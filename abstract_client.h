@@ -247,6 +247,15 @@ public:
     // TODO: remove boolean trap
     virtual AbstractClient *findModal(bool allow_itself = false) = 0;
     virtual bool isTransient() const;
+    /**
+     * @returns Whether there is a hint available to place the AbstractClient on it's parent, default @c false.
+     * @see transientPlacementHint
+     **/
+    virtual bool hasTransientPlacementHint() const;
+    /**
+     * @returns The recommended position of the transient in parent coordinates
+     **/
+    virtual QPoint transientPlacementHint() const;
     const AbstractClient* transientFor() const;
     AbstractClient* transientFor();
     /**

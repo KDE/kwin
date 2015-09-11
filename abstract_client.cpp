@@ -812,4 +812,14 @@ AbstractClient *AbstractClient::transientFor()
     return m_transientFor;
 }
 
+bool AbstractClient::hasTransientPlacementHint() const
+{
+    return false;
+}
+
+QPoint AbstractClient::transientPlacementHint() const
+{
+    return QPoint();
+}
+
 }

@@ -72,6 +72,8 @@ void Placement::place(AbstractClient* c, QRect& area)
         placeOnMainWindow(c, area);   // on mainwindow, if any, otherwise centered
     else if (c->isOnScreenDisplay() || c->isNotification())
         placeOnScreenDisplay(c, area);
+    else if (c->isTransient() && c->hasTransientPlacementHint())
+        placeTransient(c);
     else
         place(c, area, options->placement());
 }
@@ -490,6 +492,12 @@ void Placement::placeOnScreenDisplay(AbstractClient* c, QRect& area)
     const int y = area.top()  + 2 * (area.height() - c->height()) / 3;
 
     c->move(QPoint(x, y));
+}
+
+void Placement::placeTransient(AbstractClient *c)
+{
+    // TODO: apply sanity checks?
+    c->move(c->transientFor()->pos() + c->transientPlacementHint());
 }
 
 void Placement::placeDialog(AbstractClient* c, QRect& area, Policy nextPlacement)

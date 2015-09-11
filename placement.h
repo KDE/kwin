@@ -92,6 +92,7 @@ private:
     void place(AbstractClient* c, QRect& area, Policy policy, Policy nextPlacement = Unknown);
     void placeUnderMouse(AbstractClient* c, QRect& area, Policy next = Unknown);
     void placeOnMainWindow(AbstractClient* c, QRect& area, Policy next = Unknown);
+    void placeTransient(AbstractClient *c);
     QRect checkArea(const AbstractClient*c, const QRect& area);
 
     //CT needed for cascading+

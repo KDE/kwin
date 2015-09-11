@@ -726,4 +726,14 @@ void ShellClient::setTransient()
     setTransientFor(waylandServer()->findClient(s.data()));
 }
 
+bool ShellClient::hasTransientPlacementHint() const
+{
+    return isTransient() && transientFor() != nullptr;
+}
+
+QPoint ShellClient::transientPlacementHint() const
+{
+    return m_shellSurface->transientOffset();
+}
+
 }

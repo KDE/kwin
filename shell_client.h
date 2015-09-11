@@ -112,6 +112,8 @@ public:
     bool isInitialPositionSet() const;
 
     bool isTransient() const override;
+    bool hasTransientPlacementHint() const override;
+    QPoint transientPlacementHint() const override;
 
 protected:
     void addDamage(const QRegion &damage) override;
