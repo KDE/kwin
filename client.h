@@ -114,11 +114,6 @@ class Client
      **/
     Q_PROPERTY(bool resizeable READ isResizable)
     /**
-     * Whether the Client is a transient Window to another Window.
-     * @see transientFor
-     **/
-    Q_PROPERTY(bool transient READ isTransient NOTIFY transientChanged)
-    /**
      * The Client to which this Client is a transient if any.
      **/
     Q_PROPERTY(KWin::Client *transientFor READ transientFor NOTIFY transientChanged)
@@ -556,7 +551,6 @@ Q_SIGNALS:
     void clientStartUserMovedResized(KWin::Client*);
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
-    void transientChanged();
     void modalChanged();
     void moveResizedChanged();
 

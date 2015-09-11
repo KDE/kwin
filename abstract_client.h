@@ -161,6 +161,11 @@ class AbstractClient : public Toplevel
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(bool wantsInput READ wantsInput)
+    /**
+     * Whether the Client is a transient Window to another Window.
+     * @see transientFor
+     **/
+    Q_PROPERTY(bool transient READ isTransient NOTIFY transientChanged)
 public:
     virtual ~AbstractClient();
 
@@ -402,6 +407,7 @@ Q_SIGNALS:
     void captionChanged();
     void clientMaximizedStateChanged(KWin::AbstractClient*, MaximizeMode);
     void clientMaximizedStateChanged(KWin::AbstractClient* c, bool h, bool v);
+    void transientChanged();
 
 protected:
     AbstractClient();
