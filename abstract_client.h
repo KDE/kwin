@@ -269,6 +269,7 @@ public:
      **/
     virtual bool hasTransient(const AbstractClient* c, bool indirect) const;
     const QList<AbstractClient*>& transients() const; // Is not indirect
+    virtual void removeTransient(AbstractClient* cl);
     virtual QList<AbstractClient*> mainClients() const; // Call once before loop , is not indirect
     QList<AbstractClient*> allMainClients() const; // Call once before loop , is indirect
     /**
@@ -499,7 +500,6 @@ protected:
 
     void setTransientFor(AbstractClient *transientFor);
     virtual void addTransient(AbstractClient* cl);
-    virtual void removeTransient(AbstractClient* cl);
     /**
      * Just removes the @p cl from the transients without any further checks.
      **/
