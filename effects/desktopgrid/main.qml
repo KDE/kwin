@@ -31,17 +31,19 @@ Item {
             id: removeButton
             objectName: "removeButton"
             enabled: remove
-            width: 64
-            height: 64
-            iconSource: "list-remove"
+            width: height
+            font.bold: true
+            font.pointSize: 20
+            text: "-"
         }
         Plasma.Button {
             id: addButton
             objectName: "addButton"
             enabled: add
-            width: 64
-            height: 64
-            iconSource: "list-add"
+            font.bold: true
+            font.pointSize: 20
+            width: height
+            text: "+"
         }
     }
 }
