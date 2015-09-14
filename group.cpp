@@ -598,8 +598,7 @@ void Client::setTransient(xcb_window_t new_transient_for_id)
 void Client::removeFromMainClients()
 {
     TRANSIENCY_CHECK(this);
-    if (Client *t = dynamic_cast<Client*>(transientFor()))
-        t->removeTransient(this);
+    transientFor()->removeTransient(this);
     if (groupTransient()) {
         for (ClientList::ConstIterator it = group()->members().constBegin();
                 it != group()->members().constEnd();
