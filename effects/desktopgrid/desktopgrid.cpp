@@ -88,12 +88,9 @@ DesktopGridEffect::DesktopGridEffect()
 
 DesktopGridEffect::~DesktopGridEffect()
 {
-    QHash< DesktopButtonsView*, EffectWindow* >::iterator i = m_desktopButtonsViews.begin();
-    while (i != m_desktopButtonsViews.end()) {
-        DesktopButtonsView *view = i.key();
-        i = m_desktopButtonsViews.erase(i);
+    foreach (DesktopButtonsView *view, m_desktopButtonsViews)
         view->deleteLater();
-    }
+    m_desktopButtonsViews.clear();
 }
 
 void DesktopGridEffect::reconfigure(ReconfigureFlags)
@@ -165,20 +162,18 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
     }
 
     // paint the add desktop button
-    for (QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
-            it != m_desktopButtonsViews.end(); ++it) {
-        if (!it.value()) {
-            EffectWindow *view = effects->findWindow(it.key()->winId());
-            if (view) {
-                view->setData(WindowForceBlurRole, QVariant(true));
-                it.value() = view;
+    foreach (DesktopButtonsView *view, m_desktopButtonsViews) {
+        if (!view->effectWindow) {
+            EffectWindow *viewWindow = effects->findWindow(view->winId());
+            if (viewWindow) {
+                viewWindow->setData(WindowForceBlurRole, QVariant(true));
+                view->effectWindow = viewWindow;
             }
         }
-        if (it.value()) {
-            WindowPaintData d(it.value());
+        if (view->effectWindow) {
+            WindowPaintData d(view->effectWindow);
             d.multiplyOpacity(timeline.currentValue());
-            effects->drawWindow(it.value(), PAINT_WINDOW_TRANSLUCENT,
-                                infiniteRegion(), d);
+            effects->drawWindow(view->effectWindow, PAINT_WINDOW_TRANSLUCENT, infiniteRegion(), d);
         }
     }
 
@@ -279,12 +274,10 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
         if (isUsingPresentWindows() && w == windowMove && wasWindowMove) {
             return; // will be painted on top of all other windows
         }
-        for (QHash< DesktopButtonsView*, EffectWindow*>::const_iterator it = m_desktopButtonsViews.constBegin(),
-                    end = m_desktopButtonsViews.constEnd();
-                    it != end; ++it) {
-            if (it.value() == w) {
+        foreach (DesktopButtonsView *view, m_desktopButtonsViews) {
+            if (view->effectWindow == w) {
                 if (!activated && timeline.currentValue() < 0.05) {
-                    it.key()->hide();
+                    view->hide();
                 }
                 return; // will be painted on top of all other windows
             }
@@ -432,10 +425,9 @@ void DesktopGridEffect::slotWindowDeleted(EffectWindow* w)
 {
     if (w == windowMove)
         windowMove = 0;
-    for (QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
-            it != m_desktopButtonsViews.end(); ++it) {
-        if (it.value() && it.value() == w) {
-            it.value() = nullptr;
+    foreach (DesktopButtonsView *view, m_desktopButtonsViews) {
+        if (view->effectWindow && view->effectWindow == w) {
+            view->effectWindow = nullptr;
             break;
         }
     }
@@ -469,14 +461,14 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
             || timeline.currentValue() != 1)  // Block user input during animations
         return;
     QMouseEvent* me = static_cast< QMouseEvent* >(e);
-    for (QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
-            it != m_desktopButtonsViews.end(); ++it) {
-        DesktopButtonsView* view = it.key();
-        if (!wasWindowMove && !wasDesktopMove && view->geometry().contains(me->pos())) {
-            const QPoint widgetPos = view->mapFromGlobal(me->pos());
-            QMouseEvent event(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
-            view->windowInputMouseEvent(&event);
-            return;
+    if (!(wasWindowMove || wasDesktopMove)) {
+        foreach (DesktopButtonsView *view, m_desktopButtonsViews) {
+            if (view->geometry().contains(me->pos())) {
+                const QPoint widgetPos = view->mapFromGlobal(me->pos());
+                QMouseEvent event(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
+                view->windowInputMouseEvent(&event);
+                return;
+            }
         }
     }
 
@@ -1057,7 +1049,7 @@ void DesktopGridEffect::setActive(bool active)
             [this] {
                 if (activated)
                     return;
-                foreach (DesktopButtonsView *view, m_desktopButtonsViews.keys()) {
+                foreach (DesktopButtonsView *view, m_desktopButtonsViews) {
                     view->hide();
                 }
             }
@@ -1125,18 +1117,18 @@ void DesktopGridEffect::setup()
     bool enableAdd = effects->numberOfDesktops() < 20;
     bool enableRemove = effects->numberOfDesktops() > 1;
 
-    QHash< DesktopButtonsView*, EffectWindow* >::iterator it = m_desktopButtonsViews.begin();
+    QVector<DesktopButtonsView*>::iterator it = m_desktopButtonsViews.begin();
     const int n = DesktopGridConfig::showAddRemove() ? effects->numScreens() : 0;
     for (int i = 0; i < n; ++i) {
         DesktopButtonsView *view;
         if (it == m_desktopButtonsViews.end()) {
             view = new DesktopButtonsView();
-            m_desktopButtonsViews.insert(view, NULL);
+            m_desktopButtonsViews.append(view);
             it = m_desktopButtonsViews.end(); // changed through insert!
             connect(view, SIGNAL(addDesktop()), SLOT(slotAddDesktop()));
             connect(view, SIGNAL(removeDesktop()), SLOT(slotRemoveDesktop()));
         } else {
-            view = it.key();
+            view = *it;
             ++it;
         }
         view->setAddDesktopEnabled(enableAdd);
@@ -1148,9 +1140,8 @@ void DesktopGridEffect::setup()
                           view->width(), view->height());
     }
     while (it != m_desktopButtonsViews.end()) {
-        DesktopButtonsView *view = it.key();
+        (*it)->deleteLater();
         it = m_desktopButtonsViews.erase(it);
-        view->deleteLater();
     }
 }
 
@@ -1298,10 +1289,9 @@ void DesktopGridEffect::slotNumberDesktopsChanged(uint old)
     const uint desktop = effects->numberOfDesktops();
     bool enableAdd = desktop < 20;
     bool enableRemove = desktop > 1;
-    for (QHash< DesktopButtonsView*, EffectWindow* >::iterator it = m_desktopButtonsViews.begin();
-            it != m_desktopButtonsViews.end(); ++it) {
-        it.key()->setAddDesktopEnabled(enableAdd);
-        it.key()->setRemoveDesktopEnabled(enableRemove);
+    foreach (DesktopButtonsView *view, m_desktopButtonsViews) {
+        view->setAddDesktopEnabled(enableAdd);
+        view->setRemoveDesktopEnabled(enableRemove);
     }
     if (old < desktop)
         desktopsAdded(old);
@@ -1408,6 +1398,7 @@ bool DesktopGridEffect::isRelevantWithPresentWindows(EffectWindow *w) const
 ************************************************/
 DesktopButtonsView::DesktopButtonsView(QWindow *parent)
     : QQuickView(parent)
+    , effectWindow(nullptr)
     , m_visible(false)
     , m_posIsValid(false)
 {

@@ -43,6 +43,8 @@ public:
     bool isVisible() const;
     void show();
     void hide();
+public:
+    EffectWindow *effectWindow;
 Q_SIGNALS:
     void addDesktop();
     void removeDesktop();
@@ -178,7 +180,7 @@ private:
     QRect m_windowMoveGeometry;
     QPoint m_windowMoveStartPoint;
 
-    QHash< DesktopButtonsView*, EffectWindow* > m_desktopButtonsViews;
+    QVector<DesktopButtonsView*> m_desktopButtonsViews;
 
 };
 
