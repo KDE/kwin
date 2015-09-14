@@ -24,5 +24,8 @@
             <entry name="PresentWindows" type="Bool">
                 <default>true</default>
             </entry>
+            <entry name="ShowAddRemove" type="Bool">
+                <default>true</default>
+            </entry>
         </group>
 </kcfg>

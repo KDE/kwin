@@ -1126,7 +1126,8 @@ void DesktopGridEffect::setup()
     bool enableRemove = effects->numberOfDesktops() > 1;
 
     QHash< DesktopButtonsView*, EffectWindow* >::iterator it = m_desktopButtonsViews.begin();
-    for (int i = 0; i < effects->numScreens(); ++i) {
+    const int n = DesktopGridConfig::showAddRemove() ? effects->numScreens() : 0;
+    for (int i = 0; i < n; ++i) {
         DesktopButtonsView *view;
         if (it == m_desktopButtonsViews.end()) {
             view = new DesktopButtonsView();
