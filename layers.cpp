@@ -538,14 +538,15 @@ ToplevelList Workspace::constrainedStackingOrder()
     for (int i = stacking.size() - 1;
             i >= 0;
        ) {
-        Client *current = qobject_cast<Client*>(stacking[i]);
+        AbstractClient *current = qobject_cast<AbstractClient*>(stacking[i]);
         if (!current || !current->isTransient()) {
             --i;
             continue;
         }
         int i2 = -1;
-        if (current->groupTransient()) {
-            if (current->group()->members().count() > 0) {
+        Client *ccurrent = qobject_cast<Client*>(current);
+        if (ccurrent && ccurrent->groupTransient()) {
+            if (ccurrent->group()->members().count() > 0) {
                 // find topmost client this one is transient for
                 for (i2 = stacking.size() - 1;
                         i2 >= 0;
