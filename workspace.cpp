@@ -1144,8 +1144,8 @@ void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activ
 
     if (Client *client = dynamic_cast<Client*>(c)) {
         // TODO: adjust transients for non-X11
-        ClientList transients_stacking_order = ensureStackingOrder(client->transients());
-        for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
+        auto transients_stacking_order = ensureStackingOrder(client->transients());
+        for (auto it = transients_stacking_order.constBegin();
                 it != transients_stacking_order.constEnd();
                 ++it)
             sendClientToDesktop(*it, desk, dont_activate);

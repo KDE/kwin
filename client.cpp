@@ -1217,8 +1217,8 @@ void Client::doSetDesktop(int desktop, int was_desk)
         workspace()->updateOnAllDesktopsOfTransients(this);
     }
 
-    ClientList transients_stacking_order = workspace()->ensureStackingOrder(transients());
-    for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
+    auto transients_stacking_order = workspace()->ensureStackingOrder(transients());
+    for (auto it = transients_stacking_order.constBegin();
             it != transients_stacking_order.constEnd();
             ++it)
         (*it)->setDesktop(desktop);

@@ -3411,8 +3411,8 @@ void Client::sendToScreen(int newScreen)
     if (qtMode != QuickTileNone && qtMode != quick_tile_mode)
         setQuickTileMode(qtMode, true);
 
-    ClientList tso = workspace()->ensureStackingOrder(transients());
-    for (ClientList::ConstIterator it = tso.constBegin(), end = tso.constEnd(); it != end; ++it)
+    auto tso = workspace()->ensureStackingOrder(transients());
+    for (auto it = tso.constBegin(), end = tso.constEnd(); it != end; ++it)
         (*it)->sendToScreen(newScreen);
 }
 

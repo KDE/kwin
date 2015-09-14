@@ -105,8 +105,8 @@ void Activities::toggleClientOnActivity(Client* c, const QString &activity, bool
 
     //notifyWindowDesktopChanged( c, old_desktop );
 
-    ClientList transients_stacking_order = ws->ensureStackingOrder(c->transients());
-    for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
+    auto transients_stacking_order = ws->ensureStackingOrder(c->transients());
+    for (auto it = transients_stacking_order.constBegin();
             it != transients_stacking_order.constEnd();
             ++it)
         toggleClientOnActivity(*it, activity, dont_activate);
