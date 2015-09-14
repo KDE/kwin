@@ -1711,6 +1711,8 @@ void Client::getMotifHints()
 {
     const bool wasClosable = m_motif.close();
     const bool wasNoBorder = m_motif.noBorder();
+    if (m_managed) // only on property change, initial read is prefetched
+        m_motif.fetch();
     m_motif.read();
     if (m_motif.hasDecoration() && m_motif.noBorder() != wasNoBorder) {
         // If we just got a hint telling us to hide decorations, we do so.
