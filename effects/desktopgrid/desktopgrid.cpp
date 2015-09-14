@@ -1143,8 +1143,8 @@ void DesktopGridEffect::setup()
         view->setRemoveDesktopEnabled(enableRemove);
         const QRect screenRect = effects->clientArea(FullScreenArea, i, 1);
         view->show(); // pseudo show must happen before geometry changes
-        view->setGeometry(screenRect.right() + 1 - view->width(),
-                          screenRect.bottom() + 1 - view->height(),
+        view->setGeometry(screenRect.right() - border/3 - view->width(),
+                          screenRect.bottom() - border/3 - view->height(),
                           view->width(), view->height());
     }
     while (it != m_desktopButtonsViews.end()) {
