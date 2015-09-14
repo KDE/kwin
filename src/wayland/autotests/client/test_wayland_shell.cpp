@@ -47,6 +47,7 @@ private Q_SLOTS:
     void testFullscreen();
     void testMaximize();
     void testToplevel();
+    void testTransient();
     void testPing();
     void testTitle();
     void testWindowClass();
@@ -332,6 +333,61 @@ void TestWaylandShell::testToplevel()
     QVERIFY(toplevelSpy.wait());
     QCOMPARE(toplevelSpy.count(), 1);
     QVERIFY(!toplevelSpy.first().first().toBool());
+}
+
+void TestWaylandShell::testTransient()
+{
+    using namespace KWayland::Server;
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    ShellSurface *surface = m_shell->createSurface(s.data(), m_shell);
+
+    QSignalSpy serverSurfaceSpy(m_shellInterface, &ShellInterface::surfaceCreated);
+    QVERIFY(serverSurfaceSpy.isValid());
+    QVERIFY(serverSurfaceSpy.wait());
+    ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
+    QVERIFY(serverSurface);
+    QCOMPARE(serverSurface->isToplevel(), true);
+    QCOMPARE(serverSurface->isPopup(), false);
+    QCOMPARE(serverSurface->isTransient(), false);
+    QCOMPARE(serverSurface->transientFor(), QPointer<SurfaceInterface>());
+    QCOMPARE(serverSurface->transientOffset(), QPoint());
+
+    QSignalSpy transientSpy(serverSurface, &ShellSurfaceInterface::transientChanged);
+    QVERIFY(transientSpy.isValid());
+    QSignalSpy transientOffsetSpy(serverSurface, &ShellSurfaceInterface::transientOffsetChanged);
+    QVERIFY(transientOffsetSpy.isValid());
+    QSignalSpy transientForChangedSpy(serverSurface, &ShellSurfaceInterface::transientForChanged);
+    QVERIFY(transientForChangedSpy.isValid());
+
+    QScopedPointer<Surface> s2(m_compositor->createSurface());
+    m_shell->createSurface(s2.data(), m_shell);
+    serverSurfaceSpy.clear();
+    QVERIFY(serverSurfaceSpy.wait());
+    ShellSurfaceInterface *serverSurface2 = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
+    QVERIFY(serverSurface2 != serverSurface);
+    QVERIFY(serverSurface2);
+
+    surface->setTransient(s2.data(), QPoint(10, 20));
+    QVERIFY(transientSpy.wait());
+    QCOMPARE(transientSpy.count(), 1);
+    QCOMPARE(transientSpy.first().first().toBool(), true);
+    QCOMPARE(transientOffsetSpy.count(), 1);
+    QCOMPARE(transientOffsetSpy.first().first().toPoint(), QPoint(10, 20));
+    QCOMPARE(transientForChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->isToplevel(), false);
+    QCOMPARE(serverSurface->isPopup(), false);
+    QCOMPARE(serverSurface->isTransient(), true);
+    QCOMPARE(serverSurface->transientFor(), QPointer<SurfaceInterface>(serverSurface2->surface()));
+    QCOMPARE(serverSurface->transientOffset(), QPoint(10, 20));
+
+    QCOMPARE(serverSurface2->isToplevel(), true);
+    QCOMPARE(serverSurface2->isPopup(), false);
+    QCOMPARE(serverSurface2->isTransient(), false);
+    QCOMPARE(serverSurface2->transientFor(), QPointer<SurfaceInterface>());
+    QCOMPARE(serverSurface2->transientOffset(), QPoint());
 }
 
 void TestWaylandShell::testPing()

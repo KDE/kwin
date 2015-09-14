@@ -97,6 +97,25 @@ class KWAYLANDSERVER_EXPORT ShellSurfaceInterface : public Resource
      * Whether the window is maximized.
      **/
     Q_PROPERTY(bool maximized READ isMaximized NOTIFY maximizedChanged)
+    /**
+     * Whether the ShellSurfaceInterface is a popup for another SurfaceInterface.
+     *
+     * Popup implies transient.
+     * @since 5.5
+     **/
+    Q_PROPERTY(bool popup READ isPopup NOTIFY popupChanged)
+    /**
+     * Whether the ShellSurfaceInterface is a transient for another SurfaceInterface.
+     *
+     * Popup implies transient.
+     * @since 5.5
+     **/
+    Q_PROPERTY(bool transient READ isTransient NOTIFY transientChanged)
+    /**
+     * Offset of the upper left corner in the parent SurfaceInterface's coordinate system.
+     * @since 5.5
+     **/
+    Q_PROPERTY(QPoint transientOffset READ transientOffset NOTIFY transientOffsetChanged)
 public:
     virtual ~ShellSurfaceInterface();
 
@@ -144,6 +163,47 @@ public:
     bool isFullscreen() const;
     bool isToplevel() const;
     bool isMaximized() const;
+    /**
+     * @returns @c true if the ShellSurfaceInterface is a popup.
+     * @see isTransient
+     * @see transientOffset
+     * @see transientFor
+     * @since 5.5
+     **/
+    bool isPopup() const;
+    /**
+     * @returns @c true if the ShellSurfaceInterface is a transient or popup for another SurfaceInterface.
+     * @see isPopup
+     * @see transientOffset
+     * @see transientFor
+     * @since 5.5
+     **/
+    bool isTransient() const;
+    /**
+     * In case the ShellSurfaceInterface is a transient this is the offset of the ShellSurfaceInterface
+     * in the coordinate system of the SurfaceInterface this surface is a transient for.
+     *
+     * @returns offset in parent coordinate system.
+     * @see isTransient
+     * @see transientFor
+     * @since 5.5
+     **/
+    QPoint transientOffset() const;
+    /**
+     * The SurfaceInterface for which this ShellSurfaceInterface is a transient.
+     * This is only relevant if the ShellSurfaceInterface is either a transient or a
+     * popup.
+     *
+     * The transientOffset is in the local coordinate system of the SurfaceInterface
+     * returned by this method.
+     *
+     * @returns The SurfaceInterface for which this Surface is a transient
+     * @see isTransient
+     * @see isPopup
+     * @see transientOffset
+     * @since 5.5
+     **/
+    QPointer<SurfaceInterface> transientFor() const;
 
 Q_SIGNALS:
     /**
@@ -168,6 +228,22 @@ Q_SIGNALS:
     void fullscreenChanged(bool);
     void toplevelChanged(bool);
     void maximizedChanged(bool);
+    /**
+     * @since 5.5
+     **/
+    void popupChanged(bool);
+    /**
+     * @since 5.5
+     **/
+    void transientChanged(bool);
+    /**
+     * @since 5.5
+     **/
+    void transientOffsetChanged(const QPoint&);
+    /**
+     * @since 5.5
+     **/
+    void transientForChanged();
 
 private:
     friend class ShellInterface;
