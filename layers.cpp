@@ -387,7 +387,7 @@ void Workspace::raiseClient(AbstractClient* c, bool nogroup)
     }
 }
 
-void Workspace::raiseClientWithinApplication(Client* c)
+void Workspace::raiseClientWithinApplication(AbstractClient* c)
 {
     if (!c)
         return;
@@ -399,13 +399,13 @@ void Workspace::raiseClientWithinApplication(Client* c)
 
     // first try to put it above the top-most window of the application
     for (int i = unconstrained_stacking_order.size() - 1; i > -1 ; --i) {
-        Client *other = qobject_cast<Client*>(unconstrained_stacking_order.at(i));
+        AbstractClient *other = qobject_cast<AbstractClient*>(unconstrained_stacking_order.at(i));
         if (!other) {
             continue;
         }
         if (other == c)     // don't lower it just because it asked to be raised
             return;
-        if (Client::belongToSameApplication(other, c)) {
+        if (AbstractClient::belongToSameApplication(other, c)) {
             unconstrained_stacking_order.removeAll(c);
             unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(other) + 1, c);   // insert after the found one
             break;
