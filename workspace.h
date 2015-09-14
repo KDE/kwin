@@ -243,6 +243,7 @@ public:
     const ToplevelList& stackingOrder() const;
     ToplevelList xStackingOrder() const;
     ClientList ensureStackingOrder(const ClientList& clients) const;
+    QList<AbstractClient*> ensureStackingOrder(const QList<AbstractClient*> &clients) const;
 
     Client* topClientOnDesktop(int desktop, int screen, bool unconstrained = false,
                                bool only_normal = true) const;

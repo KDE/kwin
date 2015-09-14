@@ -617,18 +617,21 @@ void Workspace::blockStackingUpdates(bool block)
         }
 }
 
-// Ensure list is in stacking order
-ClientList Workspace::ensureStackingOrder(const ClientList& list) const
+namespace {
+template <class T>
+QList<T*> ensureStackingOrderInList(const ToplevelList &stackingOrder, const QList<T*> &list)
 {
+    static_assert(std::is_base_of<Toplevel, T>::value,
+                 "U must be derived from T");
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (list.count() < 2)
         return list;
     // TODO is this worth optimizing?
-    ClientList result = list;
-    for (ToplevelList::ConstIterator it = stacking_order.constBegin();
-            it != stacking_order.constEnd();
+    QList<T*> result = list;
+    for (auto it = stackingOrder.begin();
+            it != stackingOrder.end();
             ++it) {
-        Client *c = qobject_cast<Client*>(*it);
+        T *c = qobject_cast<T*>(*it);
         if (!c) {
             continue;
         }
@@ -636,6 +639,18 @@ ClientList Workspace::ensureStackingOrder(const ClientList& list) const
             result.append(c);
     }
     return result;
+}
+}
+
+// Ensure list is in stacking order
+ClientList Workspace::ensureStackingOrder(const ClientList& list) const
+{
+    return ensureStackingOrderInList(stacking_order, list);
+}
+
+QList<AbstractClient*> Workspace::ensureStackingOrder(const QList<AbstractClient*> &list) const
+{
+    return ensureStackingOrderInList(stacking_order, list);
 }
 
 // check whether a transient should be actually kept above its mainwindow
