@@ -62,7 +62,10 @@ public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotPropertyNotify(KWin::EffectWindow *w, long a);
+    void slotWaylandSlideOnShowChanged(EffectWindow* w);
 private:
+    void setupAnimData(EffectWindow *w);
+
     enum Position {
         West = 0,
         North = 1,

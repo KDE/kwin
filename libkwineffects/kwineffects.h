@@ -934,6 +934,7 @@ public:
     virtual WindowQuadType newWindowQuadType() = 0;
 
     Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(WId id) const = 0;
+    Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(KWayland::Server::SurfaceInterface *surf) const = 0;
     virtual EffectWindowList stackingOrder() const = 0;
     // window will be temporarily painted as if being at the top of the stack
     Q_SCRIPTABLE virtual void setElevatedWindow(KWin::EffectWindow* w, bool set) = 0;

@@ -24,11 +24,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTimeLine>
 #include <QApplication>
 
+#include <KWayland/Server/surface_interface.h>
+#include <KWayland/Server/slide_interface.h>
+#include <KWayland/Server/display.h>
+
 namespace KWin
 {
 
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
+    KWayland::Server::Display *display = effects->waylandDisplay();
+    if (display) {
+        display->createSlideManager(this)->create();
+    }
+
     mSlideLength = QFontMetrics(qApp->font()).height() * 8;
 
     mAtom = effects->announceSupportProperty("_KDE_SLIDE", this);
@@ -258,7 +267,17 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow* w)
 
 void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 {
+    //X11
     slotPropertyNotify(w, mAtom);
+
+    //Wayland
+    if (auto surf = w->surface()) {
+        slotWaylandSlideOnShowChanged(w);
+        connect(surf, &KWayland::Server::SurfaceInterface::slideOnShowHideChanged, this, [this, surf] {
+            slotWaylandSlideOnShowChanged(effects->findWindow(surf));
+        });
+    }
+
     if (w->isOnCurrentDesktop() && mWindowsData.contains(w)) {
         if (!w->data(WindowForceBackgroundContrastRole).isValid() && w->hasAlpha()) {
             w->setData(WindowForceBackgroundContrastRole, QVariant(true));
@@ -342,27 +361,33 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
         animData.fadeInDuration = animationTime(mFadeInTime);
         animData.fadeOutDuration = animationTime(mFadeOutTime);
     }
+    mWindowsData[ w ] = animData;
+    setupAnimData(w);
+}
+
+void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
+{
     const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
-    if (animData.start == -1) {
-        switch (animData.from) {
+    if (mWindowsData[w].start == -1) {
+        switch (mWindowsData[w].from) {
         case West:
-            animData.start = qMax(w->x() - screenRect.x(), 0);
+            mWindowsData[w].start = qMax(w->x() - screenRect.x(), 0);
             break;
         case North:
-            animData.start = qMax(w->y() - screenRect.y(), 0);
+            mWindowsData[w].start = qMax(w->y() - screenRect.y(), 0);
             break;
         case East:
-            animData.start = qMax(screenRect.x() + screenRect.width() - (w->x() + w->width()), 0);
+            mWindowsData[w].start = qMax(screenRect.x() + screenRect.width() - (w->x() + w->width()), 0);
             break;
         case South:
         default:
-            animData.start = qMax(screenRect.y() + screenRect.height() - (w->y() + w->height()), 0);
+            mWindowsData[w].start = qMax(screenRect.y() + screenRect.height() - (w->y() + w->height()), 0);
             break;
         }
     }
     // sanitize
     int difference = 0;
-    switch (animData.from) {
+    switch (mWindowsData[w].from) {
     case West:
         difference = w->x() - screenRect.x();
         break;
@@ -377,10 +402,48 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
         difference = w->y() + w->height() - (screenRect.y() + screenRect.height());
         break;
     }
-    animData.start = qMax<int>(animData.start, difference);
-    mWindowsData[ w ] = animData;
+    mWindowsData[w].start = qMax<int>(mWindowsData[w].start, difference);
     // Grab the window, so other windowClosed effects will ignore it
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+}
+
+void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow* w)
+{
+    if (!w) {
+        return;
+    }
+
+    KWayland::Server::SurfaceInterface *surf = w->surface();
+    if (!surf) {
+        return;
+    }
+
+    if (surf->slideOnShowHide()) {
+        Data animData;
+        animData.start = surf->slideOnShowHide()->offset();
+
+        switch (surf->slideOnShowHide()->location()) {
+        case KWayland::Server::SlideInterface::Location::Top:
+            animData.from = North;
+            break;
+        case KWayland::Server::SlideInterface::Location::Left:
+            animData.from = West;
+            break;
+        case KWayland::Server::SlideInterface::Location::Right:
+            animData.from = East;
+            break;
+        case KWayland::Server::SlideInterface::Location::Bottom:
+        default:
+            animData.from = South;
+            break;
+        }
+        animData.slideLength = 0;
+        animData.fadeInDuration = animationTime(mFadeInTime);
+        animData.fadeOutDuration = animationTime(mFadeOutTime);
+        mWindowsData[ w ] = animData;
+
+        setupAnimData(w);
+    }
 }
 
 bool SlidingPopupsEffect::isActive() const

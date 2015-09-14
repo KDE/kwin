@@ -130,6 +130,7 @@ public:
     void startMousePolling() override;
     void stopMousePolling() override;
     EffectWindow* findWindow(WId id) const override;
+    EffectWindow* findWindow(KWayland::Server::SurfaceInterface *surf) const override;
     EffectWindowList stackingOrder() const override;
     void setElevatedWindow(KWin::EffectWindow* w, bool set) override;
 

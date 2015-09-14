@@ -127,6 +127,9 @@ public:
     KWin::EffectWindow *findWindow(WId) const override {
         return nullptr;
     }
+    KWin::EffectWindow *findWindow(KWayland::Server::SurfaceInterface *) const override {
+        return nullptr;
+    }
     void *getProxy(QString) override {
         return nullptr;
     }

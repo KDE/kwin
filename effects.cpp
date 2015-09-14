@@ -1038,6 +1038,17 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
     return NULL;
 }
 
+EffectWindow* EffectsHandlerImpl::findWindow(KWayland::Server::SurfaceInterface *surf) const
+{
+    if (waylandServer()) {
+        if (ShellClient *w = waylandServer()->findClient(surf)) {
+            return w->effectWindow();
+        }
+    }
+    return nullptr;
+}
+
+
 EffectWindowList EffectsHandlerImpl::stackingOrder() const
 {
     ToplevelList list = Workspace::self()->xStackingOrder();
