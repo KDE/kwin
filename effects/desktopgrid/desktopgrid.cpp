@@ -293,9 +293,7 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
             yScale *= 1.05f;
         }
 
-        // Don't change brightness of windows on all desktops as this causes flickering
-        if (!w->isOnAllDesktops() || w->isDesktop())
-            data.multiplyBrightness(1.0 - (0.3 * (1.0 - hoverTimeline[paintingDesktop - 1]->currentValue())));
+        data.multiplyBrightness(1.0 - (0.3 * (1.0 - hoverTimeline[paintingDesktop - 1]->currentValue())));
 
         for (int screen = 0; screen < effects->numScreens(); screen++) {
             // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
