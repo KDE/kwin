@@ -296,9 +296,6 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
         data.multiplyBrightness(1.0 - (0.3 * (1.0 - hoverTimeline[paintingDesktop - 1]->currentValue())));
 
         for (int screen = 0; screen < effects->numScreens(); screen++) {
-            // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
-            if (w->isDesktop())
-                screen = w->screen();
             QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
 
             QRectF transformedGeo = w->geometry();
@@ -316,6 +313,8 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
                         mask |= PAINT_WINDOW_LANCZOS;
                 } else if (w->screen() != screen)
                     quadsAdded = true; // we don't want parts of overlapping windows on the other screen
+                if (w->isDesktop())
+                    quadsAdded = false;
             }
             if (zoom) {
                 transformedGeo.translate(-0.025f*transformedGeo.width(),
@@ -371,9 +370,6 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
                 }
                 effects->paintWindow(w, mask, effects->clientArea(ScreenArea, screen, 0), d);
             }
-            // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
-            if (w->isDesktop())
-                break;
         }
     } else
         effects->paintWindow(w, mask, region, data);
