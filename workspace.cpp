@@ -352,7 +352,7 @@ void Workspace::init()
 
     } // End updates blocker block
 
-    Client* new_active_client = NULL;
+    AbstractClient* new_active_client = nullptr;
     if (!qApp->isSessionRestored()) {
         --block_focus;
         new_active_client = findClient(Predicate::WindowMatch, client_info.activeWindow());

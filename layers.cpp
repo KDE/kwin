@@ -262,19 +262,19 @@ Client* Workspace::topClientOnDesktop(int desktop, int screen, bool unconstraine
     return 0;
 }
 
-Client* Workspace::findDesktop(bool topmost, int desktop) const
+AbstractClient* Workspace::findDesktop(bool topmost, int desktop) const
 {
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (topmost) {
         for (int i = stacking_order.size() - 1; i >= 0; i--) {
-            Client *c = qobject_cast<Client*>(stacking_order.at(i));
+            AbstractClient *c = qobject_cast<AbstractClient*>(stacking_order.at(i));
             if (c && c->isOnDesktop(desktop) && c->isDesktop()
                     && c->isShown(true))
                 return c;
         }
     } else { // bottom-most
         foreach (Toplevel * c, stacking_order) {
-            Client *client = qobject_cast<Client*>(c);
+            AbstractClient *client = qobject_cast<AbstractClient*>(c);
             if (client && c->isOnDesktop(desktop) && c->isDesktop()
                     && client->isShown(true))
                 return client;
