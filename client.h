@@ -175,7 +175,6 @@ public:
     bool wasOriginallyGroupTransient() const;
     QList<AbstractClient*> mainClients() const override; // Call once before loop , is not indirect
     bool hasTransient(const AbstractClient* c, bool indirect) const override;
-    const ClientList& transients() const; // Is not indirect
     void checkTransient(xcb_window_t w);
     AbstractClient* findModal(bool allow_itself = false) override;
     const Group* group() const;
@@ -700,15 +699,14 @@ private:
     void readTransientProperty(Xcb::TransientFor &transientFor);
     void readTransient();
     xcb_window_t verifyTransientFor(xcb_window_t transient_for, bool set);
-    void addTransient(Client* cl);
-    void removeTransient(Client* cl);
+    void addTransient(AbstractClient* cl) override;
+    void removeTransient(AbstractClient* cl) override;
     void removeFromMainClients();
     void cleanGrouping();
     void checkGroupTransients();
     void setTransient(xcb_window_t new_transient_for_id);
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
-    ClientList transients_list; // SELI TODO: Make this ordered in stacking order?
     ShadeMode shade_mode;
     Client *shade_below;
     uint deleting : 1; ///< True when doing cleanup and destroying the client
@@ -833,11 +831,6 @@ inline bool Client::wasOriginallyGroupTransient() const
 inline bool Client::isTransient() const
 {
     return m_transientForId != XCB_WINDOW_NONE;
-}
-
-inline const ClientList& Client::transients() const
-{
-    return transients_list;
 }
 
 inline const Group* Client::group() const

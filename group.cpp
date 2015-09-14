@@ -96,14 +96,14 @@ bool performTransiencyCheck()
                     ret = false;
                     continue;
                 }
-                if (!(*it2)->transients_list.contains(*it1)) {
+                if (!(*it2)->transients().contains(*it1)) {
                     kdDebug(1212) << "TC:" << *it1 << " has main client " << *it2 << " but main client does not have it as a transient" << endl;
                     ret = false;
                 }
             }
         }
-        ClientList trans = (*it1)->transients_list;
-        for (ClientList::ConstIterator it2 = trans.constBegin();
+        auto trans = (*it1)->transients();
+        for (auto it2 = trans.constBegin();
                 it2 != trans.constEnd();
                 ++it2) {
             if (transiencyCheckNonExistent
@@ -342,7 +342,7 @@ Group* Workspace::findClientLeaderGroup(const Client* c) const
     return ret;
 }
 
-void Workspace::updateMinimizedOfTransients(Client* c)
+void Workspace::updateMinimizedOfTransients(AbstractClient* c)
 {
     // if mainwindow is minimized or shaded, minimize transients too
     if (c->isMinimized()) {
@@ -637,12 +637,12 @@ void Client::cleanGrouping()
 //         it != mains.end();
 //         ++it )
 //        qDebug() << "MN2:" << *it;
-    for (ClientList::ConstIterator it = transients_list.constBegin();
-            it != transients_list.constEnd();
+    for (auto it = transients().constBegin();
+            it != transients().constEnd();
        ) {
         if ((*it)->transientFor() == this) {
             removeTransient(*it);
-            it = transients_list.constBegin(); // restart, just in case something more has changed with the list
+            it = transients().constBegin(); // restart, just in case something more has changed with the list
         } else
             ++it;
     }
@@ -699,7 +699,7 @@ void Client::checkGroupTransients()
                     cl = cl->transientFor()) {
                 if (cl == *it1) {
                     // don't use removeTransient(), that would modify *it2 too
-                    (*it2)->transients_list.removeAll(*it1);
+                    (*it2)->removeTransientFromList(*it1);
                     continue;
                 }
             }
@@ -708,7 +708,7 @@ void Client::checkGroupTransients()
             // and should be therefore on top of *it1
             // TODO This could possibly be optimized, it also requires hasTransient() to check for loops.
             if ((*it2)->groupTransient() && (*it1)->hasTransient(*it2, true) && (*it2)->hasTransient(*it1, true))
-                (*it2)->transients_list.removeAll(*it1);
+                (*it2)->removeTransientFromList(*it1);
             // if there are already windows W1 and W2, W2 being transient for W1, and group transient W3
             // is added, make it transient only for W2, not for W1, because it's already indirectly
             // transient for it - the indirect transiency actually shouldn't break anything,
@@ -721,9 +721,9 @@ void Client::checkGroupTransients()
                     continue;
                 if ((*it2)->hasTransient(*it1, false) && (*it3)->hasTransient(*it1, false)) {
                     if ((*it2)->hasTransient(*it3, true))
-                        (*it2)->transients_list.removeAll(*it1);
+                        (*it2)->removeTransientFromList(*it1);
                     if ((*it3)->hasTransient(*it2, true))
-                        (*it3)->transients_list.removeAll(*it1);
+                        (*it3)->removeTransientFromList(*it1);
                 }
             }
         }
@@ -797,13 +797,10 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     return new_transient_for;
 }
 
-void Client::addTransient(Client* cl)
+void Client::addTransient(AbstractClient* cl)
 {
     TRANSIENCY_CHECK(this);
-    assert(!transients_list.contains(cl));
-//    assert( !cl->hasTransient( this, true )); will be fixed in checkGroupTransients()
-    assert(cl != this);
-    transients_list.append(cl);
+    AbstractClient::addTransient(cl);
     if (workspace()->mostRecentlyActivatedClient() == this && cl->isModal())
         check_active_modal = true;
 //    qDebug() << "ADDTRANS:" << this << ":" << cl;
@@ -814,19 +811,21 @@ void Client::addTransient(Client* cl)
 //        qDebug() << "AT:" << (*it);
 }
 
-void Client::removeTransient(Client* cl)
+void Client::removeTransient(AbstractClient* cl)
 {
     TRANSIENCY_CHECK(this);
 //    qDebug() << "REMOVETRANS:" << this << ":" << cl;
 //    qDebug() << kBacktrace();
-    transients_list.removeAll(cl);
     // cl is transient for this, but this is going away
     // make cl group transient
+    AbstractClient::removeTransient(cl);
     if (cl->transientFor() == this) {
-        cl->m_transientForId = XCB_WINDOW_NONE;
-        cl->setTransientFor(nullptr); // SELI
+        if (Client *c = dynamic_cast<Client*>(cl)) {
+            c->m_transientForId = XCB_WINDOW_NONE;
+            c->setTransientFor(nullptr); // SELI
 // SELI       cl->setTransient( rootWindow());
-        cl->setTransient(XCB_WINDOW_NONE);
+            c->setTransient(XCB_WINDOW_NONE);
+        }
     }
 }
 
@@ -878,9 +877,14 @@ bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientLi
     set.append(this);
     for (auto it = transients().constBegin();
             it != transients().constEnd();
-            ++it)
-        if ((*it)->hasTransientInternal(cl, indirect, set))
+            ++it) {
+        Client *c = dynamic_cast<Client *>(*it);
+        if (!c) {
+            continue;
+        }
+        if (c->hasTransientInternal(cl, indirect, set))
             return true;
+    }
     return false;
 }
 
@@ -985,13 +989,19 @@ void Client::checkGroup(Group* set_group, bool force)
         }
     }
     if (in_group != old_group || force) {
-        for (ClientList::Iterator it = transients_list.begin();
-                it != transients_list.end();
+        for (auto it = transients().constBegin();
+                it != transients().constEnd();
            ) {
+            Client *c = dynamic_cast<Client *>(*it);
+            if (!c) {
+                ++it;
+                continue;
+            }
             // group transients in the old group are no longer transient for it
-            if ((*it)->groupTransient() && (*it)->group() != group())
-                it = transients_list.erase(it);
-            else
+            if (c->groupTransient() && c->group() != group()) {
+                removeTransientFromList(c);
+                it = transients().constBegin(); // restart, just in case something more has changed with the list
+            } else
                 ++it;
         }
         if (groupTransient()) {

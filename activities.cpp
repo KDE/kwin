@@ -108,8 +108,13 @@ void Activities::toggleClientOnActivity(Client* c, const QString &activity, bool
     auto transients_stacking_order = ws->ensureStackingOrder(c->transients());
     for (auto it = transients_stacking_order.constBegin();
             it != transients_stacking_order.constEnd();
-            ++it)
-        toggleClientOnActivity(*it, activity, dont_activate);
+            ++it) {
+        Client *c = dynamic_cast<Client *>(*it);
+        if (!c) {
+            continue;
+        }
+        toggleClientOnActivity(c, activity, dont_activate);
+    }
     ws->updateClientArea();
 }
 

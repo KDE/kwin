@@ -268,6 +268,7 @@ public:
      * @todo: remove boolean trap
      **/
     virtual bool hasTransient(const AbstractClient* c, bool indirect) const;
+    const QList<AbstractClient*>& transients() const; // Is not indirect
     virtual QList<AbstractClient*> mainClients() const; // Call once before loop , is not indirect
     QList<AbstractClient*> allMainClients() const; // Call once before loop , is indirect
     /**
@@ -497,6 +498,12 @@ protected:
     void updateColorScheme(QString path);
 
     void setTransientFor(AbstractClient *transientFor);
+    virtual void addTransient(AbstractClient* cl);
+    virtual void removeTransient(AbstractClient* cl);
+    /**
+     * Just removes the @p cl from the transients without any further checks.
+     **/
+    void removeTransientFromList(AbstractClient* cl);
 
 private:
     void handlePaletteChange();
@@ -526,6 +533,7 @@ private:
     KWayland::Server::PlasmaWindowInterface *m_windowManagementInterface = nullptr;
 
     AbstractClient *m_transientFor = nullptr;
+    QList<AbstractClient*> m_transients;
     bool m_modal = false;
 };
 
@@ -537,6 +545,11 @@ inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
 inline void AbstractClient::resizeWithChecks(const QSize& s, AbstractClient::ForceGeometry_t force)
 {
     resizeWithChecks(s.width(), s.height(), force);
+}
+
+inline const QList<AbstractClient*>& AbstractClient::transients() const
+{
+    return m_transients;
 }
 
 }

@@ -873,9 +873,9 @@ void Client::updateLayer()
         (*it)->updateLayer();
 }
 
-bool rec_checkTransientOnTop(const ClientList &transients, const Client *topmost)
+bool rec_checkTransientOnTop(const QList<AbstractClient*> &transients, const Client *topmost)
 {
-    foreach (const Client *transient, transients) {
+    foreach (const AbstractClient *transient, transients) {
         if (transient == topmost || rec_checkTransientOnTop(transient->transients(), topmost)) {
             return true;
         }

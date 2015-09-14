@@ -861,4 +861,21 @@ bool AbstractClient::isModal() const
     return m_modal;
 }
 
+void AbstractClient::addTransient(AbstractClient *cl)
+{
+    assert(!m_transients.contains(cl));
+    assert(cl != this);
+    m_transients.append(cl);
+}
+
+void AbstractClient::removeTransient(AbstractClient *cl)
+{
+    m_transients.removeAll(cl);
+}
+
+void AbstractClient::removeTransientFromList(AbstractClient *cl)
+{
+    m_transients.removeAll(cl);
+}
+
 }

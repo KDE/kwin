@@ -262,7 +262,7 @@ public:
         return m_userActionsMenu;
     }
 
-    void updateMinimizedOfTransients(Client*);
+    void updateMinimizedOfTransients(AbstractClient*);
     void updateOnAllDesktopsOfTransients(Client*);
     void checkTransients(xcb_window_t w);
 
