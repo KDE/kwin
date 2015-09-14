@@ -245,7 +245,7 @@ public:
     ClientList ensureStackingOrder(const ClientList& clients) const;
     QList<AbstractClient*> ensureStackingOrder(const QList<AbstractClient*> &clients) const;
 
-    Client* topClientOnDesktop(int desktop, int screen, bool unconstrained = false,
+    AbstractClient* topClientOnDesktop(int desktop, int screen, bool unconstrained = false,
                                bool only_normal = true) const;
     AbstractClient* findDesktop(bool topmost, int desktop) const;
     void sendClientToDesktop(AbstractClient* c, int desktop, bool dont_activate);

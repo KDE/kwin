@@ -235,7 +235,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
   doesn't accept focus it's excluded.
  */
 // TODO misleading name for this method, too many slightly different ways to use it
-Client* Workspace::topClientOnDesktop(int desktop, int screen, bool unconstrained, bool only_normal) const
+AbstractClient* Workspace::topClientOnDesktop(int desktop, int screen, bool unconstrained, bool only_normal) const
 {
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     ToplevelList list;
@@ -246,7 +246,7 @@ Client* Workspace::topClientOnDesktop(int desktop, int screen, bool unconstraine
     for (int i = list.size() - 1;
             i >= 0;
             --i) {
-        Client *c = qobject_cast<Client*>(list.at(i));
+        AbstractClient *c = qobject_cast<AbstractClient*>(list.at(i));
         if (!c) {
             continue;
         }
