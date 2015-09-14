@@ -389,14 +389,8 @@ void DesktopGridEffect::slotWindowAdded(EffectWindow* w)
     if (isUsingPresentWindows()) {
         if (!isRelevantWithPresentWindows(w))
             return; // don't add
-        if (w->isOnAllDesktops()) {
-            for (int i = 0; i < effects->numberOfDesktops(); i++) {
-                WindowMotionManager& manager = m_managers[ i*effects->numScreens()+w->screen()];
-                manager.manage(w);
-                m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
-            }
-        } else {
-            WindowMotionManager& manager = m_managers[(w->desktop()-1)*effects->numScreens()+w->screen()];
+        foreach (const int i, desktopList(w)) {
+            WindowMotionManager& manager = m_managers[ i*effects->numScreens()+w->screen()];
             manager.manage(w);
             m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
         }
@@ -413,18 +407,10 @@ void DesktopGridEffect::slotWindowClosed(EffectWindow* w)
         windowMove = NULL;
     }
     if (isUsingPresentWindows()) {
-        if (w->isOnAllDesktops()) {
-            for (int i = 0; i < effects->numberOfDesktops(); i++) {
-                WindowMotionManager& manager = m_managers[i*effects->numScreens()+w->screen()];
-                manager.unmanage(w);
-                m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
-            }
-        } else {
-            if (w->desktop() <= effects->numberOfDesktops()) {
-                WindowMotionManager& manager = m_managers[(w->desktop()-1)*effects->numScreens()+w->screen()];
-                manager.unmanage(w);
-                m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
-            }
+        foreach (const int i, desktopList(w)) {
+            WindowMotionManager& manager = m_managers[i*effects->numScreens()+w->screen()];
+            manager.unmanage(w);
+            m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
         }
     }
     effects->addRepaintFull();
@@ -450,13 +436,8 @@ void DesktopGridEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const QR
     if (w == windowMove && wasWindowMove)
         return;
     if (isUsingPresentWindows()) {
-        if (w->isOnAllDesktops()) {
-            for (int i = 0; i < effects->numberOfDesktops(); i++) {
-                WindowMotionManager& manager = m_managers[i*effects->numScreens()+w->screen()];
-                m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
-            }
-        } else {
-            WindowMotionManager& manager = m_managers[(w->desktop()-1)*effects->numScreens()+w->screen()];
+        foreach (const int i, desktopList(w)) {
+            WindowMotionManager& manager = m_managers[i*effects->numScreens()+w->screen()];
             m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
         }
     }
@@ -495,12 +476,13 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                 (me->pos() - dragStartPos).manhattanLength() > QApplication::startDragDistance()) {
             // Handle window moving
             if (!wasWindowMove) { // Activate on move
-                if (isUsingPresentWindows() && windowMove->isOnAllDesktops()) {
-                    for (int i = 0; i < effects->numberOfDesktops(); ++i) {
+                if (isUsingPresentWindows()) {
+                    foreach (const int i, desktopList(windowMove)) {
+                        const int sourceDesktop = windowMove->isOnAllDesktops() ? d : windowMove->desktop();
                         WindowMotionManager& manager = m_managers[(i)*(effects->numScreens()) + windowMove->screen()];
-                        if ((i + 1) == d) {
+                        if ((i + 1) == sourceDesktop) {
                             const QRectF transformedGeo = manager.transformedGeometry(windowMove);
-                            const QPointF pos = scalePos(transformedGeo.topLeft().toPoint(), d, windowMove->screen());
+                            const QPointF pos = scalePos(transformedGeo.topLeft().toPoint(), sourceDesktop, windowMove->screen());
                             const QSize size(scale[windowMove->screen()] *(float)transformedGeo.width(),
                                              scale[windowMove->screen()] *(float)transformedGeo.height());
                             m_windowMoveGeometry = QRect(pos.toPoint(), size);
@@ -513,21 +495,6 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                         }
                         m_proxy->calculateWindowTransformations(manager.managedWindows(), windowMove->screen(), manager);
                     }
-                } else if (isUsingPresentWindows()) {
-                    WindowMotionManager& manager = m_managers[(windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen()];
-                    const QRectF transformedGeo = manager.transformedGeometry(windowMove);
-                    const QPointF pos = scalePos(transformedGeo.topLeft().toPoint(), windowMove->desktop(), windowMove->screen());
-                    const QSize size(scale[windowMove->screen()] *(float)transformedGeo.width(),
-                                     scale[windowMove->screen()] *(float)transformedGeo.height());
-                    m_windowMoveGeometry = QRect(pos.toPoint(), size);
-                    m_windowMoveStartPoint = me->pos();
-
-                    manager.unmanage(windowMove);
-                    if (EffectWindow* modal = windowMove->findModal()) {
-                        if (manager.isManaging(modal))
-                            manager.unmanage(modal);
-                    }
-                    m_proxy->calculateWindowTransformations(manager.managedWindows(), windowMove->screen(), manager);
                 }
                 effects->defineCursor(Qt::ClosedHandCursor);
             }
@@ -610,30 +577,26 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
         } else if ((me->buttons() == Qt::MidButton || me->buttons() == Qt::RightButton) && windowMove == NULL) {
             EffectWindow* w = windowAt(me->pos());
             if (w != NULL) {
+                int desktop = 0;
                 if (w->isOnAllDesktops()) {
-                    const int desktop = posToDesktop(me->pos());
+                    desktop = posToDesktop(me->pos());
                     effects->windowToDesktop(w, desktop);
-                    if (isUsingPresentWindows()) {
-                        for (int i = 0; i < effects->numberOfDesktops(); i++) {
-                            if (i != desktop - 1) {
-                                WindowMotionManager& manager = m_managers[ i*effects->numScreens() + w->screen()];
-                                manager.unmanage(w);
-                                m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
-                            }
-                        }
-                    }
                 } else {
-                    if (isUsingPresentWindows()) {
-                        const int desktop = w->desktop();
-                        for (int i = 0; i < effects->numberOfDesktops(); i++) {
-                            if (i != desktop - 1) {
-                                WindowMotionManager& manager = m_managers[ i*effects->numScreens() + w->screen()];
+                    desktop = w->desktop();
+                    effects->windowToDesktop(w, NET::OnAllDesktops);
+                }
+                const bool isOnAllDesktops = w->isOnAllDesktops();
+                if (isUsingPresentWindows()) {
+                    for (int i = 0; i < effects->numberOfDesktops(); i++) {
+                        if (i != desktop - 1) {
+                            WindowMotionManager& manager = m_managers[ i*effects->numScreens() + w->screen()];
+                            if (isOnAllDesktops)
                                 manager.manage(w);
-                                m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
-                            }
+                            else
+                                manager.unmanage(w);
+                            m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
                         }
                     }
-                    effects->windowToDesktop(w, NET::OnAllDesktops);
                 }
                 effects->addRepaintFull();
             }
@@ -653,25 +616,16 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
         if (windowMove) {
             if (wasWindowMove) {
                 if (isUsingPresentWindows()) {
-                    if (windowMove->isOnAllDesktops()) {
-                        const int targetDesktop = posToDesktop(cursorPos());
-                        for (int i = 0; i < effects->numberOfDesktops(); ++i) {
-                            WindowMotionManager& manager = m_managers[(i)*(effects->numScreens()) + windowMove->screen()];
-                            manager.manage(windowMove);
-                            if (EffectWindow* modal = windowMove->findModal())
-                                manager.manage(modal);
-                            if (i + 1 == targetDesktop) {
-                                // for the desktop the window is dropped on, we use the current geometry
-                                manager.setTransformedGeometry(windowMove, moveGeometryToDesktop(targetDesktop));
-                            }
-                            m_proxy->calculateWindowTransformations(manager.managedWindows(), windowMove->screen(), manager);
-                        }
-                    } else {
-                        WindowMotionManager& manager = m_managers[(windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen()];
+                    const int targetDesktop = windowMove->isOnAllDesktops() ? posToDesktop(cursorPos()) : windowMove->desktop();
+                    foreach (const int i, desktopList(windowMove)) {
+                        WindowMotionManager& manager = m_managers[(i)*(effects->numScreens()) + windowMove->screen()];
                         manager.manage(windowMove);
                         if (EffectWindow* modal = windowMove->findModal())
                             manager.manage(modal);
-                        manager.setTransformedGeometry(windowMove, moveGeometryToDesktop(windowMove->desktop()));
+                        if (i + 1 == targetDesktop) {
+                            // for the desktop the window is dropped on, we use the current geometry
+                            manager.setTransformedGeometry(windowMove, moveGeometryToDesktop(targetDesktop));
+                        }
                         m_proxy->calculateWindowTransformations(manager.managedWindows(), windowMove->screen(), manager);
                     }
                     effects->addRepaintFull();
@@ -1397,6 +1351,30 @@ void DesktopGridEffect::desktopsRemoved(int old)
 
     // and repaint
     effects->addRepaintFull();
+}
+
+QVector<int> DesktopGridEffect::desktopList(const EffectWindow *w) const
+{
+    if (w->isOnAllDesktops()) {
+        static QVector<int> allDesktops;
+        if (allDesktops.count() != effects->numberOfDesktops()) {
+            allDesktops.resize(effects->numberOfDesktops());
+            for (int i = 0; i < effects->numberOfDesktops(); ++i)
+                allDesktops[i] = i;
+        }
+        return allDesktops;
+    }
+
+    if (w->desktop() > effects->numberOfDesktops() || w->desktop() < 1) { // sic! desktops are [1,n]
+        static QVector<int> emptyVector;
+        emptyVector.resize(0);
+        return emptyVector;
+    }
+
+    static QVector<int> singleDesktop;
+    singleDesktop.resize(1);
+    singleDesktop[0] = w->desktop() - 1;
+    return singleDesktop;
 }
 
 bool DesktopGridEffect::isActive() const

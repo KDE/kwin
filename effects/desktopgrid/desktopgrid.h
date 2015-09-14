@@ -138,6 +138,7 @@ private:
     QRectF moveGeometryToDesktop(int desktop) const;
     void desktopsAdded(int old);
     void desktopsRemoved(int old);
+    QVector<int> desktopList(const EffectWindow *w) const;
 
     QList<ElectricBorder> borderActivate;
     int zoomDuration;
