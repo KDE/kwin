@@ -1211,25 +1211,8 @@ void Client::doSetSkipPager()
 
 void Client::doSetDesktop(int desktop, int was_desk)
 {
-    info->setDesktop(desktop);
-    if ((was_desk == NET::OnAllDesktops) != (desktop == NET::OnAllDesktops)) {
-        // onAllDesktops changed
-        workspace()->updateOnAllDesktopsOfTransients(this);
-    }
-
-    auto transients_stacking_order = workspace()->ensureStackingOrder(transients());
-    for (auto it = transients_stacking_order.constBegin();
-            it != transients_stacking_order.constEnd();
-            ++it)
-        (*it)->setDesktop(desktop);
-
-    if (isModal())  // if a modal dialog is moved, move the mainwindow with it as otherwise
-        // the (just moved) modal dialog will confusingly return to the mainwindow with
-        // the next desktop change
-    {
-        foreach (AbstractClient * c2, mainClients())
-        c2->setDesktop(desktop);
-    }
+    Q_UNUSED(desktop)
+    Q_UNUSED(was_desk)
     updateVisibility();
 
     // Update states of all other windows in this group
