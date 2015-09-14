@@ -867,11 +867,7 @@ void Client::updateLayer()
 {
     if (layer() == belongsToLayer())
         return;
-    StackingUpdatesBlocker blocker(workspace());
-    invalidateLayer(); // invalidate, will be updated when doing restacking
-    for (auto it = transients().constBegin(),
-                                  end = transients().constEnd(); it != end; ++it)
-        (*it)->updateLayer();
+    AbstractClient::updateLayer();
 }
 
 bool rec_checkTransientOnTop(const QList<AbstractClient*> &transients, const Client *topmost)

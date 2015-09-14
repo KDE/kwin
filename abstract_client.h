@@ -505,6 +505,8 @@ protected:
      **/
     void removeTransientFromList(AbstractClient* cl);
 
+    virtual void invalidateLayer();
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;

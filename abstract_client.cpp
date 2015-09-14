@@ -191,6 +191,15 @@ void AbstractClient::doSetActive()
 
 void AbstractClient::updateLayer()
 {
+    StackingUpdatesBlocker blocker(workspace());
+    invalidateLayer(); // invalidate, will be updated when doing restacking
+    for (auto it = transients().constBegin(),
+                                  end = transients().constEnd(); it != end; ++it)
+        (*it)->updateLayer();
+}
+
+void AbstractClient::invalidateLayer()
+{
 }
 
 void AbstractClient::setKeepAbove(bool b)

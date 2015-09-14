@@ -267,7 +267,6 @@ public:
 
     virtual Layer layer() const;
     Layer belongsToLayer() const;
-    void invalidateLayer();
     void updateLayer() override;
     int sessionStackingOrder() const;
 
@@ -521,6 +520,7 @@ protected:
     void doMinimize() override;
     void doSetSkipPager() override;
     void doSetSkipTaskbar() override;
+    void invalidateLayer() override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
