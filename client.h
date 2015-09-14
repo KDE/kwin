@@ -87,10 +87,6 @@ class Client
      **/
     Q_PROPERTY(bool maximizable READ isMaximizable)
     /**
-     * Whether the Client represents a modal window.
-     **/
-    Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
-    /**
      * Whether the Client is moveable. Even if it is not moveable, it might be possible to move
      * it to another screen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
@@ -275,9 +271,6 @@ public:
     void invalidateLayer();
     void updateLayer() override;
     int sessionStackingOrder() const;
-
-    void setModal(bool modal);
-    bool isModal() const;
 
     // Auxiliary functions, depend on the windowType
     bool wantsInput() const override;
@@ -544,7 +537,6 @@ Q_SIGNALS:
     void clientStartUserMovedResized(KWin::Client*);
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
-    void modalChanged();
     void moveResizedChanged();
 
     /**
@@ -722,7 +714,6 @@ private:
     uint deleting : 1; ///< True when doing cleanup and destroying the client
     Xcb::MotifHints m_motif;
     uint hidden : 1; ///< Forcibly hidden by calling hide()
-    uint modal : 1; ///< NET::Modal
     uint noborder : 1;
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
@@ -898,11 +889,6 @@ inline Client::QuickTileMode Client::quickTileMode() const
 inline bool Client::isFullScreen() const
 {
     return fullscreen_mode != FullScreenNone;
-}
-
-inline bool Client::isModal() const
-{
-    return modal;
 }
 
 inline bool Client::hasNETSupport() const

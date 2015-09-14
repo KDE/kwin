@@ -155,7 +155,6 @@ Client::Client()
     deleting = false;
     fullscreen_mode = FullScreenNone;
     hidden = false;
-    modal = false;
     noborder = false;
     app_noborder = false;
     ignore_focus_stealing = false;
@@ -1208,17 +1207,6 @@ void Client::doSetSkipTaskbar()
 void Client::doSetSkipPager()
 {
     info->setState(skipPager() ? NET::SkipPager : NET::States(0), NET::SkipPager);
-}
-
-void Client::setModal(bool m)
-{
-    // Qt-3.2 can have even modal normal windows :(
-    if (modal == m)
-        return;
-    modal = m;
-    emit modalChanged();
-    // Changing modality for a mapped window is weird (?)
-    // _NET_WM_STATE_MODAL should possibly rather be _NET_WM_WINDOW_TYPE_MODAL_DIALOG
 }
 
 void Client::doSetDesktop(int desktop, int was_desk)

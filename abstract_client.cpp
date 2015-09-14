@@ -845,4 +845,20 @@ QList<AbstractClient*> AbstractClient::allMainClients() const
     return result;
 }
 
+void AbstractClient::setModal(bool m)
+{
+    // Qt-3.2 can have even modal normal windows :(
+    if (m_modal == m)
+        return;
+    m_modal = m;
+    emit modalChanged();
+    // Changing modality for a mapped window is weird (?)
+    // _NET_WM_STATE_MODAL should possibly rather be _NET_WM_WINDOW_TYPE_MODAL_DIALOG
+}
+
+bool AbstractClient::isModal() const
+{
+    return m_modal;
+}
+
 }

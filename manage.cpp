@@ -138,7 +138,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     updateUrgency();
     updateAllowedActions(); // Group affects isMinimizable()
 
-    modal = (info->state() & NET::Modal) != 0;   // Needs to be valid before handling groups
+    setModal((info->state() & NET::Modal) != 0);   // Needs to be valid before handling groups
     readTransientProperty(transientCookie);
     getIcons();
     m_geometryHints.read();

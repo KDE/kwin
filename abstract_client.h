@@ -170,6 +170,10 @@ class AbstractClient : public Toplevel
      * The Client to which this Client is a transient if any.
      **/
     Q_PROPERTY(KWin::AbstractClient *transientFor READ transientFor NOTIFY transientChanged)
+    /**
+     * Whether the Client represents a modal window.
+     **/
+    Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
 public:
     virtual ~AbstractClient();
 
@@ -391,6 +395,9 @@ public:
 
     virtual bool hasStrut() const;
 
+    void setModal(bool modal);
+    bool isModal() const;
+
     /**
      * Determines the mouse command for the given @p button in the current state.
      *
@@ -431,6 +438,7 @@ Q_SIGNALS:
     void clientMaximizedStateChanged(KWin::AbstractClient*, MaximizeMode);
     void clientMaximizedStateChanged(KWin::AbstractClient* c, bool h, bool v);
     void transientChanged();
+    void modalChanged();
 
 protected:
     AbstractClient();
@@ -518,6 +526,7 @@ private:
     KWayland::Server::PlasmaWindowInterface *m_windowManagementInterface = nullptr;
 
     AbstractClient *m_transientFor = nullptr;
+    bool m_modal = false;
 };
 
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
