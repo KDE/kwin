@@ -1011,7 +1011,7 @@ WindowQuadList WindowQuadList::splitAtX(double x) const
             ret.append(quad);
             continue;
         }
-        if (quad.left() == quad.right()) { // quad has no size
+        if (quad.top() == quad.bottom() || quad.left() == quad.right()) { // quad has no size
             ret.append(quad);
             continue;
         }
@@ -1043,7 +1043,7 @@ WindowQuadList WindowQuadList::splitAtY(double y) const
             ret.append(quad);
             continue;
         }
-        if (quad.top() == quad.bottom()) { // quad has no size
+        if (quad.top() == quad.bottom() || quad.left() == quad.right()) { // quad has no size
             ret.append(quad);
             continue;
         }
