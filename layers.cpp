@@ -331,7 +331,7 @@ void Workspace::lowerClient(AbstractClient* c, bool nogroup)
         most_recently_raised = 0;
 }
 
-void Workspace::lowerClientWithinApplication(Client* c)
+void Workspace::lowerClientWithinApplication(AbstractClient* c)
 {
     if (!c)
         return;
@@ -346,11 +346,11 @@ void Workspace::lowerClientWithinApplication(Client* c)
     for (ToplevelList::Iterator it = unconstrained_stacking_order.begin();
             it != unconstrained_stacking_order.end();
             ++it) {
-        Client *client = qobject_cast<Client*>(*it);
+        AbstractClient *client = qobject_cast<AbstractClient*>(*it);
         if (!client) {
             continue;
         }
-        if (Client::belongToSameApplication(client, c)) {
+        if (AbstractClient::belongToSameApplication(client, c)) {
             unconstrained_stacking_order.insert(it, c);
             lowered = true;
             break;

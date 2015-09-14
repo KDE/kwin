@@ -484,7 +484,7 @@ private:
     void propagateClients(bool propagate_new_clients);   // Called only from updateStackingOrder
     ToplevelList constrainedStackingOrder();
     void raiseClientWithinApplication(Client* c);
-    void lowerClientWithinApplication(Client* c);
+    void lowerClientWithinApplication(AbstractClient* c);
     bool allowFullClientRaising(const AbstractClient* c, xcb_timestamp_t timestamp);
     bool keepTransientAbove(const AbstractClient* mainwindow, const AbstractClient* transient);
     void blockStackingUpdates(bool block);
