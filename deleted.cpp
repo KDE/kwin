@@ -179,7 +179,8 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
 
 void Deleted::mainClientClosed(Toplevel *client)
 {
-    m_mainClients.removeAll(static_cast<Client*>(client));
+    if (AbstractClient *c = dynamic_cast<AbstractClient*>(client))
+        m_mainClients.removeAll(c);
 }
 
 xcb_window_t Deleted::frameId() const

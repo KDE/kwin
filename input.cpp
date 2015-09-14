@@ -1130,8 +1130,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
             // a deleted window doesn't get mouse events
             continue;
         }
-        if (t->isClient()) {
-            Client *c = static_cast<Client*>(t);
+        if (AbstractClient *c = dynamic_cast<AbstractClient*>(t)) {
             if (!c->isOnCurrentActivity() || !c->isOnCurrentDesktop() || c->isMinimized() || !c->isCurrentTab()) {
                 continue;
             }

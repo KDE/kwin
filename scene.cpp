@@ -275,13 +275,13 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
         opaqueFullscreen = false; // TODO: do we care about unmanged windows here (maybe input windows?)
         if (w->isOpaque()) {
-            Client *c = NULL;
-            if (topw->isClient()) {
-                c = static_cast<Client*>(topw);
+            AbstractClient *c = dynamic_cast<AbstractClient*>(topw);
+            if (c) {
                 opaqueFullscreen = c->isFullScreen();
             }
+            Client *cc = dynamic_cast<Client*>(c);
             // the window is fully opaque
-            if (c && c->decorationHasAlpha()) {
+            if (cc && cc->decorationHasAlpha()) {
                 // decoration uses alpha channel, so we may not exclude it in clipping
                 data.clip = w->clientShape().translated(w->x(), w->y());
             } else {
@@ -739,8 +739,7 @@ const QRegion &Scene::Window::shape() const
 
 QRegion Scene::Window::clientShape() const
 {
-    if (toplevel->isClient()) {
-        Client *c = static_cast< Client * > (toplevel);
+    if (AbstractClient *c = dynamic_cast< AbstractClient * > (toplevel)) {
         if (c->isShade())
             return QRegion();
     }
@@ -788,14 +787,16 @@ void Scene::Window::resetPaintingEnabled()
     }
     if (!toplevel->isOnCurrentActivity())
         disable_painting |= PAINT_DISABLED_BY_ACTIVITY;
-    if (toplevel->isClient()) {
-        Client *c = static_cast<Client*>(toplevel);
+    if (AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel)) {
         if (c->isMinimized())
             disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
         if (c->tabGroup() && c != c->tabGroup()->current())
             disable_painting |= PAINT_DISABLED_BY_TAB_GROUP;
-        else if (c->isHiddenInternal())
-            disable_painting |= PAINT_DISABLED;
+        if (Client *cc = dynamic_cast<Client*>(c)) {
+            if (cc->isHiddenInternal()) {
+                disable_painting |= PAINT_DISABLED;
+            }
+        }
     }
 }
 

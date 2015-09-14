@@ -315,7 +315,10 @@ void Workspace::lowerClient(AbstractClient* c, bool nogroup)
     unconstrained_stacking_order.prepend(c);
     if (!nogroup && c->isTransient()) {
         // lower also all windows in the group, in their reversed stacking order
-        ClientList wins = ensureStackingOrder(static_cast<Client*>(c)->group()->members());
+        ClientList wins;
+        if (Client *client = dynamic_cast<Client*>(c)) {
+            wins = ensureStackingOrder(client->group()->members());
+        }
         for (int i = wins.size() - 1;
                 i >= 0;
                 --i) {
