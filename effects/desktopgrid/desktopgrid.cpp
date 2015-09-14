@@ -504,8 +504,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                 effects->moveWindow(windowMove, unscalePos(me->pos(), NULL) + windowMoveDiff, true, 1.0 / scale[screen]);
             }
             if (d != highlightedDesktop) {
-                if (!windowMove->isOnAllDesktops())
-                    effects->windowToDesktop(windowMove, d);   // Not true all desktop move
+                effects->windowToDesktop(windowMove, d);   // Not true all desktop move
                 const int screen = effects->screenNumber(me->pos());
                 if (screen != windowMove->screen())
                     effects->windowToScreen(windowMove, screen);
