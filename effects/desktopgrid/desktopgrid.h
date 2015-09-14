@@ -154,6 +154,7 @@ private:
     bool keyboardGrab;
     bool wasWindowMove, wasDesktopMove, isValidMove;
     EffectWindow* windowMove;
+    EffectWindow* m_highlightWindow;
     QPoint windowMoveDiff;
     QPoint dragStartPos;
 

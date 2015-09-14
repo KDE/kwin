@@ -55,6 +55,7 @@ DesktopGridEffect::DesktopGridEffect()
     , wasDesktopMove(false)
     , isValidMove(false)
     , windowMove(NULL)
+    , m_highlightWindow(nullptr)
     , windowMoveDiff()
     , gridSize()
     , orientation(Qt::Horizontal)
@@ -283,8 +284,14 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
             }
         }
 
+        const bool isOnThisDesktop = !w->isOnAllDesktops() || paintingDesktop == highlightedDesktop;
+        const bool zoom = w == m_highlightWindow  && isOnThisDesktop;
         qreal xScale = data.xScale();
         qreal yScale = data.yScale();
+        if (zoom) {
+            xScale *= 1.05f;
+            yScale *= 1.05f;
+        }
 
         // Don't change brightness of windows on all desktops as this causes flickering
         if (!w->isOnAllDesktops() || w->isDesktop())
@@ -311,6 +318,10 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
                         mask |= PAINT_WINDOW_LANCZOS;
                 } else if (w->screen() != screen)
                     quadsAdded = true; // we don't want parts of overlapping windows on the other screen
+            }
+            if (zoom) {
+                transformedGeo.translate(-0.025f*transformedGeo.width(),
+                                         -0.025f*transformedGeo.height());
             }
             if (!quadsAdded) {
                 foreach (const WindowQuad & quad, data.quads) {
@@ -474,6 +485,14 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
 
     if (e->type() == QEvent::MouseMove) {
         int d = posToDesktop(me->pos());
+        if (!(wasDesktopMove || wasWindowMove)) {
+            EffectWindow *oldHighlightWindow = m_highlightWindow;
+            m_highlightWindow = windowAt(me->pos());
+            if (m_highlightWindow && m_highlightWindow->isDesktop())
+                m_highlightWindow = nullptr;
+            if (oldHighlightWindow != m_highlightWindow)
+                effects->addRepaintFull();
+        }
         if (windowMove != NULL &&
                 (me->pos() - dragStartPos).manhattanLength() > QApplication::startDragDistance()) {
             // Handle window moving
