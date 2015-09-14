@@ -263,7 +263,7 @@ public:
     }
 
     void updateMinimizedOfTransients(AbstractClient*);
-    void updateOnAllDesktopsOfTransients(Client*);
+    void updateOnAllDesktopsOfTransients(AbstractClient*);
     void checkTransients(xcb_window_t w);
 
     void storeSession(KConfig* config, SMSavePhase phase);

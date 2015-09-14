@@ -382,7 +382,7 @@ void Workspace::updateMinimizedOfTransients(AbstractClient* c)
 /*!
   Sets the client \a c's transient windows' on_all_desktops property to \a on_all_desktops.
  */
-void Workspace::updateOnAllDesktopsOfTransients(Client* c)
+void Workspace::updateOnAllDesktopsOfTransients(AbstractClient* c)
 {
     for (auto it = c->transients().constBegin();
             it != c->transients().constEnd();
