@@ -1676,8 +1676,8 @@ EffectWindowList getMainWindows(Toplevel *toplevel)
 
 EffectWindowList EffectWindowImpl::mainWindows() const
 {
-    if (toplevel->isClient()) {
-        return getMainWindows<Client>(toplevel);
+    if (dynamic_cast<AbstractClient*>(toplevel)) {
+        return getMainWindows<AbstractClient>(toplevel);
     } else if (toplevel->isDeleted()) {
         return getMainWindows<Deleted>(toplevel);
     }
