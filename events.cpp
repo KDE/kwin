@@ -1316,21 +1316,31 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
 
     QuickTileMode mode = QuickTileNone;
-    const QRect rootRect = screens()->geometry();
     bool innerBorder = false;
     for (int i=0; i < screens()->count(); ++i) {
 
         if (!screens()->geometry(i).contains(QPoint(xroot, yroot)))
             continue;
 
+        auto isInScreen = [i](const QPoint &pt) {
+            for (int j = 0; j < screens()->count(); ++j) {
+                if (j == i)
+                    continue;
+                if (screens()->geometry(j).contains(pt)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
         QRect area = workspace()->clientArea(MaximizeArea, QPoint(xroot, yroot), desktop());
         if (options->electricBorderTiling()) {
             if (xroot <= area.x() + 20) {
                 mode |= QuickTileLeft;
-                innerBorder = rootRect.x() != area.x();
+                innerBorder = isInScreen(QPoint(area.x() - 1, yroot));
             } else if (xroot >= area.x() + area.width() - 20) {
                 mode |= QuickTileRight;
-                innerBorder = rootRect.right() != area.right();
+                innerBorder = isInScreen(QPoint(area.right() + 1, yroot));
             }
         }
 
@@ -1341,7 +1351,7 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
                 mode |= QuickTileBottom;
         } else if (options->electricBorderMaximize() && yroot <= area.y() + 5 && isMaximizable()) {
             mode = QuickTileMaximize;
-            innerBorder = rootRect.y() != area.y();
+            innerBorder = isInScreen(QPoint(xroot, area.y() - 1));
         }
         break; // no point in checking other screens to contain this... "point"...
     }
@@ -1353,7 +1363,8 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
                 m_electricMaximizingDelay->setInterval(250);
                 m_electricMaximizingDelay->setSingleShot(true);
                 connect(m_electricMaximizingDelay, &QTimer::timeout, [this]() {
-                    setElectricBorderMaximizing(electricMode != QuickTileNone);
+                    if (isMove())
+                        setElectricBorderMaximizing(electricMode != QuickTileNone);
                 });
             }
             m_electricMaximizingDelay->start();
