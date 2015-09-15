@@ -293,6 +293,7 @@ InputRedirection::InputRedirection(QObject *parent)
     }
 #endif
     connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);
+    reconfigure();
 }
 
 InputRedirection::~InputRedirection()
@@ -370,7 +371,22 @@ void InputRedirection::setupWorkspace()
                                                                  m_xkb->getGroup());
             }
         );
+        connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
     }
+}
+
+void InputRedirection::reconfigure()
+{
+#if HAVE_INPUT
+    if (Application::usesLibinput()) {
+        const auto config = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("keyboard"));
+        const int delay = config.readEntry("RepeatDelay", 660);
+        const int rate = config.readEntry("RepeatRate", 25);
+        const bool enabled = config.readEntry("KeyboardRepeating", 0) == 0;
+
+        waylandServer()->seat()->setKeyRepeatInfo(enabled ? rate : 0, delay);
+    }
+#endif
 }
 
 static KWayland::Server::SeatInterface *findSeat()

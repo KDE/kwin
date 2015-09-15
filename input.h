@@ -209,6 +209,7 @@ private:
     bool areButtonsPressed() const;
     void updateKeyboardWindow();
     void setupWorkspace();
+    void reconfigure();
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
     QScopedPointer<Xkb> m_xkb;
