@@ -525,7 +525,7 @@ void ShellClient::findInternalWindow()
     }
     const QWindowList windows = kwinApp()->topLevelWindows();
     for (QWindow *w: windows) {
-        QScopedPointer<KWayland::Client::Surface> s(KWayland::Client::Surface::fromWindow(w));
+        auto s = KWayland::Client::Surface::fromWindow(w);
         if (!s) {
             continue;
         }
