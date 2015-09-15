@@ -49,9 +49,13 @@ private:
     DataDeviceManagerInterface *q;
     static const struct wl_data_device_manager_interface s_interface;
     static const quint32 s_version;
+    static const qint32 s_dataDeviceVersion;
+    static const qint32 s_dataSourceVersion;
 };
 
-const quint32 DataDeviceManagerInterface::Private::s_version = 1;
+const quint32 DataDeviceManagerInterface::Private::s_version = 2;
+const qint32 DataDeviceManagerInterface::Private::s_dataDeviceVersion = 2;
+const qint32 DataDeviceManagerInterface::Private::s_dataSourceVersion = 1;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_data_device_manager_interface DataDeviceManagerInterface::Private::s_interface = {
@@ -91,7 +95,7 @@ void DataDeviceManagerInterface::Private::createDataSourceCallback(wl_client *cl
 void DataDeviceManagerInterface::Private::createDataSource(wl_client *client, wl_resource *resource, uint32_t id)
 {
     DataSourceInterface *dataSource = new DataSourceInterface(q, resource);
-    dataSource->create(display->getConnection(client), wl_resource_get_version(resource), id);
+    dataSource->create(display->getConnection(client), qMin(wl_resource_get_version(resource), s_dataSourceVersion) , id);
     if (!dataSource->resource()) {
         wl_resource_post_no_memory(resource);
         delete dataSource;
@@ -110,7 +114,7 @@ void DataDeviceManagerInterface::Private::getDataDevice(wl_client *client, wl_re
     SeatInterface *s = SeatInterface::get(seat);
     Q_ASSERT(s);
     DataDeviceInterface *dataDevice = new DataDeviceInterface(s, q, resource);
-    dataDevice->create(display->getConnection(client), wl_resource_get_version(resource), id);
+    dataDevice->create(display->getConnection(client), qMin(wl_resource_get_version(resource), s_dataDeviceVersion), id);
     if (!dataDevice->resource()) {
         wl_resource_post_no_memory(resource);
         return;
