@@ -95,7 +95,17 @@ public:
     QRegion damage() const;
     QRegion opaque() const;
     QRegion input() const;
+    /**
+     * Use Surface::inputIsInfinite instead.
+     * @deprecated
+     * @see inputIsInfinite
+     */
     bool inputIsInfitine() const;
+    /**
+     * Replaces Surface::inputIsInfitine instead.
+     * @since 5.5
+     */
+    bool inputIsInfinite() const;
     qint32 scale() const;
     OutputInterface::Transform transform() const;
     /**

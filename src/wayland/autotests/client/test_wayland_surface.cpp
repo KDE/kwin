@@ -585,7 +585,7 @@ void TestWaylandSurface::testInput()
 
     // by default there should be an empty == infinite input region
     QCOMPARE(serverSurface->input(), QRegion());
-    QCOMPARE(serverSurface->inputIsInfitine(), true);
+    QCOMPARE(serverSurface->inputIsInfinite(), true);
 
     // let's install an input region
     s->setInputRegion(m_compositor->createRegion(QRegion(0, 10, 20, 30)).get());
@@ -593,7 +593,7 @@ void TestWaylandSurface::testInput()
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
     QCOMPARE(serverSurface->input(), QRegion());
-    QCOMPARE(serverSurface->inputIsInfitine(), true);
+    QCOMPARE(serverSurface->inputIsInfinite(), true);
     QCOMPARE(inputRegionChangedSpy.count(), 0);
 
     // so let's commit to get the new region
@@ -602,7 +602,7 @@ void TestWaylandSurface::testInput()
     QCOMPARE(inputRegionChangedSpy.count(), 1);
     QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion(0, 10, 20, 30));
     QCOMPARE(serverSurface->input(), QRegion(0, 10, 20, 30));
-    QCOMPARE(serverSurface->inputIsInfitine(), false);
+    QCOMPARE(serverSurface->inputIsInfinite(), false);
 
     // committing without setting a new region shouldn't change
     s->commit(Surface::CommitFlag::None);
@@ -610,7 +610,7 @@ void TestWaylandSurface::testInput()
     QCoreApplication::processEvents();
     QCOMPARE(inputRegionChangedSpy.count(), 1);
     QCOMPARE(serverSurface->input(), QRegion(0, 10, 20, 30));
-    QCOMPARE(serverSurface->inputIsInfitine(), false);
+    QCOMPARE(serverSurface->inputIsInfinite(), false);
 
     // let's change the input region
     s->setInputRegion(m_compositor->createRegion(QRegion(10, 20, 30, 40)).get());
@@ -619,7 +619,7 @@ void TestWaylandSurface::testInput()
     QCOMPARE(inputRegionChangedSpy.count(), 2);
     QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion(10, 20, 30, 40));
     QCOMPARE(serverSurface->input(), QRegion(10, 20, 30, 40));
-    QCOMPARE(serverSurface->inputIsInfitine(), false);
+    QCOMPARE(serverSurface->inputIsInfinite(), false);
 
     // and let's go back to an empty region
     s->setInputRegion();
@@ -628,7 +628,7 @@ void TestWaylandSurface::testInput()
     QCOMPARE(inputRegionChangedSpy.count(), 3);
     QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion());
     QCOMPARE(serverSurface->input(), QRegion());
-    QCOMPARE(serverSurface->inputIsInfitine(), true);
+    QCOMPARE(serverSurface->inputIsInfinite(), true);
 }
 
 void TestWaylandSurface::testDestroy()

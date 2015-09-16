@@ -461,6 +461,11 @@ QRegion SurfaceInterface::input() const
 
 bool SurfaceInterface::inputIsInfitine() const
 {
+    return inputIsInfinite();
+}
+
+bool SurfaceInterface::inputIsInfinite() const
+{
     Q_D();
     return d->current.inputIsInfinite;
 }
