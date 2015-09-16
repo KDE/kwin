@@ -413,7 +413,7 @@ void Workspace::raiseClientWithinApplication(AbstractClient* c)
     }
 }
 
-void Workspace::raiseClientRequest(KWin::Client *c, NET::RequestSource src, xcb_timestamp_t timestamp)
+void Workspace::raiseClientRequest(KWin::AbstractClient *c, NET::RequestSource src, xcb_timestamp_t timestamp)
 {
     if (src == NET::FromTool || allowFullClientRaising(c, timestamp))
         raiseClient(c);
@@ -435,6 +435,10 @@ void Workspace::lowerClientRequest(KWin::Client *c, NET::RequestSource src, xcb_
         lowerClientWithinApplication(c);
 }
 
+void Workspace::lowerClientRequest(KWin::AbstractClient *c)
+{
+    lowerClientWithinApplication(c);
+}
 
 void Workspace::restack(AbstractClient* c, AbstractClient* under, bool force)
 {

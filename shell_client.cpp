@@ -689,6 +689,13 @@ bool ShellClient::isInitialPositionSet() const
 void ShellClient::installQtExtendedSurface(QtExtendedSurfaceInterface *surface)
 {
     m_qtExtendedSurface = surface;
+
+    connect(m_qtExtendedSurface, &QtExtendedSurfaceInterface::raiseRequested, this, [this]() {
+        workspace()->raiseClientRequest(this);
+    });
+    connect(m_qtExtendedSurface, &QtExtendedSurfaceInterface::lowerRequested, this, [this]() {
+        workspace()->lowerClientRequest(this);
+    });
 }
 
 bool ShellClient::hasStrut() const
