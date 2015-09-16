@@ -25,11 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #include "eglonxbackend.h"
 #include <kwinxrenderutils.h>
+// KDE
+#include <KLocalizedString>
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 #include <QSocketNotifier>
 // kwayland
 #include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/display.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
 // system
@@ -115,6 +118,26 @@ void X11WindowedBackend::createWindow()
     xcb_create_window(m_connection, XCB_COPY_FROM_PARENT, m_window, m_screen->root,
                       0, 0, m_size.width(), m_size.height(),
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, mask, values);
+
+    m_winInfo = new NETWinInfo(m_connection, m_window, m_screen->root, NET::WMWindowType, NET::Properties2());
+    m_winInfo->setWindowType(NET::Normal);
+    m_winInfo->setName(i18n("KDE Wayland Compositor (%1)", waylandServer()->display()->socketName()).toUtf8().constData());
+    m_winInfo->setPid(QCoreApplication::applicationPid());
+    QIcon windowIcon = QIcon::fromTheme(QStringLiteral("kwin"));
+    auto addIcon = [this, &windowIcon] (const QSize &size) {
+        if (windowIcon.actualSize(size) != size) {
+            return;
+        }
+        NETIcon icon;
+        icon.data = windowIcon.pixmap(size).toImage().bits();
+        icon.size.width = size.width();
+        icon.size.height = size.height();
+        m_winInfo->setIcon(icon, false);
+    };
+    addIcon(QSize(16, 16));
+    addIcon(QSize(32, 32));
+    addIcon(QSize(48, 48));
+
     xcb_map_window(m_connection, m_window);
 
     m_protocols = protocolsAtom;

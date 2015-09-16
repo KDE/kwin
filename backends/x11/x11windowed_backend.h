@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 struct _XDisplay;
 typedef struct _XDisplay Display;
+class NETWinInfo;
 
 namespace KWin
 {
@@ -93,6 +94,7 @@ private:
     xcb_atom_t m_deleteWindowProtocol = XCB_ATOM_NONE;
     xcb_cursor_t m_cursor = XCB_CURSOR_NONE;
     Display *m_display = nullptr;
+    NETWinInfo *m_winInfo = nullptr;
 };
 
 }
