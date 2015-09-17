@@ -148,42 +148,23 @@ void ShellClient::debug(QDebug &stream) const
     Q_UNUSED(stream)
 }
 
-Layer ShellClient::layer() const
+Layer ShellClient::layerForDock() const
 {
-    // TODO: implement the rest
-    if (isDesktop())
-        return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
-    if (isDock()) {
-        if (workspace()->showingDesktop())
-            return NotificationLayer;
-        if (m_plasmaShellSurface) {
-            switch (m_plasmaShellSurface->panelBehavior()) {
-            case PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover:
-                return NormalLayer;
-            case PlasmaShellSurfaceInterface::PanelBehavior::AutoHide:
-                return AboveLayer;
-            case PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow:
-            case PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible:
-                return DockLayer;
-            default:
-                Q_UNREACHABLE();
-                break;
-            }
-        }
-        // slight hack for the 'allow window to cover panel' Kicker setting
-        // don't move keepbelow docks below normal window, but only to the same
-        // layer, so that both may be raised to cover the other
-        if (keepBelow())
+    if (m_plasmaShellSurface) {
+        switch (m_plasmaShellSurface->panelBehavior()) {
+        case PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover:
             return NormalLayer;
-        if (keepAbove()) // slight hack for the autohiding panels
+        case PlasmaShellSurfaceInterface::PanelBehavior::AutoHide:
             return AboveLayer;
-        return DockLayer;
+        case PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow:
+        case PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible:
+            return DockLayer;
+        default:
+            Q_UNREACHABLE();
+            break;
+        }
     }
-    if (isOnScreenDisplay())
-        return OnScreenDisplayLayer;
-    if (isFullScreen() && isActive())
-        return ActiveLayer;
-    return KWin::NormalLayer;
+    return AbstractClient::layerForDock();
 }
 
 bool ShellClient::shouldUnredirect() const

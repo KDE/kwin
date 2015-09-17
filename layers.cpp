@@ -820,61 +820,13 @@ void Client::doSetKeepBelow()
         tabGroup()->updateStates(this, TabGroup::Layer);
 }
 
-Layer Client::layer() const
+bool Client::belongsToDesktop() const
 {
-    if (in_layer == UnknownLayer)
-        const_cast< Client* >(this)->in_layer = belongsToLayer();
-    return in_layer;
-}
-
-Layer Client::belongsToLayer() const
-{
-    // NOTICE while showingDesktop, desktops move to the AboveLayer
-    // (interchangeable w/ eg. yakuake etc. which will at first remain visible)
-    // and the docks move into the NotificationLayer (which is between Above- and
-    // ActiveLayer, so that active fullscreen windows will still cover everything)
-    // Since the desktop is also activated, nothing should be in the ActiveLayer, though
-    if (isDesktop())
-        return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
-    if (isSplash())          // no damn annoying splashscreens
-        return NormalLayer; // getting in the way of everything else
-    if (isDock()) {
-        if (workspace()->showingDesktop())
-            return NotificationLayer;
-        // slight hack for the 'allow window to cover panel' Kicker setting
-        // don't move keepbelow docks below normal window, but only to the same
-        // layer, so that both may be raised to cover the other
-        if (keepBelow())
-            return NormalLayer;
-        if (keepAbove()) // slight hack for the autohiding panels
-            return AboveLayer;
-        return DockLayer;
+    foreach (const Client *c, group()->members()) {
+        if (c->isDesktop())
+            return true;
     }
-    if (isOnScreenDisplay())
-        return OnScreenDisplayLayer;
-    if (isNotification())
-        return NotificationLayer;
-    if (workspace()->showingDesktop()) {
-        foreach (const Client *c, group()->members()) {
-            if (c->isDesktop())
-                return AboveLayer;
-        }
-    }
-    if (keepBelow())
-        return BelowLayer;
-    if (isActiveFullScreen())
-        return ActiveLayer;
-    if (keepAbove())
-        return AboveLayer;
-
-    return NormalLayer;
-}
-
-void Client::updateLayer()
-{
-    if (layer() == belongsToLayer())
-        return;
-    AbstractClient::updateLayer();
+    return false;
 }
 
 bool rec_checkTransientOnTop(const QList<AbstractClient*> &transients, const Client *topmost)
@@ -889,6 +841,9 @@ bool rec_checkTransientOnTop(const QList<AbstractClient*> &transients, const Cli
 
 bool Client::isActiveFullScreen() const
 {
+    if (AbstractClient::isActiveFullScreen()) {
+        return true;
+    }
     if (!isFullScreen())
         return false;
 
@@ -896,7 +851,7 @@ bool Client::isActiveFullScreen() const
     // according to NETWM spec implementation notes suggests
     // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
     // we'll also take the screen into account
-    return ac && (ac == this || this->group() == ac->group() || ac->screen() != screen());
+    return ac && (this->group() == ac->group());
 }
 
 } // namespace

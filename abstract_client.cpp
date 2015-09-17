@@ -189,8 +189,17 @@ void AbstractClient::doSetActive()
 {
 }
 
+Layer AbstractClient::layer() const
+{
+    if (m_layer == UnknownLayer)
+        const_cast< AbstractClient* >(this)->m_layer = belongsToLayer();
+    return m_layer;
+}
+
 void AbstractClient::updateLayer()
 {
+    if (layer() == belongsToLayer())
+        return;
     StackingUpdatesBlocker blocker(workspace());
     invalidateLayer(); // invalidate, will be updated when doing restacking
     for (auto it = transients().constBegin(),
@@ -200,6 +209,57 @@ void AbstractClient::updateLayer()
 
 void AbstractClient::invalidateLayer()
 {
+    m_layer = UnknownLayer;
+}
+
+Layer AbstractClient::belongsToLayer() const
+{
+    // NOTICE while showingDesktop, desktops move to the AboveLayer
+    // (interchangeable w/ eg. yakuake etc. which will at first remain visible)
+    // and the docks move into the NotificationLayer (which is between Above- and
+    // ActiveLayer, so that active fullscreen windows will still cover everything)
+    // Since the desktop is also activated, nothing should be in the ActiveLayer, though
+    if (isDesktop())
+        return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
+    if (isSplash())          // no damn annoying splashscreens
+        return NormalLayer; // getting in the way of everything else
+    if (isDock()) {
+        if (workspace()->showingDesktop())
+            return NotificationLayer;
+        return layerForDock();
+    }
+    if (isOnScreenDisplay())
+        return OnScreenDisplayLayer;
+    if (isNotification())
+        return NotificationLayer;
+    if (workspace()->showingDesktop() && belongsToDesktop()) {
+        return AboveLayer;
+    }
+    if (keepBelow())
+        return BelowLayer;
+    if (isActiveFullScreen())
+        return ActiveLayer;
+    if (keepAbove())
+        return AboveLayer;
+
+    return NormalLayer;
+}
+
+bool AbstractClient::belongsToDesktop() const
+{
+    return false;
+}
+
+Layer AbstractClient::layerForDock() const
+{
+    // slight hack for the 'allow window to cover panel' Kicker setting
+    // don't move keepbelow docks below normal window, but only to the same
+    // layer, so that both may be raised to cover the other
+    if (keepBelow())
+        return NormalLayer;
+    if (keepAbove()) // slight hack for the autohiding panels
+        return AboveLayer;
+    return DockLayer;
 }
 
 void AbstractClient::setKeepAbove(bool b)
@@ -907,6 +967,18 @@ void AbstractClient::removeTransient(AbstractClient *cl)
 void AbstractClient::removeTransientFromList(AbstractClient *cl)
 {
     m_transients.removeAll(cl);
+}
+
+bool AbstractClient::isActiveFullScreen() const
+{
+    if (!isFullScreen())
+        return false;
+
+    const auto ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
+    // according to NETWM spec implementation notes suggests
+    // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
+    // we'll also take the screen into account
+    return ac && (ac == this || ac->screen() != screen());
 }
 
 }

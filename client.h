@@ -251,7 +251,6 @@ public:
     bool isFullScreen() const override;
     bool isFullScreenable() const override;
     bool isFullScreenable(bool fullscreen_hack) const;
-    bool isActiveFullScreen() const;
     bool userCanSetFullScreen() const override;
     QRect geometryFSRestore() const {
         return geom_fs_restore;    // Only for session saving
@@ -265,9 +264,6 @@ public:
     bool userCanSetNoBorder() const override;
     void checkNoBorder();
 
-    virtual Layer layer() const;
-    Layer belongsToLayer() const;
-    void updateLayer() override;
     int sessionStackingOrder() const;
 
     // Auxiliary functions, depend on the windowType
@@ -520,7 +516,8 @@ protected:
     void doMinimize() override;
     void doSetSkipPager() override;
     void doSetSkipTaskbar() override;
-    void invalidateLayer() override;
+    bool belongsToDesktop() const override;
+    bool isActiveFullScreen() const override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -734,7 +731,6 @@ private:
     QString cap_normal, cap_iconic, cap_suffix, cap_deco;
     Group* in_group;
     TabGroup* tab_group;
-    Layer in_layer;
     QTimer* ping_timer;
     qint64 m_killHelperPID;
     xcb_timestamp_t m_pingTimestamp;
@@ -892,11 +888,6 @@ inline bool Client::hasNETSupport() const
 inline xcb_colormap_t Client::colormap() const
 {
     return m_colormap;
-}
-
-inline void Client::invalidateLayer()
-{
-    in_layer = UnknownLayer;
 }
 
 inline int Client::sessionStackingOrder() const

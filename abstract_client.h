@@ -384,7 +384,8 @@ public:
      * @param mode The tile mode (left/right) to give this window.
      */
     virtual void setQuickTileMode(QuickTileMode mode, bool keyboard = false) = 0;
-    virtual void updateLayer();
+    Layer layer() const override;
+    void updateLayer();
 
     enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
     virtual void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) = 0;
@@ -505,7 +506,11 @@ protected:
      **/
     void removeTransientFromList(AbstractClient* cl);
 
-    virtual void invalidateLayer();
+    Layer belongsToLayer() const;
+    virtual bool belongsToDesktop() const;
+    void invalidateLayer();
+    virtual bool isActiveFullScreen() const;
+    virtual Layer layerForDock() const;
 
 private:
     void handlePaletteChange();
@@ -537,6 +542,7 @@ private:
     AbstractClient *m_transientFor = nullptr;
     QList<AbstractClient*> m_transients;
     bool m_modal = false;
+    Layer m_layer = UnknownLayer;
 };
 
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)

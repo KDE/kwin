@@ -45,7 +45,6 @@ public:
     QStringList activities() const override;
     QPoint clientPos() const override;
     QSize clientSize() const override;
-    Layer layer() const override;
     QRect transparentRect() const override;
     bool shouldUnredirect() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
@@ -119,6 +118,7 @@ protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
     void doSetActive() override;
+    Layer layerForDock() const override;
 
 private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);
