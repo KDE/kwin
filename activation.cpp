@@ -483,7 +483,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
 
     if (!get_focus) { // no suitable window under the mouse -> find sth. else
         // first try to pass the focus to the (former) active clients leader
-        if (c->isTransient()) {
+        if (c && c->isTransient()) {
             auto leaders = c->mainClients();
             if (leaders.count() == 1 && FocusChain::self()->isUsableFocusCandidate(leaders.at(0), c)) {
                 get_focus = leaders.at(0);
