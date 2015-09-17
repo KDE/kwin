@@ -678,7 +678,8 @@ bool Workspace::keepTransientAbove(const AbstractClient* mainwindow, const Abstr
     }
     // #63223 - don't keep transients above docks, because the dock is kept high,
     // and e.g. dialogs for them would be too high too
-    if (mainwindow->isDock())
+    // ignore this if the transient has a placement hint which indicates it should go above it's parent
+    if (mainwindow->isDock() && !transient->hasTransientPlacementHint())
         return false;
     return true;
 }
