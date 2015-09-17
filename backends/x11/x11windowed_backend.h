@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 struct _XDisplay;
 typedef struct _XDisplay Display;
+typedef struct _XCBKeySymbols xcb_key_symbols_t;
 class NETWinInfo;
 
 namespace KWin
@@ -78,6 +79,8 @@ Q_SIGNALS:
 private:
     void createWindow();
     void startEventReading();
+    void grabKeyboard(xcb_timestamp_t time);
+    void updateWindowTitle();
     void handleEvent(xcb_generic_event_t *event);
     void handleClientMessage(xcb_client_message_event_t *event);
     void handleButtonPress(xcb_button_press_event_t *event);
@@ -87,6 +90,7 @@ private:
 
     xcb_connection_t *m_connection = nullptr;
     xcb_screen_t *m_screen = nullptr;
+    xcb_key_symbols_t *m_keySymbols = nullptr;
     int m_screenNumber = 0;
     xcb_window_t m_window = XCB_WINDOW_NONE;
     QSize m_size;
@@ -95,6 +99,7 @@ private:
     xcb_cursor_t m_cursor = XCB_CURSOR_NONE;
     Display *m_display = nullptr;
     NETWinInfo *m_winInfo = nullptr;
+    bool m_keyboardGrabbed = false;
 };
 
 }

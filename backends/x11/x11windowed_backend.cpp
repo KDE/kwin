@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
+// xcb
+#include <xcb/xcb_keysyms.h>
 // system
 #include <linux/input.h>
 #include <X11/Xlib-xcb.h>
@@ -51,6 +53,9 @@ X11WindowedBackend::X11WindowedBackend(QObject *parent)
 X11WindowedBackend::~X11WindowedBackend()
 {
     if (m_connection) {
+        if (m_keySymbols) {
+            xcb_key_symbols_free(m_keySymbols);
+        }
         if (m_window) {
             xcb_unmap_window(m_connection, m_window);
             xcb_destroy_window(m_connection, m_window);
@@ -121,7 +126,7 @@ void X11WindowedBackend::createWindow()
 
     m_winInfo = new NETWinInfo(m_connection, m_window, m_screen->root, NET::WMWindowType, NET::Properties2());
     m_winInfo->setWindowType(NET::Normal);
-    m_winInfo->setName(i18n("KDE Wayland Compositor (%1)", waylandServer()->display()->socketName()).toUtf8().constData());
+    updateWindowTitle();
     m_winInfo->setPid(QCoreApplication::applicationPid());
     QIcon windowIcon = QIcon::fromTheme(QStringLiteral("kwin"));
     auto addIcon = [this, &windowIcon] (const QSize &size) {
@@ -179,6 +184,13 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
     case XCB_KEY_RELEASE: {
             auto event = reinterpret_cast<xcb_key_press_event_t*>(e);
             if (eventType == XCB_KEY_PRESS) {
+                if (!m_keySymbols) {
+                    m_keySymbols = xcb_key_symbols_alloc(m_connection);
+                }
+                const xcb_keysym_t kc = xcb_key_symbols_get_keysym(m_keySymbols, event->detail, 0);
+                if (kc == XK_Control_R) {
+                    grabKeyboard(event->time);
+                }
                 keyboardKeyPressed(event->detail - 8, event->time);
             } else {
                 keyboardKeyReleased(event->detail - 8, event->time);
@@ -199,9 +211,58 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
     case XCB_EXPOSE:
         handleExpose(reinterpret_cast<xcb_expose_event_t*>(e));
         break;
+    case XCB_MAPPING_NOTIFY:
+        if (m_keySymbols) {
+            xcb_refresh_keyboard_mapping(m_keySymbols, reinterpret_cast<xcb_mapping_notify_event_t*>(e));
+        }
+        break;
     default:
         break;
     }
+}
+
+void X11WindowedBackend::grabKeyboard(xcb_timestamp_t time)
+{
+    const bool oldState = m_keyboardGrabbed;
+    if (m_keyboardGrabbed) {
+        xcb_ungrab_keyboard(m_connection, time);
+        xcb_ungrab_pointer(m_connection, time);
+        m_keyboardGrabbed = false;
+    } else {
+        const auto c = xcb_grab_keyboard_unchecked(m_connection, false, m_window, time,
+                                                   XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+        ScopedCPointer<xcb_grab_keyboard_reply_t> grab(xcb_grab_keyboard_reply(m_connection, c, nullptr));
+        if (grab.isNull()) {
+            return;
+        }
+        if (grab->status == XCB_GRAB_STATUS_SUCCESS) {
+            const auto c = xcb_grab_pointer_unchecked(m_connection, false, m_window,
+                                                      XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE |
+                                                      XCB_EVENT_MASK_POINTER_MOTION |
+                                                      XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
+                                                      XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC,
+                                                      m_window, XCB_CURSOR_NONE, time);
+            ScopedCPointer<xcb_grab_pointer_reply_t> grab(xcb_grab_pointer_reply(m_connection, c, nullptr));
+            if (grab.isNull() || grab->status != XCB_GRAB_STATUS_SUCCESS) {
+                xcb_ungrab_keyboard(m_connection, time);
+                return;
+            }
+            m_keyboardGrabbed = true;
+        }
+    }
+    if (oldState != m_keyboardGrabbed) {
+        updateWindowTitle();
+        xcb_flush(m_connection);
+    }
+}
+
+void X11WindowedBackend::updateWindowTitle()
+{
+    const QString grab = m_keyboardGrabbed ? i18n("Press right control to ungrab input") : i18n("Press right control key to grab input");
+    const QString title = QStringLiteral("%1 (%2) - %3").arg(i18n("KDE Wayland Compositor"))
+                                                        .arg(waylandServer()->display()->socketName())
+                                                        .arg(grab);
+    m_winInfo->setName(title.toUtf8().constData());
 }
 
 void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
