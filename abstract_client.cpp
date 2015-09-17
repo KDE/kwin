@@ -886,6 +886,10 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
 
 void AbstractClient::setTransientFor(AbstractClient *transientFor)
 {
+    if (transientFor == this) {
+        // cannot be transient for one self
+        return;
+    }
     if (m_transientFor == transientFor) {
         return;
     }
