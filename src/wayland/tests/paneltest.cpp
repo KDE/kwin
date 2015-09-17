@@ -58,6 +58,9 @@ public:
 private:
     void setupRegistry(Registry *registry);
     void render();
+    void showTooltip(const QPointF &pos);
+    void hideTooltip();
+    void moveTooltip(const QPointF &pos);
     QThread *m_connectionThread;
     ConnectionThread *m_connectionThreadObject;
     EventQueue *m_eventQueue = nullptr;
@@ -70,6 +73,12 @@ private:
     PlasmaShell *m_plasmaShell = nullptr;
     PlasmaShellSurface *m_plasmaShellSurface = nullptr;
     PlasmaWindowManagement *m_windowManagement = nullptr;
+    struct {
+        Surface *surface = nullptr;
+        ShellSurface *shellSurface = nullptr;
+        PlasmaShellSurface *plasmaSurface = nullptr;
+        bool visible = false;
+    } m_tooltip;
 };
 
 PanelTest::PanelTest(QObject *parent)
@@ -102,6 +111,48 @@ void PanelTest::init()
     m_connectionThread->start();
 
     m_connectionThreadObject->initConnection();
+}
+
+void PanelTest::showTooltip(const QPointF &pos)
+{
+    if (!m_tooltip.surface) {
+        m_tooltip.surface = m_compositor->createSurface(this);
+        m_tooltip.shellSurface = m_shell->createSurface(m_tooltip.surface, this);
+        if (m_plasmaShell) {
+            m_tooltip.plasmaSurface = m_plasmaShell->createSurface(m_tooltip.surface, this);
+        }
+    }
+    m_tooltip.shellSurface->setTransient(m_surface, pos.toPoint());
+
+    if (!m_tooltip.visible) {
+        const QSize size(100, 50);
+        auto buffer = m_shm->getBuffer(size, size.width() * 4).toStrongRef();
+        buffer->setUsed(true);
+        QImage image(buffer->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
+        image.fill(Qt::red);
+
+        m_tooltip.surface->attachBuffer(*buffer);
+        m_tooltip.surface->damage(QRect(QPoint(0, 0), size));
+        m_tooltip.surface->commit(Surface::CommitFlag::None);
+        m_tooltip.visible = true;
+    }
+}
+
+void PanelTest::hideTooltip()
+{
+    if (!m_tooltip.visible) {
+        return;
+    }
+    m_tooltip.surface->attachBuffer(Buffer::Ptr());
+    m_tooltip.surface->commit(Surface::CommitFlag::None);
+    m_tooltip.visible = false;
+}
+
+void PanelTest::moveTooltip(const QPointF &pos)
+{
+    if (m_tooltip.plasmaSurface) {
+        m_tooltip.plasmaSurface->setPosition(QPoint(10, 0) + pos.toPoint());
+    }
 }
 
 void PanelTest::setupRegistry(Registry *registry)
@@ -145,6 +196,26 @@ void PanelTest::setupRegistry(Registry *registry)
                             } else if (button == BTN_RIGHT) {
                                 m_windowManagement->hideDesktop();
                             }
+                        }
+                    );
+                    connect(p, &Pointer::entered, this,
+                        [this, p] (quint32 serial, const QPointF &relativeToSurface) {
+                            Q_UNUSED(serial)
+                            if (p->enteredSurface() == m_surface) {
+                                showTooltip(relativeToSurface);
+                            }
+                        }
+                    );
+                    connect(p, &Pointer::motion, this,
+                        [this, p] (const QPointF &relativeToSurface) {
+                            if (p->enteredSurface() == m_surface) {
+                                moveTooltip(relativeToSurface);
+                            }
+                        }
+                    );
+                    connect(p, &Pointer::left, this,
+                        [this] {
+                            hideTooltip();
                         }
                     );
                 }
