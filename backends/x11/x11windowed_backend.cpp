@@ -98,8 +98,9 @@ void X11WindowedBackend::createWindow()
     Xcb::Atom protocolsAtom(QByteArrayLiteral("WM_PROTOCOLS"), false, m_connection);
     Xcb::Atom deleteWindowAtom(QByteArrayLiteral("WM_DELETE_WINDOW"), false, m_connection);
     m_window = xcb_generate_id(m_connection);
-    uint32_t mask = XCB_CW_EVENT_MASK;
+    uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
     const uint32_t values[] = {
+        m_screen->black_pixel,
         XCB_EVENT_MASK_KEY_PRESS |
         XCB_EVENT_MASK_KEY_RELEASE |
         XCB_EVENT_MASK_BUTTON_PRESS |
