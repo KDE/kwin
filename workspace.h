@@ -173,7 +173,7 @@ public:
     void setClientIsMoving(AbstractClient* c);
 
     QPoint adjustClientPosition(AbstractClient* c, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
-    QRect adjustClientSize(Client* c, QRect moveResizeGeom, int mode);
+    QRect adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int mode);
     void raiseClient(AbstractClient* c, bool nogroup = false);
     void lowerClient(AbstractClient* c, bool nogroup = false);
     void raiseClientRequest(AbstractClient* c, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);

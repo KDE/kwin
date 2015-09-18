@@ -582,7 +582,7 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
     return pos;
 }
 
-QRect Workspace::adjustClientSize(Client* c, QRect moveResizeGeom, int mode)
+QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int mode)
 {
     //adapted from adjustClientPosition on 29May2004
     //this function is called when resizing a window and will modify
@@ -683,8 +683,7 @@ QRect Workspace::adjustClientSize(Client* c, QRect moveResizeGeom, int mode)
         if (snap) {
             deltaX = int(snap);
             deltaY = int(snap);
-            QList<Client *>::ConstIterator l;
-            for (l = clients.constBegin(); l != clients.constEnd(); ++l) {
+            for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
                 if ((*l)->isOnDesktop(VirtualDesktopManager::self()->current()) &&
                         !(*l)->isMinimized()
                         && (*l) != c) {
