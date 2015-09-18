@@ -30,6 +30,7 @@
 #include <QQuickView>
 #include <QSortFilterProxyModel>
 #include <QString>
+#include <KPluginInfo>
 
 namespace KWin {
 namespace Compositing {
@@ -104,6 +105,9 @@ public:
     void defaults();
 
 private:
+    void loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
+    void loadJavascriptEffects(const KConfigGroup &kwinConfig);
+    void loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
     int findRowByServiceName(const QString &serviceName);
     QList<EffectData> m_effectsList;
     QList<EffectData> m_effectsChanged;
