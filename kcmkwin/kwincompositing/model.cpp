@@ -26,13 +26,15 @@
 #include <effect_builtins.h>
 
 #include <KLocalizedString>
-#include <KPluginInfo>
 #include <KService>
 #include <KServiceTypeTrader>
 #include <KSharedConfig>
 #include <KCModuleProxy>
 #include <KPluginTrader>
 #include <kdeclarative/kdeclarative.h>
+#include <KPluginLoader>
+#include <KPluginMetaData>
+#include <KAboutData>
 
 #include <QAbstractItemModel>
 #include <QDBusConnection>
@@ -218,14 +220,8 @@ bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int r
     return QAbstractItemModel::setData(index, value, role);
 }
 
-void EffectModel::loadEffects()
+void EffectModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs)
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
-
-    beginResetModel();
-    m_effectsChanged.clear();
-    m_effectsList.clear();
-    const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kwin/effects/configs/"));
     const auto builtins = BuiltInEffects::availableEffects();
     for (auto builtin : builtins) {
         const BuiltInEffects::EffectData &data = BuiltInEffects::effectData(builtin);
@@ -261,6 +257,10 @@ void EffectModel::loadEffects()
 
         m_effectsList << effect;
     }
+}
+
+void EffectModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
+{
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect", QStringLiteral("[X-Plasma-API] == 'javascript'"));
     for(KService::Ptr service : offers) {
         const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kservices5/"+ service->entryPath(), QStandardPaths::LocateFile);
@@ -293,6 +293,74 @@ void EffectModel::loadEffects()
 
         m_effectsList << effect;
     }
+}
+
+void EffectModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs)
+{
+    static const QString subDir(QStringLiteral("kwin/effects/plugins/"));
+    static const QString serviceType(QStringLiteral("KWin/Effect"));
+    const QVector<KPluginMetaData> pluginEffects = KPluginLoader::findPlugins(subDir, [] (const KPluginMetaData &data) { return data.serviceTypes().contains(serviceType); });
+    for (KPluginMetaData pluginEffect : pluginEffects) {
+        if (!pluginEffect.isValid())
+            continue;
+        EffectData effect;
+        effect.name = pluginEffect.name();
+        effect.description = pluginEffect.description();
+        effect.license = pluginEffect.license();
+        effect.version = pluginEffect.version();
+        effect.category = pluginEffect.category();
+        effect.serviceName = pluginEffect.pluginId();
+        effect.enabledByDefault = pluginEffect.isEnabledByDefault();
+        effect.supported = true;
+        effect.enabledByDefaultFunction = false;
+        effect.internal = false;
+        effect.scripted = false;
+
+        for (int i = 0; i < pluginEffect.authors().count(); ++i) {
+            effect.authorName.append(pluginEffect.authors().at(i).name());
+            effect.authorEmail.append(pluginEffect.authors().at(i).emailAddress());
+            if (i+1 < pluginEffect.authors().count()) {
+                effect.authorName.append(", ");
+                effect.authorEmail.append(", ");
+            }
+        }
+
+        if (pluginEffect.rawData().contains("org.kde.kwin.effect")) {
+            const QJsonObject d(pluginEffect.rawData().value("org.kde.kwin.effect").toObject());
+            effect.exclusiveGroup = d.value("exclusiveGroup").toString();
+            effect.video = QUrl::fromUserInput(d.value("video").toString());
+            effect.enabledByDefaultFunction = d.value("enabledByDefaultMethod").toBool();
+        }
+
+        const QString enabledKey = QStringLiteral("%1Enabled").arg(effect.serviceName);
+        if (kwinConfig.hasKey(enabledKey)) {
+            effect.effectStatus = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", effect.enabledByDefault));
+        } else if (effect.enabledByDefaultFunction) {
+            effect.effectStatus = EffectStatus::EnabledUndeterminded;
+        } else {
+            effect.effectStatus = effectStatus(effect.enabledByDefault);
+        }
+
+        auto it = std::find_if(configs.begin(), configs.end(), [pluginEffect](const KPluginInfo &info) {
+            return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == pluginEffect.pluginId();
+        });
+        effect.configurable = it != configs.end();
+
+        m_effectsList << effect;
+    }
+}
+
+void EffectModel::loadEffects()
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
+
+    beginResetModel();
+    m_effectsChanged.clear();
+    m_effectsList.clear();
+    const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kwin/effects/configs/"));
+    loadBuiltInEffects(kwinConfig, configs);
+    loadJavascriptEffects(kwinConfig);
+    loadPluginEffects(kwinConfig, configs);
 
     qSort(m_effectsList.begin(), m_effectsList.end(), [](const EffectData &a, const EffectData &b) {
         if (a.category == b.category) {
