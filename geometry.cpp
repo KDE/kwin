@@ -400,7 +400,7 @@ int Workspace::oldDisplayHeight() const
   effective snap zones. When 1.0, it means that the snap zones will be
   used without change.
  */
-QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted, double snapAdjust)
+QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unrestricted, double snapAdjust)
 {
     QSize borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
     QRect maxRect;
@@ -487,8 +487,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         // windows snap
         int snap = options->windowSnapZone() * snapAdjust;
         if (snap) {
-            QList<Client *>::ConstIterator l;
-            for (l = clients.constBegin(); l != clients.constEnd(); ++l) {
+            for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
                 if ((*l) == c)
                     continue;
                 if ((*l)->isMinimized())
