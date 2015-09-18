@@ -378,6 +378,7 @@ void Workspace::init()
                     if (!c->isInitialPositionSet()) {
                         Placement::self()->place(c, area);
                     }
+                    m_allClients.append(c);
                     if (!unconstrained_stacking_order.contains(c))
                         unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
                     if (!stacking_order.contains(c))    // It'll be updated later, and updateToolWindows() requires
@@ -393,6 +394,7 @@ void Workspace::init()
         );
         connect(w, &WaylandServer::shellClientRemoved, this,
             [this] (ShellClient *c) {
+                m_allClients.removeAll(c);
                 clientHidden(c);
                 emit clientRemoved(c);
                 x_stacking_dirty = true;
@@ -438,6 +440,7 @@ Workspace::~Workspace()
         // However, remove from some lists to e.g. prevent performTransiencyCheck()
         // from crashing.
         clients.removeAll(c);
+        m_allClients.removeAll(c);
         desktops.removeAll(c);
     }
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
@@ -511,6 +514,7 @@ void Workspace::addClient(Client* c)
     } else {
         FocusChain::self()->update(c, FocusChain::Update);
         clients.append(c);
+        m_allClients.append(c);
     }
     if (!unconstrained_stacking_order.contains(c))
         unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
@@ -574,6 +578,7 @@ void Workspace::removeClient(Client* c)
     Q_ASSERT(clients.contains(c) || desktops.contains(c));
     // TODO: if marked client is removed, notify the marked list
     clients.removeAll(c);
+    m_allClients.removeAll(c);
     desktops.removeAll(c);
     x_stacking_dirty = true;
     attention_chain.removeAll(c);

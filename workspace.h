@@ -215,6 +215,12 @@ public:
     const DeletedList &deletedList() const {
         return deleted;
     }
+    /**
+     * @returns List of all clients (either X11 or Wayland) currently managed by Workspace
+     **/
+    const QList<AbstractClient*> allClientList() const {
+        return m_allClients;
+    }
 
     void stackScreenEdgesUnderOverrideRedirect();
 
@@ -531,6 +537,7 @@ private:
     QPoint focusMousePos;
 
     ClientList clients;
+    QList<AbstractClient*> m_allClients;
     ClientList desktops;
     UnmanagedList unmanaged;
     DeletedList deleted;
