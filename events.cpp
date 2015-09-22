@@ -1287,6 +1287,9 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
     }
     if (w != frameId() && w != inputId() && w != moveResizeGrabWindow())
         return true;
+    if (w == frameId() && workspace()->userActionsMenu() && workspace()->userActionsMenu()->isShown()) {
+        const_cast<UserActionsMenu*>(workspace()->userActionsMenu())->grabInput();
+    }
     x = this->x(); // translate from grab window to local coords
     y = this->y();
 

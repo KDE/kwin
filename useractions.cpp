@@ -164,6 +164,12 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<AbstractClient> 
     }
 }
 
+void UserActionsMenu::grabInput()
+{
+    m_menu->windowHandle()->setMouseGrabEnabled(true);
+    m_menu->windowHandle()->setKeyboardGrabEnabled(true);
+}
+
 void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<AbstractClient> &c)
 {
     QStringList args;
@@ -424,19 +430,16 @@ void UserActionsMenu::menuAboutToShow()
     delete m_scriptsMenu;
     m_scriptsMenu = NULL;
     // ask scripts whether they want to add entries for the given Client
-    m_scriptsMenu = new QMenu(m_menu);
-    m_scriptsMenu->setPalette(m_client.data()->palette());
     QList<QAction*> scriptActions = Scripting::self()->actionsForUserActionMenu(m_client.data(), m_scriptsMenu);
     if (!scriptActions.isEmpty()) {
+        m_scriptsMenu = new QMenu(m_menu);
+        m_scriptsMenu->setPalette(m_client.data()->palette());
         m_scriptsMenu->addActions(scriptActions);
 
         QAction *action = m_scriptsMenu->menuAction();
         // set it as the first item after desktop
         m_menu->insertAction(m_closeOperation, action);
         action->setText(i18n("&Extensions"));
-    } else {
-        delete m_scriptsMenu;
-        m_scriptsMenu = NULL;
     }
 
     showHideActivityMenu();

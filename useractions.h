@@ -69,6 +69,12 @@ public:
      * @returns Whether the menu is currently visible
      **/
     bool isShown() const;
+
+    /**
+     * grabs keyboard and mouse, workaround(?) for bug #351112
+     **/
+    void grabInput();
+
     /**
      * @returns Whether the menu has a Client set to operate on.
      **/
