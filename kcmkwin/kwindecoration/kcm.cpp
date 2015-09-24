@@ -87,6 +87,7 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     qmlRegisterType<QAbstractItemModel>();
     QWidget *widget = QWidget::createWindowContainer(m_quickView, this);
     QVBoxLayout* layout = new QVBoxLayout(m_ui->view);
+    layout->setContentsMargins(0,0,0,0);
     layout->addWidget(widget);
 
     m_quickView->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_proxyModel);
@@ -102,6 +103,27 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
             connect(listView, SIGNAL(currentIndexChanged()), this, SLOT(changed()));
         }
     }
+
+    m_ui->tabWidget->tabBar()->disconnect();
+    auto setCurrentTab = [this](int index) {
+        if (index == 0)
+            m_ui->doubleClickMessage->hide();
+        m_ui->filter->setVisible(index == 0);
+        m_ui->knsButton->setVisible(index == 0);
+        if (auto themeList = m_quickView->rootObject()->findChild<QQuickItem*>("themeList")) {
+            themeList->setVisible(index == 0);
+        }
+        m_ui->borderSizesLabel->setVisible(index == 0);
+        m_ui->borderSizesCombo->setVisible(index == 0);
+
+        m_ui->closeWindowsDoubleClick->setVisible(index == 1);
+        if (auto buttonLayout = m_quickView->rootObject()->findChild<QQuickItem*>("buttonLayout")) {
+            buttonLayout->setVisible(index == 1);
+        }
+    };
+    connect(m_ui->tabWidget->tabBar(), &QTabBar::currentChanged, this, setCurrentTab);
+    setCurrentTab(0);
+
     m_ui->doubleClickMessage->setVisible(false);
     m_ui->doubleClickMessage->setText(i18n("Close by double clicking:\n To open the menu, keep the button pressed until it appears."));
     m_ui->doubleClickMessage->setCloseButtonVisible(true);
@@ -120,10 +142,13 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     connect(m_ui->closeWindowsDoubleClick, &QCheckBox::stateChanged, this, changedSlot);
     connect(m_ui->closeWindowsDoubleClick, &QCheckBox::toggled, this,
         [this] (bool toggled) {
-            if (!toggled || s_loading) {
+            if (s_loading) {
                 return;
             }
-            m_ui->doubleClickMessage->animatedShow();
+            if (toggled)
+                m_ui->doubleClickMessage->animatedShow();
+            else
+                m_ui->doubleClickMessage->animatedHide();
         }
     );
     connect(m_ui->borderSizesCombo, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -402,8 +427,9 @@ bool ConfigurationModule::eventFilter(QObject *watched, QEvent *e)
 
 void ConfigurationModule::updateColors()
 {
-    m_quickView->rootContext()->setContextProperty("backgroundColor", QPalette().color(QPalette::Window));
-    m_quickView->rootContext()->setContextProperty("highlightColor", QPalette().color(QPalette::Highlight));
+    m_quickView->rootContext()->setContextProperty("backgroundColor", m_ui->palette().color(QPalette::Active, QPalette::Window));
+    m_quickView->rootContext()->setContextProperty("highlightColor", m_ui->palette().color(QPalette::Active, QPalette::Highlight));
+    m_quickView->rootContext()->setContextProperty("baseColor", m_ui->palette().color(QPalette::Active, QPalette::Base));
 }
 
 }

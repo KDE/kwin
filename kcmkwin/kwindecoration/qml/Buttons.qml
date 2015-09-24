@@ -25,6 +25,7 @@ import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons;
 import org.kde.plasma.core 2.0 as PlasmaCore;
 
 Item {
+    objectName: "buttonLayout"
     Layout.preferredHeight: layout.height
     KDecoration.Bridge {
         id: bridgeItem
@@ -60,12 +61,14 @@ Item {
                     height: Math.max(units.iconSizes.small, titlebar.implicitHeight) + units.smallSpacing/2
                     ButtonGroup {
                         id: leftButtonsView
+                        anchors.left: parent.left;
                         height: buttonPreviewRow.height
                         model: configurationModule.leftButtons
                         key: "decoButtonLeft"
                     }
                     Item {
                         Layout.fillWidth: true
+                        anchors.centerIn: parent
                         height: titlebar.implicitHeight
                         Label {
                             id: titlebar
@@ -76,6 +79,7 @@ Item {
                     }
                     ButtonGroup {
                         id: rightButtonsView
+                        anchors.right: parent.right;
                         height: buttonPreviewRow.height
                         model: configurationModule.rightButtons
                         key: "decoButtonRight"

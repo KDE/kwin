@@ -24,6 +24,8 @@ import org.kde.kwin.private.kdecoration 1.0 as KDecoration
 import org.kde.plasma.core 2.0 as PlasmaCore;
 
 ScrollView {
+    objectName: "themeList"
+    frameVisible: true
     ListView {
         id: listView
         objectName: "listView"
@@ -31,7 +33,7 @@ ScrollView {
         Rectangle {
             z: -1
             anchors.fill: parent
-            color: SystemPalette.base;
+            color: baseColor
         }
         highlight: Rectangle {
             width: listView.width

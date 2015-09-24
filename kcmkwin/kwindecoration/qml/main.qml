@@ -30,6 +30,7 @@ Rectangle {
             Layout.fillHeight: true
         }
         Buttons {
+            anchors.top: parent.top
             Layout.fillWidth: true
         }
     }
