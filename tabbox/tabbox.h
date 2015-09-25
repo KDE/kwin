@@ -187,7 +187,7 @@ public:
 public Q_SLOTS:
     void show();
     void close(bool abort = false);
-    void accept();
+    void accept(bool closeTabBox = true);
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();
     void slotWalkThroughDesktopList();
