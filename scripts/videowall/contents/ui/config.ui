@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KWin::VideoWallConfigForm</class>
+ <widget class="QWidget" name="KWin::VideoWallConfigForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>334</width>
+    <height>59</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Video Wall</string>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QCheckBox" name="kcfg_ApplyTo">
+     <property name="text">
+      <string>Apply to</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLineEdit" name="kcfg_Whitelist">
+       <property name="text">
+        <string>vlc, xv, vdpau, smplayer, dragon, xine, ffplay</string>
+       </property>
+       <property name="placeholderText">
+        <string>Comma separated list of window classes</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="applyLabel">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>All</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="kcfg_Ignore">
+     <property name="text">
+      <string>Ignore</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="kcfg_Blacklist">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="placeholderText">
+        <string>Comma separated list of window classes</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="ignoreLabel">
+       <property name="text">
+        <string>None</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>kcfg_ApplyTo</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_Whitelist</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>9</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>143</x>
+     <y>13</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_ApplyTo</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>applyLabel</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>330</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_Ignore</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_Blacklist</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>33</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>111</x>
+     <y>45</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_Ignore</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>ignoreLabel</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>51</x>
+     <y>33</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>327</x>
+     <y>42</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

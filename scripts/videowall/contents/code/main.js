@@ -17,27 +17,28 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
+
+var applyTo = readConfig("ApplyTo", true);
+var whitelist = readConfig("Whitelist", "vlc, xv, vdpau, smplayer, dragon, xine, ffplay, mplayer").toString().toLowerCase().split(",");
+for (i = 0; i < whitelist.length; ++i)
+    whitelist[i] = whitelist[i].trim();
+
+var ignore = readConfig("Ignore", false);
+var blacklist = readConfig("Blacklist", "").toString().toLowerCase().split(",");
+for (i = 0; i < blacklist.length; ++i)
+    blacklist[i] = blacklist[i].trim();
+
+
 function isVideoPlayer(client) {
-    if (client.resourceName == "vlc") {
-        return true;
-    }
-    if (client.resourceName == "smplayer") {
-        return true;
-    }
-    if (client.resourceName == "dragon") {
-        return true;
-    }
-    if (client.resourceName == "xv") { //mplayer
-        return true;
-    }
-    if (client.resourceName == "ffplay") {
-        return true;
-    }
-    return false;
+    if (applyTo == true && whitelist.indexOf(client.resourceClass.toString()) < 0)
+        return false; // required whitelist match failed
+    if (ignore == true && blacklist.indexOf(client.resourceClass.toString()) > -1)
+        return false; // required blacklist match hit
+    return true;
 }
 
 var videowall = function(client, set) {
-    if (isVideoPlayer(client) && set) {
+    if (set && isVideoPlayer(client)) {
         client.geometry = workspace.clientArea(KWin.FullArea, 0, 1);
     }
 };

@@ -101,5 +101,10 @@ X-KDE-PluginInfo-Version=1.0
 
 X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
-X-KDE-ServiceTypes=KWin/Script
+X-KDE-ServiceTypes=KWin/Script,KCModule
+
+X-KDE-Library=kwin/effects/configs/kcm_kwin4_genericscripted
+X-KDE-PluginKeyword=videowall
+X-KDE-ParentComponents=videowall
+
 Type=Service
