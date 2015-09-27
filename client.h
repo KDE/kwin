@@ -410,6 +410,7 @@ public:
 public Q_SLOTS:
     void closeWindow() override;
     void updateCaption();
+    void evaluateWindowRules();
 
 private Q_SLOTS:
     void shadeHover();

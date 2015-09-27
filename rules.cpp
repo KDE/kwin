@@ -449,9 +449,14 @@ bool Rules::match(const Client* c) const
         return false;
     if (!matchRole(c->windowRole()))
         return false;
-    if (!matchTitle(c->caption(false)))
-        return false;
     if (!matchClientMachine(c->clientMachine()->hostName(), c->clientMachine()->isLocal()))
+        return false;
+    if (titlematch != UnimportantMatch) // track title changes to rematch rules
+        QObject::connect(c, &Client::captionChanged, c, &Client::evaluateWindowRules,
+                         // QueuedConnection, because title may change before
+                         // the client is ready (could segfault!)
+                         static_cast<Qt::ConnectionType>(Qt::QueuedConnection|Qt::UniqueConnection));
+    if (!matchTitle(c->caption(false)))
         return false;
     return true;
 }
@@ -862,6 +867,7 @@ CHECK_FORCE_RULE(DisableGlobalShortcuts, bool)
 
 void Client::setupWindowRules(bool ignore_temporary)
 {
+    disconnect(this, &Client::captionChanged, this, &Client::evaluateWindowRules);
     client_rules = RuleBook::self()->find(this, ignore_temporary);
     // check only after getting the rules, because there may be a rule forcing window type
 }

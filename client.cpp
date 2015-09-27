@@ -1520,6 +1520,12 @@ void Client::updateCaption()
     setCaption(cap_normal, true);
 }
 
+void Client::evaluateWindowRules()
+{
+    setupWindowRules(true);
+    applyWindowRules();
+}
+
 void Client::fetchIconicName()
 {
     QString s;
