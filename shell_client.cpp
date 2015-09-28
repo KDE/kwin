@@ -671,10 +671,10 @@ void ShellClient::installQtExtendedSurface(QtExtendedSurfaceInterface *surface)
 {
     m_qtExtendedSurface = surface;
 
-    connect(m_qtExtendedSurface, &QtExtendedSurfaceInterface::raiseRequested, this, [this]() {
+    connect(m_qtExtendedSurface.data(), &QtExtendedSurfaceInterface::raiseRequested, this, [this]() {
         workspace()->raiseClientRequest(this);
     });
-    connect(m_qtExtendedSurface, &QtExtendedSurfaceInterface::lowerRequested, this, [this]() {
+    connect(m_qtExtendedSurface.data(), &QtExtendedSurfaceInterface::lowerRequested, this, [this]() {
         workspace()->lowerClientRequest(this);
     });
 }
