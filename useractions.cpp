@@ -253,7 +253,7 @@ void UserActionsMenu::init()
     setShortcut(m_moveOperation, QStringLiteral("Window Move"));
     m_moveOperation->setData(Options::UnrestrictedMoveOp);
 
-    m_resizeOperation = advancedMenu->addAction(i18n("Re&size"));
+    m_resizeOperation = advancedMenu->addAction(i18n("&Resize"));
     setShortcut(m_resizeOperation, QStringLiteral("Window Resize"));
     m_resizeOperation->setData(Options::ResizeOp);
 
@@ -275,7 +275,7 @@ void UserActionsMenu::init()
     m_fullScreenOperation->setCheckable(true);
     m_fullScreenOperation->setData(Options::FullScreenOp);
 
-    m_shadeOperation = advancedMenu->addAction(i18n("Sh&ade"));
+    m_shadeOperation = advancedMenu->addAction(i18n("&Shade"));
     setShortcut(m_shadeOperation, QStringLiteral("Window Shade"));
     m_shadeOperation->setCheckable(true);
     m_shadeOperation->setData(Options::ShadeOp);
@@ -287,12 +287,12 @@ void UserActionsMenu::init()
 
     advancedMenu->addSeparator();
 
-    m_shortcutOperation = advancedMenu->addAction(i18n("Window &Shortcut..."));
+    m_shortcutOperation = advancedMenu->addAction(i18n("Window Short&cut..."));
     m_shortcutOperation->setIcon(QIcon::fromTheme(QStringLiteral("configure-shortcuts")));
     setShortcut(m_shortcutOperation, QStringLiteral("Setup Window Shortcut"));
     m_shortcutOperation->setData(Options::SetupWindowShortcutOp);
 
-    QAction *action = advancedMenu->addAction(i18n("&Special Window Settings..."));
+    QAction *action = advancedMenu->addAction(i18n("Special &Window Settings..."));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::WindowRulesOp);
 
@@ -303,7 +303,7 @@ void UserActionsMenu::init()
             !KAuthorized::authorizeControlModules(configModules(true)).isEmpty()) {
         advancedMenu->addSeparator();
         action = advancedMenu->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",
-                                        "Window &Manager Settings..."));
+                                        "Window Manager S&ettings..."));
         action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
         connect(action, &QAction::triggered, this,
             [this]() {
