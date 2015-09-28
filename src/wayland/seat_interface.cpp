@@ -903,6 +903,8 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
         wl_pointer_send_enter(p->resource(), serial,
                           focusedTouchSurface()->resource(),
                           wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        wl_pointer_send_motion(p->resource(), timestamp(),
+                                wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
 
         wl_pointer_send_button(p->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_PRESSED);
     }
