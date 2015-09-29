@@ -28,6 +28,14 @@
 #include <QVector>
 #include <QVector2D>
 
+namespace KWayland
+{
+namespace Server
+{
+class ContrastManagerInterface;
+}
+}
+
 namespace KWin
 {
 
@@ -76,6 +84,7 @@ private:
     QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
     QRegion m_currentContrast; // keeps track of the currently contrasted area of non-caching windows(from bottom to top)
     QHash< const EffectWindow*, QMetaObject::Connection > m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
+    KWayland::Server::ContrastManagerInterface *m_contrastManager = nullptr;
 };
 
 inline

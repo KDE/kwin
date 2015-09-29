@@ -39,11 +39,6 @@ static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEH
 
 BlurEffect::BlurEffect()
 {
-    KWayland::Server::Display *display = effects->waylandDisplay();
-    if (display) {
-        display->createBlurManager(this)->create();
-    }
-
     shader = BlurShader::create();
 
     // Offscreen texture that's used as the target for the horizontal blur pass
@@ -60,6 +55,11 @@ BlurEffect::BlurEffect()
     //     Should be included in _NET_SUPPORTED instead.
     if (shader && shader->isValid() && target->valid()) {
         net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
+        KWayland::Server::Display *display = effects->waylandDisplay();
+        if (display) {
+            m_blurManager = display->createBlurManager(this);
+            m_blurManager->create();
+        }
     } else {
         net_wm_blur_region = 0;
     }
@@ -100,8 +100,11 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
 
     windows.clear();
 
-    if (!shader || !shader->isValid())
+    if (!shader || !shader->isValid()) {
         effects->removeSupportProperty(s_blurAtomName, this);
+        delete m_blurManager;
+        m_blurManager = nullptr;
+    }
 }
 
 void BlurEffect::updateBlurRegion(EffectWindow *w) const

@@ -37,11 +37,6 @@ static const QByteArray s_contrastAtomName = QByteArrayLiteral("_KDE_NET_WM_BACK
 
 ContrastEffect::ContrastEffect()
 {
-    KWayland::Server::Display *display = effects->waylandDisplay();
-    if (display) {
-        display->createContrastManager(this)->create();
-    }
-
     shader = ContrastShader::create();
 
     reconfigure(ReconfigureAll);
@@ -50,6 +45,11 @@ ContrastEffect::ContrastEffect()
     //     Should be included in _NET_SUPPORTED instead.
     if (shader && shader->isValid()) {
         net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
+        KWayland::Server::Display *display = effects->waylandDisplay();
+        if (display) {
+            m_contrastManager = display->createContrastManager(this);
+            m_contrastManager->create();
+        }
     } else {
         net_wm_contrast_region = 0;
     }
@@ -81,8 +81,11 @@ void ContrastEffect::reconfigure(ReconfigureFlags flags)
     if (shader)
         shader->init();
 
-    if (!shader || !shader->isValid())
+    if (!shader || !shader->isValid()) {
         effects->removeSupportProperty(s_contrastAtomName, this);
+        delete m_contrastManager;
+        m_contrastManager = nullptr;
+    }
 }
 
 void ContrastEffect::updateContrastRegion(EffectWindow *w) const
