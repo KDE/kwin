@@ -50,7 +50,7 @@ private:
     static const quint32 s_version;
 };
 
-const quint32 PlasmaShellInterface::Private::s_version = 1;
+const quint32 PlasmaShellInterface::Private::s_version = 2;
 
 PlasmaShellInterface::Private::Private(PlasmaShellInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_shell_interface, s_version)
@@ -75,6 +75,7 @@ public:
     Role m_role;
     bool m_positionSet = false;
     PanelBehavior m_panelBehavior = PanelBehavior::AlwaysVisible;
+    bool m_skipTaskbar = false;
 
 private:
     // interface callbacks
@@ -83,6 +84,7 @@ private:
     static void setPositionCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y);
     static void setRoleCallback(wl_client *client, wl_resource *resource, uint32_t role);
     static void setPanelBehaviorCallback(wl_client *client, wl_resource *resource, uint32_t flag);
+    static void setSkipTaskbarCallback(wl_client *client, wl_resource *resource, uint32_t skip);
 
     void setPosition(const QPoint &globalPos);
     void setRole(uint32_t role);
@@ -156,7 +158,8 @@ const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Priva
     setOutputCallback,
     setPositionCallback,
     setRoleCallback,
-    setPanelBehaviorCallback
+    setPanelBehaviorCallback,
+    setSkipTaskbarCallback
 };
 #endif
 
@@ -254,6 +257,14 @@ void PlasmaShellSurfaceInterface::Private::setPanelBehaviorCallback(wl_client *c
     s->setPanelBehavior(org_kde_plasma_surface_panel_behavior(flag));
 }
 
+void PlasmaShellSurfaceInterface::Private::setSkipTaskbarCallback(wl_client *client, wl_resource *resource, uint32_t skip)
+{
+    auto s = cast<Private>(resource);
+    Q_ASSERT(client == *s->client);
+    s->m_skipTaskbar = (bool)skip;
+    emit s->q_func()->skipTaskbarChanged();
+}
+
 void PlasmaShellSurfaceInterface::Private::setPanelBehavior(org_kde_plasma_surface_panel_behavior behavior)
 {
     PanelBehavior newBehavior = PanelBehavior::AlwaysVisible;
@@ -301,6 +312,12 @@ PlasmaShellSurfaceInterface::PanelBehavior PlasmaShellSurfaceInterface::panelBeh
 {
     Q_D();
     return d->m_panelBehavior;
+}
+
+bool PlasmaShellSurfaceInterface::skipTaskbar() const
+{
+    Q_D();
+    return d->m_skipTaskbar;
 }
 
 }

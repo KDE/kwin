@@ -99,7 +99,7 @@ private:
     static const struct org_kde_plasma_window_interface s_interface;
 };
 
-const quint32 PlasmaWindowManagementInterface::Private::s_version = 1;
+const quint32 PlasmaWindowManagementInterface::Private::s_version = 2;
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_window_management_interface, s_version)
@@ -434,6 +434,9 @@ void PlasmaWindowInterface::Private::setStateCallback(wl_client *client, wl_reso
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_FULLSCREENABLE) {
         emit p->q->fullscreenableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_FULLSCREENABLE);
     }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR) {
+        emit p->q->skipTaskbarRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR);
+    }
 }
 
 PlasmaWindowInterface::PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent)
@@ -522,6 +525,11 @@ void PlasmaWindowInterface::setMaximizeable(bool set)
 void PlasmaWindowInterface::setMinimizeable(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MINIMIZABLE, set);
+}
+
+void PlasmaWindowInterface::setSkipTaskbar(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR, set);
 }
 
 void PlasmaWindowInterface::setThemedIconName(const QString &iconName)

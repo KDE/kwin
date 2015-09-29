@@ -82,6 +82,7 @@ public:
     void setMinimizeable(bool set);
     void setMaximizeable(bool set);
     void setFullscreenable(bool set);
+    void setSkipTaskbar(bool skip);
     void setThemedIconName(const QString &iconName);
 
     void unmap();
@@ -100,6 +101,7 @@ Q_SIGNALS:
     void minimizeableRequested(bool set);
     void maximizeableRequested(bool set);
     void fullscreenableRequested(bool set);
+    void skipTaskbarRequested(bool set);
 
 private:
     friend class PlasmaWindowManagementInterface;

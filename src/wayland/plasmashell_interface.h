@@ -129,6 +129,13 @@ public:
      **/
     PanelBehavior panelBehavior() const;
 
+    /**
+     * @returns true if this window doesn't want to be listed
+     * in the taskbar
+     * @since 5.5
+     */
+    bool skipTaskbar() const;
+
 Q_SIGNALS:
     /**
      * A change of global position has been requested.
@@ -142,6 +149,10 @@ Q_SIGNALS:
      * A change of the panel behavior has been requested.
      **/
     void panelBehaviorChanged();
+    /**
+     * A change in the skip taskbar property has been requested
+     */
+    void skipTaskbarChanged();
 
 private:
     friend class PlasmaShellInterface;
