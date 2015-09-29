@@ -635,6 +635,12 @@ void AbstractClient::setupWindowManagementInterface()
     w->setFullscreenable(isFullScreenable());
     w->setThemedIconName(icon().name().isEmpty() ? QStringLiteral("xorg") : icon().name());
     w->setAppId(QString::fromUtf8(resourceName()));
+    w->setSkipTaskbar(skipTaskbar());
+    connect(this, &AbstractClient::skipTaskbarChanged, w,
+        [w, this] {
+            w->setSkipTaskbar(skipTaskbar());
+        }
+    );
     connect(this, &AbstractClient::captionChanged, w, [w, this] { w->setTitle(caption()); });
     connect(this, &AbstractClient::desktopChanged, w,
         [w, this] {

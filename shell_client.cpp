@@ -562,7 +562,7 @@ void ShellClient::clientFullScreenChanged(bool fullScreen)
     StackingUpdatesBlocker blocker(workspace());
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
 
-    if (fullScreen) {
+    if (fullScreen) {qWarning()<<"AAAAAAAAAA"<<fullScreen;
         m_geomFsRestore = geometry();
         requestGeometry(workspace()->clientArea(FullScreenArea, this));
         workspace()->raiseClient(this);
@@ -657,12 +657,20 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
     );
     updatePosition();
     updateRole();
+
+    setSkipTaskbar(surface->skipTaskbar());
+    connect(surface, &PlasmaShellSurfaceInterface::skipTaskbarChanged, this, [this] {
+        setSkipTaskbar(m_plasmaShellSurface->skipTaskbar());
+    });
 }
 
 bool ShellClient::isInitialPositionSet() const
 {
     if (m_plasmaShellSurface) {
         return m_plasmaShellSurface->isPositionSet();
+    }
+    if (isFullScreen()) {
+        return true;
     }
     return false;
 }
