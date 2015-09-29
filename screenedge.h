@@ -564,6 +564,7 @@ inline void ScreenEdges::setDesktopSwitchingMovingClients(bool enable)
 
 inline void ScreenEdges::setReActivationThreshold(int threshold)
 {
+    Q_ASSERT(threshold >= m_timeThreshold);
     m_reactivateThreshold = threshold;
 }
 
