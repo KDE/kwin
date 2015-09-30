@@ -145,6 +145,17 @@ void WaylandClientTest::setupRegistry(Registry *registry)
                             if (key == KEY_Q && state == Keyboard::KeyState::Released) {
                                 QCoreApplication::instance()->quit();
                             }
+                            if (key == KEY_F && state == Keyboard::KeyState::Released) {
+                                if (m_shellSurface) {
+                                    static bool s_fullscreen = false;
+                                    s_fullscreen = !s_fullscreen;
+                                    if (s_fullscreen) {
+                                        m_shellSurface->setFullscreen();
+                                    } else {
+                                        m_shellSurface->setToplevel();
+                                    }
+                                }
+                            }
                         }
                     );
                 }
