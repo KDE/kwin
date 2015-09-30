@@ -1002,7 +1002,7 @@ void RuleBook::edit(AbstractClient* c, bool whole_app)
     connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
         [p] (QProcess::ProcessError e) {
             if (e == QProcess::FailedToStart) {
-                qCDebug(KWIN_CORE) << "Failed to start kwin_rules_dialog";
+                qCDebug(KWIN_CORE) << "Failed to start" << p->program();
             }
         }
     );
