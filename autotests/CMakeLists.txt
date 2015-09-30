@@ -270,6 +270,7 @@ set( testScreenEdges_SRCS
     ../screens.cpp
     ../screenedge.cpp
     ../virtualdesktops.cpp
+    ../xcbutils.cpp # init of extensions
 )
 kconfig_add_kcfg_files(testScreenEdges_SRCS ../settings.kcfgc)
 qt5_add_dbus_interface( testScreenEdges_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.freedesktop.ScreenSaver.xml screenlocker_interface)
@@ -286,6 +287,13 @@ target_link_libraries(testScreenEdges
     KF5::GlobalAccel
     KF5::WindowSystem
     XCB::XCB
+    XCB::RANDR
+    XCB::XFIXES
+    XCB::SYNC
+    XCB::COMPOSITE
+    XCB::DAMAGE
+    XCB::GLX
+    XCB::SHM
 )
 
 add_test(kwin_testScreenEdges testScreenEdges)

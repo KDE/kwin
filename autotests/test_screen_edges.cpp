@@ -305,6 +305,11 @@ void TestScreenEdges::testCreatingInitialEdges()
     // approach windows for edges not created as screen too small
     s->updateLayout();
     auto edgeWindows = s->windows();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+    if (!Xcb::Extensions::self()->isRandrAvailable()) {
+        QEXPECT_FAIL("", "Broken on no xrandr systems in Qt 5.5", Abort);
+    }
+#endif
     QCOMPARE(edgeWindows.size(), 12);
 
     auto testWindowGeometry = [&](int index) {
@@ -423,6 +428,11 @@ void TestScreenEdges::testCallback()
     auto it = std::find_if(edges.constBegin(), edges.constEnd(), [](Edge *e) {
         return e->isScreenEdge() && e->isLeft() && e->approachGeometry().bottom() < 768;
     });
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+    if (!Xcb::Extensions::self()->isRandrAvailable()) {
+        QEXPECT_FAIL("", "Broken on no xrandr systems in Qt 5.5", Abort);
+    }
+#endif
     QVERIFY(it != edges.constEnd());
 
     xcb_enter_notify_event_t event;
