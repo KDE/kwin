@@ -477,7 +477,7 @@ void TestScreenEdges::testCallback()
     QCOMPARE(Cursor::pos(), QPoint(1, 101));
 
     // now let's try to trigger again
-    QTest::qWait(100);
+    QTest::qWait(351);
     setPos(QPoint(0, 100));
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(s->isEntered(&event));
@@ -507,6 +507,7 @@ void TestScreenEdges::testCallback()
     s->setConfig(config);
     s->reconfigure();
     // it should trigger directly
+    QTest::qWait(350);
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(s->isEntered(&event));
     QCOMPARE(spy.count(), 3);
