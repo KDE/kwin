@@ -113,6 +113,19 @@ void ShellClient::destroyClient()
     m_closing = true;
     Deleted *del = Deleted::create(this);
     emit windowClosed(this, del);
+
+    StackingUpdatesBlocker blocker(workspace());
+    if (transientFor()) {
+        transientFor()->removeTransient(this);
+    }
+    for (auto it = transients().constBegin(); it != transients().constEnd();) {
+        if ((*it)->transientFor() == this) {
+            removeTransient(*it);
+            it = transients().constBegin(); // restart, just in case something more has changed with the list
+        } else {
+            ++it;
+        }
+    }
     waylandServer()->removeClient(this);
 
     del->unrefWindow();
@@ -722,7 +735,16 @@ bool ShellClient::isTransient() const
 void ShellClient::setTransient()
 {
     const auto s = m_shellSurface->transientFor();
-    setTransientFor(waylandServer()->findClient(s.data()));
+    auto t = waylandServer()->findClient(s.data());
+    if (t != transientFor()) {
+        // remove from main client
+        if (transientFor())
+            transientFor()->removeTransient(this);
+        setTransientFor(t);
+        if (t) {
+            t->addTransient(this);
+        }
+    }
 }
 
 bool ShellClient::hasTransientPlacementHint() const

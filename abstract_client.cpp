@@ -972,6 +972,9 @@ void AbstractClient::addTransient(AbstractClient *cl)
 void AbstractClient::removeTransient(AbstractClient *cl)
 {
     m_transients.removeAll(cl);
+    if (cl->transientFor() == this) {
+        cl->setTransientFor(nullptr);
+    }
 }
 
 void AbstractClient::removeTransientFromList(AbstractClient *cl)
