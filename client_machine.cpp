@@ -98,7 +98,11 @@ void GetAddrInfo::resolve()
     m_addressHints->ai_flags |= AI_CANONNAME;
 
     m_watcher->setFuture(QtConcurrent::run(getaddrinfo, m_hostName.constData(), nullptr, m_addressHints, &m_address));
-    m_ownAddressWatcher->setFuture(QtConcurrent::run(getaddrinfo, getHostName().constData(), nullptr, m_addressHints, &m_ownAddress));
+    m_ownAddressWatcher->setFuture(QtConcurrent::run([this] {
+        // needs to be performed in a lambda as getHostName() returns a temporary value which would
+        // get destroyed in the main thread before the getaddrinfo thread is able to read it
+        return getaddrinfo(getHostName().constData(), nullptr, m_addressHints, &m_ownAddress);
+    }));
 }
 
 void GetAddrInfo::slotResolved()
