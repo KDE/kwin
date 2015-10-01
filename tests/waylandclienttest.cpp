@@ -108,12 +108,15 @@ void WaylandClientTest::setupRegistry(Registry *registry)
         [this, registry](quint32 name) {
             m_compositor = registry->createCompositor(name, 1, this);
             m_surface = m_compositor->createSurface(this);
+            m_transient.surface = m_compositor->createSurface(this);
         }
     );
     connect(registry, &Registry::shellAnnounced, this,
         [this, registry](quint32 name) {
             Shell *shell = registry->createShell(name, 1, this);
             m_shellSurface = shell->createSurface(m_surface, m_surface);
+            m_transient.shellSurface = shell->createSurface(m_transient.surface, m_transient.surface);
+            m_transient.shellSurface->setTransient(m_surface, QPoint(100, 100));
             connect(m_shellSurface, &ShellSurface::sizeChanged, this, static_cast<void(WaylandClientTest::*)(const QSize&)>(&WaylandClientTest::render));
             render(QSize(200, 200));
         }
@@ -155,6 +158,32 @@ void WaylandClientTest::setupRegistry(Registry *registry)
                                         m_shellSurface->setToplevel();
                                     }
                                 }
+                            }
+                            if (key == KEY_T && state == Keyboard::KeyState::Released) {
+                                if (m_transient.visible) {
+                                    m_transient.surface->attachBuffer(Buffer::Ptr());
+                                    m_transient.surface->commit(Surface::CommitFlag::None);
+                                    m_transient.visible = false;
+                                } else {
+                                    const QSize size(200, 200);
+                                    auto buffer = m_shm->getBuffer(size, size.width() * 4).toStrongRef();
+                                    buffer->setUsed(true);
+                                    QImage image(buffer->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
+                                    image.fill(s_colors[s_colorIndex]);
+
+                                    m_transient.surface->attachBuffer(*buffer);
+                                    m_transient.surface->damage(QRect(QPoint(0, 0), size));
+                                    m_transient.surface->commit(Surface::CommitFlag::None);
+                                    buffer->setUsed(false);
+                                    m_transient.visible = true;
+                                }
+                            }
+                            if (key == KEY_K && state == Keyboard::KeyState::Released) {
+                                delete m_shellSurface;
+                                m_shellSurface = nullptr;
+                                delete m_surface;
+                                m_surface = nullptr;
+                                m_connectionThreadObject->flush();
                             }
                         }
                     );

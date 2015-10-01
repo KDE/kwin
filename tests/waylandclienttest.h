@@ -64,6 +64,11 @@ private:
     KWayland::Client::ShellSurface *m_shellSurface;
     QSize m_currentSize;
     QTimer *m_timer;
+    struct {
+        KWayland::Client::Surface *surface = nullptr;
+        KWayland::Client::ShellSurface *shellSurface = nullptr;
+        bool visible = false;
+    } m_transient;
 };
 
 #endif
