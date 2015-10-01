@@ -180,6 +180,15 @@ void AbstractClient::setActive(bool act)
     if (!m_active && shadeMode() == ShadeActivated)
         setShade(ShadeNormal);
 
+    StackingUpdatesBlocker blocker(workspace());
+    workspace()->updateClientLayer(this);   // active windows may get different layer
+    auto mainclients = mainClients();
+    for (auto it = mainclients.constBegin();
+            it != mainclients.constEnd();
+            ++it)
+        if ((*it)->isFullScreen())  // fullscreens go high even if their transient is active
+            workspace()->updateClientLayer(*it);
+
     doSetActive();
     emit activeChanged();
     updateMouseGrab();

@@ -788,15 +788,6 @@ xcb_timestamp_t Client::userTime() const
 
 void Client::doSetActive()
 {
-    StackingUpdatesBlocker blocker(workspace());
-    workspace()->updateClientLayer(this);   // active windows may get different layer
-    auto mainclients = mainClients();
-    for (auto it = mainclients.constBegin();
-            it != mainclients.constEnd();
-            ++it)
-        if ((*it)->isFullScreen())  // fullscreens go high even if their transient is active
-            workspace()->updateClientLayer(*it);
-
     updateUrgency(); // demand attention again if it's still urgent
 }
 
