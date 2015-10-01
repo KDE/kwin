@@ -375,7 +375,14 @@ void Workspace::init()
             [this] (ShellClient *c) {
                 if (!c->isInternal()) {
                     QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
-                    if (!c->isInitialPositionSet()) {
+                    bool placementDone = false;
+                    if (c->isInitialPositionSet()) {
+                        placementDone = true;
+                    }
+                    if (c->isFullScreen()) {
+                        placementDone = true;
+                    }
+                    if (!placementDone) {
                         Placement::self()->place(c, area);
                     }
                     m_allClients.append(c);
