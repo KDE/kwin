@@ -377,7 +377,7 @@ void TestWaylandShell::testTransient()
     QCOMPARE(transientOffsetSpy.count(), 1);
     QCOMPARE(transientOffsetSpy.first().first().toPoint(), QPoint(10, 20));
     QCOMPARE(transientForChangedSpy.count(), 1);
-    QCOMPARE(serverSurface->isToplevel(), false);
+    QCOMPARE(serverSurface->isToplevel(), true);
     QCOMPARE(serverSurface->isPopup(), false);
     QCOMPARE(serverSurface->isTransient(), true);
     QCOMPARE(serverSurface->transientFor(), QPointer<SurfaceInterface>(serverSurface2->surface()));

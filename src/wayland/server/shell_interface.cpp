@@ -79,7 +79,6 @@ public:
         Fullscreen,
         Toplevel,
         Maximized,
-        Transient,
         Popup
     };
     WindowMode windowMode = WindowMode::Toplevel;
@@ -283,7 +282,7 @@ void ShellSurfaceInterface::Private::setTransientCallback(wl_client *client, wl_
     Q_ASSERT(client == *s->client);
     s->transientFor = QPointer<SurfaceInterface>(SurfaceInterface::get(parent));
     s->transientOffset = QPoint(x, y);
-    s->setWindowMode(WindowMode::Transient);
+    emit s->q_func()->transientChanged(!s->transientFor.isNull());
     // TODO: flags
     emit s->q_func()->transientOffsetChanged(s->transientOffset);
     emit s->q_func()->transientForChanged();
@@ -320,10 +319,6 @@ void ShellSurfaceInterface::Private::setWindowMode(WindowMode newWindowMode)
     }
     if (oldWindowMode == WindowMode::Popup || newWindowMode == WindowMode::Popup) {
         emit q->popupChanged(windowMode == WindowMode::Popup);
-        emit q->transientChanged(windowMode == WindowMode::Popup || windowMode == WindowMode::Transient);
-    }
-    if (oldWindowMode == WindowMode::Transient || newWindowMode == WindowMode::Transient) {
-        emit q->transientChanged(windowMode == WindowMode::Popup || windowMode == WindowMode::Transient);
     }
 }
 
@@ -339,6 +334,7 @@ void ShellSurfaceInterface::Private::setPopupCallback(wl_client *client, wl_reso
     s->transientFor = QPointer<SurfaceInterface>(SurfaceInterface::get(parent));
     s->transientOffset = QPoint(x, y);
     s->setWindowMode(WindowMode::Popup);
+    emit s->q_func()->transientChanged(!s->transientFor.isNull());
     // TODO: flags
     emit s->q_func()->transientOffsetChanged(s->transientOffset);
     emit s->q_func()->transientForChanged();
@@ -430,7 +426,7 @@ bool ShellSurfaceInterface::isPopup() const
 bool ShellSurfaceInterface::isTransient() const
 {
     Q_D();
-    return isPopup() || d->windowMode == Private::WindowMode::Transient;
+    return !d->transientFor.isNull();
 }
 
 QPoint ShellSurfaceInterface::transientOffset() const
