@@ -373,6 +373,7 @@ void Workspace::init()
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this,
             [this] (ShellClient *c) {
+                updateClientLayer(c);
                 if (!c->isInternal()) {
                     QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
                     bool placementDone = false;
