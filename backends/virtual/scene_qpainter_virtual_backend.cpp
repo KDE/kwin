@@ -1,0 +1,99 @@
+/********************************************************************
+ KWin - the KDE window manager
+ This file is part of the KDE project.
+
+Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*********************************************************************/
+#include "scene_qpainter_virtual_backend.h"
+#include "virtual_backend.h"
+#include "cursor.h"
+
+#include <QDebug>
+#include <QPainter>
+#include <QTemporaryDir>
+
+namespace KWin
+{
+VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
+    : QPainterBackend()
+    , m_backBuffer(backend->size(), QImage::Format_RGB32)
+    , m_backend(backend)
+{
+    if (qEnvironmentVariableIsSet("KWIN_WAYLAND_VIRTUAL_SCREENSHOTS")) {
+        m_screenshotDir.reset(new QTemporaryDir);
+        if (!m_screenshotDir->isValid()) {
+            m_screenshotDir.reset();
+        }
+        if (!m_screenshotDir.isNull()) {
+            qDebug() << "Screenshots saved to: " << m_screenshotDir->path();
+        }
+    }
+}
+
+VirtualQPainterBackend::~VirtualQPainterBackend() = default;
+
+QImage *VirtualQPainterBackend::buffer()
+{
+    return &m_backBuffer;
+}
+
+bool VirtualQPainterBackend::needsFullRepaint() const
+{
+    return true;
+}
+
+void VirtualQPainterBackend::prepareRenderingFrame()
+{
+}
+
+void VirtualQPainterBackend::screenGeometryChanged(const QSize &size)
+{
+    if (m_backBuffer.size() != size) {
+        m_backBuffer = QImage(size, QImage::Format_RGB32);
+        m_backBuffer.fill(Qt::black);
+    }
+}
+
+void VirtualQPainterBackend::present(int mask, const QRegion &damage)
+{
+    Q_UNUSED(mask)
+    Q_UNUSED(damage)
+    if (!m_screenshotDir.isNull()) {
+        m_backBuffer.save(QStringLiteral("%1/%2.png").arg(m_screenshotDir->path()).arg(QString::number(m_frameCounter++)));
+    }
+}
+
+bool VirtualQPainterBackend::usesOverlayWindow() const
+{
+    return false;
+}
+
+void VirtualQPainterBackend::renderCursor(QPainter *painter)
+{
+    if (!m_backend->usesSoftwareCursor()) {
+        return;
+    }
+    const QImage img = m_backend->softwareCursor();
+    if (img.isNull()) {
+        return;
+    }
+    const QPoint cursorPos = Cursor::pos();
+    const QPoint hotspot = m_backend->softwareCursorHotspot();
+    painter->drawImage(cursorPos - hotspot, img);
+    m_backend->markCursorAsRendered();
+}
+
+}

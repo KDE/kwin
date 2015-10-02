@@ -1,0 +1,8 @@
+{
+    "KPlugin": {
+        "Id": "KWinWaylandVirtualBackend",
+        "Name": "virtual",
+        "Description": "Render to a virtual framebuffer."
+    },
+    "input": true
+}

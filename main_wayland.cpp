@@ -326,6 +326,7 @@ static const QString s_drmPlugin = QStringLiteral("KWinWaylandDrmBackend");
 #if HAVE_LIBHYBRIS
 static const QString s_hwcomposerPlugin = QStringLiteral("KWinWaylandHwcomposerBackend");
 #endif
+static const QString s_virtualPlugin = QStringLiteral("KWinWaylandVirtualBackend");
 
 static QString automaticBackendSelection()
 {
@@ -411,6 +412,7 @@ int main(int argc, char * argv[])
     QCommandLineOption waylandDisplayOption(QStringLiteral("wayland-display"),
                                             i18n("The Wayland Display to use in windowed mode on platform Wayland."),
                                             QStringLiteral("display"));
+    QCommandLineOption virtualFbOption(QStringLiteral("virtual"), i18n("Render to a virtual framebuffer."));
     QCommandLineOption widthOption(QStringLiteral("width"),
                                    i18n("The width for windowed mode. Default width is 1024."),
                                    QStringLiteral("width"));
@@ -437,7 +439,10 @@ int main(int argc, char * argv[])
         parser.addOption(framebufferOption);
         parser.addOption(framebufferDeviceOption);
     }
-    if (hasPlugin(KWin::s_x11Plugin)) {
+    if (hasPlugin(KWin::s_virtualPlugin)) {
+        parser.addOption(virtualFbOption);
+    }
+    if (hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_virtualPlugin)) {
         parser.addOption(widthOption);
         parser.addOption(heightOption);
     }
@@ -545,6 +550,9 @@ int main(int argc, char * argv[])
         pluginName = KWin::s_hwcomposerPlugin;
     }
 #endif
+    if (parser.isSet(virtualFbOption)) {
+        pluginName = KWin::s_virtualPlugin;
+    }
 
     if (pluginName.isEmpty()) {
         std::cerr << "No backend specified through command line argument, trying auto resolution" << std::endl;
