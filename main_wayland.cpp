@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif // HAVE_UNISTD_H
 
 #include <iostream>
+#include <iomanip>
 
 namespace KWin
 {
@@ -382,6 +383,8 @@ int main(int argc, char * argv[])
 
     KWin::Application::createAboutData();
 
+    const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"));
+
     QCommandLineOption xwaylandOption(QStringLiteral("xwayland"),
                                       i18n("Start a rootless Xwayland server."));
     QCommandLineOption waylandSocketOption(QStringList{QStringLiteral("s"), QStringLiteral("socket")},
@@ -440,12 +443,23 @@ int main(int argc, char * argv[])
                                          QStringLiteral("path/to/imserver"));
     parser.addOption(inputMethodOption);
 
+    QCommandLineOption listBackendsOption(QStringLiteral("list-backends"),
+                                           i18n("List all available backends and quit."));
+    parser.addOption(listBackendsOption);
+
     parser.addPositionalArgument(QStringLiteral("applications"),
                                  i18n("Applications to start once Wayland and Xwayland server are started"),
                                  QStringLiteral("[/path/to/application...]"));
 
     parser.process(a);
     a.processCommandLine(&parser);
+
+    if (parser.isSet(listBackendsOption)) {
+        for (const auto &plugin: availablePlugins) {
+            std::cout << std::setw(40) << std::left << qPrintable(plugin.name()) << qPrintable(plugin.description()) << std::endl;
+        }
+        return 0;
+    }
 
 #if HAVE_INPUT
     KWin::Application::setUseLibinput(parser.isSet(libinputOption));
@@ -516,12 +530,12 @@ int main(int argc, char * argv[])
         pluginName = KWin::automaticBackendSelection();
     }
 
-    const auto pluginCandidates = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"),
+    auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
         [&pluginName] (const KPluginMetaData &plugin) {
             return plugin.pluginId() == pluginName;
         }
     );
-    if (pluginCandidates.isEmpty()) {
+    if (pluginIt == availablePlugins.end()) {
         std::cerr << "FATAL ERROR: could not find a backend" << std::endl;
         return 1;
     }
@@ -530,23 +544,20 @@ int main(int argc, char * argv[])
     KWin::WaylandServer *server = KWin::WaylandServer::create(&a);
     server->init(parser.value(waylandSocketOption).toUtf8());
 
-    for (const auto &candidate: pluginCandidates) {
-        if (qobject_cast<KWin::AbstractBackend*>(candidate.instantiate())) {
+    if (qobject_cast<KWin::AbstractBackend*>((*pluginIt).instantiate())) {
 #if HAVE_INPUT
-            // check whether it needs libinput
-            const QJsonObject &metaData = candidate.rawData();
-            auto it = metaData.find(QStringLiteral("input"));
-            if (it != metaData.constEnd()) {
-                if ((*it).isBool()) {
-                    if (!(*it).toBool()) {
-                        std::cerr << "Backend does not support input, enforcing libinput support" << std::endl;
-                        KWin::Application::setUseLibinput(true);
-                    }
+        // check whether it needs libinput
+        const QJsonObject &metaData = (*pluginIt).rawData();
+        auto it = metaData.find(QStringLiteral("input"));
+        if (it != metaData.constEnd()) {
+            if ((*it).isBool()) {
+                if (!(*it).toBool()) {
+                    std::cerr << "Backend does not support input, enforcing libinput support" << std::endl;
+                    KWin::Application::setUseLibinput(true);
                 }
             }
-#endif
-            break;
         }
+#endif
     }
     if (!server->backend()) {
         std::cerr << "FATAL ERROR: could not instantiate a backend" << std::endl;

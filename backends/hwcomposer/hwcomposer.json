@@ -1,3 +1,8 @@
 {
+    "KPlugin": {
+        "Id": "KWinWaylandHwcomposerBackend",
+        "Name": "hwcomposer",
+        "Description": "Render through hwcomposer through libhybris."
+    },
     "input": true
 }
