@@ -384,6 +384,13 @@ int main(int argc, char * argv[])
     KWin::Application::createAboutData();
 
     const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"));
+    auto hasPlugin = [&availablePlugins] (const QString &name) {
+        return std::any_of(availablePlugins.begin(), availablePlugins.end(),
+            [name] (const KPluginMetaData &plugin) {
+                return plugin.pluginId() == name;
+            }
+        );
+    };
 
     QCommandLineOption xwaylandOption(QStringLiteral("xwayland"),
                                       i18n("Start a rootless Xwayland server."));
@@ -417,16 +424,28 @@ int main(int argc, char * argv[])
     a.setupCommandLine(&parser);
     parser.addOption(xwaylandOption);
     parser.addOption(waylandSocketOption);
-    parser.addOption(windowedOption);
-    parser.addOption(x11DisplayOption);
-    parser.addOption(waylandDisplayOption);
-    parser.addOption(framebufferOption);
-    parser.addOption(framebufferDeviceOption);
-    parser.addOption(widthOption);
-    parser.addOption(heightOption);
+    if (hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_waylandPlugin)) {
+        parser.addOption(windowedOption);
+    }
+    if (hasPlugin(KWin::s_x11Plugin)) {
+        parser.addOption(x11DisplayOption);
+    }
+    if (hasPlugin(KWin::s_waylandPlugin)) {
+        parser.addOption(waylandDisplayOption);
+    }
+    if (hasPlugin(KWin::s_fbdevPlugin)) {
+        parser.addOption(framebufferOption);
+        parser.addOption(framebufferDeviceOption);
+    }
+    if (hasPlugin(KWin::s_x11Plugin)) {
+        parser.addOption(widthOption);
+        parser.addOption(heightOption);
+    }
 #if HAVE_LIBHYBRIS
     QCommandLineOption hwcomposerOption(QStringLiteral("hwcomposer"), i18n("Use libhybris hwcomposer"));
-    parser.addOption(hwcomposerOption);
+    if (hasPlugin(KWin::s_hwcomposerPlugin)) {
+        parser.addOption(hwcomposerOption);
+    }
 #endif
 #if HAVE_INPUT
     QCommandLineOption libinputOption(QStringLiteral("libinput"),
@@ -435,7 +454,9 @@ int main(int argc, char * argv[])
 #endif
 #if HAVE_DRM
     QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
-    parser.addOption(drmOption);
+    if (hasPlugin(KWin::s_drmPlugin)) {
+        parser.addOption(drmOption);
+    }
 #endif
 
     QCommandLineOption inputMethodOption(QStringLiteral("inputmethod"),
