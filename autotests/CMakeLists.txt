@@ -1,4 +1,5 @@
 add_definitions(-DKWIN_UNIT_TEST)
+add_subdirectory(wayland)
 
 ########################################################
 # Test ScreenPaintData
