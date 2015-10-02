@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) \
     KWin::WaylandTestApplication app(argc, argv); \
     app.setAttribute(Qt::AA_Use96Dpi, true); \
     TestObject tc; \
-    QTEST_SET_MAIN_SOURCE_PATH \
+    QTest::setMainSourcePath("anonymous"); \
     return QTest::qExec(&tc, argc, argv); \
 }
 
