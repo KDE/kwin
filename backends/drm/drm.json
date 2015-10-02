@@ -1,8 +1,8 @@
 {
     "KPlugin": {
-        "Id": "KWinWaylandDrmBackend",
-        "Name": "drm",
-        "Description": "Render through drm node."
-    },
+        "Description": "Render through drm node.", 
+        "Id": "KWinWaylandDrmBackend", 
+        "Name": "drm"
+    }, 
     "input": false
 }

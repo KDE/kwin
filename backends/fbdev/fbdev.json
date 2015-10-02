@@ -1,8 +1,8 @@
 {
     "KPlugin": {
-        "Id": "KWinWaylandFbdevBackend",
-        "Name": "framebuffer",
-        "Description": "Render to framebuffer."
-    },
+        "Description": "Render to framebuffer.", 
+        "Id": "KWinWaylandFbdevBackend", 
+        "Name": "framebuffer"
+    }, 
     "input": false
 }

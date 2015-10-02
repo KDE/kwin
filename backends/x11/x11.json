@@ -1,8 +1,8 @@
 {
     "KPlugin": {
-        "Id": "KWinWaylandX11Backend",
-        "Name": "x11",
-        "Description": "Render to a nested window on X11 windowing system."
-    },
+        "Description": "Render to a nested window on X11 windowing system.", 
+        "Id": "KWinWaylandX11Backend", 
+        "Name": "x11"
+    }, 
     "input": true
 }

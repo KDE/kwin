@@ -1,8 +1,8 @@
 {
     "KPlugin": {
-        "Id": "KWinWaylandWaylandBackend",
-        "Name": "wayland",
-        "Description": "Render to a nested window on running Wayland compositor."
-    },
+        "Description": "Render to a nested window on running Wayland compositor.", 
+        "Id": "KWinWaylandWaylandBackend", 
+        "Name": "wayland"
+    }, 
     "input": true
 }
