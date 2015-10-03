@@ -60,9 +60,6 @@ int main(int argc, char *argv[]) \
     KWin::WaylandTestApplication app(argc, argv); \
     app.setAttribute(Qt::AA_Use96Dpi, true); \
     TestObject tc; \
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)) \
-    QTest::setMainSourcePath("anonymous"); \
-#endif \
     return QTest::qExec(&tc, argc, argv); \
 }
 
