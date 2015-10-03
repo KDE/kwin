@@ -1,8 +1,18 @@
 {
     "KPlugin": {
         "Description": "Render through drm node.", 
+        "Description[nl]": "Via drm-node renderen.", 
+        "Description[pt]": "Desenhar através de um nó DRM.", 
+        "Description[pt_BR]": "Renderizar pelo nó de DRM.", 
+        "Description[uk]": "Обробляти через вузол DRM.", 
+        "Description[x-test]": "xxRender through drm node.xx", 
         "Id": "KWinWaylandDrmBackend", 
-        "Name": "drm"
+        "Name": "drm", 
+        "Name[nl]": "drm", 
+        "Name[pt]": "DRM", 
+        "Name[pt_BR]": "drm", 
+        "Name[uk]": "drm", 
+        "Name[x-test]": "xxdrmxx"
     }, 
     "input": false
 }

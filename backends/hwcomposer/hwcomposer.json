@@ -1,8 +1,18 @@
 {
     "KPlugin": {
         "Description": "Render through hwcomposer through libhybris.", 
+        "Description[nl]": "Render via hwcomposer via libhybris.", 
+        "Description[pt]": "Desenhar através do Hwcomposer, usando a libhybris.", 
+        "Description[pt_BR]": "Renderizar através do hwcomposer e libhybris.", 
+        "Description[uk]": "Обробляти за допомогою апаратного засобу композиції через libhybris.", 
+        "Description[x-test]": "xxRender through hwcomposer through libhybris.xx", 
         "Id": "KWinWaylandHwcomposerBackend", 
-        "Name": "hwcomposer"
+        "Name": "hwcomposer", 
+        "Name[nl]": "hwcomposer", 
+        "Name[pt]": "Hwcomposer", 
+        "Name[pt_BR]": "hwcomposer", 
+        "Name[uk]": "hwcomposer", 
+        "Name[x-test]": "xxhwcomposerxx"
     }, 
     "input": true
 }

@@ -1,8 +1,18 @@
 {
     "KPlugin": {
         "Description": "Render to a nested window on X11 windowing system.", 
+        "Description[nl]": "Render naar een genest venster in het X11 windowingsysteem.", 
+        "Description[pt]": "Desenhar numa janela encadeada no sistema de janelas X11.", 
+        "Description[pt_BR]": "Renderizar uma janela aninhada no sistema de janelas X11.", 
+        "Description[uk]": "Обробляти у вкладене вікно системи керування вікнами X11.", 
+        "Description[x-test]": "xxRender to a nested window on X11 windowing system.xx", 
         "Id": "KWinWaylandX11Backend", 
-        "Name": "x11"
+        "Name": "x11", 
+        "Name[nl]": "x11", 
+        "Name[pt]": "X11", 
+        "Name[pt_BR]": "x11", 
+        "Name[uk]": "x11", 
+        "Name[x-test]": "xxx11xx"
     }, 
     "input": true
 }
