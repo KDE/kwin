@@ -392,6 +392,18 @@ int main(int argc, char * argv[])
             }
         );
     };
+    const bool hasWindowedOption = hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_waylandPlugin);
+    const bool hasSizeOption = hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_virtualPlugin);
+    const bool hasX11Option = hasPlugin(KWin::s_x11Plugin);
+    const bool hasVirtualOption = hasPlugin(KWin::s_virtualPlugin);
+    const bool hasWaylandOption = hasPlugin(KWin::s_waylandPlugin);
+    const bool hasFramebufferOption = hasPlugin(KWin::s_fbdevPlugin);
+#if HAVE_DRM
+    const bool hasDrmOption = hasPlugin(KWin::s_drmPlugin);
+#endif
+#if HAVE_LIBHYBRIS
+    const bool hasHwcomposerOption = hasPlugin(KWin::s_hwcomposerPlugin);
+#endif
 
     QCommandLineOption xwaylandOption(QStringLiteral("xwayland"),
                                       i18n("Start a rootless Xwayland server."));
@@ -426,29 +438,29 @@ int main(int argc, char * argv[])
     a.setupCommandLine(&parser);
     parser.addOption(xwaylandOption);
     parser.addOption(waylandSocketOption);
-    if (hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_waylandPlugin)) {
+    if (hasWindowedOption) {
         parser.addOption(windowedOption);
     }
-    if (hasPlugin(KWin::s_x11Plugin)) {
+    if (hasX11Option) {
         parser.addOption(x11DisplayOption);
     }
-    if (hasPlugin(KWin::s_waylandPlugin)) {
+    if (hasWaylandOption) {
         parser.addOption(waylandDisplayOption);
     }
-    if (hasPlugin(KWin::s_fbdevPlugin)) {
+    if (hasFramebufferOption) {
         parser.addOption(framebufferOption);
         parser.addOption(framebufferDeviceOption);
     }
-    if (hasPlugin(KWin::s_virtualPlugin)) {
+    if (hasVirtualOption) {
         parser.addOption(virtualFbOption);
     }
-    if (hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_virtualPlugin)) {
+    if (hasSizeOption) {
         parser.addOption(widthOption);
         parser.addOption(heightOption);
     }
 #if HAVE_LIBHYBRIS
     QCommandLineOption hwcomposerOption(QStringLiteral("hwcomposer"), i18n("Use libhybris hwcomposer"));
-    if (hasPlugin(KWin::s_hwcomposerPlugin)) {
+    if (hasHwcomposerOption) {
         parser.addOption(hwcomposerOption);
     }
 #endif
@@ -459,7 +471,7 @@ int main(int argc, char * argv[])
 #endif
 #if HAVE_DRM
     QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
-    if (hasPlugin(KWin::s_drmPlugin)) {
+    if (hasDrmOption) {
         parser.addOption(drmOption);
     }
 #endif
@@ -494,46 +506,40 @@ int main(int argc, char * argv[])
     QString pluginName;
     QSize initialWindowSize;
     QByteArray deviceIdentifier;
-    if (parser.isSet(windowedOption) && parser.isSet(framebufferOption)) {
-        std::cerr << "FATAL ERROR Cannot have both --windowed and --framebuffer" << std::endl;
-        return 1;
-    }
+
 #if HAVE_DRM
-    if (parser.isSet(drmOption) && (parser.isSet(windowedOption) || parser.isSet(framebufferOption))) {
-        std::cerr << "FATAL ERROR Cannot have both --windowed/--framebuffer and --drm" << std::endl;
-        return 1;
-    }
-    if (parser.isSet(drmOption)) {
+    if (hasDrmOption && parser.isSet(drmOption)) {
         pluginName = KWin::s_drmPlugin;
     }
 #endif
 
-
-    bool ok = false;
-    const int width = parser.value(widthOption).toInt(&ok);
-    if (!ok) {
-        std::cerr << "FATAL ERROR incorrect value for width" << std::endl;
-        return 1;
+    if (hasSizeOption) {
+        bool ok = false;
+        const int width = parser.value(widthOption).toInt(&ok);
+        if (!ok) {
+            std::cerr << "FATAL ERROR incorrect value for width" << std::endl;
+            return 1;
+        }
+        const int height = parser.value(heightOption).toInt(&ok);
+        if (!ok) {
+            std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
+            return 1;
+        }
+        initialWindowSize = QSize(width, height);
     }
-    const int height = parser.value(heightOption).toInt(&ok);
-    if (!ok) {
-        std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
-        return 1;
-    }
-    initialWindowSize = QSize(width, height);
 
-    if (parser.isSet(windowedOption)) {
-        if (parser.isSet(x11DisplayOption)) {
+    if (hasWindowedOption && parser.isSet(windowedOption)) {
+        if (hasX11Option && parser.isSet(x11DisplayOption)) {
             deviceIdentifier = parser.value(x11DisplayOption).toUtf8();
-        } else if (!parser.isSet(waylandDisplayOption)) {
+        } else if (!(hasWaylandOption && parser.isSet(waylandDisplayOption))) {
             deviceIdentifier = qgetenv("DISPLAY");
         }
         if (!deviceIdentifier.isEmpty()) {
             pluginName = KWin::s_x11Plugin;
-        } else {
+        } else if (hasWaylandOption) {
             if (parser.isSet(waylandDisplayOption)) {
                 deviceIdentifier = parser.value(waylandDisplayOption).toUtf8();
-            } else if (!parser.isSet(x11DisplayOption)) {
+            } else {
                 deviceIdentifier = qgetenv("WAYLAND_DISPLAY");
             }
             if (!deviceIdentifier.isEmpty()) {
@@ -541,16 +547,16 @@ int main(int argc, char * argv[])
             }
         }
     }
-    if (parser.isSet(framebufferOption)) {
+    if (hasFramebufferOption && parser.isSet(framebufferOption)) {
         pluginName = KWin::s_fbdevPlugin;
         deviceIdentifier = parser.value(framebufferDeviceOption).toUtf8();
     }
 #if HAVE_LIBHYBRIS
-    if (parser.isSet(hwcomposerOption)) {
+    if (hasHwcomposerOption && parser.isSet(hwcomposerOption)) {
         pluginName = KWin::s_hwcomposerPlugin;
     }
 #endif
-    if (parser.isSet(virtualFbOption)) {
+    if (hasVirtualOption && parser.isSet(virtualFbOption)) {
         pluginName = KWin::s_virtualPlugin;
     }
 
