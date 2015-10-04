@@ -1,8 +1,20 @@
 {
     "KPlugin": {
         "Description": "Render to a virtual framebuffer.", 
+        "Description[ca]": "Renderitza a un «framebuffer» virtual.", 
+        "Description[nl]": "Naar een virtuele framebuffer renderen.", 
+        "Description[pl]": "Wyświetlaj w wirtualnym buforze klatek.", 
+        "Description[pt_BR]": "Renderizar no framebuffer virtual.", 
+        "Description[sk]": "Renderovať na virtuálny framebuffer.", 
+        "Description[x-test]": "xxRender to a virtual framebuffer.xx", 
         "Id": "KWinWaylandVirtualBackend", 
-        "Name": "virtual"
+        "Name": "virtual", 
+        "Name[ca]": "Virtual", 
+        "Name[nl]": "virtueel", 
+        "Name[pl]": "wirtualne", 
+        "Name[pt_BR]": "virtual", 
+        "Name[sk]": "virtual", 
+        "Name[x-test]": "xxvirtualxx"
     }, 
     "input": true
 }

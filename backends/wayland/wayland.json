@@ -1,16 +1,22 @@
 {
     "KPlugin": {
         "Description": "Render to a nested window on running Wayland compositor.", 
+        "Description[ca]": "Renderitza a una finestra imbricada en un compositor Wayland en execució.", 
         "Description[nl]": "Render naar een genest venster in een werkende Wayland-compositor.", 
+        "Description[pl]": "Wyświetlaj w zagnieżdżonym oknie w kompozytorze Wayland.", 
         "Description[pt]": "Desenhar numa janela encadeada no compositor de Wayland em execução.", 
-        "Description[pt_BR]": "Renderizar uma janela aninhada executando no compositor Wayland.", 
+        "Description[pt_BR]": "Renderizar uma janela encadeada no compositor Wayland em execução.", 
+        "Description[sk]": "Renderovať na vnorené okno na bežiaci kompozítor Wayland.", 
         "Description[uk]": "Обробляти у вкладене вікно запущеного засобу композиції Wayland.", 
         "Description[x-test]": "xxRender to a nested window on running Wayland compositor.xx", 
         "Id": "KWinWaylandWaylandBackend", 
         "Name": "wayland", 
+        "Name[ca]": "Wayland", 
         "Name[nl]": "wayland", 
+        "Name[pl]": "wayland", 
         "Name[pt]": "Wayland", 
         "Name[pt_BR]": "wayland", 
+        "Name[sk]": "wayland", 
         "Name[uk]": "wayland", 
         "Name[x-test]": "xxwaylandxx"
     }, 

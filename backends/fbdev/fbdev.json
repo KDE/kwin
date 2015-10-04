@@ -1,16 +1,22 @@
 {
     "KPlugin": {
         "Description": "Render to framebuffer.", 
+        "Description[ca]": "Renderitza al «framebuffer».", 
         "Description[nl]": "Naar framebuffer renderen.", 
+        "Description[pl]": "Wyświetlaj w buforze klatek.", 
         "Description[pt]": "Desenhar no 'framebuffer'.", 
         "Description[pt_BR]": "Renderizar no framebuffer.", 
+        "Description[sk]": "Renderovať do framebuffera.", 
         "Description[uk]": "Обробляти до буфера кадрів.", 
         "Description[x-test]": "xxRender to framebuffer.xx", 
         "Id": "KWinWaylandFbdevBackend", 
         "Name": "framebuffer", 
+        "Name[ca]": "Framebuffer", 
         "Name[nl]": "framebuffer", 
+        "Name[pl]": "bufor klatek", 
         "Name[pt]": "'Framebuffer'", 
         "Name[pt_BR]": "framebuffer", 
+        "Name[sk]": "framebuffer", 
         "Name[uk]": "framebuffer", 
         "Name[x-test]": "xxframebufferxx"
     }, 
