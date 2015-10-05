@@ -156,4 +156,6 @@ private:
 
 }
 
+Q_DECLARE_METATYPE(KWin::ShellClient*)
+
 #endif

@@ -133,8 +133,8 @@ public:
     quint32 createWindowId(KWayland::Server::SurfaceInterface *surface);
 
 Q_SIGNALS:
-    void shellClientAdded(ShellClient*);
-    void shellClientRemoved(ShellClient*);
+    void shellClientAdded(KWin::ShellClient*);
+    void shellClientRemoved(KWin::ShellClient*);
 
 private:
     quint16 createClientId(KWayland::Server::ClientConnection *c);
