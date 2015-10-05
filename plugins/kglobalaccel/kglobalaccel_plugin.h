@@ -41,6 +41,8 @@ public Q_SLOTS:
     bool checkKeyPressed(int keyQt);
 
 private:
+    bool m_shuttingDown = false;
+    QMetaObject::Connection m_inputDestroyedConnection;
 };
 
 #endif
