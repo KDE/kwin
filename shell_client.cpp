@@ -506,7 +506,7 @@ bool ShellClient::wantsInput() const
         return false;
     }
     // if the window is not visible it doesn't get input
-    return isShown(true);
+    return m_shellSurface->acceptsKeyboardFocus() && isShown(true);
 }
 
 void ShellClient::createWindowId()
