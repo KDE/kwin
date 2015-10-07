@@ -47,6 +47,7 @@ private Q_SLOTS:
     void testFullscreen();
     void testMaximize();
     void testToplevel();
+    void testTransient_data();
     void testTransient();
     void testPing();
     void testTitle();
@@ -335,6 +336,14 @@ void TestWaylandShell::testToplevel()
     QVERIFY(!toplevelSpy.first().first().toBool());
 }
 
+void TestWaylandShell::testTransient_data()
+{
+    QTest::addColumn<bool>("keyboardFocus");
+
+    QTest::newRow("focus") << true;
+    QTest::newRow("no focus") << false;
+}
+
 void TestWaylandShell::testTransient()
 {
     using namespace KWayland::Server;
@@ -349,11 +358,15 @@ void TestWaylandShell::testTransient()
     QVERIFY(serverSurfaceSpy.wait());
     ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
     QVERIFY(serverSurface);
+    QSignalSpy acceptsKeyboardFocusChangedSpy(serverSurface, &ShellSurfaceInterface::acceptsKeyboardFocusChanged);
+    QVERIFY(acceptsKeyboardFocusChangedSpy.isValid());
     QCOMPARE(serverSurface->isToplevel(), true);
     QCOMPARE(serverSurface->isPopup(), false);
     QCOMPARE(serverSurface->isTransient(), false);
     QCOMPARE(serverSurface->transientFor(), QPointer<SurfaceInterface>());
     QCOMPARE(serverSurface->transientOffset(), QPoint());
+    QVERIFY(serverSurface->acceptsKeyboardFocus());
+    QVERIFY(acceptsKeyboardFocusChangedSpy.isEmpty());
 
     QSignalSpy transientSpy(serverSurface, &ShellSurfaceInterface::transientChanged);
     QVERIFY(transientSpy.isValid());
@@ -369,8 +382,10 @@ void TestWaylandShell::testTransient()
     ShellSurfaceInterface *serverSurface2 = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
     QVERIFY(serverSurface2 != serverSurface);
     QVERIFY(serverSurface2);
+    QVERIFY(serverSurface2->acceptsKeyboardFocus());
 
-    surface->setTransient(s2.data(), QPoint(10, 20));
+    QFETCH(bool, keyboardFocus);
+    surface->setTransient(s2.data(), QPoint(10, 20), keyboardFocus ? ShellSurface::TransientFlag::Default : ShellSurface::TransientFlag::NoFocus);
     QVERIFY(transientSpy.wait());
     QCOMPARE(transientSpy.count(), 1);
     QCOMPARE(transientSpy.first().first().toBool(), true);
@@ -382,12 +397,16 @@ void TestWaylandShell::testTransient()
     QCOMPARE(serverSurface->isTransient(), true);
     QCOMPARE(serverSurface->transientFor(), QPointer<SurfaceInterface>(serverSurface2->surface()));
     QCOMPARE(serverSurface->transientOffset(), QPoint(10, 20));
+    QCOMPARE(serverSurface->acceptsKeyboardFocus(), keyboardFocus);
+    QCOMPARE(acceptsKeyboardFocusChangedSpy.isEmpty(), keyboardFocus);
+    QCOMPARE(acceptsKeyboardFocusChangedSpy.count(), keyboardFocus ? 0 : 1);
 
     QCOMPARE(serverSurface2->isToplevel(), true);
     QCOMPARE(serverSurface2->isPopup(), false);
     QCOMPARE(serverSurface2->isTransient(), false);
     QCOMPARE(serverSurface2->transientFor(), QPointer<SurfaceInterface>());
     QCOMPARE(serverSurface2->transientOffset(), QPoint());
+    QVERIFY(serverSurface2->acceptsKeyboardFocus());
 }
 
 void TestWaylandShell::testPing()

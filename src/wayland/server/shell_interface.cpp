@@ -84,6 +84,7 @@ public:
     WindowMode windowMode = WindowMode::Toplevel;
     QPoint transientOffset;
     QPointer<SurfaceInterface> transientFor;
+    bool acceptsKeyboardFocus = true;
     void setWindowMode(WindowMode newWindowMode);
 
 private:
@@ -106,6 +107,7 @@ private:
     void setTitle(const QString &title);
     void setWindowClass(const QByteArray &windowClass);
     void pong(quint32 serial);
+    void setAcceptsFocus(quint32 flags);
     ShellSurfaceInterface *q_func() {
         return reinterpret_cast<ShellSurfaceInterface *>(q);
     }
@@ -283,9 +285,19 @@ void ShellSurfaceInterface::Private::setTransientCallback(wl_client *client, wl_
     s->transientFor = QPointer<SurfaceInterface>(SurfaceInterface::get(parent));
     s->transientOffset = QPoint(x, y);
     emit s->q_func()->transientChanged(!s->transientFor.isNull());
-    // TODO: flags
     emit s->q_func()->transientOffsetChanged(s->transientOffset);
     emit s->q_func()->transientForChanged();
+    s->setAcceptsFocus(flags);
+}
+
+void ShellSurfaceInterface::Private::setAcceptsFocus(quint32 flags)
+{
+    const bool acceptsFocus = !(flags & WL_SHELL_SURFACE_TRANSIENT_INACTIVE);
+    if (acceptsFocus != acceptsKeyboardFocus) {
+        acceptsKeyboardFocus = acceptsFocus;
+        Q_Q(ShellSurfaceInterface);
+        emit q->acceptsKeyboardFocusChanged();
+    }
 }
 
 void ShellSurfaceInterface::Private::setFullscreenCallback(wl_client *client, wl_resource *resource, uint32_t method,
@@ -335,9 +347,9 @@ void ShellSurfaceInterface::Private::setPopupCallback(wl_client *client, wl_reso
     s->transientOffset = QPoint(x, y);
     s->setWindowMode(WindowMode::Popup);
     emit s->q_func()->transientChanged(!s->transientFor.isNull());
-    // TODO: flags
     emit s->q_func()->transientOffsetChanged(s->transientOffset);
     emit s->q_func()->transientForChanged();
+    s->setAcceptsFocus(WL_SHELL_SURFACE_TRANSIENT_INACTIVE);
 }
 
 void ShellSurfaceInterface::Private::setMaximizedCallback(wl_client *client, wl_resource *resource, wl_resource *output)
@@ -433,6 +445,12 @@ QPoint ShellSurfaceInterface::transientOffset() const
 {
     Q_D();
     return d->transientOffset;
+}
+
+bool ShellSurfaceInterface::acceptsKeyboardFocus() const
+{
+    Q_D();
+    return d->acceptsKeyboardFocus;
 }
 
 QPointer< SurfaceInterface > ShellSurfaceInterface::transientFor() const

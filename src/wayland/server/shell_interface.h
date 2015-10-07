@@ -116,6 +116,15 @@ class KWAYLANDSERVER_EXPORT ShellSurfaceInterface : public Resource
      * @since 5.5
      **/
     Q_PROPERTY(QPoint transientOffset READ transientOffset NOTIFY transientOffsetChanged)
+    /**
+     * Whether the ShellSurfaceInterface can accept keyboard focus.
+     *
+     * By default ShellSurfaceInterface accepts keyboard focus, only transient surfaces
+     * might not want keyboard focus.
+     *
+     * @since 5.5
+     **/
+    Q_PROPERTY(bool acceptsKeyboardFocus READ acceptsKeyboardFocus NOTIFY acceptsKeyboardFocusChanged)
 public:
     virtual ~ShellSurfaceInterface();
 
@@ -205,6 +214,19 @@ public:
      **/
     QPointer<SurfaceInterface> transientFor() const;
 
+    /**
+     * Whether the ShellSurfaceInterface can accept keyboard focus.
+     *
+     * This is only relevant for transient and popup windows. By default all ShellSurfaces
+     * accept keyboard focus.
+     *
+     * @returns Whether the ShellSurfaceInterface can accept keyboard focus.
+     * @see isTransient()
+     * @see acceptsKeyboardFocusChanged
+     * @since 5.5
+     **/
+    bool acceptsKeyboardFocus() const;
+
 Q_SIGNALS:
     /**
      * Emitted whenever the title changes.
@@ -244,6 +266,10 @@ Q_SIGNALS:
      * @since 5.5
      **/
     void transientForChanged();
+    /**
+     * @since 5.5
+     **/
+    void acceptsKeyboardFocusChanged();
 
 private:
     friend class ShellInterface;
