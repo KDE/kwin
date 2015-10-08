@@ -405,7 +405,9 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         return;
     }
 #ifndef KWIN_HAVE_OPENGLES
-    glDrawBuffer(GL_BACK);
+    if (!m_backend->isSurfaceLessContext()) {
+        glDrawBuffer(GL_BACK);
+    }
 #endif
 
     m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;

@@ -483,6 +483,13 @@ public:
     }
 
     /**
+     * @returns whether the context is surfaceless
+     **/
+    bool isSurfaceLessContext() const {
+        return m_surfaceLessContext;
+    }
+
+    /**
      * Returns the damage that has accumulated since a buffer of the given age was presented.
      */
     QRegion accumulatedDamageHistory(int bufferAge) const;
@@ -561,6 +568,13 @@ protected:
         m_renderTimer.start();
     }
 
+    /**
+     * @param set whether the context is surface less
+     **/
+    void setSurfaceLessContext(bool set) {
+        m_surfaceLessContext = set;
+    }
+
     SwapProfiler m_swapProfiler;
 
 private:
@@ -596,6 +610,7 @@ private:
      * @brief Timer to measure how long a frame renders.
      **/
     QElapsedTimer m_renderTimer;
+    bool m_surfaceLessContext = false;
 };
 
 class SceneOpenGLDecorationRenderer : public Decoration::Renderer
