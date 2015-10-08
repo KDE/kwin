@@ -53,6 +53,7 @@ public:
 
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend* createQPainterBackend() override;
+    OpenGLBackend *createOpenGLBackend() override;
 
 Q_SIGNALS:
     void sizeChanged();

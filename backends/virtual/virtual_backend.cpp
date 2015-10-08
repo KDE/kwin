@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_qpainter_virtual_backend.h"
 #include "screens_virtual.h"
 #include "wayland_server.h"
+#include "egl_gbm_backend.h"
 // Qt
 #include <QTemporaryDir>
 // KWayland
@@ -43,8 +44,6 @@ VirtualBackend::VirtualBackend(QObject *parent)
     }
     setSoftWareCursor(true);
     setSupportsPointerWarping(true);
-    // currently only QPainter - enforce it
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
 }
 
 VirtualBackend::~VirtualBackend() = default;
@@ -75,6 +74,11 @@ Screens *VirtualBackend::createScreens(QObject *parent)
 QPainterBackend *VirtualBackend::createQPainterBackend()
 {
     return new VirtualQPainterBackend(this);
+}
+
+OpenGLBackend *VirtualBackend::createOpenGLBackend()
+{
+    return new EglGbmBackend(this);
 }
 
 }
