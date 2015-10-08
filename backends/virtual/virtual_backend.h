@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QSize>
 
+class QTemporaryDir;
+
 namespace KWin
 {
 
@@ -44,6 +46,11 @@ public:
         return m_size;
     }
 
+    bool saveFrames() const {
+        return !m_screenshotDir.isNull();
+    }
+    QString screenshotDirPath() const;
+
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend* createQPainterBackend() override;
 
@@ -52,6 +59,7 @@ Q_SIGNALS:
 
 private:
     QSize m_size;
+    QScopedPointer<QTemporaryDir> m_screenshotDir;
 };
 
 }

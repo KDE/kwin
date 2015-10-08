@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
-class QTemporaryDir;
-
 namespace KWin
 {
 
@@ -49,7 +47,6 @@ public:
 private:
     QImage m_backBuffer;
     VirtualBackend *m_backend;
-    QScopedPointer<QTemporaryDir> m_screenshotDir;
     int m_frameCounter = 0;
 };
 

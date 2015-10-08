@@ -21,9 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "virtual_backend.h"
 #include "cursor.h"
 
-#include <QDebug>
 #include <QPainter>
-#include <QTemporaryDir>
 
 namespace KWin
 {
@@ -32,15 +30,6 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
     , m_backBuffer(backend->size(), QImage::Format_RGB32)
     , m_backend(backend)
 {
-    if (qEnvironmentVariableIsSet("KWIN_WAYLAND_VIRTUAL_SCREENSHOTS")) {
-        m_screenshotDir.reset(new QTemporaryDir);
-        if (!m_screenshotDir->isValid()) {
-            m_screenshotDir.reset();
-        }
-        if (!m_screenshotDir.isNull()) {
-            qDebug() << "Screenshots saved to: " << m_screenshotDir->path();
-        }
-    }
 }
 
 VirtualQPainterBackend::~VirtualQPainterBackend() = default;
@@ -71,8 +60,8 @@ void VirtualQPainterBackend::present(int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)
-    if (!m_screenshotDir.isNull()) {
-        m_backBuffer.save(QStringLiteral("%1/%2.png").arg(m_screenshotDir->path()).arg(QString::number(m_frameCounter++)));
+    if (m_backend->saveFrames()) {
+        m_backBuffer.save(QStringLiteral("%1/%2.png").arg(m_backend->screenshotDirPath()).arg(QString::number(m_frameCounter++)));
     }
 }
 
