@@ -328,7 +328,7 @@ bool ShellClient::isFullScreenable() const
 
 bool ShellClient::isFullScreen() const
 {
-    return m_shellSurface->isFullscreen();
+    return m_fullScreen;
 }
 
 bool ShellClient::isMaximizable() const
@@ -585,6 +585,10 @@ void ShellClient::clientFullScreenChanged(bool fullScreen)
         } else {
             requestGeometry(workspace()->clientArea(MaximizeArea, this));
         }
+    }
+    if (m_fullScreen != fullScreen) {
+        m_fullScreen = fullScreen;
+        emit fullScreenChanged();
     }
 }
 
