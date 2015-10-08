@@ -151,6 +151,7 @@ private:
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWayland::Server::QtExtendedSurfaceInterface> m_qtExtendedSurface;
     bool m_fullScreen = false;
+    bool m_transient = false;
 };
 
 }

@@ -730,7 +730,7 @@ void ShellClient::updateIcon()
 
 bool ShellClient::isTransient() const
 {
-    return m_shellSurface->isTransient();
+    return m_transient;
 }
 
 void ShellClient::setTransient()
@@ -746,6 +746,7 @@ void ShellClient::setTransient()
             t->addTransient(this);
         }
     }
+    m_transient = !s.isNull();
 }
 
 bool ShellClient::hasTransientPlacementHint() const
