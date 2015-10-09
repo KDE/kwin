@@ -182,6 +182,7 @@ AbstractEglTexture::AbstractEglTexture(SceneOpenGL::Texture *texture, AbstractEg
     : SceneOpenGL::TexturePrivate()
     , q(texture)
     , m_backend(backend)
+    , m_image(EGL_NO_IMAGE_KHR)
 {
     m_target = GL_TEXTURE_2D;
 }
