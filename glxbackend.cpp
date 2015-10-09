@@ -117,6 +117,9 @@ GlxBackend::GlxBackend()
     init();
 }
 
+static bool gs_tripleBufferUndetected = true;
+static bool gs_tripleBufferNeedsDetection = false;
+
 GlxBackend::~GlxBackend()
 {
     if (isFailed()) {
@@ -126,6 +129,9 @@ GlxBackend::~GlxBackend()
     // do cleanup after initBuffer()
     cleanupGL();
     doneCurrent();
+
+    gs_tripleBufferUndetected = true;
+    gs_tripleBufferNeedsDetection = false;
 
     if (ctx)
         glXDestroyContext(display(), ctx);
@@ -139,9 +145,6 @@ GlxBackend::~GlxBackend()
     overlayWindow()->destroy();
     delete m_overlayWindow;
 }
-
-static bool gs_tripleBufferUndetected = true;
-static bool gs_tripleBufferNeedsDetection = false;
 
 void GlxBackend::init()
 {
@@ -636,6 +639,7 @@ void GlxBackend::present()
                         if (qstrcmp(qgetenv("__GL_YIELD"), "USLEEP")) {
                             options->setGlPreferBufferSwap(0);
                             setSwapInterval(0);
+                            result = 0; // hint proper behavior
                             qCWarning(KWIN_CORE) << "\nIt seems you are using the nvidia driver without triple buffering\n"
                                               "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
                                               "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"

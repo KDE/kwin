@@ -68,12 +68,19 @@ EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb
     setIsDirectRendering(true);
 }
 
+static bool gs_tripleBufferUndetected = true;
+static bool gs_tripleBufferNeedsDetection = false;
+
 EglOnXBackend::~EglOnXBackend()
 {
     if (isFailed() && m_overlayWindow) {
         m_overlayWindow->destroy();
     }
     cleanup();
+
+    gs_tripleBufferUndetected = true;
+    gs_tripleBufferNeedsDetection = false;
+
     if (m_overlayWindow) {
         if (overlayWindow()->window()) {
             overlayWindow()->destroy();
@@ -81,9 +88,6 @@ EglOnXBackend::~EglOnXBackend()
         delete m_overlayWindow;
     }
 }
-
-static bool gs_tripleBufferUndetected = true;
-static bool gs_tripleBufferNeedsDetection = false;
 
 void EglOnXBackend::init()
 {
@@ -343,6 +347,7 @@ void EglOnXBackend::present()
                     if (qstrcmp(qgetenv("__GL_YIELD"), "USLEEP")) {
                         options->setGlPreferBufferSwap(0);
                         eglSwapInterval(eglDisplay(), 0);
+                        result = 0; // hint proper behavior
                         qCWarning(KWIN_CORE) << "\nIt seems you are using the nvidia driver without triple buffering\n"
                                           "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
                                           "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"
