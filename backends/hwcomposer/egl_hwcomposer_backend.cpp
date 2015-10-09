@@ -144,7 +144,6 @@ bool EglHwcomposerBackend::makeContextCurrent()
 void EglHwcomposerBackend::present()
 {
     eglSwapBuffers(eglDisplay(), surface());
-    m_nativeSurface->present();
 }
 
 void EglHwcomposerBackend::screenGeometryChanged(const QSize &size)

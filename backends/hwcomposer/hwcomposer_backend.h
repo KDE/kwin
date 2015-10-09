@@ -30,6 +30,8 @@ typedef struct hwc_display_contents_1 hwc_display_contents_1_t;
 typedef struct hwc_layer_1 hwc_layer_1_t;
 typedef struct hwc_composer_device_1 hwc_composer_device_1_t;
 
+class HWComposerNativeWindowBuffer;
+
 namespace KWin
 {
 
@@ -76,7 +78,7 @@ class HwcomposerWindow : public HWComposerNativeWindow
 public:
     virtual ~HwcomposerWindow();
 
-    void present();
+    void present(HWComposerNativeWindowBuffer *buffer);
 
 private:
     friend HwcomposerBackend;

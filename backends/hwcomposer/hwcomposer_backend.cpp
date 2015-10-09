@@ -177,18 +177,25 @@ static void initLayer(hwc_layer_1_t *layer, const hwc_rect_t &rect)
     layer->visibleRegionScreen.rects = &layer->displayFrame;
     layer->acquireFenceFd = -1;
     layer->releaseFenceFd = -1;
+    layer->planeAlpha = 0xFF;
 }
 
 HwcomposerWindow::HwcomposerWindow(HwcomposerBackend *backend)
     : HWComposerNativeWindow(backend->size().width(), backend->size().height(), HAL_PIXEL_FORMAT_RGB_888)
     , m_backend(backend)
 {
+    setBufferCount(2);
+
     size_t size = sizeof(hwc_display_contents_1_t) + 2 * sizeof(hwc_layer_1_t);
     hwc_display_contents_1_t *list = (hwc_display_contents_1_t*)malloc(size);
     m_list = (hwc_display_contents_1_t**)malloc(HWC_NUM_DISPLAY_TYPES * sizeof(hwc_display_contents_1_t *));
     for (int i = 0; i < HWC_NUM_DISPLAY_TYPES; ++i) {
-        m_list[i] = list;
+        m_list[i] = nullptr;
     }
+    // Assign buffer only to the first item, otherwise you get tearing
+    // if passed the same to multiple places
+    // see https://github.com/mer-hybris/qt5-qpa-hwcomposer-plugin/commit/f1d802151e8a4f5d10d60eb8de8e07552b93a34a
+    m_list[0] = list;
     const hwc_rect_t rect = {
         0,
         0,
@@ -208,41 +215,26 @@ HwcomposerWindow::~HwcomposerWindow()
     // TODO: cleanup
 }
 
-static void syncWait(int fd)
+void HwcomposerWindow::present(HWComposerNativeWindowBuffer *buffer)
 {
-    if (fd == -1) {
-        return;
-    }
-    sync_wait(fd, -1);
-    close(fd);
-}
-
-void HwcomposerWindow::present()
-{
-    HWComposerNativeWindowBuffer *front;
-    lockFrontBuffer(&front);
-
-    m_list[0]->hwLayers[1].handle = front->handle;
-    m_list[0]->hwLayers[0].handle = NULL;
-    m_list[0]->hwLayers[0].flags = HWC_SKIP_LAYER;
-
-    int oldretire = m_list[0]->retireFenceFd;
-    int oldrelease = m_list[0]->hwLayers[1].releaseFenceFd;
-    int oldrelease2 = m_list[0]->hwLayers[0].releaseFenceFd;
-
     hwc_composer_device_1_t *device = m_backend->device();
-    if (device->prepare(device, 1, m_list) != 0) {
-        qCWarning(KWIN_HWCOMPOSER) << "Error preparing hwcomposer for frame";
-    }
-    if (device->set(device, 1, m_list) != 0) {
-        qCWarning(KWIN_HWCOMPOSER) << "Error setting device for frame";
-    }
 
-    unlockFrontBuffer(front);
+    auto fblayer = &m_list[0]->hwLayers[1];
+    fblayer->handle = buffer->handle;
+    fblayer->acquireFenceFd = getFenceBufferFd(buffer);
+    fblayer->releaseFenceFd = -1;
 
-    syncWait(oldrelease);
-    syncWait(oldrelease2);
-    syncWait(oldretire);
+    int err = device->prepare(device, 1, m_list);
+    assert(err == 0);
+
+    err = device->set(device, 1, m_list);
+    assert(err == 0);
+    setFenceBufferFd(buffer, fblayer->releaseFenceFd);
+
+    if (m_list[0]->retireFenceFd != -1) {
+        close(m_list[0]->retireFenceFd);
+        m_list[0]->retireFenceFd = -1;
+    }
 }
 
 }
