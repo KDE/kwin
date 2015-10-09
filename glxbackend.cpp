@@ -649,6 +649,10 @@ void GlxBackend::present()
                     }
                     setBlocksForRetrace(result == 'd');
                 }
+            } else if (blocksForRetrace()) {
+                // at least the nvidia blob manages to swap async, ie. return immediately on double
+                // buffering - what messes our timing calculation and leads to laggy behavior #346275
+                glXWaitGL();
             }
         } else {
             waitSync();
