@@ -16,6 +16,7 @@
         "Id": "KWinWaylandWaylandBackend", 
         "Name": "wayland", 
         "Name[ca]": "Wayland", 
+        "Name[cs]": "wayland", 
         "Name[en_GB]": "wayland", 
         "Name[es]": "wayland", 
         "Name[nl]": "wayland", 

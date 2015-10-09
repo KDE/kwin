@@ -16,6 +16,7 @@
         "Id": "KWinWaylandDrmBackend", 
         "Name": "drm", 
         "Name[ca]": "DRM", 
+        "Name[cs]": "drm", 
         "Name[en_GB]": "drm", 
         "Name[es]": "drm", 
         "Name[nl]": "drm", 

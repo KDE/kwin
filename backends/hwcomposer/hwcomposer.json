@@ -16,6 +16,7 @@
         "Id": "KWinWaylandHwcomposerBackend", 
         "Name": "hwcomposer", 
         "Name[ca]": "hwcomposer", 
+        "Name[cs]": "hwcomposer", 
         "Name[en_GB]": "hwcomposer", 
         "Name[es]": "hwcomposer", 
         "Name[nl]": "hwcomposer", 

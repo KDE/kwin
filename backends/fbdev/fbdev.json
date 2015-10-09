@@ -16,6 +16,7 @@
         "Id": "KWinWaylandFbdevBackend", 
         "Name": "framebuffer", 
         "Name[ca]": "Framebuffer", 
+        "Name[cs]": "framebuffer", 
         "Name[en_GB]": "framebuffer", 
         "Name[es]": "framebuffer", 
         "Name[nl]": "framebuffer", 

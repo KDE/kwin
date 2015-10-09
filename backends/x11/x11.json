@@ -16,6 +16,7 @@
         "Id": "KWinWaylandX11Backend", 
         "Name": "x11", 
         "Name[ca]": "X11", 
+        "Name[cs]": "x11", 
         "Name[en_GB]": "x11", 
         "Name[es]": "x11", 
         "Name[nl]": "x11", 
