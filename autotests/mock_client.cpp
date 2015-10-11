@@ -31,6 +31,7 @@ Client::~Client() = default;
 
 void Client::showOnScreenEdge()
 {
+    setKeepBelow(false);
     setHiddenInternal(false);
 }
 

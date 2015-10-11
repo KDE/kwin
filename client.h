@@ -772,6 +772,8 @@ private:
 
     QList<QMetaObject::Connection> m_connections;
     bool m_clientSideDecorated;
+
+    QMetaObject::Connection m_edgeRemoveConnection;
 };
 
 /**

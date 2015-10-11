@@ -364,7 +364,6 @@ private:
     bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
     bool handleDndNotify(xcb_window_t window, const QPoint &point);
     void createEdgeForClient(Client *client, ElectricBorder border);
-    void handleClientGeometryChanged();
     void deleteEdgeForClient(Client *client);
     bool m_desktopSwitching;
     bool m_desktopSwitchingMovingClients;

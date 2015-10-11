@@ -28,6 +28,7 @@ AbstractClient::AbstractClient(QObject *parent)
     , m_screen(0)
     , m_fullscreen(false)
     , m_hiddenInternal(false)
+    , m_keepBelow(false)
     , m_geometry()
 {
 }
@@ -89,6 +90,17 @@ void AbstractClient::setGeometry(const QRect &rect)
 QRect AbstractClient::geometry() const
 {
     return m_geometry;
+}
+
+bool AbstractClient::keepBelow() const
+{
+    return m_keepBelow;
+}
+
+void AbstractClient::setKeepBelow(bool keepBelow)
+{
+    m_keepBelow = keepBelow;
+    emit keepBelowChanged();
 }
 
 }

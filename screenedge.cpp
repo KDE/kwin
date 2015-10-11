@@ -654,8 +654,6 @@ ScreenEdges::ScreenEdges(QObject *parent)
             return;
         }
         deleteEdgeForClient(client);
-        QObject::disconnect(client, &Client::geometryChanged,
-                            ScreenEdges::self(), &ScreenEdges::handleClientGeometryChanged);
     });
 }
 
@@ -1087,7 +1085,7 @@ void ScreenEdges::reserve(Client *client, ElectricBorder border)
         if ((*it)->client() == client) {
             hadBorder = true;
             if ((*it)->border() == border) {
-                if (client->isHiddenInternal() && !(*it)->isReserved()) {
+                if (!(*it)->isReserved()) {
                     (*it)->reserve();
                 }
                 return;
@@ -1101,10 +1099,8 @@ void ScreenEdges::reserve(Client *client, ElectricBorder border)
     }
 
     if (border != ElectricNone) {
-        connect(client, &Client::geometryChanged, this, &ScreenEdges::handleClientGeometryChanged, Qt::UniqueConnection);
         createEdgeForClient(client, border);
     } else {
-        disconnect(client, &Client::geometryChanged, this, &ScreenEdges::handleClientGeometryChanged);
         if (hadBorder) // show again
             client->showOnScreenEdge();
     }
@@ -1176,20 +1172,11 @@ void ScreenEdges::createEdgeForClient(Client *client, ElectricBorder border)
         Edge *edge = createEdge(border, x, y, width, height, false);
         edge->setClient(client);
         m_edges.append(edge);
-        if (client->isHiddenInternal()) {
-            edge->reserve();
-        }
+        edge->reserve();
     } else {
         // we could not create an edge window, so don't allow the window to hide
         client->showOnScreenEdge();
     }
-}
-
-void ScreenEdges::handleClientGeometryChanged()
-{
-    Client *c = static_cast<Client*>(sender());
-    deleteEdgeForClient(c);
-    c->showOnScreenEdge();
 }
 
 void ScreenEdges::deleteEdgeForClient(Client* c)

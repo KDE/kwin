@@ -749,30 +749,14 @@ void TestScreenEdges::testClientEdge()
     s->init();
 
     s->reserve(&client, KWin::ElectricBottom);
-    QPointer<Edge> edge = s->findChildren<Edge*>().last();
-    QCOMPARE(&client, edge->client());
-    QCOMPARE(edge->isScreenEdge(), true);
-    QCOMPARE(edge->isCorner(), false);
-    QCOMPARE(edge->isBottom(), true);
-    QCOMPARE(edge->isReserved(), false);
-    // reserve again shouldn't change anything
-    s->reserve(&client, KWin::ElectricBottom);
-    QCOMPARE(edge.data(), s->findChildren<Edge*>().last());
-    QCOMPARE(&client, edge->client());
-    QCOMPARE(edge->isReserved(), false);
 
     // let's set the client to be hidden
     client.setHiddenInternal(true);
+    QPointer<Edge> edge = s->findChildren<Edge*>().last();
+
     s->reserve(&client, KWin::ElectricBottom);
     QCOMPARE(edge.data(), s->findChildren<Edge*>().last());
     QCOMPARE(edge->isReserved(), true);
-
-    // let's change the geometry, which should destroy the edge
-    QCOMPARE(client.isHiddenInternal(), true);
-    QCOMPARE(edge.isNull(), false);
-    client.setGeometry(QRect(2, 2, 20, 20));
-    QCOMPARE(client.isHiddenInternal(), false);
-    QCOMPARE(edge.isNull(), true);
 
     // for none of the edges it should be able to be set
     for (int i = 0; i < ELECTRIC_COUNT; ++i) {
@@ -848,6 +832,30 @@ void TestScreenEdges::testClientEdge()
     s->check(QPoint(50, 0), QDateTime::currentDateTime());
     QCOMPARE(client.isHiddenInternal(), true);
     QCOMPARE(Cursor::pos(), QPoint(50, 0));
+
+    // set to windows can cover
+    client.setGeometry(screens()->geometry());
+    client.setHiddenInternal(false);
+    client.setKeepBelow(true);
+    s->reserve(&client, KWin::ElectricLeft);
+    QCOMPARE(client.keepBelow(), true);
+    QCOMPARE(client.isHiddenInternal(), false);
+
+    xcb_enter_notify_event_t event2;
+    Cursor::setPos(0, 50);
+    event2.root_x = 0;
+    event2.root_y = 50;
+    event2.event_x = 0;
+    event2.event_y = 50;
+    event2.root = XCB_WINDOW_NONE;
+    event2.child = XCB_WINDOW_NONE;
+    event2.event = s->windows().first();
+    event2.same_screen_focus = 1;
+    event2.time = QDateTime::currentMSecsSinceEpoch();
+    QVERIFY(s->isEntered(&event2));
+    QCOMPARE(client.keepBelow(), false);
+    QCOMPARE(client.isHiddenInternal(), false);
+    QCOMPARE(Cursor::pos(), QPoint(1, 50));
 }
 
 QTEST_MAIN(TestScreenEdges)

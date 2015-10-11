@@ -25,6 +25,7 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QWidget>
+#include <QCheckBox>
 #include "../xcbutils.h"
 
 int main(int argc, char **argv)
@@ -37,15 +38,21 @@ int main(int argc, char **argv)
 
     KWin::Xcb::Atom atom(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"));
 
-    uint32_t value = 2;
+    uint32_t locationValue = 2;
+    uint32_t actionValue = 0;
+
     QPushButton *hideWindowButton = new QPushButton(QStringLiteral("Hide"), widget.data());
-    QObject::connect(hideWindowButton, &QPushButton::clicked, [&widget, &atom, &value]() {
+
+    QObject::connect(hideWindowButton, &QPushButton::clicked, [&widget, &atom, &locationValue, &actionValue]() {
+        uint32_t value = locationValue | (actionValue << 8);
         xcb_change_property(QX11Info::connection(), XCB_PROP_MODE_REPLACE, widget->winId(), atom, XCB_ATOM_CARDINAL, 32, 1, &value);
     });
+
     QPushButton *hideAndRestoreButton = new QPushButton(QStringLiteral("Hide and Restore after 10 sec"), widget.data());
     QTimer *restoreTimer = new QTimer(hideAndRestoreButton);
     restoreTimer->setSingleShot(true);
-    QObject::connect(hideAndRestoreButton, &QPushButton::clicked, [&widget, &atom, &value, restoreTimer]() {
+    QObject::connect(hideAndRestoreButton, &QPushButton::clicked, [&widget, &atom, &locationValue, &actionValue, restoreTimer]() {
+        uint32_t value = locationValue | (actionValue << 8);
         xcb_change_property(QX11Info::connection(), XCB_PROP_MODE_REPLACE, widget->winId(), atom, XCB_ATOM_CARDINAL, 32, 1, &value);
         restoreTimer->start(10000);
     });
@@ -54,34 +61,40 @@ int main(int argc, char **argv)
     });
 
     QToolButton *edgeButton = new QToolButton(widget.data());
+
+    QCheckBox *raiseCheckBox = new QCheckBox("Raise:", widget.data());
+    QObject::connect(raiseCheckBox, &QCheckBox::toggled, [&actionValue](bool checked) {
+        actionValue = checked ? 1: 0;
+    });
+
     edgeButton->setText(QStringLiteral("Edge"));
     edgeButton->setPopupMode(QToolButton::MenuButtonPopup);
     QMenu *edgeButtonMenu = new QMenu(edgeButton);
-    QObject::connect(edgeButtonMenu->addAction("Top"), &QAction::triggered, [&widget, &value]() {
+    QObject::connect(edgeButtonMenu->addAction("Top"), &QAction::triggered, [&widget, &locationValue]() {
         const QRect geo = QGuiApplication::primaryScreen()->geometry();
         widget->setGeometry(geo.x(), geo.y(), geo.width(), 100);
-        value = 0;
+        locationValue = 0;
     });
-    QObject::connect(edgeButtonMenu->addAction("Right"), &QAction::triggered, [&widget, &value]() {
+    QObject::connect(edgeButtonMenu->addAction("Right"), &QAction::triggered, [&widget, &locationValue]() {
         const QRect geo = QGuiApplication::primaryScreen()->geometry();
         widget->setGeometry(geo.x() + geo.width() - 100, geo.y(), 100, geo.height());
-        value = 1;
+        locationValue = 1;
     });
-    QObject::connect(edgeButtonMenu->addAction("Bottom"), &QAction::triggered, [&widget, &value]() {
+    QObject::connect(edgeButtonMenu->addAction("Bottom"), &QAction::triggered, [&widget, &locationValue]() {
         const QRect geo = QGuiApplication::primaryScreen()->geometry();
         widget->setGeometry(geo.x(), geo.y() + geo.height() - 100, geo.width(), 100);
-        value = 2;
+        locationValue = 2;
     });
-    QObject::connect(edgeButtonMenu->addAction("Left"), &QAction::triggered, [&widget, &value]() {
+    QObject::connect(edgeButtonMenu->addAction("Left"), &QAction::triggered, [&widget, &locationValue]() {
         const QRect geo = QGuiApplication::primaryScreen()->geometry();
         widget->setGeometry(geo.x(), geo.y(), 100, geo.height());
-        value = 3;
+        locationValue = 3;
     });
     edgeButtonMenu->addSeparator();
-    QObject::connect(edgeButtonMenu->addAction("Floating"), &QAction::triggered, [&widget, &value]() {
+    QObject::connect(edgeButtonMenu->addAction("Floating"), &QAction::triggered, [&widget, &locationValue]() {
         const QRect geo = QGuiApplication::primaryScreen()->geometry();
         widget->setGeometry(QRect(geo.center(), QSize(100, 100)));
-        value = 4;
+        locationValue = 4;
     });
     edgeButton->setMenu(edgeButtonMenu);
 

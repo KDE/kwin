@@ -2142,9 +2142,14 @@ Xcb::Property Client::fetchShowOnScreenEdge() const
 
 void Client::readShowOnScreenEdge(Xcb::Property &property)
 {
+    //value comes in two parts, edge in the lower byte
+    //then the type in the upper byte
+    // 0 = autohide
+    // 1 = raise in front on activate
+
     const uint32_t value = property.value<uint32_t>(ElectricNone);
     ElectricBorder border = ElectricNone;
-    switch (value) {
+    switch (value & 0xFF) {
     case 0:
         border = ElectricTop;
         break;
@@ -2159,8 +2164,32 @@ void Client::readShowOnScreenEdge(Xcb::Property &property)
         break;
     }
     if (border != ElectricNone) {
-        hideClient(true);
-        ScreenEdges::self()->reserve(this, border);
+        disconnect(m_edgeRemoveConnection);
+        bool successfullyHidden = false;
+
+        if (((value >> 8) & 0xFF) == 1) {
+            setKeepBelow(true);
+            successfullyHidden = keepBelow(); //request could have failed due to user kwin rules
+
+            m_edgeRemoveConnection = connect(this, &AbstractClient::keepBelowChanged, this, [this](){
+                if (!keepBelow()) {
+                    ScreenEdges::self()->reserve(this, ElectricNone);
+                }
+            });
+        } else {
+            hideClient(true);
+            successfullyHidden = isHiddenInternal();
+
+            m_edgeRemoveConnection = connect(this, &Client::geometryChanged, this, [this](){
+                ScreenEdges::self()->reserve(this, ElectricNone);
+            });
+        }
+
+        if (successfullyHidden) {
+            ScreenEdges::self()->reserve(this, border);
+        } else {
+            ScreenEdges::self()->reserve(this, ElectricNone);
+        }
     } else if (!property.isNull() && property->type != XCB_ATOM_NONE) {
         // property value is incorrect, delete the property
         // so that the client knows that it is not hidden
@@ -2168,8 +2197,9 @@ void Client::readShowOnScreenEdge(Xcb::Property &property)
     } else {
         // restore
         // TODO: add proper unreserve
+
+        //this will call showOnScreenEdge to reset the state
         ScreenEdges::self()->reserve(this, ElectricNone);
-        hideClient(false);
     }
 }
 
@@ -2181,7 +2211,10 @@ void Client::updateShowOnScreenEdge()
 
 void Client::showOnScreenEdge()
 {
+    disconnect(m_edgeRemoveConnection);
+
     hideClient(false);
+    setKeepBelow(false);
     xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
 }
 
