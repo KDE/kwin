@@ -519,6 +519,7 @@ protected:
     QuickTileMode electricBorderMode() const {
         return m_electricMode;
     }
+    QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
 
 private:
     void handlePaletteChange();

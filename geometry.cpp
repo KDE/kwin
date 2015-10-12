@@ -3204,7 +3204,7 @@ void Client::setElectricBorderMaximizing(bool maximizing)
     elevate(maximizing);
 }
 
-QRect Client::electricBorderMaximizeGeometry(QPoint pos, int desktop)
+QRect AbstractClient::electricBorderMaximizeGeometry(QPoint pos, int desktop)
 {
     if (electricBorderMode() == QuickTileMaximize) {
         if (maximizeMode() == MaximizeFull)

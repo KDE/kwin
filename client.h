@@ -295,7 +295,6 @@ public:
     void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     void setElectricBorderMaximizing(bool maximizing);
     bool isElectricBorderMaximizing() const;
-    QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
     QSize sizeForClientSize(const QSize&, Sizemode mode = SizemodeAny, bool noframe = false) const;
 
     /** Set the quick tile mode ("snap") of this window.
