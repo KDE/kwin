@@ -563,7 +563,6 @@ Q_SIGNALS:
      **/
     void blockingCompositingChanged(KWin::Client *client);
     void clientSideDecoratedChanged();
-    void quickTileModeChanged();
 
     void closeableChanged(bool);
     void minimizeableChanged(bool);

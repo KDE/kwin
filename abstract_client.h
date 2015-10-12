@@ -442,6 +442,7 @@ Q_SIGNALS:
     void clientMaximizedStateChanged(KWin::AbstractClient* c, bool h, bool v);
     void transientChanged();
     void modalChanged();
+    void quickTileModeChanged();
 
 protected:
     AbstractClient();
