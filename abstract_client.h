@@ -519,6 +519,10 @@ protected:
     QuickTileMode electricBorderMode() const {
         return m_electricMode;
     }
+    void setElectricBorderMaximizing(bool maximizing);
+    bool isElectricBorderMaximizing() const {
+        return m_electricMaximizing;
+    }
     QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
 
 private:
@@ -555,6 +559,7 @@ private:
 
     // electric border/quick tiling
     QuickTileMode m_electricMode = QuickTileNone;
+    bool m_electricMaximizing = false;
 };
 
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)

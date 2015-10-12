@@ -2697,7 +2697,7 @@ void Client::finishMoveResize(bool cancel)
 
     if (isElectricBorderMaximizing()) {
         setQuickTileMode(electricBorderMode());
-        electricMaximizing = false;
+        setElectricBorderMaximizing(false);
     } else if (!cancel) {
         if (!(maximizeMode() & MaximizeHorizontal)) {
             geom_restore.setX(geometry().x());
@@ -3189,14 +3189,9 @@ void AbstractClient::setElectricBorderMode(QuickTileMode mode)
     m_electricMode = mode;
 }
 
-bool Client::isElectricBorderMaximizing() const
+void AbstractClient::setElectricBorderMaximizing(bool maximizing)
 {
-    return electricMaximizing;
-}
-
-void Client::setElectricBorderMaximizing(bool maximizing)
-{
-    electricMaximizing = maximizing;
+    m_electricMaximizing = maximizing;
     if (maximizing)
         outline()->show(electricBorderMaximizeGeometry(Cursor::pos(), desktop()));
     else
