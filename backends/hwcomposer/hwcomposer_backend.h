@@ -29,8 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 typedef struct hwc_display_contents_1 hwc_display_contents_1_t;
 typedef struct hwc_layer_1 hwc_layer_1_t;
 typedef struct hwc_composer_device_1 hwc_composer_device_1_t;
-struct Event;
-struct AndroidEventListener;
 
 namespace KWin
 {
@@ -67,11 +65,8 @@ private Q_SLOTS:
     void toggleBlankOutput();
 
 private:
-    static void inputEvent(Event *event, void *context);
-    void initInput();
     QSize m_displaySize;
     hwc_composer_device_1_t *m_device = nullptr;
-    AndroidEventListener *m_inputListener = nullptr;
     bool m_outputBlank = true;
     int m_refreshRate = 60000;
 };

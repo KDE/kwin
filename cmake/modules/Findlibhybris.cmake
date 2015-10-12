@@ -202,40 +202,7 @@ if(NOT WIN32)
 
     mark_as_advanced(hybrissync_LIBRARY)
 
-    ##############################################
-    # hybrisinputstack
-    ##############################################
-    set(hybrisinputstack_DEFINITIONS ${PKG_hybrisinputstack_CFLAGS_OTHER})
-    set(hybrisinputstack_VERSION ${PKG_hybrisinputstack_VERSION})
-
-    find_library(hybrisinputstack_LIBRARY
-        NAMES
-            libis.so
-        HINTS
-            ${PKG_hybrisinputstack_LIBRARY_DIRS}
-    )
-
-    include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(hybrisinputstack
-        FOUND_VAR
-            hybrisinputstack_FOUND
-        REQUIRED_VARS
-            hybrisinputstack_LIBRARY
-        VERSION_VAR
-            hybrisinputstack_VERSION
-    )
-
-    if(hybrisinputstack_FOUND AND NOT TARGET libhybris::inputstack)
-        add_library(libhybris::inputstack UNKNOWN IMPORTED)
-        set_target_properties(libhybris::inputstack PROPERTIES
-            IMPORTED_LOCATION "${hybrisinputstack_LIBRARY}"
-            INTERFACE_COMPILE_OPTIONS "${hybrisinputstack_DEFINITIONS}"
-        )
-    endif()
-
-    mark_as_advanced(hybrisinputstack_LIBRARY)
-
-    if(libhardware_FOUND AND libhwcomposer_FOUND AND hybriseglplatform_FOUND AND hybrissync_FOUND AND hybrisinputstack_FOUND)
+    if(libhardware_FOUND AND libhwcomposer_FOUND AND hybriseglplatform_FOUND AND hybrissync_FOUND)
         set(libhybris_FOUND TRUE)
     else()
         set(libhybris_FOUND FALSE)

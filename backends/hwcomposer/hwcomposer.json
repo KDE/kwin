@@ -31,5 +31,5 @@
         "Name[x-test]": "xxhwcomposerxx", 
         "Name[zh_CN]": "hwcomposer"
     }, 
-    "input": true
+    "input": false
 }
