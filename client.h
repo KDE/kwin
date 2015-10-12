@@ -293,8 +293,6 @@ public:
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     void resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
-    void setElectricBorderMode(QuickTileMode mode);
-    QuickTileMode electricBorderMode() const;
     void setElectricBorderMaximizing(bool maximizing);
     bool isElectricBorderMaximizing() const;
     QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
@@ -761,7 +759,6 @@ private:
     friend class GeometryUpdatesBlocker;
 
     bool electricMaximizing;
-    QuickTileMode electricMode;
     QTimer* m_electricMaximizingDelay;
 
     friend bool performTransiencyCheck();

@@ -2696,7 +2696,7 @@ void Client::finishMoveResize(bool cancel)
     }
 
     if (isElectricBorderMaximizing()) {
-        setQuickTileMode(electricMode);
+        setQuickTileMode(electricBorderMode());
         electricMaximizing = false;
     } else if (!cancel) {
         if (!(maximizeMode() & MaximizeHorizontal)) {
@@ -3177,7 +3177,7 @@ void Client::performMoveResize()
     emit clientStepUserMovedResized(this, moveResizeGeom);
 }
 
-void Client::setElectricBorderMode(QuickTileMode mode)
+void AbstractClient::setElectricBorderMode(QuickTileMode mode)
 {
     if (mode != QuickTileMaximize) {
         // sanitize the mode, ie. simplify "invalid" combinations
@@ -3186,12 +3186,7 @@ void Client::setElectricBorderMode(QuickTileMode mode)
         if ((mode & QuickTileVertical) == QuickTileVertical)
             mode &= ~QuickTileVertical;
     }
-    electricMode = mode;
-}
-
-Client::QuickTileMode Client::electricBorderMode() const
-{
-    return electricMode;
+    m_electricMode = mode;
 }
 
 bool Client::isElectricBorderMaximizing() const
@@ -3211,7 +3206,7 @@ void Client::setElectricBorderMaximizing(bool maximizing)
 
 QRect Client::electricBorderMaximizeGeometry(QPoint pos, int desktop)
 {
-    if (electricMode == QuickTileMaximize) {
+    if (electricBorderMode() == QuickTileMaximize) {
         if (maximizeMode() == MaximizeFull)
             return geometryRestore();
         else
@@ -3219,13 +3214,13 @@ QRect Client::electricBorderMaximizeGeometry(QPoint pos, int desktop)
     }
 
     QRect ret = workspace()->clientArea(MaximizeArea, pos, desktop);
-    if (electricMode & QuickTileLeft)
+    if (electricBorderMode() & QuickTileLeft)
         ret.setRight(ret.left()+ret.width()/2 - 1);
-    else if (electricMode & QuickTileRight)
+    else if (electricBorderMode() & QuickTileRight)
         ret.setLeft(ret.right()-(ret.width()-ret.width()/2) + 1);
-    if (electricMode & QuickTileTop)
+    if (electricBorderMode() & QuickTileTop)
         ret.setBottom(ret.top()+ret.height()/2 - 1);
-    else if (electricMode & QuickTileBottom)
+    else if (electricBorderMode() & QuickTileBottom)
         ret.setTop(ret.bottom()-(ret.height()-ret.height()/2) + 1);
 
     return ret;

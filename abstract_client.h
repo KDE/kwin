@@ -513,6 +513,12 @@ protected:
     virtual bool isActiveFullScreen() const;
     virtual Layer layerForDock() const;
 
+    // electric border / quick tiling
+    void setElectricBorderMode(QuickTileMode mode);
+    QuickTileMode electricBorderMode() const {
+        return m_electricMode;
+    }
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -544,6 +550,9 @@ private:
     QList<AbstractClient*> m_transients;
     bool m_modal = false;
     Layer m_layer = UnknownLayer;
+
+    // electric border/quick tiling
+    QuickTileMode m_electricMode = QuickTileNone;
 };
 
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)

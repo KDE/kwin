@@ -1355,7 +1355,7 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
         }
         break; // no point in checking other screens to contain this... "point"...
     }
-    if (mode != electricMode) {
+    if (mode != electricBorderMode()) {
         setElectricBorderMode(mode);
         if (innerBorder) {
             if (!m_electricMaximizingDelay) {
@@ -1364,7 +1364,7 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
                 m_electricMaximizingDelay->setSingleShot(true);
                 connect(m_electricMaximizingDelay, &QTimer::timeout, [this]() {
                     if (isMove())
-                        setElectricBorderMaximizing(electricMode != QuickTileNone);
+                        setElectricBorderMaximizing(electricBorderMode() != QuickTileNone);
                 });
             }
             m_electricMaximizingDelay->start();
