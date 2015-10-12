@@ -1008,4 +1008,24 @@ AbstractClient::QuickTileMode AbstractClient::quickTileMode() const
     return QuickTileNone;
 }
 
+int AbstractClient::borderBottom() const
+{
+    return 0;
+}
+
+int AbstractClient::borderLeft() const
+{
+    return 0;
+}
+
+int AbstractClient::borderRight() const
+{
+    return 0;
+}
+
+int AbstractClient::borderTop() const
+{
+    return 0;
+}
+
 }

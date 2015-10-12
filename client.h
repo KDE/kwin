@@ -565,10 +565,10 @@ Q_SIGNALS:
     void maximizeableChanged(bool);
 
 private:
-    int borderLeft() const;
-    int borderRight() const;
-    int borderTop() const;
-    int borderBottom() const;
+    int borderLeft() const override;
+    int borderRight() const override;
+    int borderTop() const override;
+    int borderBottom() const override;
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
     bool isManaged() const; ///< Returns false if this client is not yet managed
     void updateAllowedActions(bool force = false);

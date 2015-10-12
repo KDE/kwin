@@ -528,6 +528,10 @@ protected:
 
     // geometry handling
     void checkOffscreenPosition(QRect *geom, const QRect &screenArea);
+    virtual int borderLeft() const;
+    virtual int borderRight() const;
+    virtual int borderTop() const;
+    virtual int borderBottom() const;
 
 private:
     void handlePaletteChange();
