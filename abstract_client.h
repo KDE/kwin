@@ -301,6 +301,7 @@ public:
     virtual TabGroup *tabGroup() const;
     Q_INVOKABLE virtual bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
     virtual bool isCurrentTab() const;
+    virtual QRect geometryRestore() const = 0;
     virtual MaximizeMode maximizeMode() const = 0;
     virtual void maximize(MaximizeMode) = 0;
     virtual bool noBorder() const = 0;

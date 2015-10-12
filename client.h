@@ -239,7 +239,7 @@ public:
     bool isShadeable() const override;
 
     bool isMaximizable() const override;
-    QRect geometryRestore() const;
+    QRect geometryRestore() const override;
     MaximizeMode maximizeMode() const override;
 
     QuickTileMode quickTileMode() const;

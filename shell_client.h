@@ -74,6 +74,9 @@ public:
     void hideClient(bool hide) override;
     void maximize(MaximizeMode) override;
     MaximizeMode maximizeMode() const override;
+    QRect geometryRestore() const override {
+        return m_geomMaximizeRestore;
+    }
     bool noBorder() const override;
     const WindowRules *rules() const override;
     void sendToScreen(int screen) override;
