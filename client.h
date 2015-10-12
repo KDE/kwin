@@ -242,7 +242,7 @@ public:
     QRect geometryRestore() const override;
     MaximizeMode maximizeMode() const override;
 
-    QuickTileMode quickTileMode() const;
+    QuickTileMode quickTileMode() const override;
     bool isMinimizable() const override;
     void setMaximize(bool vertically, bool horizontally);
     QRect iconGeometry() const;

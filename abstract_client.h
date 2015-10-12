@@ -385,6 +385,7 @@ public:
      * @param mode The tile mode (left/right) to give this window.
      */
     virtual void setQuickTileMode(QuickTileMode mode, bool keyboard = false) = 0;
+    virtual QuickTileMode quickTileMode() const;
     Layer layer() const override;
     void updateLayer();
 
