@@ -1065,7 +1065,7 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, QRect old
         return;
     }
 
-    if (quick_tile_mode != QuickTileNone) {
+    if (quickTileMode() != QuickTileNone) {
         setGeometry(electricBorderMaximizeGeometry(geometry().center(), desktop()));
         return;
     }
