@@ -635,8 +635,6 @@ private:
     xcb_timestamp_t readUserCreationTime() const;
     void startupIdChanged();
 
-    void checkOffscreenPosition (QRect* geom, const QRect& screenArea);
-
     void updateInputWindow();
 
     bool tabTo(Client *other, bool behind, bool activate);

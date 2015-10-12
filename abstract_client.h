@@ -525,6 +525,9 @@ protected:
     }
     QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
 
+    // geometry handling
+    void checkOffscreenPosition(QRect *geom, const QRect &screenArea);
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;

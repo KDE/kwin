@@ -1254,7 +1254,7 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, QRect old
         setGeometry(newGeom);
 }
 
-void Client::checkOffscreenPosition(QRect* geom, const QRect& screenArea)
+void AbstractClient::checkOffscreenPosition(QRect* geom, const QRect& screenArea)
 {
     if (geom->left() > screenArea.right()) {
         geom->moveLeft(screenArea.right() - screenArea.width()/4);
