@@ -3238,7 +3238,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         if (maximizeMode() == MaximizeFull) {
             setMaximize(false, false);
         } else {
-            QRect prev_geom_restore = geom_restore; // setMaximize() would set moveResizeGeom as geom_restore
+            QRect prev_geom_restore = geometryRestore(); // setMaximize() would set moveResizeGeom as geom_restore
             setMaximize(true, true);
             QRect clientArea = workspace()->clientArea(MaximizeArea, this);
             if (geometry().top() != clientArea.top()) {
@@ -3247,7 +3247,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 setGeometry(r);
             }
             quick_tile_mode = QuickTileMaximize;
-            geom_restore = prev_geom_restore;
+            setGeometryRestore(prev_geom_restore);
         }
         emit quickTileModeChanged();
         return;
@@ -3320,7 +3320,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 mode = QuickTileNone; // No other screens, toggle tiling
             } else {
                 // Move to other screen
-                geom_restore.translate(screens[nextScreen].topLeft() - screens[curScreen].topLeft());
+                setGeometry(geometryRestore().translated(screens[nextScreen].topLeft() - screens[curScreen].topLeft()));
                 whichScreen = screens[nextScreen].center();
 
                 // Swap sides
@@ -3330,7 +3330,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         } else if (quick_tile_mode == QuickTileNone) {
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
-            geom_restore = geometry();
+            setGeometryRestore(geometry());
         }
 
         if (mode != QuickTileNone) {
@@ -3351,11 +3351,11 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
         quick_tile_mode = QuickTileNone;
         // Untiling, so just restore geometry, and we're done.
-        if (!geom_restore.isValid()) // invalid if we started maximized and wait for placement
-            geom_restore = geometry();
+        if (!geometryRestore().isValid()) // invalid if we started maximized and wait for placement
+            setGeometryRestore(geometry());
         // decorations may turn off some borders when tiled
         const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
-        setGeometry(geom_restore, geom_mode);
+        setGeometry(geometryRestore(), geom_mode);
         checkWorkspacePosition(); // Just in case it's a different screen
     }
     emit quickTileModeChanged();
