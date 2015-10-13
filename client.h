@@ -209,9 +209,6 @@ public:
     void releaseWindow(bool on_shutdown = false);
     void destroyClient();
 
-    QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
-    QSize adjustedSize() const;
-
     virtual int desktop() const;
 
     void sendToScreen(int screen) override;

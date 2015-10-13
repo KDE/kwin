@@ -413,6 +413,9 @@ public:
      */
     virtual QSize sizeForClientSize(const QSize &wsize, Sizemode mode = SizemodeAny, bool noframe = false) const;
 
+    QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
+    QSize adjustedSize() const;
+
     virtual bool hasStrut() const;
 
     void setModal(bool modal);

@@ -1271,7 +1271,7 @@ void AbstractClient::checkOffscreenPosition(QRect* geom, const QRect& screenArea
 /*!
   Adjust the frame size \a frame according to he window's size hints.
  */
-QSize Client::adjustedSize(const QSize& frame, Sizemode mode) const
+QSize AbstractClient::adjustedSize(const QSize& frame, Sizemode mode) const
 {
     // first, get the window size for the given frame size s
     QSize wsize(frame.width() - (borderLeft() + borderRight()),
@@ -1284,7 +1284,7 @@ QSize Client::adjustedSize(const QSize& frame, Sizemode mode) const
 
 // this helper returns proper size even if the window is shaded
 // see also the comment in Client::setGeometry()
-QSize Client::adjustedSize() const
+QSize AbstractClient::adjustedSize() const
 {
     return sizeForClientSize(clientSize());
 }
