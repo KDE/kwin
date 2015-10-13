@@ -403,7 +403,7 @@ public:
         return m_decoration;
     }
     QPointer<Decoration::DecoratedClientImpl> decoratedClient() const;
-    bool isDecorated() const {
+    bool isDecorated() const override {
         return m_decoration != nullptr;
     }
     void setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client);

@@ -1035,4 +1035,9 @@ QSize AbstractClient::sizeForClientSize(const QSize &wsize, Sizemode mode, bool 
     return wsize;
 }
 
+bool AbstractClient::isDecorated() const
+{
+    return false;
+}
+
 }
