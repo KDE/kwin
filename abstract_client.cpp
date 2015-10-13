@@ -1011,6 +1011,10 @@ AbstractClient::QuickTileMode AbstractClient::quickTileMode() const
     return QuickTileNone;
 }
 
+void AbstractClient::updateQuickTileMode(QuickTileMode)
+{
+}
+
 int AbstractClient::borderBottom() const
 {
     return 0;

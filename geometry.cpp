@@ -1621,7 +1621,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
     // however, the user shall be able to force obedience despite and also disobedience in general
     ignore = rules()->checkIgnoreGeometry(ignore);
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
-        quick_tile_mode = QuickTileNone;
+        updateQuickTileMode(QuickTileNone);
         max_mode = MaximizeRestore;
         emit quickTileModeChanged();
     } else if (!app_noborder && quickTileMode() == QuickTileNone &&
@@ -2276,7 +2276,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         } else if ((old_mode == MaximizeVertical && max_mode == MaximizeRestore) ||
                   (old_mode == MaximizeFull && max_mode == MaximizeHorizontal)) {
             // Modifying geometry of a tiled window
-            quick_tile_mode = QuickTileNone; // Exit quick tile mode without restoring geometry
+            updateQuickTileMode(QuickTileNone); // Exit quick tile mode without restoring geometry
         }
     }
 
@@ -2355,7 +2355,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         if (!clientArea.contains(geom_restore.center()))    // Not restoring to the same screen
             Placement::self()->place(this, clientArea);
         info->setState(0, NET::Max);
-        quick_tile_mode = QuickTileNone;
+        updateQuickTileMode(QuickTileNone);
         break;
     }
 
@@ -2403,9 +2403,9 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         }
         setGeometry(r, geom_mode);
         if (options->electricBorderMaximize() && r.top() == clientArea.top())
-            quick_tile_mode = QuickTileMaximize;
+            updateQuickTileMode(QuickTileMaximize);
         else
-            quick_tile_mode = QuickTileNone;
+            updateQuickTileMode(QuickTileNone);
         info->setState(NET::Max, NET::Max);
         break;
     }
@@ -2655,7 +2655,7 @@ bool Client::startMoveResize()
 
     if (quickTileMode() != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
         // Exit quick tile mode when the user attempts to resize a tiled window
-        quick_tile_mode = QuickTileNone; // Do so without restoring original geometry
+        updateQuickTileMode(QuickTileNone); // Do so without restoring original geometry
         geom_restore = geometry();
         emit quickTileModeChanged();
     }

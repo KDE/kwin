@@ -552,6 +552,7 @@ protected:
         return m_electricMaximizing;
     }
     QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
+    virtual void updateQuickTileMode(QuickTileMode newMode);
 
     // geometry handling
     void checkOffscreenPosition(QRect *geom, const QRect &screenArea);

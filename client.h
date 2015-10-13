@@ -496,6 +496,7 @@ protected:
     bool belongsToDesktop() const override;
     bool isActiveFullScreen() const override;
     void setGeometryRestore(const QRect &geo) override;
+    void updateQuickTileMode(QuickTileMode newMode) override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -826,6 +827,11 @@ inline MaximizeMode Client::maximizeMode() const
 inline Client::QuickTileMode Client::quickTileMode() const
 {
     return (Client::QuickTileMode)quick_tile_mode;
+}
+
+inline void Client::updateQuickTileMode(QuickTileMode newMode)
+{
+    quick_tile_mode = newMode;
 }
 
 inline bool Client::isFullScreen() const
