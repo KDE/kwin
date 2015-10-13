@@ -234,7 +234,6 @@ public:
 
     QuickTileMode quickTileMode() const override;
     bool isMinimizable() const override;
-    void setMaximize(bool vertically, bool horizontally);
     QRect iconGeometry() const;
 
     void setFullScreen(bool set, bool user = true) override;
@@ -345,7 +344,6 @@ public:
     static bool sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack);
 
     void killWindow();
-    void maximize(MaximizeMode) override;
     void toggleShade();
     void showContextHelp();
     void cancelShadeHoverTimer();
@@ -563,7 +561,7 @@ private:
     bool isManaged() const; ///< Returns false if this client is not yet managed
     void updateAllowedActions(bool force = false);
     QRect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
-    void changeMaximize(bool horizontal, bool vertical, bool adjust);
+    void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
     int checkFullScreenHack(const QRect& geom) const;   // 0 - None, 1 - One xinerama screen, 2 - Full area
     void updateFullScreenHack(const QRect& geom);
     void getWmNormalHints();

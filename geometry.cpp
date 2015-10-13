@@ -2111,7 +2111,7 @@ void Client::blockGeometryUpdates(bool block)
     }
 }
 
-void Client::maximize(MaximizeMode m)
+void AbstractClient::maximize(MaximizeMode m)
 {
     setMaximize(m & MaximizeVertical, m & MaximizeHorizontal);
 }
@@ -2119,16 +2119,17 @@ void Client::maximize(MaximizeMode m)
 /*!
   Sets the maximization according to \a vertically and \a horizontally
  */
-void Client::setMaximize(bool vertically, bool horizontally)
+void AbstractClient::setMaximize(bool vertically, bool horizontally)
 {
     // changeMaximize() flips the state, so change from set->flip
-    MaximizeMode oldMode = maximizeMode();
+    const MaximizeMode oldMode = maximizeMode();
     changeMaximize(
-        max_mode & MaximizeVertical ? !vertically : vertically,
-        max_mode & MaximizeHorizontal ? !horizontally : horizontally,
+        oldMode & MaximizeVertical ? !vertically : vertically,
+        oldMode & MaximizeHorizontal ? !horizontally : horizontally,
         false);
-    if (oldMode != maximizeMode()) {
-        emit clientMaximizedStateChanged(this, max_mode);
+    const MaximizeMode newMode = maximizeMode();
+    if (oldMode != newMode) {
+        emit clientMaximizedStateChanged(this, newMode);
         emit clientMaximizedStateChanged(this, vertically, horizontally);
     }
 

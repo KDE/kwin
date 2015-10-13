@@ -367,16 +367,18 @@ void ShellClient::hideClient(bool hide)
     Q_UNUSED(hide)
 }
 
-void ShellClient::maximize(MaximizeMode mode)
+void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
 {
-    if (m_maximizeMode == mode) {
-        return;
-    }
-    // TODO: check rules
     StackingUpdatesBlocker blocker(workspace());
-    const MaximizeMode oldMode = m_maximizeMode;
-    m_maximizeMode = mode;
+    // 'adjust == true' means to update the size only, e.g. after changing workspace size
+    if (!adjust) {
+        if (vertical)
+            m_maximizeMode = MaximizeMode(m_maximizeMode ^ MaximizeVertical);
+        if (horizontal)
+            m_maximizeMode = MaximizeMode(m_maximizeMode ^ MaximizeHorizontal);
+    }
 
+    // TODO: check rules
     if (m_maximizeMode == MaximizeFull) {
         m_geomMaximizeRestore = geometry();
         requestGeometry(workspace()->clientArea(MaximizeArea, this));
@@ -388,11 +390,7 @@ void ShellClient::maximize(MaximizeMode mode)
             requestGeometry(workspace()->clientArea(PlacementArea, this));
         }
     }
-    if (oldMode != maximizeMode()) {
-        emit clientMaximizedStateChanged(this, m_maximizeMode);
-        const bool set = m_maximizeMode == MaximizeFull;
-        emit clientMaximizedStateChanged(this, set, set);
-    }
+    // TODO: add more checks as in Client
 }
 
 MaximizeMode ShellClient::maximizeMode() const

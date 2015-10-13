@@ -303,7 +303,8 @@ public:
     virtual bool isCurrentTab() const;
     virtual QRect geometryRestore() const = 0;
     virtual MaximizeMode maximizeMode() const = 0;
-    virtual void maximize(MaximizeMode) = 0;
+    void maximize(MaximizeMode);
+    void setMaximize(bool vertically, bool horizontally);
     virtual bool noBorder() const = 0;
     virtual void setNoBorder(bool set) = 0;
     virtual void blockActivityUpdates(bool b = true) = 0;
@@ -550,6 +551,7 @@ protected:
     virtual int borderRight() const;
     virtual int borderTop() const;
     virtual int borderBottom() const;
+    virtual void changeMaximize(bool horizontal, bool vertical, bool adjust) = 0;
 
 private:
     void handlePaletteChange();

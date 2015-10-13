@@ -72,7 +72,6 @@ public:
     bool isResizable() const override;
     bool isShown(bool shaded_is_shown) const override;
     void hideClient(bool hide) override;
-    void maximize(MaximizeMode) override;
     MaximizeMode maximizeMode() const override;
     QRect geometryRestore() const override {
         return m_geomMaximizeRestore;
@@ -122,6 +121,7 @@ protected:
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
     void doSetActive() override;
     Layer layerForDock() const override;
+    void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
 
 private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);
