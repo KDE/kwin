@@ -560,6 +560,7 @@ protected:
     virtual int borderTop() const;
     virtual int borderBottom() const;
     virtual void changeMaximize(bool horizontal, bool vertical, bool adjust) = 0;
+    virtual void setGeometryRestore(const QRect &geo) = 0;
     void blockGeometryUpdates(bool block);
     void blockGeometryUpdates();
     void unblockGeometryUpdates();

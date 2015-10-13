@@ -495,6 +495,7 @@ protected:
     void doSetSkipTaskbar() override;
     bool belongsToDesktop() const override;
     bool isActiveFullScreen() const override;
+    void setGeometryRestore(const QRect &geo) override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -810,6 +811,11 @@ inline ShadeMode Client::shadeMode() const
 inline QRect Client::geometryRestore() const
 {
     return geom_restore;
+}
+
+inline void Client::setGeometryRestore(const QRect &geo)
+{
+    geom_restore = geo;
 }
 
 inline MaximizeMode Client::maximizeMode() const

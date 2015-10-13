@@ -123,6 +123,9 @@ protected:
     void doSetActive() override;
     Layer layerForDock() const override;
     void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
+    void setGeometryRestore(const QRect &geo) override {
+        m_geomMaximizeRestore = geo;
+    }
 
 private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);
