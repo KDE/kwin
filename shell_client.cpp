@@ -353,7 +353,7 @@ bool ShellClient::isMovableAcrossScreens() const
 
 bool ShellClient::isResizable() const
 {
-    return false;
+    return true;
 }
 
 bool ShellClient::isShown(bool shaded_is_shown) const
