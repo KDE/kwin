@@ -397,6 +397,13 @@ public:
     void keepInArea(QRect area, bool partial = false);
     virtual QSize minSize() const;
     virtual QSize maxSize() const;
+    /// How to resize the window in order to obey constains (mainly aspect ratios)
+    enum Sizemode {
+        SizemodeAny,
+        SizemodeFixedW, ///< Try not to affect width
+        SizemodeFixedH, ///< Try not to affect height
+        SizemodeMax ///< Try not to make it larger in either direction
+    };
 
     virtual bool hasStrut() const;
 

@@ -209,13 +209,6 @@ public:
     void releaseWindow(bool on_shutdown = false);
     void destroyClient();
 
-    /// How to resize the window in order to obey constains (mainly aspect ratios)
-    enum Sizemode {
-        SizemodeAny,
-        SizemodeFixedW, ///< Try not to affect width
-        SizemodeFixedH, ///< Try not to affect height
-        SizemodeMax ///< Try not to make it larger in either direction
-    };
     QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
     QSize adjustedSize() const;
 
