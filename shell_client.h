@@ -95,6 +95,8 @@ public:
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::resizeWithChecks;
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    using AbstractClient::setGeometry;
+    void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     bool hasStrut() const override;
 
     void setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo) override;
@@ -128,7 +130,7 @@ private Q_SLOTS:
 
 private:
     void requestGeometry(const QRect &rect);
-    void setGeometry(const QRect &rect);
+    void doSetGeometry(const QRect &rect);
     void destroyClient();
     void unmap();
     void createWindowId();

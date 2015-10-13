@@ -76,11 +76,6 @@ class Client
 {
     Q_OBJECT
     /**
-     * The geometry of this Client. Be aware that depending on resize mode the geometryChanged signal
-     * might be emitted at each resize step or only at the end of the resize operation.
-     **/
-    Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
-    /**
      * Whether the Client can be maximized both horizontally and vertically.
      * The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
@@ -270,8 +265,8 @@ public:
 
     void updateShape();
 
-    void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet);
-    void setGeometry(const QRect& r, ForceGeometry_t force = NormalGeometrySet);
+    using AbstractClient::setGeometry;
+    void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::move;
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     /// plainResize() simply resizes
@@ -888,11 +883,6 @@ inline QPoint Client::clientPos() const
 inline QSize Client::clientSize() const
 {
     return client_size;
-}
-
-inline void Client::setGeometry(const QRect& r, ForceGeometry_t force)
-{
-    setGeometry(r.x(), r.y(), r.width(), r.height(), force);
 }
 
 inline void Client::plainResize(const QSize& s, ForceGeometry_t force)

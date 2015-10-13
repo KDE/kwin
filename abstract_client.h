@@ -174,6 +174,11 @@ class AbstractClient : public Toplevel
      * Whether the Client represents a modal window.
      **/
     Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
+    /**
+     * The geometry of this Client. Be aware that depending on resize mode the geometryChanged signal
+     * might be emitted at each resize step or only at the end of the resize operation.
+     **/
+    Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
 public:
     virtual ~AbstractClient();
 
@@ -398,6 +403,8 @@ public:
     void keepInArea(QRect area, bool partial = false);
     virtual QSize minSize() const;
     virtual QSize maxSize() const;
+    virtual void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
+    void setGeometry(const QRect& r, ForceGeometry_t force = NormalGeometrySet);
     /// How to resize the window in order to obey constains (mainly aspect ratios)
     enum Sizemode {
         SizemodeAny,
@@ -598,6 +605,11 @@ inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
 inline void AbstractClient::resizeWithChecks(const QSize& s, AbstractClient::ForceGeometry_t force)
 {
     resizeWithChecks(s.width(), s.height(), force);
+}
+
+inline void AbstractClient::setGeometry(const QRect& r, ForceGeometry_t force)
+{
+    setGeometry(r.x(), r.y(), r.width(), r.height(), force);
 }
 
 inline const QList<AbstractClient*>& AbstractClient::transients() const

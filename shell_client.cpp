@@ -64,7 +64,7 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
         updateInternalWindowGeometry();
         setOnAllDesktops(true);
     } else {
-        setGeometry(QRect(QPoint(0, 0), m_clientSize));
+        doSetGeometry(QRect(QPoint(0, 0), m_clientSize));
         setDesktop(VirtualDesktopManager::self()->current());
     }
     if (waylandServer()->inputMethodConnection() == m_shellSurface->client()) {
@@ -74,7 +74,7 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     connect(surface->surface(), &SurfaceInterface::sizeChanged, this,
         [this] {
             m_clientSize = m_shellSurface->surface()->buffer()->size();
-            setGeometry(QRect(geom.topLeft(), m_clientSize));
+            doSetGeometry(QRect(geom.topLeft(), m_clientSize));
             discardWindowPixmap();
         }
     );
@@ -220,7 +220,7 @@ void ShellClient::addDamage(const QRegion &damage)
             position = m_positionAfterResize.point();
             m_positionAfterResize.clear();
         }
-        setGeometry(QRect(position, m_clientSize));
+        doSetGeometry(QRect(position, m_clientSize));
     }
     markAsMapped();
     setDepth(m_shellSurface->surface()->buffer()->hasAlphaChannel() ? 32 : 24);
@@ -235,7 +235,7 @@ void ShellClient::setInternalFramebufferObject(const QSharedPointer<QOpenGLFrame
     }
     markAsMapped();
     m_clientSize = fbo->size();
-    setGeometry(QRect(geom.topLeft(), m_clientSize));
+    doSetGeometry(QRect(geom.topLeft(), m_clientSize));
     Toplevel::setInternalFramebufferObject(fbo);
     Toplevel::addDamage(QRegion(0, 0, width(), height()));
 }
@@ -250,7 +250,14 @@ void ShellClient::markAsMapped()
     setupWindowManagementInterface();
 }
 
-void ShellClient::setGeometry(const QRect &rect)
+void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
+{
+    Q_UNUSED(force)
+    // TODO: better merge with Client's implementation
+    requestGeometry(QRect(x, y, w, h));
+}
+
+void ShellClient::doSetGeometry(const QRect &rect)
 {
     if (geom == rect) {
         return;
@@ -549,7 +556,7 @@ void ShellClient::updateInternalWindowGeometry()
     if (!m_internalWindow) {
         return;
     }
-    setGeometry(m_internalWindow->geometry());
+    doSetGeometry(m_internalWindow->geometry());
 }
 
 bool ShellClient::isInternal() const
@@ -639,7 +646,7 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
 {
     m_plasmaShellSurface = surface;
     auto updatePosition = [this, surface] {
-        setGeometry(QRect(surface->position(), m_clientSize));
+        doSetGeometry(QRect(surface->position(), m_clientSize));
     };
     auto updateRole = [this, surface] {
         NET::WindowType type = NET::Unknown;
