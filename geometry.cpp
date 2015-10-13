@@ -2139,7 +2139,7 @@ void AbstractClient::setMaximize(bool vertically, bool horizontally)
 class TabSynchronizer
 {
 public:
-    TabSynchronizer(Client *client, TabGroup::States syncStates) :
+    TabSynchronizer(AbstractClient *client, TabGroup::States syncStates) :
     m_client(client) , m_states(syncStates)
     {
         if (client->tabGroup())
@@ -2153,12 +2153,12 @@ public:
     {
         if (m_client && m_client->tabGroup()) {
             m_client->tabGroup()->blockStateUpdates(false);
-            m_client->tabGroup()->updateStates(m_client, m_states);
+            m_client->tabGroup()->updateStates(dynamic_cast<Client*>(m_client), m_states);
         }
         m_client = 0;
     }
 private:
-    Client *m_client;
+    AbstractClient *m_client;
     TabGroup::States m_states;
 };
 
