@@ -13,6 +13,7 @@
         "Description[sv]": "Återge via DRM-nod.", 
         "Description[uk]": "Обробляти через вузол DRM.", 
         "Description[x-test]": "xxRender through drm node.xx", 
+        "Description[zh_CN]": "通过 drm 结点渲染。", 
         "Id": "KWinWaylandDrmBackend", 
         "Name": "drm", 
         "Name[ca]": "DRM", 
@@ -27,7 +28,8 @@
         "Name[sk]": "drm", 
         "Name[sv]": "DRM", 
         "Name[uk]": "drm", 
-        "Name[x-test]": "xxdrmxx"
+        "Name[x-test]": "xxdrmxx", 
+        "Name[zh_CN]": "drm"
     }, 
     "input": false
 }

@@ -13,6 +13,7 @@
         "Description[sv]": "Återge till ett nästlat fönster på Wayland-sammansättare som kör.", 
         "Description[uk]": "Обробляти у вкладене вікно запущеного засобу композиції Wayland.", 
         "Description[x-test]": "xxRender to a nested window on running Wayland compositor.xx", 
+        "Description[zh_CN]": "渲染到 Wayland 混成器上的嵌套窗口中", 
         "Id": "KWinWaylandWaylandBackend", 
         "Name": "wayland", 
         "Name[ca]": "Wayland", 
@@ -27,7 +28,8 @@
         "Name[sk]": "wayland", 
         "Name[sv]": "Wayland", 
         "Name[uk]": "wayland", 
-        "Name[x-test]": "xxwaylandxx"
+        "Name[x-test]": "xxwaylandxx", 
+        "Name[zh_CN]": "wayland"
     }, 
     "input": true
 }

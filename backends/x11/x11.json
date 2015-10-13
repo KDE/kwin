@@ -13,6 +13,7 @@
         "Description[sv]": "Återge till ett nästlat fönster på X11-fönstersystem.", 
         "Description[uk]": "Обробляти у вкладене вікно системи керування вікнами X11.", 
         "Description[x-test]": "xxRender to a nested window on X11 windowing system.xx", 
+        "Description[zh_CN]": "渲染到 X11 窗口系统上的嵌套窗口中", 
         "Id": "KWinWaylandX11Backend", 
         "Name": "x11", 
         "Name[ca]": "X11", 
@@ -27,7 +28,8 @@
         "Name[sk]": "x11", 
         "Name[sv]": "X11", 
         "Name[uk]": "x11", 
-        "Name[x-test]": "xxx11xx"
+        "Name[x-test]": "xxx11xx", 
+        "Name[zh_CN]": "x11"
     }, 
     "input": true
 }
