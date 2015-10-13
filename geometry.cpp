@@ -1034,7 +1034,7 @@ bool Client::hasOffscreenXineramaStrut() const
     return !region.isEmpty();
 }
 
-void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, QRect oldClientGeometry)
+void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, QRect oldClientGeometry)
 {
     enum { Left = 0, Top, Right, Bottom };
     const int border[4] = { borderLeft(), borderTop(), borderRight(), borderBottom() };
