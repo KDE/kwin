@@ -1617,14 +1617,14 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
                             bool(maximizeMode() & MaximizeHorizontal);
 
     // we want to (partially) ignore the request when the window is somehow maximized or quicktiled
-    bool ignore = !app_noborder && (quick_tile_mode != QuickTileNone || maximizeMode() != MaximizeRestore);
+    bool ignore = !app_noborder && (quickTileMode() != QuickTileNone || maximizeMode() != MaximizeRestore);
     // however, the user shall be able to force obedience despite and also disobedience in general
     ignore = rules()->checkIgnoreGeometry(ignore);
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
         quick_tile_mode = QuickTileNone;
         max_mode = MaximizeRestore;
         emit quickTileModeChanged();
-    } else if (!app_noborder && quick_tile_mode == QuickTileNone &&
+    } else if (!app_noborder && quickTileMode() == QuickTileNone &&
         (maximizeMode() == MaximizeVertical || maximizeMode() == MaximizeHorizontal)) {
         // ignoring can be, because either we do, or the user does explicitly not want it.
         // for partially maximized windows we want to allow configures in the other dimension.
@@ -2229,7 +2229,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     else
         sz = size();
 
-    if (quick_tile_mode == QuickTileNone) {
+    if (quickTileMode() == QuickTileNone) {
         if (!adjust && !(old_mode & MaximizeVertical)) {
             geom_restore.setTop(y());
             geom_restore.setHeight(sz.height());
@@ -2267,7 +2267,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     const ForceGeometry_t geom_mode = m_decoration ? ForceGeometrySet : NormalGeometrySet;
 
     // Conditional quick tiling exit points
-    if (quick_tile_mode != QuickTileNone) {
+    if (quickTileMode() != QuickTileNone) {
         if (old_mode == MaximizeFull &&
                 !clientArea.contains(geom_restore.center())) {
             // Not restoring on the same screen
@@ -2653,7 +2653,7 @@ bool Client::startMoveResize()
         }
     }
 
-    if (quick_tile_mode != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
+    if (quickTileMode() != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
         // Exit quick tile mode when the user attempts to resize a tiled window
         quick_tile_mode = QuickTileNone; // Do so without restoring original geometry
         geom_restore = geometry();
@@ -2827,7 +2827,7 @@ void Client::handleMoveResize(const QPoint &local, const QPoint &global)
     const QRect oldGeo = geometry();
     handleMoveResize(local.x(), local.y(), global.x(), global.y());
     if (!isFullScreen() && isMove()) {
-        if (quick_tile_mode != QuickTileNone && oldGeo != geometry()) {
+        if (quickTileMode() != QuickTileNone && oldGeo != geometry()) {
             GeometryUpdatesBlocker blocker(this);
             setQuickTileMode(QuickTileNone);
             moveOffset = QPoint(double(moveOffset.x()) / double(oldGeo.width()) * double(geom_restore.width()),
@@ -2835,7 +2835,7 @@ void Client::handleMoveResize(const QPoint &local, const QPoint &global)
             if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore)
                 moveResizeGeom = geom_restore;
             handleMoveResize(local.x(), local.y(), global.x(), global.y()); // fix position
-        } else if (quick_tile_mode == QuickTileNone && isResizable()) {
+        } else if (quickTileMode() == QuickTileNone && isResizable()) {
             checkQuickTilingMaximizationZones(global.x(), global.y());
         }
     }
@@ -3289,7 +3289,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise toggle the mode (set QuickTileNone)
-        if (quick_tile_mode == mode) {
+        if (quickTileMode() == mode) {
             const int numScreens = screens()->count();
             const int curScreen = screen();
             int nextScreen = curScreen;
@@ -3327,7 +3327,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 mode = ~mode & QuickTileHorizontal;
             }
             setElectricBorderMode(mode); // used by ::electricBorderMaximizeGeometry(.)
-        } else if (quick_tile_mode == QuickTileNone) {
+        } else if (quickTileMode() == QuickTileNone) {
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
             setGeometryRestore(geometry());
@@ -3381,7 +3381,7 @@ void Client::sendToScreen(int newScreen)
     // operating on the maximized / quicktiled window would leave the old geom_restore behind,
     // so we clear the state first
     MaximizeMode maxMode = maximizeMode();
-    QuickTileMode qtMode = (QuickTileMode)quick_tile_mode;
+    QuickTileMode qtMode = quickTileMode();
     if (maxMode != MaximizeRestore)
         maximize(MaximizeRestore);
     if (qtMode != QuickTileNone)
@@ -3428,7 +3428,7 @@ void Client::sendToScreen(int newScreen)
     // eg. setting QuickTileNone would break maximization
     if (maxMode != MaximizeRestore)
         maximize(maxMode);
-    if (qtMode != QuickTileNone && qtMode != quick_tile_mode)
+    if (qtMode != QuickTileNone && qtMode != quickTileMode())
         setQuickTileMode(qtMode, true);
 
     auto tso = workspace()->ensureStackingOrder(transients());
