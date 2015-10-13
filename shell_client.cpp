@@ -430,12 +430,6 @@ void ShellClient::setOnAllActivities(bool set)
     Q_UNUSED(set)
 }
 
-void ShellClient::setQuickTileMode(AbstractClient::QuickTileMode mode, bool keyboard)
-{
-    Q_UNUSED(mode)
-    Q_UNUSED(keyboard)
-}
-
 void ShellClient::setShortcut(const QString &cut)
 {
     Q_UNUSED(cut)

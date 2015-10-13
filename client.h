@@ -227,7 +227,6 @@ public:
     QRect geometryRestore() const override;
     MaximizeMode maximizeMode() const override;
 
-    QuickTileMode quickTileMode() const override;
     bool isMinimizable() const override;
     QRect iconGeometry() const;
 
@@ -278,12 +277,6 @@ public:
     void resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     QSize sizeForClientSize(const QSize&, Sizemode mode = SizemodeAny, bool noframe = false) const override;
-
-    /** Set the quick tile mode ("snap") of this window.
-     * This will also handle preserving and restoring of window geometry as necessary.
-     * @param mode The tile mode (left/right) to give this window.
-     */
-    void setQuickTileMode(QuickTileMode mode, bool keyboard = false) override;
 
     void growHorizontal() override;
     void shrinkHorizontal() override;
@@ -496,7 +489,6 @@ protected:
     bool belongsToDesktop() const override;
     bool isActiveFullScreen() const override;
     void setGeometryRestore(const QRect &geo) override;
-    void updateQuickTileMode(QuickTileMode newMode) override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -663,10 +655,6 @@ private:
     };
     MappingState mapping_state;
 
-    /** The quick tile mode of this window.
-     */
-    int quick_tile_mode;
-
     Xcb::TransientFor fetchTransient() const;
     void readTransientProperty(Xcb::TransientFor &transientFor);
     void readTransient();
@@ -822,16 +810,6 @@ inline void Client::setGeometryRestore(const QRect &geo)
 inline MaximizeMode Client::maximizeMode() const
 {
     return max_mode;
-}
-
-inline Client::QuickTileMode Client::quickTileMode() const
-{
-    return (Client::QuickTileMode)quick_tile_mode;
-}
-
-inline void Client::updateQuickTileMode(QuickTileMode newMode)
-{
-    quick_tile_mode = newMode;
 }
 
 inline bool Client::isFullScreen() const

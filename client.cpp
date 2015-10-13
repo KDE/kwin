@@ -139,7 +139,6 @@ Client::Client()
 
     // Set the initial mapping state
     mapping_state = Withdrawn;
-    quick_tile_mode = QuickTileNone;
 
     mode = PositionCenter;
     buttonDown = false;

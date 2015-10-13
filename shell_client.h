@@ -81,7 +81,6 @@ public:
     void setFullScreen(bool set, bool user = true) override;
     void setNoBorder(bool set) override;
     void setOnAllActivities(bool set) override;
-    void setQuickTileMode(QuickTileMode mode, bool keyboard = false) override;
     void setShortcut(const QString &cut) override;
     const QKeySequence &shortcut() const override;
     void takeFocus() override;

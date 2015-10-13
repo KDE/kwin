@@ -3222,7 +3222,7 @@ QRect AbstractClient::electricBorderMaximizeGeometry(QPoint pos, int desktop)
     return ret;
 }
 
-void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
+void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
 {
     // Only allow quick tile on a regular or maximized window
     if (!isResizable() && maximizeMode() != MaximizeFull)
@@ -3234,7 +3234,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
     if (mode == QuickTileMaximize) {
         TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
-        quick_tile_mode = QuickTileNone;
+        m_quickTileMode = QuickTileNone;
         if (maximizeMode() == MaximizeFull) {
             setMaximize(false, false);
         } else {
@@ -3246,7 +3246,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 r.moveTop(clientArea.top());
                 setGeometry(r);
             }
-            quick_tile_mode = QuickTileMaximize;
+            m_quickTileMode = QuickTileMaximize;
             setGeometryRestore(prev_geom_restore);
         }
         emit quickTileModeChanged();
@@ -3269,14 +3269,14 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         setMaximize(false, false);
 
         if (mode != QuickTileNone) {
-            quick_tile_mode = mode;
+            m_quickTileMode = mode;
             // decorations may turn off some borders when tiled
             const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
-            quick_tile_mode = QuickTileNone; // Temporary, so the maximize code doesn't get all confused
+            m_quickTileMode = QuickTileNone; // Temporary, so the maximize code doesn't get all confused
             setGeometry(electricBorderMaximizeGeometry(keyboard ? geometry().center() : Cursor::pos(), desktop()), geom_mode);
         }
         // Store the mode change
-        quick_tile_mode = mode;
+        m_quickTileMode = mode;
         emit quickTileModeChanged();
 
         return;
@@ -3334,22 +3334,22 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         }
 
         if (mode != QuickTileNone) {
-            quick_tile_mode = mode;
+            m_quickTileMode = mode;
             // decorations may turn off some borders when tiled
             const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
             // Temporary, so the maximize code doesn't get all confused
-            quick_tile_mode = QuickTileNone;
+            m_quickTileMode = QuickTileNone;
             setGeometry(electricBorderMaximizeGeometry(whichScreen, desktop()), geom_mode);
         }
 
         // Store the mode change
-        quick_tile_mode = mode;
+        m_quickTileMode = mode;
     }
 
     if (mode == QuickTileNone) {
         TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry);
 
-        quick_tile_mode = QuickTileNone;
+        m_quickTileMode = QuickTileNone;
         // Untiling, so just restore geometry, and we're done.
         if (!geometryRestore().isValid()) // invalid if we started maximized and wait for placement
             setGeometryRestore(geometry());

@@ -391,8 +391,10 @@ public:
      * This will also handle preserving and restoring of window geometry as necessary.
      * @param mode The tile mode (left/right) to give this window.
      */
-    virtual void setQuickTileMode(QuickTileMode mode, bool keyboard = false) = 0;
-    virtual QuickTileMode quickTileMode() const;
+    void setQuickTileMode(QuickTileMode mode, bool keyboard = false);
+    QuickTileMode quickTileMode() const {
+        return QuickTileMode(m_quickTileMode);
+    }
     Layer layer() const override;
     void updateLayer();
 
@@ -552,7 +554,9 @@ protected:
         return m_electricMaximizing;
     }
     QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
-    virtual void updateQuickTileMode(QuickTileMode newMode);
+    void updateQuickTileMode(QuickTileMode newMode) {
+        m_quickTileMode = newMode;
+    }
 
     // geometry handling
     void checkOffscreenPosition(QRect *geom, const QRect &screenArea);
@@ -609,6 +613,9 @@ private:
     // electric border/quick tiling
     QuickTileMode m_electricMode = QuickTileNone;
     bool m_electricMaximizing = false;
+    /** The quick tile mode of this window.
+     */
+    int m_quickTileMode = QuickTileNone;
 
     // geometry
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set

@@ -1006,15 +1006,6 @@ bool AbstractClient::isActiveFullScreen() const
     return ac && (ac == this || ac->screen() != screen());
 }
 
-AbstractClient::QuickTileMode AbstractClient::quickTileMode() const
-{
-    return QuickTileNone;
-}
-
-void AbstractClient::updateQuickTileMode(QuickTileMode)
-{
-}
-
 int AbstractClient::borderBottom() const
 {
     return 0;
