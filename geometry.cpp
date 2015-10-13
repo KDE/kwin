@@ -3271,7 +3271,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         if (mode != QuickTileNone) {
             quick_tile_mode = mode;
             // decorations may turn off some borders when tiled
-            const ForceGeometry_t geom_mode = m_decoration ? ForceGeometrySet : NormalGeometrySet;
+            const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
             quick_tile_mode = QuickTileNone; // Temporary, so the maximize code doesn't get all confused
             setGeometry(electricBorderMaximizeGeometry(keyboard ? geometry().center() : Cursor::pos(), desktop()), geom_mode);
         }
@@ -3336,7 +3336,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         if (mode != QuickTileNone) {
             quick_tile_mode = mode;
             // decorations may turn off some borders when tiled
-            const ForceGeometry_t geom_mode = m_decoration ? ForceGeometrySet : NormalGeometrySet;
+            const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
             // Temporary, so the maximize code doesn't get all confused
             quick_tile_mode = QuickTileNone;
             setGeometry(electricBorderMaximizeGeometry(whichScreen, desktop()), geom_mode);
@@ -3354,7 +3354,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         if (!geom_restore.isValid()) // invalid if we started maximized and wait for placement
             geom_restore = geometry();
         // decorations may turn off some borders when tiled
-        const ForceGeometry_t geom_mode = m_decoration ? ForceGeometrySet : NormalGeometrySet;
+        const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
         setGeometry(geom_restore, geom_mode);
         checkWorkspacePosition(); // Just in case it's a different screen
     }
