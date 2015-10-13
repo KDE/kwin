@@ -404,6 +404,14 @@ public:
         SizemodeFixedH, ///< Try not to affect height
         SizemodeMax ///< Try not to make it larger in either direction
     };
+    /**
+     *Calculate the appropriate frame size for the given client size @p wsize.
+     *
+     * @p wsize is adapted according to the window's size hints (minimum, maximum and incremental size changes).
+     *
+     * Default implementation returns the passed in @p wsize.
+     */
+    virtual QSize sizeForClientSize(const QSize &wsize, Sizemode mode = SizemodeAny, bool noframe = false) const;
 
     virtual bool hasStrut() const;
 

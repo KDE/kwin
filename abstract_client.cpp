@@ -1028,4 +1028,11 @@ int AbstractClient::borderTop() const
     return 0;
 }
 
+QSize AbstractClient::sizeForClientSize(const QSize &wsize, Sizemode mode, bool noframe) const
+{
+    Q_UNUSED(mode)
+    Q_UNUSED(noframe)
+    return wsize;
+}
+
 }
