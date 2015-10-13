@@ -45,7 +45,10 @@ AbstractClient::AbstractClient()
 {
 }
 
-AbstractClient::~AbstractClient() = default;
+AbstractClient::~AbstractClient()
+{
+    assert(m_blockGeometryUpdates == 0);
+}
 
 void AbstractClient::updateMouseGrab()
 {

@@ -57,8 +57,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     }
 
     // From this place on, manage() must not return false
-    block_geometry_updates = 1;
-    pending_geometry_update = PendingGeometryForced; // Force update when finishing with geometry changes
+    blockGeometryUpdates();
+    setPendingGeometryUpdate(PendingGeometryForced); // Force update when finishing with geometry changes
 
     embedClient(w, attr->visual, attr->colormap, windowGeometry->depth);
 

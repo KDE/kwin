@@ -121,8 +121,6 @@ Client::Client()
     , m_pingTimestamp(XCB_TIME_CURRENT_TIME)
     , m_userTime(XCB_TIME_CURRENT_TIME)   // Not known yet
     , allowed_actions(0)
-    , block_geometry_updates(0)
-    , pending_geometry_update(PendingGeometryNone)
     , shade_geometry_change(false)
     , sm_stacking_order(-1)
     , m_electricMaximizingDelay(nullptr)
@@ -200,7 +198,6 @@ Client::~Client()
     assert(m_wrapper == XCB_WINDOW_NONE);
     //assert( frameId() == None );
     Q_ASSERT(m_decoration == nullptr);
-    assert(block_geometry_updates == 0);
     assert(!check_active_modal);
     for (auto it = m_connections.constBegin(); it != m_connections.constEnd(); ++it) {
         disconnect(*it);
@@ -234,7 +231,7 @@ void Client::releaseWindow(bool on_shutdown)
     if (moveResizeMode)
         leaveMoveResize();
     finishWindowRules();
-    ++block_geometry_updates;
+    blockGeometryUpdates();
     if (isOnCurrentDesktop() && isShown(true))
         addWorkspaceRepaint(visibleRect());
     // Grab X during the release to make removing of properties, setting to withdrawn state
@@ -273,7 +270,7 @@ void Client::releaseWindow(bool on_shutdown)
     m_wrapper.reset();
     m_frame.reset();
     //frame = None;
-    --block_geometry_updates; // Don't use GeometryUpdatesBlocker, it would now set the geometry
+    unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     if (!on_shutdown) {
         disownDataPassedToDeleted();
         del->unrefWindow();
@@ -302,7 +299,7 @@ void Client::destroyClient()
     if (moveResizeMode)
         leaveMoveResize();
     finishWindowRules();
-    ++block_geometry_updates;
+    blockGeometryUpdates();
     if (isOnCurrentDesktop() && isShown(true))
         addWorkspaceRepaint(visibleRect());
     setModal(false);
@@ -315,7 +312,7 @@ void Client::destroyClient()
     m_wrapper.reset();
     m_frame.reset();
     //frame = None;
-    --block_geometry_updates; // Don't use GeometryUpdatesBlocker, it would now set the geometry
+    unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     disownDataPassedToDeleted();
     del->unrefWindow();
     checkNonExistentClients();

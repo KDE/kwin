@@ -572,7 +572,6 @@ private:
     void configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool);
     NETExtendedStrut strut() const;
     int checkShadeGeometry(int w, int h);
-    void blockGeometryUpdates(bool block);
     void getSyncCounter();
     void sendSyncRequest();
     bool startMoveResize();
@@ -711,13 +710,6 @@ private:
     xcb_timestamp_t m_userTime;
     NET::Actions allowed_actions;
     QSize client_size;
-    int block_geometry_updates; // > 0 = New geometry is remembered, but not actually set
-    enum PendingGeometry_t {
-        PendingGeometryNone,
-        PendingGeometryNormal,
-        PendingGeometryForced
-    };
-    PendingGeometry_t pending_geometry_update;
     QRect geom_before_block;
     QRect deco_rect_before_block;
     bool shade_geometry_change;
@@ -733,7 +725,6 @@ private:
     QKeySequence _shortcut;
     int sm_stacking_order;
     friend struct ResetupRulesProcedure;
-    friend class GeometryUpdatesBlocker;
 
     QTimer* m_electricMaximizingDelay;
 
@@ -756,24 +747,6 @@ private:
     bool m_clientSideDecorated;
 
     QMetaObject::Connection m_edgeRemoveConnection;
-};
-
-/**
- * Helper for Client::blockGeometryUpdates() being called in pairs (true/false)
- */
-class GeometryUpdatesBlocker
-{
-public:
-    explicit GeometryUpdatesBlocker(Client* c)
-        : cl(c) {
-        cl->blockGeometryUpdates(true);
-    }
-    ~GeometryUpdatesBlocker() {
-        cl->blockGeometryUpdates(false);
-    }
-
-private:
-    Client* cl;
 };
 
 inline xcb_window_t Client::wrapperId() const

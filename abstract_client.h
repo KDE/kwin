@@ -560,6 +560,17 @@ protected:
     virtual int borderTop() const;
     virtual int borderBottom() const;
     virtual void changeMaximize(bool horizontal, bool vertical, bool adjust) = 0;
+    void blockGeometryUpdates(bool block);
+    void blockGeometryUpdates();
+    void unblockGeometryUpdates();
+    bool areGeometryUpdatesBlocked() const;
+    enum PendingGeometry_t {
+        PendingGeometryNone,
+        PendingGeometryNormal,
+        PendingGeometryForced
+    };
+    PendingGeometry_t pendingGeometryUpdate() const;
+    void setPendingGeometryUpdate(PendingGeometry_t update);
 
 private:
     void handlePaletteChange();
@@ -596,6 +607,29 @@ private:
     // electric border/quick tiling
     QuickTileMode m_electricMode = QuickTileNone;
     bool m_electricMaximizing = false;
+
+    // geometry
+    int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
+    PendingGeometry_t m_pendingGeometryUpdate = PendingGeometryNone;
+    friend class GeometryUpdatesBlocker;
+};
+
+/**
+ * Helper for AbstractClient::blockGeometryUpdates() being called in pairs (true/false)
+ */
+class GeometryUpdatesBlocker
+{
+public:
+    explicit GeometryUpdatesBlocker(AbstractClient* c)
+        : cl(c) {
+        cl->blockGeometryUpdates(true);
+    }
+    ~GeometryUpdatesBlocker() {
+        cl->blockGeometryUpdates(false);
+    }
+
+private:
+    AbstractClient* cl;
 };
 
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
@@ -616,6 +650,31 @@ inline void AbstractClient::setGeometry(const QRect& r, ForceGeometry_t force)
 inline const QList<AbstractClient*>& AbstractClient::transients() const
 {
     return m_transients;
+}
+
+inline bool AbstractClient::areGeometryUpdatesBlocked() const
+{
+    return m_blockGeometryUpdates != 0;
+}
+
+inline void AbstractClient::blockGeometryUpdates()
+{
+    m_blockGeometryUpdates++;
+}
+
+inline void AbstractClient::unblockGeometryUpdates()
+{
+    m_blockGeometryUpdates--;
+}
+
+inline AbstractClient::PendingGeometry_t AbstractClient::pendingGeometryUpdate() const
+{
+    return m_pendingGeometryUpdate;
+}
+
+inline void AbstractClient::setPendingGeometryUpdate(PendingGeometry_t update)
+{
+    m_pendingGeometryUpdate = update;
 }
 
 }

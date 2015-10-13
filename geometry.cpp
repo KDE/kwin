@@ -1909,23 +1909,23 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         client_size = QSize(w - borderLeft() - borderRight(), h - borderTop() - borderBottom());
     }
     QRect g(x, y, w, h);
-    if (block_geometry_updates == 0 && g != rules()->checkGeometry(g)) {
+    if (!areGeometryUpdatesBlocked() && g != rules()->checkGeometry(g)) {
         qCDebug(KWIN_CORE) << "forced geometry fail:" << g << ":" << rules()->checkGeometry(g);
     }
-    if (force == NormalGeometrySet && geom == g && pending_geometry_update == PendingGeometryNone)
+    if (force == NormalGeometrySet && geom == g && pendingGeometryUpdate() == PendingGeometryNone)
         return;
     geom = g;
-    if (block_geometry_updates != 0) {
-        if (pending_geometry_update == PendingGeometryForced)
+    if (areGeometryUpdatesBlocked()) {
+        if (pendingGeometryUpdate() == PendingGeometryForced)
             {} // maximum, nothing needed
         else if (force == ForceGeometrySet)
-            pending_geometry_update = PendingGeometryForced;
+            setPendingGeometryUpdate(PendingGeometryForced);
         else
-            pending_geometry_update = PendingGeometryNormal;
+            setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
     QSize oldClientSize = m_frame.geometry().size();
-    bool resized = (geom_before_block.size() != geom.size() || pending_geometry_update == PendingGeometryForced);
+    bool resized = (geom_before_block.size() != geom.size() || pendingGeometryUpdate() == PendingGeometryForced);
     if (resized) {
         resizeDecoration();
         m_frame.setGeometry(x, y, w, h);
@@ -1999,21 +1999,21 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
         client_size = QSize(w - borderLeft() - borderRight(), h - borderTop() - borderBottom());
     }
     QSize s(w, h);
-    if (block_geometry_updates == 0 && s != rules()->checkSize(s)) {
+    if (!areGeometryUpdatesBlocked() && s != rules()->checkSize(s)) {
         qCDebug(KWIN_CORE) << "forced size fail:" << s << ":" << rules()->checkSize(s);
     }
     // resuming geometry updates is handled only in setGeometry()
-    assert(pending_geometry_update == PendingGeometryNone || block_geometry_updates > 0);
+    assert(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
     if (force == NormalGeometrySet && geom.size() == s)
         return;
     geom.setSize(s);
-    if (block_geometry_updates != 0) {
-        if (pending_geometry_update == PendingGeometryForced)
+    if (areGeometryUpdatesBlocked()) {
+        if (pendingGeometryUpdate() == PendingGeometryForced)
             {} // maximum, nothing needed
         else if (force == ForceGeometrySet)
-            pending_geometry_update = PendingGeometryForced;
+            setPendingGeometryUpdate(PendingGeometryForced);
         else
-            pending_geometry_update = PendingGeometryNormal;
+            setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
     QSize oldClientSize = m_frame.geometry().size();
@@ -2053,21 +2053,21 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
 void Client::move(int x, int y, ForceGeometry_t force)
 {
     // resuming geometry updates is handled only in setGeometry()
-    assert(pending_geometry_update == PendingGeometryNone || block_geometry_updates > 0);
+    assert(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
     QPoint p(x, y);
-    if (block_geometry_updates == 0 && p != rules()->checkPosition(p)) {
+    if (!areGeometryUpdatesBlocked() && p != rules()->checkPosition(p)) {
         qCDebug(KWIN_CORE) << "forced position fail:" << p << ":" << rules()->checkPosition(p);
     }
     if (force == NormalGeometrySet && geom.topLeft() == p)
         return;
     geom.moveTopLeft(p);
-    if (block_geometry_updates != 0) {
-        if (pending_geometry_update == PendingGeometryForced)
+    if (areGeometryUpdatesBlocked()) {
+        if (pendingGeometryUpdate() == PendingGeometryForced)
             {} // maximum, nothing needed
         else if (force == ForceGeometrySet)
-            pending_geometry_update = PendingGeometryForced;
+            setPendingGeometryUpdate(PendingGeometryForced);
         else
-            pending_geometry_update = PendingGeometryNormal;
+            setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
     m_frame.move(x, y);
@@ -2092,20 +2092,20 @@ void Client::move(int x, int y, ForceGeometry_t force)
     emit geometryChanged();
 }
 
-void Client::blockGeometryUpdates(bool block)
+void AbstractClient::blockGeometryUpdates(bool block)
 {
     if (block) {
-        if (block_geometry_updates == 0)
-            pending_geometry_update = PendingGeometryNone;
-        ++block_geometry_updates;
+        if (m_blockGeometryUpdates == 0)
+            m_pendingGeometryUpdate = PendingGeometryNone;
+        ++m_blockGeometryUpdates;
     } else {
-        if (--block_geometry_updates == 0) {
-            if (pending_geometry_update != PendingGeometryNone) {
+        if (--m_blockGeometryUpdates == 0) {
+            if (m_pendingGeometryUpdate != PendingGeometryNone) {
                 if (isShade())
                     setGeometry(QRect(pos(), adjustedSize()), NormalGeometrySet);
                 else
                     setGeometry(geometry(), NormalGeometrySet);
-                pending_geometry_update = PendingGeometryNone;
+                m_pendingGeometryUpdate = PendingGeometryNone;
             }
         }
     }
