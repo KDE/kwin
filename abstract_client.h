@@ -49,7 +49,7 @@ namespace Decoration
 class DecorationPalette;
 }
 
-class AbstractClient : public Toplevel
+class KWIN_EXPORT AbstractClient : public Toplevel
 {
     Q_OBJECT
     /**

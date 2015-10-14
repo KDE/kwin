@@ -17,3 +17,12 @@ add_executable(testTransientNoInput ${testTransientNoInput_SRCS})
 target_link_libraries( testTransientNoInput kwin Qt5::Test)
 add_test(kwin-testTransientNoInput testTransientNoInput)
 ecm_mark_as_test(testTransientNoInput)
+
+########################################################
+# Quick Tiling test
+########################################################
+set( testQuickTiling_SRCS quick_tiling_test.cpp kwin_wayland_test.cpp )
+add_executable(testQuickTiling ${testQuickTiling_SRCS})
+target_link_libraries( testQuickTiling kwin Qt5::Test)
+add_test(kwin-testQuickTiling testQuickTiling)
+ecm_mark_as_test(testQuickTiling)
