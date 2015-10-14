@@ -46,7 +46,6 @@ if(NOT WIN32)
     pkg_check_modules(PKG_androidheaders QUIET android-headers)
     pkg_check_modules(PKG_hwcomposerwindow QUIET hwcomposer-egl)
     pkg_check_modules(PKG_hybriseglplatform QUIET hybris-egl-platform)
-    pkg_check_modules(PKG_hybrissync QUIET libsync)
     pkg_check_modules(PKG_hybrisinputstack QUIET libis)
 
     set(libhardware_DEFINITIONS ${PKG_libhardware_CFLAGS_OTHER})
@@ -169,40 +168,7 @@ if(NOT WIN32)
 
     mark_as_advanced(hybriseglplatform_LIBRARY hybriseglplatform_INCLUDE_DIR)
 
-    ##############################################
-    # hybrissync
-    ##############################################
-    set(hybrissync_DEFINITIONS ${PKG_hybrissync_CFLAGS_OTHER})
-    set(hybrissync_VERSION ${PKG_hybrissync_VERSION})
-
-    find_library(hybrissync_LIBRARY
-        NAMES
-            libsync.so
-        HINTS
-            ${PKG_hybrissync_LIBRARY_DIRS}
-    )
-
-    include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(hybrissync
-        FOUND_VAR
-            hybrissync_FOUND
-        REQUIRED_VARS
-            hybrissync_LIBRARY
-        VERSION_VAR
-            hybrissync_VERSION
-    )
-
-    if(hybrissync_FOUND AND NOT TARGET libhybris::sync)
-        add_library(libhybris::sync UNKNOWN IMPORTED)
-        set_target_properties(libhybris::sync PROPERTIES
-            IMPORTED_LOCATION "${hybrissync_LIBRARY}"
-            INTERFACE_COMPILE_OPTIONS "${hybrissync_DEFINITIONS}"
-        )
-    endif()
-
-    mark_as_advanced(hybrissync_LIBRARY)
-
-    if(libhardware_FOUND AND libhwcomposer_FOUND AND hybriseglplatform_FOUND AND hybrissync_FOUND)
+    if(libhardware_FOUND AND libhwcomposer_FOUND AND hybriseglplatform_FOUND)
         set(libhybris_FOUND TRUE)
     else()
         set(libhybris_FOUND FALSE)
