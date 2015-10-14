@@ -880,7 +880,7 @@ EffectWindow* EffectsHandlerImpl::activeWindow() const
 
 void EffectsHandlerImpl::moveWindow(EffectWindow* w, const QPoint& pos, bool snap, double snapAdjust)
 {
-    Client* cl = dynamic_cast< Client* >(static_cast<EffectWindowImpl*>(w)->window());
+    AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());
     if (!cl || !cl->isMovable())
         return;
 
@@ -892,14 +892,14 @@ void EffectsHandlerImpl::moveWindow(EffectWindow* w, const QPoint& pos, bool sna
 
 void EffectsHandlerImpl::windowToDesktop(EffectWindow* w, int desktop)
 {
-    Client* cl = dynamic_cast< Client* >(static_cast<EffectWindowImpl*>(w)->window());
+    AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());
     if (cl && !cl->isDesktop() && !cl->isDock())
         Workspace::self()->sendClientToDesktop(cl, desktop, true);
 }
 
 void EffectsHandlerImpl::windowToScreen(EffectWindow* w, int screen)
 {
-    Client* cl = dynamic_cast< Client* >(static_cast<EffectWindowImpl*>(w)->window());
+    AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());
     if (cl && !cl->isDesktop() && !cl->isDock())
         Workspace::self()->sendClientToScreen(cl, screen);
 }
@@ -1070,7 +1070,7 @@ void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow* w, bool set)
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (Client* c = dynamic_cast< Client* >(static_cast< EffectWindowImpl* >(w)->window())) {
+    if (AbstractClient* c = dynamic_cast< AbstractClient* >(static_cast< EffectWindowImpl* >(w)->window())) {
         TabBox::TabBox::self()->setCurrentClient(c);
     }
 #else
@@ -1189,7 +1189,7 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, int screen, int deskt
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow* c) const
 {
     const Toplevel* t = static_cast< const EffectWindowImpl* >(c)->window();
-    if (const Client* cl = dynamic_cast< const Client* >(t))
+    if (const AbstractClient* cl = dynamic_cast< const AbstractClient* >(t))
         return Workspace::self()->clientArea(opt, cl);
     else
         return Workspace::self()->clientArea(opt, t->geometry().center(), VirtualDesktopManager::self()->current());
