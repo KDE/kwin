@@ -267,6 +267,13 @@ void ShellClient::doSetGeometry(const QRect &rect)
     }
     const QRect old = geom;
     geom = rect;
+
+    if (m_unmapped && m_geomMaximizeRestore.isEmpty() && !geom.isEmpty()) {
+        // use first valid geometry as restore geometry
+        // TODO: needs to interact with placing. The first valid geometry should be the placed one
+        m_geomMaximizeRestore = geom;
+    }
+
     if (!m_unmapped) {
         addWorkspaceRepaint(visibleRect());
     }

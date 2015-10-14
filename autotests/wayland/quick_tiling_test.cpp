@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/surface.h>
 
 Q_DECLARE_METATYPE(KWin::AbstractClient::QuickTileMode)
+Q_DECLARE_METATYPE(KWin::MaximizeMode)
 
 namespace KWin
 {
@@ -49,6 +50,8 @@ private Q_SLOTS:
     void cleanup();
     void testQuickTiling_data();
     void testQuickTiling();
+    void testQuickMaximizing_data();
+    void testQuickMaximizing();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -62,6 +65,8 @@ private:
 void QuickTilingTest::initTestCase()
 {
     qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
@@ -153,6 +158,8 @@ void QuickTilingTest::testQuickTiling_data()
     QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512);
     QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512);
 
+    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024);
+
 #undef FLAG
 }
 
@@ -214,6 +221,125 @@ void QuickTilingTest::testQuickTiling()
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(geometryChangedSpy.count(), 1);
     QCOMPARE(c->geometry(), expectedGeometry);
+}
+
+void QuickTilingTest::testQuickMaximizing_data()
+{
+    QTest::addColumn<AbstractClient::QuickTileMode>("mode");
+
+#define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
+
+    QTest::newRow("maximize") << FLAG(Maximize);
+    QTest::newRow("none") << FLAG(None);
+
+#undef FLAG
+}
+
+void QuickTilingTest::testQuickMaximizing()
+{
+    using namespace KWayland::Client;
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangeSpy.isValid());
+    // let's render
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    m_connection->flush();
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *c = workspace()->activeClient();
+    QVERIFY(c);
+    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->maximizeMode(), MaximizeRestore);
+    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
+    QVERIFY(quickTileChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy maximizeChangedSpy1(c, SIGNAL(clientMaximizedStateChanged(KWin::AbstractClient*,MaximizeMode)));
+    QVERIFY(maximizeChangedSpy1.isValid());
+    QSignalSpy maximizeChangedSpy2(c, SIGNAL(clientMaximizedStateChanged(KWin::AbstractClient*,bool,bool)));
+    QVERIFY(maximizeChangedSpy2.isValid());
+
+    c->setQuickTileMode(AbstractClient::QuickTileMaximize, true);
+    QCOMPARE(quickTileChangedSpy.count(), 1);
+    QCOMPARE(maximizeChangedSpy1.count(), 1);
+    QCOMPARE(maximizeChangedSpy1.first().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy1.first().last().value<KWin::MaximizeMode>(), MaximizeFull);
+    QCOMPARE(maximizeChangedSpy2.count(), 1);
+    QCOMPARE(maximizeChangedSpy2.first().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy2.first().at(1).toBool(), true);
+    QCOMPARE(maximizeChangedSpy2.first().at(2).toBool(), true);
+    // at this point the geometry did not yet change
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    // but quick tile mode already changed
+    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileMaximize);
+    QCOMPARE(c->maximizeMode(), MaximizeFull);
+    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
+
+    // but we got requested a new geometry
+    QVERIFY(sizeChangeSpy.wait());
+    QCOMPARE(sizeChangeSpy.count(), 1);
+    QCOMPARE(sizeChangeSpy.first().first().toSize(), QSize(1280, 1024));
+
+    // attach a new image
+    img = QImage(QSize(1280, 1024), QImage::Format_ARGB32);
+    img.fill(Qt::red);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 1280, 1024));
+    surface->commit(Surface::CommitFlag::None);
+    m_connection->flush();
+
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(geometryChangedSpy.count(), 1);
+    QCOMPARE(c->geometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
+
+    // go back to quick tile none
+    QFETCH(AbstractClient::QuickTileMode, mode);
+    c->setQuickTileMode(mode, true);
+    QCOMPARE(quickTileChangedSpy.count(), 2);
+    QCOMPARE(maximizeChangedSpy1.count(), 2);
+    QCOMPARE(maximizeChangedSpy1.last().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy1.last().last().value<KWin::MaximizeMode>(), MaximizeRestore);
+    QCOMPARE(maximizeChangedSpy2.count(), 2);
+    QCOMPARE(maximizeChangedSpy2.last().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy2.last().at(1).toBool(), false);
+    QCOMPARE(maximizeChangedSpy2.last().at(2).toBool(), false);
+    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->maximizeMode(), MaximizeRestore);
+    // geometry not yet changed
+    QCOMPARE(c->geometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
+    // we got requested a new geometry
+    QVERIFY(sizeChangeSpy.wait());
+    QCOMPARE(sizeChangeSpy.count(), 2);
+    QCOMPARE(sizeChangeSpy.last().first().toSize(), QSize(100, 50));
+
+    // render again
+    img = QImage(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::yellow);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+    m_connection->flush();
+
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(geometryChangedSpy.count(), 2);
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 }
 
 }
