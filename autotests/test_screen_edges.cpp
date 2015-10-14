@@ -758,6 +758,10 @@ void TestScreenEdges::testClientEdge()
     QCOMPARE(edge.data(), s->findChildren<Edge*>().last());
     QCOMPARE(edge->isReserved(), true);
 
+    //remove old reserves and resize to be in the middle of the screen
+    s->reserve(&client, KWin::ElectricNone);
+    client.setGeometry(QRect(2, 2, 20, 20));
+
     // for none of the edges it should be able to be set
     for (int i = 0; i < ELECTRIC_COUNT; ++i) {
         client.setHiddenInternal(true);
