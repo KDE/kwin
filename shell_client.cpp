@@ -254,7 +254,13 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 {
     Q_UNUSED(force)
     // TODO: better merge with Client's implementation
-    requestGeometry(QRect(x, y, w, h));
+    if (QSize(w, h) == geom.size()) {
+        // size didn't change, update directly
+        doSetGeometry(QRect(x, y, w, h));
+    } else {
+        // size did change, Client needs to provide a new buffer
+        requestGeometry(QRect(x, y, w, h));
+    }
 }
 
 void ShellClient::doSetGeometry(const QRect &rect)
