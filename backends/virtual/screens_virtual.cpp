@@ -42,29 +42,46 @@ void VirtualScreens::init()
 
 QRect VirtualScreens::geometry(int screen) const
 {
-    if (screen == 0) {
-        return QRect(QPoint(0, 0), size(screen));
+    if (screen >= m_geometries.count()) {
+        return QRect();
     }
-    return QRect();
+    return m_geometries.at(screen);
 }
 
 QSize VirtualScreens::size(int screen) const
 {
-    if (screen == 0) {
-        return m_backend->size();
-    }
-    return QSize();
+    return geometry(screen).size();
 }
 
 void VirtualScreens::updateCount()
 {
-    setCount(1);
+    m_geometries.clear();
+    const QSize size = m_backend->size();
+    for (int i = 0; i < m_backend->outputCount(); ++i) {
+        m_geometries.append(QRect(size.width() * i, 0, size.width(), size.height()));
+    }
+    setCount(m_backend->outputCount());
 }
 
 int VirtualScreens::number(const QPoint &pos) const
 {
-    Q_UNUSED(pos)
-    return 0;
+    int bestScreen = 0;
+    int minDistance = INT_MAX;
+    for (int i = 0; i < m_geometries.count(); ++i) {
+        const QRect &geo = m_geometries.at(i);
+        if (geo.contains(pos)) {
+            return i;
+        }
+        int distance = QPoint(geo.topLeft() - pos).manhattanLength();
+        distance = qMin(distance, QPoint(geo.topRight() - pos).manhattanLength());
+        distance = qMin(distance, QPoint(geo.bottomRight() - pos).manhattanLength());
+        distance = qMin(distance, QPoint(geo.bottomLeft() - pos).manhattanLength());
+        if (distance < minDistance) {
+            minDistance = distance;
+            bestScreen = i;
+        }
+    }
+    return bestScreen;
 }
 
 }

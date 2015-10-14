@@ -45,6 +45,9 @@ public:
     QSize size() const {
         return m_size;
     }
+    int outputCount() const {
+        return m_outputCount;
+    }
 
     bool saveFrames() const {
         return !m_screenshotDir.isNull();
@@ -55,11 +58,16 @@ public:
     QPainterBackend* createQPainterBackend() override;
     OpenGLBackend *createOpenGLBackend() override;
 
+    Q_INVOKABLE void setOutputCount(int count) {
+        m_outputCount = count;
+    }
+
 Q_SIGNALS:
     void sizeChanged();
 
 private:
     QSize m_size;
+    int m_outputCount = 1;
     QScopedPointer<QTemporaryDir> m_screenshotDir;
 };
 

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCREENS_VIRTUAL_H
 #define KWIN_SCREENS_VIRTUAL_H
 #include "screens.h"
+#include <QVector>
 
 namespace KWin
 {
@@ -39,6 +40,7 @@ public:
 
 private:
     VirtualBackend *m_backend;
+    QVector<QRect> m_geometries;
 };
 
 }

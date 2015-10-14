@@ -70,9 +70,13 @@ void QuickTilingTest::initTestCase()
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
+    QMetaObject::invokeMethod(waylandServer()->backend(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     waylandServer()->init(s_socketName.toLocal8Bit());
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
+    QCOMPARE(screens()->count(), 2);
+    QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
+    QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
 }
 
 void QuickTilingTest::init()
@@ -120,6 +124,8 @@ void QuickTilingTest::init()
     QVERIFY(m_shm->isValid());
     m_shell = registry.createShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>(), this);
     QVERIFY(m_shell->isValid());
+
+    screens()->setCurrent(0);
 }
 
 void QuickTilingTest::cleanup()
