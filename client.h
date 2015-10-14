@@ -206,8 +206,6 @@ public:
 
     virtual int desktop() const;
 
-    void sendToScreen(int screen) override;
-
     virtual QStringList activities() const;
     void setOnActivity(const QString &activity, bool enable);
     void setOnAllActivities(bool set) override;

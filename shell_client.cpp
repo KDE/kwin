@@ -416,11 +416,6 @@ const WindowRules *ShellClient::rules() const
     return &s_rules;
 }
 
-void ShellClient::sendToScreen(int screen)
-{
-    Q_UNUSED(screen)
-}
-
 void ShellClient::setFullScreen(bool set, bool user)
 {
     Q_UNUSED(set)

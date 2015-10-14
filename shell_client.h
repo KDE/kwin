@@ -77,7 +77,6 @@ public:
     }
     bool noBorder() const override;
     const WindowRules *rules() const override;
-    void sendToScreen(int screen) override;
     void setFullScreen(bool set, bool user = true) override;
     void setNoBorder(bool set) override;
     void setOnAllActivities(bool set) override;

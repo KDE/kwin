@@ -3361,13 +3361,13 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     emit quickTileModeChanged();
 }
 
-void Client::sendToScreen(int newScreen)
+void AbstractClient::sendToScreen(int newScreen)
 {
     newScreen = rules()->checkScreen(newScreen);
     if (isActive()) {
         screens()->setCurrent(newScreen);
         // might impact the layer of a fullscreen window
-        foreach (Client *cc, workspace()->clientList()) {
+        foreach (AbstractClient *cc, workspace()->allClientList()) {
             if (cc->isFullScreen() && cc->screen() == newScreen) {
                 cc->updateLayer();
             }
@@ -3416,12 +3416,12 @@ void Client::sendToScreen(int newScreen)
     }
 
     // align geom_restore - checkWorkspacePosition operates on it
-    geom_restore = geometry();
+    setGeometryRestore(geometry());
 
     checkWorkspacePosition(oldGeom);
 
     // re-align geom_restore to constrained geometry
-    geom_restore = geometry();
+    setGeometryRestore(geometry());
 
     // finally reset special states
     // NOTICE that MaximizeRestore/QuickTileNone checks are required.

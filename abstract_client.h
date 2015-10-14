@@ -284,7 +284,7 @@ public:
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
      */
     bool isSpecialWindow() const;
-    virtual void sendToScreen(int screen) = 0;
+    void sendToScreen(int screen);
     virtual const QKeySequence &shortcut() const  = 0;
     virtual void setShortcut(const QString &cut) = 0;
     virtual bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos);
