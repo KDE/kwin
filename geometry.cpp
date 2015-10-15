@@ -2044,7 +2044,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
 /*!
   Reimplemented to inform the client about the new window position.
  */
-void Client::move(int x, int y, ForceGeometry_t force)
+void AbstractClient::move(int x, int y, ForceGeometry_t force)
 {
     // resuming geometry updates is handled only in setGeometry()
     assert(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
@@ -2064,8 +2064,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
-    m_frame.move(x, y);
-    sendSyntheticConfigureNotify();
+    doMove(x, y);
     updateWindowRules(Rules::Position);
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
@@ -2080,6 +2079,12 @@ void Client::move(int x, int y, ForceGeometry_t force)
     // Update states of all other windows in this group
     updateTabGroupStates(TabGroup::Geometry);
     emit geometryChanged();
+}
+
+void Client::doMove(int x, int y)
+{
+    m_frame.move(x, y);
+    sendSyntheticConfigureNotify();
 }
 
 void AbstractClient::blockGeometryUpdates(bool block)

@@ -1055,4 +1055,8 @@ void AbstractClient::updateTabGroupStates(TabGroup::States)
 {
 }
 
+void AbstractClient::doMove(int, int)
+{
+}
+
 }

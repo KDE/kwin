@@ -592,27 +592,6 @@ void ShellClient::clientFullScreenChanged(bool fullScreen)
     }
 }
 
-void ShellClient::move(int x, int y, ForceGeometry_t force)
-{
-    QPoint p(x, y);
-    if (force == NormalGeometrySet && geom.topLeft() == p) {
-        return;
-    }
-    const QRect oldGeom = visibleRect();
-    geom.moveTopLeft(p);
-    updateWindowRules(Rules::Position);
-    screens()->setCurrent(this);
-    workspace()->updateStackingOrder();
-    if (Compositor::isCreated()) {
-        // TODO: is this really needed here?
-        Compositor::self()->checkUnredirect();
-    }
-
-    addLayerRepaint(oldGeom);
-    addLayerRepaint(visibleRect());
-    emit geometryChanged();
-}
-
 void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
 {
     Q_UNUSED(force)

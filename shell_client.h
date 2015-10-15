@@ -88,8 +88,6 @@ public:
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
     xcb_window_t window() const override;
-    using AbstractClient::move;
-    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::resizeWithChecks;
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::setGeometry;

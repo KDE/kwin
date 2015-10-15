@@ -264,8 +264,6 @@ public:
 
     using AbstractClient::setGeometry;
     void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
-    using AbstractClient::move;
-    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     /// plainResize() simply resizes
     void plainResize(int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void plainResize(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
@@ -488,6 +486,7 @@ protected:
     bool isActiveFullScreen() const override;
     void setGeometryRestore(const QRect &geo) override;
     void updateTabGroupStates(TabGroup::States states) override;
+    void doMove(int x, int y) override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
