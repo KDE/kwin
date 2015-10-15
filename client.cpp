@@ -2295,6 +2295,13 @@ void Client::processDecorationMove()
     }
 }
 
+void Client::updateTabGroupStates(TabGroup::States states)
+{
+    if (auto t = tabGroup()) {
+        t->updateStates(this, states);
+    }
+}
+
 } // namespace
 
 #include "client.moc"

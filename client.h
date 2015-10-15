@@ -487,6 +487,7 @@ protected:
     bool belongsToDesktop() const override;
     bool isActiveFullScreen() const override;
     void setGeometryRestore(const QRect &geo) override;
+    void updateTabGroupStates(TabGroup::States states) override;
 
 private Q_SLOTS:
     void delayedSetShortcut();

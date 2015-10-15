@@ -2078,8 +2078,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
     updateGeometryBeforeUpdateBlocking();
 
     // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Geometry);
+    updateTabGroupStates(TabGroup::Geometry);
     emit geometryChanged();
 }
 

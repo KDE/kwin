@@ -1051,4 +1051,8 @@ void AbstractClient::updateGeometryBeforeUpdateBlocking()
     m_geometryBeforeUpdateBlocking = geom;
 }
 
+void AbstractClient::updateTabGroupStates(TabGroup::States)
+{
+}
+
 }

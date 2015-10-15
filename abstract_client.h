@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #include "options.h"
 #include "rules.h"
+#include "tabgroup.h"
 
 #include <memory>
 
@@ -36,8 +37,6 @@ class PlasmaWindowInterface;
 
 namespace KWin
 {
-
-class TabGroup;
 
 namespace TabBox
 {
@@ -587,6 +586,13 @@ protected:
      * next time this method is called as the before geometry.
      **/
     void addRepaintDuringGeometryUpdates();
+
+    /**
+     * Convenient method to update the TabGroup states if there is one present.
+     * Marked as virtual as TabGroup does not yet handle AbstractClient, but only
+     * subclasses of AbstractClient. Given that the default implementation does nothing.
+     **/
+    virtual void updateTabGroupStates(TabGroup::States states);
 
 private:
     void handlePaletteChange();
