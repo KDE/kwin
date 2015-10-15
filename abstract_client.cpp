@@ -1046,4 +1046,9 @@ void AbstractClient::addRepaintDuringGeometryUpdates()
     m_visibleRectBeforeGeometryUpdate = deco_rect;
 }
 
+void AbstractClient::updateGeometryBeforeUpdateBlocking()
+{
+    m_geometryBeforeUpdateBlocking = geom;
+}
+
 }

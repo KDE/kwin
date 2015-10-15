@@ -698,7 +698,6 @@ private:
     xcb_timestamp_t m_userTime;
     NET::Actions allowed_actions;
     QSize client_size;
-    QRect geom_before_block;
     bool shade_geometry_change;
     struct {
         xcb_sync_counter_t counter;

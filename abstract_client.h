@@ -577,6 +577,10 @@ protected:
     };
     PendingGeometry_t pendingGeometryUpdate() const;
     void setPendingGeometryUpdate(PendingGeometry_t update);
+    QRect geometryBeforeUpdateBlocking() const {
+        return m_geometryBeforeUpdateBlocking;
+    }
+    void updateGeometryBeforeUpdateBlocking();
     /**
      * Schedules a repaint for the visibleRect before and after a
      * geometry update. The current visibleRect is stored for the
@@ -628,6 +632,7 @@ private:
     PendingGeometry_t m_pendingGeometryUpdate = PendingGeometryNone;
     friend class GeometryUpdatesBlocker;
     QRect m_visibleRectBeforeGeometryUpdate;
+    QRect m_geometryBeforeUpdateBlocking;
 };
 
 /**

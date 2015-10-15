@@ -1925,7 +1925,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         return;
     }
     QSize oldClientSize = m_frame.geometry().size();
-    bool resized = (geom_before_block.size() != geom.size() || pendingGeometryUpdate() == PendingGeometryForced);
+    bool resized = (geometryBeforeUpdateBlocking().size() != geom.size() || pendingGeometryUpdate() == PendingGeometryForced);
     if (resized) {
         resizeDecoration();
         m_frame.setGeometry(x, y, w, h);
@@ -1967,10 +1967,10 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     if (resized) {
         if (oldClientSize != QSize(w,h))
             discardWindowPixmap();
-        emit geometryShapeChanged(this, geom_before_block);
+        emit geometryShapeChanged(this, geometryBeforeUpdateBlocking());
     }
     addRepaintDuringGeometryUpdates();
-    geom_before_block = geom;
+    updateGeometryBeforeUpdateBlocking();
 
     // Update states of all other windows in this group
     if (tabGroup())
@@ -2030,9 +2030,9 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
     workspace()->updateStackingOrder();
     if (oldClientSize != QSize(w,h))
         discardWindowPixmap();
-    emit geometryShapeChanged(this, geom_before_block);
+    emit geometryShapeChanged(this, geometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
-    geom_before_block = geom;
+    updateGeometryBeforeUpdateBlocking();
 
     // Update states of all other windows in this group
     if (tabGroup())
@@ -2075,7 +2075,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
     }
     // client itself is not damaged
     addRepaintDuringGeometryUpdates();
-    geom_before_block = geom;
+    updateGeometryBeforeUpdateBlocking();
 
     // Update states of all other windows in this group
     if (tabGroup())
