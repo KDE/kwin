@@ -577,6 +577,12 @@ protected:
     };
     PendingGeometry_t pendingGeometryUpdate() const;
     void setPendingGeometryUpdate(PendingGeometry_t update);
+    /**
+     * Schedules a repaint for the visibleRect before and after a
+     * geometry update. The current visibleRect is stored for the
+     * next time this method is called as the before geometry.
+     **/
+    void addRepaintDuringGeometryUpdates();
 
 private:
     void handlePaletteChange();
@@ -621,6 +627,7 @@ private:
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
     PendingGeometry_t m_pendingGeometryUpdate = PendingGeometryNone;
     friend class GeometryUpdatesBlocker;
+    QRect m_visibleRectBeforeGeometryUpdate;
 };
 
 /**

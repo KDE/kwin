@@ -1969,11 +1969,8 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
             discardWindowPixmap();
         emit geometryShapeChanged(this, geom_before_block);
     }
-    const QRect deco_rect = visibleRect();
-    addLayerRepaint(deco_rect_before_block);
-    addLayerRepaint(deco_rect);
+    addRepaintDuringGeometryUpdates();
     geom_before_block = geom;
-    deco_rect_before_block = deco_rect;
 
     // Update states of all other windows in this group
     if (tabGroup())
@@ -2034,11 +2031,8 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
     if (oldClientSize != QSize(w,h))
         discardWindowPixmap();
     emit geometryShapeChanged(this, geom_before_block);
-    const QRect deco_rect = visibleRect();
-    addLayerRepaint(deco_rect_before_block);
-    addLayerRepaint(deco_rect);
+    addRepaintDuringGeometryUpdates();
     geom_before_block = geom;
-    deco_rect_before_block = deco_rect;
 
     // Update states of all other windows in this group
     if (tabGroup())
@@ -2080,11 +2074,8 @@ void Client::move(int x, int y, ForceGeometry_t force)
         Compositor::self()->checkUnredirect();
     }
     // client itself is not damaged
-    const QRect deco_rect = visibleRect();
-    addLayerRepaint(deco_rect_before_block);
-    addLayerRepaint(deco_rect);   // trigger repaint of window's new location
+    addRepaintDuringGeometryUpdates();
     geom_before_block = geom;
-    deco_rect_before_block = deco_rect;
 
     // Update states of all other windows in this group
     if (tabGroup())

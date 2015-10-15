@@ -699,7 +699,6 @@ private:
     NET::Actions allowed_actions;
     QSize client_size;
     QRect geom_before_block;
-    QRect deco_rect_before_block;
     bool shade_geometry_change;
     struct {
         xcb_sync_counter_t counter;

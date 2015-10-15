@@ -1038,4 +1038,12 @@ bool AbstractClient::isDecorated() const
     return false;
 }
 
+void AbstractClient::addRepaintDuringGeometryUpdates()
+{
+    const QRect deco_rect = visibleRect();
+    addLayerRepaint(m_visibleRectBeforeGeometryUpdate);
+    addLayerRepaint(deco_rect);   // trigger repaint of window's new location
+    m_visibleRectBeforeGeometryUpdate = deco_rect;
+}
+
 }
