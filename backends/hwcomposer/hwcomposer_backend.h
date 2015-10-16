@@ -32,6 +32,8 @@ typedef struct hwc_composer_device_1 hwc_composer_device_1_t;
 
 class HWComposerNativeWindowBuffer;
 
+class QTimer;
+
 namespace KWin
 {
 
@@ -76,6 +78,7 @@ private:
     bool m_outputBlank = true;
     bool m_pageFlipPending = false;
     int m_refreshRate = 60000;
+    QTimer *m_vsyncFailSafeTimer;
 };
 
 class HwcomposerWindow : public HWComposerNativeWindow

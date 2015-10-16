@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/seat_interface.h>
+// Qt
+#include <QTimer>
 // hybris/android
 #include <hardware/hardware.h>
 #include <hardware/hwcomposer.h>
@@ -41,8 +43,12 @@ namespace KWin
 
 HwcomposerBackend::HwcomposerBackend(QObject *parent)
     : AbstractBackend(parent)
+    , m_vsyncFailSafeTimer(new QTimer(this))
 {
     handleOutputs();
+    m_vsyncFailSafeTimer->setSingleShot(true);
+    m_vsyncFailSafeTimer->setInterval(1000);
+    connect(m_vsyncFailSafeTimer, &QTimer::timeout, this, &HwcomposerBackend::vsync);
 }
 
 HwcomposerBackend::~HwcomposerBackend()
@@ -192,12 +198,14 @@ void HwcomposerBackend::present()
     }
     m_pageFlipPending = true;
     if (Compositor::self()) {
+        m_vsyncFailSafeTimer->start();
         Compositor::self()->aboutToSwapBuffers();
     }
 }
 
 void HwcomposerBackend::vsync()
 {
+    m_vsyncFailSafeTimer->stop();
     if (m_pageFlipPending) {
         m_pageFlipPending = false;
         if (Compositor::self()) {
