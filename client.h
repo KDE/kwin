@@ -551,7 +551,6 @@ private:
     bool startMoveResize();
     void finishMoveResize(bool cancel);
     void leaveMoveResize();
-    void checkUnrestrictedMoveResize();
     void handleMoveResize(int x, int y, int x_root, int y_root);
     void handleMoveResize(const QPoint &local, const QPoint &global);
     void startDelayedMoveResize();

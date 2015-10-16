@@ -672,6 +672,7 @@ protected:
     void setMoveResizePointerMode(Position mode) {
         m_moveResize.pointer = mode;
     }
+    void checkUnrestrictedMoveResize();
 
 private:
     void handlePaletteChange();

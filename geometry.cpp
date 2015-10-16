@@ -2749,7 +2749,7 @@ void Client::leaveMoveResize()
 // If e.g. the titlebar is already outside of the workarea, there's no point in performing
 // a restricted move resize, because then e.g. resize would also move the window (#74555).
 // NOTE: Most of it is duplicated from handleMoveResize().
-void Client::checkUnrestrictedMoveResize()
+void AbstractClient::checkUnrestrictedMoveResize()
 {
     if (isUnrestrictedMoveResize())
         return;
