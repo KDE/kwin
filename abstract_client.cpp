@@ -1063,6 +1063,7 @@ void AbstractClient::updateInitialMoveResizeGeometry()
 {
     m_moveResize.initialGeometry = geometry();
     m_moveResize.geometry = m_moveResize.initialGeometry;
+    m_moveResize.startScreen = screen();
 }
 
 void AbstractClient::updateCursor()

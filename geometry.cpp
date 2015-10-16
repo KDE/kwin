@@ -2658,7 +2658,6 @@ bool Client::startMoveResize()
     }
 
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
-    moveResizeStartScreen = screen();
     updateInitialMoveResizeGeometry();
     checkUnrestrictedMoveResize();
     emit clientStartUserMovedResized(this);
@@ -2688,7 +2687,7 @@ void Client::finishMoveResize(bool cancel)
         setGeometry(moveResizeGeom);
     }
     checkScreen(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
-    if (screen() != moveResizeStartScreen) {
+    if (screen() != moveResizeStartScreen()) {
         workspace()->sendClientToScreen(this, screen()); // checks rule validity
         if (maximizeMode() != MaximizeRestore)
             checkWorkspacePosition();

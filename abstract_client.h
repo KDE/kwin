@@ -685,6 +685,9 @@ protected:
     void setMoveResizePointerButtonDown(bool down) {
         m_moveResize.buttonDown = down;
     }
+    int moveResizeStartScreen() const {
+        return m_moveResize.startScreen;
+    }
     void checkUnrestrictedMoveResize();
     /**
     * Sets an appropriate cursor shape for the logical mouse position.
@@ -747,6 +750,7 @@ private:
         Position pointer = PositionCenter;
         bool buttonDown = false;
         Qt::CursorShape cursor = Qt::ArrowCursor;
+        int startScreen = 0;
     } m_moveResize;
 };
 

@@ -610,7 +610,6 @@ private:
     bool m_blockedActivityUpdatesRequireTransients;
     Xcb::Window m_moveResizeGrabWindow;
     bool move_resize_has_keyboard_grab;
-    int moveResizeStartScreen;
     static bool s_haveResizeEffect;
     bool m_managed;
 
