@@ -110,7 +110,6 @@ Client::Client()
     , shade_below(NULL)
     , m_motif(atoms->motif_wm_hints)
     , blocks_compositing(false)
-    , m_cursor(Qt::ArrowCursor)
     , shadeHoverTimer(NULL)
     , delayedMoveResizeTimer(NULL)
     , m_colormap(XCB_COLORMAP_NONE)
@@ -172,6 +171,18 @@ Client::Client()
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &Client::updateCaption);
     connect(options, &Options::condensedTitleChanged, this, &Client::updateCaption);
+
+    connect(this, &Client::moveResizeCursorChanged, this, [this] (Qt::CursorShape cursor) {
+        xcb_cursor_t nativeCursor = Cursor::x11Cursor(cursor);
+        m_frame.defineCursor(nativeCursor);
+        if (m_decoInputExtent.isValid())
+            m_decoInputExtent.defineCursor(nativeCursor);
+        if (isMoveResize()) {
+            // changing window attributes doesn't change cursor if there's pointer grab active
+            xcb_change_active_pointer_grab(connection(), nativeCursor, xTime(),
+                XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
+        }
+    });
 
     // SELI TODO: Initialize xsizehints??
 }
@@ -1832,53 +1843,6 @@ void Client::sendSyncRequest()
 bool Client::wantsInput() const
 {
     return rules()->checkAcceptFocus(info->input() || info->supportsProtocol(NET::TakeFocusProtocol));
-}
-
-/**
- * Sets an appropriate cursor shape for the logical mouse position \a m
- */
-void Client::updateCursor()
-{
-    Position m = moveResizePointerMode();
-    if (!isResizable() || isShade())
-        m = PositionCenter;
-    Qt::CursorShape c = Qt::ArrowCursor;
-    switch(m) {
-    case PositionTopLeft:
-    case PositionBottomRight:
-        c = Qt::SizeFDiagCursor;
-        break;
-    case PositionBottomLeft:
-    case PositionTopRight:
-        c = Qt::SizeBDiagCursor;
-        break;
-    case PositionTop:
-    case PositionBottom:
-        c = Qt::SizeVerCursor;
-        break;
-    case PositionLeft:
-    case PositionRight:
-        c = Qt::SizeHorCursor;
-        break;
-    default:
-        if (isMoveResize())
-            c = Qt::SizeAllCursor;
-        else
-            c = Qt::ArrowCursor;
-        break;
-    }
-    if (c == m_cursor)
-        return;
-    m_cursor = c;
-    xcb_cursor_t nativeCursor = Cursor::x11Cursor(m_cursor);
-    m_frame.defineCursor(nativeCursor);
-    if (m_decoInputExtent.isValid())
-        m_decoInputExtent.defineCursor(nativeCursor);
-    if (isMoveResize()) {
-        // changing window attributes doesn't change cursor if there's pointer grab active
-        xcb_change_active_pointer_grab(connection(), nativeCursor, xTime(),
-            XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
-    }
 }
 
 void Client::setBlockingCompositing(bool block)

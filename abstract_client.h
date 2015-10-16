@@ -442,6 +442,12 @@ public:
     bool isResize() const {
         return isMoveResize() && moveResizePointerMode() != PositionCenter;
     }
+    /**
+     * Cursor shape for move/resize mode.
+     **/
+    Qt::CursorShape cursor() const {
+        return m_moveResize.cursor;
+    }
 
     virtual bool hasStrut() const;
 
@@ -491,6 +497,7 @@ Q_SIGNALS:
     void modalChanged();
     void quickTileModeChanged();
     void moveResizedChanged();
+    void moveResizeCursorChanged(Qt::CursorShape);
 
 protected:
     AbstractClient();
@@ -679,6 +686,10 @@ protected:
         m_moveResize.buttonDown = down;
     }
     void checkUnrestrictedMoveResize();
+    /**
+    * Sets an appropriate cursor shape for the logical mouse position.
+    */
+    void updateCursor();
 
 private:
     void handlePaletteChange();
@@ -735,6 +746,7 @@ private:
         QRect geometry;
         Position pointer = PositionCenter;
         bool buttonDown = false;
+        Qt::CursorShape cursor = Qt::ArrowCursor;
     } m_moveResize;
 };
 

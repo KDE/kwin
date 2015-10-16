@@ -1065,4 +1065,40 @@ void AbstractClient::updateInitialMoveResizeGeometry()
     m_moveResize.geometry = m_moveResize.initialGeometry;
 }
 
+void AbstractClient::updateCursor()
+{
+    Position m = moveResizePointerMode();
+    if (!isResizable() || isShade())
+        m = PositionCenter;
+    Qt::CursorShape c = Qt::ArrowCursor;
+    switch(m) {
+    case PositionTopLeft:
+    case PositionBottomRight:
+        c = Qt::SizeFDiagCursor;
+        break;
+    case PositionBottomLeft:
+    case PositionTopRight:
+        c = Qt::SizeBDiagCursor;
+        break;
+    case PositionTop:
+    case PositionBottom:
+        c = Qt::SizeVerCursor;
+        break;
+    case PositionLeft:
+    case PositionRight:
+        c = Qt::SizeHorCursor;
+        break;
+    default:
+        if (isMoveResize())
+            c = Qt::SizeAllCursor;
+        else
+            c = Qt::ArrowCursor;
+        break;
+    }
+    if (c == m_moveResize.cursor)
+        return;
+    m_moveResize.cursor = c;
+    emit moveResizeCursorChanged(c);
+}
+
 }

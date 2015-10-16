@@ -188,7 +188,6 @@ public:
     bool processDecorationButtonPress(QMouseEvent *event);
     void processDecorationButtonRelease(QMouseEvent *event);
     void processDecorationMove();
-    Qt::CursorShape cursor() const;
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
@@ -429,7 +428,6 @@ private:
     virtual ~Client(); ///< Use destroyClient() or releaseWindow()
 
     Position mousePosition() const;
-    void updateCursor();
 
     // Handlers for X11 events
     bool mapRequestEvent(xcb_map_request_event_t *e);
@@ -648,7 +646,6 @@ private:
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     bool blocks_compositing;
     WindowRules client_rules;
-    Qt::CursorShape m_cursor;
     // DON'T reorder - Saved to config files !!!
     enum FullScreenMode {
         FullScreenNone,
@@ -866,11 +863,6 @@ inline void Client::print(T &stream) const
 {
     stream << "\'ID:" << window() << ";WMCLASS:" << resourceClass() << ":"
            << resourceName() << ";Caption:" << caption() << "\'";
-}
-
-inline Qt::CursorShape Client::cursor() const
-{
-    return m_cursor;
 }
 
 } // namespace
