@@ -112,16 +112,6 @@ class Client
      */
     Q_PROPERTY(QSize basicUnit READ basicUnit)
     /**
-     * Whether the Client is currently being moved by the user.
-     * Notify signal is emitted when the Client starts or ends move/resize mode.
-     **/
-    Q_PROPERTY(bool move READ isMove NOTIFY moveResizedChanged)
-    /**
-     * Whether the Client is currently being resized by the user.
-     * Notify signal is emitted when the Client starts or ends move/resize mode.
-     **/
-    Q_PROPERTY(bool resize READ isResize NOTIFY moveResizedChanged)
-    /**
      * The optional geometry representing the minimized Client in e.g a taskbar.
      * See _NET_WM_ICON_GEOMETRY at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      * The value is evaluated each time the getter is called.
@@ -377,13 +367,6 @@ public:
      */
     bool hasOffscreenXineramaStrut() const;
 
-    bool isMove() const {
-        return isMoveResize() && moveResizePointerMode() == PositionCenter;
-    }
-    bool isResize() const {
-        return isMoveResize() && moveResizePointerMode() != PositionCenter;
-    }
-
     // Decorations <-> Effects
     KDecoration2::Decoration *decoration() {
         return m_decoration;
@@ -502,7 +485,6 @@ Q_SIGNALS:
     void clientStartUserMovedResized(KWin::Client*);
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
-    void moveResizedChanged();
 
     /**
      * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to

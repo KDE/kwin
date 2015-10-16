@@ -178,6 +178,16 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * might be emitted at each resize step or only at the end of the resize operation.
      **/
     Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
+    /**
+     * Whether the Client is currently being moved by the user.
+     * Notify signal is emitted when the Client starts or ends move/resize mode.
+     **/
+    Q_PROPERTY(bool move READ isMove NOTIFY moveResizedChanged)
+    /**
+     * Whether the Client is currently being resized by the user.
+     * Notify signal is emitted when the Client starts or ends move/resize mode.
+     **/
+    Q_PROPERTY(bool resize READ isResize NOTIFY moveResizedChanged)
 public:
     virtual ~AbstractClient();
 
@@ -426,6 +436,13 @@ public:
     QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
     QSize adjustedSize() const;
 
+    bool isMove() const {
+        return isMoveResize() && moveResizePointerMode() == PositionCenter;
+    }
+    bool isResize() const {
+        return isMoveResize() && moveResizePointerMode() != PositionCenter;
+    }
+
     virtual bool hasStrut() const;
 
     void setModal(bool modal);
@@ -473,6 +490,7 @@ Q_SIGNALS:
     void transientChanged();
     void modalChanged();
     void quickTileModeChanged();
+    void moveResizedChanged();
 
 protected:
     AbstractClient();
