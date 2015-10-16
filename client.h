@@ -378,10 +378,10 @@ public:
     bool hasOffscreenXineramaStrut() const;
 
     bool isMove() const {
-        return isMoveResize() && mode == PositionCenter;
+        return isMoveResize() && moveResizePointerMode() == PositionCenter;
     }
     bool isResize() const {
-        return isMoveResize() && mode != PositionCenter;
+        return isMoveResize() && moveResizePointerMode() != PositionCenter;
     }
 
     // Decorations <-> Effects
@@ -636,7 +636,6 @@ private:
     static bool s_haveResizeEffect;
     bool m_managed;
 
-    Position mode;
     Xcb::GeometryHints m_geometryHints;
     void sendSyntheticConfigureNotify();
     enum MappingState {

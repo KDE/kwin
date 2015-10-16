@@ -140,7 +140,6 @@ Client::Client()
     // Set the initial mapping state
     mapping_state = Withdrawn;
 
-    mode = PositionCenter;
     buttonDown = false;
 
     info = NULL;
@@ -1842,7 +1841,7 @@ bool Client::wantsInput() const
  */
 void Client::updateCursor()
 {
-    Position m = mode;
+    Position m = moveResizePointerMode();
     if (!isResizable() || isShade())
         m = PositionCenter;
     Qt::CursorShape c = Qt::ArrowCursor;
@@ -2275,7 +2274,7 @@ void Client::processDecorationButtonRelease(QMouseEvent *event)
         stopDelayedMoveResize();
         if (isMoveResize()) {
             finishMoveResize(false);
-            mode = mousePosition();
+            setMoveResizePointerMode(mousePosition());
         }
         updateCursor();
     }
@@ -2288,8 +2287,8 @@ void Client::processDecorationMove()
     }
     // TODO: handle modifiers
     Position newmode = mousePosition();
-    if (newmode != mode) {
-        mode = newmode;
+    if (newmode != moveResizePointerMode()) {
+        setMoveResizePointerMode(newmode);
         updateCursor();
     }
 }

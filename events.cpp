@@ -975,7 +975,7 @@ void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
         return; // care only about leaving the whole frame
     if (e->mode == XCB_NOTIFY_MODE_NORMAL) {
         if (!buttonDown) {
-            mode = PositionCenter;
+            setMoveResizePointerMode(PositionCenter);
             updateCursor();
         }
         bool lostMouse = !rect().contains(QPoint(e->event_x, e->event_y));
@@ -1239,7 +1239,7 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
             && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
             && com != Options::MouseMinimize  // mouse release event
             && com != Options::MouseDragTab) {
-        mode = mousePosition();
+        setMoveResizePointerMode(mousePosition());
         buttonDown = true;
         setMoveOffset(QPoint(x/* - padding_left*/, y/* - padding_top*/));
         setInvertedMoveOffset(rect().bottomRight() - moveOffset());
@@ -1307,7 +1307,7 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
         stopDelayedMoveResize();
         if (isMoveResize()) {
             finishMoveResize(false);
-            mode = mousePosition();
+            setMoveResizePointerMode(mousePosition());
         }
         updateCursor();
     }
@@ -1398,8 +1398,8 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
             }
         }
         Position newmode = modKeyDown(state) ? PositionCenter : mousePosition();
-        if (newmode != mode) {
-            mode = newmode;
+        if (newmode != moveResizePointerMode()) {
+            setMoveResizePointerMode(newmode);
             updateCursor();
         }
         return false;
@@ -1506,7 +1506,7 @@ void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         setMoveOffset(QPoint(x_root - x(), y_root - y()));  // map from global
         setInvertedMoveOffset(rect().bottomRight() - moveOffset());
         setUnrestrictedMoveResize(false);
-        mode = convert[ direction ];
+        setMoveResizePointerMode(convert[ direction ]);
         if (!startMoveResize())
             buttonDown = false;
         updateCursor();

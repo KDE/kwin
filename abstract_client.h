@@ -648,6 +648,12 @@ protected:
     void setMoveResizeGeometry(const QRect &geo) {
         m_moveResize.geometry = geo;
     }
+    Position moveResizePointerMode() const {
+        return m_moveResize.pointer;
+    }
+    void setMoveResizePointerMode(Position mode) {
+        m_moveResize.pointer = mode;
+    }
 
 private:
     void handlePaletteChange();
@@ -702,6 +708,7 @@ private:
         QPoint invertedOffset;
         QRect initialGeometry;
         QRect geometry;
+        Position pointer = PositionCenter;
     } m_moveResize;
 };
 

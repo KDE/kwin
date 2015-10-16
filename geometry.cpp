@@ -1857,6 +1857,7 @@ bool Client::isResizable() const
         return false;
     if (rules()->checkSize(QSize()).isValid())   // forced size
         return false;
+    const Position mode = moveResizePointerMode();
     if ((mode == PositionTop || mode == PositionTopLeft || mode == PositionTopRight ||
          mode == PositionLeft || mode == PositionBottomLeft) && rules()->checkPosition(invalidPoint) != invalidPoint)
         return false;
@@ -2641,6 +2642,7 @@ bool Client::startMoveResize()
     setMoveResize(true);
     workspace()->setClientIsMoving(this);
 
+    const Position mode = moveResizePointerMode();
     if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
         if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
             geom_restore = geometry(); // "restore" to current geometry
@@ -2843,6 +2845,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     if (syncRequest.isPending && isResize())
         return; // we're still waiting for the client or the timeout
 
+    const Position mode = moveResizePointerMode();
     if ((mode == PositionCenter && !isMovableAcrossScreens())
             || (mode != PositionCenter && (isShade() || !isResizable())))
         return;
@@ -2905,7 +2908,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     if (isResize()) {
         QRect orig = initialMoveResizeGeometry();
         Sizemode sizemode = SizemodeAny;
-        auto calculateMoveResizeGeom = [this, &topleft, &bottomright, &orig, &sizemode]() {
+        auto calculateMoveResizeGeom = [this, &topleft, &bottomright, &orig, &sizemode, &mode]() {
             switch(mode) {
             case PositionTopLeft:
                 setMoveResizeGeometry(QRect(topleft, orig.bottomRight()));
