@@ -611,6 +611,18 @@ protected:
     void setMoveResize(bool enabled) {
         m_moveResize.enabled = enabled;
     }
+    /**
+     * @returns whether the move resize mode is unrestricted.
+     **/
+    bool isUnrestrictedMoveResize() const {
+        return m_moveResize.unrestricted;
+    }
+    /**
+     * Sets whether move resize mode is unrestricted to @p set.
+     **/
+    void setUnrestrictedMoveResize(bool set) {
+        m_moveResize.unrestricted = set;
+    }
 
 private:
     void handlePaletteChange();
@@ -660,6 +672,7 @@ private:
 
     struct {
         bool enabled = false;
+        bool unrestricted = false;
     } m_moveResize;
 };
 

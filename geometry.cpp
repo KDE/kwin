@@ -2748,7 +2748,7 @@ void Client::leaveMoveResize()
 // NOTE: Most of it is duplicated from handleMoveResize().
 void Client::checkUnrestrictedMoveResize()
 {
-    if (unrestrictedMoveResize)
+    if (isUnrestrictedMoveResize())
         return;
     QRect desktopArea = workspace()->clientArea(WorkArea, moveResizeGeom.center(), desktop());
     int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
@@ -2762,26 +2762,26 @@ void Client::checkUnrestrictedMoveResize()
     bottom_marge = borderTop();
     if (isResize()) {
         if (moveResizeGeom.bottom() < desktopArea.top() + top_marge)
-            unrestrictedMoveResize = true;
+            setUnrestrictedMoveResize(true);
         if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge)
-            unrestrictedMoveResize = true;
+            setUnrestrictedMoveResize(true);
         if (moveResizeGeom.right() < desktopArea.left() + left_marge)
-            unrestrictedMoveResize = true;
+            setUnrestrictedMoveResize(true);
         if (moveResizeGeom.left() > desktopArea.right() - right_marge)
-            unrestrictedMoveResize = true;
-        if (!unrestrictedMoveResize && moveResizeGeom.top() < desktopArea.top())   // titlebar mustn't go out
-            unrestrictedMoveResize = true;
+            setUnrestrictedMoveResize(true);
+        if (!isUnrestrictedMoveResize() && moveResizeGeom.top() < desktopArea.top())   // titlebar mustn't go out
+            setUnrestrictedMoveResize(true);
     }
     if (isMove()) {
         if (moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1)
-            unrestrictedMoveResize = true;
+            setUnrestrictedMoveResize(true);
         // no need to check top_marge, titlebar_marge already handles it
         if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge + 1) // titlebar mustn't go out
-            unrestrictedMoveResize = true;
+            setUnrestrictedMoveResize(true);
         if (moveResizeGeom.right() < desktopArea.left() + left_marge)
-            unrestrictedMoveResize = true;
+            setUnrestrictedMoveResize(true);
         if (moveResizeGeom.left() > desktopArea.right() - right_marge)
-            unrestrictedMoveResize = true;
+            setUnrestrictedMoveResize(true);
     }
 }
 
@@ -2944,7 +2944,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         // adjust new size to snap to other windows/borders
         moveResizeGeom = workspace()->adjustClientSize(this, moveResizeGeom, mode);
 
-        if (!unrestrictedMoveResize) {
+        if (!isUnrestrictedMoveResize()) {
             // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
             // the other directions. If not visible enough, move the window to the closest valid
             // point. We bruteforce this by slowly moving the window back to its previous position
@@ -3067,9 +3067,9 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
             // first move, then snap, then check bounds
             moveResizeGeom.moveTopLeft(topleft);
             moveResizeGeom.moveTopLeft(workspace()->adjustClientPosition(this, moveResizeGeom.topLeft(),
-                                       unrestrictedMoveResize));
+                                       isUnrestrictedMoveResize()));
 
-            if (!unrestrictedMoveResize) {
+            if (!isUnrestrictedMoveResize()) {
                 const QRegion strut = workspace()->restrictedMoveArea(desktop());   // Strut areas
                 QRegion availableArea(workspace()->clientArea(FullArea, -1, 0));   // On the screen
                 availableArea -= strut;   // Strut areas

@@ -1224,8 +1224,8 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         buttonDown = true;
         moveOffset = QPoint(globalPos.x() - x(), globalPos.y() - y());  // map from global
         invertedMoveOffset = rect().bottomRight() - moveOffset;
-        unrestrictedMoveResize = (command == Options::MouseActivateRaiseAndUnrestrictedMove
-                                  || command == Options::MouseUnrestrictedMove);
+        setUnrestrictedMoveResize((command == Options::MouseActivateRaiseAndUnrestrictedMove
+                                  || command == Options::MouseUnrestrictedMove));
         if (!startMoveResize())
             buttonDown = false;
         updateCursor();
@@ -1251,7 +1251,7 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         else
             mode = (x < width() / 2) ? PositionLeft : PositionRight;
         invertedMoveOffset = rect().bottomRight() - moveOffset;
-        unrestrictedMoveResize = (command == Options::MouseUnrestrictedResize);
+        setUnrestrictedMoveResize((command == Options::MouseUnrestrictedResize));
         if (!startMoveResize())
             buttonDown = false;
         updateCursor();
