@@ -1940,7 +1940,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         }
         updateShape();
     } else {
-        if (moveResizeMode) {
+        if (isMoveResize()) {
             if (compositing())  // Defer the X update until we leave this mode
                 needsXWindowMove = true;
             else
@@ -2606,7 +2606,7 @@ void Client::positionGeometryTip()
 
 bool Client::startMoveResize()
 {
-    assert(!moveResizeMode);
+    assert(!isMoveResize());
     assert(QWidget::keyboardGrabber() == NULL);
     assert(QWidget::mouseGrabber() == NULL);
     stopDelayedMoveResize();
@@ -2638,7 +2638,7 @@ bool Client::startMoveResize()
         return false;
     }
 
-    moveResizeMode = true;
+    setMoveResize(true);
     workspace()->setClientIsMoving(this);
 
     if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
@@ -2729,7 +2729,7 @@ void Client::leaveMoveResize()
     xcb_ungrab_pointer(connection(), xTime());
     m_moveResizeGrabWindow.reset();
     workspace()->setClientIsMoving(0);
-    moveResizeMode = false;
+    setMoveResize(false);
     if (syncRequest.counter == XCB_NONE) // don't forget to sanitize since the timeout will no more fire
         syncRequest.isPending = false;
     delete syncRequest.timeout;
@@ -2845,7 +2845,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
             || (mode != PositionCenter && (isShade() || !isResizable())))
         return;
 
-    if (!moveResizeMode) {
+    if (!isMoveResize()) {
         QPoint p(QPoint(x/* - padding_left*/, y/* - padding_top*/) - moveOffset);
         if (p.manhattanLength() >= QApplication::startDragDistance()) {
             if (!startMoveResize()) {

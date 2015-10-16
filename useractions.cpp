@@ -1218,7 +1218,7 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
     case Options::MouseUnrestrictedMove: {
         if (!isMovableAcrossScreens())
             break;
-        if (moveResizeMode)
+        if (isMoveResize())
             finishMoveResize(false);
         mode = PositionCenter;
         buttonDown = true;
@@ -1235,7 +1235,7 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
     case Options::MouseUnrestrictedResize: {
         if (!isResizable() || isShade())
             break;
-        if (moveResizeMode)
+        if (isMoveResize())
             finishMoveResize(false);
         buttonDown = true;
         moveOffset = QPoint(globalPos.x() - x(), globalPos.y() - y());  // map from global

@@ -599,6 +599,19 @@ protected:
      **/
     virtual void updateTabGroupStates(TabGroup::States states);
 
+    /**
+     * @returns whether the Client is currently in move resize mode
+     **/
+    bool isMoveResize() const {
+        return m_moveResize.enabled;
+    }
+    /**
+     * Sets whether the Client is in move resize mode to @p enabled.
+     **/
+    void setMoveResize(bool enabled) {
+        m_moveResize.enabled = enabled;
+    }
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -644,6 +657,10 @@ private:
     friend class GeometryUpdatesBlocker;
     QRect m_visibleRectBeforeGeometryUpdate;
     QRect m_geometryBeforeUpdateBlocking;
+
+    struct {
+        bool enabled = false;
+    } m_moveResize;
 };
 
 /**

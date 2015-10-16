@@ -378,10 +378,10 @@ public:
     bool hasOffscreenXineramaStrut() const;
 
     bool isMove() const {
-        return moveResizeMode && mode == PositionCenter;
+        return isMoveResize() && mode == PositionCenter;
     }
     bool isResize() const {
-        return moveResizeMode && mode != PositionCenter;
+        return isMoveResize() && mode != PositionCenter;
     }
 
     // Decorations <-> Effects
@@ -630,7 +630,6 @@ private:
     int m_activityUpdatesBlocked;
     bool m_blockedActivityUpdatesRequireTransients;
     bool buttonDown;
-    bool moveResizeMode;
     Xcb::Window m_moveResizeGrabWindow;
     bool move_resize_has_keyboard_grab;
     bool unrestrictedMoveResize;

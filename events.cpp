@@ -997,7 +997,7 @@ void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
             cancelAutoRaise();
             workspace()->cancelDelayFocus();
             cancelShadeHoverTimer();
-            if (shade_mode == ShadeHover && !moveResizeMode && !buttonDown) {
+            if (shade_mode == ShadeHover && !isMoveResize() && !buttonDown) {
                 shadeHoverTimer = new QTimer(this);
                 connect(shadeHoverTimer, SIGNAL(timeout()), this, SLOT(shadeUnhover()));
                 shadeHoverTimer->setSingleShot(true);
@@ -1305,7 +1305,7 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
     if ((state & buttonMask) == 0) {
         buttonDown = false;
         stopDelayedMoveResize();
-        if (moveResizeMode) {
+        if (isMoveResize()) {
             finishMoveResize(false);
             mode = mousePosition();
         }
@@ -1483,7 +1483,7 @@ void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
 {
     if (direction == NET::Move)
         performMouseCommand(Options::MouseMove, QPoint(x_root, y_root));
-    else if (moveResizeMode && direction == NET::MoveResizeCancel) {
+    else if (isMoveResize() && direction == NET::MoveResizeCancel) {
         finishMoveResize(true);
         buttonDown = false;
         updateCursor();
@@ -1500,7 +1500,7 @@ void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         };
         if (!isResizable() || isShade())
             return;
-        if (moveResizeMode)
+        if (isMoveResize())
             finishMoveResize(false);
         buttonDown = true;
         moveOffset = QPoint(x_root - x(), y_root - y());  // map from global

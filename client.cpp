@@ -142,7 +142,6 @@ Client::Client()
 
     mode = PositionCenter;
     buttonDown = false;
-    moveResizeMode = false;
 
     info = NULL;
 
@@ -192,7 +191,7 @@ Client::~Client()
     //SWrapper::Client::clientRelease(this);
     if (syncRequest.alarm != XCB_NONE)
         xcb_sync_destroy_alarm(connection(), syncRequest.alarm);
-    assert(!moveResizeMode);
+    assert(!isMoveResize());
     assert(m_client == XCB_WINDOW_NONE);
     assert(m_wrapper == XCB_WINDOW_NONE);
     //assert( frameId() == None );
@@ -221,13 +220,13 @@ void Client::releaseWindow(bool on_shutdown)
     if (!on_shutdown) {
         del = Deleted::create(this);
     }
-    if (moveResizeMode)
+    if (isMoveResize())
         emit clientFinishUserMovedResized(this);
     emit windowClosed(this, del);
     finishCompositing();
     RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
-    if (moveResizeMode)
+    if (isMoveResize())
         leaveMoveResize();
     finishWindowRules();
     blockGeometryUpdates();
@@ -289,13 +288,13 @@ void Client::destroyClient()
     deleting = true;
     destroyWindowManagementInterface();
     Deleted* del = Deleted::create(this);
-    if (moveResizeMode)
+    if (isMoveResize())
         emit clientFinishUserMovedResized(this);
     emit windowClosed(this, del);
     finishCompositing(ReleaseReason::Destroyed);
     RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
-    if (moveResizeMode)
+    if (isMoveResize())
         leaveMoveResize();
     finishWindowRules();
     blockGeometryUpdates();
@@ -1648,7 +1647,7 @@ void Client::dontMoveResize()
 {
     buttonDown = false;
     stopDelayedMoveResize();
-    if (moveResizeMode)
+    if (isMoveResize())
         finishMoveResize(false);
 }
 
@@ -1865,7 +1864,7 @@ void Client::updateCursor()
         c = Qt::SizeHorCursor;
         break;
     default:
-        if (moveResizeMode)
+        if (isMoveResize())
             c = Qt::SizeAllCursor;
         else
             c = Qt::ArrowCursor;
@@ -1878,7 +1877,7 @@ void Client::updateCursor()
     m_frame.defineCursor(nativeCursor);
     if (m_decoInputExtent.isValid())
         m_decoInputExtent.defineCursor(nativeCursor);
-    if (moveResizeMode) {
+    if (isMoveResize()) {
         // changing window attributes doesn't change cursor if there's pointer grab active
         xcb_change_active_pointer_grab(connection(), nativeCursor, xTime(),
             XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
@@ -2274,7 +2273,7 @@ void Client::processDecorationButtonRelease(QMouseEvent *event)
     if (event->buttons() == Qt::NoButton) {
         buttonDown = false;
         stopDelayedMoveResize();
-        if (moveResizeMode) {
+        if (isMoveResize()) {
             finishMoveResize(false);
             mode = mousePosition();
         }
