@@ -635,6 +635,13 @@ protected:
     void setInvertedMoveOffset(const QPoint &offset) {
         m_moveResize.invertedOffset = offset;
     }
+    QRect initialMoveResizeGeometry() const {
+        return m_moveResize.initialGeometry;
+    }
+    /**
+     * Sets the initial move resize geometry to the current geometry.
+     **/
+    void updateInitialMoveResizeGeometry();
 
 private:
     void handlePaletteChange();
@@ -687,6 +694,7 @@ private:
         bool unrestricted = false;
         QPoint offset;
         QPoint invertedOffset;
+        QRect initialGeometry;
     } m_moveResize;
 };
 

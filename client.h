@@ -638,7 +638,6 @@ private:
 
     Position mode;
     QRect moveResizeGeom;
-    QRect initialMoveResizeGeom;
     Xcb::GeometryHints m_geometryHints;
     void sendSyntheticConfigureNotify();
     enum MappingState {

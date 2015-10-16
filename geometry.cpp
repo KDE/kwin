@@ -2657,7 +2657,8 @@ bool Client::startMoveResize()
 
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
     moveResizeStartScreen = screen();
-    initialMoveResizeGeom = moveResizeGeom = geometry();
+    updateInitialMoveResizeGeometry();
+    moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
     emit clientStartUserMovedResized(this);
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
@@ -2671,13 +2672,13 @@ void Client::finishMoveResize(bool cancel)
     leaveMoveResize();
 
     if (cancel)
-        setGeometry(initialMoveResizeGeom);
+        setGeometry(initialMoveResizeGeometry());
     else {
         if (wasResize) {
             const bool restoreH = maximizeMode() == MaximizeHorizontal &&
-                                    moveResizeGeom.width() != initialMoveResizeGeom.width();
+                                    moveResizeGeom.width() != initialMoveResizeGeometry().width();
             const bool restoreV = maximizeMode() == MaximizeVertical &&
-                                    moveResizeGeom.height() != initialMoveResizeGeom.height();
+                                    moveResizeGeom.height() != initialMoveResizeGeometry().height();
             if (restoreH || restoreV) {
                 changeMaximize(restoreV, restoreH, false);
             }
@@ -2757,7 +2758,7 @@ void Client::checkUnrestrictedMoveResize()
     left_marge = qMin(100 + borderRight(), moveResizeGeom.width());
     right_marge = qMin(100 + borderLeft(), moveResizeGeom.width());
     // width/height change with opaque resizing, use the initial ones
-    titlebar_marge = initialMoveResizeGeom.height();
+    titlebar_marge = initialMoveResizeGeometry().height();
     top_marge = borderBottom();
     bottom_marge = borderTop();
     if (isResize()) {
@@ -2900,7 +2901,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
     bool update = false;
     if (isResize()) {
-        QRect orig = initialMoveResizeGeom;
+        QRect orig = initialMoveResizeGeometry();
         Sizemode sizemode = SizemodeAny;
         auto calculateMoveResizeGeom = [this, &topleft, &bottomright, &orig, &sizemode]() {
             switch(mode) {
