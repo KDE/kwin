@@ -2592,7 +2592,7 @@ void Client::positionGeometryTip()
         if (!geometryTip) {
             geometryTip = new GeometryTip(&m_geometryHints);
         }
-        QRect wgeom(moveResizeGeom);   // position of the frame, size of the window itself
+        QRect wgeom(moveResizeGeometry());   // position of the frame, size of the window itself
         wgeom.setWidth(wgeom.width() - (width() - clientSize().width()));
         wgeom.setHeight(wgeom.height() - (height() - clientSize().height()));
         if (isShade())
@@ -2658,7 +2658,6 @@ bool Client::startMoveResize()
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
     moveResizeStartScreen = screen();
     updateInitialMoveResizeGeometry();
-    moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
     emit clientStartUserMovedResized(this);
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
@@ -2674,6 +2673,7 @@ void Client::finishMoveResize(bool cancel)
     if (cancel)
         setGeometry(initialMoveResizeGeometry());
     else {
+        const QRect &moveResizeGeom = moveResizeGeometry();
         if (wasResize) {
             const bool restoreH = maximizeMode() == MaximizeHorizontal &&
                                     moveResizeGeom.width() != initialMoveResizeGeometry().width();
@@ -2751,6 +2751,7 @@ void Client::checkUnrestrictedMoveResize()
 {
     if (isUnrestrictedMoveResize())
         return;
+    const QRect &moveResizeGeom = moveResizeGeometry();
     QRect desktopArea = workspace()->clientArea(WorkArea, moveResizeGeom.center(), desktop());
     int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
     // restricted move/resize - keep at least part of the titlebar always visible
@@ -2829,7 +2830,7 @@ void Client::handleMoveResize(const QPoint &local, const QPoint &global)
             setMoveOffset(QPoint(double(moveOffset().x()) / double(oldGeo.width()) * double(geom_restore.width()),
                                  double(moveOffset().y()) / double(oldGeo.height()) * double(geom_restore.height())));
             if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore)
-                moveResizeGeom = geom_restore;
+                setMoveResizeGeometry(geom_restore);
             handleMoveResize(local.x(), local.y(), global.x(), global.y()); // fix position
         } else if (quickTileMode() == QuickTileNone && isResizable()) {
             checkQuickTilingMaximizationZones(global.x(), global.y());
@@ -2868,11 +2869,12 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
     QPoint topleft = globalPos - moveOffset();
     QPoint bottomright = globalPos + invertedMoveOffset();
-    QRect previousMoveResizeGeom = moveResizeGeom;
+    QRect previousMoveResizeGeom = moveResizeGeometry();
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
     auto titleBarRect = [this](bool &transposed, int &requiredPixels) -> QRect {
+        const QRect &moveResizeGeom = moveResizeGeometry();
         QRect r(moveResizeGeom);
         r.moveTopLeft(QPoint(0,0));
         switch (titlebarPosition()) {
@@ -2906,31 +2908,31 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         auto calculateMoveResizeGeom = [this, &topleft, &bottomright, &orig, &sizemode]() {
             switch(mode) {
             case PositionTopLeft:
-                moveResizeGeom =  QRect(topleft, orig.bottomRight()) ;
+                setMoveResizeGeometry(QRect(topleft, orig.bottomRight()));
                 break;
             case PositionBottomRight:
-                moveResizeGeom =  QRect(orig.topLeft(), bottomright) ;
+                setMoveResizeGeometry(QRect(orig.topLeft(), bottomright));
                 break;
             case PositionBottomLeft:
-                moveResizeGeom =  QRect(QPoint(topleft.x(), orig.y()), QPoint(orig.right(), bottomright.y())) ;
+                setMoveResizeGeometry(QRect(QPoint(topleft.x(), orig.y()), QPoint(orig.right(), bottomright.y())));
                 break;
             case PositionTopRight:
-                moveResizeGeom =  QRect(QPoint(orig.x(), topleft.y()), QPoint(bottomright.x(), orig.bottom())) ;
+                setMoveResizeGeometry(QRect(QPoint(orig.x(), topleft.y()), QPoint(bottomright.x(), orig.bottom())));
                 break;
             case PositionTop:
-                moveResizeGeom =  QRect(QPoint(orig.left(), topleft.y()), orig.bottomRight()) ;
+                setMoveResizeGeometry(QRect(QPoint(orig.left(), topleft.y()), orig.bottomRight()));
                 sizemode = SizemodeFixedH; // try not to affect height
                 break;
             case PositionBottom:
-                moveResizeGeom =  QRect(orig.topLeft(), QPoint(orig.right(), bottomright.y())) ;
+                setMoveResizeGeometry(QRect(orig.topLeft(), QPoint(orig.right(), bottomright.y())));
                 sizemode = SizemodeFixedH;
                 break;
             case PositionLeft:
-                moveResizeGeom =  QRect(QPoint(topleft.x(), orig.top()), orig.bottomRight()) ;
+                setMoveResizeGeometry(QRect(QPoint(topleft.x(), orig.top()), orig.bottomRight()));
                 sizemode = SizemodeFixedW;
                 break;
             case PositionRight:
-                moveResizeGeom =  QRect(orig.topLeft(), QPoint(bottomright.x(), orig.bottom())) ;
+                setMoveResizeGeometry(QRect(orig.topLeft(), QPoint(bottomright.x(), orig.bottom())));
                 sizemode = SizemodeFixedW;
                 break;
             case PositionCenter:
@@ -2943,7 +2945,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         // first resize (without checking constrains), then snap, then check bounds, then check constrains
         calculateMoveResizeGeom();
         // adjust new size to snap to other windows/borders
-        moveResizeGeom = workspace()->adjustClientSize(this, moveResizeGeom, mode);
+        setMoveResizeGeometry(workspace()->adjustClientSize(this, moveResizeGeometry(), mode));
 
         if (!isUnrestrictedMoveResize()) {
             // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
@@ -2955,10 +2957,10 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
             int requiredPixels;
             QRect bTitleRect = titleBarRect(transposed, requiredPixels);
             int lastVisiblePixels = -1;
-            QRect lastTry = moveResizeGeom;
+            QRect lastTry = moveResizeGeometry();
             bool titleFailed = false;
             for (;;) {
-                const QRect titleRect(bTitleRect.translated(moveResizeGeom.topLeft()));
+                const QRect titleRect(bTitleRect.translated(moveResizeGeometry().topLeft()));
                 int visiblePixels = 0;
                 int realVisiblePixels = 0;
                 foreach (const QRect &rect, availableArea.rects()) {
@@ -2977,11 +2979,12 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                         break; // we won't become better
                     else {
                         if (!titleFailed)
-                            moveResizeGeom = lastTry;
+                            setMoveResizeGeometry(lastTry);
                         titleFailed = true;
                     }
                 }
                 lastVisiblePixels = realVisiblePixels;
+                QRect moveResizeGeom = moveResizeGeometry();
                 lastTry = moveResizeGeom;
 
                 // Not visible enough, move the window to the closest valid point. We bruteforce
@@ -3026,15 +3029,16 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                     moveResizeGeom.setRight(moveResizeGeom.right() + sign(previousMoveResizeGeom.right() - moveResizeGeom.right()));
                 else
                     break; // no position changed - that's certainly not good
+                setMoveResizeGeometry(moveResizeGeom);
             }
         }
 
         // Always obey size hints, even when in "unrestricted" mode
-        QSize size = adjustedSize(moveResizeGeom.size(), sizemode);
+        QSize size = adjustedSize(moveResizeGeometry().size(), sizemode);
         // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
-        topleft = QPoint(moveResizeGeom.right() - size.width() + 1, moveResizeGeom.bottom() - size.height() + 1);
-        bottomright = QPoint(moveResizeGeom.left() + size.width() - 1, moveResizeGeom.top() + size.height() - 1);
-        orig = moveResizeGeom;
+        topleft = QPoint(moveResizeGeometry().right() - size.width() + 1, moveResizeGeometry().bottom() - size.height() + 1);
+        bottomright = QPoint(moveResizeGeometry().left() + size.width() - 1, moveResizeGeometry().top() + size.height() - 1);
+        orig = moveResizeGeometry();
 
         // if aspect ratios are specified, both dimensions may change.
         // Therefore grow to the right/bottom if needed.
@@ -3046,7 +3050,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
         calculateMoveResizeGeom();
 
-        if (moveResizeGeom.size() != previousMoveResizeGeom.size())
+        if (moveResizeGeometry().size() != previousMoveResizeGeom.size())
             update = true;
     } else if (isMove()) {
         assert(mode == PositionCenter);
@@ -3054,21 +3058,24 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
             // Special moving of maximized windows on Xinerama screens
             int screen = screens()->number(globalPos);
             if (isFullScreen())
-                moveResizeGeom = workspace()->clientArea(FullScreenArea, screen, 0);
+                setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, screen, 0));
             else {
-                moveResizeGeom = workspace()->clientArea(MaximizeArea, screen, 0);
+                QRect moveResizeGeom = workspace()->clientArea(MaximizeArea, screen, 0);
                 QSize adjSize = adjustedSize(moveResizeGeom.size(), SizemodeMax);
                 if (adjSize != moveResizeGeom.size()) {
                     QRect r(moveResizeGeom);
                     moveResizeGeom.setSize(adjSize);
                     moveResizeGeom.moveCenter(r.center());
                 }
+                setMoveResizeGeometry(moveResizeGeom);
             }
         } else {
             // first move, then snap, then check bounds
+            QRect moveResizeGeom = moveResizeGeometry();
             moveResizeGeom.moveTopLeft(topleft);
             moveResizeGeom.moveTopLeft(workspace()->adjustClientPosition(this, moveResizeGeom.topLeft(),
                                        isUnrestrictedMoveResize()));
+            setMoveResizeGeometry(moveResizeGeom);
 
             if (!isUnrestrictedMoveResize()) {
                 const QRegion strut = workspace()->restrictedMoveArea(desktop());   // Strut areas
@@ -3078,6 +3085,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                 int requiredPixels;
                 QRect bTitleRect = titleBarRect(transposed, requiredPixels);
                 for (;;) {
+                    QRect moveResizeGeom = moveResizeGeometry();
                     const QRect titleRect(bTitleRect.translated(moveResizeGeom.topLeft()));
                     int visiblePixels = 0;
                     foreach (const QRect &rect, availableArea.rects()) {
@@ -3110,6 +3118,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                         }
                         if (newTitleTop > -1) {
                             moveResizeGeom.moveTop(newTitleTop); // invalid position, possibly on screen change
+                            setMoveResizeGeometry(moveResizeGeom);
                             break;
                         }
                     }
@@ -3123,6 +3132,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
                     // Move it back
                     moveResizeGeom.translate(dx, dy);
+                    setMoveResizeGeometry(moveResizeGeom);
 
                     if (moveResizeGeom == previousMoveResizeGeom) {
                         break; // Prevent lockup
@@ -3130,7 +3140,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                 }
             }
         }
-        if (moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft())
+        if (moveResizeGeometry().topLeft() != previousMoveResizeGeom.topLeft())
             update = true;
     } else
         abort();
@@ -3151,6 +3161,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
             syncRequest.isPending = true;   // limit the resizes to 30Hz to take pointless load from X11
             syncRequest.timeout->start(33); // and the client, the mouse is still moved at full speed
         }                                   // and no human can control faster resizes anyway
+        const QRect &moveResizeGeom = moveResizeGeometry();
         m_client.setGeometry(0, 0, moveResizeGeom.width() - (borderLeft() + borderRight()), moveResizeGeom.height() - (borderTop() + borderBottom()));
     } else
         performMoveResize();
@@ -3162,6 +3173,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
 void Client::performMoveResize()
 {
+    const QRect &moveResizeGeom = moveResizeGeometry();
     if (isMove() || (isResize() && !s_haveResizeEffect)) {
         setGeometry(moveResizeGeom);
     }

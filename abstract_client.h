@@ -642,6 +642,12 @@ protected:
      * Sets the initial move resize geometry to the current geometry.
      **/
     void updateInitialMoveResizeGeometry();
+    QRect moveResizeGeometry() const {
+        return m_moveResize.geometry;
+    }
+    void setMoveResizeGeometry(const QRect &geo) {
+        m_moveResize.geometry = geo;
+    }
 
 private:
     void handlePaletteChange();
@@ -695,6 +701,7 @@ private:
         QPoint offset;
         QPoint invertedOffset;
         QRect initialGeometry;
+        QRect geometry;
     } m_moveResize;
 };
 

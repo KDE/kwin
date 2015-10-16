@@ -1062,6 +1062,7 @@ void AbstractClient::doMove(int, int)
 void AbstractClient::updateInitialMoveResizeGeometry()
 {
     m_moveResize.initialGeometry = geometry();
+    m_moveResize.geometry = m_moveResize.initialGeometry;
 }
 
 }
