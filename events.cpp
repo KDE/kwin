@@ -1241,8 +1241,8 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
             && com != Options::MouseDragTab) {
         mode = mousePosition();
         buttonDown = true;
-        moveOffset = QPoint(x/* - padding_left*/, y/* - padding_top*/);
-        invertedMoveOffset = rect().bottomRight() - moveOffset;
+        setMoveOffset(QPoint(x/* - padding_left*/, y/* - padding_top*/));
+        setInvertedMoveOffset(rect().bottomRight() - moveOffset());
         setUnrestrictedMoveResize(false);
         startDelayedMoveResize();
         updateCursor();
@@ -1503,8 +1503,8 @@ void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         if (isMoveResize())
             finishMoveResize(false);
         buttonDown = true;
-        moveOffset = QPoint(x_root - x(), y_root - y());  // map from global
-        invertedMoveOffset = rect().bottomRight() - moveOffset;
+        setMoveOffset(QPoint(x_root - x(), y_root - y()));  // map from global
+        setInvertedMoveOffset(rect().bottomRight() - moveOffset());
         setUnrestrictedMoveResize(false);
         mode = convert[ direction ];
         if (!startMoveResize())

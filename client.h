@@ -637,8 +637,6 @@ private:
     bool m_managed;
 
     Position mode;
-    QPoint moveOffset;
-    QPoint invertedMoveOffset;
     QRect moveResizeGeom;
     QRect initialMoveResizeGeom;
     Xcb::GeometryHints m_geometryHints;

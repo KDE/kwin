@@ -623,6 +623,18 @@ protected:
     void setUnrestrictedMoveResize(bool set) {
         m_moveResize.unrestricted = set;
     }
+    QPoint moveOffset() const {
+        return m_moveResize.offset;
+    }
+    void setMoveOffset(const QPoint &offset) {
+        m_moveResize.offset = offset;
+    }
+    QPoint invertedMoveOffset() const {
+        return m_moveResize.invertedOffset;
+    }
+    void setInvertedMoveOffset(const QPoint &offset) {
+        m_moveResize.invertedOffset = offset;
+    }
 
 private:
     void handlePaletteChange();
@@ -673,6 +685,8 @@ private:
     struct {
         bool enabled = false;
         bool unrestricted = false;
+        QPoint offset;
+        QPoint invertedOffset;
     } m_moveResize;
 };
 

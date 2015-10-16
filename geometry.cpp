@@ -2825,8 +2825,8 @@ void Client::handleMoveResize(const QPoint &local, const QPoint &global)
         if (quickTileMode() != QuickTileNone && oldGeo != geometry()) {
             GeometryUpdatesBlocker blocker(this);
             setQuickTileMode(QuickTileNone);
-            moveOffset = QPoint(double(moveOffset.x()) / double(oldGeo.width()) * double(geom_restore.width()),
-                                double(moveOffset.y()) / double(oldGeo.height()) * double(geom_restore.height()));
+            setMoveOffset(QPoint(double(moveOffset().x()) / double(oldGeo.width()) * double(geom_restore.width()),
+                                 double(moveOffset().y()) / double(oldGeo.height()) * double(geom_restore.height())));
             if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore)
                 moveResizeGeom = geom_restore;
             handleMoveResize(local.x(), local.y(), global.x(), global.y()); // fix position
@@ -2846,7 +2846,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         return;
 
     if (!isMoveResize()) {
-        QPoint p(QPoint(x/* - padding_left*/, y/* - padding_top*/) - moveOffset);
+        QPoint p(QPoint(x/* - padding_left*/, y/* - padding_top*/) - moveOffset());
         if (p.manhattanLength() >= QApplication::startDragDistance()) {
             if (!startMoveResize()) {
                 buttonDown = false;
@@ -2865,8 +2865,8 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     QPoint globalPos(x_root, y_root);
     // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
     // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
-    QPoint topleft = globalPos - moveOffset;
-    QPoint bottomright = globalPos + invertedMoveOffset;
+    QPoint topleft = globalPos - moveOffset();
+    QPoint bottomright = globalPos + invertedMoveOffset();
     QRect previousMoveResizeGeom = moveResizeGeom;
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
