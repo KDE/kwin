@@ -259,8 +259,8 @@ void Workspace::updateClientArea(bool force)
             rootInfo()->setWorkArea(i, r);
         }
 
-        for (ClientList::ConstIterator it = clients.constBegin();
-                it != clients.constEnd();
+        for (auto it = m_allClients.constBegin();
+                it != m_allClients.constEnd();
                 ++it)
             (*it)->checkWorkspacePosition();
         for (ClientList::ConstIterator it = desktops.constBegin();
