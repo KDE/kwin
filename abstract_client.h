@@ -672,6 +672,12 @@ protected:
     void setMoveResizePointerMode(Position mode) {
         m_moveResize.pointer = mode;
     }
+    bool isMoveResizePointerButtonDown() const {
+        return m_moveResize.buttonDown;
+    }
+    void setMoveResizePointerButtonDown(bool down) {
+        m_moveResize.buttonDown = down;
+    }
     void checkUnrestrictedMoveResize();
 
 private:
@@ -728,6 +734,7 @@ private:
         QRect initialGeometry;
         QRect geometry;
         Position pointer = PositionCenter;
+        bool buttonDown = false;
     } m_moveResize;
 };
 

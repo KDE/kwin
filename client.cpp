@@ -140,8 +140,6 @@ Client::Client()
     // Set the initial mapping state
     mapping_state = Withdrawn;
 
-    buttonDown = false;
-
     info = NULL;
 
     shade_mode = ShadeNone;
@@ -1644,7 +1642,7 @@ void Client::syncTabGroupFor(QString property, bool fromThisClient)
 
 void Client::dontMoveResize()
 {
-    buttonDown = false;
+    setMoveResizePointerButtonDown(false);
     stopDelayedMoveResize();
     if (isMoveResize())
         finishMoveResize(false);
@@ -2270,7 +2268,7 @@ void Client::processDecorationButtonRelease(QMouseEvent *event)
     }
 
     if (event->buttons() == Qt::NoButton) {
-        buttonDown = false;
+        setMoveResizePointerButtonDown(false);
         stopDelayedMoveResize();
         if (isMoveResize()) {
             finishMoveResize(false);
@@ -2282,7 +2280,7 @@ void Client::processDecorationButtonRelease(QMouseEvent *event)
 
 void Client::processDecorationMove()
 {
-    if (buttonDown) {
+    if (isMoveResizePointerButtonDown()) {
         return;
     }
     // TODO: handle modifiers

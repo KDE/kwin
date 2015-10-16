@@ -974,7 +974,7 @@ void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
     if (e->event != frameId())
         return; // care only about leaving the whole frame
     if (e->mode == XCB_NOTIFY_MODE_NORMAL) {
-        if (!buttonDown) {
+        if (!isMoveResizePointerButtonDown()) {
             setMoveResizePointerMode(PositionCenter);
             updateCursor();
         }
@@ -997,7 +997,7 @@ void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
             cancelAutoRaise();
             workspace()->cancelDelayFocus();
             cancelShadeHoverTimer();
-            if (shade_mode == ShadeHover && !isMoveResize() && !buttonDown) {
+            if (shade_mode == ShadeHover && !isMoveResize() && !isMoveResizePointerButtonDown()) {
                 shadeHoverTimer = new QTimer(this);
                 connect(shadeHoverTimer, SIGNAL(timeout()), this, SLOT(shadeUnhover()));
                 shadeHoverTimer->setSingleShot(true);
@@ -1096,7 +1096,7 @@ static bool modKeyDown(int state) {
 // return value matters only when filtering events before decoration gets them
 bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time)
 {
-    if (buttonDown) {
+    if (isMoveResizePointerButtonDown()) {
         if (w == wrapperId())
             xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
         return true;
@@ -1240,7 +1240,7 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
             && com != Options::MouseMinimize  // mouse release event
             && com != Options::MouseDragTab) {
         setMoveResizePointerMode(mousePosition());
-        buttonDown = true;
+        setMoveResizePointerButtonDown(true);
         setMoveOffset(QPoint(x/* - padding_left*/, y/* - padding_top*/));
         setInvertedMoveOffset(rect().bottomRight() - moveOffset());
         setUnrestrictedMoveResize(false);
@@ -1303,7 +1303,7 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
         buttonMask &= ~XCB_BUTTON_MASK_3;
 
     if ((state & buttonMask) == 0) {
-        buttonDown = false;
+        setMoveResizePointerButtonDown(false);
         stopDelayedMoveResize();
         if (isMoveResize()) {
             finishMoveResize(false);
@@ -1387,7 +1387,7 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
     }
     if (w != frameId() && w != inputId() && w != moveResizeGrabWindow())
         return true; // care only about the whole frame
-    if (!buttonDown) {
+    if (!isMoveResizePointerButtonDown()) {
         if (w == inputId()) {
             int x = x_root - geometry().x();// + padding_left;
             int y = y_root - geometry().y();// + padding_top;
@@ -1485,7 +1485,7 @@ void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         performMouseCommand(Options::MouseMove, QPoint(x_root, y_root));
     else if (isMoveResize() && direction == NET::MoveResizeCancel) {
         finishMoveResize(true);
-        buttonDown = false;
+        setMoveResizePointerButtonDown(false);
         updateCursor();
     } else if (direction >= NET::TopLeft && direction <= NET::Left) {
         static const Position convert[] = {
@@ -1502,13 +1502,13 @@ void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
             return;
         if (isMoveResize())
             finishMoveResize(false);
-        buttonDown = true;
+        setMoveResizePointerButtonDown(true);
         setMoveOffset(QPoint(x_root - x(), y_root - y()));  // map from global
         setInvertedMoveOffset(rect().bottomRight() - moveOffset());
         setUnrestrictedMoveResize(false);
         setMoveResizePointerMode(convert[ direction ]);
         if (!startMoveResize())
-            buttonDown = false;
+            setMoveResizePointerButtonDown(false);
         updateCursor();
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
@@ -1548,12 +1548,12 @@ void Client::keyPressEvent(uint key_code, xcb_timestamp_t time)
     case Qt::Key_Return:
     case Qt::Key_Enter:
         finishMoveResize(false);
-        buttonDown = false;
+        setMoveResizePointerButtonDown(false);
         updateCursor();
         break;
     case Qt::Key_Escape:
         finishMoveResize(true);
-        buttonDown = false;
+        setMoveResizePointerButtonDown(false);
         updateCursor();
         break;
     default:

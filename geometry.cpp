@@ -2799,9 +2799,9 @@ void Client::startDelayedMoveResize()
     delayedMoveResizeTimer->setSingleShot(true);
     connect(delayedMoveResizeTimer, &QTimer::timeout, this,
         [this]() {
-            assert(buttonDown);
+            assert(isMoveResizePointerButtonDown());
             if (!startMoveResize()) {
-                buttonDown = false;
+                setMoveResizePointerButtonDown(false);
             }
             updateCursor();
             stopDelayedMoveResize();
@@ -2854,7 +2854,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         QPoint p(QPoint(x/* - padding_left*/, y/* - padding_top*/) - moveOffset());
         if (p.manhattanLength() >= QApplication::startDragDistance()) {
             if (!startMoveResize()) {
-                buttonDown = false;
+                setMoveResizePointerButtonDown(false);
                 updateCursor();
                 return;
             }

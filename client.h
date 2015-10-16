@@ -610,7 +610,6 @@ private:
     QStringList activityList;
     int m_activityUpdatesBlocked;
     bool m_blockedActivityUpdatesRequireTransients;
-    bool buttonDown;
     Xcb::Window m_moveResizeGrabWindow;
     bool move_resize_has_keyboard_grab;
     int moveResizeStartScreen;
