@@ -39,7 +39,6 @@ enum class BuiltInEffect
     CoverSwitch,
     Cube,
     CubeSlide,
-    Dashboard,
     DesktopGrid,
     DimInactive,
     DimScreen,

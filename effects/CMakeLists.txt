@@ -82,7 +82,6 @@ set( kwin4_effect_builtins_sources
     cube/cube_proxy.cpp
     cube/cubeslide.cpp
     coverswitch/coverswitch.cpp
-    dashboard/dashboard.cpp
     desktopgrid/desktopgrid.cpp
     diminactive/diminactive.cpp
     flipswitch/flipswitch.cpp
@@ -109,7 +108,6 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     cube/cubeslideconfig.kcfgc
     cube/cubeconfig.kcfgc
     coverswitch/coverswitchconfig.kcfgc
-    dashboard/dashboardconfig.kcfgc
     desktopgrid/desktopgridconfig.kcfgc
     diminactive/diminactiveconfig.kcfgc
     flipswitch/flipswitchconfig.kcfgc
@@ -144,7 +142,6 @@ add_subdirectory( windowaperture )
 # Built-in effects go here
 
 # Common effects
-add_subdirectory( dashboard )
 add_subdirectory( desktopgrid )
 add_subdirectory( diminactive )
 include( dimscreen/CMakeLists.txt )

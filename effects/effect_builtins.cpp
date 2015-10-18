@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenshot/screenshot.h"
 #include "slidingpopups/slidingpopups.h"
 // Common effects only relevant to desktop
-#include "dashboard/dashboard.h"
 #include "desktopgrid/desktopgrid.h"
 #include "diminactive/diminactive.h"
 #include "dimscreen/dimscreen.h"
@@ -169,21 +168,6 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<CubeSlideEffect>,
         &CubeSlideEffect::supported,
-        nullptr
-#endif
-EFFECT_FALLBACK
-    }, {
-        QStringLiteral("dashboard"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Dashboard"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Desaturate the desktop when displaying the Plasma dashboard"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        true,
-        true,
-#ifdef EFFECT_BUILTINS
-        &createHelper<DashboardEffect>,
-        nullptr,
         nullptr
 #endif
 EFFECT_FALLBACK
