@@ -187,12 +187,6 @@ void KWinScreenEdgesConfig::monitorInit()
     monitorAddItem(i18n("No Action"));
     monitorAddItem(i18n("Show Desktop"));
     monitorAddItem(i18n("Lock Screen"));
-    monitorAddItem(i18n("Prevent Screen Locking"));
-    //Prevent Screen Locking is not supported on some edges
-    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Top), 3, false);
-    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Left), 3, false);
-    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Right), 3, false);
-    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Bottom), 3, false);
 
     // Add the effects
     const QString presentWindowsName = BuiltInEffects::effectData(BuiltInEffect::PresentWindows).displayName;
@@ -217,7 +211,6 @@ void KWinScreenEdgesConfig::monitorLoadAction(ElectricBorder edge, const QString
     QString lowerName = config.readEntry(configName, "None").toLower();
     if (lowerName == "showdesktop") monitorChangeEdge(edge, int(ElectricActionShowDesktop));
     else if (lowerName == "lockscreen") monitorChangeEdge(edge, int(ElectricActionLockScreen));
-    else if (lowerName == "preventscreenlocking") monitorChangeEdge(edge, int(ElectricActionPreventScreenLocking));
 }
 
 void KWinScreenEdgesConfig::monitorLoad()
@@ -314,20 +307,8 @@ void KWinScreenEdgesConfig::monitorSaveAction(int edge, const QString& configNam
         config.writeEntry(configName, "ShowDesktop");
     else if (item == 2)
         config.writeEntry(configName, "LockScreen");
-    else if (item == 3)
-        config.writeEntry(configName, "PreventScreenLocking");
     else // Anything else
         config.writeEntry(configName, "None");
-
-    if ((edge == int(Monitor::TopRight)) ||
-            (edge == int(Monitor::BottomRight)) ||
-            (edge == int(Monitor::BottomLeft)) ||
-            (edge == int(Monitor::TopLeft))) {
-        KConfig scrnConfig("kscreensaverrc");
-        KConfigGroup scrnGroup = scrnConfig.group("ScreenSaver");
-        scrnGroup.writeEntry("Action" + configName, (item == 3) ? 2 /* Prevent Screen Locking */ : 0 /* None */);
-        scrnGroup.sync();
-    }
 }
 
 void KWinScreenEdgesConfig::monitorSave()

@@ -93,7 +93,6 @@ enum ElectricBorderAction {
     ElectricActionNone,          // No special action, not set, desktop switch or an effect
     ElectricActionShowDesktop,   // Show desktop or restore
     ElectricActionLockScreen,   // Lock screen
-    ElectricActionPreventScreenLocking,
     ELECTRIC_ACTION_COUNT
 };
 
