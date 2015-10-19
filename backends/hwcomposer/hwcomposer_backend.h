@@ -65,6 +65,7 @@ public:
     int refreshRate() const {
         return m_refreshRate;
     }
+    void enableVSync(bool enable);
 
 public Q_SLOTS:
     void vsync();
@@ -79,6 +80,7 @@ private:
     bool m_pageFlipPending = false;
     int m_refreshRate = 60000;
     QTimer *m_vsyncFailSafeTimer;
+    bool m_hasVsync = false;
 };
 
 class HwcomposerWindow : public HWComposerNativeWindow

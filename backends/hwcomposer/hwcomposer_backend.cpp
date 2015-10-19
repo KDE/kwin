@@ -164,7 +164,10 @@ void HwcomposerBackend::toggleBlankOutput()
     }
     m_outputBlank = !m_outputBlank;
     m_device->blank(m_device, 0, m_outputBlank ? 1 : 0);
-    m_device->eventControl(m_device, 0, HWC_EVENT_VSYNC, m_outputBlank ? 0 : 1);
+    // only disable Vsycn, enable happens after next frame rendered
+    if (m_outputBlank) {
+         enableVSync(false);
+    }
     // enable/disable compositor repainting when blanked
     if (Compositor *compositor = Compositor::self()) {
         if (m_outputBlank) {
@@ -174,6 +177,15 @@ void HwcomposerBackend::toggleBlankOutput()
             compositor->addRepaintFull();
         }
     }
+}
+
+void HwcomposerBackend::enableVSync(bool enable)
+{
+    if (m_hasVsync == enable) {
+        return;
+    }
+    const int result = m_device->eventControl(m_device, 0, HWC_EVENT_VSYNC, enable ? 1: 0);
+    m_hasVsync = enable && (result == 0);
 }
 
 HwcomposerWindow *HwcomposerBackend::createSurface()
@@ -282,6 +294,7 @@ void HwcomposerWindow::present(HWComposerNativeWindowBuffer *buffer)
 
     err = device->set(device, 1, m_list);
     assert(err == 0);
+    m_backend->enableVSync(true);
     setFenceBufferFd(buffer, fblayer->releaseFenceFd);
 
     if (m_list[0]->retireFenceFd != -1) {
