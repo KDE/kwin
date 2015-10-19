@@ -79,7 +79,6 @@ void TestBuiltInEffectLoader::testHasEffect_data()
     QTest::newRow("CoverSwitch")                    << QStringLiteral("coverswitch")       << true;
     QTest::newRow("Cube")                           << QStringLiteral("cube")              << true;
     QTest::newRow("CubeSlide")                      << QStringLiteral("cubeslide")         << true;
-    QTest::newRow("Dashboard")                      << QStringLiteral("dashboard")         << true;
     QTest::newRow("DesktopGrid")                    << QStringLiteral("desktopgrid")       << true;
     QTest::newRow("DimInactive")                    << QStringLiteral("diminactive")       << true;
     QTest::newRow("DimScreen")                      << QStringLiteral("dimscreen")         << true;
@@ -135,7 +134,6 @@ void TestBuiltInEffectLoader::testKnownEffects()
                     << QStringLiteral("coverswitch")
                     << QStringLiteral("cube")
                     << QStringLiteral("cubeslide")
-                    << QStringLiteral("dashboard")
                     << QStringLiteral("desktopgrid")
                     << QStringLiteral("diminactive")
                     << QStringLiteral("dimscreen")
@@ -200,7 +198,6 @@ void TestBuiltInEffectLoader::testSupported_data()
     QTest::newRow("Cube-GL")                        << QStringLiteral("cube")              << true  << oc;
     QTest::newRow("CubeSlide")                      << QStringLiteral("cubeslide")         << false << xc;
     QTest::newRow("CubeSlide-GL")                   << QStringLiteral("cubeslide")         << true  << oc;
-    QTest::newRow("Dashboard")                      << QStringLiteral("dashboard")         << true  << xc;
     QTest::newRow("DesktopGrid")                    << QStringLiteral("desktopgrid")       << true  << xc;
     QTest::newRow("DimInactive")                    << QStringLiteral("diminactive")       << true  << xc;
     QTest::newRow("DimScreen")                      << QStringLiteral("dimscreen")         << true  << xc;
@@ -282,7 +279,6 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
 //     QTest::newRow("Cube-GL")                        << QStringLiteral("cube")              << true  << oc;
     QTest::newRow("CubeSlide")                      << QStringLiteral("cubeslide")         << false << xc;
     QTest::newRow("CubeSlide-GL")                   << QStringLiteral("cubeslide")         << true  << oc;
-    QTest::newRow("Dashboard")                      << QStringLiteral("dashboard")         << true  << xc;
     QTest::newRow("DesktopGrid")                    << QStringLiteral("desktopgrid")       << true  << xc;
     QTest::newRow("DimInactive")                    << QStringLiteral("diminactive")       << true  << xc;
     QTest::newRow("DimScreen")                      << QStringLiteral("dimScreen")         << true  << xc;
@@ -481,7 +477,6 @@ void TestBuiltInEffectLoader::testLoadAllEffects()
 
     // prepare the configuration to hard enable/disable the effects we want to load
     KConfigGroup plugins = config->group("Plugins");
-    plugins.writeEntry(QStringLiteral("dashboardEnabled"), false);
     plugins.writeEntry(QStringLiteral("desktopgridEnabled"), false);
     plugins.writeEntry(QStringLiteral("highlightwindowEnabled"), false);
     plugins.writeEntry(QStringLiteral("kscreenEnabled"), false);

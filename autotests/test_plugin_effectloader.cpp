@@ -71,7 +71,6 @@ void TestPluginEffectLoader::testHasEffect_data()
     QTest::newRow("CoverSwitch")       << QStringLiteral("coverswitch")               << false;
     QTest::newRow("Cube")              << QStringLiteral("cube")                      << false;
     QTest::newRow("CubeSlide")         << QStringLiteral("cubeslide")                 << false;
-    QTest::newRow("Dashboard")         << QStringLiteral("dashboard")                 << false;
     QTest::newRow("DesktopGrid")       << QStringLiteral("desktopgrid")               << false;
     QTest::newRow("DimInactive")       << QStringLiteral("diminactive")               << false;
     QTest::newRow("DimScreen")         << QStringLiteral("dimscreen")                 << false;
