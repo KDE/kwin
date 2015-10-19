@@ -185,15 +185,14 @@ void KWinScreenEdgesConfig::monitorItemSetEnabled(int index, bool enabled)
 void KWinScreenEdgesConfig::monitorInit()
 {
     monitorAddItem(i18n("No Action"));
-    monitorAddItem(i18n("Show Dashboard"));
     monitorAddItem(i18n("Show Desktop"));
     monitorAddItem(i18n("Lock Screen"));
     monitorAddItem(i18n("Prevent Screen Locking"));
     //Prevent Screen Locking is not supported on some edges
-    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Top), 4, false);
-    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Left), 4, false);
-    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Right), 4, false);
-    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Bottom), 4, false);
+    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Top), 3, false);
+    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Left), 3, false);
+    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Right), 3, false);
+    m_ui->monitor->setEdgeItemEnabled(int(Monitor::Bottom), 3, false);
 
     // Add the effects
     const QString presentWindowsName = BuiltInEffects::effectData(BuiltInEffect::PresentWindows).displayName;
@@ -216,8 +215,7 @@ void KWinScreenEdgesConfig::monitorLoadAction(ElectricBorder edge, const QString
 {
     KConfigGroup config(m_config, "ElectricBorders");
     QString lowerName = config.readEntry(configName, "None").toLower();
-    if (lowerName == "dashboard") monitorChangeEdge(edge, int(ElectricActionDashboard));
-    else if (lowerName == "showdesktop") monitorChangeEdge(edge, int(ElectricActionShowDesktop));
+    if (lowerName == "showdesktop") monitorChangeEdge(edge, int(ElectricActionShowDesktop));
     else if (lowerName == "lockscreen") monitorChangeEdge(edge, int(ElectricActionLockScreen));
     else if (lowerName == "preventscreenlocking") monitorChangeEdge(edge, int(ElectricActionPreventScreenLocking));
 }
@@ -312,13 +310,11 @@ void KWinScreenEdgesConfig::monitorSaveAction(int edge, const QString& configNam
 {
     KConfigGroup config(m_config, "ElectricBorders");
     int item = m_ui->monitor->selectedEdgeItem(edge);
-    if (item == 1)   // Plasma dashboard
-        config.writeEntry(configName, "Dashboard");
-    else if (item == 2)
+    if (item == 1)
         config.writeEntry(configName, "ShowDesktop");
-    else if (item == 3)
+    else if (item == 2)
         config.writeEntry(configName, "LockScreen");
-    else if (item == 4)
+    else if (item == 3)
         config.writeEntry(configName, "PreventScreenLocking");
     else // Anything else
         config.writeEntry(configName, "None");
@@ -329,7 +325,7 @@ void KWinScreenEdgesConfig::monitorSaveAction(int edge, const QString& configNam
             (edge == int(Monitor::TopLeft))) {
         KConfig scrnConfig("kscreensaverrc");
         KConfigGroup scrnGroup = scrnConfig.group("ScreenSaver");
-        scrnGroup.writeEntry("Action" + configName, (item == 4) ? 2 /* Prevent Screen Locking */ : 0 /* None */);
+        scrnGroup.writeEntry("Action" + configName, (item == 3) ? 2 /* Prevent Screen Locking */ : 0 /* None */);
         scrnGroup.sync();
     }
 }
