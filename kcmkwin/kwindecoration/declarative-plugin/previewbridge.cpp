@@ -237,5 +237,19 @@ void PreviewBridge::configure()
     dialog.exec();
 }
 
+BridgeItem::BridgeItem(QObject *parent)
+    : QObject(parent)
+    , m_bridge(new PreviewBridge())
+{
+    connect(m_bridge, &PreviewBridge::themeChanged, this, &BridgeItem::themeChanged);
+    connect(m_bridge, &PreviewBridge::pluginChanged, this, &BridgeItem::pluginChanged);
+    connect(m_bridge, &PreviewBridge::validChanged, this, &BridgeItem::validChanged);
+}
+
+BridgeItem::~BridgeItem()
+{
+    m_bridge->deleteLater();
+}
+
 }
 }

@@ -37,7 +37,7 @@ ListView {
             id: button
             property int itemIndex: index
             property var buttonsModel: parent.ListView.view.model
-            bridge: bridgeItem
+            bridge: bridgeItem.bridge
             settings: settingsItem
             type: model["button"]
             anchors.fill: Drag.active ? undefined : parent

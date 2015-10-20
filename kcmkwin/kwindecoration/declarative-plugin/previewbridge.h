@@ -89,6 +89,48 @@ private:
     bool m_valid;
 };
 
+class BridgeItem : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString plugin READ plugin WRITE setPlugin NOTIFY pluginChanged)
+    Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
+    Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
+    Q_PROPERTY(KDecoration2::Preview::PreviewBridge *bridge READ bridge CONSTANT)
+
+public:
+    explicit BridgeItem(QObject *parent = nullptr);
+    virtual ~BridgeItem();
+
+    void setPlugin(const QString &plugin) {
+        m_bridge->setPlugin(plugin);
+    }
+    QString plugin() const {
+        return m_bridge->plugin();
+    }
+    void setTheme(const QString &theme) {
+        m_bridge->setTheme(theme);
+    }
+    QString theme() const {
+        return m_bridge->theme();
+    }
+    bool isValid() const {
+        return m_bridge->isValid();
+    }
+
+    PreviewBridge *bridge() const {
+        return m_bridge;
+    }
+
+Q_SIGNALS:
+    void pluginChanged();
+    void themeChanged();
+    void validChanged();
+
+private:
+    PreviewBridge *m_bridge;
+
+};
+
 }
 }
 

@@ -52,7 +52,7 @@ ScrollView {
             }
             KDecoration.Settings {
                 id: settingsItem
-                bridge: bridgeItem
+                bridge: bridgeItem.bridge
                 borderSizesIndex: listView.borderSizesIndex
             }
             MouseArea {
@@ -67,7 +67,7 @@ ScrollView {
                 Item {
                     KDecoration.Decoration {
                         id: inactivePreview
-                        bridge: bridgeItem
+                        bridge: bridgeItem.bridge
                         settings: settingsItem
                         anchors.fill: parent
                         Component.onCompleted: {
@@ -81,7 +81,7 @@ ScrollView {
                     }
                     KDecoration.Decoration {
                         id: activePreview
-                        bridge: bridgeItem
+                        bridge: bridgeItem.bridge
                         settings: settingsItem
                         anchors.fill: parent
                         Component.onCompleted: {
@@ -107,7 +107,7 @@ ScrollView {
                     id: configureButton
                     enabled: model["configureable"]
                     iconName: "configure"
-                    onClicked: bridgeItem.configure()
+                    onClicked: bridgeItem.bridge.configure()
                 }
             }
         }
