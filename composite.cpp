@@ -772,7 +772,7 @@ void Compositor::setCompositeTimer()
 {
     if (!hasScene())  // should not really happen, but there may be e.g. some damage events still pending
         return;
-    if (!Workspace::self()) {
+    if (m_starting || !Workspace::self()) {
         return;
     }
 
