@@ -169,11 +169,9 @@ void HwcomposerBackend::toggleBlankOutput()
          enableVSync(false);
     }
     // enable/disable compositor repainting when blanked
+    setOutputsEnabled(!m_outputBlank);
     if (Compositor *compositor = Compositor::self()) {
-        if (m_outputBlank) {
-            compositor->aboutToSwapBuffers();
-        } else {
-            compositor->bufferSwapComplete();
+        if (!m_outputBlank) {
             compositor->addRepaintFull();
         }
     }
