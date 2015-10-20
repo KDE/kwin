@@ -246,7 +246,7 @@ HwcomposerWindow::HwcomposerWindow(HwcomposerBackend *backend)
     : HWComposerNativeWindow(backend->size().width(), backend->size().height(), HAL_PIXEL_FORMAT_RGB_888)
     , m_backend(backend)
 {
-    setBufferCount(2);
+    setBufferCount(3);
 
     size_t size = sizeof(hwc_display_contents_1_t) + 2 * sizeof(hwc_layer_1_t);
     hwc_display_contents_1_t *list = (hwc_display_contents_1_t*)malloc(size);
