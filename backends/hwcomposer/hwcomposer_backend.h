@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_HWCOMPOSER_BACKEND_H
 #include "abstract_backend.h"
 
+#include <QMutex>
+#include <QWaitCondition>
+
 // libhybris
 #include <hwcomposer_window.h>
 // needed as hwcomposer_window.h includes EGL which on non-arm includes Xlib
@@ -31,8 +34,6 @@ typedef struct hwc_layer_1 hwc_layer_1_t;
 typedef struct hwc_composer_device_1 hwc_composer_device_1_t;
 
 class HWComposerNativeWindowBuffer;
-
-class QTimer;
 
 namespace KWin
 {
@@ -61,14 +62,12 @@ public:
     hwc_composer_device_1_t *device() const {
         return m_device;
     }
-    void present();
     int refreshRate() const {
         return m_refreshRate;
     }
     void enableVSync(bool enable);
-
-public Q_SLOTS:
-    void vsync();
+    void waitVSync();
+    void wakeVSync();
 
 private Q_SLOTS:
     void toggleBlankOutput();
@@ -77,10 +76,11 @@ private:
     QSize m_displaySize;
     hwc_composer_device_1_t *m_device = nullptr;
     bool m_outputBlank = true;
-    bool m_pageFlipPending = false;
     int m_refreshRate = 60000;
-    QTimer *m_vsyncFailSafeTimer;
+    int m_vsyncInterval = 16;
     bool m_hasVsync = false;
+    QMutex m_vsyncMutex;
+    QWaitCondition m_vsyncWaitCondition;
 };
 
 class HwcomposerWindow : public HWComposerNativeWindow

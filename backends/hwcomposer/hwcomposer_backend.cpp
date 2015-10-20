@@ -28,8 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/seat_interface.h>
-// Qt
-#include <QTimer>
 // hybris/android
 #include <hardware/hardware.h>
 #include <hardware/hwcomposer.h>
@@ -43,12 +41,8 @@ namespace KWin
 
 HwcomposerBackend::HwcomposerBackend(QObject *parent)
     : AbstractBackend(parent)
-    , m_vsyncFailSafeTimer(new QTimer(this))
 {
     handleOutputs();
-    m_vsyncFailSafeTimer->setSingleShot(true);
-    m_vsyncFailSafeTimer->setInterval(1000);
-    connect(m_vsyncFailSafeTimer, &QTimer::timeout, this, &HwcomposerBackend::vsync);
 }
 
 HwcomposerBackend::~HwcomposerBackend()
@@ -127,9 +121,7 @@ void HwcomposerBackend::init()
         if (disp != 0) {
             return;
         }
-        QMetaObject::invokeMethod(dynamic_cast<HwcomposerBackend*>(waylandServer()->backend()),
-                                  "vsync",
-                                  Qt::QueuedConnection);
+        dynamic_cast<HwcomposerBackend*>(waylandServer()->backend())->wakeVSync();
     };
     procs->hotplug = [] (const struct hwc_procs* procs, int disp, int connected) {
         Q_UNUSED(procs)
@@ -148,6 +140,9 @@ void HwcomposerBackend::init()
     }
     m_displaySize = output->pixelSize();
     m_refreshRate = output->refreshRate();
+    if (m_refreshRate != 0) {
+        m_vsyncInterval = 1000000/m_refreshRate;
+    }
     qCDebug(KWIN_HWCOMPOSER) << "Display size:" << m_displaySize;
     qCDebug(KWIN_HWCOMPOSER) << "Refresh rate:" << m_refreshRate;
 
@@ -201,27 +196,18 @@ OpenGLBackend *HwcomposerBackend::createOpenGLBackend()
     return new EglHwcomposerBackend(this);
 }
 
-void HwcomposerBackend::present()
+void HwcomposerBackend::waitVSync()
 {
-    if (m_pageFlipPending) {
-        return;
-    }
-    m_pageFlipPending = true;
-    if (Compositor::self()) {
-        m_vsyncFailSafeTimer->start();
-        Compositor::self()->aboutToSwapBuffers();
-    }
+    m_vsyncMutex.lock();
+    m_vsyncWaitCondition.wait(&m_vsyncMutex, m_vsyncInterval);
+    m_vsyncMutex.unlock();
 }
 
-void HwcomposerBackend::vsync()
+void HwcomposerBackend::wakeVSync()
 {
-    m_vsyncFailSafeTimer->stop();
-    if (m_pageFlipPending) {
-        m_pageFlipPending = false;
-        if (Compositor::self()) {
-            Compositor::self()->bufferSwapComplete();
-        }
-    }
+    m_vsyncMutex.lock();
+    m_vsyncWaitCondition.wakeAll();
+    m_vsyncMutex.unlock();
 }
 
 static void initLayer(hwc_layer_1_t *layer, const hwc_rect_t &rect)
@@ -279,7 +265,7 @@ HwcomposerWindow::~HwcomposerWindow()
 
 void HwcomposerWindow::present(HWComposerNativeWindowBuffer *buffer)
 {
-    m_backend->present();
+    m_backend->waitVSync();
     hwc_composer_device_1_t *device = m_backend->device();
 
     auto fblayer = &m_list[0]->hwLayers[1];
