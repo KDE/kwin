@@ -33,7 +33,7 @@ Item {
     }
     KDecoration.Settings {
         id: settingsItem
-        bridge: bridgeItem
+        bridge: bridgeItem.bridge
     }
     Rectangle {
         anchors.fill: parent
@@ -157,7 +157,7 @@ Item {
                     KDecoration.Button {
                         id: availableButton
                         anchors.centerIn: Drag.active ? undefined : parent
-                        bridge: bridgeItem
+                        bridge: bridgeItem.bridge
                         settings: settingsItem
                         type: model["button"]
                         width: units.iconSizes.small

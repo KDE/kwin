@@ -38,7 +38,7 @@ namespace Preview
 void Plugin::registerTypes(const char *uri)
 {
     Q_ASSERT(QLatin1String(uri) == QLatin1String("org.kde.kwin.private.kdecoration"));
-    qmlRegisterType<KDecoration2::Preview::PreviewBridge>(uri, 1, 0, "Bridge");
+    qmlRegisterType<KDecoration2::Preview::BridgeItem>(uri, 1, 0, "Bridge");
     qmlRegisterType<KDecoration2::Preview::Settings>(uri, 1, 0, "Settings");
     qmlRegisterType<KDecoration2::Preview::PreviewItem>(uri, 1, 0, "Decoration");
     qmlRegisterType<KDecoration2::Preview::PreviewButtonItem>(uri, 1, 0, "Button");
@@ -46,6 +46,7 @@ void Plugin::registerTypes(const char *uri)
     qmlRegisterType<KDecoration2::Preview::PreviewClient>();
     qmlRegisterType<KDecoration2::Decoration>();
     qmlRegisterType<KDecoration2::DecorationShadow>();
+    qmlRegisterType<KDecoration2::Preview::PreviewBridge>();
 }
 
 }
