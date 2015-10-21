@@ -126,8 +126,6 @@ public:
     };
     EffectView(ViewType type, QWindow *parent = 0);
 
-    Q_INVOKABLE QColor backgroundViewColor() { return KColorScheme(QPalette::Active, KColorScheme::Window, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
-
     void save();
     void load();
     void defaults();

@@ -27,7 +27,6 @@ Rectangle {
     signal changed
     implicitWidth: col.implicitWidth
     implicitHeight: col.implicitHeight
-    color: engine.backgroundViewColor()
 
     Component {
         id: sectionHeading
