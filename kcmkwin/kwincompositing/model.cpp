@@ -609,8 +609,9 @@ void EffectView::init(ViewType type)
     }
     QString mainFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, path, QStandardPaths::LocateFile);
     setResizeMode(QQuickView::SizeRootObjectToView);
-    rootContext()->setContextProperty("engine", this);
     setSource(QUrl(mainFile));
+    rootObject()->setProperty("color",
+                              KColorScheme(QPalette::Active, KColorScheme::Window, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color());
     connect(rootObject(), SIGNAL(changed()), this, SIGNAL(changed()));
     setMinimumSize(initialSize());
     connect(rootObject(), SIGNAL(implicitWidthChanged()), this, SLOT(slotImplicitSizeChanged()));
