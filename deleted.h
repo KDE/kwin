@@ -33,7 +33,7 @@ namespace Decoration
 class Renderer;
 }
 
-class Deleted
+class KWIN_EXPORT Deleted
     : public Toplevel
 {
     Q_OBJECT
@@ -118,5 +118,7 @@ inline void Deleted::refWindow()
 }
 
 } // namespace
+
+Q_DECLARE_METATYPE(KWin::Deleted*)
 
 #endif
