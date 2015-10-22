@@ -698,7 +698,16 @@ protected:
     void updateCursor();
     void startDelayedMoveResize();
     void stopDelayedMoveResize();
-    virtual bool startMoveResize();
+    bool startMoveResize();
+    /**
+     * Called from @link startMoveResize.
+     *
+     * Implementing classes should return @c false if starting move resize should
+     * get aborted. In that case @link startMoveResize will also return @c false.
+     *
+     * Base implementation returns @c true.
+     **/
+    virtual bool doStartMoveResize();
     void finishMoveResize(bool cancel);
     /**
      * Leaves the move resize mode.

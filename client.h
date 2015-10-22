@@ -468,6 +468,7 @@ protected:
     void setGeometryRestore(const QRect &geo) override;
     void updateTabGroupStates(TabGroup::States states) override;
     void doMove(int x, int y) override;
+    bool doStartMoveResize() override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -543,7 +544,6 @@ private:
     int checkShadeGeometry(int w, int h);
     void getSyncCounter();
     void sendSyncRequest();
-    bool startMoveResize() override;
     void leaveMoveResize() override;
     void handleMoveResize(int x, int y, int x_root, int y_root);
     void handleMoveResize(const QPoint &local, const QPoint &global);

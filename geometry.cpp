@@ -2605,7 +2605,7 @@ void Client::positionGeometryTip()
     }
 }
 
-bool Client::startMoveResize()
+bool AbstractClient::startMoveResize()
 {
     assert(!isMoveResize());
     assert(QWidget::keyboardGrabber() == NULL);
@@ -2615,6 +2615,39 @@ bool Client::startMoveResize()
         return false; // popups have grab
     if (isFullScreen() && (screens()->count() < 2 || !isMovableAcrossScreens()))
         return false;
+    if (!doStartMoveResize()) {
+        return false;
+    }
+
+    setMoveResize(true);
+    workspace()->setClientIsMoving(this);
+
+    const Position mode = moveResizePointerMode();
+    if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
+        if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
+            setGeometryRestore(geometry()); // "restore" to current geometry
+            setMaximize(false, false);
+        }
+    }
+
+    if (quickTileMode() != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
+        // Exit quick tile mode when the user attempts to resize a tiled window
+        updateQuickTileMode(QuickTileNone); // Do so without restoring original geometry
+        setGeometryRestore(geometry());
+        emit quickTileModeChanged();
+    }
+
+    updateHaveResizeEffect();
+    updateInitialMoveResizeGeometry();
+    checkUnrestrictedMoveResize();
+    emit clientStartUserMovedResized(this);
+    if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
+        ScreenEdges::self()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
+    return true;
+}
+
+bool Client::doStartMoveResize()
+{
     bool has_grab = false;
     // This reportedly improves smoothness of the moveresize operation,
     // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
@@ -2638,31 +2671,6 @@ bool Client::startMoveResize()
         m_moveResizeGrabWindow.reset();
         return false;
     }
-
-    setMoveResize(true);
-    workspace()->setClientIsMoving(this);
-
-    const Position mode = moveResizePointerMode();
-    if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
-        if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
-            geom_restore = geometry(); // "restore" to current geometry
-            setMaximize(false, false);
-        }
-    }
-
-    if (quickTileMode() != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
-        // Exit quick tile mode when the user attempts to resize a tiled window
-        updateQuickTileMode(QuickTileNone); // Do so without restoring original geometry
-        geom_restore = geometry();
-        emit quickTileModeChanged();
-    }
-
-    updateHaveResizeEffect();
-    updateInitialMoveResizeGeometry();
-    checkUnrestrictedMoveResize();
-    emit clientStartUserMovedResized(this);
-    if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
-        ScreenEdges::self()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
     return true;
 }
 
