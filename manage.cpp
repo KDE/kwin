@@ -196,8 +196,10 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             for (ClientList::ConstIterator it = mainclients.constBegin();
                     it != mainclients.constEnd();
                     ++it) {
-                if (mainclients.count() > 1 && (*it)->isSpecialWindow())
-                    continue; // Don't consider toolbars etc when placing
+                if (mainclients.count() > 1 &&      // A group-transient
+                    (*it)->isSpecialWindow() &&     // Don't consider toolbars etc when placing
+                    !(info->state() & NET::Modal))  // except when it's modal (blocks specials as well)
+                    continue;
                 maincl = *it;
                 if ((*it)->isOnCurrentDesktop())
                     on_current = true;
@@ -213,11 +215,12 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
             if (maincl)
                 setOnActivities(maincl->activities());
+        } else { // a transient shall appear on its leader and not drag that around
+            if (info->desktop())
+                desk = info->desktop(); // Window had the initial desktop property, force it
+            if (desktop() == 0 && asn_valid && asn_data.desktop() != 0)
+                desk = asn_data.desktop();
         }
-        if (info->desktop())
-            desk = info->desktop(); // Window had the initial desktop property, force it
-        if (desktop() == 0 && asn_valid && asn_data.desktop() != 0)
-            desk = asn_data.desktop();
 #ifdef KWIN_BUILD_ACTIVITIES
         if (Activities::self() && !isMapped && !noborder && isNormalWindow() && !activitiesDefined) {
             //a new, regular window, when we're not recovering from a crash,
