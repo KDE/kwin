@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_client.h"
 #include "decorations/decorationpalette.h"
+#include "effects.h"
 #include "focuschain.h"
 #include "outline.h"
 #include "screens.h"
@@ -1114,6 +1115,13 @@ void AbstractClient::leaveMoveResize()
         outline()->hide();
         elevate(false);
     }
+}
+
+bool AbstractClient::s_haveResizeEffect = false;
+
+void AbstractClient::updateHaveResizeEffect()
+{
+    s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
 }
 
 }

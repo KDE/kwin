@@ -1250,7 +1250,7 @@ void Client::finishCompositing(ReleaseReason releaseReason)
         }
     }
     // for safety in case KWin is just resizing the window
-    s_haveResizeEffect = false;
+    resetHaveResizeEffect();
 }
 
 bool Client::shouldUnredirect() const

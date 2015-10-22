@@ -2657,7 +2657,7 @@ bool Client::startMoveResize()
         emit quickTileModeChanged();
     }
 
-    s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
+    updateHaveResizeEffect();
     updateInitialMoveResizeGeometry();
     checkUnrestrictedMoveResize();
     emit clientStartUserMovedResized(this);
@@ -3145,7 +3145,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     if (!update)
         return;
 
-    if (isResize() && !s_haveResizeEffect) {
+    if (isResize() && !haveResizeEffect()) {
         if (!syncRequest.timeout) {
             syncRequest.timeout = new QTimer(this);
             connect(syncRequest.timeout, SIGNAL(timeout()), SLOT(performMoveResize()));
@@ -3171,7 +3171,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 void Client::performMoveResize()
 {
     const QRect &moveResizeGeom = moveResizeGeometry();
-    if (isMove() || (isResize() && !s_haveResizeEffect)) {
+    if (isMove() || (isResize() && !haveResizeEffect())) {
         setGeometry(moveResizeGeom);
     }
     if (syncRequest.counter == XCB_NONE)   // client w/o XSYNC support. allow the next resize event

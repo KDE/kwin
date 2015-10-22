@@ -606,7 +606,6 @@ private:
     bool m_blockedActivityUpdatesRequireTransients;
     Xcb::Window m_moveResizeGrabWindow;
     bool move_resize_has_keyboard_grab;
-    static bool s_haveResizeEffect;
     bool m_managed;
 
     Xcb::GeometryHints m_geometryHints;

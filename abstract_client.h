@@ -705,6 +705,14 @@ protected:
      **/
     virtual void leaveMoveResize();
 
+    static bool haveResizeEffect() {
+        return s_haveResizeEffect;
+    }
+    static void updateHaveResizeEffect();
+    static void resetHaveResizeEffect() {
+        s_haveResizeEffect = false;
+    }
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -763,6 +771,9 @@ private:
         Qt::CursorShape cursor = Qt::ArrowCursor;
         int startScreen = 0;
     } m_moveResize;
+
+
+    static bool s_haveResizeEffect;
 };
 
 /**
