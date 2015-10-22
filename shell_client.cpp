@@ -611,8 +611,10 @@ void ShellClient::unmap()
     m_unmapped = true;
     ready_for_painting = false;
     destroyWindowManagementInterface();
-    addWorkspaceRepaint(visibleRect());
-    workspace()->clientHidden(this);
+    if (Workspace::self()) {
+        addWorkspaceRepaint(visibleRect());
+        workspace()->clientHidden(this);
+    }
     emit windowHidden(this);
 }
 
