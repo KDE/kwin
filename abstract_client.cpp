@@ -20,10 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "decorations/decorationpalette.h"
 #include "focuschain.h"
+#include "outline.h"
 #include "screens.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
+#include "screenedge.h"
 #include "tabgroup.h"
 #include "workspace.h"
 
@@ -1100,6 +1102,18 @@ void AbstractClient::updateCursor()
         return;
     m_moveResize.cursor = c;
     emit moveResizeCursorChanged(c);
+}
+
+void AbstractClient::leaveMoveResize()
+{
+    workspace()->setClientIsMoving(nullptr);
+    setMoveResize(false);
+    if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
+        ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
+    if (isElectricBorderMaximizing()) {
+        outline()->hide();
+        elevate(false);
+    }
 }
 
 }

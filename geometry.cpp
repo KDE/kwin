@@ -2730,18 +2730,11 @@ void Client::leaveMoveResize()
     move_resize_has_keyboard_grab = false;
     xcb_ungrab_pointer(connection(), xTime());
     m_moveResizeGrabWindow.reset();
-    workspace()->setClientIsMoving(0);
-    setMoveResize(false);
     if (syncRequest.counter == XCB_NONE) // don't forget to sanitize since the timeout will no more fire
         syncRequest.isPending = false;
     delete syncRequest.timeout;
     syncRequest.timeout = NULL;
-    if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
-        ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
-    if (isElectricBorderMaximizing()) {
-        outline()->hide();
-        elevate(false);
-    }
+    AbstractClient::leaveMoveResize();
 }
 
 // This function checks if it actually makes sense to perform a restricted move/resize.

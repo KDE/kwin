@@ -696,6 +696,13 @@ protected:
     * Sets an appropriate cursor shape for the logical mouse position.
     */
     void updateCursor();
+    /**
+     * Leaves the move resize mode.
+     *
+     * Inheriting classes must invoke the base implementation which
+     * ensures that the internal mode is properly ended.
+     **/
+    virtual void leaveMoveResize();
 
 private:
     void handlePaletteChange();
