@@ -339,17 +339,17 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
     connect(c, static_cast<void (Client::*)(KWin::AbstractClient*, MaximizeMode)>(&Client::clientMaximizedStateChanged),
             this, &EffectsHandlerImpl::slotClientMaximized);
     connect(c, &Client::clientStartUserMovedResized, this,
-        [this](Client *c) {
+        [this](AbstractClient *c) {
             emit windowStartUserMovedResized(c->effectWindow());
         }
     );
     connect(c, &Client::clientStepUserMovedResized, this,
-        [this](Client *c, const QRect &geometry) {
+        [this](AbstractClient *c, const QRect &geometry) {
             emit windowStepUserMovedResized(c->effectWindow(), geometry);
         }
     );
     connect(c, &Client::clientFinishUserMovedResized, this,
-        [this](Client *c) {
+        [this](AbstractClient *c) {
             emit windowFinishUserMovedResized(c->effectWindow());
         }
     );

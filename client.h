@@ -480,9 +480,6 @@ private Q_SLOTS:
 Q_SIGNALS:
     void clientManaging(KWin::Client*);
     void clientFullScreenSet(KWin::Client*, bool, bool);
-    void clientStartUserMovedResized(KWin::Client*);
-    void clientStepUserMovedResized(KWin::Client *, const QRect&);
-    void clientFinishUserMovedResized(KWin::Client*);
 
     /**
      * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to

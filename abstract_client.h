@@ -498,6 +498,9 @@ Q_SIGNALS:
     void quickTileModeChanged();
     void moveResizedChanged();
     void moveResizeCursorChanged(Qt::CursorShape);
+    void clientStartUserMovedResized(KWin::AbstractClient*);
+    void clientStepUserMovedResized(KWin::AbstractClient *, const QRect&);
+    void clientFinishUserMovedResized(KWin::AbstractClient*);
 
 protected:
     AbstractClient();
