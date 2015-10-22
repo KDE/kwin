@@ -543,12 +543,10 @@ private:
     int checkShadeGeometry(int w, int h);
     void getSyncCounter();
     void sendSyncRequest();
-    bool startMoveResize();
+    bool startMoveResize() override;
     void leaveMoveResize() override;
     void handleMoveResize(int x, int y, int x_root, int y_root);
     void handleMoveResize(const QPoint &local, const QPoint &global);
-    void startDelayedMoveResize();
-    void stopDelayedMoveResize();
     void positionGeometryTip();
     void grabButton(int mod);
     void ungrabButton(int mod);
@@ -651,7 +649,6 @@ private:
     QRect geom_restore;
     QRect geom_fs_restore;
     QTimer* shadeHoverTimer;
-    QTimer* delayedMoveResizeTimer;
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix, cap_deco;
     Group* in_group;

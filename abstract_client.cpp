@@ -1124,4 +1124,9 @@ void AbstractClient::updateHaveResizeEffect()
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
 }
 
+bool AbstractClient::startMoveResize()
+{
+    return false;
+}
+
 }

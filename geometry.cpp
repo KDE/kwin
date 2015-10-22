@@ -2786,12 +2786,12 @@ void AbstractClient::checkUnrestrictedMoveResize()
 // When the user pressed mouse on the titlebar, don't activate move immediatelly,
 // since it may be just a click. Activate instead after a delay. Move used to be
 // activated only after moving by several pixels, but that looks bad.
-void Client::startDelayedMoveResize()
+void AbstractClient::startDelayedMoveResize()
 {
-    Q_ASSERT(!delayedMoveResizeTimer);
-    delayedMoveResizeTimer = new QTimer(this);
-    delayedMoveResizeTimer->setSingleShot(true);
-    connect(delayedMoveResizeTimer, &QTimer::timeout, this,
+    Q_ASSERT(!m_moveResize.delayedTimer);
+    m_moveResize.delayedTimer = new QTimer(this);
+    m_moveResize.delayedTimer->setSingleShot(true);
+    connect(m_moveResize.delayedTimer, &QTimer::timeout, this,
         [this]() {
             assert(isMoveResizePointerButtonDown());
             if (!startMoveResize()) {
@@ -2801,13 +2801,13 @@ void Client::startDelayedMoveResize()
             stopDelayedMoveResize();
         }
     );
-    delayedMoveResizeTimer->start(QApplication::startDragTime());
+    m_moveResize.delayedTimer->start(QApplication::startDragTime());
 }
 
-void Client::stopDelayedMoveResize()
+void AbstractClient::stopDelayedMoveResize()
 {
-    delete delayedMoveResizeTimer;
-    delayedMoveResizeTimer = NULL;
+    delete m_moveResize.delayedTimer;
+    m_moveResize.delayedTimer = nullptr;
 }
 
 void Client::updateMoveResize(const QPointF &currentGlobalCursor)

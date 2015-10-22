@@ -696,6 +696,9 @@ protected:
     * Sets an appropriate cursor shape for the logical mouse position.
     */
     void updateCursor();
+    void startDelayedMoveResize();
+    void stopDelayedMoveResize();
+    virtual bool startMoveResize();
     void finishMoveResize(bool cancel);
     /**
      * Leaves the move resize mode.
@@ -770,6 +773,7 @@ private:
         bool buttonDown = false;
         Qt::CursorShape cursor = Qt::ArrowCursor;
         int startScreen = 0;
+        QTimer *delayedTimer = nullptr;
     } m_moveResize;
 
 
