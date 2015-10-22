@@ -70,6 +70,7 @@ WaylandServer::WaylandServer(QObject *parent)
 WaylandServer::~WaylandServer()
 {
     if (m_internalConnection.client) {
+        dispatch();
         m_internalConnection.client->deleteLater();
         m_internalConnection.clientThread->quit();
         m_internalConnection.clientThread->wait();
