@@ -26,3 +26,12 @@ add_executable(testQuickTiling ${testQuickTiling_SRCS})
 target_link_libraries( testQuickTiling kwin Qt5::Test)
 add_test(kwin-testQuickTiling testQuickTiling)
 ecm_mark_as_test(testQuickTiling)
+
+########################################################
+# Don't Crash For glxgears
+########################################################
+set( testDontCrashGlxgears_SRCS dont_crash_glxgears.cpp kwin_wayland_test.cpp )
+add_executable(testDontCrashGlxgears ${testDontCrashGlxgears_SRCS})
+target_link_libraries( testDontCrashGlxgears kwin Qt5::Test)
+add_test(kwin-testDontCrashGlxgears testDontCrashGlxgears)
+ecm_mark_as_test(testDontCrashGlxgears)
