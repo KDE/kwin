@@ -2666,7 +2666,7 @@ bool Client::startMoveResize()
     return true;
 }
 
-void Client::finishMoveResize(bool cancel)
+void AbstractClient::finishMoveResize(bool cancel)
 {
     const bool wasResize = isResize(); // store across leaveMoveResize
     leaveMoveResize();
@@ -2697,6 +2697,7 @@ void Client::finishMoveResize(bool cancel)
         setQuickTileMode(electricBorderMode());
         setElectricBorderMaximizing(false);
     } else if (!cancel) {
+        QRect geom_restore = geometryRestore();
         if (!(maximizeMode() & MaximizeHorizontal)) {
             geom_restore.setX(geometry().x());
             geom_restore.setWidth(geometry().width());
@@ -2705,6 +2706,7 @@ void Client::finishMoveResize(bool cancel)
             geom_restore.setY(geometry().y());
             geom_restore.setHeight(geometry().height());
         }
+        setGeometryRestore(geom_restore);
     }
 // FRAME    update();
 

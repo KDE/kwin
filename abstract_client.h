@@ -696,6 +696,7 @@ protected:
     * Sets an appropriate cursor shape for the logical mouse position.
     */
     void updateCursor();
+    void finishMoveResize(bool cancel);
     /**
      * Leaves the move resize mode.
      *

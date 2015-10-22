@@ -544,7 +544,6 @@ private:
     void getSyncCounter();
     void sendSyncRequest();
     bool startMoveResize();
-    void finishMoveResize(bool cancel);
     void leaveMoveResize() override;
     void handleMoveResize(int x, int y, int x_root, int y_root);
     void handleMoveResize(const QPoint &local, const QPoint &global);
