@@ -547,7 +547,7 @@ private:
     void leaveMoveResize() override;
     void handleMoveResize(int x, int y, int x_root, int y_root);
     void handleMoveResize(const QPoint &local, const QPoint &global);
-    void positionGeometryTip();
+    void positionGeometryTip() override;
     void grabButton(int mod);
     void ungrabButton(int mod);
     void resizeDecoration();

@@ -716,6 +716,7 @@ protected:
      * ensures that the internal mode is properly ended.
      **/
     virtual void leaveMoveResize();
+    virtual void positionGeometryTip();
 
     static bool haveResizeEffect() {
         return s_haveResizeEffect;

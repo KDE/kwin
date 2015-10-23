@@ -1129,4 +1129,8 @@ bool AbstractClient::doStartMoveResize()
     return true;
 }
 
+void AbstractClient::positionGeometryTip()
+{
+}
+
 }
