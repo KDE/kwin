@@ -445,7 +445,6 @@ private:
     bool buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time = XCB_CURRENT_TIME);
     bool buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
     bool motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root);
-    void checkQuickTilingMaximizationZones(int xroot, int yroot);
 
     bool processDecorationButtonPress(int button, int state, int x, int y, int x_root, int y_root,
                                       bool ignoreMenu = false);
@@ -672,8 +671,6 @@ private:
     QKeySequence _shortcut;
     int sm_stacking_order;
     friend struct ResetupRulesProcedure;
-
-    QTimer* m_electricMaximizingDelay;
 
     friend bool performTransiencyCheck();
 

@@ -725,6 +725,11 @@ protected:
      * Default implementation does nothing.
      **/
     virtual void doPerformMoveResize();
+    /*
+     * Checks if the mouse cursor is near the edge of the screen and if so
+     * activates quick tiling or maximization
+     */
+    void checkQuickTilingMaximizationZones(int xroot, int yroot);
 
     static bool haveResizeEffect() {
         return s_haveResizeEffect;
@@ -772,6 +777,7 @@ private:
     /** The quick tile mode of this window.
      */
     int m_quickTileMode = QuickTileNone;
+    QTimer *m_electricMaximizingDelay = nullptr;
 
     // geometry
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
