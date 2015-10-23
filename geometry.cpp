@@ -2818,11 +2818,6 @@ void AbstractClient::stopDelayedMoveResize()
     m_moveResize.delayedTimer = nullptr;
 }
 
-void Client::updateMoveResize(const QPointF &currentGlobalCursor)
-{
-    handleMoveResize(pos(), currentGlobalCursor.toPoint());
-}
-
 void AbstractClient::handleMoveResize(const QPoint &local, const QPoint &global)
 {
     const QRect oldGeo = geometry();

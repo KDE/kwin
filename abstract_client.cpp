@@ -612,7 +612,7 @@ QSize AbstractClient::minSize() const
 
 void AbstractClient::updateMoveResize(const QPointF &currentGlobalCursor)
 {
-    Q_UNUSED(currentGlobalCursor)
+    handleMoveResize(pos(), currentGlobalCursor.toPoint());
 }
 
 bool AbstractClient::hasStrut() const

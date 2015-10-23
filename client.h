@@ -413,8 +413,6 @@ public:
      **/
     void showOnScreenEdge();
 
-    void updateMoveResize(const QPointF &currentGlobalCursor) override;
-
 public Q_SLOTS:
     void closeWindow() override;
     void updateCaption();
