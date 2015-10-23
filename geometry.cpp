@@ -2823,7 +2823,7 @@ void Client::updateMoveResize(const QPointF &currentGlobalCursor)
     handleMoveResize(pos(), currentGlobalCursor.toPoint());
 }
 
-void Client::handleMoveResize(const QPoint &local, const QPoint &global)
+void AbstractClient::handleMoveResize(const QPoint &local, const QPoint &global)
 {
     const QRect oldGeo = geometry();
     handleMoveResize(local.x(), local.y(), global.x(), global.y());
@@ -2831,6 +2831,7 @@ void Client::handleMoveResize(const QPoint &local, const QPoint &global)
         if (quickTileMode() != QuickTileNone && oldGeo != geometry()) {
             GeometryUpdatesBlocker blocker(this);
             setQuickTileMode(QuickTileNone);
+            const QRect &geom_restore = geometryRestore();
             setMoveOffset(QPoint(double(moveOffset().x()) / double(oldGeo.width()) * double(geom_restore.width()),
                                  double(moveOffset().y()) / double(oldGeo.height()) * double(geom_restore.height())));
             if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore)
@@ -2842,9 +2843,14 @@ void Client::handleMoveResize(const QPoint &local, const QPoint &global)
     }
 }
 
-void Client::handleMoveResize(int x, int y, int x_root, int y_root)
+bool Client::isWaitingForMoveResizeSync() const
 {
-    if (syncRequest.isPending && isResize())
+    return syncRequest.isPending && isResize();
+}
+
+void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
+{
+    if (isWaitingForMoveResizeSync())
         return; // we're still waiting for the client or the timeout
 
     const Position mode = moveResizePointerMode();
@@ -2866,7 +2872,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     }
 
     // ShadeHover or ShadeActive, ShadeNormal was already avoided above
-    if (mode != PositionCenter && shade_mode != ShadeNone)
+    if (mode != PositionCenter && shadeMode() != ShadeNone)
         setShade(ShadeNone);
 
     QPoint globalPos(x_root, y_root);
@@ -3154,26 +3160,31 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         return;
 
     if (isResize() && !haveResizeEffect()) {
-        if (!syncRequest.timeout) {
-            syncRequest.timeout = new QTimer(this);
-            connect(syncRequest.timeout, &QTimer::timeout, this, &Client::performMoveResize);
-            syncRequest.timeout->setSingleShot(true);
-        }
-        if (syncRequest.counter != XCB_NONE) {
-            syncRequest.timeout->start(250);
-            sendSyncRequest();
-        } else {                            // for clients not supporting the XSYNC protocol, we
-            syncRequest.isPending = true;   // limit the resizes to 30Hz to take pointless load from X11
-            syncRequest.timeout->start(33); // and the client, the mouse is still moved at full speed
-        }                                   // and no human can control faster resizes anyway
-        const QRect &moveResizeGeom = moveResizeGeometry();
-        m_client.setGeometry(0, 0, moveResizeGeom.width() - (borderLeft() + borderRight()), moveResizeGeom.height() - (borderTop() + borderBottom()));
+        doResizeSync();
     } else
         performMoveResize();
 
     if (isMove()) {
         ScreenEdges::self()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime()));
     }
+}
+
+void Client::doResizeSync()
+{
+    if (!syncRequest.timeout) {
+        syncRequest.timeout = new QTimer(this);
+        connect(syncRequest.timeout, &QTimer::timeout, this, &Client::performMoveResize);
+        syncRequest.timeout->setSingleShot(true);
+    }
+    if (syncRequest.counter != XCB_NONE) {
+        syncRequest.timeout->start(250);
+        sendSyncRequest();
+    } else {                            // for clients not supporting the XSYNC protocol, we
+        syncRequest.isPending = true;   // limit the resizes to 30Hz to take pointless load from X11
+        syncRequest.timeout->start(33); // and the client, the mouse is still moved at full speed
+    }                                   // and no human can control faster resizes anyway
+    const QRect &moveResizeGeom = moveResizeGeometry();
+    m_client.setGeometry(0, 0, moveResizeGeom.width() - (borderLeft() + borderRight()), moveResizeGeom.height() - (borderTop() + borderBottom()));
 }
 
 void AbstractClient::performMoveResize()

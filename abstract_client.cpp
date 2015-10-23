@@ -1137,6 +1137,15 @@ void AbstractClient::doPerformMoveResize()
 {
 }
 
+bool AbstractClient::isWaitingForMoveResizeSync() const
+{
+    return false;
+}
+
+void AbstractClient::doResizeSync()
+{
+}
+
 void AbstractClient::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
     QuickTileMode mode = QuickTileNone;

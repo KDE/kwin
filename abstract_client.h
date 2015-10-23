@@ -730,6 +730,20 @@ protected:
      * activates quick tiling or maximization
      */
     void checkQuickTilingMaximizationZones(int xroot, int yroot);
+    /**
+     * Whether a sync request is still pending.
+     * Default implementation returns @c false.
+     **/
+    virtual bool isWaitingForMoveResizeSync() const;
+    /**
+     * Called during handling a resize. Implementing subclasses can use this
+     * method to perform windowing system specific syncing.
+     *
+     * Default implementation does nothing.
+     **/
+    virtual void doResizeSync();
+    void handleMoveResize(int x, int y, int x_root, int y_root);
+    void handleMoveResize(const QPoint &local, const QPoint &global);
 
     static bool haveResizeEffect() {
         return s_haveResizeEffect;

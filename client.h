@@ -469,6 +469,8 @@ protected:
     void doMove(int x, int y) override;
     bool doStartMoveResize() override;
     void doPerformMoveResize() override;
+    bool isWaitingForMoveResizeSync() const override;
+    void doResizeSync() override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -544,8 +546,6 @@ private:
     void getSyncCounter();
     void sendSyncRequest();
     void leaveMoveResize() override;
-    void handleMoveResize(int x, int y, int x_root, int y_root);
-    void handleMoveResize(const QPoint &local, const QPoint &global);
     void positionGeometryTip() override;
     void grabButton(int mod);
     void ungrabButton(int mod);
