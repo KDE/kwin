@@ -3156,7 +3156,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     if (isResize() && !haveResizeEffect()) {
         if (!syncRequest.timeout) {
             syncRequest.timeout = new QTimer(this);
-            connect(syncRequest.timeout, SIGNAL(timeout()), SLOT(performMoveResize()));
+            connect(syncRequest.timeout, &QTimer::timeout, this, &Client::performMoveResize);
             syncRequest.timeout->setSingleShot(true);
         }
         if (syncRequest.counter != XCB_NONE) {
@@ -3176,19 +3176,24 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     }
 }
 
-void Client::performMoveResize()
+void AbstractClient::performMoveResize()
 {
     const QRect &moveResizeGeom = moveResizeGeometry();
     if (isMove() || (isResize() && !haveResizeEffect())) {
         setGeometry(moveResizeGeom);
     }
-    if (syncRequest.counter == XCB_NONE)   // client w/o XSYNC support. allow the next resize event
-        syncRequest.isPending = false; // NEVER do this for clients with a valid counter
-                                       // (leads to sync request races in some clients)
+    doPerformMoveResize();
     if (isResize())
         addRepaintFull();
     positionGeometryTip();
     emit clientStepUserMovedResized(this, moveResizeGeom);
+}
+
+void Client::doPerformMoveResize()
+{
+    if (syncRequest.counter == XCB_NONE)   // client w/o XSYNC support. allow the next resize event
+        syncRequest.isPending = false; // NEVER do this for clients with a valid counter
+                                       // (leads to sync request races in some clients)
 }
 
 void AbstractClient::setElectricBorderMode(QuickTileMode mode)

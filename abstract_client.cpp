@@ -1133,4 +1133,8 @@ void AbstractClient::positionGeometryTip()
 {
 }
 
+void AbstractClient::doPerformMoveResize()
+{
+}
+
 }

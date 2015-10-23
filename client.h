@@ -469,10 +469,10 @@ protected:
     void updateTabGroupStates(TabGroup::States states) override;
     void doMove(int x, int y) override;
     bool doStartMoveResize() override;
+    void doPerformMoveResize() override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
-    void performMoveResize();
 
     //Signals for the scripting interface
     //Signals make an excellent way for communication

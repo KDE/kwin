@@ -717,6 +717,14 @@ protected:
      **/
     virtual void leaveMoveResize();
     virtual void positionGeometryTip();
+    void performMoveResize();
+    /**
+     * Called from performMoveResize() after actually performing the change of geometry.
+     * Implementing subclasses can perform windowing system specific handling here.
+     *
+     * Default implementation does nothing.
+     **/
+    virtual void doPerformMoveResize();
 
     static bool haveResizeEffect() {
         return s_haveResizeEffect;
