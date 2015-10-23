@@ -1208,58 +1208,6 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         setShade(ShadeNone);
         cancelShadeHoverTimer();
         break;
-    case Options::MouseActivateRaiseAndMove:
-    case Options::MouseActivateRaiseAndUnrestrictedMove:
-        workspace()->raiseClient(this);
-        workspace()->requestFocus(this);
-        screens()->setCurrent(globalPos);
-        // fallthrough
-    case Options::MouseMove:
-    case Options::MouseUnrestrictedMove: {
-        if (!isMovableAcrossScreens())
-            break;
-        if (isMoveResize())
-            finishMoveResize(false);
-        setMoveResizePointerMode(PositionCenter);
-        setMoveResizePointerButtonDown(true);
-        setMoveOffset(QPoint(globalPos.x() - x(), globalPos.y() - y()));  // map from global
-        setInvertedMoveOffset(rect().bottomRight() - moveOffset());
-        setUnrestrictedMoveResize((command == Options::MouseActivateRaiseAndUnrestrictedMove
-                                  || command == Options::MouseUnrestrictedMove));
-        if (!startMoveResize())
-            setMoveResizePointerButtonDown(false);
-        updateCursor();
-        break;
-    }
-    case Options::MouseResize:
-    case Options::MouseUnrestrictedResize: {
-        if (!isResizable() || isShade())
-            break;
-        if (isMoveResize())
-            finishMoveResize(false);
-        setMoveResizePointerButtonDown(true);
-        const QPoint moveOffset = QPoint(globalPos.x() - x(), globalPos.y() - y());  // map from global
-        setMoveOffset(moveOffset);
-        int x = moveOffset.x(), y = moveOffset.y();
-        bool left = x < width() / 3;
-        bool right = x >= 2 * width() / 3;
-        bool top = y < height() / 3;
-        bool bot = y >= 2 * height() / 3;
-        Position mode;
-        if (top)
-            mode = left ? PositionTopLeft : (right ? PositionTopRight : PositionTop);
-        else if (bot)
-            mode = left ? PositionBottomLeft : (right ? PositionBottomRight : PositionBottom);
-        else
-            mode = (x < width() / 2) ? PositionLeft : PositionRight;
-        setMoveResizePointerMode(mode);
-        setInvertedMoveOffset(rect().bottomRight() - moveOffset);
-        setUnrestrictedMoveResize((command == Options::MouseUnrestrictedResize));
-        if (!startMoveResize())
-            setMoveResizePointerButtonDown(false);
-        updateCursor();
-        break;
-    }
     default:
         return AbstractClient::performMouseCommand(command, globalPos);
     }
