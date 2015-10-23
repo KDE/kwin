@@ -292,7 +292,8 @@ public:
 
     QString caption(bool full = true, bool stripped = false) const override;
 
-    void keyPressEvent(uint key_code, xcb_timestamp_t time = XCB_TIME_CURRENT_TIME);   // FRAME ??
+    using AbstractClient::keyPressEvent;
+    void keyPressEvent(uint key_code, xcb_timestamp_t time);   // FRAME ??
     void updateMouseGrab() override;
     xcb_window_t moveResizeGrabWindow() const;
 

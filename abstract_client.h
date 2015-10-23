@@ -364,6 +364,7 @@ public:
     virtual void growVertical();
     virtual void shrinkVertical();
     void updateMoveResize(const QPointF &currentGlobalCursor);
+    void keyPressEvent(uint key_code);
 
     /**
      * These values represent positions inside an area

@@ -1461,42 +1461,7 @@ void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
 void Client::keyPressEvent(uint key_code, xcb_timestamp_t time)
 {
     updateUserTime(time);
-    if (!isMove() && !isResize())
-        return;
-    bool is_control = key_code & Qt::CTRL;
-    bool is_alt = key_code & Qt::ALT;
-    key_code = key_code & ~Qt::KeyboardModifierMask;
-    int delta = is_control ? 1 : is_alt ? 32 : 8;
-    QPoint pos = Cursor::pos();
-    switch(key_code) {
-    case Qt::Key_Left:
-        pos.rx() -= delta;
-        break;
-    case Qt::Key_Right:
-        pos.rx() += delta;
-        break;
-    case Qt::Key_Up:
-        pos.ry() -= delta;
-        break;
-    case Qt::Key_Down:
-        pos.ry() += delta;
-        break;
-    case Qt::Key_Space:
-    case Qt::Key_Return:
-    case Qt::Key_Enter:
-        finishMoveResize(false);
-        setMoveResizePointerButtonDown(false);
-        updateCursor();
-        break;
-    case Qt::Key_Escape:
-        finishMoveResize(true);
-        setMoveResizePointerButtonDown(false);
-        updateCursor();
-        break;
-    default:
-        return;
-    }
-    Cursor::setPos(pos);
+    AbstractClient::keyPressEvent(key_code);
 }
 
 void Client::syncEvent(xcb_sync_alarm_notify_event_t* e)
