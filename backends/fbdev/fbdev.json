@@ -2,6 +2,7 @@
     "KPlugin": {
         "Description": "Render to framebuffer.", 
         "Description[ca]": "Renderitza al «framebuffer».", 
+        "Description[de]": "In Framebuffer rendern.", 
         "Description[en_GB]": "Render to framebuffer.", 
         "Description[es]": "Renderizar en el «framebuffer».", 
         "Description[ko]": "프레임버퍼에 렌더링합니다.", 
@@ -23,6 +24,7 @@
         "Name": "framebuffer", 
         "Name[ca]": "Framebuffer", 
         "Name[cs]": "framebuffer", 
+        "Name[de]": "Framebuffer", 
         "Name[en_GB]": "framebuffer", 
         "Name[es]": "framebuffer", 
         "Name[ko]": "framebuffer", 
