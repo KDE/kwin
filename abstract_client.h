@@ -359,10 +359,10 @@ public:
     virtual xcb_timestamp_t userTime() const;
     virtual void updateWindowRules(Rules::Types selection) = 0;
 
-    virtual void growHorizontal();
-    virtual void shrinkHorizontal();
-    virtual void growVertical();
-    virtual void shrinkVertical();
+    void growHorizontal();
+    void shrinkHorizontal();
+    void growVertical();
+    void shrinkVertical();
     void updateMoveResize(const QPointF &currentGlobalCursor);
     void keyPressEvent(uint key_code);
 
@@ -745,6 +745,8 @@ protected:
     virtual void doResizeSync();
     void handleMoveResize(int x, int y, int x_root, int y_root);
     void handleMoveResize(const QPoint &local, const QPoint &global);
+
+    virtual QSize resizeIncrements() const;
 
     static bool haveResizeEffect() {
         return s_haveResizeEffect;

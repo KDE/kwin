@@ -2250,6 +2250,11 @@ void Client::updateTabGroupStates(TabGroup::States states)
     }
 }
 
+QSize Client::resizeIncrements() const
+{
+    return m_geometryHints.resizeIncrements();
+}
+
 } // namespace
 
 #include "client.moc"

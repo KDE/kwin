@@ -263,11 +263,6 @@ public:
     void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     QSize sizeForClientSize(const QSize&, Sizemode mode = SizemodeAny, bool noframe = false) const override;
 
-    void growHorizontal() override;
-    void shrinkHorizontal() override;
-    void growVertical() override;
-    void shrinkVertical() override;
-
     bool providesContextHelp() const;
     const QKeySequence &shortcut() const override;
     void setShortcut(const QString& cut) override;
@@ -468,6 +463,7 @@ protected:
     void doPerformMoveResize() override;
     bool isWaitingForMoveResizeSync() const override;
     void doResizeSync() override;
+    QSize resizeIncrements() const override;
 
 private Q_SLOTS:
     void delayedSetShortcut();

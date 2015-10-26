@@ -721,15 +721,15 @@ void Workspace::slotWindowGrowHorizontal()
         active_client->growHorizontal();
 }
 
-void Client::growHorizontal()
+void AbstractClient::growHorizontal()
 {
     if (!isResizable() || isShade())
         return;
     QRect geom = geometry();
     geom.setRight(workspace()->packPositionRight(this, geom.right(), true));
     QSize adjsize = adjustedSize(geom.size(), SizemodeFixedW);
-    if (geometry().size() == adjsize && geom.size() != adjsize && m_geometryHints.resizeIncrements().width() > 1) { // take care of size increments
-        int newright = workspace()->packPositionRight(this, geom.right() + m_geometryHints.resizeIncrements().width() - 1, true);
+    if (geometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().width() > 1) { // take care of size increments
+        int newright = workspace()->packPositionRight(this, geom.right() + resizeIncrements().width() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
         // TODO this may be wrong?
         if (workspace()->clientArea(MovementArea,
@@ -748,7 +748,7 @@ void Workspace::slotWindowShrinkHorizontal()
         active_client->shrinkHorizontal();
 }
 
-void Client::shrinkHorizontal()
+void AbstractClient::shrinkHorizontal()
 {
     if (!isResizable() || isShade())
         return;
@@ -769,15 +769,15 @@ void Workspace::slotWindowGrowVertical()
         active_client->growVertical();
 }
 
-void Client::growVertical()
+void AbstractClient::growVertical()
 {
     if (!isResizable() || isShade())
         return;
     QRect geom = geometry();
     geom.setBottom(workspace()->packPositionDown(this, geom.bottom(), true));
     QSize adjsize = adjustedSize(geom.size(), SizemodeFixedH);
-    if (geometry().size() == adjsize && geom.size() != adjsize && m_geometryHints.resizeIncrements().height() > 1) { // take care of size increments
-        int newbottom = workspace()->packPositionDown(this, geom.bottom() + m_geometryHints.resizeIncrements().height() - 1, true);
+    if (geometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().height() > 1) { // take care of size increments
+        int newbottom = workspace()->packPositionDown(this, geom.bottom() + resizeIncrements().height() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
         if (workspace()->clientArea(MovementArea,
                                    QPoint(geometry().center().x(), (y() + newbottom) / 2), desktop()).bottom() >= newbottom)
@@ -795,7 +795,7 @@ void Workspace::slotWindowShrinkVertical()
         active_client->shrinkVertical();
 }
 
-void Client::shrinkVertical()
+void AbstractClient::shrinkVertical()
 {
     if (!isResizable() || isShade())
         return;

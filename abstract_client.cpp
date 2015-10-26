@@ -93,22 +93,6 @@ bool AbstractClient::isCurrentTab() const
     return true;
 }
 
-void AbstractClient::growHorizontal()
-{
-}
-
-void AbstractClient::growVertical()
-{
-}
-
-void AbstractClient::shrinkHorizontal()
-{
-}
-
-void AbstractClient::shrinkVertical()
-{
-}
-
 xcb_timestamp_t AbstractClient::userTime() const
 {
     return XCB_TIME_CURRENT_TIME;
@@ -1300,6 +1284,11 @@ void AbstractClient::keyPressEvent(uint key_code)
         return;
     }
     Cursor::setPos(pos);
+}
+
+QSize AbstractClient::resizeIncrements() const
+{
+    return QSize(1, 1);
 }
 
 }
