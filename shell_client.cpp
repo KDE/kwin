@@ -283,7 +283,6 @@ void ShellClient::doSetGeometry(const QRect &rect)
     if (!m_unmapped) {
         addWorkspaceRepaint(visibleRect());
     }
-    emit geometryChanged();
     emit geometryShapeChanged(this, old);
 }
 
