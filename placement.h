@@ -37,7 +37,7 @@ namespace KWin
 class AbstractClient;
 class Client;
 
-class Placement
+class KWIN_EXPORT Placement
 {
 public:
     virtual ~Placement();

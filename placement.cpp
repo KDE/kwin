@@ -671,7 +671,7 @@ const char* Placement::policyToString(Policy policy)
 // Workspace
 // ********************
 
-void Client::packTo(int left, int top)
+void AbstractClient::packTo(int left, int top)
 {
     workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
 
