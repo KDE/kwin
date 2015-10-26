@@ -333,28 +333,28 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
     loaded_effects.clear();
 }
 
-void EffectsHandlerImpl::setupClientConnections(Client* c)
+void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)
 {
-    connect(c, &Client::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
-    connect(c, static_cast<void (Client::*)(KWin::AbstractClient*, MaximizeMode)>(&Client::clientMaximizedStateChanged),
+    connect(c, &AbstractClient::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
+    connect(c, static_cast<void (AbstractClient::*)(KWin::AbstractClient*, MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged),
             this, &EffectsHandlerImpl::slotClientMaximized);
-    connect(c, &Client::clientStartUserMovedResized, this,
+    connect(c, &AbstractClient::clientStartUserMovedResized, this,
         [this](AbstractClient *c) {
             emit windowStartUserMovedResized(c->effectWindow());
         }
     );
-    connect(c, &Client::clientStepUserMovedResized, this,
+    connect(c, &AbstractClient::clientStepUserMovedResized, this,
         [this](AbstractClient *c, const QRect &geometry) {
             emit windowStepUserMovedResized(c->effectWindow(), geometry);
         }
     );
-    connect(c, &Client::clientFinishUserMovedResized, this,
+    connect(c, &AbstractClient::clientFinishUserMovedResized, this,
         [this](AbstractClient *c) {
             emit windowFinishUserMovedResized(c->effectWindow());
         }
     );
-    connect(c, &Client::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
-    connect(c, &Client::clientMinimized, this,
+    connect(c, &AbstractClient::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
+    connect(c, &AbstractClient::clientMinimized, this,
         [this](AbstractClient *c, bool animate) {
             // TODO: notify effects even if it should not animate?
             if (animate) {
@@ -362,7 +362,7 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
             }
         }
     );
-    connect(c, &Client::clientUnminimized, this,
+    connect(c, &AbstractClient::clientUnminimized, this,
         [this](AbstractClient* c, bool animate) {
             // TODO: notify effects even if it should not animate?
             if (animate) {
@@ -370,10 +370,15 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
             }
         }
     );
-    connect(c, &Client::modalChanged,         this, &EffectsHandlerImpl::slotClientModalityChanged);
-    connect(c, &Client::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
+    connect(c, &AbstractClient::modalChanged,         this, &EffectsHandlerImpl::slotClientModalityChanged);
+    connect(c, &AbstractClient::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
+    connect(c, &AbstractClient::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
+}
+
+void EffectsHandlerImpl::setupClientConnections(Client* c)
+{
+    setupAbstractClientConnections(c);
     connect(c, &Client::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
-    connect(c, &Client::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
     connect(c, &Client::propertyNotify,       this, &EffectsHandlerImpl::slotPropertyNotify);
 }
 
@@ -582,10 +587,7 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 void EffectsHandlerImpl::slotShellClientShown(Toplevel *t)
 {
     ShellClient *c = static_cast<ShellClient*>(t);
-    connect(c, &ShellClient::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
-    connect(c, &ShellClient::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
-    connect(c, static_cast<void (ShellClient::*)(KWin::AbstractClient*, MaximizeMode)>(&Client::clientMaximizedStateChanged),
-            this, &EffectsHandlerImpl::slotClientMaximized);
+    setupAbstractClientConnections(c);
     emit windowAdded(t->effectWindow());
 }
 

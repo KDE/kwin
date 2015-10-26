@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_backend.h"
 #include "abstract_client.h"
 #include "cursor.h"
+#include "effects.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -182,6 +183,14 @@ void MoveResizeWindowTest::testMove()
     QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
+    // effects signal handlers
+    QSignalSpy windowStartUserMovedResizedSpy(effects, &EffectsHandler::windowStartUserMovedResized);
+    QVERIFY(windowStartUserMovedResizedSpy.isValid());
+    QSignalSpy windowStepUserMovedResizedSpy(effects, &EffectsHandler::windowStepUserMovedResized);
+    QVERIFY(windowStepUserMovedResizedSpy.isValid());
+    QSignalSpy windowFinishUserMovedResizedSpy(effects, &EffectsHandler::windowFinishUserMovedResized);
+    QVERIFY(windowFinishUserMovedResizedSpy.isValid());
+
     // begin move
     QVERIFY(workspace()->getMovingClient() == nullptr);
     QCOMPARE(c->isMove(), false);
@@ -189,6 +198,7 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(workspace()->getMovingClient(), c);
     QCOMPARE(startMoveResizedSpy.count(), 1);
     QCOMPARE(moveResizedChangedSpy.count(), 1);
+    QCOMPARE(windowStartUserMovedResizedSpy.count(), 1);
     QCOMPARE(c->isMove(), true);
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 
@@ -205,6 +215,8 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(Cursor::pos(), cursorPos + QPoint(16, 0));
     QEXPECT_FAIL("", "First event is ignored", Continue);
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+    QEXPECT_FAIL("", "First event is ignored", Continue);
+    QCOMPARE(windowStepUserMovedResizedSpy.count(), 2);
 
     c->keyPressEvent(Qt::Key_Down | Qt::ALT);
     c->updateMoveResize(Cursor::pos());
@@ -218,6 +230,7 @@ void MoveResizeWindowTest::testMove()
     c->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(moveResizedChangedSpy.count(), 2);
+    QCOMPARE(windowFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(c->geometry(), QRect(16, 32, 100, 50));
     QCOMPARE(c->isMove(), false);
     QVERIFY(workspace()->getMovingClient() == nullptr);
