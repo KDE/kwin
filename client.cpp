@@ -155,14 +155,6 @@ Client::Client()
     client_size = QSize(100, 100);
     ready_for_painting = false; // wait for first damage or sync reply
 
-    connect(this, &Client::geometryShapeChanged, this, &Client::geometryChanged);
-    auto signalMaximizeChanged = static_cast<void (Client::*)(KWin::AbstractClient*, MaximizeMode)>(&Client::clientMaximizedStateChanged);
-    connect(this, signalMaximizeChanged, this, &Client::geometryChanged);
-    connect(this, &Client::clientStepUserMovedResized,   this, &Client::geometryChanged);
-    connect(this, &Client::clientStartUserMovedResized,  this, &Client::moveResizedChanged);
-    connect(this, &Client::clientFinishUserMovedResized, this, &Client::moveResizedChanged);
-    connect(this, &Client::clientStartUserMovedResized,  this, &Client::removeCheckScreenConnection);
-    connect(this, &Client::clientFinishUserMovedResized, this, &Client::setupCheckScreenConnection);
     connect(this, &Client::paletteChanged, this, &Client::triggerDecorationRepaint);
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &Client::updateCaption);

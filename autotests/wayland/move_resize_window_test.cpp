@@ -188,7 +188,6 @@ void MoveResizeWindowTest::testMove()
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->getMovingClient(), c);
     QCOMPARE(startMoveResizedSpy.count(), 1);
-    QEXPECT_FAIL("", "Connect is in Client", Continue);
     QCOMPARE(moveResizedChangedSpy.count(), 1);
     QCOMPARE(c->isMove(), true);
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
@@ -218,6 +217,7 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
     c->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(moveResizedChangedSpy.count(), 2);
     QCOMPARE(c->geometry(), QRect(16, 32, 100, 50));
     QCOMPARE(c->isMove(), false);
     QVERIFY(workspace()->getMovingClient() == nullptr);
