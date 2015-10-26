@@ -54,6 +54,8 @@ private Q_SLOTS:
     void testMove();
     void testPackTo_data();
     void testPackTo();
+    void testPackAgainstClient_data();
+    void testPackAgainstClient();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -277,6 +279,91 @@ void MoveResizeWindowTest::testPackTo()
     QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
 
+    // let's place it centered
+    Placement::self()->placeCentered(c, QRect(0, 0, 1280, 1024));
+    QCOMPARE(c->geometry(), QRect(590, 487, 100, 50));
+
+    QFETCH(QString, methodCall);
+    QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
+    QTEST(c->geometry(), "expectedGeometry");
+}
+
+void MoveResizeWindowTest::testPackAgainstClient_data()
+{
+    QTest::addColumn<QString>("methodCall");
+    QTest::addColumn<QRect>("expectedGeometry");
+
+    QTest::newRow("left")  << QStringLiteral("slotWindowPackLeft")  << QRect(10, 487, 100, 50);
+    QTest::newRow("up")    << QStringLiteral("slotWindowPackUp")    << QRect(590, 10, 100, 50);
+    QTest::newRow("right") << QStringLiteral("slotWindowPackRight") << QRect(1170, 487, 100, 50);
+    QTest::newRow("down")  << QStringLiteral("slotWindowPackDown")  << QRect(590, 964, 100, 50);
+}
+
+void MoveResizeWindowTest::testPackAgainstClient()
+{
+    using namespace KWayland::Client;
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QScopedPointer<Surface> surface1(m_compositor->createSurface());
+    QVERIFY(!surface1.isNull());
+    QScopedPointer<Surface> surface2(m_compositor->createSurface());
+    QVERIFY(!surface2.isNull());
+    QScopedPointer<Surface> surface3(m_compositor->createSurface());
+    QVERIFY(!surface3.isNull());
+    QScopedPointer<Surface> surface4(m_compositor->createSurface());
+    QVERIFY(!surface4.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface1(m_shell->createSurface(surface1.data()));
+    QVERIFY(!shellSurface1.isNull());
+    QScopedPointer<ShellSurface> shellSurface2(m_shell->createSurface(surface2.data()));
+    QVERIFY(!shellSurface2.isNull());
+    QScopedPointer<ShellSurface> shellSurface3(m_shell->createSurface(surface3.data()));
+    QVERIFY(!shellSurface3.isNull());
+    QScopedPointer<ShellSurface> shellSurface4(m_shell->createSurface(surface4.data()));
+    QVERIFY(!shellSurface4.isNull());
+    auto renderWindow = [this, &clientAddedSpy] (Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
+        // let's render
+        QImage img(QSize(10, 10), QImage::Format_ARGB32);
+        img.fill(Qt::blue);
+        surface->attachBuffer(m_shm->createBuffer(img));
+        surface->damage(QRect(0, 0, 10, 10));
+        surface->commit(Surface::CommitFlag::None);
+
+        m_connection->flush();
+        QVERIFY(clientAddedSpy.wait());
+        AbstractClient *c = workspace()->activeClient();
+        QVERIFY(c);
+        QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+        QCOMPARE(c->geometry().size(), QSize(10, 10));
+        clientAddedSpy.clear();
+        // let's place it centered
+        Placement::self()->placeCentered(c, QRect(0, 0, 1280, 1024));
+        QCOMPARE(c->geometry(), QRect(635, 507, 10, 10));
+        QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
+        QCOMPARE(c->geometry(), expectedGeometry);
+    };
+    renderWindow(surface1.data(), QStringLiteral("slotWindowPackLeft"),  QRect(0, 507, 10, 10));
+    renderWindow(surface2.data(), QStringLiteral("slotWindowPackUp"),    QRect(635, 0, 10, 10));
+    renderWindow(surface3.data(), QStringLiteral("slotWindowPackRight"), QRect(1270, 507, 10, 10));
+    renderWindow(surface4.data(), QStringLiteral("slotWindowPackDown"),  QRect(635, 1014, 10, 10));
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(!surface.isNull());
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    m_connection->flush();
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *c = workspace()->activeClient();
+    QVERIFY(c);
+    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
     // let's place it centered
     Placement::self()->placeCentered(c, QRect(0, 0, 1280, 1024));
     QCOMPARE(c->geometry(), QRect(590, 487, 100, 50));
