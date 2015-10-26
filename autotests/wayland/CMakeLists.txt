@@ -28,6 +28,15 @@ add_test(kwin-testQuickTiling testQuickTiling)
 ecm_mark_as_test(testQuickTiling)
 
 ########################################################
+# Move/Resize window test
+########################################################
+set( testMoveResize_SRCS move_resize_window_test.cpp kwin_wayland_test.cpp )
+add_executable(testMoveResize ${testMoveResize_SRCS})
+target_link_libraries( testMoveResize kwin Qt5::Test)
+add_test(kwin-testMoveResize testMoveResize)
+ecm_mark_as_test(testMoveResize)
+
+########################################################
 # Don't Crash For glxgears
 ########################################################
 set( testDontCrashGlxgears_SRCS dont_crash_glxgears.cpp kwin_wayland_test.cpp )

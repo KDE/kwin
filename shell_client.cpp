@@ -356,12 +356,12 @@ bool ShellClient::isMinimizable() const
 
 bool ShellClient::isMovable() const
 {
-    return false;
+    return true;
 }
 
 bool ShellClient::isMovableAcrossScreens() const
 {
-    return false;
+    return true;
 }
 
 bool ShellClient::isResizable() const
