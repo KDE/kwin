@@ -23,12 +23,15 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/event_queue.h"
+#include "../../src/client/pointer.h"
+#include "../../src/client/seat.h"
 #include "../../src/client/shell.h"
 #include "../../src/client/surface.h"
 #include "../../src/client/registry.h"
 #include "../../src/server/buffer_interface.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
+#include "../../src/server/seat_interface.h"
 #include "../../src/server/shell_interface.h"
 #include "../../src/server/surface_interface.h"
 // Wayland
@@ -54,14 +57,18 @@ private Q_SLOTS:
     void testWindowClass();
     void testDestroy();
     void testCast();
+    void testMove();
 
 private:
     KWayland::Server::Display *m_display;
     KWayland::Server::CompositorInterface *m_compositorInterface;
     KWayland::Server::ShellInterface *m_shellInterface;
+    KWayland::Server::SeatInterface *m_seatInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Shell *m_shell;
+    KWayland::Client::Seat *m_seat;
+    KWayland::Client::Pointer *m_pointer;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
 };
@@ -73,9 +80,12 @@ TestWaylandShell::TestWaylandShell(QObject *parent)
     , m_display(nullptr)
     , m_compositorInterface(nullptr)
     , m_shellInterface(nullptr)
+    , m_seatInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_shell(nullptr)
+    , m_seat(nullptr)
+    , m_pointer(nullptr)
     , m_queue(nullptr)
     , m_thread(nullptr)
 {
@@ -100,6 +110,12 @@ void TestWaylandShell::init()
     m_shellInterface->create();
     QVERIFY(m_shellInterface->isValid());
 
+    m_seatInterface = m_display->createSeat(m_display);
+    QVERIFY(m_seatInterface);
+    m_seatInterface->setHasPointer(true);
+    m_seatInterface->create();
+    QVERIFY(m_seatInterface->isValid());
+
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, SIGNAL(connected()));
@@ -117,16 +133,21 @@ void TestWaylandShell::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
+    using namespace KWayland::Client;
     KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
+    QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
     QSignalSpy shellSpy(&registry, SIGNAL(shellAnnounced(quint32,quint32)));
+    QSignalSpy seatAnnouncedSpy(&registry, &Registry::seatAnnounced);
+    QVERIFY(seatAnnouncedSpy.isValid());
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
     QCOMPARE(registry.eventQueue(), m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
-    QVERIFY(compositorSpy.wait());
+    QVERIFY(interfacesAnnouncedSpy.wait());
 
     m_compositor = new KWayland::Client::Compositor(this);
     m_compositor->setup(registry.bindCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
@@ -137,10 +158,28 @@ void TestWaylandShell::init()
     }
     m_shell = registry.createShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>(), this);
     QVERIFY(m_shell->isValid());
+
+    QVERIFY(!seatAnnouncedSpy.isEmpty());
+    m_seat = registry.createSeat(seatAnnouncedSpy.first().first().value<quint32>(), seatAnnouncedSpy.first().last().value<quint32>(), this);
+    QVERIFY(seatAnnouncedSpy.isValid());
+    QSignalSpy hasPointerSpy(m_seat, &Seat::hasPointerChanged);
+    QVERIFY(hasPointerSpy.isValid());
+    QVERIFY(hasPointerSpy.wait());
+    QVERIFY(hasPointerSpy.first().first().toBool());
+    m_pointer = m_seat->createPointer(m_seat);
+    QVERIFY(m_pointer->isValid());
 }
 
 void TestWaylandShell::cleanup()
 {
+    if (m_pointer) {
+        delete m_pointer;
+        m_pointer = nullptr;
+    }
+    if (m_seat) {
+        delete m_seat;
+        m_seat = nullptr;
+    }
     if (m_shell) {
         delete m_shell;
         m_shell = nullptr;
@@ -163,6 +202,9 @@ void TestWaylandShell::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
+
+    delete m_seatInterface;
+    m_seatInterface = nullptr;
 
     delete m_shellInterface;
     m_shellInterface = nullptr;
@@ -512,6 +554,8 @@ void TestWaylandShell::testDestroy()
     QVERIFY(surface->isValid());
 
     connect(m_connection, &ConnectionThread::connectionDied, m_shell, &Shell::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_pointer, &Pointer::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_seat, &Seat::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, s.data(), &Surface::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
@@ -522,6 +566,7 @@ void TestWaylandShell::testDestroy()
     m_display = nullptr;
     m_compositorInterface = nullptr;
     m_shellInterface = nullptr;
+    m_seatInterface = nullptr;
     QVERIFY(connectionDiedSpy.wait());
 
     QVERIFY(!m_shell->isValid());
@@ -553,6 +598,37 @@ void TestWaylandShell::testCast()
 
     const Shell &s2(s);
     QCOMPARE((wl_shell*)s2, wlShell);
+}
+
+void TestWaylandShell::testMove()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QScopedPointer<KWayland::Client::Surface> s(m_compositor->createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    ShellSurface *surface = m_shell->createSurface(s.data(), m_shell);
+
+    QSignalSpy serverSurfaceSpy(m_shellInterface, &ShellInterface::surfaceCreated);
+    QVERIFY(serverSurfaceSpy.isValid());
+    QVERIFY(serverSurfaceSpy.wait());
+    ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
+    QVERIFY(serverSurface);
+    QSignalSpy moveRequestedSpy(serverSurface, &ShellSurfaceInterface::moveRequested);
+    QVERIFY(moveRequestedSpy.isValid());
+
+    QSignalSpy pointerButtonChangedSpy(m_pointer, &Pointer::buttonStateChanged);
+    QVERIFY(pointerButtonChangedSpy.isValid());
+
+    m_seatInterface->setFocusedPointerSurface(serverSurface->surface());
+    m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+    QVERIFY(pointerButtonChangedSpy.wait());
+
+    surface->requestMove(m_seat, pointerButtonChangedSpy.first().first().value<quint32>());
+    QVERIFY(moveRequestedSpy.wait());
+    QCOMPARE(moveRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.first().at(0).value<SeatInterface*>(), m_seatInterface);
+    QCOMPARE(moveRequestedSpy.first().at(1).value<quint32>(), m_seatInterface->pointerButtonSerial(Qt::LeftButton));
 }
 
 QTEST_GUILESS_MAIN(TestWaylandShell)

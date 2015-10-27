@@ -328,4 +328,6 @@ private:
 }
 }
 
+Q_DECLARE_METATYPE(KWayland::Server::SeatInterface*)
+
 #endif

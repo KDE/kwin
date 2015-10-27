@@ -252,11 +252,9 @@ void ShellSurfaceInterface::requestSize(const QSize &size)
 
 void ShellSurfaceInterface::Private::moveCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial)
 {
-    Q_UNUSED(seat)
-    Q_UNUSED(serial)
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
-    // TODO: implement
+    emit s->q_func()->moveRequested(SeatInterface::get(seat), serial);
 }
 
 void ShellSurfaceInterface::Private::resizeCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial, uint32_t edges)
