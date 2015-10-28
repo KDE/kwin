@@ -419,7 +419,7 @@ private:
     // Use Workspace::createClient()
     virtual ~Client(); ///< Use destroyClient() or releaseWindow()
 
-    Position mousePosition() const;
+    Position mousePosition() const override;
 
     // Handlers for X11 events
     bool mapRequestEvent(xcb_map_request_event_t *e);

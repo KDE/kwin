@@ -1291,4 +1291,20 @@ QSize AbstractClient::resizeIncrements() const
     return QSize(1, 1);
 }
 
+AbstractClient::Position AbstractClient::mousePosition() const
+{
+    return PositionCenter;
+}
+
+void AbstractClient::endMoveResize()
+{
+    setMoveResizePointerButtonDown(false);
+    stopDelayedMoveResize();
+    if (isMoveResize()) {
+        finishMoveResize(false);
+        setMoveResizePointerMode(mousePosition());
+    }
+    updateCursor();
+}
+
 }

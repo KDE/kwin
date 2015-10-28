@@ -1303,13 +1303,7 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
         buttonMask &= ~XCB_BUTTON_MASK_3;
 
     if ((state & buttonMask) == 0) {
-        setMoveResizePointerButtonDown(false);
-        stopDelayedMoveResize();
-        if (isMoveResize()) {
-            finishMoveResize(false);
-            setMoveResizePointerMode(mousePosition());
-        }
-        updateCursor();
+        endMoveResize();
     }
     return true;
 }

@@ -364,6 +364,10 @@ public:
     void growVertical();
     void shrinkVertical();
     void updateMoveResize(const QPointF &currentGlobalCursor);
+    /**
+     * Ends move resize when all pointer buttons are up again.
+     **/
+    void endMoveResize();
     void keyPressEvent(uint key_code);
 
     /**
@@ -747,6 +751,11 @@ protected:
     void handleMoveResize(const QPoint &local, const QPoint &global);
 
     virtual QSize resizeIncrements() const;
+
+    /**
+     * Default implementation returns PositionCenter
+     **/
+    virtual Position mousePosition() const;
 
     static bool haveResizeEffect() {
         return s_haveResizeEffect;

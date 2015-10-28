@@ -731,6 +731,14 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
         // an effect grabbed the pointer, we do not forward the event to surfaces
         return;
     }
+    if (AbstractClient *c = workspace()->getMovingClient()) {
+        if (state == KWin::InputRedirection::PointerButtonReleased) {
+            if (!areButtonsPressed()) {
+                c->endMoveResize();
+            }
+        }
+        return;
+    }
     if (state == KWin::InputRedirection::PointerButtonPressed) {
         if (m_shortcuts->processPointerPressed(m_xkb->modifiers(), qtButtonStates())) {
             return;
