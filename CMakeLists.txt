@@ -573,7 +573,7 @@ install(
         org.kde.kwin.Compositing.xml
         org.kde.kwin.Effects.xml
     DESTINATION
-        ${DBUS_INTERFACES_INSTALL_DIR}
+        ${KDE_INSTALL_DBUSINTERFACEDIR}
 )
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
@@ -606,6 +606,7 @@ include(ECMPackageConfigHelpers)
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KWinDBusInterface")
 ecm_configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake"
+    PATH_VARS KDE_INSTALL_DBUSINTERFACEDIR
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake
     DESTINATION ${CMAKECONFIG_INSTALL_DIR})
