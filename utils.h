@@ -206,7 +206,7 @@ static inline int bitCount(uint32_t mask)
 class ClearablePoint
 {
 public:
-    inline bool isValid() {
+    inline bool isValid() const {
         return m_valid;
     }
 

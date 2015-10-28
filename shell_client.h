@@ -122,6 +122,8 @@ protected:
     void setGeometryRestore(const QRect &geo) override {
         m_geomMaximizeRestore = geo;
     }
+    void doResizeSync() override;
+    bool isWaitingForMoveResizeSync() const override;
 
 private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);

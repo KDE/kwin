@@ -739,4 +739,14 @@ QPoint ShellClient::transientPlacementHint() const
     return m_shellSurface->transientOffset();
 }
 
+bool ShellClient::isWaitingForMoveResizeSync() const
+{
+    return m_positionAfterResize.isValid();
+}
+
+void ShellClient::doResizeSync()
+{
+    requestGeometry(moveResizeGeometry());
+}
+
 }
