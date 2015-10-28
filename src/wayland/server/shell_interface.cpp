@@ -259,12 +259,38 @@ void ShellSurfaceInterface::Private::moveCallback(wl_client *client, wl_resource
 
 void ShellSurfaceInterface::Private::resizeCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial, uint32_t edges)
 {
-    Q_UNUSED(seat)
-    Q_UNUSED(serial)
-    Q_UNUSED(edges)
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
-    // TODO: implement
+    Qt::Edges qtEdges;
+    switch (edges) {
+    case WL_SHELL_SURFACE_RESIZE_TOP:
+        qtEdges = Qt::TopEdge;
+        break;
+    case WL_SHELL_SURFACE_RESIZE_BOTTOM:
+        qtEdges = Qt::BottomEdge;
+        break;
+    case WL_SHELL_SURFACE_RESIZE_LEFT:
+        qtEdges = Qt::LeftEdge;
+        break;
+    case WL_SHELL_SURFACE_RESIZE_TOP_LEFT:
+        qtEdges = Qt::TopEdge | Qt::LeftEdge;
+        break;
+    case WL_SHELL_SURFACE_RESIZE_BOTTOM_LEFT:
+        qtEdges = Qt::BottomEdge | Qt::LeftEdge;
+        break;
+    case WL_SHELL_SURFACE_RESIZE_RIGHT:
+        qtEdges = Qt::RightEdge;
+        break;
+    case WL_SHELL_SURFACE_RESIZE_TOP_RIGHT:
+        qtEdges = Qt::TopEdge | Qt::RightEdge;
+        break;
+    case WL_SHELL_SURFACE_RESIZE_BOTTOM_RIGHT:
+        qtEdges = Qt::BottomEdge | Qt::RightEdge;
+        break;
+    default:
+        break;
+    }
+    emit s->q_func()->resizeRequested(SeatInterface::get(seat), serial, qtEdges);
 }
 
 void ShellSurfaceInterface::Private::setToplevelCallback(wl_client *client, wl_resource *resource)

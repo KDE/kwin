@@ -43,6 +43,7 @@ class TestWaylandShell : public QObject
 public:
     explicit TestWaylandShell(QObject *parent = nullptr);
 private Q_SLOTS:
+    void initTestCase();
     void init();
     void cleanup();
 
@@ -58,6 +59,8 @@ private Q_SLOTS:
     void testDestroy();
     void testCast();
     void testMove();
+    void testResize_data();
+    void testResize();
 
 private:
     KWayland::Server::Display *m_display;
@@ -89,6 +92,11 @@ TestWaylandShell::TestWaylandShell(QObject *parent)
     , m_queue(nullptr)
     , m_thread(nullptr)
 {
+}
+
+void TestWaylandShell::initTestCase()
+{
+    qRegisterMetaType<Qt::Edges>();
 }
 
 void TestWaylandShell::init()
@@ -629,6 +637,66 @@ void TestWaylandShell::testMove()
     QCOMPARE(moveRequestedSpy.count(), 1);
     QCOMPARE(moveRequestedSpy.first().at(0).value<SeatInterface*>(), m_seatInterface);
     QCOMPARE(moveRequestedSpy.first().at(1).value<quint32>(), m_seatInterface->pointerButtonSerial(Qt::LeftButton));
+}
+
+void TestWaylandShell::testResize_data()
+{
+    QTest::addColumn<Qt::Edges>("resizeEdge");
+    QTest::addColumn<Qt::Edges>("expectedEdge");
+
+    QTest::newRow("None") << Qt::Edges() << Qt::Edges();
+
+    QTest::newRow("Top")    << Qt::Edges(Qt::TopEdge)    << Qt::Edges(Qt::TopEdge);
+    QTest::newRow("Bottom") << Qt::Edges(Qt::BottomEdge) << Qt::Edges(Qt::BottomEdge);
+    QTest::newRow("Left")   << Qt::Edges(Qt::LeftEdge)   << Qt::Edges(Qt::LeftEdge);
+    QTest::newRow("Right")  << Qt::Edges(Qt::RightEdge)  << Qt::Edges(Qt::RightEdge);
+
+    QTest::newRow("Top Left")     << Qt::Edges(Qt::TopEdge | Qt::LeftEdge)     << Qt::Edges(Qt::TopEdge | Qt::LeftEdge);
+    QTest::newRow("Top Right")    << Qt::Edges(Qt::TopEdge | Qt::RightEdge)    << Qt::Edges(Qt::TopEdge | Qt::RightEdge);
+    QTest::newRow("Bottom Left")  << Qt::Edges(Qt::BottomEdge | Qt::LeftEdge)  << Qt::Edges(Qt::BottomEdge | Qt::LeftEdge);
+    QTest::newRow("Bottom Right") << Qt::Edges(Qt::BottomEdge | Qt::RightEdge) << Qt::Edges(Qt::BottomEdge | Qt::RightEdge);
+
+    // invalid combinations
+    QTest::newRow("Top Bottom") << Qt::Edges(Qt::TopEdge | Qt::BottomEdge) << Qt::Edges();
+    QTest::newRow("Left Right") << Qt::Edges(Qt::RightEdge | Qt::LeftEdge) << Qt::Edges();
+    QTest::newRow("Top Bottom Right")  << Qt::Edges(Qt::TopEdge | Qt::BottomEdge | Qt::RightEdge)  << Qt::Edges();
+    QTest::newRow("Top Bottom Left")   << Qt::Edges(Qt::TopEdge | Qt::BottomEdge | Qt::LeftEdge)   << Qt::Edges();
+    QTest::newRow("Left Right Top")    << Qt::Edges(Qt::RightEdge | Qt::LeftEdge | Qt::TopEdge)    << Qt::Edges();
+    QTest::newRow("Left Right Bottom") << Qt::Edges(Qt::RightEdge | Qt::LeftEdge | Qt::BottomEdge) << Qt::Edges();
+    QTest::newRow("All") << Qt::Edges(Qt::RightEdge | Qt::LeftEdge | Qt::BottomEdge | Qt::TopEdge) << Qt::Edges();
+}
+
+void TestWaylandShell::testResize()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QScopedPointer<KWayland::Client::Surface> s(m_compositor->createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    ShellSurface *surface = m_shell->createSurface(s.data(), m_shell);
+
+    QSignalSpy serverSurfaceSpy(m_shellInterface, &ShellInterface::surfaceCreated);
+    QVERIFY(serverSurfaceSpy.isValid());
+    QVERIFY(serverSurfaceSpy.wait());
+    ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
+    QVERIFY(serverSurface);
+    QSignalSpy resizeRequestedSpy(serverSurface, &ShellSurfaceInterface::resizeRequested);
+    QVERIFY(resizeRequestedSpy.isValid());
+
+    QSignalSpy pointerButtonChangedSpy(m_pointer, &Pointer::buttonStateChanged);
+    QVERIFY(pointerButtonChangedSpy.isValid());
+
+    m_seatInterface->setFocusedPointerSurface(serverSurface->surface());
+    m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+    QVERIFY(pointerButtonChangedSpy.wait());
+
+    QFETCH(Qt::Edges, resizeEdge);
+    surface->requestResize(m_seat, pointerButtonChangedSpy.first().first().value<quint32>(), resizeEdge);
+    QVERIFY(resizeRequestedSpy.wait());
+    QCOMPARE(resizeRequestedSpy.count(), 1);
+    QCOMPARE(resizeRequestedSpy.first().at(0).value<SeatInterface*>(), m_seatInterface);
+    QCOMPARE(resizeRequestedSpy.first().at(1).value<quint32>(), m_seatInterface->pointerButtonSerial(Qt::LeftButton));
+    QTEST(resizeRequestedSpy.first().at(2).value<Qt::Edges>(), "expectedEdge");
 }
 
 QTEST_GUILESS_MAIN(TestWaylandShell)
