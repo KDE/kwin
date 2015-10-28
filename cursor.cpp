@@ -511,7 +511,6 @@ QByteArray Cursor::cursorName(Qt::CursorShape shape) const
 
 InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
     : Cursor(parent)
-    , m_oldButtons(Qt::NoButton)
     , m_currentButtons(Qt::NoButton)
 {
     connect(input(), SIGNAL(globalPointerChanged(QPointF)), SLOT(slotPosChanged(QPointF)));
@@ -547,7 +546,7 @@ void InputRedirectionCursor::slotPosChanged(const QPointF &pos)
 {
     const QPoint oldPos = currentPos();
     updatePos(pos.toPoint());
-    emit mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_oldButtons,
+    emit mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_currentButtons,
                       input()->keyboardModifiers(), input()->keyboardModifiers());
 }
 
@@ -558,8 +557,10 @@ void InputRedirectionCursor::slotModifiersChanged(Qt::KeyboardModifiers mods, Qt
 
 void InputRedirectionCursor::slotPointerButtonChanged()
 {
-    m_oldButtons = m_currentButtons;
+    const Qt::MouseButtons oldButtons = m_currentButtons;
     m_currentButtons = input()->qtButtonStates();
+    const QPoint pos = currentPos();
+    emit mouseChanged(pos, pos, m_currentButtons, oldButtons, input()->keyboardModifiers(), input()->keyboardModifiers());
 }
 
 void InputRedirectionCursor::doStartCursorTracking()

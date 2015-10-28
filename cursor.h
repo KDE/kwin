@@ -271,7 +271,6 @@ private Q_SLOTS:
     void slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods);
 private:
     explicit InputRedirectionCursor(QObject *parent);
-    Qt::MouseButtons m_oldButtons;
     Qt::MouseButtons m_currentButtons;
     friend class Cursor;
 };
