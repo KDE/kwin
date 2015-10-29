@@ -186,12 +186,6 @@ bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
 
 void Edge::handle(const QPoint &cursorPos)
 {
-    if (m_client) {
-        pushCursorBack(cursorPos);
-        m_client->showOnScreenEdge();
-        unreserve();
-        return;
-    }
     AbstractClient *movingClient = Workspace::self()->getMovingClient();
     bool isResize = false;
     if (Client *movingClientClient = qobject_cast<Client*>(movingClient))
@@ -210,6 +204,14 @@ void Edge::handle(const QPoint &cursorPos)
         // work as we hold a grab.
         return;
     }
+
+    if (m_client) {
+        pushCursorBack(cursorPos);
+        m_client->showOnScreenEdge();
+        unreserve();
+        return;
+    }
+
     if (handleAction() || handleByCallback()) {
         pushCursorBack(cursorPos);
         return;
