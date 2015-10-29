@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "shell_client.h"
 #include "composite.h"
+#include "cursor.h"
 #include "deleted.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -27,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
+#include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/buffer_interface.h>
@@ -104,6 +106,47 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
 
     setTransient();
     connect(surface, &ShellSurfaceInterface::transientForChanged, this, &ShellClient::setTransient);
+    connect(surface, &ShellSurfaceInterface::moveRequested, this,
+        [this] {
+            // TODO: check the seat and serial
+            performMouseCommand(Options::MouseMove, Cursor::pos());
+        }
+    );
+    connect(surface, &ShellSurfaceInterface::resizeRequested, this,
+        [this] (SeatInterface *seat, quint32 serial, Qt::Edges edges) {
+            // TODO: check the seat and serial
+            Q_UNUSED(seat)
+            Q_UNUSED(serial)
+            if (!isResizable() || isShade()) {
+                return;
+            }
+            if (isMoveResize()) {
+                finishMoveResize(false);
+            }
+            setMoveResizePointerButtonDown(true);
+            setMoveOffset(Cursor::pos() - pos());  // map from global
+            setInvertedMoveOffset(rect().bottomRight() - moveOffset());
+            setUnrestrictedMoveResize(false);
+            auto toPosition = [edges] {
+                Position pos = PositionCenter;
+                if (edges.testFlag(Qt::TopEdge)) {
+                    pos = PositionTop;
+                } else if (edges.testFlag(Qt::BottomEdge)) {
+                    pos = PositionBottom;
+                }
+                if (edges.testFlag(Qt::LeftEdge)) {
+                    pos = Position(pos | PositionLeft);
+                } else if (edges.testFlag(Qt::RightEdge)) {
+                    pos = Position(pos | PositionRight);
+                }
+                return pos;
+            };
+            setMoveResizePointerMode(toPosition());
+            if (!startMoveResize())
+                setMoveResizePointerButtonDown(false);
+            updateCursor();
+        }
+    );
 }
 
 ShellClient::~ShellClient() = default;
