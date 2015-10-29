@@ -371,10 +371,6 @@ int main(int argc, char * argv[])
 
     // enforce our internal qpa plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);
-#if (QT_VERSION < QT_VERSION_CHECK(5, 4, 2))
-    // TODO: remove warning once we depend on Qt 5.5
-    qWarning() << "QtWayland 5.4.2 required, application might freeze if not present!";
-#endif
 
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
     qunsetenv("QT_IM_MODULE");
