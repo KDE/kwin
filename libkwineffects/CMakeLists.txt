@@ -101,21 +101,14 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
     install(TARGETS ${name} EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
-if(KWIN_BUILD_OPENGLES)
-    kwin4_add_glutils_backend(kwinglesutils ${epoxy_INCLUDE_DIR} ${epoxy_LIBRARY})
-    set_target_properties(kwinglesutils PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGLES)
-    set_target_properties(kwinglesutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glesutils)
-endif()
-if(KWIN_BUILD_OPENGL)
-    kwin4_add_glutils_backend(kwinglutils ${epoxy_INCLUDE_DIR} ${epoxy_LIBRARY})
-    set_target_properties(kwinglutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glutils)
+kwin4_add_glutils_backend(kwinglutils ${epoxy_INCLUDE_DIR} ${epoxy_LIBRARY})
+set_target_properties(kwinglutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glutils)
 
-    target_link_libraries(kwinglutils PUBLIC ${epoxy_LIBRARY})
-    # -ldl used by OpenGL code
-    find_library(DL_LIBRARY dl)
-    if (DL_LIBRARY)
-       target_link_libraries(kwinglutils PRIVATE ${DL_LIBRARY})
-    endif()
+target_link_libraries(kwinglutils PUBLIC ${epoxy_LIBRARY})
+# -ldl used by OpenGL code
+find_library(DL_LIBRARY dl)
+if (DL_LIBRARY)
+    target_link_libraries(kwinglutils PRIVATE ${DL_LIBRARY})
 endif()
 
 install( FILES

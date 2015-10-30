@@ -248,22 +248,6 @@ set(KWIN_INTERNAL_NAME_X11 "kwin_x11")
 set(KWIN_INTERNAL_NAME_WAYLAND "kwin_wayland")
 set(KWIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-set(KWIN_BUILD_OPENGL FALSE)
-set(KWIN_BUILD_OPENGLES FALSE)
-if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL")
-    set(KWIN_BUILD_OPENGL TRUE)
-    message("Building KWin with OpenGL support")
-endif()
-if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GLESv2")
-    set(KWIN_BUILD_OPENGLES TRUE)
-    message("Building KWin with OpenGL ES 2 support")
-    add_definitions(-DKWIN_HAVE_OPENGLES)
-endif()
-
-if(NOT KWIN_BUILD_OPENGL AND NOT KWIN_BUILD_OPENGLES)
-    message(FATAL_ERROR "KWin needs to be built against either OpenGL or OpenGL ES 2. Check your Qt config!")
-endif()
-
 # KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available: may be disabled
 if( KWIN_BUILD_XRENDER_COMPOSITING )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
@@ -540,16 +524,11 @@ set_target_properties(kwin PROPERTIES
 target_link_libraries(kwin ${kwinLibs})
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
-if(KWIN_BUILD_OPENGL)
-  target_link_libraries(kwin kwinglutils ${epoxy_LIBRARY})
-  # -ldl used by OpenGL code
-  find_library(DL_LIBRARY dl)
-  if (DL_LIBRARY)
-    target_link_libraries(kwin ${DL_LIBRARY})
-  endif()
-elseif(KWIN_BUILD_OPENGLES)
-  target_link_libraries(kwin ${kwinLibs} kwinglesutils ${epoxy_LIBRARY})
-  set_target_properties(kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
+target_link_libraries(kwin kwinglutils ${epoxy_LIBRARY})
+# -ldl used by OpenGL code
+find_library(DL_LIBRARY dl)
+if (DL_LIBRARY)
+target_link_libraries(kwin ${DL_LIBRARY})
 endif()
 
 kf5_add_kdeinit_executable(kwin_x11 main_x11.cpp)
