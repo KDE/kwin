@@ -227,34 +227,34 @@ bool EglOnXBackend::initRenderingContext()
     setSurface(surface);
 
     EGLContext ctx = EGL_NO_CONTEXT;
-#ifdef KWIN_HAVE_OPENGLES
-    const EGLint context_attribs[] = {
-        EGL_CONTEXT_CLIENT_VERSION, 2,
-        EGL_NONE
-    };
+    if (isOpenGLES()) {
+        const EGLint context_attribs[] = {
+            EGL_CONTEXT_CLIENT_VERSION, 2,
+            EGL_NONE
+        };
 
-    ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs);
-#else
-    const EGLint context_attribs_31_core[] = {
-        EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-        EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-        EGL_NONE
-    };
+        ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs);
+    } else {
+        const EGLint context_attribs_31_core[] = {
+            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+            EGL_NONE
+        };
 
-    const EGLint context_attribs_legacy[] = {
-        EGL_NONE
-    };
+        const EGLint context_attribs_legacy[] = {
+            EGL_NONE
+        };
 
-    const QByteArray eglExtensions = eglQueryString(dpy, EGL_EXTENSIONS);
-    const QList<QByteArray> extensions = eglExtensions.split(' ');
+        const QByteArray eglExtensions = eglQueryString(dpy, EGL_EXTENSIONS);
+        const QList<QByteArray> extensions = eglExtensions.split(' ');
 
-    // Try to create a 3.1 core context
-    if (options->glCoreProfile() && extensions.contains("EGL_KHR_create_context"))
-        ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs_31_core);
+        // Try to create a 3.1 core context
+        if (options->glCoreProfile() && extensions.contains("EGL_KHR_create_context"))
+            ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs_31_core);
 
-    if (ctx == EGL_NO_CONTEXT)
-        ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs_legacy);
-#endif
+        if (ctx == EGL_NO_CONTEXT)
+            ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs_legacy);
+    }
 
     if (ctx == EGL_NO_CONTEXT) {
         qCCritical(KWIN_CORE) << "Create Context failed";
@@ -284,11 +284,7 @@ bool EglOnXBackend::initBufferConfigs()
         EGL_GREEN_SIZE,           1,
         EGL_BLUE_SIZE,            1,
         EGL_ALPHA_SIZE,           0,
-#ifdef KWIN_HAVE_OPENGLES
-        EGL_RENDERABLE_TYPE,      EGL_OPENGL_ES2_BIT,
-#else
-        EGL_RENDERABLE_TYPE,      EGL_OPENGL_BIT,
-#endif
+        EGL_RENDERABLE_TYPE,      isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
         EGL_CONFIG_CAVEAT,        EGL_NONE,
         EGL_NONE,
     };

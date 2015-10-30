@@ -88,14 +88,10 @@ bool AbstractEglBackend::initEglAPI()
     }
     qCDebug(KWIN_CORE) << "Egl Initialize succeeded";
 
-#ifdef KWIN_HAVE_OPENGLES
-    eglBindAPI(EGL_OPENGL_ES_API);
-#else
-    if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
+    if (eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API) == EGL_FALSE) {
         qCCritical(KWIN_CORE) << "bind OpenGL API failed";
         return false;
     }
-#endif
     qCDebug(KWIN_CORE) << "EGL version: " << major << "." << minor;
     return true;
 }
@@ -176,6 +172,11 @@ bool AbstractEglBackend::makeCurrent()
 void AbstractEglBackend::doneCurrent()
 {
     eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+}
+
+bool AbstractEglBackend::isOpenGLES() const
+{
+    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 
 AbstractEglTexture::AbstractEglTexture(SceneOpenGL::Texture *texture, AbstractEglBackend *backend)

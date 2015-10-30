@@ -68,6 +68,7 @@ protected:
     void initClientExtensions();
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
+    bool isOpenGLES() const;
 
 private:
     EGLDisplay m_display = EGL_NO_DISPLAY;
