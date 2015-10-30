@@ -542,8 +542,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
     }
 
-#ifndef KWIN_HAVE_OPENGLES
-    if (m_glVersion >= kVersionNumber(3, 0)) {
+    if (!isGLES() && m_glVersion >= kVersionNumber(3, 0)) {
         int count;
         glGetIntegerv(GL_NUM_EXTENSIONS, &count);
 
@@ -551,9 +550,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             const char *name = (const char *) glGetStringi(GL_EXTENSIONS, i);
             m_extensions.insert(name);
         }
-    } else
-#endif
-    {
+    } else {
         const QByteArray extensions = (const char *) glGetString(GL_EXTENSIONS);
         m_extensions = QSet<QByteArray>::fromList(extensions.split(' '));
     }
@@ -566,24 +563,22 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     if (platformInterface == EglPlatformInterface) {
-#ifdef KWIN_HAVE_OPENGLES
-        m_supportsGLSL = true;
-        m_textureNPOT = true;
-#else
-        m_supportsGLSL = m_extensions.contains("GL_ARB_shader_objects") &&
-                         m_extensions.contains("GL_ARB_fragment_shader") &&
-                         m_extensions.contains("GL_ARB_vertex_shader");
+        if (isGLES()) {
+            m_supportsGLSL = true;
+            m_textureNPOT = true;
+        } else {
+            m_supportsGLSL = m_extensions.contains("GL_ARB_shader_objects") &&
+                             m_extensions.contains("GL_ARB_fragment_shader") &&
+                             m_extensions.contains("GL_ARB_vertex_shader");
 
-        m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
-#endif
+            m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
+        }
     } else if (platformInterface == GlxPlatformInterface) {
-#ifndef KWIN_HAVE_OPENGLES
         m_supportsGLSL = m_extensions.contains("GL_ARB_shader_objects") &&
                          m_extensions.contains("GL_ARB_fragment_shader") &&
                          m_extensions.contains("GL_ARB_vertex_shader");
 
         m_textureNPOT = m_extensions.contains("GL_ARB_texture_non_power_of_two");
-#endif
     }
 
     m_serverVersion = getXServerVersion();
