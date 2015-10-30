@@ -58,14 +58,14 @@ using glXSwapIntervalMESA_func = int (*)(unsigned int interval);
 extern KWINGLUTILS_EXPORT glXSwapIntervalMESA_func glXSwapIntervalMESA;
 
 // GL_ARB_robustness / GL_EXT_robustness
-using glGetGraphicsResetStatus_func = GLenum (*)();
-using glReadnPixels_func = void (*)(GLint x, GLint y, GLsizei width, GLsizei height,
+using kwinGlGetGraphicsResetStatus_func = GLenum (*)();
+using kwinGlReadnPixels_func = void (*)(GLint x, GLint y, GLsizei width, GLsizei height,
                                     GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
-using glGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
+using kwinGlGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
-extern KWINGLUTILS_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
-extern KWINGLUTILS_EXPORT glReadnPixels_func            glReadnPixels;
-extern KWINGLUTILS_EXPORT glGetnUniformfv_func          glGetnUniformfv;
+extern KWINGLUTILS_EXPORT kwinGlGetGraphicsResetStatus_func kwinGlGetGraphicsResetStatus;
+extern KWINGLUTILS_EXPORT kwinGlReadnPixels_func            kwinGlReadnPixels;
+extern KWINGLUTILS_EXPORT kwinGlGetnUniformfv_func          kwinGlGetnUniformfv;
 
 } // namespace
 

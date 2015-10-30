@@ -602,7 +602,7 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
     int location = uniformLocation(name);
     if (location >= 0) {
         GLfloat m[16];
-        glGetnUniformfv(mProgram, location, sizeof(m), m);
+        kwinGlGetnUniformfv(mProgram, location, sizeof(m), m);
         QMatrix4x4 matrix(m[0], m[4], m[8],  m[12],
                           m[1], m[5], m[9],  m[13],
                           m[2], m[6], m[10], m[14],
@@ -672,7 +672,7 @@ static bool fuzzyCompare(const QVector4D &lhs, const QVector4D &rhs)
 static bool checkPixel(int x, int y, const QVector4D &expected, const char *file, int line)
 {
     uint8_t data[4];
-    glReadnPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 4, data);
+    kwinGlReadnPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 4, data);
 
     const QVector4D pixel{data[0] / 255.f, data[1] / 255.f, data[2] / 255.f, data[3] / 255.f};
 
