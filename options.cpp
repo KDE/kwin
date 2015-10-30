@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "settings.h"
 #include "xcbutils.h"
 #include <kwinglplatform.h>
+#include <QOpenGLContext>
 
 #endif //KCMRULES
 
@@ -768,10 +769,10 @@ void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
     qCDebug(KWIN_CORE) << "Forcing EGL native interface as compiled without GLX support";
     interface = EglPlatformInterface;
 #endif
-#ifdef KWIN_HAVE_OPENGLES
-    qCDebug(KWIN_CORE) << "Forcing EGL native interface as compiled against OpenGL ES";
-    interface = EglPlatformInterface;
-#endif
+    if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
+        qCDebug(KWIN_CORE) << "Forcing EGL native interface as Qt uses OpenGL ES";
+        interface = EglPlatformInterface;
+    }
 
     if (m_glPlatformInterface == interface) {
         return;

@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QTimerEvent>
 #include <QDateTime>
+#include <QOpenGLContext>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KNotification>
@@ -207,14 +208,12 @@ void Compositor::slotCompositingOptionsInitialized()
         else {
             unsafeConfig.writeEntry(openGLIsUnsafe, true);
             unsafeConfig.sync();
-#ifndef KWIN_HAVE_OPENGLES
-            if (!kwinApp()->shouldUseWaylandForCompositing() && !CompositingPrefs::hasGlx()) {
+            if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL && !kwinApp()->shouldUseWaylandForCompositing() && !CompositingPrefs::hasGlx()) {
                 unsafeConfig.writeEntry(openGLIsUnsafe, false);
                 unsafeConfig.sync();
                 qCDebug(KWIN_CORE) << "No glx extensions available";
                 break;
             }
-#endif
 
             m_scene = SceneOpenGL::createScene(this);
 

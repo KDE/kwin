@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ksharedconfig.h>
 
 #include <QDebug>
+#include <QOpenGLContext>
 #include <QStandardPaths>
 #include <qprocess.h>
 
@@ -82,9 +83,9 @@ bool CompositingPrefs::compositingPossible()
     if (Xcb::Extensions::self()->isRenderAvailable() && Xcb::Extensions::self()->isFixesAvailable())
         return true;
 #endif
-#ifdef KWIN_HAVE_OPENGLES
-    return true;
-#endif
+    if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
+        return true;
+    }
     qCDebug(KWIN_CORE) << "No OpenGL or XRender/XFixes support";
     return false;
 }

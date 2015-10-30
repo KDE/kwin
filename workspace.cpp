@@ -1477,13 +1477,12 @@ QString Workspace::supportInformation() const
         switch (effects->compositingType()) {
         case OpenGL2Compositing:
         case OpenGLCompositing: {
-#ifdef KWIN_HAVE_OPENGLES
-            support.append(QStringLiteral("Compositing Type: OpenGL ES 2.0\n"));
-#else
-            support.append(QStringLiteral("Compositing Type: OpenGL\n"));
-#endif
-
             GLPlatform *platform = GLPlatform::instance();
+            if (platform->isGLES()) {
+                support.append(QStringLiteral("Compositing Type: OpenGL ES 2.0\n"));
+            } else {
+                support.append(QStringLiteral("Compositing Type: OpenGL\n"));
+            }
             support.append(QStringLiteral("OpenGL vendor string: ") +   QString::fromUtf8(platform->glVendorString()) + QStringLiteral("\n"));
             support.append(QStringLiteral("OpenGL renderer string: ") + QString::fromUtf8(platform->glRendererString()) + QStringLiteral("\n"));
             support.append(QStringLiteral("OpenGL version string: ") +  QString::fromUtf8(platform->glVersionString()) + QStringLiteral("\n"));

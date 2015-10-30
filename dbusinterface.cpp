@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 // Qt
+#include <QOpenGLContext>
 #include <QDBusServiceWatcher>
 
 namespace KWin
@@ -200,11 +201,11 @@ QString CompositorDBusInterface::compositingType() const
     case XRenderCompositing:
         return QStringLiteral("xrender");
     case OpenGL2Compositing:
-#ifdef KWIN_HAVE_OPENGLES
-        return QStringLiteral("gles");
-#else
-        return QStringLiteral("gl2");
-#endif
+        if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
+            return QStringLiteral("gles");
+        } else {
+            return QStringLiteral("gl2");
+        }
     case QPainterCompositing:
         return QStringLiteral("qpainter");
     case NoCompositing:
@@ -245,9 +246,9 @@ QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const
 #if HAVE_EPOXY_GLX
     supportsGlx = (kwinApp()->operationMode() == Application::OperationModeX11);
 #endif
-#ifdef KWIN_HAVE_OPENGLES
-    supportsGlx = false;
-#endif
+    if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
+        supportsGlx = false;
+    }
     if (supportsGlx) {
         interfaces << QStringLiteral("glx");
     }
