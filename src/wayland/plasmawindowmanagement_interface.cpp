@@ -21,9 +21,12 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "global_p.h"
 #include "resource_p.h"
 #include "display.h"
+#include "surface_interface.h"
 
 #include <QList>
 #include <QVector>
+#include <QRect>
+#include <QHash>
 
 #include <wayland-server.h>
 #include <wayland-plasma-window-management-server-protocol.h>
@@ -77,6 +80,7 @@ public:
     };
     QList<WindowResource> resources;
     quint32 windowId = 0;
+    QHash<SurfaceInterface*, QRect> minimizedGeometries;
 
 private:
     static void unbind(wl_resource *resource);
@@ -84,6 +88,8 @@ private:
     static void setStateCallback(wl_client *client, wl_resource *resource, uint32_t flags, uint32_t state);
     static void setVirtualDesktopCallback(wl_client *client, wl_resource *resource, uint32_t number);
     static void closeCallback(wl_client *client, wl_resource *resource);
+    static void setTaskGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel, uint32_t x, uint32_t y, uint32_t width, uint32_t height);
+    static void unsetMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel);
     static Private *cast(wl_resource *resource) {
         return reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
     }
@@ -241,6 +247,8 @@ PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *pa
 const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_interface = {
     setStateCallback,
     setVirtualDesktopCallback,
+    setTaskGeometryCallback,
+    unsetMinimizedGeometryCallback,
     closeCallback
 };
 #endif
@@ -439,6 +447,38 @@ void PlasmaWindowInterface::Private::setStateCallback(wl_client *client, wl_reso
     }
 }
 
+void PlasmaWindowInterface::Private::setTaskGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel, uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+{
+    Q_UNUSED(client)
+    Private *p = cast(resource);
+    SurfaceInterface *panelSurface = SurfaceInterface::get(panel);
+
+    if (!panelSurface) {
+        return;
+    }
+
+    p->minimizedGeometries[panelSurface] = QRect(x, y, width, height);
+    emit p->q->minimizedGeometriesChanged();
+    connect(panelSurface, &QObject::destroyed, p->q, [p, panelSurface] () {
+        if (p->minimizedGeometries.remove(panelSurface)) {;
+            emit p->q->minimizedGeometriesChanged();
+        }
+    });
+}
+
+void PlasmaWindowInterface::Private::unsetMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel)
+{
+    Q_UNUSED(client)
+    Private *p = cast(resource);
+    SurfaceInterface *panelSurface = SurfaceInterface::get(panel);
+
+    if (!panelSurface) {
+        return;
+    }
+    p->minimizedGeometries.remove(panelSurface);
+    emit p->q->minimizedGeometriesChanged();
+}
+
 PlasmaWindowInterface::PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent)
     : QObject(parent)
     , d(new Private(wm, this))
@@ -465,6 +505,11 @@ void PlasmaWindowInterface::setVirtualDesktop(quint32 desktop)
 void PlasmaWindowInterface::unmap()
 {
     d->unmap();
+}
+
+QHash<SurfaceInterface*, QRect>  PlasmaWindowInterface::minimizedGeometries() const
+{
+    return d->minimizedGeometries;
 }
 
 void PlasmaWindowInterface::setActive(bool set)

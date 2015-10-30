@@ -36,6 +36,7 @@ namespace Server
 
 class Display;
 class PlasmaWindowInterface;
+class SurfaceInterface;
 
 class KWAYLANDSERVER_EXPORT PlasmaWindowManagementInterface : public Global
 {
@@ -87,6 +88,13 @@ public:
 
     void unmap();
 
+    /**
+     * @returns Geometries of the taskbar entries, indicized by the
+     *          surface of the panels
+     * @since 5.5
+     */
+    QHash<SurfaceInterface*, QRect> minimizedGeometries() const;
+
 Q_SIGNALS:
     void closeRequested();
     void virtualDesktopRequested(quint32 desktop);
@@ -102,6 +110,7 @@ Q_SIGNALS:
     void maximizeableRequested(bool set);
     void fullscreenableRequested(bool set);
     void skipTaskbarRequested(bool set);
+    QRect minimizedGeometriesChanged();
 
 private:
     friend class PlasmaWindowManagementInterface;

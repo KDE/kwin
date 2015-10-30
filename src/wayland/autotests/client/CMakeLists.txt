@@ -169,6 +169,17 @@ add_test(kwayland-testSlide testSlide)
 ecm_mark_as_test(testSlide)
 
 ########################################################
+# Test Window Management
+########################################################
+set( testWindowmanagement_SRCS
+        test_wayland_windowmanagement.cpp
+    )
+add_executable(testWindowmanagement ${testWindowmanagement_SRCS})
+target_link_libraries( testWindowmanagement Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
+add_test(kwayland-testWindowmanagement testWindowmanagement)
+ecm_mark_as_test(testWindowmanagement)
+
+########################################################
 # Test DataSource
 ########################################################
 set( testDataSource_SRCS
