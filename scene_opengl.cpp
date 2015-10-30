@@ -28,9 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scene_opengl.h"
 #include "eglonxbackend.h"
-#ifndef KWIN_HAVE_OPENGLES
+#if HAVE_EPOXY_GLX
 #include "glxbackend.h"
-#endif // KWIN_HAVE_OPENGLES
+#endif
 
 #include "abstract_backend.h"
 #include "wayland_server.h"
@@ -541,7 +541,7 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
 
     switch (platformInterface) {
     case GlxPlatformInterface:
-#ifndef KWIN_HAVE_OPENGLES
+#if HAVE_EPOXY_GLX
         backend = new GlxBackend();
 #endif
         break;

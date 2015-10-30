@@ -241,7 +241,10 @@ void CompositorDBusInterface::suspend()
 QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const
 {
     QStringList interfaces;
-    bool supportsGlx = (kwinApp()->operationMode() == Application::OperationModeX11);
+    bool supportsGlx = false;
+#if HAVE_EPOXY_GLX
+    supportsGlx = (kwinApp()->operationMode() == Application::OperationModeX11);
+#endif
 #ifdef KWIN_HAVE_OPENGLES
     supportsGlx = false;
 #endif

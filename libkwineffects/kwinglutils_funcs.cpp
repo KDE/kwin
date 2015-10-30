@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglutils.h"
 
 #include <dlfcn.h>
+#if HAVE_EPOXY_GLX
+#include <epoxy/glx.h>
+#endif
 
 
 // Resolves given function, using getProcAddress
@@ -56,10 +59,12 @@ glGetnUniformfv_func          glGetnUniformfv;
 
 typedef void (*glXFuncPtr)();
 
-#ifndef KWIN_HAVE_OPENGLES
 static glXFuncPtr getProcAddress(const char* name)
 {
-    glXFuncPtr ret = glXGetProcAddress((const GLubyte*) name);
+    glXFuncPtr ret = nullptr;
+#if HAVE_EPOXY_GLX
+    ret = glXGetProcAddress((const GLubyte*) name);
+#endif
     if (ret == nullptr)
         ret = (glXFuncPtr) dlsym(RTLD_DEFAULT, name);
     return ret;
@@ -72,7 +77,6 @@ void glxResolveFunctions()
     else
         glXSwapIntervalMESA = nullptr;
 }
-#endif
 
 void eglResolveFunctions()
 {

@@ -27,10 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <epoxy/egl.h>
 
-#ifndef KWIN_HAVE_OPENGLES
-#include <epoxy/glx.h>
-#endif
-
 #include <fixx11h.h>
 
 #include <epoxy/gl.h>
@@ -51,9 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-#ifndef KWIN_HAVE_OPENGLES
 void KWINGLUTILS_EXPORT glxResolveFunctions();
-#endif
 
 void KWINGLUTILS_EXPORT eglResolveFunctions();
 

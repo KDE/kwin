@@ -22,8 +22,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-// TODO: cmake magic
-#ifndef KWIN_HAVE_OPENGLES
 // own
 #include "glxbackend.h"
 // kwin
@@ -870,4 +868,3 @@ OpenGLBackend *GlxTexture::backend()
 }
 
 } // namespace
-#endif

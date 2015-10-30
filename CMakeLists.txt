@@ -272,6 +272,7 @@ endif()
 include_directories(${XKB_INCLUDE_DIR})
 
 include_directories(${epoxy_INCLUDE_DIR})
+set(HAVE_EPOXY_GLX ${epoxy_HAS_GLX})
 
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
@@ -355,7 +356,6 @@ set(kwin_KDEINIT_SRCS
    scene_xrender.cpp
    scene_opengl.cpp
    scene_qpainter.cpp
-   glxbackend.cpp
    thumbnailitem.cpp
    lanczosfilter.cpp
    deleted.cpp
@@ -391,6 +391,10 @@ set(kwin_KDEINIT_SRCS
     wayland_server.cpp
     wayland_cursor_theme.cpp
    )
+
+if(HAVE_EPOXY_GLX)
+    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} glxbackend.cpp)
+endif()
 
 if(KWIN_BUILD_TABBOX)
     set(

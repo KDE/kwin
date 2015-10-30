@@ -1384,6 +1384,12 @@ QString Workspace::supportInformation() const
 #else
     support.append(no);
 #endif
+    support.append(QStringLiteral("HAVE_EPOXY_GLX: "));
+#if HAVE_EPOXY_GLX
+    support.append(yes);
+#else
+    support.append(no);
+#endif
     support.append(QStringLiteral("\n"));
 
     support.append(QStringLiteral("X11\n"));

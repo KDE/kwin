@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "x11eventfilter.h"
 
 #include <xcb/glx.h>
+#include <epoxy/glx.h>
 #include <memory>
 
 namespace KWin

@@ -45,6 +45,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 
+#if HAVE_EPOXY_GLX
+#include <epoxy/glx.h>
+#endif
+
 #define DEBUG_GLRENDERTARGET 0
 
 #define MAKE_GL_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
@@ -77,7 +81,7 @@ int glTextureUnitsCount;
 // Functions
 void initGLX()
 {
-#ifndef KWIN_HAVE_OPENGLES
+#if HAVE_EPOXY_GLX
     // Get GLX version
     int major, minor;
     glXQueryVersion(display(), &major, &minor);
