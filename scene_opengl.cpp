@@ -391,24 +391,20 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
 
     // perform Scene specific checks
     GLPlatform *glPlatform = GLPlatform::instance();
-#ifndef KWIN_HAVE_OPENGLES
-    if (!hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"))
+    if (!glPlatform->isGLES() && !hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"))
             && !hasGLExtension(QByteArrayLiteral("GL_ARB_texture_rectangle"))) {
         qCCritical(KWIN_CORE) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         init_ok = false;
         return; // error
     }
-#endif
     if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(8, 0)) {
         qCCritical(KWIN_CORE) << "KWin requires at least Mesa 8.0 for OpenGL compositing.";
         init_ok = false;
         return;
     }
-#ifndef KWIN_HAVE_OPENGLES
-    if (!m_backend->isSurfaceLessContext()) {
+    if (!glPlatform->isGLES() && !m_backend->isSurfaceLessContext()) {
         glDrawBuffer(GL_BACK);
     }
-#endif
 
     m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
     initDebugOutput();
@@ -610,7 +606,6 @@ bool SceneOpenGL::initFailed() const
     return !init_ok;
 }
 
-#ifndef KWIN_HAVE_OPENGLES
 void SceneOpenGL::copyPixels(const QRegion &region)
 {
     const int height = screens()->size().height();
@@ -623,30 +618,19 @@ void SceneOpenGL::copyPixels(const QRegion &region)
         glBlitFramebuffer(x0, y0, x1, y1, x0, y0, x1, y1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
     }
 }
-#endif
-
-#ifndef KWIN_HAVE_OPENGLES
-#  define GL_GUILTY_CONTEXT_RESET_KWIN    GL_GUILTY_CONTEXT_RESET_ARB
-#  define GL_INNOCENT_CONTEXT_RESET_KWIN  GL_INNOCENT_CONTEXT_RESET_ARB
-#  define GL_UNKNOWN_CONTEXT_RESET_KWIN   GL_UNKNOWN_CONTEXT_RESET_ARB
-#else
-#  define GL_GUILTY_CONTEXT_RESET_KWIN    GL_GUILTY_CONTEXT_RESET_EXT
-#  define GL_INNOCENT_CONTEXT_RESET_KWIN  GL_INNOCENT_CONTEXT_RESET_EXT
-#  define GL_UNKNOWN_CONTEXT_RESET_KWIN   GL_UNKNOWN_CONTEXT_RESET_EXT
-#endif
 
 void SceneOpenGL::handleGraphicsReset(GLenum status)
 {
     switch (status) {
-    case GL_GUILTY_CONTEXT_RESET_KWIN:
+    case GL_GUILTY_CONTEXT_RESET:
         qCDebug(KWIN_CORE) << "A graphics reset attributable to the current GL context occurred.";
         break;
 
-    case GL_INNOCENT_CONTEXT_RESET_KWIN:
+    case GL_INNOCENT_CONTEXT_RESET:
         qCDebug(KWIN_CORE) << "A graphics reset not attributable to the current GL context occurred.";
         break;
 
-    case GL_UNKNOWN_CONTEXT_RESET_KWIN:
+    case GL_UNKNOWN_CONTEXT_RESET:
         qCDebug(KWIN_CORE) << "A graphics reset of an unknown cause occurred.";
         break;
 
@@ -732,20 +716,20 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         int mask = 0;
         paintScreen(&mask, damage, repaint, &updateRegion, &validRegion);   // call generic implementation
 
-#ifndef KWIN_HAVE_OPENGLES
-        const QSize &screenSize = screens()->size();
-        const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
+        if (!GLPlatform::instance()->isGLES()) {
+            const QSize &screenSize = screens()->size();
+            const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
 
-        // copy dirty parts from front to backbuffer
-        if (!m_backend->supportsBufferAge() &&
-            options->glPreferBufferSwap() == Options::CopyFrontBuffer &&
-            validRegion != displayRegion) {
-            glReadBuffer(GL_FRONT);
-            copyPixels(displayRegion - validRegion);
-            glReadBuffer(GL_BACK);
-            validRegion = displayRegion;
+            // copy dirty parts from front to backbuffer
+            if (!m_backend->supportsBufferAge() &&
+                options->glPreferBufferSwap() == Options::CopyFrontBuffer &&
+                validRegion != displayRegion) {
+                glReadBuffer(GL_FRONT);
+                copyPixels(displayRegion - validRegion);
+                glReadBuffer(GL_BACK);
+                validRegion = displayRegion;
+            }
         }
-#endif
 
         GLVertexBuffer::streamingBuffer()->endOfFrame();
 
@@ -980,9 +964,7 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
     }
     if (GLPlatform::instance()->recommendedCompositor() < OpenGL2Compositing) {
         qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL 2 compositing";
-#ifndef KWIN_HAVE_OPENGLES
         return false;
-#endif
     }
     return true;
 }
@@ -1026,13 +1008,11 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
         return; // error
     }
 
-#ifndef KWIN_HAVE_OPENGLES
     // It is not legal to not have a vertex array object bound in a core context
-    if (hasGLExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
+    if (!GLPlatform::instance()->isGLES() && hasGLExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
     }
-#endif
 
     if (!ShaderManager::instance()->selfTest()) {
         qCCritical(KWIN_CORE) << "ShaderManager self test failed";

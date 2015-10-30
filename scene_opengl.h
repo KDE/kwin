@@ -81,12 +81,10 @@ public:
         return m_backend;
     }
 
-#ifndef KWIN_HAVE_OPENGLES
     /**
      * Copy a region of pixels from the current read to the current draw buffer
      */
     static void copyPixels(const QRegion &region);
-#endif
 
     static SceneOpenGL *createScene(QObject *parent);
 
