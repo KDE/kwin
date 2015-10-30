@@ -181,10 +181,8 @@ static QString formatGLError(GLenum err)
     case GL_INVALID_ENUM:      return QStringLiteral("GL_INVALID_ENUM");
     case GL_INVALID_VALUE:     return QStringLiteral("GL_INVALID_VALUE");
     case GL_INVALID_OPERATION: return QStringLiteral("GL_INVALID_OPERATION");
-#ifndef KWIN_HAVE_OPENGLES
     case GL_STACK_OVERFLOW:    return QStringLiteral("GL_STACK_OVERFLOW");
     case GL_STACK_UNDERFLOW:   return QStringLiteral("GL_STACK_UNDERFLOW");
-#endif
     case GL_OUT_OF_MEMORY:     return QStringLiteral("GL_OUT_OF_MEMORY");
     default: return QStringLiteral("0x") + QString::number(err, 16);
     }
@@ -391,13 +389,8 @@ void GLShader::bindAttributeLocation(const char *name, int index)
 
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
-#ifndef KWIN_HAVE_OPENGLES
-    if (hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_gpu_shader4")))
+    if (!GLPlatform::instance()->isGLES() && (hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_gpu_shader4"))))
         glBindFragDataLocation(mProgram, index, name);
-#else
-    Q_UNUSED(name)
-    Q_UNUSED(index)
-#endif
 }
 
 void GLShader::bind()
@@ -1397,7 +1390,6 @@ static QString formatFramebufferStatus(GLenum status)
     case GL_FRAMEBUFFER_UNSUPPORTED:
         // A format or the combination of formats of the attachments is unsupported
         return QStringLiteral("GL_FRAMEBUFFER_UNSUPPORTED");
-#ifndef KWIN_HAVE_OPENGLES
     case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
         // Not all attached images have the same width and height
         return QStringLiteral("GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT");
@@ -1413,7 +1405,6 @@ static QString formatFramebufferStatus(GLenum status)
     case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
         // The read buffer is missing
         return QStringLiteral("GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER");
-#endif
     default:
         return QStringLiteral("Unknown (0x") + QString::number(status, 16) + QStringLiteral(")");
     }

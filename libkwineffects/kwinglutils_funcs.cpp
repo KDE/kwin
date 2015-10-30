@@ -84,19 +84,12 @@ void eglResolveFunctions()
 
 void glResolveFunctions(OpenGLPlatformInterface platformInterface)
 {
-#ifndef KWIN_HAVE_OPENGLES
     if (hasGLExtension(QByteArrayLiteral("GL_ARB_robustness"))) {
         // See http://www.opengl.org/registry/specs/ARB/robustness.txt
         GL_RESOLVE_WITH_EXT(glGetGraphicsResetStatus, glGetGraphicsResetStatusARB);
         GL_RESOLVE_WITH_EXT(glReadnPixels,            glReadnPixelsARB);
         GL_RESOLVE_WITH_EXT(glGetnUniformfv,          glGetnUniformfvARB);
-    } else {
-        glGetGraphicsResetStatus = KWin::GetGraphicsResetStatus;
-        glReadnPixels            = KWin::ReadnPixels;
-        glGetnUniformfv          = KWin::GetnUniformfv;
-    }
-#else
-    if (hasGLExtension(QByteArrayLiteral("GL_EXT_robustness"))) {
+    } else if (hasGLExtension(QByteArrayLiteral("GL_EXT_robustness"))) {
         // See http://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
         glGetGraphicsResetStatus = (glGetGraphicsResetStatus_func) eglGetProcAddress("glGetGraphicsResetStatusEXT");
         glReadnPixels            = (glReadnPixels_func)            eglGetProcAddress("glReadnPixelsEXT");
@@ -106,7 +99,6 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glReadnPixels            = KWin::ReadnPixels;
         glGetnUniformfv          = KWin::GetnUniformfv;
     }
-#endif // KWIN_HAVE_OPENGLES
 }
 
 static GLenum GetGraphicsResetStatus()
