@@ -113,12 +113,7 @@ void ContrastShader::init()
 {
     reset();
 
-
-#ifdef KWIN_HAVE_OPENGLES
-    const bool glsl_140 = false;
-#else
-    const bool glsl_140 = GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
-#endif
+    const bool glsl_140 = !GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
 
     QByteArray vertexSource;
     QByteArray fragmentSource;

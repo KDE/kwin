@@ -96,11 +96,7 @@ CubeEffect::CubeEffect()
     desktopNameFont.setBold(true);
     desktopNameFont.setPointSize(14);
 
-#ifdef KWIN_HAVE_OPENGLES
-    const qint64 coreVersionNumber = kVersionNumber(3, 0);
-#else
-    const qint64 coreVersionNumber = kVersionNumber(1, 40);
-#endif
+    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
     if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
         m_shadersDir = QStringLiteral("kwin/shaders/1.40/");
 
@@ -262,9 +258,9 @@ void CubeEffect::slotCubeCapLoaded()
         effects->makeOpenGLContextCurrent();
         capTexture = new GLTexture(img);
         capTexture->setFilter(GL_LINEAR);
-#ifndef KWIN_HAVE_OPENGLES
-        capTexture->setWrapMode(GL_CLAMP_TO_BORDER);
-#endif
+        if (!GLPlatform::instance()->isGLES()) {
+            capTexture->setWrapMode(GL_CLAMP_TO_BORDER);
+        }
         // need to recreate the VBO for the cube cap
         delete m_cubeCapBuffer;
         m_cubeCapBuffer = NULL;
@@ -445,10 +441,10 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 m_reflectionMatrix.translate(0.0, sin(fabs(manualAngle) * M_PI / 360.0f * float(effects->numberOfDesktops())) * addedHeight2 + addedHeight1 - float(rect.height()), 0.0);
             }
 
-#ifndef KWIN_HAVE_OPENGLES
             // TODO: find a solution for GLES
-            glEnable(GL_CLIP_PLANE0);
-#endif
+            if (!GLPlatform::instance()->isGLES()) {
+                glEnable(GL_CLIP_PLANE0);
+            }
             reflectionPainting = true;
             glEnable(GL_CULL_FACE);
             paintCap(true, -point - zTranslate);
@@ -463,10 +459,10 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             paintCap(false, -point - zTranslate);
             glDisable(GL_CULL_FACE);
             reflectionPainting = false;
-#ifndef KWIN_HAVE_OPENGLES
             // TODO: find a solution for GLES
-            glDisable(GL_CLIP_PLANE0);
-#endif
+            if (!GLPlatform::instance()->isGLES()) {
+                glDisable(GL_CLIP_PLANE0);
+            }
 
             const float width = rect.width();
             const float height = rect.height();
@@ -1784,14 +1780,14 @@ void CubeEffect::setActive(bool active)
         desktopChangedWhileRotating = false;
         if (reflection) {
             QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
-#ifndef KWIN_HAVE_OPENGLES
             // clip parts above the reflection area
-            double eqn[4] = {0.0, 1.0, 0.0, 0.0};
-            glPushMatrix();
-            glTranslatef(0.0, rect.height(), 0.0);
-            glClipPlane(GL_CLIP_PLANE0, eqn);
-            glPopMatrix();
-#endif
+            if (!GLPlatform::instance()->isGLES()) {
+                double eqn[4] = {0.0, 1.0, 0.0, 0.0};
+                glPushMatrix();
+                glTranslatef(0.0, rect.height(), 0.0);
+                glClipPlane(GL_CLIP_PLANE0, eqn);
+                glPopMatrix();
+            }
             float temporaryCoeff = float(rect.width()) / tan(M_PI / float(effects->numberOfDesktops()));
             mAddedHeightCoeff1 = sqrt(float(rect.height()) * float(rect.height()) + temporaryCoeff * temporaryCoeff);
             mAddedHeightCoeff2 = sqrt(float(rect.height()) * float(rect.height()) + float(rect.width()) * float(rect.width()) + temporaryCoeff * temporaryCoeff);

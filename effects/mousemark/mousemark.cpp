@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <kwinconfig.h>
+#include <kwinglplatform.h>
 #include <kwinglutils.h>
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -116,9 +117,9 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
     if (marks.isEmpty() && drawing.isEmpty())
         return;
     if ( effects->isOpenGLCompositing()) {
-#ifndef KWIN_HAVE_OPENGLES
-        glEnable(GL_LINE_SMOOTH);
-#endif
+        if (!GLPlatform::instance()->isGLES()) {
+            glEnable(GL_LINE_SMOOTH);
+        }
         glLineWidth(width);
         GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
         vbo->reset();
@@ -145,9 +146,9 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             vbo->render(GL_LINE_STRIP);
         }
         glLineWidth(1.0);
-    #ifndef KWIN_HAVE_OPENGLES
-        glDisable(GL_LINE_SMOOTH);
-    #endif
+        if (!GLPlatform::instance()->isGLES()) {
+            glDisable(GL_LINE_SMOOTH);
+        }
     }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if ( effects->compositingType() == XRenderCompositing) {

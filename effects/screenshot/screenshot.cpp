@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screenshot.h"
+#include <kwinglplatform.h>
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
 #include <QtCore/QTemporaryFile>
@@ -237,11 +238,11 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
         // copy content from framebuffer into image
         tex.bind();
         img = QImage(geometry.size(), QImage::Format_ARGB32);
-#ifdef KWIN_HAVE_OPENGLES
-        glReadPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
-#else
-        glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
-#endif
+        if (GLPlatform::instance()->isGLES()) {
+            glReadPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+        } else {
+            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+        }
         tex.unbind();
         ScreenShotEffect::convertFromGLImage(img, geometry.width(), geometry.height());
     }

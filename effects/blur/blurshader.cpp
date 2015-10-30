@@ -173,18 +173,18 @@ void GLSLBlurShader::unbind()
 
 int GLSLBlurShader::maxKernelSize() const
 {
-#ifdef KWIN_HAVE_OPENGLES
-    // GL_MAX_VARYING_FLOATS not available in GLES
-    // querying for GL_MAX_VARYING_VECTORS crashes on nouveau
-    // using the minimum value of 8
-    return 8 * 2;
-#else
-    int value;
-    glGetIntegerv(GL_MAX_VARYING_FLOATS, &value);
-    // Maximum number of vec4 varyings * 2
-    // The code generator will pack two vec2's into each vec4.
-    return value / 2;
-#endif
+    if (GLPlatform::instance()->isGLES()) {
+        // GL_MAX_VARYING_FLOATS not available in GLES
+        // querying for GL_MAX_VARYING_VECTORS crashes on nouveau
+        // using the minimum value of 8
+        return 8 * 2;
+    } else {
+        int value;
+        glGetIntegerv(GL_MAX_VARYING_FLOATS, &value);
+        // Maximum number of vec4 varyings * 2
+        // The code generator will pack two vec2's into each vec4.
+        return value / 2;
+    }
 }
 
 void GLSLBlurShader::init()
@@ -208,11 +208,7 @@ void GLSLBlurShader::init()
         offsets << vec4;
     }
 
-#ifdef KWIN_HAVE_OPENGLES
-    const bool glsl_140 = false;
-#else
-    const bool glsl_140 = GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
-#endif
+    const bool glsl_140 = !GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
 
     QByteArray vertexSource;
     QByteArray fragmentSource;

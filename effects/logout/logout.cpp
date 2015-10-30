@@ -62,11 +62,7 @@ LogoutEffect::LogoutEffect()
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
 
     if (effects->isOpenGLCompositing()) {
-#ifdef KWIN_HAVE_OPENGLES
-        const qint64 coreVersionNumber = kVersionNumber(3, 0);
-#else
-        const qint64 coreVersionNumber = kVersionNumber(1, 40);
-#endif
+        const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
         if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
             m_shadersDir = QStringLiteral("kwin/shaders/1.40/");
     }
