@@ -239,7 +239,7 @@ ColorCorrectionPrivate::ColorCorrectionPrivate(ColorCorrection *parent)
     , m_enabled(false)
     , m_hasError(false)
     , m_duringEnablingPhase(false)
-    , m_haveTexture3D(true)
+    , m_haveTexture3D(!GLPlatform::instance()->isGLES() || hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_OES_texture_3D")))
     , m_ccTextureUnit(-1)
     , m_dummyCCTexture(0)
     , m_lastOutput(-1)
@@ -259,10 +259,6 @@ ColorCorrectionPrivate::ColorCorrectionPrivate(ColorCorrection *parent)
 
     connect(m_csi, SIGNAL(updateSucceeded()), this, SLOT(colorServerUpdateSucceededSlot()));
     connect(m_csi, SIGNAL(updateFailed()), this, SLOT(colorServerUpdateFailedSlot()));
-
-#ifdef KWIN_HAVE_OPENGLES
-    m_haveTexture3D = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_OES_texture_3D"));
-#endif
 }
 
 ColorCorrectionPrivate::~ColorCorrectionPrivate()
@@ -288,14 +284,12 @@ bool ColorCorrection::setEnabled(bool enabled)
         return false;
     }
 
-#ifdef KWIN_HAVE_OPENGLES
     const GLPlatform *gl = GLPlatform::instance();
     if (enabled && gl->isGLES() && !d->m_haveTexture3D) {
         qCCritical(LIBKWINGLUTILS) << "color correction is not supported on OpenGL ES without OES_texture_3D";
         d->m_hasError = true;
         return false;
     }
-#endif // KWIN_HAVE_OPENGLES
 
     if (enabled) {
         // Update all profiles and regions
@@ -623,22 +617,22 @@ bool ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-#ifndef KWIN_HAVE_OPENGLES
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB16,
-                 LUT_GRID_POINTS, LUT_GRID_POINTS, LUT_GRID_POINTS,
-                 0, GL_RGB, GL_UNSIGNED_SHORT, clut.data());
-#else
-    const int textureDataSize = clut.size();
-    QVector<quint8> textureData(textureDataSize);
-    quint8 *pTextureData = textureData.data();
-    const quint16 *pClutData = clut.data();
-    for (int i = 0; i < textureDataSize; ++i)
-        *(pTextureData++) = *(pClutData++) >> 8;
+    if (!GLPlatform::instance()->isGLES()) {
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB16,
+                    LUT_GRID_POINTS, LUT_GRID_POINTS, LUT_GRID_POINTS,
+                    0, GL_RGB, GL_UNSIGNED_SHORT, clut.data());
+    } else {
+        const int textureDataSize = clut.size();
+        QVector<quint8> textureData(textureDataSize);
+        quint8 *pTextureData = textureData.data();
+        const quint16 *pClutData = clut.data();
+        for (int i = 0; i < textureDataSize; ++i)
+            *(pTextureData++) = *(pClutData++) >> 8;
 
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB,
-                 LUT_GRID_POINTS, LUT_GRID_POINTS, LUT_GRID_POINTS,
-                 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
-#endif // KWIN_HAVE_OPENGLES
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB,
+                    LUT_GRID_POINTS, LUT_GRID_POINTS, LUT_GRID_POINTS,
+                    0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
+    }
 
     return !checkGLError("setupCCTexture");
 }
