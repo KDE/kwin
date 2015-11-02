@@ -857,6 +857,12 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_virtualMachine = true;
         m_recommendedCompositor = OpenGL2Compositing;
     }
+
+    // and force back to shader supported on gles, we wouldn't have got a context if not supported
+    if (isGLES()) {
+        m_supportsGLSL = true;
+        m_limitedGLSL = false;
+    }
 }
 
 static void print(const QString &label, const QString &setting)
