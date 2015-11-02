@@ -373,6 +373,7 @@ private:
     bool m_virtualMachine: 1;
     bool m_preferBufferSubData: 1;
     OpenGLPlatformInterface m_platformInterface;
+    bool m_gles: 1;
     static GLPlatform *s_platform;
 };
 

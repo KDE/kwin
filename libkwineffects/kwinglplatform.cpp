@@ -510,7 +510,8 @@ GLPlatform::GLPlatform()
       m_textureNPOT(false),
       m_limitedNPOT(false),
       m_virtualMachine(false),
-      m_platformInterface(NoOpenGLPlatformInterface)
+      m_platformInterface(NoOpenGLPlatformInterface),
+      m_gles(false)
 {
 }
 
@@ -531,6 +532,14 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     if (versionTokens.count() > 0) {
         const QByteArray version = QByteArray(m_version);
         m_glVersion = parseVersionString(version);
+        if (platformInterface == EglPlatformInterface) {
+            // only EGL can have OpenGLES, GLX is OpenGL only
+            if (version.startsWith("OpenGL ES")) {
+                // from GLES 2: "Returns a version or release number of the form OpenGL<space>ES<space><version number><space><vendor-specific information>."
+                // from GLES 3: "Returns a version or release number." and "The version number uses one of these forms: major_number.minor_number major_number.minor_number.release_number"
+                m_gles = true;
+            }
+        }
     }
 
 #ifndef KWIN_HAVE_OPENGLES
@@ -1049,11 +1058,7 @@ OpenGLPlatformInterface GLPlatform::platformInterface() const
 
 bool GLPlatform::isGLES() const
 {
-#ifdef KWIN_HAVE_OPENGLES
-    return true;
-#else
-    return false;
-#endif
+    return m_gles;
 }
 
 void GLPlatform::cleanup()
