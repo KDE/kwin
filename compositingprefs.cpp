@@ -85,6 +85,8 @@ bool CompositingPrefs::compositingPossible()
 #endif
     if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
         return true;
+    } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        return true;
     }
     qCDebug(KWIN_CORE) << "No OpenGL or XRender/XFixes support";
     return false;

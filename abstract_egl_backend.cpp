@@ -176,6 +176,9 @@ void AbstractEglBackend::doneCurrent()
 
 bool AbstractEglBackend::isOpenGLES() const
 {
+    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        return true;
+    }
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 

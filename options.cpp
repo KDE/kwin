@@ -772,6 +772,9 @@ void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
     if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
         qCDebug(KWIN_CORE) << "Forcing EGL native interface as Qt uses OpenGL ES";
         interface = EglPlatformInterface;
+    } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        qCDebug(KWIN_CORE) << "Forcing EGL native interface as OpenGL ES requested through KWIN_COMPOSE environment variable.";
+        interface = EglPlatformInterface;
     }
 
     if (m_glPlatformInterface == interface) {

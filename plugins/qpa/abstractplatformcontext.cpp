@@ -28,6 +28,9 @@ namespace QPA
 
 static bool isOpenGLES()
 {
+    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        return true;
+    }
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 

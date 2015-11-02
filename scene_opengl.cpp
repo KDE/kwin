@@ -951,7 +951,7 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
 {
     const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
     if (!forceEnv.isEmpty()) {
-        if (qstrcmp(forceEnv, "O2") == 0) {
+        if (qstrcmp(forceEnv, "O2") == 0 || qstrcmp(forceEnv, "O2ES") == 0) {
             qCDebug(KWIN_CORE) << "OpenGL 2 compositing enforced by environment variable";
             return true;
         } else {
