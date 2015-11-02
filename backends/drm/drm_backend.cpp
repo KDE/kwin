@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <KSharedConfig>
 // Qt
+#include <QCryptographicHash>
 #include <QSocketNotifier>
 #include <QPainter>
 // system
@@ -285,8 +286,10 @@ void DrmBackend::queryResources()
         }
         drmOutput->m_connector = connector->connector_id;
         drmOutput->init(connector.data());
+        qCDebug(KWIN_DRM) << "Found new output with uuid" << drmOutput->uuid();
         connectedOutputs << drmOutput;
     }
+    std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_connector < b->m_connector; });
     // check for outputs which got removed
     auto it = m_outputs.begin();
     while (it != m_outputs.end()) {
@@ -305,8 +308,41 @@ void DrmBackend::queryResources()
         }
     }
     m_outputs = connectedOutputs;
+    readOutputsConfiguration();
     emit screensQueried();
-    // TODO: install global space
+}
+
+void DrmBackend::readOutputsConfiguration()
+{
+    if (m_outputs.isEmpty()) {
+        return;
+    }
+    const QByteArray uuid = generateOutputConfigurationUuid();
+    const auto outputGroup = KSharedConfig::openConfig(KWIN_CONFIG)->group("DrmOutputs");
+    const auto configGroup = outputGroup.group(uuid);
+    qCDebug(KWIN_DRM) << "Reading output configuration for" << uuid;
+    // default position goes from left to right
+    QPoint pos(0, 0);
+    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
+        const auto outputConfig = configGroup.group((*it)->uuid());
+        (*it)->setGlobalPos(outputConfig.readEntry<QPoint>("Position", pos));
+        // TODO: add mode
+        pos.setX(pos.x() + (*it)->size().width());
+    }
+}
+
+QByteArray DrmBackend::generateOutputConfigurationUuid() const
+{
+    auto it = m_outputs.constBegin();
+    if (m_outputs.size() == 1) {
+        // special case: one output
+        return (*it)->uuid();
+    }
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    for (; it != m_outputs.constEnd(); ++it) {
+        hash.addData((*it)->uuid());
+    }
+    return hash.result().toHex().left(10);
 }
 
 DrmOutput *DrmBackend::findOutput(quint32 connector)
@@ -650,6 +686,7 @@ void DrmOutput::init(drmModeConnector *connector)
 {
     initEdid(connector);
     initDpms(connector);
+    initUuid();
     m_savedCrtc.reset(drmModeGetCrtc(m_backend->fd(), m_crtcId));
     blank();
     setDpms(DpmsMode::On);
@@ -729,6 +766,16 @@ void DrmOutput::init(drmModeConnector *connector)
     }
 
     m_waylandOutput->create();
+}
+
+void DrmOutput::initUuid()
+{
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    hash.addData(QByteArray::number(m_connector));
+    hash.addData(m_edid.eisaId);
+    hash.addData(m_edid.monitorName);
+    hash.addData(m_edid.serialNumber);
+    m_uuid = hash.result().toHex().left(10);
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
@@ -994,6 +1041,14 @@ int DrmOutput::currentRefreshRate() const
         return 60000;
     }
     return m_waylandOutput->refreshRate();
+}
+
+void DrmOutput::setGlobalPos(const QPoint &pos)
+{
+    m_globalPos = pos;
+    if (m_waylandOutput) {
+        m_waylandOutput->setGlobalPosition(pos);
+    }
 }
 
 DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)

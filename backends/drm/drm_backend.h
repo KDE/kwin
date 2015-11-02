@@ -107,6 +107,8 @@ private:
     quint32 findCrtc(drmModeRes *res, drmModeConnector *connector, bool *ok = nullptr);
     bool crtcIsUsed(quint32 crtc);
     void outputDpmsChanged();
+    void readOutputsConfiguration();
+    QByteArray generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
@@ -155,6 +157,10 @@ public:
         return m_dpmsMode == DpmsMode::On;
     }
 
+    QByteArray uuid() const {
+        return m_uuid;
+    }
+
 Q_SIGNALS:
     void dpmsChanged();
 
@@ -167,6 +173,8 @@ private:
     void initDpms(drmModeConnector *connector);
     bool isCurrentMode(const drmModeModeInfo *mode) const;
     void reenableDpms();
+    void initUuid();
+    void setGlobalPos(const QPoint &pos);
 
     DrmBackend *m_backend;
     QPoint m_globalPos;
@@ -186,6 +194,7 @@ private:
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
     DpmsMode m_dpmsMode = DpmsMode::On;
+    QByteArray m_uuid;
 };
 
 class DrmBuffer
