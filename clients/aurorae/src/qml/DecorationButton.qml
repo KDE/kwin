@@ -107,44 +107,17 @@ Item {
             switch (button.buttonType) {
             case DecorationOptions.DecorationButtonOnAllDesktops:
                 // all desktops
-                button.toggled = decoration.client.onAllDesktops;
+                button.toggled = Qt.binding(function() { return decoration.client.onAllDesktops; });
                 break;
             case DecorationOptions.DecorationButtonKeepAbove:
-                button.toggled = decoration.client.keepAbove;
+                button.toggled = Qt.binding(function() { return decoration.client.keepAbove; });
                 break;
             case DecorationOptions.DecorationButtonKeepBelow:
-                button.toggled = decoration.client.keepBelow;
+                button.toggled = Qt.binding(function() { return decoration.client.keepBelow; });
                 break;
             case DecorationOptions.DecorationButtonShade:
-                button.toggled = decoration.client.shaded;
+                button.toggled = Qt.binding(function() { return decoration.client.shaded; });
                 break;
-            }
-        }
-        Connections {
-            target: decoration.client
-            onShadedChanged: {
-                if (button.buttonType != DecorationOptions.DecorationButtonShade) {
-                    return;
-                }
-                button.toggled = decoration.client.shaded;
-            }
-            onKeepBelowChanged: {
-                if (button.buttonType != DecorationOptions.DecorationButtonKeepBelow) {
-                    return;
-                }
-                button.toggled = decoration.client.keepBelow;
-            }
-            onKeepAboveChanged: {
-                if (button.buttonType != DecorationOptions.DecorationButtonKeepAbove) {
-                    return;
-                }
-                button.toggled = decoration.client.keepAbove;
-            }
-            onDesktopChanged: {
-                if (button.buttonType != DecorationOptions.DecorationButtonOnAllDesktops) {
-                    return;
-                }
-                button.toggled = decoration.client.onAllDesktops;
             }
         }
     }
