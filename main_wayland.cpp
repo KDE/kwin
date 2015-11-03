@@ -380,6 +380,8 @@ int main(int argc, char * argv[])
 #endif
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
+    // reset QT_QPA_PLATFORM to a sane value for any processes started from KWin
+    setenv("QT_QPA_PLATFORM", "wayland", true);
 
     KWin::Application::createAboutData();
 
