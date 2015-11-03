@@ -68,6 +68,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KNotification>
 #include <KProcess>
 
+// HACK: workaround for libepoxy < 1.3
+#ifndef GL_GUILTY_CONTEXT_RESET
+#define GL_GUILTY_CONTEXT_RESET 0x8253
+#endif
+#ifndef GL_INNOCENT_CONTEXT_RESET
+#define GL_INNOCENT_CONTEXT_RESET 0x8254
+#endif
+#ifndef GL_UNKNOWN_CONTEXT_RESET
+#define GL_UNKNOWN_CONTEXT_RESET 0x8255
+#endif
+
 namespace KWin
 {
 
