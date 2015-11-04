@@ -55,6 +55,9 @@ class DpmsManagerInterface;
 class IdleInterface;
 class FakeInputInterface;
 class OutputInterface;
+class OutputDeviceInterface;
+class OutputConfigurationInterface;
+class OutputManagementInterface;
 class PlasmaShellInterface;
 class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
@@ -136,12 +139,17 @@ public:
     void removeOutput(OutputInterface *output);
     QList<OutputInterface*> outputs() const;
 
+    OutputDeviceInterface *createOutputDevice(QObject *parent = nullptr);
+    void removeOutputDevice(OutputDeviceInterface *output);
+    QList<OutputDeviceInterface*> outputDevices() const;
+
     CompositorInterface *createCompositor(QObject *parent = nullptr);
     void createShm();
     ShellInterface *createShell(QObject *parent = nullptr);
     SeatInterface *createSeat(QObject *parent = nullptr);
     SubCompositorInterface *createSubCompositor(QObject *parent = nullptr);
     DataDeviceManagerInterface *createDataDeviceManager(QObject *parent = nullptr);
+    OutputManagementInterface *createOutputManagement(QObject *parent = nullptr);
     PlasmaShellInterface *createPlasmaShell(QObject *parent = nullptr);
     PlasmaWindowManagementInterface *createPlasmaWindowManagement(QObject *parent = nullptr);
     QtSurfaceExtensionInterface *createQtSurfaceExtension(QObject *parent = nullptr);

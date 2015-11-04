@@ -21,6 +21,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "compositor_interface.h"
 #include "datadevicemanager_interface.h"
 #include "dpms_interface.h"
+#include "outputconfiguration_interface.h"
+#include "outputmanagement_interface.h"
+#include "outputdevice_interface.h"
 #include "idle_interface.h"
 #include "fakeinput_interface.h"
 #include "logging_p.h"
@@ -65,6 +68,7 @@ public:
     QString socketName = QStringLiteral("wayland-0");
     bool running = false;
     QList<OutputInterface*> outputs;
+    QList<OutputDeviceInterface*> outputdevices;
     QVector<ClientConnection*> clients;
     EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 
@@ -212,6 +216,22 @@ ShellInterface *Display::createShell(QObject *parent)
     return shell;
 }
 
+OutputDeviceInterface *Display::createOutputDevice(QObject *parent)
+{
+    OutputDeviceInterface *output = new OutputDeviceInterface(this, parent);
+    connect(output, &QObject::destroyed, this, [this,output] { d->outputdevices.removeAll(output); });
+    connect(this, &Display::aboutToTerminate, output, [this,output] { removeOutputDevice(output); });
+    d->outputdevices << output;
+    return output;
+}
+
+OutputManagementInterface *Display::createOutputManagement(QObject *parent)
+{
+    OutputManagementInterface *om = new OutputManagementInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, om, [this,om] { delete om; });
+    return om;
+}
+
 SeatInterface *Display::createSeat(QObject *parent)
 {
     SeatInterface *seat = new SeatInterface(this, parent);
@@ -315,6 +335,12 @@ void Display::removeOutput(OutputInterface *output)
     delete output;
 }
 
+void Display::removeOutputDevice(OutputDeviceInterface *output)
+{
+    d->outputdevices.removeAll(output);
+    delete output;
+}
+
 quint32 Display::nextSerial()
 {
     return wl_display_next_serial(d->display);
@@ -343,6 +369,11 @@ Display::operator wl_display*() const
 QList< OutputInterface* > Display::outputs() const
 {
     return d->outputs;
+}
+
+QList< OutputDeviceInterface* > Display::outputDevices() const
+{
+    return d->outputdevices;
 }
 
 ClientConnection *Display::getConnection(wl_client *client)
