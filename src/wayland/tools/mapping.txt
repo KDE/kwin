@@ -29,6 +29,9 @@ org_kde_kwin_slide_manager;SlideManager
 org_kde_kwin_fake_input;FakeInput
 org_kde_kwin_idle;Idle
 org_kde_kwin_idle_timeout;IdleTimeout
+org_kde_kwin_outputmanagement;OutputManagement
+org_kde_kwin_outputconfiguration;OutputConfiguration
+org_kde_kwin_outputdevice;OutputDevice
 org_kde_kwin_shadow;Shadow
 org_kde_kwin_shadow_manager;ShadowManager
 org_kde_plasma_shell;PlasmaShell
