@@ -136,6 +136,12 @@ public:
      */
     bool skipTaskbar() const;
 
+    /**
+     * @returns The PlasmaShellSurfaceInterface for the @p native resource.
+     * @since 5.5
+     **/
+    static PlasmaShellSurfaceInterface *get(wl_resource *native);
+
 Q_SIGNALS:
     /**
      * A change of global position has been requested.

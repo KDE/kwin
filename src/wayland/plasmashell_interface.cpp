@@ -320,5 +320,10 @@ bool PlasmaShellSurfaceInterface::skipTaskbar() const
     return d->m_skipTaskbar;
 }
 
+PlasmaShellSurfaceInterface *PlasmaShellSurfaceInterface::get(wl_resource *native)
+{
+    return Private::get<PlasmaShellSurfaceInterface>(native);
+}
+
 }
 }
