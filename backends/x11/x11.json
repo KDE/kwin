@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render to a nested window on X11 windowing system.", 
+        "Description[ca@valencia]": "Renderitza a una finestra imbricada en el sistema de finestres X11.", 
         "Description[ca]": "Renderitza a una finestra imbricada en el sistema de finestres X11.", 
         "Description[en_GB]": "Render to a nested window on X11 windowing system.", 
         "Description[es]": "Renderizar en una ventana anidada en el sistema de ventanas X11.", 
@@ -22,6 +23,7 @@
         "Description[zh_CN]": "渲染到 X11 窗口系统上的嵌套窗口中", 
         "Id": "KWinWaylandX11Backend", 
         "Name": "x11", 
+        "Name[ca@valencia]": "X11", 
         "Name[ca]": "X11", 
         "Name[cs]": "x11", 
         "Name[de]": "x11", 

@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render through drm node.", 
+        "Description[ca@valencia]": "Renderitza mitjançant el node del DRM.", 
         "Description[ca]": "Renderitza mitjançant el node del DRM.", 
         "Description[de]": "In DRM-Knoten rendern.", 
         "Description[en_GB]": "Render through drm node.", 
@@ -23,6 +24,7 @@
         "Description[zh_CN]": "通过 drm 结点渲染。", 
         "Id": "KWinWaylandDrmBackend", 
         "Name": "drm", 
+        "Name[ca@valencia]": "DRM", 
         "Name[ca]": "DRM", 
         "Name[cs]": "drm", 
         "Name[de]": "DRM", 

@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render to a nested window on running Wayland compositor.", 
+        "Description[ca@valencia]": "Renderitza a una finestra imbricada en un compositor Wayland en execució.", 
         "Description[ca]": "Renderitza a una finestra imbricada en un compositor Wayland en execució.", 
         "Description[en_GB]": "Render to a nested window on running Wayland compositor.", 
         "Description[es]": "Renderizar en una ventana anidada en el compositor Wayland en ejecución.", 
@@ -22,6 +23,7 @@
         "Description[zh_CN]": "渲染到 Wayland 混成器上的嵌套窗口中", 
         "Id": "KWinWaylandWaylandBackend", 
         "Name": "wayland", 
+        "Name[ca@valencia]": "Wayland", 
         "Name[ca]": "Wayland", 
         "Name[cs]": "wayland", 
         "Name[de]": "Wayland", 

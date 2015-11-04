@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render to framebuffer.", 
+        "Description[ca@valencia]": "Renderitza al «framebuffer».", 
         "Description[ca]": "Renderitza al «framebuffer».", 
         "Description[de]": "In Framebuffer rendern.", 
         "Description[en_GB]": "Render to framebuffer.", 
@@ -23,6 +24,7 @@
         "Description[zh_CN]": "渲染到帧缓冲。", 
         "Id": "KWinWaylandFbdevBackend", 
         "Name": "framebuffer", 
+        "Name[ca@valencia]": "Framebuffer", 
         "Name[ca]": "Framebuffer", 
         "Name[cs]": "framebuffer", 
         "Name[de]": "Framebuffer", 
