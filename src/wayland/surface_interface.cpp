@@ -173,10 +173,14 @@ void SurfaceInterface::frameRendered(quint32 msec)
 {
     Q_D();
     // notify all callbacks
+    const bool needsFlush = !d->current.callbacks.isEmpty();
     while (!d->current.callbacks.isEmpty()) {
         wl_resource *r = d->current.callbacks.takeFirst();
         wl_callback_send_done(r, msec);
         wl_resource_destroy(r);
+    }
+    if (needsFlush)  {
+        client()->flush();
     }
 }
 
