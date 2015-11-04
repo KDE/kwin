@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // WaylandServer
 #include "../../src/server/display.h"
 #include "../../src/server/clientconnection.h"
+#include "../../src/server/outputmanagement_interface.h"
 #include "../../src/server/output_interface.h"
 // Wayland
 #include <wayland-server.h>
@@ -41,6 +42,7 @@ private Q_SLOTS:
     void testAddRemoveOutput();
     void testClientConnection();
     void testConnectNoSocket();
+    void testOutputManagement();
 };
 
 void TestWaylandServerDisplay::testSocketName()
@@ -192,6 +194,17 @@ void TestWaylandServerDisplay::testConnectNoSocket()
     close(sv[0]);
     close(sv[1]);
 }
+
+void TestWaylandServerDisplay::testOutputManagement()
+{
+    auto display = new KWayland::Server::Display(this);
+    display->setSocketName("kwayland-test-0");
+    display->start();
+    auto kwin = display->createOutputManagement(this);
+    kwin->create();
+    QVERIFY(kwin->isValid());
+}
+
 
 QTEST_GUILESS_MAIN(TestWaylandServerDisplay)
 #include "test_display.moc"
