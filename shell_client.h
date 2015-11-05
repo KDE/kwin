@@ -66,6 +66,7 @@ public:
     bool isFullScreen() const override;
     bool isMaximizable() const override;
     bool isMinimizable() const override;
+    QRect iconGeometry() const override;
     bool isMovable() const override;
     bool isMovableAcrossScreens() const override;
     bool isResizable() const override;

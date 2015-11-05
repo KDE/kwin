@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/plasmashell_interface.h>
 #include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
+#include <KWayland/Server/plasmawindowmanagement_interface.h>
 
 #include <KDesktopFile>
 
@@ -394,6 +395,30 @@ bool ShellClient::isMaximizable() const
 bool ShellClient::isMinimizable() const
 {
     return (!m_plasmaShellSurface || m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal);
+}
+
+QRect ShellClient::iconGeometry() const
+{
+    int minDistance = INT_MAX;
+    ShellClient *candidatePanel = nullptr;
+    QRect candidateGeom;
+
+    for (auto i = windowManagementInterface()->minimizedGeometries().constBegin(), end = windowManagementInterface()->minimizedGeometries().constEnd(); i != end; ++i) {
+        ShellClient *client = waylandServer()->findClient(i.key());
+        if (!client) {
+            continue;
+        }
+        const int distance = QPoint(client->pos() - pos()).manhattanLength();
+        if (distance < minDistance) {
+            minDistance = distance;
+            candidatePanel = client;
+            candidateGeom = i.value();
+        }
+    }
+    if (!candidatePanel) {
+        return QRect();
+    }
+    return candidateGeom.translated(candidatePanel->pos());
 }
 
 bool ShellClient::isMovable() const

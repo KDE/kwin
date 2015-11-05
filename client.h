@@ -112,13 +112,6 @@ class Client
      */
     Q_PROPERTY(QSize basicUnit READ basicUnit)
     /**
-     * The optional geometry representing the minimized Client in e.g a taskbar.
-     * See _NET_WM_ICON_GEOMETRY at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     * The value is evaluated each time the getter is called.
-     * Because of that no changed signal is provided.
-     **/
-    Q_PROPERTY(QRect iconGeometry READ iconGeometry)
-    /**
      * The "Window Tabs" Group this Client belongs to.
      **/
     Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
@@ -215,7 +208,7 @@ public:
     MaximizeMode maximizeMode() const override;
 
     bool isMinimizable() const override;
-    QRect iconGeometry() const;
+    QRect iconGeometry() const override;
 
     void setFullScreen(bool set, bool user = true) override;
     bool isFullScreen() const override;

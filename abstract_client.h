@@ -125,6 +125,13 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      **/
     Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized NOTIFY minimizedChanged)
     /**
+     * The optional geometry representing the minimized Client in e.g a taskbar.
+     * See _NET_WM_ICON_GEOMETRY at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     * The value is evaluated each time the getter is called.
+     * Because of that no changed signal is provided.
+     **/
+    Q_PROPERTY(QRect iconGeometry READ iconGeometry)
+    /**
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
      * i.e. window types that usually don't have a window frame and the user does not use window
      * management (moving, raising,...) on them.
@@ -349,6 +356,7 @@ public:
     virtual bool isShadeable() const;
     virtual bool isMaximizable() const = 0;
     virtual bool isMinimizable() const = 0;
+    virtual QRect iconGeometry() const = 0;
     virtual bool userCanSetFullScreen() const = 0;
     virtual bool userCanSetNoBorder() const = 0;
     virtual void setOnAllActivities(bool set) = 0;
@@ -588,6 +596,10 @@ protected:
     QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
     void updateQuickTileMode(QuickTileMode newMode) {
         m_quickTileMode = newMode;
+    }
+
+    KWayland::Server::PlasmaWindowInterface *windowManagementInterface() const {
+        return m_windowManagementInterface;
     }
 
     // geometry handling
