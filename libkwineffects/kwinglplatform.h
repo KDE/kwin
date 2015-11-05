@@ -319,7 +319,7 @@ public:
     OpenGLPlatformInterface platformInterface() const;
 
     /**
-     * @returns a human readable form of the @p version.
+     * @returns a human readable form of the @p version as a QString.
      * @since 4.9
      * @see glVersion
      * @see glslVersion
@@ -331,17 +331,43 @@ public:
      **/
     static QString versionToString(qint64 version);
     /**
-     * @returns a human readable form for the @p driver.
+     * @returns a human readable form of the @p version as a QByteArray.
+     * @since 5.5
+     * @see glVersion
+     * @see glslVersion
+     * @see driverVersion
+     * @see mesaVersion
+     * @see galliumVersion
+     * @see kernelVersion
+     * @see serverVersion
+     **/
+    static QByteArray versionToString8(qint64 version);
+
+    /**
+     * @returns a human readable form for the @p driver as a QString.
      * @since 4.9
      * @see driver
      **/
     static QString driverToString(Driver driver);
     /**
-     * @returns a human readable form for the @p chipClass.
+     * @returns a human readable form for the @p driver as a QByteArray.
+     * @since 5.5
+     * @see driver
+     **/
+    static QByteArray driverToString8(Driver driver);
+
+    /**
+     * @returns a human readable form for the @p chipClass as a QString.
      * @since 4.9
      * @see chipClass
      **/
     static QString chipClassToString(ChipClass chipClass);
+    /**
+     * @returns a human readable form for the @p chipClass as a QByteArray.
+     * @since 5.5
+     * @see chipClass
+     **/
+    static QByteArray chipClassToString8(ChipClass chipClass);
 
 private:
     GLPlatform();

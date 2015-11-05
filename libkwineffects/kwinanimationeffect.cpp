@@ -880,7 +880,7 @@ QString AnimationEffect::debug(const QString &/*parameter*/) const
             QString caption = entry.key()->isDeleted() ? QStringLiteral("[Deleted]") : entry.key()->caption();
             if (caption.isEmpty())
                 caption = QStringLiteral("[Untitled]");
-            dbg += QStringLiteral("Animating window: ") + caption + QStringLiteral("\n");
+            dbg += QLatin1String("Animating window: ") + caption + QLatin1Char('\n');
             QList<AniData>::const_iterator anim = entry->first.constBegin(), animEnd = entry->first.constEnd();
             for (; anim != animEnd; ++anim)
                 dbg += anim->debugInfo();

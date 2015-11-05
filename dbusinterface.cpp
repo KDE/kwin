@@ -53,7 +53,7 @@ DBusInterface::DBusInterface(QObject *parent)
     dbus.registerObject(QStringLiteral("/KWin"), this);
     const QByteArray dBusSuffix = qgetenv("KWIN_DBUS_SERVICE_SUFFIX");
     if (!dBusSuffix.isNull()) {
-        m_serviceName = m_serviceName + QStringLiteral(".") + dBusSuffix;
+        m_serviceName = m_serviceName + QLatin1Char('.') + dBusSuffix;
     }
     if (!dbus.registerService(m_serviceName)) {
         QDBusServiceWatcher *dog = new QDBusServiceWatcher(m_serviceName, dbus, QDBusServiceWatcher::WatchForUnregistration, this);

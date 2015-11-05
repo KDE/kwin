@@ -64,11 +64,11 @@ AuroraeThemePrivate::~AuroraeThemePrivate()
 
 void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
 {
-    QString file(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + AuroraeTheme::mapButtonToName(type) + QStringLiteral(".svg"));
+    QString file(QLatin1String("aurorae/themes/") + themeName + QLatin1Char('/') + AuroraeTheme::mapButtonToName(type) + QLatin1String(".svg"));
     QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     if (path.isEmpty()) {
         // let's look for svgz
-        file.append(QStringLiteral("z"));
+        file += QLatin1String("z");
         path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     }
     if (!path.isEmpty()) {
@@ -102,7 +102,7 @@ bool AuroraeTheme::isValid() const
 void AuroraeTheme::loadTheme(const QString &name)
 {
     KConfig conf(QStringLiteral("auroraerc"));
-    KConfig config(QStringLiteral("aurorae/themes/") + name + QStringLiteral("/") + name + QStringLiteral("rc"),
+    KConfig config(QLatin1String("aurorae/themes/") + name + QLatin1Char('/') + name + QLatin1String("rc"),
                    KConfig::FullConfig, QStandardPaths::GenericDataLocation);
     KConfigGroup themeGroup(&conf, name);
     loadTheme(name, config);
@@ -111,10 +111,10 @@ void AuroraeTheme::loadTheme(const QString &name)
 void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
 {
     d->themeName = name;
-    QString file(QStringLiteral("aurorae/themes/") + d->themeName + QStringLiteral("/decoration.svg"));
+    QString file(QLatin1String("aurorae/themes/") + d->themeName + QLatin1String("/decoration.svg"));
     QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     if (path.isEmpty()) {
-        file += QStringLiteral("z");
+        file += QLatin1String("z");
         path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     }
     if (path.isEmpty()) {

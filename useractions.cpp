@@ -189,7 +189,7 @@ void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Ab
                  "activated using the %1 keyboard shortcut.",
                  shortcut(QStringLiteral("Window Operations Menu")));
         type = QStringLiteral("altf3warning");
-    } else if (message == QStringLiteral("fullscreenaltf3")) {
+    } else if (message == QLatin1String("fullscreenaltf3")) {
         args << QStringLiteral("--msgbox") << i18n(
                  "You have selected to show a window in fullscreen mode.\n"
                  "If the application itself does not have an option to turn the fullscreen "
@@ -205,7 +205,7 @@ void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Ab
         KConfigGroup cg(&cfg, "Notification Messages");  // Depends on KMessageBox
         if (!cg.readEntry(type, true))
             return;
-        args << QStringLiteral("--dontagain") << QStringLiteral("kwin_dialogsrc:") + type;
+        args << QStringLiteral("--dontagain") << QLatin1String("kwin_dialogsrc:") + type;
     }
     if (!c.isNull())
         args << QStringLiteral("--embed") << QString::number(c.data()->window());
@@ -636,9 +636,9 @@ void UserActionsMenu::desktopPopupAboutToShow()
     for (uint i = 1; i <= vds->count(); ++i) {
         QString basic_name(QStringLiteral("%1  %2"));
         if (i < BASE) {
-            basic_name.prepend(QStringLiteral("&"));
+            basic_name.prepend(QLatin1Char('&'));
         }
-        action = m_desktopMenu->addAction(basic_name.arg(i).arg(vds->name(i).replace(QStringLiteral("&"), QStringLiteral("&&"))));
+        action = m_desktopMenu->addAction(basic_name.arg(i).arg(vds->name(i).replace(QLatin1Char('&'), QStringLiteral("&&"))));
         action->setData(i);
         action->setCheckable(true);
         group->addAction(action);
@@ -1760,7 +1760,7 @@ void Client::setShortcut(const QString& _cut)
 // Format:
 // base+(abcdef)<space>base+(abcdef)
 // E.g. Alt+Ctrl+(ABCDEF);Meta+X,Meta+(ABCDEF)
-    if (!cut.contains(QStringLiteral("(")) && !cut.contains(QStringLiteral(")")) && !cut.contains(QStringLiteral(" - "))) {
+    if (!cut.contains(QLatin1Char('(')) && !cut.contains(QLatin1Char(')')) && !cut.contains(QLatin1String(" - "))) {
         if (workspace()->shortcutAvailable(cut, this))
             setShortcutInternal(QKeySequence(cut));
         else

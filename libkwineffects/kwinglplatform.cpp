@@ -83,7 +83,7 @@ static qint64 getKernelVersion()
     struct utsname name;
     uname(&name);
 
-    if (QByteArray(name.sysname) == "Linux")
+    if (qstrcmp(name.sysname, "Linux") == 0)
         return parseVersionString(name.release);
 
     return 0;
@@ -100,92 +100,93 @@ static QString extract(const QString &string, const QString &match, int offset =
     return result;
 }
 
-static ChipClass detectRadeonClass(const QString &chipset)
+static ChipClass detectRadeonClass(const QByteArray &chipset)
 {
     if (chipset.isEmpty())
         return UnknownRadeon;
 
-    if (chipset.contains(QStringLiteral("R100"))  ||
-        chipset.contains(QStringLiteral("RV100")) ||
-        chipset.contains(QStringLiteral("RS100")))
+    if (chipset.contains("R100")  ||
+        chipset.contains("RV100") ||
+        chipset.contains("RS100"))
         return R100;
 
-    if (chipset.contains(QStringLiteral("RV200")) ||
-        chipset.contains(QStringLiteral("RS200")) ||
-        chipset.contains(QStringLiteral("R200"))  ||
-        chipset.contains(QStringLiteral("RV250")) ||
-        chipset.contains(QStringLiteral("RS300")) ||
-        chipset.contains(QStringLiteral("RV280")))
+    if (chipset.contains("RV200") ||
+        chipset.contains("RS200") ||
+        chipset.contains("R200")  ||
+        chipset.contains("RV250") ||
+        chipset.contains("RS300") ||
+        chipset.contains("RV280"))
         return R200;
 
-    if (chipset.contains(QStringLiteral("R300"))  ||
-        chipset.contains(QStringLiteral("R350"))  ||
-        chipset.contains(QStringLiteral("R360"))  ||
-        chipset.contains(QStringLiteral("RV350")) ||
-        chipset.contains(QStringLiteral("RV370")) ||
-        chipset.contains(QStringLiteral("RV380")))
+    if (chipset.contains("R300")  ||
+        chipset.contains("R350")  ||
+        chipset.contains("R360")  ||
+        chipset.contains("RV350") ||
+        chipset.contains("RV370") ||
+        chipset.contains("RV380"))
         return R300;
 
-    if (chipset.contains(QStringLiteral("R420"))  ||
-        chipset.contains(QStringLiteral("R423"))  ||
-        chipset.contains(QStringLiteral("R430"))  ||
-        chipset.contains(QStringLiteral("R480"))  ||
-        chipset.contains(QStringLiteral("R481"))  ||
-        chipset.contains(QStringLiteral("RV410")) ||
-        chipset.contains(QStringLiteral("RS400")) ||
-        chipset.contains(QStringLiteral("RC410")) ||
-        chipset.contains(QStringLiteral("RS480")) ||
-        chipset.contains(QStringLiteral("RS482")) ||
-        chipset.contains(QStringLiteral("RS600")) ||
-        chipset.contains(QStringLiteral("RS690")) ||
-        chipset.contains(QStringLiteral("RS740")))
+    if (chipset.contains("R420")  ||
+        chipset.contains("R423")  ||
+        chipset.contains("R430")  ||
+        chipset.contains("R480")  ||
+        chipset.contains("R481")  ||
+        chipset.contains("RV410") ||
+        chipset.contains("RS400") ||
+        chipset.contains("RC410") ||
+        chipset.contains("RS480") ||
+        chipset.contains("RS482") ||
+        chipset.contains("RS600") ||
+        chipset.contains("RS690") ||
+        chipset.contains("RS740"))
         return R400;
 
-    if (chipset.contains(QStringLiteral("RV515")) ||
-        chipset.contains(QStringLiteral("R520"))  ||
-        chipset.contains(QStringLiteral("RV530")) ||
-        chipset.contains(QStringLiteral("R580"))  ||
-        chipset.contains(QStringLiteral("RV560")) ||
-        chipset.contains(QStringLiteral("RV570")))
+    if (chipset.contains("RV515") ||
+        chipset.contains("R520")  ||
+        chipset.contains("RV530") ||
+        chipset.contains("R580")  ||
+        chipset.contains("RV560") ||
+        chipset.contains("RV570"))
         return R500;
 
-    if (chipset.contains(QStringLiteral("R600"))  ||
-        chipset.contains(QStringLiteral("RV610")) ||
-        chipset.contains(QStringLiteral("RV630")) ||
-        chipset.contains(QStringLiteral("RV670")) ||
-        chipset.contains(QStringLiteral("RV620")) ||
-        chipset.contains(QStringLiteral("RV635")) ||
-        chipset.contains(QStringLiteral("RS780")) ||
-        chipset.contains(QStringLiteral("RS880")))
+    if (chipset.contains("R600")  ||
+        chipset.contains("RV610") ||
+        chipset.contains("RV630") ||
+        chipset.contains("RV670") ||
+        chipset.contains("RV620") ||
+        chipset.contains("RV635") ||
+        chipset.contains("RS780") ||
+        chipset.contains("RS880"))
         return R600;
 
-    if (chipset.contains(QStringLiteral("R700"))  ||
-        chipset.contains(QStringLiteral("RV770")) ||
-        chipset.contains(QStringLiteral("RV730")) ||
-        chipset.contains(QStringLiteral("RV710")) ||
-        chipset.contains(QStringLiteral("RV740")))
+    if (chipset.contains("R700")  ||
+        chipset.contains("RV770") ||
+        chipset.contains("RV730") ||
+        chipset.contains("RV710") ||
+        chipset.contains("RV740"))
         return R700;
 
-    if (chipset.contains(QStringLiteral("EVERGREEN")) ||  // Not an actual chipset, but returned by R600G in 7.9
-        chipset.contains(QStringLiteral("CEDAR"))     ||
-        chipset.contains(QStringLiteral("REDWOOD"))   ||
-        chipset.contains(QStringLiteral("JUNIPER"))   ||
-        chipset.contains(QStringLiteral("CYPRESS"))   ||
-        chipset.contains(QStringLiteral("HEMLOCK"))   ||
-        chipset.contains(QStringLiteral("PALM")))
+    if (chipset.contains("EVERGREEN") ||  // Not an actual chipset, but returned by R600G in 7.9
+        chipset.contains("CEDAR")     ||
+        chipset.contains("REDWOOD")   ||
+        chipset.contains("JUNIPER")   ||
+        chipset.contains("CYPRESS")   ||
+        chipset.contains("HEMLOCK")   ||
+        chipset.contains("PALM"))
         return Evergreen;
 
-    if (chipset.contains(QStringLiteral("SUMO"))   ||
-        chipset.contains(QStringLiteral("SUMO2"))  ||
-        chipset.contains(QStringLiteral("BARTS"))  ||
-        chipset.contains(QStringLiteral("TURKS"))  ||
-        chipset.contains(QStringLiteral("CAICOS")) ||
-        chipset.contains(QStringLiteral("CAYMAN")))
+    if (chipset.contains("SUMO")   ||
+        chipset.contains("SUMO2")  ||
+        chipset.contains("BARTS")  ||
+        chipset.contains("TURKS")  ||
+        chipset.contains("CAICOS") ||
+        chipset.contains("CAYMAN"))
         return NorthernIslands;
 
-    QString name = extract(chipset, QStringLiteral("HD [0-9]{4}")); // HD followed by a space and 4 digits
+    const QString chipset16 = QString::fromLatin1(chipset);
+    QString name = extract(chipset16, QStringLiteral("HD [0-9]{4}")); // HD followed by a space and 4 digits
     if (!name.isEmpty()) {
-        const int id = name.right(4).toInt();
+        const int id = name.rightRef(4).toInt();
         if (id == 6250 || id == 6310)   // Palm
             return Evergreen;
 
@@ -204,9 +205,9 @@ static ChipClass detectRadeonClass(const QString &chipset)
         return UnknownRadeon;
     }
 
-    name = extract(chipset, QStringLiteral("X[0-9]{3,4}")); // X followed by 3-4 digits
+    name = extract(chipset16, QStringLiteral("X[0-9]{3,4}")); // X followed by 3-4 digits
     if (!name.isEmpty()) {
-        const int id = name.mid(1, -1).toInt();
+        const int id = name.midRef(1, -1).toInt();
 
         // X1xxx
         if (id >= 1300)
@@ -223,7 +224,7 @@ static ChipClass detectRadeonClass(const QString &chipset)
         return UnknownRadeon;
     }
 
-    name = extract(chipset, QStringLiteral("\\b[0-9]{4}\\b")); // A group of 4 digits
+    name = extract(chipset16, QStringLiteral("\\b[0-9]{4}\\b")); // A group of 4 digits
     if (!name.isEmpty()) {
         const int id = name.toInt();
 
@@ -250,7 +251,7 @@ static ChipClass detectNVidiaClass(const QString &chipset)
 {
     QString name = extract(chipset, QStringLiteral("\\bNV[0-9,A-F]{2}\\b")); // NV followed by two hexadecimal digits
     if (!name.isEmpty()) {
-        const int id = chipset.mid(2, -1).toInt(0, 16); // Strip the 'NV' from the id
+        const int id = chipset.midRef(2, -1).toInt(0, 16); // Strip the 'NV' from the id
 
         switch(id & 0xf0) {
         case 0x00:
@@ -278,18 +279,18 @@ static ChipClass detectNVidiaClass(const QString &chipset)
         }
     }
 
-    if (chipset.contains(QStringLiteral("GeForce2")) || chipset.contains(QStringLiteral("GeForce 256")))
+    if (chipset.contains(QLatin1String("GeForce2")) || chipset.contains(QLatin1String("GeForce 256")))
         return NV10;
 
-    if (chipset.contains(QStringLiteral("GeForce3")))
+    if (chipset.contains(QLatin1String("GeForce3")))
         return NV20;
 
-    if (chipset.contains(QStringLiteral("GeForce4"))) {
-        if (chipset.contains(QStringLiteral("MX 420"))  ||
-                chipset.contains(QStringLiteral("MX 440"))  || // including MX 440SE
-                chipset.contains(QStringLiteral("MX 460"))  ||
-                chipset.contains(QStringLiteral("MX 4000")) ||
-                chipset.contains(QStringLiteral("PCX 4300")))
+    if (chipset.contains(QLatin1String("GeForce4"))) {
+        if (chipset.contains(QLatin1String("MX 420"))  ||
+                chipset.contains(QLatin1String("MX 440"))  || // including MX 440SE
+                chipset.contains(QLatin1String("MX 460"))  ||
+                chipset.contains(QLatin1String("MX 4000")) ||
+                chipset.contains(QLatin1String("PCX 4300")))
             return NV10;
 
         return NV20;
@@ -301,7 +302,7 @@ static ChipClass detectNVidiaClass(const QString &chipset)
         if (!name[name.length() - 1].isDigit())
             name.chop(1);
 
-        const int id = name.right(4).toInt();
+        const int id = name.rightRef(4).toInt();
         if (id < 6000)
             return NV30;
 
@@ -320,7 +321,7 @@ static ChipClass detectNVidiaClass(const QString &chipset)
         if (!name[name.length() - 1].isDigit())
             name.chop(1);
 
-        const int id = name.right(3).toInt();
+        const int id = name.rightRef(3).toInt();
         if (id >= 100 && id < 600) {
             if (id >= 400)
                 return GF100;
@@ -331,6 +332,10 @@ static ChipClass detectNVidiaClass(const QString &chipset)
     }
 
     return UnknownNVidia;
+}
+static inline ChipClass detectNVidiaClass(const QByteArray &chipset)
+{
+    return detectNVidiaClass(QString::fromLatin1(chipset));
 }
 
 static ChipClass detectIntelClass(const QByteArray &chipset)
@@ -390,106 +395,118 @@ static ChipClass detectIntelClass(const QByteArray &chipset)
 
 QString GLPlatform::versionToString(qint64 version)
 {
+    return QString::fromLatin1(versionToString8(version));
+}
+QByteArray GLPlatform::versionToString8(qint64 version)
+{
     int major = (version >> 32);
     int minor = (version >> 16) & 0xffff;
     int patch = version & 0xffff;
 
-    QString string = QString::number(major) + QStringLiteral(".") + QString::number(minor);
+    QByteArray string = QByteArray::number(major) + '.' + QByteArray::number(minor);
     if (patch != 0)
-        string += QStringLiteral(".") + QString::number(patch);
+        string += '.' + QByteArray::number(patch);
 
     return string;
 }
 
 QString GLPlatform::driverToString(Driver driver)
 {
+    return QString::fromLatin1(driverToString8(driver));
+}
+QByteArray GLPlatform::driverToString8(Driver driver)
+{
     switch(driver) {
     case Driver_R100:
-        return QStringLiteral("Radeon");
+        return QByteArrayLiteral("Radeon");
     case Driver_R200:
-        return QStringLiteral("R200");
+        return QByteArrayLiteral("R200");
     case Driver_R300C:
-        return QStringLiteral("R300C");
+        return QByteArrayLiteral("R300C");
     case Driver_R300G:
-        return QStringLiteral("R300G");
+        return QByteArrayLiteral("R300G");
     case Driver_R600C:
-        return QStringLiteral("R600C");
+        return QByteArrayLiteral("R600C");
     case Driver_R600G:
-        return QStringLiteral("R600G");
+        return QByteArrayLiteral("R600G");
     case Driver_Nouveau:
-        return QStringLiteral("Nouveau");
+        return QByteArrayLiteral("Nouveau");
     case Driver_Intel:
-        return QStringLiteral("Intel");
+        return QByteArrayLiteral("Intel");
     case Driver_NVidia:
-        return QStringLiteral("NVIDIA");
+        return QByteArrayLiteral("NVIDIA");
     case Driver_Catalyst:
-        return QStringLiteral("Catalyst");
+        return QByteArrayLiteral("Catalyst");
     case Driver_Swrast:
-        return QStringLiteral("Software rasterizer");
+        return QByteArrayLiteral("Software rasterizer");
     case Driver_Softpipe:
-        return QStringLiteral("softpipe");
+        return QByteArrayLiteral("softpipe");
     case Driver_Llvmpipe:
-        return QStringLiteral("LLVMpipe");
+        return QByteArrayLiteral("LLVMpipe");
     case Driver_VirtualBox:
-        return QStringLiteral("VirtualBox (Chromium)");
+        return QByteArrayLiteral("VirtualBox (Chromium)");
     case Driver_VMware:
-        return QStringLiteral("VMware (SVGA3D)");
+        return QByteArrayLiteral("VMware (SVGA3D)");
 
     default:
-        return QStringLiteral("Unknown");
+        return QByteArrayLiteral("Unknown");
     }
 }
 
 QString GLPlatform::chipClassToString(ChipClass chipClass)
 {
+    return QString::fromLatin1(chipClassToString8(chipClass));
+}
+QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
+{
     switch(chipClass) {
     case R100:
-        return QStringLiteral("R100");
+        return QByteArrayLiteral("R100");
     case R200:
-        return QStringLiteral("R200");
+        return QByteArrayLiteral("R200");
     case R300:
-        return QStringLiteral("R300");
+        return QByteArrayLiteral("R300");
     case R400:
-        return QStringLiteral("R400");
+        return QByteArrayLiteral("R400");
     case R500:
-        return QStringLiteral("R500");
+        return QByteArrayLiteral("R500");
     case R600:
-        return QStringLiteral("R600");
+        return QByteArrayLiteral("R600");
     case R700:
-        return QStringLiteral("R700");
+        return QByteArrayLiteral("R700");
     case Evergreen:
-        return QStringLiteral("EVERGREEN");
+        return QByteArrayLiteral("EVERGREEN");
     case NorthernIslands:
-        return QStringLiteral("NI");
+        return QByteArrayLiteral("NI");
 
     case NV10:
-        return QStringLiteral("NV10");
+        return QByteArrayLiteral("NV10");
     case NV20:
-        return QStringLiteral("NV20");
+        return QByteArrayLiteral("NV20");
     case NV30:
-        return QStringLiteral("NV30");
+        return QByteArrayLiteral("NV30");
     case NV40:
-        return QStringLiteral("NV40/G70");
+        return QByteArrayLiteral("NV40/G70");
     case G80:
-        return QStringLiteral("G80/G90");
+        return QByteArrayLiteral("G80/G90");
     case GF100:
-        return QStringLiteral("GF100");
+        return QByteArrayLiteral("GF100");
 
     case I8XX:
-        return QStringLiteral("i830/i835");
+        return QByteArrayLiteral("i830/i835");
     case I915:
-        return QStringLiteral("i915/i945");
+        return QByteArrayLiteral("i915/i945");
     case I965:
-        return QStringLiteral("i965");
+        return QByteArrayLiteral("i965");
     case SandyBridge:
-        return QStringLiteral("SandyBridge");
+        return QByteArrayLiteral("SandyBridge");
     case IvyBridge:
-        return QStringLiteral("IvyBridge");
+        return QByteArrayLiteral("IvyBridge");
     case Haswell:
-        return QStringLiteral("Haswell");
+        return QByteArrayLiteral("Haswell");
 
     default:
-        return QStringLiteral("Unknown");
+        return QByteArrayLiteral("Unknown");
     }
 }
 
@@ -586,7 +603,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     m_kernelVersion = getKernelVersion();
 
     m_glslVersion = 0;
-    m_glsl_version = QByteArray();
+    m_glsl_version.clear();
 
     if (m_supportsGLSL) {
         // Parse the GLSL version
@@ -594,7 +611,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_glslVersion = parseVersionString(m_glsl_version);
     }
 
-    m_chipset = "Unknown";
+    m_chipset = QByteArrayLiteral("Unknown");
     m_preferBufferSubData = false;
 
 
@@ -624,7 +641,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             // Vendor: Advanced Micro Devices, Inc.
             m_driver = Driver_R600C;
 
-        m_chipClass = detectRadeonClass(QString::fromUtf8(m_chipset));
+        m_chipClass = detectRadeonClass(m_chipset);
     }
 
     // Intel
@@ -652,8 +669,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
                     tokens.at(4) : tokens.at(3);
 
         // R300G
-        if (m_vendor == "X.Org R300 Project") {
-            m_chipClass = detectRadeonClass(QString::fromUtf8(m_chipset));
+        if (m_vendor == QByteArrayLiteral("X.Org R300 Project")) {
+            m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R300G;
         }
 
@@ -678,13 +695,13 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
                  m_renderer.contains("TURKS")     ||
                  m_renderer.contains("CAICOS")    ||
                  m_renderer.contains("CAYMAN"))) {
-            m_chipClass = detectRadeonClass(QString::fromUtf8(m_chipset));
+            m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R600G;
         }
 
         // Nouveau
         else if (m_vendor == "nouveau") {
-            m_chipClass = detectNVidiaClass(QString::fromUtf8(m_chipset));
+            m_chipClass = detectNVidiaClass(m_chipset);
             m_driver = Driver_Nouveau;
         }
 
@@ -708,7 +725,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     // Properietary drivers
     // ====================================================
     else if (m_vendor == "ATI Technologies Inc.") {
-        m_chipClass = detectRadeonClass(QString::fromUtf8(m_renderer));
+        m_chipClass = detectRadeonClass(m_renderer);
         m_driver = Driver_Catalyst;
 
         if (versionTokens.count() > 1 && versionTokens.at(2)[0] == '(')
@@ -720,7 +737,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     else if (m_vendor == "NVIDIA Corporation") {
-        m_chipClass = detectNVidiaClass(QString::fromUtf8(m_renderer));
+        m_chipClass = detectNVidiaClass(m_renderer);
         m_driver = Driver_NVidia;
 
         int index = versionTokens.indexOf("NVIDIA");
@@ -861,45 +878,45 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 }
 
-static void print(const QString &label, const QString &setting)
+static void print(const QByteArray &label, const QByteArray &setting)
 {
     std::cout << std::setw(40) << std::left
-              << qPrintable(label) << qPrintable(setting) << std::endl;
+              << label.data() << setting.data() << std::endl;
 }
 
 void GLPlatform::printResults() const
 {
-    print(QStringLiteral("OpenGL vendor string:"),   QString::fromUtf8(m_vendor));
-    print(QStringLiteral("OpenGL renderer string:"), QString::fromUtf8(m_renderer));
-    print(QStringLiteral("OpenGL version string:"),  QString::fromUtf8(m_version));
+    print(QByteArrayLiteral("OpenGL vendor string:"),   m_vendor);
+    print(QByteArrayLiteral("OpenGL renderer string:"), m_renderer);
+    print(QByteArrayLiteral("OpenGL version string:"),  m_version);
 
     if (m_supportsGLSL)
-        print(QStringLiteral("OpenGL shading language version string:"), QString::fromUtf8(m_glsl_version));
+        print(QByteArrayLiteral("OpenGL shading language version string:"), m_glsl_version);
 
-    print(QStringLiteral("Driver:"), driverToString(m_driver));
+    print(QByteArrayLiteral("Driver:"), driverToString8(m_driver));
     if (!isMesaDriver())
-        print(QStringLiteral("Driver version:"), versionToString(m_driverVersion));
+        print(QByteArrayLiteral("Driver version:"), versionToString8(m_driverVersion));
 
-    print(QStringLiteral("GPU class:"), chipClassToString(m_chipClass));
+    print(QByteArrayLiteral("GPU class:"), chipClassToString8(m_chipClass));
 
-    print(QStringLiteral("OpenGL version:"), versionToString(m_glVersion));
+    print(QByteArrayLiteral("OpenGL version:"), versionToString8(m_glVersion));
 
     if (m_supportsGLSL)
-        print(QStringLiteral("GLSL version:"), versionToString(m_glslVersion));
+        print(QByteArrayLiteral("GLSL version:"), versionToString8(m_glslVersion));
 
     if (isMesaDriver())
-        print(QStringLiteral("Mesa version:"), versionToString(mesaVersion()));
+        print(QByteArrayLiteral("Mesa version:"), versionToString8(mesaVersion()));
     //if (galliumVersion() > 0)
     //    print("Gallium version:", versionToString(m_galliumVersion));
     if (serverVersion() > 0)
-        print(QStringLiteral("X server version:"), versionToString(m_serverVersion));
+        print(QByteArrayLiteral("X server version:"), versionToString8(m_serverVersion));
     if (kernelVersion() > 0)
-        print(QStringLiteral("Linux kernel version:"), versionToString(m_kernelVersion));
+        print(QByteArrayLiteral("Linux kernel version:"), versionToString8(m_kernelVersion));
 
-    print(QStringLiteral("Requires strict binding:"), !m_looseBinding ? QStringLiteral("yes") : QStringLiteral("no"));
-    print(QStringLiteral("GLSL shaders:"), m_supportsGLSL ? (m_limitedGLSL ? QStringLiteral("limited") : QStringLiteral("yes")) : QStringLiteral("no"));
-    print(QStringLiteral("Texture NPOT support:"), m_textureNPOT ? (m_limitedNPOT ? QStringLiteral("limited") : QStringLiteral("yes")) : QStringLiteral("no"));
-    print(QStringLiteral("Virtual Machine:"), m_virtualMachine ? QStringLiteral("yes") : QStringLiteral("no"));
+    print(QByteArrayLiteral("Requires strict binding:"), !m_looseBinding ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
+    print(QByteArrayLiteral("GLSL shaders:"), m_supportsGLSL ? (m_limitedGLSL ? QByteArrayLiteral("limited") : QByteArrayLiteral("yes")) : QByteArrayLiteral("no"));
+    print(QByteArrayLiteral("Texture NPOT support:"), m_textureNPOT ? (m_limitedNPOT ? QByteArrayLiteral("limited") : QByteArrayLiteral("yes")) : QByteArrayLiteral("no"));
+    print(QByteArrayLiteral("Virtual Machine:"), m_virtualMachine ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
 }
 
 bool GLPlatform::supports(GLFeature feature) const

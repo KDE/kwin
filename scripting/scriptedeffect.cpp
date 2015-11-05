@@ -45,7 +45,7 @@ QScriptValue kwinEffectScriptPrint(QScriptContext *context, QScriptEngine *engin
     QString result;
     for (int i = 0; i < context->argumentCount(); ++i) {
         if (i > 0) {
-            result.append(QStringLiteral(" "));
+            result.append(QLatin1Char(' '));
         }
         result.append(context->argument(i).toString());
     }
@@ -394,7 +394,7 @@ ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
         return nullptr;
     }
     const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                      QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + name + QStringLiteral("/contents/") + scriptName);
+                                                      QLatin1String(KWIN_NAME "/effects/") + name + QLatin1String("/contents/") + scriptName);
     if (scriptFile.isNull()) {
         qCDebug(KWIN_SCRIPTING) << "Could not locate the effect script";
         return nullptr;
@@ -438,7 +438,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_scriptFile = pathToScript;
 
     // does the effect contain an KConfigXT file?
-    const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + m_effectName + QStringLiteral("/contents/config/main.xml"));
+    const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String(KWIN_NAME "/effects/") + m_effectName + QLatin1String("/contents/config/main.xml"));
     if (!kconfigXTFile.isNull()) {
         KConfigGroup cg = effects->effectConfig(m_effectName);
         QFile xmlFile(kconfigXTFile);

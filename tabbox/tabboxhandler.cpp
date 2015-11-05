@@ -244,7 +244,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
                                               .arg(config.layoutName())
                                               .arg(desktopMode ? QStringLiteral("desktopswitcher/DesktopSwitcher.qml") : QStringLiteral("windowswitcher/WindowSwitcher.qml")));
     if (file.isNull()) {
-        const QString folderName = QStringLiteral(KWIN_NAME) + (desktopMode ? QStringLiteral("/desktoptabbox/") : QStringLiteral("/tabbox/"));
+        const QString folderName = QLatin1String(KWIN_NAME) + (desktopMode ? QLatin1String("/desktoptabbox/") : QLatin1String("/tabbox/"));
         auto findSwitcher = [this, desktopMode, folderName] {
             const QString type = desktopMode ? QStringLiteral("KWin/DesktopSwitcher") : QStringLiteral("KWin/WindowSwitcher");
             auto offers = KPackage::PackageLoader::self()->findPackages(type,  folderName,
@@ -270,14 +270,14 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
         if (!service.isValid()) {
             return nullptr;
         }
-        if (service.value(QStringLiteral("X-Plasma-API")) != QStringLiteral("declarativeappletscript")) {
+        if (service.value(QStringLiteral("X-Plasma-API")) != QLatin1String("declarativeappletscript")) {
             qCDebug(KWIN_TABBOX) << "Window Switcher Layout is no declarativeappletscript";
             return nullptr;
         }
         auto findScriptFile = [desktopMode, service, folderName] {
             const QString pluginName = service.pluginId();
             const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
-            return QStandardPaths::locate(QStandardPaths::GenericDataLocation, folderName + pluginName + QStringLiteral("/contents/") + scriptName);
+            return QStandardPaths::locate(QStandardPaths::GenericDataLocation, folderName + pluginName + QLatin1String("/contents/") + scriptName);
         };
         file = findScriptFile();
     }

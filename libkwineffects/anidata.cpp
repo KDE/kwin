@@ -32,48 +32,54 @@ using namespace KWin;
 static const int Gaussian = 46;
 
 AniData::AniData()
+ : attribute(AnimationEffect::Opacity)
+ , customCurve(0) // Linear
+ , time(0)
+ , duration(0)
+ , meta(0)
+ , startTime(0)
+ , windowType((NET::WindowTypeMask)0)
+ , waitAtSource(false)
+ , keepAtTarget(false)
 {
-    attribute = AnimationEffect::Opacity;
-    windowType = (NET::WindowTypeMask)0;
-    duration = time = meta = startTime = 0;
-    waitAtSource = keepAtTarget = false;
 }
 
-AniData::AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,
-                 QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource, bool keepAtTarget )
+AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to_,
+                 QEasingCurve curve_, int delay, const FPx2 &from_, bool waitAtSource_, bool keepAtTarget_ )
+ : attribute(a)
+ , curve(curve_)
+ , from(from_)
+ , to(to_)
+ , time(0)
+ , duration(ms)
+ , meta(meta_)
+ , startTime(AnimationEffect::clock() + delay)
+ , windowType((NET::WindowTypeMask)0)
+ , waitAtSource(waitAtSource_)
+ , keepAtTarget(keepAtTarget_)
 {
-    attribute = a;
-    this->from = from;
-    this->to = to;
-    this->curve = curve;
-    duration = ms;
-    time = 0;
-    this->meta = meta;
-    this->waitAtSource = waitAtSource;
-    this->keepAtTarget = keepAtTarget;
-    startTime = AnimationEffect::clock() + delay;
 }
 
 AniData::AniData(const AniData &other)
+ : attribute(other.attribute)
+ , curve(other.curve)
+ , customCurve(other.customCurve)
+ , from(other.from)
+ , to(other.to)
+ , time(other.time)
+ , duration(other.duration)
+ , meta(other.meta)
+ , startTime(other.startTime)
+ , windowType(other.windowType)
+ , waitAtSource(other.waitAtSource)
+ , keepAtTarget(other.keepAtTarget)
 {
-    attribute = other.attribute;
-    from = other.from;
-    to = other.to;
-    time = other.time;
-    duration = other.duration;
-    curve = other.curve;
-    customCurve = other.customCurve;
-    windowType = other.windowType;
-    meta = other.meta;
-    waitAtSource = other.waitAtSource;
-    keepAtTarget = other.keepAtTarget;
-    startTime = other.startTime;
 }
 
 static FPx2 fpx2(const QString &s, AnimationEffect::Attribute a)
 {
     bool ok; float f1, f2;
-    QStringList floats = s.split(QStringLiteral(","));
+    const QVector<QStringRef> floats = s.splitRef(u',');
     f1 = floats.at(0).toFloat(&ok);
     if (!ok || (f1 < 0.0 && !(  a == AnimationEffect::Position ||
                                 a == AnimationEffect::Translation ||
@@ -101,26 +107,25 @@ static FPx2 fpx2(const QString &s, AnimationEffect::Attribute a)
 }
 
 AniData::AniData(const QString &str) // format: WindowMask:Attribute:Meta:Duration:To:Shape:Delay:From
+ : customCurve(0) // Linear
+ , time(0)
+ , duration(1) // invalidate
 {
-    time = 0;
-    duration = 1; // invalidate
-    customCurve = 0; // Linear
-
-    QStringList animation = str.split(u':');
+    const QVector<QStringRef> animation = str.splitRef(u':');
     if (animation.count() < 5)
         return; // at least window type, attribute, metadata, time and target is required
 
     windowType = (NET::WindowTypeMask)animation.at(0).toUInt();
 
-    if (animation.at(1) == QStringLiteral("Opacity"))           attribute = AnimationEffect::Opacity;
-    else if (animation.at(1) == QStringLiteral("Brightness"))   attribute = AnimationEffect::Brightness;
-    else if (animation.at(1) == QStringLiteral("Saturation"))   attribute = AnimationEffect::Saturation;
-    else if (animation.at(1) == QStringLiteral("Scale"))        attribute = AnimationEffect::Scale;
-    else if (animation.at(1) == QStringLiteral("Translation"))  attribute = AnimationEffect::Translation;
-    else if (animation.at(1) == QStringLiteral("Rotation"))     attribute = AnimationEffect::Rotation;
-    else if (animation.at(1) == QStringLiteral("Position"))     attribute = AnimationEffect::Position;
-    else if (animation.at(1) == QStringLiteral("Size"))         attribute = AnimationEffect::Size;
-    else if (animation.at(1) == QStringLiteral("Clip"))         attribute = AnimationEffect::Clip;
+    if (animation.at(1) == QLatin1String("Opacity"))           attribute = AnimationEffect::Opacity;
+    else if (animation.at(1) == QLatin1String("Brightness"))   attribute = AnimationEffect::Brightness;
+    else if (animation.at(1) == QLatin1String("Saturation"))   attribute = AnimationEffect::Saturation;
+    else if (animation.at(1) == QLatin1String("Scale"))        attribute = AnimationEffect::Scale;
+    else if (animation.at(1) == QLatin1String("Translation"))  attribute = AnimationEffect::Translation;
+    else if (animation.at(1) == QLatin1String("Rotation"))     attribute = AnimationEffect::Rotation;
+    else if (animation.at(1) == QLatin1String("Position"))     attribute = AnimationEffect::Position;
+    else if (animation.at(1) == QLatin1String("Size"))         attribute = AnimationEffect::Size;
+    else if (animation.at(1) == QLatin1String("Clip"))         attribute = AnimationEffect::Clip;
     else {
         qCDebug(LIBKWINEFFECTS) << "Invalid attribute" << animation.at(1);
         return;
@@ -136,7 +141,7 @@ AniData::AniData(const QString &str) // format: WindowMask:Attribute:Meta:Durati
         return;
     }
 
-    to = fpx2(animation.at(4), attribute);
+    to = fpx2(animation.at(4).toString(), attribute);
 
     if (animation.count() > 5) {
         customCurve = animation.at(5).toInt();
@@ -155,7 +160,7 @@ AniData::AniData(const QString &str) // format: WindowMask:Attribute:Meta:Durati
                 time = t;
 
             if (animation.count() > 7)
-                from = fpx2(animation.at(7), attribute);
+                from = fpx2(animation.at(7).toString(), attribute);
         }
     }
     if (!(from.isValid() || to.isValid())) {
@@ -183,8 +188,7 @@ static QString attributeString(KWin::AnimationEffect::Attribute attribute)
 QList<AniData> AniData::list(const QString &str)
 {
     QList<AniData> newList;
-    QStringList list = str.split(u';', QString::SkipEmptyParts);
-    foreach (const QString &astr, list) {
+    foreach (const QString &astr, str.split(u';', QString::SkipEmptyParts)) {
         newList << AniData(astr);
         if (newList.last().duration < 0)
             newList.removeLast();
@@ -194,20 +198,20 @@ QList<AniData> AniData::list(const QString &str)
 
 QString AniData::toString() const
 {
-    QString ret =   QString::number((uint)windowType) + QStringLiteral(":") + attributeString(attribute) + QStringLiteral(":") +
-                    QString::number(meta) + QStringLiteral(":") + QString::number(duration) + QStringLiteral(":") +
-                    to.toString() + QStringLiteral(":") + QString::number(customCurve) + QStringLiteral(":") +
-                    QString::number(time) + QStringLiteral(":") + from.toString();
+    QString ret =   QString::number((uint)windowType) + QLatin1Char(':') + attributeString(attribute) + QLatin1Char(':') +
+                    QString::number(meta) + QLatin1Char(':') + QString::number(duration) + QLatin1Char(':') +
+                    to.toString() + QLatin1Char(':') + QString::number(customCurve) + QLatin1Char(':') +
+                    QString::number(time) + QLatin1Char(':') + from.toString();
     return ret;
 }
 
 QString AniData::debugInfo() const
 {
-    return QStringLiteral("Animation: ") + attributeString(attribute) +
-           QStringLiteral("\n     From: ") + from.toString() +
-           QStringLiteral("\n       To: ") + to.toString() +
-           QStringLiteral("\n  Started: ") + QString::number(AnimationEffect::clock() - startTime) + QStringLiteral("ms ago\n") +
-           QStringLiteral(  " Duration: ") + QString::number(duration) + QStringLiteral("ms\n") +
-           QStringLiteral(  "   Passed: ") + QString::number(time) + QStringLiteral("ms\n") +
-           QStringLiteral(  " Applying: ") + QString::number(windowType) + QStringLiteral("\n");
+    return QLatin1String("Animation: ") + attributeString(attribute) +
+           QLatin1String("\n     From: ") + from.toString() +
+           QLatin1String("\n       To: ") + to.toString() +
+           QLatin1String("\n  Started: ") + QString::number(AnimationEffect::clock() - startTime) + QLatin1String("ms ago\n") +
+           QLatin1String(  " Duration: ") + QString::number(duration) + QLatin1String("ms\n") +
+           QLatin1String(  "   Passed: ") + QString::number(time) + QLatin1String("ms\n") +
+           QLatin1String(  " Applying: ") + QString::number(windowType) + QLatin1Char('\n');
 }

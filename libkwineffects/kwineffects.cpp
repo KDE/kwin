@@ -687,7 +687,7 @@ bool EffectsHandler::isOpenGLCompositing() const
 KConfigGroup EffectsHandler::effectConfig(const QString& effectname)
 {
     KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals);
-    return kwinconfig->group(QStringLiteral("Effect-") + effectname);
+    return kwinconfig->group(QLatin1String("Effect-") + effectname);
 }
 
 EffectsHandler* effects = nullptr;
@@ -750,7 +750,7 @@ WINDOW_HELPER(KWayland::Server::SurfaceInterface *, surface, "surface")
 
 QString EffectWindow::windowClass() const
 {
-    return parent()->property("resourceName").toString() + QStringLiteral(" ") + parent()->property("resourceClass").toString();
+    return parent()->property("resourceName").toString() + QLatin1Char(' ') + parent()->property("resourceClass").toString();
 }
 
 QRect EffectWindow::contentsRect() const

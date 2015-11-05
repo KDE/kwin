@@ -248,30 +248,28 @@ GLTexture& GLTexture::operator = (const GLTexture& tex)
 }
 
 GLTexturePrivate::GLTexturePrivate()
+ : m_texture(0)
+ , m_target(0)
+ , m_internalFormat(0)
+ , m_filter(GL_NEAREST)
+ , m_wrapMode(GL_REPEAT)
+ , m_yInverted(false)
+ , m_canUseMipmaps(false)
+ , m_markedDirty(false)
+ , m_filterChanged(true)
+ , m_wrapModeChanged(false)
+ , m_immutable(false)
+ , m_mipLevels(1)
+ , m_unnormalizeActive(0)
+ , m_normalizeActive(0)
+ , m_vbo(nullptr)
 {
-    m_texture = 0;
-    m_target = 0;
-    m_internalFormat = 0;
-    m_filter = GL_NEAREST;
-    m_wrapMode = GL_REPEAT;
-    m_yInverted = false;
-    m_canUseMipmaps = false;
-    m_mipLevels = 1;
-    m_immutable = false;
-    m_markedDirty = false;
-    m_unnormalizeActive = 0;
-    m_normalizeActive = 0;
-    m_vbo = nullptr;
-    m_filterChanged = true;
-    m_wrapModeChanged = false;
     ++s_textureObjectCounter;
 }
 
 GLTexturePrivate::~GLTexturePrivate()
 {
-    if (m_vbo != nullptr) {
-        delete m_vbo;
-    }
+    delete m_vbo;
     if (m_texture != 0) {
         glDeleteTextures(1, &m_texture);
     }

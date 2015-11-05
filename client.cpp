@@ -1250,7 +1250,7 @@ void Client::setOnActivities(QStringList newActivitiesList)
     }
     QString joinedActivitiesList = newActivitiesList.join(QStringLiteral(","));
     joinedActivitiesList = rules()->checkActivity(joinedActivitiesList, false);
-    newActivitiesList = joinedActivitiesList.split(QStringLiteral(","), QString::SkipEmptyParts);
+    newActivitiesList = joinedActivitiesList.split(u',', QString::SkipEmptyParts);
 
     QStringList allActivities = Activities::self()->all();
     if (// If we got the request to be on all activities explicitly
@@ -1460,7 +1460,7 @@ void Client::setCaption(const QString& _s, bool force)
         static QScriptProgram stripTitle;
         static QScriptValue script;
         if (stripTitle.isNull()) {
-            const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/stripTitle.js"));
+            const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/stripTitle.js"));
             if (!scriptFile.isEmpty()) {
                 QFile f(scriptFile);
                 if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {
@@ -1487,9 +1487,9 @@ void Client::setCaption(const QString& _s, bool force)
     QString machine_suffix;
     if (!options->condensedTitle()) { // machine doesn't qualify for "clean"
         if (clientMachine()->hostName() != ClientMachine::localhost() && !clientMachine()->isLocal())
-            machine_suffix = QStringLiteral(" <@") + QString::fromUtf8(clientMachine()->hostName()) + QStringLiteral(">") + LRM;
+            machine_suffix = QLatin1String(" <@") + QString::fromUtf8(clientMachine()->hostName()) + QLatin1Char('>') + LRM;
     }
-    QString shortcut_suffix = !shortcut().isEmpty() ? (QStringLiteral(" {") + shortcut().toString() + QStringLiteral("}")) : QString();
+    QString shortcut_suffix = !shortcut().isEmpty() ? (QLatin1String(" {") + shortcut().toString() + QLatin1Char('}')) : QString();
     cap_suffix = machine_suffix + shortcut_suffix;
     auto fetchNameInternalPredicate = [this](const Client *cl) {
         return (!cl->isSpecialWindow() || cl->isToolbar()) &&
@@ -1498,7 +1498,7 @@ void Client::setCaption(const QString& _s, bool force)
     if ((!isSpecialWindow() || isToolbar()) && workspace()->findClient(fetchNameInternalPredicate)) {
         int i = 2;
         do {
-            cap_suffix = machine_suffix + QStringLiteral(" <") + QString::number(i) + QStringLiteral(">") + LRM;
+            cap_suffix = machine_suffix + QLatin1String(" <") + QString::number(i) + QLatin1Char('>') + LRM;
             i++;
         } while (workspace()->findClient(fetchNameInternalPredicate));
         info->setVisibleName(caption().toUtf8().constData());
@@ -1955,7 +1955,7 @@ void Client::readActivities(Xcb::StringProperty &property)
         return;
     }
 
-    newActivitiesList = prop.split(QStringLiteral(","));
+    newActivitiesList = prop.split(u',');
 
     if (newActivitiesList == activityList)
         return; //expected change, it's ok.

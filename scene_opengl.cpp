@@ -868,7 +868,7 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
             QDBusInterface dialog( QStringLiteral("org.kde.kwinCompositingDialog"), QStringLiteral("/CompositorSettings"), QStringLiteral("org.kde.kwinCompositingDialog") );
             dialog.asyncCall(QStringLiteral("warn"), message, details, QString());
         } else {
-            const QString args = QStringLiteral("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QStringLiteral(" details ") + QString::fromUtf8(details.toLocal8Bit().toBase64());
+            const QString args = QLatin1String("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QLatin1String(" details ") + QString::fromUtf8(details.toLocal8Bit().toBase64());
             KProcess::startDetached(QStringLiteral("kcmshell5"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
         }
         QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);
@@ -899,8 +899,8 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
             QDBusInterface dialog( QStringLiteral("org.kde.kwinCompositingDialog"), QStringLiteral("/CompositorSettings"), QStringLiteral("org.kde.kwinCompositingDialog") );
             dialog.asyncCall(QStringLiteral("warn"), message, details, QStringLiteral("kwin_dialogsrc:max_tex_warning"));
         } else {
-            const QString args = QStringLiteral("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QStringLiteral(" details ") +
-                                 QString::fromUtf8(details.toLocal8Bit().toBase64()) + QStringLiteral(" dontagain kwin_dialogsrc:max_tex_warning");
+            const QString args = QLatin1String("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QLatin1String(" details ") +
+                                 QString::fromUtf8(details.toLocal8Bit().toBase64()) + QLatin1String(" dontagain kwin_dialogsrc:max_tex_warning");
             KProcess::startDetached(QStringLiteral("kcmshell5"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
         }
         QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);

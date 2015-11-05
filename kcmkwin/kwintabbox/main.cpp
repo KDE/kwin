@@ -111,8 +111,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     initLayoutLists();
     KWinTabBoxConfigForm *ui[2] = { m_primaryTabBoxUi, m_alternativeTabBoxUi };
     for (int i = 0; i < 2; ++i) {
-        ui[i]->effectConfigButton->setIcon(QIcon::fromTheme("view-preview"));
-        ui[i]->ghns->setIcon(QIcon::fromTheme("get-hot-new-stuff"));
+        ui[i]->effectConfigButton->setIcon(QIcon::fromTheme(QStringLiteral("view-preview")));
+        ui[i]->ghns->setIcon(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")));
 
         connect(ui[i]->highlightWindowCheck, SIGNAL(clicked(bool)), SLOT(changed()));
         connect(ui[i]->showTabBox, SIGNAL(clicked(bool)), SLOT(tabBoxToggled(bool)));
@@ -169,7 +169,7 @@ static QList<Plasma::Package> availableLnFPackages()
     const QStringList dataPaths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
 
     for (const QString &path : dataPaths) {
-        QDir dir(path + QStringLiteral("/plasma/look-and-feel"));
+        QDir dir(path + QLatin1String("/plasma/look-and-feel"));
         paths << dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
     }
 
@@ -219,7 +219,7 @@ void KWinTabBoxConfig::initLayoutLists()
         }
         const QString scriptName = service->property("X-Plasma-MainScript").toString();
         const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                          "kwin/tabbox/" + pluginName + "/contents/"
+                                                          QLatin1String("kwin/tabbox/") + pluginName + QLatin1String("/contents/")
                                                           + scriptName);
         if (scriptFile.isNull()) {
             continue;

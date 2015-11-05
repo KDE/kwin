@@ -115,7 +115,7 @@ void Helper::unref()
 }
 
 static const QString s_defaultTheme = QStringLiteral("kwin4_decoration_qml_plastik");
-static const QString s_qmlPackageFolder = QStringLiteral(KWIN_NAME) + QStringLiteral("/decorations/");
+static const QString s_qmlPackageFolder = QStringLiteral(KWIN_NAME "/decorations/");
 /*
  * KDecoration2::BorderSize doesn't map to the indices used for the Aurorae SVG Button Sizes.
  * BorderSize defines None and NoSideBorder as index 0 and 1. These do not make sense for Button
@@ -179,7 +179,7 @@ QQmlComponent *Helper::loadComponent(const QString &themeName)
     const KPluginMetaData &service = offers.first();
     const QString pluginName = service.pluginId();
     const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
-    const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, s_qmlPackageFolder + pluginName + QStringLiteral("/contents/") + scriptName);
+    const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, s_qmlPackageFolder + pluginName + QLatin1String("/contents/") + scriptName);
     if (file.isNull()) {
         qCDebug(AURORAE) << "Could not find script file for " << pluginName;
         // TODO: what to do in error case?
@@ -295,7 +295,7 @@ void Decoration::init()
     if (component == Helper::instance().svgComponent()) {
         // load SVG theme
         const QString themeName = m_themeName.mid(16);
-        KConfig config(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + themeName + QStringLiteral("rc"),
+        KConfig config(QLatin1String("aurorae/themes/") + themeName + QLatin1Char('/') + themeName + QLatin1String("rc"),
                        KConfig::FullConfig, QStandardPaths::GenericDataLocation);
         AuroraeTheme *theme = new AuroraeTheme(this);
         theme->loadTheme(themeName, config);
@@ -660,7 +660,7 @@ void ThemeFinder::findAllSvgThemes()
             name = packageName;
         }
 
-        m_themes.insert(name, QStringLiteral("__aurorae__svg__") + packageName);
+        m_themes.insert(name, QString(QLatin1String("__aurorae__svg__") + packageName));
     }
 }
 

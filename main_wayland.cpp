@@ -594,7 +594,7 @@ int main(int argc, char * argv[])
         // check whether it needs libinput
         const QJsonObject &metaData = (*pluginIt).rawData();
         auto it = metaData.find(QStringLiteral("input"));
-        if (it != metaData.constEnd()) {
+        if (it != metaData.end()) {
             if ((*it).isBool()) {
                 if (!(*it).toBool()) {
                     std::cerr << "Backend does not support input, enforcing libinput support" << std::endl;

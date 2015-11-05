@@ -1526,14 +1526,14 @@ QString EffectsHandlerImpl::supportInformation(const QString &name) const
     }
     for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if ((*it).first == name) {
-            QString support((*it).first + QStringLiteral(":\n"));
+            QString support((*it).first + QLatin1String(":\n"));
             const QMetaObject *metaOptions = (*it).second->metaObject();
             for (int i=0; i<metaOptions->propertyCount(); ++i) {
                 const QMetaProperty property = metaOptions->property(i);
-                if (QLatin1String(property.name()) == QLatin1String("objectName")) {
+                if (qstrcmp(property.name(), "objectName") == 0) {
                     continue;
                 }
-                support.append(QString::fromUtf8(property.name()) + QStringLiteral(": ") + (*it).second->property(property.name()).toString() + QStringLiteral("\n"));
+                support += QString::fromUtf8(property.name()) + QLatin1String(": ") + (*it).second->property(property.name()).toString() + QLatin1Char('\n');
             }
             return support;
         }

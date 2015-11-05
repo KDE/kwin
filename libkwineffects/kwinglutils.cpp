@@ -107,13 +107,15 @@ void initEGL()
 void initGL(OpenGLPlatformInterface platformInterface)
 {
     // Get OpenGL version
-    QString glversionstring = QString::fromUtf8((const char*)glGetString(GL_VERSION));
-    if (glversionstring.startsWith(QLatin1String("OpenGL ES "))) {
+    const char* glversioncstring = (const char*)glGetString(GL_VERSION);
+    QByteArray glversionstring = QByteArray::fromRawData(glversioncstring, qstrlen(glversioncstring));
+    if (glversionstring.startsWith("OpenGL ES ")) {
         glversionstring = glversionstring.mid(10);
     }
-    QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(QStringLiteral(" "))).split(QStringLiteral("."));
+    glversionstring.truncate(glversionstring.indexOf(' '));
+    auto glversioninfo = glversionstring.split('.');
     while (glversioninfo.count() < 3)
-        glversioninfo << QStringLiteral("0");
+        glversioninfo << "0";
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(), glversioninfo[2].toInt());
 
     // Get list of supported OpenGL extensions
@@ -184,7 +186,7 @@ static QString formatGLError(GLenum err)
     case GL_STACK_OVERFLOW:    return QStringLiteral("GL_STACK_OVERFLOW");
     case GL_STACK_UNDERFLOW:   return QStringLiteral("GL_STACK_UNDERFLOW");
     case GL_OUT_OF_MEMORY:     return QStringLiteral("GL_OUT_OF_MEMORY");
-    default: return QStringLiteral("0x") + QString::number(err, 16);
+    default: return QLatin1String("0x") + QString::number(err, 16);
     }
 }
 

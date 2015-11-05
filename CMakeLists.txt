@@ -46,7 +46,7 @@ include(KDECompilerSettings)
 include(ECMInstallIcons)
 include(ECMOptionalAddSubdirectory)
 
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -DQT_USE_QSTRINGBUILDER)
 
 # require at least gcc 4.8
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")

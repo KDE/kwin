@@ -40,7 +40,7 @@ QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parent
 {
     Q_UNUSED(iface)
     Q_UNUSED(parent)
-    if (keyword.startsWith(QStringLiteral("kwin4_effect_"))) {
+    if (keyword.startsWith(QLatin1String("kwin4_effect_"))) {
         return new ScriptedEffectConfig(QStringLiteral("kcm_kwin4_genericscripted"), keyword, parentWidget, args);
     } else {
         return new ScriptingConfig(QStringLiteral("kcm_kwin4_genericscripted"), keyword, parentWidget, args);
@@ -64,19 +64,19 @@ void GenericScriptedConfig::createUi()
     QVBoxLayout* layout = new QVBoxLayout(this);
 
     const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                        QStringLiteral(KWIN_NAME) +
-                                                        QStringLiteral("/") +
+                                                        QLatin1String(KWIN_NAME) +
+                                                        QLatin1Char('/') +
                                                         typeName() +
-                                                        QStringLiteral("/") +
+                                                        QLatin1Char('/') +
                                                         m_packageName +
-                                                        QStringLiteral("/contents/config/main.xml"));
+                                                        QLatin1String("/contents/config/main.xml"));
     const QString uiPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                 QStringLiteral(KWIN_NAME) +
-                                                 QStringLiteral("/") +
+                                                 QLatin1String(KWIN_NAME) +
+                                                 QLatin1Char('/') +
                                                  typeName() +
-                                                 QStringLiteral("/") +
+                                                 QLatin1Char('/') +
                                                  m_packageName +
-                                                 QStringLiteral("/contents/ui/config.ui"));
+                                                 QLatin1String("/contents/ui/config.ui"));
     if (kconfigXTFile.isEmpty() || uiPath.isEmpty()) {
         layout->addWidget(new QLabel(i18nc("Error message", "Plugin does not provide configuration file in expected location")));
         return;
@@ -136,7 +136,7 @@ QString ScriptedEffectConfig::typeName() const
 
 KConfigGroup ScriptedEffectConfig::configGroup()
 {
-    return KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG))->group(QStringLiteral("Effect-") + packageName());
+    return KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG))->group(QLatin1String("Effect-") + packageName());
 }
 
 void ScriptedEffectConfig::reload()
@@ -159,7 +159,7 @@ ScriptingConfig::~ScriptingConfig()
 
 KConfigGroup ScriptingConfig::configGroup()
 {
-    return KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG))->group(QStringLiteral("Script-") + packageName());
+    return KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG))->group(QLatin1String("Script-") + packageName());
 }
 
 QString ScriptingConfig::typeName() const

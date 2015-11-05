@@ -270,7 +270,7 @@ void Rules::write(KConfigGroup& cfg) const
     WRITE_SET_RULE(fullscreen,);
     WRITE_SET_RULE(noborder,);
     auto colorToString = [](const QString &value) -> QString {
-        if (value.endsWith(QStringLiteral(".colors"))) {
+        if (value.endsWith(QLatin1String(".colors"))) {
             return QFileInfo(value).baseName();
         } else {
             return value;
@@ -364,7 +364,7 @@ QString Rules::readDecoColor(const KConfigGroup &cfg)
     }
     // find the actual scheme file
     return QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                  QStringLiteral("color-schemes/") + themeName + QStringLiteral(".colors"));
+                                  QLatin1String("color-schemes/") + themeName + QLatin1String(".colors"));
 }
 
 bool Rules::matchType(NET::WindowType match_type) const
@@ -1018,7 +1018,7 @@ void RuleBook::edit(AbstractClient* c, bool whole_app)
 void RuleBook::load()
 {
     deleteAll();
-    KConfig cfg(QStringLiteral(KWIN_NAME) + QStringLiteral("rulesrc"), KConfig::NoGlobals);
+    KConfig cfg(QStringLiteral(KWIN_NAME "rulesrc"), KConfig::NoGlobals);
     int count = cfg.group("General").readEntry("count", 0);
     for (int i = 1;
             i <= count;
@@ -1032,7 +1032,7 @@ void RuleBook::load()
 void RuleBook::save()
 {
     m_updateTimer->stop();
-    KConfig cfg(QStringLiteral(KWIN_NAME) + QStringLiteral("rulesrc"), KConfig::NoGlobals);
+    KConfig cfg(QStringLiteral(KWIN_NAME "rulesrc"), KConfig::NoGlobals);
     QStringList groups = cfg.groupList();
     for (QStringList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();

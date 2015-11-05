@@ -51,7 +51,7 @@ CompositingPrefs::~CompositingPrefs()
 
 bool CompositingPrefs::openGlIsBroken()
 {
-    const QString unsafeKey(QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
+    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
     return KConfigGroup(KSharedConfig::openConfig(), "Compositing").readEntry(unsafeKey, false);
 }
 
@@ -59,8 +59,8 @@ bool CompositingPrefs::compositingPossible()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(KSharedConfig::openConfig(), "Compositing");
-    const QString unsafeKey(QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QStringLiteral("OpenGL") &&
+    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false))
         return false;
 
@@ -96,8 +96,8 @@ QString CompositingPrefs::compositingNotPossibleReason()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(KSharedConfig::openConfig(), "Compositing");
-    const QString unsafeKey(QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QStringLiteral("OpenGL") &&
+    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false))
         return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
                     "This was most likely due to a driver bug."

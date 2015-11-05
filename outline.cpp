@@ -151,7 +151,7 @@ void CompositedOutlineVisual::show()
     if (m_qmlComponent.isNull()) {
         m_qmlComponent.reset(new QQmlComponent(Scripting::self()->qmlEngine()));
         // TODO: fileName should be configurable
-        const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/outline/plasma/outline.qml"));
+        const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/outline/plasma/outline.qml"));
         if (fileName.isEmpty()) {
             qCDebug(KWIN_CORE) << "Could not locate outline.qml";
             return;

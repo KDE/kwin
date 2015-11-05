@@ -229,7 +229,7 @@ KWin::AbstractScript::~AbstractScript()
 
 KConfigGroup KWin::AbstractScript::config() const
 {
-    return KSharedConfig::openConfig()->group(QStringLiteral("Script-") + m_pluginName);
+    return KSharedConfig::openConfig()->group(QLatin1String("Script-") + m_pluginName);
 }
 
 void KWin::AbstractScript::stop()
@@ -432,12 +432,12 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* pa
     , m_starting(false)
     , m_agent(new ScriptUnloaderAgent(this))
 {
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/") + QString::number(scriptId()), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
+    QDBusConnection::sessionBus().registerObject(QLatin1Char('/') + QString::number(scriptId()), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
 }
 
 KWin::Script::~Script()
 {
-    QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/") + QString::number(scriptId()));
+    QDBusConnection::sessionBus().unregisterObject(QLatin1Char('/') + QString::number(scriptId()));
 }
 
 void KWin::Script::run()
@@ -661,16 +661,16 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
         s_started = true;
     }
     QMap<QString,QString> pluginStates = KConfigGroup(_config, "Plugins").entryMap();
-    const QString scriptFolder = QStringLiteral(KWIN_NAME) + QStringLiteral("/scripts/");
+    const QString scriptFolder = QStringLiteral(KWIN_NAME "/scripts/");
     const auto offers = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
 
     LoadScriptList scriptsToLoad;
 
     for (const KPluginMetaData &service: offers) {
-        const QString value = pluginStates.value(service.pluginId() + QString::fromLatin1("Enabled"), QString());
+        const QString value = pluginStates.value(service.pluginId() + QLatin1String("Enabled"), QString());
         const bool enabled = value.isNull() ? service.isEnabledByDefault() : QVariant(value).toBool();
-        const bool javaScript = service.value(QStringLiteral("X-Plasma-API")) == QStringLiteral("javascript");
-        const bool declarativeScript = service.value(QStringLiteral("X-Plasma-API")) == QStringLiteral("declarativescript");
+        const bool javaScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1String("javascript");
+        const bool declarativeScript = service.value(QStringLiteral("X-Plasma-API")) == QLatin1String("declarativescript");
         if (!javaScript && !declarativeScript) {
             continue;
         }
@@ -684,7 +684,7 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
         }
         const QString pluginName = service.pluginId();
         const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
-        const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, scriptFolder + pluginName + QStringLiteral("/contents/") + scriptName);
+        const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, scriptFolder + pluginName + QLatin1String("/contents/") + scriptName);
         if (file.isNull()) {
             qCDebug(KWIN_SCRIPTING) << "Could not find script file for " << pluginName;
             continue;
