@@ -53,6 +53,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/types.h>
 #include <sys/socket.h>
 
+//screenlocker
+#include <KScreenLocker/KsldApp>
+
 using namespace KWayland::Server;
 
 namespace KWin
@@ -77,8 +80,9 @@ WaylandServer::~WaylandServer()
     }
 }
 
-void WaylandServer::init(const QByteArray &socketName)
+void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 {
+    m_initFlags = flags;
     m_display = new KWayland::Server::Display(this);
     if (!socketName.isNull() && !socketName.isEmpty()) {
         m_display->setSocketName(QString::fromUtf8(socketName));
@@ -205,6 +209,10 @@ void WaylandServer::initWorkspace()
                 );
             }
         );
+    }
+    ScreenLocker::KSldApp::self();
+    if (m_initFlags.testFlag(InitalizationFlag::LockScreen)) {
+        ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
 }
 

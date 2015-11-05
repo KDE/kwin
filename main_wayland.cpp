@@ -486,6 +486,10 @@ int main(int argc, char * argv[])
                                            i18n("List all available backends and quit."));
     parser.addOption(listBackendsOption);
 
+    QCommandLineOption screenLockerOption(QStringLiteral("lockscreen"),
+                                          i18n("Starts the session in locked mode."));
+    parser.addOption(screenLockerOption);
+
     parser.addPositionalArgument(QStringLiteral("applications"),
                                  i18n("Applications to start once Wayland and Xwayland server are started"),
                                  QStringLiteral("[/path/to/application...]"));
@@ -578,7 +582,12 @@ int main(int argc, char * argv[])
 
     // TODO: create backend without having the server running
     KWin::WaylandServer *server = KWin::WaylandServer::create(&a);
-    server->init(parser.value(waylandSocketOption).toUtf8());
+
+    KWin::WaylandServer::InitalizationFlags flags;
+    if (parser.isSet(screenLockerOption)) {
+        flags = KWin::WaylandServer::InitalizationFlag::LockScreen;
+    }
+    server->init(parser.value(waylandSocketOption).toUtf8(), flags);
 
     if (qobject_cast<KWin::AbstractBackend*>((*pluginIt).instantiate())) {
 #if HAVE_INPUT

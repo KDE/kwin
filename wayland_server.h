@@ -62,8 +62,15 @@ class KWIN_EXPORT WaylandServer : public QObject
 {
     Q_OBJECT
 public:
+    enum class InitalizationFlag {
+        NoOptions = 0x0,
+        LockScreen = 0x1
+    };
+
+    Q_DECLARE_FLAGS(InitalizationFlags, InitalizationFlag)
+
     virtual ~WaylandServer();
-    void init(const QByteArray &socketName = QByteArray());
+    void init(const QByteArray &socketName = QByteArray(), InitalizationFlags flags = InitalizationFlag::NoOptions);
     void initOutputs();
 
     KWayland::Server::Display *display() {
@@ -159,6 +166,7 @@ private:
     QList<ShellClient*> m_clients;
     QList<ShellClient*> m_internalClients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
+    InitalizationFlags m_initFlags;
     KWIN_SINGLETON(WaylandServer)
 };
 

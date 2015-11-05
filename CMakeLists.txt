@@ -116,6 +116,11 @@ set_package_properties(KF5Wayland PROPERTIES
                        TYPE REQUIRED
                       )
 
+find_package(KScreenLocker CONFIG REQUIRED)
+set_package_properties(KScreenLocker PROPERTIES
+                       TYPE REQUIRED
+                       PURPOSE "For screenlocker integration in kwin_wayland")
+
 find_package(EGL)
 set_package_properties(EGL PROPERTIES
                        TYPE RUNTIME
@@ -462,6 +467,7 @@ set(kwin_KDE_LIBS
     KF5::WindowSystem
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
+    PW::KScreenLocker
 )
 
 set(kwin_XLIB_LIBS
