@@ -210,7 +210,10 @@ void WaylandServer::initWorkspace()
             }
         );
     }
+
     ScreenLocker::KSldApp::self();
+    ScreenLocker::KSldApp::self()->setWaylandDisplay(m_display);
+    ScreenLocker::KSldApp::self()->initialize();
     if (m_initFlags.testFlag(InitalizationFlag::LockScreen)) {
         ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
