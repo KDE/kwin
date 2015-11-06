@@ -101,6 +101,8 @@ public:
         return m_windowId;
     }
     bool isInternal() const;
+    bool isLockScreen() const;
+    bool isInputMethod() const;
     QWindow *internalWindow() const {
         return m_internalWindow;
     }

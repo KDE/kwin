@@ -626,6 +626,16 @@ bool ShellClient::isInternal() const
     return m_shellSurface->client() == waylandServer()->internalConnection();
 }
 
+bool ShellClient::isLockScreen() const
+{
+    return m_shellSurface->client() == waylandServer()->greeterClientConnection();
+}
+
+bool ShellClient::isInputMethod() const
+{
+    return m_shellSurface->client() == waylandServer()->inputMethodConnection();
+}
+
 xcb_window_t ShellClient::window() const
 {
     return windowId();

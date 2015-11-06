@@ -127,6 +127,9 @@ public:
     KWayland::Server::ClientConnection *internalConnection() const {
         return m_internalConnection.server;
     }
+    KWayland::Server::ClientConnection *screenLockerClientConnection() const {
+        return m_screenLockerClientConnection;
+    }
     KWayland::Client::ShmPool *internalShmPool() {
         return m_internalConnection.shm;
     }
@@ -154,6 +157,7 @@ private:
     KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
     KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
     KWayland::Server::ClientConnection *m_inputMethodServerConnection = nullptr;
+    KWayland::Server::ClientConnection *m_screenLockerClientConnection = nullptr;
     struct {
         KWayland::Server::ClientConnection *server = nullptr;
         KWayland::Client::ConnectionThread *client = nullptr;
