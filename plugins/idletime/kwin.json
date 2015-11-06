@@ -1,0 +1,3 @@
+{
+    "platforms": ["wayland-org.kde.kwin.qpa"]
+}
