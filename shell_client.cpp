@@ -628,7 +628,7 @@ bool ShellClient::isInternal() const
 
 bool ShellClient::isLockScreen() const
 {
-    return m_shellSurface->client() == waylandServer()->greeterClientConnection();
+    return m_shellSurface->client() == waylandServer()->screenLockerClientConnection();
 }
 
 bool ShellClient::isInputMethod() const
