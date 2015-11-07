@@ -100,8 +100,8 @@ Name[zh_TW]=進階
 
 Comment=Advanced Window Management Features
 Comment[bs]=Napredne mogućnosti upravljanja prozoeima
-Comment[ca]=Característiques avançades de la gestió de finestres
-Comment[ca@valencia]=Característiques avançades de la gestió de finestres
+Comment[ca]=Característiques avançades per a la gestió de les finestres
+Comment[ca@valencia]=Característiques avançades per a la gestió de les finestres
 Comment[cs]=Pokročilé vlastností správy oken
 Comment[da]=Avancerede vindueshåndteringsegenskaber
 Comment[de]=Erweiterte Fensterverwaltung
@@ -141,8 +141,8 @@ Comment[zh_TW]=進階視窗管理功能
 
 X-KDE-Keywords=shading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behavior
 X-KDE-Keywords[bs]=sjenčanje, granične, lebdjenje, aktivne granice, popločavanje, Kartice, tabovanje, prozorno tabovanje, grupiranje prozora, pločica, prozorna pločica,  plasman przora, plasman prozorâ, napredo ponašanje prozora
-X-KDE-Keywords[ca]=ombra,vora,passar per sobre,vores actives,mosaic,pestanyes,pestanyes de finestra,agrupació de finestres,mosaic de finestres,col·locació de finestres,comportament avançat de finestra
-X-KDE-Keywords[ca@valencia]=ombra,vora,passar per sobre,vores actives,mosaic,pestanyes,pestanyes de finestra,agrupació de finestres,mosaic de finestres,col·locació de finestres,comportament avançat de finestra
+X-KDE-Keywords[ca]=ombra,vora,passar per sobre,vores actives,mosaic,pestanyes,pestanyes de finestra,agrupació de les finestres,mosaic de les finestres,col·locació de les finestres,comportament avançat de les finestres
+X-KDE-Keywords[ca@valencia]=ombra,vora,passar per sobre,vores actives,mosaic,pestanyes,pestanyes de finestra,agrupació de les finestres,mosaic de les finestres,col·locació de les finestres,comportament avançat de les finestres
 X-KDE-Keywords[da]=kant,hover,aktive kanter,tiling,faneblade,vinduesfaneblade,gruppering af vinduer,vinduesplacering,placering af vinduer,avanceret vinduesopførsel
 X-KDE-Keywords[de]=Fensterheber,Rand,Überfahren,Aktive Ränder,Kacheln,Unterfenster,Fenstergruppierung,Fensterkachelung,Fensteranordnung,Erweitertes Fensterverhalten
 X-KDE-Keywords[el]=σκίαση,περίγραμμα,αιώρηση,ενεργά περιγράμματα,παράθεση,στηλοθέτες,στηλοθέτηση,στηλοθέτηση παραθύρων,ομαδοποίηση παραθύρων,παράθεση παραθύρων,τοποθέτηση παραθύρων,τοποθέτηση παραθύρων,προχωρημένη συμπεριφορά παραθύρων
