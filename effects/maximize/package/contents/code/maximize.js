@@ -35,7 +35,7 @@ var maximizeEffect = {
             oldGeometry = window.olderGeometry;
         window.olderGeometry = window.oldGeometry;
         window.oldGeometry = newGeometry;
-        animate({
+        window.maximizeAnimation1 = animate({
             window: window,
             duration: maximizeEffect.duration,
             animations: [{
@@ -61,7 +61,7 @@ var maximizeEffect = {
             }]
         });
         if (!window.resize) {
-            animate({
+            window.maximizeAnimation2 =animate({
                 window: window,
                 duration: maximizeEffect.duration,
                 animations: [{
@@ -74,6 +74,17 @@ var maximizeEffect = {
     },
     geometryChange: function (window, oldGeometry) {
         "use strict";
+        if (window.maximizeAnimation1) {
+            if (window.geometry.width != window.oldGeometry.width ||
+                window.geometry.height != window.oldGeometry.height) {
+                cancel(window.maximizeAnimation1);
+                delete window.maximizeAnimation1;
+                if (window.maximizeAnimation2) {
+                    cancel(window.maximizeAnimation2);
+                    delete window.maximizeAnimation2;
+                }
+            }
+        }
         window.oldGeometry = window.geometry;
         window.olderGeometry = oldGeometry;
     },
