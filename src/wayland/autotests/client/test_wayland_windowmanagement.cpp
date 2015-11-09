@@ -149,9 +149,6 @@ void TestWindowManagement::init()
     QVERIFY(serverSurfaceCreated.wait());
     m_surfaceInterface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
     QVERIFY(m_surfaceInterface);
-
-    m_surface = m_compositor->createSurface(this);
-    QVERIFY(m_surface);
 }
 
 void TestWindowManagement::testWindowTitle()
@@ -192,6 +189,10 @@ void TestWindowManagement::cleanup()
     delete m_surfaceInterface;
     m_surfaceInterface = nullptr;
 
+    if (m_surface) {
+        delete m_surface;
+        m_surface = nullptr;
+    }
     if (m_compositor) {
         delete m_compositor;
         m_compositor = nullptr;
