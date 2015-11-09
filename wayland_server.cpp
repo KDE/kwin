@@ -215,7 +215,7 @@ void WaylandServer::initWorkspace()
     ScreenLocker::KSldApp::self()->setWaylandDisplay(m_display);
     ScreenLocker::KSldApp::self()->initialize();
 
-    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked, this,
+    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::greeterClientConnectionChanged, this,
         [this] () {
             m_screenLockerClientConnection = ScreenLocker::KSldApp::self()->greeterClientConnection();
         }
