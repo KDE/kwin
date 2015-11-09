@@ -113,23 +113,31 @@ void ContrastShader::init()
 {
     reset();
 
-    const bool glsl_140 = !GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
+    const bool gles = GLPlatform::instance()->isGLES();
+    const bool glsl_140 = !gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
+    const bool core = glsl_140 || (gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0));
 
     QByteArray vertexSource;
     QByteArray fragmentSource;
 
-    const QByteArray attribute   = glsl_140 ? "in"                : "attribute";
-    const QByteArray varying_in  = glsl_140 ? "noperspective in"  : "varying";
-    const QByteArray varying_out = glsl_140 ? "noperspective out" : "varying";
-    const QByteArray texture2D   = glsl_140 ? "texture"           : "texture2D";
-    const QByteArray fragColor   = glsl_140 ? "fragColor"         : "gl_FragColor";
+    const QByteArray attribute   = core ? "in"                : "attribute";
+    const QByteArray varying_in  = core ? (gles ? "in" : "noperspective in") : "varying";
+    const QByteArray varying_out = core ? (gles ? "out" : "noperspective out") : "varying";
+    const QByteArray texture2D   = core ? "texture"           : "texture2D";
+    const QByteArray fragColor   = core ? "fragColor"         : "gl_FragColor";
 
     // Vertex shader
     // ===================================================================
     QTextStream stream(&vertexSource);
 
-   if (glsl_140)
+    if (gles) {
+        if (core) {
+            stream << "#version 300 es\n\n";
+        }
+        stream << "precision highp float;\n";
+    } else if (glsl_140) {
         stream << "#version 140\n\n";
+    }
 
     stream << "uniform mat4 modelViewProjectionMatrix;\n";
     stream << "uniform mat4 textureMatrix;\n";
@@ -148,15 +156,21 @@ void ContrastShader::init()
     // ===================================================================
     QTextStream stream2(&fragmentSource);
 
-    if (glsl_140)
+    if (gles) {
+        if (core) {
+            stream2 << "#version 300 es\n\n";
+        }
+        stream2 << "precision highp float;\n";
+    } else if (glsl_140) {
         stream2 << "#version 140\n\n";
+    }
 
     stream2 << "uniform mat4 colorMatrix;\n";
     stream2 << "uniform sampler2D sampler;\n";
     stream2 << "uniform float opacity;\n";
     stream2 << varying_in << " vec4 varyingTexCoords;\n";
 
-    if (glsl_140)
+    if (core)
         stream2 << "out vec4 fragColor;\n\n";
 
     stream2 << "void main(void)\n";
