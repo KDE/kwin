@@ -144,9 +144,14 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<AbstractClient> 
     Workspace *ws = Workspace::self();
     int x = pos.left();
     int y = pos.bottom();
+    const bool needsPopup = kwinApp()->shouldUseWaylandForCompositing();
     if (y == pos.top()) {
         m_client.data()->blockActivityUpdates(true);
-        m_menu->exec(QPoint(x, y));
+        if (needsPopup) {
+            m_menu->popup(QPoint(x, y));
+        } else {
+            m_menu->exec(QPoint(x, y));
+        }
         if (!m_client.isNull())
             m_client.data()->blockActivityUpdates(false);
     }
@@ -155,10 +160,19 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<AbstractClient> 
         QRect area = ws->clientArea(ScreenArea, QPoint(x, y), VirtualDesktopManager::self()->current());
         menuAboutToShow(); // needed for sizeHint() to be correct :-/
         int popupHeight = m_menu->sizeHint().height();
-        if (y + popupHeight < area.height())
-            m_menu->exec(QPoint(x, y));
-        else
-            m_menu->exec(QPoint(x, pos.top() - popupHeight));
+        if (y + popupHeight < area.height()) {
+            if (needsPopup) {
+                m_menu->popup(QPoint(x, y));
+            } else {
+                m_menu->exec(QPoint(x, y));
+            }
+        } else {
+            if (needsPopup) {
+                m_menu->popup(QPoint(x, pos.top() - popupHeight));
+            } else {
+                m_menu->exec(QPoint(x, pos.top() - popupHeight));
+            }
+        }
         if (!m_client.isNull())
             m_client.data()->blockActivityUpdates(true);
     }
