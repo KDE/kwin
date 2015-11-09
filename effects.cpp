@@ -769,12 +769,14 @@ void* EffectsHandlerImpl::getProxy(QString name)
 
 void EffectsHandlerImpl::startMousePolling()
 {
-    Cursor::self()->startMousePolling();
+    if (Cursor::self())
+        Cursor::self()->startMousePolling();
 }
 
 void EffectsHandlerImpl::stopMousePolling()
 {
-    Cursor::self()->stopMousePolling();
+    if (Cursor::self())
+        Cursor::self()->stopMousePolling();
 }
 
 bool EffectsHandlerImpl::hasKeyboardGrab() const
