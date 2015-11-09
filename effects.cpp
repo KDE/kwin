@@ -599,10 +599,12 @@ void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
     emit windowAdded(u->effectWindow());
 }
 
-void EffectsHandlerImpl::slotWindowClosed(KWin::Toplevel *c)
+void EffectsHandlerImpl::slotWindowClosed(KWin::Toplevel *c, KWin::Deleted *d)
 {
     c->disconnect(this);
-    emit windowClosed(c->effectWindow());
+    if (d) {
+        emit windowClosed(c->effectWindow());
+    }
 }
 
 void EffectsHandlerImpl::slotClientModalityChanged()
