@@ -376,7 +376,7 @@ int main(int argc, char * argv[])
     qunsetenv("QT_IM_MODULE");
     qputenv("QSG_RENDER_LOOP", "basic");
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-    QCoreApplication::setAttribute(Qt::AA_NoHighDpiScaling, true);
+    QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
 #endif
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
