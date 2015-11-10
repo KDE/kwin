@@ -155,24 +155,31 @@ ShellClient::~ShellClient() = default;
 void ShellClient::destroyClient()
 {
     m_closing = true;
-    Deleted *del = Deleted::create(this);
+    Deleted *del = nullptr;
+    if (workspace()) {
+        del = Deleted::create(this);
+    }
     emit windowClosed(this, del);
 
-    StackingUpdatesBlocker blocker(workspace());
-    if (transientFor()) {
-        transientFor()->removeTransient(this);
-    }
-    for (auto it = transients().constBegin(); it != transients().constEnd();) {
-        if ((*it)->transientFor() == this) {
-            removeTransient(*it);
-            it = transients().constBegin(); // restart, just in case something more has changed with the list
-        } else {
-            ++it;
+    if (workspace()) {
+        StackingUpdatesBlocker blocker(workspace());
+        if (transientFor()) {
+            transientFor()->removeTransient(this);
+        }
+        for (auto it = transients().constBegin(); it != transients().constEnd();) {
+            if ((*it)->transientFor() == this) {
+                removeTransient(*it);
+                it = transients().constBegin(); // restart, just in case something more has changed with the list
+            } else {
+                ++it;
+            }
         }
     }
     waylandServer()->removeClient(this);
 
-    del->unrefWindow();
+    if (del) {
+        del->unrefWindow();
+    }
     m_shellSurface = nullptr;
     deleteClient(this);
 }
