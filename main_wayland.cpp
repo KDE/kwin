@@ -188,6 +188,15 @@ void ApplicationWayland::continueStartupWithX()
             environment.remove("DISPLAY");
             environment.remove("WAYLAND_DISPLAY");
             QProcess *p = new QProcess(this);
+            auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
+            connect(p, finishedSignal, this,
+                [this, p] {
+                    if (waylandServer()) {
+                        waylandServer()->destroyInputMethodConnection();
+                    }
+                    p->deleteLater();
+                }
+            );
             p->setProcessEnvironment(environment);
             p->start(m_inputMethodServerToStart);
             p->waitForStarted();

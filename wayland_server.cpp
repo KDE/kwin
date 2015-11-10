@@ -71,7 +71,10 @@ WaylandServer::WaylandServer(QObject *parent)
     qRegisterMetaType<KWayland::Server::OutputInterface::DpmsMode>();
 }
 
-WaylandServer::~WaylandServer() = default;
+WaylandServer::~WaylandServer()
+{
+    destroyInputMethodConnection();
+}
 
 void WaylandServer::destroyInternalConnection()
 {
@@ -290,6 +293,15 @@ int WaylandServer::createInputMethodConnection()
     }
     m_inputMethodServerConnection = m_display->createClient(sx[0]);
     return sx[1];
+}
+
+void WaylandServer::destroyInputMethodConnection()
+{
+    if (!m_inputMethodServerConnection) {
+        return;
+    }
+    m_inputMethodServerConnection->destroy();
+    m_inputMethodServerConnection = nullptr;
 }
 
 void WaylandServer::createInternalConnection()

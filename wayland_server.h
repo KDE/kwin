@@ -115,6 +115,7 @@ public:
      * @returns file descriptor to the input method server's socket.
      **/
     int createInputMethodConnection();
+    void destroyInputMethodConnection();
 
     void createInternalConnection();
     void destroyInternalConnection();
