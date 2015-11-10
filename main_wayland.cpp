@@ -80,6 +80,7 @@ ApplicationWayland::~ApplicationWayland()
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
         destroyAtoms();
         xcb_disconnect(x11Connection());
+        setX11Connection(nullptr);
     }
     if (m_xwaylandProcess) {
         m_xwaylandProcess->terminate();
