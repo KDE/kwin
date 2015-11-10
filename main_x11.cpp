@@ -121,6 +121,7 @@ ApplicationX11::ApplicationX11(int &argc, char **argv)
 
 ApplicationX11::~ApplicationX11()
 {
+    destroyCompositor();
     destroyWorkspace();
     if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE)   // If there was no --replace (no new WM)
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
@@ -134,6 +135,7 @@ void ApplicationX11::setReplace(bool replace)
 void ApplicationX11::lostSelection()
 {
     sendPostedEvents();
+    destroyCompositor();
     destroyWorkspace();
     // Remove windowmanager privileges
     Xcb::selectInput(rootWindow(), XCB_EVENT_MASK_PROPERTY_CHANGE);

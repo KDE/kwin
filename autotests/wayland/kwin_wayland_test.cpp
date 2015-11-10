@@ -50,8 +50,8 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
 
 WaylandTestApplication::~WaylandTestApplication()
 {
-    destroyCompositor();
     destroyWorkspace();
+    waylandServer()->dispatch();
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
         destroyAtoms();
@@ -61,6 +61,8 @@ WaylandTestApplication::~WaylandTestApplication()
         m_xwaylandProcess->terminate();
         m_xwaylandProcess->waitForFinished();
     }
+    waylandServer()->destroyInternalConnection();
+    destroyCompositor();
 }
 
 void WaylandTestApplication::performStartup()

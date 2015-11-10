@@ -116,6 +116,7 @@ public:
     int createInputMethodConnection();
 
     void createInternalConnection();
+    void destroyInternalConnection();
     void initWorkspace();
 
     KWayland::Server::ClientConnection *xWaylandConnection() const {

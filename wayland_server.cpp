@@ -70,13 +70,16 @@ WaylandServer::WaylandServer(QObject *parent)
     qRegisterMetaType<KWayland::Server::OutputInterface::DpmsMode>();
 }
 
-WaylandServer::~WaylandServer()
+WaylandServer::~WaylandServer() = default;
+
+void WaylandServer::destroyInternalConnection()
 {
     if (m_internalConnection.client) {
         dispatch();
         m_internalConnection.client->deleteLater();
         m_internalConnection.clientThread->quit();
         m_internalConnection.clientThread->wait();
+        m_internalConnection.client = nullptr;
     }
 }
 

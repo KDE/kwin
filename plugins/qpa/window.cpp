@@ -57,7 +57,6 @@ Window::~Window()
     }
     delete m_shellSurface;
     delete m_surface;
-    waylandServer()->internalClientConection()->flush();
 }
 
 WId Window::winId() const
@@ -106,7 +105,9 @@ void Window::unmap()
     }
     m_surface->attachBuffer(KWayland::Client::Buffer::Ptr());
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    waylandServer()->internalClientConection()->flush();
+    if (waylandServer()->internalClientConection()) {
+        waylandServer()->internalClientConection()->flush();
+    }
 }
 
 void Window::createEglSurface(EGLDisplay dpy, EGLConfig config)

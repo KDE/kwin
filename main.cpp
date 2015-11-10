@@ -418,10 +418,6 @@ void Application::destroyWorkspace()
 
 void Application::destroyCompositor()
 {
-    if (Workspace::self()) {
-        // compositor is destroyed together with Workspace
-        return;
-    }
     delete Compositor::self();
 }
 

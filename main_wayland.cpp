@@ -74,8 +74,8 @@ ApplicationWayland::ApplicationWayland(int &argc, char **argv)
 
 ApplicationWayland::~ApplicationWayland()
 {
-    destroyCompositor();
     destroyWorkspace();
+    waylandServer()->dispatch();
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
         destroyAtoms();
@@ -85,6 +85,8 @@ ApplicationWayland::~ApplicationWayland()
         m_xwaylandProcess->terminate();
         m_xwaylandProcess->waitForFinished();
     }
+    waylandServer()->destroyInternalConnection();
+    destroyCompositor();
 }
 
 void ApplicationWayland::performStartup()

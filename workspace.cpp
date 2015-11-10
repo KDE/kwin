@@ -425,8 +425,6 @@ void Workspace::init()
 
 Workspace::~Workspace()
 {
-    delete m_compositor;
-    m_compositor = NULL;
     blockStackingUpdates(true);
 
     // TODO: grabXServer();
