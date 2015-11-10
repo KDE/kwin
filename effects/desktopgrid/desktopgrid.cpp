@@ -422,6 +422,12 @@ void DesktopGridEffect::slotWindowDeleted(EffectWindow* w)
             break;
         }
     }
+    if (isUsingPresentWindows()) {
+        for (QList<WindowMotionManager>::iterator it = m_managers.begin(),
+                                                 end = m_managers.end(); it != end; ++it) {
+            it->unmanage(w);
+        }
+    }
 }
 
 void DesktopGridEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const QRect& old)
