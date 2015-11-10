@@ -117,6 +117,15 @@ public:
      **/
     operator wl_client*() const;
 
+    /**
+     * Destroys this ClientConnection.
+     * This is a convenient wrapper around wl_client_destroy. The use case is in combination
+     * with ClientConnections created through @link Display::createClient @endlink. E.g. once
+     * the process for the ClientConnection exited, the ClientConnection needs to be destroyed, too.
+     * @since 5.5
+     **/
+    void destroy();
+
 Q_SIGNALS:
     /**
      * Signal emitted when the ClientConnection got disconnected from the server.

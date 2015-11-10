@@ -95,6 +95,11 @@ void ClientConnection::flush()
     wl_client_flush(d->client);
 }
 
+void ClientConnection::destroy()
+{
+    wl_client_destroy(d->client);
+}
+
 wl_resource *ClientConnection::createResource(const wl_interface *interface, quint32 version, quint32 id)
 {
     return wl_resource_create(d->client, interface, version, id);

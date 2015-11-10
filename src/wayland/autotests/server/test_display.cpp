@@ -169,7 +169,7 @@ void TestWaylandServerDisplay::testClientConnection()
     QVERIFY(disconnectedSpy.isEmpty());
     wl_client_destroy(client);
     QCOMPARE(disconnectedSpy.count(), 1);
-    wl_client_destroy(*client2);
+    client2->destroy();
     QCOMPARE(disconnectedSpy.count(), 2);
     close(sv[0]);
     close(sv[1]);
