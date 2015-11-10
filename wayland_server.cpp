@@ -82,6 +82,7 @@ void WaylandServer::destroyInternalConnection()
         m_internalConnection.client->deleteLater();
         m_internalConnection.clientThread->quit();
         m_internalConnection.clientThread->wait();
+        delete m_internalConnection.clientThread;
         m_internalConnection.client = nullptr;
     }
 }
