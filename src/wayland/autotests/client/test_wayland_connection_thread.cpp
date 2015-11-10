@@ -209,7 +209,7 @@ void TestWaylandConnectionThread::testConnectFd()
     using namespace KWayland::Server;
     int sv[2];
     QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
-    auto c = m_display->createClient(sv[0])
+    auto c = m_display->createClient(sv[0]);
     QVERIFY(c);
     QSignalSpy disconnectedSpy(c, &ClientConnection::disconnected);
     QVERIFY(disconnectedSpy.isValid());
