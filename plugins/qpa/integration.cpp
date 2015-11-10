@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/shell.h>
+#include <KWayland/Client/surface.h>
 #include <KWayland/Server/clientconnection.h>
 
 #include <QCoreApplication>
@@ -112,8 +113,8 @@ QPlatformWindow *Integration::createPlatformWindow(QWindow *window) const
         return new QPlatformWindow(window);
     } else {
         // don't set window as parent, cause infinite recursion in PlasmaQuick::Dialog
-        auto surface = c->createSurface();
-        return new Window(window, surface, s->createSurface(surface), this);
+        auto surface = c->createSurface(c);
+        return new Window(window, surface, s->createSurface(surface, surface), this);
     }
 }
 
@@ -196,7 +197,7 @@ KWayland::Client::Compositor *Integration::compositor() const
         auto registry = waylandServer()->internalClientRegistry();
         const auto c = registry->interface(Registry::Interface::Compositor);
         if (c.name != 0u) {
-            const_cast<Integration*>(this)->m_compositor = registry->createCompositor(c.name, c.version);
+            const_cast<Integration*>(this)->m_compositor = registry->createCompositor(c.name, c.version, registry);
         }
     }
     return m_compositor;
@@ -209,7 +210,7 @@ KWayland::Client::Shell *Integration::shell() const
         auto registry = waylandServer()->internalClientRegistry();
         const auto s = registry->interface(Registry::Interface::Shell);
         if (s.name != 0u) {
-            const_cast<Integration*>(this)->m_shell = registry->createShell(s.name, s.version);
+            const_cast<Integration*>(this)->m_shell = registry->createShell(s.name, s.version, registry);
         }
     }
     return m_shell;

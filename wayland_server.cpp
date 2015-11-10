@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/registry.h>
+#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 // Server
 #include <KWayland/Server/compositor_interface.h>
@@ -75,6 +76,8 @@ WaylandServer::~WaylandServer() = default;
 void WaylandServer::destroyInternalConnection()
 {
     if (m_internalConnection.client) {
+        delete m_internalConnection.registry;
+        delete m_internalConnection.shm;
         dispatch();
         m_internalConnection.client->deleteLater();
         m_internalConnection.clientThread->quit();

@@ -43,6 +43,8 @@ Window::Window(QWindow *window, KWayland::Client::Surface *surface, KWayland::Cl
     , m_windowId(++s_windowId)
     , m_integration(integration)
 {
+    QObject::connect(m_surface, &QObject::destroyed, window, [this] { m_surface = nullptr;});
+    QObject::connect(m_shellSurface, &QObject::destroyed, window, [this] { m_shellSurface = nullptr;});
     waylandServer()->internalClientConection()->flush();
 }
 
@@ -103,8 +105,10 @@ void Window::unmap()
     if (m_shellClient) {
         m_shellClient->setInternalFramebufferObject(QSharedPointer<QOpenGLFramebufferObject>());
     }
-    m_surface->attachBuffer(KWayland::Client::Buffer::Ptr());
-    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    if (m_surface) {
+        m_surface->attachBuffer(KWayland::Client::Buffer::Ptr());
+        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    }
     if (waylandServer()->internalClientConection()) {
         waylandServer()->internalClientConection()->flush();
     }
