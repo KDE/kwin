@@ -484,10 +484,13 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_FOCUS_IN: {
         const auto *event = reinterpret_cast<xcb_focus_in_event_t*>(e);
         if (event->event == rootWindow()
-                && (event->detail == XCB_NOTIFY_DETAIL_NONE || event->detail == XCB_NOTIFY_DETAIL_POINTER_ROOT)) {
+                && (event->detail == XCB_NOTIFY_DETAIL_NONE || event->detail == XCB_NOTIFY_DETAIL_POINTER_ROOT || event->detail == XCB_NOTIFY_DETAIL_INFERIOR)) {
             Xcb::CurrentInput currentInput;
             updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
-            if (!currentInput.isNull() && (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT)) {
+            // it seems we can "loose" focus reversions when the closing client hold a grab
+            // => catch the typical pattern (though we don't want the focus on the root anyway) #348935
+            const bool lostFocusPointerToRoot = currentInput->focus == rootWindow() && event->detail == XCB_NOTIFY_DETAIL_INFERIOR;
+            if (!currentInput.isNull() && (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT || lostFocusPointerToRoot)) {
                 //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
                 AbstractClient *c = mostRecentlyActivatedClient();
                 if (c != NULL)
