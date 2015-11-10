@@ -109,6 +109,7 @@ public:
      * @returns file descriptor for Xwayland to connect to.
      **/
     int createXWaylandConnection();
+    void destroyXWaylandConnection();
 
     /**
      * @returns file descriptor to the input method server's socket.
@@ -120,7 +121,7 @@ public:
     void initWorkspace();
 
     KWayland::Server::ClientConnection *xWaylandConnection() const {
-        return m_xwaylandConnection;
+        return m_xwayland.client;
     }
     KWayland::Server::ClientConnection *inputMethodConnection() const {
         return m_inputMethodServerConnection;
@@ -156,7 +157,10 @@ private:
     KWayland::Server::PlasmaShellInterface *m_plasmaShell = nullptr;
     KWayland::Server::PlasmaWindowManagementInterface *m_windowManagement = nullptr;
     KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
-    KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
+    struct {
+        KWayland::Server::ClientConnection *client = nullptr;
+        QMetaObject::Connection destroyConnection;
+    } m_xwayland;
     KWayland::Server::ClientConnection *m_inputMethodServerConnection = nullptr;
     KWayland::Server::ClientConnection *m_screenLockerClientConnection = nullptr;
     struct {

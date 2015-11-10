@@ -125,7 +125,7 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
                 // it's possible that a Surface gets created before Workspace is created
                 return;
             }
-            if (surface->client() == m_xwaylandConnection) {
+            if (surface->client() == m_xwayland.client) {
                 // skip Xwayland clients, those are created using standard X11 way
                 return;
             }
@@ -261,13 +261,23 @@ int WaylandServer::createXWaylandConnection()
         qCWarning(KWIN_CORE) << "Could not create socket";
         return -1;
     }
-    m_xwaylandConnection = m_display->createClient(sx[0]);
-    connect(m_xwaylandConnection, &KWayland::Server::ClientConnection::disconnected, this,
+    m_xwayland.client = m_display->createClient(sx[0]);
+    m_xwayland.destroyConnection = connect(m_xwayland.client, &KWayland::Server::ClientConnection::disconnected, this,
         [] {
             qFatal("Xwayland Connection died");
         }
     );
     return sx[1];
+}
+
+void WaylandServer::destroyXWaylandConnection()
+{
+    if (!m_xwayland.client) {
+        return;
+    }
+    disconnect(m_xwayland.destroyConnection);
+    m_xwayland.client->destroy();
+    m_xwayland.client = nullptr;
 }
 
 int WaylandServer::createInputMethodConnection()

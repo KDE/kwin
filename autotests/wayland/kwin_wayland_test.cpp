@@ -61,6 +61,7 @@ WaylandTestApplication::~WaylandTestApplication()
     if (m_xwaylandProcess) {
         m_xwaylandProcess->terminate();
         m_xwaylandProcess->waitForFinished();
+        waylandServer()->destroyXWaylandConnection();
     }
     waylandServer()->destroyInternalConnection();
     destroyCompositor();
