@@ -557,5 +557,5 @@ void TestSubSurface::testCast()
     QCOMPARE(SubSurface::get(*(subSurface.data())), QPointer<SubSurface>(subSurface.data()));
 }
 
-QTEST_MAIN(TestSubSurface)
+QTEST_GUILESS_MAIN(TestSubSurface)
 #include "test_wayland_subsurface.moc"

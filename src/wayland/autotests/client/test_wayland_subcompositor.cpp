@@ -169,5 +169,5 @@ void TestSubCompositor::testCast()
     QCOMPARE((wl_subcompositor*)c2, wlSubComp);
 }
 
-QTEST_MAIN(TestSubCompositor)
+QTEST_GUILESS_MAIN(TestSubCompositor)
 #include "test_wayland_subcompositor.moc"

@@ -167,5 +167,5 @@ void TestSlide::testCreate()
     QCOMPARE(serverSurface->slideOnShowHide()->offset(), 15);
 }
 
-QTEST_MAIN(TestSlide)
+QTEST_GUILESS_MAIN(TestSlide)
 #include "test_wayland_slide.moc"

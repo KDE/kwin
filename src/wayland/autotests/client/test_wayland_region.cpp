@@ -281,5 +281,5 @@ void TestRegion::testDestroy()
     region->destroy();
 }
 
-QTEST_MAIN(TestRegion)
+QTEST_GUILESS_MAIN(TestRegion)
 #include "test_wayland_region.moc"

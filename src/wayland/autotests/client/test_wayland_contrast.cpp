@@ -176,5 +176,5 @@ void TestContrast::testCreate()
     QCOMPARE(wl_fixed_from_double(serverSurface->contrast()->saturation()), wl_fixed_from_double(1.7));
 }
 
-QTEST_MAIN(TestContrast)
+QTEST_GUILESS_MAIN(TestContrast)
 #include "test_wayland_contrast.moc"

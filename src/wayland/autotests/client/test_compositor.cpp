@@ -157,5 +157,5 @@ void TestCompositor::testCast()
     QCOMPARE((wl_compositor*)c2, wlComp);
 }
 
-QTEST_MAIN(TestCompositor)
+QTEST_GUILESS_MAIN(TestCompositor)
 #include "test_compositor.moc"

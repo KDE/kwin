@@ -165,5 +165,5 @@ void TestBlur::testCreate()
     QCOMPARE(serverSurface->blur()->region(), QRegion(0, 0, 10, 20));
 }
 
-QTEST_MAIN(TestBlur)
+QTEST_GUILESS_MAIN(TestBlur)
 #include "test_wayland_blur.moc"
