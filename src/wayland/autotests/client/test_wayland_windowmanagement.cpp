@@ -153,7 +153,7 @@ void TestWindowManagement::init()
 
 void TestWindowManagement::testWindowTitle()
 {
-    m_windowInterface->setTitle("Test Title");
+    m_windowInterface->setTitle(QStringLiteral("Test Title"));
 
     QSignalSpy titleSpy(m_window, SIGNAL(titleChanged()));
     QVERIFY(titleSpy.isValid());
