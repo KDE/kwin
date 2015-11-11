@@ -218,5 +218,5 @@ void TestWindowManagement::cleanup()
     m_display = nullptr;
 }
 
-QTEST_MAIN(TestWindowManagement)
+QTEST_GUILESS_MAIN(TestWindowManagement)
 #include "test_wayland_windowmanagement.moc"
