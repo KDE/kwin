@@ -868,15 +868,7 @@ void InputRedirection::updateKeyboardWindow()
     }
     if (auto seat = findSeat()) {
         // TODO: this needs better integration
-        // check unmanaged
-        Toplevel *t = nullptr;
-        if (!workspace()->unmanagedList().isEmpty()) {
-            // TODO: better check whether this unmanaged should get the key event
-            t = workspace()->unmanagedList().first();
-        }
-        if (!t) {
-            t = workspace()->activeClient();
-        }
+        Toplevel *t = workspace()->activeClient();
         if (t && t->surface()) {
             if (t->surface() != seat->focusedKeyboardSurface()) {
                 seat->setFocusedKeyboardSurface(t->surface());
