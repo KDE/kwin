@@ -86,6 +86,7 @@ ApplicationWayland::~ApplicationWayland()
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
         destroyAtoms();
+        emit x11ConnectionAboutToBeDestroyed();
         xcb_disconnect(x11Connection());
         setX11Connection(nullptr);
     }

@@ -128,6 +128,12 @@ Compositor::Compositor(QObject* workspace)
                 }
             }, Qt::QueuedConnection
         );
+        connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this,
+            [this] {
+                delete cm_selection;
+                cm_selection = nullptr;
+            }
+        );
     } else {
         // delay the call to setup by one event cycle
         // The ctor of this class is invoked from the Workspace ctor, that means before

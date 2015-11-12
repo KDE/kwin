@@ -152,6 +152,7 @@ public:
 
 Q_SIGNALS:
     void x11ConnectionChanged();
+    void x11ConnectionAboutToBeDestroyed();
     void workspaceCreated();
     void screensCreated();
     void virtualTerminalCreated();
