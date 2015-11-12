@@ -73,6 +73,7 @@ Rules::Rules()
     , decocolorrule(UnusedForceRule)
     , blockcompositingrule(UnusedForceRule)
     , fsplevelrule(UnusedForceRule)
+    , fpplevelrule(UnusedForceRule)
     , acceptfocusrule(UnusedForceRule)
     , closeablerule(UnusedForceRule)
     , autogrouprule(UnusedForceRule)
@@ -182,6 +183,7 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
     decocolorrule = decocolor.isEmpty() ? UnusedForceRule : readForceRule(cfg, QStringLiteral("decocolorrule"));
     READ_FORCE_RULE(blockcompositing, , false);
     READ_FORCE_RULE(fsplevel, limit0to4, 0); // fsp is 0-4
+    READ_FORCE_RULE(fpplevel, limit0to4, 0); // fpp is 0-4
     READ_FORCE_RULE(acceptfocus, , false);
     READ_FORCE_RULE(closeable, , false);
     READ_FORCE_RULE(autogroup, , false);
@@ -279,6 +281,7 @@ void Rules::write(KConfigGroup& cfg) const
     WRITE_FORCE_RULE(decocolor, colorToString);
     WRITE_FORCE_RULE(blockcompositing,);
     WRITE_FORCE_RULE(fsplevel,);
+    WRITE_FORCE_RULE(fpplevel,);
     WRITE_FORCE_RULE(acceptfocus,);
     WRITE_FORCE_RULE(closeable,);
     WRITE_FORCE_RULE(autogroup,);
@@ -322,6 +325,7 @@ bool Rules::isEmpty() const
            && decocolorrule == UnusedForceRule
            && blockcompositingrule == UnusedForceRule
            && fsplevelrule == UnusedForceRule
+           && fpplevelrule == UnusedForceRule
            && acceptfocusrule == UnusedForceRule
            && closeablerule == UnusedForceRule
            && autogrouprule == UnusedForceRule
@@ -650,6 +654,7 @@ APPLY_RULE(noborder, NoBorder, bool)
 APPLY_FORCE_RULE(decocolor, DecoColor, QString)
 APPLY_FORCE_RULE(blockcompositing, BlockCompositing, bool)
 APPLY_FORCE_RULE(fsplevel, FSP, int)
+APPLY_FORCE_RULE(fpplevel, FPP, int)
 APPLY_FORCE_RULE(acceptfocus, AcceptFocus, bool)
 APPLY_FORCE_RULE(closeable, Closeable, bool)
 APPLY_FORCE_RULE(autogroup, Autogrouping, bool)
@@ -718,6 +723,7 @@ void Rules::discardUsed(bool withdrawn)
     DISCARD_USED_FORCE_RULE(decocolor);
     DISCARD_USED_FORCE_RULE(blockcompositing);
     DISCARD_USED_FORCE_RULE(fsplevel);
+    DISCARD_USED_FORCE_RULE(fpplevel);
     DISCARD_USED_FORCE_RULE(acceptfocus);
     DISCARD_USED_FORCE_RULE(closeable);
     DISCARD_USED_FORCE_RULE(autogroup);
@@ -851,6 +857,7 @@ CHECK_RULE(NoBorder, bool)
 CHECK_FORCE_RULE(DecoColor, QString)
 CHECK_FORCE_RULE(BlockCompositing, bool)
 CHECK_FORCE_RULE(FSP, int)
+CHECK_FORCE_RULE(FPP, int)
 CHECK_FORCE_RULE(AcceptFocus, bool)
 CHECK_FORCE_RULE(Closeable, bool)
 CHECK_FORCE_RULE(Autogrouping, bool)

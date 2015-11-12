@@ -121,6 +121,7 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(shortcut, force);
     // workarounds tab
     SETUP(fsplevel, force);
+    SETUP(fpplevel, force);
     SETUP(type, force);
     SETUP(ignoregeometry, set);
     SETUP(minsize, force);
@@ -206,6 +207,7 @@ void RulesWidget::updateEnableshortcut()
 }
 // workarounds tab
 UPDATE_ENABLE_SLOT(fsplevel)
+UPDATE_ENABLE_SLOT(fpplevel)
 UPDATE_ENABLE_SLOT(type)
 UPDATE_ENABLE_SLOT(ignoregeometry)
 UPDATE_ENABLE_SLOT(minsize)
@@ -508,6 +510,7 @@ void RulesWidget::setRules(Rules* rules)
     SPINBOX_FORCE_RULE(opacityinactive,);
     LINEEDIT_SET_RULE(shortcut,);
     COMBOBOX_FORCE_RULE(fsplevel,);
+    COMBOBOX_FORCE_RULE(fpplevel,);
     COMBOBOX_FORCE_RULE(type, typeToCombo);
     CHECKBOX_SET_RULE(ignoregeometry,);
     LINEEDIT_FORCE_RULE(minsize, sizeToStr);
@@ -611,6 +614,7 @@ Rules* RulesWidget::rules() const
     SPINBOX_FORCE_RULE(opacityinactive,);
     LINEEDIT_SET_RULE(shortcut,);
     COMBOBOX_FORCE_RULE(fsplevel,);
+    COMBOBOX_FORCE_RULE(fpplevel,);
     COMBOBOX_FORCE_RULE(type, comboToType);
     CHECKBOX_SET_RULE(ignoregeometry,);
     LINEEDIT_FORCE_RULE(minsize, strToSize);
@@ -731,6 +735,7 @@ void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
     SPINBOX_PREFILL(opacityinactive, , 100 /*get the actual opacity somehow*/);
     //LINEEDIT_PREFILL( shortcut, );
     //COMBOBOX_PREFILL( fsplevel, );
+    //COMBOBOX_PREFILL( fpplevel, );
     COMBOBOX_PREFILL(type, typeToCombo, info.windowType(SUPPORTED_MANAGED_WINDOW_TYPES_MASK));
     //CHECKBOX_PREFILL( ignoregeometry, );
     LINEEDIT_PREFILL(minsize, sizeToStr, info.frameGeometry().size());

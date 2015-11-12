@@ -92,6 +92,7 @@ private Q_SLOTS:
     void updateEnableopacityinactive();
     // workarounds tab
     void updateEnablefsplevel();
+    void updateEnablefpplevel();
     void updateEnabletype();
     void updateEnableignoregeometry();
     void updateEnableminsize();

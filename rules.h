@@ -80,6 +80,7 @@ public:
     QString checkDecoColor(QString schemeFile) const;
     bool checkBlockCompositing(bool block) const;
     int checkFSP(int fsp) const;
+    int checkFPP(int fpp) const;
     bool checkAcceptFocus(bool focus) const;
     bool checkCloseable(bool closeable) const;
     bool checkAutogrouping(bool autogroup) const;
@@ -147,6 +148,7 @@ public:
     bool applyDecoColor(QString &schemeFile) const;
     bool applyBlockCompositing(bool& block) const;
     bool applyFSP(int& fsp) const;
+    bool applyFPP(int& fpp) const;
     bool applyAcceptFocus(bool& focus) const;
     bool applyCloseable(bool& closeable) const;
     bool applyAutogrouping(bool& autogroup) const;
@@ -262,7 +264,9 @@ private:
     bool blockcompositing;
     ForceRule blockcompositingrule;
     int fsplevel;
+    int fpplevel;
     ForceRule fsplevelrule;
+    ForceRule fpplevelrule;
     bool acceptfocus;
     ForceRule acceptfocusrule;
     bool closeable;
