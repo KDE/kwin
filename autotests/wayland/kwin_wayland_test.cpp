@@ -57,6 +57,7 @@ WaylandTestApplication::~WaylandTestApplication()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
+    disconnect(m_xwaylandFailConnection);
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
         destroyAtoms();
@@ -225,7 +226,7 @@ void WaylandTestApplication::startXwaylandServer()
                            QStringLiteral("-rootless"),
                            QStringLiteral("-wm"),
                            QString::number(fd)});
-    connect(m_xwaylandProcess, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
+    m_xwaylandFailConnection = connect(m_xwaylandProcess, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
         [] (QProcess::ProcessError error) {
             if (error == QProcess::FailedToStart) {
                 std::cerr << "FATAL ERROR: failed to start Xwayland" << std::endl;

@@ -47,6 +47,7 @@ private:
 
     int m_xcbConnectionFd = -1;
     QProcess *m_xwaylandProcess = nullptr;
+    QMetaObject::Connection m_xwaylandFailConnection;
 };
 
 }

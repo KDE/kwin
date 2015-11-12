@@ -66,6 +66,7 @@ private:
     QStringList m_applicationsToStart;
     QString m_inputMethodServerToStart;
     QProcess *m_xwaylandProcess = nullptr;
+    QMetaObject::Connection m_xwaylandFailConnection;
     QProcessEnvironment m_environment;
 };
 
