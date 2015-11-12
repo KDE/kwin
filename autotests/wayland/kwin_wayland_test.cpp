@@ -68,7 +68,9 @@ WaylandTestApplication::~WaylandTestApplication()
     }
     if (m_xwaylandProcess) {
         m_xwaylandProcess->terminate();
-        m_xwaylandProcess->waitForFinished();
+        while (m_xwaylandProcess->state() != QProcess::NotRunning) {
+            processEvents(QEventLoop::WaitForMoreEvents);
+        }
         waylandServer()->destroyXWaylandConnection();
     }
     waylandServer()->destroyInternalConnection();
