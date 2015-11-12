@@ -112,7 +112,10 @@ void initGL(OpenGLPlatformInterface platformInterface)
     if (glversionstring.startsWith("OpenGL ES ")) {
         glversionstring = glversionstring.mid(10);
     }
-    glversionstring.truncate(glversionstring.indexOf(' '));
+    const int whiteSpaceIndex = glversionstring.indexOf(' ');
+    if (whiteSpaceIndex != -1) {
+        glversionstring.truncate(whiteSpaceIndex);
+    }
     auto glversioninfo = glversionstring.split('.');
     while (glversioninfo.count() < 3)
         glversioninfo << "0";
