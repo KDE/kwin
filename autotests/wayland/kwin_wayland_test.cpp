@@ -51,6 +51,7 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
 
 WaylandTestApplication::~WaylandTestApplication()
 {
+    waylandServer()->backend()->setOutputsEnabled(false);
     destroyWorkspace();
     waylandServer()->dispatch();
     // need to unload all effects prior to destroying X connection as they might do X calls

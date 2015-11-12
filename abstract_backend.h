@@ -89,6 +89,9 @@ public:
     bool areOutputsEnabled() const {
         return m_outputsEnabled;
     }
+    void setOutputsEnabled(bool enabled) {
+        m_outputsEnabled = enabled;
+    }
 
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
@@ -130,9 +133,6 @@ protected:
     }
     void setSupportsPointerWarping(bool set) {
         m_pointerWarping = set;
-    }
-    void setOutputsEnabled(bool enabled) {
-        m_outputsEnabled = enabled;
     }
 
 private:
