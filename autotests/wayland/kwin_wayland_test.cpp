@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "../../abstract_backend.h"
+#include "../../effects.h"
 #include "../../wayland_server.h"
 #include "../../workspace.h"
 #include "../../xcbutils.h"
@@ -52,6 +53,10 @@ WaylandTestApplication::~WaylandTestApplication()
 {
     destroyWorkspace();
     waylandServer()->dispatch();
+    // need to unload all effects prior to destroying X connection as they might do X calls
+    if (effects) {
+        static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
+    }
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
         destroyAtoms();

@@ -316,6 +316,11 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 
 EffectsHandlerImpl::~EffectsHandlerImpl()
 {
+    unloadAllEffects();
+}
+
+void EffectsHandlerImpl::unloadAllEffects()
+{
     makeOpenGLContextCurrent();
     if (keyboard_grab_effect != NULL)
         ungrabKeyboard();

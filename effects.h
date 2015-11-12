@@ -62,7 +62,7 @@ class EffectLoader;
 class Unmanaged;
 class ScreenLockerWatcher;
 
-class EffectsHandlerImpl : public EffectsHandler
+class KWIN_EXPORT EffectsHandlerImpl : public EffectsHandler
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Effects")
@@ -206,6 +206,7 @@ public:
     void reloadEffect(Effect *effect) override;
     QStringList loadedEffects() const;
     QStringList listOfEffects() const;
+    void unloadAllEffects();
 
     QList<EffectWindow*> elevatedWindows() const;
     QStringList activeEffects() const;
