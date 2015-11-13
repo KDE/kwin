@@ -112,39 +112,9 @@ bool EglGbmBackend::initRenderingContext()
         return false;
     }
 
-    EGLContext context = EGL_NO_CONTEXT;
-    if (isOpenGLES()) {
-        const EGLint context_attribs[] = {
-            EGL_CONTEXT_CLIENT_VERSION, 2,
-            EGL_NONE
-        };
-
-        context = eglCreateContext(eglDisplay(), config(), EGL_NO_CONTEXT, context_attribs);
-    } else {
-        const EGLint context_attribs_31_core[] = {
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_CONTEXT_FLAGS_KHR,         EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-            EGL_NONE
-        };
-
-        const EGLint context_attribs_legacy[] = {
-            EGL_NONE
-        };
-
-        // Try to create a 3.1 core context
-        if (options->glCoreProfile() && extensions.contains(QByteArrayLiteral("EGL_KHR_create_context")))
-            context = eglCreateContext(eglDisplay(), config(), EGL_NO_CONTEXT, context_attribs_31_core);
-
-        if (context == EGL_NO_CONTEXT)
-            context = eglCreateContext(eglDisplay(), config(), EGL_NO_CONTEXT, context_attribs_legacy);
-        }
-
-        if (context == EGL_NO_CONTEXT) {
-    //         qCCritical(KWIN_DRM) << "Create Context failed";
-            return false;
+    if (!createContext()) {
+        return false;
     }
-    setContext(context);
     setSurfaceLessContext(true);
 
     return makeCurrent();

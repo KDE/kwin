@@ -51,9 +51,6 @@ protected:
     void setEglDisplay(const EGLDisplay &display) {
         m_display = display;
     }
-    void setContext(const EGLContext &context) {
-        m_context = context;
-    }
     void setSurface(const EGLSurface &surface) {
         m_surface = surface;
     }
@@ -69,6 +66,8 @@ protected:
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
+
+    bool createContext();
 
 private:
     EGLDisplay m_display = EGL_NO_DISPLAY;

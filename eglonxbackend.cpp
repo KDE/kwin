@@ -230,43 +230,11 @@ bool EglOnXBackend::initRenderingContext()
     }
     setSurface(surface);
 
-    EGLContext ctx = EGL_NO_CONTEXT;
-    if (isOpenGLES()) {
-        const EGLint context_attribs[] = {
-            EGL_CONTEXT_CLIENT_VERSION, 2,
-            EGL_NONE
-        };
-
-        ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs);
-    } else {
-        const EGLint context_attribs_31_core[] = {
-            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-            EGL_NONE
-        };
-
-        const EGLint context_attribs_legacy[] = {
-            EGL_NONE
-        };
-
-        const QByteArray eglExtensions = eglQueryString(dpy, EGL_EXTENSIONS);
-        const QList<QByteArray> extensions = eglExtensions.split(' ');
-
-        // Try to create a 3.1 core context
-        if (options->glCoreProfile() && extensions.contains("EGL_KHR_create_context"))
-            ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs_31_core);
-
-        if (ctx == EGL_NO_CONTEXT)
-            ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs_legacy);
-    }
-
-    if (ctx == EGL_NO_CONTEXT) {
-        qCCritical(KWIN_CORE) << "Create Context failed";
+    if (!createContext()) {
         return false;
     }
-    setContext(ctx);
 
-    if (eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE) {
+    if (eglMakeCurrent(dpy, surface, surface, context()) == EGL_FALSE) {
         qCCritical(KWIN_CORE) << "Make Context Current failed";
         return false;
     }

@@ -102,19 +102,9 @@ bool EglHwcomposerBackend::initRenderingContext()
         return false;
     }
 
-    EGLContext context = EGL_NO_CONTEXT;
-    const EGLint context_attribs[] = {
-        EGL_CONTEXT_CLIENT_VERSION, 2,
-        EGL_NONE
-    };
-
-    context = eglCreateContext(eglDisplay(), config(), EGL_NO_CONTEXT, context_attribs);
-
-    if (context == EGL_NO_CONTEXT) {
-        qCCritical(KWIN_HWCOMPOSER) << "Create Context failed";
+    if (!createContext()) {
         return false;
     }
-    setContext(context);
 
     m_nativeSurface = m_backend->createSurface();
     EGLSurface surface = eglCreateWindowSurface(eglDisplay(), config(), (EGLNativeWindowType)static_cast<ANativeWindow*>(m_nativeSurface), nullptr);

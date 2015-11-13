@@ -182,6 +182,46 @@ bool AbstractEglBackend::isOpenGLES() const
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 
+bool AbstractEglBackend::createContext()
+{
+    EGLContext ctx = EGL_NO_CONTEXT;
+    if (isOpenGLES()) {
+        const EGLint context_attribs[] = {
+            EGL_CONTEXT_CLIENT_VERSION, 2,
+            EGL_NONE
+        };
+
+        ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, context_attribs);
+    } else {
+        const EGLint context_attribs_31_core[] = {
+            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+            EGL_NONE
+        };
+
+        const EGLint context_attribs_legacy[] = {
+            EGL_NONE
+        };
+
+        const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
+        const QList<QByteArray> extensions = eglExtensions.split(' ');
+
+        // Try to create a 3.1 core context
+        if (options->glCoreProfile() && extensions.contains("EGL_KHR_create_context"))
+            ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, context_attribs_31_core);
+
+        if (ctx == EGL_NO_CONTEXT)
+            ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, context_attribs_legacy);
+    }
+
+    if (ctx == EGL_NO_CONTEXT) {
+        qCCritical(KWIN_CORE) << "Create Context failed";
+        return false;
+    }
+    m_context = ctx;
+    return true;
+}
+
 AbstractEglTexture::AbstractEglTexture(SceneOpenGL::Texture *texture, AbstractEglBackend *backend)
     : SceneOpenGL::TexturePrivate()
     , q(texture)
