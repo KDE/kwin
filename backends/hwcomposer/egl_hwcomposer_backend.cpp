@@ -42,7 +42,6 @@ EglHwcomposerBackend::EglHwcomposerBackend(HwcomposerBackend *backend)
 EglHwcomposerBackend::~EglHwcomposerBackend()
 {
     cleanup();
-    delete m_nativeSurface;
 }
 
 bool EglHwcomposerBackend::initializeEgl()
