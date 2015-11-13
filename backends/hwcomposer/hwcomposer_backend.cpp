@@ -47,6 +47,9 @@ HwcomposerBackend::HwcomposerBackend(QObject *parent)
 
 HwcomposerBackend::~HwcomposerBackend()
 {
+    if (!m_outputBlank) {
+        toggleBlankOutput();
+    }
     if (m_device) {
         hwc_close_1(m_device);
     }
