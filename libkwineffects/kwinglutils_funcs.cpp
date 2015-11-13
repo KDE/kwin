@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "kwinglutils.h"
+#include "kwinglplatform.h"
 
 #include <dlfcn.h>
 #if HAVE_EPOXY_GLX
@@ -84,12 +85,30 @@ void eglResolveFunctions()
 
 void glResolveFunctions(OpenGLPlatformInterface platformInterface)
 {
-    if (hasGLExtension(QByteArrayLiteral("GL_ARB_robustness"))) {
+    const bool haveArbRobustness = hasGLExtension(QByteArrayLiteral("GL_ARB_robustness"));
+    const bool haveExtRobustness = hasGLExtension(QByteArrayLiteral("GL_EXT_robustness"));
+    bool robustContext = false;
+    if (GLPlatform::instance()->isGLES()) {
+        if (haveExtRobustness) {
+            GLint value = 0;
+            glGetIntegerv(GL_CONTEXT_ROBUST_ACCESS_EXT, &value);
+            robustContext = (value != 0);
+        }
+    } else {
+        if (haveArbRobustness) {
+            GLint value = 0;
+            glGetIntegerv(GL_CONTEXT_FLAGS, &value);
+            if (value & GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT_ARB) {
+                robustContext = true;
+            }
+        }
+    }
+    if (robustContext && haveArbRobustness) {
         // See http://www.opengl.org/registry/specs/ARB/robustness.txt
         GL_RESOLVE_WITH_EXT(kwinGlGetGraphicsResetStatus, glGetGraphicsResetStatusARB);
         GL_RESOLVE_WITH_EXT(kwinGlReadnPixels,            glReadnPixelsARB);
         GL_RESOLVE_WITH_EXT(kwinGlGetnUniformfv,          glGetnUniformfvARB);
-    } else if (hasGLExtension(QByteArrayLiteral("GL_EXT_robustness"))) {
+    } else if (robustContext && haveExtRobustness) {
         // See http://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
         kwinGlGetGraphicsResetStatus = (kwinGlGetGraphicsResetStatus_func) eglGetProcAddress("glGetGraphicsResetStatusEXT");
         kwinGlReadnPixels            = (kwinGlReadnPixels_func)            eglGetProcAddress("glReadnPixelsEXT");
