@@ -946,6 +946,10 @@ bool Options::loadCompositingConfig (bool force)
             break;
         }
     }
+    if (kwinApp()->shouldUseWaylandForCompositing() && (compositingMode == XRenderCompositing || compositingMode == NoCompositing)) {
+        qCDebug(KWIN_CORE) << "Compositing forced to QPainter mode by invalid compositor selection";
+        compositingMode = QPainterCompositing;
+    }
     setCompositingMode(compositingMode);
 
     if (m_compositingMode == NoCompositing) {
