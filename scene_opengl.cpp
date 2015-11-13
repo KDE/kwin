@@ -476,8 +476,26 @@ static void scheduleVboReInit()
 void SceneOpenGL::initDebugOutput()
 {
     const bool have_KHR_debug = hasGLExtension(QByteArrayLiteral("GL_KHR_debug"));
-    if (!have_KHR_debug && !hasGLExtension(QByteArrayLiteral("GL_ARB_debug_output")))
+    const bool have_ARB_debug = hasGLExtension(QByteArrayLiteral("GL_ARB_debug_output"));
+    if (!have_KHR_debug && !have_ARB_debug)
         return;
+
+    if (!have_ARB_debug) {
+        // if we don't have ARB debug, but only KHR debug we need to verify whether the context is a debug context
+        // it should work without as well, but empirical tests show: no it doesn't
+        if (GLPlatform::instance()->isGLES()) {
+            if (!hasGLVersion(3, 2)) {
+                // empirical data shows extension doesn't work
+                return;
+            }
+        }
+        // can only be queried with either OpenGL or OpenGL ES of at least 3.1
+        GLint value = 0;
+        glGetIntegerv(GL_CONTEXT_FLAGS, &value);
+        if (!(value & GL_CONTEXT_FLAG_DEBUG_BIT)) {
+            return;
+        }
+    }
 
     gs_debuggedScene = this;
 
@@ -514,11 +532,6 @@ void SceneOpenGL::initDebugOutput()
             break;
         }
     };
-
-    // Expoxy fails to resolve glDebugMessageCallback on GLES
-    if (!glDebugMessageCallback) {
-        return;
-    }
 
     glDebugMessageCallback(callback, nullptr);
 
