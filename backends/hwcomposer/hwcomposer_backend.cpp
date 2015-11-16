@@ -201,6 +201,9 @@ OpenGLBackend *HwcomposerBackend::createOpenGLBackend()
 
 void HwcomposerBackend::waitVSync()
 {
+    if (!m_hasVsync) {
+         return;
+    }
     m_vsyncMutex.lock();
     m_vsyncWaitCondition.wait(&m_vsyncMutex, m_vsyncInterval);
     m_vsyncMutex.unlock();
