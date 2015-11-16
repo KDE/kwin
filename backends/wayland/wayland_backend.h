@@ -45,7 +45,6 @@ class ShmPool;
 class Compositor;
 class ConnectionThread;
 class EventQueue;
-class FullscreenShell;
 class Keyboard;
 class Output;
 class Pointer;
@@ -175,7 +174,6 @@ private:
     QList<KWayland::Client::Output*> m_outputs;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
     QThread *m_connectionThread;
-    KWayland::Client::FullscreenShell *m_fullscreenShell;
     KWayland::Client::SubCompositor *m_subCompositor;
     WaylandCursor *m_cursor;
 };

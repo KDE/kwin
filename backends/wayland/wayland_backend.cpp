@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/fullscreen_shell.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/pointer.h>
@@ -348,7 +347,6 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_shm(new ShmPool(this))
     , m_connectionThreadObject(new ConnectionThread(nullptr))
     , m_connectionThread(nullptr)
-    , m_fullscreenShell(new FullscreenShell(this))
     , m_subCompositor(new SubCompositor(this))
     , m_cursor(nullptr)
 {
@@ -362,7 +360,6 @@ WaylandBackend::~WaylandBackend()
     if (m_shellSurface) {
         m_shellSurface->release();
     }
-    m_fullscreenShell->release();
     if (m_surface) {
         m_surface->release();
     }
@@ -414,11 +411,6 @@ void WaylandBackend::init()
             m_shm->setup(m_registry->bindShm(name, 1));
         }
     );
-    connect(m_registry, &Registry::fullscreenShellAnnounced, this,
-        [this](quint32 name, quint32 version) {
-            m_fullscreenShell->setup(m_registry->bindFullscreenShell(name, version));
-        }
-    );
     connect(m_registry, &Registry::subCompositorAnnounced, this,
         [this](quint32 name, quint32 version) {
             m_subCompositor->setup(m_registry->bindSubCompositor(name, version));
@@ -460,7 +452,6 @@ void WaylandBackend::initConnection()
                 delete m_shellSurface;
                 m_shellSurface = nullptr;
             }
-            m_fullscreenShell->destroy();
             if (m_surface) {
                 m_surface->destroy();
                 delete m_surface;
@@ -535,20 +526,7 @@ void WaylandBackend::createSurface()
             m_seat->setInstallCursor(true);
         }
     }
-    if (m_fullscreenShell->isValid()) {
-        Output *o = m_outputs.first();
-        m_fullscreenShell->present(m_surface, o);
-        if (o->pixelSize().isValid()) {
-            emit shellSurfaceSizeChanged(o->pixelSize());
-        }
-        connect(o, &Output::changed, this,
-            [this, o]() {
-                if (o->pixelSize().isValid()) {
-                    emit shellSurfaceSizeChanged(o->pixelSize());
-                }
-            }
-        );
-    } else if (m_shell->isValid()) {
+    if (m_shell->isValid()) {
         // map the surface as fullscreen
         m_shellSurface = m_shell->createSurface(m_surface, this);
         m_shellSurface->setFullscreen();
@@ -560,9 +538,6 @@ QSize WaylandBackend::shellSurfaceSize() const
 {
     if (m_shellSurface) {
         return m_shellSurface->size();
-    }
-    if (m_fullscreenShell->isValid()) {
-        return m_outputs.first()->pixelSize();
     }
     return QSize();
 }
