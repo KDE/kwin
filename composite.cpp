@@ -703,13 +703,21 @@ void Compositor::performCompositing()
         return;
     }
 
-    // skip windows that are not yet ready for being painted
+    // skip windows that are not yet ready for being painted and if screen is locked skip windows that are
+    // neither lockscreen nor inputmethod windows
     // TODO ?
     // this cannot be used so carelessly - needs protections against broken clients, the window
     // should not get focus before it's displayed, handle unredirected windows properly and so on.
-    foreach (Toplevel *t, windows)
-        if (!t->readyForPainting())
+    foreach (Toplevel *t, windows) {
+        if (!t->readyForPainting()) {
             windows.removeAll(t);
+        }
+        if (waylandServer() && waylandServer()->isScreenLocked()) {
+            if(!t->isLockScreen() && !t->isInputMethod()) {
+                windows.removeAll(t);
+            }
+        }
+    }
 
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint

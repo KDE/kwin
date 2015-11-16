@@ -507,6 +507,9 @@ void InputRedirection::setupLibInputWithScreens()
 
 void InputRedirection::updatePointerWindow()
 {
+    if (waylandServer() && waylandServer()->isScreenLocked()) {
+        return;
+    }
     // TODO: handle pointer grab aka popups
     Toplevel *t = findToplevel(m_globalPointer.toPoint());
     updatePointerInternalWindow();
@@ -695,6 +698,17 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
     if (!workspace()) {
         return;
     }
+
+    if (waylandServer()->isScreenLocked()) {
+        Toplevel *t = findToplevel(pos.toPoint());
+        if (auto seat = findSeat()) {
+            seat->setFocusedPointerSurface(t->surface(), t->pos());
+            seat->setTimestamp(time);
+            seat->setPointerPos(pos);
+        }
+        return;
+    }
+
     // first update to new mouse position
 //     const QPointF oldPos = m_globalPointer;
     updatePointerPosition(pos);
@@ -734,6 +748,21 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
 
     QMouseEvent event(buttonStateToEvent(state), m_globalPointer.toPoint(), m_globalPointer.toPoint(),
                       buttonToQtMouseButton(button), qtButtonStates(), keyboardModifiers());
+
+    if (waylandServer()->isScreenLocked()) {
+        if (auto seat = findSeat()) {
+            KWayland::Server::SurfaceInterface *s = seat->focusedPointerSurface();
+            if (s) {
+                Toplevel *t = waylandServer()->findClient(s);
+                if (t->isLockScreen() || t->isInputMethod()) {
+                    seat->setTimestamp(time);
+                    state == PointerButtonPressed ? seat->pointerButtonPressed(button) : seat->pointerButtonReleased(button);
+                }
+            }
+        }
+        return;
+    }
+
     // check whether an effect has a mouse grab
     if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(&event)) {
         // an effect grabbed the pointer, we do not forward the event to surfaces
@@ -806,7 +835,23 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
     if (delta == 0) {
         return;
     }
+
     emit pointerAxisChanged(axis, delta);
+
+    if (waylandServer()->isScreenLocked()) {
+        if (auto seat = findSeat()) {
+            KWayland::Server::SurfaceInterface *s = seat->focusedPointerSurface();
+            if (s) {
+                Toplevel *t = waylandServer()->findClient(s);
+                if (t->isLockScreen() || t->isInputMethod()) {
+                    seat->setTimestamp(time);
+                    seat->pointerAxis(axis == InputRedirection::PointerAxisHorizontal ? Qt::Horizontal : Qt::Vertical, delta);
+                }
+            }
+        }
+        return;
+    }
+
     if (m_xkb->modifiers() != Qt::NoModifier) {
         PointerAxisDirection direction = PointerAxisUp;
         if (axis == PointerAxisHorizontal) {
@@ -894,6 +939,37 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
             return;
         }
     }
+
+
+    if (waylandServer()->isScreenLocked()) {
+        const ToplevelList &stacking = Workspace::self()->stackingOrder();
+        if (stacking.isEmpty()) {
+            return;
+        }
+        auto it = stacking.end();
+        do {
+            --it;
+            Toplevel *t = (*it);
+            if (t->isDeleted()) {
+                // a deleted window doesn't get mouse events
+                continue;
+            }
+            if (!t->isLockScreen()) {
+                continue;
+            }
+            if (!t->readyForPainting()) {
+                continue;
+            }
+            if (auto seat = findSeat()) {
+                seat->setFocusedKeyboardSurface(t->surface());
+                seat->setTimestamp(time);
+                state == InputRedirection::KeyboardKeyPressed ? seat->keyPressed(key) : seat->keyReleased(key);
+            }
+            return;
+        } while (it != stacking.begin());
+        return;
+    }
+
     // TODO: pass to internal parts of KWin
 #ifdef KWIN_BUILD_TABBOX
     if (TabBox::TabBox::self() && TabBox::TabBox::self()->isGrabbed()) {
@@ -1119,11 +1195,14 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
     if (!Workspace::self()) {
         return nullptr;
     }
+    const bool isScreenLocked = waylandServer() && waylandServer()->isScreenLocked();
     // TODO: check whether the unmanaged wants input events at all
-    const UnmanagedList &unmanaged = Workspace::self()->unmanagedList();
-    foreach (Unmanaged *u, unmanaged) {
-        if (u->geometry().contains(pos) && acceptsInput(u, pos)) {
-            return u;
+    if (!isScreenLocked) {
+        const UnmanagedList &unmanaged = Workspace::self()->unmanagedList();
+        foreach (Unmanaged *u, unmanaged) {
+            if (u->geometry().contains(pos) && acceptsInput(u, pos)) {
+                return u;
+            }
         }
     }
     const ToplevelList &stacking = Workspace::self()->stackingOrder();
@@ -1145,6 +1224,11 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
         }
         if (!t->readyForPainting()) {
             continue;
+        }
+        if (isScreenLocked) {
+            if (!t->isLockScreen() && !t->isInputMethod()) {
+                continue;
+            }
         }
         if (t->geometry().contains(pos) && acceptsInput(t, pos)) {
             return t;
