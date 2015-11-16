@@ -704,10 +704,12 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
 
     if (waylandServer()->isScreenLocked()) {
         Toplevel *t = findToplevel(pos.toPoint());
-        if (auto seat = findSeat()) {
-            seat->setFocusedPointerSurface(t->surface(), t->pos());
-            seat->setTimestamp(time);
-            seat->setPointerPos(pos);
+        if (t && t->surface()) {
+            if (auto seat = findSeat()) {
+                seat->setFocusedPointerSurface(t->surface(), t->pos());
+                seat->setTimestamp(time);
+                seat->setPointerPos(pos);
+            }
         }
         return;
     }
