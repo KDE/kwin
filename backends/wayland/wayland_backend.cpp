@@ -308,7 +308,6 @@ WaylandBackend::~WaylandBackend()
 
 void WaylandBackend::init()
 {
-    connect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::checkBackendReady);
     connect(m_registry, &Registry::compositorAnnounced, this,
         [this](quint32 name) {
             m_compositor->setup(m_registry->bindCompositor(name, 1));
@@ -441,10 +440,11 @@ void WaylandBackend::createSurface()
         m_seat->setInstallCursor(true);
     }
     if (m_shell->isValid()) {
-        // map the surface as fullscreen
         m_shellSurface = m_shell->createSurface(m_surface, this);
-        m_shellSurface->setFullscreen();
         connect(m_shellSurface, &ShellSurface::sizeChanged, this, &WaylandBackend::shellSurfaceSizeChanged);
+        m_shellSurface->setSize(initialWindowSize());
+        m_shellSurface->setToplevel();
+        setReady(true);
     }
 }
 
@@ -454,15 +454,6 @@ QSize WaylandBackend::shellSurfaceSize() const
         return m_shellSurface->size();
     }
     return QSize();
-}
-
-void WaylandBackend::checkBackendReady()
-{
-    if (!shellSurfaceSize().isValid()) {
-        return;
-    }
-    disconnect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::checkBackendReady);
-    setReady(true);
 }
 
 Screens *WaylandBackend::createScreens(QObject *parent)

@@ -134,7 +134,6 @@ private:
     void initConnection();
     void createSurface();
     void destroyOutputs();
-    void checkBackendReady();
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;
