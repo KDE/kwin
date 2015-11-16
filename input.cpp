@@ -665,6 +665,9 @@ void InputRedirection::installCursorFromDecoration()
 
 void InputRedirection::updateFocusedPointerPosition()
 {
+    if (!workspace()) {
+        return;
+    }
     if (m_pointerWindow.isNull()) {
         return;
     }
@@ -743,6 +746,9 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
 
 void InputRedirection::processPointerButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time)
 {
+    if (!workspace()) {
+        return;
+    }
     m_pointerButtons[button] = state;
     emit pointerButtonStateChanged(button, state);
 
