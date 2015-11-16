@@ -50,7 +50,9 @@ Deleted::~Deleted()
     if (delete_refcount != 0)
         qCCritical(KWIN_CORE) << "Deleted client has non-zero reference count (" << delete_refcount << ")";
     assert(delete_refcount == 0);
-    workspace()->removeDeleted(this);
+    if (workspace()) {
+        workspace()->removeDeleted(this);
+    }
     deleteEffectWindow();
 }
 
