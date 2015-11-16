@@ -117,6 +117,11 @@ public:
     int createInputMethodConnection();
     void destroyInputMethodConnection();
 
+    /**
+     * @returns true if screen is locked.
+     **/
+    bool isScreenLocked() const;
+
     void createInternalConnection();
     void destroyInternalConnection();
     void initWorkspace();

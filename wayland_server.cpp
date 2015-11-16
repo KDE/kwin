@@ -133,6 +133,9 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
                 // skip Xwayland clients, those are created using standard X11 way
                 return;
             }
+            if (surface->client() == m_screenLockerClientConnection && !isScreenLocked()) {
+                ScreenLocker::KSldApp::self()->lockScreenShown();
+            }
             auto client = new ShellClient(surface);
             if (auto c = Compositor::self()) {
                 connect(client, &Toplevel::needsRepaint, c, &Compositor::scheduleRepaint);
@@ -478,6 +481,11 @@ quint16 WaylandServer::createClientId(ClientConnection *c)
         }
     );
     return id;
+}
+
+bool WaylandServer::isScreenLocked() const
+{
+    return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked;
 }
 
 }
