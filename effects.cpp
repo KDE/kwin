@@ -336,6 +336,7 @@ void EffectsHandlerImpl::unloadAllEffects()
         delete effect;
     }
     loaded_effects.clear();
+    m_effectLoader->clear();
 }
 
 void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)

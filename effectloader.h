@@ -162,6 +162,11 @@ public:
      */
     virtual bool isEffectSupported(const QString &name) const = 0;
 
+    /**
+     * @brief Clears the load queue, that is all scheduled Effects are discarded from loading.
+     **/
+    virtual void clear() = 0;
+
 Q_SIGNALS:
     /**
      * @brief The loader emits this signal when it successfully loaded an effect.
@@ -236,10 +241,17 @@ public:
         m_queue.enqueue(value);
         scheduleDequeue();
     }
+    void clear()
+    {
+        m_queue.clear();
+        m_dequeueScheduled = false;
+    }
 protected:
     void dequeue() override
     {
-        Q_ASSERT(!m_queue.isEmpty());
+        if (m_queue.isEmpty()) {
+            return;
+        }
         m_dequeueScheduled = false;
         const auto pair = m_queue.dequeue();
         m_effectLoader->loadEffect(pair.first, pair.second);
@@ -274,6 +286,7 @@ public:
     bool isEffectSupported(const QString &name) const override;
     QStringList listOfKnownEffects() const override;
 
+    void clear() override;
     void queryAndLoadAll() override;
     bool loadEffect(const QString& name) override;
     bool loadEffect(BuiltInEffect effect, LoadEffectFlags flags);
@@ -300,6 +313,7 @@ public:
     bool isEffectSupported(const QString &name) const override;
     QStringList listOfKnownEffects() const override;
 
+    void clear() override;
     void queryAndLoadAll() override;
     bool loadEffect(const QString &name) override;
     bool loadEffect(const KPluginMetaData &effect, LoadEffectFlags flags);
@@ -322,6 +336,7 @@ public:
     bool isEffectSupported(const QString &name) const override;
     QStringList listOfKnownEffects() const override;
 
+    void clear() override;
     void queryAndLoadAll() override;
     bool loadEffect(const QString &name) override;
     bool loadEffect(const KPluginMetaData &info, LoadEffectFlags flags);
@@ -349,6 +364,7 @@ public:
     bool loadEffect(const QString &name) override;
     void queryAndLoadAll() override;
     void setConfig(KSharedConfig::Ptr config) override;
+    void clear() override;
 
 private:
     QList<AbstractEffectLoader*> m_loaders;

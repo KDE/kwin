@@ -178,6 +178,11 @@ QString BuiltInEffectLoader::internalName(const QString& name) const
     return name.toLower();
 }
 
+void BuiltInEffectLoader::clear()
+{
+    m_queue->clear();
+}
+
 static const QString s_nameProperty = QStringLiteral("X-KDE-PluginInfo-Name");
 static const QString s_jsConstraint = QStringLiteral("[X-Plasma-API] == 'javascript'");
 static const QString s_serviceType = QStringLiteral("KWin/Effect");
@@ -288,6 +293,12 @@ KPluginMetaData ScriptedEffectLoader::findEffect(const QString &name) const
     return KPluginMetaData();
 }
 
+
+void ScriptedEffectLoader::clear()
+{
+    // TODO: cancel future
+    m_queue->clear();
+}
 
 PluginEffectLoader::PluginEffectLoader(QObject *parent)
     : AbstractEffectLoader(parent)
@@ -448,6 +459,12 @@ void PluginEffectLoader::setPluginSubDirectory(const QString &directory)
     m_pluginSubDirectory = directory;
 }
 
+void PluginEffectLoader::clear()
+{
+    // TODO: cancel future
+    m_queue->clear();
+}
+
 EffectLoader::EffectLoader(QObject *parent)
     : AbstractEffectLoader(parent)
 {
@@ -510,6 +527,13 @@ void EffectLoader::setConfig(KSharedConfig::Ptr config)
     AbstractEffectLoader::setConfig(config);
     for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) {
         (*it)->setConfig(config);
+    }
+}
+
+void EffectLoader::clear()
+{
+    for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) {
+        (*it)->clear();
     }
 }
 
