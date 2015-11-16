@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging.h"
 #include "screens_hwcomposer.h"
 #include "composite.h"
+#include "input.h"
 #include "virtual_terminal.h"
 #include "wayland_server.h"
 // KWayland
@@ -31,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // hybris/android
 #include <hardware/hardware.h>
 #include <hardware/hwcomposer.h>
+#include <hardware/lights.h>
 // linux
 #include <linux/input.h>
 
@@ -133,7 +135,18 @@ void HwcomposerBackend::init()
     };
     m_device->registerProcs(m_device, procs);
 
+    initLights();
     toggleBlankOutput();
+    connect(input(), &InputRedirection::keyStateChanged, this,
+        [this] (quint32 key, InputRedirection::KeyboardKeyState state) {
+            if (state != InputRedirection::KeyboardKeyState::KeyboardKeyReleased) {
+                return;
+            }
+            if (key == KEY_POWER) {
+                toggleBlankOutput();
+            }
+        }
+    );
 
     // get display configuration
     auto output = createOutput(hwcDevice);
@@ -155,12 +168,28 @@ void HwcomposerBackend::init()
     setReady(true);
 }
 
+void HwcomposerBackend::initLights()
+{
+    hw_module_t *lightsModule = nullptr;
+    if (hw_get_module(LIGHTS_HARDWARE_MODULE_ID, (const hw_module_t **)&lightsModule) != 0) {
+        qCWarning(KWIN_HWCOMPOSER) << "Failed to get lights module";
+        return;
+    }
+    light_device_t *lightsDevice = nullptr;
+    if (lightsModule->methods->open(lightsModule, LIGHT_ID_BACKLIGHT, (hw_device_t **)&lightsDevice) != 0) {
+        qCWarning(KWIN_HWCOMPOSER) << "Failed to create lights device";
+        return;
+    }
+    m_lights = lightsDevice;
+}
+
 void HwcomposerBackend::toggleBlankOutput()
 {
     if (!m_device) {
         return;
     }
     m_outputBlank = !m_outputBlank;
+    toggleScreenBrightness();
     m_device->blank(m_device, 0, m_outputBlank ? 1 : 0);
     // only disable Vsycn, enable happens after next frame rendered
     if (m_outputBlank) {
@@ -173,6 +202,21 @@ void HwcomposerBackend::toggleBlankOutput()
             compositor->addRepaintFull();
         }
     }
+}
+
+void HwcomposerBackend::toggleScreenBrightness()
+{
+    if (!m_lights) {
+        return;
+    }
+    const int brightness = m_outputBlank ? 0 : 0xFF;
+    struct light_state_t state;
+    state.flashMode = LIGHT_FLASH_NONE;
+    state.brightnessMode = BRIGHTNESS_MODE_USER;
+
+    state.color = (int)((0xffU << 24) | (brightness << 16) |
+                        (brightness << 8) | brightness);
+    m_lights->set_light(m_lights, &state);
 }
 
 void HwcomposerBackend::enableVSync(bool enable)
