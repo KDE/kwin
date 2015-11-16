@@ -52,8 +52,6 @@ class Registry;
 class Seat;
 class Shell;
 class ShellSurface;
-class SubCompositor;
-class SubSurface;
 class Surface;
 class Touch;
 }
@@ -98,30 +96,6 @@ private:
     bool m_installCursor;
 };
 
-class WaylandCursor : public QObject
-{
-    Q_OBJECT
-public:
-    explicit WaylandCursor(KWayland::Client::Surface *parentSurface, WaylandBackend *backend);
-
-    void setHotSpot(const QPoint &pos);
-    const QPoint &hotSpot() const {
-        return m_hotSpot;
-    }
-    void setCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
-    void setCursorImage(const QImage &image, const QPoint &hotspot);
-    void setCursorImage(Qt::CursorShape shape);
-
-Q_SIGNALS:
-    void hotSpotChanged(const QPoint &);
-
-private:
-    WaylandBackend *m_backend;
-    QPoint m_hotSpot;
-    KWayland::Client::SubSurface *m_subSurface;
-    WaylandCursorTheme *m_theme = nullptr;
-};
-
 /**
 * @brief Class encapsulating all Wayland data structures needed by the Egl backend.
 *
@@ -141,7 +115,6 @@ public:
     KWayland::Client::Compositor *compositor();
     const QList<KWayland::Client::Output*> &outputs() const;
     KWayland::Client::ShmPool *shmPool();
-    KWayland::Client::SubCompositor *subCompositor();
 
     KWayland::Client::Surface *surface() const;
     QSize shellSurfaceSize() const;
@@ -174,8 +147,6 @@ private:
     QList<KWayland::Client::Output*> m_outputs;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
     QThread *m_connectionThread;
-    KWayland::Client::SubCompositor *m_subCompositor;
-    WaylandCursor *m_cursor;
 };
 
 inline
@@ -188,12 +159,6 @@ inline
 KWayland::Client::Compositor *WaylandBackend::compositor()
 {
     return m_compositor;
-}
-
-inline
-KWayland::Client::SubCompositor *WaylandBackend::subCompositor()
-{
-    return m_subCompositor;
 }
 
 inline
