@@ -45,7 +45,6 @@ protected Q_SLOTS:
     void updateCount() override;
 private:
     Wayland::WaylandBackend *m_backend;
-    QList<QRect> m_geometries;
 };
 
 }
