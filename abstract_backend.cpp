@@ -330,4 +330,9 @@ EGLContext AbstractBackend::sceneEglContext() const
     return EGL_NO_CONTEXT;
 }
 
+QSize AbstractBackend::screenSize() const
+{
+    return QSize();
+}
+
 }

@@ -60,6 +60,14 @@ public:
      **/
     virtual EGLContext sceneEglContext() const;
 
+    /**
+     * Implementing subclasses should provide a size in case the backend represents
+     * a basic screen and uses the BasicScreens.
+     *
+     * Base implementation returns an invalid size.
+     **/
+    virtual QSize screenSize() const;
+
     bool usesSoftwareCursor() const {
         return m_softWareCursor;
     }
@@ -114,6 +122,10 @@ Q_SIGNALS:
     void initFailed();
     void cursorChanged();
     void readyChanged(bool);
+    /**
+     * Emitted by backends using a one screen (nested window) approach and when the size of that changes.
+     **/
+    void screenSizeChanged();
 
 protected:
     explicit AbstractBackend(QObject *parent = nullptr);

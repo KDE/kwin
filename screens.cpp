@@ -184,4 +184,50 @@ int Screens::intersecting(const QRect &r) const
     return cnt;
 }
 
+BasicScreens::BasicScreens(AbstractBackend *backend, QObject *parent)
+    : Screens(parent)
+    , m_backend(backend)
+{
+}
+
+BasicScreens::~BasicScreens() = default;
+
+void BasicScreens::init()
+{
+    KWin::Screens::init();
+#ifndef KWIN_UNIT_TEST
+    connect(m_backend, &AbstractBackend::screenSizeChanged,
+            this, &BasicScreens::startChangedTimer);
+#endif
+    updateCount();
+    emit changed();
+}
+
+QRect BasicScreens::geometry(int screen) const
+{
+    if (screen == 0) {
+        return QRect(QPoint(0, 0), size(screen));
+    }
+    return QRect();
+}
+
+QSize BasicScreens::size(int screen) const
+{
+    if (screen == 0) {
+        return m_backend->screenSize();
+    }
+    return QSize();
+}
+
+void BasicScreens::updateCount()
+{
+    setCount(1);
+}
+
+int BasicScreens::number(const QPoint &pos) const
+{
+    Q_UNUSED(pos)
+    return 0;
+}
+
 } // namespace

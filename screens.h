@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 class AbstractClient;
+class AbstractBackend;
 
 class KWIN_EXPORT Screens : public QObject
 {
@@ -146,6 +147,26 @@ private:
     QSize m_boundingSize;
 
     KWIN_SINGLETON(Screens)
+};
+
+/**
+ * @brief A base implementation for backends with just a (nested) window
+ **/
+class KWIN_EXPORT BasicScreens : public Screens
+{
+    Q_OBJECT
+public:
+    BasicScreens(AbstractBackend *backend, QObject *parent = nullptr);
+    virtual ~BasicScreens();
+
+    void init() override;
+    QRect geometry(int screen) const override;
+    int number(const QPoint &pos) const override;
+    QSize size(int screen) const override;
+    void updateCount() override;
+
+private:
+    AbstractBackend *m_backend;
 };
 
 inline
