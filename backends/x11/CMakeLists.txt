@@ -1,7 +1,6 @@
 set(X11BACKEND_SOURCES
     logging.cpp
     scene_qpainter_x11_backend.cpp
-    screens_x11windowed.cpp
     x11windowed_backend.cpp
 )
 

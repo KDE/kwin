@@ -19,11 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11windowed_backend.h"
 #include "scene_qpainter_x11_backend.h"
-#include "screens_x11windowed.h"
 #include "logging.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
 #include "eglonxbackend.h"
+#include "screens.h"
 #include <kwinxrenderutils.h>
 // KDE
 #include <KLocalizedString>
@@ -48,6 +48,7 @@ X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : AbstractBackend(parent)
 {
     setSupportsPointerWarping(true);
+    connect(this, &X11WindowedBackend::sizeChanged, this, &X11WindowedBackend::screenSizeChanged);
 }
 
 X11WindowedBackend::~X11WindowedBackend()
@@ -395,7 +396,7 @@ xcb_window_t X11WindowedBackend::rootWindow() const
 
 Screens *X11WindowedBackend::createScreens(QObject *parent)
 {
-    return new X11WindowedScreens(this, parent);
+    return new BasicScreens(this, parent);
 }
 
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()

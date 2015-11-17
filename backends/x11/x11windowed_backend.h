@@ -46,6 +46,9 @@ public:
     X11WindowedBackend(QObject *parent = nullptr);
     virtual ~X11WindowedBackend();
     void init() override;
+    QSize screenSize() const override {
+        return m_size;
+    }
 
     xcb_connection_t *connection() const {
         return m_connection;
