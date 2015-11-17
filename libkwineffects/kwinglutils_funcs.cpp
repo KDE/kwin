@@ -54,9 +54,9 @@ static void GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLflo
 glXSwapIntervalMESA_func glXSwapIntervalMESA;
 
 // GL_ARB_robustness / GL_EXT_robustness
-kwinGlGetGraphicsResetStatus_func kwinGlGetGraphicsResetStatus;
-kwinGlReadnPixels_func            kwinGlReadnPixels;
-kwinGlGetnUniformfv_func          kwinGlGetnUniformfv;
+glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
+glReadnPixels_func            glReadnPixels;
+glGetnUniformfv_func          glGetnUniformfv;
 
 typedef void (*glXFuncPtr)();
 
@@ -105,18 +105,18 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
     }
     if (robustContext && haveArbRobustness) {
         // See http://www.opengl.org/registry/specs/ARB/robustness.txt
-        GL_RESOLVE_WITH_EXT(kwinGlGetGraphicsResetStatus, glGetGraphicsResetStatusARB);
-        GL_RESOLVE_WITH_EXT(kwinGlReadnPixels,            glReadnPixelsARB);
-        GL_RESOLVE_WITH_EXT(kwinGlGetnUniformfv,          glGetnUniformfvARB);
+        GL_RESOLVE_WITH_EXT(glGetGraphicsResetStatus, glGetGraphicsResetStatusARB);
+        GL_RESOLVE_WITH_EXT(glReadnPixels,            glReadnPixelsARB);
+        GL_RESOLVE_WITH_EXT(glGetnUniformfv,          glGetnUniformfvARB);
     } else if (robustContext && haveExtRobustness) {
         // See http://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
-        kwinGlGetGraphicsResetStatus = (kwinGlGetGraphicsResetStatus_func) eglGetProcAddress("glGetGraphicsResetStatusEXT");
-        kwinGlReadnPixels            = (kwinGlReadnPixels_func)            eglGetProcAddress("glReadnPixelsEXT");
-        kwinGlGetnUniformfv          = (kwinGlGetnUniformfv_func)          eglGetProcAddress("glGetnUniformfvEXT");
+        glGetGraphicsResetStatus = (glGetGraphicsResetStatus_func) eglGetProcAddress("glGetGraphicsResetStatusEXT");
+        glReadnPixels            = (glReadnPixels_func)            eglGetProcAddress("glReadnPixelsEXT");
+        glGetnUniformfv          = (glGetnUniformfv_func)          eglGetProcAddress("glGetnUniformfvEXT");
     } else {
-        kwinGlGetGraphicsResetStatus = KWin::GetGraphicsResetStatus;
-        kwinGlReadnPixels            = KWin::ReadnPixels;
-        kwinGlGetnUniformfv          = KWin::GetnUniformfv;
+        glGetGraphicsResetStatus = KWin::GetGraphicsResetStatus;
+        glReadnPixels            = KWin::ReadnPixels;
+        glGetnUniformfv          = KWin::GetnUniformfv;
     }
 }
 

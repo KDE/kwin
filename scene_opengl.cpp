@@ -666,7 +666,7 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
     timer.start();
 
     // Wait until the reset is completed or max 10 seconds
-    while (timer.elapsed() < 10000 && kwinGlGetGraphicsResetStatus() != GL_NO_ERROR)
+    while (timer.elapsed() < 10000 && glGetGraphicsResetStatus() != GL_NO_ERROR)
         usleep(50);
 
     qCDebug(KWIN_CORE) << "Attempting to reset compositing.";
@@ -712,7 +712,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             // prepare rendering makes context current on the output
             QRegion repaint = m_backend->prepareRenderingForScreen(i);
 
-            const GLenum status = kwinGlGetGraphicsResetStatus();
+            const GLenum status = glGetGraphicsResetStatus();
             if (status != GL_NO_ERROR) {
                 handleGraphicsReset(status);
                 return 0;
@@ -731,7 +731,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         m_backend->makeCurrent();
         QRegion repaint = m_backend->prepareRenderingFrame();
 
-        const GLenum status = kwinGlGetGraphicsResetStatus();
+        const GLenum status = glGetGraphicsResetStatus();
         if (status != GL_NO_ERROR) {
             handleGraphicsReset(status);
             return 0;
