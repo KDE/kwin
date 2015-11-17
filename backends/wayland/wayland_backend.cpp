@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/keyboard.h>
-#include <KWayland/Client/output.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/registry.h>
@@ -279,13 +278,11 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThreadObject(new ConnectionThread(nullptr))
     , m_connectionThread(nullptr)
 {
-    connect(this, &WaylandBackend::outputsChanged, this, &WaylandBackend::screensQueried);
     connect(this, &WaylandBackend::connectionFailed, this, &WaylandBackend::initFailed);
 }
 
 WaylandBackend::~WaylandBackend()
 {
-    destroyOutputs();
     if (m_shellSurface) {
         m_shellSurface->release();
     }
@@ -318,14 +315,6 @@ void WaylandBackend::init()
             m_shell->setup(m_registry->bindShell(name, 1));
         }
     );
-    connect(m_registry, &Registry::outputAnnounced, this,
-        [this](quint32 name) {
-            Output *output = new Output(this);
-            output->setup(m_registry->bindOutput(name, 2));
-            m_outputs.append(output);
-            connect(output, &Output::changed, this, &WaylandBackend::outputsChanged);
-        }
-    );
     connect(m_registry, &Registry::seatAnnounced, this,
         [this](quint32 name) {
             if (Application::usesLibinput()) {
@@ -342,12 +331,6 @@ void WaylandBackend::init()
     connect(m_registry, &Registry::interfacesAnnounced, this, &WaylandBackend::createSurface);
     m_connectionThreadObject->setSocketName(deviceIdentifier());
     initConnection();
-}
-
-void WaylandBackend::destroyOutputs()
-{
-    qDeleteAll(m_outputs);
-    m_outputs.clear();
 }
 
 void WaylandBackend::initConnection()
@@ -369,7 +352,6 @@ void WaylandBackend::initConnection()
             emit systemCompositorDied();
             m_seat.reset();
             m_shm->destroy();
-            destroyOutputs();
             if (m_shellSurface) {
                 m_shellSurface->destroy();
                 delete m_shellSurface;
@@ -445,6 +427,7 @@ void WaylandBackend::createSurface()
         m_shellSurface->setSize(initialWindowSize());
         m_shellSurface->setToplevel();
         setReady(true);
+        emit screensQueried();
     }
 }
 

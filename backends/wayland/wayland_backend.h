@@ -46,7 +46,6 @@ class Compositor;
 class ConnectionThread;
 class EventQueue;
 class Keyboard;
-class Output;
 class Pointer;
 class Registry;
 class Seat;
@@ -113,7 +112,6 @@ public:
     void init() override;
     wl_display *display();
     KWayland::Client::Compositor *compositor();
-    const QList<KWayland::Client::Output*> &outputs() const;
     KWayland::Client::ShmPool *shmPool();
 
     KWayland::Client::Surface *surface() const;
@@ -128,12 +126,10 @@ public:
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
     void systemCompositorDied();
-    void outputsChanged();
     void connectionFailed();
 private:
     void initConnection();
     void createSurface();
-    void destroyOutputs();
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;
@@ -143,7 +139,6 @@ private:
     KWayland::Client::ShellSurface *m_shellSurface;
     QScopedPointer<WaylandSeat> m_seat;
     KWayland::Client::ShmPool *m_shm;
-    QList<KWayland::Client::Output*> m_outputs;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
     QThread *m_connectionThread;
 };
@@ -170,12 +165,6 @@ inline
 KWayland::Client::Surface *WaylandBackend::surface() const
 {
     return m_surface;
-}
-
-inline
-const QList< KWayland::Client::Output* >& WaylandBackend::outputs() const
-{
-    return m_outputs;
 }
 
 } // namespace Wayland
