@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging.h"
 #include "logind.h"
 #include "scene_qpainter_fb_backend.h"
-#include "screens_fb.h"
+#include "screens.h"
 #include "virtual_terminal.h"
 // system
 #include <fcntl.h>
@@ -51,7 +51,7 @@ FramebufferBackend::~FramebufferBackend()
 
 Screens *FramebufferBackend::createScreens(QObject *parent)
 {
-    return new FramebufferScreens(this, parent);
+    return new BasicScreens(this, parent);
 }
 
 QPainterBackend *FramebufferBackend::createQPainterBackend()

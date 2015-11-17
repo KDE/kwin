@@ -39,6 +39,10 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
 
+    QSize screenSize() const override {
+        return m_resolution;
+    }
+
     void init() override;
 
     bool isValid() const {
