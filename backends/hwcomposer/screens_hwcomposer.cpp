@@ -24,46 +24,12 @@ namespace KWin
 {
 
 HwcomposerScreens::HwcomposerScreens(HwcomposerBackend *backend, QObject *parent)
-    : Screens(parent)
+    : BasicScreens(backend, parent)
     , m_backend(backend)
 {
 }
 
 HwcomposerScreens::~HwcomposerScreens() = default;
-
-void HwcomposerScreens::init()
-{
-    Screens::init();
-    updateCount();
-    emit changed();
-}
-
-QRect HwcomposerScreens::geometry(int screen) const
-{
-    if (screen == 0) {
-        return QRect(QPoint(0, 0), size(screen));
-    }
-    return QRect();
-}
-
-QSize HwcomposerScreens::size(int screen) const
-{
-    if (screen == 0) {
-        return m_backend->size();
-    }
-    return QSize();
-}
-
-void HwcomposerScreens::updateCount()
-{
-    setCount(1);
-}
-
-int HwcomposerScreens::number(const QPoint &pos) const
-{
-    Q_UNUSED(pos)
-    return 0;
-}
 
 float HwcomposerScreens::refreshRate(int screen) const
 {

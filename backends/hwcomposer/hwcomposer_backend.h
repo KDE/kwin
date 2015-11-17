@@ -53,6 +53,10 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
 
+    QSize screenSize() const override {
+        return m_displaySize;
+    }
+
     HwcomposerWindow *createSurface();
 
     QSize size() const {

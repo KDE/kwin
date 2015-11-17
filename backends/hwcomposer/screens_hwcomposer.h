@@ -25,17 +25,12 @@ namespace KWin
 {
 class HwcomposerBackend;
 
-class HwcomposerScreens : public Screens
+class HwcomposerScreens : public BasicScreens
 {
     Q_OBJECT
 public:
     HwcomposerScreens(HwcomposerBackend *backend, QObject *parent = nullptr);
     virtual ~HwcomposerScreens();
-    void init() override;
-    QRect geometry(int screen) const override;
-    int number(const QPoint &pos) const override;
-    QSize size(int screen) const override;
-    void updateCount() override;
     float refreshRate(int screen) const override;
 
 private:
