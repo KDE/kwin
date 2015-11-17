@@ -329,7 +329,9 @@ void WaylandBackend::init()
         }
     );
     connect(m_registry, &Registry::interfacesAnnounced, this, &WaylandBackend::createSurface);
-    m_connectionThreadObject->setSocketName(deviceIdentifier());
+    if (!deviceIdentifier().isEmpty()) {
+        m_connectionThreadObject->setSocketName(deviceIdentifier());
+    }
     initConnection();
 }
 
