@@ -25,6 +25,7 @@
         "Description[zh_CN]": "渲染到 X11 窗口系统上的嵌套窗口中", 
         "Id": "KWinWaylandX11Backend", 
         "Name": "x11", 
+        "Name[ast]": "x11", 
         "Name[ca@valencia]": "X11", 
         "Name[ca]": "X11", 
         "Name[cs]": "x11", 
