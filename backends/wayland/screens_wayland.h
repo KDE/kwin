@@ -44,7 +44,6 @@ public:
 protected Q_SLOTS:
     void updateCount() override;
 private:
-    void updateXRandr();
     Wayland::WaylandBackend *m_backend;
     QList<QRect> m_geometries;
 };
