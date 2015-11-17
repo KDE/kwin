@@ -59,10 +59,6 @@ EglWaylandBackend::EglWaylandBackend(Wayland::WaylandBackend *b)
     init();
     // Egl is always direct rendering
     setIsDirectRendering(true);
-
-    qCWarning(KWIN_WAYLAND_BACKEND) << "Using Wayland rendering backend";
-    qCWarning(KWIN_WAYLAND_BACKEND) << "This is a highly experimental backend, do not use for productive usage!";
-    qCWarning(KWIN_WAYLAND_BACKEND) << "Please do not report any issues you might encounter when using this backend!";
 }
 
 EglWaylandBackend::~EglWaylandBackend()
