@@ -67,6 +67,7 @@ public:
     static OutputDeviceInterface *get(wl_resource *native);
 
 private:
+    static Private *cast(wl_resource *native);
     static void unbind(wl_resource *resource);
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     int32_t toTransform() const;
@@ -97,11 +98,19 @@ OutputDeviceInterface::Private::~Private()
 
 OutputDeviceInterface *OutputDeviceInterface::Private::get(wl_resource *native)
 {
+    if (Private *p = cast(native)) {
+        return p->q;
+    }
+    return nullptr;
+}
+
+OutputDeviceInterface::Private *OutputDeviceInterface::Private::cast(wl_resource *native)
+{
     for (auto it = s_privates.constBegin(); it != s_privates.constEnd(); ++it) {
         const auto &resources = (*it)->resources;
         auto rit = std::find_if(resources.begin(), resources.end(), [native] (const ResourceData &data) { return data.resource == native; });
         if (rit != resources.end()) {
-            return (*it)->q;
+            return (*it);
         }
     }
     return nullptr;
@@ -350,7 +359,10 @@ void OutputDeviceInterface::Private::bind(wl_client *client, uint32_t version, u
 
 void OutputDeviceInterface::Private::unbind(wl_resource *resource)
 {
-    auto o = reinterpret_cast<OutputDeviceInterface::Private*>(wl_resource_get_user_data(resource));
+    Private *o = cast(resource);
+    if (!o) {
+        return;
+    }
     auto it = std::find_if(o->resources.begin(), o->resources.end(), [resource](const ResourceData &r) { return r.resource == resource; });
     if (it != o->resources.end()) {
         o->resources.erase(it);
