@@ -1,7 +1,6 @@
 set(WAYLAND_BACKEND_SOURCES
     logging.cpp
     scene_qpainter_wayland_backend.cpp
-    screens_wayland.cpp
     wayland_backend.cpp
     egl_wayland_backend.cpp
 )

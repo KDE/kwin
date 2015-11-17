@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging.h"
 #include "main.h"
 #include "scene_qpainter_wayland_backend.h"
-#include "screens_wayland.h"
+#include "screens.h"
 #include "wayland_server.h"
 #include "wayland_cursor_theme.h"
 #include "egl_wayland_backend.h"
@@ -279,6 +279,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThread(nullptr)
 {
     connect(this, &WaylandBackend::connectionFailed, this, &WaylandBackend::initFailed);
+    connect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::screenSizeChanged);
 }
 
 WaylandBackend::~WaylandBackend()
@@ -443,7 +444,7 @@ QSize WaylandBackend::shellSurfaceSize() const
 
 Screens *WaylandBackend::createScreens(QObject *parent)
 {
-    return new WaylandScreens(this, parent);
+    return new BasicScreens(this, parent);
 }
 
 OpenGLBackend *WaylandBackend::createOpenGLBackend()

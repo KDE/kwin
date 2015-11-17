@@ -123,6 +123,10 @@ public:
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend *createQPainterBackend() override;
 
+    QSize screenSize() const override {
+        return shellSurfaceSize();
+    }
+
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
     void systemCompositorDied();
