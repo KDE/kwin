@@ -702,21 +702,21 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
         return;
     }
 
+    // first update to new mouse position
+//     const QPointF oldPos = m_globalPointer;
+    updatePointerPosition(pos);
+
     if (waylandServer()->isScreenLocked()) {
-        Toplevel *t = findToplevel(pos.toPoint());
+        Toplevel *t = findToplevel(m_globalPointer.toPoint());
         if (t && t->surface()) {
             if (auto seat = findSeat()) {
                 seat->setFocusedPointerSurface(t->surface(), t->pos());
                 seat->setTimestamp(time);
-                seat->setPointerPos(pos);
+                seat->setPointerPos(m_globalPointer);
             }
         }
         return;
     }
-
-    // first update to new mouse position
-//     const QPointF oldPos = m_globalPointer;
-    updatePointerPosition(pos);
 
     // TODO: check which part of KWin would like to intercept the event
     QMouseEvent event(QEvent::MouseMove, m_globalPointer.toPoint(), m_globalPointer.toPoint(),

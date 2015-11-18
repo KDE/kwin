@@ -39,6 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include <workspace.h>
 #include "virtualdesktops.h"
+#ifndef KWIN_UNIT_TEST
+#include "wayland_server.h"
+#endif
 // DBus generated
 #include "screenlocker_interface.h"
 // frameworks
@@ -599,6 +602,11 @@ AreaBasedEdge::~AreaBasedEdge()
 
 void AreaBasedEdge::pointerPosChanged(const QPointF &pos)
 {
+#ifndef KWIN_UNIT_TEST
+    if (waylandServer() && waylandServer()->isScreenLocked()) {
+        return;
+    }
+#endif
     if (!isReserved()) {
         return;
     }
