@@ -173,7 +173,7 @@ void ShadowTest::render()
 
 int main(int argc, char **argv)
 {
-    QGuiApplication app(argc, argv);
+    QCoreApplication app(argc, argv);
     ShadowTest client;
     client.init();
 
