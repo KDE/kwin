@@ -73,7 +73,7 @@ WaylandTestApplication::~WaylandTestApplication()
         }
         waylandServer()->destroyXWaylandConnection();
     }
-    waylandServer()->destroyInternalConnection();
+    waylandServer()->terminateClientConnections();
     destroyCompositor();
 }
 

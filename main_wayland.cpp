@@ -97,7 +97,7 @@ ApplicationWayland::~ApplicationWayland()
         }
         waylandServer()->destroyXWaylandConnection();
     }
-    waylandServer()->destroyInternalConnection();
+    waylandServer()->terminateClientConnections();
     destroyCompositor();
 }
 

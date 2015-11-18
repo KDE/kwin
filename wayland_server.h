@@ -72,6 +72,7 @@ public:
     virtual ~WaylandServer();
     void init(const QByteArray &socketName = QByteArray(), InitalizationFlags flags = InitalizationFlag::NoOptions);
     void initOutputs();
+    void terminateClientConnections();
 
     KWayland::Server::Display *display() {
         return m_display;
@@ -123,7 +124,6 @@ public:
     bool isScreenLocked() const;
 
     void createInternalConnection();
-    void destroyInternalConnection();
     void initWorkspace();
 
     KWayland::Server::ClientConnection *xWaylandConnection() const {
@@ -156,6 +156,7 @@ Q_SIGNALS:
 
 private:
     quint16 createClientId(KWayland::Server::ClientConnection *c);
+    void destroyInternalConnection();
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;

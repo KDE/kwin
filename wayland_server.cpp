@@ -91,6 +91,16 @@ void WaylandServer::destroyInternalConnection()
     }
 }
 
+void WaylandServer::terminateClientConnections()
+{
+    destroyInternalConnection();
+    destroyInputMethodConnection();
+    const auto connections = m_display->connections();
+    for (auto it = connections.begin(); it != connections.end(); ++it) {
+        (*it)->destroy();
+    }
+}
+
 void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 {
     m_initFlags = flags;
