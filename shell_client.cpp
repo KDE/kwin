@@ -609,6 +609,7 @@ void ShellClient::findInternalWindow()
         m_internalWindow = w;
         connect(m_internalWindow, &QWindow::xChanged, this, &ShellClient::updateInternalWindowGeometry);
         connect(m_internalWindow, &QWindow::yChanged, this, &ShellClient::updateInternalWindowGeometry);
+        connect(m_internalWindow, &QWindow::destroyed, this, [this] { m_internalWindow = nullptr; });
 
         // Try reading the window type from the QWindow. PlasmaCore.Dialog provides a dynamic type property
         // let's check whether it exists, if it does it's our window type
