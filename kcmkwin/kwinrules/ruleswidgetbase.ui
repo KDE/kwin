@@ -2222,7 +2222,7 @@ but this may sometimes fail or superact.
        <item row="9" column="1">
         <widget class="QCheckBox" name="enable_fpplevel">
          <property name="toolTip">
-          <string>This controls the focus protection of the currenly active window.
+          <string>This controls the focus protection of the currently active window.
 None will always give the focus away,
 Extreme will keep it.
 Otherwise it's interleaved with the stealing prevention
