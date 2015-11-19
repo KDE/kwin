@@ -488,8 +488,10 @@ void SceneOpenGL::initDebugOutput()
                 // empirical data shows extension doesn't work
                 return;
             }
+        } else if (!hasGLVersion(3, 0)) {
+            return;
         }
-        // can only be queried with either OpenGL or OpenGL ES of at least 3.1
+        // can only be queried with either OpenGL >= 3.0 or OpenGL ES of at least 3.1
         GLint value = 0;
         glGetIntegerv(GL_CONTEXT_FLAGS, &value);
         if (!(value & GL_CONTEXT_FLAG_DEBUG_BIT)) {

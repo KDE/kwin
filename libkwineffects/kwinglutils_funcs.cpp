@@ -96,9 +96,13 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         }
     } else {
         if (haveArbRobustness) {
-            GLint value = 0;
-            glGetIntegerv(GL_CONTEXT_FLAGS, &value);
-            if (value & GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT_ARB) {
+            if (hasGLVersion(3, 0)) {
+                GLint value = 0;
+                glGetIntegerv(GL_CONTEXT_FLAGS, &value);
+                if (value & GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT_ARB) {
+                    robustContext = true;
+                }
+            } else {
                 robustContext = true;
             }
         }
