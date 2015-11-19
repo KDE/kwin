@@ -214,6 +214,14 @@ void ApplicationWayland::continueStartupWithX()
     }
 
     m_environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
+    // start session
+    if (!m_sessionArgument.isEmpty()) {
+        QProcess *p = new QProcess(this);
+        p->setProcessEnvironment(m_environment);
+        auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
+        connect(p, finishedSignal, this, &ApplicationWayland::quit);
+        p->start(m_sessionArgument);
+    }
     // start the applications passed to us as command line arguments
     if (!m_applicationsToStart.isEmpty()) {
         for (const QString &application: m_applicationsToStart) {
@@ -513,6 +521,11 @@ int main(int argc, char * argv[])
                                           i18n("Starts the session in locked mode."));
     parser.addOption(screenLockerOption);
 
+    QCommandLineOption exitWithSessionOption(QStringLiteral("exit-with-session"),
+                                             i18n("Exit after the session application, which is started by KWin, closed."),
+                                             QStringLiteral("/path/to/session"));
+    parser.addOption(exitWithSessionOption);
+
     parser.addPositionalArgument(QStringLiteral("applications"),
                                  i18n("Applications to start once Wayland and Xwayland server are started"),
                                  QStringLiteral("[/path/to/application...]"));
@@ -525,6 +538,10 @@ int main(int argc, char * argv[])
             std::cout << std::setw(40) << std::left << qPrintable(plugin.name()) << qPrintable(plugin.description()) << std::endl;
         }
         return 0;
+    }
+
+    if (parser.isSet(exitWithSessionOption)) {
+        a.setSessionArgument(parser.value(exitWithSessionOption));
     }
 
 #if HAVE_INPUT

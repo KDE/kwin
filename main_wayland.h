@@ -46,6 +46,9 @@ public:
     void setProcessStartupEnvironment(const QProcessEnvironment &environment) {
         m_environment = environment;
     }
+    void setSessionArgument(const QString &session) {
+        m_sessionArgument = session;
+    }
 
     QProcessEnvironment processStartupEnvironment() const override {
         return m_environment;
@@ -68,6 +71,7 @@ private:
     QProcess *m_xwaylandProcess = nullptr;
     QMetaObject::Connection m_xwaylandFailConnection;
     QProcessEnvironment m_environment;
+    QString m_sessionArgument;
 };
 
 }
