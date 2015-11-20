@@ -944,7 +944,7 @@ void CoverSwitchEffect::slotWindowClosed(EffectWindow* c)
 
 bool CoverSwitchEffect::isActive() const
 {
-    return mActivated || stop || stopRequested;
+    return (mActivated || stop || stopRequested) && !effects->isScreenLocked();
 }
 
 void CoverSwitchEffect::updateCaption()
