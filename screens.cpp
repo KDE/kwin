@@ -205,29 +205,45 @@ void BasicScreens::init()
 
 QRect BasicScreens::geometry(int screen) const
 {
-    if (screen == 0) {
-        return QRect(QPoint(0, 0), size(screen));
+    if (screen < m_geometries.count()) {
+        return m_geometries.at(screen);
     }
     return QRect();
 }
 
 QSize BasicScreens::size(int screen) const
 {
-    if (screen == 0) {
-        return m_backend->screenSize();
+    if (screen < m_geometries.count()) {
+        return m_geometries.at(screen).size();
     }
     return QSize();
 }
 
 void BasicScreens::updateCount()
 {
-    setCount(1);
+    m_geometries = m_backend->screenGeometries();
+    setCount(m_geometries.count());
 }
 
 int BasicScreens::number(const QPoint &pos) const
 {
-    Q_UNUSED(pos)
-    return 0;
+    int bestScreen = 0;
+    int minDistance = INT_MAX;
+    for (int i = 0; i < m_geometries.count(); ++i) {
+        const QRect &geo = m_geometries.at(i);
+        if (geo.contains(pos)) {
+            return i;
+        }
+        int distance = QPoint(geo.topLeft() - pos).manhattanLength();
+        distance = qMin(distance, QPoint(geo.topRight() - pos).manhattanLength());
+        distance = qMin(distance, QPoint(geo.bottomRight() - pos).manhattanLength());
+        distance = qMin(distance, QPoint(geo.bottomLeft() - pos).manhattanLength());
+        if (distance < minDistance) {
+            minDistance = distance;
+            bestScreen = i;
+        }
+    }
+    return bestScreen;
 }
 
 } // namespace

@@ -335,4 +335,9 @@ QSize AbstractBackend::screenSize() const
     return QSize();
 }
 
+QVector<QRect> AbstractBackend::screenGeometries() const
+{
+    return QVector<QRect>({QRect(QPoint(0, 0), screenSize())});
+}
+
 }

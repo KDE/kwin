@@ -67,6 +67,13 @@ public:
      * Base implementation returns an invalid size.
      **/
     virtual QSize screenSize() const;
+    /**
+     * Implementing subclasses should provide all geometries in case the backend represents
+     * a basic screen and uses the BasicScreens.
+     *
+     * Base implementation returns one QRect positioned at 0/0 with screenSize() as size.
+     **/
+    virtual QVector<QRect> screenGeometries() const;
 
     bool usesSoftwareCursor() const {
         return m_softWareCursor;

@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QRect>
 #include <QTimer>
+#include <QVector>
 
 namespace KWin
 {
@@ -167,6 +168,7 @@ public:
 
 private:
     AbstractBackend *m_backend;
+    QVector<QRect> m_geometries;
 };
 
 inline
