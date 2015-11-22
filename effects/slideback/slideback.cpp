@@ -276,6 +276,10 @@ void SlideBackEffect::slotWindowUnminimized(EffectWindow* w)
 {
     // SlideBack should not be triggered on an unminimized window. For this we need to store the last unminimized window.
     m_justMapped = w;
+    // the stackingOrderChanged() signal came before the window turned an effect window
+    // usually this is no problem as the change shall not be caught anyway, but
+    // the window may have changed its stack position, bug #353745
+    slotStackingOrderChanged();
 }
 
 void SlideBackEffect::slotTabBoxAdded()
