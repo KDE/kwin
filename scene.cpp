@@ -77,6 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "screens.h"
 #include "shadow.h"
+#include "wayland_server.h"
 
 #include "thumbnailitem.h"
 
@@ -608,6 +609,9 @@ void Scene::finalPaintWindow(EffectWindowImpl* w, int mask, QRegion region, Wind
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
+    if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen()) {
+        return;
+    }
     w->sceneWindow()->performPaint(mask, region, data);
 }
 

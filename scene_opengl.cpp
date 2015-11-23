@@ -1142,6 +1142,9 @@ Scene::Window *SceneOpenGL2::createWindow(Toplevel *t)
 
 void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
+    if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen()) {
+        return;
+    }
     if (!m_colorCorrection.isNull() && m_colorCorrection->isEnabled()) {
         // Split the painting for separate screens
         const int numScreens = screens()->count();
