@@ -159,6 +159,28 @@ void HwcomposerBackend::init()
     if (m_refreshRate != 0) {
         m_vsyncInterval = 1000000/m_refreshRate;
     }
+    if (m_lights) {
+        using namespace KWayland::Server;
+        output->setDpmsSupported(true);
+        auto updateDpms = [this, output] {
+            output->setDpmsMode(m_outputBlank ? OutputInterface::DpmsMode::Off : OutputInterface::DpmsMode::On);
+        };
+        updateDpms();
+        connect(this, &HwcomposerBackend::outputBlankChanged, this, updateDpms);
+        connect(output, &OutputInterface::dpmsModeRequested, this,
+            [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
+                if (mode == OutputInterface::DpmsMode::On) {
+                    if (m_outputBlank) {
+                        toggleBlankOutput();
+                    }
+                } else {
+                    if (!m_outputBlank) {
+                        toggleBlankOutput();
+                    }
+                }
+            }
+        );
+    }
     qCDebug(KWIN_HWCOMPOSER) << "Display size:" << m_displaySize;
     qCDebug(KWIN_HWCOMPOSER) << "Refresh rate:" << m_refreshRate;
 
@@ -202,6 +224,7 @@ void HwcomposerBackend::toggleBlankOutput()
             compositor->addRepaintFull();
         }
     }
+    emit outputBlankChanged();
 }
 
 void HwcomposerBackend::toggleScreenBrightness()

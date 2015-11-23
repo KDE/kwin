@@ -74,6 +74,9 @@ public:
     void waitVSync();
     void wakeVSync();
 
+Q_SIGNALS:
+    void outputBlankChanged();
+
 private Q_SLOTS:
     void toggleBlankOutput();
 
