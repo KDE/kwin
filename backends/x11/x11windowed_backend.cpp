@@ -415,4 +415,10 @@ void X11WindowedBackend::warpPointer(const QPointF &globalPos)
     xcb_flush(m_connection);
 }
 
+xcb_window_t X11WindowedBackend::windowForScreen(int screen) const
+{
+    Q_UNUSED(screen)
+    return window();
+}
+
 }

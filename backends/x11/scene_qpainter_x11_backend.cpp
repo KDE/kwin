@@ -19,26 +19,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scene_qpainter_x11_backend.h"
 #include "x11windowed_backend.h"
+#include "screens.h"
 
 namespace KWin
 {
 X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backend)
     : QPainterBackend()
-    , m_backBuffer(backend->size(), QImage::Format_RGB32)
     , m_backend(backend)
 {
+    connect(screens(), &Screens::changed, this, &X11WindowedQPainterBackend::createOutputs);
+    createOutputs();
 }
 
 X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
 {
+    qDeleteAll(m_outputs);
     if (m_gc) {
         xcb_free_gc(m_backend->connection(), m_gc);
     }
 }
 
+void X11WindowedQPainterBackend::createOutputs()
+{
+    qDeleteAll(m_outputs);
+    m_outputs.clear();
+    for (int i = 0; i < screens()->count(); ++i) {
+        Output *output = new Output;
+        output->window = m_backend->windowForScreen(i);
+        output->buffer = QImage(screens()->size(i), QImage::Format_RGB32);
+        output->buffer.fill(Qt::black);
+        m_outputs << output;
+    }
+    m_needsFullRepaint = true;
+}
+
 QImage *X11WindowedQPainterBackend::buffer()
 {
-    return &m_backBuffer;
+    return bufferForScreen(0);
+}
+
+QImage *X11WindowedQPainterBackend::bufferForScreen(int screen)
+{
+    return &m_outputs.at(screen)->buffer;
 }
 
 bool X11WindowedQPainterBackend::needsFullRepaint() const
@@ -48,15 +70,6 @@ bool X11WindowedQPainterBackend::needsFullRepaint() const
 
 void X11WindowedQPainterBackend::prepareRenderingFrame()
 {
-}
-
-void X11WindowedQPainterBackend::screenGeometryChanged(const QSize &size)
-{
-    if (m_backBuffer.size() != size) {
-        m_backBuffer = QImage(size, QImage::Format_RGB32);
-        m_backBuffer.fill(Qt::black);
-        m_needsFullRepaint = true;
-    }
 }
 
 void X11WindowedQPainterBackend::present(int mask, const QRegion &damage)
@@ -69,15 +82,23 @@ void X11WindowedQPainterBackend::present(int mask, const QRegion &damage)
         m_gc = xcb_generate_id(c);
         xcb_create_gc(c, m_gc, window, 0, nullptr);
     }
-    // TODO: only update changes?
-    xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, window, m_gc,
-                    m_backBuffer.width(), m_backBuffer.height(), 0, 0, 0, 24,
-                    m_backBuffer.byteCount(), m_backBuffer.constBits());
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        // TODO: only update changes?
+        const QImage &buffer = (*it)->buffer;
+        xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, (*it)->window, m_gc,
+                        buffer.width(), buffer.height(), 0, 0, 0, 24,
+                        buffer.byteCount(), buffer.constBits());
+    }
 }
 
 bool X11WindowedQPainterBackend::usesOverlayWindow() const
 {
     return false;
+}
+
+bool X11WindowedQPainterBackend::perScreenRendering() const
+{
+    return true;
 }
 
 }

@@ -37,17 +37,23 @@ public:
     virtual ~X11WindowedQPainterBackend();
 
     QImage *buffer() override;
+    QImage *bufferForScreen(int screenId) override;
     bool needsFullRepaint() const override;
     bool usesOverlayWindow() const override;
     void prepareRenderingFrame() override;
     void present(int mask, const QRegion &damage) override;
-    void screenGeometryChanged(const QSize &size);
+    bool perScreenRendering() const override;
 
 private:
+    void createOutputs();
     bool m_needsFullRepaint = true;
     xcb_gcontext_t m_gc = XCB_NONE;
-    QImage m_backBuffer;
     X11WindowedBackend *m_backend;
+    struct Output {
+        xcb_window_t window;
+        QImage buffer;
+    };
+    QVector<Output*> m_outputs;
 };
 
 }

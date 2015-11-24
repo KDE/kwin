@@ -59,6 +59,7 @@ public:
     xcb_window_t window() const {
         return m_window;
     }
+    xcb_window_t windowForScreen(int screen) const;
     Display *display() const {
         return m_display;
     }
