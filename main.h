@@ -142,6 +142,15 @@ public:
         return m_connection;
     }
 
+#ifdef KWIN_BUILD_ACTIVITIES
+    bool usesKActivities() const {
+        return m_useKActivities;
+    }
+    void setUseKActivities(bool use) {
+        m_useKActivities = use;
+    }
+#endif
+
     virtual QProcessEnvironment processStartupEnvironment() const;
 
     static void setupMalloc();
@@ -204,6 +213,9 @@ private:
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
     xcb_connection_t *m_connection = nullptr;
+#ifdef KWIN_BUILD_ACTIVITIES
+    bool m_useKActivities = true;
+#endif
     static int crashes;
 };
 

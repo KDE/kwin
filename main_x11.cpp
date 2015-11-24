@@ -280,10 +280,20 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
     parser.addOption(replaceOption);
+#ifdef KWIN_BUILD_ACTIVITIES
+    QCommandLineOption noActivitiesOption(QStringLiteral("no-kactivities"),
+                                        i18n("Disable KActivities integration."));
+    parser.addOption(noActivitiesOption);
+#endif
 
     parser.process(a);
     a.processCommandLine(&parser);
     a.setReplace(parser.isSet(replaceOption));
+#ifdef KWIN_BUILD_ACTIVITIES
+    if (parser.isSet(noActivitiesOption)) {
+        a.setUseKActivities(false);
+    }
+#endif
 
     // perform sanity checks
     if (a.platformName().toLower() != QStringLiteral("xcb")) {

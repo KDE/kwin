@@ -140,8 +140,7 @@ Workspace::Workspace(const QString &sessionKey)
 
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = nullptr;
-    // HACK: do not use Activities on Wayland as it blocks the startup
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+    if (kwinApp()->usesKActivities()) {
         activities = Activities::create(this);
     }
     if (activities) {
