@@ -33,6 +33,18 @@ namespace KWin
 class GLRenderTarget;
 class GLTexture;
 
+class WindowAttributes {
+public:
+    WindowAttributes(const WindowPaintData &data);
+    void applyTo(WindowPaintData &data) const;
+    qreal opacity = 1.0;
+    qreal rotation = 0.0;
+    QVector3D rotationAxis;
+    QVector3D rotationOrigin;
+    QVector3D scale = QVector3D(1,1,1);
+    QVector3D translation;
+};
+
 class LogoutEffect
     : public Effect
 {
@@ -80,9 +92,8 @@ private:
     bool blurSupported, useBlur;
     GLTexture* blurTexture;
     GLRenderTarget* blurTarget;
-    double windowOpacity;
-    EffectWindowList windows;
-    QHash< EffectWindow*, double > windowsOpacities;
+    typedef QPair<EffectWindow*, WindowAttributes> WinDataPair;
+    QList<WinDataPair> m_windows;
     GLShader *m_vignettingShader;
     GLShader *m_blurShader;
     QString m_shadersDir;
