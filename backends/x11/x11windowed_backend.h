@@ -41,14 +41,12 @@ class KWIN_EXPORT X11WindowedBackend : public AbstractBackend
     Q_OBJECT
     Q_INTERFACES(KWin::AbstractBackend)
     Q_PLUGIN_METADATA(IID "org.kde.kwin.AbstractBackend" FILE "x11.json")
-    Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
+    Q_PROPERTY(QSize size READ screenSize NOTIFY sizeChanged)
 public:
     X11WindowedBackend(QObject *parent = nullptr);
     virtual ~X11WindowedBackend();
     void init() override;
-    QSize screenSize() const override {
-        return m_size;
-    }
+    QVector<QRect> screenGeometries() const override;
 
     xcb_connection_t *connection() const {
         return m_connection;
@@ -57,17 +55,13 @@ public:
         return m_screenNumber;
     }
     xcb_window_t window() const {
-        return m_window;
+        return windowForScreen(0);
     }
     xcb_window_t windowForScreen(int screen) const;
     Display *display() const {
         return m_display;
     }
     xcb_window_t rootWindow() const;
-
-    QSize size() const {
-        return m_size;
-    }
 
     void installCursorFromServer() override;
     void installCursorImage(Qt::CursorShape shape) override;
@@ -96,13 +90,18 @@ private:
     xcb_screen_t *m_screen = nullptr;
     xcb_key_symbols_t *m_keySymbols = nullptr;
     int m_screenNumber = 0;
-    xcb_window_t m_window = XCB_WINDOW_NONE;
-    QSize m_size;
+    struct Output {
+        xcb_window_t window = XCB_WINDOW_NONE;
+        QSize size;
+        QPoint xPosition;
+        QPoint internalPosition;
+        NETWinInfo *winInfo = nullptr;
+    };
+    QVector<Output> m_windows;
     xcb_atom_t m_protocols = XCB_ATOM_NONE;
     xcb_atom_t m_deleteWindowProtocol = XCB_ATOM_NONE;
     xcb_cursor_t m_cursor = XCB_CURSOR_NONE;
     Display *m_display = nullptr;
-    NETWinInfo *m_winInfo = nullptr;
     bool m_keyboardGrabbed = false;
 };
 
