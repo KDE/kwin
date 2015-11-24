@@ -426,6 +426,7 @@ int main(int argc, char * argv[])
     };
     const bool hasWindowedOption = hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_waylandPlugin);
     const bool hasSizeOption = hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_virtualPlugin);
+    const bool hasOutputCountOption = hasPlugin(KWin::s_x11Plugin);
     const bool hasX11Option = hasPlugin(KWin::s_x11Plugin);
     const bool hasVirtualOption = hasPlugin(KWin::s_virtualPlugin);
     const bool hasWaylandOption = hasPlugin(KWin::s_waylandPlugin);
@@ -465,6 +466,10 @@ int main(int argc, char * argv[])
                                     i18n("The height for windowed mode. Default height is 768."),
                                     QStringLiteral("height"));
     heightOption.setDefaultValue(QString::number(768));
+    QCommandLineOption outputCountOption(QStringLiteral("output-count"),
+                                    i18n("The number of windows to open as outputs in windowed mode. Default value is 1"),
+                                    QStringLiteral("height"));
+    outputCountOption.setDefaultValue(QString::number(1));
 
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
@@ -489,6 +494,9 @@ int main(int argc, char * argv[])
     if (hasSizeOption) {
         parser.addOption(widthOption);
         parser.addOption(heightOption);
+    }
+    if (hasOutputCountOption) {
+        parser.addOption(outputCountOption);
     }
 #if HAVE_LIBHYBRIS
     QCommandLineOption hwcomposerOption(QStringLiteral("hwcomposer"), i18n("Use libhybris hwcomposer"));
@@ -551,6 +559,7 @@ int main(int argc, char * argv[])
     QString pluginName;
     QSize initialWindowSize;
     QByteArray deviceIdentifier;
+    int outputCount = 1;
 
 #if HAVE_DRM
     if (hasDrmOption && parser.isSet(drmOption)) {
@@ -571,6 +580,14 @@ int main(int argc, char * argv[])
             return 1;
         }
         initialWindowSize = QSize(width, height);
+    }
+
+    if (hasOutputCountOption) {
+        bool ok = false;
+        const int count = parser.value(outputCountOption).toInt(&ok);
+        if (ok) {
+            outputCount = qMax(1, count);
+        }
     }
 
     if (hasWindowedOption && parser.isSet(windowedOption)) {
@@ -655,6 +672,7 @@ int main(int argc, char * argv[])
     if (initialWindowSize.isValid()) {
         server->backend()->setInitialWindowSize(initialWindowSize);
     }
+    server->backend()->setInitialOutputCount(outputCount);
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
     environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->display()->socketName());

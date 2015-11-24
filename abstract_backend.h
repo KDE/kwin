@@ -107,6 +107,12 @@ public:
     void setOutputsEnabled(bool enabled) {
         m_outputsEnabled = enabled;
     }
+    int initialOutputCount() const {
+        return m_initialOutputCount;
+    }
+    void setInitialOutputCount(int count) {
+        m_initialOutputCount = count;
+    }
 
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
@@ -170,6 +176,7 @@ private:
     QByteArray m_deviceIdentifier;
     bool m_pointerWarping = false;
     bool m_outputsEnabled = true;
+    int m_initialOutputCount = 1;
 };
 
 }

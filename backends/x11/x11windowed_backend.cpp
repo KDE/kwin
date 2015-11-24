@@ -106,55 +106,57 @@ void X11WindowedBackend::createWindow()
 {
     Xcb::Atom protocolsAtom(QByteArrayLiteral("WM_PROTOCOLS"), false, m_connection);
     Xcb::Atom deleteWindowAtom(QByteArrayLiteral("WM_DELETE_WINDOW"), false, m_connection);
-    Output o;
-    o.window = xcb_generate_id(m_connection);
-    uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
-    const uint32_t values[] = {
-        m_screen->black_pixel,
-        XCB_EVENT_MASK_KEY_PRESS |
-        XCB_EVENT_MASK_KEY_RELEASE |
-        XCB_EVENT_MASK_BUTTON_PRESS |
-        XCB_EVENT_MASK_BUTTON_RELEASE |
-        XCB_EVENT_MASK_POINTER_MOTION |
-        XCB_EVENT_MASK_ENTER_WINDOW |
-        XCB_EVENT_MASK_LEAVE_WINDOW |
-        XCB_EVENT_MASK_STRUCTURE_NOTIFY |
-        XCB_EVENT_MASK_EXPOSURE
-    };
-    o.size = initialWindowSize();
-    if (!m_windows.isEmpty()) {
-        const auto &p = m_windows.last();
-        o.internalPosition = QPoint(p.internalPosition.x() + p.size.width(), 0);
-    }
-    xcb_create_window(m_connection, XCB_COPY_FROM_PARENT, o.window, m_screen->root,
-                      0, 0, o.size.width(), o.size.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, mask, values);
-
-    o.winInfo = new NETWinInfo(m_connection, o.window, m_screen->root, NET::WMWindowType, NET::Properties2());
-    o.winInfo->setWindowType(NET::Normal);
-    o.winInfo->setPid(QCoreApplication::applicationPid());
-    QIcon windowIcon = QIcon::fromTheme(QStringLiteral("kwin"));
-    auto addIcon = [&o, &windowIcon] (const QSize &size) {
-        if (windowIcon.actualSize(size) != size) {
-            return;
+    for (int i = 0; i < initialOutputCount(); ++i) {
+        Output o;
+        o.window = xcb_generate_id(m_connection);
+        uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
+        const uint32_t values[] = {
+            m_screen->black_pixel,
+            XCB_EVENT_MASK_KEY_PRESS |
+            XCB_EVENT_MASK_KEY_RELEASE |
+            XCB_EVENT_MASK_BUTTON_PRESS |
+            XCB_EVENT_MASK_BUTTON_RELEASE |
+            XCB_EVENT_MASK_POINTER_MOTION |
+            XCB_EVENT_MASK_ENTER_WINDOW |
+            XCB_EVENT_MASK_LEAVE_WINDOW |
+            XCB_EVENT_MASK_STRUCTURE_NOTIFY |
+            XCB_EVENT_MASK_EXPOSURE
+        };
+        o.size = initialWindowSize();
+        if (!m_windows.isEmpty()) {
+            const auto &p = m_windows.last();
+            o.internalPosition = QPoint(p.internalPosition.x() + p.size.width(), 0);
         }
-        NETIcon icon;
-        icon.data = windowIcon.pixmap(size).toImage().bits();
-        icon.size.width = size.width();
-        icon.size.height = size.height();
-        o.winInfo->setIcon(icon, false);
-    };
-    addIcon(QSize(16, 16));
-    addIcon(QSize(32, 32));
-    addIcon(QSize(48, 48));
+        xcb_create_window(m_connection, XCB_COPY_FROM_PARENT, o.window, m_screen->root,
+                        0, 0, o.size.width(), o.size.height(),
+                        0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, mask, values);
 
-    xcb_map_window(m_connection, o.window);
+        o.winInfo = new NETWinInfo(m_connection, o.window, m_screen->root, NET::WMWindowType, NET::Properties2());
+        o.winInfo->setWindowType(NET::Normal);
+        o.winInfo->setPid(QCoreApplication::applicationPid());
+        QIcon windowIcon = QIcon::fromTheme(QStringLiteral("kwin"));
+        auto addIcon = [&o, &windowIcon] (const QSize &size) {
+            if (windowIcon.actualSize(size) != size) {
+                return;
+            }
+            NETIcon icon;
+            icon.data = windowIcon.pixmap(size).toImage().bits();
+            icon.size.width = size.width();
+            icon.size.height = size.height();
+            o.winInfo->setIcon(icon, false);
+        };
+        addIcon(QSize(16, 16));
+        addIcon(QSize(32, 32));
+        addIcon(QSize(48, 48));
 
-    m_protocols = protocolsAtom;
-    m_deleteWindowProtocol = deleteWindowAtom;
-    xcb_change_property(m_connection, XCB_PROP_MODE_REPLACE, o.window, m_protocols, XCB_ATOM_ATOM, 32, 1, &m_deleteWindowProtocol);
+        xcb_map_window(m_connection, o.window);
 
-    m_windows << o;
+        m_protocols = protocolsAtom;
+        m_deleteWindowProtocol = deleteWindowAtom;
+        xcb_change_property(m_connection, XCB_PROP_MODE_REPLACE, o.window, m_protocols, XCB_ATOM_ATOM, 32, 1, &m_deleteWindowProtocol);
+
+        m_windows << o;
+    }
 
     updateWindowTitle();
 
