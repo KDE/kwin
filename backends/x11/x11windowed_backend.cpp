@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
-#include "eglonxbackend.h"
+#include "egl_x11_backend.h"
 #include "screens.h"
 #include <kwinxrenderutils.h>
 // KDE
@@ -441,7 +441,7 @@ Screens *X11WindowedBackend::createScreens(QObject *parent)
 
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 {
-    return  new EglOnXBackend(connection(), display(), rootWindow(), screenNumer(), window());
+    return  new EglX11Backend(this);
 }
 
 QPainterBackend *X11WindowedBackend::createQPainterBackend()

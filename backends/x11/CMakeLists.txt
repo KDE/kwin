@@ -1,5 +1,6 @@
 set(X11BACKEND_SOURCES
     logging.cpp
+    egl_x11_backend.cpp
     scene_qpainter_x11_backend.cpp
     x11windowed_backend.cpp
 )
