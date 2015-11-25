@@ -172,6 +172,7 @@ bool EglOnXBackend::initRenderingContext()
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
     const bool havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
+    setHavePlatformBase(havePlatformBase);
     if (havePlatformBase) {
         // Make sure that the X11 platform is supported
         if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11")))
@@ -202,38 +203,17 @@ bool EglOnXBackend::initRenderingContext()
             overlayWindow()->setup(None);
         }
     }
-
-    xcb_window_t window = XCB_WINDOW_NONE;
-    if (m_overlayWindow) {
-        window = m_overlayWindow->window();
-    } else if (m_renderingWindow) {
-        window = m_renderingWindow;
-    }
-    if (window == XCB_WINDOW_NONE) {
+    if (!createSurfaces()) {
+        qCCritical(KWIN_CORE) << "Creating egl surface failed";
         return false;
     }
-
-    EGLSurface surface = EGL_NO_SURFACE;
-    if (havePlatformBase) {
-        // Note: Window is 64 bits on a 64-bit architecture whereas xcb_window_t is
-        //       always 32 bits. eglCreatePlatformWindowSurfaceEXT() expects the
-        //       native_window parameter to be pointer to a Window, so this variable
-        //       cannot be an xcb_window_t.
-        surface = eglCreatePlatformWindowSurfaceEXT(dpy, config(), (void *) &window, nullptr);
-    } else {
-        surface = eglCreateWindowSurface(dpy, config(), window, nullptr);
-    }
-
-    if (surface == EGL_NO_SURFACE) {
-        return false;
-    }
-    setSurface(surface);
 
     if (!createContext()) {
+        qCCritical(KWIN_CORE) << "Create OpenGL context failed";
         return false;
     }
 
-    if (eglMakeCurrent(dpy, surface, surface, context()) == EGL_FALSE) {
+    if (!makeContextCurrent(surface())) {
         qCCritical(KWIN_CORE) << "Make Context Current failed";
         return false;
     }
@@ -245,6 +225,44 @@ bool EglOnXBackend::initRenderingContext()
     }
 
     return true;
+}
+
+bool EglOnXBackend::createSurfaces()
+{
+    xcb_window_t window = XCB_WINDOW_NONE;
+    if (m_overlayWindow) {
+        window = m_overlayWindow->window();
+    } else if (m_renderingWindow) {
+        window = m_renderingWindow;
+    }
+
+    EGLSurface surface = createSurface(window);
+
+    if (surface == EGL_NO_SURFACE) {
+        return false;
+    }
+    setSurface(surface);
+    return true;
+}
+
+EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
+{
+    if (window == XCB_WINDOW_NONE) {
+        return EGL_NO_SURFACE;
+    }
+
+    EGLSurface surface = EGL_NO_SURFACE;
+    if (havePlatformBase()) {
+        // Note: Window is 64 bits on a 64-bit architecture whereas xcb_window_t is
+        //       always 32 bits. eglCreatePlatformWindowSurfaceEXT() expects the
+        //       native_window parameter to be pointer to a Window, so this variable
+        //       cannot be an xcb_window_t.
+        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *) &window, nullptr);
+    } else {
+        surface = eglCreateWindowSurface(eglDisplay(), config(), window, nullptr);
+    }
+
+    return surface;
 }
 
 bool EglOnXBackend::initBufferConfigs()
@@ -294,9 +312,21 @@ void EglOnXBackend::present()
     if (lastDamage().isEmpty())
         return;
 
-    const QSize screenSize = screens()->size();
-    const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
-    const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
+    presentSurface(surface(), lastDamage(), screens()->geometry());
+
+    setLastDamage(QRegion());
+    if (!supportsBufferAge()) {
+        eglWaitGL();
+        xcb_flush(m_connection);
+    }
+}
+
+void EglOnXBackend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
+{
+    if (damage.isEmpty()) {
+        return;
+    }
+    const bool fullRepaint = supportsBufferAge() || (damage == screenGeometry);
 
     if (fullRepaint || !surfaceHasSubPost) {
         if (gs_tripleBufferNeedsDetection) {
@@ -304,7 +334,7 @@ void EglOnXBackend::present()
             m_swapProfiler.begin();
         }
         // the entire screen changed, or we cannot do partial updates (which implies we enabled surface preservation)
-        eglSwapBuffers(eglDisplay(), surface());
+        eglSwapBuffers(eglDisplay(), surface);
         if (gs_tripleBufferNeedsDetection) {
             eglWaitGL();
             if (char result = m_swapProfiler.end()) {
@@ -326,19 +356,13 @@ void EglOnXBackend::present()
             }
         }
         if (supportsBufferAge()) {
-            eglQuerySurface(eglDisplay(), surface(), EGL_BUFFER_AGE_EXT, &m_bufferAge);
+            eglQuerySurface(eglDisplay(), surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
         }
     } else {
         // a part of the screen changed, and we can use eglPostSubBufferNV to copy the updated area
-        foreach (const QRect & r, lastDamage().rects()) {
-            eglPostSubBufferNV(eglDisplay(), surface(), r.left(), screenSize.height() - r.bottom() - 1, r.width(), r.height());
+        foreach (const QRect & r, damage.rects()) {
+            eglPostSubBufferNV(eglDisplay(), surface, r.left(), screenGeometry.height() - r.bottom() - 1, r.width(), r.height());
         }
-    }
-
-    setLastDamage(QRegion());
-    if (!supportsBufferAge()) {
-        eglWaitGL();
-        xcb_flush(m_connection);
     }
 }
 
@@ -428,6 +452,11 @@ bool EglOnXBackend::usesOverlayWindow() const
 OverlayWindow* EglOnXBackend::overlayWindow()
 {
     return m_overlayWindow;
+}
+
+bool EglOnXBackend::makeContextCurrent(const EGLSurface &surface)
+{
+    return eglMakeCurrent(eglDisplay(), surface, surface, context()) == EGL_TRUE;
 }
 
 /************************************************

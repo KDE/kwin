@@ -44,6 +44,16 @@ public:
 
 protected:
     virtual void present();
+    void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
+    virtual bool createSurfaces();
+    EGLSurface createSurface(xcb_window_t window);
+    void setHavePlatformBase(bool have) {
+        m_havePlatformBase = have;
+    }
+    bool havePlatformBase() const {
+        return m_havePlatformBase;
+    }
+    bool makeContextCurrent(const EGLSurface &surface);
 
 private:
     bool initBufferConfigs();
@@ -60,6 +70,7 @@ private:
     xcb_window_t m_rootWindow;
     int m_x11ScreenNumber;
     xcb_window_t m_renderingWindow = XCB_WINDOW_NONE;
+    bool m_havePlatformBase = false;
     friend class EglTexture;
 };
 
