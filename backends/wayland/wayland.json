@@ -5,6 +5,7 @@
         "Description[ca]": "Renderitza a una finestra imbricada en un compositor Wayland en execució.", 
         "Description[en_GB]": "Render to a nested window on running Wayland compositor.", 
         "Description[es]": "Renderizar en una ventana anidada en el compositor Wayland en ejecución.", 
+        "Description[fr]": "Rendre sur une fenêtre imbriquée sur un compositeur Wayland en cours de fonctionnement.", 
         "Description[gl]": "Renderizar unha xanela aniñada no compositor de Wayland en execución.", 
         "Description[it]": "Resa in una finestra nidificata su compositore Wayland in esecuzione.", 
         "Description[ko]": "Wayland 컴포지터에서 실행 중인 창에 렌더링합니다.", 
@@ -23,6 +24,7 @@
         "Description[uk]": "Обробляти у вкладене вікно запущеного засобу композиції Wayland.", 
         "Description[x-test]": "xxRender to a nested window on running Wayland compositor.xx", 
         "Description[zh_CN]": "渲染到 Wayland 混成器上的嵌套窗口中", 
+        "Description[zh_TW]": "成像到執行中的 Wayland 的巢狀視窗。", 
         "Id": "KWinWaylandWaylandBackend", 
         "Name": "wayland", 
         "Name[ca@valencia]": "Wayland", 
@@ -31,6 +33,7 @@
         "Name[de]": "Wayland", 
         "Name[en_GB]": "wayland", 
         "Name[es]": "wayland", 
+        "Name[fr]": "wayland", 
         "Name[gl]": "wayland", 
         "Name[it]": "wayland", 
         "Name[ko]": "wayland", 
@@ -48,7 +51,8 @@
         "Name[sv]": "Wayland", 
         "Name[uk]": "wayland", 
         "Name[x-test]": "xxwaylandxx", 
-        "Name[zh_CN]": "wayland"
+        "Name[zh_CN]": "wayland", 
+        "Name[zh_TW]": "wayland"
     }, 
     "input": true
 }
