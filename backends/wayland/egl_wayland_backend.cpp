@@ -55,8 +55,6 @@ EglWaylandBackend::EglWaylandBackend(Wayland::WaylandBackend *b)
         return;
     }
     connect(m_wayland, SIGNAL(shellSurfaceSizeChanged(QSize)), SLOT(overlaySizeChanged(QSize)));
-    initializeEgl();
-    init();
     // Egl is always direct rendering
     setIsDirectRendering(true);
 }
@@ -95,6 +93,10 @@ bool EglWaylandBackend::initializeEgl()
 
 void EglWaylandBackend::init()
 {
+    if (!initializeEgl()) {
+        setFailed("Could not initialize egl");
+        return;
+    }
     if (!initRenderingContext()) {
         setFailed("Could not initialize rendering context");
         return;

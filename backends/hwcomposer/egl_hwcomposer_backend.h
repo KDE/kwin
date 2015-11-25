@@ -37,12 +37,12 @@ public:
     void screenGeometryChanged(const QSize &size) override;
     QRegion prepareRenderingFrame() override;
     void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void init() override;
 
 protected:
     void present() override;
 
 private:
-    void init();
     bool initializeEgl();
     bool initRenderingContext();
     bool initBufferConfigs();

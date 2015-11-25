@@ -28,11 +28,6 @@ EglHwcomposerBackend::EglHwcomposerBackend(HwcomposerBackend *backend)
     : AbstractEglBackend()
     , m_backend(backend)
 {
-    if (!initializeEgl()) {
-        setFailed("Failed to initialize egl");
-        return;
-    }
-    init();
     // EGL is always direct rendering
     setIsDirectRendering(true);
     setSyncsToVBlank(true);
@@ -60,6 +55,10 @@ bool EglHwcomposerBackend::initializeEgl()
 
 void EglHwcomposerBackend::init()
 {
+    if (!initializeEgl()) {
+        setFailed("Failed to initialize egl");
+        return;
+    }
     if (!initRenderingContext()) {
         setFailed("Could not initialize rendering context");
         return;

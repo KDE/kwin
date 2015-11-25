@@ -48,13 +48,13 @@ public:
     bool usesOverlayWindow() const override;
     bool perScreenRendering() const override;
     QRegion prepareRenderingForScreen(int screenId) override;
+    void init() override;
 
 protected:
     void present() override;
     void cleanupSurfaces() override;
 
 private:
-    void init();
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();

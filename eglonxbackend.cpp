@@ -63,7 +63,6 @@ EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb
     , m_x11ScreenNumber(screenNumber)
     , m_renderingWindow(renderingWindow)
 {
-    init();
     // Egl is always direct rendering
     setIsDirectRendering(true);
 }

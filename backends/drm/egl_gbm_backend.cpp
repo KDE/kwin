@@ -39,8 +39,6 @@ EglGbmBackend::EglGbmBackend(DrmBackend *b)
     , AbstractEglBackend()
     , m_backend(b)
 {
-    initializeEgl();
-    init();
     // Egl is always direct rendering
     setIsDirectRendering(true);
     setSyncsToVBlank(true);
@@ -117,6 +115,10 @@ bool EglGbmBackend::initializeEgl()
 
 void EglGbmBackend::init()
 {
+    if (!initializeEgl()) {
+        setFailed("Could not initialize egl");
+        return;
+    }
     if (!initRenderingContext()) {
         setFailed("Could not initialize rendering context");
         return;

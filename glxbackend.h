@@ -71,12 +71,12 @@ public:
     virtual void doneCurrent() override;
     virtual OverlayWindow* overlayWindow() override;
     virtual bool usesOverlayWindow() const override;
+    void init() override;
 
 protected:
     virtual void present();
 
 private:
-    void init();
     bool initBuffer();
     void waitSync();
     bool initRenderingContext();

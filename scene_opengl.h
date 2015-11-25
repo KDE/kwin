@@ -377,6 +377,8 @@ class KWIN_EXPORT OpenGLBackend
 public:
     OpenGLBackend();
     virtual ~OpenGLBackend();
+
+    virtual void init() = 0;
     /**
      * @return Time passes since start of rendering current frame.
      * @see startRenderTimer

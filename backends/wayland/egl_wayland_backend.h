@@ -58,6 +58,7 @@ public:
     virtual QRegion prepareRenderingFrame();
     virtual void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     virtual bool usesOverlayWindow() const override;
+    void init() override;
 
 protected:
     virtual void present();
@@ -66,7 +67,6 @@ private Q_SLOTS:
     void overlaySizeChanged(const QSize &size);
 
 private:
-    void init();
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();

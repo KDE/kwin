@@ -578,7 +578,13 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
         // no backend available
         return NULL;
     }
-    if (!backend || backend->isFailed()) {
+    if (!backend) {
+        return nullptr;
+    }
+    if (!backend->isFailed()) {
+        backend->init();
+    }
+    if (backend->isFailed()) {
         delete backend;
         return NULL;
     }

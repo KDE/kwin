@@ -114,7 +114,6 @@ GlxBackend::GlxBackend()
     , m_bufferAge(0)
     , haveSwapInterval(false)
 {
-    init();
 }
 
 static bool gs_tripleBufferUndetected = true;

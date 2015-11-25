@@ -42,12 +42,12 @@ public:
     QRegion prepareRenderingFrame() override;
     void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool usesOverlayWindow() const override;
+    void init() override;
 
 protected:
     void present() override;
 
 private:
-    void init();
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();

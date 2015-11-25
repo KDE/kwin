@@ -40,12 +40,12 @@ public:
     virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
     virtual OverlayWindow* overlayWindow() override;
     virtual bool usesOverlayWindow() const override;
+    void init() override;
 
 protected:
     virtual void present();
 
 private:
-    void init();
     bool initBufferConfigs();
     bool initRenderingContext();
     /**
