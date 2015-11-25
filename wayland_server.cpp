@@ -265,8 +265,10 @@ void WaylandServer::initOutputs()
     Q_ASSERT(s);
     for (int i = 0; i < s->count(); ++i) {
         OutputInterface *output = m_display->createOutput(m_display);
-        output->setPhysicalSize(s->size(i) / 3.8);
-        output->addMode(s->size(i));
+        const QRect &geo = s->geometry(i);
+        output->setGlobalPosition(geo.topLeft());
+        output->setPhysicalSize(geo.size() / 3.8);
+        output->addMode(geo.size());
         output->create();
     }
 }
