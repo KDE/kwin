@@ -54,7 +54,7 @@ void ShowPaintEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
     painted = QRegion();
     effects->paintScreen(mask, region, data);
     if (effects->isOpenGLCompositing())
-        paintGL();
+        paintGL(data.projectionMatrix());
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing)
         paintXrender();
@@ -72,12 +72,13 @@ void ShowPaintEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
     effects->paintWindow(w, mask, region, data);
 }
 
-void ShowPaintEffect::paintGL()
+void ShowPaintEffect::paintGL(const QMatrix4x4 &projection)
 {
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setUseColor(true);
-    ShaderBinder binder(ShaderManager::ColorShader);
+    ShaderBinder binder(ShaderTrait::UniformColor);
+    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projection);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     QColor color = colors[ color_index ];

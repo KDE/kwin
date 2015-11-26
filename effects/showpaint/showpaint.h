@@ -35,7 +35,7 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 private:
-    void paintGL();
+    void paintGL(const QMatrix4x4 &projection);
     void paintXrender();
     void paintQPainter();
     QRegion painted; // what's painted in one pass
