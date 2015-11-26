@@ -443,6 +443,14 @@ public:
      * @see ShaderManager::pushShader
      **/
     explicit ShaderBinder(GLShader *shader);
+    /**
+     * @brief Pushes the Shader with the given @p traits to the ShaderManager's stack.
+     *
+     * @param traits The traits describing the shader
+     * @see ShaderManager::pushShader
+     * @since 5.6
+     **/
+    explicit ShaderBinder(ShaderTraits traits);
     ~ShaderBinder();
 
     /**
@@ -466,6 +474,13 @@ ShaderBinder::ShaderBinder(GLShader *shader)
     : m_shader(shader)
 {
     ShaderManager::instance()->pushShader(shader);
+}
+
+inline
+ShaderBinder::ShaderBinder(ShaderTraits traits)
+    : m_shader(nullptr)
+{
+    m_shader = ShaderManager::instance()->pushShader(traits);
 }
 
 inline
