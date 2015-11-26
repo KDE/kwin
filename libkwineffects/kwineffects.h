@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QList>
 #include <QHash>
 #include <QStack>
+#include <QScopedPointer>
 
 #include <KPluginFactory>
 
@@ -2419,7 +2420,9 @@ class KWINEFFECTS_EXPORT ScreenPaintData : public PaintData
 {
 public:
     ScreenPaintData();
+    ScreenPaintData(const QMatrix4x4 &projectionMatrix);
     ScreenPaintData(const ScreenPaintData &other);
+    virtual ~ScreenPaintData();
     /**
      * Scales the screen by @p scale factor.
      * Multiplies all three components by the given factor.
@@ -2462,6 +2465,16 @@ public:
      **/
     ScreenPaintData& operator+=(const QVector3D &translation);
     ScreenPaintData& operator=(const ScreenPaintData &rhs);
+
+    /**
+     * The projection matrix used by the scene for the current rendering pass.
+     * On non-OpenGL compositors it's set to Identity matrix.
+     * @since 5.6
+     **/
+    QMatrix4x4 projectionMatrix() const;
+private:
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 class KWINEFFECTS_EXPORT ScreenPrePaintData

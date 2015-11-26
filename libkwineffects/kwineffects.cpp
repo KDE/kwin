@@ -418,13 +418,30 @@ WindowPaintData &WindowPaintData::operator+=(const QVector3D &translation)
     return *this;
 }
 
+class ScreenPaintData::Private
+{
+public:
+    QMatrix4x4 projectionMatrix;
+};
+
 ScreenPaintData::ScreenPaintData()
     : PaintData()
+    , d(new Private())
 {
 }
 
+ScreenPaintData::ScreenPaintData(const QMatrix4x4 &projectionMatrix)
+    : PaintData()
+    , d(new Private())
+{
+    d->projectionMatrix = projectionMatrix;
+}
+
+ScreenPaintData::~ScreenPaintData() = default;
+
 ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
     : PaintData()
+    , d(new Private())
 {
     translate(other.translation());
     setXScale(other.xScale());
@@ -433,6 +450,7 @@ ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
     setRotationOrigin(other.rotationOrigin());
     setRotationAxis(other.rotationAxis());
     setRotationAngle(other.rotationAngle());
+    d->projectionMatrix = other.d->projectionMatrix;
 }
 
 ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
@@ -446,6 +464,7 @@ ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
     setRotationOrigin(rhs.rotationOrigin());
     setRotationAxis(rhs.rotationAxis());
     setRotationAngle(rhs.rotationAngle());
+    d->projectionMatrix = rhs.d->projectionMatrix;
     return *this;
 }
 
@@ -491,6 +510,11 @@ ScreenPaintData &ScreenPaintData::operator+=(const QVector3D &translation)
 {
     translate(translation);
     return *this;
+}
+
+QMatrix4x4 ScreenPaintData::projectionMatrix() const
+{
+    return d->projectionMatrix;
 }
 
 //****************************************
