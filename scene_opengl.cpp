@@ -1137,8 +1137,8 @@ void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
     vbo->setUseColor(true);
     vbo->setData(vertices.count() / 2, 2, vertices.data(), NULL);
 
-    ShaderBinder binder(ShaderManager::ColorShader);
-    binder.shader()->setUniform(GLShader::Offset, QVector2D(0, 0));
+    ShaderBinder binder(ShaderTrait::UniformColor);
+    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, m_projectionMatrix);
 
     vbo->render(GL_TRIANGLES);
 }
