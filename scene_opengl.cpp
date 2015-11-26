@@ -727,6 +727,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             }
 
             int mask = 0;
+            updateProjectionMatrix();
             paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid);   // call generic implementation
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
@@ -746,6 +747,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         }
 
         int mask = 0;
+        updateProjectionMatrix();
         paintScreen(&mask, damage, repaint, &updateRegion, &validRegion);   // call generic implementation
 
         if (!GLPlatform::instance()->isGLES()) {
@@ -1092,9 +1094,13 @@ QMatrix4x4 SceneOpenGL2::createProjectionMatrix() const
     return projection * matrix;
 }
 
-void SceneOpenGL2::paintSimpleScreen(int mask, QRegion region)
+void SceneOpenGL2::updateProjectionMatrix()
 {
     m_projectionMatrix = createProjectionMatrix();
+}
+
+void SceneOpenGL2::paintSimpleScreen(int mask, QRegion region)
+{
     m_screenProjectionMatrix = m_projectionMatrix;
 
     Scene::paintSimpleScreen(mask, region);
@@ -1103,10 +1109,8 @@ void SceneOpenGL2::paintSimpleScreen(int mask, QRegion region)
 void SceneOpenGL2::paintGenericScreen(int mask, ScreenPaintData data)
 {
     const QMatrix4x4 screenMatrix = transformation(mask, data);
-    const QMatrix4x4 pMatrix = createProjectionMatrix();
 
-    m_projectionMatrix = pMatrix;
-    m_screenProjectionMatrix = pMatrix * screenMatrix;
+    m_screenProjectionMatrix = m_projectionMatrix * screenMatrix;
 
     // ### Remove the following two lines when there are no more users of the old shader API
     ShaderBinder binder(ShaderManager::GenericShader);
