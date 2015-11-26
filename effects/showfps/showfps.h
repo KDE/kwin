@@ -73,7 +73,7 @@ public:
         return textColor;
     }
 private:
-    void paintGL(int fps);
+    void paintGL(int fps, const QMatrix4x4 &projectionMatrix);
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     void paintXrender(int fps);
 #endif

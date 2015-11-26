@@ -158,7 +158,7 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
     if (fps > MAX_TIME)
         fps = MAX_TIME; // keep it the same height
     if (effects->isOpenGLCompositing()) {
-        paintGL(fps);
+        paintGL(fps, data.projectionMatrix());
         glFinish(); // make sure all rendering is done
     }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -173,7 +173,7 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
     m_noBenchmark->render(infiniteRegion(), 1.0, alpha);
 }
 
-void ShowFpsEffect::paintGL(int fps)
+void ShowFpsEffect::paintGL(int fps, const QMatrix4x4 &projectionMatrix)
 {
     int x = this->x;
     int y = this->y;
@@ -181,7 +181,8 @@ void ShowFpsEffect::paintGL(int fps)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // TODO painting first the background white and then the contents
     // means that the contents also blend with the background, I guess
-    ShaderBinder binder(ShaderManager::ColorShader);
+    ShaderBinder binder(ShaderTrait::UniformColor);
+    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     QColor color(255, 255, 255);
@@ -236,10 +237,10 @@ void ShowFpsEffect::paintGL(int fps)
     if (fpsTextRect.isValid()) {
         fpsText.reset(new GLTexture(fpsTextImage(fps)));
         fpsText->bind();
-        ShaderBinder binder(ShaderManager::SimpleShader);
-        if (effects->compositingType() == OpenGL2Compositing) {
-            binder.shader()->setUniform("offset", QVector2D(0, 0));
-        }
+        ShaderBinder binder(ShaderTrait::MapTexture);
+        QMatrix4x4 mvp = projectionMatrix;
+        mvp.translate(fpsTextRect.x(), fpsTextRect.y());
+        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
         fpsText->render(QRegion(fpsTextRect), fpsTextRect);
         fpsText->unbind();
         effects->addRepaint(fpsTextRect);
