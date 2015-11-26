@@ -5,6 +5,7 @@
         "Description[ca]": "Renderitza a una finestra imbricada en el sistema de finestres X11.", 
         "Description[en_GB]": "Render to a nested window on X11 windowing system.", 
         "Description[es]": "Renderizar en una ventana anidada en el sistema de ventanas X11.", 
+        "Description[fi]": "Renderöi sisäkkäiseen ikkunaan, joka on X11-ikkunointijärjestelmässä.", 
         "Description[fr]": "Rendre sur une fenêtre imbriquée sur le système de fenêtrage X11.", 
         "Description[gl]": "Renderizar unha xanela aniñada no sistema de xanelas X11.", 
         "Description[it]": "Resa in una finestra nidificata su sistema di finestre X11.", 
@@ -24,7 +25,6 @@
         "Description[uk]": "Обробляти у вкладене вікно системи керування вікнами X11.", 
         "Description[x-test]": "xxRender to a nested window on X11 windowing system.xx", 
         "Description[zh_CN]": "渲染到 X11 窗口系统上的嵌套窗口中", 
-        "Description[zh_TW]": "成像到 X11 視窗系統的巢狀視窗。", 
         "Id": "KWinWaylandX11Backend", 
         "Name": "x11", 
         "Name[ast]": "x11", 
@@ -35,6 +35,7 @@
         "Name[de]": "x11", 
         "Name[en_GB]": "x11", 
         "Name[es]": "x11", 
+        "Name[fi]": "x11", 
         "Name[fr]": "x11", 
         "Name[gl]": "x11", 
         "Name[it]": "x11", 
@@ -53,8 +54,7 @@
         "Name[sv]": "X11", 
         "Name[uk]": "x11", 
         "Name[x-test]": "xxx11xx", 
-        "Name[zh_CN]": "x11", 
-        "Name[zh_TW]": "x11"
+        "Name[zh_CN]": "x11"
     }, 
     "input": true
 }

@@ -6,6 +6,7 @@
         "Description[de]": "In Framebuffer rendern.", 
         "Description[en_GB]": "Render to framebuffer.", 
         "Description[es]": "Renderizar en el «framebuffer».", 
+        "Description[fi]": "Renderöi framebufferiin.", 
         "Description[fr]": "Rendre sur le « framebuffer ».", 
         "Description[gl]": "Renderizar no búfer de fotogramas.", 
         "Description[it]": "Resa su framebuffer.", 
@@ -25,7 +26,6 @@
         "Description[uk]": "Обробляти до буфера кадрів.", 
         "Description[x-test]": "xxRender to framebuffer.xx", 
         "Description[zh_CN]": "渲染到帧缓冲。", 
-        "Description[zh_TW]": "成像至影格緩衝區。", 
         "Id": "KWinWaylandFbdevBackend", 
         "Name": "framebuffer", 
         "Name[ca@valencia]": "Framebuffer", 
@@ -34,6 +34,7 @@
         "Name[de]": "Framebuffer", 
         "Name[en_GB]": "framebuffer", 
         "Name[es]": "framebuffer", 
+        "Name[fi]": "framebuffer", 
         "Name[fr]": "framebuffer", 
         "Name[gl]": "framebuffer", 
         "Name[it]": "framebuffer", 
@@ -52,8 +53,7 @@
         "Name[sv]": "rambuffer", 
         "Name[uk]": "framebuffer", 
         "Name[x-test]": "xxframebufferxx", 
-        "Name[zh_CN]": "framebuffer", 
-        "Name[zh_TW]": "影格緩衝區（framebuffer）"
+        "Name[zh_CN]": "framebuffer"
     }, 
     "input": false
 }

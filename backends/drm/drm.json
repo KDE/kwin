@@ -6,6 +6,7 @@
         "Description[de]": "In DRM-Knoten rendern.", 
         "Description[en_GB]": "Render through drm node.", 
         "Description[es]": "Renderizar a través del nodo DRM.", 
+        "Description[fi]": "Renderöi DRM-noden läpi.", 
         "Description[fr]": "Rendre par le biais d'un nœud de rendu « DRM ».", 
         "Description[gl]": "Renderizar a través dun nodo de DRM.", 
         "Description[it]": "Resa tramite nodo drm.", 
@@ -25,7 +26,6 @@
         "Description[uk]": "Обробляти через вузол DRM.", 
         "Description[x-test]": "xxRender through drm node.xx", 
         "Description[zh_CN]": "通过 drm 结点渲染。", 
-        "Description[zh_TW]": "透過 drm 節點成像。", 
         "Id": "KWinWaylandDrmBackend", 
         "Name": "drm", 
         "Name[ca@valencia]": "DRM", 
@@ -34,6 +34,7 @@
         "Name[de]": "DRM", 
         "Name[en_GB]": "drm", 
         "Name[es]": "drm", 
+        "Name[fi]": "drm", 
         "Name[fr]": "drm", 
         "Name[gl]": "drm", 
         "Name[it]": "drm", 
@@ -52,8 +53,7 @@
         "Name[sv]": "DRM", 
         "Name[uk]": "drm", 
         "Name[x-test]": "xxdrmxx", 
-        "Name[zh_CN]": "drm", 
-        "Name[zh_TW]": "drm"
+        "Name[zh_CN]": "drm"
     }, 
     "input": false
 }

@@ -5,6 +5,7 @@
         "Description[ca]": "Renderitza a un «framebuffer» virtual.", 
         "Description[en_GB]": "Render to a virtual framebuffer.", 
         "Description[es]": "Renderizar en un «framebuffer» virtual.", 
+        "Description[fi]": "Renderöi virtuaaliseen framebufferiin.", 
         "Description[fr]": "Rendre sur un « framebuffer » factice.", 
         "Description[gl]": "Renderizar nun búfer de fotogramas virtual.", 
         "Description[it]": "Resa su un framebuffer virtuale.", 
@@ -24,7 +25,6 @@
         "Description[uk]": "Обробляти до віртуального буфера кадрів.", 
         "Description[x-test]": "xxRender to a virtual framebuffer.xx", 
         "Description[zh_CN]": "渲染到虚拟帧缓冲。", 
-        "Description[zh_TW]": "成像到虛擬影格緩衝區。", 
         "Id": "KWinWaylandVirtualBackend", 
         "Name": "virtual", 
         "Name[ca@valencia]": "Virtual", 
@@ -32,6 +32,7 @@
         "Name[de]": "Virtuell", 
         "Name[en_GB]": "virtual", 
         "Name[es]": "virtual", 
+        "Name[fi]": "virtual", 
         "Name[fr]": "virtual", 
         "Name[gl]": "virtual", 
         "Name[it]": "virtual", 
@@ -50,8 +51,7 @@
         "Name[sv]": "virtuell", 
         "Name[uk]": "virtual", 
         "Name[x-test]": "xxvirtualxx", 
-        "Name[zh_CN]": "virtual", 
-        "Name[zh_TW]": "虛擬"
+        "Name[zh_CN]": "virtual"
     }, 
     "input": true
 }
