@@ -1975,7 +1975,7 @@ void CubeEffect::unregisterCubeInsideEffect(CubeInsideEffect* effect)
 
 bool CubeEffect::isActive() const
 {
-    return activated;
+    return activated && !effects->isScreenLocked();
 }
 
 } // namespace

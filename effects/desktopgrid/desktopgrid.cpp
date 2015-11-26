@@ -1377,7 +1377,7 @@ QVector<int> DesktopGridEffect::desktopList(const EffectWindow *w) const
 
 bool DesktopGridEffect::isActive() const
 {
-    return timeline.currentValue() != 0 || activated || (isUsingPresentWindows() && isMotionManagerMovingWindows());
+    return (timeline.currentValue() != 0 || activated || (isUsingPresentWindows() && isMotionManagerMovingWindows())) && !effects->isScreenLocked();
 }
 
 bool DesktopGridEffect::isRelevantWithPresentWindows(EffectWindow *w) const

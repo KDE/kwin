@@ -920,7 +920,7 @@ void FlipSwitchEffect::slotTabBoxKeyEvent(QKeyEvent *event)
 
 bool FlipSwitchEffect::isActive() const
 {
-    return m_active;
+    return m_active && !effects->isScreenLocked();
 }
 
 void FlipSwitchEffect::updateCaption()

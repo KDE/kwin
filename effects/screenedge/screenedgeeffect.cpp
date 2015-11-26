@@ -45,6 +45,13 @@ ScreenEdgeEffect::ScreenEdgeEffect()
     m_cleanupTimer->setInterval(5000);
     m_cleanupTimer->setSingleShot(true);
     connect(m_cleanupTimer, SIGNAL(timeout()), SLOT(cleanup()));
+    connect(effects, &EffectsHandler::screenLockingChanged, this,
+        [this] (bool locked) {
+            if (locked) {
+                cleanup();
+            }
+        }
+    );
 }
 
 ScreenEdgeEffect::~ScreenEdgeEffect()
@@ -333,7 +340,7 @@ T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
 
 bool ScreenEdgeEffect::isActive() const
 {
-    return !m_borders.isEmpty();
+    return !m_borders.isEmpty() && !effects->isScreenLocked();
 }
 
 } // namespace

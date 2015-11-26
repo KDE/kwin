@@ -1868,7 +1868,7 @@ void PresentWindowsEffect::globalShortcutChanged(QAction *action, const QKeySequ
 
 bool PresentWindowsEffect::isActive() const
 {
-    return m_activated || m_motionManager.managingWindows();
+    return (m_activated || m_motionManager.managingWindows()) && !effects->isScreenLocked();
 }
 
 void PresentWindowsEffect::reCreateGrids()
