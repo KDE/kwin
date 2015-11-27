@@ -98,9 +98,12 @@ void ScreenEdgeEffect::paintScreen(int mask, QRegion region, ScreenPaintData &da
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             texture->bind();
-            ShaderBinder binder(ShaderManager::SimpleShader);
+            ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate);
             const QVector4D constant(opacity, opacity, opacity, opacity);
             binder.shader()->setUniform(GLShader::ModulationConstant, constant);
+            QMatrix4x4 mvp = data.projectionMatrix();
+            mvp.translate((*it)->geometry.x(), (*it)->geometry.y());
+            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             texture->render(infiniteRegion(), (*it)->geometry);
             texture->unbind();
             glDisable(GL_BLEND);
