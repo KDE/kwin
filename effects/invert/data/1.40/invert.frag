@@ -3,13 +3,13 @@ uniform sampler2D sampler;
 uniform vec4 modulation;
 uniform float saturation;
 
-in vec2 varyingTexCoords;
+in vec2 texcoord0;
 
 out vec4 fragColor;
 
 void main()
 {
-    vec4 tex = texture(sampler, varyingTexCoords);
+    vec4 tex = texture(sampler, texcoord0);
 
     if (saturation != 1.0) {
         vec3 desaturated = tex.rgb * vec3( 0.30, 0.59, 0.11 );
