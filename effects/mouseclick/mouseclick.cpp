@@ -369,9 +369,10 @@ void MouseClickEffect::drawCircleQPainter(const QColor &color, float cx, float c
     painter->restore();
 }
 
-void MouseClickEffect::paintScreenSetupGl(int, QRegion, ScreenPaintData&)
+void MouseClickEffect::paintScreenSetupGl(int, QRegion, ScreenPaintData &data)
 {
-    ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
+    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor);
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
 
     glLineWidth(m_lineWidth);
     glEnable(GL_BLEND);
