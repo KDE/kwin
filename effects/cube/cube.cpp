@@ -407,7 +407,8 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
         // wallpaper
         if (wallpaper) {
-            ShaderBinder binder(ShaderManager::SimpleShader);
+            ShaderBinder binder(ShaderTrait::MapTexture);
+            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
             wallpaper->bind();
             wallpaper->render(region, rect);
             wallpaper->unbind();
