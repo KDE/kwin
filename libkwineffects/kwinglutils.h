@@ -362,6 +362,24 @@ public:
     GLShader *loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource);
 
     /**
+     * Creates a custom shader with the given @p traits and custom @p vertexSource and or @p fragmentSource.
+     * If the @p vertexSource is empty a vertex shader with the given @p traits is generated.
+     * If it is not empty the @p vertexSource is used as the source for the vertex shader.
+     *
+     * The same applies for argument @p fragmentSource just for the fragment shader.
+     *
+     * So if both @p vertesSource and @p fragmentSource are provided the @p traits are ignored.
+     * If neither are provided a new shader following the @p traits is generated.
+     *
+     * @param traits The shader traits for generating the shader
+     * @param vertesSource optional vertex shader source code to be used instead of shader traits
+     * @param fragmentSource optional fragment shader source code to be used instead of shader traits
+     * @return new generated shader
+     * @since 5.6
+     **/
+    GLShader *generateCustomShader(ShaderTraits traits, const QByteArray &vertexSource = QByteArray(), const QByteArray &fragmentSource = QByteArray());
+
+    /**
      * Compiles and tests the dynamically generated shaders.
      * Returns true if successful and false otherwise.
      */

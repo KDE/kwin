@@ -987,8 +987,13 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
 
 GLShader *ShaderManager::generateShader(ShaderTraits traits)
 {
-    const QByteArray vertex   = generateVertexSource(traits);
-    const QByteArray fragment = generateFragmentSource(traits);
+    return generateCustomShader(traits);
+}
+
+GLShader *ShaderManager::generateCustomShader(ShaderTraits traits, const QByteArray &vertexSource, const QByteArray &fragmentSource)
+{
+    const QByteArray vertex   = vertexSource.isEmpty() ? generateVertexSource(traits) : vertexSource;
+    const QByteArray fragment = fragmentSource.isEmpty() ? generateFragmentSource(traits) : fragmentSource;
 
 #if 0
     qCDebug(LIBKWINGLUTILS) << "**************";
