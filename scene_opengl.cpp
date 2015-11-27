@@ -1813,19 +1813,17 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
     GLShader* shader = m_effectFrame->shader();
     bool sceneShader = false;
     if (!shader) {
-        shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+        shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::Modulate);
         sceneShader = true;
     } else if (shader) {
         ShaderManager::instance()->pushShader(shader);
     }
 
     if (shader) {
-        if (sceneShader)
-            shader->setUniform(GLShader::Offset, QVector2D(0, 0));
-
         shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
         shader->setUniform(GLShader::Saturation, 1.0f);
     }
+    const QMatrix4x4 projection = m_scene->projectionMatrix();
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1945,15 +1943,18 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
         m_unstyledTexture->bind();
         const QPoint pt = m_effectFrame->geometry().topLeft();
-        if (sceneShader) {
-            shader->setUniform(GLShader::Offset, QVector2D(pt.x(), pt.y()));
-        } else {
+        if (!sceneShader) {
             QMatrix4x4 translation;
             translation.translate(pt.x(), pt.y());
             if (shader) {
                 shader->setUniform(GLShader::WindowTransformation, translation);
             }
         }
+
+        QMatrix4x4 mvp(projection);
+        mvp.translate(pt.x(), pt.y());
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
         m_unstyledVBO->render(region, GL_TRIANGLES);
         if (!sceneShader) {
             if (shader) {
@@ -1972,7 +1973,13 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         m_texture->bind();
         qreal left, top, right, bottom;
         m_effectFrame->frame().getMargins(left, top, right, bottom);   // m_geometry is the inner geometry
-        m_texture->render(region, m_effectFrame->geometry().adjusted(-left, -top, right, bottom));
+        const QRect rect = m_effectFrame->geometry().adjusted(-left, -top, right, bottom);
+
+        QMatrix4x4 mvp(projection);
+        mvp.translate(rect.x(), rect.y());
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
+        m_texture->render(region, rect);
         m_texture->unbind();
 
     }
@@ -1987,6 +1994,9 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
                 const float a = opacity * frameOpacity;
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
             }
+            QMatrix4x4 mvp(projection);
+            mvp.translate(m_effectFrame->selection().x(), m_effectFrame->selection().y());
+            shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             m_selectionTexture->bind();
             m_selectionTexture->render(region, m_effectFrame->selection());
@@ -1999,6 +2009,10 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
     if (!m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty()) {
         QPoint topLeft(m_effectFrame->geometry().x(),
                        m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2);
+
+        QMatrix4x4 mvp(projection);
+        mvp.translate(topLeft.x(), topLeft.y());
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
         if (m_effectFrame->isCrossFade() && m_oldIconTexture) {
             if (shader) {
@@ -2030,6 +2044,9 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
     // Render text
     if (!m_effectFrame->text().isEmpty()) {
+        QMatrix4x4 mvp(projection);
+        mvp.translate(m_effectFrame->geometry().x(), m_effectFrame->geometry().y());
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
         if (m_effectFrame->isCrossFade() && m_oldTextTexture) {
             if (shader) {
                 const float a = opacity * (1.0 - m_effectFrame->crossFadeProgress());
