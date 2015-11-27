@@ -359,9 +359,7 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-            QMatrix4x4 mvp;
-            const QSize size = effects->virtualScreenSize();
-            mvp.ortho(0, size.width(), size.height(), 0, 0, 65535);
+            QMatrix4x4 mvp = data.projectionMatrix();
             mvp.translate(rect.x(), rect.y());
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             texture->render(region, rect);
