@@ -1549,8 +1549,8 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
             traits |= ShaderTrait::AdjustSaturation;
 
         shader = ShaderManager::instance()->pushShader(traits);
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
     }
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
 
     if (ColorCorrection *cc = scene->colorCorrection()) {
         cc->setupForOutput(data.screen());
