@@ -376,7 +376,6 @@ set(kwin_KDEINIT_SRCS
     abstract_egl_backend.cpp
     eglonxbackend.cpp
     abstract_backend.cpp
-    virtual_terminal.cpp
     shell_client.cpp
     wayland_server.cpp
     wayland_cursor_theme.cpp
@@ -421,6 +420,7 @@ if(HAVE_INPUT)
         libinput/connection.cpp
         libinput/events.cpp
         libinput/libinput_logging.cpp
+        virtual_terminal.cpp
     )
 endif()
 
