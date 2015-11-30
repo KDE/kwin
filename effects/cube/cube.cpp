@@ -102,7 +102,10 @@ CubeEffect::CubeEffect()
 
     if (effects->compositingType() == OpenGL2Compositing) {
         const QString fragmentshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cube-reflection.glsl"));
-        m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
+        QFile ffr(fragmentshader);
+        if (ffr.open(QIODevice::ReadOnly)) {
+            m_reflectionShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ffr.readAll());
+        }
         const QString capshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cube-cap.glsl"));
         QFile ff(capshader);
         if (ff.open(QIODevice::ReadOnly)) {
@@ -295,7 +298,6 @@ void CubeEffect::slotWallPaperLoaded()
 
 void CubeEffect::slotResetShaders()
 {
-    ShaderManager::instance()->resetShader(m_reflectionShader,  ShaderManager::GenericShader);
     ShaderManager::instance()->resetShader(cylinderShader,      ShaderManager::GenericShader);
     ShaderManager::instance()->resetShader(sphereShader,        ShaderManager::GenericShader);
 }
@@ -486,9 +488,9 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             if (m_reflectionShader && m_reflectionShader->isValid()) {
                 // ensure blending is enabled - no attribute stack
                 ShaderBinder binder(m_reflectionShader);
-                QMatrix4x4 windowTransformation;
+                QMatrix4x4 windowTransformation = data.projectionMatrix();
                 windowTransformation.translate(rect.x() + rect.width() * 0.5f, 0.0, 0.0);
-                m_reflectionShader->setUniform("windowTransformation", windowTransformation);
+                m_reflectionShader->setUniform(GLShader::ModelViewProjectionMatrix, windowTransformation);
                 m_reflectionShader->setUniform("u_alpha", alpha);
                 QVector<float> verts;
                 QVector<float> texcoords;
