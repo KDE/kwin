@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QVector2D>
+#include <QFile>
 
 #include <kmessagebox.h>
 
@@ -116,7 +117,12 @@ bool LookingGlassEffect::loadData()
     if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
         shadersDir = QStringLiteral("kwin/shaders/1.40/");
     const QString fragmentshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, shadersDir + QStringLiteral("lookingglass.frag"));
-    m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, fragmentshader);
+    QFile ff(fragmentshader);
+    if (!ff.open(QIODevice::ReadOnly)) {
+        qCCritical(KWINEFFECTS) << "Failed to read shader!";
+        return false;
+    }
+    m_shader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader);
         m_shader->setUniform("u_textureSize", QVector2D(screenSize.width(), screenSize.height()));
@@ -228,10 +234,10 @@ void LookingGlassEffect::slotMouseChanged(const QPoint& pos, const QPoint& old, 
     }
 }
 
-void LookingGlassEffect::postPaintScreen()
+void LookingGlassEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 {
     // Call the next effect.
-    effects->postPaintScreen();
+    effects->paintScreen(mask, region, data);
     if (m_valid && m_enabled) {
         // Disable render texture
         GLRenderTarget* target = GLRenderTarget::popRenderTarget();
@@ -245,6 +251,7 @@ void LookingGlassEffect::postPaintScreen()
         m_shader->setUniform("u_zoom", (float)zoom);
         m_shader->setUniform("u_radius", (float)radius);
         m_shader->setUniform("u_cursor", QVector2D(cursorPos().x(), cursorPos().y()));
+        m_shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
         m_vbo->render(GL_TRIANGLES);
         m_texture->unbind();
     }
