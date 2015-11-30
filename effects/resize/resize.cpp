@@ -85,7 +85,8 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
                 vbo->reset();
                 vbo->setUseColor(true);
-                ShaderBinder binder(ShaderManager::ColorShader);
+                ShaderBinder binder(ShaderTrait::UniformColor);
+                binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.screenProjectionMatrix());
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 color.setAlphaF(alpha);
