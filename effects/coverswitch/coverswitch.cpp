@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coverswitchconfig.h"
 
 #include <kwinconfig.h>
+#include <QFile>
 #include <QFont>
 #include <QIcon>
 #include <QMatrix4x4>
@@ -65,7 +66,10 @@ CoverSwitchEffect::CoverSwitchEffect()
         if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
             shadersDir = QStringLiteral("kwin/shaders/1.40/");
         const QString fragmentshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, shadersDir + QStringLiteral("coverswitch-reflection.glsl"));
-        m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
+        QFile ff(fragmentshader);
+        if (ff.open(QIODevice::ReadOnly)) {
+            m_reflectionShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
+        }
     } else {
         m_reflectionShader = NULL;
     }
@@ -238,9 +242,9 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
 
             if (m_reflectionShader && m_reflectionShader->isValid()) {
                 ShaderManager::instance()->pushShader(m_reflectionShader);
-                QMatrix4x4 windowTransformation;
+                QMatrix4x4 windowTransformation = data.projectionMatrix();
                 windowTransformation.translate(area.x() + area.width() * 0.5f, 0.0, 0.0);
-                m_reflectionShader->setUniform("windowTransformation", windowTransformation);
+                m_reflectionShader->setUniform(GLShader::ModelViewProjectionMatrix, windowTransformation);
                 m_reflectionShader->setUniform("u_frontColor", QVector4D(mirrorColor[0][0], mirrorColor[0][1], mirrorColor[0][2], mirrorColor[0][3]));
                 m_reflectionShader->setUniform("u_backColor", QVector4D(mirrorColor[1][0], mirrorColor[1][1], mirrorColor[1][2], mirrorColor[1][3]));
                 // TODO: make this one properly
