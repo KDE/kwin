@@ -75,6 +75,10 @@ ApplicationWayland::ApplicationWayland(int &argc, char **argv)
 
 ApplicationWayland::~ApplicationWayland()
 {
+    if (!waylandServer()) {
+        return;
+    }
+
     waylandServer()->backend()->setOutputsEnabled(false);
     destroyWorkspace();
     waylandServer()->dispatch();
