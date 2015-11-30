@@ -160,7 +160,7 @@ private:
     };
     void toggle(CubeMode newMode = Cube);
     void paintCube(int mask, QRegion region, ScreenPaintData& data);
-    void paintCap(bool frontFirst, float zOffset);
+    void paintCap(bool frontFirst, float zOffset, const QMatrix4x4 &projection);
     void paintCubeCap();
     void paintCylinderCap();
     void paintSphereCap();
