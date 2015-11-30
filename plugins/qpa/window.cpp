@@ -54,9 +54,11 @@ Window::~Window()
     if (m_eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(m_integration->eglDisplay(), m_eglSurface);
     }
+#if HAVE_WAYLAND_EGL
     if (m_eglWaylandWindow) {
         wl_egl_window_destroy(m_eglWaylandWindow);
     }
+#endif
     delete m_shellSurface;
     delete m_surface;
 }
@@ -95,9 +97,11 @@ void Window::setGeometry(const QRect &rect)
             m_resized = true;
         }
     }
+#if HAVE_WAYLAND_EGL
     if (m_eglWaylandWindow) {
         wl_egl_window_resize(m_eglWaylandWindow, geometry().width(), geometry().height(), 0, 0);
     }
+#endif
 }
 
 void Window::unmap()
@@ -116,12 +120,14 @@ void Window::unmap()
 
 void Window::createEglSurface(EGLDisplay dpy, EGLConfig config)
 {
+#if HAVE_WAYLAND_EGL
     const QSize size = window()->size();
     m_eglWaylandWindow = wl_egl_window_create(*m_surface, size.width(), size.height());
     if (!m_eglWaylandWindow) {
         return;
     }
     m_eglSurface = eglCreateWindowSurface(dpy, config, m_eglWaylandWindow, nullptr);
+#endif
 }
 
 void Window::bindContentFBO()

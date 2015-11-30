@@ -18,11 +18,14 @@ add_library(KWinQpaPlugin MODULE ${QPA_SOURCES})
 target_link_libraries(KWinQpaPlugin
     kwin
     KF5::WaylandClient
-    Wayland::Egl
     Qt5PlatformSupport::Qt5PlatformSupport
     ${FONTCONFIG_LIBRARIES}
     ${FREETYPE_LIBRARIES}
 )
+
+if(HAVE_WAYLAND_EGL)
+    target_link_libraries(KWinQpaPlugin Wayland::Egl)
+endif()
 
 install(
     TARGETS

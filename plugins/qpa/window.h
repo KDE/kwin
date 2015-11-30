@@ -24,7 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fixx11h.h>
 #include <qpa/qplatformwindow.h>
 // wayland
+#include <config-kwin.h>
+#if HAVE_WAYLAND_EGL
 #include <wayland-egl.h>
+#endif
 
 class QOpenGLFramebufferObject;
 

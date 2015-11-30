@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // own
 #include "wayland_backend.h"
+#include <config-kwin.h>
 // KWin
 #include "cursor.h"
 #include "logging.h"
@@ -27,7 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "wayland_server.h"
 #include "wayland_cursor_theme.h"
+#if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
+#endif
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -449,7 +452,11 @@ Screens *WaylandBackend::createScreens(QObject *parent)
 
 OpenGLBackend *WaylandBackend::createOpenGLBackend()
 {
+#if HAVE_WAYLAND_EGL
     return new EglWaylandBackend(this);
+#else
+    return nullptr;
+#endif
 }
 
 QPainterBackend *WaylandBackend::createQPainterBackend()

@@ -2,11 +2,18 @@ set(WAYLAND_BACKEND_SOURCES
     logging.cpp
     scene_qpainter_wayland_backend.cpp
     wayland_backend.cpp
-    egl_wayland_backend.cpp
 )
 
+if(HAVE_WAYLAND_EGL)
+    set(WAYLAND_BACKEND_SOURCES egl_wayland_backend.cpp ${WAYLAND_BACKEND_SOURCES})
+endif()
+
 add_library(KWinWaylandWaylandBackend MODULE ${WAYLAND_BACKEND_SOURCES})
-target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient Wayland::Egl)
+target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient)
+
+if(HAVE_WAYLAND_EGL)
+    target_link_libraries(KWinWaylandWaylandBackend Wayland::Egl)
+endif()
 
 install(
     TARGETS
