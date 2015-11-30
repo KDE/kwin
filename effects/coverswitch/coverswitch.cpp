@@ -681,11 +681,10 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
     }
 
     if (reflectedWindow) {
-        GLShader *shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
-        QMatrix4x4 origMatrix = shader->getUniformMatrix4x4("screenTransformation");
         QMatrix4x4 reflectionMatrix;
         reflectionMatrix.scale(1.0, -1.0, 1.0);
-        shader->setUniform("screenTransformation", origMatrix * reflectionMatrix);
+        data.setProjectionMatrix(data.screenProjectionMatrix());
+        data.setModelViewMatrix(reflectionMatrix);
         data.setYTranslation(- area.height() - windowRect.y() - windowRect.height());
         if (start) {
             data.multiplyOpacity(timeLine.currentValue());
@@ -695,8 +694,6 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
         effects->drawWindow(w,
                                 PAINT_WINDOW_TRANSFORMED,
                                 infiniteRegion(), data);
-        shader->setUniform("screenTransformation", origMatrix);
-        ShaderManager::instance()->popShader();
     } else {
         effects->paintWindow(w,
                              PAINT_WINDOW_TRANSFORMED,
