@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "startupfeedback.h"
 // Qt
 #include <QApplication>
+#include <QFile>
 #include <QSize>
 #include <QStyle>
 #include <QtCore/QStandardPaths>
@@ -131,11 +132,17 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
             delete m_blinkingShader;
             m_blinkingShader = 0;
             const QString shader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/blinking-startup-fragment.glsl"));
-            m_blinkingShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, shader);
-            if (m_blinkingShader->isValid()) {
-                qCDebug(KWINEFFECTS) << "Blinking Shader is valid";
+
+            QFile ff(shader);
+            if (ff.open(QIODevice::ReadOnly)) {
+                m_blinkingShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
+                if (m_blinkingShader->isValid()) {
+                    qCDebug(KWINEFFECTS) << "Blinking Shader is valid";
+                } else {
+                    qCDebug(KWINEFFECTS) << "Blinking Shader is not valid";
+                }
             } else {
-                qCDebug(KWINEFFECTS) << "Blinking Shader is not valid";
+                qCCritical(KWINEFFECTS) << "Couldn't open" << shader << "for reading!";
             }
         }
     } else
@@ -187,27 +194,18 @@ void StartupFeedbackEffect::paintScreen(int mask, QRegion region, ScreenPaintDat
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         texture->bind();
-        bool useShader = false;
-        if (m_type == BlinkingFeedback) {
+        if (m_type == BlinkingFeedback && m_blinkingShader && m_blinkingShader->isValid()) {
             const QColor& blinkingColor = BLINKING_COLORS[ FRAME_TO_BLINKING_COLOR[ m_frame ]];
-            if (m_blinkingShader && m_blinkingShader->isValid()) {
-                useShader = true;
-                ShaderManager::instance()->pushShader(m_blinkingShader);
-                m_blinkingShader->setUniform("u_color", blinkingColor);
-            }
+            ShaderManager::instance()->pushShader(m_blinkingShader);
+            m_blinkingShader->setUniform(GLShader::Color, blinkingColor);
         } else {
-            useShader = true;
-            auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-            QMatrix4x4 mvp;
-            const QSize size = effects->virtualScreenSize();
-            mvp.ortho(0, size.width(), size.height(), 0, 0, 65535);
-            mvp.translate(m_currentGeometry.x(), m_currentGeometry.y());
-            s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+            ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
         }
+        QMatrix4x4 mvp = data.projectionMatrix();
+        mvp.translate(m_currentGeometry.x(), m_currentGeometry.y());
+        ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
         texture->render(m_currentGeometry, m_currentGeometry);
-        if (useShader) {
-            ShaderManager::instance()->popShader();
-        }
+        ShaderManager::instance()->popShader();
         texture->unbind();
         glDisable(GL_BLEND);
     }
