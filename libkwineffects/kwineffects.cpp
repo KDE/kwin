@@ -234,13 +234,20 @@ public:
     qreal crossFadeProgress;
     QMatrix4x4 pMatrix;
     QMatrix4x4 mvMatrix;
+    QMatrix4x4 screenProjectionMatrix;
 };
 
-WindowPaintData::WindowPaintData(EffectWindow* w)
+WindowPaintData::WindowPaintData(EffectWindow *w)
+    : WindowPaintData(w, QMatrix4x4())
+{
+}
+
+WindowPaintData::WindowPaintData(EffectWindow* w, const QMatrix4x4 &screenProjectionMatrix)
     : PaintData()
     , shader(nullptr)
     , d(new WindowPaintDataPrivate())
 {
+    d->screenProjectionMatrix = screenProjectionMatrix;
     quads = w->buildQuads();
     setOpacity(w->opacity());
     setSaturation(1.0);
@@ -269,6 +276,7 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     setCrossFadeProgress(other.crossFadeProgress());
     setProjectionMatrix(other.projectionMatrix());
     setModelViewMatrix(other.modelViewMatrix());
+    d->screenProjectionMatrix = other.d->screenProjectionMatrix;
 }
 
 WindowPaintData::~WindowPaintData()
@@ -416,6 +424,11 @@ WindowPaintData &WindowPaintData::operator+=(const QVector3D &translation)
 {
     translate(translation);
     return *this;
+}
+
+QMatrix4x4 WindowPaintData::screenProjectionMatrix() const
+{
+    return d->screenProjectionMatrix;
 }
 
 class ScreenPaintData::Private

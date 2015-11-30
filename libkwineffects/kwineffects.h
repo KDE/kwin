@@ -2229,6 +2229,7 @@ class KWINEFFECTS_EXPORT WindowPaintData : public PaintData
 {
 public:
     explicit WindowPaintData(EffectWindow* w);
+    explicit WindowPaintData(EffectWindow* w, const QMatrix4x4 &screenProjectionMatrix);
     WindowPaintData(const WindowPaintData &other);
     virtual ~WindowPaintData();
     /**
@@ -2404,6 +2405,14 @@ public:
      * Returns a reference to the model-view matrix.
      */
     QMatrix4x4 &rmodelViewMatrix();
+
+    /**
+     * Returns The projection matrix as used by the current screen painting pass
+     * including screen transformations.
+     *
+     * @since 5.6
+     **/
+    QMatrix4x4 screenProjectionMatrix() const;
 
     WindowQuadList quads;
 

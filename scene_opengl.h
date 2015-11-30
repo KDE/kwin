@@ -129,7 +129,7 @@ public:
 
     ColorCorrection *colorCorrection();
     QMatrix4x4 projectionMatrix() const override { return m_projectionMatrix; }
-    QMatrix4x4 screenProjectionMatrix() const { return m_screenProjectionMatrix; }
+    QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
 
 protected:
     virtual void paintSimpleScreen(int mask, QRegion region);

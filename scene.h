@@ -137,6 +137,8 @@ public:
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
 
+    virtual QMatrix4x4 screenProjectionMatrix() const;
+
     /**
      * Whether the Scene uses an X11 overlay window to perform compositing.
      */

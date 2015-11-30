@@ -473,7 +473,7 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         return;
     }
 
-    WindowPaintData data(w->window()->effectWindow());
+    WindowPaintData data(w->window()->effectWindow(), screenProjectionMatrix());
     data.quads = quads;
     effects->paintWindow(effectWindow(w), mask, region, data);
     // paint thumbnails on top of window
@@ -518,7 +518,7 @@ void Scene::paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacit
             continue;
         }
         EffectWindowImpl *thumb = it.value().data();
-        WindowPaintData thumbData(thumb);
+        WindowPaintData thumbData(thumb, screenProjectionMatrix());
         thumbData.setOpacity(opacity);
         thumbData.setBrightness(brightness * item->brightness());
         thumbData.setSaturation(saturation * item->saturation());
@@ -650,6 +650,11 @@ void Scene::doneOpenGLContextCurrent()
 
 void Scene::triggerFence()
 {
+}
+
+QMatrix4x4 Scene::screenProjectionMatrix() const
+{
+    return QMatrix4x4();
 }
 
 //****************************************
