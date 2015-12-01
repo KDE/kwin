@@ -237,6 +237,7 @@ private:
     QMatrix4x4 m_rotationMatrix;
     QMatrix4x4 m_reflectionMatrix;
     QMatrix4x4 m_textureMirrorMatrix;
+    QMatrix4x4 m_currentFaceMatrix;
     GLVertexBuffer *m_cubeCapBuffer;
 
     // Shortcuts - needed to toggle the effect
