@@ -1112,22 +1112,7 @@ void SceneOpenGL2::paintGenericScreen(int mask, ScreenPaintData data)
 
     m_screenProjectionMatrix = m_projectionMatrix * screenMatrix;
 
-    // ### Remove the following two lines when there are no more users of the old shader API
-    ShaderBinder binder(ShaderManager::GenericShader);
-    binder.shader()->setUniform(GLShader::ScreenTransformation, screenMatrix);
-
     Scene::paintGenericScreen(mask, data);
-}
-
-void SceneOpenGL2::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
-{
-    ShaderBinder binder(ShaderManager::GenericShader);
-    GLShader *shader = binder.shader();
-    QMatrix4x4 screenTransformation = shader->getUniformMatrix4x4("screenTransformation");
-
-    KWin::SceneOpenGL::paintDesktop(desktop, mask, region, data);
-
-    shader->setUniform(GLShader::ScreenTransformation, screenTransformation);
 }
 
 void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
@@ -1556,8 +1541,6 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         cc->setupForOutput(data.screen());
     }
 
-    // ### Remove the following line when there are no more users of the old shader API
-    shader->setUniform(GLShader::WindowTransformation, windowMatrix);
     shader->setUniform(GLShader::Saturation, data.saturation());
 
     const GLenum filter = (mask & (Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED))
@@ -1811,10 +1794,8 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
     region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
 
     GLShader* shader = m_effectFrame->shader();
-    bool sceneShader = false;
     if (!shader) {
         shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::Modulate);
-        sceneShader = true;
     } else if (shader) {
         ShaderManager::instance()->pushShader(shader);
     }
@@ -1943,24 +1924,12 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
         m_unstyledTexture->bind();
         const QPoint pt = m_effectFrame->geometry().topLeft();
-        if (!sceneShader) {
-            QMatrix4x4 translation;
-            translation.translate(pt.x(), pt.y());
-            if (shader) {
-                shader->setUniform(GLShader::WindowTransformation, translation);
-            }
-        }
 
         QMatrix4x4 mvp(projection);
         mvp.translate(pt.x(), pt.y());
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
         m_unstyledVBO->render(region, GL_TRIANGLES);
-        if (!sceneShader) {
-            if (shader) {
-                shader->setUniform(GLShader::WindowTransformation, QMatrix4x4());
-            }
-        }
         m_unstyledTexture->unbind();
     } else if (m_effectFrame->style() == EffectFrameStyled) {
         if (!m_texture)   // Lazy creation

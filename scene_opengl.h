@@ -137,7 +137,6 @@ protected:
     virtual void doPaintBackground(const QVector< float >& vertices);
     virtual Scene::Window *createWindow(Toplevel *t);
     virtual void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
     virtual void updateProjectionMatrix() override;
 
 private Q_SLOTS:
