@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 
+#include <QFile>
 #include <QtGui/QMatrix4x4>
 #include <QtGui/QVector2D>
 
@@ -185,7 +186,7 @@ void LogoutEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 // If we are not blurring then we are not rendering to an FBO
                 if (w == logoutWindow) {
                     // This is the logout window don't alter it but render our vignetting now
-                    renderVignetting();
+                    renderVignetting(data.screenProjectionMatrix());
                 } else if (logoutWindowPassed) { // Window is in the background, desaturate
                     data.multiplySaturation((1.0 - progress * 0.2));
                 } // else ... All other windows are unaltered
@@ -212,7 +213,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 // The logout window has been deleted but we still want to fade out the vignetting, thus
                 // render it on the top of everything if still animating. We don't check if logoutWindow
                 // is set as it may still be even if it wasn't rendered.
-                renderVignetting();
+                renderVignetting(data.projectionMatrix());
         } else {
             GLRenderTarget::pushRenderTarget(blurTarget);
             blurTarget->blitFromFramebuffer();
@@ -223,7 +224,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             renderBlurTexture();
 
             // Vignetting (Radial gradient with transparent middle and black edges)
-            renderVignetting();
+            renderVignetting(data.projectionMatrix());
             //--------------------------
 
             // Render the logout window and all windows on top
@@ -300,12 +301,15 @@ bool LogoutEffect::isLogoutDialog(EffectWindow* w)
     return false;
 }
 
-void LogoutEffect::renderVignetting()
+void LogoutEffect::renderVignetting(const QMatrix4x4 &projection)
 {
     if (!m_vignettingShader) {
-        m_vignettingShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::ColorShader,
-                                                                           QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                                                                  m_shadersDir + QStringLiteral("vignetting.frag")));
+        QFile ff(QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("vignetting.frag")));
+        if (!ff.open(QIODevice::ReadOnly)) {
+            qCDebug(KWINEFFECTS) << "Could not open Vignetting Shader";
+            return;
+        }
+        m_vignettingShader = ShaderManager::instance()->generateCustomShader(ShaderTrait(), QByteArray(), ff.readAll());
         if (!m_vignettingShader->isValid()) {
             qCDebug(KWINEFFECTS) << "Vignetting Shader failed to load";
             return;
@@ -314,12 +318,8 @@ void LogoutEffect::renderVignetting()
         // shader broken
         return;
     }
-    // need to get the projection matrix from the ortho shader for the vignetting shader
-    QMatrix4x4 projection = ShaderManager::instance()->pushShader(KWin::ShaderManager::SimpleShader)->getUniformMatrix4x4("projection");
-    ShaderManager::instance()->popShader();
-
     ShaderBinder binder(m_vignettingShader);
-    m_vignettingShader->setUniform(KWin::GLShader::ProjectionMatrix, projection);
+    m_vignettingShader->setUniform(KWin::GLShader::ModelViewProjectionMatrix, projection);
     m_vignettingShader->setUniform("u_progress", (float)progress * 0.9f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
