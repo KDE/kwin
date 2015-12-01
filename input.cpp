@@ -31,11 +31,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #if HAVE_INPUT
 #include "libinput/connection.h"
+#include "virtual_terminal.h"
 #endif
 #include "abstract_backend.h"
 #include "shell_client.h"
 #include "wayland_server.h"
-#include "virtual_terminal.h"
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/fakeinput_interface.h>
 #include <KWayland/Server/seat_interface.h>
@@ -939,6 +939,7 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
         emit keyboardModifiersChanged(keyboardModifiers(), oldMods);
     }
     // check for vt-switch
+#if HAVE_INPUT
     if (VirtualTerminal::self()) {
         const xkb_keysym_t keysym = m_xkb->toKeysym(key);
         if (state == KWin::InputRedirection::KeyboardKeyPressed &&
@@ -947,6 +948,7 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
             return;
         }
     }
+#endif
 
 
     if (waylandServer()->isScreenLocked()) {

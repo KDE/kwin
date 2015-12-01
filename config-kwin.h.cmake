@@ -13,6 +13,7 @@
 #cmakedefine01 HAVE_DRM
 #cmakedefine01 HAVE_GBM
 #cmakedefine01 HAVE_LIBHYBRIS
+#cmakedefine01 HAVE_WAYLAND_EGL
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H 1
