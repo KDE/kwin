@@ -213,9 +213,11 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                     const qreal rgb = data.brightness() * data.opacity();
                     const qreal a = data.opacity();
 
-                    ShaderBinder binder(ShaderManager::SimpleShader);
+                    ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
                     GLShader *shader = binder.shader();
-                    shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+                    QMatrix4x4 mvp = data.screenProjectionMatrix();
+                    mvp.translate(textureRect.x(), textureRect.y());
+                    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
                     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
                     shader->setUniform(GLShader::Saturation, data.saturation());
 
@@ -344,9 +346,11 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             const qreal rgb = data.brightness() * data.opacity();
             const qreal a = data.opacity();
 
-            ShaderBinder binder(ShaderManager::SimpleShader);
+            ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
             GLShader *shader = binder.shader();
-            shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+            QMatrix4x4 mvp = data.screenProjectionMatrix();
+            mvp.translate(textureRect.x(), textureRect.y());
+            shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
             shader->setUniform(GLShader::Saturation, data.saturation());
 
