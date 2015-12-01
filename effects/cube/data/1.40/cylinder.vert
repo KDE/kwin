@@ -18,33 +18,30 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #version 140
-uniform mat4 projection;
-uniform mat4 modelview;
-uniform mat4 screenTransformation;
-uniform mat4 windowTransformation;
+uniform mat4 modelViewProjectionMatrix;
 uniform float width;
 uniform float cubeAngle;
 uniform float xCoord;
 uniform float timeLine;
 
-in vec4 vertex;
-in vec2 texCoord;
+in vec4 position;
+in vec4 texcoord;
 
-out vec2 varyingTexCoords;
+out vec2 texcoord0;
 
 void main()
 {
-    varyingTexCoords = texCoord;
-    vec4 transformedVertex = vec4(vertex.x - ( width - xCoord ), vertex.yzw);
+    texcoord0 = texcoord.st;
+    vec4 transformedVertex = vec4(position.x - ( width - xCoord ), position.yzw);
     float radian = radians(cubeAngle);
     float radius = (width)*tan(radian);
     float azimuthAngle = radians(transformedVertex.x/(width)*(90.0 - cubeAngle));
 
     transformedVertex.x = width - xCoord + radius * sin( azimuthAngle );
-    transformedVertex.z = vertex.z + radius * cos( azimuthAngle ) - radius;
+    transformedVertex.z = position.z + radius * cos( azimuthAngle ) - radius;
 
-    vec3 diff = (vertex.xyz - transformedVertex.xyz)*timeLine;
+    vec3 diff = (position.xyz - transformedVertex.xyz)*timeLine;
     transformedVertex.xyz += diff;
 
-    gl_Position = projection*(modelview*screenTransformation*windowTransformation)*transformedVertex;
+    gl_Position = modelViewProjectionMatrix*transformedVertex;
 }

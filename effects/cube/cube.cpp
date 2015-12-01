@@ -298,7 +298,6 @@ void CubeEffect::slotWallPaperLoaded()
 
 void CubeEffect::slotResetShaders()
 {
-    ShaderManager::instance()->resetShader(cylinderShader,      ShaderManager::GenericShader);
     ShaderManager::instance()->resetShader(sphereShader,        ShaderManager::GenericShader);
 }
 
@@ -315,33 +314,19 @@ bool CubeEffect::loadShader()
         return false;
     }
 
-    cylinderShader = ShaderManager::instance()->loadVertexShader(ShaderManager::GenericShader, cylinderVertexshader);
+    QFile cvf(cylinderVertexshader);
+    if (!cvf.open(QIODevice::ReadOnly)) {
+        qCCritical(KWINEFFECTS) << "The cylinder shader couldn't be opened!";
+        return false;
+    }
+
+    cylinderShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate, cvf.readAll(), QByteArray());
     if (!cylinderShader->isValid()) {
         qCCritical(KWINEFFECTS) << "The cylinder shader failed to load!";
         return false;
     } else {
         ShaderBinder binder(cylinderShader);
         cylinderShader->setUniform("sampler", 0);
-        QMatrix4x4 projection;
-        float fovy = 60.0f;
-        float aspect = 1.0f;
-        float zNear = 0.1f;
-        float zFar = 100.0f;
-        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
-        float ymin = -ymax;
-        float xmin =  ymin * aspect;
-        float xmax = ymax * aspect;
-        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
-        cylinderShader->setUniform(GLShader::ProjectionMatrix, projection);
-        QMatrix4x4 modelview;
-        float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
-        modelview.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
-        const QSize screenSize = effects->virtualScreenSize();
-        modelview.scale((xmax - xmin)*scaleFactor / screenSize.width(), -(ymax - ymin)*scaleFactor / screenSize.height(), 0.001);
-        cylinderShader->setUniform(GLShader::ModelViewMatrix, modelview);
-        const QMatrix4x4 identity;
-        cylinderShader->setUniform(GLShader::ScreenTransformation, identity);
-        cylinderShader->setUniform(GLShader::WindowTransformation, identity);
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
         cylinderShader->setUniform("width", (float)rect.width() * 0.5f);
     }
