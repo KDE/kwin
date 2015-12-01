@@ -120,7 +120,6 @@ CubeEffect::CubeEffect()
     connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
     connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
-    connect(effects, SIGNAL(screenGeometryChanged(const QSize&)), this, SLOT(slotResetShaders()));
 
     reconfigure(ReconfigureAll);
 }
@@ -296,11 +295,6 @@ void CubeEffect::slotWallPaperLoaded()
     watcher->deleteLater();
 }
 
-void CubeEffect::slotResetShaders()
-{
-    ShaderManager::instance()->resetShader(sphereShader,        ShaderManager::GenericShader);
-}
-
 bool CubeEffect::loadShader()
 {
     effects->makeOpenGLContextCurrent();
@@ -330,33 +324,19 @@ bool CubeEffect::loadShader()
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
         cylinderShader->setUniform("width", (float)rect.width() * 0.5f);
     }
-    sphereShader = ShaderManager::instance()->loadVertexShader(ShaderManager::GenericShader, sphereVertexshader);
+
+    QFile svf(sphereVertexshader);
+    if (!svf.open(QIODevice::ReadOnly)) {
+        qCCritical(KWINEFFECTS) << "The sphere shader couldn't be opened!";
+        return false;
+    }
+    sphereShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate, svf.readAll(), QByteArray());
     if (!sphereShader->isValid()) {
         qCCritical(KWINEFFECTS) << "The sphere shader failed to load!";
         return false;
     } else {
         ShaderBinder binder(sphereShader);
         sphereShader->setUniform("sampler", 0);
-        QMatrix4x4 projection;
-        float fovy = 60.0f;
-        float aspect = 1.0f;
-        float zNear = 0.1f;
-        float zFar = 100.0f;
-        float ymax = zNear * tan(fovy  * M_PI / 360.0f);
-        float ymin = -ymax;
-        float xmin =  ymin * aspect;
-        float xmax = ymax * aspect;
-        projection.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
-        sphereShader->setUniform(GLShader::ProjectionMatrix, projection);
-        QMatrix4x4 modelview;
-        float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
-        modelview.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
-        const QSize screenSize = effects->virtualScreenSize();
-        modelview.scale((xmax - xmin)*scaleFactor / screenSize.width(), -(ymax - ymin)*scaleFactor / screenSize.height(), 0.001);
-        sphereShader->setUniform(GLShader::ModelViewMatrix, modelview);
-        const QMatrix4x4 identity;
-        sphereShader->setUniform(GLShader::ScreenTransformation, identity);
-        sphereShader->setUniform(GLShader::WindowTransformation, identity);
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
         sphereShader->setUniform("width", (float)rect.width() * 0.5f);
         sphereShader->setUniform("height", (float)rect.height() * 0.5f);

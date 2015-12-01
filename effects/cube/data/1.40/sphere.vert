@@ -18,25 +18,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #version 140
-uniform mat4 projection;
-uniform mat4 modelview;
-uniform mat4 screenTransformation;
-uniform mat4 windowTransformation;
+uniform mat4 modelViewProjectionMatrix;
 uniform float width;
 uniform float height;
 uniform float cubeAngle;
 uniform vec2 u_offset;
 uniform float timeLine;
 
-in vec4 vertex;
-in vec2 texCoord;
+in vec4 position;
+in vec4 texcoord;
 
-out vec2 varyingTexCoords;
+out vec2 texcoord0;
 
 void main()
 {
-    varyingTexCoords = texCoord;
-    vec4 transformedVertex = vertex;
+    texcoord0 = texcoord.st;
+    vec4 transformedVertex = position;
     transformedVertex.x = transformedVertex.x - width;
     transformedVertex.y = transformedVertex.y - height;
     transformedVertex.xy = transformedVertex.xy + u_offset;
@@ -49,8 +46,8 @@ void main()
 
     transformedVertex.xy += vec2( width - u_offset.x, height - u_offset.y );
 
-    vec3 diff = (vertex.xyz - transformedVertex.xyz)*timeLine;
+    vec3 diff = (position.xyz - transformedVertex.xyz)*timeLine;
     transformedVertex.xyz += diff;
 
-    gl_Position = projection*(modelview*screenTransformation*windowTransformation)*transformedVertex;
+    gl_Position = modelViewProjectionMatrix*transformedVertex;
 }
