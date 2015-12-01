@@ -65,7 +65,6 @@ private:
     QBasicTimer m_timer;
     bool m_inited;
     QScopedPointer<GLShader> m_shader;
-    int m_uTexUnit;
     int m_uOffsets;
     int m_uKernel;
     QVector2D m_offsets[16];
