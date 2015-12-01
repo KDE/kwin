@@ -221,7 +221,7 @@ void LogoutEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
             //--------------------------
             // Render the screen effect
-            renderBlurTexture();
+            renderBlurTexture(data.projectionMatrix());
 
             // Vignetting (Radial gradient with transparent middle and black edges)
             renderVignetting(data.projectionMatrix());
@@ -348,12 +348,15 @@ void LogoutEffect::renderVignetting(const QMatrix4x4 &projection)
     glDisable(GL_BLEND);
 }
 
-void LogoutEffect::renderBlurTexture()
+void LogoutEffect::renderBlurTexture(const QMatrix4x4 &projection)
 {
     if (!m_blurShader) {
-        m_blurShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::SimpleShader,
-                                                                     QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                                                            m_shadersDir + QStringLiteral("logout-blur.frag")));
+        QFile ff(QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("logout-blur.frag")));
+        if (!ff.open(QIODevice::ReadOnly)) {
+            qCDebug(KWINEFFECTS) << "Could not open Logout Blur Shader";
+            return;
+        }
+        m_blurShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
         if (!m_blurShader->isValid()) {
             qCDebug(KWINEFFECTS) << "Logout blur shader failed to load";
         }
@@ -363,9 +366,7 @@ void LogoutEffect::renderBlurTexture()
     }
     // Unmodified base image
     ShaderBinder binder(m_blurShader);
-    m_blurShader->setUniform(GLShader::Offset, QVector2D(0, 0));
-    m_blurShader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
-    m_blurShader->setUniform(GLShader::Saturation, 1.0);
+    m_blurShader->setUniform(GLShader::ModelViewProjectionMatrix, projection);
     m_blurShader->setUniform("u_alphaProgress", (float)progress * 0.4f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
