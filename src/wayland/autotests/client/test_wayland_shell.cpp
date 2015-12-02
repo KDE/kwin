@@ -37,6 +37,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // Wayland
 #include <wayland-client-protocol.h>
 
+Q_DECLARE_METATYPE(Qt::Edges)
+
 class TestWaylandShell : public QObject
 {
     Q_OBJECT
