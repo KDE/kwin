@@ -46,7 +46,6 @@ EglOnXBackend::EglOnXBackend()
     , m_rootWindow(rootWindow())
     , m_x11ScreenNumber(kwinApp()->x11ScreenNumber())
 {
-    init();
     // Egl is always direct rendering
     setIsDirectRendering(true);
 }
