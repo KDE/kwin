@@ -27,18 +27,21 @@ function isRelevant(client) {
 var minimizeAllWindows = function() {
     var allClients = workspace.clientList();
     var clients = [];
-    var minimize = true;
+    var minimize = false;
     for (var i = 0; i < allClients.length; ++i) {
         if (isRelevant(allClients[i])) {
             clients.push(allClients[i]);
-            if (allClients[i].minimizedForMinimizeAll === true) {
-                minimize = false;
+            if (!allClients[i].minimized && allClients[i].minimizedForMinimizeAll !== true) {
+                minimize = true;
             }
         }
     }
     for (var i = 0; i < clients.length; ++i) {
-        if (minimize && clients[i].minimized)
+        if ((minimize == clients[i].minimized) || // no change required at all
+            (!minimize && clients[i].minimizedForMinimizeAll !== true)) { // unminimize, but not this one
+            delete clients[i].minimizedForMinimizeAll;
             continue;
+        }
         clients[i].minimized = minimize;
         clients[i].minimizedForMinimizeAll = minimize;
     }
