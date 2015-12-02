@@ -168,7 +168,8 @@ void IdleTimeoutInterface::Private::setup(quint32 timeout)
     }
     timer = new QTimer(q);
     timer->setSingleShot(true);
-    timer->setInterval(timeout);
+    // less than 5 sec is not idle by definition
+    timer->setInterval(qMax(timeout, 5000u));
     QObject::connect(timer, &QTimer::timeout, q,
         [this] {
             if (resource) {
