@@ -439,9 +439,9 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 
         if (!shape.isEmpty()) {
             if (m_shouldCache && !translated && !w->isDeleted()) {
-                doCachedBlur(w, region, data.opacity());
+                doCachedBlur(w, region, data.opacity(), data.screenProjectionMatrix());
             } else {
-                doBlur(shape, screen, data.opacity());
+                doBlur(shape, screen, data.opacity(), data.screenProjectionMatrix());
             }
         }
     }
@@ -456,12 +456,12 @@ void BlurEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double opa
     bool valid = target->valid() && shader && shader->isValid();
     QRegion shape = frame->geometry().adjusted(-5, -5, 5, 5) & screen;
     if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()) && frame->style() != EffectFrameNone) {
-        doBlur(shape, screen, opacity * frameOpacity);
+        doBlur(shape, screen, opacity * frameOpacity, frame->screenProjectionMatrix());
     }
     effects->paintEffectFrame(frame, region, opacity, frameOpacity);
 }
 
-void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float opacity)
+void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection)
 {
     const QRegion expanded = expand(shape) & screen;
     const QRect r = expanded.boundingRect();
@@ -488,6 +488,10 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     shader->bind();
     shader->setDirection(Qt::Horizontal);
     shader->setPixelDistance(1.0 / r.width());
+
+    QMatrix4x4 modelViewProjectionMatrix;
+    modelViewProjectionMatrix.ortho(0, tex.width(), tex.height(), 0 , 0, 65535);
+    shader->setModelViewProjectionMatrix(modelViewProjectionMatrix);
 
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
@@ -529,6 +533,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     textureMatrix.scale(1.0 / tex.width(), -1.0 / tex.height(), 1);
     textureMatrix.translate(0, -tex.height(), 0);
     shader->setTextureMatrix(textureMatrix);
+    shader->setModelViewProjectionMatrix(screenProjection);
 
     vbo->draw(GL_TRIANGLES, expanded.rectCount() * 6, shape.rectCount() * 6);
     vbo->unbindArrays();
@@ -541,7 +546,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     shader->unbind();
 }
 
-void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const float opacity)
+void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const float opacity, const QMatrix4x4 &screenProjection)
 {
     const QRect screen = effects->virtualScreenGeometry();
     const QRegion blurredRegion = blurRegion(w).translated(w->pos()) & screen;
@@ -671,10 +676,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
     }
 
-    modelViewProjectionMatrix.setToIdentity();
-    const QSize screenSize = effects->virtualScreenSize();
-    modelViewProjectionMatrix.ortho(0, screenSize.width(), screenSize.height(), 0, 0, 65535);
-    shader->setModelViewProjectionMatrix(modelViewProjectionMatrix);
+    shader->setModelViewProjectionMatrix(screenProjection);
 
     // Set the up the texture matrix to transform from screen coordinates
     // to texture coordinates.
