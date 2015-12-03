@@ -204,6 +204,13 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Whether the decoration is currently using an alpha channel.
      **/
     Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
+    /**
+     * Whether the window has a decoration or not.
+     * This property is not allowed to be set by applications themselves.
+     * The decision whether a window has a border or not belongs to the window manager.
+     * If this property gets abused by application developers, it will be removed again.
+     **/
+    Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder)
 public:
     virtual ~AbstractClient();
 

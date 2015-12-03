@@ -111,13 +111,6 @@ class Client
      **/
     Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
     /**
-     * Whether the window has a decoration or not.
-     * This property is not allowed to be set by applications themselves.
-     * The decision whether a window has a border or not belongs to the window manager.
-     * If this property gets abused by application developers, it will be removed again.
-     **/
-    Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder)
-    /**
      * A client can block compositing. That is while the Client is alive and the state is set,
      * Compositing is suspended and is resumed when there are no Clients blocking compositing any
      * more.
