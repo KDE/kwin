@@ -57,6 +57,8 @@ AbstractClient::AbstractClient()
     connect(this, &AbstractClient::clientFinishUserMovedResized, this, &AbstractClient::moveResizedChanged);
     connect(this, &AbstractClient::clientStartUserMovedResized,  this, &AbstractClient::removeCheckScreenConnection);
     connect(this, &AbstractClient::clientFinishUserMovedResized, this, &AbstractClient::setupCheckScreenConnection);
+
+    connect(this, &AbstractClient::paletteChanged, this, &AbstractClient::triggerDecorationRepaint);
 }
 
 AbstractClient::~AbstractClient()
@@ -1318,6 +1320,13 @@ bool AbstractClient::decorationHasAlpha() const
         return false;
     }
     return true;
+}
+
+void AbstractClient::triggerDecorationRepaint()
+{
+    if (isDecorated()) {
+        decoration()->update();
+    }
 }
 
 }

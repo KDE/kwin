@@ -231,7 +231,6 @@ public:
     void takeFocus() override;
 
     void updateDecoration(bool check_workspace_pos, bool force = false);
-    void triggerDecorationRepaint();
 
     void updateShape();
 

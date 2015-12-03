@@ -496,6 +496,7 @@ public:
         return m_decoration != nullptr;
     }
     bool decorationHasAlpha() const;
+    void triggerDecorationRepaint();
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);

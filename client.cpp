@@ -154,8 +154,6 @@ Client::Client()
     client_size = QSize(100, 100);
     ready_for_painting = false; // wait for first damage or sync reply
 
-    connect(this, &Client::paletteChanged, this, &Client::triggerDecorationRepaint);
-
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &Client::updateCaption);
     connect(options, &Options::condensedTitleChanged, this, &Client::updateCaption);
 
@@ -438,13 +436,6 @@ void Client::destroyDecoration()
         }
     }
     m_decoInputExtent.reset();
-}
-
-void Client::triggerDecorationRepaint()
-{
-    if (isDecorated()) {
-        decoration()->update();
-    }
 }
 
 void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
