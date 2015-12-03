@@ -2175,19 +2175,6 @@ void Client::processDecorationButtonRelease(QMouseEvent *event)
     }
 }
 
-void Client::processDecorationMove()
-{
-    if (isMoveResizePointerButtonDown()) {
-        return;
-    }
-    // TODO: handle modifiers
-    Position newmode = mousePosition();
-    if (newmode != moveResizePointerMode()) {
-        setMoveResizePointerMode(newmode);
-        updateCursor();
-    }
-}
-
 void Client::updateTabGroupStates(TabGroup::States states)
 {
     if (auto t = tabGroup()) {

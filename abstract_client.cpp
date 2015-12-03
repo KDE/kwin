@@ -1359,4 +1359,17 @@ void AbstractClient::layoutDecorationRects(QRect &left, QRect &top, QRect &right
                   borderRight(), r.height() - top.height() - bottom.height());
 }
 
+void AbstractClient::processDecorationMove()
+{
+    if (isMoveResizePointerButtonDown()) {
+        return;
+    }
+    // TODO: handle modifiers
+    Position newmode = mousePosition();
+    if (newmode != moveResizePointerMode()) {
+        setMoveResizePointerMode(newmode);
+        updateCursor();
+    }
+}
+
 }
