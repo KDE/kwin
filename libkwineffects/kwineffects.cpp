@@ -1788,6 +1788,7 @@ public:
 
     bool crossFading;
     qreal crossFadeProgress;
+    QMatrix4x4 screenProjectionMatrix;
 };
 
 EffectFramePrivate::EffectFramePrivate()
@@ -1831,6 +1832,16 @@ bool EffectFrame::isCrossFade() const
 void EffectFrame::enableCrossFade(bool enable)
 {
     d->crossFading = enable;
+}
+
+QMatrix4x4 EffectFrame::screenProjectionMatrix() const
+{
+    return d->screenProjectionMatrix;
+}
+
+void EffectFrame::setScreenProjectionMatrix(const QMatrix4x4 &spm)
+{
+    d->screenProjectionMatrix = spm;
 }
 
 } // namespace

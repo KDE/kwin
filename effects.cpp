@@ -1930,6 +1930,7 @@ void EffectFrameImpl::render(QRegion region, double opacity, double frameOpacity
         return; // Nothing to display
     }
     m_shader = NULL;
+    setScreenProjectionMatrix(static_cast<EffectsHandlerImpl*>(effects)->scene()->screenProjectionMatrix());
     effects->paintEffectFrame(this, region, opacity, frameOpacity);
 }
 

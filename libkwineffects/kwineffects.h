@@ -2937,6 +2937,22 @@ public:
      **/
     qreal crossFadeProgress() const;
 
+    /**
+     * Returns The projection matrix as used by the current screen painting pass
+     * including screen transformations.
+     *
+     * This matrix is only valid during a rendering pass started by render.
+     *
+     * @since 5.6
+     * @see render
+     * @see EffectsHandler::paintEffectFrame
+     * @see Effect::paintEffectFrame
+     **/
+    QMatrix4x4 screenProjectionMatrix() const;
+
+protected:
+    void setScreenProjectionMatrix(const QMatrix4x4 &projection);
+
 private:
     EffectFramePrivate* const d;
 };
