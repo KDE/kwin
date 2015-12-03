@@ -1403,7 +1403,7 @@ void SceneOpenGL::Window::endRenderWindow()
 
 GLTexture *SceneOpenGL::Window::getDecorationTexture() const
 {
-    if (Client *client = dynamic_cast<Client *>(toplevel)) {
+    if (AbstractClient *client = dynamic_cast<AbstractClient *>(toplevel)) {
         if (client->noBorder()) {
             return nullptr;
         }
