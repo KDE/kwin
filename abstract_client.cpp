@@ -1329,4 +1329,20 @@ void AbstractClient::triggerDecorationRepaint()
     }
 }
 
+void AbstractClient::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
+{
+    if (!isDecorated()) {
+        return;
+    }
+    QRect r = decoration()->rect();
+
+    top = QRect(r.x(), r.y(), r.width(), borderTop());
+    bottom = QRect(r.x(), r.y() + r.height() - borderBottom(),
+                   r.width(), borderBottom());
+    left = QRect(r.x(), r.y() + top.height(),
+                 borderLeft(), r.height() - top.height() - bottom.height());
+    right = QRect(r.x() + r.width() - borderRight(), r.y() + top.height(),
+                  borderRight(), r.height() - top.height() - bottom.height());
+}
+
 }

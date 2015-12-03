@@ -497,6 +497,7 @@ public:
     }
     bool decorationHasAlpha() const;
     void triggerDecorationRepaint();
+    virtual void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
