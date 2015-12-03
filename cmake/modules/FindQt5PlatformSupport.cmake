@@ -67,7 +67,7 @@ endif()
 # Use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
 find_package(PkgConfig)
-pkg_check_modules(PKG_Qt5PlatformSupport QUIET Qt5PlatformSupport)
+pkg_check_modules(PKG_Qt5PlatformSupport QUIET Qt5Gui)
 
 set(Qt5PlatformSupport_DEFINITIONS ${PKG_Qt5PlatformSupport_CFLAGS_OTHER})
 set(Qt5PlatformSupport_VERSION ${PKG_Qt5PlatformSupport_VERSION})
