@@ -1311,7 +1311,7 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
     // even if they're not set in flags - see getWmNormalHints()
     QSize min_size = tabGroup() ? tabGroup()->minSize() : minSize();
     QSize max_size = tabGroup() ? tabGroup()->maxSize() : maxSize();
-    if (m_decoration != NULL) {
+    if (isDecorated()) {
         QSize decominsize(0, 0);
         QSize border_size(borderLeft() + borderRight(), borderTop() + borderBottom());
         if (border_size.width() > decominsize.width())  // just in case
@@ -2237,9 +2237,9 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     }
 
     // call into decoration update borders
-    if (m_decoration && m_decoration->client() && !(options->borderlessMaximizedWindows() && max_mode == KWin::MaximizeFull)) {
+    if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && max_mode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
-        const auto c = m_decoration->client().data();
+        const auto c = decoration()->client().data();
         if ((max_mode & MaximizeVertical) != (old_mode & MaximizeVertical)) {
             emit c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
         }
@@ -2260,7 +2260,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         changeMaximizeRecursion = false;
     }
 
-    const ForceGeometry_t geom_mode = m_decoration ? ForceGeometrySet : NormalGeometrySet;
+    const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
 
     // Conditional quick tiling exit points
     if (quickTileMode() != QuickTileNone) {

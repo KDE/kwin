@@ -45,11 +45,6 @@ class KStartupInfoId;
 
 struct xcb_sync_alarm_notify_event_t;
 
-namespace KDecoration2
-{
-class Decoration;
-}
-
 namespace KWin
 {
 
@@ -356,16 +351,7 @@ public:
     bool hasOffscreenXineramaStrut() const;
 
     // Decorations <-> Effects
-    KDecoration2::Decoration *decoration() {
-        return m_decoration;
-    }
-    const KDecoration2::Decoration *decoration() const {
-        return m_decoration;
-    }
     QPointer<Decoration::DecoratedClientImpl> decoratedClient() const;
-    bool isDecorated() const override {
-        return m_decoration != nullptr;
-    }
     void setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client);
 
     QRect decorationRect() const;
@@ -550,7 +536,7 @@ private:
     Xcb::Property fetchGtkFrameExtents() const;
     void readGtkFrameExtents(Xcb::Property &prop);
     void detectGtkFrameExtents();
-    void destroyDecoration();
+    void destroyDecoration() override;
     void updateFrameExtents();
 
     void internalShow();
@@ -582,7 +568,6 @@ private:
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
-    KDecoration2::Decoration *m_decoration;
     QPointer<Decoration::DecoratedClientImpl> m_decoratedClient;
     QElapsedTimer m_decorationDoubleClickTimer;
     QStringList activityList;

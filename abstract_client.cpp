@@ -34,6 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
 
+#include <KDecoration2/Decoration>
+
 namespace KWin
 {
 
@@ -60,6 +62,7 @@ AbstractClient::AbstractClient()
 AbstractClient::~AbstractClient()
 {
     assert(m_blockGeometryUpdates == 0);
+    Q_ASSERT(m_decoration == nullptr);
 }
 
 void AbstractClient::updateMouseGrab()
@@ -1075,11 +1078,6 @@ QSize AbstractClient::sizeForClientSize(const QSize &wsize, Sizemode mode, bool 
     return wsize;
 }
 
-bool AbstractClient::isDecorated() const
-{
-    return false;
-}
-
 void AbstractClient::addRepaintDuringGeometryUpdates()
 {
     const QRect deco_rect = visibleRect();
@@ -1305,6 +1303,12 @@ void AbstractClient::endMoveResize()
         setMoveResizePointerMode(mousePosition());
     }
     updateCursor();
+}
+
+void AbstractClient::destroyDecoration()
+{
+    delete m_decoration;
+    m_decoration = nullptr;
 }
 
 }

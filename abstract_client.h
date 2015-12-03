@@ -35,6 +35,11 @@ class PlasmaWindowInterface;
 }
 }
 
+namespace KDecoration2
+{
+class Decoration;
+}
+
 namespace KWin
 {
 
@@ -331,7 +336,6 @@ public:
     virtual void blockActivityUpdates(bool b = true) = 0;
     QPalette palette() const;
     const Decoration::DecorationPalette *decorationPalette() const;
-    virtual bool isDecorated() const;
     virtual bool isResizable() const = 0;
     virtual bool isMovable() const = 0;
     virtual bool isMovableAcrossScreens() const = 0;
@@ -476,6 +480,17 @@ public:
      **/
     Options::MouseCommand getMouseCommand(Qt::MouseButton button, bool *handled) const;
     Options::MouseCommand getWheelCommand(Qt::Orientation orientation, bool *handled) const;
+
+    // decoration related
+    KDecoration2::Decoration *decoration() {
+        return m_decoration;
+    }
+    const KDecoration2::Decoration *decoration() const {
+        return m_decoration;
+    }
+    bool isDecorated() const {
+        return m_decoration != nullptr;
+    }
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
@@ -777,6 +792,11 @@ protected:
         s_haveResizeEffect = false;
     }
 
+    void setDecoration(KDecoration2::Decoration *decoration) {
+        m_decoration = decoration;
+    }
+    virtual void destroyDecoration();
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -837,6 +857,8 @@ private:
         int startScreen = 0;
         QTimer *delayedTimer = nullptr;
     } m_moveResize;
+
+    KDecoration2::Decoration *m_decoration = nullptr;
 
 
     static bool s_haveResizeEffect;

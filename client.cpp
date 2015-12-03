@@ -97,7 +97,6 @@ Client::Client()
     , m_client()
     , m_wrapper()
     , m_frame()
-    , m_decoration(nullptr)
     , m_activityUpdatesBlocked(false)
     , m_blockedActivityUpdatesRequireTransients(false)
     , m_moveResizeGrabWindow()
@@ -191,7 +190,6 @@ Client::~Client()
     assert(m_client == XCB_WINDOW_NONE);
     assert(m_wrapper == XCB_WINDOW_NONE);
     //assert( frameId() == None );
-    Q_ASSERT(m_decoration == nullptr);
     assert(!check_active_modal);
     for (auto it = m_connections.constBegin(); it != m_connections.constEnd(); ++it) {
         disconnect(*it);
@@ -320,8 +318,8 @@ void Client::updateInputWindow()
 
     QRegion region;
 
-    if (!noBorder() && m_decoration) {
-        const QMargins &r = m_decoration->resizeOnlyBorders();
+    if (!noBorder() && isDecorated()) {
+        const QMargins &r = decoration()->resizeOnlyBorders();
         const int left   = r.left();
         const int top    = r.top();
         const int right  = r.right();
@@ -329,9 +327,9 @@ void Client::updateInputWindow()
         if (left != 0 || top != 0 || right != 0 || bottom != 0) {
             region = QRegion(-left,
                              -top,
-                             m_decoration->size().width() + left + right,
-                             m_decoration->size().height() + top + bottom);
-            region = region.subtracted(m_decoration->rect());
+                             decoration()->size().width() + left + right,
+                             decoration()->size().height() + top + bottom);
+            region = region.subtracted(decoration()->rect());
         }
     }
 
@@ -373,7 +371,7 @@ void Client::updateInputWindow()
 void Client::updateDecoration(bool check_workspace_pos, bool force)
 {
     if (!force &&
-            ((m_decoration == NULL && noBorder()) || (m_decoration != NULL && !noBorder())))
+            ((!isDecorated() && noBorder()) || (isDecorated() && !noBorder())))
         return;
     QRect oldgeom = geometry();
     QRect oldClientGeom = oldgeom.adjusted(borderLeft(), borderTop(), -borderRight(), -borderBottom());
@@ -394,12 +392,12 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
 
 void Client::createDecoration(const QRect& oldgeom)
 {
-    m_decoration = Decoration::DecorationBridge::self()->createDecoration(this);
-    if (m_decoration) {
-        QMetaObject::invokeMethod(m_decoration, "update", Qt::QueuedConnection);
-        connect(m_decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::getShadow);
-        connect(m_decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &Client::updateInputWindow);
-        connect(m_decoration, &KDecoration2::Decoration::bordersChanged, this,
+    KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
+    if (decoration) {
+        QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
+        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::getShadow);
+        connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &Client::updateInputWindow);
+        connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {
                 updateFrameExtents();
                 GeometryUpdatesBlocker blocker(this);
@@ -415,6 +413,7 @@ void Client::createDecoration(const QRect& oldgeom)
             }
         );
     }
+    setDecoration(decoration);
 
     move(calculateGravitation(false));
     plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
@@ -427,10 +426,9 @@ void Client::createDecoration(const QRect& oldgeom)
 void Client::destroyDecoration()
 {
     QRect oldgeom = geometry();
-    if (m_decoration) {
+    if (isDecorated()) {
         QPoint grav = calculateGravitation(true);
-        delete m_decoration;
-        m_decoration = nullptr;
+        AbstractClient::destroyDecoration();
         plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
         move(grav);
         if (compositing())
@@ -444,17 +442,17 @@ void Client::destroyDecoration()
 
 void Client::triggerDecorationRepaint()
 {
-    if (m_decoration) {
-        m_decoration->update();
+    if (isDecorated()) {
+        decoration()->update();
     }
 }
 
 void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
 {
-    if (!m_decoration) {
+    if (!isDecorated()) {
         return;
     }
-    QRect r = m_decoration->rect();
+    QRect r = decoration()->rect();
 
     NETStrut strut = info->frameOverlap();
 
@@ -571,9 +569,7 @@ void Client::detectGtkFrameExtents()
  */
 void Client::resizeDecoration()
 {
-    if (m_decoration) {
-        m_decoration->update();
-    }
+    triggerDecorationRepaint();
     updateInputWindow();
 }
 
@@ -784,7 +780,7 @@ void Client::setShade(ShadeMode mode)
         return; // No real change in shaded state
     }
 
-    assert(m_decoration != NULL);   // noborder windows can't be shaded
+    assert(isDecorated());   // noborder windows can't be shaded
     GeometryUpdatesBlocker blocker(this);
 
     // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
@@ -1850,8 +1846,8 @@ void Client::setBlockingCompositing(bool block)
 
 Client::Position Client::mousePosition() const
 {
-    if (m_decoration) {
-        switch (m_decoration->sectionUnderMouse()) {
+    if (isDecorated()) {
+        switch (decoration()->sectionUnderMouse()) {
             case Qt::BottomLeftSection:
                 return PositionBottomLeft;
             case Qt::BottomRightSection:
@@ -2066,7 +2062,7 @@ NET::WindowType Client::windowType(bool direct, int supportedTypes) const
 
 bool Client::decorationHasAlpha() const
 {
-    if (!m_decoration || m_decoration->isOpaque()) {
+    if (!isDecorated() || decoration()->isOpaque()) {
         // either no decoration or decoration has alpha disabled
         return false;
     }
@@ -2171,7 +2167,7 @@ void Client::showOnScreenEdge()
 #define BORDER(which) \
     int Client::border##which() const \
     { \
-        return m_decoration ? m_decoration->border##which() : 0; \
+        return isDecorated() ? decoration()->border##which() : 0; \
     }
 
 BORDER(Bottom)
@@ -2219,8 +2215,8 @@ bool Client::processDecorationButtonPress(QMouseEvent *event)
 
 void Client::processDecorationButtonRelease(QMouseEvent *event)
 {
-    if (m_decoration) {
-        if (!event->isAccepted() && m_decoration->titleBar().contains(event->pos()) && event->button() == Qt::LeftButton) {
+    if (isDecorated()) {
+        if (!event->isAccepted() && decoration()->titleBar().contains(event->pos()) && event->button() == Qt::LeftButton) {
             m_decorationDoubleClickTimer.start();
         }
     }
