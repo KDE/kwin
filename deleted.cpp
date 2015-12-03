@@ -86,24 +86,19 @@ void Deleted::copyToDeleted(Toplevel* c)
     m_windowRole = c->windowRole();
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
-    Client* client = dynamic_cast<Client*>(c);
-    if (client) {
+    if (AbstractClient *client = dynamic_cast<AbstractClient*>(c)) {
         no_border = client->noBorder();
         if (!no_border) {
+            client->layoutDecorationRects(decoration_left,
+                                          decoration_top,
+                                          decoration_right,
+                                          decoration_bottom);
             if (client->isDecorated()) {
                 if (Decoration::Renderer *renderer = client->decoratedClient()->renderer()) {
                     m_decorationRenderer = renderer;
                     m_decorationRenderer->reparent(this);
                 }
             }
-        }
-    }
-    if (AbstractClient *client = dynamic_cast<AbstractClient*>(c)) {
-        if (!client->noBorder()) {
-            client->layoutDecorationRects(decoration_left,
-                                          decoration_top,
-                                          decoration_right,
-                                          decoration_bottom);
         }
         m_wasClient = true;
         m_minimized = client->isMinimized();
