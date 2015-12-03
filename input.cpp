@@ -563,7 +563,7 @@ void InputRedirection::updatePointerWindow()
 void InputRedirection::updatePointerDecoration(Toplevel *t)
 {
     const auto oldDeco = m_pointerDecoration;
-    if (Client *c = dynamic_cast<Client*>(t)) {
+    if (AbstractClient *c = dynamic_cast<AbstractClient*>(t)) {
         // check whether it's on a Decoration
         if (c->decoratedClient()) {
             const QRect clientRect = QRect(c->clientPos(), c->clientSize()).translated(c->pos());
