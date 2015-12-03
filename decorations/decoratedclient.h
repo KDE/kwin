@@ -28,6 +28,7 @@ namespace KWin
 {
 
 class Client;
+class AbstractClient;
 
 namespace Decoration
 {
@@ -78,7 +79,7 @@ public:
     void requestToggleOnAllDesktops() override;
     void requestToggleShade() override;
 
-    Client *client() {
+    AbstractClient *client() {
         return m_client;
     }
     Renderer *renderer() {
@@ -91,7 +92,7 @@ public:
 
 private:
     void createRenderer();
-    Client *m_client;
+    AbstractClient *m_client;
     Renderer *m_renderer;
 };
 

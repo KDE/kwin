@@ -2429,7 +2429,7 @@ SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::Decorat
     : Renderer(client)
     , m_texture()
 {
-    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (Client::*)(const QRect&)>(&Client::addRepaint));
+    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (AbstractClient::*)(const QRect&)>(&AbstractClient::addRepaint));
 }
 
 SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer() = default;
