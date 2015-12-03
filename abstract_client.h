@@ -573,6 +573,10 @@ Q_SIGNALS:
     void clientStartUserMovedResized(KWin::AbstractClient*);
     void clientStepUserMovedResized(KWin::AbstractClient *, const QRect&);
     void clientFinishUserMovedResized(KWin::AbstractClient*);
+    void closeableChanged(bool);
+    void minimizeableChanged(bool);
+    void shadeableChanged(bool);
+    void maximizeableChanged(bool);
 
 protected:
     AbstractClient();
