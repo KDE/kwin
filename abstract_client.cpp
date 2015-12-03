@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_client.h"
+#include "decorations/decoratedclient.h"
 #include "decorations/decorationpalette.h"
 #include "cursor.h"
 #include "effects.h"
@@ -1468,6 +1469,16 @@ bool AbstractClient::providesContextHelp() const
 
 void AbstractClient::showContextHelp()
 {
+}
+
+QPointer<Decoration::DecoratedClientImpl> AbstractClient::decoratedClient() const
+{
+    return m_decoratedClient;
+}
+
+void AbstractClient::setDecoratedClient(QPointer< Decoration::DecoratedClientImpl > client)
+{
+    m_decoratedClient = client;
 }
 
 }

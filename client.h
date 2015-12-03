@@ -48,11 +48,6 @@ struct xcb_sync_alarm_notify_event_t;
 namespace KWin
 {
 
-namespace Decoration
-{
-class DecoratedClientImpl;
-}
-
 
 /**
  * @brief Defines Predicates on how to search for a Client.
@@ -330,9 +325,6 @@ public:
     bool hasOffscreenXineramaStrut() const;
 
     // Decorations <-> Effects
-    QPointer<Decoration::DecoratedClientImpl> decoratedClient() const;
-    void setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client);
-
     QRect decorationRect() const;
 
     QRect transparentRect() const;
@@ -533,7 +525,6 @@ private:
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
-    QPointer<Decoration::DecoratedClientImpl> m_decoratedClient;
     QStringList activityList;
     int m_activityUpdatesBlocked;
     bool m_blockedActivityUpdatesRequireTransients;

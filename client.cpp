@@ -2111,16 +2111,6 @@ void Client::showOnScreenEdge()
     xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
 }
 
-QPointer<Decoration::DecoratedClientImpl> Client::decoratedClient() const
-{
-    return m_decoratedClient;
-}
-
-void Client::setDecoratedClient(QPointer< Decoration::DecoratedClientImpl > client)
-{
-    m_decoratedClient = client;
-}
-
 void Client::addDamage(const QRegion &damage)
 {
     if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead

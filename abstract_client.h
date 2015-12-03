@@ -52,6 +52,7 @@ class TabBoxClientImpl;
 
 namespace Decoration
 {
+class DecoratedClientImpl;
 class DecorationPalette;
 }
 
@@ -509,6 +510,8 @@ public:
     bool isDecorated() const {
         return m_decoration != nullptr;
     }
+    QPointer<Decoration::DecoratedClientImpl> decoratedClient() const;
+    void setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client);
     bool decorationHasAlpha() const;
     void triggerDecorationRepaint();
     virtual void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
@@ -910,6 +913,7 @@ private:
     } m_moveResize;
 
     KDecoration2::Decoration *m_decoration = nullptr;
+    QPointer<Decoration::DecoratedClientImpl> m_decoratedClient;
     QElapsedTimer m_decorationDoubleClickTimer;
 
 
