@@ -90,10 +90,6 @@ void Deleted::copyToDeleted(Toplevel* c)
     if (client) {
         no_border = client->noBorder();
         if (!no_border) {
-            client->layoutDecorationRects(decoration_left,
-                                          decoration_top,
-                                          decoration_right,
-                                          decoration_bottom);
             if (client->isDecorated()) {
                 if (Decoration::Renderer *renderer = client->decoratedClient()->renderer()) {
                     m_decorationRenderer = renderer;
@@ -103,6 +99,12 @@ void Deleted::copyToDeleted(Toplevel* c)
         }
     }
     if (AbstractClient *client = dynamic_cast<AbstractClient*>(c)) {
+        if (!client->noBorder()) {
+            client->layoutDecorationRects(decoration_left,
+                                          decoration_top,
+                                          decoration_right,
+                                          decoration_bottom);
+        }
         m_wasClient = true;
         m_minimized = client->isMinimized();
         m_modal = client->isModal();
