@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <memory>
 
+#include <QElapsedTimer>
+
 namespace KWayland
 {
 namespace Server
@@ -506,6 +508,8 @@ public:
     void triggerDecorationRepaint();
     virtual void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
     void processDecorationMove();
+    bool processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu = false);
+    void processDecorationButtonRelease(QMouseEvent *event);
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
@@ -813,6 +817,7 @@ protected:
         m_decoration = decoration;
     }
     virtual void destroyDecoration();
+    void startDecorationDoubleClickTimer();
 
 private:
     void handlePaletteChange();
@@ -876,6 +881,7 @@ private:
     } m_moveResize;
 
     KDecoration2::Decoration *m_decoration = nullptr;
+    QElapsedTimer m_decorationDoubleClickTimer;
 
 
     static bool s_haveResizeEffect;

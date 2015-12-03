@@ -1168,7 +1168,9 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
         x = x_root - geometry().x();
         y = y_root - geometry().y();
         // New API processes core events FIRST and only passes unused ones to the decoration
-        return processDecorationButtonPress(button, state, x, y, x_root, y_root, true);
+        QMouseEvent ev(QMouseEvent::MouseButtonPress, QPoint(x, y), QPoint(x_root, y_root),
+                       x11ToQtMouseButton(button), x11ToQtMouseButtons(state), Qt::KeyboardModifiers());
+        return processDecorationButtonPress(&ev, true);
     }
     if (w == frameId() && isDecorated()) {
         if (button >= 4 && button <= 7) {
@@ -1200,69 +1202,12 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
             if (!event.isAccepted()) {
-                processDecorationButtonPress(button, state, x, y, x_root, y_root);
+                processDecorationButtonPress(&event);
             }
         }
         return true;
     }
     return true;
-}
-
-
-// this function processes button press events only after decoration decides not to handle them,
-// unlike buttonPressEvent(), which (when the window is decoration) filters events before decoration gets them
-bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int y, int x_root, int y_root,
-        bool ignoreMenu)
-{
-    Options::MouseCommand com = Options::MouseNothing;
-    bool active = isActive();
-    if (!wantsInput())    // we cannot be active, use it anyway
-        active = true;
-
-    // check whether it is a double click
-    if (button == XCB_BUTTON_INDEX_1) {
-        if (m_decorationDoubleClickTimer.isValid() &&
-                decoration()->titleBar().contains(x, y) &&
-                !m_decorationDoubleClickTimer.hasExpired(QGuiApplication::styleHints()->mouseDoubleClickInterval())) {
-            Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
-            dontMoveResize();
-            m_decorationDoubleClickTimer.invalidate();
-            return false;
-        }
-        m_decorationDoubleClickTimer.invalidate();
-    }
-
-    if (button == XCB_BUTTON_INDEX_1)
-        com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
-    else if (button == XCB_BUTTON_INDEX_2)
-        com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
-    else if (button == XCB_BUTTON_INDEX_3)
-        com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
-    if (button == XCB_BUTTON_INDEX_1
-            && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
-            && com != Options::MouseMinimize  // mouse release event
-            && com != Options::MouseDragTab) {
-        setMoveResizePointerMode(mousePosition());
-        setMoveResizePointerButtonDown(true);
-        setMoveOffset(QPoint(x/* - padding_left*/, y/* - padding_top*/));
-        setInvertedMoveOffset(rect().bottomRight() - moveOffset());
-        setUnrestrictedMoveResize(false);
-        startDelayedMoveResize();
-        updateCursor();
-    }
-    // In the new API the decoration may process the menu action to display an inactive tab's menu.
-    // If the event is unhandled then the core will create one for the active window in the group.
-    if (!ignoreMenu || com != Options::MouseOperationsMenu)
-        performMouseCommand(com, QPoint(x_root, y_root));
-    return !( // Return events that should be passed to the decoration in the new API
-               com == Options::MouseRaise ||
-               com == Options::MouseOperationsMenu ||
-               com == Options::MouseActivateAndRaise ||
-               com == Options::MouseActivate ||
-               com == Options::MouseActivateRaiseAndPassClick ||
-               com == Options::MouseActivateAndPassClick ||
-               com == Options::MouseDragTab ||
-               com == Options::MouseNothing);
 }
 
 // return value matters only when filtering events before decoration gets them
@@ -1280,7 +1225,7 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
             if (!event.isAccepted() && decoration()->titleBar().contains(x, y) && button == XCB_BUTTON_INDEX_1) {
-                m_decorationDoubleClickTimer.start();
+                startDecorationDoubleClickTimer();
             }
         }
     }

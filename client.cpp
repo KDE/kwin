@@ -2141,32 +2141,6 @@ bool Client::belongsToSameApplication(const AbstractClient *other, bool active_h
     return Client::belongToSameApplication(this, c2, active_hack);
 }
 
-bool Client::processDecorationButtonPress(QMouseEvent *event)
-{
-    return processDecorationButtonPress(qtToX11Button(event->button()), 0,
-                                        event->x(), event->y(),
-                                        event->globalX(), event->globalY());
-}
-
-void Client::processDecorationButtonRelease(QMouseEvent *event)
-{
-    if (isDecorated()) {
-        if (!event->isAccepted() && decoration()->titleBar().contains(event->pos()) && event->button() == Qt::LeftButton) {
-            m_decorationDoubleClickTimer.start();
-        }
-    }
-
-    if (event->buttons() == Qt::NoButton) {
-        setMoveResizePointerButtonDown(false);
-        stopDelayedMoveResize();
-        if (isMoveResize()) {
-            finishMoveResize(false);
-            setMoveResizePointerMode(mousePosition());
-        }
-        updateCursor();
-    }
-}
-
 void Client::updateTabGroupStates(TabGroup::States states)
 {
     if (auto t = tabGroup()) {

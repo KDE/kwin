@@ -162,8 +162,6 @@ public:
     bool windowEvent(xcb_generic_event_t *e);
     void syncEvent(xcb_sync_alarm_notify_event_t* e);
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
-    bool processDecorationButtonPress(QMouseEvent *event);
-    void processDecorationButtonRelease(QMouseEvent *event);
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
@@ -401,8 +399,6 @@ private:
     bool buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
     bool motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root);
 
-    bool processDecorationButtonPress(int button, int state, int x, int y, int x_root, int y_root,
-                                      bool ignoreMenu = false);
     Client* findAutogroupCandidate() const;
 
 protected:
@@ -548,7 +544,6 @@ private:
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
     QPointer<Decoration::DecoratedClientImpl> m_decoratedClient;
-    QElapsedTimer m_decorationDoubleClickTimer;
     QStringList activityList;
     int m_activityUpdatesBlocked;
     bool m_blockedActivityUpdatesRequireTransients;

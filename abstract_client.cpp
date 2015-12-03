@@ -36,6 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDecoration2/Decoration>
 
+#include <QMouseEvent>
+#include <QStyleHints>
+
 namespace KWin
 {
 
@@ -1378,6 +1381,84 @@ void AbstractClient::processDecorationMove()
         setMoveResizePointerMode(newmode);
         updateCursor();
     }
+}
+
+bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
+{
+    Options::MouseCommand com = Options::MouseNothing;
+    bool active = isActive();
+    if (!wantsInput())    // we cannot be active, use it anyway
+        active = true;
+
+    // check whether it is a double click
+    if (event->button() == Qt::LeftButton) {
+        if (m_decorationDoubleClickTimer.isValid() &&
+                decoration()->titleBar().contains(event->x(), event->y()) &&
+                !m_decorationDoubleClickTimer.hasExpired(QGuiApplication::styleHints()->mouseDoubleClickInterval())) {
+            Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
+            dontMoveResize();
+            m_decorationDoubleClickTimer.invalidate();
+            return false;
+        }
+        m_decorationDoubleClickTimer.invalidate();
+    }
+
+    if (event->button() == Qt::LeftButton)
+        com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
+    else if (event->button() == Qt::MidButton)
+        com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
+    else if (event->button() == Qt::RightButton)
+        com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
+    if (event->button() == Qt::LeftButton
+            && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
+            && com != Options::MouseMinimize  // mouse release event
+            && com != Options::MouseDragTab) {
+        setMoveResizePointerMode(mousePosition());
+        setMoveResizePointerButtonDown(true);
+        setMoveOffset(event->pos());
+        setInvertedMoveOffset(rect().bottomRight() - moveOffset());
+        setUnrestrictedMoveResize(false);
+        startDelayedMoveResize();
+        updateCursor();
+    }
+    // In the new API the decoration may process the menu action to display an inactive tab's menu.
+    // If the event is unhandled then the core will create one for the active window in the group.
+    if (!ignoreMenu || com != Options::MouseOperationsMenu)
+        performMouseCommand(com, event->globalPos());
+    return !( // Return events that should be passed to the decoration in the new API
+               com == Options::MouseRaise ||
+               com == Options::MouseOperationsMenu ||
+               com == Options::MouseActivateAndRaise ||
+               com == Options::MouseActivate ||
+               com == Options::MouseActivateRaiseAndPassClick ||
+               com == Options::MouseActivateAndPassClick ||
+               com == Options::MouseDragTab ||
+               com == Options::MouseNothing);
+}
+
+void AbstractClient::processDecorationButtonRelease(QMouseEvent *event)
+{
+    if (isDecorated()) {
+        if (!event->isAccepted() && decoration()->titleBar().contains(event->pos()) && event->button() == Qt::LeftButton) {
+            m_decorationDoubleClickTimer.start();
+        }
+    }
+
+    if (event->buttons() == Qt::NoButton) {
+        setMoveResizePointerButtonDown(false);
+        stopDelayedMoveResize();
+        if (isMoveResize()) {
+            finishMoveResize(false);
+            setMoveResizePointerMode(mousePosition());
+        }
+        updateCursor();
+    }
+}
+
+
+void AbstractClient::startDecorationDoubleClickTimer()
+{
+    m_decorationDoubleClickTimer.start();
 }
 
 }
