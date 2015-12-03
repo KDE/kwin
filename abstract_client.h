@@ -794,9 +794,10 @@ protected:
     virtual QSize resizeIncrements() const;
 
     /**
-     * Default implementation returns PositionCenter
+     * Returns the position depending on the Decoration's section under mouse.
+     * If no decoration it returns PositionCenter.
      **/
-    virtual Position mousePosition() const;
+    Position mousePosition() const;
 
     static bool haveResizeEffect() {
         return s_haveResizeEffect;

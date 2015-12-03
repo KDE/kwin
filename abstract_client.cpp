@@ -1285,6 +1285,28 @@ QSize AbstractClient::resizeIncrements() const
 
 AbstractClient::Position AbstractClient::mousePosition() const
 {
+    if (isDecorated()) {
+        switch (decoration()->sectionUnderMouse()) {
+            case Qt::BottomLeftSection:
+                return PositionBottomLeft;
+            case Qt::BottomRightSection:
+                return PositionBottomRight;
+            case Qt::BottomSection:
+                return PositionBottom;
+            case Qt::LeftSection:
+                return PositionLeft;
+            case Qt::RightSection:
+                return PositionRight;
+            case Qt::TopSection:
+                return PositionTop;
+            case Qt::TopLeftSection:
+                return PositionTopLeft;
+            case Qt::TopRightSection:
+                return PositionTopRight;
+            default:
+                return PositionCenter;
+        }
+    }
     return PositionCenter;
 }
 
