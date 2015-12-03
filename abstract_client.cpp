@@ -1461,4 +1461,13 @@ void AbstractClient::startDecorationDoubleClickTimer()
     m_decorationDoubleClickTimer.start();
 }
 
+bool AbstractClient::providesContextHelp() const
+{
+    return false;
+}
+
+void AbstractClient::showContextHelp()
+{
+}
+
 }

@@ -213,6 +213,11 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * If this property gets abused by application developers, it will be removed again.
      **/
     Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder)
+    /**
+     * Whether the Client provides context help. Mostly needed by decorations to decide whether to
+     * show the help button or not.
+     **/
+    Q_PROPERTY(bool providesContextHelp READ providesContextHelp CONSTANT)
 public:
     virtual ~AbstractClient();
 
@@ -510,6 +515,26 @@ public:
     void processDecorationMove();
     bool processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu = false);
     void processDecorationButtonRelease(QMouseEvent *event);
+
+    /**
+    * Returns whether the window provides context help or not. If it does,
+    * you should show a help menu item or a help button like '?' and call
+    * contextHelp() if this is invoked.
+    *
+    * Default implementation returns @c false.
+    * @see showContextHelp;
+    */
+    virtual bool providesContextHelp() const;
+
+    /**
+    * Invokes context help on the window. Only works if the window
+    * actually provides context help.
+    *
+    * Default implementation does nothing.
+    *
+    * @see providesContextHelp()
+    */
+    virtual void showContextHelp();
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);

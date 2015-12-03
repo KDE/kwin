@@ -90,11 +90,6 @@ class Client
      **/
     Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
     /**
-     * Whether the Client provides context help. Mostly needed by decorations to decide whether to
-     * show the help button or not.
-     **/
-    Q_PROPERTY(bool providesContextHelp READ providesContextHelp CONSTANT)
-    /**
      * Whether the Client can be resized. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      **/
@@ -236,7 +231,7 @@ public:
     void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     QSize sizeForClientSize(const QSize&, Sizemode mode = SizemodeAny, bool noframe = false) const override;
 
-    bool providesContextHelp() const;
+    bool providesContextHelp() const override;
     const QKeySequence &shortcut() const override;
     void setShortcut(const QString& cut) override;
 
@@ -286,7 +281,7 @@ public:
 
     void killWindow();
     void toggleShade();
-    void showContextHelp();
+    void showContextHelp() override;
     void cancelShadeHoverTimer();
     void checkActiveModal();
     StrutRect strutRect(StrutArea area) const;
