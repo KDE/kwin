@@ -2146,18 +2146,6 @@ void Client::showOnScreenEdge()
     xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
 }
 
-#define BORDER(which) \
-    int Client::border##which() const \
-    { \
-        return isDecorated() ? decoration()->border##which() : 0; \
-    }
-
-BORDER(Bottom)
-BORDER(Left)
-BORDER(Right)
-BORDER(Top)
-#undef BORDER
-
 QPointer<Decoration::DecoratedClientImpl> Client::decoratedClient() const
 {
     return m_decoratedClient;

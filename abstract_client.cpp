@@ -1053,25 +1053,17 @@ bool AbstractClient::isActiveFullScreen() const
     return ac && (ac == this || ac->screen() != screen());
 }
 
-int AbstractClient::borderBottom() const
-{
-    return 0;
-}
+#define BORDER(which) \
+    int AbstractClient::border##which() const \
+    { \
+        return isDecorated() ? decoration()->border##which() : 0; \
+    }
 
-int AbstractClient::borderLeft() const
-{
-    return 0;
-}
-
-int AbstractClient::borderRight() const
-{
-    return 0;
-}
-
-int AbstractClient::borderTop() const
-{
-    return 0;
-}
+BORDER(Bottom)
+BORDER(Left)
+BORDER(Right)
+BORDER(Top)
+#undef BORDER
 
 QSize AbstractClient::sizeForClientSize(const QSize &wsize, Sizemode mode, bool noframe) const
 {

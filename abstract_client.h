@@ -626,10 +626,10 @@ protected:
 
     // geometry handling
     void checkOffscreenPosition(QRect *geom, const QRect &screenArea);
-    virtual int borderLeft() const;
-    virtual int borderRight() const;
-    virtual int borderTop() const;
-    virtual int borderBottom() const;
+    int borderLeft() const;
+    int borderRight() const;
+    int borderTop() const;
+    int borderBottom() const;
     virtual void changeMaximize(bool horizontal, bool vertical, bool adjust) = 0;
     virtual void setGeometryRestore(const QRect &geo) = 0;
     /**
