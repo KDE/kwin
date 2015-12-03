@@ -356,7 +356,7 @@ void SceneQPainter::Window::renderShadow(QPainter* painter)
 void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
 {
     // TODO: custom decoration opacity
-    Client *client = dynamic_cast<Client*>(toplevel);
+    AbstractClient *client = dynamic_cast<AbstractClient*>(toplevel);
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
     if (!client && !deleted) {
         return;
