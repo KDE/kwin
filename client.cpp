@@ -1632,14 +1632,6 @@ void Client::syncTabGroupFor(QString property, bool fromThisClient)
         tab_group->sync(property.toAscii().data(), fromThisClient ? this : tab_group->current());
 }
 
-void Client::dontMoveResize()
-{
-    setMoveResizePointerButtonDown(false);
-    stopDelayedMoveResize();
-    if (isMoveResize())
-        finishMoveResize(false);
-}
-
 void Client::setClientShown(bool shown)
 {
     if (deleting)

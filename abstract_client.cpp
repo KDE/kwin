@@ -1283,6 +1283,14 @@ QSize AbstractClient::resizeIncrements() const
     return QSize(1, 1);
 }
 
+void AbstractClient::dontMoveResize()
+{
+    setMoveResizePointerButtonDown(false);
+    stopDelayedMoveResize();
+    if (isMoveResize())
+        finishMoveResize(false);
+}
+
 AbstractClient::Position AbstractClient::mousePosition() const
 {
     if (isDecorated()) {

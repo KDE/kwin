@@ -328,7 +328,6 @@ public:
     *   to change the visible client it starts to move-resize the new
     *   client, this function stops it.
     */
-    void dontMoveResize();
     bool isCurrentTab() const override;
 
     /**

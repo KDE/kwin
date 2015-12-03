@@ -791,6 +791,7 @@ protected:
     virtual void doResizeSync();
     void handleMoveResize(int x, int y, int x_root, int y_root);
     void handleMoveResize(const QPoint &local, const QPoint &global);
+    void dontMoveResize();
 
     virtual QSize resizeIncrements() const;
 
