@@ -1311,4 +1311,13 @@ void AbstractClient::destroyDecoration()
     m_decoration = nullptr;
 }
 
+bool AbstractClient::decorationHasAlpha() const
+{
+    if (!isDecorated() || decoration()->isOpaque()) {
+        // either no decoration or decoration has alpha disabled
+        return false;
+    }
+    return true;
+}
+
 }

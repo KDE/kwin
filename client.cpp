@@ -2060,15 +2060,6 @@ NET::WindowType Client::windowType(bool direct, int supportedTypes) const
     return wt;
 }
 
-bool Client::decorationHasAlpha() const
-{
-    if (!isDecorated() || decoration()->isOpaque()) {
-        // either no decoration or decoration has alpha disabled
-        return false;
-    }
-    return true;
-}
-
 void Client::cancelFocusOutTimer()
 {
     if (m_focusOutTimer) {

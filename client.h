@@ -129,10 +129,6 @@ class Client
      **/
     Q_PROPERTY(bool blocksCompositing READ isBlockingCompositing WRITE setBlockingCompositing NOTIFY blockingCompositingChanged)
     /**
-     * Whether the decoration is currently using an alpha channel.
-     **/
-    Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
-    /**
      * Whether the Client uses client side window decorations.
      * Only GTK+ are detected.
      **/
@@ -358,7 +354,6 @@ public:
 
     QRect transparentRect() const;
 
-    bool decorationHasAlpha() const;
     bool isClientSideDecorated() const;
     bool wantsShadowToBeRendered() const override;
 

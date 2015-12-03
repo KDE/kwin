@@ -200,6 +200,10 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Notify signal is emitted when the Client starts or ends move/resize mode.
      **/
     Q_PROPERTY(bool resize READ isResize NOTIFY moveResizedChanged)
+    /**
+     * Whether the decoration is currently using an alpha channel.
+     **/
+    Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
 public:
     virtual ~AbstractClient();
 
@@ -491,6 +495,7 @@ public:
     bool isDecorated() const {
         return m_decoration != nullptr;
     }
+    bool decorationHasAlpha() const;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
