@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decoratedclient.h"
 #include "decorationpalette.h"
 #include "decorationrenderer.h"
-#include "client.h"
+#include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
 #include "options.h"
@@ -37,7 +37,7 @@ namespace KWin
 namespace Decoration
 {
 
-DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration)
+DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration)
     : QObject()
     , DecoratedClientPrivate(decoratedClient, decoration)
     , m_client(client)
@@ -45,40 +45,40 @@ DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::Decorated
 {
     createRenderer();
     client->setDecoratedClient(QPointer<DecoratedClientImpl>(this));
-    connect(client, &Client::activeChanged, this,
+    connect(client, &AbstractClient::activeChanged, this,
         [decoratedClient, client]() {
             emit decoratedClient->activeChanged(client->isActive());
         }
     );
-    connect(client, &Client::geometryChanged, this,
+    connect(client, &AbstractClient::geometryChanged, this,
         [decoratedClient, client]() {
             emit decoratedClient->widthChanged(client->clientSize().width());
             emit decoratedClient->heightChanged(client->clientSize().height());
         }
     );
-    connect(client, &Client::desktopChanged, this,
+    connect(client, &AbstractClient::desktopChanged, this,
         [decoratedClient, client]() {
             emit decoratedClient->onAllDesktopsChanged(client->isOnAllDesktops());
         }
     );
-    connect(client, &Client::captionChanged, this,
+    connect(client, &AbstractClient::captionChanged, this,
         [decoratedClient, client]() {
             emit decoratedClient->captionChanged(client->caption());
         }
     );
-    connect(client, &Client::iconChanged, this,
+    connect(client, &AbstractClient::iconChanged, this,
         [decoratedClient, client]() {
             emit decoratedClient->iconChanged(client->icon());
         }
     );
-    connect(client, &Client::shadeChanged, this,
+    connect(client, &AbstractClient::shadeChanged, this,
         [decoratedClient, client]() {
             // TODO: geometry is wrong
             emit decoratedClient->shadedChanged(client->isShade());
         }
     );
-    connect(client, &Client::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedClient::keepAboveChanged);
-    connect(client, &Client::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
+    connect(client, &AbstractClient::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedClient::keepAboveChanged);
+    connect(client, &AbstractClient::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
     connect(Compositor::self(), &Compositor::compositingToggled, this,
         [this, decoration]() {
             delete m_renderer;
@@ -87,17 +87,17 @@ DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::Decorated
             decoration->update();
         }
     );
-    connect(client, &Client::quickTileModeChanged, decoratedClient,
+    connect(client, &AbstractClient::quickTileModeChanged, decoratedClient,
         [this, decoratedClient]() {
             emit decoratedClient->adjacentScreenEdgesChanged(adjacentScreenEdges());
         }
     );
-    connect(client, &Client::closeableChanged, decoratedClient, &KDecoration2::DecoratedClient::closeableChanged);
-    connect(client, &Client::shadeableChanged, decoratedClient, &KDecoration2::DecoratedClient::shadeableChanged);
-    connect(client, &Client::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::minimizeableChanged);
-    connect(client, &Client::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizeableChanged);
+    connect(client, &AbstractClient::closeableChanged, decoratedClient, &KDecoration2::DecoratedClient::closeableChanged);
+    connect(client, &AbstractClient::shadeableChanged, decoratedClient, &KDecoration2::DecoratedClient::shadeableChanged);
+    connect(client, &AbstractClient::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::minimizeableChanged);
+    connect(client, &AbstractClient::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizeableChanged);
 
-    connect(client, &Client::paletteChanged, decoratedClient, &KDecoration2::DecoratedClient::paletteChanged);
+    connect(client, &AbstractClient::paletteChanged, decoratedClient, &KDecoration2::DecoratedClient::paletteChanged);
 }
 
 DecoratedClientImpl::~DecoratedClientImpl() = default;
@@ -220,25 +220,25 @@ bool DecoratedClientImpl::isMaximizedHorizontally() const
 Qt::Edges DecoratedClientImpl::adjacentScreenEdges() const
 {
     Qt::Edges edges;
-    const Client::QuickTileMode mode = m_client->quickTileMode();
-    if (mode.testFlag(Client::QuickTileLeft)) {
+    const AbstractClient::QuickTileMode mode = m_client->quickTileMode();
+    if (mode.testFlag(AbstractClient::QuickTileLeft)) {
         edges |= Qt::LeftEdge;
-        if (!mode.testFlag(Client::QuickTileTop) && !mode.testFlag(Client::QuickTileBottom)) {
+        if (!mode.testFlag(AbstractClient::QuickTileTop) && !mode.testFlag(AbstractClient::QuickTileBottom)) {
             // using complete side
             edges |= Qt::TopEdge | Qt::BottomEdge;
         }
     }
-    if (mode.testFlag(Client::QuickTileTop)) {
+    if (mode.testFlag(AbstractClient::QuickTileTop)) {
         edges |= Qt::TopEdge;
     }
-    if (mode.testFlag(Client::QuickTileRight)) {
+    if (mode.testFlag(AbstractClient::QuickTileRight)) {
         edges |= Qt::RightEdge;
-        if (!mode.testFlag(Client::QuickTileTop) && !mode.testFlag(Client::QuickTileBottom)) {
+        if (!mode.testFlag(AbstractClient::QuickTileTop) && !mode.testFlag(AbstractClient::QuickTileBottom)) {
             // using complete side
             edges |= Qt::TopEdge | Qt::BottomEdge;
         }
     }
-    if (mode.testFlag(Client::QuickTileBottom)) {
+    if (mode.testFlag(AbstractClient::QuickTileBottom)) {
         edges |= Qt::BottomEdge;
     }
     return edges;
