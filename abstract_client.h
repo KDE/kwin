@@ -502,13 +502,13 @@ public:
 
     // decoration related
     KDecoration2::Decoration *decoration() {
-        return m_decoration;
+        return m_decoration.decoration;
     }
     const KDecoration2::Decoration *decoration() const {
-        return m_decoration;
+        return m_decoration.decoration;
     }
     bool isDecorated() const {
-        return m_decoration != nullptr;
+        return m_decoration.decoration != nullptr;
     }
     QPointer<Decoration::DecoratedClientImpl> decoratedClient() const;
     void setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client);
@@ -846,7 +846,7 @@ protected:
     }
 
     void setDecoration(KDecoration2::Decoration *decoration) {
-        m_decoration = decoration;
+        m_decoration.decoration = decoration;
     }
     virtual void destroyDecoration();
     void startDecorationDoubleClickTimer();
@@ -912,9 +912,11 @@ private:
         QTimer *delayedTimer = nullptr;
     } m_moveResize;
 
-    KDecoration2::Decoration *m_decoration = nullptr;
-    QPointer<Decoration::DecoratedClientImpl> m_decoratedClient;
-    QElapsedTimer m_decorationDoubleClickTimer;
+    struct {
+        KDecoration2::Decoration *decoration = nullptr;
+        QPointer<Decoration::DecoratedClientImpl> client;
+        QElapsedTimer doubleClickTimer;
+    } m_decoration;
 
 
     static bool s_haveResizeEffect;

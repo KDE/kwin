@@ -68,7 +68,7 @@ AbstractClient::AbstractClient()
 AbstractClient::~AbstractClient()
 {
     assert(m_blockGeometryUpdates == 0);
-    Q_ASSERT(m_decoration == nullptr);
+    Q_ASSERT(m_decoration.decoration == nullptr);
 }
 
 void AbstractClient::updateMouseGrab()
@@ -1335,8 +1335,8 @@ void AbstractClient::endMoveResize()
 
 void AbstractClient::destroyDecoration()
 {
-    delete m_decoration;
-    m_decoration = nullptr;
+    delete m_decoration.decoration;
+    m_decoration.decoration = nullptr;
 }
 
 bool AbstractClient::decorationHasAlpha() const
@@ -1393,15 +1393,15 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
 
     // check whether it is a double click
     if (event->button() == Qt::LeftButton) {
-        if (m_decorationDoubleClickTimer.isValid() &&
+        if (m_decoration.doubleClickTimer.isValid() &&
                 decoration()->titleBar().contains(event->x(), event->y()) &&
-                !m_decorationDoubleClickTimer.hasExpired(QGuiApplication::styleHints()->mouseDoubleClickInterval())) {
+                !m_decoration.doubleClickTimer.hasExpired(QGuiApplication::styleHints()->mouseDoubleClickInterval())) {
             Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
             dontMoveResize();
-            m_decorationDoubleClickTimer.invalidate();
+            m_decoration.doubleClickTimer.invalidate();
             return false;
         }
-        m_decorationDoubleClickTimer.invalidate();
+        m_decoration.doubleClickTimer.invalidate();
     }
 
     if (event->button() == Qt::LeftButton)
@@ -1441,7 +1441,7 @@ void AbstractClient::processDecorationButtonRelease(QMouseEvent *event)
 {
     if (isDecorated()) {
         if (!event->isAccepted() && decoration()->titleBar().contains(event->pos()) && event->button() == Qt::LeftButton) {
-            m_decorationDoubleClickTimer.start();
+            m_decoration.doubleClickTimer.start();
         }
     }
 
@@ -1459,7 +1459,7 @@ void AbstractClient::processDecorationButtonRelease(QMouseEvent *event)
 
 void AbstractClient::startDecorationDoubleClickTimer()
 {
-    m_decorationDoubleClickTimer.start();
+    m_decoration.doubleClickTimer.start();
 }
 
 bool AbstractClient::providesContextHelp() const
@@ -1473,12 +1473,12 @@ void AbstractClient::showContextHelp()
 
 QPointer<Decoration::DecoratedClientImpl> AbstractClient::decoratedClient() const
 {
-    return m_decoratedClient;
+    return m_decoration.client;
 }
 
 void AbstractClient::setDecoratedClient(QPointer< Decoration::DecoratedClientImpl > client)
 {
-    m_decoratedClient = client;
+    m_decoration.client = client;
 }
 
 }
