@@ -237,6 +237,7 @@ void WaylandServer::initWorkspace()
 
     ScreenLocker::KSldApp::self();
     ScreenLocker::KSldApp::self()->setWaylandDisplay(m_display);
+    ScreenLocker::KSldApp::self()->setGreeterEnvironment(kwinApp()->processStartupEnvironment());
     ScreenLocker::KSldApp::self()->initialize();
 
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::greeterClientConnectionChanged, this,
