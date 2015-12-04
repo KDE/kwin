@@ -105,6 +105,7 @@ public:
      * @see findClient(Predicate, xcb_window_t)
      */
     Client *findClient(std::function<bool (const Client*)> func) const;
+    AbstractClient *findAbstractClient(std::function<bool (const AbstractClient*)> func) const;
     /**
      * @brief Finds the Client matching the given match @p predicate for the given window.
      *

@@ -1615,6 +1615,17 @@ Client *Workspace::findClient(std::function<bool (const Client*)> func) const
     return nullptr;
 }
 
+AbstractClient *Workspace::findAbstractClient(std::function<bool (const AbstractClient*)> func) const
+{
+    if (AbstractClient *ret = Toplevel::findInList(m_allClients, func)) {
+        return ret;
+    }
+    if (Client *ret = Toplevel::findInList(desktops, func)) {
+        return ret;
+    }
+    return nullptr;
+}
+
 Unmanaged *Workspace::findUnmanaged(std::function<bool (const Unmanaged*)> func) const
 {
     return Toplevel::findInList(unmanaged, func);
