@@ -207,7 +207,7 @@ void DecorationBridge::findTheme(const QVariantMap &map)
 
 std::unique_ptr<KDecoration2::DecoratedClientPrivate> DecorationBridge::createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration)
 {
-    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<Client*>(decoration->parent()), client, decoration));
+    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<AbstractClient*>(decoration->parent()), client, decoration));
 }
 
 std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::settings(KDecoration2::DecorationSettings *parent)
@@ -225,7 +225,7 @@ void DecorationBridge::update(KDecoration2::Decoration *decoration, const QRect 
     }
 }
 
-KDecoration2::Decoration *DecorationBridge::createDecoration(Client *client)
+KDecoration2::Decoration *DecorationBridge::createDecoration(AbstractClient *client)
 {
     if (m_noPlugin) {
         return nullptr;

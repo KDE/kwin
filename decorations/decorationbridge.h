@@ -37,7 +37,7 @@ class DecorationSettings;
 namespace KWin
 {
 
-class Client;
+class AbstractClient;
 
 namespace Decoration
 {
@@ -49,7 +49,7 @@ public:
     virtual ~DecorationBridge();
 
     void init();
-    KDecoration2::Decoration *createDecoration(Client *client);
+    KDecoration2::Decoration *createDecoration(AbstractClient *client);
 
     std::unique_ptr<KDecoration2::DecoratedClientPrivate> createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration) override;
     std::unique_ptr<KDecoration2::DecorationSettingsPrivate> settings(KDecoration2::DecorationSettings *parent) override;
