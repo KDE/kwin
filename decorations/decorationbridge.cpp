@@ -218,7 +218,7 @@ std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::setti
 void DecorationBridge::update(KDecoration2::Decoration *decoration, const QRect &geometry)
 {
     // TODO: remove check once all compositors implement it
-    if (Client *c = Workspace::self()->findClient([decoration] (const Client *client) { return client->decoration() == decoration; })) {
+    if (AbstractClient *c = Workspace::self()->findAbstractClient([decoration] (const AbstractClient *client) { return client->decoration() == decoration; })) {
         if (Renderer *renderer = c->decoratedClient()->renderer()) {
             renderer->schedule(geometry);
         }
