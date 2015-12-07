@@ -517,6 +517,13 @@ void Toplevel::setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebuf
     setDepth(32);
 }
 
+QMatrix4x4 Toplevel::inputTransformation() const
+{
+    QMatrix4x4 m;
+    m.translate(-x(), -y());
+    return m;
+}
+
 } // namespace
 
 #include "toplevel.moc"

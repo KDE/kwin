@@ -538,7 +538,7 @@ void InputRedirection::updatePointerWindow()
             }
         }
         if (t && t->surface()) {
-            seat->setFocusedPointerSurface(t->surface(), t->pos());
+            seat->setFocusedPointerSurface(t->surface(), t->inputTransformation());
             connect(t, &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedPointerPosition);
             if (AbstractBackend *b = waylandServer()->backend()) {
                 b->installCursorFromServer();
@@ -679,7 +679,7 @@ void InputRedirection::updateFocusedPointerPosition()
         if (m_pointerWindow.data()->surface() != seat->focusedPointerSurface()) {
             return;
         }
-        seat->setFocusedPointerSurfacePosition(m_pointerWindow.data()->pos());
+        seat->setFocusedPointerSurfaceTransformation(m_pointerWindow.data()->inputTransformation());
     }
 }
 
@@ -710,7 +710,7 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
         Toplevel *t = findToplevel(m_globalPointer.toPoint());
         if (t && t->surface()) {
             if (auto seat = findSeat()) {
-                seat->setFocusedPointerSurface(t->surface(), t->pos());
+                seat->setFocusedPointerSurface(t->surface(), t->inputTransformation());
                 seat->setTimestamp(time);
                 seat->setPointerPos(m_globalPointer);
             }

@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <NETWM>
 // Qt
 #include <QObject>
+#include <QMatrix4x4>
 // xcb
 #include <xcb/damage.h>
 #include <xcb/xfixes.h>
@@ -370,6 +371,14 @@ public:
 
     virtual void setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo);
     const QSharedPointer<QOpenGLFramebufferObject> &internalFramebufferObject() const;
+
+    /**
+     * @returns Transformation to map from global to window coordinates.
+     *
+     * Default implementation returns a translation on negative pos().
+     * @see pos
+     **/
+    virtual QMatrix4x4 inputTransformation() const;
 
     /**
      * @brief Finds the Toplevel matching the condition expressed in @p func in @p list.
