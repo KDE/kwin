@@ -104,7 +104,7 @@ PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentRes
     connect(parent, &SeatInterface::pointerPosChanged, this, [this] {
         Q_D();
         if (d->focusedSurface && d->resource) {
-            const QPointF pos = d->seat->pointerPos() - d->seat->focusedPointerSurfacePosition();
+            const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
             wl_pointer_send_motion(d->resource, d->seat->timestamp(),
                                    wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
         }
@@ -134,7 +134,7 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 seri
         }
     );
 
-    const QPointF pos = d->seat->pointerPos() - d->seat->focusedPointerSurfacePosition();
+    const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
     wl_pointer_send_enter(d->resource, serial,
                           d->focusedSurface->resource(),
                           wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));

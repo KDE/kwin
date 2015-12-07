@@ -483,6 +483,17 @@ SurfaceInterface *SeatInterface::focusedPointerSurface() const
 
 void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QPointF &surfacePosition)
 {
+    QMatrix4x4 m;
+    m.translate(-surfacePosition.x(), -surfacePosition.y());
+    setFocusedPointerSurface(surface, m);
+    Q_D();
+    if (d->globalPointer.focus.surface) {
+        d->globalPointer.focus.offset = surfacePosition;
+    }
+}
+
+void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QMatrix4x4 &transformation)
+{
     Q_D();
     const quint32 serial = d->display->nextSerial();
     if (d->globalPointer.focus.pointer) {
@@ -505,7 +516,8 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QP
                 d->globalPointer.focus = Private::Pointer::Focus();
             }
         );
-        d->globalPointer.focus.offset = surfacePosition;
+        d->globalPointer.focus.offset = QPointF();
+        d->globalPointer.focus.transformation = transformation;
         d->globalPointer.focus.serial = serial;
     }
     if (!p) {
@@ -525,6 +537,8 @@ void SeatInterface::setFocusedPointerSurfacePosition(const QPointF &surfacePosit
     Q_D();
     if (d->globalPointer.focus.surface) {
         d->globalPointer.focus.offset = surfacePosition;
+        d->globalPointer.focus.transformation = QMatrix4x4();
+        d->globalPointer.focus.transformation.translate(-surfacePosition.x(), -surfacePosition.y());
     }
 }
 
@@ -532,6 +546,20 @@ QPointF SeatInterface::focusedPointerSurfacePosition() const
 {
     Q_D();
     return d->globalPointer.focus.offset;
+}
+
+void SeatInterface::setFocusedPointerSurfaceTransformation(const QMatrix4x4 &transformation)
+{
+    Q_D();
+    if (d->globalPointer.focus.surface) {
+        d->globalPointer.focus.transformation = transformation;
+    }
+}
+
+QMatrix4x4 SeatInterface::focusedPointerSurfaceTransformation() const
+{
+    Q_D();
+    return d->globalPointer.focus.transformation;
 }
 
 namespace {

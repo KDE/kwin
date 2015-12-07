@@ -59,6 +59,8 @@ private Q_SLOTS:
     void testCapabilities_data();
     void testCapabilities();
     void testPointer();
+    void testPointerTransformation_data();
+    void testPointerTransformation();
     void testPointerButton_data();
     void testPointerButton();
     void testCursor();
@@ -416,6 +418,111 @@ void TestWaylandSeat::testPointer()
 
     // enter it again
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(0, 0));
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(p->enteredSurface(), s);
+    QCOMPARE(cp.enteredSurface(), s);
+
+    delete s;
+    wl_display_flush(m_connection->display());
+    QTest::qWait(100);
+    QVERIFY(!m_seatInterface->focusedPointerSurface());
+}
+
+void TestWaylandSeat::testPointerTransformation_data()
+{
+    QTest::addColumn<QMatrix4x4>("enterTransformation");
+    // global position at 20/18
+    QTest::addColumn<QPointF>("expectedEnterPoint");
+    // global position at 10/16
+    QTest::addColumn<QPointF>("expectedMovePoint");
+
+    QMatrix4x4 tm;
+    tm.translate(-10, -15);
+    QTest::newRow("translation") << tm << QPointF(10, 3) << QPointF(0, 1);
+    QMatrix4x4 sm;
+    sm.scale(2, 2);
+    QTest::newRow("scale") << sm << QPointF(40, 36) << QPointF(20, 32);
+    QMatrix4x4 rotate;
+    rotate.rotate(90, 0, 0, 1);
+    QTest::newRow("rotate") << rotate << QPointF(-18, 20) << QPointF(-16, 10);
+}
+
+void TestWaylandSeat::testPointerTransformation()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QSignalSpy pointerSpy(m_seat, &Seat::hasPointerChanged);
+    QVERIFY(pointerSpy.isValid());
+    m_seatInterface->setHasPointer(true);
+    QVERIFY(pointerSpy.wait());
+
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    Surface *s = m_compositor->createSurface(m_compositor);
+    QVERIFY(surfaceCreatedSpy.wait());
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    m_seatInterface->setPointerPos(QPoint(20, 18));
+    QFETCH(QMatrix4x4, enterTransformation);
+    m_seatInterface->setFocusedPointerSurface(serverSurface, enterTransformation);
+    QCOMPARE(m_seatInterface->focusedPointerSurfaceTransformation(), enterTransformation);
+    // no pointer yet
+    QVERIFY(m_seatInterface->focusedPointerSurface());
+    QVERIFY(!m_seatInterface->focusedPointer());
+
+    Pointer *p = m_seat->createPointer(m_seat);
+    const Pointer &cp = *p;
+    QVERIFY(p->isValid());
+    QSignalSpy pointerCreatedSpy(m_seatInterface, &SeatInterface::pointerCreated);
+    QVERIFY(pointerCreatedSpy.isValid());
+    // once the pointer is created it should be set as the focused pointer
+    QVERIFY(pointerCreatedSpy.wait());
+    QVERIFY(m_seatInterface->focusedPointer());
+    QCOMPARE(pointerCreatedSpy.first().first().value<PointerInterface*>(), m_seatInterface->focusedPointer());
+
+    m_seatInterface->setFocusedPointerSurface(nullptr);
+    serverSurface->client()->flush();
+    QTest::qWait(100);
+
+    QSignalSpy enteredSpy(p, &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+
+    QSignalSpy leftSpy(p, &Pointer::left);
+    QVERIFY(leftSpy.isValid());
+
+    QSignalSpy motionSpy(p, &Pointer::motion);
+    QVERIFY(motionSpy.isValid());
+
+    QVERIFY(!p->enteredSurface());
+    QVERIFY(!cp.enteredSurface());
+    m_seatInterface->setFocusedPointerSurface(serverSurface, enterTransformation);
+    QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.first().first().value<quint32>(), m_display->serial());
+    QTEST(enteredSpy.first().last().toPointF(), "expectedEnterPoint");
+    PointerInterface *serverPointer = m_seatInterface->focusedPointer();
+    QVERIFY(serverPointer);
+    QCOMPARE(p->enteredSurface(), s);
+    QCOMPARE(cp.enteredSurface(), s);
+
+    // test motion
+    m_seatInterface->setTimestamp(1);
+    m_seatInterface->setPointerPos(QPoint(10, 16));
+    QVERIFY(motionSpy.wait());
+    QTEST(motionSpy.first().first().toPointF(), "expectedMovePoint");
+    QCOMPARE(motionSpy.first().last().value<quint32>(), quint32(1));
+
+    // leave the surface
+    m_seatInterface->setFocusedPointerSurface(nullptr);
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(leftSpy.first().first().value<quint32>(), m_display->serial());
+    QVERIFY(!p->enteredSurface());
+    QVERIFY(!cp.enteredSurface());
+
+    // enter it again
+    m_seatInterface->setFocusedPointerSurface(serverSurface);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(p->enteredSurface(), s);
     QCOMPARE(cp.enteredSurface(), s);

@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 #include <QPoint>
+#include <QMatrix4x4>
 
 #include <KWayland/Server/kwaylandserver_export.h>
 #include "global.h"
@@ -157,6 +158,9 @@ public:
      * Pointer motion events are adjusted to the local position based on the @p surfacePosition.
      * If the surface changes it's position in the global coordinate system
      * use setFocusedPointerSurfacePosition to update.
+     * The surface position is used to create the base transformation matrix to go from global
+     * to surface local coordinates. The default generated matrix is a translation with
+     * negative @p surfacePosition.
      *
      * @param surface The surface which should become the new focused pointer surface.
      * @param surfacePosition The position of the surface in the global coordinate system
@@ -166,8 +170,35 @@ public:
      * @see focusedPointer
      * @see setFocusedPointerSurfacePosition
      * @see focusedPointerSurfacePosition
+     * @see setFocusedPointerSurfaceTransformation
+     * @see focusedPointerSurfaceTransformation
      **/
     void setFocusedPointerSurface(SurfaceInterface *surface, const QPointF &surfacePosition = QPoint());
+    /**
+     * Sets the focused pointer @p surface.
+     * All pointer events will be sent to the @p surface till a new focused pointer surface gets
+     * installed. When the focus pointer surface changes a leave event is sent to the previous
+     * focused surface.
+     *
+     * To unset the focused pointer surface pass @c nullptr as @p surface.
+     *
+     * Pointer motion events are adjusted to the local position based on the @p transformation.
+     * If the surface changes it's position in the global coordinate system
+     * use setFocusedPointerSurfaceTransformation to update.
+     *
+     * @param surface The surface which should become the new focused pointer surface.
+     * @param transformation The transformation to transform global into local coordinates
+     *
+     * @see setPointerPos
+     * @see focucedPointerSurface
+     * @see focusedPointer
+     * @see setFocusedPointerSurfacePosition
+     * @see focusedPointerSurfacePosition
+     * @see setFocusedPointerSurfaceTransformation
+     * @see focusedPointerSurfaceTransformation
+     * @since 5.6
+     **/
+    void setFocusedPointerSurface(SurfaceInterface *surface, const QMatrix4x4 &transformation);
     /**
      * @returns The currently focused pointer surface, that is the surface receiving pointer events.
      * @see setFocusedPointerSurface
@@ -179,19 +210,45 @@ public:
      **/
     PointerInterface *focusedPointer() const;
     /**
-     * Updates the global position of the currently focused pointer surface
+     * Updates the global position of the currently focused pointer surface.
+     *
+     * Updating the focused surface position also generates a new transformation matrix.
+     * The default generated matrix is a translation with negative @p surfacePosition.
+     * If a different transformation is required a dedicated call to
+     * @link setFocusedPointerSurfaceTransformation is required.
      *
      * @param surfacePosition The new global position of the focused pointer surface
      * @see focusedPointerSurface
      * @see setFocusedPointerSurface
+     * @see focusedPointerSurfaceTransformation
+     * @see setFocusedPointerSurfaceTransformation
      **/
     void setFocusedPointerSurfacePosition(const QPointF &surfacePosition);
     /**
      * @returns The position of the focused pointer surface in global coordinates.
      * @see setFocusedPointerSurfacePosition
      * @see setFocusedPointerSurface
+     * @see focusedPointerSurfaceTransformation
      **/
     QPointF focusedPointerSurfacePosition() const;
+    /**
+     * Sets the @p transformation for going from global to local coordinates.
+     *
+     * The default transformation gets generated from the surface position and reset whenever
+     * the surface position changes.
+     *
+     * @see focusedPointerSurfaceTransformation
+     * @see focusedPointerSurfacePosition
+     * @see setFocusedPointerSurfacePosition
+     * @since 5.6
+     **/
+    void setFocusedPointerSurfaceTransformation(const QMatrix4x4 &transformation);
+    /**
+     * @returns The transformation applied to pointer position to go from global to local coordinates.
+     * @see setFocusedPointerSurfaceTransformation
+     * @since 5.6
+     **/
+    QMatrix4x4 focusedPointerSurfaceTransformation() const;
     /**
      * Marks the @p button as pressed.
      *

@@ -74,6 +74,7 @@ public:
             PointerInterface *pointer = nullptr;
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
+            QMatrix4x4 transformation;
             quint32 serial = 0;
         };
         Focus focus;
