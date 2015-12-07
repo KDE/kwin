@@ -835,4 +835,11 @@ void ShellClient::doResizeSync()
     requestGeometry(moveResizeGeometry());
 }
 
+QMatrix4x4 ShellClient::inputTransformation() const
+{
+    QMatrix4x4 m = Toplevel::inputTransformation();
+    m.translate(-borderLeft(), -borderTop());
+    return m;
+}
+
 }

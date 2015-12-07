@@ -116,6 +116,8 @@ public:
     bool hasTransientPlacementHint() const override;
     QPoint transientPlacementHint() const override;
 
+    QMatrix4x4 inputTransformation() const override;
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
