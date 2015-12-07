@@ -570,6 +570,11 @@ bool ShellClient::userCanSetNoBorder() const
 
 bool ShellClient::wantsInput() const
 {
+    return rules()->checkAcceptFocus(acceptsFocus());
+}
+
+bool ShellClient::acceptsFocus() const
+{
     if (isInternal()) {
         return false;
     }

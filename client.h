@@ -410,6 +410,7 @@ protected:
     bool isWaitingForMoveResizeSync() const override;
     void doResizeSync() override;
     QSize resizeIncrements() const override;
+    bool acceptsFocus() const override;
 
 private Q_SLOTS:
     void delayedSetShortcut();

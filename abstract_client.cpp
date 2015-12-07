@@ -804,7 +804,7 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
         break;
     case Options::MouseActivateAndRaise: {
         replay = isActive(); // for clickraise mode
-        bool mustReplay = !rules()->checkAcceptFocus(info->input());
+        bool mustReplay = !rules()->checkAcceptFocus(acceptsFocus());
         if (mustReplay) {
             ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),
                                      begin = workspace()->stackingOrder().constBegin();
@@ -824,13 +824,13 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
         workspace()->requestFocus(this);
         workspace()->lowerClient(this);
         screens()->setCurrent(globalPos);
-        replay = replay || !rules()->checkAcceptFocus(info->input());
+        replay = replay || !rules()->checkAcceptFocus(acceptsFocus());
         break;
     case Options::MouseActivate:
         replay = isActive(); // for clickraise mode
         workspace()->takeActivity(this, Workspace::ActivityFocus);
         screens()->setCurrent(globalPos);
-        replay = replay || !rules()->checkAcceptFocus(info->input());
+        replay = replay || !rules()->checkAcceptFocus(acceptsFocus());
         break;
     case Options::MouseActivateRaiseAndPassClick:
         workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);

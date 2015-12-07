@@ -129,6 +129,7 @@ protected:
     }
     void doResizeSync() override;
     bool isWaitingForMoveResizeSync() const override;
+    bool acceptsFocus() const override;
 
 private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);

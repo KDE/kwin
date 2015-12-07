@@ -1815,7 +1815,12 @@ void Client::sendSyncRequest()
 
 bool Client::wantsInput() const
 {
-    return rules()->checkAcceptFocus(info->input() || info->supportsProtocol(NET::TakeFocusProtocol));
+    return rules()->checkAcceptFocus(acceptsFocus() || info->supportsProtocol(NET::TakeFocusProtocol));
+}
+
+bool Client::acceptsFocus() const
+{
+    return info->input();
 }
 
 void Client::setBlockingCompositing(bool block)
