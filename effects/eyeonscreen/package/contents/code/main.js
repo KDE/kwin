@@ -135,6 +135,10 @@ var eyeOnScreenEffect = {
                             }]
                         });
                     }
+                    if (w.eyeOnScreenOpacityKeeper !== undefined) {
+                        cancel(w.eyeOnScreenOpacityKeeper);
+                        delete w.eyeOnScreenOpacityKeeper;
+                    }
                     animate({
                         window: w,
                         duration: eyeOnScreenEffect.duration,
