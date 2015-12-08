@@ -827,7 +827,7 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         QRegion center = toplevel->transparentRect();
         QRegion decoration = (client && true ?
                               QRegion(client->decorationRect()) : shape()) - center;
-        ret = makeQuads(WindowQuadContents, contents);
+        ret = makeQuads(WindowQuadContents, contents, client->clientContentPos());
 
         QRect rects[4];
         bool isShadedClient = false;
@@ -910,16 +910,16 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
     return list;
 }
 
-WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg) const
+WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg, const QPoint &textureOffset) const
 {
     WindowQuadList ret;
     foreach (const QRect & r, reg.rects()) {
         WindowQuad quad(type);
         // TODO asi mam spatne pravy dolni roh - bud tady, nebo v jinych castech
-        quad[ 0 ] = WindowVertex(r.x(), r.y(), r.x(), r.y());
-        quad[ 1 ] = WindowVertex(r.x() + r.width(), r.y(), r.x() + r.width(), r.y());
-        quad[ 2 ] = WindowVertex(r.x() + r.width(), r.y() + r.height(), r.x() + r.width(), r.y() + r.height());
-        quad[ 3 ] = WindowVertex(r.x(), r.y() + r.height(), r.x(), r.y() + r.height());
+        quad[ 0 ] = WindowVertex(r.x(), r.y(), r.x() + textureOffset.x(), r.y() + textureOffset.y());
+        quad[ 1 ] = WindowVertex(r.x() + r.width(), r.y(), r.x() + r.width() + textureOffset.x(), r.y() + textureOffset.y());
+        quad[ 2 ] = WindowVertex(r.x() + r.width(), r.y() + r.height(), r.x() + r.width() + textureOffset.x(), r.y() + r.height() + textureOffset.y());
+        quad[ 3 ] = WindowVertex(r.x(), r.y() + r.height(), r.x() + textureOffset.x(), r.y() + r.height() + textureOffset.y());
         ret.append(quad);
     }
     return ret;

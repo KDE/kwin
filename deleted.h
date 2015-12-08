@@ -49,6 +49,9 @@ public:
     virtual QStringList activities() const;
     virtual QPoint clientPos() const;
     virtual QSize clientSize() const;
+    QPoint clientContentPos() const override {
+        return m_contentPos;
+    }
     virtual QRect transparentRect() const;
     virtual bool isDeleted() const;
     virtual xcb_window_t frameId() const override;
@@ -93,6 +96,7 @@ private:
     int desk;
     QStringList activityList;
     QRect contentsRect; // for clientPos()/clientSize()
+    QPoint m_contentPos;
     QRect transparent_rect;
     xcb_window_t m_frame;
 

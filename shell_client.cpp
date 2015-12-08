@@ -200,6 +200,11 @@ QPoint ShellClient::clientPos() const
     return QPoint(0, 0);
 }
 
+QPoint ShellClient::clientContentPos() const
+{
+    return -1 * clientPos();
+}
+
 QSize ShellClient::clientSize() const
 {
     // TODO: connect for changes

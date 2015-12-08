@@ -78,6 +78,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     desk = c->desktop();
     activityList = c->activities();
     contentsRect = QRect(c->clientPos(), c->clientSize());
+    m_contentPos = c->clientContentPos();
     transparent_rect = c->transparentRect();
     m_layer = c->layer();
     m_frame = c->frameId();

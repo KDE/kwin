@@ -280,7 +280,7 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
     renderWindowDecorations(painter);
 
     // render content
-    const QRect src = QRect(toplevel->clientPos(), toplevel->clientSize());
+    const QRect src = QRect(toplevel->clientPos() + toplevel->clientContentPos(), toplevel->clientSize());
     painter->drawImage(toplevel->clientPos(), pixmap->image(), src);
 
     if (!opaque) {

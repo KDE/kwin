@@ -226,6 +226,11 @@ public:
     bool isOnActiveScreen() const;
     int screen() const; // the screen where the center is
     virtual QPoint clientPos() const = 0; // inside of geometry()
+    /**
+     * Describes how the client's content maps to the window geometry including the frame.
+     * The default implementation is a 1:1 mapping meaning the frame is part of the content.
+     **/
+    virtual QPoint clientContentPos() const;
     virtual QSize clientSize() const = 0;
     virtual QRect visibleRect() const; // the area the window occupies on the screen
     virtual QRect decorationRect() const; // rect including the decoration shadows
@@ -772,6 +777,11 @@ inline KWayland::Server::SurfaceInterface *Toplevel::surface() const
 inline const QSharedPointer<QOpenGLFramebufferObject> &Toplevel::internalFramebufferObject() const
 {
     return m_internalFBO;
+}
+
+inline QPoint Toplevel::clientContentPos() const
+{
+    return QPoint(0, 0);
 }
 
 template <class T, class U>
