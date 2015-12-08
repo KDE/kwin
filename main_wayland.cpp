@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCommandLineParser>
 #include <QtConcurrentRun>
 #include <QFile>
+#include <QFileInfo>
 #include <QFutureWatcher>
 #include <QProcess>
 #include <QSocketNotifier>
@@ -50,6 +51,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif // HAVE_UNISTD_H
+
+#if HAVE_SYS_PRCTL_H
+#include <sys/prctl.h>
+#endif
 
 #include <iostream>
 #include <iomanip>
@@ -382,10 +387,26 @@ static QString automaticBackendSelection()
     return s_fbdevPlugin;
 }
 
+static void disablePtrace()
+{
+#if HAVE_PR_SET_DUMPABLE
+    // check whether we are running under a debugger
+    const QFileInfo parent(QStringLiteral("/proc/%1/exe").arg(getppid()));
+    if (parent.isSymLink() && parent.symLinkTarget().endsWith(QLatin1String("/gdb"))) {
+        // debugger, don't adjust
+        return;
+    }
+
+    // disable ptrace in kwin_wayland
+    prctl(PR_SET_DUMPABLE, 0);
+#endif
+}
+
 } // namespace
 
 int main(int argc, char * argv[])
 {
+    KWin::disablePtrace();
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
 
