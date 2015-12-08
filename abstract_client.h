@@ -284,6 +284,10 @@ public:
 
     bool wantsTabFocus() const;
 
+    QPoint clientPos() const override {
+        return QPoint(borderLeft(), borderTop());
+    }
+
     virtual void updateMouseGrab();
     virtual QString caption(bool full = true, bool stripped = false) const = 0;
     virtual bool isCloseable() const = 0;

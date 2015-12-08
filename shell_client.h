@@ -43,7 +43,6 @@ public:
     virtual ~ShellClient();
 
     QStringList activities() const override;
-    QPoint clientPos() const override;
     QPoint clientContentPos() const override;
     QSize clientSize() const override;
     QRect transparentRect() const override;

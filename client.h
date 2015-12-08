@@ -145,7 +145,6 @@ public:
     QSize minSize() const override;
     QSize maxSize() const override;
     QSize basicUnit() const;
-    virtual QPoint clientPos() const; // Inside of geometry()
     virtual QSize clientSize() const;
     QPoint inputPos() const { return input_offset; } // Inside of geometry()
 
@@ -717,11 +716,6 @@ inline int Client::sessionStackingOrder() const
 inline bool Client::isManaged() const
 {
     return m_managed;
-}
-
-inline QPoint Client::clientPos() const
-{
-    return QPoint(borderLeft(), borderTop());
 }
 
 inline QSize Client::clientSize() const

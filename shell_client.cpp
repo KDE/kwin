@@ -195,11 +195,6 @@ QStringList ShellClient::activities() const
     return QStringList();
 }
 
-QPoint ShellClient::clientPos() const
-{
-    return QPoint(0, 0);
-}
-
 QPoint ShellClient::clientContentPos() const
 {
     return -1 * clientPos();
