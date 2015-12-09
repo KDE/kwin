@@ -23,7 +23,7 @@ target_link_libraries(kwin_presentwindows_config
     KF5::XmlGui
 )
 
-kcoreaddons_desktop_to_json(kwin_presentwindows_config presentwindows_config.desktop)
+kcoreaddons_desktop_to_json(kwin_presentwindows_config presentwindows_config.desktop SERVICE_TYPES kcmodule.desktop)
 
 install(
     TARGETS

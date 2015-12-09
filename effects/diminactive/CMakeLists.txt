@@ -14,7 +14,7 @@ target_link_libraries(kwin_diminactive_config
     KF5::Service
 )
 
-kcoreaddons_desktop_to_json(kwin_diminactive_config diminactive_config.desktop)
+kcoreaddons_desktop_to_json(kwin_diminactive_config diminactive_config.desktop SERVICE_TYPES kcmodule.desktop)
 
 install(
     TARGETS

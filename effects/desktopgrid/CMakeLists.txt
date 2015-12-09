@@ -25,7 +25,7 @@ target_link_libraries(kwin_desktopgrid_config
     KF5::XmlGui
 )
 
-kcoreaddons_desktop_to_json(kwin_desktopgrid_config desktopgrid_config.desktop)
+kcoreaddons_desktop_to_json(kwin_desktopgrid_config desktopgrid_config.desktop SERVICE_TYPES kcmodule.desktop SERVICE_TYPES kcmodule.desktop)
 
 install(
     TARGETS
