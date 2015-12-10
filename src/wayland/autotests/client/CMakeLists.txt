@@ -222,3 +222,14 @@ add_executable(testDataDevice ${testDataDevice_SRCS})
 target_link_libraries( testDataDevice Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
 add_test(kwayland-testDataDevice testDataDevice)
 ecm_mark_as_test(testDataDevice)
+
+########################################################
+# Test ServerSideDecoration
+########################################################
+set( testServerSideDecoration_SRCS
+        test_server_side_decoration.cpp
+    )
+add_executable(testServerSideDecoration ${testServerSideDecoration_SRCS})
+target_link_libraries( testServerSideDecoration Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
+add_test(kwayland-testServerSideDecoration testServerSideDecoration)
+ecm_mark_as_test(testServerSideDecoration)

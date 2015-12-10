@@ -27,6 +27,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/registry.h"
 #include "../../src/client/output.h"
 #include "../../src/client/seat.h"
+#include "../../src/client/server_decoration.h"
 #include "../../src/client/shell.h"
 #include "../../src/client/subcompositor.h"
 #include "../../src/server/compositor_interface.h"
@@ -38,6 +39,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/shell_interface.h"
 #include "../../src/server/blur_interface.h"
 #include "../../src/server/contrast_interface.h"
+#include "../../src/server/server_decoration_interface.h"
 #include "../../src/server/slide_interface.h"
 #include "../../src/server/subcompositor_interface.h"
 #include "../../src/server/outputmanagement_interface.h"
@@ -45,6 +47,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // Wayland
 #include <wayland-client-protocol.h>
 #include <wayland-dpms-client-protocol.h>
+#include <wayland-server-decoration-client-protocol.h>
 
 class TestWaylandRegistry : public QObject
 {
@@ -67,6 +70,7 @@ private Q_SLOTS:
     void testBindContrastManager();
     void testBindSlideManager();
     void testBindDpmsManager();
+    void testBindServerSideDecorationManager();
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
@@ -84,6 +88,7 @@ private:
     KWayland::Server::SubCompositorInterface *m_subcompositor;
     KWayland::Server::DataDeviceManagerInterface *m_dataDeviceManager;
     KWayland::Server::OutputManagementInterface *m_outputManagement;
+    KWayland::Server::ServerSideDecorationManagerInterface *m_serverSideDecorationManager;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-registry-0");
@@ -99,6 +104,7 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_subcompositor(nullptr)
     , m_dataDeviceManager(nullptr)
     , m_outputManagement(nullptr)
+    , m_serverSideDecorationManager(nullptr)
 {
 }
 
@@ -129,6 +135,8 @@ void TestWaylandRegistry::init()
     m_display->createContrastManager(this)->create();
     m_display->createSlideManager(this)->create();
     m_display->createDpmsManager()->create();
+    m_serverSideDecorationManager = m_display->createServerSideDecorationManager();
+    m_serverSideDecorationManager->create();
 }
 
 void TestWaylandRegistry::cleanup()
@@ -251,6 +259,11 @@ void TestWaylandRegistry::testBindDpmsManager()
     TEST_BIND(KWayland::Client::Registry::Interface::Dpms, SIGNAL(dpmsAnnounced(quint32,quint32)), bindDpmsManager, org_kde_kwin_dpms_manager_destroy)
 }
 
+void TestWaylandRegistry::testBindServerSideDecorationManager()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::ServerSideDecorationManager, SIGNAL(serverSideDecorationManagerAnnounced(quint32,quint32)), bindServerSideDecorationManager, org_kde_kwin_server_decoration_manager_destroy)
+}
+
 #undef TEST_BIND
 
 void TestWaylandRegistry::testRemoval()
@@ -284,6 +297,8 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(subCompositorAnnouncedSpy.isValid());
     QSignalSpy outputManagementAnnouncedSpy(&registry, SIGNAL(outputManagementAnnounced(quint32,quint32)));
     QVERIFY(outputManagementAnnouncedSpy.isValid());
+    QSignalSpy serverSideDecorationManagerAnnouncedSpy(&registry, &Registry::serverSideDecorationManagerAnnounced);
+    QVERIFY(serverSideDecorationManagerAnnouncedSpy.isValid());
 
     QVERIFY(!registry.isValid());
     registry.create(connection.display());
@@ -297,6 +312,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!seatAnnouncedSpy.isEmpty());
     QVERIFY(!subCompositorAnnouncedSpy.isEmpty());
     QVERIFY(!outputManagementAnnouncedSpy.isEmpty());
+    QVERIFY(!serverSideDecorationManagerAnnouncedSpy.isEmpty());
 
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Compositor));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Output));
@@ -307,6 +323,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::SubCompositor));
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::FullscreenShell));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::OutputManagement));
+    QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::ServerSideDecorationManager));
 
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Compositor).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Output).isEmpty());
@@ -317,6 +334,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::SubCompositor).isEmpty());
     QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::FullscreenShell).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::OutputManagement).isEmpty());
+    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::ServerSideDecorationManager).isEmpty());
 
     QSignalSpy seatRemovedSpy(&registry, SIGNAL(seatRemoved(quint32)));
     QVERIFY(seatRemovedSpy.isValid());
@@ -326,6 +344,7 @@ void TestWaylandRegistry::testRemoval()
     Output *output = registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
     Compositor *compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, &registry);
     SubCompositor *subcompositor = registry.createSubCompositor(registry.interface(Registry::Interface::SubCompositor).name, registry.interface(Registry::Interface::SubCompositor).version, &registry);
+    ServerSideDecorationManager *serverSideDeco = registry.createServerSideDecorationManager(registry.interface(Registry::Interface::ServerSideDecorationManager).name, registry.interface(Registry::Interface::ServerSideDecorationManager).version, &registry);
     connection.flush();
     m_display->dispatchEvents();
     QSignalSpy seatObjectRemovedSpy(seat, &Seat::removed);
@@ -404,6 +423,18 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::OutputManagement));
     QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::OutputManagement).isEmpty());
 
+    QSignalSpy serverSideDecoManagerRemovedSpy(&registry, &Registry::serverSideDecorationManagerRemoved);
+    QVERIFY(serverSideDecoManagerRemovedSpy.isValid());
+    QSignalSpy serverSideDecoManagerObjectRemovedSpy(serverSideDeco, &ServerSideDecorationManager::removed);
+    QVERIFY(serverSideDecoManagerObjectRemovedSpy.isValid());
+
+    delete m_serverSideDecorationManager;
+    QVERIFY(serverSideDecoManagerRemovedSpy.wait());
+    QCOMPARE(serverSideDecoManagerRemovedSpy.first().first(), serverSideDecorationManagerAnnouncedSpy.first().first());
+    QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::ServerSideDecorationManager));
+    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::ServerSideDecorationManager).isEmpty());
+    QCOMPARE(serverSideDecoManagerObjectRemovedSpy.count(), 1);
+
     // cannot test shmRemoved as there is no functionality for it
 
     // verify everything has been removed only once
@@ -412,6 +443,7 @@ void TestWaylandRegistry::testRemoval()
     QCOMPARE(outputObjectRemovedSpy.count(), 1);
     QCOMPARE(compositorObjectRemovedSpy.count(), 1);
     QCOMPARE(subcompositorObjectRemovedSpy.count(), 1);
+    QCOMPARE(serverSideDecoManagerObjectRemovedSpy.count(), 1);
 }
 
 void TestWaylandRegistry::testDestroy()
