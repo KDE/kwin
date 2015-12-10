@@ -65,6 +65,7 @@ class SeatInterface;
 class ShadowManagerInterface;
 class BlurManagerInterface;
 class ContrastManagerInterface;
+class ServerSideDecorationManagerInterface;
 class SlideManagerInterface;
 class ShellInterface;
 class SubCompositorInterface;
@@ -165,6 +166,10 @@ public:
     ContrastManagerInterface *createContrastManager(QObject *parent = nullptr);
     SlideManagerInterface *createSlideManager(QObject *parent = nullptr);
     DpmsManagerInterface *createDpmsManager(QObject *parent = nullptr);
+    /**
+     * @since 5.6
+     **/
+    ServerSideDecorationManagerInterface *createServerSideDecorationManager(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

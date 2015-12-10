@@ -35,6 +35,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow_interface.h"
 #include "blur_interface.h"
 #include "contrast_interface.h"
+#include "server_decoration_interface.h"
 #include "slide_interface.h"
 #include "shell_interface.h"
 #include "subcompositor_interface.h"
@@ -323,6 +324,13 @@ DpmsManagerInterface *Display::createDpmsManager(QObject *parent)
 {
     auto d = new DpmsManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [this, d] { delete d; });
+    return d;
+}
+
+ServerSideDecorationManagerInterface *Display::createServerSideDecorationManager(QObject *parent)
+{
+    auto d = new ServerSideDecorationManagerInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
 }
 

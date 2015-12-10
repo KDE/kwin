@@ -29,6 +29,7 @@ set(SERVER_LIB_SRCS
     shadow_interface.cpp
     blur_interface.cpp
     contrast_interface.cpp
+    server_decoration_interface.cpp
     shell_interface.cpp
     surface_interface.cpp
     subcompositor_interface.cpp
@@ -94,6 +95,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME slide
 )
 
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/server-decoration.xml
+    BASENAME server_decoration
+)
+
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
 generate_export_header(KF5WaylandServer
     BASE_NAME
@@ -156,6 +162,7 @@ install(FILES
   region_interface.h
   resource.h
   seat_interface.h
+  server_decoration_interface.h
   shadow_interface.h
   shell_interface.h
   slide_interface.h
