@@ -17,8 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_SCENE_QPAINTER_X11_BACKEND_H
-#define KWIN_SCENE_QPAINTER_X11_BACKEND_H
+#ifndef KWIN_SCENE_QPAINTER_VIRTUAL_BACKEND_H
+#define KWIN_SCENE_QPAINTER_VIRTUAL_BACKEND_H
 
 #include "scene_qpainter.h"
 

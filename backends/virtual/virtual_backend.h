@@ -17,8 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_X11WINDOWED_BACKEND_H
-#define KWIN_X11WINDOWED_BACKEND_H
+#ifndef KWIN_VIRTUAL_BACKEND_H
+#define KWIN_VIRTUAL_BACKEND_H
 #include "abstract_backend.h"
 
 #include <kwin_export.h>
