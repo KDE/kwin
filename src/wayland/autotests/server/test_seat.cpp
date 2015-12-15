@@ -37,6 +37,7 @@ private Q_SLOTS:
     void testPointerPos();
     void testDestroyThroughTerminate();
     void testRepeatInfo();
+    void testMultiple();
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-server-seat-test-0");
@@ -195,6 +196,38 @@ void TestWaylandServerSeat::testRepeatInfo()
     seat->setKeyRepeatInfo(-25, -660);
     QCOMPARE(seat->keyRepeatRate(), 0);
     QCOMPARE(seat->keyRepeatDelay(), 0);
+}
+
+void TestWaylandServerSeat::testMultiple()
+{
+    Display display;
+    display.setSocketName(s_socketName);
+    display.start();
+    QVERIFY(display.seats().isEmpty());
+    SeatInterface *seat1 = display.createSeat();
+    QCOMPARE(display.seats().count(), 1);
+    QCOMPARE(display.seats().at(0), seat1);
+    SeatInterface *seat2 = display.createSeat();
+    QCOMPARE(display.seats().count(), 2);
+    QCOMPARE(display.seats().at(0), seat1);
+    QCOMPARE(display.seats().at(1), seat2);
+    SeatInterface *seat3 = display.createSeat();
+    QCOMPARE(display.seats().count(), 3);
+    QCOMPARE(display.seats().at(0), seat1);
+    QCOMPARE(display.seats().at(1), seat2);
+    QCOMPARE(display.seats().at(2), seat3);
+
+    delete seat3;
+    QCOMPARE(display.seats().count(), 2);
+    QCOMPARE(display.seats().at(0), seat1);
+    QCOMPARE(display.seats().at(1), seat2);
+
+    delete seat2;
+    QCOMPARE(display.seats().count(), 1);
+    QCOMPARE(display.seats().at(0), seat1);
+
+    delete seat1;
+    QCOMPARE(display.seats().count(), 0);
 }
 
 QTEST_GUILESS_MAIN(TestWaylandServerSeat)

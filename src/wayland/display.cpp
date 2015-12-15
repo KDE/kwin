@@ -69,6 +69,7 @@ public:
     bool running = false;
     QList<OutputInterface*> outputs;
     QList<OutputDeviceInterface*> outputdevices;
+    QVector<SeatInterface*> seats;
     QVector<ClientConnection*> clients;
     EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 
@@ -235,7 +236,9 @@ OutputManagementInterface *Display::createOutputManagement(QObject *parent)
 SeatInterface *Display::createSeat(QObject *parent)
 {
     SeatInterface *seat = new SeatInterface(this, parent);
+    connect(seat, &QObject::destroyed, this, [this, seat] { d->seats.removeAll(seat); });
     connect(this, &Display::aboutToTerminate, seat, [this,seat] { delete seat; });
+    d->seats << seat;
     return seat;
 }
 
@@ -374,6 +377,11 @@ QList< OutputInterface* > Display::outputs() const
 QList< OutputDeviceInterface* > Display::outputDevices() const
 {
     return d->outputdevices;
+}
+
+QVector<SeatInterface*> Display::seats() const
+{
+    return d->seats;
 }
 
 ClientConnection *Display::getConnection(wl_client *client)

@@ -147,6 +147,11 @@ public:
     void createShm();
     ShellInterface *createShell(QObject *parent = nullptr);
     SeatInterface *createSeat(QObject *parent = nullptr);
+    /**
+     * @returns All SeatInterface currently managed on the Display.
+     * @since 5.6
+     **/
+    QVector<SeatInterface*> seats() const;
     SubCompositorInterface *createSubCompositor(QObject *parent = nullptr);
     DataDeviceManagerInterface *createDataDeviceManager(QObject *parent = nullptr);
     OutputManagementInterface *createOutputManagement(QObject *parent = nullptr);
