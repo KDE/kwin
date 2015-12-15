@@ -330,7 +330,7 @@ void UserActionsMenu::init()
                 // opens the KWin configuration
                 QStringList args;
                 args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows") << configModules(false);
-                QProcess *p = new QProcess(this);
+                QProcess *p = new Process(this);
                 p->setArguments(args);
                 p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
                 p->setProgram(QStringLiteral("kcmshell5"));
