@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPoint>
 #include <QRect>
 #include <QScopedPointer>
+#include <QProcess>
 // system
 #include <limits.h>
 Q_DECLARE_LOGGING_CATEGORY(KWIN_CORE)
@@ -225,6 +226,20 @@ public:
 private:
     QPoint m_point;
     bool m_valid = false;
+};
+
+/**
+ * QProcess subclass which unblocks SIGUSR in the child process.
+ **/
+class KWIN_EXPORT Process : public QProcess
+{
+    Q_OBJECT
+public:
+    explicit Process(QObject *parent = nullptr);
+    virtual ~Process();
+
+protected:
+    void setupChildProcess() override;
 };
 
 } // namespace

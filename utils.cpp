@@ -42,6 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "workspace.h"
 
+#include <signal.h>
+
 #endif
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtCriticalMsg)
@@ -140,6 +142,22 @@ void ungrabXKeyboard()
     }
     keyboard_grabbed = false;
     xcb_ungrab_keyboard(connection(), XCB_TIME_CURRENT_TIME);
+}
+
+Process::Process(QObject *parent)
+    : QProcess(parent)
+{
+}
+
+Process::~Process() = default;
+
+void Process::setupChildProcess()
+{
+    sigset_t userSiganls;
+    sigemptyset(&userSiganls);
+    sigaddset(&userSiganls, SIGUSR1);
+    sigaddset(&userSiganls, SIGUSR2);
+    pthread_sigmask(SIG_UNBLOCK, &userSiganls, nullptr);
 }
 
 #endif

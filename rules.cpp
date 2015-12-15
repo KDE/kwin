@@ -1007,7 +1007,7 @@ void RuleBook::edit(AbstractClient* c, bool whole_app)
     args << QStringLiteral("--wid") << QString::number(c->window());
     if (whole_app)
         args << QStringLiteral("--whole-app");
-    QProcess *p = new QProcess(this);
+    QProcess *p = new Process(this);
     p->setArguments(args);
     p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
     p->setProgram(QStringLiteral(KWIN_RULES_DIALOG_BIN));
