@@ -198,6 +198,7 @@ void ApplicationWayland::continueStartupWithX()
             environment.remove("DISPLAY");
             environment.remove("WAYLAND_DISPLAY");
             QProcess *p = new QProcess(this);
+            p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
             auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
             connect(p, finishedSignal, this,
                 [this, p] {
@@ -217,6 +218,7 @@ void ApplicationWayland::continueStartupWithX()
     // start session
     if (!m_sessionArgument.isEmpty()) {
         QProcess *p = new QProcess(this);
+        p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
         p->setProcessEnvironment(m_environment);
         auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
         connect(p, finishedSignal, this, &ApplicationWayland::quit);
@@ -228,6 +230,7 @@ void ApplicationWayland::continueStartupWithX()
             // note: this will kill the started process when we exit
             // this is going to happen anyway as we are the wayland and X server the app connects to
             QProcess *p = new QProcess(this);
+            p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
             p->setProcessEnvironment(m_environment);
             p->start(application);
         }
@@ -297,6 +300,7 @@ void ApplicationWayland::startXwaylandServer()
     m_xcbConnectionFd = sx[0];
 
     m_xwaylandProcess = new QProcess(kwinApp());
+    m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
     m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
     QProcessEnvironment env = m_environment;
     env.insert("WAYLAND_SOCKET", QByteArray::number(wlfd));
