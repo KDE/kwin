@@ -173,7 +173,8 @@ void ApplicationX11::performStartup()
                                                                                                                  maskValues)));
         if (!redirectCheck.isNull()) {
             fputs(i18n("kwin: another window manager is running (try using --replace)\n").toLocal8Bit().constData(), stderr);
-            ::exit(1);
+            if (!wasCrash()) // if this is a crash-restart, DrKonqi may have stopped the process w/o killing the connection
+                ::exit(1);
         }
 
         createInput();
@@ -185,7 +186,7 @@ void ApplicationX11::performStartup()
     });
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();
-    owner->claim(m_replace, true);
+    owner->claim(m_replace || wasCrash(), true);
 
     createAtoms();
 }
