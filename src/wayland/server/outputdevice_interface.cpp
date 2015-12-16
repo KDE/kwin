@@ -561,7 +561,7 @@ void KWayland::Server::OutputDeviceInterface::Private::sendEdid()
 {
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         org_kde_kwin_outputdevice_send_edid((*it).resource,
-                                            edid.constData());
+                                            edid.toBase64().constData());
     }
 
 }
