@@ -110,7 +110,7 @@ void TestWaylandOutputDevice::init()
 
     m_serverOutputDevice->setCurrentMode(1);
 
-    m_edid = "AP///////wAQrBbwTExLQQ4WAQOANCB46h7Frk80sSYOUFSlSwCBgKlA0QBxTwEBAQEBAQEBKDyAoHCwI0AwIDYABkQhAAAaAAAA/wBGNTI1TTI0NUFLTEwKAAAA/ABERUxMIFUyNDEwCiAgAAAA/QA4TB5REQAKICAgICAgAToCAynxUJAFBAMCBxYBHxITFCAVEQYjCQcHZwMMABAAOC2DAQAA4wUDAQI6gBhxOC1AWCxFAAZEIQAAHgEdgBhxHBYgWCwlAAZEIQAAngEdAHJR0B4gbihVAAZEIQAAHowK0Iog4C0QED6WAAZEIQAAGAAAAAAAAAAAAAAAAAAAPg==";
+    m_edid = QByteArray::fromBase64("AP///////wAQrBbwTExLQQ4WAQOANCB46h7Frk80sSYOUFSlSwCBgKlA0QBxTwEBAQEBAQEBKDyAoHCwI0AwIDYABkQhAAAaAAAA/wBGNTI1TTI0NUFLTEwKAAAA/ABERUxMIFUyNDEwCiAgAAAA/QA4TB5REQAKICAgICAgAToCAynxUJAFBAMCBxYBHxITFCAVEQYjCQcHZwMMABAAOC2DAQAA4wUDAQI6gBhxOC1AWCxFAAZEIQAAHgEdgBhxHBYgWCwlAAZEIQAAngEdAHJR0B4gbihVAAZEIQAAHowK0Iog4C0QED6WAAZEIQAAGAAAAAAAAAAAAAAAAAAAPg==");
     m_serverOutputDevice->setEdid(m_edid);
 
     m_serverOutputDevice->create();
@@ -183,7 +183,7 @@ void TestWaylandOutputDevice::testRegistry()
     QCOMPARE(output.transform(), KWayland::Client::OutputDevice::Transform::Normal);
     QCOMPARE(output.enabled(), OutputDevice::Enablement::Enabled);
     QCOMPARE(output.edid(), QByteArray());
-    QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::changed);
+    QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::done);
     QVERIFY(outputChanged.isValid());
 
     output.setup(registry.bindOutputDevice(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
