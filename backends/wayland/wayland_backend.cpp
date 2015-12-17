@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
+#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -423,6 +424,19 @@ void WaylandBackend::createSurface()
     if (!m_surface || !m_surface->isValid()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Surface failed";
         return;
+    }
+    using namespace KWayland::Client;
+    auto iface = m_registry->interface(Registry::Interface::ServerSideDecorationManager);
+    if (iface.name != 0) {
+        auto manager = m_registry->createServerSideDecorationManager(iface.name, iface.version, this);
+        auto decoration = manager->create(m_surface, this);
+        connect(decoration, &ServerSideDecoration::modeChanged, this,
+            [this, decoration] {
+                if (decoration->mode() != ServerSideDecoration::Mode::Server) {
+                    decoration->requestMode(ServerSideDecoration::Mode::Server);
+                }
+            }
+        );
     }
     if (m_seat) {
         m_seat->setInstallCursor(true);
