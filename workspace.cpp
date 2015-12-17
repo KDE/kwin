@@ -1685,6 +1685,12 @@ bool Workspace::hasClient(const AbstractClient *c)
     return false;
 }
 
+void Workspace::forEachAbstractClient(std::function< void (AbstractClient*) > func)
+{
+    std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
+    std::for_each(desktops.constBegin(), desktops.constEnd(), func);
+}
+
 } // namespace
 
 #include "workspace.moc"

@@ -116,6 +116,7 @@ public:
      */
     Client *findClient(Predicate predicate, xcb_window_t w) const;
     void forEachClient(std::function<void (Client*)> func);
+    void forEachAbstractClient(std::function<void (AbstractClient*)> func);
     Unmanaged *findUnmanaged(std::function<bool (const Unmanaged*)> func) const;
     /**
      * @brief Finds the Unmanaged with the given window id.
