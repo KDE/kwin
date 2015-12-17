@@ -209,7 +209,7 @@ public:
 
     void takeFocus() override;
 
-    void updateDecoration(bool check_workspace_pos, bool force = false);
+    void updateDecoration(bool check_workspace_pos, bool force = false) override;
 
     void updateShape();
 

@@ -524,6 +524,11 @@ public:
     void processDecorationButtonRelease(QMouseEvent *event);
 
     /**
+     * TODO: fix boolean traps
+     **/
+    virtual void updateDecoration(bool check_workspace_pos, bool force = false) = 0;
+
+    /**
     * Returns whether the window provides context help or not. If it does,
     * you should show a help menu item or a help button like '?' and call
     * contextHelp() if this is invoked.
