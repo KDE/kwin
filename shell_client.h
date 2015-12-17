@@ -27,6 +27,7 @@ namespace KWayland
 namespace Server
 {
 class ShellSurfaceInterface;
+class ServerSideDecorationInterface;
 class PlasmaShellSurfaceInterface;
 class QtExtendedSurfaceInterface;
 }
@@ -109,6 +110,7 @@ public:
 
     void installPlasmaShellSurface(KWayland::Server::PlasmaShellSurfaceInterface *surface);
     void installQtExtendedSurface(KWayland::Server::QtExtendedSurfaceInterface *surface);
+    void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
 
     bool isInitialPositionSet() const;
 
@@ -161,6 +163,7 @@ private:
     NET::WindowType m_windowType = NET::Normal;
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWayland::Server::QtExtendedSurfaceInterface> m_qtExtendedSurface;
+    KWayland::Server::ServerSideDecorationInterface *m_serverDecoration = nullptr;
     bool m_fullScreen = false;
     bool m_transient = false;
 };

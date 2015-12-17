@@ -26,12 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "composite.h"
 #include "scene.h"
+#include "wayland_server.h"
 #include "workspace.h"
 
 // KDecoration
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/DecorationSettings>
+
+// KWayland
+#include <KWayland/Server/server_decoration_interface.h>
 
 // Frameworks
 #include <KPluginMetaData>
@@ -82,8 +86,12 @@ QString DecorationBridge::readTheme() const
 
 void DecorationBridge::init()
 {
+    using namespace KWayland::Server;
     m_noPlugin = readNoPlugin();
     if (m_noPlugin) {
+        if (waylandServer()) {
+            waylandServer()->decorationManager()->setDefaultMode(ServerSideDecorationManagerInterface::Mode::None);
+        }
         return;
     }
     m_plugin = readPlugin();
@@ -100,6 +108,9 @@ void DecorationBridge::init()
             m_plugin = QStringLiteral("org.kde.kwin.aurorae");
             initPlugin();
         }
+    }
+    if (waylandServer()) {
+        waylandServer()->decorationManager()->setDefaultMode(m_factory ? ServerSideDecorationManagerInterface::Mode::Server : ServerSideDecorationManagerInterface::Mode::None);
     }
 }
 

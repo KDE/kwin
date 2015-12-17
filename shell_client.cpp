@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
 #include <KWayland/Server/shadow_interface.h>
+#include <KWayland/Server/server_decoration_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
 
@@ -148,6 +149,10 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
             updateCursor();
         }
     );
+    // check whether we have a ServerSideDecoration
+    if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(surface->surface())) {
+        installServerSideDecoration(deco);
+    }
 }
 
 ShellClient::~ShellClient() = default;
@@ -845,6 +850,31 @@ QMatrix4x4 ShellClient::inputTransformation() const
     QMatrix4x4 m = Toplevel::inputTransformation();
     m.translate(-borderLeft(), -borderTop());
     return m;
+}
+
+void ShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *deco)
+{
+    if (m_serverDecoration == deco) {
+        return;
+    }
+    m_serverDecoration = deco;
+    connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed, this,
+        [this] {
+            // TODO: update decoration
+            m_serverDecoration = nullptr;
+        }
+    );
+    // TODO: update decoration
+    connect(m_serverDecoration, &ServerSideDecorationInterface::modeRequested, this,
+        [this] (ServerSideDecorationManagerInterface::Mode mode) {
+            const bool changed = mode != m_serverDecoration->mode();
+            // always acknowledge the requested mode
+            m_serverDecoration->setMode(mode);
+            if (changed) {
+                // TODO: update decoration
+            }
+        }
+    );
 }
 
 }

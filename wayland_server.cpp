@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/seat_interface.h>
+#include <KWayland/Server/server_decoration_interface.h>
 #include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/blur_interface.h>
 #include <KWayland/Server/shell_interface.h>
@@ -219,6 +220,16 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     shadowManager->create();
 
     m_display->createDpmsManager(m_display)->create();
+
+    m_decorationManager = m_display->createServerSideDecorationManager(m_display);
+    connect(m_decorationManager, &ServerSideDecorationManagerInterface::decorationCreated, this,
+        [this] (ServerSideDecorationInterface *deco) {
+            if (ShellClient *c = findClient(deco->surface())) {
+                c->installServerSideDecoration(deco);
+            }
+        }
+    );
+    m_decorationManager->create();
 }
 
 void WaylandServer::initWorkspace()
