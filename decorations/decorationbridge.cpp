@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorations_logging.h"
 #include "settings.h"
 // KWin core
-#include "client.h"
+#include "abstract_client.h"
 #include "composite.h"
 #include "scene.h"
 #include "wayland_server.h"
