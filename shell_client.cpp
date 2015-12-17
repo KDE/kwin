@@ -640,6 +640,9 @@ bool ShellClient::userCanSetFullScreen() const
 
 bool ShellClient::userCanSetNoBorder() const
 {
+    if (m_serverDecoration && m_serverDecoration->mode() == ServerSideDecorationManagerInterface::Mode::Server) {
+        return !isFullScreen() && !isShade() && !tabGroup();
+    }
     return false;
 }
 
