@@ -48,6 +48,9 @@ void *NativeInterface::nativeResourceForIntegration(const QByteArray &resource)
 {
     const QByteArray r = resource.toLower();
     if (r == s_displayKey || r == s_wlDisplayKey) {
+        if (!waylandServer() || !waylandServer()->internalClientConection()) {
+            return nullptr;
+        }
         return waylandServer()->internalClientConection()->display();
     }
     if (r == s_compositorKey) {
@@ -60,6 +63,9 @@ void *NativeInterface::nativeResourceForWindow(const QByteArray &resource, QWind
 {
     const QByteArray r = resource.toLower();
     if (r == s_displayKey || r == s_wlDisplayKey) {
+        if (!waylandServer() || !waylandServer()->internalClientConection()) {
+            return nullptr;
+        }
         return waylandServer()->internalClientConection()->display();
     }
     if (r == s_compositorKey) {
