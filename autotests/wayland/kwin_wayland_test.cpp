@@ -43,6 +43,9 @@ static void readDisplay(int pipe);
 WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
     : Application(OperationModeXwayland, argc, argv)
 {
+#ifdef KWIN_BUILD_ACTIVITIES
+    setUseKActivities(false);
+#endif
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
     WaylandServer *server = WaylandServer::create(this);
     QPluginLoader loader(QStringLiteral(KWINBACKENDPATH));
