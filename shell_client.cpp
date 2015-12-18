@@ -55,6 +55,7 @@ namespace KWin
 ShellClient::ShellClient(ShellSurfaceInterface *surface)
     : AbstractClient()
     , m_shellSurface(surface)
+    , m_internal(surface->client() == waylandServer()->internalConnection())
 {
     setSurface(surface->surface());
     findInternalWindow();
@@ -714,7 +715,7 @@ void ShellClient::updateInternalWindowGeometry()
 
 bool ShellClient::isInternal() const
 {
-    return m_shellSurface->client() == waylandServer()->internalConnection();
+    return m_internal;
 }
 
 bool ShellClient::isLockScreen() const
