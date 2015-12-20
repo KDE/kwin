@@ -2195,9 +2195,11 @@ SceneOpenGLShadow::SceneOpenGLShadow(Toplevel *toplevel)
 
 SceneOpenGLShadow::~SceneOpenGLShadow()
 {
-    effects->makeOpenGLContextCurrent();
-    DecorationShadowTextureCache::instance().unregister(this);
-    m_texture.reset();
+    if (effects) {
+        effects->makeOpenGLContextCurrent();
+        DecorationShadowTextureCache::instance().unregister(this);
+        m_texture.reset();
+    }
 }
 
 void SceneOpenGLShadow::buildQuads()
