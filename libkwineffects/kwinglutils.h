@@ -81,6 +81,7 @@ inline bool KWINGLUTILS_EXPORT isPowerOfTwo(int x)
  * @return power of two integer _greater or equal to_ x.
  *  E.g. nearestPowerOfTwo(513) = nearestPowerOfTwo(800) = 1024
  **/
+// TODO: Drop for Plasma 6, no longer needed after OpenGL 2.0
 int KWINGLUTILS_EXPORT nearestPowerOfTwo(int x);
 
 class KWINGLUTILS_EXPORT GLShader

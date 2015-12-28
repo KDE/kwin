@@ -205,19 +205,22 @@ bool checkGLError(const char* txt)
     return hasError;
 }
 
+// TODO: Drop for Plasma 6, no longer needed after OpenGL 2.0
 int nearestPowerOfTwo(int x)
 {
-    // This method had been copied from Qt's nearest_gl_texture_size()
-    int n = 0, last = 0;
-    for (int s = 0; s < 32; ++s) {
-        if (((x >> s) & 1) == 1) {
-            ++n;
-            last = s;
-        }
-    }
-    if (n > 1)
-        return 1 << (last + 1);
-    return 1 << last;
+    unsigned y = static_cast<unsigned>(x);
+
+    // From Hank Warren's "Hacker's Delight", clp2() method.
+    // Works for up to 32-bit integers.
+
+    y = y - 1;
+    y = y | (y >>  1);
+    y = y | (y >>  2);
+    y = y | (y >>  4);
+    y = y | (y >>  8);
+    y = y | (y >> 16);
+
+    return static_cast<int>(y + 1);
 }
 
 //****************************************
