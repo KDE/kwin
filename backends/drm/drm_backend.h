@@ -34,6 +34,7 @@ namespace KWayland
 namespace Server
 {
 class OutputInterface;
+class OutputDeviceInterface;
 }
 }
 
@@ -193,6 +194,7 @@ private:
     Edid m_edid;
     QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
+    QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
     ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
     DpmsMode m_dpmsMode = DpmsMode::On;
     QByteArray m_uuid;

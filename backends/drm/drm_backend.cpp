@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWayland
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
+#include <KWayland/Server/outputdevice_interface.h>
 // KF5
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -562,6 +563,7 @@ DrmOutput::~DrmOutput()
     hideCursor();
     cleanupBlackBuffer();
     delete m_waylandOutput.data();
+    delete m_waylandOutputDevice.data();
 }
 
 void DrmOutput::hideCursor()
@@ -695,11 +697,20 @@ void DrmOutput::init(drmModeConnector *connector)
         m_waylandOutput.clear();
     }
     m_waylandOutput = waylandServer()->display()->createOutput();
+    if (!m_waylandOutputDevice.isNull()) {
+        delete m_waylandOutputDevice.data();
+        m_waylandOutputDevice.clear();
+    }
+    m_waylandOutputDevice = waylandServer()->display()->createOutputDevice();
+    m_waylandOutputDevice->setUuid(m_uuid);
+
     if (!m_edid.eisaId.isEmpty()) {
         m_waylandOutput->setManufacturer(QString::fromLatin1(m_edid.eisaId));
     } else {
         m_waylandOutput->setManufacturer(i18n("unknown"));
     }
+    m_waylandOutputDevice->setManufacturer(m_waylandOutput->manufacturer());
+
     if (!m_edid.monitorName.isEmpty()) {
         QString model = QString::fromLatin1(m_edid.monitorName);
         if (!m_edid.serialNumber.isEmpty()) {
@@ -712,6 +723,7 @@ void DrmOutput::init(drmModeConnector *connector)
     } else {
         m_waylandOutput->setModel(i18n("unknown"));
     }
+    m_waylandOutputDevice->setModel(m_waylandOutput->model());
 
     QSize physicalSize = !m_edid.physicalSize.isEmpty() ? m_edid.physicalSize : QSize(connector->mmWidth, connector->mmHeight);
     // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
@@ -727,16 +739,20 @@ void DrmOutput::init(drmModeConnector *connector)
         physicalSize = overwriteSize;
     }
     m_waylandOutput->setPhysicalSize(physicalSize);
+    m_waylandOutputDevice->setPhysicalSize(physicalSize);
 
     // read in mode information
     for (int i = 0; i < connector->count_modes; ++i) {
         auto *m = &connector->modes[i];
         KWayland::Server::OutputInterface::ModeFlags flags;
+        KWayland::Server::OutputDeviceInterface::ModeFlags deviceflags;
         if (isCurrentMode(m)) {
             flags |= KWayland::Server::OutputInterface::ModeFlag::Current;
+            deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
         }
         if (m->type & DRM_MODE_TYPE_PREFERRED) {
             flags |= KWayland::Server::OutputInterface::ModeFlag::Preferred;
+            deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred;
         }
 
         // Calculate higher precision (mHz) refresh rate
@@ -752,6 +768,14 @@ void DrmOutput::init(drmModeConnector *connector)
             refreshRate /= m->vscan;
         }
         m_waylandOutput->addMode(QSize(m->hdisplay, m->vdisplay), flags, refreshRate);
+
+        KWayland::Server::OutputDeviceInterface::Mode mode;
+        mode.id = i;
+        mode.size = QSize(m->hdisplay, m->vdisplay);
+        mode.flags = deviceflags;
+        mode.refreshRate = refreshRate;
+        qDebug() << "Adding mode: " << i << mode.size;
+        m_waylandOutputDevice->addMode(mode);
     }
 
     // set dpms
@@ -766,6 +790,8 @@ void DrmOutput::init(drmModeConnector *connector)
     }
 
     m_waylandOutput->create();
+    qDebug() << "Created OutputDevice";
+    m_waylandOutputDevice->create();
 }
 
 void DrmOutput::initUuid()
@@ -1049,6 +1075,9 @@ void DrmOutput::setGlobalPos(const QPoint &pos)
     m_globalPos = pos;
     if (m_waylandOutput) {
         m_waylandOutput->setGlobalPosition(pos);
+    }
+    if (m_waylandOutputDevice) {
+        m_waylandOutputDevice->setGlobalPosition(pos);
     }
 }
 
