@@ -865,6 +865,7 @@ protected:
     }
     virtual void destroyDecoration();
     void startDecorationDoubleClickTimer();
+    void invalidateDecorationDoubleClickTimer();
 
 private:
     void handlePaletteChange();

@@ -1224,8 +1224,8 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
                               x11ToQtKeyboardModifiers(state));
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
-            if (!event.isAccepted() && decoration()->titleBar().contains(x, y) && button == XCB_BUTTON_INDEX_1) {
-                startDecorationDoubleClickTimer();
+            if (event.isAccepted() || !decoration()->titleBar().contains(x, y)) {
+                invalidateDecorationDoubleClickTimer(); // click was for the deco and shall not init a doubleclick
             }
         }
     }
