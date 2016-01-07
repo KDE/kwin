@@ -72,11 +72,7 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
         }
     );
     connect(client, &AbstractClient::shadeChanged, this,
-        [decoratedClient, client]() {
-            // TODO: geometry is wrong
-            emit decoratedClient->shadedChanged(client->isShade());
-        }
-    );
+            &Decoration::DecoratedClientImpl::signalShadeChange);
     connect(client, &AbstractClient::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedClient::keepAboveChanged);
     connect(client, &AbstractClient::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
     connect(Compositor::self(), &Compositor::compositingToggled, this,
@@ -101,6 +97,10 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
 }
 
 DecoratedClientImpl::~DecoratedClientImpl() = default;
+
+void DecoratedClientImpl::signalShadeChange() {
+    emit decoratedClient()->shadedChanged(m_client->isShade());
+}
 
 #define DELEGATE(type, name, clientName) \
     type DecoratedClientImpl::name() const \
