@@ -109,12 +109,8 @@ void Workspace::storeSession(KConfig* config, SMSavePhase phase)
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
         Client* c = (*it);
         QByteArray sessionId = c->sessionId();
-        QByteArray wmCommand = c->wmCommand();
         if (sessionId.isEmpty())
-            // remember also applications that are not XSMP capable
-            // and use the obsolete WM_COMMAND / WM_SAVE_YOURSELF
-            if (wmCommand.isEmpty())
-                continue;
+            continue;
         count++;
         if (c->isActive())
             active_client = count;
@@ -144,7 +140,6 @@ void Workspace::storeClient(KConfigGroup &cg, int num, Client *c)
     QString n = QString::number(num);
     cg.writeEntry(QLatin1String("sessionId") + n, c->sessionId().constData());
     cg.writeEntry(QLatin1String("windowRole") + n, c->windowRole().constData());
-    cg.writeEntry(QLatin1String("wmCommand") + n, c->wmCommand().constData());
     cg.writeEntry(QLatin1String("resourceName") + n, c->resourceName().constData());
     cg.writeEntry(QLatin1String("resourceClass") + n, c->resourceClass().constData());
     cg.writeEntry(QLatin1String("geometry") + n, QRect(c->calculateGravitation(true), c->clientSize()));   // FRAME
@@ -185,12 +180,8 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
         Client* c = (*it);
         QByteArray sessionId = c->sessionId();
-        QByteArray wmCommand = c->wmCommand();
         if (sessionId.isEmpty())
-            // remember also applications that are not XSMP capable
-            // and use the obsolete WM_COMMAND / WM_SAVE_YOURSELF
-            if (wmCommand.isEmpty())
-                continue;
+            continue;
         if (!sessionIds.contains(sessionId))
             continue;
 
@@ -230,7 +221,6 @@ void Workspace::addSessionInfo(KConfigGroup &cg)
         session.append(info);
         info->sessionId = cg.readEntry(QLatin1String("sessionId") + n, QString()).toLatin1();
         info->windowRole = cg.readEntry(QLatin1String("windowRole") + n, QString()).toLatin1();
-        info->wmCommand = cg.readEntry(QLatin1String("wmCommand") + n, QString()).toLatin1();
         info->resourceName = cg.readEntry(QLatin1String("resourceName") + n, QString()).toLatin1();
         info->resourceClass = cg.readEntry(QLatin1String("resourceClass") + n, QString()).toLower().toLatin1();
         info->geometry = cg.readEntry(QLatin1String("geometry") + n, QRect());
@@ -279,7 +269,6 @@ SessionInfo* Workspace::takeSessionInfo(Client* c)
     SessionInfo *realInfo = 0;
     QByteArray sessionId = c->sessionId();
     QByteArray windowRole = c->windowRole();
-    QByteArray wmCommand = c->wmCommand();
     QByteArray resourceName = c->resourceName();
     QByteArray resourceClass = c->resourceClass();
 
@@ -313,10 +302,8 @@ SessionInfo* Workspace::takeSessionInfo(Client* c)
             if (info->resourceName == resourceName
                     && info->resourceClass == resourceClass
                     && sessionInfoWindowTypeMatch(c, info)) {
-                if (wmCommand.isEmpty() || info->wmCommand == wmCommand) {
-                    realInfo = info;
-                    session.removeAll(info);
-                }
+                realInfo = info;
+                session.removeAll(info);
             }
         }
     }

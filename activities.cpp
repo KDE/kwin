@@ -169,7 +169,7 @@ void Activities::reallyStop(const QString &id)
         const Client* c = (*it);
         const QByteArray sessionId = c->sessionId();
         if (sessionId.isEmpty()) {
-            continue; //TODO support old wm_command apps too?
+            continue;
         }
 
         //qDebug() << sessionId;

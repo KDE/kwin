@@ -274,7 +274,6 @@ public:
     QByteArray sessionId() const;
     QByteArray resourceName() const;
     QByteArray resourceClass() const;
-    QByteArray wmCommand();
     QByteArray wmClientMachine(bool use_localhost) const;
     const ClientMachine *clientMachine() const;
     Window wmClientLeader() const;
