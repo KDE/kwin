@@ -181,6 +181,7 @@ private:
     quint32 m_crtcId = 0;
     quint32 m_connector = 0;
     quint32 m_lastStride = 0;
+    bool m_lastGbm = false;
     drmModeModeInfo m_mode;
     DrmBuffer *m_currentBuffer = nullptr;
     DrmBuffer *m_blackBuffer = nullptr;
@@ -220,6 +221,9 @@ public:
     }
     gbm_bo *gbm() const {
         return m_bo;
+    }
+    bool isGbm() const {
+        return m_bo != nullptr;
     }
     void releaseGbm();
 
