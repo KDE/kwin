@@ -614,7 +614,7 @@ bool DrmOutput::present(DrmBuffer *buffer)
     if (m_currentBuffer) {
         return false;
     }
-    if (m_lastStride != buffer->stride()) {
+    if (m_lastStride != buffer->stride() || m_lastGbm != buffer->isGbm()) {
         // need to set a new mode first
         if (!setMode(buffer)) {
             return false;
@@ -811,6 +811,7 @@ bool DrmOutput::setMode(DrmBuffer *buffer)
 {
     if (drmModeSetCrtc(m_backend->fd(), m_crtcId, buffer->bufferId(), 0, 0, &m_connector, 1, &m_mode) == 0) {
         m_lastStride = buffer->stride();
+        m_lastGbm = buffer->isGbm();
         return true;
     } else {
         qCWarning(KWIN_DRM) << "Mode setting failed";
