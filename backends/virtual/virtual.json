@@ -3,6 +3,7 @@
         "Description": "Render to a virtual framebuffer.", 
         "Description[ca@valencia]": "Renderitza a un «framebuffer» virtual.", 
         "Description[ca]": "Renderitza a un «framebuffer» virtual.", 
+        "Description[de]": "In virtuellen Framebuffer rendern.", 
         "Description[es]": "Renderizar en un «framebuffer» virtual.", 
         "Description[fi]": "Renderöi virtuaaliseen framebufferiin.", 
         "Description[fr]": "Rendre sur un « framebuffer » factice.", 
