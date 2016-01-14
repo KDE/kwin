@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/outputdevice_interface.h>
+#include <KWayland/Server/outputmanagement_interface.h>
+#include <KWayland/Server/outputconfiguration_interface.h>
 // KF5
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -107,6 +109,19 @@ void DrmBackend::init()
     }
     auto v = VirtualTerminal::create(this);
     connect(v, &VirtualTerminal::activeChanged, this, &DrmBackend::activate);
+
+    auto display = waylandServer()->display();
+    m_outputManagement = display->createOutputManagement(display);
+    connect(m_outputManagement, &KWayland::Server::OutputManagementInterface::configurationChangeRequested,
+            this, &DrmBackend::configurationChangeRequested);
+    m_outputManagement->create();
+
+}
+
+void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
+{
+    // TODO: applying new config
+    qDebug() << "Someone wants to change the screen setup! Coming to you in a future patch...";
 }
 
 void DrmBackend::activate(bool active)

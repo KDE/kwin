@@ -49,6 +49,7 @@ class OutputInterface;
 class PlasmaShellInterface;
 class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
+class OutputManagementInterface;
 }
 }
 
