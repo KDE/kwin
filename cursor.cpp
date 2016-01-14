@@ -258,6 +258,7 @@ void Cursor::notifyCursorChanged(uint32_t serial)
     emit cursorChanged(serial);
 }
 
+#ifndef KCMRULES
 class XInputEventFilter : public X11EventFilter
 {
 public:
@@ -276,6 +277,7 @@ public:
 private:
     X11Cursor *m_x11Cursor;
 };
+#endif
 
 X11Cursor::X11Cursor(QObject *parent)
     : Cursor(parent)

@@ -259,7 +259,9 @@ private:
     bool m_hasXInput;
     int m_xiOpcode;
     bool m_needsPoll;
+#ifndef KCMRULES
     QScopedPointer<XInputEventFilter> m_xiEventFilter;
+#endif
     friend class Cursor;
 };
 
