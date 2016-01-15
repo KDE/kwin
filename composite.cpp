@@ -311,7 +311,6 @@ void Compositor::startupWithWorkspace()
     }
     Q_ASSERT(m_scene);
     claimCompositorSelection();
-    connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::windowDeleted);
     m_xrrRefreshRate = KWin::currentRefreshRate();
     fpsInterval = options->maxFpsInterval();
     if (m_scene->syncsToVBlank()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
@@ -323,6 +322,7 @@ void Compositor::startupWithWorkspace()
     scheduleRepaint();
     xcb_composite_redirect_subwindows(connection(), rootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
     new EffectsHandlerImpl(this, m_scene);   // sets also the 'effects' pointer
+    connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::windowDeleted);
     connect(effects, SIGNAL(screenGeometryChanged(QSize)), SLOT(addRepaintFull()));
     addRepaintFull();
     foreach (Client * c, Workspace::self()->clientList()) {
