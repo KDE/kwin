@@ -1047,7 +1047,7 @@ void Client::updateHiddenPreview()
     }
 }
 
-void Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3)
+void Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3, xcb_timestamp_t timestamp)
 {
     xcb_client_message_event_t ev;
     memset(&ev, 0, sizeof(ev));
@@ -1056,7 +1056,7 @@ void Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol
     ev.type = a;
     ev.format = 32;
     ev.data.data32[0] = protocol;
-    ev.data.data32[1] = xTime();
+    ev.data.data32[1] = timestamp;
     ev.data.data32[2] = data1;
     ev.data.data32[3] = data2;
     ev.data.data32[4] = data3;
@@ -1363,8 +1363,7 @@ void Client::takeFocus()
     else
         demandAttention(false); // window cannot take input, at least withdraw urgency
     if (info->supportsProtocol(NET::TakeFocusProtocol)) {
-        updateXTime();
-        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
+        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, 0, 0, 0, XCB_CURRENT_TIME);
     }
     workspace()->setShouldGetFocus(this);
 
