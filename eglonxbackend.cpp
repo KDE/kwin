@@ -91,6 +91,8 @@ EglOnXBackend::~EglOnXBackend()
 
 void EglOnXBackend::init()
 {
+    initEGL();       // required to toggle
+    initBufferAge(); // EGL_SWAP_BEHAVIOR_PRESERVED_BIT
     if (!initRenderingContext()) {
         setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
@@ -251,7 +253,7 @@ bool EglOnXBackend::initRenderingContext()
 bool EglOnXBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT|EGL_SWAP_BEHAVIOR_PRESERVED_BIT,
+        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT | (supportsBufferAge() ? 0 : EGL_SWAP_BEHAVIOR_PRESERVED_BIT),
         EGL_RED_SIZE,             1,
         EGL_GREEN_SIZE,           1,
         EGL_BLUE_SIZE,            1,
