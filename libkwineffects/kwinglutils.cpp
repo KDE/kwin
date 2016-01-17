@@ -96,6 +96,8 @@ void initGLX()
 void initEGL()
 {
     EGLDisplay dpy = eglGetCurrentDisplay();
+    if (dpy == EGL_NO_DISPLAY)
+        dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     int major, minor;
     eglInitialize(dpy, &major, &minor);
     eglVersion = MAKE_GL_VERSION(major, minor, 0);
