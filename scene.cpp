@@ -825,9 +825,8 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         AbstractClient *client = dynamic_cast<AbstractClient*>(toplevel);
         QRegion contents = clientShape();
         QRegion center = toplevel->transparentRect();
-        QRegion decoration = (client && true ?
-                              QRegion(client->decorationRect()) : shape()) - center;
-        ret = makeQuads(WindowQuadContents, contents, client->clientContentPos());
+        QRegion decoration = (client ? QRegion(client->decorationRect()) : shape()) - center;
+        ret = makeQuads(WindowQuadContents, contents, toplevel->clientContentPos());
 
         QRect rects[4];
         bool isShadedClient = false;
