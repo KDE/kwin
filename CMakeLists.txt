@@ -485,8 +485,8 @@ set(kwin_XLIB_LIBS
 )
 
 if(X11_Xinput_FOUND)
-    set(kwin_XLIB_LIBS ${kwin_XLIB_LIBS} ${X11_Xinput_LIB}
-)
+    set(kwin_XLIB_LIBS ${kwin_XLIB_LIBS} ${X11_Xinput_LIB})
+endif()
 
 set(kwin_XCB_LIBS
     XCB::XCB
