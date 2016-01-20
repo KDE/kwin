@@ -24,18 +24,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "main.h"
 #include "utils.h"
+#include "x11eventfilter.h"
 #include "xcbutils.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
 #include <KSharedConfig>
 // Qt
+#include <QAbstractEventDispatcher>
 #include <QDBusConnection>
 #include <QScreen>
 #include <QTimer>
 // xcb
 #include <xcb/xfixes.h>
 #include <xcb/xcb_cursor.h>
+// X11
+#include <X11/Xlib.h>
+#if HAVE_X11_XINPUT
+#include <X11/extensions/XInput2.h>
+#else
+#define XI_RawMotion 0
+#endif
+#include <fixx11h.h>
 
 namespace KWin
 {
@@ -248,13 +258,38 @@ void Cursor::notifyCursorChanged(uint32_t serial)
     emit cursorChanged(serial);
 }
 
+#ifndef KCMRULES
+class XInputEventFilter : public X11EventFilter
+{
+public:
+    XInputEventFilter(X11Cursor *parent, int xi_opcode)
+        : X11EventFilter(XCB_GE_GENERIC, xi_opcode, XI_RawMotion)
+        , m_x11Cursor(parent)
+        {}
+    virtual ~XInputEventFilter() = default;
+
+    bool event(xcb_generic_event_t *event) override {
+        Q_UNUSED(event)
+        m_x11Cursor->schedulePoll();
+        return false;
+    }
+
+private:
+    X11Cursor *m_x11Cursor;
+};
+#endif
+
 X11Cursor::X11Cursor(QObject *parent)
     : Cursor(parent)
     , m_timeStamp(XCB_TIME_CURRENT_TIME)
     , m_buttonMask(0)
     , m_resetTimeStampTimer(new QTimer(this))
     , m_mousePollingTimer(new QTimer(this))
+    , m_hasXInput(false)
+    , m_xiOpcode(0)
+    , m_needsPoll(false)
 {
+    initXInput();
     m_resetTimeStampTimer->setSingleShot(true);
     connect(m_resetTimeStampTimer, SIGNAL(timeout()), SLOT(resetTimeStamp()));
     // TODO: How often do we really need to poll?
@@ -266,6 +301,39 @@ X11Cursor::X11Cursor(QObject *parent)
 
 X11Cursor::~X11Cursor()
 {
+}
+
+void X11Cursor::initXInput()
+{
+#ifndef KCMRULES
+#if HAVE_X11_XINPUT
+    if (qEnvironmentVariableIsSet("KWIN_NO_XI2")) {
+        return;
+    }
+    Display *dpy = display();
+    int xi_opcode, event, error;
+    // init XInput extension
+    if (!XQueryExtension(dpy, "XInputExtension", &xi_opcode, &event, &error)) {
+        return;
+    }
+
+    // verify that the XInput extension is at at least version 2.0
+    int major = 2, minor = 0;
+    int result = XIQueryVersion(dpy, &major, &minor);
+    if (result == BadImplementation) {
+        // Xinput 2.2 returns BadImplementation if checked against 2.0
+        major = 2;
+        minor = 2;
+        if (XIQueryVersion(dpy, &major, &minor) != Success) {
+            return;
+        }
+    } else if (result != Success) {
+        return;
+    }
+    m_hasXInput = true;
+    m_xiOpcode = xi_opcode;
+#endif
+#endif
 }
 
 void X11Cursor::doSetPos()
@@ -298,14 +366,64 @@ void X11Cursor::resetTimeStamp()
     m_timeStamp = XCB_TIME_CURRENT_TIME;
 }
 
+void X11Cursor::aboutToBlock()
+{
+    if (m_needsPoll) {
+        mousePolled();
+        m_needsPoll = false;
+    }
+}
+
 void X11Cursor::doStartMousePolling()
 {
-    m_mousePollingTimer->start();
+    if (m_hasXInput) {
+#ifndef KCMRULES
+#if HAVE_X11_XINPUT
+        m_xiEventFilter.reset(new XInputEventFilter(this, m_xiOpcode));
+
+        // this assumes KWin is the only one setting events on the root window
+        // given Qt's source code this seems to be true. If it breaks, we need to change
+        XIEventMask evmasks[1];
+        unsigned char mask1[XIMaskLen(XI_LASTEVENT)];
+
+        memset(mask1, 0, sizeof(mask1));
+
+        XISetMask(mask1, XI_RawMotion);
+
+        evmasks[0].deviceid = XIAllMasterDevices;
+        evmasks[0].mask_len = sizeof(mask1);
+        evmasks[0].mask = mask1;
+        XISelectEvents(display(), rootWindow(), evmasks, 1);
+        connect(qApp->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11Cursor::aboutToBlock);
+#endif
+#endif
+    } else {
+        m_mousePollingTimer->start();
+    }
 }
 
 void X11Cursor::doStopMousePolling()
 {
-    m_mousePollingTimer->stop();
+    if (m_hasXInput) {
+#ifndef KCMRULES
+#if HAVE_X11_XINPUT
+        m_xiEventFilter.reset();
+
+        XIEventMask evmasks[1];
+        unsigned char mask1[(XI_LASTEVENT + 7)/8];
+
+        memset(mask1, 0, sizeof(mask1));
+
+        evmasks[0].deviceid = XIAllMasterDevices;
+        evmasks[0].mask_len = sizeof(mask1);
+        evmasks[0].mask = mask1;
+        XISelectEvents(display(), rootWindow(), evmasks, 1);
+        disconnect(qApp->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11Cursor::aboutToBlock);
+#endif
+#endif
+    } else {
+        m_mousePollingTimer->stop();
+    }
 }
 
 void X11Cursor::doStartCursorTracking()
