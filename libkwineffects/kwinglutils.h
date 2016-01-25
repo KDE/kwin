@@ -229,40 +229,6 @@ class KWINGLUTILS_EXPORT ShaderManager
 {
 public:
     /**
-     * Identifiers for built-in shaders available for effects and scene
-     **/
-    enum ShaderType {
-        /**
-         * An orthographic projection shader able to render textured geometries.
-         * Expects a @c vec2 uniform @c offset describing the offset from top-left corner
-         * and defaults to @c (0/0). Expects a @c vec2 uniform @c textureSize to calculate
-         * normalized texture coordinates. Defaults to @c (1.0/1.0). And expects a @c vec3
-         * uniform @c colorManiuplation, with @c x being opacity, @c y being brightness and
-         * @c z being saturation. All three values default to @c 1.0.
-         * The sampler uniform is @c sample and defaults to @c 0.
-         * The shader uses two vertex attributes @c vertex and @c texCoord.
-         **/
-        SimpleShader = 0,
-        /**
-         * A generic shader able to render transformed, textured geometries.
-         * This shader is mostly needed by the scene and not of much interest for effects.
-         * Effects can influence this shader through @link ScreenPaintData and @link WindowPaintData.
-         * The shader expects four @c mat4 uniforms @c projection, @c modelview,
-         * @c screenTransformation and @c windowTransformation. The fragment shader expect the
-         * same uniforms as the SimpleShader and the same vertex attributes are used.
-         **/
-        GenericShader,
-        /**
-         * An orthographic shader to render simple colored geometries without texturing.
-         * Expects a @c vec2 uniform @c offset describing the offset from top-left corner
-         * and defaults to @c (0/0). The fragment shader expects a single @c vec4 uniform
-         * @c geometryColor, which defaults to fully opaque black.
-         * The Shader uses one vertex attribute @c vertex.
-         **/
-        ColorShader
-    };
-
-    /**
      * Returns a shader with the given traits, creating it if necessary.
      */
     GLShader *shader(ShaderTraits traits);
@@ -277,29 +243,12 @@ public:
      **/
     bool isShaderBound() const;
     /**
-     * Allows to query whether Shaders are supported by the compositor, that is
-     * whether the Shaders compiled successfully.
-     *
-     * @return @c true if the built-in shaders are valid, @c false otherwise
-     **/
-    bool isValid() const;
-    /**
      * Is @c true if the environment variable KWIN_GL_DEBUG is set to 1.
      * In that case shaders are compiled with KWIN_SHADER_DEBUG defined.
      * @returns @c true if shaders are compiled with debug information
      * @since 4.8
      **/
     bool isShaderDebug() const;
-
-    /**
-     * Binds the shader of specified @p type.
-     * To unbind the shader use @link popShader. A previous bound shader will be rebound.
-     * @param type The built-in shader to bind
-     * @param reset Whether all uniforms should be reset to their default values
-     * @return The bound shader or @c NULL if shaders are not valid
-     * @see popShader
-     **/
-    GLShader *pushShader(ShaderType type, bool reset = false);
 
     /**
      * Pushes the current shader onto the stack and binds a shader
@@ -325,33 +274,6 @@ public:
      **/
     void popShader();
 
-    /**
-     * Resets all shaders to the default uniform values.
-     * Only built in shaders are changed.
-     * @since 4.8
-     **/
-    void resetAllShaders();
-
-    /**
-     * Resets ShaderType @p type uniforms of a custom shader
-     * @since 4.11.1
-     */
-    void resetShader(GLShader *shader, ShaderType type);
-
-    /**
-     * Creates a GLShader with a built-in vertex shader and a custom fragment shader.
-     * @param vertex The generic vertex shader
-     * @param fragmentFile The path to the source code of the fragment shader
-     * @return The created shader
-     **/
-    GLShader *loadFragmentShader(ShaderType vertex, const QString &fragmentFile);
-    /**
-     * Creates a GLShader with a built-in fragment shader and a custom vertex shader.
-     * @param fragment The generic fragment shader
-     * @param vertexFile The path to the source code of the vertex shader
-     * @return The created shader
-     **/
-    GLShader *loadVertexShader(ShaderType fragment, const QString &vertexFile);
     /**
      * Creates a GLShader with the specified sources.
      * The difference to GLShader is that it does not need to be loaded from files.
@@ -386,14 +308,6 @@ public:
     bool selfTest();
 
     /**
-     * Sets the virtual screen size to @p s.
-     * @since 5.2
-     **/
-    static void setVirtualScreenSize(const QSize &s) {
-        s_virtualScreenSize = s;
-    }
-
-    /**
      * @return a pointer to the ShaderManager instance
      **/
     static ShaderManager *instance();
@@ -407,8 +321,6 @@ private:
     ShaderManager();
     ~ShaderManager();
 
-    void initShaders();
-    void resetShader(ShaderType type);
     void bindFragDataLocations(GLShader *shader);
     void bindAttributeLocations(GLShader *shader) const;
 
@@ -417,14 +329,9 @@ private:
     GLShader *generateShader(ShaderTraits traits);
 
     QStack<GLShader*> m_boundShaders;
-    GLShader *m_shader[3];
     QHash<ShaderTraits, GLShader *> m_shaderHash;
-    bool m_inited;
-    bool m_valid;
     bool m_debug;
-    QByteArray m_shaderDir;
     static ShaderManager *s_shaderManager;
-    static QSize s_virtualScreenSize;
 };
 
 /**
@@ -446,14 +353,6 @@ private:
 class KWINGLUTILS_EXPORT ShaderBinder
 {
 public:
-    /**
-     * @brief Pushes the Shader of the given @p type to the ShaderManager's stack.
-     *
-     * @param type The built-in Shader type
-     * @param reset Whether all uniforms should be reset to their default values. Defaults to false.
-     * @see ShaderManager::pushShader
-     **/
-    explicit ShaderBinder(ShaderManager::ShaderType type, bool reset = false);
     /**
      * @brief Pushes the given @p shader to the ShaderManager's stack.
      *
@@ -479,13 +378,6 @@ public:
 private:
     GLShader *m_shader;
 };
-
-inline
-ShaderBinder::ShaderBinder(ShaderManager::ShaderType type, bool reset)
-    : m_shader(nullptr)
-{
-    m_shader = ShaderManager::instance()->pushShader(type, reset);
-}
 
 inline
 ShaderBinder::ShaderBinder(GLShader *shader)

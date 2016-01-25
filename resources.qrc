@@ -1,17 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/resources">
   <file>shaders/1.10/lanczos-fragment.glsl</file>
-  <file>shaders/1.10/scene-vertex.glsl</file>
-  <file>shaders/1.10/scene-fragment.glsl</file>
-  <file>shaders/1.10/scene-color-vertex.glsl</file>
-  <file>shaders/1.10/scene-color-fragment.glsl</file>
-  <file>shaders/1.10/scene-generic-vertex.glsl</file>
 
   <file>shaders/1.40/lanczos-fragment.glsl</file>
-  <file>shaders/1.40/scene-vertex.glsl</file>
-  <file>shaders/1.40/scene-fragment.glsl</file>
-  <file>shaders/1.40/scene-color-vertex.glsl</file>
-  <file>shaders/1.40/scene-color-fragment.glsl</file>
-  <file>shaders/1.40/scene-generic-vertex.glsl</file>
   </qresource>
 </RCC>

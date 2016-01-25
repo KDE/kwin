@@ -938,10 +938,8 @@ void SceneOpenGL::screenGeometryChanged(const QSize &size)
     Scene::screenGeometryChanged(size);
     glViewport(0,0, size.width(), size.height());
     m_backend->screenGeometryChanged(size);
-    ShaderManager::setVirtualScreenSize(size);
     GLRenderTarget::setVirtualScreenSize(size);
     GLVertexBuffer::setVirtualScreenSize(size);
-    ShaderManager::instance()->resetAllShaders();
 }
 
 void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
@@ -1025,14 +1023,8 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
     connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()), Qt::QueuedConnection);
 
     const QSize &s = screens()->size();
-    ShaderManager::setVirtualScreenSize(s);
     GLRenderTarget::setVirtualScreenSize(s);
     GLVertexBuffer::setVirtualScreenSize(s);
-    if (!ShaderManager::instance()->isValid()) {
-        qCDebug(KWIN_CORE) << "No Scene Shaders available";
-        init_ok = false;
-        return;
-    }
 
     // push one shader on the stack so that one is always bound
     ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
