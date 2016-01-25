@@ -20,6 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "clientconnection.h"
 #include "display.h"
 // Qt
+#include <QFileInfo>
 #include <QVector>
 // Wayland
 #include <wayland-server.h>
@@ -40,6 +41,7 @@ public:
     pid_t pid = 0;
     uid_t user = 0;
     gid_t group = 0;
+    QString executablePath;
 
 private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
@@ -59,6 +61,7 @@ ClientConnection::Private::Private(wl_client *c, Display *display, ClientConnect
     listener.notify = destroyListenerCallback;
     wl_client_add_destroy_listener(c, &listener);
     wl_client_get_credentials(client, &pid, &user, &group);
+    executablePath = QFileInfo(QStringLiteral("/proc/%1/exe").arg(pid)).symLinkTarget();
 }
 
 ClientConnection::Private::~Private()
@@ -143,6 +146,11 @@ pid_t ClientConnection::processId() const
 uid_t ClientConnection::userId() const
 {
     return d->user;
+}
+
+QString ClientConnection::executablePath() const
+{
+    return d->executablePath;
 }
 
 }

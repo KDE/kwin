@@ -109,6 +109,19 @@ public:
     gid_t groupId() const;
 
     /**
+     * The absolute path to the executable.
+     *
+     * Please note: if the ClientConnection got created with @link Display::createClient @endlink
+     * the executablePath will be identical to the process running the KWayland::Server::Display.
+     *
+     * If the executable path cannot be resolved an empty QString is returned.
+     *
+     * @see processId
+     * @since 5.6
+     **/
+    QString executablePath() const;
+
+    /**
      * Cast operator the native wl_client this ClientConnection represents.
      **/
     operator wl_client*();
