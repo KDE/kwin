@@ -140,7 +140,6 @@ private Q_SLOTS:
     void slotTabBoxClosed();
     void slotCubeCapLoaded();
     void slotWallPaperLoaded();
-    void slotResetShaders();
 private:
     enum RotationDirection {
         Left,
@@ -160,7 +159,7 @@ private:
     };
     void toggle(CubeMode newMode = Cube);
     void paintCube(int mask, QRegion region, ScreenPaintData& data);
-    void paintCap(bool frontFirst, float zOffset);
+    void paintCap(bool frontFirst, float zOffset, const QMatrix4x4 &projection);
     void paintCubeCap();
     void paintCylinderCap();
     void paintSphereCap();
@@ -237,6 +236,7 @@ private:
     QMatrix4x4 m_rotationMatrix;
     QMatrix4x4 m_reflectionMatrix;
     QMatrix4x4 m_textureMirrorMatrix;
+    QMatrix4x4 m_currentFaceMatrix;
     GLVertexBuffer *m_cubeCapBuffer;
 
     // Shortcuts - needed to toggle the effect

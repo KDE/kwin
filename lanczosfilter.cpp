@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+#include <QFile>
+
 #include <qmath.h>
 #include <cmath>
 
@@ -45,7 +47,6 @@ LanczosFilter::LanczosFilter(QObject* parent)
     , m_offscreenTarget(0)
     , m_inited(false)
     , m_shader(0)
-    , m_uTexUnit(0)
     , m_uOffsets(0)
     , m_uKernel(0)
 {
@@ -84,13 +85,16 @@ void LanczosFilter::init()
         if (gl->isRadeon() && gl->chipClass() < R600)
             return;
     }
-    m_shader.reset(ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader,
-                                                                 gl->glslVersion() >= kVersionNumber(1, 40) ?
-                                                                 QStringLiteral(":/resources/shaders/1.40/lanczos-fragment.glsl") :
-                                                                 QStringLiteral(":/resources/shaders/1.10/lanczos-fragment.glsl")));
+    QFile ff(gl->glslVersion() >= kVersionNumber(1, 40) ?
+             QStringLiteral(":/resources/shaders/1.40/lanczos-fragment.glsl") :
+             QStringLiteral(":/resources/shaders/1.10/lanczos-fragment.glsl"));
+    if (!ff.open(QIODevice::ReadOnly)) {
+        qCDebug(KWIN_CORE) << "Failed to open lanczos shader";
+        return;
+    }
+    m_shader.reset(ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll()));
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader.data());
-        m_uTexUnit    = m_shader->uniformLocation("texUnit");
         m_uKernel     = m_shader->uniformLocation("kernel");
         m_uOffsets    = m_shader->uniformLocation("offsets");
     } else {
@@ -213,9 +217,11 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                     const qreal rgb = data.brightness() * data.opacity();
                     const qreal a = data.opacity();
 
-                    ShaderBinder binder(ShaderManager::SimpleShader);
+                    ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
                     GLShader *shader = binder.shader();
-                    shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+                    QMatrix4x4 mvp = data.screenProjectionMatrix();
+                    mvp.translate(textureRect.x(), textureRect.y());
+                    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
                     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
                     shader->setUniform(GLShader::Saturation, data.saturation());
 
@@ -249,6 +255,10 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             updateOffscreenSurfaces();
             GLRenderTarget::pushRenderTarget(m_offscreenTarget);
 
+            QMatrix4x4 modelViewProjectionMatrix;
+            modelViewProjectionMatrix.ortho(0, m_offscreenTex->width(), m_offscreenTex->height(), 0 , 0, 65535);
+            thumbData.setProjectionMatrix(modelViewProjectionMatrix);
+
             glClearColor(0.0, 0.0, 0.0, 0.0);
             glClear(GL_COLOR_BUFFER_BIT);
             w->sceneWindow()->performPaint(mask, infiniteRegion(), thumbData);
@@ -268,6 +278,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             createOffsets(kernelSize, sw, Qt::Horizontal);
 
             ShaderManager::instance()->pushShader(m_shader.data());
+            m_shader->setUniform(GLShader::ModelViewProjectionMatrix, modelViewProjectionMatrix);
             setUniforms();
 
             // Draw the window back into the FBO, this time scaled horizontally
@@ -344,9 +355,11 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             const qreal rgb = data.brightness() * data.opacity();
             const qreal a = data.opacity();
 
-            ShaderBinder binder(ShaderManager::SimpleShader);
+            ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
             GLShader *shader = binder.shader();
-            shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+            QMatrix4x4 mvp = data.screenProjectionMatrix();
+            mvp.translate(textureRect.x(), textureRect.y());
+            shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
             shader->setUniform(GLShader::Saturation, data.saturation());
 
@@ -404,7 +417,6 @@ void LanczosFilter::discardCacheTexture(EffectWindow *w)
 
 void LanczosFilter::setUniforms()
 {
-    glUniform1i(m_uTexUnit, 0);
     glUniform2fv(m_uOffsets, 16, (const GLfloat*)m_offsets);
     glUniform4fv(m_uKernel, 16, (const GLfloat*)m_kernel);
 }

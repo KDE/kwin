@@ -655,16 +655,6 @@ void ColorCorrectionPrivate::colorServerUpdateSucceededSlot()
 
         // Reload all shaders
         ShaderManager::cleanup();
-        if (!ShaderManager::instance()->isValid()) {
-            qCCritical(LIBKWINGLUTILS) << "Shader reinitialization failed, possible compile problems with the shaders "
-                "altered for color-correction";
-            m_hasError = true;
-            qCDebug(LIBKWINGLUTILS) << "Color correction has been disabled due to shader issues";
-            m_enabled = false;
-            GLShader::sColorCorrect = false;
-            ShaderManager::cleanup();
-            ShaderManager::instance();
-        }
     }
 
     emit q->changed();

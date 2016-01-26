@@ -2,11 +2,11 @@ uniform sampler2D sampler;
 uniform vec4 modulation;
 uniform float saturation;
 
-varying vec2 varyingTexCoords;
+varying vec2 texcoord0;
 
 void main()
 {
-    vec4 tex = texture2D(sampler, varyingTexCoords);
+    vec4 tex = texture2D(sampler, texcoord0);
 
     if (saturation != 1.0) {
         vec3 desaturated = tex.rgb * vec3( 0.30, 0.59, 0.11 );

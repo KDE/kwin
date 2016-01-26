@@ -234,13 +234,20 @@ public:
     qreal crossFadeProgress;
     QMatrix4x4 pMatrix;
     QMatrix4x4 mvMatrix;
+    QMatrix4x4 screenProjectionMatrix;
 };
 
-WindowPaintData::WindowPaintData(EffectWindow* w)
+WindowPaintData::WindowPaintData(EffectWindow *w)
+    : WindowPaintData(w, QMatrix4x4())
+{
+}
+
+WindowPaintData::WindowPaintData(EffectWindow* w, const QMatrix4x4 &screenProjectionMatrix)
     : PaintData()
     , shader(nullptr)
     , d(new WindowPaintDataPrivate())
 {
+    d->screenProjectionMatrix = screenProjectionMatrix;
     quads = w->buildQuads();
     setOpacity(w->opacity());
     setSaturation(1.0);
@@ -269,6 +276,7 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     setCrossFadeProgress(other.crossFadeProgress());
     setProjectionMatrix(other.projectionMatrix());
     setModelViewMatrix(other.modelViewMatrix());
+    d->screenProjectionMatrix = other.d->screenProjectionMatrix;
 }
 
 WindowPaintData::~WindowPaintData()
@@ -418,13 +426,35 @@ WindowPaintData &WindowPaintData::operator+=(const QVector3D &translation)
     return *this;
 }
 
+QMatrix4x4 WindowPaintData::screenProjectionMatrix() const
+{
+    return d->screenProjectionMatrix;
+}
+
+class ScreenPaintData::Private
+{
+public:
+    QMatrix4x4 projectionMatrix;
+};
+
 ScreenPaintData::ScreenPaintData()
     : PaintData()
+    , d(new Private())
 {
 }
 
+ScreenPaintData::ScreenPaintData(const QMatrix4x4 &projectionMatrix)
+    : PaintData()
+    , d(new Private())
+{
+    d->projectionMatrix = projectionMatrix;
+}
+
+ScreenPaintData::~ScreenPaintData() = default;
+
 ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
     : PaintData()
+    , d(new Private())
 {
     translate(other.translation());
     setXScale(other.xScale());
@@ -433,6 +463,7 @@ ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
     setRotationOrigin(other.rotationOrigin());
     setRotationAxis(other.rotationAxis());
     setRotationAngle(other.rotationAngle());
+    d->projectionMatrix = other.d->projectionMatrix;
 }
 
 ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
@@ -446,6 +477,7 @@ ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
     setRotationOrigin(rhs.rotationOrigin());
     setRotationAxis(rhs.rotationAxis());
     setRotationAngle(rhs.rotationAngle());
+    d->projectionMatrix = rhs.d->projectionMatrix;
     return *this;
 }
 
@@ -491,6 +523,11 @@ ScreenPaintData &ScreenPaintData::operator+=(const QVector3D &translation)
 {
     translate(translation);
     return *this;
+}
+
+QMatrix4x4 ScreenPaintData::projectionMatrix() const
+{
+    return d->projectionMatrix;
 }
 
 //****************************************
@@ -1751,6 +1788,7 @@ public:
 
     bool crossFading;
     qreal crossFadeProgress;
+    QMatrix4x4 screenProjectionMatrix;
 };
 
 EffectFramePrivate::EffectFramePrivate()
@@ -1794,6 +1832,16 @@ bool EffectFrame::isCrossFade() const
 void EffectFrame::enableCrossFade(bool enable)
 {
     d->crossFading = enable;
+}
+
+QMatrix4x4 EffectFrame::screenProjectionMatrix() const
+{
+    return d->screenProjectionMatrix;
+}
+
+void EffectFrame::setScreenProjectionMatrix(const QMatrix4x4 &spm)
+{
+    d->screenProjectionMatrix = spm;
 }
 
 } // namespace

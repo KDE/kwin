@@ -727,7 +727,8 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             }
 
             int mask = 0;
-            paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid);   // call generic implementation
+            updateProjectionMatrix();
+            paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid, projectionMatrix());   // call generic implementation
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
 
@@ -746,7 +747,8 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         }
 
         int mask = 0;
-        paintScreen(&mask, damage, repaint, &updateRegion, &validRegion);   // call generic implementation
+        updateProjectionMatrix();
+        paintScreen(&mask, damage, repaint, &updateRegion, &validRegion, projectionMatrix());   // call generic implementation
 
         if (!GLPlatform::instance()->isGLES()) {
             const QSize &screenSize = screens()->size();
@@ -936,10 +938,8 @@ void SceneOpenGL::screenGeometryChanged(const QSize &size)
     Scene::screenGeometryChanged(size);
     glViewport(0,0, size.width(), size.height());
     m_backend->screenGeometryChanged(size);
-    ShaderManager::setVirtualScreenSize(size);
     GLRenderTarget::setVirtualScreenSize(size);
     GLVertexBuffer::setVirtualScreenSize(size);
-    ShaderManager::instance()->resetAllShaders();
 }
 
 void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
@@ -1023,14 +1023,8 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
     connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()), Qt::QueuedConnection);
 
     const QSize &s = screens()->size();
-    ShaderManager::setVirtualScreenSize(s);
     GLRenderTarget::setVirtualScreenSize(s);
     GLVertexBuffer::setVirtualScreenSize(s);
-    if (!ShaderManager::instance()->isValid()) {
-        qCDebug(KWIN_CORE) << "No Scene Shaders available";
-        init_ok = false;
-        return;
-    }
 
     // push one shader on the stack so that one is always bound
     ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
@@ -1092,9 +1086,13 @@ QMatrix4x4 SceneOpenGL2::createProjectionMatrix() const
     return projection * matrix;
 }
 
-void SceneOpenGL2::paintSimpleScreen(int mask, QRegion region)
+void SceneOpenGL2::updateProjectionMatrix()
 {
     m_projectionMatrix = createProjectionMatrix();
+}
+
+void SceneOpenGL2::paintSimpleScreen(int mask, QRegion region)
+{
     m_screenProjectionMatrix = m_projectionMatrix;
 
     Scene::paintSimpleScreen(mask, region);
@@ -1103,27 +1101,10 @@ void SceneOpenGL2::paintSimpleScreen(int mask, QRegion region)
 void SceneOpenGL2::paintGenericScreen(int mask, ScreenPaintData data)
 {
     const QMatrix4x4 screenMatrix = transformation(mask, data);
-    const QMatrix4x4 pMatrix = createProjectionMatrix();
 
-    m_projectionMatrix = pMatrix;
-    m_screenProjectionMatrix = pMatrix * screenMatrix;
-
-    // ### Remove the following two lines when there are no more users of the old shader API
-    ShaderBinder binder(ShaderManager::GenericShader);
-    binder.shader()->setUniform(GLShader::ScreenTransformation, screenMatrix);
+    m_screenProjectionMatrix = m_projectionMatrix * screenMatrix;
 
     Scene::paintGenericScreen(mask, data);
-}
-
-void SceneOpenGL2::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
-{
-    ShaderBinder binder(ShaderManager::GenericShader);
-    GLShader *shader = binder.shader();
-    QMatrix4x4 screenTransformation = shader->getUniformMatrix4x4("screenTransformation");
-
-    KWin::SceneOpenGL::paintDesktop(desktop, mask, region, data);
-
-    shader->setUniform(GLShader::ScreenTransformation, screenTransformation);
 }
 
 void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
@@ -1133,8 +1114,8 @@ void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
     vbo->setUseColor(true);
     vbo->setData(vertices.count() / 2, 2, vertices.data(), NULL);
 
-    ShaderBinder binder(ShaderManager::ColorShader);
-    binder.shader()->setUniform(GLShader::Offset, QVector2D(0, 0));
+    ShaderBinder binder(ShaderTrait::UniformColor);
+    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, m_projectionMatrix);
 
     vbo->render(GL_TRIANGLES);
 }
@@ -1545,15 +1526,13 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
             traits |= ShaderTrait::AdjustSaturation;
 
         shader = ShaderManager::instance()->pushShader(traits);
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
     }
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
 
     if (ColorCorrection *cc = scene->colorCorrection()) {
         cc->setupForOutput(data.screen());
     }
 
-    // ### Remove the following line when there are no more users of the old shader API
-    shader->setUniform(GLShader::WindowTransformation, windowMatrix);
     shader->setUniform(GLShader::Saturation, data.saturation());
 
     const GLenum filter = (mask & (Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED))
@@ -1807,21 +1786,17 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
     region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
 
     GLShader* shader = m_effectFrame->shader();
-    bool sceneShader = false;
     if (!shader) {
-        shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
-        sceneShader = true;
+        shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::Modulate);
     } else if (shader) {
         ShaderManager::instance()->pushShader(shader);
     }
 
     if (shader) {
-        if (sceneShader)
-            shader->setUniform(GLShader::Offset, QVector2D(0, 0));
-
         shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
         shader->setUniform(GLShader::Saturation, 1.0f);
     }
+    const QMatrix4x4 projection = m_scene->projectionMatrix();
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1941,21 +1916,12 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
         m_unstyledTexture->bind();
         const QPoint pt = m_effectFrame->geometry().topLeft();
-        if (sceneShader) {
-            shader->setUniform(GLShader::Offset, QVector2D(pt.x(), pt.y()));
-        } else {
-            QMatrix4x4 translation;
-            translation.translate(pt.x(), pt.y());
-            if (shader) {
-                shader->setUniform(GLShader::WindowTransformation, translation);
-            }
-        }
+
+        QMatrix4x4 mvp(projection);
+        mvp.translate(pt.x(), pt.y());
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
         m_unstyledVBO->render(region, GL_TRIANGLES);
-        if (!sceneShader) {
-            if (shader) {
-                shader->setUniform(GLShader::WindowTransformation, QMatrix4x4());
-            }
-        }
         m_unstyledTexture->unbind();
     } else if (m_effectFrame->style() == EffectFrameStyled) {
         if (!m_texture)   // Lazy creation
@@ -1968,7 +1934,13 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         m_texture->bind();
         qreal left, top, right, bottom;
         m_effectFrame->frame().getMargins(left, top, right, bottom);   // m_geometry is the inner geometry
-        m_texture->render(region, m_effectFrame->geometry().adjusted(-left, -top, right, bottom));
+        const QRect rect = m_effectFrame->geometry().adjusted(-left, -top, right, bottom);
+
+        QMatrix4x4 mvp(projection);
+        mvp.translate(rect.x(), rect.y());
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
+        m_texture->render(region, rect);
         m_texture->unbind();
 
     }
@@ -1983,6 +1955,9 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
                 const float a = opacity * frameOpacity;
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
             }
+            QMatrix4x4 mvp(projection);
+            mvp.translate(m_effectFrame->selection().x(), m_effectFrame->selection().y());
+            shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             m_selectionTexture->bind();
             m_selectionTexture->render(region, m_effectFrame->selection());
@@ -1995,6 +1970,10 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
     if (!m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty()) {
         QPoint topLeft(m_effectFrame->geometry().x(),
                        m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2);
+
+        QMatrix4x4 mvp(projection);
+        mvp.translate(topLeft.x(), topLeft.y());
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
         if (m_effectFrame->isCrossFade() && m_oldIconTexture) {
             if (shader) {
@@ -2026,6 +2005,9 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
     // Render text
     if (!m_effectFrame->text().isEmpty()) {
+        QMatrix4x4 mvp(projection);
+        mvp.translate(m_effectFrame->geometry().x(), m_effectFrame->geometry().y());
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
         if (m_effectFrame->isCrossFade() && m_oldTextTexture) {
             if (shader) {
                 const float a = opacity * (1.0 - m_effectFrame->crossFadeProgress());

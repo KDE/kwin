@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QList>
 #include <QHash>
 #include <QStack>
+#include <QScopedPointer>
 
 #include <KPluginFactory>
 
@@ -2228,6 +2229,7 @@ class KWINEFFECTS_EXPORT WindowPaintData : public PaintData
 {
 public:
     explicit WindowPaintData(EffectWindow* w);
+    explicit WindowPaintData(EffectWindow* w, const QMatrix4x4 &screenProjectionMatrix);
     WindowPaintData(const WindowPaintData &other);
     virtual ~WindowPaintData();
     /**
@@ -2404,6 +2406,14 @@ public:
      */
     QMatrix4x4 &rmodelViewMatrix();
 
+    /**
+     * Returns The projection matrix as used by the current screen painting pass
+     * including screen transformations.
+     *
+     * @since 5.6
+     **/
+    QMatrix4x4 screenProjectionMatrix() const;
+
     WindowQuadList quads;
 
     /**
@@ -2419,7 +2429,9 @@ class KWINEFFECTS_EXPORT ScreenPaintData : public PaintData
 {
 public:
     ScreenPaintData();
+    ScreenPaintData(const QMatrix4x4 &projectionMatrix);
     ScreenPaintData(const ScreenPaintData &other);
+    virtual ~ScreenPaintData();
     /**
      * Scales the screen by @p scale factor.
      * Multiplies all three components by the given factor.
@@ -2462,6 +2474,16 @@ public:
      **/
     ScreenPaintData& operator+=(const QVector3D &translation);
     ScreenPaintData& operator=(const ScreenPaintData &rhs);
+
+    /**
+     * The projection matrix used by the scene for the current rendering pass.
+     * On non-OpenGL compositors it's set to Identity matrix.
+     * @since 5.6
+     **/
+    QMatrix4x4 projectionMatrix() const;
+private:
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 class KWINEFFECTS_EXPORT ScreenPrePaintData
@@ -2914,6 +2936,22 @@ public:
      * @since 4.6
      **/
     qreal crossFadeProgress() const;
+
+    /**
+     * Returns The projection matrix as used by the current screen painting pass
+     * including screen transformations.
+     *
+     * This matrix is only valid during a rendering pass started by render.
+     *
+     * @since 5.6
+     * @see render
+     * @see EffectsHandler::paintEffectFrame
+     * @see Effect::paintEffectFrame
+     **/
+    QMatrix4x4 screenProjectionMatrix() const;
+
+protected:
+    void setScreenProjectionMatrix(const QMatrix4x4 &projection);
 
 private:
     EffectFramePrivate* const d;

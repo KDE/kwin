@@ -106,7 +106,7 @@ Scene::~Scene()
 
 // returns mask and possibly modified region
 void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint,
-                        QRegion *updateRegion, QRegion *validRegion)
+                        QRegion *updateRegion, QRegion *validRegion, const QMatrix4x4 &projection)
 {
     const QSize &screenSize = screens()->size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
@@ -146,7 +146,7 @@ void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint
         paintBackground(region);
     }
 
-    ScreenPaintData data;
+    ScreenPaintData data(projection);
     effects->paintScreen(*mask, region, data);
 
     foreach (Window *w, stacking_order) {
@@ -473,7 +473,7 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         return;
     }
 
-    WindowPaintData data(w->window()->effectWindow());
+    WindowPaintData data(w->window()->effectWindow(), screenProjectionMatrix());
     data.quads = quads;
     effects->paintWindow(effectWindow(w), mask, region, data);
     // paint thumbnails on top of window
@@ -518,7 +518,7 @@ void Scene::paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacit
             continue;
         }
         EffectWindowImpl *thumb = it.value().data();
-        WindowPaintData thumbData(thumb);
+        WindowPaintData thumbData(thumb, screenProjectionMatrix());
         thumbData.setOpacity(opacity);
         thumbData.setBrightness(brightness * item->brightness());
         thumbData.setSaturation(saturation * item->saturation());
@@ -650,6 +650,11 @@ void Scene::doneOpenGLContextCurrent()
 
 void Scene::triggerFence()
 {
+}
+
+QMatrix4x4 Scene::screenProjectionMatrix() const
+{
+    return QMatrix4x4();
 }
 
 //****************************************
@@ -825,9 +830,8 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         AbstractClient *client = dynamic_cast<AbstractClient*>(toplevel);
         QRegion contents = clientShape();
         QRegion center = toplevel->transparentRect();
-        QRegion decoration = (client && true ?
-                              QRegion(client->decorationRect()) : shape()) - center;
-        ret = makeQuads(WindowQuadContents, contents, client->clientContentPos());
+        QRegion decoration = (client ? QRegion(client->decorationRect()) : shape()) - center;
+        ret = makeQuads(WindowQuadContents, contents, toplevel->clientContentPos());
 
         QRect rects[4];
         bool isShadedClient = false;

@@ -799,6 +799,8 @@ void Client::setShade(ShadeMode mode)
         }
     } else {
         shade_geometry_change = true;
+        if (decoratedClient())
+            decoratedClient()->signalShadeChange();
         QSize s(sizeForClientSize(clientSize()));
         shade_geometry_change = false;
         plainResize(s);

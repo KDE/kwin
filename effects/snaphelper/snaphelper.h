@@ -38,7 +38,7 @@ public:
     virtual void reconfigure(ReconfigureFlags);
 
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
-    virtual void postPaintScreen();
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
     virtual bool isActive() const;
 
 public Q_SLOTS:

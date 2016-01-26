@@ -226,6 +226,10 @@ public:
 
     KWayland::Server::Display *waylandDisplay() const override;
 
+    Scene *scene() const {
+        return m_scene;
+    }
+
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
     void slotTabAdded(EffectWindow* from, EffectWindow* to);

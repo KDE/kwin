@@ -86,8 +86,8 @@ private:
     bool canDoPersistent;
     EffectWindowList ignoredWindows;
 
-    void renderVignetting();
-    void renderBlurTexture();
+    void renderVignetting(const QMatrix4x4 &projection);
+    void renderBlurTexture(const QMatrix4x4 &projection);
     int frameDelay;
     bool blurSupported, useBlur;
     GLTexture* blurTexture;

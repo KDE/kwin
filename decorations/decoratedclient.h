@@ -89,6 +89,8 @@ public:
         return KDecoration2::DecoratedClientPrivate::client();
     }
 
+    void signalShadeChange();
+
 private:
     void createRenderer();
     AbstractClient *m_client;

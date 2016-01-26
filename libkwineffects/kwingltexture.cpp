@@ -478,13 +478,7 @@ void GLTexture::render(QRegion region, const QRect& rect, bool hardwareClipping)
 
         d->m_vbo->setData(4, 2, verts, texcoords);
     }
-    QMatrix4x4 translation;
-    translation.translate(rect.x(), rect.y());
-    GLShader *shader = ShaderManager::instance()->getBoundShader();
-    shader->setUniform(GLShader::Offset, QVector2D(rect.x(), rect.y()));
-    shader->setUniform(GLShader::WindowTransformation, translation);
     d->m_vbo->render(region, GL_TRIANGLE_STRIP, hardwareClipping);
-    shader->setUniform(GLShader::WindowTransformation, QMatrix4x4());
 }
 
 GLuint GLTexture::texture() const

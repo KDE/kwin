@@ -62,6 +62,7 @@ public:
     virtual void doneOpenGLContextCurrent() override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     virtual void triggerFence() override;
+    virtual QMatrix4x4 projectionMatrix() const = 0;
 
     void insertWait();
 
@@ -98,6 +99,7 @@ protected:
     void handleGraphicsReset(GLenum status);
 
     virtual void doPaintBackground(const QVector<float> &vertices) = 0;
+    virtual void updateProjectionMatrix() = 0;
 
 Q_SIGNALS:
     void resetCompositing();
@@ -126,8 +128,8 @@ public:
     static bool supported(OpenGLBackend *backend);
 
     ColorCorrection *colorCorrection();
-    QMatrix4x4 projectionMatrix() const { return m_projectionMatrix; }
-    QMatrix4x4 screenProjectionMatrix() const { return m_screenProjectionMatrix; }
+    QMatrix4x4 projectionMatrix() const override { return m_projectionMatrix; }
+    QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
 
 protected:
     virtual void paintSimpleScreen(int mask, QRegion region);
@@ -135,7 +137,7 @@ protected:
     virtual void doPaintBackground(const QVector< float >& vertices);
     virtual Scene::Window *createWindow(Toplevel *t);
     virtual void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
+    virtual void updateProjectionMatrix() override;
 
 private Q_SLOTS:
     void slotColorCorrectedChanged(bool recreateShaders = true);

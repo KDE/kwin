@@ -1392,16 +1392,21 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
         active = true;
 
     // check whether it is a double click
-    if (event->button() == Qt::LeftButton) {
-        if (m_decoration.doubleClickTimer.isValid() &&
-                decoration()->titleBar().contains(event->x(), event->y()) &&
-                !m_decoration.doubleClickTimer.hasExpired(QGuiApplication::styleHints()->mouseDoubleClickInterval())) {
-            Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
-            dontMoveResize();
+    if (event->button() == Qt::LeftButton && decoration()->titleBar().contains(event->x(), event->y())) {
+        if (m_decoration.doubleClickTimer.isValid()) {
+            const quint64 interval = m_decoration.doubleClickTimer.elapsed();
             m_decoration.doubleClickTimer.invalidate();
-            return false;
+            if (interval > QGuiApplication::styleHints()->mouseDoubleClickInterval()) {
+                m_decoration.doubleClickTimer.invalidate(); // expired -> new first click and pot. init
+            } else {
+                Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
+                dontMoveResize();
+                return false;
+            }
         }
-        m_decoration.doubleClickTimer.invalidate();
+         else {
+            m_decoration.doubleClickTimer.start(); // new first click and pot. init, could be invalidated by release - see below
+        }
     }
 
     if (event->button() == Qt::LeftButton)
@@ -1460,6 +1465,11 @@ void AbstractClient::processDecorationButtonRelease(QMouseEvent *event)
 void AbstractClient::startDecorationDoubleClickTimer()
 {
     m_decoration.doubleClickTimer.start();
+}
+
+void AbstractClient::invalidateDecorationDoubleClickTimer()
+{
+    m_decoration.doubleClickTimer.invalidate();
 }
 
 bool AbstractClient::providesContextHelp() const

@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwineffects.h"
 
 #include <QElapsedTimer>
+#include <QMatrix4x4>
 
 class QOpenGLFramebufferObject;
 
@@ -136,6 +137,8 @@ public:
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
 
+    virtual QMatrix4x4 screenProjectionMatrix() const;
+
     /**
      * Whether the Scene uses an X11 overlay window to perform compositing.
      */
@@ -158,7 +161,7 @@ protected:
     void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,
-                     QRegion *updateRegion, QRegion *validRegion);
+                     QRegion *updateRegion, QRegion *validRegion, const QMatrix4x4 &projection = QMatrix4x4());
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
     void finalPaintScreen(int mask, QRegion region, ScreenPaintData& data);

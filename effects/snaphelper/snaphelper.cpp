@@ -63,16 +63,17 @@ void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void SnapHelperEffect::postPaintScreen()
+void SnapHelperEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 {
-    effects->postPaintScreen();
+    effects->paintScreen(mask, region, data);
     if (m_timeline.currentValue() != 0.0) {
         // Display the guide
         if (effects->isOpenGLCompositing()) {
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
             vbo->setUseColor(true);
-            ShaderBinder binder(ShaderManager::ColorShader);
+            ShaderBinder binder(ShaderTrait::UniformColor);
+            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
