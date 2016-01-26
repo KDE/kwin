@@ -73,19 +73,7 @@ bool InvertEffect::loadData()
 {
     m_inited = true;
 
-    QString shadersDir = QStringLiteral("kwin/shaders/1.10/");
-    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
-    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
-        shadersDir = QStringLiteral("kwin/shaders/1.40/");
-    const QString fragmentshader =  QStandardPaths::locate(QStandardPaths::GenericDataLocation, shadersDir + QStringLiteral("invert.frag"));
-
-    QFile ff(fragmentshader);
-    if (!ff.open(QIODevice::ReadOnly)) {
-        qCCritical(KWINEFFECTS) << "Couldn't open" << fragmentshader << "for reading!";
-        return false;
-    }
-
-    m_shader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
+    m_shader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("invert.frag"));
     if (!m_shader->isValid()) {
         qCCritical(KWINEFFECTS) << "The shader failed to load!";
         return false;

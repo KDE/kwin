@@ -96,7 +96,6 @@ private:
     QList<WinDataPair> m_windows;
     GLShader *m_vignettingShader;
     GLShader *m_blurShader;
-    QString m_shadersDir;
 };
 
 } // namespace

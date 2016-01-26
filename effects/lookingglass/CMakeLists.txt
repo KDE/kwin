@@ -1,14 +1,6 @@
 #######################################
 # Effect
 
-# Data files
-install( FILES
-    data/1.10/lookingglass.frag
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10 )
-install( FILES
-    data/1.40/lookingglass.frag
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40 )
-
 #######################################
 # Config
 set(kwin_lookingglass_config_SRCS lookingglass_config.cpp)

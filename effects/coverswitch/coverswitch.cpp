@@ -61,15 +61,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     captionFont.setPointSize(captionFont.pointSize() * 2);
 
     if (effects->compositingType() == OpenGL2Compositing) {
-        QString shadersDir = QStringLiteral("kwin/shaders/1.10/");
-        const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
-        if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
-            shadersDir = QStringLiteral("kwin/shaders/1.40/");
-        const QString fragmentshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, shadersDir + QStringLiteral("coverswitch-reflection.glsl"));
-        QFile ff(fragmentshader);
-        if (ff.open(QIODevice::ReadOnly)) {
-            m_reflectionShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
-        }
+        m_reflectionShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("coverswitch-reflection.glsl"));
     } else {
         m_reflectionShader = NULL;
     }
