@@ -35,8 +35,6 @@ namespace Server
 {
 class OutputInterface;
 class OutputDeviceInterface;
-class OutputManagementInterface;
-class OutputConfigurationInterface;
 }
 }
 
@@ -68,6 +66,7 @@ public:
     explicit DrmBackend(QObject *parent = nullptr);
     virtual ~DrmBackend();
 
+    void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config) override;
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend* createOpenGLBackend() override;
@@ -111,7 +110,6 @@ private:
     bool crtcIsUsed(quint32 crtc);
     void outputDpmsChanged();
     void readOutputsConfiguration();
-    void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
     QByteArray generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
     QScopedPointer<Udev> m_udev;
@@ -124,7 +122,6 @@ private:
     int m_pageFlipsPending = 0;
     bool m_active = false;
     QVector<DrmBuffer*> m_buffers;
-    KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
 };
 
 class DrmOutput : public QObject

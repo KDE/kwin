@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/clientconnection.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
+#include <KWayland/Server/outputconfiguration_interface.h>
 // Wayland
 #include <wayland-cursor.h>
 
@@ -141,6 +142,11 @@ OpenGLBackend *AbstractBackend::createOpenGLBackend()
 QPainterBackend *AbstractBackend::createQPainterBackend()
 {
     return nullptr;
+}
+
+void AbstractBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
+{
+    qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
 }
 
 void AbstractBackend::setSoftWareCursor(bool set)

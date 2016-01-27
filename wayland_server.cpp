@@ -46,6 +46,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/blur_interface.h>
 #include <KWayland/Server/shell_interface.h>
+#include <KWayland/Server/outputmanagement_interface.h>
+#include <KWayland/Server/outputconfiguration_interface.h>
+
 
 // Qt
 #include <QThread>
@@ -230,6 +233,12 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
         }
     );
     m_decorationManager->create();
+
+    m_outputManagement = m_display->createOutputManagement(m_display);
+    connect(m_outputManagement, &OutputManagementInterface::configurationChangeRequested,
+            this, &WaylandServer::configurationChangeRequested);
+    m_outputManagement->create();
+    qCDebug(KWIN_CORE) << "########## OutputManagementInterface created.";
 }
 
 void WaylandServer::initWorkspace()
@@ -511,5 +520,13 @@ bool WaylandServer::isScreenLocked() const
 {
     return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked;
 }
+
+void WaylandServer::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
+{
+    if (m_backend) {
+        m_backend->configurationChangeRequested(config);
+    }
+}
+
 
 }

@@ -109,19 +109,6 @@ void DrmBackend::init()
     }
     auto v = VirtualTerminal::create(this);
     connect(v, &VirtualTerminal::activeChanged, this, &DrmBackend::activate);
-
-    auto display = waylandServer()->display();
-    m_outputManagement = display->createOutputManagement(display);
-    connect(m_outputManagement, &KWayland::Server::OutputManagementInterface::configurationChangeRequested,
-            this, &DrmBackend::configurationChangeRequested);
-    m_outputManagement->create();
-
-}
-
-void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
-{
-    // TODO: applying new config
-    qDebug() << "Someone wants to change the screen setup! Coming to you in a future patch...";
 }
 
 void DrmBackend::activate(bool active)
@@ -359,6 +346,12 @@ QByteArray DrmBackend::generateOutputConfigurationUuid() const
         hash.addData((*it)->uuid());
     }
     return hash.result().toHex().left(10);
+}
+
+void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
+{
+    qCDebug(KWIN_DRM) << "DRM config change goes here...";
+
 }
 
 DrmOutput *DrmBackend::findOutput(quint32 connector)

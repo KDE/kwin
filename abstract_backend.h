@@ -25,6 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QObject>
 
+namespace KWayland {
+    namespace Server {
+        class OutputConfigurationInterface;
+    }
+}
+
 namespace KWin
 {
 
@@ -74,6 +80,14 @@ public:
      * Base implementation returns one QRect positioned at 0/0 with screenSize() as size.
      **/
     virtual QVector<QRect> screenGeometries() const;
+    /**
+     * Implement this method to receive configuration change requests through KWayland's
+     * OutputManagement interface.
+     *
+     * Base implementation warns that the current backend does not implement this
+     * functionality.
+     */
+    virtual void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
 
     bool usesSoftwareCursor() const {
         return m_softWareCursor;
