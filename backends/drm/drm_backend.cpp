@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWayland
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
+#include <KWayland/Server/outputchangeset.h>
 #include <KWayland/Server/outputdevice_interface.h>
 #include <KWayland/Server/outputmanagement_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
@@ -352,12 +353,36 @@ void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurat
 {
     qCDebug(KWIN_DRM) << "DRM config change goes here...";
 
+    auto changes = config->changes();
+    for (auto *outputdevice: changes.keys()) {
+        qCDebug(KWIN_DRM) << "Sth changed";
+        KWayland::Server::OutputChangeSet *changeset = changes[outputdevice];
+
+        auto drmoutput = findOutput(outputdevice->uuid());
+        if (drmoutput == nullptr) {
+            qCWarning(KWIN_DRM) << "Could NOT find DrmOutput matching " << outputdevice->uuid();
+            return;
+        }
+        drmoutput->setChanges(changeset);
+    }
+
 }
 
 DrmOutput *DrmBackend::findOutput(quint32 connector)
 {
     auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [connector] (DrmOutput *o) {
         return o->m_connector == connector;
+    });
+    if (it != m_outputs.constEnd()) {
+        return *it;
+    }
+    return nullptr;
+}
+
+DrmOutput *DrmBackend::findOutput(QByteArray uuid)
+{
+    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [uuid] (DrmOutput *o) {
+        return o->m_uuid == uuid;
     });
     if (it != m_outputs.constEnd()) {
         return *it;
@@ -782,7 +807,7 @@ void DrmOutput::init(drmModeConnector *connector)
         mode.size = QSize(m->hdisplay, m->vdisplay);
         mode.flags = deviceflags;
         mode.refreshRate = refreshRate;
-        qDebug() << "Adding mode: " << i << mode.size;
+        qCDebug(KWIN_DRM) << "Adding mode: " << i << mode.size;
         m_waylandOutputDevice->addMode(mode);
     }
 
@@ -798,7 +823,7 @@ void DrmOutput::init(drmModeConnector *connector)
     }
 
     m_waylandOutput->create();
-    qDebug() << "Created OutputDevice";
+    qCDebug(KWIN_DRM) << "Created OutputDevice";
     m_waylandOutputDevice->create();
 }
 
@@ -1087,6 +1112,61 @@ void DrmOutput::setGlobalPos(const QPoint &pos)
     if (m_waylandOutputDevice) {
         m_waylandOutputDevice->setGlobalPosition(pos);
     }
+}
+
+void DrmOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
+{
+    m_changeset = changes;
+    qCDebug(KWIN_DRM) << "set changes in DrmOutput";
+    /*
+     connect(m_changeset, &QObject::destroyed,
+        this, [=]() {
+        qCDebug(KWIN_DRM) << "changeset deleted;";
+        m_changeset.clear();
+    });
+    */
+    commitChanges();
+}
+
+bool DrmOutput::commitChanges()
+{
+    Q_ASSERT(!m_waylandOutputDevice.isNull());
+    Q_ASSERT(!m_waylandOutput.isNull());
+
+    if (m_changeset.isNull()) {
+        qCDebug(KWIN_DRM) << "no changes";
+        // No changes to an output is an entirely valid thing
+        return true;
+    }
+
+    bool success = true;
+
+    if (m_changeset->enabledChanged()) {
+        qCDebug(KWIN_DRM) << "Setting enabled:";
+        //m_waylandOutputDevice->setEnabled(m_changeset->enabled());
+        // FIXME: implement
+    }
+    if (m_changeset->modeChanged()) {
+        qCDebug(KWIN_DRM) << "Setting new mode:" << m_changeset->mode();
+        //m_waylandOutputDevice->setCurrentMode(m_changeset->mode());
+        // FIXME: implement for wl_output
+    }
+    if (m_changeset->transformChanged()) {
+        qCDebug(KWIN_DRM) << "Server setting transform: " << (int)(m_changeset->transform());
+        m_waylandOutputDevice->setTransform(m_changeset->transform());
+        // FIXME: implement for wl_output
+    }
+    if (m_changeset->positionChanged()) {
+        qCDebug(KWIN_DRM) << "Server setting position: " << m_changeset->position();
+        m_waylandOutput->setGlobalPosition(m_changeset->position());
+        m_waylandOutputDevice->setGlobalPosition(m_changeset->position());
+    }
+    if (m_changeset->scaleChanged()) {
+        qCDebug(KWIN_DRM) << "Setting scale:" << m_changeset->scale();
+        m_waylandOutputDevice->setScale(m_changeset->scale());
+        // FIXME: implement for wl_output
+    }
+    return success;
 }
 
 DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)

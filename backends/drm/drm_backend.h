@@ -35,6 +35,7 @@ namespace Server
 {
 class OutputInterface;
 class OutputDeviceInterface;
+class OutputChangeSet;
 }
 }
 
@@ -112,6 +113,7 @@ private:
     void readOutputsConfiguration();
     QByteArray generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
+    DrmOutput *findOutput(QByteArray uuid);
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
     int m_fd = -1;
@@ -143,6 +145,12 @@ public:
     void init(drmModeConnector *connector);
     void restoreSaved();
     void blank();
+
+    /**
+     * This sets the changes and tests them against the DRM output
+     */
+    void setChanges(KWayland::Server::OutputChangeSet *changeset);
+    bool commitChanges();
 
     QSize size() const;
     QRect geometry() const;
@@ -196,6 +204,7 @@ private:
     QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
+    QPointer<KWayland::Server::OutputChangeSet> m_changeset;
     ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
     DpmsMode m_dpmsMode = DpmsMode::On;
     QByteArray m_uuid;
