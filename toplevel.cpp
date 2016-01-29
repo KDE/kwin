@@ -513,4 +513,3 @@ QMatrix4x4 Toplevel::inputTransformation() const
 
 } // namespace
 
-#include "toplevel.moc"

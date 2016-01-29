@@ -1694,4 +1694,3 @@ void Workspace::forEachAbstractClient(std::function< void (AbstractClient*) > fu
 
 } // namespace
 
-#include "workspace.moc"

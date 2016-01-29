@@ -290,4 +290,3 @@ bool Monitor::Corner::active() const
 }
 } // namespace
 
-#include "monitor.moc"

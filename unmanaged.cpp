@@ -156,4 +156,3 @@ NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
 
 } // namespace
 
-#include "unmanaged.moc"

@@ -1847,4 +1847,3 @@ void EffectFrame::setScreenProjectionMatrix(const QMatrix4x4 &spm)
 
 } // namespace
 
-#include "kwineffects.moc"

@@ -260,4 +260,3 @@ Borders::operator QMargins() const
 
 } // namespace
 
-#include "decorationoptions.moc"

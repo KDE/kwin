@@ -1611,4 +1611,3 @@ void TabBox::removeTabBoxGrab()
 } // namespace TabBox
 } // namespace
 
-#include "tabbox.moc"

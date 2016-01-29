@@ -64,4 +64,3 @@ void GeometryTip::setGeometry(const QRect& geom)
 
 } // namespace
 
-#include "geometrytip.moc"

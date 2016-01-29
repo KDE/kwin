@@ -1971,4 +1971,3 @@ QPoint CloseWindowView::mapFromGlobal(const QPoint &pos) const
 
 } // namespace
 
-#include "presentwindows.moc"

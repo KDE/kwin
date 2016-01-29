@@ -61,4 +61,3 @@ QColor ColorHelper::foreground(bool active, ColorHelper::ForegroundRole role) co
     return kcs.foreground(static_cast<KColorScheme::ForegroundRole>(role)).color();
 }
 
-#include "colorhelper.moc"

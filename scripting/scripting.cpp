@@ -795,4 +795,3 @@ QList< QAction * > KWin::Scripting::actionsForUserActionMenu(KWin::AbstractClien
     return actions;
 }
 
-#include "scripting.moc"

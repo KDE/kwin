@@ -41,4 +41,3 @@ void EffectModelTest::testEffectFilterModel() {
 }
 
 QTEST_MAIN(EffectModelTest)
-#include "effectmodeltest.moc"

@@ -202,4 +202,3 @@ QByteArray Deleted::windowRole() const
 
 } // namespace
 
-#include "deleted.moc"

@@ -388,4 +388,3 @@ void MouseClickEffect::paintScreenFinishGl(int, QRegion, ScreenPaintData&)
 
 } // namespace
 
-#include "mouseclick.moc"

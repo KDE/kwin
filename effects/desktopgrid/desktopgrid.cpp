@@ -1459,4 +1459,3 @@ void DesktopButtonsView::hide()
 
 } // namespace
 
-#include "desktopgrid.moc"

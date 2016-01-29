@@ -532,4 +532,3 @@ QProcessEnvironment Application::processStartupEnvironment() const
 
 } // namespace
 
-#include "main.moc"
