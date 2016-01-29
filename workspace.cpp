@@ -194,6 +194,7 @@ Workspace::Workspace(const QString &sessionKey)
         m_compositor = Compositor::create(this);
     }
     connect(this, &Workspace::currentDesktopChanged, m_compositor, &Compositor::addRepaintFull);
+    connect(m_compositor, &QObject::destroyed, this, [this] { m_compositor = nullptr; });
 
     auto decorationBridge = Decoration::DecorationBridge::create(this);
     decorationBridge->init();
