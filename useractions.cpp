@@ -319,7 +319,7 @@ void UserActionsMenu::init()
     action = advancedMenu->addAction(i18n("S&pecial Application Settings..."));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::ApplicationRulesOp);
-    if (!KSharedConfig::openConfig()->isImmutable() &&
+    if (!kwinApp()->config()->isImmutable() &&
             !KAuthorized::authorizeControlModules(configModules(true)).isEmpty()) {
         advancedMenu->addSeparator();
         action = advancedMenu->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",

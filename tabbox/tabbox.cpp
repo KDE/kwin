@@ -761,7 +761,7 @@ void TabBox::hide(bool abort)
 
 void TabBox::reconfigure()
 {
-    KSharedConfigPtr c = KSharedConfig::openConfig();
+    KSharedConfigPtr c = kwinApp()->config();
     KConfigGroup config = c->group("TabBox");
 
     loadConfig(c->group("TabBox"), m_defaultConfig);
@@ -1241,7 +1241,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     Client* nc = c;
     bool options_traverse_all;
     {
-        KConfigGroup group(KSharedConfig::openConfig(), "TabBox");
+        KConfigGroup group(kwinApp()->config(), "TabBox");
         options_traverse_all = group.readEntry("TraverseAll", false);
     }
 

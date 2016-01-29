@@ -87,7 +87,7 @@ int currentRefreshRate()
 
 Options::Options(QObject *parent)
     : QObject(parent)
-    , m_settings(new Settings(KSharedConfig::openConfig()))
+    , m_settings(new Settings(kwinApp()->config()))
     , m_focusPolicy(ClickToFocus)
     , m_nextFocusPrefersMouse(false)
     , m_clickRaise(false)

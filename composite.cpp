@@ -206,7 +206,7 @@ void Compositor::slotCompositingOptionsInitialized()
         qCDebug(KWIN_CORE) << "Initializing OpenGL compositing";
 
         // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
-        KSharedConfigPtr unsafeConfigPtr = KSharedConfig::openConfig();
+        KSharedConfigPtr unsafeConfigPtr = kwinApp()->config();
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
         const QString openGLIsUnsafe = QLatin1String("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString());
         if (unsafeConfig.readEntry(openGLIsUnsafe, false))
@@ -461,7 +461,7 @@ void Compositor::deleteUnusedSupportProperties()
 void Compositor::fallbackToXRenderCompositing()
 {
     finish();
-    KConfigGroup config(KSharedConfig::openConfig(), "Compositing");
+    KConfigGroup config(kwinApp()->config(), "Compositing");
     config.writeEntry("Backend", "XRender");
     config.sync();
     options->setCompositingMode(XRenderCompositing);
@@ -482,7 +482,7 @@ void Compositor::slotConfigChanged()
 void Compositor::slotReinitialize()
 {
     // Reparse config. Config options will be reloaded by setup()
-    KSharedConfig::openConfig()->reparseConfiguration();
+    kwinApp()->config()->reparseConfiguration();
 
     // Restart compositing
     finish();

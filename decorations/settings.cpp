@@ -152,7 +152,7 @@ static KDecoration2::BorderSize stringToSize(const QString &name)
 
 void SettingsImpl::readSettings()
 {
-    KConfigGroup config = KSharedConfig::openConfig(KWIN_CONFIG)->group(QStringLiteral("org.kde.kdecoration2"));
+    KConfigGroup config = kwinApp()->config()->group(QStringLiteral("org.kde.kdecoration2"));
     const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType >({
         KDecoration2::DecorationButtonType::Menu,
         KDecoration2::DecorationButtonType::OnAllDesktops

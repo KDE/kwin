@@ -71,17 +71,17 @@ DecorationBridge::~DecorationBridge()
 
 static QString readPlugin()
 {
-    return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("library", s_defaultPlugin);
+    return kwinApp()->config()->group(s_pluginName).readEntry("library", s_defaultPlugin);
 }
 
 static bool readNoPlugin()
 {
-    return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("NoPlugin", false);
+    return kwinApp()->config()->group(s_pluginName).readEntry("NoPlugin", false);
 }
 
 QString DecorationBridge::readTheme() const
 {
-    return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("theme", m_defaultTheme);
+    return kwinApp()->config()->group(s_pluginName).readEntry("theme", m_defaultTheme);
 }
 
 void DecorationBridge::init()

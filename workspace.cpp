@@ -217,7 +217,7 @@ Workspace::Workspace(const QString &sessionKey)
 void Workspace::init()
 {
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
-    KSharedConfigPtr config = KSharedConfig::openConfig();
+    KSharedConfigPtr config = kwinApp()->config();
     kwinApp()->createScreens();
     Screens *screens = Screens::self();
     // get screen support
@@ -454,7 +454,7 @@ Workspace::~Workspace()
     xcb_delete_property(connection(), rootWindow(), atoms->kwin_running);
 
     delete RuleBook::self();
-    KSharedConfig::openConfig()->sync();
+    kwinApp()->config()->sync();
 
     RootInfo::destroy();
     delete startup;
@@ -788,7 +788,7 @@ void Workspace::slotReconfigure()
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
 
-    KSharedConfig::openConfig()->reparseConfiguration();
+    kwinApp()->config()->reparseConfiguration();
     options->updateSettings();
 
     emit configChanged();
