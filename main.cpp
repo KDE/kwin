@@ -150,6 +150,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     : QApplication(argc, argv)
     , m_eventFilter(new XcbEventFilter())
     , m_configLock(false)
+    , m_config()
     , m_operationMode(mode)
 {
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
@@ -184,11 +185,13 @@ void Application::start()
 {
     setQuitOnLastWindowClosed(false);
 
-    KSharedConfig::Ptr config = KSharedConfig::openConfig();
-    if (!config->isImmutable() && m_configLock) {
+    if (!m_config) {
+        m_config = KSharedConfig::openConfig();
+    }
+    if (!m_config->isImmutable() && m_configLock) {
         // TODO: This shouldn't be necessary
         //config->setReadOnly( true );
-        config->reparseConfiguration();
+        m_config->reparseConfiguration();
     }
 
     crashChecking();

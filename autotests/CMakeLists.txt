@@ -75,6 +75,7 @@ target_link_libraries( testXcbWrapper
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
+                       KF5::ConfigCore
                        KF5::WindowSystem
                        XCB::XCB
 )
@@ -86,6 +87,7 @@ if (XCB_ICCCM_FOUND)
     target_link_libraries( testXcbSizeHints
                            Qt5::Test
                            Qt5::X11Extras
+                           KF5::ConfigCore
                            KF5::WindowSystem
                            XCB::XCB
                            XCB::ICCCM
@@ -106,6 +108,7 @@ target_link_libraries( testXcbWindow
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
+                       KF5::ConfigCore
                        KF5::WindowSystem
                        XCB::XCB
 )

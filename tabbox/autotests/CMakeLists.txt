@@ -21,6 +21,7 @@ target_link_libraries( testTabBoxClientModel
     Qt5::Quick
     Qt5::Test
     Qt5::X11Extras
+    KF5::ConfigCore
     KF5::I18n
     KF5::Package
     KF5::WindowSystem
@@ -50,6 +51,7 @@ target_link_libraries( testTabBoxHandler
     Qt5::Quick
     Qt5::Test
     Qt5::X11Extras
+    KF5::ConfigCore
     KF5::I18n
     KF5::Package
     KF5::WindowSystem
