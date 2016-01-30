@@ -68,6 +68,7 @@ Comment[zh_TW]=KWin 視窗管理員
 [Event/compositingsuspendeddbus]
 Name=Compositing has been suspended
 Name[ar]=عُلِّق التركيب
+Name[ast]=Suspendióse la composición
 Name[bg]=Ефектите са временно спрени
 Name[bs]=Slaganje je suspendovano
 Name[ca]=S'ha suspès la composició
@@ -132,6 +133,7 @@ Name[zh_CN]=混成已被中断
 Name[zh_TW]=組合效能已被暫停
 Comment=Another application has requested to suspend compositing.
 Comment[ar]=تطبيق أخر طلب تعليق التركيب
+Comment[ast]=Otra aplicación solicitó suspender la composición.
 Comment[bg]=Друго приложение е поискало временно спиране на ефектите.
 Comment[bs]=Drugi program je zatražio da se slaganje suspenduje.
 Comment[ca]=Una altra aplicació ha sol·licitat de suspendre la composició.
