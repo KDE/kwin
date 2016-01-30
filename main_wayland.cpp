@@ -421,11 +421,11 @@ int main(int argc, char * argv[])
     if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
     // ensure that no thread takes SIGUSR
-    sigset_t userSiganls;
-    sigemptyset(&userSiganls);
-    sigaddset(&userSiganls, SIGUSR1);
-    sigaddset(&userSiganls, SIGUSR2);
-    pthread_sigmask(SIG_BLOCK, &userSiganls, nullptr);
+    sigset_t userSignals;
+    sigemptyset(&userSignals);
+    sigaddset(&userSignals, SIGUSR1);
+    sigaddset(&userSignals, SIGUSR2);
+    pthread_sigmask(SIG_BLOCK, &userSignals, nullptr);
 
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
 
