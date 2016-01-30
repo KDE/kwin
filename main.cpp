@@ -211,9 +211,14 @@ void Application::destroyAtoms()
     atoms = nullptr;
 }
 
-void Application::crashChecking()
+void Application::setupCrashHandler()
 {
     KCrash::setEmergencySaveFunction(Application::crashHandler);
+}
+
+void Application::crashChecking()
+{
+    setupCrashHandler();
     if (crashes >= 4) {
         // Something has gone seriously wrong
         AlternativeWMDialog dialog;

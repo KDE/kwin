@@ -177,6 +177,7 @@ Q_SIGNALS:
 protected:
     Application(OperationMode mode, int &argc, char **argv);
     virtual void performStartup() = 0;
+    virtual void setupCrashHandler();
 
     void notifyKSplash();
     void createInput();
