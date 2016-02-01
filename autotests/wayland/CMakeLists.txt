@@ -44,3 +44,12 @@ add_executable(testDontCrashGlxgears ${testDontCrashGlxgears_SRCS})
 target_link_libraries( testDontCrashGlxgears kwin Qt5::Test)
 add_test(kwin-testDontCrashGlxgears testDontCrashGlxgears)
 ecm_mark_as_test(testDontCrashGlxgears)
+
+########################################################
+# Lock screen integration test
+########################################################
+set( testLockScreen_SRCS lockscreen.cpp kwin_wayland_test.cpp )
+add_executable(testLockScreen ${testLockScreen_SRCS})
+target_link_libraries( testLockScreen kwin Qt5::Test)
+add_test(kwin-testLockScreen testLockScreen)
+ecm_mark_as_test(testLockScreen)
