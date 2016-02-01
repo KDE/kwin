@@ -676,7 +676,6 @@ Scene::Window::Window(Toplevel * c)
 
 Scene::Window::~Window()
 {
-    delete cached_quad_list;
     delete m_shadow;
 }
 
@@ -715,8 +714,7 @@ void Scene::Window::discardShape()
     // it is created on-demand and cached, simply
     // reset the flag
     shape_valid = false;
-    delete cached_quad_list;
-    cached_quad_list = NULL;
+    cached_quad_list.reset();
 }
 
 // Find out the shape of the window using the XShape extension
@@ -853,7 +851,7 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         ret << m_shadow->shadowQuads();
     }
     effects->buildQuads(toplevel->effectWindow(), ret);
-    cached_quad_list = new WindowQuadList(ret);
+    cached_quad_list.reset(new WindowQuadList(ret));
     return ret;
 }
 
