@@ -89,6 +89,7 @@ EglOnXBackend::~EglOnXBackend()
 
 void EglOnXBackend::init()
 {
+    qputenv("EGL_PLATFORM", "x11");
     initEGL();       // required to toggle
     initBufferAge(); // EGL_SWAP_BEHAVIOR_PRESERVED_BIT
     if (!initRenderingContext()) {
