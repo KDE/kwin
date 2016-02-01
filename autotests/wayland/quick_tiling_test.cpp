@@ -57,6 +57,8 @@ private Q_SLOTS:
     void testQuickMaximizing();
     void testQuickTilingKeyboardMove_data();
     void testQuickTilingKeyboardMove();
+    void testQuickTilingPointerMove_data();
+    void testQuickTilingPointerMove();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -446,6 +448,70 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     waylandServer()->backend()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     waylandServer()->backend()->keyboardKeyPressed(KEY_ENTER, timestamp++);
     waylandServer()->backend()->keyboardKeyReleased(KEY_ENTER, timestamp++);
+    QCOMPARE(Cursor::pos(), targetPos);
+    QVERIFY(!workspace()->getMovingClient());
+
+    QCOMPARE(quickTileChangedSpy.count(), 1);
+    QTEST(c->quickTileMode(), "expectedMode");
+}
+
+
+
+void QuickTilingTest::testQuickTilingPointerMove_data()
+{
+    QTest::addColumn<QPoint>("targetPos");
+    QTest::addColumn<AbstractClient::QuickTileMode>("expectedMode");
+
+    QTest::newRow("topRight") << QPoint(2559, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileRight);
+    QTest::newRow("right") << QPoint(2559, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileRight);
+    QTest::newRow("bottomRight") << QPoint(2559, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileRight);
+    QTest::newRow("bottomLeft") << QPoint(0, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileLeft);
+    QTest::newRow("Left") << QPoint(0, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileLeft);
+    QTest::newRow("topLeft") << QPoint(0, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileLeft);
+}
+
+void QuickTilingTest::testQuickTilingPointerMove()
+{
+    using namespace KWayland::Client;
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangeSpy.isValid());
+    // let's render
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    m_connection->flush();
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *c = workspace()->activeClient();
+    QVERIFY(c);
+    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->maximizeMode(), MaximizeRestore);
+
+    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
+    QVERIFY(quickTileChangedSpy.isValid());
+
+    workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
+    QCOMPARE(c, workspace()->getMovingClient());
+    QCOMPARE(Cursor::pos(), QPoint(49, 24));
+
+    QFETCH(QPoint, targetPos);
+    quint32 timestamp = 1;
+    waylandServer()->backend()->pointerMotion(targetPos, timestamp++);
+    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(Cursor::pos(), targetPos);
     QVERIFY(!workspace()->getMovingClient());
 
