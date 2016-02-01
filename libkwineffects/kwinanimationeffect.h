@@ -114,6 +114,7 @@ public:
      * If you shadow _windowClosed() or connect your slot to EffectsHandler::windowClosed() after _windowClosed() was connected, animations for closing windows will fail.
      */
     AnimationEffect();
+    ~AnimationEffect();
 
     bool isActive() const;
     /**

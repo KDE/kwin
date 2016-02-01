@@ -58,6 +58,11 @@ AnimationEffect::AnimationEffect() : d_ptr(new AnimationEffectPrivate())
     QMetaObject::invokeMethod( this, "init", Qt::QueuedConnection );
 }
 
+AnimationEffect::~AnimationEffect()
+{
+    delete d_ptr;
+}
+
 void AnimationEffect::init()
 {
     Q_D(AnimationEffect);
