@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_backend.h"
 #include "abstract_client.h"
 #include "cursor.h"
+#include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -55,6 +56,8 @@ private Q_SLOTS:
     void cleanup();
     void testPointer();
     void testPointerButton();
+    void testPointerAxis();
+    void testScreenEdge();
 
 private:
     void unlock();
@@ -331,6 +334,107 @@ void LockScreenTest::testPointerButton()
     QVERIFY(buttonChangedSpy.wait());
     waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(buttonChangedSpy.wait());
+}
+
+void LockScreenTest::testPointerAxis()
+{
+    using namespace KWayland::Client;
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<Pointer> pointer(m_seat->createPointer());
+    QVERIFY(!pointer.isNull());
+    QSignalSpy axisChangedSpy(pointer.data(), &Pointer::axisChanged);
+    QVERIFY(axisChangedSpy.isValid());
+
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangeSpy.isValid());
+    // let's render
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    m_connection->flush();
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *c = workspace()->activeClient();
+    QVERIFY(c);
+    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+
+    // first move cursor into the center of the window
+    quint32 timestamp = 1;
+    waylandServer()->backend()->pointerMotion(c->geometry().center(), timestamp++);
+    // and simulate axis
+    waylandServer()->backend()->pointerAxisHorizontal(5.0, timestamp++);
+    QVERIFY(axisChangedSpy.wait());
+
+    QVERIFY(!waylandServer()->isScreenLocked());
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    QVERIFY(lockStateChangedSpy.isValid());
+    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
+    QCOMPARE(lockStateChangedSpy.count(), 1);
+    QVERIFY(waylandServer()->isScreenLocked());
+
+    // and simulate axis
+    waylandServer()->backend()->pointerAxisHorizontal(5.0, timestamp++);
+    QVERIFY(!axisChangedSpy.wait(100));
+    waylandServer()->backend()->pointerAxisVertical(5.0, timestamp++);
+    QVERIFY(!axisChangedSpy.wait(100));
+
+    // and unlock
+    QCOMPARE(lockStateChangedSpy.count(), 1);
+    unlock();
+    if (lockStateChangedSpy.count() < 2) {
+        QVERIFY(lockStateChangedSpy.wait());
+    }
+    QCOMPARE(lockStateChangedSpy.count(), 2);
+    QVERIFY(!waylandServer()->isScreenLocked());
+
+    // and move axis again
+    waylandServer()->backend()->pointerAxisHorizontal(5.0, timestamp++);
+    QVERIFY(axisChangedSpy.wait());
+    waylandServer()->backend()->pointerAxisVertical(5.0, timestamp++);
+    QVERIFY(axisChangedSpy.wait());
+}
+
+void LockScreenTest::testScreenEdge()
+{
+    QSignalSpy screenEdgeSpy(ScreenEdges::self(), &ScreenEdges::approaching);
+    QVERIFY(screenEdgeSpy.isValid());
+    QCOMPARE(screenEdgeSpy.count(), 0);
+
+    quint32 timestamp = 1;
+    waylandServer()->backend()->pointerMotion(QPoint(5, 5), timestamp++);
+    QCOMPARE(screenEdgeSpy.count(), 1);
+
+    QVERIFY(!waylandServer()->isScreenLocked());
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    QVERIFY(lockStateChangedSpy.isValid());
+    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
+    QCOMPARE(lockStateChangedSpy.count(), 1);
+    QVERIFY(waylandServer()->isScreenLocked());
+
+    waylandServer()->backend()->pointerMotion(QPoint(4, 4), timestamp++);
+    QCOMPARE(screenEdgeSpy.count(), 1);
+
+    // and unlock
+    QCOMPARE(lockStateChangedSpy.count(), 1);
+    unlock();
+    if (lockStateChangedSpy.count() < 2) {
+        QVERIFY(lockStateChangedSpy.wait());
+    }
+    QCOMPARE(lockStateChangedSpy.count(), 2);
+    QVERIFY(!waylandServer()->isScreenLocked());
+
+    waylandServer()->backend()->pointerMotion(QPoint(5, 5), timestamp++);
+    QCOMPARE(screenEdgeSpy.count(), 2);
 }
 
 }
