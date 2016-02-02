@@ -79,6 +79,7 @@ WaylandServer::~WaylandServer()
 
 void WaylandServer::destroyInternalConnection()
 {
+    emit terminatingInternalClientConnection();
     if (m_internalConnection.client) {
         delete m_internalConnection.registry;
         delete m_internalConnection.shm;
