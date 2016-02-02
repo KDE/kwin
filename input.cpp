@@ -714,6 +714,12 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
                 seat->setTimestamp(time);
                 seat->setPointerPos(m_globalPointer);
             }
+        } else {
+            if (auto seat = findSeat()) {
+                seat->setFocusedPointerSurface(nullptr);
+                seat->setTimestamp(time);
+                seat->setPointerPos(m_globalPointer);
+            }
         }
         return;
     }
