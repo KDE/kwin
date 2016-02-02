@@ -95,6 +95,12 @@ void AbstractBackend::updateCursorImage(Qt::CursorShape shape)
         // check whether we can create it
         if (waylandServer() && waylandServer()->internalShmPool()) {
             m_cursorTheme = new WaylandCursorTheme(waylandServer()->internalShmPool(), this);
+            connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this,
+                [this] {
+                    delete m_cursorTheme;
+                    m_cursorTheme = nullptr;
+                }
+            );
         }
     }
     if (!m_cursorTheme) {
