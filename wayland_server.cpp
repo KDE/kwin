@@ -509,7 +509,8 @@ quint16 WaylandServer::createClientId(ClientConnection *c)
 
 bool WaylandServer::isScreenLocked() const
 {
-    return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked;
+    return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked ||
+           ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
 }
 
 }
