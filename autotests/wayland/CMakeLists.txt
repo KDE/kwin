@@ -107,3 +107,12 @@ add_executable(testPlatformCursor ${testPlatformCursor_SRCS})
 target_link_libraries( testPlatformCursor kwin Qt5::Test)
 add_test(kwin-testPlatformCursor testPlatformCursor)
 ecm_mark_as_test(testPlatformCursor)
+
+########################################################
+# Don't crash cancel animation test
+########################################################
+set( testDontCrashCancelAnimation_SRCS dont_crash_cancel_animation.cpp kwin_wayland_test.cpp )
+add_executable(testDontCrashCancelAnimation ${testDontCrashCancelAnimation_SRCS})
+target_link_libraries( testDontCrashCancelAnimation kwin Qt5::Test)
+add_test(kwin-testDontCrashCancelAnimation testDontCrashCancelAnimation)
+ecm_mark_as_test(testDontCrashCancelAnimation)
