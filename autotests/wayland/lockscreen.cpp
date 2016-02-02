@@ -63,6 +63,7 @@ private Q_SLOTS:
 
 private:
     void unlock();
+    AbstractClient *showWindow();
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::Seat *m_seat = nullptr;
@@ -87,6 +88,31 @@ Q_SIGNALS:
     void inputEvent();
 };
 
+#define LOCK \
+    QVERIFY(!waylandServer()->isScreenLocked()); \
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged); \
+    QVERIFY(lockStateChangedSpy.isValid()); \
+    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate); \
+    QCOMPARE(lockStateChangedSpy.count(), 1); \
+    QVERIFY(waylandServer()->isScreenLocked());
+
+#define UNLOCK \
+    QCOMPARE(lockStateChangedSpy.count(), 1); \
+    unlock(); \
+    if (lockStateChangedSpy.count() < 2) { \
+        QVERIFY(lockStateChangedSpy.wait()); \
+    } \
+    QCOMPARE(lockStateChangedSpy.count(), 2); \
+    QVERIFY(!waylandServer()->isScreenLocked());
+
+#define MOTION(target) \
+    waylandServer()->backend()->pointerMotion(target, timestamp++)
+
+#define PRESS \
+    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++)
+
+#define RELEASE \
+    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++)
 
 void LockScreenTest::unlock()
 {
@@ -99,6 +125,41 @@ void LockScreenTest::unlock()
         QMetaObject::invokeMethod(*it, "requestUnlock");
         break;
     }
+}
+
+AbstractClient *LockScreenTest::showWindow()
+{
+    using namespace KWayland::Client;
+#define VERIFY(statement) \
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
+        return nullptr;
+#define COMPARE(actual, expected) \
+    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
+        return nullptr;
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    VERIFY(clientAddedSpy.isValid());
+
+    Surface *surface = m_compositor->createSurface(m_compositor);
+    VERIFY(surface);
+    ShellSurface *shellSurface = m_shell->createSurface(surface, surface);
+    VERIFY(shellSurface);
+    // let's render
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    m_connection->flush();
+    VERIFY(clientAddedSpy.wait());
+    AbstractClient *c = workspace()->activeClient();
+    VERIFY(c);
+    COMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+
+#undef VERIFY
+#undef COMPARE
+
+    return c;
 }
 
 void LockScreenTest::initTestCase()
@@ -204,12 +265,6 @@ void LockScreenTest::testPointer()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QVERIFY(!surface.isNull());
-
     QScopedPointer<Pointer> pointer(m_seat->createPointer());
     QVERIFY(!pointer.isNull());
     QSignalSpy enteredSpy(pointer.data(), &Pointer::entered);
@@ -217,34 +272,15 @@ void LockScreenTest::testPointer()
     QSignalSpy leftSpy(pointer.data(), &Pointer::left);
     QVERIFY(leftSpy.isValid());
 
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
-    QVERIFY(sizeChangeSpy.isValid());
-    // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
-
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
+    AbstractClient *c = showWindow();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
 
     // first move cursor into the center of the window
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerMotion(c->geometry().center(), timestamp++);
+    MOTION(c->geometry().center());
     QVERIFY(enteredSpy.wait());
 
-    QVERIFY(!waylandServer()->isScreenLocked());
-    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
-    QVERIFY(lockStateChangedSpy.isValid());
-    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    QVERIFY(waylandServer()->isScreenLocked());
+    LOCK
 
     QEXPECT_FAIL("", "Adding the lock screen window should send left event", Continue);
     QVERIFY(leftSpy.wait(100));
@@ -252,32 +288,26 @@ void LockScreenTest::testPointer()
     QCOMPARE(leftSpy.count(), 1);
 
     // simulate moving out in and out again
-    waylandServer()->backend()->pointerMotion(c->geometry().bottomRight() + QPoint(100, 100), timestamp++);
-    waylandServer()->backend()->pointerMotion(c->geometry().center(), timestamp++);
-    waylandServer()->backend()->pointerMotion(c->geometry().bottomRight() + QPoint(100, 100), timestamp++);
+    MOTION(c->geometry().center());
+    MOTION(c->geometry().bottomRight() + QPoint(100, 100));
+    MOTION(c->geometry().bottomRight() + QPoint(100, 100));
     QEXPECT_FAIL("", "Adding the lock screen window should send left event", Continue);
     QVERIFY(!leftSpy.wait(100));
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(enteredSpy.count(), 1);
 
     // go back on the window
-    waylandServer()->backend()->pointerMotion(c->geometry().center(), timestamp++);
+    MOTION(c->geometry().center());
     // and unlock
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    unlock();
-    if (lockStateChangedSpy.count() < 2) {
-        QVERIFY(lockStateChangedSpy.wait());
-    }
-    QCOMPARE(lockStateChangedSpy.count(), 2);
-    QVERIFY(!waylandServer()->isScreenLocked());
+    UNLOCK
 
     QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
     QVERIFY(enteredSpy.wait(100));
     QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
     QCOMPARE(enteredSpy.count(), 2);
     // move on the window
-    waylandServer()->backend()->pointerMotion(c->geometry().center() + QPoint(100, 100), timestamp++);
-    waylandServer()->backend()->pointerMotion(c->geometry().center(), timestamp++);
+    MOTION(c->geometry().center() + QPoint(100, 100));
+    MOTION(c->geometry().center());
     QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
     QVERIFY(!enteredSpy.wait(100));
     QCOMPARE(enteredSpy.count(), 2);
@@ -287,70 +317,37 @@ void LockScreenTest::testPointerButton()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QVERIFY(!surface.isNull());
-
     QScopedPointer<Pointer> pointer(m_seat->createPointer());
     QVERIFY(!pointer.isNull());
     QSignalSpy buttonChangedSpy(pointer.data(), &Pointer::buttonStateChanged);
     QVERIFY(buttonChangedSpy.isValid());
 
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
-    QVERIFY(sizeChangeSpy.isValid());
-    // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
-
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
+    AbstractClient *c = showWindow();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
 
     // first move cursor into the center of the window
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerMotion(c->geometry().center(), timestamp++);
+    MOTION(c->geometry().center());
     // and simulate a click
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    PRESS;
     QVERIFY(buttonChangedSpy.wait());
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    RELEASE;
     QVERIFY(buttonChangedSpy.wait());
 
-    QVERIFY(!waylandServer()->isScreenLocked());
-    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
-    QVERIFY(lockStateChangedSpy.isValid());
-    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    QVERIFY(waylandServer()->isScreenLocked());
+    LOCK
 
     // and simulate a click
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    PRESS;
     QVERIFY(!buttonChangedSpy.wait(100));
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    RELEASE;
     QVERIFY(!buttonChangedSpy.wait(100));
 
-    // and unlock
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    unlock();
-    if (lockStateChangedSpy.count() < 2) {
-        QVERIFY(lockStateChangedSpy.wait());
-    }
-    QCOMPARE(lockStateChangedSpy.count(), 2);
-    QVERIFY(!waylandServer()->isScreenLocked());
-
+    UNLOCK
 
     // and click again
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    PRESS;
     QVERIFY(buttonChangedSpy.wait());
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    RELEASE;
     QVERIFY(buttonChangedSpy.wait());
 }
 
@@ -358,47 +355,22 @@ void LockScreenTest::testPointerAxis()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QVERIFY(!surface.isNull());
-
     QScopedPointer<Pointer> pointer(m_seat->createPointer());
     QVERIFY(!pointer.isNull());
     QSignalSpy axisChangedSpy(pointer.data(), &Pointer::axisChanged);
     QVERIFY(axisChangedSpy.isValid());
 
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
-    QVERIFY(sizeChangeSpy.isValid());
-    // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
-
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
+    AbstractClient *c = showWindow();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
 
     // first move cursor into the center of the window
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerMotion(c->geometry().center(), timestamp++);
+    MOTION(c->geometry().center());
     // and simulate axis
     waylandServer()->backend()->pointerAxisHorizontal(5.0, timestamp++);
     QVERIFY(axisChangedSpy.wait());
 
-    QVERIFY(!waylandServer()->isScreenLocked());
-    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
-    QVERIFY(lockStateChangedSpy.isValid());
-    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    QVERIFY(waylandServer()->isScreenLocked());
+    LOCK
 
     // and simulate axis
     waylandServer()->backend()->pointerAxisHorizontal(5.0, timestamp++);
@@ -407,13 +379,7 @@ void LockScreenTest::testPointerAxis()
     QVERIFY(!axisChangedSpy.wait(100));
 
     // and unlock
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    unlock();
-    if (lockStateChangedSpy.count() < 2) {
-        QVERIFY(lockStateChangedSpy.wait());
-    }
-    QCOMPARE(lockStateChangedSpy.count(), 2);
-    QVERIFY(!waylandServer()->isScreenLocked());
+    UNLOCK
 
     // and move axis again
     waylandServer()->backend()->pointerAxisHorizontal(5.0, timestamp++);
@@ -429,29 +395,18 @@ void LockScreenTest::testScreenEdge()
     QCOMPARE(screenEdgeSpy.count(), 0);
 
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerMotion(QPoint(5, 5), timestamp++);
+    MOTION(QPoint(5, 5));
     QCOMPARE(screenEdgeSpy.count(), 1);
 
-    QVERIFY(!waylandServer()->isScreenLocked());
-    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
-    QVERIFY(lockStateChangedSpy.isValid());
-    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    QVERIFY(waylandServer()->isScreenLocked());
+    LOCK
 
-    waylandServer()->backend()->pointerMotion(QPoint(4, 4), timestamp++);
+    MOTION(QPoint(4, 4));
     QCOMPARE(screenEdgeSpy.count(), 1);
 
     // and unlock
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    unlock();
-    if (lockStateChangedSpy.count() < 2) {
-        QVERIFY(lockStateChangedSpy.wait());
-    }
-    QCOMPARE(lockStateChangedSpy.count(), 2);
-    QVERIFY(!waylandServer()->isScreenLocked());
+    UNLOCK
 
-    waylandServer()->backend()->pointerMotion(QPoint(5, 5), timestamp++);
+    MOTION(QPoint(5, 5));
     QCOMPARE(screenEdgeSpy.count(), 2);
 }
 
@@ -464,44 +419,32 @@ void LockScreenTest::testEffects()
 
     quint32 timestamp = 1;
     QCOMPARE(inputSpy.count(), 0);
-    waylandServer()->backend()->pointerMotion(QPoint(5, 5), timestamp++);
+    MOTION(QPoint(5, 5));
     QCOMPARE(inputSpy.count(), 1);
     // simlate click
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    PRESS;
     QCOMPARE(inputSpy.count(), 2);
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    RELEASE;
     QCOMPARE(inputSpy.count(), 3);
 
-    QVERIFY(!waylandServer()->isScreenLocked());
-    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
-    QVERIFY(lockStateChangedSpy.isValid());
-    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    QVERIFY(waylandServer()->isScreenLocked());
+    LOCK
 
-    waylandServer()->backend()->pointerMotion(QPoint(6, 6), timestamp++);
+    MOTION(QPoint(6, 6));
     QCOMPARE(inputSpy.count(), 3);
     // simlate click
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    PRESS;
     QCOMPARE(inputSpy.count(), 3);
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    RELEASE;
     QCOMPARE(inputSpy.count(), 3);
 
-    // and unlock
-    QCOMPARE(lockStateChangedSpy.count(), 1);
-    unlock();
-    if (lockStateChangedSpy.count() < 2) {
-        QVERIFY(lockStateChangedSpy.wait());
-    }
-    QCOMPARE(lockStateChangedSpy.count(), 2);
-    QVERIFY(!waylandServer()->isScreenLocked());
+    UNLOCK
 
-    waylandServer()->backend()->pointerMotion(QPoint(5, 5), timestamp++);
+    MOTION(QPoint(5, 5));
     QCOMPARE(inputSpy.count(), 4);
     // simlate click
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    PRESS;
     QCOMPARE(inputSpy.count(), 5);
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    RELEASE;
     QCOMPARE(inputSpy.count(), 6);
 
     effects->stopMouseInterception(effect.data());
