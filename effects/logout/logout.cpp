@@ -117,7 +117,7 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     } else if (!blurTexture) {
         blurSupported = false;
         delete blurTarget; // catch as we just tested the texture ;-P
-        if (effects->isOpenGLCompositing() && GLRenderTarget::blitSupported() && useBlur) {
+        if (effects->isOpenGLCompositing() && GLRenderTarget::blitSupported() && !GLPlatform::instance()->supports(LimitedNPOT) && useBlur) {
             // TODO: It seems that it is not possible to create a GLRenderTarget that has
             //       a different size than the display right now. Most likely a KWin core bug.
             // Create texture and render target

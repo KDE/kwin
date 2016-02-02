@@ -443,7 +443,8 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
         }
 
         if (!shape.isEmpty()) {
-            if (w->isFullScreen() && GLRenderTarget::blitSupported() && m_simpleShader->isValid() && shape.boundingRect() == w->geometry()) {
+            if (w->isFullScreen() && GLRenderTarget::blitSupported() && m_simpleShader->isValid()
+                    && !GLPlatform::instance()->supports(LimitedNPOT) && shape.boundingRect() == w->geometry()) {
                 doSimpleBlur(w, data.opacity(), data.screenProjectionMatrix());
             } else if (m_shouldCache && !translated && !w->isDeleted()) {
                 doCachedBlur(w, region, data.opacity(), data.screenProjectionMatrix());
