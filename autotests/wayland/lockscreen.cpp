@@ -218,15 +218,12 @@ void LockScreenTest::testPointer()
     waylandServer()->backend()->pointerMotion(c->geometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
 
-    // TODO: we need a proper signal to check whether screen is locked
     QVERIFY(!waylandServer()->isScreenLocked());
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    QVERIFY(lockStateChangedSpy.isValid());
     ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
-    QVERIFY(clientAddedSpy.wait());
-    QVERIFY(clientAddedSpy.last().first().value<ShellClient*>()->isLockScreen());
+    QCOMPARE(lockStateChangedSpy.count(), 1);
     QVERIFY(waylandServer()->isScreenLocked());
-    // two screen setup should give us two lock windows
-    QVERIFY(clientAddedSpy.wait());
-    QVERIFY(clientAddedSpy.last().first().value<ShellClient*>()->isLockScreen());
 
     QEXPECT_FAIL("", "Adding the lock screen window should send left event", Continue);
     QVERIFY(leftSpy.wait(100));
@@ -245,11 +242,12 @@ void LockScreenTest::testPointer()
     // go back on the window
     waylandServer()->backend()->pointerMotion(c->geometry().center(), timestamp++);
     // and unlock
-    QSignalSpy shellClientRemovedSpy(waylandServer(), &WaylandServer::shellClientRemoved);
-    QVERIFY(shellClientRemovedSpy.isValid());
+    QCOMPARE(lockStateChangedSpy.count(), 1);
     unlock();
-    QVERIFY(shellClientRemovedSpy.wait());
-    QCOMPARE(shellClientRemovedSpy.count(), 2);
+    if (lockStateChangedSpy.count() < 2) {
+        QVERIFY(lockStateChangedSpy.wait());
+    }
+    QCOMPARE(lockStateChangedSpy.count(), 2);
     QVERIFY(!waylandServer()->isScreenLocked());
 
     QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
@@ -305,15 +303,12 @@ void LockScreenTest::testPointerButton()
     waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(buttonChangedSpy.wait());
 
-    // TODO: we need a proper signal to check whether screen is locked
     QVERIFY(!waylandServer()->isScreenLocked());
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    QVERIFY(lockStateChangedSpy.isValid());
     ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
-    QVERIFY(clientAddedSpy.wait());
-    QVERIFY(clientAddedSpy.last().first().value<ShellClient*>()->isLockScreen());
+    QCOMPARE(lockStateChangedSpy.count(), 1);
     QVERIFY(waylandServer()->isScreenLocked());
-    // two screen setup should give us two lock windows
-    QVERIFY(clientAddedSpy.wait());
-    QVERIFY(clientAddedSpy.last().first().value<ShellClient*>()->isLockScreen());
 
     // and simulate a click
     waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -322,12 +317,14 @@ void LockScreenTest::testPointerButton()
     QVERIFY(!buttonChangedSpy.wait(100));
 
     // and unlock
-    QSignalSpy shellClientRemovedSpy(waylandServer(), &WaylandServer::shellClientRemoved);
-    QVERIFY(shellClientRemovedSpy.isValid());
+    QCOMPARE(lockStateChangedSpy.count(), 1);
     unlock();
-    QVERIFY(shellClientRemovedSpy.wait());
-    QCOMPARE(shellClientRemovedSpy.count(), 2);
+    if (lockStateChangedSpy.count() < 2) {
+        QVERIFY(lockStateChangedSpy.wait());
+    }
+    QCOMPARE(lockStateChangedSpy.count(), 2);
     QVERIFY(!waylandServer()->isScreenLocked());
+
 
     // and click again
     waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
