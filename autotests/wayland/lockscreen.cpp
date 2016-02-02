@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "shell_client.h"
+#include <kwineffects.h>
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
@@ -58,6 +59,7 @@ private Q_SLOTS:
     void testPointerButton();
     void testPointerAxis();
     void testScreenEdge();
+    void testEffects();
 
 private:
     void unlock();
@@ -69,6 +71,22 @@ private:
     KWayland::Client::EventQueue *m_queue = nullptr;
     QThread *m_thread = nullptr;
 };
+
+class HelperEffect : public Effect
+{
+    Q_OBJECT
+public:
+    HelperEffect() {}
+    ~HelperEffect() {}
+
+    void windowInputMouseEvent(QEvent*) override {
+        emit inputEvent();
+    }
+
+Q_SIGNALS:
+    void inputEvent();
+};
+
 
 void LockScreenTest::unlock()
 {
@@ -435,6 +453,58 @@ void LockScreenTest::testScreenEdge()
 
     waylandServer()->backend()->pointerMotion(QPoint(5, 5), timestamp++);
     QCOMPARE(screenEdgeSpy.count(), 2);
+}
+
+void LockScreenTest::testEffects()
+{
+    QScopedPointer<HelperEffect> effect(new HelperEffect);
+    QSignalSpy inputSpy(effect.data(), &HelperEffect::inputEvent);
+    QVERIFY(inputSpy.isValid());
+    effects->startMouseInterception(effect.data(), Qt::ArrowCursor);
+
+    quint32 timestamp = 1;
+    QCOMPARE(inputSpy.count(), 0);
+    waylandServer()->backend()->pointerMotion(QPoint(5, 5), timestamp++);
+    QCOMPARE(inputSpy.count(), 1);
+    // simlate click
+    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QCOMPARE(inputSpy.count(), 2);
+    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(inputSpy.count(), 3);
+
+    QVERIFY(!waylandServer()->isScreenLocked());
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    QVERIFY(lockStateChangedSpy.isValid());
+    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
+    QCOMPARE(lockStateChangedSpy.count(), 1);
+    QVERIFY(waylandServer()->isScreenLocked());
+
+    waylandServer()->backend()->pointerMotion(QPoint(6, 6), timestamp++);
+    QCOMPARE(inputSpy.count(), 3);
+    // simlate click
+    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QCOMPARE(inputSpy.count(), 3);
+    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(inputSpy.count(), 3);
+
+    // and unlock
+    QCOMPARE(lockStateChangedSpy.count(), 1);
+    unlock();
+    if (lockStateChangedSpy.count() < 2) {
+        QVERIFY(lockStateChangedSpy.wait());
+    }
+    QCOMPARE(lockStateChangedSpy.count(), 2);
+    QVERIFY(!waylandServer()->isScreenLocked());
+
+    waylandServer()->backend()->pointerMotion(QPoint(5, 5), timestamp++);
+    QCOMPARE(inputSpy.count(), 4);
+    // simlate click
+    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QCOMPARE(inputSpy.count(), 5);
+    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(inputSpy.count(), 6);
+
+    effects->stopMouseInterception(effect.data());
 }
 
 }
