@@ -60,6 +60,7 @@ private Q_SLOTS:
     void testPointerAxis();
     void testScreenEdge();
     void testEffects();
+    void testMoveWindow();
 
 private:
     void unlock();
@@ -448,6 +449,47 @@ void LockScreenTest::testEffects()
     QCOMPARE(inputSpy.count(), 6);
 
     effects->stopMouseInterception(effect.data());
+}
+
+void LockScreenTest::testMoveWindow()
+{
+    using namespace KWayland::Client;
+    AbstractClient *c = showWindow();
+    QVERIFY(c);
+    QSignalSpy clientStepUserMovedResizedSpy(c, &AbstractClient::clientStepUserMovedResized);
+    QVERIFY(clientStepUserMovedResizedSpy.isValid());
+    quint32 timestamp = 1;
+
+    workspace()->slotWindowMove();
+    QCOMPARE(workspace()->getMovingClient(), c);
+    QVERIFY(c->isMove());
+    waylandServer()->backend()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
+    waylandServer()->backend()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
+    QEXPECT_FAIL("", "First event is ignored", Continue);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+
+    // TODO adjust once the expected fail is fixed
+    waylandServer()->backend()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
+    waylandServer()->backend()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+
+    // while locking our window should continue to be in move resize
+    LOCK
+    QCOMPARE(workspace()->getMovingClient(), c);
+    QVERIFY(c->isMove());
+    waylandServer()->backend()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
+    waylandServer()->backend()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+
+    UNLOCK
+    QCOMPARE(workspace()->getMovingClient(), c);
+    QVERIFY(c->isMove());
+    waylandServer()->backend()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
+    waylandServer()->backend()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+    waylandServer()->backend()->keyboardKeyPressed(KEY_ESC, timestamp++);
+    waylandServer()->backend()->keyboardKeyReleased(KEY_ESC, timestamp++);
+    QVERIFY(!c->isMove());
 }
 
 }
