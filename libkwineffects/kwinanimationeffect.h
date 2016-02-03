@@ -173,6 +173,19 @@ protected:
     { return p_animate(w, a, meta, ms, to, curve, delay, from, true); }
 
     /**
+     * this allows to alter the target (but not type or curve) of a running animation
+     * with the ID @param animationId
+     * @param newTarget alters the "to" parameter of the animation
+     * If @param newRemainingTime allows to lengthen (or shorten) the remaining time
+     * of the animation. By default (-1) the remaining time remains unchanged
+     *
+     * Please use @function cancel to cancel an animation rather than altering it.
+     * NOTICE that you can NOT retarget an animation that just has just @function animationEnded !
+     * @return whether there was such animation and it could be altered
+     */
+    bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1);
+
+    /**
      * Called whenever an animation end, passes the transformed @class EffectWindow @enum Attribute and originally supplied @param meta
      * You can reimplement it to keep a constant transformation for the window (ie. keep it a this opacity or position) or to start another animation
      */
@@ -200,6 +213,7 @@ private:
     float progress( const AniData& ) const;
     void disconnectGeometryChanges();
     void updateLayerRepaints();
+    void validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, const EffectWindow *w) const;
 private Q_SLOTS:
     void init();
     void triggerRepaint();
