@@ -43,6 +43,7 @@ namespace KWin
 class GlobalShortcutsManager;
 class Toplevel;
 class Xkb;
+class InputEventFilter;
 
 namespace Decoration
 {
@@ -145,6 +146,15 @@ public:
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);
 
+    void uninstallInputEventFilter(InputEventFilter *filter);
+    Toplevel *findToplevel(const QPoint &pos);
+    GlobalShortcutsManager *shortcuts() const {
+        return m_shortcuts;
+    }
+    void insertTouchId(quint32 internalId, qint32 kwaylandId);
+    qint32 touchId(quint32 internalId);
+    void removeTouchId(quint32 internalId);
+
 public Q_SLOTS:
     void updatePointerWindow();
 
@@ -190,7 +200,6 @@ Q_SIGNALS:
 private:
     static QEvent::Type buttonStateToEvent(PointerButtonState state);
     static Qt::MouseButton buttonToQtMouseButton(uint32_t button);
-    Toplevel *findToplevel(const QPoint &pos);
     void setupLibInput();
     void setupLibInputWithScreens();
     void updatePointerPosition(const QPointF &pos);
@@ -207,6 +216,8 @@ private:
     void updateKeyboardWindow();
     void setupWorkspace();
     void reconfigure();
+    void setupInputFilters();
+    void installInputEventFilter(InputEventFilter *filter);
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
     QScopedPointer<Xkb> m_xkb;
@@ -235,8 +246,70 @@ private:
 
     bool m_pointerWarping = false;
 
+    QVector<InputEventFilter*> m_filters;
+
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();
+    friend class DecorationEventFilter;
+    friend class InternalWindowEventFilter;
+    friend class ForwardInputFilter;
+};
+
+/**
+ * Base class for filtering input events inside InputRedirection.
+ *
+ * The idea behind the InputEventFilter is to have task oriented
+ * filters. E.g. there is one filter taking care of a locked screen,
+ * one to take care of interacting with window decorations, etc.
+ *
+ * A concrete subclass can reimplement the virtual methods and decide
+ * whether an event should be filtered out or not by returning either
+ * @c true or @c false. E.g. the lock screen filter can easily ensure
+ * that all events are filtered out.
+ *
+ * As soon as a filter returns @c true the processing is stopped. If
+ * a filter returns @c false the next one is invoked. This means a filter
+ * installed early gets to see more events than a filter installed later on.
+ *
+ * Deleting an instance of InputEventFilter automatically uninstalls it from
+ * InputRedirection.
+ **/
+class InputEventFilter
+{
+public:
+    InputEventFilter();
+    virtual ~InputEventFilter();
+
+    /**
+     * Event filter for pointer events which can be described by a QMouseEvent.
+     *
+     * Please note that the button translation in QMouseEvent cannot cover all
+     * possible buttons. Because of that also the @p nativeButton code is passed
+     * through the filter. For internal areas it's fine to use @p event, but for
+     * passing to client windows the @p nativeButton should be used.
+     *
+     * @param event The event information about the move or button press/release
+     * @param nativeButton The native key code of the button, for move events 0
+     * @return @c true to stop further event processing, @c false to pass to next filter
+     **/
+    virtual bool pointerEvent(QMouseEvent *event, quint32 nativeButton);
+    /**
+     * Event filter for pointer axis events.
+     *
+     * @param event The event information about the axis event
+     * @return @c true to stop further event processing, @c false to pass to next filter
+     **/
+    virtual bool wheelEvent(QWheelEvent *event);
+    /**
+     * Event filter for keyboard events.
+     *
+     * @param event The event information about the key event
+     * @return @c tru to stop further event processing, @c false to pass to next filter.
+     **/
+    virtual bool keyEvent(QKeyEvent *event);
+    virtual bool touchDown(quint32 id, const QPointF &pos, quint32 time);
+    virtual bool touchMotion(quint32 id, const QPointF &pos, quint32 time);
+    virtual bool touchUp(quint32 id, quint32 time);
 };
 
 class Xkb
