@@ -239,6 +239,14 @@ set_package_properties(Fontconfig PROPERTIES DESCRIPTION "Font access configurat
                        PURPOSE "Needed for KWin's QPA plugin."
                       )
 
+find_package(Xwayland)
+set_package_properties(Xwayland PROPERTIES
+    URL "http://x.org"
+    DESCRIPTION "Xwayland X server"
+    TYPE RUNTIME
+    PURPOSE "Needed for running kwin_wayland"
+    )
+
 ########### configure tests ###############
 include(CMakeDependentOption)
 
