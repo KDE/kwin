@@ -38,10 +38,15 @@ QElapsedTimer AnimationEffect::s_clock;
 
 class AnimationEffectPrivate {
 public:
-    AnimationEffectPrivate() { m_animated = m_damageDirty = m_animationsTouched = m_isInitialized = false; }
+    AnimationEffectPrivate()
+    {
+        m_animated = m_damageDirty = m_animationsTouched = m_isInitialized = false;
+        m_justEndedAnimation = 0;
+    }
     AnimationEffect::AniMap m_animations;
     EffectWindowList m_zombies;
     bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched, m_isInitialized;
+    quint64 m_justEndedAnimation; // protect against cancel
 };
 }
 
@@ -231,6 +236,8 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
 bool AnimationEffect::cancel(quint64 animationId)
 {
     Q_D(AnimationEffect);
+    if (animationId == d->m_justEndedAnimation)
+        return true; // this is just ending, do not try to cancel it but fake success
     for (AniMap::iterator entry = d->m_animations.begin(), mapEnd = d->m_animations.end(); entry != mapEnd; ++entry) {
         for (QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end(); anim != animEnd; ++anim) {
             if (quint64(&(*anim)) == animationId) {
@@ -245,6 +252,7 @@ bool AnimationEffect::cancel(quint64 animationId)
                 }
                 if (d->m_animations.isEmpty())
                     disconnectGeometryChanges();
+                d->m_animationsTouched = true; // could be called from animationEnded
                 return true;
             }
         }
@@ -292,7 +300,9 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                     oldW->unreferencePreviousWindowPixmap();
                     effects->addRepaint(oldW->expandedGeometry());
                 }
+                d->m_justEndedAnimation = quint64(&(*anim));
                 animationEnded(oldW, anim->attribute, anim->meta);
+                d->m_justEndedAnimation = 0;
                 // NOTICE animationEnded is an external call and might have called "::animate"
                 // as a result our iterators could now point random junk on the heap
                 // so we've to restore the former states, ie. find our window list and animation
