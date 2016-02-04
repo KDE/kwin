@@ -868,7 +868,7 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
 
     if (m_xkb->modifiers() != Qt::NoModifier) {
         PointerAxisDirection direction = PointerAxisUp;
-        if (axis == PointerAxisHorizontal) {
+        if (axis == PointerAxisVertical) {
             if (delta > 0) {
                 direction = PointerAxisUp;
             } else {
