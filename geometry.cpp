@@ -1075,7 +1075,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     // because the window already had its position, and if a window
     // with a strut altering the workarea would be managed in initialization
     // after this one, this window would be moved
-    if (workspace()->initializing())
+    if (!workspace() || workspace()->initializing())
         return;
 
     // If the window was touching an edge before but not now move it so it is again.
