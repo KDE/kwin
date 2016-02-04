@@ -54,6 +54,7 @@ private Q_SLOTS:
     void init();
     void cleanup();
     void testAxis();
+    void testDoubleClick();
 
 private:
     AbstractClient *showWindow();
@@ -100,10 +101,10 @@ AbstractClient *DecorationInputTest::showWindow()
     VERIFY(decoSpy.wait());
     COMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
     // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    QImage img(QSize(500, 50), QImage::Format_ARGB32);
     img.fill(Qt::blue);
     surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
+    surface->damage(QRect(0, 0, 500, 50));
     surface->commit(Surface::CommitFlag::None);
 
     m_connection->flush();
@@ -131,6 +132,8 @@ void DecorationInputTest::initTestCase()
     // change some options
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group(QStringLiteral("MouseBindings")).writeEntry("CommandTitlebarWheel", QStringLiteral("above/below"));
+    config->group(QStringLiteral("Windows")).writeEntry("TitlebarDoubleClickCommand", QStringLiteral("OnAllDesktops"));
+    config->group(QStringLiteral("Desktops")).writeEntry("Number", 2);
     config->sync();
 
     kwinApp()->setConfig(config);
@@ -255,6 +258,33 @@ void DecorationInputTest::testAxis()
     waylandServer()->backend()->pointerAxisVertical(-5.0, timestamp++);
     QVERIFY(!c->keepBelow());
     QVERIFY(c->keepAbove());
+}
+
+void KWin::DecorationInputTest::testDoubleClick()
+{
+    AbstractClient *c = showWindow();
+    QVERIFY(c);
+    QVERIFY(c->isDecorated());
+    QVERIFY(!c->noBorder());
+    QVERIFY(!c->isOnAllDesktops());
+    quint32 timestamp = 1;
+    MOTION(QPoint(c->geometry().center().x(), c->clientPos().y() / 2));
+
+    // double click
+    PRESS;
+    RELEASE;
+    PRESS;
+    RELEASE;
+    QVERIFY(c->isOnAllDesktops());
+    // double click again
+    PRESS;
+    RELEASE;
+    QEXPECT_FAIL("", "Tripple click triggers another double click", Continue);
+    QVERIFY(c->isOnAllDesktops());
+    PRESS;
+    RELEASE;
+    QEXPECT_FAIL("", "Tripple click triggers another double click", Continue);
+    QVERIFY(!c->isOnAllDesktops());
 }
 
 }
