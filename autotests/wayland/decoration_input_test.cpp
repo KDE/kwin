@@ -39,6 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
+#include <KDecoration2/Decoration>
+
 #include <linux/input.h>
 
 namespace KWin
@@ -55,6 +57,7 @@ private Q_SLOTS:
     void cleanup();
     void testAxis();
     void testDoubleClick();
+    void testHover();
 
 private:
     AbstractClient *showWindow();
@@ -285,6 +288,42 @@ void KWin::DecorationInputTest::testDoubleClick()
     RELEASE;
     QEXPECT_FAIL("", "Tripple click triggers another double click", Continue);
     QVERIFY(!c->isOnAllDesktops());
+}
+
+void DecorationInputTest::testHover()
+{
+    AbstractClient *c = showWindow();
+    QVERIFY(c);
+    QVERIFY(c->isDecorated());
+    QVERIFY(!c->noBorder());
+
+    // our left border is moved out of the visible area, so move the window to a better place
+    c->move(QPoint(20, 0));
+
+    quint32 timestamp = 1;
+    MOTION(QPoint(c->geometry().center().x(), c->clientPos().y() / 2));
+    QCOMPARE(c->cursor(), Qt::ArrowCursor);
+
+    MOTION(QPoint(20, 0));
+    QCOMPARE(c->cursor(), Qt::SizeFDiagCursor);
+    MOTION(QPoint(c->geometry().x() + c->geometry().width() / 2, 0));
+    QCOMPARE(c->cursor(), Qt::SizeVerCursor);
+    MOTION(QPoint(c->geometry().x() + c->geometry().width() - 1, 0));
+    QCOMPARE(c->cursor(), Qt::SizeBDiagCursor);
+    MOTION(QPoint(c->geometry().x() + c->geometry().width() - 1, c->height() / 2));
+    QCOMPARE(c->cursor(), Qt::SizeHorCursor);
+    MOTION(QPoint(c->geometry().x() + c->geometry().width() - 1, c->height() - 1));
+    QCOMPARE(c->cursor(), Qt::SizeFDiagCursor);
+    MOTION(QPoint(c->geometry().x() + c->geometry().width() / 2, c->height() - 1));
+    QCOMPARE(c->cursor(), Qt::SizeVerCursor);
+    MOTION(QPoint(c->geometry().x(), c->height() - 1));
+    QCOMPARE(c->cursor(), Qt::SizeBDiagCursor);
+    MOTION(QPoint(c->geometry().x(), c->height() / 2));
+    QCOMPARE(c->cursor(), Qt::SizeHorCursor);
+
+    MOTION(c->geometry().center());
+    QEXPECT_FAIL("", "Cursor not set back on leave", Continue);
+    QCOMPARE(c->cursor(), Qt::ArrowCursor);
 }
 
 }
