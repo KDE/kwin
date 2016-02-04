@@ -61,6 +61,9 @@ private Q_SLOTS:
     void testScreenEdge();
     void testEffects();
     void testMoveWindow();
+    void testPointerShortcut();
+    void testAxisShortcut_data();
+    void testAxisShortcut();
 
 private:
     void unlock();
@@ -490,6 +493,92 @@ void LockScreenTest::testMoveWindow()
     waylandServer()->backend()->keyboardKeyPressed(KEY_ESC, timestamp++);
     waylandServer()->backend()->keyboardKeyReleased(KEY_ESC, timestamp++);
     QVERIFY(!c->isMove());
+}
+
+void LockScreenTest::testPointerShortcut()
+{
+    using namespace KWayland::Client;
+    QScopedPointer<QAction> action(new QAction(nullptr));
+    QSignalSpy actionSpy(action.data(), &QAction::triggered);
+    QVERIFY(actionSpy.isValid());
+    input()->registerPointerShortcut(Qt::MetaModifier, Qt::LeftButton, action.data());
+
+    // try to trigger the shortcut
+    quint32 timestamp = 1;
+#define PERFORM(expectedCount) \
+    waylandServer()->backend()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++); \
+    PRESS; \
+    QCoreApplication::instance()->processEvents(); \
+    QCOMPARE(actionSpy.count(), expectedCount); \
+    RELEASE; \
+    waylandServer()->backend()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++); \
+    QCoreApplication::instance()->processEvents(); \
+    QCOMPARE(actionSpy.count(), expectedCount);
+
+    PERFORM(1)
+
+    // now the same thing with a locked screen
+    LOCK
+    PERFORM(1)
+
+    // and as unlocked
+    UNLOCK
+    PERFORM(2)
+#undef PERFORM
+}
+
+
+void LockScreenTest::testAxisShortcut_data()
+{
+    QTest::addColumn<Qt::Orientation>("direction");
+    QTest::addColumn<int>("sign");
+
+    QTest::newRow("up") << Qt::Vertical << 1;
+    QTest::newRow("down") << Qt::Vertical << -1;
+    QTest::newRow("left") << Qt::Horizontal << 1;
+    QTest::newRow("right") << Qt::Horizontal << -1;
+}
+
+void LockScreenTest::testAxisShortcut()
+{
+    using namespace KWayland::Client;
+    QScopedPointer<QAction> action(new QAction(nullptr));
+    QSignalSpy actionSpy(action.data(), &QAction::triggered);
+    QVERIFY(actionSpy.isValid());
+    QFETCH(Qt::Orientation, direction);
+    QFETCH(int, sign);
+    PointerAxisDirection axisDirection = PointerAxisUp;
+    if (direction == Qt::Vertical) {
+        axisDirection = sign > 0 ? PointerAxisUp : PointerAxisDown;
+    } else {
+        axisDirection = sign > 0 ? PointerAxisLeft : PointerAxisRight;
+    }
+    input()->registerAxisShortcut(Qt::MetaModifier, axisDirection, action.data());
+
+    // try to trigger the shortcut
+    quint32 timestamp = 1;
+#define PERFORM(expectedCount) \
+    waylandServer()->backend()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++); \
+    if (direction == Qt::Vertical) \
+        waylandServer()->backend()->pointerAxisVertical(sign * 5.0, timestamp++); \
+    else \
+        waylandServer()->backend()->pointerAxisHorizontal(sign * 5.0, timestamp++); \
+    QCoreApplication::instance()->processEvents(); \
+    QCOMPARE(actionSpy.count(), expectedCount); \
+    waylandServer()->backend()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++); \
+    QCoreApplication::instance()->processEvents(); \
+    QCOMPARE(actionSpy.count(), expectedCount);
+
+    PERFORM(1)
+
+    // now the same thing with a locked screen
+    LOCK
+    PERFORM(1)
+
+    // and as unlocked
+    UNLOCK
+    PERFORM(2)
+#undef PERFORM
 }
 
 }
