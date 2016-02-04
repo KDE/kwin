@@ -58,6 +58,7 @@ private Q_SLOTS:
     void testAxis();
     void testDoubleClick();
     void testHover();
+    void testPressToMove();
 
 private:
     AbstractClient *showWindow();
@@ -324,6 +325,48 @@ void DecorationInputTest::testHover()
     MOTION(c->geometry().center());
     QEXPECT_FAIL("", "Cursor not set back on leave", Continue);
     QCOMPARE(c->cursor(), Qt::ArrowCursor);
+}
+
+void DecorationInputTest::testPressToMove()
+{
+    AbstractClient *c = showWindow();
+    QVERIFY(c);
+    QVERIFY(c->isDecorated());
+    QVERIFY(!c->noBorder());
+    QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(startMoveResizedSpy.isValid());
+    QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
+    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
+
+    quint32 timestamp = 1;
+    MOTION(QPoint(c->geometry().center().x(), c->clientPos().y() / 2));
+    QCOMPARE(c->cursor(), Qt::ArrowCursor);
+
+    PRESS;
+    QVERIFY(!c->isMove());
+    MOTION(QPoint(c->geometry().center().x() + 10, c->clientPos().y() / 2));
+    const int oldX = c->x();
+    QTRY_VERIFY(c->isMove());
+    QCOMPARE(startMoveResizedSpy.count(), 1);
+
+    RELEASE;
+    QTRY_VERIFY(!c->isMove());
+    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QEXPECT_FAIL("", "Just trigger move doesn't move the window", Continue);
+    QCOMPARE(c->x(), oldX + 10);
+
+    // again
+    PRESS;
+    QVERIFY(!c->isMove());
+    MOTION(QPoint(c->geometry().center().x() + 20, c->clientPos().y() / 2));
+    QTRY_VERIFY(c->isMove());
+    QCOMPARE(startMoveResizedSpy.count(), 2);
+    MOTION(QPoint(c->geometry().center().x() + 30, c->clientPos().y() / 2));
+
+    RELEASE;
+    QTRY_VERIFY(!c->isMove());
+    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 2);
+    QCOMPARE(c->x(), oldX + 20);
 }
 
 }
