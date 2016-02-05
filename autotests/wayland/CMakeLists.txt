@@ -62,3 +62,12 @@ add_executable(testDecorationInput ${testDecorationInput_SRCS})
 target_link_libraries( testDecorationInput kwin Qt5::Test)
 add_test(kwin-testDecorationInput testDecorationInput)
 ecm_mark_as_test(testDecorationInput)
+
+########################################################
+# Internal Window test
+########################################################
+set( testInternalWindow_SRCS internal_window.cpp kwin_wayland_test.cpp )
+add_executable(testInternalWindow ${testInternalWindow_SRCS})
+target_link_libraries( testInternalWindow kwin Qt5::Test)
+add_test(kwin-testInternalWindow testInternalWindow)
+ecm_mark_as_test(testInternalWindow)
