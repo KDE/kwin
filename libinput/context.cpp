@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "context.h"
 #include "events.h"
+#include "libinput_logging.h"
 #include "../logind.h"
 #include "../udev.h"
 
@@ -31,10 +32,33 @@ namespace KWin
 namespace LibInput
 {
 
+static void libinputLogHandler(libinput *libinput, libinput_log_priority priority, const char *format, va_list args)
+{
+    Q_UNUSED(libinput)
+    char buf[1024];
+    if (std::vsnprintf(buf, 1023, format, args) <= 0) {
+        return;
+    }
+    switch (priority) {
+    case LIBINPUT_LOG_PRIORITY_DEBUG:
+        qCDebug(KWIN_LIBINPUT) << "Libinput:" << buf;
+        break;
+    case LIBINPUT_LOG_PRIORITY_INFO:
+        qCInfo(KWIN_LIBINPUT) << "Libinput:" << buf;
+        break;
+    case LIBINPUT_LOG_PRIORITY_ERROR:
+    default:
+        qCCritical(KWIN_LIBINPUT) << "Libinput:" << buf;
+        break;
+    }
+}
+
 Context::Context(const Udev &udev)
     : m_libinput(libinput_udev_create_context(&Context::s_interface, this, udev))
     , m_suspended(false)
 {
+    libinput_log_set_priority(m_libinput, LIBINPUT_LOG_PRIORITY_DEBUG);
+    libinput_log_set_handler(m_libinput, &libinputLogHandler);
 }
 
 Context::~Context()
