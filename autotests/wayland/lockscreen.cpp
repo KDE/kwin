@@ -60,6 +60,7 @@ private Q_SLOTS:
     void testPointerAxis();
     void testScreenEdge();
     void testEffects();
+    void testEffectsKeyboard();
     void testMoveWindow();
     void testPointerShortcut();
     void testAxisShortcut_data();
@@ -87,9 +88,13 @@ public:
     void windowInputMouseEvent(QEvent*) override {
         emit inputEvent();
     }
+    void grabbedKeyboardEvent(QKeyEvent *e) override {
+        emit keyEvent(e->text());
+    }
 
 Q_SIGNALS:
     void inputEvent();
+    void keyEvent(const QString&);
 };
 
 #define LOCK \
@@ -117,6 +122,12 @@ Q_SIGNALS:
 
 #define RELEASE \
     waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++)
+
+#define KEYPRESS( key ) \
+    waylandServer()->backend()->keyboardKeyPressed(key, timestamp++)
+
+#define KEYRELEASE( key ) \
+    waylandServer()->backend()->keyboardKeyReleased(key, timestamp++)
 
 void LockScreenTest::unlock()
 {
@@ -452,6 +463,44 @@ void LockScreenTest::testEffects()
     QCOMPARE(inputSpy.count(), 6);
 
     effects->stopMouseInterception(effect.data());
+}
+
+void LockScreenTest::testEffectsKeyboard()
+{
+    QScopedPointer<HelperEffect> effect(new HelperEffect);
+    QSignalSpy inputSpy(effect.data(), &HelperEffect::keyEvent);
+    QVERIFY(inputSpy.isValid());
+    effects->grabKeyboard(effect.data());
+
+    quint32 timestamp = 1;
+    KEYPRESS(KEY_A);
+    QCOMPARE(inputSpy.count(), 1);
+    QCOMPARE(inputSpy.first().first().toString(), QStringLiteral("a"));
+    KEYRELEASE(KEY_A);
+    QCOMPARE(inputSpy.count(), 2);
+    QCOMPARE(inputSpy.first().first().toString(), QStringLiteral("a"));
+    QCOMPARE(inputSpy.at(1).first().toString(), QStringLiteral("a"));
+
+    LOCK
+    KEYPRESS(KEY_B);
+    QCOMPARE(inputSpy.count(), 2);
+    KEYRELEASE(KEY_B);
+    QCOMPARE(inputSpy.count(), 2);
+
+    UNLOCK
+    KEYPRESS(KEY_C);
+    QCOMPARE(inputSpy.count(), 3);
+    QCOMPARE(inputSpy.first().first().toString(), QStringLiteral("a"));
+    QCOMPARE(inputSpy.at(1).first().toString(), QStringLiteral("a"));
+    QCOMPARE(inputSpy.at(2).first().toString(), QStringLiteral("c"));
+    KEYRELEASE(KEY_C);
+    QCOMPARE(inputSpy.count(), 4);
+    QCOMPARE(inputSpy.first().first().toString(), QStringLiteral("a"));
+    QCOMPARE(inputSpy.at(1).first().toString(), QStringLiteral("a"));
+    QCOMPARE(inputSpy.at(2).first().toString(), QStringLiteral("c"));
+    QCOMPARE(inputSpy.at(3).first().toString(), QStringLiteral("c"));
+
+    effects->ungrabKeyboard();
 }
 
 void LockScreenTest::testMoveWindow()
