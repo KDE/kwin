@@ -65,6 +65,7 @@ private Q_SLOTS:
     void testPointerShortcut();
     void testAxisShortcut_data();
     void testAxisShortcut();
+    void testKeyboardShortcut();
 
 private:
     void unlock();
@@ -628,6 +629,46 @@ void LockScreenTest::testAxisShortcut()
     UNLOCK
     PERFORM(2)
 #undef PERFORM
+}
+
+void LockScreenTest::testKeyboardShortcut()
+{
+    using namespace KWayland::Client;
+    QScopedPointer<QAction> action(new QAction(nullptr));
+    QSignalSpy actionSpy(action.data(), &QAction::triggered);
+    QVERIFY(actionSpy.isValid());
+    input()->registerShortcut(Qt::CTRL + Qt::META + Qt::ALT + Qt::Key_Space, action.data());
+
+    // try to trigger the shortcut
+    quint32 timestamp = 1;
+    KEYPRESS(KEY_LEFTCTRL);
+    KEYPRESS(KEY_LEFTMETA);
+    KEYPRESS(KEY_LEFTALT);
+    KEYPRESS(KEY_SPACE);
+    QCoreApplication::instance()->processEvents();
+    QCOMPARE(actionSpy.count(), 1);
+    KEYRELEASE(KEY_SPACE);
+    QCoreApplication::instance()->processEvents();
+    QCOMPARE(actionSpy.count(), 1);
+
+    LOCK
+    KEYPRESS(KEY_SPACE);
+    QCoreApplication::instance()->processEvents();
+    QCOMPARE(actionSpy.count(), 1);
+    KEYRELEASE(KEY_SPACE);
+    QCoreApplication::instance()->processEvents();
+    QCOMPARE(actionSpy.count(), 1);
+
+    UNLOCK
+    KEYPRESS(KEY_SPACE);
+    QCoreApplication::instance()->processEvents();
+    QCOMPARE(actionSpy.count(), 2);
+    KEYRELEASE(KEY_SPACE);
+    QCoreApplication::instance()->processEvents();
+    QCOMPARE(actionSpy.count(), 2);
+    KEYRELEASE(KEY_LEFTCTRL);
+    KEYRELEASE(KEY_LEFTMETA);
+    KEYRELEASE(KEY_LEFTALT);
 }
 
 }
