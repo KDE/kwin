@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/event_queue.h>
+#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/shell.h>
@@ -58,6 +59,7 @@ private Q_SLOTS:
     void testPointer();
     void testPointerButton();
     void testPointerAxis();
+    void testKeyboard();
     void testScreenEdge();
     void testEffects();
     void testEffectsKeyboard();
@@ -402,6 +404,61 @@ void LockScreenTest::testPointerAxis()
     QVERIFY(axisChangedSpy.wait());
     waylandServer()->backend()->pointerAxisVertical(5.0, timestamp++);
     QVERIFY(axisChangedSpy.wait());
+}
+
+void LockScreenTest::testKeyboard()
+{
+    using namespace KWayland::Client;
+
+    QScopedPointer<Keyboard> keyboard(m_seat->createKeyboard());
+    QVERIFY(!keyboard.isNull());
+    QSignalSpy enteredSpy(keyboard.data(), &Keyboard::entered);
+    QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(keyboard.data(), &Keyboard::left);
+    QVERIFY(leftSpy.isValid());
+    QSignalSpy keyChangedSpy(keyboard.data(), &Keyboard::keyChanged);
+    QVERIFY(keyChangedSpy.isValid());
+
+    AbstractClient *c = showWindow();
+    QVERIFY(c);
+    QVERIFY(enteredSpy.wait());
+    QTRY_COMPARE(enteredSpy.count(), 1);
+
+    quint32 timestamp = 1;
+    KEYPRESS(KEY_A);
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 1);
+    QCOMPARE(keyChangedSpy.at(0).at(0).value<quint32>(), quint32(KEY_A));
+    QCOMPARE(keyChangedSpy.at(0).at(1).value<Keyboard::KeyState>(), Keyboard::KeyState::Pressed);
+    QCOMPARE(keyChangedSpy.at(0).at(2).value<quint32>(), quint32(1));
+    KEYRELEASE(KEY_A);
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 2);
+    QCOMPARE(keyChangedSpy.at(1).at(0).value<quint32>(), quint32(KEY_A));
+    QCOMPARE(keyChangedSpy.at(1).at(1).value<Keyboard::KeyState>(), Keyboard::KeyState::Released);
+    QCOMPARE(keyChangedSpy.at(1).at(2).value<quint32>(), quint32(2));
+
+    LOCK
+    KEYPRESS(KEY_B);
+    KEYRELEASE(KEY_B);
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(leftSpy.count(), 1);
+    QCOMPARE(keyChangedSpy.count(), 2);
+
+    UNLOCK
+    KEYPRESS(KEY_C);
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 3);
+    KEYRELEASE(KEY_C);
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 4);
+    QCOMPARE(enteredSpy.count(), 2);
+    QCOMPARE(keyChangedSpy.at(2).at(0).value<quint32>(), quint32(KEY_C));
+    QCOMPARE(keyChangedSpy.at(3).at(0).value<quint32>(), quint32(KEY_C));
+    QCOMPARE(keyChangedSpy.at(2).at(2).value<quint32>(), quint32(5));
+    QCOMPARE(keyChangedSpy.at(3).at(2).value<quint32>(), quint32(6));
+    QCOMPARE(keyChangedSpy.at(2).at(1).value<Keyboard::KeyState>(), Keyboard::KeyState::Pressed);
+    QCOMPARE(keyChangedSpy.at(3).at(1).value<Keyboard::KeyState>(), Keyboard::KeyState::Released);
 }
 
 void LockScreenTest::testScreenEdge()
