@@ -44,6 +44,7 @@ private Q_SLOTS:
     void testEnterLeave();
     void testPointerPressRelease();
     void testPointerAxis();
+    void testKeyboard();
 };
 
 class HelperWindow : public QRasterWindow
@@ -60,6 +61,8 @@ Q_SIGNALS:
     void mousePressed();
     void mouseReleased();
     void wheel();
+    void keyPressed();
+    void keyReleased();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -68,6 +71,8 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 };
 
 HelperWindow::HelperWindow()
@@ -116,6 +121,18 @@ void HelperWindow::wheelEvent(QWheelEvent *event)
 {
     Q_UNUSED(event)
     emit wheel();
+}
+
+void HelperWindow::keyPressEvent(QKeyEvent *event)
+{
+    Q_UNUSED(event)
+    emit keyPressed();
+}
+
+void HelperWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    Q_UNUSED(event)
+    emit keyReleased();
 }
 
 void InternalWindowTest::initTestCase()
@@ -218,6 +235,31 @@ void InternalWindowTest::testPointerAxis()
     QTRY_COMPARE(wheelSpy.count(), 1);
     waylandServer()->backend()->pointerAxisHorizontal(5.0, timestamp++);
     QTRY_COMPARE(wheelSpy.count(), 2);
+}
+
+void InternalWindowTest::testKeyboard()
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    win.show();
+    QSignalSpy pressSpy(&win, &HelperWindow::keyPressed);
+    QVERIFY(pressSpy.isValid());
+    QSignalSpy releaseSpy(&win, &HelperWindow::keyReleased);
+    QVERIFY(releaseSpy.isValid());
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+
+    quint32 timestamp = 1;
+    waylandServer()->backend()->pointerMotion(QPoint(50, 50), timestamp++);
+
+    waylandServer()->backend()->keyboardKeyPressed(KEY_A, timestamp++);
+    QTRY_COMPARE(pressSpy.count(), 1);
+    QCOMPARE(releaseSpy.count(), 0);
+    waylandServer()->backend()->keyboardKeyReleased(KEY_A, timestamp++);
+    QTRY_COMPARE(releaseSpy.count(), 1);
+    QCOMPARE(pressSpy.count(), 1);
 }
 
 }
