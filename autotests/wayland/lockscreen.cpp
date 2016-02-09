@@ -300,16 +300,13 @@ void LockScreenTest::testPointer()
 
     LOCK
 
-    QEXPECT_FAIL("", "Adding the lock screen window should send left event", Continue);
     QVERIFY(leftSpy.wait(100));
-    QEXPECT_FAIL("", "Adding the lock screen window should send left event", Continue);
     QCOMPARE(leftSpy.count(), 1);
 
     // simulate moving out in and out again
     MOTION(c->geometry().center());
     MOTION(c->geometry().bottomRight() + QPoint(100, 100));
     MOTION(c->geometry().bottomRight() + QPoint(100, 100));
-    QEXPECT_FAIL("", "Adding the lock screen window should send left event", Continue);
     QVERIFY(!leftSpy.wait(100));
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(enteredSpy.count(), 1);
@@ -319,16 +316,14 @@ void LockScreenTest::testPointer()
     // and unlock
     UNLOCK
 
-    QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
     QVERIFY(enteredSpy.wait(100));
-    QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
     QCOMPARE(enteredSpy.count(), 2);
     // move on the window
     MOTION(c->geometry().center() + QPoint(100, 100));
+    QVERIFY(leftSpy.wait());
     MOTION(c->geometry().center());
-    QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
-    QVERIFY(!enteredSpy.wait(100));
-    QCOMPARE(enteredSpy.count(), 2);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 3);
 }
 
 void LockScreenTest::testPointerButton()

@@ -49,6 +49,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTemporaryFile>
 // KDE
 #include <kkeyserver.h>
+//screenlocker
+#include <KScreenLocker/KsldApp>
+
 #include <xkbcommon/xkbcommon.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
 // system
@@ -352,19 +355,16 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         if (event->type() == QEvent::MouseMove) {
-            Toplevel *t = input()->findToplevel(event->screenPos().toPoint());
-            if (t && t->surface()) {
-                seat->setFocusedPointerSurface(t->surface(), t->inputTransformation());
-            } else {
-                seat->setFocusedPointerSurface(nullptr);
+            if (event->buttons() == Qt::NoButton) {
+                // update pointer window only if no button is pressed
+                input()->updatePointerWindow();
             }
-            seat->setPointerPos(event->screenPos().toPoint());
+            if (pointerSurfaceAllowed()) {
+                seat->setPointerPos(event->screenPos().toPoint());
+            }
         } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
-            if (KWayland::Server::SurfaceInterface *s = seat->focusedPointerSurface()) {
-                Toplevel *t = waylandServer()->findClient(s);
-                if (t->isLockScreen() || t->isInputMethod()) {
-                    event->type() == QEvent::MouseButtonPress ? seat->pointerButtonPressed(nativeButton) : seat->pointerButtonReleased(nativeButton);
-                }
+            if (pointerSurfaceAllowed()) {
+                event->type() == QEvent::MouseButtonPress ? seat->pointerButtonPressed(nativeButton) : seat->pointerButtonReleased(nativeButton);
             }
         }
         return true;
@@ -374,13 +374,10 @@ public:
             return false;
         }
         auto seat = waylandServer()->seat();
-        if (KWayland::Server::SurfaceInterface *s = seat->focusedPointerSurface()) {
-            Toplevel *t = waylandServer()->findClient(s);
-            if (t->isLockScreen() || t->isInputMethod()) {
-                seat->setTimestamp(event->timestamp());
-                const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
-                seat->pointerAxis(orientation, orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y());
-            }
+        if (pointerSurfaceAllowed()) {
+            seat->setTimestamp(event->timestamp());
+            const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
+            seat->pointerAxis(orientation, orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y());
         }
         return true;
     }
@@ -422,6 +419,16 @@ public:
             break;
         default:
             break;
+        }
+        return true;
+    }
+private:
+    bool pointerSurfaceAllowed() const {
+        if (KWayland::Server::SurfaceInterface *s = waylandServer()->seat()->focusedPointerSurface()) {
+            if (Toplevel *t = waylandServer()->findClient(s)) {
+                return t->isLockScreen() || t->isInputMethod();
+            }
+            return false;
         }
         return true;
     }
@@ -878,6 +885,8 @@ void InputRedirection::setupWorkspace()
             }
         );
         connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
+
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &InputRedirection::updatePointerWindow);
     }
     setupInputFilters();
 }
@@ -1034,9 +1043,6 @@ void InputRedirection::setupLibInputWithScreens()
 
 void InputRedirection::updatePointerWindow()
 {
-    if (waylandServer() && waylandServer()->isScreenLocked()) {
-        return;
-    }
     // TODO: handle pointer grab aka popups
     Toplevel *t = findToplevel(m_globalPointer.toPoint());
     updatePointerInternalWindow();
@@ -1090,6 +1096,7 @@ void InputRedirection::updatePointerWindow()
 void InputRedirection::updatePointerDecoration(Toplevel *t)
 {
     const auto oldDeco = m_pointerDecoration;
+    bool needsReset = waylandServer() && waylandServer()->isScreenLocked();
     if (AbstractClient *c = dynamic_cast<AbstractClient*>(t)) {
         // check whether it's on a Decoration
         if (c->decoratedClient()) {
@@ -1097,12 +1104,15 @@ void InputRedirection::updatePointerDecoration(Toplevel *t)
             if (!clientRect.contains(m_globalPointer.toPoint())) {
                 m_pointerDecoration = c->decoratedClient();
             } else {
-                m_pointerDecoration.clear();
+                needsReset = true;
             }
         } else {
-            m_pointerDecoration.clear();
+            needsReset = true;
         }
     } else {
+        needsReset = true;
+    }
+    if (needsReset) {
         m_pointerDecoration.clear();
     }
 
@@ -1128,6 +1138,7 @@ void InputRedirection::updatePointerInternalWindow()
     const auto oldInternalWindow = m_pointerInternalWindow;
     if (waylandServer()) {
         bool found = false;
+        bool needsReset = waylandServer()->isScreenLocked();
         const auto &internalClients = waylandServer()->internalClients();
         const bool change = m_pointerInternalWindow.isNull() || !(m_pointerInternalWindow->flags().testFlag(Qt::Popup) && m_pointerInternalWindow->isVisible());
         if (!internalClients.isEmpty() && change) {
@@ -1146,8 +1157,11 @@ void InputRedirection::updatePointerInternalWindow()
                 }
             } while (it != internalClients.begin());
             if (!found) {
-                m_pointerInternalWindow.clear();
+                needsReset = true;
             }
+        }
+        if (needsReset) {
+            m_pointerInternalWindow.clear();
         }
     }
     if (oldInternalWindow != m_pointerInternalWindow) {
