@@ -1397,6 +1397,7 @@ void InputRedirection::cancelTouch()
     if (auto seat = findSeat()) {
         seat->cancelTouchSequence();
     }
+    m_touchIdMapper.clear();
 }
 
 void InputRedirection::touchFrame()

@@ -270,6 +270,8 @@ void TouchInputTest::testCancel()
     QVERIFY(sequenceStartedSpy.isValid());
     QSignalSpy cancelSpy(m_touch, &Touch::sequenceCanceled);
     QVERIFY(cancelSpy.isValid());
+    QSignalSpy pointRemovedSpy(m_touch, &Touch::pointRemoved);
+    QVERIFY(pointRemovedSpy.isValid());
 
     quint32 timestamp = 1;
     waylandServer()->backend()->touchDown(1, QPointF(125, 125), timestamp++);
@@ -280,6 +282,10 @@ void TouchInputTest::testCancel()
     waylandServer()->backend()->touchCancel();
     QVERIFY(cancelSpy.wait());
     QCOMPARE(cancelSpy.count(), 1);
+
+    waylandServer()->backend()->touchUp(1, timestamp++);
+    QVERIFY(!pointRemovedSpy.wait(100));
+    QCOMPARE(pointRemovedSpy.count(), 0);
 }
 
 }
