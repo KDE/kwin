@@ -371,9 +371,24 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, QRegion region, Windo
     if (shouldContrast(w, mask, data)) {
         QRegion shape = region & contrastRegion(w).translated(w->pos()) & screen;
 
-        const bool translated = data.xTranslation() || data.yTranslation();
         // let's do the evil parts - someone wants to blur behind a transformed window
-        if (translated) {
+        const bool translated = data.xTranslation() || data.yTranslation();
+        const bool scaled = data.xScale() != 1 || data.yScale() != 1;
+        if (scaled) {
+            QPoint pt = shape.boundingRect().topLeft();
+            QVector<QRect> shapeRects = shape.rects();
+            shape = QRegion(); // clear
+            foreach (QRect r, shapeRects) {
+                r.moveTo(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
+                            pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
+                r.setWidth(r.width() * data.xScale());
+                r.setHeight(r.height() * data.yScale());
+                shape |= r;
+            }
+            shape = shape & region;
+
+        //Only translated, not scaled
+        } else if (translated) {
             shape = shape.translated(data.xTranslation(), data.yTranslation());
             shape = shape & region;
         }
