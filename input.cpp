@@ -1265,40 +1265,6 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
     return NULL;
 }
 
-uint8_t InputRedirection::toXPointerButton(uint32_t button)
-{
-    switch (button) {
-    case BTN_LEFT:
-        return XCB_BUTTON_INDEX_1;
-    case BTN_RIGHT:
-        return XCB_BUTTON_INDEX_3;
-    case BTN_MIDDLE:
-        return XCB_BUTTON_INDEX_2;
-    default:
-        // TODO: add more buttons
-        return XCB_BUTTON_INDEX_ANY;
-    }
-}
-
-uint8_t InputRedirection::toXPointerButton(InputRedirection::PointerAxis axis, qreal delta)
-{
-    switch (axis) {
-    case PointerAxisVertical:
-        if (delta < 0) {
-            return 4;
-        } else {
-            return 5;
-        }
-    case PointerAxisHorizontal:
-        if (delta < 0) {
-            return 6;
-        } else {
-            return 7;
-        }
-    }
-    return XCB_BUTTON_INDEX_ANY;
-}
-
 Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
 {
     return m_xkb->modifiers();
