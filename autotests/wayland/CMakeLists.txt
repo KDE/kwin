@@ -71,3 +71,12 @@ add_executable(testInternalWindow ${testInternalWindow_SRCS})
 target_link_libraries( testInternalWindow kwin Qt5::Test)
 add_test(kwin-testInternalWindow testInternalWindow)
 ecm_mark_as_test(testInternalWindow)
+
+########################################################
+# Touch Input Test
+########################################################
+set( testTouchInput_SRCS touch_input_test.cpp kwin_wayland_test.cpp )
+add_executable(testTouchInput ${testTouchInput_SRCS})
+target_link_libraries( testTouchInput kwin Qt5::Test)
+add_test(kwin-testTouchInput testTouchInput)
+ecm_mark_as_test(testTouchInput)
