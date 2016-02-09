@@ -983,6 +983,11 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
             }
             return;
         } while (it != stacking.begin());
+        if (auto seat = findSeat()) {
+            seat->setFocusedKeyboardSurface(nullptr);
+            seat->setTimestamp(time);
+            state == InputRedirection::KeyboardKeyPressed ? seat->keyPressed(key) : seat->keyReleased(key);
+        }
         return;
     }
 
@@ -1035,6 +1040,10 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
         }
     }
     if (auto seat = findSeat()) {
+        if (workspace()->activeClient() &&
+            (seat->focusedKeyboardSurface() != workspace()->activeClient()->surface())) {
+            seat->setFocusedKeyboardSurface(workspace()->activeClient()->surface());
+        }
         seat->setTimestamp(time);
         state == InputRedirection::KeyboardKeyPressed ? seat->keyPressed(key) : seat->keyReleased(key);
     }
