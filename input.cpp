@@ -385,31 +385,12 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
-        const ToplevelList &stacking = Workspace::self()->stackingOrder();
-        auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
-        Toplevel *found = nullptr;
-        if (!stacking.isEmpty()) {
-            auto it = stacking.end();
-            do {
-                --it;
-                Toplevel *t = (*it);
-                if (t->isDeleted()) {
-                    // a deleted window doesn't get mouse events
-                    continue;
-                }
-                if (!t->isLockScreen()) {
-                    continue;
-                }
-                if (!t->readyForPainting()) {
-                    continue;
-                }
-                found = t;
-                break;
-            } while (it != stacking.begin());
+        input()->updateKeyboardWindow();
+        if (!keyboardSurfaceAllowed()) {
+            // don't pass event to seat
+            return true;
         }
-        // if we reach this point it's time to unset
-        seat->setFocusedKeyboardSurface(found ? found->surface() : nullptr);
+        auto seat = waylandServer()->seat();
         switch (event->type()) {
         case QEvent::KeyPress:
             seat->keyPressed(event->nativeScanCode());
@@ -423,14 +404,20 @@ public:
         return true;
     }
 private:
-    bool pointerSurfaceAllowed() const {
-        if (KWayland::Server::SurfaceInterface *s = waylandServer()->seat()->focusedPointerSurface()) {
+    bool surfaceAllowed(KWayland::Server::SurfaceInterface *(KWayland::Server::SeatInterface::*method)() const) const {
+        if (KWayland::Server::SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
             if (Toplevel *t = waylandServer()->findClient(s)) {
                 return t->isLockScreen() || t->isInputMethod();
             }
             return false;
         }
         return true;
+    }
+    bool pointerSurfaceAllowed() const {
+        return surfaceAllowed(&KWayland::Server::SeatInterface::focusedPointerSurface);
+    }
+    bool keyboardSurfaceAllowed() const {
+        return surfaceAllowed(&KWayland::Server::SeatInterface::focusedKeyboardSurface);
     }
 };
 
@@ -707,10 +694,7 @@ public:
             return false;
         }
         auto seat = waylandServer()->seat();
-        if (workspace()->activeClient() &&
-            (seat->focusedKeyboardSurface() != workspace()->activeClient()->surface())) {
-            seat->setFocusedKeyboardSurface(workspace()->activeClient()->surface());
-        }
+        input()->updateKeyboardWindow();
         seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::KeyPress:
@@ -887,6 +871,7 @@ void InputRedirection::setupWorkspace()
         connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
 
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &InputRedirection::updatePointerWindow);
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &InputRedirection::updateKeyboardWindow);
     }
     setupInputFilters();
 }
@@ -1300,11 +1285,37 @@ void InputRedirection::updateKeyboardWindow()
     }
     if (auto seat = findSeat()) {
         // TODO: this needs better integration
-        Toplevel *t = workspace()->activeClient();
-        if (t && t->surface()) {
-            if (t->surface() != seat->focusedKeyboardSurface()) {
-                seat->setFocusedKeyboardSurface(t->surface());
+        Toplevel *found = nullptr;
+        if (waylandServer()->isScreenLocked()) {
+            const ToplevelList &stacking = Workspace::self()->stackingOrder();
+            if (!stacking.isEmpty()) {
+                auto it = stacking.end();
+                do {
+                    --it;
+                    Toplevel *t = (*it);
+                    if (t->isDeleted()) {
+                        // a deleted window doesn't get mouse events
+                        continue;
+                    }
+                    if (!t->isLockScreen()) {
+                        continue;
+                    }
+                    if (!t->readyForPainting()) {
+                        continue;
+                    }
+                    found = t;
+                    break;
+                } while (it != stacking.begin());
             }
+        } else {
+            found = workspace()->activeClient();
+        }
+        if (found && found->surface()) {
+            if (found->surface() != seat->focusedKeyboardSurface()) {
+                seat->setFocusedKeyboardSurface(found->surface());
+            }
+        } else {
+            seat->setFocusedKeyboardSurface(nullptr);
         }
     }
 }

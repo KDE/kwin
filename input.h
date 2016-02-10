@@ -155,6 +155,8 @@ public:
     qint32 touchId(quint32 internalId);
     void removeTouchId(quint32 internalId);
 
+    void updateKeyboardWindow();
+
 public Q_SLOTS:
     void updatePointerWindow();
 
@@ -213,7 +215,6 @@ private:
     void pointerInternalWindowVisibilityChanged(bool visible);
     void installCursorFromDecoration();
     bool areButtonsPressed() const;
-    void updateKeyboardWindow();
     void setupWorkspace();
     void reconfigure();
     void setupInputFilters();

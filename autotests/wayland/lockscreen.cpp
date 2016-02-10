@@ -434,13 +434,15 @@ void LockScreenTest::testKeyboard()
     QCOMPARE(keyChangedSpy.at(1).at(2).value<quint32>(), quint32(2));
 
     LOCK
+    QVERIFY(leftSpy.wait());
     KEYPRESS(KEY_B);
     KEYRELEASE(KEY_B);
-    QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(keyChangedSpy.count(), 2);
 
     UNLOCK
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
     KEYPRESS(KEY_C);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 3);
