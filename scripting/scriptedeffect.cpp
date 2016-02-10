@@ -262,9 +262,10 @@ QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
         return engine->undefinedValue();
     }
 
-    QList<QVariant> animIds;
+    QScriptValue array = engine->newArray(settings.length());
+    int i = 0;
     foreach (const AnimationSettings &setting, settings) {
-        animIds << QVariant(effect->animate(window,
+        array.setProperty(i, (uint)effect->animate(window,
                                     setting.type,
                                     setting.duration,
                                     setting.to,
@@ -272,8 +273,9 @@ QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
                                     setting.metaData,
                                     setting.curve,
                                     setting.delay));
+        ++i;
     }
-    return engine->newVariant(animIds);
+    return array;
 }
 
 QScriptValue kwinEffectSet(QScriptContext *context, QScriptEngine *engine)
