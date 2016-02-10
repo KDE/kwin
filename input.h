@@ -145,9 +145,6 @@ public:
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);
 
-    static uint8_t toXPointerButton(uint32_t button);
-    static uint8_t toXPointerButton(PointerAxis axis, qreal delta);
-
 public Q_SLOTS:
     void updatePointerWindow();
 

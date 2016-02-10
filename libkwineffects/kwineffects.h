@@ -1660,6 +1660,12 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * relevant only in Wayland, on X11 it will be nullptr
      */
     Q_PROPERTY(KWayland::Server::SurfaceInterface *surface READ surface)
+
+    /**
+     * Whether the window is fullscreen.
+     * @since 5.6
+     **/
+    Q_PROPERTY(bool fullScreen READ isFullScreen)
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -1896,6 +1902,11 @@ public:
      * @since 5.5
      */
     KWayland::Server::SurfaceInterface *surface() const;
+
+    /**
+     * @since 5.6
+     **/
+    bool isFullScreen() const;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

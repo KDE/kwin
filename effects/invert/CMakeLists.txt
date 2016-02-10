@@ -1,14 +1,6 @@
 #######################################
 # Effect
 
-# Data files
-install( FILES
-    data/1.10/invert.frag
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10 )
-install( FILES
-    data/1.40/invert.frag
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40 )
-
 #######################################
 # Config
 set(kwin_invert_config_SRCS invert_config.cpp)

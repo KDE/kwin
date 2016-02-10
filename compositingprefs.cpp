@@ -52,13 +52,13 @@ CompositingPrefs::~CompositingPrefs()
 bool CompositingPrefs::openGlIsBroken()
 {
     const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
-    return KConfigGroup(KSharedConfig::openConfig(), "Compositing").readEntry(unsafeKey, false);
+    return KConfigGroup(kwinApp()->config(), "Compositing").readEntry(unsafeKey, false);
 }
 
 bool CompositingPrefs::compositingPossible()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
-    KConfigGroup gl_workaround_group(KSharedConfig::openConfig(), "Compositing");
+    KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
     const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false))
@@ -95,7 +95,7 @@ bool CompositingPrefs::compositingPossible()
 QString CompositingPrefs::compositingNotPossibleReason()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
-    KConfigGroup gl_workaround_group(KSharedConfig::openConfig(), "Compositing");
+    KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
     const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false))

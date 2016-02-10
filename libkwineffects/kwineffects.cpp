@@ -839,6 +839,7 @@ WINDOW_HELPER_DEFAULT(QIcon, icon, "icon", QIcon())
 WINDOW_HELPER_DEFAULT(bool, isSkipSwitcher, "skipSwitcher", false)
 WINDOW_HELPER_DEFAULT(bool, isCurrentTab, "isCurrentTab", false)
 WINDOW_HELPER_DEFAULT(bool, decorationHasAlpha, "decorationHasAlpha", false)
+WINDOW_HELPER_DEFAULT(bool, isFullScreen, "fullScreen", false)
 
 #undef WINDOW_HELPER_DEFAULT
 
@@ -1846,4 +1847,3 @@ void EffectFrame::setScreenProjectionMatrix(const QMatrix4x4 &spm)
 
 } // namespace
 
-#include "kwineffects.moc"

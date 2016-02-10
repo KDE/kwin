@@ -130,19 +130,11 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
         m_type = BlinkingFeedback;
         if (effects->compositingType() == OpenGL2Compositing) {
             delete m_blinkingShader;
-            m_blinkingShader = 0;
-            const QString shader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/blinking-startup-fragment.glsl"));
-
-            QFile ff(shader);
-            if (ff.open(QIODevice::ReadOnly)) {
-                m_blinkingShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
-                if (m_blinkingShader->isValid()) {
-                    qCDebug(KWINEFFECTS) << "Blinking Shader is valid";
-                } else {
-                    qCDebug(KWINEFFECTS) << "Blinking Shader is not valid";
-                }
+            m_blinkingShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("blinking-startup-fragment.glsl"));
+            if (m_blinkingShader->isValid()) {
+                qCDebug(KWINEFFECTS) << "Blinking Shader is valid";
             } else {
-                qCCritical(KWINEFFECTS) << "Couldn't open" << shader << "for reading!";
+                qCDebug(KWINEFFECTS) << "Blinking Shader is not valid";
             }
         }
     } else

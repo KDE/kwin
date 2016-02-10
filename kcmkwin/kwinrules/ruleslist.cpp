@@ -262,4 +262,3 @@ void KCMRulesList::defaults()
 
 } // namespace
 
-#include "ruleslist.moc"

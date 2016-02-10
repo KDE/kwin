@@ -985,4 +985,3 @@ FlipSwitchEffect::ItemInfo::~ItemInfo()
 
 } // namespace
 
-#include "flipswitch.moc"

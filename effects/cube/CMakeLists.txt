@@ -6,22 +6,6 @@ install( FILES
     data/cubecap.png
     DESTINATION ${DATA_INSTALL_DIR}/kwin )
 
-install( FILES
-    data/1.10/cube-cap.glsl
-    data/1.10/cube-reflection.glsl
-    data/1.10/cylinder.vert
-    data/1.10/sphere.vert
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10
-)
-
-install( FILES
-    data/1.40/cube-cap.glsl
-    data/1.40/cube-reflection.glsl
-    data/1.40/cylinder.vert
-    data/1.40/sphere.vert
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40
-)
-
 #######################################
 # Config
 

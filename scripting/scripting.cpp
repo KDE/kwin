@@ -229,7 +229,7 @@ KWin::AbstractScript::~AbstractScript()
 
 KConfigGroup KWin::AbstractScript::config() const
 {
-    return KSharedConfig::openConfig()->group(QLatin1String("Script-") + m_pluginName);
+    return kwinApp()->config()->group(QLatin1String("Script-") + m_pluginName);
 }
 
 void KWin::AbstractScript::stop()
@@ -653,7 +653,7 @@ void KWin::Scripting::start()
 
 LoadScriptList KWin::Scripting::queryScriptsToLoad()
 {
-    KSharedConfig::Ptr _config = KSharedConfig::openConfig();
+    KSharedConfig::Ptr _config = kwinApp()->config();
     static bool s_started = false;
     if (s_started) {
         _config->reparseConfiguration();
@@ -795,4 +795,3 @@ QList< QAction * > KWin::Scripting::actionsForUserActionMenu(KWin::AbstractClien
     return actions;
 }
 
-#include "scripting.moc"

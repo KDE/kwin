@@ -287,4 +287,3 @@ bool MouseMarkEffect::isActive() const
 
 } // namespace
 
-#include "mousemark.moc"

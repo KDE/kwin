@@ -96,6 +96,8 @@ set( kwin4_effect_builtins_sources
     zoom/zoom.cpp
     )
 
+qt5_add_resources( kwin4_effect_builtins_sources shaders.qrc )
+
 kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     blur/blurconfig.kcfgc
     cube/cubeslideconfig.kcfgc

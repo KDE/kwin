@@ -159,6 +159,7 @@ public:
 Q_SIGNALS:
     void shellClientAdded(KWin::ShellClient*);
     void shellClientRemoved(KWin::ShellClient*);
+    void terminatingInternalClientConnection();
 
 private:
     quint16 createClientId(KWayland::Server::ClientConnection *c);

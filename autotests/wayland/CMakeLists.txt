@@ -44,3 +44,39 @@ add_executable(testDontCrashGlxgears ${testDontCrashGlxgears_SRCS})
 target_link_libraries( testDontCrashGlxgears kwin Qt5::Test)
 add_test(kwin-testDontCrashGlxgears testDontCrashGlxgears)
 ecm_mark_as_test(testDontCrashGlxgears)
+
+########################################################
+# Lock screen integration test
+########################################################
+set( testLockScreen_SRCS lockscreen.cpp kwin_wayland_test.cpp )
+add_executable(testLockScreen ${testLockScreen_SRCS})
+target_link_libraries( testLockScreen kwin Qt5::Test)
+add_test(kwin-testLockScreen testLockScreen)
+ecm_mark_as_test(testLockScreen)
+
+########################################################
+# Decoration input test
+########################################################
+set( testDecorationInput_SRCS decoration_input_test.cpp kwin_wayland_test.cpp )
+add_executable(testDecorationInput ${testDecorationInput_SRCS})
+target_link_libraries( testDecorationInput kwin Qt5::Test)
+add_test(kwin-testDecorationInput testDecorationInput)
+ecm_mark_as_test(testDecorationInput)
+
+########################################################
+# Internal Window test
+########################################################
+set( testInternalWindow_SRCS internal_window.cpp kwin_wayland_test.cpp )
+add_executable(testInternalWindow ${testInternalWindow_SRCS})
+target_link_libraries( testInternalWindow kwin Qt5::Test)
+add_test(kwin-testInternalWindow testInternalWindow)
+ecm_mark_as_test(testInternalWindow)
+
+########################################################
+# Touch Input Test
+########################################################
+set( testTouchInput_SRCS touch_input_test.cpp kwin_wayland_test.cpp )
+add_executable(testTouchInput ${testTouchInput_SRCS})
+target_link_libraries( testTouchInput kwin Qt5::Test)
+add_test(kwin-testTouchInput testTouchInput)
+ecm_mark_as_test(testTouchInput)

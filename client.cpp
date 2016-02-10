@@ -2151,4 +2151,3 @@ QSize Client::resizeIncrements() const
 
 } // namespace
 
-#include "client.moc"

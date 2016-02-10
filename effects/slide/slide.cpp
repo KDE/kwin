@@ -290,4 +290,3 @@ bool SlideEffect::isActive() const
 
 } // namespace
 
-#include "slide.moc"

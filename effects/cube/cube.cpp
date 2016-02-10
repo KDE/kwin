@@ -89,28 +89,15 @@ CubeEffect::CubeEffect()
     , zOrderingFactor(0.0f)
     , mAddedHeightCoeff1(0.0f)
     , mAddedHeightCoeff2(0.0f)
-    , m_shadersDir(QStringLiteral("kwin/shaders/1.10/"))
     , m_cubeCapBuffer(NULL)
     , m_proxy(this)
 {
     desktopNameFont.setBold(true);
     desktopNameFont.setPointSize(14);
 
-    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
-    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
-        m_shadersDir = QStringLiteral("kwin/shaders/1.40/");
-
     if (effects->compositingType() == OpenGL2Compositing) {
-        const QString fragmentshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cube-reflection.glsl"));
-        QFile ffr(fragmentshader);
-        if (ffr.open(QIODevice::ReadOnly)) {
-            m_reflectionShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ffr.readAll());
-        }
-        const QString capshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cube-cap.glsl"));
-        QFile ff(capshader);
-        if (ff.open(QIODevice::ReadOnly)) {
-            m_capShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
-        }
+        m_reflectionShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("cube-reflection.glsl"));
+        m_capShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("cube-cap.glsl"));
     } else {
         m_reflectionShader = NULL;
         m_capShader = NULL;
@@ -301,20 +288,8 @@ bool CubeEffect::loadShader()
     if (!(GLPlatform::instance()->supports(GLSL) &&
             (effects->compositingType() == OpenGL2Compositing)))
         return false;
-    QString cylinderVertexshader =  QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cylinder.vert"));
-    QString sphereVertexshader   = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("sphere.vert"));
-    if (cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty()) {
-        qCCritical(KWINEFFECTS) << "Couldn't locate shader files";
-        return false;
-    }
 
-    QFile cvf(cylinderVertexshader);
-    if (!cvf.open(QIODevice::ReadOnly)) {
-        qCCritical(KWINEFFECTS) << "The cylinder shader couldn't be opened!";
-        return false;
-    }
-
-    cylinderShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate, cvf.readAll(), QByteArray());
+    cylinderShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate, QStringLiteral("cylinder.vert"), QString());
     if (!cylinderShader->isValid()) {
         qCCritical(KWINEFFECTS) << "The cylinder shader failed to load!";
         return false;
@@ -325,12 +300,7 @@ bool CubeEffect::loadShader()
         cylinderShader->setUniform("width", (float)rect.width() * 0.5f);
     }
 
-    QFile svf(sphereVertexshader);
-    if (!svf.open(QIODevice::ReadOnly)) {
-        qCCritical(KWINEFFECTS) << "The sphere shader couldn't be opened!";
-        return false;
-    }
-    sphereShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate, svf.readAll(), QByteArray());
+    sphereShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate, QStringLiteral("sphere.vert"), QString());
     if (!sphereShader->isValid()) {
         qCCritical(KWINEFFECTS) << "The sphere shader failed to load!";
         return false;
@@ -411,10 +381,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 m_reflectionMatrix.translate(0.0, sin(fabs(manualAngle) * M_PI / 360.0f * float(effects->numberOfDesktops())) * addedHeight2 + addedHeight1 - float(rect.height()), 0.0);
             }
 
-            // TODO: find a solution for GLES
-            if (!GLPlatform::instance()->isGLES()) {
-                glEnable(GL_CLIP_PLANE0);
-            }
             reflectionPainting = true;
             glEnable(GL_CULL_FACE);
             paintCap(true, -point - zTranslate, data.projectionMatrix());
@@ -429,10 +395,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             paintCap(false, -point - zTranslate, data.projectionMatrix());
             glDisable(GL_CULL_FACE);
             reflectionPainting = false;
-            // TODO: find a solution for GLES
-            if (!GLPlatform::instance()->isGLES()) {
-                glDisable(GL_CLIP_PLANE0);
-            }
 
             const float width = rect.width();
             const float height = rect.height();
@@ -1743,14 +1705,6 @@ void CubeEffect::setActive(bool active)
         desktopChangedWhileRotating = false;
         if (reflection) {
             QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
-            // clip parts above the reflection area
-            if (!GLPlatform::instance()->isGLES()) {
-                double eqn[4] = {0.0, 1.0, 0.0, 0.0};
-                glPushMatrix();
-                glTranslatef(0.0, rect.height(), 0.0);
-                glClipPlane(GL_CLIP_PLANE0, eqn);
-                glPopMatrix();
-            }
             float temporaryCoeff = float(rect.width()) / tan(M_PI / float(effects->numberOfDesktops()));
             mAddedHeightCoeff1 = sqrt(float(rect.height()) * float(rect.height()) + temporaryCoeff * temporaryCoeff);
             mAddedHeightCoeff2 = sqrt(float(rect.height()) * float(rect.height()) + float(rect.width()) * float(rect.width()) + temporaryCoeff * temporaryCoeff);

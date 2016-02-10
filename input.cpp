@@ -714,6 +714,12 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
                 seat->setTimestamp(time);
                 seat->setPointerPos(m_globalPointer);
             }
+        } else {
+            if (auto seat = findSeat()) {
+                seat->setFocusedPointerSurface(nullptr);
+                seat->setTimestamp(time);
+                seat->setPointerPos(m_globalPointer);
+            }
         }
         return;
     }
@@ -862,7 +868,7 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
 
     if (m_xkb->modifiers() != Qt::NoModifier) {
         PointerAxisDirection direction = PointerAxisUp;
-        if (axis == PointerAxisHorizontal) {
+        if (axis == PointerAxisVertical) {
             if (delta > 0) {
                 direction = PointerAxisUp;
             } else {
@@ -977,6 +983,11 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
             }
             return;
         } while (it != stacking.begin());
+        if (auto seat = findSeat()) {
+            seat->setFocusedKeyboardSurface(nullptr);
+            seat->setTimestamp(time);
+            state == InputRedirection::KeyboardKeyPressed ? seat->keyPressed(key) : seat->keyReleased(key);
+        }
         return;
     }
 
@@ -1004,10 +1015,13 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
     }
     if (workspace()) {
         if (AbstractClient *c = workspace()->getMovingClient()) {
-            c->keyPressEvent(m_xkb->toQtKey(m_xkb->toKeysym(key)) | m_xkb->modifiers());
-            if (c->isMove() || c->isResize()) {
-                // only update if mode didn't end
-                c->updateMoveResize(m_globalPointer);
+            // TODO: handle key repeat
+            if (state == KeyboardKeyPressed) {
+                c->keyPressEvent(m_xkb->toQtKey(m_xkb->toKeysym(key)) | m_xkb->modifiers());
+                if (c->isMove() || c->isResize()) {
+                    // only update if mode didn't end
+                    c->updateMoveResize(m_globalPointer);
+                }
             }
             return;
         }
@@ -1026,6 +1040,10 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
         }
     }
     if (auto seat = findSeat()) {
+        if (workspace()->activeClient() &&
+            (seat->focusedKeyboardSurface() != workspace()->activeClient()->surface())) {
+            seat->setFocusedKeyboardSurface(workspace()->activeClient()->surface());
+        }
         seat->setTimestamp(time);
         state == InputRedirection::KeyboardKeyPressed ? seat->keyPressed(key) : seat->keyReleased(key);
     }
@@ -1245,40 +1263,6 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
         }
     } while (it != stacking.begin());
     return NULL;
-}
-
-uint8_t InputRedirection::toXPointerButton(uint32_t button)
-{
-    switch (button) {
-    case BTN_LEFT:
-        return XCB_BUTTON_INDEX_1;
-    case BTN_RIGHT:
-        return XCB_BUTTON_INDEX_3;
-    case BTN_MIDDLE:
-        return XCB_BUTTON_INDEX_2;
-    default:
-        // TODO: add more buttons
-        return XCB_BUTTON_INDEX_ANY;
-    }
-}
-
-uint8_t InputRedirection::toXPointerButton(InputRedirection::PointerAxis axis, qreal delta)
-{
-    switch (axis) {
-    case PointerAxisVertical:
-        if (delta < 0) {
-            return 4;
-        } else {
-            return 5;
-        }
-    case PointerAxisHorizontal:
-        if (delta < 0) {
-            return 6;
-        } else {
-            return 7;
-        }
-    }
-    return XCB_BUTTON_INDEX_ANY;
 }
 
 Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const

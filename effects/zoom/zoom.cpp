@@ -539,4 +539,3 @@ bool ZoomEffect::isActive() const
 
 } // namespace
 
-#include "zoom.moc"

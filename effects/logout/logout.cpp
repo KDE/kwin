@@ -67,7 +67,6 @@ LogoutEffect::LogoutEffect()
     , ignoredWindows()
     , m_vignettingShader(NULL)
     , m_blurShader(NULL)
-    , m_shadersDir(QStringLiteral("kwin/shaders/1.10/"))
 {
     if (logoutAtom.isValid()) {
         // Persistent effect
@@ -81,12 +80,6 @@ LogoutEffect::LogoutEffect()
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
-
-    if (effects->isOpenGLCompositing()) {
-        const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
-        if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
-            m_shadersDir = QStringLiteral("kwin/shaders/1.40/");
-    }
 }
 
 LogoutEffect::~LogoutEffect()
@@ -124,7 +117,7 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     } else if (!blurTexture) {
         blurSupported = false;
         delete blurTarget; // catch as we just tested the texture ;-P
-        if (effects->isOpenGLCompositing() && GLRenderTarget::blitSupported() && useBlur) {
+        if (effects->isOpenGLCompositing() && GLRenderTarget::blitSupported() && !GLPlatform::instance()->supports(LimitedNPOT) && useBlur) {
             // TODO: It seems that it is not possible to create a GLRenderTarget that has
             //       a different size than the display right now. Most likely a KWin core bug.
             // Create texture and render target
@@ -304,12 +297,7 @@ bool LogoutEffect::isLogoutDialog(EffectWindow* w)
 void LogoutEffect::renderVignetting(const QMatrix4x4 &projection)
 {
     if (!m_vignettingShader) {
-        QFile ff(QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("vignetting.frag")));
-        if (!ff.open(QIODevice::ReadOnly)) {
-            qCDebug(KWINEFFECTS) << "Could not open Vignetting Shader";
-            return;
-        }
-        m_vignettingShader = ShaderManager::instance()->generateCustomShader(ShaderTrait(), QByteArray(), ff.readAll());
+        m_vignettingShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait(), QString(), QStringLiteral("vignetting.frag"));
         if (!m_vignettingShader->isValid()) {
             qCDebug(KWINEFFECTS) << "Vignetting Shader failed to load";
             return;
@@ -351,16 +339,12 @@ void LogoutEffect::renderVignetting(const QMatrix4x4 &projection)
 void LogoutEffect::renderBlurTexture(const QMatrix4x4 &projection)
 {
     if (!m_blurShader) {
-        QFile ff(QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("logout-blur.frag")));
-        if (!ff.open(QIODevice::ReadOnly)) {
-            qCDebug(KWINEFFECTS) << "Could not open Logout Blur Shader";
-            return;
-        }
-        m_blurShader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
+        m_blurShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("logout-blur.frag"));
         if (!m_blurShader->isValid()) {
             qCDebug(KWINEFFECTS) << "Logout blur shader failed to load";
         }
-    } else if (!m_blurShader->isValid()) {
+    }
+    if (!m_blurShader->isValid()) {
         // shader is broken - no need to continue here
         return;
     }

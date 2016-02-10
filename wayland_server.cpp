@@ -82,6 +82,7 @@ WaylandServer::~WaylandServer()
 
 void WaylandServer::destroyInternalConnection()
 {
+    emit terminatingInternalClientConnection();
     if (m_internalConnection.client) {
         delete m_internalConnection.registry;
         delete m_internalConnection.shm;
@@ -518,7 +519,8 @@ quint16 WaylandServer::createClientId(ClientConnection *c)
 
 bool WaylandServer::isScreenLocked() const
 {
-    return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked;
+    return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked ||
+           ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
 }
 
 void WaylandServer::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)

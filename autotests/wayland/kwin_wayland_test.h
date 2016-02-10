@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) \
 { \
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true); \
     setenv("QT_QPA_PLATFORM_PLUGIN_PATH", KWINQPAPATH, true); \
-    setenv("KWIN_FOCRE_OWN_QPA", "1", true); \
+    setenv("KWIN_FORCE_OWN_QPA", "1", true); \
     DPI; \
     KWin::WaylandTestApplication app(argc, argv); \
     app.setAttribute(Qt::AA_Use96Dpi, true); \

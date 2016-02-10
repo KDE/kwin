@@ -322,7 +322,7 @@ void DrmBackend::readOutputsConfiguration()
         return;
     }
     const QByteArray uuid = generateOutputConfigurationUuid();
-    const auto outputGroup = KSharedConfig::openConfig(KWIN_CONFIG)->group("DrmOutputs");
+    const auto outputGroup = kwinApp()->config()->group("DrmOutputs");
     const auto configGroup = outputGroup.group(uuid);
     qCDebug(KWIN_DRM) << "Reading output configuration for" << uuid;
     // default position goes from left to right
@@ -761,9 +761,8 @@ void DrmOutput::init(drmModeConnector *connector)
     QSize physicalSize = !m_edid.physicalSize.isEmpty() ? m_edid.physicalSize : QSize(connector->mmWidth, connector->mmHeight);
     // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
     // as this information is used to calculate DPI info, it's going to result in everything being huge
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(KWIN_CONFIG);
     const QByteArray unknown = QByteArrayLiteral("unkown");
-    KConfigGroup group = config->group("EdidOverwrite").group(m_edid.eisaId.isEmpty() ? unknown : m_edid.eisaId)
+    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId.isEmpty() ? unknown : m_edid.eisaId)
                                                        .group(m_edid.monitorName.isEmpty() ? unknown : m_edid.monitorName)
                                                        .group(m_edid.serialNumber.isEmpty() ? unknown : m_edid.serialNumber);
     if (group.hasKey("PhysicalSize")) {

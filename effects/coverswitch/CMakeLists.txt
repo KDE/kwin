@@ -1,12 +1,5 @@
 #######################################
 # Effect
-install( FILES
-    shaders/1.10/coverswitch-reflection.glsl
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10 )
-install( FILES
-    shaders/1.40/coverswitch-reflection.glsl
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40 )
-
 
 #######################################
 # Config

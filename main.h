@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KSelectionWatcher>
 #include <KSelectionOwner>
+#include <KSharedConfig>
 // Qt
 #include <QApplication>
 #include <QAbstractNativeEventFilter>
@@ -75,6 +76,13 @@ public:
     virtual ~Application();
 
     void setConfigLock(bool lock);
+
+    KSharedConfigPtr config() const {
+        return m_config;
+    }
+    void setConfig(KSharedConfigPtr config) {
+        m_config = config;
+    }
 
     void start();
     /**
@@ -169,6 +177,7 @@ Q_SIGNALS:
 protected:
     Application(OperationMode mode, int &argc, char **argv);
     virtual void performStartup() = 0;
+    virtual void setupCrashHandler();
 
     void notifyKSplash();
     void createInput();
@@ -209,6 +218,7 @@ private:
     void crashChecking();
     QScopedPointer<XcbEventFilter> m_eventFilter;
     bool m_configLock;
+    KSharedConfigPtr m_config;
     OperationMode m_operationMode;
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;

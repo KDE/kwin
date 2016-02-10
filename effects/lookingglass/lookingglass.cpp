@@ -83,7 +83,7 @@ LookingGlassEffect::~LookingGlassEffect()
 
 bool LookingGlassEffect::supported()
 {
-    return effects->compositingType() == OpenGL2Compositing;
+    return effects->compositingType() == OpenGL2Compositing && !GLPlatform::instance()->supports(LimitedNPOT);
 }
 
 void LookingGlassEffect::reconfigure(ReconfigureFlags)
@@ -112,17 +112,7 @@ bool LookingGlassEffect::loadData()
         return false;
     }
 
-    QString shadersDir = QStringLiteral("kwin/shaders/1.10/");
-    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
-    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
-        shadersDir = QStringLiteral("kwin/shaders/1.40/");
-    const QString fragmentshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, shadersDir + QStringLiteral("lookingglass.frag"));
-    QFile ff(fragmentshader);
-    if (!ff.open(QIODevice::ReadOnly)) {
-        qCCritical(KWINEFFECTS) << "Failed to read shader!";
-        return false;
-    }
-    m_shader = ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll());
+    m_shader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("lookingglass.frag"));
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader);
         m_shader->setUniform("u_textureSize", QVector2D(screenSize.width(), screenSize.height()));
@@ -264,4 +254,3 @@ bool LookingGlassEffect::isActive() const
 
 } // namespace
 
-#include "lookingglass.moc"

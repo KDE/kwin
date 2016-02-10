@@ -42,6 +42,7 @@ Deleted::Deleted()
     , m_modal(false)
     , m_wasClient(false)
     , m_decorationRenderer(nullptr)
+    , m_fullscreen(false)
 {
 }
 
@@ -108,6 +109,7 @@ void Deleted::copyToDeleted(Toplevel* c)
         foreach (AbstractClient *c, m_mainClients) {
             connect(c, &AbstractClient::windowClosed, this, &Deleted::mainClientClosed);
         }
+        m_fullscreen = client->isFullScreen();
     }
 }
 
@@ -200,4 +202,3 @@ QByteArray Deleted::windowRole() const
 
 } // namespace
 
-#include "deleted.moc"

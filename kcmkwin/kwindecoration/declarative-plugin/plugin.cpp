@@ -52,5 +52,4 @@ void Plugin::registerTypes(const char *uri)
 }
 }
 
-#include "plugin.moc"
 

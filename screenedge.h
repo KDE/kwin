@@ -199,7 +199,7 @@ private Q_SLOTS:
  *
  * @todo change way how Effects/Scripts can reserve an edge and are notified.
  */
-class ScreenEdges : public QObject
+class KWIN_EXPORT ScreenEdges : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool desktopSwitching READ isDesktopSwitching)

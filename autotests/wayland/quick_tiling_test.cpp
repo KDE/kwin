@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "abstract_backend.h"
 #include "abstract_client.h"
+#include "cursor.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -32,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+
+#include <linux/input.h>
 
 Q_DECLARE_METATYPE(KWin::AbstractClient::QuickTileMode)
 Q_DECLARE_METATYPE(KWin::MaximizeMode)
@@ -52,6 +55,10 @@ private Q_SLOTS:
     void testQuickTiling();
     void testQuickMaximizing_data();
     void testQuickMaximizing();
+    void testQuickTilingKeyboardMove_data();
+    void testQuickTilingKeyboardMove();
+    void testQuickTilingPointerMove_data();
+    void testQuickTilingPointerMove();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -72,6 +79,15 @@ void QuickTilingTest::initTestCase()
     waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
     QMetaObject::invokeMethod(waylandServer()->backend(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     waylandServer()->init(s_socketName.toLocal8Bit());
+
+    // set custom config which disables the Outline
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup group = config->group("Outline");
+    group.writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
+    group.sync();
+
+    kwinApp()->setConfig(config);
+
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QCOMPARE(screens()->count(), 2);
@@ -139,12 +155,13 @@ void QuickTilingTest::cleanup()
     delete m_queue;
     m_queue = nullptr;
     if (m_thread) {
+        m_connection->deleteLater();
         m_thread->quit();
         m_thread->wait();
         delete m_thread;
         m_thread = nullptr;
+        m_connection = nullptr;
     }
-
 }
 
 void QuickTilingTest::testQuickTiling_data()
@@ -357,6 +374,149 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(geometryChangedSpy.count(), 4);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
+}
+
+void QuickTilingTest::testQuickTilingKeyboardMove_data()
+{
+    QTest::addColumn<QPoint>("targetPos");
+    QTest::addColumn<AbstractClient::QuickTileMode>("expectedMode");
+
+    QTest::newRow("topRight") << QPoint(2559, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileRight);
+    QTest::newRow("right") << QPoint(2559, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileRight);
+    QTest::newRow("bottomRight") << QPoint(2559, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileRight);
+    QTest::newRow("bottomLeft") << QPoint(0, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileLeft);
+    QTest::newRow("Left") << QPoint(0, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileLeft);
+    QTest::newRow("topLeft") << QPoint(0, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileLeft);
+}
+
+void QuickTilingTest::testQuickTilingKeyboardMove()
+{
+    using namespace KWayland::Client;
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangeSpy.isValid());
+    // let's render
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    m_connection->flush();
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *c = workspace()->activeClient();
+    QVERIFY(c);
+    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->maximizeMode(), MaximizeRestore);
+
+    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
+    QVERIFY(quickTileChangedSpy.isValid());
+
+    workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
+    QCOMPARE(c, workspace()->getMovingClient());
+    QCOMPARE(Cursor::pos(), QPoint(49, 24));
+
+    QFETCH(QPoint, targetPos);
+    quint32 timestamp = 1;
+    waylandServer()->backend()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    while (Cursor::pos().x() > targetPos.x()) {
+        waylandServer()->backend()->keyboardKeyPressed(KEY_LEFT, timestamp++);
+        waylandServer()->backend()->keyboardKeyReleased(KEY_LEFT, timestamp++);
+    }
+    while (Cursor::pos().x() < targetPos.x()) {
+        waylandServer()->backend()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
+        waylandServer()->backend()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
+    }
+    while (Cursor::pos().y() < targetPos.y()) {
+        waylandServer()->backend()->keyboardKeyPressed(KEY_DOWN, timestamp++);
+        waylandServer()->backend()->keyboardKeyReleased(KEY_DOWN, timestamp++);
+    }
+    while (Cursor::pos().y() > targetPos.y()) {
+        waylandServer()->backend()->keyboardKeyPressed(KEY_UP, timestamp++);
+        waylandServer()->backend()->keyboardKeyReleased(KEY_UP, timestamp++);
+    }
+    waylandServer()->backend()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    waylandServer()->backend()->keyboardKeyPressed(KEY_ENTER, timestamp++);
+    waylandServer()->backend()->keyboardKeyReleased(KEY_ENTER, timestamp++);
+    QCOMPARE(Cursor::pos(), targetPos);
+    QVERIFY(!workspace()->getMovingClient());
+
+    QCOMPARE(quickTileChangedSpy.count(), 1);
+    QTEST(c->quickTileMode(), "expectedMode");
+}
+
+
+
+void QuickTilingTest::testQuickTilingPointerMove_data()
+{
+    QTest::addColumn<QPoint>("targetPos");
+    QTest::addColumn<AbstractClient::QuickTileMode>("expectedMode");
+
+    QTest::newRow("topRight") << QPoint(2559, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileRight);
+    QTest::newRow("right") << QPoint(2559, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileRight);
+    QTest::newRow("bottomRight") << QPoint(2559, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileRight);
+    QTest::newRow("bottomLeft") << QPoint(0, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileLeft);
+    QTest::newRow("Left") << QPoint(0, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileLeft);
+    QTest::newRow("topLeft") << QPoint(0, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileLeft);
+}
+
+void QuickTilingTest::testQuickTilingPointerMove()
+{
+    using namespace KWayland::Client;
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangeSpy.isValid());
+    // let's render
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    m_connection->flush();
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *c = workspace()->activeClient();
+    QVERIFY(c);
+    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->maximizeMode(), MaximizeRestore);
+
+    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
+    QVERIFY(quickTileChangedSpy.isValid());
+
+    workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
+    QCOMPARE(c, workspace()->getMovingClient());
+    QCOMPARE(Cursor::pos(), QPoint(49, 24));
+
+    QFETCH(QPoint, targetPos);
+    quint32 timestamp = 1;
+    waylandServer()->backend()->pointerMotion(targetPos, timestamp++);
+    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(Cursor::pos(), targetPos);
+    QVERIFY(!workspace()->getMovingClient());
+
+    QCOMPARE(quickTileChangedSpy.count(), 1);
+    QTEST(c->quickTileMode(), "expectedMode");
 }
 
 }

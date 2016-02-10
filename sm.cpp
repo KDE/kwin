@@ -517,4 +517,3 @@ void Workspace::sessionSaveDone()
 
 } // namespace
 
-#include "sm.moc"

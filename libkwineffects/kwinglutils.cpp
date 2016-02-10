@@ -362,7 +362,9 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
     // Make sure shaders are actually supported
-    if (!GLPlatform::instance()->supports(GLSL) || GLPlatform::instance()->supports(LimitedNPOT)) {
+    if (!(GLPlatform::instance()->supports(GLSL) &&
+        // we lack shader branching for Texture2DRectangle everywhere - and it's probably not worth it
+        GLPlatform::instance()->supports(TextureNPOT))) {
         qCCritical(LIBKWINGLUTILS) << "Shaders are not supported";
         return false;
     }
@@ -644,6 +646,13 @@ void ShaderManager::cleanup()
 ShaderManager::ShaderManager()
 {
     m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
+
+    const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
+    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber) {
+        m_resourcePath = QStringLiteral(":/effect-shaders-1.40/");
+    } else {
+        m_resourcePath = QStringLiteral(":/effect-shaders-1.10/");
+    }
 }
 
 ShaderManager::~ShaderManager()
@@ -1001,6 +1010,33 @@ GLShader *ShaderManager::generateCustomShader(ShaderTraits traits, const QByteAr
 
     shader->link();
     return shader;
+}
+
+GLShader *ShaderManager::generateShaderFromResources(ShaderTraits traits, const QString &vertexFile, const QString &fragmentFile)
+{
+    auto loadShaderFile = [this] (const QString &fileName) {
+        QFile file(m_resourcePath + fileName);
+        if (file.open(QIODevice::ReadOnly)) {
+            return file.readAll();
+        }
+        qCCritical(LIBKWINGLUTILS) << "Failed to read shader " << fileName;
+        return QByteArray();
+    };
+    QByteArray vertexSource;
+    QByteArray fragmentSource;
+    if (!vertexFile.isEmpty()) {
+        vertexSource = loadShaderFile(vertexFile);
+        if (vertexSource.isEmpty()) {
+            return new GLShader();
+        }
+    }
+    if (!fragmentFile.isEmpty()) {
+        fragmentSource = loadShaderFile(fragmentFile);
+        if (fragmentSource.isEmpty()) {
+            return new GLShader();
+        }
+    }
+    return generateCustomShader(traits, vertexSource, fragmentSource);
 }
 
 GLShader *ShaderManager::shader(ShaderTraits traits)
