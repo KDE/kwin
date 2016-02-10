@@ -156,6 +156,7 @@ public:
     void removeTouchId(quint32 internalId);
 
     void updateKeyboardWindow();
+    void updateTouchWindow(const QPointF &pos);
 
 public Q_SLOTS:
     void updatePointerWindow();
@@ -209,7 +210,6 @@ private:
     void registerShortcutForGlobalAccelTimestamp(QAction *action);
     void updateFocusedPointerPosition();
     void updateFocusedTouchPosition();
-    void updateTouchWindow(const QPointF &pos);
     void updatePointerDecoration(Toplevel *t);
     void updatePointerInternalWindow();
     void pointerInternalWindowVisibilityChanged(bool visible);

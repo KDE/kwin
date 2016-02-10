@@ -403,6 +403,49 @@ public:
         }
         return true;
     }
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) {
+        if (!waylandServer()->isScreenLocked()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        if (!seat->isTouchSequence()) {
+            input()->updateTouchWindow(pos);
+        }
+        if (touchSurfaceAllowed()) {
+            input()->insertTouchId(id, seat->touchDown(pos));
+        }
+        return true;
+    }
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) {
+        if (!waylandServer()->isScreenLocked()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        if (touchSurfaceAllowed()) {
+            const qint32 kwaylandId = input()->touchId(id);
+            if (kwaylandId != -1) {
+                seat->touchMove(kwaylandId, pos);
+            }
+        }
+        return true;
+    }
+    bool touchUp(quint32 id, quint32 time) {
+        if (!waylandServer()->isScreenLocked()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        if (touchSurfaceAllowed()) {
+            const qint32 kwaylandId = input()->touchId(id);
+            if (kwaylandId != -1) {
+                seat->touchUp(kwaylandId);
+                input()->removeTouchId(id);
+            }
+        }
+        return true;
+    }
 private:
     bool surfaceAllowed(KWayland::Server::SurfaceInterface *(KWayland::Server::SeatInterface::*method)() const) const {
         if (KWayland::Server::SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
@@ -418,6 +461,9 @@ private:
     }
     bool keyboardSurfaceAllowed() const {
         return surfaceAllowed(&KWayland::Server::SeatInterface::focusedKeyboardSurface);
+    }
+    bool touchSurfaceAllowed() const {
+        return surfaceAllowed(&KWayland::Server::SeatInterface::focusedTouchSurface);
     }
 };
 
@@ -872,6 +918,13 @@ void InputRedirection::setupWorkspace()
 
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &InputRedirection::updatePointerWindow);
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &InputRedirection::updateKeyboardWindow);
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
+            [this] {
+                cancelTouch();
+                // position doesn't matter
+                updateTouchWindow(QPointF());
+            }
+        );
     }
     setupInputFilters();
 }

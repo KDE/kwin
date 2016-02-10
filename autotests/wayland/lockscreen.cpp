@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/touch.h>
 
 //screenlocker
 #include <KScreenLocker/KsldApp>
@@ -68,6 +69,7 @@ private Q_SLOTS:
     void testAxisShortcut_data();
     void testAxisShortcut();
     void testKeyboardShortcut();
+    void testTouch();
 
 private:
     void unlock();
@@ -723,6 +725,44 @@ void LockScreenTest::testKeyboardShortcut()
     KEYRELEASE(KEY_LEFTCTRL);
     KEYRELEASE(KEY_LEFTMETA);
     KEYRELEASE(KEY_LEFTALT);
+}
+
+void LockScreenTest::testTouch()
+{
+    using namespace KWayland::Client;
+    auto touch = m_seat->createTouch(m_seat);
+    QVERIFY(touch);
+    QVERIFY(touch->isValid());
+    AbstractClient *c = showWindow();
+    QVERIFY(c);
+    QSignalSpy sequenceStartedSpy(touch, &Touch::sequenceStarted);
+    QVERIFY(sequenceStartedSpy.isValid());
+    QSignalSpy cancelSpy(touch, &Touch::sequenceCanceled);
+    QVERIFY(cancelSpy.isValid());
+    QSignalSpy pointRemovedSpy(touch, &Touch::pointRemoved);
+    QVERIFY(pointRemovedSpy.isValid());
+
+    quint32 timestamp = 1;
+    waylandServer()->backend()->touchDown(1, QPointF(25, 25), timestamp++);
+    QVERIFY(sequenceStartedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 1);
+
+    LOCK
+    QVERIFY(cancelSpy.wait());
+
+    waylandServer()->backend()->touchUp(1, timestamp++);
+    QVERIFY(!pointRemovedSpy.wait(100));
+    waylandServer()->backend()->touchDown(1, QPointF(25, 25), timestamp++);
+    waylandServer()->backend()->touchMotion(1, QPointF(26, 26), timestamp++);
+    waylandServer()->backend()->touchUp(1, timestamp++);
+
+    UNLOCK
+    waylandServer()->backend()->touchDown(1, QPointF(25, 25), timestamp++);
+    QVERIFY(sequenceStartedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 2);
+    waylandServer()->backend()->touchUp(1, timestamp++);
+    QVERIFY(pointRemovedSpy.wait());
+    QCOMPARE(pointRemovedSpy.count(), 1);
 }
 
 }
