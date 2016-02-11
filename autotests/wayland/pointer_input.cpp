@@ -208,22 +208,16 @@ void PointerInputTest::testWarpingUpdatesFocus()
 
     // enter
     Cursor::setPos(QPoint(25, 25));
-    QEXPECT_FAIL("", "Not yet imlemented", Continue);
     QVERIFY(enteredSpy.wait());
-    QEXPECT_FAIL("", "Not yet imlemented", Continue);
     QCOMPARE(enteredSpy.count(), 1);
     // window should have focus
-    QEXPECT_FAIL("", "Not yet imlemented", Continue);
     QCOMPARE(pointer->enteredSurface(), surface);
     // also on the server
-    QEXPECT_FAIL("", "Not yet imlemented", Continue);
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
 
     // and out again
     Cursor::setPos(QPoint(250, 250));;
-    QEXPECT_FAIL("", "Not yet imlemented", Continue);
     QVERIFY(leftSpy.wait());
-    QEXPECT_FAIL("", "Not yet imlemented", Continue);
     QCOMPARE(leftSpy.count(), 1);
     // there should not be a focused pointer surface anymore
     QVERIFY(!waylandServer()->seat()->focusedPointerSurface());
@@ -265,11 +259,8 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
 
     // now warp
     Cursor::setPos(QPoint(26, 26));
-    QEXPECT_FAIL("", "Not yet imlemented", Continue);
     QVERIFY(movedSpy.wait());
-    QEXPECT_FAIL("", "Not yet imlemented", Continue);
     QCOMPARE(movedSpy.count(), 2);
-    QEXPECT_FAIL("", "Not yet imlemented", Continue);
     QCOMPARE(movedSpy.last().first().toPointF(), QPointF(26, 26));
 }
 

@@ -1693,10 +1693,13 @@ void InputRedirection::updatePointerAfterScreenChange()
 void InputRedirection::warpPointer(const QPointF &pos)
 {
     if (supportsPointerWarping()) {
+        quint32 timestamp = 0;
         if (waylandServer()) {
             waylandServer()->backend()->warpPointer(pos);
+            timestamp = waylandServer()->seat()->timestamp();
         }
-        updatePointerPosition(pos);
+        // TODO: better way to get timestamps
+        processPointerMotion(pos, timestamp);
     }
 }
 
