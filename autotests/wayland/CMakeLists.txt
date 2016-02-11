@@ -89,3 +89,12 @@ add_executable(testInputStackingOrder ${testInputStackingOrder_SRCS})
 target_link_libraries( testInputStackingOrder kwin Qt5::Test)
 add_test(kwin-testInputStackingOrder testInputStackingOrder)
 ecm_mark_as_test(testInputStackingOrder)
+
+########################################################
+# Pointer Input Test
+########################################################
+set( testPointerInput_SRCS pointer_input.cpp kwin_wayland_test.cpp )
+add_executable(testPointerInput ${testPointerInput_SRCS})
+target_link_libraries( testPointerInput kwin Qt5::Test)
+add_test(kwin-testPointerInput testPointerInput)
+ecm_mark_as_test(testPointerInput)
