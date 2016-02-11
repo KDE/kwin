@@ -80,3 +80,12 @@ add_executable(testTouchInput ${testTouchInput_SRCS})
 target_link_libraries( testTouchInput kwin Qt5::Test)
 add_test(kwin-testTouchInput testTouchInput)
 ecm_mark_as_test(testTouchInput)
+
+########################################################
+# Input Stacking Order Test
+########################################################
+set( testInputStackingOrder_SRCS input_stacking_order.cpp kwin_wayland_test.cpp )
+add_executable(testInputStackingOrder ${testInputStackingOrder_SRCS})
+target_link_libraries( testInputStackingOrder kwin Qt5::Test)
+add_test(kwin-testInputStackingOrder testInputStackingOrder)
+ecm_mark_as_test(testInputStackingOrder)
