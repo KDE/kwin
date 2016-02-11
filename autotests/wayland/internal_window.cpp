@@ -264,5 +264,5 @@ void InternalWindowTest::testKeyboard()
 
 }
 
-WAYLANTEST_MAIN(KWin::InternalWindowTest)
+WAYLANDTEST_MAIN(KWin::InternalWindowTest)
 #include "internal_window.moc"

@@ -290,5 +290,5 @@ void TouchInputTest::testCancel()
 
 }
 
-WAYLANTEST_MAIN(KWin::TouchInputTest)
+WAYLANDTEST_MAIN(KWin::TouchInputTest)
 #include "touch_input_test.moc"

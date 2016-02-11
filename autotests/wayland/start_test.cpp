@@ -160,5 +160,5 @@ void StartTest::testCreateWindow()
 
 }
 
-WAYLANTEST_MAIN(KWin::StartTest)
+WAYLANDTEST_MAIN(KWin::StartTest)
 #include "start_test.moc"

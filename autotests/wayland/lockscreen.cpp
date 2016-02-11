@@ -767,5 +767,5 @@ void LockScreenTest::testTouch()
 
 }
 
-WAYLANTEST_MAIN(KWin::LockScreenTest)
+WAYLANDTEST_MAIN(KWin::LockScreenTest)
 #include "lockscreen.moc"

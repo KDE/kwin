@@ -450,5 +450,5 @@ void MoveResizeWindowTest::testGrowShrink()
 
 }
 
-WAYLANTEST_MAIN(KWin::MoveResizeWindowTest)
+WAYLANDTEST_MAIN(KWin::MoveResizeWindowTest)
 #include "move_resize_window_test.moc"

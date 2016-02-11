@@ -371,5 +371,5 @@ void DecorationInputTest::testPressToMove()
 
 }
 
-WAYLANTEST_MAIN(KWin::DecorationInputTest)
+WAYLANDTEST_MAIN(KWin::DecorationInputTest)
 #include "decoration_input_test.moc"
