@@ -87,14 +87,6 @@ public:
      * @return const QPointF& The current global pointer position
      */
     const QPointF &globalPointer() const;
-    /**
-     * @brief The last known state of the @p button. If @p button is still unknown the state is
-     * @c PointerButtonReleased.
-     *
-     * @param button The button for which the last known state should be queried.
-     * @return KWin::InputRedirection::PointerButtonState
-     */
-    PointerButtonState pointerButtonState(uint32_t button) const;
     Qt::MouseButtons qtButtonStates() const;
     Qt::KeyboardModifiers keyboardModifiers() const;
 
@@ -356,17 +348,6 @@ inline
 const QPointF &InputRedirection::globalPointer() const
 {
     return m_globalPointer;
-}
-
-inline
-InputRedirection::PointerButtonState InputRedirection::pointerButtonState(uint32_t button) const
-{
-    auto it = m_pointerButtons.constFind(button);
-    if (it != m_pointerButtons.constEnd()) {
-        return it.value();
-    } else {
-        return KWin::InputRedirection::PointerButtonReleased;
-    }
 }
 
 template <typename T>
