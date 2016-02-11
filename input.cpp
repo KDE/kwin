@@ -1560,16 +1560,6 @@ Qt::MouseButtons InputRedirection::qtButtonStates() const
     return buttons;
 }
 
-bool InputRedirection::areButtonsPressed() const
-{
-    for (auto it = m_pointerButtons.constBegin(); it != m_pointerButtons.constEnd(); ++it) {
-        if (it.value() == KWin::InputRedirection::PointerButtonPressed) {
-            return true;
-        }
-    }
-    return false;
-}
-
 static bool acceptsInput(Toplevel *t, const QPoint &pos)
 {
     const QRegion input = t->inputShape();

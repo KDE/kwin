@@ -214,7 +214,6 @@ private:
     void updatePointerInternalWindow();
     void pointerInternalWindowVisibilityChanged(bool visible);
     void installCursorFromDecoration();
-    bool areButtonsPressed() const;
     void setupWorkspace();
     void reconfigure();
     void setupInputFilters();
