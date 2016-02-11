@@ -55,9 +55,10 @@ private Q_SLOTS:
     void cleanup();
     void testWarpingUpdatesFocus();
     void testWarpingGeneratesPointerMotion();
+    void testUpdateFocusAfterScreenChange();
 
 private:
-    void render(KWayland::Client::Surface *surface);
+    void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::Seat *m_seat = nullptr;
@@ -167,12 +168,12 @@ void PointerInputTest::cleanup()
     }
 }
 
-void PointerInputTest::render(KWayland::Client::Surface *surface)
+void PointerInputTest::render(KWayland::Client::Surface *surface, const QSize &size)
 {
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    QImage img(size, QImage::Format_ARGB32);
     img.fill(Qt::blue);
     surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
+    surface->damage(QRect(QPoint(0, 0), size));
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     m_connection->flush();
 }
@@ -262,6 +263,55 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     QVERIFY(movedSpy.wait());
     QCOMPARE(movedSpy.count(), 2);
     QCOMPARE(movedSpy.last().first().toPointF(), QPointF(26, 26));
+}
+
+void PointerInputTest::testUpdateFocusAfterScreenChange()
+{
+    // this test verifies that a pointer enter event is generated when the cursor changes to another
+    // screen due to removal of screen
+    using namespace KWayland::Client;
+    // ensure cursor is on second screen
+    Cursor::setPos(1500, 300);
+
+    // create pointer and signal spy for enter and motion
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy enteredSpy(pointer, &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+
+    // create a window
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = m_shell->createSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface, QSize(1280, 1024));
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+    QVERIFY(!window->geometry().contains(Cursor::pos()));
+
+    QSignalSpy screensChangedSpy(screens(), &Screens::changed);
+    QVERIFY(screensChangedSpy.isValid());
+    // now let's remove the screen containing the cursor
+    QMetaObject::invokeMethod(waylandServer()->backend(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 1));
+    QMetaObject::invokeMethod(waylandServer()->backend(), "sizeChanged", Qt::QueuedConnection);
+    QVERIFY(screensChangedSpy.wait());
+    QCOMPARE(screens()->count(), 1);
+
+    // this should have warped the cursor
+    QEXPECT_FAIL("", "Doesn't work yet, requires libinput", Continue);
+    QCOMPARE(Cursor::pos(), QPoint(639, 511));
+    QEXPECT_FAIL("", "Doesn't work yet, requires libinput", Continue);
+    QVERIFY(window->geometry().contains(Cursor::pos()));
+
+    // and we should get an enter event
+    QEXPECT_FAIL("", "Not yet passed through", Continue);
+    QVERIFY(enteredSpy.wait());
+    QEXPECT_FAIL("", "Not yet passed through", Continue);
+    QCOMPARE(enteredSpy.count(), 1);
 }
 
 }
