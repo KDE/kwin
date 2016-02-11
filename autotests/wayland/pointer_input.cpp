@@ -302,15 +302,11 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QCOMPARE(screens()->count(), 1);
 
     // this should have warped the cursor
-    QEXPECT_FAIL("", "Doesn't work yet, requires libinput", Continue);
     QCOMPARE(Cursor::pos(), QPoint(639, 511));
-    QEXPECT_FAIL("", "Doesn't work yet, requires libinput", Continue);
     QVERIFY(window->geometry().contains(Cursor::pos()));
 
     // and we should get an enter event
-    QEXPECT_FAIL("", "Not yet passed through", Continue);
     QVERIFY(enteredSpy.wait());
-    QEXPECT_FAIL("", "Not yet passed through", Continue);
     QCOMPARE(enteredSpy.count(), 1);
 }
 

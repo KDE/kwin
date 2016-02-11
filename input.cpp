@@ -915,6 +915,7 @@ void InputRedirection::setupWorkspace()
             }
         );
         connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
+        connect(screens(), &Screens::changed, this, &InputRedirection::updatePointerAfterScreenChange);
 
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &InputRedirection::updatePointerWindow);
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &InputRedirection::updateKeyboardWindow);
@@ -1071,7 +1072,6 @@ void InputRedirection::setupLibInputWithScreens()
         }
     );
     // set pos to center of all screens
-    connect(screens(), &Screens::changed, this, &InputRedirection::updatePointerAfterScreenChange);
     m_globalPointer = screens()->geometry().center();
     emit globalPointerChanged(m_globalPointer);
     // sanitize
@@ -1686,8 +1686,13 @@ void InputRedirection::updatePointerAfterScreenChange()
         return;
     }
     // pointer no longer on a screen, reposition to closes screen
-    m_globalPointer = screens()->geometry(screens()->number(m_globalPointer.toPoint())).center();
-    emit globalPointerChanged(m_globalPointer);
+    const QPointF pos = screens()->geometry(screens()->number(m_globalPointer.toPoint())).center();
+    quint32 timestamp = 0;
+    if (auto seat = findSeat()) {
+        timestamp = seat->timestamp();
+    }
+    // TODO: better way to get timestamps
+    processPointerMotion(pos, timestamp);
 }
 
 void InputRedirection::warpPointer(const QPointF &pos)
