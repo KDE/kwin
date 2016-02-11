@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox/tabbox.h"
 #endif
 #include "unmanaged.h"
+#include "screenedge.h"
 #include "screens.h"
 #include "workspace.h"
 #if HAVE_INPUT
@@ -686,6 +687,17 @@ public:
 };
 #endif
 
+class ScreenEdgeInputFilter : public InputEventFilter
+{
+public:
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+        Q_UNUSED(nativeButton)
+        ScreenEdges::self()->isEntered(event);
+        // always forward
+        return false;
+    }
+};
+
 /**
  * The remaining default input filter which forwards events to other windows
  **/
@@ -940,6 +952,7 @@ void InputRedirection::setupInputFilters()
     if (waylandServer()) {
         installInputEventFilter(new LockScreenFilter);
     }
+    installInputEventFilter(new ScreenEdgeInputFilter);
     installInputEventFilter(new EffectsFilter);
     installInputEventFilter(new MoveResizeFilter);
     installInputEventFilter(new GlobalShortcutFilter);
