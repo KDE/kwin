@@ -46,7 +46,7 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
 #ifdef KWIN_BUILD_ACTIVITIES
     setUseKActivities(false);
 #endif
-    qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
+    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     WaylandServer *server = WaylandServer::create(this);
     QPluginLoader loader(QStringLiteral(KWINBACKENDPATH));
     loader.instance()->setParent(server);

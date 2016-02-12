@@ -43,6 +43,7 @@ private Q_SLOTS:
 
 void DontCrashGlxgearsTest::initTestCase()
 {
+    qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
     qRegisterMetaType<KWin::Deleted*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
