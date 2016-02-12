@@ -935,6 +935,9 @@ void ShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecora
     connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed, this,
         [this] {
             m_serverDecoration = nullptr;
+            if (!Workspace::self()) {
+                return;
+            }
             updateDecoration(true);
         }
     );
