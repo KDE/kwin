@@ -332,6 +332,7 @@ set(kwin_KDEINIT_SRCS
    focuschain.cpp
    globalshortcuts.cpp
    input.cpp
+   pointer_input.cpp
    netinfo.cpp
    placement.cpp 
    atoms.cpp 

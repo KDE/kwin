@@ -44,6 +44,7 @@ class GlobalShortcutsManager;
 class Toplevel;
 class Xkb;
 class InputEventFilter;
+class PointerInputRedirection;
 
 namespace Decoration
 {
@@ -86,7 +87,7 @@ public:
     /**
      * @return const QPointF& The current global pointer position
      */
-    const QPointF &globalPointer() const;
+    QPointF globalPointer() const;
     Qt::MouseButtons qtButtonStates() const;
     Qt::KeyboardModifiers keyboardModifiers() const;
 
@@ -150,8 +151,12 @@ public:
     void updateKeyboardWindow();
     void updateTouchWindow(const QPointF &pos);
 
-public Q_SLOTS:
-    void updatePointerWindow();
+    QVector<InputEventFilter*> filters() const {
+        return m_filters;
+    }
+    PointerInputRedirection *pointer() const {
+        return m_pointer;
+    }
 
 Q_SIGNALS:
     /**
@@ -193,36 +198,16 @@ Q_SIGNALS:
     void keyStateChanged(quint32 keyCode, InputRedirection::KeyboardKeyState state);
 
 private:
-    static QEvent::Type buttonStateToEvent(PointerButtonState state);
-    static Qt::MouseButton buttonToQtMouseButton(uint32_t button);
     void setupLibInput();
     void setupLibInputWithScreens();
-    void updatePointerPosition(const QPointF &pos);
-    void updatePointerAfterScreenChange();
     void registerShortcutForGlobalAccelTimestamp(QAction *action);
-    void updateFocusedPointerPosition();
     void updateFocusedTouchPosition();
-    void updatePointerDecoration(Toplevel *t);
-    void updatePointerInternalWindow();
-    void pointerInternalWindowVisibilityChanged(bool visible);
-    void installCursorFromDecoration();
     void setupWorkspace();
     void reconfigure();
     void setupInputFilters();
     void installInputEventFilter(InputEventFilter *filter);
-    QPointF m_globalPointer;
-    QHash<uint32_t, PointerButtonState> m_pointerButtons;
+    PointerInputRedirection *m_pointer;
     QScopedPointer<Xkb> m_xkb;
-    /**
-     * @brief The Toplevel which currently receives pointer events
-     */
-    QWeakPointer<Toplevel> m_pointerWindow;
-    /**
-     * @brief The Decoration which currently receives pointer events.
-     * Decoration belongs to the pointerWindow
-     **/
-    QPointer<Decoration::DecoratedClientImpl> m_pointerDecoration;
-    QPointer<QWindow> m_pointerInternalWindow;
     /**
      * @brief The Toplevel which currently receives touch events
      */
@@ -235,8 +220,6 @@ private:
     GlobalShortcutsManager *m_shortcuts;
 
     LibInput::Connection *m_libInput = nullptr;
-
-    bool m_pointerWarping = false;
 
     QVector<InputEventFilter*> m_filters;
 
@@ -342,12 +325,6 @@ inline
 InputRedirection *input()
 {
     return InputRedirection::s_self;
-}
-
-inline
-const QPointF &InputRedirection::globalPointer() const
-{
-    return m_globalPointer;
 }
 
 template <typename T>

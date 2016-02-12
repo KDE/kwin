@@ -133,11 +133,6 @@ Workspace::Workspace(const QString &sessionKey)
     // first initialize the extensions
     Xcb::Extensions::self();
 
-    // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        connect(this, SIGNAL(stackingOrderChanged()), input(), SLOT(updatePointerWindow()));
-    }
-
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = nullptr;
     if (kwinApp()->usesKActivities()) {
