@@ -32,18 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class KGlobalAccelInterface;
 class QKeySequence;
 
-struct xkb_context;
-struct xkb_keymap;
-struct xkb_state;
-typedef uint32_t xkb_mod_index_t;
-typedef uint32_t xkb_keysym_t;
-
 namespace KWin
 {
 class GlobalShortcutsManager;
 class Toplevel;
-class Xkb;
 class InputEventFilter;
+class KeyboardInputRedirection;
 class PointerInputRedirection;
 class TouchInputRedirection;
 
@@ -146,10 +140,11 @@ public:
         return m_shortcuts;
     }
 
-    void updateKeyboardWindow();
-
     QVector<InputEventFilter*> filters() const {
         return m_filters;
+    }
+    KeyboardInputRedirection *keyboard() const {
+        return m_keyboard;
     }
     PointerInputRedirection *pointer() const {
         return m_pointer;
@@ -205,9 +200,9 @@ private:
     void reconfigure();
     void setupInputFilters();
     void installInputEventFilter(InputEventFilter *filter);
+    KeyboardInputRedirection *m_keyboard;
     PointerInputRedirection *m_pointer;
     TouchInputRedirection *m_touch;
-    QScopedPointer<Xkb> m_xkb;
 
     GlobalShortcutsManager *m_shortcuts;
 
@@ -279,40 +274,6 @@ public:
     virtual bool touchUp(quint32 id, quint32 time);
 };
 
-class Xkb
-{
-public:
-    Xkb(InputRedirection *input);
-    ~Xkb();
-    void installKeymap(int fd, uint32_t size);
-    void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
-    void updateKey(uint32_t key, InputRedirection::KeyboardKeyState state);
-    xkb_keysym_t toKeysym(uint32_t key);
-    QString toString(xkb_keysym_t keysym);
-    Qt::Key toQtKey(xkb_keysym_t keysym);
-    Qt::KeyboardModifiers modifiers() const;
-
-    quint32 getMods(quint32 components);
-    quint32 getGroup();
-private:
-    void updateKeymap(xkb_keymap *keymap);
-    void createKeymapFile();
-    void updateModifiers();
-    InputRedirection *m_input;
-    xkb_context *m_context;
-    xkb_keymap *m_keymap;
-    xkb_state *m_state;
-    xkb_mod_index_t m_shiftModifier;
-    xkb_mod_index_t m_controlModifier;
-    xkb_mod_index_t m_altModifier;
-    xkb_mod_index_t m_metaModifier;
-    Qt::KeyboardModifiers m_modifiers;
-    struct {
-        uint pressCount = 0;
-        Qt::KeyboardModifier modifier = Qt::NoModifier;
-    } m_modOnlyShortcut;
-};
-
 inline
 InputRedirection *input()
 {
@@ -324,12 +285,6 @@ inline
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, void (T::*slot)()) {
     registerShortcut(shortcut, action);
     connect(action, &QAction::triggered, receiver, slot);
-}
-
-inline
-Qt::KeyboardModifiers Xkb::modifiers() const
-{
-    return m_modifiers;
 }
 
 } // namespace KWin

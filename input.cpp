@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "input.h"
+#include "keyboard_input.h"
 #include "pointer_input.h"
 #include "touch_input.h"
 #include "client.h"
@@ -64,222 +65,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-
-Xkb::Xkb(InputRedirection *input)
-    : m_input(input)
-    , m_context(xkb_context_new(static_cast<xkb_context_flags>(0)))
-    , m_keymap(NULL)
-    , m_state(NULL)
-    , m_shiftModifier(0)
-    , m_controlModifier(0)
-    , m_altModifier(0)
-    , m_metaModifier(0)
-    , m_modifiers(Qt::NoModifier)
-{
-    if (!m_context) {
-        qCDebug(KWIN_CORE) << "Could not create xkb context";
-    } else {
-        // load default keymap
-        xkb_keymap *keymap = xkb_keymap_new_from_names(m_context, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
-        if (keymap) {
-            updateKeymap(keymap);
-        } else {
-            qCDebug(KWIN_CORE) << "Could not create default xkb keymap";
-        }
-    }
-}
-
-Xkb::~Xkb()
-{
-    xkb_state_unref(m_state);
-    xkb_keymap_unref(m_keymap);
-    xkb_context_unref(m_context);
-}
-
-void Xkb::installKeymap(int fd, uint32_t size)
-{
-    if (!m_context) {
-        return;
-    }
-    char *map = reinterpret_cast<char*>(mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0));
-    if (map == MAP_FAILED) {
-        return;
-    }
-    xkb_keymap *keymap = xkb_keymap_new_from_string(m_context, map, XKB_KEYMAP_FORMAT_TEXT_V1, XKB_MAP_COMPILE_PLACEHOLDER);
-    munmap(map, size);
-    if (!keymap) {
-        qCDebug(KWIN_CORE) << "Could not map keymap from file";
-        return;
-    }
-    updateKeymap(keymap);
-}
-
-void Xkb::updateKeymap(xkb_keymap *keymap)
-{
-    Q_ASSERT(keymap);
-    xkb_state *state = xkb_state_new(keymap);
-    if (!state) {
-        qCDebug(KWIN_CORE) << "Could not create XKB state";
-        xkb_keymap_unref(keymap);
-        return;
-    }
-    // now release the old ones
-    xkb_state_unref(m_state);
-    xkb_keymap_unref(m_keymap);
-
-    m_keymap = keymap;
-    m_state = state;
-
-    m_shiftModifier   = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_SHIFT);
-    m_controlModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CTRL);
-    m_altModifier     = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
-    m_metaModifier    = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
-
-    createKeymapFile();
-}
-
-void Xkb::createKeymapFile()
-{
-    if (!waylandServer()) {
-        return;
-    }
-    // TODO: uninstall keymap on server?
-    if (!m_keymap) {
-        return;
-    }
-
-    ScopedCPointer<char> keymapString(xkb_keymap_get_as_string(m_keymap, XKB_KEYMAP_FORMAT_TEXT_V1));
-    if (keymapString.isNull()) {
-        return;
-    }
-    const uint size = qstrlen(keymapString.data()) + 1;
-
-    QTemporaryFile *tmp = new QTemporaryFile(m_input);
-    if (!tmp->open()) {
-        delete tmp;
-        return;
-    }
-    unlink(tmp->fileName().toUtf8().constData());
-    if (!tmp->resize(size)) {
-        delete tmp;
-        return;
-    }
-    uchar *address = tmp->map(0, size);
-    if (!address) {
-        return;
-    }
-    if (qstrncpy(reinterpret_cast<char*>(address), keymapString.data(), size) == nullptr) {
-        delete tmp;
-        return;
-    }
-    waylandServer()->seat()->setKeymap(tmp->handle(), size);
-}
-
-void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
-{
-    if (!m_keymap || !m_state) {
-        return;
-    }
-    xkb_state_update_mask(m_state, modsDepressed, modsLatched, modsLocked, 0, 0, group);
-    updateModifiers();
-}
-
-void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
-{
-    if (!m_keymap || !m_state) {
-        return;
-    }
-    xkb_state_update_key(m_state, key + 8, static_cast<xkb_key_direction>(state));
-    updateModifiers();
-    if (state == InputRedirection::KeyboardKeyPressed) {
-        m_modOnlyShortcut.pressCount++;
-        if (m_modOnlyShortcut.pressCount == 1) {
-            m_modOnlyShortcut.modifier = Qt::KeyboardModifier(int(m_modifiers));
-        } else {
-            m_modOnlyShortcut.modifier = Qt::NoModifier;
-        }
-    } else {
-        m_modOnlyShortcut.pressCount--;
-        // TODO: ignore on lock screen
-        if (m_modOnlyShortcut.pressCount == 0) {
-            if (m_modOnlyShortcut.modifier != Qt::NoModifier) {
-                const auto list = options->modifierOnlyDBusShortcut(m_modOnlyShortcut.modifier);
-                if (list.size() >= 4) {
-                    auto call = QDBusMessage::createMethodCall(list.at(0), list.at(1), list.at(2), list.at(3));
-                    QVariantList args;
-                    for (int i = 4; i < list.size(); ++i) {
-                        args << list.at(i);
-                    }
-                    call.setArguments(args);
-                    QDBusConnection::sessionBus().asyncCall(call);
-                }
-            }
-        }
-        m_modOnlyShortcut.modifier = Qt::NoModifier;
-    }
-}
-
-void Xkb::updateModifiers()
-{
-    Qt::KeyboardModifiers mods = Qt::NoModifier;
-    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
-        mods |= Qt::ShiftModifier;
-    }
-    if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
-        mods |= Qt::AltModifier;
-    }
-    if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
-        mods |= Qt::ControlModifier;
-    }
-    if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
-        mods |= Qt::MetaModifier;
-    }
-    m_modifiers = mods;
-}
-
-xkb_keysym_t Xkb::toKeysym(uint32_t key)
-{
-    if (!m_state) {
-        return XKB_KEY_NoSymbol;
-    }
-    return xkb_state_key_get_one_sym(m_state, key + 8);
-}
-
-QString Xkb::toString(xkb_keysym_t keysym)
-{
-    if (!m_state || keysym == XKB_KEY_NoSymbol) {
-        return QString();
-    }
-    QByteArray byteArray(7, 0);
-    int ok = xkb_keysym_to_utf8(keysym, byteArray.data(), byteArray.size());
-    if (ok == -1 || ok == 0) {
-        return QString();
-    }
-    return QString::fromUtf8(byteArray.constData());
-}
-
-Qt::Key Xkb::toQtKey(xkb_keysym_t keysym)
-{
-    int key = Qt::Key_unknown;
-    KKeyServer::symXToKeyQt(keysym, &key);
-    return static_cast<Qt::Key>(key);
-}
-
-quint32 Xkb::getMods(quint32 components)
-{
-    if (!m_state) {
-        return 0;
-    }
-    return xkb_state_serialize_mods(m_state, xkb_state_component(components));
-}
-
-quint32 Xkb::getGroup()
-{
-    if (!m_state) {
-        return 0;
-    }
-    return xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
-}
 
 InputEventFilter::InputEventFilter() = default;
 
@@ -388,7 +173,7 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
-        input()->updateKeyboardWindow();
+        input()->keyboard()->update();
         if (!keyboardSurfaceAllowed()) {
             // don't pass event to seat
             return true;
@@ -754,7 +539,7 @@ public:
             return false;
         }
         auto seat = waylandServer()->seat();
-        input()->updateKeyboardWindow();
+        input()->keyboard()->update();
         seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::KeyPress:
@@ -822,9 +607,9 @@ KWIN_SINGLETON_FACTORY(InputRedirection)
 
 InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
+    , m_keyboard(new KeyboardInputRedirection(this))
     , m_pointer(new PointerInputRedirection(this))
     , m_touch(new TouchInputRedirection(this))
-    , m_xkb(new Xkb(this))
     , m_shortcuts(new GlobalShortcutsManager(this))
 {
     qRegisterMetaType<KWin::InputRedirection::KeyboardKeyState>();
@@ -867,7 +652,6 @@ void InputRedirection::init()
 void InputRedirection::setupWorkspace()
 {
     if (waylandServer()) {
-        connect(workspace(), &Workspace::clientActivated, this, &InputRedirection::updateKeyboardWindow);
         using namespace KWayland::Server;
         FakeInputInterface *fakeInput = waylandServer()->display()->createFakeInput(this);
         fakeInput->create();
@@ -923,18 +707,17 @@ void InputRedirection::setupWorkspace()
                 if (!waylandServer()->seat()) {
                     return;
                 }
-                waylandServer()->seat()->updateKeyboardModifiers(m_xkb->getMods(XKB_STATE_MODS_DEPRESSED),
-                                                                 m_xkb->getMods(XKB_STATE_MODS_LATCHED),
-                                                                 m_xkb->getMods(XKB_STATE_MODS_LOCKED),
-                                                                 m_xkb->getGroup());
+                waylandServer()->seat()->updateKeyboardModifiers(m_keyboard->xkb()->getMods(XKB_STATE_MODS_DEPRESSED),
+                                                                 m_keyboard->xkb()->getMods(XKB_STATE_MODS_LATCHED),
+                                                                 m_keyboard->xkb()->getMods(XKB_STATE_MODS_LOCKED),
+                                                                 m_keyboard->xkb()->getGroup());
             }
         );
         connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
 
+        m_keyboard->init();
         m_pointer->init();
         m_touch->init();
-
-        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &InputRedirection::updateKeyboardWindow);
     }
     setupInputFilters();
 }
@@ -1006,7 +789,7 @@ void InputRedirection::setupLibInput()
         );
         connect(conn, &LibInput::Connection::pointerButtonChanged, m_pointer, &PointerInputRedirection::processButton);
         connect(conn, &LibInput::Connection::pointerAxisChanged, m_pointer, &PointerInputRedirection::processAxis);
-        connect(conn, &LibInput::Connection::keyChanged, this, &InputRedirection::processKeyboardKey);
+        connect(conn, &LibInput::Connection::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
         connect(conn, &LibInput::Connection::pointerMotion, this,
             [this] (QPointF delta, uint32_t time) {
                 m_pointer->processMotion(m_pointer->pos() + delta, time);
@@ -1098,87 +881,19 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
     m_pointer->processAxis(axis, delta, time);
 }
 
-void InputRedirection::updateKeyboardWindow()
-{
-    if (!workspace()) {
-        return;
-    }
-    if (auto seat = findSeat()) {
-        // TODO: this needs better integration
-        Toplevel *found = nullptr;
-        if (waylandServer()->isScreenLocked()) {
-            const ToplevelList &stacking = Workspace::self()->stackingOrder();
-            if (!stacking.isEmpty()) {
-                auto it = stacking.end();
-                do {
-                    --it;
-                    Toplevel *t = (*it);
-                    if (t->isDeleted()) {
-                        // a deleted window doesn't get mouse events
-                        continue;
-                    }
-                    if (!t->isLockScreen()) {
-                        continue;
-                    }
-                    if (!t->readyForPainting()) {
-                        continue;
-                    }
-                    found = t;
-                    break;
-                } while (it != stacking.begin());
-            }
-        } else {
-            found = workspace()->activeClient();
-        }
-        if (found && found->surface()) {
-            if (found->surface() != seat->focusedKeyboardSurface()) {
-                seat->setFocusedKeyboardSurface(found->surface());
-            }
-        } else {
-            seat->setFocusedKeyboardSurface(nullptr);
-        }
-    }
-}
-
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
 {
-    emit keyStateChanged(key, state);
-    const Qt::KeyboardModifiers oldMods = keyboardModifiers();
-    m_xkb->updateKey(key, state);
-    if (oldMods != keyboardModifiers()) {
-        emit keyboardModifiersChanged(keyboardModifiers(), oldMods);
-    }
-    const xkb_keysym_t keySym = m_xkb->toKeysym(key);
-    QKeyEvent event((state == KeyboardKeyPressed) ? QEvent::KeyPress : QEvent::KeyRelease,
-                    m_xkb->toQtKey(keySym),
-                    m_xkb->modifiers(),
-                    key,
-                    keySym,
-                    0,
-                    m_xkb->toString(m_xkb->toKeysym(key)));
-    event.setTimestamp(time);
-
-    for (auto it = m_filters.constBegin(), end = m_filters.constEnd(); it != end; it++) {
-        if ((*it)->keyEvent(&event)) {
-            return;
-        }
-    }
+    m_keyboard->processKey(key, state, time);
 }
 
 void InputRedirection::processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
 {
-    // TODO: send to proper Client and also send when active Client changes
-    Qt::KeyboardModifiers oldMods = keyboardModifiers();
-    m_xkb->updateModifiers(modsDepressed, modsLatched, modsLocked, group);
-    if (oldMods != keyboardModifiers()) {
-        emit keyboardModifiersChanged(keyboardModifiers(), oldMods);
-    }
+    m_keyboard->processModifiers(modsDepressed, modsLatched, modsLocked, group);
 }
 
 void InputRedirection::processKeymapChange(int fd, uint32_t size)
 {
-    // TODO: should we pass the keymap to our Clients? Or only to the currently active one and update
-    m_xkb->installKeymap(fd, size);
+    m_keyboard->processKeymapChange(fd, size);
 }
 
 void InputRedirection::processTouchDown(qint32 id, const QPointF &pos, quint32 time)
@@ -1269,7 +984,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
 
 Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
 {
-    return m_xkb->modifiers();
+    return m_keyboard->modifiers();
 }
 
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
