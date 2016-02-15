@@ -94,7 +94,7 @@ public:
     void checkOutputsAreOn();
 
 public Q_SLOTS:
-    void turnOututsOn();
+    void turnOutputsOn();
 
 
 Q_SIGNALS:

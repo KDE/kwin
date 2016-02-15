@@ -96,7 +96,7 @@ bool DpmsInputEventFilter::keyEvent(QKeyEvent *event)
 void DpmsInputEventFilter::notify()
 {
     // queued to not modify the list of event filters while filtering
-    QMetaObject::invokeMethod(m_backend, "turnOututsOn", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(m_backend, "turnOutputsOn", Qt::QueuedConnection);
 }
 
 DrmBackend::DrmBackend(QObject *parent)
@@ -154,7 +154,7 @@ void DrmBackend::outputWentOff()
     input()->prepandInputEventFilter(m_dpmsFilter.data());
 }
 
-void DrmBackend::turnOututsOn()
+void DrmBackend::turnOutputsOn()
 {
     m_dpmsFilter.reset();
     for (auto it = m_outputs.constBegin(), end = m_outputs.constEnd(); it != end; it++) {
