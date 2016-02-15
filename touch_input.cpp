@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "toplevel.h"
 #include "wayland_server.h"
+#include "workspace.h"
 // KWayland
 #include <KWayland/Server/seat_interface.h>
 // screenlocker
@@ -49,6 +50,8 @@ void TouchInputRedirection::init()
             update();
         }
     );
+    connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
+    connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
 }
 
 void TouchInputRedirection::update(const QPointF &pos)
