@@ -128,6 +128,14 @@ public:
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);
 
+    /**
+     * Adds the @p filter to the list of event filters and makes it the first
+     * event filter in processing.
+     *
+     * Note: the event filter will get events before the lock screen can get them, thus
+     * this is a security relevant method.
+     **/
+    void prepandInputEventFilter(InputEventFilter *filter);
     void uninstallInputEventFilter(InputEventFilter *filter);
     Toplevel *findToplevel(const QPoint &pos);
     GlobalShortcutsManager *shortcuts() const {
@@ -230,7 +238,7 @@ private:
  * Deleting an instance of InputEventFilter automatically uninstalls it from
  * InputRedirection.
  **/
-class InputEventFilter
+class KWIN_EXPORT InputEventFilter
 {
 public:
     InputEventFilter();

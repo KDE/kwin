@@ -626,6 +626,11 @@ void InputRedirection::installInputEventFilter(InputEventFilter *filter)
     m_filters << filter;
 }
 
+void InputRedirection::prepandInputEventFilter(InputEventFilter *filter)
+{
+    m_filters.prepend(filter);
+}
+
 void InputRedirection::uninstallInputEventFilter(InputEventFilter *filter)
 {
     m_filters.removeAll(filter);

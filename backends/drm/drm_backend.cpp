@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_backend.h"
 #include "composite.h"
 #include "cursor.h"
-#include "input.h"
 #include "logging.h"
 #include "logind.h"
 #include "scene_qpainter_drm_backend.h"
@@ -64,10 +63,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+DpmsInputEventFilter::DpmsInputEventFilter(DrmBackend *backend)
+    : InputEventFilter()
+    , m_backend(backend)
+{
+}
+
+DpmsInputEventFilter::~DpmsInputEventFilter() = default;
+
+bool DpmsInputEventFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(nativeButton)
+    notify();
+    return true;
+}
+
+bool DpmsInputEventFilter::wheelEvent(QWheelEvent *event)
+{
+    Q_UNUSED(event)
+    notify();
+    return true;
+}
+
+bool DpmsInputEventFilter::keyEvent(QKeyEvent *event)
+{
+    Q_UNUSED(event)
+    notify();
+    return true;
+}
+
+void DpmsInputEventFilter::notify()
+{
+    // queued to not modify the list of event filters while filtering
+    QMetaObject::invokeMethod(m_backend, "turnOututsOn", Qt::QueuedConnection);
+}
+
 DrmBackend::DrmBackend(QObject *parent)
     : AbstractBackend(parent)
     , m_udev(new Udev)
     , m_udevMonitor(m_udev->monitor())
+    , m_dpmsFilter()
 {
     handleOutputs();
     m_cursor[0] = nullptr;
@@ -106,6 +142,40 @@ void DrmBackend::init()
     }
     auto v = VirtualTerminal::create(this);
     connect(v, &VirtualTerminal::activeChanged, this, &DrmBackend::activate);
+}
+
+void DrmBackend::outputWentOff()
+{
+    if (!m_dpmsFilter.isNull()) {
+        // already another output is off
+        return;
+    }
+    m_dpmsFilter.reset(new DpmsInputEventFilter(this));
+    input()->prepandInputEventFilter(m_dpmsFilter.data());
+}
+
+void DrmBackend::turnOututsOn()
+{
+    m_dpmsFilter.reset();
+    for (auto it = m_outputs.constBegin(), end = m_outputs.constEnd(); it != end; it++) {
+        (*it)->setDpms(DrmOutput::DpmsMode::On);
+    }
+}
+
+void DrmBackend::checkOutputsAreOn()
+{
+    if (m_dpmsFilter.isNull()) {
+        // already disabled, all outputs are on
+        return;
+    }
+    for (auto it = m_outputs.constBegin(), end = m_outputs.constEnd(); it != end; it++) {
+        if (!(*it)->isDpmsEnabled()) {
+            // dpms still disabled, need to keep the filter
+            return;
+        }
+    }
+    // all outputs are on, disable the filter
+    m_dpmsFilter.reset();
 }
 
 void DrmBackend::activate(bool active)
@@ -996,6 +1066,9 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
     if (m_dpms.isNull()) {
         return;
     }
+    if (mode == m_dpmsMode) {
+        return;
+    }
     if (drmModeConnectorSetProperty(m_backend->fd(), m_connector, m_dpms->prop_id, uint64_t(mode)) != 0) {
         qCWarning(KWIN_DRM) << "Setting DPMS failed";
         return;
@@ -1006,25 +1079,14 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
     }
     emit dpmsChanged();
     if (m_dpmsMode != DpmsMode::On) {
-        connect(input(), &InputRedirection::globalPointerChanged, this, &DrmOutput::reenableDpms);
-        connect(input(), &InputRedirection::pointerButtonStateChanged, this, &DrmOutput::reenableDpms);
-        connect(input(), &InputRedirection::pointerAxisChanged, this, &DrmOutput::reenableDpms);
-        connect(input(), &InputRedirection::keyStateChanged, this, &DrmOutput::reenableDpms);
+        m_backend->outputWentOff();
     } else {
-        disconnect(input(), &InputRedirection::globalPointerChanged, this, &DrmOutput::reenableDpms);
-        disconnect(input(), &InputRedirection::pointerButtonStateChanged, this, &DrmOutput::reenableDpms);
-        disconnect(input(), &InputRedirection::pointerAxisChanged, this, &DrmOutput::reenableDpms);
-        disconnect(input(), &InputRedirection::keyStateChanged, this, &DrmOutput::reenableDpms);
+        m_backend->checkOutputsAreOn();
         blank();
         if (Compositor *compositor = Compositor::self()) {
             compositor->addRepaintFull();
         }
     }
-}
-
-void DrmOutput::reenableDpms()
-{
-    setDpms(DpmsMode::On);
 }
 
 QString DrmOutput::name() const
