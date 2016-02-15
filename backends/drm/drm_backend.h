@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_backend.h"
 #include "input.h"
 
+#include <QElapsedTimer>
 #include <QImage>
 #include <QPointer>
 #include <QSize>
@@ -261,10 +262,16 @@ public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
     bool wheelEvent(QWheelEvent *event) override;
     bool keyEvent(QKeyEvent *event) override;
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchUp(quint32 id, quint32 time) override;
 
 private:
     void notify();
     DrmBackend *m_backend;
+    QElapsedTimer m_doubleTapTimer;
+    QVector<qint32> m_touchPoints;
+    bool m_secondTap = false;
 };
 
 }
