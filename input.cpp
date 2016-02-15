@@ -406,7 +406,7 @@ public:
         }
         return true;
     }
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) {
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -420,7 +420,7 @@ public:
         }
         return true;
     }
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) {
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -434,7 +434,7 @@ public:
         }
         return true;
     }
-    bool touchUp(quint32 id, quint32 time) {
+    bool touchUp(quint32 id, quint32 time) override {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
