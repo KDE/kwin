@@ -45,6 +45,7 @@ class Toplevel;
 class Xkb;
 class InputEventFilter;
 class PointerInputRedirection;
+class TouchInputRedirection;
 
 namespace Decoration
 {
@@ -144,18 +145,17 @@ public:
     GlobalShortcutsManager *shortcuts() const {
         return m_shortcuts;
     }
-    void insertTouchId(quint32 internalId, qint32 kwaylandId);
-    qint32 touchId(quint32 internalId);
-    void removeTouchId(quint32 internalId);
 
     void updateKeyboardWindow();
-    void updateTouchWindow(const QPointF &pos);
 
     QVector<InputEventFilter*> filters() const {
         return m_filters;
     }
     PointerInputRedirection *pointer() const {
         return m_pointer;
+    }
+    TouchInputRedirection *touch() const {
+        return m_touch;
     }
 
 Q_SIGNALS:
@@ -201,21 +201,13 @@ private:
     void setupLibInput();
     void setupLibInputWithScreens();
     void registerShortcutForGlobalAccelTimestamp(QAction *action);
-    void updateFocusedTouchPosition();
     void setupWorkspace();
     void reconfigure();
     void setupInputFilters();
     void installInputEventFilter(InputEventFilter *filter);
     PointerInputRedirection *m_pointer;
+    TouchInputRedirection *m_touch;
     QScopedPointer<Xkb> m_xkb;
-    /**
-     * @brief The Toplevel which currently receives touch events
-     */
-    QWeakPointer<Toplevel> m_touchWindow;
-    /**
-     * external/kwayland
-     **/
-    QHash<qint32, qint32> m_touchIdMapper;
 
     GlobalShortcutsManager *m_shortcuts;
 

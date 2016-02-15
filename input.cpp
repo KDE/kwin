@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "input.h"
 #include "pointer_input.h"
+#include "touch_input.h"
 #include "client.h"
 #include "effects.h"
 #include "globalshortcuts.h"
@@ -412,10 +413,10 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (!seat->isTouchSequence()) {
-            input()->updateTouchWindow(pos);
+            input()->touch()->update(pos);
         }
         if (touchSurfaceAllowed()) {
-            input()->insertTouchId(id, seat->touchDown(pos));
+            input()->touch()->insertId(id, seat->touchDown(pos));
         }
         return true;
     }
@@ -426,7 +427,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
-            const qint32 kwaylandId = input()->touchId(id);
+            const qint32 kwaylandId = input()->touch()->mappedId(id);
             if (kwaylandId != -1) {
                 seat->touchMove(kwaylandId, pos);
             }
@@ -440,10 +441,10 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
-            const qint32 kwaylandId = input()->touchId(id);
+            const qint32 kwaylandId = input()->touch()->mappedId(id);
             if (kwaylandId != -1) {
                 seat->touchUp(kwaylandId);
-                input()->removeTouchId(id);
+                input()->touch()->removeId(id);
             }
         }
         return true;
@@ -774,8 +775,8 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (!seat->isTouchSequence()) {
-            input()->updateTouchWindow(pos);
-            if (AbstractClient *c = dynamic_cast<AbstractClient*>(input()->m_touchWindow.data())) {
+            input()->touch()->update(pos);
+            if (AbstractClient *c = dynamic_cast<AbstractClient*>(input()->touch()->window().data())) {
                 // perform same handling as if it were a left click
                 bool wasAction = false;
                 const Options::MouseCommand command = c->getMouseCommand(Qt::LeftButton, &wasAction);
@@ -787,7 +788,7 @@ public:
                 }
             }
         }
-        input()->insertTouchId(id, seat->touchDown(pos));
+        input()->touch()->insertId(id, seat->touchDown(pos));
         return true;
     }
     bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
@@ -796,7 +797,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        const qint32 kwaylandId = input()->touchId(id);
+        const qint32 kwaylandId = input()->touch()->mappedId(id);
         if (kwaylandId != -1) {
             seat->touchMove(kwaylandId, pos);
         }
@@ -808,10 +809,10 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        const qint32 kwaylandId = input()->touchId(id);
+        const qint32 kwaylandId = input()->touch()->mappedId(id);
         if (kwaylandId != -1) {
             seat->touchUp(kwaylandId);
-            input()->removeTouchId(id);
+            input()->touch()->removeId(id);
         }
         return true;
     }
@@ -822,6 +823,7 @@ KWIN_SINGLETON_FACTORY(InputRedirection)
 InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
     , m_pointer(new PointerInputRedirection(this))
+    , m_touch(new TouchInputRedirection(this))
     , m_xkb(new Xkb(this))
     , m_shortcuts(new GlobalShortcutsManager(this))
 {
@@ -930,15 +932,9 @@ void InputRedirection::setupWorkspace()
         connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
 
         m_pointer->init();
+        m_touch->init();
 
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &InputRedirection::updateKeyboardWindow);
-        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
-            [this] {
-                cancelTouch();
-                // position doesn't matter
-                updateTouchWindow(QPointF());
-            }
-        );
     }
     setupInputFilters();
 }
@@ -1022,11 +1018,11 @@ void InputRedirection::setupLibInput()
                 m_pointer->processMotion(screen, time);
             }
         );
-        connect(conn, &LibInput::Connection::touchDown, this, &InputRedirection::processTouchDown);
-        connect(conn, &LibInput::Connection::touchUp, this, &InputRedirection::processTouchUp);
-        connect(conn, &LibInput::Connection::touchMotion, this, &InputRedirection::processTouchMotion);
-        connect(conn, &LibInput::Connection::touchCanceled, this, &InputRedirection::cancelTouch);
-        connect(conn, &LibInput::Connection::touchFrame, this, &InputRedirection::touchFrame);
+        connect(conn, &LibInput::Connection::touchDown, m_touch, &TouchInputRedirection::processDown);
+        connect(conn, &LibInput::Connection::touchUp, m_touch, &TouchInputRedirection::processUp);
+        connect(conn, &LibInput::Connection::touchMotion, m_touch, &TouchInputRedirection::processMotion);
+        connect(conn, &LibInput::Connection::touchCanceled, m_touch, &TouchInputRedirection::cancel);
+        connect(conn, &LibInput::Connection::touchFrame, m_touch, &TouchInputRedirection::frame);
         if (screens()) {
             setupLibInputWithScreens();
         } else {
@@ -1085,19 +1081,6 @@ void InputRedirection::setupLibInputWithScreens()
         }
     );
 #endif
-}
-
-void InputRedirection::updateFocusedTouchPosition()
-{
-    if (m_touchWindow.isNull()) {
-        return;
-    }
-    if (auto seat = findSeat()) {
-        if (m_touchWindow.data()->surface() != seat->focusedTouchSurface()) {
-            return;
-        }
-        seat->setFocusedTouchSurfacePosition(m_touchWindow.data()->pos());
-    }
 }
 
 void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
@@ -1200,92 +1183,27 @@ void InputRedirection::processKeymapChange(int fd, uint32_t size)
 
 void InputRedirection::processTouchDown(qint32 id, const QPointF &pos, quint32 time)
 {
-    for (auto it = m_filters.constBegin(), end = m_filters.constEnd(); it != end; it++) {
-        if ((*it)->touchDown(id, pos, time)) {
-            return;
-        }
-    }
+    m_touch->processDown(id, pos, time);
 }
-
-void InputRedirection::updateTouchWindow(const QPointF &pos)
-{
-    // TODO: handle pointer grab aka popups
-    Toplevel *t = findToplevel(pos.toPoint());
-    auto oldWindow = m_touchWindow;
-    if (!oldWindow.isNull() && t == oldWindow.data()) {
-        return;
-    }
-    if (auto seat = findSeat()) {
-        // disconnect old surface
-        if (oldWindow) {
-            disconnect(oldWindow.data(), &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedTouchPosition);
-        }
-        if (t && t->surface()) {
-            seat->setFocusedTouchSurface(t->surface(), t->pos());
-            connect(t, &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedTouchPosition);
-        } else {
-            seat->setFocusedTouchSurface(nullptr);
-            t = nullptr;
-        }
-    }
-    if (!t) {
-        m_touchWindow.clear();
-        return;
-    }
-    m_touchWindow = QWeakPointer<Toplevel>(t);
-}
-
 
 void InputRedirection::processTouchUp(qint32 id, quint32 time)
 {
-    for (auto it = m_filters.constBegin(), end = m_filters.constEnd(); it != end; it++) {
-        if ((*it)->touchUp(id, time)) {
-            return;
-        }
-    }
+    m_touch->processUp(id, time);
 }
 
 void InputRedirection::processTouchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
-    for (auto it = m_filters.constBegin(), end = m_filters.constEnd(); it != end; it++) {
-        if ((*it)->touchMotion(id, pos, time)) {
-            return;
-        }
-    }
+    m_touch->processMotion(id, pos, time);
 }
 
 void InputRedirection::cancelTouch()
 {
-    if (auto seat = findSeat()) {
-        seat->cancelTouchSequence();
-    }
-    m_touchIdMapper.clear();
+    m_touch->cancel();
 }
 
 void InputRedirection::touchFrame()
 {
-    if (auto seat = findSeat()) {
-        seat->touchFrame();
-    }
-}
-
-void InputRedirection::insertTouchId(quint32 internalId, qint32 kwaylandId)
-{
-    m_touchIdMapper.insert(internalId, kwaylandId);
-}
-
-qint32 InputRedirection::touchId(quint32 internalId)
-{
-    auto it = input()->m_touchIdMapper.constFind(internalId);
-    if (it != input()->m_touchIdMapper.constEnd()) {
-        return it.value();
-    }
-    return -1;
-}
-
-void InputRedirection::removeTouchId(quint32 internalId)
-{
-    m_touchIdMapper.remove(internalId);
+    m_touch->frame();
 }
 
 Qt::MouseButtons InputRedirection::qtButtonStates() const
