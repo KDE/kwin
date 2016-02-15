@@ -144,7 +144,7 @@ void KWinCompositingSettings::init()
                 m_form.tearingWarning->animatedShow();
             } else if (index == 4) {
                 // re-use screen content
-                m_form.tearingWarning->setText(i18n("\"Re-use screen content\" causes performance severe problems on MESA drivers."));
+                m_form.tearingWarning->setText(i18n("\"Re-use screen content\" causes severe performance problems on MESA drivers."));
                 m_form.tearingWarning->animatedShow();
             } else {
                 m_form.tearingWarning->animatedHide();
