@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 
 #include <QElapsedTimer>
+#include <QPointer>
 
 namespace KWayland
 {

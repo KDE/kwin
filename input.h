@@ -21,16 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_INPUT_H
 #include <kwinglobals.h>
 #include <QAction>
-#include <QHash>
 #include <QObject>
 #include <QPoint>
-#include <QPointer>
-#include <QEvent>
-#include <QWeakPointer>
 #include <config-kwin.h>
 
 class KGlobalAccelInterface;
 class QKeySequence;
+class QMouseEvent;
+class QKeyEvent;
+class QWheelEvent;
 
 namespace KWin
 {
@@ -40,11 +39,6 @@ class InputEventFilter;
 class KeyboardInputRedirection;
 class PointerInputRedirection;
 class TouchInputRedirection;
-
-namespace Decoration
-{
-class DecoratedClientImpl;
-}
 
 namespace LibInput
 {

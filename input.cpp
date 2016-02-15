@@ -46,22 +46,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <decorations/decoratedclient.h>
 #include <KDecoration2/Decoration>
 // Qt
-#include <QDBusMessage>
-#include <QDBusPendingCall>
 #include <QKeyEvent>
-#include <QMouseEvent>
-#include <QTemporaryFile>
-// KDE
-#include <kkeyserver.h>
-//screenlocker
-#include <KScreenLocker/KsldApp>
 
 #include <xkbcommon/xkbcommon.h>
-#include <xkbcommon/xkbcommon-keysyms.h>
-// system
-#include <linux/input.h>
-#include <sys/mman.h>
-#include <unistd.h>
 
 namespace KWin
 {
