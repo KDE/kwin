@@ -162,7 +162,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
         }
 
         if (to) {
-            if (from->isValid()) {
+            if (to->isValid()) {
                 RELATIVE_XY(Target);
                 to->set(relative[0] ? (*to)[0] * area.width() : (*to)[0],
                         relative[1] ? (*to)[1] * area.height() : (*to)[1]);
@@ -184,7 +184,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
         }
 
         if (to) {
-            if (from->isValid()) {
+            if (to->isValid()) {
                 RELATIVE_XY(Target);
                 to->set(relative[0] ? (*to)[0] * area.width() : (*to)[0],
                         relative[1] ? (*to)[1] * area.height() : (*to)[1]);
