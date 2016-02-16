@@ -173,11 +173,12 @@ public:
 
         // continue normal processing
         input()->keyboard()->update();
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
         if (!keyboardSurfaceAllowed()) {
             // don't pass event to seat
             return true;
         }
-        auto seat = waylandServer()->seat();
         switch (event->type()) {
         case QEvent::KeyPress:
             seat->keyPressed(event->nativeScanCode());
