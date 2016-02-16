@@ -45,6 +45,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/seat_interface.h>
 #include <decorations/decoratedclient.h>
 #include <KDecoration2/Decoration>
+//screenlocker
+#include <KScreenLocker/KsldApp>
 // Qt
 #include <QKeyEvent>
 
@@ -160,6 +162,16 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
+        // send event to KSldApp for global accel
+        // if event is set to accepted it means a whitelisted shortcut was triggered
+        // in that case we filter it out and don't process it further
+        event->setAccepted(false);
+        QCoreApplication::sendEvent(ScreenLocker::KSldApp::self(), event);
+        if (event->isAccepted()) {
+            return true;
+        }
+
+        // continue normal processing
         input()->keyboard()->update();
         if (!keyboardSurfaceAllowed()) {
             // don't pass event to seat
