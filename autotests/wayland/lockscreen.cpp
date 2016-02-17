@@ -111,12 +111,16 @@ Q_SIGNALS:
     QVERIFY(waylandServer()->isScreenLocked());
 
 #define UNLOCK \
-    QCOMPARE(lockStateChangedSpy.count(), 1); \
+    int expectedLockCount = 1; \
+    if (ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked) { \
+        expectedLockCount = 2; \
+    } \
+    QCOMPARE(lockStateChangedSpy.count(), expectedLockCount); \
     unlock(); \
-    if (lockStateChangedSpy.count() < 2) { \
+    if (lockStateChangedSpy.count() < expectedLockCount + 1) { \
         QVERIFY(lockStateChangedSpy.wait()); \
     } \
-    QCOMPARE(lockStateChangedSpy.count(), 2); \
+    QCOMPARE(lockStateChangedSpy.count(), expectedLockCount + 1); \
     QVERIFY(!waylandServer()->isScreenLocked());
 
 #define MOTION(target) \
