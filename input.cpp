@@ -385,13 +385,27 @@ class InternalWindowEventFilter : public InputEventFilter {
         return e.isAccepted();
     }
     bool keyEvent(QKeyEvent *event) override {
-        auto internal = input()->pointer()->internalWindow();
-        if (!internal) {
+        const auto &internalClients = waylandServer()->internalClients();
+        if (internalClients.isEmpty()) {
+            return false;
+        }
+        QWindow *found = nullptr;
+        auto it = internalClients.end();
+        do {
+            it--;
+            if (QWindow *w = (*it)->internalWindow()) {
+                if (!w->isVisible()) {
+                    continue;
+                }
+                found = w;
+                break;
+            }
+        } while (it != internalClients.begin());
+        if (!found) {
             return false;
         }
         event->setAccepted(false);
-        QCoreApplication::sendEvent(internal.data(), event);
-        return true;
+        return QCoreApplication::sendEvent(found, event);
     }
 };
 
