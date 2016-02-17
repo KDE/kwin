@@ -1445,8 +1445,8 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
 void AbstractClient::processDecorationButtonRelease(QMouseEvent *event)
 {
     if (isDecorated()) {
-        if (!event->isAccepted() && decoration()->titleBar().contains(event->pos()) && event->button() == Qt::LeftButton) {
-            m_decoration.doubleClickTimer.start();
+        if (event->isAccepted() || !decoration()->titleBar().contains(event->pos())) {
+            invalidateDecorationDoubleClickTimer(); // click was for the deco and shall not init a doubleclick
         }
     }
 
