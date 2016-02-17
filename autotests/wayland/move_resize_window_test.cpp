@@ -36,6 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
+#include <linux/input.h>
+
 Q_DECLARE_METATYPE(KWin::AbstractClient::QuickTileMode)
 Q_DECLARE_METATYPE(KWin::MaximizeMode)
 
@@ -58,6 +60,8 @@ private Q_SLOTS:
     void testPackAgainstClient();
     void testGrowShrink_data();
     void testGrowShrink();
+    void testPointerMoveEnd_data();
+    void testPointerMoveEnd();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -446,6 +450,82 @@ void MoveResizeWindowTest::testGrowShrink()
     m_connection->flush();
     QVERIFY(geometryChangedSpy.wait());
     QTEST(c->geometry(), "expectedGeometry");
+}
+
+void MoveResizeWindowTest::testPointerMoveEnd_data()
+{
+    QTest::addColumn<int>("additionalButton");
+
+    QTest::newRow("BTN_RIGHT")   << BTN_RIGHT;
+    QTest::newRow("BTN_MIDDLE")  << BTN_MIDDLE;
+    QTest::newRow("BTN_SIDE")    << BTN_SIDE;
+    QTest::newRow("BTN_EXTRA")   << BTN_EXTRA;
+    QTest::newRow("BTN_FORWARD") << BTN_FORWARD;
+    QTest::newRow("BTN_BACK")    << BTN_BACK;
+    QTest::newRow("BTN_TASK")    << BTN_TASK;
+    for (int i=BTN_TASK + 1; i < BTN_JOYSTICK; i++) {
+        QTest::newRow(QByteArray::number(i, 16).constData()) << i;
+    }
+}
+
+void MoveResizeWindowTest::testPointerMoveEnd()
+{
+    // this test verifies that moving a window through pointer only ends if all buttons are released
+    using namespace KWayland::Client;
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangeSpy.isValid());
+    // let's render
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    m_connection->flush();
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *c = workspace()->activeClient();
+    QVERIFY(c);
+    QVERIFY(!c->isMove());
+
+    // let's trigger the left button
+    quint32 timestamp = 1;
+    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QVERIFY(!c->isMove());
+    workspace()->slotWindowMove();
+    QVERIFY(c->isMove());
+
+    // let's press another button
+    QFETCH(int, additionalButton);
+    waylandServer()->backend()->pointerButtonPressed(additionalButton, timestamp++);
+    QVERIFY(c->isMove());
+
+    // release the left button, should still have the window moving
+    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QEXPECT_FAIL("BTN_SIDE", "Not yet mapped", Continue);
+    QEXPECT_FAIL("BTN_EXTRA", "Not yet mapped", Continue);
+    QEXPECT_FAIL("BTN_TASK", "Not yet mapped", Continue);
+    QEXPECT_FAIL("118", "Not yet mapped", Continue);
+    QEXPECT_FAIL("119", "Not yet mapped", Continue);
+    QEXPECT_FAIL("11a", "Not yet mapped", Continue);
+    QEXPECT_FAIL("11b", "Not yet mapped", Continue);
+    QEXPECT_FAIL("11c", "Not yet mapped", Continue);
+    QEXPECT_FAIL("11d", "Not yet mapped", Continue);
+    QEXPECT_FAIL("11e", "Not yet mapped", Continue);
+    QEXPECT_FAIL("11f", "Not yet mapped", Continue);
+    QVERIFY(c->isMove());
+
+    // but releasing the other button should now end moving
+    waylandServer()->backend()->pointerButtonReleased(additionalButton, timestamp++);
+    QVERIFY(!c->isMove());
 }
 
 }
