@@ -41,6 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Server/seat_interface.h>
 
+#include <linux/input.h>
+
 namespace KWin
 {
 
@@ -56,6 +58,8 @@ private Q_SLOTS:
     void testWarpingUpdatesFocus();
     void testWarpingGeneratesPointerMotion();
     void testUpdateFocusAfterScreenChange();
+    void testModifierClickUnrestrictedMove_data();
+    void testModifierClickUnrestrictedMove();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -78,6 +82,8 @@ void PointerInputTest::initTestCase()
     waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
     QMetaObject::invokeMethod(waylandServer()->backend(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     waylandServer()->init(s_socketName.toLocal8Bit());
+
+    kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
@@ -308,6 +314,87 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     // and we should get an enter event
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
+}
+
+void PointerInputTest::testModifierClickUnrestrictedMove_data()
+{
+    QTest::addColumn<int>("modifierKey");
+    QTest::addColumn<int>("mouseButton");
+    QTest::addColumn<QString>("modKey");
+
+    const QString alt = QStringLiteral("Alt");
+    const QString meta = QStringLiteral("Meta");
+
+    QTest::newRow("Left Alt + Left Click")    << KEY_LEFTALT  << BTN_LEFT   << alt;
+    QTest::newRow("Left Alt + Right Click")   << KEY_LEFTALT  << BTN_RIGHT  << alt;
+    QTest::newRow("Left Alt + Middle Click")  << KEY_LEFTALT  << BTN_MIDDLE << alt;
+    QTest::newRow("Right Alt + Left Click")   << KEY_RIGHTALT << BTN_LEFT   << alt;
+    QTest::newRow("Right Alt + Right Click")  << KEY_RIGHTALT << BTN_RIGHT  << alt;
+    QTest::newRow("Right Alt + Middle Click") << KEY_RIGHTALT << BTN_MIDDLE << alt;
+    // now everything with meta
+    QTest::newRow("Left Meta + Left Click")    << KEY_LEFTMETA  << BTN_LEFT   << meta;
+    QTest::newRow("Left Meta + Right Click")   << KEY_LEFTMETA  << BTN_RIGHT  << meta;
+    QTest::newRow("Left Meta + Middle Click")  << KEY_LEFTMETA  << BTN_MIDDLE << meta;
+    QTest::newRow("Right Meta + Left Click")   << KEY_RIGHTMETA << BTN_LEFT   << meta;
+    QTest::newRow("Right Meta + Right Click")  << KEY_RIGHTMETA << BTN_RIGHT  << meta;
+    QTest::newRow("Right Meta + Middle Click") << KEY_RIGHTMETA << BTN_MIDDLE << meta;
+}
+
+void PointerInputTest::testModifierClickUnrestrictedMove()
+{
+    // this test ensures that Alt+mouse button press triggers unrestricted move
+    using namespace KWayland::Client;
+    // create pointer and signal spy for button events
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy buttonSpy(pointer, &Pointer::buttonStateChanged);
+    QVERIFY(buttonSpy.isValid());
+
+    // first modify the config for this run
+    QFETCH(QString, modKey);
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", modKey);
+    group.writeEntry("CommandAll1", "Move");
+    group.writeEntry("CommandAll2", "Move");
+    group.writeEntry("CommandAll3", "Move");
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // create a window
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = m_shell->createSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+
+    // move cursor on window
+    Cursor::setPos(window->geometry().center());
+
+    // simulate modifier+click
+    quint32 timestamp = 1;
+    QFETCH(int, modifierKey);
+    QFETCH(int, mouseButton);
+    waylandServer()->backend()->keyboardKeyPressed(modifierKey, timestamp++);
+    QVERIFY(!window->isMove());
+    waylandServer()->backend()->pointerButtonPressed(mouseButton, timestamp++);
+    QVERIFY(window->isMove());
+    // release modifier should not change it
+    waylandServer()->backend()->keyboardKeyReleased(modifierKey, timestamp++);
+    QVERIFY(window->isMove());
+    // but releasing the key should end move/resize
+    waylandServer()->backend()->pointerButtonReleased(mouseButton, timestamp++);
+    QVERIFY(!window->isMove());
+
+    // all of that should not have triggered button events on the surface
+    QCOMPARE(buttonSpy.count(), 0);
+    // also waiting shouldn't give us the event
+    QVERIFY(!buttonSpy.wait(100));
 }
 
 }

@@ -520,7 +520,26 @@ public:
             bool passThrough = true;
             if (AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->window().data())) {
                 bool wasAction = false;
-                const Options::MouseCommand command = c->getMouseCommand(event->button(), &wasAction);
+                Options::MouseCommand command = Options::MouseNothing;
+                if (event->modifiers() == options->commandAllModifier()) {
+                    wasAction = true;
+                    switch (event->button()) {
+                    case Qt::LeftButton:
+                        command = options->commandAll1();
+                        break;
+                    case Qt::MiddleButton:
+                        command = options->commandAll2();
+                        break;
+                    case Qt::RightButton:
+                        command = options->commandAll3();
+                        break;
+                    default:
+                        // nothing
+                        break;
+                    }
+                } else {
+                    c->getMouseCommand(event->button(), &wasAction);
+                }
                 if (wasAction) {
                     passThrough = c->performMouseCommand(command, event->globalPos());
                 }
