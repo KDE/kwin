@@ -330,6 +330,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     plugins.writeEntry(kwin4 + QStringLiteral("translucencyEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("eyeonscreenEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("windowapertureEnabled"), false);
+    plugins.writeEntry(kwin4 + QStringLiteral("morphingpopupsEnabled"), false);
     plugins.sync();
 
     loader.setConfig(config);
