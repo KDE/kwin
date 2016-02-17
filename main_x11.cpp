@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-kwin.h>
 // kwin
 #include "sm.h"
+#include "workspace.h"
 #include "xcbutils.h"
 
 // KDE
@@ -189,6 +190,13 @@ void ApplicationX11::performStartup()
     owner->claim(m_replace || wasCrash(), true);
 
     createAtoms();
+}
+
+bool ApplicationX11::notify(QObject* o, QEvent* e)
+{
+    if (Workspace::self()->workspaceEvent(e))
+        return true;
+    return QApplication::notify(o, e);
 }
 
 } // namespace

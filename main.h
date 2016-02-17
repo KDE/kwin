@@ -205,7 +205,6 @@ protected:
     }
     void destroyAtoms();
 
-    bool notify(QObject* o, QEvent* e);
     static void crashHandler(int signal);
 
 protected:
