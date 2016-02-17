@@ -48,12 +48,43 @@ static Qt::MouseButton buttonToQtMouseButton(uint32_t button)
         return Qt::MiddleButton;
     case BTN_RIGHT:
         return Qt::RightButton;
+    case BTN_SIDE:
+        // in QtWayland mapped like that
+        return Qt::ExtraButton1;
+    case BTN_EXTRA:
+        // in QtWayland mapped like that
+        return Qt::ExtraButton2;
     case BTN_BACK:
-        return Qt::XButton1;
+        return Qt::BackButton;
     case BTN_FORWARD:
-        return Qt::XButton2;
+        return Qt::ForwardButton;
+    case BTN_TASK:
+        return Qt::TaskButton;
+        // mapped like that in QtWayland
+    case 0x118:
+        return Qt::ExtraButton6;
+    case 0x119:
+        return Qt::ExtraButton7;
+    case 0x11a:
+        return Qt::ExtraButton8;
+    case 0x11b:
+        return Qt::ExtraButton9;
+    case 0x11c:
+        return Qt::ExtraButton10;
+    case 0x11d:
+        return Qt::ExtraButton11;
+    case 0x11e:
+        return Qt::ExtraButton12;
+    case 0x11f:
+        return Qt::ExtraButton13;
     }
-    return Qt::NoButton;
+    // all other values get mapped to ExtraButton24
+    // this is actually incorrect but doesn't matter in our usage
+    // KWin internally doesn't use these high extra buttons anyway
+    // it's only needed for recognizing whether buttons are pressed
+    // if multiple buttons are mapped to the value the evaluation whether
+    // buttons are pressed is correct and that's all we care about.
+    return Qt::ExtraButton24;
 }
 
 static bool screenContainsPos(const QPointF &pos)
@@ -357,11 +388,7 @@ void PointerInputRedirection::updateButton(uint32_t button, InputRedirection::Po
         if (it.value() == InputRedirection::PointerButtonReleased) {
             continue;
         }
-        Qt::MouseButton button = buttonToQtMouseButton(it.key());
-        // TODO: we need to map all buttons, otherwise checks for are buttons pressed fail
-        if (button != Qt::NoButton) {
-            m_qtButtons |= button;
-        }
+        m_qtButtons |= buttonToQtMouseButton(it.key());
     }
 
     emit m_input->pointerButtonStateChanged(button, state);

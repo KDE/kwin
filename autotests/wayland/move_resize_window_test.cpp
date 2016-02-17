@@ -510,17 +510,6 @@ void MoveResizeWindowTest::testPointerMoveEnd()
 
     // release the left button, should still have the window moving
     waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
-    QEXPECT_FAIL("BTN_SIDE", "Not yet mapped", Continue);
-    QEXPECT_FAIL("BTN_EXTRA", "Not yet mapped", Continue);
-    QEXPECT_FAIL("BTN_TASK", "Not yet mapped", Continue);
-    QEXPECT_FAIL("118", "Not yet mapped", Continue);
-    QEXPECT_FAIL("119", "Not yet mapped", Continue);
-    QEXPECT_FAIL("11a", "Not yet mapped", Continue);
-    QEXPECT_FAIL("11b", "Not yet mapped", Continue);
-    QEXPECT_FAIL("11c", "Not yet mapped", Continue);
-    QEXPECT_FAIL("11d", "Not yet mapped", Continue);
-    QEXPECT_FAIL("11e", "Not yet mapped", Continue);
-    QEXPECT_FAIL("11f", "Not yet mapped", Continue);
     QVERIFY(c->isMove());
 
     // but releasing the other button should now end moving
