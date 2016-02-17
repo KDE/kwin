@@ -98,3 +98,12 @@ add_executable(testPointerInput ${testPointerInput_SRCS})
 target_link_libraries( testPointerInput kwin Qt5::Test)
 add_test(kwin-testPointerInput testPointerInput)
 ecm_mark_as_test(testPointerInput)
+
+########################################################
+# PlatformCursorTest
+########################################################
+set( testPlatformCursor_SRCS platformcursor.cpp kwin_wayland_test.cpp )
+add_executable(testPlatformCursor ${testPlatformCursor_SRCS})
+target_link_libraries( testPlatformCursor kwin Qt5::Test)
+add_test(kwin-testPlatformCursor testPlatformCursor)
+ecm_mark_as_test(testPlatformCursor)

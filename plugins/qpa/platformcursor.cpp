@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,49 +17,36 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#include "screen.h"
 #include "platformcursor.h"
-
-#include <KWayland/Client/output.h>
+#include "../../cursor.h"
 
 namespace KWin
 {
 namespace QPA
 {
 
-Screen::Screen(KWayland::Client::Output *o)
-    : QPlatformScreen()
-    , m_output(o)
-    , m_cursor(new PlatformCursor)
+PlatformCursor::PlatformCursor()
+    : QPlatformCursor()
 {
-    // TODO: connect to resolution changes
 }
 
-Screen::~Screen() = default;
+PlatformCursor::~PlatformCursor() = default;
 
-int Screen::depth() const
+QPoint PlatformCursor::pos() const
 {
-    return 32;
+    return Cursor::pos();
 }
 
-QImage::Format Screen::format() const
+void PlatformCursor::setPos(const QPoint &pos)
 {
-    return QImage::Format_ARGB32_Premultiplied;
+    Cursor::setPos(pos);
 }
 
-QRect Screen::geometry() const
+void PlatformCursor::changeCursor(QCursor *windowCursor, QWindow *window)
 {
-    return m_output->geometry();
-}
-
-QSizeF Screen::physicalSize() const
-{
-    return m_output->physicalSize();
-}
-
-QPlatformCursor *Screen::cursor() const
-{
-    return m_cursor.data();
+    Q_UNUSED(windowCursor)
+    Q_UNUSED(window)
+    // TODO: implement
 }
 
 }

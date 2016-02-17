@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,50 +17,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#include "screen.h"
-#include "platformcursor.h"
+#ifndef KWIN_QPA_PLATFORMCURSOR_H
+#define KWIN_QPA_PLATFORMCURSOR_H
 
-#include <KWayland/Client/output.h>
+#include <qpa/qplatformcursor.h>
 
 namespace KWin
 {
 namespace QPA
 {
 
-Screen::Screen(KWayland::Client::Output *o)
-    : QPlatformScreen()
-    , m_output(o)
-    , m_cursor(new PlatformCursor)
+class PlatformCursor : public QPlatformCursor
 {
-    // TODO: connect to resolution changes
-}
-
-Screen::~Screen() = default;
-
-int Screen::depth() const
-{
-    return 32;
-}
-
-QImage::Format Screen::format() const
-{
-    return QImage::Format_ARGB32_Premultiplied;
-}
-
-QRect Screen::geometry() const
-{
-    return m_output->geometry();
-}
-
-QSizeF Screen::physicalSize() const
-{
-    return m_output->physicalSize();
-}
-
-QPlatformCursor *Screen::cursor() const
-{
-    return m_cursor.data();
-}
+public:
+    PlatformCursor();
+    virtual ~PlatformCursor();
+    QPoint pos() const override;
+    void setPos(const QPoint &pos) override;
+    void changeCursor(QCursor *windowCursor, QWindow *window) override;
+};
 
 }
 }
+
+#endif
