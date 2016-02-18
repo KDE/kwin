@@ -266,12 +266,19 @@ NET::WindowType ShellClient::windowType(bool direct, int supported_types) const
 
 double ShellClient::opacity() const
 {
-    return 1.0;
+    return m_opacity;
 }
 
 void ShellClient::setOpacity(double opacity)
 {
-    Q_UNUSED(opacity)
+    const qreal newOpacity = qBound(0.0, opacity, 1.0);
+    if (newOpacity == m_opacity) {
+        return;
+    }
+    const qreal oldOpacity = m_opacity;
+    m_opacity = newOpacity;
+    addRepaintFull();
+    emit opacityChanged(this, oldOpacity);
 }
 
 void ShellClient::addDamage(const QRegion &damage)
