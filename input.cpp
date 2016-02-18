@@ -568,12 +568,13 @@ public:
         // check for modifier
         bool passThrough = true;
         if (AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->window().data())) {
-            // TODO: implement wheel action
             bool wasAction = false;
             Options::MouseCommand command = Options::MouseNothing;
             if (orientation == Qt::Vertical && event->modifiers() == options->commandAllModifier()) {
                 wasAction = true;
                 command = options->operationWindowMouseWheel(event->angleDelta().y());
+            } else {
+                command = c->getWheelCommand(Qt::Vertical, &wasAction);
             }
             if (wasAction) {
                 passThrough = c->performMouseCommand(command, event->globalPos());

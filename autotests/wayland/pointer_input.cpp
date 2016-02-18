@@ -62,6 +62,7 @@ private Q_SLOTS:
     void testModifierClickUnrestrictedMove();
     void testModifierScrollOpacity_data();
     void testModifierScrollOpacity();
+    void testScrollAction();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -464,6 +465,57 @@ void PointerInputTest::testModifierScrollOpacity()
     // axis should have been filtered out
     QCOMPARE(axisSpy.count(), 0);
     QVERIFY(!axisSpy.wait(100));
+}
+
+void  PointerInputTest::testScrollAction()
+{
+    // this test verifies that scroll on inactive window performs a mouse action
+    using namespace KWayland::Client;
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy axisSpy(pointer, &Pointer::axisChanged);
+    QVERIFY(axisSpy.isValid());
+
+    // first modify the config for this run
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandWindowWheel", "activate and scroll");
+    group.sync();
+    workspace()->slotReconfigure();
+    // create two windows
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface1 = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface1);
+    ShellSurface *shellSurface1 = m_shell->createSurface(surface1, surface1);
+    QVERIFY(shellSurface1);
+    render(surface1);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window1 = workspace()->activeClient();
+    QVERIFY(window1);
+    Surface *surface2 = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface2);
+    ShellSurface *shellSurface2 = m_shell->createSurface(surface2, surface2);
+    QVERIFY(shellSurface2);
+    render(surface2);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window2 = workspace()->activeClient();
+    QVERIFY(window2);
+    QVERIFY(window1 != window2);
+
+    // move cursor to the inactive window
+    Cursor::setPos(window1->geometry().center());
+
+    quint32 timestamp = 1;
+    QVERIFY(!window1->isActive());
+    waylandServer()->backend()->pointerAxisVertical(5, timestamp++);
+    QVERIFY(window1->isActive());
+
+    // but also the wheel event should be passed to the window
+    QVERIFY(axisSpy.wait());
+
+    // we need to wait a little bit, otherwise the test crashes in effectshandler, needs fixing
+    QTest::qWait(100);
 }
 
 }
