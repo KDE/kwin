@@ -399,6 +399,9 @@ void Workspace::init()
         connect(w, &WaylandServer::shellClientRemoved, this,
             [this] (ShellClient *c) {
                 m_allClients.removeAll(c);
+                if (c == delayfocus_client) {
+                    cancelDelayFocus();
+                }
                 clientHidden(c);
                 emit clientRemoved(c);
                 x_stacking_dirty = true;
@@ -1207,7 +1210,7 @@ void Workspace::delayFocus()
     cancelDelayFocus();
 }
 
-void Workspace::requestDelayFocus(Client* c)
+void Workspace::requestDelayFocus(AbstractClient* c)
 {
     delayfocus_client = c;
     delete delayFocusTimer;

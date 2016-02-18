@@ -325,7 +325,7 @@ public:
     int packPositionDown(const AbstractClient* cl, int oldy, bool bottom_edge) const;
 
     void cancelDelayFocus();
-    void requestDelayFocus(Client*);
+    void requestDelayFocus(AbstractClient*);
 
     /**
     * updates the mouse position to track whether a focus follow mouse focus change was caused by
@@ -535,7 +535,7 @@ private:
 
     // Delay(ed) window focus timer and client
     QTimer* delayFocusTimer;
-    Client* delayfocus_client;
+    AbstractClient* delayfocus_client;
     QPoint focusMousePos;
 
     ClientList clients;
