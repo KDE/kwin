@@ -60,6 +60,8 @@ private Q_SLOTS:
     void testUpdateFocusAfterScreenChange();
     void testModifierClickUnrestrictedMove_data();
     void testModifierClickUnrestrictedMove();
+    void testModifierScrollOpacity_data();
+    void testModifierScrollOpacity();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -395,6 +397,73 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     QCOMPARE(buttonSpy.count(), 0);
     // also waiting shouldn't give us the event
     QVERIFY(!buttonSpy.wait(100));
+}
+
+void PointerInputTest::testModifierScrollOpacity_data()
+{
+    QTest::addColumn<int>("modifierKey");
+    QTest::addColumn<QString>("modKey");
+
+    const QString alt = QStringLiteral("Alt");
+    const QString meta = QStringLiteral("Meta");
+
+    QTest::newRow("Left Alt")   << KEY_LEFTALT  << alt;
+    QTest::newRow("Right Alt")  << KEY_RIGHTALT << alt;
+    QTest::newRow("Left Meta")  << KEY_LEFTMETA  << meta;
+    QTest::newRow("Right Meta") << KEY_RIGHTMETA << meta;
+}
+
+void PointerInputTest::testModifierScrollOpacity()
+{
+    // this test verifies that mod+wheel performs a window operation and does not
+    // pass the wheel to the window
+    using namespace KWayland::Client;
+    // create pointer and signal spy for button events
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy axisSpy(pointer, &Pointer::axisChanged);
+    QVERIFY(axisSpy.isValid());
+
+    // first modify the config for this run
+    QFETCH(QString, modKey);
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", modKey);
+    group.writeEntry("CommandAllWheel", "change opacity");
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // create a window
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = m_shell->createSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+    // set the opacity to 0.5
+    window->setOpacity(0.5);
+    QCOMPARE(window->opacity(), 0.5);
+
+    // move cursor on window
+    Cursor::setPos(window->geometry().center());
+
+    // simulate modifier+wheel
+    quint32 timestamp = 1;
+    QFETCH(int, modifierKey);
+    waylandServer()->backend()->keyboardKeyPressed(modifierKey, timestamp++);
+    waylandServer()->backend()->pointerAxisVertical(5, timestamp++);
+    QCOMPARE(window->opacity(), 0.6);
+    waylandServer()->backend()->pointerAxisVertical(-5, timestamp++);
+    QCOMPARE(window->opacity(), 0.5);
+    waylandServer()->backend()->keyboardKeyReleased(modifierKey, timestamp++);
+
+    // axis should have been filtered out
+    QCOMPARE(axisSpy.count(), 0);
+    QVERIFY(!axisSpy.wait(100));
 }
 
 }

@@ -564,7 +564,25 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
-        seat->pointerAxis(orientation, orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y());
+
+        // check for modifier
+        bool passThrough = true;
+        if (AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->window().data())) {
+            // TODO: implement wheel action
+            bool wasAction = false;
+            Options::MouseCommand command = Options::MouseNothing;
+            if (orientation == Qt::Vertical && event->modifiers() == options->commandAllModifier()) {
+                wasAction = true;
+                command = options->operationWindowMouseWheel(event->angleDelta().y());
+            }
+            if (wasAction) {
+                passThrough = c->performMouseCommand(command, event->globalPos());
+            }
+        }
+
+        if (passThrough) {
+            seat->pointerAxis(orientation, orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y());
+        }
         return true;
     }
     bool keyEvent(QKeyEvent *event) override {
