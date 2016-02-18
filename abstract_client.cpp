@@ -1523,4 +1523,13 @@ void AbstractClient::enterEvent(const QPoint &globalPos)
     }
 }
 
+void AbstractClient::leaveEvent()
+{
+    cancelAutoRaise();
+    workspace()->cancelDelayFocus();
+    // TODO: shade hover
+    // TODO: send hover leave to deco
+    // TODO: handle Options::FocusStrictlyUnderMouse
+}
+
 }

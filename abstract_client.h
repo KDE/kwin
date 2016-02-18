@@ -407,6 +407,7 @@ public:
     void keyPressEvent(uint key_code);
 
     void enterEvent(const QPoint &globalPos);
+    void leaveEvent();
 
     /**
      * These values represent positions inside an area

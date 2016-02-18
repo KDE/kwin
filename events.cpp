@@ -978,8 +978,7 @@ void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
             }
         }
         if (lostMouse) {
-            cancelAutoRaise();
-            workspace()->cancelDelayFocus();
+            leaveEvent();
             cancelShadeHoverTimer();
             if (shade_mode == ShadeHover && !isMoveResize() && !isMoveResizePointerButtonDown()) {
                 shadeHoverTimer = new QTimer(this);
