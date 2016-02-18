@@ -148,7 +148,7 @@ public:
      */
     AbstractClient* mostRecentlyActivatedClient() const;
 
-    Client* clientUnderMouse(int screen) const;
+    AbstractClient* clientUnderMouse(int screen) const;
 
     void activateClient(AbstractClient*, bool force = false);
     void requestFocus(AbstractClient* c, bool force = false);

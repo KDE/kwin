@@ -1204,7 +1204,7 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         // used to be activateNextClient(this), then topClientOnDesktop
         // since this is a mouseOp it's however safe to use the client under the mouse instead
         if (isActive() && options->focusPolicyIsReasonable()) {
-            Client *next = workspace()->clientUnderMouse(screen());
+            AbstractClient *next = workspace()->clientUnderMouse(screen());
             if (next && next != this)
                 workspace()->requestFocus(next, false);
         }
@@ -1384,7 +1384,7 @@ void Workspace::slotWindowLower()
         //activateNextClient( c ); // Doesn't work when we lower a child window
         if (active_client->isActive() && options->focusPolicyIsReasonable()) {
             if (options->isNextFocusPrefersMouse()) {
-                Client *next = clientUnderMouse(active_client->screen());
+                AbstractClient *next = clientUnderMouse(active_client->screen());
                 if (next && next != active_client)
                     requestFocus(next, false);
             } else {

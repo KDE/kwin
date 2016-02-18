@@ -410,11 +410,11 @@ void Workspace::clientHidden(AbstractClient* c)
     activateNextClient(c);
 }
 
-Client *Workspace::clientUnderMouse(int screen) const
+AbstractClient *Workspace::clientUnderMouse(int screen) const
 {
     ToplevelList::const_iterator it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
-        Client *client = qobject_cast<Client*>(*(--it));
+        AbstractClient *client = qobject_cast<AbstractClient*>(*(--it));
         if (!client) {
             continue;
         }
