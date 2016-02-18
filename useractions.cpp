@@ -1199,17 +1199,6 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
 {
     bool replay = false;
     switch(command) {
-    case Options::MouseLower: {
-        workspace()->lowerClient(this);
-        // used to be activateNextClient(this), then topClientOnDesktop
-        // since this is a mouseOp it's however safe to use the client under the mouse instead
-        if (isActive() && options->focusPolicyIsReasonable()) {
-            AbstractClient *next = workspace()->clientUnderMouse(screen());
-            if (next && next != this)
-                workspace()->requestFocus(next, false);
-        }
-        break;
-    }
     case Options::MouseShade :
         toggleShade();
         cancelShadeHoverTimer();
