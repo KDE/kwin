@@ -205,11 +205,15 @@ void PointerInputRedirection::update()
     }
     // TODO: handle pointer grab aka popups
     Toplevel *t = m_input->findToplevel(m_pos.toPoint());
+    const auto oldDeco = m_decoration;
     updateInternalWindow();
     if (!m_internalWindow) {
         updateDecoration(t);
     } else {
         // TODO: send hover leave to decoration
+        if (m_decoration) {
+            m_decoration->client()->leaveEvent();
+        }
         m_decoration.clear();
     }
     if (m_decoration || m_internalWindow) {
@@ -222,12 +226,22 @@ void PointerInputRedirection::update()
     auto seat = waylandServer()->seat();
     // disconnect old surface
     if (oldWindow) {
+        if (AbstractClient *c = qobject_cast<AbstractClient*>(oldWindow.data())) {
+            c->leaveEvent();
+        }
         disconnect(m_windowGeometryConnection);
         m_windowGeometryConnection = QMetaObject::Connection();
         if (auto p = seat->focusedPointer()) {
             if (auto c = p->cursor()) {
                 disconnect(c, &KWayland::Server::Cursor::changed, waylandServer()->backend(), &AbstractBackend::installCursorFromServer);
             }
+        }
+    }
+    if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
+        // only send enter if it wasn't on deco for the same client before
+        if (m_decoration.isNull() || m_decoration->client() != c) {
+            c->enterEvent(m_pos.toPoint());
+            workspace()->updateFocusMousePosition(m_pos.toPoint());
         }
     }
     if (t && t->surface()) {
@@ -343,7 +357,18 @@ void PointerInputRedirection::updateDecoration(Toplevel *t)
         m_decoration.clear();
     }
 
+    bool leftSend = false;
+    auto oldWindow = qobject_cast<AbstractClient*>(m_window.data());
+    if (oldWindow && (m_decoration && m_decoration->client() != oldWindow)) {
+        leftSend = true;
+        oldWindow->leaveEvent();
+    }
+
     if (oldDeco && oldDeco != m_decoration) {
+        if (oldDeco->client() != t && !leftSend) {
+            leftSend = true;
+            oldDeco->client()->leaveEvent();
+        }
         // send leave
         QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
         QCoreApplication::instance()->sendEvent(oldDeco->decoration(), &event);
@@ -352,6 +377,10 @@ void PointerInputRedirection::updateDecoration(Toplevel *t)
         }
     }
     if (m_decoration) {
+        if (m_decoration->client() != oldWindow) {
+            m_decoration->client()->enterEvent(m_pos.toPoint());
+            workspace()->updateFocusMousePosition(m_pos.toPoint());
+        }
         const QPointF p = m_pos - t->pos();
         QHoverEvent event(QEvent::HoverMove, p, p);
         QCoreApplication::instance()->sendEvent(m_decoration->decoration(), &event);

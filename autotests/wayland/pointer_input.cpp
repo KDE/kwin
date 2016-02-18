@@ -63,6 +63,7 @@ private Q_SLOTS:
     void testModifierScrollOpacity_data();
     void testModifierScrollOpacity();
     void testScrollAction();
+    void testFocusFollowsMouse();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -516,6 +517,90 @@ void  PointerInputTest::testScrollAction()
 
     // we need to wait a little bit, otherwise the test crashes in effectshandler, needs fixing
     QTest::qWait(100);
+}
+
+void PointerInputTest::testFocusFollowsMouse()
+{
+    using namespace KWayland::Client;
+    // need to create a pointer, otherwise it doesn't accept focus
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    // move cursor out of the way of first window to be created
+    Cursor::setPos(900, 900);
+
+    // first modify the config for this run
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("AutoRaise", true);
+    group.writeEntry("AutoRaiseInterval", 20);
+    group.writeEntry("DelayFocusInterval", 200);
+    group.writeEntry("FocusPolicy", "FocusFollowsMouse");
+    group.sync();
+    workspace()->slotReconfigure();
+    // verify the settings
+    QCOMPARE(options->focusPolicy(), Options::FocusFollowsMouse);
+    QVERIFY(options->isAutoRaise());
+    QCOMPARE(options->autoRaiseInterval(), 20);
+    QCOMPARE(options->delayFocusInterval(), 200);
+
+    // create two windows
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface1 = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface1);
+    ShellSurface *shellSurface1 = m_shell->createSurface(surface1, surface1);
+    QVERIFY(shellSurface1);
+    render(surface1, QSize(800, 800));
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window1 = workspace()->activeClient();
+    QVERIFY(window1);
+    Surface *surface2 = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface2);
+    ShellSurface *shellSurface2 = m_shell->createSurface(surface2, surface2);
+    QVERIFY(shellSurface2);
+    render(surface2, QSize(800, 800));
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window2 = workspace()->activeClient();
+    QVERIFY(window2);
+    QVERIFY(window1 != window2);
+    QCOMPARE(workspace()->topClientOnDesktop(1, -1), window2);
+    // geometry of the two windows should be overlapping
+    QVERIFY(window1->geometry().intersects(window2->geometry()));
+
+    // signal spies for active window changed and stacking order changed
+    QSignalSpy activeWindowChangedSpy(workspace(), &Workspace::clientActivated);
+    QVERIFY(activeWindowChangedSpy.isValid());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.isValid());
+
+    QVERIFY(!window1->isActive());
+    QVERIFY(window2->isActive());
+
+    // move on top of first window
+    QVERIFY(window1->geometry().contains(10, 10));
+    QVERIFY(!window2->geometry().contains(10, 10));
+    Cursor::setPos(10, 10);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(stackingOrderChangedSpy.count(), 1);
+    QCOMPARE(workspace()->topClientOnDesktop(1, -1), window1);
+    QTRY_VERIFY(window1->isActive());
+
+    // move on second window, but move away before active window change delay hits
+    Cursor::setPos(810, 810);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(stackingOrderChangedSpy.count(), 2);
+    QCOMPARE(workspace()->topClientOnDesktop(1, -1), window2);
+    Cursor::setPos(10, 10);
+    QVERIFY(!activeWindowChangedSpy.wait(250));
+    QVERIFY(window1->isActive());
+    QCOMPARE(workspace()->topClientOnDesktop(1, -1), window1);
+    // as we moved back on window 1 that should been raised in the mean time
+    QCOMPARE(stackingOrderChangedSpy.count(), 3);
+
+    // quickly move on window 2 and back on window 1 should not raise window 2
+    Cursor::setPos(810, 810);
+    Cursor::setPos(10, 10);
+    QVERIFY(!stackingOrderChangedSpy.wait(250));
 }
 
 }
