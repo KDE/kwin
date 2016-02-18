@@ -500,6 +500,91 @@ public:
 };
 
 /**
+ * This filter implements window actions. If the event should not be passed to the
+ * current pointer window it will filter out the event
+ **/
+class WindowActionInputFilter : public InputEventFilter
+{
+public:
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+        Q_UNUSED(nativeButton)
+        if (event->type() != QEvent::MouseButtonPress) {
+            return false;
+        }
+        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->window().data());
+        if (!c) {
+            return false;
+        }
+        bool wasAction = false;
+        Options::MouseCommand command = Options::MouseNothing;
+        if (event->modifiers() == options->commandAllModifier()) {
+            wasAction = true;
+            switch (event->button()) {
+            case Qt::LeftButton:
+                command = options->commandAll1();
+                break;
+            case Qt::MiddleButton:
+                command = options->commandAll2();
+                break;
+            case Qt::RightButton:
+                command = options->commandAll3();
+                break;
+            default:
+                // nothing
+                break;
+            }
+        } else {
+            c->getMouseCommand(event->button(), &wasAction);
+        }
+        if (wasAction) {
+            return !c->performMouseCommand(command, event->globalPos());
+        }
+        return false;
+    }
+    bool wheelEvent(QWheelEvent *event) override {
+        if (event->angleDelta().y() == 0) {
+            // only actions on vertical scroll
+            return false;
+        }
+        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->window().data());
+        if (!c) {
+            return false;
+        }
+        bool wasAction = false;
+        Options::MouseCommand command = Options::MouseNothing;
+        if (event->modifiers() == options->commandAllModifier()) {
+            wasAction = true;
+            command = options->operationWindowMouseWheel(event->angleDelta().y());
+        } else {
+            command = c->getWheelCommand(Qt::Vertical, &wasAction);
+        }
+        if (wasAction) {
+            return !c->performMouseCommand(command, event->globalPos());
+        }
+        return false;
+    }
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+        Q_UNUSED(id)
+        Q_UNUSED(time)
+        auto seat = waylandServer()->seat();
+        if (seat->isTouchSequence()) {
+            return false;
+        }
+        input()->touch()->update(pos);
+        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->touch()->window().data());
+        if (!c) {
+            return false;
+        }
+        bool wasAction = false;
+        const Options::MouseCommand command = c->getMouseCommand(Qt::LeftButton, &wasAction);
+        if (wasAction) {
+            return !c->performMouseCommand(command, pos.toPoint());
+        }
+        return false;
+    }
+};
+
+/**
  * The remaining default input filter which forwards events to other windows
  **/
 class ForwardInputFilter : public InputEventFilter
@@ -516,39 +601,9 @@ public:
             }
             seat->setPointerPos(event->globalPos());
             break;
-        case QEvent::MouseButtonPress: {
-            bool passThrough = true;
-            if (AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->window().data())) {
-                bool wasAction = false;
-                Options::MouseCommand command = Options::MouseNothing;
-                if (event->modifiers() == options->commandAllModifier()) {
-                    wasAction = true;
-                    switch (event->button()) {
-                    case Qt::LeftButton:
-                        command = options->commandAll1();
-                        break;
-                    case Qt::MiddleButton:
-                        command = options->commandAll2();
-                        break;
-                    case Qt::RightButton:
-                        command = options->commandAll3();
-                        break;
-                    default:
-                        // nothing
-                        break;
-                    }
-                } else {
-                    c->getMouseCommand(event->button(), &wasAction);
-                }
-                if (wasAction) {
-                    passThrough = c->performMouseCommand(command, event->globalPos());
-                }
-            }
-            if (passThrough) {
-                seat->pointerButtonPressed(nativeButton);
-            }
+        case QEvent::MouseButtonPress:
+            seat->pointerButtonPressed(nativeButton);
             break;
-        }
         case QEvent::MouseButtonRelease:
             seat->pointerButtonReleased(nativeButton);
             if (event->buttons() == Qt::NoButton) {
@@ -564,26 +619,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
-
-        // check for modifier
-        bool passThrough = true;
-        if (AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->window().data())) {
-            bool wasAction = false;
-            Options::MouseCommand command = Options::MouseNothing;
-            if (orientation == Qt::Vertical && event->modifiers() == options->commandAllModifier()) {
-                wasAction = true;
-                command = options->operationWindowMouseWheel(event->angleDelta().y());
-            } else {
-                command = c->getWheelCommand(Qt::Vertical, &wasAction);
-            }
-            if (wasAction) {
-                passThrough = c->performMouseCommand(command, event->globalPos());
-            }
-        }
-
-        if (passThrough) {
-            seat->pointerAxis(orientation, orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y());
-        }
+        seat->pointerAxis(orientation, orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y());
         return true;
     }
     bool keyEvent(QKeyEvent *event) override {
@@ -613,17 +649,6 @@ public:
         seat->setTimestamp(time);
         if (!seat->isTouchSequence()) {
             input()->touch()->update(pos);
-            if (AbstractClient *c = dynamic_cast<AbstractClient*>(input()->touch()->window().data())) {
-                // perform same handling as if it were a left click
-                bool wasAction = false;
-                const Options::MouseCommand command = c->getMouseCommand(Qt::LeftButton, &wasAction);
-                if (wasAction) {
-                    // if no replay we filter out this touch point
-                    if (!c->performMouseCommand(command, pos.toPoint())) {
-                        return true;
-                    }
-                }
-            }
         }
         input()->touch()->insertId(id, seat->touchDown(pos));
         return true;
@@ -799,6 +824,7 @@ void InputRedirection::setupInputFilters()
     installInputEventFilter(new InternalWindowEventFilter);
     installInputEventFilter(new DecorationEventFilter);
     if (waylandServer()) {
+        installInputEventFilter(new WindowActionInputFilter);
         installInputEventFilter(new ForwardInputFilter);
     }
 }
