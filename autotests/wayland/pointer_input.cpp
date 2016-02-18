@@ -456,9 +456,9 @@ void PointerInputTest::testModifierScrollOpacity()
     quint32 timestamp = 1;
     QFETCH(int, modifierKey);
     waylandServer()->backend()->keyboardKeyPressed(modifierKey, timestamp++);
-    waylandServer()->backend()->pointerAxisVertical(5, timestamp++);
-    QCOMPARE(window->opacity(), 0.6);
     waylandServer()->backend()->pointerAxisVertical(-5, timestamp++);
+    QCOMPARE(window->opacity(), 0.6);
+    waylandServer()->backend()->pointerAxisVertical(5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
     waylandServer()->backend()->keyboardKeyReleased(modifierKey, timestamp++);
 

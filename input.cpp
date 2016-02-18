@@ -554,7 +554,7 @@ public:
         Options::MouseCommand command = Options::MouseNothing;
         if (event->modifiers() == options->commandAllModifier()) {
             wasAction = true;
-            command = options->operationWindowMouseWheel(event->angleDelta().y());
+            command = options->operationWindowMouseWheel(-1 * event->angleDelta().y());
         } else {
             command = c->getWheelCommand(Qt::Vertical, &wasAction);
         }
