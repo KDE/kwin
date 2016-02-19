@@ -291,6 +291,14 @@ quint32 Xkb::getGroup()
     return xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
 }
 
+bool Xkb::shouldKeyRepeat(quint32 key) const
+{
+    if (!m_keymap) {
+        return false;
+    }
+    return xkb_keymap_key_repeats(m_keymap, key) != 0;
+}
+
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     : QObject(parent)
     , m_input(parent)
@@ -397,7 +405,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
                     autoRepeat);
     event.setTimestamp(time);
     if (state == InputRedirection::KeyboardKeyPressed) {
-        if (waylandServer()->seat()->keyRepeatDelay() != 0) {
+        if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyRepeatDelay() != 0) {
             QTimer *timer = new QTimer;
             timer->setInterval(waylandServer()->seat()->keyRepeatDelay());
             connect(timer, &QTimer::timeout, this,
