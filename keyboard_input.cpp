@@ -279,6 +279,10 @@ void Xkb::updateModifiers()
         mods |= Qt::MetaModifier;
     }
     m_modifiers = mods;
+    waylandServer()->seat()->updateKeyboardModifiers(xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED)),
+                                                     xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED)),
+                                                     xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED)),
+                                                     xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE));
 }
 
 xkb_keysym_t Xkb::toKeysym(uint32_t key)
@@ -307,22 +311,6 @@ Qt::Key Xkb::toQtKey(xkb_keysym_t keysym)
     int key = Qt::Key_unknown;
     KKeyServer::symXToKeyQt(keysym, &key);
     return static_cast<Qt::Key>(key);
-}
-
-quint32 Xkb::getMods(quint32 components)
-{
-    if (!m_state) {
-        return 0;
-    }
-    return xkb_state_serialize_mods(m_state, xkb_state_component(components));
-}
-
-quint32 Xkb::getGroup()
-{
-    if (!m_state) {
-        return 0;
-    }
-    return xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
 }
 
 bool Xkb::shouldKeyRepeat(quint32 key) const

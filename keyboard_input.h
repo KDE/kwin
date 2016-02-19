@@ -58,9 +58,6 @@ public:
     Qt::KeyboardModifiers modifiers() const;
     bool shouldKeyRepeat(quint32 key) const;
 
-    quint32 getMods(quint32 components);
-    quint32 getGroup();
-
 private:
     xkb_keymap *loadKeymapFromConfig();
     xkb_keymap *loadDefaultKeymap();

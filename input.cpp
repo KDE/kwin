@@ -792,17 +792,6 @@ void InputRedirection::setupWorkspace()
                 );
             }
         );
-        connect(this, &InputRedirection::keyboardModifiersChanged, waylandServer(),
-            [this] {
-                if (!waylandServer()->seat()) {
-                    return;
-                }
-                waylandServer()->seat()->updateKeyboardModifiers(m_keyboard->xkb()->getMods(XKB_STATE_MODS_DEPRESSED),
-                                                                 m_keyboard->xkb()->getMods(XKB_STATE_MODS_LATCHED),
-                                                                 m_keyboard->xkb()->getMods(XKB_STATE_MODS_LOCKED),
-                                                                 m_keyboard->xkb()->getGroup());
-            }
-        );
         connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
 
         m_keyboard->init();
