@@ -745,12 +745,21 @@ void SeatInterface::setKeymap(int fd, quint32 size)
 void SeatInterface::updateKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
 {
     Q_D();
+    bool changed = false;
+#define UPDATE( value ) \
+    if (d->keys.modifiers.value != value) { \
+        d->keys.modifiers.value = value; \
+        changed = true; \
+    }
+    UPDATE(depressed)
+    UPDATE(latched)
+    UPDATE(locked)
+    UPDATE(group)
+    if (!changed) {
+        return;
+    }
     const quint32 serial = d->display->nextSerial();
     d->keys.modifiers.serial = serial;
-    d->keys.modifiers.depressed = depressed;
-    d->keys.modifiers.latched = latched;
-    d->keys.modifiers.locked = locked;
-    d->keys.modifiers.group = group;
     if (d->keys.focus.keyboard && d->keys.focus.surface) {
         d->keys.focus.keyboard->updateModifiers(depressed, latched, locked, group, serial);
     }
