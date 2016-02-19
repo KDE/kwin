@@ -47,6 +47,32 @@ Q_LOGGING_CATEGORY(KWIN_XKB, "kwin_xkbcommon", QtCriticalMsg);
 
 namespace KWin
 {
+
+static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const char *format, va_list args)
+{
+    Q_UNUSED(context)
+    char buf[1024];
+    if (std::vsnprintf(buf, 1023, format, args) <= 0) {
+        return;
+    }
+    switch (priority) {
+    case XKB_LOG_LEVEL_DEBUG:
+        qCDebug(KWIN_XKB) << "XKB:" << buf;
+        break;
+    case XKB_LOG_LEVEL_INFO:
+        qCInfo(KWIN_XKB) << "XKB:" << buf;
+        break;
+    case XKB_LOG_LEVEL_WARNING:
+        qCWarning(KWIN_XKB) << "XKB:" << buf;
+        break;
+    case XKB_LOG_LEVEL_ERROR:
+    case XKB_LOG_LEVEL_CRITICAL:
+    default:
+        qCCritical(KWIN_XKB) << "XKB:" << buf;
+        break;
+    }
+}
+
 Xkb::Xkb(InputRedirection *input)
     : m_input(input)
     , m_context(xkb_context_new(static_cast<xkb_context_flags>(0)))
@@ -61,6 +87,8 @@ Xkb::Xkb(InputRedirection *input)
     if (!m_context) {
         qCDebug(KWIN_XKB) << "Could not create xkb context";
     } else {
+        xkb_context_set_log_level(m_context, XKB_LOG_LEVEL_DEBUG);
+        xkb_context_set_log_fn(m_context, &xkbLogHandler);
         // load default keymap
         xkb_keymap *keymap = xkb_keymap_new_from_names(m_context, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
         if (keymap) {
