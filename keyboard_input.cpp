@@ -179,6 +179,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     m_controlModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CTRL);
     m_altModifier     = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
     m_metaModifier    = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
+    m_currentLayout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
 
     createKeymapFile();
 }
@@ -280,10 +281,24 @@ void Xkb::updateModifiers()
         mods |= Qt::MetaModifier;
     }
     m_modifiers = mods;
+    const xkb_layout_index_t layout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
+    if (layout != m_currentLayout) {
+        m_currentLayout = layout;
+        // notify OSD service about the new layout
+        QDBusMessage msg = QDBusMessage::createMethodCall(
+        QStringLiteral("org.kde.plasmashell"),
+        QStringLiteral("/org/kde/osdService"),
+        QStringLiteral("org.kde.osdService"),
+        QStringLiteral("kbdLayoutChanged"));
+
+        msg << QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, layout));
+
+        QDBusConnection::sessionBus().asyncCall(msg);
+    }
     waylandServer()->seat()->updateKeyboardModifiers(xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED)),
                                                      xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED)),
                                                      xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED)),
-                                                     xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE));
+                                                     layout);
 }
 
 xkb_keysym_t Xkb::toKeysym(uint32_t key)

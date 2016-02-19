@@ -79,6 +79,7 @@ private:
         uint pressCount = 0;
         Qt::KeyboardModifier modifier = Qt::NoModifier;
     } m_modOnlyShortcut;
+    quint32 m_currentLayout = 0;
 };
 
 class KeyboardInputRedirection : public QObject
