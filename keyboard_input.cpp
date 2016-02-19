@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KScreenLocker/KsldApp>
 // Frameworks
 #include <KKeyServer>
+#include <KGlobalAccel>
 // Qt
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -321,6 +322,20 @@ bool Xkb::shouldKeyRepeat(quint32 key) const
     return xkb_keymap_key_repeats(m_keymap, key) != 0;
 }
 
+void Xkb::switchToNextLayout()
+{
+    if (!m_keymap || !m_state) {
+        return;
+    }
+    const xkb_layout_index_t numLayouts = xkb_keymap_num_layouts(m_keymap);
+    const xkb_layout_index_t nextLayout = (xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE) + 1) % numLayouts;
+    const xkb_mod_mask_t depressed = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED));
+    const xkb_mod_mask_t latched = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED));
+    const xkb_mod_mask_t locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
+    xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, nextLayout);
+    updateModifiers();
+}
+
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     : QObject(parent)
     , m_input(parent)
@@ -343,6 +358,19 @@ void KeyboardInputRedirection::init()
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(workspace(), &Workspace::clientActivated, this, &KeyboardInputRedirection::update);
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
+
+    QAction *switchKeyboardAction = new QAction(this);
+    switchKeyboardAction->setObjectName(QStringLiteral("Switch to Next Keyboard Layout"));
+    switchKeyboardAction->setProperty("componentName", QStringLiteral("KDE Keyboard Layout Switcher"));
+    const QKeySequence sequence = QKeySequence(Qt::ALT+Qt::CTRL+Qt::Key_K);
+    KGlobalAccel::self()->setDefaultShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
+    KGlobalAccel::self()->setShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
+    m_input->registerShortcut(sequence, switchKeyboardAction);
+    connect(switchKeyboardAction, &QAction::triggered, this,
+        [this] {
+            m_xkb->switchToNextLayout();
+        }
+    );
 
     m_xkb->reconfigure();
 }
