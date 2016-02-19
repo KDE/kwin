@@ -1,8 +1,18 @@
 [Desktop Entry]
 Comment=Cross fade animation when Tooltips or Notifications change their geometry
+Comment[ca]=Animació d'esvaïment creuat quan els consells d'eines o les notificacions canvien la seva geometria
+Comment[pt]=Animar o desvanecimento quando as dicas ou notificações mudarem de tamanho
+Comment[sv]=Övertona animering när verktygstips eller underrättelser ändrar storlek
+Comment[uk]=Анімація зі зміною освітленості під час зміни геометрії панелей підказок і сповіщень
+Comment[x-test]=xxCross fade animation when Tooltips or Notifications change their geometryxx
 Encoding=UTF-8
 Icon=preferences-system-windows-effect-morphingpopups
 Name=Morphing popups
+Name[ca]=Missatges emergents en metamorfosi
+Name[pt]=Mensagens com mudança de forma
+Name[sv]=Föränderliga meddelanderutor
+Name[uk]=Аморфні контекстні панелі
+Name[x-test]=xxMorphing popupsxx
 Type=Service
 X-KDE-ParentApp=
 X-KDE-PluginInfo-Author=Marco Martin
