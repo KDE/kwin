@@ -43,6 +43,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/mman.h>
 #include <unistd.h>
 
+Q_LOGGING_CATEGORY(KWIN_XKB, "kwin_xkbcommon", QtCriticalMsg);
+
 namespace KWin
 {
 Xkb::Xkb(InputRedirection *input)
@@ -57,14 +59,14 @@ Xkb::Xkb(InputRedirection *input)
     , m_modifiers(Qt::NoModifier)
 {
     if (!m_context) {
-        qCDebug(KWIN_CORE) << "Could not create xkb context";
+        qCDebug(KWIN_XKB) << "Could not create xkb context";
     } else {
         // load default keymap
         xkb_keymap *keymap = xkb_keymap_new_from_names(m_context, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
         if (keymap) {
             updateKeymap(keymap);
         } else {
-            qCDebug(KWIN_CORE) << "Could not create default xkb keymap";
+            qCDebug(KWIN_XKB) << "Could not create default xkb keymap";
         }
     }
 }
@@ -88,7 +90,7 @@ void Xkb::installKeymap(int fd, uint32_t size)
     xkb_keymap *keymap = xkb_keymap_new_from_string(m_context, map, XKB_KEYMAP_FORMAT_TEXT_V1, XKB_MAP_COMPILE_PLACEHOLDER);
     munmap(map, size);
     if (!keymap) {
-        qCDebug(KWIN_CORE) << "Could not map keymap from file";
+        qCDebug(KWIN_XKB) << "Could not map keymap from file";
         return;
     }
     updateKeymap(keymap);
@@ -99,7 +101,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     Q_ASSERT(keymap);
     xkb_state *state = xkb_state_new(keymap);
     if (!state) {
-        qCDebug(KWIN_CORE) << "Could not create XKB state";
+        qCDebug(KWIN_XKB) << "Could not create XKB state";
         xkb_keymap_unref(keymap);
         return;
     }

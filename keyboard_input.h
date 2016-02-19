@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPointer>
 #include <QPointF>
 
+#include <QLoggingCategory>
+Q_DECLARE_LOGGING_CATEGORY(KWIN_XKB)
+
 class QWindow;
 struct xkb_context;
 struct xkb_keymap;
