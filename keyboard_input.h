@@ -108,6 +108,7 @@ private:
     InputRedirection *m_input;
     bool m_inited = false;
     QScopedPointer<Xkb> m_xkb;
+    QHash<quint32, QTimer*> m_repeatTimers;
 };
 
 inline

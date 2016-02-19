@@ -68,7 +68,8 @@ public:
     };
     enum KeyboardKeyState {
         KeyboardKeyReleased,
-        KeyboardKeyPressed
+        KeyboardKeyPressed,
+        KeyboardKeyAutoRepeat
     };
     virtual ~InputRedirection();
     void init();

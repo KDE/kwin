@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
+#include <KWayland/Server/seat_interface.h>
 
 //screenlocker
 #include <KScreenLocker/KsldApp>
@@ -64,6 +65,7 @@ private Q_SLOTS:
     void testScreenEdge();
     void testEffects();
     void testEffectsKeyboard();
+    void testEffectsKeyboardAutorepeat();
     void testMoveWindow();
     void testPointerShortcut();
     void testAxisShortcut_data();
@@ -560,6 +562,47 @@ void LockScreenTest::testEffectsKeyboard()
     QCOMPARE(inputSpy.at(1).first().toString(), QStringLiteral("a"));
     QCOMPARE(inputSpy.at(2).first().toString(), QStringLiteral("c"));
     QCOMPARE(inputSpy.at(3).first().toString(), QStringLiteral("c"));
+
+    effects->ungrabKeyboard();
+}
+
+void LockScreenTest::testEffectsKeyboardAutorepeat()
+{
+    // this test is just like testEffectsKeyboard, but tests auto repeat key events
+    // while the key is pressed the Effect should get auto repeated events
+    // but the lock screen should filter them out
+    QScopedPointer<HelperEffect> effect(new HelperEffect);
+    QSignalSpy inputSpy(effect.data(), &HelperEffect::keyEvent);
+    QVERIFY(inputSpy.isValid());
+    effects->grabKeyboard(effect.data());
+
+    // we need to configure the key repeat first. It is only enabled on libinput
+    waylandServer()->seat()->setKeyRepeatInfo(25, 300);
+
+    quint32 timestamp = 1;
+    KEYPRESS(KEY_A);
+    QCOMPARE(inputSpy.count(), 1);
+    QCOMPARE(inputSpy.first().first().toString(), QStringLiteral("a"));
+    QVERIFY(inputSpy.wait());
+    QVERIFY(inputSpy.count() > 1);
+    // and still more events
+    QVERIFY(inputSpy.wait());
+    QCOMPARE(inputSpy.at(1).first().toString(), QStringLiteral("a"));
+
+    // now release
+    inputSpy.clear();
+    KEYRELEASE(KEY_A);
+    QCOMPARE(inputSpy.count(), 1);
+
+    // while locked key repeat should not pass any events to the Effect
+    LOCK
+    KEYPRESS(KEY_B);
+    QVERIFY(!inputSpy.wait(200));
+    KEYRELEASE(KEY_B);
+    QVERIFY(!inputSpy.wait(200));
+
+    UNLOCK
+    // don't test again, that's covered by testEffectsKeyboard
 
     effects->ungrabKeyboard();
 }

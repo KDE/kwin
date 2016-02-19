@@ -268,7 +268,11 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
 {
 }
 
-KeyboardInputRedirection::~KeyboardInputRedirection() = default;
+KeyboardInputRedirection::~KeyboardInputRedirection()
+{
+    qDeleteAll(m_repeatTimers);
+    m_repeatTimers.clear();
+}
 
 void KeyboardInputRedirection::init()
 {
@@ -327,21 +331,65 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     if (!m_inited) {
         return;
     }
-    emit m_input->keyStateChanged(key, state);
-    const Qt::KeyboardModifiers oldMods = modifiers();
-    m_xkb->updateKey(key, state);
-    if (oldMods != modifiers()) {
-        emit m_input->keyboardModifiersChanged(modifiers(), oldMods);
+    QEvent::Type type;
+    bool autoRepeat = false;
+    switch (state) {
+    case InputRedirection::KeyboardKeyAutoRepeat:
+        autoRepeat = true;
+        // fall through
+    case InputRedirection::KeyboardKeyPressed:
+        type = QEvent::KeyPress;
+        break;
+    case InputRedirection::KeyboardKeyReleased:
+        type = QEvent::KeyRelease;
+        break;
+    default:
+        Q_UNREACHABLE();
     }
+
+    if (!autoRepeat) {
+        emit m_input->keyStateChanged(key, state);
+        const Qt::KeyboardModifiers oldMods = modifiers();
+        m_xkb->updateKey(key, state);
+        if (oldMods != modifiers()) {
+            emit m_input->keyboardModifiersChanged(modifiers(), oldMods);
+        }
+    }
+
     const xkb_keysym_t keySym = m_xkb->toKeysym(key);
-    QKeyEvent event((state == InputRedirection::KeyboardKeyPressed) ? QEvent::KeyPress : QEvent::KeyRelease,
+    QKeyEvent event(type,
                     m_xkb->toQtKey(keySym),
                     m_xkb->modifiers(),
                     key,
                     keySym,
                     0,
-                    m_xkb->toString(m_xkb->toKeysym(key)));
+                    m_xkb->toString(m_xkb->toKeysym(key)),
+                    autoRepeat);
     event.setTimestamp(time);
+    if (state == InputRedirection::KeyboardKeyPressed) {
+        if (waylandServer()->seat()->keyRepeatDelay() != 0) {
+            QTimer *timer = new QTimer;
+            timer->setInterval(waylandServer()->seat()->keyRepeatDelay());
+            connect(timer, &QTimer::timeout, this,
+                [this, timer, time, key] {
+                    const int delay = 1000 / waylandServer()->seat()->keyRepeatRate();
+                    if (timer->interval() != delay) {
+                        timer->setInterval(delay);
+                    }
+                    // TODO: better time
+                    processKey(key, InputRedirection::KeyboardKeyAutoRepeat, time);
+                }
+            );
+            m_repeatTimers.insert(key, timer);
+            timer->start();
+        }
+    } else if (state == InputRedirection::KeyboardKeyReleased) {
+        auto it = m_repeatTimers.find(key);
+        if (it != m_repeatTimers.end()) {
+            delete it.value();
+            m_repeatTimers.erase(it);
+        }
+    }
 
     const auto &filters = m_input->filters();
     for (auto it = filters.begin(), end = filters.end(); it != end; it++) {

@@ -111,7 +111,7 @@ class VirtualTerminalFilter : public InputEventFilter {
 public:
     bool keyEvent(QKeyEvent *event) override {
         // really on press and not on release? X11 switches on press.
-        if (event->type() == QEvent::KeyPress) {
+        if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
             const xkb_keysym_t keysym = event->nativeVirtualKey();
             if (keysym >= XKB_KEY_XF86Switch_VT_1 && keysym <= XKB_KEY_XF86Switch_VT_12) {
                 VirtualTerminal::self()->activate(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
@@ -161,6 +161,10 @@ public:
     bool keyEvent(QKeyEvent * event) override {
         if (!waylandServer()->isScreenLocked()) {
             return false;
+        }
+        if (event->isAutoRepeat()) {
+            // wayland client takes care of it
+            return true;
         }
         // send event to KSldApp for global accel
         // if event is set to accepted it means a whitelisted shortcut was triggered
@@ -344,7 +348,7 @@ public:
         return input()->shortcuts()->processAxis(event->modifiers(), direction);
     }
     bool keyEvent(QKeyEvent *event) override {
-        if (event->type() == QEvent::KeyPress) {
+        if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
             return input()->shortcuts()->processKey(event->modifiers(), event->nativeVirtualKey());
         }
         return false;
@@ -624,6 +628,10 @@ public:
     }
     bool keyEvent(QKeyEvent *event) override {
         if (!workspace()) {
+            return false;
+        }
+        if (event->isAutoRepeat()) {
+            // handled by Wayland client
             return false;
         }
         auto seat = waylandServer()->seat();
