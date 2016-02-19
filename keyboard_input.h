@@ -47,6 +47,8 @@ class Xkb
 public:
     Xkb(InputRedirection *input);
     ~Xkb();
+    void reconfigure();
+
     void installKeymap(int fd, uint32_t size);
     void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
     void updateKey(uint32_t key, InputRedirection::KeyboardKeyState state);
@@ -58,7 +60,10 @@ public:
 
     quint32 getMods(quint32 components);
     quint32 getGroup();
+
 private:
+    xkb_keymap *loadKeymapFromConfig();
+    xkb_keymap *loadDefaultKeymap();
     void updateKeymap(xkb_keymap *keymap);
     void createKeymapFile();
     void updateModifiers();

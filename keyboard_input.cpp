@@ -89,13 +89,6 @@ Xkb::Xkb(InputRedirection *input)
     } else {
         xkb_context_set_log_level(m_context, XKB_LOG_LEVEL_DEBUG);
         xkb_context_set_log_fn(m_context, &xkbLogHandler);
-        // load default keymap
-        xkb_keymap *keymap = xkb_keymap_new_from_names(m_context, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
-        if (keymap) {
-            updateKeymap(keymap);
-        } else {
-            qCDebug(KWIN_XKB) << "Could not create default xkb keymap";
-        }
     }
 }
 
@@ -104,6 +97,47 @@ Xkb::~Xkb()
     xkb_state_unref(m_state);
     xkb_keymap_unref(m_keymap);
     xkb_context_unref(m_context);
+}
+
+void Xkb::reconfigure()
+{
+    if (!m_context) {
+        return;
+    }
+
+    xkb_keymap *keymap = loadKeymapFromConfig();
+    if (!keymap) {
+        qCDebug(KWIN_XKB) << "Could not create xkb keymap from configuration";
+        keymap = loadDefaultKeymap();
+    }
+    if (keymap) {
+        updateKeymap(keymap);
+    } else {
+        qCDebug(KWIN_XKB) << "Could not create default xkb keymap";
+    }
+}
+
+xkb_keymap *Xkb::loadKeymapFromConfig()
+{
+    // load config
+    const KConfigGroup config = KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals)->group("Layout");
+    const QByteArray model = config.readEntry("Model", "pc104").toLocal8Bit();
+    const QByteArray layout = config.readEntry("LayoutList", "").toLocal8Bit();
+    const QByteArray options = config.readEntry("Options", "").toLocal8Bit();
+
+    xkb_rule_names ruleNames = {
+        .rules = nullptr,
+        .model = model.constData(),
+        .layout = layout.constData(),
+        .variant = nullptr,
+        .options = options.constData()
+    };
+    return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
+}
+
+xkb_keymap *Xkb::loadDefaultKeymap()
+{
+    return xkb_keymap_new_from_names(m_context, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
 void Xkb::installKeymap(int fd, uint32_t size)
@@ -321,6 +355,8 @@ void KeyboardInputRedirection::init()
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(workspace(), &Workspace::clientActivated, this, &KeyboardInputRedirection::update);
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
+
+    m_xkb->reconfigure();
 }
 
 void KeyboardInputRedirection::update()
