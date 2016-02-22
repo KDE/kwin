@@ -2,6 +2,7 @@
 Comment=Cross fade animation when Tooltips or Notifications change their geometry
 Comment[ca]=Animació d'esvaïment creuat quan els consells d'eines o les notificacions canvien la seva geometria
 Comment[ca@valencia]=Animació d'esvaïment creuat quan els consells d'eines o les notificacions canvien la seua geometria
+Comment[en_GB]=Cross fade animation when Tooltips or Notifications change their geometry
 Comment[nl]=Verwissel animatie van opkomen/vervagen wanneer tekstballonnen of meldingen hun geometrie wijzigen
 Comment[pl]=Animacja zanikania przy zmianie geometrii wskazówek lub powiadomień
 Comment[pt]=Animar o desvanecimento quando as dicas ou notificações mudarem de tamanho
@@ -19,6 +20,7 @@ Icon=preferences-system-windows-effect-morphingpopups
 Name=Morphing popups
 Name[ca]=Missatges emergents en metamorfosi
 Name[ca@valencia]=Missatges emergents en metamorfosi
+Name[en_GB]=Morphing popups
 Name[nl]=Morphing popups
 Name[pl]=Morfing elementów wysuwnych
 Name[pt]=Mensagens com mudança de forma
