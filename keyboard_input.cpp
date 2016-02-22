@@ -387,6 +387,18 @@ void KeyboardInputRedirection::init()
         }
     );
 
+    QDBusConnection::sessionBus().connect(QString(),
+                                          QStringLiteral("/Layouts"),
+                                          QStringLiteral("org.kde.keyboard"),
+                                          QStringLiteral("reloadConfig"),
+                                          this,
+                                          SLOT(reconfigure()));
+
+    m_xkb->reconfigure();
+}
+
+void KeyboardInputRedirection::reconfigure()
+{
     m_xkb->reconfigure();
 }
 

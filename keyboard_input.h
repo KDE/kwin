@@ -113,6 +113,9 @@ public:
         return m_xkb->modifiers();
     }
 
+private Q_SLOTS:
+    void reconfigure();
+
 private:
     InputRedirection *m_input;
     bool m_inited = false;
