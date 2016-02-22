@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_cursor_theme.h"
 #include "cursor.h"
 #include "wayland_server.h"
+// Qt
+#include <QVector>
 // KWayland
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Server/display.h>
@@ -85,10 +87,22 @@ wl_cursor_image *WaylandCursorTheme::get(Qt::CursorShape shape)
         // loading cursor failed
         return nullptr;
     }
-    wl_cursor *c = wl_cursor_theme_get_cursor(m_theme, Cursor::self()->cursorName(shape).constData());
+    const QByteArray name = Cursor::self()->cursorName(shape);
+    wl_cursor *c = wl_cursor_theme_get_cursor(m_theme, name.constData());
+    if (!c || c->image_count <= 0) {
+        const auto &names = Cursor::self()->cursorAlternativeNames(name);
+        for (auto it = names.begin(), end = names.end(); it != end; it++) {
+            c = wl_cursor_theme_get_cursor(m_theme, (*it).constData());
+            if (c && c->image_count > 0) {
+                break;
+            }
+        }
+        return nullptr;
+    }
     if (!c || c->image_count <= 0) {
         return nullptr;
     }
+    // TODO: who deletes c?
     return c->images[0];
 }
 
