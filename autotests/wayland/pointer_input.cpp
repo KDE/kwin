@@ -64,6 +64,10 @@ private Q_SLOTS:
     void testModifierScrollOpacity();
     void testScrollAction();
     void testFocusFollowsMouse();
+    void testMouseActionInactiveWindow_data();
+    void testMouseActionInactiveWindow();
+    void testMouseActionActiveWindow_data();
+    void testMouseActionActiveWindow();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -601,6 +605,176 @@ void PointerInputTest::testFocusFollowsMouse()
     Cursor::setPos(810, 810);
     Cursor::setPos(10, 10);
     QVERIFY(!stackingOrderChangedSpy.wait(250));
+}
+
+void PointerInputTest::testMouseActionInactiveWindow_data()
+{
+    QTest::addColumn<quint32>("button");
+
+    QTest::newRow("Left")   << quint32(BTN_LEFT);
+    QTest::newRow("Middle") << quint32(BTN_MIDDLE);
+    QTest::newRow("Right")  << quint32(BTN_RIGHT);
+}
+
+void PointerInputTest::testMouseActionInactiveWindow()
+{
+    // this test performs the mouse button window action on an inactive window
+    // it should activate the window and raise it
+    using namespace KWayland::Client;
+
+    // first modify the config for this run - disable FocusFollowsMouse
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("FocusPolicy", "ClickToFocus");
+    group.sync();
+    group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandWindow1", "Activate, raise and pass click");
+    group.writeEntry("CommandWindow2", "Activate, raise and pass click");
+    group.writeEntry("CommandWindow3", "Activate, raise and pass click");
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // create two windows
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface1 = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface1);
+    ShellSurface *shellSurface1 = m_shell->createSurface(surface1, surface1);
+    QVERIFY(shellSurface1);
+    render(surface1, QSize(800, 800));
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window1 = workspace()->activeClient();
+    QVERIFY(window1);
+    Surface *surface2 = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface2);
+    ShellSurface *shellSurface2 = m_shell->createSurface(surface2, surface2);
+    QVERIFY(shellSurface2);
+    render(surface2, QSize(800, 800));
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window2 = workspace()->activeClient();
+    QVERIFY(window2);
+    QVERIFY(window1 != window2);
+    QCOMPARE(workspace()->topClientOnDesktop(1, -1), window2);
+    // geometry of the two windows should be overlapping
+    QVERIFY(window1->geometry().intersects(window2->geometry()));
+
+    // signal spies for active window changed and stacking order changed
+    QSignalSpy activeWindowChangedSpy(workspace(), &Workspace::clientActivated);
+    QVERIFY(activeWindowChangedSpy.isValid());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.isValid());
+
+    QVERIFY(!window1->isActive());
+    QVERIFY(window2->isActive());
+
+    // move on top of first window
+    QVERIFY(window1->geometry().contains(10, 10));
+    QVERIFY(!window2->geometry().contains(10, 10));
+    Cursor::setPos(10, 10);
+    // no focus follows mouse
+    QVERIFY(!stackingOrderChangedSpy.wait(200));
+    QVERIFY(stackingOrderChangedSpy.isEmpty());
+    QVERIFY(activeWindowChangedSpy.isEmpty());
+    QVERIFY(window2->isActive());
+    // and click
+    quint32 timestamp = 1;
+    QFETCH(quint32, button);
+    waylandServer()->backend()->pointerButtonPressed(button, timestamp++);
+    // should raise window1 and activate it
+    QCOMPARE(stackingOrderChangedSpy.count(), 1);
+    QVERIFY(!activeWindowChangedSpy.isEmpty());
+    QCOMPARE(workspace()->topClientOnDesktop(1, -1), window1);
+    QVERIFY(window1->isActive());
+    QVERIFY(!window2->isActive());
+
+    // release again
+    waylandServer()->backend()->pointerButtonReleased(button, timestamp++);
+}
+
+void PointerInputTest::testMouseActionActiveWindow_data()
+{
+    QTest::addColumn<bool>("clickRaise");
+    QTest::addColumn<quint32>("button");
+
+    for (quint32 i=BTN_LEFT; i < BTN_JOYSTICK; i++) {
+        QByteArray number = QByteArray::number(i, 16);
+        QTest::newRow(QByteArrayLiteral("click raise/").append(number).constData()) << true << i;
+        QTest::newRow(QByteArrayLiteral("no click raise/").append(number).constData()) << false << i;
+    }
+}
+
+void PointerInputTest::testMouseActionActiveWindow()
+{
+    // this test verifies the mouse action performed on an active window
+    // for all buttons it should trigger a window raise depending on the
+    // click raise option
+    using namespace KWayland::Client;
+    // create a button spy - all clicks should be passed through
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy buttonSpy(pointer, &Pointer::buttonStateChanged);
+    QVERIFY(buttonSpy.isValid());
+
+    // adjust config for this run
+    QFETCH(bool, clickRaise);
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("ClickRaise", clickRaise);
+    group.sync();
+    workspace()->slotReconfigure();
+    QCOMPARE(options->isClickRaise(), clickRaise);
+
+    // create two windows
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface1 = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface1);
+    ShellSurface *shellSurface1 = m_shell->createSurface(surface1, surface1);
+    QVERIFY(shellSurface1);
+    render(surface1, QSize(800, 800));
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window1 = workspace()->activeClient();
+    QVERIFY(window1);
+    Surface *surface2 = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface2);
+    ShellSurface *shellSurface2 = m_shell->createSurface(surface2, surface2);
+    QVERIFY(shellSurface2);
+    render(surface2, QSize(800, 800));
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window2 = workspace()->activeClient();
+    QVERIFY(window2);
+    QVERIFY(window1 != window2);
+    QCOMPARE(workspace()->topClientOnDesktop(1, -1), window2);
+    // geometry of the two windows should be overlapping
+    QVERIFY(window1->geometry().intersects(window2->geometry()));
+    // lower the currently active window
+    workspace()->lowerClient(window2);
+    QCOMPARE(workspace()->topClientOnDesktop(1, -1), window1);
+
+    // signal spy for stacking order spy
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.isValid());
+
+    // move on top of second window
+    QVERIFY(!window1->geometry().contains(900, 900));
+    QVERIFY(window2->geometry().contains(900, 900));
+    Cursor::setPos(900, 900);
+
+    // and click
+    quint32 timestamp = 1;
+    QFETCH(quint32, button);
+    waylandServer()->backend()->pointerButtonPressed(button, timestamp++);
+    QVERIFY(buttonSpy.wait());
+    if (clickRaise) {
+        QCOMPARE(stackingOrderChangedSpy.count(), 1);
+        QTRY_COMPARE_WITH_TIMEOUT(workspace()->topClientOnDesktop(1, -1), window2, 200);
+    } else {
+        QCOMPARE(stackingOrderChangedSpy.count(), 0);
+        QVERIFY(!stackingOrderChangedSpy.wait(100));
+        QCOMPARE(workspace()->topClientOnDesktop(1, -1), window1);
+    }
+
+    // release again
+    waylandServer()->backend()->pointerButtonReleased(button, timestamp++);
 }
 
 }

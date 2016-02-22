@@ -538,7 +538,7 @@ public:
                 break;
             }
         } else {
-            c->getMouseCommand(event->button(), &wasAction);
+            command = c->getMouseCommand(event->button(), &wasAction);
         }
         if (wasAction) {
             return !c->performMouseCommand(command, event->globalPos());
