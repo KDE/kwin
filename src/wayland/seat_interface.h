@@ -373,6 +373,12 @@ Q_SIGNALS:
     void keyboardCreated(KWayland::Server::KeyboardInterface*);
     void touchCreated(KWayland::Server::TouchInterface*);
 
+    /**
+     * Emitted whenever the focused pointer changes
+     * @since 5.6
+     **/
+    void focusedPointerChanged(KWayland::Server::PointerInterface*);
+
 private:
     friend class Display;
     friend class DataDeviceManagerInterface;

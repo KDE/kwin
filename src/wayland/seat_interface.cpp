@@ -322,6 +322,7 @@ void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource
         if (!globalPointer.focus.pointer) {
             globalPointer.focus.pointer = pointer;
             pointer->setFocusedSurface(globalPointer.focus.surface, globalPointer.focus.serial);
+            emit q->focusedPointerChanged(pointer);
         }
     }
     QObject::connect(pointer, &QObject::destroyed, q,
@@ -329,6 +330,7 @@ void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource
             pointers.removeAt(pointers.indexOf(pointer));
             if (globalPointer.focus.pointer == pointer) {
                 globalPointer.focus.pointer = nullptr;
+                emit q->focusedPointerChanged(nullptr);
             }
         }
     );
@@ -514,12 +516,14 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QM
             [this] {
                 Q_D();
                 d->globalPointer.focus = Private::Pointer::Focus();
+                emit focusedPointerChanged(nullptr);
             }
         );
         d->globalPointer.focus.offset = QPointF();
         d->globalPointer.focus.transformation = transformation;
         d->globalPointer.focus.serial = serial;
     }
+    emit focusedPointerChanged(p);
     if (!p) {
         return;
     }
