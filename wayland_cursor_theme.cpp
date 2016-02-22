@@ -19,8 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "wayland_cursor_theme.h"
 #include "cursor.h"
+#include "wayland_server.h"
 // KWayland
 #include <KWayland/Client/shm_pool.h>
+#include <KWayland/Server/display.h>
+#include <KWayland/Server/output_interface.h>
 // Wayland
 #include <wayland-cursor.h>
 
@@ -51,8 +54,17 @@ void WaylandCursorTheme::loadTheme()
     } else {
         destroyTheme();
     }
+    int size = c->themeSize();
+    if (size == 0) {
+        // resolution depended
+        // as we don't support per screen cursor sizes yet, we use the first screen
+        KWayland::Server::Display *display = waylandServer()->display();
+        auto output = display->outputs().first();
+        // calculate dots per inch, multiplied with magic constants from Cursor::loadThemeSettings()
+        size = qreal(output->pixelSize().height()) / (qreal(output->physicalSize().height()) * 0.0393701) * 16.0 / 72.0;
+    }
     m_theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
-                                   c->themeSize() ? c->themeSize() : -1, m_shm->shm());
+                                   size, m_shm->shm());
 }
 
 void WaylandCursorTheme::destroyTheme()
