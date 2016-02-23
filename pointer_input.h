@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "input.h"
 
+#include <QElapsedTimer>
 #include <QObject>
 #include <QPointer>
 #include <QPointF>
@@ -31,8 +32,10 @@ class QWindow;
 namespace KWin
 {
 
+class CursorImage;
 class InputRedirection;
 class Toplevel;
+class WaylandCursorTheme;
 
 namespace Decoration
 {
@@ -69,7 +72,11 @@ public:
         return m_internalWindow;
     }
 
-    void installCursorFromDecoration();
+    QImage cursorImage() const;
+    QPoint cursorHotSpot() const;
+    void markCursorAsRendered();
+    void setEffectsOverrideCursor(Qt::CursorShape shape);
+    void removeEffectsOverrideCursor();
 
     /**
      * @internal
@@ -84,12 +91,16 @@ public:
      */
     void processAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time);
 
+Q_SIGNALS:
+    void decorationChanged();
+
 private:
     void updatePosition(const QPointF &pos);
     void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
     void updateInternalWindow();
     void updateDecoration(Toplevel *t);
     InputRedirection *m_input;
+    CursorImage *m_cursor;
     bool m_inited = false;
     bool m_supportsWarping;
     QPointF m_pos;
@@ -107,6 +118,62 @@ private:
     QPointer<QWindow> m_internalWindow;
     QMetaObject::Connection m_windowGeometryConnection;
     QMetaObject::Connection m_internalWindowConnection;
+};
+
+class CursorImage : public QObject
+{
+    Q_OBJECT
+public:
+    explicit CursorImage(PointerInputRedirection *parent = nullptr);
+    virtual ~CursorImage();
+
+    void setEffectsOverrideCursor(Qt::CursorShape shape);
+    void removeEffectsOverrideCursor();
+
+    QImage image() const;
+    QPoint hotSpot() const;
+    void markAsRendered();
+
+Q_SIGNALS:
+    void changed();
+
+private:
+    void reevaluteSource();
+    void update();
+    void updateServerCursor();
+    void updateDecoration();
+    void updateDecorationCursor();
+    void loadTheme();
+    struct Image {
+        QImage image;
+        QPoint hotSpot;
+    };
+    void loadThemeCursor(Qt::CursorShape shape, Image *image);
+
+    enum class CursorSource {
+        LockScreen,
+        EffectsOverride,
+        PointerSurface,
+        Decoration,
+        Fallback
+    };
+    void setSource(CursorSource source);
+
+    PointerInputRedirection *m_pointer;
+    CursorSource m_currentSource = CursorSource::Fallback;
+    WaylandCursorTheme *m_cursorTheme = nullptr;
+    struct {
+        QMetaObject::Connection connection;
+        QImage image;
+        QPoint hotSpot;
+    } m_serverCursor;
+
+    Image m_effectsCursor;
+    Image m_decorationCursor;
+    QMetaObject::Connection m_decorationConnection;
+    Image m_fallbackCursor;
+    QHash<Qt::CursorShape, Image> m_cursors;
+    QElapsedTimer m_surfaceRenderedTimer;
 };
 
 }

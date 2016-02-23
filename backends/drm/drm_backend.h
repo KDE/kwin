@@ -71,8 +71,6 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend* createOpenGLBackend() override;
-    void installCursorFromServer() override;
-    void installCursorImage(Qt::CursorShape shape) override;
 
     void init() override;
     DrmBuffer *createBuffer(const QSize &size);

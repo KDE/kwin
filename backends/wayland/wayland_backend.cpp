@@ -68,7 +68,6 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     , m_keyboard(NULL)
     , m_touch(nullptr)
     , m_cursor(NULL)
-    , m_theme(new WaylandCursorTheme(backend->shmPool(), this))
     , m_enteredSerial(0)
     , m_backend(backend)
     , m_installCursor(false)
@@ -244,21 +243,15 @@ void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const 
     m_cursor->attachBuffer(image);
     m_cursor->damage(QRect(QPoint(0,0), size));
     m_cursor->commit(Surface::CommitFlag::None);
-}
-
-void WaylandSeat::installCursorImage(Qt::CursorShape shape)
-{
-    wl_cursor_image *image = m_theme->get(shape);
-    if (!image) {
-        return;
-    }
-    installCursorImage(wl_cursor_image_get_buffer(image),
-                       QSize(image->width, image->height),
-                       QPoint(image->hotspot_x, image->hotspot_y));
+    m_backend->flush();
 }
 
 void WaylandSeat::installCursorImage(const QImage &image, const QPoint &hotSpot)
 {
+    if (image.isNull()) {
+        installCursorImage(nullptr, QSize(), QPoint());
+        return;
+    }
     installCursorImage(*(m_backend->shmPool()->createBuffer(image).data()), image.size(), hotSpot);
 }
 
@@ -337,6 +330,15 @@ void WaylandBackend::init()
     if (!deviceIdentifier().isEmpty()) {
         m_connectionThreadObject->setSocketName(deviceIdentifier());
     }
+    connect(this, &WaylandBackend::cursorChanged, this,
+        [this] {
+            if (m_seat.isNull() || !m_seat->isInstallCursor()) {
+                return;
+            }
+            m_seat->installCursorImage(softwareCursor(), softwareCursorHotspot());
+            markCursorAsRendered();
+        }
+    );
     initConnection();
 }
 
@@ -387,35 +389,6 @@ void WaylandBackend::initConnection()
     m_connectionThread->start();
 
     m_connectionThreadObject->initConnection();
-}
-
-void WaylandBackend::installCursorImage(Qt::CursorShape shape)
-{
-    if (!m_seat.isNull() && m_seat->isInstallCursor()) {
-        m_seat->installCursorImage(shape);
-    }
-}
-
-void WaylandBackend::installCursorFromServer()
-{
-    if (!waylandServer() || !waylandServer()->seat()->focusedPointer()) {
-        return;
-    }
-    auto c = waylandServer()->seat()->focusedPointer()->cursor();
-    if (c) {
-        auto cursorSurface = c->surface();
-        if (!cursorSurface.isNull()) {
-            auto buffer = cursorSurface.data()->buffer();
-            if (buffer) {
-                // set cursor
-                if (!m_seat.isNull() && m_seat->isInstallCursor()) {
-                    m_seat->installCursorImage(buffer->data(), c->hotspot());
-                }
-                return;
-            }
-        }
-    }
-    // TODO: unset cursor
 }
 
 void WaylandBackend::createSurface()
@@ -476,6 +449,13 @@ OpenGLBackend *WaylandBackend::createOpenGLBackend()
 QPainterBackend *WaylandBackend::createQPainterBackend()
 {
     return new WaylandQPainterBackend(this);
+}
+
+void WaylandBackend::flush()
+{
+    if (m_connectionThreadObject) {
+        m_connectionThreadObject->flush();
+    }
 }
 
 }

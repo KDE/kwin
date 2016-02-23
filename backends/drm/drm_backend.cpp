@@ -529,16 +529,6 @@ void DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
     }
 }
 
-void DrmBackend::installCursorFromServer()
-{
-    updateCursorFromServer();
-}
-
-void DrmBackend::installCursorImage(Qt::CursorShape shape)
-{
-    updateCursorImage(shape);
-}
-
 void DrmBackend::initCursor()
 {
     uint64_t capability = 0;
@@ -562,7 +552,6 @@ void DrmBackend::initCursor()
     // now we have screens and can set cursors, so start tracking
     connect(this, &DrmBackend::cursorChanged, this, &DrmBackend::updateCursor);
     connect(Cursor::self(), &Cursor::posChanged, this, &DrmBackend::moveCursor);
-    installCursorImage(Qt::ArrowCursor);
 }
 
 void DrmBackend::setCursor()
@@ -572,6 +561,7 @@ void DrmBackend::setCursor()
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         (*it)->showCursor(c);
     }
+    markCursorAsRendered();
 }
 
 void DrmBackend::updateCursor()

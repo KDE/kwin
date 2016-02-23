@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "cursor.h"
 #include "group.h"
+#include "pointer_input.h"
 #include "scene_xrender.h"
 #include "scene_qpainter.h"
 #include "unmanaged.h"
@@ -709,9 +710,7 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
         return;
     }
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        if (AbstractBackend *w = waylandServer()->backend()) {
-            w->installCursorImage(shape);
-        }
+        input()->pointer()->setEffectsOverrideCursor(shape);
         return;
     }
     // NOTE: it is intended to not perform an XPointerGrab on X11. See documentation in kwineffects.h
@@ -743,12 +742,18 @@ void EffectsHandlerImpl::stopMouseInterception(Effect *effect)
     }
     m_grabbedMouseEffects.removeAll(effect);
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        input()->pointer()->removeEffectsOverrideCursor();
         return;
     }
     if (m_grabbedMouseEffects.isEmpty()) {
         m_mouseInterceptionWindow.unmap();
         Workspace::self()->stackScreenEdgesUnderOverrideRedirect();
     }
+}
+
+bool EffectsHandlerImpl::isMouseInterception() const
+{
+    return m_grabbedMouseEffects.count() > 0;
 }
 
 void EffectsHandlerImpl::registerGlobalShortcut(const QKeySequence &shortcut, QAction *action)
@@ -1225,11 +1230,7 @@ QSize EffectsHandlerImpl::virtualScreenSize() const
 void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)
 {
     if (!m_mouseInterceptionWindow.isValid()) {
-        if (waylandServer()) {
-            if (AbstractBackend *w = waylandServer()->backend()) {
-                w->installCursorImage(shape);
-            }
-        }
+        input()->pointer()->setEffectsOverrideCursor(shape);
         return;
     }
     const xcb_cursor_t c = Cursor::x11Cursor(shape);

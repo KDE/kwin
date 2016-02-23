@@ -443,7 +443,6 @@ public:
             if (event->type() == QEvent::MouseButtonRelease) {
                 decoration->client()->processDecorationButtonRelease(&e);
             }
-            input()->pointer()->installCursorFromDecoration();
             return true;
         }
         default:

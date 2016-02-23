@@ -93,6 +93,11 @@ void X11WindowedBackend::init()
         XRenderUtils::init(m_connection, m_screen->root);
         createWindow();
         startEventReading();
+        connect(this, &X11WindowedBackend::cursorChanged, this,
+            [this] {
+                createCursor(softwareCursor(), softwareCursorHotspot());
+            }
+        );
         setReady(true);
         waylandServer()->seat()->setHasPointer(true);
         waylandServer()->seat()->setHasKeyboard(true);
@@ -374,25 +379,6 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
     }
 }
 
-void X11WindowedBackend::installCursorFromServer()
-{
-    if (!waylandServer() || !waylandServer()->seat()->focusedPointer()) {
-        return;
-    }
-    auto c = waylandServer()->seat()->focusedPointer()->cursor();
-    if (c) {
-        auto cursorSurface = c->surface();
-        if (!cursorSurface.isNull()) {
-            auto buffer = cursorSurface.data()->buffer();
-            if (buffer) {
-                createCursor(buffer->data(), c->hotspot());
-                return;
-            }
-        }
-    }
-    // TODO: unset cursor
-}
-
 void X11WindowedBackend::createCursor(const QImage &img, const QPoint &hotspot)
 {
     const xcb_pixmap_t pix = xcb_generate_id(m_connection);
@@ -417,13 +403,7 @@ void X11WindowedBackend::createCursor(const QImage &img, const QPoint &hotspot)
     }
     m_cursor = cid;
     xcb_flush(m_connection);
-}
-
-void X11WindowedBackend::installCursorImage(Qt::CursorShape shape)
-{
-    // TODO: only update if shape changed
-    updateCursorImage(shape);
-    createCursor(softwareCursor(), softwareCursorHotspot());
+    markCursorAsRendered();
 }
 
 xcb_window_t X11WindowedBackend::rootWindow() const
