@@ -46,9 +46,6 @@ var morphingEffect = {
 
         if (distance > (newGeometry.width + newGeometry.height) * 2) {
             return;
-        //Also don't animate very small steps
-        } else if (distance < 10) {
-            return;
         }
 
         //don't resize it "too much", set as four times
