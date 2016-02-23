@@ -508,6 +508,14 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::focusedPointerChanged, this, &CursorImage::update);
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
     connect(m_pointer, &PointerInputRedirection::decorationChanged, this, &CursorImage::updateDecoration);
+    // connect the move resize of all window
+    auto setupMoveResizeConnection = [this] (AbstractClient *c) {
+        connect(c, &AbstractClient::moveResizedChanged, this, &CursorImage::updateMoveResize);
+    };
+    const auto clients = workspace()->allClientList();
+    std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
+    connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
+    connect(waylandServer(), &WaylandServer::shellClientAdded, this, setupMoveResizeConnection);
     loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
     if (m_cursorTheme) {
         connect(m_cursorTheme, &WaylandCursorTheme::themeChanged, this,
@@ -515,6 +523,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
                 m_cursors.clear();
                 loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
                 updateDecorationCursor();
+                updateMoveResize();
                 // TODO: update effects
             }
         );
@@ -579,6 +588,19 @@ void CursorImage::updateDecorationCursor()
     if (AbstractClient *c = deco.isNull() ? nullptr : deco->client()) {
         loadThemeCursor(c->cursor(), &m_decorationCursor);
         if (m_currentSource == CursorSource::Decoration) {
+            emit changed();
+        }
+    }
+    reevaluteSource();
+}
+
+void CursorImage::updateMoveResize()
+{
+    m_moveResizeCursor.image = QImage();
+    m_moveResizeCursor.hotSpot = QPoint();
+    if (AbstractClient *c = workspace()->getMovingClient()) {
+        loadThemeCursor(c->isMove() ? Qt::SizeAllCursor : Qt::SizeBDiagCursor, &m_moveResizeCursor);
+        if (m_currentSource == CursorSource::MoveResize) {
             emit changed();
         }
     }
@@ -697,6 +719,10 @@ void CursorImage::reevaluteSource()
         setSource(CursorSource::EffectsOverride);
         return;
     }
+    if (workspace() && workspace()->getMovingClient()) {
+        setSource(CursorSource::MoveResize);
+        return;
+    }
     if (!m_pointer->decoration().isNull()) {
         setSource(CursorSource::Decoration);
         return;
@@ -722,6 +748,8 @@ QImage CursorImage::image() const
     switch (m_currentSource) {
     case CursorSource::EffectsOverride:
         return m_effectsCursor.image;
+    case CursorSource::MoveResize:
+        return m_moveResizeCursor.image;
     case CursorSource::LockScreen:
     case CursorSource::PointerSurface:
         // lockscreen also uses server cursor image
@@ -740,6 +768,8 @@ QPoint CursorImage::hotSpot() const
     switch (m_currentSource) {
     case CursorSource::EffectsOverride:
         return m_effectsCursor.hotSpot;
+    case CursorSource::MoveResize:
+        return m_moveResizeCursor.hotSpot;
     case CursorSource::LockScreen:
     case CursorSource::PointerSurface:
         // lockscreen also uses server cursor image

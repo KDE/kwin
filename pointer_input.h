@@ -143,6 +143,7 @@ private:
     void updateServerCursor();
     void updateDecoration();
     void updateDecorationCursor();
+    void updateMoveResize();
     void loadTheme();
     struct Image {
         QImage image;
@@ -153,6 +154,7 @@ private:
     enum class CursorSource {
         LockScreen,
         EffectsOverride,
+        MoveResize,
         PointerSurface,
         Decoration,
         Fallback
@@ -172,6 +174,7 @@ private:
     Image m_decorationCursor;
     QMetaObject::Connection m_decorationConnection;
     Image m_fallbackCursor;
+    Image m_moveResizeCursor;
     QHash<Qt::CursorShape, Image> m_cursors;
     QElapsedTimer m_surfaceRenderedTimer;
 };
