@@ -509,6 +509,16 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
     connect(m_pointer, &PointerInputRedirection::decorationChanged, this, &CursorImage::updateDecoration);
     loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
+    if (m_cursorTheme) {
+        connect(m_cursorTheme, &WaylandCursorTheme::themeChanged, this,
+            [this] {
+                m_cursors.clear();
+                loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
+                updateDecorationCursor();
+                // TODO: update effects
+            }
+        );
+    }
     m_surfaceRenderedTimer.start();
 }
 

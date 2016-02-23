@@ -47,6 +47,9 @@ public:
 
     wl_cursor_image *get(Qt::CursorShape shape);
 
+Q_SIGNALS:
+    void themeChanged();
+
 private:
     void loadTheme();
     void destroyTheme();

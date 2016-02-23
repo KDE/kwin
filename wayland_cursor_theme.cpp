@@ -67,6 +67,7 @@ void WaylandCursorTheme::loadTheme()
     }
     m_theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
                                    size, m_shm->shm());
+    emit themeChanged();
 }
 
 void WaylandCursorTheme::destroyTheme()
