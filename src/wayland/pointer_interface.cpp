@@ -81,9 +81,7 @@ void PointerInterface::Private::setCursor(quint32 serial, SurfaceInterface *surf
     if (!cursor) {
         Q_Q(PointerInterface);
         cursor = new Cursor(q);
-        cursor->d->enteredSerial = serial;
-        cursor->d->hotspot = hotspot;
-        cursor->d->surface = QPointer<SurfaceInterface>(surface);
+        cursor->d->update(QPointer<SurfaceInterface>(surface), serial, hotspot);
         QObject::connect(cursor, &Cursor::changed, q, &PointerInterface::cursorChanged);
         emit q->cursorChanged();
     } else {

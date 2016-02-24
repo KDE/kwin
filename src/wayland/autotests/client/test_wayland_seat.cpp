@@ -64,6 +64,7 @@ private Q_SLOTS:
     void testPointerButton_data();
     void testPointerButton();
     void testCursor();
+    void testCursorDamage();
     void testKeyboard();
     void testCast();
     void testDestroy();
@@ -731,12 +732,78 @@ void TestWaylandSeat::testCursor()
     QCOMPARE(surfaceChangedSpy.count(), 1);
     QCOMPARE(cursor->surface()->buffer()->data(), img);
 
-    p->hideCursor();
-    QVERIFY(surfaceChangedSpy.wait());
+    // and add another image to the surface
+    QImage blue(QSize(10, 20), QImage::Format_ARGB32);
+    blue.fill(Qt::blue);
+    cursorSurface->attachBuffer(m_shm->createBuffer(blue));
+    cursorSurface->damage(QRect(0, 0, 10, 20));
+    cursorSurface->commit(Surface::CommitFlag::None);
+    QVERIFY(changedSpy.wait());
     QCOMPARE(changedSpy.count(), 4);
     QCOMPARE(cursorChangedSpy.count(), 5);
+    QCOMPARE(cursor->surface()->buffer()->data(), blue);
+
+    p->hideCursor();
+    QVERIFY(surfaceChangedSpy.wait());
+    QCOMPARE(changedSpy.count(), 5);
+    QCOMPARE(cursorChangedSpy.count(), 6);
     QCOMPARE(surfaceChangedSpy.count(), 2);
     QVERIFY(!cursor->surface());
+}
+
+void TestWaylandSeat::testCursorDamage()
+{
+    // this test verifies that damaging a cursor surface triggers a cursor changed on the server
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QSignalSpy pointerSpy(m_seat, &Seat::hasPointerChanged);
+    QVERIFY(pointerSpy.isValid());
+    m_seatInterface->setHasPointer(true);
+    QVERIFY(pointerSpy.wait());
+
+    // create pointer
+    QScopedPointer<Pointer> p(m_seat->createPointer());
+    QVERIFY(p->isValid());
+    QSignalSpy enteredSpy(p.data(), &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+    // create surface
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    m_compositor->createSurface(m_compositor);
+    QVERIFY(surfaceCreatedSpy.wait());
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    // send enter to the surface
+    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    QVERIFY(enteredSpy.wait());
+
+    // create a signal spy for the cursor changed signal
+    auto pointer = m_seatInterface->focusedPointer();
+    QSignalSpy cursorChangedSpy(pointer, &PointerInterface::cursorChanged);
+    QVERIFY(cursorChangedSpy.isValid());
+
+    // now let's set the cursor
+    Surface *cursorSurface = m_compositor->createSurface(m_compositor);
+    QVERIFY(cursorSurface);
+    QImage red(QSize(10, 10), QImage::Format_ARGB32);
+    red.fill(Qt::red);
+    cursorSurface->attachBuffer(m_shm->createBuffer(red));
+    cursorSurface->damage(QRect(0, 0, 10, 10));
+    cursorSurface->commit(Surface::CommitFlag::None);
+    p->setCursor(cursorSurface, QPoint(0, 0));
+    QVERIFY(cursorChangedSpy.wait());
+    QCOMPARE(pointer->cursor()->surface()->buffer()->data(), red);
+
+    // and damage the surface
+    QImage blue(QSize(10, 10), QImage::Format_ARGB32);
+    blue.fill(Qt::blue);
+    cursorSurface->attachBuffer(m_shm->createBuffer(blue));
+    cursorSurface->damage(QRect(0, 0, 10, 10));
+    cursorSurface->commit(Surface::CommitFlag::None);
+    QVERIFY(cursorChangedSpy.wait());
+    QCOMPARE(pointer->cursor()->surface()->buffer()->data(), blue);
 }
 
 void TestWaylandSeat::testKeyboard()
