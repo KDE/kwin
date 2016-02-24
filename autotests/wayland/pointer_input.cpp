@@ -811,7 +811,6 @@ void PointerInputTest::testCursorImage()
     // move cursor to center of window, this should first set a null pointer
     Cursor::setPos(window->geometry().center());
     QCOMPARE(p->window().data(), window);
-    QEXPECT_FAIL("", "Fix me", Continue);
     QVERIFY(p->cursorImage().isNull());
     QVERIFY(enteredSpy.wait());
 
@@ -854,7 +853,6 @@ void PointerInputTest::testCursorImage()
     // move cursor somewhere else, should reset to fallback cursor
     Cursor::setPos(window->geometry().bottomLeft() + QPoint(20, 20));
     QVERIFY(p->window().isNull());
-    QEXPECT_FAIL("", "Fix me", Continue);
     QVERIFY(!p->cursorImage().isNull());
 }
 

@@ -256,6 +256,7 @@ void PointerInputRedirection::update()
         }
     }
     if (t && t->surface()) {
+        m_window = QPointer<Toplevel>(t);
         seat->setFocusedPointerSurface(t->surface(), t->inputTransformation());
         m_windowGeometryConnection = connect(t, &Toplevel::geometryChanged, this,
             [this] {
@@ -275,14 +276,10 @@ void PointerInputRedirection::update()
             }
         );
     } else {
+        m_window.clear();
         seat->setFocusedPointerSurface(nullptr);
         t = nullptr;
     }
-    if (!t) {
-        m_window.clear();
-        return;
-    }
-    m_window = QPointer<Toplevel>(t);
 }
 
 void PointerInputRedirection::updateInternalWindow()
