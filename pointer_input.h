@@ -42,7 +42,7 @@ namespace Decoration
 class DecoratedClientImpl;
 }
 
-class PointerInputRedirection : public QObject
+class KWIN_EXPORT PointerInputRedirection : public QObject
 {
     Q_OBJECT
 public:

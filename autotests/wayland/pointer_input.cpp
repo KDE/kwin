@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -68,6 +69,7 @@ private Q_SLOTS:
     void testMouseActionInactiveWindow();
     void testMouseActionActiveWindow_data();
     void testMouseActionActiveWindow();
+    void testCursorImage();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -775,6 +777,85 @@ void PointerInputTest::testMouseActionActiveWindow()
 
     // release again
     waylandServer()->backend()->pointerButtonReleased(button, timestamp++);
+}
+
+void PointerInputTest::testCursorImage()
+{
+    // this test verifies that the pointer image gets updated correctly from the client provided data
+    using namespace KWayland::Client;
+    // we need a pointer to get the enter event
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy enteredSpy(pointer, &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+
+    // move cursor somewhere the new window won't open
+    Cursor::setPos(800, 800);
+    auto p = input()->pointer();
+    // at the moment it should be the fallback cursor
+    QVERIFY(!p->cursorImage().isNull());
+
+    // create a window
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = m_shell->createSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+
+    // move cursor to center of window, this should first set a null pointer
+    Cursor::setPos(window->geometry().center());
+    QCOMPARE(p->window().data(), window);
+    QEXPECT_FAIL("", "Fix me", Continue);
+    QVERIFY(p->cursorImage().isNull());
+    QVERIFY(enteredSpy.wait());
+
+    // create a cursor on the pointer
+    Surface *cursorSurface = m_compositor->createSurface(m_compositor);
+    QVERIFY(cursorSurface);
+    QSignalSpy cursorRenderedSpy(cursorSurface, &Surface::frameRendered);
+    QVERIFY(cursorRenderedSpy.isValid());
+    QImage red = QImage(QSize(10, 10), QImage::Format_ARGB32);
+    red.fill(Qt::red);
+    cursorSurface->attachBuffer(m_shm->createBuffer(red));
+    cursorSurface->damage(QRect(0, 0, 10, 10));
+    cursorSurface->commit();
+    pointer->setCursor(cursorSurface, QPoint(5, 5));
+    QVERIFY(cursorRenderedSpy.wait());
+    QCOMPARE(p->cursorImage(), red);
+    QCOMPARE(p->cursorHotSpot(), QPoint(5, 5));
+    // change hotspot
+    pointer->setCursor(cursorSurface, QPoint(6, 6));
+    m_connection->flush();
+    QTRY_COMPARE(p->cursorHotSpot(), QPoint(6, 6));
+    QCOMPARE(p->cursorImage(), red);
+
+    // change the buffer
+    QImage blue = QImage(QSize(10, 10), QImage::Format_ARGB32);
+    blue.fill(Qt::blue);
+    auto b = m_shm->createBuffer(blue);
+    cursorSurface->attachBuffer(b);
+    cursorSurface->damage(QRect(0, 0, 10, 10));
+    cursorSurface->commit();
+    QVERIFY(cursorRenderedSpy.wait());
+    QTRY_COMPARE(p->cursorImage(), blue);
+    QCOMPARE(p->cursorHotSpot(), QPoint(6, 6));
+
+    // hide the cursor
+    pointer->setCursor(nullptr);
+    m_connection->flush();
+    QTRY_VERIFY(p->cursorImage().isNull());
+
+    // move cursor somewhere else, should reset to fallback cursor
+    Cursor::setPos(window->geometry().bottomLeft() + QPoint(20, 20));
+    QVERIFY(p->window().isNull());
+    QEXPECT_FAIL("", "Fix me", Continue);
+    QVERIFY(!p->cursorImage().isNull());
 }
 
 }
