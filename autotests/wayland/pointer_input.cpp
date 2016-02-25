@@ -96,6 +96,9 @@ void PointerInputTest::initTestCase()
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
+    qputenv("XCURSOR_THEME", QByteArrayLiteral("breeze_cursors"));
+    qputenv("XCURSOR_SIZE", QByteArrayLiteral("32"));
+
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QCOMPARE(screens()->count(), 2);
