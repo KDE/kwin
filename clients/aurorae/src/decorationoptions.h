@@ -244,6 +244,7 @@ private:
     bool m_active;
     KDecoration2::Decoration *m_decoration;
     ColorSettings m_colors;
+    QMetaObject::Connection m_paletteConnection;
 };
 
 class Borders : public QObject
