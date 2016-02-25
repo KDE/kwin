@@ -909,7 +909,6 @@ void PointerInputTest::testEffectOverrideCursorImage()
     const QImage openHand = p->cursorImage();
     QVERIFY(!openHand.isNull());
     QVERIFY(openHand != fallback);
-    QEXPECT_FAIL("", "Fix me", Continue);
     QVERIFY(leftSpy.wait());
 
     // let's change to arrow cursor, this should be our fallback
@@ -924,7 +923,6 @@ void PointerInputTest::testEffectOverrideCursorImage()
     Cursor::setPos(800, 800);
     // and end the override, which should switch to fallback
     effects->stopMouseInterception(effect.data());
-    QEXPECT_FAIL("", "Fix me", Continue);
     QCOMPARE(p->cursorImage(), fallback);
 
     // start mouse interception again
@@ -938,7 +936,6 @@ void PointerInputTest::testEffectOverrideCursorImage()
 
     // after ending the interception we should get an enter event
     effects->stopMouseInterception(effect.data());
-    QEXPECT_FAIL("", "Fix me", Continue);
     QVERIFY(enteredSpy.wait());
     QVERIFY(p->cursorImage().isNull());
 }

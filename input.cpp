@@ -1022,6 +1022,10 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
     const bool isScreenLocked = waylandServer() && waylandServer()->isScreenLocked();
     // TODO: check whether the unmanaged wants input events at all
     if (!isScreenLocked) {
+        // if an effect overrides the cursor we don't have a window to focus
+        if (effects && static_cast<EffectsHandlerImpl*>(effects)->isMouseInterception()) {
+            return nullptr;
+        }
         const UnmanagedList &unmanaged = Workspace::self()->unmanagedList();
         foreach (Unmanaged *u, unmanaged) {
             if (u->geometry().contains(pos) && acceptsInput(u, pos)) {

@@ -487,6 +487,8 @@ void PointerInputRedirection::setEffectsOverrideCursor(Qt::CursorShape shape)
     if (!m_inited) {
         return;
     }
+    // current pointer focus window should get a leave event
+    update();
     m_cursor->setEffectsOverrideCursor(shape);
 }
 
@@ -495,6 +497,8 @@ void PointerInputRedirection::removeEffectsOverrideCursor()
     if (!m_inited) {
         return;
     }
+    // cursor position might have changed while there was an effect in place
+    update();
     m_cursor->removeEffectsOverrideCursor();
 }
 
