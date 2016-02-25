@@ -98,7 +98,6 @@ wl_cursor_image *WaylandCursorTheme::get(Qt::CursorShape shape)
                 break;
             }
         }
-        return nullptr;
     }
     if (!c || c->image_count <= 0) {
         return nullptr;
