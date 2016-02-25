@@ -70,6 +70,7 @@ private Q_SLOTS:
     void testMouseActionActiveWindow_data();
     void testMouseActionActiveWindow();
     void testCursorImage();
+    void testEffectOverrideCursorImage();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -854,6 +855,92 @@ void PointerInputTest::testCursorImage()
     Cursor::setPos(window->geometry().bottomLeft() + QPoint(20, 20));
     QVERIFY(p->window().isNull());
     QVERIFY(!p->cursorImage().isNull());
+}
+
+class HelperEffect : public Effect
+{
+    Q_OBJECT
+public:
+    HelperEffect() {}
+    ~HelperEffect() {}
+};
+
+void PointerInputTest::testEffectOverrideCursorImage()
+{
+    // this test verifies the effect cursor override handling
+    using namespace KWayland::Client;
+    // we need a pointer to get the enter event and set a cursor
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy enteredSpy(pointer, &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(pointer, &Pointer::left);
+    QVERIFY(leftSpy.isValid());
+    // move cursor somewhere the new window won't open
+    Cursor::setPos(800, 800);
+    auto p = input()->pointer();
+    // here we should have the fallback cursor
+    const QImage fallback = p->cursorImage();
+    QVERIFY(!fallback.isNull());
+
+    // now let's create a window
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = m_compositor->createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = m_shell->createSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+
+    // and move cursor to the window
+    QVERIFY(!window->geometry().contains(QPoint(800, 800)));
+    Cursor::setPos(window->geometry().center());
+    QVERIFY(enteredSpy.wait());
+    // cursor image should be null
+    QVERIFY(p->cursorImage().isNull());
+
+    // now create an effect and set an override cursor
+    QScopedPointer<HelperEffect> effect(new HelperEffect);
+    effects->startMouseInterception(effect.data(), Qt::OpenHandCursor);
+    const QImage openHand = p->cursorImage();
+    QVERIFY(!openHand.isNull());
+    QVERIFY(openHand != fallback);
+    QEXPECT_FAIL("", "Fix me", Continue);
+    QVERIFY(leftSpy.wait());
+
+    // let's change to arrow cursor, this should be our fallback
+    effects->defineCursor(Qt::ArrowCursor);
+    QCOMPARE(p->cursorImage(), fallback);
+
+    // back to openhand
+    effects->defineCursor(Qt::OpenHandCursor);
+    QCOMPARE(p->cursorImage(), openHand);
+
+    // move cursor outside the window area
+    Cursor::setPos(800, 800);
+    // and end the override, which should switch to fallback
+    effects->stopMouseInterception(effect.data());
+    QEXPECT_FAIL("", "Fix me", Continue);
+    QCOMPARE(p->cursorImage(), fallback);
+
+    // start mouse interception again
+    effects->startMouseInterception(effect.data(), Qt::OpenHandCursor);
+    QCOMPARE(p->cursorImage(), openHand);
+
+    // move cursor to area of window
+    Cursor::setPos(window->geometry().center());
+    // this should not result in an enter event
+    QVERIFY(!enteredSpy.wait(100));
+
+    // after ending the interception we should get an enter event
+    effects->stopMouseInterception(effect.data());
+    QEXPECT_FAIL("", "Fix me", Continue);
+    QVERIFY(enteredSpy.wait());
+    QVERIFY(p->cursorImage().isNull());
 }
 
 }
