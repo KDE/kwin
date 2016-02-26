@@ -24,12 +24,7 @@ var morphingEffect = {
         "use strict";
         morphingEffect.duration = animationTime(150);
     },
-    cleanup: function(window) {
-        "use strict";
 
-        delete window.moveAnimation;
-        delete window.fadeAnimation;
-    },
     geometryChange: function (window, oldGeometry) {
         "use strict";
 
@@ -45,6 +40,13 @@ var morphingEffect = {
         var distance = Math.abs(oldGeometry.x - newGeometry.x) + Math.abs(oldGeometry.y - newGeometry.y);
 
         if (distance > (newGeometry.width + newGeometry.height) * 2) {
+            if (window.moveAnimation) {
+                delete window.moveAnimation;
+            }
+            if (window.fadeAnimation) {
+                delete window.fadeAnimation;
+            }
+
             return;
         }
 
@@ -61,22 +63,28 @@ var morphingEffect = {
         //WindowForceBlurRole
         window.setData(5, true);
 
+        var couldRetarget = false;
 
         if (window.moveAnimation) {
             if (window.moveAnimation[0]) {
-                retarget(window.moveAnimation[0], {
+                couldRetarget = retarget(window.moveAnimation[0], {
                         value1: newGeometry.width,
                         value2: newGeometry.height
                     }, morphingEffect.duration);
             }
-            if (window.moveAnimation[1]) {
-                retarget(window.moveAnimation[1], {
+            if (couldRetarget && window.moveAnimation[1]) {
+                couldRetarget = retarget(window.moveAnimation[1], {
                         value1: newGeometry.x + newGeometry.width/2,
                         value2: newGeometry.y + newGeometry.height / 2
                     }, morphingEffect.duration);
             }
+            if (!couldRetarget) {
+                cancel(window.moveAnimation[0]);
+            }
 
-        } else {
+        }
+
+        if (!couldRetarget) {
             window.moveAnimation = animate({
                 window: window,
                 duration: morphingEffect.duration,
@@ -105,10 +113,12 @@ var morphingEffect = {
 
         }
 
+        couldRetarget = false;
         if (window.fadeAnimation) {
-            retarget(window.fadeAnimation[0], 1.0, morphingEffect.duration);
+            couldRetarget = retarget(window.fadeAnimation[0], 1.0, morphingEffect.duration);
+        }
 
-        } else {
+        if (!couldRetarget) {
             window.fadeAnimation = animate({
                 window: window,
                 duration: morphingEffect.duration,
@@ -125,7 +135,6 @@ var morphingEffect = {
         "use strict";
         effect.configChanged.connect(morphingEffect.loadConfig);
         effects.windowGeometryShapeChanged.connect(morphingEffect.geometryChange);
-        effect.animationEnded.connect(morphingEffect.cleanup);
     }
 };
 morphingEffect.init();

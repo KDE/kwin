@@ -378,12 +378,16 @@ QScriptValue kwinEffectRetarget(QScriptContext *context, QScriptEngine *engine)
     FPx2 target;
     fpx2FromScriptValue(context->argument(1), target);
 
+    ok = false;
     const int remainingTime = context->argumentCount() == 3 ? context->argument(2).toVariant().toInt() : -1;
     foreach (const quint64 &animId, animIds) {
-        ok |= engine->newVariant(effect->retarget(animId, target, remainingTime)).toBool();
+        ok = effect->retarget(animId, target, remainingTime);
+        if (!ok) {
+            break;
+        }
     }
 
-    return engine->newVariant(ok);
+    return QScriptValue(ok);
 }
 
 QScriptValue kwinEffectCancel(QScriptContext *context, QScriptEngine *engine)
