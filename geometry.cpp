@@ -2256,7 +2256,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         // triggers a maximize change.
         // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore geometry
         changeMaximizeRecursion = true;
-        setNoBorder(app_noborder || max_mode == MaximizeFull);
+        setNoBorder(rules()->checkNoBorder(app_noborder || (m_motif.hasDecoration() && m_motif.noBorder()) || max_mode == MaximizeFull));
         changeMaximizeRecursion = false;
     }
 
