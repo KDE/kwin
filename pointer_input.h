@@ -144,6 +144,8 @@ private:
     void updateDecoration();
     void updateDecorationCursor();
     void updateMoveResize();
+    void updateDrag();
+    void updateDragCursor();
     void loadTheme();
     struct Image {
         QImage image;
@@ -157,6 +159,7 @@ private:
         MoveResize,
         PointerSurface,
         Decoration,
+        DragAndDrop,
         Fallback
     };
     void setSource(CursorSource source);
@@ -177,6 +180,10 @@ private:
     Image m_moveResizeCursor;
     QHash<Qt::CursorShape, Image> m_cursors;
     QElapsedTimer m_surfaceRenderedTimer;
+    struct {
+        Image cursor;
+        QMetaObject::Connection connection;
+    } m_drag;
 };
 
 }

@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/datadevice_interface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
@@ -128,6 +129,14 @@ void PointerInputRedirection::init()
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &PointerInputRedirection::update);
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
+    connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::dragEnded, this,
+        [this] {
+            // need to force a focused pointer change
+            waylandServer()->seat()->setFocusedPointerSurface(nullptr);
+            m_window.clear();
+            update();
+        }
+    );
 
     // warp the cursor to center of screen
     warp(screens()->geometry().center());
@@ -214,6 +223,10 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
 void PointerInputRedirection::update()
 {
     if (!m_inited) {
+        return;
+    }
+    if (waylandServer()->seat()->isDragPointer()) {
+        // ignore during drag and drop
         return;
     }
     // TODO: handle pointer grab aka popups
@@ -507,6 +520,13 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     , m_pointer(parent)
 {
     connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::focusedPointerChanged, this, &CursorImage::update);
+    connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::dragStarted, this, &CursorImage::updateDrag);
+    connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::dragEnded, this,
+        [this] {
+            disconnect(m_drag.connection);
+            reevaluteSource();
+        }
+    );
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
     connect(m_pointer, &PointerInputRedirection::decorationChanged, this, &CursorImage::updateDecoration);
     // connect the move resize of all window
@@ -536,6 +556,28 @@ CursorImage::~CursorImage() = default;
 
 void CursorImage::markAsRendered()
 {
+    if (m_currentSource == CursorSource::DragAndDrop) {
+        // always sending a frame rendered to the drag icon surface to not freeze QtWayland (see https://bugreports.qt.io/browse/QTBUG-51599 )
+        if (auto ddi = waylandServer()->seat()->dragSource()) {
+            if (auto s = ddi->icon()) {
+                s->frameRendered(m_surfaceRenderedTimer.elapsed());
+            }
+        }
+        auto p = waylandServer()->seat()->dragPointer();
+        if (!p) {
+            return;
+        }
+        auto c = p->cursor();
+        if (!c) {
+            return;
+        }
+        auto cursorSurface = c->surface();
+        if (cursorSurface.isNull()) {
+            return;
+        }
+        cursorSurface->frameRendered(m_surfaceRenderedTimer.elapsed());
+        return;
+    }
     if (m_currentSource != CursorSource::LockScreen && m_currentSource != CursorSource::PointerSurface) {
         return;
     }
@@ -680,6 +722,70 @@ void CursorImage::removeEffectsOverrideCursor()
     reevaluteSource();
 }
 
+void CursorImage::updateDrag()
+{
+    using namespace KWayland::Server;
+    disconnect(m_drag.connection);
+    m_drag.cursor.image = QImage();
+    m_drag.cursor.hotSpot = QPoint();
+    reevaluteSource();
+    if (auto p = waylandServer()->seat()->dragPointer()) {
+        m_drag.connection = connect(p, &PointerInterface::cursorChanged, this, &CursorImage::updateDragCursor);
+    } else {
+        m_drag.connection = QMetaObject::Connection();
+    }
+    updateDragCursor();
+}
+
+void CursorImage::updateDragCursor()
+{
+    m_drag.cursor.image = QImage();
+    m_drag.cursor.hotSpot = QPoint();
+    const bool needsEmit = m_currentSource == CursorSource::DragAndDrop;
+    QImage additionalIcon;
+    if (auto ddi = waylandServer()->seat()->dragSource()) {
+        if (auto dragIcon = ddi->icon()) {
+            if (auto buffer = dragIcon->buffer()) {
+                additionalIcon = buffer->data().copy();
+            }
+        }
+    }
+    auto p = waylandServer()->seat()->dragPointer();
+    if (!p) {
+        if (needsEmit) {
+            emit changed();
+        }
+        return;
+    }
+    auto c = p->cursor();
+    if (!c) {
+        if (needsEmit) {
+            emit changed();
+        }
+        return;
+    }
+    auto cursorSurface = c->surface();
+    if (cursorSurface.isNull()) {
+        if (needsEmit) {
+            emit changed();
+        }
+        return;
+    }
+    auto buffer = cursorSurface.data()->buffer();
+    if (!buffer) {
+        if (needsEmit) {
+            emit changed();
+        }
+        return;
+    }
+    m_drag.cursor.hotSpot = c->hotspot();
+    m_drag.cursor.image = buffer->data().copy();
+    if (needsEmit) {
+        emit changed();
+    }
+    // TODO: add the cursor image
+}
+
 void CursorImage::loadThemeCursor(Qt::CursorShape shape, Image *image)
 {
     loadTheme();
@@ -712,6 +818,11 @@ void CursorImage::loadThemeCursor(Qt::CursorShape shape, Image *image)
 
 void CursorImage::reevaluteSource()
 {
+    if (waylandServer()->seat()->isDragPointer()) {
+        // TODO: touch drag?
+        setSource(CursorSource::DragAndDrop);
+        return;
+    }
     if (waylandServer()->isScreenLocked()) {
         setSource(CursorSource::LockScreen);
         return;
@@ -757,6 +868,8 @@ QImage CursorImage::image() const
         return m_serverCursor.image;
     case CursorSource::Decoration:
         return m_decorationCursor.image;
+    case CursorSource::DragAndDrop:
+        return m_drag.cursor.image;
     case CursorSource::Fallback:
         return m_fallbackCursor.image;
     default:
@@ -777,6 +890,8 @@ QPoint CursorImage::hotSpot() const
         return m_serverCursor.hotSpot;
     case CursorSource::Decoration:
         return m_decorationCursor.hotSpot;
+    case CursorSource::DragAndDrop:
+        return m_drag.cursor.hotSpot;
     case CursorSource::Fallback:
         return m_fallbackCursor.hotSpot;
     default:

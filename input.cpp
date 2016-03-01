@@ -687,6 +687,47 @@ public:
     }
 };
 
+class DragAndDropInputFilter : public InputEventFilter
+{
+public:
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+        auto seat = waylandServer()->seat();
+        if (!seat->isDragPointer()) {
+            return false;
+        }
+        seat->setTimestamp(event->timestamp());
+        switch (event->type()) {
+        case QEvent::MouseMove: {
+            if (Toplevel *t = input()->findToplevel(event->globalPos())) {
+                // TODO: consider decorations
+                if (t->surface() != seat->dragSurface()) {
+                    if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
+                        workspace()->raiseClient(c);
+                    }
+                    seat->setPointerPos(event->globalPos());
+                    seat->setDragTarget(t->surface(), event->globalPos(), t->inputTransformation());
+                }
+            } else {
+                // no window at that place, if we have a surface we need to reset
+                seat->setDragTarget(nullptr);
+            }
+            seat->setPointerPos(event->globalPos());
+            break;
+        }
+        case QEvent::MouseButtonPress:
+            seat->pointerButtonPressed(nativeButton);
+            break;
+        case QEvent::MouseButtonRelease:
+            seat->pointerButtonReleased(nativeButton);
+            break;
+        default:
+            break;
+        }
+        // TODO: should we pass through effects?
+        return true;
+    }
+};
+
 KWIN_SINGLETON_FACTORY(InputRedirection)
 
 InputRedirection::InputRedirection(QObject *parent)
@@ -808,6 +849,7 @@ void InputRedirection::setupInputFilters()
     }
 #endif
     if (waylandServer()) {
+        installInputEventFilter(new DragAndDropInputFilter);
         installInputEventFilter(new LockScreenFilter);
     }
     installInputEventFilter(new ScreenEdgeInputFilter);
