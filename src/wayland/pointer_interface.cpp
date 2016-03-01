@@ -99,8 +99,13 @@ const struct wl_pointer_interface PointerInterface::Private::s_interface = {
 PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentResource)
     : Resource(new Private(parent, parentResource, this), parent)
 {
+    // TODO: handle touch
     connect(parent, &SeatInterface::pointerPosChanged, this, [this] {
         Q_D();
+        if (d->seat->isDragPointer()) {
+            // handled by DataDevice
+            return;
+        }
         if (d->focusedSurface && d->resource) {
             const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
             wl_pointer_send_motion(d->resource, d->seat->timestamp(),

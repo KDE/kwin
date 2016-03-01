@@ -49,11 +49,19 @@ public:
 
     DataSourceInterface *selection = nullptr;
 
+    struct Drag {
+        SurfaceInterface *surface = nullptr;
+        QMetaObject::Connection destroyConnection;
+        QMetaObject::Connection pointerPosConnection;
+        quint32 serial = 0;
+    };
+    Drag drag;
+
 private:
     DataDeviceInterface *q_func() {
         return reinterpret_cast<DataDeviceInterface*>(q);
     }
-    void startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *icon);
+    void startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *icon, quint32 serial);
     void setSelection(DataSourceInterface *dataSource);
     static void startDragCallback(wl_client *client, wl_resource *resource, wl_resource *source, wl_resource *origin, wl_resource *icon, uint32_t serial);
     static void setSelectionCallback(wl_client *client, wl_resource *resource, wl_resource *source, uint32_t serial);
@@ -83,18 +91,21 @@ void DataDeviceInterface::Private::startDragCallback(wl_client *client, wl_resou
     Q_UNUSED(client)
     Q_UNUSED(serial)
     // TODO: verify serial
-    cast<Private>(resource)->startDrag(DataSourceInterface::get(source), SurfaceInterface::get(origin), SurfaceInterface::get(icon));
+    cast<Private>(resource)->startDrag(DataSourceInterface::get(source), SurfaceInterface::get(origin), SurfaceInterface::get(icon), serial);
 }
 
-void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *i)
+void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *i, quint32 serial)
 {
-    if (seat->focusedPointerSurface() != origin) {
+    // TODO: allow touch
+    if (seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() != origin) {
         wl_resource_post_error(resource, 0, "Surface doesn't have pointer grab");
         return;
     }
+    // TODO: source is allowed to be null, handled client internally!
     source = dataSource;
     surface = origin;
     icon = i;
+    drag.serial = serial;
     Q_Q(DataDeviceInterface);
     emit q->dragStarted();
 }
@@ -199,6 +210,75 @@ void DataDeviceInterface::sendClearSelection()
         return;
     }
     wl_data_device_send_selection(d->resource, nullptr);
+}
+
+void DataDeviceInterface::drop()
+{
+    Q_D();
+    if (!d->resource) {
+        return;
+    }
+    wl_data_device_send_drop(d->resource);
+    client()->flush();
+}
+
+void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 serial)
+{
+    Q_D();
+    if (d->drag.surface) {
+        if (d->resource && d->drag.surface->resource()) {
+            wl_data_device_send_leave(d->resource);
+        }
+        if (d->drag.pointerPosConnection) {
+            disconnect(d->drag.pointerPosConnection);
+            d->drag.pointerPosConnection = QMetaObject::Connection();
+        }
+        disconnect(d->drag.destroyConnection);
+        d->drag.destroyConnection = QMetaObject::Connection();
+        d->drag.surface = nullptr;
+        // don't update serial, we need it
+    }
+    if (!surface) {
+        return;
+    }
+    DataOfferInterface *offer = d->createDataOffer(d->seat->dragSource()->dragSource());
+    d->drag.surface = surface;
+    if (d->seat->isDragPointer()) {
+        d->drag.pointerPosConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this,
+            [this] {
+                Q_D();
+                const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
+                wl_data_device_send_motion(d->resource, d->seat->timestamp(),
+                                        wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+                client()->flush();
+            }
+        );
+    }
+    // TODO: same for touch
+    d->drag.destroyConnection = connect(d->drag.surface, &QObject::destroyed, this,
+        [this] {
+            Q_D();
+            if (d->resource) {
+                wl_data_device_send_leave(d->resource);
+            }
+            if (d->drag.pointerPosConnection) {
+                disconnect(d->drag.pointerPosConnection);
+            }
+            d->drag = Private::Drag();
+        }
+    );
+
+    // TODO: handle touch position
+    const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
+    wl_data_device_send_enter(d->resource, serial, surface->resource(),
+                              wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
+    d->client->flush();
+}
+
+quint32 DataDeviceInterface::dragImplicitGrabSerial() const
+{
+    Q_D();
+    return d->drag.serial;
 }
 
 DataDeviceInterface::Private *DataDeviceInterface::d_func() const

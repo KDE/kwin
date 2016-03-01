@@ -231,6 +231,30 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
             updateSelection(dataDevice, false);
         }
     );
+    QObject::connect(dataDevice, &DataDeviceInterface::dragStarted, q,
+        [this, dataDevice] {
+            if (q->hasImplicitPointerGrab(dataDevice->dragImplicitGrabSerial())) {
+                drag.mode = Drag::Mode::Pointer;
+            } else {
+                // TODO: touch
+                return;
+            }
+            drag.source = dataDevice;
+            drag.target = dataDevice;
+            drag.surface = dataDevice->origin();
+            drag.sourcePointer = interfaceForSurface(drag.surface, pointers);
+            // TODO: transformation needs to be either pointer or touch
+            drag.transformation = globalPointer.focus.transformation;
+            drag.destroyConnection = QObject::connect(dataDevice, &QObject::destroyed, q,
+                [this] {
+                    endDrag(display->nextSerial());
+                }
+            );
+            dataDevice->updateDragTarget(dataDevice->origin(), dataDevice->dragImplicitGrabSerial());
+            emit q->dragStarted();
+            emit q->dragSurfaceChanged();
+        }
+    );
     // is the new DataDevice for the current keyoard focus?
     if (keys.focus.surface && !keys.focus.selection) {
         // same client?
@@ -241,6 +265,19 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
             }
         }
     }
+}
+
+void SeatInterface::Private::endDrag(quint32 serial)
+{
+    auto target = drag.target;
+    QObject::disconnect(drag.destroyConnection);
+    if (target) {
+        target->drop();
+        target->updateDragTarget(nullptr, serial);
+    }
+    drag = Drag();
+    emit q->dragSurfaceChanged();
+    emit q->dragEnded();
 }
 
 void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice, bool set)
@@ -477,6 +514,39 @@ void SeatInterface::setTimestamp(quint32 time)
     emit timestampChanged(time);
 }
 
+void SeatInterface::setDragTarget(SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation)
+{
+    Q_D();
+    if (surface == d->drag.surface) {
+        // no change
+        return;
+    }
+    const quint32 serial = d->display->nextSerial();
+    if (d->drag.target) {
+        d->drag.target->updateDragTarget(nullptr, serial);
+    }
+    d->drag.target = d->dataDeviceForSurface(surface);
+    // TODO: update touch
+    if (d->drag.mode == Private::Drag::Mode::Pointer) {
+        setPointerPos(globalPosition);
+    }
+    if (d->drag.target) {
+        d->drag.surface = surface;
+        d->drag.transformation = inputTransformation;
+        d->drag.target->updateDragTarget(surface, serial);
+    } else {
+        d->drag.surface = nullptr;
+    }
+    emit dragSurfaceChanged();
+    return;
+}
+
+void SeatInterface::setDragTarget(SurfaceInterface *surface, const QMatrix4x4 &inputTransformation)
+{
+    // TODO: handle touch
+    setDragTarget(surface, pointerPos(), inputTransformation);
+}
+
 SurfaceInterface *SeatInterface::focusedPointerSurface() const
 {
     Q_D();
@@ -497,6 +567,10 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QP
 void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QMatrix4x4 &transformation)
 {
     Q_D();
+    if (d->drag.mode == Private::Drag::Mode::Pointer) {
+        // ignore
+        return;
+    }
     const quint32 serial = d->display->nextSerial();
     if (d->globalPointer.focus.pointer) {
         d->globalPointer.focus.pointer->setFocusedSurface(nullptr, serial);
@@ -610,6 +684,10 @@ bool SeatInterface::isPointerButtonPressed(quint32 button) const
 void SeatInterface::pointerAxis(Qt::Orientation orientation, quint32 delta)
 {
     Q_D();
+    if (d->drag.mode == Private::Drag::Mode::Pointer) {
+        // ignore
+        return;
+    }
     if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
         d->globalPointer.focus.pointer->axis(orientation, delta);
     }
@@ -630,6 +708,10 @@ void SeatInterface::pointerButtonPressed(quint32 button)
     const quint32 serial = d->display->nextSerial();
     d->updatePointerButtonSerial(button, serial);
     d->updatePointerButtonState(button, Private::Pointer::State::Pressed);
+    if (d->drag.mode == Private::Drag::Mode::Pointer) {
+        // ignore
+        return;
+    }
     if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
         d->globalPointer.focus.pointer->buttonPressed(button, serial);
     }
@@ -648,8 +730,17 @@ void SeatInterface::pointerButtonReleased(quint32 button)
 {
     Q_D();
     const quint32 serial = d->display->nextSerial();
+    const quint32 currentButtonSerial = pointerButtonSerial(button);
     d->updatePointerButtonSerial(button, serial);
     d->updatePointerButtonState(button, Private::Pointer::State::Released);
+    if (d->drag.mode == Private::Drag::Mode::Pointer) {
+        if (d->drag.source->dragImplicitGrabSerial() != currentButtonSerial) {
+            // not our drag button - ignore
+            return;
+        }
+        d->endDrag(serial);
+        return;
+    }
     if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
         d->globalPointer.focus.pointer->buttonReleased(button, serial);
     }
@@ -995,6 +1086,64 @@ void SeatInterface::touchFrame()
     if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
         d->touchInterface.focus.touch->frame();
     }
+}
+
+bool SeatInterface::isDrag() const
+{
+    Q_D();
+    return d->drag.mode != Private::Drag::Mode::None;
+}
+
+bool SeatInterface::isDragPointer() const
+{
+    Q_D();
+    return d->drag.mode == Private::Drag::Mode::Pointer;
+}
+
+bool SeatInterface::isDragTouch() const
+{
+    Q_D();
+    return d->drag.mode == Private::Drag::Mode::Touch;
+}
+
+bool SeatInterface::hasImplicitPointerGrab(quint32 serial) const
+{
+    Q_D();
+    const auto &serials = d->globalPointer.buttonSerials;
+    for (auto it = serials.begin(), end = serials.end(); it != end; it++) {
+        if (it.value() == serial) {
+            return isPointerButtonPressed(it.key());
+        }
+    }
+    return false;
+}
+
+QMatrix4x4 SeatInterface::dragSurfaceTransformation() const
+{
+    Q_D();
+    return d->drag.transformation;
+}
+
+SurfaceInterface *SeatInterface::dragSurface() const
+{
+    Q_D();
+    return d->drag.surface;
+}
+
+PointerInterface *SeatInterface::dragPointer() const
+{
+    Q_D();
+    if (d->drag.mode != Private::Drag::Mode::Pointer) {
+        return nullptr;
+    }
+
+    return d->drag.sourcePointer;
+}
+
+DataDeviceInterface *SeatInterface::dragSource() const
+{
+    Q_D();
+    return d->drag.source;
 }
 
 }

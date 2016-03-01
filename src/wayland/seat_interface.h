@@ -38,6 +38,7 @@ namespace KWayland
 namespace Server
 {
 
+class DataDeviceInterface;
 class Display;
 class SurfaceInterface;
 
@@ -132,6 +133,76 @@ public:
 
     void setTimestamp(quint32 time);
     quint32 timestamp() const;
+
+    /**
+     * @name Drag'n'Drop related methods
+     **/
+    ///@{
+    /**
+     * @returns whether there is currently a drag'n'drop going on.
+     * @since 5.6
+     * @see isDragPointer
+     * @see isDragTouch
+     * @see dragStarted
+     * @see dragEnded
+     **/
+    bool isDrag() const;
+    /**
+     * @returns whether the drag'n'drop is operated through the pointer device
+     * @since 5.6
+     * @see isDrag
+     * @see isDragTouch
+     **/
+    bool isDragPointer() const;
+    /**
+     * @returns whether the drag'n'drop is operated through the touch device
+     * @since 5.6
+     * @see isDrag
+     * @see isDragPointer
+     **/
+    bool isDragTouch() const;
+    /**
+     * @returns The transformation applied to go from global to local coordinates for drag motion events.
+     * @see dragSurfaceTransformation
+     * @since 5.6
+     **/
+    QMatrix4x4 dragSurfaceTransformation() const;
+    /**
+     * @returns The currently focused Surface for drag motion events.
+     * @since 5.6
+     * @see dragSurfaceTransformation
+     * @see dragSurfaceChanged
+     **/
+    SurfaceInterface *dragSurface() const;
+    /**
+     * @returns The PointerInterface which triggered the drag operation
+     * @since 5.6
+     * @see isDragPointer
+     **/
+    PointerInterface *dragPointer() const;
+    /**
+     * @returns The DataDeviceInterface which started the drag and drop operation.
+     * @see isDrag
+     * @since 5.6
+     **/
+    DataDeviceInterface *dragSource() const;
+    /**
+     * Sets the current drag target to @p surface.
+     *
+     * Sends a drag leave event to the current target and an enter event to @p surface.
+     * The enter position is derived from @p globalPosition and transformed by @p inputTransformation.
+     * @since 5.6
+     **/
+    void setDragTarget(SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation);
+    /**
+     * Sets the current drag target to @p surface.
+     *
+     * Sends a drag leave event to the current target and an enter event to @p surface.
+     * The enter position is derived from current global position and transformed by @p inputTransformation.
+     * @since 5.6
+     **/
+    void setDragTarget(SurfaceInterface *surface, const QMatrix4x4 &inputTransformation = QMatrix4x4());
+    ///@}
 
     /**
      * @name Pointer related methods
@@ -290,6 +361,11 @@ public:
      **/
     quint32 pointerButtonSerial(Qt::MouseButton button) const;
     void pointerAxis(Qt::Orientation orientation, quint32 delta);
+    /**
+     * @returns true if there is a pressed button with the given @p serial
+     * @since 5.6
+     **/
+    bool hasImplicitPointerGrab(quint32 serial) const;
     ///@}
 
     /**
@@ -378,6 +454,25 @@ Q_SIGNALS:
      * @since 5.6
      **/
     void focusedPointerChanged(KWayland::Server::PointerInterface*);
+
+    /**
+     * Emitted when a drag'n'drop operation is started
+     * @since 5.6
+     * @see dragEnded
+     **/
+    void dragStarted();
+    /**
+     * Emitted when a drag'n'drop operation ended, either by dropping or canceling.
+     * @since 5.6
+     * @see dragStarted
+     **/
+    void dragEnded();
+    /**
+     * Emitted whenever the drag surface for motion events changed.
+     * @since 5.6
+     * @see dragSurface
+     **/
+    void dragSurfaceChanged();
 
 private:
     friend class Display;

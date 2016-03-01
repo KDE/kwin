@@ -32,6 +32,7 @@ namespace Server
 {
 
 class DataDeviceManagerInterface;
+class DataOfferInterface;
 class DataSourceInterface;
 class SeatInterface;
 class SurfaceInterface;
@@ -53,10 +54,34 @@ public:
     SurfaceInterface *origin() const;
     SurfaceInterface *icon() const;
 
+    /**
+     * @returns the serial of the implicit grab which started the drag
+     * @since 5.6
+     **/
+    quint32 dragImplicitGrabSerial() const;
+
     DataSourceInterface *selection() const;
 
     void sendSelection(DataDeviceInterface *other);
     void sendClearSelection();
+    /**
+     * The event is sent when a drag-and-drop operation is ended because the implicit grab is removed.
+     * @since 5.6
+     **/
+    void drop();
+    /**
+     * Updates the SurfaceInterface to which drag motion events are sent.
+     *
+     * If a SurfaceInterface was registered in this DataDeviceInterface for drag motion events, it
+     * will be sent a leave event.
+     *
+     * If @p surface is not null it will be sent a drag enter event.
+     *
+     * @param surface The SurfaceInterface which gets motion events
+     * @param serial The serial to be used for enter/leave
+     * @since 5.6
+     **/
+    void updateDragTarget(SurfaceInterface *surface, quint32 serial);
 
 Q_SIGNALS:
     void dragStarted();

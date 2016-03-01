@@ -72,9 +72,12 @@ DataOfferInterface::Private::~Private() = default;
 void DataOfferInterface::Private::acceptCallback(wl_client *client, wl_resource *resource, uint32_t serial, const char *mimeType)
 {
     Q_UNUSED(client)
-    Q_UNUSED(resource)
     Q_UNUSED(serial)
-    Q_UNUSED(mimeType)
+    auto p = cast<Private>(resource);
+    if (!p->source) {
+        return;
+    }
+    p->source->accept(mimeType ? QString::fromUtf8(mimeType) : QString());
 }
 
 void DataOfferInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
@@ -104,6 +107,12 @@ DataOfferInterface::DataOfferInterface(DataSourceInterface *source, DataDeviceIn
                 return;
             }
             wl_data_offer_send_offer(d->resource, mimeType.toUtf8().constData());
+        }
+    );
+    QObject::connect(source, &QObject::destroyed, this,
+        [this] {
+            Q_D();
+            d->source = nullptr;
         }
     );
 }

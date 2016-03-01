@@ -47,6 +47,7 @@ public:
     TouchInterface *touchForSurface(SurfaceInterface *surface) const;
     DataDeviceInterface *dataDeviceForSurface(SurfaceInterface *surface) const;
     void registerDataDevice(DataDeviceInterface *dataDevice);
+    void endDrag(quint32 serial);
 
     QString name;
     bool pointer = false;
@@ -132,6 +133,22 @@ public:
         QVector<qint32> ids;
     };
     Touch touchInterface;
+
+    struct Drag {
+        enum class Mode {
+            None,
+            Pointer,
+            Touch
+        };
+        Mode mode = Mode::None;
+        DataDeviceInterface *source = nullptr;
+        DataDeviceInterface *target = nullptr;
+        SurfaceInterface *surface = nullptr;
+        PointerInterface *sourcePointer = nullptr;
+        QMatrix4x4 transformation;
+        QMetaObject::Connection destroyConnection;
+    };
+    Drag drag;
 
     static SeatInterface *get(wl_resource *native) {
         auto s = cast(native);
