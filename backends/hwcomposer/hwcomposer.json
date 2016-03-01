@@ -3,6 +3,7 @@
         "Description": "Render through hwcomposer through libhybris.", 
         "Description[ca@valencia]": "Renderitza mitjançant el «hwcomposer» mitjançant «libhybris».", 
         "Description[ca]": "Renderitza mitjançant el «hwcomposer» mitjançant «libhybris».", 
+        "Description[da]": "Rendér igennem hwcomposer igennem libhybris.", 
         "Description[es]": "Renderizar a través «hwcomposer» mediante «libhybris».", 
         "Description[fi]": "Renderöi hwcomposerin läpi käyttäen libhybristä.", 
         "Description[fr]": "Rendre par le biais de « hwcomposer » via « libhybris ».", 
