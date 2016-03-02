@@ -201,6 +201,10 @@ void TestWindowManagement::cleanup()
         delete m_queue;
         m_queue = nullptr;
     }
+    if (m_windowManagement) {
+        delete m_windowManagement;
+        m_windowManagement = nullptr;
+    }
     if (m_registry) {
         delete m_registry;
         m_registry = nullptr;
