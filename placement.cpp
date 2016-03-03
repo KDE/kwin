@@ -497,7 +497,7 @@ void Placement::placeOnScreenDisplay(AbstractClient* c, QRect& area)
 void Placement::placeTransient(AbstractClient *c)
 {
     // TODO: apply sanity checks?
-    c->move(c->transientFor()->pos() + c->transientPlacementHint());
+    c->move(c->transientFor()->pos() + c->transientFor()->clientPos() + c->transientPlacementHint());
 }
 
 void Placement::placeDialog(AbstractClient* c, QRect& area, Policy nextPlacement)

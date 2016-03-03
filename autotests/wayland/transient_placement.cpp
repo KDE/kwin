@@ -297,7 +297,6 @@ void TransientPlacementTest::testDecorationPosition()
     QVERIFY(transient->hasTransientPlacementHint());
     QFETCH(QRect, expectedGeometry);
     expectedGeometry.translate(parent->clientPos());
-    QEXPECT_FAIL("", "Fix me", Continue);
     QCOMPARE(transient->geometry(), expectedGeometry);
 }
 
