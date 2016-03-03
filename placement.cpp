@@ -522,7 +522,7 @@ void Placement::placeTransient(AbstractClient *c)
     }
     if (screen.x() > c->x()) {
         // left is not on screen
-        c->move(screen.y(), c->y());
+        c->move(screen.x(), c->y());
         CHECK
     }
 #undef CHECK
