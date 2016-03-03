@@ -233,3 +233,14 @@ add_executable(testServerSideDecoration ${testServerSideDecoration_SRCS})
 target_link_libraries( testServerSideDecoration Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
 add_test(kwayland-testServerSideDecoration testServerSideDecoration)
 ecm_mark_as_test(testServerSideDecoration)
+
+########################################################
+# Test Drag'N'Drop
+########################################################
+set( testDragAndDrop_SRCS
+        test_drag_drop.cpp
+    )
+add_executable(testDragAndDrop ${testDragAndDrop_SRCS})
+target_link_libraries( testDragAndDrop Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
+add_test(kwayland-testDragAndDrop testDragAndDrop)
+ecm_mark_as_test(testDragAndDrop)
