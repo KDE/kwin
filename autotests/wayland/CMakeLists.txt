@@ -116,3 +116,12 @@ add_executable(testDontCrashCancelAnimation ${testDontCrashCancelAnimation_SRCS}
 target_link_libraries( testDontCrashCancelAnimation kwin Qt5::Test)
 add_test(kwin-testDontCrashCancelAnimation testDontCrashCancelAnimation)
 ecm_mark_as_test(testDontCrashCancelAnimation)
+
+########################################################
+# Transient Placement Test
+########################################################
+set( testTransientPlacmenet_SRCS transient_placement.cpp kwin_wayland_test.cpp )
+add_executable(testTransientPlacmenet ${testTransientPlacmenet_SRCS})
+target_link_libraries( testTransientPlacmenet kwin Qt5::Test)
+add_test(kwin-testTransientPlacmenet testTransientPlacmenet)
+ecm_mark_as_test(testTransientPlacmenet)
