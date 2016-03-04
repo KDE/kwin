@@ -127,6 +127,15 @@ public:
     Unmanaged *findUnmanaged(xcb_window_t w) const;
     void forEachUnmanaged(std::function<void (Unmanaged*)> func);
     Toplevel *findToplevel(std::function<bool (const Toplevel*)> func) const;
+    /**
+     * @brief Finds a Toplevel for the internal window @p w.
+     *
+     * Internal window means a window created by KWin itself. On X11 this is an Unmanaged
+     * and mapped by the window id, on Wayland a ShellClient mapped on the internal window id.
+     *
+     * @returns Toplevel
+     **/
+    Toplevel *findInternal(QWindow *w) const;
 
     QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
     QRect clientArea(clientAreaOption, const AbstractClient* c) const;

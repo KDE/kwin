@@ -1693,5 +1693,17 @@ void Workspace::forEachAbstractClient(std::function< void (AbstractClient*) > fu
     std::for_each(desktops.constBegin(), desktops.constEnd(), func);
 }
 
+Toplevel *Workspace::findInternal(QWindow *w) const
+{
+    if (!w) {
+        return nullptr;
+    }
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        return findUnmanaged(w->winId());
+    } else {
+        return waylandServer()->findClient(w);
+    }
+}
+
 } // namespace
 
