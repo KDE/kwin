@@ -47,10 +47,13 @@ public:
     EffectWindowList m_zombies;
     bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched, m_isInitialized;
     quint64 m_justEndedAnimation; // protect against cancel
+    static quint64 m_animCounter;
 };
 }
 
 using namespace KWin;
+
+quint64 AnimationEffectPrivate::m_animCounter = 0;
 
 AnimationEffect::AnimationEffect() : d_ptr(new AnimationEffectPrivate())
 {
@@ -235,7 +238,8 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     if (it == d->m_animations.end())
         it = d->m_animations.insert(w, QPair<QList<AniData>, QRect>(QList<AniData>(), QRect()));
     it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource, keepAtTarget));
-    quint64 ret_id = quint64(&it->first.last());
+    quint64 ret_id = ++d->m_animCounter;
+    it->first.last().id = ret_id;
     it->second = QRect();
 
     d->m_animationsTouched = true;
@@ -261,7 +265,7 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
                          mapEnd = d->m_animations.end(); entry != mapEnd; ++entry) {
         for (QList<AniData>::iterator anim = entry->first.begin(),
                                    animEnd = entry->first.end(); anim != animEnd; ++anim) {
-            if (quint64(&(*anim)) == animationId) {
+            if (anim->id == animationId) {
                 anim->from.set(interpolated(*anim, 0), interpolated(*anim, 1));
                 validate(anim->attribute, anim->meta, nullptr, &newTarget, entry.key());
                 anim->to.set(newTarget[0], newTarget[1]);
@@ -280,7 +284,7 @@ bool AnimationEffect::cancel(quint64 animationId)
         return true; // this is just ending, do not try to cancel it but fake success
     for (AniMap::iterator entry = d->m_animations.begin(), mapEnd = d->m_animations.end(); entry != mapEnd; ++entry) {
         for (QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end(); anim != animEnd; ++anim) {
-            if (quint64(&(*anim)) == animationId) {
+            if (anim->id == animationId) {
                 entry->first.erase(anim); // remove the animation
                 if (entry->first.isEmpty()) { // no other animations on the window, release it.
                     const int i = d->m_zombies.indexOf(entry.key());
@@ -340,7 +344,7 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                     oldW->unreferencePreviousWindowPixmap();
                     effects->addRepaint(oldW->expandedGeometry());
                 }
-                d->m_justEndedAnimation = quint64(&(*anim));
+                d->m_justEndedAnimation = anim->id;
                 animationEnded(oldW, anim->attribute, anim->meta);
                 d->m_justEndedAnimation = 0;
                 // NOTICE animationEnded is an external call and might have called "::animate"
