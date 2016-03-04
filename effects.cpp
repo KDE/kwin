@@ -1285,6 +1285,17 @@ bool EffectsHandlerImpl::checkInputWindowEvent(QMouseEvent *e)
     return true;
 }
 
+bool EffectsHandlerImpl::checkInputWindowEvent(QWheelEvent *e)
+{
+    if (m_grabbedMouseEffects.isEmpty()) {
+        return false;
+    }
+    foreach (Effect *effect, m_grabbedMouseEffects) {
+        effect->windowInputMouseEvent(e);
+    }
+    return true;
+}
+
 void EffectsHandlerImpl::connectNotify(const QMetaMethod &signal)
 {
     if (signal == QMetaMethod::fromSignal(&EffectsHandler::cursorShapeChanged)) {

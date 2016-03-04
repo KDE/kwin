@@ -46,6 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <linux/input.h>
 
+Q_DECLARE_METATYPE(Qt::Orientation)
+
 namespace KWin
 {
 

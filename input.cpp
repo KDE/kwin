@@ -481,12 +481,25 @@ public:
 class TabBoxInputFilter : public InputEventFilter
 {
 public:
+    bool pointerEvent(QMouseEvent *event, quint32 button) override {
+        Q_UNUSED(button)
+        if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
+            return false;
+        }
+        return TabBox::TabBox::self()->handleMouseEvent(event);
+    }
     bool keyEvent(QKeyEvent *event) override {
         if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
             return false;
         }
         TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
         return true;
+    }
+    bool wheelEvent(QWheelEvent *event) override {
+        if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
+            return false;
+        }
+        return TabBox::TabBox::self()->handleWheelEvent(event);
     }
 };
 #endif
