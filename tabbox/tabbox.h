@@ -31,7 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class KConfigGroup;
 class QAction;
+class QMouseEvent;
 class QKeyEvent;
+class QWheelEvent;
 
 struct xcb_button_press_event_t;
 struct xcb_motion_notify_event_t;
@@ -162,6 +164,8 @@ public:
 
     bool handleMouseEvent(xcb_button_press_event_t *e);
     bool handleMouseEvent(xcb_motion_notify_event_t *e);
+    bool handleMouseEvent(QMouseEvent *event);
+    bool handleWheelEvent(QWheelEvent *event);
     void grabbedKeyEvent(QKeyEvent* event);
 
     bool isGrabbed() const {

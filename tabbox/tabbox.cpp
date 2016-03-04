@@ -901,6 +901,54 @@ bool TabBox::handleMouseEvent(xcb_motion_notify_event_t *e)
     return false;
 }
 
+bool TabBox::handleMouseEvent(QMouseEvent *event)
+{
+    if (!m_isShown && isDisplayed()) {
+        // tabbox has been replaced, check effects
+        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(event)) {
+            return true;
+        }
+    }
+    switch (event->type()) {
+    case QEvent::MouseMove:
+        if (!m_tabBox->containsPos(event->globalPos())) {
+            // filter out all events which are not on the TabBox window.
+            // We don't want windows to react on the mouse events
+            return true;
+        }
+        return false;
+    case QEvent::MouseButtonPress:
+        if ((!m_isShown && isDisplayed()) || !m_tabBox->containsPos(event->globalPos())) {
+            close();  // click outside closes tab
+            return true;
+        }
+        // fall through
+    case QEvent::MouseButtonRelease:
+    default:
+        // we do not filter it out, the intenal filter takes care
+        return false;
+    }
+    return false;
+}
+
+bool TabBox::handleWheelEvent(QWheelEvent *event)
+{
+    if (!m_isShown && isDisplayed()) {
+        // tabbox has been replaced, check effects
+        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(event)) {
+            return true;
+        }
+    }
+    if (event->angleDelta().y() == 0) {
+        return false;
+    }
+    const QModelIndex index = m_tabBox->nextPrev(event->angleDelta().y() > 0);
+    if (index.isValid()) {
+        setCurrentIndex(index);
+    }
+    return true;
+}
+
 void TabBox::grabbedKeyEvent(QKeyEvent* event)
 {
     emit tabBoxKeyEvent(event);
