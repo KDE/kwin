@@ -167,6 +167,7 @@ public:
     bool checkInputWindowEvent(xcb_button_press_event_t *e);
     bool checkInputWindowEvent(xcb_motion_notify_event_t *e);
     bool checkInputWindowEvent(QMouseEvent *e);
+    bool checkInputWindowEvent(QWheelEvent *e);
     void checkInputWindowStacking();
 
     void reserveElectricBorder(ElectricBorder border, Effect *effect) override;
