@@ -295,6 +295,7 @@ void ShellClient::addDamage(const QRegion &damage)
     }
     markAsMapped();
     setDepth(m_shellSurface->surface()->buffer()->hasAlphaChannel() ? 32 : 24);
+    repaints_region += damage.translated(clientPos());
     Toplevel::addDamage(damage);
 }
 

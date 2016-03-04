@@ -2125,6 +2125,7 @@ void Client::addDamage(const QRegion &damage)
             setupWindowManagementInterface();
         }
     }
+    repaints_region += damage;
     Toplevel::addDamage(damage);
 }
 
