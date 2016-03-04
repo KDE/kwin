@@ -492,7 +492,8 @@ public:
         if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
             return false;
         }
-        TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
+        if (event->type() == QEvent::KeyPress)
+            TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
         return true;
     }
     bool wheelEvent(QWheelEvent *event) override {
@@ -868,10 +869,10 @@ void InputRedirection::setupInputFilters()
     installInputEventFilter(new ScreenEdgeInputFilter);
     installInputEventFilter(new EffectsFilter);
     installInputEventFilter(new MoveResizeFilter);
-    installInputEventFilter(new GlobalShortcutFilter);
 #ifdef KWIN_BUILD_TABBOX
     installInputEventFilter(new TabBoxInputFilter);
 #endif
+    installInputEventFilter(new GlobalShortcutFilter);
     installInputEventFilter(new InternalWindowEventFilter);
     installInputEventFilter(new DecorationEventFilter);
     if (waylandServer()) {
