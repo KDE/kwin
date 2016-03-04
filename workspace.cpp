@@ -1679,8 +1679,11 @@ bool Workspace::hasClient(const AbstractClient *c)
 {
     if (auto cc = dynamic_cast<const Client*>(c)) {
         return hasClient(cc);
+    } else {
+        return findAbstractClient([c](const AbstractClient *test) {
+            return test == c;
+        }) != nullptr;
     }
-    // TODO: test for ShellClient
     return false;
 }
 
