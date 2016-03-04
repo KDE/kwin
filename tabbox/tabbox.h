@@ -65,7 +65,7 @@ public:
     virtual int nextDesktopFocusChain(int desktop) const;
     virtual int numberOfDesktops() const;
     virtual TabBoxClientList stackingOrder() const;
-    virtual void elevateClient(TabBoxClient* c, WId tabbox, bool elevate) const;
+    virtual void elevateClient(TabBoxClient* c, QWindow *tabbox, bool elevate) const;
     virtual void raiseClient(TabBoxClient *client) const;
     virtual void restack(TabBoxClient *c, TabBoxClient *under);
     virtual void shadeClient(TabBoxClient *c, bool b) const;

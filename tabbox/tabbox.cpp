@@ -305,11 +305,11 @@ void TabBoxHandlerImpl::restack(TabBoxClient *c, TabBoxClient *under)
                                static_cast<TabBoxClientImpl*>(under)->client(), true);
 }
 
-void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, WId tabbox, bool b) const
+void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, QWindow *tabbox, bool b) const
 {
     auto cl = static_cast<TabBoxClientImpl*>(c)->client();
     cl->elevate(b);
-    if (Unmanaged *w = Workspace::self()->findUnmanaged(tabbox))
+    if (Toplevel *w = Workspace::self()->findInternal(tabbox))
         w->elevate(b);
 }
 
