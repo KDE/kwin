@@ -72,7 +72,7 @@ public:
 
     SurfaceInterface *surface;
     QPoint m_globalPos;
-    Role m_role;
+    Role m_role = Role::Normal;
     bool m_positionSet = false;
     PanelBehavior m_panelBehavior = PanelBehavior::AlwaysVisible;
     bool m_skipTaskbar = false;
