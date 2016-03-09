@@ -233,3 +233,15 @@ add_executable(testServerSideDecoration ${testServerSideDecoration_SRCS})
 target_link_libraries( testServerSideDecoration Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
 add_test(kwayland-testServerSideDecoration testServerSideDecoration)
 ecm_mark_as_test(testServerSideDecoration)
+
+
+########################################################
+# Test PlasmaShell
+########################################################
+set( testPlasmaShell_SRCS
+        test_plasmashell.cpp
+    )
+add_executable(testPlasmaShell ${testPlasmaShell_SRCS})
+target_link_libraries( testPlasmaShell Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
+add_test(kwayland-testPlasmaShell testPlasmaShell)
+ecm_mark_as_test(testPlasmaShell)
