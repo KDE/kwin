@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-kwin.h>
 // kwin
 #include "sm.h"
+#include "workspace.h"
 #include "xcbutils.h"
 
 // KDE
@@ -191,6 +192,13 @@ void ApplicationX11::performStartup()
     createAtoms();
 }
 
+bool ApplicationX11::notify(QObject* o, QEvent* e)
+{
+    if (Workspace::self()->workspaceEvent(e))
+        return true;
+    return QApplication::notify(o, e);
+}
+
 } // namespace
 
 extern "C"
@@ -270,6 +278,9 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     setenv("QT_QPA_PLATFORM", "xcb", true);
 
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+    QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+#endif
 
     KWin::ApplicationX11 a(argc, argv);
     a.setupTranslator();

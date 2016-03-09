@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_backend.h"
 #include "composite.h"
 #include "cursor.h"
-#include "input.h"
 #include "logging.h"
 #include "logind.h"
 #include "scene_qpainter_drm_backend.h"
@@ -68,10 +67,95 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+DpmsInputEventFilter::DpmsInputEventFilter(DrmBackend *backend)
+    : InputEventFilter()
+    , m_backend(backend)
+{
+}
+
+DpmsInputEventFilter::~DpmsInputEventFilter() = default;
+
+bool DpmsInputEventFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(nativeButton)
+    notify();
+    return true;
+}
+
+bool DpmsInputEventFilter::wheelEvent(QWheelEvent *event)
+{
+    Q_UNUSED(event)
+    notify();
+    return true;
+}
+
+bool DpmsInputEventFilter::keyEvent(QKeyEvent *event)
+{
+    Q_UNUSED(event)
+    notify();
+    return true;
+}
+
+bool DpmsInputEventFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
+{
+    Q_UNUSED(pos)
+    Q_UNUSED(time)
+    if (m_touchPoints.isEmpty()) {
+        if (!m_doubleTapTimer.isValid()) {
+            // this is the first tap
+            m_doubleTapTimer.start();
+        } else {
+            if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {
+                m_secondTap = true;
+            } else {
+                // took too long. Let's consider it a new click
+                m_doubleTapTimer.restart();
+            }
+        }
+    } else {
+        // not a double tap
+        m_doubleTapTimer.invalidate();
+        m_secondTap = false;
+    }
+    m_touchPoints << id;
+    return true;
+}
+
+bool DpmsInputEventFilter::touchUp(quint32 id, quint32 time)
+{
+    Q_UNUSED(time)
+    m_touchPoints.removeAll(id);
+    if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
+        if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {
+            notify();
+        }
+        m_doubleTapTimer.invalidate();
+        m_secondTap = false;
+    }
+    return true;
+}
+
+bool DpmsInputEventFilter::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(pos)
+    Q_UNUSED(time)
+    // ignore the event
+    return true;
+}
+
+void DpmsInputEventFilter::notify()
+{
+    // queued to not modify the list of event filters while filtering
+    QMetaObject::invokeMethod(m_backend, "turnOutputsOn", Qt::QueuedConnection);
+}
+
 DrmBackend::DrmBackend(QObject *parent)
     : AbstractBackend(parent)
     , m_udev(new Udev)
     , m_udevMonitor(m_udev->monitor())
+    , m_dpmsFilter()
 {
     handleOutputs();
     m_cursor[0] = nullptr;
@@ -110,6 +194,40 @@ void DrmBackend::init()
     }
     auto v = VirtualTerminal::create(this);
     connect(v, &VirtualTerminal::activeChanged, this, &DrmBackend::activate);
+}
+
+void DrmBackend::outputWentOff()
+{
+    if (!m_dpmsFilter.isNull()) {
+        // already another output is off
+        return;
+    }
+    m_dpmsFilter.reset(new DpmsInputEventFilter(this));
+    input()->prepandInputEventFilter(m_dpmsFilter.data());
+}
+
+void DrmBackend::turnOutputsOn()
+{
+    m_dpmsFilter.reset();
+    for (auto it = m_outputs.constBegin(), end = m_outputs.constEnd(); it != end; it++) {
+        (*it)->setDpms(DrmOutput::DpmsMode::On);
+    }
+}
+
+void DrmBackend::checkOutputsAreOn()
+{
+    if (m_dpmsFilter.isNull()) {
+        // already disabled, all outputs are on
+        return;
+    }
+    for (auto it = m_outputs.constBegin(), end = m_outputs.constEnd(); it != end; it++) {
+        if (!(*it)->isDpmsEnabled()) {
+            // dpms still disabled, need to keep the filter
+            return;
+        }
+    }
+    // all outputs are on, disable the filter
+    m_dpmsFilter.reset();
 }
 
 void DrmBackend::activate(bool active)
@@ -445,16 +563,6 @@ void DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
     }
 }
 
-void DrmBackend::installCursorFromServer()
-{
-    updateCursorFromServer();
-}
-
-void DrmBackend::installCursorImage(Qt::CursorShape shape)
-{
-    updateCursorImage(shape);
-}
-
 void DrmBackend::initCursor()
 {
     uint64_t capability = 0;
@@ -478,7 +586,6 @@ void DrmBackend::initCursor()
     // now we have screens and can set cursors, so start tracking
     connect(this, &DrmBackend::cursorChanged, this, &DrmBackend::updateCursor);
     connect(Cursor::self(), &Cursor::posChanged, this, &DrmBackend::moveCursor);
-    installCursorImage(Qt::ArrowCursor);
 }
 
 void DrmBackend::setCursor()
@@ -488,6 +595,7 @@ void DrmBackend::setCursor()
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         (*it)->showCursor(c);
     }
+    markCursorAsRendered();
 }
 
 void DrmBackend::updateCursor()
@@ -1055,6 +1163,9 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
     if (m_dpms.isNull()) {
         return;
     }
+    if (mode == m_dpmsMode) {
+        return;
+    }
     if (drmModeConnectorSetProperty(m_backend->fd(), m_connector, m_dpms->prop_id, uint64_t(mode)) != 0) {
         qCWarning(KWIN_DRM) << "Setting DPMS failed";
         return;
@@ -1065,25 +1176,14 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
     }
     emit dpmsChanged();
     if (m_dpmsMode != DpmsMode::On) {
-        connect(input(), &InputRedirection::globalPointerChanged, this, &DrmOutput::reenableDpms);
-        connect(input(), &InputRedirection::pointerButtonStateChanged, this, &DrmOutput::reenableDpms);
-        connect(input(), &InputRedirection::pointerAxisChanged, this, &DrmOutput::reenableDpms);
-        connect(input(), &InputRedirection::keyStateChanged, this, &DrmOutput::reenableDpms);
+        m_backend->outputWentOff();
     } else {
-        disconnect(input(), &InputRedirection::globalPointerChanged, this, &DrmOutput::reenableDpms);
-        disconnect(input(), &InputRedirection::pointerButtonStateChanged, this, &DrmOutput::reenableDpms);
-        disconnect(input(), &InputRedirection::pointerAxisChanged, this, &DrmOutput::reenableDpms);
-        disconnect(input(), &InputRedirection::keyStateChanged, this, &DrmOutput::reenableDpms);
+        m_backend->checkOutputsAreOn();
         blank();
         if (Compositor *compositor = Compositor::self()) {
             compositor->addRepaintFull();
         }
     }
-}
-
-void DrmOutput::reenableDpms()
-{
-    setDpms(DpmsMode::On);
 }
 
 QString DrmOutput::name() const

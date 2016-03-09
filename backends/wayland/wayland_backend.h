@@ -74,7 +74,6 @@ public:
     virtual ~WaylandSeat();
 
     void installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
-    void installCursorImage(Qt::CursorShape shape);
     void installCursorImage(const QImage &image, const QPoint &hotspot);
     void setInstallCursor(bool install);
     bool isInstallCursor() const {
@@ -89,7 +88,6 @@ private:
     KWayland::Client::Keyboard *m_keyboard;
     KWayland::Client::Touch *m_touch;
     KWayland::Client::Surface *m_cursor;
-    WaylandCursorTheme *m_theme = nullptr;
     uint32_t m_enteredSerial;
     WaylandBackend *m_backend;
     bool m_installCursor;
@@ -116,8 +114,6 @@ public:
 
     KWayland::Client::Surface *surface() const;
     QSize shellSurfaceSize() const;
-    void installCursorImage(Qt::CursorShape shape) override;
-    void installCursorFromServer() override;
 
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
@@ -126,6 +122,8 @@ public:
     QSize screenSize() const override {
         return shellSurfaceSize();
     }
+
+    void flush();
 
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);

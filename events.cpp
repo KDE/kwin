@@ -948,26 +948,7 @@ void Client::enterNotifyEvent(xcb_enter_notify_event_t *e)
         }
 #undef MOUSE_DRIVEN_FOCUS
 
-        if (options->focusPolicy() == Options::ClickToFocus || workspace()->userActionsMenu()->isShown())
-            return;
-
-        QPoint currentPos(e->root_x, e->root_y);
-        if (options->isAutoRaise() && !isDesktop() &&
-                !isDock() && workspace()->focusChangeEnabled() &&
-                currentPos != workspace()->focusMousePosition() &&
-                workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(),
-                                                options->isSeparateScreenFocus() ? screen() : -1) != this) {
-            startAutoRaise();
-        }
-
-        if (isDesktop() || isDock())
-            return;
-        // for FocusFollowsMouse, change focus only if the mouse has actually been moved, not if the focus
-        // change came because of window changes (e.g. closing a window) - #92290
-        if (options->focusPolicy() != Options::FocusFollowsMouse
-                || currentPos != workspace()->focusMousePosition()) {
-                workspace()->requestDelayFocus(this);
-        }
+        enterEvent(QPoint(e->root_x, e->root_y));
         return;
     }
 }
@@ -997,8 +978,7 @@ void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
             }
         }
         if (lostMouse) {
-            cancelAutoRaise();
-            workspace()->cancelDelayFocus();
+            leaveEvent();
             cancelShadeHoverTimer();
             if (shade_mode == ShadeHover && !isMoveResize() && !isMoveResizePointerButtonDown()) {
                 shadeHoverTimer = new QTimer(this);

@@ -9,6 +9,7 @@ set(QPA_SOURCES
     main.cpp
     nativeinterface.cpp
     platformcontextwayland.cpp
+    platformcursor.cpp
     screen.cpp
     sharingplatformcontext.cpp
     window.cpp

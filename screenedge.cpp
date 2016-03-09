@@ -33,20 +33,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include <client.h>
 #include "cursor.h"
-#include "input.h"
 #include "main.h"
 #include "screens.h"
 #include "utils.h"
 #include <workspace.h>
 #include "virtualdesktops.h"
-#ifndef KWIN_UNIT_TEST
-#include "wayland_server.h"
-#endif
 // DBus generated
 #include "screenlocker_interface.h"
 // frameworks
 #include <KConfigGroup>
 // Qt
+#include <QMouseEvent>
 #include <QSharedPointer>
 #include <QTimer>
 #include <QVector>
@@ -593,40 +590,10 @@ void WindowBasedEdge::doUpdateBlocking()
 AreaBasedEdge::AreaBasedEdge(ScreenEdges* parent)
     : Edge(parent)
 {
-    connect(input(), SIGNAL(globalPointerChanged(QPointF)), SLOT(pointerPosChanged(QPointF)));
 }
 
 AreaBasedEdge::~AreaBasedEdge()
 {
-}
-
-void AreaBasedEdge::pointerPosChanged(const QPointF &pos)
-{
-#ifndef KWIN_UNIT_TEST
-    if (waylandServer() && waylandServer()->isScreenLocked()) {
-        return;
-    }
-#endif
-    if (!isReserved()) {
-        return;
-    }
-    const QPoint p = pos.toPoint();
-    if (approachGeometry().contains(p)) {
-        if (!isApproaching()) {
-            startApproaching();
-        } else {
-            updateApproaching(p);
-        }
-    } else {
-        if (isApproaching()) {
-            stopApproaching();
-        }
-    }
-    if (geometry().contains(p)) {
-        // we don't push the cursor back as pointer warping is not supported on Wayland
-        // TODO: this clearly needs improving
-        check(p, QDateTime(), true);
-    }
 }
 
 /**********************************************************
@@ -1229,6 +1196,47 @@ bool ScreenEdges::isEntered(xcb_client_message_event_t *event)
     }
     return handleDndNotify(event->window,
                            QPoint(event->data.data32[2] >> 16, event->data.data32[2] & 0xffff));
+}
+
+bool ScreenEdges::isEntered(QMouseEvent *event)
+{
+    if (event->type() != QEvent::MouseMove) {
+        return false;
+    }
+    bool activated = false;
+    bool activatedForClient = false;
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+        Edge *edge = *it;
+        if (!edge->isReserved()) {
+            continue;
+        }
+        if (edge->approachGeometry().contains(event->globalPos())) {
+            if (!edge->isApproaching()) {
+                edge->startApproaching();
+            } else {
+                edge->updateApproaching(event->globalPos());
+            }
+        } else {
+            if (edge->isApproaching()) {
+                edge->stopApproaching();
+            }
+        }
+        if (edge->geometry().contains(event->globalPos())) {
+            if (edge->check(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp()))) {
+                if (edge->client()) {
+                    activatedForClient = true;
+                }
+            }
+        }
+    }
+    if (activatedForClient) {
+        for (auto it = m_edges.constBegin(); it != m_edges.constEnd(); ++it) {
+            if ((*it)->client()) {
+                (*it)->markAsTriggered(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp()));
+            }
+        }
+    }
+    return activated;
 }
 
 bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp)

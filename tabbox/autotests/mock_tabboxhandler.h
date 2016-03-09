@@ -51,7 +51,7 @@ public:
         Q_UNUSED(client)
         return "desktop";
     }
-    virtual void elevateClient(TabBox::TabBoxClient *c, WId tabbox, bool elevate) const {
+    virtual void elevateClient(TabBox::TabBoxClient *c, QWindow *tabbox, bool elevate) const {
         Q_UNUSED(c)
         Q_UNUSED(tabbox)
         Q_UNUSED(elevate)

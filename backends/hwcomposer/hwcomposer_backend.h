@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_HWCOMPOSER_BACKEND_H
 #define KWIN_HWCOMPOSER_BACKEND_H
 #include "abstract_backend.h"
+#include "input.h"
 
+#include <QElapsedTimer>
 #include <QMutex>
 #include <QWaitCondition>
 
@@ -40,6 +42,7 @@ namespace KWin
 {
 
 class HwcomposerWindow;
+class BacklightInputEventFilter;
 
 class HwcomposerBackend : public AbstractBackend
 {
@@ -74,6 +77,10 @@ public:
     void waitVSync();
     void wakeVSync();
 
+    bool isBacklightOff() const {
+        return m_outputBlank;
+    }
+
 Q_SIGNALS:
     void outputBlankChanged();
 
@@ -92,6 +99,7 @@ private:
     bool m_hasVsync = false;
     QMutex m_vsyncMutex;
     QWaitCondition m_vsyncWaitCondition;
+    QScopedPointer<BacklightInputEventFilter> m_filter;
 };
 
 class HwcomposerWindow : public HWComposerNativeWindow
@@ -106,6 +114,27 @@ private:
     HwcomposerWindow(HwcomposerBackend *backend);
     HwcomposerBackend *m_backend;
     hwc_display_contents_1_t **m_list;
+};
+
+class BacklightInputEventFilter : public InputEventFilter
+{
+public:
+    BacklightInputEventFilter(HwcomposerBackend *backend);
+    virtual ~BacklightInputEventFilter();
+
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
+    bool wheelEvent(QWheelEvent *event) override;
+    bool keyEvent(QKeyEvent *event) override;
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchUp(quint32 id, quint32 time) override;
+
+private:
+    void toggleBacklight();
+    HwcomposerBackend *m_backend;
+    QElapsedTimer m_doubleTapTimer;
+    QVector<qint32> m_touchPoints;
+    bool m_secondTap = false;
 };
 
 }

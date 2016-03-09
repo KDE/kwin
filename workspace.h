@@ -127,6 +127,15 @@ public:
     Unmanaged *findUnmanaged(xcb_window_t w) const;
     void forEachUnmanaged(std::function<void (Unmanaged*)> func);
     Toplevel *findToplevel(std::function<bool (const Toplevel*)> func) const;
+    /**
+     * @brief Finds a Toplevel for the internal window @p w.
+     *
+     * Internal window means a window created by KWin itself. On X11 this is an Unmanaged
+     * and mapped by the window id, on Wayland a ShellClient mapped on the internal window id.
+     *
+     * @returns Toplevel
+     **/
+    Toplevel *findInternal(QWindow *w) const;
 
     QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
     QRect clientArea(clientAreaOption, const AbstractClient* c) const;
@@ -148,7 +157,7 @@ public:
      */
     AbstractClient* mostRecentlyActivatedClient() const;
 
-    Client* clientUnderMouse(int screen) const;
+    AbstractClient* clientUnderMouse(int screen) const;
 
     void activateClient(AbstractClient*, bool force = false);
     void requestFocus(AbstractClient* c, bool force = false);
@@ -325,7 +334,7 @@ public:
     int packPositionDown(const AbstractClient* cl, int oldy, bool bottom_edge) const;
 
     void cancelDelayFocus();
-    void requestDelayFocus(Client*);
+    void requestDelayFocus(AbstractClient*);
 
     /**
     * updates the mouse position to track whether a focus follow mouse focus change was caused by
@@ -535,7 +544,7 @@ private:
 
     // Delay(ed) window focus timer and client
     QTimer* delayFocusTimer;
-    Client* delayfocus_client;
+    AbstractClient* delayfocus_client;
     QPoint focusMousePos;
 
     ClientList clients;

@@ -169,10 +169,10 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
 
     if (q->isKWinCompositing()) {
         if (lastRaisedClient)
-            q->elevateClient(lastRaisedClient, w ? w->winId() : 0, false);
+            q->elevateClient(lastRaisedClient, w, false);
         lastRaisedClient = currentClient;
         if (currentClient)
-            q->elevateClient(currentClient, w ? w->winId() : 0, true);
+            q->elevateClient(currentClient, w, true);
     } else {
         if (lastRaisedClient) {
             q->shadeClient(lastRaisedClient, true);
@@ -226,7 +226,7 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
     }
     QWindow *w = window();
     if (currentClient)
-        q->elevateClient(currentClient, w ? w->winId() : 0, false);
+        q->elevateClient(currentClient, w, false);
     if (abort && lastRaisedClient && lastRaisedClientSucc)
         q->restack(lastRaisedClient, lastRaisedClientSucc);
     lastRaisedClient = nullptr;

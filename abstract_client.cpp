@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "screenedge.h"
 #include "tabgroup.h"
+#include "useractions.h"
 #include "workspace.h"
 
 #include "wayland_server.h"
@@ -792,6 +793,13 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
         break;
     case Options::MouseLower: {
         workspace()->lowerClient(this);
+        // used to be activateNextClient(this), then topClientOnDesktop
+        // since this is a mouseOp it's however safe to use the client under the mouse instead
+        if (isActive() && options->focusPolicyIsReasonable()) {
+            AbstractClient *next = workspace()->clientUnderMouse(screen());
+            if (next && next != this)
+                workspace()->requestFocus(next, false);
+        }
         break;
     }
     case Options::MouseOperationsMenu:
@@ -1445,8 +1453,8 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
 void AbstractClient::processDecorationButtonRelease(QMouseEvent *event)
 {
     if (isDecorated()) {
-        if (!event->isAccepted() && decoration()->titleBar().contains(event->pos()) && event->button() == Qt::LeftButton) {
-            m_decoration.doubleClickTimer.start();
+        if (event->isAccepted() || !decoration()->titleBar().contains(event->pos())) {
+            invalidateDecorationDoubleClickTimer(); // click was for the deco and shall not init a doubleclick
         }
     }
 
@@ -1489,6 +1497,39 @@ QPointer<Decoration::DecoratedClientImpl> AbstractClient::decoratedClient() cons
 void AbstractClient::setDecoratedClient(QPointer< Decoration::DecoratedClientImpl > client)
 {
     m_decoration.client = client;
+}
+
+void AbstractClient::enterEvent(const QPoint &globalPos)
+{
+    // TODO: shade hover
+    if (options->focusPolicy() == Options::ClickToFocus || workspace()->userActionsMenu()->isShown())
+        return;
+
+    if (options->isAutoRaise() && !isDesktop() &&
+            !isDock() && workspace()->focusChangeEnabled() &&
+            globalPos != workspace()->focusMousePosition() &&
+            workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(),
+                                            options->isSeparateScreenFocus() ? screen() : -1) != this) {
+        startAutoRaise();
+    }
+
+    if (isDesktop() || isDock())
+        return;
+    // for FocusFollowsMouse, change focus only if the mouse has actually been moved, not if the focus
+    // change came because of window changes (e.g. closing a window) - #92290
+    if (options->focusPolicy() != Options::FocusFollowsMouse
+            || globalPos != workspace()->focusMousePosition()) {
+        workspace()->requestDelayFocus(this);
+    }
+}
+
+void AbstractClient::leaveEvent()
+{
+    cancelAutoRaise();
+    workspace()->cancelDelayFocus();
+    // TODO: shade hover
+    // TODO: send hover leave to deco
+    // TODO: handle Options::FocusStrictlyUnderMouse
 }
 
 }

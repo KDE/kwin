@@ -63,9 +63,6 @@ public:
     }
     xcb_window_t rootWindow() const;
 
-    void installCursorFromServer() override;
-    void installCursorImage(Qt::CursorShape shape) override;
-
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend* createQPainterBackend() override;

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screen.h"
+#include "platformcursor.h"
 
 #include <KWayland/Client/output.h>
 
@@ -29,6 +30,7 @@ namespace QPA
 Screen::Screen(KWayland::Client::Output *o)
     : QPlatformScreen()
     , m_output(o)
+    , m_cursor(new PlatformCursor)
 {
     // TODO: connect to resolution changes
 }
@@ -53,6 +55,11 @@ QRect Screen::geometry() const
 QSizeF Screen::physicalSize() const
 {
     return m_output->physicalSize();
+}
+
+QPlatformCursor *Screen::cursor() const
+{
+    return m_cursor.data();
 }
 
 }

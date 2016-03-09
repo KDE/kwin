@@ -459,6 +459,16 @@ public:
     uint keyCmdAllModKey() const {
         return CmdAllModKey;
     }
+    Qt::KeyboardModifier commandAllModifier() const {
+        switch (CmdAllModKey) {
+        case Qt::Key_Alt:
+            return Qt::AltModifier;
+        case Qt::Key_Meta:
+            return Qt::MetaModifier;
+        default:
+            Q_UNREACHABLE();
+        }
+    }
 
     static WindowOperation windowOperation(const QString &name, bool restricted);
     static MouseCommand mouseCommand(const QString &name, bool restricted);

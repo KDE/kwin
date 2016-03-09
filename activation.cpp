@@ -410,11 +410,11 @@ void Workspace::clientHidden(AbstractClient* c)
     activateNextClient(c);
 }
 
-Client *Workspace::clientUnderMouse(int screen) const
+AbstractClient *Workspace::clientUnderMouse(int screen) const
 {
     ToplevelList::const_iterator it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
-        Client *client = qobject_cast<Client*>(*(--it));
+        AbstractClient *client = qobject_cast<AbstractClient*>(*(--it));
         if (!client) {
             continue;
         }
@@ -606,6 +606,9 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
         qCDebug(KWIN_CORE) << "Activation: Belongs to active application";
         return true;
     }
+
+    if (!c->isOnCurrentDesktop()) // we allowed explicit self-activation across virtual desktops
+        return false; // inside a client or if no client was active, but not otherwise
 
     // High FPS, not intr-client change. Only allow if the active client has only minor interest
     if (level > FSP::Medium && protection > FSP::Low)

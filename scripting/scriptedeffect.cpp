@@ -262,9 +262,10 @@ QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
         return engine->undefinedValue();
     }
 
-    QList<QVariant> animIds;
+    QScriptValue array = engine->newArray(settings.length());
+    int i = 0;
     foreach (const AnimationSettings &setting, settings) {
-        animIds << QVariant(effect->animate(window,
+        array.setProperty(i, (uint)effect->animate(window,
                                     setting.type,
                                     setting.duration,
                                     setting.to,
@@ -272,8 +273,9 @@ QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
                                     setting.metaData,
                                     setting.curve,
                                     setting.delay));
+        ++i;
     }
-    return engine->newVariant(animIds);
+    return array;
 }
 
 QScriptValue kwinEffectSet(QScriptContext *context, QScriptEngine *engine)
@@ -306,53 +308,27 @@ QScriptValue kwinEffectSet(QScriptContext *context, QScriptEngine *engine)
     return engine->newVariant(animIds);
 }
 
-QScriptValue kwinEffectCancel(QScriptContext *context, QScriptEngine *engine)
+QList<quint64> animations(const QVariant &v, bool *ok)
 {
-    ScriptedEffect *effect = qobject_cast<ScriptedEffect*>(context->callee().data().toQObject());
-    if (context->argumentCount() != 1) {
-        context->throwError(QScriptContext::SyntaxError, QStringLiteral("Exactly one argument expected"));
-        return engine->undefinedValue();
-    }
-    QVariant v = context->argument(0).toVariant();
     QList<quint64> animIds;
-    bool ok = false;
+    *ok = false;
     if (v.isValid()) {
-        quint64 animId = v.toULongLong(&ok);
-        if (ok)
+        quint64 animId = v.toULongLong(ok);
+        if (*ok)
             animIds << animId;
     }
-    if (!ok) { // may still be a variantlist of variants being quint64
+    if (!*ok) { // may still be a variantlist of variants being quint64
         QList<QVariant> list = v.toList();
         if (!list.isEmpty()) {
             foreach (const QVariant &vv, list) {
-                quint64 animId = vv.toULongLong(&ok);
-                if (ok)
+                quint64 animId = vv.toULongLong(ok);
+                if (*ok)
                     animIds << animId;
             }
-            ok = !animIds.isEmpty();
+            *ok = !animIds.isEmpty();
         }
     }
-    if (!ok) {
-        context->throwError(QScriptContext::TypeError, QStringLiteral("Argument needs to be one or several quint64"));
-        return engine->undefinedValue();
-    }
-
-    foreach (const quint64 &animId, animIds) {
-        ok |= engine->newVariant(effect->cancel(animId)).toBool();
-    }
-
-    return engine->newVariant(ok);
-}
-
-QScriptValue effectWindowToScriptValue(QScriptEngine *eng, const KEffectWindowRef &window)
-{
-    return eng->newQObject(window, QScriptEngine::QtOwnership,
-                           QScriptEngine::ExcludeChildObjects | QScriptEngine::ExcludeDeleteLater | QScriptEngine::PreferExistingWrapperObject);
-}
-
-void effectWindowFromScriptValue(const QScriptValue &value, EffectWindow* &window)
-{
-    window = qobject_cast<EffectWindow*>(value.toQObject());
+    return animIds;
 }
 
 QScriptValue fpx2ToScriptValue(QScriptEngine *eng, const KWin::FPx2 &fpx2)
@@ -383,6 +359,67 @@ void fpx2FromScriptValue(const QScriptValue &value, KWin::FPx2 &fpx2)
         }
         fpx2 = FPx2(value1.toNumber(), value2.toNumber());
     }
+}
+
+QScriptValue kwinEffectRetarget(QScriptContext *context, QScriptEngine *engine)
+{
+    ScriptedEffect *effect = qobject_cast<ScriptedEffect*>(context->callee().data().toQObject());
+    if (context->argumentCount() < 2 || context->argumentCount() > 3) {
+        context->throwError(QScriptContext::SyntaxError, QStringLiteral("2 or 3 arguments expected"));
+        return engine->undefinedValue();
+    }
+    QVariant v = context->argument(0).toVariant();
+    bool ok = false;
+    QList<quint64> animIds = animations(v, &ok);
+    if (!ok) {
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Argument needs to be one or several quint64"));
+        return engine->undefinedValue();
+    }
+    FPx2 target;
+    fpx2FromScriptValue(context->argument(1), target);
+
+    ok = false;
+    const int remainingTime = context->argumentCount() == 3 ? context->argument(2).toVariant().toInt() : -1;
+    foreach (const quint64 &animId, animIds) {
+        ok = effect->retarget(animId, target, remainingTime);
+        if (!ok) {
+            break;
+        }
+    }
+
+    return QScriptValue(ok);
+}
+
+QScriptValue kwinEffectCancel(QScriptContext *context, QScriptEngine *engine)
+{
+    ScriptedEffect *effect = qobject_cast<ScriptedEffect*>(context->callee().data().toQObject());
+    if (context->argumentCount() != 1) {
+        context->throwError(QScriptContext::SyntaxError, QStringLiteral("Exactly one argument expected"));
+        return engine->undefinedValue();
+    }
+    QVariant v = context->argument(0).toVariant();
+    bool ok = false;
+    QList<quint64> animIds = animations(v, &ok);
+    if (!ok) {
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Argument needs to be one or several quint64"));
+        return engine->undefinedValue();
+    }
+    foreach (const quint64 &animId, animIds) {
+        ok |= engine->newVariant(effect->cancel(animId)).toBool();
+    }
+
+    return engine->newVariant(ok);
+}
+
+QScriptValue effectWindowToScriptValue(QScriptEngine *eng, const KEffectWindowRef &window)
+{
+    return eng->newQObject(window, QScriptEngine::QtOwnership,
+                           QScriptEngine::ExcludeChildObjects | QScriptEngine::ExcludeDeleteLater | QScriptEngine::PreferExistingWrapperObject);
+}
+
+void effectWindowFromScriptValue(const QScriptValue &value, EffectWindow* &window)
+{
+    window = qobject_cast<EffectWindow*>(value.toQObject());
 }
 
 ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
@@ -484,6 +521,11 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     setFunc.setData(m_engine->newQObject(this));
     m_engine->globalObject().setProperty(QStringLiteral("set"), setFunc);
 
+    // retarget
+    QScriptValue retargetFunc = m_engine->newFunction(kwinEffectRetarget);
+    retargetFunc.setData(m_engine->newQObject(this));
+    m_engine->globalObject().setProperty(QStringLiteral("retarget"), retargetFunc);
+
     // cancel...
     QScriptValue cancelFunc = m_engine->newFunction(kwinEffectCancel);
     cancelFunc.setData(m_engine->newQObject(this));
@@ -537,6 +579,11 @@ quint64 ScriptedEffect::set(KWin::EffectWindow* w, KWin::AnimationEffect::Attrib
     else if (static_cast<int>(curve) == static_cast<int>(GaussianCurve))
         qec.setCustomType(qecGaussian);
     return AnimationEffect::set(w, a, metaData, ms, to, qec, delay, from);
+}
+
+bool ScriptedEffect::retarget(quint64 animationId, KWin::FPx2 newTarget, int newRemainingTime)
+{
+    return AnimationEffect::retarget(animationId, newTarget, newRemainingTime);
 }
 
 bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRole)

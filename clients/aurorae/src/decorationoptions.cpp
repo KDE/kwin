@@ -172,9 +172,16 @@ void DecorationOptions::setDecoration(KDecoration2::Decoration *decoration)
         disconnect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
         disconnect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
         disconnect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
+        disconnect(m_paletteConnection);
     }
     m_decoration = decoration;
     connect(m_decoration->client().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
+    m_paletteConnection = connect(m_decoration->client().data(), &KDecoration2::DecoratedClient::paletteChanged, this,
+        [this] (const QPalette &pal) {
+            m_colors.update(pal);
+            emit colorsChanged();
+        }
+    );
     auto s = m_decoration->settings();
     connect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
     connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);

@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/seat_interface.h>
+// Qt
+#include <QKeyEvent>
 // hybris/android
 #include <hardware/hardware.h>
 #include <hardware/hwcomposer.h>
@@ -40,6 +42,103 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+
+BacklightInputEventFilter::BacklightInputEventFilter(HwcomposerBackend *backend)
+    : InputEventFilter()
+    , m_backend(backend)
+{
+}
+
+BacklightInputEventFilter::~BacklightInputEventFilter() = default;
+
+bool BacklightInputEventFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(nativeButton)
+    if (!m_backend->isBacklightOff()) {
+        return false;
+    }
+    toggleBacklight();
+    return true;
+}
+
+bool BacklightInputEventFilter::wheelEvent(QWheelEvent *event)
+{
+    Q_UNUSED(event)
+    if (!m_backend->isBacklightOff()) {
+        return false;
+    }
+    toggleBacklight();
+    return true;
+}
+
+bool BacklightInputEventFilter::keyEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_PowerOff && event->type() == QEvent::KeyRelease) {
+        toggleBacklight();
+        return true;
+    }
+    return m_backend->isBacklightOff();
+}
+
+bool BacklightInputEventFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
+{
+    Q_UNUSED(pos)
+    Q_UNUSED(time)
+    if (!m_backend->isBacklightOff()) {
+        return false;
+    }
+    if (m_touchPoints.isEmpty()) {
+        if (!m_doubleTapTimer.isValid()) {
+            // this is the first tap
+            m_doubleTapTimer.start();
+        } else {
+            if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {
+                m_secondTap = true;
+            } else {
+                // took too long. Let's consider it a new click
+                m_doubleTapTimer.restart();
+            }
+        }
+    } else {
+        // not a double tap
+        m_doubleTapTimer.invalidate();
+        m_secondTap = false;
+    }
+    m_touchPoints << id;
+    return true;
+}
+
+bool BacklightInputEventFilter::touchUp(quint32 id, quint32 time)
+{
+    Q_UNUSED(time)
+    m_touchPoints.removeAll(id);
+    if (!m_backend->isBacklightOff()) {
+        return false;
+    }
+    if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
+        if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {
+            toggleBacklight();
+        }
+        m_doubleTapTimer.invalidate();
+        m_secondTap = false;
+    }
+    return true;
+}
+
+bool BacklightInputEventFilter::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(pos)
+    Q_UNUSED(time)
+    return m_backend->isBacklightOff();
+}
+
+void BacklightInputEventFilter::toggleBacklight()
+{
+    // queued to not modify the list of event filters while filtering
+    QMetaObject::invokeMethod(m_backend, "toggleBlankOutput", Qt::QueuedConnection);
+}
 
 HwcomposerBackend::HwcomposerBackend(QObject *parent)
     : AbstractBackend(parent)
@@ -137,16 +236,8 @@ void HwcomposerBackend::init()
 
     initLights();
     toggleBlankOutput();
-    connect(input(), &InputRedirection::keyStateChanged, this,
-        [this] (quint32 key, InputRedirection::KeyboardKeyState state) {
-            if (state != InputRedirection::KeyboardKeyState::KeyboardKeyReleased) {
-                return;
-            }
-            if (key == KEY_POWER) {
-                toggleBlankOutput();
-            }
-        }
-    );
+    m_filter.reset(new BacklightInputEventFilter(this));
+    input()->prepandInputEventFilter(m_filter.data());
 
     // get display configuration
     auto output = createOutput(hwcDevice);

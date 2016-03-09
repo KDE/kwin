@@ -1,5 +1,5 @@
 project(KWIN)
-set(PROJECT_VERSION "5.5.90")
+set(PROJECT_VERSION "5.6.90")
 set(PROJECT_VERSION_MAJOR 5)
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
@@ -332,6 +332,9 @@ set(kwin_KDEINIT_SRCS
    focuschain.cpp
    globalshortcuts.cpp
    input.cpp
+   keyboard_input.cpp
+   pointer_input.cpp
+   touch_input.cpp
    netinfo.cpp
    placement.cpp 
    atoms.cpp 

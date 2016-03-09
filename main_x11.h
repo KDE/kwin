@@ -50,6 +50,7 @@ public:
 
 protected:
     void performStartup() override;
+    bool notify(QObject *o, QEvent *e) override;
 
 private Q_SLOTS:
     void lostSelection();

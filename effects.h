@@ -123,6 +123,7 @@ public:
     // not performing XGrabPointer
     void startMouseInterception(Effect *effect, Qt::CursorShape shape) override;
     void stopMouseInterception(Effect *effect) override;
+    bool isMouseInterception() const;
     void registerGlobalShortcut(const QKeySequence &shortcut, QAction *action) override;
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action) override;
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) override;
@@ -166,6 +167,7 @@ public:
     bool checkInputWindowEvent(xcb_button_press_event_t *e);
     bool checkInputWindowEvent(xcb_motion_notify_event_t *e);
     bool checkInputWindowEvent(QMouseEvent *e);
+    bool checkInputWindowEvent(QWheelEvent *e);
     void checkInputWindowStacking();
 
     void reserveElectricBorder(ElectricBorder border, Effect *effect) override;

@@ -47,3 +47,8 @@ bool KWin::InputRedirection::supportsPointerWarping() const
 {
     return false;
 }
+
+QPointF KWin::InputRedirection::globalPointer() const
+{
+    return QPointF();
+}

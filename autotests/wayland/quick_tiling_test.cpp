@@ -521,5 +521,5 @@ void QuickTilingTest::testQuickTilingPointerMove()
 
 }
 
-WAYLANTEST_MAIN(KWin::QuickTilingTest)
+WAYLANDTEST_MAIN(KWin::QuickTilingTest)
 #include "quick_tiling_test.moc"

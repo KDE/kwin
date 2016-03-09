@@ -133,11 +133,6 @@ Workspace::Workspace(const QString &sessionKey)
     // first initialize the extensions
     Xcb::Extensions::self();
 
-    // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        connect(this, SIGNAL(stackingOrderChanged()), input(), SLOT(updatePointerWindow()));
-    }
-
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = nullptr;
     if (kwinApp()->usesKActivities()) {
@@ -404,6 +399,9 @@ void Workspace::init()
         connect(w, &WaylandServer::shellClientRemoved, this,
             [this] (ShellClient *c) {
                 m_allClients.removeAll(c);
+                if (c == delayfocus_client) {
+                    cancelDelayFocus();
+                }
                 clientHidden(c);
                 emit clientRemoved(c);
                 x_stacking_dirty = true;
@@ -1212,7 +1210,7 @@ void Workspace::delayFocus()
     cancelDelayFocus();
 }
 
-void Workspace::requestDelayFocus(Client* c)
+void Workspace::requestDelayFocus(AbstractClient* c)
 {
     delayfocus_client = c;
     delete delayFocusTimer;
@@ -1681,8 +1679,11 @@ bool Workspace::hasClient(const AbstractClient *c)
 {
     if (auto cc = dynamic_cast<const Client*>(c)) {
         return hasClient(cc);
+    } else {
+        return findAbstractClient([c](const AbstractClient *test) {
+            return test == c;
+        }) != nullptr;
     }
-    // TODO: test for ShellClient
     return false;
 }
 
@@ -1690,6 +1691,18 @@ void Workspace::forEachAbstractClient(std::function< void (AbstractClient*) > fu
 {
     std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
     std::for_each(desktops.constBegin(), desktops.constEnd(), func);
+}
+
+Toplevel *Workspace::findInternal(QWindow *w) const
+{
+    if (!w) {
+        return nullptr;
+    }
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        return findUnmanaged(w->winId());
+    } else {
+        return waylandServer()->findClient(w);
+    }
 }
 
 } // namespace

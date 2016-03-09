@@ -38,14 +38,22 @@ QElapsedTimer AnimationEffect::s_clock;
 
 class AnimationEffectPrivate {
 public:
-    AnimationEffectPrivate() { m_animated = m_damageDirty = m_animationsTouched = m_isInitialized = false; }
+    AnimationEffectPrivate()
+    {
+        m_animated = m_damageDirty = m_animationsTouched = m_isInitialized = false;
+        m_justEndedAnimation = 0;
+    }
     AnimationEffect::AniMap m_animations;
     EffectWindowList m_zombies;
     bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched, m_isInitialized;
+    quint64 m_justEndedAnimation; // protect against cancel
+    static quint64 m_animCounter;
 };
 }
 
 using namespace KWin;
+
+quint64 AnimationEffectPrivate::m_animCounter = 0;
 
 AnimationEffect::AnimationEffect() : d_ptr(new AnimationEffectPrivate())
 {
@@ -56,6 +64,11 @@ AnimationEffect::AnimationEffect() : d_ptr(new AnimationEffectPrivate())
     /* this is the same as the QTimer::singleShot(0, SLOT(init())) kludge
      * defering the init and esp. the connection to the windowClosed slot */
     QMetaObject::invokeMethod( this, "init", Qt::QueuedConnection );
+}
+
+AnimationEffect::~AnimationEffect()
+{
+    delete d_ptr;
 }
 
 void AnimationEffect::init()
@@ -82,114 +95,133 @@ bool AnimationEffect::isActive() const
 #define RELATIVE_XY(_FIELD_) const bool relative[2] = { static_cast<bool>(metaData(Relative##_FIELD_##X, meta)), \
                                                         static_cast<bool>(metaData(Relative##_FIELD_##Y, meta)) }
 
-quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget )
+void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, const EffectWindow *w) const
 {
-    const bool waitAtSource = from.isValid();
     if (a < NonFloatBase) {
         if (a == Scale) {
             QRect area = effects->clientArea(ScreenArea , w);
-            if (from.isValid()) {
+            if (from && from->isValid()) {
                 RELATIVE_XY(Source);
-                from.set(   relative[0] ? from[0] * area.width() / w->width() : from[0],
-                            relative[1] ? from[1] * area.height() / w->height() : from[1] );
+                from->set(relative[0] ? (*from)[0] * area.width() / w->width() : (*from)[0],
+                          relative[1] ? (*from)[1] * area.height() / w->height() : (*from)[1]);
             }
-            if (to.isValid()) {
+            if (to && to->isValid()) {
                 RELATIVE_XY(Target);
-                to.set( relative[0] ? to[0] * area.width() / w->width() : to[0],
-                        relative[1] ? to[1] * area.height() / w->height() : to[1] );
+                to->set(relative[0] ? (*to)[0] * area.width() / w->width() : (*to)[0],
+                        relative[1] ? (*to)[1] * area.height() / w->height() : (*to)[1] );
             }
         } else if (a == Rotation) {
-            if (!from.isValid()) {
-                setMetaData( SourceAnchor, metaData(TargetAnchor, meta), meta );
-                from.set(0.0,0.0);
+            if (from && !from->isValid()) {
+                setMetaData(SourceAnchor, metaData(TargetAnchor, meta), meta);
+                from->set(0.0,0.0);
             }
-            if (!to.isValid()) {
-                setMetaData( TargetAnchor, metaData(SourceAnchor, meta), meta );
-                to.set(0.0,0.0);
+            if (to && !to->isValid()) {
+                setMetaData(TargetAnchor, metaData(SourceAnchor, meta), meta);
+                to->set(0.0,0.0);
             }
         }
-        if (!from.isValid())
-            from.set(1.0,1.0);
-        if (!to.isValid())
-            to.set(1.0,1.0);
+        if (from && !from->isValid())
+            from->set(1.0,1.0);
+        if (to && !to->isValid())
+            to->set(1.0,1.0);
 
 
     } else if (a == Position) {
         QRect area = effects->clientArea(ScreenArea , w);
         QPoint pt = w->geometry().bottomRight(); // cannot be < 0 ;-)
-        if (from.isValid()) {
-            RELATIVE_XY(Source);
-            from.set( relative[0] ? area.x() + from[0] * area.width() : from[0],
-                      relative[1] ? area.y() + from[1] * area.height() : from[1] );
-        } else {
-            from.set(pt.x(), pt.y());
-            setMetaData( SourceAnchor, AnimationEffect::Bottom|AnimationEffect::Right, meta );
+        if (from) {
+            if (from->isValid()) {
+                RELATIVE_XY(Source);
+                from->set(relative[0] ? area.x() + (*from)[0] * area.width() : (*from)[0],
+                        relative[1] ? area.y() + (*from)[1] * area.height() : (*from)[1]);
+            } else {
+                from->set(pt.x(), pt.y());
+                setMetaData(SourceAnchor, AnimationEffect::Bottom|AnimationEffect::Right, meta);
+            }
         }
 
-        if (to.isValid()) {
-            RELATIVE_XY(Target);
-            to.set( relative[0] ? area.x() + to[0] * area.width() : to[0],
-                    relative[1] ? area.y() + to[1] * area.height() : to[1] );
-        } else {
-            to.set(pt.x(), pt.y());
-            setMetaData( TargetAnchor, AnimationEffect::Bottom|AnimationEffect::Right, meta );
+        if (to) {
+            if (to->isValid()) {
+                RELATIVE_XY(Target);
+                to->set(relative[0] ? area.x() + (*to)[0] * area.width() : (*to)[0],
+                        relative[1] ? area.y() + (*to)[1] * area.height() : (*to)[1]);
+            } else {
+                to->set(pt.x(), pt.y());
+                setMetaData( TargetAnchor, AnimationEffect::Bottom|AnimationEffect::Right, meta );
+            }
         }
 
 
     } else if (a == Size) {
         QRect area = effects->clientArea(ScreenArea , w);
-        if (from.isValid()) {
-            RELATIVE_XY(Source);
-            from.set( relative[0] ? from[0] * area.width() : from[0],
-                      relative[1] ? from[1] * area.height() : from[1] );
-        } else {
-            from.set(w->width(), w->height());
+        if (from) {
+            if (from->isValid()) {
+                RELATIVE_XY(Source);
+                from->set(relative[0] ? (*from)[0] * area.width() : (*from)[0],
+                          relative[1] ? (*from)[1] * area.height() : (*from)[1]);
+            } else {
+                from->set(w->width(), w->height());
+            }
         }
 
-        if (to.isValid()) {
-            RELATIVE_XY(Target);
-            to.set( relative[0] ? to[0] * area.width() : to[0],
-                    relative[1] ? to[1] * area.height() : to[1] );
-        } else {
-            to.set(w->width(), w->height());
+        if (to) {
+            if (to->isValid()) {
+                RELATIVE_XY(Target);
+                to->set(relative[0] ? (*to)[0] * area.width() : (*to)[0],
+                        relative[1] ? (*to)[1] * area.height() : (*to)[1]);
+            } else {
+                to->set(w->width(), w->height());
+            }
         }
-
 
     } else if (a == Translation) {
         QRect area = w->rect();
-        if (from.isValid()) {
-            RELATIVE_XY(Source);
-            from.set(   relative[0] ? from[0] * area.width() : from[0],
-                        relative[1] ? from[1] * area.height() : from[1] );
-        } else {
-            from.set(0.0, 0.0);
+        if (from) {
+            if (from->isValid()) {
+                RELATIVE_XY(Source);
+                from->set(relative[0] ? (*from)[0] * area.width() : (*from)[0],
+                          relative[1] ? (*from)[1] * area.height() : (*from)[1]);
+            } else {
+                from->set(0.0, 0.0);
+            }
         }
 
-        if (to.isValid()) {
-            RELATIVE_XY(Target);
-            to.set( relative[0] ? to[0] * area.width() : to[0],
-                    relative[1] ? to[1] * area.height() : to[1] );
-        } else {
-            to.set(0.0, 0.0);
+        if (to) {
+            if (to->isValid()) {
+                RELATIVE_XY(Target);
+                to->set(relative[0] ? (*to)[0] * area.width() : (*to)[0],
+                        relative[1] ? (*to)[1] * area.height() : (*to)[1]);
+            } else {
+                to->set(0.0, 0.0);
+            }
         }
+
     } else if (a == Clip) {
-        if (!from.isValid()) {
-            from.set(1.0,1.0);
-            setMetaData( SourceAnchor, metaData(TargetAnchor, meta), meta );
+        if (from && !from->isValid()) {
+            from->set(1.0,1.0);
+            setMetaData(SourceAnchor, metaData(TargetAnchor, meta), meta);
         }
-        if (!to.isValid()) {
-            to.set(1.0,1.0);
-            setMetaData( TargetAnchor, metaData(SourceAnchor, meta), meta );
+        if (to && !to->isValid()) {
+            to->set(1.0,1.0);
+            setMetaData(TargetAnchor, metaData(SourceAnchor, meta), meta);
         }
+
     } else if (a == CrossFadePrevious) {
-        if (!from.isValid()) {
-            from.set(0.0);
+        if (from && !from->isValid()) {
+            from->set(0.0);
         }
-        if (!to.isValid()) {
-            to.set(1.0);
+        if (to && !to->isValid()) {
+            to->set(1.0);
         }
-        w->referencePreviousWindowPixmap();
     }
+}
+
+quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget )
+{
+    const bool waitAtSource = from.isValid();
+    validate(a, meta, &from, &to, w);
+    if (a == CrossFadePrevious)
+        w->referencePreviousWindowPixmap();
 
     Q_D(AnimationEffect);
     if (!d->m_isInitialized)
@@ -206,7 +238,8 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     if (it == d->m_animations.end())
         it = d->m_animations.insert(w, QPair<QList<AniData>, QRect>(QList<AniData>(), QRect()));
     it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource, keepAtTarget));
-    quint64 ret_id = quint64(&it->first.last());
+    quint64 ret_id = ++d->m_animCounter;
+    it->first.last().id = ret_id;
     it->second = QRect();
 
     d->m_animationsTouched = true;
@@ -223,12 +256,35 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     return ret_id;
 }
 
+bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime)
+{
+    Q_D(AnimationEffect);
+    if (animationId == d->m_justEndedAnimation)
+        return false; // this is just ending, do not try to retarget it
+    for (AniMap::iterator entry = d->m_animations.begin(),
+                         mapEnd = d->m_animations.end(); entry != mapEnd; ++entry) {
+        for (QList<AniData>::iterator anim = entry->first.begin(),
+                                   animEnd = entry->first.end(); anim != animEnd; ++anim) {
+            if (anim->id == animationId) {
+                anim->from.set(interpolated(*anim, 0), interpolated(*anim, 1));
+                validate(anim->attribute, anim->meta, nullptr, &newTarget, entry.key());
+                anim->to.set(newTarget[0], newTarget[1]);
+                anim->duration = anim->time + newRemainingTime;
+                return true;
+            }
+        }
+    }
+    return false; // no animation found
+}
+
 bool AnimationEffect::cancel(quint64 animationId)
 {
     Q_D(AnimationEffect);
+    if (animationId == d->m_justEndedAnimation)
+        return true; // this is just ending, do not try to cancel it but fake success
     for (AniMap::iterator entry = d->m_animations.begin(), mapEnd = d->m_animations.end(); entry != mapEnd; ++entry) {
         for (QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end(); anim != animEnd; ++anim) {
-            if (quint64(&(*anim)) == animationId) {
+            if (anim->id == animationId) {
                 entry->first.erase(anim); // remove the animation
                 if (entry->first.isEmpty()) { // no other animations on the window, release it.
                     const int i = d->m_zombies.indexOf(entry.key());
@@ -240,6 +296,7 @@ bool AnimationEffect::cancel(quint64 animationId)
                 }
                 if (d->m_animations.isEmpty())
                     disconnectGeometryChanges();
+                d->m_animationsTouched = true; // could be called from animationEnded
                 return true;
             }
         }
@@ -287,7 +344,9 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                     oldW->unreferencePreviousWindowPixmap();
                     effects->addRepaint(oldW->expandedGeometry());
                 }
+                d->m_justEndedAnimation = anim->id;
                 animationEnded(oldW, anim->attribute, anim->meta);
+                d->m_justEndedAnimation = 0;
                 // NOTICE animationEnded is an external call and might have called "::animate"
                 // as a result our iterators could now point random junk on the heap
                 // so we've to restore the former states, ie. find our window list and animation

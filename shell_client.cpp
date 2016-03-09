@@ -266,12 +266,19 @@ NET::WindowType ShellClient::windowType(bool direct, int supported_types) const
 
 double ShellClient::opacity() const
 {
-    return 1.0;
+    return m_opacity;
 }
 
 void ShellClient::setOpacity(double opacity)
 {
-    Q_UNUSED(opacity)
+    const qreal newOpacity = qBound(0.0, opacity, 1.0);
+    if (newOpacity == m_opacity) {
+        return;
+    }
+    const qreal oldOpacity = m_opacity;
+    m_opacity = newOpacity;
+    addRepaintFull();
+    emit opacityChanged(this, oldOpacity);
 }
 
 void ShellClient::addDamage(const QRegion &damage)
@@ -288,6 +295,7 @@ void ShellClient::addDamage(const QRegion &damage)
     }
     markAsMapped();
     setDepth(m_shellSurface->surface()->buffer()->hasAlphaChannel() ? 32 : 24);
+    repaints_region += damage.translated(clientPos());
     Toplevel::addDamage(damage);
 }
 
@@ -935,6 +943,9 @@ void ShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecora
     connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed, this,
         [this] {
             m_serverDecoration = nullptr;
+            if (!Workspace::self()) {
+                return;
+            }
             updateDecoration(true);
         }
     );

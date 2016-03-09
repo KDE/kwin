@@ -38,6 +38,8 @@ public:
     inline bool isOneDimensional() const {
         return from[0] == from[1] && to[0] == to[1];
     }
+
+    quint64 id{0};
     static QList<AniData> list(const QString &str);
     QString toString() const;
     QString debugInfo() const;

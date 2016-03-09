@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <memory>
 
 #include <QElapsedTimer>
+#include <QPointer>
 
 namespace KWayland
 {
@@ -404,6 +405,9 @@ public:
      **/
     void endMoveResize();
     void keyPressEvent(uint key_code);
+
+    void enterEvent(const QPoint &globalPos);
+    void leaveEvent();
 
     /**
      * These values represent positions inside an area

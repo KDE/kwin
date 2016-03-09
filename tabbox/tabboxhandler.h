@@ -167,7 +167,7 @@ public:
     /**
     * De-/Elevate a client using the compositor (if enabled)
     */
-    virtual void elevateClient(TabBoxClient* c, WId tabbox, bool elevate) const = 0;
+    virtual void elevateClient(TabBoxClient* c, QWindow *tabbox, bool elevate) const = 0;
 
     /**
     * Raise a client (w/o activating it)

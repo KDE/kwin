@@ -283,11 +283,9 @@ void KWin::DecorationInputTest::testDoubleClick()
     // double click again
     PRESS;
     RELEASE;
-    QEXPECT_FAIL("", "Tripple click triggers another double click", Continue);
     QVERIFY(c->isOnAllDesktops());
     PRESS;
     RELEASE;
-    QEXPECT_FAIL("", "Tripple click triggers another double click", Continue);
     QVERIFY(!c->isOnAllDesktops());
 }
 
@@ -371,5 +369,5 @@ void DecorationInputTest::testPressToMove()
 
 }
 
-WAYLANTEST_MAIN(KWin::DecorationInputTest)
+WAYLANDTEST_MAIN(KWin::DecorationInputTest)
 #include "decoration_input_test.moc"

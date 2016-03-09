@@ -66,9 +66,9 @@ int main(int argc, char *argv[]) \
 }
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-#define WAYLANTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling) )
+#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling) )
 #else
-#define WAYLANTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject,)
+#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject,)
 #endif
 
 #endif

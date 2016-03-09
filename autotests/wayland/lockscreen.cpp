@@ -38,11 +38,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/touch.h>
+#include <KWayland/Server/seat_interface.h>
 
 //screenlocker
 #include <KScreenLocker/KsldApp>
 
 #include <linux/input.h>
+
+Q_DECLARE_METATYPE(Qt::Orientation)
 
 namespace KWin
 {
@@ -63,11 +67,13 @@ private Q_SLOTS:
     void testScreenEdge();
     void testEffects();
     void testEffectsKeyboard();
+    void testEffectsKeyboardAutorepeat();
     void testMoveWindow();
     void testPointerShortcut();
     void testAxisShortcut_data();
     void testAxisShortcut();
     void testKeyboardShortcut();
+    void testTouch();
 
 private:
     void unlock();
@@ -109,12 +115,16 @@ Q_SIGNALS:
     QVERIFY(waylandServer()->isScreenLocked());
 
 #define UNLOCK \
-    QCOMPARE(lockStateChangedSpy.count(), 1); \
+    int expectedLockCount = 1; \
+    if (ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked) { \
+        expectedLockCount = 2; \
+    } \
+    QCOMPARE(lockStateChangedSpy.count(), expectedLockCount); \
     unlock(); \
-    if (lockStateChangedSpy.count() < 2) { \
+    if (lockStateChangedSpy.count() < expectedLockCount + 1) { \
         QVERIFY(lockStateChangedSpy.wait()); \
     } \
-    QCOMPARE(lockStateChangedSpy.count(), 2); \
+    QCOMPARE(lockStateChangedSpy.count(), expectedLockCount + 1); \
     QVERIFY(!waylandServer()->isScreenLocked());
 
 #define MOTION(target) \
@@ -300,16 +310,13 @@ void LockScreenTest::testPointer()
 
     LOCK
 
-    QEXPECT_FAIL("", "Adding the lock screen window should send left event", Continue);
     QVERIFY(leftSpy.wait(100));
-    QEXPECT_FAIL("", "Adding the lock screen window should send left event", Continue);
     QCOMPARE(leftSpy.count(), 1);
 
     // simulate moving out in and out again
     MOTION(c->geometry().center());
     MOTION(c->geometry().bottomRight() + QPoint(100, 100));
     MOTION(c->geometry().bottomRight() + QPoint(100, 100));
-    QEXPECT_FAIL("", "Adding the lock screen window should send left event", Continue);
     QVERIFY(!leftSpy.wait(100));
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(enteredSpy.count(), 1);
@@ -319,16 +326,14 @@ void LockScreenTest::testPointer()
     // and unlock
     UNLOCK
 
-    QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
     QVERIFY(enteredSpy.wait(100));
-    QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
     QCOMPARE(enteredSpy.count(), 2);
     // move on the window
     MOTION(c->geometry().center() + QPoint(100, 100));
+    QVERIFY(leftSpy.wait());
     MOTION(c->geometry().center());
-    QEXPECT_FAIL("", "Focus doesn't move back on surface removal", Continue);
-    QVERIFY(!enteredSpy.wait(100));
-    QCOMPARE(enteredSpy.count(), 2);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 3);
 }
 
 void LockScreenTest::testPointerButton()
@@ -439,13 +444,15 @@ void LockScreenTest::testKeyboard()
     QCOMPARE(keyChangedSpy.at(1).at(2).value<quint32>(), quint32(2));
 
     LOCK
+    QVERIFY(leftSpy.wait());
     KEYPRESS(KEY_B);
     KEYRELEASE(KEY_B);
-    QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(keyChangedSpy.count(), 2);
 
     UNLOCK
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
     KEYPRESS(KEY_C);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 3);
@@ -557,6 +564,47 @@ void LockScreenTest::testEffectsKeyboard()
     QCOMPARE(inputSpy.at(1).first().toString(), QStringLiteral("a"));
     QCOMPARE(inputSpy.at(2).first().toString(), QStringLiteral("c"));
     QCOMPARE(inputSpy.at(3).first().toString(), QStringLiteral("c"));
+
+    effects->ungrabKeyboard();
+}
+
+void LockScreenTest::testEffectsKeyboardAutorepeat()
+{
+    // this test is just like testEffectsKeyboard, but tests auto repeat key events
+    // while the key is pressed the Effect should get auto repeated events
+    // but the lock screen should filter them out
+    QScopedPointer<HelperEffect> effect(new HelperEffect);
+    QSignalSpy inputSpy(effect.data(), &HelperEffect::keyEvent);
+    QVERIFY(inputSpy.isValid());
+    effects->grabKeyboard(effect.data());
+
+    // we need to configure the key repeat first. It is only enabled on libinput
+    waylandServer()->seat()->setKeyRepeatInfo(25, 300);
+
+    quint32 timestamp = 1;
+    KEYPRESS(KEY_A);
+    QCOMPARE(inputSpy.count(), 1);
+    QCOMPARE(inputSpy.first().first().toString(), QStringLiteral("a"));
+    QVERIFY(inputSpy.wait());
+    QVERIFY(inputSpy.count() > 1);
+    // and still more events
+    QVERIFY(inputSpy.wait());
+    QCOMPARE(inputSpy.at(1).first().toString(), QStringLiteral("a"));
+
+    // now release
+    inputSpy.clear();
+    KEYRELEASE(KEY_A);
+    QCOMPARE(inputSpy.count(), 1);
+
+    // while locked key repeat should not pass any events to the Effect
+    LOCK
+    KEYPRESS(KEY_B);
+    QVERIFY(!inputSpy.wait(200));
+    KEYRELEASE(KEY_B);
+    QVERIFY(!inputSpy.wait(200));
+
+    UNLOCK
+    // don't test again, that's covered by testEffectsKeyboard
 
     effects->ungrabKeyboard();
 }
@@ -728,7 +776,45 @@ void LockScreenTest::testKeyboardShortcut()
     KEYRELEASE(KEY_LEFTALT);
 }
 
+void LockScreenTest::testTouch()
+{
+    using namespace KWayland::Client;
+    auto touch = m_seat->createTouch(m_seat);
+    QVERIFY(touch);
+    QVERIFY(touch->isValid());
+    AbstractClient *c = showWindow();
+    QVERIFY(c);
+    QSignalSpy sequenceStartedSpy(touch, &Touch::sequenceStarted);
+    QVERIFY(sequenceStartedSpy.isValid());
+    QSignalSpy cancelSpy(touch, &Touch::sequenceCanceled);
+    QVERIFY(cancelSpy.isValid());
+    QSignalSpy pointRemovedSpy(touch, &Touch::pointRemoved);
+    QVERIFY(pointRemovedSpy.isValid());
+
+    quint32 timestamp = 1;
+    waylandServer()->backend()->touchDown(1, QPointF(25, 25), timestamp++);
+    QVERIFY(sequenceStartedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 1);
+
+    LOCK
+    QVERIFY(cancelSpy.wait());
+
+    waylandServer()->backend()->touchUp(1, timestamp++);
+    QVERIFY(!pointRemovedSpy.wait(100));
+    waylandServer()->backend()->touchDown(1, QPointF(25, 25), timestamp++);
+    waylandServer()->backend()->touchMotion(1, QPointF(26, 26), timestamp++);
+    waylandServer()->backend()->touchUp(1, timestamp++);
+
+    UNLOCK
+    waylandServer()->backend()->touchDown(1, QPointF(25, 25), timestamp++);
+    QVERIFY(sequenceStartedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 2);
+    waylandServer()->backend()->touchUp(1, timestamp++);
+    QVERIFY(pointRemovedSpy.wait());
+    QCOMPARE(pointRemovedSpy.count(), 1);
 }
 
-WAYLANTEST_MAIN(KWin::LockScreenTest)
+}
+
+WAYLANDTEST_MAIN(KWin::LockScreenTest)
 #include "lockscreen.moc"

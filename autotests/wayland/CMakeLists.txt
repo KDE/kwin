@@ -80,3 +80,48 @@ add_executable(testTouchInput ${testTouchInput_SRCS})
 target_link_libraries( testTouchInput kwin Qt5::Test)
 add_test(kwin-testTouchInput testTouchInput)
 ecm_mark_as_test(testTouchInput)
+
+########################################################
+# Input Stacking Order Test
+########################################################
+set( testInputStackingOrder_SRCS input_stacking_order.cpp kwin_wayland_test.cpp )
+add_executable(testInputStackingOrder ${testInputStackingOrder_SRCS})
+target_link_libraries( testInputStackingOrder kwin Qt5::Test)
+add_test(kwin-testInputStackingOrder testInputStackingOrder)
+ecm_mark_as_test(testInputStackingOrder)
+
+########################################################
+# Pointer Input Test
+########################################################
+set( testPointerInput_SRCS pointer_input.cpp kwin_wayland_test.cpp )
+add_executable(testPointerInput ${testPointerInput_SRCS})
+target_link_libraries( testPointerInput kwin Qt5::Test)
+add_test(kwin-testPointerInput testPointerInput)
+ecm_mark_as_test(testPointerInput)
+
+########################################################
+# PlatformCursorTest
+########################################################
+set( testPlatformCursor_SRCS platformcursor.cpp kwin_wayland_test.cpp )
+add_executable(testPlatformCursor ${testPlatformCursor_SRCS})
+target_link_libraries( testPlatformCursor kwin Qt5::Test)
+add_test(kwin-testPlatformCursor testPlatformCursor)
+ecm_mark_as_test(testPlatformCursor)
+
+########################################################
+# Don't crash cancel animation test
+########################################################
+set( testDontCrashCancelAnimation_SRCS dont_crash_cancel_animation.cpp kwin_wayland_test.cpp )
+add_executable(testDontCrashCancelAnimation ${testDontCrashCancelAnimation_SRCS})
+target_link_libraries( testDontCrashCancelAnimation kwin Qt5::Test)
+add_test(kwin-testDontCrashCancelAnimation testDontCrashCancelAnimation)
+ecm_mark_as_test(testDontCrashCancelAnimation)
+
+########################################################
+# Transient Placement Test
+########################################################
+set( testTransientPlacmenet_SRCS transient_placement.cpp kwin_wayland_test.cpp )
+add_executable(testTransientPlacmenet ${testTransientPlacmenet_SRCS})
+target_link_libraries( testTransientPlacmenet kwin Qt5::Test)
+add_test(kwin-testTransientPlacmenet testTransientPlacmenet)
+ecm_mark_as_test(testTransientPlacmenet)

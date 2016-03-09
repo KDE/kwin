@@ -187,5 +187,5 @@ void TransientNoInputTest::testTransientNoFocus()
 
 }
 
-WAYLANTEST_MAIN(KWin::TransientNoInputTest)
+WAYLANDTEST_MAIN(KWin::TransientNoInputTest)
 #include "transient_no_input_test.moc"

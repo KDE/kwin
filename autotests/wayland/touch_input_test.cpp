@@ -49,6 +49,7 @@ private Q_SLOTS:
     void cleanup();
     void testMultipleTouchPoints();
     void testCancel();
+    void testTouchMouseAction();
 
 private:
     AbstractClient *showWindow();
@@ -270,6 +271,8 @@ void TouchInputTest::testCancel()
     QVERIFY(sequenceStartedSpy.isValid());
     QSignalSpy cancelSpy(m_touch, &Touch::sequenceCanceled);
     QVERIFY(cancelSpy.isValid());
+    QSignalSpy pointRemovedSpy(m_touch, &Touch::pointRemoved);
+    QVERIFY(pointRemovedSpy.isValid());
 
     quint32 timestamp = 1;
     waylandServer()->backend()->touchDown(1, QPointF(125, 125), timestamp++);
@@ -280,9 +283,41 @@ void TouchInputTest::testCancel()
     waylandServer()->backend()->touchCancel();
     QVERIFY(cancelSpy.wait());
     QCOMPARE(cancelSpy.count(), 1);
+
+    waylandServer()->backend()->touchUp(1, timestamp++);
+    QVERIFY(!pointRemovedSpy.wait(100));
+    QCOMPARE(pointRemovedSpy.count(), 0);
+}
+
+void TouchInputTest::testTouchMouseAction()
+{
+    // this test verifies that a touch down on an inactive client will activate it
+    using namespace KWayland::Client;
+    // create two windows
+    AbstractClient *c1 = showWindow();
+    QVERIFY(c1);
+    AbstractClient *c2 = showWindow();
+    QVERIFY(c2);
+
+    QVERIFY(!c1->isActive());
+    QVERIFY(c2->isActive());
+
+    // also create a sequence started spy as the touch event should be passed through
+    QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
+    QVERIFY(sequenceStartedSpy.isValid());
+
+    quint32 timestamp = 1;
+    waylandServer()->backend()->touchDown(1, c1->geometry().center(), timestamp++);
+    QVERIFY(c1->isActive());
+
+    QVERIFY(sequenceStartedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 1);
+
+    // cleanup
+    waylandServer()->backend()->touchCancel();
 }
 
 }
 
-WAYLANTEST_MAIN(KWin::TouchInputTest)
+WAYLANDTEST_MAIN(KWin::TouchInputTest)
 #include "touch_input_test.moc"

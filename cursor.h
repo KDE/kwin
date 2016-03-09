@@ -108,6 +108,10 @@ public:
      * @return QByteArray
      */
     QByteArray cursorName(Qt::CursorShape shape) const;
+    /**
+     * @return list of alternative names for the cursor with @p name
+     **/
+    QVector<QByteArray> cursorAlternativeNames(const QByteArray &name) const;
 
     /**
      * Returns the current cursor position. This method does an update of the mouse position if

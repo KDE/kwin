@@ -247,13 +247,6 @@ void Application::crashChecking()
     QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
 }
 
-bool Application::notify(QObject* o, QEvent* e)
-{
-    if (Workspace::self()->workspaceEvent(e))
-        return true;
-    return QApplication::notify(o, e);
-}
-
 void Application::crashHandler(int signal)
 {
     crashes++;

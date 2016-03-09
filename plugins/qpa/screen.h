@@ -34,6 +34,7 @@ namespace KWin
 {
 namespace QPA
 {
+class PlatformCursor;
 
 class Screen : public QPlatformScreen
 {
@@ -45,9 +46,11 @@ public:
     int depth() const override;
     QImage::Format format() const override;
     QSizeF physicalSize() const override;
+    QPlatformCursor *cursor() const override;
 
 private:
     KWayland::Client::Output *m_output;
+    QScopedPointer<PlatformCursor> m_cursor;
 };
 
 }

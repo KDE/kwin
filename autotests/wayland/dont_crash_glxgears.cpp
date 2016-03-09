@@ -100,5 +100,5 @@ void DontCrashGlxgearsTest::testGlxgears()
 
 }
 
-WAYLANTEST_MAIN(KWin::DontCrashGlxgearsTest)
+WAYLANDTEST_MAIN(KWin::DontCrashGlxgearsTest)
 #include "dont_crash_glxgears.moc"

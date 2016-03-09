@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DRM_BACKEND_H
 #define KWIN_DRM_BACKEND_H
 #include "abstract_backend.h"
+#include "input.h"
 
+#include <QElapsedTimer>
 #include <QImage>
 #include <QPointer>
 #include <QSize>
@@ -47,6 +49,7 @@ class UdevMonitor;
 
 class DrmBuffer;
 class DrmOutput;
+class DpmsInputEventFilter;
 
 template <typename Pointer, void (*cleanupFunc)(Pointer*)>
 struct DrmCleanup
@@ -71,8 +74,6 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend* createOpenGLBackend() override;
-    void installCursorFromServer() override;
-    void installCursorImage(Qt::CursorShape shape) override;
 
     void init() override;
     DrmBuffer *createBuffer(const QSize &size);
@@ -90,6 +91,13 @@ public:
         return m_buffers;
     }
     void bufferDestroyed(DrmBuffer *b);
+
+    void outputWentOff();
+    void checkOutputsAreOn();
+
+public Q_SLOTS:
+    void turnOutputsOn();
+
 
 Q_SIGNALS:
     void outputRemoved(KWin::DrmOutput *output);
@@ -124,6 +132,7 @@ private:
     int m_pageFlipsPending = 0;
     bool m_active = false;
     QVector<DrmBuffer*> m_buffers;
+    QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
 };
 
 class DrmOutput : public QObject
@@ -182,7 +191,6 @@ private:
     void initEdid(drmModeConnector *connector);
     void initDpms(drmModeConnector *connector);
     bool isCurrentMode(const drmModeModeInfo *mode) const;
-    void reenableDpms();
     void initUuid();
     void setGlobalPos(const QPoint &pos);
 
@@ -253,6 +261,27 @@ private:
     quint64 m_bufferSize = 0;
     void *m_memory = nullptr;
     QImage *m_image = nullptr;
+};
+
+class DpmsInputEventFilter : public InputEventFilter
+{
+public:
+    DpmsInputEventFilter(DrmBackend *backend);
+    ~DpmsInputEventFilter();
+
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
+    bool wheelEvent(QWheelEvent *event) override;
+    bool keyEvent(QKeyEvent *event) override;
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchUp(quint32 id, quint32 time) override;
+
+private:
+    void notify();
+    DrmBackend *m_backend;
+    QElapsedTimer m_doubleTapTimer;
+    QVector<qint32> m_touchPoints;
+    bool m_secondTap = false;
 };
 
 }

@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "cursor.h"
 #include "input.h"
+#include "pointer_input.h"
 #include "scene_opengl.h"
 #include "wayland_server.h"
 #include "wayland_cursor_theme.h"
@@ -36,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/outputconfiguration_interface.h>
 // Wayland
 #include <wayland-cursor.h>
+
 
 namespace KWin
 {
@@ -51,87 +53,14 @@ AbstractBackend::~AbstractBackend()
     WaylandServer::self()->uninstallBackend(this);
 }
 
-void AbstractBackend::installCursorFromServer()
+QImage AbstractBackend::softwareCursor() const
 {
-    if (!m_softWareCursor) {
-        return;
-    }
-    triggerCursorRepaint();
-    updateCursorFromServer();
+    return input()->pointer()->cursorImage();
 }
 
-void AbstractBackend::updateCursorFromServer()
+QPoint AbstractBackend::softwareCursorHotspot() const
 {
-    if (!waylandServer() || !waylandServer()->seat()->focusedPointer()) {
-        return;
-    }
-    auto c = waylandServer()->seat()->focusedPointer()->cursor();
-    if (!c) {
-        return;
-    }
-    auto cursorSurface = c->surface();
-    if (cursorSurface.isNull()) {
-        return;
-    }
-    auto buffer = cursorSurface.data()->buffer();
-    if (!buffer) {
-        return;
-    }
-    m_cursor.hotspot = c->hotspot();
-    m_cursor.image = buffer->data().copy();
-    emit cursorChanged();
-}
-
-void AbstractBackend::installCursorImage(Qt::CursorShape shape)
-{
-    if (!m_softWareCursor) {
-        return;
-    }
-    updateCursorImage(shape);
-}
-
-void AbstractBackend::updateCursorImage(Qt::CursorShape shape)
-{
-    if (!m_cursorTheme) {
-        // check whether we can create it
-        if (waylandServer() && waylandServer()->internalShmPool()) {
-            m_cursorTheme = new WaylandCursorTheme(waylandServer()->internalShmPool(), this);
-            connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this,
-                [this] {
-                    delete m_cursorTheme;
-                    m_cursorTheme = nullptr;
-                }
-            );
-        }
-    }
-    if (!m_cursorTheme) {
-        return;
-    }
-    wl_cursor_image *cursor = m_cursorTheme->get(shape);
-    if (!cursor) {
-        return;
-    }
-    wl_buffer *b = wl_cursor_image_get_buffer(cursor);
-    if (!b) {
-        return;
-    }
-    waylandServer()->internalClientConection()->flush();
-    waylandServer()->dispatch();
-    installThemeCursor(KWayland::Client::Buffer::getId(b), QPoint(cursor->hotspot_x, cursor->hotspot_y));
-}
-
-void AbstractBackend::installThemeCursor(quint32 id, const QPoint &hotspot)
-{
-    auto buffer = KWayland::Server::BufferInterface::get(waylandServer()->internalConnection()->getResource(id));
-    if (!buffer) {
-        return;
-    }
-    if (m_softWareCursor) {
-        triggerCursorRepaint();
-    }
-    m_cursor.hotspot = hotspot;
-    m_cursor.image = buffer->data().copy();
-    emit cursorChanged();
+    return input()->pointer()->cursorHotSpot();
 }
 
 Screens *AbstractBackend::createScreens(QObject *parent)
@@ -170,17 +99,24 @@ void AbstractBackend::setSoftWareCursor(bool set)
 
 void AbstractBackend::triggerCursorRepaint()
 {
-    if (!Compositor::self() || m_cursor.image.isNull()) {
+    if (!Compositor::self()) {
         return;
     }
-    Compositor::self()->addRepaint(m_cursor.lastRenderedPosition.x() - m_cursor.hotspot.x(),
-                                   m_cursor.lastRenderedPosition.y() - m_cursor.hotspot.y(),
-                                   m_cursor.image.width(), m_cursor.image.height());
+    const QPoint &hotSpot = softwareCursorHotspot();
+    const QSize &size = softwareCursor().size();
+    Compositor::self()->addRepaint(m_cursor.lastRenderedPosition.x() - hotSpot.x(),
+                                   m_cursor.lastRenderedPosition.y() - hotSpot.y(),
+                                   size.width(), size.height());
 }
 
 void AbstractBackend::markCursorAsRendered()
 {
-    m_cursor.lastRenderedPosition = Cursor::pos();
+    if (m_softWareCursor) {
+        m_cursor.lastRenderedPosition = Cursor::pos();
+    }
+    if (input()->pointer()) {
+        input()->pointer()->markCursorAsRendered();
+    }
 }
 
 void AbstractBackend::keyboardKeyPressed(quint32 key, quint32 time)

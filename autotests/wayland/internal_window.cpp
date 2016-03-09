@@ -44,6 +44,7 @@ private Q_SLOTS:
     void testEnterLeave();
     void testPointerPressRelease();
     void testPointerAxis();
+    void testKeyboard_data();
     void testKeyboard();
 };
 
@@ -237,6 +238,14 @@ void InternalWindowTest::testPointerAxis()
     QTRY_COMPARE(wheelSpy.count(), 2);
 }
 
+void InternalWindowTest::testKeyboard_data()
+{
+    QTest::addColumn<QPoint>("cursorPos");
+
+    QTest::newRow("on Window") << QPoint(50, 50);
+    QTest::newRow("outside Window") << QPoint(250, 250);
+}
+
 void InternalWindowTest::testKeyboard()
 {
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
@@ -252,7 +261,8 @@ void InternalWindowTest::testKeyboard()
     QCOMPARE(clientAddedSpy.count(), 1);
 
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerMotion(QPoint(50, 50), timestamp++);
+    QFETCH(QPoint, cursorPos);
+    waylandServer()->backend()->pointerMotion(cursorPos, timestamp++);
 
     waylandServer()->backend()->keyboardKeyPressed(KEY_A, timestamp++);
     QTRY_COMPARE(pressSpy.count(), 1);
@@ -264,5 +274,5 @@ void InternalWindowTest::testKeyboard()
 
 }
 
-WAYLANTEST_MAIN(KWin::InternalWindowTest)
+WAYLANDTEST_MAIN(KWin::InternalWindowTest)
 #include "internal_window.moc"

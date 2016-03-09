@@ -533,7 +533,10 @@ bool PresentWindowsEffect::borderActivated(ElectricBorder border)
 
 void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
 {
-    QMouseEvent* me = static_cast< QMouseEvent* >(e);
+    QMouseEvent* me = dynamic_cast< QMouseEvent* >(e);
+    if (!me) {
+        return;
+    }
     if (m_closeView) {
         const bool contains = m_closeView->geometry().contains(me->pos());
         if (!m_closeView->isVisible() && contains) {
