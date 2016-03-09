@@ -170,4 +170,6 @@ private:
 }
 }
 
+Q_DECLARE_METATYPE(KWayland::Server::PlasmaShellSurfaceInterface::Role)
+
 #endif
