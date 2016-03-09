@@ -401,6 +401,9 @@ class InternalWindowEventFilter : public InputEventFilter {
                 if (!w->isVisible()) {
                     continue;
                 }
+                if (!screens()->geometry().contains(w->geometry())) {
+                    continue;
+                }
                 found = w;
                 break;
             }
