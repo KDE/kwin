@@ -88,6 +88,8 @@ void Integration::initialize()
     // TODO: start initialize Wayland once the internal Wayland connection is created
     connect(kwinApp(), &Application::screensCreated, this, &Integration::initializeWayland, Qt::QueuedConnection);
     QPlatformIntegration::initialize();
+    m_dummyScreen = new Screen(nullptr);
+    screenAdded(m_dummyScreen);
 }
 
 QAbstractEventDispatcher *Integration::createEventDispatcher() const
@@ -178,6 +180,10 @@ void Integration::initializeWayland()
 
 void Integration::createWaylandOutput(quint32 name, quint32 version)
 {
+    if (m_dummyScreen) {
+        destroyScreen(m_dummyScreen);
+        m_dummyScreen = nullptr;
+    }
     using namespace KWayland::Client;
     auto o = m_registry->createOutput(name, version, this);
     connect(o, &Output::changed, this,
