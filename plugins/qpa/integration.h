@@ -40,6 +40,8 @@ namespace KWin
 namespace QPA
 {
 
+class Screen;
+
 class Integration : public QObject, public QPlatformIntegration
 {
     Q_OBJECT
@@ -74,6 +76,7 @@ private:
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::Shell *m_shell = nullptr;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
+    Screen *m_dummyScreen = nullptr;
 };
 
 }

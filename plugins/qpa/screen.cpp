@@ -49,12 +49,12 @@ QImage::Format Screen::format() const
 
 QRect Screen::geometry() const
 {
-    return m_output->geometry();
+    return m_output ? m_output->geometry() : QRect(0, 0, 1, 1);
 }
 
 QSizeF Screen::physicalSize() const
 {
-    return m_output->physicalSize();
+    return m_output ? m_output->physicalSize() : QPlatformScreen::physicalSize();
 }
 
 QPlatformCursor *Screen::cursor() const
