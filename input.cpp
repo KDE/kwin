@@ -123,6 +123,20 @@ public:
 };
 #endif
 
+class TerminateServerFilter : public InputEventFilter {
+public:
+    bool keyEvent(QKeyEvent *event) override {
+        if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
+            if (event->nativeVirtualKey() == XKB_KEY_Terminate_Server) {
+                qCWarning(KWIN_CORE) << "Request to terminate server";
+                QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
 class LockScreenFilter : public InputEventFilter {
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
@@ -866,6 +880,7 @@ void InputRedirection::setupInputFilters()
     }
 #endif
     if (waylandServer()) {
+        installInputEventFilter(new TerminateServerFilter);
         installInputEventFilter(new DragAndDropInputFilter);
         installInputEventFilter(new LockScreenFilter);
     }
