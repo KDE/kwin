@@ -46,6 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/blur_interface.h>
 #include <KWayland/Server/shell_interface.h>
+#include <KWayland/Server/outputmanagement_interface.h>
+#include <KWayland/Server/outputconfiguration_interface.h>
 
 // Qt
 #include <QThread>
@@ -231,6 +233,12 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
         }
     );
     m_decorationManager->create();
+
+    m_outputManagement = m_display->createOutputManagement(m_display);
+    connect(m_outputManagement, &OutputManagementInterface::configurationChangeRequested,
+            this, [this](KWayland::Server::OutputConfigurationInterface *config) {
+                m_backend->configurationChangeRequested(config);
+    });
 }
 
 void WaylandServer::initWorkspace()

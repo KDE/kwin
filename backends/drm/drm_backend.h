@@ -36,6 +36,9 @@ namespace KWayland
 namespace Server
 {
 class OutputInterface;
+class OutputDeviceInterface;
+class OutputChangeSet;
+class OutputManagementInterface;
 }
 }
 
@@ -68,6 +71,7 @@ public:
     explicit DrmBackend(QObject *parent = nullptr);
     virtual ~DrmBackend();
 
+    void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config) override;
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend* createOpenGLBackend() override;
@@ -118,6 +122,7 @@ private:
     void readOutputsConfiguration();
     QByteArray generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
+    DrmOutput *findOutput(const QByteArray &uuid);
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
     int m_fd = -1;
@@ -129,6 +134,7 @@ private:
     bool m_active = false;
     QVector<DrmBuffer*> m_buffers;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
+    KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
 };
 
 class DrmOutput : public QObject
@@ -150,6 +156,12 @@ public:
     void init(drmModeConnector *connector);
     void restoreSaved();
     void blank();
+
+    /**
+     * This sets the changes and tests them against the DRM output
+     */
+    void setChanges(KWayland::Server::OutputChangeSet *changeset);
+    bool commitChanges();
 
     QSize size() const;
     QRect geometry() const;
@@ -201,6 +213,8 @@ private:
     Edid m_edid;
     QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
+    QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
+    QPointer<KWayland::Server::OutputChangeSet> m_changeset;
     ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
     DpmsMode m_dpmsMode = DpmsMode::On;
     QByteArray m_uuid;

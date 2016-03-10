@@ -33,6 +33,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWayland
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
+#include <KWayland/Server/outputchangeset.h>
+#include <KWayland/Server/outputdevice_interface.h>
+#include <KWayland/Server/outputmanagement_interface.h>
+#include <KWayland/Server/outputconfiguration_interface.h>
 // KF5
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -463,10 +467,37 @@ QByteArray DrmBackend::generateOutputConfigurationUuid() const
     return hash.result().toHex().left(10);
 }
 
+void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
+{
+    const auto changes = config->changes();
+    for (auto it = changes.begin(); it != changes.end(); it++) {
+
+        KWayland::Server::OutputChangeSet *changeset = it.value();
+
+        auto drmoutput = findOutput(it.key()->uuid());
+        if (drmoutput == nullptr) {
+            qCWarning(KWIN_DRM) << "Could NOT find DrmOutput matching " << it.key()->uuid();
+            return;
+        }
+        drmoutput->setChanges(changeset);
+    }
+}
+
 DrmOutput *DrmBackend::findOutput(quint32 connector)
 {
     auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [connector] (DrmOutput *o) {
         return o->m_connector == connector;
+    });
+    if (it != m_outputs.constEnd()) {
+        return *it;
+    }
+    return nullptr;
+}
+
+DrmOutput *DrmBackend::findOutput(const QByteArray &uuid)
+{
+    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [uuid] (DrmOutput *o) {
+        return o->m_uuid == uuid;
     });
     if (it != m_outputs.constEnd()) {
         return *it;
@@ -670,6 +701,7 @@ DrmOutput::~DrmOutput()
     hideCursor();
     cleanupBlackBuffer();
     delete m_waylandOutput.data();
+    delete m_waylandOutputDevice.data();
 }
 
 void DrmOutput::hideCursor()
@@ -803,11 +835,20 @@ void DrmOutput::init(drmModeConnector *connector)
         m_waylandOutput.clear();
     }
     m_waylandOutput = waylandServer()->display()->createOutput();
+    if (!m_waylandOutputDevice.isNull()) {
+        delete m_waylandOutputDevice.data();
+        m_waylandOutputDevice.clear();
+    }
+    m_waylandOutputDevice = waylandServer()->display()->createOutputDevice();
+    m_waylandOutputDevice->setUuid(m_uuid);
+
     if (!m_edid.eisaId.isEmpty()) {
         m_waylandOutput->setManufacturer(QString::fromLatin1(m_edid.eisaId));
     } else {
         m_waylandOutput->setManufacturer(i18n("unknown"));
     }
+    m_waylandOutputDevice->setManufacturer(m_waylandOutput->manufacturer());
+
     if (!m_edid.monitorName.isEmpty()) {
         QString model = QString::fromLatin1(m_edid.monitorName);
         if (!m_edid.serialNumber.isEmpty()) {
@@ -820,6 +861,7 @@ void DrmOutput::init(drmModeConnector *connector)
     } else {
         m_waylandOutput->setModel(i18n("unknown"));
     }
+    m_waylandOutputDevice->setModel(m_waylandOutput->model());
 
     QSize physicalSize = !m_edid.physicalSize.isEmpty() ? m_edid.physicalSize : QSize(connector->mmWidth, connector->mmHeight);
     // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
@@ -834,16 +876,20 @@ void DrmOutput::init(drmModeConnector *connector)
         physicalSize = overwriteSize;
     }
     m_waylandOutput->setPhysicalSize(physicalSize);
+    m_waylandOutputDevice->setPhysicalSize(physicalSize);
 
     // read in mode information
     for (int i = 0; i < connector->count_modes; ++i) {
         auto *m = &connector->modes[i];
         KWayland::Server::OutputInterface::ModeFlags flags;
+        KWayland::Server::OutputDeviceInterface::ModeFlags deviceflags;
         if (isCurrentMode(m)) {
             flags |= KWayland::Server::OutputInterface::ModeFlag::Current;
+            deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
         }
         if (m->type & DRM_MODE_TYPE_PREFERRED) {
             flags |= KWayland::Server::OutputInterface::ModeFlag::Preferred;
+            deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred;
         }
 
         // Calculate higher precision (mHz) refresh rate
@@ -859,6 +905,14 @@ void DrmOutput::init(drmModeConnector *connector)
             refreshRate /= m->vscan;
         }
         m_waylandOutput->addMode(QSize(m->hdisplay, m->vdisplay), flags, refreshRate);
+
+        KWayland::Server::OutputDeviceInterface::Mode mode;
+        mode.id = i;
+        mode.size = QSize(m->hdisplay, m->vdisplay);
+        mode.flags = deviceflags;
+        mode.refreshRate = refreshRate;
+        qCDebug(KWIN_DRM) << "Adding mode: " << i << mode.size;
+        m_waylandOutputDevice->addMode(mode);
     }
 
     // set dpms
@@ -873,6 +927,8 @@ void DrmOutput::init(drmModeConnector *connector)
     }
 
     m_waylandOutput->create();
+    qCDebug(KWIN_DRM) << "Created OutputDevice";
+    m_waylandOutputDevice->create();
 }
 
 void DrmOutput::initUuid()
@@ -1149,6 +1205,55 @@ void DrmOutput::setGlobalPos(const QPoint &pos)
     if (m_waylandOutput) {
         m_waylandOutput->setGlobalPosition(pos);
     }
+    if (m_waylandOutputDevice) {
+        m_waylandOutputDevice->setGlobalPosition(pos);
+    }
+}
+
+void DrmOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
+{
+    m_changeset = changes;
+    qCDebug(KWIN_DRM) << "set changes in DrmOutput";
+    commitChanges();
+}
+
+bool DrmOutput::commitChanges()
+{
+    Q_ASSERT(!m_waylandOutputDevice.isNull());
+    Q_ASSERT(!m_waylandOutput.isNull());
+
+    if (m_changeset.isNull()) {
+        qCDebug(KWIN_DRM) << "no changes";
+        // No changes to an output is an entirely valid thing
+        return true;
+    }
+
+    if (m_changeset->enabledChanged()) {
+        qCDebug(KWIN_DRM) << "Setting enabled:";
+        m_waylandOutputDevice->setEnabled(m_changeset->enabled());
+        // FIXME: implement
+    }
+    if (m_changeset->modeChanged()) {
+        qCDebug(KWIN_DRM) << "Setting new mode:" << m_changeset->mode();
+        m_waylandOutputDevice->setCurrentMode(m_changeset->mode());
+        // FIXME: implement for wl_output
+    }
+    if (m_changeset->transformChanged()) {
+        qCDebug(KWIN_DRM) << "Server setting transform: " << (int)(m_changeset->transform());
+        m_waylandOutputDevice->setTransform(m_changeset->transform());
+        // FIXME: implement for wl_output
+    }
+    if (m_changeset->positionChanged()) {
+        qCDebug(KWIN_DRM) << "Server setting position: " << m_changeset->position();
+        m_waylandOutput->setGlobalPosition(m_changeset->position());
+        m_waylandOutputDevice->setGlobalPosition(m_changeset->position());
+    }
+    if (m_changeset->scaleChanged()) {
+        qCDebug(KWIN_DRM) << "Setting scale:" << m_changeset->scale();
+        m_waylandOutputDevice->setScale(m_changeset->scale());
+        // FIXME: implement for wl_output
+    }
+    return true;
 }
 
 DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)

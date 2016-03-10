@@ -67,6 +67,12 @@ QPainterBackend *AbstractBackend::createQPainterBackend()
     return nullptr;
 }
 
+void AbstractBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
+{
+    Q_UNUSED(config)
+    qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
+}
+
 void AbstractBackend::setSoftWareCursor(bool set)
 {
     if (m_softWareCursor == set) {

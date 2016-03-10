@@ -49,6 +49,8 @@ class OutputInterface;
 class PlasmaShellInterface;
 class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
+class OutputManagementInterface;
+class OutputConfigurationInterface;
 }
 }
 
@@ -162,6 +164,7 @@ Q_SIGNALS:
 private:
     quint16 createClientId(KWayland::Server::ClientConnection *c);
     void destroyInternalConnection();
+    void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
@@ -170,6 +173,7 @@ private:
     KWayland::Server::PlasmaWindowManagementInterface *m_windowManagement = nullptr;
     KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
     KWayland::Server::ServerSideDecorationManagerInterface *m_decorationManager = nullptr;
+    KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
     struct {
         KWayland::Server::ClientConnection *client = nullptr;
         QMetaObject::Connection destroyConnection;
