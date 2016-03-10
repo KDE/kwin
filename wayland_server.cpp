@@ -523,5 +523,4 @@ bool WaylandServer::isScreenLocked() const
            ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
 }
 
-
 }

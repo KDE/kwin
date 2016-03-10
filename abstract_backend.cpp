@@ -26,9 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pointer_input.h"
 #include "scene_opengl.h"
 #include "wayland_server.h"
-// KWayland
-#include <KWayland/Server/outputconfiguration_interface.h>
-
 
 namespace KWin
 {
@@ -72,6 +69,7 @@ QPainterBackend *AbstractBackend::createQPainterBackend()
 
 void AbstractBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
 {
+    Q_UNUSED(config)
     qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
 }
 
