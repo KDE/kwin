@@ -164,7 +164,8 @@ Q_SIGNALS:
 private:
     quint16 createClientId(KWayland::Server::ClientConnection *c);
     void destroyInternalConnection();
-    void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);    KWayland::Server::Display *m_display = nullptr;
+    void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
+    KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
     KWayland::Server::ShellInterface *m_shell = nullptr;

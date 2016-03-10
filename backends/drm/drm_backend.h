@@ -121,7 +121,7 @@ private:
     void readOutputsConfiguration();
     QByteArray generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
-    DrmOutput *findOutput(QByteArray uuid);
+    DrmOutput *findOutput(const QByteArray &uuid);
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
     int m_fd = -1;

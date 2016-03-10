@@ -237,9 +237,9 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 
     m_outputManagement = m_display->createOutputManagement(m_display);
     connect(m_outputManagement, &OutputManagementInterface::configurationChangeRequested,
-            this, &WaylandServer::configurationChangeRequested);
-    m_outputManagement->create();
-    qCDebug(KWIN_CORE) << "########## OutputManagementInterface created.";
+            this, [this](KWayland::Server::OutputConfigurationInterface *config) {
+                m_backend->configurationChangeRequested(config);
+    });
 }
 
 void WaylandServer::initWorkspace()
@@ -521,13 +521,6 @@ bool WaylandServer::isScreenLocked() const
 {
     return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked ||
            ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
-}
-
-void WaylandServer::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
-{
-    if (m_backend) {
-        m_backend->configurationChangeRequested(config);
-    }
 }
 
 

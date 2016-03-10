@@ -26,17 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pointer_input.h"
 #include "scene_opengl.h"
 #include "wayland_server.h"
-#include "wayland_cursor_theme.h"
 // KWayland
-#include <KWayland/Client/buffer.h>
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/clientconnection.h>
-#include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
-// Wayland
-#include <wayland-cursor.h>
 
 
 namespace KWin

@@ -469,21 +469,18 @@ QByteArray DrmBackend::generateOutputConfigurationUuid() const
 
 void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
 {
-    qCDebug(KWIN_DRM) << "DRM config change goes here...";
+    const auto changes = config->changes();
+    for (auto it = changes.begin(); it != changes.end(); it++) {
 
-    auto changes = config->changes();
-    for (auto *outputdevice: changes.keys()) {
-        qCDebug(KWIN_DRM) << "Sth changed";
-        KWayland::Server::OutputChangeSet *changeset = changes[outputdevice];
+        KWayland::Server::OutputChangeSet *changeset = it.value();
 
-        auto drmoutput = findOutput(outputdevice->uuid());
+        auto drmoutput = findOutput(it.key()->uuid());
         if (drmoutput == nullptr) {
-            qCWarning(KWIN_DRM) << "Could NOT find DrmOutput matching " << outputdevice->uuid();
+            qCWarning(KWIN_DRM) << "Could NOT find DrmOutput matching " << it.key()->uuid();
             return;
         }
         drmoutput->setChanges(changeset);
     }
-
 }
 
 DrmOutput *DrmBackend::findOutput(quint32 connector)
@@ -497,7 +494,7 @@ DrmOutput *DrmBackend::findOutput(quint32 connector)
     return nullptr;
 }
 
-DrmOutput *DrmBackend::findOutput(QByteArray uuid)
+DrmOutput *DrmBackend::findOutput(const QByteArray &uuid)
 {
     auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [uuid] (DrmOutput *o) {
         return o->m_uuid == uuid;
@@ -1217,13 +1214,6 @@ void DrmOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
 {
     m_changeset = changes;
     qCDebug(KWIN_DRM) << "set changes in DrmOutput";
-    /*
-     connect(m_changeset, &QObject::destroyed,
-        this, [=]() {
-        qCDebug(KWIN_DRM) << "changeset deleted;";
-        m_changeset.clear();
-    });
-    */
     commitChanges();
 }
 
@@ -1238,16 +1228,14 @@ bool DrmOutput::commitChanges()
         return true;
     }
 
-    bool success = true;
-
     if (m_changeset->enabledChanged()) {
         qCDebug(KWIN_DRM) << "Setting enabled:";
-        //m_waylandOutputDevice->setEnabled(m_changeset->enabled());
+        m_waylandOutputDevice->setEnabled(m_changeset->enabled());
         // FIXME: implement
     }
     if (m_changeset->modeChanged()) {
         qCDebug(KWIN_DRM) << "Setting new mode:" << m_changeset->mode();
-        //m_waylandOutputDevice->setCurrentMode(m_changeset->mode());
+        m_waylandOutputDevice->setCurrentMode(m_changeset->mode());
         // FIXME: implement for wl_output
     }
     if (m_changeset->transformChanged()) {
@@ -1265,7 +1253,7 @@ bool DrmOutput::commitChanges()
         m_waylandOutputDevice->setScale(m_changeset->scale());
         // FIXME: implement for wl_output
     }
-    return success;
+    return true;
 }
 
 DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
