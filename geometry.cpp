@@ -2619,6 +2619,8 @@ bool AbstractClient::startMoveResize()
         return false;
     }
 
+    invalidateDecorationDoubleClickTimer();
+
     setMoveResize(true);
     workspace()->setClientIsMoving(this);
 
