@@ -432,7 +432,7 @@ public:
             }
             QHoverEvent e(QEvent::HoverMove, p, p);
             QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-            decoration->client()->processDecorationMove();
+            decoration->client()->processDecorationMove(p.toPoint(), event->globalPos());
             return true;
         }
         case QEvent::MouseButtonPress:
