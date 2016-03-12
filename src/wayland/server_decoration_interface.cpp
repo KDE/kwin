@@ -40,6 +40,8 @@ public:
 
     Mode defaultMode = Mode::None;
 
+    QVector<wl_resource*> resources;
+
 private:
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
 
@@ -107,6 +109,25 @@ ServerSideDecorationManagerInterface::Private::Private(ServerSideDecorationManag
 {
 }
 
+namespace {
+static uint32_t modeWayland(ServerSideDecorationManagerInterface::Mode mode)
+{
+    switch (mode) {
+    case ServerSideDecorationManagerInterface::Mode::None:
+        return ORG_KDE_KWIN_SERVER_DECORATION_MODE_NONE;
+        break;
+    case ServerSideDecorationManagerInterface::Mode::Client:
+        return ORG_KDE_KWIN_SERVER_DECORATION_MODE_CLIENT;
+        break;
+    case ServerSideDecorationManagerInterface::Mode::Server:
+        return ORG_KDE_KWIN_SERVER_DECORATION_MODE_SERVER;
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+}
+
 void ServerSideDecorationManagerInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {
     auto c = display->getConnection(client);
@@ -116,13 +137,16 @@ void ServerSideDecorationManagerInterface::Private::bind(wl_client *client, uint
         return;
     }
     wl_resource_set_implementation(resource, &s_interface, this, unbind);
-    // TODO: should we track?
+
+    resources << resource;
+
+    org_kde_kwin_server_decoration_manager_send_default_mode(resource, modeWayland(defaultMode));
+    c->flush();
 }
 
 void ServerSideDecorationManagerInterface::Private::unbind(wl_resource *resource)
 {
-    Q_UNUSED(resource)
-    // TODO: implement?
+    cast(resource)->resources.removeAll(resource);
 }
 
 ServerSideDecorationManagerInterface::ServerSideDecorationManagerInterface(Display *display, QObject *parent)
@@ -141,6 +165,10 @@ void ServerSideDecorationManagerInterface::setDefaultMode(Mode mode)
 {
     Q_D();
     d->defaultMode = mode;
+    const uint32_t wlMode = modeWayland(mode);
+    for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); it++) {
+        org_kde_kwin_server_decoration_manager_send_default_mode(*it, wlMode);
+    }
 }
 
 class ServerSideDecorationInterface::Private : public Resource::Private
@@ -240,21 +268,7 @@ void ServerSideDecorationInterface::setMode(ServerSideDecorationManagerInterface
 {
     Q_D();
     d->mode = mode;
-    uint32_t wlMode;
-    switch (mode) {
-    case ServerSideDecorationManagerInterface::Mode::None:
-        wlMode = ORG_KDE_KWIN_SERVER_DECORATION_MODE_NONE;
-        break;
-    case ServerSideDecorationManagerInterface::Mode::Client:
-        wlMode = ORG_KDE_KWIN_SERVER_DECORATION_MODE_CLIENT;
-        break;
-    case ServerSideDecorationManagerInterface::Mode::Server:
-        wlMode = ORG_KDE_KWIN_SERVER_DECORATION_MODE_SERVER;
-        break;
-    default:
-        Q_UNREACHABLE();
-    }
-    org_kde_kwin_server_decoration_send_mode(resource(), wlMode);
+    org_kde_kwin_server_decoration_send_mode(resource(), modeWayland(mode));
     client()->flush();
 }
 
