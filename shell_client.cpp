@@ -473,6 +473,11 @@ bool ShellClient::isMinimizable() const
 
 QRect ShellClient::iconGeometry() const
 {
+    if (!windowManagementInterface()) {
+        // window management interface is only available if the surface is mapped
+        return QRect();
+    }
+
     int minDistance = INT_MAX;
     ShellClient *candidatePanel = nullptr;
     QRect candidateGeom;
