@@ -64,6 +64,7 @@ public Q_SLOTS: // METHODS
     bool stopActivity(const QString &in0);
     QString supportInformation();
     Q_NOREPLY void unclutterDesktop();
+    Q_NOREPLY void showDebugConsole();
 
 private Q_SLOTS:
     void becomeKWinService(const QString &service);

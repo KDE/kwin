@@ -35,5 +35,6 @@
     <method name="supportInformation">
         <arg type="s" direction="out"/>
     </method>
+    <method name="showDebugConsole"/>
   </interface>
 </node>

@@ -328,6 +328,7 @@ set(kwin_KDEINIT_SRCS
    client.cpp 
    client_machine.cpp
    cursor.cpp
+   debug_console.cpp
    tabgroup.cpp
    focuschain.cpp
    globalshortcuts.cpp
@@ -453,6 +454,7 @@ qt5_add_dbus_interface( kwin_KDEINIT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freede
 qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
 ki18n_wrap_ui(kwin_KDEINIT_SRCS
+    debug_console.ui
     shortcutdialog.ui
 )
 

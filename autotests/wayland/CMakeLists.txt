@@ -125,3 +125,12 @@ add_executable(testTransientPlacmenet ${testTransientPlacmenet_SRCS})
 target_link_libraries( testTransientPlacmenet kwin Qt5::Test)
 add_test(kwin-testTransientPlacmenet testTransientPlacmenet)
 ecm_mark_as_test(testTransientPlacmenet)
+
+########################################################
+# Debug Console Test
+########################################################
+set( testDebugConsole_SRCS debug_console_test.cpp kwin_wayland_test.cpp )
+add_executable(testDebugConsole ${testDebugConsole_SRCS})
+target_link_libraries( testDebugConsole kwin Qt5::Test)
+add_test(kwin-testDebugConsole testDebugConsole)
+ecm_mark_as_test(testDebugConsole)

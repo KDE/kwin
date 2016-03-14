@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "composite.h"
 #include "compositingprefs.h"
+#include "debug_console.h"
 #include "main.h"
 #include "placement.h"
 #include "kwinadaptor.h"
@@ -174,6 +175,11 @@ void DBusInterface::previousDesktop()
     VirtualDesktopManager::self()->moveTo<DesktopPrevious>();
 }
 
+void DBusInterface::showDebugConsole()
+{
+    DebugConsole *console = new DebugConsole;
+    console->show();
+}
 
 CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)
     : QObject(parent)
