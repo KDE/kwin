@@ -127,6 +127,10 @@ void StartTest::testCreateWindow()
     // but still not yet in workspace
     QVERIFY(workspace()->allClientList().isEmpty());
 
+    // icon geometry accesses windowManagementInterface which only exists after window became visible
+    // verify that accessing doesnt't crash
+    QVERIFY(waylandServer()->clients().first()->iconGeometry().isNull());
+
     // let's render
     QImage img(QSize(100, 50), QImage::Format_ARGB32);
     img.fill(Qt::blue);

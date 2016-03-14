@@ -58,6 +58,7 @@ private Q_SLOTS:
     void testAxis();
     void testDoubleClick();
     void testHover();
+    void testPressToMove_data();
     void testPressToMove();
 
 private:
@@ -325,46 +326,63 @@ void DecorationInputTest::testHover()
     QCOMPARE(c->cursor(), Qt::ArrowCursor);
 }
 
+void DecorationInputTest::testPressToMove_data()
+{
+    QTest::addColumn<QPoint>("offset");
+    QTest::addColumn<QPoint>("offset2");
+    QTest::addColumn<QPoint>("offset3");
+
+    QTest::newRow("To right")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0);
+    QTest::newRow("To left")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0);
+    QTest::newRow("To bottom") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30);
+    QTest::newRow("To top")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30);
+}
+
 void DecorationInputTest::testPressToMove()
 {
     AbstractClient *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
+    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
     QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(startMoveResizedSpy.isValid());
     QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     quint32 timestamp = 1;
-    MOTION(QPoint(c->geometry().center().x(), c->clientPos().y() / 2));
+    MOTION(QPoint(c->geometry().center().x(), c->y() + c->clientPos().y() / 2));
     QCOMPARE(c->cursor(), Qt::ArrowCursor);
 
     PRESS;
     QVERIFY(!c->isMove());
-    MOTION(QPoint(c->geometry().center().x() + 10, c->clientPos().y() / 2));
-    const int oldX = c->x();
-    QTRY_VERIFY(c->isMove());
+    QFETCH(QPoint, offset);
+    MOTION(QPoint(c->geometry().center().x(), c->y() + c->clientPos().y() / 2) + offset);
+    const QPoint oldPos = c->pos();
+    QVERIFY(c->isMove());
     QCOMPARE(startMoveResizedSpy.count(), 1);
 
     RELEASE;
     QTRY_VERIFY(!c->isMove());
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
     QEXPECT_FAIL("", "Just trigger move doesn't move the window", Continue);
-    QCOMPARE(c->x(), oldX + 10);
+    QCOMPARE(c->pos(), oldPos + offset);
 
     // again
     PRESS;
     QVERIFY(!c->isMove());
-    MOTION(QPoint(c->geometry().center().x() + 20, c->clientPos().y() / 2));
-    QTRY_VERIFY(c->isMove());
+    QFETCH(QPoint, offset2);
+    MOTION(QPoint(c->geometry().center().x(), c->y() + c->clientPos().y() / 2) + offset2);
+    QVERIFY(c->isMove());
     QCOMPARE(startMoveResizedSpy.count(), 2);
-    MOTION(QPoint(c->geometry().center().x() + 30, c->clientPos().y() / 2));
+    QFETCH(QPoint, offset3);
+    MOTION(QPoint(c->geometry().center().x(), c->y() + c->clientPos().y() / 2) + offset3);
 
     RELEASE;
     QTRY_VERIFY(!c->isMove());
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 2);
-    QCOMPARE(c->x(), oldX + 20);
+    // TODO: the offset should also be included
+    QCOMPARE(c->pos(), oldPos + offset2 + offset3);
 }
 
 }

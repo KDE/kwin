@@ -396,7 +396,7 @@ void PointerInputRedirection::updateDecoration(Toplevel *t)
         const QPointF p = m_pos - t->pos();
         QHoverEvent event(QEvent::HoverMove, p, p);
         QCoreApplication::instance()->sendEvent(m_decoration->decoration(), &event);
-        m_decoration->client()->processDecorationMove();
+        m_decoration->client()->processDecorationMove(p.toPoint(), m_pos.toPoint());
     }
 }
 

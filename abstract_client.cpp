@@ -1379,9 +1379,10 @@ void AbstractClient::layoutDecorationRects(QRect &left, QRect &top, QRect &right
                   borderRight(), r.height() - top.height() - bottom.height());
 }
 
-void AbstractClient::processDecorationMove()
+void AbstractClient::processDecorationMove(const QPoint &localPos, const QPoint &globalPos)
 {
     if (isMoveResizePointerButtonDown()) {
+        handleMoveResize(localPos.x(), localPos.y(), globalPos.x(), globalPos.y());
         return;
     }
     // TODO: handle modifiers

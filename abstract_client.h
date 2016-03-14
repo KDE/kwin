@@ -523,7 +523,7 @@ public:
     bool decorationHasAlpha() const;
     void triggerDecorationRepaint();
     virtual void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
-    void processDecorationMove();
+    void processDecorationMove(const QPoint &localPos, const QPoint &globalPos);
     bool processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu = false);
     void processDecorationButtonRelease(QMouseEvent *event);
 
