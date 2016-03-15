@@ -73,5 +73,6 @@ private:
 
 }
 }
+Q_DECLARE_METATYPE(KWayland::Server::RegionInterface*)
 
 #endif
