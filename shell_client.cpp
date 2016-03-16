@@ -502,16 +502,25 @@ QRect ShellClient::iconGeometry() const
 
 bool ShellClient::isMovable() const
 {
+    if (m_plasmaShellSurface) {
+        return m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal;
+    }
     return true;
 }
 
 bool ShellClient::isMovableAcrossScreens() const
 {
+    if (m_plasmaShellSurface) {
+        return m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal;
+    }
     return true;
 }
 
 bool ShellClient::isResizable() const
 {
+    if (m_plasmaShellSurface) {
+        return m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal;
+    }
     return true;
 }
 
