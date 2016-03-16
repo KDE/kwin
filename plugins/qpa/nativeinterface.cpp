@@ -79,5 +79,26 @@ void *NativeInterface::nativeResourceForWindow(const QByteArray &resource, QWind
     return nullptr;
 }
 
+static void roundtrip()
+{
+    if (!waylandServer()) {
+        return;
+    }
+    auto c = waylandServer()->internalClientConection();
+    if (!c) {
+        return;
+    }
+    c->flush();
+    waylandServer()->dispatch();
+}
+
+QFunctionPointer NativeInterface::platformFunction(const QByteArray &function) const
+{
+    if (qstrcmp(function.toLower(), "roundtrip") == 0) {
+        return &roundtrip;
+    }
+    return nullptr;
+}
+
 }
 }
