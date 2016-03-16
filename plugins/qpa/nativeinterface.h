@@ -35,6 +35,7 @@ public:
     explicit NativeInterface(Integration *integration);
     void *nativeResourceForIntegration(const QByteArray &resource) override;
     void *nativeResourceForWindow(const QByteArray &resourceString, QWindow *window) override;
+    QFunctionPointer platformFunction(const QByteArray &function) const override;
 
 private:
     Integration *m_integration;
