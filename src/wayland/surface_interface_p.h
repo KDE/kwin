@@ -45,6 +45,9 @@ public:
         bool contrastIsSet = false;
         bool slideIsSet = false;
         bool inputIsInfinite = true;
+        bool childrenChanged = false;
+        bool scaleIsSet = false;
+        bool transformIsSet = false;
         qint32 scale = 1;
         OutputInterface::Transform transform = OutputInterface::Transform::Normal;
         QList<wl_resource*> callbacks = QList<wl_resource*>();
@@ -71,15 +74,19 @@ public:
     void setContrast(const QPointer<ContrastInterface> &contrast);
     void setSlide(const QPointer<SlideInterface> &slide);
 
+    void commitSubSurface();
+    void commit();
+
     State current;
     State pending;
+    State subSurfacePending;
     QPointer<SubSurfaceInterface> subSurface;
 
 private:
     SurfaceInterface *q_func() {
         return reinterpret_cast<SurfaceInterface *>(q);
     }
-    void commit();
+    void swapStates(State *source, State *target, bool emitChanged);
     void damage(const QRect &rect);
     void setScale(qint32 scale);
     void setTransform(OutputInterface::Transform transform);

@@ -162,6 +162,19 @@ void SubSurfaceInterface::Private::create(ClientConnection *client, quint32 vers
     parent = p;
     Q_Q(SubSurfaceInterface);
     surface->d_func()->subSurface = QPointer<SubSurfaceInterface>(q);
+    // copy current state to subSurfacePending state
+    // it's the reference for all new pending state which needs to be committed
+    surface->d_func()->subSurfacePending = surface->d_func()->current;
+    surface->d_func()->subSurfacePending.blurIsSet = false;
+    surface->d_func()->subSurfacePending.bufferIsSet = false;
+    surface->d_func()->subSurfacePending.childrenChanged = false;
+    surface->d_func()->subSurfacePending.contrastIsSet = false;
+    surface->d_func()->subSurfacePending.callbacks.clear();
+    surface->d_func()->subSurfacePending.inputIsSet = false;
+    surface->d_func()->subSurfacePending.inputIsInfinite = true;
+    surface->d_func()->subSurfacePending.opaqueIsSet = false;
+    surface->d_func()->subSurfacePending.shadowIsSet = false;
+    surface->d_func()->subSurfacePending.slideIsSet = false;
     parent->d_func()->addChild(QPointer<SubSurfaceInterface>(q));
 }
 
@@ -173,6 +186,9 @@ void SubSurfaceInterface::Private::commit()
         scheduledPos = QPoint();
         Q_Q(SubSurfaceInterface);
         emit q->positionChanged(pos);
+    }
+    if (surface) {
+        surface->d_func()->commitSubSurface();
     }
 }
 
@@ -250,6 +266,13 @@ void SubSurfaceInterface::Private::setMode(Mode m)
 {
     if (mode == m) {
         return;
+    }
+    if (m == Mode::Desynchronized && (!parent->subSurface() || !parent->subSurface()->isSynchronized())) {
+        // no longer synchronized, this is like calling commit
+        if (surface) {
+            surface->d_func()->commit();
+            surface->d_func()->commitSubSurface();
+        }
     }
     mode = m;
     Q_Q(SubSurfaceInterface);

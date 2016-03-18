@@ -45,14 +45,24 @@ SurfaceInterface::Private::~Private()
     destroy();
 }
 
-void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > subSurface)
+void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > child)
 {
-    pending.children.append(subSurface);
+    // protocol is not precise on how to handle the addition of new sub surfaces, this follows Weston's behavior
+    if (subSurface.isNull() || !subSurface->isSynchronized()) {
+        pending.children.append(child);
+    } else {
+        subSurfacePending.children.append(child);
+    }
 }
 
-void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > subSurface)
+void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > child)
 {
-    pending.children.removeAll(subSurface);
+    // protocol is not precise on how to handle the addition of new sub surfaces, this follows Weston's behavior
+    if (subSurface.isNull() || !subSurface->isSynchronized()) {
+        pending.children.removeAll(child);
+    } else {
+        subSurfacePending.children.removeAll(child);
+    }
 }
 
 bool SurfaceInterface::Private::raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
@@ -70,6 +80,7 @@ bool SurfaceInterface::Private::raiseChild(QPointer<SubSurfaceInterface> subsurf
         // it's to the parent, so needs to become last item
         pending.children.append(*it);
         pending.children.erase(it);
+        pending.childrenChanged = true;
         return true;
     }
     if (!sibling->subSurface()) {
@@ -86,6 +97,7 @@ bool SurfaceInterface::Private::raiseChild(QPointer<SubSurfaceInterface> subsurf
     // find the iterator again
     siblingIt = std::find(pending.children.begin(), pending.children.end(), sibling->subSurface());
     pending.children.insert(++siblingIt, value);
+    pending.childrenChanged = true;
     return true;
 }
 
@@ -105,6 +117,7 @@ bool SurfaceInterface::Private::lowerChild(QPointer<SubSurfaceInterface> subsurf
         auto value = *it;
         pending.children.erase(it);
         pending.children.prepend(value);
+        pending.childrenChanged = true;
         return true;
     }
     if (!sibling->subSurface()) {
@@ -121,6 +134,7 @@ bool SurfaceInterface::Private::lowerChild(QPointer<SubSurfaceInterface> subsurf
     // find the iterator again
     siblingIt = std::find(pending.children.begin(), pending.children.end(), sibling->subSurface());
     pending.children.insert(siblingIt, value);
+    pending.childrenChanged = true;
     return true;
 }
 
@@ -199,6 +213,9 @@ void SurfaceInterface::Private::destroy()
     for (wl_resource *c : pending.callbacks) {
         wl_resource_destroy(c);
     }
+    for (wl_resource *c : subSurfacePending.callbacks) {
+        wl_resource_destroy(c);
+    }
     if (current.buffer) {
         current.buffer->unref();
     }
@@ -208,95 +225,119 @@ void SurfaceInterface::Private::destroy()
     }
 }
 
-void SurfaceInterface::Private::commit()
+void SurfaceInterface::Private::swapStates(State *source, State *target, bool emitChanged)
 {
     Q_Q(SurfaceInterface);
-    const bool bufferChanged = pending.bufferIsSet;
-    const bool opaqueRegionChanged = pending.opaqueIsSet;
-    const bool inputRegionChanged = pending.inputIsSet;
-    const bool scaleFactorChanged = current.scale != pending.scale;
-    const bool transformFactorChanged = current.transform != pending.transform;
-    const bool shadowChanged = pending.shadowIsSet;
-    const bool blurChanged = pending.blurIsSet;
-    const bool contrastChanged = pending.contrastIsSet;
-    const bool slideChanged = pending.slideIsSet;
+    const bool bufferChanged = source->bufferIsSet;
+    const bool opaqueRegionChanged = source->opaqueIsSet;
+    const bool inputRegionChanged = source->inputIsSet;
+    const bool scaleFactorChanged = source->scaleIsSet && (target->scale != source->scale);
+    const bool transformFactorChanged = source->transformIsSet && (target->transform != source->transform);
+    const bool shadowChanged = source->shadowIsSet;
+    const bool blurChanged = source->blurIsSet;
+    const bool contrastChanged = source->contrastIsSet;
+    const bool slideChanged = source->slideIsSet;
+    const bool childrenChanged = source->childrenChanged;
     bool sizeChanged = false;
-    auto buffer = current.buffer;
+    auto buffer = target->buffer;
     if (bufferChanged) {
+        // TODO: is the reffing correct for subsurfaces?
         QSize oldSize;
-        if (current.buffer) {
-            oldSize = current.buffer->size();
-            current.buffer->unref();
-            QObject::disconnect(current.buffer, &BufferInterface::sizeChanged, q, &SurfaceInterface::sizeChanged);
+        if (target->buffer) {
+            oldSize = target->buffer->size();
+            if (emitChanged) {
+                target->buffer->unref();
+                QObject::disconnect(target->buffer, &BufferInterface::sizeChanged, q, &SurfaceInterface::sizeChanged);
+            } else {
+                delete target->buffer;
+                target->buffer = nullptr;
+            }
         }
-        if (pending.buffer) {
-            pending.buffer->ref();
-            QObject::connect(pending.buffer, &BufferInterface::sizeChanged, q, &SurfaceInterface::sizeChanged);
-            const QSize newSize = pending.buffer->size();
+        if (source->buffer) {
+            if (emitChanged) {
+                source->buffer->ref();
+                QObject::connect(source->buffer, &BufferInterface::sizeChanged, q, &SurfaceInterface::sizeChanged);
+            }
+            const QSize newSize = source->buffer->size();
             sizeChanged = newSize.isValid() && newSize != oldSize;
         }
-        buffer = pending.buffer;
+        buffer = source->buffer;
     }
-    auto shadow = current.shadow;
-    if (shadowChanged) {
-        shadow = pending.shadow;
-    }
-    auto blur = current.blur;
-    if (blurChanged) {
-        blur = pending.blur;
-    }
-    auto contrast = current.contrast;
-    if (contrastChanged) {
-        contrast = pending.contrast;
-    }
-    auto slide = current.slide;
-    if (slideChanged) {
-        slide = pending.slide;
-    }
-    QList<wl_resource*> callbacks = current.callbacks;
-    callbacks.append(pending.callbacks);
     // copy values
-    current = pending;
-    current.buffer = buffer;
-    current.callbacks = callbacks;
-    current.shadow = shadow;
-    current.blur = blur;
-    current.contrast = contrast;
-    current.slide = slide;
-    pending = State{};
-    pending.children = current.children;
-    pending.input = current.input;
-    pending.inputIsInfinite = current.inputIsInfinite;
-    pending.opaque = current.opaque;
-    // commit all subSurfaces to apply position changes
-    for (auto it = current.children.constBegin(); it != current.children.constEnd(); ++it) {
-        if (!(*it)) {
-            continue;
-        }
-        (*it)->d_func()->commit();
+    if (bufferChanged) {
+        target->buffer = buffer;
+        target->damage = source->damage;
+        target->bufferIsSet = source->bufferIsSet;
     }
-    if (opaqueRegionChanged) {
-        emit q->opaqueChanged(current.opaque);
+    if (childrenChanged) {
+        target->childrenChanged = source->childrenChanged;
+        target->children = source->children;
+    }
+    target->callbacks.append(source->callbacks);
+
+    if (shadowChanged) {
+        target->shadow = source->shadow;
+        target->shadowIsSet = true;
+    }
+    if (blurChanged) {
+        target->blur = source->blur;
+        target->blurIsSet = true;
+    }
+    if (contrastChanged) {
+        target->contrast = source->contrast;
+        target->contrastIsSet = true;
+    }
+    if (slideChanged) {
+        target->slide = source->slide;
+        target->slideIsSet = true;
     }
     if (inputRegionChanged) {
-        emit q->inputChanged(current.input);
+        target->input = source->input;
+        target->inputIsInfinite = source->inputIsInfinite;
+        target->inputIsSet = true;
+    }
+    if (opaqueRegionChanged) {
+        target->opaque = source->opaque;
+        target->opaqueIsSet = true;
     }
     if (scaleFactorChanged) {
-        emit q->scaleChanged(current.scale);
+        target->scale = source->scale;
+        target->scaleIsSet = true;
     }
     if (transformFactorChanged) {
-        emit q->transformChanged(current.transform);
+        target->transform = source->transform;
+        target->transformIsSet = true;
     }
-    if (bufferChanged) {
-        if (!current.damage.isEmpty()) {
+
+    *source = State{};
+    source->children = target->children;
+    if (opaqueRegionChanged) {
+        emit q->opaqueChanged(target->opaque);
+    }
+    if (inputRegionChanged) {
+        emit q->inputChanged(target->input);
+    }
+    if (scaleFactorChanged) {
+        emit q->scaleChanged(target->scale);
+    }
+    if (transformFactorChanged) {
+        emit q->transformChanged(target->transform);
+    }
+    if (bufferChanged && emitChanged) {
+        if (!target->damage.isEmpty()) {
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
             if (!windowRegion.isEmpty()) {
-                current.damage = windowRegion.intersected(current.damage);
+                target->damage = windowRegion.intersected(target->damage);
+                if (emitChanged) {
+                    emit q->damaged(target->damage);
+                }
             }
-            emit q->damaged(current.damage);
-        } else if (!current.buffer) {
+        } else if (!target->buffer && emitChanged) {
             emit q->unmapped();
         }
+    }
+    if (!emitChanged) {
+        return;
     }
     if (sizeChanged) {
         emit q->sizeChanged();
@@ -315,6 +356,43 @@ void SurfaceInterface::Private::commit()
     }
 }
 
+void SurfaceInterface::Private::commit()
+{
+    if (!subSurface.isNull() && subSurface->isSynchronized()) {
+        swapStates(&pending, &subSurfacePending, false);
+    } else {
+        swapStates(&pending, &current, true);
+        if (!subSurface.isNull()) {
+            subSurface->d_func()->commit();
+        }
+        // commit all subSurfaces to apply position changes
+        // "The cached state is applied to the sub-surface immediately after the parent surface's state is applied"
+        for (auto it = current.children.constBegin(); it != current.children.constEnd(); ++it) {
+            const auto &subSurface = *it;
+            if (subSurface.isNull()) {
+                continue;
+            }
+            subSurface->d_func()->commit();
+        }
+    }
+}
+
+void SurfaceInterface::Private::commitSubSurface()
+{
+    if (subSurface.isNull() || !subSurface->isSynchronized()) {
+        return;
+    }
+    swapStates(&subSurfacePending, &current, true);
+    // "The cached state is applied to the sub-surface immediately after the parent surface's state is applied"
+    for (auto it = current.children.constBegin(); it != current.children.constEnd(); ++it) {
+        const auto &subSurface = *it;
+        if (subSurface.isNull() || !subSurface->isSynchronized()) {
+            continue;
+        }
+        subSurface->d_func()->commit();
+    }
+}
+
 void SurfaceInterface::Private::damage(const QRect &rect)
 {
     if (!pending.bufferIsSet || (pending.bufferIsSet && !pending.buffer)) {
@@ -327,6 +405,7 @@ void SurfaceInterface::Private::damage(const QRect &rect)
 void SurfaceInterface::Private::setScale(qint32 scale)
 {
     pending.scale = scale;
+    pending.scaleIsSet = true;
 }
 
 void SurfaceInterface::Private::setTransform(OutputInterface::Transform transform)
@@ -365,6 +444,9 @@ void SurfaceInterface::Private::attachBuffer(wl_resource *buffer, const QPoint &
             if (pending.buffer == buffer) {
                 pending.buffer = nullptr;
             }
+            if (subSurfacePending.buffer == buffer) {
+                subSurfacePending.buffer = nullptr;
+            }
             if (current.buffer == buffer) {
                 current.buffer->unref();
                 current.buffer = nullptr;
@@ -378,6 +460,7 @@ void SurfaceInterface::Private::destroyFrameCallback(wl_resource *r)
     auto s = cast<Private>(r);
     s->current.callbacks.removeAll(r);
     s->pending.callbacks.removeAll(r);
+    s->subSurfacePending.callbacks.removeAll(r);
 }
 
 void SurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
