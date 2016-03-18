@@ -51,3 +51,7 @@ if (Qt5Widgets_FOUND)
     target_link_libraries(dpmsTest KF5::WaylandClient Qt5::Widgets)
     ecm_mark_as_test(dpmsTest)
 endif()
+
+add_executable(subsurface-test subsurfacetest.cpp)
+target_link_libraries(subsurface-test Qt5::Core Qt5::Gui KF5::WaylandClient)
+ecm_mark_as_test(subsurface-test)
