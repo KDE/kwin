@@ -70,6 +70,18 @@ public:
     };
     Mode mode() const;
 
+    /**
+     * Whether this SubSurfaceInterface is in synchronized mode.
+     * A SubSurface is in synchronized mode if either @link mode is
+     * @c Mode::Synchronized or if the parent surface is in synchronized
+     * mode. If a SubSurfaceInterface is in synchronized mode all child
+     * SubSurfaceInterfaces are also in synchronized mode ignoring the actual mode.
+     * @returns Whether this SubSurfaceInterface is in synchronized mode.
+     * @see mode
+     * @since 5.7
+     **/
+    bool isSynchronized() const;
+
     QPointer<SurfaceInterface> surface();
     QPointer<SurfaceInterface> parentSurface();
 

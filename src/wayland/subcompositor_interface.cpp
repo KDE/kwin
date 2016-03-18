@@ -288,6 +288,24 @@ SubSurfaceInterface::Mode SubSurfaceInterface::mode() const
     return d->mode;
 }
 
+bool SubSurfaceInterface::isSynchronized() const
+{
+    Q_D();
+    if (d->mode == Mode::Synchronized) {
+        return true;
+    }
+    if (d->parent.isNull()) {
+        // that shouldn't happen, but let's assume false
+        return false;
+    }
+    if (!d->parent->subSurface().isNull()) {
+        // follow parent's mode
+        return d->parent->subSurface()->isSynchronized();
+    }
+    // parent is no subsurface, thus parent is in desync mode and this surface is in desync mode
+    return false;
+}
+
 SubSurfaceInterface::Private *SubSurfaceInterface::d_func() const
 {
     return reinterpret_cast<SubSurfaceInterface::Private*>(d.data());
