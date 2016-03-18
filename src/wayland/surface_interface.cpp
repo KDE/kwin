@@ -179,6 +179,13 @@ void SurfaceInterface::frameRendered(quint32 msec)
         wl_callback_send_done(r, msec);
         wl_resource_destroy(r);
     }
+    for (auto it = d->current.children.constBegin(); it != d->current.children.constEnd(); ++it) {
+        const auto &subSurface = *it;
+        if (subSurface.isNull() || subSurface->d_func()->surface.isNull()) {
+            continue;
+        }
+        subSurface->d_func()->surface->frameRendered(msec);
+    }
     if (needsFlush)  {
         client()->flush();
     }
