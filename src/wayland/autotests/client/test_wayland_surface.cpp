@@ -51,6 +51,7 @@ private Q_SLOTS:
     void testMultipleSurfaces();
     void testOpaque();
     void testInput();
+    void testScale();
     void testDestroy();
 
 private:
@@ -629,6 +630,49 @@ void TestWaylandSurface::testInput()
     QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion());
     QCOMPARE(serverSurface->input(), QRegion());
     QCOMPARE(serverSurface->inputIsInfinite(), true);
+}
+
+void TestWaylandSurface::testScale()
+{
+    // this test verifies that updating the scale factor is correctly passed to the Wayland server
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // create surface
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QCOMPARE(s->scale(), 1);
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    QCOMPARE(serverSurface->scale(), 1);
+
+    // let's change the scale factor
+    QSignalSpy scaleChangedSpy(serverSurface, &SurfaceInterface::scaleChanged);
+    QVERIFY(scaleChangedSpy.isValid());
+    s->setScale(2);
+    QCOMPARE(s->scale(), 2);
+    // needs a commit
+    QVERIFY(!scaleChangedSpy.wait(100));
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(scaleChangedSpy.wait());
+    QCOMPARE(scaleChangedSpy.count(), 1);
+    QCOMPARE(scaleChangedSpy.first().first().toInt(), 2);
+    QCOMPARE(serverSurface->scale(), 2);
+
+    // let's try changing to same factor, should not emit changed on server
+    s->setScale(2);
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(!scaleChangedSpy.wait(100));
+
+    // but changing to a different value should still work
+    s->setScale(4);
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(scaleChangedSpy.wait());
+    QCOMPARE(scaleChangedSpy.count(), 2);
+    QCOMPARE(scaleChangedSpy.first().first().toInt(), 2);
+    QCOMPARE(scaleChangedSpy.last().first().toInt(), 4);
+    QCOMPARE(serverSurface->scale(), 4);
 }
 
 void TestWaylandSurface::testDestroy()
