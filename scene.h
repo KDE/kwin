@@ -35,6 +35,7 @@ namespace KWayland
 namespace Server
 {
 class BufferInterface;
+class SubSurfaceInterface;
 }
 }
 
@@ -392,8 +393,31 @@ public:
      */
     Toplevel *toplevel() const;
 
+    /**
+     * @returns the parent WindowPixmap in the sub-surface tree
+     **/
+    WindowPixmap *parent() const {
+        return m_parent;
+    }
+
+    /**
+     * @returns the current sub-surface tree
+     **/
+    QVector<WindowPixmap*> children() const {
+        return m_children;
+    }
+
+    /**
+     * @returns the subsurface this WindowPixmap is for if it is not for a root window
+     **/
+    QPointer<KWayland::Server::SubSurfaceInterface> subSurface() const {
+        return m_subSurface;
+    }
+
 protected:
     explicit WindowPixmap(Scene::Window *window);
+    explicit WindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface, WindowPixmap *parent);
+    virtual WindowPixmap *createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface);
     /**
      * @return The Window this WindowPixmap belongs to
      */
@@ -403,7 +427,15 @@ protected:
      * Should be called by the implementing subclasses when the Wayland Buffer changed and needs
      * updating.
      **/
-    void updateBuffer();
+    virtual void updateBuffer();
+
+    /**
+     * Sets the sub-surface tree to @p children.
+     **/
+    void setChildren(const QVector<WindowPixmap*> &children) {
+        m_children = children;
+    }
+
 private:
     Scene::Window *m_window;
     xcb_pixmap_t m_pixmap;
@@ -412,6 +444,9 @@ private:
     QRect m_contentsRect;
     QPointer<KWayland::Server::BufferInterface> m_buffer;
     QSharedPointer<QOpenGLFramebufferObject> m_fbo;
+    WindowPixmap *m_parent = nullptr;
+    QVector<WindowPixmap*> m_children;
+    QPointer<KWayland::Server::SubSurfaceInterface> m_subSurface;
 };
 
 class Scene::EffectFrame
