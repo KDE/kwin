@@ -200,6 +200,11 @@ Q_SIGNALS:
      * @since 5.5
      **/
     void contrastChanged();
+    /**
+     * Emitted whenever the tree of sub-surfaces changes in a way which requires a repaint.
+     * @since 5.7
+     **/
+    void subSurfaceTreeChanged();
 
 private:
     friend class CompositorInterface;

@@ -53,6 +53,12 @@ void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > child)
     } else {
         subSurfacePending.children.append(child);
     }
+    Q_Q(SurfaceInterface);
+    emit q->subSurfaceTreeChanged();
+    QObject::connect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::connect(child->surface().data(), &SurfaceInterface::damaged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::connect(child->surface().data(), &SurfaceInterface::unmapped, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::connect(child->surface().data(), &SurfaceInterface::subSurfaceTreeChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
 }
 
 void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > child)
@@ -63,6 +69,12 @@ void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > chil
     } else {
         subSurfacePending.children.removeAll(child);
     }
+    Q_Q(SurfaceInterface);
+    emit q->subSurfaceTreeChanged();
+    QObject::disconnect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::disconnect(child->surface().data(), &SurfaceInterface::damaged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::disconnect(child->surface().data(), &SurfaceInterface::unmapped, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::disconnect(child->surface().data(), &SurfaceInterface::subSurfaceTreeChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
 }
 
 bool SurfaceInterface::Private::raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
@@ -353,6 +365,9 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     }
     if (slideChanged) {
         emit q->slideOnShowHideChanged();
+    }
+    if (childrenChanged) {
+        emit q->subSurfaceTreeChanged();
     }
 }
 

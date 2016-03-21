@@ -24,9 +24,11 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/event_queue.h"
 #include "../../src/client/registry.h"
+#include "../../src/client/shm_pool.h"
 #include "../../src/client/subcompositor.h"
 #include "../../src/client/subsurface.h"
 #include "../../src/client/surface.h"
+#include "../../src/server/buffer_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/subcompositor_interface.h"
@@ -50,6 +52,8 @@ private Q_SLOTS:
     void testPlaceBelow();
     void testDestroy();
     void testCast();
+    void testSyncMode();
+    void testDeSyncMode();
 
 private:
     KWayland::Server::Display *m_display;
@@ -57,6 +61,7 @@ private:
     KWayland::Server::SubCompositorInterface *m_subcompositorInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
+    KWayland::Client::ShmPool *m_shm;
     KWayland::Client::SubCompositor *m_subCompositor;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -71,6 +76,7 @@ TestSubSurface::TestSubSurface(QObject *parent)
     , m_subcompositorInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
+    , m_shm(nullptr)
     , m_subCompositor(nullptr)
     , m_queue(nullptr)
     , m_thread(nullptr)
@@ -85,6 +91,7 @@ void TestSubSurface::init()
     m_display->setSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
+    m_display->createShm();
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -131,10 +138,17 @@ void TestSubSurface::init()
         QVERIFY(compositorSpy.wait());
     }
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+
+    m_shm = registry.createShmPool(registry.interface(KWayland::Client::Registry::Interface::Shm).name, registry.interface(KWayland::Client::Registry::Interface::Shm).version, this);
+    QVERIFY(m_shm->isValid());
 }
 
 void TestSubSurface::cleanup()
 {
+    if (m_shm) {
+        delete m_shm;
+        m_shm = nullptr;
+    }
     if (m_subCompositor) {
         delete m_subCompositor;
         m_subCompositor = nullptr;
@@ -283,6 +297,10 @@ void TestSubSurface::testPosition()
     SubSurfaceInterface *serverSubSurface = subSurfaceCreatedSpy.first().first().value<KWayland::Server::SubSurfaceInterface*>();
     QVERIFY(serverSubSurface);
 
+    // create a signalspy
+    QSignalSpy subsurfaceTreeChanged(serverSubSurface->parentSurface().data(), &SurfaceInterface::subSurfaceTreeChanged);
+    QVERIFY(subsurfaceTreeChanged.isValid());
+
     // both client and server should have a default position
     QCOMPARE(subSurface->position(), QPoint());
     QCOMPARE(serverSubSurface->position(), QPoint());
@@ -307,10 +325,12 @@ void TestSubSurface::testPosition()
 
     // committing the parent surface should update the position
     parent->commit(Surface::CommitFlag::None);
+    QCOMPARE(subsurfaceTreeChanged.count(), 0);
     QVERIFY(positionChangedSpy.wait());
     QCOMPARE(positionChangedSpy.count(), 1);
     QCOMPARE(positionChangedSpy.first().first().toPoint(), QPoint(20, 30));
     QCOMPARE(serverSubSurface->position(), QPoint(20, 30));
+    QCOMPARE(subsurfaceTreeChanged.count(), 1);
 }
 
 void TestSubSurface::testPlaceAbove()
@@ -525,6 +545,7 @@ void TestSubSurface::testDestroy()
 
     connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_subCompositor, &SubCompositor::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, surface.data(), &Surface::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, parent.data(), &Surface::destroy);
@@ -555,6 +576,117 @@ void TestSubSurface::testCast()
     QScopedPointer<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.data()), QPointer<Surface>(parent.data())));
 
     QCOMPARE(SubSurface::get(*(subSurface.data())), QPointer<SubSurface>(subSurface.data()));
+}
+
+void TestSubSurface::testSyncMode()
+{
+    // this test verifies that state is only applied when the parent surface commits its pending state
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto childSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(childSurface);
+
+    QScopedPointer<Surface> parent(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto parentSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(parentSurface);
+    QSignalSpy subSurfaceTreeChangedSpy(parentSurface, &SurfaceInterface::subSurfaceTreeChanged);
+    QVERIFY(subSurfaceTreeChangedSpy.isValid());
+    // create subSurface for surface of parent
+    QScopedPointer<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.data()), QPointer<Surface>(parent.data())));
+    QVERIFY(subSurfaceTreeChangedSpy.wait());
+    QCOMPARE(subSurfaceTreeChangedSpy.count(), 1);
+
+    // let's damage the child surface
+    QSignalSpy childDamagedSpy(childSurface, &SurfaceInterface::damaged);
+    QVERIFY(childDamagedSpy.isValid());
+
+    QImage image(QSize(200, 200), QImage::Format_ARGB32);
+    image.fill(Qt::black);
+    surface->attachBuffer(m_shm->createBuffer(image));
+    surface->damage(QRect(0, 0, 200, 200));
+    surface->commit();
+
+    // state should be applied when the parent surface's state gets applied
+    QVERIFY(!childDamagedSpy.wait(100));
+    QVERIFY(!childSurface->buffer());
+
+    QImage image2(QSize(400, 400), QImage::Format_ARGB32);
+    image2.fill(Qt::red);
+    parent->attachBuffer(m_shm->createBuffer(image2));
+    parent->damage(QRect(0, 0, 400, 400));
+    parent->commit();
+    QVERIFY(childDamagedSpy.wait());
+    QCOMPARE(childDamagedSpy.count(), 1);
+    QCOMPARE(subSurfaceTreeChangedSpy.count(), 2);
+    QCOMPARE(childSurface->buffer()->data(), image);
+    QCOMPARE(parentSurface->buffer()->data(), image2);
+
+    // sending frame rendered to parent should also send it to child
+    QSignalSpy frameRenderedSpy(surface.data(), &Surface::frameRendered);
+    QVERIFY(frameRenderedSpy.isValid());
+    parentSurface->frameRendered(100);
+    QVERIFY(frameRenderedSpy.wait());
+}
+
+void TestSubSurface::testDeSyncMode()
+{
+    // this test verifies that state gets applied immediately in desync mode
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto childSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(childSurface);
+
+    QScopedPointer<Surface> parent(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto parentSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(parentSurface);
+    QSignalSpy subSurfaceTreeChangedSpy(parentSurface, &SurfaceInterface::subSurfaceTreeChanged);
+    QVERIFY(subSurfaceTreeChangedSpy.isValid());
+    // create subSurface for surface of parent
+    QScopedPointer<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.data()), QPointer<Surface>(parent.data())));
+    QVERIFY(subSurfaceTreeChangedSpy.wait());
+    QCOMPARE(subSurfaceTreeChangedSpy.count(), 1);
+
+    // let's damage the child surface
+    QSignalSpy childDamagedSpy(childSurface, &SurfaceInterface::damaged);
+    QVERIFY(childDamagedSpy.isValid());
+
+    QImage image(QSize(200, 200), QImage::Format_ARGB32);
+    image.fill(Qt::black);
+    surface->attachBuffer(m_shm->createBuffer(image));
+    surface->damage(QRect(0, 0, 200, 200));
+    surface->commit(Surface::CommitFlag::None);
+
+    // state should be applied when the parent surface's state gets applied or when the subsurface switches to desync
+    QVERIFY(!childDamagedSpy.wait(100));
+
+    // setting to desync should apply the state directly
+    subSurface->setMode(SubSurface::Mode::Desynchronized);
+    QVERIFY(childDamagedSpy.wait());
+    QCOMPARE(subSurfaceTreeChangedSpy.count(), 2);
+    QCOMPARE(childSurface->buffer()->data(), image);
+
+    // and damaging again, should directly be applied
+    image.fill(Qt::red);
+    surface->attachBuffer(m_shm->createBuffer(image));
+    surface->damage(QRect(0, 0, 200, 200));
+    surface->commit(Surface::CommitFlag::None);
+    QVERIFY(childDamagedSpy.wait());
+    QCOMPARE(subSurfaceTreeChangedSpy.count(), 3);
+    QCOMPARE(childSurface->buffer()->data(), image);
 }
 
 QTEST_GUILESS_MAIN(TestSubSurface)
