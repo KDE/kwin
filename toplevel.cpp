@@ -451,6 +451,15 @@ void Toplevel::setSurface(KWayland::Server::SurfaceInterface *surface)
     }
     m_surface = surface;
     connect(m_surface, &SurfaceInterface::damaged, this, &Toplevel::addDamage);
+    connect(m_surface, &SurfaceInterface::subSurfaceTreeChanged, this,
+        [this] {
+            // TODO improve to only update actual visual area
+            if (ready_for_painting) {
+                addDamageFull();
+                m_isDamaged = true;
+            }
+        }
+    );
     connect(m_surface, &SurfaceInterface::destroyed, this,
         [this] {
             m_surface = nullptr;
