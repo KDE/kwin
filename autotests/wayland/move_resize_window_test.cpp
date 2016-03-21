@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/registry.h>
+#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -62,12 +63,15 @@ private Q_SLOTS:
     void testGrowShrink();
     void testPointerMoveEnd_data();
     void testPointerMoveEnd();
+    void testPlasmaShellSurfaceMovable_data();
+    void testPlasmaShellSurfaceMovable();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::ShmPool *m_shm = nullptr;
     KWayland::Client::Shell *m_shell = nullptr;
+    KWayland::Client::PlasmaShell *m_plasmaShell = nullptr;
     KWayland::Client::EventQueue *m_queue = nullptr;
     QThread *m_thread = nullptr;
 };
@@ -132,6 +136,8 @@ void MoveResizeWindowTest::init()
     QVERIFY(m_shm->isValid());
     m_shell = registry.createShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>(), this);
     QVERIFY(m_shell->isValid());
+    m_plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name, registry.interface(Registry::Interface::PlasmaShell).version, this);
+    QVERIFY(m_plasmaShell->isValid());
 
     screens()->setCurrent(0);
 }
@@ -144,6 +150,8 @@ void MoveResizeWindowTest::cleanup()
     m_shm = nullptr;
     delete m_shell;
     m_shell = nullptr;
+    delete m_plasmaShell;
+    m_plasmaShell = nullptr;
     delete m_queue;
     m_queue = nullptr;
     if (m_thread) {
@@ -515,6 +523,52 @@ void MoveResizeWindowTest::testPointerMoveEnd()
     // but releasing the other button should now end moving
     waylandServer()->backend()->pointerButtonReleased(additionalButton, timestamp++);
     QVERIFY(!c->isMove());
+}
+
+void MoveResizeWindowTest::testPlasmaShellSurfaceMovable_data()
+{
+    QTest::addColumn<KWayland::Client::PlasmaShellSurface::Role>("role");
+    QTest::addColumn<bool>("movable");
+    QTest::addColumn<bool>("movableAcrossScreens");
+    QTest::addColumn<bool>("resizable");
+
+    QTest::newRow("normal")  << KWayland::Client::PlasmaShellSurface::Role::Normal          << true  << true  << true;
+    QTest::newRow("desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop         << false << false << false;
+    QTest::newRow("panel")   << KWayland::Client::PlasmaShellSurface::Role::Panel           << false << false << false;
+    QTest::newRow("osd")     << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << false << false << false;
+}
+
+void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
+{
+    // this test verifies that certain window types from PlasmaShellSurface are not moveable or resizable
+    using namespace KWayland::Client;
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    // and a PlasmaShellSurface
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QVERIFY(!plasmaSurface.isNull());
+    QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
+    plasmaSurface->setRole(role);
+    // let's render
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    m_connection->flush();
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *c = clientAddedSpy.first().first().value<AbstractClient*>();
+    QVERIFY(c);
+    QTEST(c->isMovable(), "movable");
+    QTEST(c->isMovableAcrossScreens(), "movableAcrossScreens");
+    QTEST(c->isResizable(), "resizable");
 }
 
 }
