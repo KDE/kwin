@@ -22,6 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_backend.h"
 #include "input.h"
 
+#include "drm_buffer.h"
+#include "drm_inputeventfilter.h"
+#include "drm_pointer.h"
+
 #include <QElapsedTimer>
 #include <QImage>
 #include <QPointer>
@@ -48,19 +52,8 @@ namespace KWin
 class Udev;
 class UdevMonitor;
 
-class DrmBuffer;
 class DrmOutput;
-class DpmsInputEventFilter;
 
-template <typename Pointer, void (*cleanupFunc)(Pointer*)>
-struct DrmCleanup
-{
-    static inline void cleanup(Pointer *ptr)
-    {
-        cleanupFunc(ptr);
-    }
-};
-template <typename T, void (*cleanupFunc)(T*)> using ScopedDrmPointer = QScopedPointer<T, DrmCleanup<T, cleanupFunc>>;
 
 class KWIN_EXPORT DrmBackend : public AbstractBackend
 {
@@ -137,158 +130,8 @@ private:
     KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
 };
 
-class DrmOutput : public QObject
-{
-    Q_OBJECT
-public:
-    struct Edid {
-        QByteArray eisaId;
-        QByteArray monitorName;
-        QByteArray serialNumber;
-        QSize physicalSize;
-    };
-    virtual ~DrmOutput();
-    void showCursor(DrmBuffer *buffer);
-    void hideCursor();
-    void moveCursor(const QPoint &globalPos);
-    bool present(DrmBuffer *buffer);
-    void pageFlipped();
-    void init(drmModeConnector *connector);
-    void restoreSaved();
-    void blank();
-
-    /**
-     * This sets the changes and tests them against the DRM output
-     */
-    void setChanges(KWayland::Server::OutputChangeSet *changeset);
-    bool commitChanges();
-
-    QSize size() const;
-    QRect geometry() const;
-    QString name() const;
-    int currentRefreshRate() const;
-    enum class DpmsMode {
-        On = DRM_MODE_DPMS_ON,
-        Standby = DRM_MODE_DPMS_STANDBY,
-        Suspend = DRM_MODE_DPMS_SUSPEND,
-        Off = DRM_MODE_DPMS_OFF
-    };
-    void setDpms(DpmsMode mode);
-    bool isDpmsEnabled() const {
-        return m_dpmsMode == DpmsMode::On;
-    }
-
-    QByteArray uuid() const {
-        return m_uuid;
-    }
-
-Q_SIGNALS:
-    void dpmsChanged();
-
-private:
-    friend class DrmBackend;
-    DrmOutput(DrmBackend *backend);
-    void cleanupBlackBuffer();
-    bool setMode(DrmBuffer *buffer);
-    void initEdid(drmModeConnector *connector);
-    void initDpms(drmModeConnector *connector);
-    bool isCurrentMode(const drmModeModeInfo *mode) const;
-    void initUuid();
-    void setGlobalPos(const QPoint &pos);
-
-    DrmBackend *m_backend;
-    QPoint m_globalPos;
-    quint32 m_crtcId = 0;
-    quint32 m_connector = 0;
-    quint32 m_lastStride = 0;
-    bool m_lastGbm = false;
-    drmModeModeInfo m_mode;
-    DrmBuffer *m_currentBuffer = nullptr;
-    DrmBuffer *m_blackBuffer = nullptr;
-    struct CrtcCleanup {
-        static void inline cleanup(_drmModeCrtc *ptr) {
-            drmModeFreeCrtc(ptr);
-        }
-    };
-    Edid m_edid;
-    QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
-    QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
-    QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
-    QPointer<KWayland::Server::OutputChangeSet> m_changeset;
-    ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
-    DpmsMode m_dpmsMode = DpmsMode::On;
-    QByteArray m_uuid;
-};
-
-class DrmBuffer
-{
-public:
-    ~DrmBuffer();
-
-    bool map(QImage::Format format = QImage::Format_RGB32);
-    QImage *image() const {
-        return m_image;
-    }
-    quint32 handle() const {
-        return m_handle;
-    }
-    const QSize &size() const {
-        return m_size;
-    }
-    quint32 bufferId() const {
-        return m_bufferId;
-    }
-    quint32 stride() const {
-        return m_stride;
-    }
-    gbm_bo *gbm() const {
-        return m_bo;
-    }
-    bool isGbm() const {
-        return m_bo != nullptr;
-    }
-    void releaseGbm();
-
-private:
-    friend class DrmBackend;
-    DrmBuffer(DrmBackend *backend, const QSize &size);
-    DrmBuffer(DrmBackend *backend, gbm_surface *surface);
-    DrmBackend *m_backend;
-    gbm_surface *m_surface = nullptr;
-    gbm_bo *m_bo = nullptr;
-    QSize m_size;
-    quint32 m_handle = 0;
-    quint32 m_bufferId = 0;
-    quint32 m_stride = 0;
-    quint64 m_bufferSize = 0;
-    void *m_memory = nullptr;
-    QImage *m_image = nullptr;
-};
-
-class DpmsInputEventFilter : public InputEventFilter
-{
-public:
-    DpmsInputEventFilter(DrmBackend *backend);
-    ~DpmsInputEventFilter();
-
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
-    bool wheelEvent(QWheelEvent *event) override;
-    bool keyEvent(QKeyEvent *event) override;
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
-    bool touchUp(quint32 id, quint32 time) override;
-
-private:
-    void notify();
-    DrmBackend *m_backend;
-    QElapsedTimer m_doubleTapTimer;
-    QVector<qint32> m_touchPoints;
-    bool m_secondTap = false;
-};
 
 }
-
-Q_DECLARE_METATYPE(KWin::DrmOutput*)
 
 #endif
 

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scene_qpainter_drm_backend.h"
 #include "drm_backend.h"
+#include "drm_output.h"
 #include "virtual_terminal.h"
 
 namespace KWin

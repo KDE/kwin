@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screens_drm.h"
 #include "drm_backend.h"
+#include "drm_output.h"
 
 namespace KWin
 {

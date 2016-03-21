@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "composite.h"
 #include "drm_backend.h"
+#include "drm_output.h"
 #include "logging.h"
 #include "options.h"
 #include "screens.h"
