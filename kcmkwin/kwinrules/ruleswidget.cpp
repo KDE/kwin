@@ -878,8 +878,8 @@ EditShortcutDialog::EditShortcutDialog(QWidget* parent, const char* name)
     connect(buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
 
-    layout()->addWidget(buttons);
     layout()->addWidget(widget);
+    layout()->addWidget(buttons);
 }
 
 void EditShortcutDialog::setShortcut(const QString& cut)
@@ -900,7 +900,7 @@ ShortcutDialog::ShortcutDialog(const QKeySequence& cut, QWidget* parent)
     // It's a global shortcut so don't allow multikey shortcuts
     widget->setMultiKeyShortcutsAllowed(false);
 
-    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close, this);
+    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
     connect(buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
 
