@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_backend.h"
 #include "wayland_server.h"
 #include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/surface_interface.h>
 #include "decorations/decoratedclient.h"
 // Qt
@@ -235,6 +236,23 @@ SceneQPainter::Window::~Window()
     discardShape();
 }
 
+static void paintSubSurface(QPainter *painter, const QPoint &pos, QPainterWindowPixmap *pixmap)
+{
+    QPoint p = pos;
+    if (!pixmap->subSurface().isNull()) {
+        p += pixmap->subSurface()->position();
+    }
+    painter->drawImage(p, pixmap->image());
+    const auto &children = pixmap->children();
+    for (auto it = children.begin(); it != children.end(); ++it) {
+        auto pixmap = static_cast<QPainterWindowPixmap*>(*it);
+        if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
+            continue;
+        }
+        paintSubSurface(painter, p, pixmap);
+    }
+}
+
 void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintData data)
 {
     if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
@@ -247,7 +265,7 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
         return;
     }
     if (!toplevel->damage().isEmpty()) {
-        pixmap->update(toplevel->damage());
+        pixmap->update();
         toplevel->resetDamage();
     }
 
@@ -281,6 +299,15 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
     // render content
     const QRect src = QRect(toplevel->clientPos() + toplevel->clientContentPos(), toplevel->clientSize());
     painter->drawImage(toplevel->clientPos(), pixmap->image(), src);
+
+    // render subsurfaces
+    const auto &children = pixmap->children();
+    for (auto pixmap : children) {
+        if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
+            continue;
+        }
+        paintSubSurface(painter, toplevel->clientPos(), static_cast<QPainterWindowPixmap*>(pixmap));
+    }
 
     if (!opaque) {
         tempPainter.restore();
@@ -406,6 +433,11 @@ QPainterWindowPixmap::QPainterWindowPixmap(Scene::Window *window)
 {
 }
 
+QPainterWindowPixmap::QPainterWindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface, WindowPixmap *parent)
+    : WindowPixmap(subSurface, parent)
+{
+}
+
 QPainterWindowPixmap::~QPainterWindowPixmap()
 {
 }
@@ -423,19 +455,35 @@ void QPainterWindowPixmap::create()
     m_image = buffer()->data().copy();
 }
 
-bool QPainterWindowPixmap::update(const QRegion &damage)
+WindowPixmap *QPainterWindowPixmap::createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface)
 {
+    return new QPainterWindowPixmap(subSurface, this);
+}
+
+void QPainterWindowPixmap::updateBuffer()
+{
+    const auto oldBuffer = buffer();
+    WindowPixmap::updateBuffer();
+    const auto &b = buffer();
+    if (b.isNull()) {
+        m_image = QImage();
+        return;
+    }
+    if (b == oldBuffer) {
+        return;
+    }
+    // perform deep copy
+    m_image = b->data().copy();
+}
+
+bool QPainterWindowPixmap::update()
+{
+    // TODO: there is lots of things which can be removed here
     const auto oldBuffer = buffer();
     updateBuffer();
     const auto &b = buffer();
     if (b == oldBuffer || b.isNull()) {
         return false;
-    }
-    QPainter p(&m_image);
-    const QImage &data = b->data();
-    p.setCompositionMode(QPainter::CompositionMode_Source);
-    for (const QRect &rect : damage.rects()) {
-        p.drawImage(rect, data, rect);
     }
     return true;
 }
