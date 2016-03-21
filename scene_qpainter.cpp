@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/surface_interface.h>
-#include "xcbutils.h"
 #include "decorations/decoratedclient.h"
 // Qt
 #include <QDebug>
@@ -404,7 +403,6 @@ Decoration::Renderer *SceneQPainter::createDecorationRenderer(Decoration::Decora
 //****************************************
 QPainterWindowPixmap::QPainterWindowPixmap(Scene::Window *window)
     : WindowPixmap(window)
-    , m_shm(kwinApp()->shouldUseWaylandForCompositing() ? nullptr : new Xcb::Shm)
 {
 }
 
@@ -417,51 +415,27 @@ void QPainterWindowPixmap::create()
     if (isValid()) {
         return;
     }
-    if (!kwinApp()->shouldUseWaylandForCompositing() && !m_shm->isValid()) {
-        return;
-    }
     KWin::WindowPixmap::create();
     if (!isValid()) {
         return;
     }
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        // performing deep copy, this could probably be improved
-        m_image = buffer()->data().copy();
-        return;
-    }
-    m_image = QImage((uchar*)m_shm->buffer(), size().width(), size().height(), QImage::Format_ARGB32_Premultiplied);
+    // performing deep copy, this could probably be improved
+    m_image = buffer()->data().copy();
 }
 
 bool QPainterWindowPixmap::update(const QRegion &damage)
 {
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        const auto oldBuffer = buffer();
-        updateBuffer();
-        const auto &b = buffer();
-        if (b == oldBuffer || b.isNull()) {
-            return false;
-        }
-        QPainter p(&m_image);
-        const QImage &data = b->data();
-        p.setCompositionMode(QPainter::CompositionMode_Source);
-        for (const QRect &rect : damage.rects()) {
-            p.drawImage(rect, data, rect);
-        }
-        return true;
-    }
-
-    if (!m_shm->isValid()) {
+    const auto oldBuffer = buffer();
+    updateBuffer();
+    const auto &b = buffer();
+    if (b == oldBuffer || b.isNull()) {
         return false;
     }
-
-    // TODO: optimize by only updating the damaged areas
-    xcb_shm_get_image_cookie_t cookie = xcb_shm_get_image_unchecked(connection(), pixmap(),
-        0, 0, size().width(), size().height(),
-        ~0, XCB_IMAGE_FORMAT_Z_PIXMAP, m_shm->segment(), 0);
-
-    ScopedCPointer<xcb_shm_get_image_reply_t> image(xcb_shm_get_image_reply(connection(), cookie, NULL));
-    if (image.isNull()) {
-        return false;
+    QPainter p(&m_image);
+    const QImage &data = b->data();
+    p.setCompositionMode(QPainter::CompositionMode_Source);
+    for (const QRect &rect : damage.rects()) {
+        p.drawImage(rect, data, rect);
     }
     return true;
 }

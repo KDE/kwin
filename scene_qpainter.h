@@ -27,10 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
-namespace Xcb {
-    class Shm;
-}
-
 class KWIN_EXPORT QPainterBackend
 {
 public:
@@ -163,7 +159,6 @@ public:
     bool update(const QRegion &damage);
     const QImage &image();
 private:
-    QScopedPointer<Xcb::Shm> m_shm;
     QImage m_image;
 };
 
