@@ -207,6 +207,7 @@ void TestSubSurface::testCreate()
     QCOMPARE(serverSubSurface->surface().data(), serverSurface);
     QCOMPARE(serverSurface->subSurface().data(), serverSubSurface);
     // children are only added after committing the surface
+    QEXPECT_FAIL("", "Incorrect adding of child windows to workaround QtWayland behavior", Continue);
     QCOMPARE(serverParentSurface->childSubSurfaces().count(), 0);
     // so let's commit the surface, to apply the stacking change
     parent->commit(Surface::CommitFlag::None);
@@ -222,9 +223,12 @@ void TestSubSurface::testCreate()
     QVERIFY(destroyedSpy.wait());
     QCOMPARE(serverSurface->subSurface(), QPointer<SubSurfaceInterface>());
     // only applied after next commit
+    QEXPECT_FAIL("", "Incorrect removing of child windows to workaround QtWayland behavior", Continue);
     QCOMPARE(serverParentSurface->childSubSurfaces().count(), 1);
     // but the surface should be invalid
-    QVERIFY(serverParentSurface->childSubSurfaces().first().isNull());
+    if (!serverParentSurface->childSubSurfaces().isEmpty()) {
+        QVERIFY(serverParentSurface->childSubSurfaces().first().isNull());
+    }
     // committing the state should solve it
     parent->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
@@ -364,6 +368,7 @@ void TestSubSurface::testPlaceAbove()
     subSurfaceCreatedSpy.clear();
 
     // so far the stacking order should still be empty
+    QEXPECT_FAIL("", "Incorrect adding of child windows to workaround QtWayland behavior", Continue);
     QVERIFY(serverSubSurface1->parentSurface()->childSubSurfaces().isEmpty());
 
     // committing the parent should create the stacking order
@@ -464,6 +469,7 @@ void TestSubSurface::testPlaceBelow()
     subSurfaceCreatedSpy.clear();
 
     // so far the stacking order should still be empty
+    QEXPECT_FAIL("", "Incorrect adding of child windows to workaround QtWayland behavior", Continue);
     QVERIFY(serverSubSurface1->parentSurface()->childSubSurfaces().isEmpty());
 
     // committing the parent should create the stacking order

@@ -47,12 +47,10 @@ SurfaceInterface::Private::~Private()
 
 void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > child)
 {
-    // protocol is not precise on how to handle the addition of new sub surfaces, this follows Weston's behavior
-    if (subSurface.isNull() || !subSurface->isSynchronized()) {
-        pending.children.append(child);
-    } else {
-        subSurfacePending.children.append(child);
-    }
+    // protocol is not precise on how to handle the addition of new sub surfaces
+    pending.children.append(child);
+    subSurfacePending.children.append(child);
+    current.children.append(child);
     Q_Q(SurfaceInterface);
     emit q->subSurfaceTreeChanged();
     QObject::connect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
@@ -63,12 +61,10 @@ void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > child)
 
 void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > child)
 {
-    // protocol is not precise on how to handle the addition of new sub surfaces, this follows Weston's behavior
-    if (subSurface.isNull() || !subSurface->isSynchronized()) {
-        pending.children.removeAll(child);
-    } else {
-        subSurfacePending.children.removeAll(child);
-    }
+    // protocol is not precise on how to handle the addition of new sub surfaces
+    pending.children.removeAll(child);
+    subSurfacePending.children.removeAll(child);
+    current.children.removeAll(child);
     Q_Q(SurfaceInterface);
     emit q->subSurfaceTreeChanged();
     QObject::disconnect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
