@@ -240,7 +240,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     const bool opaqueRegionChanged = source->opaqueIsSet;
     const bool inputRegionChanged = source->inputIsSet;
     const bool scaleFactorChanged = source->scaleIsSet && (target->scale != source->scale);
-    const bool transformFactorChanged = source->transformIsSet && (target->transform != source->transform);
+    const bool transformChanged = source->transformIsSet && (target->transform != source->transform);
     const bool shadowChanged = source->shadowIsSet;
     const bool blurChanged = source->blurIsSet;
     const bool contrastChanged = source->contrastIsSet;
@@ -312,7 +312,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         target->scale = source->scale;
         target->scaleIsSet = true;
     }
-    if (transformFactorChanged) {
+    if (transformChanged) {
         target->transform = source->transform;
         target->transformIsSet = true;
     }
@@ -328,7 +328,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     if (scaleFactorChanged) {
         emit q->scaleChanged(target->scale);
     }
-    if (transformFactorChanged) {
+    if (transformChanged) {
         emit q->transformChanged(target->transform);
     }
     if (bufferChanged && emitChanged) {
