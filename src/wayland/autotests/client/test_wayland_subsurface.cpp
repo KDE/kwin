@@ -54,6 +54,7 @@ private Q_SLOTS:
     void testCast();
     void testSyncMode();
     void testDeSyncMode();
+    void testMainSurfaceFromTree();
 
 private:
     KWayland::Server::Display *m_display;
@@ -206,6 +207,7 @@ void TestSubSurface::testCreate()
     QCOMPARE(serverSubSurface->parentSurface().data(), serverParentSurface);
     QCOMPARE(serverSubSurface->surface().data(), serverSurface);
     QCOMPARE(serverSurface->subSurface().data(), serverSubSurface);
+    QCOMPARE(serverSubSurface->mainSurface().data(), serverParentSurface);
     // children are only added after committing the surface
     QEXPECT_FAIL("", "Incorrect adding of child windows to workaround QtWayland behavior", Continue);
     QCOMPARE(serverParentSurface->childSubSurfaces().count(), 0);
@@ -693,6 +695,57 @@ void TestSubSurface::testDeSyncMode()
     QVERIFY(childDamagedSpy.wait());
     QCOMPARE(subSurfaceTreeChangedSpy.count(), 3);
     QCOMPARE(childSurface->buffer()->data(), image);
+}
+
+
+void TestSubSurface::testMainSurfaceFromTree()
+{
+    // this test verifies that in a tree of surfaces every surface has the same main surface
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> parentSurface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto parentServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(parentServerSurface);
+    QScopedPointer<Surface> childLevel1Surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto childLevel1ServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(childLevel1ServerSurface);
+    QScopedPointer<Surface> childLevel2Surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto childLevel2ServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(childLevel2ServerSurface);
+    QScopedPointer<Surface> childLevel3Surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto childLevel3ServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(childLevel3ServerSurface);
+
+    QSignalSpy subSurfaceTreeChangedSpy(parentServerSurface, &SurfaceInterface::subSurfaceTreeChanged);
+    QVERIFY(subSurfaceTreeChangedSpy.isValid());
+
+    m_subCompositor->createSubSurface(childLevel1Surface.data(), parentSurface.data());
+    m_subCompositor->createSubSurface(childLevel2Surface.data(), childLevel1Surface.data());
+    m_subCompositor->createSubSurface(childLevel3Surface.data(), childLevel2Surface.data());
+
+    parentSurface->commit(Surface::CommitFlag::None);
+    QVERIFY(subSurfaceTreeChangedSpy.wait());
+
+    QCOMPARE(parentServerSurface->childSubSurfaces().count(), 1);
+    auto child = parentServerSurface->childSubSurfaces().first();
+    QCOMPARE(child->parentSurface().data(), parentServerSurface);
+    QCOMPARE(child->mainSurface().data(), parentServerSurface);
+    QCOMPARE(child->surface()->childSubSurfaces().count(), 1);
+    auto child2 = child->surface()->childSubSurfaces().first();
+    QCOMPARE(child2->parentSurface().data(), child->surface().data());
+    QCOMPARE(child2->mainSurface().data(), parentServerSurface);
+    QCOMPARE(child2->surface()->childSubSurfaces().count(), 1);
+    auto child3 = child2->surface()->childSubSurfaces().first();
+    QCOMPARE(child3->parentSurface().data(), child2->surface().data());
+    QCOMPARE(child3->mainSurface().data(), parentServerSurface);
+    QCOMPARE(child3->surface()->childSubSurfaces().count(), 0);
 }
 
 QTEST_GUILESS_MAIN(TestSubSurface)

@@ -85,6 +85,12 @@ public:
     QPointer<SurfaceInterface> surface();
     QPointer<SurfaceInterface> parentSurface();
 
+    /**
+     * @returns the main surface for the sub-surface tree, that is the first surface without a parent
+     * @since 5.7
+     **/
+    QPointer<SurfaceInterface> mainSurface() const;
+
 Q_SIGNALS:
     void positionChanged(const QPoint&);
     void modeChanged(KWayland::Server::SubSurfaceInterface::Mode);

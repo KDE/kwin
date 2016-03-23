@@ -329,6 +329,15 @@ bool SubSurfaceInterface::isSynchronized() const
     return false;
 }
 
+QPointer<SurfaceInterface> SubSurfaceInterface::mainSurface() const
+{
+    Q_D();
+    if (d->parent->d_func()->subSurface) {
+        return d->parent->d_func()->subSurface->mainSurface();
+    }
+    return d->parent;
+}
+
 SubSurfaceInterface::Private *SubSurfaceInterface::d_func() const
 {
     return reinterpret_cast<SubSurfaceInterface::Private*>(d.data());
