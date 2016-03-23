@@ -28,6 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ui_debug_console.h"
 
 // KWayland
+#include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/clientconnection.h>
+#include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/surface_interface.h>
 // frameworks
 #include <KLocalizedString>
@@ -47,8 +50,34 @@ DebugConsole::DebugConsole()
     m_ui->treeView->setItemDelegate(new DebugConsoleDelegate(this));
     m_ui->treeView->setModel(new DebugConsoleModel(this));
     m_ui->quitButton->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
+    m_ui->windowsButton->setIcon(QIcon::fromTheme(QStringLiteral("view-list-tree")));
+    m_ui->surfacesButton->setIcon(QIcon::fromTheme(QStringLiteral("view-list-tree")));
+
+    if (kwinApp()->operationMode() == Application::OperationMode::OperationModeX11) {
+        m_ui->surfacesButton->setDisabled(true);
+    }
 
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
+    connect(m_ui->windowsButton, &QAbstractButton::toggled, this,
+        [this] (bool toggled) {
+            if (!toggled) {
+                return;
+            }
+            m_ui->surfacesButton->setChecked(false);
+            m_ui->treeView->model()->deleteLater();
+            m_ui->treeView->setModel(new DebugConsoleModel(this));
+        }
+    );
+    connect(m_ui->surfacesButton, &QAbstractButton::toggled, this,
+        [this] (bool toggled) {
+            if (!toggled) {
+                return;
+            }
+            m_ui->windowsButton->setChecked(false);
+            m_ui->treeView->model()->deleteLater();
+            m_ui->treeView->setModel(new SurfaceTreeModel(this));
+        }
+    );
 
     // for X11
     setWindowFlags(Qt::X11BypassWindowManagerHint);
@@ -512,6 +541,203 @@ Client *DebugConsoleModel::x11Client(const QModelIndex &index) const
 Unmanaged *DebugConsoleModel::unmanaged(const QModelIndex &index) const
 {
     return clientForIndex(index, m_unmanageds, s_x11UnmanagedId);
+}
+
+/////////////////////////////////////// SurfaceTreeModel
+SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
+    : QAbstractItemModel(parent)
+{
+    // TODO: it would be nice to not have to reset the model on each change
+    auto reset = [this] {
+        beginResetModel();
+        endResetModel();
+    };
+    using namespace KWayland::Server;
+
+    const auto unmangeds = workspace()->unmanagedList();
+    for (auto u : unmangeds) {
+        connect(u->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+    }
+    for (auto c : workspace()->allClientList()) {
+        connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+    }
+    for (auto c : workspace()->desktopList()) {
+        connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+    }
+    for (auto c : waylandServer()->internalClients()) {
+        connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+    }
+    connect(waylandServer(), &WaylandServer::shellClientAdded, this,
+        [this, reset] (ShellClient *c) {
+            connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+            reset();
+        }
+    );
+    connect(workspace(), &Workspace::clientAdded, this,
+        [this, reset] (AbstractClient *c) {
+            connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+            reset();
+        }
+    );
+    connect(workspace(), &Workspace::clientRemoved, this, reset);
+    connect(workspace(), &Workspace::unmanagedAdded, this,
+        [this, reset] (Unmanaged *u) {
+            connect(u->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+            reset();
+        }
+    );
+    connect(workspace(), &Workspace::unmanagedRemoved, this, reset);
+}
+
+SurfaceTreeModel::~SurfaceTreeModel() = default;
+
+int SurfaceTreeModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return 1;
+}
+
+int SurfaceTreeModel::rowCount(const QModelIndex &parent) const
+{
+    if (parent.isValid()) {
+        using namespace KWayland::Server;
+        if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(parent.internalPointer())) {
+            const auto &children = surface->childSubSurfaces();
+            return children.count();
+        }
+        return 0;
+    }
+    // toplevel are all windows
+    return workspace()->allClientList().count() +
+           workspace()->desktopList().count() +
+           workspace()->unmanagedList().count() +
+           waylandServer()->internalClients().count();
+}
+
+QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (column != 0) {
+        // invalid column
+        return QModelIndex();
+    }
+
+    if (parent.isValid()) {
+        using namespace KWayland::Server;
+        if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(parent.internalPointer())) {
+            const auto &children = surface->childSubSurfaces();
+            if (row < children.count()) {
+                return createIndex(row, column, children.at(row)->surface().data());
+            }
+        }
+        return QModelIndex();
+    }
+    // a window
+    const auto &allClients = workspace()->allClientList();
+    if (row < allClients.count()) {
+        // references a client
+        return createIndex(row, column, allClients.at(row)->surface());
+    }
+    int reference = allClients.count();
+    const auto &desktopClients = workspace()->desktopList();
+    if (row < reference + desktopClients.count()) {
+        return createIndex(row, column, desktopClients.at(row-reference)->surface());
+    }
+    reference += desktopClients.count();
+    const auto &unmanaged = workspace()->unmanagedList();
+    if (row < reference + unmanaged.count()) {
+        return createIndex(row, column, unmanaged.at(row-reference)->surface());
+    }
+    reference += unmanaged.count();
+    const auto &internal = waylandServer()->internalClients();
+    if (row < reference + internal.count()) {
+        return createIndex(row, column, internal.at(row-reference)->surface());
+    }
+    // not found
+    return QModelIndex();
+}
+
+QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
+{
+    using namespace KWayland::Server;
+    if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(child.internalPointer())) {
+        const auto &subsurface = surface->subSurface();
+        if (subsurface.isNull()) {
+            // doesn't reference a subsurface, this is a top-level window
+            return QModelIndex();
+        }
+        SurfaceInterface *parent = subsurface->parentSurface().data();
+        if (!parent) {
+            // something is wrong
+            return QModelIndex();
+        }
+        // is the parent a subsurface itself?
+        if (parent->subSurface()) {
+            auto grandParent = parent->subSurface()->parentSurface();
+            if (grandParent.isNull()) {
+                // something is wrong
+                return QModelIndex();
+            }
+            const auto &children = grandParent->childSubSurfaces();
+            for (int row = 0; row < children.count(); row++) {
+                if (children.at(row).data() == parent->subSurface().data()) {
+                    return createIndex(row, 0, parent);
+                }
+            }
+            return QModelIndex();
+        }
+        // not a subsurface, thus it's a true window
+        int row = 0;
+        const auto &allClients = workspace()->allClientList();
+        for (; row < allClients.count(); row++) {
+            if (allClients.at(row)->surface() == parent) {
+                return createIndex(row, 0, parent);
+            }
+        }
+        row = allClients.count();
+        const auto &desktopClients = workspace()->desktopList();
+        for (int i = 0; i < desktopClients.count(); i++) {
+            if (desktopClients.at(i)->surface() == parent) {
+                return createIndex(row + i, 0, parent);
+            }
+        }
+        row += desktopClients.count();
+        const auto &unmanaged = workspace()->unmanagedList();
+        for (int i = 0; i < unmanaged.count(); i++) {
+            if (unmanaged.at(i)->surface() == parent) {
+                return createIndex(row + i, 0, parent);
+            }
+        }
+        row += unmanaged.count();
+        const auto &internal = waylandServer()->internalClients();
+        for (int i = 0; i < internal.count(); i++) {
+            if (internal.at(i)->surface() == parent) {
+                return createIndex(row + i, 0, parent);
+            }
+        }
+    }
+    return QModelIndex();
+}
+
+QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid()) {
+        return QVariant();
+    }
+    using namespace KWayland::Server;
+    if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(index.internalPointer())) {
+        if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
+            return QStringLiteral("%1 (%2) - %3").arg(surface->client()->executablePath())
+                                                .arg(surface->client()->processId())
+                                                .arg(surface->id());
+        } else if (role == Qt::DecorationRole) {
+            if (auto buffer = surface->buffer()) {
+                if (buffer->shmBuffer()) {
+                    return buffer->data().scaled(QSize(64, 64), Qt::KeepAspectRatio);
+                }
+            }
+        }
+    }
+    return QVariant();
 }
 
 }

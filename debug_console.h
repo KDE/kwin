@@ -100,6 +100,20 @@ private:
     QScopedPointer<Ui::DebugConsole> m_ui;
 };
 
+class SurfaceTreeModel : public QAbstractItemModel
+{
+    Q_OBJECT
+public:
+    explicit SurfaceTreeModel(QObject *parent = nullptr);
+    virtual ~SurfaceTreeModel();
+
+    int columnCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QModelIndex index(int row, int column, const QModelIndex & parent) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+};
+
 }
 
 #endif

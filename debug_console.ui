@@ -17,9 +17,25 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="quitButton">
+      <widget class="QPushButton" name="windowsButton">
        <property name="text">
-        <string>Quit Debug Console</string>
+        <string>Windows</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="surfacesButton">
+       <property name="text">
+        <string>Surfaces</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -35,6 +51,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="quitButton">
+       <property name="text">
+        <string>Quit Debug Console</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
