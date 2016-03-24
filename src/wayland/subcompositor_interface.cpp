@@ -295,11 +295,25 @@ QPoint SubSurfaceInterface::position() const
 
 QPointer<SurfaceInterface> SubSurfaceInterface::surface()
 {
+    // TODO: remove with ABI break (KF6)
+    Q_D();
+    return d->surface;
+}
+
+QPointer<SurfaceInterface> SubSurfaceInterface::surface() const
+{
     Q_D();
     return d->surface;
 }
 
 QPointer<SurfaceInterface> SubSurfaceInterface::parentSurface()
+{
+    // TODO: remove with ABI break (KF6)
+    Q_D();
+    return d->parent;
+}
+
+QPointer<SurfaceInterface> SubSurfaceInterface::parentSurface() const
 {
     Q_D();
     return d->parent;

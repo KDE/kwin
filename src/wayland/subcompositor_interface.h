@@ -82,8 +82,20 @@ public:
      **/
     bool isSynchronized() const;
 
+    // TODO: remove with ABI break (KF6)
     QPointer<SurfaceInterface> surface();
+    /**
+     * @returns The surface this SubSurfaceInterface was created on.
+     * @since 5.7
+     **/
+    QPointer<SurfaceInterface> surface() const;
+    // TODO: remove with ABI break (KF6)
     QPointer<SurfaceInterface> parentSurface();
+    /**
+     * @returns The parent surface for which this SubSurfaceInterface is a child
+     * @since 5.7
+     **/
+    QPointer<SurfaceInterface> parentSurface() const;
 
     /**
      * @returns the main surface for the sub-surface tree, that is the first surface without a parent
