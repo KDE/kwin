@@ -176,6 +176,18 @@ void SubSurfaceInterface::Private::create(ClientConnection *client, quint32 vers
     surface->d_func()->subSurfacePending.shadowIsSet = false;
     surface->d_func()->subSurfacePending.slideIsSet = false;
     parent->d_func()->addChild(QPointer<SubSurfaceInterface>(q));
+
+    QObject::connect(surface, &QObject::destroyed, q,
+        [this] {
+            // from spec: "If the wl_surface associated with the wl_subsurface is destroyed,
+            // the wl_subsurface object becomes inert. Note, that destroying either object
+            // takes effect immediately."
+            if (parent) {
+                Q_Q(SubSurfaceInterface);
+                reinterpret_cast<SurfaceInterface::Private*>(parent->d.data())->removeChild(QPointer<SubSurfaceInterface>(q));
+            }
+        }
+    );
 }
 
 void SubSurfaceInterface::Private::commit()

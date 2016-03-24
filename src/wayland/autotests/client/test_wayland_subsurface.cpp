@@ -55,6 +55,7 @@ private Q_SLOTS:
     void testSyncMode();
     void testDeSyncMode();
     void testMainSurfaceFromTree();
+    void testRemoveSurface();
 
 private:
     KWayland::Server::Display *m_display;
@@ -746,6 +747,39 @@ void TestSubSurface::testMainSurfaceFromTree()
     QCOMPARE(child3->parentSurface().data(), child2->surface().data());
     QCOMPARE(child3->mainSurface().data(), parentServerSurface);
     QCOMPARE(child3->surface()->childSubSurfaces().count(), 0);
+}
+
+void TestSubSurface::testRemoveSurface()
+{
+    // this test verifies that removing the surface also removes the sub-surface from the parent
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> parentSurface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto parentServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(parentServerSurface);
+    QScopedPointer<Surface> childSurface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto childServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(childServerSurface);
+
+    QSignalSpy subSurfaceTreeChangedSpy(parentServerSurface, &SurfaceInterface::subSurfaceTreeChanged);
+    QVERIFY(subSurfaceTreeChangedSpy.isValid());
+
+    m_subCompositor->createSubSurface(childSurface.data(), parentSurface.data());
+    parentSurface->commit(Surface::CommitFlag::None);
+    QVERIFY(subSurfaceTreeChangedSpy.wait());
+
+    QCOMPARE(parentServerSurface->childSubSurfaces().count(), 1);
+
+    // destroy surface, takes place immediately
+    childSurface.reset();
+    QVERIFY(subSurfaceTreeChangedSpy.wait());
+    QCOMPARE(parentServerSurface->childSubSurfaces().count(), 0);
 }
 
 QTEST_GUILESS_MAIN(TestSubSurface)
