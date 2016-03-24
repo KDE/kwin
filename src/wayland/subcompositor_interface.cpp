@@ -219,6 +219,14 @@ void SubSurfaceInterface::Private::setPositionCallback(wl_client *client, wl_res
 
 void SubSurfaceInterface::Private::setPosition(const QPoint &p)
 {
+    Q_Q(SubSurfaceInterface);
+    if (!q->isSynchronized()) {
+        // workaround for https://bugreports.qt.io/browse/QTBUG-52118
+        // apply directly as Qt doesn't commit the parent surface
+        pos = p;
+        emit q->positionChanged(pos);
+        return;
+    }
     if (scheduledPos == p) {
         return;
     }
