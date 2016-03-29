@@ -56,6 +56,7 @@ private Q_SLOTS:
     void testDeSyncMode();
     void testMainSurfaceFromTree();
     void testRemoveSurface();
+    void testMappingOfSurfaceTree();
 
 private:
     KWayland::Server::Display *m_display;
@@ -789,6 +790,128 @@ void TestSubSurface::testRemoveSurface()
     childSurface.reset();
     QVERIFY(subSurfaceTreeChangedSpy.wait());
     QCOMPARE(parentServerSurface->childSubSurfaces().count(), 0);
+}
+
+void TestSubSurface::testMappingOfSurfaceTree()
+{
+    // this test verifies mapping and unmapping of a sub-surface tree
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> parentSurface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto parentServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(parentServerSurface);
+    QScopedPointer<Surface> childLevel1Surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto childLevel1ServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(childLevel1ServerSurface);
+    QScopedPointer<Surface> childLevel2Surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto childLevel2ServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(childLevel2ServerSurface);
+    QScopedPointer<Surface> childLevel3Surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto childLevel3ServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(childLevel3ServerSurface);
+
+    QSignalSpy subSurfaceTreeChangedSpy(parentServerSurface, &SurfaceInterface::subSurfaceTreeChanged);
+    QVERIFY(subSurfaceTreeChangedSpy.isValid());
+
+    auto subSurfaceLevel1 = m_subCompositor->createSubSurface(childLevel1Surface.data(), parentSurface.data());
+    auto subSurfaceLevel2 = m_subCompositor->createSubSurface(childLevel2Surface.data(), childLevel1Surface.data());
+    auto subSurfaceLevel3 = m_subCompositor->createSubSurface(childLevel3Surface.data(), childLevel2Surface.data());
+
+    parentSurface->commit(Surface::CommitFlag::None);
+    QVERIFY(subSurfaceTreeChangedSpy.wait());
+
+    QCOMPARE(parentServerSurface->childSubSurfaces().count(), 1);
+    auto child = parentServerSurface->childSubSurfaces().first();
+    QCOMPARE(child->surface()->childSubSurfaces().count(), 1);
+    auto child2 = child->surface()->childSubSurfaces().first();
+    QCOMPARE(child2->surface()->childSubSurfaces().count(), 1);
+    auto child3 = child2->surface()->childSubSurfaces().first();
+    QCOMPARE(child3->parentSurface().data(), child2->surface().data());
+    QCOMPARE(child3->mainSurface().data(), parentServerSurface);
+    QCOMPARE(child3->surface()->childSubSurfaces().count(), 0);
+
+    // so far no surface is mapped
+    QVERIFY(!parentServerSurface->isMapped());
+    QVERIFY(!child->surface()->isMapped());
+    QVERIFY(!child2->surface()->isMapped());
+    QVERIFY(!child3->surface()->isMapped());
+
+    // first set all subsurfaces to desync, to simplify
+    subSurfaceLevel1->setMode(SubSurface::Mode::Desynchronized);
+    subSurfaceLevel2->setMode(SubSurface::Mode::Desynchronized);
+    subSurfaceLevel3->setMode(SubSurface::Mode::Desynchronized);
+
+    // first map the child, should not map it
+    QSignalSpy child3DamageSpy(child3->surface().data(), &SurfaceInterface::damaged);
+    QVERIFY(child3DamageSpy.isValid());
+    QImage image(QSize(200, 200), QImage::Format_ARGB32);
+    image.fill(Qt::black);
+    childLevel3Surface->attachBuffer(m_shm->createBuffer(image));
+    childLevel3Surface->damage(QRect(0, 0, 200, 200));
+    childLevel3Surface->commit(Surface::CommitFlag::None);
+    QVERIFY(child3DamageSpy.wait());
+    QVERIFY(child3->surface()->buffer());
+    QVERIFY(!child3->surface()->isMapped());
+
+    // let's map the top level
+    QSignalSpy parentSpy(parentServerSurface, &SurfaceInterface::damaged);
+    QVERIFY(parentSpy.isValid());
+    parentSurface->attachBuffer(m_shm->createBuffer(image));
+    parentSurface->damage(QRect(0, 0, 200, 200));
+    parentSurface->commit(Surface::CommitFlag::None);
+    QVERIFY(parentSpy.wait());
+    QVERIFY(parentServerSurface->isMapped());
+    // children should not yet be mapped
+    QVERIFY(!child->surface()->isMapped());
+    QVERIFY(!child2->surface()->isMapped());
+    QVERIFY(!child3->surface()->isMapped());
+
+    // next level
+    QSignalSpy child2DamageSpy(child2->surface().data(), &SurfaceInterface::damaged);
+    QVERIFY(child2DamageSpy.isValid());
+    childLevel2Surface->attachBuffer(m_shm->createBuffer(image));
+    childLevel2Surface->damage(QRect(0, 0, 200, 200));
+    childLevel2Surface->commit(Surface::CommitFlag::None);
+    QVERIFY(child2DamageSpy.wait());
+    QVERIFY(parentServerSurface->isMapped());
+    // children should not yet be mapped
+    QVERIFY(!child->surface()->isMapped());
+    QVERIFY(!child2->surface()->isMapped());
+    QVERIFY(!child3->surface()->isMapped());
+
+    // last but not least the first child level, which should map all our subsurfaces
+    QSignalSpy child1DamageSpy(child->surface().data(), &SurfaceInterface::damaged);
+    QVERIFY(child1DamageSpy.isValid());
+    childLevel1Surface->attachBuffer(m_shm->createBuffer(image));
+    childLevel1Surface->damage(QRect(0, 0, 200, 200));
+    childLevel1Surface->commit(Surface::CommitFlag::None);
+    QVERIFY(child1DamageSpy.wait());
+
+    // everything is mapped
+    QVERIFY(parentServerSurface->isMapped());
+    QVERIFY(child->surface()->isMapped());
+    QVERIFY(child2->surface()->isMapped());
+    QVERIFY(child3->surface()->isMapped());
+
+    // unmapping a parent should unmap the complete tree
+    QSignalSpy unmappedSpy(child->surface().data(), &SurfaceInterface::unmapped);
+    QVERIFY(unmappedSpy.isValid());
+    childLevel1Surface->attachBuffer(Buffer::Ptr());
+    childLevel1Surface->damage(QRect(0, 0, 200, 200));
+    childLevel1Surface->commit(Surface::CommitFlag::None);
+    QVERIFY(unmappedSpy.wait());
+
+    QVERIFY(parentServerSurface->isMapped());
+    QVERIFY(!child->surface()->isMapped());
+    QVERIFY(!child2->surface()->isMapped());
+    QVERIFY(!child3->surface()->isMapped());
 }
 
 QTEST_GUILESS_MAIN(TestSubSurface)
