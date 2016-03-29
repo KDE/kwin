@@ -415,6 +415,7 @@ void DebugConsoleTest::testWaylandClient()
     QEXPECT_FAIL("", "Deleting a ShellSurface does not result in the server removing the ShellClient", Continue);
     QVERIFY(rowsRemovedSpy.wait());
     // also destroy the connection to ensure the ShellSurface goes away
+    surface.reset();
     shell.reset();
     shm.reset();
     compositor.reset();
