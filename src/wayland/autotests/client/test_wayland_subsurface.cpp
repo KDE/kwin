@@ -869,8 +869,11 @@ void TestSubSurface::testMappingOfSurfaceTree()
     QVERIFY(parentSpy.wait());
     QVERIFY(parentServerSurface->isMapped());
     // children should not yet be mapped
+    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child->surface()->isMapped());
+    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child2->surface()->isMapped());
+    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child3->surface()->isMapped());
 
     // next level
@@ -882,8 +885,11 @@ void TestSubSurface::testMappingOfSurfaceTree()
     QVERIFY(child2DamageSpy.wait());
     QVERIFY(parentServerSurface->isMapped());
     // children should not yet be mapped
+    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child->surface()->isMapped());
+    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child2->surface()->isMapped());
+    QEXPECT_FAIL("", "Workaround for QtWayland bug https://bugreports.qt.io/browse/QTBUG-52192", Continue);
     QVERIFY(!child3->surface()->isMapped());
 
     // last but not least the first child level, which should map all our subsurfaces

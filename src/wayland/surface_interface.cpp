@@ -343,6 +343,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
             if (!windowRegion.isEmpty()) {
                 target->damage = windowRegion.intersected(target->damage);
                 if (emitChanged) {
+                    subSurfaceIsMapped = true;
                     emit q->damaged(target->damage);
                     // workaround for https://bugreports.qt.io/browse/QTBUG-52092
                     // if the surface is a sub-surface, but the main surface is not yet mapped, fake frame rendered
@@ -352,6 +353,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
                 }
             }
         } else if (!target->buffer && emitChanged) {
+            subSurfaceIsMapped = false;
             emit q->unmapped();
         }
     }
@@ -672,7 +674,7 @@ bool SurfaceInterface::isMapped() const
     if (d->subSurface) {
         // from spec:
         // "A sub-surface becomes mapped, when a non-NULL wl_buffer is applied and the parent surface is mapped."
-        return d->current.buffer && !d->subSurface->parentSurface().isNull() && d->subSurface->parentSurface()->isMapped();
+        return d->subSurfaceIsMapped && !d->subSurface->parentSurface().isNull() && d->subSurface->parentSurface()->isMapped();
     }
     return d->current.buffer != nullptr;
 }
