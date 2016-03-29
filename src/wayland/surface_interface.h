@@ -153,6 +153,17 @@ public:
     QPointer<ContrastInterface> contrast() const;
 
     /**
+     * Whether the SurfaceInterface is currently considered to be mapped.
+     * A SurfaceInterface is mapped if it has a non-null BufferInterface attached.
+     * If the SurfaceInterface references a SubSurfaceInterface it is only considered
+     * mapped if it has a BufferInterface attached and the parent SurfaceInterface is mapped.
+     *
+     * @returns Whether the SurfaceInterface is currently mapped
+     * @since 5.7
+     **/
+    bool isMapped() const;
+
+    /**
      * @returns The SurfaceInterface for the @p native resource.
      **/
     static SurfaceInterface *get(wl_resource *native);

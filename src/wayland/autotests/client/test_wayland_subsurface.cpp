@@ -626,6 +626,9 @@ void TestSubSurface::testSyncMode()
     QVERIFY(!childDamagedSpy.wait(100));
     QVERIFY(!childSurface->buffer());
 
+    QVERIFY(!childSurface->isMapped());
+    QVERIFY(!parentSurface->isMapped());
+
     QImage image2(QSize(400, 400), QImage::Format_ARGB32);
     image2.fill(Qt::red);
     parent->attachBuffer(m_shm->createBuffer(image2));
@@ -636,6 +639,8 @@ void TestSubSurface::testSyncMode()
     QCOMPARE(subSurfaceTreeChangedSpy.count(), 2);
     QCOMPARE(childSurface->buffer()->data(), image);
     QCOMPARE(parentSurface->buffer()->data(), image2);
+    QVERIFY(childSurface->isMapped());
+    QVERIFY(parentSurface->isMapped());
 
     // sending frame rendered to parent should also send it to child
     QSignalSpy frameRenderedSpy(surface.data(), &Surface::frameRendered);
@@ -681,12 +686,16 @@ void TestSubSurface::testDeSyncMode()
 
     // state should be applied when the parent surface's state gets applied or when the subsurface switches to desync
     QVERIFY(!childDamagedSpy.wait(100));
+    QVERIFY(!childSurface->isMapped());
+    QVERIFY(!parentSurface->isMapped());
 
     // setting to desync should apply the state directly
     subSurface->setMode(SubSurface::Mode::Desynchronized);
     QVERIFY(childDamagedSpy.wait());
     QCOMPARE(subSurfaceTreeChangedSpy.count(), 2);
     QCOMPARE(childSurface->buffer()->data(), image);
+    QVERIFY(!childSurface->isMapped());
+    QVERIFY(!parentSurface->isMapped());
 
     // and damaging again, should directly be applied
     image.fill(Qt::red);

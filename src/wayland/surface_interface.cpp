@@ -662,6 +662,17 @@ QPointer< SlideInterface > SurfaceInterface::slideOnShowHide() const
     return d->current.slide;
 }
 
+bool SurfaceInterface::isMapped() const
+{
+    Q_D();
+    if (d->subSurface) {
+        // from spec:
+        // "A sub-surface becomes mapped, when a non-NULL wl_buffer is applied and the parent surface is mapped."
+        return d->current.buffer && !d->subSurface->parentSurface().isNull() && d->subSurface->parentSurface()->isMapped();
+    }
+    return d->current.buffer != nullptr;
+}
+
 SurfaceInterface::Private *SurfaceInterface::d_func() const
 {
     return reinterpret_cast<Private*>(d.data());

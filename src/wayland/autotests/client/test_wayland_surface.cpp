@@ -231,6 +231,7 @@ void TestWaylandSurface::testDamage()
     QVERIFY(serverSurface);
     QCOMPARE(serverSurface->damage(), QRegion());
     QVERIFY(serverSurface->parentResource());
+    QVERIFY(!serverSurface->isMapped());
 
     QSignalSpy damageSpy(serverSurface, SIGNAL(damaged(QRegion)));
     QVERIFY(damageSpy.isValid());
@@ -242,6 +243,7 @@ void TestWaylandSurface::testDamage()
     QCoreApplication::processEvents();
     QCoreApplication::processEvents();
     QVERIFY(damageSpy.isEmpty());
+    QVERIFY(!serverSurface->isMapped());
 
     QImage img(QSize(10, 10), QImage::Format_ARGB32);
     img.fill(Qt::black);
@@ -252,6 +254,7 @@ void TestWaylandSurface::testDamage()
     QVERIFY(damageSpy.wait());
     QCOMPARE(serverSurface->damage(), QRegion(0, 0, 10, 10));
     QCOMPARE(damageSpy.first().first().value<QRegion>(), QRegion(0, 0, 10, 10));
+    QVERIFY(serverSurface->isMapped());
 
     // damage multiple times
     QRegion testRegion(5, 8, 3, 6);
@@ -266,6 +269,7 @@ void TestWaylandSurface::testDamage()
     QVERIFY(damageSpy.wait());
     QCOMPARE(serverSurface->damage(), testRegion);
     QCOMPARE(damageSpy.first().first().value<QRegion>(), testRegion);
+    QVERIFY(serverSurface->isMapped());
 }
 
 void TestWaylandSurface::testFrameCallback()
@@ -408,6 +412,7 @@ void TestWaylandSurface::testAttachBuffer()
     QCOMPARE(serverSurface->buffer(), buffer3);
     QVERIFY(damageSpy.isEmpty());
     QVERIFY(unmappedSpy.isEmpty());
+    QVERIFY(serverSurface->isMapped());
 
     // clear the surface
     s->attachBuffer(blackBuffer);
@@ -420,6 +425,7 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(!unmappedSpy.isEmpty());
     QCOMPARE(unmappedSpy.count(), 1);
     QVERIFY(damageSpy.isEmpty());
+    QVERIFY(!serverSurface->isMapped());
 
     // TODO: add signal test on release
     buffer->unref();
