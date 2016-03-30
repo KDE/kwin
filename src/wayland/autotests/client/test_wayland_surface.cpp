@@ -53,6 +53,7 @@ private Q_SLOTS:
     void testInput();
     void testScale();
     void testDestroy();
+    void testUnmapOfNotMappedSurface();
 
 private:
     KWayland::Server::Display *m_display;
@@ -704,6 +705,31 @@ void TestWaylandSurface::testDestroy()
 
     // calling destroy again should not fail
     s->destroy();
+}
+
+void TestWaylandSurface::testUnmapOfNotMappedSurface()
+{
+    // this test verifies that a surface which doesn't have a buffer attached doesn't trigger the unmapped signal
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // create surface
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+
+    QSignalSpy unmappedSpy(serverSurface, &SurfaceInterface::unmapped);
+    QVERIFY(unmappedSpy.isValid());
+    QSignalSpy scaleChanged(serverSurface, &SurfaceInterface::scaleChanged);
+
+    // let's map a null buffer and change scale to trigger a signal we can wait for
+    s->attachBuffer(Buffer::Ptr());
+    s->setScale(2);
+    s->commit(Surface::CommitFlag::None);
+
+    QVERIFY(scaleChanged.wait());
+    QVERIFY(unmappedSpy.isEmpty());
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSurface)

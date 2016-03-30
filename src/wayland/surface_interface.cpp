@@ -238,7 +238,7 @@ void SurfaceInterface::Private::destroy()
 void SurfaceInterface::Private::swapStates(State *source, State *target, bool emitChanged)
 {
     Q_Q(SurfaceInterface);
-    const bool bufferChanged = source->bufferIsSet;
+    bool bufferChanged = source->bufferIsSet;
     const bool opaqueRegionChanged = source->opaqueIsSet;
     const bool inputRegionChanged = source->inputIsSet;
     const bool scaleFactorChanged = source->scaleIsSet && (target->scale != source->scale);
@@ -270,6 +270,10 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
             }
             const QSize newSize = source->buffer->size();
             sizeChanged = newSize.isValid() && newSize != oldSize;
+        }
+        if (!target->buffer && !source->buffer && emitChanged) {
+            // null buffer set on a not mapped surface, don't emit unmapped
+            bufferChanged = false;
         }
         buffer = source->buffer;
     }
