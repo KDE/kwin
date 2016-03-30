@@ -40,6 +40,16 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="inputEventsButton">
+       <property name="text">
+        <string>Input Events</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -66,6 +76,16 @@
      <attribute name="headerDefaultSectionSize">
       <number>250</number>
      </attribute>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="inputTextEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
   </layout>

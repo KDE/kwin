@@ -36,11 +36,273 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <NETWM>
 // Qt
+#include <QMouseEvent>
 #include <QMetaProperty>
 #include <QMetaType>
 
 namespace KWin
 {
+
+
+static QString tableHeaderRow(const QString &title)
+{
+    return QStringLiteral("<tr><th colspan=\"2\">%1</th></tr>").arg(title);
+}
+
+template<typename T>
+static
+QString tableRow(const QString &title, const T &argument)
+{
+    return QStringLiteral("<tr><td>%1</td><td>%2</td></tr>").arg(title).arg(argument);
+}
+
+static QString timestampRow(quint32 timestamp)
+{
+    return tableRow(i18n("Timestamp"), timestamp);
+}
+
+static QString buttonToString(Qt::MouseButton button)
+{
+    switch (button) {
+        case Qt::LeftButton:
+            return i18nc("A mouse button", "Left");
+        case Qt::RightButton:
+            return i18nc("A mouse button", "Right");
+        case Qt::MiddleButton:
+            return i18nc("A mouse button", "Middle");
+        case Qt::BackButton:
+            return i18nc("A mouse button", "Back");
+        case Qt::ForwardButton:
+            return i18nc("A mouse button", "Forward");
+        case Qt::TaskButton:
+            return i18nc("A mouse button", "Task");
+        case Qt::ExtraButton4:
+            return i18nc("A mouse button", "Extra Button 4");
+        case Qt::ExtraButton5:
+            return i18nc("A mouse button", "Extra Button 5");
+        case Qt::ExtraButton6:
+            return i18nc("A mouse button", "Extra Button 6");
+        case Qt::ExtraButton7:
+            return i18nc("A mouse button", "Extra Button 7");
+        case Qt::ExtraButton8:
+            return i18nc("A mouse button", "Extra Button 8");
+        case Qt::ExtraButton9:
+            return i18nc("A mouse button", "Extra Button 9");
+        case Qt::ExtraButton10:
+            return i18nc("A mouse button", "Extra Button 10");
+        case Qt::ExtraButton11:
+            return i18nc("A mouse button", "Extra Button 11");
+        case Qt::ExtraButton12:
+            return i18nc("A mouse button", "Extra Button 12");
+        case Qt::ExtraButton13:
+            return i18nc("A mouse button", "Extra Button 13");
+        case Qt::ExtraButton14:
+            return i18nc("A mouse button", "Extra Button 14");
+        case Qt::ExtraButton15:
+            return i18nc("A mouse button", "Extra Button 15");
+        case Qt::ExtraButton16:
+            return i18nc("A mouse button", "Extra Button 16");
+        case Qt::ExtraButton17:
+            return i18nc("A mouse button", "Extra Button 17");
+        case Qt::ExtraButton18:
+            return i18nc("A mouse button", "Extra Button 18");
+        case Qt::ExtraButton19:
+            return i18nc("A mouse button", "Extra Button 19");
+        case Qt::ExtraButton20:
+            return i18nc("A mouse button", "Extra Button 20");
+        case Qt::ExtraButton21:
+            return i18nc("A mouse button", "Extra Button 21");
+        case Qt::ExtraButton22:
+            return i18nc("A mouse button", "Extra Button 22");
+        case Qt::ExtraButton23:
+            return i18nc("A mouse button", "Extra Button 23");
+        case Qt::ExtraButton24:
+            return i18nc("A mouse button", "Extra Button 24");
+    default:
+        return QString();
+    }
+}
+
+static QString buttonsToString(Qt::MouseButtons buttons)
+{
+    QString ret;
+    for (uint i = 1; i < Qt::ExtraButton24; i = i << 1) {
+        if (buttons & i) {
+            ret.append(buttonToString(Qt::MouseButton(uint(buttons) & i)));
+            ret.append(QStringLiteral(" "));
+        }
+    };
+    return ret;
+}
+
+static const QString s_hr = QStringLiteral("<hr/>");
+static const QString s_tableStart = QStringLiteral("<table>");
+static const QString s_tableEnd = QStringLiteral("</table>");
+
+DebugConsoleFilter::DebugConsoleFilter(QTextEdit *textEdit)
+    : InputEventFilter()
+    , m_textEdit(textEdit)
+{
+}
+
+DebugConsoleFilter::~DebugConsoleFilter() = default;
+
+bool DebugConsoleFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+{
+    QString text = s_hr;
+    const QString timestamp = timestampRow(event->timestamp());
+
+    text.append(s_tableStart);
+    switch (event->type()) {
+    case QEvent::MouseMove:
+        text.append(tableHeaderRow(i18nc("A mouse pointer motion event", "Pointer Motion")));
+        text.append(timestamp);
+        text.append(tableRow(i18nc("The global mouse pointer position", "Global Position"), QStringLiteral("%1/%2").arg(event->pos().x()).arg(event->pos().y())));
+        break;
+    case QEvent::MouseButtonPress:
+        text.append(tableHeaderRow(i18nc("A mouse pointer button press event", "Pointer Button Press")));
+        text.append(timestamp);
+        text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
+        text.append(tableRow(i18nc("A button in a mouse press/release event",  "Native Button code"), nativeButton));
+        text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons())));
+        break;
+    case QEvent::MouseButtonRelease:
+        text.append(tableHeaderRow(i18nc("A mouse pointer button release event", "Pointer Button Release")));
+        text.append(timestamp);
+        text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
+        text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), nativeButton));
+        text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons())));
+        break;
+    default:
+        break;
+    }
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::wheelEvent(QWheelEvent *event)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A mouse pointer axis (wheel) event", "Pointer Axis")));
+    text.append(timestampRow(event->timestamp()));
+    const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
+    text.append(tableRow(i18nc("The orientation of a pointer axis event", "Orientation"),
+                         orientation == Qt::Horizontal ? i18nc("An orientation of a pointer axis event", "Horizontal")
+                                                       : i18nc("An orientation of a pointer axis event", "Vertical")));
+    text.append(tableRow(QStringLiteral("Delta"), orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y()));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::keyEvent(QKeyEvent *event)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+
+    switch (event->type()) {
+    case QEvent::KeyPress:
+        text.append(tableHeaderRow(i18nc("A key press event", "Key Press")));
+        break;
+    case QEvent::KeyRelease:
+        text.append(tableHeaderRow(i18nc("A key release event", "Key Release")));
+        break;
+    default:
+        break;
+    }
+    auto modifiersToString = [event] {
+        QString ret;
+        if (event->modifiers().testFlag(Qt::ShiftModifier)) {
+            ret.append(i18nc("A keyboard modifier", "Shift"));
+            ret.append(QStringLiteral(" "));
+        }
+        if (event->modifiers().testFlag(Qt::ControlModifier)) {
+            ret.append(i18nc("A keyboard modifier", "Control"));
+            ret.append(QStringLiteral(" "));
+        }
+        if (event->modifiers().testFlag(Qt::AltModifier)) {
+            ret.append(i18nc("A keyboard modifier", "Alt"));
+            ret.append(QStringLiteral(" "));
+        }
+        if (event->modifiers().testFlag(Qt::MetaModifier)) {
+            ret.append(i18nc("A keyboard modifier", "Meta"));
+            ret.append(QStringLiteral(" "));
+        }
+        if (event->modifiers().testFlag(Qt::KeypadModifier)) {
+            ret.append(i18nc("A keyboard modifier", "Keypad"));
+            ret.append(QStringLiteral(" "));
+        }
+        if (event->modifiers().testFlag(Qt::GroupSwitchModifier)) {
+            ret.append(i18nc("A keyboard modifier", "Group-switch"));
+            ret.append(QStringLiteral(" "));
+        }
+        return ret;
+    };
+    text.append(timestampRow(event->timestamp()));
+    text.append(tableRow(i18nc("Whether the event is an automatic key repeat", "Repeat"), event->isAutoRepeat()));
+    text.append(tableRow(i18nc("The code as read from the input device", "Scan code"), event->nativeScanCode()));
+    text.append(tableRow(i18nc("The translated code to an Xkb symbol", "Xkb symbol"), event->nativeVirtualKey()));
+    text.append(tableRow(i18nc("The translated code interpreted as text", "Utf8"), event->text()));
+    text.append(tableRow(i18nc("The currently active modifiers", "Modifiers"), modifiersToString()));
+
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A touch down event", "Touch down")));
+    text.append(timestampRow(time));
+    text.append(tableRow(i18nc("The id of the touch point in the touch event", "Point identifier"), id));
+    text.append(tableRow(i18nc("The global position of the touch point", "Global position"),
+                         QStringLiteral("%1/%2").arg(pos.x()).arg(pos.y())));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A touch motion event", "Touch Motion")));
+    text.append(timestampRow(time));
+    text.append(tableRow(i18nc("The id of the touch point in the touch event", "Point identifier"), id));
+    text.append(tableRow(i18nc("The global position of the touch point", "Global position"),
+                         QStringLiteral("%1/%2").arg(pos.x()).arg(pos.y())));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::touchUp(quint32 id, quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A touch up event", "Touch Up")));
+    text.append(timestampRow(time));
+    text.append(tableRow(i18nc("The id of the touch point in the touch event", "Point identifier"), id));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
 
 DebugConsole::DebugConsole()
     : QWidget()
@@ -55,6 +317,7 @@ DebugConsole::DebugConsole()
 
     if (kwinApp()->operationMode() == Application::OperationMode::OperationModeX11) {
         m_ui->surfacesButton->setDisabled(true);
+        m_ui->inputEventsButton->setDisabled(true);
     }
 
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
@@ -64,8 +327,11 @@ DebugConsole::DebugConsole()
                 return;
             }
             m_ui->surfacesButton->setChecked(false);
+            m_ui->inputEventsButton->setChecked(false);
             m_ui->treeView->model()->deleteLater();
             m_ui->treeView->setModel(new DebugConsoleModel(this));
+            m_ui->treeView->setVisible(true);
+            m_ui->inputTextEdit->setVisible(false);
         }
     );
     connect(m_ui->surfacesButton, &QAbstractButton::toggled, this,
@@ -74,10 +340,30 @@ DebugConsole::DebugConsole()
                 return;
             }
             m_ui->windowsButton->setChecked(false);
+            m_ui->inputEventsButton->setChecked(false);
             m_ui->treeView->model()->deleteLater();
             m_ui->treeView->setModel(new SurfaceTreeModel(this));
+            m_ui->treeView->setVisible(true);
+            m_ui->inputTextEdit->setVisible(false);
         }
     );
+    connect(m_ui->inputEventsButton, &QAbstractButton::toggled, this,
+        [this] (bool toggled) {
+            if (!toggled) {
+                return;
+            }
+            m_ui->windowsButton->setChecked(false);
+            m_ui->surfacesButton->setChecked(false);
+            m_ui->treeView->setVisible(false);
+            m_ui->inputTextEdit->setVisible(true);
+            if (m_inputFilter.isNull()) {
+                m_inputFilter.reset(new DebugConsoleFilter(m_ui->inputTextEdit));
+                input()->prepandInputEventFilter(m_inputFilter.data());
+            }
+        }
+    );
+
+    m_ui->inputTextEdit->setVisible(false);
 
     // for X11
     setWindowFlags(Qt::X11BypassWindowManagerHint);

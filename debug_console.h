@@ -21,10 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_DEBUG_CONSOLE_H
 
 #include <kwin_export.h>
+#include "input.h"
 
 #include <QAbstractItemModel>
 #include <QStyledItemDelegate>
 #include <QVector>
+
+class QTextEdit;
 
 namespace Ui
 {
@@ -37,6 +40,7 @@ namespace KWin
 class Client;
 class ShellClient;
 class Unmanaged;
+class DebugConsoleFilter;
 
 class KWIN_EXPORT DebugConsoleModel : public QAbstractItemModel
 {
@@ -98,6 +102,7 @@ public:
 
 private:
     QScopedPointer<Ui::DebugConsole> m_ui;
+    QScopedPointer<DebugConsoleFilter> m_inputFilter;
 };
 
 class SurfaceTreeModel : public QAbstractItemModel
@@ -112,6 +117,23 @@ public:
     QModelIndex index(int row, int column, const QModelIndex & parent) const override;
     int rowCount(const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
+};
+
+class DebugConsoleFilter : public InputEventFilter
+{
+public:
+    explicit DebugConsoleFilter(QTextEdit *textEdit);
+    virtual ~DebugConsoleFilter();
+
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
+    bool wheelEvent(QWheelEvent *event) override;
+    bool keyEvent(QKeyEvent *event) override;
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchUp(quint32 id, quint32 time) override;
+
+private:
+    QTextEdit *m_textEdit;
 };
 
 }
