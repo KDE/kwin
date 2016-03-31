@@ -49,6 +49,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "decorations/decoratedclient.h"
 
+#include <KWayland/Server/subcompositor_interface.h>
+#include <KWayland/Server/surface_interface.h>
+
 #include <array>
 #include <cmath>
 #include <unistd.h>
@@ -1505,6 +1508,29 @@ QMatrix4x4 SceneOpenGL2Window::modelViewProjectionMatrix(int mask, const WindowP
     return scene->projectionMatrix() * mvMatrix;
 }
 
+static void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap)
+{
+    QMatrix4x4 newWindowMatrix = windowMatrix;
+    newWindowMatrix.translate(pixmap->subSurface()->position().x(), pixmap->subSurface()->position().y());
+
+    if (!pixmap->texture()->isNull()) {
+        // render this texture
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * newWindowMatrix);
+        auto texture = pixmap->texture();
+        texture->bind();
+        texture->render(QRegion(), QRect(0, 0, texture->width(), texture->height()));
+        texture->unbind();
+    }
+
+    const auto &children = pixmap->children();
+    for (auto pixmap : children) {
+        if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
+            continue;
+        }
+        renderSubSurface(shader, mvp, newWindowMatrix, static_cast<OpenGLWindowPixmap*>(pixmap));
+    }
+}
+
 void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData data)
 {
     if (!beginRenderWindow(mask, region, data))
@@ -1512,8 +1538,9 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
 
     SceneOpenGL2 *scene = static_cast<SceneOpenGL2 *>(m_scene);
 
-    const QMatrix4x4 windowMatrix = transformation(mask, data);
-    const QMatrix4x4 mvpMatrix = modelViewProjectionMatrix(mask, data) * windowMatrix;
+    QMatrix4x4 windowMatrix = transformation(mask, data);
+    const QMatrix4x4 modelViewProjection = modelViewProjectionMatrix(mask, data);
+    const QMatrix4x4 mvpMatrix = modelViewProjection * windowMatrix;
 
     GLShader *shader = data.shader;
     if (!shader) {
@@ -1640,6 +1667,16 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     vbo->unbindArrays();
 
     setBlendEnabled(false);
+
+    // render sub-surfaces
+    const auto &children = windowPixmap<OpenGLWindowPixmap>()->children();
+    windowMatrix.translate(toplevel->clientPos().x(), toplevel->clientPos().y());
+    for (auto pixmap : children) {
+        if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
+            continue;
+        }
+        renderSubSurface(shader, modelViewProjection, windowMatrix, static_cast<OpenGLWindowPixmap*>(pixmap));
+    }
 
     if (!data.shader)
         ShaderManager::instance()->popShader();
