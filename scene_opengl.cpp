@@ -1655,6 +1655,14 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
 OpenGLWindowPixmap::OpenGLWindowPixmap(Scene::Window *window, SceneOpenGL* scene)
     : WindowPixmap(window)
     , m_texture(scene->createTexture())
+    , m_scene(scene)
+{
+}
+
+OpenGLWindowPixmap::OpenGLWindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface, WindowPixmap *parent, SceneOpenGL *scene)
+    : WindowPixmap(subSurface, parent)
+    , m_texture(scene->createTexture())
+    , m_scene(scene)
 {
 }
 
@@ -1665,14 +1673,32 @@ OpenGLWindowPixmap::~OpenGLWindowPixmap()
 bool OpenGLWindowPixmap::bind()
 {
     if (!m_texture->isNull()) {
-        if (!toplevel()->damage().isEmpty()) {
+        // always call updateBuffer to get the sub-surface tree updated
+        if (subSurface().isNull() && !toplevel()->damage().isEmpty()) {
             updateBuffer();
+        }
+        auto s = surface();
+        if (s && !s->trackedDamage().isEmpty()) {
             m_texture->updateFromPixmap(this);
             // mipmaps need to be updated
             m_texture->setDirty();
+        }
+        if (subSurface().isNull()) {
             toplevel()->resetDamage();
         }
+        // also bind all children
+        for (auto it = children().constBegin(); it != children().constEnd(); ++it) {
+            static_cast<OpenGLWindowPixmap*>(*it)->bind();
+        }
         return true;
+    }
+    // also bind all children, needs to be done before checking isValid
+    // as there might be valid children to render, see https://bugreports.qt.io/browse/QTBUG-52192
+    if (subSurface().isNull()) {
+        updateBuffer();
+    }
+    for (auto it = children().constBegin(); it != children().constEnd(); ++it) {
+        static_cast<OpenGLWindowPixmap*>(*it)->bind();
     }
     if (!isValid()) {
         return false;
@@ -1680,11 +1706,18 @@ bool OpenGLWindowPixmap::bind()
 
     bool success = m_texture->load(this);
 
-    if (success)
-        toplevel()->resetDamage();
-    else
+    if (success) {
+        if (subSurface().isNull()) {
+            toplevel()->resetDamage();
+        }
+    } else
         qCDebug(KWIN_CORE) << "Failed to bind window";
     return success;
+}
+
+WindowPixmap *OpenGLWindowPixmap::createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface)
+{
+    return new OpenGLWindowPixmap(subSurface, this, m_scene);
 }
 
 //****************************************

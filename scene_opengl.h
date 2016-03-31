@@ -274,8 +274,12 @@ public:
     virtual ~OpenGLWindowPixmap();
     SceneOpenGL::Texture *texture() const;
     bool bind();
+protected:
+    WindowPixmap *createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface) override;
 private:
+    explicit OpenGLWindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface, WindowPixmap *parent, SceneOpenGL *scene);
     QScopedPointer<SceneOpenGL::Texture> m_texture;
+    SceneOpenGL *m_scene;
 };
 
 class SceneOpenGL::EffectFrame

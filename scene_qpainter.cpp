@@ -265,7 +265,7 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
         return;
     }
     if (!toplevel->damage().isEmpty()) {
-        pixmap->update();
+        pixmap->updateBuffer();
         toplevel->resetDamage();
     }
 
@@ -453,6 +453,9 @@ void QPainterWindowPixmap::create()
     }
     // performing deep copy, this could probably be improved
     m_image = buffer()->data().copy();
+    if (auto s = surface()) {
+        s->resetTrackedDamage();
+    }
 }
 
 WindowPixmap *QPainterWindowPixmap::createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface)
@@ -474,18 +477,9 @@ void QPainterWindowPixmap::updateBuffer()
     }
     // perform deep copy
     m_image = b->data().copy();
-}
-
-bool QPainterWindowPixmap::update()
-{
-    // TODO: there is lots of things which can be removed here
-    const auto oldBuffer = buffer();
-    updateBuffer();
-    const auto &b = buffer();
-    if (b == oldBuffer || b.isNull()) {
-        return false;
+    if (auto s = surface()) {
+        s->resetTrackedDamage();
     }
-    return true;
 }
 
 QPainterEffectFrame::QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene)

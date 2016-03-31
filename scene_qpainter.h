@@ -156,12 +156,11 @@ public:
     virtual ~QPainterWindowPixmap();
     virtual void create() override;
 
-    bool update();
+    void updateBuffer() override;
     const QImage &image();
 
 protected:
     WindowPixmap *createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface) override;
-    void updateBuffer() override;
 private:
     explicit QPainterWindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface, WindowPixmap *parent);
     QImage m_image;
