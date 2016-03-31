@@ -17,39 +17,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="windowsButton">
-       <property name="text">
-        <string>Windows</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="surfacesButton">
-       <property name="text">
-        <string>Surfaces</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="inputEventsButton">
-       <property name="text">
-        <string>Input Events</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -72,27 +39,57 @@
     </layout>
    </item>
    <item>
-    <widget class="QTreeView" name="treeView">
-     <attribute name="headerDefaultSectionSize">
-      <number>250</number>
-     </attribute>
-    </widget>
-   </item>
-   <item>
-    <widget class="QTextEdit" name="inputTextEdit">
-     <property name="enabled">
-      <bool>false</bool>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
+     <widget class="QWidget" name="windows">
+      <attribute name="title">
+       <string>Windows</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QTreeView" name="windowsView">
+         <attribute name="headerDefaultSectionSize">
+          <number>250</number>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="surfaces">
+      <attribute name="title">
+       <string>Surfaces</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QTreeView" name="surfacesView"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="input">
+      <attribute name="title">
+       <string>Input Events</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QTextEdit" name="inputTextEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>quitButton</tabstop>
-  <tabstop>treeView</tabstop>
  </tabstops>
  <resources/>
  <connections/>
