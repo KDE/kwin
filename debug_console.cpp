@@ -309,61 +309,28 @@ DebugConsole::DebugConsole()
     , m_ui(new Ui::DebugConsole)
 {
     m_ui->setupUi(this);
-    m_ui->treeView->setItemDelegate(new DebugConsoleDelegate(this));
-    m_ui->treeView->setModel(new DebugConsoleModel(this));
+    m_ui->windowsView->setItemDelegate(new DebugConsoleDelegate(this));
+    m_ui->windowsView->setModel(new DebugConsoleModel(this));
+    m_ui->surfacesView->setModel(new SurfaceTreeModel(this));
     m_ui->quitButton->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
-    m_ui->windowsButton->setIcon(QIcon::fromTheme(QStringLiteral("view-list-tree")));
-    m_ui->surfacesButton->setIcon(QIcon::fromTheme(QStringLiteral("view-list-tree")));
+    m_ui->tabWidget->setTabIcon(0, QIcon::fromTheme(QStringLiteral("view-list-tree")));
+    m_ui->tabWidget->setTabIcon(1, QIcon::fromTheme(QStringLiteral("view-list-tree")));
 
     if (kwinApp()->operationMode() == Application::OperationMode::OperationModeX11) {
-        m_ui->surfacesButton->setDisabled(true);
-        m_ui->inputEventsButton->setDisabled(true);
+        m_ui->tabWidget->setTabEnabled(1, false);
+        m_ui->tabWidget->setTabEnabled(2, false);
     }
 
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
-    connect(m_ui->windowsButton, &QAbstractButton::toggled, this,
-        [this] (bool toggled) {
-            if (!toggled) {
-                return;
-            }
-            m_ui->surfacesButton->setChecked(false);
-            m_ui->inputEventsButton->setChecked(false);
-            m_ui->treeView->model()->deleteLater();
-            m_ui->treeView->setModel(new DebugConsoleModel(this));
-            m_ui->treeView->setVisible(true);
-            m_ui->inputTextEdit->setVisible(false);
-        }
-    );
-    connect(m_ui->surfacesButton, &QAbstractButton::toggled, this,
-        [this] (bool toggled) {
-            if (!toggled) {
-                return;
-            }
-            m_ui->windowsButton->setChecked(false);
-            m_ui->inputEventsButton->setChecked(false);
-            m_ui->treeView->model()->deleteLater();
-            m_ui->treeView->setModel(new SurfaceTreeModel(this));
-            m_ui->treeView->setVisible(true);
-            m_ui->inputTextEdit->setVisible(false);
-        }
-    );
-    connect(m_ui->inputEventsButton, &QAbstractButton::toggled, this,
-        [this] (bool toggled) {
-            if (!toggled) {
-                return;
-            }
-            m_ui->windowsButton->setChecked(false);
-            m_ui->surfacesButton->setChecked(false);
-            m_ui->treeView->setVisible(false);
-            m_ui->inputTextEdit->setVisible(true);
-            if (m_inputFilter.isNull()) {
+    connect(m_ui->tabWidget, &QTabWidget::currentChanged, this,
+        [this] (int index) {
+            // delay creation of input event filter until the tab is selected
+            if (index == 2 && m_inputFilter.isNull()) {
                 m_inputFilter.reset(new DebugConsoleFilter(m_ui->inputTextEdit));
                 input()->prepandInputEventFilter(m_inputFilter.data());
             }
         }
     );
-
-    m_ui->inputTextEdit->setVisible(false);
 
     // for X11
     setWindowFlags(Qt::X11BypassWindowManagerHint);
