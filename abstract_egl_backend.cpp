@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/display.h>
+#include <KWayland/Server/surface_interface.h>
 // kwin libs
 #include <kwinglplatform.h>
 // Qt
@@ -289,6 +290,9 @@ bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
         return loadTexture(pixmap->pixmap(), pixmap->toplevel()->size());
     }
     // try Wayland loading
+    if (auto s = pixmap->surface()) {
+        s->resetTrackedDamage();
+    }
     if (buffer->shmBuffer()) {
         return loadShmTexture(buffer);
     } else {
@@ -339,6 +343,7 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         }
         return;
     }
+    auto s = pixmap->surface();
     if (!buffer->shmBuffer()) {
         q->bind();
         EGLImageKHR image = attach(buffer);
@@ -347,16 +352,20 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
             eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
             m_image = image;
         }
+        if (s) {
+            s->resetTrackedDamage();
+        }
         return;
     }
     // shm fallback
     const QImage &image = buffer->data();
-    if (image.isNull()) {
+    if (image.isNull() || !s) {
         return;
     }
     Q_ASSERT(image.size() == m_size);
     q->bind();
-    const QRegion &damage = pixmap->toplevel()->damage();
+    const QRegion damage = s->trackedDamage();
+    s->resetTrackedDamage();
 
     // TODO: this should be shared with GLTexture::update
     if (GLPlatform::instance()->isGLES()) {
