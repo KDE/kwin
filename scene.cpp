@@ -1082,6 +1082,15 @@ void WindowPixmap::updateBuffer()
     }
 }
 
+KWayland::Server::SurfaceInterface *WindowPixmap::surface() const
+{
+    if (!m_subSurface.isNull()) {
+        return m_subSurface->surface().data();
+    } else {
+        return toplevel()->surface();
+    }
+}
+
 //****************************************
 // Scene::EffectFrame
 //****************************************

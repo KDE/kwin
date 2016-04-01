@@ -414,6 +414,11 @@ public:
         return m_subSurface;
     }
 
+    /**
+     * @returns the surface this WindowPixmap references, might be @c null.
+     **/
+    KWayland::Server::SurfaceInterface *surface() const;
+
 protected:
     explicit WindowPixmap(Scene::Window *window);
     explicit WindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface, WindowPixmap *parent);
