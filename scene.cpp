@@ -1018,13 +1018,7 @@ bool WindowPixmap::isValid() const
 void WindowPixmap::updateBuffer()
 {
     using namespace KWayland::Server;
-    SurfaceInterface *s = nullptr;
-    if (!m_subSurface.isNull()) {
-        s = m_subSurface->surface().data();
-    } else {
-        s = toplevel()->surface();
-    }
-    if (s) {
+    if (SurfaceInterface *s = surface()) {
         QVector<WindowPixmap*> oldTree = m_children;
         QVector<WindowPixmap*> children;
         using namespace KWayland::Server;
