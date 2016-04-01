@@ -81,6 +81,7 @@ public:
     State pending;
     State subSurfacePending;
     QPointer<SubSurfaceInterface> subSurface;
+    QRegion trackedDamage;
 
     // workaround for https://bugreports.qt.io/browse/QTBUG-52192
     // A subsurface needs to be considered mapped even if it doesn't have a buffer attached
