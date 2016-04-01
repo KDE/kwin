@@ -239,7 +239,7 @@ public:
     QRect rect() const;
     // access to the internal window class
     // TODO eventually get rid of this
-    Toplevel* window();
+    Toplevel* window() const;
     // should the window be painted
     bool isPaintingEnabled() const;
     void resetPaintingEnabled();
@@ -390,7 +390,7 @@ public:
      * @brief Returns the Toplevel this WindowPixmap belongs to.
      * Note: the Toplevel can change over the lifetime of the WindowPixmap in case the Toplevel is copied to Deleted.
      */
-    Toplevel *toplevel();
+    Toplevel *toplevel() const;
 
 protected:
     explicit WindowPixmap(Scene::Window *window);
@@ -480,7 +480,7 @@ QRect Scene::Window::rect() const
 }
 
 inline
-Toplevel* Scene::Window::window()
+Toplevel* Scene::Window::window() const
 {
     return toplevel;
 }
@@ -553,7 +553,7 @@ T* Scene::Window::previousWindowPixmap()
 }
 
 inline
-Toplevel* WindowPixmap::toplevel()
+Toplevel* WindowPixmap::toplevel() const
 {
     return m_window->window();
 }
