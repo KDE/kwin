@@ -96,8 +96,8 @@ void PointerInputTest::initTestCase()
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
-    qputenv("XCURSOR_THEME", QByteArrayLiteral("breeze_cursors"));
-    qputenv("XCURSOR_SIZE", QByteArrayLiteral("32"));
+    qputenv("XCURSOR_THEME", QByteArrayLiteral("DMZ-White"));
+    qputenv("XCURSOR_SIZE", QByteArrayLiteral("24"));
 
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
@@ -908,19 +908,19 @@ void PointerInputTest::testEffectOverrideCursorImage()
 
     // now create an effect and set an override cursor
     QScopedPointer<HelperEffect> effect(new HelperEffect);
-    effects->startMouseInterception(effect.data(), Qt::OpenHandCursor);
-    const QImage openHand = p->cursorImage();
-    QVERIFY(!openHand.isNull());
-    QVERIFY(openHand != fallback);
+    effects->startMouseInterception(effect.data(), Qt::SizeAllCursor);
+    const QImage sizeAll = p->cursorImage();
+    QVERIFY(!sizeAll.isNull());
+    QVERIFY(sizeAll != fallback);
     QVERIFY(leftSpy.wait());
 
     // let's change to arrow cursor, this should be our fallback
     effects->defineCursor(Qt::ArrowCursor);
     QCOMPARE(p->cursorImage(), fallback);
 
-    // back to openhand
-    effects->defineCursor(Qt::OpenHandCursor);
-    QCOMPARE(p->cursorImage(), openHand);
+    // back to size all
+    effects->defineCursor(Qt::SizeAllCursor);
+    QCOMPARE(p->cursorImage(), sizeAll);
 
     // move cursor outside the window area
     Cursor::setPos(800, 800);
@@ -929,8 +929,8 @@ void PointerInputTest::testEffectOverrideCursorImage()
     QCOMPARE(p->cursorImage(), fallback);
 
     // start mouse interception again
-    effects->startMouseInterception(effect.data(), Qt::OpenHandCursor);
-    QCOMPARE(p->cursorImage(), openHand);
+    effects->startMouseInterception(effect.data(), Qt::SizeAllCursor);
+    QCOMPARE(p->cursorImage(), sizeAll);
 
     // move cursor to area of window
     Cursor::setPos(window->geometry().center());
