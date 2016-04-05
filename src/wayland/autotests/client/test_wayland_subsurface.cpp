@@ -57,6 +57,7 @@ private Q_SLOTS:
     void testMainSurfaceFromTree();
     void testRemoveSurface();
     void testMappingOfSurfaceTree();
+    void testSurfaceAt();
 
 private:
     KWayland::Server::Display *m_display;
@@ -918,6 +919,85 @@ void TestSubSurface::testMappingOfSurfaceTree()
     QVERIFY(!child->surface()->isMapped());
     QVERIFY(!child2->surface()->isMapped());
     QVERIFY(!child3->surface()->isMapped());
+}
+
+void TestSubSurface::testSurfaceAt()
+{
+    // this test verifies that the correct surface is picked in a sub-surface tree
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // first create a parent surface and map it
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+    QScopedPointer<Surface> parent(m_compositor->createSurface());
+    QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::red);
+    parent->attachBuffer(m_shm->createBuffer(image));
+    parent->damage(QRect(0, 0, 100, 100));
+    parent->commit(Surface::CommitFlag::None);
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *parentServerSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+
+    // create two child sub surfaces, those won't be mapped, just added to the parent
+    // this is to simulate the behavior of QtWayland
+    QScopedPointer<Surface> directChild1(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *directChild1ServerSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+    QScopedPointer<Surface> directChild2(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *directChild2ServerSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+
+    // create the sub surfaces for them
+    QScopedPointer<SubSurface> directChild1SubSurface(m_subCompositor->createSubSurface(directChild1.data(), parent.data()));
+    directChild1SubSurface->setMode(SubSurface::Mode::Desynchronized);
+    QScopedPointer<SubSurface> directChild2SubSurface(m_subCompositor->createSubSurface(directChild2.data(), parent.data()));
+    directChild2SubSurface->setMode(SubSurface::Mode::Desynchronized);
+
+    // each of the children gets a child
+    QScopedPointer<Surface> childFor1(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *childFor1ServerSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+    QScopedPointer<Surface> childFor2(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *childFor2ServerSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+
+    // create sub surfaces for them
+    QScopedPointer<SubSurface> childFor1SubSurface(m_subCompositor->createSubSurface(childFor1.data(), directChild1.data()));
+    childFor1SubSurface->setMode(SubSurface::Mode::Desynchronized);
+    QScopedPointer<SubSurface> childFor2SubSurface(m_subCompositor->createSubSurface(childFor2.data(), directChild2.data()));
+    childFor2SubSurface->setMode(SubSurface::Mode::Desynchronized);
+
+    // both get a quarter of the grand-parent surface
+    childFor2SubSurface->setPosition(QPoint(50, 50));
+    childFor2->commit(Surface::CommitFlag::None);
+    directChild2->commit(Surface::CommitFlag::None);
+    parent->commit(Surface::CommitFlag::None);
+
+    // now let's render both grand children
+    QImage partImage(QSize(50, 50), QImage::Format_ARGB32_Premultiplied);
+    partImage.fill(Qt::green);
+    childFor1->attachBuffer(m_shm->createBuffer(partImage));
+    childFor1->damage(QRect(0, 0, 50, 50));
+    childFor1->commit(Surface::CommitFlag::None);
+    partImage.fill(Qt::blue);
+    childFor2->attachBuffer(m_shm->createBuffer(partImage));
+    childFor2->damage(QRect(0, 0, 50, 50));
+    childFor2->commit(Surface::CommitFlag::None);
+
+    QSignalSpy treeChangedSpy(parentServerSurface, &SurfaceInterface::subSurfaceTreeChanged);
+    QVERIFY(treeChangedSpy.isValid());
+    QVERIFY(treeChangedSpy.wait());
+
+    // now let's test a few positions
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(0, 0)), childFor1ServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(49, 49)), childFor1ServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(50, 50)), childFor2ServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(100, 100)), childFor2ServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(25, 75)), parentServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(75, 25)), parentServerSurface);
+    // outside the geometries should be no surface
+    QVERIFY(!parentServerSurface->surfaceAt(QPointF(-1, -1)));
+    QVERIFY(!parentServerSurface->surfaceAt(QPointF(101, 101)));
 }
 
 QTEST_GUILESS_MAIN(TestSubSurface)

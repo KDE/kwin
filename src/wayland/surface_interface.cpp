@@ -25,6 +25,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "region_interface.h"
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
+// Qt
+#include <QListIterator>
 // Wayland
 #include <wayland-server.h>
 // std
@@ -690,6 +692,32 @@ void SurfaceInterface::resetTrackedDamage()
 {
     Q_D();
     d->trackedDamage = QRegion();
+}
+
+SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
+{
+    if (!isMapped()) {
+        return nullptr;
+    }
+    Q_D();
+    // go from top to bottom. Top most child is last in list
+    QListIterator<QPointer<SubSurfaceInterface>> it(d->current.children);
+    it.toBack();
+    while (it.hasPrevious()) {
+        const auto &current = it.previous();
+        auto surface = current->surface();
+        if (surface.isNull()) {
+            continue;
+        }
+        if (auto s = surface->surfaceAt(position - current->position())) {
+            return s;
+        }
+    }
+    // check whether the geometry contains the pos
+    if (!size().isEmpty() && QRectF(QPoint(0, 0), size()).contains(position)) {
+        return this;
+    }
+    return nullptr;
 }
 
 SurfaceInterface::Private *SurfaceInterface::d_func() const

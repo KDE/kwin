@@ -56,6 +56,7 @@ private Q_SLOTS:
     void testDestroy();
     void testUnmapOfNotMappedSurface();
     void testDamageTracking();
+    void testSurfaceAt();
 
 private:
     KWayland::Server::Display *m_display;
@@ -795,6 +796,41 @@ void TestWaylandSurface::testDamageTracking()
     QVERIFY(serverSurface->trackedDamage().isEmpty());
     // but not affect the actual damage
     QCOMPARE(serverSurface->damage(), QRegion(50, 40, 20, 30));
+}
+
+void TestWaylandSurface::testSurfaceAt()
+{
+    // this test verifies that surfaceAt(const QPointF&) works as expected for the case of no children
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // create surface
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+
+    // a newly created surface should not be mapped and not provide a surface at a position
+    QVERIFY(!serverSurface->isMapped());
+    QVERIFY(!serverSurface->surfaceAt(QPointF(0, 0)));
+
+    // let's damage this surface
+    QSignalSpy sizeChangedSpy(serverSurface, &SurfaceInterface::sizeChanged);
+    QVERIFY(sizeChangedSpy.isValid());
+    QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::red);
+    s->attachBuffer(m_shm->createBuffer(image));
+    s->damage(QRect(0, 0, 100, 100));
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(sizeChangedSpy.wait());
+
+    // now the surface is mapped and surfaceAt should give the surface
+    QVERIFY(serverSurface->isMapped());
+    QCOMPARE(serverSurface->surfaceAt(QPointF(0, 0)), serverSurface);
+    QCOMPARE(serverSurface->surfaceAt(QPointF(100, 100)), serverSurface);
+    // outside the geometry it should not give a surface
+    QVERIFY(!serverSurface->surfaceAt(QPointF(101, 101)));
+    QVERIFY(!serverSurface->surfaceAt(QPointF(-1, -1)));
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSurface)

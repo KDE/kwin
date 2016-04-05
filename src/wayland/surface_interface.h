@@ -192,6 +192,20 @@ public:
     void resetTrackedDamage();
 
     /**
+     * Finds the SurfaceInterface at the given @p position in surface-local coordinates.
+     * This can be either a descendant SurfaceInterface honoring the stacking order or
+     * the SurfaceInterface itself if its geometry contains the given @p position.
+     *
+     * If no such SurfaceInterface is found, e.g. because the SurfaceInterface is unmapped,
+     * @c nullptr is returned.
+     *
+     * @param position The position in surface-local coordinates
+     * @returns Child surface at the given @p position or surface itself at the position, might be @c nullptr
+     * @since 5.7
+     **/
+    SurfaceInterface *surfaceAt(const QPointF &position);
+
+    /**
      * @returns The SurfaceInterface for the @p native resource.
      **/
     static SurfaceInterface *get(wl_resource *native);
