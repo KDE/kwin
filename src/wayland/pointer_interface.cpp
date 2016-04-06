@@ -21,6 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "resource_p.h"
 #include "seat_interface.h"
 #include "display.h"
+#include "subcompositor_interface.h"
 #include "surface_interface.h"
 // Wayland
 #include <wayland-server.h>
@@ -38,8 +39,12 @@ public:
 
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;
+    QPointer<SurfaceInterface> focusedChildSurface;
     QMetaObject::Connection destroyConnection;
     Cursor *cursor = nullptr;
+
+    void sendLeave(SurfaceInterface *surface, quint32 serial);
+    void sendEnter(SurfaceInterface *surface, const QPointF &parentSurfacePosition, quint32 serial);
 
 private:
     PointerInterface *q_func() {
@@ -89,6 +94,36 @@ void PointerInterface::Private::setCursor(quint32 serial, SurfaceInterface *surf
     }
 }
 
+void PointerInterface::Private::sendLeave(SurfaceInterface *surface, quint32 serial)
+{
+    if (!surface) {
+        return;
+    }
+    if (resource && surface->resource()) {
+        wl_pointer_send_leave(resource, serial, surface->resource());
+    }
+}
+
+namespace {
+static QPointF surfacePosition(SurfaceInterface *surface) {
+    if (surface && surface->subSurface()) {
+        return surface->subSurface()->position() + surfacePosition(surface->subSurface()->parentSurface().data());
+    }
+    return QPointF();
+}
+}
+
+void PointerInterface::Private::sendEnter(SurfaceInterface *surface, const QPointF &parentSurfacePosition, quint32 serial)
+{
+    if (!surface) {
+        return;
+    }
+    const QPointF adjustedPos = parentSurfacePosition - surfacePosition(surface);
+    wl_pointer_send_enter(resource, serial,
+                          surface->resource(),
+                          wl_fixed_from_double(adjustedPos.x()), wl_fixed_from_double(adjustedPos.y()));
+}
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_pointer_interface PointerInterface::Private::s_interface = {
     setCursorCallback,
@@ -108,8 +143,21 @@ PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentRes
         }
         if (d->focusedSurface && d->resource) {
             const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
-            wl_pointer_send_motion(d->resource, d->seat->timestamp(),
-                                   wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+            auto targetSurface = d->focusedSurface->surfaceAt(pos);
+            if (!targetSurface) {
+                targetSurface = d->focusedSurface;
+            }
+            if (targetSurface != d->focusedChildSurface.data()) {
+                const quint32 serial = d->seat->display()->nextSerial();
+                d->sendLeave(d->focusedChildSurface.data(), serial);
+                d->focusedChildSurface = QPointer<SurfaceInterface>(targetSurface);
+                d->sendEnter(targetSurface, pos, serial);
+                d->client->flush();
+            } else {
+                const QPointF adjustedPos = pos - surfacePosition(d->focusedChildSurface);
+                wl_pointer_send_motion(d->resource, d->seat->timestamp(),
+                                       wl_fixed_from_double(adjustedPos.x()), wl_fixed_from_double(adjustedPos.y()));
+            }
         }
     });
 }
@@ -119,14 +167,11 @@ PointerInterface::~PointerInterface() = default;
 void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 serial)
 {
     Q_D();
-    if (d->focusedSurface) {
-        if (d->resource && d->focusedSurface->resource()) {
-            wl_pointer_send_leave(d->resource, serial, d->focusedSurface->resource());
-        }
-        disconnect(d->destroyConnection);
-    }
+    d->sendLeave(d->focusedChildSurface.data(), serial);
+    disconnect(d->destroyConnection);
     if (!surface) {
         d->focusedSurface = nullptr;
+        d->focusedChildSurface.clear();
         return;
     }
     d->focusedSurface = surface;
@@ -134,13 +179,16 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 seri
         [this] {
             Q_D();
             d->focusedSurface = nullptr;
+            d->focusedChildSurface.clear();
         }
     );
 
     const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
-    wl_pointer_send_enter(d->resource, serial,
-                          d->focusedSurface->resource(),
-                          wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+    d->focusedChildSurface = QPointer<SurfaceInterface>(d->focusedSurface->surfaceAt(pos));
+    if (!d->focusedChildSurface) {
+        d->focusedChildSurface = QPointer<SurfaceInterface>(d->focusedSurface);
+    }
+    d->sendEnter(d->focusedChildSurface.data(), pos, serial);
     d->client->flush();
 }
 

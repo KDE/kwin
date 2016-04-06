@@ -32,6 +32,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/registry.h"
 #include "../../src/client/seat.h"
 #include "../../src/client/shm_pool.h"
+#include "../../src/client/subcompositor.h"
+#include "../../src/client/subsurface.h"
 #include "../../src/client/touch.h"
 #include "../../src/server/buffer_interface.h"
 #include "../../src/server/compositor_interface.h"
@@ -40,6 +42,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/keyboard_interface.h"
 #include "../../src/server/pointer_interface.h"
 #include "../../src/server/seat_interface.h"
+#include "../../src/server/subcompositor_interface.h"
 #include "../../src/server/surface_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
@@ -63,6 +66,7 @@ private Q_SLOTS:
     void testPointerTransformation();
     void testPointerButton_data();
     void testPointerButton();
+    void testPointerSubSurfaceTree();
     void testCursor();
     void testCursorDamage();
     void testKeyboard();
@@ -76,10 +80,12 @@ private:
     KWayland::Server::Display *m_display;
     KWayland::Server::CompositorInterface *m_compositorInterface;
     KWayland::Server::SeatInterface *m_seatInterface;
+    KWayland::Server::SubCompositorInterface *m_subCompositorInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Seat *m_seat;
     KWayland::Client::ShmPool *m_shm;
+    KWayland::Client::SubCompositor * m_subCompositor;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
 };
@@ -91,10 +97,12 @@ TestWaylandSeat::TestWaylandSeat(QObject *parent)
     , m_display(nullptr)
     , m_compositorInterface(nullptr)
     , m_seatInterface(nullptr)
+    , m_subCompositorInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_seat(nullptr)
     , m_shm(nullptr)
+    , m_subCompositor(nullptr)
     , m_queue(nullptr)
     , m_thread(nullptr)
 {
@@ -114,6 +122,11 @@ void TestWaylandSeat::init()
     QVERIFY(m_compositorInterface);
     m_compositorInterface->create();
     QVERIFY(m_compositorInterface->isValid());
+
+    m_subCompositorInterface = m_display->createSubCompositor(m_display);
+    QVERIFY(m_subCompositorInterface);
+    m_subCompositorInterface->create();
+    QVERIFY(m_subCompositorInterface->isValid());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -158,10 +171,19 @@ void TestWaylandSeat::init()
     m_shm = new KWayland::Client::ShmPool(this);
     m_shm->setup(registry.bindShm(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
     QVERIFY(m_shm->isValid());
+
+    m_subCompositor = registry.createSubCompositor(registry.interface(KWayland::Client::Registry::Interface::SubCompositor).name,
+                                                   registry.interface(KWayland::Client::Registry::Interface::SubCompositor).version,
+                                                   this);
+    QVERIFY(m_subCompositor->isValid());
 }
 
 void TestWaylandSeat::cleanup()
 {
+    if (m_subCompositor) {
+        delete m_subCompositor;
+        m_subCompositor = nullptr;
+    }
     if (m_shm) {
         delete m_shm;
         m_shm = nullptr;
@@ -194,6 +216,9 @@ void TestWaylandSeat::cleanup()
 
     delete m_seatInterface;
     m_seatInterface = nullptr;
+
+    delete m_subCompositorInterface;
+    m_subCompositorInterface = nullptr;
 
     delete m_display;
     m_display = nullptr;
@@ -643,6 +668,104 @@ void TestWaylandSeat::testPointerButton()
     QCOMPARE(buttonChangedSpy.last().at(3).value<KWayland::Client::Pointer::ButtonState>(), Pointer::ButtonState::Released);
 }
 
+void TestWaylandSeat::testPointerSubSurfaceTree()
+{
+    // this test verifies that pointer motion on a surface with sub-surfaces sends motion enter/leave to the sub-surface
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    // first create the pointer
+    QSignalSpy hasPointerChangedSpy(m_seat, &Seat::hasPointerChanged);
+    QVERIFY(hasPointerChangedSpy.isValid());
+    m_seatInterface->setHasPointer(true);
+    QVERIFY(hasPointerChangedSpy.wait());
+    QScopedPointer<Pointer> pointer(m_seat->createPointer());
+
+    // create a sub surface tree
+    // parent surface (100, 100) with one sub surface taking the half of it's size (50, 100)
+    // which has two further children (50, 50) which are overlapping
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> parentSurface(m_compositor->createSurface());
+    QScopedPointer<Surface> childSurface(m_compositor->createSurface());
+    QScopedPointer<Surface> grandChild1Surface(m_compositor->createSurface());
+    QScopedPointer<Surface> grandChild2Surface(m_compositor->createSurface());
+    QScopedPointer<SubSurface> childSubSurface(m_subCompositor->createSubSurface(childSurface.data(), parentSurface.data()));
+    QScopedPointer<SubSurface> grandChild1SubSurface(m_subCompositor->createSubSurface(grandChild1Surface.data(), childSurface.data()));
+    QScopedPointer<SubSurface> grandChild2SubSurface(m_subCompositor->createSubSurface(grandChild2Surface.data(), childSurface.data()));
+    grandChild2SubSurface->setPosition(QPoint(0, 25));
+
+    // let's map the surfaces
+    auto render = [this] (Surface *s, const QSize &size) {
+        QImage image(size, QImage::Format_ARGB32);
+        image.fill(Qt::black);
+        s->attachBuffer(m_shm->createBuffer(image));
+        s->damage(QRect(QPoint(0, 0), size));
+        s->commit(Surface::CommitFlag::None);
+    };
+    render(grandChild2Surface.data(), QSize(50, 50));
+    render(grandChild1Surface.data(), QSize(50, 50));
+    render(childSurface.data(), QSize(50, 100));
+    render(parentSurface.data(), QSize(100, 100));
+
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface->isMapped());
+
+    // send in pointer events
+    QSignalSpy enteredSpy(pointer.data(), &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(pointer.data(), &Pointer::left);
+    QVERIFY(leftSpy.isValid());
+    QSignalSpy motionSpy(pointer.data(), &Pointer::motion);
+    QVERIFY(motionSpy.isValid());
+    // first to the grandChild2 in the overlapped area
+    quint32 timestamp = 1;
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->setPointerPos(QPointF(25, 50));
+    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 1);
+    QCOMPARE(leftSpy.count(), 0);
+    QCOMPARE(motionSpy.count(), 0);
+    QCOMPARE(enteredSpy.last().last().toPointF(), QPointF(25, 25));
+    QCOMPARE(pointer->enteredSurface(), grandChild2Surface.data());
+    // a motion on grandchild2
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->setPointerPos(QPointF(25, 60));
+    QVERIFY(motionSpy.wait());
+    QCOMPARE(enteredSpy.count(), 1);
+    QCOMPARE(leftSpy.count(), 0);
+    QCOMPARE(motionSpy.count(), 1);
+    QCOMPARE(motionSpy.last().first().toPointF(), QPointF(25, 35));
+    // motion which changes to childSurface
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->setPointerPos(QPointF(25, 80));
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
+    QCOMPARE(leftSpy.count(), 1);
+    QCOMPARE(motionSpy.count(), 1);
+    QCOMPARE(enteredSpy.last().last().toPointF(), QPointF(25, 80));
+    QCOMPARE(pointer->enteredSurface(), childSurface.data());
+    // a leave for the whole surface
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->setFocusedPointerSurface(nullptr);
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
+    QCOMPARE(leftSpy.count(), 2);
+    QCOMPARE(motionSpy.count(), 1);
+    // a new enter on the main surface
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->setPointerPos(QPointF(75, 50));
+    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 3);
+    QCOMPARE(leftSpy.count(), 2);
+    QCOMPARE(motionSpy.count(), 1);
+    QCOMPARE(enteredSpy.last().last().toPointF(), QPointF(75, 50));
+    QCOMPARE(pointer->enteredSurface(), parentSurface.data());
+}
+
 void TestWaylandSeat::testCursor()
 {
     using namespace KWayland::Client;
@@ -1019,6 +1142,7 @@ void TestWaylandSeat::testDestroy()
     m_compositor = nullptr;
     connect(m_connection, &ConnectionThread::connectionDied, m_seat, &Seat::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_subCompositor, &SubCompositor::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
     QVERIFY(m_seat->isValid());
 
@@ -1028,6 +1152,7 @@ void TestWaylandSeat::testDestroy()
     m_display = nullptr;
     m_compositorInterface = nullptr;
     m_seatInterface = nullptr;
+    m_subCompositorInterface = nullptr;
     QVERIFY(connectionDiedSpy.wait());
 
     // now the seat should be destroyed;
