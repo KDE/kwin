@@ -23,7 +23,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "datadevice_interface.h"
 #include "datasource_interface.h"
 #include "keyboard_interface.h"
+#include "keyboard_interface_p.h"
 #include "pointer_interface.h"
+#include "pointer_interface_p.h"
 #include "surface_interface.h"
 // Wayland
 #ifndef WL_SEAT_NAME_SINCE_VERSION
@@ -714,6 +716,10 @@ void SeatInterface::pointerButtonPressed(quint32 button)
     }
     if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
         d->globalPointer.focus.pointer->buttonPressed(button, serial);
+        if (d->globalPointer.focus.surface == d->keys.focus.surface && d->keys.focus.keyboard) {
+            // update the focused child surface
+            d->keys.focus.keyboard->d_func()->focusChildSurface(d->globalPointer.focus.pointer->d_func()->focusedChildSurface, serial);
+        }
     }
 }
 

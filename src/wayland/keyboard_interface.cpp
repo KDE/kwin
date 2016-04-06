@@ -42,6 +42,38 @@ KeyboardInterface::Private::Private(SeatInterface *s, wl_resource *parentResourc
 {
 }
 
+void KeyboardInterface::Private::focusChildSurface(const QPointer<SurfaceInterface> &childSurface, quint32 serial)
+{
+    if (focusedChildSurface == childSurface) {
+        return;
+    }
+    sendLeave(focusedChildSurface.data(), serial);
+    focusedChildSurface = childSurface;
+    sendEnter(focusedChildSurface.data(), serial);
+}
+
+void KeyboardInterface::Private::sendLeave(SurfaceInterface *surface, quint32 serial)
+{
+    if (surface && resource && surface->resource()) {
+        wl_keyboard_send_leave(resource, serial, surface->resource());
+    }
+}
+
+void KeyboardInterface::Private::sendEnter(SurfaceInterface *surface, quint32 serial)
+{
+    wl_array keys;
+    wl_array_init(&keys);
+    const auto states = seat->pressedKeys();
+    for (auto it = states.begin(); it != states.end(); ++it) {
+        uint32_t *k = reinterpret_cast<uint32_t*>(wl_array_add(&keys, sizeof(uint32_t)));
+        *k = *it;
+    }
+    wl_keyboard_send_enter(resource, serial, surface->resource(), &keys);
+    wl_array_release(&keys);
+
+    sendModifiers();
+}
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_keyboard_interface KeyboardInterface::Private::s_interface {
     releaseCallback
@@ -99,12 +131,9 @@ void KeyboardInterface::Private::sendModifiers()
 void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 serial)
 {
     Q_D();
-    if (d->focusedSurface) {
-        if (d->resource && d->focusedSurface->resource()) {
-            wl_keyboard_send_leave(d->resource, serial, d->focusedSurface->resource());
-        }
-        disconnect(d->destroyConnection);
-    }
+    d->sendLeave(d->focusedChildSurface, serial);
+    disconnect(d->destroyConnection);
+    d->focusedChildSurface.clear();
     d->focusedSurface = surface;
     if (!d->focusedSurface) {
         return;
@@ -113,20 +142,12 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
         [this] {
             Q_D();
             d->focusedSurface = nullptr;
+            d->focusedChildSurface.clear();
         }
     );
+    d->focusedChildSurface = QPointer<SurfaceInterface>(surface);
 
-    wl_array keys;
-    wl_array_init(&keys);
-    const auto states = d->seat->pressedKeys();
-    for (auto it = states.begin(); it != states.end(); ++it) {
-        uint32_t *k = reinterpret_cast<uint32_t*>(wl_array_add(&keys, sizeof(uint32_t)));
-        *k = *it;
-    }
-    wl_keyboard_send_enter(d->resource, serial, d->focusedSurface->resource(), &keys);
-    wl_array_release(&keys);
-
-    d->sendModifiers();
+    d->sendEnter(d->focusedSurface, serial);
     d->client->flush();
 }
 

@@ -22,6 +22,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_interface.h"
 #include "resource_p.h"
 
+#include <QPointer>
+
 namespace KWayland
 {
 namespace Server
@@ -36,8 +38,13 @@ public:
     void sendModifiers();
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
 
+    void focusChildSurface(const QPointer<SurfaceInterface> &childSurface, quint32 serial);
+    void sendLeave(SurfaceInterface *surface, quint32 serial);
+    void sendEnter(SurfaceInterface *surface, quint32 serial);
+
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;
+    QPointer<SurfaceInterface> focusedChildSurface;
     QMetaObject::Connection destroyConnection;
 
 private:
