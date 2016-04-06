@@ -18,7 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "keyboard_interface.h"
-#include "resource_p.h"
+#include "keyboard_interface_p.h"
 #include "display.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
@@ -35,26 +35,6 @@ namespace KWayland
 
 namespace Server
 {
-
-class KeyboardInterface::Private : public Resource::Private
-{
-public:
-    Private(SeatInterface *s, wl_resource *parentResource, KeyboardInterface *q);
-    void sendKeymap();
-    void sendKeymap(int fd, quint32 size);
-    void sendModifiers();
-    void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
-
-    SeatInterface *seat;
-    SurfaceInterface *focusedSurface = nullptr;
-    QMetaObject::Connection destroyConnection;
-
-private:
-    // since version 3
-    static void releaseCallback(wl_client *client, wl_resource *resource);
-
-    static const struct wl_keyboard_interface s_interface;
-};
 
 KeyboardInterface::Private::Private(SeatInterface *s, wl_resource *parentResource, KeyboardInterface *q)
     : Resource::Private(q, s, parentResource, &wl_keyboard_interface, &s_interface)
