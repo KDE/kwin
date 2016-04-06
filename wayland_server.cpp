@@ -238,7 +238,7 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_outputManagement = m_display->createOutputManagement(m_display);
     connect(m_outputManagement, &OutputManagementInterface::configurationChangeRequested,
             this, [this](KWayland::Server::OutputConfigurationInterface *config) {
-                m_backend->configurationChangeRequested(config);
+                kwinApp()->platform()->configurationChangeRequested(config);
     });
 
     m_display->createSubCompositor(m_display)->create();
@@ -282,7 +282,7 @@ void WaylandServer::initWorkspace()
 
 void WaylandServer::initOutputs()
 {
-    if (m_backend && m_backend->handlesOutputs()) {
+    if (kwinApp()->platform()->handlesOutputs()) {
         return;
     }
     Screens *s = screens();
@@ -375,18 +375,6 @@ void WaylandServer::createInternalConnection()
         }
     );
     m_internalConnection.client->initConnection();
-}
-
-void WaylandServer::installBackend(AbstractBackend *backend)
-{
-    Q_ASSERT(!m_backend);
-    m_backend = backend;
-}
-
-void WaylandServer::uninstallBackend(AbstractBackend *backend)
-{
-    Q_ASSERT(m_backend == backend);
-    m_backend = nullptr;
 }
 
 void WaylandServer::removeClient(ShellClient *c)
@@ -523,6 +511,11 @@ bool WaylandServer::isScreenLocked() const
 {
     return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked ||
            ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
+}
+
+AbstractBackend *WaylandServer::backend() const
+{
+    return kwinApp()->platform();
 }
 
 }

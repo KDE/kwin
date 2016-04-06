@@ -33,12 +33,10 @@ namespace KWin
 AbstractBackend::AbstractBackend(QObject *parent)
     : QObject(parent)
 {
-    WaylandServer::self()->installBackend(this);
 }
 
 AbstractBackend::~AbstractBackend()
 {
-    WaylandServer::self()->uninstallBackend(this);
 }
 
 QImage AbstractBackend::softwareCursor() const

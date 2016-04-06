@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include <config-kwin.h>
 // kwin
+#include "abstract_backend.h"
 #include "atoms.h"
 #include "composite.h"
 #include "cursor.h"
@@ -39,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KCrash>
 #include <KLocalizedString>
+#include <KPluginMetaData>
 #include <KSharedConfig>
 // Qt
 #include <qplatformdefs.h>
@@ -526,6 +528,28 @@ bool Application::usesLibinput()
 QProcessEnvironment Application::processStartupEnvironment() const
 {
     return QProcessEnvironment::systemEnvironment();
+}
+
+void Application::initPlatform(const KPluginMetaData &plugin)
+{
+    Q_ASSERT(!m_platform);
+    m_platform = qobject_cast<AbstractBackend*>(plugin.instantiate());
+    if (m_platform) {
+        m_platform->setParent(this);
+#if HAVE_INPUT
+        // check whether it needs libinput
+        const QJsonObject &metaData = plugin.rawData();
+        auto it = metaData.find(QStringLiteral("input"));
+        if (it != metaData.end()) {
+            if ((*it).isBool()) {
+                if (!(*it).toBool()) {
+                    qCDebug(KWIN_CORE) << "Platform does not support input, enforcing libinput support";
+                    setUseLibinput(true);
+                }
+            }
+        }
+#endif
+    }
 }
 
 } // namespace

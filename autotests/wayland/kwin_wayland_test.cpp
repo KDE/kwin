@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../workspace.h"
 #include "../../xcbutils.h"
 
+#include <KPluginMetaData>
+
 #include <QAbstractEventDispatcher>
 #include <QPluginLoader>
 #include <QSocketNotifier>
@@ -47,9 +49,8 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
     setUseKActivities(false);
 #endif
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
-    WaylandServer *server = WaylandServer::create(this);
-    QPluginLoader loader(QStringLiteral(KWINBACKENDPATH));
-    loader.instance()->setParent(server);
+    initPlatform(KPluginMetaData(QStringLiteral(KWINBACKENDPATH)));
+    WaylandServer::create(this);
 }
 
 WaylandTestApplication::~WaylandTestApplication()

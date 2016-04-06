@@ -693,26 +693,11 @@ int main(int argc, char * argv[])
     }
     server->init(parser.value(waylandSocketOption).toUtf8(), flags);
 
-    if (qobject_cast<KWin::AbstractBackend*>((*pluginIt).instantiate())) {
-#if HAVE_INPUT
-        // check whether it needs libinput
-        const QJsonObject &metaData = (*pluginIt).rawData();
-        auto it = metaData.find(QStringLiteral("input"));
-        if (it != metaData.end()) {
-            if ((*it).isBool()) {
-                if (!(*it).toBool()) {
-                    std::cerr << "Backend does not support input, enforcing libinput support" << std::endl;
-                    KWin::Application::setUseLibinput(true);
-                }
-            }
-        }
-#endif
-    }
-    if (!server->backend()) {
+    a.initPlatform(*pluginIt);
+    if (!a.platform()) {
         std::cerr << "FATAL ERROR: could not instantiate a backend" << std::endl;
         return 1;
     }
-    server->backend()->setParent(server);
     if (!deviceIdentifier.isEmpty()) {
         server->backend()->setDeviceIdentifier(deviceIdentifier);
     }

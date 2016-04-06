@@ -33,10 +33,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAbstractNativeEventFilter>
 #include <QProcessEnvironment>
 
+class KPluginMetaData;
 class QCommandLineParser;
 
 namespace KWin
 {
+
+class AbstractBackend;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -161,6 +164,11 @@ public:
 
     virtual QProcessEnvironment processStartupEnvironment() const;
 
+    void initPlatform(const KPluginMetaData &plugin);
+    AbstractBackend *platform() const {
+        return m_platform;
+    }
+
     static void setupMalloc();
     static void setupLocalizedString();
 
@@ -225,6 +233,7 @@ private:
 #ifdef KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;
 #endif
+    AbstractBackend *m_platform = nullptr;
     static int crashes;
 };
 

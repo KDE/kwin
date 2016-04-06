@@ -106,11 +106,7 @@ public:
     ShellClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
     ShellClient *findClient(QWindow *w) const;
 
-    AbstractBackend *backend() const {
-        return m_backend;
-    }
-    void installBackend(AbstractBackend *backend);
-    void uninstallBackend(AbstractBackend *backend);
+    AbstractBackend *backend() const;
 
     /**
      * @returns file descriptor for Xwayland to connect to.
@@ -188,7 +184,6 @@ private:
         KWayland::Client::ShmPool *shm = nullptr;
 
     } m_internalConnection;
-    AbstractBackend *m_backend = nullptr;
     QList<ShellClient*> m_clients;
     QList<ShellClient*> m_internalClients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
