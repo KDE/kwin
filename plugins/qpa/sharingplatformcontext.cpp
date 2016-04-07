@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sharingplatformcontext.h"
 #include "integration.h"
 #include "window.h"
-#include "../../abstract_backend.h"
+#include "../../platform.h"
 #include "../../wayland_server.h"
 #include "../../shell_client.h"
 

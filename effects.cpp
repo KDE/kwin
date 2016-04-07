@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include "composite.h"
 #include "xcbutils.h"
-#include "abstract_backend.h"
+#include "platform.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 

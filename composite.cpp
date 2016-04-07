@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "compositingprefs.h"
 #include "xcbutils.h"
-#include "abstract_backend.h"
+#include "platform.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "decorations/decoratedclient.h"

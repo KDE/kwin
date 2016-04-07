@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "libinput/connection.h"
 #include "virtual_terminal.h"
 #endif
-#include "abstract_backend.h"
+#include "platform.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 #include <KWayland/Server/display.h>

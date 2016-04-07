@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_WAYLAND_BACKEND_H
 #define KWIN_WAYLAND_BACKEND_H
 // KWin
-#include "abstract_backend.h"
+#include "platform.h"
 #include <config-kwin.h>
 #include <kwinglobals.h>
 // Qt

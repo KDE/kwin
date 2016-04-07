@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #define WL_EGL_PLATFORM 1
 #include "integration.h"
-#include "abstract_backend.h"
+#include "platform.h"
 #include "backingstore.h"
 #include "nativeinterface.h"
 #include "platformcontextwayland.h"

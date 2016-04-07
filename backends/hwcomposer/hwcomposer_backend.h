@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_HWCOMPOSER_BACKEND_H
 #define KWIN_HWCOMPOSER_BACKEND_H
-#include "abstract_backend.h"
+#include "platform.h"
 #include "input.h"
 
 #include <QElapsedTimer>

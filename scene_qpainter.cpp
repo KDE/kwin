@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "screens.h"
 #include "toplevel.h"
-#include "abstract_backend.h"
+#include "platform.h"
 #include "wayland_server.h"
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/subcompositor_interface.h>

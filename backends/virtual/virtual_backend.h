@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_VIRTUAL_BACKEND_H
 #define KWIN_VIRTUAL_BACKEND_H
-#include "abstract_backend.h"
+#include "platform.h"
 
 #include <kwin_export.h>
 

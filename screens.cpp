@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <workspace.h>
 #include <config-kwin.h>
 #include "screens_xrandr.h"
-#include "abstract_backend.h"
+#include "platform.h"
 #include "wayland_server.h"
 #ifdef KWIN_UNIT_TEST
 #include <mock_screens.h>

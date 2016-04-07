@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "wayland_server.h"
 #include "client.h"
-#include "abstract_backend.h"
+#include "platform.h"
 #include "composite.h"
 #include "screens.h"
 #include "shell_client.h"

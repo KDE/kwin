@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glxbackend.h"
 #endif
 
-#include "abstract_backend.h"
+#include "platform.h"
 #include "wayland_server.h"
 
 #include <kwinglcolorcorrection.h>
