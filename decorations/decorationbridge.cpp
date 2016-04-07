@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include <config-kwin.h>
 
 // KDecoration
 #include <KDecoration2/Decoration>
@@ -50,8 +51,13 @@ namespace KWin
 namespace Decoration
 {
 
+static const QString s_aurorae = QStringLiteral("org.kde.kwin.aurorae");
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
-static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
+#if HAVE_BREEZE_DECO
+static const QString s_defaultPlugin = QStringLiteral(BREEZE_KDECORATION_PLUGIN_ID);
+#else
+static const QString s_defaultPlugin = s_aurorae;
+#endif
 
 KWIN_SINGLETON_FACTORY(DecorationBridge)
 
@@ -105,7 +111,7 @@ void DecorationBridge::init()
         }
         // default plugin failed to load, try fallback
         if (!m_factory) {
-            m_plugin = QStringLiteral("org.kde.kwin.aurorae");
+            m_plugin = s_aurorae;
             initPlugin();
         }
     }

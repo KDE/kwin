@@ -17,6 +17,10 @@
 #cmakedefine01 HAVE_WAYLAND_EGL
 #cmakedefine01 HAVE_SYS_PRCTL_H
 #cmakedefine01 HAVE_PR_SET_DUMPABLE
+#cmakedefine01 HAVE_BREEZE_DECO
+#if HAVE_BREEZE_DECO
+#define BREEZE_KDECORATION_PLUGIN_ID "${BREEZE_KDECORATION_PLUGIN_ID}"
+#endif
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H 1

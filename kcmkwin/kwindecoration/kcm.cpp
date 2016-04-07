@@ -20,6 +20,7 @@
 #include "kcm.h"
 #include "decorationmodel.h"
 #include "declarative-plugin/buttonsmodel.h"
+#include <config-kwin.h>
 
 // KDE
 #include <KConfigGroup>
@@ -53,7 +54,13 @@ namespace KDecoration2
 namespace Configuration
 {
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
-static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
+#if HAVE_BREEZE_DECO
+static const QString s_defaultPlugin = QStringLiteral(BREEZE_KDECORATION_PLUGIN_ID);
+static const QString s_defaultTheme;
+#else
+static const QString s_defaultPlugin = QStringLiteral("org.kde.kwin.aurorae");
+static const QString s_defaultTheme = QStringLiteral("kwin4_decoration_qml_plastik");
+#endif
 static const QString s_borderSizeNormal = QStringLiteral("Normal");
 static const QString s_ghnsIcon = QStringLiteral("get-hot-new-stuff");
 
@@ -294,7 +301,7 @@ void ConfigurationModule::load()
     s_loading = true;
     const KConfigGroup config = KSharedConfig::openConfig("kwinrc")->group(s_pluginName);
     const QString plugin = config.readEntry("library", s_defaultPlugin);
-    const QString theme = config.readEntry("theme", QString());
+    const QString theme = config.readEntry("theme", s_defaultTheme);
     const QModelIndex index = m_proxyModel->mapFromSource(m_model->findDecoration(plugin, theme));
     if (auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView")) {
         listView->setProperty("currentIndex", index.isValid() ? index.row() : -1);
