@@ -142,8 +142,8 @@ void InternalWindowTest::initTestCase()
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
-    waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
-    QMetaObject::invokeMethod(waylandServer()->backend(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     waylandServer()->init(s_socketName.toLocal8Bit());
 
     kwinApp()->start();
@@ -182,14 +182,14 @@ void InternalWindowTest::testEnterLeave()
     QVERIFY(moveSpy.isValid());
 
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerMotion(QPoint(50, 50), timestamp++);
+    kwinApp()->platform()->pointerMotion(QPoint(50, 50), timestamp++);
     QTRY_COMPARE(enterSpy.count(), 1);
 
-    waylandServer()->backend()->pointerMotion(QPoint(60, 50), timestamp++);
+    kwinApp()->platform()->pointerMotion(QPoint(60, 50), timestamp++);
     QTRY_COMPARE(moveSpy.count(), 1);
     QCOMPARE(moveSpy.first().first().toPoint(), QPoint(60, 50));
 
-    waylandServer()->backend()->pointerMotion(QPoint(101, 50), timestamp++);
+    kwinApp()->platform()->pointerMotion(QPoint(101, 50), timestamp++);
     QTRY_COMPARE(leaveSpy.count(), 1);
 }
 
@@ -209,11 +209,11 @@ void InternalWindowTest::testPointerPressRelease()
     QCOMPARE(clientAddedSpy.count(), 1);
 
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerMotion(QPoint(50, 50), timestamp++);
+    kwinApp()->platform()->pointerMotion(QPoint(50, 50), timestamp++);
 
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
     QTRY_COMPARE(pressSpy.count(), 1);
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QTRY_COMPARE(releaseSpy.count(), 1);
 }
 
@@ -230,11 +230,11 @@ void InternalWindowTest::testPointerAxis()
     QCOMPARE(clientAddedSpy.count(), 1);
 
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerMotion(QPoint(50, 50), timestamp++);
+    kwinApp()->platform()->pointerMotion(QPoint(50, 50), timestamp++);
 
-    waylandServer()->backend()->pointerAxisVertical(5.0, timestamp++);
+    kwinApp()->platform()->pointerAxisVertical(5.0, timestamp++);
     QTRY_COMPARE(wheelSpy.count(), 1);
-    waylandServer()->backend()->pointerAxisHorizontal(5.0, timestamp++);
+    kwinApp()->platform()->pointerAxisHorizontal(5.0, timestamp++);
     QTRY_COMPARE(wheelSpy.count(), 2);
 }
 
@@ -262,12 +262,12 @@ void InternalWindowTest::testKeyboard()
 
     quint32 timestamp = 1;
     QFETCH(QPoint, cursorPos);
-    waylandServer()->backend()->pointerMotion(cursorPos, timestamp++);
+    kwinApp()->platform()->pointerMotion(cursorPos, timestamp++);
 
-    waylandServer()->backend()->keyboardKeyPressed(KEY_A, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
     QTRY_COMPARE(pressSpy.count(), 1);
     QCOMPARE(releaseSpy.count(), 0);
-    waylandServer()->backend()->keyboardKeyReleased(KEY_A, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
     QTRY_COMPARE(releaseSpy.count(), 1);
     QCOMPARE(pressSpy.count(), 1);
 }

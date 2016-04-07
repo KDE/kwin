@@ -122,7 +122,7 @@ void PointerInputRedirection::init()
     Q_ASSERT(!m_inited);
     m_cursor = new CursorImage(this);
     m_inited = true;
-    connect(m_cursor, &CursorImage::changed, waylandServer()->backend(), &AbstractBackend::cursorChanged);
+    connect(m_cursor, &CursorImage::changed, kwinApp()->platform(), &AbstractBackend::cursorChanged);
     emit m_cursor->changed();
     connect(workspace(), &Workspace::stackingOrderChanged, this, &PointerInputRedirection::update);
     connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
@@ -437,7 +437,7 @@ void PointerInputRedirection::updateButton(uint32_t button, InputRedirection::Po
 void PointerInputRedirection::warp(const QPointF &pos)
 {
     if (supportsWarping()) {
-        waylandServer()->backend()->warpPointer(pos);
+        kwinApp()->platform()->warpPointer(pos);
         processMotion(pos, waylandServer()->seat()->timestamp());
     }
 }
@@ -450,7 +450,7 @@ bool PointerInputRedirection::supportsWarping() const
     if (m_supportsWarping) {
         return true;
     }
-    if (waylandServer()->backend()->supportsPointerWarping()) {
+    if (kwinApp()->platform()->supportsPointerWarping()) {
         return true;
     }
     return false;

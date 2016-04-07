@@ -83,7 +83,7 @@ void MoveResizeWindowTest::initTestCase()
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
-    waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     waylandServer()->init(s_socketName.toLocal8Bit());
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
@@ -506,22 +506,22 @@ void MoveResizeWindowTest::testPointerMoveEnd()
 
     // let's trigger the left button
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(!c->isMove());
     workspace()->slotWindowMove();
     QVERIFY(c->isMove());
 
     // let's press another button
     QFETCH(int, additionalButton);
-    waylandServer()->backend()->pointerButtonPressed(additionalButton, timestamp++);
+    kwinApp()->platform()->pointerButtonPressed(additionalButton, timestamp++);
     QVERIFY(c->isMove());
 
     // release the left button, should still have the window moving
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(c->isMove());
 
     // but releasing the other button should now end moving
-    waylandServer()->backend()->pointerButtonReleased(additionalButton, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(additionalButton, timestamp++);
     QVERIFY(!c->isMove());
 }
 

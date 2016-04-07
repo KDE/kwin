@@ -116,10 +116,10 @@ Compositor::Compositor(QObject* workspace)
     m_unusedSupportPropertyTimer.setSingleShot(true);
     connect(&m_unusedSupportPropertyTimer, SIGNAL(timeout()), SLOT(deleteUnusedSupportProperties()));
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        if (waylandServer()->backend()->isReady()) {
+        if (kwinApp()->platform()->isReady()) {
             QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
         }
-        connect(waylandServer()->backend(), &AbstractBackend::readyChanged, this,
+        connect(kwinApp()->platform(), &AbstractBackend::readyChanged, this,
             [this] (bool ready) {
                 if (ready) {
                     setup();
@@ -649,7 +649,7 @@ void Compositor::performCompositing()
 
     // If outputs are disabled, we return to the event loop and
     // continue processing events until the outputs are enabled again
-    if (waylandServer() && !waylandServer()->backend()->areOutputsEnabled()) {
+    if (waylandServer() && !kwinApp()->platform()->areOutputsEnabled()) {
         compositeTimer.stop();
         return;
     }
@@ -796,7 +796,7 @@ void Compositor::setCompositeTimer()
         return;
 
     // Don't start the timer if all outputs are disabled
-    if (waylandServer() && !waylandServer()->backend()->areOutputsEnabled()) {
+    if (waylandServer() && !kwinApp()->platform()->areOutputsEnabled()) {
         return;
     }
 

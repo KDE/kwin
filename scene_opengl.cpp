@@ -572,7 +572,7 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
         break;
     case EglPlatformInterface:
         if (kwinApp()->shouldUseWaylandForCompositing()) {
-            backend = waylandServer()->backend()->createOpenGLBackend();
+            backend = kwinApp()->platform()->createOpenGLBackend();
         } else {
             backend = new EglOnXBackend();
         }

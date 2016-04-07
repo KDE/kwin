@@ -74,13 +74,13 @@ private:
 };
 
 #define MOTION(target) \
-    waylandServer()->backend()->pointerMotion(target, timestamp++)
+    kwinApp()->platform()->pointerMotion(target, timestamp++)
 
 #define PRESS \
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++)
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++)
 
 #define RELEASE \
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++)
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++)
 
 AbstractClient *DecorationInputTest::showWindow()
 {
@@ -130,8 +130,8 @@ void DecorationInputTest::initTestCase()
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
-    waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
-    QMetaObject::invokeMethod(waylandServer()->backend(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     waylandServer()->init(s_socketName.toLocal8Bit());
 
     // change some options
@@ -254,13 +254,13 @@ void DecorationInputTest::testAxis()
 
     // TODO: mouse wheel direction looks wrong to me
     // simulate wheel
-    waylandServer()->backend()->pointerAxisVertical(5.0, timestamp++);
+    kwinApp()->platform()->pointerAxisVertical(5.0, timestamp++);
     QVERIFY(c->keepBelow());
     QVERIFY(!c->keepAbove());
-    waylandServer()->backend()->pointerAxisVertical(-5.0, timestamp++);
+    kwinApp()->platform()->pointerAxisVertical(-5.0, timestamp++);
     QVERIFY(!c->keepBelow());
     QVERIFY(!c->keepAbove());
-    waylandServer()->backend()->pointerAxisVertical(-5.0, timestamp++);
+    kwinApp()->platform()->pointerAxisVertical(-5.0, timestamp++);
     QVERIFY(!c->keepBelow());
     QVERIFY(c->keepAbove());
 }

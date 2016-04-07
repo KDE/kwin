@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens_hwcomposer.h"
 #include "composite.h"
 #include "input.h"
+#include "main.h"
 #include "virtual_terminal.h"
 #include "wayland_server.h"
 // KWayland
@@ -225,7 +226,7 @@ void HwcomposerBackend::init()
         if (disp != 0) {
             return;
         }
-        dynamic_cast<HwcomposerBackend*>(waylandServer()->backend())->wakeVSync();
+        dynamic_cast<HwcomposerBackend*>(kwinApp()->platform())->wakeVSync();
     };
     procs->hotplug = [] (const struct hwc_procs* procs, int disp, int connected) {
         Q_UNUSED(procs)

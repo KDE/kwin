@@ -71,7 +71,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
     qRegisterMetaType<KWin::Deleted*>();
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
-    waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     waylandServer()->init(s_socketName.toLocal8Bit());
     kwinApp()->start();
     QVERIFY(Compositor::self());

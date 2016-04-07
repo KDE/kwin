@@ -96,7 +96,7 @@ SceneQPainter *SceneQPainter::createScene(QObject *parent)
 {
     QScopedPointer<QPainterBackend> backend;
     if (kwinApp()->shouldUseWaylandForCompositing()) {
-        backend.reset(waylandServer()->backend()->createQPainterBackend());
+        backend.reset(kwinApp()->platform()->createQPainterBackend());
         if (backend.isNull()) {
             return nullptr;
         }

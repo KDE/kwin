@@ -69,8 +69,8 @@ void TouchInputTest::initTestCase()
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
-    waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
-    QMetaObject::invokeMethod(waylandServer()->backend(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     waylandServer()->init(s_socketName.toLocal8Bit());
 
     kwinApp()->start();
@@ -219,7 +219,7 @@ void TouchInputTest::testMultipleTouchPoints()
     QVERIFY(endedSpy.isValid());
 
     quint32 timestamp = 1;
-    waylandServer()->backend()->touchDown(1, QPointF(125, 125), timestamp++);
+    kwinApp()->platform()->touchDown(1, QPointF(125, 125), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 1);
@@ -229,7 +229,7 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(pointMovedSpy.count(), 0);
 
     // a point outside the window
-    waylandServer()->backend()->touchDown(2, QPointF(0, 0), timestamp++);
+    kwinApp()->platform()->touchDown(2, QPointF(0, 0), timestamp++);
     QVERIFY(pointAddedSpy.wait());
     QCOMPARE(pointAddedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
@@ -238,21 +238,21 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(pointMovedSpy.count(), 0);
 
     // let's move that one
-    waylandServer()->backend()->touchMotion(2, QPointF(100, 100), timestamp++);
+    kwinApp()->platform()->touchMotion(2, QPointF(100, 100), timestamp++);
     QVERIFY(pointMovedSpy.wait());
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
     QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
     QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(0, 0));
 
-    waylandServer()->backend()->touchUp(1, timestamp++);
+    kwinApp()->platform()->touchUp(1, timestamp++);
     QVERIFY(pointRemovedSpy.wait());
     QCOMPARE(pointRemovedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
     QCOMPARE(m_touch->sequence().first()->isDown(), false);
     QCOMPARE(endedSpy.count(), 0);
 
-    waylandServer()->backend()->touchUp(2, timestamp++);
+    kwinApp()->platform()->touchUp(2, timestamp++);
     QVERIFY(pointRemovedSpy.wait());
     QCOMPARE(pointRemovedSpy.count(), 2);
     QCOMPARE(m_touch->sequence().count(), 2);
@@ -275,16 +275,16 @@ void TouchInputTest::testCancel()
     QVERIFY(pointRemovedSpy.isValid());
 
     quint32 timestamp = 1;
-    waylandServer()->backend()->touchDown(1, QPointF(125, 125), timestamp++);
+    kwinApp()->platform()->touchDown(1, QPointF(125, 125), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
 
     // cancel
-    waylandServer()->backend()->touchCancel();
+    kwinApp()->platform()->touchCancel();
     QVERIFY(cancelSpy.wait());
     QCOMPARE(cancelSpy.count(), 1);
 
-    waylandServer()->backend()->touchUp(1, timestamp++);
+    kwinApp()->platform()->touchUp(1, timestamp++);
     QVERIFY(!pointRemovedSpy.wait(100));
     QCOMPARE(pointRemovedSpy.count(), 0);
 }
@@ -307,14 +307,14 @@ void TouchInputTest::testTouchMouseAction()
     QVERIFY(sequenceStartedSpy.isValid());
 
     quint32 timestamp = 1;
-    waylandServer()->backend()->touchDown(1, c1->geometry().center(), timestamp++);
+    kwinApp()->platform()->touchDown(1, c1->geometry().center(), timestamp++);
     QVERIFY(c1->isActive());
 
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
 
     // cleanup
-    waylandServer()->backend()->touchCancel();
+    kwinApp()->platform()->touchCancel();
 }
 
 }

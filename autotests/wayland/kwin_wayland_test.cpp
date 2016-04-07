@@ -55,7 +55,7 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
 
 WaylandTestApplication::~WaylandTestApplication()
 {
-    waylandServer()->backend()->setOutputsEnabled(false);
+    kwinApp()->platform()->setOutputsEnabled(false);
     destroyWorkspace();
     waylandServer()->dispatch();
     // need to unload all effects prior to destroying X connection as they might do X calls
@@ -94,7 +94,7 @@ void WaylandTestApplication::performStartup()
 
 void WaylandTestApplication::createBackend()
 {
-    AbstractBackend *backend = waylandServer()->backend();
+    AbstractBackend *backend = kwinApp()->platform();
     connect(backend, &AbstractBackend::screensQueried, this, &WaylandTestApplication::continueStartupWithScreens);
     connect(backend, &AbstractBackend::initFailed, this,
         [] () {
@@ -107,7 +107,7 @@ void WaylandTestApplication::createBackend()
 
 void WaylandTestApplication::continueStartupWithScreens()
 {
-    disconnect(waylandServer()->backend(), &AbstractBackend::screensQueried, this, &WaylandTestApplication::continueStartupWithScreens);
+    disconnect(kwinApp()->platform(), &AbstractBackend::screensQueried, this, &WaylandTestApplication::continueStartupWithScreens);
     createScreens();
     waylandServer()->initOutputs();
 

@@ -46,7 +46,7 @@ void DontCrashGlxgearsTest::initTestCase()
     qRegisterMetaType<KWin::Deleted*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
-    waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     waylandServer()->init(s_socketName.toLocal8Bit());
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());

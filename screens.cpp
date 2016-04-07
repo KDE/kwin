@@ -43,7 +43,7 @@ Screens *Screens::create(QObject *parent)
     s_self = new MockScreens(parent);
 #else
     if (kwinApp()->shouldUseWaylandForCompositing()) {
-        s_self = waylandServer()->backend()->createScreens(parent);
+        s_self = kwinApp()->platform()->createScreens(parent);
     }
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         s_self = new XRandRScreens(parent);

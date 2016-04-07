@@ -84,7 +84,7 @@ ApplicationWayland::~ApplicationWayland()
         return;
     }
 
-    waylandServer()->backend()->setOutputsEnabled(false);
+    kwinApp()->platform()->setOutputsEnabled(false);
     destroyWorkspace();
     waylandServer()->dispatch();
     // need to unload all effects prior to destroying X connection as they might do X calls
@@ -130,7 +130,7 @@ void ApplicationWayland::setupCrashHandler()
 
 void ApplicationWayland::createBackend()
 {
-    AbstractBackend *backend = waylandServer()->backend();
+    AbstractBackend *backend = kwinApp()->platform();
     connect(backend, &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
     connect(backend, &AbstractBackend::initFailed, this,
         [] () {
@@ -143,7 +143,7 @@ void ApplicationWayland::createBackend()
 
 void ApplicationWayland::continueStartupWithScreens()
 {
-    disconnect(waylandServer()->backend(), &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+    disconnect(kwinApp()->platform(), &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
     createScreens();
     waylandServer()->initOutputs();
 
@@ -699,12 +699,12 @@ int main(int argc, char * argv[])
         return 1;
     }
     if (!deviceIdentifier.isEmpty()) {
-        server->backend()->setDeviceIdentifier(deviceIdentifier);
+        a.platform()->setDeviceIdentifier(deviceIdentifier);
     }
     if (initialWindowSize.isValid()) {
-        server->backend()->setInitialWindowSize(initialWindowSize);
+        a.platform()->setInitialWindowSize(initialWindowSize);
     }
-    server->backend()->setInitialOutputCount(outputCount);
+    a.platform()->setInitialOutputCount(outputCount);
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
     environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->display()->socketName());

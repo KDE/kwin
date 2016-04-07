@@ -145,7 +145,7 @@ QPlatformNativeInterface *Integration::nativeInterface() const
 
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
-    if (waylandServer()->backend()->supportsQpaContext()) {
+    if (kwinApp()->platform()->supportsQpaContext()) {
         return new SharingPlatformContext(context, const_cast<Integration*>(this));
     }
     if (m_eglDisplay == EGL_NO_DISPLAY) {

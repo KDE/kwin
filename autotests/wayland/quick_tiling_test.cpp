@@ -76,8 +76,8 @@ void QuickTilingTest::initTestCase()
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
-    waylandServer()->backend()->setInitialWindowSize(QSize(1280, 1024));
-    QMetaObject::invokeMethod(waylandServer()->backend(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     waylandServer()->init(s_socketName.toLocal8Bit());
 
     // set custom config which disables the Outline
@@ -428,26 +428,26 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 
     QFETCH(QPoint, targetPos);
     quint32 timestamp = 1;
-    waylandServer()->backend()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     while (Cursor::pos().x() > targetPos.x()) {
-        waylandServer()->backend()->keyboardKeyPressed(KEY_LEFT, timestamp++);
-        waylandServer()->backend()->keyboardKeyReleased(KEY_LEFT, timestamp++);
+        kwinApp()->platform()->keyboardKeyPressed(KEY_LEFT, timestamp++);
+        kwinApp()->platform()->keyboardKeyReleased(KEY_LEFT, timestamp++);
     }
     while (Cursor::pos().x() < targetPos.x()) {
-        waylandServer()->backend()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
-        waylandServer()->backend()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
+        kwinApp()->platform()->keyboardKeyPressed(KEY_RIGHT, timestamp++);
+        kwinApp()->platform()->keyboardKeyReleased(KEY_RIGHT, timestamp++);
     }
     while (Cursor::pos().y() < targetPos.y()) {
-        waylandServer()->backend()->keyboardKeyPressed(KEY_DOWN, timestamp++);
-        waylandServer()->backend()->keyboardKeyReleased(KEY_DOWN, timestamp++);
+        kwinApp()->platform()->keyboardKeyPressed(KEY_DOWN, timestamp++);
+        kwinApp()->platform()->keyboardKeyReleased(KEY_DOWN, timestamp++);
     }
     while (Cursor::pos().y() > targetPos.y()) {
-        waylandServer()->backend()->keyboardKeyPressed(KEY_UP, timestamp++);
-        waylandServer()->backend()->keyboardKeyReleased(KEY_UP, timestamp++);
+        kwinApp()->platform()->keyboardKeyPressed(KEY_UP, timestamp++);
+        kwinApp()->platform()->keyboardKeyReleased(KEY_UP, timestamp++);
     }
-    waylandServer()->backend()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    waylandServer()->backend()->keyboardKeyPressed(KEY_ENTER, timestamp++);
-    waylandServer()->backend()->keyboardKeyReleased(KEY_ENTER, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_ENTER, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_ENTER, timestamp++);
     QCOMPARE(Cursor::pos(), targetPos);
     QVERIFY(!workspace()->getMovingClient());
 
@@ -509,9 +509,9 @@ void QuickTilingTest::testQuickTilingPointerMove()
 
     QFETCH(QPoint, targetPos);
     quint32 timestamp = 1;
-    waylandServer()->backend()->pointerMotion(targetPos, timestamp++);
-    waylandServer()->backend()->pointerButtonPressed(BTN_LEFT, timestamp++);
-    waylandServer()->backend()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->pointerMotion(targetPos, timestamp++);
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(Cursor::pos(), targetPos);
     QVERIFY(!workspace()->getMovingClient());
 
