@@ -242,6 +242,26 @@ bool Edge::handleAction()
         }
         return true;
     }
+    case ElectricActionKRunner: { // open krunner
+        QDBusConnection::sessionBus().asyncCall(
+            QDBusMessage::createMethodCall(QStringLiteral("org.kde.krunner"),
+                                           QStringLiteral("/App"),
+                                           QStringLiteral("org.kde.krunner.App"),
+                                           QStringLiteral("display")
+            )
+        );
+        return true;
+    }
+    case ElectricActionActivityManager: { // open activity manager
+        QDBusConnection::sessionBus().asyncCall(
+            QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
+                                           QStringLiteral("/PlasmaShell"),
+                                           QStringLiteral("org.kde.PlasmaShell"),
+                                           QStringLiteral("toggleActivityManager")
+            )
+        );
+        return true;
+    }
     default:
         return false;
     }
@@ -552,6 +572,10 @@ static ElectricBorderAction electricBorderAction(const QString& name)
         return ElectricActionShowDesktop;
     } else if (lowerName == QStringLiteral("lockscreen")) {
         return ElectricActionLockScreen;
+    } else if (lowerName == QLatin1String("krunner")) {
+        return ElectricActionKRunner;
+    } else if (lowerName == QLatin1String("activitymanager")) {
+        return ElectricActionActivityManager;
     }
     return ElectricActionNone;
 }

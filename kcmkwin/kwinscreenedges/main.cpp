@@ -187,6 +187,8 @@ void KWinScreenEdgesConfig::monitorInit()
     monitorAddItem(i18n("No Action"));
     monitorAddItem(i18n("Show Desktop"));
     monitorAddItem(i18n("Lock Screen"));
+    monitorAddItem(i18nc("Open krunner", "Run Command"));
+    monitorAddItem(i18n("Activity Manager"));
 
     // Add the effects
     const QString presentWindowsName = BuiltInEffects::effectData(BuiltInEffect::PresentWindows).displayName;
@@ -211,6 +213,8 @@ void KWinScreenEdgesConfig::monitorLoadAction(ElectricBorder edge, const QString
     QString lowerName = config.readEntry(configName, "None").toLower();
     if (lowerName == "showdesktop") monitorChangeEdge(edge, int(ElectricActionShowDesktop));
     else if (lowerName == "lockscreen") monitorChangeEdge(edge, int(ElectricActionLockScreen));
+    else if (lowerName == "krunner") monitorChangeEdge(edge, int(ElectricActionKRunner));
+    else if (lowerName == "activitymanager") monitorChangeEdge(edge, int(ElectricActionActivityManager));
 }
 
 void KWinScreenEdgesConfig::monitorLoad()
@@ -307,6 +311,10 @@ void KWinScreenEdgesConfig::monitorSaveAction(int edge, const QString& configNam
         config.writeEntry(configName, "ShowDesktop");
     else if (item == 2)
         config.writeEntry(configName, "LockScreen");
+    else if (item == 3)
+        config.writeEntry(configName, "KRunner");
+    else if (item == 4)
+        config.writeEntry(configName, "ActivityManager");
     else // Anything else
         config.writeEntry(configName, "None");
 }
