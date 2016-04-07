@@ -30,61 +30,61 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-AbstractBackend::AbstractBackend(QObject *parent)
+Platform::Platform(QObject *parent)
     : QObject(parent)
 {
 }
 
-AbstractBackend::~AbstractBackend()
+Platform::~Platform()
 {
 }
 
-QImage AbstractBackend::softwareCursor() const
+QImage Platform::softwareCursor() const
 {
     return input()->pointer()->cursorImage();
 }
 
-QPoint AbstractBackend::softwareCursorHotspot() const
+QPoint Platform::softwareCursorHotspot() const
 {
     return input()->pointer()->cursorHotSpot();
 }
 
-Screens *AbstractBackend::createScreens(QObject *parent)
+Screens *Platform::createScreens(QObject *parent)
 {
     Q_UNUSED(parent)
     return nullptr;
 }
 
-OpenGLBackend *AbstractBackend::createOpenGLBackend()
+OpenGLBackend *Platform::createOpenGLBackend()
 {
     return nullptr;
 }
 
-QPainterBackend *AbstractBackend::createQPainterBackend()
+QPainterBackend *Platform::createQPainterBackend()
 {
     return nullptr;
 }
 
-void AbstractBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
+void Platform::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
 {
     Q_UNUSED(config)
     qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
 }
 
-void AbstractBackend::setSoftWareCursor(bool set)
+void Platform::setSoftWareCursor(bool set)
 {
     if (m_softWareCursor == set) {
         return;
     }
     m_softWareCursor = set;
     if (m_softWareCursor) {
-        connect(Cursor::self(), &Cursor::posChanged, this, &AbstractBackend::triggerCursorRepaint);
+        connect(Cursor::self(), &Cursor::posChanged, this, &Platform::triggerCursorRepaint);
     } else {
-        disconnect(Cursor::self(), &Cursor::posChanged, this, &AbstractBackend::triggerCursorRepaint);
+        disconnect(Cursor::self(), &Cursor::posChanged, this, &Platform::triggerCursorRepaint);
     }
 }
 
-void AbstractBackend::triggerCursorRepaint()
+void Platform::triggerCursorRepaint()
 {
     if (!Compositor::self()) {
         return;
@@ -96,7 +96,7 @@ void AbstractBackend::triggerCursorRepaint()
                                    size.width(), size.height());
 }
 
-void AbstractBackend::markCursorAsRendered()
+void Platform::markCursorAsRendered()
 {
     if (m_softWareCursor) {
         m_cursor.lastRenderedPosition = Cursor::pos();
@@ -106,7 +106,7 @@ void AbstractBackend::markCursorAsRendered()
     }
 }
 
-void AbstractBackend::keyboardKeyPressed(quint32 key, quint32 time)
+void Platform::keyboardKeyPressed(quint32 key, quint32 time)
 {
     if (!input()) {
         return;
@@ -114,7 +114,7 @@ void AbstractBackend::keyboardKeyPressed(quint32 key, quint32 time)
     input()->processKeyboardKey(key, InputRedirection::KeyboardKeyPressed, time);
 }
 
-void AbstractBackend::keyboardKeyReleased(quint32 key, quint32 time)
+void Platform::keyboardKeyReleased(quint32 key, quint32 time)
 {
     if (!input()) {
         return;
@@ -122,7 +122,7 @@ void AbstractBackend::keyboardKeyReleased(quint32 key, quint32 time)
     input()->processKeyboardKey(key, InputRedirection::KeyboardKeyReleased, time);
 }
 
-void AbstractBackend::keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
+void Platform::keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
 {
     if (!input()) {
         return;
@@ -130,7 +130,7 @@ void AbstractBackend::keyboardModifiers(uint32_t modsDepressed, uint32_t modsLat
     input()->processKeyboardModifiers(modsDepressed, modsLatched, modsLocked, group);
 }
 
-void AbstractBackend::keymapChange(int fd, uint32_t size)
+void Platform::keymapChange(int fd, uint32_t size)
 {
     if (!input()) {
         return;
@@ -138,7 +138,7 @@ void AbstractBackend::keymapChange(int fd, uint32_t size)
     input()->processKeymapChange(fd, size);
 }
 
-void AbstractBackend::pointerAxisHorizontal(qreal delta, quint32 time)
+void Platform::pointerAxisHorizontal(qreal delta, quint32 time)
 {
     if (!input()) {
         return;
@@ -146,7 +146,7 @@ void AbstractBackend::pointerAxisHorizontal(qreal delta, quint32 time)
     input()->processPointerAxis(InputRedirection::PointerAxisHorizontal, delta, time);
 }
 
-void AbstractBackend::pointerAxisVertical(qreal delta, quint32 time)
+void Platform::pointerAxisVertical(qreal delta, quint32 time)
 {
     if (!input()) {
         return;
@@ -154,7 +154,7 @@ void AbstractBackend::pointerAxisVertical(qreal delta, quint32 time)
     input()->processPointerAxis(InputRedirection::PointerAxisVertical, delta, time);
 }
 
-void AbstractBackend::pointerButtonPressed(quint32 button, quint32 time)
+void Platform::pointerButtonPressed(quint32 button, quint32 time)
 {
     if (!input()) {
         return;
@@ -162,7 +162,7 @@ void AbstractBackend::pointerButtonPressed(quint32 button, quint32 time)
     input()->processPointerButton(button, InputRedirection::PointerButtonPressed, time);
 }
 
-void AbstractBackend::pointerButtonReleased(quint32 button, quint32 time)
+void Platform::pointerButtonReleased(quint32 button, quint32 time)
 {
     if (!input()) {
         return;
@@ -170,7 +170,7 @@ void AbstractBackend::pointerButtonReleased(quint32 button, quint32 time)
     input()->processPointerButton(button, InputRedirection::PointerButtonReleased, time);
 }
 
-void AbstractBackend::pointerMotion(const QPointF &position, quint32 time)
+void Platform::pointerMotion(const QPointF &position, quint32 time)
 {
     if (!input()) {
         return;
@@ -178,7 +178,7 @@ void AbstractBackend::pointerMotion(const QPointF &position, quint32 time)
     input()->processPointerMotion(position, time);
 }
 
-void AbstractBackend::touchCancel()
+void Platform::touchCancel()
 {
     if (!input()) {
         return;
@@ -186,7 +186,7 @@ void AbstractBackend::touchCancel()
     input()->cancelTouch();
 }
 
-void AbstractBackend::touchDown(qint32 id, const QPointF &pos, quint32 time)
+void Platform::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
     if (!input()) {
         return;
@@ -194,7 +194,7 @@ void AbstractBackend::touchDown(qint32 id, const QPointF &pos, quint32 time)
     input()->processTouchDown(id, pos, time);
 }
 
-void AbstractBackend::touchFrame()
+void Platform::touchFrame()
 {
     if (!input()) {
         return;
@@ -202,7 +202,7 @@ void AbstractBackend::touchFrame()
     input()->touchFrame();
 }
 
-void AbstractBackend::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+void Platform::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
     if (!input()) {
         return;
@@ -210,7 +210,7 @@ void AbstractBackend::touchMotion(qint32 id, const QPointF &pos, quint32 time)
     input()->processTouchMotion(id, pos, time);
 }
 
-void AbstractBackend::touchUp(qint32 id, quint32 time)
+void Platform::touchUp(qint32 id, quint32 time)
 {
     if (!input()) {
         return;
@@ -218,7 +218,7 @@ void AbstractBackend::touchUp(qint32 id, quint32 time)
     input()->processTouchUp(id, time);
 }
 
-void AbstractBackend::repaint(const QRect &rect)
+void Platform::repaint(const QRect &rect)
 {
     if (!Compositor::self()) {
         return;
@@ -226,7 +226,7 @@ void AbstractBackend::repaint(const QRect &rect)
     Compositor::self()->addRepaint(rect);
 }
 
-void AbstractBackend::setReady(bool ready)
+void Platform::setReady(bool ready)
 {
     if (m_ready == ready) {
         return;
@@ -235,17 +235,17 @@ void AbstractBackend::setReady(bool ready)
     emit readyChanged(m_ready);
 }
 
-void AbstractBackend::warpPointer(const QPointF &globalPos)
+void Platform::warpPointer(const QPointF &globalPos)
 {
     Q_UNUSED(globalPos)
 }
 
-bool AbstractBackend::supportsQpaContext() const
+bool Platform::supportsQpaContext() const
 {
     return hasGLExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context"));
 }
 
-EGLDisplay AbstractBackend::sceneEglDisplay() const
+EGLDisplay Platform::sceneEglDisplay() const
 {
     if (Compositor *c = Compositor::self()) {
         if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
@@ -255,7 +255,7 @@ EGLDisplay AbstractBackend::sceneEglDisplay() const
     return EGL_NO_DISPLAY;
 }
 
-EGLContext AbstractBackend::sceneEglContext() const
+EGLContext Platform::sceneEglContext() const
 {
     if (Compositor *c = Compositor::self()) {
         if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
@@ -265,12 +265,12 @@ EGLContext AbstractBackend::sceneEglContext() const
     return EGL_NO_CONTEXT;
 }
 
-QSize AbstractBackend::screenSize() const
+QSize Platform::screenSize() const
 {
     return QSize();
 }
 
-QVector<QRect> AbstractBackend::screenGeometries() const
+QVector<QRect> Platform::screenGeometries() const
 {
     return QVector<QRect>({QRect(QPoint(0, 0), screenSize())});
 }

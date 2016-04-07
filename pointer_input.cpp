@@ -122,7 +122,7 @@ void PointerInputRedirection::init()
     Q_ASSERT(!m_inited);
     m_cursor = new CursorImage(this);
     m_inited = true;
-    connect(m_cursor, &CursorImage::changed, kwinApp()->platform(), &AbstractBackend::cursorChanged);
+    connect(m_cursor, &CursorImage::changed, kwinApp()->platform(), &Platform::cursorChanged);
     emit m_cursor->changed();
     connect(workspace(), &Workspace::stackingOrderChanged, this, &PointerInputRedirection::update);
     connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);

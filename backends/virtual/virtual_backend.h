@@ -31,11 +31,11 @@ class QTemporaryDir;
 namespace KWin
 {
 
-class KWIN_EXPORT VirtualBackend : public AbstractBackend
+class KWIN_EXPORT VirtualBackend : public Platform
 {
     Q_OBJECT
-    Q_INTERFACES(KWin::AbstractBackend)
-    Q_PLUGIN_METADATA(IID "org.kde.kwin.AbstractBackend" FILE "virtual.json")
+    Q_INTERFACES(KWin::Platform)
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "virtual.json")
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
     VirtualBackend(QObject *parent = nullptr);

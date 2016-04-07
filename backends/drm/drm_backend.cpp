@@ -60,7 +60,7 @@ namespace KWin
 {
 
 DrmBackend::DrmBackend(QObject *parent)
-    : AbstractBackend(parent)
+    : Platform(parent)
     , m_udev(new Udev)
     , m_udevMonitor(m_udev->monitor())
     , m_dpmsFilter()
@@ -559,7 +559,7 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
 #if HAVE_GBM
     return new EglGbmBackend(this);
 #else
-    return AbstractBackend::createOpenGLBackend();
+    return Platform::createOpenGLBackend();
 #endif
 }
 

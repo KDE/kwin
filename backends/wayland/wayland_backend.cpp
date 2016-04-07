@@ -162,8 +162,8 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
         [this] (bool hasTouch) {
             if (hasTouch && !m_touch) {
                 m_touch = m_seat->createTouch(this);
-                connect(m_touch, &Touch::sequenceCanceled, m_backend, &AbstractBackend::touchCancel);
-                connect(m_touch, &Touch::frameEnded, m_backend, &AbstractBackend::touchFrame);
+                connect(m_touch, &Touch::sequenceCanceled, m_backend, &Platform::touchCancel);
+                connect(m_touch, &Touch::frameEnded, m_backend, &Platform::touchFrame);
                 connect(m_touch, &Touch::sequenceStarted, this,
                     [this] (TouchPoint *tp) {
                         m_backend->touchDown(tp->id(), tp->position(), tp->time());
@@ -262,7 +262,7 @@ void WaylandSeat::setInstallCursor(bool install)
 }
 
 WaylandBackend::WaylandBackend(QObject *parent)
-    : AbstractBackend(parent)
+    : Platform(parent)
     , m_display(nullptr)
     , m_eventQueue(new EventQueue(this))
     , m_registry(new Registry(this))

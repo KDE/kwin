@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 class AbstractClient;
-class AbstractBackend;
+class Platform;
 
 class KWIN_EXPORT Screens : public QObject
 {
@@ -157,7 +157,7 @@ class KWIN_EXPORT BasicScreens : public Screens
 {
     Q_OBJECT
 public:
-    BasicScreens(AbstractBackend *backend, QObject *parent = nullptr);
+    BasicScreens(Platform *backend, QObject *parent = nullptr);
     virtual ~BasicScreens();
 
     void init() override;
@@ -167,7 +167,7 @@ public:
     void updateCount() override;
 
 private:
-    AbstractBackend *m_backend;
+    Platform *m_backend;
     QVector<QRect> m_geometries;
 };
 

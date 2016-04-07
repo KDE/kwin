@@ -142,7 +142,7 @@ void BacklightInputEventFilter::toggleBacklight()
 }
 
 HwcomposerBackend::HwcomposerBackend(QObject *parent)
-    : AbstractBackend(parent)
+    : Platform(parent)
 {
     handleOutputs();
 }

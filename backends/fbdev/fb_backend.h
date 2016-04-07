@@ -27,11 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class KWIN_EXPORT FramebufferBackend : public AbstractBackend
+class KWIN_EXPORT FramebufferBackend : public Platform
 {
     Q_OBJECT
-    Q_INTERFACES(KWin::AbstractBackend)
-    Q_PLUGIN_METADATA(IID "org.kde.kwin.AbstractBackend" FILE "fbdev.json")
+    Q_INTERFACES(KWin::Platform)
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "fbdev.json")
 public:
     explicit FramebufferBackend(QObject *parent = nullptr);
     virtual ~FramebufferBackend();

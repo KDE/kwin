@@ -45,7 +45,7 @@ namespace KWin
 {
 
 X11WindowedBackend::X11WindowedBackend(QObject *parent)
-    : AbstractBackend(parent)
+    : Platform(parent)
 {
     setSupportsPointerWarping(true);
     connect(this, &X11WindowedBackend::sizeChanged, this, &X11WindowedBackend::screenSizeChanged);

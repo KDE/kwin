@@ -31,7 +31,7 @@ namespace KWin
 {
 
 VirtualBackend::VirtualBackend(QObject *parent)
-    : AbstractBackend(parent)
+    : Platform(parent)
 {
     if (qEnvironmentVariableIsSet("KWIN_WAYLAND_VIRTUAL_SCREENSHOTS")) {
         m_screenshotDir.reset(new QTemporaryDir);

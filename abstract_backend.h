@@ -39,11 +39,11 @@ class QPainterBackend;
 class Screens;
 class WaylandCursorTheme;
 
-class KWIN_EXPORT AbstractBackend : public QObject
+class KWIN_EXPORT Platform : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~AbstractBackend();
+    virtual ~Platform();
 
     virtual void init() = 0;
     virtual Screens *createScreens(QObject *parent = nullptr);
@@ -149,7 +149,7 @@ Q_SIGNALS:
     void screenSizeChanged();
 
 protected:
-    explicit AbstractBackend(QObject *parent = nullptr);
+    explicit Platform(QObject *parent = nullptr);
     void setSoftWareCursor(bool set);
     void handleOutputs() {
         m_handlesOutputs = true;
@@ -183,6 +183,6 @@ private:
 
 }
 
-Q_DECLARE_INTERFACE(KWin::AbstractBackend, "org.kde.kwin.AbstractBackend")
+Q_DECLARE_INTERFACE(KWin::Platform, "org.kde.kwin.Platform")
 
 #endif

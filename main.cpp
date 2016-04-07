@@ -533,7 +533,7 @@ QProcessEnvironment Application::processStartupEnvironment() const
 void Application::initPlatform(const KPluginMetaData &plugin)
 {
     Q_ASSERT(!m_platform);
-    m_platform = qobject_cast<AbstractBackend*>(plugin.instantiate());
+    m_platform = qobject_cast<Platform *>(plugin.instantiate());
     if (m_platform) {
         m_platform->setParent(this);
 #if HAVE_INPUT

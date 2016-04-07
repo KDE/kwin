@@ -184,7 +184,7 @@ int Screens::intersecting(const QRect &r) const
     return cnt;
 }
 
-BasicScreens::BasicScreens(AbstractBackend *backend, QObject *parent)
+BasicScreens::BasicScreens(Platform *backend, QObject *parent)
     : Screens(parent)
     , m_backend(backend)
 {
@@ -196,7 +196,7 @@ void BasicScreens::init()
 {
     KWin::Screens::init();
 #ifndef KWIN_UNIT_TEST
-    connect(m_backend, &AbstractBackend::screenSizeChanged,
+    connect(m_backend, &Platform::screenSizeChanged,
             this, &BasicScreens::startChangedTimer);
 #endif
     updateCount();

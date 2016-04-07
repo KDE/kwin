@@ -99,11 +99,11 @@ private:
 * It creates the connection to the Wayland Compositor, sets up the registry and creates
 * the Wayland surface and its shell mapping.
 */
-class KWIN_EXPORT WaylandBackend : public AbstractBackend
+class KWIN_EXPORT WaylandBackend : public Platform
 {
     Q_OBJECT
-    Q_INTERFACES(KWin::AbstractBackend)
-    Q_PLUGIN_METADATA(IID "org.kde.kwin.AbstractBackend" FILE "wayland.json")
+    Q_INTERFACES(KWin::Platform)
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "wayland.json")
 public:
     explicit WaylandBackend(QObject *parent = nullptr);
     virtual ~WaylandBackend();

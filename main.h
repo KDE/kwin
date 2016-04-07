@@ -39,7 +39,7 @@ class QCommandLineParser;
 namespace KWin
 {
 
-class AbstractBackend;
+class Platform;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -165,7 +165,7 @@ public:
     virtual QProcessEnvironment processStartupEnvironment() const;
 
     void initPlatform(const KPluginMetaData &plugin);
-    AbstractBackend *platform() const {
+    Platform *platform() const {
         return m_platform;
     }
 
@@ -233,7 +233,7 @@ private:
 #ifdef KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;
 #endif
-    AbstractBackend *m_platform = nullptr;
+    Platform *m_platform = nullptr;
     static int crashes;
 };
 

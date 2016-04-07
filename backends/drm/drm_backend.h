@@ -55,11 +55,11 @@ class UdevMonitor;
 class DrmOutput;
 
 
-class KWIN_EXPORT DrmBackend : public AbstractBackend
+class KWIN_EXPORT DrmBackend : public Platform
 {
     Q_OBJECT
-    Q_INTERFACES(KWin::AbstractBackend)
-    Q_PLUGIN_METADATA(IID "org.kde.kwin.AbstractBackend" FILE "drm.json")
+    Q_INTERFACES(KWin::Platform)
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "drm.json")
 public:
     explicit DrmBackend(QObject *parent = nullptr);
     virtual ~DrmBackend();

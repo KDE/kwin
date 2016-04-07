@@ -36,7 +36,7 @@ namespace KWin
 {
 
 FramebufferBackend::FramebufferBackend(QObject *parent)
-    : AbstractBackend(parent)
+    : Platform(parent)
 {
     setSoftWareCursor(true);
 }

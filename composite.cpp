@@ -119,7 +119,7 @@ Compositor::Compositor(QObject* workspace)
         if (kwinApp()->platform()->isReady()) {
             QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
         }
-        connect(kwinApp()->platform(), &AbstractBackend::readyChanged, this,
+        connect(kwinApp()->platform(), &Platform::readyChanged, this,
             [this] (bool ready) {
                 if (ready) {
                     setup();

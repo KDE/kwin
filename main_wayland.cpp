@@ -130,20 +130,19 @@ void ApplicationWayland::setupCrashHandler()
 
 void ApplicationWayland::createBackend()
 {
-    AbstractBackend *backend = kwinApp()->platform();
-    connect(backend, &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
-    connect(backend, &AbstractBackend::initFailed, this,
+    connect(platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+    connect(platform(), &Platform::initFailed, this,
         [] () {
             std::cerr <<  "FATAL ERROR: backend failed to initialize, exiting now" << std::endl;
             ::exit(1);
         }
     );
-    backend->init();
+    platform()->init();
 }
 
 void ApplicationWayland::continueStartupWithScreens()
 {
-    disconnect(kwinApp()->platform(), &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+    disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
     createScreens();
     waylandServer()->initOutputs();
 
