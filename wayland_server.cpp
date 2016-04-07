@@ -513,9 +513,4 @@ bool WaylandServer::isScreenLocked() const
            ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
 }
 
-AbstractBackend *WaylandServer::backend() const
-{
-    return kwinApp()->platform();
-}
-
 }

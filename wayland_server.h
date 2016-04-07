@@ -58,7 +58,6 @@ namespace KWin
 {
 class ShellClient;
 
-class AbstractBackend;
 class AbstractClient;
 
 class KWIN_EXPORT WaylandServer : public QObject
@@ -105,8 +104,6 @@ public:
     ShellClient *findClient(quint32 id) const;
     ShellClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
     ShellClient *findClient(QWindow *w) const;
-
-    AbstractBackend *backend() const;
 
     /**
      * @returns file descriptor for Xwayland to connect to.
