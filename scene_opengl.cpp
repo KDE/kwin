@@ -2099,9 +2099,12 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         }
         if (!m_textTexture)   // Lazy creation
             updateTextTexture();
-        m_textTexture->bind();
-        m_textTexture->render(region, m_effectFrame->geometry());
-        m_textTexture->unbind();
+
+        if (m_textTexture) {
+            m_textTexture->bind();
+            m_textTexture->render(region, m_effectFrame->geometry());
+            m_textTexture->unbind();
+        }
     }
 
     if (shader) {

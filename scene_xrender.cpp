@@ -926,9 +926,12 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
         if (!m_textPicture) { // Lazy creation
             updateTextPicture();
         }
-        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *m_textPicture, fill, effects->xrenderBufferPicture(),
-                         0, 0, 0, 0, m_effectFrame->geometry().x(), m_effectFrame->geometry().y(),
-                         m_effectFrame->geometry().width(), m_effectFrame->geometry().height());
+
+        if (m_textPicture) {
+            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *m_textPicture, fill, effects->xrenderBufferPicture(),
+                             0, 0, 0, 0, m_effectFrame->geometry().x(), m_effectFrame->geometry().y(),
+                             m_effectFrame->geometry().width(), m_effectFrame->geometry().height());
+        }
     }
 }
 
