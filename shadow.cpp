@@ -365,6 +365,10 @@ bool Shadow::updateShadow()
             }
         }
     }
+    if (!m_topLevel) {
+        clear();
+        return false;
+    }
     auto data = Shadow::readX11ShadowProperty(m_topLevel->window());
     if (data.isEmpty()) {
         clear();
