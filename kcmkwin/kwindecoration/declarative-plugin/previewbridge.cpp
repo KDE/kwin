@@ -199,9 +199,9 @@ void PreviewBridge::configure()
 
     auto save = [this,kcm] {
         kcm->save();
-        if (!m_lastCreatedSettings) {
+        if (m_lastCreatedSettings) {
+            emit m_lastCreatedSettings->decorationSettings()->reconfigured();
         }
-        emit m_lastCreatedSettings->decorationSettings()->reconfigured();
         // Send signal to all kwin instances
         QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
                                                           QStringLiteral("org.kde.KWin"),
