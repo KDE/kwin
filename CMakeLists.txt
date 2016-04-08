@@ -574,7 +574,6 @@ target_link_libraries(kwin_wayland kwin)
 
 install(TARGETS kwin_wayland         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-add_subdirectory(backends)
 add_subdirectory(plugins)
 
 ########### install files ###############

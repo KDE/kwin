@@ -1,4 +1,4 @@
-add_definitions(-DKWINBACKENDPATH="${CMAKE_BINARY_DIR}/backends/virtual/KWinWaylandVirtualBackend.so")
+add_definitions(-DKWINBACKENDPATH="${CMAKE_BINARY_DIR}/plugins/platforms/virtual/KWinWaylandVirtualBackend.so")
 add_definitions(-DKWINQPAPATH="${CMAKE_BINARY_DIR}/plugins/qpa/")
 ########################################################
 # Test Start
