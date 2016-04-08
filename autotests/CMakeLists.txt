@@ -237,7 +237,7 @@ set( testXRandRScreens_SRCS
      mock_screens.cpp
      mock_workspace.cpp
      ../screens.cpp
-     ../screens_xrandr.cpp
+     ../plugins/platforms/x11/standalone/screens_xrandr.cpp
      ../xcbutils.cpp # init of extensions
      ../x11eventfilter.cpp
 )

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11_platform.h"
+#include "screens_xrandr.h"
 
 #include <QX11Info>
 
@@ -39,6 +40,11 @@ void X11StandalonePlatform::init()
     }
     setReady(true);
     emit screensQueried();
+}
+
+Screens *X11StandalonePlatform::createScreens(QObject *parent)
+{
+    return new XRandRScreens(parent);
 }
 
 }

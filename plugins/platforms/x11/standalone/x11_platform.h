@@ -38,6 +38,8 @@ public:
     virtual ~X11StandalonePlatform();
     void init() override;
 
+    Screens *createScreens(QObject *parent = nullptr) override;
+
 };
 
 }

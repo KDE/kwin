@@ -23,10 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 
+#include <kwin_export.h>
+
 namespace KWin
 {
 
-class X11EventFilter
+class KWIN_EXPORT X11EventFilter
 {
 public:
     /**

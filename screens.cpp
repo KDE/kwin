@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "settings.h"
 #include <workspace.h>
 #include <config-kwin.h>
-#include "screens_xrandr.h"
 #include "platform.h"
 #include "wayland_server.h"
 #ifdef KWIN_UNIT_TEST
@@ -42,12 +41,7 @@ Screens *Screens::create(QObject *parent)
 #ifdef KWIN_UNIT_TEST
     s_self = new MockScreens(parent);
 #else
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        s_self = kwinApp()->platform()->createScreens(parent);
-    }
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        s_self = new XRandRScreens(parent);
-    }
+    s_self = kwinApp()->platform()->createScreens(parent);
 #endif
     Q_ASSERT(s_self);
     s_self->init();

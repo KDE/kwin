@@ -1,5 +1,6 @@
 set(X11PLATFORM_SOURCES
     x11_platform.cpp
+    screens_xrandr.cpp
 )
 
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
