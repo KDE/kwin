@@ -53,6 +53,9 @@ private Q_SLOTS:
     void testDpms_data();
     void testDpms();
 
+    void testDpmsRequestMode_data();
+    void testDpmsRequestMode();
+
 private:
     KWayland::Server::Display *m_display;
     KWayland::Server::OutputInterface *m_serverOutput;
@@ -472,6 +475,84 @@ void TestWaylandOutput::testDpms()
     QVERIFY(clientDpmsModeChangedSpy.wait());
     QCOMPARE(clientDpmsModeChangedSpy.count(), 1);
     QTEST(dpms->mode(), "client");
+
+    // test supported changed
+    QSignalSpy supportedChangedSpy(dpms, &Dpms::supportedChanged);
+    QVERIFY(supportedChangedSpy.isValid());
+    m_serverOutput->setDpmsSupported(false);
+    QVERIFY(supportedChangedSpy.wait());
+    QCOMPARE(supportedChangedSpy.count(), 1);
+    QVERIFY(!dpms->isSupported());
+    m_serverOutput->setDpmsSupported(true);
+    QVERIFY(supportedChangedSpy.wait());
+    QCOMPARE(supportedChangedSpy.count(), 2);
+    QVERIFY(dpms->isSupported());
+
+    // and switch back to on
+    m_serverOutput->setDpmsMode(OutputInterface::DpmsMode::On);
+    QVERIFY(clientDpmsModeChangedSpy.wait());
+    QCOMPARE(clientDpmsModeChangedSpy.count(), 2);
+    QCOMPARE(dpms->mode(), Dpms::Mode::On);
+}
+
+void TestWaylandOutput::testDpmsRequestMode_data()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QTest::addColumn<KWayland::Client::Dpms::Mode>("client");
+    QTest::addColumn<KWayland::Server::OutputInterface::DpmsMode>("server");
+
+    QTest::newRow("Standby") << Dpms::Mode::Standby << OutputInterface::DpmsMode::Standby;
+    QTest::newRow("Suspend") << Dpms::Mode::Suspend << OutputInterface::DpmsMode::Suspend;
+    QTest::newRow("Off") << Dpms::Mode::Off << OutputInterface::DpmsMode::Off;
+    QTest::newRow("On") << Dpms::Mode::On << OutputInterface::DpmsMode::On;
+}
+
+void TestWaylandOutput::testDpmsRequestMode()
+{
+    // this test verifies that requesting a dpms change from client side emits the signal on server side
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    // setup code
+    m_display->createDpmsManager()->create();
+
+    // set Dpms on the Output
+    QSignalSpy serverDpmsSupportedChangedSpy(m_serverOutput, &OutputInterface::dpmsSupportedChanged);
+    QVERIFY(serverDpmsSupportedChangedSpy.isValid());
+    QCOMPARE(m_serverOutput->isDpmsSupported(), false);
+    m_serverOutput->setDpmsSupported(true);
+    QCOMPARE(serverDpmsSupportedChangedSpy.count(), 1);
+    QCOMPARE(m_serverOutput->isDpmsSupported(), true);
+
+    KWayland::Client::Registry registry;
+    registry.setEventQueue(m_queue);
+    QSignalSpy announced(&registry, &Registry::interfacesAnnounced);
+    QVERIFY(announced.isValid());
+    QSignalSpy dpmsAnnouncedSpy(&registry, &Registry::dpmsAnnounced);
+    QVERIFY(dpmsAnnouncedSpy.isValid());
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    m_connection->flush();
+    QVERIFY(announced.wait());
+    QCOMPARE(dpmsAnnouncedSpy.count(), 1);
+
+    Output *output = registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
+
+    DpmsManager *dpmsManager = registry.createDpmsManager(dpmsAnnouncedSpy.first().first().value<quint32>(), dpmsAnnouncedSpy.first().last().value<quint32>(), &registry);
+    QVERIFY(dpmsManager->isValid());
+
+    Dpms *dpms = dpmsManager->getDpms(output, &registry);
+    // and test request mode
+    QSignalSpy modeRequestedSpy(m_serverOutput, &OutputInterface::dpmsModeRequested);
+    QVERIFY(modeRequestedSpy.isValid());
+
+    QFETCH(Dpms::Mode, client);
+    dpms->requestMode(client);
+    QVERIFY(modeRequestedSpy.wait());
+    QTEST(modeRequestedSpy.last().first().value<OutputInterface::DpmsMode>(), "server");
 }
 
 QTEST_GUILESS_MAIN(TestWaylandOutput)
