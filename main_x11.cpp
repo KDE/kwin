@@ -22,12 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main_x11.h"
 #include <config-kwin.h>
 // kwin
+#include "platform.h"
 #include "sm.h"
 #include "workspace.h"
 #include "xcbutils.h"
 
 // KDE
 #include <KLocalizedString>
+#include <KPluginLoader>
+#include <KPluginMetaData>
 // Qt
 #include <qplatformdefs.h>
 #include <QCommandLineParser>
@@ -36,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif // HAVE_UNISTD_H
+#include <iostream>
 
 namespace KWin
 {
@@ -179,11 +183,23 @@ void ApplicationX11::performStartup()
         }
 
         createInput();
-        createWorkspace();
 
-        Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+        connect(platform(), &Platform::screensQueried, this,
+            [this] {
+                createWorkspace();
 
-        notifyKSplash();
+                Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+
+                notifyKSplash();
+            }
+        );
+        connect(platform(), &Platform::initFailed, this,
+            [] () {
+                std::cerr <<  "FATAL ERROR: backend failed to initialize, exiting now" << std::endl;
+                ::exit(1);
+            }
+        );
+        platform()->init();
     });
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();
@@ -317,6 +333,19 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         fprintf(stderr, "%s: FATAL ERROR KWin requires Xlib support in the xcb plugin. Do not configure Qt with -no-xcb-xlib\n",
                 argv[0]);
         exit(1);
+    }
+
+    // find and load the X11 platform plugin
+    const auto plugins = KPluginLoader::findPluginsById(QStringLiteral("org.kde.kwin.platforms"),
+                                                        QStringLiteral("KWinX11Platform"));
+    if (plugins.isEmpty()) {
+        std::cerr << "FATAL ERROR: KWin could not find the KWinX11Platform plugin" << std::endl;
+        return 1;
+    }
+    a.initPlatform(plugins.first());
+    if (!a.platform()) {
+        std::cerr << "FATAL ERROR: could not instantiate the platform plugin" << std::endl;
+        return 1;
     }
 
     a.start();
