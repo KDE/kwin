@@ -61,7 +61,7 @@ enum class Predicate {
     InputIdMatch
 };
 
-class Client
+class KWIN_EXPORT Client
     : public AbstractClient
 {
     Q_OBJECT

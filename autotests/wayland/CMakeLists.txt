@@ -134,3 +134,12 @@ add_executable(testDebugConsole ${testDebugConsole_SRCS})
 target_link_libraries( testDebugConsole kwin Qt5::Test)
 add_test(kwin-testDebugConsole testDebugConsole)
 ecm_mark_as_test(testDebugConsole)
+
+########################################################
+# Struts Test
+########################################################
+set( testStruts_SRCS struts_test.cpp kwin_wayland_test.cpp )
+add_executable(testStruts ${testStruts_SRCS})
+target_link_libraries( testStruts kwin Qt5::Test XCB::ICCCM)
+add_test(kwin-testStruts testStruts)
+ecm_mark_as_test(testStruts)

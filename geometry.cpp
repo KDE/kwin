@@ -926,6 +926,17 @@ QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) co
 //        qDebug() << "Moving bottom of: " << r << " to " << stareaB.top() - 1;
         r . setBottom(stareaB . top() - 1);
     }
+
+    // sanity check that a strut doesn't exclude a complete screen geometry
+    // this is a violation to EWMH, as KWin just ignores the strut
+    for (int i = 0; i < screens()->count(); i++) {
+        const QRect screenGeo = screens()->geometry(i);
+        if (!r.intersects(screenGeo)) {
+            qCDebug(KWIN_CORE) << "Adjusted client area would exclude a complete screen, ignore";
+            return area;
+        }
+    }
+
     return r;
 }
 
