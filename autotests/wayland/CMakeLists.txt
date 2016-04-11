@@ -125,3 +125,12 @@ add_executable(testTransientPlacmenet ${testTransientPlacmenet_SRCS})
 target_link_libraries( testTransientPlacmenet kwin Qt5::Test)
 add_test(kwin-testTransientPlacmenet testTransientPlacmenet)
 ecm_mark_as_test(testTransientPlacmenet)
+
+########################################################
+# Dont Crash Empty Deco Test
+########################################################
+set( testDontCrashEmptyDeco_SRCS dont_crash_empty_deco.cpp kwin_wayland_test.cpp )
+add_executable(testDontCrashEmptyDeco ${testDontCrashEmptyDeco_SRCS})
+target_link_libraries( testDontCrashEmptyDeco kwin Qt5::Test)
+add_test(kwin-testDontCrashEmptyDeco testDontCrashEmptyDeco)
+ecm_mark_as_test(testDontCrashEmptyDeco)
