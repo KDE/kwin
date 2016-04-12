@@ -20,3 +20,21 @@ add_executable(testWaylandServerSeat ${testWaylandServerSeat_SRCS})
 target_link_libraries( testWaylandServerSeat Qt5::Test Qt5::Gui KF5::WaylandServer Wayland::Server)
 add_test(kwayland-testWaylandServerSeat testWaylandServerSeat)
 ecm_mark_as_test(testWaylandServerSeat)
+
+########################################################
+# QtSurfaceExtenstion Helper
+########################################################
+add_executable(surfaceExtensionHelper surfaceextension_helper.cpp)
+target_link_libraries( surfaceExtensionHelper Qt5::Gui)
+ecm_mark_as_test(surfaceExtensionHelper)
+
+########################################################
+# Test QtSurfaceExtenstion
+########################################################
+set( testQtSurfaceExtension_SRCS
+        test_qt_surface_extension.cpp
+    )
+add_executable(testQtSurfaceExtension ${testQtSurfaceExtension_SRCS})
+target_link_libraries( testQtSurfaceExtension Qt5::Test Qt5::Gui KF5::WaylandServer)
+add_test(kwayland-testQtSurfaceExtension testQtSurfaceExtension)
+ecm_mark_as_test(testQtSurfaceExtension)
