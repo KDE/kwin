@@ -255,3 +255,14 @@ add_executable(testPlasmaShell ${testPlasmaShell_SRCS})
 target_link_libraries( testPlasmaShell Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
 add_test(kwayland-testPlasmaShell testPlasmaShell)
 ecm_mark_as_test(testPlasmaShell)
+
+########################################################
+# Test Idle
+########################################################
+set( testIdle_SRCS
+        test_idle.cpp
+    )
+add_executable(testIdle ${testIdle_SRCS})
+target_link_libraries( testIdle Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(kwayland-testIdle testIdle)
+ecm_mark_as_test(testIdle)
