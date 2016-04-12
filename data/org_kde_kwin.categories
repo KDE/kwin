@@ -8,6 +8,7 @@ kwin_wayland_framebuffer KWin Wayland (Framebuffer backend)
 kwin_wayland_hwcomposer KWin Wayland (hwcomposer backend)
 kwin_wayland_backend KWin Wayland (Wayland backend)
 kwin_wayland_x11windowed KWin Wayland (X11 backend)
+kwin_platform_x11_standalone KWin X11 Standalone Platform
 kwin_libinput KWin Libinput Integration
 kwin_tabbox KWin Window Switcher
 kwin_decorations KWin Decorations

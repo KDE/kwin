@@ -1,4 +1,5 @@
 set(X11PLATFORM_SOURCES
+    logging.cpp
     x11_platform.cpp
     screens_xrandr.cpp
 )
