@@ -27,10 +27,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scene_opengl.h"
-#include "eglonxbackend.h"
-#if HAVE_EPOXY_GLX
-#include "glxbackend.h"
-#endif
 
 #include "platform.h"
 #include "wayland_server.h"
@@ -561,26 +557,7 @@ void SceneOpenGL::initDebugOutput()
 
 SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
 {
-    OpenGLBackend *backend = NULL;
-    OpenGLPlatformInterface platformInterface = options->glPlatformInterface();
-
-    switch (platformInterface) {
-    case GlxPlatformInterface:
-#if HAVE_EPOXY_GLX
-        backend = new GlxBackend();
-#endif
-        break;
-    case EglPlatformInterface:
-        if (kwinApp()->shouldUseWaylandForCompositing()) {
-            backend = kwinApp()->platform()->createOpenGLBackend();
-        } else {
-            backend = new EglOnXBackend();
-        }
-        break;
-    default:
-        // no backend available
-        return NULL;
-    }
+    OpenGLBackend *backend = kwinApp()->platform()->createOpenGLBackend();
     if (!backend) {
         return nullptr;
     }

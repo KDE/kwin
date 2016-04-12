@@ -414,10 +414,6 @@ set(kwin_KDEINIT_SRCS
     wayland_cursor_theme.cpp
    )
 
-if(HAVE_EPOXY_GLX)
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} glxbackend.cpp)
-endif()
-
 if(KWIN_BUILD_TABBOX)
     set(
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}

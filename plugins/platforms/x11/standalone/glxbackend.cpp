@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // own
 #include "glxbackend.h"
+#include "logging.h"
 // kwin
 #include "options.h"
-#include "utils.h"
 #include "overlaywindow.h"
 #include "composite.h"
 #include "screens.h"
@@ -229,9 +229,9 @@ void GlxBackend::init()
                 setBlocksForRetrace(true);
                 haveWaitSync = true;
             } else
-                qCWarning(KWIN_CORE) << "NO VSYNC! glXSwapInterval is not supported, glXWaitVideoSync is supported but broken";
+                qCWarning(KWIN_X11STANDALONE) << "NO VSYNC! glXSwapInterval is not supported, glXWaitVideoSync is supported but broken";
         } else
-            qCWarning(KWIN_CORE) << "NO VSYNC! neither glSwapInterval nor glXWaitVideoSync are supported";
+            qCWarning(KWIN_X11STANDALONE) << "NO VSYNC! neither glSwapInterval nor glXWaitVideoSync are supported";
     } else {
         // disable v-sync (if possible)
         setSwapInterval(0);
@@ -245,7 +245,7 @@ void GlxBackend::init()
 
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
 
-    qCDebug(KWIN_CORE) << "Direct rendering:" << isDirectRendering();
+    qCDebug(KWIN_X11STANDALONE) << "Direct rendering:" << isDirectRendering();
 }
 
 bool GlxBackend::initRenderingContext()
@@ -302,12 +302,12 @@ bool GlxBackend::initRenderingContext()
         ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, NULL, direct);
 
     if (!ctx) {
-        qCDebug(KWIN_CORE) << "Failed to create an OpenGL context.";
+        qCDebug(KWIN_X11STANDALONE) << "Failed to create an OpenGL context.";
         return false;
     }
 
     if (!glXMakeCurrent(display(), glxWindow, ctx)) {
-        qCDebug(KWIN_CORE) << "Failed to make the OpenGL context current.";
+        qCDebug(KWIN_X11STANDALONE) << "Failed to make the OpenGL context current.";
         glXDestroyContext(display(), ctx);
         ctx = 0;
         return false;
@@ -329,7 +329,7 @@ bool GlxBackend::initBuffer()
         glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID, (int *) &visual);
 
         if (!visual) {
-           qCCritical(KWIN_CORE) << "The GLXFBConfig does not have an associated X visual";
+           qCCritical(KWIN_X11STANDALONE) << "The GLXFBConfig does not have an associated X visual";
            return false;
         }
 
@@ -346,7 +346,7 @@ bool GlxBackend::initBuffer()
         glxWindow = glXCreateWindow(display(), fbconfig, window, NULL);
         overlayWindow()->setup(window);
     } else {
-        qCCritical(KWIN_CORE) << "Failed to create overlay window";
+        qCCritical(KWIN_X11STANDALONE) << "Failed to create overlay window";
         return false;
     }
 
@@ -415,12 +415,12 @@ bool GlxBackend::initFbConfig()
         glXGetFBConfigAttrib(display(), fbconfig, GLX_DEPTH_SIZE,   &depth);
         glXGetFBConfigAttrib(display(), fbconfig, GLX_STENCIL_SIZE, &stencil);
 
-        qCDebug(KWIN_CORE, "Choosing GLXFBConfig %#x X visual %#x depth %d RGBA %d:%d:%d:%d ZS %d:%d",
+        qCDebug(KWIN_X11STANDALONE, "Choosing GLXFBConfig %#x X visual %#x depth %d RGBA %d:%d:%d:%d ZS %d:%d",
                 fbconfig_id, visual_id, visualDepth(visual_id), red, green, blue, alpha, depth, stencil);
     }
 
     if (fbconfig == nullptr) {
-        qCCritical(KWIN_CORE) << "Failed to find a usable framebuffer configuration";
+        qCCritical(KWIN_X11STANDALONE) << "Failed to find a usable framebuffer configuration";
         return false;
     }
 
@@ -466,7 +466,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     const xcb_render_directformat_t *direct = XRenderUtils::findPictFormatInfo(format);
 
     if (!direct) {
-        qCCritical(KWIN_CORE).nospace() << "Could not find a picture format for visual 0x" << hex << visual;
+        qCCritical(KWIN_X11STANDALONE).nospace() << "Could not find a picture format for visual 0x" << hex << visual;
         return info;
     }
 
@@ -499,7 +499,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
 
     if (count < 1) {
-        qCCritical(KWIN_CORE).nospace() << "Could not find a framebuffer configuration for visual 0x" << hex << visual;
+        qCCritical(KWIN_X11STANDALONE).nospace() << "Could not find a framebuffer configuration for visual 0x" << hex << visual;
         return info;
     }
 
@@ -581,7 +581,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         glXGetFBConfigAttrib(display(), info->fbconfig, GLX_FBCONFIG_ID, &fbc_id);
         glXGetFBConfigAttrib(display(), info->fbconfig, GLX_VISUAL_ID,   &visual_id);
 
-        qCDebug(KWIN_CORE).nospace() << "Using FBConfig 0x" << hex << fbc_id << " for visual 0x" << hex << visual_id;
+        qCDebug(KWIN_X11STANDALONE).nospace() << "Using FBConfig 0x" << hex << fbc_id << " for visual 0x" << hex << visual_id;
     }
 
     return info;
@@ -643,7 +643,7 @@ void GlxBackend::present()
                             options->setGlPreferBufferSwap(0);
                             setSwapInterval(0);
                             result = 0; // hint proper behavior
-                            qCWarning(KWIN_CORE) << "\nIt seems you are using the nvidia driver without triple buffering\n"
+                            qCWarning(KWIN_X11STANDALONE) << "\nIt seems you are using the nvidia driver without triple buffering\n"
                                               "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
                                               "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"
                                               "For this reason, the tearing prevention has been disabled.\n"

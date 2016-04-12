@@ -4,6 +4,10 @@ set(X11PLATFORM_SOURCES
     screens_xrandr.cpp
 )
 
+if(HAVE_EPOXY_GLX)
+    set(X11PLATFORM_SOURCES ${X11PLATFORM_SOURCES} glxbackend.cpp)
+endif()
+
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
 target_link_libraries(KWinX11Platform kwin Qt5::X11Extras)
 

@@ -38,7 +38,7 @@ class OpenGLBackend;
 class SyncManager;
 class SyncObject;
 
-class SceneOpenGL
+class KWIN_EXPORT SceneOpenGL
     : public Scene
 {
     Q_OBJECT
@@ -347,7 +347,7 @@ private:
  * @short Profiler to detect whether we have triple buffering
  * The strategy is to start setBlocksForRetrace(false) but assume blocking and have the system prove that assumption wrong
  **/
-class SwapProfiler
+class KWIN_EXPORT SwapProfiler
 {
 public:
     SwapProfiler();

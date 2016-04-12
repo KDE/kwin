@@ -18,7 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11_platform.h"
+#include <kwinconfig.h>
+#if HAVE_EPOXY_GLX
+#include "glxbackend.h"
+#endif
+#include "eglonxbackend.h"
 #include "screens_xrandr.h"
+#include "options.h"
 
 #include <QX11Info>
 
@@ -45,6 +51,21 @@ void X11StandalonePlatform::init()
 Screens *X11StandalonePlatform::createScreens(QObject *parent)
 {
     return new XRandRScreens(parent);
+}
+
+OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
+{
+    switch (options->glPlatformInterface()) {
+#if HAVE_EPOXY_GLX
+    case GlxPlatformInterface:
+        return new GlxBackend();
+#endif
+    case EglPlatformInterface:
+        return new EglOnXBackend();
+    default:
+        // no backend available
+        return nullptr;
+    }
 }
 
 }

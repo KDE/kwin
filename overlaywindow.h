@@ -25,8 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // xcb
 #include <xcb/xcb.h>
 
+#include <kwin_export.h>
+
 namespace KWin {
-class OverlayWindow {
+class KWIN_EXPORT OverlayWindow {
 public:
     OverlayWindow();
     ~OverlayWindow();
