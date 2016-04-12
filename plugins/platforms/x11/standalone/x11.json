@@ -1,8 +1,8 @@
 {
     "KPlugin": {
-        "Description": "Platform plugin for standalone x11 in kwin_x11.",
-        "Id": "KWinX11Platform",
+        "Description": "Platform plugin for standalone x11 in kwin_x11.", 
+        "Id": "KWinX11Platform", 
         "Name": "x11-standalone"
-    },
+    }, 
     "input": true
 }
