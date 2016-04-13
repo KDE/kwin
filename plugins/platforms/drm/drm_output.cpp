@@ -22,12 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "composite.h"
 #include "logging.h"
+#include "main.h"
 #include "screens_drm.h"
 #include "virtual_terminal.h"
 #include "wayland_server.h"
-#if HAVE_GBM
-#include "egl_gbm_backend.h"
-#endif
 // KWayland
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>

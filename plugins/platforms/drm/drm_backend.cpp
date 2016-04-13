@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "logging.h"
 #include "logind.h"
+#include "main.h"
 #include "scene_qpainter_drm_backend.h"
 #include "screens_drm.h"
 #include "udev.h"
