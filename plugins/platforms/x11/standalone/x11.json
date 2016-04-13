@@ -1,8 +1,24 @@
 {
     "KPlugin": {
         "Description": "Platform plugin for standalone x11 in kwin_x11.", 
+        "Description[ca@valencia]": "Connector de plataforma per una X11 autònoma en el kwin_x11", 
+        "Description[ca]": "Connector de plataforma per una X11 autònoma en el kwin_x11", 
+        "Description[es]": "Complemento de Platform para X11 autónomo en kwin_x11.", 
+        "Description[nl]": "Platform plug-in voor alleenstaande x11 in kwin_x11.", 
+        "Description[pt]": "'Plugin' de plataformas para um X11 autónomo no X11 do KWin.", 
+        "Description[sv]": "Plattforminsticksprogram för fristående X11 i kwin_x11", 
+        "Description[uk]": "Додаток платформи для окремого x11 у kwin_x11.", 
+        "Description[x-test]": "xxPlatform plugin for standalone x11 in kwin_x11.xx", 
         "Id": "KWinX11Platform", 
-        "Name": "x11-standalone"
+        "Name": "x11-standalone", 
+        "Name[ca@valencia]": "X11-autònoma", 
+        "Name[ca]": "X11-autònoma", 
+        "Name[es]": "x11-autónomo", 
+        "Name[nl]": "x11-alleenstaand", 
+        "Name[pt]": "x11-autónomo", 
+        "Name[sv]": "Fristående X11", 
+        "Name[uk]": "x11-окремий", 
+        "Name[x-test]": "xxx11-standalonexx"
     }, 
     "input": true
 }
