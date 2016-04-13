@@ -277,3 +277,14 @@ add_executable(testShadow ${testShadow_SRCS})
 target_link_libraries( testShadow Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
 add_test(kwayland-testShadow testShadow)
 ecm_mark_as_test(testShadow)
+
+########################################################
+# Test FakeInput
+########################################################
+set( testFakeInput_SRCS
+        test_fake_input.cpp
+    )
+add_executable(testFakeInput ${testFakeInput_SRCS})
+target_link_libraries( testFakeInput Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(kwayland-testFakeInput testFakeInput)
+ecm_mark_as_test(testFakeInput)
