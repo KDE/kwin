@@ -58,6 +58,7 @@ private Q_SLOTS:
     void testRemoveSurface();
     void testMappingOfSurfaceTree();
     void testSurfaceAt();
+    void testDestroyAttachedBuffer();
 
 private:
     KWayland::Server::Display *m_display;
@@ -998,6 +999,39 @@ void TestSubSurface::testSurfaceAt()
     // outside the geometries should be no surface
     QVERIFY(!parentServerSurface->surfaceAt(QPointF(-1, -1)));
     QVERIFY(!parentServerSurface->surfaceAt(QPointF(101, 101)));
+}
+
+void TestSubSurface::testDestroyAttachedBuffer()
+{
+    // this test verifies that destroying of a buffer attached to a sub-surface works
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // create surface
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+    QScopedPointer<Surface> parent(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    QScopedPointer<Surface> child(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverChildSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+    // create sub-surface
+    m_subCompositor->createSubSurface(child.data(), parent.data());
+
+    // let's damage this surface, will be in sub-surface pending state
+    QImage image(QSize(100, 100), QImage::Format_ARGB32);
+    image.fill(Qt::red);
+    child->attachBuffer(m_shm->createBuffer(image));
+    child->damage(QRect(0, 0, 100, 100));
+    child->commit(Surface::CommitFlag::None);
+    m_connection->flush();
+
+    // Let's try to destroy it
+    QSignalSpy destroySpy(serverChildSurface, &QObject::destroyed);
+    QVERIFY(destroySpy.isValid());
+    delete m_shm;
+    m_shm = nullptr;
+    child.reset();
+    QVERIFY(destroySpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestSubSurface)

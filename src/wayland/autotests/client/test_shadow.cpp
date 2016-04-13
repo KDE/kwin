@@ -243,6 +243,27 @@ void ShadowTest::testShadowElements()
     QCOMPARE(serverShadow->bottom()->data(), bottomImage);
     QCOMPARE(serverShadow->bottomLeft()->data(), bottomLeftImage);
     QCOMPARE(serverShadow->left()->data(), leftImage);
+
+    // try to destroy the buffer
+    // first attach one buffer
+    shadow->attachTopLeft(m_shm->createBuffer(topLeftImage));
+    // create a destroyed signal
+    QSignalSpy destroyedSpy(serverShadow->topLeft(), &BufferInterface::aboutToBeDestroyed);
+    QVERIFY(destroyedSpy.isValid());
+    delete m_shm;
+    m_shm = nullptr;
+    QVERIFY(destroyedSpy.wait());
+
+    // now all buffers should be gone
+    // TODO: does that need a signal?
+    QVERIFY(!serverShadow->topLeft());
+    QVERIFY(!serverShadow->top());
+    QVERIFY(!serverShadow->topRight());
+    QVERIFY(!serverShadow->right());
+    QVERIFY(!serverShadow->bottomRight());
+    QVERIFY(!serverShadow->bottom());
+    QVERIFY(!serverShadow->bottomLeft());
+    QVERIFY(!serverShadow->left());
 }
 
 QTEST_GUILESS_MAIN(ShadowTest)

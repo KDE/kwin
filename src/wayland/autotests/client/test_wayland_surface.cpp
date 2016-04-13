@@ -57,6 +57,7 @@ private Q_SLOTS:
     void testUnmapOfNotMappedSurface();
     void testDamageTracking();
     void testSurfaceAt();
+    void testDestroyAttachedBuffer();
 
 private:
     KWayland::Server::Display *m_display;
@@ -831,6 +832,45 @@ void TestWaylandSurface::testSurfaceAt()
     // outside the geometry it should not give a surface
     QVERIFY(!serverSurface->surfaceAt(QPointF(101, 101)));
     QVERIFY(!serverSurface->surfaceAt(QPointF(-1, -1)));
+}
+
+void TestWaylandSurface::testDestroyAttachedBuffer()
+{
+    // this test verifies that destroying of a buffer attached to a surface works
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // create surface
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+
+    // let's damage this surface
+    QSignalSpy damagedSpy(serverSurface, &SurfaceInterface::damaged);
+    QVERIFY(damagedSpy.isValid());
+    QImage image(QSize(100, 100), QImage::Format_ARGB32);
+    image.fill(Qt::red);
+    s->attachBuffer(m_shm->createBuffer(image));
+    s->damage(QRect(0, 0, 100, 100));
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(damagedSpy.wait());
+    QVERIFY(serverSurface->buffer());
+
+    // attach another buffer
+    image.fill(Qt::blue);
+    s->attachBuffer(m_shm->createBuffer(image));
+    m_connection->flush();
+
+    // Let's try to destroy it
+    QSignalSpy destroySpy(serverSurface->buffer(), &BufferInterface::aboutToBeDestroyed);
+    QVERIFY(destroySpy.isValid());
+    delete m_shm;
+    m_shm = nullptr;
+    QVERIFY(destroySpy.wait());
+
+    // TODO: should this emit unmapped?
+    QVERIFY(!serverSurface->buffer());
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSurface)
