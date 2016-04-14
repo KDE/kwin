@@ -278,6 +278,7 @@ void Compositor::slotCompositingOptionsInitialized()
         }
         return;
     }
+    emit sceneCreated();
 
     if (Workspace::self()) {
         startupWithWorkspace();
