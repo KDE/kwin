@@ -94,18 +94,14 @@ QImage *QPainterBackend::bufferForScreen(int screenId)
 //****************************************
 SceneQPainter *SceneQPainter::createScene(QObject *parent)
 {
-    QScopedPointer<QPainterBackend> backend;
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        backend.reset(kwinApp()->platform()->createQPainterBackend());
-        if (backend.isNull()) {
-            return nullptr;
-        }
-        if (backend->isFailed()) {
-            return NULL;
-        }
-        return new SceneQPainter(backend.take(), parent);
+    QScopedPointer<QPainterBackend> backend(kwinApp()->platform()->createQPainterBackend());
+    if (backend.isNull()) {
+        return nullptr;
     }
-    return NULL;
+    if (backend->isFailed()) {
+        return NULL;
+    }
+    return new SceneQPainter(backend.take(), parent);
 }
 
 SceneQPainter::SceneQPainter(QPainterBackend *backend, QObject *parent)
