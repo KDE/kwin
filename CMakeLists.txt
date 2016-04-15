@@ -322,9 +322,6 @@ if(KWIN_BUILD_KCMS)
     add_subdirectory( kcmkwin )
 endif()
 
-if( KWIN_BUILD_DECORATIONS )
-    add_subdirectory( clients )
-endif()
 add_subdirectory( data )
 
 add_subdirectory( effects )
