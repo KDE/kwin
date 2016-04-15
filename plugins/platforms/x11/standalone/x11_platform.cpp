@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11_platform.h"
+#include "edge.h"
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
 #include "glxbackend.h"
@@ -66,6 +67,11 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
         // no backend available
         return nullptr;
     }
+}
+
+Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
+{
+    return new WindowBasedEdge(edges);
 }
 
 }

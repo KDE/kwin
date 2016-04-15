@@ -34,9 +34,11 @@ namespace KWayland {
 namespace KWin
 {
 
+class Edge;
 class OpenGLBackend;
 class QPainterBackend;
 class Screens;
+class ScreenEdges;
 class WaylandCursorTheme;
 
 class KWIN_EXPORT Platform : public QObject
@@ -49,6 +51,11 @@ public:
     virtual Screens *createScreens(QObject *parent = nullptr);
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
+    /**
+     * Allows the platform to create a platform specific screen edge.
+     * The default implementation creates a Edge.
+     **/
+    virtual Edge *createScreenEdge(ScreenEdges *parent);
     virtual void warpPointer(const QPointF &globalPos);
     /**
      * Whether our Compositing EGL display allows a surface less context

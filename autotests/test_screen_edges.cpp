@@ -94,11 +94,6 @@ void updateXTime()
 {
 }
 
-Application::OperationMode Application::operationMode() const
-{
-    return OperationModeX11;
-}
-
 class TestObject : public QObject
 {
     Q_OBJECT

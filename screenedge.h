@@ -31,13 +31,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCREENEDGE_H
 // KWin
 #include "kwinglobals.h"
-#include "xcbutils.h"
 // KDE includes
 #include <KSharedConfig>
 // Qt
 #include <QObject>
 #include <QVector>
 #include <QDateTime>
+#include <QRect>
 
 class QMouseEvent;
 
@@ -46,7 +46,7 @@ namespace KWin {
 class Client;
 class ScreenEdges;
 
-class Edge : public QObject
+class KWIN_EXPORT Edge : public QObject
 {
     Q_OBJECT
 public:
@@ -130,35 +130,6 @@ private:
     bool m_blocked;
     bool m_pushBackBlocked;
     Client *m_client;
-};
-
-class WindowBasedEdge : public Edge
-{
-    Q_OBJECT
-public:
-    explicit WindowBasedEdge(ScreenEdges *parent);
-    virtual ~WindowBasedEdge();
-
-    quint32 window() const override;
-    /**
-     * The approach window is a special window to notice when get close to the screen border but
-     * not yet triggering the border.
-     **/
-    quint32 approachWindow() const override;
-
-protected:
-    virtual void doGeometryUpdate();
-    virtual void activate();
-    virtual void deactivate();
-    virtual void doStartApproaching();
-    virtual void doStopApproaching();
-    virtual void doUpdateBlocking();
-
-private:
-    void createWindow();
-    void createApproachWindow();
-    Xcb::Window m_window;
-    Xcb::Window m_approachWindow;
 };
 
 /**
@@ -494,20 +465,6 @@ inline Client *Edge::client() const
 inline bool Edge::isApproaching() const
 {
     return m_approaching;
-}
-
-/**********************************************************
- * Inlines WindowBasedEdge
- *********************************************************/
-
-inline quint32 WindowBasedEdge::window() const
-{
-    return m_window;
-}
-
-inline quint32 WindowBasedEdge::approachWindow() const
-{
-    return m_approachWindow;
 }
 
 /**********************************************************

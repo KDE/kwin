@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "pointer_input.h"
 #include "scene_opengl.h"
+#include "screenedge.h"
 #include "wayland_server.h"
 
 namespace KWin
@@ -63,6 +64,11 @@ OpenGLBackend *Platform::createOpenGLBackend()
 QPainterBackend *Platform::createQPainterBackend()
 {
     return nullptr;
+}
+
+Edge *Platform::createScreenEdge(ScreenEdges *edges)
+{
+    return new Edge(edges);
 }
 
 void Platform::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)

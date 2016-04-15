@@ -276,6 +276,7 @@ set( testScreenEdges_SRCS
     ../screenedge.cpp
     ../virtualdesktops.cpp
     ../xcbutils.cpp # init of extensions
+    ../plugins/platforms/x11/standalone/edge.cpp
 )
 kconfig_add_kcfg_files(testScreenEdges_SRCS ../settings.kcfgc)
 qt5_add_dbus_interface( testScreenEdges_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.freedesktop.ScreenSaver.xml screenlocker_interface)

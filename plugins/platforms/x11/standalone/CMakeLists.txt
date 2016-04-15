@@ -1,4 +1,5 @@
 set(X11PLATFORM_SOURCES
+    edge.cpp
     logging.cpp
     x11_platform.cpp
     screens_xrandr.cpp
