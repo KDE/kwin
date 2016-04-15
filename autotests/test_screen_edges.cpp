@@ -445,7 +445,7 @@ void TestScreenEdges::testCallback()
     };
     event.root = XCB_WINDOW_NONE;
     event.child = XCB_WINDOW_NONE;
-    event.event = static_cast<WindowBasedEdge*>(*it)->window();
+    event.event = (*it)->window();
     event.same_screen_focus = 1;
     event.time = QDateTime::currentMSecsSinceEpoch();
     setPos(QPoint(0, 50));

@@ -487,6 +487,16 @@ void Edge::updateApproaching(const QPoint &point)
     }
 }
 
+quint32 Edge::window() const
+{
+    return 0;
+}
+
+quint32 Edge::approachWindow() const
+{
+    return 0;
+}
+
 /**********************************************************
  * ScreenEdges
  *********************************************************/
@@ -1233,8 +1243,8 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
     bool activated = false;
     bool activatedForClient = false;
     for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        WindowBasedEdge *edge = dynamic_cast<WindowBasedEdge*>(*it);
-        if (!edge) {
+        Edge *edge = *it;
+        if (!edge || edge->window() == XCB_WINDOW_NONE) {
             continue;
         }
         if (!edge->isReserved()) {
@@ -1268,8 +1278,8 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
 bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
 {
     for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        WindowBasedEdge *edge = dynamic_cast<WindowBasedEdge*>(*it);
-        if (!edge) {
+        Edge *edge = *it;
+        if (!edge || edge->window() == XCB_WINDOW_NONE) {
             continue;
         }
         if (edge->isReserved() && edge->window() == window) {
@@ -1292,10 +1302,7 @@ QVector< xcb_window_t > ScreenEdges::windows() const
     for (auto it = m_edges.constBegin();
             it != m_edges.constEnd();
             ++it) {
-        WindowBasedEdge *edge = dynamic_cast<WindowBasedEdge*>(*it);
-        if (!edge) {
-            continue;
-        }
+        Edge *edge = *it;
         xcb_window_t w = edge->window();
         if (w != XCB_WINDOW_NONE) {
             wins.append(w);

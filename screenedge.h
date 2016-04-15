@@ -74,6 +74,19 @@ public:
     Client *client() const;
     const QRect &geometry() const;
 
+    /**
+     * The window id of the native window representing the edge.
+     * Default implementation returns @c 0, which means no window.
+     **/
+    virtual quint32 window() const;
+    /**
+     * The approach window is a special window to notice when get close to the screen border but
+     * not yet triggering the border.
+     *
+     * The default implementation returns @c 0, which means no window.
+     **/
+    virtual quint32 approachWindow() const;
+
 public Q_SLOTS:
     void reserve();
     void unreserve();
@@ -126,12 +139,12 @@ public:
     explicit WindowBasedEdge(ScreenEdges *parent);
     virtual ~WindowBasedEdge();
 
-    xcb_window_t window() const;
+    quint32 window() const override;
     /**
      * The approach window is a special window to notice when get close to the screen border but
      * not yet triggering the border.
      **/
-    xcb_window_t approachWindow() const;
+    quint32 approachWindow() const override;
 
 protected:
     virtual void doGeometryUpdate();
@@ -487,12 +500,12 @@ inline bool Edge::isApproaching() const
  * Inlines WindowBasedEdge
  *********************************************************/
 
-inline xcb_window_t WindowBasedEdge::window() const
+inline quint32 WindowBasedEdge::window() const
 {
     return m_window;
 }
 
-inline xcb_window_t WindowBasedEdge::approachWindow() const
+inline quint32 WindowBasedEdge::approachWindow() const
 {
     return m_approachWindow;
 }
