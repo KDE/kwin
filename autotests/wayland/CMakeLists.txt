@@ -32,7 +32,7 @@ ecm_mark_as_test(testQuickTiling)
 ########################################################
 set( testMoveResize_SRCS move_resize_window_test.cpp kwin_wayland_test.cpp )
 add_executable(testMoveResize ${testMoveResize_SRCS})
-target_link_libraries( testMoveResize kwin Qt5::Test)
+target_link_libraries( testMoveResize kwin Qt5::Test XCB::ICCCM)
 add_test(kwin-testMoveResize testMoveResize)
 ecm_mark_as_test(testMoveResize)
 

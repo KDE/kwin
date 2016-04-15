@@ -1340,9 +1340,13 @@ void Client::focusOutEvent(xcb_focus_out_event_t *e)
 // performs _NET_WM_MOVERESIZE
 void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
 {
-    if (direction == NET::Move)
+    if (direction == NET::Move) {
+        // move cursor to the provided position to prevent the window jumping there on first movement
+        // the expectation is that the cursor is already at the provided position,
+        // thus it's more a safety measurement
+        Cursor::setPos(QPoint(x_root, y_root));
         performMouseCommand(Options::MouseMove, QPoint(x_root, y_root));
-    else if (isMoveResize() && direction == NET::MoveResizeCancel) {
+    } else if (isMoveResize() && direction == NET::MoveResizeCancel) {
         finishMoveResize(true);
         setMoveResizePointerButtonDown(false);
         updateCursor();

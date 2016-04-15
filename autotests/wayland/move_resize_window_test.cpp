@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/surface.h>
 
 #include <linux/input.h>
+#include <xcb/xcb_icccm.h>
 
 Q_DECLARE_METATYPE(KWin::AbstractClient::QuickTileMode)
 Q_DECLARE_METATYPE(KWin::MaximizeMode)
@@ -65,6 +66,7 @@ private Q_SLOTS:
     void testPointerMoveEnd();
     void testPlasmaShellSurfaceMovable_data();
     void testPlasmaShellSurfaceMovable();
+    void testNetMove();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -569,6 +571,86 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
     QTEST(c->isMovable(), "movable");
     QTEST(c->isMovableAcrossScreens(), "movableAcrossScreens");
     QTEST(c->isResizable(), "resizable");
+}
+
+void MoveResizeWindowTest::testNetMove()
+{
+    // this test verifies that a move request for an X11 window through NET API works
+    // create an xcb window
+    struct XcbConnectionDeleter
+    {
+        static inline void cleanup(xcb_connection_t *pointer)
+        {
+            xcb_disconnect(pointer);
+        }
+    };
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+
+    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      0, 0, 100, 100,
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, 0, 0);
+    xcb_icccm_size_hints_set_size(&hints, 1, 100, 100);
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    // let's set a no-border
+    NETWinInfo winInfo(c.data(), w, rootWindow(), NET::WMWindowType, NET::Properties2());
+    winInfo.setWindowType(NET::Override);
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(client);
+    QCOMPARE(client->window(), w);
+    const QRect origGeo = client->geometry();
+
+    // let's move the cursor outside the window
+    Cursor::setPos(screens()->geometry(0).center());
+    QVERIFY(!origGeo.contains(Cursor::pos()));
+
+    QSignalSpy moveStartSpy(client, &Client::clientStartUserMovedResized);
+    QVERIFY(moveStartSpy.isValid());
+    QSignalSpy moveEndSpy(client, &Client::clientFinishUserMovedResized);
+    QVERIFY(moveEndSpy.isValid());
+    QSignalSpy moveStepSpy(client, &Client::clientStepUserMovedResized);
+    QVERIFY(moveStepSpy.isValid());
+
+    // use NETRootInfo to trigger a move request
+    NETRootInfo root(c.data(), NET::Properties());
+    root.moveResizeRequest(w, origGeo.center().x(), origGeo.center().y(), NET::Move);
+    xcb_flush(c.data());
+
+    QVERIFY(moveStartSpy.wait());
+    QCOMPARE(workspace()->getMovingClient(), client);
+    QVERIFY(client->isMove());
+    QCOMPARE(client->geometryRestore(), origGeo);
+    QCOMPARE(Cursor::pos(), origGeo.center());
+
+    // let's move a step
+    Cursor::setPos(Cursor::pos() + QPoint(10, 10));
+    QCOMPARE(moveStepSpy.count(), 1);
+    QCOMPARE(moveStepSpy.first().last().toRect(), origGeo.translated(10, 10));
+
+    // let's cancel the move resize again through the net API
+    root.moveResizeRequest(w, client->geometry().center().x(), client->geometry().center().y(), NET::MoveResizeCancel);
+    xcb_flush(c.data());
+    QVERIFY(moveEndSpy.wait());
+
+    // and destroy the window again
+    xcb_unmap_window(c.data(), w);
+    xcb_destroy_window(c.data(), w);
+    xcb_flush(c.data());
+    c.reset();
+
+    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+    QVERIFY(windowClosedSpy.wait());
 }
 
 }
