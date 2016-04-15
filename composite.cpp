@@ -115,32 +115,29 @@ Compositor::Compositor(QObject* workspace)
     m_unusedSupportPropertyTimer.setInterval(compositorLostMessageDelay);
     m_unusedSupportPropertyTimer.setSingleShot(true);
     connect(&m_unusedSupportPropertyTimer, SIGNAL(timeout()), SLOT(deleteUnusedSupportProperties()));
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        if (kwinApp()->platform()->isReady()) {
-            QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
-        }
-        connect(kwinApp()->platform(), &Platform::readyChanged, this,
-            [this] (bool ready) {
-                if (ready) {
-                    setup();
-                } else {
-                    finish();
-                }
-            }, Qt::QueuedConnection
-        );
-        connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this,
-            [this] {
-                delete cm_selection;
-                cm_selection = nullptr;
-            }
-        );
-    } else {
-        // delay the call to setup by one event cycle
-        // The ctor of this class is invoked from the Workspace ctor, that means before
-        // Workspace is completely constructed, so calling Workspace::self() would result
-        // in undefined behavior. This is fixed by using a delayed invocation.
+
+    // delay the call to setup by one event cycle
+    // The ctor of this class is invoked from the Workspace ctor, that means before
+    // Workspace is completely constructed, so calling Workspace::self() would result
+    // in undefined behavior. This is fixed by using a delayed invocation.
+    if (kwinApp()->platform()->isReady()) {
         QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
     }
+    connect(kwinApp()->platform(), &Platform::readyChanged, this,
+        [this] (bool ready) {
+            if (ready) {
+                setup();
+            } else {
+                finish();
+            }
+        }, Qt::QueuedConnection
+    );
+    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this,
+        [this] {
+            delete cm_selection;
+            cm_selection = nullptr;
+        }
+    );
 
     // register DBus
     new CompositorDBusInterface(this);
@@ -649,7 +646,7 @@ void Compositor::performCompositing()
 
     // If outputs are disabled, we return to the event loop and
     // continue processing events until the outputs are enabled again
-    if (waylandServer() && !kwinApp()->platform()->areOutputsEnabled()) {
+    if (!kwinApp()->platform()->areOutputsEnabled()) {
         compositeTimer.stop();
         return;
     }
@@ -796,7 +793,7 @@ void Compositor::setCompositeTimer()
         return;
 
     // Don't start the timer if all outputs are disabled
-    if (waylandServer() && !kwinApp()->platform()->areOutputsEnabled()) {
+    if (!kwinApp()->platform()->areOutputsEnabled()) {
         return;
     }
 
