@@ -648,6 +648,8 @@ void AbstractClient::setupWindowManagementInterface()
     w->setThemedIconName(icon().name().isEmpty() ? QStringLiteral("xorg") : icon().name());
     w->setAppId(QString::fromUtf8(resourceName()));
     w->setSkipTaskbar(skipTaskbar());
+    w->setShadable(isShadeable());
+    w->setShaded(isShade());
     connect(this, &AbstractClient::skipTaskbarChanged, w,
         [w, this] {
             w->setSkipTaskbar(skipTaskbar());
@@ -687,6 +689,7 @@ void AbstractClient::setupWindowManagementInterface()
             w->setAppId(QString::fromUtf8(resourceName()));
         }
     );
+    connect(this, &AbstractClient::shadeChanged, w, [w, this] { w->setShaded(isShade()); });
     connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
     connect(w, &PlasmaWindowInterface::virtualDesktopRequested, this,
         [this] (quint32 desktop) {
@@ -732,6 +735,11 @@ void AbstractClient::setupWindowManagementInterface()
             if (set) {
                 workspace()->activateClient(this, true);
             }
+        }
+    );
+    connect(w, &PlasmaWindowInterface::shadedRequested, this,
+        [this] (bool set) {
+            setShade(set);
         }
     );
     m_windowManagementInterface = w;
