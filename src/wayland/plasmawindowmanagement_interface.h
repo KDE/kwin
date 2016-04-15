@@ -85,6 +85,14 @@ public:
     void setFullscreenable(bool set);
     void setSkipTaskbar(bool skip);
     void setThemedIconName(const QString &iconName);
+    /**
+     * @since 5.7
+     */
+    void setShadable(bool set);
+    /**
+     * @since 5.7
+     */
+    void setShaded(bool set);
 
     void unmap();
 
@@ -111,6 +119,8 @@ Q_SIGNALS:
     void fullscreenableRequested(bool set);
     void skipTaskbarRequested(bool set);
     QRect minimizedGeometriesChanged();
+    void shadableRequested(bool set);
+    void shadedRequested(bool set);
 
 private:
     friend class PlasmaWindowManagementInterface;

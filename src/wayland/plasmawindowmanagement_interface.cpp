@@ -445,6 +445,12 @@ void PlasmaWindowInterface::Private::setStateCallback(wl_client *client, wl_reso
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR) {
         emit p->q->skipTaskbarRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR);
     }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADABLE) {
+        emit p->q->shadableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADABLE);
+    }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADED) {
+        emit p->q->shadedRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADED);
+    }
 }
 
 void PlasmaWindowInterface::Private::setMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel, uint32_t x, uint32_t y, uint32_t width, uint32_t height)
@@ -587,6 +593,16 @@ void PlasmaWindowInterface::setSkipTaskbar(bool set)
 void PlasmaWindowInterface::setThemedIconName(const QString &iconName)
 {
     d->setThemedIconName(iconName);
+}
+
+void PlasmaWindowInterface::setShadable(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADABLE, set);
+}
+
+void PlasmaWindowInterface::setShaded(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADED, set);
 }
 
 }

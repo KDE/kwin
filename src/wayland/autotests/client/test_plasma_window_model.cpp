@@ -60,6 +60,8 @@ private Q_SLOTS:
     void testIsOnAllDesktops();
     void testIsDemandingAttention();
     void testSkipTaskbar();
+    void testIsShadable();
+    void testIsShaded();
     void testTitle();
     void testAppId();
     void testVirtualDesktop();
@@ -215,6 +217,8 @@ void PlasmaWindowModelTest::testRoleNames_data()
     QTest::newRow("IsOnAllDesktops")      << int(PlasmaWindowModel::IsOnAllDesktops) << QByteArrayLiteral("IsOnAllDesktops");
     QTest::newRow("IsDemandingAttention") << int(PlasmaWindowModel::IsDemandingAttention) << QByteArrayLiteral("IsDemandingAttention");
     QTest::newRow("SkipTaskbar")          << int(PlasmaWindowModel::SkipTaskbar) << QByteArrayLiteral("SkipTaskbar");
+    QTest::newRow("IsShadable")           << int(PlasmaWindowModel::IsShadable) << QByteArrayLiteral("IsShadable");
+    QTest::newRow("IsShaded")             << int(PlasmaWindowModel::IsShaded) << QByteArrayLiteral("IsShaded");
 }
 
 void PlasmaWindowModelTest::testRoleNames()
@@ -292,6 +296,8 @@ void PlasmaWindowModelTest::testDefaultData_data()
     QTest::newRow("VirtualDesktop")       << int(PlasmaWindowModel::VirtualDesktop) << QVariant(0);
     QTest::newRow("IsOnAllDesktops")      << int(PlasmaWindowModel::IsOnAllDesktops) << QVariant(false);
     QTest::newRow("IsDemandingAttention") << int(PlasmaWindowModel::IsDemandingAttention) << QVariant(false);
+    QTest::newRow("IsShadable")           << int(PlasmaWindowModel::IsShadable) << QVariant(false);
+    QTest::newRow("IsShaded")             << int(PlasmaWindowModel::IsShaded) << QVariant(false);
     QTest::newRow("SkipTaskbar")          << int(PlasmaWindowModel::SkipTaskbar) << QVariant(false);
 }
 
@@ -370,6 +376,16 @@ void PlasmaWindowModelTest::testIsDemandingAttention()
 void PlasmaWindowModelTest::testSkipTaskbar()
 {
     QVERIFY(testBooleanData(PlasmaWindowModel::SkipTaskbar, &PlasmaWindowInterface::setSkipTaskbar));
+}
+
+void PlasmaWindowModelTest::testIsShadable()
+{
+    QVERIFY(testBooleanData(PlasmaWindowModel::IsShadable, &PlasmaWindowInterface::setShadable));
+}
+
+void PlasmaWindowModelTest::testIsShaded()
+{
+    QVERIFY(testBooleanData(PlasmaWindowModel::IsShaded, &PlasmaWindowInterface::setShaded));
 }
 
 void PlasmaWindowModelTest::testTitle()
@@ -481,6 +497,8 @@ void PlasmaWindowModelTest::testRequests()
     QVERIFY(minimizedRequestedSpy.isValid());
     QSignalSpy maximizeRequestedSpy(w, &PlasmaWindowInterface::maximizedRequested);
     QVERIFY(maximizeRequestedSpy.isValid());
+    QSignalSpy shadeRequestedSpy(w, &PlasmaWindowInterface::shadedRequested);
+    QVERIFY(shadeRequestedSpy.isValid());
 
     // first let's use some invalid row numbers
     model->requestActivate(-1);
@@ -493,6 +511,7 @@ void PlasmaWindowModelTest::testRequests()
     model->requestVirtualDesktop(1, 1);
     model->requestToggleMinimized(1);
     model->requestToggleMaximized(1);
+    model->requestToggleShaded(1);
     // that should not have triggered any signals
     QVERIFY(!activateRequestedSpy.wait(100));
     QVERIFY(activateRequestedSpy.isEmpty());
@@ -500,6 +519,7 @@ void PlasmaWindowModelTest::testRequests()
     QVERIFY(virtualDesktopRequestedSpy.isEmpty());
     QVERIFY(minimizedRequestedSpy.isEmpty());
     QVERIFY(maximizeRequestedSpy.isEmpty());
+    QVERIFY(shadeRequestedSpy.isEmpty());
 
     // now with the proper row
     // activate
@@ -511,6 +531,7 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(virtualDesktopRequestedSpy.count(), 0);
     QCOMPARE(minimizedRequestedSpy.count(), 0);
     QCOMPARE(maximizeRequestedSpy.count(), 0);
+    QCOMPARE(shadeRequestedSpy.count(), 0);
     // close
     model->requestClose(0);
     QVERIFY(closeRequestedSpy.wait());
@@ -519,6 +540,7 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(virtualDesktopRequestedSpy.count(), 0);
     QCOMPARE(minimizedRequestedSpy.count(), 0);
     QCOMPARE(maximizeRequestedSpy.count(), 0);
+    QCOMPARE(shadeRequestedSpy.count(), 0);
     // virtual desktop
     model->requestVirtualDesktop(0, 1);
     QVERIFY(virtualDesktopRequestedSpy.wait());
@@ -528,6 +550,7 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(closeRequestedSpy.count(), 1);
     QCOMPARE(minimizedRequestedSpy.count(), 0);
     QCOMPARE(maximizeRequestedSpy.count(), 0);
+    QCOMPARE(shadeRequestedSpy.count(), 0);
     // minimize
     model->requestToggleMinimized(0);
     QVERIFY(minimizedRequestedSpy.wait());
@@ -537,6 +560,7 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(closeRequestedSpy.count(), 1);
     QCOMPARE(virtualDesktopRequestedSpy.count(), 1);
     QCOMPARE(maximizeRequestedSpy.count(), 0);
+    QCOMPARE(shadeRequestedSpy.count(), 0);
     // maximize
     model->requestToggleMaximized(0);
     QVERIFY(maximizeRequestedSpy.wait());
@@ -546,6 +570,17 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(closeRequestedSpy.count(), 1);
     QCOMPARE(virtualDesktopRequestedSpy.count(), 1);
     QCOMPARE(minimizedRequestedSpy.count(), 1);
+    QCOMPARE(shadeRequestedSpy.count(), 0);
+    // shade
+    model->requestToggleShaded(0);
+    QVERIFY(shadeRequestedSpy.wait());
+    QCOMPARE(shadeRequestedSpy.count(), 1);
+    QCOMPARE(shadeRequestedSpy.first().first().toBool(), true);
+    QCOMPARE(activateRequestedSpy.count(), 1);
+    QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(virtualDesktopRequestedSpy.count(), 1);
+    QCOMPARE(minimizedRequestedSpy.count(), 1);
+    QCOMPARE(maximizeRequestedSpy.count(), 1);
 
     // the toggles can also support a different state
     QSignalSpy dataChangedSpy(model, &PlasmaWindowModel::dataChanged);
@@ -564,6 +599,13 @@ void PlasmaWindowModelTest::testRequests()
     QVERIFY(maximizeRequestedSpy.wait());
     QCOMPARE(maximizeRequestedSpy.count(), 2);
     QCOMPARE(maximizeRequestedSpy.last().first().toBool(), false);
+    // shaded
+    w->setShaded(true);
+    QVERIFY(dataChangedSpy.wait());
+    model->requestToggleShaded(0);
+    QVERIFY(shadeRequestedSpy.wait());
+    QCOMPARE(shadeRequestedSpy.count(), 2);
+    QCOMPARE(shadeRequestedSpy.last().first().toBool(), false);
 }
 
 QTEST_GUILESS_MAIN(PlasmaWindowModelTest)
