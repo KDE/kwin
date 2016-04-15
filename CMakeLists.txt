@@ -407,7 +407,6 @@ set(kwin_KDEINIT_SRCS
     decorations/decorationrenderer.cpp
     decorations/decorations_logging.cpp
     abstract_egl_backend.cpp
-    eglonxbackend.cpp
     platform.cpp
     shell_client.cpp
     wayland_server.cpp

@@ -9,7 +9,7 @@ if(HAVE_EPOXY_GLX)
 endif()
 
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
-target_link_libraries(KWinX11Platform kwin Qt5::X11Extras)
+target_link_libraries(KWinX11Platform eglx11common kwin Qt5::X11Extras)
 
 install(
     TARGETS
