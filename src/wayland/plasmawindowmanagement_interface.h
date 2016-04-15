@@ -119,7 +119,13 @@ Q_SIGNALS:
     void fullscreenableRequested(bool set);
     void skipTaskbarRequested(bool set);
     QRect minimizedGeometriesChanged();
+    /**
+     * @since 5.7
+     */
     void shadableRequested(bool set);
+    /**
+     * @since 5.7
+     */
     void shadedRequested(bool set);
 
 private:
