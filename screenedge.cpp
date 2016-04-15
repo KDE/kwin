@@ -584,17 +584,6 @@ void WindowBasedEdge::doUpdateBlocking()
         m_approachWindow.map();
     }
 }
-/**********************************************************
- * AreaBasedEdge
- *********************************************************/
-AreaBasedEdge::AreaBasedEdge(ScreenEdges* parent)
-    : Edge(parent)
-{
-}
-
-AreaBasedEdge::~AreaBasedEdge()
-{
-}
 
 /**********************************************************
  * ScreenEdges
@@ -952,7 +941,7 @@ Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, in
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         edge = new WindowBasedEdge(this);
     } else {
-        edge = new AreaBasedEdge(this);
+        edge = new Edge(this);
     }
     edge->setBorder(border);
     edge->setGeometry(QRect(x, y, width, height));

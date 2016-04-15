@@ -148,14 +148,6 @@ private:
     Xcb::Window m_approachWindow;
 };
 
-class AreaBasedEdge : public Edge
-{
-    Q_OBJECT
-public:
-    explicit AreaBasedEdge(ScreenEdges *parent);
-    virtual ~AreaBasedEdge();
-};
-
 /**
  * @short Class for controlling screen edges.
  *
