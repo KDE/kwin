@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusUnixFileDescriptor>
 
 #include <sys/stat.h>
+#include <sys/sysmacros.h>
 #include <unistd.h>
 #include "utils.h"
 

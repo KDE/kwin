@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/ioctl.h>
 #include <sys/signalfd.h>
 #include <sys/stat.h>
+#include <sys/sysmacros.h>
 
 #define RELEASE_SIGNAL SIGUSR1
 #define ACQUISITION_SIGNAL SIGUSR2
