@@ -65,6 +65,7 @@ private Q_SLOTS:
     void testIsMovable();
     void testIsResizable();
     void testIsVirtualDesktopChangeable();
+    void testIsCloseable();
     void testTitle();
     void testAppId();
     void testVirtualDesktop();
@@ -225,6 +226,7 @@ void PlasmaWindowModelTest::testRoleNames_data()
     QTest::newRow("IsMovable")            << int(PlasmaWindowModel::IsMovable) << QByteArrayLiteral("IsMovable");
     QTest::newRow("IsResizable")          << int(PlasmaWindowModel::IsResizable) << QByteArrayLiteral("IsResizable");
     QTest::newRow("IsVirtualDesktopChangeable") << int(PlasmaWindowModel::IsVirtualDesktopChangeable) << QByteArrayLiteral("IsVirtualDesktopChangeable");
+    QTest::newRow("IsCloseable")          << int(PlasmaWindowModel::IsCloseable) << QByteArrayLiteral("IsCloseable");
 }
 
 void PlasmaWindowModelTest::testRoleNames()
@@ -308,6 +310,7 @@ void PlasmaWindowModelTest::testDefaultData_data()
     QTest::newRow("IsMovable")            << int(PlasmaWindowModel::IsMovable) << QVariant(false);
     QTest::newRow("IsResizable")          << int(PlasmaWindowModel::IsResizable) << QVariant(false);
     QTest::newRow("IsVirtualDesktopChangeable") << int(PlasmaWindowModel::IsVirtualDesktopChangeable) << QVariant(false);
+    QTest::newRow("IsCloseable")           << int(PlasmaWindowModel::IsCloseable) << QVariant(false);
 }
 
 void PlasmaWindowModelTest::testDefaultData()
@@ -410,6 +413,11 @@ void PlasmaWindowModelTest::testIsResizable()
 void PlasmaWindowModelTest::testIsVirtualDesktopChangeable()
 {
     QVERIFY(testBooleanData(PlasmaWindowModel::IsVirtualDesktopChangeable, &PlasmaWindowInterface::setVirtualDesktopChangeable));
+}
+
+void PlasmaWindowModelTest::testIsCloseable()
+{
+    QVERIFY(testBooleanData(PlasmaWindowModel::IsCloseable, &PlasmaWindowInterface::setCloseable));
 }
 
 void PlasmaWindowModelTest::testTitle()
