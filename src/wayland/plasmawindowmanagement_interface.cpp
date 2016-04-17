@@ -88,6 +88,8 @@ private:
     static void setStateCallback(wl_client *client, wl_resource *resource, uint32_t flags, uint32_t state);
     static void setVirtualDesktopCallback(wl_client *client, wl_resource *resource, uint32_t number);
     static void closeCallback(wl_client *client, wl_resource *resource);
+    static void requestMoveCallback(wl_client *client, wl_resource *resource);
+    static void requestResizeCallback(wl_client *client, wl_resource *resource);
     static void setMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel, uint32_t x, uint32_t y, uint32_t width, uint32_t height);
     static void unsetMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel);
     static Private *cast(wl_resource *resource) {
@@ -249,7 +251,9 @@ const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_i
     setVirtualDesktopCallback,
     setMinimizedGeometryCallback,
     unsetMinimizedGeometryCallback,
-    closeCallback
+    closeCallback,
+    requestMoveCallback,
+    requestResizeCallback
 };
 #endif
 
@@ -398,6 +402,20 @@ void PlasmaWindowInterface::Private::closeCallback(wl_client *client, wl_resourc
     emit p->q->closeRequested();
 }
 
+void PlasmaWindowInterface::Private::requestMoveCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    Private *p = cast(resource);
+    emit p->q->moveRequested();
+}
+
+void PlasmaWindowInterface::Private::requestResizeCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    Private *p = cast(resource);
+    emit p->q->resizeRequested();
+}
+
 void PlasmaWindowInterface::Private::setVirtualDesktopCallback(wl_client *client, wl_resource *resource, uint32_t number)
 {
     Q_UNUSED(client)
@@ -450,6 +468,12 @@ void PlasmaWindowInterface::Private::setStateCallback(wl_client *client, wl_reso
     }
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADED) {
         emit p->q->shadedRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADED);
+    }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE) {
+        emit p->q->movableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE);
+    }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_RESIZABLE) {
+        emit p->q->resizableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_RESIZABLE);
     }
 }
 
@@ -603,6 +627,16 @@ void PlasmaWindowInterface::setShadeable(bool set)
 void PlasmaWindowInterface::setShaded(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADED, set);
+}
+
+void PlasmaWindowInterface::setMovable(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE, set);
+}
+
+void PlasmaWindowInterface::setResizable(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_RESIZABLE, set);
 }
 
 }

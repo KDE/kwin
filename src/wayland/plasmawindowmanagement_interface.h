@@ -93,6 +93,14 @@ public:
      * @since 5.7
      */
     void setShaded(bool set);
+    /**
+     * @since 5.7
+     */
+    void setMovable(bool set);
+    /**
+     * @since 5.7
+     */
+    void setResizable(bool set);
 
     void unmap();
 
@@ -105,6 +113,14 @@ public:
 
 Q_SIGNALS:
     void closeRequested();
+    /**
+     * @since 5.7
+     */
+    void moveRequested();
+    /**
+     * @since 5.7
+     */
+    void resizeRequested();
     void virtualDesktopRequested(quint32 desktop);
     void activeRequested(bool set);
     void minimizedRequested(bool set);
@@ -127,6 +143,14 @@ Q_SIGNALS:
      * @since 5.7
      */
     void shadedRequested(bool set);
+    /**
+     * @since 5.7
+     */
+    void movableRequested(bool set);
+    /**
+     * @since 5.7
+     */
+    void resizableRequested(bool set);
 
 private:
     friend class PlasmaWindowManagementInterface;

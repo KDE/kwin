@@ -62,6 +62,8 @@ private Q_SLOTS:
     void testSkipTaskbar();
     void testIsShadeable();
     void testIsShaded();
+    void testIsMovable();
+    void testIsResizable();
     void testTitle();
     void testAppId();
     void testVirtualDesktop();
@@ -219,6 +221,8 @@ void PlasmaWindowModelTest::testRoleNames_data()
     QTest::newRow("SkipTaskbar")          << int(PlasmaWindowModel::SkipTaskbar) << QByteArrayLiteral("SkipTaskbar");
     QTest::newRow("IsShadeable")           << int(PlasmaWindowModel::IsShadeable) << QByteArrayLiteral("IsShadeable");
     QTest::newRow("IsShaded")             << int(PlasmaWindowModel::IsShaded) << QByteArrayLiteral("IsShaded");
+    QTest::newRow("IsMovable")            << int(PlasmaWindowModel::IsMovable) << QByteArrayLiteral("IsMovable");
+    QTest::newRow("IsResizable")          << int(PlasmaWindowModel::IsResizable) << QByteArrayLiteral("IsResizable");
 }
 
 void PlasmaWindowModelTest::testRoleNames()
@@ -299,6 +303,8 @@ void PlasmaWindowModelTest::testDefaultData_data()
     QTest::newRow("IsShadeable")           << int(PlasmaWindowModel::IsShadeable) << QVariant(false);
     QTest::newRow("IsShaded")             << int(PlasmaWindowModel::IsShaded) << QVariant(false);
     QTest::newRow("SkipTaskbar")          << int(PlasmaWindowModel::SkipTaskbar) << QVariant(false);
+    QTest::newRow("IsMovable")            << int(PlasmaWindowModel::IsMovable) << QVariant(false);
+    QTest::newRow("IsResizable")          << int(PlasmaWindowModel::IsResizable) << QVariant(false);
 }
 
 void PlasmaWindowModelTest::testDefaultData()
@@ -386,6 +392,16 @@ void PlasmaWindowModelTest::testIsShadeable()
 void PlasmaWindowModelTest::testIsShaded()
 {
     QVERIFY(testBooleanData(PlasmaWindowModel::IsShaded, &PlasmaWindowInterface::setShaded));
+}
+
+void PlasmaWindowModelTest::testIsMovable()
+{
+    QVERIFY(testBooleanData(PlasmaWindowModel::IsMovable, &PlasmaWindowInterface::setMovable));
+}
+
+void PlasmaWindowModelTest::testIsResizable()
+{
+    QVERIFY(testBooleanData(PlasmaWindowModel::IsResizable, &PlasmaWindowInterface::setResizable));
 }
 
 void PlasmaWindowModelTest::testTitle()
@@ -491,6 +507,10 @@ void PlasmaWindowModelTest::testRequests()
     QVERIFY(activateRequestedSpy.isValid());
     QSignalSpy closeRequestedSpy(w, &PlasmaWindowInterface::closeRequested);
     QVERIFY(closeRequestedSpy.isValid());
+    QSignalSpy moveRequestedSpy(w, &PlasmaWindowInterface::moveRequested);
+    QVERIFY(moveRequestedSpy.isValid());
+    QSignalSpy resizeRequestedSpy(w, &PlasmaWindowInterface::resizeRequested);
+    QVERIFY(resizeRequestedSpy.isValid());
     QSignalSpy virtualDesktopRequestedSpy(w, &PlasmaWindowInterface::virtualDesktopRequested);
     QVERIFY(virtualDesktopRequestedSpy.isValid());
     QSignalSpy minimizedRequestedSpy(w, &PlasmaWindowInterface::minimizedRequested);
@@ -508,6 +528,8 @@ void PlasmaWindowModelTest::testRequests()
     model->requestToggleMaximized(-1);
     model->requestActivate(1);
     model->requestClose(1);
+    model->requestMove(1);
+    model->requestResize(1);
     model->requestVirtualDesktop(1, 1);
     model->requestToggleMinimized(1);
     model->requestToggleMaximized(1);
@@ -516,6 +538,8 @@ void PlasmaWindowModelTest::testRequests()
     QVERIFY(!activateRequestedSpy.wait(100));
     QVERIFY(activateRequestedSpy.isEmpty());
     QVERIFY(closeRequestedSpy.isEmpty());
+    QVERIFY(moveRequestedSpy.isEmpty());
+    QVERIFY(resizeRequestedSpy.isEmpty());
     QVERIFY(virtualDesktopRequestedSpy.isEmpty());
     QVERIFY(minimizedRequestedSpy.isEmpty());
     QVERIFY(maximizeRequestedSpy.isEmpty());
@@ -528,6 +552,8 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(activateRequestedSpy.count(), 1);
     QCOMPARE(activateRequestedSpy.first().first().toBool(), true);
     QCOMPARE(closeRequestedSpy.count(), 0);
+    QCOMPARE(moveRequestedSpy.count(), 0);
+    QCOMPARE(resizeRequestedSpy.count(), 0);
     QCOMPARE(virtualDesktopRequestedSpy.count(), 0);
     QCOMPARE(minimizedRequestedSpy.count(), 0);
     QCOMPARE(maximizeRequestedSpy.count(), 0);
@@ -537,6 +563,30 @@ void PlasmaWindowModelTest::testRequests()
     QVERIFY(closeRequestedSpy.wait());
     QCOMPARE(activateRequestedSpy.count(), 1);
     QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.count(), 0);
+    QCOMPARE(resizeRequestedSpy.count(), 0);
+    QCOMPARE(virtualDesktopRequestedSpy.count(), 0);
+    QCOMPARE(minimizedRequestedSpy.count(), 0);
+    QCOMPARE(maximizeRequestedSpy.count(), 0);
+    QCOMPARE(shadeRequestedSpy.count(), 0);
+    // move
+    model->requestMove(0);
+    QVERIFY(moveRequestedSpy.wait());
+    QCOMPARE(activateRequestedSpy.count(), 1);
+    QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.count(), 1);
+    QCOMPARE(resizeRequestedSpy.count(), 0);
+    QCOMPARE(virtualDesktopRequestedSpy.count(), 0);
+    QCOMPARE(minimizedRequestedSpy.count(), 0);
+    QCOMPARE(maximizeRequestedSpy.count(), 0);
+    QCOMPARE(shadeRequestedSpy.count(), 0);
+    // resize
+    model->requestResize(0);
+    QVERIFY(resizeRequestedSpy.wait());
+    QCOMPARE(activateRequestedSpy.count(), 1);
+    QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.count(), 1);
+    QCOMPARE(resizeRequestedSpy.count(), 1);
     QCOMPARE(virtualDesktopRequestedSpy.count(), 0);
     QCOMPARE(minimizedRequestedSpy.count(), 0);
     QCOMPARE(maximizeRequestedSpy.count(), 0);
@@ -548,6 +598,8 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(virtualDesktopRequestedSpy.first().first().toUInt(), 1u);
     QCOMPARE(activateRequestedSpy.count(), 1);
     QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.count(), 1);
+    QCOMPARE(resizeRequestedSpy.count(), 1);
     QCOMPARE(minimizedRequestedSpy.count(), 0);
     QCOMPARE(maximizeRequestedSpy.count(), 0);
     QCOMPARE(shadeRequestedSpy.count(), 0);
@@ -558,6 +610,8 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(minimizedRequestedSpy.first().first().toBool(), true);
     QCOMPARE(activateRequestedSpy.count(), 1);
     QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.count(), 1);
+    QCOMPARE(resizeRequestedSpy.count(), 1);
     QCOMPARE(virtualDesktopRequestedSpy.count(), 1);
     QCOMPARE(maximizeRequestedSpy.count(), 0);
     QCOMPARE(shadeRequestedSpy.count(), 0);
@@ -568,6 +622,7 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(maximizeRequestedSpy.first().first().toBool(), true);
     QCOMPARE(activateRequestedSpy.count(), 1);
     QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.count(), 1);
     QCOMPARE(virtualDesktopRequestedSpy.count(), 1);
     QCOMPARE(minimizedRequestedSpy.count(), 1);
     QCOMPARE(shadeRequestedSpy.count(), 0);
@@ -578,6 +633,8 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(shadeRequestedSpy.first().first().toBool(), true);
     QCOMPARE(activateRequestedSpy.count(), 1);
     QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.count(), 1);
+    QCOMPARE(resizeRequestedSpy.count(), 1);
     QCOMPARE(virtualDesktopRequestedSpy.count(), 1);
     QCOMPARE(minimizedRequestedSpy.count(), 1);
     QCOMPARE(maximizeRequestedSpy.count(), 1);
