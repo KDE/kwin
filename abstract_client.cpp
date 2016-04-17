@@ -650,6 +650,8 @@ void AbstractClient::setupWindowManagementInterface()
     w->setSkipTaskbar(skipTaskbar());
     w->setShadeable(isShadeable());
     w->setShaded(isShade());
+    w->setResizable(isResizable());
+    w->setMovable(isMovable());
     connect(this, &AbstractClient::skipTaskbarChanged, w,
         [w, this] {
             w->setSkipTaskbar(skipTaskbar());
@@ -691,6 +693,18 @@ void AbstractClient::setupWindowManagementInterface()
     );
     connect(this, &AbstractClient::shadeChanged, w, [w, this] { w->setShaded(isShade()); });
     connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
+    connect(w, &PlasmaWindowInterface::moveRequested, this,
+        [this] {
+            Cursor::setPos(geometry().center());
+            performMouseCommand(Options::MouseMove, Cursor::pos());
+        }
+    );
+    connect(w, &PlasmaWindowInterface::resizeRequested, this,
+        [this] {
+            Cursor::setPos(geometry().bottomRight());
+            performMouseCommand(Options::MouseResize, Cursor::pos());
+        }
+    );
     connect(w, &PlasmaWindowInterface::virtualDesktopRequested, this,
         [this] (quint32 desktop) {
             workspace()->sendClientToDesktop(this, desktop + 1, true);
