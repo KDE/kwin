@@ -58,14 +58,23 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     , m_internal(surface->client() == waylandServer()->internalConnection())
 {
     setSurface(surface->surface());
+    init();
+}
+
+ShellClient::~ShellClient() = default;
+
+void ShellClient::init()
+{
     findInternalWindow();
     createWindowId();
     setupCompositing();
-    if (surface->surface()->buffer()) {
+    SurfaceInterface *s = surface();
+    Q_ASSERT(s);
+    if (s->buffer()) {
         setReadyForPainting();
         setupWindowManagementInterface();
         m_unmapped = false;
-        m_clientSize = surface->surface()->buffer()->size();
+        m_clientSize = s->buffer()->size();
     } else {
         ready_for_painting = false;
     }
@@ -76,93 +85,93 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
         doSetGeometry(QRect(QPoint(0, 0), m_clientSize));
         setDesktop(VirtualDesktopManager::self()->current());
     }
-    if (waylandServer()->inputMethodConnection() == m_shellSurface->client()) {
+    if (waylandServer()->inputMethodConnection() == s->client()) {
         m_windowType = NET::OnScreenDisplay;
     }
 
-    connect(surface->surface(), &SurfaceInterface::sizeChanged, this,
+    connect(s, &SurfaceInterface::sizeChanged, this,
         [this] {
-            m_clientSize = m_shellSurface->surface()->buffer()->size();
+            m_clientSize = surface()->buffer()->size();
             doSetGeometry(QRect(geom.topLeft(), m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
             discardWindowPixmap();
         }
     );
-    connect(surface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
-    connect(surface->surface(), &SurfaceInterface::unmapped, this, &ShellClient::unmap);
-    connect(surface, &ShellSurfaceInterface::titleChanged, this, &ShellClient::captionChanged);
+    connect(s, &SurfaceInterface::unmapped, this, &ShellClient::unmap);
+    if (m_shellSurface) {
+        connect(m_shellSurface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
+        connect(m_shellSurface, &ShellSurfaceInterface::titleChanged, this, &ShellClient::captionChanged);
 
-    connect(surface, &ShellSurfaceInterface::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
-    connect(surface, &ShellSurfaceInterface::maximizedChanged, this,
-        [this] (bool maximized) {
-            maximize(maximized ? MaximizeFull : MaximizeRestore);
-        }
-    );
-    connect(surface, &ShellSurfaceInterface::windowClassChanged, this, &ShellClient::updateIcon);
+        connect(m_shellSurface, &ShellSurfaceInterface::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
+        connect(m_shellSurface, &ShellSurfaceInterface::maximizedChanged, this,
+            [this] (bool maximized) {
+                maximize(maximized ? MaximizeFull : MaximizeRestore);
+            }
+        );
+        connect(m_shellSurface, &ShellSurfaceInterface::windowClassChanged, this, &ShellClient::updateIcon);
+
+        setResourceClass(m_shellSurface->windowClass());
+        connect(m_shellSurface, &ShellSurfaceInterface::windowClassChanged, this,
+            [this] {
+                setResourceClass(m_shellSurface->windowClass());
+            }
+        );
+        connect(m_shellSurface, &ShellSurfaceInterface::transientForChanged, this, &ShellClient::setTransient);
+        connect(m_shellSurface, &ShellSurfaceInterface::moveRequested, this,
+            [this] {
+                // TODO: check the seat and serial
+                performMouseCommand(Options::MouseMove, Cursor::pos());
+            }
+        );
+        connect(m_shellSurface, &ShellSurfaceInterface::resizeRequested, this,
+            [this] (SeatInterface *seat, quint32 serial, Qt::Edges edges) {
+                // TODO: check the seat and serial
+                Q_UNUSED(seat)
+                Q_UNUSED(serial)
+                if (!isResizable() || isShade()) {
+                    return;
+                }
+                if (isMoveResize()) {
+                    finishMoveResize(false);
+                }
+                setMoveResizePointerButtonDown(true);
+                setMoveOffset(Cursor::pos() - pos());  // map from global
+                setInvertedMoveOffset(rect().bottomRight() - moveOffset());
+                setUnrestrictedMoveResize(false);
+                auto toPosition = [edges] {
+                    Position pos = PositionCenter;
+                    if (edges.testFlag(Qt::TopEdge)) {
+                        pos = PositionTop;
+                    } else if (edges.testFlag(Qt::BottomEdge)) {
+                        pos = PositionBottom;
+                    }
+                    if (edges.testFlag(Qt::LeftEdge)) {
+                        pos = Position(pos | PositionLeft);
+                    } else if (edges.testFlag(Qt::RightEdge)) {
+                        pos = Position(pos | PositionRight);
+                    }
+                    return pos;
+                };
+                setMoveResizePointerMode(toPosition());
+                if (!startMoveResize())
+                    setMoveResizePointerButtonDown(false);
+                updateCursor();
+            }
+        );
+    }
     updateIcon();
 
     // setup shadow integration
     getShadow();
-    connect(surface->surface(), &SurfaceInterface::shadowChanged, this, &Toplevel::getShadow);
-
-    setResourceClass(surface->windowClass());
-    connect(surface, &ShellSurfaceInterface::windowClassChanged, this,
-        [this] {
-            setResourceClass(m_shellSurface->windowClass());
-        }
-    );
+    connect(s, &SurfaceInterface::shadowChanged, this, &Toplevel::getShadow);
 
     setTransient();
-    connect(surface, &ShellSurfaceInterface::transientForChanged, this, &ShellClient::setTransient);
-    connect(surface, &ShellSurfaceInterface::moveRequested, this,
-        [this] {
-            // TODO: check the seat and serial
-            performMouseCommand(Options::MouseMove, Cursor::pos());
-        }
-    );
-    connect(surface, &ShellSurfaceInterface::resizeRequested, this,
-        [this] (SeatInterface *seat, quint32 serial, Qt::Edges edges) {
-            // TODO: check the seat and serial
-            Q_UNUSED(seat)
-            Q_UNUSED(serial)
-            if (!isResizable() || isShade()) {
-                return;
-            }
-            if (isMoveResize()) {
-                finishMoveResize(false);
-            }
-            setMoveResizePointerButtonDown(true);
-            setMoveOffset(Cursor::pos() - pos());  // map from global
-            setInvertedMoveOffset(rect().bottomRight() - moveOffset());
-            setUnrestrictedMoveResize(false);
-            auto toPosition = [edges] {
-                Position pos = PositionCenter;
-                if (edges.testFlag(Qt::TopEdge)) {
-                    pos = PositionTop;
-                } else if (edges.testFlag(Qt::BottomEdge)) {
-                    pos = PositionBottom;
-                }
-                if (edges.testFlag(Qt::LeftEdge)) {
-                    pos = Position(pos | PositionLeft);
-                } else if (edges.testFlag(Qt::RightEdge)) {
-                    pos = Position(pos | PositionRight);
-                }
-                return pos;
-            };
-            setMoveResizePointerMode(toPosition());
-            if (!startMoveResize())
-                setMoveResizePointerButtonDown(false);
-            updateCursor();
-        }
-    );
     // check whether we have a ServerSideDecoration
-    if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(surface->surface())) {
+    if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(s)) {
         installServerSideDecoration(deco);
     }
 
     updateColorScheme(QString());
 }
-
-ShellClient::~ShellClient() = default;
 
 void ShellClient::destroyClient()
 {

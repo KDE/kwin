@@ -138,6 +138,7 @@ private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);
 
 private:
+    void init();
     void requestGeometry(const QRect &rect);
     void doSetGeometry(const QRect &rect);
     void createDecoration(const QRect &oldgeom);
