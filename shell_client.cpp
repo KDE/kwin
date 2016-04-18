@@ -292,8 +292,9 @@ void ShellClient::setOpacity(double opacity)
 
 void ShellClient::addDamage(const QRegion &damage)
 {
-    if (m_shellSurface->surface()->buffer()->size().isValid()) {
-        m_clientSize = m_shellSurface->surface()->buffer()->size();
+    auto s = surface();
+    if (s->buffer()->size().isValid()) {
+        m_clientSize = s->buffer()->size();
         QPoint position = geom.topLeft();
         if (m_positionAfterResize.isValid()) {
             addLayerRepaint(geometry());
@@ -303,7 +304,7 @@ void ShellClient::addDamage(const QRegion &damage)
         doSetGeometry(QRect(position, m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
     }
     markAsMapped();
-    setDepth(m_shellSurface->surface()->buffer()->hasAlphaChannel() ? 32 : 24);
+    setDepth(s->buffer()->hasAlphaChannel() ? 32 : 24);
     repaints_region += damage.translated(clientPos());
     Toplevel::addDamage(damage);
 }
@@ -436,7 +437,10 @@ QString ShellClient::caption(bool full, bool stripped) const
 {
     Q_UNUSED(full)
     Q_UNUSED(stripped)
-    return m_shellSurface->title();
+    if (m_shellSurface) {
+        return m_shellSurface->title();
+    }
+    return QString();
 }
 
 void ShellClient::closeWindow()
@@ -688,14 +692,17 @@ bool ShellClient::acceptsFocus() const
     if (isInternal()) {
         return false;
     }
-    if (waylandServer()->inputMethodConnection() == m_shellSurface->client()) {
+    if (waylandServer()->inputMethodConnection() == surface()->client()) {
         return false;
     }
-    if (m_shellSurface->isPopup()) {
-        return false;
+    if (m_shellSurface) {
+        if (m_shellSurface->isPopup()) {
+            return false;
+        }
+        // if the window is not visible it doesn't get input
+        return m_shellSurface->acceptsKeyboardFocus() && isShown(true);
     }
-    // if the window is not visible it doesn't get input
-    return m_shellSurface->acceptsKeyboardFocus() && isShown(true);
+    return false;
 }
 
 void ShellClient::createWindowId()
@@ -703,13 +710,13 @@ void ShellClient::createWindowId()
     if (m_internalWindow) {
         m_windowId = m_internalWindow->winId();
     } else {
-        m_windowId = waylandServer()->createWindowId(m_shellSurface->surface());
+        m_windowId = waylandServer()->createWindowId(surface());
     }
 }
 
 void ShellClient::findInternalWindow()
 {
-    if (m_shellSurface->client() != waylandServer()->internalConnection()) {
+    if (surface()->client() != waylandServer()->internalConnection()) {
         return;
     }
     const QWindowList windows = kwinApp()->topLevelWindows();
@@ -751,12 +758,12 @@ bool ShellClient::isInternal() const
 
 bool ShellClient::isLockScreen() const
 {
-    return m_shellSurface->client() == waylandServer()->screenLockerClientConnection();
+    return surface()->client() == waylandServer()->screenLockerClientConnection();
 }
 
 bool ShellClient::isInputMethod() const
 {
-    return m_shellSurface->client() == waylandServer()->inputMethodConnection();
+    return surface()->client() == waylandServer()->inputMethodConnection();
 }
 
 xcb_window_t ShellClient::window() const
@@ -767,7 +774,9 @@ xcb_window_t ShellClient::window() const
 void ShellClient::requestGeometry(const QRect &rect)
 {
     m_positionAfterResize.setPoint(rect.topLeft());
-    m_shellSurface->requestSize(rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
+    if (m_shellSurface) {
+        m_shellSurface->requestSize(rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
+    }
 }
 
 void ShellClient::clientFullScreenChanged(bool fullScreen)
@@ -803,7 +812,9 @@ void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
     if (h > area.height()) {
         h = area.height();
     }
-    m_shellSurface->requestSize(QSize(w, h));
+    if (m_shellSurface) {
+        m_shellSurface->requestSize(QSize(w, h));
+    }
 }
 
 void ShellClient::unmap()
@@ -898,7 +909,10 @@ bool ShellClient::hasStrut() const
 
 void ShellClient::updateIcon()
 {
-    QString desktopFile = QString::fromUtf8(m_shellSurface->windowClass());
+    QString desktopFile;
+    if (m_shellSurface) {
+        desktopFile = QString::fromUtf8(m_shellSurface->windowClass());
+    }
     if (desktopFile.isEmpty()) {
         setIcon(QIcon());
     }
@@ -916,8 +930,11 @@ bool ShellClient::isTransient() const
 
 void ShellClient::setTransient()
 {
-    const auto s = m_shellSurface->transientFor();
-    auto t = waylandServer()->findClient(s.data());
+    SurfaceInterface *s = nullptr;
+    if (m_shellSurface) {
+        s = m_shellSurface->transientFor().data();
+    }
+    auto t = waylandServer()->findClient(s);
     if (t != transientFor()) {
         // remove from main client
         if (transientFor())
@@ -927,7 +944,7 @@ void ShellClient::setTransient()
             t->addTransient(this);
         }
     }
-    m_transient = !s.isNull();
+    m_transient = (s != nullptr);
 }
 
 bool ShellClient::hasTransientPlacementHint() const
@@ -937,7 +954,10 @@ bool ShellClient::hasTransientPlacementHint() const
 
 QPoint ShellClient::transientPlacementHint() const
 {
-    return m_shellSurface->transientOffset();
+    if (m_shellSurface) {
+        return m_shellSurface->transientOffset();
+    }
+    return QPoint();
 }
 
 bool ShellClient::isWaitingForMoveResizeSync() const
