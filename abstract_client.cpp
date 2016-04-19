@@ -648,7 +648,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setThemedIconName(icon().name().isEmpty() ? QStringLiteral("xorg") : icon().name());
     w->setAppId(QString::fromUtf8(resourceName()));
     w->setSkipTaskbar(skipTaskbar());
-    w->setShadable(isShadeable());
+    w->setShadeable(isShadeable());
     w->setShaded(isShade());
     connect(this, &AbstractClient::skipTaskbarChanged, w,
         [w, this] {
