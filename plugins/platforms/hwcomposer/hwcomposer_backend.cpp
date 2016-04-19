@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "input.h"
 #include "main.h"
-#include "virtual_terminal.h"
 #include "wayland_server.h"
 // KWayland
 #include <KWayland/Server/display.h>
@@ -276,8 +275,6 @@ void HwcomposerBackend::init()
     qCDebug(KWIN_HWCOMPOSER) << "Display size:" << m_displaySize;
     qCDebug(KWIN_HWCOMPOSER) << "Refresh rate:" << m_refreshRate;
 
-    VirtualTerminal::create(this);
-    VirtualTerminal::self()->init();
     emit screensQueried();
     setReady(true);
 }
