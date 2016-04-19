@@ -126,12 +126,22 @@ LogindIntegration::~LogindIntegration()
 
 void LogindIntegration::logindServiceRegistered()
 {
+    const QByteArray sessionId = qgetenv("XDG_SESSION_ID");
+    QString methodName;
+    QVariantList args;
+    if (sessionId.isEmpty()) {
+        methodName = QStringLiteral("GetSessionByPID");
+        args << (quint32) QCoreApplication::applicationPid();
+    } else {
+        methodName = QStringLiteral("GetSession");
+        args << QString::fromLocal8Bit(sessionId);
+    }
     // get the current session
     QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
                                                           s_login1Path,
                                                           s_login1ManagerInterface,
-                                                          QStringLiteral("GetSessionByPID"));
-    message.setArguments(QVariantList() << (quint32) QCoreApplication::applicationPid());
+                                                          methodName);
+    message.setArguments(args);
     QDBusPendingReply<QDBusObjectPath> session = m_bus.asyncCall(message);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(session, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this,
@@ -149,6 +159,13 @@ void LogindIntegration::logindServiceRegistered()
             qCDebug(KWIN_CORE) << "Session path:" << m_sessionPath;
             m_connected = true;
             connectSessionPropertiesChanged();
+            // activate the session, in case we are not on it
+            QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+                                                                m_sessionPath,
+                                                                s_login1SessionInterface,
+                                                                QStringLiteral("Activate"));
+            // blocking on purpose
+            m_bus.call(message);
             getSeat();
             getSessionActive();
             getVirtualTerminal();
