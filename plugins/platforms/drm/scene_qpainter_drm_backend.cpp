@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_qpainter_drm_backend.h"
 #include "drm_backend.h"
 #include "drm_output.h"
-#include "virtual_terminal.h"
+#include "logind.h"
 
 namespace KWin
 {
@@ -101,7 +101,7 @@ void DrmQPainterBackend::present(int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)
-    if (!VirtualTerminal::self()->isActive()) {
+    if (!LogindIntegration::self()->isActiveSession()) {
         return;
     }
     for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {

@@ -21,10 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_backend.h"
 
 #include "composite.h"
+#include "logind.h"
 #include "logging.h"
 #include "main.h"
 #include "screens_drm.h"
-#include "virtual_terminal.h"
 #include "wayland_server.h"
 // KWayland
 #include <KWayland/Server/display.h>
@@ -102,7 +102,7 @@ bool DrmOutput::present(DrmBuffer *buffer)
     if (!buffer || buffer->bufferId() == 0) {
         return false;
     }
-    if (!VirtualTerminal::self()->isActive()) {
+    if (!LogindIntegration::self()->isActiveSession()) {
         m_currentBuffer = buffer;
         return false;
     }

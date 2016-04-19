@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_qpainter_drm_backend.h"
 #include "screens_drm.h"
 #include "udev.h"
-#include "virtual_terminal.h"
 #include "wayland_server.h"
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
@@ -101,8 +100,6 @@ void DrmBackend::init()
     } else {
         connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
     }
-    auto v = VirtualTerminal::create(this);
-    connect(v, &VirtualTerminal::activeChanged, this, &DrmBackend::activate);
 }
 
 void DrmBackend::outputWentOff()
@@ -210,7 +207,6 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
 void DrmBackend::openDrm()
 {
     connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, this, &DrmBackend::activate);
-    VirtualTerminal::self()->init();
     UdevDevice::Ptr device = m_udev->primaryGpu();
     if (!device) {
         qCWarning(KWIN_DRM) << "Did not find a GPU";
@@ -226,7 +222,7 @@ void DrmBackend::openDrm()
     QSocketNotifier *notifier = new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
     connect(notifier, &QSocketNotifier::activated, this,
         [this] {
-            if (!VirtualTerminal::self()->isActive()) {
+            if (!LogindIntegration::self()->isActiveSession()) {
                 return;
             }
             drmEventContext e;
