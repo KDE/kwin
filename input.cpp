@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #if HAVE_INPUT
 #include "libinput/connection.h"
-#include "virtual_terminal.h"
 #endif
 #include "platform.h"
 #include "shell_client.h"
@@ -773,10 +772,21 @@ InputRedirection::InputRedirection(QObject *parent)
     qRegisterMetaType<KWin::InputRedirection::PointerAxis>();
 #if HAVE_INPUT
     if (Application::usesLibinput()) {
-        if (VirtualTerminal::self()) {
+        if (LogindIntegration::self()->hasSessionControl()) {
             setupLibInput();
         } else {
-            connect(kwinApp(), &Application::virtualTerminalCreated, this, &InputRedirection::setupLibInput);
+            if (LogindIntegration::self()->isConnected()) {
+                LogindIntegration::self()->takeControl();
+            } else {
+                connect(LogindIntegration::self(), &LogindIntegration::connectedChanged, LogindIntegration::self(), &LogindIntegration::takeControl);
+            }
+            connect(LogindIntegration::self(), &LogindIntegration::hasSessionControlChanged, this,
+                [this] (bool sessionControl) {
+                    if (sessionControl) {
+                        setupLibInput();
+                    }
+                }
+            );
         }
     }
 #endif
@@ -875,7 +885,7 @@ void InputRedirection::setupWorkspace()
 void InputRedirection::setupInputFilters()
 {
 #if HAVE_INPUT
-    if (VirtualTerminal::self()) {
+    if (LogindIntegration::self()->hasSessionControl()) {
         installInputEventFilter(new VirtualTerminalFilter);
     }
 #endif
@@ -993,7 +1003,7 @@ void InputRedirection::setupLibInput()
                 }
             );
         }
-        connect(VirtualTerminal::self(), &VirtualTerminal::activeChanged, m_libInput,
+        connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, m_libInput,
             [this] (bool active) {
                 if (!active) {
                     m_libInput->deactivate();
