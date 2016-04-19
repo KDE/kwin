@@ -88,7 +88,7 @@ public:
     /**
      * @since 5.7
      */
-    void setShadable(bool set);
+    void setShadeable(bool set);
     /**
      * @since 5.7
      */
@@ -122,7 +122,7 @@ Q_SIGNALS:
     /**
      * @since 5.7
      */
-    void shadableRequested(bool set);
+    void shadeableRequested(bool set);
     /**
      * @since 5.7
      */

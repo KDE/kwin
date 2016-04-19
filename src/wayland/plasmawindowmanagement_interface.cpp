@@ -445,8 +445,8 @@ void PlasmaWindowInterface::Private::setStateCallback(wl_client *client, wl_reso
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR) {
         emit p->q->skipTaskbarRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR);
     }
-    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADABLE) {
-        emit p->q->shadableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADABLE);
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADEABLE) {
+        emit p->q->shadeableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADEABLE);
     }
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADED) {
         emit p->q->shadedRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADED);
@@ -595,9 +595,9 @@ void PlasmaWindowInterface::setThemedIconName(const QString &iconName)
     d->setThemedIconName(iconName);
 }
 
-void PlasmaWindowInterface::setShadable(bool set)
+void PlasmaWindowInterface::setShadeable(bool set)
 {
-    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADABLE, set);
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADEABLE, set);
 }
 
 void PlasmaWindowInterface::setShaded(bool set)

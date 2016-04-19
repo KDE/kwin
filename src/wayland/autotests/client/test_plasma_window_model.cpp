@@ -60,7 +60,7 @@ private Q_SLOTS:
     void testIsOnAllDesktops();
     void testIsDemandingAttention();
     void testSkipTaskbar();
-    void testIsShadable();
+    void testIsShadeable();
     void testIsShaded();
     void testTitle();
     void testAppId();
@@ -217,7 +217,7 @@ void PlasmaWindowModelTest::testRoleNames_data()
     QTest::newRow("IsOnAllDesktops")      << int(PlasmaWindowModel::IsOnAllDesktops) << QByteArrayLiteral("IsOnAllDesktops");
     QTest::newRow("IsDemandingAttention") << int(PlasmaWindowModel::IsDemandingAttention) << QByteArrayLiteral("IsDemandingAttention");
     QTest::newRow("SkipTaskbar")          << int(PlasmaWindowModel::SkipTaskbar) << QByteArrayLiteral("SkipTaskbar");
-    QTest::newRow("IsShadable")           << int(PlasmaWindowModel::IsShadable) << QByteArrayLiteral("IsShadable");
+    QTest::newRow("IsShadeable")           << int(PlasmaWindowModel::IsShadeable) << QByteArrayLiteral("IsShadeable");
     QTest::newRow("IsShaded")             << int(PlasmaWindowModel::IsShaded) << QByteArrayLiteral("IsShaded");
 }
 
@@ -296,7 +296,7 @@ void PlasmaWindowModelTest::testDefaultData_data()
     QTest::newRow("VirtualDesktop")       << int(PlasmaWindowModel::VirtualDesktop) << QVariant(0);
     QTest::newRow("IsOnAllDesktops")      << int(PlasmaWindowModel::IsOnAllDesktops) << QVariant(false);
     QTest::newRow("IsDemandingAttention") << int(PlasmaWindowModel::IsDemandingAttention) << QVariant(false);
-    QTest::newRow("IsShadable")           << int(PlasmaWindowModel::IsShadable) << QVariant(false);
+    QTest::newRow("IsShadeable")           << int(PlasmaWindowModel::IsShadeable) << QVariant(false);
     QTest::newRow("IsShaded")             << int(PlasmaWindowModel::IsShaded) << QVariant(false);
     QTest::newRow("SkipTaskbar")          << int(PlasmaWindowModel::SkipTaskbar) << QVariant(false);
 }
@@ -378,9 +378,9 @@ void PlasmaWindowModelTest::testSkipTaskbar()
     QVERIFY(testBooleanData(PlasmaWindowModel::SkipTaskbar, &PlasmaWindowInterface::setSkipTaskbar));
 }
 
-void PlasmaWindowModelTest::testIsShadable()
+void PlasmaWindowModelTest::testIsShadeable()
 {
-    QVERIFY(testBooleanData(PlasmaWindowModel::IsShadable, &PlasmaWindowInterface::setShadable));
+    QVERIFY(testBooleanData(PlasmaWindowModel::IsShadeable, &PlasmaWindowInterface::setShadeable));
 }
 
 void PlasmaWindowModelTest::testIsShaded()
