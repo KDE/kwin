@@ -101,6 +101,10 @@ public:
      * @since 5.7
      */
     void setResizable(bool set);
+    /**
+     * @since 5.7
+     */
+    void setVirtualDesktopChangeable(bool set);
 
     void unmap();
 
@@ -151,6 +155,10 @@ Q_SIGNALS:
      * @since 5.7
      */
     void resizableRequested(bool set);
+    /**
+     * @since 5.7
+     */
+    void virtualDesktopChangeableRequested(bool set);
 
 private:
     friend class PlasmaWindowManagementInterface;

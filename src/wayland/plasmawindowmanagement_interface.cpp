@@ -475,6 +475,9 @@ void PlasmaWindowInterface::Private::setStateCallback(wl_client *client, wl_reso
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_RESIZABLE) {
         emit p->q->resizableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_RESIZABLE);
     }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_VIRTUAL_DESKTOP_CHANGEABLE) {
+        emit p->q->virtualDesktopChangeableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_VIRTUAL_DESKTOP_CHANGEABLE);
+    }
 }
 
 void PlasmaWindowInterface::Private::setMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel, uint32_t x, uint32_t y, uint32_t width, uint32_t height)
@@ -637,6 +640,11 @@ void PlasmaWindowInterface::setMovable(bool set)
 void PlasmaWindowInterface::setResizable(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_RESIZABLE, set);
+}
+
+void PlasmaWindowInterface::setVirtualDesktopChangeable(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_VIRTUAL_DESKTOP_CHANGEABLE, set);
 }
 
 }
