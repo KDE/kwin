@@ -652,6 +652,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setShaded(isShade());
     w->setResizable(isResizable());
     w->setMovable(isMovable());
+    w->setVirtualDesktopChangeable(true); // FIXME Matches Client::actionSupported(), but both should be implemented.
     connect(this, &AbstractClient::skipTaskbarChanged, w,
         [w, this] {
             w->setSkipTaskbar(skipTaskbar());
