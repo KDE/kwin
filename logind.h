@@ -48,6 +48,7 @@ public:
     int vt() const {
         return m_vt;
     }
+    void switchVirtualTerminal(quint32 vtNr);
 
     void takeControl();
     void releaseControl();

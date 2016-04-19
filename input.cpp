@@ -114,7 +114,7 @@ public:
         if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
             const xkb_keysym_t keysym = event->nativeVirtualKey();
             if (keysym >= XKB_KEY_XF86Switch_VT_1 && keysym <= XKB_KEY_XF86Switch_VT_12) {
-                VirtualTerminal::self()->activate(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
+                LogindIntegration::self()->switchVirtualTerminal(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
                 return true;
             }
         }

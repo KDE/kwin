@@ -362,4 +362,17 @@ void LogindIntegration::getSeat()
     );
 }
 
+void LogindIntegration::switchVirtualTerminal(quint32 vtNr)
+{
+    if (!m_connected || m_seatPath.isEmpty()) {
+        return;
+    }
+    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+                                                          m_seatPath,
+                                                          QStringLiteral("org.freedesktop.login1.Seat"),
+                                                          QStringLiteral("SwitchTo"));
+    message.setArguments(QVariantList{vtNr});
+    m_bus.asyncCall(message);
+}
+
 } // namespace
