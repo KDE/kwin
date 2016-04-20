@@ -13,8 +13,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2015-07-14</date>
-<releaseinfo>Plasma 5.3</releaseinfo>
+<date>2016-04-14</date>
+<releaseinfo>Plasma 5.6</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -68,6 +68,24 @@ you find one which best suits your pattern of work.</para>
 <imagedata fileref="configure.png" format="PNG"/></imageobject></inlinemediaobject> 
 configure button to open configuration dialogs for the decoration.</para>
 
+<para>The options in this configuration dialog are applied to all windows. 
+Some window decorations (&eg; <quote>Breeze</quote> or <quote>Oxygen</quote>)
+provide a <guilabel>Window-Specific Overrides</guilabel> tab.
+On this tab you can change the border size and the visibility 
+of the window titlebar for particular windows.</para>
+
+<para>Different options for particular windows you find in the &systemsettings;
+module <ulink url="help:/kcontrol/windowspecific">Window Rules</ulink>.
+</para>
+
+<tip>
+<para>For accessibility purposes, some window decorations support
+extra wide borders.  If this is available, you can also choose a
+border size here.  These large borders are easier to see for low
+vision users, and easier to grab for people with limited mobility or
+difficulty using a mouse.</para>
+</tip>
+
 </sect2>
 
 <sect2>
@@ -95,18 +113,22 @@ The available options depend on the selected style.
 <sect2>
 <title>Buttons</title>
 
-<para>This section below the style list allows you to customize the button location on the titlebar. 
+<para>This tab allows you to customize the button location on the titlebar. 
 You can drag buttons into the titlebar, remove them or drag around the
 buttons until you have the order that makes you comfortable.
 </para>
 
-<tip>
-<para>For accessibility purposes, some window decorations support
-extra wide borders.  If this is available, you can also choose a
-border size here.  These large borders are easier to see for low
-vision users, and easier to grab for people with limited mobility or
-difficulty using a mouse.</para>
-</tip>
+<screenshot>
+<screeninfo>Button Options</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Button Options</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
 
 <para>Enable <guilabel>Close windows by double clicking the menu button</guilabel>
 to have an additional option to the Close button or if you have removed the Close button from the titlebar.
