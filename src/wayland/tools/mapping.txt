@@ -44,3 +44,6 @@ wl_text_input;TextInputUnstableV0
 wl_text_input_manager;TextInputManagerUnstableV0
 zwp_text_input_v2;TextInputUnstableV2
 zwp_text_input_manager_v2;TextInputManagerUnstableV2
+xdg_shell;XdgShellV5
+xdg_surface;XdgSurfaceV5
+xdg_popup;XdgPopupV5

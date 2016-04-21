@@ -37,6 +37,8 @@ set(SERVER_LIB_SRCS
     textinput_interface.cpp
     textinput_interface_v0.cpp
     textinput_interface_v2.cpp
+    xdgshell_interface.cpp
+    xdgshell_v5_interface.cpp
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
@@ -113,6 +115,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME text-input-unstable-v2
 )
 
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/xdg-shell-unstable-v5.xml
+    BASENAME xdg-shell-v5
+)
+
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
 generate_export_header(KF5WaylandServer
     BASE_NAME
@@ -183,6 +190,7 @@ install(FILES
   surface_interface.h
   textinput_interface.h
   touch_interface.h
+  xdgshell_interface.h
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server COMPONENT Devel
 )
 

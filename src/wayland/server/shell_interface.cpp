@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "shell_interface.h"
+#include "generic_shell_surface_p.h"
 #include "global_p.h"
 #include "resource_p.h"
 #include "display.h"
@@ -64,15 +65,12 @@ const struct wl_shell_interface ShellInterface::Private::s_interface = {
 #endif
 
 
-class ShellSurfaceInterface::Private : public Resource::Private
+class ShellSurfaceInterface::Private : public Resource::Private, public GenericShellSurface<ShellSurfaceInterface>
 {
 public:
     Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface, wl_resource *parentResource);
     void ping();
 
-    SurfaceInterface *surface;
-    QString title;
-    QByteArray windowClass;
     QScopedPointer<QTimer> pingTimer;
     quint32 pingSerial = 0;
     enum class WindowMode {
@@ -87,12 +85,13 @@ public:
     bool acceptsKeyboardFocus = true;
     void setWindowMode(WindowMode newWindowMode);
 
+    ShellSurfaceInterface *q_func() {
+        return reinterpret_cast<ShellSurfaceInterface *>(q);
+    }
+
 private:
     // interface callbacks
     static void pongCallback(wl_client *client, wl_resource *resource, uint32_t serial);
-    static void moveCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial);
-    static void resizeCallback(wl_client *client, wl_resource *resource, wl_resource *seat,
-                               uint32_t serial, uint32_t edges);
     static void setToplevelCallback(wl_client *client, wl_resource *resource);
     static void setTransientCallback(wl_client *client, wl_resource *resource, wl_resource *parent,
                                      int32_t x, int32_t y, uint32_t flags);
@@ -101,16 +100,9 @@ private:
     static void setPopupCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
                                 wl_resource *parent, int32_t x, int32_t y, uint32_t flags);
     static void setMaximizedCallback(wl_client *client, wl_resource *resource, wl_resource *output);
-    static void setTitleCallback(wl_client *client, wl_resource *resource, const char *title);
-    static void setClassCallback(wl_client *client, wl_resource *resource, const char *class_);
 
-    void setTitle(const QString &title);
-    void setWindowClass(const QByteArray &windowClass);
     void pong(quint32 serial);
     void setAcceptsFocus(quint32 flags);
-    ShellSurfaceInterface *q_func() {
-        return reinterpret_cast<ShellSurfaceInterface *>(q);
-    }
 
     static const struct wl_shell_surface_interface s_interface;
 };
@@ -166,7 +158,7 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
  *********************************/
 ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface, wl_resource *parentResource)
     : Resource::Private(q, shell, parentResource, &wl_shell_surface_interface, &s_interface)
-    , surface(surface)
+    , GenericShellSurface<KWayland::Server::ShellSurfaceInterface>(q, surface)
     , pingTimer(new QTimer)
 {
     pingTimer->setSingleShot(true);
@@ -177,14 +169,14 @@ ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface
 const struct wl_shell_surface_interface ShellSurfaceInterface::Private::s_interface = {
     pongCallback,
     moveCallback,
-    resizeCallback,
+    resizeCallback<wl_shell_surface_resize>,
     setToplevelCallback,
     setTransientCallback,
     setFullscreenCallback,
     setPopupCallback,
     setMaximizedCallback,
     setTitleCallback,
-    setClassCallback
+    setAppIdCallback
 };
 #endif
 
@@ -262,17 +254,10 @@ void ShellSurfaceInterface::requestSize(const QSize &size)
     d->client->flush();
 }
 
-void ShellSurfaceInterface::Private::moveCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial)
+namespace {
+template <>
+Qt::Edges edgesToQtEdges(wl_shell_surface_resize edges)
 {
-    auto s = cast<Private>(resource);
-    Q_ASSERT(client == *s->client);
-    emit s->q_func()->moveRequested(SeatInterface::get(seat), serial);
-}
-
-void ShellSurfaceInterface::Private::resizeCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial, uint32_t edges)
-{
-    auto s = cast<Private>(resource);
-    Q_ASSERT(client == *s->client);
     Qt::Edges qtEdges;
     switch (edges) {
     case WL_SHELL_SURFACE_RESIZE_TOP:
@@ -299,10 +284,14 @@ void ShellSurfaceInterface::Private::resizeCallback(wl_client *client, wl_resour
     case WL_SHELL_SURFACE_RESIZE_BOTTOM_RIGHT:
         qtEdges = Qt::BottomEdge | Qt::RightEdge;
         break;
+    case WL_SHELL_SURFACE_RESIZE_NONE:
+        break;
     default:
+        Q_UNREACHABLE();
         break;
     }
-    emit s->q_func()->resizeRequested(SeatInterface::get(seat), serial, qtEdges);
+    return qtEdges;
+}
 }
 
 void ShellSurfaceInterface::Private::setToplevelCallback(wl_client *client, wl_resource *resource)
@@ -399,40 +388,6 @@ void ShellSurfaceInterface::Private::setMaximizedCallback(wl_client *client, wl_
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
     s->setWindowMode(WindowMode::Maximized);
-}
-
-void ShellSurfaceInterface::Private::setTitleCallback(wl_client *client, wl_resource *resource, const char *title)
-{
-    auto s = cast<Private>(resource);
-    Q_ASSERT(client == *s->client);
-    s->setTitle(QString::fromUtf8(title));
-}
-
-void ShellSurfaceInterface::Private::setTitle(const QString &t)
-{
-    if (title == t) {
-        return;
-    }
-    title = t;
-    Q_Q(ShellSurfaceInterface);
-    emit q->titleChanged(title);
-}
-
-void ShellSurfaceInterface::Private::setClassCallback(wl_client *client, wl_resource *resource, const char *class_)
-{
-    auto s = cast<Private>(resource);
-    Q_ASSERT(client == *s->client);
-    s->setWindowClass(QByteArray(class_));
-}
-
-void ShellSurfaceInterface::Private::setWindowClass(const QByteArray &wc)
-{
-    if (windowClass == wc) {
-        return;
-    }
-    windowClass = wc;
-    Q_Q(ShellSurfaceInterface);
-    emit q->windowClassChanged(windowClass);
 }
 
 SurfaceInterface *ShellSurfaceInterface::surface() const {

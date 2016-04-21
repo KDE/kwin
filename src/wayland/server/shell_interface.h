@@ -40,6 +40,8 @@ class Display;
 class SeatInterface;
 class SurfaceInterface;
 class ShellSurfaceInterface;
+template <typename T>
+class GenericShellSurface;
 
 /**
  * @brief Global for the wl_shell interface.
@@ -293,6 +295,7 @@ Q_SIGNALS:
 private:
     friend class ShellInterface;
     explicit ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource);
+    friend class GenericShellSurface<ShellSurfaceInterface>;
     class Private;
     Private *d_func() const;
 };
