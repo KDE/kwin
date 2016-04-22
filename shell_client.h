@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SHELL_CLIENT_H
 
 #include "abstract_client.h"
+#include <KWayland/Server/xdg_shell_v5_interface.h>
 
 namespace KWayland
 {
@@ -41,6 +42,8 @@ class KWIN_EXPORT ShellClient : public AbstractClient
     Q_OBJECT
 public:
     ShellClient(KWayland::Server::ShellSurfaceInterface *surface);
+    ShellClient(KWayland::Server::XdgSurfaceV5Interface *surface);
+    ShellClient(KWayland::Server::XdgPopupV5Interface *surface);
     virtual ~ShellClient();
 
     QStringList activities() const override;
@@ -139,6 +142,8 @@ private Q_SLOTS:
 
 private:
     void init();
+    template <class T>
+    void initSurface(T *shellSurface);
     void requestGeometry(const QRect &rect);
     void doSetGeometry(const QRect &rect);
     void createDecoration(const QRect &oldgeom);
@@ -150,9 +155,12 @@ private:
     void updateIcon();
     void markAsMapped();
     void setTransient();
+    KWayland::Server::XdgSurfaceV5Interface::States xdgSurfaceStates() const;
     static void deleteClient(ShellClient *c);
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;
+    KWayland::Server::XdgSurfaceV5Interface *m_xdgShellSurface;
+    KWayland::Server::XdgPopupV5Interface *m_xdgShellPopup;
     QSize m_clientSize;
 
     ClearablePoint m_positionAfterResize; // co-ordinates saved from a requestGeometry call, real geometry will be updated after the next damage event when the client has resized

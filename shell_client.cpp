@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/server_decoration_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
+#include <KWayland/Server/xdg_shell_v5_interface.h>
 
 #include <KDesktopFile>
 
@@ -55,6 +56,30 @@ namespace KWin
 ShellClient::ShellClient(ShellSurfaceInterface *surface)
     : AbstractClient()
     , m_shellSurface(surface)
+    , m_xdgShellSurface(nullptr)
+    , m_xdgShellPopup(nullptr)
+    , m_internal(surface->client() == waylandServer()->internalConnection())
+{
+    setSurface(surface->surface());
+    init();
+}
+
+ShellClient::ShellClient(XdgSurfaceV5Interface *surface)
+    : AbstractClient()
+    , m_shellSurface(nullptr)
+    , m_xdgShellSurface(surface)
+    , m_xdgShellPopup(nullptr)
+    , m_internal(surface->client() == waylandServer()->internalConnection())
+{
+    setSurface(surface->surface());
+    init();
+}
+
+ShellClient::ShellClient(XdgPopupV5Interface *surface)
+    : AbstractClient()
+    , m_shellSurface(nullptr)
+    , m_xdgShellSurface(nullptr)
+    , m_xdgShellPopup(surface)
     , m_internal(surface->client() == waylandServer()->internalConnection())
 {
     setSurface(surface->surface());
@@ -62,6 +87,71 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
 }
 
 ShellClient::~ShellClient() = default;
+
+template <class T>
+void ShellClient::initSurface(T *shellSurface)
+{
+    connect(shellSurface, &T::titleChanged, this, &ShellClient::captionChanged);
+    connect(shellSurface, &T::destroyed, this, &ShellClient::destroyClient);
+    connect(shellSurface, &T::moveRequested, this,
+        [this] {
+            // TODO: check the seat and serial
+            performMouseCommand(Options::MouseMove, Cursor::pos());
+        }
+    );
+    connect(shellSurface, &T::windowClassChanged, this, &ShellClient::updateIcon);
+
+    setResourceClass(shellSurface->windowClass());
+    connect(shellSurface, &T::windowClassChanged, this,
+        [this] (const QByteArray &windowClass) {
+            setResourceClass(windowClass);
+        }
+    );
+    connect(shellSurface, &T::resizeRequested, this,
+        [this] (SeatInterface *seat, quint32 serial, Qt::Edges edges) {
+            // TODO: check the seat and serial
+            Q_UNUSED(seat)
+            Q_UNUSED(serial)
+            if (!isResizable() || isShade()) {
+                return;
+            }
+            if (isMoveResize()) {
+                finishMoveResize(false);
+            }
+            setMoveResizePointerButtonDown(true);
+            setMoveOffset(Cursor::pos() - pos());  // map from global
+            setInvertedMoveOffset(rect().bottomRight() - moveOffset());
+            setUnrestrictedMoveResize(false);
+            auto toPosition = [edges] {
+                Position pos = PositionCenter;
+                if (edges.testFlag(Qt::TopEdge)) {
+                    pos = PositionTop;
+                } else if (edges.testFlag(Qt::BottomEdge)) {
+                    pos = PositionBottom;
+                }
+                if (edges.testFlag(Qt::LeftEdge)) {
+                    pos = Position(pos | PositionLeft);
+                } else if (edges.testFlag(Qt::RightEdge)) {
+                    pos = Position(pos | PositionRight);
+                }
+                return pos;
+            };
+            setMoveResizePointerMode(toPosition());
+            if (!startMoveResize())
+                setMoveResizePointerButtonDown(false);
+            updateCursor();
+        }
+    );
+    connect(shellSurface, &T::maximizedChanged, this,
+        [this] (bool maximized) {
+            maximize(maximized ? MaximizeFull : MaximizeRestore);
+        }
+    );
+    // TODO: consider output!
+    connect(shellSurface, &T::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
+
+    connect(shellSurface, &T::transientForChanged, this, &ShellClient::setTransient);
+}
 
 void ShellClient::init()
 {
@@ -98,65 +188,30 @@ void ShellClient::init()
     );
     connect(s, &SurfaceInterface::unmapped, this, &ShellClient::unmap);
     if (m_shellSurface) {
-        connect(m_shellSurface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
-        connect(m_shellSurface, &ShellSurfaceInterface::titleChanged, this, &ShellClient::captionChanged);
-
-        connect(m_shellSurface, &ShellSurfaceInterface::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
-        connect(m_shellSurface, &ShellSurfaceInterface::maximizedChanged, this,
-            [this] (bool maximized) {
-                maximize(maximized ? MaximizeFull : MaximizeRestore);
-            }
-        );
-        connect(m_shellSurface, &ShellSurfaceInterface::windowClassChanged, this, &ShellClient::updateIcon);
-
-        setResourceClass(m_shellSurface->windowClass());
-        connect(m_shellSurface, &ShellSurfaceInterface::windowClassChanged, this,
-            [this] {
-                setResourceClass(m_shellSurface->windowClass());
-            }
-        );
-        connect(m_shellSurface, &ShellSurfaceInterface::transientForChanged, this, &ShellClient::setTransient);
-        connect(m_shellSurface, &ShellSurfaceInterface::moveRequested, this,
-            [this] {
-                // TODO: check the seat and serial
-                performMouseCommand(Options::MouseMove, Cursor::pos());
-            }
-        );
-        connect(m_shellSurface, &ShellSurfaceInterface::resizeRequested, this,
-            [this] (SeatInterface *seat, quint32 serial, Qt::Edges edges) {
-                // TODO: check the seat and serial
+        initSurface(m_shellSurface);
+    } else if (m_xdgShellSurface) {
+        initSurface(m_xdgShellSurface);
+        connect(m_xdgShellSurface, &XdgSurfaceV5Interface::windowMenuRequested, this,
+            [this] (SeatInterface *seat, quint32 serial, const QPoint &surfacePos) {
+                // TODO: check serial on seat
                 Q_UNUSED(seat)
                 Q_UNUSED(serial)
-                if (!isResizable() || isShade()) {
-                    return;
-                }
-                if (isMoveResize()) {
-                    finishMoveResize(false);
-                }
-                setMoveResizePointerButtonDown(true);
-                setMoveOffset(Cursor::pos() - pos());  // map from global
-                setInvertedMoveOffset(rect().bottomRight() - moveOffset());
-                setUnrestrictedMoveResize(false);
-                auto toPosition = [edges] {
-                    Position pos = PositionCenter;
-                    if (edges.testFlag(Qt::TopEdge)) {
-                        pos = PositionTop;
-                    } else if (edges.testFlag(Qt::BottomEdge)) {
-                        pos = PositionBottom;
-                    }
-                    if (edges.testFlag(Qt::LeftEdge)) {
-                        pos = Position(pos | PositionLeft);
-                    } else if (edges.testFlag(Qt::RightEdge)) {
-                        pos = Position(pos | PositionRight);
-                    }
-                    return pos;
-                };
-                setMoveResizePointerMode(toPosition());
-                if (!startMoveResize())
-                    setMoveResizePointerButtonDown(false);
-                updateCursor();
+                performMouseCommand(Options::MouseOperationsMenu, pos() + surfacePos);
             }
         );
+        connect(m_xdgShellSurface, &XdgSurfaceV5Interface::minimizeRequested, this,
+            [this] {
+                performMouseCommand(Options::MouseMinimize, Cursor::pos());
+            }
+        );
+        auto configure = [this] {
+            m_xdgShellSurface->configure(xdgSurfaceStates());
+        };
+        connect(this, &AbstractClient::activeChanged, this, configure);
+        connect(this, &AbstractClient::clientStartUserMovedResized, this, configure);
+        connect(this, &AbstractClient::clientFinishUserMovedResized, this, configure);
+    } else if (m_xdgShellPopup) {
+        connect(m_xdgShellPopup, &XdgPopupV5Interface::destroyed, this, &ShellClient::destroyClient);
     }
     updateIcon();
 
@@ -440,11 +495,17 @@ QString ShellClient::caption(bool full, bool stripped) const
     if (m_shellSurface) {
         return m_shellSurface->title();
     }
+    if (m_xdgShellSurface) {
+        return m_xdgShellSurface->title();
+    }
     return QString();
 }
 
 void ShellClient::closeWindow()
 {
+    if (m_xdgShellSurface && isCloseable()) {
+        m_xdgShellSurface->close();
+    }
     if (m_qtExtendedSurface && isCloseable()) {
         m_qtExtendedSurface->close();
     }
@@ -460,6 +521,9 @@ bool ShellClient::isCloseable() const
 {
     if (m_windowType == NET::Desktop || m_windowType == NET::Dock) {
         return false;
+    }
+    if (m_xdgShellSurface) {
+        return true;
     }
     return m_qtExtendedSurface ? true : false;
 }
@@ -518,6 +582,9 @@ bool ShellClient::isMovable() const
     if (m_plasmaShellSurface) {
         return m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal;
     }
+    if (m_xdgShellPopup) {
+        return false;
+    }
     return true;
 }
 
@@ -526,6 +593,9 @@ bool ShellClient::isMovableAcrossScreens() const
     if (m_plasmaShellSurface) {
         return m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal;
     }
+    if (m_xdgShellPopup) {
+        return false;
+    }
     return true;
 }
 
@@ -533,6 +603,9 @@ bool ShellClient::isResizable() const
 {
     if (m_plasmaShellSurface) {
         return m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal;
+    }
+    if (m_xdgShellPopup) {
+        return false;
     }
     return true;
 }
@@ -702,6 +775,10 @@ bool ShellClient::acceptsFocus() const
         // if the window is not visible it doesn't get input
         return m_shellSurface->acceptsKeyboardFocus() && isShown(true);
     }
+    if (m_xdgShellSurface) {
+        // TODO: proper
+        return true;
+    }
     return false;
 }
 
@@ -774,8 +851,12 @@ xcb_window_t ShellClient::window() const
 void ShellClient::requestGeometry(const QRect &rect)
 {
     m_positionAfterResize.setPoint(rect.topLeft());
+    const QSize size = rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
     if (m_shellSurface) {
-        m_shellSurface->requestSize(rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
+        m_shellSurface->requestSize(size);
+    }
+    if (m_xdgShellSurface) {
+        m_xdgShellSurface->configure(xdgSurfaceStates(), size);
     }
 }
 
@@ -783,6 +864,9 @@ void ShellClient::clientFullScreenChanged(bool fullScreen)
 {
     StackingUpdatesBlocker blocker(workspace());
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
+
+    const bool emitSignal = m_fullScreen != fullScreen;
+    m_fullScreen = fullScreen;
 
     if (fullScreen) {
         m_geomFsRestore = geometry();
@@ -795,8 +879,7 @@ void ShellClient::clientFullScreenChanged(bool fullScreen)
             requestGeometry(workspace()->clientArea(MaximizeArea, this));
         }
     }
-    if (m_fullScreen != fullScreen) {
-        m_fullScreen = fullScreen;
+    if (emitSignal) {
         emit fullScreenChanged();
     }
 }
@@ -814,6 +897,9 @@ void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
     }
     if (m_shellSurface) {
         m_shellSurface->requestSize(QSize(w, h));
+    }
+    if (m_xdgShellSurface) {
+        m_xdgShellSurface->configure(xdgSurfaceStates(), QSize(w, h));
     }
 }
 
@@ -934,6 +1020,14 @@ void ShellClient::setTransient()
     if (m_shellSurface) {
         s = m_shellSurface->transientFor().data();
     }
+    if (m_xdgShellSurface) {
+        if (auto transient = m_xdgShellSurface->transientFor().data()) {
+            s = transient->surface();
+        }
+    }
+    if (m_xdgShellPopup) {
+        s = m_xdgShellPopup->transientFor().data();
+    }
     auto t = waylandServer()->findClient(s);
     if (t != transientFor()) {
         // remove from main client
@@ -956,6 +1050,9 @@ QPoint ShellClient::transientPlacementHint() const
 {
     if (m_shellSurface) {
         return m_shellSurface->transientOffset();
+    }
+    if (m_xdgShellPopup) {
+        return m_xdgShellPopup->transientOffset();
     }
     return QPoint();
 }
@@ -1005,6 +1102,24 @@ void ShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecora
             }
         }
     );
+}
+
+KWayland::Server::XdgSurfaceV5Interface::States ShellClient::xdgSurfaceStates() const
+{
+    XdgSurfaceV5Interface::States states;
+    if (isActive()) {
+        states |= XdgSurfaceV5Interface::State::Activated;
+    }
+    if (isFullScreen()) {
+        states |= XdgSurfaceV5Interface::State::Fullscreen;
+    }
+    if (maximizeMode() == MaximizeMode::MaximizeFull) {
+        states |= XdgSurfaceV5Interface::State::Maximized;
+    }
+    if (isResize()) {
+        states |= XdgSurfaceV5Interface::State::Resizing;
+    }
+    return states;
 }
 
 }

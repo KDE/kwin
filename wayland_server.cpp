@@ -49,6 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/outputmanagement_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
+#include <KWayland/Server/xdg_shell_v5_interface.h>
 
 // Qt
 #include <QThread>
@@ -106,6 +107,41 @@ void WaylandServer::terminateClientConnections()
     }
 }
 
+
+template <class T>
+void WaylandServer::createSurface(T *surface)
+{
+    if (!Workspace::self()) {
+        // it's possible that a Surface gets created before Workspace is created
+        return;
+    }
+    if (surface->client() == m_xwayland.client) {
+        // skip Xwayland clients, those are created using standard X11 way
+        return;
+    }
+    if (surface->client() == m_screenLockerClientConnection) {
+        ScreenLocker::KSldApp::self()->lockScreenShown();
+    }
+    auto client = new ShellClient(surface);
+    if (auto c = Compositor::self()) {
+        connect(client, &Toplevel::needsRepaint, c, &Compositor::scheduleRepaint);
+    }
+    if (client->isInternal()) {
+        m_internalClients << client;
+    } else {
+        m_clients << client;
+    }
+    if (client->readyForPainting()) {
+        emit shellClientAdded(client);
+    } else {
+        connect(client, &ShellClient::windowShown, this,
+            [this, client] {
+                emit shellClientAdded(client);
+            }
+        );
+    }
+}
+
 void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 {
     m_initFlags = flags;
@@ -138,39 +174,12 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     );
     m_shell = m_display->createShell(m_display);
     m_shell->create();
-    connect(m_shell, &ShellInterface::surfaceCreated, this,
-        [this] (ShellSurfaceInterface *surface) {
-            if (!Workspace::self()) {
-                // it's possible that a Surface gets created before Workspace is created
-                return;
-            }
-            if (surface->client() == m_xwayland.client) {
-                // skip Xwayland clients, those are created using standard X11 way
-                return;
-            }
-            if (surface->client() == m_screenLockerClientConnection) {
-                ScreenLocker::KSldApp::self()->lockScreenShown();
-            }
-            auto client = new ShellClient(surface);
-            if (auto c = Compositor::self()) {
-                connect(client, &Toplevel::needsRepaint, c, &Compositor::scheduleRepaint);
-            }
-            if (client->isInternal()) {
-                m_internalClients << client;
-            } else {
-                m_clients << client;
-            }
-            if (client->readyForPainting()) {
-                emit shellClientAdded(client);
-            } else {
-                connect(client, &ShellClient::windowShown, this,
-                    [this, client] {
-                        emit shellClientAdded(client);
-                    }
-                );
-            }
-        }
-    );
+    connect(m_shell, &ShellInterface::surfaceCreated, this, &WaylandServer::createSurface<ShellSurfaceInterface>);
+    m_xdgShell = m_display->createXdgShellUnstableVersion5(m_display);
+    m_xdgShell->create();
+    connect(m_xdgShell, &XdgShellV5Interface::surfaceCreated, this, &WaylandServer::createSurface<XdgSurfaceV5Interface>);
+    // TODO: verify seat and serial
+    connect(m_xdgShell, &XdgShellV5Interface::popupCreated, this, &WaylandServer::createSurface<XdgPopupV5Interface>);
     m_display->createShm();
     m_seat = m_display->createSeat(m_display);
     m_seat->create();

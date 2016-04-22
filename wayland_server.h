@@ -51,6 +51,7 @@ class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
 class OutputManagementInterface;
 class OutputConfigurationInterface;
+class XdgShellV5Interface;
 }
 }
 
@@ -158,10 +159,13 @@ private:
     quint16 createClientId(KWayland::Server::ClientConnection *c);
     void destroyInternalConnection();
     void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
+    template <class T>
+    void createSurface(T *surface);
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
     KWayland::Server::ShellInterface *m_shell = nullptr;
+    KWayland::Server::XdgShellV5Interface *m_xdgShell = nullptr;
     KWayland::Server::PlasmaShellInterface *m_plasmaShell = nullptr;
     KWayland::Server::PlasmaWindowManagementInterface *m_windowManagement = nullptr;
     KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
