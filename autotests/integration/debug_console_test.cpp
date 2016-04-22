@@ -49,6 +49,7 @@ private Q_SLOTS:
     void topLevelTest();
     void testX11Client();
     void testX11Unmanaged();
+    void testWaylandClient_data();
     void testWaylandClient();
     void testInternalWindow();
 };
@@ -292,6 +293,14 @@ void DebugConsoleTest::testX11Unmanaged()
     QVERIFY(!model2.hasChildren(model2.index(1, 0, QModelIndex())));
 }
 
+void DebugConsoleTest::testWaylandClient_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
 void DebugConsoleTest::testWaylandClient()
 {
     DebugConsoleModel model;
@@ -318,8 +327,9 @@ void DebugConsoleTest::testWaylandClient()
     using namespace KWayland::Client;
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(surface->isValid());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
-    QVERIFY(shellSurface->isValid());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QVERIFY(!shellSurface.isNull());
     Test::render(surface.data(), QSize(10, 10), Qt::red);
 
     // now we have the window, it should be added to our model
@@ -380,11 +390,13 @@ void DebugConsoleTest::testWaylandClient()
     shellSurface.reset();
     Test::flushWaylandConnection();
     qDebug() << rowsRemovedSpy.count();
-    QEXPECT_FAIL("", "Deleting a ShellSurface does not result in the server removing the ShellClient", Continue);
+    QEXPECT_FAIL("wlShell", "Deleting a ShellSurface does not result in the server removing the ShellClient", Continue);
     QVERIFY(rowsRemovedSpy.wait());
     surface.reset();
 
-    QVERIFY(rowsRemovedSpy.wait());
+    if (rowsRemovedSpy.isEmpty()) {
+        QVERIFY(rowsRemovedSpy.wait());
+    }
     QCOMPARE(rowsRemovedSpy.count(), 1);
     QCOMPARE(rowsRemovedSpy.first().first().value<QModelIndex>(), waylandTopLevelIndex);
     QCOMPARE(rowsRemovedSpy.first().at(1).value<int>(), 0);

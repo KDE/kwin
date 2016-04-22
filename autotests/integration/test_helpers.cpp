@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/xdgshell.h>
 
 #include <QThread>
 
@@ -48,6 +49,7 @@ static struct {
     Compositor *compositor = nullptr;
     ServerSideDecorationManager *decoration = nullptr;
     Shell *shell = nullptr;
+    XdgShell *xdgShellV5 = nullptr;
     ShmPool *shm = nullptr;
     Seat *seat = nullptr;
     PlasmaShell *plasmaShell = nullptr;
@@ -110,6 +112,10 @@ bool setupWaylandConnection(const QString &socketName, AdditionalWaylandInterfac
     if (!s_waylandConnection.shell->isValid()) {
         return false;
     }
+    s_waylandConnection.xdgShellV5 = registry.createXdgShell(registry.interface(Registry::Interface::XdgShellUnstableV5).name, registry.interface(Registry::Interface::XdgShellUnstableV5).version);
+    if (!s_waylandConnection.xdgShellV5->isValid()) {
+        return false;
+    }
     if (flags.testFlag(AdditionalWaylandInterface::Seat)) {
         s_waylandConnection.seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version);
         if (!s_waylandConnection.seat->isValid()) {
@@ -155,6 +161,8 @@ void destroyWaylandConnection()
     s_waylandConnection.decoration = nullptr;
     delete s_waylandConnection.seat;
     s_waylandConnection.seat = nullptr;
+    delete s_waylandConnection.xdgShellV5;
+    s_waylandConnection.xdgShellV5 = nullptr;
     delete s_waylandConnection.shell;
     s_waylandConnection.shell = nullptr;
     delete s_waylandConnection.shm;
@@ -303,6 +311,32 @@ ShellSurface *createShellSurface(Surface *surface, QObject *parent)
         return nullptr;
     }
     return s;
+}
+
+XdgShellSurface *createXdgShellV5Surface(Surface *surface, QObject *parent)
+{
+    if (!s_waylandConnection.xdgShellV5) {
+        return nullptr;
+    }
+    auto s = s_waylandConnection.xdgShellV5->createSurface(surface, parent);
+    if (!s->isValid()) {
+        delete s;
+        return nullptr;
+    }
+    return s;
+}
+
+QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent)
+{
+    switch (type) {
+    case ShellSurfaceType::WlShell:
+        return createShellSurface(surface, parent);
+    case ShellSurfaceType::XdgShellV5:
+        return createXdgShellV5Surface(surface, parent);
+    default:
+        Q_UNREACHABLE();
+        return nullptr;
+    }
 }
 
 bool waitForWindowDestroyed(AbstractClient *client)

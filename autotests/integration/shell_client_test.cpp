@@ -46,6 +46,7 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
+    void testMapUnmapMap_data();
     void testMapUnmapMap();
     void testDesktopPresenceChanged();
 };
@@ -81,6 +82,14 @@ void TestShellClient::cleanup()
     Test::destroyWaylandConnection();
 }
 
+void TestShellClient::testMapUnmapMap_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
 void TestShellClient::testMapUnmapMap()
 {
     // this test verifies that mapping a previously mapped window works correctly
@@ -92,7 +101,8 @@ void TestShellClient::testMapUnmapMap()
     QVERIFY(effectsWindowHiddenSpy.isValid());
 
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
 
     // now let's render
     Test::render(surface.data(), QSize(100, 50), Qt::blue);

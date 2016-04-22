@@ -64,6 +64,7 @@ private Q_SLOTS:
     void testDoubleClick();
     void testDoubleTap_data();
     void testDoubleTap();
+    void testHover_data();
     void testHover();
     void testPressToMove_data();
     void testPressToMove();
@@ -71,7 +72,7 @@ private Q_SLOTS:
     void testTapToMove();
 
 private:
-    AbstractClient *showWindow();
+    AbstractClient *showWindow(Test::ShellSurfaceType type);
 };
 
 #define MOTION(target) \
@@ -83,7 +84,7 @@ private:
 #define RELEASE \
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++)
 
-AbstractClient *DecorationInputTest::showWindow()
+AbstractClient *DecorationInputTest::showWindow(Test::ShellSurfaceType type)
 {
     using namespace KWayland::Client;
 #define VERIFY(statement) \
@@ -95,7 +96,7 @@ AbstractClient *DecorationInputTest::showWindow()
 
     Surface *surface = Test::createSurface(Test::waylandCompositor());
     VERIFY(surface);
-    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
+    auto shellSurface = Test::createShellSurface(type, surface, surface);
     VERIFY(shellSurface);
     auto deco = Test::waylandServerSideDecoration()->create(surface, surface);
     QSignalSpy decoSpy(deco, &ServerSideDecoration::modeChanged);
@@ -162,15 +163,20 @@ void DecorationInputTest::testAxis_data()
 {
     QTest::addColumn<QPoint>("decoPoint");
     QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
+    QTest::addColumn<Test::ShellSurfaceType>("type");
 
-    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection;
-    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection;
-    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection;
+    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("topLeft|xdg") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("top|xdg") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("topRight|xdg") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV5;
 }
 
 void DecorationInputTest::testAxis()
 {
-    AbstractClient *c = showWindow();
+    QFETCH(Test::ShellSurfaceType, type);
+    AbstractClient *c = showWindow(type);
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -211,15 +217,20 @@ void DecorationInputTest::testDoubleClick_data()
 {
     QTest::addColumn<QPoint>("decoPoint");
     QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
+    QTest::addColumn<Test::ShellSurfaceType>("type");
 
-    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection;
-    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection;
-    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection;
+    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("topLeft|xdg") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("top|xdg") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("topRight|xdg") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV5;
 }
 
 void KWin::DecorationInputTest::testDoubleClick()
 {
-    AbstractClient *c = showWindow();
+    QFETCH(Test::ShellSurfaceType, type);
+    AbstractClient *c = showWindow(type);
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -261,15 +272,20 @@ void DecorationInputTest::testDoubleTap_data()
 {
     QTest::addColumn<QPoint>("decoPoint");
     QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
+    QTest::addColumn<Test::ShellSurfaceType>("type");
 
-    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection;
-    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection;
-    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection;
+    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("topLeft|xdg") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("top|xdg") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("topRight|xdg") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV5;
 }
 
 void KWin::DecorationInputTest::testDoubleTap()
 {
-    AbstractClient *c = showWindow();
+    QFETCH(Test::ShellSurfaceType, type);
+    AbstractClient *c = showWindow(type);
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -306,9 +322,18 @@ void KWin::DecorationInputTest::testDoubleTap()
     QVERIFY(c->isOnAllDesktops());
 }
 
+void DecorationInputTest::testHover_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
 void DecorationInputTest::testHover()
 {
-    AbstractClient *c = showWindow();
+    QFETCH(Test::ShellSurfaceType, type);
+    AbstractClient *c = showWindow(type);
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -347,16 +372,22 @@ void DecorationInputTest::testPressToMove_data()
     QTest::addColumn<QPoint>("offset");
     QTest::addColumn<QPoint>("offset2");
     QTest::addColumn<QPoint>("offset3");
+    QTest::addColumn<Test::ShellSurfaceType>("type");
 
-    QTest::newRow("To right")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0);
-    QTest::newRow("To left")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0);
-    QTest::newRow("To bottom") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30);
-    QTest::newRow("To top")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30);
+    QTest::newRow("To right")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("To left")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("To bottom") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("To top")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("To right|xdg")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("To left|xdg")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("To bottom|xdg") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("To top|xdg")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::ShellSurfaceType::XdgShellV5;
 }
 
 void DecorationInputTest::testPressToMove()
 {
-    AbstractClient *c = showWindow();
+    QFETCH(Test::ShellSurfaceType, type);
+    AbstractClient *c = showWindow(type);
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -406,16 +437,22 @@ void DecorationInputTest::testTapToMove_data()
     QTest::addColumn<QPoint>("offset");
     QTest::addColumn<QPoint>("offset2");
     QTest::addColumn<QPoint>("offset3");
+    QTest::addColumn<Test::ShellSurfaceType>("type");
 
-    QTest::newRow("To right")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0);
-    QTest::newRow("To left")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0);
-    QTest::newRow("To bottom") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30);
-    QTest::newRow("To top")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30);
+    QTest::newRow("To right")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("To left")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("To bottom") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("To top")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("To right|xdg")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("To left|xdg")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("To bottom|xdg") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("To top|xdg")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::ShellSurfaceType::XdgShellV5;
 }
 
 void DecorationInputTest::testTapToMove()
 {
-    AbstractClient *c = showWindow();
+    QFETCH(Test::ShellSurfaceType, type);
+    AbstractClient *c = showWindow(type);
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());

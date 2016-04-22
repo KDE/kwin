@@ -47,6 +47,7 @@ private Q_SLOTS:
     void cleanup();
     void testStartFrame();
     void testCursorMoving();
+    void testWindow_data();
     void testWindow();
 };
 
@@ -133,14 +134,24 @@ void SceneQPainterTest::testCursorMoving()
     QCOMPARE(referenceImage, *scene->backend()->buffer());
 }
 
+void SceneQPainterTest::testWindow_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
 void SceneQPainterTest::testWindow()
 {
+    KWin::Cursor::setPos(45, 45);
     // this test verifies that a window is rendered correctly
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
     QScopedPointer<Surface> s(Test::createSurface());
-    QScopedPointer<ShellSurface> ss(Test::createShellSurface(s.data()));
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> ss(Test::createShellSurface(type, s.data()));
     QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
 
     auto scene = qobject_cast<SceneQPainter*>(KWin::Compositor::self()->scene());

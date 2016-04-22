@@ -39,6 +39,7 @@ class Shell;
 class ShellSurface;
 class ShmPool;
 class Surface;
+class XdgShellSurface;
 }
 }
 
@@ -112,7 +113,13 @@ bool waitForWaylandTouch();
 void flushWaylandConnection();
 
 KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
+enum class ShellSurfaceType {
+    WlShell,
+    XdgShellV5
+};
+QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent = nullptr);
 KWayland::Client::ShellSurface *createShellSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
+KWayland::Client::XdgShellSurface *createXdgShellV5Surface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.
@@ -140,6 +147,7 @@ bool waitForWindowDestroyed(AbstractClient *client);
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
+Q_DECLARE_METATYPE(KWin::Test::ShellSurfaceType)
 
 #define WAYLANDTEST_MAIN_HELPER(TestObject, DPI) \
 int main(int argc, char *argv[]) \
