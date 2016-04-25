@@ -43,13 +43,15 @@ void TouchInputRedirection::init()
     Q_ASSERT(!m_inited);
     m_inited = true;
 
-    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
-        [this] {
-            cancel();
-            // position doesn't matter
-            update();
-        }
-    );
+    if (waylandServer()->hasScreenLockerIntegration()) {
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
+            [this] {
+                cancel();
+                // position doesn't matter
+                update();
+            }
+        );
+    }
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
 }

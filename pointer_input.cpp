@@ -126,7 +126,9 @@ void PointerInputRedirection::init()
     emit m_cursor->changed();
     connect(workspace(), &Workspace::stackingOrderChanged, this, &PointerInputRedirection::update);
     connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
-    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &PointerInputRedirection::update);
+    if (waylandServer()->hasScreenLockerIntegration()) {
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &PointerInputRedirection::update);
+    }
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::dragEnded, this,
@@ -527,7 +529,9 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
             reevaluteSource();
         }
     );
-    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
+    if (waylandServer()->hasScreenLockerIntegration()) {
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
+    }
     connect(m_pointer, &PointerInputRedirection::decorationChanged, this, &CursorImage::updateDecoration);
     // connect the move resize of all window
     auto setupMoveResizeConnection = [this] (AbstractClient *c) {

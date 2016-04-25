@@ -374,7 +374,9 @@ void KeyboardInputRedirection::init()
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(workspace(), &Workspace::clientActivated, this, &KeyboardInputRedirection::update);
-    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
+    if (waylandServer()->hasScreenLockerIntegration()) {
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
+    }
 
     QAction *switchKeyboardAction = new QAction(this);
     switchKeyboardAction->setObjectName(QStringLiteral("Switch to Next Keyboard Layout"));

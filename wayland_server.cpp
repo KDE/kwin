@@ -260,25 +260,27 @@ void WaylandServer::initWorkspace()
         );
     }
 
-    ScreenLocker::KSldApp::self();
-    ScreenLocker::KSldApp::self()->setWaylandDisplay(m_display);
-    ScreenLocker::KSldApp::self()->setGreeterEnvironment(kwinApp()->processStartupEnvironment());
-    ScreenLocker::KSldApp::self()->initialize();
+    if (hasScreenLockerIntegration()) {
+        ScreenLocker::KSldApp::self();
+        ScreenLocker::KSldApp::self()->setWaylandDisplay(m_display);
+        ScreenLocker::KSldApp::self()->setGreeterEnvironment(kwinApp()->processStartupEnvironment());
+        ScreenLocker::KSldApp::self()->initialize();
 
-    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::greeterClientConnectionChanged, this,
-        [this] () {
-            m_screenLockerClientConnection = ScreenLocker::KSldApp::self()->greeterClientConnection();
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::greeterClientConnectionChanged, this,
+            [this] () {
+                m_screenLockerClientConnection = ScreenLocker::KSldApp::self()->greeterClientConnection();
+            }
+        );
+
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked, this,
+            [this] () {
+                m_screenLockerClientConnection = nullptr;
+            }
+        );
+
+        if (m_initFlags.testFlag(InitalizationFlag::LockScreen)) {
+            ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
         }
-    );
-
-    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked, this,
-        [this] () {
-            m_screenLockerClientConnection = nullptr;
-        }
-    );
-
-    if (m_initFlags.testFlag(InitalizationFlag::LockScreen)) {
-        ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
 }
 
@@ -511,8 +513,16 @@ quint16 WaylandServer::createClientId(ClientConnection *c)
 
 bool WaylandServer::isScreenLocked() const
 {
+    if (!hasScreenLockerIntegration()) {
+        return false;
+    }
     return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked ||
            ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
+}
+
+bool WaylandServer::hasScreenLockerIntegration() const
+{
+    return !m_initFlags.testFlag(InitalizationFlag::NoLockScreenIntegration);
 }
 
 }

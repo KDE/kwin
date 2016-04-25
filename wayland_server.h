@@ -66,7 +66,8 @@ class KWIN_EXPORT WaylandServer : public QObject
 public:
     enum class InitalizationFlag {
         NoOptions = 0x0,
-        LockScreen = 0x1
+        LockScreen = 0x1,
+        NoLockScreenIntegration = 0x2
     };
 
     Q_DECLARE_FLAGS(InitalizationFlags, InitalizationFlag)
@@ -121,6 +122,10 @@ public:
      * @returns true if screen is locked.
      **/
     bool isScreenLocked() const;
+    /**
+     * @returns whether integration with KScreenLocker is available.
+     **/
+    bool hasScreenLockerIntegration() const;
 
     void createInternalConnection();
     void initWorkspace();
