@@ -74,7 +74,6 @@ public:
 
     virtual ~WaylandServer();
     void init(const QByteArray &socketName = QByteArray(), InitalizationFlags flags = InitalizationFlag::NoOptions);
-    void initOutputs();
     void terminateClientConnections();
 
     KWayland::Server::Display *display() {
@@ -160,6 +159,7 @@ Q_SIGNALS:
     void terminatingInternalClientConnection();
 
 private:
+    void initOutputs();
     quint16 createClientId(KWayland::Server::ClientConnection *c);
     void destroyInternalConnection();
     void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);

@@ -145,7 +145,6 @@ void ApplicationWayland::continueStartupWithScreens()
 {
     disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
     createScreens();
-    waylandServer()->initOutputs();
 
     if (!m_startXWayland) {
         continueStartupWithX();

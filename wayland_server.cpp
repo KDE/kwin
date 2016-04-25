@@ -73,6 +73,8 @@ WaylandServer::WaylandServer(QObject *parent)
 {
     qRegisterMetaType<KWayland::Server::SurfaceInterface *>("KWayland::Server::SurfaceInterface *");
     qRegisterMetaType<KWayland::Server::OutputInterface::DpmsMode>();
+
+    connect(kwinApp(), &Application::screensCreated, this, &WaylandServer::initOutputs);
 }
 
 WaylandServer::~WaylandServer()

@@ -110,7 +110,6 @@ void WaylandTestApplication::continueStartupWithScreens()
 {
     disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &WaylandTestApplication::continueStartupWithScreens);
     createScreens();
-    waylandServer()->initOutputs();
 
     createCompositor();
     connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::startXwaylandServer);
