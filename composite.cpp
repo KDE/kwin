@@ -1054,7 +1054,7 @@ bool Toplevel::resetAndFetchDamage()
     if (!m_isDamaged)
         return false;
 
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+    if (damage_handle == XCB_NONE) {
         m_isDamaged = false;
         return true;
     }
