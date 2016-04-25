@@ -998,7 +998,7 @@ void Toplevel::finishCompositing(ReleaseReason releaseReason)
         delete effect_window;
     }
 
-    if (kwinApp()->operationMode() == Application::OperationModeX11 &&
+    if (damage_handle != XCB_NONE &&
             releaseReason != ReleaseReason::Destroyed) {
         xcb_damage_destroy(connection(), damage_handle);
     }
