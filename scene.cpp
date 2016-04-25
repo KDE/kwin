@@ -949,7 +949,7 @@ WindowPixmap::WindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface>
 
 WindowPixmap::~WindowPixmap()
 {
-    if (isValid() && !kwinApp()->shouldUseWaylandForCompositing()) {
+    if (m_pixmap != XCB_WINDOW_NONE) {
         xcb_free_pixmap(connection(), m_pixmap);
     }
     if (m_buffer) {
@@ -964,7 +964,7 @@ void WindowPixmap::create()
     if (isValid() || toplevel()->isDeleted()) {
         return;
     }
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
+    if (toplevel()->surface()) {
         // use Buffer
         updateBuffer();
         if ((m_buffer || !m_fbo.isNull()) && m_subSurface.isNull()) {
@@ -1009,8 +1009,8 @@ WindowPixmap *WindowPixmap::createChild(const QPointer<KWayland::Server::SubSurf
 
 bool WindowPixmap::isValid() const
 {
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        return !m_buffer.isNull() || !m_fbo.isNull();
+    if (!m_buffer.isNull() || !m_fbo.isNull()) {
+        return true;
     }
     return m_pixmap != XCB_PIXMAP_NONE;
 }
