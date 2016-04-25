@@ -30,11 +30,13 @@ ecm_mark_as_test(testQuickTiling)
 ########################################################
 # Move/Resize window test
 ########################################################
-set( testMoveResize_SRCS move_resize_window_test.cpp kwin_wayland_test.cpp )
-add_executable(testMoveResize ${testMoveResize_SRCS})
-target_link_libraries( testMoveResize kwin Qt5::Test XCB::ICCCM)
-add_test(kwin-testMoveResize testMoveResize)
-ecm_mark_as_test(testMoveResize)
+if (XCB_ICCCM_FOUND)
+    set( testMoveResize_SRCS move_resize_window_test.cpp kwin_wayland_test.cpp )
+    add_executable(testMoveResize ${testMoveResize_SRCS})
+    target_link_libraries( testMoveResize kwin Qt5::Test XCB::ICCCM)
+    add_test(kwin-testMoveResize testMoveResize)
+    ecm_mark_as_test(testMoveResize)
+endif()
 
 ########################################################
 # Don't Crash For glxgears
@@ -138,8 +140,10 @@ ecm_mark_as_test(testDebugConsole)
 ########################################################
 # Struts Test
 ########################################################
-set( testStruts_SRCS struts_test.cpp kwin_wayland_test.cpp )
-add_executable(testStruts ${testStruts_SRCS})
-target_link_libraries( testStruts kwin Qt5::Test XCB::ICCCM)
-add_test(kwin-testStruts testStruts)
-ecm_mark_as_test(testStruts)
+if (XCB_ICCCM_FOUND)
+    set( testStruts_SRCS struts_test.cpp kwin_wayland_test.cpp )
+    add_executable(testStruts ${testStruts_SRCS})
+    target_link_libraries( testStruts kwin Qt5::Test XCB::ICCCM)
+    add_test(kwin-testStruts testStruts)
+    ecm_mark_as_test(testStruts)
+endif()
