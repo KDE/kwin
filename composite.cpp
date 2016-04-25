@@ -966,7 +966,7 @@ bool Toplevel::setupCompositing()
     if (damage_handle != XCB_NONE)
         return false;
 
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+    if (kwinApp()->operationMode() == Application::OperationModeX11 && !surface()) {
         damage_handle = xcb_generate_id(connection());
         xcb_damage_create(connection(), damage_handle, frameId(), XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
     }
