@@ -186,6 +186,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void compositingToggled(bool active);
     void aboutToDestroy();
+    void sceneCreated();
 
 protected:
     void timerEvent(QTimerEvent *te);

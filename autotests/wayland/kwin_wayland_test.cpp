@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "../../platform.h"
+#include "../../composite.h"
 #include "../../effects.h"
 #include "../../wayland_server.h"
 #include "../../workspace.h"
@@ -112,8 +113,7 @@ void WaylandTestApplication::continueStartupWithScreens()
     waylandServer()->initOutputs();
 
     createCompositor();
-
-    startXwaylandServer();
+    connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::startXwaylandServer);
 }
 
 void WaylandTestApplication::continueStartupWithX()
@@ -190,6 +190,7 @@ void WaylandTestApplication::createX11Connection()
 
 void WaylandTestApplication::startXwaylandServer()
 {
+    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::startXwaylandServer);
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
         std::cerr << "FATAL ERROR failed to create pipe to start Xwayland " << std::endl;

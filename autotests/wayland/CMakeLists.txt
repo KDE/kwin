@@ -147,3 +147,12 @@ if (XCB_ICCCM_FOUND)
     add_test(kwin-testStruts testStruts)
     ecm_mark_as_test(testStruts)
 endif()
+
+########################################################
+# Dont Crash Empty Deco Test
+########################################################
+set( testDontCrashEmptyDeco_SRCS dont_crash_empty_deco.cpp kwin_wayland_test.cpp )
+add_executable(testDontCrashEmptyDeco ${testDontCrashEmptyDeco_SRCS})
+target_link_libraries( testDontCrashEmptyDeco kwin Qt5::Test)
+add_test(kwin-testDontCrashEmptyDeco testDontCrashEmptyDeco)
+ecm_mark_as_test(testDontCrashEmptyDeco)

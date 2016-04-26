@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "main_wayland.h"
+#include "composite.h"
 #include "workspace.h"
 #include <config-kwin.h>
 // kwin
@@ -151,8 +152,7 @@ void ApplicationWayland::continueStartupWithScreens()
         return;
     }
     createCompositor();
-
-    startXwaylandServer();
+    connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::startXwaylandServer);
 }
 
 void ApplicationWayland::continueStartupWithX()
@@ -279,6 +279,7 @@ void ApplicationWayland::createX11Connection()
 
 void ApplicationWayland::startXwaylandServer()
 {
+    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::startXwaylandServer);
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
         std::cerr << "FATAL ERROR failed to create pipe to start Xwayland " << std::endl;

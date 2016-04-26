@@ -2501,6 +2501,11 @@ void SceneOpenGLDecorationRenderer::render()
         resetImageSizesDirty();
     }
 
+    if (!m_texture) {
+        // for invalid sizes we get no texture, see BUG 361551
+        return;
+    }
+
     QRect left, top, right, bottom;
     client()->client()->layoutDecorationRects(left, top, right, bottom);
 
