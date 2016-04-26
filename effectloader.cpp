@@ -258,9 +258,12 @@ bool ScriptedEffectLoader::loadEffect(const KPluginMetaData &effect, LoadEffectF
 
 void ScriptedEffectLoader::queryAndLoadAll()
 {
+    if (m_queryConnection) {
+        return;
+    }
     // perform querying for the services in a thread
     QFutureWatcher<QList<KPluginMetaData>> *watcher = new QFutureWatcher<QList<KPluginMetaData>>(this);
-    connect(watcher, &QFutureWatcher<QList<KPluginMetaData>>::finished, this,
+    m_queryConnection = connect(watcher, &QFutureWatcher<QList<KPluginMetaData>>::finished, this,
         [this, watcher]() {
             const auto effects = watcher->result();
             for (auto effect : effects) {
@@ -270,6 +273,7 @@ void ScriptedEffectLoader::queryAndLoadAll()
                 }
             }
             watcher->deleteLater();
+            m_queryConnection = QMetaObject::Connection();
         },
         Qt::QueuedConnection);
     watcher->setFuture(QtConcurrent::run(this, &ScriptedEffectLoader::findAllEffects));
@@ -296,7 +300,8 @@ KPluginMetaData ScriptedEffectLoader::findEffect(const QString &name) const
 
 void ScriptedEffectLoader::clear()
 {
-    // TODO: cancel future
+    disconnect(m_queryConnection);
+    m_queryConnection = QMetaObject::Connection();
     m_queue->clear();
 }
 
@@ -432,9 +437,12 @@ bool PluginEffectLoader::loadEffect(const KPluginMetaData &info, LoadEffectFlags
 
 void PluginEffectLoader::queryAndLoadAll()
 {
+    if (m_queryConnection) {
+        return;
+    }
     // perform querying for the services in a thread
     QFutureWatcher<QVector<KPluginMetaData>> *watcher = new QFutureWatcher<QVector<KPluginMetaData>>(this);
-    connect(watcher, &QFutureWatcher<QVector<KPluginMetaData>>::finished, this,
+    m_queryConnection = connect(watcher, &QFutureWatcher<QVector<KPluginMetaData>>::finished, this,
         [this, watcher]() {
             const auto effects = watcher->result();
             for (const auto &effect : effects) {
@@ -444,6 +452,7 @@ void PluginEffectLoader::queryAndLoadAll()
                 }
             }
             watcher->deleteLater();
+            m_queryConnection = QMetaObject::Connection();
         },
         Qt::QueuedConnection);
     watcher->setFuture(QtConcurrent::run(this, &PluginEffectLoader::findAllEffects));
@@ -461,7 +470,8 @@ void PluginEffectLoader::setPluginSubDirectory(const QString &directory)
 
 void PluginEffectLoader::clear()
 {
-    // TODO: cancel future
+    disconnect(m_queryConnection);
+    m_queryConnection = QMetaObject::Connection();
     m_queue->clear();
 }
 

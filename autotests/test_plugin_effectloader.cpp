@@ -58,6 +58,7 @@ private Q_SLOTS:
     void testLoadPluginEffect_data();
     void testLoadPluginEffect();
     void testLoadAllEffects();
+    void testCancelLoadAllEffects();
 };
 
 void TestPluginEffectLoader::testHasEffect_data()
@@ -379,6 +380,33 @@ void TestPluginEffectLoader::testLoadAllEffects()
     QCOMPARE(arguments.count(), 2);
     QCOMPARE(arguments.at(1).toString(), QStringLiteral("fakeeffectplugin"));
     spy.clear();
+}
+
+void TestPluginEffectLoader::testCancelLoadAllEffects()
+{
+    // this test verifies that no test gets loaded when the loader gets cleared
+    MockEffectsHandler mockHandler(KWin::OpenGL2Compositing);
+    KWin::PluginEffectLoader loader;
+    loader.setPluginSubDirectory(QString());
+
+    // prepare the configuration to hard enable/disable the effects we want to load
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup plugins = config->group("Plugins");
+    plugins.writeEntry(QStringLiteral("fakeeffectpluginEnabled"), true);
+    plugins.sync();
+
+    loader.setConfig(config);
+
+    qRegisterMetaType<KWin::Effect*>();
+    QSignalSpy spy(&loader, &KWin::PluginEffectLoader::effectLoaded);
+    QVERIFY(spy.isValid());
+
+    loader.queryAndLoadAll();
+    loader.clear();
+
+    // Should not load any effect
+    QVERIFY(!spy.wait(100));
+    QVERIFY(spy.isEmpty());
 }
 
 QTEST_MAIN(TestPluginEffectLoader)

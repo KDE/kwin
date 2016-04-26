@@ -323,6 +323,7 @@ private:
     KPluginMetaData findEffect(const QString &name) const;
     QStringList m_loadedEffects;
     EffectLoadQueue< ScriptedEffectLoader, KPluginMetaData > *m_queue;
+    QMetaObject::Connection m_queryConnection;
 };
 
 class PluginEffectLoader : public AbstractEffectLoader
@@ -350,6 +351,7 @@ private:
     QStringList m_loadedEffects;
     EffectLoadQueue< PluginEffectLoader, KPluginMetaData> *m_queue;
     QString m_pluginSubDirectory;
+    QMetaObject::Connection m_queryConnection;
 };
 
 class EffectLoader : public AbstractEffectLoader

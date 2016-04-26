@@ -72,6 +72,7 @@ private Q_SLOTS:
     void testLoadScriptedEffect_data();
     void testLoadScriptedEffect();
     void testLoadAllEffects();
+    void testCancelLoadAllEffects();
 };
 
 void TestScriptedEffectLoader::testHasEffect_data()
@@ -385,6 +386,33 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     qSort(loadedEffects);
     QCOMPARE(loadedEffects.at(0), kwin4 + QStringLiteral("fade"));
     QCOMPARE(loadedEffects.at(1), kwin4 + QStringLiteral("scalein"));
+}
+
+void TestScriptedEffectLoader::testCancelLoadAllEffects()
+{
+    // this test verifies that no test gets loaded when the loader gets cleared
+    MockEffectsHandler mockHandler(KWin::XRenderCompositing);
+    KWin::ScriptedEffectLoader loader;
+
+    // prepare the configuration to hard enable/disable the effects we want to load
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    const QString kwin4 = QStringLiteral("kwin4_effect_");
+    KConfigGroup plugins = config->group("Plugins");
+    plugins.writeEntry(kwin4 + QStringLiteral("scaleinEnabled"), true);
+    plugins.sync();
+
+    loader.setConfig(config);
+
+    qRegisterMetaType<KWin::Effect*>();
+    QSignalSpy spy(&loader, &KWin::ScriptedEffectLoader::effectLoaded);
+    QVERIFY(spy.isValid());
+
+    loader.queryAndLoadAll();
+    loader.clear();
+
+    // Should not load any effect
+    QVERIFY(!spy.wait(100));
+    QVERIFY(spy.isEmpty());
 }
 
 QTEST_MAIN(TestScriptedEffectLoader)
