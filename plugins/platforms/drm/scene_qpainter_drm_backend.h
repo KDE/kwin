@@ -37,7 +37,7 @@ public:
     virtual ~DrmQPainterBackend();
 
     QImage *buffer() override;
-    QImage *bufferForScreen(int screenId);
+    QImage *bufferForScreen(int screenId) override;
     bool needsFullRepaint() const override;
     bool usesOverlayWindow() const override;
     void prepareRenderingFrame() override;
