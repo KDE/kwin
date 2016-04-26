@@ -301,9 +301,11 @@ void TestScreenEdges::testCreatingInitialEdges()
     s->updateLayout();
     auto edgeWindows = s->windows();
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+#if (QT_VERSION < QT_VERSION_CHECK(5, 6, 1))
     if (!Xcb::Extensions::self()->isRandrAvailable()) {
         QEXPECT_FAIL("", "Broken on no xrandr systems in Qt 5.5", Abort);
     }
+#endif
 #endif
     QCOMPARE(edgeWindows.size(), 12);
 
@@ -424,9 +426,11 @@ void TestScreenEdges::testCallback()
         return e->isScreenEdge() && e->isLeft() && e->approachGeometry().bottom() < 768;
     });
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+#if (QT_VERSION < QT_VERSION_CHECK(5, 6, 1))
     if (!Xcb::Extensions::self()->isRandrAvailable()) {
         QEXPECT_FAIL("", "Broken on no xrandr systems in Qt 5.5", Abort);
     }
+#endif
 #endif
     QVERIFY(it != edges.constEnd());
 
