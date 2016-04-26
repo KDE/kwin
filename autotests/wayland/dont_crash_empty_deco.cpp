@@ -70,6 +70,9 @@ private:
 
 void DontCrashEmptyDecorationTest::initTestCase()
 {
+    if (!QFile::exists(QStringLiteral("/dev/dri/card0"))) {
+        QSKIP("Needs a dri device");
+    }
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
