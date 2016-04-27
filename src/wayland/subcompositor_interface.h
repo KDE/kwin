@@ -78,7 +78,7 @@ public:
      * SubSurfaceInterfaces are also in synchronized mode ignoring the actual mode.
      * @returns Whether this SubSurfaceInterface is in synchronized mode.
      * @see mode
-     * @since 5.7
+     * @since 5.22
      **/
     bool isSynchronized() const;
 
@@ -86,20 +86,20 @@ public:
     QPointer<SurfaceInterface> surface();
     /**
      * @returns The surface this SubSurfaceInterface was created on.
-     * @since 5.7
+     * @since 5.22
      **/
     QPointer<SurfaceInterface> surface() const;
     // TODO: remove with ABI break (KF6)
     QPointer<SurfaceInterface> parentSurface();
     /**
      * @returns The parent surface for which this SubSurfaceInterface is a child
-     * @since 5.7
+     * @since 5.22
      **/
     QPointer<SurfaceInterface> parentSurface() const;
 
     /**
      * @returns the main surface for the sub-surface tree, that is the first surface without a parent
-     * @since 5.7
+     * @since 5.22
      **/
     QPointer<SurfaceInterface> mainSurface() const;
 

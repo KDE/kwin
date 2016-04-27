@@ -159,7 +159,7 @@ public:
      * mapped if it has a BufferInterface attached and the parent SurfaceInterface is mapped.
      *
      * @returns Whether the SurfaceInterface is currently mapped
-     * @since 5.7
+     * @since 5.22
      **/
     bool isMapped() const;
 
@@ -179,7 +179,7 @@ public:
      * @returns Combined damage since last call to resetTrackedDamage
      * @see damage
      * @see resetTrackedDamage
-     * @since 5.7
+     * @since 5.22
      **/
     QRegion trackedDamage() const;
 
@@ -187,7 +187,7 @@ public:
      * Reset the damage tracking. The compositor should invoke this method once it updated
      * it's internal state and processed the current damage.
      * @see trackedDamage
-     * @since 5.7
+     * @since 5.22
      **/
     void resetTrackedDamage();
 
@@ -201,7 +201,7 @@ public:
      *
      * @param position The position in surface-local coordinates
      * @returns Child surface at the given @p position or surface itself at the position, might be @c nullptr
-     * @since 5.7
+     * @since 5.22
      **/
     SurfaceInterface *surfaceAt(const QPointF &position);
 
@@ -255,7 +255,7 @@ Q_SIGNALS:
     void contrastChanged();
     /**
      * Emitted whenever the tree of sub-surfaces changes in a way which requires a repaint.
-     * @since 5.7
+     * @since 5.22
      **/
     void subSurfaceTreeChanged();
 

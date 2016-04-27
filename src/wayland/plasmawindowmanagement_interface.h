@@ -86,23 +86,23 @@ public:
     void setSkipTaskbar(bool skip);
     void setThemedIconName(const QString &iconName);
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void setShadeable(bool set);
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void setShaded(bool set);
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void setMovable(bool set);
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void setResizable(bool set);
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void setVirtualDesktopChangeable(bool set);
 
@@ -118,11 +118,11 @@ public:
 Q_SIGNALS:
     void closeRequested();
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void moveRequested();
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void resizeRequested();
     void virtualDesktopRequested(quint32 desktop);
@@ -140,23 +140,23 @@ Q_SIGNALS:
     void skipTaskbarRequested(bool set);
     QRect minimizedGeometriesChanged();
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void shadeableRequested(bool set);
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void shadedRequested(bool set);
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void movableRequested(bool set);
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void resizableRequested(bool set);
     /**
-     * @since 5.7
+     * @since 5.22
      */
     void virtualDesktopChangeableRequested(bool set);
 
