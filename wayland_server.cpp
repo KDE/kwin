@@ -244,6 +244,7 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             this, [this](KWayland::Server::OutputConfigurationInterface *config) {
                 kwinApp()->platform()->configurationChangeRequested(config);
     });
+    m_outputManagement->create();
 
     m_display->createSubCompositor(m_display)->create();
 }
