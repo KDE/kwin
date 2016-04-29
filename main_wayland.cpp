@@ -438,7 +438,7 @@ int main(int argc, char * argv[])
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);
 
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
-    qunsetenv("QT_IM_MODULE");
+    qputenv("QT_IM_MODULE", "qtvirtualkeyboard");
     qputenv("QSG_RENDER_LOOP", "basic");
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
     QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);

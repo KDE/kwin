@@ -34,6 +34,7 @@ class QWheelEvent;
 namespace KWin
 {
 class GlobalShortcutsManager;
+class InputMethods;
 class Toplevel;
 class InputEventFilter;
 class KeyboardInputRedirection;
@@ -155,6 +156,9 @@ public:
     TouchInputRedirection *touch() const {
         return m_touch;
     }
+    InputMethods *inputMethods() const {
+        return m_inputMethods;
+    }
 
 Q_SIGNALS:
     /**
@@ -212,6 +216,8 @@ private:
     LibInput::Connection *m_libInput = nullptr;
 
     QVector<InputEventFilter*> m_filters;
+
+    InputMethods *m_inputMethods;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "effects.h"
 #include "globalshortcuts.h"
+#include "input_methods.h"
 #include "logind.h"
 #include "main.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -766,6 +767,7 @@ InputRedirection::InputRedirection(QObject *parent)
     , m_pointer(new PointerInputRedirection(this))
     , m_touch(new TouchInputRedirection(this))
     , m_shortcuts(new GlobalShortcutsManager(this))
+    , m_inputMethods(new InputMethods(this))
 {
     qRegisterMetaType<KWin::InputRedirection::KeyboardKeyState>();
     qRegisterMetaType<KWin::InputRedirection::PointerButtonState>();
@@ -878,6 +880,9 @@ void InputRedirection::setupWorkspace()
         m_keyboard->init();
         m_pointer->init();
         m_touch->init();
+
+        // create input window
+        m_inputMethods->init();
     }
     setupInputFilters();
 }

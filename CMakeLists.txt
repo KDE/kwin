@@ -345,6 +345,7 @@ set(kwin_KDEINIT_SRCS
    focuschain.cpp
    globalshortcuts.cpp
    input.cpp
+   input_methods.cpp
    keyboard_input.cpp
    pointer_input.cpp
    touch_input.cpp

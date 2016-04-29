@@ -60,6 +60,7 @@ public:
     QPlatformOpenGLContext *createPlatformOpenGLContext(QOpenGLContext *context) const override;
 
     void initialize() override;
+    QPlatformInputContext *inputContext() const override;
 
     KWayland::Client::Compositor *compositor() const;
     EGLDisplay eglDisplay() const;
@@ -77,6 +78,7 @@ private:
     KWayland::Client::Shell *m_shell = nullptr;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     Screen *m_dummyScreen = nullptr;
+    QScopedPointer<QPlatformInputContext> m_inputContext;
 };
 
 }
