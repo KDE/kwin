@@ -415,6 +415,7 @@ set(kwin_KDEINIT_SRCS
     shell_client.cpp
     wayland_server.cpp
     wayland_cursor_theme.cpp
+    virtualkeyboard.cpp
    )
 
 if(KWIN_BUILD_TABBOX)

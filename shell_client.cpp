@@ -764,6 +764,9 @@ bool ShellClient::isLockScreen() const
 
 bool ShellClient::isInputMethod() const
 {
+    if (m_internal && m_internalWindow) {
+        return m_internalWindow->property("__kwin_input_method").toBool();
+    }
     return surface()->client() == waylandServer()->inputMethodConnection();
 }
 
