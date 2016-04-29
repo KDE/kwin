@@ -314,6 +314,11 @@ void PointerInputRedirection::updateInternalWindow()
                     continue;
                 }
                 if (w->geometry().contains(m_pos.toPoint())) {
+                    // check input mask
+                    const QRegion mask = w->mask().translated(w->geometry().topLeft());
+                    if (!mask.isEmpty() && !mask.contains(m_pos.toPoint())) {
+                        continue;
+                    }
                     m_internalWindow = QPointer<QWindow>(w);
                     found = true;
                     break;

@@ -191,6 +191,16 @@ void InternalWindowTest::testEnterLeave()
 
     kwinApp()->platform()->pointerMotion(QPoint(101, 50), timestamp++);
     QTRY_COMPARE(leaveSpy.count(), 1);
+
+    // set a mask on the window
+    win.setMask(QRegion(10, 20, 30, 40));
+    // outside the mask we should not get an enter
+    kwinApp()->platform()->pointerMotion(QPoint(5, 5), timestamp++);
+    QVERIFY(!enterSpy.wait(100));
+    QCOMPARE(enterSpy.count(), 1);
+    // inside the mask we should still get an enter
+    kwinApp()->platform()->pointerMotion(QPoint(25, 27), timestamp++);
+    QTRY_COMPARE(enterSpy.count(), 2);
 }
 
 void InternalWindowTest::testPointerPressRelease()
