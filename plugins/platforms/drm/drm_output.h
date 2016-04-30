@@ -131,6 +131,10 @@ public:
         return m_orientation;
     }
 
+    const QPointer<KWayland::Server::OutputInterface> getWaylandInterface() const {
+        return m_waylandOutput;
+    }
+
 Q_SIGNALS:
     void dpmsChanged();
     void modeChanged();
