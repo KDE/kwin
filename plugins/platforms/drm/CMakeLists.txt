@@ -13,7 +13,12 @@ set(DRM_SOURCES
 )
 
 if(HAVE_GBM)
-    set(DRM_SOURCES ${DRM_SOURCES} egl_gbm_backend.cpp drm_buffer_gbm.cpp gbm_surface.cpp)
+    set(DRM_SOURCES ${DRM_SOURCES}
+        egl_gbm_backend.cpp
+        drm_buffer_gbm.cpp
+        gbm_surface.cpp
+        remoteaccess_manager.cpp
+    )
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
