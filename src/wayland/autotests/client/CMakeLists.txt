@@ -1,5 +1,3 @@
-include_directories(${CMAKE_BINARY_DIR}/wayland_protocols/)
-set_source_files_properties(${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c GENERATED)
 ########################################################
 # Test WaylandConnectionThread
 ########################################################
