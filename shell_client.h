@@ -90,7 +90,6 @@ public:
     bool userCanSetFullScreen() const override;
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
-    xcb_window_t window() const override;
     using AbstractClient::resizeWithChecks;
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::setGeometry;
@@ -99,7 +98,7 @@ public:
 
     void setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo) override;
 
-    quint32 windowId() const {
+    quint32 windowId() const override {
         return m_windowId;
     }
     bool isInternal() const;

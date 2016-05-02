@@ -766,11 +766,6 @@ bool ShellClient::isInputMethod() const
     return surface()->client() == waylandServer()->inputMethodConnection();
 }
 
-xcb_window_t ShellClient::window() const
-{
-    return windowId();
-}
-
 void ShellClient::requestGeometry(const QRect &rect)
 {
     m_positionAfterResize.setPoint(rect.topLeft());

@@ -375,7 +375,7 @@ QIcon TabBoxClientImpl::icon() const
 
 WId TabBoxClientImpl::window() const
 {
-    return m_client->window();
+    return m_client->windowId();
 }
 
 bool TabBoxClientImpl::isMinimized() const

@@ -166,6 +166,9 @@ void ScreenLockerWatcher::setLocked(bool activated)
 
 static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom_t type, int format)
 {
+    if (win == XCB_WINDOW_NONE) {
+        return QByteArray();
+    }
     uint32_t len = 32768;
     for (;;) {
         Xcb::Property prop(false, win, atom, XCB_ATOM_ANY, 0, len);
@@ -183,6 +186,9 @@ static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom
 
 static void deleteWindowProperty(Window win, long int atom)
 {
+    if (win == XCB_WINDOW_NONE) {
+        return;
+    }
     xcb_delete_property(connection(), win, atom);
 }
 

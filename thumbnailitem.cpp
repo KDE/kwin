@@ -159,7 +159,7 @@ void WindowThumbnailItem::setClient(AbstractClient *client)
     }
     m_client = client;
     if (m_client) {
-        setWId(m_client->window());
+        setWId(m_client->windowId());
     } else {
         setWId(0);
     }
@@ -183,7 +183,7 @@ void WindowThumbnailItem::paint(QPainter *painter)
 
 void WindowThumbnailItem::repaint(KWin::EffectWindow *w)
 {
-    if (static_cast<KWin::EffectWindowImpl*>(w)->window()->window() == m_wId) {
+    if (static_cast<KWin::EffectWindowImpl*>(w)->window()->windowId() == m_wId) {
         update();
     }
 }

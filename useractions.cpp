@@ -222,7 +222,7 @@ void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Ab
         args << QStringLiteral("--dontagain") << QLatin1String("kwin_dialogsrc:") + type;
     }
     if (!c.isNull())
-        args << QStringLiteral("--embed") << QString::number(c.data()->window());
+        args << QStringLiteral("--embed") << QString::number(c.data()->windowId());
     QtConcurrent::run([args]() {
         KProcess::startDetached(QStringLiteral("kdialog"), args);
     });
@@ -1704,7 +1704,7 @@ void Workspace::slotInvertScreen()
     bool succeeded = false;
 
     if (Xcb::Extensions::self()->isRandrAvailable()) {
-        ScreenResources res(active_client ? active_client->window() : rootWindow());
+        ScreenResources res((active_client && active_client->window() != XCB_WINDOW_NONE) ? active_client->window() : rootWindow());
 
         if (!res.isNull()) {
             for (int j = 0; j < res->num_crtcs; ++j) {

@@ -519,5 +519,10 @@ QMatrix4x4 Toplevel::inputTransformation() const
     return m;
 }
 
+quint32 Toplevel::windowId() const
+{
+    return window();
+}
+
 } // namespace
 

@@ -82,7 +82,7 @@ class KWIN_EXPORT Toplevel
     Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
     Q_PROPERTY(QSize size READ size)
     Q_PROPERTY(int width READ width)
-    Q_PROPERTY(qulonglong windowId READ window CONSTANT)
+    Q_PROPERTY(qulonglong windowId READ windowId CONSTANT)
     Q_PROPERTY(int x READ x)
     Q_PROPERTY(int y READ y)
     Q_PROPERTY(int desktop READ desktop)
@@ -213,7 +213,11 @@ class KWIN_EXPORT Toplevel
 public:
     explicit Toplevel();
     virtual xcb_window_t frameId() const;
-    virtual xcb_window_t window() const;
+    xcb_window_t window() const;
+    /**
+     * @return a unique identifier for the Toplevel. On X11 same as @link {window}
+     **/
+    virtual quint32 windowId() const;
     QRect geometry() const;
     QSize size() const;
     QPoint pos() const;
