@@ -44,10 +44,13 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/subcompositor_interface.h"
 #include "../../src/server/outputmanagement_interface.h"
 #include "../../src/server/outputdevice_interface.h"
+#include "../../src/server/textinput_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
 #include <wayland-dpms-client-protocol.h>
 #include <wayland-server-decoration-client-protocol.h>
+#include <wayland-text-input-v0-client-protocol.h>
+#include <wayland-text-input-v2-client-protocol.h>
 
 class TestWaylandRegistry : public QObject
 {
@@ -71,6 +74,8 @@ private Q_SLOTS:
     void testBindSlideManager();
     void testBindDpmsManager();
     void testBindServerSideDecorationManager();
+    void testBindTextInputManagerUnstableV0();
+    void testBindTextInputManagerUnstableV2();
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
@@ -89,6 +94,8 @@ private:
     KWayland::Server::DataDeviceManagerInterface *m_dataDeviceManager;
     KWayland::Server::OutputManagementInterface *m_outputManagement;
     KWayland::Server::ServerSideDecorationManagerInterface *m_serverSideDecorationManager;
+    KWayland::Server::TextInputManagerInterface *m_textInputManagerV0;
+    KWayland::Server::TextInputManagerInterface *m_textInputManagerV2;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-registry-0");
@@ -105,6 +112,8 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_dataDeviceManager(nullptr)
     , m_outputManagement(nullptr)
     , m_serverSideDecorationManager(nullptr)
+    , m_textInputManagerV0(nullptr)
+    , m_textInputManagerV2(nullptr)
 {
 }
 
@@ -137,6 +146,12 @@ void TestWaylandRegistry::init()
     m_display->createDpmsManager()->create();
     m_serverSideDecorationManager = m_display->createServerSideDecorationManager();
     m_serverSideDecorationManager->create();
+    m_textInputManagerV0 = m_display->createTextInputManager(KWayland::Server::TextInputInterfaceVersion::UnstableV0);
+    QCOMPARE(m_textInputManagerV0->interfaceVersion(), KWayland::Server::TextInputInterfaceVersion::UnstableV0);
+    m_textInputManagerV0->create();
+    m_textInputManagerV2 = m_display->createTextInputManager(KWayland::Server::TextInputInterfaceVersion::UnstableV2);
+    QCOMPARE(m_textInputManagerV2->interfaceVersion(), KWayland::Server::TextInputInterfaceVersion::UnstableV2);
+    m_textInputManagerV2->create();
 }
 
 void TestWaylandRegistry::cleanup()
@@ -262,6 +277,16 @@ void TestWaylandRegistry::testBindDpmsManager()
 void TestWaylandRegistry::testBindServerSideDecorationManager()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::ServerSideDecorationManager, SIGNAL(serverSideDecorationManagerAnnounced(quint32,quint32)), bindServerSideDecorationManager, org_kde_kwin_server_decoration_manager_destroy)
+}
+
+void TestWaylandRegistry::testBindTextInputManagerUnstableV0()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::TextInputManagerUnstableV0, SIGNAL(textInputManagerUnstableV0Announced(quint32,quint32)), bindTextInputManagerUnstableV0, wl_text_input_manager_destroy)
+}
+
+void TestWaylandRegistry::testBindTextInputManagerUnstableV2()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2, SIGNAL(textInputManagerUnstableV2Announced(quint32,quint32)), bindTextInputManagerUnstableV2, zwp_text_input_manager_v2_destroy)
 }
 
 #undef TEST_BIND

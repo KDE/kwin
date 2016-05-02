@@ -27,6 +27,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "pointer_interface.h"
 #include "pointer_interface_p.h"
 #include "surface_interface.h"
+#include "textinput_interface_p.h"
 // Wayland
 #ifndef WL_SEAT_NAME_SINCE_VERSION
 #define WL_SEAT_NAME_SINCE_VERSION 2
@@ -204,6 +205,11 @@ DataDeviceInterface *SeatInterface::Private::dataDeviceForSurface(SurfaceInterfa
     return interfaceForSurface(surface, dataDevices);
 }
 
+TextInputInterface *SeatInterface::Private::textInputForSurface(SurfaceInterface *surface) const
+{
+    return interfaceForSurface(surface, textInputs);
+}
+
 void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
 {
     Q_ASSERT(dataDevice->seat() == q);
@@ -267,6 +273,33 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
             }
         }
     }
+}
+
+
+void SeatInterface::Private::registerTextInput(TextInputInterface *ti)
+{
+    // text input version 0 might call this multiple times
+    if (textInputs.contains(ti)) {
+        return;
+    }
+    textInputs << ti;
+    if (textInput.focus.surface && textInput.focus.surface->client() == ti->client()) {
+        // this is a text input for the currently focused text input surface
+        if (!textInput.focus.textInput) {
+            textInput.focus.textInput = ti;
+            ti->d_func()->sendEnter(textInput.focus.surface, textInput.focus.serial);
+            emit q->focusedTextInputChanged();
+        }
+    }
+    QObject::connect(ti, &QObject::destroyed, q,
+        [this, ti] {
+            textInputs.removeAt(textInputs.indexOf(ti));
+            if (textInput.focus.textInput == ti) {
+                textInput.focus.textInput = nullptr;
+                emit q->focusedTextInputChanged();
+            }
+        }
+    );
 }
 
 void SeatInterface::Private::endDrag(quint32 serial)
@@ -829,10 +862,13 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
             }
         }
     }
-    if (!k) {
-        return;
+    if (k) {
+        k->setFocusedSurface(surface, serial);
     }
-    k->setFocusedSurface(surface, serial);
+    // focused text input surface follows keyboard
+    if (hasKeyboard()) {
+        setFocusedTextInputSurface(surface);
+    }
 }
 
 void SeatInterface::setKeymap(int fd, quint32 size)
@@ -1153,6 +1189,54 @@ DataDeviceInterface *SeatInterface::dragSource() const
 {
     Q_D();
     return d->drag.source;
+}
+
+void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
+{
+    Q_D();
+    const quint32 serial = d->display->nextSerial();
+    const auto old = d->textInput.focus.textInput;
+    if (d->textInput.focus.textInput) {
+        // TODO: setFocusedSurface like in other interfaces
+        d->textInput.focus.textInput->d_func()->sendLeave(serial, d->textInput.focus.surface);
+    }
+    if (d->textInput.focus.surface) {
+        disconnect(d->textInput.focus.destroyConnection);
+    }
+    d->textInput.focus = Private::TextInput::Focus();
+    d->textInput.focus.surface = surface;
+    TextInputInterface *t = d->textInputForSurface(surface);
+    if (t && !t->resource()) {
+        t = nullptr;
+    }
+    d->textInput.focus.textInput = t;
+    if (d->textInput.focus.surface) {
+        d->textInput.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
+            [this] {
+                setFocusedTextInputSurface(nullptr);
+            }
+        );
+        d->textInput.focus.serial = serial;
+    }
+    if (t) {
+        // TODO: setFocusedSurface like in other interfaces
+        t->d_func()->sendEnter(surface, serial);
+    }
+    if (old != t) {
+        emit focusedTextInputChanged();
+    }
+}
+
+SurfaceInterface *SeatInterface::focusedTextInputSurface() const
+{
+    Q_D();
+    return d->textInput.focus.surface;
+}
+
+TextInputInterface *SeatInterface::focusedTextInput() const
+{
+    Q_D();
+    return d->textInput.focus.textInput;
 }
 
 }

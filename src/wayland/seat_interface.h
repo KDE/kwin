@@ -41,6 +41,7 @@ namespace Server
 class DataDeviceInterface;
 class Display;
 class SurfaceInterface;
+class TextInputInterface;
 
 /**
  * @brief Represents a Seat on the Wayland Display.
@@ -413,6 +414,16 @@ public:
      **/
     qint32 keyRepeatDelay() const;
 
+    /**
+     * Passes keyboard focus to @p surface.
+     *
+     * If the SeatInterface has the keyboard capability, also the focused
+     * text input surface will be set to @p surface.
+     *
+     * @see focusedKeyboardSurface
+     * @see hasKeyboard
+     * @see setFocusedTextInputSurface
+     **/
     void setFocusedKeyboardSurface(SurfaceInterface *surface);
     SurfaceInterface *focusedKeyboardSurface() const;
     KeyboardInterface *focusedKeyboard() const;
@@ -433,6 +444,50 @@ public:
     void touchFrame();
     void cancelTouchSequence();
     bool isTouchSequence() const;
+    ///@}
+
+    /**
+     * @name Text input related methods.
+     **/
+    ///@{
+    /**
+     * Passes text input focus to @p surface.
+     *
+     * If the SeatInterface has the keyboard capability this method will
+     * be invoked automatically when setting the focused keyboard surface.
+     *
+     * In case there is a TextInputInterface for the @p surface, the enter
+     * event will be triggered on the TextInputInterface for @p surface.
+     * The focusedTextInput will be set to that TextInputInterface. If there
+     * is no TextInputInterface for that @p surface, it might get updated later on.
+     * In both cases the signal focusedTextInputChanged will be emitted.
+     *
+     * @see focusedTextInputSurface
+     * @see focusedTextInput
+     * @see focusedTextInputChanged
+     * @see setFocusedKeyboardSurface
+     * @since 5.23
+     **/
+    void setFocusedTextInputSurface(SurfaceInterface *surface);
+    /**
+     * @returns The SurfaceInterface which is currently focused for text input.
+     * @see setFocusedTextInputSurface
+     * @since 5.23
+     **/
+    SurfaceInterface *focusedTextInputSurface() const;
+    /**
+     * The currently focused text input, may be @c null even if there is a
+     * focused text input surface set.
+     *
+     * The focused text input might not be enabled for the @link{focusedTextInputSurface}.
+     * It is recommended to check the enabled state before interacting with the
+     * TextInputInterface.
+     *
+     * @see focusedTextInputChanged
+     * @see focusedTextInputSurface
+     * @since 5.23
+     **/
+    TextInputInterface *focusedTextInput() const;
     ///@}
 
     static SeatInterface *get(wl_resource *native);
@@ -473,10 +528,18 @@ Q_SIGNALS:
      * @see dragSurface
      **/
     void dragSurfaceChanged();
+    /**
+     * Emitted whenever the focused text input changed.
+     * @see focusedTextInput
+     * @since 5.23
+     **/
+    void focusedTextInputChanged();
 
 private:
     friend class Display;
     friend class DataDeviceManagerInterface;
+    friend class TextInputManagerUnstableV0Interface;
+    friend class TextInputManagerUnstableV2Interface;
     explicit SeatInterface(Display *display, QObject *parent);
 
     class Private;

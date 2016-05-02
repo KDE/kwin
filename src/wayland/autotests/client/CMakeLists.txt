@@ -297,3 +297,14 @@ add_executable(testPlasmaWindowModel ${testPlasmaWindowModel_SRCS})
 target_link_libraries( testPlasmaWindowModel Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
 add_test(kwayland-testPlasmaWindowModel testPlasmaWindowModel)
 ecm_mark_as_test(testPlasmaWindowModel)
+
+########################################################
+# Test TextInput
+########################################################
+set( testTextInput_SRCS
+        test_text_input.cpp
+    )
+add_executable(testTextInput ${testTextInput_SRCS})
+target_link_libraries( testTextInput Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(kwayland-testTextInput testTextInput)
+ecm_mark_as_test(testTextInput)

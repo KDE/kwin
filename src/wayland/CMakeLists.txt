@@ -34,6 +34,9 @@ set(SERVER_LIB_SRCS
     surface_interface.cpp
     subcompositor_interface.cpp
     touch_interface.cpp
+    textinput_interface.cpp
+    textinput_interface_v0.cpp
+    textinput_interface_v2.cpp
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
@@ -98,6 +101,16 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/server-decoration.xml
     BASENAME server_decoration
+)
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/text-input.xml
+    BASENAME text
+)
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/text-input-unstable-v2.xml
+    BASENAME text-input-unstable-v2
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
@@ -168,6 +181,7 @@ install(FILES
   slide_interface.h
   subcompositor_interface.h
   surface_interface.h
+  textinput_interface.h
   touch_interface.h
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server COMPONENT Devel
 )

@@ -39,6 +39,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "slide_interface.h"
 #include "shell_interface.h"
 #include "subcompositor_interface.h"
+#include "textinput_interface_p.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -332,6 +333,23 @@ ServerSideDecorationManagerInterface *Display::createServerSideDecorationManager
     auto d = new ServerSideDecorationManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
+}
+
+TextInputManagerInterface *Display::createTextInputManager(const TextInputInterfaceVersion &version, QObject *parent)
+{
+    TextInputManagerInterface *t = nullptr;
+    switch (version) {
+    case TextInputInterfaceVersion::UnstableV0:
+        t = new TextInputManagerUnstableV0Interface(this, parent);
+        break;
+    case TextInputInterfaceVersion::UnstableV1:
+        // unsupported
+        return nullptr;
+    case TextInputInterfaceVersion::UnstableV2:
+        t = new TextInputManagerUnstableV2Interface(this, parent);
+    }
+    connect(this, &Display::aboutToTerminate, t, [t] { delete t; });
+    return t;
 }
 
 void Display::createShm()

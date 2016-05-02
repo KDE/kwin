@@ -69,6 +69,8 @@ class ServerSideDecorationManagerInterface;
 class SlideManagerInterface;
 class ShellInterface;
 class SubCompositorInterface;
+enum class TextInputInterfaceVersion;
+class TextInputManagerInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -170,6 +172,12 @@ public:
      * @since 5.6
      **/
     ServerSideDecorationManagerInterface *createServerSideDecorationManager(QObject *parent = nullptr);
+    /**
+     * Create the text input manager in interface @p version.
+     * @returns The created manager object
+     * @since 5.23
+     **/
+    TextInputManagerInterface *createTextInputManager(const TextInputInterfaceVersion &version, QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.
