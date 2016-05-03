@@ -809,33 +809,48 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
 
     const auto unmangeds = workspace()->unmanagedList();
     for (auto u : unmangeds) {
+        if (!u->surface()) {
+            continue;
+        }
         connect(u->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
     }
     for (auto c : workspace()->allClientList()) {
+        if (!c->surface()) {
+            continue;
+        }
         connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
     }
     for (auto c : workspace()->desktopList()) {
-        connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-    }
-    for (auto c : waylandServer()->internalClients()) {
-        connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-    }
-    connect(waylandServer(), &WaylandServer::shellClientAdded, this,
-        [this, reset] (ShellClient *c) {
-            connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-            reset();
+        if (!c->surface()) {
+            continue;
         }
-    );
+        connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+    }
+    if (waylandServer()) {
+        for (auto c : waylandServer()->internalClients()) {
+            connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+        }
+        connect(waylandServer(), &WaylandServer::shellClientAdded, this,
+            [this, reset] (ShellClient *c) {
+                connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+                reset();
+            }
+        );
+    }
     connect(workspace(), &Workspace::clientAdded, this,
         [this, reset] (AbstractClient *c) {
-            connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+            if (c->surface()) {
+                connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+            }
             reset();
         }
     );
     connect(workspace(), &Workspace::clientRemoved, this, reset);
     connect(workspace(), &Workspace::unmanagedAdded, this,
         [this, reset] (Unmanaged *u) {
-            connect(u->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+            if (u->surface()) {
+                connect(u->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+            }
             reset();
         }
     );
@@ -860,11 +875,12 @@ int SurfaceTreeModel::rowCount(const QModelIndex &parent) const
         }
         return 0;
     }
+    const int internalClientsCount = waylandServer() ? waylandServer()->internalClients().count() : 0;
     // toplevel are all windows
     return workspace()->allClientList().count() +
            workspace()->desktopList().count() +
            workspace()->unmanagedList().count() +
-           waylandServer()->internalClients().count();
+           internalClientsCount;
 }
 
 QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -901,9 +917,11 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
         return createIndex(row, column, unmanaged.at(row-reference)->surface());
     }
     reference += unmanaged.count();
-    const auto &internal = waylandServer()->internalClients();
-    if (row < reference + internal.count()) {
-        return createIndex(row, column, internal.at(row-reference)->surface());
+    if (waylandServer()) {
+        const auto &internal = waylandServer()->internalClients();
+        if (row < reference + internal.count()) {
+            return createIndex(row, column, internal.at(row-reference)->surface());
+        }
     }
     // not found
     return QModelIndex();
@@ -961,10 +979,12 @@ QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
             }
         }
         row += unmanaged.count();
-        const auto &internal = waylandServer()->internalClients();
-        for (int i = 0; i < internal.count(); i++) {
-            if (internal.at(i)->surface() == parent) {
-                return createIndex(row + i, 0, parent);
+        if (waylandServer()) {
+            const auto &internal = waylandServer()->internalClients();
+            for (int i = 0; i < internal.count(); i++) {
+                if (internal.at(i)->surface() == parent) {
+                    return createIndex(row + i, 0, parent);
+                }
             }
         }
     }
