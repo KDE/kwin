@@ -84,6 +84,16 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="inputDevices">
+      <attribute name="title">
+       <string>Input Devices</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QTreeView" name="inputDevicesView"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_DEBUG_CONSOLE_H
 
 #include <kwin_export.h>
+#include <config-kwin.h>
 #include "input.h"
 
 #include <QAbstractItemModel>
@@ -135,6 +136,22 @@ public:
 private:
     QTextEdit *m_textEdit;
 };
+
+#if HAVE_INPUT
+class InputDeviceModel : public QAbstractItemModel
+{
+    Q_OBJECT
+public:
+    explicit InputDeviceModel(QObject *parent = nullptr);
+    virtual ~InputDeviceModel();
+
+    int columnCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QModelIndex index(int row, int column, const QModelIndex & parent) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+};
+#endif
 
 }
 

@@ -37,6 +37,7 @@ namespace LibInput
 {
 
 class Event;
+class Device;
 class Context;
 
 class Connection : public QObject
@@ -68,6 +69,10 @@ public:
 
     void processEvents();
 
+    QVector<Device*> devices() const {
+        return m_devices;
+    }
+
 Q_SIGNALS:
     void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time);
     void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time);
@@ -82,6 +87,8 @@ Q_SIGNALS:
     void hasKeyboardChanged(bool);
     void hasPointerChanged(bool);
     void hasTouchChanged(bool);
+    void deviceAdded(KWin::LibInput::Device *);
+    void deviceRemoved(KWin::LibInput::Device *);
 
     void eventsRead();
 
@@ -103,6 +110,7 @@ private:
     QMutex m_mutex;
     QVector<Event*> m_eventQueue;
     bool wasSuspended = false;
+    QVector<Device*> m_devices;
 
     KWIN_SINGLETON(Connection)
     static QThread *s_thread;

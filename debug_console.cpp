@@ -24,6 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#if HAVE_INPUT
+#include "libinput/connection.h"
+#include "libinput/device.h"
+#endif
 
 #include "ui_debug_console.h"
 
@@ -312,6 +316,12 @@ DebugConsole::DebugConsole()
     m_ui->windowsView->setItemDelegate(new DebugConsoleDelegate(this));
     m_ui->windowsView->setModel(new DebugConsoleModel(this));
     m_ui->surfacesView->setModel(new SurfaceTreeModel(this));
+#if HAVE_INPUT
+    if (kwinApp()->usesLibinput()) {
+        m_ui->inputDevicesView->setModel(new InputDeviceModel(this));
+        m_ui->inputDevicesView->setItemDelegate(new DebugConsoleDelegate(this));
+    }
+#endif
     m_ui->quitButton->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
     m_ui->tabWidget->setTabIcon(0, QIcon::fromTheme(QStringLiteral("view-list-tree")));
     m_ui->tabWidget->setTabIcon(1, QIcon::fromTheme(QStringLiteral("view-list-tree")));
@@ -319,6 +329,9 @@ DebugConsole::DebugConsole()
     if (kwinApp()->operationMode() == Application::OperationMode::OperationModeX11) {
         m_ui->tabWidget->setTabEnabled(1, false);
         m_ui->tabWidget->setTabEnabled(2, false);
+    }
+    if (!kwinApp()->usesLibinput()) {
+        m_ui->tabWidget->setTabEnabled(3, false);
     }
 
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
@@ -375,6 +388,104 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
             } else {
                 return QStringLiteral("nullptr");
             }
+        }
+        if (value.userType() == qMetaTypeId<Qt::MouseButtons>()) {
+            const auto buttons = value.value<Qt::MouseButtons>();
+            if (buttons == Qt::NoButton) {
+                return i18n("No Mouse Buttons");
+            }
+            QStringList list;
+            if (buttons.testFlag(Qt::LeftButton)) {
+                list << i18nc("Mouse Button", "left");
+            }
+            if (buttons.testFlag(Qt::RightButton)) {
+                list << i18nc("Mouse Button", "right");
+            }
+            if (buttons.testFlag(Qt::MiddleButton)) {
+                list << i18nc("Mouse Button", "middle");
+            }
+            if (buttons.testFlag(Qt::BackButton)) {
+                list << i18nc("Mouse Button", "back");
+            }
+            if (buttons.testFlag(Qt::ForwardButton)) {
+                list << i18nc("Mouse Button", "forward");
+            }
+            if (buttons.testFlag(Qt::ExtraButton1)) {
+                list << i18nc("Mouse Button", "extra 1");
+            }
+            if (buttons.testFlag(Qt::ExtraButton2)) {
+                list << i18nc("Mouse Button", "extra 2");
+            }
+            if (buttons.testFlag(Qt::ExtraButton3)) {
+                list << i18nc("Mouse Button", "extra 3");
+            }
+            if (buttons.testFlag(Qt::ExtraButton4)) {
+                list << i18nc("Mouse Button", "extra 4");
+            }
+            if (buttons.testFlag(Qt::ExtraButton5)) {
+                list << i18nc("Mouse Button", "extra 5");
+            }
+            if (buttons.testFlag(Qt::ExtraButton6)) {
+                list << i18nc("Mouse Button", "extra 6");
+            }
+            if (buttons.testFlag(Qt::ExtraButton7)) {
+                list << i18nc("Mouse Button", "extra 7");
+            }
+            if (buttons.testFlag(Qt::ExtraButton8)) {
+                list << i18nc("Mouse Button", "extra 8");
+            }
+            if (buttons.testFlag(Qt::ExtraButton9)) {
+                list << i18nc("Mouse Button", "extra 9");
+            }
+            if (buttons.testFlag(Qt::ExtraButton10)) {
+                list << i18nc("Mouse Button", "extra 10");
+            }
+            if (buttons.testFlag(Qt::ExtraButton11)) {
+                list << i18nc("Mouse Button", "extra 11");
+            }
+            if (buttons.testFlag(Qt::ExtraButton12)) {
+                list << i18nc("Mouse Button", "extra 12");
+            }
+            if (buttons.testFlag(Qt::ExtraButton13)) {
+                list << i18nc("Mouse Button", "extra 13");
+            }
+            if (buttons.testFlag(Qt::ExtraButton14)) {
+                list << i18nc("Mouse Button", "extra 14");
+            }
+            if (buttons.testFlag(Qt::ExtraButton15)) {
+                list << i18nc("Mouse Button", "extra 15");
+            }
+            if (buttons.testFlag(Qt::ExtraButton16)) {
+                list << i18nc("Mouse Button", "extra 16");
+            }
+            if (buttons.testFlag(Qt::ExtraButton17)) {
+                list << i18nc("Mouse Button", "extra 17");
+            }
+            if (buttons.testFlag(Qt::ExtraButton18)) {
+                list << i18nc("Mouse Button", "extra 18");
+            }
+            if (buttons.testFlag(Qt::ExtraButton19)) {
+                list << i18nc("Mouse Button", "extra 19");
+            }
+            if (buttons.testFlag(Qt::ExtraButton20)) {
+                list << i18nc("Mouse Button", "extra 20");
+            }
+            if (buttons.testFlag(Qt::ExtraButton21)) {
+                list << i18nc("Mouse Button", "extra 21");
+            }
+            if (buttons.testFlag(Qt::ExtraButton22)) {
+                list << i18nc("Mouse Button", "extra 22");
+            }
+            if (buttons.testFlag(Qt::ExtraButton23)) {
+                list << i18nc("Mouse Button", "extra 23");
+            }
+            if (buttons.testFlag(Qt::ExtraButton24)) {
+                list << i18nc("Mouse Button", "extra 24");
+            }
+            if (buttons.testFlag(Qt::TaskButton)) {
+                list << i18nc("Mouse Button", "task");
+            }
+            return list.join(QStringLiteral(", "));
         }
         break;
     }
@@ -1012,5 +1123,98 @@ QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
     }
     return QVariant();
 }
+
+#if HAVE_INPUT
+InputDeviceModel::InputDeviceModel(QObject *parent)
+    : QAbstractItemModel(parent)
+{
+    auto c = LibInput::Connection::self();
+    auto resetModel = [this] {
+        beginResetModel();
+        endResetModel();
+    };
+    connect(c, &LibInput::Connection::deviceAdded, this, resetModel);
+    connect(c, &LibInput::Connection::deviceRemoved, this, resetModel);
+}
+
+InputDeviceModel::~InputDeviceModel() = default;
+
+
+int InputDeviceModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return 2;
+}
+
+QVariant InputDeviceModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid()) {
+        return QVariant();
+    }
+    if (!index.parent().isValid() && index.column() == 0) {
+        const auto devices = LibInput::Connection::self()->devices();
+        if (index.row() >= devices.count()) {
+            return QVariant();
+        }
+        if (role == Qt::DisplayRole) {
+            return devices.at(index.row())->name();
+        }
+    }
+    if (index.parent().isValid()) {
+        if (role == Qt::DisplayRole) {
+            const auto device = LibInput::Connection::self()->devices().at(index.parent().row());
+            const auto property = device->metaObject()->property(index.row());
+            if (index.column() == 0) {
+                return property.name();
+            } else if (index.column() == 1) {
+                return device->property(property.name());
+            }
+        }
+    }
+    return QVariant();
+}
+
+QModelIndex InputDeviceModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (column >= 2) {
+        return QModelIndex();
+    }
+    if (parent.isValid()) {
+        if (parent.internalId() & s_propertyBitMask) {
+            return QModelIndex();
+        }
+        if (row >= LibInput::Connection::self()->devices().at(parent.row())->metaObject()->propertyCount()) {
+            return QModelIndex();
+        }
+        return createIndex(row, column, quint32(row + 1) << 16 | parent.internalId());
+    }
+    if (row >= LibInput::Connection::self()->devices().count()) {
+        return QModelIndex();
+    }
+    return createIndex(row, column, row + 1);
+}
+
+int InputDeviceModel::rowCount(const QModelIndex &parent) const
+{
+    if (!parent.isValid()) {
+        return LibInput::Connection::self()->devices().count();
+    }
+    if (parent.internalId() & s_propertyBitMask) {
+        return 0;
+    }
+
+    return LibInput::Connection::self()->devices().at(parent.row())->metaObject()->propertyCount();
+}
+
+QModelIndex InputDeviceModel::parent(const QModelIndex &child) const
+{
+    if (child.internalId() & s_propertyBitMask) {
+        const quintptr parentId = child.internalId() & s_clientBitMask;
+        return createIndex(parentId - 1, 0, parentId);
+    }
+    return QModelIndex();
+}
+
+#endif
 
 }

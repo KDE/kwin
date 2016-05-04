@@ -443,6 +443,7 @@ if(HAVE_INPUT)
         ${kwin_KDEINIT_SRCS}
         libinput/context.cpp
         libinput/connection.cpp
+        libinput/device.cpp
         libinput/events.cpp
         libinput/libinput_logging.cpp
         virtual_terminal.cpp

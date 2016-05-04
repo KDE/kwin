@@ -23,6 +23,7 @@ if (HAVE_INPUT)
             libinputtest.cpp
             ${KWIN_SOURCE_DIR}/libinput/context.cpp
             ${KWIN_SOURCE_DIR}/libinput/connection.cpp
+            ${KWIN_SOURCE_DIR}/libinput/device.cpp
             ${KWIN_SOURCE_DIR}/libinput/events.cpp
             ${KWIN_SOURCE_DIR}/libinput/libinput_logging.cpp
             ${KWIN_SOURCE_DIR}/logind.cpp

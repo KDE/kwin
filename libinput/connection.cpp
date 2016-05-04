@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "connection.h"
 #include "context.h"
+#include "device.h"
 #include "events.h"
 #include "../logind.h"
 #include "../udev.h"
@@ -159,46 +160,61 @@ void Connection::processEvents()
     while (!m_eventQueue.isEmpty()) {
         QScopedPointer<Event> event(m_eventQueue.takeFirst());
         switch (event->type()) {
-            case LIBINPUT_EVENT_DEVICE_ADDED:
-                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_KEYBOARD)) {
+            case LIBINPUT_EVENT_DEVICE_ADDED: {
+                auto device = new Device(event->device(), this);
+                m_devices << device;
+                if (device->isKeyboard()) {
                     m_keyboard++;
                     if (m_keyboard == 1) {
                         emit hasKeyboardChanged(true);
                     }
                 }
-                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_POINTER)) {
+                if (device->isPointer()) {
                     m_pointer++;
                     if (m_pointer == 1) {
                         emit hasPointerChanged(true);
                     }
                 }
-                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_TOUCH)) {
+                if (device->isTouch()) {
                     m_touch++;
                     if (m_touch == 1) {
                         emit hasTouchChanged(true);
                     }
                 }
+                emit deviceAdded(device);
                 break;
-            case LIBINPUT_EVENT_DEVICE_REMOVED:
-                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_KEYBOARD)) {
+            }
+            case LIBINPUT_EVENT_DEVICE_REMOVED: {
+                auto it = std::find_if(m_devices.begin(), m_devices.end(), [&event] (Device *d) { return event->device() == d->device(); } );
+                if (it == m_devices.end()) {
+                    // we don't know this device
+                    break;
+                }
+                auto device = *it;
+                m_devices.erase(it);
+                emit deviceRemoved(device);
+
+                if (device->isKeyboard()) {
                     m_keyboard--;
                     if (m_keyboard == 0) {
                         emit hasKeyboardChanged(false);
                     }
                 }
-                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_POINTER)) {
+                if (device->isPointer()) {
                     m_pointer--;
                     if (m_pointer == 0) {
                         emit hasPointerChanged(false);
                     }
                 }
-                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_TOUCH)) {
+                if (device->isTouch()) {
                     m_touch--;
                     if (m_touch == 0) {
                         emit hasTouchChanged(false);
                     }
                 }
+                delete device;
                 break;
+            }
             case LIBINPUT_EVENT_KEYBOARD_KEY: {
                 KeyEvent *ke = static_cast<KeyEvent*>(event.data());
                 emit keyChanged(ke->key(), ke->state(), ke->time());
