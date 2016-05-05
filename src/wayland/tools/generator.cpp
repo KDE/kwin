@@ -208,6 +208,7 @@ Interface::Interface() = default;
 Interface::Interface(const QXmlStreamAttributes &attributes)
     : m_name(attributes.value(QStringLiteral("name")).toString())
     , m_version(attributes.value(QStringLiteral("version")).toUInt())
+    , m_factory(Q_NULLPTR)
 {
     auto it = s_clientClassNameMapping.constFind(m_name);
     if (it != s_clientClassNameMapping.constEnd()) {
