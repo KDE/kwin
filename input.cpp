@@ -788,6 +788,7 @@ InputRedirection::InputRedirection(QObject *parent)
                 }
             );
         }
+        m_inputConfig = KSharedConfig::openConfig(QStringLiteral("kcminputrc"));
     }
 #endif
     connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);
@@ -913,7 +914,8 @@ void InputRedirection::reconfigure()
 {
 #if HAVE_INPUT
     if (Application::usesLibinput()) {
-        const auto config = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("keyboard"));
+        m_inputConfig->reparseConfiguration();
+        const auto config = m_inputConfig->group(QStringLiteral("keyboard"));
         const int delay = config.readEntry("RepeatDelay", 660);
         const int rate = config.readEntry("RepeatRate", 25);
         const bool enabled = config.readEntry("KeyboardRepeating", 0) == 0;
@@ -944,6 +946,7 @@ void InputRedirection::setupLibInput()
     LibInput::Connection *conn = LibInput::Connection::create(this);
     m_libInput = conn;
     if (conn) {
+        conn->setInputConfig(m_inputConfig);
         conn->setup();
         connect(conn, &LibInput::Connection::eventsRead, this,
             [this] {

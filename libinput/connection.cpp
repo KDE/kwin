@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../udev.h"
 #include "libinput_logging.h"
 
+#include <KConfigGroup>
+
 #include <QMutexLocker>
 #include <QSocketNotifier>
 #include <QThread>
@@ -88,6 +90,9 @@ Connection::Connection(Context *input, QObject *parent)
     , m_mutex(QMutex::Recursive)
 {
     Q_ASSERT(m_input);
+    // need to connect to KGlobalSettings as the mouse KCM does not emit a dedicated signal
+    QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
+                                          QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
 }
 
 Connection::~Connection()
@@ -181,6 +186,7 @@ void Connection::processEvents()
                         emit hasTouchChanged(true);
                     }
                 }
+                applyDeviceConfig(device);
                 emit deviceAdded(device);
                 break;
             }
@@ -331,6 +337,25 @@ bool Connection::isSuspended() const
         return false;
     }
     return s_context->isSuspended();
+}
+
+void Connection::applyDeviceConfig(Device *device)
+{
+    if (device->isPointer()) {
+        device->setLeftHanded(m_config->group("Mouse").readEntry("MouseButtonMapping", "RightHanded") == QLatin1String("LeftHanded"));
+    }
+}
+
+void Connection::slotKGlobalSettingsNotifyChange(int type, int arg)
+{
+    if (type == 3 /**SettingsChanged**/ && arg == 0 /** SETTINGS_MOUSE **/) {
+        m_config->reparseConfiguration();
+        for (auto it = m_devices.constBegin(), end = m_devices.constEnd(); it != end; ++it) {
+            if ((*it)->isPointer()) {
+                applyDeviceConfig(*it);
+            }
+        }
+    }
 }
 
 }

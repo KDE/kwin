@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPoint>
 #include <config-kwin.h>
 
+#include <KSharedConfig>
+
 class KGlobalAccelInterface;
 class QKeySequence;
 class QMouseEvent;
@@ -212,6 +214,7 @@ private:
     LibInput::Connection *m_libInput = nullptr;
 
     QVector<InputEventFilter*> m_filters;
+    KSharedConfigPtr m_inputConfig;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();

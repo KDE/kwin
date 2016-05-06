@@ -30,5 +30,5 @@ if (HAVE_INPUT)
             ${KWIN_SOURCE_DIR}/udev.cpp
     )
     add_executable(libinputtest ${libinputtest_SRCS})
-    target_link_libraries(libinputtest Qt5::Core Qt5::DBus Libinput::Libinput ${UDEV_LIBS} KF5::WindowSystem)
+    target_link_libraries(libinputtest Qt5::Core Qt5::DBus Libinput::Libinput ${UDEV_LIBS} KF5::ConfigCore KF5::WindowSystem)
 endif()

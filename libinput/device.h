@@ -55,6 +55,7 @@ class Device : public QObject
     Q_PROPERTY(bool supportsCalibrationMatrix READ supportsCalibrationMatrix CONSTANT)
     Q_PROPERTY(bool supportsDisableEvents READ supportsDisableEvents CONSTANT)
     Q_PROPERTY(bool supportsDisableEventsOnExternalMouse READ supportsDisableEventsOnExternalMouse CONSTANT)
+    Q_PROPERTY(bool leftHanded READ isLeftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     virtual ~Device();
@@ -126,9 +127,21 @@ public:
         return m_supportsDisableEventsOnExternalMouse;
     }
 
+    bool isLeftHanded() const {
+        return m_leftHanded;
+    }
+    /**
+     * Sets the Device to left handed mode if @p set is @c true.
+     * If @p set is @c false the device is set to right handed mode
+     **/
+    void setLeftHanded(bool set);
+
     libinput_device *device() const {
         return m_device;
     }
+
+Q_SIGNALS:
+    void leftHandedChanged();
 
 private:
     libinput_device *m_device;
@@ -154,6 +167,7 @@ private:
     bool m_supportsCalibrationMatrix;
     bool m_supportsDisableEvents;
     bool m_supportsDisableEventsOnExternalMouse;
+    bool m_leftHanded;
 };
 
 }

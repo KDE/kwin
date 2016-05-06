@@ -80,6 +80,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportsCalibrationMatrix(libinput_device_config_calibration_has_matrix(m_device))
     , m_supportsDisableEvents(libinput_device_config_send_events_get_modes(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED)
     , m_supportsDisableEventsOnExternalMouse(libinput_device_config_send_events_get_modes(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE)
+    , m_leftHanded(m_supportsLeftHanded ? libinput_device_config_left_handed_get(m_device) : false)
 {
     libinput_device_ref(m_device);
 
@@ -122,6 +123,19 @@ Device::Device(libinput_device *device, QObject *parent)
 Device::~Device()
 {
     libinput_device_unref(m_device);
+}
+
+void Device::setLeftHanded(bool set)
+{
+    if (!m_supportsLeftHanded) {
+        return;
+    }
+    if (libinput_device_config_left_handed_set(m_device, set) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_leftHanded != set) {
+            m_leftHanded = set;
+            emit leftHandedChanged();
+        }
+    }
 }
 
 }

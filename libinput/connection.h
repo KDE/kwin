@@ -46,6 +46,10 @@ class Connection : public QObject
 public:
     ~Connection();
 
+    void setInputConfig(const KSharedConfigPtr &config) {
+        m_config = config;
+    }
+
     void setup();
     /**
      * Sets the screen @p size. This is needed for mapping absolute pointer events to
@@ -94,10 +98,12 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void doSetup();
+    void slotKGlobalSettingsNotifyChange(int type, int arg);
 
 private:
     Connection(Context *input, QObject *parent = nullptr);
     void handleEvent();
+    void applyDeviceConfig(Device *device);
     Context *m_input;
     QSocketNotifier *m_notifier;
     QSize m_size;
@@ -111,6 +117,7 @@ private:
     QVector<Event*> m_eventQueue;
     bool wasSuspended = false;
     QVector<Device*> m_devices;
+    KSharedConfigPtr m_config;
 
     KWIN_SINGLETON(Connection)
     static QThread *s_thread;
