@@ -485,7 +485,6 @@ set(kwin_KDE_LIBS
     KF5::ConfigCore
     KF5::CoreAddons
     KF5::ConfigWidgets
-    KF5::Crash
     KF5::GlobalAccel
     KF5::GlobalAccelPrivate
     KF5::I18n
@@ -570,7 +569,7 @@ target_link_libraries(kwin ${DL_LIBRARY})
 endif()
 
 kf5_add_kdeinit_executable(kwin_x11 main_x11.cpp)
-target_link_libraries(kdeinit_kwin_x11 kwin)
+target_link_libraries(kdeinit_kwin_x11 kwin KF5::Crash)
 
 install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP )
 install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )

@@ -56,7 +56,6 @@ public:
 
 protected:
     void performStartup() override;
-    void setupCrashHandler() override;
 
 private:
     void createBackend();

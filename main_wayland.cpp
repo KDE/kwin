@@ -123,12 +123,6 @@ void ApplicationWayland::performStartup()
     createBackend();
 }
 
-void ApplicationWayland::setupCrashHandler()
-{
-    // this disables auto-restart of kwin_wayland
-    // do nothing hence allowing OS to create dump and so on
-}
-
 void ApplicationWayland::createBackend()
 {
     connect(platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);

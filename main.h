@@ -185,7 +185,6 @@ Q_SIGNALS:
 protected:
     Application(OperationMode mode, int &argc, char **argv);
     virtual void performStartup() = 0;
-    virtual void setupCrashHandler();
 
     void notifyKSplash();
     void createInput();
@@ -213,16 +212,14 @@ protected:
     }
     void destroyAtoms();
 
-    static void crashHandler(int signal);
-
 protected:
     QString m_originalSessionKey;
+    static int crashes;
 
 private Q_SLOTS:
     void resetCrashesCount();
 
 private:
-    void crashChecking();
     QScopedPointer<XcbEventFilter> m_eventFilter;
     bool m_configLock;
     KSharedConfigPtr m_config;
@@ -234,7 +231,6 @@ private:
     bool m_useKActivities = true;
 #endif
     Platform *m_platform = nullptr;
-    static int crashes;
 };
 
 inline static Application *kwinApp()

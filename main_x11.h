@@ -56,6 +56,11 @@ private Q_SLOTS:
     void lostSelection();
 
 private:
+    void crashChecking();
+    void setupCrashHandler();
+
+    static void crashHandler(int signal);
+
     QScopedPointer<KWinSelectionOwner> owner;
     bool m_replace;
 };
