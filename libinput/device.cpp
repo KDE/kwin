@@ -81,6 +81,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportsDisableEvents(libinput_device_config_send_events_get_modes(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED)
     , m_supportsDisableEventsOnExternalMouse(libinput_device_config_send_events_get_modes(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE)
     , m_leftHanded(m_supportsLeftHanded ? libinput_device_config_left_handed_get(m_device) : false)
+    , m_pointerAcceleration(libinput_device_config_accel_get_speed(m_device))
 {
     libinput_device_ref(m_device);
 
@@ -134,6 +135,20 @@ void Device::setLeftHanded(bool set)
         if (m_leftHanded != set) {
             m_leftHanded = set;
             emit leftHandedChanged();
+        }
+    }
+}
+
+void Device::setPointerAcceleration(qreal acceleration)
+{
+    if (!m_supportsPointerAcceleration) {
+        return;
+    }
+    acceleration = qBound(-1.0, acceleration, 1.0);
+    if (libinput_device_config_accel_set_speed(m_device, acceleration) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_pointerAcceleration != acceleration) {
+            m_pointerAcceleration = acceleration;
+            emit pointerAccelerationChanged();
         }
     }
 }

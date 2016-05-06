@@ -342,7 +342,20 @@ bool Connection::isSuspended() const
 void Connection::applyDeviceConfig(Device *device)
 {
     if (device->isPointer()) {
-        device->setLeftHanded(m_config->group("Mouse").readEntry("MouseButtonMapping", "RightHanded") == QLatin1String("LeftHanded"));
+        const KConfigGroup group = m_config->group("Mouse");
+        device->setLeftHanded(group.readEntry("MouseButtonMapping", "RightHanded") == QLatin1String("LeftHanded"));
+        qreal accel = group.readEntry("Acceleration", -1.0);
+        if (qFuzzyCompare(accel, -1.0) || qFuzzyCompare(accel, 1.0)) {
+            // default value
+            device->setPointerAcceleration(0.0);
+        } else {
+            // the X11-based config is mapped in [0.1,20.0] with 1.0 being the "normal" setting - we assume that's the default
+            if (accel < 1.0) {
+                device->setPointerAcceleration(-1.0 + ((accel * 10.0) - 1.0) / 9.0);
+            } else {
+                device->setPointerAcceleration((accel -1.0)/19.0);
+            }
+        }
     }
 }
 

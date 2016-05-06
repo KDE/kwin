@@ -56,6 +56,7 @@ class Device : public QObject
     Q_PROPERTY(bool supportsDisableEvents READ supportsDisableEvents CONSTANT)
     Q_PROPERTY(bool supportsDisableEventsOnExternalMouse READ supportsDisableEventsOnExternalMouse CONSTANT)
     Q_PROPERTY(bool leftHanded READ isLeftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
+    Q_PROPERTY(qreal pointerAcceleration READ pointerAcceleration WRITE setPointerAcceleration NOTIFY pointerAccelerationChanged)
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     virtual ~Device();
@@ -136,12 +137,21 @@ public:
      **/
     void setLeftHanded(bool set);
 
+    qreal pointerAcceleration() const {
+        return m_pointerAcceleration;
+    }
+    /**
+     * @param acceleration mapped to range [-1,1] with -1 being the slowest, 1 being the fastest supported acceleration.
+     **/
+    void setPointerAcceleration(qreal acceleration);
+
     libinput_device *device() const {
         return m_device;
     }
 
 Q_SIGNALS:
     void leftHandedChanged();
+    void pointerAccelerationChanged();
 
 private:
     libinput_device *m_device;
@@ -168,6 +178,7 @@ private:
     bool m_supportsDisableEvents;
     bool m_supportsDisableEventsOnExternalMouse;
     bool m_leftHanded;
+    qreal m_pointerAcceleration;
 };
 
 }
