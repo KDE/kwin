@@ -1127,14 +1127,31 @@ QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
 #if HAVE_INPUT
 InputDeviceModel::InputDeviceModel(QObject *parent)
     : QAbstractItemModel(parent)
+    , m_devices(LibInput::Connection::self()->devices())
 {
+    for (auto it = m_devices.constBegin(); it != m_devices.constEnd(); ++it) {
+        setupDeviceConnections(*it);
+    }
     auto c = LibInput::Connection::self();
-    auto resetModel = [this] {
-        beginResetModel();
-        endResetModel();
-    };
-    connect(c, &LibInput::Connection::deviceAdded, this, resetModel);
-    connect(c, &LibInput::Connection::deviceRemoved, this, resetModel);
+    connect(c, &LibInput::Connection::deviceAdded, this,
+        [this] (LibInput::Device *d) {
+            beginInsertRows(QModelIndex(), m_devices.count(), m_devices.count());
+            m_devices << d;
+            setupDeviceConnections(d);
+            endInsertRows();
+        }
+    );
+    connect(c, &LibInput::Connection::deviceRemoved, this,
+        [this] (LibInput::Device *d) {
+            const int index = m_devices.indexOf(d);
+            if (index == -1) {
+                return;
+            }
+            beginRemoveRows(QModelIndex(), index, index);
+            m_devices.removeAt(index);
+            endRemoveRows();
+        }
+    );
 }
 
 InputDeviceModel::~InputDeviceModel() = default;
@@ -1213,6 +1230,31 @@ QModelIndex InputDeviceModel::parent(const QModelIndex &child) const
         return createIndex(parentId - 1, 0, parentId);
     }
     return QModelIndex();
+}
+
+void InputDeviceModel::setupDeviceConnections(LibInput::Device *device)
+{
+    connect(device, &LibInput::Device::enabledChanged, this,
+        [this, device] {
+            const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
+            const QModelIndex child = index(device->metaObject()->indexOfProperty("enabled"), 1, parent);
+            emit dataChanged(child, child, QVector<int>{Qt::DisplayRole});
+        }
+    );
+    connect(device, &LibInput::Device::leftHandedChanged, this,
+        [this, device] {
+            const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
+            const QModelIndex child = index(device->metaObject()->indexOfProperty("leftHanded"), 1, parent);
+            emit dataChanged(child, child, QVector<int>{Qt::DisplayRole});
+        }
+    );
+    connect(device, &LibInput::Device::pointerAccelerationChanged, this,
+        [this, device] {
+            const QModelIndex parent = index(m_devices.indexOf(device), 0, QModelIndex());
+            const QModelIndex child = index(device->metaObject()->indexOfProperty("pointerAcceleration"), 1, parent);
+            emit dataChanged(child, child, QVector<int>{Qt::DisplayRole});
+        }
+    );
 }
 
 #endif
