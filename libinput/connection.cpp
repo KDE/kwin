@@ -26,7 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "libinput_logging.h"
 
 #include <KConfigGroup>
+#include <KGlobalAccel>
 
+#include <QDBusMessage>
+#include <QDBusConnection>
+#include <QDBusPendingCall>
 #include <QMutexLocker>
 #include <QSocketNotifier>
 #include <QThread>
@@ -83,6 +87,8 @@ Connection *Connection::create(QObject *parent)
     return s_self;
 }
 
+static const QString s_touchpadComponent = QStringLiteral("kcm_touchpad");
+
 Connection::Connection(Context *input, QObject *parent)
     : QObject(parent)
     , m_input(input)
@@ -90,6 +96,47 @@ Connection::Connection(Context *input, QObject *parent)
     , m_mutex(QMutex::Recursive)
 {
     Q_ASSERT(m_input);
+
+    // steal touchpad shortcuts
+    QAction *touchpadToggleAction = new QAction(this);
+    QAction *touchpadOnAction = new QAction(this);
+    QAction *touchpadOffAction = new QAction(this);
+
+    touchpadToggleAction->setObjectName(QStringLiteral("Toggle Touchpad"));
+    touchpadToggleAction->setProperty("componentName", s_touchpadComponent);
+    touchpadOnAction->setObjectName(QStringLiteral("Enable Touchpad"));
+    touchpadOnAction->setProperty("componentName", s_touchpadComponent);
+    touchpadOffAction->setObjectName(QStringLiteral("Disable Touchpad"));
+    touchpadOffAction->setProperty("componentName", s_touchpadComponent);
+    KGlobalAccel::self()->setDefaultShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle});
+    KGlobalAccel::self()->setShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle});
+    KGlobalAccel::self()->setDefaultShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
+    KGlobalAccel::self()->setShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
+    KGlobalAccel::self()->setDefaultShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
+    KGlobalAccel::self()->setShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
+#ifndef KWIN_BUILD_TESTING
+    InputRedirection::self()->registerShortcut(Qt::Key_TouchpadToggle, touchpadToggleAction);
+    InputRedirection::self()->registerShortcut(Qt::Key_TouchpadOn, touchpadOnAction);
+    InputRedirection::self()->registerShortcut(Qt::Key_TouchpadOff, touchpadOffAction);
+#endif
+    connect(touchpadToggleAction, &QAction::triggered, this, &Connection::toggleTouchpads);
+    connect(touchpadOnAction, &QAction::triggered, this,
+        [this] {
+            if (m_touchpadsEnabled) {
+                return;
+            }
+            toggleTouchpads();
+        }
+    );
+    connect(touchpadOffAction, &QAction::triggered, this,
+        [this] {
+            if (!m_touchpadsEnabled) {
+                return;
+            }
+            toggleTouchpads();
+        }
+    );
+
     // need to connect to KGlobalSettings as the mouse KCM does not emit a dedicated signal
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
@@ -368,6 +415,42 @@ void Connection::slotKGlobalSettingsNotifyChange(int type, int arg)
                 applyDeviceConfig(*it);
             }
         }
+    }
+}
+
+void Connection::toggleTouchpads()
+{
+    bool changed = false;
+    m_touchpadsEnabled = !m_touchpadsEnabled;
+    for (auto it = m_devices.constBegin(); it != m_devices.constEnd(); ++it) {
+        auto device = *it;
+        if (!device->isPointer()) {
+            continue;
+        }
+        if (device->isKeyboard() || device->isTouch() || device->isTabletPad() || device->isTabletTool()) {
+            // ignore all combined devices. E.g. a touchpad on a keyboard we don't want to toggle
+            // as that would result in the keyboard going off as well
+            continue;
+        }
+        // is this a touch pad? We don't really know, let's do some assumptions
+        if (device->tapFingerCount() > 0 || device->supportsDisableWhileTyping() || device->supportsDisableEventsOnExternalMouse()) {
+            const bool old = device->isEnabled();
+            device->setEnabled(m_touchpadsEnabled);
+            if (old != device->isEnabled()) {
+                changed = true;
+            }
+        }
+    }
+    if (changed) {
+        // send OSD message
+        QDBusMessage msg = QDBusMessage::createMethodCall(
+            QStringLiteral("org.kde.plasmashell"),
+            QStringLiteral("/org/kde/osdService"),
+            QStringLiteral("org.kde.osdService"),
+            QStringLiteral("touchpadEnabledChanged")
+        );
+        msg.setArguments({m_touchpadsEnabled});
+        QDBusConnection::sessionBus().asyncCall(msg);
     }
 }
 

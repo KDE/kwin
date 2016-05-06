@@ -73,6 +73,8 @@ public:
 
     void processEvents();
 
+    void toggleTouchpads();
+
     QVector<Device*> devices() const {
         return m_devices;
     }
@@ -118,6 +120,7 @@ private:
     bool wasSuspended = false;
     QVector<Device*> m_devices;
     KSharedConfigPtr m_config;
+    bool m_touchpadsEnabled = true;
 
     KWIN_SINGLETON(Connection)
     static QThread *s_thread;
