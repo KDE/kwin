@@ -355,6 +355,8 @@ public:
      **/
     void showOnScreenEdge();
 
+    static void cleanupX11();
+
 public Q_SLOTS:
     void closeWindow() override;
     void updateCaption();

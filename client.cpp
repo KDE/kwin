@@ -630,6 +630,11 @@ void Client::updateShape()
 
 static Xcb::Window shape_helper_window(XCB_WINDOW_NONE);
 
+void Client::cleanupX11()
+{
+    shape_helper_window.reset();
+}
+
 void Client::updateInputShape()
 {
     if (hiddenPreview())   // Sets it to none, don't change

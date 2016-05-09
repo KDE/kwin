@@ -144,6 +144,7 @@ KWIN_EXPORT xcb_connection_t *connection()
     if (!s_con) {
         s_con = reinterpret_cast<xcb_connection_t*>(qApp->property("x11Connection").value<void*>());
     }
+    Q_ASSERT(qApp);
     return s_con;
 }
 
