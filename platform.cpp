@@ -281,4 +281,9 @@ QVector<QRect> Platform::screenGeometries() const
     return QVector<QRect>({QRect(QPoint(0, 0), screenSize())});
 }
 
+bool Platform::requiresCompositing() const
+{
+    return true;
+}
+
 }

@@ -74,4 +74,10 @@ Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
     return new WindowBasedEdge(edges);
 }
 
+bool X11StandalonePlatform::requiresCompositing() const
+{
+    return false;
+}
+
+
 }

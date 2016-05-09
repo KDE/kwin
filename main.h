@@ -96,7 +96,6 @@ public:
     OperationMode operationMode() const;
     void setOperationMode(OperationMode mode);
     bool shouldUseWaylandForCompositing() const;
-    bool requiresCompositing() const;
 
     void setupTranslator();
     void setupCommandLine(QCommandLineParser *parser);

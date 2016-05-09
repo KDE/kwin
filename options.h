@@ -542,9 +542,7 @@ public:
         m_compositingMode = mode;
     }
     // Separate to mode so the user can toggle
-    bool isUseCompositing() const {
-        return m_useCompositing || kwinApp()->requiresCompositing();
-    }
+    bool isUseCompositing() const;
     bool isCompositingInitialized() const {
         return m_compositingInitialized;
     }
@@ -553,9 +551,7 @@ public:
     HiddenPreviews hiddenPreviews() const {
         return m_hiddenPreviews;
     }
-    bool isUnredirectFullscreen() const {
-        return m_unredirectFullscreen && !kwinApp()->requiresCompositing();
-    }
+    bool isUnredirectFullscreen() const;
     // OpenGL
     // 0 = no, 1 = yes when transformed,
     // 2 = try trilinear when transformed; else 1,

@@ -123,11 +123,6 @@ bool Application::shouldUseWaylandForCompositing() const
     return m_operationMode == OperationModeWaylandAndX11 || m_operationMode == OperationModeXwayland;
 }
 
-bool Application::requiresCompositing() const
-{
-    return shouldUseWaylandForCompositing();
-}
-
 void Application::start()
 {
     setQuitOnLastWindowClosed(false);

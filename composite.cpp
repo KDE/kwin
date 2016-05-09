@@ -252,7 +252,7 @@ void Compositor::slotCompositingOptionsInitialized()
             cm_selection->owning = false;
             cm_selection->release();
         }
-        if (kwinApp()->requiresCompositing()) {
+        if (kwinApp()->platform()->requiresCompositing()) {
             qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
             qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
             qApp->quit();
@@ -268,7 +268,7 @@ void Compositor::slotCompositingOptionsInitialized()
             cm_selection->owning = false;
             cm_selection->release();
         }
-        if (kwinApp()->requiresCompositing()) {
+        if (kwinApp()->platform()->requiresCompositing()) {
             qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
             qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
             qApp->quit();
@@ -497,7 +497,7 @@ void Compositor::slotReinitialize()
 // for the shortcut
 void Compositor::slotToggleCompositing()
 {
-    if (kwinApp()->requiresCompositing()) {
+    if (kwinApp()->platform()->requiresCompositing()) {
         // we are not allowed to turn on/off compositing
         return;
     }
@@ -515,7 +515,7 @@ void Compositor::updateCompositeBlocking()
 
 void Compositor::updateCompositeBlocking(Client *c)
 {
-    if (kwinApp()->requiresCompositing()) {
+    if (kwinApp()->platform()->requiresCompositing()) {
         return;
     }
     if (c) { // if c == 0 we just check if we can resume
@@ -540,7 +540,7 @@ void Compositor::updateCompositeBlocking(Client *c)
 
 void Compositor::suspend(Compositor::SuspendReason reason)
 {
-    if (kwinApp()->requiresCompositing()) {
+    if (kwinApp()->platform()->requiresCompositing()) {
         return;
     }
     Q_ASSERT(reason != NoReasonSuspend);

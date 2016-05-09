@@ -41,6 +41,7 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     Edge *createScreenEdge(ScreenEdges *parent) override;
+    bool requiresCompositing() const override;
 
 };
 
