@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QProcess>
 
-#include "compositingprefs.h"
 #include "screens.h"
 #include "settings.h"
 #include "xcbutils.h"

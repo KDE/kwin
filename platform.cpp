@@ -286,4 +286,19 @@ bool Platform::requiresCompositing() const
     return true;
 }
 
+bool Platform::compositingPossible() const
+{
+    return true;
+}
+
+QString Platform::compositingNotPossibleReason() const
+{
+    return QString();
+}
+
+bool Platform::openGLCompositingIsBroken() const
+{
+    return false;
+}
+
 }

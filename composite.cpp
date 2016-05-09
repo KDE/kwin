@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "shadow.h"
 #include "useractions.h"
-#include "compositingprefs.h"
 #include "xcbutils.h"
 #include "platform.h"
 #include "shell_client.h"
@@ -170,7 +169,7 @@ void Compositor::setup()
         }
         qCDebug(KWIN_CORE) << "Compositing is suspended, reason:" << reasons;
         return;
-    } else if (!CompositingPrefs::compositingPossible()) {
+    } else if (!kwinApp()->platform()->compositingPossible()) {
         qCCritical(KWIN_CORE) << "Compositing is not possible";
         return;
     }
@@ -211,7 +210,7 @@ void Compositor::slotCompositingOptionsInitialized()
         else {
             unsafeConfig.writeEntry(openGLIsUnsafe, true);
             unsafeConfig.sync();
-            if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL && !kwinApp()->shouldUseWaylandForCompositing() && !CompositingPrefs::hasGlx()) {
+            if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL && !kwinApp()->shouldUseWaylandForCompositing() && !Xcb::Extensions::self()->hasGlx()) {
                 unsafeConfig.writeEntry(openGLIsUnsafe, false);
                 unsafeConfig.sync();
                 qCDebug(KWIN_CORE) << "No glx extensions available";

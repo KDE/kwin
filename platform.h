@@ -100,6 +100,30 @@ public:
      * without compositing (e.g. rendering is done by the windowing system), re-implement this method.
      **/
     virtual bool requiresCompositing() const;
+    /**
+     * Whether Compositing is possible in the Platform.
+     * Returning @c false in this method makes only sense if @link{requiresCompositing} returns @c false.
+     *
+     * The default implementation returns @c true.
+     * @see requiresCompositing
+     **/
+    virtual bool compositingPossible() const;
+    /**
+     * Returns a user facing text explaining why compositing is not possible in case
+     * @link{compositingPossible} returns @c false.
+     *
+     * The default implementation returns an empty string.
+     * @see compositingPossible
+     **/
+    virtual QString compositingNotPossibleReason() const;
+    /**
+     * Whether OpenGL compositing is broken.
+     * The Platform can implement this method if it is able to detect whether OpenGL compositing
+     * broke (e.g. triggered a crash in a previous run).
+     *
+     * Default implementation returns @c false.
+     **/
+    virtual bool openGLCompositingIsBroken() const;
 
     bool usesSoftwareCursor() const {
         return m_softWareCursor;

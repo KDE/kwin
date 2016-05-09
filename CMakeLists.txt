@@ -388,7 +388,6 @@ set(kwin_KDEINIT_SRCS
    deleted.cpp
    effects.cpp
    effectloader.cpp
-   compositingprefs.cpp
    virtualdesktops.cpp
    xcbutils.cpp
    x11eventfilter.cpp

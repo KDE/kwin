@@ -42,6 +42,21 @@ public:
     OpenGLBackend *createOpenGLBackend() override;
     Edge *createScreenEdge(ScreenEdges *parent) override;
     bool requiresCompositing() const override;
+    bool compositingPossible() const override;
+    QString compositingNotPossibleReason() const override;
+    bool openGLCompositingIsBroken() const override;
+
+private:
+    /**
+     * Tests whether GLX is supported and returns @c true
+     * in case KWin is compiled with OpenGL support and GLX
+     * is available.
+     *
+     * If KWin is compiled with OpenGL ES or without OpenGL at
+     * all, @c false is returned.
+     * @returns @c true if GLX is available, @c false otherwise and if not build with OpenGL support.
+     **/
+    static bool hasGlx();
 
 };
 
