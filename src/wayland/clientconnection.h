@@ -20,6 +20,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWAYLAND_SERVER_CLIENTCONNECTION_H
 #define KWAYLAND_SERVER_CLIENTCONNECTION_H
 
+#include <sys/types.h>
+
 #include <QObject>
 
 #include <KWayland/Server/kwaylandserver_export.h>
