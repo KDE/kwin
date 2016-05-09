@@ -1640,6 +1640,11 @@ AbstractClient *Workspace::findAbstractClient(std::function<bool (const Abstract
     if (Client *ret = Toplevel::findInList(desktops, func)) {
         return ret;
     }
+    if (waylandServer()) {
+        if (AbstractClient *ret = Toplevel::findInList(waylandServer()->internalClients(), func)) {
+            return ret;
+        }
+    }
     return nullptr;
 }
 

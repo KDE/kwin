@@ -170,6 +170,7 @@ private:
     bool m_closing = false;
     quint32 m_windowId = 0;
     QWindow *m_internalWindow = nullptr;
+    Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_unmapped = true;
     MaximizeMode m_maximizeMode = MaximizeRestore;
     QRect m_geomMaximizeRestore; // size and position of the window before it was set to maximize

@@ -178,6 +178,7 @@ void ShellClient::init()
     if (m_internalWindow) {
         updateInternalWindowGeometry();
         setOnAllDesktops(true);
+        updateDecoration(true);
     } else {
         doSetGeometry(QRect(QPoint(0, 0), m_clientSize));
         setDesktop(VirtualDesktopManager::self()->current());
@@ -484,6 +485,13 @@ void ShellClient::doSetGeometry(const QRect &rect)
     if (!m_unmapped) {
         addWorkspaceRepaint(visibleRect());
     }
+    if (m_internalWindow) {
+        const QRect windowRect = QRect(geom.topLeft() + QPoint(borderLeft(), borderTop()),
+                                       geom.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
+        if (m_internalWindow->geometry() != windowRect) {
+            m_internalWindow->setGeometry(windowRect);
+        }
+    }
     triggerDecorationRepaint();
     if (hasStrut()) {
         workspace()->updateClientArea();
@@ -526,6 +534,9 @@ void ShellClient::closeWindow()
     if (m_qtExtendedSurface && isCloseable()) {
         m_qtExtendedSurface->close();
     }
+    if (m_internalWindow) {
+        m_internalWindow->hide();
+    }
 }
 
 AbstractClient *ShellClient::findModal(bool allow_itself)
@@ -540,6 +551,9 @@ bool ShellClient::isCloseable() const
         return false;
     }
     if (m_xdgShellSurface) {
+        return true;
+    }
+    if (m_internal) {
         return true;
     }
     return m_qtExtendedSurface ? true : false;
@@ -557,6 +571,9 @@ bool ShellClient::isFullScreen() const
 
 bool ShellClient::isMaximizable() const
 {
+    if (m_internal) {
+        return false;
+    }
     return true;
 }
 
@@ -694,7 +711,7 @@ MaximizeMode ShellClient::maximizeMode() const
 bool ShellClient::noBorder() const
 {
     if (isInternal()) {
-        return true;
+        return m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
     }
     if (m_serverDecoration) {
         if (m_serverDecoration->mode() == ServerSideDecorationManagerInterface::Mode::Server) {
@@ -791,6 +808,9 @@ bool ShellClient::userCanSetNoBorder() const
     if (m_serverDecoration && m_serverDecoration->mode() == ServerSideDecorationManagerInterface::Mode::Server) {
         return !isFullScreen() && !isShade() && !tabGroup();
     }
+    if (m_internal) {
+        return !m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
+    }
     return false;
 }
 
@@ -852,6 +872,7 @@ void ShellClient::findInternalWindow()
             continue;
         }
         m_internalWindow = w;
+        m_internalWindowFlags = m_internalWindow->flags();
         connect(m_internalWindow, &QWindow::xChanged, this, &ShellClient::updateInternalWindowGeometry);
         connect(m_internalWindow, &QWindow::yChanged, this, &ShellClient::updateInternalWindowGeometry);
         connect(m_internalWindow, &QWindow::destroyed, this, [this] { m_internalWindow = nullptr; });
@@ -871,7 +892,8 @@ void ShellClient::updateInternalWindowGeometry()
     if (!m_internalWindow) {
         return;
     }
-    doSetGeometry(m_internalWindow->geometry());
+    doSetGeometry(QRect(m_internalWindow->geometry().topLeft() - QPoint(borderLeft(), borderTop()),
+                        m_internalWindow->geometry().size() + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
 }
 
 bool ShellClient::isInternal() const
@@ -907,6 +929,9 @@ void ShellClient::requestGeometry(const QRect &rect)
         m_xdgShellSurface->configure(xdgSurfaceStates(), size);
     }
     m_blockedRequestGeometry = QRect();
+    if (m_internal) {
+        m_internalWindow->setGeometry(QRect(rect.topLeft() + QPoint(borderLeft(), borderTop()), rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
+    }
 }
 
 void ShellClient::clientFullScreenChanged(bool fullScreen)
@@ -949,6 +974,9 @@ void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
     }
     if (m_xdgShellSurface) {
         m_xdgShellSurface->configure(xdgSurfaceStates(), QSize(w, h));
+    }
+    if (m_internal) {
+        m_internalWindow->setGeometry(QRect(pos() + QPoint(borderLeft(), borderTop()), QSize(w, h) - QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
     }
 }
 

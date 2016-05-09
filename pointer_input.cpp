@@ -367,11 +367,14 @@ void PointerInputRedirection::update()
     if (!m_internalWindow) {
         updateDecoration(t, m_pos);
     } else {
-        // TODO: send hover leave to decoration
+        updateDecoration(waylandServer()->findClient(m_internalWindow), m_pos);
         if (m_decoration) {
-            m_decoration->client()->leaveEvent();
+            disconnect(m_internalWindowConnection);
+            m_internalWindowConnection = QMetaObject::Connection();
+            QEvent event(QEvent::Leave);
+            QCoreApplication::sendEvent(m_internalWindow.data(), &event);
+            m_internalWindow.clear();
         }
-        m_decoration.clear();
     }
     if (m_decoration || m_internalWindow) {
         t = nullptr;

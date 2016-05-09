@@ -91,6 +91,7 @@ private:
 HelperWindow::HelperWindow()
     : QRasterWindow(nullptr)
 {
+    setFlags(Qt::FramelessWindowHint);
 }
 
 HelperWindow::~HelperWindow() = default;

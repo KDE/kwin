@@ -430,6 +430,13 @@ class InternalWindowEventFilter : public InputEventFilter {
         if (!internal) {
             return false;
         }
+        if (event->buttons() == Qt::NoButton) {
+            // update pointer window only if no button is pressed
+            input()->pointer()->update();
+        }
+        if (!internal) {
+            return false;
+        }
         QMouseEvent e(event->type(),
                         event->pos() - internal->position(),
                         event->globalPos(),
@@ -1534,7 +1541,7 @@ void InputDeviceHandler::updateInternalWindow(const QPointF &pos)
                 if (!w->isVisible()) {
                     continue;
                 }
-                if (w->geometry().contains(pos.toPoint())) {
+                if ((*it)->geometry().contains(pos.toPoint())) {
                     // check input mask
                     const QRegion mask = w->mask().translated(w->geometry().topLeft());
                     if (!mask.isEmpty() && !mask.contains(pos.toPoint())) {
