@@ -56,6 +56,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_SYS_PRCTL_H
 #include <sys/prctl.h>
 #endif
+#if HAVE_SYS_PROCCTL_H
+#include <unistd.h>
+#include <sys/procctl.h>
+#endif
 
 #include <iostream>
 #include <iomanip>
@@ -403,6 +407,14 @@ static void disablePtrace()
     // disable ptrace in kwin_wayland
     prctl(PR_SET_DUMPABLE, 0);
 #endif
+#if HAVE_PROC_TRACE_CTL
+    // FreeBSD's rudimentary procfs does not support /proc/<pid>/exe
+    // We could use the P_TRACED flag of the process to find out
+    // if the process is being debugged ond FreeBSD.
+    int mode = PROC_TRACE_CTL_DISABLE;
+    procctl(P_PID, getpid(), PROC_TRACE_CTL, &mode);
+#endif
+
 }
 
 } // namespace
