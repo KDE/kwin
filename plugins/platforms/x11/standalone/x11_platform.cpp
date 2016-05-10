@@ -161,4 +161,19 @@ bool X11StandalonePlatform::hasGlx()
     return Xcb::Extensions::self()->hasGlx();
 }
 
+void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
+{
+    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
+    auto group = KConfigGroup(kwinApp()->config(), "Compositing");
+    switch (safePoint) {
+    case OpenGLSafePoint::PreInit:
+        group.writeEntry(unsafeKey, true);
+        break;
+    case OpenGLSafePoint::PostInit:
+        group.writeEntry(unsafeKey, false);
+        break;
+    }
+    group.sync();
+}
+
 }

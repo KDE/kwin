@@ -202,20 +202,15 @@ void Compositor::slotCompositingOptionsInitialized()
         qCDebug(KWIN_CORE) << "Initializing OpenGL compositing";
 
         // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
-        KSharedConfigPtr unsafeConfigPtr = kwinApp()->config();
-        KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
-        const QString openGLIsUnsafe = QLatin1String("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString());
-        if (unsafeConfig.readEntry(openGLIsUnsafe, false))
+        if (kwinApp()->platform()->openGLCompositingIsBroken())
             qCWarning(KWIN_CORE) << "KWin has detected that your OpenGL library is unsafe to use";
         else {
-            unsafeConfig.writeEntry(openGLIsUnsafe, true);
-            unsafeConfig.sync();
+            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
 
             m_scene = SceneOpenGL::createScene(this);
 
             // TODO: Add 30 second delay to protect against screen freezes as well
-            unsafeConfig.writeEntry(openGLIsUnsafe, false);
-            unsafeConfig.sync();
+            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
 
             if (m_scene && !m_scene->initFailed()) {
                 connect(static_cast<SceneOpenGL*>(m_scene), &SceneOpenGL::resetCompositing, this, &Compositor::restart);

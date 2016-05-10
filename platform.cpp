@@ -301,4 +301,9 @@ bool Platform::openGLCompositingIsBroken() const
     return false;
 }
 
+void Platform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
+{
+    Q_UNUSED(safePoint)
+}
+
 }

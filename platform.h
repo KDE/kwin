@@ -122,8 +122,22 @@ public:
      * broke (e.g. triggered a crash in a previous run).
      *
      * Default implementation returns @c false.
+     * @see createOpenGLSafePoint
      **/
     virtual bool openGLCompositingIsBroken() const;
+    enum class OpenGLSafePoint {
+        PreInit,
+        PostInit
+    };
+    /**
+     * This method is invoked before and after creating the OpenGL rendering Scene.
+     * An implementing Platform can use it to detect crashes triggered by the OpenGL implementation.
+     * This can be used for @link{openGLCompositingIsBroken}.
+     *
+     * The default implementation does nothing.
+     * @see openGLCompositingIsBroken.
+     **/
+    virtual void createOpenGLSafePoint(OpenGLSafePoint safePoint);
 
     bool usesSoftwareCursor() const {
         return m_softWareCursor;
