@@ -210,12 +210,6 @@ void Compositor::slotCompositingOptionsInitialized()
         else {
             unsafeConfig.writeEntry(openGLIsUnsafe, true);
             unsafeConfig.sync();
-            if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGL && !kwinApp()->shouldUseWaylandForCompositing() && !Xcb::Extensions::self()->hasGlx()) {
-                unsafeConfig.writeEntry(openGLIsUnsafe, false);
-                unsafeConfig.sync();
-                qCDebug(KWIN_CORE) << "No glx extensions available";
-                break;
-            }
 
             m_scene = SceneOpenGL::createScene(this);
 

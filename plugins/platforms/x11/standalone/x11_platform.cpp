@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glxbackend.h"
 #endif
 #include "eglonxbackend.h"
+#include "logging.h"
 #include "screens_xrandr.h"
 #include "options.h"
 
@@ -63,7 +64,12 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
     switch (options->glPlatformInterface()) {
 #if HAVE_EPOXY_GLX
     case GlxPlatformInterface:
-        return new GlxBackend();
+        if (hasGlx()) {
+            return new GlxBackend();
+        } else {
+            qCWarning(KWIN_X11STANDALONE) << "Glx not available, trying EGL instead.";
+            // no break, needs fall-through
+        }
 #endif
     case EglPlatformInterface:
         return new EglOnXBackend();
