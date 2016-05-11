@@ -149,6 +149,17 @@ if (XCB_ICCCM_FOUND)
 endif()
 
 ########################################################
+# Shade Test
+########################################################
+if (XCB_ICCCM_FOUND)
+    set( testShade_SRCS shade_test.cpp kwin_wayland_test.cpp )
+    add_executable(testShade ${testShade_SRCS})
+    target_link_libraries( testShade kwin Qt5::Test XCB::ICCCM)
+    add_test(kwin-testShade testShade)
+    ecm_mark_as_test(testShade)
+endif()
+
+########################################################
 # Dont Crash Empty Deco Test
 ########################################################
 set( testDontCrashEmptyDeco_SRCS dont_crash_empty_deco.cpp kwin_wayland_test.cpp )
