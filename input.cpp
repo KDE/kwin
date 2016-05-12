@@ -485,7 +485,7 @@ public:
         if (e.isAccepted()) {
             return true;
         }
-        if (orientation == Qt::Vertical && decoration->decoration()->titleBar().contains(localPos.toPoint())) {
+        if ((orientation == Qt::Vertical) && decoration->client()->titlebarPositionUnderMouse()) {
             decoration->client()->performMouseCommand(options->operationTitlebarMouseWheel(delta * -1),
                                                         event->globalPosF().toPoint());
         }

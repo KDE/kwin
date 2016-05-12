@@ -21,12 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "abstract_client.h"
 #include "cursor.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "shell_client.h"
 #include <kwineffects.h>
+#include "decorations/decoratedclient.h"
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
@@ -43,6 +45,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <linux/input.h>
 
+Q_DECLARE_METATYPE(Qt::WindowFrameSection)
+
 namespace KWin
 {
 
@@ -55,7 +59,9 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
+    void testAxis_data();
     void testAxis();
+    void testDoubleClick_data();
     void testDoubleClick();
     void testHover();
     void testPressToMove_data();
@@ -239,6 +245,16 @@ void DecorationInputTest::cleanup()
     }
 }
 
+void DecorationInputTest::testAxis_data()
+{
+    QTest::addColumn<QPoint>("decoPoint");
+    QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
+
+    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection;
+    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection;
+    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection;
+}
+
 void DecorationInputTest::testAxis()
 {
     AbstractClient *c = showWindow();
@@ -251,6 +267,8 @@ void DecorationInputTest::testAxis()
 
     quint32 timestamp = 1;
     MOTION(QPoint(c->geometry().center().x(), c->clientPos().y() / 2));
+    QVERIFY(!input()->pointer()->decoration().isNull());
+    QCOMPARE(input()->pointer()->decoration()->decoration()->sectionUnderMouse(), Qt::TitleBarArea);
 
     // TODO: mouse wheel direction looks wrong to me
     // simulate wheel
@@ -263,6 +281,27 @@ void DecorationInputTest::testAxis()
     kwinApp()->platform()->pointerAxisVertical(-5.0, timestamp++);
     QVERIFY(!c->keepBelow());
     QVERIFY(c->keepAbove());
+
+    // test top most deco pixel, BUG: 362860
+    c->move(0, 0);
+    QFETCH(QPoint, decoPoint);
+    MOTION(decoPoint);
+    QVERIFY(!input()->pointer()->decoration().isNull());
+    QCOMPARE(input()->pointer()->decoration()->client(), c);
+    QTEST(input()->pointer()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
+    kwinApp()->platform()->pointerAxisVertical(5.0, timestamp++);
+    QVERIFY(!c->keepBelow());
+    QVERIFY(!c->keepAbove());
+}
+
+void DecorationInputTest::testDoubleClick_data()
+{
+    QTest::addColumn<QPoint>("decoPoint");
+    QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
+
+    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection;
+    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection;
+    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection;
 }
 
 void KWin::DecorationInputTest::testDoubleClick()
@@ -288,6 +327,21 @@ void KWin::DecorationInputTest::testDoubleClick()
     PRESS;
     RELEASE;
     QVERIFY(!c->isOnAllDesktops());
+
+    // test top most deco pixel, BUG: 362860
+    c->move(0, 0);
+    QFETCH(QPoint, decoPoint);
+    MOTION(decoPoint);
+    QVERIFY(!input()->pointer()->decoration().isNull());
+    QCOMPARE(input()->pointer()->decoration()->client(), c);
+    QTEST(input()->pointer()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
+    // double click
+    PRESS;
+    RELEASE;
+    QVERIFY(!c->isOnAllDesktops());
+    PRESS;
+    RELEASE;
+    QVERIFY(c->isOnAllDesktops());
 }
 
 void DecorationInputTest::testHover()

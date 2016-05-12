@@ -460,6 +460,31 @@ AbstractClient::Position AbstractClient::titlebarPosition() const
     return PositionTop;
 }
 
+bool AbstractClient::titlebarPositionUnderMouse() const
+{
+    if (!isDecorated()) {
+        return false;
+    }
+    const auto sectionUnderMouse = decoration()->sectionUnderMouse();
+    if (sectionUnderMouse == Qt::TitleBarArea) {
+        return true;
+    }
+    // check other sections based on titlebarPosition
+    switch (titlebarPosition()) {
+    case AbstractClient::PositionTop:
+        return (sectionUnderMouse == Qt::TopLeftSection || sectionUnderMouse == Qt::TopSection || sectionUnderMouse == Qt::TopRightSection);
+    case AbstractClient::PositionLeft:
+        return (sectionUnderMouse == Qt::TopLeftSection || sectionUnderMouse == Qt::LeftSection || sectionUnderMouse == Qt::BottomLeftSection);
+    case AbstractClient::PositionRight:
+        return (sectionUnderMouse == Qt::BottomRightSection || sectionUnderMouse == Qt::RightSection || sectionUnderMouse == Qt::TopRightSection);
+    case AbstractClient::PositionBottom:
+        return (sectionUnderMouse == Qt::BottomLeftSection || sectionUnderMouse == Qt::BottomSection || sectionUnderMouse == Qt::BottomRightSection);
+    default:
+        // nothing
+        return false;
+    }
+}
+
 void AbstractClient::setMinimized(bool set)
 {
     set ? minimize() : unminimize();
@@ -1426,7 +1451,7 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
         active = true;
 
     // check whether it is a double click
-    if (event->button() == Qt::LeftButton && decoration()->titleBar().contains(event->x(), event->y())) {
+    if (event->button() == Qt::LeftButton && titlebarPositionUnderMouse()) {
         if (m_decoration.doubleClickTimer.isValid()) {
             const quint64 interval = m_decoration.doubleClickTimer.elapsed();
             m_decoration.doubleClickTimer.invalidate();
@@ -1479,7 +1504,7 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
 void AbstractClient::processDecorationButtonRelease(QMouseEvent *event)
 {
     if (isDecorated()) {
-        if (event->isAccepted() || !decoration()->titleBar().contains(event->pos())) {
+        if (event->isAccepted() || !titlebarPositionUnderMouse()) {
             invalidateDecorationDoubleClickTimer(); // click was for the deco and shall not init a doubleclick
         }
     }

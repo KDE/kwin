@@ -1172,7 +1172,7 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
             if (!event.isAccepted() && !hor) {
-                if (decoration()->titleBar().contains(x, y)) {
+                if (titlebarPositionUnderMouse()) {
                     performMouseCommand(options->operationTitlebarMouseWheel(delta), QPoint(x_root, y_root));
                 }
             }
@@ -1204,7 +1204,7 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
                               x11ToQtKeyboardModifiers(state));
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
-            if (event.isAccepted() || !decoration()->titleBar().contains(x, y)) {
+            if (event.isAccepted() || !titlebarPositionUnderMouse()) {
                 invalidateDecorationDoubleClickTimer(); // click was for the deco and shall not init a doubleclick
             }
         }
