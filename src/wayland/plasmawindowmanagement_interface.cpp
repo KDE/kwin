@@ -74,17 +74,15 @@ public:
     void unmap();
     void setState(org_kde_plasma_window_management_state flag, bool set);
 
-    struct WindowResource {
-        wl_resource *resource;
-        wl_listener *destroyListener;
-    };
-    QList<WindowResource> resources;
+    QVector<wl_resource*> resources;
     quint32 windowId = 0;
     QHash<SurfaceInterface*, QRect> minimizedGeometries;
+    PlasmaWindowManagementInterface *wm;
+
+    bool unmapped = false;
 
 private:
     static void unbind(wl_resource *resource);
-    static void destroyListenerCallback(wl_listener *listener, void *data);
     static void setStateCallback(wl_client *client, wl_resource *resource, uint32_t flags, uint32_t state);
     static void setVirtualDesktopCallback(wl_client *client, wl_resource *resource, uint32_t number);
     static void closeCallback(wl_client *client, wl_resource *resource);
@@ -92,12 +90,12 @@ private:
     static void requestResizeCallback(wl_client *client, wl_resource *resource);
     static void setMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel, uint32_t x, uint32_t y, uint32_t width, uint32_t height);
     static void unsetMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel);
+    static void destroyCallback(wl_client *client, wl_resource *resource);
     static Private *cast(wl_resource *resource) {
         return reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
     }
 
     PlasmaWindowInterface *q;
-    PlasmaWindowManagementInterface *wm;
     QString m_title;
     QString m_appId;
     QString m_themedIconName;
@@ -107,7 +105,7 @@ private:
     static const struct org_kde_plasma_window_interface s_interface;
 };
 
-const quint32 PlasmaWindowManagementInterface::Private::s_version = 3;
+const quint32 PlasmaWindowManagementInterface::Private::s_version = 4;
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_window_management_interface, s_version)
@@ -245,6 +243,17 @@ PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *pa
     return window;
 }
 
+void PlasmaWindowManagementInterface::unmapWindow(PlasmaWindowInterface *window)
+{
+    if (!window) {
+        return;
+    }
+    Q_D();
+    d->windows.removeOne(window);
+    Q_ASSERT(!d->windows.contains(window));
+    window->d->unmap();
+}
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_interface = {
     setStateCallback,
@@ -253,7 +262,8 @@ const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_i
     unsetMinimizedGeometryCallback,
     closeCallback,
     requestMoveCallback,
-    requestResizeCallback
+    requestResizeCallback,
+    destroyCallback
 };
 #endif
 
@@ -268,30 +278,30 @@ PlasmaWindowInterface::Private::~Private()
     // need to copy, as destroy goes through the destroy listener and modifies the list as we iterate
     const auto c = resources;
     for (const auto &r : c) {
-        org_kde_plasma_window_send_unmapped(r.resource);
-        wl_resource_destroy(r.resource);
+        auto client = wl_resource_get_client(r);
+        org_kde_plasma_window_send_unmapped(r);
+        wl_resource_destroy(r);
+        wl_client_flush(client);
+    }
+}
+
+void PlasmaWindowInterface::Private::destroyCallback(wl_client *, wl_resource *r)
+{
+    Private *p = cast(r);
+    p->resources.removeAll(r);
+    wl_resource_destroy(r);
+    if (p->unmapped && p->resources.isEmpty()) {
+        p->q->deleteLater();
     }
 }
 
 void PlasmaWindowInterface::Private::unbind(wl_resource *resource)
 {
     Private *p = reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
-    auto it = p->resources.begin();
-    while (it != p->resources.end()) {
-        if ((*it).resource == resource) {
-            wl_list_remove(&(*it).destroyListener->link);
-            delete (*it).destroyListener;
-            it = p->resources.erase(it);
-        } else {
-            it++;
-        }
+    p->resources.removeAll(resource);
+    if (p->unmapped && p->resources.isEmpty()) {
+        p->q->deleteLater();
     }
-}
-
-void PlasmaWindowInterface::Private::destroyListenerCallback(wl_listener *listener, void *data)
-{
-    Q_UNUSED(listener);
-    Private::unbind(reinterpret_cast<wl_resource*>(data));
 }
 
 void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_t id)
@@ -301,15 +311,8 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_
     if (!resource) {
         return;
     }
-    WindowResource r;
-    r.resource = resource;
-    r.destroyListener = new wl_listener;
-    r.destroyListener->notify = destroyListenerCallback;
-    r.destroyListener->link.prev = nullptr;
-    r.destroyListener->link.next = nullptr;
     wl_resource_set_implementation(resource, &s_interface, this, unbind);
-    wl_resource_add_destroy_listener(resource, r.destroyListener);
-    resources << r;
+    resources << resource;
 
     org_kde_plasma_window_send_virtual_desktop_changed(resource, m_virtualDesktop);
     if (!m_appId.isEmpty()) {
@@ -331,7 +334,7 @@ void PlasmaWindowInterface::Private::setAppId(const QString &appId)
     m_appId = appId;
     const QByteArray utf8 = m_appId.toUtf8();
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        org_kde_plasma_window_send_app_id_changed((*it).resource, utf8.constData());
+        org_kde_plasma_window_send_app_id_changed(*it, utf8.constData());
     }
 }
 
@@ -343,7 +346,7 @@ void PlasmaWindowInterface::Private::setThemedIconName(const QString &iconName)
     m_themedIconName = iconName;
     const QByteArray utf8 = m_themedIconName.toUtf8();
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        org_kde_plasma_window_send_themed_icon_name_changed((*it).resource, utf8.constData());
+        org_kde_plasma_window_send_themed_icon_name_changed(*it, utf8.constData());
     }
 }
 
@@ -355,7 +358,7 @@ void PlasmaWindowInterface::Private::setTitle(const QString &title)
     m_title = title;
     const QByteArray utf8 = m_title.toUtf8();
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        org_kde_plasma_window_send_title_changed((*it).resource, utf8.constData());
+        org_kde_plasma_window_send_title_changed(*it, utf8.constData());
     }
 }
 
@@ -366,15 +369,18 @@ void PlasmaWindowInterface::Private::setVirtualDesktop(quint32 desktop)
     }
     m_virtualDesktop = desktop;
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        org_kde_plasma_window_send_virtual_desktop_changed((*it).resource, m_virtualDesktop);
+        org_kde_plasma_window_send_virtual_desktop_changed(*it, m_virtualDesktop);
     }
 }
 
 void PlasmaWindowInterface::Private::unmap()
 {
+    unmapped = true;
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        org_kde_plasma_window_send_unmapped((*it).resource);
-        wl_resource_destroy((*it).resource);
+        org_kde_plasma_window_send_unmapped(*it);
+    }
+    if (resources.isEmpty()) {
+        q->deleteLater();
     }
 }
 
@@ -391,7 +397,7 @@ void PlasmaWindowInterface::Private::setState(org_kde_plasma_window_management_s
     }
     m_state = newState;
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        org_kde_plasma_window_send_state_changed((*it).resource, m_state);
+        org_kde_plasma_window_send_state_changed(*it, m_state);
     }
 }
 
@@ -544,7 +550,7 @@ void PlasmaWindowInterface::setVirtualDesktop(quint32 desktop)
 
 void PlasmaWindowInterface::unmap()
 {
-    d->unmap();
+    d->wm->unmapWindow(this);
 }
 
 QHash<SurfaceInterface*, QRect>  PlasmaWindowInterface::minimizedGeometries() const

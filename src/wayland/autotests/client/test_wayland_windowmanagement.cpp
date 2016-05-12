@@ -44,6 +44,8 @@ private Q_SLOTS:
 
     void testWindowTitle();
     void testMinimizedGeometry();
+    void testUseAfterUnmap();
+    void testServerDelete();
 
     void cleanup();
 
@@ -180,14 +182,6 @@ void TestWindowManagement::testMinimizedGeometry()
 
 void TestWindowManagement::cleanup()
 {
-    delete m_windowManagementInterface;
-    m_windowManagementInterface = nullptr;
-
-    delete m_windowInterface;
-    m_windowInterface = nullptr;
-
-    delete m_surfaceInterface;
-    m_surfaceInterface = nullptr;
 
     if (m_surface) {
         delete m_surface;
@@ -220,8 +214,48 @@ void TestWindowManagement::cleanup()
     }
     m_connection = nullptr;
 
+    delete m_windowManagementInterface;
+    m_windowManagementInterface = nullptr;
+
+    delete m_windowInterface;
+    m_windowInterface = nullptr;
+
+    delete m_surfaceInterface;
+    m_surfaceInterface = nullptr;
+
     delete m_display;
     m_display = nullptr;
+}
+
+void TestWindowManagement::testUseAfterUnmap()
+{
+    // this test verifies that when the client uses a window after it's unmapped, things don't break
+    QSignalSpy unmappedSpy(m_window, &KWayland::Client::PlasmaWindow::unmapped);
+    QVERIFY(unmappedSpy.isValid());
+    QSignalSpy destroyedSpy(m_window, &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    m_windowInterface->unmap();
+    m_window->requestClose();
+    QVERIFY(unmappedSpy.wait());
+    QVERIFY(destroyedSpy.wait());
+    m_window = nullptr;
+    QSignalSpy serverDestroyedSpy(m_windowInterface, &QObject::destroyed);
+    QVERIFY(serverDestroyedSpy.isValid());
+    QVERIFY(serverDestroyedSpy.wait());
+    m_windowInterface = nullptr;
+}
+
+void TestWindowManagement::testServerDelete()
+{
+    QSignalSpy unmappedSpy(m_window, &KWayland::Client::PlasmaWindow::unmapped);
+    QVERIFY(unmappedSpy.isValid());
+    QSignalSpy destroyedSpy(m_window, &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    delete m_windowInterface;
+    m_windowInterface = nullptr;
+    QVERIFY(unmappedSpy.wait());
+    QVERIFY(destroyedSpy.wait());
+    m_window = nullptr;
 }
 
 QTEST_GUILESS_MAIN(TestWindowManagement)
