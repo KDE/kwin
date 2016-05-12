@@ -489,9 +489,9 @@ void RulesWidget::setRules(Rules* rules)
                 return i;
             }
         }
-        // search for Oxygen
+        // search for Breeze
         for (int i = 0; i < decocolor->count(); ++i) {
-            if (QFileInfo(decocolor->itemData(i).toString()).baseName() == QStringLiteral("Oxygen")) {
+            if (QFileInfo(decocolor->itemData(i).toString()).baseName() == QStringLiteral("Breeze")) {
                 return i;
             }
         }
