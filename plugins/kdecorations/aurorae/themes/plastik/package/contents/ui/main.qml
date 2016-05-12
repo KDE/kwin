@@ -343,6 +343,7 @@ Decoration {
     Component {
         id: maximizeButtonComponent
         PlastikButton {
+            objectName: "maximizeButton"
             buttonType: DecorationOptions.DecorationButtonMaximizeRestore
             size: root.buttonSize
         }

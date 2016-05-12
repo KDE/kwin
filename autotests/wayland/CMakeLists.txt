@@ -167,3 +167,14 @@ add_executable(testDontCrashEmptyDeco ${testDontCrashEmptyDeco_SRCS})
 target_link_libraries( testDontCrashEmptyDeco kwin Qt5::Test)
 add_test(kwin-testDontCrashEmptyDeco testDontCrashEmptyDeco)
 ecm_mark_as_test(testDontCrashEmptyDeco)
+
+########################################################
+# Dont Crash Aurorae Destroy Deco
+########################################################
+if (XCB_ICCCM_FOUND)
+    set( testDontCrashAuroraeDestroyDeco_SRCS dont_crash_aurorae_destroy_deco.cpp kwin_wayland_test.cpp )
+    add_executable(testDontCrashAuroraeDestroyDeco ${testDontCrashAuroraeDestroyDeco_SRCS})
+    target_link_libraries( testDontCrashAuroraeDestroyDeco kwin Qt5::Test XCB::ICCCM)
+    add_test(kwin-testDontCrashAuroraeDestroyDeco testDontCrashAuroraeDestroyDeco)
+    ecm_mark_as_test(testDontCrashAuroraeDestroyDeco)
+endif()

@@ -189,7 +189,12 @@ void DecoratedClientImpl::requestShowWindowMenu()
 
 void DecoratedClientImpl::requestToggleMaximization(Qt::MouseButtons buttons)
 {
-    Workspace::self()->performWindowOperation(m_client, options->operationMaxButtonClick(buttons));
+    QMetaObject::invokeMethod(this, "delayedRequestToggleMaximization", Qt::QueuedConnection, Q_ARG(Options::WindowOperation, options->operationMaxButtonClick(buttons)));
+}
+
+void DecoratedClientImpl::delayedRequestToggleMaximization(Options::WindowOperation operation)
+{
+    Workspace::self()->performWindowOperation(m_client, operation);
 }
 
 int DecoratedClientImpl::width() const
