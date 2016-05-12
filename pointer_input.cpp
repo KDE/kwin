@@ -108,8 +108,7 @@ static bool screenContainsPos(const QPointF &pos)
 }
 
 PointerInputRedirection::PointerInputRedirection(InputRedirection* parent)
-    : QObject(parent)
-    , m_input(parent)
+    : InputDeviceHandler(parent)
     , m_cursor(nullptr)
     , m_supportsWarping(Application::usesLibinput())
 {
@@ -236,7 +235,7 @@ void PointerInputRedirection::update()
     const auto oldDeco = m_decoration;
     updateInternalWindow();
     if (!m_internalWindow) {
-        updateDecoration(t);
+        updateDecoration(t, m_pos);
     } else {
         // TODO: send hover leave to decoration
         if (m_decoration) {
@@ -353,57 +352,6 @@ void PointerInputRedirection::updateInternalWindow()
             QCoreApplication::sendEvent(m_internalWindow.data(), &event);
             return;
         }
-    }
-}
-
-void PointerInputRedirection::updateDecoration(Toplevel *t)
-{
-    const auto oldDeco = m_decoration;
-    bool needsReset = waylandServer()->isScreenLocked();
-    if (AbstractClient *c = dynamic_cast<AbstractClient*>(t)) {
-        // check whether it's on a Decoration
-        if (c->decoratedClient()) {
-            const QRect clientRect = QRect(c->clientPos(), c->clientSize()).translated(c->pos());
-            if (!clientRect.contains(m_pos.toPoint())) {
-                m_decoration = c->decoratedClient();
-            } else {
-                needsReset = true;
-            }
-        } else {
-            needsReset = true;
-        }
-    } else {
-        needsReset = true;
-    }
-    if (needsReset) {
-        m_decoration.clear();
-    }
-
-    bool leftSend = false;
-    auto oldWindow = qobject_cast<AbstractClient*>(m_window.data());
-    if (oldWindow && (m_decoration && m_decoration->client() != oldWindow)) {
-        leftSend = true;
-        oldWindow->leaveEvent();
-    }
-
-    if (oldDeco && oldDeco != m_decoration) {
-        if (oldDeco->client() != t && !leftSend) {
-            leftSend = true;
-            oldDeco->client()->leaveEvent();
-        }
-        // send leave
-        QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
-        QCoreApplication::instance()->sendEvent(oldDeco->decoration(), &event);
-    }
-    if (m_decoration) {
-        if (m_decoration->client() != oldWindow) {
-            m_decoration->client()->enterEvent(m_pos.toPoint());
-            workspace()->updateFocusMousePosition(m_pos.toPoint());
-        }
-        const QPointF p = m_pos - t->pos();
-        QHoverEvent event(QEvent::HoverMove, p, p);
-        QCoreApplication::instance()->sendEvent(m_decoration->decoration(), &event);
-        m_decoration->client()->processDecorationMove(p.toPoint(), m_pos.toPoint());
     }
 }
 

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_TOUCH_INPUT_H
 #define KWIN_TOUCH_INPUT_H
+#include "input.h"
 
 #include <QHash>
 #include <QObject>
@@ -31,7 +32,12 @@ namespace KWin
 class InputRedirection;
 class Toplevel;
 
-class TouchInputRedirection : public QObject
+namespace Decoration
+{
+class DecoratedClientImpl;
+}
+
+class TouchInputRedirection : public InputDeviceHandler
 {
     Q_OBJECT
 public:
@@ -51,20 +57,16 @@ public:
     void removeId(quint32 internalId);
     qint32 mappedId(quint32 internalId);
 
-    /**
-     * @brief The Toplevel which currently receives touch events
-     */
-    QPointer<Toplevel> window() const {
-        return m_window;
+    void setDecorationPressId(qint32 id) {
+        m_decorationId = id;
+    }
+    qint32 decorationPressId() const {
+        return m_decorationId;
     }
 
 private:
-    InputRedirection *m_input;
     bool m_inited = false;
-    /**
-     * @brief The Toplevel which currently receives touch events
-     */
-    QPointer<Toplevel> m_window;
+    qint32 m_decorationId = -1;
     /**
      * external/kwayland
      **/

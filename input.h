@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <QObject>
 #include <QPoint>
+#include <QPointer>
 #include <config-kwin.h>
 
 #include <KSharedConfig>
@@ -41,6 +42,11 @@ class InputEventFilter;
 class KeyboardInputRedirection;
 class PointerInputRedirection;
 class TouchInputRedirection;
+
+namespace Decoration
+{
+class DecoratedClientImpl;
+}
 
 namespace LibInput
 {
@@ -278,6 +284,36 @@ public:
     virtual bool touchDown(quint32 id, const QPointF &pos, quint32 time);
     virtual bool touchMotion(quint32 id, const QPointF &pos, quint32 time);
     virtual bool touchUp(quint32 id, quint32 time);
+};
+
+class InputDeviceHandler : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~InputDeviceHandler();
+
+    QPointer<Toplevel> window() const {
+        return m_window;
+    }
+    QPointer<Decoration::DecoratedClientImpl> decoration() const {
+        return m_decoration;
+    }
+
+Q_SIGNALS:
+    void decorationChanged();
+
+protected:
+    explicit InputDeviceHandler(InputRedirection *parent);
+    void updateDecoration(Toplevel *t, const QPointF &pos);
+    InputRedirection *m_input;
+    /**
+     * @brief The Toplevel which currently receives events
+     */
+    QPointer<Toplevel> m_window;
+    /**
+     * @brief The Decoration which currently receives events.
+     **/
+    QPointer<Decoration::DecoratedClientImpl> m_decoration;
 };
 
 inline

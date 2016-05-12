@@ -491,6 +491,79 @@ public:
         }
         return true;
     }
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+        auto seat = waylandServer()->seat();
+        if (seat->isTouchSequence()) {
+            return false;
+        }
+        if (input()->touch()->decorationPressId() != -1) {
+            // already on a decoration, ignore further touch points, but filter out
+            return true;
+        }
+        seat->setTimestamp(time);
+        input()->touch()->update(pos);
+        auto decoration = input()->touch()->decoration();
+        if (!decoration) {
+            return false;
+        }
+        input()->touch()->setDecorationPressId(id);
+        m_lastGlobalTouchPos = pos;
+        m_lastLocalTouchPos = pos - decoration->client()->pos();
+        QMouseEvent e(QEvent::MouseButtonPress, m_lastLocalTouchPos, pos, Qt::LeftButton, Qt::LeftButton, input()->keyboardModifiers());
+        e.setAccepted(false);
+        QCoreApplication::sendEvent(decoration->decoration(), &e);
+        if (!e.isAccepted()) {
+            decoration->client()->processDecorationButtonPress(&e);
+        }
+        return true;
+    }
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+        Q_UNUSED(time)
+        auto decoration = input()->touch()->decoration();
+        if (!decoration) {
+            return false;
+        }
+        if (input()->touch()->decorationPressId() == -1) {
+            return false;
+        }
+        if (input()->touch()->decorationPressId() != id) {
+            // ignore, but filter out
+            return true;
+        }
+        m_lastGlobalTouchPos = pos;
+        m_lastLocalTouchPos = pos - decoration->client()->pos();
+        QHoverEvent e(QEvent::HoverMove, m_lastLocalTouchPos, m_lastLocalTouchPos);
+        QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
+        decoration->client()->processDecorationMove(m_lastLocalTouchPos.toPoint(), pos.toPoint());
+        return true;
+    }
+    bool touchUp(quint32 id, quint32 time) override {
+        Q_UNUSED(time);
+        auto decoration = input()->touch()->decoration();
+        if (!decoration) {
+            return false;
+        }
+        if (input()->touch()->decorationPressId() == -1) {
+            return false;
+        }
+        if (input()->touch()->decorationPressId() != id) {
+            // ignore, but filter out
+            return true;
+        }
+        // send mouse up
+        QMouseEvent e(QEvent::MouseButtonRelease, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::MouseButtons(), input()->keyboardModifiers());
+        e.setAccepted(false);
+        QCoreApplication::sendEvent(decoration->decoration(), &e);
+        decoration->client()->processDecorationButtonRelease(&e);
+
+        m_lastGlobalTouchPos = QPointF();
+        m_lastLocalTouchPos = QPointF();
+        input()->touch()->setDecorationPressId(-1);
+        return true;
+    }
+private:
+    QPointF m_lastGlobalTouchPos;
+    QPointF m_lastLocalTouchPos;
 };
 
 #ifdef KWIN_BUILD_TABBOX
@@ -1204,6 +1277,65 @@ bool InputRedirection::supportsPointerWarping() const
 QPointF InputRedirection::globalPointer() const
 {
     return m_pointer->pos();
+}
+
+InputDeviceHandler::InputDeviceHandler(InputRedirection *input)
+    : QObject(input)
+    , m_input(input)
+{
+}
+
+InputDeviceHandler::~InputDeviceHandler() = default;
+
+void InputDeviceHandler::updateDecoration(Toplevel *t, const QPointF &pos)
+{
+    const auto oldDeco = m_decoration;
+    bool needsReset = waylandServer()->isScreenLocked();
+    if (AbstractClient *c = dynamic_cast<AbstractClient*>(t)) {
+        // check whether it's on a Decoration
+        if (c->decoratedClient()) {
+            const QRect clientRect = QRect(c->clientPos(), c->clientSize()).translated(c->pos());
+            if (!clientRect.contains(pos.toPoint())) {
+                m_decoration = c->decoratedClient();
+            } else {
+                needsReset = true;
+            }
+        } else {
+            needsReset = true;
+        }
+    } else {
+        needsReset = true;
+    }
+    if (needsReset) {
+        m_decoration.clear();
+    }
+
+    bool leftSend = false;
+    auto oldWindow = qobject_cast<AbstractClient*>(m_window.data());
+    if (oldWindow && (m_decoration && m_decoration->client() != oldWindow)) {
+        leftSend = true;
+        oldWindow->leaveEvent();
+    }
+
+    if (oldDeco && oldDeco != m_decoration) {
+        if (oldDeco->client() != t && !leftSend) {
+            leftSend = true;
+            oldDeco->client()->leaveEvent();
+        }
+        // send leave
+        QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
+        QCoreApplication::instance()->sendEvent(oldDeco->decoration(), &event);
+    }
+    if (m_decoration) {
+        if (m_decoration->client() != oldWindow) {
+            m_decoration->client()->enterEvent(pos.toPoint());
+            workspace()->updateFocusMousePosition(pos.toPoint());
+        }
+        const QPointF p = pos - t->pos();
+        QHoverEvent event(QEvent::HoverMove, p, p);
+        QCoreApplication::instance()->sendEvent(m_decoration->decoration(), &event);
+        m_decoration->client()->processDecorationMove(p.toPoint(), pos.toPoint());
+    }
 }
 
 } // namespace

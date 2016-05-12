@@ -18,21 +18,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "touch_input.h"
+#include "abstract_client.h"
 #include "input.h"
 #include "toplevel.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "decorations/decoratedclient.h"
+// KDecoration
+#include <KDecoration2/Decoration>
 // KWayland
 #include <KWayland/Server/seat_interface.h>
 // screenlocker
 #include <KScreenLocker/KsldApp>
+// Qt
+#include <QHoverEvent>
 
 namespace KWin
 {
 
 TouchInputRedirection::TouchInputRedirection(InputRedirection *parent)
-    : QObject(parent)
-    , m_input(parent)
+    : InputDeviceHandler(parent)
 {
 }
 
@@ -64,6 +69,12 @@ void TouchInputRedirection::update(const QPointF &pos)
     // TODO: handle pointer grab aka popups
     Toplevel *t = m_input->findToplevel(pos.toPoint());
     auto oldWindow = m_window;
+    updateDecoration(t, pos);
+    if (m_decoration) {
+        t = nullptr;
+    } else {
+        m_decorationId = -1;
+    }
     if (!oldWindow.isNull() && t == oldWindow.data()) {
         return;
     }
