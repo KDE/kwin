@@ -724,7 +724,7 @@ void Compositor::performCompositing()
     m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
     m_timeSinceStart += m_timeSinceLastVBlank;
 
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
+    if (waylandServer()) {
         for (Toplevel *win : damaged) {
             if (auto surface = win->surface()) {
                 surface->frameRendered(m_timeSinceStart);
