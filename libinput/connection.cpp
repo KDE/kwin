@@ -88,6 +88,7 @@ Connection *Connection::create(QObject *parent)
 }
 
 static const QString s_touchpadComponent = QStringLiteral("kcm_touchpad");
+static const QString s_serviceName = QStringLiteral("org.kde.KWin.InputDevice");
 
 Connection::Connection(Context *input, QObject *parent)
     : QObject(parent)
@@ -140,10 +141,13 @@ Connection::Connection(Context *input, QObject *parent)
     // need to connect to KGlobalSettings as the mouse KCM does not emit a dedicated signal
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
+
+    QDBusConnection::sessionBus().registerService(s_serviceName);
 }
 
 Connection::~Connection()
 {
+    QDBusConnection::sessionBus().unregisterService(s_serviceName);
     s_self = nullptr;
     delete s_context;
     s_context = nullptr;

@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "device.h"
 #include <libinput.h>
 
+#include <QDBusConnection>
+
 #include <linux/input.h>
 
 #include <config-kwin.h>
@@ -138,11 +140,17 @@ Device::Device(libinput_device *device, QObject *parent)
     }
 
     s_devices << this;
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice/") + m_sysName,
+                                                 QStringLiteral("org.kde.KWin.InputDevice"),
+                                                 this,
+                                                 QDBusConnection::ExportAllProperties
+    );
 }
 
 Device::~Device()
 {
     s_devices.removeOne(this);
+    QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/org/kde/KWin/InputDevice/") + m_sysName);
     libinput_device_unref(m_device);
 }
 
