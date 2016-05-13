@@ -62,5 +62,15 @@ QPlatformCursor *Screen::cursor() const
     return m_cursor.data();
 }
 
+QDpi Screen::logicalDpi() const
+{
+    static int force_dpi = qEnvironmentVariableIsSet("QT_WAYLAND_FORCE_DPI") ? qEnvironmentVariableIntValue("QT_WAYLAND_FORCE_DPI") : -1;
+    if (force_dpi > 0) {
+        return QDpi(force_dpi, force_dpi);
+    }
+
+    return QPlatformScreen::logicalDpi();
+}
+
 }
 }

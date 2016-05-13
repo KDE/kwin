@@ -47,6 +47,7 @@ public:
     QImage::Format format() const override;
     QSizeF physicalSize() const override;
     QPlatformCursor *cursor() const override;
+    QDpi logicalDpi() const override;
 
 private:
     KWayland::Client::Output *m_output;
