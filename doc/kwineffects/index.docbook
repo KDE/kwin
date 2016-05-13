@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title>Desktop Effects</title>
+<authorgroup>
+<author>&Mike.McBride; &Mike.McBride.mail;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2016-04-14</date>
+<releaseinfo>Plasma 5.6</releaseinfo>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>KControl</keyword>
+<keyword>desktop</keyword>
+<keyword>effects</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para>This module is used to enable and configure desktop effects
+for Plasma.</para>
+
+<para>The main part of this page is a list of all available effects grouped 
+by <guilabel>Accessibility</guilabel>, <guilabel>Appearance</guilabel>, 
+<guilabel>Focus</guilabel>, <guilabel>Tools</guilabel>, <guilabel>Candy</guilabel> 
+and <guilabel>Window Management</guilabel>.</para>
+<para>Use the incremental search bar above the list window to find items in the list.</para>
+
+<para>Normally there is no reason for users to change that, but 
+there is a <inlinemediaobject><imageobject><imagedata fileref="configure-filter.png" format="PNG"/>
+</imageobject></inlinemediaobject> configuration button to modify the filtering of the list to show 
+also those effects.
+</para>
+
+<para>The easiest way of installing new effects is by using the built-in
+KNewStuff support in &kwin;. Press the <guibutton>Get New Effects</guibutton> button to open 
+a dialog with a list of available effects from the Internet and to install and uninstall effects.</para>
+<note><para>Please keep in mind that changing these sensible defaults can break your system.</para>
+</note>
+
+<para>Check an effect in the list to enable it. Display information about Author and License by 
+clicking the <inlinemediaobject><imageobject><imagedata fileref="dialog-information.png" format="PNG"/>
+</imageobject> </inlinemediaobject> info button at the right side of the list item.</para>
+
+<para>Some effects have settings options, in this case there is a <inlinemediaobject><imageobject>
+<imagedata fileref="configure-effects.png" format="PNG"/></imageobject></inlinemediaobject> configure button 
+at the left of the info button. Click it to open a configuration dialog.</para>
+<para>To see a video preview of an effect click on the <inlinemediaobject><imageobject><imagedata fileref="video.png" format="PNG"/>
+</imageobject></inlinemediaobject> button.</para>
+
+<para>Some effects are mutual exclusive to other effects. For example one would only want to activate the 
+<guilabel>Minimize Animations</guilabel> or the <guilabel>Magic Lamp</guilabel> effect. Both activated at the same 
+time result in broken animations. 
+</para>
+
+<para>For effects in a mutual exclusive group the &GUI; uses radio buttons and manages that only one of these 
+effects can be activated.
+</para>
+
+<para>All effects which are not supported by the currently used compositing backend 
+are hidden by default (&eg; OpenGL effects when using XRender).
+</para> 
+
+<para>Also all internal or helper effects are hidden by default. These are effects which replace 
+functionality from KWin Core or provide interaction with other elements of the desktop shell.
+</para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Candy (Startup feedback)
+Window Management (Cover Switch)
+-->
+
+</article>
