@@ -34,6 +34,7 @@ namespace LibInput
 class Device : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.InputDevice")
     Q_PROPERTY(bool keyboard READ isKeyboard CONSTANT)
     Q_PROPERTY(bool alphaNumericKeyboard READ isAlphaNumericKeyboard CONSTANT)
     Q_PROPERTY(bool pointer READ isPointer CONSTANT)
