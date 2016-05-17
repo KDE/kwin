@@ -46,6 +46,8 @@ private Q_SLOTS:
     void testMinimizedGeometry();
     void testUseAfterUnmap();
     void testServerDelete();
+    void testActiveWindowOnUnmapped();
+    void testDeleteActiveWindow();
 
     void cleanup();
 
@@ -256,6 +258,55 @@ void TestWindowManagement::testServerDelete()
     QVERIFY(unmappedSpy.wait());
     QVERIFY(destroyedSpy.wait());
     m_window = nullptr;
+}
+
+void TestWindowManagement::testActiveWindowOnUnmapped()
+{
+    // This test verifies that unmapping the active window changes the active window.
+    // first make the window active
+    QVERIFY(!m_windowManagement->activeWindow());
+    QVERIFY(!m_window->isActive());
+    QSignalSpy activeWindowChangedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::activeWindowChanged);
+    QVERIFY(activeWindowChangedSpy.isValid());
+    m_windowInterface->setActive(true);
+    QVERIFY(activeWindowChangedSpy.wait());
+    QCOMPARE(m_windowManagement->activeWindow(), m_window);
+    QVERIFY(m_window->isActive());
+
+    // now unmap should change the active window
+    QSignalSpy destroyedSpy(m_window, &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    QSignalSpy serverDestroyedSpy(m_windowInterface, &QObject::destroyed);
+    QVERIFY(serverDestroyedSpy.isValid());
+    m_windowManagementInterface->unmapWindow(m_windowInterface);
+    QVERIFY(activeWindowChangedSpy.wait());
+    QVERIFY(!m_windowManagement->activeWindow());
+    QVERIFY(destroyedSpy.wait());
+    QCOMPARE(destroyedSpy.count(), 1);
+    m_window = nullptr;
+    QVERIFY(serverDestroyedSpy.wait());
+    m_windowInterface = nullptr;
+}
+
+void TestWindowManagement::testDeleteActiveWindow()
+{
+    // This test verifies that deleting the active window on client side changes the active window
+    // first make the window active
+    QVERIFY(!m_windowManagement->activeWindow());
+    QVERIFY(!m_window->isActive());
+    QSignalSpy activeWindowChangedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::activeWindowChanged);
+    QVERIFY(activeWindowChangedSpy.isValid());
+    m_windowInterface->setActive(true);
+    QVERIFY(activeWindowChangedSpy.wait());
+    QCOMPARE(activeWindowChangedSpy.count(), 1);
+    QCOMPARE(m_windowManagement->activeWindow(), m_window);
+    QVERIFY(m_window->isActive());
+
+    // delete the client side window - that's semantically kind of wrong, but shouldn't make our code crash
+    delete m_window;
+    m_window = nullptr;
+    QCOMPARE(activeWindowChangedSpy.count(), 2);
+    QVERIFY(!m_windowManagement->activeWindow());
 }
 
 QTEST_GUILESS_MAIN(TestWindowManagement)
