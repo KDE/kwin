@@ -268,8 +268,8 @@ const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_i
 #endif
 
 PlasmaWindowInterface::Private::Private(PlasmaWindowManagementInterface *wm, PlasmaWindowInterface *q)
-    : q(q)
-    , wm(wm)
+    : wm(wm)
+    , q(q)
 {
 }
 
