@@ -73,6 +73,7 @@ private Q_SLOTS:
     void testRequests();
     // TODO: minimized geometry
     // TODO: model reset
+    void testCreateWithUnmappedWindow();
 
 private:
     bool testBooleanData(PlasmaWindowModel::AdditionalRoles role, void (PlasmaWindowInterface::*function)(bool));
@@ -679,6 +680,39 @@ void PlasmaWindowModelTest::testRequests()
     QVERIFY(shadeRequestedSpy.wait());
     QCOMPARE(shadeRequestedSpy.count(), 2);
     QCOMPARE(shadeRequestedSpy.last().first().toBool(), false);
+}
+
+void PlasmaWindowModelTest::testCreateWithUnmappedWindow()
+{
+    // this test verifies that creating the model just when an unmapped window exists doesn't cause problems
+    // that is the unmapped window should be added (as expected), but also be removed again
+
+    // create a window in "normal way"
+    QSignalSpy windowCreatedSpy(m_pw, &PlasmaWindowManagement::windowCreated);
+    QVERIFY(windowCreatedSpy.isValid());
+    auto w = m_pwInterface->createWindow(m_pwInterface);
+    QVERIFY(w);
+    QVERIFY(windowCreatedSpy.wait());
+    PlasmaWindow *window = windowCreatedSpy.first().first().value<PlasmaWindow*>();
+    QVERIFY(window);
+    QSignalSpy unmappedSpy(window, &PlasmaWindow::unmapped);
+    QVERIFY(unmappedSpy.isValid());
+    QSignalSpy destroyedSpy(window, &PlasmaWindow::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    // unmap should be triggered, but not yet the destroyed
+    w->unmap();
+    QVERIFY(unmappedSpy.wait());
+    QVERIFY(destroyedSpy.isEmpty());
+
+    auto model = m_pw->createWindowModel();
+    QVERIFY(model);
+    QCOMPARE(model->rowCount(), 1);
+    QSignalSpy rowRemovedSpy(model, &PlasmaWindowModel::rowsRemoved);
+    QVERIFY(rowRemovedSpy.isValid());
+    QVERIFY(rowRemovedSpy.wait());
+    QCOMPARE(rowRemovedSpy.count(), 1);
+    QCOMPARE(model->rowCount(), 0);
+    QCOMPARE(destroyedSpy.count(), 1);
 }
 
 QTEST_GUILESS_MAIN(PlasmaWindowModelTest)
