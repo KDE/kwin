@@ -35,6 +35,16 @@ using namespace KWayland::Client;
 using namespace KWayland::Server;
 
 Q_DECLARE_METATYPE(Qt::MouseButton)
+typedef void (KWayland::Client::PlasmaWindow::*ClientWindowSignal)();
+Q_DECLARE_METATYPE(ClientWindowSignal)
+typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowBoolSetter)(bool);
+Q_DECLARE_METATYPE(ServerWindowBoolSetter)
+typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowStringSetter)(const QString&);
+Q_DECLARE_METATYPE(ServerWindowStringSetter)
+typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowQuint32Setter)(quint32);
+Q_DECLARE_METATYPE(ServerWindowQuint32Setter)
+typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowVoidSetter)();
+Q_DECLARE_METATYPE(ServerWindowVoidSetter)
 
 class PlasmaWindowModelTest : public QObject
 {
@@ -74,6 +84,9 @@ private Q_SLOTS:
     // TODO: minimized geometry
     // TODO: model reset
     void testCreateWithUnmappedWindow();
+    void testChangeWindowAfterModelDestroy_data();
+    void testChangeWindowAfterModelDestroy();
+    void testCreateWindowAfterModelDestroy();
 
 private:
     bool testBooleanData(PlasmaWindowModel::AdditionalRoles role, void (PlasmaWindowInterface::*function)(bool));
@@ -713,6 +726,80 @@ void PlasmaWindowModelTest::testCreateWithUnmappedWindow()
     QCOMPARE(rowRemovedSpy.count(), 1);
     QCOMPARE(model->rowCount(), 0);
     QCOMPARE(destroyedSpy.count(), 1);
+}
+
+void PlasmaWindowModelTest::testChangeWindowAfterModelDestroy_data()
+{
+    QTest::addColumn<ClientWindowSignal>("changedSignal");
+    QTest::addColumn<QVariant>("setter");
+    QTest::addColumn<QVariant>("value");
+
+    QTest::newRow("active")           << &PlasmaWindow::activeChanged                   << qVariantFromValue(&PlasmaWindowInterface::setActive)                   << QVariant(true);
+    QTest::newRow("minimized")        << &PlasmaWindow::minimizedChanged                << qVariantFromValue(&PlasmaWindowInterface::setMinimized)                << QVariant(true);
+    QTest::newRow("fullscreen")       << &PlasmaWindow::fullscreenChanged               << qVariantFromValue(&PlasmaWindowInterface::setFullscreen)               << QVariant(true);
+    QTest::newRow("keepAbove")        << &PlasmaWindow::keepAboveChanged                << qVariantFromValue(&PlasmaWindowInterface::setKeepAbove)                << QVariant(true);
+    QTest::newRow("keepBelow")        << &PlasmaWindow::keepBelowChanged                << qVariantFromValue(&PlasmaWindowInterface::setKeepBelow)                << QVariant(true);
+    QTest::newRow("maximized")        << &PlasmaWindow::maximizedChanged                << qVariantFromValue(&PlasmaWindowInterface::setMaximized)                << QVariant(true);
+    QTest::newRow("demandsAttention") << &PlasmaWindow::demandsAttentionChanged         << qVariantFromValue(&PlasmaWindowInterface::setDemandsAttention)         << QVariant(true);
+    QTest::newRow("closeable")        << &PlasmaWindow::closeableChanged                << qVariantFromValue(&PlasmaWindowInterface::setCloseable)                << QVariant(true);
+    QTest::newRow("minimizeable")     << &PlasmaWindow::minimizeableChanged             << qVariantFromValue(&PlasmaWindowInterface::setMinimizeable)             << QVariant(true);
+    QTest::newRow("maximizeable")     << &PlasmaWindow::maximizeableChanged             << qVariantFromValue(&PlasmaWindowInterface::setMaximizeable)             << QVariant(true);
+    QTest::newRow("fullscreenable")   << &PlasmaWindow::fullscreenableChanged           << qVariantFromValue(&PlasmaWindowInterface::setFullscreenable)           << QVariant(true);
+    QTest::newRow("skipTaskbar")      << &PlasmaWindow::skipTaskbarChanged              << qVariantFromValue(&PlasmaWindowInterface::setSkipTaskbar)              << QVariant(true);
+    QTest::newRow("shadeable")        << &PlasmaWindow::shadeableChanged                << qVariantFromValue(&PlasmaWindowInterface::setShadeable)                << QVariant(true);
+    QTest::newRow("shaded")           << &PlasmaWindow::shadedChanged                   << qVariantFromValue(&PlasmaWindowInterface::setShaded)                   << QVariant(true);
+    QTest::newRow("movable")          << &PlasmaWindow::movableChanged                  << qVariantFromValue(&PlasmaWindowInterface::setMovable)                  << QVariant(true);
+    QTest::newRow("resizable")        << &PlasmaWindow::resizableChanged                << qVariantFromValue(&PlasmaWindowInterface::setResizable)                << QVariant(true);
+    QTest::newRow("vdChangeable")     << &PlasmaWindow::virtualDesktopChangeableChanged << qVariantFromValue(&PlasmaWindowInterface::setVirtualDesktopChangeable) << QVariant(true);
+    QTest::newRow("onallDesktop")     << &PlasmaWindow::onAllDesktopsChanged            << qVariantFromValue(&PlasmaWindowInterface::setOnAllDesktops)            << QVariant(true);
+    QTest::newRow("title")            << &PlasmaWindow::titleChanged                    << qVariantFromValue(&PlasmaWindowInterface::setTitle)                    << QVariant(QStringLiteral("foo"));
+    QTest::newRow("appId")            << &PlasmaWindow::appIdChanged                    << qVariantFromValue(&PlasmaWindowInterface::setAppId)                    << QVariant(QStringLiteral("foo"));
+    QTest::newRow("icon" )            << &PlasmaWindow::iconChanged                     << qVariantFromValue(&PlasmaWindowInterface::setThemedIconName)           << QVariant(QStringLiteral("foo"));
+    QTest::newRow("vd")               << &PlasmaWindow::virtualDesktopChanged           << qVariantFromValue(&PlasmaWindowInterface::setVirtualDesktop)           << QVariant(2u);
+    QTest::newRow("unmapped")         << &PlasmaWindow::unmapped                        << qVariantFromValue(&PlasmaWindowInterface::unmap)                       << QVariant();
+}
+
+void PlasmaWindowModelTest::testChangeWindowAfterModelDestroy()
+{
+    // this test verifies that changes in a window after the model got destroyed doesn't crash
+    auto model = m_pw->createWindowModel();
+    QVERIFY(model);
+    QSignalSpy windowCreatedSpy(m_pw, &PlasmaWindowManagement::windowCreated);
+    QVERIFY(windowCreatedSpy.isValid());
+    auto w = m_pwInterface->createWindow(m_pwInterface);
+    QVERIFY(windowCreatedSpy.wait());
+    PlasmaWindow *window = windowCreatedSpy.first().first().value<PlasmaWindow*>();
+    QCOMPARE(model->rowCount(), 1);
+    delete model;
+    QFETCH(ClientWindowSignal, changedSignal);
+    QSignalSpy changedSpy(window, changedSignal);
+    QVERIFY(changedSpy.isValid());
+    QVERIFY(!window->isActive());
+    QFETCH(QVariant, setter);
+    QFETCH(QVariant, value);
+    if (QMetaType::Type(value.type()) == QMetaType::Bool) {
+        (w->*(setter.value<ServerWindowBoolSetter>()))(value.toBool());
+    } else if (QMetaType::Type(value.type()) == QMetaType::QString) {
+        (w->*(setter.value<ServerWindowStringSetter>()))(value.toString());
+    } else if (QMetaType::Type(value.type()) == QMetaType::UInt) {
+        (w->*(setter.value<ServerWindowQuint32Setter>()))(value.toUInt());
+    } else if (!value.isValid()) {
+        (w->*(setter.value<ServerWindowVoidSetter>()))();
+    }
+
+    QVERIFY(changedSpy.wait());
+}
+
+void PlasmaWindowModelTest::testCreateWindowAfterModelDestroy()
+{
+    // this test verifies that creating a window after the model got destroyed doesn't crash
+    auto model = m_pw->createWindowModel();
+    QVERIFY(model);
+    delete model;
+    QSignalSpy windowCreatedSpy(m_pw, &PlasmaWindowManagement::windowCreated);
+    QVERIFY(windowCreatedSpy.isValid());
+    m_pwInterface->createWindow(m_pwInterface);
+    QVERIFY(windowCreatedSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(PlasmaWindowModelTest)
