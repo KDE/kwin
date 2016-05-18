@@ -513,11 +513,11 @@ void TestWaylandOutputDevice::testId()
     QVERIFY(idChanged.isValid());
 
     m_serverOutputDevice->setUuid("42");
-    QVERIFY(idChanged.wait(200));
+    QVERIFY(idChanged.wait());
     QCOMPARE(output.uuid(), QByteArray("42"));
 
     m_serverOutputDevice->setUuid("4711");
-    QVERIFY(idChanged.wait(200));
+    QVERIFY(idChanged.wait());
     QCOMPARE(output.uuid(), QByteArray("4711"));
 }
 
