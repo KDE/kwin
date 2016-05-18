@@ -454,11 +454,17 @@ void TestWaylandOutputDevice::testEnabled()
     m_serverOutputDevice->setEnabled(OutputDeviceInterface::Enablement::Disabled);
     QVERIFY(enabledChanged.wait());
     QCOMPARE(output.enabled(), OutputDevice::Enablement::Disabled);
+    if (changed.count() != enabledChanged.count()) {
+        QVERIFY(changed.wait());
+    }
     QCOMPARE(changed.count(), enabledChanged.count());
 
     m_serverOutputDevice->setEnabled(OutputDeviceInterface::Enablement::Enabled);
     QVERIFY(enabledChanged.wait());
     QCOMPARE(output.enabled(), OutputDevice::Enablement::Enabled);
+    if (changed.count() != enabledChanged.count()) {
+        QVERIFY(changed.wait());
+    }
     QCOMPARE(changed.count(), enabledChanged.count());
 }
 
