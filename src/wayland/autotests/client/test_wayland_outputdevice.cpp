@@ -482,7 +482,7 @@ void TestWaylandOutputDevice::testEdid()
 
     QCOMPARE(output.edid(), QByteArray());
 
-    QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::changed);
+    QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::done);
     QVERIFY(outputChanged.isValid());
     output.setup(registry.bindOutputDevice(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
     wl_display_flush(m_connection->display());
@@ -501,7 +501,7 @@ void TestWaylandOutputDevice::testId()
     QVERIFY(announced.wait());
 
     KWayland::Client::OutputDevice output;
-    QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::changed);
+    QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::done);
     QVERIFY(outputChanged.isValid());
     output.setup(registry.bindOutputDevice(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
     wl_display_flush(m_connection->display());
