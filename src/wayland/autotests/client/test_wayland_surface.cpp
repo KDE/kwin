@@ -58,6 +58,7 @@ private Q_SLOTS:
     void testDamageTracking();
     void testSurfaceAt();
     void testDestroyAttachedBuffer();
+    void testDisconnect();
 
 private:
     KWayland::Server::Display *m_display;
@@ -871,6 +872,41 @@ void TestWaylandSurface::testDestroyAttachedBuffer()
 
     // TODO: should this emit unmapped?
     QVERIFY(!serverSurface->buffer());
+}
+
+void TestWaylandSurface::testDisconnect()
+{
+    // this test verifies that the server side correctly tears down the resources when the client disconnects
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    // destroy client
+    QSignalSpy clientDisconnectedSpy(serverSurface->client(), &ClientConnection::disconnected);
+    QVERIFY(clientDisconnectedSpy.isValid());
+    QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    QVERIFY(surfaceDestroyedSpy.isValid());
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
+    }
+    QVERIFY(clientDisconnectedSpy.wait());
+    QCOMPARE(clientDisconnectedSpy.count(), 1);
+    QCOMPARE(surfaceDestroyedSpy.count(), 0);
+    QVERIFY(surfaceDestroyedSpy.wait());
+    QCOMPARE(surfaceDestroyedSpy.count(), 1);
+
+    s->destroy();
+    m_shm->destroy();
+    m_compositor->destroy();
+    m_queue->destroy();
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSurface)

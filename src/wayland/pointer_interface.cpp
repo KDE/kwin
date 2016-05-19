@@ -105,7 +105,7 @@ const struct wl_pointer_interface PointerInterface::Private::s_interface = {
 #endif
 
 PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(parent, parentResource, this), parent)
+    : Resource(new Private(parent, parentResource, this))
 {
     // TODO: handle touch
     connect(parent, &SeatInterface::pointerPosChanged, this, [this] {

@@ -100,7 +100,7 @@ void RegionInterface::Private::destroyCallback(wl_client *client, wl_resource *r
 }
 
 RegionInterface::RegionInterface(CompositorInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(parent, this, parentResource), parent)
+    : Resource(new Private(parent, this, parentResource))
 {
 }
 

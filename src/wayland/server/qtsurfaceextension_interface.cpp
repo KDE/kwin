@@ -187,7 +187,7 @@ void QtExtendedSurfaceInterface::Private::updateGenericPropertyCallback(wl_clien
 }
 
 QtExtendedSurfaceInterface::QtExtendedSurfaceInterface(QtSurfaceExtensionInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(this, shell, parent, parentResource), parent)
+    : Resource(new Private(this, shell, parent, parentResource))
 {
 }
 

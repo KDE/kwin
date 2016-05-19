@@ -44,6 +44,7 @@ private Q_SLOTS:
     void testAdd();
     void testRemove();
     void testDestroy();
+    void testDisconnect();
 
 private:
     KWayland::Server::Display *m_display;
@@ -279,6 +280,39 @@ void TestRegion::testDestroy()
 
     // calling destroy again should not fail
     region->destroy();
+}
+
+void TestRegion::testDisconnect()
+{
+    // this test verifies that the server side correctly tears down the resources when the client disconnects
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QScopedPointer<Region> r(m_compositor->createRegion());
+    QVERIFY(!r.isNull());
+    QVERIFY(r->isValid());
+    QSignalSpy regionCreatedSpy(m_compositorInterface, &CompositorInterface::regionCreated);
+    QVERIFY(regionCreatedSpy.isValid());
+    QVERIFY(regionCreatedSpy.wait());
+    auto serverRegion = regionCreatedSpy.first().first().value<RegionInterface*>();
+
+    // destroy client
+    QSignalSpy clientDisconnectedSpy(serverRegion->client(), &ClientConnection::disconnected);
+    QVERIFY(clientDisconnectedSpy.isValid());
+    QSignalSpy regionDestroyedSpy(serverRegion, &QObject::destroyed);
+    QVERIFY(regionDestroyedSpy.isValid());
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
+    }
+    QVERIFY(clientDisconnectedSpy.wait());
+    QCOMPARE(clientDisconnectedSpy.count(), 1);
+    QCOMPARE(regionDestroyedSpy.count(), 0);
+    QVERIFY(regionDestroyedSpy.wait());
+    QCOMPARE(regionDestroyedSpy.count(), 1);
+
+    r->destroy();
+    m_compositor->destroy();
+    m_queue->destroy();
 }
 
 QTEST_GUILESS_MAIN(TestRegion)

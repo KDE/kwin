@@ -164,7 +164,7 @@ const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Priva
 #endif
 
 PlasmaShellSurfaceInterface::PlasmaShellSurfaceInterface(PlasmaShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(this, shell, parent, parentResource), parent)
+    : Resource(new Private(this, shell, parent, parentResource))
 {
 }
 

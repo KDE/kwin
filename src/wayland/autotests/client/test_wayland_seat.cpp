@@ -75,6 +75,7 @@ private Q_SLOTS:
     void testDestroy();
     void testSelection();
     void testTouch();
+    void testDisconnect();
     // TODO: add test for keymap
 
 private:
@@ -1533,6 +1534,78 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(pointRemovedSpy.count(), 3);
     QCOMPARE(touch->sequence().first()->position(), QPointF(0, 0));
+}
+
+void TestWaylandSeat::testDisconnect()
+{
+    // this test verifies that disconnecting the client cleans up correctly
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QSignalSpy keyboardCreatedSpy(m_seatInterface, &SeatInterface::keyboardCreated);
+    QVERIFY(keyboardCreatedSpy.isValid());
+    QSignalSpy pointerCreatedSpy(m_seatInterface, &SeatInterface::pointerCreated);
+    QVERIFY(pointerCreatedSpy.isValid());
+    QSignalSpy touchCreatedSpy(m_seatInterface, &SeatInterface::touchCreated);
+    QVERIFY(touchCreatedSpy.isValid());
+
+    // create the things we need
+    m_seatInterface->setHasKeyboard(true);
+    m_seatInterface->setHasPointer(true);
+    m_seatInterface->setHasTouch(true);
+    QSignalSpy touchSpy(m_seat, &Seat::hasTouchChanged);
+    QVERIFY(touchSpy.isValid());
+    QVERIFY(touchSpy.wait());
+
+    QScopedPointer<Keyboard> keyboard(m_seat->createKeyboard());
+    QVERIFY(!keyboard.isNull());
+    QVERIFY(keyboardCreatedSpy.wait());
+    auto serverKeyboard = keyboardCreatedSpy.first().first().value<KeyboardInterface*>();
+    QVERIFY(serverKeyboard);
+
+    QScopedPointer<Pointer> pointer(m_seat->createPointer());
+    QVERIFY(!pointer.isNull());
+    QVERIFY(pointerCreatedSpy.wait());
+    auto serverPointer = pointerCreatedSpy.first().first().value<PointerInterface*>();
+    QVERIFY(serverPointer);
+
+    QScopedPointer<Touch> touch(m_seat->createTouch());
+    QVERIFY(!touch.isNull());
+    QVERIFY(touchCreatedSpy.wait());
+    auto serverTouch = touchCreatedSpy.first().first().value<TouchInterface*>();
+    QVERIFY(serverTouch);
+
+    // setup destroys
+    QSignalSpy keyboardDestroyedSpy(serverKeyboard, &QObject::destroyed);
+    QVERIFY(keyboardDestroyedSpy.isValid());
+    QSignalSpy pointerDestroyedSpy(serverPointer, &QObject::destroyed);
+    QVERIFY(pointerDestroyedSpy.isValid());
+    QSignalSpy touchDestroyedSpy(serverTouch, &QObject::destroyed);
+    QVERIFY(touchDestroyedSpy.isValid());
+    QSignalSpy clientDisconnectedSpy(serverKeyboard->client(), &ClientConnection::disconnected);
+    QVERIFY(clientDisconnectedSpy.isValid());
+
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
+    }
+    QVERIFY(clientDisconnectedSpy.wait());
+    QCOMPARE(clientDisconnectedSpy.count(), 1);
+    QCOMPARE(keyboardDestroyedSpy.count(), 0);
+    QCOMPARE(pointerDestroyedSpy.count(), 0);
+    QCOMPARE(touchDestroyedSpy.count(), 0);
+    QVERIFY(keyboardDestroyedSpy.wait());
+    QCOMPARE(keyboardDestroyedSpy.count(), 1);
+    QCOMPARE(pointerDestroyedSpy.count(), 1);
+    QCOMPARE(touchDestroyedSpy.count(), 1);
+
+    keyboard->destroy();
+    pointer->destroy();
+    touch->destroy();
+    m_compositor->destroy();
+    m_seat->destroy();
+    m_shm->destroy();
+    m_subCompositor->destroy();
+    m_queue->destroy();
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSeat)

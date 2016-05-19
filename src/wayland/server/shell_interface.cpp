@@ -189,7 +189,7 @@ const struct wl_shell_surface_interface ShellSurfaceInterface::Private::s_interf
 #endif
 
 ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(this, shell, parent, parentResource), parent)
+    : Resource(new Private(this, shell, parent, parentResource))
 {
     Q_D();
     connect(d->pingTimer.data(), &QTimer::timeout, this, &ShellSurfaceInterface::pingTimeout);

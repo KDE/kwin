@@ -81,7 +81,7 @@ const struct wl_keyboard_interface KeyboardInterface::Private::s_interface {
 #endif
 
 KeyboardInterface::KeyboardInterface(SeatInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(parent, parentResource, this), parent)
+    : Resource(new Private(parent, parentResource, this))
 {
 }
 

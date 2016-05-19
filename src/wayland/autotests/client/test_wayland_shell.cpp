@@ -63,6 +63,7 @@ private Q_SLOTS:
     void testMove();
     void testResize_data();
     void testResize();
+    void testDisconnect();
 
 private:
     KWayland::Server::Display *m_display;
@@ -699,6 +700,45 @@ void TestWaylandShell::testResize()
     QCOMPARE(resizeRequestedSpy.first().at(0).value<SeatInterface*>(), m_seatInterface);
     QCOMPARE(resizeRequestedSpy.first().at(1).value<quint32>(), m_seatInterface->pointerButtonSerial(Qt::LeftButton));
     QTEST(resizeRequestedSpy.first().at(2).value<Qt::Edges>(), "expectedEdge");
+}
+
+void TestWaylandShell::testDisconnect()
+{
+    // this test verifies that the server side correctly tears down the resources when the client disconnects
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QScopedPointer<KWayland::Client::Surface> s(m_compositor->createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    QScopedPointer<ShellSurface> surface(m_shell->createSurface(s.data(), m_shell));
+    QSignalSpy serverSurfaceSpy(m_shellInterface, &ShellInterface::surfaceCreated);
+    QVERIFY(serverSurfaceSpy.isValid());
+    QVERIFY(serverSurfaceSpy.wait());
+    ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    // destroy client
+    QSignalSpy clientDisconnectedSpy(serverSurface->client(), &ClientConnection::disconnected);
+    QVERIFY(clientDisconnectedSpy.isValid());
+    QSignalSpy shellSurfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    QVERIFY(shellSurfaceDestroyedSpy.isValid());
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
+    }
+    QVERIFY(clientDisconnectedSpy.wait());
+    QCOMPARE(clientDisconnectedSpy.count(), 1);
+    QCOMPARE(shellSurfaceDestroyedSpy.count(), 0);
+    QVERIFY(shellSurfaceDestroyedSpy.wait());
+    QCOMPARE(shellSurfaceDestroyedSpy.count(), 1);
+
+    s->destroy();
+    surface->destroy();
+    m_shell->destroy();
+    m_compositor->destroy();
+    m_pointer->destroy();
+    m_seat->destroy();
+    m_queue->destroy();
 }
 
 QTEST_GUILESS_MAIN(TestWaylandShell)

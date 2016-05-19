@@ -45,6 +45,7 @@ private Q_SLOTS:
 
     void testRole_data();
     void testRole();
+    void testDisconnect();
 
 private:
     Display *m_display = nullptr;
@@ -188,6 +189,44 @@ void TestPlasmaShell::testRole()
     QVERIFY(roleChangedSpy.wait());
     QCOMPARE(roleChangedSpy.count(), 1);
     QTEST(sps->role(), "serverRole");
+}
+
+void TestPlasmaShell::testDisconnect()
+{
+    // this test verifies that a disconnect cleans up
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QVERIFY(plasmaSurfaceCreatedSpy.isValid());
+    // create the surface
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+
+    // and get them on the server
+    QVERIFY(plasmaSurfaceCreatedSpy.wait());
+    QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
+    auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface*>();
+    QVERIFY(sps);
+
+    // disconnect
+    QSignalSpy clientDisconnectedSpy(sps->client(), &ClientConnection::disconnected);
+    QVERIFY(clientDisconnectedSpy.isValid());
+    QSignalSpy surfaceDestroyedSpy(sps, &QObject::destroyed);
+    QVERIFY(surfaceDestroyedSpy.isValid());
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
+    }
+    QVERIFY(clientDisconnectedSpy.wait());
+    QCOMPARE(clientDisconnectedSpy.count(), 1);
+    QCOMPARE(surfaceDestroyedSpy.count(), 0);
+    QVERIFY(surfaceDestroyedSpy.wait());
+    QCOMPARE(surfaceDestroyedSpy.count(), 1);
+
+    s->destroy();
+    ps->destroy();
+    m_plasmaShell->destroy();
+    m_compositor->destroy();
+    m_registry->destroy();
+    m_queue->destroy();
 }
 
 QTEST_GUILESS_MAIN(TestPlasmaShell)

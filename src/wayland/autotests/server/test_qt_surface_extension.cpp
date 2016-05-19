@@ -84,6 +84,8 @@ void TestQtSurfaceExtension::testCloseWindow()
     QCOMPARE(surfaceExtensionSpy.count(), 1);
     auto *extension = surfaceExtensionSpy.first().first().value<QtExtendedSurfaceInterface*>();
     QVERIFY(extension);
+    QSignalSpy surfaceExtensionDestroyedSpy(extension, &QObject::destroyed);
+    QVERIFY(surfaceExtensionSpy.isValid());
     QSignalSpy processStateChangedSpy(&process, &QProcess::stateChanged);
     QVERIFY(processStateChangedSpy.isValid());
     extension->close();
@@ -91,6 +93,10 @@ void TestQtSurfaceExtension::testCloseWindow()
 
     QVERIFY(processStateChangedSpy.wait());
     QCOMPARE(process.exitStatus(), QProcess::NormalExit);
+    if (surfaceExtensionDestroyedSpy.count() == 0) {
+        QVERIFY(surfaceExtensionDestroyedSpy.wait());
+    }
+    QCOMPARE(surfaceExtensionSpy.count(), 1);
 }
 
 QTEST_GUILESS_MAIN(TestQtSurfaceExtension)

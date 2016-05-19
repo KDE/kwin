@@ -70,7 +70,7 @@ void TouchInterface::Private::releaseCallback(wl_client *client, wl_resource *re
 }
 
 TouchInterface::TouchInterface(SeatInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(parent, parentResource, this), parent)
+    : Resource(new Private(parent, parentResource, this))
 {
 }
 

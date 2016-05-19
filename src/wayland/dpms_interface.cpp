@@ -120,7 +120,7 @@ void DpmsInterface::Private::releaseCallback(wl_client *client, wl_resource *res
 }
 
 DpmsInterface::DpmsInterface(OutputInterface *output, wl_resource *parentResource, DpmsManagerInterface *manager)
-    : Resource(new Private(this, manager, parentResource, output), manager)
+    : Resource(new Private(this, manager, parentResource, output))
 {
     connect(output, &OutputInterface::dpmsSupportedChanged, this,
         [this] {
