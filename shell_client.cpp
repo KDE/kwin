@@ -981,10 +981,13 @@ void ShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecora
     connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed, this,
         [this] {
             m_serverDecoration = nullptr;
-            if (!Workspace::self()) {
+            if (m_closing || !Workspace::self()) {
                 return;
             }
-            updateDecoration(true);
+            if (!m_unmapped) {
+                // maybe delay to next event cycle in case the ShellClient is getting destroyed, too
+                updateDecoration(true);
+            }
         }
     );
     if (!m_unmapped) {
