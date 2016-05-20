@@ -1,6 +1,9 @@
 add_definitions(-DKWIN_UNIT_TEST)
 remove_definitions(-DQT_USE_QSTRINGBUILDER)
 add_subdirectory(wayland)
+if (HAVE_INPUT)
+    add_subdirectory(libinput)
+endif()
 
 ########################################################
 # Test ScreenPaintData
