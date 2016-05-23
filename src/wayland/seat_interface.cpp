@@ -349,14 +349,15 @@ void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource
 {
     // TODO: only create if seat has pointer?
     PointerInterface *pointer = new PointerInterface(q, resource);
-    pointer->create(display->getConnection(client), qMin(wl_resource_get_version(resource), s_pointerVersion), id);
+    auto clientConnection = display->getConnection(client);
+    pointer->create(clientConnection, qMin(wl_resource_get_version(resource), s_pointerVersion), id);
     if (!pointer->resource()) {
         wl_resource_post_no_memory(resource);
         delete pointer;
         return;
     }
     pointers << pointer;
-    if (globalPointer.focus.surface && globalPointer.focus.surface->client()->client() == client) {
+    if (globalPointer.focus.surface && globalPointer.focus.surface->client() == clientConnection) {
         // this is a pointer for the currently focused pointer surface
         if (!globalPointer.focus.pointer) {
             globalPointer.focus.pointer = pointer;
@@ -385,7 +386,8 @@ void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resourc
 {
     // TODO: only create if seat has keyboard?
     KeyboardInterface *keyboard = new KeyboardInterface(q, resource);
-    keyboard->create(display->getConnection(client), qMin(wl_resource_get_version(resource), s_keyboardVersion) , id);
+    auto clientConnection = display->getConnection(client);
+    keyboard->create(clientConnection, qMin(wl_resource_get_version(resource), s_keyboardVersion) , id);
     if (!keyboard->resource()) {
         wl_resource_post_no_memory(resource);
         delete keyboard;
@@ -396,7 +398,7 @@ void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resourc
         keyboard->setKeymap(keys.keymap.fd, keys.keymap.size);
     }
     keyboards << keyboard;
-    if (keys.focus.surface && keys.focus.surface->client()->client() == client) {
+    if (keys.focus.surface && keys.focus.surface->client() == clientConnection) {
         // this is a keyboard for the currently focused keyboard surface
         if (!keys.focus.keyboard) {
             keys.focus.keyboard = keyboard;
@@ -423,14 +425,15 @@ void SeatInterface::Private::getTouch(wl_client *client, wl_resource *resource, 
 {
     // TODO: only create if seat has touch?
     TouchInterface *touch = new TouchInterface(q, resource);
-    touch->create(display->getConnection(client), qMin(wl_resource_get_version(resource), s_touchVersion), id);
+    auto clientConnection = display->getConnection(client);
+    touch->create(clientConnection, qMin(wl_resource_get_version(resource), s_touchVersion), id);
     if (!touch->resource()) {
         wl_resource_post_no_memory(resource);
         delete touch;
         return;
     }
     touchs << touch;
-    if (touchInterface.focus.surface && touchInterface.focus.surface->client()->client() == client) {
+    if (touchInterface.focus.surface && touchInterface.focus.surface->client() == clientConnection) {
         // this is a touch for the currently focused touch surface
         if (!touchInterface.focus.touch) {
             touchInterface.focus.touch = touch;
