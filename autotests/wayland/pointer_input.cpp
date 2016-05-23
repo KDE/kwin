@@ -745,6 +745,8 @@ void PointerInputTest::testMouseActionActiveWindow()
     QVERIFY(clientAddedSpy.wait());
     AbstractClient *window1 = workspace()->activeClient();
     QVERIFY(window1);
+    QSignalSpy window1DestroyedSpy(window1, &QObject::destroyed);
+    QVERIFY(window1DestroyedSpy.isValid());
     Surface *surface2 = m_compositor->createSurface(m_compositor);
     QVERIFY(surface2);
     ShellSurface *shellSurface2 = m_shell->createSurface(surface2, surface2);
@@ -754,6 +756,8 @@ void PointerInputTest::testMouseActionActiveWindow()
     AbstractClient *window2 = workspace()->activeClient();
     QVERIFY(window2);
     QVERIFY(window1 != window2);
+    QSignalSpy window2DestroyedSpy(window2, &QObject::destroyed);
+    QVERIFY(window2DestroyedSpy.isValid());
     QCOMPARE(workspace()->topClientOnDesktop(1, -1), window2);
     // geometry of the two windows should be overlapping
     QVERIFY(window1->geometry().intersects(window2->geometry()));
@@ -786,6 +790,11 @@ void PointerInputTest::testMouseActionActiveWindow()
 
     // release again
     kwinApp()->platform()->pointerButtonReleased(button, timestamp++);
+
+    delete surface1;
+    QVERIFY(window1DestroyedSpy.wait());
+    delete surface2;
+    QVERIFY(window2DestroyedSpy.wait());
 }
 
 void PointerInputTest::testCursorImage()
