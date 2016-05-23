@@ -99,6 +99,7 @@ private:
     void createRenderer();
     AbstractClient *m_client;
     Renderer *m_renderer;
+    QMetaObject::Connection m_compositorToggledConnection;
 };
 
 }

@@ -75,12 +75,18 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
             &Decoration::DecoratedClientImpl::signalShadeChange);
     connect(client, &AbstractClient::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedClient::keepAboveChanged);
     connect(client, &AbstractClient::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
-    connect(Compositor::self(), &Compositor::compositingToggled, this,
+    m_compositorToggledConnection = connect(Compositor::self(), &Compositor::compositingToggled, this,
         [this, decoration]() {
             delete m_renderer;
             m_renderer = nullptr;
             createRenderer();
             decoration->update();
+        }
+    );
+    connect(Compositor::self(), &Compositor::aboutToDestroy, this,
+        [this] {
+            disconnect(m_compositorToggledConnection);
+            m_compositorToggledConnection = QMetaObject::Connection();
         }
     );
     connect(client, &AbstractClient::quickTileModeChanged, decoratedClient,
