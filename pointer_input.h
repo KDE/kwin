@@ -62,9 +62,6 @@ public:
     Qt::MouseButtons buttons() const {
         return m_qtButtons;
     }
-    QPointer<QWindow> internalWindow() const {
-        return m_internalWindow;
-    }
 
     QImage cursorImage() const;
     QPoint cursorHotSpot() const;
@@ -88,14 +85,12 @@ public:
 private:
     void updatePosition(const QPointF &pos);
     void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
-    void updateInternalWindow();
     CursorImage *m_cursor;
     bool m_inited = false;
     bool m_supportsWarping;
     QPointF m_pos;
     QHash<uint32_t, InputRedirection::PointerButtonState> m_buttons;
     Qt::MouseButtons m_qtButtons;
-    QPointer<QWindow> m_internalWindow;
     QMetaObject::Connection m_windowGeometryConnection;
     QMetaObject::Connection m_internalWindowConnection;
 };

@@ -63,15 +63,23 @@ public:
     qint32 decorationPressId() const {
         return m_decorationId;
     }
+    void setInternalPressId(qint32 id) {
+        m_internalId = id;
+    }
+    qint32 internalPressId() const {
+        return m_internalId;
+    }
 
 private:
     bool m_inited = false;
     qint32 m_decorationId = -1;
+    qint32 m_internalId = -1;
     /**
      * external/kwayland
      **/
     QHash<qint32, qint32> m_idMapper;
     QMetaObject::Connection m_windowGeometryConnection;
+    bool m_windowUpdatedInCycle = false;
 };
 
 }

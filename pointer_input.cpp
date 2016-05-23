@@ -138,6 +138,21 @@ void PointerInputRedirection::init()
             update();
         }
     );
+    connect(this, &PointerInputRedirection::internalWindowChanged, this,
+        [this] {
+            disconnect(m_internalWindowConnection);
+            m_internalWindowConnection = QMetaObject::Connection();
+            if (m_internalWindow) {
+                m_internalWindowConnection = connect(m_internalWindow.data(), &QWindow::visibleChanged, this,
+                    [this] (bool visible) {
+                        if (!visible) {
+                            update();
+                        }
+                    }
+                );
+            }
+        }
+    );
 
     // warp the cursor to center of screen
     warp(screens()->geometry().center());
@@ -233,7 +248,7 @@ void PointerInputRedirection::update()
     // TODO: handle pointer grab aka popups
     Toplevel *t = m_input->findToplevel(m_pos.toPoint());
     const auto oldDeco = m_decoration;
-    updateInternalWindow();
+    updateInternalWindow(m_pos);
     if (!m_internalWindow) {
         updateDecoration(t, m_pos);
     } else {
@@ -293,65 +308,6 @@ void PointerInputRedirection::update()
         m_window.clear();
         seat->setFocusedPointerSurface(nullptr);
         t = nullptr;
-    }
-}
-
-void PointerInputRedirection::updateInternalWindow()
-{
-    const auto oldInternalWindow = m_internalWindow;
-    bool found = false;
-    // TODO: screen locked check without going through wayland server
-    bool needsReset = waylandServer()->isScreenLocked();
-    const auto &internalClients = waylandServer()->internalClients();
-    const bool change = m_internalWindow.isNull() || !(m_internalWindow->flags().testFlag(Qt::Popup) && m_internalWindow->isVisible());
-    if (!internalClients.isEmpty() && change) {
-        auto it = internalClients.end();
-        do {
-            it--;
-            if (QWindow *w = (*it)->internalWindow()) {
-                if (!w->isVisible()) {
-                    continue;
-                }
-                if (w->geometry().contains(m_pos.toPoint())) {
-                    // check input mask
-                    const QRegion mask = w->mask().translated(w->geometry().topLeft());
-                    if (!mask.isEmpty() && !mask.contains(m_pos.toPoint())) {
-                        continue;
-                    }
-                    m_internalWindow = QPointer<QWindow>(w);
-                    found = true;
-                    break;
-                }
-            }
-        } while (it != internalClients.begin());
-        if (!found) {
-            needsReset = true;
-        }
-    }
-    if (needsReset) {
-        m_internalWindow.clear();
-    }
-    if (oldInternalWindow != m_internalWindow) {
-        // changed
-        if (oldInternalWindow) {
-            disconnect(m_internalWindowConnection);
-            m_internalWindowConnection = QMetaObject::Connection();
-            QEvent event(QEvent::Leave);
-            QCoreApplication::sendEvent(oldInternalWindow.data(), &event);
-        }
-        if (m_internalWindow) {
-            m_internalWindowConnection = connect(m_internalWindow.data(), &QWindow::visibleChanged, this,
-                [this] (bool visible) {
-                    if (!visible) {
-                        update();
-                    }
-                });
-            QEnterEvent event(m_pos - m_internalWindow->position(),
-                              m_pos - m_internalWindow->position(),
-                              m_pos);
-            QCoreApplication::sendEvent(m_internalWindow.data(), &event);
-            return;
-        }
     }
 }
 

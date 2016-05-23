@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testPointerAxis();
     void testKeyboard_data();
     void testKeyboard();
+    void testTouch();
 };
 
 class HelperWindow : public QRasterWindow
@@ -54,6 +55,13 @@ class HelperWindow : public QRasterWindow
 public:
     HelperWindow();
     ~HelperWindow();
+
+    QPoint latestGlobalMousePos() const {
+        return m_latestGlobalMousePos;
+    }
+    Qt::MouseButtons pressedButtons() const {
+        return m_pressedButtons;
+    }
 
 Q_SIGNALS:
     void entered();
@@ -74,6 +82,10 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
+
+private:
+    QPoint m_latestGlobalMousePos;
+    Qt::MouseButtons m_pressedButtons = Qt::MouseButtons();
 };
 
 HelperWindow::HelperWindow()
@@ -103,18 +115,21 @@ bool HelperWindow::event(QEvent *event)
 
 void HelperWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    m_latestGlobalMousePos = event->globalPos();
     emit mouseMoved(event->globalPos());
 }
 
 void HelperWindow::mousePressEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event)
+    m_latestGlobalMousePos = event->globalPos();
+    m_pressedButtons = event->buttons();
     emit mousePressed();
 }
 
 void HelperWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event)
+    m_latestGlobalMousePos = event->globalPos();
+    m_pressedButtons = event->buttons();
     emit mouseReleased();
 }
 
@@ -280,6 +295,72 @@ void InternalWindowTest::testKeyboard()
     kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
     QTRY_COMPARE(releaseSpy.count(), 1);
     QCOMPARE(pressSpy.count(), 1);
+}
+
+void InternalWindowTest::testTouch()
+{
+    // touch events for internal windows are emulated through mouse events
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    win.show();
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+
+    QSignalSpy pressSpy(&win, &HelperWindow::mousePressed);
+    QVERIFY(pressSpy.isValid());
+    QSignalSpy releaseSpy(&win, &HelperWindow::mouseReleased);
+    QVERIFY(releaseSpy.isValid());
+    QSignalSpy moveSpy(&win, &HelperWindow::mouseMoved);
+    QVERIFY(moveSpy.isValid());
+
+    quint32 timestamp = 1;
+    QCOMPARE(win.pressedButtons(), Qt::MouseButtons());
+    kwinApp()->platform()->touchDown(0, QPointF(50, 50), timestamp++);
+    QCOMPARE(pressSpy.count(), 1);
+    QCOMPARE(win.latestGlobalMousePos(), QPoint(50, 50));
+    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
+
+    // further touch down should not trigger
+    kwinApp()->platform()->touchDown(1, QPointF(75, 75), timestamp++);
+    QCOMPARE(pressSpy.count(), 1);
+    kwinApp()->platform()->touchUp(1, timestamp++);
+    QCOMPARE(releaseSpy.count(), 0);
+    QCOMPARE(win.latestGlobalMousePos(), QPoint(50, 50));
+    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
+
+    // another press
+    kwinApp()->platform()->touchDown(1, QPointF(10, 10), timestamp++);
+    QCOMPARE(pressSpy.count(), 1);
+    QCOMPARE(win.latestGlobalMousePos(), QPoint(50, 50));
+    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
+
+    // simulate the move
+    QCOMPARE(moveSpy.count(), 0);
+    kwinApp()->platform()->touchMotion(0, QPointF(80, 90), timestamp++);
+    QCOMPARE(moveSpy.count(), 1);
+    QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
+    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
+
+    // move on other ID should not do anything
+    kwinApp()->platform()->touchMotion(1, QPointF(20, 30), timestamp++);
+    QCOMPARE(moveSpy.count(), 1);
+    QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
+    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
+
+    // now up our main point
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QCOMPARE(releaseSpy.count(), 1);
+    QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
+    QCOMPARE(win.pressedButtons(), Qt::MouseButtons());
+
+    // and up the additional point
+    kwinApp()->platform()->touchUp(1, timestamp++);
+    QCOMPARE(releaseSpy.count(), 1);
+    QCOMPARE(moveSpy.count(), 1);
+    QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
+    QCOMPARE(win.pressedButtons(), Qt::MouseButtons());
 }
 
 }

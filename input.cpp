@@ -427,6 +427,81 @@ class InternalWindowEventFilter : public InputEventFilter {
         event->setAccepted(false);
         return QCoreApplication::sendEvent(found, event);
     }
+
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+        auto seat = waylandServer()->seat();
+        if (seat->isTouchSequence()) {
+            // something else is getting the events
+            return false;
+        }
+        auto touch = input()->touch();
+        if (touch->internalPressId() != -1) {
+            // already on a decoration, ignore further touch points, but filter out
+            return true;
+        }
+        // a new touch point
+        seat->setTimestamp(time);
+        touch->update(pos);
+        auto internal = touch->internalWindow();
+        if (!internal) {
+            return false;
+        }
+        touch->setInternalPressId(id);
+        // Qt's touch event API is rather complex, let's do fake mouse events instead
+        m_lastGlobalTouchPos = pos;
+        m_lastLocalTouchPos = pos - QPointF(internal->x(), internal->y());
+        QMouseEvent e(QEvent::MouseButtonPress, m_lastLocalTouchPos, pos, Qt::LeftButton, Qt::LeftButton, input()->keyboardModifiers());
+        e.setAccepted(false);
+        QCoreApplication::sendEvent(internal.data(), &e);
+        return true;
+    }
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+        auto touch = input()->touch();
+        auto internal = touch->internalWindow();
+        if (!internal) {
+            return false;
+        }
+        if (touch->internalPressId() == -1) {
+            return false;
+        }
+        waylandServer()->seat()->setTimestamp(time);
+        if (touch->internalPressId() != qint32(id)) {
+            // ignore, but filter out
+            return true;
+        }
+        m_lastGlobalTouchPos = pos;
+        m_lastLocalTouchPos = pos - QPointF(internal->x(), internal->y());
+        QMouseEvent e(QEvent::MouseMove, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::LeftButton, input()->keyboardModifiers());
+        QCoreApplication::instance()->sendEvent(internal.data(), &e);
+        return true;
+    }
+    bool touchUp(quint32 id, quint32 time) override {
+        auto touch = input()->touch();
+        auto internal = touch->internalWindow();
+        if (!internal) {
+            return false;
+        }
+        if (touch->internalPressId() == -1) {
+            return false;
+        }
+        waylandServer()->seat()->setTimestamp(time);
+        if (touch->internalPressId() != qint32(id)) {
+            // ignore, but filter out
+            return true;
+        }
+        // send mouse up
+        QMouseEvent e(QEvent::MouseButtonRelease, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::MouseButtons(), input()->keyboardModifiers());
+        e.setAccepted(false);
+        QCoreApplication::sendEvent(internal.data(), &e);
+
+        m_lastGlobalTouchPos = QPointF();
+        m_lastLocalTouchPos = QPointF();
+        input()->touch()->setInternalPressId(-1);
+        return true;
+    }
+private:
+    QPointF m_lastGlobalTouchPos;
+    QPointF m_lastLocalTouchPos;
 };
 
 class DecorationEventFilter : public InputEventFilter {
@@ -1335,6 +1410,57 @@ void InputDeviceHandler::updateDecoration(Toplevel *t, const QPointF &pos)
         QHoverEvent event(QEvent::HoverMove, p, p);
         QCoreApplication::instance()->sendEvent(m_decoration->decoration(), &event);
         m_decoration->client()->processDecorationMove(p.toPoint(), pos.toPoint());
+    }
+}
+
+void InputDeviceHandler::updateInternalWindow(const QPointF &pos)
+{
+    const auto oldInternalWindow = m_internalWindow;
+    bool found = false;
+    // TODO: screen locked check without going through wayland server
+    bool needsReset = waylandServer()->isScreenLocked();
+    const auto &internalClients = waylandServer()->internalClients();
+    const bool change = m_internalWindow.isNull() || !(m_internalWindow->flags().testFlag(Qt::Popup) && m_internalWindow->isVisible());
+    if (!internalClients.isEmpty() && change) {
+        auto it = internalClients.end();
+        do {
+            it--;
+            if (QWindow *w = (*it)->internalWindow()) {
+                if (!w->isVisible()) {
+                    continue;
+                }
+                if (w->geometry().contains(pos.toPoint())) {
+                    // check input mask
+                    const QRegion mask = w->mask().translated(w->geometry().topLeft());
+                    if (!mask.isEmpty() && !mask.contains(pos.toPoint())) {
+                        continue;
+                    }
+                    m_internalWindow = QPointer<QWindow>(w);
+                    found = true;
+                    break;
+                }
+            }
+        } while (it != internalClients.begin());
+        if (!found) {
+            needsReset = true;
+        }
+    }
+    if (needsReset) {
+        m_internalWindow.clear();
+    }
+    if (oldInternalWindow != m_internalWindow) {
+        // changed
+        if (oldInternalWindow) {
+            QEvent event(QEvent::Leave);
+            QCoreApplication::sendEvent(oldInternalWindow.data(), &event);
+        }
+        if (m_internalWindow) {
+            QEnterEvent event(pos - m_internalWindow->position(),
+                              pos - m_internalWindow->position(),
+                              pos);
+            QCoreApplication::sendEvent(m_internalWindow.data(), &event);
+        }
+        emit internalWindowChanged();
     }
 }
 

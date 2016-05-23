@@ -298,13 +298,18 @@ public:
     QPointer<Decoration::DecoratedClientImpl> decoration() const {
         return m_decoration;
     }
+    QPointer<QWindow> internalWindow() const {
+        return m_internalWindow;
+    }
 
 Q_SIGNALS:
     void decorationChanged();
+    void internalWindowChanged();
 
 protected:
     explicit InputDeviceHandler(InputRedirection *parent);
     void updateDecoration(Toplevel *t, const QPointF &pos);
+    void updateInternalWindow(const QPointF &pos);
     InputRedirection *m_input;
     /**
      * @brief The Toplevel which currently receives events
@@ -314,6 +319,7 @@ protected:
      * @brief The Decoration which currently receives events.
      **/
     QPointer<Decoration::DecoratedClientImpl> m_decoration;
+    QPointer<QWindow> m_internalWindow;
 };
 
 inline

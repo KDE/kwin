@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KScreenLocker/KsldApp>
 // Qt
 #include <QHoverEvent>
+#include <QWindow>
 
 namespace KWin
 {
@@ -66,14 +67,29 @@ void TouchInputRedirection::update(const QPointF &pos)
     if (!m_inited) {
         return;
     }
+    if (m_windowUpdatedInCycle) {
+        return;
+    }
+    m_windowUpdatedInCycle = true;
     // TODO: handle pointer grab aka popups
     Toplevel *t = m_input->findToplevel(pos.toPoint());
     auto oldWindow = m_window;
-    updateDecoration(t, pos);
-    if (m_decoration) {
-        t = nullptr;
+    updateInternalWindow(pos);
+    if (!m_internalWindow) {
+        updateDecoration(t, pos);
     } else {
+        // TODO: send hover leave to decoration
+        if (m_decoration) {
+            m_decoration->client()->leaveEvent();
+        }
+        m_decoration.clear();
+    }
+    if (m_decoration || m_internalWindow) {
+        t = nullptr;
+    } else if (!m_decoration) {
         m_decorationId = -1;
+    } else if (!m_internalWindow) {
+        m_internalId = -1;
     }
     if (!oldWindow.isNull() && t == oldWindow.data()) {
         return;
@@ -133,12 +149,14 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
     if (!m_inited) {
         return;
     }
+    m_windowUpdatedInCycle = false;
     const auto &filters = m_input->filters();
     for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
         if ((*it)->touchDown(id, pos, time)) {
             return;
         }
     }
+    m_windowUpdatedInCycle = false;
 }
 
 void TouchInputRedirection::processUp(qint32 id, quint32 time)
@@ -146,12 +164,14 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time)
     if (!m_inited) {
         return;
     }
+    m_windowUpdatedInCycle = false;
     const auto &filters = m_input->filters();
     for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
         if ((*it)->touchUp(id, time)) {
             return;
         }
     }
+    m_windowUpdatedInCycle = false;
 }
 
 void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32 time)
@@ -159,12 +179,14 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32
     if (!m_inited) {
         return;
     }
+    m_windowUpdatedInCycle = false;
     const auto &filters = m_input->filters();
     for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
         if ((*it)->touchMotion(id, pos, time)) {
             return;
         }
     }
+    m_windowUpdatedInCycle = false;
 }
 
 void TouchInputRedirection::cancel()
