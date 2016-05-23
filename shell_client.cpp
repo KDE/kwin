@@ -89,6 +89,7 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     );
     connect(surface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
     connect(surface->surface(), &SurfaceInterface::unmapped, this, &ShellClient::unmap);
+    connect(surface->surface(), &SurfaceInterface::destroyed, this, &ShellClient::destroyClient);
     connect(surface, &ShellSurfaceInterface::titleChanged, this, &ShellClient::captionChanged);
 
     connect(surface, &ShellSurfaceInterface::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
