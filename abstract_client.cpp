@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationpalette.h"
+#include "decorations/decorationbridge.h"
 #include "cursor.h"
 #include "effects.h"
 #include "focuschain.h"
@@ -64,6 +65,8 @@ AbstractClient::AbstractClient()
     connect(this, &AbstractClient::clientFinishUserMovedResized, this, &AbstractClient::setupCheckScreenConnection);
 
     connect(this, &AbstractClient::paletteChanged, this, &AbstractClient::triggerDecorationRepaint);
+
+    connect(Decoration::DecorationBridge::self(), &QObject::destroyed, this, &AbstractClient::destroyDecoration);
 }
 
 AbstractClient::~AbstractClient()
