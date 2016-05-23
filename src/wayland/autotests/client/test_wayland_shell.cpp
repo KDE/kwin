@@ -729,6 +729,11 @@ void TestWaylandShell::testDisconnect()
     QVERIFY(clientDisconnectedSpy.wait());
     QCOMPARE(clientDisconnectedSpy.count(), 1);
     QCOMPARE(shellSurfaceDestroyedSpy.count(), 0);
+    // it's already unbound, but the shell surface is not yet destroyed
+    QVERIFY(!serverSurface->resource());
+    // ensure we don't crash when accessing it in this state
+    serverSurface->ping();
+    serverSurface->requestSize(QSize(1, 2));
     QVERIFY(shellSurfaceDestroyedSpy.wait());
     QCOMPARE(shellSurfaceDestroyedSpy.count(), 1);
 

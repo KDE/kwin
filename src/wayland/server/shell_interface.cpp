@@ -216,6 +216,9 @@ void ShellSurfaceInterface::Private::pong(quint32 serial)
 void ShellSurfaceInterface::ping()
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     d->ping();
 }
 
@@ -245,6 +248,9 @@ bool ShellSurfaceInterface::isPinged() const
 void ShellSurfaceInterface::requestSize(const QSize &size)
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     // TODO: what about the edges?
     wl_shell_surface_send_configure(d->resource, 0, size.width(), size.height());
     d->client->flush();
