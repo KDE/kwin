@@ -125,6 +125,36 @@ Q_SIGNALS:
      * Requests a pointer axis for the given @p orientation by @p delta.
      **/
     void pointerAxisRequested(Qt::Orientation orientation, qreal delta);
+    /**
+     * Requests a touch down at @p pos and identified by @p id.
+     *
+     * @since 5.23
+     **/
+    void touchDownRequested(quint32 id, const QPointF &pos);
+    /**
+     * Requests a touch motion by @p pos and identified by @p id.
+     *
+     * @since 5.23
+     **/
+    void touchMotionRequested(quint32 id, const QPointF &pos);
+    /**
+     * Requests a touch up identified by @p id.
+     *
+     * @since 5.23
+     **/
+    void touchUpRequested(quint32 id);
+    /**
+     * Requests a touch cancel event.
+     *
+     * @since 5.23
+     **/
+    void touchCancelRequested();
+    /**
+     * Requests a touch frame event.
+     *
+     * @since 5.23
+     **/
+    void touchFrameRequested();
 
 private:
     friend class FakeInputInterface;

@@ -50,6 +50,7 @@ private Q_SLOTS:
     void testPointerButtonLinux();
     void testAxis_data();
     void testAxis();
+    void testTouch();
 
 private:
     Display *m_display = nullptr;
@@ -316,6 +317,86 @@ void FakeInputTest::testAxis()
     QCOMPARE(axisSpy.first().at(0).value<Qt::Orientation>(), orientation);
     QCOMPARE(axisSpy.first().at(1).value<qreal>(), delta);
 }
+
+void FakeInputTest::testTouch()
+{
+    QVERIFY(!m_device->isAuthenticated());
+    QSignalSpy touchDownSpy(m_device, &FakeInputDevice::touchDownRequested);
+    QVERIFY(touchDownSpy.isValid());
+    QSignalSpy touchMotionSpy(m_device, &FakeInputDevice::touchMotionRequested);
+    QVERIFY(touchMotionSpy.isValid());
+    QSignalSpy touchUpSpy(m_device, &FakeInputDevice::touchUpRequested);
+    QVERIFY(touchUpSpy.isValid());
+    QSignalSpy touchFrameSpy(m_device, &FakeInputDevice::touchFrameRequested);
+    QVERIFY(touchFrameSpy.isValid());
+    QSignalSpy touchCancelSpy(m_device, &FakeInputDevice::touchCancelRequested);
+    QVERIFY(touchCancelSpy.isValid());
+
+    // without an authentication we shouldn't get the signals
+    m_fakeInput->requestTouchDown(0, QPointF(1, 2));
+    QVERIFY(!touchDownSpy.wait(100));
+
+    m_fakeInput->requestTouchMotion(0, QPointF(3, 4));
+    QVERIFY(!touchMotionSpy.wait(100));
+
+    m_fakeInput->requestTouchUp(0);
+    QVERIFY(!touchUpSpy.wait(100));
+
+    m_fakeInput->requestTouchDown(1, QPointF(5, 6));
+    QVERIFY(!touchDownSpy.wait(100));
+
+    m_fakeInput->requestTouchFrame();
+    QVERIFY(!touchFrameSpy.wait(100));
+
+    m_fakeInput->requestTouchCancel();
+    QVERIFY(!touchCancelSpy.wait(100));
+
+    // now let's authenticate the interface
+    m_device->setAuthentication(true);
+    m_fakeInput->requestTouchDown(0, QPointF(1, 2));
+    QVERIFY(touchDownSpy.wait());
+    QCOMPARE(touchDownSpy.count(), 1);
+    QCOMPARE(touchDownSpy.last().at(0).value<quint32>(), quint32(0));
+    QCOMPARE(touchDownSpy.last().at(1).toPointF(), QPointF(1, 2));
+
+    // Same id should not trigger another touchDown.
+    m_fakeInput->requestTouchDown(0, QPointF(5,6));
+    QVERIFY(!touchDownSpy.wait(100));
+
+    m_fakeInput->requestTouchMotion(0, QPointF(3, 4));
+    QVERIFY(touchMotionSpy.wait());
+    QCOMPARE(touchMotionSpy.count(), 1);
+    QCOMPARE(touchMotionSpy.last().at(0).value<quint32>(), quint32(0));
+    QCOMPARE(touchMotionSpy.last().at(1).toPointF(), QPointF(3, 4));
+
+    // touchMotion with bogus id should not trigger signal.
+    m_fakeInput->requestTouchMotion(1, QPointF(3, 4));
+    QVERIFY(!touchMotionSpy.wait(100));
+
+    m_fakeInput->requestTouchUp(0);
+    QVERIFY(touchUpSpy.wait());
+    QCOMPARE(touchUpSpy.count(), 1);
+    QCOMPARE(touchUpSpy.last().at(0).value<quint32>(), quint32(0));
+
+    // touchUp with bogus id should not trigger signal.
+    m_fakeInput->requestTouchUp(1);
+    QVERIFY(!touchUpSpy.wait(100));
+
+    m_fakeInput->requestTouchDown(1, QPointF(5, 6));
+    QVERIFY(touchDownSpy.wait());
+    QCOMPARE(touchDownSpy.count(), 2);
+    QCOMPARE(touchDownSpy.last().at(0).value<quint32>(), quint32(1));
+    QCOMPARE(touchDownSpy.last().at(1).toPointF(), QPointF(5, 6));
+
+    m_fakeInput->requestTouchFrame();
+    QVERIFY(touchFrameSpy.wait());
+    QCOMPARE(touchFrameSpy.count(), 1);
+
+    m_fakeInput->requestTouchCancel();
+    QVERIFY(touchCancelSpy.wait());
+    QCOMPARE(touchCancelSpy.count(), 1);
+}
+
 
 QTEST_GUILESS_MAIN(FakeInputTest)
 #include "test_fake_input.moc"

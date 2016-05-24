@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "global_p.h"
 
 #include <QSizeF>
+#include <QPointF>
 
 #include <wayland-server.h>
 #include <wayland-fake-input-server-protocol.h>
@@ -43,6 +44,11 @@ private:
     static void pointerMotionCallback(wl_client *client, wl_resource *resource, wl_fixed_t delta_x, wl_fixed_t delta_y);
     static void buttonCallback(wl_client *client, wl_resource *resource, uint32_t button, uint32_t state);
     static void axisCallback(wl_client *client, wl_resource *resource, uint32_t axis, wl_fixed_t value);
+    static void touchDownCallback(wl_client *client, wl_resource *resource, quint32 id, wl_fixed_t x, wl_fixed_t y);
+    static void touchMotionCallback(wl_client *client, wl_resource *resource, quint32 id, wl_fixed_t x, wl_fixed_t y);
+    static void touchUpCallback(wl_client *client, wl_resource *resource, quint32 id);
+    static void touchCancelCallback(wl_client *client, wl_resource *resource);
+    static void touchFrameCallback(wl_client *client, wl_resource *resource);
 
     static void unbind(wl_resource *resource);
     static Private *cast(wl_resource *r) {
@@ -53,6 +59,7 @@ private:
     FakeInputInterface *q;
     static const struct org_kde_kwin_fake_input_interface s_interface;
     static const quint32 s_version;
+    static QList<quint32> touchIds;
 };
 
 class FakeInputDevice::Private
@@ -67,14 +74,20 @@ private:
     FakeInputDevice *q;
 };
 
-const quint32 FakeInputInterface::Private::s_version = 1;
+const quint32 FakeInputInterface::Private::s_version = 2;
+QList<quint32> FakeInputInterface::Private::touchIds = QList<quint32>();
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_fake_input_interface FakeInputInterface::Private::s_interface = {
     authenticateCallback,
     pointerMotionCallback,
     buttonCallback,
-    axisCallback
+    axisCallback,
+    touchDownCallback,
+    touchMotionCallback,
+    touchUpCallback,
+    touchCancelCallback,
+    touchFrameCallback
 };
 #endif
 
@@ -176,6 +189,68 @@ void FakeInputInterface::Private::buttonCallback(wl_client *client, wl_resource 
         // nothing
         break;
     }
+}
+
+void FakeInputInterface::Private::touchDownCallback(wl_client *client, wl_resource *resource, quint32 id, wl_fixed_t x, wl_fixed_t y)
+{
+    Q_UNUSED(client)
+    FakeInputDevice *d = device(resource);
+    if (!d || !d->isAuthenticated()) {
+        return;
+    }
+    if (touchIds.contains(id)) {
+        return;
+    }
+    touchIds << id;
+    emit d->touchDownRequested(id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
+}
+
+void FakeInputInterface::Private::touchMotionCallback(wl_client *client, wl_resource *resource, quint32 id, wl_fixed_t x, wl_fixed_t y)
+{
+    Q_UNUSED(client)
+    FakeInputDevice *d = device(resource);
+    if (!d || !d->isAuthenticated()) {
+        return;
+    }
+    if (!touchIds.contains(id)) {
+        return;
+    }
+    emit d->touchMotionRequested(id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
+}
+
+void FakeInputInterface::Private::touchUpCallback(wl_client *client, wl_resource *resource, quint32 id)
+{
+    Q_UNUSED(client)
+    FakeInputDevice *d = device(resource);
+    if (!d || !d->isAuthenticated()) {
+        return;
+    }
+    if (!touchIds.contains(id)) {
+        return;
+    }
+    touchIds.removeOne(id);
+    emit d->touchUpRequested(id);
+}
+
+void FakeInputInterface::Private::touchCancelCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    FakeInputDevice *d = device(resource);
+    if (!d || !d->isAuthenticated()) {
+        return;
+    }
+    touchIds.clear();
+    emit d->touchCancelRequested();
+}
+
+void FakeInputInterface::Private::touchFrameCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    FakeInputDevice *d = device(resource);
+    if (!d || !d->isAuthenticated()) {
+        return;
+    }
+    emit d->touchFrameRequested();
 }
 
 FakeInputInterface::FakeInputInterface(Display *display, QObject *parent)
