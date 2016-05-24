@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "debug_console.h"
 #include "client.h"
+#include "input_event.h"
 #include "main.h"
 #include "shell_client.h"
 #include "unmanaged.h"
@@ -127,6 +128,16 @@ static QString buttonToString(Qt::MouseButton button)
     }
 }
 
+#if HAVE_INPUT
+static QString deviceRow(LibInput::Device *device)
+{
+    if (!device) {
+        return tableRow(i18n("Input Device"), i18nc("The input device of the event is not known", "Unknown"));
+    }
+    return tableRow(i18n("Input Device"), QStringLiteral("%1 (%2)").arg(device->name()).arg(device->sysName()));
+}
+#endif
+
 static QString buttonsToString(Qt::MouseButtons buttons)
 {
     QString ret;
@@ -160,11 +171,17 @@ bool DebugConsoleFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
     switch (event->type()) {
     case QEvent::MouseMove:
         text.append(tableHeaderRow(i18nc("A mouse pointer motion event", "Pointer Motion")));
+#if HAVE_INPUT
+        text.append(deviceRow(static_cast<MouseEvent*>(event)->device()));
+#endif
         text.append(timestamp);
         text.append(tableRow(i18nc("The global mouse pointer position", "Global Position"), QStringLiteral("%1/%2").arg(event->pos().x()).arg(event->pos().y())));
         break;
     case QEvent::MouseButtonPress:
         text.append(tableHeaderRow(i18nc("A mouse pointer button press event", "Pointer Button Press")));
+#if HAVE_INPUT
+        text.append(deviceRow(static_cast<MouseEvent*>(event)->device()));
+#endif
         text.append(timestamp);
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
         text.append(tableRow(i18nc("A button in a mouse press/release event",  "Native Button code"), nativeButton));
@@ -172,6 +189,9 @@ bool DebugConsoleFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         break;
     case QEvent::MouseButtonRelease:
         text.append(tableHeaderRow(i18nc("A mouse pointer button release event", "Pointer Button Release")));
+#if HAVE_INPUT
+        text.append(deviceRow(static_cast<MouseEvent*>(event)->device()));
+#endif
         text.append(timestamp);
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), nativeButton));
@@ -192,6 +212,9 @@ bool DebugConsoleFilter::wheelEvent(QWheelEvent *event)
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A mouse pointer axis (wheel) event", "Pointer Axis")));
+#if HAVE_INPUT
+        text.append(deviceRow(static_cast<WheelEvent*>(event)->device()));
+#endif
     text.append(timestampRow(event->timestamp()));
     const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
     text.append(tableRow(i18nc("The orientation of a pointer axis event", "Orientation"),
@@ -220,6 +243,9 @@ bool DebugConsoleFilter::keyEvent(QKeyEvent *event)
     default:
         break;
     }
+#if HAVE_INPUT
+        text.append(deviceRow(static_cast<KeyEvent*>(event)->device()));
+#endif
     auto modifiersToString = [event] {
         QString ret;
         if (event->modifiers().testFlag(Qt::ShiftModifier)) {
