@@ -414,5 +414,5 @@ void TestLibinputDevice::testLeftHanded()
     QCOMPARE(leftHandedChangedSpy.isEmpty(), (supported && initValue) == expectedValue);
 }
 
-QTEST_MAIN(TestLibinputDevice)
+QTEST_GUILESS_MAIN(TestLibinputDevice)
 #include "device_test.moc"
