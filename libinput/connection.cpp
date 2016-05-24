@@ -214,7 +214,7 @@ void Connection::processEvents()
         QScopedPointer<Event> event(m_eventQueue.takeFirst());
         switch (event->type()) {
             case LIBINPUT_EVENT_DEVICE_ADDED: {
-                auto device = new Device(event->device(), this);
+                auto device = new Device(event->nativeDevice(), this);
                 m_devices << device;
                 if (device->isKeyboard()) {
                     m_keyboard++;
@@ -245,7 +245,7 @@ void Connection::processEvents()
                 break;
             }
             case LIBINPUT_EVENT_DEVICE_REMOVED: {
-                auto it = std::find_if(m_devices.begin(), m_devices.end(), [&event] (Device *d) { return event->device() == d->device(); } );
+                auto it = std::find_if(m_devices.begin(), m_devices.end(), [&event] (Device *d) { return event->device() == d; } );
                 if (it == m_devices.end()) {
                     // we don't know this device
                     break;

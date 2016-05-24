@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "events.h"
+#include "device.h"
 
 #include <QSize>
 
@@ -56,6 +57,7 @@ Event *Event::create(libinput_event *event)
 Event::Event(libinput_event *event, libinput_event_type type)
     : m_event(event)
     , m_type(type)
+    , m_device(Device::getDevice(libinput_event_get_device(m_event)))
 {
 }
 
@@ -64,8 +66,11 @@ Event::~Event()
     libinput_event_destroy(m_event);
 }
 
-libinput_device *Event::device() const
+libinput_device *Event::nativeDevice() const
 {
+    if (m_device) {
+        return m_device->device();
+    }
     return libinput_event_get_device(m_event);
 }
 

@@ -29,13 +29,18 @@ namespace KWin
 namespace LibInput
 {
 
+class Device;
+
 class Event
 {
 public:
     virtual ~Event();
 
     libinput_event_type type() const;
-    libinput_device *device() const;
+    Device *device() const {
+        return m_device;
+    }
+    libinput_device *nativeDevice() const;
 
     operator libinput_event*() {
         return m_event;
@@ -52,6 +57,7 @@ protected:
 private:
     libinput_event *m_event;
     libinput_event_type m_type;
+    Device *m_device;
 };
 
 class KeyEvent : public Event
