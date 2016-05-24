@@ -60,6 +60,9 @@ public:
     bool hasKeyboard() const {
         return m_keyboard > 0;
     }
+    bool hasAlphaNumericKeyboard() const {
+        return m_alphaNumericKeyboard > 0;
+    }
     bool hasTouch() const {
         return m_touch > 0;
     }
@@ -91,6 +94,7 @@ Q_SIGNALS:
     void touchUp(qint32 id, quint32 time);
     void touchMotion(qint32 id, const QPointF &absolutePos, quint32 time);
     void hasKeyboardChanged(bool);
+    void hasAlphaNumericKeyboardChanged(bool);
     void hasPointerChanged(bool);
     void hasTouchChanged(bool);
     void deviceAdded(KWin::LibInput::Device *);
@@ -110,9 +114,11 @@ private:
     QSocketNotifier *m_notifier;
     QSize m_size;
     int m_keyboard = 0;
+    int m_alphaNumericKeyboard = 0;
     int m_pointer = 0;
     int m_touch = 0;
     bool m_keyboardBeforeSuspend = false;
+    bool m_alphaNumericKeyboardBeforeSuspend = false;
     bool m_pointerBeforeSuspend = false;
     bool m_touchBeforeSuspend = false;
     QMutex m_mutex;

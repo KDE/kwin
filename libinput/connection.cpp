@@ -183,6 +183,7 @@ void Connection::deactivate()
         return;
     }
     m_keyboardBeforeSuspend = hasKeyboard();
+    m_alphaNumericKeyboardBeforeSuspend = hasAlphaNumericKeyboard();
     m_pointerBeforeSuspend = hasPointer();
     m_touchBeforeSuspend = hasTouch();
     m_input->suspend();
@@ -217,6 +218,12 @@ void Connection::processEvents()
                 m_devices << device;
                 if (device->isKeyboard()) {
                     m_keyboard++;
+                    if (device->isAlphaNumericKeyboard()) {
+                        m_alphaNumericKeyboard++;
+                        if (m_alphaNumericKeyboard == 1) {
+                            emit hasAlphaNumericKeyboardChanged(true);
+                        }
+                    }
                     if (m_keyboard == 1) {
                         emit hasKeyboardChanged(true);
                     }
@@ -249,6 +256,12 @@ void Connection::processEvents()
 
                 if (device->isKeyboard()) {
                     m_keyboard--;
+                    if (device->isAlphaNumericKeyboard()) {
+                        m_alphaNumericKeyboard--;
+                        if (m_alphaNumericKeyboard == 0) {
+                            emit hasAlphaNumericKeyboardChanged(false);
+                        }
+                    }
                     if (m_keyboard == 0) {
                         emit hasKeyboardChanged(false);
                     }
@@ -362,6 +375,9 @@ void Connection::processEvents()
     if (wasSuspended) {
         if (m_keyboardBeforeSuspend && !m_keyboard) {
             emit hasKeyboardChanged(false);
+        }
+        if (m_alphaNumericKeyboardBeforeSuspend && !m_alphaNumericKeyboardBeforeSuspend) {
+            emit hasAlphaNumericKeyboardChanged(false);
         }
         if (m_pointerBeforeSuspend && !m_pointer) {
             emit hasPointerChanged(false);
