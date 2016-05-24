@@ -19,6 +19,7 @@
 */
 #include "../input.h"
 #include "../libinput/connection.h"
+#include "../libinput/device.h"
 #include "../logind.h"
 
 #include <QCoreApplication>

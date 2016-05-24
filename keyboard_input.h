@@ -42,6 +42,11 @@ namespace KWin
 class InputRedirection;
 class Toplevel;
 
+namespace LibInput
+{
+class Device;
+}
+
 class Xkb
 {
 public:
@@ -96,7 +101,7 @@ public:
     /**
      * @internal
      */
-    void processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time);
+    void processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, LibInput::Device *device = nullptr);
     /**
      * @internal
      */

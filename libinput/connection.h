@@ -83,16 +83,16 @@ public:
     }
 
 Q_SIGNALS:
-    void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time);
-    void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time);
-    void pointerMotionAbsolute(QPointF orig, QPointF screen, quint32 time);
-    void pointerMotion(QPointF delta, quint32 time);
-    void pointerAxisChanged(KWin::InputRedirection::PointerAxis axis, qreal delta, quint32 time);
-    void touchFrame();
-    void touchCanceled();
-    void touchDown(qint32 id, const QPointF &absolutePos, quint32 time);
-    void touchUp(qint32 id, quint32 time);
-    void touchMotion(qint32 id, const QPointF &absolutePos, quint32 time);
+    void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time, KWin::LibInput::Device *device);
+    void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time, KWin::LibInput::Device *device);
+    void pointerMotionAbsolute(QPointF orig, QPointF screen, quint32 time, KWin::LibInput::Device *device);
+    void pointerMotion(QPointF delta, quint32 time, KWin::LibInput::Device *device);
+    void pointerAxisChanged(KWin::InputRedirection::PointerAxis axis, qreal delta, quint32 time, KWin::LibInput::Device *device);
+    void touchFrame(KWin::LibInput::Device *device);
+    void touchCanceled(KWin::LibInput::Device *device);
+    void touchDown(qint32 id, const QPointF &absolutePos, quint32 time, KWin::LibInput::Device *device);
+    void touchUp(qint32 id, quint32 time, KWin::LibInput::Device *device);
+    void touchMotion(qint32 id, const QPointF &absolutePos, quint32 time, KWin::LibInput::Device *device);
     void hasKeyboardChanged(bool);
     void hasAlphaNumericKeyboardChanged(bool);
     void hasPointerChanged(bool);

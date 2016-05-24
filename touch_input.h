@@ -37,6 +37,11 @@ namespace Decoration
 class DecoratedClientImpl;
 }
 
+namespace LibInput
+{
+class Device;
+}
+
 class TouchInputRedirection : public InputDeviceHandler
 {
     Q_OBJECT
@@ -47,9 +52,9 @@ public:
     void update(const QPointF &pos = QPointF());
     void init();
 
-    void processDown(qint32 id, const QPointF &pos, quint32 time);
-    void processUp(qint32 id, quint32 time);
-    void processMotion(qint32 id, const QPointF &pos, quint32 time);
+    void processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
+    void processUp(qint32 id, quint32 time, LibInput::Device *device = nullptr);
+    void processMotion(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
     void cancel();
     void frame();
 

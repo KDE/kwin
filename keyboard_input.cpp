@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "keyboard_input.h"
+#include "input_event.h"
 #include "abstract_client.h"
 #include "options.h"
 #include "utils.h"
@@ -447,7 +448,7 @@ void KeyboardInputRedirection::update()
     }
 }
 
-void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
+void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, LibInput::Device *device)
 {
     if (!m_inited) {
         return;
@@ -478,15 +479,15 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     }
 
     const xkb_keysym_t keySym = m_xkb->toKeysym(key);
-    QKeyEvent event(type,
-                    m_xkb->toQtKey(keySym),
-                    m_xkb->modifiers(),
-                    key,
-                    keySym,
-                    0,
-                    m_xkb->toString(m_xkb->toKeysym(key)),
-                    autoRepeat);
-    event.setTimestamp(time);
+    KeyEvent event(type,
+                   m_xkb->toQtKey(keySym),
+                   m_xkb->modifiers(),
+                   key,
+                   keySym,
+                   m_xkb->toString(m_xkb->toKeysym(key)),
+                   autoRepeat,
+                   time,
+                   device);
     if (state == InputRedirection::KeyboardKeyPressed) {
         if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyRepeatDelay() != 0) {
             QTimer *timer = new QTimer;

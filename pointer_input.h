@@ -42,6 +42,11 @@ namespace Decoration
 class DecoratedClientImpl;
 }
 
+namespace LibInput
+{
+class Device;
+}
+
 class KWIN_EXPORT PointerInputRedirection : public InputDeviceHandler
 {
     Q_OBJECT
@@ -72,15 +77,15 @@ public:
     /**
      * @internal
      */
-    void processMotion(const QPointF &pos, uint32_t time);
+    void processMotion(const QPointF &pos, uint32_t time, LibInput::Device *device = nullptr);
     /**
      * @internal
      */
-    void processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time);
+    void processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, LibInput::Device *device = nullptr);
     /**
      * @internal
      */
-    void processAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time);
+    void processAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time, LibInput::Device *device = nullptr);
 
 private:
     void updatePosition(const QPointF &pos);

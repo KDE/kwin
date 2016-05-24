@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #if HAVE_INPUT
 #include "libinput/connection.h"
+#include "libinput/device.h"
 #endif
 #include "platform.h"
 #include "shell_client.h"
@@ -1105,14 +1106,14 @@ void InputRedirection::setupLibInput()
         connect(conn, &LibInput::Connection::pointerAxisChanged, m_pointer, &PointerInputRedirection::processAxis);
         connect(conn, &LibInput::Connection::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
         connect(conn, &LibInput::Connection::pointerMotion, this,
-            [this] (QPointF delta, uint32_t time) {
-                m_pointer->processMotion(m_pointer->pos() + delta, time);
+            [this] (QPointF delta, uint32_t time, LibInput::Device *device) {
+                m_pointer->processMotion(m_pointer->pos() + delta, time, device);
             }
         );
         connect(conn, &LibInput::Connection::pointerMotionAbsolute, this,
-            [this] (QPointF orig, QPointF screen, uint32_t time) {
+            [this] (QPointF orig, QPointF screen, uint32_t time, LibInput::Device *device) {
                 Q_UNUSED(orig)
-                m_pointer->processMotion(screen, time);
+                m_pointer->processMotion(screen, time, device);
             }
         );
         connect(conn, &LibInput::Connection::touchDown, m_touch, &TouchInputRedirection::processDown);

@@ -283,7 +283,7 @@ void Connection::processEvents()
             }
             case LIBINPUT_EVENT_KEYBOARD_KEY: {
                 KeyEvent *ke = static_cast<KeyEvent*>(event.data());
-                emit keyChanged(ke->key(), ke->state(), ke->time());
+                emit keyChanged(ke->key(), ke->state(), ke->time(), ke->device());
                 break;
             }
             case LIBINPUT_EVENT_POINTER_AXIS: {
@@ -312,13 +312,13 @@ void Connection::processEvents()
                     }
                 }
                 for (auto it = deltas.constBegin(); it != deltas.constEnd(); ++it) {
-                    emit pointerAxisChanged(it.key(), it.value().delta, it.value().time);
+                    emit pointerAxisChanged(it.key(), it.value().delta, it.value().time, pe->device());
                 }
                 break;
             }
             case LIBINPUT_EVENT_POINTER_BUTTON: {
                 PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                emit pointerButtonChanged(pe->button(), pe->buttonState(), pe->time());
+                emit pointerButtonChanged(pe->button(), pe->buttonState(), pe->time(), pe->device());
                 break;
             }
             case LIBINPUT_EVENT_POINTER_MOTION: {
@@ -336,35 +336,35 @@ void Connection::processEvents()
                         break;
                     }
                 }
-                emit pointerMotion(delta, latestTime);
+                emit pointerMotion(delta, latestTime, pe->device());
                 break;
             }
             case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {
                 PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                emit pointerMotionAbsolute(pe->absolutePos(), pe->absolutePos(m_size), pe->time());
+                emit pointerMotionAbsolute(pe->absolutePos(), pe->absolutePos(m_size), pe->time(), pe->device());
                 break;
             }
             case LIBINPUT_EVENT_TOUCH_DOWN: {
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                emit touchDown(te->id(), te->absolutePos(m_size), te->time());
+                emit touchDown(te->id(), te->absolutePos(m_size), te->time(), te->device());
                 break;
             }
             case LIBINPUT_EVENT_TOUCH_UP: {
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                emit touchUp(te->id(), te->time());
+                emit touchUp(te->id(), te->time(), te->device());
                 break;
             }
             case LIBINPUT_EVENT_TOUCH_MOTION: {
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                emit touchMotion(te->id(), te->absolutePos(m_size), te->time());
+                emit touchMotion(te->id(), te->absolutePos(m_size), te->time(), te->device());
                 break;
             }
             case LIBINPUT_EVENT_TOUCH_CANCEL: {
-                emit touchCanceled();
+                emit touchCanceled(event->device());
                 break;
             }
             case LIBINPUT_EVENT_TOUCH_FRAME: {
-                emit touchFrame();
+                emit touchFrame(event->device());
                 break;
             }
             default:

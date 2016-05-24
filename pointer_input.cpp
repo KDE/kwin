@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pointer_input.h"
 #include "platform.h"
 #include "effects.h"
+#include "input_event.h"
 #include "screens.h"
 #include "shell_client.h"
 #include "wayland_cursor_theme.h"
@@ -159,15 +160,14 @@ void PointerInputRedirection::init()
     updateAfterScreenChange();
 }
 
-void PointerInputRedirection::processMotion(const QPointF &pos, uint32_t time)
+void PointerInputRedirection::processMotion(const QPointF &pos, uint32_t time, LibInput::Device *device)
 {
     if (!m_inited) {
         return;
     }
     updatePosition(pos);
-    QMouseEvent event(QEvent::MouseMove, m_pos.toPoint(), m_pos.toPoint(),
-                      Qt::NoButton, m_qtButtons, m_input->keyboardModifiers());
-    event.setTimestamp(time);
+    MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
+                     m_input->keyboardModifiers(), time, device);
 
     const auto &filters = m_input->filters();
     for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
@@ -177,7 +177,7 @@ void PointerInputRedirection::processMotion(const QPointF &pos, uint32_t time)
     }
 }
 
-void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time)
+void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, LibInput::Device *device)
 {
     if (!m_inited) {
         return;
@@ -197,9 +197,8 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
         return;
     }
 
-    QMouseEvent event(type, m_pos.toPoint(), m_pos.toPoint(),
-                      buttonToQtMouseButton(button), m_qtButtons, m_input->keyboardModifiers());
-    event.setTimestamp(time);
+    MouseEvent event(type, m_pos, buttonToQtMouseButton(button), m_qtButtons,
+                     m_input->keyboardModifiers(), time, device);
 
     const auto &filters = m_input->filters();
     for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
@@ -209,7 +208,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
     }
 }
 
-void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time)
+void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time, LibInput::Device *device)
 {
     if (!m_inited) {
         return;
@@ -220,13 +219,9 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
 
     emit m_input->pointerAxisChanged(axis, delta);
 
-    QWheelEvent wheelEvent(m_pos, m_pos, QPoint(),
-                           (axis == InputRedirection::PointerAxisHorizontal) ? QPoint(delta, 0) : QPoint(0, delta),
-                           delta,
+    WheelEvent wheelEvent(m_pos, delta,
                            (axis == InputRedirection::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
-                           m_qtButtons,
-                           m_input->keyboardModifiers());
-    wheelEvent.setTimestamp(time);
+                           m_qtButtons, m_input->keyboardModifiers(), time, device);
 
     const auto &filters = m_input->filters();
     for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
