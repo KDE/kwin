@@ -52,6 +52,21 @@ static bool checkAlphaNumericKeyboard(libinput_device *device)
     return true;
 }
 
+QVector<Device*> Device::s_devices;
+
+Device *Device::getDevice(libinput_device *native)
+{
+    auto it = std::find_if(s_devices.constBegin(), s_devices.constEnd(),
+        [native] (const Device *d) {
+            return d->device() == native;
+        }
+    );
+    if (it != s_devices.constEnd()) {
+        return *it;
+    }
+    return nullptr;
+}
+
 Device::Device(libinput_device *device, QObject *parent)
     : QObject(parent)
     , m_device(device)
@@ -120,10 +135,13 @@ Device::Device(libinput_device *device, QObject *parent)
     if (m_keyboard) {
         m_alphaNumericKeyboard = checkAlphaNumericKeyboard(m_device);
     }
+
+    s_devices << this;
 }
 
 Device::~Device()
 {
+    s_devices.removeOne(this);
     libinput_device_unref(m_device);
 }
 

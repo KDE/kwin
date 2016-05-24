@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 #include <QSizeF>
+#include <QVector>
 
 struct libinput_device;
 
@@ -155,6 +156,17 @@ public:
         return m_device;
     }
 
+    /**
+     * All created Devices
+     **/
+    static QVector<Device*> devices() {
+        return s_devices;
+    }
+    /**
+     * Gets the Device for @p native. @c null if there is no Device for @p native.
+     **/
+    static Device *getDevice(libinput_device *native);
+
 Q_SIGNALS:
     void leftHandedChanged();
     void pointerAccelerationChanged();
@@ -187,6 +199,8 @@ private:
     bool m_leftHanded;
     qreal m_pointerAcceleration;
     bool m_enabled;
+
+    static QVector<Device*> s_devices;
 };
 
 }
