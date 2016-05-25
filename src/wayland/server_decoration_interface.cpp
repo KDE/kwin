@@ -250,10 +250,6 @@ ServerSideDecorationInterface::Private::Private(ServerSideDecorationInterface *q
 
 ServerSideDecorationInterface::Private::~Private()
 {
-    if (resource) {
-        wl_resource_destroy(resource);
-        resource = nullptr;
-    }
     s_all.removeAll(this);
 }
 

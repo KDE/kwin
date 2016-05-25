@@ -368,10 +368,6 @@ ShadowInterface::Private::~Private()
     CURRENT(bottom)
     CURRENT(bottomLeft)
 #undef CURRENT
-    if (resource) {
-        wl_resource_destroy(resource);
-        resource = nullptr;
-    }
 }
 
 ShadowInterface::ShadowInterface(ShadowManagerInterface *parent, wl_resource *parentResource)

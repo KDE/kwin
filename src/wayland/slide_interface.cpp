@@ -200,13 +200,7 @@ SlideInterface::Private::Private(SlideInterface *q, SlideManagerInterface *c, wl
 {
 }
 
-SlideInterface::Private::~Private()
-{
-    if (resource) {
-        wl_resource_destroy(resource);
-        resource = nullptr;
-    }
-}
+SlideInterface::Private::~Private() = default;
 
 SlideInterface::SlideInterface(SlideManagerInterface *parent, wl_resource *parentResource)
     : Resource(new Private(this, parent, parentResource))

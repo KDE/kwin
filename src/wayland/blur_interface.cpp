@@ -202,13 +202,7 @@ BlurInterface::Private::Private(BlurInterface *q, BlurManagerInterface *c, wl_re
 {
 }
 
-BlurInterface::Private::~Private()
-{
-    if (resource) {
-        wl_resource_destroy(resource);
-        resource = nullptr;
-    }
-}
+BlurInterface::Private::~Private() = default;
 
 BlurInterface::BlurInterface(BlurManagerInterface *parent, wl_resource *parentResource)
     : Resource(new Private(this, parent, parentResource))

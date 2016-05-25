@@ -238,13 +238,7 @@ ContrastInterface::Private::Private(ContrastInterface *q, ContrastManagerInterfa
 {
 }
 
-ContrastInterface::Private::~Private()
-{
-    if (resource) {
-        wl_resource_destroy(resource);
-        resource = nullptr;
-    }
-}
+ContrastInterface::Private::~Private() = default;
 
 ContrastInterface::ContrastInterface(ContrastManagerInterface *parent, wl_resource *parentResource)
     : Resource(new Private(this, parent, parentResource))

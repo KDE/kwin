@@ -205,13 +205,7 @@ OutputConfigurationInterface::Private::Private(OutputConfigurationInterface *q, 
 {
 }
 
-OutputConfigurationInterface::Private::~Private()
-{
-    if (resource) {
-        wl_resource_destroy(resource);
-        resource = nullptr;
-    }
-}
+OutputConfigurationInterface::Private::~Private() = default;
 
 OutputConfigurationInterface::Private *OutputConfigurationInterface::d_func() const
 {

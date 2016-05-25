@@ -235,10 +235,6 @@ void SurfaceInterface::Private::destroy()
     if (current.buffer) {
         current.buffer->unref();
     }
-    if (resource) {
-        wl_resource_destroy(resource);
-        resource = nullptr;
-    }
 }
 
 void SurfaceInterface::Private::swapStates(State *source, State *target, bool emitChanged)
