@@ -122,6 +122,7 @@ private:
     int m_drmId = 0;
     QVector<DrmOutput*> m_outputs;
     DrmBuffer *m_cursor[2];
+    bool m_cursorEnabled = false;
     int m_cursorIndex = 0;
     int m_pageFlipsPending = 0;
     bool m_active = false;

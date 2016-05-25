@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "egl_gbm_backend.h"
 #endif
 // KWayland
+#include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
 // KF5
 #include <KConfigGroup>
@@ -467,6 +468,19 @@ void DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
 
 void DrmBackend::initCursor()
 {
+    m_cursorEnabled = waylandServer()->seat()->hasPointer();
+    connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::hasPointerChanged, this,
+        [this] {
+            m_cursorEnabled = waylandServer()->seat()->hasPointer();
+            for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+                if (m_cursorEnabled) {
+                    (*it)->showCursor(m_cursor[m_cursorIndex]);
+                } else {
+                    (*it)->hideCursor();
+                }
+            }
+        }
+    );
     uint64_t capability = 0;
     QSize cursorSize;
     if (drmGetCap(m_fd, DRM_CAP_CURSOR_WIDTH, &capability) == 0) {
@@ -494,8 +508,10 @@ void DrmBackend::setCursor()
 {
     DrmBuffer *c = m_cursor[m_cursorIndex];
     m_cursorIndex = (m_cursorIndex + 1) % 2;
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->showCursor(c);
+    if (m_cursorEnabled) {
+        for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+            (*it)->showCursor(c);
+        }
     }
     markCursorAsRendered();
 }
@@ -520,6 +536,9 @@ void DrmBackend::updateCursor()
 
 void DrmBackend::hideCursor()
 {
+    if (!m_cursorEnabled) {
+        return;
+    }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         (*it)->hideCursor();
     }
@@ -528,6 +547,9 @@ void DrmBackend::hideCursor()
 void DrmBackend::moveCursor()
 {
     const QPoint p = Cursor::pos() - softwareCursorHotspot();
+    if (!m_cursorEnabled) {
+        return;
+    }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         (*it)->moveCursor(p);
     }
