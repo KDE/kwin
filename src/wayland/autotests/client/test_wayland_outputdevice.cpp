@@ -316,6 +316,7 @@ void TestWaylandOutputDevice::testScaleChange()
     QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -368,6 +369,7 @@ void TestWaylandOutputDevice::testSubPixel()
     QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -417,6 +419,7 @@ void TestWaylandOutputDevice::testTransform()
     QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -444,6 +447,7 @@ void TestWaylandOutputDevice::testEnabled()
     QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -486,6 +490,7 @@ void TestWaylandOutputDevice::testEdid()
     QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -510,6 +515,7 @@ void TestWaylandOutputDevice::testId()
     QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -530,10 +536,14 @@ void TestWaylandOutputDevice::testId()
 
     m_serverOutputDevice->setUuid("42");
     QVERIFY(idChanged.wait());
+    QCOMPARE(idChanged.first().first().toByteArray(), QByteArray("42"));
+    idChanged.clear();
     QCOMPARE(output.uuid(), QByteArray("42"));
 
     m_serverOutputDevice->setUuid("4711");
     QVERIFY(idChanged.wait());
+    QCOMPARE(idChanged.first().first().toByteArray(), QByteArray("4711"));
+    idChanged.clear();
     QCOMPARE(output.uuid(), QByteArray("4711"));
 }
 
@@ -543,6 +553,7 @@ void TestWaylandOutputDevice::testDone()
     QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
