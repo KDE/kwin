@@ -79,7 +79,6 @@ public:
 
 private:
     // interface callbacks
-    static void destroyCallback(wl_client *client, wl_resource *resource);
     static void setOutputCallback(wl_client *client, wl_resource *resource, wl_resource *output);
     static void setPositionCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y);
     static void setRoleCallback(wl_client *client, wl_resource *resource, uint32_t role);
@@ -154,7 +153,7 @@ PlasmaShellSurfaceInterface::Private::Private(PlasmaShellSurfaceInterface *q, Pl
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Private::s_interface = {
-    destroyCallback,
+    resourceDestroyedCallback,
     setOutputCallback,
     setPositionCallback,
     setRoleCallback,
@@ -183,12 +182,6 @@ PlasmaShellInterface *PlasmaShellSurfaceInterface::shell() const {
 PlasmaShellSurfaceInterface::Private *PlasmaShellSurfaceInterface::d_func() const
 {
     return reinterpret_cast<PlasmaShellSurfaceInterface::Private*>(d.data());
-}
-
-void PlasmaShellSurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    wl_resource_destroy(resource);
 }
 
 void PlasmaShellSurfaceInterface::Private::setOutputCallback(wl_client *client, wl_resource *resource, wl_resource *output)

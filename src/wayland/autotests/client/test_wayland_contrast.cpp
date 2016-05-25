@@ -174,6 +174,12 @@ void TestContrast::testCreate()
     QCOMPARE(wl_fixed_from_double(serverSurface->contrast()->contrast()), wl_fixed_from_double(0.2));
     QCOMPARE(wl_fixed_from_double(serverSurface->contrast()->intensity()), wl_fixed_from_double(2.0));
     QCOMPARE(wl_fixed_from_double(serverSurface->contrast()->saturation()), wl_fixed_from_double(1.7));
+
+    // and destroy
+    QSignalSpy destroyedSpy(serverSurface->contrast(), &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    delete contrast;
+    QVERIFY(destroyedSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestContrast)

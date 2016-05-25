@@ -163,6 +163,12 @@ void TestBlur::testCreate()
 
     QVERIFY(blurChanged.wait());
     QCOMPARE(serverSurface->blur()->region(), QRegion(0, 0, 10, 20));
+
+    // and destroy
+    QSignalSpy destroyedSpy(serverSurface->blur(), &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    delete blur;
+    QVERIFY(destroyedSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestBlur)

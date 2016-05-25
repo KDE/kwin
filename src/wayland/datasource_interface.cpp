@@ -47,7 +47,6 @@ private:
     void offer(const QString &mimeType);
 
     static void offerCallback(wl_client *client, wl_resource *resource, const char *mimeType);
-    static void destroyCallack(wl_client *client, wl_resource *resource);
 
     const static struct wl_data_source_interface s_interface;
 };
@@ -55,7 +54,7 @@ private:
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_data_source_interface DataSourceInterface::Private::s_interface = {
     offerCallback,
-    destroyCallack
+    resourceDestroyedCallback
 };
 #endif
 
@@ -65,15 +64,6 @@ DataSourceInterface::Private::Private(DataSourceInterface *q, DataDeviceManagerI
 }
 
 DataSourceInterface::Private::~Private() = default;
-
-void DataSourceInterface::Private::destroyCallack(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    auto p = cast<Private>(resource);
-    wl_resource_destroy(resource);
-    p->resource = nullptr;
-    p->q->deleteLater();
-}
 
 void DataSourceInterface::Private::offerCallback(wl_client *client, wl_resource *resource, const char *mimeType)
 {

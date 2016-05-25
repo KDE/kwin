@@ -34,12 +34,6 @@ namespace KWayland
 namespace Server
 {
 
-void TextInputInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    wl_resource_destroy(resource);
-}
-
 void TextInputInterface::Private::activateCallback(wl_client *client, wl_resource *resource, wl_resource *seat, wl_resource *surface)
 {
     auto p = cast<Private>(resource);

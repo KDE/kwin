@@ -201,6 +201,12 @@ void TestServerSideDecoration::testCreate()
     QVERIFY(modeChangedSpy.wait());
     QCOMPARE(modeChangedSpy.count(), 1);
     QTEST(serverSideDecoration->mode(), "clientMode");
+
+    // and destroy
+    QSignalSpy destroyedSpy(serverDeco, &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    serverSideDecoration.reset();
+    QVERIFY(destroyedSpy.wait());
 }
 
 void TestServerSideDecoration::testRequest_data()

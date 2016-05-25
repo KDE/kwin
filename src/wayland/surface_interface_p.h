@@ -104,7 +104,6 @@ private:
 
     static void destroyFrameCallback(wl_resource *r);
 
-    static void destroyCallback(wl_client *client, wl_resource *resource);
     static void attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy);
     static void damageCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
     static void frameCallaback(wl_client *client, wl_resource *resource, uint32_t callback);

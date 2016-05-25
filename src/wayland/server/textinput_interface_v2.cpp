@@ -65,7 +65,7 @@ private:
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct zwp_text_input_v2_interface TextInputUnstableV2Interface::Private::s_interface = {
-    destroyCallback,
+    resourceDestroyedCallback,
     enableCallback,
     disableCallback,
     showInputPanelCallback,

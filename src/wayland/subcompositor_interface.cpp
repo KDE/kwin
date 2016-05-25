@@ -129,7 +129,7 @@ SubCompositorInterface::~SubCompositorInterface() = default;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_subsurface_interface SubSurfaceInterface::Private::s_interface = {
-    destroyCallback,
+    resourceDestroyedCallback,
     setPositionCallback,
     placeAboveCallback,
     placeBelowCallback,
@@ -202,12 +202,6 @@ void SubSurfaceInterface::Private::commit()
     if (surface) {
         surface->d_func()->commitSubSurface();
     }
-}
-
-void SubSurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    wl_resource_destroy(resource);
 }
 
 void SubSurfaceInterface::Private::setPositionCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y)

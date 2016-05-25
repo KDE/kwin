@@ -183,7 +183,6 @@ public:
     static ServerSideDecorationInterface *get(SurfaceInterface *s);
 
 private:
-    static void releaseCallback(wl_client *client, wl_resource *resource);
     static void requestModeCallback(wl_client *client, wl_resource *resource, uint32_t mode);
 
     ServerSideDecorationInterface *q_func() {
@@ -196,19 +195,11 @@ private:
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_server_decoration_interface ServerSideDecorationInterface::Private::s_interface = {
-    releaseCallback,
+    resourceDestroyedCallback,
     requestModeCallback
 };
 QVector<ServerSideDecorationInterface::Private*> ServerSideDecorationInterface::Private::s_all;
 #endif
-
-void ServerSideDecorationInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    Private *p = cast<Private>(resource);
-    wl_resource_destroy(resource);
-    p->q->deleteLater();
-}
 
 void ServerSideDecorationInterface::Private::requestModeCallback(wl_client *client, wl_resource *resource, uint32_t mode)
 {

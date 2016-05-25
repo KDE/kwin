@@ -46,7 +46,6 @@ private:
     void receive(const QString &mimeType, qint32 fd);
     static void acceptCallback(wl_client *client, wl_resource *resource, uint32_t serial, const char *mimeType);
     static void receiveCallback(wl_client *client, wl_resource *resource, const char *mimeType, int32_t fd);
-    static void destroyCallback(wl_client *client, wl_resource *resource);
 
     static const struct wl_data_offer_interface s_interface;
 };
@@ -55,7 +54,7 @@ private:
 const struct wl_data_offer_interface DataOfferInterface::Private::s_interface = {
     acceptCallback,
     receiveCallback,
-    destroyCallback
+    resourceDestroyedCallback
 };
 #endif
 
@@ -78,12 +77,6 @@ void DataOfferInterface::Private::acceptCallback(wl_client *client, wl_resource 
         return;
     }
     p->source->accept(mimeType ? QString::fromUtf8(mimeType) : QString());
-}
-
-void DataOfferInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    wl_resource_destroy(resource);
 }
 
 void DataOfferInterface::Private::receiveCallback(wl_client *client, wl_resource *resource, const char *mimeType, int32_t fd)

@@ -42,7 +42,6 @@ private:
     void add(const QRect &rect);
     void subtract(const QRect &rect);
 
-    static void destroyCallback(wl_client *client, wl_resource *r);
     static void addCallback(wl_client *client, wl_resource *r, int32_t x, int32_t y, int32_t width, int32_t height);
     static void subtractCallback(wl_client *client, wl_resource *r, int32_t x, int32_t y, int32_t width, int32_t height);
 
@@ -51,7 +50,7 @@ private:
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_region_interface RegionInterface::Private::s_interface = {
-    destroyCallback,
+    resourceDestroyedCallback,
     addCallback,
     subtractCallback
 };
@@ -91,12 +90,6 @@ void RegionInterface::Private::subtractCallback(wl_client *client, wl_resource *
 {
     Q_UNUSED(client)
     cast<Private>(r)->subtract(QRect(x, y, width, height));
-}
-
-void RegionInterface::Private::destroyCallback(wl_client *client, wl_resource *r)
-{
-    Q_UNUSED(client)
-    wl_resource_destroy(r);
 }
 
 RegionInterface::RegionInterface(CompositorInterface *parent, wl_resource *parentResource)

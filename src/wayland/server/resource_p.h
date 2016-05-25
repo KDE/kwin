@@ -79,6 +79,7 @@ protected:
         return r ? reinterpret_cast<Derived*>(wl_resource_get_user_data(r)) : nullptr;
     }
     static void unbind(wl_resource *resource);
+    static void resourceDestroyedCallback(wl_client *client, wl_resource *resource);
 
     Resource *q;
     static QList<Private*> s_allResources;

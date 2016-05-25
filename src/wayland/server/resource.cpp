@@ -67,6 +67,13 @@ void Resource::Private::unbind(wl_resource *r)
     p->q->deleteLater();
 }
 
+
+void Resource::Private::resourceDestroyedCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    wl_resource_destroy(resource);
+}
+
 Resource::Resource(Resource::Private *d, QObject *parent)
     : QObject(parent)
     , d(d)

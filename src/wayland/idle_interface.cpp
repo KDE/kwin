@@ -63,7 +63,6 @@ public:
     QTimer *timer = nullptr;
 
 private:
-    static void releaseCallback(wl_client *client, wl_resource *resource);
     static void simulateUserActivityCallback(wl_client *client, wl_resource *resource);
     IdleTimeoutInterface *q_func() {
         return reinterpret_cast<IdleTimeoutInterface*>(q);
@@ -126,7 +125,7 @@ IdleInterface::~IdleInterface() = default;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_idle_timeout_interface IdleTimeoutInterface::Private::s_interface = {
-    releaseCallback,
+    resourceDestroyedCallback,
     simulateUserActivityCallback
 };
 #endif
@@ -138,14 +137,6 @@ IdleTimeoutInterface::Private::Private(SeatInterface *seat, IdleTimeoutInterface
 }
 
 IdleTimeoutInterface::Private::~Private() = default;
-
-void IdleTimeoutInterface::Private::releaseCallback(wl_client* client, wl_resource* resource)
-{
-    Q_UNUSED(client);
-    Private *p = reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
-    wl_resource_destroy(resource);
-    p->q->deleteLater();
-}
 
 void IdleTimeoutInterface::Private::simulateUserActivityCallback(wl_client *client, wl_resource *resource)
 {

@@ -86,7 +86,6 @@ public:
 protected:
     Private(TextInputInterface *q, Global *c, wl_resource *parentResource, const wl_interface *interface, const void *implementation);
 
-    static void destroyCallback(wl_client *client, wl_resource *resource);
     static void activateCallback(wl_client *client, wl_resource *resource, wl_resource * seat, wl_resource * surface);
     static void deactivateCallback(wl_client *client, wl_resource *resource, wl_resource * seat);
     static void enableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);

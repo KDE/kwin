@@ -75,7 +75,6 @@ public:
 
 private:
     static void setCallback(wl_client *client, wl_resource *resource, uint32_t mode);
-    static void releaseCallback(wl_client *client, wl_resource *resource);
     static const struct org_kde_kwin_dpms_interface s_interface;
 };
 

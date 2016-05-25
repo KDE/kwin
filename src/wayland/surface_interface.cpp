@@ -176,7 +176,7 @@ void SurfaceInterface::Private::setContrast(const QPointer<ContrastInterface> &c
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
-    destroyCallback,
+    resourceDestroyedCallback,
     attachCallback,
     damageCallback,
     frameCallaback,
@@ -488,12 +488,6 @@ void SurfaceInterface::Private::destroyFrameCallback(wl_resource *r)
     s->current.callbacks.removeAll(r);
     s->pending.callbacks.removeAll(r);
     s->subSurfacePending.callbacks.removeAll(r);
-}
-
-void SurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    wl_resource_destroy(resource);
 }
 
 void SurfaceInterface::Private::attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy)

@@ -162,7 +162,6 @@ private:
     static void setContrastCallback(wl_client *client, wl_resource *resource, wl_fixed_t contrast);
     static void setIntensityCallback(wl_client *client, wl_resource *resource, wl_fixed_t intensity);
     static void setSaturationCallback(wl_client *client, wl_resource *resource, wl_fixed_t saturation);
-    static void releaseCallback(wl_client *client, wl_resource *resource);
 
     static const struct org_kde_kwin_contrast_interface s_interface;
 };
@@ -174,7 +173,7 @@ const struct org_kde_kwin_contrast_interface ContrastInterface::Private::s_inter
     setContrastCallback,
     setIntensityCallback,
     setSaturationCallback,
-    releaseCallback
+    resourceDestroyedCallback
 };
 #endif
 
@@ -223,14 +222,6 @@ void ContrastInterface::Private::setSaturationCallback(wl_client *client, wl_res
     Q_UNUSED(client)
     Private *p = cast<Private>(resource);
     p->pendingSaturation = wl_fixed_to_double(saturation);
-}
-
-void ContrastInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client);
-    Private *p = reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
-    wl_resource_destroy(resource);
-    p->q->deleteLater();
 }
 
 ContrastInterface::Private::Private(ContrastInterface *q, ContrastManagerInterface *c, wl_resource *parentResource)

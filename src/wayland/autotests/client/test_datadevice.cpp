@@ -191,6 +191,12 @@ void TestDataDevice::testCreate()
     QVERIFY(!deviceInterface->icon());
     QVERIFY(!deviceInterface->selection());
     QVERIFY(deviceInterface->parentResource());
+
+    // and destroy
+    QSignalSpy destroyedSpy(deviceInterface, &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    dataDevice.reset();
+    QVERIFY(destroyedSpy.wait());
 }
 
 void TestDataDevice::testDrag()

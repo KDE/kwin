@@ -78,7 +78,7 @@ DpmsManagerInterface::~DpmsManagerInterface() = default;
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_dpms_interface DpmsInterface::Private::s_interface = {
     setCallback,
-    releaseCallback
+    resourceDestroyedCallback
 };
 #endif
 
@@ -109,14 +109,6 @@ void DpmsInterface::Private::setCallback(wl_client *client, wl_resource *resourc
         return;
     }
     emit cast<Private>(resource)->output->dpmsModeRequested(dpmsMode);
-}
-
-void DpmsInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    Private *p = reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
-    wl_resource_destroy(resource);
-    p->q->deleteLater();
 }
 
 DpmsInterface::DpmsInterface(OutputInterface *output, wl_resource *parentResource, DpmsManagerInterface *manager)
