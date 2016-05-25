@@ -1126,10 +1126,10 @@ void InputRedirection::setupLibInput()
             connect(kwinApp(), &Application::screensCreated, this, &InputRedirection::setupLibInputWithScreens);
         }
         if (auto s = findSeat()) {
-            s->setHasKeyboard(conn->hasKeyboard());
+            s->setHasKeyboard(conn->hasAlphaNumericKeyboard());
             s->setHasPointer(conn->hasPointer());
             s->setHasTouch(conn->hasTouch());
-            connect(conn, &LibInput::Connection::hasKeyboardChanged, this,
+            connect(conn, &LibInput::Connection::hasAlphaNumericKeyboardChanged, this,
                 [this, s] (bool set) {
                     if (m_libInput->isSuspended()) {
                         return;
