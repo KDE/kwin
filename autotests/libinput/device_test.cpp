@@ -434,6 +434,8 @@ void TestLibinputDevice::testLeftHanded_data()
     QTest::newRow("true -> false") << true << false << true << false << false;
     QTest::newRow("false -> true") << true << false << false << true  << true;
     QTest::newRow("set fails") << true << true << true << false << true;
+    QTest::newRow("true -> true") << true << false << true << true << true;
+    QTest::newRow("false -> false") << true << false << false << false << false;
 }
 
 void TestLibinputDevice::testLeftHanded()
