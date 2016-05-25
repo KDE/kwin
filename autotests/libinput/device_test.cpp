@@ -58,6 +58,8 @@ private Q_SLOTS:
     void testPointerAcceleration();
     void testLeftHanded_data();
     void testLeftHanded();
+    void testSupportedButtons_data();
+    void testSupportedButtons();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -455,6 +457,48 @@ void TestLibinputDevice::testLeftHanded()
     QFETCH(bool, expectedValue);
     QCOMPARE(d.isLeftHanded(), expectedValue);
     QCOMPARE(leftHandedChangedSpy.isEmpty(), (supported && initValue) == expectedValue);
+}
+
+void TestLibinputDevice::testSupportedButtons_data()
+{
+    QTest::addColumn<bool>("isPointer");
+    QTest::addColumn<Qt::MouseButtons>("setButtons");
+    QTest::addColumn<Qt::MouseButtons>("expectedButtons");
+
+    QTest::newRow("left")    << true << Qt::MouseButtons(Qt::LeftButton)    << Qt::MouseButtons(Qt::LeftButton);
+    QTest::newRow("right")   << true << Qt::MouseButtons(Qt::RightButton)   << Qt::MouseButtons(Qt::RightButton);
+    QTest::newRow("middle")  << true << Qt::MouseButtons(Qt::MiddleButton)  << Qt::MouseButtons(Qt::MiddleButton);
+    QTest::newRow("extra1")  << true << Qt::MouseButtons(Qt::ExtraButton1)  << Qt::MouseButtons(Qt::ExtraButton1);
+    QTest::newRow("extra2")  << true << Qt::MouseButtons(Qt::ExtraButton2)  << Qt::MouseButtons(Qt::ExtraButton2);
+    QTest::newRow("back")    << true << Qt::MouseButtons(Qt::BackButton)    << Qt::MouseButtons(Qt::BackButton);
+    QTest::newRow("forward") << true << Qt::MouseButtons(Qt::ForwardButton) << Qt::MouseButtons(Qt::ForwardButton);
+    QTest::newRow("task")    << true << Qt::MouseButtons(Qt::TaskButton)    << Qt::MouseButtons(Qt::TaskButton);
+
+    QTest::newRow("no pointer/left")    << false << Qt::MouseButtons(Qt::LeftButton)    << Qt::MouseButtons();
+    QTest::newRow("no pointer/right")   << false << Qt::MouseButtons(Qt::RightButton)   << Qt::MouseButtons();
+    QTest::newRow("no pointer/middle")  << false << Qt::MouseButtons(Qt::MiddleButton)  << Qt::MouseButtons();
+    QTest::newRow("no pointer/extra1")  << false << Qt::MouseButtons(Qt::ExtraButton1)  << Qt::MouseButtons();
+    QTest::newRow("no pointer/extra2")  << false << Qt::MouseButtons(Qt::ExtraButton2)  << Qt::MouseButtons();
+    QTest::newRow("no pointer/back")    << false << Qt::MouseButtons(Qt::BackButton)    << Qt::MouseButtons();
+    QTest::newRow("no pointer/forward") << false << Qt::MouseButtons(Qt::ForwardButton) << Qt::MouseButtons();
+    QTest::newRow("no pointer/task")    << false << Qt::MouseButtons(Qt::TaskButton)    << Qt::MouseButtons();
+
+    QTest::newRow("all") << true
+                         << Qt::MouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton | Qt::ExtraButton1 | Qt::ExtraButton2 | Qt::BackButton | Qt::ForwardButton | Qt::TaskButton)
+                         << Qt::MouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton | Qt::ExtraButton1 | Qt::ExtraButton2 | Qt::BackButton | Qt::ForwardButton | Qt::TaskButton);
+}
+
+void TestLibinputDevice::testSupportedButtons()
+{
+    libinput_device device;
+    QFETCH(bool, isPointer);
+    device.pointer = isPointer;
+    QFETCH(Qt::MouseButtons, setButtons);
+    device.supportedButtons = setButtons;
+
+    Device d(&device);
+    QCOMPARE(d.isPointer(), isPointer);
+    QTEST(d.supportedButtons(), "expectedButtons");
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)

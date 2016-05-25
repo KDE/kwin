@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <libinput.h>
 #include "mock_libinput.h"
 
+#include <linux/input.h>
+
 int libinput_device_keyboard_has_key(struct libinput_device *device, uint32_t code)
 {
     return 0;
@@ -158,7 +160,26 @@ int libinput_device_get_size(struct libinput_device *device, double *width, doub
 
 int libinput_device_pointer_has_button(struct libinput_device *device, uint32_t code)
 {
-    return 0;
+    switch (code) {
+    case BTN_LEFT:
+        return device->supportedButtons.testFlag(Qt::LeftButton);
+    case BTN_MIDDLE:
+        return device->supportedButtons.testFlag(Qt::MiddleButton);
+    case BTN_RIGHT:
+        return device->supportedButtons.testFlag(Qt::RightButton);
+    case BTN_SIDE:
+        return device->supportedButtons.testFlag(Qt::ExtraButton1);
+    case BTN_EXTRA:
+        return device->supportedButtons.testFlag(Qt::ExtraButton2);
+    case BTN_BACK:
+        return device->supportedButtons.testFlag(Qt::BackButton);
+    case BTN_FORWARD:
+        return device->supportedButtons.testFlag(Qt::ForwardButton);
+    case BTN_TASK:
+        return device->supportedButtons.testFlag(Qt::TaskButton);
+    default:
+        return 0;
+    }
 }
 
 enum libinput_config_status libinput_device_config_left_handed_set(struct libinput_device *device, int left_handed)

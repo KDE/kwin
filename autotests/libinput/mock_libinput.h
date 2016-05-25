@@ -47,6 +47,7 @@ struct libinput_device {
     int setPointerAccelerationReturnValue = 0;
     bool leftHanded = false;
     int setLeftHandedReturnValue = 0;
+    Qt::MouseButtons supportedButtons;
 };
 
 #endif
