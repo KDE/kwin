@@ -58,6 +58,7 @@ private Q_SLOTS:
     void testDamageTracking();
     void testSurfaceAt();
     void testDestroyAttachedBuffer();
+    void testDestroyWithPendingCallback();
     void testDisconnect();
 
 private:
@@ -872,6 +873,44 @@ void TestWaylandSurface::testDestroyAttachedBuffer()
 
     // TODO: should this emit unmapped?
     QVERIFY(!serverSurface->buffer());
+}
+
+
+void TestWaylandSurface::testDestroyWithPendingCallback()
+{
+    // this test tries to verify that destroying a surface with a pending callback works correctly
+    // first create surface
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    // now render to it
+    QImage img(QSize(10, 10), QImage::Format_ARGB32);
+    img.fill(Qt::black);
+    auto b = m_shm->createBuffer(img);
+    s->attachBuffer(b);
+    s->damage(QRect(0, 0, 10, 10));
+    // add some frame callbacks
+    for (int i = 0; i < 1000; i++) {
+        wl_surface_frame(*s);
+    }
+    s->commit(KWayland::Client::Surface::CommitFlag::FrameCallback);
+    QSignalSpy damagedSpy(serverSurface, &SurfaceInterface::damaged);
+    QVERIFY(damagedSpy.isValid());
+    QVERIFY(damagedSpy.wait());
+
+    // now try to destroy the Surface again
+    QSignalSpy destroyedSpy(serverSurface, &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    s.reset();
+    QVERIFY(destroyedSpy.wait());
 }
 
 void TestWaylandSurface::testDisconnect()

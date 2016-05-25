@@ -219,14 +219,18 @@ void SurfaceInterface::frameRendered(quint32 msec)
 
 void SurfaceInterface::Private::destroy()
 {
-    for (wl_resource *c : current.callbacks) {
-        wl_resource_destroy(c);
-    }
-    for (wl_resource *c : pending.callbacks) {
-        wl_resource_destroy(c);
-    }
-    for (wl_resource *c : subSurfacePending.callbacks) {
-        wl_resource_destroy(c);
+    // copy all existing callbacks to new list and clear existing lists
+    // the wl_resource_destroy on the callback resource goes into destroyFrameCallback
+    // which would modify the list we are iterating on
+    QList<wl_resource *> callbacksToDestroy;
+    callbacksToDestroy << current.callbacks;
+    current.callbacks.clear();
+    callbacksToDestroy << pending.callbacks;
+    pending.callbacks.clear();
+    callbacksToDestroy << subSurfacePending.callbacks;
+    subSurfacePending.callbacks.clear();
+    for (auto it = callbacksToDestroy.constBegin(), end = callbacksToDestroy.constEnd(); it != end; it++) {
+        wl_resource_destroy(*it);
     }
     if (current.buffer) {
         current.buffer->unref();
