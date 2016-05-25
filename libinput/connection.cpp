@@ -376,7 +376,7 @@ void Connection::processEvents()
         if (m_keyboardBeforeSuspend && !m_keyboard) {
             emit hasKeyboardChanged(false);
         }
-        if (m_alphaNumericKeyboardBeforeSuspend && !m_alphaNumericKeyboardBeforeSuspend) {
+        if (m_alphaNumericKeyboardBeforeSuspend && !m_alphaNumericKeyboard) {
             emit hasAlphaNumericKeyboardChanged(false);
         }
         if (m_pointerBeforeSuspend && !m_pointer) {
