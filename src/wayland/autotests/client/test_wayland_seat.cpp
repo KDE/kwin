@@ -1107,7 +1107,8 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(modifierSpy.first().at(2).value<quint32>(), quint32(0));
     QCOMPARE(modifierSpy.first().at(3).value<quint32>(), quint32(0));
     QCOMPARE(enteredSpy.count(), 1);
-    QCOMPARE(enteredSpy.first().first().value<quint32>(), m_display->serial());
+    // TODO: get through API
+    QCOMPARE(enteredSpy.first().first().value<quint32>(), m_display->serial() - 1);
 
     QSignalSpy keyChangedSpy(keyboard, SIGNAL(keyChanged(quint32,KWayland::Client::Keyboard::KeyState,quint32)));
     QVERIFY(keyChangedSpy.isValid());
@@ -1160,7 +1161,8 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(!m_seatInterface->focusedKeyboard());
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
-    QCOMPARE(leftSpy.first().first().value<quint32>(), m_display->serial());
+    // TODO: get through API
+    QCOMPARE(leftSpy.first().first().value<quint32>(), m_display->serial() -1 );
 
     QVERIFY(!keyboard->enteredSurface());
     QVERIFY(!ckeyboard.enteredSurface());
