@@ -32,6 +32,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/region_interface.h"
 #include "../../src/server/blur_interface.h"
 
+using namespace KWayland::Client;
+
 class TestBlur : public QObject
 {
     Q_OBJECT
@@ -52,7 +54,6 @@ private:
     KWayland::Client::BlurManager *m_blurManager;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
-    KWayland::Client::Registry m_registry;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-blur-0");
@@ -79,7 +80,8 @@ void TestBlur::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, SIGNAL(connected()));
+    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QVERIFY(connectedSpy.isValid());
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -94,43 +96,48 @@ void TestBlur::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    QSignalSpy compositorSpy(&m_registry, SIGNAL(compositorAnnounced(quint32,quint32)));
+    Registry registry;
+    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
     QVERIFY(compositorSpy.isValid());
 
-    QSignalSpy blurSpy(&m_registry, SIGNAL(blurAnnounced(quint32,quint32)));
+    QSignalSpy blurSpy(&registry, &Registry::blurAnnounced);
     QVERIFY(blurSpy.isValid());
 
-    QVERIFY(!m_registry.eventQueue());
-    m_registry.setEventQueue(m_queue);
-    QCOMPARE(m_registry.eventQueue(), m_queue);
-    m_registry.create(m_connection->display());
-    QVERIFY(m_registry.isValid());
-    m_registry.setup();
+    QVERIFY(!registry.eventQueue());
+    registry.setEventQueue(m_queue);
+    QCOMPARE(registry.eventQueue(), m_queue);
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
 
     m_compositorInterface = m_display->createCompositor(m_display);
     m_compositorInterface->create();
     QVERIFY(m_compositorInterface->isValid());
 
     QVERIFY(compositorSpy.wait());
-    m_compositor = m_registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
     m_blurManagerInterface = m_display->createBlurManager(m_display);
     m_blurManagerInterface->create();
     QVERIFY(m_blurManagerInterface->isValid());
 
     QVERIFY(blurSpy.wait());
-    m_blurManager = m_registry.createBlurManager(blurSpy.first().first().value<quint32>(), blurSpy.first().last().value<quint32>(), this);
+    m_blurManager = registry.createBlurManager(blurSpy.first().first().value<quint32>(), blurSpy.first().last().value<quint32>(), this);
 }
 
 void TestBlur::cleanup()
 {
-    if (m_compositor) {
-        delete m_compositor;
-        m_compositor = nullptr;
+#define CLEANUP(variable) \
+    if (variable) { \
+        delete variable; \
+        variable = nullptr; \
     }
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
+    CLEANUP(m_compositor)
+    CLEANUP(m_blurManager)
+    CLEANUP(m_queue)
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
     }
     if (m_thread) {
         m_thread->quit();
@@ -138,11 +145,10 @@ void TestBlur::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    delete m_connection;
-    m_connection = nullptr;
-
-    delete m_display;
-    m_display = nullptr;
+    CLEANUP(m_compositorInterface)
+    CLEANUP(m_blurManagerInterface)
+    CLEANUP(m_display)
+#undef CLEANUP
 }
 
 void TestBlur::testCreate()
