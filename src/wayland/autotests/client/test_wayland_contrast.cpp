@@ -47,6 +47,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testCreate();
+    void testSurfaceDestroy();
 
 private:
     KWayland::Server::Display *m_display;
@@ -185,6 +186,39 @@ void TestContrast::testCreate()
     QVERIFY(destroyedSpy.isValid());
     delete contrast;
     QVERIFY(destroyedSpy.wait());
+}
+
+void TestContrast::testSurfaceDestroy()
+{
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWayland::Server::CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+
+    QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QSignalSpy contrastChanged(serverSurface, &KWayland::Server::SurfaceInterface::contrastChanged);
+    QVERIFY(contrastChanged.isValid());
+
+    QScopedPointer<KWayland::Client::Contrast> contrast(m_contrastManager->createContrast(surface.data()));
+    contrast->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
+    contrast->commit();
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QVERIFY(contrastChanged.wait());
+    QCOMPARE(serverSurface->contrast()->region(), QRegion(0, 0, 10, 20));
+
+    // destroy the parent surface
+    QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    QVERIFY(surfaceDestroyedSpy.isValid());
+    QSignalSpy contrastDestroyedSpy(serverSurface->contrast(), &QObject::destroyed);
+    QVERIFY(contrastDestroyedSpy.isValid());
+    surface.reset();
+    QVERIFY(surfaceDestroyedSpy.wait());
+    QVERIFY(contrastDestroyedSpy.isEmpty());
+    // destroy the blur
+    contrast.reset();
+    QVERIFY(contrastDestroyedSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestContrast)

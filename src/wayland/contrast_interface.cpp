@@ -106,14 +106,6 @@ void ContrastManagerInterface::Private::createContrast(wl_client *client, wl_res
         delete contrast;
         return;
     }
-    QObject::connect(s, &QObject::destroyed, contrast,
-        [contrast] {
-            if (contrast->resource()) {
-                wl_resource_destroy(contrast->resource());
-                delete contrast;
-            }
-        }
-    );
     s->d_func()->setContrast(QPointer<ContrastInterface>(contrast));
 }
 
