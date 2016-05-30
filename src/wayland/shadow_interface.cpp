@@ -105,14 +105,6 @@ void ShadowManagerInterface::Private::createShadow(wl_client *client, wl_resourc
         delete shadow;
         return;
     }
-    QObject::connect(s, &QObject::destroyed, shadow,
-        [shadow] {
-            if (shadow->resource()) {
-                wl_resource_destroy(shadow->resource());
-                delete shadow;
-            }
-        }
-    );
     s->d_func()->setShadow(QPointer<ShadowInterface>(shadow));
 }
 

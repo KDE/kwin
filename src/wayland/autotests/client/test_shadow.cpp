@@ -45,6 +45,7 @@ private Q_SLOTS:
 
     void testCreateShadow();
     void testShadowElements();
+    void testSurfaceDestroy();
 
 private:
     Display *m_display = nullptr;
@@ -264,6 +265,52 @@ void ShadowTest::testShadowElements()
     QVERIFY(!serverShadow->bottom());
     QVERIFY(!serverShadow->bottomLeft());
     QVERIFY(!serverShadow->left());
+}
+
+void ShadowTest::testSurfaceDestroy()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+
+    QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface*>();
+    QSignalSpy shadowChangedSpy(serverSurface, &SurfaceInterface::shadowChanged);
+    QVERIFY(shadowChangedSpy.isValid());
+
+    QScopedPointer<Shadow> shadow(m_shadow->createShadow(surface.data()));
+    shadow->commit();
+    surface->commit(Surface::CommitFlag::None);
+    QVERIFY(shadowChangedSpy.wait());
+    auto serverShadow = serverSurface->shadow();
+    QVERIFY(serverShadow);
+
+    // destroy the parent surface
+    QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    QVERIFY(surfaceDestroyedSpy.isValid());
+    QSignalSpy shadowDestroyedSpy(serverShadow, &QObject::destroyed);
+    QVERIFY(shadowDestroyedSpy.isValid());
+    QSignalSpy clientDisconnectedSpy(serverSurface->client(), &ClientConnection::disconnected);
+    QVERIFY(clientDisconnectedSpy.isValid());
+    surface.reset();
+    QVERIFY(surfaceDestroyedSpy.wait());
+    QVERIFY(shadowDestroyedSpy.isEmpty());
+    // destroy the shadow
+    shadow.reset();
+    // shadow protocol doesn't have a destroy callback yet, so also disconnect
+    m_connection->deleteLater();
+    m_connection = nullptr;
+    QVERIFY(clientDisconnectedSpy.wait());
+    if (shadowDestroyedSpy.isEmpty()) {
+        QVERIFY(shadowDestroyedSpy.wait());
+    }
+    QCOMPARE(shadowDestroyedSpy.count(), 1);
+    m_shm->destroy();
+    m_compositor->destroy();
+    m_shadow->destroy();
+    m_queue->destroy();
 }
 
 QTEST_GUILESS_MAIN(ShadowTest)
