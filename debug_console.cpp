@@ -147,7 +147,7 @@ static QString buttonsToString(Qt::MouseButtons buttons)
             ret.append(QStringLiteral(" "));
         }
     };
-    return ret;
+    return ret.trimmed();
 }
 
 static const QString s_hr = QStringLiteral("<hr/>");
