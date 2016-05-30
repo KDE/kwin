@@ -45,6 +45,8 @@ private Q_SLOTS:
     void testRequest_data();
     void testRequest();
 
+    void testSurfaceDestroy();
+
 private:
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositorInterface = nullptr;
@@ -288,6 +290,38 @@ void TestServerSideDecoration::testRequest()
     QVERIFY(modeChangedSpy.wait());
     QCOMPARE(modeChangedSpy.count(), 2);
     QCOMPARE(serverSideDecoration->mode(), clientRequestMode);
+}
+
+void TestServerSideDecoration::testSurfaceDestroy()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+    QSignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
+    QVERIFY(decorationCreated.isValid());
+
+    QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+
+    auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface*>();
+    QScopedPointer<ServerSideDecoration> serverSideDecoration(m_serverSideDecorationManager->create(surface.data()));
+    QCOMPARE(serverSideDecoration->mode(), ServerSideDecoration::Mode::None);
+    QVERIFY(decorationCreated.wait());
+    auto serverDeco = decorationCreated.first().first().value<ServerSideDecorationInterface*>();
+    QVERIFY(serverDeco);
+
+    // destroy the parent surface
+    QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    QVERIFY(surfaceDestroyedSpy.isValid());
+    QSignalSpy decorationDestroyedSpy(serverDeco, &QObject::destroyed);
+    QVERIFY(decorationDestroyedSpy.isValid());
+    surface.reset();
+    QVERIFY(surfaceDestroyedSpy.wait());
+    QVERIFY(decorationDestroyedSpy.isEmpty());
+    // destroy the blur
+    serverSideDecoration.reset();
+    QVERIFY(decorationDestroyedSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestServerSideDecoration)

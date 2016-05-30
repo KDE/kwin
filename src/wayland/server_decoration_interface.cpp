@@ -86,14 +86,6 @@ void ServerSideDecorationManagerInterface::Private::create(wl_client *client, wl
         delete decoration;
         return;
     }
-    QObject::connect(s, &QObject::destroyed, decoration,
-        [decoration] {
-            if (decoration->resource()) {
-                wl_resource_destroy(decoration->resource());
-                delete decoration;
-            }
-        }
-    );
     decoration->setMode(defaultMode);
     emit q->decorationCreated(decoration);
 }
