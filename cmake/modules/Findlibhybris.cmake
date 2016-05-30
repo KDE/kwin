@@ -46,7 +46,6 @@ if(NOT WIN32)
     pkg_check_modules(PKG_androidheaders QUIET android-headers)
     pkg_check_modules(PKG_hwcomposerwindow QUIET hwcomposer-egl)
     pkg_check_modules(PKG_hybriseglplatform QUIET hybris-egl-platform)
-    pkg_check_modules(PKG_hybrisinputstack QUIET libis)
 
     set(libhardware_DEFINITIONS ${PKG_libhardware_CFLAGS_OTHER})
     set(libhardware_VERSION ${PKG_libhardware_VERSION})
