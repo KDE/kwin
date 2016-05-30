@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QByteArray>
 #include <QSizeF>
+#include <QVector>
 
 struct libinput_device {
     bool keyboard = false;
@@ -48,6 +49,7 @@ struct libinput_device {
     bool leftHanded = false;
     int setLeftHandedReturnValue = 0;
     Qt::MouseButtons supportedButtons;
+    QVector<quint32> keys;
 };
 
 #endif

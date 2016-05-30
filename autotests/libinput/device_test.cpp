@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtTest/QtTest>
 
+#include <linux/input.h>
+
 using namespace KWin::LibInput;
 
 class TestLibinputDevice : public QObject
@@ -60,6 +62,8 @@ private Q_SLOTS:
     void testLeftHanded();
     void testSupportedButtons_data();
     void testSupportedButtons();
+    void testAlphaNumericKeyboard_data();
+    void testAlphaNumericKeyboard();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -501,6 +505,58 @@ void TestLibinputDevice::testSupportedButtons()
     Device d(&device);
     QCOMPARE(d.isPointer(), isPointer);
     QTEST(d.supportedButtons(), "expectedButtons");
+}
+
+void TestLibinputDevice::testAlphaNumericKeyboard_data()
+{
+    QTest::addColumn<QVector<quint32>>("supportedKeys");
+    QTest::addColumn<bool>("isAlpha");
+
+    QVector<quint32> keys;
+
+    for (int i = KEY_1; i <= KEY_0; i++) {
+        keys << i;
+        QByteArray row = QByteArrayLiteral("number");
+        row.append(QByteArray::number(i));
+        QTest::newRow(row.constData()) << keys << false;
+    }
+    for (int i = KEY_Q; i <= KEY_P; i++) {
+        keys << i;
+        QByteArray row = QByteArrayLiteral("alpha");
+        row.append(QByteArray::number(i));
+        QTest::newRow(row.constData()) << keys << false;
+    }
+    for (int i = KEY_A; i <= KEY_L; i++) {
+        keys << i;
+        QByteArray row = QByteArrayLiteral("alpha");
+        row.append(QByteArray::number(i));
+        QTest::newRow(row.constData()) << keys << false;
+    }
+    for (int i = KEY_Z; i < KEY_M; i++) {
+        keys << i;
+        QByteArray row = QByteArrayLiteral("alpha");
+        row.append(QByteArray::number(i));
+        QTest::newRow(row.constData()) << keys << false;
+    }
+    // adding a different key should not result in it becoming alphanumeric keyboard
+    keys << KEY_SEMICOLON;
+    QTest::newRow("semicolon") << keys << false;
+
+    // last but not least the M which should turn everything on
+    keys << KEY_M;
+    QTest::newRow("alphanumeric") << keys << true;
+}
+
+void TestLibinputDevice::testAlphaNumericKeyboard()
+{
+    QFETCH(QVector<quint32>, supportedKeys);
+    libinput_device device;
+    device.keyboard = true;
+    device.keys = supportedKeys;
+
+    Device d(&device);
+    QCOMPARE(d.isKeyboard(), true);
+    QTEST(d.isAlphaNumericKeyboard(), "isAlpha");
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)

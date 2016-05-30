@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int libinput_device_keyboard_has_key(struct libinput_device *device, uint32_t code)
 {
-    return 0;
+    return device->keys.contains(code);
 }
 
 int libinput_device_has_capability(struct libinput_device *device, enum libinput_device_capability capability)
