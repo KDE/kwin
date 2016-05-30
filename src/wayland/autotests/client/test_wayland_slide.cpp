@@ -170,6 +170,12 @@ void TestSlide::testCreate()
     QVERIFY(slideChanged.wait());
     QCOMPARE(serverSurface->slideOnShowHide()->location(), KWayland::Server::SlideInterface::Location::Top);
     QCOMPARE(serverSurface->slideOnShowHide()->offset(), 15);
+
+    // and destroy
+    QSignalSpy destroyedSpy(serverSurface->slideOnShowHide(), &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    delete slide;
+    QVERIFY(destroyedSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestSlide)

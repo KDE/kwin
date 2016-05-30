@@ -148,7 +148,6 @@ private:
     static void commitCallback(wl_client *client, wl_resource *resource);
     static void setLocationCallback(wl_client *client, wl_resource *resource, uint32_t location);
     static void setOffsetCallback(wl_client *client, wl_resource *resource, int32_t offset);
-    static void releaseCallback(wl_client *client, wl_resource *resource);
 
     SlideInterface *q_func() {
         return reinterpret_cast<SlideInterface *>(q);
@@ -162,7 +161,7 @@ const struct org_kde_kwin_slide_interface SlideInterface::Private::s_interface =
     commitCallback,
     setLocationCallback,
     setOffsetCallback,
-    releaseCallback
+    resourceDestroyedCallback
 };
 #endif
 
@@ -186,13 +185,6 @@ void SlideInterface::Private::setOffsetCallback(wl_client *client, wl_resource *
     Q_UNUSED(client)
     Private *p = cast<Private>(resource);
     p->pendingOffset = offset;
-}
-
-void SlideInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    Q_UNUSED(resource)
-    // TODO: implement
 }
 
 SlideInterface::Private::Private(SlideInterface *q, SlideManagerInterface *c, wl_resource *parentResource)
