@@ -106,14 +106,6 @@ void BlurManagerInterface::Private::createBlur(wl_client *client, wl_resource *r
         delete blur;
         return;
     }
-    QObject::connect(s, &QObject::destroyed, blur,
-        [blur] {
-            if (blur->resource()) {
-                wl_resource_destroy(blur->resource());
-                delete blur;
-            }
-        }
-    );
     s->d_func()->setBlur(QPointer<BlurInterface>(blur));
 }
 

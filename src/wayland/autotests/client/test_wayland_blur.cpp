@@ -44,6 +44,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testCreate();
+    void testSurfaceDestroy();
 
 private:
     KWayland::Server::Display *m_display;
@@ -175,6 +176,39 @@ void TestBlur::testCreate()
     QVERIFY(destroyedSpy.isValid());
     delete blur;
     QVERIFY(destroyedSpy.wait());
+}
+
+void TestBlur::testSurfaceDestroy()
+{
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWayland::Server::CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+
+    QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QSignalSpy blurChanged(serverSurface, &KWayland::Server::SurfaceInterface::blurChanged);
+    QVERIFY(blurChanged.isValid());
+
+    QScopedPointer<KWayland::Client::Blur> blur(m_blurManager->createBlur(surface.data()));
+    blur->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
+    blur->commit();
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QVERIFY(blurChanged.wait());
+    QCOMPARE(serverSurface->blur()->region(), QRegion(0, 0, 10, 20));
+
+    // destroy the parent surface
+    QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    QVERIFY(surfaceDestroyedSpy.isValid());
+    QSignalSpy blurDestroyedSpy(serverSurface->blur(), &QObject::destroyed);
+    QVERIFY(blurDestroyedSpy.isValid());
+    surface.reset();
+    QVERIFY(surfaceDestroyedSpy.wait());
+    QVERIFY(blurDestroyedSpy.isEmpty());
+    // destroy the blur
+    blur.reset();
+    QVERIFY(blurDestroyedSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestBlur)
