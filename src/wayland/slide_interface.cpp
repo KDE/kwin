@@ -83,14 +83,6 @@ void SlideManagerInterface::Private::createSlide(wl_client *client, wl_resource 
         delete slide;
         return;
     }
-    QObject::connect(s, &QObject::destroyed, slide,
-        [slide] {
-            if (slide->resource()) {
-                wl_resource_destroy(slide->resource());
-                delete slide;
-            }
-        }
-    );
     s->d_func()->setSlide(QPointer<SlideInterface>(slide));
 }
 
