@@ -213,3 +213,162 @@ enum libinput_config_status libinput_device_config_send_events_set_mode(struct l
     }
     return LIBINPUT_CONFIG_STATUS_INVALID;
 }
+
+
+enum libinput_event_type libinput_event_get_type(struct libinput_event *event)
+{
+    return event->type;
+}
+
+struct libinput_device *libinput_event_get_device(struct libinput_event *event)
+{
+    return event->device;
+}
+
+void libinput_event_destroy(struct libinput_event *event)
+{
+    delete event;
+}
+
+struct libinput_event_keyboard *libinput_event_get_keyboard_event(struct libinput_event *event)
+{
+    if (event->type == LIBINPUT_EVENT_KEYBOARD_KEY) {
+        return reinterpret_cast<libinput_event_keyboard *>(event);
+    }
+    return nullptr;
+}
+
+struct libinput_event_pointer *libinput_event_get_pointer_event(struct libinput_event *event)
+{
+    Q_UNUSED(event)
+    return nullptr;
+}
+
+struct libinput_event_touch *libinput_event_get_touch_event(struct libinput_event *event)
+{
+    Q_UNUSED(event)
+    return nullptr;
+}
+
+uint32_t libinput_event_keyboard_get_key(struct libinput_event_keyboard *event)
+{
+    return event->key;
+}
+
+enum libinput_key_state libinput_event_keyboard_get_key_state(struct libinput_event_keyboard *event)
+{
+    return event->state;
+}
+
+uint32_t libinput_event_keyboard_get_time(struct libinput_event_keyboard *event)
+{
+    return event->time;
+}
+
+double libinput_event_pointer_get_absolute_x(struct libinput_event_pointer *event)
+{
+    Q_UNUSED(event)
+    return 0.0;
+}
+
+double libinput_event_pointer_get_absolute_y(struct libinput_event_pointer *event)
+{
+    Q_UNUSED(event)
+    return 0.0;
+}
+
+double libinput_event_pointer_get_absolute_x_transformed(struct libinput_event_pointer *event, uint32_t width)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(width)
+    return 0.0;
+}
+
+double libinput_event_pointer_get_absolute_y_transformed(struct libinput_event_pointer *event, uint32_t height)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(height)
+    return 0.0;
+}
+
+double libinput_event_pointer_get_dx(struct libinput_event_pointer *event)
+{
+    Q_UNUSED(event)
+    return 0.0;
+}
+
+double libinput_event_pointer_get_dy(struct libinput_event_pointer *event)
+{
+    Q_UNUSED(event)
+    return 0.0;
+}
+
+uint32_t libinput_event_pointer_get_time(struct libinput_event_pointer *event)
+{
+    Q_UNUSED(event)
+    return 0;
+}
+
+uint32_t libinput_event_pointer_get_button(struct libinput_event_pointer *event)
+{
+    Q_UNUSED(event)
+    return 0;
+}
+
+enum libinput_button_state libinput_event_pointer_get_button_state(struct libinput_event_pointer *event)
+{
+    Q_UNUSED(event)
+    return LIBINPUT_BUTTON_STATE_RELEASED;
+}
+
+int libinput_event_pointer_has_axis(struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(axis)
+    return 0;
+}
+
+double libinput_event_pointer_get_axis_value(struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(axis)
+    return 0.0;
+}
+
+uint32_t libinput_event_touch_get_time(struct libinput_event_touch *event)
+{
+    Q_UNUSED(time)
+    return 0;
+}
+
+double libinput_event_touch_get_x(struct libinput_event_touch *event)
+{
+    Q_UNUSED(event)
+    return 0.0;
+}
+
+double libinput_event_touch_get_y(struct libinput_event_touch *event)
+{
+    Q_UNUSED(event)
+    return 0.0;
+}
+
+double libinput_event_touch_get_x_transformed(struct libinput_event_touch *event, uint32_t width)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(width)
+    return 0.0;
+}
+
+double libinput_event_touch_get_y_transformed(struct libinput_event_touch *event, uint32_t height)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(height)
+    return 0.0;
+}
+
+int32_t libinput_event_touch_get_slot(struct libinput_event_touch *event)
+{
+    Q_UNUSED(event)
+    return 0;
+}

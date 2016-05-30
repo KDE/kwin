@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef MOCK_LIBINPUT_H
 #define MOCK_LIBINPUT_H
+#include <libinput.h>
 
 #include <QByteArray>
 #include <QSizeF>
@@ -52,6 +53,20 @@ struct libinput_device {
     QVector<quint32> keys;
     bool enabled = true;
     int setEnableModeReturnValue = 0;
+};
+
+struct libinput_event {
+    libinput_device *device = nullptr;
+    libinput_event_type type = LIBINPUT_EVENT_NONE;
+    quint32 time = 0;
+};
+
+struct libinput_event_keyboard : libinput_event {
+    libinput_event_keyboard() {
+        type = LIBINPUT_EVENT_KEYBOARD_KEY;
+    }
+    libinput_key_state state = LIBINPUT_KEY_STATE_RELEASED;
+    quint32 key = 0;
 };
 
 #endif
