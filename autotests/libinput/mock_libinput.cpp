@@ -131,7 +131,12 @@ double libinput_device_config_accel_get_speed(struct libinput_device *device)
 
 uint32_t libinput_device_config_send_events_get_mode(struct libinput_device *device)
 {
-    return 0;
+    if (device->enabled) {
+        return LIBINPUT_CONFIG_SEND_EVENTS_ENABLED;
+    } else {
+        // TODO: disabled on eternal mouse
+        return LIBINPUT_CONFIG_SEND_EVENTS_DISABLED;
+    }
 }
 
 struct libinput_device *libinput_device_ref(struct libinput_device *device)
@@ -202,5 +207,9 @@ enum libinput_config_status libinput_device_config_accel_set_speed(struct libinp
 
 enum libinput_config_status libinput_device_config_send_events_set_mode(struct libinput_device *device, uint32_t mode)
 {
+    if (device->setEnableModeReturnValue == 0) {
+        device->enabled = (mode == LIBINPUT_CONFIG_SEND_EVENTS_ENABLED);
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
     return LIBINPUT_CONFIG_STATUS_INVALID;
 }

@@ -64,6 +64,8 @@ private Q_SLOTS:
     void testSupportedButtons();
     void testAlphaNumericKeyboard_data();
     void testAlphaNumericKeyboard();
+    void testEnabled_data();
+    void testEnabled();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -557,6 +559,46 @@ void TestLibinputDevice::testAlphaNumericKeyboard()
     Device d(&device);
     QCOMPARE(d.isKeyboard(), true);
     QTEST(d.isAlphaNumericKeyboard(), "isAlpha");
+}
+
+
+void TestLibinputDevice::testEnabled_data()
+{
+    QTest::addColumn<bool>("supported");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("expectedValue");
+
+    QTest::newRow("unsupported/true") << false << false << true << false << true;
+    QTest::newRow("unsupported/false") << false << false << false << true << true;
+    QTest::newRow("true -> false") << true << false << true << false << false;
+    QTest::newRow("false -> true") << true << false << false << true  << true;
+    QTest::newRow("set fails") << true << true << true << false << true;
+    QTest::newRow("true -> true") << true << false << true << true << true;
+    QTest::newRow("false -> false") << true << false << false << false << false;
+}
+
+void TestLibinputDevice::testEnabled()
+{
+    libinput_device device;
+    QFETCH(bool, supported);
+    QFETCH(bool, setShouldFail);
+    QFETCH(bool, initValue);
+    device.supportsDisableEvents = supported;
+    device.enabled = initValue;
+    device.setEnableModeReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.isEnabled(), !supported || initValue);
+    QCOMPARE(d.property("enabled").toBool(), !supported || initValue);
+
+    QSignalSpy enabledChangedSpy(&d, &Device::enabledChanged);
+    QVERIFY(enabledChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setEnabled(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.isEnabled(), expectedValue);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)

@@ -50,6 +50,8 @@ struct libinput_device {
     int setLeftHandedReturnValue = 0;
     Qt::MouseButtons supportedButtons;
     QVector<quint32> keys;
+    bool enabled = true;
+    int setEnableModeReturnValue = 0;
 };
 
 #endif
