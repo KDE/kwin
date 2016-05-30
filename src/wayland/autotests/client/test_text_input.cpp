@@ -272,7 +272,7 @@ void TextInputTest::testEnterLeave()
     QVERIFY(serverTextInput->isEnabled());
 
     // and trigger an enter
-    if (!updatesDirectly) {
+    if (enteredSpy.isEmpty()) {
         QVERIFY(enteredSpy.wait());
     }
     QCOMPARE(enteredSpy.count(), 1);
