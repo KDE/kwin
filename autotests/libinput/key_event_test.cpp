@@ -76,6 +76,9 @@ void TestLibinputKeyEvent::testCreate()
     // verify it's a key event
     QVERIFY(dynamic_cast<KeyEvent*>(event.data()));
     QCOMPARE((libinput_event_keyboard*)(*dynamic_cast<KeyEvent*>(event.data())), keyEvent);
+
+    // verify that a nullptr passed to Event::create returns a nullptr
+    QVERIFY(!Event::create(nullptr));
 }
 
 void TestLibinputKeyEvent::testEvent_data()
