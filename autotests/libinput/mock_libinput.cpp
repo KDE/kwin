@@ -240,7 +240,12 @@ struct libinput_event_keyboard *libinput_event_get_keyboard_event(struct libinpu
 
 struct libinput_event_pointer *libinput_event_get_pointer_event(struct libinput_event *event)
 {
-    Q_UNUSED(event)
+    if (event->type == LIBINPUT_EVENT_POINTER_MOTION ||
+        event->type == LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE ||
+        event->type == LIBINPUT_EVENT_POINTER_BUTTON ||
+        event->type == LIBINPUT_EVENT_POINTER_AXIS) {
+        return reinterpret_cast<libinput_event_pointer *>(event);
+    }
     return nullptr;
 }
 
@@ -267,72 +272,71 @@ uint32_t libinput_event_keyboard_get_time(struct libinput_event_keyboard *event)
 
 double libinput_event_pointer_get_absolute_x(struct libinput_event_pointer *event)
 {
-    Q_UNUSED(event)
-    return 0.0;
+    return event->absolutePos.x();
 }
 
 double libinput_event_pointer_get_absolute_y(struct libinput_event_pointer *event)
 {
-    Q_UNUSED(event)
-    return 0.0;
+    return event->absolutePos.y();
 }
 
 double libinput_event_pointer_get_absolute_x_transformed(struct libinput_event_pointer *event, uint32_t width)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(width)
-    return 0.0;
+    double deviceWidth = 0.0;
+    double deviceHeight = 0.0;
+    libinput_device_get_size(event->device, &deviceWidth, &deviceHeight);
+    return event->absolutePos.x() / deviceWidth * width;
 }
 
 double libinput_event_pointer_get_absolute_y_transformed(struct libinput_event_pointer *event, uint32_t height)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(height)
-    return 0.0;
+    double deviceWidth = 0.0;
+    double deviceHeight = 0.0;
+    libinput_device_get_size(event->device, &deviceWidth, &deviceHeight);
+    return event->absolutePos.y() / deviceHeight * height;
 }
 
 double libinput_event_pointer_get_dx(struct libinput_event_pointer *event)
 {
-    Q_UNUSED(event)
-    return 0.0;
+    return event->delta.width();
 }
 
 double libinput_event_pointer_get_dy(struct libinput_event_pointer *event)
 {
-    Q_UNUSED(event)
-    return 0.0;
+    return event->delta.height();
 }
 
 uint32_t libinput_event_pointer_get_time(struct libinput_event_pointer *event)
 {
-    Q_UNUSED(event)
-    return 0;
+    return event->time;
 }
 
 uint32_t libinput_event_pointer_get_button(struct libinput_event_pointer *event)
 {
-    Q_UNUSED(event)
-    return 0;
+    return event->button;
 }
 
 enum libinput_button_state libinput_event_pointer_get_button_state(struct libinput_event_pointer *event)
 {
-    Q_UNUSED(event)
-    return LIBINPUT_BUTTON_STATE_RELEASED;
+    return event->buttonState;
 }
 
 int libinput_event_pointer_has_axis(struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(axis)
-    return 0;
+    if (axis == LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL) {
+        return event->verticalAxis;
+    } else {
+        return event->horizontalAxis;
+    }
 }
 
 double libinput_event_pointer_get_axis_value(struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(axis)
-    return 0.0;
+    if (axis == LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL) {
+        return event->verticalAxisValue;
+    } else {
+        return event->horizontalAxisValue;
+    }
 }
 
 uint32_t libinput_event_touch_get_time(struct libinput_event_touch *event)

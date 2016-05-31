@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <libinput.h>
 
 #include <QByteArray>
+#include <QPointF>
 #include <QSizeF>
 #include <QVector>
 
@@ -67,6 +68,17 @@ struct libinput_event_keyboard : libinput_event {
     }
     libinput_key_state state = LIBINPUT_KEY_STATE_RELEASED;
     quint32 key = 0;
+};
+
+struct libinput_event_pointer : libinput_event {
+    libinput_button_state buttonState = LIBINPUT_BUTTON_STATE_RELEASED;
+    quint32 button = 0;
+    bool verticalAxis = false;
+    bool horizontalAxis = false;
+    qreal horizontalAxisValue = 0.0;
+    qreal verticalAxisValue = 0.0;
+    QSizeF delta;
+    QPointF absolutePos;
 };
 
 #endif
