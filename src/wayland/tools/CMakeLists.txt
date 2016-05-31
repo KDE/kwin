@@ -1,3 +1,5 @@
+add_subdirectory(testserver)
+
 include(ECMMarkAsTest)
 
 find_package(Qt5Concurrent ${QT_MIN_VERSION} CONFIG QUIET)
