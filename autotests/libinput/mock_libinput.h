@@ -81,4 +81,9 @@ struct libinput_event_pointer : libinput_event {
     QPointF absolutePos;
 };
 
+struct libinput_event_touch : libinput_event {
+    qint32 slot = -1;
+    QPointF absolutePos;
+};
+
 #endif

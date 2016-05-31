@@ -251,7 +251,13 @@ struct libinput_event_pointer *libinput_event_get_pointer_event(struct libinput_
 
 struct libinput_event_touch *libinput_event_get_touch_event(struct libinput_event *event)
 {
-    Q_UNUSED(event)
+    if (event->type == LIBINPUT_EVENT_TOUCH_DOWN ||
+        event->type == LIBINPUT_EVENT_TOUCH_UP ||
+        event->type == LIBINPUT_EVENT_TOUCH_MOTION ||
+        event->type == LIBINPUT_EVENT_TOUCH_CANCEL ||
+        event->type == LIBINPUT_EVENT_TOUCH_FRAME) {
+        return reinterpret_cast<libinput_event_touch *>(event);
+    }
     return nullptr;
 }
 
@@ -341,38 +347,36 @@ double libinput_event_pointer_get_axis_value(struct libinput_event_pointer *even
 
 uint32_t libinput_event_touch_get_time(struct libinput_event_touch *event)
 {
-    Q_UNUSED(time)
-    return 0;
+    return event->time;
 }
 
 double libinput_event_touch_get_x(struct libinput_event_touch *event)
 {
-    Q_UNUSED(event)
-    return 0.0;
+    return event->absolutePos.x();
 }
 
 double libinput_event_touch_get_y(struct libinput_event_touch *event)
 {
-    Q_UNUSED(event)
-    return 0.0;
+    return event->absolutePos.y();
 }
 
 double libinput_event_touch_get_x_transformed(struct libinput_event_touch *event, uint32_t width)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(width)
-    return 0.0;
+    double deviceWidth = 0.0;
+    double deviceHeight = 0.0;
+    libinput_device_get_size(event->device, &deviceWidth, &deviceHeight);
+    return event->absolutePos.x() / deviceWidth * width;
 }
 
 double libinput_event_touch_get_y_transformed(struct libinput_event_touch *event, uint32_t height)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(height)
-    return 0.0;
+    double deviceWidth = 0.0;
+    double deviceHeight = 0.0;
+    libinput_device_get_size(event->device, &deviceWidth, &deviceHeight);
+    return event->absolutePos.y() / deviceHeight * height;
 }
 
 int32_t libinput_event_touch_get_slot(struct libinput_event_touch *event)
 {
-    Q_UNUSED(event)
-    return 0;
+    return event->slot;
 }
