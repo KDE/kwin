@@ -213,6 +213,7 @@ bool X11XRenderBackend::usesOverlayWindow() const
 //****************************************
 // SceneXrender
 //****************************************
+
 SceneXrender* SceneXrender::createScene(QObject *parent)
 {
     QScopedPointer<XRenderBackend> backend;
@@ -308,6 +309,7 @@ Decoration::Renderer *SceneXrender::createDecorationRenderer(Decoration::Decorat
 
 XRenderPicture *SceneXrender::Window::s_tempPicture = 0;
 QRect SceneXrender::Window::temp_visibleRect;
+XRenderPicture *SceneXrender::Window::s_fadeAlphaPicture = nullptr;
 
 SceneXrender::Window::Window(Toplevel* c, SceneXrender *scene)
     : Scene::Window(c)
@@ -326,6 +328,8 @@ void SceneXrender::Window::cleanup()
 {
     delete s_tempPicture;
     s_tempPicture = NULL;
+    delete s_fadeAlphaPicture;
+    s_fadeAlphaPicture = nullptr;
 }
 
 // Maps window coordinates to screen coordinates
@@ -655,14 +659,13 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
             if (data.crossFadeProgress() < 1.0 && data.crossFadeProgress() > 0.0) {
                 XRenderWindowPixmap *previous = previousWindowPixmap<XRenderWindowPixmap>();
                 if (previous && previous != pixmap) {
-                    static XRenderPicture cFadeAlpha(XCB_RENDER_PICTURE_NONE);
                     static xcb_render_color_t cFadeColor = {0, 0, 0, 0};
                     cFadeColor.alpha = uint16_t((1.0 - data.crossFadeProgress()) * 0xffff);
-                    if (cFadeAlpha == XCB_RENDER_PICTURE_NONE) {
-                        cFadeAlpha = xRenderFill(cFadeColor);
+                    if (!s_fadeAlphaPicture) {
+                        s_fadeAlphaPicture = new XRenderPicture(xRenderFill(cFadeColor));
                     } else {
                         xcb_rectangle_t rect = {0, 0, 1, 1};
-                        xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, cFadeAlpha, cFadeColor , 1, &rect);
+                        xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, *s_fadeAlphaPicture, cFadeColor , 1, &rect);
                     }
                     if (previous->size() != pixmap->size()) {
                         xcb_render_transform_t xform2 = {
@@ -674,7 +677,7 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
                     }
 
                     xcb_render_composite(connection(), opaque ? XCB_RENDER_PICT_OP_OVER : XCB_RENDER_PICT_OP_ATOP,
-                                         previous->picture(), cFadeAlpha, renderTarget,
+                                         previous->picture(), *s_fadeAlphaPicture, renderTarget,
                                          cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
 
                     if (previous->size() != pixmap->size()) {

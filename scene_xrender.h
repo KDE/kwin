@@ -205,6 +205,7 @@ private:
     QRegion transformed_shape;
     static QRect temp_visibleRect;
     static XRenderPicture *s_tempPicture;
+    static XRenderPicture *s_fadeAlphaPicture;
 };
 
 class XRenderWindowPixmap : public WindowPixmap
