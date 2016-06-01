@@ -282,10 +282,13 @@ void PlasmaWindowModelTest::testAddRemoveRows()
     // that index doesn't have children
     QCOMPARE(model->rowCount(model->index(0)), 0);
 
+    // process events in order to ensure that the resource is created on server side before we unmap the window
+    QCoreApplication::instance()->processEvents(QEventLoop::WaitForMoreEvents);
+
     // now let's remove that again
     QSignalSpy rowRemovedSpy(model, &PlasmaWindowModel::rowsRemoved);
     QVERIFY(rowRemovedSpy.isValid());
-    delete w;
+    w->unmap();
     QVERIFY(rowRemovedSpy.wait());
     QCOMPARE(rowRemovedSpy.count(), 1);
     QVERIFY(!rowRemovedSpy.first().at(0).toModelIndex().isValid());
@@ -295,6 +298,10 @@ void PlasmaWindowModelTest::testAddRemoveRows()
     // now the model is empty again
     QCOMPARE(model->rowCount(), 0);
     QVERIFY(!model->index(0).isValid());
+
+    QSignalSpy wDestroyedSpy(w, &QObject::destroyed);
+    QVERIFY(wDestroyedSpy.isValid());
+    QVERIFY(wDestroyedSpy.wait());
 }
 
 void PlasmaWindowModelTest::testDefaultData_data()
@@ -708,6 +715,9 @@ void PlasmaWindowModelTest::testCreateWithUnmappedWindow()
     QVERIFY(windowCreatedSpy.wait());
     PlasmaWindow *window = windowCreatedSpy.first().first().value<PlasmaWindow*>();
     QVERIFY(window);
+    // make sure the resource is properly created on server side
+    QCoreApplication::instance()->processEvents(QEventLoop::WaitForMoreEvents);
+
     QSignalSpy unmappedSpy(window, &PlasmaWindow::unmapped);
     QVERIFY(unmappedSpy.isValid());
     QSignalSpy destroyedSpy(window, &PlasmaWindow::destroyed);
@@ -769,6 +779,8 @@ void PlasmaWindowModelTest::testChangeWindowAfterModelDestroy()
     auto w = m_pwInterface->createWindow(m_pwInterface);
     QVERIFY(windowCreatedSpy.wait());
     PlasmaWindow *window = windowCreatedSpy.first().first().value<PlasmaWindow*>();
+    // make sure the resource is properly created on server side
+    QCoreApplication::instance()->processEvents(QEventLoop::WaitForMoreEvents);
     QCOMPARE(model->rowCount(), 1);
     delete model;
     QFETCH(ClientWindowSignal, changedSignal);
