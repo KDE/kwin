@@ -465,6 +465,9 @@ Workspace::~Workspace()
 
     // TODO: ungrabXServer();
 
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        XRenderUtils::cleanup();
+    }
     Xcb::Extensions::destroy();
     _self = 0;
 }

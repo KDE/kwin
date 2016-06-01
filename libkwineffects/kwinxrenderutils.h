@@ -180,6 +180,11 @@ KWINXRENDERUTILS_EXPORT xcb_render_pictformat_t findPictFormat(xcb_visualid_t vi
  */
 KWINXRENDERUTILS_EXPORT const xcb_render_directformat_t *findPictFormatInfo(xcb_render_pictformat_t format);
 
+/**
+ * @internal
+ **/
+KWINXRENDERUTILS_EXPORT void cleanup();
+
 } // namespace XRenderUtils
 
 } // namespace KWin

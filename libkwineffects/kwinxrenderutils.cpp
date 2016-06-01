@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinxrenderutils.h"
 #include "logging_p.h"
 
+#include <QCoreApplication>
 #include <QStack>
 #include <QPixmap>
 #include <QGlobalStatic>
@@ -32,11 +33,19 @@ namespace XRenderUtils
 {
 static xcb_connection_t *s_connection = nullptr;
 static xcb_window_t s_rootWindow = XCB_WINDOW_NONE;
+static XRenderPicture s_blendPicture(XCB_RENDER_PICTURE_NONE);
 
 void init(xcb_connection_t *connection, xcb_window_t rootWindow)
 {
     s_connection = connection;
     s_rootWindow = rootWindow;
+}
+
+void cleanup()
+{
+    s_blendPicture = XRenderPicture(XCB_RENDER_PICTURE_NONE);
+    s_connection = nullptr;
+    s_rootWindow = XCB_WINDOW_NONE;
 }
 
 } // namespace
@@ -78,16 +87,15 @@ XRenderPicture xRenderFill(const QColor &c)
 
 XRenderPicture xRenderBlendPicture(double opacity)
 {
-    static XRenderPicture s_blendPicture(XCB_RENDER_PICTURE_NONE);
     static xcb_render_color_t s_blendColor = {0, 0, 0, 0};
     s_blendColor.alpha = uint16_t(opacity * 0xffff);
-    if (s_blendPicture == XCB_RENDER_PICTURE_NONE) {
-        s_blendPicture = xRenderFill(s_blendColor);
+    if (XRenderUtils::s_blendPicture == XCB_RENDER_PICTURE_NONE) {
+        XRenderUtils::s_blendPicture = xRenderFill(s_blendColor);
     } else {
         xcb_rectangle_t rect = {0, 0, 1, 1};
-        xcb_render_fill_rectangles(XRenderUtils::s_connection, XCB_RENDER_PICT_OP_SRC, s_blendPicture, s_blendColor, 1, &rect);
+        xcb_render_fill_rectangles(XRenderUtils::s_connection, XCB_RENDER_PICT_OP_SRC, XRenderUtils::s_blendPicture, s_blendColor, 1, &rect);
     }
-    return s_blendPicture;
+    return XRenderUtils::s_blendPicture;
 }
 
 static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
@@ -150,8 +158,10 @@ XRenderPicture::XRenderPicture(xcb_pixmap_t pix, int depth)
 
 XRenderPictureData::~XRenderPictureData()
 {
-    if (picture != XCB_RENDER_PICTURE_NONE)
+    if (picture != XCB_RENDER_PICTURE_NONE) {
+        Q_ASSERT(qApp);
         xcb_render_free_picture(XRenderUtils::s_connection, picture);
+    }
 }
 
 XFixesRegion::XFixesRegion(const QRegion &region)
