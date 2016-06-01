@@ -40,6 +40,7 @@ class KWIN_EXPORT Deleted
     Q_PROPERTY(bool minimized READ isMinimized)
     Q_PROPERTY(bool modal READ isModal)
     Q_PROPERTY(bool fullScreen READ isFullScreen CONSTANT)
+    Q_PROPERTY(bool isCurrentTab READ isCurrentTab)
 public:
     static Deleted* create(Toplevel* c);
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
@@ -87,6 +88,10 @@ public:
     bool isFullScreen() const {
         return m_fullscreen;
     }
+
+    bool isCurrentTab() const {
+        return m_wasCurrentTab;
+    }
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
@@ -115,6 +120,7 @@ private:
     bool m_modal;
     QList<AbstractClient*> m_mainClients;
     bool m_wasClient;
+    bool m_wasCurrentTab;
     Decoration::Renderer *m_decorationRenderer;
     double m_opacity;
     NET::WindowType m_type = NET::Unknown;
