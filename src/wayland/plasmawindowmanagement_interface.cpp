@@ -169,13 +169,10 @@ void PlasmaWindowManagementInterface::Private::getWindowCallback(wl_client *clie
         }
     );
     if (it == p->windows.constEnd()) {
-        ClientConnection *c = p->q->display()->getConnection(client);
-        wl_resource *r = c->createResource(&org_kde_plasma_window_interface, wl_resource_get_version(resource), id);
-        if (!r) {
-            return;
-        }
-        org_kde_plasma_window_send_unmapped(r);
-        wl_resource_destroy(r);
+        // create a temp window just for the resource and directly send an unmapped
+        PlasmaWindowInterface *window = new PlasmaWindowInterface(p->q, p->q);
+        window->d->createResource(resource, id);
+        window->unmap();
         return;
     }
     (*it)->d->createResource(resource, id);

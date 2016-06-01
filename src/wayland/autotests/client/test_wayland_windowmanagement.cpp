@@ -48,6 +48,7 @@ private Q_SLOTS:
     void testServerDelete();
     void testActiveWindowOnUnmapped();
     void testDeleteActiveWindow();
+    void testCreateAfterUnmap();
 
     void cleanup();
 
@@ -307,6 +308,36 @@ void TestWindowManagement::testDeleteActiveWindow()
     m_window = nullptr;
     QCOMPARE(activeWindowChangedSpy.count(), 2);
     QVERIFY(!m_windowManagement->activeWindow());
+}
+
+void TestWindowManagement::testCreateAfterUnmap()
+{
+    // this test verifies that we don't get a protocol error on client side when creating an already unmapped window.
+    QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
+    QVERIFY(windowSpy.isValid());
+    // create and unmap in one go
+    // client will first handle the create, the unmap will be sent once the server side is bound
+    auto serverWindow = m_windowManagementInterface->createWindow(this);
+    serverWindow->unmap();
+    QCOMPARE(m_windowManagementInterface->children().count(), 0);
+    QVERIFY(windowSpy.wait());
+    QCOMPARE(windowSpy.count(), 1);
+    auto window = windowSpy.first().first().value<KWayland::Client::PlasmaWindow*>();
+    QVERIFY(window);
+    // now this is not yet on the server, on the server it will be after next roundtrip
+    // which we can trigger by waiting for destroy of the newly created window.
+    // why destroy? Because we will get the unmap which triggers a destroy
+    QSignalSpy clientDestroyedSpy(window, &QObject::destroyed);
+    QVERIFY(clientDestroyedSpy.isValid());
+    QVERIFY(clientDestroyedSpy.wait());
+    // the server side created a helper PlasmaWindowInterface with PlasmaWindowManagementInterface as parent
+    // it emitted unmapped so we can be sure it will be destroyed directly
+    QCOMPARE(m_windowManagementInterface->children().count(), 1);
+    auto helperWindow = qobject_cast<KWayland::Server::PlasmaWindowInterface*>(m_windowManagementInterface->children().first());
+    QVERIFY(helperWindow);
+    QSignalSpy helperDestroyedSpy(helperWindow, &QObject::destroyed);
+    QVERIFY(helperDestroyedSpy.isValid());
+    QVERIFY(helperDestroyedSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestWindowManagement)
