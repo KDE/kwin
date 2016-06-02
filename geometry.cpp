@@ -144,6 +144,15 @@ void Workspace::updateClientArea(bool force)
         if (!(*it)->hasStrut())
             continue;
         QRect r = (*it)->adjustedClientArea(desktopArea, desktopArea);
+        // sanity check that a strut doesn't exclude a complete screen geometry
+        // this is a violation to EWMH, as KWin just ignores the strut
+        for (int i = 0; i < Screens::self()->count(); i++) {
+            if (!r.intersects(Screens::self()->geometry(i))) {
+                qCDebug(KWIN_CORE) << "Adjusted client area would exclude a complete screen, ignore";
+                r = desktopArea;
+                break;
+            }
+        }
         StrutRects strutRegion = (*it)->strutRects();
 
         // Ignore offscreen xinerama struts. These interfere with the larger monitors on the setup
@@ -164,8 +173,12 @@ void Workspace::updateClientArea(bool force)
                 for (int iS = 0;
                         iS < nscreens;
                         iS ++) {
-                    new_sareas[ i ][ iS ] = new_sareas[ i ][ iS ].intersected(
+                    const auto geo = new_sareas[ i ][ iS ].intersected(
                                                 (*it)->adjustedClientArea(desktopArea, screens[ iS ]));
+                    // ignore the geometry if it results in the screen getting removed completly
+                    if (!geo.isEmpty()) {
+                        new_sareas[ i ][ iS ] = geo;
+                    }
                 }
             }
         } else {
@@ -176,9 +189,12 @@ void Workspace::updateClientArea(bool force)
                     iS < nscreens;
                     iS ++) {
 //                            qDebug() << "adjusting new_sarea: " << screens[ iS ];
-                new_sareas[(*it)->desktop()][ iS ]
-                = new_sareas[(*it)->desktop()][ iS ].intersected(
+                const auto geo = new_sareas[(*it)->desktop()][ iS ].intersected(
                       (*it)->adjustedClientArea(desktopArea, screens[ iS ]));
+                // ignore the geometry if it results in the screen getting removed completly
+                if (!geo.isEmpty()) {
+                    new_sareas[(*it)->desktop()][ iS ] = geo;
+                }
             }
         }
     }
@@ -950,16 +966,6 @@ QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) co
     if (stareaB . intersects(area)) {
 //        qDebug() << "Moving bottom of: " << r << " to " << stareaB.top() - 1;
         r . setBottom(stareaB . top() - 1);
-    }
-
-    // sanity check that a strut doesn't exclude a complete screen geometry
-    // this is a violation to EWMH, as KWin just ignores the strut
-    for (int i = 0; i < screens()->count(); i++) {
-        const QRect screenGeo = screens()->geometry(i);
-        if (!r.intersects(screenGeo)) {
-            qCDebug(KWIN_CORE) << "Adjusted client area would exclude a complete screen, ignore";
-            return area;
-        }
     }
 
     return r;

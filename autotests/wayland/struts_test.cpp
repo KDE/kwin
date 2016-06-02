@@ -437,7 +437,7 @@ void StrutsTest::testX11Struts_data()
                                            << 0 << 1023
                                            << 0 << 0
                                            << 0 << 0
-                                           << QRect(0, 0, /*1220*/1280, 1024)
+                                           << QRect(0, 0, 1220, 1024)
                                            << QRect(1280, 0, 1280, 1024)
                                            << QRect(0, 0, 2560, 1024);
     // second screen
@@ -493,7 +493,7 @@ void StrutsTest::testX11Struts_data()
                                            << 0 << 0
                                            << 0 << 0
                                            << QRect(0, 0, 1280, 1024)
-                                           << QRect(1280, 0, 1280, 1024)//QRect(1340, 0, 1220, 1024)
+                                           << QRect(1340, 0, 1220, 1024)
                                            << QRect(0, 0, 2560, 1024);
     // invalid struts
     QTest::newRow("bottom panel/ invalid strut") << QRect(0, 980, 1280, 44)
@@ -729,9 +729,7 @@ void StrutsTest::test363804()
     // now verify the actual updated client areas
     QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), geometries.at(0));
     QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), geometries.at(0));
-    QEXPECT_FAIL("", "The actual bug", Continue);
     QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(554, 1080, 1366, 732));
-    QEXPECT_FAIL("", "The actual bug", Continue);
     QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(554, 1080, 1366, 732));
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 1920, 1812));
 
