@@ -214,7 +214,9 @@ void Connection::processEvents()
         QScopedPointer<Event> event(m_eventQueue.takeFirst());
         switch (event->type()) {
             case LIBINPUT_EVENT_DEVICE_ADDED: {
-                auto device = new Device(event->nativeDevice(), this);
+                auto device = new Device(event->nativeDevice());
+                device->moveToThread(s_thread);
+                device->setParent(this);
                 m_devices << device;
                 if (device->isKeyboard()) {
                     m_keyboard++;
@@ -278,7 +280,7 @@ void Connection::processEvents()
                         emit hasTouchChanged(false);
                     }
                 }
-                delete device;
+                device->deleteLater();
                 break;
             }
             case LIBINPUT_EVENT_KEYBOARD_KEY: {
