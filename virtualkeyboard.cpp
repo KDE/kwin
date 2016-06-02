@@ -314,13 +314,13 @@ bool VirtualKeyboard::event(QEvent *e)
                 if (!contentHints.testFlag(TextInputInterface::ContentHint::AutoCapitalization)) {
                     hints |= Qt::ImhNoAutoUppercase;
                 }
-                if (contentHints.testFlag(TextInputInterface::ContentHint::Lowercase)) {
+                if (contentHints.testFlag(TextInputInterface::ContentHint::LowerCase)) {
                     hints |= Qt::ImhPreferLowercase;
                 }
-                if (contentHints.testFlag(TextInputInterface::ContentHint::Uppercase)) {
+                if (contentHints.testFlag(TextInputInterface::ContentHint::UpperCase)) {
                     hints |= Qt::ImhPreferUppercase;
                 }
-                if (contentHints.testFlag(TextInputInterface::ContentHint::Titlecase)) {
+                if (contentHints.testFlag(TextInputInterface::ContentHint::TitleCase)) {
                     // no mapping in Qt
                 }
                 if (contentHints.testFlag(TextInputInterface::ContentHint::HiddenText)) {
@@ -356,7 +356,7 @@ bool VirtualKeyboard::event(QEvent *e)
                 case TextInputInterface::ContentPurpose::Time:
                     hints |= Qt::ImhTime;
                     break;
-                case TextInputInterface::ContentPurpose::Datetime:
+                case TextInputInterface::ContentPurpose::DateTime:
                     hints |= Qt::ImhDate;
                     hints |= Qt::ImhTime;
                     break;
