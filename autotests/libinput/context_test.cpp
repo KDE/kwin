@@ -54,6 +54,8 @@ void TestContext::testCreateFailUdev()
     // should not have a valid libinput
     libinput *libinput = context;
     QVERIFY(!libinput);
+    QVERIFY(!context.assignSeat("testSeat"));
+    QCOMPARE(context.fileDescriptor(), -1);
 }
 
 void TestContext::testAssignSeat_data()

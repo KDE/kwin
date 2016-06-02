@@ -81,7 +81,7 @@ bool Context::assignSeat(const char *seat)
 int Context::fileDescriptor()
 {
     if (!isValid()) {
-        return 0;
+        return -1;
     }
     return libinput_get_fd(m_libinput);
 }
