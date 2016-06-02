@@ -86,4 +86,10 @@ struct libinput_event_touch : libinput_event {
     QPointF absolutePos;
 };
 
+struct libinput {
+    int refCount = 1;
+    QByteArray seat;
+    int assignSeatRetVal = 0;
+};
+
 #endif

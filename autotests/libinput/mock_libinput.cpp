@@ -380,3 +380,72 @@ int32_t libinput_event_touch_get_slot(struct libinput_event_touch *event)
 {
     return event->slot;
 }
+
+struct libinput *libinput_udev_create_context(const struct libinput_interface *interface, void *user_data, struct udev *udev)
+{
+    if (!udev) {
+        return nullptr;
+    }
+    Q_UNUSED(interface)
+    Q_UNUSED(user_data)
+    return new libinput;
+}
+
+void libinput_log_set_priority(struct libinput *libinput, enum libinput_log_priority priority)
+{
+    Q_UNUSED(libinput)
+    Q_UNUSED(priority)
+}
+
+void libinput_log_set_handler(struct libinput *libinput, libinput_log_handler log_handler)
+{
+    Q_UNUSED(libinput)
+    Q_UNUSED(log_handler)
+}
+
+struct libinput *libinput_unref(struct libinput *libinput)
+{
+    libinput->refCount--;
+    if (libinput->refCount == 0) {
+        delete libinput;
+        return nullptr;
+    }
+    return libinput;
+}
+
+int libinput_udev_assign_seat(struct libinput *libinput, const char *seat_id)
+{
+    if (libinput->assignSeatRetVal == 0) {
+        libinput->seat = QByteArray(seat_id);
+    }
+    return libinput->assignSeatRetVal;
+}
+
+int libinput_get_fd(struct libinput *libinput)
+{
+    Q_UNUSED(libinput)
+    return -1;
+}
+
+int libinput_dispatch(struct libinput *libinput)
+{
+    Q_UNUSED(libinput)
+    return 0;
+}
+
+struct libinput_event *libinput_get_event(struct libinput *libinput)
+{
+    Q_UNUSED(libinput)
+    return nullptr;
+}
+
+void libinput_suspend(struct libinput *libinput)
+{
+    Q_UNUSED(libinput)
+}
+
+int libinput_resume(struct libinput *libinput)
+{
+    Q_UNUSED(libinput)
+    return 0;
+}

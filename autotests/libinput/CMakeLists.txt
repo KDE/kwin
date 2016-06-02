@@ -1,4 +1,5 @@
 include_directories(${Libinput_INCLUDE_DIRS})
+include_directories(${UDEV_INCLUDE_DIR})
 ########################################################
 # Test Devices
 ########################################################
@@ -49,6 +50,30 @@ add_executable(testLibinputTouchEvent ${testLibinputTouchEvent_SRCS})
 target_link_libraries( testLibinputTouchEvent Qt5::Test Qt5::Widgets KF5::ConfigCore)
 add_test(kwin-testLibinputTouchEvent testLibinputTouchEvent)
 ecm_mark_as_test(testLibinputTouchEvent)
+
+########################################################
+# Test Context
+########################################################
+set( testLibinputContext_SRCS
+        context_test.cpp
+        mock_libinput.cpp
+        mock_udev.cpp
+        ../../libinput/context.cpp
+        ../../libinput/device.cpp
+        ../../libinput/events.cpp
+        ../../libinput/libinput_logging.cpp
+        ../../logind.cpp
+    )
+add_executable(testLibinputContext ${testLibinputContext_SRCS})
+target_link_libraries( testLibinputContext
+    Qt5::DBus
+    Qt5::Test
+    Qt5::Widgets
+    KF5::ConfigCore
+    KF5::WindowSystem
+    )
+add_test(kwin-testLibinputContext testLibinputContext)
+ecm_mark_as_test(testLibinputContext)
 
 ########################################################
 # Test Input Events
