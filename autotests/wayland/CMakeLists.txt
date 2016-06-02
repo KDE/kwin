@@ -189,3 +189,12 @@ if (XCB_ICCCM_FOUND)
     add_test(kwin-testPlasmaWindow testPlasmaWindow)
     ecm_mark_as_test(testPlasmaWindow)
 endif()
+
+########################################################
+# Plasma Surface Test
+########################################################
+set( testPlasmaSurface_SRCS plasma_surface_test.cpp kwin_wayland_test.cpp )
+add_executable(testPlasmaSurface ${testPlasmaSurface_SRCS})
+target_link_libraries( testPlasmaSurface kwin Qt5::Test)
+add_test(kwin-testPlasmaSurface testPlasmaSurface)
+ecm_mark_as_test(testPlasmaSurface)

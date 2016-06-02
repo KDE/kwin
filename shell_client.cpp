@@ -857,6 +857,9 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
         }
         if (type != m_windowType) {
             m_windowType = type;
+            if (m_windowType == NET::Desktop || type == NET::Dock || type == NET::OnScreenDisplay) {
+                setOnAllDesktops(true);
+            }
             workspace()->updateClientArea();
         }
     };
