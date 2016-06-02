@@ -97,29 +97,31 @@ void Integration::initialize()
     screenAdded(m_dummyScreen);
     m_inputContext.reset(QPlatformInputContextFactory::create(QStringLiteral("qtvirtualkeyboard")));
     qunsetenv("QT_IM_MODULE");
-    connect(qApp, &QGuiApplication::focusObjectChanged, this,
-        [this] {
-            if (VirtualKeyboard::self() && qApp->focusObject() != VirtualKeyboard::self()) {
-                m_inputContext->setFocusObject(VirtualKeyboard::self());
-            }
-        }
-    );
-    connect(kwinApp(), &Application::workspaceCreated, this,
-        [this] {
-            if (VirtualKeyboard::self()) {
-                m_inputContext->setFocusObject(VirtualKeyboard::self());
-            }
-        }
-    );
-    connect(qApp->inputMethod(), &QInputMethod::visibleChanged, this,
-        [this] {
-            if (qApp->inputMethod()->isVisible()) {
-                if (QWindow *w = VirtualKeyboard::self()->inputPanel()) {
-                    QWindowSystemInterface::handleWindowActivated(w, Qt::ActiveWindowFocusReason);
+    if (!m_inputContext.isNull()) {
+        connect(qApp, &QGuiApplication::focusObjectChanged, this,
+            [this] {
+                if (VirtualKeyboard::self() && qApp->focusObject() != VirtualKeyboard::self()) {
+                    m_inputContext->setFocusObject(VirtualKeyboard::self());
                 }
             }
-        }
-    );
+        );
+        connect(kwinApp(), &Application::workspaceCreated, this,
+            [this] {
+                if (VirtualKeyboard::self()) {
+                    m_inputContext->setFocusObject(VirtualKeyboard::self());
+                }
+            }
+        );
+        connect(qApp->inputMethod(), &QInputMethod::visibleChanged, this,
+            [this] {
+                if (qApp->inputMethod()->isVisible()) {
+                    if (QWindow *w = VirtualKeyboard::self()->inputPanel()) {
+                        QWindowSystemInterface::handleWindowActivated(w, Qt::ActiveWindowFocusReason);
+                    }
+                }
+            }
+        );
+    }
 }
 
 QAbstractEventDispatcher *Integration::createEventDispatcher() const
