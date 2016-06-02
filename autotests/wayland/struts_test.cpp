@@ -58,6 +58,7 @@ private Q_SLOTS:
     void cleanup();
     void testX11Struts_data();
     void testX11Struts();
+    void test363804();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -352,6 +353,14 @@ void StrutsTest::testX11Struts_data()
                                            << QRect(0, 0, 2560, 1024);
 }
 
+struct XcbConnectionDeleter
+{
+    static inline void cleanup(xcb_connection_t *pointer)
+    {
+        xcb_disconnect(pointer);
+    }
+};
+
 void StrutsTest::testX11Struts()
 {
     // this test verifies that struts are applied correctly for X11 windows
@@ -376,13 +385,6 @@ void StrutsTest::testX11Struts()
     QCOMPARE(workspace()->clientArea(FullArea, 0, 1), QRect(0, 0, 2560, 1024));
 
     // create an xcb window
-    struct XcbConnectionDeleter
-    {
-        static inline void cleanup(xcb_connection_t *pointer)
-        {
-            xcb_disconnect(pointer);
-        }
-    };
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
 
@@ -491,6 +493,85 @@ void StrutsTest::testX11Struts()
     // combined
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 2560, 1024));
     QCOMPARE(workspace()->clientArea(FullArea, 0, 1), QRect(0, 0, 2560, 1024));
+}
+
+void StrutsTest::test363804()
+{
+    // this test verifies the condition described in BUG 363804
+    // two screens in a vertical setup, aligned to right border with panel on the bottom screen
+    const QVector<QRect> geometries{QRect(0, 0, 1920, 1080), QRect(554, 1080, 1366, 768)};
+    QMetaObject::invokeMethod(kwinApp()->platform(), "outputGeometriesChanged",
+                              Qt::DirectConnection,
+                              Q_ARG(QVector<QRect>, geometries));
+    QCOMPARE(screens()->geometry(0), geometries.at(0));
+    QCOMPARE(screens()->geometry(1), geometries.at(1));
+    QCOMPARE(screens()->geometry(), QRect(0, 0, 1920, 1848));
+
+    // create an xcb window
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+
+    xcb_window_t w = xcb_generate_id(c.data());
+    const QRect windowGeometry(554, 1812, 1366, 36);
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    NETWinInfo info(c.data(), w, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    info.setWindowType(NET::Dock);
+    NETExtendedStrut strut;
+    strut.left_start = 0;
+    strut.left_end = 0;
+    strut.left_width = 0;
+    strut.right_start = 0;
+    strut.right_end = 0;
+    strut.right_width = 0;
+    strut.top_start = 0;
+    strut.top_end = 0;
+    strut.top_width = 0;
+    strut.bottom_start = 554;
+    strut.bottom_end = 1919;
+    strut.bottom_width = 36;
+    info.setExtendedStrut(strut);
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+    // we should get a client for it
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(client);
+    QCOMPARE(client->window(), w);
+    QVERIFY(!client->isDecorated());
+    QCOMPARE(client->windowType(), NET::Dock);
+    QCOMPARE(client->geometry(), windowGeometry);
+
+    // now verify the actual updated client areas
+    QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), geometries.at(0));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), geometries.at(0));
+    QEXPECT_FAIL("", "The actual bug", Continue);
+    QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(554, 1080, 1366, 733));
+    QEXPECT_FAIL("", "The actual bug", Continue);
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(554, 1080, 1366, 733));
+    QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 1920, 1812));
+
+    // and destroy the window again
+    xcb_unmap_window(c.data(), w);
+    xcb_destroy_window(c.data(), w);
+    xcb_flush(c.data());
+    c.reset();
+
+    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+    QVERIFY(windowClosedSpy.wait());
 }
 
 }
