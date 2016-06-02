@@ -558,9 +558,9 @@ void StrutsTest::test363804()
     QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), geometries.at(0));
     QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), geometries.at(0));
     QEXPECT_FAIL("", "The actual bug", Continue);
-    QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(554, 1080, 1366, 733));
+    QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(554, 1080, 1366, 732));
     QEXPECT_FAIL("", "The actual bug", Continue);
-    QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(554, 1080, 1366, 733));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(554, 1080, 1366, 732));
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 1920, 1812));
 
     // and destroy the window again
