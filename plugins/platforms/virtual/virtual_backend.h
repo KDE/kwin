@@ -64,6 +64,7 @@ public:
 
 Q_SIGNALS:
     void sizeChanged();
+    void outputGeometriesChanged(const QVector<QRect> &geometries);
 
 private:
     QSize m_size;

@@ -36,6 +36,13 @@ void VirtualScreens::init()
     KWin::Screens::init();
     connect(m_backend, &VirtualBackend::sizeChanged,
             this, &VirtualScreens::startChangedTimer);
+    connect(m_backend, &VirtualBackend::outputGeometriesChanged, this,
+        [this] (const QVector<QRect> &geometries) {
+            // TODO: update Wayland Output
+            m_geometries = geometries;
+            emit changed();
+        }
+    );
     updateCount();
     emit changed();
 }
