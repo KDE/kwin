@@ -63,6 +63,7 @@ private Q_SLOTS:
     void testInternalWindowNoPlasmaWindow();
     void testPopupWindowNoPlasmaWindow();
     void testLockScreenNoPlasmaWindow();
+    void testDestroyedButNotUnmapped();
 
 private:
     ConnectionThread *m_connection = nullptr;
@@ -385,6 +386,36 @@ void PlasmaWindowTest::testLockScreenNoPlasmaWindow()
     }
     QVERIFY(lockStateChangedSpy.wait());
     QVERIFY(!waylandServer()->isScreenLocked());
+}
+
+void PlasmaWindowTest::testDestroyedButNotUnmapped()
+{
+    // this test verifies that also when a ShellSurface gets destroyed without a prior unmap
+    // the PlasmaWindow gets destroyed on Client side
+    QSignalSpy plasmaWindowCreatedSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
+    QVERIFY(plasmaWindowCreatedSpy.isValid());
+
+    // first create the parent window
+    QScopedPointer<Surface> parentSurface(m_compositor->createSurface());
+    QScopedPointer<ShellSurface> parentShellSurface(m_shell->createSurface(parentSurface.data()));
+    // map that window
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    parentSurface->attachBuffer(m_shm->createBuffer(img));
+    parentSurface->damage(QRect(0, 0, 100, 50));
+    parentSurface->commit();
+    // this should create a plasma window
+    QVERIFY(plasmaWindowCreatedSpy.wait());
+    QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
+    auto window = plasmaWindowCreatedSpy.first().first().value<PlasmaWindow*>();
+    QVERIFY(window);
+    QSignalSpy destroyedSpy(window, &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+
+    // now destroy without an unmap
+    parentShellSurface.reset();
+    parentSurface.reset();
+    QVERIFY(destroyedSpy.wait());
 }
 
 }

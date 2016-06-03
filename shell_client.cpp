@@ -184,6 +184,7 @@ void ShellClient::destroyClient()
         del = Deleted::create(this);
     }
     emit windowClosed(this, del);
+    destroyWindowManagementInterface();
     destroyDecoration();
 
     if (workspace()) {
