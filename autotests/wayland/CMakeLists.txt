@@ -178,3 +178,14 @@ if (XCB_ICCCM_FOUND)
     add_test(kwin-testDontCrashAuroraeDestroyDeco testDontCrashAuroraeDestroyDeco)
     ecm_mark_as_test(testDontCrashAuroraeDestroyDeco)
 endif()
+
+########################################################
+# PlasmaWindow test
+########################################################
+if (XCB_ICCCM_FOUND)
+    set( testPlasmaWindow_SRCS plasmawindow_test.cpp kwin_wayland_test.cpp )
+    add_executable(testPlasmaWindow ${testPlasmaWindow_SRCS})
+    target_link_libraries( testPlasmaWindow kwin Qt5::Test XCB::ICCCM)
+    add_test(kwin-testPlasmaWindow testPlasmaWindow)
+    ecm_mark_as_test(testPlasmaWindow)
+endif()
