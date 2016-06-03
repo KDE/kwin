@@ -72,7 +72,9 @@ void ShellClient::init()
     Q_ASSERT(s);
     if (s->buffer()) {
         setReadyForPainting();
-        setupWindowManagementInterface();
+        if (shouldExposeToWindowManagement()) {
+            setupWindowManagementInterface();
+        }
         m_unmapped = false;
         m_clientSize = s->buffer()->size();
     } else {
@@ -331,7 +333,9 @@ void ShellClient::markAsMapped()
 
     m_unmapped = false;
     setReadyForPainting();
-    setupWindowManagementInterface();
+    if (shouldExposeToWindowManagement()) {
+        setupWindowManagementInterface();
+    }
 }
 
 void ShellClient::createDecoration(const QRect &oldGeom)
@@ -1007,6 +1011,19 @@ void ShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecora
             }
         }
     );
+}
+
+bool ShellClient::shouldExposeToWindowManagement()
+{
+    if (isInternal()) {
+        return false;
+    }
+    if (m_shellSurface) {
+        if (m_shellSurface->isTransient() && !m_shellSurface->acceptsKeyboardFocus()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 }

@@ -149,6 +149,7 @@ private:
     void updateIcon();
     void markAsMapped();
     void setTransient();
+    bool shouldExposeToWindowManagement();
     static void deleteClient(ShellClient *c);
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;

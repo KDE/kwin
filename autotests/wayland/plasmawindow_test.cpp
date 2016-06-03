@@ -279,7 +279,6 @@ void PlasmaWindowTest::testInternalWindowNoPlasmaWindow()
     win.setGeometry(0, 0, 100, 100);
     win.show();
 
-    QEXPECT_FAIL("", "Internal windows still exposed", Continue);
     QVERIFY(!plasmaWindowCreatedSpy.wait());
 }
 
@@ -311,7 +310,6 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
     popupSurface->commit();
 
     // this should not create a plasma window
-    QEXPECT_FAIL("", "Popup windows are still exposed", Continue);
     QVERIFY(!plasmaWindowCreatedSpy.wait());
 
     // now the same with an already mapped surface when we create the shell surface
@@ -323,7 +321,7 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
     popup2ShellSurface->setTransient(popupSurface.data(), QPoint(0, 0), ShellSurface::TransientFlag::NoFocus);
 
     // this should not create a plasma window
-    QEXPECT_FAIL("", "Popup windows are still exposed", Continue);
+    QEXPECT_FAIL("", "The call to setTransient comes to late the window is already mapped then", Continue);
     QVERIFY(!plasmaWindowCreatedSpy.wait());
 }
 
