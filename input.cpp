@@ -1021,6 +1021,34 @@ void InputRedirection::setupWorkspace()
                         m_pointer->processAxis(axis, delta, 0);
                     }
                 );
+                connect(device, &FakeInputDevice::touchDownRequested, this,
+                   [this] (quint32 id, const QPointF &pos) {
+                       // TODO: Fix time
+                       m_touch->processDown(id, pos, 0);
+                   }
+                );
+                connect(device, &FakeInputDevice::touchMotionRequested, this,
+                   [this] (quint32 id, const QPointF &pos) {
+                       // TODO: Fix time
+                       m_touch->processMotion(id, pos, 0);
+                   }
+                );
+                connect(device, &FakeInputDevice::touchUpRequested, this,
+                    [this] (quint32 id) {
+                        // TODO: Fix time
+                        m_touch->processUp(id, 0);
+                    }
+                );
+                connect(device, &FakeInputDevice::touchCancelRequested, this,
+                    [this] () {
+                        m_touch->cancel();
+                    }
+                );
+                connect(device, &FakeInputDevice::touchFrameRequested, this,
+                   [this] () {
+                       m_touch->frame();
+                   }
+                );
             }
         );
         connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
