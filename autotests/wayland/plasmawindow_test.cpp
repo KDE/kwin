@@ -36,6 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+//screenlocker
+#include <KScreenLocker/KsldApp>
 
 #include <QPainter>
 #include <QRasterWindow>
@@ -60,6 +62,7 @@ private Q_SLOTS:
     void testCreateDestroyX11PlasmaWindow();
     void testInternalWindowNoPlasmaWindow();
     void testPopupWindowNoPlasmaWindow();
+    void testLockScreenNoPlasmaWindow();
 
 private:
     ConnectionThread *m_connection = nullptr;
@@ -87,6 +90,7 @@ void PlasmaWindowTest::initTestCase()
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
     setenv("QT_QPA_PLATFORM", "wayland", true);
+    setenv("QMLSCENE_DEVICE", "softwarecontext", true);
     waylandServer()->initWorkspace();
 }
 
@@ -323,6 +327,64 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
     // this should not create a plasma window
     QEXPECT_FAIL("", "The call to setTransient comes to late the window is already mapped then", Continue);
     QVERIFY(!plasmaWindowCreatedSpy.wait());
+
+    // let's destroy the windows
+    QCOMPARE(waylandServer()->clients().count(), 3);
+    QSignalSpy destroyed1Spy(waylandServer()->clients().last(), &QObject::destroyed);
+    QVERIFY(destroyed1Spy.isValid());
+    popup2Surface->attachBuffer(Buffer::Ptr());
+    popup2Surface->commit(Surface::CommitFlag::None);
+    popup2ShellSurface.reset();
+    popup2Surface.reset();
+    QVERIFY(destroyed1Spy.wait());
+    QCOMPARE(waylandServer()->clients().count(), 2);
+    QSignalSpy destroyed2Spy(waylandServer()->clients().last(), &QObject::destroyed);
+    QVERIFY(destroyed2Spy.isValid());
+    popupSurface->attachBuffer(Buffer::Ptr());
+    popupSurface->commit(Surface::CommitFlag::None);
+    popupShellSurface.reset();
+    popupSurface.reset();
+    QVERIFY(destroyed2Spy.wait());
+    QCOMPARE(waylandServer()->clients().count(), 1);
+    QSignalSpy destroyed3Spy(waylandServer()->clients().last(), &QObject::destroyed);
+    QVERIFY(destroyed3Spy.isValid());
+    parentSurface->attachBuffer(Buffer::Ptr());
+    parentSurface->commit(Surface::CommitFlag::None);
+    parentShellSurface.reset();
+    parentSurface.reset();
+    QVERIFY(destroyed3Spy.wait());
+}
+
+void PlasmaWindowTest::testLockScreenNoPlasmaWindow()
+{
+    // this test verifies that lock screen windows are not exposed to PlasmaWindow
+    QSignalSpy plasmaWindowCreatedSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
+    QVERIFY(plasmaWindowCreatedSpy.isValid());
+
+    // this time we use a QSignalSpy on ShellClient as it'a a little bit more complex setup
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    // lock
+    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
+    QVERIFY(clientAddedSpy.wait());
+    QVERIFY(clientAddedSpy.first().first().value<ShellClient*>()->isLockScreen());
+    // should not be sent to the client
+    QVERIFY(plasmaWindowCreatedSpy.isEmpty());
+    QVERIFY(!plasmaWindowCreatedSpy.wait());
+
+    // fake unlock
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    QVERIFY(lockStateChangedSpy.isValid());
+    const auto children = ScreenLocker::KSldApp::self()->children();
+    for (auto it = children.begin(); it != children.end(); ++it) {
+        if (qstrcmp((*it)->metaObject()->className(), "LogindIntegration") != 0) {
+            continue;
+        }
+        QMetaObject::invokeMethod(*it, "requestUnlock");
+        break;
+    }
+    QVERIFY(lockStateChangedSpy.wait());
+    QVERIFY(!waylandServer()->isScreenLocked());
 }
 
 }

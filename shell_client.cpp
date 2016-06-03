@@ -1018,6 +1018,9 @@ bool ShellClient::shouldExposeToWindowManagement()
     if (isInternal()) {
         return false;
     }
+    if (isLockScreen()) {
+        return false;
+    }
     if (m_shellSurface) {
         if (m_shellSurface->isTransient() && !m_shellSurface->acceptsKeyboardFocus()) {
             return false;
