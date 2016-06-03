@@ -42,6 +42,8 @@ private Q_SLOTS:
     void cleanup();
 
     void testMultipleShellSurfacesForSurface();
+    void testTransientForSameSurface_data();
+    void testTransientForSameSurface();
 
 private:
     Display *m_display = nullptr;
@@ -138,6 +140,28 @@ void ErrorTest::testMultipleShellSurfacesForSurface()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QScopedPointer<ShellSurface> shellSurface1(m_shell->createSurface(surface.data()));
     QScopedPointer<ShellSurface> shellSurface2(m_shell->createSurface(surface.data()));
+    QVERIFY(errorSpy.wait());
+    QVERIFY(m_connection->hasError());
+    QCOMPARE(m_connection->errorCode(), EPROTO);
+}
+
+void ErrorTest::testTransientForSameSurface_data()
+{
+    QTest::addColumn<ShellSurface::TransientFlag>("flag");
+
+    QTest::newRow("transient") << ShellSurface::TransientFlag::Default;
+    QTest::newRow("transient no focus") << ShellSurface::TransientFlag::NoFocus;
+}
+
+void ErrorTest::testTransientForSameSurface()
+{
+    // this test verifies that creating a transient shell surface for itself triggers a protocol error
+    QSignalSpy errorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QVERIFY(errorSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QFETCH(ShellSurface::TransientFlag, flag);
+    shellSurface->setTransient(surface.data(), QPoint(), flag);
     QVERIFY(errorSpy.wait());
     QVERIFY(m_connection->hasError());
     QCOMPARE(m_connection->errorCode(), EPROTO);

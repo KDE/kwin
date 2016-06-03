@@ -147,7 +147,7 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
         }
     );
     if (it != surfaces.constEnd()) {
-        wl_resource_post_error(surface->resource(), WL_DISPLAY_ERROR_INVALID_OBJECT, "ShellSurface already created");
+        wl_resource_post_error(surface->resource(), WL_SHELL_ERROR_ROLE, "ShellSurface already created");
         return;
     }
     ShellSurfaceInterface *shellSurface = new ShellSurfaceInterface(q, surface, parentResource);
@@ -312,7 +312,12 @@ void ShellSurfaceInterface::Private::setTransientCallback(wl_client *client, wl_
     Q_UNUSED(flags)
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
-    s->transientFor = QPointer<SurfaceInterface>(SurfaceInterface::get(parent));
+    auto surface = SurfaceInterface::get(parent);
+    if (surface && s->surface == surface) {
+        wl_resource_post_error(surface->resource(), WL_SHELL_ERROR_ROLE, "Cannot be a transient to itself");
+        return;
+    }
+    s->transientFor = QPointer<SurfaceInterface>(surface);
     s->transientOffset = QPoint(x, y);
     emit s->q_func()->transientChanged(!s->transientFor.isNull());
     emit s->q_func()->transientOffsetChanged(s->transientOffset);
