@@ -308,3 +308,14 @@ add_executable(testTextInput ${testTextInput_SRCS})
 target_link_libraries( testTextInput Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
 add_test(kwayland-testTextInput testTextInput)
 ecm_mark_as_test(testTextInput)
+
+########################################################
+# Test Error
+########################################################
+set( testError_SRCS
+        test_error.cpp
+    )
+add_executable(testError ${testError_SRCS})
+target_link_libraries( testError Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(kwayland-testError testError)
+ecm_mark_as_test(testError)
