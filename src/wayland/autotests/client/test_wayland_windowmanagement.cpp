@@ -64,6 +64,7 @@ private Q_SLOTS:
     void testShowingDesktop();
     void testRequestShowingDesktop_data();
     void testRequestShowingDesktop();
+    void testParentWindow();
 
     void cleanup();
 
@@ -468,6 +469,44 @@ void TestWindowManagement::testRequestShowingDesktop()
     QVERIFY(requestSpy.wait());
     QCOMPARE(requestSpy.count(), 1);
     QTEST(requestSpy.first().first().value<PlasmaWindowManagementInterface::ShowingDesktopState>(), "expectedValue");
+}
+
+void TestWindowManagement::testParentWindow()
+{
+    using namespace KWayland::Client;
+    // this test verifies the functionality of ParentWindows
+    QCOMPARE(m_windowManagement->windows().count(), 1);
+    auto parentWindow = m_windowManagement->windows().first();
+    QVERIFY(parentWindow);
+    QVERIFY(parentWindow->parentWindow().isNull());
+
+    // now let's create a second window
+    QSignalSpy windowAddedSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
+    QVERIFY(windowAddedSpy.isValid());
+    auto serverTransient = m_windowManagementInterface->createWindow(this);
+    serverTransient->setParentWindow(m_windowInterface);
+    QVERIFY(windowAddedSpy.wait());
+    auto transient = windowAddedSpy.first().first().value<PlasmaWindow*>();
+    QCOMPARE(transient->parentWindow().data(), parentWindow);
+
+    // let's unset the parent
+    QSignalSpy parentWindowChangedSpy(transient, &PlasmaWindow::parentWindowChanged);
+    QVERIFY(parentWindowChangedSpy.isValid());
+    serverTransient->setParentWindow(nullptr);
+    QVERIFY(parentWindowChangedSpy.wait());
+    QVERIFY(transient->parentWindow().isNull());
+
+    // and set it again
+    serverTransient->setParentWindow(m_windowInterface);
+    QVERIFY(parentWindowChangedSpy.wait());
+    QCOMPARE(transient->parentWindow().data(), parentWindow);
+
+    // now let's try to unmap the parent
+    m_windowInterface->unmap();
+    m_window = nullptr;
+    m_windowInterface = nullptr;
+    QVERIFY(parentWindowChangedSpy.wait());
+    QVERIFY(transient->parentWindow().isNull());
 }
 
 QTEST_GUILESS_MAIN(TestWindowManagement)

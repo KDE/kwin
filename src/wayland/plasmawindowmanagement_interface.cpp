@@ -73,6 +73,8 @@ public:
     void setVirtualDesktop(quint32 desktop);
     void unmap();
     void setState(org_kde_plasma_window_management_state flag, bool set);
+    void setParentWindow(PlasmaWindowInterface *parent);
+    wl_resource *resourceForParent(PlasmaWindowInterface *parent, wl_resource *child) const;
 
     QVector<wl_resource*> resources;
     quint32 windowId = 0;
@@ -80,6 +82,8 @@ public:
     PlasmaWindowManagementInterface *wm;
 
     bool unmapped = false;
+    PlasmaWindowInterface *parentWindow = nullptr;
+    QMetaObject::Connection parentWindowDestroyConnection;
 
 private:
     static void unbind(wl_resource *resource);
@@ -105,7 +109,7 @@ private:
     static const struct org_kde_plasma_window_interface s_interface;
 };
 
-const quint32 PlasmaWindowManagementInterface::Private::s_version = 4;
+const quint32 PlasmaWindowManagementInterface::Private::s_version = 5;
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_window_management_interface, s_version)
@@ -321,6 +325,8 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_
     org_kde_plasma_window_send_state_changed(resource, m_state);
     org_kde_plasma_window_send_themed_icon_name_changed(resource, m_themedIconName.toUtf8().constData());
 
+    org_kde_plasma_window_send_parent_window(resource, resourceForParent(parentWindow, resource));
+
     if (unmapped) {
         org_kde_plasma_window_send_unmapped(resource);
     }
@@ -403,6 +409,46 @@ void PlasmaWindowInterface::Private::setState(org_kde_plasma_window_management_s
     m_state = newState;
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         org_kde_plasma_window_send_state_changed(*it, m_state);
+    }
+}
+
+wl_resource *PlasmaWindowInterface::Private::resourceForParent(PlasmaWindowInterface *parent, wl_resource *child) const
+{
+    if (!parent) {
+        return nullptr;
+    }
+    auto it = std::find_if(parent->d->resources.begin(), parent->d->resources.end(),
+        [child] (wl_resource *parentResource) {
+            return wl_resource_get_client(child) == wl_resource_get_client(parentResource);
+        }
+    );
+    if (it != parent->d->resources.end()) {
+        return *it;
+    }
+    return nullptr;
+}
+
+void PlasmaWindowInterface::Private::setParentWindow(PlasmaWindowInterface *window)
+{
+    if (parentWindow == window) {
+        return;
+    }
+    QObject::disconnect(parentWindowDestroyConnection);
+    parentWindowDestroyConnection = QMetaObject::Connection();
+    parentWindow = window;
+    if (parentWindow) {
+        parentWindowDestroyConnection = QObject::connect(window, &QObject::destroyed, q,
+            [this] {
+                parentWindow = nullptr;
+                parentWindowDestroyConnection = QMetaObject::Connection();
+                for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+                    org_kde_plasma_window_send_parent_window(*it, nullptr);
+                }
+            }
+        );
+    }
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+        org_kde_plasma_window_send_parent_window(*it, resourceForParent(window, *it));
     }
 }
 
@@ -656,6 +702,11 @@ void PlasmaWindowInterface::setResizable(bool set)
 void PlasmaWindowInterface::setVirtualDesktopChangeable(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_VIRTUAL_DESKTOP_CHANGEABLE, set);
+}
+
+void PlasmaWindowInterface::setParentWindow(PlasmaWindowInterface *parentWindow)
+{
+    d->setParentWindow(parentWindow);
 }
 
 }

@@ -139,6 +139,14 @@ public:
      */
     QHash<SurfaceInterface*, QRect> minimizedGeometries() const;
 
+    /**
+     * Sets this PlasmaWindowInterface as a transient window to @p parentWindow.
+     * If @p parentWindow is @c nullptr, the PlasmaWindowInterface is a toplevel
+     * window and does not have a parent window.
+     * @since 5.24
+     **/
+    void setParentWindow(PlasmaWindowInterface *parentWindow);
+
 Q_SIGNALS:
     void closeRequested();
     /**
