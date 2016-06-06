@@ -313,16 +313,16 @@ void TestWindowManagement::testDeleteActiveWindow()
 void TestWindowManagement::testCreateAfterUnmap()
 {
     // this test verifies that we don't get a protocol error on client side when creating an already unmapped window.
-    QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
-    QVERIFY(windowSpy.isValid());
+    QCOMPARE(m_windowManagement->children().count(), 1);
     // create and unmap in one go
     // client will first handle the create, the unmap will be sent once the server side is bound
     auto serverWindow = m_windowManagementInterface->createWindow(this);
     serverWindow->unmap();
     QCOMPARE(m_windowManagementInterface->children().count(), 0);
-    QVERIFY(windowSpy.wait());
-    QCOMPARE(windowSpy.count(), 1);
-    auto window = windowSpy.first().first().value<KWayland::Client::PlasmaWindow*>();
+    QCoreApplication::instance()->processEvents();
+    QCoreApplication::instance()->processEvents(QEventLoop::WaitForMoreEvents);
+    QTRY_COMPARE(m_windowManagement->children().count(), 2);
+    auto window = dynamic_cast<KWayland::Client::PlasmaWindow*>(m_windowManagement->children().last());
     QVERIFY(window);
     // now this is not yet on the server, on the server it will be after next roundtrip
     // which we can trigger by waiting for destroy of the newly created window.
@@ -330,6 +330,7 @@ void TestWindowManagement::testCreateAfterUnmap()
     QSignalSpy clientDestroyedSpy(window, &QObject::destroyed);
     QVERIFY(clientDestroyedSpy.isValid());
     QVERIFY(clientDestroyedSpy.wait());
+    QCOMPARE(m_windowManagement->children().count(), 1);
     // the server side created a helper PlasmaWindowInterface with PlasmaWindowManagementInterface as parent
     // it emitted unmapped so we can be sure it will be destroyed directly
     QCOMPARE(m_windowManagementInterface->children().count(), 1);

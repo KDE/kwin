@@ -171,8 +171,8 @@ void PlasmaWindowManagementInterface::Private::getWindowCallback(wl_client *clie
     if (it == p->windows.constEnd()) {
         // create a temp window just for the resource and directly send an unmapped
         PlasmaWindowInterface *window = new PlasmaWindowInterface(p->q, p->q);
+        window->d->unmapped = true;
         window->d->createResource(resource, id);
-        window->unmap();
         return;
     }
     (*it)->d->createResource(resource, id);
@@ -320,6 +320,14 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_
     }
     org_kde_plasma_window_send_state_changed(resource, m_state);
     org_kde_plasma_window_send_themed_icon_name_changed(resource, m_themedIconName.toUtf8().constData());
+
+    if (unmapped) {
+        org_kde_plasma_window_send_unmapped(resource);
+    }
+
+    if (wl_resource_get_version(resource) >= ORG_KDE_PLASMA_WINDOW_INITIAL_STATE_SINCE_VERSION) {
+        org_kde_plasma_window_send_initial_state(resource);
+    }
     c->flush();
 }
 

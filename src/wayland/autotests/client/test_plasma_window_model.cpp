@@ -187,9 +187,6 @@ if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
     m_display->dispatchEvents();
     QSignalSpy dataChangedSpy(model, &PlasmaWindowModel::dataChanged);
     VERIFY(dataChangedSpy.isValid());
-    // just creating sends one changed, this could be improved in the protocol
-    VERIFY(dataChangedSpy.wait());
-    dataChangedSpy.clear();
 
     const QModelIndex index = model->index(0);
     COMPARE(model->data(index, role).toBool(), false);
@@ -454,9 +451,6 @@ void PlasmaWindowModelTest::testTitle()
     m_display->dispatchEvents();
     QSignalSpy dataChangedSpy(model, &PlasmaWindowModel::dataChanged);
     QVERIFY(dataChangedSpy.isValid());
-    // just creating sends one changed, this could be improved in the protocol
-    QVERIFY(dataChangedSpy.wait());
-    dataChangedSpy.clear();
 
     const QModelIndex index = model->index(0);
     QCOMPARE(model->data(index, Qt::DisplayRole).toString(), QString());
@@ -482,9 +476,6 @@ void PlasmaWindowModelTest::testAppId()
     m_display->dispatchEvents();
     QSignalSpy dataChangedSpy(model, &PlasmaWindowModel::dataChanged);
     QVERIFY(dataChangedSpy.isValid());
-    // just creating sends one changed, this could be improved in the protocol
-    QVERIFY(dataChangedSpy.wait());
-    dataChangedSpy.clear();
 
     const QModelIndex index = model->index(0);
     QCOMPARE(model->data(index, PlasmaWindowModel::AppId).toString(), QString());
@@ -510,9 +501,6 @@ void PlasmaWindowModelTest::testVirtualDesktop()
     m_display->dispatchEvents();
     QSignalSpy dataChangedSpy(model, &PlasmaWindowModel::dataChanged);
     QVERIFY(dataChangedSpy.isValid());
-    // just creating sends one changed, this could be improved in the protocol
-    QVERIFY(dataChangedSpy.wait());
-    dataChangedSpy.clear();
 
     const QModelIndex index = model->index(0);
     QCOMPARE(model->data(index, PlasmaWindowModel::VirtualDesktop).toInt(), 0);
