@@ -681,6 +681,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setResizable(isResizable());
     w->setMovable(isMovable());
     w->setVirtualDesktopChangeable(true); // FIXME Matches Client::actionSupported(), but both should be implemented.
+    w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
     connect(this, &AbstractClient::skipTaskbarChanged, w,
         [w, this] {
             w->setSkipTaskbar(skipTaskbar());
@@ -721,6 +722,11 @@ void AbstractClient::setupWindowManagementInterface()
         }
     );
     connect(this, &AbstractClient::shadeChanged, w, [w, this] { w->setShaded(isShade()); });
+    connect(this, &AbstractClient::transientChanged, w,
+        [w, this] {
+            w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
+        }
+    );
     connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
     connect(w, &PlasmaWindowInterface::moveRequested, this,
         [this] {
