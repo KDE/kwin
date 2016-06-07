@@ -2381,6 +2381,10 @@ bool SceneOpenGLShadow::prepareBackend()
     const int width = topLeft.width() + top.width() + topRight.width();
     const int height = topLeft.height() + left.height() + bottomLeft.height();
 
+    if (width == 0 || height == 0) {
+        return false;
+    }
+
     QImage image(width, height, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     QPainter p;
