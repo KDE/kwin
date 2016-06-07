@@ -2276,8 +2276,12 @@ void SceneOpenGLShadow::buildQuads()
     const QRectF outerRect(QPointF(-leftOffset(), -topOffset()),
                            QPointF(topLevel()->width() + rightOffset(), topLevel()->height() + bottomOffset()));
 
-    const qreal width = topLeft.width() + top.width() + topRight.width();
-    const qreal height = topLeft.height() + left.height() + bottomLeft.height();
+    const int width = qMax(topLeft.width(), bottomLeft.width()) +
+                      qMax(top.width(), bottom.width()) +
+                      qMax(topRight.width(), bottomRight.width());
+    const int height = qMax(topLeft.height(), bottomLeft.height()) +
+                       qMax(left.height(), right.height()) +
+                       qMax(bottomLeft.height(), bottomRight.height());
 
     qreal tx1(0.0), tx2(0.0), ty1(0.0), ty2(0.0);
 
@@ -2377,9 +2381,14 @@ bool SceneOpenGLShadow::prepareBackend()
     const QSize bottomLeft(shadowPixmap(ShadowElementBottomLeft).size());
     const QSize left(shadowPixmap(ShadowElementLeft).size());
     const QSize topLeft(shadowPixmap(ShadowElementTopLeft).size());
+    const QSize bottomRight(shadowPixmap(ShadowElementBottomRight).size());
 
-    const int width = topLeft.width() + top.width() + topRight.width();
-    const int height = topLeft.height() + left.height() + bottomLeft.height();
+    const int width = qMax(topLeft.width(), bottomLeft.width()) +
+                      qMax(top.width(), bottom.width()) +
+                      qMax(topRight.width(), bottomRight.width());
+    const int height = qMax(topLeft.height(), bottomLeft.height()) +
+                       qMax(left.height(), right.height()) +
+                       qMax(bottomLeft.height(), bottomRight.height());
 
     if (width == 0 || height == 0) {
         return false;
