@@ -292,25 +292,13 @@ void ShadowTest::testSurfaceDestroy()
     QVERIFY(surfaceDestroyedSpy.isValid());
     QSignalSpy shadowDestroyedSpy(serverShadow, &QObject::destroyed);
     QVERIFY(shadowDestroyedSpy.isValid());
-    QSignalSpy clientDisconnectedSpy(serverSurface->client(), &ClientConnection::disconnected);
-    QVERIFY(clientDisconnectedSpy.isValid());
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
     QVERIFY(shadowDestroyedSpy.isEmpty());
     // destroy the shadow
     shadow.reset();
-    // shadow protocol doesn't have a destroy callback yet, so also disconnect
-    m_connection->deleteLater();
-    m_connection = nullptr;
-    QVERIFY(clientDisconnectedSpy.wait());
-    if (shadowDestroyedSpy.isEmpty()) {
-        QVERIFY(shadowDestroyedSpy.wait());
-    }
+    QVERIFY(shadowDestroyedSpy.wait());
     QCOMPARE(shadowDestroyedSpy.count(), 1);
-    m_shm->destroy();
-    m_compositor->destroy();
-    m_shadow->destroy();
-    m_queue->destroy();
 }
 
 QTEST_GUILESS_MAIN(ShadowTest)

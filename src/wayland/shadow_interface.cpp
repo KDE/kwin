@@ -43,6 +43,7 @@ private:
 
     static void createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
     static void unsetCallback(wl_client *client, wl_resource *resource, wl_resource *surface);
+    static void destroyCallback(wl_client *client, wl_resource *resource);
     static void unbind(wl_resource *resource);
     static Private *cast(wl_resource *r) {
         return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
@@ -53,12 +54,13 @@ private:
     static const quint32 s_version;
 };
 
-const quint32 ShadowManagerInterface::Private::s_version = 1;
+const quint32 ShadowManagerInterface::Private::s_version = 2;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_shadow_manager_interface ShadowManagerInterface::Private::s_interface = {
     createCallback,
-    unsetCallback
+    unsetCallback,
+    destroyCallback
 };
 #endif
 
@@ -84,6 +86,12 @@ void ShadowManagerInterface::Private::unbind(wl_resource *resource)
 {
     Q_UNUSED(resource)
     // TODO: implement?
+}
+
+void ShadowManagerInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    wl_resource_destroy(resource);
 }
 
 void ShadowManagerInterface::Private::createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
@@ -198,6 +206,7 @@ const struct org_kde_kwin_shadow_interface ShadowInterface::Private::s_interface
     offsetTopCallback,
     offsetRightCallback,
     offsetBottomCallback,
+    resourceDestroyedCallback
 };
 #endif
 
