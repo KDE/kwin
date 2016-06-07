@@ -167,11 +167,7 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             if (client->readyForPainting()) {
                 emit shellClientAdded(client);
             } else {
-                connect(client, &ShellClient::windowShown, this,
-                    [this, client] {
-                        emit shellClientAdded(client);
-                    }
-                );
+                connect(client, &ShellClient::windowShown, this, &WaylandServer::shellClientShown);
             }
         }
     );
@@ -247,6 +243,17 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_outputManagement->create();
 
     m_display->createSubCompositor(m_display)->create();
+}
+
+void WaylandServer::shellClientShown(Toplevel *t)
+{
+    ShellClient *c = dynamic_cast<ShellClient*>(t);
+    if (!c) {
+        qCWarning(KWIN_CORE) << "Failed to cast a Toplevel which is supposed to be a ShellClient to ShellClient";
+        return;
+    }
+    disconnect(c, &ShellClient::windowShown, this, &WaylandServer::shellClientShown);
+    emit shellClientAdded(c);
 }
 
 void WaylandServer::initWorkspace()

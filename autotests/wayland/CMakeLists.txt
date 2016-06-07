@@ -207,3 +207,12 @@ add_executable(testMaximized ${testMaximized_SRCS})
 target_link_libraries( testMaximized kwin Qt5::Test)
 add_test(kwin-testMaximized testMaximized)
 ecm_mark_as_test(testMaximized)
+
+########################################################
+# Shell Client Test
+########################################################
+set( testShellClient_SRCS shell_client_test.cpp kwin_wayland_test.cpp )
+add_executable(testShellClient ${testShellClient_SRCS})
+target_link_libraries( testShellClient kwin Qt5::Test)
+add_test(kwin-testShellClient testShellClient)
+ecm_mark_as_test(testShellClient)

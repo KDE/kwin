@@ -59,6 +59,7 @@ namespace KWin
 class ShellClient;
 
 class AbstractClient;
+class Toplevel;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -159,6 +160,7 @@ Q_SIGNALS:
     void terminatingInternalClientConnection();
 
 private:
+    void shellClientShown(Toplevel *t);
     void initOutputs();
     quint16 createClientId(KWayland::Server::ClientConnection *c);
     void destroyInternalConnection();
