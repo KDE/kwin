@@ -198,3 +198,12 @@ add_executable(testPlasmaSurface ${testPlasmaSurface_SRCS})
 target_link_libraries( testPlasmaSurface kwin Qt5::Test)
 add_test(kwin-testPlasmaSurface testPlasmaSurface)
 ecm_mark_as_test(testPlasmaSurface)
+
+########################################################
+# Maximized Windows Test
+########################################################
+set( testMaximized_SRCS maximize_test.cpp kwin_wayland_test.cpp )
+add_executable(testMaximized ${testMaximized_SRCS})
+target_link_libraries( testMaximized kwin Qt5::Test)
+add_test(kwin-testMaximized testMaximized)
+ecm_mark_as_test(testMaximized)
