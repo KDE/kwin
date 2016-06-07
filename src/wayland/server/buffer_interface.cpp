@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "buffer_interface.h"
 #include "display.h"
+#include "logging_p.h"
 #include "surface_interface.h"
 // Wayland
 #include <wayland-server.h>
@@ -184,7 +185,9 @@ BufferInterface::BufferInterface(wl_resource *resource, SurfaceInterface *parent
 
 BufferInterface::~BufferInterface()
 {
-    Q_ASSERT(d->refCount == 0);
+    if (d->refCount != 0) {
+        qCWarning(KWAYLAND_SERVER) << "Buffer destroyed while still being referenced, ref count:" << d->refCount;
+    }
 }
 
 void BufferInterface::Private::destroyListenerCallback(wl_listener *listener, void *data)
