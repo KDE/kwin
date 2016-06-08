@@ -185,6 +185,11 @@ int Screens::intersecting(const QRect &r) const
     return cnt;
 }
 
+QSize Screens::displaySize() const
+{
+    return size();
+}
+
 BasicScreens::BasicScreens(Platform *backend, QObject *parent)
     : Screens(parent)
     , m_backend(backend)

@@ -961,12 +961,12 @@ int EffectsHandlerImpl::desktopGridHeight() const
 
 int EffectsHandlerImpl::workspaceWidth() const
 {
-    return desktopGridWidth() * displayWidth();
+    return desktopGridWidth() * screens()->size().width();
 }
 
 int EffectsHandlerImpl::workspaceHeight() const
 {
-    return desktopGridHeight() * displayHeight();
+    return desktopGridHeight() * screens()->size().height();
 }
 
 int EffectsHandlerImpl::desktopAtCoords(QPoint coords) const
@@ -987,7 +987,8 @@ QPoint EffectsHandlerImpl::desktopCoords(int id) const
     QPoint coords = VirtualDesktopManager::self()->grid().gridCoords(id);
     if (coords.x() == -1)
         return QPoint(-1, -1);
-    return QPoint(coords.x() * displayWidth(), coords.y() * displayHeight());
+    const QSize displaySize = screens()->size();
+    return QPoint(coords.x() * displaySize.width(), coords.y() * displaySize.height());
 }
 
 int EffectsHandlerImpl::desktopAbove(int desktop, bool wrap) const

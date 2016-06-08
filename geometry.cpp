@@ -90,7 +90,7 @@ void Workspace::desktopResized()
 
 void Workspace::saveOldScreenSizes()
 {
-    olddisplaysize = QSize( displayWidth(), displayHeight());
+    olddisplaysize = screens()->displaySize();
     oldscreensizes.clear();
     for( int i = 0;
          i < screens()->count();
@@ -355,6 +355,7 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
         desktop = VirtualDesktopManager::self()->current();
     if (screen == -1)
         screen = screens()->current();
+    const QSize displaySize = screens()->displaySize();
 
     QRect sarea, warea;
 
@@ -372,7 +373,7 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
                 ? screenarea[ desktop ][ screen ]
                 : screens()->geometry(screen);
         warea = workarea[ desktop ].isNull()
-                ? QRect(0, 0, displayWidth(), displayHeight())
+                ? QRect(0, 0, displaySize.width(), displaySize.height())
                 : workarea[ desktop ];
     }
 
@@ -394,7 +395,7 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
         else
             return warea;
     case FullArea:
-        return QRect(0, 0, displayWidth(), displayHeight());
+        return QRect(0, 0, displaySize.width(), displaySize.height());
     }
     abort();
 }
@@ -955,7 +956,7 @@ QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) co
     // HACK: workarea handling is not xinerama aware, so if this strut
     // reserves place at a xinerama edge that's inside the virtual screen,
     // ignore the strut for workspace setting.
-    if (area == QRect(0, 0, displayWidth(), displayHeight())) {
+    if (area == QRect(QPoint(0, 0), screens()->displaySize())) {
         if (stareaL.left() < screenarea.left())
             stareaL = QRect();
         if (stareaR.right() > screenarea.right())
@@ -997,28 +998,29 @@ NETExtendedStrut Client::strut() const
 {
     NETExtendedStrut ext = info->extendedStrut();
     NETStrut str = info->strut();
+    const QSize displaySize = screens()->displaySize();
     if (ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0
             && (str.left != 0 || str.right != 0 || str.top != 0 || str.bottom != 0)) {
         // build extended from simple
         if (str.left != 0) {
             ext.left_width = str.left;
             ext.left_start = 0;
-            ext.left_end = displayHeight();
+            ext.left_end = displaySize.height();
         }
         if (str.right != 0) {
             ext.right_width = str.right;
             ext.right_start = 0;
-            ext.right_end = displayHeight();
+            ext.right_end = displaySize.height();
         }
         if (str.top != 0) {
             ext.top_width = str.top;
             ext.top_start = 0;
-            ext.top_end = displayWidth();
+            ext.top_end = displaySize.width();
         }
         if (str.bottom != 0) {
             ext.bottom_width = str.bottom;
             ext.bottom_start = 0;
-            ext.bottom_end = displayWidth();
+            ext.bottom_end = displaySize.width();
         }
     }
     return ext;
@@ -1027,6 +1029,7 @@ NETExtendedStrut Client::strut() const
 StrutRect Client::strutRect(StrutArea area) const
 {
     assert(area != StrutAreaAll);   // Not valid
+    const QSize displaySize = screens()->displaySize();
     NETExtendedStrut strutArea = strut();
     switch(area) {
     case StrutAreaTop:
@@ -1039,14 +1042,14 @@ StrutRect Client::strutRect(StrutArea area) const
     case StrutAreaRight:
         if (strutArea.right_width != 0)
             return StrutRect(QRect(
-                                 displayWidth() - strutArea.right_width, strutArea.right_start,
+                                 displaySize.width() - strutArea.right_width, strutArea.right_start,
                                  strutArea.right_width, strutArea.right_end - strutArea.right_start
                              ), StrutAreaRight);
         break;
     case StrutAreaBottom:
         if (strutArea.bottom_width != 0)
             return StrutRect(QRect(
-                                 strutArea.bottom_start, displayHeight() - strutArea.bottom_width,
+                                 strutArea.bottom_start, displaySize.height() - strutArea.bottom_width,
                                  strutArea.bottom_end - strutArea.bottom_start, strutArea.bottom_width
                              ), StrutAreaBottom);
         break;
@@ -1148,6 +1151,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     QRect oldScreenArea;
     QRect oldGeomTall;
     QRect oldGeomWide;
+    const auto displaySize = screens()->displaySize();
     if( workspace()->inUpdateClientArea()) {
         // we need to find the screen area as it was before the change
         oldScreenArea = QRect( 0, 0, workspace()->oldDisplayWidth(), workspace()->oldDisplayHeight());
@@ -1163,8 +1167,8 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
         }
     } else {
         oldScreenArea = workspace()->clientArea(ScreenArea, oldGeometry.center(), oldDesktop);
-        oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), displayHeight());   // Full screen height
-        oldGeomWide = QRect(0, oldGeometry.y(), displayWidth(), oldGeometry.height());   // Full screen width
+        oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), displaySize.height());   // Full screen height
+        oldGeomWide = QRect(0, oldGeometry.y(), displaySize.width(), oldGeometry.height());   // Full screen width
     }
     int oldTopMax = oldScreenArea.y();
     int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
@@ -1177,8 +1181,8 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     int leftMax = screenArea.x();
     QRect newGeom = geometryRestore(); // geometry();
     QRect newClientGeom = newGeom.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
-    const QRect newGeomTall = QRect(newGeom.x(), 0, newGeom.width(), displayHeight());   // Full screen height
-    const QRect newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
+    const QRect newGeomTall = QRect(newGeom.x(), 0, newGeom.width(), displaySize.height());   // Full screen height
+    const QRect newGeomWide = QRect(0, newGeom.y(), displaySize.width(), newGeom.height());   // Full screen width
     // Get the max strut point for each side where the window is (E.g. Highest point for
     // the bottom struts bounded by the window's left and right sides).
 

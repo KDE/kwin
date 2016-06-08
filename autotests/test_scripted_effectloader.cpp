@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mock_effectshandler.h"
 #include "../scripting/scriptedeffect.h"
 // for mocking
+#include "../cursor.h"
 #include "../input.h"
 #include "../screenedge.h"
 // KDE
@@ -62,6 +63,13 @@ void registration(QScriptEngine *)
 {
 }
 }
+
+static QPoint s_cursorPos = QPoint();
+QPoint Cursor::pos()
+{
+    return s_cursorPos;
+}
+
 
 }
 

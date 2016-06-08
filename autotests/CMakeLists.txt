@@ -152,12 +152,17 @@ ecm_mark_as_test(testBuiltInEffectLoader)
 include_directories(${KWIN_SOURCE_DIR})
 set( testScriptedEffectLoader_SRCS
     test_scripted_effectloader.cpp
+    mock_abstract_client.cpp
     mock_effectshandler.cpp
+    mock_screens.cpp
+    mock_workspace.cpp
     ../effectloader.cpp
     ../scripting/scriptedeffect.cpp
     ../scripting/scriptingutils.cpp
     ../scripting/scripting_logging.cpp
+    ../screens.cpp
 )
+kconfig_add_kcfg_files(testScriptedEffectLoader_SRCS ../settings.kcfgc)
 add_executable( testScriptedEffectLoader ${testScriptedEffectLoader_SRCS})
 
 target_link_libraries(testScriptedEffectLoader

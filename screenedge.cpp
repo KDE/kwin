@@ -417,7 +417,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
         const uint interimDesktop = desktop;
         desktop = vds->toLeft(desktop, vds->isNavigationWrappingAround());
         if (desktop != interimDesktop)
-            pos.setX(displayWidth() - 1 - OFFSET);
+            pos.setX(screens()->size().width() - 1 - OFFSET);
     } else if (isRight()) {
         const uint interimDesktop = desktop;
         desktop = vds->toRight(desktop, vds->isNavigationWrappingAround());
@@ -428,7 +428,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
         const uint interimDesktop = desktop;
         desktop = vds->above(desktop, vds->isNavigationWrappingAround());
         if (desktop != interimDesktop)
-            pos.setY(displayHeight() - 1 - OFFSET);
+            pos.setY(screens()->size().height() - 1 - OFFSET);
     } else if (isBottom()) {
         const uint interimDesktop = desktop;
         desktop = vds->below(desktop, vds->isNavigationWrappingAround());

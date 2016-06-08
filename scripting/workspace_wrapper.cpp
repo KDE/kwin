@@ -226,17 +226,17 @@ QSize WorkspaceWrapper::workspaceSize() const
 
 QSize WorkspaceWrapper::displaySize() const
 {
-    return QSize(KWin::displayWidth(), KWin::displayHeight());
+    return screens()->displaySize();
 }
 
 int WorkspaceWrapper::displayWidth() const
 {
-    return KWin::displayWidth();
+    return displaySize().width();
 }
 
 int WorkspaceWrapper::displayHeight() const
 {
-    return KWin::displayHeight();
+    return displaySize().height();
 }
 
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int desktop) const

@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "overlaywindow.h"
 #include "platform.h"
+#include "screens.h"
 #include "xcbutils.h"
 #include "kwinxrenderutils.h"
 #include "decorations/decoratedclient.h"
@@ -173,7 +174,8 @@ void X11XRenderBackend::init(bool createOverlay)
 void X11XRenderBackend::createBuffer()
 {
     xcb_pixmap_t pixmap = xcb_generate_id(connection());
-    xcb_create_pixmap(connection(), Xcb::defaultDepth(), pixmap, rootWindow(), displayWidth(), displayHeight());
+    const auto displaySize = screens()->displaySize();
+    xcb_create_pixmap(connection(), Xcb::defaultDepth(), pixmap, rootWindow(), displaySize.width(), displaySize.height());
     xcb_render_picture_t b = xcb_generate_id(connection());
     xcb_render_create_picture(connection(), b, pixmap, m_format, 0, NULL);
     xcb_free_pixmap(connection(), pixmap);   // The picture owns the pixmap now
@@ -182,6 +184,7 @@ void X11XRenderBackend::createBuffer()
 
 void X11XRenderBackend::present(int mask, const QRegion &damage)
 {
+    const auto displaySize = screens()->displaySize();
     if (mask & Scene::PAINT_SCREEN_REGION) {
         // Use the damage region as the clip region for the root window
         XFixesRegion frontRegion(damage);
@@ -189,13 +192,13 @@ void X11XRenderBackend::present(int mask, const QRegion &damage)
         // copy composed buffer to the root window
         xcb_xfixes_set_picture_clip_region(connection(), buffer(), XCB_XFIXES_REGION_NONE, 0, 0);
         xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer(), XCB_RENDER_PICTURE_NONE,
-                             m_front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
+                             m_front, 0, 0, 0, 0, 0, 0, displaySize.width(), displaySize.height());
         xcb_xfixes_set_picture_clip_region(connection(), m_front, XCB_XFIXES_REGION_NONE, 0, 0);
         xcb_flush(connection());
     } else {
         // copy composed buffer to the root window
         xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer(), XCB_RENDER_PICTURE_NONE,
-                             m_front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
+                             m_front, 0, 0, 0, 0, 0, 0, displaySize.width(), displaySize.height());
         xcb_flush(connection());
     }
 }

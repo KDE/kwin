@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "meta.h"
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
+#include "../screens.h"
 #include "../screenedge.h"
 #include "scripting_logging.h"
 // KDE
@@ -71,14 +72,14 @@ QScriptValue kwinEffectDisplayWidth(QScriptContext *context, QScriptEngine *engi
 {
     Q_UNUSED(context)
     Q_UNUSED(engine)
-    return displayWidth();
+    return screens()->displaySize().width();
 }
 
 QScriptValue kwinEffectDisplayHeight(QScriptContext *context, QScriptEngine *engine)
 {
     Q_UNUSED(context)
     Q_UNUSED(engine)
-    return displayHeight();
+    return screens()->displaySize().height();
 }
 
 QScriptValue kwinScriptGlobalShortcut(QScriptContext *context, QScriptEngine *engine)

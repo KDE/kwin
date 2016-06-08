@@ -126,7 +126,7 @@ QRect XRandRScreens::geometry(int screen) const
         return QRect();
     }
     return m_geometries.at(screen).isValid() ? m_geometries.at(screen) :
-           QRect(0, 0, displayWidth(), displayHeight()); // xinerama, lacks RandR
+           QRect(QPoint(0, 0), displaySize()); // xinerama, lacks RandR
 }
 
 QString XRandRScreens::name(int screen) const
@@ -186,6 +186,15 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
     // let's try to gather a few XRandR events, unlikely that there is just one
     startChangedTimer();
     return false;
+}
+
+QSize XRandRScreens::displaySize() const
+{
+    xcb_screen_t *screen = defaultScreen();
+    if (!screen) {
+        return Screens::size();
+    }
+    return QSize(screen->width_in_pixels, screen->height_in_pixels);
 }
 
 } // namespace

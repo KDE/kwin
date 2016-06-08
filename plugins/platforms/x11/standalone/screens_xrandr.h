@@ -40,6 +40,7 @@ public:
     int number(const QPoint& pos) const override;
     float refreshRate(int screen) const override;
     QSize size(int screen) const override;
+    QSize displaySize() const override;
 
     using QObject::event;
     bool event(xcb_generic_event_t *event) override;
