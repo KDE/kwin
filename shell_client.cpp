@@ -554,8 +554,13 @@ void ShellClient::hideClient(bool hide)
     Q_UNUSED(hide)
 }
 
+static bool changeMaximizeRecursion = false;
 void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
 {
+    if (changeMaximizeRecursion) {
+        return;
+    }
+    MaximizeMode oldMode = m_maximizeMode;
     StackingUpdatesBlocker blocker(workspace());
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
     if (!adjust) {
@@ -578,6 +583,22 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         }
     }
     // TODO: add more checks as in Client
+
+    // call into decoration update borders
+    if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_maximizeMode == KWin::MaximizeFull)) {
+        changeMaximizeRecursion = true;
+        const auto c = decoration()->client().data();
+        if ((m_maximizeMode & MaximizeVertical) != (oldMode & MaximizeVertical)) {
+            emit c->maximizedVerticallyChanged(m_maximizeMode & MaximizeVertical);
+        }
+        if ((m_maximizeMode & MaximizeHorizontal) != (oldMode & MaximizeHorizontal)) {
+            emit c->maximizedHorizontallyChanged(m_maximizeMode & MaximizeHorizontal);
+        }
+        if ((m_maximizeMode == MaximizeFull) != (oldMode == MaximizeFull)) {
+            emit c->maximizedChanged(m_maximizeMode & MaximizeFull);
+        }
+        changeMaximizeRecursion = false;
+    }
 }
 
 MaximizeMode ShellClient::maximizeMode() const
