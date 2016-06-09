@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/registry.h>
+#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shell.h>
@@ -56,6 +57,8 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
+    void testWaylandStruts_data();
+    void testWaylandStruts();
     void testX11Struts_data();
     void testX11Struts();
     void test363804();
@@ -68,6 +71,7 @@ private:
     KWayland::Client::ShmPool *m_shm = nullptr;
     KWayland::Client::Shell *m_shell = nullptr;
     KWayland::Client::EventQueue *m_queue = nullptr;
+    KWayland::Client::PlasmaShell *m_plasmaShell = nullptr;
     QThread *m_thread = nullptr;
 };
 
@@ -145,6 +149,10 @@ void StrutsTest::init()
     QVERIFY(m_seat->isValid());
     m_deco = registry.createServerSideDecorationManager(decorationSpy.first().first().value<quint32>(), decorationSpy.first().last().value<quint32>());
     QVERIFY(m_deco->isValid());
+    m_plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name,
+                                               registry.interface(Registry::Interface::PlasmaShell).version,
+                                               this);
+    QVERIFY(m_plasmaShell);
     QSignalSpy hasPointerSpy(m_seat, &Seat::hasPointerChanged);
     QVERIFY(hasPointerSpy.isValid());
     QVERIFY(hasPointerSpy.wait());
@@ -165,6 +173,8 @@ void StrutsTest::cleanup()
     m_shm = nullptr;
     delete m_shell;
     m_shell = nullptr;
+    delete m_plasmaShell;
+    m_plasmaShell = nullptr;
     delete m_queue;
     m_queue = nullptr;
     if (m_thread) {
@@ -175,6 +185,118 @@ void StrutsTest::cleanup()
         m_thread = nullptr;
         m_connection = nullptr;
     }
+    while (!waylandServer()->clients().isEmpty()) {
+        QCoreApplication::instance()->processEvents(QEventLoop::WaitForMoreEvents);
+    }
+    QVERIFY(waylandServer()->clients().isEmpty());
+}
+
+void StrutsTest::testWaylandStruts_data()
+{
+    QTest::addColumn<QVector<QRect>>("windowGeometries");
+    QTest::addColumn<QRect>("screen0Maximized");
+    QTest::addColumn<QRect>("screen1Maximized");
+    QTest::addColumn<QRect>("workArea");
+
+    QTest::newRow("bottom/0") << QVector<QRect>{QRect(0, 992, 1280, 32)}    << QRect(0, 0, 1280, 992)   << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 992);
+    QTest::newRow("bottom/1") << QVector<QRect>{QRect(1280, 992, 1280, 32)} << QRect(0, 0, 1280, 1024)  << QRect(1280, 0, 1280, 992)  << QRect(0, 0, 2560, 992);
+    QTest::newRow("top/0")    << QVector<QRect>{QRect(0, 0, 1280, 32)}      << QRect(0, 32, 1280, 992)  << QRect(1280, 0, 1280, 1024) << QRect(0, 32, 2560, 992);
+    QTest::newRow("top/1")    << QVector<QRect>{QRect(1280, 0, 1280, 32)}   << QRect(0, 0, 1280, 1024)  << QRect(1280, 32, 1280, 992) << QRect(0, 32, 2560, 992);
+    QTest::newRow("left/0")   << QVector<QRect>{QRect(0, 0, 32, 1024)}      << QRect(32, 0, 1248, 1024) << QRect(1280, 0, 1280, 1024) << QRect(32, 0, 2528, 1024);
+    QTest::newRow("left/1")   << QVector<QRect>{QRect(1280, 0, 32, 1024)}   << QRect(0, 0, 1280, 1024)  << QRect(1312, 0, 1248, 1024) << QRect(0, 0, 2560, 1024);
+    QTest::newRow("right/0")  << QVector<QRect>{QRect(1248, 0, 32, 1024)}   << QRect(0, 0, 1248, 1024)  << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 1024);
+    QTest::newRow("right/1")  << QVector<QRect>{QRect(2528, 0, 32, 1024)}   << QRect(0, 0, 1280, 1024)  << QRect(1280, 0, 1248, 1024) << QRect(0, 0, 2528, 1024);
+
+    // same with partial panels not covering the whole area
+    QTest::newRow("part bottom/0") << QVector<QRect>{QRect(100, 992, 1080, 32)}  << QRect(0, 0, 1280, 992)   << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 992);
+    QTest::newRow("part bottom/1") << QVector<QRect>{QRect(1380, 992, 1080, 32)} << QRect(0, 0, 1280, 1024)  << QRect(1280, 0, 1280, 992)  << QRect(0, 0, 2560, 992);
+    QTest::newRow("part top/0")    << QVector<QRect>{QRect(100, 0, 1080, 32)}    << QRect(0, 32, 1280, 992)  << QRect(1280, 0, 1280, 1024) << QRect(0, 32, 2560, 992);
+    QTest::newRow("part top/1")    << QVector<QRect>{QRect(1380, 0, 1080, 32)}   << QRect(0, 0, 1280, 1024)  << QRect(1280, 32, 1280, 992) << QRect(0, 32, 2560, 992);
+    QTest::newRow("part left/0")   << QVector<QRect>{QRect(0, 100, 32, 824)}     << QRect(32, 0, 1248, 1024) << QRect(1280, 0, 1280, 1024) << QRect(32, 0, 2528, 1024);
+    QTest::newRow("part left/1")   << QVector<QRect>{QRect(1280, 100, 32, 824)}  << QRect(0, 0, 1280, 1024)  << QRect(1312, 0, 1248, 1024) << QRect(0, 0, 2560, 1024);
+    QTest::newRow("part right/0")  << QVector<QRect>{QRect(1248, 100, 32, 824)}  << QRect(0, 0, 1248, 1024)  << QRect(1280, 0, 1280, 1024) << QRect(0, 0, 2560, 1024);
+    QTest::newRow("part right/1")  << QVector<QRect>{QRect(2528, 100, 32, 824)}  << QRect(0, 0, 1280, 1024)  << QRect(1280, 0, 1248, 1024) << QRect(0, 0, 2528, 1024);
+
+    // multiple panels
+    QTest::newRow("two bottom panels") << QVector<QRect>{QRect(100, 992, 1080, 32), QRect(1380, 984, 1080, 40)} << QRect(0, 0, 1280, 992) << QRect(1280, 0, 1280, 984) << QRect(0, 0, 2560, 984);
+    QTest::newRow("two left panels") << QVector<QRect>{QRect(0, 10, 32, 390), QRect(0, 450, 40, 100)} << QRect(40, 0, 1240, 1024) << QRect(1280, 0, 1280, 1024) << QRect(40, 0, 2520, 1024);
+}
+
+void StrutsTest::testWaylandStruts()
+{
+    // this test verifies that struts on Wayland panels are handled correctly
+    using namespace KWayland::Client;
+    // no, struts yet
+    QVERIFY(waylandServer()->clients().isEmpty());
+    // first screen
+    QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MovementArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeFullArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(FullScreenArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(ScreenArea, 0, 1), QRect(0, 0, 1280, 1024));
+    // second screen
+    QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MovementArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeFullArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(FullScreenArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(ScreenArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    // combined
+    QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 2560, 1024));
+    QCOMPARE(workspace()->clientArea(FullArea, 0, 1), QRect(0, 0, 2560, 1024));
+
+    QFETCH(QVector<QRect>, windowGeometries);
+    // create the panels
+    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    for (auto it = windowGeometries.constBegin(), end = windowGeometries.constEnd(); it != end; it++) {
+        const QRect windowGeometry = *it;
+        Surface *surface = m_compositor->createSurface(m_compositor);
+        ShellSurface *shellSurface = m_shell->createSurface(surface, surface);
+        Q_UNUSED(shellSurface)
+        PlasmaShellSurface *plasmaSurface = m_plasmaShell->createSurface(surface, surface);
+        plasmaSurface->setPosition(windowGeometry.topLeft());
+        plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+
+        // map the window
+        QImage img(windowGeometry.size(), QImage::Format_RGB32);
+        img.fill(Qt::red);
+        surface->attachBuffer(m_shm->createBuffer(img));
+        surface->damage(QRect(QPoint(0, 0), windowGeometry.size()));
+        surface->commit(Surface::CommitFlag::None);
+
+        QVERIFY(windowCreatedSpy.wait());
+        QCOMPARE(windowCreatedSpy.count(), 1);
+        auto c = windowCreatedSpy.first().first().value<ShellClient*>();
+        QVERIFY(c);
+        QVERIFY(!c->isActive());
+        QCOMPARE(c->geometry(), windowGeometry);
+        QVERIFY(c->isDock());
+        QVERIFY(c->hasStrut());
+        windowCreatedSpy.clear();
+    }
+
+    // some props are independent of struts - those first
+    // screen 0
+    QCOMPARE(workspace()->clientArea(MovementArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeFullArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(FullScreenArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(ScreenArea, 0, 1), QRect(0, 0, 1280, 1024));
+    // screen 1
+    QCOMPARE(workspace()->clientArea(MovementArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeFullArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(FullScreenArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(ScreenArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    // combined
+    QCOMPARE(workspace()->clientArea(FullArea, 0, 1), QRect(0, 0, 2560, 1024));
+
+    // now verify the actual updated client areas
+    QTEST(workspace()->clientArea(PlacementArea, 0, 1), "screen0Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, 0, 1), "screen0Maximized");
+    QTEST(workspace()->clientArea(PlacementArea, 1, 1), "screen1Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, 1, 1), "screen1Maximized");
+    QTEST(workspace()->clientArea(WorkArea, 0, 1), "workArea");
 }
 
 void StrutsTest::testX11Struts_data()
