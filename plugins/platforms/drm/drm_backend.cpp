@@ -498,7 +498,7 @@ void DrmBackend::initCursor()
     m_cursor[0]->image()->fill(Qt::transparent);
     m_cursor[1] = createBuffer(cursorSize);
     m_cursor[1]->map(QImage::Format_ARGB32_Premultiplied);
-    m_cursor[0]->image()->fill(Qt::transparent);
+    m_cursor[1]->image()->fill(Qt::transparent);
     // now we have screens and can set cursors, so start tracking
     connect(this, &DrmBackend::cursorChanged, this, &DrmBackend::updateCursor);
     connect(Cursor::self(), &Cursor::posChanged, this, &DrmBackend::moveCursor);
