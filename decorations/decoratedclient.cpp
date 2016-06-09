@@ -99,6 +99,14 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
     connect(client, &AbstractClient::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::minimizeableChanged);
     connect(client, &AbstractClient::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizeableChanged);
 
+    auto signalMaximizeChanged = static_cast<void (AbstractClient::*)(KWin::AbstractClient*, MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged);
+    connect(client, signalMaximizeChanged, decoratedClient,
+        [this, decoratedClient] (AbstractClient *client, MaximizeMode mode) {
+            Q_UNUSED(client)
+            emit decoratedClient->maximizedChanged(mode == MaximizeMode::MaximizeFull);
+        }
+    );
+
     connect(client, &AbstractClient::paletteChanged, decoratedClient, &KDecoration2::DecoratedClient::paletteChanged);
 }
 

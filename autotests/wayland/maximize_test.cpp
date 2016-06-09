@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include "screens.h"
 #include "wayland_server.h"
+#include "workspace.h"
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
@@ -31,8 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/server_decoration.h>
 
 #include <KWayland/Server/shell_interface.h>
+
+#include <KDecoration2/Decoration>
+#include <KDecoration2/DecoratedClient>
 
 #include <QThread>
 
@@ -49,6 +54,7 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
+    void testMaximizedPassedToDeco();
     void testInitiallyMaximized();
 
 private:
@@ -56,6 +62,7 @@ private:
     Shell *m_shell = nullptr;
     ShmPool *m_shm = nullptr;
     EventQueue *m_queue = nullptr;
+    ServerSideDecorationManager *m_ssd = nullptr;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
 };
@@ -119,6 +126,10 @@ void TestMaximized::init()
                                    registry.interface(Registry::Interface::Shell).version,
                                    this);
     QVERIFY(m_shell->isValid());
+    m_ssd = registry.createServerSideDecorationManager(registry.interface(Registry::Interface::ServerSideDecorationManager).name,
+                                                       registry.interface(Registry::Interface::ServerSideDecorationManager).version,
+                                                       this);
+    QVERIFY(m_ssd);
 
     screens()->setCurrent(0);
     KWin::Cursor::setPos(QPoint(1280, 512));
@@ -134,6 +145,7 @@ void TestMaximized::cleanup()
     CLEANUP(m_compositor)
     CLEANUP(m_shm)
     CLEANUP(m_shell)
+    CLEANUP(m_ssd)
     CLEANUP(m_queue)
 
     if (m_connection) {
@@ -147,6 +159,45 @@ void TestMaximized::cleanup()
         m_thread = nullptr;
     }
 #undef CLEANUP
+}
+
+void TestMaximized::testMaximizedPassedToDeco()
+{
+    // this test verifies that when a ShellClient gets maximized the Decoration receives the signal
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<ServerSideDecoration> ssd(m_ssd->create(surface.data()));
+
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(clientAddedSpy.isEmpty());
+    QVERIFY(clientAddedSpy.wait());
+    auto client = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(client);
+    QVERIFY(client->isDecorated());
+    auto decoration = client->decoration();
+    QVERIFY(decoration);
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+
+    // now maximize
+    QSignalSpy maximizedChangedSpy(decoration->client().data(), &KDecoration2::DecoratedClient::maximizedChanged);
+    QVERIFY(maximizedChangedSpy.isValid());
+    workspace()->slotWindowMaximize();
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(maximizedChangedSpy.count(), 1);
+    QCOMPARE(maximizedChangedSpy.last().first().toBool(), true);
+
+    // now unmaximize again
+    workspace()->slotWindowMaximize();
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(maximizedChangedSpy.count(), 2);
+    QCOMPARE(maximizedChangedSpy.last().first().toBool(), false);
 }
 
 void TestMaximized::testInitiallyMaximized()
