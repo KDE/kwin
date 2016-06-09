@@ -348,6 +348,7 @@ void ShellClient::createDecoration(const QRect &oldGeom)
         connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {
                 GeometryUpdatesBlocker blocker(this);
+                RequestGeometryBlocker requestBlocker(this);
                 QRect oldgeom = geometry();
                 if (!isShade())
                     checkWorkspacePosition(oldgeom);
@@ -565,6 +566,7 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     }
     MaximizeMode oldMode = m_maximizeMode;
     StackingUpdatesBlocker blocker(workspace());
+    RequestGeometryBlocker geometryBlocker(this);
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
     if (!adjust) {
         if (vertical)
@@ -801,10 +803,15 @@ bool ShellClient::isInputMethod() const
 
 void ShellClient::requestGeometry(const QRect &rect)
 {
+    if (m_requestGeometryBlockCounter != 0) {
+        m_blockedRequestGeometry = rect;
+        return;
+    }
     m_positionAfterResize.setPoint(rect.topLeft());
     if (m_shellSurface) {
         m_shellSurface->requestSize(rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
     }
+    m_blockedRequestGeometry = QRect();
 }
 
 void ShellClient::clientFullScreenChanged(bool fullScreen)

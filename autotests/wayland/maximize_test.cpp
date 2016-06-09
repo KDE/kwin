@@ -214,6 +214,15 @@ void TestMaximized::testMaximizedPassedToDeco()
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(maximizedChangedSpy.count(), 2);
     QCOMPARE(maximizedChangedSpy.last().first().toBool(), false);
+    QCOMPARE(bordersChangedSpy.count(), 2);
+    QVERIFY(decoration->borderTop() != 0);
+    QVERIFY(decoration->borderLeft() != 0);
+    QVERIFY(decoration->borderRight() != 0);
+    QVERIFY(decoration->borderBottom() != 0);
+
+    QVERIFY(sizeChangedSpy.wait());
+    QCOMPARE(sizeChangedSpy.count(), 2);
+    QCOMPARE(sizeChangedSpy.last().first().toSize(), QSize(100, 50));
 }
 
 void TestMaximized::testInitiallyMaximized()

@@ -172,6 +172,29 @@ private:
     bool m_transient = false;
     bool m_internal;
     qreal m_opacity = 1.0;
+
+    class RequestGeometryBlocker {
+    public:
+        RequestGeometryBlocker(ShellClient *client)
+            : m_client(client)
+        {
+            m_client->m_requestGeometryBlockCounter++;
+        }
+        ~RequestGeometryBlocker()
+        {
+            m_client->m_requestGeometryBlockCounter--;
+            if (m_client->m_requestGeometryBlockCounter == 0) {
+                if (m_client->m_blockedRequestGeometry.isValid()) {
+                    m_client->requestGeometry(m_client->m_blockedRequestGeometry);
+                }
+            }
+        }
+    private:
+        ShellClient *m_client;
+    };
+    friend class RequestGeometryBlocker;
+    int m_requestGeometryBlockCounter = 0;
+    QRect m_blockedRequestGeometry;
 };
 
 }
