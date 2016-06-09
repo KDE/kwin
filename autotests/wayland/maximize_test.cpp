@@ -176,6 +176,9 @@ void TestMaximized::testMaximizedPassedToDeco()
     surface->damage(QRect(0, 0, 100, 50));
     surface->commit(Surface::CommitFlag::None);
 
+    QSignalSpy sizeChangedSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangedSpy.isValid());
+
     QVERIFY(clientAddedSpy.isEmpty());
     QVERIFY(clientAddedSpy.wait());
     auto client = clientAddedSpy.first().first().value<ShellClient*>();
@@ -186,12 +189,25 @@ void TestMaximized::testMaximizedPassedToDeco()
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
 
     // now maximize
+    QVERIFY(sizeChangedSpy.isEmpty());
+    QSignalSpy bordersChangedSpy(decoration, &KDecoration2::Decoration::bordersChanged);
+    QVERIFY(bordersChangedSpy.isValid());
     QSignalSpy maximizedChangedSpy(decoration->client().data(), &KDecoration2::DecoratedClient::maximizedChanged);
     QVERIFY(maximizedChangedSpy.isValid());
     workspace()->slotWindowMaximize();
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(maximizedChangedSpy.count(), 1);
     QCOMPARE(maximizedChangedSpy.last().first().toBool(), true);
+    QCOMPARE(bordersChangedSpy.count(), 1);
+    QCOMPARE(decoration->borderLeft(), 0);
+    QCOMPARE(decoration->borderBottom(), 0);
+    QCOMPARE(decoration->borderRight(), 0);
+    QVERIFY(decoration->borderTop() != 0);
+
+    QVERIFY(sizeChangedSpy.isEmpty());
+    QVERIFY(sizeChangedSpy.wait());
+    QCOMPARE(sizeChangedSpy.count(), 1);
+    QCOMPARE(sizeChangedSpy.first().first().toSize(), QSize(1280, 1024 - decoration->borderTop()));
 
     // now unmaximize again
     workspace()->slotWindowMaximize();

@@ -572,19 +572,6 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (horizontal)
             m_maximizeMode = MaximizeMode(m_maximizeMode ^ MaximizeHorizontal);
     }
-
-    // TODO: check rules
-    if (m_maximizeMode == MaximizeFull) {
-        m_geomMaximizeRestore = geometry();
-        requestGeometry(workspace()->clientArea(MaximizeArea, this));
-        workspace()->raiseClient(this);
-    } else {
-        if (m_geomMaximizeRestore.isValid()) {
-            requestGeometry(m_geomMaximizeRestore);
-        } else {
-            requestGeometry(workspace()->clientArea(PlacementArea, this));
-        }
-    }
     // TODO: add more checks as in Client
 
     // call into decoration update borders
@@ -601,6 +588,19 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
             emit c->maximizedChanged(m_maximizeMode & MaximizeFull);
         }
         changeMaximizeRecursion = false;
+    }
+
+    // TODO: check rules
+    if (m_maximizeMode == MaximizeFull) {
+        m_geomMaximizeRestore = geometry();
+        requestGeometry(workspace()->clientArea(MaximizeArea, this));
+        workspace()->raiseClient(this);
+    } else {
+        if (m_geomMaximizeRestore.isValid()) {
+            requestGeometry(m_geomMaximizeRestore);
+        } else {
+            requestGeometry(workspace()->clientArea(PlacementArea, this));
+        }
     }
 }
 
