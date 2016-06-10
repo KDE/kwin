@@ -165,7 +165,11 @@ void TestPlasmaShell::testRole()
 
     // create the surface
     QScopedPointer<Surface> s(m_compositor->createSurface());
+    // no PlasmaShellSurface for the Surface yet yet
+    QVERIFY(!PlasmaShellSurface::get(s.data()));
     QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+    // now we should have a PlasmaShellSurface for
+    QCOMPARE(PlasmaShellSurface::get(s.data()), ps.data());
 
     // try to create another PlasmaShellSurface for the same Surface, should return from cache
     QCOMPARE(m_plasmaShell->createSurface(s.data()), ps.data());
