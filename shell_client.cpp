@@ -417,6 +417,9 @@ void ShellClient::doSetGeometry(const QRect &rect)
         addWorkspaceRepaint(visibleRect());
     }
     triggerDecorationRepaint();
+    if (hasStrut()) {
+        workspace()->updateClientArea();
+    }
     emit geometryShapeChanged(this, old);
 }
 

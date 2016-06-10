@@ -59,6 +59,7 @@ private Q_SLOTS:
     void cleanup();
     void testWaylandStruts_data();
     void testWaylandStruts();
+    void testMoveWaylandPanel();
     void testX11Struts_data();
     void testX11Struts();
     void test363804();
@@ -297,6 +298,55 @@ void StrutsTest::testWaylandStruts()
     QTEST(workspace()->clientArea(PlacementArea, 1, 1), "screen1Maximized");
     QTEST(workspace()->clientArea(MaximizeArea, 1, 1), "screen1Maximized");
     QTEST(workspace()->clientArea(WorkArea, 0, 1), "workArea");
+}
+
+void StrutsTest::testMoveWaylandPanel()
+{
+    // this test verifies that repositioning a Wayland panel updates the client area
+    using namespace KWayland::Client;
+    const QRect windowGeometry(0, 1000, 1280, 24);
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    Q_UNUSED(shellSurface)
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    plasmaSurface->setPosition(windowGeometry.topLeft());
+    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+
+    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+
+    // map the window
+    QImage img(windowGeometry.size(), QImage::Format_RGB32);
+    img.fill(Qt::red);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(QPoint(0, 0), windowGeometry.size()));
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(windowCreatedSpy.wait());
+    QCOMPARE(windowCreatedSpy.count(), 1);
+    auto c = windowCreatedSpy.first().first().value<ShellClient*>();
+    QVERIFY(c);
+    QVERIFY(!c->isActive());
+    QCOMPARE(c->geometry(), windowGeometry);
+    QVERIFY(c->isDock());
+    QVERIFY(c->hasStrut());
+    windowCreatedSpy.clear();
+    QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 0, 1280, 1000));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), QRect(0, 0, 1280, 1000));
+    QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 2560, 1000));
+
+    QSignalSpy geometryChangedSpy(c, &ShellClient::geometryShapeChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    plasmaSurface->setPosition(QPoint(1280, 1000));
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(c->geometry(), QRect(1280, 1000, 1280, 24));
+    QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(1280, 0, 1280, 1000));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(1280, 0, 1280, 1000));
+    QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 2560, 1000));
 }
 
 void StrutsTest::testX11Struts_data()
