@@ -45,6 +45,7 @@ private Q_SLOTS:
 
     void testRole_data();
     void testRole();
+    void testPosition();
     void testDisconnect();
 
 private:
@@ -205,6 +206,45 @@ void TestPlasmaShell::testRole()
     QVERIFY(roleChangedSpy.wait());
     QCOMPARE(roleChangedSpy.count(), 2);
     QCOMPARE(sps->role(), PlasmaShellSurfaceInterface::Role::Normal);
+}
+
+void TestPlasmaShell::testPosition()
+{
+    // this test verifies that updating the position of a PlasmaShellSurface is properly passed to the server
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QVERIFY(plasmaSurfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+    QVERIFY(plasmaSurfaceCreatedSpy.wait());
+    QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
+
+    // verify that we got a plasma shell surface
+    auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface*>();
+    QVERIFY(sps);
+    QVERIFY(sps->surface());
+
+    // default position should not be set
+    QVERIFY(!sps->isPositionSet());
+    QCOMPARE(sps->position(), QPoint());
+
+    // now let's try to change the position
+    QSignalSpy positionChangedSpy(sps, &PlasmaShellSurfaceInterface::positionChanged);
+    QVERIFY(positionChangedSpy.isValid());
+    ps->setPosition(QPoint(1, 2));
+    QVERIFY(positionChangedSpy.wait());
+    QCOMPARE(positionChangedSpy.count(), 1);
+    QVERIFY(sps->isPositionSet());
+    QCOMPARE(sps->position(), QPoint(1, 2));
+
+    // let's try to set same position, should not trigger an update
+    ps->setPosition(QPoint(1, 2));
+    QVERIFY(!positionChangedSpy.wait(100));
+    // different point should work, though
+    ps->setPosition(QPoint(3, 4));
+    QVERIFY(positionChangedSpy.wait());
+    QCOMPARE(positionChangedSpy.count(), 2);
+    QCOMPARE(sps->position(), QPoint(3, 4));
 }
 
 void TestPlasmaShell::testDisconnect()
