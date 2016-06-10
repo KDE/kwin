@@ -168,6 +168,7 @@ void TestPlasmaShell::testRole()
     // no PlasmaShellSurface for the Surface yet yet
     QVERIFY(!PlasmaShellSurface::get(s.data()));
     QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+    QCOMPARE(ps->role(), PlasmaShellSurface::Role::Normal);
     // now we should have a PlasmaShellSurface for
     QCOMPARE(PlasmaShellSurface::get(s.data()), ps.data());
 
@@ -193,9 +194,17 @@ void TestPlasmaShell::testRole()
     QVERIFY(roleChangedSpy.isValid());
     QFETCH(PlasmaShellSurface::Role, clientRole);
     ps->setRole(clientRole);
+    QCOMPARE(ps->role(), clientRole);
     QVERIFY(roleChangedSpy.wait());
     QCOMPARE(roleChangedSpy.count(), 1);
     QTEST(sps->role(), "serverRole");
+
+    // set role back to normal
+    ps->setRole(PlasmaShellSurface::Role::Normal);
+    QCOMPARE(ps->role(), PlasmaShellSurface::Role::Normal);
+    QVERIFY(roleChangedSpy.wait());
+    QCOMPARE(roleChangedSpy.count(), 2);
+    QCOMPARE(sps->role(), PlasmaShellSurfaceInterface::Role::Normal);
 }
 
 void TestPlasmaShell::testDisconnect()
