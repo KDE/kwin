@@ -85,10 +85,16 @@ void TestWaylandOutput::init()
     QVERIFY(m_display->isRunning());
 
     m_serverOutput = m_display->createOutput(this);
+    QCOMPARE(m_serverOutput->pixelSize(), QSize());
+    QCOMPARE(m_serverOutput->refreshRate(), 60000);
     m_serverOutput->addMode(QSize(800, 600), OutputInterface::ModeFlags(OutputInterface::ModeFlag::Preferred));
+    QCOMPARE(m_serverOutput->pixelSize(), QSize(800, 600));
     m_serverOutput->addMode(QSize(1024, 768));
     m_serverOutput->addMode(QSize(1280, 1024), OutputInterface::ModeFlags(), 90000);
+    QCOMPARE(m_serverOutput->pixelSize(), QSize(800, 600));
     m_serverOutput->setCurrentMode(QSize(1024, 768));
+    QCOMPARE(m_serverOutput->pixelSize(), QSize(1024, 768));
+    QCOMPARE(m_serverOutput->refreshRate(), 60000);
     m_serverOutput->create();
     QCOMPARE(m_serverOutput->isDpmsSupported(), false);
     QCOMPARE(m_serverOutput->dpmsMode(), OutputInterface::DpmsMode::On);
@@ -135,8 +141,25 @@ void TestWaylandOutput::cleanup()
 
 void TestWaylandOutput::testRegistry()
 {
+    QSignalSpy globalPositionChangedSpy(m_serverOutput, &KWayland::Server::OutputInterface::globalPositionChanged);
+    QVERIFY(globalPositionChangedSpy.isValid());
+    QCOMPARE(m_serverOutput->globalPosition(), QPoint(0, 0));
     m_serverOutput->setGlobalPosition(QPoint(100, 50));
+    QCOMPARE(m_serverOutput->globalPosition(), QPoint(100, 50));
+    QCOMPARE(globalPositionChangedSpy.count(), 1);
+    // changing again should not trigger signal
+    m_serverOutput->setGlobalPosition(QPoint(100, 50));
+    QCOMPARE(globalPositionChangedSpy.count(), 1);
+
+    QSignalSpy physicalSizeChangedSpy(m_serverOutput, &KWayland::Server::OutputInterface::physicalSizeChanged);
+    QVERIFY(physicalSizeChangedSpy.isValid());
+    QCOMPARE(m_serverOutput->physicalSize(), QSize());
     m_serverOutput->setPhysicalSize(QSize(200, 100));
+    QCOMPARE(m_serverOutput->physicalSize(), QSize(200, 100));
+    QCOMPARE(physicalSizeChangedSpy.count(), 1);
+    // changing again should not trigger signal
+    m_serverOutput->setPhysicalSize(QSize(200, 100));
+    QCOMPARE(physicalSizeChangedSpy.count(), 1);
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
@@ -182,6 +205,20 @@ void TestWaylandOutput::testRegistry()
 
 void TestWaylandOutput::testModeChanges()
 {
+    // verify the server modes
+    using namespace KWayland::Server;
+    const auto serverModes = m_serverOutput->modes();
+    QCOMPARE(serverModes.count(), 3);
+    QCOMPARE(serverModes.at(0).size, QSize(800, 600));
+    QCOMPARE(serverModes.at(1).size, QSize(1024, 768));
+    QCOMPARE(serverModes.at(2).size, QSize(1280, 1024));
+    QCOMPARE(serverModes.at(0).refreshRate, 60000);
+    QCOMPARE(serverModes.at(1).refreshRate, 60000);
+    QCOMPARE(serverModes.at(2).refreshRate, 90000);
+    QCOMPARE(serverModes.at(0).flags, OutputInterface::ModeFlags(OutputInterface::ModeFlag::Preferred));
+    QCOMPARE(serverModes.at(1).flags, OutputInterface::ModeFlags(OutputInterface::ModeFlag::Current));
+    QCOMPARE(serverModes.at(2).flags, OutputInterface::ModeFlags());
+
     using namespace KWayland::Client;
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
@@ -256,6 +293,7 @@ void TestWaylandOutput::testModeChanges()
     outputChanged.clear();
     modeChangedSpy.clear();
     m_serverOutput->setCurrentMode(QSize(1280, 1024), 90000);
+    QCOMPARE(m_serverOutput->refreshRate(), 90000);
     QVERIFY(modeChangedSpy.wait());
     if (modeChangedSpy.size() == 1) {
         QVERIFY(modeChangedSpy.wait());
@@ -293,9 +331,18 @@ void TestWaylandOutput::testScaleChange()
 
     // change the scale
     outputChanged.clear();
+    QCOMPARE(m_serverOutput->scale(), 1);
+    QSignalSpy serverScaleChanged(m_serverOutput, &KWayland::Server::OutputInterface::scaleChanged);
+    QVERIFY(serverScaleChanged.isValid());
     m_serverOutput->setScale(2);
+    QCOMPARE(m_serverOutput->scale(), 2);
+    QCOMPARE(serverScaleChanged.count(), 1);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 2);
+    // changing to same value should not trigger
+    m_serverOutput->setScale(2);
+    QCOMPARE(serverScaleChanged.count(), 1);
+    QVERIFY(!outputChanged.wait(100));
 
     // change once more
     outputChanged.clear();
@@ -323,7 +370,15 @@ void TestWaylandOutput::testSubPixel()
     using namespace KWayland::Client;
     using namespace KWayland::Server;
     QFETCH(OutputInterface::SubPixel, actual);
+    QCOMPARE(m_serverOutput->subPixel(), OutputInterface::SubPixel::Unknown);
+    QSignalSpy serverSubPixelChangedSpy(m_serverOutput, &OutputInterface::subPixelChanged);
+    QVERIFY(serverSubPixelChangedSpy.isValid());
     m_serverOutput->setSubPixel(actual);
+    QCOMPARE(m_serverOutput->subPixel(), actual);
+    QCOMPARE(serverSubPixelChangedSpy.count(), 1);
+    // changing to same value should not trigger the signal
+    m_serverOutput->setSubPixel(actual);
+    QCOMPARE(serverSubPixelChangedSpy.count(), 1);
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
@@ -347,6 +402,8 @@ void TestWaylandOutput::testSubPixel()
     // change back to unknown
     outputChanged.clear();
     m_serverOutput->setSubPixel(OutputInterface::SubPixel::Unknown);
+    QCOMPARE(m_serverOutput->subPixel(), OutputInterface::SubPixel::Unknown);
+    QCOMPARE(serverSubPixelChangedSpy.count(), 2);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }
@@ -374,7 +431,15 @@ void TestWaylandOutput::testTransform()
     using namespace KWayland::Client;
     using namespace KWayland::Server;
     QFETCH(OutputInterface::Transform, actual);
+    QCOMPARE(m_serverOutput->transform(), OutputInterface::Transform::Normal);
+    QSignalSpy serverTransformChangedSpy(m_serverOutput, &OutputInterface::transformChanged);
+    QVERIFY(serverTransformChangedSpy.isValid());
     m_serverOutput->setTransform(actual);
+    QCOMPARE(m_serverOutput->transform(), actual);
+    QCOMPARE(serverTransformChangedSpy.count(), 1);
+    // changing to same should not trigger signal
+    m_serverOutput->setTransform(actual);
+    QCOMPARE(serverTransformChangedSpy.count(), 1);
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
@@ -397,6 +462,8 @@ void TestWaylandOutput::testTransform()
     // change back to normal
     outputChanged.clear();
     m_serverOutput->setTransform(OutputInterface::Transform::Normal);
+    QCOMPARE(m_serverOutput->transform(), OutputInterface::Transform::Normal);
+    QCOMPARE(serverTransformChangedSpy.count(), 2);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }
