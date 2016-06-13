@@ -281,14 +281,17 @@ void TestWaylandShell::testFullscreen()
     ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
     QVERIFY(serverSurface);
     QVERIFY(serverSurface->parentResource());
+    QCOMPARE(serverSurface->shell(), m_shellInterface);
 
     QSignalSpy fullscreenSpy(serverSurface, SIGNAL(fullscreenChanged(bool)));
     QVERIFY(fullscreenSpy.isValid());
 
+    QVERIFY(!serverSurface->isFullscreen());
     surface->setFullscreen();
     QVERIFY(fullscreenSpy.wait());
     QCOMPARE(fullscreenSpy.count(), 1);
     QVERIFY(fullscreenSpy.first().first().toBool());
+    QVERIFY(serverSurface->isFullscreen());
     serverSurface->requestSize(QSize(1024, 768));
 
     QVERIFY(sizeSpy.wait());
@@ -302,6 +305,7 @@ void TestWaylandShell::testFullscreen()
     QVERIFY(fullscreenSpy.wait());
     QCOMPARE(fullscreenSpy.count(), 1);
     QVERIFY(!fullscreenSpy.first().first().toBool());
+    QVERIFY(!serverSurface->isFullscreen());
 }
 
 void TestWaylandShell::testMaximize()
@@ -325,10 +329,12 @@ void TestWaylandShell::testMaximize()
     QSignalSpy maximizedSpy(serverSurface, SIGNAL(maximizedChanged(bool)));
     QVERIFY(maximizedSpy.isValid());
 
+    QVERIFY(!serverSurface->isMaximized());
     surface->setMaximized();
     QVERIFY(maximizedSpy.wait());
     QCOMPARE(maximizedSpy.count(), 1);
     QVERIFY(maximizedSpy.first().first().toBool());
+    QVERIFY(serverSurface->isMaximized());
     serverSurface->requestSize(QSize(1024, 768));
 
     QVERIFY(sizeSpy.wait());
@@ -342,6 +348,7 @@ void TestWaylandShell::testMaximize()
     QVERIFY(maximizedSpy.wait());
     QCOMPARE(maximizedSpy.count(), 1);
     QVERIFY(!maximizedSpy.first().first().toBool());
+    QVERIFY(!serverSurface->isMaximized());
 }
 
 void TestWaylandShell::testToplevel()
@@ -476,6 +483,7 @@ void TestWaylandShell::testPing()
     QVERIFY(serverSurfaceSpy.wait());
     ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
     QVERIFY(serverSurface);
+    QVERIFY(!serverSurface->isPinged());
 
     QSignalSpy pingTimeoutSpy(serverSurface, SIGNAL(pingTimeout()));
     QVERIFY(pingTimeoutSpy.isValid());
@@ -483,6 +491,7 @@ void TestWaylandShell::testPing()
     QVERIFY(pongSpy.isValid());
 
     serverSurface->ping();
+    QVERIFY(serverSurface->isPinged());
     QVERIFY(pingSpy.wait());
     wl_display_flush(m_connection->display());
 
@@ -553,6 +562,10 @@ void TestWaylandShell::testWindowClass()
     QVERIFY(windowClassSpy.wait());
     QCOMPARE(serverSurface->windowClass(), testClass);
     QCOMPARE(windowClassSpy.first().first().toByteArray(), testClass);
+
+    // try setting it to same should not trigger the signal
+    wl_shell_surface_set_class(*surface, testClass.constData());
+    QVERIFY(!windowClassSpy.wait(100));
 }
 
 void TestWaylandShell::testDestroy()
