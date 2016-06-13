@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testRole_data();
     void testRole();
     void testPosition();
+    void testSkipTaskbar();
     void testDisconnect();
 
 private:
@@ -245,6 +246,41 @@ void TestPlasmaShell::testPosition()
     QVERIFY(positionChangedSpy.wait());
     QCOMPARE(positionChangedSpy.count(), 2);
     QCOMPARE(sps->position(), QPoint(3, 4));
+}
+
+void TestPlasmaShell::testSkipTaskbar()
+{
+    // this test verifies that sip taskbar is properly passed to server
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QVERIFY(plasmaSurfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+    QVERIFY(plasmaSurfaceCreatedSpy.wait());
+    QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
+
+    // verify that we got a plasma shell surface
+    auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface*>();
+    QVERIFY(sps);
+    QVERIFY(sps->surface());
+    QVERIFY(!sps->skipTaskbar());
+
+    // now change
+    QSignalSpy skipTaskbarChangedSpy(sps, &PlasmaShellSurfaceInterface::skipTaskbarChanged);
+    QVERIFY(skipTaskbarChangedSpy.isValid());
+    ps->setSkipTaskbar(true);
+    QVERIFY(skipTaskbarChangedSpy.wait());
+    QVERIFY(sps->skipTaskbar());
+    // setting to same again should not emit the signal
+    ps->setSkipTaskbar(true);
+    QEXPECT_FAIL("", "Should not be emitted if not changed", Continue);
+    QVERIFY(!skipTaskbarChangedSpy.wait(100));
+    QVERIFY(sps->skipTaskbar());
+
+    // setting to false should change again
+    ps->setSkipTaskbar(false);
+    QVERIFY(skipTaskbarChangedSpy.wait());
+    QVERIFY(!sps->skipTaskbar());
 }
 
 void TestPlasmaShell::testDisconnect()
