@@ -47,6 +47,8 @@ private Q_SLOTS:
     void testRole();
     void testPosition();
     void testSkipTaskbar();
+    void testPanelBehavior_data();
+    void testPanelBehavior();
     void testDisconnect();
 
 private:
@@ -284,6 +286,52 @@ void TestPlasmaShell::testSkipTaskbar()
     ps->setSkipTaskbar(false);
     QVERIFY(skipTaskbarChangedSpy.wait());
     QVERIFY(!sps->skipTaskbar());
+}
+
+void TestPlasmaShell::testPanelBehavior_data()
+{
+    QTest::addColumn<PlasmaShellSurface::PanelBehavior>("client");
+    QTest::addColumn<PlasmaShellSurfaceInterface::PanelBehavior>("server");
+
+    QTest::newRow("autohide") << PlasmaShellSurface::PanelBehavior::AutoHide << PlasmaShellSurfaceInterface::PanelBehavior::AutoHide;
+    QTest::newRow("can cover") << PlasmaShellSurface::PanelBehavior::WindowsCanCover << PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover;
+    QTest::newRow("go below") << PlasmaShellSurface::PanelBehavior::WindowsGoBelow << PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow;
+}
+
+void TestPlasmaShell::testPanelBehavior()
+{
+    // this test verifies that the panel behavior is properly passed to the server
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QVERIFY(plasmaSurfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+    ps->setRole(PlasmaShellSurface::Role::Panel);
+    QVERIFY(plasmaSurfaceCreatedSpy.wait());
+    QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
+
+    // verify that we got a plasma shell surface
+    auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface*>();
+    QVERIFY(sps);
+    QVERIFY(sps->surface());
+    QCOMPARE(sps->panelBehavior(), PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible);
+
+    // now change the behavior
+    QSignalSpy behaviorChangedSpy(sps, &PlasmaShellSurfaceInterface::panelBehaviorChanged);
+    QVERIFY(behaviorChangedSpy.isValid());
+    QFETCH(PlasmaShellSurface::PanelBehavior, client);
+    ps->setPanelBehavior(client);
+    QVERIFY(behaviorChangedSpy.wait());
+    QTEST(sps->panelBehavior(), "server");
+
+    // changing to same should not trigger the signal
+    ps->setPanelBehavior(client);
+    QVERIFY(!behaviorChangedSpy.wait(100));
+
+    // but changing back to Always Visible should work
+    ps->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
+    QVERIFY(behaviorChangedSpy.wait());
+    QCOMPARE(sps->panelBehavior(), PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible);
 }
 
 void TestPlasmaShell::testDisconnect()

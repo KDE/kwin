@@ -171,5 +171,6 @@ private:
 }
 
 Q_DECLARE_METATYPE(KWayland::Server::PlasmaShellSurfaceInterface::Role)
+Q_DECLARE_METATYPE(KWayland::Server::PlasmaShellSurfaceInterface::PanelBehavior)
 
 #endif
