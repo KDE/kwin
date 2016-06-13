@@ -187,6 +187,9 @@ void TestPlasmaShell::testRole()
     QVERIFY(sps);
     QVERIFY(sps->surface());
     QCOMPARE(sps->surface(), surfaceCreatedSpy.first().first().value<SurfaceInterface*>());
+    QCOMPARE(sps->shell(), m_plasmaShellInterface);
+    QCOMPARE(PlasmaShellSurfaceInterface::get(sps->resource()), sps);
+    QVERIFY(!PlasmaShellSurfaceInterface::get(nullptr));
 
     // default role should be normal
     QCOMPARE(sps->role(), PlasmaShellSurfaceInterface::Role::Normal);
