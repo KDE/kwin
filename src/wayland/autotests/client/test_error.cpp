@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/event_queue.h"
+#include "../../src/client/plasmashell.h"
 #include "../../src/client/registry.h"
 #include "../../src/client/shell.h"
 #include "../../src/client/surface.h"
@@ -30,6 +31,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/shell_interface.h"
+#include "../../src/server/plasmashell_interface.h"
+
+#include <wayland-client-protocol.h>
 
 using namespace KWayland::Client;
 using namespace KWayland::Server;
@@ -42,6 +46,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testMultipleShellSurfacesForSurface();
+    void testMultiplePlasmaShellSurfacesForSurface();
     void testTransientForSameSurface_data();
     void testTransientForSameSurface();
 
@@ -49,11 +54,13 @@ private:
     Display *m_display = nullptr;
     CompositorInterface *m_ci = nullptr;
     ShellInterface *m_si = nullptr;
+    PlasmaShellInterface *m_psi = nullptr;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
     EventQueue *m_queue = nullptr;
     Compositor *m_compositor = nullptr;
     Shell *m_shell = nullptr;
+    PlasmaShell *m_plasmaShell = nullptr;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-error-0");
@@ -70,6 +77,8 @@ void ErrorTest::init()
     m_ci->create();
     m_si = m_display->createShell(m_display);
     m_si->create();
+    m_psi = m_display->createPlasmaShell(m_display);
+    m_psi->create();
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -104,6 +113,10 @@ void ErrorTest::init()
                                    registry.interface(Registry::Interface::Shell).version,
                                    this);
     QVERIFY(m_shell);
+    m_plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name,
+                                               registry.interface(Registry::Interface::PlasmaShell).version,
+                                               this);
+    QVERIFY(m_plasmaShell);
 }
 
 void ErrorTest::cleanup()
@@ -113,6 +126,7 @@ void ErrorTest::cleanup()
         delete variable; \
         variable = nullptr; \
     }
+    CLEANUP(m_plasmaShell)
     CLEANUP(m_shell)
     CLEANUP(m_compositor)
     CLEANUP(m_queue)
@@ -126,6 +140,7 @@ void ErrorTest::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
+    CLEANUP(m_psi)
     CLEANUP(m_si)
     CLEANUP(m_ci)
     CLEANUP(m_display)
@@ -143,6 +158,23 @@ void ErrorTest::testMultipleShellSurfacesForSurface()
     QVERIFY(errorSpy.wait());
     QVERIFY(m_connection->hasError());
     QCOMPARE(m_connection->errorCode(), EPROTO);
+}
+
+void ErrorTest::testMultiplePlasmaShellSurfacesForSurface()
+{
+    // this test verifies that creating two ShellSurfaces for the same Surface triggers a protocol error
+    QSignalSpy errorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QVERIFY(errorSpy.isValid());
+    // PlasmaShell is too smart and doesn't allow us to create a second PlasmaShellSurface
+    // thus we need to cheat by creating a surface manually
+    auto surface = wl_compositor_create_surface(*m_compositor);
+    QScopedPointer<PlasmaShellSurface> shellSurface1(m_plasmaShell->createSurface(surface));
+    QScopedPointer<PlasmaShellSurface> shellSurface2(m_plasmaShell->createSurface(surface));
+    QVERIFY(!m_connection->hasError());
+    QVERIFY(errorSpy.wait());
+    QVERIFY(m_connection->hasError());
+    QCOMPARE(m_connection->errorCode(), EPROTO);
+    wl_surface_destroy(surface);
 }
 
 void ErrorTest::testTransientForSameSurface_data()

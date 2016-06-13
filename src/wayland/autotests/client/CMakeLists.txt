@@ -316,6 +316,6 @@ set( testError_SRCS
         test_error.cpp
     )
 add_executable(testError ${testError_SRCS})
-target_link_libraries( testError Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+target_link_libraries( testError Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
 add_test(kwayland-testError testError)
 ecm_mark_as_test(testError)
