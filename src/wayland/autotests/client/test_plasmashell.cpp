@@ -206,6 +206,10 @@ void TestPlasmaShell::testRole()
     QCOMPARE(roleChangedSpy.count(), 1);
     QTEST(sps->role(), "serverRole");
 
+    // try changing again should not emit the signal
+    ps->setRole(clientRole);
+    QVERIFY(!roleChangedSpy.wait(100));
+
     // set role back to normal
     ps->setRole(PlasmaShellSurface::Role::Normal);
     QCOMPARE(ps->role(), PlasmaShellSurface::Role::Normal);
