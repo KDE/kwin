@@ -26,6 +26,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/datadevicemanager.h"
 #include "../../src/client/datasource.h"
 #include "../../src/client/compositor.h"
+#include "../../src/client/keyboard.h"
 #include "../../src/client/pointer.h"
 #include "../../src/client/registry.h"
 #include "../../src/client/seat.h"
@@ -51,6 +52,7 @@ private Q_SLOTS:
     void testDrag();
     void testDragInternally();
     void testSetSelection();
+    void testSendSelectionOnSeat();
     void testDestroy();
 
 private:
@@ -378,6 +380,63 @@ void TestDataDevice::testSetSelection()
     QCOMPARE(selectionChangedSpy.count(), 1);
     QCOMPARE(selectionClearedSpy.count(), 1);
     QVERIFY(!deviceInterface->selection());
+}
+
+void TestDataDevice::testSendSelectionOnSeat()
+{
+    // this test verifies that the selection is sent when setting a focused keyboard
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // first add keyboard support to Seat
+    QSignalSpy keyboardChangedSpy(m_seat, &Seat::hasKeyboardChanged);
+    QVERIFY(keyboardChangedSpy.isValid());
+    m_seatInterface->setHasKeyboard(true);
+    QVERIFY(keyboardChangedSpy.wait());
+    // now create DataDevice, Keyboard and a Surface
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, &DataDeviceManagerInterface::dataDeviceCreated);
+    QVERIFY(dataDeviceCreatedSpy.isValid());
+    QScopedPointer<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
+    QVERIFY(dataDevice->isValid());
+    QVERIFY(dataDeviceCreatedSpy.wait());
+    auto serverDataDevice = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface*>();
+    QVERIFY(serverDataDevice);
+    QScopedPointer<Keyboard> keyboard(m_seat->createKeyboard());
+    QVERIFY(keyboard->isValid());
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surface->isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+
+    // now set the selection
+    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    QVERIFY(dataSource->isValid());
+    dataSource->offer(QStringLiteral("text/plain"));
+    dataDevice->setSelection(1, dataSource.data());
+    // we should get a selection offered for that on the data device
+    QSignalSpy selectionOfferedSpy(dataDevice.data(), &DataDevice::selectionOffered);
+    QVERIFY(selectionOfferedSpy.isValid());
+    QVERIFY(selectionOfferedSpy.wait());
+    QCOMPARE(selectionOfferedSpy.count(), 1);
+
+    // now unfocus the keyboard
+    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    // if setting the same surface again, we should get another offer
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    QVERIFY(selectionOfferedSpy.wait());
+    QCOMPARE(selectionOfferedSpy.count(), 2);
+
+    // now let's try to destroy the data device and set a focused keyboard just while the data device is being destroyedd
+    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    QSignalSpy unboundSpy(serverDataDevice, &Resource::unbound);
+    QVERIFY(unboundSpy.isValid());
+    dataDevice.reset();
+    QVERIFY(unboundSpy.wait());
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
 }
 
 void TestDataDevice::testDestroy()

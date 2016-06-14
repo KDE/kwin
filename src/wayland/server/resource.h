@@ -74,6 +74,14 @@ public:
      **/
     quint32 id() const;
 
+Q_SIGNALS:
+    /**
+     * This signal is emitted when the client unbound this Resource.
+     * The Resource will be deleted in the next event cycle after this event.
+     * @since 5.24
+     **/
+    void unbound();
+
 protected:
     class Private;
     explicit Resource(Private *d, QObject *parent = nullptr);

@@ -214,21 +214,21 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
 {
     Q_ASSERT(dataDevice->seat() == q);
     dataDevices << dataDevice;
-    QObject::connect(dataDevice, &QObject::destroyed, q,
-        [this, dataDevice] {
-            dataDevices.removeAt(dataDevices.indexOf(dataDevice));
-            if (keys.focus.selection == dataDevice) {
-                keys.focus.selection = nullptr;
-            }
-            if (currentSelection == dataDevice) {
-                // current selection is cleared
-                currentSelection = nullptr;
-                if (keys.focus.selection) {
-                    keys.focus.selection->sendClearSelection();
-                }
+    auto dataDeviceCleanup = [this, dataDevice] {
+        dataDevices.removeOne(dataDevice);
+        if (keys.focus.selection == dataDevice) {
+            keys.focus.selection = nullptr;
+        }
+        if (currentSelection == dataDevice) {
+            // current selection is cleared
+            currentSelection = nullptr;
+            if (keys.focus.selection) {
+                keys.focus.selection->sendClearSelection();
             }
         }
-    );
+    };
+    QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
+    QObject::connect(dataDevice, &Resource::unbound, q, dataDeviceCleanup);
     QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q,
         [this, dataDevice] {
             updateSelection(dataDevice, true);

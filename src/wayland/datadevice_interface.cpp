@@ -130,6 +130,9 @@ void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
 
 DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInterface *source)
 {
+    if (!resource) {
+        return nullptr;
+    }
     Q_Q(DataDeviceInterface);
     DataOfferInterface *offer = new DataOfferInterface(source, q, resource);
     auto c = q->global()->display()->getConnection(wl_resource_get_client(resource));

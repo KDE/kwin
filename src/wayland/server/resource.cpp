@@ -64,6 +64,7 @@ void Resource::Private::unbind(wl_resource *r)
 {
     Private *p = cast<Private>(r);
     p->resource = nullptr;
+    emit p->q->unbound();
     p->q->deleteLater();
 }
 
