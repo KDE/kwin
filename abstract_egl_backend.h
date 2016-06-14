@@ -90,9 +90,14 @@ protected:
     EGLImageKHR image() const {
         return m_image;
     }
+    void setImage(const EGLImageKHR &img) {
+        m_image = img;
+    }
+    SceneOpenGL::Texture *texture() const {
+        return q;
+    }
 
 private:
-    bool loadTexture(xcb_pixmap_t pix, const QSize &size);
     bool loadShmTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
     bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
     EGLImageKHR attach(const QPointer<KWayland::Server::BufferInterface> &buffer);

@@ -31,6 +31,7 @@ EglX11Backend::EglX11Backend(X11WindowedBackend *backend)
     : EglOnXBackend(backend->connection(), backend->display(), backend->rootWindow(), backend->screenNumer(), XCB_WINDOW_NONE)
     , m_backend(backend)
 {
+    setX11TextureFromPixmapSupported(false);
 }
 
 EglX11Backend::~EglX11Backend() = default;

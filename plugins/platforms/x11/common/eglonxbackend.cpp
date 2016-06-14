@@ -469,10 +469,56 @@ bool EglOnXBackend::makeContextCurrent(const EGLSurface &surface)
 
 EglTexture::EglTexture(KWin::SceneOpenGL::Texture *texture, KWin::EglOnXBackend *backend)
     : AbstractEglTexture(texture, backend)
+    , m_backend(backend)
 {
 }
 
 EglTexture::~EglTexture() = default;
+
+bool EglTexture::loadTexture(WindowPixmap *pixmap)
+{
+    // first try the Wayland enabled loading
+    if (AbstractEglTexture::loadTexture(pixmap)) {
+        return true;
+    }
+    // did not succeed, try on X11
+    return loadTexture(pixmap->pixmap(), pixmap->toplevel()->size());
+}
+
+bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
+{
+    if (!m_backend->isX11TextureFromPixmapSupported()) {
+        return false;
+    }
+
+    if (pix == XCB_NONE)
+        return false;
+
+    glGenTextures(1, &m_texture);
+    auto q = texture();
+    q->setWrapMode(GL_CLAMP_TO_EDGE);
+    q->setFilter(GL_LINEAR);
+    q->bind();
+    const EGLint attribs[] = {
+        EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
+        EGL_NONE
+    };
+    setImage(eglCreateImageKHR(m_backend->eglDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
+                               (EGLClientBuffer)pix, attribs));
+
+    if (EGL_NO_IMAGE_KHR == image()) {
+        qCDebug(KWIN_CORE) << "failed to create egl image";
+        q->unbind();
+        q->discard();
+        return false;
+    }
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image());
+    q->unbind();
+    q->setYInverted(true);
+    m_size = size;
+    updateMatrix();
+    return true;
+}
 
 void KWin::EglTexture::onDamage()
 {

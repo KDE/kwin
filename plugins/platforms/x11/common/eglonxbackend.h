@@ -42,6 +42,10 @@ public:
     virtual bool usesOverlayWindow() const override;
     void init() override;
 
+    bool isX11TextureFromPixmapSupported() const {
+        return m_x11TextureFromPixmapSupported;
+    }
+
 protected:
     virtual void present();
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
@@ -54,6 +58,10 @@ protected:
         return m_havePlatformBase;
     }
     bool makeContextCurrent(const EGLSurface &surface);
+
+    void setX11TextureFromPixmapSupported(bool set) {
+        m_x11TextureFromPixmapSupported = set;
+    }
 
 private:
     bool initBufferConfigs();
@@ -71,6 +79,7 @@ private:
     int m_x11ScreenNumber;
     xcb_window_t m_renderingWindow = XCB_WINDOW_NONE;
     bool m_havePlatformBase = false;
+    bool m_x11TextureFromPixmapSupported = true;
     friend class EglTexture;
 };
 
@@ -82,10 +91,13 @@ class EglTexture : public AbstractEglTexture
 public:
     virtual ~EglTexture();
     virtual void onDamage();
+    bool loadTexture(WindowPixmap *pixmap) override;
 
 private:
+    bool loadTexture(xcb_pixmap_t pix, const QSize &size);
     friend class EglOnXBackend;
     EglTexture(SceneOpenGL::Texture *texture, EglOnXBackend *backend);
+    EglOnXBackend *m_backend;
 };
 
 } // namespace
