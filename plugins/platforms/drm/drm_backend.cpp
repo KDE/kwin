@@ -387,6 +387,7 @@ void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurat
         }
         drmoutput->setChanges(changeset);
     }
+    emit screens()->changed();
 }
 
 DrmOutput *DrmBackend::findOutput(quint32 connector)
