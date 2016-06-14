@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include "screens.h"
 #include "wayland_server.h"
+#include "workspace.h"
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
@@ -170,6 +171,7 @@ void TestShellClient::testMapUnmapMap()
     auto client = clientAddedSpy.first().first().value<ShellClient*>();
     QVERIFY(client);
     QVERIFY(client->isShown(true));
+    QCOMPARE(workspace()->activeClient(), client);
 
     // now unmap
     QSignalSpy hiddenSpy(client, &ShellClient::windowHidden);
@@ -180,6 +182,7 @@ void TestShellClient::testMapUnmapMap()
     surface->commit(Surface::CommitFlag::None);
     QVERIFY(hiddenSpy.wait());
     QVERIFY(windowClosedSpy.isEmpty());
+    QVERIFY(!workspace()->activeClient());
 
     QSignalSpy windowShownSpy(client, &ShellClient::windowShown);
     QVERIFY(windowShownSpy.isValid());
@@ -190,6 +193,7 @@ void TestShellClient::testMapUnmapMap()
     QVERIFY(windowShownSpy.wait());
     QCOMPARE(windowShownSpy.count(), 1);
     QCOMPARE(clientAddedSpy.count(), 1);
+    QCOMPARE(workspace()->activeClient(), client);
 
     // let's unmap again
     surface->attachBuffer(Buffer::Ptr());
