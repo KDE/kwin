@@ -380,6 +380,17 @@ void TestDataDevice::testSetSelection()
     QCOMPARE(selectionChangedSpy.count(), 1);
     QCOMPARE(selectionClearedSpy.count(), 1);
     QVERIFY(!deviceInterface->selection());
+
+    // set another selection
+    dataDevice->setSelection(2, dataSource.data());
+    QVERIFY(selectionChangedSpy.wait());
+    // now unbind the dataDevice
+    QSignalSpy unboundSpy(deviceInterface, &DataDeviceInterface::unbound);
+    QVERIFY(unboundSpy.isValid());
+    dataDevice.reset();
+    QVERIFY(unboundSpy.wait());
+    // send a selection to the unbound data device
+    deviceInterface->sendSelection(deviceInterface);
 }
 
 void TestDataDevice::testSendSelectionOnSeat()
