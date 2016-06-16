@@ -101,8 +101,14 @@ void ShellClient::init()
     connect(s, &SurfaceInterface::unmapped, this, &ShellClient::unmap);
     connect(s, &SurfaceInterface::destroyed, this, &ShellClient::destroyClient);
     if (m_shellSurface) {
+        m_caption = m_shellSurface->title();
         connect(m_shellSurface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
-        connect(m_shellSurface, &ShellSurfaceInterface::titleChanged, this, &ShellClient::captionChanged);
+        connect(m_shellSurface, &ShellSurfaceInterface::titleChanged, this,
+            [this] {
+                m_caption = m_shellSurface->title();
+                emit captionChanged();
+            }
+        );
 
         connect(m_shellSurface, &ShellSurfaceInterface::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
         connect(m_shellSurface, &ShellSurfaceInterface::maximizedChanged, this,
@@ -450,10 +456,7 @@ QString ShellClient::caption(bool full, bool stripped) const
 {
     Q_UNUSED(full)
     Q_UNUSED(stripped)
-    if (m_shellSurface) {
-        return m_shellSurface->title();
-    }
-    return QString();
+    return m_caption;
 }
 
 void ShellClient::closeWindow()

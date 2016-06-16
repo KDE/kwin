@@ -195,6 +195,7 @@ private:
     friend class RequestGeometryBlocker;
     int m_requestGeometryBlockCounter = 0;
     QRect m_blockedRequestGeometry;
+    QString m_caption;
 };
 
 }
