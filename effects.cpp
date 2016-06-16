@@ -104,7 +104,7 @@ void ScreenLockerWatcher::serviceOwnerChanged(const QString &serviceName, const 
     m_interface = NULL;
     m_locked = false;
     if (!newOwner.isEmpty()) {
-        m_interface = new OrgFreedesktopScreenSaverInterface(newOwner, QString(), QDBusConnection::sessionBus(), this);
+        m_interface = new OrgFreedesktopScreenSaverInterface(newOwner, QStringLiteral("/ScreenSaver"), QDBusConnection::sessionBus(), this);
         connect(m_interface, SIGNAL(ActiveChanged(bool)), SLOT(setLocked(bool)));
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(m_interface->GetActive(), this);
         connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(activeQueried(QDBusPendingCallWatcher*)));
