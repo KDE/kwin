@@ -108,7 +108,8 @@ public:
         Normal, ///< A normal surface
         Desktop, ///< The surface represents a desktop, normally stacked below all other surfaces
         Panel, ///< The surface represents a panel (dock), normally stacked above normal surfaces
-        OnScreenDisplay ///< The surface represents an on screen display, like a volume changed notification
+        OnScreenDisplay, ///< The surface represents an on screen display, like a volume changed notification
+        Notification ///< The surface represents a notification @since 5.24
     };
     /**
      * @returns The requested role, default value is @c Role::Normal.
