@@ -64,6 +64,7 @@ private Q_SLOTS:
     void testResize_data();
     void testResize();
     void testDisconnect();
+    void testWhileDestroying();
 
 private:
     KWayland::Server::Display *m_display;
@@ -757,6 +758,41 @@ void TestWaylandShell::testDisconnect()
     m_pointer->destroy();
     m_seat->destroy();
     m_queue->destroy();
+}
+
+void TestWaylandShell::testWhileDestroying()
+{
+    // this test tries to hit a condition that a Surface gets created with an ID which was already
+    // used for a previous Surface. For each Surface we try to create a ShellSurface.
+    // Even if there was a Surface in the past with the same ID, it should create the ShellSurface
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    // create ShellSurface
+    QSignalSpy shellSurfaceCreatedSpy(m_shellInterface, &ShellInterface::surfaceCreated);
+    QVERIFY(shellSurfaceCreatedSpy.isValid());
+    QScopedPointer<ShellSurface> ps(m_shell->createSurface(s.data()));
+    QVERIFY(shellSurfaceCreatedSpy.wait());
+
+    // now try to create more surfaces
+    QSignalSpy clientErrorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QVERIFY(clientErrorSpy.isValid());
+    for (int i = 0; i < 100; i++) {
+        s.reset();
+        ps.reset();
+        s.reset(m_compositor->createSurface());
+        ps.reset(m_shell->createSurface(s.data()));
+        QVERIFY(surfaceCreatedSpy.wait());
+    }
+    QVERIFY(clientErrorSpy.isEmpty());
+    QVERIFY(!clientErrorSpy.wait(100));
+    QVERIFY(clientErrorSpy.isEmpty());
 }
 
 QTEST_GUILESS_MAIN(TestWaylandShell)

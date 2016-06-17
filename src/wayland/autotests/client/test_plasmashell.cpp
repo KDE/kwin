@@ -50,6 +50,7 @@ private Q_SLOTS:
     void testPanelBehavior_data();
     void testPanelBehavior();
     void testDisconnect();
+    void testWhileDestroying();
 
 private:
     Display *m_display = nullptr;
@@ -374,6 +375,38 @@ void TestPlasmaShell::testDisconnect()
     m_compositor->destroy();
     m_registry->destroy();
     m_queue->destroy();
+}
+
+void TestPlasmaShell::testWhileDestroying()
+{
+    // this test tries to hit a condition that a Surface gets created with an ID which was already
+    // used for a previous Surface. For each Surface we try to create a PlasmaShellSurface.
+    // Even if there was a Surface in the past with the same ID, it should create the PlasmaShellSurface
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    // create ShellSurface
+    QSignalSpy shellSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QVERIFY(shellSurfaceCreatedSpy.isValid());
+    QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+    QVERIFY(shellSurfaceCreatedSpy.wait());
+
+    // now try to create more surfaces
+    QSignalSpy clientErrorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QVERIFY(clientErrorSpy.isValid());
+    for (int i = 0; i < 100; i++) {
+        s.reset();
+        s.reset(m_compositor->createSurface());
+        m_plasmaShell->createSurface(s.data(), this);
+        QVERIFY(surfaceCreatedSpy.wait());
+    }
+    QVERIFY(clientErrorSpy.isEmpty());
+    QVERIFY(!clientErrorSpy.wait(100));
+    QVERIFY(clientErrorSpy.isEmpty());
 }
 
 QTEST_GUILESS_MAIN(TestPlasmaShell)

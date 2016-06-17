@@ -189,6 +189,12 @@ void QtExtendedSurfaceInterface::Private::updateGenericPropertyCallback(wl_clien
 QtExtendedSurfaceInterface::QtExtendedSurfaceInterface(QtSurfaceExtensionInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
     : Resource(new Private(this, shell, parent, parentResource))
 {
+    auto unsetSurface = [this] {
+        Q_D();
+        d->surface = nullptr;
+    };
+    connect(parent, &Resource::unbound, this, unsetSurface);
+    connect(parent, &QObject::destroyed, this, unsetSurface);
 }
 
 QtExtendedSurfaceInterface::~QtExtendedSurfaceInterface() = default;

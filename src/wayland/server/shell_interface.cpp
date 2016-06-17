@@ -193,6 +193,12 @@ ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInter
 {
     Q_D();
     connect(d->pingTimer.data(), &QTimer::timeout, this, &ShellSurfaceInterface::pingTimeout);
+    auto unsetSurface = [this] {
+        Q_D();
+        d->surface = nullptr;
+    };
+    connect(parent, &Resource::unbound, this, unsetSurface);
+    connect(parent, &QObject::destroyed, this, unsetSurface);
 }
 
 ShellSurfaceInterface::~ShellSurfaceInterface() = default;

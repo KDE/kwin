@@ -165,6 +165,12 @@ const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Priva
 PlasmaShellSurfaceInterface::PlasmaShellSurfaceInterface(PlasmaShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
     : Resource(new Private(this, shell, parent, parentResource))
 {
+    auto unsetSurface = [this] {
+        Q_D();
+        d->surface = nullptr;
+    };
+    connect(parent, &Resource::unbound, this, unsetSurface);
+    connect(parent, &QObject::destroyed, this, unsetSurface);
 }
 
 PlasmaShellSurfaceInterface::~PlasmaShellSurfaceInterface() = default;
