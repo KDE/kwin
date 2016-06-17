@@ -44,6 +44,9 @@ public:
     static ResourceDerived *get(wl_resource *native) {
         static_assert(std::is_base_of<Resource, ResourceDerived>::value,
                       "ResourceDerived must be derived from Resource");
+        if (!native) {
+            return nullptr;
+        }
         auto it = std::find_if(s_allResources.constBegin(), s_allResources.constEnd(),
             [native](Private *p) {
                 return p->resource == native;

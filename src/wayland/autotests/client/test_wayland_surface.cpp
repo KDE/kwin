@@ -178,6 +178,8 @@ void TestWaylandSurface::testStaticAccessor()
     QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
     QVERIFY(serverSurfaceCreated.isValid());
 
+    QVERIFY(!KWayland::Server::SurfaceInterface::get(nullptr));
+    QVERIFY(!KWayland::Server::SurfaceInterface::get(1, nullptr));
     QVERIFY(KWayland::Client::Surface::all().isEmpty());
     KWayland::Client::Surface *s1 = m_compositor->createSurface();
     QVERIFY(s1->isValid());
@@ -226,6 +228,11 @@ void TestWaylandSurface::testStaticAccessor()
     delete s1;
     QVERIFY(KWayland::Client::Surface::all().isEmpty());
     QVERIFY(!KWayland::Client::Surface::get(nullptr));
+    QSignalSpy unboundSpy(serverSurface1, &KWayland::Server::Resource::unbound);
+    QVERIFY(unboundSpy.isValid());
+    QVERIFY(unboundSpy.wait());
+    QVERIFY(!KWayland::Server::SurfaceInterface::get(nullptr));
+    QVERIFY(!KWayland::Server::SurfaceInterface::get(1, nullptr));
 }
 
 void TestWaylandSurface::testDamage()
