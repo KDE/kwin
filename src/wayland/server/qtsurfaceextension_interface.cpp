@@ -119,7 +119,7 @@ void QtSurfaceExtensionInterface::Private::createSurface(wl_client *client, uint
         }
     );
     if (it != surfaces.constEnd()) {
-        wl_resource_post_error(surface->resource(), WL_DISPLAY_ERROR_INVALID_OBJECT, "PlasmaShellSurface already created");
+        wl_resource_post_error(surface->resource(), WL_DISPLAY_ERROR_INVALID_OBJECT, "Qt Surface Extension already created");
         return;
     }
     QtExtendedSurfaceInterface *shellSurface = new QtExtendedSurfaceInterface(q, surface, parentResource);
