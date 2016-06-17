@@ -734,7 +734,8 @@ bool ShellClient::acceptsFocus() const
         return false;
     }
     if (m_plasmaShellSurface) {
-        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay) {
+        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay ||
+            m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Notification) {
             return false;
         }
     }
@@ -893,6 +894,9 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
         case PlasmaShellSurfaceInterface::Role::OnScreenDisplay:
             type = NET::OnScreenDisplay;
             break;
+        case PlasmaShellSurfaceInterface::Role::Notification:
+            type = NET::Notification;
+            break;
         case PlasmaShellSurfaceInterface::Role::Normal:
         default:
             type = NET::Normal;
@@ -900,7 +904,7 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
         }
         if (type != m_windowType) {
             m_windowType = type;
-            if (m_windowType == NET::Desktop || type == NET::Dock || type == NET::OnScreenDisplay) {
+            if (m_windowType == NET::Desktop || type == NET::Dock || type == NET::OnScreenDisplay || type == NET::Notification) {
                 setOnAllDesktops(true);
             }
             workspace()->updateClientArea();
