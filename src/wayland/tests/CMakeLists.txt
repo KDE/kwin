@@ -55,3 +55,7 @@ endif()
 add_executable(subsurface-test subsurfacetest.cpp)
 target_link_libraries(subsurface-test Qt5::Core Qt5::Gui KF5::WaylandClient)
 ecm_mark_as_test(subsurface-test)
+
+add_executable(plasmasurface-test plasmasurfacetest.cpp)
+target_link_libraries(plasmasurface-test Qt5::Gui KF5::WaylandClient)
+ecm_mark_as_test(plasmasurface-test)
