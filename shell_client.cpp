@@ -733,6 +733,11 @@ bool ShellClient::acceptsFocus() const
     if (waylandServer()->inputMethodConnection() == surface()->client()) {
         return false;
     }
+    if (m_plasmaShellSurface) {
+        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay) {
+            return false;
+        }
+    }
     if (m_shellSurface) {
         if (m_shellSurface->isPopup()) {
             return false;
