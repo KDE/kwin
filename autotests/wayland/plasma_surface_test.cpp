@@ -46,6 +46,8 @@ private Q_SLOTS:
 
     void testRoleOnAllDesktops_data();
     void testRoleOnAllDesktops();
+    void testAcceptsFocus_data();
+    void testAcceptsFocus();
 
 private:
     ConnectionThread *m_connection = nullptr;
@@ -203,6 +205,47 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QEXPECT_FAIL("Panel", "PS before WS not supported", Continue);
     QEXPECT_FAIL("OSD", "PS before WS not supported", Continue);
     QCOMPARE(c->isOnAllDesktops(), expectedOnAllDesktops);
+}
+
+void PlasmaSurfaceTest::testAcceptsFocus_data()
+{
+    QTest::addColumn<PlasmaShellSurface::Role>("role");
+    QTest::addColumn<bool>("wantsInput");
+    QTest::addColumn<bool>("active");
+
+    QTest::newRow("Desktop") << PlasmaShellSurface::Role::Desktop << true << true;
+    QTest::newRow("Panel") << PlasmaShellSurface::Role::Panel << true << false;
+    QTest::newRow("OSD") << PlasmaShellSurface::Role::OnScreenDisplay << false << false;
+    QTest::newRow("Normal") << PlasmaShellSurface::Role::Normal << true << true;
+}
+
+void PlasmaSurfaceTest::testAcceptsFocus()
+{
+    // this test verifies that some surface roles don't get focus
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(!surface.isNull());
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QVERIFY(!plasmaSurface.isNull());
+    QFETCH(PlasmaShellSurface::Role, role);
+    plasmaSurface->setRole(role);
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    // now render to map the window
+    QImage img(QSize(100, 50), QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(0, 0, 100, 50));
+    surface->commit();
+    QVERIFY(clientAddedSpy.wait());
+
+    auto c = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(c);
+    QTEST(c->wantsInput(), "wantsInput");
+    QTEST(c->isActive(), "active");
 }
 
 WAYLANDTEST_MAIN(PlasmaSurfaceTest)
