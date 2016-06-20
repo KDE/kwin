@@ -219,6 +219,9 @@ QtExtendedSurfaceInterface::Private *QtExtendedSurfaceInterface::d_func() const
 void QtExtendedSurfaceInterface::close()
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     qt_extended_surface_send_close(d->resource);
     d->client->flush();
 }
