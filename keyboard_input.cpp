@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 // KWayland
+#include <KWayland/Server/datadevice_interface.h>
 #include <KWayland/Server/seat_interface.h>
 //screenlocker
 #include <KScreenLocker/KsldApp>
@@ -452,6 +453,19 @@ void KeyboardInputRedirection::update()
     if (found && found->surface()) {
         if (found->surface() != seat->focusedKeyboardSurface()) {
             seat->setFocusedKeyboardSurface(found->surface());
+            auto newKeyboard = seat->focusedKeyboard();
+            if (newKeyboard && newKeyboard->client() == waylandServer()->xWaylandConnection()) {
+                // focus passed to an XWayland surface
+                const auto selection = seat->selection();
+                auto xclipboard = waylandServer()->xclipboardSyncDataDevice();
+                if (xclipboard && selection != xclipboard.data()) {
+                    if (selection) {
+                        xclipboard->sendSelection(selection);
+                    } else {
+                        xclipboard->sendClearSelection();
+                    }
+                }
+            }
         }
     } else {
         seat->setFocusedKeyboardSurface(nullptr);

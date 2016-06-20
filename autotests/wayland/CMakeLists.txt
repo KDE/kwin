@@ -1,5 +1,6 @@
 add_definitions(-DKWINBACKENDPATH="${CMAKE_BINARY_DIR}/plugins/platforms/virtual/KWinWaylandVirtualBackend.so")
 add_definitions(-DKWINQPAPATH="${CMAKE_BINARY_DIR}/plugins/qpa/")
+add_subdirectory(helper)
 ########################################################
 # Test Start
 ########################################################
@@ -225,3 +226,12 @@ add_executable(testDontCrashNoBorder ${testDontCrashNoBorder_SRCS})
 target_link_libraries( testDontCrashNoBorder kwin Qt5::Test)
 add_test(kwin-testDontCrashNoBorder testDontCrashNoBorder)
 ecm_mark_as_test(testDontCrashNoBorder)
+
+########################################################
+# XClipboardSync Test
+########################################################
+set( testXClipboardSync_SRCS xclipboardsync_test.cpp kwin_wayland_test.cpp )
+add_executable(testXClipboardSync ${testXClipboardSync_SRCS})
+target_link_libraries( testXClipboardSync kwin Qt5::Test)
+add_test(kwin-testXClipboardSync testXClipboardSync)
+ecm_mark_as_test(testXClipboardSync)

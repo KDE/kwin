@@ -335,6 +335,7 @@ add_subdirectory( effects )
 add_subdirectory( scripts )
 add_subdirectory( tabbox )
 add_subdirectory(scripting)
+add_subdirectory(helpers)
 
 ########### next target ###############
 

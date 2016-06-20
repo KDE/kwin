@@ -23,8 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 
 #include <QObject>
+#include <QPointer>
 
 class QThread;
+class QProcess;
 class QWindow;
 
 namespace KWayland
@@ -41,6 +43,7 @@ namespace Server
 class ClientConnection;
 class CompositorInterface;
 class Display;
+class DataDeviceInterface;
 class ShellInterface;
 class SeatInterface;
 class ServerSideDecorationManagerInterface;
@@ -118,6 +121,8 @@ public:
     int createInputMethodConnection();
     void destroyInputMethodConnection();
 
+    int createXclipboardSyncConnection();
+
     /**
      * @returns true if screen is locked.
      **/
@@ -142,6 +147,9 @@ public:
     KWayland::Server::ClientConnection *screenLockerClientConnection() const {
         return m_screenLockerClientConnection;
     }
+    QPointer<KWayland::Server::DataDeviceInterface> xclipboardSyncDataDevice() const {
+        return m_xclipbaordSync.ddi;
+    }
     KWayland::Client::ShmPool *internalShmPool() {
         return m_internalConnection.shm;
     }
@@ -160,6 +168,7 @@ Q_SIGNALS:
     void terminatingInternalClientConnection();
 
 private:
+    void setupX11ClipboardSync();
     void shellClientShown(Toplevel *t);
     void initOutputs();
     quint16 createClientId(KWayland::Server::ClientConnection *c);
@@ -188,6 +197,11 @@ private:
         KWayland::Client::ShmPool *shm = nullptr;
 
     } m_internalConnection;
+    struct {
+        QProcess *process = nullptr;
+        KWayland::Server::ClientConnection *client = nullptr;
+        QPointer<KWayland::Server::DataDeviceInterface> ddi;
+    } m_xclipbaordSync;
     QList<ShellClient*> m_clients;
     QList<ShellClient*> m_internalClients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
