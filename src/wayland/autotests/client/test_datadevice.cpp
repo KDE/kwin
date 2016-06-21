@@ -194,11 +194,16 @@ void TestDataDevice::testCreate()
     QVERIFY(!deviceInterface->selection());
     QVERIFY(deviceInterface->parentResource());
 
+    QVERIFY(!m_seatInterface->selection());
+    m_seatInterface->setSelection(deviceInterface);
+    QCOMPARE(m_seatInterface->selection(), deviceInterface);
+
     // and destroy
     QSignalSpy destroyedSpy(deviceInterface, &QObject::destroyed);
     QVERIFY(destroyedSpy.isValid());
     dataDevice.reset();
     QVERIFY(destroyedSpy.wait());
+    QVERIFY(!m_seatInterface->selection());
 }
 
 void TestDataDevice::testDrag()

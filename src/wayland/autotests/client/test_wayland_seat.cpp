@@ -1306,6 +1306,7 @@ void TestWaylandSeat::testSelection()
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(!m_seatInterface->selection());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
     QVERIFY(!m_seatInterface->focusedKeyboard());
@@ -1314,6 +1315,7 @@ void TestWaylandSeat::testSelection()
     QCoreApplication::processEvents();
     QVERIFY(selectionSpy.isEmpty());
     QVERIFY(selectionClearedSpy.isEmpty());
+    QVERIFY(!m_seatInterface->selection());
 
     // now let's try to set a selection - we have keyboard focus, so it should be sent to us
     QScopedPointer<DataSource> ds(ddm->createDataSource());
@@ -1322,6 +1324,8 @@ void TestWaylandSeat::testSelection()
     dd1->setSelection(0, ds.data());
     QVERIFY(selectionSpy.wait());
     QCOMPARE(selectionSpy.count(), 1);
+    auto ddi = m_seatInterface->selection();
+    QVERIFY(ddi);
     QVERIFY(selectionClearedSpy.isEmpty());
     auto df = selectionSpy.first().first().value<DataOffer*>();
     QCOMPARE(df->offeredMimeTypes().count(), 1);
@@ -1347,6 +1351,21 @@ void TestWaylandSeat::testSelection()
     QCoreApplication::processEvents();
     QCoreApplication::processEvents();
     QCOMPARE(selectionSpy.count(), 1);
+
+    // let's unset the selection on the seat
+    m_seatInterface->setSelection(nullptr);
+    // and pass focus back on our surface
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    // we don't have a selection, so it should not send a selection
+    QVERIFY(!selectionSpy.wait(100));
+    // now let's set it manually
+    m_seatInterface->setSelection(ddi);
+    QCOMPARE(m_seatInterface->selection(), ddi);
+    QVERIFY(selectionSpy.wait());
+    QCOMPARE(selectionSpy.count(), 2);
+    // now clear it manully
+    m_seatInterface->setSelection(nullptr);
+    QVERIFY(selectionClearedSpy.wait());
 }
 
 void TestWaylandSeat::testTouch()

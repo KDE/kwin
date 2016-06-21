@@ -1239,5 +1239,27 @@ TextInputInterface *SeatInterface::focusedTextInput() const
     return d->textInput.focus.textInput;
 }
 
+DataDeviceInterface *SeatInterface::selection() const
+{
+    Q_D();
+    return d->currentSelection;
+}
+
+void SeatInterface::setSelection(DataDeviceInterface *dataDevice)
+{
+    Q_D();
+    if (d->currentSelection == dataDevice) {
+        return;
+    }
+    d->currentSelection = dataDevice;
+    if (d->keys.focus.selection) {
+        if (dataDevice) {
+            d->keys.focus.selection->sendSelection(dataDevice);
+        } else {
+            d->keys.focus.selection->sendClearSelection();
+        }
+    }
+}
+
 }
 }

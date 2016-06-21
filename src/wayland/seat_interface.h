@@ -490,6 +490,26 @@ public:
     TextInputInterface *focusedTextInput() const;
     ///@}
 
+    /**
+     * @returns The DataDeviceInterface holding the current clipboard selection.
+     * @since 5.24
+     * @see setSelection
+     **/
+    DataDeviceInterface *selection() const;
+    /**
+     * This method allows to manually set the @p dataDevice for the current clipboard selection.
+     * The clipboard selection is handled automatically in SeatInterface.
+     * If a DataDeviceInterface belonging to the current focused KeyboardInterface
+     * sets a selection, the current clipboard selection will be updated automatically.
+     * With this method it's possible to override the automatic clipboard update for
+     * e.g. the case of a clipboard manager.
+     *
+     * @param dataDevice Sets the current clipboard selection.
+     * @see selection
+     * @since 5.24
+     **/
+    void setSelection(DataDeviceInterface *dataDevice);
+
     static SeatInterface *get(wl_resource *native);
 
 Q_SIGNALS:
