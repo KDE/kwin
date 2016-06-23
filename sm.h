@@ -41,6 +41,7 @@ class Client;
 struct SessionInfo {
     QByteArray sessionId;
     QByteArray windowRole;
+    QByteArray wmCommand;
     QByteArray wmClientMachine;
     QByteArray resourceName;
     QByteArray resourceClass;
