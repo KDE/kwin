@@ -364,8 +364,8 @@ void ShellClient::createDecoration(const QRect &oldGeom)
     }
     setDecoration(decoration);
     // TODO: ensure the new geometry still fits into the client area (e.g. maximized windows)
-    doSetGeometry(QRect(oldGeom.topLeft(), m_clientSize + QSize(decoration->borderLeft() + decoration->borderRight(),
-                                                               decoration->borderBottom() + decoration->borderTop())));
+    doSetGeometry(QRect(oldGeom.topLeft(), m_clientSize + (decoration ? QSize(decoration->borderLeft() + decoration->borderRight(),
+                                                               decoration->borderBottom() + decoration->borderTop()) : QSize())));
 
     emit geometryShapeChanged(this, oldGeom);
 }
