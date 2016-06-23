@@ -336,8 +336,6 @@ add_subdirectory( scripts )
 add_subdirectory( tabbox )
 add_subdirectory(scripting)
 
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1212)
-
 ########### next target ###############
 
 set(kwin_KDEINIT_SRCS
