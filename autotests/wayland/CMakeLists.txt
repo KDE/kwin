@@ -216,3 +216,12 @@ add_executable(testShellClient ${testShellClient_SRCS})
 target_link_libraries( testShellClient kwin Qt5::Test)
 add_test(kwin-testShellClient testShellClient)
 ecm_mark_as_test(testShellClient)
+
+########################################################
+# DontCrashNoBorder Test
+########################################################
+set( testDontCrashNoBorder_SRCS dont_crash_no_border.cpp kwin_wayland_test.cpp )
+add_executable(testDontCrashNoBorder ${testDontCrashNoBorder_SRCS})
+target_link_libraries( testDontCrashNoBorder kwin Qt5::Test)
+add_test(kwin-testDontCrashNoBorder testDontCrashNoBorder)
+ecm_mark_as_test(testDontCrashNoBorder)
