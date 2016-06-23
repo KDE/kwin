@@ -177,6 +177,19 @@ QByteArray Toplevel::sessionId() const
     return result;
 }
 
+/*!
+  Returns command property for this client,
+  taken either from its window or from the leader window.
+ */
+QByteArray Toplevel::wmCommand()
+{
+    QByteArray result = Xcb::StringProperty(window(), XCB_ATOM_WM_COMMAND);
+    if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin != window())
+        result = Xcb::StringProperty(wmClientLeaderWin, XCB_ATOM_WM_COMMAND);
+    result.replace(0, ' ');
+    return result;
+}
+
 void Toplevel::getWmClientMachine()
 {
     m_clientMachine->resolve(window(), wmClientLeader());
