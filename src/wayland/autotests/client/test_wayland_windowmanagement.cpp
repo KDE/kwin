@@ -33,6 +33,14 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/region_interface.h"
 #include "../../src/server/plasmawindowmanagement_interface.h"
 #include "../../src/server/surface_interface.h"
+#include <wayland-plasma-window-management-client-protocol.h>
+
+typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowSignal)();
+Q_DECLARE_METATYPE(ServerWindowSignal)
+typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowBooleanSignal)(bool);
+Q_DECLARE_METATYPE(ServerWindowBooleanSignal)
+typedef void (KWayland::Client::PlasmaWindow::*ClientWindowVoidSetter)();
+Q_DECLARE_METATYPE(ClientWindowVoidSetter)
 
 class TestWindowManagement : public QObject
 {
@@ -49,6 +57,10 @@ private Q_SLOTS:
     void testActiveWindowOnUnmapped();
     void testDeleteActiveWindow();
     void testCreateAfterUnmap();
+    void testRequests_data();
+    void testRequests();
+    void testRequestsBoolean_data();
+    void testRequestsBoolean();
 
     void cleanup();
 
@@ -339,6 +351,71 @@ void TestWindowManagement::testCreateAfterUnmap()
     QSignalSpy helperDestroyedSpy(helperWindow, &QObject::destroyed);
     QVERIFY(helperDestroyedSpy.isValid());
     QVERIFY(helperDestroyedSpy.wait());
+}
+
+void TestWindowManagement::testRequests_data()
+{
+    using namespace KWayland::Server;
+    using namespace KWayland::Client;
+    QTest::addColumn<ServerWindowSignal>("changedSignal");
+    QTest::addColumn<ClientWindowVoidSetter>("requester");
+
+    QTest::newRow("close")  << &PlasmaWindowInterface::closeRequested  << &PlasmaWindow::requestClose;
+    QTest::newRow("move")   << &PlasmaWindowInterface::moveRequested   << &PlasmaWindow::requestMove;
+    QTest::newRow("resize") << &PlasmaWindowInterface::resizeRequested << &PlasmaWindow::requestResize;
+}
+
+void TestWindowManagement::testRequests()
+{
+    // this test case verifies all the different requests on a PlasmaWindow
+    QFETCH(ServerWindowSignal, changedSignal);
+    QSignalSpy requestSpy(m_windowInterface, changedSignal);
+    QVERIFY(requestSpy.isValid());
+    QFETCH(ClientWindowVoidSetter, requester);
+    (m_window->*(requester))();
+    QVERIFY(requestSpy.wait());
+}
+
+void TestWindowManagement::testRequestsBoolean_data()
+{
+    using namespace KWayland::Server;
+    QTest::addColumn<ServerWindowBooleanSignal>("changedSignal");
+    QTest::addColumn<int>("flag");
+
+    QTest::newRow("activate")  << &PlasmaWindowInterface::activeRequested  << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_ACTIVE);
+    QTest::newRow("minimized") << &PlasmaWindowInterface::minimizedRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MINIMIZED);
+    QTest::newRow("maximized") << &PlasmaWindowInterface::maximizedRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MAXIMIZED);
+    QTest::newRow("fullscreen") << &PlasmaWindowInterface::fullscreenRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_FULLSCREEN);
+    QTest::newRow("keepAbove") << &PlasmaWindowInterface::keepAboveRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_KEEP_ABOVE);
+    QTest::newRow("keepBelow") << &PlasmaWindowInterface::keepBelowRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_KEEP_BELOW);
+    QTest::newRow("demandsAttention") << &PlasmaWindowInterface::demandsAttentionRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_DEMANDS_ATTENTION);
+    QTest::newRow("closeable") << &PlasmaWindowInterface::closeableRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_CLOSEABLE);
+    QTest::newRow("minimizable") << &PlasmaWindowInterface::minimizeableRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MINIMIZABLE);
+    QTest::newRow("maximizable") << &PlasmaWindowInterface::maximizeableRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MAXIMIZABLE);
+    QTest::newRow("fullscreenable") << &PlasmaWindowInterface::fullscreenableRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_FULLSCREENABLE);
+    QTest::newRow("skiptaskbar") << &PlasmaWindowInterface::skipTaskbarRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR);
+    QTest::newRow("shadeable") << &PlasmaWindowInterface::shadeableRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADEABLE);
+    QTest::newRow("shaded") << &PlasmaWindowInterface::shadedRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADED);
+    QTest::newRow("movable") << &PlasmaWindowInterface::movableRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MOVABLE);
+    QTest::newRow("resizable") << &PlasmaWindowInterface::resizableRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_RESIZABLE);
+    QTest::newRow("virtualDesktopChangeable") << &PlasmaWindowInterface::virtualDesktopChangeableRequested << int(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_VIRTUAL_DESKTOP_CHANGEABLE);
+}
+
+void TestWindowManagement::testRequestsBoolean()
+{
+    // this test case verifies all the different requests on a PlasmaWindow
+    QFETCH(ServerWindowBooleanSignal, changedSignal);
+    QSignalSpy requestSpy(m_windowInterface, changedSignal);
+    QVERIFY(requestSpy.isValid());
+    QFETCH(int, flag);
+    org_kde_plasma_window_set_state(*m_window, flag, flag);
+    QVERIFY(requestSpy.wait());
+    QCOMPARE(requestSpy.count(), 1);
+    QCOMPARE(requestSpy.first().first().toBool(), true);
+    org_kde_plasma_window_set_state(*m_window, flag, 0);
+    QVERIFY(requestSpy.wait());
+    QCOMPARE(requestSpy.count(), 2);
+    QCOMPARE(requestSpy.last().first().toBool(), false);
 }
 
 QTEST_GUILESS_MAIN(TestWindowManagement)
