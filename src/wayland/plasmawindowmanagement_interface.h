@@ -195,4 +195,6 @@ private:
 }
 }
 
+Q_DECLARE_METATYPE(KWayland::Server::PlasmaWindowManagementInterface::ShowingDesktopState)
+
 #endif

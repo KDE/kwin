@@ -61,6 +61,9 @@ private Q_SLOTS:
     void testRequests();
     void testRequestsBoolean_data();
     void testRequestsBoolean();
+    void testShowingDesktop();
+    void testRequestShowingDesktop_data();
+    void testRequestShowingDesktop();
 
     void cleanup();
 
@@ -97,6 +100,7 @@ TestWindowManagement::TestWindowManagement(QObject *parent)
 void TestWindowManagement::init()
 {
     using namespace KWayland::Server;
+    qRegisterMetaType<KWayland::Server::PlasmaWindowManagementInterface::ShowingDesktopState>("ShowingDesktopState");
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -416,6 +420,54 @@ void TestWindowManagement::testRequestsBoolean()
     QVERIFY(requestSpy.wait());
     QCOMPARE(requestSpy.count(), 2);
     QCOMPARE(requestSpy.last().first().toBool(), false);
+}
+
+void TestWindowManagement::testShowingDesktop()
+{
+    using namespace KWayland::Server;
+    // this test verifies setting the showing desktop state
+    QVERIFY(!m_windowManagement->isShowingDesktop());
+    QSignalSpy showingDesktopChangedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::showingDesktopChanged);
+    QVERIFY(showingDesktopChangedSpy.isValid());
+    m_windowManagementInterface->setShowingDesktopState(PlasmaWindowManagementInterface::ShowingDesktopState::Enabled);
+    QVERIFY(showingDesktopChangedSpy.wait());
+    QCOMPARE(showingDesktopChangedSpy.count(), 1);
+    QCOMPARE(showingDesktopChangedSpy.first().first().toBool(), true);
+    QVERIFY(m_windowManagement->isShowingDesktop());
+    // setting to same should not change
+    m_windowManagementInterface->setShowingDesktopState(PlasmaWindowManagementInterface::ShowingDesktopState::Enabled);
+    QVERIFY(!showingDesktopChangedSpy.wait(100));
+    QCOMPARE(showingDesktopChangedSpy.count(), 1);
+    // setting to other state should change
+    m_windowManagementInterface->setShowingDesktopState(PlasmaWindowManagementInterface::ShowingDesktopState::Disabled);
+    QVERIFY(showingDesktopChangedSpy.wait());
+    QCOMPARE(showingDesktopChangedSpy.count(), 2);
+    QCOMPARE(showingDesktopChangedSpy.first().first().toBool(), true);
+    QCOMPARE(showingDesktopChangedSpy.last().first().toBool(), false);
+    QVERIFY(!m_windowManagement->isShowingDesktop());
+}
+
+void TestWindowManagement::testRequestShowingDesktop_data()
+{
+    using namespace KWayland::Server;
+    QTest::addColumn<bool>("value");
+    QTest::addColumn<PlasmaWindowManagementInterface::ShowingDesktopState>("expectedValue");
+
+    QTest::newRow("enable") << true << PlasmaWindowManagementInterface::ShowingDesktopState::Enabled;
+    QTest::newRow("disable") << false << PlasmaWindowManagementInterface::ShowingDesktopState::Disabled;
+}
+
+void TestWindowManagement::testRequestShowingDesktop()
+{
+    // this test verifies requesting show desktop state
+    using namespace KWayland::Server;
+    QSignalSpy requestSpy(m_windowManagementInterface, &PlasmaWindowManagementInterface::requestChangeShowingDesktop);
+    QVERIFY(requestSpy.isValid());
+    QFETCH(bool, value);
+    m_windowManagement->setShowingDesktop(value);
+    QVERIFY(requestSpy.wait());
+    QCOMPARE(requestSpy.count(), 1);
+    QTEST(requestSpy.first().first().value<PlasmaWindowManagementInterface::ShowingDesktopState>(), "expectedValue");
 }
 
 QTEST_GUILESS_MAIN(TestWindowManagement)
