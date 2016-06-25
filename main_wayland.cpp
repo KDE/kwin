@@ -419,6 +419,16 @@ static void disablePtrace()
 
 }
 
+static void unsetDumpable(int sig)
+{
+#if HAVE_PR_SET_DUMPABLE
+    prctl(PR_SET_DUMPABLE, 1);
+#endif
+    signal(sig, SIG_IGN);
+    raise(sig);
+    return;
+}
+
 } // namespace
 
 int main(int argc, char * argv[])
@@ -433,6 +443,8 @@ int main(int argc, char * argv[])
         signal(SIGINT, SIG_IGN);
     if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
+    signal(SIGABRT, KWin::unsetDumpable);
+    signal(SIGSEGV, KWin::unsetDumpable);
     // ensure that no thread takes SIGUSR
     sigset_t userSignals;
     sigemptyset(&userSignals);
