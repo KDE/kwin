@@ -126,6 +126,7 @@ private:
     bool m_inited = false;
     QScopedPointer<Xkb> m_xkb;
     QHash<quint32, QTimer*> m_repeatTimers;
+    QMetaObject::Connection m_activeClientSurfaceChangedConnection;
 };
 
 inline
