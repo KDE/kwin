@@ -964,7 +964,8 @@ void WindowPixmap::create()
     if (isValid() || toplevel()->isDeleted()) {
         return;
     }
-    if (toplevel()->surface()) {
+    // always update from Buffer on Wayland, don't try using XPixmap
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
         // use Buffer
         updateBuffer();
         if ((m_buffer || !m_fbo.isNull()) && m_subSurface.isNull()) {
