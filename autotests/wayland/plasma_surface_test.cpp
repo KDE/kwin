@@ -148,6 +148,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops_data()
     QTest::newRow("OSD") << PlasmaShellSurface::Role::OnScreenDisplay << true;
     QTest::newRow("Normal") << PlasmaShellSurface::Role::Normal << false;
     QTest::newRow("Notification") << PlasmaShellSurface::Role::Notification << true;
+    QTest::newRow("ToolTip") << PlasmaShellSurface::Role::ToolTip << true;
 }
 
 void PlasmaSurfaceTest::testRoleOnAllDesktops()
@@ -206,6 +207,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QEXPECT_FAIL("Panel", "PS before WS not supported", Continue);
     QEXPECT_FAIL("OSD", "PS before WS not supported", Continue);
     QEXPECT_FAIL("Notification", "PS before WS not supported", Continue);
+    QEXPECT_FAIL("ToolTip", "PS before WS not supported", Continue);
     QCOMPARE(c->isOnAllDesktops(), expectedOnAllDesktops);
 }
 
@@ -220,6 +222,7 @@ void PlasmaSurfaceTest::testAcceptsFocus_data()
     QTest::newRow("OSD") << PlasmaShellSurface::Role::OnScreenDisplay << false << false;
     QTest::newRow("Normal") << PlasmaShellSurface::Role::Normal << true << true;
     QTest::newRow("Notification") << PlasmaShellSurface::Role::Notification << false << false;
+    QTest::newRow("ToolTip") << PlasmaShellSurface::Role::ToolTip << false << false;
 }
 
 void PlasmaSurfaceTest::testAcceptsFocus()
