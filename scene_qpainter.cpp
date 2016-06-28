@@ -163,6 +163,7 @@ qint64 SceneQPainter::paint(QRegion damage, ToplevelList toplevels)
             QRegion updateRegion, validRegion;
             paintScreen(&mask, damage.intersected(geometry), QRegion(), &updateRegion, &validRegion);
             overallUpdate = overallUpdate.united(updateRegion);
+            m_backend->renderCursor(m_painter.data());
 
             m_painter->restore();
             m_painter->end();
