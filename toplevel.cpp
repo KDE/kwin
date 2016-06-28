@@ -478,6 +478,7 @@ void Toplevel::setSurface(KWayland::Server::SurfaceInterface *surface)
             m_surface = nullptr;
         }
     );
+    emit surfaceChanged();
 }
 
 void Toplevel::addDamage(const QRegion &damage)

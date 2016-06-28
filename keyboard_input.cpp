@@ -374,7 +374,17 @@ void KeyboardInputRedirection::init()
 
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
-    connect(workspace(), &Workspace::clientActivated, this, &KeyboardInputRedirection::update);
+    connect(workspace(), &Workspace::clientActivated, this,
+        [this] {
+            disconnect(m_activeClientSurfaceChangedConnection);
+            if (auto c = workspace()->activeClient()) {
+                m_activeClientSurfaceChangedConnection = connect(c, &Toplevel::surfaceChanged, this, &KeyboardInputRedirection::update);
+            } else {
+                m_activeClientSurfaceChangedConnection = QMetaObject::Connection();
+            }
+            update();
+        }
+    );
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
     }

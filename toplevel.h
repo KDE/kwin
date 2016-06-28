@@ -450,6 +450,11 @@ Q_SIGNALS:
      **/
     void hasAlphaChanged();
 
+    /**
+     * Emitted whenever the Surface for this Toplevel changes.
+     **/
+    void surfaceChanged();
+
 protected Q_SLOTS:
     /**
      * Checks whether the screen number for this Toplevel changed and updates if needed.
