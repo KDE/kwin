@@ -248,7 +248,9 @@ void TextInputTest::testEnterLeave()
 
     // now let's try to enter it
     QVERIFY(!m_seatInterface->focusedTextInput());
+    QVERIFY(!m_seatInterface->focusedTextInputSurface());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedTextInputSurface(), serverSurface);
     // text input not yet set for the surface
     QFETCH(bool, updatesDirectly);
     QCOMPARE(bool(m_seatInterface->focusedTextInput()), updatesDirectly);
