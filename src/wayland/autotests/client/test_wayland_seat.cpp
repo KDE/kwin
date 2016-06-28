@@ -1400,7 +1400,8 @@ void TestWaylandSeat::testTouch()
     Touch *touch = m_seat->createTouch(m_seat);
     QVERIFY(touch->isValid());
     QVERIFY(touchCreatedSpy.wait());
-    QVERIFY(m_seatInterface->focusedTouch());
+    auto serverTouch = m_seatInterface->focusedTouch();
+    QVERIFY(serverTouch);
     QCOMPARE(touchCreatedSpy.first().first().value<KWayland::Server::TouchInterface*>(), m_seatInterface->focusedTouch());
 
     QSignalSpy sequenceStartedSpy(touch, SIGNAL(sequenceStarted(KWayland::Client::TouchPoint*)));
@@ -1559,6 +1560,31 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(pointRemovedSpy.count(), 3);
     QCOMPARE(touch->sequence().first()->position(), QPointF(0, 0));
+
+    // destroy touch on client side
+    QSignalSpy unboundSpy(serverTouch, &TouchInterface::unbound);
+    QVERIFY(unboundSpy.isValid());
+    QSignalSpy destroyedSpy(serverTouch, &TouchInterface::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    delete touch;
+    QVERIFY(unboundSpy.wait());
+    QCOMPARE(unboundSpy.count(), 1);
+    QCOMPARE(destroyedSpy.count(), 0);
+    QVERIFY(!serverTouch->resource());
+    // try to call into all the the methods of the touch interface, should not crash
+    QCOMPARE(m_seatInterface->focusedTouch(), serverTouch);
+    m_seatInterface->setTimestamp(8);
+    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 0);
+    m_seatInterface->touchFrame();
+    m_seatInterface->touchMove(0, QPointF(0, 0));
+    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 1);
+    m_seatInterface->cancelTouchSequence();
+    QVERIFY(destroyedSpy.wait());
+    QCOMPARE(destroyedSpy.count(), 1);
+    // should have unset the focused touch
+    QVERIFY(!m_seatInterface->focusedTouch());
+    // but not the focused touch surface
+    QCOMPARE(m_seatInterface->focusedTouchSurface(), serverSurface);
 }
 
 void TestWaylandSeat::testDisconnect()

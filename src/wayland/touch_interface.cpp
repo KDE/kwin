@@ -44,16 +44,13 @@ private:
     TouchInterface *q_func() {
         return reinterpret_cast<TouchInterface *>(q);
     }
-    // interface
-    // since version 3
-    static void releaseCallback(wl_client *client, wl_resource *resource);
 
     static const struct wl_touch_interface s_interface;
 };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_touch_interface TouchInterface::Private::s_interface = {
-    releaseCallback
+    resourceDestroyedCallback
 };
 #endif
 
@@ -61,12 +58,6 @@ TouchInterface::Private::Private(SeatInterface *parent, wl_resource *parentResou
     : Resource::Private(q, parent, parentResource, &wl_touch_interface, &s_interface)
     , seat(parent)
 {
-}
-
-void TouchInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    unbind(resource);
 }
 
 TouchInterface::TouchInterface(SeatInterface *parent, wl_resource *parentResource)
