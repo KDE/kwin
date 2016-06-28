@@ -222,7 +222,7 @@ private:
     void triggerCursorRepaint();
     bool m_softWareCursor = false;
     struct {
-        QPoint lastRenderedPosition;
+        QRect lastRenderedGeometry;
     } m_cursor;
     bool m_handlesOutputs = false;
     bool m_ready = false;
