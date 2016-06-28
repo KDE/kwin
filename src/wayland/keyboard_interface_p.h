@@ -33,7 +33,6 @@ class KeyboardInterface::Private : public Resource::Private
 {
 public:
     Private(SeatInterface *s, wl_resource *parentResource, KeyboardInterface *q);
-    void sendKeymap();
     void sendKeymap(int fd, quint32 size);
     void sendModifiers();
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);

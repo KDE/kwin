@@ -24,9 +24,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "surface_interface.h"
 // Qt
 #include <QVector>
-// System
-#include <fcntl.h>
-#include <unistd.h>
 // Wayland
 #include <wayland-server.h>
 
@@ -91,18 +88,6 @@ void KeyboardInterface::setKeymap(int fd, quint32 size)
 {
     Q_D();
     d->sendKeymap(fd, size);
-}
-
-void KeyboardInterface::Private::sendKeymap()
-{
-    Q_ASSERT(resource);
-    if (seat->isKeymapXkbCompatible()) {
-        sendKeymap(seat->keymapFileDescriptor(), seat->keymapSize());
-    } else {
-        int nullFd = open("/dev/null", O_RDONLY); // krazy:exclude=syscalls
-        wl_keyboard_send_keymap(resource, WL_KEYBOARD_KEYMAP_FORMAT_NO_KEYMAP, nullFd, 0);
-        close(nullFd);
-    }
 }
 
 void KeyboardInterface::Private::sendKeymap(int fd, quint32 size)
