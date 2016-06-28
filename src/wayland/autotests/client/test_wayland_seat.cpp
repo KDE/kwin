@@ -1363,9 +1363,13 @@ void TestWaylandSeat::testSelection()
     QCOMPARE(m_seatInterface->selection(), ddi);
     QVERIFY(selectionSpy.wait());
     QCOMPARE(selectionSpy.count(), 2);
+    // setting the same again should not change
+    m_seatInterface->setSelection(ddi);
+    QVERIFY(!selectionSpy.wait(100));
     // now clear it manully
     m_seatInterface->setSelection(nullptr);
     QVERIFY(selectionClearedSpy.wait());
+    QCOMPARE(selectionSpy.count(), 2);
 }
 
 void TestWaylandSeat::testTouch()
