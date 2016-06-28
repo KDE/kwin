@@ -80,7 +80,6 @@ public:
      **/
     virtual QImage *bufferForScreen(int screenId);
     virtual bool needsFullRepaint() const = 0;
-    virtual void renderCursor(QPainter *painter);
     /**
      * Whether the rendering needs to be split per screen.
      * Default implementation returns @c false.
@@ -130,6 +129,7 @@ protected:
 
 private:
     explicit SceneQPainter(QPainterBackend *backend, QObject *parent = nullptr);
+    void paintCursor();
     QScopedPointer<QPainterBackend> m_backend;
     QScopedPointer<QPainter> m_painter;
     class Window;

@@ -73,11 +73,6 @@ void QPainterBackend::setFailed(const QString &reason)
     m_failed = true;
 }
 
-void QPainterBackend::renderCursor(QPainter *painter)
-{
-    Q_UNUSED(painter)
-}
-
 bool QPainterBackend::perScreenRendering() const
 {
     return false;
@@ -163,7 +158,7 @@ qint64 SceneQPainter::paint(QRegion damage, ToplevelList toplevels)
             QRegion updateRegion, validRegion;
             paintScreen(&mask, damage.intersected(geometry), QRegion(), &updateRegion, &validRegion);
             overallUpdate = overallUpdate.united(updateRegion);
-            m_backend->renderCursor(m_painter.data());
+            paintCursor();
 
             m_painter->restore();
             m_painter->end();
@@ -181,7 +176,7 @@ qint64 SceneQPainter::paint(QRegion damage, ToplevelList toplevels)
         QRegion updateRegion, validRegion;
         paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion);
 
-        m_backend->renderCursor(m_painter.data());
+        paintCursor();
         m_backend->showOverlay();
 
         m_painter->end();
@@ -198,6 +193,21 @@ void SceneQPainter::paintBackground(QRegion region)
 {
     m_painter->setBrush(Qt::black);
     m_painter->drawRects(region.rects());
+}
+
+void SceneQPainter::paintCursor()
+{
+    if (!kwinApp()->platform()->usesSoftwareCursor()) {
+        return;
+    }
+    const QImage img = kwinApp()->platform()->softwareCursor();
+    if (img.isNull()) {
+        return;
+    }
+    const QPoint cursorPos = Cursor::pos();
+    const QPoint hotspot = kwinApp()->platform()->softwareCursorHotspot();
+    m_painter->drawImage(cursorPos - hotspot, img);
+    kwinApp()->platform()->markCursorAsRendered();
 }
 
 Scene::Window *SceneQPainter::createWindow(Toplevel *toplevel)

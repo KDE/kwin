@@ -70,19 +70,4 @@ bool VirtualQPainterBackend::usesOverlayWindow() const
     return false;
 }
 
-void VirtualQPainterBackend::renderCursor(QPainter *painter)
-{
-    if (!m_backend->usesSoftwareCursor()) {
-        return;
-    }
-    const QImage img = m_backend->softwareCursor();
-    if (img.isNull()) {
-        return;
-    }
-    const QPoint cursorPos = Cursor::pos();
-    const QPoint hotspot = m_backend->softwareCursorHotspot();
-    painter->drawImage(cursorPos - hotspot, img);
-    m_backend->markCursorAsRendered();
-}
-
 }
