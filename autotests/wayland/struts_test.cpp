@@ -60,6 +60,7 @@ private Q_SLOTS:
     void testWaylandStruts_data();
     void testWaylandStruts();
     void testMoveWaylandPanel();
+    void testWaylandMobilePanel();
     void testX11Struts_data();
     void testX11Struts();
     void test363804();
@@ -347,6 +348,85 @@ void StrutsTest::testMoveWaylandPanel()
     QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(1280, 0, 1280, 1000));
     QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(1280, 0, 1280, 1000));
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 2560, 1000));
+}
+
+void StrutsTest::testWaylandMobilePanel()
+{
+    using namespace KWayland::Client;
+
+    //First enable maxmizing policy
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("Placement", "Maximizing");
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // create first top panel
+    const QRect windowGeometry(0, 0, 1280, 60);
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    Q_UNUSED(shellSurface)
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    plasmaSurface->setPosition(windowGeometry.topLeft());
+    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+
+    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+
+    // map the first panel
+    QImage img(windowGeometry.size(), QImage::Format_RGB32);
+    img.fill(Qt::red);
+    surface->attachBuffer(m_shm->createBuffer(img));
+    surface->damage(QRect(QPoint(0, 0), windowGeometry.size()));
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(windowCreatedSpy.wait());
+    QCOMPARE(windowCreatedSpy.count(), 1);
+
+    auto c = windowCreatedSpy.first().first().value<ShellClient*>();
+    QVERIFY(c);
+    QVERIFY(!c->isActive());
+    QCOMPARE(c->geometry(), windowGeometry);
+    QVERIFY(c->isDock());
+    QVERIFY(c->hasStrut());
+    windowCreatedSpy.clear();
+
+    QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 60, 1280, 964));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), QRect(0, 60, 1280, 964));
+    QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 60, 2560, 964));
+
+    // create another bottom panel
+    const QRect windowGeometry2(0, 874, 1280, 150);
+    QScopedPointer<Surface> surface2(m_compositor->createSurface());
+    QScopedPointer<ShellSurface> shellSurface2(m_shell->createSurface(surface2.data()));
+    Q_UNUSED(shellSurface2)
+    QScopedPointer<PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.data()));
+    plasmaSurface2->setPosition(windowGeometry2.topLeft());
+    plasmaSurface2->setRole(PlasmaShellSurface::Role::Panel);
+
+    QImage img2(windowGeometry2.size(), QImage::Format_RGB32);
+    img2.fill(Qt::blue);
+    surface2->attachBuffer(m_shm->createBuffer(img2));
+    surface2->damage(QRect(QPoint(0, 0), windowGeometry2.size()));
+    surface2->commit(Surface::CommitFlag::None);
+
+    QVERIFY(windowCreatedSpy.wait());
+    QCOMPARE(windowCreatedSpy.count(), 1);
+
+    auto c1 = windowCreatedSpy.first().first().value<ShellClient*>();
+    QVERIFY(c1);
+    QVERIFY(!c1->isActive());
+    QCOMPARE(c1->geometry(), windowGeometry2);
+    QVERIFY(c1->isDock());
+    QVERIFY(c1->hasStrut());
+    windowCreatedSpy.clear();
+
+    QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 60, 1280, 814));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), QRect(0, 60, 1280, 814));
+    QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 60, 2560, 814));
 }
 
 void StrutsTest::testX11Struts_data()
