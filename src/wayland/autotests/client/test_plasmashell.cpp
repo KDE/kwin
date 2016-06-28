@@ -157,6 +157,7 @@ void TestPlasmaShell::testRole_data()
     QTest::newRow("osd") << PlasmaShellSurface::Role::OnScreenDisplay << PlasmaShellSurfaceInterface::Role::OnScreenDisplay;
     QTest::newRow("panel") << PlasmaShellSurface::Role::Panel << PlasmaShellSurfaceInterface::Role::Panel;
     QTest::newRow("notification") << PlasmaShellSurface::Role::Notification << PlasmaShellSurfaceInterface::Role::Notification;
+    QTest::newRow("tooltip") << PlasmaShellSurface::Role::ToolTip << PlasmaShellSurfaceInterface::Role::ToolTip;
 }
 
 void TestPlasmaShell::testRole()

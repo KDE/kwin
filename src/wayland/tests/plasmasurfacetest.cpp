@@ -172,6 +172,8 @@ int main(int argc, char **argv)
     parser.addOption(desktopOption);
     QCommandLineOption osdOption(QStringLiteral("osd"));
     parser.addOption(osdOption);
+    QCommandLineOption tooltipOption(QStringLiteral("tooltip"));
+    parser.addOption(tooltipOption);
     QCommandLineOption skipTaskbarOption(QStringLiteral("skipTaskbar"));
     parser.addOption(skipTaskbarOption);
     parser.process(app);
@@ -186,6 +188,8 @@ int main(int argc, char **argv)
         client.setRole(PlasmaShellSurface::Role::Desktop);
     } else if (parser.isSet(osdOption)) {
         client.setRole(PlasmaShellSurface::Role::OnScreenDisplay);
+    } else if (parser.isSet(tooltipOption)) {
+        client.setRole(PlasmaShellSurface::Role::ToolTip);
     }
     client.setSkipTaskbar(parser.isSet(skipTaskbarOption));
 
