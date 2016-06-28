@@ -171,6 +171,8 @@ qint64 SceneQPainter::paint(QRegion damage, ToplevelList toplevels)
         m_backend->present(mask, overallUpdate);
     } else {
         m_painter->begin(m_backend->buffer());
+        m_painter->setClipping(true);
+        m_painter->setClipRegion(damage);
         if (m_backend->needsFullRepaint()) {
             mask |= Scene::PAINT_SCREEN_BACKGROUND_FIRST;
             damage = QRegion(0, 0, displayWidth(), displayHeight());
@@ -267,10 +269,10 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
 
     QPainter *scenePainter = m_scene->painter();
     QPainter *painter = scenePainter;
+    painter->save();
     painter->setClipRegion(region);
     painter->setClipping(true);
 
-    painter->save();
     painter->translate(x(), y());
     if (mask & PAINT_WINDOW_TRANSFORMED) {
         painter->translate(data.xTranslation(), data.yTranslation());
@@ -317,9 +319,6 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
     }
 
     painter->restore();
-
-    painter->setClipRegion(QRegion());
-    painter->setClipping(false);
 }
 
 void SceneQPainter::Window::renderShadow(QPainter* painter)
