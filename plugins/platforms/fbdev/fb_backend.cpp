@@ -38,7 +38,6 @@ namespace KWin
 FramebufferBackend::FramebufferBackend(QObject *parent)
     : Platform(parent)
 {
-    setSoftWareCursor(true);
 }
 
 FramebufferBackend::~FramebufferBackend()
@@ -61,6 +60,7 @@ QPainterBackend *FramebufferBackend::createQPainterBackend()
 
 void FramebufferBackend::init()
 {
+    setSoftWareCursor(true);
     LogindIntegration *logind = LogindIntegration::self();
     auto takeControl = [logind, this]() {
         if (logind->hasSessionControl()) {
