@@ -100,7 +100,7 @@ void PointerInterface::Private::sendEnter(SurfaceInterface *surface, const QPoin
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_pointer_interface PointerInterface::Private::s_interface = {
     setCursorCallback,
-    releaseCallback
+    resourceDestroyedCallback
 };
 #endif
 
@@ -203,12 +203,6 @@ void PointerInterface::Private::setCursorCallback(wl_client *client, wl_resource
     auto p = cast<Private>(resource);
     Q_ASSERT(p->client->client() == client);
     p->setCursor(serial, SurfaceInterface::get(surface), QPoint(hotspot_x, hotspot_y));
-}
-
-void PointerInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    unbind(resource);
 }
 
 Cursor *PointerInterface::cursor() const

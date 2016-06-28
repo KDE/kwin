@@ -466,11 +466,56 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(p->enteredSurface(), s);
     QCOMPARE(cp.enteredSurface(), s);
 
+    // destroy the focused pointer
+    QSignalSpy unboundSpy(serverPointer, &Resource::unbound);
+    QVERIFY(unboundSpy.isValid());
+    QSignalSpy destroyedSpy(serverPointer, &Resource::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    delete p;
+    QVERIFY(unboundSpy.wait());
+    QCOMPARE(unboundSpy.count(), 1);
+    QCOMPARE(destroyedSpy.count(), 0);
+    // now test that calling into the methods in Seat does not crash
+    QCOMPARE(m_seatInterface->focusedPointer(), serverPointer);
+    QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
+    m_seatInterface->setTimestamp(8);
+    m_seatInterface->setPointerPos(QPoint(10, 15));
+    m_seatInterface->setTimestamp(9);
+    m_seatInterface->pointerButtonPressed(1);
+    m_seatInterface->setTimestamp(10);
+    m_seatInterface->pointerButtonReleased(1);
+    m_seatInterface->setTimestamp(11);
+    m_seatInterface->pointerAxis(Qt::Horizontal, 10);
+    m_seatInterface->setTimestamp(12);
+    m_seatInterface->pointerAxis(Qt::Vertical, 20);
+    m_seatInterface->setFocusedPointerSurface(nullptr);
+    QCOMPARE(focusedPointerChangedSpy.count(), 7);
+    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    QCOMPARE(focusedPointerChangedSpy.count(), 8);
+    QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
+    QVERIFY(!m_seatInterface->focusedPointer());
+
+    // and now destroy
+    QVERIFY(destroyedSpy.wait());
+    QCOMPARE(unboundSpy.count(), 1);
+    QCOMPARE(destroyedSpy.count(), 1);
+    QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
+    QVERIFY(!m_seatInterface->focusedPointer());
+
+    // create a pointer again
+    p = m_seat->createPointer(m_seat);
+    QVERIFY(focusedPointerChangedSpy.wait());
+    QCOMPARE(focusedPointerChangedSpy.count(), 9);
+    QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
+    serverPointer = m_seatInterface->focusedPointer();
+    QVERIFY(serverPointer);
+
     delete s;
     wl_display_flush(m_connection->display());
     QVERIFY(focusedPointerChangedSpy.wait());
-    QCOMPARE(focusedPointerChangedSpy.count(), 7);
+    QCOMPARE(focusedPointerChangedSpy.count(), 10);
     QVERIFY(!m_seatInterface->focusedPointerSurface());
+    QVERIFY(!m_seatInterface->focusedPointer());
 }
 
 void TestWaylandSeat::testPointerTransformation_data()
