@@ -918,6 +918,7 @@ void TestWaylandSeat::testCursor()
     QVERIFY(!cursor->surface());
     QCOMPARE(cursor->hotspot(), QPoint());
     QCOMPARE(cursor->enteredSerial(), serial);
+    QCOMPARE(cursor->pointer(), m_seatInterface->focusedPointer());
 
     QSignalSpy hotspotChangedSpy(cursor, SIGNAL(hotspotChanged()));
     QVERIFY(hotspotChangedSpy.isValid());
