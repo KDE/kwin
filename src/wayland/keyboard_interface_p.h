@@ -48,9 +48,6 @@ public:
     QMetaObject::Connection destroyConnection;
 
 private:
-    // since version 3
-    static void releaseCallback(wl_client *client, wl_resource *resource);
-
     static const struct wl_keyboard_interface s_interface;
 };
 

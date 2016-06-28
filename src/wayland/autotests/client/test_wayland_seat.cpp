@@ -48,6 +48,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <wayland-client-protocol.h>
 
 #include <linux/input.h>
+// System
+#include <fcntl.h>
+#include <unistd.h>
 
 class TestWaylandSeat : public QObject
 {
@@ -1066,7 +1069,8 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyboard->keyRepeatRate(), 0);
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
-    QVERIFY(m_seatInterface->focusedKeyboard());
+    auto serverKeyboard = m_seatInterface->focusedKeyboard();
+    QVERIFY(serverKeyboard);
 
     // we should get the repeat info announced
     QCOMPARE(repeatInfoSpy.count(), 1);
@@ -1177,11 +1181,49 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyboard->enteredSurface(), s);
     QCOMPARE(ckeyboard.enteredSurface(), s);
 
+    QSignalSpy serverSurfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    QVERIFY(serverSurfaceDestroyedSpy.isValid());
     delete s;
-    wl_display_flush(m_connection->display());
-    QTest::qWait(100);
+    QVERIFY(serverSurfaceDestroyedSpy.wait());
     QVERIFY(!m_seatInterface->focusedKeyboardSurface());
     QVERIFY(!m_seatInterface->focusedKeyboard());
+    QVERIFY(!serverKeyboard->focusedSurface());
+
+    // let's create a Surface again
+    QScopedPointer<Surface> s2(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    QCOMPARE(surfaceCreatedSpy.count(), 2);
+    serverSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboard(), serverKeyboard);
+
+    // delete the Keyboard
+    QSignalSpy unboundSpy(serverKeyboard, &Resource::unbound);
+    QVERIFY(unboundSpy.isValid());
+    QSignalSpy destroyedSpy(serverKeyboard, &Resource::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    delete keyboard;
+    QVERIFY(unboundSpy.wait());
+    QCOMPARE(unboundSpy.count(), 1);
+    QCOMPARE(destroyedSpy.count(), 0);
+    // verify that calling into the Keyboard related functionality doesn't crash
+    m_seatInterface->setTimestamp(9);
+    m_seatInterface->keyPressed(KEY_F2);
+    m_seatInterface->setTimestamp(10);
+    m_seatInterface->keyReleased(KEY_F2);
+    m_seatInterface->setKeyRepeatInfo(30, 560);
+    m_seatInterface->setKeyRepeatInfo(25, 660);
+    m_seatInterface->updateKeyboardModifiers(5, 6, 7, 8);
+    m_seatInterface->setKeymap(open("/dev/null", O_RDONLY), 0);
+    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+    QVERIFY(!m_seatInterface->focusedKeyboard());
+
+    QVERIFY(destroyedSpy.wait());
+    QCOMPARE(destroyedSpy.count(), 1);
 
     // create a second Keyboard to verify that repeat info is announced properly
     Keyboard *keyboard2 = m_seat->createKeyboard(m_seat);
@@ -1196,6 +1238,17 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyboard2->isKeyRepeatEnabled(), true);
     QCOMPARE(keyboard2->keyRepeatRate(), 25);
     QCOMPARE(keyboard2->keyRepeatDelay(), 660);
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+    serverKeyboard = m_seatInterface->focusedKeyboard();
+    QVERIFY(serverKeyboard);
+    QSignalSpy keyboard2DestroyedSpy(serverKeyboard, &QObject::destroyed);
+    QVERIFY(keyboard2DestroyedSpy.isValid());
+    delete keyboard2;
+    QVERIFY(keyboard2DestroyedSpy.wait());
+    // this should have unset it on the server
+    QVERIFY(!m_seatInterface->focusedKeyboard());
+    // but not the surface
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
 }
 
 void TestWaylandSeat::testCast()

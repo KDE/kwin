@@ -76,7 +76,7 @@ void KeyboardInterface::Private::sendEnter(SurfaceInterface *surface, quint32 se
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_keyboard_interface KeyboardInterface::Private::s_interface {
-    releaseCallback
+    resourceDestroyedCallback
 };
 #endif
 
@@ -86,12 +86,6 @@ KeyboardInterface::KeyboardInterface(SeatInterface *parent, wl_resource *parentR
 }
 
 KeyboardInterface::~KeyboardInterface() = default;
-
-void KeyboardInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    unbind(resource);
-}
 
 void KeyboardInterface::setKeymap(int fd, quint32 size)
 {
@@ -113,13 +107,17 @@ void KeyboardInterface::Private::sendKeymap()
 
 void KeyboardInterface::Private::sendKeymap(int fd, quint32 size)
 {
-    Q_ASSERT(resource);
+    if (!resource) {
+        return;
+    }
     wl_keyboard_send_keymap(resource, WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1, fd, size);
 }
 
 void KeyboardInterface::Private::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial)
 {
-    Q_ASSERT(resource);
+    if (!resource) {
+        return;
+    }
     wl_keyboard_send_modifiers(resource, serial, depressed, latched, locked, group);
 }
 
@@ -154,6 +152,9 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
 void KeyboardInterface::keyPressed(quint32 key, quint32 serial)
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     Q_ASSERT(d->focusedSurface);
     wl_keyboard_send_key(d->resource, serial, d->seat->timestamp(), key, WL_KEYBOARD_KEY_STATE_PRESSED);
 }
@@ -161,6 +162,9 @@ void KeyboardInterface::keyPressed(quint32 key, quint32 serial)
 void KeyboardInterface::keyReleased(quint32 key, quint32 serial)
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     Q_ASSERT(d->focusedSurface);
     wl_keyboard_send_key(d->resource, serial, d->seat->timestamp(), key, WL_KEYBOARD_KEY_STATE_RELEASED);
 }
@@ -175,6 +179,9 @@ void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quin
 void KeyboardInterface::repeatInfo(qint32 charactersPerSecond, qint32 delay)
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     if (wl_resource_get_version(d->resource) < WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
         // only supported since version 4
         return;
