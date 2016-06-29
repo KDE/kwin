@@ -602,7 +602,7 @@ public:
         if (input()->touch()->decorationPressId() == -1) {
             return false;
         }
-        if (input()->touch()->decorationPressId() != id) {
+        if (input()->touch()->decorationPressId() != qint32(id)) {
             // ignore, but filter out
             return true;
         }
@@ -622,7 +622,7 @@ public:
         if (input()->touch()->decorationPressId() == -1) {
             return false;
         }
-        if (input()->touch()->decorationPressId() != id) {
+        if (input()->touch()->decorationPressId() != qint32(id)) {
             // ignore, but filter out
             return true;
         }
