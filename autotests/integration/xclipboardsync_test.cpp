@@ -166,9 +166,11 @@ void XClipboardSyncTest::testSync()
     QCOMPARE(clientAddedSpy.count(), 1);
     QCOMPARE(shellClientAddedSpy.count(), 1);
     QVERIFY(pasteClient);
-    qDebug() << pasteClient;
     if (workspace()->activeClient() != pasteClient) {
+        QSignalSpy clientActivatedSpy(workspace(), &Workspace::clientActivated);
+        QVERIFY(clientActivatedSpy.isValid());
         workspace()->activateClient(pasteClient);
+        QVERIFY(clientActivatedSpy.wait());
     }
     QTRY_COMPARE(workspace()->activeClient(), pasteClient);
     QVERIFY(finishedSpy.wait());
