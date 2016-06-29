@@ -324,7 +324,6 @@ include_directories(BEFORE
     )
 
 add_subdirectory( libkwineffects )
-add_subdirectory( killer )
 if(KWIN_BUILD_KCMS)
     add_subdirectory( kcmkwin )
 endif()
