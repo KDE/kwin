@@ -235,3 +235,12 @@ add_executable(testXClipboardSync ${testXClipboardSync_SRCS})
 target_link_libraries( testXClipboardSync kwin Qt5::Test)
 add_test(kwin-testXClipboardSync testXClipboardSync)
 ecm_mark_as_test(testXClipboardSync)
+
+########################################################
+# SceneQPainter Test
+########################################################
+set( testSceneQPainter_SRCS scene_qpainter_test.cpp kwin_wayland_test.cpp )
+add_executable(testSceneQPainter ${testSceneQPainter_SRCS})
+target_link_libraries( testSceneQPainter kwin Qt5::Test)
+add_test(kwin-testSceneQPainter testSceneQPainter)
+ecm_mark_as_test(testSceneQPainter)

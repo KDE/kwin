@@ -102,7 +102,7 @@ private:
     bool m_failed;
 };
 
-class SceneQPainter : public Scene
+class KWIN_EXPORT SceneQPainter : public Scene
 {
     Q_OBJECT
 
@@ -120,6 +120,10 @@ public:
     void screenGeometryChanged(const QSize &size) override;
 
     QPainter *painter();
+
+    QPainterBackend *backend() const {
+        return m_backend.data();
+    }
 
     static SceneQPainter *createScene(QObject *parent);
 

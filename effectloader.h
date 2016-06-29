@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_EFFECT_LOADER_H
 #define KWIN_EFFECT_LOADER_H
+#include <kwin_export.h>
 // KDE
 #include <KPluginMetaData>
 #include <KSharedConfig>
@@ -302,7 +303,7 @@ private:
  * @brief Can load scripted Effects
  *
  */
-class ScriptedEffectLoader : public AbstractEffectLoader
+class KWIN_EXPORT ScriptedEffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT
 public:

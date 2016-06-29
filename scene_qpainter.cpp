@@ -186,6 +186,8 @@ qint64 SceneQPainter::paint(QRegion damage, ToplevelList toplevels)
     // do cleanup
     clearStackingOrder();
 
+    emit frameRendered();
+
     return renderTimer.nsecsElapsed();
 }
 

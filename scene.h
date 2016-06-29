@@ -57,7 +57,7 @@ class Shadow;
 class WindowPixmap;
 
 // The base class for compositing backends.
-class Scene : public QObject
+class KWIN_EXPORT Scene : public QObject
 {
     Q_OBJECT
 public:
@@ -148,6 +148,9 @@ public:
     virtual void triggerFence();
 
     virtual Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
+
+Q_SIGNALS:
+    void frameRendered();
 
 public Q_SLOTS:
     // a window has been destroyed
