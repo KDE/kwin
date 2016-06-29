@@ -75,6 +75,7 @@ int libinput_device_config_tap_get_finger_count(struct libinput_device *device)
 
 enum libinput_config_tap_state libinput_device_config_tap_get_enabled(struct libinput_device *device)
 {
+    Q_UNUSED(device)
     return LIBINPUT_CONFIG_TAP_DISABLED;
 }
 

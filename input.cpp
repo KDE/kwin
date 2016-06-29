@@ -980,6 +980,8 @@ void InputRedirection::setupWorkspace()
             [this] (FakeInputDevice *device) {
                 connect(device, &FakeInputDevice::authenticationRequested, this,
                     [this, device] (const QString &application, const QString &reason) {
+                        Q_UNUSED(application)
+                        Q_UNUSED(reason)
                         // TODO: make secure
                         device->setAuthentication(true);
                     }
