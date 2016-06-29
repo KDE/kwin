@@ -296,6 +296,7 @@ void Compositor::startupWithWorkspace()
         return;
     }
     Q_ASSERT(m_scene);
+    connect(workspace(), &Workspace::destroyed, this, [this] { compositeTimer.stop(); });
     claimCompositorSelection();
     m_xrrRefreshRate = KWin::currentRefreshRate();
     fpsInterval = options->maxFpsInterval();
