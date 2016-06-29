@@ -166,6 +166,7 @@ void PlasmaWindowManagementInterface::Private::showDesktopCallback(wl_client *cl
 
 void PlasmaWindowManagementInterface::Private::getWindowCallback(wl_client *client, wl_resource *resource, uint32_t id, uint32_t internalWindowId)
 {
+    Q_UNUSED(client)
     auto p = reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
     auto it = std::find_if(p->windows.constBegin(), p->windows.constEnd(),
         [internalWindowId] (PlasmaWindowInterface *window) {
