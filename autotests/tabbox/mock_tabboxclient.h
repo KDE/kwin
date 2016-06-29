@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_MOCK_TABBOX_CLIENT_H
 #define KWIN_MOCK_TABBOX_CLIENT_H
 
-#include "../tabboxhandler.h"
+#include "../../tabbox/tabboxhandler.h"
 
 #include <QIcon>
 

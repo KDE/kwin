@@ -5,6 +5,7 @@ add_subdirectory(integration)
 if (HAVE_INPUT)
     add_subdirectory(libinput)
 endif()
+add_subdirectory(tabbox)
 
 ########################################################
 # Test ScreenPaintData
