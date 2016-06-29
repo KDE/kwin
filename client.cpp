@@ -1352,19 +1352,6 @@ void Client::setOnAllActivities(bool on)
  */
 void Client::takeFocus()
 {
-#ifndef NDEBUG
-    static Time previous_focus_timestamp;
-    static Client* previous_client;
-
-    //if ( previous_focus_timestamp == xTime() && previous_client != this )
-    //    {
-    //    qDebug() << "Repeated use of the same X timestamp for focus";
-    //    qDebug() << kBacktrace();
-    //    }
-
-    previous_focus_timestamp = xTime();
-    previous_client = this;
-#endif
     if (rules()->checkAcceptFocus(info->input()))
         m_client.focus();
     else
