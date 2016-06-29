@@ -1462,7 +1462,7 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
     // check whether it is a double click
     if (event->button() == Qt::LeftButton && titlebarPositionUnderMouse()) {
         if (m_decoration.doubleClickTimer.isValid()) {
-            const quint64 interval = m_decoration.doubleClickTimer.elapsed();
+            const qint64 interval = m_decoration.doubleClickTimer.elapsed();
             m_decoration.doubleClickTimer.invalidate();
             if (interval > QGuiApplication::styleHints()->mouseDoubleClickInterval()) {
                 m_decoration.doubleClickTimer.invalidate(); // expired -> new first click and pot. init
