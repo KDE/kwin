@@ -261,7 +261,6 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
     if (zoom != target_zoom) {
         const float zoomDist = qAbs(target_zoom - source_zoom);
-        double diff = time / animationTime(500.0);
         if (target_zoom > zoom)
             zoom = qMin(zoom + ((zoomDist * time) / animationTime(150*zoomFactor)), target_zoom);
         else
