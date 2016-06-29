@@ -116,7 +116,6 @@ void Workspace::updateClientArea(bool force)
     const Screens *s = Screens::self();
     int nscreens = s->count();
     const int numberOfDesktops = VirtualDesktopManager::self()->count();
-    qCDebug(KWIN_CORE) << "screens: " << nscreens << "desktops: " << numberOfDesktops;
     QVector< QRect > new_wareas(numberOfDesktops + 1);
     QVector< StrutRects > new_rmoveareas(numberOfDesktops + 1);
     QVector< QVector< QRect > > new_sareas(numberOfDesktops + 1);
@@ -311,8 +310,6 @@ void Workspace::updateClientArea(bool force)
 
         oldrestrictedmovearea.clear(); // reset, no longer valid or needed
     }
-
-    qCDebug(KWIN_CORE) << "Done.";
 }
 
 void Workspace::updateClientArea()
