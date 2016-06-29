@@ -152,14 +152,16 @@ void DrmBackend::reactivate()
         return;
     }
     m_active = true;
-    DrmBuffer *c = m_cursor[(m_cursorIndex + 1) % 2];
-    const QPoint cp = Cursor::pos() - softwareCursorHotspot();
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        DrmOutput *o = *it;
-        o->pageFlipped();
-        o->blank();
-        o->showCursor(c);
-        o->moveCursor(cp);
+    if (!usesSoftwareCursor()) {
+        DrmBuffer *c = m_cursor[(m_cursorIndex + 1) % 2];
+        const QPoint cp = Cursor::pos() - softwareCursorHotspot();
+        for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+            DrmOutput *o = *it;
+            o->pageFlipped();
+            o->blank();
+            o->showCursor(c);
+            o->moveCursor(cp);
+        }
     }
     // restart compositor
     m_pageFlipsPending = 0;
@@ -473,6 +475,9 @@ void DrmBackend::initCursor()
     connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::hasPointerChanged, this,
         [this] {
             m_cursorEnabled = waylandServer()->seat()->hasPointer();
+            if (usesSoftwareCursor()) {
+                return;
+            }
             for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
                 if (m_cursorEnabled) {
                     (*it)->showCursor(m_cursor[m_cursorIndex]);
@@ -494,12 +499,18 @@ void DrmBackend::initCursor()
     } else {
         cursorSize.setHeight(64);
     }
-    m_cursor[0] = createBuffer(cursorSize);
-    m_cursor[0]->map(QImage::Format_ARGB32_Premultiplied);
-    m_cursor[0]->image()->fill(Qt::transparent);
-    m_cursor[1] = createBuffer(cursorSize);
-    m_cursor[1]->map(QImage::Format_ARGB32_Premultiplied);
-    m_cursor[1]->image()->fill(Qt::transparent);
+    auto createCursor = [this, cursorSize] (int index) {
+        m_cursor[index] = createBuffer(cursorSize);
+        if (!m_cursor[index]->map(QImage::Format_ARGB32_Premultiplied)) {
+            return false;
+        }
+        m_cursor[index]->image()->fill(Qt::transparent);
+        return true;
+    };
+    if (!createCursor(0) || !createCursor(1)) {
+        setSoftWareCursor(true);
+        return;
+    }
     // now we have screens and can set cursors, so start tracking
     connect(this, &DrmBackend::cursorChanged, this, &DrmBackend::updateCursor);
     connect(Cursor::self(), &Cursor::posChanged, this, &DrmBackend::moveCursor);
@@ -519,6 +530,9 @@ void DrmBackend::setCursor()
 
 void DrmBackend::updateCursor()
 {
+    if (usesSoftwareCursor()) {
+        return;
+    }
     const QImage &cursorImage = softwareCursor();
     if (cursorImage.isNull()) {
         hideCursor();

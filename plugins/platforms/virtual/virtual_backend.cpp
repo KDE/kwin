@@ -42,7 +42,6 @@ VirtualBackend::VirtualBackend(QObject *parent)
             qDebug() << "Screenshots saved to: " << m_screenshotDir->path();
         }
     }
-    setSoftWareCursor(true);
     setSupportsPointerWarping(true);
 }
 
@@ -50,6 +49,7 @@ VirtualBackend::~VirtualBackend() = default;
 
 void VirtualBackend::init()
 {
+    setSoftWareCursor(true);
     m_size = initialWindowSize();
     setReady(true);
     waylandServer()->seat()->setHasPointer(true);

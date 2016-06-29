@@ -42,7 +42,6 @@ public:
     void prepareRenderingFrame() override;
     void present(int mask, const QRegion &damage) override;
     void screenGeometryChanged(const QSize &size) override;
-    void renderCursor(QPainter *painter) override;
 
 private:
     QImage m_backBuffer;

@@ -39,7 +39,6 @@ public:
     bool usesOverlayWindow() const override;
     void prepareRenderingFrame() override;
     void present(int mask, const QRegion &damage) override;
-    void renderCursor(QPainter *painter) override;
 
 private:
     QImage m_renderBuffer;
