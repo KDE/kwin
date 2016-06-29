@@ -944,9 +944,11 @@ void TestSubSurface::testSurfaceAt()
     QScopedPointer<Surface> directChild1(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
     SurfaceInterface *directChild1ServerSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(directChild1ServerSurface);
     QScopedPointer<Surface> directChild2(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
     SurfaceInterface *directChild2ServerSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(directChild2ServerSurface);
 
     // create the sub surfaces for them
     QScopedPointer<SubSurface> directChild1SubSurface(m_subCompositor->createSubSurface(directChild1.data(), parent.data()));
@@ -988,6 +990,11 @@ void TestSubSurface::testSurfaceAt()
     QSignalSpy treeChangedSpy(parentServerSurface, &SurfaceInterface::subSurfaceTreeChanged);
     QVERIFY(treeChangedSpy.isValid());
     QVERIFY(treeChangedSpy.wait());
+
+    QCOMPARE(directChild1ServerSurface->subSurface()->parentSurface().data(), parentServerSurface);
+    QCOMPARE(directChild2ServerSurface->subSurface()->parentSurface().data(), parentServerSurface);
+    QCOMPARE(childFor1ServerSurface->subSurface()->parentSurface().data(), directChild1ServerSurface);
+    QCOMPARE(childFor2ServerSurface->subSurface()->parentSurface().data(), directChild2ServerSurface);
 
     // now let's test a few positions
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(0, 0)), childFor1ServerSurface);
