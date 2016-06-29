@@ -450,9 +450,6 @@ SessionSaveDoneHelper::SessionSaveDoneHelper()
         return; // no SM
 
     // detect ksmserver
-    // NOTICE: no idea whether the assumptions about it in Workspace::saveState()
-    // still hold for KF5/Plasma 5
-#warning assuming special behavior in ksmserver to be still present in KF5
     char* vendor = SmcVendor(conn);
     gs_sessionManagerIsKSMServer = qstrcmp(vendor, "KDE") == 0;
     free(vendor);
