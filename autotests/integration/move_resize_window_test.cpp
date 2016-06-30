@@ -30,11 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/shell.h>
-#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
 #include <linux/input.h>
@@ -71,11 +68,7 @@ private Q_SLOTS:
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::ShmPool *m_shm = nullptr;
     KWayland::Client::Shell *m_shell = nullptr;
-    KWayland::Client::PlasmaShell *m_plasmaShell = nullptr;
-    KWayland::Client::EventQueue *m_queue = nullptr;
-    QThread *m_thread = nullptr;
 };
 
 void MoveResizeWindowTest::initTestCase()
@@ -95,74 +88,17 @@ void MoveResizeWindowTest::initTestCase()
 
 void MoveResizeWindowTest::init()
 {
-    using namespace KWayland::Client;
-    // setup connection
-    m_connection = new ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
-    m_connection->setSocketName(s_socketName);
-
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
-    m_thread->start();
-
-    m_connection->initConnection();
-    QVERIFY(connectedSpy.wait());
-
-    m_queue = new EventQueue(this);
-    QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
-    QVERIFY(m_queue->isValid());
-
-    Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
-    QSignalSpy shmSpy(&registry, &Registry::shmAnnounced);
-    QSignalSpy shellSpy(&registry, &Registry::shellAnnounced);
-    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(allAnnounced.isValid());
-    QVERIFY(shmSpy.isValid());
-    QVERIFY(shellSpy.isValid());
-    QVERIFY(compositorSpy.isValid());
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(allAnnounced.wait());
-    QVERIFY(!compositorSpy.isEmpty());
-    QVERIFY(!shmSpy.isEmpty());
-    QVERIFY(!shellSpy.isEmpty());
-
-    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_compositor->isValid());
-    m_shm = registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_shm->isValid());
-    m_shell = registry.createShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_shell->isValid());
-    m_plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name, registry.interface(Registry::Interface::PlasmaShell).version, this);
-    QVERIFY(m_plasmaShell->isValid());
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::PlasmaShell));
+    m_connection = Test::waylandConnection();
+    m_compositor = Test::waylandCompositor();
+    m_shell = Test::waylandShell();
 
     screens()->setCurrent(0);
 }
 
 void MoveResizeWindowTest::cleanup()
 {
-    delete m_compositor;
-    m_compositor = nullptr;
-    delete m_shm;
-    m_shm = nullptr;
-    delete m_shell;
-    m_shell = nullptr;
-    delete m_plasmaShell;
-    m_plasmaShell = nullptr;
-    delete m_queue;
-    m_queue = nullptr;
-    if (m_thread) {
-        m_thread->quit();
-        m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
-    }
-
+    Test::destroyWaylandConnection();
 }
 
 void MoveResizeWindowTest::testMove()
@@ -172,19 +108,15 @@ void MoveResizeWindowTest::testMove()
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
 
     m_connection->flush();
     QVERIFY(clientAddedSpy.wait());
@@ -274,19 +206,15 @@ void MoveResizeWindowTest::testPackTo()
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
 
     m_connection->flush();
     QVERIFY(clientAddedSpy.wait());
@@ -322,30 +250,26 @@ void MoveResizeWindowTest::testPackAgainstClient()
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
-    QScopedPointer<Surface> surface1(m_compositor->createSurface());
+    QScopedPointer<Surface> surface1(Test::createSurface());
     QVERIFY(!surface1.isNull());
-    QScopedPointer<Surface> surface2(m_compositor->createSurface());
+    QScopedPointer<Surface> surface2(Test::createSurface());
     QVERIFY(!surface2.isNull());
-    QScopedPointer<Surface> surface3(m_compositor->createSurface());
+    QScopedPointer<Surface> surface3(Test::createSurface());
     QVERIFY(!surface3.isNull());
-    QScopedPointer<Surface> surface4(m_compositor->createSurface());
+    QScopedPointer<Surface> surface4(Test::createSurface());
     QVERIFY(!surface4.isNull());
 
-    QScopedPointer<ShellSurface> shellSurface1(m_shell->createSurface(surface1.data()));
+    QScopedPointer<ShellSurface> shellSurface1(Test::createShellSurface(surface1.data()));
     QVERIFY(!shellSurface1.isNull());
-    QScopedPointer<ShellSurface> shellSurface2(m_shell->createSurface(surface2.data()));
+    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
     QVERIFY(!shellSurface2.isNull());
-    QScopedPointer<ShellSurface> shellSurface3(m_shell->createSurface(surface3.data()));
+    QScopedPointer<ShellSurface> shellSurface3(Test::createShellSurface(surface3.data()));
     QVERIFY(!shellSurface3.isNull());
-    QScopedPointer<ShellSurface> shellSurface4(m_shell->createSurface(surface4.data()));
+    QScopedPointer<ShellSurface> shellSurface4(Test::createShellSurface(surface4.data()));
     QVERIFY(!shellSurface4.isNull());
     auto renderWindow = [this, &clientAddedSpy] (Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
         // let's render
-        QImage img(QSize(10, 10), QImage::Format_ARGB32);
-        img.fill(Qt::blue);
-        surface->attachBuffer(m_shm->createBuffer(img));
-        surface->damage(QRect(0, 0, 10, 10));
-        surface->commit(Surface::CommitFlag::None);
+        Test::render(surface, QSize(10, 10), Qt::blue);
 
         m_connection->flush();
         QVERIFY(clientAddedSpy.wait());
@@ -365,15 +289,11 @@ void MoveResizeWindowTest::testPackAgainstClient()
     renderWindow(surface3.data(), QStringLiteral("slotWindowPackRight"), QRect(1270, 507, 10, 10));
     renderWindow(surface4.data(), QStringLiteral("slotWindowPackDown"),  QRect(635, 1014, 10, 10));
 
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
 
     m_connection->flush();
     QVERIFY(clientAddedSpy.wait());
@@ -407,34 +327,26 @@ void MoveResizeWindowTest::testGrowShrink()
     QVERIFY(clientAddedSpy.isValid());
 
     // block geometry helper
-    QScopedPointer<Surface> surface1(m_compositor->createSurface());
+    QScopedPointer<Surface> surface1(Test::createSurface());
     QVERIFY(!surface1.isNull());
-    QScopedPointer<ShellSurface> shellSurface1(m_shell->createSurface(surface1.data()));
+    QScopedPointer<ShellSurface> shellSurface1(Test::createShellSurface(surface1.data()));
     QVERIFY(!shellSurface1.isNull());
-    QImage img1(QSize(650, 514), QImage::Format_ARGB32);
-    img1.fill(Qt::blue);
-    surface1->attachBuffer(m_shm->createBuffer(img1));
-    surface1->damage(QRect(0, 0, 650, 514));
-    surface1->commit(Surface::CommitFlag::None);
+    Test::render(surface1.data(), QSize(650, 514), Qt::blue);
     m_connection->flush();
     QVERIFY(clientAddedSpy.wait());
     clientAddedSpy.clear();
     workspace()->slotWindowPackRight();
     workspace()->slotWindowPackDown();
 
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
 
     m_connection->flush();
     QVERIFY(clientAddedSpy.wait());
@@ -449,11 +361,7 @@ void MoveResizeWindowTest::testGrowShrink()
     QFETCH(QString, methodCall);
     QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
     QVERIFY(sizeChangeSpy.wait());
-    QImage img2(shellSurface->size(), QImage::Format_ARGB32);
-    img2.fill(Qt::red);
-    surface->attachBuffer(m_shm->createBuffer(img2));
-    surface->damage(QRect(QPoint(0, 0), shellSurface->size()));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), shellSurface->size(), Qt::red);
 
     QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
     QVERIFY(geometryChangedSpy.isValid());
@@ -486,19 +394,15 @@ void MoveResizeWindowTest::testPointerMoveEnd()
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
 
     m_connection->flush();
     QVERIFY(clientAddedSpy.wait());
@@ -547,22 +451,18 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     // and a PlasmaShellSurface
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
     QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
     // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
 
     m_connection->flush();
     QVERIFY(clientAddedSpy.wait());

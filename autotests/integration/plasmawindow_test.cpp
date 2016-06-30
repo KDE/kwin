@@ -29,12 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/shell.h>
-#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Server/seat_interface.h>
 //screenlocker
@@ -67,13 +63,9 @@ private Q_SLOTS:
     void testDestroyedButNotUnmapped();
 
 private:
-    ConnectionThread *m_connection = nullptr;
     PlasmaWindowManagement *m_windowManagement = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     Shell *m_shell = nullptr;
-    ShmPool *m_shm = nullptr;
-    EventQueue *m_queue = nullptr;
-    QThread *m_thread = nullptr;
 };
 
 void PlasmaWindowTest::initTestCase()
@@ -98,49 +90,10 @@ void PlasmaWindowTest::initTestCase()
 
 void PlasmaWindowTest::init()
 {
-    // setup connection
-    m_connection = new ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
-    m_connection->setSocketName(s_socketName);
-
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
-    m_thread->start();
-
-    m_connection->initConnection();
-    QVERIFY(connectedSpy.wait());
-
-    m_queue = new EventQueue(this);
-    QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
-    QVERIFY(m_queue->isValid());
-
-    Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(allAnnounced.isValid());
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(allAnnounced.wait());
-
-    m_windowManagement = registry.createPlasmaWindowManagement(registry.interface(Registry::Interface::PlasmaWindowManagement).name,
-                                                               registry.interface(Registry::Interface::PlasmaWindowManagement).version,
-                                                               this);
-    QVERIFY(m_windowManagement);
-    m_compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name,
-                                             registry.interface(Registry::Interface::Compositor).version,
-                                             this);
-    QVERIFY(m_compositor);
-    m_shm = registry.createShmPool(registry.interface(Registry::Interface::Shm).name,
-                                   registry.interface(Registry::Interface::Shm).version,
-                                   this);
-    QVERIFY(m_shm);
-    m_shell = registry.createShell(registry.interface(Registry::Interface::Shell).name,
-                                   registry.interface(Registry::Interface::Shell).version,
-                                   this);
-    QVERIFY(m_shell);
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::WindowManagement));
+    m_windowManagement = Test::waylandWindowManagement();
+    m_compositor = Test::waylandCompositor();
+    m_shell = Test::waylandShell();
 
     screens()->setCurrent(0);
     Cursor::setPos(QPoint(640, 512));
@@ -148,27 +101,7 @@ void PlasmaWindowTest::init()
 
 void PlasmaWindowTest::cleanup()
 {
-#define CLEANUP(name) \
-    if (name) { \
-        delete name; \
-        name = nullptr; \
-    }
-    CLEANUP(m_windowManagement)
-    CLEANUP(m_shm)
-    CLEANUP(m_shell)
-    CLEANUP(m_compositor)
-    CLEANUP(m_queue)
-#undef CLEANUP
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
-    if (m_thread) {
-        m_thread->quit();
-        m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
-    }
+    Test::destroyWaylandConnection();
 }
 
 void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
@@ -304,35 +237,27 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
     QVERIFY(plasmaWindowCreatedSpy.isValid());
 
     // first create the parent window
-    QScopedPointer<Surface> parentSurface(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> parentShellSurface(m_shell->createSurface(parentSurface.data()));
+    QScopedPointer<Surface> parentSurface(Test::createSurface());
+    QScopedPointer<ShellSurface> parentShellSurface(Test::createShellSurface(parentSurface.data()));
     // map that window
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    parentSurface->attachBuffer(m_shm->createBuffer(img));
-    parentSurface->damage(QRect(0, 0, 100, 50));
-    parentSurface->commit();
+    Test::render(parentSurface.data(), QSize(100, 50), Qt::blue);
     // this should create a plasma window
     QVERIFY(plasmaWindowCreatedSpy.wait());
 
     // now let's create a popup window for it
-    QScopedPointer<Surface> popupSurface(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> popupShellSurface(m_shell->createSurface(popupSurface.data()));
+    QScopedPointer<Surface> popupSurface(Test::createSurface());
+    QScopedPointer<ShellSurface> popupShellSurface(Test::createShellSurface(popupSurface.data()));
     popupShellSurface->setTransient(parentSurface.data(), QPoint(0, 0), ShellSurface::TransientFlag::NoFocus);
     // let's map it
-    popupSurface->attachBuffer(m_shm->createBuffer(img));
-    popupSurface->damage(QRect(0, 0, 100, 50));
-    popupSurface->commit();
+    Test::render(popupSurface.data(), QSize(100, 50), Qt::blue);
 
     // this should not create a plasma window
     QVERIFY(!plasmaWindowCreatedSpy.wait());
 
     // now the same with an already mapped surface when we create the shell surface
-    QScopedPointer<Surface> popup2Surface(m_compositor->createSurface());
-    popup2Surface->attachBuffer(m_shm->createBuffer(img));
-    popup2Surface->damage(QRect(0, 0, 100, 50));
-    popup2Surface->commit();
-    QScopedPointer<ShellSurface> popup2ShellSurface(m_shell->createSurface(popup2Surface.data()));
+    QScopedPointer<Surface> popup2Surface(Test::createSurface());
+    Test::render(popup2Surface.data(), QSize(100, 50), Qt::blue);
+    QScopedPointer<ShellSurface> popup2ShellSurface(Test::createShellSurface(popup2Surface.data()));
     popup2ShellSurface->setTransient(popupSurface.data(), QPoint(0, 0), ShellSurface::TransientFlag::NoFocus);
 
     // this should not create a plasma window
@@ -409,14 +334,10 @@ void PlasmaWindowTest::testDestroyedButNotUnmapped()
     QVERIFY(plasmaWindowCreatedSpy.isValid());
 
     // first create the parent window
-    QScopedPointer<Surface> parentSurface(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> parentShellSurface(m_shell->createSurface(parentSurface.data()));
+    QScopedPointer<Surface> parentSurface(Test::createSurface());
+    QScopedPointer<ShellSurface> parentShellSurface(Test::createShellSurface(parentSurface.data()));
     // map that window
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    parentSurface->attachBuffer(m_shm->createBuffer(img));
-    parentSurface->damage(QRect(0, 0, 100, 50));
-    parentSurface->commit();
+    Test::render(parentSurface.data(), QSize(100, 50), Qt::blue);
     // this should create a plasma window
     QVERIFY(plasmaWindowCreatedSpy.wait());
     QCOMPARE(plasmaWindowCreatedSpy.count(), 1);

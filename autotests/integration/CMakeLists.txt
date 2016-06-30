@@ -2,7 +2,7 @@ add_definitions(-DKWINBACKENDPATH="${CMAKE_BINARY_DIR}/plugins/platforms/virtual
 add_definitions(-DKWINQPAPATH="${CMAKE_BINARY_DIR}/plugins/qpa/")
 add_subdirectory(helper)
 
-add_library(KWinIntegrationTestFramework STATIC kwin_wayland_test.cpp)
+add_library(KWinIntegrationTestFramework STATIC kwin_wayland_test.cpp test_helpers.cpp)
 target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test)
 
 function(integrationTest)

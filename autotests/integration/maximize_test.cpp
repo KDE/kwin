@@ -25,10 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -38,8 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
-
-#include <QThread>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -56,15 +51,6 @@ private Q_SLOTS:
 
     void testMaximizedPassedToDeco();
     void testInitiallyMaximized();
-
-private:
-    KWayland::Client::Compositor *m_compositor = nullptr;
-    Shell *m_shell = nullptr;
-    ShmPool *m_shm = nullptr;
-    EventQueue *m_queue = nullptr;
-    ServerSideDecorationManager *m_ssd = nullptr;
-    ConnectionThread *m_connection = nullptr;
-    QThread *m_thread = nullptr;
 };
 
 void TestMaximized::initTestCase()
@@ -87,49 +73,7 @@ void TestMaximized::initTestCase()
 
 void TestMaximized::init()
 {
-    // setup connection
-    m_connection = new ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
-    m_connection->setSocketName(s_socketName);
-
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
-    m_thread->start();
-
-    m_connection->initConnection();
-    QVERIFY(connectedSpy.wait());
-
-    m_queue = new EventQueue(this);
-    QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
-    QVERIFY(m_queue->isValid());
-
-    Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(allAnnounced.isValid());
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(allAnnounced.wait());
-
-    m_compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name,
-                                             registry.interface(Registry::Interface::Compositor).version,
-                                             this);
-    QVERIFY(m_compositor->isValid());
-    m_shm = registry.createShmPool(registry.interface(Registry::Interface::Shm).name,
-                                   registry.interface(Registry::Interface::Shm).version,
-                                   this);
-    QVERIFY(m_shm->isValid());
-    m_shell = registry.createShell(registry.interface(Registry::Interface::Shell).name,
-                                   registry.interface(Registry::Interface::Shell).version,
-                                   this);
-    QVERIFY(m_shell->isValid());
-    m_ssd = registry.createServerSideDecorationManager(registry.interface(Registry::Interface::ServerSideDecorationManager).name,
-                                                       registry.interface(Registry::Interface::ServerSideDecorationManager).version,
-                                                       this);
-    QVERIFY(m_ssd);
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Decoration));
 
     screens()->setCurrent(0);
     KWin::Cursor::setPos(QPoint(1280, 512));
@@ -137,28 +81,7 @@ void TestMaximized::init()
 
 void TestMaximized::cleanup()
 {
-#define CLEANUP(name) \
-    if (name) { \
-        delete name; \
-        name = nullptr; \
-    }
-    CLEANUP(m_compositor)
-    CLEANUP(m_shm)
-    CLEANUP(m_shell)
-    CLEANUP(m_ssd)
-    CLEANUP(m_queue)
-
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
-    if (m_thread) {
-        m_thread->quit();
-        m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
-    }
-#undef CLEANUP
+    Test::destroyWaylandConnection();
 }
 
 void TestMaximized::testMaximizedPassedToDeco()
@@ -166,15 +89,11 @@ void TestMaximized::testMaximizedPassedToDeco()
     // this test verifies that when a ShellClient gets maximized the Decoration receives the signal
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
-    QScopedPointer<ServerSideDecoration> ssd(m_ssd->create(surface.data()));
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<ServerSideDecoration> ssd(Test::waylandServerSideDecoration()->create(surface.data()));
 
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
 
     QSignalSpy sizeChangedSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangedSpy.isValid());
@@ -231,8 +150,8 @@ void TestMaximized::testInitiallyMaximized()
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
 
     QSignalSpy sizeChangedSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangedSpy.isValid());
@@ -242,11 +161,7 @@ void TestMaximized::testInitiallyMaximized()
     QCOMPARE(shellSurface->size(), QSize(1280, 1024));
 
     // now let's render in an incorrect size
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
 
     QVERIFY(clientAddedSpy.isEmpty());
     QVERIFY(clientAddedSpy.wait());

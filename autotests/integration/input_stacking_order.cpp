@@ -57,13 +57,6 @@ private Q_SLOTS:
 
 private:
     void render(KWayland::Client::Surface *surface);
-    KWayland::Client::ConnectionThread *m_connection = nullptr;
-    KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::Seat *m_seat = nullptr;
-    KWayland::Client::ShmPool *m_shm = nullptr;
-    KWayland::Client::Shell *m_shell = nullptr;
-    KWayland::Client::EventQueue *m_queue = nullptr;
-    QThread *m_thread = nullptr;
 };
 
 void InputStackingOrderTest::initTestCase()
@@ -89,56 +82,8 @@ void InputStackingOrderTest::initTestCase()
 void InputStackingOrderTest::init()
 {
     using namespace KWayland::Client;
-    // setup connection
-    m_connection = new ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
-    m_connection->setSocketName(s_socketName);
-
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
-    m_thread->start();
-
-    m_connection->initConnection();
-    QVERIFY(connectedSpy.wait());
-
-    m_queue = new EventQueue(this);
-    QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
-    QVERIFY(m_queue->isValid());
-
-    Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
-    QSignalSpy shmSpy(&registry, &Registry::shmAnnounced);
-    QSignalSpy shellSpy(&registry, &Registry::shellAnnounced);
-    QSignalSpy seatSpy(&registry, &Registry::seatAnnounced);
-    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(allAnnounced.isValid());
-    QVERIFY(shmSpy.isValid());
-    QVERIFY(shellSpy.isValid());
-    QVERIFY(compositorSpy.isValid());
-    QVERIFY(seatSpy.isValid());
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(allAnnounced.wait());
-    QVERIFY(!compositorSpy.isEmpty());
-    QVERIFY(!shmSpy.isEmpty());
-    QVERIFY(!shellSpy.isEmpty());
-    QVERIFY(!seatSpy.isEmpty());
-
-    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_compositor->isValid());
-    m_shm = registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_shm->isValid());
-    m_shell = registry.createShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_shell->isValid());
-    m_seat = registry.createSeat(seatSpy.first().first().value<quint32>(), seatSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_seat->isValid());
-    QSignalSpy hasPointerSpy(m_seat, &Seat::hasPointerChanged);
-    QVERIFY(hasPointerSpy.isValid());
-    QVERIFY(hasPointerSpy.wait());
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);
     Cursor::setPos(QPoint(640, 512));
@@ -146,34 +91,13 @@ void InputStackingOrderTest::init()
 
 void InputStackingOrderTest::cleanup()
 {
-    delete m_compositor;
-    m_compositor = nullptr;
-    delete m_seat;
-    m_seat = nullptr;
-    delete m_shm;
-    m_shm = nullptr;
-    delete m_shell;
-    m_shell = nullptr;
-    delete m_queue;
-    m_queue = nullptr;
-    if (m_thread) {
-        m_connection->deleteLater();
-        m_thread->quit();
-        m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
-        m_connection = nullptr;
-    }
+    Test::destroyWaylandConnection();
 }
 
 void InputStackingOrderTest::render(KWayland::Client::Surface *surface)
 {
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    m_connection->flush();
+    Test::render(surface, QSize(100, 50), Qt::blue);
+    Test::flushWaylandConnection();
 }
 
 void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
@@ -184,7 +108,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     // other window should gain focus without a mouse event in between
     using namespace KWayland::Client;
     // create pointer and signal spy for enter and leave signals
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
     QSignalSpy enteredSpy(pointer, &Pointer::entered);
@@ -195,18 +119,18 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     // now create the two windows and make them overlap
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
-    Surface *surface1 = m_compositor->createSurface(m_compositor);
+    Surface *surface1 = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface1);
-    ShellSurface *shellSurface1 = m_shell->createSurface(surface1, surface1);
+    ShellSurface *shellSurface1 = Test::createShellSurface(surface1, surface1);
     QVERIFY(shellSurface1);
     render(surface1);
     QVERIFY(clientAddedSpy.wait());
     AbstractClient *window1 = workspace()->activeClient();
     QVERIFY(window1);
 
-    Surface *surface2 = m_compositor->createSurface(m_compositor);
+    Surface *surface2 = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface2);
-    ShellSurface *shellSurface2 = m_shell->createSurface(surface2, surface2);
+    ShellSurface *shellSurface2 = Test::createShellSurface(surface2, surface2);
     QVERIFY(shellSurface2);
     render(surface2);
     QVERIFY(clientAddedSpy.wait());

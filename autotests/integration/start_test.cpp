@@ -26,10 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/shell.h>
-#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
 namespace KWin
@@ -42,6 +39,7 @@ class StartTest : public QObject
     Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
+    void cleanup();
     void testScreens();
     void testNoWindowsAtStart();
     void testCreateWindow();
@@ -55,6 +53,11 @@ void StartTest::initTestCase()
     waylandServer()->init(s_socketName.toLocal8Bit());
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
+}
+
+void StartTest::cleanup()
+{
+    Test::destroyWaylandConnection();
 }
 
 void StartTest::testScreens()
@@ -78,15 +81,7 @@ void StartTest::testCreateWindow()
 {
     // first we need to connect to the server
     using namespace KWayland::Client;
-    auto connection = new ConnectionThread;
-    QSignalSpy connectedSpy(connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
-    connection->setSocketName(s_socketName);
-    QThread *thread = new QThread(this);
-    connection->moveToThread(thread);
-    thread->start();
-    connection->initConnection();
-    QVERIFY(connectedSpy.wait());
+    QVERIFY(Test::setupWaylandConnection(s_socketName));
 
     QSignalSpy shellClientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(shellClientAddedSpy.isValid());
@@ -94,32 +89,14 @@ void StartTest::testCreateWindow()
     QVERIFY(shellClientRemovedSpy.isValid());
 
     {
-    EventQueue queue;
-    queue.setup(connection);
-    Registry registry;
-    registry.setEventQueue(&queue);
-    registry.create(connection);
-    QSignalSpy registryAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(registryAnnouncedSpy.isValid());
-    registry.setup();
-    QVERIFY(registryAnnouncedSpy.wait());
-
-    const auto compositorData = registry.interface(Registry::Interface::Compositor);
-    const auto shellData = registry.interface(Registry::Interface::Shell);
-    const auto shmData = registry.interface(Registry::Interface::Shm);
-    QScopedPointer<KWayland::Client::Compositor> compositor(registry.createCompositor(compositorData.name, compositorData.version));
-    QVERIFY(!compositor.isNull());
-    QScopedPointer<Shell> shell(registry.createShell(shellData.name, shellData.version));
-    QVERIFY(!shell.isNull());
-
-    QScopedPointer<Surface> surface(compositor->createSurface());
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QSignalSpy surfaceRenderedSpy(surface.data(), &Surface::frameRendered);
     QVERIFY(surfaceRenderedSpy.isValid());
 
-    QScopedPointer<ShellSurface> shellSurface(shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    connection->flush();
+    Test::flushWaylandConnection();
     QVERIFY(waylandServer()->clients().isEmpty());
     // now dispatch should give us the client
     waylandServer()->dispatch();
@@ -132,15 +109,10 @@ void StartTest::testCreateWindow()
     QVERIFY(waylandServer()->clients().first()->iconGeometry().isNull());
 
     // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    QScopedPointer<ShmPool> shm(registry.createShmPool(shmData.name, shmData.version));
-    QVERIFY(!shm.isNull());
-    surface->attachBuffer(shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
     surface->commit();
 
-    connection->flush();
+    Test::flushWaylandConnection();
     QVERIFY(shellClientAddedSpy.wait());
     QCOMPARE(workspace()->allClientList().count(), 1);
     QCOMPARE(workspace()->allClientList().first(), waylandServer()->clients().first());
@@ -155,11 +127,6 @@ void StartTest::testCreateWindow()
     // this should tear down everything again
     QVERIFY(shellClientRemovedSpy.wait());
     QVERIFY(waylandServer()->clients().isEmpty());
-
-    // cleanup
-    connection->deleteLater();
-    thread->quit();
-    thread->wait();
 }
 
 }

@@ -33,13 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDecoration2/Decoration>
 
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/event_queue.h>
 
 namespace KWin
 {
@@ -58,12 +56,6 @@ private Q_SLOTS:
 private:
     void unlock();
     AbstractClient *showWindow();
-    KWayland::Client::ConnectionThread *m_connection = nullptr;
-    KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::ShmPool *m_shm = nullptr;
-    KWayland::Client::Shell *m_shell = nullptr;
-    KWayland::Client::EventQueue *m_queue = nullptr;
-    QThread *m_thread = nullptr;
 };
 
 void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
@@ -83,69 +75,12 @@ void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
 
 void DontCrashCancelAnimationFromAnimationEndedTest::init()
 {
-    using namespace KWayland::Client;
-    // setup connection
-    m_connection = new ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
-    m_connection->setSocketName(s_socketName);
-
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
-    m_thread->start();
-
-    m_connection->initConnection();
-    QVERIFY(connectedSpy.wait());
-
-    m_queue = new EventQueue(this);
-    QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
-    QVERIFY(m_queue->isValid());
-
-    Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
-    QSignalSpy shmSpy(&registry, &Registry::shmAnnounced);
-    QSignalSpy shellSpy(&registry, &Registry::shellAnnounced);
-    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(allAnnounced.isValid());
-    QVERIFY(shmSpy.isValid());
-    QVERIFY(shellSpy.isValid());
-    QVERIFY(compositorSpy.isValid());
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(allAnnounced.wait());
-    QVERIFY(!compositorSpy.isEmpty());
-    QVERIFY(!shmSpy.isEmpty());
-    QVERIFY(!shellSpy.isEmpty());
-
-    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_compositor->isValid());
-    m_shm = registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_shm->isValid());
-    m_shell = registry.createShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_shell->isValid());
+    QVERIFY(Test::setupWaylandConnection(s_socketName));
 }
 
 void DontCrashCancelAnimationFromAnimationEndedTest::cleanup()
 {
-    delete m_compositor;
-    m_compositor = nullptr;
-    delete m_shm;
-    m_shm = nullptr;
-    delete m_shell;
-    m_shell = nullptr;
-    delete m_queue;
-    m_queue = nullptr;
-    if (m_thread) {
-        m_connection->deleteLater();
-        m_thread->quit();
-        m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
-        m_connection = nullptr;
-    }
+    Test::destroyWaylandConnection();
 }
 
 void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
@@ -169,18 +104,14 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
-    Surface *surface = m_compositor->createSurface(m_compositor);
+    Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
-    ShellSurface *shellSurface = m_shell->createSurface(surface, surface);
+    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
     QVERIFY(shellSurface);
     // let's render
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface, QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
+    Test::flushWaylandConnection();
     QVERIFY(clientAddedSpy.wait());
     AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);

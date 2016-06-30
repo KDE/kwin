@@ -25,6 +25,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtTest/QtTest>
 
+namespace KWayland
+{
+namespace Client
+{
+class ConnectionThread;
+class Compositor;
+class PlasmaShell;
+class PlasmaWindowManagement;
+class Seat;
+class ServerSideDecorationManager;
+class Shell;
+class ShellSurface;
+class ShmPool;
+class Surface;
+}
+}
+
 namespace KWin
 {
 
@@ -50,7 +67,60 @@ private:
     QMetaObject::Connection m_xwaylandFailConnection;
 };
 
+namespace Test
+{
+
+enum class AdditionalWaylandInterface {
+    Seat = 1 << 0,
+    Decoration = 1 << 1,
+    PlasmaShell = 1 << 2,
+    WindowManagement = 1 << 3
+};
+Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
+/**
+ * Creates a Wayland Connection in a dedicated thread and creates various
+ * client side objects which can be used to create windows.
+ * @param socketName The name of the Wayland socket to connect to.
+ * @returns @c true if created successfully, @c false if there was an error
+ * @see destroyWaylandConnection
+ **/
+bool setupWaylandConnection(const QString &socketName, AdditionalWaylandInterfaces flags = AdditionalWaylandInterfaces());
+
+/**
+ * Destroys the Wayland Connection created with @link{setupWaylandConnection}.
+ * This can be called from cleanup in order to ensure that no Wayland Connection
+ * leaks into the next test method.
+ * @see setupWaylandConnection
+ */
+void destroyWaylandConnection();
+
+KWayland::Client::ConnectionThread *waylandConnection();
+KWayland::Client::Compositor *waylandCompositor();
+KWayland::Client::Shell *waylandShell();
+KWayland::Client::ShmPool *waylandShmPool();
+KWayland::Client::Seat *waylandSeat();
+KWayland::Client::ServerSideDecorationManager *waylandServerSideDecoration();
+KWayland::Client::PlasmaShell *waylandPlasmaShell();
+KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
+
+bool waitForWaylandPointer();
+bool waitForWaylandTouch();
+
+void flushWaylandConnection();
+
+KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
+KWayland::Client::ShellSurface *createShellSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
+
+/**
+ * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.
+ * The @p surface gets damaged and committed, thus it's rendered.
+ **/
+void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32);
 }
+
+}
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
 
 #define WAYLANDTEST_MAIN_HELPER(TestObject, DPI) \
 int main(int argc, char *argv[]) \

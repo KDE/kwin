@@ -28,16 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include <kwineffects.h>
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/pointer.h>
-#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shell.h>
-#include <KWayland/Client/seat.h>
-#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
 #include <KDecoration2/Decoration>
@@ -66,15 +59,8 @@ private Q_SLOTS:
     void test363804();
 
 private:
-    KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::ServerSideDecorationManager *m_deco = nullptr;
-    KWayland::Client::Seat *m_seat = nullptr;
-    KWayland::Client::ShmPool *m_shm = nullptr;
-    KWayland::Client::Shell *m_shell = nullptr;
-    KWayland::Client::EventQueue *m_queue = nullptr;
     KWayland::Client::PlasmaShell *m_plasmaShell = nullptr;
-    QThread *m_thread = nullptr;
 };
 
 void StrutsTest::initTestCase()
@@ -98,99 +84,18 @@ void StrutsTest::initTestCase()
 
 void StrutsTest::init()
 {
-    using namespace KWayland::Client;
-    // setup connection
-    m_connection = new ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
-    m_connection->setSocketName(s_socketName);
-
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
-    m_thread->start();
-
-    m_connection->initConnection();
-    QVERIFY(connectedSpy.wait());
-
-    m_queue = new EventQueue(this);
-    QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
-    QVERIFY(m_queue->isValid());
-
-    Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
-    QSignalSpy shmSpy(&registry, &Registry::shmAnnounced);
-    QSignalSpy shellSpy(&registry, &Registry::shellAnnounced);
-    QSignalSpy seatSpy(&registry, &Registry::seatAnnounced);
-    QSignalSpy decorationSpy(&registry, &Registry::serverSideDecorationManagerAnnounced);
-    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(allAnnounced.isValid());
-    QVERIFY(shmSpy.isValid());
-    QVERIFY(shellSpy.isValid());
-    QVERIFY(compositorSpy.isValid());
-    QVERIFY(seatSpy.isValid());
-    QVERIFY(decorationSpy.isValid());
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(allAnnounced.wait());
-    QVERIFY(!compositorSpy.isEmpty());
-    QVERIFY(!shmSpy.isEmpty());
-    QVERIFY(!shellSpy.isEmpty());
-    QVERIFY(!seatSpy.isEmpty());
-    QVERIFY(!decorationSpy.isEmpty());
-
-    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_compositor->isValid());
-    m_shm = registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_shm->isValid());
-    m_shell = registry.createShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_shell->isValid());
-    m_seat = registry.createSeat(seatSpy.first().first().value<quint32>(), seatSpy.first().last().value<quint32>(), this);
-    QVERIFY(m_seat->isValid());
-    m_deco = registry.createServerSideDecorationManager(decorationSpy.first().first().value<quint32>(), decorationSpy.first().last().value<quint32>());
-    QVERIFY(m_deco->isValid());
-    m_plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name,
-                                               registry.interface(Registry::Interface::PlasmaShell).version,
-                                               this);
-    QVERIFY(m_plasmaShell);
-    QSignalSpy hasPointerSpy(m_seat, &Seat::hasPointerChanged);
-    QVERIFY(hasPointerSpy.isValid());
-    QVERIFY(hasPointerSpy.wait());
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::PlasmaShell));
+    m_compositor = Test::waylandCompositor();
+    m_plasmaShell = Test::waylandPlasmaShell();
 
     screens()->setCurrent(0);
     Cursor::setPos(QPoint(640, 512));
+    QVERIFY(waylandServer()->clients().isEmpty());
 }
 
 void StrutsTest::cleanup()
 {
-    delete m_compositor;
-    m_compositor = nullptr;
-    delete m_deco;
-    m_deco = nullptr;
-    delete m_seat;
-    m_seat = nullptr;
-    delete m_shm;
-    m_shm = nullptr;
-    delete m_shell;
-    m_shell = nullptr;
-    delete m_plasmaShell;
-    m_plasmaShell = nullptr;
-    delete m_queue;
-    m_queue = nullptr;
-    if (m_thread) {
-        m_connection->deleteLater();
-        m_thread->quit();
-        m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
-        m_connection = nullptr;
-    }
-    while (!waylandServer()->clients().isEmpty()) {
-        QCoreApplication::instance()->processEvents(QEventLoop::WaitForMoreEvents);
-    }
-    QVERIFY(waylandServer()->clients().isEmpty());
+    Test::destroyWaylandConnection();
 }
 
 void StrutsTest::testWaylandStruts_data()
@@ -252,21 +157,18 @@ void StrutsTest::testWaylandStruts()
     // create the panels
     QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(windowCreatedSpy.isValid());
+    QHash<Surface*, ShellClient*> clients;
     for (auto it = windowGeometries.constBegin(), end = windowGeometries.constEnd(); it != end; it++) {
         const QRect windowGeometry = *it;
-        Surface *surface = m_compositor->createSurface(m_compositor);
-        ShellSurface *shellSurface = m_shell->createSurface(surface, surface);
+        Surface *surface = Test::createSurface(m_compositor);
+        ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
         Q_UNUSED(shellSurface)
         PlasmaShellSurface *plasmaSurface = m_plasmaShell->createSurface(surface, surface);
         plasmaSurface->setPosition(windowGeometry.topLeft());
         plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
 
         // map the window
-        QImage img(windowGeometry.size(), QImage::Format_RGB32);
-        img.fill(Qt::red);
-        surface->attachBuffer(m_shm->createBuffer(img));
-        surface->damage(QRect(QPoint(0, 0), windowGeometry.size()));
-        surface->commit(Surface::CommitFlag::None);
+        Test::render(surface, windowGeometry.size(), Qt::red, QImage::Format_RGB32);
 
         QVERIFY(windowCreatedSpy.wait());
         QCOMPARE(windowCreatedSpy.count(), 1);
@@ -277,6 +179,7 @@ void StrutsTest::testWaylandStruts()
         QVERIFY(c->isDock());
         QVERIFY(c->hasStrut());
         windowCreatedSpy.clear();
+        clients.insert(surface, c);
     }
 
     // some props are independent of struts - those first
@@ -299,6 +202,14 @@ void StrutsTest::testWaylandStruts()
     QTEST(workspace()->clientArea(PlacementArea, 1, 1), "screen1Maximized");
     QTEST(workspace()->clientArea(MaximizeArea, 1, 1), "screen1Maximized");
     QTEST(workspace()->clientArea(WorkArea, 0, 1), "workArea");
+
+    // delete all surfaces
+    for (auto it = clients.begin(); it != clients.end(); it++) {
+        QSignalSpy destroyedSpy(it.value(), &QObject::destroyed);
+        QVERIFY(destroyedSpy.isValid());
+        delete it.key();
+        QVERIFY(destroyedSpy.wait());
+    }
 }
 
 void StrutsTest::testMoveWaylandPanel()
@@ -306,8 +217,8 @@ void StrutsTest::testMoveWaylandPanel()
     // this test verifies that repositioning a Wayland panel updates the client area
     using namespace KWayland::Client;
     const QRect windowGeometry(0, 1000, 1280, 24);
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     Q_UNUSED(shellSurface)
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
@@ -317,11 +228,7 @@ void StrutsTest::testMoveWaylandPanel()
     QVERIFY(windowCreatedSpy.isValid());
 
     // map the window
-    QImage img(windowGeometry.size(), QImage::Format_RGB32);
-    img.fill(Qt::red);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(QPoint(0, 0), windowGeometry.size()));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), windowGeometry.size(), Qt::red, QImage::Format_RGB32);
 
     QVERIFY(windowCreatedSpy.wait());
     QCOMPARE(windowCreatedSpy.count(), 1);
@@ -362,8 +269,8 @@ void StrutsTest::testWaylandMobilePanel()
 
     // create first top panel
     const QRect windowGeometry(0, 0, 1280, 60);
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     Q_UNUSED(shellSurface)
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
@@ -373,11 +280,7 @@ void StrutsTest::testWaylandMobilePanel()
     QVERIFY(windowCreatedSpy.isValid());
 
     // map the first panel
-    QImage img(windowGeometry.size(), QImage::Format_RGB32);
-    img.fill(Qt::red);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(QPoint(0, 0), windowGeometry.size()));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), windowGeometry.size(), Qt::red, QImage::Format_RGB32);
 
     QVERIFY(windowCreatedSpy.wait());
     QCOMPARE(windowCreatedSpy.count(), 1);
@@ -398,18 +301,14 @@ void StrutsTest::testWaylandMobilePanel()
 
     // create another bottom panel
     const QRect windowGeometry2(0, 874, 1280, 150);
-    QScopedPointer<Surface> surface2(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> shellSurface2(m_shell->createSurface(surface2.data()));
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
     Q_UNUSED(shellSurface2)
     QScopedPointer<PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.data()));
     plasmaSurface2->setPosition(windowGeometry2.topLeft());
     plasmaSurface2->setRole(PlasmaShellSurface::Role::Panel);
 
-    QImage img2(windowGeometry2.size(), QImage::Format_RGB32);
-    img2.fill(Qt::blue);
-    surface2->attachBuffer(m_shm->createBuffer(img2));
-    surface2->damage(QRect(QPoint(0, 0), windowGeometry2.size()));
-    surface2->commit(Surface::CommitFlag::None);
+    Test::render(surface2.data(), windowGeometry2.size(), Qt::blue, QImage::Format_RGB32);
 
     QVERIFY(windowCreatedSpy.wait());
     QCOMPARE(windowCreatedSpy.count(), 1);

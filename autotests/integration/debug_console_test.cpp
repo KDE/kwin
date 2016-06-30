@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -46,6 +44,7 @@ class DebugConsoleTest : public QObject
     Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
+    void cleanup();
     void topLevelTest_data();
     void topLevelTest();
     void testX11Client();
@@ -71,6 +70,11 @@ void DebugConsoleTest::initTestCase()
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
     setenv("QT_QPA_PLATFORM", "wayland", true);
     waylandServer()->initWorkspace();
+}
+
+void DebugConsoleTest::cleanup()
+{
+    Test::destroyWaylandConnection();
 }
 
 void DebugConsoleTest::topLevelTest_data()
@@ -308,51 +312,15 @@ void DebugConsoleTest::testWaylandClient()
     QVERIFY(rowsInsertedSpy.isValid());
 
     // create our connection
-    using namespace KWayland::Client;
-    // setup connection
-    QScopedPointer<ConnectionThread> connection(new ConnectionThread);
-    QSignalSpy connectedSpy(connection.data(), &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
-    connection->setSocketName(s_socketName);
-
-    QScopedPointer<QThread> thread(new QThread);
-    connection->moveToThread(thread.data());
-    thread->start();
-
-    connection->initConnection();
-    QVERIFY(connectedSpy.wait());
-
-    QScopedPointer<EventQueue> queue(new EventQueue);
-    QVERIFY(!queue->isValid());
-    queue->setup(connection.data());
-    QVERIFY(queue->isValid());
-
-    Registry registry;
-    registry.setEventQueue(queue.data());
-    QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(interfacesAnnouncedSpy.isValid());
-    registry.create(connection.data());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(interfacesAnnouncedSpy.wait());
-
-    QScopedPointer<Compositor> compositor(registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version));
-    QVERIFY(compositor->isValid());
-    QScopedPointer<ShmPool> shm(registry.createShmPool(registry.interface(Registry::Interface::Shm).name, registry.interface(Registry::Interface::Shm).version));
-    QVERIFY(shm->isValid());
-    QScopedPointer<Shell> shell(registry.createShell(registry.interface(Registry::Interface::Shell).name, registry.interface(Registry::Interface::Shell).version));
-    QVERIFY(shell->isValid());
+    QVERIFY(Test::setupWaylandConnection(s_socketName));
 
     // create the Surface and ShellSurface
-    QScopedPointer<Surface> surface(compositor->createSurface());
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(surface->isValid());
-    QScopedPointer<ShellSurface> shellSurface(shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(shellSurface->isValid());
-    QImage img(10, 10, QImage::Format_ARGB32);
-    img.fill(Qt::red);
-    surface->attachBuffer(shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 10, 10));
-    surface->commit(Surface::CommitFlag::None);
+    Test::render(surface.data(), QSize(10, 10), Qt::red);
 
     // now we have the window, it should be added to our model
     QVERIFY(rowsInsertedSpy.wait());
@@ -410,18 +378,11 @@ void DebugConsoleTest::testWaylandClient()
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
     shellSurface.reset();
-    connection->flush();
+    Test::flushWaylandConnection();
     qDebug() << rowsRemovedSpy.count();
     QEXPECT_FAIL("", "Deleting a ShellSurface does not result in the server removing the ShellClient", Continue);
     QVERIFY(rowsRemovedSpy.wait());
-    // also destroy the connection to ensure the ShellSurface goes away
     surface.reset();
-    shell.reset();
-    shm.reset();
-    compositor.reset();
-    connection.take()->deleteLater();
-    thread->quit();
-    QVERIFY(thread->wait());
 
     QVERIFY(rowsRemovedSpy.wait());
     QCOMPARE(rowsRemovedSpy.count(), 1);

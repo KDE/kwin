@@ -52,11 +52,8 @@ private Q_SLOTS:
 private:
     ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
-    ShmPool *m_shm = nullptr;
     Shell *m_shell = nullptr;
     PlasmaShell *m_plasmaShell = nullptr;
-    EventQueue *m_queue = nullptr;
-    QThread *m_thread = nullptr;
 };
 
 void PlasmaSurfaceTest::initTestCase()
@@ -72,70 +69,15 @@ void PlasmaSurfaceTest::initTestCase()
 
 void PlasmaSurfaceTest::init()
 {
-    // setup connection
-    m_connection = new ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
-    m_connection->setSocketName(s_socketName);
-
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
-    m_thread->start();
-
-    m_connection->initConnection();
-    QVERIFY(connectedSpy.wait());
-
-    m_queue = new EventQueue(this);
-    QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
-    QVERIFY(m_queue->isValid());
-
-    Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(allAnnounced.isValid());
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(allAnnounced.wait());
-
-    m_compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name,
-                                             registry.interface(Registry::Interface::Compositor).version,
-                                             this);
-    QVERIFY(m_compositor->isValid());
-    m_shm = registry.createShmPool(registry.interface(Registry::Interface::Shm).name,
-                                   registry.interface(Registry::Interface::Shm).version,
-                                   this);
-    QVERIFY(m_shm->isValid());
-    m_shell = registry.createShell(registry.interface(Registry::Interface::Shell).name,
-                                   registry.interface(Registry::Interface::Shell).version,
-                                   this);
-    QVERIFY(m_shell->isValid());
-    m_plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name,
-                                         registry.interface(Registry::Interface::PlasmaShell).version,
-                                         this);
-    QVERIFY(m_plasmaShell->isValid());
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::PlasmaShell));
+    m_compositor = Test::waylandCompositor();
+    m_shell = Test::waylandShell();
+    m_plasmaShell = Test::waylandPlasmaShell();
 }
 
 void PlasmaSurfaceTest::cleanup()
 {
-#define CLEANUP(name) delete name; name = nullptr;
-    CLEANUP(m_plasmaShell)
-    CLEANUP(m_shell)
-    CLEANUP(m_shm)
-    CLEANUP(m_compositor)
-    CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
-    if (m_thread) {
-        m_thread->quit();
-        m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
-    }
-#undef CLEANUP
+    Test::destroyWaylandConnection();
 }
 
 void PlasmaSurfaceTest::testRoleOnAllDesktops_data()
@@ -154,9 +96,9 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops_data()
 void PlasmaSurfaceTest::testRoleOnAllDesktops()
 {
     // this test verifies that a ShellClient is set on all desktops when the role changes
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
@@ -165,11 +107,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QVERIFY(clientAddedSpy.isValid());
 
     // now render to map the window
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit();
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(clientAddedSpy.wait());
     AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
@@ -189,16 +127,14 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
 
     // let's create a second window where we init a little bit different
     // first creating the PlasmaSurface then the Shell Surface
-    QScopedPointer<Surface> surface2(m_compositor->createSurface());
+    QScopedPointer<Surface> surface2(Test::createSurface());
     QVERIFY(!surface2.isNull());
     QScopedPointer<PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.data()));
     QVERIFY(!plasmaSurface2.isNull());
     plasmaSurface2->setRole(role);
-    QScopedPointer<ShellSurface> shellSurface2(m_shell->createSurface(surface2.data()));
+    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
     QVERIFY(!shellSurface2.isNull());
-    surface2->attachBuffer(m_shm->createBuffer(img));
-    surface2->damage(QRect(0, 0, 100, 50));
-    surface2->commit();
+    Test::render(surface2.data(), QSize(100, 50), Qt::blue);
     QVERIFY(clientAddedSpy.wait());
 
     QVERIFY(workspace()->activeClient() != c);
@@ -228,9 +164,9 @@ void PlasmaSurfaceTest::testAcceptsFocus_data()
 void PlasmaSurfaceTest::testAcceptsFocus()
 {
     // this test verifies that some surface roles don't get focus
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
@@ -241,11 +177,7 @@ void PlasmaSurfaceTest::testAcceptsFocus()
     QVERIFY(clientAddedSpy.isValid());
 
     // now render to map the window
-    QImage img(QSize(100, 50), QImage::Format_ARGB32);
-    img.fill(Qt::blue);
-    surface->attachBuffer(m_shm->createBuffer(img));
-    surface->damage(QRect(0, 0, 100, 50));
-    surface->commit();
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(clientAddedSpy.wait());
 
     auto c = clientAddedSpy.first().first().value<ShellClient*>();
