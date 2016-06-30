@@ -173,7 +173,7 @@ void TestSlide::testCreate()
     QCOMPARE(serverSurface->slideOnShowHide()->offset(), 15);
 
     // and destroy
-    QSignalSpy destroyedSpy(serverSurface->slideOnShowHide(), &QObject::destroyed);
+    QSignalSpy destroyedSpy(serverSurface->slideOnShowHide().data(), &QObject::destroyed);
     QVERIFY(destroyedSpy.isValid());
     delete slide;
     QVERIFY(destroyedSpy.wait());

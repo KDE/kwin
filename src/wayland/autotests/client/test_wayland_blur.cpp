@@ -201,7 +201,7 @@ void TestBlur::testSurfaceDestroy()
     // destroy the parent surface
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
     QVERIFY(surfaceDestroyedSpy.isValid());
-    QSignalSpy blurDestroyedSpy(serverSurface->blur(), &QObject::destroyed);
+    QSignalSpy blurDestroyedSpy(serverSurface->blur().data(), &QObject::destroyed);
     QVERIFY(blurDestroyedSpy.isValid());
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
