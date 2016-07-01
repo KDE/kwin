@@ -399,6 +399,8 @@ void MoveResizeWindowTest::testPointerMoveEnd()
     // but releasing the other button should now end moving
     kwinApp()->platform()->pointerButtonReleased(additionalButton, timestamp++);
     QVERIFY(!c->isMove());
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c));
 }
 
 void MoveResizeWindowTest::testPlasmaShellSurfaceMovable_data()
@@ -435,6 +437,8 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
     QTEST(c->isMovable(), "movable");
     QTEST(c->isMovableAcrossScreens(), "movableAcrossScreens");
     QTEST(c->isResizable(), "resizable");
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c));
 }
 
 void MoveResizeWindowTest::testNetMove()
@@ -484,6 +488,7 @@ void MoveResizeWindowTest::testNetMove()
     QVERIFY(moveEndSpy.isValid());
     QSignalSpy moveStepSpy(client, &Client::clientStepUserMovedResized);
     QVERIFY(moveStepSpy.isValid());
+    QVERIFY(!workspace()->getMovingClient());
 
     // use NETRootInfo to trigger a move request
     NETRootInfo root(c.data(), NET::Properties());
