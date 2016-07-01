@@ -23,10 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "platform.h"
 #include "scene_qpainter.h"
+#include "shell_client.h"
 #include "wayland_server.h"
 #include "effect_builtins.h"
 
 #include <KConfigGroup>
+
+#include <KWayland/Client/seat.h>
+#include <KWayland/Client/shell.h>
+#include <KWayland/Client/surface.h>
+#include <KWayland/Client/pointer.h>
 
 #include <QPainter>
 
@@ -38,12 +44,21 @@ class SceneQPainterTest : public QObject
 Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
+    void cleanup();
     void testStartFrame();
     void testCursorMoving();
+    void testWindow();
 };
+
+void SceneQPainterTest::cleanup()
+{
+    Test::destroyWaylandConnection();
+}
 
 void SceneQPainterTest::initTestCase()
 {
+    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -115,6 +130,47 @@ void SceneQPainterTest::testCursorMoving()
     const QImage cursorImage = kwinApp()->platform()->softwareCursor();
     QVERIFY(!cursorImage.isNull());
     p.drawImage(QPoint(45, 45) - kwinApp()->platform()->softwareCursorHotspot(), cursorImage);
+    QCOMPARE(referenceImage, *scene->backend()->buffer());
+}
+
+void SceneQPainterTest::testWindow()
+{
+    // this test verifies that a window is rendered correctly
+    using namespace KWayland::Client;
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::waitForWaylandPointer());
+    QScopedPointer<Surface> s(Test::createSurface());
+    QScopedPointer<ShellSurface> ss(Test::createShellSurface(s.data()));
+    QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
+
+    // now let's map the window
+    QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(200, 300), Qt::blue));
+    // which should trigger a frame
+    auto scene = qobject_cast<SceneQPainter*>(KWin::Compositor::self()->scene());
+    QVERIFY(scene);
+    QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
+    QVERIFY(frameRenderedSpy.isValid());
+    QVERIFY(frameRenderedSpy.wait());
+    // we didn't set a cursor image on the surface yet, so it should be just black + window
+    QImage referenceImage(QSize(1280, 1024), QImage::Format_RGB32);
+    referenceImage.fill(Qt::black);
+    QPainter painter(&referenceImage);
+    painter.fillRect(0, 0, 200, 300, Qt::blue);
+    QCOMPARE(referenceImage, *scene->backend()->buffer());
+
+    // now let's set a cursor image
+    QScopedPointer<Surface> cs(Test::createSurface());
+    QVERIFY(!cs.isNull());
+    Test::render(cs.data(), QSize(10, 10), Qt::red);
+    p->setCursor(cs.data(), QPoint(5, 5));
+    QVERIFY(frameRenderedSpy.wait());
+    painter.fillRect(KWin::Cursor::pos().x() - 5, KWin::Cursor::pos().y() - 5, 10, 10, Qt::red);
+    QCOMPARE(referenceImage, *scene->backend()->buffer());
+    // let's move the cursor again
+    KWin::Cursor::setPos(10, 10);
+    QVERIFY(frameRenderedSpy.wait());
+    painter.fillRect(0, 0, 200, 300, Qt::blue);
+    painter.fillRect(5, 5, 10, 10, Qt::red);
     QCOMPARE(referenceImage, *scene->backend()->buffer());
 }
 
