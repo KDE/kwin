@@ -78,6 +78,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     WindowSystem
     IconThemes
     IdleTime
+    Wayland
 )
 # required frameworks by config modules
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
@@ -112,10 +113,6 @@ set_package_properties(KF5DocTools PROPERTIES
 add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation")
 
 find_package(KDecoration2 CONFIG REQUIRED)
-find_package(KF5Wayland CONFIG REQUIRED)
-set_package_properties(KF5Wayland PROPERTIES
-                       TYPE REQUIRED
-                      )
 
 find_package(KScreenLocker CONFIG REQUIRED)
 set_package_properties(KScreenLocker PROPERTIES
