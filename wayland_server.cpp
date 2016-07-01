@@ -162,9 +162,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
                 ScreenLocker::KSldApp::self()->lockScreenShown();
             }
             auto client = new ShellClient(surface);
-            if (auto c = Compositor::self()) {
-                connect(client, &Toplevel::needsRepaint, c, &Compositor::scheduleRepaint);
-            }
             if (client->isInternal()) {
                 m_internalClients << client;
             } else {

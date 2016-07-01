@@ -368,6 +368,7 @@ void Workspace::init()
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this,
             [this] (ShellClient *c) {
+                setupClientConnections(c);
                 c->updateDecoration(false);
                 updateClientLayer(c);
                 if (!c->isInternal()) {
@@ -483,18 +484,23 @@ Workspace::~Workspace()
     _self = 0;
 }
 
+void Workspace::setupClientConnections(AbstractClient *c)
+{
+    connect(c, &Toplevel::needsRepaint, m_compositor, &Compositor::scheduleRepaint);
+    connect(c, &AbstractClient::desktopPresenceChanged, this, &Workspace::desktopPresenceChanged);
+}
+
 Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
     Client* c = new Client();
-    connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
+    setupClientConnections(c);
     connect(c, &Client::activeChanged, m_compositor, static_cast<void (Compositor::*)()>(&Compositor::checkUnredirect));
     connect(c, SIGNAL(fullScreenChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(geometryChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(blockingCompositingChanged(KWin::Client*)), m_compositor, SLOT(updateCompositeBlocking(KWin::Client*)));
     connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
-    connect(c, &Client::desktopPresenceChanged, this, &Workspace::desktopPresenceChanged);
     if (!c->manage(w, is_mapped)) {
         Client::deleteClient(c);
         return NULL;

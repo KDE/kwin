@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "cursor.h"
+#include "effects.h"
 #include "platform.h"
 #include "shell_client.h"
 #include "screens.h"
@@ -46,6 +47,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testMapUnmapMap();
+    void testDesktopPresenceChanged();
 };
 
 void TestShellClient::initTestCase()
@@ -129,6 +131,42 @@ void TestShellClient::testMapUnmapMap()
     surface.reset();
     QVERIFY(windowClosedSpy.wait());
     QCOMPARE(windowClosedSpy.count(), 1);
+}
+
+void TestShellClient::testDesktopPresenceChanged()
+{
+    // this test verifies that the desktop presence changed signals are properly emitted
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(c->desktop(), 1);
+    effects->setNumberOfDesktops(4);
+    QSignalSpy desktopPresenceChangedClientSpy(c, &ShellClient::desktopPresenceChanged);
+    QVERIFY(desktopPresenceChangedClientSpy.isValid());
+    QSignalSpy desktopPresenceChangedWorkspaceSpy(workspace(), &Workspace::desktopPresenceChanged);
+    QVERIFY(desktopPresenceChangedWorkspaceSpy.isValid());
+    QSignalSpy desktopPresenceChangedEffectsSpy(effects, &EffectsHandler::desktopPresenceChanged);
+    QVERIFY(desktopPresenceChangedEffectsSpy.isValid());
+
+    // let's change the desktop
+    workspace()->sendClientToDesktop(c, 2, false);
+    QCOMPARE(c->desktop(), 2);
+    QCOMPARE(desktopPresenceChangedClientSpy.count(), 1);
+    QCOMPARE(desktopPresenceChangedWorkspaceSpy.count(), 1);
+    // effects is delayed by one cycle
+    QCOMPARE(desktopPresenceChangedEffectsSpy.count(), 0);
+    QVERIFY(desktopPresenceChangedEffectsSpy.wait());
+    QCOMPARE(desktopPresenceChangedEffectsSpy.count(), 1);
+
+    // verify the arguments
+    QCOMPARE(desktopPresenceChangedClientSpy.first().at(0).value<AbstractClient*>(), c);
+    QCOMPARE(desktopPresenceChangedClientSpy.first().at(1).toInt(), 1);
+    QCOMPARE(desktopPresenceChangedWorkspaceSpy.first().at(0).value<AbstractClient*>(), c);
+    QCOMPARE(desktopPresenceChangedWorkspaceSpy.first().at(1).toInt(), 1);
+    QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(0).value<EffectWindow*>(), c->effectWindow());
+    QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(1).toInt(), 1);
+    QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(2).toInt(), 2);
 }
 
 WAYLANDTEST_MAIN(TestShellClient)

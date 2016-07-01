@@ -512,6 +512,7 @@ private:
 
     /// This is the right way to create a new client
     Client* createClient(xcb_window_t w, bool is_mapped);
+    void setupClientConnections(AbstractClient *client);
     void addClient(Client* c);
     Unmanaged* createUnmanaged(xcb_window_t w);
     void addUnmanaged(Unmanaged* c);
