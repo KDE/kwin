@@ -98,8 +98,6 @@ void DontCrashNoBorder::testCreateWindow()
 {
     // create a window and ensure that this doesn't crash
         using namespace KWayland::Client;
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
@@ -113,13 +111,9 @@ void DontCrashNoBorder::testCreateWindow()
     QVERIFY(decoSpy.wait());
     QCOMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
     // let's render
-    Test::render(surface.data(), QSize(500, 50), Qt::blue);
-
-    Test::flushWaylandConnection();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(500, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
     QVERIFY(!c->isDecorated());
 }
 

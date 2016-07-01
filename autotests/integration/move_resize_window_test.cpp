@@ -105,9 +105,6 @@ void MoveResizeWindowTest::testMove()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -116,13 +113,10 @@ void MoveResizeWindowTest::testMove()
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
     QVERIFY(geometryChangedSpy.isValid());
@@ -203,9 +197,6 @@ void MoveResizeWindowTest::testPackTo()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -214,13 +205,10 @@ void MoveResizeWindowTest::testPackTo()
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
 
     // let's place it centered
@@ -247,9 +235,6 @@ void MoveResizeWindowTest::testPackAgainstClient()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface1(Test::createSurface());
     QVERIFY(!surface1.isNull());
     QScopedPointer<Surface> surface2(Test::createSurface());
@@ -267,17 +252,13 @@ void MoveResizeWindowTest::testPackAgainstClient()
     QVERIFY(!shellSurface3.isNull());
     QScopedPointer<ShellSurface> shellSurface4(Test::createShellSurface(surface4.data()));
     QVERIFY(!shellSurface4.isNull());
-    auto renderWindow = [this, &clientAddedSpy] (Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
+    auto renderWindow = [this] (Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
         // let's render
-        Test::render(surface, QSize(10, 10), Qt::blue);
+        auto c = Test::renderAndWaitForShown(surface, QSize(10, 10), Qt::blue);
 
-        m_connection->flush();
-        QVERIFY(clientAddedSpy.wait());
-        AbstractClient *c = workspace()->activeClient();
         QVERIFY(c);
-        QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+        QCOMPARE(workspace()->activeClient(), c);
         QCOMPARE(c->geometry().size(), QSize(10, 10));
-        clientAddedSpy.clear();
         // let's place it centered
         Placement::self()->placeCentered(c, QRect(0, 0, 1280, 1024));
         QCOMPARE(c->geometry(), QRect(635, 507, 10, 10));
@@ -293,13 +274,10 @@ void MoveResizeWindowTest::testPackAgainstClient()
     QVERIFY(!surface.isNull());
     QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
     // let's place it centered
     Placement::self()->placeCentered(c, QRect(0, 0, 1280, 1024));
     QCOMPARE(c->geometry(), QRect(590, 487, 100, 50));
@@ -323,8 +301,6 @@ void MoveResizeWindowTest::testGrowShrink_data()
 void MoveResizeWindowTest::testGrowShrink()
 {
     using namespace KWayland::Client;
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
 
     // block geometry helper
     QScopedPointer<Surface> surface1(Test::createSurface());
@@ -332,9 +308,7 @@ void MoveResizeWindowTest::testGrowShrink()
     QScopedPointer<ShellSurface> shellSurface1(Test::createShellSurface(surface1.data()));
     QVERIFY(!shellSurface1.isNull());
     Test::render(surface1.data(), QSize(650, 514), Qt::blue);
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    clientAddedSpy.clear();
+    QVERIFY(Test::waitForWaylandWindowShown());
     workspace()->slotWindowPackRight();
     workspace()->slotWindowPackDown();
 
@@ -346,13 +320,10 @@ void MoveResizeWindowTest::testGrowShrink()
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
 
     // let's place it centered
     Placement::self()->placeCentered(c, QRect(0, 0, 1280, 1024));
@@ -391,9 +362,6 @@ void MoveResizeWindowTest::testPointerMoveEnd()
     // this test verifies that moving a window through pointer only ends if all buttons are released
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -402,12 +370,10 @@ void MoveResizeWindowTest::testPointerMoveEnd()
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
+    QCOMPARE(c, workspace()->activeClient());
     QVERIFY(!c->isMove());
 
     // let's trigger the left button
@@ -448,9 +414,6 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
 {
     // this test verifies that certain window types from PlasmaShellSurface are not moveable or resizable
     using namespace KWayland::Client;
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -462,11 +425,8 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
     QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
     // let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = clientAddedSpy.first().first().value<AbstractClient*>();
     QVERIFY(c);
     QTEST(c->isMovable(), "movable");
     QTEST(c->isMovableAcrossScreens(), "movableAcrossScreens");

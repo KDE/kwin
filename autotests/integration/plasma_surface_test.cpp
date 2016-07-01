@@ -103,15 +103,10 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     // now render to map the window
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
+    AbstractClient *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
 
     // currently the role is not yet set, so the window should not be on all desktops
     QCOMPARE(c->isOnAllDesktops(), false);
@@ -135,7 +130,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
     QVERIFY(!shellSurface2.isNull());
     Test::render(surface2.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(clientAddedSpy.wait());
+    QVERIFY(Test::waitForWaylandWindowShown());
 
     QVERIFY(workspace()->activeClient() != c);
     c = workspace()->activeClient();
@@ -173,14 +168,9 @@ void PlasmaSurfaceTest::testAcceptsFocus()
     QFETCH(PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     // now render to map the window
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(clientAddedSpy.wait());
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    auto c = clientAddedSpy.first().first().value<ShellClient*>();
     QVERIFY(c);
     QTEST(c->wantsInput(), "wantsInput");
     QTEST(c->isActive(), "active");

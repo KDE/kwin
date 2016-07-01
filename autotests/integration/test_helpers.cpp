@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "shell_client.h"
+#include "wayland_server.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -242,6 +244,32 @@ void render(Surface *surface, const QSize &size, const QColor &color, const QIma
     surface->attachBuffer(s_waylandConnection.shm->createBuffer(img));
     surface->damage(QRect(QPoint(0, 0), size));
     surface->commit(Surface::CommitFlag::None);
+}
+
+ShellClient *waitForWaylandWindowShown(int timeout)
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    if (!clientAddedSpy.isValid()) {
+        return nullptr;
+    }
+    if (!clientAddedSpy.wait(timeout)) {
+        return nullptr;
+    }
+    return clientAddedSpy.first().first().value<ShellClient*>();
+}
+
+ShellClient *renderAndWaitForShown(Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    if (!clientAddedSpy.isValid()) {
+        return nullptr;
+    }
+    render(surface, size, color, format);
+    flushWaylandConnection();
+    if (!clientAddedSpy.wait(timeout)) {
+        return nullptr;
+    }
+    return clientAddedSpy.first().first().value<ShellClient*>();
 }
 
 void flushWaylandConnection()

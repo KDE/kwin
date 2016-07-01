@@ -131,9 +131,6 @@ void QuickTilingTest::testQuickTiling()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -142,13 +139,10 @@ void QuickTilingTest::testQuickTiling()
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
@@ -205,9 +199,6 @@ void QuickTilingTest::testQuickMaximizing()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -216,13 +207,10 @@ void QuickTilingTest::testQuickMaximizing()
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
@@ -313,9 +301,6 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -324,13 +309,10 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
@@ -390,9 +372,6 @@ void QuickTilingTest::testQuickTilingPointerMove()
 {
     using namespace KWayland::Client;
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -401,13 +380,10 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    m_connection->flush();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
     QCOMPARE(c->maximizeMode(), MaximizeRestore);

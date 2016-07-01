@@ -87,20 +87,15 @@ void TestMaximized::cleanup()
 void TestMaximized::testMaximizedPassedToDeco()
 {
     // this test verifies that when a ShellClient gets maximized the Decoration receives the signal
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
     QScopedPointer<ServerSideDecoration> ssd(Test::waylandServerSideDecoration()->create(surface.data()));
 
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     QSignalSpy sizeChangedSpy(shellSurface.data(), &ShellSurface::sizeChanged);
     QVERIFY(sizeChangedSpy.isValid());
 
-    QVERIFY(clientAddedSpy.isEmpty());
-    QVERIFY(clientAddedSpy.wait());
-    auto client = clientAddedSpy.first().first().value<ShellClient*>();
     QVERIFY(client);
     QVERIFY(client->isDecorated());
     auto decoration = client->decoration();
@@ -147,9 +142,6 @@ void TestMaximized::testMaximizedPassedToDeco()
 void TestMaximized::testInitiallyMaximized()
 {
     // this test verifies that a window created as maximized, will be maximized
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
 
@@ -161,11 +153,7 @@ void TestMaximized::testInitiallyMaximized()
     QCOMPARE(shellSurface->size(), QSize(1280, 1024));
 
     // now let's render in an incorrect size
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
-
-    QVERIFY(clientAddedSpy.isEmpty());
-    QVERIFY(clientAddedSpy.wait());
-    auto client = clientAddedSpy.first().first().value<ShellClient*>();
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QCOMPARE(client->geometry(), QRect(0, 0, 100, 50));
     QEXPECT_FAIL("", "Should go out of maximzied", Continue);

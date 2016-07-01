@@ -92,8 +92,6 @@ AbstractClient *DecorationInputTest::showWindow()
 #define COMPARE(actual, expected) \
     if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
         return nullptr;
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    VERIFY(clientAddedSpy.isValid());
 
     Surface *surface = Test::createSurface(Test::waylandCompositor());
     VERIFY(surface);
@@ -107,13 +105,9 @@ AbstractClient *DecorationInputTest::showWindow()
     VERIFY(decoSpy.wait());
     COMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
     // let's render
-    Test::render(surface, QSize(500, 50), Qt::blue);
-
-    Test::flushWaylandConnection();
-    VERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
+    auto c = Test::renderAndWaitForShown(surface, QSize(500, 50), Qt::blue);
     VERIFY(c);
-    COMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    COMPARE(workspace()->activeClient(), c);
 
 #undef VERIFY
 #undef COMPARE

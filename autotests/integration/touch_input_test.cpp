@@ -100,21 +100,16 @@ AbstractClient *TouchInputTest::showWindow()
 #define COMPARE(actual, expected) \
     if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
         return nullptr;
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    VERIFY(clientAddedSpy.isValid());
 
     Surface *surface = Test::createSurface(Test::waylandCompositor());
     VERIFY(surface);
     ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
     VERIFY(shellSurface);
     // let's render
-    Test::render(surface, QSize(100, 50), Qt::blue);
+    auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
 
-    Test::flushWaylandConnection();
-    VERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
     VERIFY(c);
-    COMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    COMPARE(workspace()->activeClient(), c);
 
 #undef VERIFY
 #undef COMPARE

@@ -52,10 +52,6 @@ private Q_SLOTS:
     void init();
     void cleanup();
     void testScript();
-
-private:
-    void unlock();
-    AbstractClient *showWindow();
 };
 
 void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
@@ -101,21 +97,14 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
 
     using namespace KWayland::Client;
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-
     Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
     ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
     QVERIFY(shellSurface);
     // let's render
-    Test::render(surface, QSize(100, 50), Qt::blue);
-
-    Test::flushWaylandConnection();
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *c = workspace()->activeClient();
+    auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(clientAddedSpy.first().first().value<ShellClient*>(), c);
+    QCOMPARE(workspace()->activeClient(), c);
 
     // make sure we animate
     QTest::qWait(200);

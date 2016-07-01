@@ -155,8 +155,6 @@ void StrutsTest::testWaylandStruts()
 
     QFETCH(QVector<QRect>, windowGeometries);
     // create the panels
-    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QHash<Surface*, ShellClient*> clients;
     for (auto it = windowGeometries.constBegin(), end = windowGeometries.constEnd(); it != end; it++) {
         const QRect windowGeometry = *it;
@@ -168,17 +166,13 @@ void StrutsTest::testWaylandStruts()
         plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
 
         // map the window
-        Test::render(surface, windowGeometry.size(), Qt::red, QImage::Format_RGB32);
+        auto c = Test::renderAndWaitForShown(surface, windowGeometry.size(), Qt::red, QImage::Format_RGB32);
 
-        QVERIFY(windowCreatedSpy.wait());
-        QCOMPARE(windowCreatedSpy.count(), 1);
-        auto c = windowCreatedSpy.first().first().value<ShellClient*>();
         QVERIFY(c);
         QVERIFY(!c->isActive());
         QCOMPARE(c->geometry(), windowGeometry);
         QVERIFY(c->isDock());
         QVERIFY(c->hasStrut());
-        windowCreatedSpy.clear();
         clients.insert(surface, c);
     }
 
@@ -224,21 +218,13 @@ void StrutsTest::testMoveWaylandPanel()
     plasmaSurface->setPosition(windowGeometry.topLeft());
     plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
 
-    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(windowCreatedSpy.isValid());
-
     // map the window
-    Test::render(surface.data(), windowGeometry.size(), Qt::red, QImage::Format_RGB32);
-
-    QVERIFY(windowCreatedSpy.wait());
-    QCOMPARE(windowCreatedSpy.count(), 1);
-    auto c = windowCreatedSpy.first().first().value<ShellClient*>();
+    auto c = Test::renderAndWaitForShown(surface.data(), windowGeometry.size(), Qt::red, QImage::Format_RGB32);
     QVERIFY(c);
     QVERIFY(!c->isActive());
     QCOMPARE(c->geometry(), windowGeometry);
     QVERIFY(c->isDock());
     QVERIFY(c->hasStrut());
-    windowCreatedSpy.clear();
     QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 0, 1280, 1000));
     QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), QRect(0, 0, 1280, 1000));
     QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(1280, 0, 1280, 1024));
@@ -276,22 +262,13 @@ void StrutsTest::testWaylandMobilePanel()
     plasmaSurface->setPosition(windowGeometry.topLeft());
     plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
 
-    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(windowCreatedSpy.isValid());
-
     // map the first panel
-    Test::render(surface.data(), windowGeometry.size(), Qt::red, QImage::Format_RGB32);
-
-    QVERIFY(windowCreatedSpy.wait());
-    QCOMPARE(windowCreatedSpy.count(), 1);
-
-    auto c = windowCreatedSpy.first().first().value<ShellClient*>();
+    auto c = Test::renderAndWaitForShown(surface.data(), windowGeometry.size(), Qt::red, QImage::Format_RGB32);
     QVERIFY(c);
     QVERIFY(!c->isActive());
     QCOMPARE(c->geometry(), windowGeometry);
     QVERIFY(c->isDock());
     QVERIFY(c->hasStrut());
-    windowCreatedSpy.clear();
 
     QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 60, 1280, 964));
     QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), QRect(0, 60, 1280, 964));
@@ -308,18 +285,13 @@ void StrutsTest::testWaylandMobilePanel()
     plasmaSurface2->setPosition(windowGeometry2.topLeft());
     plasmaSurface2->setRole(PlasmaShellSurface::Role::Panel);
 
-    Test::render(surface2.data(), windowGeometry2.size(), Qt::blue, QImage::Format_RGB32);
+    auto c1 = Test::renderAndWaitForShown(surface2.data(), windowGeometry2.size(), Qt::blue, QImage::Format_RGB32);
 
-    QVERIFY(windowCreatedSpy.wait());
-    QCOMPARE(windowCreatedSpy.count(), 1);
-
-    auto c1 = windowCreatedSpy.first().first().value<ShellClient*>();
     QVERIFY(c1);
     QVERIFY(!c1->isActive());
     QCOMPARE(c1->geometry(), windowGeometry2);
     QVERIFY(c1->isDock());
     QVERIFY(c1->hasStrut());
-    windowCreatedSpy.clear();
 
     QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 60, 1280, 814));
     QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), QRect(0, 60, 1280, 814));

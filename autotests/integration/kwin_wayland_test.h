@@ -45,6 +45,8 @@ class Surface;
 namespace KWin
 {
 
+class ShellClient;
+
 class WaylandTestApplication : public Application
 {
     Q_OBJECT
@@ -116,6 +118,17 @@ KWayland::Client::ShellSurface *createShellSurface(KWayland::Client::Surface *su
  * The @p surface gets damaged and committed, thus it's rendered.
  **/
 void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32);
+
+/**
+ * Waits till a new ShellClient is shown and returns the created ShellClient.
+ * If no ShellClient gets shown during @p timeout @c null is returned.
+ **/
+ShellClient *waitForWaylandWindowShown(int timeout = 5000);
+
+/**
+ * Combination of @link{render} and @link{waitForWaylandWindowShown}.
+ **/
+ShellClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
 }
 
 }
