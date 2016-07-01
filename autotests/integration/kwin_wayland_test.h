@@ -45,6 +45,7 @@ class Surface;
 namespace KWin
 {
 
+class AbstractClient;
 class ShellClient;
 
 class WaylandTestApplication : public Application
@@ -129,6 +130,11 @@ ShellClient *waitForWaylandWindowShown(int timeout = 5000);
  * Combination of @link{render} and @link{waitForWaylandWindowShown}.
  **/
 ShellClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
+
+/**
+ * Waits for the @p client to be destroyed.
+ **/
+bool waitForWindowDestroyed(AbstractClient *client);
 }
 
 }

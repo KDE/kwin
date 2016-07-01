@@ -305,5 +305,14 @@ ShellSurface *createShellSurface(Surface *surface, QObject *parent)
     return s;
 }
 
+bool waitForWindowDestroyed(AbstractClient *client)
+{
+    QSignalSpy destroyedSpy(client, &QObject::destroyed);
+    if (!destroyedSpy.isValid()) {
+        return false;
+    }
+    return destroyedSpy.wait();
+}
+
 }
 }

@@ -180,6 +180,8 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(c->geometry(), QRect(16, 32, 100, 50));
     QCOMPARE(c->isMove(), false);
     QVERIFY(workspace()->getMovingClient() == nullptr);
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c));
 }
 
 void MoveResizeWindowTest::testPackTo_data()
@@ -218,6 +220,8 @@ void MoveResizeWindowTest::testPackTo()
     QFETCH(QString, methodCall);
     QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
     QTEST(c->geometry(), "expectedGeometry");
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c));
 }
 
 void MoveResizeWindowTest::testPackAgainstClient_data()
