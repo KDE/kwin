@@ -35,6 +35,7 @@ integrationTest(NAME testShellClient SRCS shell_client_test.cpp)
 integrationTest(NAME testDontCrashNoBorder SRCS dont_crash_no_border.cpp)
 integrationTest(NAME testXClipboardSync SRCS xclipboardsync_test.cpp)
 integrationTest(NAME testSceneQPainter SRCS scene_qpainter_test.cpp)
+integrationTest(NAME testNoXdgRuntimeDir SRCS no_xdg_runtime_dir_test.cpp)
 
 if (XCB_ICCCM_FOUND)
     integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp LIBS XCB::ICCCM)

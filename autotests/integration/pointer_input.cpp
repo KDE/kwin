@@ -87,7 +87,7 @@ void PointerInputTest::initTestCase()
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
-    waylandServer()->init(s_socketName.toLocal8Bit());
+    QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 

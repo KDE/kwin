@@ -90,7 +90,9 @@ ApplicationWayland::~ApplicationWayland()
         return;
     }
 
-    kwinApp()->platform()->setOutputsEnabled(false);
+    if (kwinApp()->platform()) {
+        kwinApp()->platform()->setOutputsEnabled(false);
+    }
     // need to unload all effects prior to destroying X connection as they might do X calls
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
@@ -710,7 +712,10 @@ int main(int argc, char * argv[])
     if (parser.isSet(screenLockerOption)) {
         flags = KWin::WaylandServer::InitalizationFlag::LockScreen;
     }
-    server->init(parser.value(waylandSocketOption).toUtf8(), flags);
+    if (!server->init(parser.value(waylandSocketOption).toUtf8(), flags)) {
+        std::cerr << "FATAL ERROR: could not create Wayland server" << std::endl;
+        return 1;
+    }
 
     a.initPlatform(*pluginIt);
     if (!a.platform()) {

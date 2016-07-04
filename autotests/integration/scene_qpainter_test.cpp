@@ -62,7 +62,7 @@ void SceneQPainterTest::initTestCase()
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
-    waylandServer()->init(s_socketName.toLocal8Bit());
+    QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
     // disable all effects - we don't want to have it interact with the rendering
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);

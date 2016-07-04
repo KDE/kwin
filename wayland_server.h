@@ -77,7 +77,7 @@ public:
     Q_DECLARE_FLAGS(InitalizationFlags, InitalizationFlag)
 
     virtual ~WaylandServer();
-    void init(const QByteArray &socketName = QByteArray(), InitalizationFlags flags = InitalizationFlag::NoOptions);
+    bool init(const QByteArray &socketName = QByteArray(), InitalizationFlags flags = InitalizationFlag::NoOptions);
     void terminateClientConnections();
 
     KWayland::Server::Display *display() {

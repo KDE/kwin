@@ -113,7 +113,7 @@ void WaylandServer::terminateClientConnections()
     }
 }
 
-void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
+bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 {
     m_initFlags = flags;
     m_display = new KWayland::Server::Display(this);
@@ -121,6 +121,9 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
         m_display->setSocketName(QString::fromUtf8(socketName));
     }
     m_display->start();
+    if (!m_display->isRunning()) {
+        return false;
+    }
     m_compositor = m_display->createCompositor(m_display);
     m_compositor->create();
     connect(m_compositor, &CompositorInterface::surfaceCreated, this,
@@ -264,6 +267,8 @@ void WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_outputManagement->create();
 
     m_display->createSubCompositor(m_display)->create();
+
+    return true;
 }
 
 void WaylandServer::shellClientShown(Toplevel *t)
