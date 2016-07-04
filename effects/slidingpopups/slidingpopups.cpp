@@ -45,6 +45,8 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
+    connect(effects, &EffectsHandler::windowShown, this, &SlidingPopupsEffect::startForShow);
+    connect(effects, &EffectsHandler::windowHidden, this, &SlidingPopupsEffect::slotWindowClosed);
     reconfigure(ReconfigureAll);
 }
 
@@ -107,11 +109,15 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
 
         if (progress != 1.0) {
             data.setTransformed();
-            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
+            w->enablePainting(EffectWindow::PAINT_DISABLED | EffectWindow::PAINT_DISABLED_BY_DELETE);
         } else {
             delete mDisappearingWindows.take(w);
             w->addRepaintFull();
-            w->unrefWindow();
+            if (w->isDeleted()) {
+                w->unrefWindow();
+            } else {
+                w->unreferencePreviousWindowPixmap();
+            }
         }
     }
     if (progress != 1.0) {
@@ -191,7 +197,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
     if (mAppearingWindows.contains(w)) {
         appearing = true;
         animating = true;
-    } else if (mDisappearingWindows.contains(w) && w->isDeleted()) {
+    } else if (mDisappearingWindows.contains(w)) {
         appearing = false;
         animating = true;
     }
@@ -278,10 +284,25 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
         });
     }
 
+    startForShow(w);
+}
+
+void SlidingPopupsEffect::startForShow(EffectWindow *w)
+{
     if (w->isOnCurrentDesktop() && mWindowsData.contains(w)) {
         if (!w->data(WindowForceBackgroundContrastRole).isValid() && w->hasAlpha()) {
             w->setData(WindowForceBackgroundContrastRole, QVariant(true));
             m_backgroundContrastForced.append(w);
+        }
+        auto it = mDisappearingWindows.find(w);
+        if (it != mDisappearingWindows.end()) {
+            delete it.value();
+            mDisappearingWindows.erase(it);
+        }
+        it = mAppearingWindows.find(w);
+        if (it != mAppearingWindows.end()) {
+            delete it.value();
+            mAppearingWindows.erase(it);
         }
         mAppearingWindows.insert(w, new QTimeLine(mWindowsData[ w ].fadeInDuration, this));
         mAppearingWindows[ w ]->setCurveShape(QTimeLine::EaseInOutCurve);
@@ -298,8 +319,20 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
 {
     if (w->isOnCurrentDesktop() && !w->isMinimized() && mWindowsData.contains(w)) {
-        w->refWindow();
-        delete mAppearingWindows.take(w);
+        if (w->isDeleted()) {
+            w->refWindow();
+        } else {
+            w->referencePreviousWindowPixmap();
+        }
+        auto it = mAppearingWindows.find(w);
+        if (it != mAppearingWindows.end()) {
+            delete it.value();
+            mAppearingWindows.erase(it);
+        }
+        // could be already running, better check
+        if (mDisappearingWindows.contains(w)) {
+            return;
+        }
         mDisappearingWindows.insert(w, new QTimeLine(mWindowsData[ w ].fadeOutDuration, this));
         mDisappearingWindows[ w ]->setCurveShape(QTimeLine::EaseInOutCurve);
 

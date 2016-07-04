@@ -65,6 +65,7 @@ public Q_SLOTS:
     void slotWaylandSlideOnShowChanged(EffectWindow* w);
 private:
     void setupAnimData(EffectWindow *w);
+    void startForShow(EffectWindow *w);
 
     enum Position {
         West = 0,
