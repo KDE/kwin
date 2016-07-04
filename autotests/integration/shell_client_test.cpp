@@ -86,6 +86,10 @@ void TestShellClient::testMapUnmapMap()
     // this test verifies that mapping a previously mapped window works correctly
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy effectsWindowShownSpy(effects, &EffectsHandler::windowShown);
+    QVERIFY(effectsWindowShownSpy.isValid());
+    QSignalSpy effectsWindowHiddenSpy(effects, &EffectsHandler::windowHidden);
+    QVERIFY(effectsWindowHiddenSpy.isValid());
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
@@ -101,6 +105,7 @@ void TestShellClient::testMapUnmapMap()
     QCOMPARE(client->isHiddenInternal(), false);
     QCOMPARE(client->readyForPainting(), true);
     QCOMPARE(workspace()->activeClient(), client);
+    QVERIFY(effectsWindowShownSpy.isEmpty());
 
     // now unmap
     QSignalSpy hiddenSpy(client, &ShellClient::windowHidden);
@@ -114,6 +119,8 @@ void TestShellClient::testMapUnmapMap()
     QCOMPARE(client->isHiddenInternal(), true);
     QVERIFY(windowClosedSpy.isEmpty());
     QVERIFY(!workspace()->activeClient());
+    QCOMPARE(effectsWindowHiddenSpy.count(), 1);
+    QCOMPARE(effectsWindowHiddenSpy.first().first().value<EffectWindow*>(), client->effectWindow());
 
     QSignalSpy windowShownSpy(client, &ShellClient::windowShown);
     QVERIFY(windowShownSpy.isValid());
@@ -122,19 +129,28 @@ void TestShellClient::testMapUnmapMap()
     QVERIFY(windowShownSpy.wait());
     QCOMPARE(windowShownSpy.count(), 1);
     QCOMPARE(clientAddedSpy.count(), 1);
+    QCOMPARE(client->readyForPainting(), true);
+    QCOMPARE(client->isHiddenInternal(), false);
     QCOMPARE(workspace()->activeClient(), client);
+    QCOMPARE(effectsWindowShownSpy.count(), 1);
+    QCOMPARE(effectsWindowShownSpy.first().first().value<EffectWindow*>(), client->effectWindow());
 
     // let's unmap again
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
     QVERIFY(hiddenSpy.wait());
     QCOMPARE(hiddenSpy.count(), 2);
+    QCOMPARE(client->readyForPainting(), true);
+    QCOMPARE(client->isHiddenInternal(), true);
     QVERIFY(windowClosedSpy.isEmpty());
+    QCOMPARE(effectsWindowHiddenSpy.count(), 2);
+    QCOMPARE(effectsWindowHiddenSpy.last().first().value<EffectWindow*>(), client->effectWindow());
 
     shellSurface.reset();
     surface.reset();
     QVERIFY(windowClosedSpy.wait());
     QCOMPARE(windowClosedSpy.count(), 1);
+    QCOMPARE(effectsWindowHiddenSpy.count(), 2);
 }
 
 void TestShellClient::testDesktopPresenceChanged()

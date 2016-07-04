@@ -386,6 +386,16 @@ void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)
     connect(c, &AbstractClient::modalChanged,         this, &EffectsHandlerImpl::slotClientModalityChanged);
     connect(c, &AbstractClient::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
     connect(c, &AbstractClient::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
+    connect(c, &AbstractClient::windowShown, this,
+        [this](Toplevel *c) {
+            emit windowShown(c->effectWindow());
+        }
+    );
+    connect(c, &AbstractClient::windowHidden, this,
+        [this](Toplevel *c) {
+            emit windowHidden(c->effectWindow());
+        }
+    );
 }
 
 void EffectsHandlerImpl::setupClientConnections(Client* c)

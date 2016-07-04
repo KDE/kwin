@@ -1430,6 +1430,29 @@ Q_SIGNALS:
      **/
     void virtualScreenGeometryChanged();
 
+    /**
+     * The window @p w gets shown again. The window was previously
+     * initially shown with @link{windowAdded} and hidden with @link{windowHidden}.
+     *
+     * @see windowHidden
+     * @see windowAdded
+     * @since 5.8
+     **/
+    void windowShown(KWin::EffectWindow *w);
+
+    /**
+     * The window @p w got hidden but not yet closed.
+     * This can happen when a window is still being used and is supposed to be shown again
+     * with @link{windowShown}. On X11 an example is autohiding panels. On Wayland every
+     * window first goes through the window hidden state and might get shown again, or might
+     * get closed the normal way.
+     *
+     * @see windowShown
+     * @see windowClosed
+     * @since 5.8
+     **/
+    void windowHidden(KWin::EffectWindow *w);
+
 protected:
     QVector< EffectPair > loaded_effects;
     //QHash< QString, EffectFactory* > effect_factories;
