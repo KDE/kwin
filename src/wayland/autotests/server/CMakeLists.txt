@@ -38,3 +38,11 @@ add_executable(testQtSurfaceExtension ${testQtSurfaceExtension_SRCS})
 target_link_libraries( testQtSurfaceExtension Qt5::Test Qt5::Gui KF5::WaylandServer)
 add_test(kwayland-testQtSurfaceExtension testQtSurfaceExtension)
 ecm_mark_as_test(testQtSurfaceExtension)
+
+########################################################
+# Test No XDG_RUNTIME_DIR
+########################################################
+add_executable(testNoXdgRuntimeDir test_no_xdg_runtime_dir.cpp)
+target_link_libraries( testNoXdgRuntimeDir Qt5::Test KF5::WaylandServer)
+add_test(kwayland-testNoXdgRuntimeDir testNoXdgRuntimeDir)
+ecm_mark_as_test(testNoXdgRuntimeDir)

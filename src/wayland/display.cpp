@@ -109,6 +109,9 @@ Display::Display(QObject *parent)
 Display::~Display()
 {
     terminate();
+    if (d->display) {
+        wl_display_destroy(d->display);
+    }
 }
 
 void Display::Private::flush()
@@ -150,6 +153,7 @@ void Display::start(StartMode mode)
     d->display = wl_display_create();
     if (mode == StartMode::ConnectToSocket) {
         if (wl_display_add_socket(d->display, qPrintable(d->socketName)) != 0) {
+            qCWarning(KWAYLAND_SERVER) << "Failed to create Wayland socket";
             return;
         }
     }
@@ -170,7 +174,7 @@ void Display::dispatchEvents(int msecTimeout)
     Q_ASSERT(d->display);
     if (d->running) {
         d->dispatch();
-    } else {
+    } else if (d->loop) {
         wl_event_loop_dispatch(d->loop, msecTimeout);
         wl_display_flush_clients(d->display);
     }
