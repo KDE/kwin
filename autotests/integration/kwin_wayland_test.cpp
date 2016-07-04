@@ -57,12 +57,13 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
 WaylandTestApplication::~WaylandTestApplication()
 {
     kwinApp()->platform()->setOutputsEnabled(false);
-    destroyWorkspace();
-    waylandServer()->dispatch();
     // need to unload all effects prior to destroying X connection as they might do X calls
+    // also before destroy Workspace, as effects might call into Workspace
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
+    destroyWorkspace();
+    waylandServer()->dispatch();
     disconnect(m_xwaylandFailConnection);
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
