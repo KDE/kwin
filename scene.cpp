@@ -800,10 +800,8 @@ void Scene::Window::resetPaintingEnabled()
             disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
         if (c->tabGroup() && c != c->tabGroup()->current())
             disable_painting |= PAINT_DISABLED_BY_TAB_GROUP;
-        if (Client *cc = dynamic_cast<Client*>(c)) {
-            if (cc->isHiddenInternal()) {
-                disable_painting |= PAINT_DISABLED;
-            }
+        if (c->isHiddenInternal()) {
+            disable_painting |= PAINT_DISABLED;
         }
     }
 }

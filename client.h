@@ -167,7 +167,7 @@ public:
 
     /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
     bool isShown(bool shaded_is_shown) const override;
-    bool isHiddenInternal() const; // For compositing
+    bool isHiddenInternal() const override; // For compositing
 
     ShadeMode shadeMode() const override; // Prefer isShade()
     void setShade(ShadeMode mode) override;

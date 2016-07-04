@@ -98,6 +98,8 @@ void TestShellClient::testMapUnmapMap()
     auto client = clientAddedSpy.first().first().value<ShellClient*>();
     QVERIFY(client);
     QVERIFY(client->isShown(true));
+    QCOMPARE(client->isHiddenInternal(), false);
+    QCOMPARE(client->readyForPainting(), true);
     QCOMPARE(workspace()->activeClient(), client);
 
     // now unmap
@@ -108,6 +110,8 @@ void TestShellClient::testMapUnmapMap()
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
     QVERIFY(hiddenSpy.wait());
+    QCOMPARE(client->readyForPainting(), true);
+    QCOMPARE(client->isHiddenInternal(), true);
     QVERIFY(windowClosedSpy.isEmpty());
     QVERIFY(!workspace()->activeClient());
 

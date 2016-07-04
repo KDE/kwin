@@ -1312,7 +1312,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
             continue;
         }
         if (AbstractClient *c = dynamic_cast<AbstractClient*>(t)) {
-            if (!c->isOnCurrentActivity() || !c->isOnCurrentDesktop() || c->isMinimized() || !c->isCurrentTab()) {
+            if (!c->isOnCurrentActivity() || !c->isOnCurrentDesktop() || c->isMinimized() || !c->isCurrentTab() || c->isHiddenInternal()) {
                 continue;
             }
         }

@@ -339,7 +339,12 @@ void ShellClient::markAsMapped()
     }
 
     m_unmapped = false;
-    setReadyForPainting();
+    if (!ready_for_painting) {
+        setReadyForPainting();
+    } else {
+        addRepaintFull();
+        emit windowShown(this);
+    }
     if (shouldExposeToWindowManagement()) {
         setupWindowManagementInterface();
     }
@@ -868,7 +873,6 @@ void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
 void ShellClient::unmap()
 {
     m_unmapped = true;
-    ready_for_painting = false;
     destroyWindowManagementInterface();
     if (Workspace::self()) {
         addWorkspaceRepaint(visibleRect());

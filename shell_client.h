@@ -72,6 +72,9 @@ public:
     bool isMovableAcrossScreens() const override;
     bool isResizable() const override;
     bool isShown(bool shaded_is_shown) const override;
+    bool isHiddenInternal() const override {
+        return m_unmapped;
+    }
     void hideClient(bool hide) override;
     MaximizeMode maximizeMode() const override;
     QRect geometryRestore() const override {

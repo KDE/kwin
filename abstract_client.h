@@ -294,6 +294,7 @@ public:
     virtual bool isCloseable() const = 0;
     // TODO: remove boolean trap
     virtual bool isShown(bool shaded_is_shown) const = 0;
+    virtual bool isHiddenInternal() const = 0;
     // TODO: remove boolean trap
     virtual void hideClient(bool hide) = 0;
     virtual bool isFullScreenable() const = 0;
