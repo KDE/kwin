@@ -143,14 +143,17 @@ void SceneQPainterTest::testWindow()
     QScopedPointer<ShellSurface> ss(Test::createShellSurface(s.data()));
     QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
 
-    // now let's map the window
-    QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(200, 300), Qt::blue));
-    // which should trigger a frame
     auto scene = qobject_cast<SceneQPainter*>(KWin::Compositor::self()->scene());
     QVERIFY(scene);
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
     QVERIFY(frameRenderedSpy.isValid());
-    QVERIFY(frameRenderedSpy.wait());
+
+    // now let's map the window
+    QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(200, 300), Qt::blue));
+    // which should trigger a frame
+    if (frameRenderedSpy.isEmpty()) {
+        QVERIFY(frameRenderedSpy.wait());
+    }
     // we didn't set a cursor image on the surface yet, so it should be just black + window
     QImage referenceImage(QSize(1280, 1024), QImage::Format_RGB32);
     referenceImage.fill(Qt::black);
