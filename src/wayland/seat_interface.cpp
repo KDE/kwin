@@ -328,6 +328,7 @@ void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice, bo
                 keys.focus.selection->sendSelection(dataDevice);
             } else {
                 keys.focus.selection->sendClearSelection();
+                currentSelection = nullptr;
             }
         }
     }
@@ -859,6 +860,8 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
         if (d->keys.focus.selection) {
             if (d->currentSelection) {
                 d->keys.focus.selection->sendSelection(d->currentSelection);
+            } else {
+                d->keys.focus.selection->sendClearSelection();
             }
         }
     }

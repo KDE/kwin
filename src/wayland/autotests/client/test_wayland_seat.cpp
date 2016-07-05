@@ -1409,11 +1409,10 @@ void TestWaylandSeat::testSelection()
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
     QVERIFY(!m_seatInterface->focusedKeyboard());
-    serverSurface->client()->flush();
-    QCoreApplication::processEvents();
-    QCoreApplication::processEvents();
+    QVERIFY(selectionClearedSpy.wait());
     QVERIFY(selectionSpy.isEmpty());
-    QVERIFY(selectionClearedSpy.isEmpty());
+    QVERIFY(!selectionClearedSpy.isEmpty());
+    selectionClearedSpy.clear();
     QVERIFY(!m_seatInterface->selection());
 
     // now let's try to set a selection - we have keyboard focus, so it should be sent to us
@@ -1425,7 +1424,6 @@ void TestWaylandSeat::testSelection()
     QCOMPARE(selectionSpy.count(), 1);
     auto ddi = m_seatInterface->selection();
     QVERIFY(ddi);
-    QVERIFY(selectionClearedSpy.isEmpty());
     auto df = selectionSpy.first().first().value<DataOffer*>();
     QCOMPARE(df->offeredMimeTypes().count(), 1);
     QCOMPARE(df->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));

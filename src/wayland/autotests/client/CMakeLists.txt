@@ -319,3 +319,14 @@ add_executable(testError ${testError_SRCS})
 target_link_libraries( testError Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
 add_test(kwayland-testError testError)
 ecm_mark_as_test(testError)
+
+########################################################
+# Test Selection
+########################################################
+set( testSelection_SRCS
+        test_selection.cpp
+    )
+add_executable(testSelection ${testSelection_SRCS})
+target_link_libraries( testSelection Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
+add_test(kwayland-testSelection testSelection)
+ecm_mark_as_test(testSelection)
