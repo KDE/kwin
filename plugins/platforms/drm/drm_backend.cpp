@@ -237,6 +237,11 @@ void DrmBackend::openDrm()
     );
     m_drmId = device->sysNum();
     queryResources();
+    if (m_outputs.isEmpty()) {
+        qCWarning(KWIN_DRM) << "No outputs, cannot render, will terminate now";
+        emit initFailed();
+        return;
+    }
 
     // setup udevMonitor
     if (m_udevMonitor) {
@@ -315,7 +320,11 @@ void DrmBackend::queryResources()
             drmOutput->m_mode = connector->modes[0];
         }
         drmOutput->m_connector = connector->connector_id;
-        drmOutput->init(connector.data());
+        if (!drmOutput->init(connector.data())) {
+            qCWarning(KWIN_DRM) << "Failed to create output for connector " << connector->connector_id;
+            delete drmOutput;
+            continue;
+        }
         qCDebug(KWIN_DRM) << "Found new output with uuid" << drmOutput->uuid();
         connectedOutputs << drmOutput;
     }
@@ -339,7 +348,9 @@ void DrmBackend::queryResources()
     }
     m_outputs = connectedOutputs;
     readOutputsConfiguration();
-    emit screensQueried();
+    if (!m_outputs.isEmpty()) {
+        emit screensQueried();
+    }
 }
 
 void DrmBackend::readOutputsConfiguration()

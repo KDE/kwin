@@ -180,13 +180,15 @@ static DrmOutput::DpmsMode fromWaylandDpmsMode(KWayland::Server::OutputInterface
     }
 }
 
-void DrmOutput::init(drmModeConnector *connector)
+bool DrmOutput::init(drmModeConnector *connector)
 {
     initEdid(connector);
     initDpms(connector);
     initUuid();
     m_savedCrtc.reset(drmModeGetCrtc(m_backend->fd(), m_crtcId));
-    blank();
+    if (!blank()) {
+        return false;
+    }
     setDpms(DpmsMode::On);
     if (!m_waylandOutput.isNull()) {
         delete m_waylandOutput.data();
@@ -287,6 +289,7 @@ void DrmOutput::init(drmModeConnector *connector)
     m_waylandOutput->create();
     qCDebug(KWIN_DRM) << "Created OutputDevice";
     m_waylandOutputDevice->create();
+    return true;
 }
 
 void DrmOutput::initUuid()
@@ -318,14 +321,17 @@ bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
         && qstrcmp(mode->name, m_mode.name) == 0;
 }
 
-void DrmOutput::blank()
+bool DrmOutput::blank()
 {
     if (!m_blackBuffer) {
         m_blackBuffer = m_backend->createBuffer(size());
-        m_blackBuffer->map();
+        if (!m_blackBuffer->map()) {
+            cleanupBlackBuffer();
+            return false;
+        }
         m_blackBuffer->image()->fill(Qt::black);
     }
-    setMode(m_blackBuffer);
+    return setMode(m_blackBuffer);
 }
 
 bool DrmOutput::setMode(DrmBuffer *buffer)
