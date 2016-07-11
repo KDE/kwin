@@ -53,6 +53,8 @@ class Shell;
 class ShellSurface;
 class Surface;
 class Touch;
+class XdgShell;
+class XdgShellSurface;
 }
 }
 
@@ -132,6 +134,8 @@ Q_SIGNALS:
 private:
     void initConnection();
     void createSurface();
+    template <class T>
+    void setupSurface(T *surface);
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;
@@ -139,6 +143,8 @@ private:
     KWayland::Client::Shell *m_shell;
     KWayland::Client::Surface *m_surface;
     KWayland::Client::ShellSurface *m_shellSurface;
+    KWayland::Client::XdgShell *m_xdgShell = nullptr;
+    KWayland::Client::XdgShellSurface *m_xdgShellSurface = nullptr;
     QScopedPointer<WaylandSeat> m_seat;
     KWayland::Client::ShmPool *m_shm;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;

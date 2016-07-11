@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
+#include <KWayland/Client/xdgshell.h>
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
@@ -281,11 +282,17 @@ WaylandBackend::WaylandBackend(QObject *parent)
 
 WaylandBackend::~WaylandBackend()
 {
+    if (m_xdgShellSurface) {
+        m_xdgShellSurface->release();
+    }
     if (m_shellSurface) {
         m_shellSurface->release();
     }
     if (m_surface) {
         m_surface->release();
+    }
+    if (m_xdgShell) {
+        m_xdgShell->release();
     }
     m_shell->release();
     m_compositor->release();
@@ -361,6 +368,11 @@ void WaylandBackend::initConnection()
             emit systemCompositorDied();
             m_seat.reset();
             m_shm->destroy();
+            if (m_xdgShellSurface) {
+                m_xdgShellSurface->destroy();
+                delete m_xdgShellSurface;
+                m_xdgShellSurface = nullptr;
+            }
             if (m_shellSurface) {
                 m_shellSurface->destroy();
                 delete m_shellSurface;
@@ -373,6 +385,9 @@ void WaylandBackend::initConnection()
             }
             if (m_shell) {
                 m_shell->destroy();
+            }
+            if (m_xdgShell) {
+                m_xdgShell->destroy();
             }
             m_compositor->destroy();
             m_registry->destroy();
@@ -414,20 +429,40 @@ void WaylandBackend::createSurface()
     if (m_seat) {
         m_seat->setInstallCursor(true);
     }
+    // check for xdg shell
+    auto xdgIface = m_registry->interface(Registry::Interface::XdgShellUnstableV5);
+    if (xdgIface.name != 0) {
+        m_xdgShell = m_registry->createXdgShell(xdgIface.name, xdgIface.version, this);
+        if (m_xdgShell && m_xdgShell->isValid()) {
+            m_xdgShellSurface = m_xdgShell->createSurface(m_surface, this);
+            connect(m_xdgShellSurface, &XdgShellSurface::closeRequested, qApp, &QCoreApplication::quit);
+            setupSurface(m_xdgShellSurface);
+            return;
+        }
+    }
     if (m_shell->isValid()) {
         m_shellSurface = m_shell->createSurface(m_surface, this);
-        connect(m_shellSurface, &ShellSurface::sizeChanged, this, &WaylandBackend::shellSurfaceSizeChanged);
-        m_shellSurface->setSize(initialWindowSize());
+        setupSurface(m_shellSurface);
         m_shellSurface->setToplevel();
-        setReady(true);
-        emit screensQueried();
     }
+}
+
+template <class T>
+void WaylandBackend::setupSurface(T *surface)
+{
+    connect(surface, &T::sizeChanged, this, &WaylandBackend::shellSurfaceSizeChanged);
+    surface->setSize(initialWindowSize());
+    setReady(true);
+    emit screensQueried();
 }
 
 QSize WaylandBackend::shellSurfaceSize() const
 {
     if (m_shellSurface) {
         return m_shellSurface->size();
+    }
+    if (m_xdgShellSurface) {
+        return m_xdgShellSurface->size();
     }
     return QSize();
 }
