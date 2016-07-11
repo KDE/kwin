@@ -79,7 +79,7 @@ void FramebufferQPainterBackend::present(int mask, const QRegion &damage)
         return;
     }
     QPainter p(&m_backBuffer);
-    p.drawImage(QPoint(0, 0), m_renderBuffer);
+    p.drawImage(QPoint(0, 0), m_backend->isBGR() ? m_renderBuffer.rgbSwapped() : m_renderBuffer);
 }
 
 bool FramebufferQPainterBackend::usesOverlayWindow() const
