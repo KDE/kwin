@@ -135,7 +135,7 @@ void ApplicationWayland::createBackend()
     connect(platform(), &Platform::initFailed, this,
         [] () {
             std::cerr <<  "FATAL ERROR: backend failed to initialize, exiting now" << std::endl;
-            ::exit(1);
+            QCoreApplication::exit(1);
         }
     );
     platform()->init();
