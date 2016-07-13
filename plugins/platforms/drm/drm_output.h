@@ -61,9 +61,9 @@ public:
     void moveCursor(const QPoint &globalPos);
     bool present(DrmBuffer *buffer);
     void pageFlipped();
-    void init(drmModeConnector *connector);
+    bool init(drmModeConnector *connector);
     void restoreSaved();
-    void blank();
+    bool blank();
 
     /**
      * This sets the changes and tests them against the DRM output

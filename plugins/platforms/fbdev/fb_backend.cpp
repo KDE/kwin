@@ -92,6 +92,7 @@ void FramebufferBackend::openFrameBuffer()
     }
     m_fd = fd;
     queryScreenInfo();
+    initImageFormat();
     setReady(true);
     emit screensQueried();
 }
@@ -154,8 +155,13 @@ void FramebufferBackend::unmap()
 
 QImage::Format FramebufferBackend::imageFormat() const
 {
+    return m_imageFormat;
+}
+
+void FramebufferBackend::initImageFormat()
+{
     if (m_fd < 0) {
-        return QImage::Format_Invalid;
+        return;
     }
 
     qCDebug(KWIN_FB) << "Bits Per Pixel: " << m_bitsPerPixel;
@@ -178,7 +184,7 @@ QImage::Format FramebufferBackend::imageFormat() const
             m_green.offset == 8 &&
             m_red.offset == 16) {
         qCDebug(KWIN_FB) << "Framebuffer format is RGB32";
-        return QImage::Format_RGB32;
+        m_imageFormat = QImage::Format_RGB32;
     } else if (m_bitsPerPixel == 24 &&
             m_red.length == 8 &&
             m_green.length == 8 &&
@@ -187,7 +193,8 @@ QImage::Format FramebufferBackend::imageFormat() const
             m_green.offset == 8 &&
             m_red.offset == 16) {
         qCDebug(KWIN_FB) << "Framebuffer Format is RGB888";
-        return QImage::Format_RGB888;
+        m_bgr = true;
+        m_imageFormat = QImage::Format_RGB888;
     } else if (m_bitsPerPixel == 16 &&
             m_red.length == 5 &&
             m_green.length == 6 &&
@@ -196,10 +203,9 @@ QImage::Format FramebufferBackend::imageFormat() const
             m_green.offset == 5 &&
             m_red.offset == 11) {
         qCDebug(KWIN_FB) << "Framebuffer Format is RGB16";
-        return QImage::Format_RGB16;
+        m_imageFormat = QImage::Format_RGB16;
     }
     qCWarning(KWIN_FB) << "Framebuffer format is unknown";
-    return QImage::Format_Invalid;
 }
 
 }

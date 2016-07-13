@@ -71,10 +71,17 @@ public:
         return m_bitsPerPixel;
     }
     QImage::Format imageFormat() const;
+    /**
+     * @returns whether the imageFormat is BGR instead of RGB.
+     **/
+    bool isBGR() const {
+        return m_bgr;
+    }
 
 private:
     void openFrameBuffer();
     bool queryScreenInfo();
+    void initImageFormat();
     QSize m_resolution;
     QSize m_physicalSize;
     QByteArray m_id;
@@ -91,6 +98,8 @@ private:
     quint32 m_bufferLength = 0;
     int m_bytesPerLine = 0;
     void *m_memory = nullptr;
+    QImage::Format m_imageFormat = QImage::Format_Invalid;
+    bool m_bgr = false;
 };
 
 }

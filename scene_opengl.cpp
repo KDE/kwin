@@ -2280,7 +2280,7 @@ void SceneOpenGLShadow::buildQuads()
     const int width = qMax(topLeft.width(), bottomLeft.width()) +
                       qMax(top.width(), bottom.width()) +
                       qMax(topRight.width(), bottomRight.width());
-    const int height = qMax(topLeft.height(), bottomLeft.height()) +
+    const int height = qMax(topLeft.height(), topRight.height()) +
                        qMax(left.height(), right.height()) +
                        qMax(bottomLeft.height(), bottomRight.height());
 
@@ -2387,7 +2387,8 @@ bool SceneOpenGLShadow::prepareBackend()
     const int width = qMax(topLeft.width(), bottomLeft.width()) +
                       qMax(top.width(), bottom.width()) +
                       qMax(topRight.width(), bottomRight.width());
-    const int height = qMax(topLeft.height(), bottomLeft.height()) +
+
+    const int height = qMax(topRight.height(), topLeft.height()) +
                        qMax(left.height(), right.height()) +
                        qMax(bottomLeft.height(), bottomRight.height());
 
