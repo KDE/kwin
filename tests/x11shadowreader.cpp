@@ -19,6 +19,7 @@
 */
 #include "../xcbutils.h"
 #include <QApplication>
+#include <QDebug>
 #include <QCommandLineParser>
 #include <QLabel>
 #include <QFormLayout>
