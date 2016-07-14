@@ -947,6 +947,7 @@ void Client::internalShow()
     if (Compositor::isCreated()) {
         Compositor::self()->checkUnredirect();
     }
+    emit windowShown(this);
 }
 
 void Client::internalHide()
@@ -961,6 +962,7 @@ void Client::internalHide()
         updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
+    emit windowHidden(this);
     if (Compositor::isCreated()) {
         Compositor::self()->checkUnredirect();
     }

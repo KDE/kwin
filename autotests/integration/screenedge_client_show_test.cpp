@@ -136,18 +136,30 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QVERIFY(!client->hasStrut());
     QVERIFY(!client->isHiddenInternal());
 
+    QSignalSpy effectsWindowAdded(effects, &EffectsHandler::windowAdded);
+    QVERIFY(effectsWindowAdded.isValid());
+    QVERIFY(effectsWindowAdded.wait());
+
     // now try to hide
     QFETCH(quint32, location);
     xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atom, XCB_ATOM_CARDINAL, 32, 1, &location);
     xcb_flush(c.data());
 
-    // we don't have a signal yet, so QTRY_VERIFY it is
-    QTRY_VERIFY(client->isHiddenInternal());
+    QSignalSpy effectsWindowHiddenSpy(effects, &EffectsHandler::windowHidden);
+    QVERIFY(effectsWindowHiddenSpy.isValid());
+    QSignalSpy clientHiddenSpy(client, &Client::windowHidden);
+    QVERIFY(clientHiddenSpy.isValid());
+    QVERIFY(clientHiddenSpy.wait());
+    QVERIFY(client->isHiddenInternal());
+    QCOMPARE(effectsWindowHiddenSpy.count(), 1);
 
     // now trigger the edge
+    QSignalSpy effectsWindowShownSpy(effects, &EffectsHandler::windowShown);
+    QVERIFY(effectsWindowShownSpy.isValid());
     QFETCH(QPoint, triggerPos);
     Cursor::setPos(triggerPos);
     QVERIFY(!client->isHiddenInternal());
+    QCOMPARE(effectsWindowShownSpy.count(), 1);
 
     // destroy window again
     QSignalSpy windowClosedSpy(client, &Client::windowClosed);
