@@ -88,7 +88,7 @@ static QPointF surfacePosition(SurfaceInterface *surface) {
 
 void PointerInterface::Private::sendEnter(SurfaceInterface *surface, const QPointF &parentSurfacePosition, quint32 serial)
 {
-    if (!surface) {
+    if (!surface || !surface->resource()) {
         return;
     }
     const QPointF adjustedPos = parentSurfacePosition - surfacePosition(surface);
