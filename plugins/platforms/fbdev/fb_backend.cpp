@@ -88,11 +88,20 @@ void FramebufferBackend::openFrameBuffer()
     fd = open(deviceIdentifier().constData(), O_RDWR | O_CLOEXEC);
     if (fd < 0) {
         qCWarning(KWIN_FB) << "failed to open frame buffer device";
+        emit initFailed();
         return;
     }
     m_fd = fd;
-    queryScreenInfo();
+    if (!queryScreenInfo()) {
+        qCWarning(KWIN_FB) << "failed to query framebuffer information";
+        emit initFailed();
+        return;
+    }
     initImageFormat();
+    if (m_imageFormat == QImage::Format_Invalid) {
+        emit initFailed();
+        return;
+    }
     setReady(true);
     emit screensQueried();
 }
