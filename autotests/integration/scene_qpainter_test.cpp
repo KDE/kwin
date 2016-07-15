@@ -49,6 +49,8 @@ private Q_SLOTS:
     void testCursorMoving();
     void testWindow_data();
     void testWindow();
+    void testCompositorRestart_data();
+    void testCompositorRestart();
 };
 
 void SceneQPainterTest::cleanup()
@@ -185,6 +187,57 @@ void SceneQPainterTest::testWindow()
     QVERIFY(frameRenderedSpy.wait());
     painter.fillRect(0, 0, 200, 300, Qt::blue);
     painter.fillRect(5, 5, 10, 10, Qt::red);
+    QCOMPARE(referenceImage, *scene->backend()->buffer());
+}
+
+void SceneQPainterTest::testCompositorRestart_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
+void SceneQPainterTest::testCompositorRestart()
+{
+    // this test verifies that the compositor/SceneQPainter survive a restart of the compositor and still render correctly
+    KWin::Cursor::setPos(400, 400);
+
+    // first create a window
+    using namespace KWayland::Client;
+    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QScopedPointer<Surface> s(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> ss(Test::createShellSurface(type, s.data()));
+    QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(200, 300), Qt::blue));
+
+    // now let's try to reinitialize the compositing scene
+    auto oldScene = KWin::Compositor::self()->scene();
+    QVERIFY(oldScene);
+    QSignalSpy sceneCreatedSpy(KWin::Compositor::self(), &KWin::Compositor::sceneCreated);
+    QVERIFY(sceneCreatedSpy.isValid());
+    KWin::Compositor::self()->slotReinitialize();
+    if (sceneCreatedSpy.isEmpty()) {
+        QVERIFY(sceneCreatedSpy.wait());
+    }
+    QCOMPARE(sceneCreatedSpy.count(), 1);
+    auto scene = qobject_cast<SceneQPainter*>(KWin::Compositor::self()->scene());
+    QVERIFY(scene);
+
+    // this should directly trigger a frame
+    KWin::Compositor::self()->addRepaintFull();
+    QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
+    QVERIFY(frameRenderedSpy.isValid());
+    QVERIFY(frameRenderedSpy.wait());
+
+    // render reference image
+    QImage referenceImage(QSize(1280, 1024), QImage::Format_RGB32);
+    referenceImage.fill(Qt::black);
+    QPainter painter(&referenceImage);
+    painter.fillRect(0, 0, 200, 300, Qt::blue);
+    const QImage cursorImage = kwinApp()->platform()->softwareCursor();
+    QVERIFY(!cursorImage.isNull());
+    painter.drawImage(QPoint(400, 400) - kwinApp()->platform()->softwareCursorHotspot(), cursorImage);
     QCOMPARE(referenceImage, *scene->backend()->buffer());
 }
 

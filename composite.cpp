@@ -324,6 +324,13 @@ void Compositor::startupWithWorkspace()
         c->setupCompositing();
         c->getShadow();
     }
+    if (auto w = waylandServer()) {
+        const auto clients = w->clients();
+        for (auto c : clients) {
+            c->setupCompositing();
+            c->getShadow();
+        }
+    }
 
     emit compositingToggled(true);
 
