@@ -74,6 +74,7 @@ public:
     void unmap();
     void setState(org_kde_plasma_window_management_state flag, bool set);
     void setParentWindow(PlasmaWindowInterface *parent);
+    void setGeometry(const QRect &geometry);
     wl_resource *resourceForParent(PlasmaWindowInterface *parent, wl_resource *child) const;
 
     QVector<wl_resource*> resources;
@@ -84,6 +85,7 @@ public:
     bool unmapped = false;
     PlasmaWindowInterface *parentWindow = nullptr;
     QMetaObject::Connection parentWindowDestroyConnection;
+    QRect geometry;
 
 private:
     static void unbind(wl_resource *resource);
@@ -109,7 +111,7 @@ private:
     static const struct org_kde_plasma_window_interface s_interface;
 };
 
-const quint32 PlasmaWindowManagementInterface::Private::s_version = 5;
+const quint32 PlasmaWindowManagementInterface::Private::s_version = 6;
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_window_management_interface, s_version)
@@ -332,6 +334,10 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_
         org_kde_plasma_window_send_unmapped(resource);
     }
 
+    if (geometry.isValid() && wl_resource_get_version(resource) >= ORG_KDE_PLASMA_WINDOW_GEOMETRY_SINCE_VERSION) {
+        org_kde_plasma_window_send_geometry(resource, geometry.x(), geometry.y(), geometry.width(), geometry.height());
+    }
+
     if (wl_resource_get_version(resource) >= ORG_KDE_PLASMA_WINDOW_INITIAL_STATE_SINCE_VERSION) {
         org_kde_plasma_window_send_initial_state(resource);
     }
@@ -450,6 +456,24 @@ void PlasmaWindowInterface::Private::setParentWindow(PlasmaWindowInterface *wind
     }
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         org_kde_plasma_window_send_parent_window(*it, resourceForParent(window, *it));
+    }
+}
+
+void PlasmaWindowInterface::Private::setGeometry(const QRect &geo)
+{
+    if (geometry == geo) {
+        return;
+    }
+    geometry = geo;
+    if (!geometry.isValid()) {
+        return;
+    }
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+        auto resource = *it;
+        if (wl_resource_get_version(resource) < ORG_KDE_PLASMA_WINDOW_GEOMETRY_SINCE_VERSION) {
+            continue;
+        }
+        org_kde_plasma_window_send_geometry(resource, geometry.x(), geometry.y(), geometry.width(), geometry.height());
     }
 }
 
@@ -708,6 +732,11 @@ void PlasmaWindowInterface::setVirtualDesktopChangeable(bool set)
 void PlasmaWindowInterface::setParentWindow(PlasmaWindowInterface *parentWindow)
 {
     d->setParentWindow(parentWindow);
+}
+
+void PlasmaWindowInterface::setGeometry(const QRect &geometry)
+{
+    d->setGeometry(geometry);
 }
 
 }

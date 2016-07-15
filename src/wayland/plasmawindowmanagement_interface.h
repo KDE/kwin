@@ -147,6 +147,14 @@ public:
      **/
     void setParentWindow(PlasmaWindowInterface *parentWindow);
 
+    /**
+     * Sets the window @p geometry of this PlasmaWindow.
+     *
+     * @param geometry The geometry in absolute coordinates
+     * @since 5.25
+     **/
+    void setGeometry(const QRect &geometry);
+
 Q_SIGNALS:
     void closeRequested();
     /**

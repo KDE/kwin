@@ -65,6 +65,7 @@ private Q_SLOTS:
     void testRequestShowingDesktop_data();
     void testRequestShowingDesktop();
     void testParentWindow();
+    void testGeometry();
 
     void cleanup();
 
@@ -507,6 +508,39 @@ void TestWindowManagement::testParentWindow()
     m_windowInterface = nullptr;
     QVERIFY(parentWindowChangedSpy.wait());
     QVERIFY(transient->parentWindow().isNull());
+}
+
+void TestWindowManagement::testGeometry()
+{
+    using namespace KWayland::Client;
+    QVERIFY(m_window);
+    QCOMPARE(m_window->geometry(), QRect());
+    QSignalSpy windowGeometryChangedSpy(m_window, &PlasmaWindow::geometryChanged);
+    QVERIFY(windowGeometryChangedSpy.isValid());
+    m_windowInterface->setGeometry(QRect(20, -10, 30, 40));
+    QVERIFY(windowGeometryChangedSpy.wait());
+    QCOMPARE(m_window->geometry(), QRect(20, -10, 30, 40));
+    // setting an empty geometry should not be sent to the client
+    m_windowInterface->setGeometry(QRect());
+    QVERIFY(!windowGeometryChangedSpy.wait(10));
+    // setting to the geometry which the client still has should not trigger signal
+    m_windowInterface->setGeometry(QRect(20, -10, 30, 40));
+    QVERIFY(!windowGeometryChangedSpy.wait(10));
+    // setting another geometry should work, though
+    m_windowInterface->setGeometry(QRect(0, 0, 35, 45));
+    QVERIFY(windowGeometryChangedSpy.wait());
+    QCOMPARE(windowGeometryChangedSpy.count(), 2);
+    QCOMPARE(m_window->geometry(), QRect(0, 0, 35, 45));
+
+    // let's bind a second PlasmaWindowManagement to verify the initial setting
+    QScopedPointer<PlasmaWindowManagement> pm(m_registry->createPlasmaWindowManagement(m_registry->interface(Registry::Interface::PlasmaWindowManagement).name,
+                                                                                       m_registry->interface(Registry::Interface::PlasmaWindowManagement).version));
+    QVERIFY(!pm.isNull());
+    QSignalSpy windowAddedSpy(pm.data(), &PlasmaWindowManagement::windowCreated);
+    QVERIFY(windowAddedSpy.isValid());
+    QVERIFY(windowAddedSpy.wait());
+    auto window = pm->windows().first();
+    QCOMPARE(window->geometry(), QRect(0, 0, 35, 45));
 }
 
 QTEST_GUILESS_MAIN(TestWindowManagement)
