@@ -80,6 +80,11 @@ bool AbstractEglBackend::initEglAPI()
 {
     EGLint major, minor;
     if (eglInitialize(m_display, &major, &minor) == EGL_FALSE) {
+        qCWarning(KWIN_CORE) << "eglInitialize failed";
+        EGLint error = eglGetError();
+        if (error != EGL_SUCCESS) {
+            qCWarning(KWIN_CORE) << "Error during eglInitialize " << error;
+        }
         return false;
     }
     EGLint error = eglGetError();

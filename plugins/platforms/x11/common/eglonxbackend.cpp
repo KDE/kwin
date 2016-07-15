@@ -179,8 +179,10 @@ bool EglOnXBackend::initRenderingContext()
     setHavePlatformBase(havePlatformBase);
     if (havePlatformBase) {
         // Make sure that the X11 platform is supported
-        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11")))
+        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11"))) {
+            qCWarning(KWIN_CORE) << "EGL_EXT_platform_base is supported, but EGL_EXT_platform_x11 is not. Cannot create EGLDisplay on X11";
             return false;
+        }
 
         const int attribs[] = {
             EGL_PLATFORM_X11_SCREEN_EXT, m_x11ScreenNumber,
@@ -192,8 +194,10 @@ bool EglOnXBackend::initRenderingContext()
         dpy = eglGetDisplay(m_x11Display);
     }
 
-    if (dpy == EGL_NO_DISPLAY)
+    if (dpy == EGL_NO_DISPLAY) {
+        qCWarning(KWIN_CORE) << "Failed to get the EGLDisplay";
         return false;
+    }
     setEglDisplay(dpy);
     initEglAPI();
 
