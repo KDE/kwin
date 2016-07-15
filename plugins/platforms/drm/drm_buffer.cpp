@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // system
 #include <sys/mman.h>
+#include <errno.h>
 // drm
 #include <xf86drm.h>
 #if HAVE_GBM
@@ -44,13 +45,16 @@ DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
     createArgs.width = size.width();
     createArgs.height = size.height();
     if (drmIoctl(m_backend->fd(), DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
+        qCWarning(KWIN_DRM) << "DRM_IOCTL_MODE_CREATE_DUMB failed";
         return;
     }
     m_handle = createArgs.handle;
     m_bufferSize = createArgs.size;
     m_stride = createArgs.pitch;
-    drmModeAddFB(m_backend->fd(), size.width(), size.height(), 24, 32,
-                 m_stride, createArgs.handle, &m_bufferId);
+    if (drmModeAddFB(m_backend->fd(), size.width(), size.height(), 24, 32,
+                     m_stride, createArgs.handle, &m_bufferId) != 0) {
+        qCWarning(KWIN_DRM) << "drmModeAddFB failed with errno" << errno;
+    }
 }
 
 
