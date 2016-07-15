@@ -169,7 +169,6 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool useCompositing READ isUseCompositing WRITE setUseCompositing NOTIFY useCompositingChanged)
     Q_PROPERTY(bool compositingInitialized READ isCompositingInitialized WRITE setCompositingInitialized NOTIFY compositingInitializedChanged)
     Q_PROPERTY(int hiddenPreviews READ hiddenPreviews WRITE setHiddenPreviews NOTIFY hiddenPreviewsChanged)
-    Q_PROPERTY(bool unredirectFullscreen READ isUnredirectFullscreen WRITE setUnredirectFullscreen NOTIFY unredirectFullscreenChanged)
     /**
      * 0 = no, 1 = yes when transformed,
      * 2 = try trilinear when transformed; else 1,
@@ -551,7 +550,6 @@ public:
     HiddenPreviews hiddenPreviews() const {
         return m_hiddenPreviews;
     }
-    bool isUnredirectFullscreen() const;
     // OpenGL
     // 0 = no, 1 = yes when transformed,
     // 2 = try trilinear when transformed; else 1,
@@ -648,7 +646,6 @@ public:
     void setUseCompositing(bool useCompositing);
     void setCompositingInitialized(bool compositingInitialized);
     void setHiddenPreviews(int hiddenPreviews);
-    void setUnredirectFullscreen(bool unredirectFullscreen);
     void setGlSmoothScale(int glSmoothScale);
     void setXrenderSmoothScale(bool xrenderSmoothScale);
     void setMaxFpsInterval(qint64 maxFpsInterval);
@@ -735,9 +732,6 @@ public:
     }
     static HiddenPreviews defaultHiddenPreviews() {
         return HiddenPreviewsShown;
-    }
-    static bool defaultUnredirectFullscreen() {
-        return false;
     }
     static int defaultGlSmoothScale() {
         return 2;
@@ -843,7 +837,6 @@ Q_SIGNALS:
     void useCompositingChanged();
     void compositingInitializedChanged();
     void hiddenPreviewsChanged();
-    void unredirectFullscreenChanged();
     void glSmoothScaleChanged();
     void colorCorrectedChanged();
     void xrenderSmoothScaleChanged();
@@ -892,7 +885,6 @@ private:
     bool m_useCompositing;
     bool m_compositingInitialized;
     HiddenPreviews m_hiddenPreviews;
-    bool m_unredirectFullscreen;
     int m_glSmoothScale;
     bool m_colorCorrected;
     bool m_xrenderSmoothScale;

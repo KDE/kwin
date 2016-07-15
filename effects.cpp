@@ -681,7 +681,6 @@ void EffectsHandlerImpl::slotPaddingChanged(Toplevel* t, const QRect& old)
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)
 {
     fullscreen_effect = e;
-    m_compositor->checkUnredirect();
 }
 
 Effect* EffectsHandlerImpl::activeFullScreenEffect() const

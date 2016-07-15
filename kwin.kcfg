@@ -254,9 +254,6 @@
             <min>4</min>
             <max>6</max>
         </entry>
-        <entry name="UnredirectFullscreen" type="Bool">
-            <default>false</default>
-        </entry>
         <entry name="AnimationSpeed" type="Int">
             <default>3</default>
             <min>0</min>

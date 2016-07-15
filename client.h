@@ -391,7 +391,6 @@ private:
 
 protected:
     virtual void debug(QDebug& stream) const;
-    virtual bool shouldUnredirect() const;
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
     void doSetActive() override;

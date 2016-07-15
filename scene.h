@@ -275,7 +275,6 @@ public:
     void updateToplevel(Toplevel* c);
     // creates initial quad list for the window
     virtual WindowQuadList buildQuads(bool force = false) const;
-    void suspendUnredirect(bool suspend);
     void updateShadow(Shadow* shadow);
     const Shadow* shadow() const;
     Shadow* shadow();
@@ -532,12 +531,6 @@ inline
 void Scene::Window::updateToplevel(Toplevel* c)
 {
     toplevel = c;
-}
-
-inline
-void Scene::Window::suspendUnredirect(bool suspend)
-{
-    toplevel->suspendUnredirect(suspend);
 }
 
 inline

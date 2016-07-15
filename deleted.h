@@ -94,7 +94,6 @@ public:
     }
 protected:
     virtual void debug(QDebug& stream) const;
-    virtual bool shouldUnredirect() const;
 private Q_SLOTS:
     void mainClientClosed(KWin::Toplevel *client);
 private:

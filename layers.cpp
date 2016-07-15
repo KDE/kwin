@@ -722,9 +722,6 @@ ToplevelList Workspace::xStackingOrder() const
             x_stacking << c;
         }
     }
-    if (m_compositor) {
-        const_cast< Workspace* >(this)->m_compositor->checkUnredirect();
-    }
     return x_stacking;
 }
 

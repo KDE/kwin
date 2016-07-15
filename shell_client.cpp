@@ -322,12 +322,6 @@ Layer ShellClient::layerForDock() const
     return AbstractClient::layerForDock();
 }
 
-bool ShellClient::shouldUnredirect() const
-{
-    // TODO: unredirect for fullscreen
-    return false;
-}
-
 QRect ShellClient::transparentRect() const
 {
     // TODO: implement

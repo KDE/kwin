@@ -86,7 +86,6 @@ KWinCompositingSettings::KWinCompositingSettings(QWidget *parent, const QVariant
     m_form.scaleWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     m_form.tearingWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     m_form.windowThumbnailWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
-    m_form.unredirectInformation->setIcon(QIcon::fromTheme(QStringLiteral("dialog-information")));
 
     init();
 }
@@ -161,20 +160,6 @@ void KWinCompositingSettings::init()
                 m_form.windowThumbnailWarning->animatedShow();
             } else {
                 m_form.windowThumbnailWarning->animatedHide();
-            }
-        }
-    );
-
-    // unredirect fullscreen
-    m_form.unredirectFullscreen->setChecked(m_compositing->unredirectFullscreen());
-    connect(m_compositing, &Compositing::unredirectFullscreenChanged, m_form.unredirectFullscreen, &QCheckBox::setChecked);
-    connect(m_form.unredirectFullscreen, &QCheckBox::toggled, m_compositing, &Compositing::setUnredirectFullscreen);
-    connect(m_form.unredirectFullscreen, &QCheckBox::toggled,
-        [this](bool enabled) {
-            if (enabled) {
-                m_form.unredirectInformation->animatedShow();
-            } else {
-                m_form.unredirectInformation->animatedHide();
             }
         }
     );

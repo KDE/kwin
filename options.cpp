@@ -114,7 +114,6 @@ Options::Options(QObject *parent)
     , m_useCompositing(Options::defaultUseCompositing())
     , m_compositingInitialized(Options::defaultCompositingInitialized())
     , m_hiddenPreviews(Options::defaultHiddenPreviews())
-    , m_unredirectFullscreen(Options::defaultUnredirectFullscreen())
     , m_glSmoothScale(Options::defaultGlSmoothScale())
     , m_colorCorrected(Options::defaultColorCorrected())
     , m_xrenderSmoothScale(Options::defaultXrenderSmoothScale())
@@ -634,20 +633,6 @@ void Options::setHiddenPreviews(int hiddenPreviews)
     emit hiddenPreviewsChanged();
 }
 
-void Options::setUnredirectFullscreen(bool unredirectFullscreen)
-{
-    if (GLPlatform::instance()->driver() == Driver_Intel)
-        unredirectFullscreen = false; // bug #252817
-    if (m_unredirectFullscreen == unredirectFullscreen) {
-        return;
-    }
-    if (GLPlatform::instance()->driver() == Driver_Intel) { // write back the value
-        KConfigGroup(m_settings->config(), "Compositing").writeEntry("UnredirectFullscreen", false);
-    }
-    m_unredirectFullscreen = unredirectFullscreen;
-    emit unredirectFullscreenChanged();
-}
-
 void Options::setGlSmoothScale(int glSmoothScale)
 {
     if (m_glSmoothScale == glSmoothScale) {
@@ -1007,7 +992,6 @@ void Options::reloadCompositingSettings(bool force)
         previews = HiddenPreviewsAlways;
     setHiddenPreviews(previews);
 
-    setUnredirectFullscreen(config.readEntry("UnredirectFullscreen", Options::defaultUnredirectFullscreen()));
     // TOOD: add setter
     animationSpeed = qBound(0, config.readEntry("AnimationSpeed", Options::defaultAnimationSpeed()), 6);
 
@@ -1160,12 +1144,6 @@ QStringList Options::modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const
 bool Options::isUseCompositing() const
 {
     return m_useCompositing || kwinApp()->platform()->requiresCompositing();
-}
-
-
-bool Options::isUnredirectFullscreen() const
-{
-    return m_unredirectFullscreen && !kwinApp()->platform()->requiresCompositing();
 }
 
 } // namespace
