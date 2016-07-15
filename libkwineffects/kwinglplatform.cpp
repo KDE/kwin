@@ -843,13 +843,14 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     if (isSoftwareEmulation()) {
-        // we recommend XRender
-        m_recommendedCompositor = XRenderCompositing;
         if (m_driver < Driver_Llvmpipe) {
+            // we recommend XRender
+            m_recommendedCompositor = XRenderCompositing;
             // Software emulation does not provide GLSL
             m_limitedGLSL = m_supportsGLSL = false;
         } else {
             // llvmpipe does support GLSL
+            m_recommendedCompositor = OpenGL2Compositing;
             m_limitedGLSL = false;
             m_supportsGLSL = true;
         }
