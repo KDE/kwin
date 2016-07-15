@@ -115,8 +115,6 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
             w->addRepaintFull();
             if (w->isDeleted()) {
                 w->unrefWindow();
-            } else {
-                w->unreferencePreviousWindowPixmap();
             }
         }
     }
@@ -321,8 +319,6 @@ void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
     if (w->isOnCurrentDesktop() && !w->isMinimized() && mWindowsData.contains(w)) {
         if (w->isDeleted()) {
             w->refWindow();
-        } else {
-            w->referencePreviousWindowPixmap();
         }
         auto it = mAppearingWindows.find(w);
         if (it != mAppearingWindows.end()) {
