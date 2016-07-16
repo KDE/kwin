@@ -48,7 +48,7 @@ enum class LoadEffectFlag {
     Load = 1 << 0, ///< Effect should be loaded
     CheckDefaultFunction = 1 << 2 ///< The Check Default Function needs to be invoked if the Effect provides it
 };
-Q_DECLARE_FLAGS(LoadEffectFlags, LoadEffectFlag);
+Q_DECLARE_FLAGS(LoadEffectFlags, LoadEffectFlag)
 
 /**
  * @brief Interface to describe how an effect loader has to function.

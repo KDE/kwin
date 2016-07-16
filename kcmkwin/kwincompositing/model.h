@@ -154,9 +154,9 @@ class EffectFilterModel : public QSortFilterProxyModel
      * Default value is @c true.
      **/
     Q_PROPERTY(bool filterOutInternal MEMBER m_filterOutInternal NOTIFY filterOutInternalChanged)
-    Q_PROPERTY(QColor backgroundActiveColor READ backgroundActiveColor CONSTANT);
-    Q_PROPERTY(QColor backgroundNormalColor READ backgroundNormalColor CONSTANT);
-    Q_PROPERTY(QColor backgroundAlternateColor READ backgroundAlternateColor CONSTANT);
+    Q_PROPERTY(QColor backgroundActiveColor READ backgroundActiveColor CONSTANT)
+    Q_PROPERTY(QColor backgroundNormalColor READ backgroundNormalColor CONSTANT)
+    Q_PROPERTY(QColor backgroundAlternateColor READ backgroundAlternateColor CONSTANT)
     Q_PROPERTY(QColor sectionColor READ sectionColor CONSTANT)
 public:
     EffectFilterModel(QObject *parent = 0);

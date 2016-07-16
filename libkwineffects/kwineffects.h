@@ -58,7 +58,7 @@ class QMatrix4x4;
  * Logging category to be used inside the KWin effects.
  * Do not use in this library.
  **/
-Q_DECLARE_LOGGING_CATEGORY(KWINEFFECTS);
+Q_DECLARE_LOGGING_CATEGORY(KWINEFFECTS)
 
 namespace KWayland {
     namespace Server {

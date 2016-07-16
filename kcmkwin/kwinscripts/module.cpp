@@ -39,7 +39,7 @@
 
 #include "version.h"
 
-K_PLUGIN_FACTORY_DECLARATION(KcmKWinScriptsFactory);
+K_PLUGIN_FACTORY_DECLARATION(KcmKWinScriptsFactory)
 
 Module::Module(QWidget *parent, const QVariantList &args) :
     KCModule(parent, args),
