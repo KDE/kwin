@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "window.h"
 #include "../../shell_client.h"
 #include "../../wayland_server.h"
+#include <logging.h>
 
 #include <QOpenGLFramebufferObject>
 
@@ -149,6 +150,9 @@ void Window::createFBO()
 {
     const QRect &r = geometry();
     m_contentFBO.reset(new QOpenGLFramebufferObject(r.width(), r.height(), QOpenGLFramebufferObject::CombinedDepthStencil));
+    if (!m_contentFBO->isValid()) {
+        qCWarning(KWIN_QPA) << "Content FBO is not valid";
+    }
     m_resized = false;
 }
 

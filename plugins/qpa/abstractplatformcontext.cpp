@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstractplatformcontext.h"
 #include "integration.h"
+#include <logging.h>
 
 namespace KWin
 {
@@ -54,9 +55,11 @@ static EGLConfig configFromGLFormat(EGLDisplay dpy, const QSurfaceFormat &format
     EGLint count;
     EGLConfig configs[1024];
     if (eglChooseConfig(dpy, config_attribs, configs, 1, &count) == EGL_FALSE) {
+        qCWarning(KWIN_QPA) << "eglChooseConfig failed";
         return 0;
     }
     if (count != 1) {
+        qCWarning(KWIN_QPA) << "eglChooseConfig did not return any configs";
         return 0;
     }
     return configs[0];
@@ -135,6 +138,7 @@ bool AbstractPlatformContext::isValid() const
 bool AbstractPlatformContext::bindApi()
 {
     if (eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API) == EGL_FALSE) {
+        qCWarning(KWIN_QPA) << "eglBindAPI failed";
         return false;
     }
     return true;
@@ -211,6 +215,7 @@ void AbstractPlatformContext::createContext(EGLContext shareContext)
     }
 
     if (context == EGL_NO_CONTEXT) {
+        qCWarning(KWIN_QPA) << "Failed to create EGL context";
         return;
     }
     m_context = context;
