@@ -71,6 +71,10 @@ public:
      * The EGLContext used by the compositing scene.
      **/
     virtual EGLContext sceneEglContext() const;
+    /**
+     * The first (in case of multiple) EGLSurface used by the compositing scene.
+     **/
+    EGLSurface sceneEglSurface() const;
 
     /**
      * Implementing subclasses should provide a size in case the backend represents

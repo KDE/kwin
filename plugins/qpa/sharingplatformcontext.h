@@ -32,6 +32,7 @@ class SharingPlatformContext : public AbstractPlatformContext
 {
 public:
     explicit SharingPlatformContext(QOpenGLContext *context, Integration *integration);
+    explicit SharingPlatformContext(QOpenGLContext *context, Integration *integration, const EGLSurface &surface);
 
     void swapBuffers(QPlatformSurface *surface) override;
 
@@ -43,6 +44,8 @@ public:
 
 private:
     void create();
+
+    EGLSurface m_surface;
 };
 
 }
