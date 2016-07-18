@@ -9,6 +9,8 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FR
 
 include_directories(${KWIN_SOURCE_DIR}/effects)
 
+include(ECMMarkAsTest)
+
 ################# configure checks and create the configured files #################
 
 # now create config headers

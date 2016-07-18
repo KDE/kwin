@@ -1,5 +1,6 @@
 add_definitions(-DKWIN_UNIT_TEST)
 remove_definitions(-DQT_USE_QSTRINGBUILDER)
+add_subdirectory(libkwineffects)
 add_subdirectory(libxrenderutils)
 add_subdirectory(integration)
 if (HAVE_INPUT)

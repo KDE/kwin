@@ -125,5 +125,3 @@ install( FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinglutils_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinxrenderutils_export.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
-
-add_subdirectory(autotests)
