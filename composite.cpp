@@ -751,13 +751,8 @@ bool Compositor::windowRepaintsPending() const
     if (!c->repaints().isEmpty())
         return true;
     if (auto w = waylandServer()) {
-        const bool locked = waylandServer()->isScreenLocked();
         const auto &clients = w->clients();
         for (auto c : clients) {
-            if (locked && !c->isLockScreen() && !c->isInputMethod()) {
-                // ignore not visible windows while locked
-                continue;
-            }
             if (c->readyForPainting() && !c->repaints().isEmpty()) {
                 return true;
             }
