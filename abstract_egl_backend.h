@@ -39,17 +39,17 @@ public:
     EGLContext context() const {
         return m_context;
     }
-
-    static void unbindWaylandDisplay();
-
-protected:
-    AbstractEglBackend();
     EGLSurface surface() const {
         return m_surface;
     }
     EGLConfig config() const {
         return m_config;
     }
+
+    static void unbindWaylandDisplay();
+
+protected:
+    AbstractEglBackend();
     void setEglDisplay(const EGLDisplay &display);
     void setSurface(const EGLSurface &surface) {
         m_surface = surface;

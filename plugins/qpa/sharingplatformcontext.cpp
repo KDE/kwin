@@ -34,7 +34,13 @@ namespace QPA
 {
 
 SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, Integration *integration)
-    : AbstractPlatformContext(context, integration, kwinApp()->platform()->sceneEglDisplay())
+    : SharingPlatformContext(context, integration, EGL_NO_SURFACE)
+{
+}
+
+SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, Integration *integration, const EGLSurface &surface, EGLConfig config)
+    : AbstractPlatformContext(context, integration, kwinApp()->platform()->sceneEglDisplay(), config)
+    , m_surface(surface)
 {
     create();
 }
@@ -42,7 +48,7 @@ SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, Integrat
 bool SharingPlatformContext::makeCurrent(QPlatformSurface *surface)
 {
     Window *window = static_cast<Window*>(surface);
-    if (eglMakeCurrent(eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, context())) {
+    if (eglMakeCurrent(eglDisplay(), m_surface, m_surface, context())) {
         window->bindContentFBO();
         return true;
     }

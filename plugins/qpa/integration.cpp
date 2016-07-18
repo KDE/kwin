@@ -180,6 +180,13 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
     if (kwinApp()->platform()->supportsQpaContext()) {
         return new SharingPlatformContext(context, const_cast<Integration*>(this));
     }
+    if (kwinApp()->platform()->sceneEglDisplay() != EGL_NO_DISPLAY) {
+        auto s = kwinApp()->platform()->sceneEglSurface();
+        if (s != EGL_NO_SURFACE) {
+            // try a SharingPlatformContext with a created surface
+            return new SharingPlatformContext(context, const_cast<Integration*>(this), s, kwinApp()->platform()->sceneEglConfig());
+        }
+    }
     if (m_eglDisplay == EGL_NO_DISPLAY) {
         const_cast<Integration*>(this)->initEgl();
     }
