@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "options.h"
 #include "overlaywindow.h"
+#include "platform.h"
 #include "screens.h"
 #include "xcbutils.h"
 // kwin libs
@@ -171,27 +172,29 @@ void EglOnXBackend::init()
 bool EglOnXBackend::initRenderingContext()
 {
     initClientExtensions();
-    EGLDisplay dpy;
+    EGLDisplay dpy = kwinApp()->platform()->sceneEglDisplay();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    const bool havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
-    setHavePlatformBase(havePlatformBase);
-    if (havePlatformBase) {
-        // Make sure that the X11 platform is supported
-        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11"))) {
-            qCWarning(KWIN_CORE) << "EGL_EXT_platform_base is supported, but EGL_EXT_platform_x11 is not. Cannot create EGLDisplay on X11";
-            return false;
+    if (display == EGL_NO_DISPLAY) {
+        const bool havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
+        setHavePlatformBase(havePlatformBase);
+        if (havePlatformBase) {
+            // Make sure that the X11 platform is supported
+            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11"))) {
+                qCWarning(KWIN_CORE) << "EGL_EXT_platform_base is supported, but EGL_EXT_platform_x11 is not. Cannot create EGLDisplay on X11";
+                return false;
+            }
+
+            const int attribs[] = {
+                EGL_PLATFORM_X11_SCREEN_EXT, m_x11ScreenNumber,
+                EGL_NONE
+            };
+
+            dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_x11Display, attribs);
+        } else {
+            dpy = eglGetDisplay(m_x11Display);
         }
-
-        const int attribs[] = {
-            EGL_PLATFORM_X11_SCREEN_EXT, m_x11ScreenNumber,
-            EGL_NONE
-        };
-
-        dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_x11Display, attribs);
-    } else {
-        dpy = eglGetDisplay(m_x11Display);
     }
 
     if (dpy == EGL_NO_DISPLAY) {

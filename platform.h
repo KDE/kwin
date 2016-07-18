@@ -65,7 +65,8 @@ public:
     /**
      * The EGLDisplay used by the compositing scene.
      **/
-    virtual EGLDisplay sceneEglDisplay() const;
+    EGLDisplay sceneEglDisplay() const;
+    void setSceneEglDisplay(EGLDisplay display);
     /**
      * The EGLContext used by the compositing scene.
      **/
@@ -231,6 +232,7 @@ private:
     bool m_pointerWarping = false;
     bool m_outputsEnabled = true;
     int m_initialOutputCount = 1;
+    EGLDisplay m_eglDisplay;
 };
 
 }

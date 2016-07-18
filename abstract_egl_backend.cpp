@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_egl_backend.h"
 #include "options.h"
+#include "platform.h"
 #include "wayland_server.h"
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/display.h>
@@ -56,16 +57,20 @@ AbstractEglBackend::AbstractEglBackend()
 
 AbstractEglBackend::~AbstractEglBackend() = default;
 
+void AbstractEglBackend::unbindWaylandDisplay()
+{
+    auto display = kwinApp()->platform()->sceneEglDisplay();
+    if (eglUnbindWaylandDisplayWL && display != EGL_NO_DISPLAY) {
+        eglUnbindWaylandDisplayWL(display, *(WaylandServer::self()->display()));
+    }
+}
+
 void AbstractEglBackend::cleanup()
 {
-    if (eglUnbindWaylandDisplayWL && eglDisplay() != EGL_NO_DISPLAY) {
-        eglUnbindWaylandDisplayWL(eglDisplay(), *(WaylandServer::self()->display()));
-    }
     cleanupGL();
     doneCurrent();
     eglDestroyContext(m_display, m_context);
     cleanupSurfaces();
-    eglTerminate(m_display);
     eglReleaseThread();
 }
 
@@ -137,11 +142,14 @@ void AbstractEglBackend::initWayland()
         eglBindWaylandDisplayWL = (eglBindWaylandDisplayWL_func)eglGetProcAddress("eglBindWaylandDisplayWL");
         eglUnbindWaylandDisplayWL = (eglUnbindWaylandDisplayWL_func)eglGetProcAddress("eglUnbindWaylandDisplayWL");
         eglQueryWaylandBufferWL = (eglQueryWaylandBufferWL_func)eglGetProcAddress("eglQueryWaylandBufferWL");
-        if (!eglBindWaylandDisplayWL(eglDisplay(), *(WaylandServer::self()->display()))) {
-            eglUnbindWaylandDisplayWL = nullptr;
-            eglQueryWaylandBufferWL = nullptr;
-        } else {
-            waylandServer()->display()->setEglDisplay(eglDisplay());
+        // only bind if not already done
+        if (waylandServer()->display()->eglDisplay() != eglDisplay()) {
+            if (!eglBindWaylandDisplayWL(eglDisplay(), *(WaylandServer::self()->display()))) {
+                eglUnbindWaylandDisplayWL = nullptr;
+                eglQueryWaylandBufferWL = nullptr;
+            } else {
+                waylandServer()->display()->setEglDisplay(eglDisplay());
+            }
         }
     }
 }
@@ -261,6 +269,11 @@ bool AbstractEglBackend::createContext()
     }
     m_context = ctx;
     return true;
+}
+
+void AbstractEglBackend::setEglDisplay(const EGLDisplay &display) {
+    m_display = display;
+    kwinApp()->platform()->setSceneEglDisplay(display);
 }
 
 AbstractEglTexture::AbstractEglTexture(SceneOpenGL::Texture *texture, AbstractEglBackend *backend)

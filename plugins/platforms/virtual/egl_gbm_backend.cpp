@@ -53,17 +53,19 @@ EglGbmBackend::~EglGbmBackend()
 bool EglGbmBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = EGL_NO_DISPLAY;
+    EGLDisplay display = m_backend->sceneEglDisplay();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) ||
-            !hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"))) {
-        setFailed("EGL_EXT_platform_base and/or EGL_MESA_platform_gbm missing");
-        return false;
-    }
+    if (display == EGL_NO_DISPLAY) {
+        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) ||
+                !hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"))) {
+            setFailed("EGL_EXT_platform_base and/or EGL_MESA_platform_gbm missing");
+            return false;
+        }
 
-    display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, EGL_DEFAULT_DISPLAY, nullptr);
+        display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, EGL_DEFAULT_DISPLAY, nullptr);
+    }
 
     if (display == EGL_NO_DISPLAY)
         return false;
