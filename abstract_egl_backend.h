@@ -40,6 +40,8 @@ public:
         return m_context;
     }
 
+    static void unbindWaylandDisplay();
+
 protected:
     AbstractEglBackend();
     EGLSurface surface() const {
@@ -48,9 +50,7 @@ protected:
     EGLConfig config() const {
         return m_config;
     }
-    void setEglDisplay(const EGLDisplay &display) {
-        m_display = display;
-    }
+    void setEglDisplay(const EGLDisplay &display);
     void setSurface(const EGLSurface &surface) {
         m_surface = surface;
     }

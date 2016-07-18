@@ -70,19 +70,21 @@ EglWaylandBackend::~EglWaylandBackend()
 bool EglWaylandBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = EGL_NO_DISPLAY;
+    EGLDisplay display = m_wayland->sceneEglDisplay();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    m_havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
-    if (m_havePlatformBase) {
-        // Make sure that the wayland platform is supported
-        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_wayland")))
-            return false;
+    if (display == EGL_NO_DISPLAY) {
+        m_havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
+        if (m_havePlatformBase) {
+            // Make sure that the wayland platform is supported
+            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_wayland")))
+                return false;
 
-        display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_wayland->display(), nullptr);
-    } else {
-        display = eglGetDisplay(m_wayland->display());
+            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_wayland->display(), nullptr);
+        } else {
+            display = eglGetDisplay(m_wayland->display());
+        }
     }
 
     if (display == EGL_NO_DISPLAY)
