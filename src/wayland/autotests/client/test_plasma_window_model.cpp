@@ -76,6 +76,7 @@ private Q_SLOTS:
     void testIsResizable();
     void testIsVirtualDesktopChangeable();
     void testIsCloseable();
+    void testGeometry();
     void testTitle();
     void testAppId();
     void testVirtualDesktop();
@@ -238,6 +239,7 @@ void PlasmaWindowModelTest::testRoleNames_data()
     QTest::newRow("IsResizable")          << int(PlasmaWindowModel::IsResizable) << QByteArrayLiteral("IsResizable");
     QTest::newRow("IsVirtualDesktopChangeable") << int(PlasmaWindowModel::IsVirtualDesktopChangeable) << QByteArrayLiteral("IsVirtualDesktopChangeable");
     QTest::newRow("IsCloseable")          << int(PlasmaWindowModel::IsCloseable) << QByteArrayLiteral("IsCloseable");
+    QTest::newRow("Geometry")          << int(PlasmaWindowModel::Geometry) << QByteArrayLiteral("Geometry");
 }
 
 void PlasmaWindowModelTest::testRoleNames()
@@ -328,7 +330,8 @@ void PlasmaWindowModelTest::testDefaultData_data()
     QTest::newRow("IsMovable")            << int(PlasmaWindowModel::IsMovable) << QVariant(false);
     QTest::newRow("IsResizable")          << int(PlasmaWindowModel::IsResizable) << QVariant(false);
     QTest::newRow("IsVirtualDesktopChangeable") << int(PlasmaWindowModel::IsVirtualDesktopChangeable) << QVariant(false);
-    QTest::newRow("IsCloseable")           << int(PlasmaWindowModel::IsCloseable) << QVariant(false);
+    QTest::newRow("IsCloseable")          << int(PlasmaWindowModel::IsCloseable) << QVariant(false);
+    QTest::newRow("Geometry")             << int(PlasmaWindowModel::Geometry) << QVariant(QRect());
 }
 
 void PlasmaWindowModelTest::testDefaultData()
@@ -436,6 +439,36 @@ void PlasmaWindowModelTest::testIsVirtualDesktopChangeable()
 void PlasmaWindowModelTest::testIsCloseable()
 {
     QVERIFY(testBooleanData(PlasmaWindowModel::IsCloseable, &PlasmaWindowInterface::setCloseable));
+}
+
+void PlasmaWindowModelTest::testGeometry()
+{
+    auto model = m_pw->createWindowModel();
+    QVERIFY(model);
+
+    QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
+    QVERIFY(rowInsertedSpy.isValid());
+
+    auto w = m_pwInterface->createWindow(m_pwInterface);
+    QVERIFY(w);
+    QVERIFY(rowInsertedSpy.wait());
+
+    const QModelIndex index = model->index(0);
+
+    QCOMPARE(model->data(index, PlasmaWindowModel::Geometry).toRect(), QRect());
+
+    QSignalSpy dataChangedSpy(model, &PlasmaWindowModel::dataChanged);
+    QVERIFY(dataChangedSpy.isValid());
+
+    const QRect geom(0, 15, 50, 75);
+    w->setGeometry(geom);
+
+    QVERIFY(dataChangedSpy.wait());
+    QCOMPARE(dataChangedSpy.count(), 1);
+    QCOMPARE(dataChangedSpy.last().first().toModelIndex(), index);
+    QCOMPARE(dataChangedSpy.last().last().value<QVector<int>>(), QVector<int>{int(PlasmaWindowModel::Geometry)});
+
+    QCOMPARE(model->data(index, PlasmaWindowModel::Geometry).toRect(), geom);
 }
 
 void PlasmaWindowModelTest::testTitle()
