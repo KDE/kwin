@@ -47,6 +47,10 @@ bool SharingPlatformContext::makeCurrent(QPlatformSurface *surface)
         return true;
     }
     qCWarning(KWIN_QPA) << "Failed to make context current";
+    EGLint error = eglGetError();
+    if (error != EGL_SUCCESS) {
+        qCWarning(KWIN_QPA) << "EGL error code: " << error;
+    }
 
     return false;
 }
