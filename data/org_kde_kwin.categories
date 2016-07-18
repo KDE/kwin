@@ -15,3 +15,4 @@ kwin_decorations KWin Decorations
 kwin_scripting KWin Scripting
 aurorae KWin Aurorae Window Decoration Engine
 kwin_xkbcommon KWin xkbcommon integration
+kwin_qpa_plugin KWin QtPlatformAbstraction plugin

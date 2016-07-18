@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../platform.h"
 #include "../../wayland_server.h"
 #include "../../shell_client.h"
+#include <logging.h>
 
 #include <QOpenGLFramebufferObject>
 
@@ -45,6 +46,8 @@ bool SharingPlatformContext::makeCurrent(QPlatformSurface *surface)
         window->bindContentFBO();
         return true;
     }
+    qCWarning(KWIN_QPA) << "Failed to make context current";
+
     return false;
 }
 
@@ -58,6 +61,7 @@ void SharingPlatformContext::swapBuffers(QPlatformSurface *surface)
     Window *window = static_cast<Window*>(surface);
     auto c = window->shellClient();
     if (!c) {
+        qCDebug(KWIN_QPA) << "SwapBuffers called but there is no ShellClient";
         return;
     }
     makeCurrent(surface);
@@ -74,15 +78,18 @@ GLuint SharingPlatformContext::defaultFramebufferObject(QPlatformSurface *surfac
             return fbo->handle();
         }
     }
+    qCDebug(KWIN_QPA) << "No default framebuffer object for internal window";
     return 0;
 }
 
 void SharingPlatformContext::create()
 {
     if (config() == 0) {
+        qCWarning(KWIN_QPA) << "Did not get an EGL config";
         return;
     }
     if (!bindApi()) {
+        qCWarning(KWIN_QPA) << "Could not bind API.";
         return;
     }
     createContext(kwinApp()->platform()->sceneEglContext());

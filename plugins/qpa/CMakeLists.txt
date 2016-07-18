@@ -15,6 +15,9 @@ set(QPA_SOURCES
     window.cpp
 )
 
+include(ECMQtDeclareLoggingCategory)
+ecm_qt_declare_logging_category(QPA_SOURCES HEADER logging.h IDENTIFIER KWIN_QPA CATEGORY_NAME kwin_qpa_plugin DEFAULT_SEVERITY Critical)
+
 add_library(KWinQpaPlugin MODULE ${QPA_SOURCES})
 target_link_libraries(KWinQpaPlugin
     kwin
