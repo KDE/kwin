@@ -391,7 +391,7 @@ static void initLayer(hwc_layer_1_t *layer, const hwc_rect_t &rect)
 }
 
 HwcomposerWindow::HwcomposerWindow(HwcomposerBackend *backend)
-    : HWComposerNativeWindow(backend->size().width(), backend->size().height(), HAL_PIXEL_FORMAT_RGB_888)
+    : HWComposerNativeWindow(backend->size().width(), backend->size().height(), HAL_PIXEL_FORMAT_RGBA_8888)
     , m_backend(backend)
 {
     setBufferCount(3);
