@@ -284,6 +284,16 @@ EGLSurface Platform::sceneEglSurface() const
     return EGL_NO_SURFACE;
 }
 
+EGLConfig Platform::sceneEglConfig() const
+{
+    if (Compositor *c = Compositor::self()) {
+        if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
+            return static_cast<AbstractEglBackend*>(s->backend())->config();
+        }
+    }
+    return nullptr;
+}
+
 QSize Platform::screenSize() const
 {
     return QSize();

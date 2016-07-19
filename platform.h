@@ -77,6 +77,11 @@ public:
     EGLSurface sceneEglSurface() const;
 
     /**
+     * The EglConfig used by the compositing scene.
+     **/
+    EGLConfig sceneEglConfig() const;
+
+    /**
      * Implementing subclasses should provide a size in case the backend represents
      * a basic screen and uses the BasicScreens.
      *

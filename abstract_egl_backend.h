@@ -42,14 +42,14 @@ public:
     EGLSurface surface() const {
         return m_surface;
     }
+    EGLConfig config() const {
+        return m_config;
+    }
 
     static void unbindWaylandDisplay();
 
 protected:
     AbstractEglBackend();
-    EGLConfig config() const {
-        return m_config;
-    }
     void setEglDisplay(const EGLDisplay &display);
     void setSurface(const EGLSurface &surface) {
         m_surface = surface;

@@ -38,8 +38,8 @@ SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, Integrat
 {
 }
 
-SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, Integration *integration, const EGLSurface &surface)
-    : AbstractPlatformContext(context, integration, kwinApp()->platform()->sceneEglDisplay())
+SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, Integration *integration, const EGLSurface &surface, EGLConfig config)
+    : AbstractPlatformContext(context, integration, kwinApp()->platform()->sceneEglDisplay(), config)
     , m_surface(surface)
 {
     create();
