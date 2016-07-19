@@ -23,10 +23,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "virtual_backend.h"
 #include "options.h"
 #include "screens.h"
+#if HAVE_UDEV
+#include "udev.h"
+#endif
+#include <logging.h>
 // kwin libs
 #include <kwinglplatform.h>
 // Qt
 #include <QOpenGLContext>
+// system
+#include <fcntl.h>
+#include <unistd.h>
+#if HAVE_GBM
+#include <gbm.h>
+#endif
 
 namespace KWin
 {
@@ -48,6 +58,47 @@ EglGbmBackend::~EglGbmBackend()
     delete m_fbo;
     delete m_backBuffer;
     cleanup();
+#if HAVE_GBM
+    if (m_device) {
+        gbm_device_destroy(m_device);
+    }
+#endif
+    if (m_drmFd != -1) {
+        close(m_drmFd);
+    }
+}
+
+void EglGbmBackend::initGbmDevice()
+{
+#if HAVE_UDEV
+    if (m_drmFd != -1) {
+        // already initialized
+        return;
+    }
+    QScopedPointer<Udev> udev(new Udev);
+    UdevDevice::Ptr device = udev->renderNode();
+    if (!device) {
+        // if we don't have a render node, try to find a virtual (vgem) device
+        qCDebug(KWIN_VIRTUAL) << "No render node, looking for a vgem device";
+        device = udev->virtualGpu();
+    }
+    if (!device) {
+        qCDebug(KWIN_VIRTUAL) << "Neither a render node, nor a vgem device found";
+        return;
+    }
+    qCDebug(KWIN_VIRTUAL) << "Found a device: " << device->devNode();
+    m_drmFd = open(device->devNode(), O_RDWR | O_CLOEXEC);
+    if (m_drmFd == -1) {
+        qCWarning(KWIN_VIRTUAL) << "Failed to open: " << device->devNode();
+        return;
+    }
+#if HAVE_GBM
+    m_device = gbm_create_device(m_drmFd);
+    if (!m_device) {
+        qCWarning(KWIN_VIRTUAL) << "Failed to open gbm device";
+    }
+#endif
+#endif
 }
 
 bool EglGbmBackend::initializeEgl()
@@ -64,7 +115,17 @@ bool EglGbmBackend::initializeEgl()
             return false;
         }
 
-        display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, EGL_DEFAULT_DISPLAY, nullptr);
+#if HAVE_GBM
+        initGbmDevice();
+        if (m_device) {
+            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, m_device, nullptr);
+        }
+#endif
+
+        if (display == EGL_NO_DISPLAY) {
+            qCWarning(KWIN_VIRTUAL) << "Failed to create EGLDisplay through GBM device, trying with default device";
+            display = eglGetPlatformDisplay(EGL_PLATFORM_GBM_MESA, EGL_DEFAULT_DISPLAY, nullptr);
+        }
     }
 
     if (display == EGL_NO_DISPLAY)

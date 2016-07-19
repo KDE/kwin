@@ -21,6 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_EGL_GBM_BACKEND_H
 #include "abstract_egl_backend.h"
 #include "scene_opengl.h"
+#include <config-kwin.h>
+
+#if HAVE_GBM
+struct gbm_device;
+#endif
 
 namespace KWin
 {
@@ -51,10 +56,15 @@ private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
+    void initGbmDevice();
     VirtualBackend *m_backend;
     GLTexture *m_backBuffer = nullptr;
     GLRenderTarget *m_fbo = nullptr;
     int m_frameCounter = 0;
+#if HAVE_GBM
+    gbm_device *m_device = nullptr;
+#endif
+    int m_drmFd = -1;
     friend class EglGbmTexture;
 };
 

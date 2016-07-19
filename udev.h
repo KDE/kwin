@@ -83,6 +83,8 @@ public:
         return m_udev != nullptr;
     }
     UdevDevice::Ptr primaryGpu();
+    UdevDevice::Ptr virtualGpu();
+    UdevDevice::Ptr renderNode();
     UdevDevice::Ptr deviceFromSyspath(const char *syspath);
     UdevMonitor *monitor();
     operator udev*() const {

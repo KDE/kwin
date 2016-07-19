@@ -148,6 +148,36 @@ UdevDevice::Ptr Udev::primaryGpu()
     });
 }
 
+UdevDevice::Ptr Udev::virtualGpu()
+{
+    if (!m_udev) {
+        return UdevDevice::Ptr();
+    }
+    UdevEnumerate enumerate(this);
+    enumerate.addMatch(UdevEnumerate::Match::SubSystem, "drm");
+    enumerate.addMatch(UdevEnumerate::Match::SysName, "card[0-9]*");
+    enumerate.scan();
+    return enumerate.find([](const UdevDevice::Ptr &device) {
+        const QByteArray deviceName(udev_device_get_syspath(*device));
+        return deviceName.contains("virtual");
+    });
+}
+
+UdevDevice::Ptr Udev::renderNode()
+{
+    if (!m_udev) {
+        return UdevDevice::Ptr();
+    }
+    UdevEnumerate enumerate(this);
+    enumerate.addMatch(UdevEnumerate::Match::SubSystem, "drm");
+    enumerate.addMatch(UdevEnumerate::Match::SysName, "renderD[0-9]*");
+    enumerate.scan();
+    return enumerate.find([](const UdevDevice::Ptr &device) {
+        Q_UNUSED(device)
+        return true;
+    });
+}
+
 UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)
 {
     return std::move(UdevDevice::Ptr(new UdevDevice(udev_device_new_from_syspath(m_udev, syspath))));
