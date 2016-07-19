@@ -83,7 +83,6 @@ KWinCompositingSettings::KWinCompositingSettings(QWidget *parent, const QVariant
     connect(reenableGLAction, &QAction::triggered, m_compositing, &KWin::Compositing::Compositing::reenableOpenGLDetection);
     connect(reenableGLAction, &QAction::triggered, m_form.glCrashedWarning, &KMessageWidget::animatedHide);
     m_form.glCrashedWarning->addAction(reenableGLAction);
-    m_form.interfaceWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     m_form.scaleWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     m_form.tearingWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     m_form.windowThumbnailWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
@@ -166,22 +165,6 @@ void KWinCompositingSettings::init()
         }
     );
 
-    // openglPlatformInterface
-    m_form.openGLPlatformInterface->setModel(m_compositing->openGLPlatformInterfaceModel());
-    m_form.openGLPlatformInterface->setCurrentIndex(m_compositing->openGLPlatformInterface());
-    connect(m_compositing, &Compositing::openGLPlatformInterfaceChanged, m_form.openGLPlatformInterface, &QComboBox::setCurrentIndex);
-    connect(m_form.openGLPlatformInterface, currentIndexChangedSignal, m_compositing, &Compositing::setOpenGLPlatformInterface);
-    connect(m_form.openGLPlatformInterface, currentIndexChangedSignal,
-        [this]() {
-            if (m_form.openGLPlatformInterface->count() > 1 // only if egl and glx are supported
-                    && m_form.openGLPlatformInterface->currentData().toString() == QStringLiteral("egl")) {
-                m_form.interfaceWarning->animatedShow();
-            } else {
-                m_form.interfaceWarning->animatedHide();
-            }
-        }
-    );
-
     // unredirect fullscreen
     m_form.unredirectFullscreen->setChecked(m_compositing->unredirectFullscreen());
     connect(m_compositing, &Compositing::unredirectFullscreenChanged, m_form.unredirectFullscreen, &QCheckBox::setChecked);
@@ -219,8 +202,6 @@ void KWinCompositingSettings::init()
         m_form.glScaleFilterLabel->setVisible(currentType != CompositingType::XRENDER_INDEX);
         m_form.xrScaleFilter->setVisible(currentType == CompositingType::XRENDER_INDEX);
         m_form.xrScaleFilterLabel->setVisible(currentType == CompositingType::XRENDER_INDEX);
-        m_form.openGLPlatformInterface->setVisible(currentType != CompositingType::XRENDER_INDEX);
-        m_form.openGLPlatformInterfaceLabel->setVisible(currentType != CompositingType::XRENDER_INDEX);
         m_form.colorCorrection->setEnabled(currentType == CompositingType::OPENGL31_INDEX || currentType == CompositingType::OPENGL20_INDEX);
     };
     showHideBasedOnType();

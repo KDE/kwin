@@ -6,14 +6,99 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>402</width>
-    <height>335</height>
+    <width>481</width>
+    <height>415</height>
    </rect>
   </property>
   <layout class="QFormLayout" name="formLayout">
    <property name="fieldGrowthPolicy">
     <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
    </property>
+   <item row="0" column="0" colspan="2">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="KMessageWidget" name="glCrashedWarning">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>OpenGL compositing (the default) has crashed KWin in the past.
+This was most likely due to a driver bug.
+If you think that you have meanwhile upgraded to a stable driver,
+you can reset this protection but be aware that this might result in an immediate crash!
+Alternatively, you might want to use the XRender backend instead.</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="messageType">
+        <enum>KMessageWidget::Warning</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KMessageWidget" name="scaleWarning">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Scale method &quot;Accurate&quot; is not supported by all hardware and can cause performance regressions and rendering artifacts.</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="messageType">
+        <enum>KMessageWidget::Warning</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KMessageWidget" name="tearingWarning">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="messageType">
+        <enum>KMessageWidget::Warning</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KMessageWidget" name="windowThumbnailWarning">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Keeping the window thumbnail always interferes with the minimized state of windows. This can result in windows not suspending their work when minimized.</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="messageType">
+        <enum>KMessageWidget::Warning</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KMessageWidget" name="unredirectInformation">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Having full screen windows bypass the compositor is not supported on every hardware.</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="messageType">
+        <enum>KMessageWidget::Information</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
    <item row="1" column="0" colspan="2">
     <widget class="QCheckBox" name="compositingEnabled">
      <property name="text">
@@ -143,24 +228,21 @@
    <item row="7" column="1">
     <widget class="QComboBox" name="type"/>
    </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="openGLPlatformInterfaceLabel">
-     <property name="text">
-      <string>OpenGL interface:</string>
+   <item row="8" column="0" colspan="2">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
-    <widget class="QComboBox" name="openGLPlatformInterface"/>
-   </item>
-   <item row="10" column="0">
+   <item row="9" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>Tearing prevention (&quot;vsync&quot;):</string>
      </property>
     </widget>
    </item>
-   <item row="10" column="1">
+   <item row="9" column="1">
     <widget class="QComboBox" name="tearingPrevention">
      <item>
       <property name="text">
@@ -189,14 +271,14 @@
      </item>
     </widget>
    </item>
-   <item row="11" column="0">
+   <item row="10" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
       <string>Keep window thumbnails:</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
+   <item row="10" column="1">
     <widget class="QComboBox" name="windowThumbnail">
      <item>
       <property name="text">
@@ -215,141 +297,33 @@
      </item>
     </widget>
    </item>
-   <item row="13" column="0">
+   <item row="12" column="0">
     <widget class="QLabel" name="label_8">
      <property name="text">
       <string>Expert:</string>
      </property>
     </widget>
    </item>
-   <item row="13" column="1">
+   <item row="12" column="1">
     <widget class="QCheckBox" name="unredirectFullscreen">
      <property name="text">
       <string>Suspend compositor for full screen windows</string>
      </property>
     </widget>
    </item>
-   <item row="14" column="0">
+   <item row="13" column="0">
     <widget class="QLabel" name="label_9">
      <property name="text">
       <string>Experimental:</string>
      </property>
     </widget>
    </item>
-   <item row="14" column="1">
+   <item row="13" column="1">
     <widget class="QCheckBox" name="colorCorrection">
      <property name="text">
       <string>Enable color correction</string>
      </property>
     </widget>
-   </item>
-   <item row="9" column="0" colspan="2">
-    <widget class="Line" name="line_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <layout class="QVBoxLayout" name="verticalLayout_4">
-     <item>
-      <widget class="KMessageWidget" name="glCrashedWarning">
-       <property name="text">
-           <string>OpenGL compositing (the default) has crashed KWin in the past.
-This was most likely due to a driver bug.
-If you think that you have meanwhile upgraded to a stable driver,
-you can reset this protection but be aware that this might result in an immediate crash!
-Alternatively, you might want to use the XRender backend instead.</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-       <property name="visible">
-        <bool>false</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Warning</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="KMessageWidget" name="interfaceWarning">
-       <property name="text">
-        <string>EGL is not supported by all OpenGL drivers. If not supported the Compositor will be disabled.</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-       <property name="visible">
-        <bool>false</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Warning</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="KMessageWidget" name="scaleWarning">
-       <property name="text">
-        <string>Scale method &quot;Accurate&quot; is not supported by all hardware and can cause performance regressions and rendering artifacts.</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-       <property name="visible">
-        <bool>false</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Warning</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="KMessageWidget" name="tearingWarning">
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-       <property name="visible">
-        <bool>false</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Warning</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="KMessageWidget" name="windowThumbnailWarning">
-       <property name="text">
-        <string>Keeping the window thumbnail always interferes with the minimized state of windows. This can result in windows not suspending their work when minimized.</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-       <property name="visible">
-        <bool>false</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Warning</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="KMessageWidget" name="unredirectInformation">
-       <property name="text">
-        <string>Having full screen windows bypass the compositor is not supported on every hardware.</string>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-       <property name="visible">
-        <bool>false</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Information</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>
@@ -357,7 +331,7 @@ Alternatively, you might want to use the XRender backend instead.</string>
   <customwidget>
    <class>KMessageWidget</class>
    <extends>QFrame</extends>
-   <header location="global">kmessagewidget.h</header>
+   <header>kmessagewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
