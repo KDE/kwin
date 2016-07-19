@@ -50,6 +50,7 @@ static EGLConfig configFromGLFormat(EGLDisplay dpy, const QSurfaceFormat &format
         EGL_RENDERABLE_TYPE,      isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
         EGL_NONE,
     };
+    qCDebug(KWIN_QPA) << "Trying to find a format with: rgba/depth/stencil" << (SIZE(red)) << (SIZE(green)) <<( SIZE(blue)) << (SIZE(alpha)) << (SIZE(depth)) << (SIZE(stencil));
 #undef SIZE
 
     EGLint count;
