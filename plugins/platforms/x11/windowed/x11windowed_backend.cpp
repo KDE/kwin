@@ -303,8 +303,26 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
     }
     if (event->type == m_protocols && m_protocols != XCB_ATOM_NONE) {
         if (event->data.data32[0] == m_deleteWindowProtocol && m_deleteWindowProtocol != XCB_ATOM_NONE) {
-            qCDebug(KWIN_X11WINDOWED) << "Backend window is going to be closed, shutting down.";
-            QCoreApplication::quit();
+            if (m_windows.count() == 1) {
+                qCDebug(KWIN_X11WINDOWED) << "Backend window is going to be closed, shutting down.";
+                QCoreApplication::quit();
+            } else {
+                // remove the window
+                qCDebug(KWIN_X11WINDOWED) << "Removing one output window.";
+                auto o = *it;
+                it = m_windows.erase(it);
+                xcb_unmap_window(m_connection, o.window);
+                xcb_destroy_window(m_connection, o.window);
+                delete o.winInfo;
+
+                // update the sizes
+                int x = o.internalPosition.x();
+                for (; it != m_windows.end(); ++it) {
+                    (*it).internalPosition.setX(x);
+                    x += (*it).size.width();
+                }
+                QMetaObject::invokeMethod(screens(), "updateCount");
+            }
         }
     }
 }
