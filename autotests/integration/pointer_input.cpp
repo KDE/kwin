@@ -244,8 +244,9 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QSignalSpy screensChangedSpy(screens(), &Screens::changed);
     QVERIFY(screensChangedSpy.isValid());
     // now let's remove the screen containing the cursor
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 1));
-    QMetaObject::invokeMethod(kwinApp()->platform(), "sizeChanged", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(kwinApp()->platform(), "outputGeometriesChanged",
+                              Qt::DirectConnection,
+                              Q_ARG(QVector<QRect>, QVector<QRect>{QRect(0, 0, 1280, 1024)}));
     QVERIFY(screensChangedSpy.wait());
     QCOMPARE(screens()->count(), 1);
 
