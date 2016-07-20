@@ -371,6 +371,7 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
     if (s != (*it).size) {
         (*it).size = s;
         int x = (*it).internalPosition.x() + s.width();
+        it++;
         for (; it != m_windows.end(); ++it) {
             (*it).internalPosition.setX(x);
             x += (*it).size.width();
