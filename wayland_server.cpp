@@ -330,6 +330,22 @@ void WaylandServer::initOutputs()
     if (kwinApp()->platform()->handlesOutputs()) {
         return;
     }
+    syncOutputsToWayland();
+    connect(screens(), &Screens::changed, this,
+        [this] {
+            // when screens change we need to sync this to Wayland.
+            // Unfortunately we don't have much information and cannot properly match a KWin screen
+            // to a Wayland screen.
+            // Thus we just recreate all outputs and delete the old ones
+            const auto outputs = m_display->outputs();
+            syncOutputsToWayland();
+            qDeleteAll(outputs);
+        }
+    );
+}
+
+void WaylandServer::syncOutputsToWayland()
+{
     Screens *s = screens();
     Q_ASSERT(s);
     for (int i = 0; i < s->count(); ++i) {
