@@ -176,7 +176,7 @@ bool EglOnXBackend::initRenderingContext()
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    if (display == EGL_NO_DISPLAY) {
+    if (dpy == EGL_NO_DISPLAY) {
         const bool havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
         setHavePlatformBase(havePlatformBase);
         if (havePlatformBase) {
