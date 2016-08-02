@@ -321,7 +321,7 @@ private:
 /**
   * The heart of KWin::Scripting. Infinite power lies beyond
   */
-class Scripting : public QObject
+class KWIN_EXPORT Scripting : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")

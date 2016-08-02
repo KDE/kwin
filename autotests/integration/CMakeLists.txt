@@ -47,3 +47,5 @@ if (XCB_ICCCM_FOUND)
     integrationTest(NAME testPlasmaWindow SRCS plasmawindow_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testScreenEdgeClientShow SRCS screenedge_client_show_test.cpp LIBS XCB::ICCCM)
 endif()
+
+add_subdirectory(scripting)

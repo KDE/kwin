@@ -1,0 +1,1 @@
+integrationTest(NAME testScriptingScreenEdge SRCS screenedge_test.cpp)
