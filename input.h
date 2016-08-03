@@ -164,6 +164,8 @@ public:
         return m_touch;
     }
 
+    bool hasAlphaNumericKeyboard();
+
 Q_SIGNALS:
     /**
      * @brief Emitted when the global pointer position changed
@@ -202,6 +204,8 @@ Q_SIGNALS:
      * @param oldMods The new key state
      */
     void keyStateChanged(quint32 keyCode, InputRedirection::KeyboardKeyState state);
+
+    void hasAlphaNumericKeyboardChanged(bool set);
 
 private:
     void setupLibInput();

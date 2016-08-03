@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "virtualkeyboard.h"
+#include "input.h"
 #include "utils.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -78,10 +79,10 @@ void VirtualKeyboard::init()
     m_inputWindow->setProperty("__kwin_input_method", true);
 
     if (waylandServer()) {
-        m_enabled = !waylandServer()->seat()->hasKeyboard();
-        connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::hasKeyboardChanged, this,
-            [this] {
-                setEnabled(!waylandServer()->seat()->hasKeyboard());
+        m_enabled = !input()->hasAlphaNumericKeyboard();
+        connect(input(), &InputRedirection::hasAlphaNumericKeyboardChanged, this,
+            [this] (bool set) {
+                setEnabled(!set);
             }
         );
     }

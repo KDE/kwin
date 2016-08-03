@@ -1157,15 +1157,17 @@ void InputRedirection::setupLibInput()
             connect(kwinApp(), &Application::screensCreated, this, &InputRedirection::setupLibInputWithScreens);
         }
         if (auto s = findSeat()) {
-            s->setHasKeyboard(conn->hasAlphaNumericKeyboard());
+            // Workaround for QTBUG-54371: if there is no real keyboard Qt doesn't request virtual keyboard
+            s->setHasKeyboard(true);
             s->setHasPointer(conn->hasPointer());
             s->setHasTouch(conn->hasTouch());
             connect(conn, &LibInput::Connection::hasAlphaNumericKeyboardChanged, this,
-                [this, s] (bool set) {
+                [this] (bool set) {
                     if (m_libInput->isSuspended()) {
                         return;
                     }
-                    s->setHasKeyboard(set);
+                    // TODO: this should update the seat, only workaround for QTBUG-54371
+                    emit hasAlphaNumericKeyboardChanged(set);
                 }
             );
             connect(conn, &LibInput::Connection::hasPointerChanged, this,
@@ -1194,6 +1196,16 @@ void InputRedirection::setupLibInput()
         );
     }
 #endif
+}
+
+bool InputRedirection::hasAlphaNumericKeyboard()
+{
+#if HAVE_INPUT
+    if (m_libInput) {
+        return m_libInput->hasAlphaNumericKeyboard();
+    }
+#endif
+    return true;
 }
 
 void InputRedirection::setupLibInputWithScreens()
