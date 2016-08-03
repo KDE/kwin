@@ -30,31 +30,34 @@ if (Qt5Concurrent_FOUND)
     ecm_mark_as_test(pasteClient)
 endif()
 
-add_executable(touchClientTest touchclienttest.cpp)
-target_link_libraries(touchClientTest KF5::WaylandClient)
+if (HAVE_LINUX_INPUT_H)
+    add_executable(touchClientTest touchclienttest.cpp)
+    target_link_libraries(touchClientTest KF5::WaylandClient)
 
 
-add_executable(panelTest paneltest.cpp)
-target_link_libraries(panelTest KF5::WaylandClient)
-ecm_mark_as_test(panelTest)
+    add_executable(panelTest paneltest.cpp)
+    target_link_libraries(panelTest KF5::WaylandClient)
+    ecm_mark_as_test(panelTest)
+
+    add_executable(qtwayland-integration-test qtwaylandintegrationtest.cpp)
+    target_link_libraries(qtwayland-integration-test Qt5::Core Qt5::Gui KF5::WaylandClient)
+    ecm_mark_as_test(qtwayland-integration-test)
+
+    add_executable(subsurface-test subsurfacetest.cpp)
+    target_link_libraries(subsurface-test Qt5::Core Qt5::Gui KF5::WaylandClient)
+    ecm_mark_as_test(subsurface-test)
+endif()
 
 add_executable(shadowTest shadowtest.cpp)
 target_link_libraries(shadowTest KF5::WaylandClient)
 ecm_mark_as_test(shadowTest)
 
-add_executable(qtwayland-integration-test qtwaylandintegrationtest.cpp)
-target_link_libraries(qtwayland-integration-test Qt5::Core Qt5::Gui KF5::WaylandClient)
-ecm_mark_as_test(qtwayland-integration-test)
 
 if (Qt5Widgets_FOUND)
     add_executable(dpmsTest dpmstest.cpp)
     target_link_libraries(dpmsTest KF5::WaylandClient Qt5::Widgets)
     ecm_mark_as_test(dpmsTest)
 endif()
-
-add_executable(subsurface-test subsurfacetest.cpp)
-target_link_libraries(subsurface-test Qt5::Core Qt5::Gui KF5::WaylandClient)
-ecm_mark_as_test(subsurface-test)
 
 add_executable(plasmasurface-test plasmasurfacetest.cpp)
 target_link_libraries(plasmasurface-test Qt5::Gui KF5::WaylandClient)

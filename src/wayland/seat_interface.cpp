@@ -33,7 +33,10 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #define WL_SEAT_NAME_SINCE_VERSION 2
 #endif
 // linux
+#include <config-kwayland.h>
+#if HAVE_LINUX_INPUT_H
 #include <linux/input.h>
+#endif
 
 namespace KWayland
 {
@@ -682,6 +685,7 @@ QMatrix4x4 SeatInterface::focusedPointerSurfaceTransformation() const
 namespace {
 static quint32 qtToWaylandButton(Qt::MouseButton button)
 {
+#if HAVE_LINUX_INPUT_H
     static const QHash<Qt::MouseButton, quint32> s_buttons({
         {Qt::LeftButton, BTN_LEFT},
         {Qt::RightButton, BTN_RIGHT},
@@ -702,6 +706,9 @@ static quint32 qtToWaylandButton(Qt::MouseButton button)
         // further mapping not possible, 0x120 is BTN_JOYSTICK
     });
     return s_buttons.value(button, 0);
+#else
+    return 0;
+#endif
 }
 }
 
@@ -1075,6 +1082,7 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
     if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
         d->touchInterface.focus.touch->down(id, serial, globalPosition - d->touchInterface.focus.offset);
     } else if (id == 0 && focusedTouchSurface()) {
+#if HAVE_LINUX_INPUT_H
         auto p = d->pointerForSurface(focusedTouchSurface());
         if (!p) {
             return id;
@@ -1087,6 +1095,7 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
                                 wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
 
         wl_pointer_send_button(p->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_PRESSED);
+#endif
     }
 
     d->touchInterface.ids << id;
@@ -1117,6 +1126,7 @@ void SeatInterface::touchUp(qint32 id)
     if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
         d->touchInterface.focus.touch->up(id, display()->nextSerial());
     } else if (id == 0 && focusedTouchSurface()) {
+#if HAVE_LINUX_INPUT_H
         const quint32 serial = display()->nextSerial();
         auto p = d->pointerForSurface(focusedTouchSurface());
         if (!p) {
@@ -1124,6 +1134,7 @@ void SeatInterface::touchUp(qint32 id)
         }
 
         wl_pointer_send_button(p->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_RELEASED);
+#endif
     }
     d->touchInterface.ids.removeAll(id);
 }
