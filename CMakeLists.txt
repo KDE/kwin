@@ -182,6 +182,13 @@ if (UDEV_FOUND)
     set(HAVE_UDEV TRUE)
 endif()
 
+set(HAVE_LIBINPUT_1_2 FALSE)
+if (Libinput_FOUND)
+    if (NOT (Libinput_VERSION VERSION_LESS "1.2"))
+        set(HAVE_LIBINPUT_1_2 TRUE)
+    endif()
+endif()
+
 find_package(Libdrm)
 set_package_properties(Libdrm PROPERTIES TYPE OPTIONAL PURPOSE "Required for drm output on Wayland.")
 set(HAVE_DRM FALSE)

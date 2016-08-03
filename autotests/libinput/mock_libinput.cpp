@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include <libinput.h>
 #include "mock_libinput.h"
+#include <config-kwin.h>
 
 #include <linux/input.h>
 
@@ -38,6 +39,10 @@ int libinput_device_has_capability(struct libinput_device *device, enum libinput
         return device->touch;
     case LIBINPUT_DEVICE_CAP_GESTURE:
         return device->gestureSupported;
+#if HAVE_LIBINPUT_1_2
+    case LIBINPUT_DEVICE_CAP_TABLET_TOOL:
+        return device->tabletTool;
+#endif
     default:
         return 0;
     }

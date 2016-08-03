@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "mock_libinput.h"
 #include "../../libinput/device.h"
+#include <config-kwin.h>
 
 #include <QtTest/QtTest>
 
@@ -115,14 +116,16 @@ void TestLibinputDevice::testDeviceType_data()
     QTest::addColumn<bool>("keyboard");
     QTest::addColumn<bool>("pointer");
     QTest::addColumn<bool>("touch");
+    QTest::addColumn<bool>("tabletTool");
 
-    QTest::newRow("keyboard") << true << false << false;
-    QTest::newRow("pointer") << false << true << false;
-    QTest::newRow("touch") << false << false << true;
-    QTest::newRow("keyboard/pointer") << true << true << false;
-    QTest::newRow("keyboard/touch") << true << false << true;
-    QTest::newRow("pointer/touch") << false << true << true;
-    QTest::newRow("keyboard/pointer/touch") << true << true << true;
+    QTest::newRow("keyboard") << true << false << false << false;
+    QTest::newRow("pointer") << false << true << false << false;
+    QTest::newRow("touch") << false << false << true << false;
+    QTest::newRow("keyboard/pointer") << true << true << false << false;
+    QTest::newRow("keyboard/touch") << true << false << true << false;
+    QTest::newRow("pointer/touch") << false << true << true << false;
+    QTest::newRow("keyboard/pointer/touch") << true << true << true << false;
+    QTest::newRow("tabletTool") << false << false << false << true;
 }
 
 void TestLibinputDevice::testDeviceType()
@@ -131,11 +134,13 @@ void TestLibinputDevice::testDeviceType()
     QFETCH(bool, keyboard);
     QFETCH(bool, pointer);
     QFETCH(bool, touch);
+    QFETCH(bool, tabletTool);
 
     libinput_device device;
     device.keyboard = keyboard;
     device.pointer = pointer;
     device.touch = touch;
+    device.tabletTool = tabletTool;
 
     Device d(&device);
     QCOMPARE(d.isKeyboard(), keyboard);
@@ -146,8 +151,13 @@ void TestLibinputDevice::testDeviceType()
     QCOMPARE(d.property("touch").toBool(), touch);
     QCOMPARE(d.isTabletPad(), false);
     QCOMPARE(d.property("tabletPad").toBool(), false);
+#if HAVE_LIBINPUT_1_2
+    QCOMPARE(d.isTabletTool(), tabletTool);
+    QCOMPARE(d.property("tabletTool").toBool(), tabletTool);
+#else
     QCOMPARE(d.isTabletTool(), false);
     QCOMPARE(d.property("tabletTool").toBool(), false);
+#endif
 
     QCOMPARE(d.device(), &device);
 }

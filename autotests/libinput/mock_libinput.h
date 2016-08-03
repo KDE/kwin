@@ -30,6 +30,7 @@ struct libinput_device {
     bool keyboard = false;
     bool pointer = false;
     bool touch = false;
+    bool tabletTool = false;
     bool gestureSupported = false;
     QByteArray name;
     QByteArray sysName;
