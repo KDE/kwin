@@ -602,6 +602,7 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 {
     Q_ASSERT(dynamic_cast<Client*>(t));
     Client *c = static_cast<Client*>(t);
+    disconnect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
     setupClientConnections(c);
     if (!c->tabGroup()) // the "window" has already been there
         emit windowAdded(c->effectWindow());

@@ -49,3 +49,4 @@ if (XCB_ICCCM_FOUND)
 endif()
 
 add_subdirectory(scripting)
+add_subdirectory(effects)
