@@ -92,7 +92,7 @@ void X11WindowedBackend::init()
         }
         XRenderUtils::init(m_connection, m_screen->root);
         createWindow();
-        startEventReading();
+        connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
         connect(this, &X11WindowedBackend::cursorChanged, this,
             [this] {
                 createCursor(softwareCursor(), softwareCursorHotspot());
