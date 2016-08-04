@@ -159,6 +159,7 @@ void PointerInputTest::testWarpingUpdatesFocus()
     Cursor::setPos(QPoint(25, 25));
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
+    QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(25, 25));
     // window should have focus
     QCOMPARE(pointer->enteredSurface(), surface);
     // also on the server
@@ -201,15 +202,12 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     // enter
     kwinApp()->platform()->pointerMotion(QPointF(25, 25), 1);
     QVERIFY(enteredSpy.wait());
-    // we get a move event together with the enter, that's actually wrong but also shouldn't harm
-    QVERIFY(movedSpy.wait());
-    QCOMPARE(movedSpy.count(), 1);
-    QCOMPARE(movedSpy.first().first().toPointF(), QPointF(25, 25));
+    QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(25, 25));
 
     // now warp
     Cursor::setPos(QPoint(26, 26));
     QVERIFY(movedSpy.wait());
-    QCOMPARE(movedSpy.count(), 2);
+    QCOMPARE(movedSpy.count(), 1);
     QCOMPARE(movedSpy.last().first().toPointF(), QPointF(26, 26));
 }
 

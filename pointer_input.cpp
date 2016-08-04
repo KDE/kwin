@@ -281,6 +281,9 @@ void PointerInputRedirection::update()
     }
     if (t && t->surface()) {
         m_window = QPointer<Toplevel>(t);
+        // TODO: add convenient API to update global pos together with updating focused surface
+        seat->setFocusedPointerSurface(nullptr);
+        seat->setPointerPos(m_pos.toPoint());
         seat->setFocusedPointerSurface(t->surface(), t->inputTransformation());
         m_windowGeometryConnection = connect(t, &Toplevel::geometryChanged, this,
             [this] {
