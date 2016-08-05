@@ -369,6 +369,44 @@ void Connection::processEvents()
                 emit touchFrame(event->device());
                 break;
             }
+            case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN: {
+                PinchGestureEvent *pe = static_cast<PinchGestureEvent*>(event.data());
+                emit pinchGestureBegin(pe->fingerCount(), pe->time(), pe->device());
+                break;
+            }
+            case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE: {
+                PinchGestureEvent *pe = static_cast<PinchGestureEvent*>(event.data());
+                emit pinchGestureUpdate(pe->scale(), pe->angleDelta(), pe->delta(), pe->time(), pe->device());
+                break;
+            }
+            case LIBINPUT_EVENT_GESTURE_PINCH_END: {
+                PinchGestureEvent *pe = static_cast<PinchGestureEvent*>(event.data());
+                if (pe->isCancelled()) {
+                    emit pinchGestureCancelled(pe->time(), pe->device());
+                } else {
+                    emit pinchGestureEnd(pe->time(), pe->device());
+                }
+                break;
+            }
+            case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN: {
+                SwipeGestureEvent *se = static_cast<SwipeGestureEvent*>(event.data());
+                emit swipeGestureBegin(se->fingerCount(), se->time(), se->device());
+                break;
+            }
+            case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE: {
+                SwipeGestureEvent *se = static_cast<SwipeGestureEvent*>(event.data());
+                emit swipeGestureUpdate(se->delta(), se->time(), se->device());
+                break;
+            }
+            case LIBINPUT_EVENT_GESTURE_SWIPE_END: {
+                SwipeGestureEvent *se = static_cast<SwipeGestureEvent*>(event.data());
+                if (se->isCancelled()) {
+                    emit swipeGestureCancelled(se->time(), se->device());
+                } else {
+                    emit swipeGestureEnd(se->time(), se->device());
+                }
+                break;
+            }
             default:
                 // nothing
                 break;

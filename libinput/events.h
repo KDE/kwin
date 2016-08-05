@@ -129,6 +129,47 @@ private:
     libinput_event_touch *m_touchEvent;
 };
 
+class GestureEvent : public Event
+{
+public:
+    virtual ~GestureEvent();
+
+    quint32 time() const;
+    int fingerCount() const;
+
+    QSizeF delta() const;
+
+    bool isCancelled() const;
+
+    operator libinput_event_gesture*() {
+        return m_gestureEvent;
+    }
+    operator libinput_event_gesture*() const {
+        return m_gestureEvent;
+    }
+
+protected:
+    GestureEvent(libinput_event *event, libinput_event_type type);
+    libinput_event_gesture *m_gestureEvent;
+};
+
+class PinchGestureEvent : public GestureEvent
+{
+public:
+    PinchGestureEvent(libinput_event *event, libinput_event_type type);
+    virtual ~PinchGestureEvent();
+
+    qreal scale() const;
+    qreal angleDelta() const;
+};
+
+class SwipeGestureEvent : public GestureEvent
+{
+public:
+    SwipeGestureEvent(libinput_event *event, libinput_event_type type);
+    virtual ~SwipeGestureEvent();
+};
+
 inline
 libinput_event_type Event::type() const
 {

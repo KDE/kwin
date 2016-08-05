@@ -87,6 +87,14 @@ struct libinput_event_touch : libinput_event {
     QPointF absolutePos;
 };
 
+struct libinput_event_gesture : libinput_event {
+    int fingerCount = 0;
+    bool cancelled = false;
+    QSizeF delta = QSizeF(0, 0);
+    qreal scale = 0.0;
+    qreal angleDelta = 0.0;
+};
+
 struct libinput {
     int refCount = 1;
     QByteArray seat;

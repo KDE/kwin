@@ -231,6 +231,126 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
     }
 }
 
+void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!m_inited) {
+        return;
+    }
+
+    const auto &filters = m_input->filters();
+    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
+        if ((*it)->swipeGestureBegin(fingerCount, time)) {
+            return;
+        }
+    }
+}
+
+void PointerInputRedirection::processSwipeGestureUpdate(const QSizeF &delta, quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!m_inited) {
+        return;
+    }
+
+    const auto &filters = m_input->filters();
+    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
+        if ((*it)->swipeGestureUpdate(delta, time)) {
+            return;
+        }
+    }
+}
+
+void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!m_inited) {
+        return;
+    }
+
+    const auto &filters = m_input->filters();
+    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
+        if ((*it)->swipeGestureEnd(time)) {
+            return;
+        }
+    }
+}
+
+void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!m_inited) {
+        return;
+    }
+
+    const auto &filters = m_input->filters();
+    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
+        if ((*it)->swipeGestureCancelled(time)) {
+            return;
+        }
+    }
+}
+
+void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!m_inited) {
+        return;
+    }
+
+    const auto &filters = m_input->filters();
+    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
+        if ((*it)->pinchGestureBegin(fingerCount, time)) {
+            return;
+        }
+    }
+}
+
+void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!m_inited) {
+        return;
+    }
+
+    const auto &filters = m_input->filters();
+    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
+        if ((*it)->pinchGestureUpdate(scale, angleDelta, delta, time)) {
+            return;
+        }
+    }
+}
+
+void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!m_inited) {
+        return;
+    }
+
+    const auto &filters = m_input->filters();
+    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
+        if ((*it)->pinchGestureEnd(time)) {
+            return;
+        }
+    }
+}
+
+void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device)
+{
+    Q_UNUSED(device)
+    if (!m_inited) {
+        return;
+    }
+
+    const auto &filters = m_input->filters();
+    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
+        if ((*it)->pinchGestureCancelled(time)) {
+            return;
+        }
+    }
+}
+
 void PointerInputRedirection::update()
 {
     if (!m_inited) {

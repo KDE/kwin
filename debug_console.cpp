@@ -334,6 +334,118 @@ bool DebugConsoleFilter::touchUp(quint32 id, quint32 time)
     return false;
 }
 
+bool DebugConsoleFilter::pinchGestureBegin(int fingerCount, quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A pinch gesture is started", "Pinch start")));
+    text.append(timestampRow(time));
+    text.append(tableRow(i18nc("Number of fingers in this pinch gesture", "Finger count"), fingerCount));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A pinch gesture is updated", "Pinch update")));
+    text.append(timestampRow(time));
+    text.append(tableRow(i18nc("Current scale in pinch gesture", "Scale"), scale));
+    text.append(tableRow(i18nc("Current angle in pinch gesture", "Angle delta"), angleDelta));
+    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta x"), delta.width()));
+    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta y"), delta.height()));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::pinchGestureEnd(quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A pinch gesture ended", "Pinch end")));
+    text.append(timestampRow(time));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::pinchGestureCancelled(quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A pinch gesture got cancelled", "Pinch cancelled")));
+    text.append(timestampRow(time));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::swipeGestureBegin(int fingerCount, quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A swipe gesture is started", "Swipe start")));
+    text.append(timestampRow(time));
+    text.append(tableRow(i18nc("Number of fingers in this swipe gesture", "Finger count"), fingerCount));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::swipeGestureUpdate(const QSizeF &delta, quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A swipe gesture is updated", "Swipe update")));
+    text.append(timestampRow(time));
+    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta x"), delta.width()));
+    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta y"), delta.height()));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::swipeGestureEnd(quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A swipe gesture ended", "Swipe end")));
+    text.append(timestampRow(time));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
+bool DebugConsoleFilter::swipeGestureCancelled(quint32 time)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A swipe gesture got cancelled", "Swipe cancelled")));
+    text.append(timestampRow(time));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+    return false;
+}
+
 DebugConsole::DebugConsole()
     : QWidget()
     , m_ui(new Ui::DebugConsole)

@@ -106,6 +106,60 @@ bool InputEventFilter::touchUp(quint32 id, quint32 time)
     return false;
 }
 
+bool InputEventFilter::pinchGestureBegin(int fingerCount, quint32 time)
+{
+    Q_UNUSED(fingerCount)
+    Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time)
+{
+    Q_UNUSED(scale)
+    Q_UNUSED(angleDelta)
+    Q_UNUSED(delta)
+    Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::pinchGestureEnd(quint32 time)
+{
+    Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::pinchGestureCancelled(quint32 time)
+{
+    Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::swipeGestureBegin(int fingerCount, quint32 time)
+{
+    Q_UNUSED(fingerCount)
+    Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::swipeGestureUpdate(const QSizeF &delta, quint32 time)
+{
+    Q_UNUSED(delta)
+    Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::swipeGestureEnd(quint32 time)
+{
+    Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::swipeGestureCancelled(quint32 time)
+{
+    Q_UNUSED(time)
+    return false;
+}
+
 #if HAVE_INPUT
 class VirtualTerminalFilter : public InputEventFilter {
 public:
@@ -1134,6 +1188,14 @@ void InputRedirection::setupLibInput()
         );
         connect(conn, &LibInput::Connection::pointerButtonChanged, m_pointer, &PointerInputRedirection::processButton);
         connect(conn, &LibInput::Connection::pointerAxisChanged, m_pointer, &PointerInputRedirection::processAxis);
+        connect(conn, &LibInput::Connection::pinchGestureBegin, m_pointer, &PointerInputRedirection::processPinchGestureBegin);
+        connect(conn, &LibInput::Connection::pinchGestureUpdate, m_pointer, &PointerInputRedirection::processPinchGestureUpdate);
+        connect(conn, &LibInput::Connection::pinchGestureEnd, m_pointer, &PointerInputRedirection::processPinchGestureEnd);
+        connect(conn, &LibInput::Connection::pinchGestureCancelled, m_pointer, &PointerInputRedirection::processPinchGestureCancelled);
+        connect(conn, &LibInput::Connection::swipeGestureBegin, m_pointer, &PointerInputRedirection::processSwipeGestureBegin);
+        connect(conn, &LibInput::Connection::swipeGestureUpdate, m_pointer, &PointerInputRedirection::processSwipeGestureUpdate);
+        connect(conn, &LibInput::Connection::swipeGestureEnd, m_pointer, &PointerInputRedirection::processSwipeGestureEnd);
+        connect(conn, &LibInput::Connection::swipeGestureCancelled, m_pointer, &PointerInputRedirection::processSwipeGestureCancelled);
         connect(conn, &LibInput::Connection::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
         connect(conn, &LibInput::Connection::pointerMotion, this,
             [this] (QPointF delta, uint32_t time, LibInput::Device *device) {

@@ -49,6 +49,14 @@ Event *Event::create(libinput_event *event)
     case LIBINPUT_EVENT_TOUCH_CANCEL:
     case LIBINPUT_EVENT_TOUCH_FRAME:
         return new TouchEvent(event, t);
+    case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
+    case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE:
+    case LIBINPUT_EVENT_GESTURE_SWIPE_END:
+        return new SwipeGestureEvent(event, t);
+    case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN:
+    case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:
+    case LIBINPUT_EVENT_GESTURE_PINCH_END:
+        return new PinchGestureEvent(event, t);
     default:
         return new Event(event, t);
     }
@@ -208,6 +216,59 @@ qint32 TouchEvent::id() const
     Q_ASSERT(type() != LIBINPUT_EVENT_TOUCH_CANCEL && type() != LIBINPUT_EVENT_TOUCH_FRAME);
     return libinput_event_touch_get_slot(m_touchEvent);
 }
+
+GestureEvent::GestureEvent(libinput_event *event, libinput_event_type type)
+    : Event(event, type)
+    , m_gestureEvent(libinput_event_get_gesture_event(event))
+{
+}
+
+GestureEvent::~GestureEvent() = default;
+
+quint32 GestureEvent::time() const
+{
+    return libinput_event_gesture_get_time(m_gestureEvent);
+}
+
+int GestureEvent::fingerCount() const
+{
+    return libinput_event_gesture_get_finger_count(m_gestureEvent);
+}
+
+QSizeF GestureEvent::delta() const
+{
+    return QSizeF(libinput_event_gesture_get_dx(m_gestureEvent),
+                  libinput_event_gesture_get_dy(m_gestureEvent));
+}
+
+bool GestureEvent::isCancelled() const
+{
+    return libinput_event_gesture_get_cancelled(m_gestureEvent) != 0;
+}
+
+PinchGestureEvent::PinchGestureEvent(libinput_event *event, libinput_event_type type)
+    : GestureEvent(event, type)
+{
+}
+
+PinchGestureEvent::~PinchGestureEvent() = default;
+
+qreal PinchGestureEvent::scale() const
+{
+    return libinput_event_gesture_get_scale(m_gestureEvent);
+}
+
+qreal PinchGestureEvent::angleDelta() const
+{
+    return libinput_event_gesture_get_angle_delta(m_gestureEvent);
+}
+
+SwipeGestureEvent::SwipeGestureEvent(libinput_event *event, libinput_event_type type)
+    : GestureEvent(event, type)
+{
+}
+
+SwipeGestureEvent::~SwipeGestureEvent() = default;
 
 }
 }

@@ -52,6 +52,20 @@ add_test(kwin-testLibinputTouchEvent testLibinputTouchEvent)
 ecm_mark_as_test(testLibinputTouchEvent)
 
 ########################################################
+# Test Gesture Event
+########################################################
+set( testLibinputGestureEvent_SRCS
+        gesture_event_test.cpp
+        mock_libinput.cpp
+        ../../libinput/device.cpp
+        ../../libinput/events.cpp
+    )
+add_executable(testLibinputGestureEvent ${testLibinputGestureEvent_SRCS})
+target_link_libraries( testLibinputGestureEvent Qt5::Test Qt5::Widgets KF5::ConfigCore)
+add_test(kwin-testLibinputGestureEvent testLibinputGestureEvent)
+ecm_mark_as_test(testLibinputGestureEvent)
+
+########################################################
 # Test Context
 ########################################################
 set( testLibinputContext_SRCS

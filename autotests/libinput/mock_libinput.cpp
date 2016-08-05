@@ -267,6 +267,74 @@ struct libinput_event_touch *libinput_event_get_touch_event(struct libinput_even
     return nullptr;
 }
 
+struct libinput_event_gesture *libinput_event_get_gesture_event(struct libinput_event *event)
+{
+    if (event->type == LIBINPUT_EVENT_GESTURE_PINCH_BEGIN ||
+        event->type == LIBINPUT_EVENT_GESTURE_PINCH_UPDATE ||
+        event->type == LIBINPUT_EVENT_GESTURE_PINCH_END ||
+        event->type == LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN ||
+        event->type == LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE ||
+        event->type == LIBINPUT_EVENT_GESTURE_SWIPE_END) {
+        return reinterpret_cast<libinput_event_gesture *>(event);
+    }
+    return nullptr;
+}
+
+int libinput_event_gesture_get_cancelled(struct libinput_event_gesture *event)
+{
+    if (event->type == LIBINPUT_EVENT_GESTURE_PINCH_END || event->type == LIBINPUT_EVENT_GESTURE_SWIPE_END) {
+        return event->cancelled;
+    }
+    return 0;
+}
+
+uint32_t libinput_event_gesture_get_time(struct libinput_event_gesture *event)
+{
+    return event->time;
+}
+
+int libinput_event_gesture_get_finger_count(struct libinput_event_gesture *event)
+{
+    return event->fingerCount;
+}
+
+double libinput_event_gesture_get_dx(struct libinput_event_gesture *event)
+{
+    if (event->type == LIBINPUT_EVENT_GESTURE_PINCH_UPDATE || event->type == LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE) {
+        return event->delta.width();
+    }
+    return 0.0;
+}
+
+double libinput_event_gesture_get_dy(struct libinput_event_gesture *event)
+{
+    if (event->type == LIBINPUT_EVENT_GESTURE_PINCH_UPDATE || event->type == LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE) {
+        return event->delta.height();
+    }
+    return 0.0;
+}
+
+double libinput_event_gesture_get_scale(struct libinput_event_gesture *event)
+{
+    switch (event->type) {
+    case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN:
+        return 1.0;
+    case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:
+    case LIBINPUT_EVENT_GESTURE_PINCH_END:
+        return event->scale;
+    default:
+        return 0.0;
+    }
+}
+
+double libinput_event_gesture_get_angle_delta(struct libinput_event_gesture *event)
+{
+    if (event->type == LIBINPUT_EVENT_GESTURE_PINCH_UPDATE) {
+        return event->angleDelta;
+    }
+    return 0.0;
+}
+
 uint32_t libinput_event_keyboard_get_key(struct libinput_event_keyboard *event)
 {
     return event->key;

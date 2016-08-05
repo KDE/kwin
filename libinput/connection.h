@@ -99,6 +99,14 @@ Q_SIGNALS:
     void hasTouchChanged(bool);
     void deviceAdded(KWin::LibInput::Device *);
     void deviceRemoved(KWin::LibInput::Device *);
+    void swipeGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device);
+    void swipeGestureUpdate(const QSizeF &delta, quint32 time, KWin::LibInput::Device *device);
+    void swipeGestureEnd(quint32 time, KWin::LibInput::Device *device);
+    void swipeGestureCancelled(quint32 time, KWin::LibInput::Device *device);
+    void pinchGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device);
+    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time, KWin::LibInput::Device *device);
+    void pinchGestureEnd(quint32 time, KWin::LibInput::Device *device);
+    void pinchGestureCancelled(quint32 time, KWin::LibInput::Device *device);
 
     void eventsRead();
 
