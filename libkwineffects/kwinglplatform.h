@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_GLPLATFORM_H
 
 #include <kwinglutils_export.h>
-#include <kwinglutils_funcs.h>
+#include <kwinglobals.h>
 
 #include <QByteArray>
 #include <QSet>

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "kwinglplatform.h"
-#include "kwinglutils.h"
+#include <epoxy/gl.h>
 
 #include <QRegExp>
 #include <QStringList>
