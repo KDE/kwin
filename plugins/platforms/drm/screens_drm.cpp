@@ -36,8 +36,8 @@ DrmScreens::~DrmScreens() = default;
 
 void DrmScreens::init()
 {
-    KWin::Screens::init();
     updateCount();
+    KWin::Screens::init();
     emit changed();
 }
 

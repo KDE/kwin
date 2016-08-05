@@ -33,6 +33,7 @@ VirtualScreens::~VirtualScreens() = default;
 
 void VirtualScreens::init()
 {
+    updateCount();
     KWin::Screens::init();
     connect(m_backend, &VirtualBackend::sizeChanged,
             this, &VirtualScreens::startChangedTimer);
@@ -47,7 +48,6 @@ void VirtualScreens::init()
             }
         }
     );
-    updateCount();
     emit changed();
 }
 

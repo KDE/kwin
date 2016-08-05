@@ -188,12 +188,12 @@ BasicScreens::~BasicScreens() = default;
 
 void BasicScreens::init()
 {
+    updateCount();
     KWin::Screens::init();
 #ifndef KWIN_UNIT_TEST
     connect(m_backend, &Platform::screenSizeChanged,
             this, &BasicScreens::startChangedTimer);
 #endif
-    updateCount();
     emit changed();
 }
 
