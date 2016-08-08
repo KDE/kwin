@@ -1,0 +1,21 @@
+[Driver]
+Vendor=X.Org
+Renderer=Gallium 0.4 on AMD HAWAII (DRM 2.43.0, LLVM 3.7.1)
+Version=3.0 Mesa 11.1.2
+ShadingLanguageVersion=1.30
+
+[Settings]
+LooseBinding=true
+GLSL=true
+TextureNPOT=true
+Mesa=true
+Gallium=true
+Radeon=true
+GLVersion=3,0
+GLSLVersion=1,30
+MesaVersion=11,1,2
+GalliumVersion=0,4
+DriverVersion=11,1,2
+Driver=5
+ChipClass=999
+Compositor=9

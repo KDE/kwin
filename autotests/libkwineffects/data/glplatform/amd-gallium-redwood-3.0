@@ -1,0 +1,21 @@
+[Driver]
+Vendor=X.Org
+Renderer=Gallium 0.4 on AMD REDWOOD (DRM 2.43.0 / 4.6.4-1-ARCH, LLVM 3.8.0)
+Version=3.0 Mesa 12.0.1
+ShadingLanguageVersion=1.30
+
+[Settings]
+LooseBinding=true
+GLSL=true
+TextureNPOT=true
+Mesa=true
+Gallium=true
+Radeon=true
+GLVersion=3,0
+GLSLVersion=1,30
+MesaVersion=12,0,1
+GalliumVersion=0,4
+DriverVersion=12,0,1
+Driver=5
+ChipClass=7
+Compositor=9

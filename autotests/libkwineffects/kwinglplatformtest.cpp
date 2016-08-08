@@ -161,13 +161,23 @@ void GLPlatformTest::testDetect()
     QCOMPARE(gl->mesaVersion(), readVersion(settingsGroup, "MesaVersion"));
     QCOMPARE(gl->galliumVersion(), readVersion(settingsGroup, "GalliumVersion"));
     QCOMPARE(gl->serverVersion(), 0);
+    QEXPECT_FAIL("amd-catalyst-radeonhd-7700M-3.1.13399", "Detects GL version instead of driver version", Continue);
     QCOMPARE(gl->driverVersion(), readVersion(settingsGroup, "DriverVersion"));
 
+    QEXPECT_FAIL("amd-gallium-bonaire-3.0", "Not detected as a radeon driver", Continue);
+    QEXPECT_FAIL("amd-gallium-hawaii-3.0", "Not detected as a radeon driver", Continue);
+    QEXPECT_FAIL("amd-gallium-tonga-4.1", "Not detected as a radeon driver", Continue);
     QCOMPARE(gl->driver(), Driver(settingsGroup.readEntry("Driver", int(Driver_Unknown))));
+    QEXPECT_FAIL("amd-gallium-bonaire-3.0", "Not detected as a radeon driver", Continue);
+    QEXPECT_FAIL("amd-gallium-hawaii-3.0", "Not detected as a radeon driver", Continue);
+    QEXPECT_FAIL("amd-gallium-tonga-4.1", "Not detected as a radeon driver", Continue);
     QCOMPARE(gl->chipClass(), ChipClass(settingsGroup.readEntry("ChipClass", int(UnknownChipClass))));
 
     QCOMPARE(gl->isMesaDriver(), settingsGroup.readEntry("Mesa", false));
     QCOMPARE(gl->isGalliumDriver(), settingsGroup.readEntry("Gallium", false));
+    QEXPECT_FAIL("amd-gallium-bonaire-3.0", "Not detected as a radeon driver", Continue);
+    QEXPECT_FAIL("amd-gallium-hawaii-3.0", "Not detected as a radeon driver", Continue);
+    QEXPECT_FAIL("amd-gallium-tonga-4.1", "Not detected as a radeon driver", Continue);
     QCOMPARE(gl->isRadeon(), settingsGroup.readEntry("Radeon", false));
     QCOMPARE(gl->isNvidia(), settingsGroup.readEntry("Nvidia", false));
     QCOMPARE(gl->isIntel(), settingsGroup.readEntry("Intel", false));

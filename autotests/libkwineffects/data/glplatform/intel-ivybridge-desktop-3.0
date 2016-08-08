@@ -1,0 +1,20 @@
+[Driver]
+Vendor=Intel Open Source Technology Center
+Renderer=Mesa DRI Intel(R) Ivybridge Desktop
+Version=3.0 Mesa 11.1.0 (git-525f3c2)
+ShadingLanguageVersion=1.30
+
+[Settings]
+LooseBinding=true
+GLSL=true
+TextureNPOT=true
+Mesa=true
+Intel=true
+GLVersion=3,0
+GLSLVersion=1,30
+MesaVersion=11,1,0
+DriverVersion=11,1,0
+Driver=7
+ChipClass=2004
+Compositor=9
+

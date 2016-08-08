@@ -1,0 +1,18 @@
+[Driver]
+Vendor=ATI Technologies Inc.
+Renderer=AMD Radeon HD 7700M Series
+Version=3.1.13399 Compatibility Profile Context FireGL 15.201.1151
+ShadingLanguageVersion=4.40
+
+[Settings]
+LooseBinding=false
+GLSL=true
+TextureNPOT=true
+Catalyst=true
+Radeon=true
+GLVersion=3,1,13399
+GLSLVersion=4,40
+DriverVersion=15,201,1151
+Driver=9
+ChipClass=999
+Compositor=9
