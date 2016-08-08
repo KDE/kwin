@@ -343,6 +343,8 @@ void LockScreenTest::testPointerButton()
 
     QScopedPointer<Pointer> pointer(m_seat->createPointer());
     QVERIFY(!pointer.isNull());
+    QSignalSpy enteredSpy(pointer.data(), &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
     QSignalSpy buttonChangedSpy(pointer.data(), &Pointer::buttonStateChanged);
     QVERIFY(buttonChangedSpy.isValid());
 
@@ -352,6 +354,7 @@ void LockScreenTest::testPointerButton()
     // first move cursor into the center of the window
     quint32 timestamp = 1;
     MOTION(c->geometry().center());
+    QVERIFY(enteredSpy.wait());
     // and simulate a click
     PRESS;
     QVERIFY(buttonChangedSpy.wait());
@@ -367,6 +370,8 @@ void LockScreenTest::testPointerButton()
     QVERIFY(!buttonChangedSpy.wait(100));
 
     UNLOCK
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
 
     // and click again
     PRESS;
@@ -383,6 +388,8 @@ void LockScreenTest::testPointerAxis()
     QVERIFY(!pointer.isNull());
     QSignalSpy axisChangedSpy(pointer.data(), &Pointer::axisChanged);
     QVERIFY(axisChangedSpy.isValid());
+    QSignalSpy enteredSpy(pointer.data(), &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
 
     AbstractClient *c = showWindow();
     QVERIFY(c);
@@ -390,6 +397,7 @@ void LockScreenTest::testPointerAxis()
     // first move cursor into the center of the window
     quint32 timestamp = 1;
     MOTION(c->geometry().center());
+    QVERIFY(enteredSpy.wait());
     // and simulate axis
     kwinApp()->platform()->pointerAxisHorizontal(5.0, timestamp++);
     QVERIFY(axisChangedSpy.wait());
@@ -404,6 +412,8 @@ void LockScreenTest::testPointerAxis()
 
     // and unlock
     UNLOCK
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
 
     // and move axis again
     kwinApp()->platform()->pointerAxisHorizontal(5.0, timestamp++);
