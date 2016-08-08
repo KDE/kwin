@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QExplicitlySharedDataPointer>
 #include <QtGui/QMatrix4x4>
 
+#include <epoxy/gl.h>
+
 class QImage;
 class QPixmap;
 
