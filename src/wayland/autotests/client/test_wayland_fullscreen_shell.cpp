@@ -105,12 +105,19 @@ void TestWaylandFullscreenShell::testRegistry()
     QVERIFY(connectedSpy.wait());
 
     KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfaceAnnounced);
+    QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy announced(&registry, SIGNAL(fullscreenShellAnnounced(quint32,quint32)));
     registry.create(connection.display());
     QVERIFY(registry.isValid());
     registry.setup();
     wl_display_flush(connection.display());
-    QVERIFY(announced.wait());
+    QVERIFY(interfacesAnnouncedSpy.wait());
+
+    if (!registry.hasInterface(KWayland::Client::Registry::Interface::FullscreenShell)) {
+        QSKIP("Weston does not have fullscreen shell support");
+    }
+    QCOMPARE(announced.count(), 1);
 
     KWayland::Client::FullscreenShell fullscreenShell;
     QVERIFY(!fullscreenShell.isValid());
@@ -132,12 +139,19 @@ void TestWaylandFullscreenShell::testRegistryCreate()
     QVERIFY(connectedSpy.wait());
 
     KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfaceAnnounced);
+    QVERIFY(interfacesAnnouncedSpy.isValid());
     QSignalSpy announced(&registry, SIGNAL(fullscreenShellAnnounced(quint32,quint32)));
     registry.create(connection.display());
     QVERIFY(registry.isValid());
     registry.setup();
     wl_display_flush(connection.display());
-    QVERIFY(announced.wait());
+    QVERIFY(interfacesAnnouncedSpy.wait());
+
+    if (!registry.hasInterface(KWayland::Client::Registry::Interface::FullscreenShell)) {
+        QSKIP("Weston does not have fullscreen shell support");
+    }
+    QCOMPARE(announced.count(), 1);
 
     KWayland::Client::FullscreenShell *fullscreenShell = registry.createFullscreenShell(announced.first().first().value<quint32>(), 1, &registry);
     QVERIFY(fullscreenShell->isValid());
