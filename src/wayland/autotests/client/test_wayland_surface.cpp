@@ -945,7 +945,9 @@ void TestWaylandSurface::testDisconnect()
     }
     QVERIFY(clientDisconnectedSpy.wait());
     QCOMPARE(clientDisconnectedSpy.count(), 1);
-    QCOMPARE(surfaceDestroyedSpy.count(), 0);
+    if (surfaceDestroyedSpy.isEmpty()) {
+        QVERIFY(surfaceDestroyedSpy.wait());
+    }
     QTRY_COMPARE(surfaceDestroyedSpy.count(), 1);
 
     s->destroy();
