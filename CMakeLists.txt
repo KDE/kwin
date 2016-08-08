@@ -164,7 +164,7 @@ set_package_properties(XKB PROPERTIES
                        PURPOSE "Required for building KWin with Wayland support"
                       )
 
-find_package(Libinput 0.10)
+find_package(Libinput 1.2)
 set_package_properties(Libinput PROPERTIES TYPE OPTIONAL PURPOSE "Required for input handling on Wayland.")
 
 find_package(UDev)
@@ -180,13 +180,6 @@ endif()
 set(HAVE_UDEV FALSE)
 if (UDEV_FOUND)
     set(HAVE_UDEV TRUE)
-endif()
-
-set(HAVE_LIBINPUT_1_2 FALSE)
-if (Libinput_FOUND)
-    if (NOT (Libinput_VERSION VERSION_LESS "1.2"))
-        set(HAVE_LIBINPUT_1_2 TRUE)
-    endif()
 endif()
 
 find_package(Libdrm)

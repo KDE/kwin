@@ -151,13 +151,8 @@ void TestLibinputDevice::testDeviceType()
     QCOMPARE(d.property("touch").toBool(), touch);
     QCOMPARE(d.isTabletPad(), false);
     QCOMPARE(d.property("tabletPad").toBool(), false);
-#if HAVE_LIBINPUT_1_2
     QCOMPARE(d.isTabletTool(), tabletTool);
     QCOMPARE(d.property("tabletTool").toBool(), tabletTool);
-#else
-    QCOMPARE(d.isTabletTool(), false);
-    QCOMPARE(d.property("tabletTool").toBool(), false);
-#endif
 
     QCOMPARE(d.device(), &device);
 }
