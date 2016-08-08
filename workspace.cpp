@@ -398,6 +398,11 @@ void Workspace::init()
                 connect(c, &ShellClient::windowShown, this,
                     [this, c] {
                         updateClientLayer(c);
+                        // TODO: when else should we send the client through placement?
+                        if (c->hasTransientPlacementHint()) {
+                            QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
+                            Placement::self()->place(c, area);
+                        }
                         x_stacking_dirty = true;
                         updateStackingOrder(true);
                         updateClientArea();

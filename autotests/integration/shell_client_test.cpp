@@ -49,6 +49,7 @@ private Q_SLOTS:
     void testMapUnmapMap_data();
     void testMapUnmapMap();
     void testDesktopPresenceChanged();
+    void testTransientPositionAfterRemap();
 };
 
 void TestShellClient::initTestCase()
@@ -197,6 +198,41 @@ void TestShellClient::testDesktopPresenceChanged()
     QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(0).value<EffectWindow*>(), c->effectWindow());
     QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(1).toInt(), 1);
     QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(2).toInt(), 2);
+}
+
+void TestShellClient::testTransientPositionAfterRemap()
+{
+    // this test simulates the situation that a transient window gets reused and the parent window
+    // moved between the two usages
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+
+    // create the Transient window
+    QScopedPointer<Surface> transientSurface(Test::createSurface());
+    QScopedPointer<ShellSurface> transientShellSurface(Test::createShellSurface(transientSurface.data()));
+    transientShellSurface->setTransient(surface.data(), QPoint(5, 10));
+    auto transient = Test::renderAndWaitForShown(transientSurface.data(), QSize(50, 40), Qt::blue);
+    QVERIFY(transient);
+    QCOMPARE(transient->geometry(), QRect(c->geometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
+
+    // unmap the transient
+    QSignalSpy windowHiddenSpy(transient, &ShellClient::windowHidden);
+    QVERIFY(windowHiddenSpy.isValid());
+    transientSurface->attachBuffer(Buffer::Ptr());
+    transientSurface->commit(Surface::CommitFlag::None);
+    QVERIFY(windowHiddenSpy.wait());
+
+    // now move the parent surface
+    c->setGeometry(c->geometry().translated(5, 10));
+
+    // now map the transient again
+    QSignalSpy windowShownSpy(transient, &ShellClient::windowShown);
+    QVERIFY(windowShownSpy.isValid());
+    Test::render(transientSurface.data(), QSize(50, 40), Qt::blue);
+    QVERIFY(windowShownSpy.wait());
+    QCOMPARE(transient->geometry(), QRect(c->geometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
 }
 
 WAYLANDTEST_MAIN(TestShellClient)
