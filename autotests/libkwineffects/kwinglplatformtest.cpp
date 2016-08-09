@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfig>
 #include <KConfigGroup>
 
+Q_DECLARE_METATYPE(KWin::Driver)
+Q_DECLARE_METATYPE(KWin::ChipClass)
+
 using namespace KWin;
 
 void KWin::cleanupGL()
@@ -37,6 +40,10 @@ class GLPlatformTest : public QObject
 private Q_SLOTS:
     void cleanup();
 
+    void testDriverToString_data();
+    void testDriverToString();
+    void testChipClassToString_data();
+    void testChipClassToString();
     void testPriorDetect();
     void testDetect_data();
     void testDetect();
@@ -47,6 +54,73 @@ void GLPlatformTest::cleanup()
     cleanupGL();
     delete s_gl;
     s_gl = nullptr;
+}
+
+void GLPlatformTest::testDriverToString_data()
+{
+    QTest::addColumn<Driver>("driver");
+    QTest::addColumn<QString>("expected");
+
+    QTest::newRow("R100") << Driver_R100 << QStringLiteral("Radeon");
+    QTest::newRow("R200") << Driver_R200 << QStringLiteral("R200");
+    QTest::newRow("R300C") << Driver_R300C << QStringLiteral("R300C");
+    QTest::newRow("R300G") << Driver_R300G << QStringLiteral("R300G");
+    QTest::newRow("R600C") << Driver_R600C << QStringLiteral("R600C");
+    QTest::newRow("R600G") << Driver_R600G << QStringLiteral("R600G");
+    QTest::newRow("Nouveau") << Driver_Nouveau << QStringLiteral("Nouveau");
+    QTest::newRow("Intel") << Driver_Intel << QStringLiteral("Intel");
+    QTest::newRow("NVidia") << Driver_NVidia << QStringLiteral("NVIDIA");
+    QTest::newRow("Catalyst") << Driver_Catalyst << QStringLiteral("Catalyst");
+    QTest::newRow("Swrast") << Driver_Swrast << QStringLiteral("Software rasterizer");
+    QTest::newRow("Softpipe") << Driver_Softpipe << QStringLiteral("softpipe");
+    QTest::newRow("Llvmpipe") << Driver_Llvmpipe << QStringLiteral("LLVMpipe");
+    QTest::newRow("VirtualBox") << Driver_VirtualBox << QStringLiteral("VirtualBox (Chromium)");
+    QTest::newRow("VMware") << Driver_VMware << QStringLiteral("VMware (SVGA3D)");
+    QTest::newRow("Unknown") << Driver_Unknown << QStringLiteral("Unknown");
+}
+
+void GLPlatformTest::testDriverToString()
+{
+    QFETCH(Driver, driver);
+    QTEST(GLPlatform::driverToString(driver), "expected");
+}
+
+void GLPlatformTest::testChipClassToString_data()
+{
+    QTest::addColumn<ChipClass>("chipClass");
+    QTest::addColumn<QString>("expected");
+
+    QTest::newRow("R100") << R100 << QStringLiteral("R100");
+    QTest::newRow("R200") << R200 << QStringLiteral("R200");
+    QTest::newRow("R300") << R300 << QStringLiteral("R300");
+    QTest::newRow("R400") << R400 << QStringLiteral("R400");
+    QTest::newRow("R500") << R500 << QStringLiteral("R500");
+    QTest::newRow("R600") << R600 << QStringLiteral("R600");
+    QTest::newRow("R700") << R700 << QStringLiteral("R700");
+    QTest::newRow("Evergreen") << Evergreen << QStringLiteral("EVERGREEN");
+    QTest::newRow("NorthernIslands") << NorthernIslands << QStringLiteral("NI");
+    QTest::newRow("UnknownRadeon") << UnknownRadeon << QStringLiteral("Unknown");
+    QTest::newRow("NV10") << NV10 << QStringLiteral("NV10");
+    QTest::newRow("NV20") << NV20 << QStringLiteral("NV20");
+    QTest::newRow("NV30") << NV30 << QStringLiteral("NV30");
+    QTest::newRow("NV40") << NV40 << QStringLiteral("NV40/G70");
+    QTest::newRow("G80") << G80 << QStringLiteral("G80/G90");
+    QTest::newRow("GF100") << GF100 << QStringLiteral("GF100");
+    QTest::newRow("UnknownNVidia") << UnknownNVidia << QStringLiteral("Unknown");
+    QTest::newRow("I8XX") << I8XX << QStringLiteral("i830/i835");
+    QTest::newRow("I915") << I915 << QStringLiteral("i915/i945");
+    QTest::newRow("I965") << I965 << QStringLiteral("i965");
+    QTest::newRow("SandyBridge") << SandyBridge << QStringLiteral("SandyBridge");
+    QTest::newRow("IvyBridge") << IvyBridge << QStringLiteral("IvyBridge");
+    QTest::newRow("Haswell") << Haswell << QStringLiteral("Haswell");
+    QTest::newRow("UnknownIntel") << UnknownIntel << QStringLiteral("Unknown");
+    QTest::newRow("UnknownChipClass") << UnknownChipClass << QStringLiteral("Unknown");
+}
+
+void GLPlatformTest::testChipClassToString()
+{
+    QFETCH(ChipClass, chipClass);
+    QTEST(GLPlatform::chipClassToString(chipClass), "expected");
 }
 
 void GLPlatformTest::testPriorDetect()
