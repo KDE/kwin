@@ -368,7 +368,7 @@ void ShellClient::addDamage(const QRegion &damage)
         doSetGeometry(QRect(position, m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
     }
     markAsMapped();
-    setDepth(s->buffer()->hasAlphaChannel() ? 32 : 24);
+    setDepth((s->buffer()->hasAlphaChannel() && !isDesktop()) ? 32 : 24);
     repaints_region += damage.translated(clientPos());
     Toplevel::addDamage(damage);
 }

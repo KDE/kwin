@@ -107,6 +107,11 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     m_motif.init(window());
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
+    if (isDesktop() && bit_depth == 32) {
+        // force desktop windows to be opaque. It's a desktop after all, there is no window below
+        bit_depth = 24;
+    }
+
     // If it's already mapped, ignore hint
     bool init_minimize = !isMapped && (info->initialMappingState() == NET::Iconic);
 

@@ -49,6 +49,8 @@ private Q_SLOTS:
     void testAcceptsFocus_data();
     void testAcceptsFocus();
 
+    void testDesktopIsOpaque();
+
 private:
     ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
@@ -174,6 +176,27 @@ void PlasmaSurfaceTest::testAcceptsFocus()
     QVERIFY(c);
     QTEST(c->wantsInput(), "wantsInput");
     QTEST(c->isActive(), "active");
+}
+
+void PlasmaSurfaceTest::testDesktopIsOpaque()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QVERIFY(!plasmaSurface.isNull());
+    plasmaSurface->setRole(PlasmaShellSurface::Role::Desktop);
+
+    // now render to map the window
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(c);
+    QCOMPARE(c->windowType(), NET::Desktop);
+    QVERIFY(c->isDesktop());
+
+    QVERIFY(!c->hasAlpha());
+    QCOMPARE(c->depth(), 24);
 }
 
 WAYLANDTEST_MAIN(PlasmaSurfaceTest)

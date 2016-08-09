@@ -115,6 +115,8 @@ void TestShellClient::testMapUnmapMap()
     QVERIFY(client->isShown(true));
     QCOMPARE(client->isHiddenInternal(), false);
     QCOMPARE(client->readyForPainting(), true);
+    QCOMPARE(client->depth(), 32);
+    QVERIFY(client->hasAlpha());
     QCOMPARE(workspace()->activeClient(), client);
     QVERIFY(effectsWindowShownSpy.isEmpty());
 
@@ -135,13 +137,15 @@ void TestShellClient::testMapUnmapMap()
 
     QSignalSpy windowShownSpy(client, &ShellClient::windowShown);
     QVERIFY(windowShownSpy.isValid());
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    Test::render(surface.data(), QSize(100, 50), Qt::blue, QImage::Format_RGB32);
     QCOMPARE(clientAddedSpy.count(), 1);
     QVERIFY(windowShownSpy.wait());
     QCOMPARE(windowShownSpy.count(), 1);
     QCOMPARE(clientAddedSpy.count(), 1);
     QCOMPARE(client->readyForPainting(), true);
     QCOMPARE(client->isHiddenInternal(), false);
+    QCOMPARE(client->depth(), 24);
+    QVERIFY(!client->hasAlpha());
     QCOMPARE(workspace()->activeClient(), client);
     QCOMPARE(effectsWindowShownSpy.count(), 1);
     QCOMPARE(effectsWindowShownSpy.first().first().value<EffectWindow*>(), client->effectWindow());

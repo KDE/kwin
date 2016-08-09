@@ -46,6 +46,7 @@ if (XCB_ICCCM_FOUND)
     integrationTest(NAME testDontCrashAuroraeDestroyDeco SRCS dont_crash_aurorae_destroy_deco.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testPlasmaWindow SRCS plasmawindow_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testScreenEdgeClientShow SRCS screenedge_client_show_test.cpp LIBS XCB::ICCCM)
+    integrationTest(NAME testX11DesktopWindow SRCS desktop_window_x11_test.cpp LIBS XCB::ICCCM)
 endif()
 
 add_subdirectory(scripting)
