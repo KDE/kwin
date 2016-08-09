@@ -349,6 +349,7 @@ bool VirtualKeyboard::event(QEvent *e)
                     break;
                 case TextInputInterface::ContentPurpose::Url:
                     hints |= Qt::ImhUrlCharactersOnly;
+                    break;
                 case TextInputInterface::ContentPurpose::Email:
                     hints |= Qt::ImhEmailCharactersOnly;
                     break;
