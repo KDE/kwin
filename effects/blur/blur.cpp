@@ -186,6 +186,9 @@ bool BlurEffect::enabledByDefault()
 
     if (gl->isIntel() && gl->chipClass() < SandyBridge)
         return false;
+    if (gl->isSoftwareEmulation()) {
+        return false;
+    }
 
     return true;
 }
