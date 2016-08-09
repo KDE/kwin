@@ -65,6 +65,7 @@ void VirtualKeyboard::init()
 {
     // TODO: need a shared Qml engine
     m_inputWindow.reset(new QQuickView(nullptr));
+    m_inputWindow->setFlags(Qt::FramelessWindowHint);
     m_inputWindow->setGeometry(screens()->geometry(screens()->current()));
     m_inputWindow->setResizeMode(QQuickView::SizeRootObjectToView);
     m_inputWindow->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/virtualkeyboard/main.qml"))));
