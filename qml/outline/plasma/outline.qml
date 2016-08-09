@@ -23,7 +23,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore;
 
 Window {
     id: window
-    flags: Qt.BypassWindowManagerHint
+    flags: Qt.BypassWindowManagerHint | Qt.FramelessWindowHint
     color: "transparent"
 
     // outline is a context property
