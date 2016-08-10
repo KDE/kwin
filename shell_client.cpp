@@ -789,6 +789,9 @@ void ShellClient::takeFocus()
 
 void ShellClient::doSetActive()
 {
+    if (!isActive()) {
+        return;
+    }
     StackingUpdatesBlocker blocker(workspace());
     workspace()->focusToNull();
 }
