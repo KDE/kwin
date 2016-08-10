@@ -98,6 +98,7 @@ private Q_SLOTS:
 private:
     void createRenderer();
     AbstractClient *m_client;
+    QSize m_clientSize;
     Renderer *m_renderer;
     QMetaObject::Connection m_compositorToggledConnection;
 };

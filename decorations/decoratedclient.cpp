@@ -41,6 +41,7 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
     : QObject()
     , DecoratedClientPrivate(decoratedClient, decoration)
     , m_client(client)
+    , m_clientSize(client->clientSize())
     , m_renderer(nullptr)
 {
     createRenderer();
@@ -51,9 +52,18 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
         }
     );
     connect(client, &AbstractClient::geometryChanged, this,
-        [decoratedClient, client]() {
-            emit decoratedClient->widthChanged(client->clientSize().width());
-            emit decoratedClient->heightChanged(client->clientSize().height());
+        [decoratedClient, this]() {
+            if (m_client->clientSize() == m_clientSize) {
+                return;
+            }
+            const auto oldSize = m_clientSize;
+            m_clientSize = m_client->clientSize();
+            if (oldSize.width() != m_clientSize.width()) {
+                emit decoratedClient->widthChanged(m_clientSize.width());
+            }
+            if (oldSize.height() != m_clientSize.height()) {
+                emit decoratedClient->heightChanged(m_clientSize.height());
+            }
         }
     );
     connect(client, &AbstractClient::desktopChanged, this,
@@ -205,12 +215,12 @@ void DecoratedClientImpl::delayedRequestToggleMaximization(Options::WindowOperat
 
 int DecoratedClientImpl::width() const
 {
-    return m_client->clientSize().width();
+    return m_clientSize.width();
 }
 
 int DecoratedClientImpl::height() const
 {
-    return m_client->clientSize().height();
+    return m_clientSize.height();
 }
 
 bool DecoratedClientImpl::isMaximizedVertically() const
