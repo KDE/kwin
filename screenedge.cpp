@@ -262,6 +262,16 @@ bool Edge::handleAction()
         );
         return true;
     }
+    case ElectricActionApplicationLauncher: {
+        QDBusConnection::sessionBus().asyncCall(
+            QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
+                                           QStringLiteral("/PlasmaShell"),
+                                           QStringLiteral("org.kde.PlasmaShell"),
+                                           QStringLiteral("activateLauncherMenu")
+            )
+        );
+        return true;
+    }
     default:
         return false;
     }
@@ -576,6 +586,8 @@ static ElectricBorderAction electricBorderAction(const QString& name)
         return ElectricActionKRunner;
     } else if (lowerName == QLatin1String("activitymanager")) {
         return ElectricActionActivityManager;
+    } else if (lowerName == QLatin1String("applicationlauncher")) {
+        return ElectricActionApplicationLauncher;
     }
     return ElectricActionNone;
 }

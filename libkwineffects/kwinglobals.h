@@ -95,6 +95,7 @@ enum ElectricBorderAction {
     ElectricActionLockScreen,   // Lock screen
     ElectricActionKRunner,       // Open KRunner
     ElectricActionActivityManager, // Activity Manager
+    ElectricActionApplicationLauncher, // Application Launcher
     ELECTRIC_ACTION_COUNT
 };
 
