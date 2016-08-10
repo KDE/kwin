@@ -102,6 +102,8 @@ public:
     virtual ~DebugConsole();
 
 private:
+    void initGLTab();
+
     QScopedPointer<Ui::DebugConsole> m_ui;
     QScopedPointer<DebugConsoleFilter> m_inputFilter;
 };

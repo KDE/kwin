@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "libinput/connection.h"
 #include "libinput/device.h"
 #endif
+#include <kwinglplatform.h>
+#include <kwinglutils.h>
 
 #include "ui_debug_console.h"
 
@@ -485,9 +487,53 @@ DebugConsole::DebugConsole()
 
     // for X11
     setWindowFlags(Qt::X11BypassWindowManagerHint);
+
+    initGLTab();
 }
 
 DebugConsole::~DebugConsole() = default;
+
+void DebugConsole::initGLTab()
+{
+    GLPlatform *gl = GLPlatform::instance();
+    if (!gl) {
+        m_ui->noOpenGLLabel->setVisible(true);
+        m_ui->glInfoScrollArea->setVisible(false);
+        return;
+    }
+    m_ui->noOpenGLLabel->setVisible(false);
+    m_ui->glInfoScrollArea->setVisible(true);
+    m_ui->glVendorStringLabel->setText(QString::fromLocal8Bit(gl->glVendorString()));
+    m_ui->glRendererStringLabel->setText(QString::fromLocal8Bit(gl->glRendererString()));
+    m_ui->glVersionStringLabel->setText(QString::fromLocal8Bit(gl->glVersionString()));
+    m_ui->glslVersionStringLabel->setText(QString::fromLocal8Bit(gl->glShadingLanguageVersionString()));
+    m_ui->glDriverLabel->setText(GLPlatform::driverToString(gl->driver()));
+    m_ui->glGPULabel->setText(GLPlatform::chipClassToString(gl->chipClass()));
+    m_ui->glVersionLabel->setText(GLPlatform::versionToString(gl->glVersion()));
+    m_ui->glslLabel->setText(GLPlatform::versionToString(gl->glslVersion()));
+
+    auto extensionsString = [] (const QList<QByteArray> &extensions) {
+        QString text = QStringLiteral("<ul>");
+        for (auto extension : extensions) {
+            text.append(QStringLiteral("<li>%1</li>").arg(QString::fromLocal8Bit(extension)));
+        }
+        text.append(QStringLiteral("</ul>"));
+        return text;
+    };
+    if (gl->platformInterface() == EglPlatformInterface) {
+        m_ui->eglExtensionsBox->setVisible(true);
+        m_ui->glxExtensionsBox->setVisible(false);
+
+        m_ui->eglExtensionsLabel->setText(extensionsString(eglExtensions()));
+    } else {
+        m_ui->eglExtensionsBox->setVisible(false);
+        m_ui->glxExtensionsBox->setVisible(true);
+
+        m_ui->glxExtensionsLabel->setText(extensionsString(glxExtensions()));
+    }
+
+    m_ui->openGLExtensionsLabel->setText(extensionsString(openGLExtensions()));
+}
 
 DebugConsoleDelegate::DebugConsoleDelegate(QObject *parent)
     : QStyledItemDelegate(parent)

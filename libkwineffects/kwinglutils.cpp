@@ -72,8 +72,8 @@ static int glXVersion;
 static int eglVersion;
 // List of all supported GL, EGL and GLX extensions
 static QList<QByteArray> glExtensions;
-static QList<QByteArray> glxExtensions;
-static QList<QByteArray> eglExtensions;
+static QList<QByteArray> s_glxExtensions;
+static QList<QByteArray> s_eglExtensions;
 
 int glTextureUnitsCount;
 
@@ -88,7 +88,7 @@ void initGLX()
     glXVersion = MAKE_GL_VERSION(major, minor, 0);
     // Get list of supported GLX extensions
     const QByteArray string = (const char *) glXQueryExtensionsString(display(), QX11Info::appScreen());
-    glxExtensions = string.split(' ');
+    s_glxExtensions = string.split(' ');
     glxResolveFunctions();
 #endif
 }
@@ -102,7 +102,7 @@ void initEGL()
     eglInitialize(dpy, &major, &minor);
     eglVersion = MAKE_GL_VERSION(major, minor, 0);
     const QByteArray string = eglQueryString(dpy, EGL_EXTENSIONS);
-    eglExtensions = string.split(' ');
+    s_eglExtensions = string.split(' ');
     eglResolveFunctions();
 }
 
@@ -152,8 +152,8 @@ void cleanupGL()
     GLPlatform::cleanup();
 
     glExtensions.clear();
-    glxExtensions.clear();
-    eglExtensions.clear();
+    s_glxExtensions.clear();
+    s_eglExtensions.clear();
 
     glVersion = 0;
     glXVersion = 0;
@@ -178,7 +178,22 @@ bool hasEGLVersion(int major, int minor, int release)
 
 bool hasGLExtension(const QByteArray &extension)
 {
-    return glExtensions.contains(extension) || glxExtensions.contains(extension) || eglExtensions.contains(extension);
+    return glExtensions.contains(extension) || s_glxExtensions.contains(extension) || s_eglExtensions.contains(extension);
+}
+
+QList<QByteArray> eglExtensions()
+{
+    return s_eglExtensions;
+}
+
+QList<QByteArray> glxExtensions()
+{
+    return s_glxExtensions;
+}
+
+QList<QByteArray> openGLExtensions()
+{
+    return glExtensions;
 }
 
 static QString formatGLError(GLenum err)
