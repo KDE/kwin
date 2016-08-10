@@ -492,7 +492,6 @@ void ShellClient::doSetGeometry(const QRect &rect)
             m_internalWindow->setGeometry(windowRect);
         }
     }
-    triggerDecorationRepaint();
     if (hasStrut()) {
         workspace()->updateClientArea();
     }
