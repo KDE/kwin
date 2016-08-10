@@ -28,7 +28,7 @@ namespace KWin
 
 bool FallApartEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return effects->isOpenGLCompositing() && effects->animationsSupported();
 }
 
 FallApartEffect::FallApartEffect()

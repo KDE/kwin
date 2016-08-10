@@ -49,7 +49,7 @@ CubeSlideEffect::~CubeSlideEffect()
 
 bool CubeSlideEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return effects->isOpenGLCompositing() && effects->animationsSupported();
 }
 
 void CubeSlideEffect::reconfigure(ReconfigureFlags)

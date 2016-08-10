@@ -43,7 +43,7 @@ SheetEffect::SheetEffect()
 
 bool SheetEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return effects->isOpenGLCompositing() && effects->animationsSupported();
 }
 
 void SheetEffect::reconfigure(ReconfigureFlags)

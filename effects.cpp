@@ -1505,6 +1505,16 @@ void EffectsHandlerImpl::doneOpenGLContextCurrent()
     m_scene->doneOpenGLContextCurrent();
 }
 
+bool EffectsHandlerImpl::animationsSupported() const
+{
+    static const QByteArray forceEnvVar = qgetenv("KWIN_EFFECTS_FORCE_ANIMATIONS");
+    if (!forceEnvVar.isEmpty()) {
+        static const int forceValue = forceEnvVar.toInt();
+        return forceValue == 1;
+    }
+    return m_scene->animationsSupported();
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************

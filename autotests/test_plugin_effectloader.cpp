@@ -42,6 +42,11 @@ ScriptedEffect *ScriptedEffect::create(const KPluginMetaData&)
     return nullptr;
 }
 
+bool ScriptedEffect::supported()
+{
+    return true;
+}
+
 }
 
 class TestPluginEffectLoader : public QObject

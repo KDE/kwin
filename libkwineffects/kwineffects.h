@@ -1102,6 +1102,16 @@ public:
     virtual KWayland::Server::Display *waylandDisplay() const = 0;
 
     /**
+     * Whether animations are supported by the Scene.
+     * If this method returns @c false Effects are supposed to not
+     * animate transitions.
+     *
+     * @returns Whether the Scene can drive animations
+     * @since 5.8
+     **/
+    virtual bool animationsSupported() const = 0;
+
+    /**
      * @return @ref KConfigGroup which holds given effect's config options
      **/
     static KConfigGroup effectConfig(const QString& effectname);

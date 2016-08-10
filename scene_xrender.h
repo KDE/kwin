@@ -169,6 +169,10 @@ public:
     }
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client);
 
+    bool animationsSupported() const override {
+        return true;
+    }
+
     static SceneXrender *createScene(QObject *parent);
 protected:
     virtual Scene::Window *createWindow(Toplevel *toplevel);

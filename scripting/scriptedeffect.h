@@ -67,6 +67,7 @@ public:
     void setActiveConfig(const QString &name);
     static ScriptedEffect *create(const QString &effectName, const QString &pathToScript, int chainPosition);
     static ScriptedEffect *create(const KPluginMetaData &effect);
+    static bool supported();
     virtual ~ScriptedEffect();
     /**
      * Whether another effect has grabbed the @p w with the given @p grabRole.

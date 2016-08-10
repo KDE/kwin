@@ -149,6 +149,14 @@ public:
 
     virtual Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
 
+    /**
+     * Whether the Scene is able to drive animations.
+     * This is used as a hint to the effects system which effects can be supported.
+     * If the Scene performs software rendering it is supposed to return @c false,
+     * if rendering is hardware accelerated it should return @c true.
+     **/
+    virtual bool animationsSupported() const = 0;
+
 Q_SIGNALS:
     void frameRendered();
 

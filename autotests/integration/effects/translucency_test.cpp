@@ -74,6 +74,7 @@ void TranslucencyTest::initTestCase()
     config->sync();
     kwinApp()->setConfig(config);
 
+    qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QVERIFY(Compositor::self());

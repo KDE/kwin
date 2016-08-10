@@ -226,6 +226,8 @@ public:
 
     KWayland::Server::Display *waylandDisplay() const override;
 
+    bool animationsSupported() const override;
+
     Scene *scene() const {
         return m_scene;
     }

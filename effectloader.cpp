@@ -205,6 +205,9 @@ bool ScriptedEffectLoader::hasEffect(const QString &name) const
 bool ScriptedEffectLoader::isEffectSupported(const QString &name) const
 {
     // scripted effects are in general supported
+    if (!ScriptedEffect::supported()) {
+        return false;
+    }
     return hasEffect(name);
 }
 
@@ -236,6 +239,11 @@ bool ScriptedEffectLoader::loadEffect(const KPluginMetaData &effect, LoadEffectF
     }
     if (m_loadedEffects.contains(name)) {
         qCDebug(KWIN_CORE) << name << "already loaded";
+        return false;
+    }
+
+    if (!ScriptedEffect::supported()) {
+        qCDebug(KWIN_CORE) << "Effect is not supported: " << name;
         return false;
     }
 

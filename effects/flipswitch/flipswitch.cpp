@@ -83,7 +83,7 @@ FlipSwitchEffect::~FlipSwitchEffect()
 
 bool FlipSwitchEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return effects->isOpenGLCompositing() && effects->animationsSupported();
 }
 
 void FlipSwitchEffect::reconfigure(ReconfigureFlags)

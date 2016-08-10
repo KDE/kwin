@@ -63,6 +63,7 @@ public:
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     virtual void triggerFence() override;
     virtual QMatrix4x4 projectionMatrix() const = 0;
+    bool animationsSupported() const override;
 
     void insertWait();
 

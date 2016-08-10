@@ -450,6 +450,11 @@ ScriptedEffect *ScriptedEffect::create(const QString& effectName, const QString&
     return effect;
 }
 
+bool ScriptedEffect::supported()
+{
+    return effects->animationsSupported();
+}
+
 ScriptedEffect::ScriptedEffect()
     : AnimationEffect()
     , m_engine(new QScriptEngine(this))

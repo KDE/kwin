@@ -229,5 +229,15 @@ public:
     KWayland::Server::Display *waylandDisplay() const override {
         return nullptr;
     }
+
+    bool animationsSupported() const override {
+        return m_animationsSuported;
+    }
+    void setAnimationsSupported(bool set) {
+        m_animationsSuported = set;
+    }
+
+private:
+    bool m_animationsSuported = true;
 };
 #endif

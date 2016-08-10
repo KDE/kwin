@@ -119,6 +119,10 @@ public:
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void screenGeometryChanged(const QSize &size) override;
 
+    bool animationsSupported() const override {
+        return false;
+    }
+
     QPainter *painter();
 
     QPainterBackend *backend() const {

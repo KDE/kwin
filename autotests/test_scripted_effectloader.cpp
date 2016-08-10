@@ -136,11 +136,17 @@ void TestScriptedEffectLoader::testHasEffect()
     QFETCH(QString, name);
     QFETCH(bool, expected);
 
+    MockEffectsHandler mockHandler(KWin::XRenderCompositing);
     KWin::ScriptedEffectLoader loader;
     QCOMPARE(loader.hasEffect(name), expected);
 
     // each available effect should also be supported
     QCOMPARE(loader.isEffectSupported(name), expected);
+
+    if (expected) {
+        mockHandler.setAnimationsSupported(false);
+        QVERIFY(!loader.isEffectSupported(name));
+    }
 }
 
 void TestScriptedEffectLoader::testKnownEffects()

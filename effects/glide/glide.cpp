@@ -55,7 +55,7 @@ GlideEffect::~GlideEffect()
 
 bool GlideEffect::supported()
 {
-    return effects->isOpenGLCompositing();
+    return effects->isOpenGLCompositing() && effects->animationsSupported();
 }
 
 void GlideEffect::reconfigure(ReconfigureFlags)

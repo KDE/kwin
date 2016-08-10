@@ -956,6 +956,11 @@ Decoration::Renderer *SceneOpenGL::createDecorationRenderer(Decoration::Decorate
     return new SceneOpenGLDecorationRenderer(impl);
 }
 
+bool SceneOpenGL::animationsSupported() const
+{
+    return !GLPlatform::instance()->isSoftwareEmulation();
+}
+
 //****************************************
 // SceneOpenGL2
 //****************************************
