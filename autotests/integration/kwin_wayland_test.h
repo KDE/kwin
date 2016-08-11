@@ -109,6 +109,7 @@ KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();
+bool waitForWaylandKeyboard();
 
 void flushWaylandConnection();
 

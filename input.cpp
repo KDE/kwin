@@ -340,6 +340,7 @@ public:
         if (!effects || !static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()) {
             return false;
         }
+        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
         static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(event);
         return true;
     }
@@ -487,7 +488,11 @@ class InternalWindowEventFilter : public InputEventFilter {
             return false;
         }
         event->setAccepted(false);
-        return QCoreApplication::sendEvent(found, event);
+        if (QCoreApplication::sendEvent(found, event)) {
+            waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+            return true;
+        }
+        return false;
     }
 
     bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
@@ -718,6 +723,7 @@ public:
         if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
             return false;
         }
+        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
         if (event->type() == QEvent::KeyPress)
             TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
         return true;

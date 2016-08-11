@@ -28,7 +28,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QRasterWindow>
 
+#include <KWayland/Client/keyboard.h>
+#include <KWayland/Client/surface.h>
+#include <KWayland/Client/seat.h>
+#include <KWayland/Client/shell.h>
+
 #include <linux/input.h>
+
+using namespace KWayland::Client;
 
 namespace KWin
 {
@@ -41,6 +48,7 @@ class InternalWindowTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void init();
+    void cleanup();
     void testEnterLeave();
     void testPointerPressRelease();
     void testPointerAxis();
@@ -173,6 +181,13 @@ void InternalWindowTest::initTestCase()
 void InternalWindowTest::init()
 {
     Cursor::setPos(QPoint(1280, 512));
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::waitForWaylandKeyboard());
+}
+
+void InternalWindowTest::cleanup()
+{
+    Test::destroyWaylandConnection();
 }
 
 void InternalWindowTest::testEnterLeave()
@@ -285,6 +300,9 @@ void InternalWindowTest::testKeyboard()
     QVERIFY(releaseSpy.isValid());
     QVERIFY(clientAddedSpy.wait());
     QCOMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QVERIFY(internalClient->isInternal());
 
     quint32 timestamp = 1;
     QFETCH(QPoint, cursorPos);
@@ -296,6 +314,51 @@ void InternalWindowTest::testKeyboard()
     kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
     QTRY_COMPARE(releaseSpy.count(), 1);
     QCOMPARE(pressSpy.count(), 1);
+
+    // let's hide the window again and create a "real" window
+    win.hide();
+    clientAddedSpy.clear();
+
+    QScopedPointer<Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    QVERIFY(!keyboard.isNull());
+    QVERIFY(keyboard->isValid());
+    QSignalSpy enteredSpy(keyboard.data(), &Keyboard::entered);
+    QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(keyboard.data(), &Keyboard::left);
+    QVERIFY(leftSpy.isValid());
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(Test::ShellSurfaceType::WlShell, surface.data()));
+
+    // now let's render
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+
+    if (enteredSpy.isEmpty()) {
+        QVERIFY(enteredSpy.wait());
+    }
+    QCOMPARE(enteredSpy.count(), 1);
+
+    QSignalSpy windowShownSpy(internalClient, &ShellClient::windowShown);
+    QVERIFY(windowShownSpy.isValid());
+    win.show();
+    QCOMPARE(windowShownSpy.count(), 1);
+    QVERIFY(leftSpy.isEmpty());
+    QVERIFY(!leftSpy.wait(100));
+
+    // now let's trigger a key, which should result in a leave
+    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(pressSpy.count(), 2);
+
+    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    QTRY_COMPARE(releaseSpy.count(), 2);
+
+    // after hiding the internal window, next key press should trigger an enter
+    win.hide();
+    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    QVERIFY(enteredSpy.wait());
+    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
 }
 
 void InternalWindowTest::testTouch()

@@ -247,6 +247,18 @@ bool waitForWaylandTouch()
     return hasTouchSpy.wait();
 }
 
+bool waitForWaylandKeyboard()
+{
+    if (!s_waylandConnection.seat) {
+        return false;
+    }
+    QSignalSpy hasKeyboardSpy(s_waylandConnection.seat, &Seat::hasKeyboardChanged);
+    if (!hasKeyboardSpy.isValid()) {
+        return false;
+    }
+    return hasKeyboardSpy.wait();
+}
+
 void render(Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format)
 {
     QImage img(size, format);
