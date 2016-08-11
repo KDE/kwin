@@ -1376,7 +1376,7 @@ DesktopButtonsView::DesktopButtonsView(QWindow *parent)
     , m_visible(false)
     , m_posIsValid(false)
 {
-    setFlags(Qt::X11BypassWindowManagerHint);
+    setFlags(Qt::X11BypassWindowManagerHint | Qt::FramelessWindowHint);
     setColor(Qt::transparent);
 
     rootContext()->setContextProperty(QStringLiteral("add"), QVariant(true));

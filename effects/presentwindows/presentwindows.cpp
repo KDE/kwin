@@ -1893,7 +1893,7 @@ CloseWindowView::CloseWindowView(QObject *parent)
     , m_visible(false)
     , m_posIsValid(false)
 {
-    m_window->setFlags(Qt::X11BypassWindowManagerHint);
+    m_window->setFlags(Qt::X11BypassWindowManagerHint | Qt::FramelessWindowHint);
     m_window->setColor(Qt::transparent);
 
     m_window->setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/presentwindows/main.qml"))));
