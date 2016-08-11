@@ -646,7 +646,7 @@ bool ShellClient::isResizable() const
 bool ShellClient::isShown(bool shaded_is_shown) const
 {
     Q_UNUSED(shaded_is_shown)
-    return !m_closing && !m_unmapped;
+    return !m_closing && !m_unmapped && !isMinimized();
 }
 
 void ShellClient::hideClient(bool hide)
@@ -1226,6 +1226,11 @@ KWayland::Server::XdgShellSurfaceInterface::States ShellClient::xdgSurfaceStates
         states |= XdgShellSurfaceInterface::State::Resizing;
     }
     return states;
+}
+
+void ShellClient::doMinimize()
+{
+    workspace()->clientHidden(this);
 }
 
 }

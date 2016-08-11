@@ -261,9 +261,7 @@ void TestShellClient::testMinimizeActiveWindow()
     QCOMPARE(workspace()->activeClient(), c);
 
     workspace()->slotWindowMinimize();
-    QEXPECT_FAIL("", "BUG 366634", Continue);
     QVERIFY(!c->isActive());
-    QEXPECT_FAIL("", "BUG 366634", Continue);
     QVERIFY(!workspace()->activeClient());
 }
 
