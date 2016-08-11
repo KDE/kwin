@@ -78,8 +78,20 @@ int libinput_device_config_tap_get_finger_count(struct libinput_device *device)
 
 enum libinput_config_tap_state libinput_device_config_tap_get_enabled(struct libinput_device *device)
 {
-    Q_UNUSED(device)
-    return LIBINPUT_CONFIG_TAP_DISABLED;
+    if (device->tapToClick) {
+        return LIBINPUT_CONFIG_TAP_ENABLED;
+    } else {
+        return LIBINPUT_CONFIG_TAP_DISABLED;
+    }
+}
+
+enum libinput_config_status libinput_device_config_tap_set_enabled(struct libinput_device *device, enum libinput_config_tap_state enable)
+{
+    if (device->setTapToClickReturnValue == 0) {
+        device->tapToClick = (enable == LIBINPUT_CONFIG_TAP_ENABLED);
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
 }
 
 enum libinput_config_tap_state libinput_device_config_tap_get_default_enabled(struct libinput_device *device)

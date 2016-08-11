@@ -58,6 +58,7 @@ class Device : public QObject
     Q_PROPERTY(bool supportsDisableEventsOnExternalMouse READ supportsDisableEventsOnExternalMouse CONSTANT)
     Q_PROPERTY(bool leftHanded READ isLeftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
     Q_PROPERTY(qreal pointerAcceleration READ pointerAcceleration WRITE setPointerAcceleration NOTIFY pointerAccelerationChanged)
+    Q_PROPERTY(bool tapToClick READ isTapToClick WRITE setTapToClick NOTIFY tapToClickChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
@@ -111,6 +112,13 @@ public:
     bool tapEnabledByDefault() const {
         return m_tapEnabledByDefault;
     }
+    bool isTapToClick() const {
+        return m_tapToClick;
+    }
+    /**
+     * Set the Device to tap to click if @p set is @c true.
+     **/
+    void setTapToClick(bool set);
     bool supportsDisableWhileTyping() const {
         return m_supportsDisableWhileTyping;
     }
@@ -171,6 +179,7 @@ Q_SIGNALS:
     void leftHandedChanged();
     void pointerAccelerationChanged();
     void enabledChanged();
+    void tapToClickChanged();
 
 private:
     libinput_device *m_device;
@@ -190,6 +199,7 @@ private:
     Qt::MouseButtons m_supportedButtons = Qt::NoButton;
     int m_tapFingerCount;
     bool m_tapEnabledByDefault;
+    bool m_tapToClick;
     bool m_supportsDisableWhileTyping;
     bool m_supportsPointerAcceleration;
     bool m_supportsLeftHanded;

@@ -67,6 +67,8 @@ private Q_SLOTS:
     void testAlphaNumericKeyboard();
     void testEnabled_data();
     void testEnabled();
+    void testTapToClick_data();
+    void testTapToClick();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -604,6 +606,46 @@ void TestLibinputDevice::testEnabled()
     d.setEnabled(setValue);
     QFETCH(bool, expectedValue);
     QCOMPARE(d.isEnabled(), expectedValue);
+}
+
+void TestLibinputDevice::testTapToClick_data()
+{
+    QTest::addColumn<int>("fingerCount");
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("expectedValue");
+
+    QTest::newRow("unsupported") << 0 << false << true << true << false;
+    QTest::newRow("true -> false") << 1 << true << false << false << false;
+    QTest::newRow("false -> true") << 2 << false << true << false << true;
+    QTest::newRow("set fails") << 3 << true << false << true << true;
+    QTest::newRow("true -> true") << 2 << true << true << false << true;
+    QTest::newRow("false -> false") << 1 << false << false << false << false;
+}
+
+void TestLibinputDevice::testTapToClick()
+{
+    libinput_device device;
+    QFETCH(int, fingerCount);
+    QFETCH(bool, initValue);
+    QFETCH(bool, setShouldFail);
+    device.tapFingerCount = fingerCount;
+    device.tapToClick = initValue;
+    device.setTapToClickReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.tapFingerCount(), fingerCount);
+    QCOMPARE(d.isTapToClick(), initValue);
+    QCOMPARE(d.property("tapToClick").toBool(), initValue);
+
+    QSignalSpy tapToClickChangedSpy(&d, &Device::tapToClickChanged);
+    QVERIFY(tapToClickChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setTapToClick(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.isTapToClick(), expectedValue);
+    QCOMPARE(tapToClickChangedSpy.isEmpty(), initValue == expectedValue);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)

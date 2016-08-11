@@ -90,6 +90,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_vendor(libinput_device_get_id_vendor(m_device))
     , m_tapFingerCount(libinput_device_config_tap_get_finger_count(m_device))
     , m_tapEnabledByDefault(libinput_device_config_tap_get_default_enabled(m_device) == LIBINPUT_CONFIG_TAP_ENABLED)
+    , m_tapToClick(libinput_device_config_tap_get_enabled(m_device))
     , m_supportsDisableWhileTyping(libinput_device_config_dwt_is_available(m_device))
     , m_supportsPointerAcceleration(libinput_device_config_accel_is_available(m_device))
     , m_supportsLeftHanded(libinput_device_config_left_handed_is_available(m_device))
@@ -182,6 +183,19 @@ void Device::setEnabled(bool enabled)
         if (m_enabled != enabled) {
             m_enabled = enabled;
             emit enabledChanged();
+        }
+    }
+}
+
+void Device::setTapToClick(bool set)
+{
+    if (m_tapFingerCount == 0) {
+        return;
+    }
+    if (libinput_device_config_tap_set_enabled(m_device, set ? LIBINPUT_CONFIG_TAP_ENABLED : LIBINPUT_CONFIG_TAP_DISABLED) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_tapToClick != set) {
+            m_tapToClick = set;
+            emit tapToClickChanged();
         }
     }
 }

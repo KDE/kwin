@@ -41,6 +41,7 @@ struct libinput_device {
     QSizeF deviceSize;
     int deviceSizeReturnValue = 0;
     bool tapEnabledByDefault = false;
+    bool tapToClick = false;
     bool supportsDisableWhileTyping = false;
     bool supportsPointerAcceleration = false;
     bool supportsLeftHanded = false;
@@ -55,6 +56,7 @@ struct libinput_device {
     QVector<quint32> keys;
     bool enabled = true;
     int setEnableModeReturnValue = 0;
+    int setTapToClickReturnValue = 0;
 };
 
 struct libinput_event {
