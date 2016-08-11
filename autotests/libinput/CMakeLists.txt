@@ -5,7 +5,7 @@ include_directories(${UDEV_INCLUDE_DIR})
 ########################################################
 set( testLibinputDevice_SRCS device_test.cpp mock_libinput.cpp ../../libinput/device.cpp )
 add_executable(testLibinputDevice ${testLibinputDevice_SRCS})
-target_link_libraries( testLibinputDevice Qt5::Test)
+target_link_libraries( testLibinputDevice Qt5::Test Qt5::DBus)
 add_test(kwin-testLibinputDevice testLibinputDevice)
 ecm_mark_as_test(testLibinputDevice)
 
@@ -19,7 +19,7 @@ set( testLibinputKeyEvent_SRCS
         ../../libinput/events.cpp
     )
 add_executable(testLibinputKeyEvent ${testLibinputKeyEvent_SRCS})
-target_link_libraries( testLibinputKeyEvent Qt5::Test Qt5::Widgets KF5::ConfigCore)
+target_link_libraries( testLibinputKeyEvent Qt5::Test Qt5::DBus Qt5::Widgets KF5::ConfigCore)
 add_test(kwin-testLibinputKeyEvent testLibinputKeyEvent)
 ecm_mark_as_test(testLibinputKeyEvent)
 
@@ -33,7 +33,7 @@ set( testLibinputPointerEvent_SRCS
         ../../libinput/events.cpp
     )
 add_executable(testLibinputPointerEvent ${testLibinputPointerEvent_SRCS})
-target_link_libraries( testLibinputPointerEvent Qt5::Test Qt5::Widgets KF5::ConfigCore)
+target_link_libraries( testLibinputPointerEvent Qt5::Test Qt5::DBus Qt5::Widgets KF5::ConfigCore)
 add_test(kwin-testLibinputPointerEvent testLibinputPointerEvent)
 ecm_mark_as_test(testLibinputPointerEvent)
 
@@ -47,7 +47,7 @@ set( testLibinputTouchEvent_SRCS
         ../../libinput/events.cpp
     )
 add_executable(testLibinputTouchEvent ${testLibinputTouchEvent_SRCS})
-target_link_libraries( testLibinputTouchEvent Qt5::Test Qt5::Widgets KF5::ConfigCore)
+target_link_libraries( testLibinputTouchEvent Qt5::Test Qt5::DBus Qt5::Widgets KF5::ConfigCore)
 add_test(kwin-testLibinputTouchEvent testLibinputTouchEvent)
 ecm_mark_as_test(testLibinputTouchEvent)
 
@@ -61,7 +61,7 @@ set( testLibinputGestureEvent_SRCS
         ../../libinput/events.cpp
     )
 add_executable(testLibinputGestureEvent ${testLibinputGestureEvent_SRCS})
-target_link_libraries( testLibinputGestureEvent Qt5::Test Qt5::Widgets KF5::ConfigCore)
+target_link_libraries( testLibinputGestureEvent Qt5::Test Qt5::DBus Qt5::Widgets KF5::ConfigCore)
 add_test(kwin-testLibinputGestureEvent testLibinputGestureEvent)
 ecm_mark_as_test(testLibinputGestureEvent)
 
@@ -94,6 +94,6 @@ ecm_mark_as_test(testLibinputContext)
 ########################################################
 set( testInputEvents_SRCS input_event_test.cpp mock_libinput.cpp ../../libinput/device.cpp ../../input_event.cpp )
 add_executable(testInputEvents ${testInputEvents_SRCS})
-target_link_libraries( testInputEvents Qt5::Test Qt5::Gui)
+target_link_libraries( testInputEvents Qt5::Test Qt5::DBus Qt5::Gui)
 add_test(kwin-testInputEvents testInputEvents)
 ecm_mark_as_test(testInputEvents)
