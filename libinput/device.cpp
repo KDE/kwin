@@ -174,31 +174,24 @@ void Device::setPointerAcceleration(qreal acceleration)
     }
 }
 
-void Device::setEnabled(bool enabled)
-{
-    if (!m_supportsDisableEvents) {
-        return;
-    }
-    if (libinput_device_config_send_events_set_mode(m_device, enabled ? LIBINPUT_CONFIG_SEND_EVENTS_ENABLED  : LIBINPUT_CONFIG_SEND_EVENTS_DISABLED) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
-        if (m_enabled != enabled) {
-            m_enabled = enabled;
-            emit enabledChanged();
-        }
-    }
+#define CONFIG(method, condition, function, enum, variable) \
+void Device::method(bool set) \
+{ \
+    if (condition) { \
+        return; \
+    } \
+    if (libinput_device_config_##function(m_device, set ? LIBINPUT_CONFIG_##enum##_ENABLED : LIBINPUT_CONFIG_##enum##_DISABLED) == LIBINPUT_CONFIG_STATUS_SUCCESS) { \
+        if (m_##variable != set) { \
+            m_##variable = set; \
+            emit variable##Changed(); \
+        }\
+    } \
 }
 
-void Device::setTapToClick(bool set)
-{
-    if (m_tapFingerCount == 0) {
-        return;
-    }
-    if (libinput_device_config_tap_set_enabled(m_device, set ? LIBINPUT_CONFIG_TAP_ENABLED : LIBINPUT_CONFIG_TAP_DISABLED) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
-        if (m_tapToClick != set) {
-            m_tapToClick = set;
-            emit tapToClickChanged();
-        }
-    }
-}
+CONFIG(setEnabled, !m_supportsDisableEvents, send_events_set_mode, SEND_EVENTS, enabled)
+CONFIG(setTapToClick, m_tapFingerCount == 0, tap_set_enabled, TAP, tapToClick)
+
+#undef CONFIG
 
 }
 }
