@@ -25,7 +25,12 @@ namespace KWin
 {
 
 X11EventFilter::X11EventFilter(int eventType, int opcode, int genericEventType)
-    : m_eventType(eventType), m_extension(opcode), m_genericEventType(genericEventType)
+    : X11EventFilter(eventType, opcode, QVector<int>{genericEventType})
+{
+}
+
+X11EventFilter::X11EventFilter(int eventType, int opcode, const QVector< int > &genericEventTypes)
+    : m_eventType(eventType), m_extension(opcode), m_genericEventTypes(genericEventTypes)
 {
     Workspace::self()->registerEventFilter(this);
 }

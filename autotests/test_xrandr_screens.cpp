@@ -138,7 +138,7 @@ void TestXRandRScreens::testStartup()
     QVERIFY(screens->eventType() != 0);
     QCOMPARE(screens->eventType(), Xcb::Extensions::self()->randrNotifyEvent());
     QCOMPARE(screens->extension(), 0);
-    QCOMPARE(screens->genericEventType(), 0);
+    QCOMPARE(screens->genericEventTypes(), QVector<int>{0});
     screens->init();
     QRect xephyrDefault = QRect(0, 0, 640, 480);
     QCOMPARE(screens->count(), 1);

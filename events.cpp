@@ -237,7 +237,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(e);
 
         foreach (X11EventFilter *filter, m_genericEventFilters) {
-            if (filter->extension() == ge->extension && filter->genericEventType() == ge->event_type && filter->event(e)) {
+            if (filter->extension() == ge->extension && filter->genericEventTypes().contains(ge->event_type) && filter->event(e)) {
                 return true;
             }
         }
