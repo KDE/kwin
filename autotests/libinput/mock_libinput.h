@@ -42,6 +42,8 @@ struct libinput_device {
     int deviceSizeReturnValue = 0;
     bool tapEnabledByDefault = false;
     bool tapToClick = false;
+    bool tapAndDragEnabledByDefault = false;
+    bool tapAndDrag = false;
     bool supportsDisableWhileTyping = false;
     bool supportsPointerAcceleration = false;
     bool supportsLeftHanded = false;
@@ -57,6 +59,7 @@ struct libinput_device {
     bool enabled = true;
     int setEnableModeReturnValue = 0;
     int setTapToClickReturnValue = 0;
+    int setTapAndDragReturnValue = 0;
 };
 
 struct libinput_event {
