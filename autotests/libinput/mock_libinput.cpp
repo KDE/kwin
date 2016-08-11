@@ -130,6 +130,33 @@ enum libinput_config_status libinput_device_config_tap_set_drag_enabled(struct l
     return LIBINPUT_CONFIG_STATUS_INVALID;
 }
 
+enum libinput_config_drag_lock_state libinput_device_config_tap_get_default_drag_lock_enabled(struct libinput_device *device)
+{
+    if (device->tapDragLockEnabledByDefault) {
+        return LIBINPUT_CONFIG_DRAG_LOCK_ENABLED;
+    } else {
+        return LIBINPUT_CONFIG_DRAG_LOCK_DISABLED;
+    }
+}
+
+enum libinput_config_drag_lock_state libinput_device_config_tap_get_drag_lock_enabled(struct libinput_device *device)
+{
+    if (device->tapDragLock) {
+        return LIBINPUT_CONFIG_DRAG_LOCK_ENABLED;
+    } else {
+        return LIBINPUT_CONFIG_DRAG_LOCK_DISABLED;
+    }
+}
+
+enum libinput_config_status libinput_device_config_tap_set_drag_lock_enabled(struct libinput_device *device, enum libinput_config_drag_lock_state enable)
+{
+    if (device->setTapDragLockReturnValue == 0) {
+        device->tapDragLock = (enable == LIBINPUT_CONFIG_DRAG_LOCK_ENABLED);
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
 int libinput_device_config_dwt_is_available(struct libinput_device *device)
 {
     return device->supportsDisableWhileTyping;

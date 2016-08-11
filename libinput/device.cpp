@@ -93,6 +93,8 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_tapToClick(libinput_device_config_tap_get_enabled(m_device))
     , m_tapAndDragEnabledByDefault(libinput_device_config_tap_get_default_drag_enabled(m_device))
     , m_tapAndDrag(libinput_device_config_tap_get_drag_enabled(m_device))
+    , m_tapDragLockEnabledByDefault(libinput_device_config_tap_get_default_drag_lock_enabled(m_device))
+    , m_tapDragLock(libinput_device_config_tap_get_drag_lock_enabled(m_device))
     , m_supportsDisableWhileTyping(libinput_device_config_dwt_is_available(m_device))
     , m_supportsPointerAcceleration(libinput_device_config_accel_is_available(m_device))
     , m_supportsLeftHanded(libinput_device_config_left_handed_is_available(m_device))
@@ -193,6 +195,7 @@ void Device::method(bool set) \
 CONFIG(setEnabled, !m_supportsDisableEvents, send_events_set_mode, SEND_EVENTS, enabled)
 CONFIG(setTapToClick, m_tapFingerCount == 0, tap_set_enabled, TAP, tapToClick)
 CONFIG(setTapAndDrag, false, tap_set_drag_enabled, DRAG, tapAndDrag)
+CONFIG(setTapDragLock, false, tap_set_drag_lock_enabled, DRAG_LOCK, tapDragLock)
 
 #undef CONFIG
 

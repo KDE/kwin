@@ -73,6 +73,10 @@ private Q_SLOTS:
     void testTapAndDragEnabledByDefault();
     void testTapAndDrag_data();
     void testTapAndDrag();
+    void testTapDragLockEnabledByDefault_data();
+    void testTapDragLockEnabledByDefault();
+    void testTapDragLock_data();
+    void testTapDragLock();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -704,6 +708,60 @@ void TestLibinputDevice::testTapAndDrag()
     QFETCH(bool, expectedValue);
     QCOMPARE(d.isTapAndDrag(), expectedValue);
     QCOMPARE(tapAndDragChangedSpy.isEmpty(), initValue == expectedValue);
+}
+
+void TestLibinputDevice::testTapDragLockEnabledByDefault_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::newRow("enabled") << true;
+    QTest::newRow("disabled") << false;
+}
+
+void TestLibinputDevice::testTapDragLockEnabledByDefault()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.tapDragLockEnabledByDefault = enabled;
+
+    Device d(&device);
+    QCOMPARE(d.tapDragLockEnabledByDefault(), enabled);
+    QCOMPARE(d.property("tapDragLockEnabledByDefault").toBool(), enabled);
+}
+
+void TestLibinputDevice::testTapDragLock_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("expectedValue");
+
+    QTest::newRow("true -> false") << true << false << false << false;
+    QTest::newRow("false -> true") << false << true << false << true;
+    QTest::newRow("set fails") << true << false << true << true;
+    QTest::newRow("true -> true") << true << true << false << true;
+    QTest::newRow("false -> false") << false << false << false << false;
+}
+
+void TestLibinputDevice::testTapDragLock()
+{
+    libinput_device device;
+    QFETCH(bool, initValue);
+    QFETCH(bool, setShouldFail);
+    device.tapDragLock = initValue;
+    device.setTapDragLockReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.isTapDragLock(), initValue);
+    QCOMPARE(d.property("tapDragLock").toBool(), initValue);
+
+    QSignalSpy tapDragLockChangedSpy(&d, &Device::tapDragLockChanged);
+    QVERIFY(tapDragLockChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setTapDragLock(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.isTapDragLock(), expectedValue);
+    QCOMPARE(tapDragLockChangedSpy.isEmpty(), initValue == expectedValue);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)

@@ -61,6 +61,8 @@ class Device : public QObject
     Q_PROPERTY(bool tapToClick READ isTapToClick WRITE setTapToClick NOTIFY tapToClickChanged)
     Q_PROPERTY(bool tapAndDragEnabledByDefault READ tapAndDragEnabledByDefault CONSTANT)
     Q_PROPERTY(bool tapAndDrag READ isTapAndDrag WRITE setTapAndDrag NOTIFY tapAndDragChanged)
+    Q_PROPERTY(bool tapDragLockEnabledByDefault READ tapDragLockEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool tapDragLock READ isTapDragLock WRITE setTapDragLock NOTIFY tapDragLockChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
@@ -128,6 +130,13 @@ public:
         return m_tapAndDrag;
     }
     void setTapAndDrag(bool set);
+    bool tapDragLockEnabledByDefault() const {
+        return m_tapDragLockEnabledByDefault;
+    }
+    bool isTapDragLock() const {
+        return m_tapDragLock;
+    }
+    void setTapDragLock(bool set);
     bool supportsDisableWhileTyping() const {
         return m_supportsDisableWhileTyping;
     }
@@ -190,6 +199,7 @@ Q_SIGNALS:
     void enabledChanged();
     void tapToClickChanged();
     void tapAndDragChanged();
+    void tapDragLockChanged();
 
 private:
     libinput_device *m_device;
@@ -212,6 +222,8 @@ private:
     bool m_tapToClick;
     bool m_tapAndDragEnabledByDefault;
     bool m_tapAndDrag;
+    bool m_tapDragLockEnabledByDefault;
+    bool m_tapDragLock;
     bool m_supportsDisableWhileTyping;
     bool m_supportsPointerAcceleration;
     bool m_supportsLeftHanded;
