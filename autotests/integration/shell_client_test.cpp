@@ -50,6 +50,8 @@ private Q_SLOTS:
     void testMapUnmapMap();
     void testDesktopPresenceChanged();
     void testTransientPositionAfterRemap();
+    void testMinimizeActiveWindow_data();
+    void testMinimizeActiveWindow();
 };
 
 void TestShellClient::initTestCase()
@@ -237,6 +239,32 @@ void TestShellClient::testTransientPositionAfterRemap()
     Test::render(transientSurface.data(), QSize(50, 40), Qt::blue);
     QVERIFY(windowShownSpy.wait());
     QCOMPARE(transient->geometry(), QRect(c->geometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
+}
+
+void TestShellClient::testMinimizeActiveWindow_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
+void TestShellClient::testMinimizeActiveWindow()
+{
+    // this test verifies that when minimizing the active window it gets deactivated
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QCOMPARE(workspace()->activeClient(), c);
+
+    workspace()->slotWindowMinimize();
+    QEXPECT_FAIL("", "BUG 366634", Continue);
+    QVERIFY(!c->isActive());
+    QEXPECT_FAIL("", "BUG 366634", Continue);
+    QVERIFY(!workspace()->activeClient());
 }
 
 WAYLANDTEST_MAIN(TestShellClient)
