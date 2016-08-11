@@ -49,7 +49,7 @@ class Device : public QObject
     Q_PROPERTY(quint32 vendor READ vendor CONSTANT)
     Q_PROPERTY(Qt::MouseButtons supportedButtons READ supportedButtons CONSTANT)
     Q_PROPERTY(int tapFingerCount READ tapFingerCount CONSTANT)
-    Q_PROPERTY(bool tapEnabledByDefault READ tapEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool tapToClickEnabledByDefault READ tapToClickEnabledByDefault CONSTANT)
     Q_PROPERTY(bool supportsDisableWhileTyping READ supportsDisableWhileTyping CONSTANT)
     Q_PROPERTY(bool supportsPointerAcceleration READ supportsPointerAcceleration CONSTANT)
     Q_PROPERTY(bool supportsLeftHanded READ supportsLeftHanded CONSTANT)
@@ -109,8 +109,8 @@ public:
     int tapFingerCount() const {
         return m_tapFingerCount;
     }
-    bool tapEnabledByDefault() const {
-        return m_tapEnabledByDefault;
+    bool tapToClickEnabledByDefault() const {
+        return m_tapToClickEnabledByDefault;
     }
     bool isTapToClick() const {
         return m_tapToClick;
@@ -198,7 +198,7 @@ private:
     quint32 m_vendor;
     Qt::MouseButtons m_supportedButtons = Qt::NoButton;
     int m_tapFingerCount;
-    bool m_tapEnabledByDefault;
+    bool m_tapToClickEnabledByDefault;
     bool m_tapToClick;
     bool m_supportsDisableWhileTyping;
     bool m_supportsPointerAcceleration;

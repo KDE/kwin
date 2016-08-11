@@ -278,8 +278,8 @@ void TestLibinputDevice::testTapEnabledByDefault()
     device.tapEnabledByDefault = enabled;
 
     Device d(&device);
-    QCOMPARE(d.tapEnabledByDefault(), enabled);
-    QCOMPARE(d.property("tapEnabledByDefault").toBool(), enabled);
+    QCOMPARE(d.tapToClickEnabledByDefault(), enabled);
+    QCOMPARE(d.property("tapToClickEnabledByDefault").toBool(), enabled);
 }
 
 void TestLibinputDevice::testSupportsDisableWhileTyping_data()
