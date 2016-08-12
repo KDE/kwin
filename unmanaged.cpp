@@ -154,5 +154,11 @@ NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
     return info->windowType(NET::WindowTypes(supportedTypes));
 }
 
+void Unmanaged::addDamage(const QRegion &damage)
+{
+    repaints_region += damage;
+    Toplevel::addDamage(damage);
+}
+
 } // namespace
 
