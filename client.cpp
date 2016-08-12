@@ -1240,6 +1240,16 @@ void Client::setOnActivities(QStringList newActivitiesList)
     newActivitiesList = joinedActivitiesList.split(u',', QString::SkipEmptyParts);
 
     QStringList allActivities = Activities::self()->all();
+
+    auto it = newActivitiesList.begin();
+    while (it != newActivitiesList.end()) {
+        if (! allActivities.contains(*it)) {
+            it = newActivitiesList.erase(it);
+        } else {
+            it++;
+        }
+    }
+
     if (// If we got the request to be on all activities explicitly
         newActivitiesList.isEmpty() || joinedActivitiesList == Activities::nullUuid() ||
         // If we got a list of activities that covers all activities
