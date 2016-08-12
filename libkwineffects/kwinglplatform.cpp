@@ -800,12 +800,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     else if (m_vendor == "Qualcomm") {
         m_driver = Driver_Qualcomm;
         m_chipClass = detectQualcommClass(m_renderer);
-        // version specific overwrite for libhybris disabling OpenGL ES 3
-        if (isGLES() && m_glVersion == kVersionNumber(2, 0) && m_glslVersion >= kVersionNumber(3, 0)) {
-            if (m_version.contains("OpenGL ES 3.0")) {
-                m_glVersion = kVersionNumber(3, 0);
-            }
-        }
     }
 
     else if (m_renderer == "Software Rasterizer") {

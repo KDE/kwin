@@ -7,7 +7,7 @@ ShadingLanguageVersion=OpenGL ES GLSL ES 3.00
 [Settings]
 GLSL=true
 TextureNPOT=true
-GLVersion=3,0
+GLVersion=2,0
 GLSLVersion=3,0
 GLES=true
 Adreno=true
