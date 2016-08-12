@@ -1,0 +1,15 @@
+[Driver]
+Vendor=Qualcomm
+Renderer=Adreno (TM) 330
+Version=OpenGL ES 2.0 (OpenGL ES 3.0 V@104.0 AU@  (GIT@Id3510ff6dc))
+ShadingLanguageVersion=OpenGL ES GLSL ES 3.00
+
+[Settings]
+GLSL=true
+TextureNPOT=true
+GLVersion=2,0
+GLSLVersion=3,0
+GLES=true
+Driver=15
+ChipClass=99999
+Compositor=9
