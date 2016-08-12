@@ -35,7 +35,7 @@ namespace KWin
 {
 class Client;
 
-class Activities : public QObject
+class KWIN_EXPORT Activities : public QObject
 {
     Q_OBJECT
 
