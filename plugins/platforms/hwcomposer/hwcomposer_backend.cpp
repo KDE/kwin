@@ -34,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // hybris/android
 #include <hardware/hardware.h>
 #include <hardware/hwcomposer.h>
-#include <hardware/lights.h>
 // linux
 #include <linux/input.h>
 
@@ -234,7 +233,6 @@ void HwcomposerBackend::init()
     };
     m_device->registerProcs(m_device, procs);
 
-    initLights();
     toggleBlankOutput();
     m_filter.reset(new BacklightInputEventFilter(this));
     input()->prepandInputEventFilter(m_filter.data());
@@ -250,48 +248,32 @@ void HwcomposerBackend::init()
     if (m_refreshRate != 0) {
         m_vsyncInterval = 1000000/m_refreshRate;
     }
-    if (m_lights) {
-        using namespace KWayland::Server;
-        output->setDpmsSupported(true);
-        auto updateDpms = [this, output] {
-            output->setDpmsMode(m_outputBlank ? OutputInterface::DpmsMode::Off : OutputInterface::DpmsMode::On);
-        };
-        updateDpms();
-        connect(this, &HwcomposerBackend::outputBlankChanged, this, updateDpms);
-        connect(output, &OutputInterface::dpmsModeRequested, this,
-            [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
-                if (mode == OutputInterface::DpmsMode::On) {
-                    if (m_outputBlank) {
-                        toggleBlankOutput();
-                    }
-                } else {
-                    if (!m_outputBlank) {
-                        toggleBlankOutput();
-                    }
+
+    using namespace KWayland::Server;
+    output->setDpmsSupported(true);
+    auto updateDpms = [this, output] {
+        output->setDpmsMode(m_outputBlank ? OutputInterface::DpmsMode::Off : OutputInterface::DpmsMode::On);
+    };
+    updateDpms();
+    connect(this, &HwcomposerBackend::outputBlankChanged, this, updateDpms);
+    connect(output, &OutputInterface::dpmsModeRequested, this,
+        [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
+            if (mode == OutputInterface::DpmsMode::On) {
+                if (m_outputBlank) {
+                    toggleBlankOutput();
+                }
+            } else {
+                if (!m_outputBlank) {
+                    toggleBlankOutput();
                 }
             }
-        );
-    }
+        }
+    );
     qCDebug(KWIN_HWCOMPOSER) << "Display size:" << m_displaySize;
     qCDebug(KWIN_HWCOMPOSER) << "Refresh rate:" << m_refreshRate;
 
     emit screensQueried();
     setReady(true);
-}
-
-void HwcomposerBackend::initLights()
-{
-    hw_module_t *lightsModule = nullptr;
-    if (hw_get_module(LIGHTS_HARDWARE_MODULE_ID, (const hw_module_t **)&lightsModule) != 0) {
-        qCWarning(KWIN_HWCOMPOSER) << "Failed to get lights module";
-        return;
-    }
-    light_device_t *lightsDevice = nullptr;
-    if (lightsModule->methods->open(lightsModule, LIGHT_ID_BACKLIGHT, (hw_device_t **)&lightsDevice) != 0) {
-        qCWarning(KWIN_HWCOMPOSER) << "Failed to create lights device";
-        return;
-    }
-    m_lights = lightsDevice;
 }
 
 void HwcomposerBackend::toggleBlankOutput()
@@ -300,7 +282,6 @@ void HwcomposerBackend::toggleBlankOutput()
         return;
     }
     m_outputBlank = !m_outputBlank;
-    toggleScreenBrightness();
     m_device->blank(m_device, 0, m_outputBlank ? 1 : 0);
     // only disable Vsycn, enable happens after next frame rendered
     if (m_outputBlank) {
@@ -314,21 +295,6 @@ void HwcomposerBackend::toggleBlankOutput()
         }
     }
     emit outputBlankChanged();
-}
-
-void HwcomposerBackend::toggleScreenBrightness()
-{
-    if (!m_lights) {
-        return;
-    }
-    const int brightness = m_outputBlank ? 0 : 0xFF;
-    struct light_state_t state;
-    state.flashMode = LIGHT_FLASH_NONE;
-    state.brightnessMode = BRIGHTNESS_MODE_USER;
-
-    state.color = (int)((0xffU << 24) | (brightness << 16) |
-                        (brightness << 8) | brightness);
-    m_lights->set_light(m_lights, &state);
 }
 
 void HwcomposerBackend::enableVSync(bool enable)
