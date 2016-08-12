@@ -393,6 +393,37 @@ static ChipClass detectIntelClass(const QByteArray &chipset)
     return UnknownIntel;
 }
 
+static ChipClass detectQualcommClass(const QByteArray &chipClass)
+{
+    if (!chipClass.contains("Adreno")) {
+        return UnknownChipClass;
+    }
+    const auto parts = chipClass.split(' ');
+    if (parts.count() < 3) {
+        return UnknownAdreno;
+    }
+    bool ok = false;
+    const int value = parts.at(2).toInt(&ok);
+    if (ok) {
+        if (value >= 100 && value < 200) {
+            return Adreno1XX;
+        }
+        if (value >= 200 && value < 300) {
+            return Adreno2XX;
+        }
+        if (value >= 300 && value < 400) {
+            return Adreno3XX;
+        }
+        if (value >= 400 && value < 500) {
+            return Adreno4XX;
+        }
+        if (value >= 500 && value < 600) {
+            return Adreno5XX;
+        }
+    }
+    return UnknownAdreno;
+}
+
 QString GLPlatform::versionToString(qint64 version)
 {
     return QString::fromLatin1(versionToString8(version));
@@ -447,6 +478,8 @@ QByteArray GLPlatform::driverToString8(Driver driver)
         return QByteArrayLiteral("VirtualBox (Chromium)");
     case Driver_VMware:
         return QByteArrayLiteral("VMware (SVGA3D)");
+    case Driver_Qualcomm:
+        return QByteArrayLiteral("Qualcomm");
 
     default:
         return QByteArrayLiteral("Unknown");
@@ -504,6 +537,17 @@ QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
         return QByteArrayLiteral("IvyBridge");
     case Haswell:
         return QByteArrayLiteral("Haswell");
+
+    case Adreno1XX:
+        return QByteArrayLiteral("Adreno 1xx series");
+    case Adreno2XX:
+        return QByteArrayLiteral("Adreno 2xx series");
+    case Adreno3XX:
+        return QByteArrayLiteral("Adreno 3xx series");
+    case Adreno4XX:
+        return QByteArrayLiteral("Adreno 4xx series");
+    case Adreno5XX:
+        return QByteArrayLiteral("Adreno 5xx series");
 
     default:
         return QByteArrayLiteral("Unknown");
@@ -753,6 +797,17 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_driverVersion = 0;
     }
 
+    else if (m_vendor == "Qualcomm") {
+        m_driver = Driver_Qualcomm;
+        m_chipClass = detectQualcommClass(m_renderer);
+        // version specific overwrite for libhybris disabling OpenGL ES 3
+        if (isGLES() && m_glVersion == kVersionNumber(2, 0) && m_glslVersion >= kVersionNumber(3, 0)) {
+            if (m_version.contains("OpenGL ES 3.0")) {
+                m_glVersion = kVersionNumber(3, 0);
+            }
+        }
+    }
+
     else if (m_renderer == "Software Rasterizer") {
         m_driver = Driver_Swrast;
     }
@@ -859,6 +914,15 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_recommendedCompositor = OpenGL2Compositing;
             m_limitedGLSL = false;
             m_supportsGLSL = true;
+        }
+    }
+
+    if (m_driver == Driver_Qualcomm) {
+        if (m_chipClass == Adreno1XX) {
+            m_recommendedCompositor = NoCompositing;
+        } else {
+            // all other drivers support at least GLES 2
+            m_recommendedCompositor = OpenGL2Compositing;
         }
     }
 
@@ -1035,6 +1099,11 @@ bool GLPlatform::isVMware() const
 bool GLPlatform::isSoftwareEmulation() const
 {
     return m_driver == Driver_Softpipe || m_driver == Driver_Swrast || m_driver == Driver_Llvmpipe;
+}
+
+bool GLPlatform::isAdreno() const
+{
+    return m_chipClass >= Adreno1XX && m_chipClass <= UnknownAdreno;
 }
 
 const QByteArray &GLPlatform::glRendererString() const

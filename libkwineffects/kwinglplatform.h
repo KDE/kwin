@@ -101,6 +101,7 @@ enum Driver {
     Driver_Llvmpipe,
     Driver_VirtualBox,
     Driver_VMware,
+    Driver_Qualcomm,
     Driver_Unknown
 };
 
@@ -134,6 +135,15 @@ enum ChipClass {
     IvyBridge,              // GL4.0  CL1.1  DX11      SM 5.0      2012
     Haswell,                // GL4.0  CL1.2  DX11.1    SM 5.0      2013
     UnknownIntel  = 2999,
+
+    // Qualcomm Adreno
+    // from https://en.wikipedia.org/wiki/Adreno
+    Adreno1XX     = 3000,   // GLES1.1
+    Adreno2XX,              // GLES2.0       DX9c
+    Adreno3XX,              // GLES3.0 CL1.1 DX11.1
+    Adreno4XX,              // GLES3.1 CL1.2 DX11.2
+    Adreno5XX,              // GLES3.1 CL2.0 DX11.2
+    UnknownAdreno = 3999,
 
     UnknownChipClass = 99999
 };
@@ -266,6 +276,12 @@ public:
      * @since 4.10
      **/
     bool isVirtualMachine() const;
+
+    /**
+     * @returns @c true if the GPU is a Qualcomm Adreno GPU, and false otherwise
+     * @since 5.8
+     **/
+    bool isAdreno() const;
 
     /**
      * @returns the GL_VERSION string as provided by the driver.

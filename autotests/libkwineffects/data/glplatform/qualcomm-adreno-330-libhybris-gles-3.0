@@ -7,9 +7,10 @@ ShadingLanguageVersion=OpenGL ES GLSL ES 3.00
 [Settings]
 GLSL=true
 TextureNPOT=true
-GLVersion=2,0
+GLVersion=3,0
 GLSLVersion=3,0
 GLES=true
+Adreno=true
 Driver=15
-ChipClass=99999
+ChipClass=3002
 Compositor=9

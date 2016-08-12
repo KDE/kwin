@@ -76,6 +76,7 @@ void GLPlatformTest::testDriverToString_data()
     QTest::newRow("Llvmpipe") << Driver_Llvmpipe << QStringLiteral("LLVMpipe");
     QTest::newRow("VirtualBox") << Driver_VirtualBox << QStringLiteral("VirtualBox (Chromium)");
     QTest::newRow("VMware") << Driver_VMware << QStringLiteral("VMware (SVGA3D)");
+    QTest::newRow("Qualcomm") << Driver_Qualcomm << QStringLiteral("Qualcomm");
     QTest::newRow("Unknown") << Driver_Unknown << QStringLiteral("Unknown");
 }
 
@@ -114,6 +115,12 @@ void GLPlatformTest::testChipClassToString_data()
     QTest::newRow("IvyBridge") << IvyBridge << QStringLiteral("IvyBridge");
     QTest::newRow("Haswell") << Haswell << QStringLiteral("Haswell");
     QTest::newRow("UnknownIntel") << UnknownIntel << QStringLiteral("Unknown");
+    QTest::newRow("Adreno1XX") << Adreno1XX << QStringLiteral("Adreno 1xx series");
+    QTest::newRow("Adreno2XX") << Adreno2XX << QStringLiteral("Adreno 2xx series");
+    QTest::newRow("Adreno3XX") << Adreno3XX << QStringLiteral("Adreno 3xx series");
+    QTest::newRow("Adreno4XX") << Adreno4XX << QStringLiteral("Adreno 4xx series");
+    QTest::newRow("Adreno5XX") << Adreno5XX << QStringLiteral("Adreno 5xx series");
+    QTest::newRow("UnknwonAdreno") << UnknownAdreno << QStringLiteral("Unknown");
     QTest::newRow("UnknownChipClass") << UnknownChipClass << QStringLiteral("Unknown");
 }
 
@@ -257,6 +264,7 @@ void GLPlatformTest::testDetect()
     QCOMPARE(gl->isIntel(), settingsGroup.readEntry("Intel", false));
     QCOMPARE(gl->isVirtualBox(), settingsGroup.readEntry("VirtualBox", false));
     QCOMPARE(gl->isVMware(), settingsGroup.readEntry("VMware", false));
+    QCOMPARE(gl->isAdreno(), settingsGroup.readEntry("Adreno", false));
 
     QCOMPARE(gl->isSoftwareEmulation(), settingsGroup.readEntry("SoftwareEmulation", false));
     QCOMPARE(gl->isVirtualMachine(), settingsGroup.readEntry("VirtualMachine", false));
