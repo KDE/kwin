@@ -416,7 +416,7 @@ public:
         return input()->shortcuts()->processAxis(event->modifiers(), direction);
     }
     bool keyEvent(QKeyEvent *event) override {
-        if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
+        if (event->type() == QEvent::KeyPress) {
             return input()->shortcuts()->processKey(event->modifiers(), event->nativeVirtualKey());
         }
         return false;
