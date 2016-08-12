@@ -64,8 +64,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 // Variables
-// GL version, use MAKE_GL_VERSION() macro for comparing with a specific version
-static int glVersion;
 // GLX version, use MAKE_GL_VERSION() macro for comparing with a specific version
 static int glXVersion;
 // EGL version, use MAKE_GL_VERSION() macro for comparing with a specific version
@@ -108,21 +106,6 @@ void initEGL()
 
 void initGL(OpenGLPlatformInterface platformInterface)
 {
-    // Get OpenGL version
-    const char* glversioncstring = (const char*)glGetString(GL_VERSION);
-    QByteArray glversionstring = QByteArray::fromRawData(glversioncstring, qstrlen(glversioncstring));
-    if (glversionstring.startsWith("OpenGL ES ")) {
-        glversionstring = glversionstring.mid(10);
-    }
-    const int whiteSpaceIndex = glversionstring.indexOf(' ');
-    if (whiteSpaceIndex != -1) {
-        glversionstring.truncate(whiteSpaceIndex);
-    }
-    auto glversioninfo = glversionstring.split('.');
-    while (glversioninfo.count() < 3)
-        glversioninfo << "0";
-    glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(), glversioninfo[2].toInt());
-
     // Get list of supported OpenGL extensions
     if (hasGLVersion(3, 0)) {
         int count;
@@ -155,7 +138,6 @@ void cleanupGL()
     s_glxExtensions.clear();
     s_eglExtensions.clear();
 
-    glVersion = 0;
     glXVersion = 0;
     eglVersion = 0;
     glTextureUnitsCount = 0;
@@ -163,7 +145,7 @@ void cleanupGL()
 
 bool hasGLVersion(int major, int minor, int release)
 {
-    return glVersion >= MAKE_GL_VERSION(major, minor, release);
+    return GLPlatform::instance()->glVersion() >= kVersionNumber(major, minor, release);
 }
 
 bool hasGLXVersion(int major, int minor, int release)
