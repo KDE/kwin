@@ -308,10 +308,12 @@ void Xkb::updateModifiers()
 
         QDBusConnection::sessionBus().asyncCall(msg);
     }
-    waylandServer()->seat()->updateKeyboardModifiers(xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED)),
-                                                     xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED)),
-                                                     xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED)),
-                                                     layout);
+    if (waylandServer()) {
+        waylandServer()->seat()->updateKeyboardModifiers(xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED)),
+                                                         xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED)),
+                                                         xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED)),
+                                                         layout);
+    }
 }
 
 xkb_keysym_t Xkb::toKeysym(uint32_t key)

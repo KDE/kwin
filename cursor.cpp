@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include <kwinglobals.h>
 #include "input.h"
+#include "keyboard_input.h"
 #include "main.h"
 #include "utils.h"
 #include "x11eventfilter.h"
@@ -42,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xlib.h>
 #if HAVE_X11_XINPUT
 #include <X11/extensions/XInput2.h>
+#include <X11/extensions/XI2proto.h>
 #else
 #define XI_RawMotion 0
 #endif
@@ -263,14 +265,24 @@ class XInputEventFilter : public X11EventFilter
 {
 public:
     XInputEventFilter(X11Cursor *parent, int xi_opcode)
-        : X11EventFilter(XCB_GE_GENERIC, xi_opcode, QVector<int>{XI_RawMotion, XI_RawButtonPress, XI_RawButtonRelease})
+        : X11EventFilter(XCB_GE_GENERIC, xi_opcode, QVector<int>{XI_RawMotion, XI_RawButtonPress, XI_RawButtonRelease, XI_RawKeyPress, XI_RawKeyRelease})
         , m_x11Cursor(parent)
         {}
     virtual ~XInputEventFilter() = default;
 
     bool event(xcb_generic_event_t *event) override {
-        Q_UNUSED(event)
-        m_x11Cursor->schedulePoll();
+        xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(event);
+        switch (ge->event_type) {
+        case XI_RawKeyPress:
+            input()->keyboard()->xkb()->updateKey(reinterpret_cast<xXIRawEvent*>(event)->detail - 8, InputRedirection::KeyboardKeyPressed);
+            break;
+        case XI_RawKeyRelease:
+            input()->keyboard()->xkb()->updateKey(reinterpret_cast<xXIRawEvent*>(event)->detail - 8, InputRedirection::KeyboardKeyReleased);
+            break;
+        default:
+            m_x11Cursor->schedulePoll();
+            break;
+        }
         return false;
     }
 
@@ -332,6 +344,7 @@ void X11Cursor::initXInput()
     }
     m_hasXInput = true;
     m_xiOpcode = xi_opcode;
+    input()->keyboard()->xkb()->reconfigure();
 #endif
 #endif
 }
@@ -391,6 +404,8 @@ void X11Cursor::doStartMousePolling()
         XISetMask(mask1, XI_RawMotion);
         XISetMask(mask1, XI_RawButtonPress);
         XISetMask(mask1, XI_RawButtonRelease);
+        XISetMask(mask1, XI_RawKeyPress);
+        XISetMask(mask1, XI_RawKeyRelease);
 
         evmasks[0].deviceid = XIAllMasterDevices;
         evmasks[0].mask_len = sizeof(mask1);
