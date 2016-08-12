@@ -125,15 +125,15 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     QCOMPARE(client->window(), w);
     QVERIFY(client->isDecorated());
 
+    //verify the test machine doesn't have the following activities used
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("foo")));
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("bar")));
+
+    //setting the client to an invalid activities should result in the client being on all activities
     client->setOnActivities(QStringList{QStringLiteral("foo"), QStringLiteral("bar")});
-    QEXPECT_FAIL("", "D1982", Continue);
     QVERIFY(client->isOnAllActivities());
-    QEXPECT_FAIL("", "D1982", Continue);
-    QVERIFY(!client->isOnActivity(QStringLiteral("foo")));
-    QEXPECT_FAIL("", "D1982", Continue);
-    QVERIFY(!client->isOnActivity(QStringLiteral("bar")));
+    QVERIFY(!client->activities().contains(QLatin1String("foo")));
+    QVERIFY(!client->activities().contains(QLatin1String("bar")));
 
     // and destroy the window again
     xcb_unmap_window(c.data(), w);
