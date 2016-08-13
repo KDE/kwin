@@ -95,6 +95,12 @@ Xkb::Xkb(InputRedirection *input)
         xkb_context_set_log_level(m_context, XKB_LOG_LEVEL_DEBUG);
         xkb_context_set_log_fn(m_context, &xkbLogHandler);
     }
+
+    auto resetModOnlyShortcut = [this] {
+        m_modOnlyShortcut.modifier = Qt::NoModifier;
+    };
+    QObject::connect(m_input, &InputRedirection::pointerButtonStateChanged, resetModOnlyShortcut);
+    QObject::connect(m_input, &InputRedirection::pointerAxisChanged, resetModOnlyShortcut);
 }
 
 Xkb::~Xkb()
@@ -243,7 +249,8 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     updateModifiers();
     if (state == InputRedirection::KeyboardKeyPressed) {
         m_modOnlyShortcut.pressCount++;
-        if (m_modOnlyShortcut.pressCount == 1) {
+        if (m_modOnlyShortcut.pressCount == 1 &&
+            m_input->qtButtonStates() == Qt::NoButton) {
             m_modOnlyShortcut.modifier = Qt::KeyboardModifier(int(m_modifiers));
         } else {
             m_modOnlyShortcut.modifier = Qt::NoModifier;

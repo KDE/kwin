@@ -197,7 +197,6 @@ void ModifierOnlyShortcutTest::testTrigger()
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(input()->qtButtonStates(), Qt::NoButton);
-    QEXPECT_FAIL("", "Button not yet handled", Continue);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // mouse button press before mod press, release before mod release
@@ -207,7 +206,6 @@ void ModifierOnlyShortcutTest::testTrigger()
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(input()->qtButtonStates(), Qt::NoButton);
-    QEXPECT_FAIL("", "Button not yet handled", Continue);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // mouse button click while mod is pressed
@@ -217,21 +215,18 @@ void ModifierOnlyShortcutTest::testTrigger()
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(input()->qtButtonStates(), Qt::NoButton);
-    QEXPECT_FAIL("", "Button not yet handled", Continue);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // scroll while mod is pressed
     kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
     kwinApp()->platform()->pointerAxisVertical(5.0, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
-    QEXPECT_FAIL("", "Axis not yet handled", Continue);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // same for horizontal
     kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
     kwinApp()->platform()->pointerAxisHorizontal(5.0, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
-    QEXPECT_FAIL("", "Axis not yet handled", Continue);
     QCOMPARE(triggeredSpy.count(), 2);
 }
 
