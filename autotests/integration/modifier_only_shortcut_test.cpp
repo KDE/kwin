@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "cursor.h"
+#include "input.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -187,6 +188,36 @@ void ModifierOnlyShortcutTest::testTrigger()
     kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    QCOMPARE(triggeredSpy.count(), 2);
+
+    // mouse button pressed before clicking modifier
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QCOMPARE(input()->qtButtonStates(), Qt::LeftButton);
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(input()->qtButtonStates(), Qt::NoButton);
+    QEXPECT_FAIL("", "Button not yet handled", Continue);
+    QCOMPARE(triggeredSpy.count(), 2);
+
+    // mouse button press before mod press, release before mod release
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QCOMPARE(input()->qtButtonStates(), Qt::LeftButton);
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QCOMPARE(input()->qtButtonStates(), Qt::NoButton);
+    QEXPECT_FAIL("", "Button not yet handled", Continue);
+    QCOMPARE(triggeredSpy.count(), 2);
+
+    // mouse button click while mod is pressed
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QCOMPARE(input()->qtButtonStates(), Qt::LeftButton);
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QCOMPARE(input()->qtButtonStates(), Qt::NoButton);
+    QEXPECT_FAIL("", "Button not yet handled", Continue);
     QCOMPARE(triggeredSpy.count(), 2);
 }
 
