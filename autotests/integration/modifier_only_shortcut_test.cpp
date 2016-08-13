@@ -1,0 +1,194 @@
+/********************************************************************
+KWin - the KDE window manager
+This file is part of the KDE project.
+
+Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*********************************************************************/
+#include "kwin_wayland_test.h"
+#include "cursor.h"
+#include "platform.h"
+#include "screens.h"
+#include "wayland_server.h"
+#include "workspace.h"
+
+#include <KConfigGroup>
+
+#include <QDBusConnection>
+
+#include <linux/input.h>
+
+using namespace KWin;
+using namespace KWayland::Client;
+
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_modifier_only_shortcut-0");
+static const QString s_serviceName = QStringLiteral("org.kde.KWin.Test.ModifierOnlyShortcut");
+static const QString s_path = QStringLiteral("/Test");
+
+class ModifierOnlyShortcutTest : public QObject
+{
+    Q_OBJECT
+private Q_SLOTS:
+    void initTestCase();
+    void init();
+    void cleanup();
+
+    void testTrigger_data();
+    void testTrigger();
+};
+
+class Target : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.Test.ModifierOnlyShortcut")
+
+public:
+    Target();
+    virtual ~Target();
+
+public Q_SLOTS:
+    Q_SCRIPTABLE void shortcut();
+
+Q_SIGNALS:
+    void shortcutTriggered();
+};
+
+Target::Target()
+    : QObject()
+{
+    QDBusConnection::sessionBus().registerService(s_serviceName);
+    QDBusConnection::sessionBus().registerObject(s_path, s_serviceName, this, QDBusConnection::ExportScriptableSlots);
+}
+
+Target::~Target()
+{
+    QDBusConnection::sessionBus().unregisterObject(s_path);
+    QDBusConnection::sessionBus().unregisterService(s_serviceName);
+}
+
+void Target::shortcut()
+{
+    emit shortcutTriggered();
+}
+
+void ModifierOnlyShortcutTest::initTestCase()
+{
+    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
+    QVERIFY(workspaceCreatedSpy.isValid());
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+
+    kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
+
+    kwinApp()->start();
+    QVERIFY(workspaceCreatedSpy.wait());
+    waylandServer()->initWorkspace();
+}
+
+void ModifierOnlyShortcutTest::init()
+{
+    screens()->setCurrent(0);
+    KWin::Cursor::setPos(QPoint(640, 512));
+}
+
+void ModifierOnlyShortcutTest::cleanup()
+{
+}
+
+void ModifierOnlyShortcutTest::testTrigger_data()
+{
+    QTest::addColumn<QStringList>("metaConfig");
+    QTest::addColumn<QStringList>("altConfig");
+    QTest::addColumn<QStringList>("controlConfig");
+    QTest::addColumn<QStringList>("shiftConfig");
+    QTest::addColumn<int>("modifier");
+    QTest::addColumn<QList<int>>("nonTriggeringMods");
+
+    const QStringList trigger = QStringList{s_serviceName, s_path, s_serviceName, QStringLiteral("shortcut")};
+    const QStringList e = QStringList();
+
+    QTest::newRow("leftMeta") << trigger << e << e << e << KEY_LEFTMETA << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("rightMeta") << trigger << e << e << e << KEY_RIGHTMETA << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("leftAlt") << e << trigger << e << e << KEY_LEFTALT << QList<int>{KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("rightAlt") << e << trigger << e << e << KEY_RIGHTALT << QList<int>{KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("leftControl") << e << e << trigger << e << KEY_LEFTCTRL << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("rightControl") << e << e << trigger << e << KEY_RIGHTCTRL << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
+    QTest::newRow("leftShift") << e << e << e << trigger << KEY_LEFTSHIFT << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTMETA, KEY_RIGHTMETA};
+    QTest::newRow("rightShift") << e << e <<  e << trigger <<KEY_RIGHTSHIFT << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTMETA, KEY_RIGHTMETA};
+}
+
+void ModifierOnlyShortcutTest::testTrigger()
+{
+    // this test verifies that modifier only shortcut triggers correctly
+    Target target;
+    QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
+    QVERIFY(triggeredSpy.isValid());
+
+    KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
+    QFETCH(QStringList, metaConfig);
+    QFETCH(QStringList, altConfig);
+    QFETCH(QStringList, shiftConfig);
+    QFETCH(QStringList, controlConfig);
+    group.writeEntry("Meta", metaConfig);
+    group.writeEntry("Alt", altConfig);
+    group.writeEntry("Shift", shiftConfig);
+    group.writeEntry("Control", controlConfig);
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // configured shortcut should trigger
+    quint32 timestamp = 1;
+    QFETCH(int, modifier);
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QCOMPARE(triggeredSpy.count(), 1);
+
+    // the other shortcuts should not trigger
+    QFETCH(QList<int>, nonTriggeringMods);
+    for (auto it = nonTriggeringMods.constBegin(), end = nonTriggeringMods.constEnd(); it != end; it++) {
+        kwinApp()->platform()->keyboardKeyPressed(*it, timestamp++);
+        kwinApp()->platform()->keyboardKeyReleased(*it, timestamp++);
+        QCOMPARE(triggeredSpy.count(), 1);
+    }
+
+    // try configured again
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QCOMPARE(triggeredSpy.count(), 2);
+
+    // click another key while modifier is held
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QCOMPARE(triggeredSpy.count(), 2);
+
+    // release other key after modifier release
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    QCOMPARE(triggeredSpy.count(), 2);
+
+    // press key before pressing modifier
+    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    QCOMPARE(triggeredSpy.count(), 2);
+}
+
+WAYLANDTEST_MAIN(ModifierOnlyShortcutTest)
+#include "modifier_only_shortcut_test.moc"

@@ -38,6 +38,7 @@ integrationTest(NAME testSceneOpenGL SRCS scene_opengl_test.cpp)
 integrationTest(NAME testSceneQPainter SRCS scene_qpainter_test.cpp)
 integrationTest(NAME testNoXdgRuntimeDir SRCS no_xdg_runtime_dir_test.cpp)
 integrationTest(NAME testScreenChanges SRCS screen_changes_test.cpp)
+integrationTest(NAME testModiferOnlyShortcut SRCS modifier_only_shortcut_test.cpp)
 
 if (XCB_ICCCM_FOUND)
     integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp LIBS XCB::ICCCM)
