@@ -383,6 +383,7 @@ set(kwin_KDEINIT_SRCS
    scene_xrender.cpp
    scene_opengl.cpp
    scene_qpainter.cpp
+   screenlockerwatcher.cpp
    thumbnailitem.cpp
    lanczosfilter.cpp
    deleted.cpp

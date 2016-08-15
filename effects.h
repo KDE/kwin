@@ -45,7 +45,6 @@ class Display;
 
 class QDBusPendingCallWatcher;
 class QDBusServiceWatcher;
-class OrgFreedesktopScreenSaverInterface;
 
 
 namespace KWin
@@ -452,29 +451,6 @@ private:
     GLShader* m_shader;
 
     Plasma::Theme *m_theme;
-};
-
-class ScreenLockerWatcher : public QObject
-{
-    Q_OBJECT
-public:
-    explicit ScreenLockerWatcher(QObject *parent = 0);
-    virtual ~ScreenLockerWatcher();
-    bool isLocked() const {
-        return m_locked;
-    }
-Q_SIGNALS:
-    void locked(bool locked);
-private Q_SLOTS:
-    void setLocked(bool activated);
-    void activeQueried(QDBusPendingCallWatcher *watcher);
-    void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
-    void serviceRegisteredQueried();
-    void serviceOwnerQueried();
-private:
-    OrgFreedesktopScreenSaverInterface *m_interface;
-    QDBusServiceWatcher *m_serviceWatcher;
-    bool m_locked;
 };
 
 inline
