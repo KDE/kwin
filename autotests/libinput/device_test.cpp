@@ -193,7 +193,7 @@ void TestLibinputDevice::testNames_data()
     QTest::addColumn<QByteArray>("sysName");
     QTest::addColumn<QByteArray>("outputName");
 
-    QTest::newRow("empty") << QByteArray() << QByteArray() << QByteArray();
+    QTest::newRow("empty") << QByteArray() << QByteArrayLiteral("event1") << QByteArray();
     QTest::newRow("set") << QByteArrayLiteral("awesome test device") << QByteArrayLiteral("event0") << QByteArrayLiteral("hdmi0");
 }
 
