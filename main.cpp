@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logind.h"
 #include "options.h"
 #include "screens.h"
+#include "screenlockerwatcher.h"
 #include "sm.h"
 #include "workspace.h"
 #include "xcbutils.h"
@@ -268,6 +269,7 @@ void Application::createWorkspace()
 
 void Application::createInput()
 {
+    ScreenLockerWatcher::create(this);
     LogindIntegration::create(this);
     auto input = InputRedirection::create(this);
     input->init();

@@ -59,7 +59,6 @@ class Compositor;
 class Deleted;
 class EffectLoader;
 class Unmanaged;
-class ScreenLockerWatcher;
 
 class KWIN_EXPORT EffectsHandlerImpl : public EffectsHandler
 {
@@ -289,7 +288,6 @@ private:
     QHash<QByteArray, qulonglong> m_managedProperties;
     Compositor *m_compositor;
     Scene *m_scene;
-    ScreenLockerWatcher *m_screenLockerWatcher;
     bool m_desktopRendering;
     int m_currentRenderedDesktop;
     Xcb::Window m_mouseInterceptionWindow;

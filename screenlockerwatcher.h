@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
+#include <kwinglobals.h>
+
 class OrgFreedesktopScreenSaverInterface;
 class QDBusServiceWatcher;
 class QDBusPendingCallWatcher;
@@ -33,7 +35,6 @@ class ScreenLockerWatcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScreenLockerWatcher(QObject *parent = 0);
     virtual ~ScreenLockerWatcher();
     bool isLocked() const {
         return m_locked;
@@ -50,6 +51,8 @@ private:
     OrgFreedesktopScreenSaverInterface *m_interface;
     QDBusServiceWatcher *m_serviceWatcher;
     bool m_locked;
+
+    KWIN_SINGLETON(ScreenLockerWatcher)
 };
 }
 

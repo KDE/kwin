@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+KWIN_SINGLETON_FACTORY(ScreenLockerWatcher)
+
 static const QString SCREEN_LOCKER_SERVICE_NAME = QStringLiteral("org.freedesktop.ScreenSaver");
 
 ScreenLockerWatcher::ScreenLockerWatcher(QObject *parent)

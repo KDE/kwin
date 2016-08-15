@@ -102,7 +102,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     , next_window_quad_type(EFFECT_QUAD_TYPE_START)
     , m_compositor(compositor)
     , m_scene(scene)
-    , m_screenLockerWatcher(new ScreenLockerWatcher(this))
     , m_desktopRendering(false)
     , m_currentRenderedDesktop(0)
     , m_effectLoader(new EffectLoader(this))
@@ -201,7 +200,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(tabBox, &TabBox::TabBox::tabBoxKeyEvent, this, &EffectsHandler::tabBoxKeyEvent);
 #endif
     connect(ScreenEdges::self(), &ScreenEdges::approaching, this, &EffectsHandler::screenEdgeApproaching);
-    connect(m_screenLockerWatcher, &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
+    connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
     // connect all clients
     for (Client *c : ws->clientList()) {
         setupClientConnections(c);
@@ -1482,7 +1481,7 @@ QString EffectsHandlerImpl::supportInformation(const QString &name) const
 
 bool EffectsHandlerImpl::isScreenLocked() const
 {
-    return m_screenLockerWatcher->isLocked();
+    return ScreenLockerWatcher::self()->isLocked();
 }
 
 QString EffectsHandlerImpl::debug(const QString& name, const QString& parameter) const
