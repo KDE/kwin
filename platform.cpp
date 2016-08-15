@@ -75,6 +75,11 @@ Edge *Platform::createScreenEdge(ScreenEdges *edges)
     return new Edge(edges);
 }
 
+void Platform::createPlatformCursor(QObject *parent)
+{
+    new InputRedirectionCursor(parent);
+}
+
 void Platform::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
 {
     Q_UNUSED(config)

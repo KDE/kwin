@@ -273,7 +273,7 @@ void Application::createInput()
     LogindIntegration::create(this);
     auto input = InputRedirection::create(this);
     input->init();
-    Cursor::create(this);
+    m_platform->createPlatformCursor(this);
 }
 
 void Application::createScreens()
