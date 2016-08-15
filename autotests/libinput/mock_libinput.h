@@ -33,7 +33,7 @@ struct libinput_device {
     bool tabletTool = false;
     bool gestureSupported = false;
     QByteArray name;
-    QByteArray sysName;
+    QByteArray sysName = QByteArrayLiteral("event0");
     QByteArray outputName;
     quint32 product = 0;
     quint32 vendor = 0;
