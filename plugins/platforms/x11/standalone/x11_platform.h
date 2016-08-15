@@ -41,6 +41,7 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     Edge *createScreenEdge(ScreenEdges *parent) override;
+    void createPlatformCursor(QObject *parent = nullptr) override;
     bool requiresCompositing() const override;
     bool compositingPossible() const override;
     QString compositingNotPossibleReason() const override;

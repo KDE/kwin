@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11_platform.h"
+#include "cursor.h"
 #include "edge.h"
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
@@ -82,6 +83,11 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
 Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
 {
     return new WindowBasedEdge(edges);
+}
+
+void X11StandalonePlatform::createPlatformCursor(QObject *parent)
+{
+    new X11Cursor(parent);
 }
 
 bool X11StandalonePlatform::requiresCompositing() const

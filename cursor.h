@@ -222,10 +222,11 @@ private:
     KWIN_SINGLETON(Cursor)
 };
 
-class X11Cursor : public Cursor
+class KWIN_EXPORT X11Cursor : public Cursor
 {
     Q_OBJECT
 public:
+    X11Cursor(QObject *parent);
     virtual ~X11Cursor();
 
     void schedulePoll() {
@@ -252,7 +253,6 @@ private Q_SLOTS:
     void mousePolled();
     void aboutToBlock();
 private:
-    X11Cursor(QObject *parent);
     void initXInput();
     xcb_cursor_t createCursor(const QByteArray &name);
     QHash<QByteArray, xcb_cursor_t > m_cursors;
@@ -279,6 +279,7 @@ class InputRedirectionCursor : public Cursor
 {
     Q_OBJECT
 public:
+    explicit InputRedirectionCursor(QObject *parent);
     virtual ~InputRedirectionCursor();
 protected:
     virtual void doSetPos();
@@ -289,7 +290,6 @@ private Q_SLOTS:
     void slotPointerButtonChanged();
     void slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods);
 private:
-    explicit InputRedirectionCursor(QObject *parent);
     Qt::MouseButtons m_currentButtons;
     friend class Cursor;
 };

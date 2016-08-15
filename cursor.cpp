@@ -53,21 +53,6 @@ namespace KWin
 {
 Cursor *Cursor::s_self = nullptr;
 
-Cursor *Cursor::create(QObject *parent)
-{
-    Q_ASSERT(!s_self);
-#ifndef KCMRULES
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        s_self = new X11Cursor(parent);
-    } else {
-        s_self = new InputRedirectionCursor(parent);
-    }
-#else
-    s_self = new X11Cursor(parent);
-#endif
-    return s_self;
-}
-
 Cursor::Cursor(QObject *parent)
     : QObject(parent)
     , m_mousePollingCounter(0)
@@ -75,6 +60,7 @@ Cursor::Cursor(QObject *parent)
     , m_themeName("default")
     , m_themeSize(24)
 {
+    s_self = this;
     loadThemeSettings();
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));

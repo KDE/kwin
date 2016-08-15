@@ -56,6 +56,11 @@ public:
      * The default implementation creates a Edge.
      **/
     virtual Edge *createScreenEdge(ScreenEdges *parent);
+    /**
+     * Allows the platform to create a platform specific Cursor.
+     * The default implementation creates an InputRedirectionCursor.
+     **/
+    virtual void createPlatformCursor(QObject *parent = nullptr);
     virtual void warpPointer(const QPointF &globalPos);
     /**
      * Whether our Compositing EGL display allows a surface less context
