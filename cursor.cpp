@@ -263,7 +263,7 @@ class XInputEventFilter : public X11EventFilter
 {
 public:
     XInputEventFilter(X11Cursor *parent, int xi_opcode)
-        : X11EventFilter(XCB_GE_GENERIC, xi_opcode, XI_RawMotion)
+        : X11EventFilter(XCB_GE_GENERIC, xi_opcode, QVector<int>{XI_RawMotion, XI_RawButtonPress, XI_RawButtonRelease})
         , m_x11Cursor(parent)
         {}
     virtual ~XInputEventFilter() = default;
@@ -389,6 +389,8 @@ void X11Cursor::doStartMousePolling()
         memset(mask1, 0, sizeof(mask1));
 
         XISetMask(mask1, XI_RawMotion);
+        XISetMask(mask1, XI_RawButtonPress);
+        XISetMask(mask1, XI_RawButtonRelease);
 
         evmasks[0].deviceid = XIAllMasterDevices;
         evmasks[0].mask_len = sizeof(mask1);

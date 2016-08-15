@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 
+#include <QVector>
+
 #include <kwin_export.h>
 
 namespace KWin
@@ -35,6 +37,7 @@ public:
      * Creates an event filter for the given event type.
      */
     X11EventFilter(int eventType, int opcode = 0, int genericEventType = 0);
+    X11EventFilter(int eventType, int opcode, const QVector<int> &genericEventTypes);
 
     /**
      * Destroys the event filter.
@@ -54,11 +57,11 @@ public:
     int extension() const { return m_extension; }
 
     /**
-     * Returns the type of generic events to filter.
+     * Returns the types of generic events to filter.
      *
      * Only used when the event type is XCB_GE_GENERIC.
      */
-    int genericEventType() const { return m_genericEventType; }
+    QVector<int> genericEventTypes() const { return m_genericEventTypes; }
 
     /**
      * This method is called for every event of the filtered type.
@@ -70,7 +73,7 @@ public:
 private:
     int m_eventType;
     int m_extension;
-    int m_genericEventType;
+    QVector<int> m_genericEventTypes;
 };
 
 } // namespace KWin
