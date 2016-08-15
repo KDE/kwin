@@ -126,6 +126,10 @@ public:
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
     virtual bool isActive() const;
 
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
+    bool touchUp(quint32 id, quint32 time) override;
+
     int requestedEffectChainPosition() const override {
         return 70;
     }
@@ -265,6 +269,7 @@ protected:
     // Helper functions for mouse actions
     void mouseActionWindow(WindowMouseAction& action);
     void mouseActionDesktop(DesktopMouseAction& action);
+    void inputEventUpdate(const QPoint &pos, QEvent::Type type = QEvent::None, Qt::MouseButton button = Qt::NoButton);
 
 private:
     PresentWindowsEffectProxy m_proxy;
@@ -330,6 +335,10 @@ private:
     CloseWindowView* m_closeView;
     EffectWindow* m_closeWindow;
     Qt::Corner m_closeButtonCorner;
+    struct {
+        quint32 id = 0;
+        bool active = false;
+    } m_touch;
 };
 
 } // namespace

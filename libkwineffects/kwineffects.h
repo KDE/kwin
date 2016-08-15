@@ -545,6 +545,67 @@ public:
      **/
     virtual int requestedEffectChainPosition() const;
 
+
+    /**
+     * A touch point was pressed.
+     *
+     * If the effect wants to exclusively use the touch event it should return @c true.
+     * If @c false is returned the touch event is passed to further effects.
+     *
+     * In general an Effect should only return @c true if it is the exclusive effect getting
+     * input events. E.g. has grabbed mouse events.
+     *
+     * Default implementation returns @c false.
+     *
+     * @param id The unique id of the touch point
+     * @param pos The position of the touch point in global coordinates
+     * @param time Timestamp
+     *
+     * @see touchMotion
+     * @see touchUp
+     * @since 5.8
+     **/
+    virtual bool touchDown(quint32 id, const QPointF &pos, quint32 time);
+    /**
+     * A touch point moved.
+     *
+     * If the effect wants to exclusively use the touch event it should return @c true.
+     * If @c false is returned the touch event is passed to further effects.
+     *
+     * In general an Effect should only return @c true if it is the exclusive effect getting
+     * input events. E.g. has grabbed mouse events.
+     *
+     * Default implementation returns @c false.
+     *
+     * @param id The unique id of the touch point
+     * @param pos The position of the touch point in global coordinates
+     * @param time Timestamp
+     *
+     * @see touchDown
+     * @see touchUp
+     * @since 5.8
+     **/
+    virtual bool touchMotion(quint32 id, const QPointF &pos, quint32 time);
+    /**
+     * A touch point was released.
+     *
+     * If the effect wants to exclusively use the touch event it should return @c true.
+     * If @c false is returned the touch event is passed to further effects.
+     *
+     * In general an Effect should only return @c true if it is the exclusive effect getting
+     * input events. E.g. has grabbed mouse events.
+     *
+     * Default implementation returns @c false.
+     *
+     * @param id The unique id of the touch point
+     * @param time Timestamp
+     *
+     * @see touchDown
+     * @see touchMotion
+     * @since 5.8
+     **/
+    virtual bool touchUp(quint32 id, quint32 time);
+
     static QPoint cursorPos();
 
     /**

@@ -553,6 +553,11 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
             }
         }
     }
+    inputEventUpdate(me->pos(), me->type(), me->button());
+}
+
+void PresentWindowsEffect::inputEventUpdate(const QPoint &pos, QEvent::Type type, Qt::MouseButton button)
+{
     // Which window are we hovering over? Always trigger as we don't always get move events before clicking
     // We cannot use m_motionManager.windowAtPoint() as the window might not be visible
     EffectWindowList windows = m_motionManager.managedWindows();
@@ -562,7 +567,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
         DataHash::const_iterator winData = m_windowData.constFind(windows.at(i));
         if (winData == m_windowData.constEnd())
             continue;
-        if (m_motionManager.transformedGeometry(windows.at(i)).contains(cursorPos()) &&
+        if (m_motionManager.transformedGeometry(windows.at(i)).contains(pos) &&
                 winData->visible && !winData->deleted) {
             hovering = true;
             if (windows.at(i) && m_highlightedWindow != windows.at(i))
@@ -572,15 +577,15 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
     }
     if (!hovering)
         setHighlightedWindow(NULL);
-    if (m_highlightedWindow && m_motionManager.transformedGeometry(m_highlightedWindow).contains(me->pos()))
+    if (m_highlightedWindow && m_motionManager.transformedGeometry(m_highlightedWindow).contains(pos))
         updateCloseWindow();
     else if (m_closeView)
         m_closeView->hide();
 
-    if (e->type() == QEvent::MouseButtonRelease) {
+    if (type == QEvent::MouseButtonRelease) {
         if (highlightCandidate)
             setHighlightedWindow(highlightCandidate);
-        if (me->button() == Qt::LeftButton) {
+        if (button == Qt::LeftButton) {
             if (hovering) {
                 // mouse is hovering above a window - use MouseActionsWindow
                 mouseActionWindow(m_leftButtonWindow);
@@ -589,7 +594,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
                 mouseActionDesktop(m_leftButtonDesktop);
             }
         }
-        if (me->button() == Qt::MidButton) {
+        if (button == Qt::MidButton) {
             if (hovering) {
                 // mouse is hovering above a window - use MouseActionsWindow
                 mouseActionWindow(m_middleButtonWindow);
@@ -598,7 +603,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
                 mouseActionDesktop(m_middleButtonDesktop);
             }
         }
-        if (me->button() == Qt::RightButton) {
+        if (button == Qt::RightButton) {
             if (hovering) {
                 // mouse is hovering above a window - use MouseActionsWindow
                 mouseActionWindow(m_rightButtonWindow);
@@ -609,6 +614,52 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
         }
     } else if (highlightCandidate && !m_motionManager.areWindowsMoving())
         setHighlightedWindow(highlightCandidate);
+}
+
+bool PresentWindowsEffect::touchDown(quint32 id, const QPointF &pos, quint32 time)
+{
+    Q_UNUSED(time)
+    if (!m_activated) {
+        return false;
+    }
+    // only if we don't track a touch id yet
+    if (!m_touch.active) {
+        m_touch.active = true;
+        m_touch.id = id;
+        inputEventUpdate(pos.toPoint());
+    }
+    return true;
+}
+
+bool PresentWindowsEffect::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(time)
+    if (!m_activated) {
+        return false;
+    }
+    if (m_touch.active && m_touch.id == id) {
+        // only update for the touch id we track
+        inputEventUpdate(pos.toPoint());
+    }
+    return true;
+}
+
+bool PresentWindowsEffect::touchUp(quint32 id, quint32 time)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(time)
+    if (!m_activated) {
+        return false;
+    }
+    if (m_touch.active && m_touch.id == id) {
+        m_touch.active = false;
+        m_touch.id = 0;
+        if (m_highlightedWindow) {
+            mouseActionWindow(m_leftButtonWindow);
+        }
+    }
+    return true;
 }
 
 void PresentWindowsEffect::mouseActionWindow(WindowMouseAction& action)

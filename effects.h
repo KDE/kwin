@@ -232,6 +232,10 @@ public:
         return m_scene;
     }
 
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time);
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time);
+    bool touchUp(quint32 id, quint32 time);
+
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
     void slotTabAdded(EffectWindow* from, EffectWindow* to);

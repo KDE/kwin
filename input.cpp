@@ -344,6 +344,24 @@ public:
         static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(event);
         return true;
     }
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+        if (!effects) {
+            return false;
+        }
+        return static_cast< EffectsHandlerImpl* >(effects)->touchDown(id, pos, time);
+    }
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+        if (!effects) {
+            return false;
+        }
+        return static_cast< EffectsHandlerImpl* >(effects)->touchMotion(id, pos, time);
+    }
+    bool touchUp(quint32 id, quint32 time) override {
+        if (!effects) {
+            return false;
+        }
+        return static_cast< EffectsHandlerImpl* >(effects)->touchUp(id, time);
+    }
 };
 
 class MoveResizeFilter : public InputEventFilter {

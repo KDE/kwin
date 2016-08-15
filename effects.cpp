@@ -672,6 +672,40 @@ bool EffectsHandlerImpl::isMouseInterception() const
     return m_grabbedMouseEffects.count() > 0;
 }
 
+
+bool EffectsHandlerImpl::touchDown(quint32 id, const QPointF &pos, quint32 time)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->touchDown(id, pos, time)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool EffectsHandlerImpl::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->touchMotion(id, pos, time)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool EffectsHandlerImpl::touchUp(quint32 id, quint32 time)
+{
+    // TODO: reverse call order?
+    for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if (it->second->touchUp(id, time)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void EffectsHandlerImpl::registerGlobalShortcut(const QKeySequence &shortcut, QAction *action)
 {
     input()->registerShortcut(shortcut, action);

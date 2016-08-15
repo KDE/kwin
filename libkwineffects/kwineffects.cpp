@@ -672,6 +672,29 @@ xcb_window_t Effect::x11RootWindow() const
     return effects->x11RootWindow();
 }
 
+bool Effect::touchDown(quint32 id, const QPointF &pos, quint32 time)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(pos)
+    Q_UNUSED(time)
+    return false;
+}
+
+bool Effect::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(pos)
+    Q_UNUSED(time)
+    return false;
+}
+
+bool Effect::touchUp(quint32 id, quint32 time)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(time)
+    return false;
+}
+
 //****************************************
 // EffectFactory
 //****************************************
