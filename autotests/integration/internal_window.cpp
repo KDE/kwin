@@ -303,6 +303,7 @@ void InternalWindowTest::testKeyboard()
     auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
     QVERIFY(internalClient);
     QVERIFY(internalClient->isInternal());
+    QVERIFY(internalClient->readyForPainting());
 
     quint32 timestamp = 1;
     QFETCH(QPoint, cursorPos);
@@ -316,7 +317,11 @@ void InternalWindowTest::testKeyboard()
     QCOMPARE(pressSpy.count(), 1);
 
     // let's hide the window again and create a "real" window
+    QSignalSpy internalClientUnmappedSpy(internalClient, &ShellClient::windowHidden);
+    QVERIFY(internalClientUnmappedSpy.isValid());
     win.hide();
+    QVERIFY(internalClientUnmappedSpy.wait());
+    QCOMPARE(internalClientUnmappedSpy.count(), 1);
     clientAddedSpy.clear();
 
     QScopedPointer<Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
