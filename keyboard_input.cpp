@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "options.h"
 #include "utils.h"
+#include "screenlockerwatcher.h"
 #include "toplevel.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -101,6 +102,7 @@ Xkb::Xkb(InputRedirection *input)
     };
     QObject::connect(m_input, &InputRedirection::pointerButtonStateChanged, resetModOnlyShortcut);
     QObject::connect(m_input, &InputRedirection::pointerAxisChanged, resetModOnlyShortcut);
+    QObject::connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, m_input, resetModOnlyShortcut);
 }
 
 Xkb::~Xkb()
@@ -250,6 +252,7 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     if (state == InputRedirection::KeyboardKeyPressed) {
         m_modOnlyShortcut.pressCount++;
         if (m_modOnlyShortcut.pressCount == 1 &&
+            !ScreenLockerWatcher::self()->isLocked() &&
             m_input->qtButtonStates() == Qt::NoButton) {
             m_modOnlyShortcut.modifier = Qt::KeyboardModifier(int(m_modifiers));
         } else {
@@ -257,7 +260,6 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
         }
     } else {
         m_modOnlyShortcut.pressCount--;
-        // TODO: ignore on lock screen
         if (m_modOnlyShortcut.pressCount == 0) {
             if (m_modOnlyShortcut.modifier != Qt::NoModifier) {
                 const auto list = options->modifierOnlyDBusShortcut(m_modOnlyShortcut.modifier);

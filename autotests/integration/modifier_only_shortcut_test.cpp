@@ -233,13 +233,11 @@ void ModifierOnlyShortcutTest::testTrigger()
     kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
     QVERIFY(Test::lockScreen());
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
-    QEXPECT_FAIL("", "Screen locking does not quit trigger yet", Continue);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // now trigger while screen is locked, should also not work
     kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
-    QEXPECT_FAIL("", "Screen locking does not prevent trigger yet", Continue);
     QCOMPARE(triggeredSpy.count(), 2);
 
     QVERIFY(Test::unlockScreen());
