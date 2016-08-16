@@ -143,6 +143,18 @@ ShellClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSi
  * Waits for the @p client to be destroyed.
  **/
 bool waitForWindowDestroyed(AbstractClient *client);
+
+/**
+ * Locks the screen and waits till the screen is locked.
+ * @returns @c true if the screen could be locked, @c false otherwise
+ **/
+bool lockScreen();
+
+/**
+ * Unlocks the screen and waits till the screen is unlocked.
+ * @returns @c true if the screen could be unlocked, @c false otherwise
+ **/
+bool unlockScreen();
 }
 
 }

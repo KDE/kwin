@@ -34,6 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
 
+//screenlocker
+#include <KScreenLocker/KsldApp>
+
 #include <QThread>
 
 using namespace KWayland::Client;
@@ -360,6 +363,43 @@ bool waitForWindowDestroyed(AbstractClient *client)
         return false;
     }
     return destroyedSpy.wait();
+}
+
+bool lockScreen()
+{
+    if (waylandServer()->isScreenLocked()) {
+        return false;
+    }
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    if (!lockStateChangedSpy.isValid()) {
+        return false;
+    }
+    ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
+    if (lockStateChangedSpy.count() != 1) {
+        return false;
+    }
+    return waylandServer()->isScreenLocked();
+}
+
+bool unlockScreen()
+{
+    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    if (!lockStateChangedSpy.isValid()) {
+        return false;
+    }
+    using namespace ScreenLocker;
+    const auto children = KSldApp::self()->children();
+    for (auto it = children.begin(); it != children.end(); ++it) {
+        if (qstrcmp((*it)->metaObject()->className(), "LogindIntegration") != 0) {
+            continue;
+        }
+        QMetaObject::invokeMethod(*it, "requestUnlock");
+        break;
+    }
+    if (waylandServer()->isScreenLocked()) {
+        lockStateChangedSpy.wait();
+    }
+    return !waylandServer()->isScreenLocked();
 }
 
 }

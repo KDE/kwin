@@ -228,6 +228,21 @@ void ModifierOnlyShortcutTest::testTrigger()
     kwinApp()->platform()->pointerAxisHorizontal(5.0, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
+
+    // now try to lock the screen while modifier key is pressed
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    QVERIFY(Test::lockScreen());
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QEXPECT_FAIL("", "Screen locking does not quit trigger yet", Continue);
+    QCOMPARE(triggeredSpy.count(), 2);
+
+    // now trigger while screen is locked, should also not work
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QEXPECT_FAIL("", "Screen locking does not prevent trigger yet", Continue);
+    QCOMPARE(triggeredSpy.count(), 2);
+
+    QVERIFY(Test::unlockScreen());
 }
 
 WAYLANDTEST_MAIN(ModifierOnlyShortcutTest)
