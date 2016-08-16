@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "shell_client.h"
+#include "screenlockerwatcher.h"
 #include "wayland_server.h"
 
 #include <KWayland/Client/compositor.h>
@@ -378,7 +379,22 @@ bool lockScreen()
     if (lockStateChangedSpy.count() != 1) {
         return false;
     }
-    return waylandServer()->isScreenLocked();
+    if (!waylandServer()->isScreenLocked()) {
+        return false;
+    }
+    if (!ScreenLockerWatcher::self()->isLocked()) {
+        QSignalSpy lockedSpy(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked);
+        if (!lockedSpy.isValid()) {
+            return false;
+        }
+        if (!lockedSpy.wait()) {
+            return false;
+        }
+        if (!ScreenLockerWatcher::self()->isLocked()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool unlockScreen()
@@ -399,7 +415,22 @@ bool unlockScreen()
     if (waylandServer()->isScreenLocked()) {
         lockStateChangedSpy.wait();
     }
-    return !waylandServer()->isScreenLocked();
+    if (waylandServer()->isScreenLocked()) {
+        return true;
+    }
+    if (ScreenLockerWatcher::self()->isLocked()) {
+        QSignalSpy lockedSpy(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked);
+        if (!lockedSpy.isValid()) {
+            return false;
+        }
+        if (!lockedSpy.wait()) {
+            return false;
+        }
+        if (ScreenLockerWatcher::self()->isLocked()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 }
