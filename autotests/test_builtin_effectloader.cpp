@@ -113,6 +113,7 @@ void TestBuiltInEffectLoader::testHasEffect_data()
     QTest::newRow("SnapHelper")                     << QStringLiteral("snaphelper")        << true;
     QTest::newRow("StartupFeedback")                << QStringLiteral("startupfeedback")   << true;
     QTest::newRow("ThumbnailAside")                 << QStringLiteral("thumbnailaside")    << true;
+    QTest::newRow("Touchpoints")                    << QStringLiteral("touchpoints")       << true;
     QTest::newRow("TrackMouse")                     << QStringLiteral("trackmouse")        << true;
     QTest::newRow("WindowGeometry")                 << QStringLiteral("windowgeometry")    << true;
     QTest::newRow("WobblyWindows")                  << QStringLiteral("wobblywindows")     << true;
@@ -168,6 +169,7 @@ void TestBuiltInEffectLoader::testKnownEffects()
                     << QStringLiteral("snaphelper")
                     << QStringLiteral("startupfeedback")
                     << QStringLiteral("thumbnailaside")
+                    << QStringLiteral("touchpoints")
                     << QStringLiteral("trackmouse")
                     << QStringLiteral("windowgeometry")
                     << QStringLiteral("wobblywindows")
@@ -247,6 +249,7 @@ void TestBuiltInEffectLoader::testSupported_data()
     QTest::newRow("StartupFeedback")                << QStringLiteral("startupfeedback")   << false << xc << true;
     QTest::newRow("StartupFeedback-GL")             << QStringLiteral("startupfeedback")   << true  << oc << true;
     QTest::newRow("ThumbnailAside")                 << QStringLiteral("thumbnailaside")    << true  << xc << true;
+    QTest::newRow("TouchPoints")                    << QStringLiteral("touchpoints")       << true  << xc << true;
     QTest::newRow("TrackMouse")                     << QStringLiteral("trackmouse")        << true  << xc << true;
     QTest::newRow("WindowGeometry")                 << QStringLiteral("windowgeometry")    << true  << xc << true;
     QTest::newRow("WobblyWindows")                  << QStringLiteral("wobblywindows")     << false << xc << true;
@@ -334,6 +337,7 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
     // Tries to load shader and makes our test abort
 //     QTest::newRow("StartupFeedback-GL")             << QStringLiteral("startupfeedback")   << true  << oc;
     QTest::newRow("ThumbnailAside")                 << QStringLiteral("thumbnailaside")    << true  << xc;
+    QTest::newRow("Touchpoints")                    << QStringLiteral("touchpoints")       << true  << xc;
     QTest::newRow("TrackMouse")                     << QStringLiteral("trackmouse")        << true  << xc;
     // TODO: Accesses EffectFrame and crashes
 //     QTest::newRow("WindowGeometry")                 << QStringLiteral("windowgeometry")    << true  << xc;

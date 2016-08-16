@@ -90,6 +90,7 @@ set( kwin4_effect_builtins_sources
     resize/resize.cpp
     showfps/showfps.cpp
     thumbnailaside/thumbnailaside.cpp
+    touchpoints/touchpoints.cpp
     trackmouse/trackmouse.cpp
     windowgeometry/windowgeometry.cpp
     wobblywindows/wobblywindows.cpp
