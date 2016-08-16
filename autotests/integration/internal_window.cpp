@@ -54,6 +54,7 @@ private Q_SLOTS:
     void testPointerAxis();
     void testKeyboard_data();
     void testKeyboard();
+    void testKeyboardTriggersLeave();
     void testTouch();
 };
 
@@ -315,15 +316,12 @@ void InternalWindowTest::testKeyboard()
     kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
     QTRY_COMPARE(releaseSpy.count(), 1);
     QCOMPARE(pressSpy.count(), 1);
+}
 
-    // let's hide the window again and create a "real" window
-    QSignalSpy internalClientUnmappedSpy(internalClient, &ShellClient::windowHidden);
-    QVERIFY(internalClientUnmappedSpy.isValid());
-    win.hide();
-    QVERIFY(internalClientUnmappedSpy.wait());
-    QCOMPARE(internalClientUnmappedSpy.count(), 1);
-    clientAddedSpy.clear();
-
+void InternalWindowTest::testKeyboardTriggersLeave()
+{
+    // this test verifies that a leave event is sent to a client when an internal window
+    // gets a key event
     QScopedPointer<Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
     QVERIFY(!keyboard.isNull());
     QVERIFY(keyboard->isValid());
@@ -345,20 +343,34 @@ void InternalWindowTest::testKeyboard()
     }
     QCOMPARE(enteredSpy.count(), 1);
 
-    QSignalSpy windowShownSpy(internalClient, &ShellClient::windowShown);
-    QVERIFY(windowShownSpy.isValid());
+    // create internal window
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
     win.show();
-    QTRY_COMPARE(windowShownSpy.count(), 1);
+    QSignalSpy pressSpy(&win, &HelperWindow::keyPressed);
+    QVERIFY(pressSpy.isValid());
+    QSignalSpy releaseSpy(&win, &HelperWindow::keyReleased);
+    QVERIFY(releaseSpy.isValid());
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QVERIFY(internalClient->isInternal());
+    QVERIFY(internalClient->readyForPainting());
+
     QVERIFY(leftSpy.isEmpty());
     QVERIFY(!leftSpy.wait(100));
 
     // now let's trigger a key, which should result in a leave
+    quint32 timestamp = 1;
     kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
     QVERIFY(leftSpy.wait());
-    QCOMPARE(pressSpy.count(), 2);
+    QCOMPARE(pressSpy.count(), 1);
 
     kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
-    QTRY_COMPARE(releaseSpy.count(), 2);
+    QTRY_COMPARE(releaseSpy.count(), 1);
 
     // after hiding the internal window, next key press should trigger an enter
     win.hide();
