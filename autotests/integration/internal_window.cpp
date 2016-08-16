@@ -338,6 +338,7 @@ void InternalWindowTest::testKeyboard()
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QVERIFY(c->isActive());
+    QVERIFY(!c->isInternal());
 
     if (enteredSpy.isEmpty()) {
         QVERIFY(enteredSpy.wait());
@@ -347,10 +348,7 @@ void InternalWindowTest::testKeyboard()
     QSignalSpy windowShownSpy(internalClient, &ShellClient::windowShown);
     QVERIFY(windowShownSpy.isValid());
     win.show();
-    if (windowShownSpy.isEmpty()) {
-        QVERIFY(windowShownSpy.wait());
-    }
-    QCOMPARE(windowShownSpy.count(), 1);
+    QTRY_COMPARE(windowShownSpy.count(), 1);
     QVERIFY(leftSpy.isEmpty());
     QVERIFY(!leftSpy.wait(100));
 
