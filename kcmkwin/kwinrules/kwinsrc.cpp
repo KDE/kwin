@@ -21,6 +21,7 @@
 
 #include "ruleslist.h"
 #include "../../cursor.cpp"
+#include "../../plugins/platforms/x11/standalone/x11cursor.cpp"
 #include "../../rules.cpp"
 #include "../../placement.cpp"
 #include "../../options.cpp"

@@ -511,10 +511,6 @@ set(kwin_XLIB_LIBS
     ${X11_SM_LIB}
 )
 
-if(X11_Xinput_FOUND)
-    set(kwin_XLIB_LIBS ${kwin_XLIB_LIBS} ${X11_Xinput_LIB})
-endif()
-
 set(kwin_XCB_LIBS
     XCB::XCB
     XCB::XFIXES
@@ -527,7 +523,6 @@ set(kwin_XCB_LIBS
     XCB::KEYSYMS
     XCB::SHM
     XCB::GLX
-    XCB::CURSOR
 )
 
 set(kwin_WAYLAND_LIBS

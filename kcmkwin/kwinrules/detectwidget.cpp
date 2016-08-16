@@ -17,7 +17,7 @@
  */
 
 #include "detectwidget.h"
-#include "../../cursor.h"
+#include "../../plugins/platforms/x11/standalone/x11cursor.h"
 
 #include <KLocalizedString>
 #include <QDebug>
