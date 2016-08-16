@@ -382,8 +382,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     loader.queryAndLoadAll();
 
     // let's use qWait as we need to wait for two signals to be emitted
-    QTest::qWait(100);
-    QCOMPARE(spy.size(), 2);
+    QTRY_COMPARE(spy.size(), 2);
     QStringList loadedEffects;
     for (auto &list : spy) {
         QCOMPARE(list.size(), 2);
