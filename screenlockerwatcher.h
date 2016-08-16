@@ -48,6 +48,7 @@ private Q_SLOTS:
     void serviceRegisteredQueried();
     void serviceOwnerQueried();
 private:
+    void initialize();
     OrgFreedesktopScreenSaverInterface *m_interface;
     QDBusServiceWatcher *m_serviceWatcher;
     bool m_locked;

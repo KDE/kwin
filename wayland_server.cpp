@@ -323,6 +323,7 @@ void WaylandServer::initWorkspace()
             ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
         }
     }
+    emit initialized();
 }
 
 void WaylandServer::initOutputs()

@@ -167,6 +167,7 @@ Q_SIGNALS:
     void shellClientAdded(KWin::ShellClient*);
     void shellClientRemoved(KWin::ShellClient*);
     void terminatingInternalClientConnection();
+    void initialized();
 
 private:
     void setupX11ClipboardSync();

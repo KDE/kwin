@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screenlockerwatcher.h"
+#include "wayland_server.h"
 
 #include <QFutureWatcher>
 #include <QtConcurrentRun>
@@ -37,6 +38,19 @@ ScreenLockerWatcher::ScreenLockerWatcher(QObject *parent)
     , m_serviceWatcher(new QDBusServiceWatcher(this))
     , m_locked(false)
 {
+    if (waylandServer() && waylandServer()->hasScreenLockerIntegration()) {
+        connect(waylandServer(), &WaylandServer::initialized, this, &ScreenLockerWatcher::initialize);
+    } else {
+        initialize();
+    }
+}
+
+ScreenLockerWatcher::~ScreenLockerWatcher()
+{
+}
+
+void ScreenLockerWatcher::initialize()
+{
     connect(m_serviceWatcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)), SLOT(serviceOwnerChanged(QString,QString,QString)));
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForOwnerChange);
     m_serviceWatcher->addWatchedService(SCREEN_LOCKER_SERVICE_NAME);
@@ -47,10 +61,6 @@ ScreenLockerWatcher::ScreenLockerWatcher(QObject *parent)
     watcher->setFuture(QtConcurrent::run(QDBusConnection::sessionBus().interface(),
                                          &QDBusConnectionInterface::isServiceRegistered,
                                          SCREEN_LOCKER_SERVICE_NAME));
-}
-
-ScreenLockerWatcher::~ScreenLockerWatcher()
-{
 }
 
 void ScreenLockerWatcher::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)
