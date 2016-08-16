@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11_platform.h"
-#include "cursor.h"
+#include "x11cursor.h"
 #include "edge.h"
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX

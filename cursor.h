@@ -33,8 +33,6 @@ class QTimer;
 namespace KWin
 {
 
-class XInputEventFilter;
-
 /**
  * @short Replacement for QCursor.
  *
@@ -220,53 +218,6 @@ private:
     int m_themeSize;
 
     KWIN_SINGLETON(Cursor)
-};
-
-class KWIN_EXPORT X11Cursor : public Cursor
-{
-    Q_OBJECT
-public:
-    X11Cursor(QObject *parent);
-    virtual ~X11Cursor();
-
-    void schedulePoll() {
-        m_needsPoll = true;
-    }
-
-protected:
-    virtual xcb_cursor_t getX11Cursor(Qt::CursorShape shape);
-    xcb_cursor_t getX11Cursor(const QByteArray &name) override;
-    virtual void doSetPos();
-    virtual void doGetPos();
-    virtual void doStartMousePolling();
-    virtual void doStopMousePolling();
-    virtual void doStartCursorTracking();
-    virtual void doStopCursorTracking();
-
-private Q_SLOTS:
-    /**
-    * Because of QTimer's and the impossibility to get events for all mouse
-    * movements (at least I haven't figured out how) the position needs
-    * to be also refetched after each return to the event loop.
-    */
-    void resetTimeStamp();
-    void mousePolled();
-    void aboutToBlock();
-private:
-    void initXInput();
-    xcb_cursor_t createCursor(const QByteArray &name);
-    QHash<QByteArray, xcb_cursor_t > m_cursors;
-    xcb_timestamp_t m_timeStamp;
-    uint16_t m_buttonMask;
-    QTimer *m_resetTimeStampTimer;
-    QTimer *m_mousePollingTimer;
-    bool m_hasXInput;
-    int m_xiOpcode;
-    bool m_needsPoll;
-#ifndef KCMRULES
-    QScopedPointer<XInputEventFilter> m_xiEventFilter;
-#endif
-    friend class Cursor;
 };
 
 /**

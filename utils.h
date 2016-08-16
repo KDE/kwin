@@ -179,8 +179,8 @@ public:
 int qtToX11Button(Qt::MouseButton button);
 Qt::MouseButton x11ToQtMouseButton(int button);
 int qtToX11State(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
-Qt::MouseButtons x11ToQtMouseButtons(int state);
-Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state);
+Qt::MouseButtons KWIN_EXPORT x11ToQtMouseButtons(int state);
+Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
 
 void checkNonExistentClients();
 

@@ -47,7 +47,7 @@ namespace LibInput
 class Device;
 }
 
-class Xkb
+class KWIN_EXPORT Xkb
 {
 public:
     Xkb(InputRedirection *input);
