@@ -342,6 +342,9 @@ void InternalWindowTest::testKeyboard()
     QSignalSpy windowShownSpy(internalClient, &ShellClient::windowShown);
     QVERIFY(windowShownSpy.isValid());
     win.show();
+    if (windowShownSpy.isEmpty()) {
+        QVERIFY(windowShownSpy.wait());
+    }
     QCOMPARE(windowShownSpy.count(), 1);
     QVERIFY(leftSpy.isEmpty());
     QVERIFY(!leftSpy.wait(100));
