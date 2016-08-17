@@ -92,6 +92,7 @@ void ModifierOnlyShortcutTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
+    qputenv("KWIN_XKB_DEFAULT_KEYMAP", "1");
 
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());

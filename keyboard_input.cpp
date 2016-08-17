@@ -118,7 +118,10 @@ void Xkb::reconfigure()
         return;
     }
 
-    xkb_keymap *keymap = loadKeymapFromConfig();
+    xkb_keymap *keymap = nullptr;
+    if (!qEnvironmentVariableIsSet("KWIN_XKB_DEFAULT_KEYMAP")) {
+        keymap = loadKeymapFromConfig();
+    }
     if (!keymap) {
         qCDebug(KWIN_XKB) << "Could not create xkb keymap from configuration";
         keymap = loadDefaultKeymap();
