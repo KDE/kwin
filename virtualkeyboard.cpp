@@ -42,6 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQuickItem>
 #include <QQuickView>
 #include <QQuickWindow>
+// xkbcommon
+#include <xkbcommon/xkbcommon.h>
 
 using namespace KWayland::Server;
 
@@ -411,8 +413,11 @@ bool VirtualKeyboard::eventFilter(QObject *o, QEvent *e)
         if (event->nativeScanCode() == 0) {
             // this is a key composed by the virtual keyboard - we need to send it to the client
             // TODO: proper xkb support in KWindowSystem needed
-            int sym = 0;
-            KKeyServer::keyQtToSymX(event->key(), &sym);
+            int sym = xkb_keysym_from_name(event->text().toUtf8().constData(), XKB_KEYSYM_NO_FLAGS);
+            if (sym == XKB_KEY_NoSymbol) {
+                // mapping from text failed, try mapping through KKeyServer
+                KKeyServer::keyQtToSymX(event->key(), &sym);
+            }
             if (sym != 0) {
                 if (waylandServer()) {
                     auto t = waylandServer()->seat()->focusedTextInput();
