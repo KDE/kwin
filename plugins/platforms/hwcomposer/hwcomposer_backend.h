@@ -86,6 +86,9 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void toggleBlankOutput();
+    void screenBrightnessChanged(int brightness) {
+        m_oldScreenBrightness = brightness;
+    }
 
 private:
     void initLights();
@@ -96,6 +99,7 @@ private:
     bool m_outputBlank = true;
     int m_refreshRate = 60000;
     int m_vsyncInterval = 16;
+    int m_oldScreenBrightness = 0xff;
     bool m_hasVsync = false;
     QMutex m_vsyncMutex;
     QWaitCondition m_vsyncWaitCondition;

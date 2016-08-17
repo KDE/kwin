@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/seat_interface.h>
 // Qt
 #include <QKeyEvent>
+#include <QDBusConnection>
 // hybris/android
 #include <hardware/hardware.h>
 #include <hardware/hwcomposer.h>
@@ -143,6 +144,13 @@ void BacklightInputEventFilter::toggleBacklight()
 HwcomposerBackend::HwcomposerBackend(QObject *parent)
     : Platform(parent)
 {
+    if (!QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.Solid.PowerManagement"),
+                                              QStringLiteral("/org/kde/Solid/PowerManagement/Actions/BrightnessControl"),
+                                              QStringLiteral("org.kde.Solid.PowerManagement.Actions.BrightnessControl"),
+                                              QStringLiteral("brightnessChanged"), this,
+                                              SLOT(screenBrightnessChanged(int)))) {
+        qCWarning(KWIN_HWCOMPOSER) << "Failed to connect to brightness control";
+    }
     handleOutputs();
 }
 
@@ -321,7 +329,7 @@ void HwcomposerBackend::toggleScreenBrightness()
     if (!m_lights) {
         return;
     }
-    const int brightness = m_outputBlank ? 0 : 0xFF;
+    const int brightness = m_outputBlank ? 0 : m_oldScreenBrightness;
     struct light_state_t state;
     state.flashMode = LIGHT_FLASH_NONE;
     state.brightnessMode = BRIGHTNESS_MODE_USER;
