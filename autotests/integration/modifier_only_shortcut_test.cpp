@@ -48,6 +48,7 @@ private Q_SLOTS:
 
     void testTrigger_data();
     void testTrigger();
+    void testCapsLock();
 };
 
 class Target : public QObject
@@ -242,6 +243,49 @@ void ModifierOnlyShortcutTest::testTrigger()
     QCOMPARE(triggeredSpy.count(), 2);
 
     QVERIFY(Test::unlockScreen());
+}
+
+void ModifierOnlyShortcutTest::testCapsLock()
+{
+    // this test verifies that Capslock does not trigger the shift shortcut
+    // and that the shift modifier on capslock does not trigger either
+    Target target;
+    QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
+    QVERIFY(triggeredSpy.isValid());
+
+    KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
+    group.writeEntry("Meta", QStringList());
+    group.writeEntry("Alt", QStringList());
+    group.writeEntry("Shift", QStringList{s_serviceName, s_path, s_serviceName, QStringLiteral("shortcut")});
+    group.writeEntry("Control", QStringList());
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // first test that the normal shortcut triggers
+    quint32 timestamp = 1;
+    const int modifier = KEY_LEFTSHIFT;
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QCOMPARE(triggeredSpy.count(), 1);
+
+    // now capslock
+    kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
+    QCOMPARE(triggeredSpy.count(), 1);
+
+    // currently caps lock is on
+    // shift is ignored
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
+    QCOMPARE(triggeredSpy.count(), 1);
+
+    // release caps lock
+    kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
+    QCOMPARE(triggeredSpy.count(), 1);
 }
 
 WAYLANDTEST_MAIN(ModifierOnlyShortcutTest)

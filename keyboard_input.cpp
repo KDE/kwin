@@ -85,6 +85,7 @@ Xkb::Xkb(InputRedirection *input)
     , m_keymap(NULL)
     , m_state(NULL)
     , m_shiftModifier(0)
+    , m_capsModifier(0)
     , m_controlModifier(0)
     , m_altModifier(0)
     , m_metaModifier(0)
@@ -191,6 +192,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     m_state = state;
 
     m_shiftModifier   = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_SHIFT);
+    m_capsModifier    = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CAPS);
     m_controlModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CTRL);
     m_altModifier     = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
     m_metaModifier    = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
@@ -250,12 +252,14 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     if (!m_keymap || !m_state) {
         return;
     }
+    const auto oldMods = m_modifiers;
     xkb_state_update_key(m_state, key + 8, static_cast<xkb_key_direction>(state));
     updateModifiers();
     if (state == InputRedirection::KeyboardKeyPressed) {
         m_modOnlyShortcut.pressCount++;
         if (m_modOnlyShortcut.pressCount == 1 &&
             !ScreenLockerWatcher::self()->isLocked() &&
+            oldMods == Qt::NoModifier &&
             m_input->qtButtonStates() == Qt::NoButton) {
             m_modOnlyShortcut.modifier = Qt::KeyboardModifier(int(m_modifiers));
         } else {
@@ -263,7 +267,8 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
         }
     } else {
         m_modOnlyShortcut.pressCount--;
-        if (m_modOnlyShortcut.pressCount == 0) {
+        if (m_modOnlyShortcut.pressCount == 0 &&
+            m_modifiers == Qt::NoModifier) {
             if (m_modOnlyShortcut.modifier != Qt::NoModifier) {
                 const auto list = options->modifierOnlyDBusShortcut(m_modOnlyShortcut.modifier);
                 if (list.size() >= 4) {
@@ -284,7 +289,8 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
 void Xkb::updateModifiers()
 {
     Qt::KeyboardModifiers mods = Qt::NoModifier;
-    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1 ||
+        xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::ShiftModifier;
     }
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {

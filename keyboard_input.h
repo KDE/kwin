@@ -76,6 +76,7 @@ private:
     xkb_keymap *m_keymap;
     xkb_state *m_state;
     xkb_mod_index_t m_shiftModifier;
+    xkb_mod_index_t m_capsModifier;
     xkb_mod_index_t m_controlModifier;
     xkb_mod_index_t m_altModifier;
     xkb_mod_index_t m_metaModifier;
