@@ -370,6 +370,20 @@ void Compositor::finish()
         c->finishCompositing();
         xcb_composite_unredirect_subwindows(connection(), rootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
     }
+    if (waylandServer()) {
+        foreach (ShellClient *c, waylandServer()->clients()) {
+            m_scene->windowClosed(c, nullptr);
+        }
+        foreach (ShellClient *c, waylandServer()->internalClients()) {
+            m_scene->windowClosed(c, nullptr);
+        }
+        foreach (ShellClient *c, waylandServer()->clients()) {
+            c->finishCompositing();
+        }
+        foreach (ShellClient *c, waylandServer()->internalClients()) {
+            c->finishCompositing();
+        }
+    }
     delete effects;
     effects = NULL;
     delete m_scene;
@@ -971,6 +985,9 @@ void Toplevel::damageNotifyEvent()
 
 bool Toplevel::compositing() const
 {
+    if (!Workspace::self()) {
+        return false;
+    }
     return Workspace::self()->compositing();
 }
 
