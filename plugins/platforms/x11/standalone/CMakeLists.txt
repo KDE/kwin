@@ -6,6 +6,10 @@ set(X11PLATFORM_SOURCES
     screens_xrandr.cpp
 )
 
+if(X11_Xinput_FOUND)
+    set(X11PLATFORM_SOURCES ${X11PLATFORM_SOURCES} xinputintegration.cpp)
+endif()
+
 if(HAVE_EPOXY_GLX)
     set(X11PLATFORM_SOURCES ${X11PLATFORM_SOURCES} glxbackend.cpp)
 endif()

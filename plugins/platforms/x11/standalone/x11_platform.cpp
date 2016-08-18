@@ -20,11 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "x11_platform.h"
 #include "x11cursor.h"
 #include "edge.h"
+#include <config-kwin.h>
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
 #include "glxbackend.h"
 #endif
+#if HAVE_X11_XINPUT
+#include "xinputintegration.h"
+#endif
 #include "eglonxbackend.h"
+#include "keyboard_input.h"
 #include "logging.h"
 #include "screens_xrandr.h"
 #include "options.h"
@@ -41,6 +46,16 @@ namespace KWin
 X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     : Platform(parent)
 {
+#if HAVE_X11_XINPUT
+    if (!qEnvironmentVariableIsSet("KWIN_NO_XI2")) {
+        m_xinputIntegration = new XInputIntegration(this);
+        m_xinputIntegration->init();
+        if (!m_xinputIntegration->hasXinput()) {
+            delete m_xinputIntegration;
+            m_xinputIntegration = nullptr;
+        }
+    }
+#endif
 }
 
 X11StandalonePlatform::~X11StandalonePlatform() = default;
@@ -87,7 +102,17 @@ Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
 
 void X11StandalonePlatform::createPlatformCursor(QObject *parent)
 {
-    new X11Cursor(parent);
+    auto c = new X11Cursor(parent, m_xinputIntegration != nullptr);
+#if HAVE_X11_XINPUT
+    if (m_xinputIntegration) {
+        m_xinputIntegration->setCursor(c);
+        // we know we have xkb already
+        auto xkb = input()->keyboard()->xkb();
+        m_xinputIntegration->setXkb(xkb);
+        xkb->reconfigure();
+        m_xinputIntegration->startListening();
+    }
+#endif
 }
 
 bool X11StandalonePlatform::requiresCompositing() const

@@ -24,13 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class XInputEventFilter;
-
 class KWIN_EXPORT X11Cursor : public Cursor
 {
     Q_OBJECT
 public:
-    X11Cursor(QObject *parent);
+    X11Cursor(QObject *parent, bool xInputSupport = false);
     virtual ~X11Cursor();
 
     void schedulePoll() {
@@ -57,7 +55,6 @@ private Q_SLOTS:
     void mousePolled();
     void aboutToBlock();
 private:
-    void initXInput();
     xcb_cursor_t createCursor(const QByteArray &name);
     QHash<QByteArray, xcb_cursor_t > m_cursors;
     xcb_timestamp_t m_timeStamp;
@@ -65,11 +62,7 @@ private:
     QTimer *m_resetTimeStampTimer;
     QTimer *m_mousePollingTimer;
     bool m_hasXInput;
-    int m_xiOpcode;
     bool m_needsPoll;
-#ifndef KCMRULES
-    QScopedPointer<XInputEventFilter> m_xiEventFilter;
-#endif
     friend class Cursor;
 };
 
