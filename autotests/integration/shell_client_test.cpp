@@ -263,6 +263,13 @@ void TestShellClient::testMinimizeActiveWindow()
     workspace()->slotWindowMinimize();
     QVERIFY(!c->isActive());
     QVERIFY(!workspace()->activeClient());
+    QVERIFY(c->isMinimized());
+
+    // unminimize again
+    c->unminimize();
+    QVERIFY(!c->isMinimized());
+    QVERIFY(c->isActive());
+    QCOMPARE(workspace()->activeClient(), c);
 }
 
 WAYLANDTEST_MAIN(TestShellClient)
