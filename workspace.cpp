@@ -470,6 +470,11 @@ Workspace::~Workspace()
         (*it)->release(ReleaseReason::KWinShutsDown);
     xcb_delete_property(connection(), rootWindow(), atoms->kwin_running);
 
+    for (auto it = deleted.begin(); it != deleted.end();) {
+        emit deletedRemoved(*it);
+        it = deleted.erase(it);
+    }
+
     delete RuleBook::self();
     kwinApp()->config()->sync();
 
