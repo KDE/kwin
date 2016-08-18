@@ -53,6 +53,8 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
         if (!m_xinputIntegration->hasXinput()) {
             delete m_xinputIntegration;
             m_xinputIntegration = nullptr;
+        } else {
+            connect(kwinApp(), &Application::workspaceCreated, m_xinputIntegration, &XInputIntegration::startListening);
         }
     }
 #endif
@@ -110,7 +112,6 @@ void X11StandalonePlatform::createPlatformCursor(QObject *parent)
         auto xkb = input()->keyboard()->xkb();
         m_xinputIntegration->setXkb(xkb);
         xkb->reconfigure();
-        m_xinputIntegration->startListening();
     }
 #endif
 }

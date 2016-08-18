@@ -61,8 +61,8 @@ public:
         return false;
     }
 
-    void setCursor(X11Cursor *cursor) {
-        m_x11Cursor = QPointer<X11Cursor>(cursor);
+    void setCursor(const QPointer<X11Cursor> &cursor) {
+        m_x11Cursor = cursor;
     }
     void setXkb(Xkb *xkb) {
         m_xkb = xkb;
@@ -112,17 +112,16 @@ void XInputIntegration::init()
     m_majorVersion = major;
     m_minorVersion = minor;
     qCDebug(KWIN_X11STANDALONE) << "Has XInput support" << m_majorVersion << "." << m_minorVersion;
-    m_xiEventFilter.reset(new XInputEventFilter(m_xiOpcode));
 }
 
 void XInputIntegration::setCursor(X11Cursor *cursor)
 {
-    m_xiEventFilter->setCursor(cursor);
+    m_x11Cursor = QPointer<X11Cursor>(cursor);
 }
 
 void XInputIntegration::setXkb(Xkb *xkb)
 {
-    m_xiEventFilter->setXkb(xkb);
+    m_xkb = xkb;
 }
 
 void XInputIntegration::startListening()
@@ -147,6 +146,9 @@ void XInputIntegration::startListening()
     evmasks[0].mask_len = sizeof(mask1);
     evmasks[0].mask = mask1;
     XISelectEvents(display(), rootWindow(), evmasks, 1);
+    m_xiEventFilter.reset(new XInputEventFilter(m_xiOpcode));
+    m_xiEventFilter->setCursor(m_x11Cursor);
+    m_xiEventFilter->setXkb(m_xkb);
 }
 
 }

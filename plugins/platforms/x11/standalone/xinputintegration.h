@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_XINPUTINTEGRATION_H
 
 #include <QObject>
+#include <QPointer>
 #include <QScopedPointer>
 
 namespace KWin
@@ -52,6 +53,9 @@ private:
     int m_xiOpcode = 0;
     int m_majorVersion = 0;
     int m_minorVersion = 0;
+    QPointer<X11Cursor> m_x11Cursor;
+    // TODO: QPointer
+    Xkb *m_xkb = nullptr;
 
     QScopedPointer<XInputEventFilter> m_xiEventFilter;
 };
