@@ -99,7 +99,7 @@ private:
     bool m_outputBlank = true;
     int m_refreshRate = 60000;
     int m_vsyncInterval = 16;
-    int m_oldScreenBrightness = 0xff;
+    int m_oldScreenBrightness = 0x7f;
     bool m_hasVsync = false;
     QMutex m_vsyncMutex;
     QWaitCondition m_vsyncWaitCondition;
