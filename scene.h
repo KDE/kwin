@@ -538,12 +538,6 @@ void Scene::Window::suspendUnredirect(bool suspend)
 }
 
 inline
-void Scene::Window::updateShadow(Shadow* shadow)
-{
-    m_shadow = shadow;
-}
-
-inline
 const Shadow* Scene::Window::shadow() const
 {
     return m_shadow;

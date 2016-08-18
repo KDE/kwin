@@ -337,10 +337,11 @@ bool Shadow::updateShadow()
     auto clear = [this]() {
         if (m_topLevel && m_topLevel->effectWindow() && m_topLevel->effectWindow()->sceneWindow() &&
                                             m_topLevel->effectWindow()->sceneWindow()->shadow()) {
-            m_topLevel->effectWindow()->sceneWindow()->updateShadow(0);
-            m_topLevel->effectWindow()->buildQuads(true);
+            auto w = m_topLevel->effectWindow();
+            // this also deletes the shadow
+            w->sceneWindow()->updateShadow(nullptr);
+            w->buildQuads(true);
         }
-        deleteLater();
     };
     if (m_decorationShadow) {
         if (AbstractClient *c = qobject_cast<AbstractClient*>(m_topLevel)) {
