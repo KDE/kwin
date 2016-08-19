@@ -1237,4 +1237,19 @@ void ShellClient::doMinimize()
     }
 }
 
+bool ShellClient::setupCompositing()
+{
+    if (m_compositingSetup) {
+        return true;
+    }
+    m_compositingSetup = Toplevel::setupCompositing();
+    return m_compositingSetup;
+}
+
+void ShellClient::finishCompositing(ReleaseReason releaseReason)
+{
+    m_compositingSetup = false;
+    Toplevel::finishCompositing(releaseReason);
+}
+
 }

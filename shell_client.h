@@ -125,6 +125,9 @@ public:
 
     QMatrix4x4 inputTransformation() const override;
 
+    bool setupCompositing() override;
+    void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
@@ -208,6 +211,8 @@ private:
     int m_requestGeometryBlockCounter = 0;
     QRect m_blockedRequestGeometry;
     QString m_caption;
+
+    bool m_compositingSetup = false;
 };
 
 }

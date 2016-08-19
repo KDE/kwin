@@ -326,6 +326,11 @@ void Compositor::startupWithWorkspace()
             c->setupCompositing();
             c->getShadow();
         }
+        const auto internalClients = w->internalClients();
+        for (auto c : internalClients) {
+            c->setupCompositing();
+            c->getShadow();
+        }
     }
 
     emit compositingToggled(true);
