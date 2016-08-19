@@ -18,7 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "xinputintegration.h"
+#include "main.h"
 #include "logging.h"
+#include "platform.h"
 #include "x11cursor.h"
 
 #include "keyboard_input.h"
@@ -27,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/XInput2.h>
 #include <X11/extensions/XI2proto.h>
+
+#include <linux/input.h>
 
 namespace KWin
 {
@@ -50,6 +54,60 @@ public:
         case XI_RawKeyRelease:
             if (m_xkb) {
                 m_xkb->updateKey(reinterpret_cast<xXIRawEvent*>(event)->detail - 8, InputRedirection::KeyboardKeyReleased);
+            }
+            break;
+        case XI_RawButtonPress:
+            if (m_xkb) {
+                auto e = reinterpret_cast<xXIRawEvent*>(event);
+                switch (e->detail) {
+                // TODO: this currently ignores left handed settings, for current usage not needed
+                // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
+                case XCB_BUTTON_INDEX_1:
+                    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, e->time);
+                    break;
+                case XCB_BUTTON_INDEX_2:
+                    kwinApp()->platform()->pointerButtonPressed(BTN_MIDDLE, e->time);
+                    break;
+                case XCB_BUTTON_INDEX_3:
+                    kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, e->time);
+                    break;
+                case XCB_BUTTON_INDEX_4:
+                case XCB_BUTTON_INDEX_5:
+                    // vertical axis, ignore on press
+                    break;
+                // TODO: further buttons, horizontal scrolling?
+                }
+            }
+            if (m_x11Cursor) {
+                m_x11Cursor->schedulePoll();
+            }
+            break;
+        case XI_RawButtonRelease:
+            if (m_xkb) {
+                auto e = reinterpret_cast<xXIRawEvent*>(event);
+                switch (e->detail) {
+                // TODO: this currently ignores left handed settings, for current usage not needed
+                // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
+                case XCB_BUTTON_INDEX_1:
+                    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, e->time);
+                    break;
+                case XCB_BUTTON_INDEX_2:
+                    kwinApp()->platform()->pointerButtonReleased(BTN_MIDDLE, e->time);
+                    break;
+                case XCB_BUTTON_INDEX_3:
+                    kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, e->time);
+                    break;
+                case XCB_BUTTON_INDEX_4:
+                    kwinApp()->platform()->pointerAxisVertical(120, e->time);
+                    break;
+                case XCB_BUTTON_INDEX_5:
+                    kwinApp()->platform()->pointerAxisVertical(-120, e->time);
+                    break;
+                // TODO: further buttons, horizontal scrolling?
+                }
+            }
+            if (m_x11Cursor) {
+                m_x11Cursor->schedulePoll();
             }
             break;
         default:

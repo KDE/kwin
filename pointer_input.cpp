@@ -179,10 +179,11 @@ void PointerInputRedirection::processMotion(const QPointF &pos, uint32_t time, L
 
 void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, LibInput::Device *device)
 {
+    updateButton(button, state);
+
     if (!m_inited) {
         return;
     }
-    updateButton(button, state);
 
     QEvent::Type type;
     switch (state) {
@@ -210,14 +211,15 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
 
 void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time, LibInput::Device *device)
 {
-    if (!m_inited) {
-        return;
-    }
     if (delta == 0) {
         return;
     }
 
     emit m_input->pointerAxisChanged(axis, delta);
+
+    if (!m_inited) {
+        return;
+    }
 
     WheelEvent wheelEvent(m_pos, delta,
                            (axis == InputRedirection::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
