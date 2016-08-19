@@ -126,11 +126,14 @@ void ScreenEdgeTest::testEdge()
     const int id = Scripting::self()->loadScript(scriptToLoad);
     QVERIFY(id != -1);
     QVERIFY(Scripting::self()->isScriptLoaded(scriptToLoad));
-    // TODO: a way to run the script without having to call the global start
-    Scripting::self()->start();
-    // give it some time to start - a callback would be nice
-    QTest::qWait(100);
-
+    auto s = Scripting::self()->findScript(scriptToLoad);
+    QVERIFY(s);
+    QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+    QVERIFY(runningChangedSpy.isValid());
+    s->run();
+    QVERIFY(runningChangedSpy.wait());
+    QCOMPARE(runningChangedSpy.count(), 1);
+    QCOMPARE(runningChangedSpy.first().first().toBool(), true);
     // triggering the edge will result in show desktop being triggered
     QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
     QVERIFY(showDesktopSpy.isValid());

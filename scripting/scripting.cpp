@@ -719,13 +719,18 @@ void KWin::Scripting::slotScriptsQueried()
 
 bool KWin::Scripting::isScriptLoaded(const QString &pluginName) const
 {
+    return findScript(pluginName) != nullptr;
+}
+
+KWin::AbstractScript *KWin::Scripting::findScript(const QString &pluginName) const
+{
     QMutexLocker locker(m_scriptsLock.data());
     foreach (AbstractScript *script, scripts) {
         if (script->pluginName() == pluginName) {
-            return true;
+            return script;
         }
     }
-    return false;
+    return nullptr;
 }
 
 bool KWin::Scripting::unloadScript(const QString &pluginName)

@@ -52,7 +52,7 @@ class Client;
 class ScriptUnloaderAgent;
 class WorkspaceWrapper;
 
-class AbstractScript : public QObject
+class KWIN_EXPORT AbstractScript : public QObject
 {
     Q_OBJECT
 public:
@@ -149,6 +149,7 @@ private Q_SLOTS:
 
 Q_SIGNALS:
     Q_SCRIPTABLE void print(const QString &text);
+    void runningChanged(bool);
 
 protected:
     QFile &scriptFile() {
@@ -158,7 +159,11 @@ protected:
         return m_running;
     }
     void setRunning(bool running) {
+        if (m_running == running) {
+            return;
+        }
         m_running = running;
+        emit runningChanged(m_running);
     }
     int scriptId() const {
         return m_scriptId;
@@ -356,6 +361,8 @@ public:
     QQmlEngine *qmlEngine() const;
     QQmlEngine *qmlEngine();
     WorkspaceWrapper *workspaceWrapper() const;
+
+    AbstractScript *findScript(const QString &pluginName) const;
 
     static Scripting *self();
     static Scripting *create(QObject *parent);
