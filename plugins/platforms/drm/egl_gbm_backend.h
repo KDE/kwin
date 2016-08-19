@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_egl_backend.h"
 #include "scene_opengl.h"
 
-struct gbm_device;
 struct gbm_surface;
 
 namespace KWin
@@ -74,7 +73,6 @@ private:
     void cleanupOutput(const Output &output);
     void createOutput(DrmOutput *output);
     DrmBackend *m_backend;
-    gbm_device *m_device = nullptr;
     QVector<Output> m_outputs;
     friend class EglGbmTexture;
 };

@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xf86drmMode.h>
 
 struct gbm_bo;
+struct gbm_device;
 struct gbm_surface;
 
 namespace KWayland
@@ -89,6 +90,13 @@ public:
     void outputWentOff();
     void checkOutputsAreOn();
 
+    void setGbmDevice(gbm_device *device) {
+        m_gbmDevice = device;
+    }
+    gbm_device *gbmDevice() const {
+        return m_gbmDevice;
+    }
+
 public Q_SLOTS:
     void turnOutputsOn();
 
@@ -129,6 +137,7 @@ private:
     QVector<DrmBuffer*> m_buffers;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
     KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
+    gbm_device *m_gbmDevice = nullptr;
 };
 
 

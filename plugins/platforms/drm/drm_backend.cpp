@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
+#include <gbm.h>
 #endif
 // KWayland
 #include <KWayland/Server/seat_interface.h>
@@ -73,6 +74,11 @@ DrmBackend::DrmBackend(QObject *parent)
 
 DrmBackend::~DrmBackend()
 {
+#if HAVE_GBM
+    if (m_gbmDevice) {
+        gbm_device_destroy(m_gbmDevice);
+    }
+#endif
     if (m_fd >= 0) {
         // wait for pageflips
         while (m_pageFlipsPending != 0) {
