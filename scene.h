@@ -542,12 +542,6 @@ void Scene::Window::updateToplevel(Toplevel* c)
 }
 
 inline
-void Scene::Window::updateShadow(Shadow* shadow)
-{
-    m_shadow = shadow;
-}
-
-inline
 const Shadow* Scene::Window::shadow() const
 {
     return m_shadow;

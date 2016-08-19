@@ -920,6 +920,15 @@ WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg,
     return ret;
 }
 
+void Scene::Window::updateShadow(Shadow* shadow)
+{
+    if (m_shadow == shadow) {
+        return;
+    }
+    delete m_shadow;
+    m_shadow = shadow;
+}
+
 //****************************************
 // WindowPixmap
 //****************************************
