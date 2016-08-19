@@ -26,6 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTemporaryDir>
 // KWayland
 #include <KWayland/Server/seat_interface.h>
+// system
+#include <fcntl.h>
+#include <unistd.h>
+#if HAVE_GBM
+#include <gbm.h>
+#endif
 
 namespace KWin
 {
@@ -45,7 +51,17 @@ VirtualBackend::VirtualBackend(QObject *parent)
     setSupportsPointerWarping(true);
 }
 
-VirtualBackend::~VirtualBackend() = default;
+VirtualBackend::~VirtualBackend()
+{
+#if HAVE_GBM
+    if (m_gbmDevice) {
+        gbm_device_destroy(m_gbmDevice);
+    }
+#endif
+    if (m_drmFd != -1) {
+        close(m_drmFd);
+    }
+}
 
 void VirtualBackend::init()
 {

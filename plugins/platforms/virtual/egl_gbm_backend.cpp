@@ -58,20 +58,12 @@ EglGbmBackend::~EglGbmBackend()
     delete m_fbo;
     delete m_backBuffer;
     cleanup();
-#if HAVE_GBM
-    if (m_device) {
-        gbm_device_destroy(m_device);
-    }
-#endif
-    if (m_drmFd != -1) {
-        close(m_drmFd);
-    }
 }
 
 void EglGbmBackend::initGbmDevice()
 {
 #if HAVE_UDEV
-    if (m_drmFd != -1) {
+    if (m_backend->drmFd() != -1) {
         // already initialized
         return;
     }
@@ -87,16 +79,18 @@ void EglGbmBackend::initGbmDevice()
         return;
     }
     qCDebug(KWIN_VIRTUAL) << "Found a device: " << device->devNode();
-    m_drmFd = open(device->devNode(), O_RDWR | O_CLOEXEC);
-    if (m_drmFd == -1) {
+    int fd = open(device->devNode(), O_RDWR | O_CLOEXEC);
+    if (fd == -1) {
         qCWarning(KWIN_VIRTUAL) << "Failed to open: " << device->devNode();
         return;
     }
+    m_backend->setDrmFd(fd);
 #if HAVE_GBM
-    m_device = gbm_create_device(m_drmFd);
-    if (!m_device) {
+    auto gbmDevice = gbm_create_device(fd);
+    if (!gbmDevice) {
         qCWarning(KWIN_VIRTUAL) << "Failed to open gbm device";
     }
+    m_backend->setGbmDevice(gbmDevice);
 #endif
 #endif
 }
@@ -117,8 +111,8 @@ bool EglGbmBackend::initializeEgl()
 
 #if HAVE_GBM
         initGbmDevice();
-        if (m_device) {
-            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, m_device, nullptr);
+        if (auto device = m_backend->gbmDevice()) {
+            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_MESA, device, nullptr);
         }
 #endif
 

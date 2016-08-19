@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QTemporaryDir;
 
+struct gbm_device;
+
 namespace KWin
 {
 
@@ -62,6 +64,20 @@ public:
         m_outputCount = count;
     }
 
+    int drmFd() const {
+        return m_drmFd;
+    }
+    void setDrmFd(int fd) {
+        m_drmFd = fd;
+    }
+
+    gbm_device *gbmDevice() const {
+        return m_gbmDevice;
+    }
+    void setGbmDevice(gbm_device *device) {
+        m_gbmDevice = device;
+    }
+
 Q_SIGNALS:
     void sizeChanged();
     void outputGeometriesChanged(const QVector<QRect> &geometries);
@@ -70,6 +86,8 @@ private:
     QSize m_size;
     int m_outputCount = 1;
     QScopedPointer<QTemporaryDir> m_screenshotDir;
+    int m_drmFd = -1;
+    gbm_device *m_gbmDevice = nullptr;
 };
 
 }
