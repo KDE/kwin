@@ -307,15 +307,18 @@ void Xkb::updateModifiers()
     if (layout != m_currentLayout) {
         m_currentLayout = layout;
         // notify OSD service about the new layout
-        QDBusMessage msg = QDBusMessage::createMethodCall(
-        QStringLiteral("org.kde.plasmashell"),
-        QStringLiteral("/org/kde/osdService"),
-        QStringLiteral("org.kde.osdService"),
-        QStringLiteral("kbdLayoutChanged"));
+        if (kwinApp()->usesLibinput()) {
+            // only if kwin is in charge of keyboard input
+            QDBusMessage msg = QDBusMessage::createMethodCall(
+            QStringLiteral("org.kde.plasmashell"),
+            QStringLiteral("/org/kde/osdService"),
+            QStringLiteral("org.kde.osdService"),
+            QStringLiteral("kbdLayoutChanged"));
 
-        msg << QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, layout));
+            msg << QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, layout));
 
-        QDBusConnection::sessionBus().asyncCall(msg);
+            QDBusConnection::sessionBus().asyncCall(msg);
+        }
     }
     if (waylandServer()) {
         waylandServer()->seat()->updateKeyboardModifiers(xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED)),
