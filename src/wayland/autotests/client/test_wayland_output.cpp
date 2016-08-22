@@ -185,7 +185,10 @@ void TestWaylandOutput::testRegistry()
     QSignalSpy outputChanged(&output, SIGNAL(changed()));
     QVERIFY(outputChanged.isValid());
 
-    output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
+    auto o = registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>());
+    QVERIFY(!KWayland::Client::Output::get(o));
+    output.setup(o);
+    QCOMPARE(KWayland::Client::Output::get(o), &output);
     wl_display_flush(m_connection->display());
     QVERIFY(outputChanged.wait());
 
