@@ -152,6 +152,10 @@ void IdleTest::testTimeout()
     QVERIFY(resumedFormIdleSpy.isEmpty());
     m_seatInterface->setTimestamp(1);
     QVERIFY(resumedFormIdleSpy.wait());
+
+    timeout.reset();
+    m_connection->flush();
+    m_display->dispatchEvents();
 }
 
 void IdleTest::testSimulateUserActivity()
@@ -176,6 +180,10 @@ void IdleTest::testSimulateUserActivity()
     QVERIFY(resumedFormIdleSpy.isEmpty());
     timeout->simulateUserActivity();
     QVERIFY(resumedFormIdleSpy.wait());
+
+    timeout.reset();
+    m_connection->flush();
+    m_display->dispatchEvents();
 }
 
 QTEST_GUILESS_MAIN(IdleTest)
