@@ -581,35 +581,6 @@ bool ShellClient::isMinimizable() const
     return (!m_plasmaShellSurface || m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal);
 }
 
-QRect ShellClient::iconGeometry() const
-{
-    if (!windowManagementInterface()) {
-        // window management interface is only available if the surface is mapped
-        return QRect();
-    }
-
-    int minDistance = INT_MAX;
-    ShellClient *candidatePanel = nullptr;
-    QRect candidateGeom;
-
-    for (auto i = windowManagementInterface()->minimizedGeometries().constBegin(), end = windowManagementInterface()->minimizedGeometries().constEnd(); i != end; ++i) {
-        ShellClient *client = waylandServer()->findClient(i.key());
-        if (!client) {
-            continue;
-        }
-        const int distance = QPoint(client->pos() - pos()).manhattanLength();
-        if (distance < minDistance) {
-            minDistance = distance;
-            candidatePanel = client;
-            candidateGeom = i.value();
-        }
-    }
-    if (!candidatePanel) {
-        return QRect();
-    }
-    return candidateGeom.translated(candidatePanel->pos());
-}
-
 bool ShellClient::isMovable() const
 {
     if (m_plasmaShellSurface) {

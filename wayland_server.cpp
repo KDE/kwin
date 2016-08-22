@@ -561,6 +561,11 @@ ShellClient *WaylandServer::findClient(SurfaceInterface *surface) const
     return nullptr;
 }
 
+AbstractClient *WaylandServer::findAbstractClient(SurfaceInterface *surface) const
+{
+    return findClient(surface);
+}
+
 ShellClient *WaylandServer::findClient(QWindow *w) const
 {
     if (!w) {

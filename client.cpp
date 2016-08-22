@@ -737,7 +737,7 @@ QRect Client::iconGeometry() const
                 return geom;
         }
         // No mainwindow (or their parents) with icon geometry was found
-        return QRect();
+        return AbstractClient::iconGeometry();
     }
 }
 

@@ -108,6 +108,7 @@ public:
     void removeClient(ShellClient *c);
     ShellClient *findClient(quint32 id) const;
     ShellClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
+    AbstractClient *findAbstractClient(KWayland::Server::SurfaceInterface *surface) const;
     ShellClient *findClient(QWindow *w) const;
 
     /**

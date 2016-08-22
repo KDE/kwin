@@ -1598,4 +1598,33 @@ void AbstractClient::leaveEvent()
     // TODO: handle Options::FocusStrictlyUnderMouse
 }
 
+QRect AbstractClient::iconGeometry() const
+{
+    if (!windowManagementInterface() || !waylandServer()) {
+        // window management interface is only available if the surface is mapped
+        return QRect();
+    }
+
+    int minDistance = INT_MAX;
+    AbstractClient *candidatePanel = nullptr;
+    QRect candidateGeom;
+
+    for (auto i = windowManagementInterface()->minimizedGeometries().constBegin(), end = windowManagementInterface()->minimizedGeometries().constEnd(); i != end; ++i) {
+        AbstractClient *client = waylandServer()->findAbstractClient(i.key());
+        if (!client) {
+            continue;
+        }
+        const int distance = QPoint(client->pos() - pos()).manhattanLength();
+        if (distance < minDistance) {
+            minDistance = distance;
+            candidatePanel = client;
+            candidateGeom = i.value();
+        }
+    }
+    if (!candidatePanel) {
+        return QRect();
+    }
+    return candidateGeom.translated(candidatePanel->pos());
+}
+
 }
