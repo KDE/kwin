@@ -226,6 +226,7 @@ void TestWindowManagement::cleanup()
     }
     if (m_thread) {
         if (m_connection) {
+            m_connection->flush();
             m_connection->deleteLater();
         }
         m_thread->quit();
@@ -235,6 +236,7 @@ void TestWindowManagement::cleanup()
     }
     m_connection = nullptr;
 
+    m_display->dispatchEvents();
     delete m_windowManagementInterface;
     m_windowManagementInterface = nullptr;
 
