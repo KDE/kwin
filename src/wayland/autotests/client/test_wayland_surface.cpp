@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/event_queue.h"
+#include "../../src/client/output.h"
 #include "../../src/client/surface.h"
 #include "../../src/client/region.h"
 #include "../../src/client/registry.h"
@@ -59,6 +60,7 @@ private Q_SLOTS:
     void testSurfaceAt();
     void testDestroyAttachedBuffer();
     void testDestroyWithPendingCallback();
+    void testOutput();
     void testDisconnect();
 
 private:
@@ -954,6 +956,79 @@ void TestWaylandSurface::testDisconnect()
     m_shm->destroy();
     m_compositor->destroy();
     m_queue->destroy();
+}
+
+void TestWaylandSurface::testOutput()
+{
+    // This test verifies that the enter/leave are sent correctly to the Client
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    qRegisterMetaType<KWayland::Client::Output*>();
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    QVERIFY(s->outputs().isEmpty());
+    QSignalSpy enteredSpy(s.data(), &Surface::outputEntered);
+    QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(s.data(), &Surface::outputLeft);
+    QVERIFY(leftSpy.isValid());
+    // wait for the surface on the Server side
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>());
+
+    // create another registry to get notified about added outputs
+    Registry registry;
+    registry.setEventQueue(m_queue);
+    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
+    QVERIFY(allAnnounced.isValid());
+    registry.create(m_connection);
+    QVERIFY(registry.isValid());
+    registry.setup();
+    QVERIFY(allAnnounced.wait());
+    QSignalSpy outputAnnouncedSpy(&registry, &Registry::outputAnnounced);
+    QVERIFY(outputAnnouncedSpy.isValid());
+
+    auto serverOutput = m_display->createOutput(m_display);
+    serverOutput->create();
+    QVERIFY(outputAnnouncedSpy.wait());
+    QScopedPointer<Output> clientOutput(registry.createOutput(outputAnnouncedSpy.first().first().value<quint32>(), outputAnnouncedSpy.first().last().value<quint32>()));
+    QVERIFY(clientOutput->isValid());
+    m_connection->flush();
+    m_display->dispatchEvents();
+
+    // now enter it
+    serverSurface->setOutputs(QVector<OutputInterface*>{serverOutput});
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>{serverOutput});
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 1);
+    QCOMPARE(enteredSpy.first().first().value<Output*>(), clientOutput.data());
+    QCOMPARE(s->outputs(), QVector<Output*>{clientOutput.data()});
+
+    // adding to same should not trigger
+    serverSurface->setOutputs(QVector<OutputInterface*>{serverOutput});
+
+    // leave again
+    serverSurface->setOutputs(QVector<OutputInterface*>());
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>());
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(enteredSpy.count(), 1);
+    QCOMPARE(leftSpy.count(), 1);
+    QCOMPARE(leftSpy.first().first().value<Output*>(), clientOutput.data());
+    QCOMPARE(s->outputs(), QVector<Output*>());
+
+    // leave again should not trigger
+    serverSurface->setOutputs(QVector<OutputInterface*>());
+
+    // and enter again, just to verify
+    serverSurface->setOutputs(QVector<OutputInterface*>{serverOutput});
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>{serverOutput});
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
+    QCOMPARE(leftSpy.count(), 1);
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSurface)

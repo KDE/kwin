@@ -89,6 +89,8 @@ public:
     // waiting on the frame callback of the never visible surface
     bool subSurfaceIsMapped = true;
 
+    QVector<OutputInterface *> outputs;
+
 private:
     SurfaceInterface *q_func() {
         return reinterpret_cast<SurfaceInterface *>(q);

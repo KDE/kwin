@@ -506,6 +506,18 @@ bool OutputInterface::isDpmsSupported() const
     return d->dpms.supported;
 }
 
+QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const
+{
+    Q_D();
+    QVector<wl_resource *> ret;
+    for (auto it = d->resources.constBegin(), end = d->resources.constEnd(); it != end; ++it) {
+        if (wl_resource_get_client((*it).resource) == client->client()) {
+            ret << (*it).resource;
+        }
+    }
+    return ret;
+}
+
 OutputInterface *OutputInterface::get(wl_resource* native)
 {
     return Private::get(native);

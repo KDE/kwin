@@ -688,6 +688,44 @@ void SurfaceInterface::resetTrackedDamage()
     d->trackedDamage = QRegion();
 }
 
+QVector<OutputInterface *> SurfaceInterface::outputs() const
+{
+    Q_D();
+    return d->outputs;
+}
+
+void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
+{
+    Q_D();
+    QVector<OutputInterface *> removedOutputs = d->outputs;
+    for (auto it = outputs.constBegin(), end = outputs.constEnd(); it != end; ++it) {
+        const auto o = *it;
+        removedOutputs.removeOne(o);
+    }
+    for (auto it = removedOutputs.constBegin(), end = removedOutputs.constEnd(); it != end; ++it) {
+        const auto resources = (*it)->clientResources(client());
+        for (wl_resource *r : resources) {
+            wl_surface_send_leave(d->resource, r);
+        }
+    }
+    // TODO: send leave when OutputInterface gets destroyed
+
+    QVector<OutputInterface *> addedOutputsOutputs = outputs;
+    for (auto it = d->outputs.constBegin(), end = d->outputs.constEnd(); it != end; ++it) {
+        const auto o = *it;
+        addedOutputsOutputs.removeOne(o);
+    }
+    for (auto it = addedOutputsOutputs.constBegin(), end = addedOutputsOutputs.constEnd(); it != end; ++it) {
+        const auto resources = (*it)->clientResources(client());
+        for (wl_resource *r : resources) {
+            wl_surface_send_enter(d->resource, r);
+        }
+    }
+    // TODO: send enter when the client binds the OutputInterface another time
+
+    d->outputs = outputs;
+}
+
 SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
 {
     if (!isMapped()) {

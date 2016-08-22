@@ -36,6 +36,7 @@ namespace KWayland
 namespace Server
 {
 
+class ClientConnection;
 class Display;
 
 /**
@@ -124,6 +125,12 @@ public:
      * @since 5.5
      **/
     void setDpmsMode(DpmsMode mode);
+
+    /**
+     * @returns all wl_resources bound for the @p client
+     * @since 5.27
+     **/
+    QVector<wl_resource *> clientResources(ClientConnection *client) const;
 
     static OutputInterface *get(wl_resource *native);
 

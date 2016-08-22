@@ -206,6 +206,24 @@ public:
     SurfaceInterface *surfaceAt(const QPointF &position);
 
     /**
+     * Sets the @p outputs this SurfaceInterface overlaps with, may be empty.
+     *
+     * The compositor should update whenever the SurfaceInterface becomes visible on
+     * an OutputInterface by e.g. getting (un)mapped, resized, moved, etc.
+     *
+     * @see outputs
+     * @since 5.27
+     **/
+    void setOutputs(const QVector<OutputInterface *> &outputs);
+
+    /**
+     * @returns All OutputInterfaces the SurfaceInterface is on.
+     * @see setOutputs
+     * @since 5.27
+     **/
+    QVector<OutputInterface *> outputs() const;
+
+    /**
      * @returns The SurfaceInterface for the @p native resource.
      **/
     static SurfaceInterface *get(wl_resource *native);
