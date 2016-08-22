@@ -405,6 +405,7 @@ void PointerInputRedirection::update()
     if (t && t->surface()) {
         m_window = QPointer<Toplevel>(t);
         // TODO: add convenient API to update global pos together with updating focused surface
+        warpXcbOnSurfaceLeft(t->surface());
         seat->setFocusedPointerSurface(nullptr);
         seat->setPointerPos(m_pos.toPoint());
         seat->setFocusedPointerSurface(t->surface(), t->inputTransformation());
@@ -427,9 +428,38 @@ void PointerInputRedirection::update()
         );
     } else {
         m_window.clear();
+        warpXcbOnSurfaceLeft(nullptr);
         seat->setFocusedPointerSurface(nullptr);
         t = nullptr;
     }
+}
+
+void PointerInputRedirection::warpXcbOnSurfaceLeft(KWayland::Server::SurfaceInterface *newSurface)
+{
+    auto xc = waylandServer()->xWaylandConnection();
+    if (!xc) {
+        // No XWayland, no point in warping the x cursor
+        return;
+    }
+    if (!kwinApp()->x11Connection()) {
+        return;
+    }
+    static bool s_hasXWayland119 = xcb_get_setup(kwinApp()->x11Connection())->release_number >= 11900000;
+    if (s_hasXWayland119) {
+        return;
+    }
+    if (newSurface && newSurface->client() == xc) {
+        // new window is an X window
+        return;
+    }
+    auto s = waylandServer()->seat()->focusedPointerSurface();
+    if (!s || s->client() != xc) {
+        // pointer was not on an X window
+        return;
+    }
+    // warp pointer to 0/0 to trigger leave events on previously focused X window
+    xcb_warp_pointer(connection(), XCB_WINDOW_NONE, rootWindow(), 0, 0, 0, 0, 0, 0),
+    xcb_flush(connection());
 }
 
 void PointerInputRedirection::updatePosition(const QPointF &pos)

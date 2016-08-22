@@ -195,7 +195,6 @@ void XWaylandInputTest::testPointerEnterLeave()
 
     // move out of window
     Cursor::setPos(client->geometry().bottomRight() + QPoint(10, 10));
-    QEXPECT_FAIL("", "Xwayland doesn't send leave events when the surface gets a leave", Continue);
     QVERIFY(leftSpy.wait());
 
     // destroy window again

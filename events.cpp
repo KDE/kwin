@@ -286,6 +286,10 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         break;
     }
     case XCB_MOTION_NOTIFY: {
+        if (kwinApp()->operationMode() != Application::OperationModeX11) {
+            // ignore X11 pointer events generated on X windows if we are not on X
+            return true;
+        }
         auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t*>(e);
         const QPoint rootPos(mouseEvent->root_x, mouseEvent->root_y);
 #ifdef KWIN_BUILD_TABBOX
