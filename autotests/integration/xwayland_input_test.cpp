@@ -181,6 +181,7 @@ void XWaylandInputTest::testPointerEnterLeave()
     QVERIFY(client->surface());
 
     // move pointer into the window, should trigger an enter
+    QVERIFY(!client->geometry().contains(Cursor::pos()));
     Cursor::setPos(client->geometry().center());
     QVERIFY(enteredSpy.wait());
 
