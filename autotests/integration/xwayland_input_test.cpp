@@ -135,6 +135,9 @@ void XWaylandInputTest::testPointerEnterLeave()
     // create the test window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
+    if (xcb_get_setup(c.data())->release_number < 1800000) {
+        QSKIP("XWayland 1.18 required");
+    }
     X11EventReaderHelper eventReader(c.data());
     QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
     QVERIFY(enteredSpy.isValid());
