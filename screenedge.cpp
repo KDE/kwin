@@ -790,7 +790,7 @@ void ScreenEdges::recreateEdges()
 {
     QList<Edge*> oldEdges(m_edges);
     m_edges.clear();
-    const QRect fullArea(0, 0, displayWidth(), displayHeight());
+    const QRect fullArea = screens()->geometry();
     QRegion processedRegion;
     for (int i=0; i<screens()->count(); ++i) {
         const QRegion screen = QRegion(screens()->geometry(i)).subtracted(processedRegion);
