@@ -15,5 +15,5 @@ kwineffects_unit_tests(
 
 add_executable(kwinglplatformtest kwinglplatformtest.cpp mock_gl.cpp ../../libkwineffects/kwinglplatform.cpp)
 add_test(kwineffects-kwinglplatformtest kwinglplatformtest)
-target_link_libraries(kwinglplatformtest Qt5::Test Qt5::Gui Qt5::X11Extras KF5::ConfigCore)
+target_link_libraries(kwinglplatformtest Qt5::Test Qt5::Gui Qt5::X11Extras KF5::ConfigCore XCB::XCB)
 ecm_mark_as_test(kwinglplatformtest)

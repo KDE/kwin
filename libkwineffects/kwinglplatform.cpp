@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QOpenGLContext>
 
 #include <sys/utsname.h>
-#include <X11/Xlib.h>
 
 #include <iostream>
 #include <iomanip>
@@ -62,17 +61,19 @@ static qint64 parseVersionString(const QByteArray &version)
 static qint64 getXServerVersion()
 {
     qint64 major, minor, patch;
+    major = 0;
+    minor = 0;
+    patch = 0;
 
-    Display *dpy = display();
-    if (dpy && strstr(ServerVendor(dpy), "X.Org")) {
-        const int release  = VendorRelease(dpy);
-        major = (release / 10000000);
-        minor = (release /   100000) % 100;
-        patch = (release /     1000) % 100;
-    } else {
-        major = 0;
-        minor = 0;
-        patch = 0;
+    if (xcb_connection_t *c = connection()) {
+        auto setup = xcb_get_setup(c);
+        const QByteArray vendorName(xcb_setup_vendor(setup), xcb_setup_vendor_length(setup));
+        if (vendorName.contains("X.Org")) {
+            const int release = setup->release_number;
+            major = (release / 10000000);
+            minor = (release /   100000) % 100;
+            patch = (release /     1000) % 100;
+        }
     }
 
     return kVersionNumber(major, minor, patch);
