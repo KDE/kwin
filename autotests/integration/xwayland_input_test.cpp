@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "shell_client.h"
 
+#include <KWayland/Server/seat_interface.h>
+
 #include <QSocketNotifier>
 
 #include <netwm.h>
@@ -184,6 +186,8 @@ void XWaylandInputTest::testPointerEnterLeave()
     QVERIFY(!client->geometry().contains(Cursor::pos()));
     QVERIFY(enteredSpy.isEmpty());
     Cursor::setPos(client->geometry().center());
+    QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), client->surface());
+    QVERIFY(waylandServer()->seat()->focusedPointer());
     QVERIFY(enteredSpy.wait());
 
     // move out of window
