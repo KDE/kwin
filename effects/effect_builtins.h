@@ -48,7 +48,6 @@ enum class BuiltInEffect
     HighlightWindow,
     Invert,
     Kscreen,
-    Logout,
     LookingGlass,
     MagicLamp,
     Magnifier,

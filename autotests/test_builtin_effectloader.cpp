@@ -93,7 +93,6 @@ void TestBuiltInEffectLoader::testHasEffect_data()
     QTest::newRow("HighlightWindow")                << QStringLiteral("highlightwindow")   << true;
     QTest::newRow("Invert")                         << QStringLiteral("invert")            << true;
     QTest::newRow("Kscreen")                        << QStringLiteral("kscreen")           << true;
-    QTest::newRow("Logout")                         << QStringLiteral("logout")            << true;
     QTest::newRow("LookingGlass")                   << QStringLiteral("lookingglass")      << true;
     QTest::newRow("MagicLamp")                      << QStringLiteral("magiclamp")         << true;
     QTest::newRow("Magnifier")                      << QStringLiteral("magnifier")         << true;
@@ -149,7 +148,6 @@ void TestBuiltInEffectLoader::testKnownEffects()
                     << QStringLiteral("highlightwindow")
                     << QStringLiteral("invert")
                     << QStringLiteral("kscreen")
-                    << QStringLiteral("logout")
                     << QStringLiteral("lookingglass")
                     << QStringLiteral("magiclamp")
                     << QStringLiteral("magnifier")
@@ -223,7 +221,6 @@ void TestBuiltInEffectLoader::testSupported_data()
     QTest::newRow("Invert")                         << QStringLiteral("invert")            << false << xc << true;
     QTest::newRow("Invert-GL")                      << QStringLiteral("invert")            << true  << oc << true;
     QTest::newRow("Kscreen")                        << QStringLiteral("kscreen")           << true  << xc << true;
-    QTest::newRow("Logout")                         << QStringLiteral("logout")            << true  << xc << true;
     QTest::newRow("LookingGlass")                   << QStringLiteral("lookingglass")      << false << xc << true;
     QTest::newRow("LookingGlass-GL")                << QStringLiteral("lookingglass")      << true  << oc << true;
     QTest::newRow("MagicLamp")                      << QStringLiteral("magiclamp")         << false << xc << true;
@@ -311,7 +308,6 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
     QTest::newRow("Invert")                         << QStringLiteral("invert")            << false << xc;
     QTest::newRow("Invert-GL")                      << QStringLiteral("invert")            << true  << oc;
     QTest::newRow("Kscreen")                        << QStringLiteral("kscreen")           << true  << xc;
-    QTest::newRow("Logout")                         << QStringLiteral("logout")            << true  << xc;
     QTest::newRow("LookingGlass")                   << QStringLiteral("lookingglass")      << false << xc;
     QTest::newRow("LookingGlass-GL")                << QStringLiteral("lookingglass")      << true  << oc;
     QTest::newRow("MagicLamp")                      << QStringLiteral("magiclamp")         << false << xc;
@@ -501,7 +497,6 @@ void TestBuiltInEffectLoader::testLoadAllEffects()
     plugins.writeEntry(QStringLiteral("desktopgridEnabled"), false);
     plugins.writeEntry(QStringLiteral("highlightwindowEnabled"), false);
     plugins.writeEntry(QStringLiteral("kscreenEnabled"), false);
-    plugins.writeEntry(QStringLiteral("logoutEnabled"), false);
     plugins.writeEntry(QStringLiteral("minimizeanimationEnabled"), false);
     plugins.writeEntry(QStringLiteral("presentwindowsEnabled"), false);
     plugins.writeEntry(QStringLiteral("screenedgeEnabled"), false);

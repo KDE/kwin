@@ -7,7 +7,6 @@
   <file alias="sphere.vert">cube/data/1.10/sphere.vert</file>
   <file alias="invert.frag">invert/data/1.10/invert.frag</file>
   <file alias="logout-blur.frag">logout/data/1.10/logout-blur.frag</file>
-  <file alias="vignetting.frag">logout/data/1.10/vignetting.frag</file>
   <file alias="lookingglass.frag">lookingglass/data/1.10/lookingglass.frag</file>
   <file alias="blinking-startup-fragment.glsl">startupfeedback/data/blinking-startup-fragment.glsl</file>
 </qresource>
@@ -19,7 +18,6 @@
   <file alias="sphere.vert">cube/data/1.40/sphere.vert</file>
   <file alias="invert.frag">invert/data/1.40/invert.frag</file>
   <file alias="logout-blur.frag">logout/data/1.40/logout-blur.frag</file>
-  <file alias="vignetting.frag">logout/data/1.40/vignetting.frag</file>
   <file alias="lookingglass.frag">lookingglass/data/1.40/lookingglass.frag</file>
 </qresource>
 </RCC>

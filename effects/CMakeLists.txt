@@ -158,7 +158,6 @@ include( slidingpopups/CMakeLists.txt )
 add_subdirectory( thumbnailaside )
 add_subdirectory( windowgeometry )
 add_subdirectory( zoom )
-include( logout/CMakeLists.txt )
 
 # OpenGL-specific effects
 add_subdirectory( blur )
