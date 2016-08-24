@@ -67,6 +67,7 @@ enum class BuiltInEffect
     SnapHelper,
     StartupFeedback,
     ThumbnailAside,
+    TouchPoints,
     TrackMouse,
     WindowGeometry,
     WobblyWindows,
