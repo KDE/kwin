@@ -195,6 +195,7 @@ void ShellClient::init()
         }
     );
     connect(s, &SurfaceInterface::unmapped, this, &ShellClient::unmap);
+    connect(s, &SurfaceInterface::unbound, this, &ShellClient::destroyClient);
     connect(s, &SurfaceInterface::destroyed, this, &ShellClient::destroyClient);
     if (m_shellSurface) {
         initSurface(m_shellSurface);
