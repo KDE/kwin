@@ -84,6 +84,10 @@ void LanczosFilter::init()
         // also radeon before R600 has trouble
         if (gl->isRadeon() && gl->chipClass() < R600)
             return;
+        // and also for software emulation (e.g. llvmpipe)
+        if (gl->isSoftwareEmulation()) {
+            return;
+        }
     }
     QFile ff(gl->glslVersion() >= kVersionNumber(1, 40) ?
              QStringLiteral(":/resources/shaders/1.40/lanczos-fragment.glsl") :
