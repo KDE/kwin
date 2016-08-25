@@ -141,7 +141,7 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
         description = cfg.readEntry("description");
     READ_MATCH_STRING(wmclass, .toLower().toLatin1());
     wmclasscomplete = cfg.readEntry("wmclasscomplete" , false);
-    READ_MATCH_STRING(windowrole, .toLatin1());
+    READ_MATCH_STRING(windowrole, .toLower().toLatin1());
     READ_MATCH_STRING(title,);
     READ_MATCH_STRING(clientmachine, .toLower().toLatin1());
     types = NET::WindowTypeMask(cfg.readEntry<uint>("types", NET::AllTypesMask));
@@ -451,7 +451,7 @@ bool Rules::match(const Client* c) const
         return false;
     if (!matchWMClass(c->resourceClass(), c->resourceName()))
         return false;
-    if (!matchRole(c->windowRole()))
+    if (!matchRole(c->windowRole().toLower()))
         return false;
     if (!matchClientMachine(c->clientMachine()->hostName(), c->clientMachine()->isLocal()))
         return false;

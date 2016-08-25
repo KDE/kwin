@@ -154,7 +154,6 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     QVERIFY(surfaceChangedSpy.isValid());
     QVERIFY(surfaceChangedSpy.wait());
     QVERIFY(client->surface());
-    QEXPECT_FAIL("CamelCase", "BUG 367554", Continue);
     QCOMPARE(client->maximizeMode(), MaximizeVertical);
 
     // destroy window again
