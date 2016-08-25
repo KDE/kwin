@@ -49,6 +49,7 @@ if (XCB_ICCCM_FOUND)
     integrationTest(NAME testScreenEdgeClientShow SRCS screenedge_client_show_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testX11DesktopWindow SRCS desktop_window_x11_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testXwaylandInput SRCS xwayland_input_test.cpp LIBS XCB::ICCCM)
+    integrationTest(NAME testWindowRules SRCS window_rules_test.cpp LIBS XCB::ICCCM)
 
     if (KWIN_BUILD_ACTIVITIES)
         integrationTest(NAME testActivities SRCS activities_test.cpp LIBS XCB::ICCCM)

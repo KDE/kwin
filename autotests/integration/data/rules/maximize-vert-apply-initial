@@ -1,0 +1,13 @@
+Description=Window settings for kpat
+clientmachine=localhost
+clientmachinematch=0
+maximizevert=true
+maximizevertrule=3
+title=KPatience
+titlematch=0
+types=1
+windowrole=mainwindow
+windowrolematch=1
+wmclass=kpat
+wmclasscomplete=false
+wmclassmatch=1
