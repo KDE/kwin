@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>481</width>
-    <height>349</height>
+    <width>462</width>
+    <height>377</height>
    </rect>
   </property>
   <layout class="QFormLayout" name="formLayout">
@@ -21,18 +21,15 @@
        <property name="visible">
         <bool>false</bool>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string>OpenGL compositing (the default) has crashed KWin in the past.
 This was most likely due to a driver bug.
 If you think that you have meanwhile upgraded to a stable driver,
 you can reset this protection but be aware that this might result in an immediate crash!
 Alternatively, you might want to use the XRender backend instead.</string>
        </property>
-       <property name="wordWrap">
+       <property name="wordWrap" stdset="0">
         <bool>true</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Warning</enum>
        </property>
       </widget>
      </item>
@@ -41,14 +38,11 @@ Alternatively, you might want to use the XRender backend instead.</string>
        <property name="visible">
         <bool>false</bool>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string>Scale method &quot;Accurate&quot; is not supported by all hardware and can cause performance regressions and rendering artifacts.</string>
        </property>
-       <property name="wordWrap">
+       <property name="wordWrap" stdset="0">
         <bool>true</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Warning</enum>
        </property>
       </widget>
      </item>
@@ -57,11 +51,8 @@ Alternatively, you might want to use the XRender backend instead.</string>
        <property name="visible">
         <bool>false</bool>
        </property>
-       <property name="wordWrap">
+       <property name="wordWrap" stdset="0">
         <bool>true</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Warning</enum>
        </property>
       </widget>
      </item>
@@ -70,14 +61,11 @@ Alternatively, you might want to use the XRender backend instead.</string>
        <property name="visible">
         <bool>false</bool>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string>Keeping the window thumbnail always interferes with the minimized state of windows. This can result in windows not suspending their work when minimized.</string>
        </property>
-       <property name="wordWrap">
+       <property name="wordWrap" stdset="0">
         <bool>true</bool>
-       </property>
-       <property name="messageType">
-        <enum>KMessageWidget::Warning</enum>
        </property>
       </widget>
      </item>
@@ -292,6 +280,18 @@ Alternatively, you might want to use the XRender backend instead.</string>
     <widget class="QCheckBox" name="colorCorrection">
      <property name="text">
       <string>Enable color correction</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="1">
+    <widget class="QCheckBox" name="windowsBlockCompositing">
+     <property name="toolTip">
+      <string>Applications can set a hint to block compositing when the window is open.
+ This brings performance improvements for e.g. games.
+ The setting can be overruled by window-specific rules.</string>
+     </property>
+     <property name="text">
+      <string>Allow applications to block compositing</string>
      </property>
     </widget>
    </item>

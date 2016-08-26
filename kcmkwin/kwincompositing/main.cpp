@@ -169,6 +169,11 @@ void KWinCompositingSettings::init()
     connect(m_compositing, &Compositing::glColorCorrectionChanged, m_form.colorCorrection, &QCheckBox::setChecked);
     connect(m_form.colorCorrection, &QCheckBox::toggled, m_compositing, &Compositing::setGlColorCorrection);
 
+    // windows blocking compositing
+    m_form.windowsBlockCompositing->setChecked(m_compositing->windowsBlockCompositing());
+    connect(m_compositing, &Compositing::windowsBlockCompositingChanged, m_form.windowsBlockCompositing, &QCheckBox::setChecked);
+    connect(m_form.windowsBlockCompositing, &QCheckBox::toggled, m_compositing, &Compositing::setWindowsBlockCompositing);
+
     // compositing type
     CompositingType *type = new CompositingType(this);
     m_form.type->setModel(type);

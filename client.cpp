@@ -1822,7 +1822,7 @@ bool Client::acceptsFocus() const
 void Client::setBlockingCompositing(bool block)
 {
     const bool usedToBlock = blocks_compositing;
-    blocks_compositing = rules()->checkBlockCompositing(block);
+    blocks_compositing = rules()->checkBlockCompositing(block && options->windowsBlockCompositing());
     if (usedToBlock != blocks_compositing) {
         emit blockingCompositingChanged(blocks_compositing ? this : 0);
     }

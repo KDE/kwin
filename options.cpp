@@ -125,6 +125,7 @@ Options::Options(QObject *parent)
     , m_glCoreProfile(Options::defaultGLCoreProfile())
     , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
     , m_glPlatformInterface(Options::defaultGlPlatformInterface())
+    , m_windowsBlockCompositing(true)
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
     , CmdActiveTitlebar2(Options::defaultCommandActiveTitlebar2())
@@ -714,6 +715,15 @@ void Options::setGLCoreProfile(bool value)
     emit glCoreProfileChanged();
 }
 
+void Options::setWindowsBlockCompositing(bool value)
+{
+    if (m_windowsBlockCompositing == value) {
+        return;
+    }
+    m_windowsBlockCompositing = value;
+    emit windowsBlockCompositingChanged();
+}
+
 void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
 {
     if (glPreferBufferSwap == 'a') {
@@ -886,6 +896,7 @@ void Options::syncFromKcfgc()
     setElectricBorderMaximize(m_settings->electricBorderMaximize());
     setElectricBorderTiling(m_settings->electricBorderTiling());
     setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
+    setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
 
 }
 
@@ -956,6 +967,8 @@ void Options::reloadCompositingSettings(bool force)
     if (!loadCompositingConfig(force)) {
         return;
     }
+    m_settings->load();
+    syncFromKcfgc();
     // from now on we've an initial setup and don't have to reload settings on compositing activation
     // see Workspace::setupCompositing(), composite.cpp
     setCompositingInitialized(true);

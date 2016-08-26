@@ -48,6 +48,7 @@ Compositing::Compositing(QObject *parent)
     , m_changed(false)
     , m_openGLPlatformInterfaceModel(new OpenGLPlatformInterfaceModel(this))
     , m_openGLPlatformInterface(0)
+    , m_windowsBlockCompositing(true)
 {
     reset();
     connect(this, &Compositing::animationSpeedChanged,       this, &Compositing::changed);
@@ -59,6 +60,7 @@ Compositing::Compositing(QObject *parent)
     connect(this, &Compositing::compositingTypeChanged,      this, &Compositing::changed);
     connect(this, &Compositing::compositingEnabledChanged,   this, &Compositing::changed);
     connect(this, &Compositing::openGLPlatformInterfaceChanged, this, &Compositing::changed);
+    connect(this, &Compositing::windowsBlockCompositingChanged, this, &Compositing::changed);
 
     connect(this, &Compositing::changed, [this]{
         m_changed = true;
@@ -112,6 +114,8 @@ void Compositing::reset()
     const QModelIndex index = m_openGLPlatformInterfaceModel->indexForKey(kwinConfig.readEntry("GLPlatformInterface", "glx"));
     setOpenGLPlatformInterface(index.isValid() ? index.row() : 0);
 
+    setWindowsBlockCompositing(kwinConfig.readEntry("WindowsBlockCompositing", true));
+
     m_changed = false;
 }
 
@@ -126,6 +130,7 @@ void Compositing::defaults()
     setCompositingType(CompositingType::OPENGL20_INDEX);
     const QModelIndex index = m_openGLPlatformInterfaceModel->indexForKey(QStringLiteral("glx"));
     setOpenGLPlatformInterface(index.isValid() ? index.row() : 0);
+    setWindowsBlockCompositing(true);
     m_changed = true;
 }
 
@@ -324,6 +329,7 @@ void Compositing::save()
     if (glIndex.isValid()) {
         kwinConfig.writeEntry("GLPlatformInterface", glIndex.data(Qt::UserRole).toString());
     }
+    kwinConfig.writeEntry("WindowsBlockCompositing", windowsBlockCompositing());
     kwinConfig.sync();
 
     if (m_changed) {
@@ -353,6 +359,20 @@ void Compositing::setOpenGLPlatformInterface(int interface)
     }
     m_openGLPlatformInterface = interface;
     emit openGLPlatformInterfaceChanged(interface);
+}
+
+bool Compositing::windowsBlockCompositing() const
+{
+    return m_windowsBlockCompositing;
+}
+
+void Compositing::setWindowsBlockCompositing(bool set)
+{
+    if (m_windowsBlockCompositing == set) {
+        return;
+    }
+    m_windowsBlockCompositing = set;
+    emit windowsBlockCompositingChanged(set);
 }
 
 CompositingType::CompositingType(QObject *parent)

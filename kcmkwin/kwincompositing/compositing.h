@@ -44,6 +44,7 @@ class Compositing : public QObject
     Q_PROPERTY(bool compositingEnabled READ compositingEnabled WRITE setCompositingEnabled NOTIFY compositingEnabledChanged)
     Q_PROPERTY(KWin::Compositing::OpenGLPlatformInterfaceModel *openGLPlatformInterfaceModel READ openGLPlatformInterfaceModel CONSTANT)
     Q_PROPERTY(int openGLPlatformInterface READ openGLPlatformInterface WRITE setOpenGLPlatformInterface NOTIFY openGLPlatformInterfaceChanged)
+    Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
 public:
     explicit Compositing(QObject *parent = 0);
 
@@ -59,6 +60,7 @@ public:
     int compositingType() const;
     bool compositingEnabled() const;
     int openGLPlatformInterface() const;
+    bool windowsBlockCompositing() const;
 
     OpenGLPlatformInterfaceModel *openGLPlatformInterfaceModel() const;
 
@@ -71,6 +73,7 @@ public:
     void setCompositingType(int index);
     void setCompositingEnabled(bool enalbed);
     void setOpenGLPlatformInterface(int interface);
+    void setWindowsBlockCompositing(bool set);
 
     void save();
 
@@ -89,6 +92,7 @@ Q_SIGNALS:
     void compositingTypeChanged(int);
     void compositingEnabledChanged(bool);
     void openGLPlatformInterfaceChanged(int);
+    void windowsBlockCompositingChanged(bool);
 
 private:
     int m_animationSpeed;
@@ -102,6 +106,7 @@ private:
     bool m_changed;
     OpenGLPlatformInterfaceModel *m_openGLPlatformInterfaceModel;
     int m_openGLPlatformInterface;
+    bool m_windowsBlockCompositing;
 };
 
 

@@ -190,6 +190,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool glCoreProfile READ glCoreProfile WRITE setGLCoreProfile NOTIFY glCoreProfileChanged)
     Q_PROPERTY(GlSwapStrategy glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
     Q_PROPERTY(KWin::OpenGLPlatformInterface glPlatformInterface READ glPlatformInterface WRITE setGlPlatformInterface NOTIFY glPlatformInterfaceChanged)
+    Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
 public:
 
     explicit Options(QObject *parent = NULL);
@@ -593,6 +594,11 @@ public:
         return m_glPreferBufferSwap;
     }
 
+    bool windowsBlockCompositing() const
+    {
+        return m_windowsBlockCompositing;
+    }
+
     QStringList modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const;
 
     // setters
@@ -656,6 +662,7 @@ public:
     void setGLCoreProfile(bool glCoreProfile);
     void setGlPreferBufferSwap(char glPreferBufferSwap);
     void setGlPlatformInterface(OpenGLPlatformInterface interface);
+    void setWindowsBlockCompositing(bool set);
 
     // default values
     static WindowOperation defaultOperationTitlebarDblClick() {
@@ -848,6 +855,7 @@ Q_SIGNALS:
     void glCoreProfileChanged();
     void glPreferBufferSwapChanged();
     void glPlatformInterfaceChanged();
+    void windowsBlockCompositingChanged();
 
     void configChanged();
 
@@ -897,6 +905,7 @@ private:
     bool m_glCoreProfile;
     GlSwapStrategy m_glPreferBufferSwap;
     OpenGLPlatformInterface m_glPlatformInterface;
+    bool m_windowsBlockCompositing;
 
     WindowOperation OpTitlebarDblClick;
     WindowOperation opMaxButtonRightClick = defaultOperationMaxButtonRightClick();
