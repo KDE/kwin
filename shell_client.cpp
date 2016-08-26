@@ -191,7 +191,6 @@ void ShellClient::init()
         [this] {
             m_clientSize = surface()->buffer()->size();
             doSetGeometry(QRect(geom.topLeft(), m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
-            discardWindowPixmap();
         }
     );
     connect(s, &SurfaceInterface::unmapped, this, &ShellClient::unmap);

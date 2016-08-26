@@ -459,9 +459,11 @@ void Toplevel::setSurface(KWayland::Server::SurfaceInterface *surface)
     using namespace KWayland::Server;
     if (m_surface) {
         disconnect(m_surface, &SurfaceInterface::damaged, this, &Toplevel::addDamage);
+        disconnect(m_surface, &SurfaceInterface::sizeChanged, this, &Toplevel::discardWindowPixmap);
     }
     m_surface = surface;
     connect(m_surface, &SurfaceInterface::damaged, this, &Toplevel::addDamage);
+    connect(m_surface, &SurfaceInterface::sizeChanged, this, &Toplevel::discardWindowPixmap);
     connect(m_surface, &SurfaceInterface::subSurfaceTreeChanged, this,
         [this] {
             // TODO improve to only update actual visual area
