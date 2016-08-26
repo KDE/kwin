@@ -235,6 +235,11 @@ bool CompositorDBusInterface::isOpenGLBroken() const
     return kwinApp()->platform()->openGLCompositingIsBroken();
 }
 
+bool CompositorDBusInterface::platformRequiresCompositing() const
+{
+    return kwinApp()->platform()->requiresCompositing();
+}
+
 void CompositorDBusInterface::resume()
 {
     m_compositor->resume(Compositor::ScriptSuspend);

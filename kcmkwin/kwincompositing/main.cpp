@@ -87,6 +87,9 @@ KWinCompositingSettings::KWinCompositingSettings(QWidget *parent, const QVariant
     m_form.tearingWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     m_form.windowThumbnailWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
 
+    m_form.compositingEnabled->setVisible(!m_compositing->compositingRequired());
+    m_form.windowsBlockCompositing->setVisible(!m_compositing->compositingRequired());
+
     init();
 }
 

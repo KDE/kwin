@@ -115,6 +115,7 @@ class CompositorDBusInterface : public QObject
      * Values depend on operation mode and compile time options.
      **/
     Q_PROPERTY(QStringList supportedOpenGLPlatformInterfaces READ supportedOpenGLPlatformInterfaces)
+    Q_PROPERTY(bool platformRequiresCompositing READ platformRequiresCompositing)
 public:
     explicit CompositorDBusInterface(Compositor *parent);
     virtual ~CompositorDBusInterface() = default;
@@ -125,6 +126,7 @@ public:
     bool isOpenGLBroken() const;
     QString compositingType() const;
     QStringList supportedOpenGLPlatformInterfaces() const;
+    bool platformRequiresCompositing() const;
 
 public Q_SLOTS:
     /**

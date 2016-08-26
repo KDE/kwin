@@ -25,6 +25,8 @@
 #include <QAbstractItemModel>
 #include <QObject>
 
+class OrgKdeKwinCompositingInterface;
+
 namespace KWin {
 namespace Compositing {
 
@@ -45,6 +47,7 @@ class Compositing : public QObject
     Q_PROPERTY(KWin::Compositing::OpenGLPlatformInterfaceModel *openGLPlatformInterfaceModel READ openGLPlatformInterfaceModel CONSTANT)
     Q_PROPERTY(int openGLPlatformInterface READ openGLPlatformInterface WRITE setOpenGLPlatformInterface NOTIFY openGLPlatformInterfaceChanged)
     Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
+    Q_PROPERTY(bool compositingRequired READ compositingRequired CONSTANT)
 public:
     explicit Compositing(QObject *parent = 0);
 
@@ -61,6 +64,7 @@ public:
     bool compositingEnabled() const;
     int openGLPlatformInterface() const;
     bool windowsBlockCompositing() const;
+    bool compositingRequired() const;
 
     OpenGLPlatformInterfaceModel *openGLPlatformInterfaceModel() const;
 
@@ -107,6 +111,8 @@ private:
     OpenGLPlatformInterfaceModel *m_openGLPlatformInterfaceModel;
     int m_openGLPlatformInterface;
     bool m_windowsBlockCompositing;
+    bool m_windowsBlockingCompositing;
+    OrgKdeKwinCompositingInterface *m_compositingInterface;
 };
 
 
