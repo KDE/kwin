@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "xcbutils.h"
 
+#include <kwineffects.h>
+
 // KDE
 #include <KAboutData>
 #include <KLocalizedString>
@@ -102,6 +104,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     , m_operationMode(mode)
 {
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
+    qRegisterMetaType<KWin::EffectWindow*>();
 }
 
 void Application::setConfigLock(bool lock)
