@@ -73,7 +73,6 @@ KWIN_SINGLETON_FACTORY(WaylandServer)
 WaylandServer::WaylandServer(QObject *parent)
     : QObject(parent)
 {
-    qRegisterMetaType<KWayland::Server::SurfaceInterface *>("KWayland::Server::SurfaceInterface *");
     qRegisterMetaType<KWayland::Server::OutputInterface::DpmsMode>();
 
     connect(kwinApp(), &Application::screensCreated, this, &WaylandServer::initOutputs);

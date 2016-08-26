@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <KPluginMetaData>
 #include <KSharedConfig>
+#include <KWayland/Server/surface_interface.h>
 // Qt
 #include <qplatformdefs.h>
 #include <qcommandlineparser.h>
@@ -105,6 +106,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
 {
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
     qRegisterMetaType<KWin::EffectWindow*>();
+    qRegisterMetaType<KWayland::Server::SurfaceInterface *>("KWayland::Server::SurfaceInterface *");
 }
 
 void Application::setConfigLock(bool lock)
