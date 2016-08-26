@@ -44,7 +44,7 @@ bool PlatformContextWayland::makeCurrent(QPlatformSurface *surface)
             return false;
         }
     }
-    return eglMakeCurrent(eglDisplay(), s, s, context());
+    return eglMakeCurrent(eglDisplay(), s, s, eglContext());
 }
 
 bool PlatformContextWayland::isSharing() const

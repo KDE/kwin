@@ -48,7 +48,7 @@ SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, Integrat
 bool SharingPlatformContext::makeCurrent(QPlatformSurface *surface)
 {
     Window *window = static_cast<Window*>(surface);
-    if (eglMakeCurrent(eglDisplay(), m_surface, m_surface, context())) {
+    if (eglMakeCurrent(eglDisplay(), m_surface, m_surface, eglContext())) {
         window->bindContentFBO();
         return true;
     }
@@ -74,7 +74,7 @@ void SharingPlatformContext::swapBuffers(QPlatformSurface *surface)
         qCDebug(KWIN_QPA) << "SwapBuffers called but there is no ShellClient";
         return;
     }
-    makeCurrent(surface);
+    context()->makeCurrent(surface->surface());
     glFlush();
     c->setInternalFramebufferObject(window->swapFBO());
     window->bindContentFBO();

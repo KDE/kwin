@@ -53,7 +53,7 @@ protected:
         return m_config;
     }
     bool bindApi();
-    EGLContext context() const {
+    EGLContext eglContext() const {
         return m_context;
     }
     void createContext(EGLContext shareContext = EGL_NO_CONTEXT);
