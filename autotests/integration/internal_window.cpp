@@ -54,6 +54,7 @@ private Q_SLOTS:
     void testPointerAxis();
     void testKeyboard_data();
     void testKeyboard();
+    void testKeyboardShowWithoutActivating();
     void testKeyboardTriggersLeave();
     void testTouch();
 };
@@ -331,6 +332,39 @@ void InternalWindowTest::testKeyboard()
     kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
     QTRY_COMPARE(releaseSpy.count(), 1);
     QCOMPARE(pressSpy.count(), 1);
+}
+
+void InternalWindowTest::testKeyboardShowWithoutActivating()
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setProperty("_q_showWithoutActivating", true);
+    win.setGeometry(0, 0, 100, 100);
+    win.show();
+    QSignalSpy pressSpy(&win, &HelperWindow::keyPressed);
+    QVERIFY(pressSpy.isValid());
+    QSignalSpy releaseSpy(&win, &HelperWindow::keyReleased);
+    QVERIFY(releaseSpy.isValid());
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QVERIFY(internalClient->isInternal());
+    QVERIFY(internalClient->readyForPainting());
+
+    quint32 timestamp = 1;
+    const QPoint cursorPos = QPoint(50, 50);
+    kwinApp()->platform()->pointerMotion(cursorPos, timestamp++);
+
+    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    QCOMPARE(pressSpy.count(), 0);
+    QVERIFY(!pressSpy.wait(100));
+    QCOMPARE(releaseSpy.count(), 0);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    QCOMPARE(releaseSpy.count(), 0);
+    QVERIFY(!releaseSpy.wait(100));
+    QCOMPARE(pressSpy.count(), 0);
 }
 
 void InternalWindowTest::testKeyboardTriggersLeave()

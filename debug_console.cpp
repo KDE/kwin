@@ -452,6 +452,7 @@ DebugConsole::DebugConsole()
     : QWidget()
     , m_ui(new Ui::DebugConsole)
 {
+    setAttribute(Qt::WA_ShowWithoutActivating);
     m_ui->setupUi(this);
     m_ui->windowsView->setItemDelegate(new DebugConsoleDelegate(this));
     m_ui->windowsView->setModel(new DebugConsoleModel(this));

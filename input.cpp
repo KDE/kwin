@@ -498,6 +498,9 @@ class InternalWindowEventFilter : public InputEventFilter {
                 if (!screens()->geometry().contains(w->geometry())) {
                     continue;
                 }
+                if (w->property("_q_showWithoutActivating").toBool()) {
+                    continue;
+                }
                 found = w;
                 break;
             }
