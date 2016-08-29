@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTemporaryFile>
 // xkbcommon
 #include <xkbcommon/xkbcommon.h>
+#include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
 // system
 #include <sys/mman.h>
@@ -90,12 +91,31 @@ Xkb::Xkb(InputRedirection *input)
     , m_altModifier(0)
     , m_metaModifier(0)
     , m_modifiers(Qt::NoModifier)
+    , m_keysym(XKB_KEY_NoSymbol)
 {
     if (!m_context) {
         qCDebug(KWIN_XKB) << "Could not create xkb context";
     } else {
         xkb_context_set_log_level(m_context, XKB_LOG_LEVEL_DEBUG);
         xkb_context_set_log_fn(m_context, &xkbLogHandler);
+
+        // get locale as described in xkbcommon doc
+        // cannot use QLocale as it drops the modifier part
+        QByteArray locale = qgetenv("LC_ALL");
+        if (locale.isEmpty()) {
+            locale = qgetenv("LC_CTYPE");
+        }
+        if (locale.isEmpty()) {
+            locale = qgetenv("LANG");
+        }
+        if (locale.isEmpty()) {
+            locale = QByteArrayLiteral("C");
+        }
+
+        m_compose.table = xkb_compose_table_new_from_locale(m_context, locale.constData(), XKB_COMPOSE_COMPILE_NO_FLAGS);
+        if (m_compose.table) {
+            m_compose.state = xkb_compose_state_new(m_compose.table, XKB_COMPOSE_STATE_NO_FLAGS);
+        }
     }
 
     auto resetModOnlyShortcut = [this] {
@@ -108,6 +128,8 @@ Xkb::Xkb(InputRedirection *input)
 
 Xkb::~Xkb()
 {
+    xkb_compose_state_unref(m_compose.state);
+    xkb_compose_table_unref(m_compose.table);
     xkb_state_unref(m_state);
     xkb_keymap_unref(m_keymap);
     xkb_context_unref(m_context);
@@ -254,6 +276,24 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     }
     const auto oldMods = m_modifiers;
     xkb_state_update_key(m_state, key + 8, static_cast<xkb_key_direction>(state));
+    if (state == InputRedirection::KeyboardKeyPressed) {
+        const auto sym = toKeysym(key);
+        if (m_compose.state && xkb_compose_state_feed(m_compose.state, sym) == XKB_COMPOSE_FEED_ACCEPTED) {
+            switch (xkb_compose_state_get_status(m_compose.state)) {
+            case XKB_COMPOSE_NOTHING:
+                m_keysym = sym;
+                break;
+            case XKB_COMPOSE_COMPOSED:
+                m_keysym = xkb_compose_state_get_one_sym(m_compose.state);
+                break;
+            default:
+                m_keysym = XKB_KEY_NoSymbol;
+                break;
+            }
+        } else {
+            m_keysym = sym;
+        }
+    }
     updateModifiers();
     if (state == InputRedirection::KeyboardKeyPressed) {
         m_modOnlyShortcut.pressCount++;
@@ -525,13 +565,13 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
         }
     }
 
-    const xkb_keysym_t keySym = m_xkb->toKeysym(key);
+    const xkb_keysym_t keySym = m_xkb->currentKeysym();
     KeyEvent event(type,
                    m_xkb->toQtKey(keySym),
                    m_xkb->modifiers(),
                    key,
                    keySym,
-                   m_xkb->toString(m_xkb->toKeysym(key)),
+                   m_xkb->toString(keySym),
                    autoRepeat,
                    time,
                    device);

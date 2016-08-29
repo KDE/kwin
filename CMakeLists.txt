@@ -158,7 +158,7 @@ if(Wayland_Egl_FOUND)
     set(HAVE_WAYLAND_EGL TRUE)
 endif()
 
-find_package(XKB 0.4.1)
+find_package(XKB 0.5.0)
 set_package_properties(XKB PROPERTIES
                        TYPE REQUIRED
                        PURPOSE "Required for building KWin with Wayland support"
