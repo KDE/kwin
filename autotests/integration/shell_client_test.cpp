@@ -121,6 +121,14 @@ void TestShellClient::testMapUnmapMap()
     QVERIFY(client->hasAlpha());
     QCOMPARE(workspace()->activeClient(), client);
     QVERIFY(effectsWindowShownSpy.isEmpty());
+    QVERIFY(client->isMaximizable());
+    QVERIFY(client->isMovable());
+    QVERIFY(client->isMovableAcrossScreens());
+    QVERIFY(client->isResizable());
+    QVERIFY(client->property("maximizable").toBool());
+    QVERIFY(client->property("moveable").toBool());
+    QVERIFY(client->property("moveableAcrossScreens").toBool());
+    QVERIFY(client->property("resizeable").toBool());
 
     // now unmap
     QSignalSpy hiddenSpy(client, &ShellClient::windowHidden);

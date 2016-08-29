@@ -220,6 +220,30 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * show the help button or not.
      **/
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp CONSTANT)
+    /**
+     * Whether the Client can be maximized both horizontally and vertically.
+     * The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     **/
+    Q_PROPERTY(bool maximizable READ isMaximizable)
+    /**
+     * Whether the Client is moveable. Even if it is not moveable, it might be possible to move
+     * it to another screen. The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     * @see moveableAcrossScreens
+     **/
+    Q_PROPERTY(bool moveable READ isMovable)
+    /**
+     * Whether the Client can be moved to another screen. The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     * @see moveable
+     **/
+    Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
+    /**
+     * Whether the Client can be resized. The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     **/
+    Q_PROPERTY(bool resizeable READ isResizable)
 public:
     virtual ~AbstractClient();
 
