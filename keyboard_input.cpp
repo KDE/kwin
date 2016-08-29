@@ -361,7 +361,7 @@ bool Xkb::shouldKeyRepeat(quint32 key) const
     if (!m_keymap) {
         return false;
     }
-    return xkb_keymap_key_repeats(m_keymap, key) != 0;
+    return xkb_keymap_key_repeats(m_keymap, key + 8) != 0;
 }
 
 void Xkb::switchToNextLayout()
