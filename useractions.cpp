@@ -129,7 +129,7 @@ bool UserActionsMenu::isMenuClient(const AbstractClient *c) const
 
 void UserActionsMenu::show(const QRect &pos, const QWeakPointer<AbstractClient> &cl)
 {
-    if (!KAuthorized::authorizeKAction(QStringLiteral("kwin_rmb")))
+    if (!KAuthorized::authorizeAction(QStringLiteral("kwin_rmb")))
         return;
     if (cl.isNull())
         return;
