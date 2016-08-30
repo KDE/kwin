@@ -343,6 +343,21 @@ void TabBoxHandlerImpl::activateAndClose()
     m_tabBox->accept();
 }
 
+void TabBoxHandlerImpl::highlightWindows(TabBoxClient *window, QWindow *controller)
+{
+    if (!effects) {
+        return;
+    }
+    QVector<EffectWindow*> windows;
+    if (window) {
+        windows << static_cast<TabBoxClientImpl*>(window)->client()->effectWindow();
+    }
+    if (auto t = Workspace::self()->findToplevel(controller)) {
+        windows << t->effectWindow();
+    }
+    static_cast<EffectsHandlerImpl*>(effects)->highlightWindows(windows);
+}
+
 /*********************************************************
 * TabBoxClientImpl
 *********************************************************/

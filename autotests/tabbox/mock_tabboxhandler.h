@@ -93,6 +93,11 @@ public:
     }
     virtual void grabbedKeyEvent(QKeyEvent *event) const;
 
+    void highlightWindows(TabBox::TabBoxClient *window = nullptr, QWindow *controller = nullptr) override {
+        Q_UNUSED(window)
+        Q_UNUSED(controller)
+    }
+
     // mock methods
     QWeakPointer<TabBox::TabBoxClient> createMockWindow(const QString &caption, WId id);
     void closeWindow(TabBox::TabBoxClient *client);

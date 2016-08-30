@@ -258,9 +258,47 @@ void HighlightWindowEffect::finishHighlighting()
         m_windowOpacity.constBegin().key()->addRepaintFull();
 }
 
+void HighlightWindowEffect::highlightWindows(const QVector<KWin::EffectWindow *> &windows)
+{
+    if (windows.isEmpty()) {
+        finishHighlighting();
+        return;
+    }
+
+    m_monitorWindow = nullptr;
+    m_highlightedWindows.clear();
+    m_highlightedIds.clear();
+    for (auto w : windows) {
+        m_highlightedWindows << w;
+    }
+    prepareHighlighting();
+}
+
 bool HighlightWindowEffect::isActive() const
 {
     return !(m_windowOpacity.isEmpty() || effects->isScreenLocked());
+}
+
+bool HighlightWindowEffect::provides(Feature feature)
+{
+    switch (feature) {
+    case HighlightWindows:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool HighlightWindowEffect::perform(Feature feature, const QVariantList &arguments)
+{
+    if (feature != HighlightWindows) {
+        return false;
+    }
+    if (arguments.size() != 1) {
+        return false;
+    }
+    highlightWindows(arguments.first().value<QVector<EffectWindow*>>());
+    return true;
 }
 
 } // namespace

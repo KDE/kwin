@@ -236,6 +236,8 @@ public:
     bool touchMotion(quint32 id, const QPointF &pos, quint32 time);
     bool touchUp(quint32 id, quint32 time);
 
+    void highlightWindows(const QVector<EffectWindow *> &windows);
+
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
     void slotTabAdded(EffectWindow* from, EffectWindow* to);

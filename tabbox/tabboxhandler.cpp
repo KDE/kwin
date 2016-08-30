@@ -92,7 +92,6 @@ public:
     */
     bool isShown;
     TabBoxClient *lastRaisedClient, *lastRaisedClientSucc;
-    Xcb::Atom m_highlightWindowsAtom;
 
 private:
     QObject *createSwitcherItem(bool desktopMode);
@@ -102,7 +101,6 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
     : m_qmlContext()
     , m_qmlComponent()
     , m_mainItem(nullptr)
-    , m_highlightWindowsAtom(QByteArrayLiteral("_KDE_WINDOW_HIGHLIGHT"))
 {
     this->q = q;
     isShown = false;
@@ -199,19 +197,11 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
         }
     }
 
-    xcb_window_t wId;
-    QVector< xcb_window_t > data;
     if (config.isShowTabBox() && w) {
-        wId = w->winId();
-        data.resize(2);
-        data[ 1 ] = wId;
+        q->highlightWindows(currentClient, w);
     } else {
-        wId = rootWindow();
-        data.resize(1);
+        q->highlightWindows(currentClient);
     }
-    data[ 0 ] = currentClient ? currentClient->window() : 0L;
-    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, wId, m_highlightWindowsAtom,
-                        m_highlightWindowsAtom, 32, data.size(), data.constData());
 }
 
 void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
@@ -232,7 +222,7 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
     lastRaisedClient = nullptr;
     lastRaisedClientSucc = nullptr;
     // highlight windows
-    xcb_delete_property(connection(), config.isShowTabBox() && w ? w->winId() : rootWindow(), m_highlightWindowsAtom);
+    q->highlightWindows();
 }
 
 #ifndef KWIN_UNIT_TEST

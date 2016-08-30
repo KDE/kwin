@@ -353,7 +353,7 @@ public:
     };
 
     enum Feature {
-        Nothing = 0, Resize, GeometryTip, Outline, ScreenInversion, Blur, Contrast
+        Nothing = 0, Resize, GeometryTip, Outline, ScreenInversion, Blur, Contrast, HighlightWindows
     };
 
     /**
@@ -481,6 +481,19 @@ public:
      * return true if your effect substitutes questioned feature
     */
     virtual bool provides(Feature);
+
+    /**
+     * Performs the @p feature with the @p arguments.
+     *
+     * This allows to have specific protocols between KWin core and an Effect.
+     *
+     * The method is supposed to return @c true if it performed the features,
+     * @c false otherwise.
+     *
+     * The default implementation returns @c false.
+     * @since 5.8
+     **/
+    virtual bool perform(Feature feature, const QVariantList &arguments);
 
     /**
      * Can be called to draw multiple copies (e.g. thumbnails) of a window.

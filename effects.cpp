@@ -107,6 +107,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     , m_effectLoader(new EffectLoader(this))
     , m_trackingCursorChanges(0)
 {
+    qRegisterMetaType<QVector<KWin::EffectWindow*>>();
     connect(m_effectLoader, &AbstractEffectLoader::effectLoaded, this,
         [this](Effect *effect, const QString &name) {
             effect_order.insert(effect->requestedEffectChainPosition(), EffectPair(name, effect));
@@ -1547,6 +1548,15 @@ bool EffectsHandlerImpl::animationsSupported() const
         return forceValue == 1;
     }
     return m_scene->animationsSupported();
+}
+
+void EffectsHandlerImpl::highlightWindows(const QVector<EffectWindow *> &windows)
+{
+    Effect *e = provides(Effect::HighlightWindows);
+    if (!e) {
+        return;
+    }
+    e->perform(Effect::HighlightWindows, QVariantList{QVariant::fromValue(windows)});
 }
 
 //****************************************

@@ -74,6 +74,7 @@ public:
     virtual QWeakPointer< TabBoxClient > clientToAddToList(KWin::TabBox::TabBoxClient* client, int desktop) const;
     virtual QWeakPointer< TabBoxClient > desktopClient() const;
     virtual void activateAndClose();
+    void highlightWindows(TabBoxClient *window = nullptr, QWindow *controller = nullptr) override;
 
 private:
     bool checkDesktop(TabBoxClient* client, int desktop) const;

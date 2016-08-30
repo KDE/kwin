@@ -42,6 +42,9 @@ public:
         return 70;
     }
 
+    bool provides(Feature feature) override;
+    bool perform(Feature feature, const QVariantList &arguments) override;
+
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow* w);
     void slotWindowClosed(KWin::EffectWindow *w);
@@ -51,6 +54,8 @@ public Q_SLOTS:
 private:
     void prepareHighlighting();
     void finishHighlighting();
+
+    void highlightWindows(const QVector<KWin::EffectWindow *> &windows);
 
     bool m_finishing;
 

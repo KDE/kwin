@@ -187,6 +187,8 @@ public:
      */
     virtual void shadeClient(TabBoxClient *c, bool b) const = 0;
 
+    virtual void highlightWindows(TabBoxClient *window = nullptr, QWindow *controller = nullptr) = 0;
+
     /**
     * @return The current stacking order of TabBoxClients
     */

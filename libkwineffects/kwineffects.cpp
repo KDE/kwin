@@ -695,6 +695,13 @@ bool Effect::touchUp(quint32 id, quint32 time)
     return false;
 }
 
+bool Effect::perform(Feature feature, const QVariantList &arguments)
+{
+    Q_UNUSED(feature)
+    Q_UNUSED(arguments)
+    return false;
+}
+
 //****************************************
 // EffectFactory
 //****************************************
