@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "placement.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -478,7 +479,6 @@ void ShellClient::doSetGeometry(const QRect &rect)
 
     if (m_unmapped && m_geomMaximizeRestore.isEmpty() && !geom.isEmpty()) {
         // use first valid geometry as restore geometry
-        // TODO: needs to interact with placing. The first valid geometry should be the placed one
         m_geomMaximizeRestore = geom;
     }
 
@@ -1221,6 +1221,12 @@ void ShellClient::finishCompositing(ReleaseReason releaseReason)
 {
     m_compositingSetup = false;
     Toplevel::finishCompositing(releaseReason);
+}
+
+void ShellClient::placeIn(QRect &area)
+{
+    Placement::self()->place(this, area);
+    setGeometryRestore(geometry());
 }
 
 }

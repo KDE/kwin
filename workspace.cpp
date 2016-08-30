@@ -381,7 +381,7 @@ void Workspace::init()
                         placementDone = true;
                     }
                     if (!placementDone) {
-                        Placement::self()->place(c, area);
+                        c->placeIn(area);
                     }
                     m_allClients.append(c);
                     if (!unconstrained_stacking_order.contains(c))
@@ -401,7 +401,7 @@ void Workspace::init()
                         // TODO: when else should we send the client through placement?
                         if (c->hasTransientPlacementHint()) {
                             QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
-                            Placement::self()->place(c, area);
+                            c->placeIn(area);
                         }
                         x_stacking_dirty = true;
                         updateStackingOrder(true);

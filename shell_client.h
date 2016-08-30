@@ -127,6 +127,9 @@ public:
     bool setupCompositing() override;
     void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
 
+    // TODO: const-ref
+    void placeIn(QRect &area);
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;

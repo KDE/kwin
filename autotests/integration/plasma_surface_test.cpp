@@ -232,7 +232,6 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QCOMPARE(screens()->geometry(0), geometries.at(0));
     QCOMPARE(screens()->geometry(1), geometries.at(1));
 
-    QEXPECT_FAIL("", "Geometry should not change due to a screen being added", Continue);
     QCOMPARE(c->geometry(), QRect(590, 649, 100, 50));
 }
 
