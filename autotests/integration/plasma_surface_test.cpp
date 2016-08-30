@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "platform.h"
 #include "shell_client.h"
+#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <KWayland/Client/connection_thread.h>
@@ -50,6 +51,7 @@ private Q_SLOTS:
     void testAcceptsFocus();
 
     void testDesktopIsOpaque();
+    void testOSDPlacement();
 
 private:
     ConnectionThread *m_connection = nullptr;
@@ -197,6 +199,41 @@ void PlasmaSurfaceTest::testDesktopIsOpaque()
 
     QVERIFY(!c->hasAlpha());
     QCOMPARE(c->depth(), 24);
+}
+
+void PlasmaSurfaceTest::testOSDPlacement()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QVERIFY(!plasmaSurface.isNull());
+    plasmaSurface->setRole(PlasmaShellSurface::Role::OnScreenDisplay);
+
+    // now render and map the window
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(c);
+    QCOMPARE(c->windowType(), NET::OnScreenDisplay);
+    QVERIFY(c->isOnScreenDisplay());
+    QCOMPARE(c->geometry(), QRect(590, 649, 100, 50));
+
+    // change the screen size
+    QSignalSpy screensChangedSpy(screens(), &Screens::changed);
+    QVERIFY(screensChangedSpy.isValid());
+    const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
+    QMetaObject::invokeMethod(kwinApp()->platform(), "outputGeometriesChanged",
+                              Qt::DirectConnection,
+                              Q_ARG(QVector<QRect>, geometries));
+    QVERIFY(screensChangedSpy.wait());
+    QCOMPARE(screensChangedSpy.count(), 1);
+    QCOMPARE(screens()->count(), 2);
+    QCOMPARE(screens()->geometry(0), geometries.at(0));
+    QCOMPARE(screens()->geometry(1), geometries.at(1));
+
+    QEXPECT_FAIL("", "Geometry should not change due to a screen being added", Continue);
+    QCOMPARE(c->geometry(), QRect(590, 649, 100, 50));
 }
 
 WAYLANDTEST_MAIN(PlasmaSurfaceTest)
