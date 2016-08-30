@@ -1707,6 +1707,19 @@ Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) co
     return nullptr;
 }
 
+Toplevel *Workspace::findToplevel(QWindow *w) const
+{
+    if (!w) {
+        return nullptr;
+    }
+    if (waylandServer()) {
+        if (auto c = waylandServer()->findClient(w)) {
+            return c;
+        }
+    }
+    return findUnmanaged(w->winId());
+}
+
 bool Workspace::hasClient(const AbstractClient *c)
 {
     if (auto cc = dynamic_cast<const Client*>(c)) {

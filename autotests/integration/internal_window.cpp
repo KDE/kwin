@@ -196,6 +196,8 @@ void InternalWindowTest::testEnterLeave()
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
     HelperWindow win;
+    QVERIFY(!workspace()->findToplevel(nullptr));
+    QVERIFY(!workspace()->findToplevel(&win));
     win.setGeometry(0, 0, 100, 100);
     win.show();
 
@@ -204,6 +206,7 @@ void InternalWindowTest::testEnterLeave()
     QVERIFY(!workspace()->activeClient());
     ShellClient *c = clientAddedSpy.first().first().value<ShellClient*>();
     QVERIFY(c->isInternal());
+    QCOMPARE(workspace()->findToplevel(&win), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 100));
 
     QSignalSpy enterSpy(&win, &HelperWindow::entered);
