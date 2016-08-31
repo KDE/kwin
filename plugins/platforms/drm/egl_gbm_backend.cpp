@@ -234,10 +234,8 @@ void EglGbmBackend::present()
 void EglGbmBackend::presentOnOutput(EglGbmBackend::Output &o)
 {
     eglSwapBuffers(eglDisplay(), o.eglSurface);
-    auto oldBuffer = o.buffer;
     o.buffer = m_backend->createBuffer(o.gbmSurface);
     m_backend->present(o.buffer, o.output);
-    delete oldBuffer;
     if (supportsBufferAge()) {
         eglQuerySurface(eglDisplay(), o.eglSurface, EGL_BUFFER_AGE_EXT, &o.bufferAge);
     }

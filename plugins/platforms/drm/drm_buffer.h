@@ -58,6 +58,10 @@ public:
     bool isGbm() const {
         return m_bo != nullptr;
     }
+    bool deleteAfterPageFlip() const {
+        return m_deleteAfterPageFlip;
+    }
+
     void releaseGbm();
 
 private:
@@ -74,6 +78,7 @@ private:
     quint64 m_bufferSize = 0;
     void *m_memory = nullptr;
     QImage *m_image = nullptr;
+    bool m_deleteAfterPageFlip = false;
 };
 
 }

@@ -1,5 +1,9 @@
 set(DRM_SOURCES
     drm_backend.cpp
+    drm_object.cpp
+    drm_object_connector.cpp
+    drm_object_crtc.cpp
+    drm_object_plane.cpp
     drm_output.cpp
     drm_buffer.cpp
     drm_inputeventfilter.cpp

@@ -54,6 +54,7 @@ class Udev;
 class UdevMonitor;
 
 class DrmOutput;
+class DrmPlane;
 
 
 class KWIN_EXPORT DrmBackend : public Platform
@@ -85,10 +86,18 @@ public:
     QVector<DrmBuffer*> buffers() const {
         return m_buffers;
     }
+    QVector<DrmPlane*> planes() const {
+        return m_planes;
+    }
     void bufferDestroyed(DrmBuffer *b);
 
     void outputWentOff();
     void checkOutputsAreOn();
+
+    // returns use of AMS, default is not/legacy
+    bool atomicModeSetting() const {
+        return m_atomicModeSetting;
+    }
 
     void setGbmDevice(gbm_device *device) {
         m_gbmDevice = device;
@@ -99,7 +108,6 @@ public:
 
 public Q_SLOTS:
     void turnOutputsOn();
-
 
 Q_SIGNALS:
     void outputRemoved(KWin::DrmOutput *output);
@@ -130,11 +138,14 @@ private:
     int m_drmId = 0;
     QVector<DrmOutput*> m_outputs;
     DrmBuffer *m_cursor[2];
+    bool m_atomicModeSetting = false;
     bool m_cursorEnabled = false;
     int m_cursorIndex = 0;
     int m_pageFlipsPending = 0;
     bool m_active = false;
     QVector<DrmBuffer*> m_buffers;
+    // all available planes: primarys, cursors and overlays
+    QVector<DrmPlane*> m_planes;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
     KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
     gbm_device *m_gbmDevice = nullptr;

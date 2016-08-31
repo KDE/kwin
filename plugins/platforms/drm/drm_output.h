@@ -21,11 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_DRM_OUTPUT_H
 
 #include "drm_pointer.h"
+#include "drm_object.h"
 
 #include <QObject>
 #include <QPoint>
 #include <QPointer>
 #include <QSize>
+#include <QVector>
 #include <xf86drmMode.h>
 
 namespace KWayland
@@ -44,6 +46,9 @@ namespace KWin
 
 class DrmBackend;
 class DrmBuffer;
+class DrmPlane;
+class DrmConnector;
+class DrmCrtc;
 
 class DrmOutput : public QObject
 {
@@ -59,9 +64,9 @@ public:
     void showCursor(DrmBuffer *buffer);
     void hideCursor();
     void moveCursor(const QPoint &globalPos);
+    bool init(drmModeConnector *connector);
     bool present(DrmBuffer *buffer);
     void pageFlipped();
-    bool init(drmModeConnector *connector);
     void restoreSaved();
     bool blank();
 
@@ -75,6 +80,7 @@ public:
     QRect geometry() const;
     QString name() const;
     int currentRefreshRate() const;
+    // These values are defined by the kernel
     enum class DpmsMode {
         On = DRM_MODE_DPMS_ON,
         Standby = DRM_MODE_DPMS_STANDBY,
@@ -97,12 +103,19 @@ private:
     friend class DrmBackend;
     DrmOutput(DrmBackend *backend);
     void cleanupBlackBuffer();
-    bool setMode(DrmBuffer *buffer);
+    bool presentAtomically(DrmBuffer *buffer);
+    bool presentLegacy(DrmBuffer *buffer);
+    bool setModeLegacy(DrmBuffer *buffer);
     void initEdid(drmModeConnector *connector);
     void initDpms(drmModeConnector *connector);
     bool isCurrentMode(const drmModeModeInfo *mode) const;
     void initUuid();
     void setGlobalPos(const QPoint &pos);
+
+    void pageFlippedBufferRemover(DrmBuffer *oldbuffer, DrmBuffer *newbuffer);
+    bool initPrimaryPlane();
+    bool initCursorPlane();
+    DrmObject::AtomicReturn atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
 
     DrmBackend *m_backend;
     QPoint m_globalPos;
@@ -112,10 +125,11 @@ private:
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
     DrmBuffer *m_currentBuffer = nullptr;
+    DrmBuffer *m_nextBuffer = nullptr;
     DrmBuffer *m_blackBuffer = nullptr;
     struct CrtcCleanup {
         static void inline cleanup(_drmModeCrtc *ptr) {
-            drmModeFreeCrtc(ptr);
+            drmModeFreeCrtc(ptr);       // TODO: Atomically? See compositor-drm.c l.3670
         }
     };
     Edid m_edid;
@@ -126,8 +140,14 @@ private:
     KWin::ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
     DpmsMode m_dpmsMode = DpmsMode::On;
     QByteArray m_uuid;
-};
 
+    DrmConnector *m_conn = nullptr;
+    DrmCrtc *m_crtc = nullptr;
+    uint32_t m_blobId = 0;
+    DrmPlane* m_primaryPlane = nullptr;
+    DrmPlane* m_cursorPlane = nullptr;
+    QVector<DrmPlane*> m_planesFlipList;
+};
 
 }
 

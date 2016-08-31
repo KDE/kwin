@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_backend.h"
 #include "drm_output.h"
+#include "drm_object_connector.h"
+#include "drm_object_crtc.h"
+#include "drm_object_plane.h"
 #include "composite.h"
 #include "cursor.h"
 #include "logging.h"
@@ -84,6 +87,7 @@ DrmBackend::~DrmBackend()
         while (m_pageFlipsPending != 0) {
             QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
         }
+        qDeleteAll(m_planes);
         qDeleteAll(m_outputs);
         delete m_cursor[0];
         delete m_cursor[1];
@@ -242,6 +246,46 @@ void DrmBackend::openDrm()
         }
     );
     m_drmId = device->sysNum();
+
+    // trying to activate Atomic Mode Setting (this means also Universal Planes)
+    if (qEnvironmentVariableIsSet("KWIN_DRM_AMS")) {
+        if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
+            qCDebug(KWIN_DRM) << "Using Atomic Mode Setting.";
+            m_atomicModeSetting = true;
+
+            ScopedDrmPointer<drmModePlaneRes, &drmModeFreePlaneResources> planeResources(drmModeGetPlaneResources(m_fd));
+            if (!planeResources) {
+                qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode";
+                m_atomicModeSetting = false;
+            }
+
+            if (m_atomicModeSetting) {
+                qCDebug(KWIN_DRM) << "Number of planes:" << planeResources->count_planes;
+
+                // create the plane objects
+                for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
+                    drmModePlane *kplane = drmModeGetPlane(m_fd, planeResources->planes[i]);
+                    DrmPlane *p = new DrmPlane(kplane->plane_id, m_fd);
+
+                    if (p->init()) {
+                        p->setPossibleCrtcs(kplane->possible_crtcs);
+                        p->setFormats(kplane->formats, kplane->count_formats);
+                        m_planes << p;
+                    } else {
+                        delete p;
+                    }
+                }
+
+                if (m_planes.isEmpty()) {
+                    qCWarning(KWIN_DRM) << "Failed to create any plane. Falling back to legacy mode";
+                    m_atomicModeSetting = false;
+                }
+            }
+        } else {
+            qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode.";
+        }
+    }
+
     queryResources();
     if (m_outputs.isEmpty()) {
         qCWarning(KWIN_DRM) << "No outputs, cannot render, will terminate now";
@@ -320,12 +364,37 @@ void DrmBackend::queryResources()
         DrmOutput *drmOutput = new DrmOutput(this);
         connect(drmOutput, &DrmOutput::dpmsChanged, this, &DrmBackend::outputDpmsChanged);
         drmOutput->m_crtcId = crtcId;
+        drmOutput->m_connector = connector->connector_id;
+
+        if (m_atomicModeSetting) {
+            drmOutput->m_crtc = new DrmCrtc(crtcId, m_fd);
+            if (drmOutput->m_crtc->init()) {
+                drmOutput->m_crtc->setOutput(drmOutput);
+            } else {
+                qCWarning(KWIN_DRM) << "Crtc object failed, skipping output on connector" << connector->connector_id;
+                delete drmOutput->m_crtc;
+                delete drmOutput;
+                continue;
+            }
+
+            drmOutput->m_conn = new DrmConnector(connector->connector_id, m_fd);
+            if (drmOutput->m_conn->init()) {
+                drmOutput->m_conn->setOutput(drmOutput);
+            } else {
+                qCWarning(KWIN_DRM) << "Connector object failed, skipping output on connector" << connector->connector_id;
+                delete drmOutput->m_conn;
+                delete drmOutput;
+                continue;
+            }
+        }
+
         if (crtc->mode_valid) {
             drmOutput->m_mode = crtc->mode;
         } else {
             drmOutput->m_mode = connector->modes[0];
         }
-        drmOutput->m_connector = connector->connector_id;
+        qCDebug(KWIN_DRM) << "For new output use mode " << drmOutput->m_mode.name;
+
         if (!drmOutput->init(connector.data())) {
             qCWarning(KWIN_DRM) << "Failed to create output for connector " << connector->connector_id;
             delete drmOutput;
@@ -625,6 +694,7 @@ DrmBuffer *DrmBackend::createBuffer(gbm_surface *surface)
 {
 #if HAVE_GBM
     DrmBuffer *b = new DrmBuffer(this, surface);
+    b->m_deleteAfterPageFlip = true;
     m_buffers << b;
     return b;
 #else

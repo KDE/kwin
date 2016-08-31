@@ -19,6 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_output.h"
 #include "drm_backend.h"
+#include "drm_object_plane.h"
+#include "drm_object_crtc.h"
+#include "drm_object_connector.h"
+
+#include <errno.h>
 
 #include "composite.h"
 #include "logind.h"
@@ -58,6 +63,8 @@ DrmOutput::~DrmOutput()
 {
     hideCursor();
     cleanupBlackBuffer();
+    delete m_crtc;
+    delete m_conn;
     delete m_waylandOutput.data();
     delete m_waylandOutputDevice.data();
 }
@@ -95,55 +102,6 @@ QSize DrmOutput::size() const
 QRect DrmOutput::geometry() const
 {
     return QRect(m_globalPos, size());
-}
-
-bool DrmOutput::present(DrmBuffer *buffer)
-{
-    if (!buffer || buffer->bufferId() == 0) {
-        return false;
-    }
-    if (!LogindIntegration::self()->isActiveSession()) {
-        m_currentBuffer = buffer;
-        return false;
-    }
-    if (m_dpmsMode != DpmsMode::On) {
-        return false;
-    }
-    if (m_currentBuffer) {
-        return false;
-    }
-    if (m_lastStride != buffer->stride() || m_lastGbm != buffer->isGbm()) {
-        // need to set a new mode first
-        if (!setMode(buffer)) {
-            return false;
-        }
-    }
-    const bool ok = drmModePageFlip(m_backend->fd(), m_crtcId, buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
-    if (ok) {
-        m_currentBuffer = buffer;
-    } else {
-        qCWarning(KWIN_DRM) << "Page flip failed";
-        buffer->releaseGbm();
-    }
-    return ok;
-}
-
-void DrmOutput::pageFlipped()
-{
-    if (!m_currentBuffer) {
-        return;
-    }
-    m_currentBuffer->releaseGbm();
-    m_currentBuffer = nullptr;
-    cleanupBlackBuffer();
-}
-
-void DrmOutput::cleanupBlackBuffer()
-{
-    if (m_blackBuffer) {
-        delete m_blackBuffer;
-        m_blackBuffer = nullptr;
-    }
 }
 
 static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
@@ -185,6 +143,11 @@ bool DrmOutput::init(drmModeConnector *connector)
     initEdid(connector);
     initDpms(connector);
     initUuid();
+    if (m_backend->atomicModeSetting()) {
+        if (!initPrimaryPlane()) {
+            return false;
+        }
+    }
     m_savedCrtc.reset(drmModeGetCrtc(m_backend->fd(), m_crtcId));
     if (!blank()) {
         return false;
@@ -240,6 +203,10 @@ bool DrmOutput::init(drmModeConnector *connector)
 
     // read in mode information
     for (int i = 0; i < connector->count_modes; ++i) {
+
+        // TODO: in AMS here we could read and store for later every mode's blob_id
+        // would simplify isCurrentMode(..) and presentAtomically(..) in case of mode set
+
         auto *m = &connector->modes[i];
         KWayland::Server::OutputInterface::ModeFlags flags;
         KWayland::Server::OutputDeviceInterface::ModeFlags deviceflags;
@@ -319,31 +286,6 @@ bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
         && mode->flags       == m_mode.flags
         && mode->type        == m_mode.type
         && qstrcmp(mode->name, m_mode.name) == 0;
-}
-
-bool DrmOutput::blank()
-{
-    if (!m_blackBuffer) {
-        m_blackBuffer = m_backend->createBuffer(size());
-        if (!m_blackBuffer->map()) {
-            cleanupBlackBuffer();
-            return false;
-        }
-        m_blackBuffer->image()->fill(Qt::black);
-    }
-    return setMode(m_blackBuffer);
-}
-
-bool DrmOutput::setMode(DrmBuffer *buffer)
-{
-    if (drmModeSetCrtc(m_backend->fd(), m_crtcId, buffer->bufferId(), 0, 0, &m_connector, 1, &m_mode) == 0) {
-        m_lastStride = buffer->stride();
-        m_lastGbm = buffer->isGbm();
-        return true;
-    } else {
-        qCWarning(KWIN_DRM) << "Mode setting failed";
-        return false;
-    }
 }
 
 static bool verifyEdidHeader(drmModePropertyBlobPtr edid)
@@ -505,6 +447,61 @@ void DrmOutput::initEdid(drmModeConnector *connector)
     m_edid.physicalSize = extractPhysicalSize(edid.data());
 }
 
+bool DrmOutput::initPrimaryPlane()
+{
+    for (int i = 0; i < m_backend->planes().size(); ++i) {
+        DrmPlane* p = m_backend->planes()[i];
+        if (!p) {
+            continue;
+        }
+        if (p->type() != DrmPlane::TypeIndex::Primary) {
+            continue;
+        }
+        if (p->output()) {     // Plane already has an output
+            continue;
+        }
+        if (m_primaryPlane) {     // Output already has a primary plane
+            continue;
+        }
+        if (!p->isCrtcSupported(m_crtcId)) {
+            continue;
+        }
+        p->setOutput(this);
+        m_primaryPlane = p;
+        qCDebug(KWIN_DRM) << "Initialized primary plane" << p->id() << "on CRTC" << m_crtcId;
+        return true;
+    }
+    qCCritical(KWIN_DRM) << "Failed to initialize primary plane.";
+    return false;
+}
+
+bool DrmOutput::initCursorPlane()       // TODO: Add call in init (but needs layer support in general first)
+{
+    for (int i = 0; i < m_backend->planes().size(); ++i) {
+        DrmPlane* p = m_backend->planes()[i];
+        if (!p) {
+            continue;
+        }
+        if (p->type() != DrmPlane::TypeIndex::Cursor) {
+            continue;
+        }
+        if (p->output()) {     // Plane already has an output
+            continue;
+        }
+        if (m_cursorPlane) {     // Output already has a cursor plane
+            continue;
+        }
+        if (!p->isCrtcSupported(m_crtcId)) {
+            continue;
+        }
+        p->setOutput(this);
+        m_cursorPlane = p;
+        qCDebug(KWIN_DRM) << "Initialized cursor plane" << p->id() << "on CRTC" << m_crtcId;
+        return true;
+    }
+    return false;
+}
+
 void DrmOutput::initDpms(drmModeConnector *connector)
 {
     for (int i = 0; i < connector->count_props; ++i) {
@@ -525,12 +522,30 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
         return;
     }
     if (mode == m_dpmsMode) {
+        qCDebug(KWIN_DRM) << "New DPMS mode equals old mode. DPMS unchanged.";
         return;
     }
-    if (drmModeConnectorSetProperty(m_backend->fd(), m_connector, m_dpms->prop_id, uint64_t(mode)) != 0) {
-        qCWarning(KWIN_DRM) << "Setting DPMS failed";
-        return;
+
+    if (m_backend->atomicModeSetting()) {
+        drmModeAtomicReq *req = drmModeAtomicAlloc();
+
+        if (atomicReqModesetPopulate(req, mode == DpmsMode::On) == DrmObject::AtomicReturn::Error) {
+            qCWarning(KWIN_DRM) << "Failed to populate atomic request for output" << m_crtcId;
+            return;
+        }
+        if (drmModeAtomicCommit(m_backend->fd(), req, DRM_MODE_ATOMIC_ALLOW_MODESET, this)) {
+            qCWarning(KWIN_DRM) << "Failed to commit atomic request for output" << m_crtcId;
+        } else {
+            qCDebug(KWIN_DRM) << "DPMS set for output" << m_crtcId;
+        }
+        drmModeAtomicFree(req);
+    } else {
+        if (drmModeConnectorSetProperty(m_backend->fd(), m_connector, m_dpms->prop_id, uint64_t(mode)) < 0) {
+            qCWarning(KWIN_DRM) << "Setting DPMS failed";
+            return;
+        }
     }
+
     m_dpmsMode = mode;
     if (m_waylandOutput) {
         m_waylandOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsMode));
@@ -621,5 +636,251 @@ bool DrmOutput::commitChanges()
     return true;
 }
 
+void DrmOutput::pageFlipped()
+{
+    if (m_backend->atomicModeSetting()){
+        foreach (DrmPlane *p, m_planesFlipList) {
+            pageFlippedBufferRemover(p->current(), p->next());
+            p->setCurrent(p->next());
+            p->setNext(nullptr);
+        }
+        m_planesFlipList.clear();
+
+    } else {
+        if (!m_nextBuffer) {
+            return;
+        }
+        pageFlippedBufferRemover(m_currentBuffer, m_nextBuffer);
+        m_currentBuffer = m_nextBuffer;
+        m_nextBuffer = nullptr;
+    }
+    cleanupBlackBuffer();
+}
+
+void DrmOutput::pageFlippedBufferRemover(DrmBuffer *oldbuffer, DrmBuffer *newbuffer)
+{
+    if (newbuffer->deleteAfterPageFlip()) {
+        if ( oldbuffer && oldbuffer != newbuffer ) {
+            delete oldbuffer;
+        }
+    } else {
+        // although oldbuffer's pointer is remapped in pageFlipped(),
+        // we ignore the pointer completely anywhere else in this case
+        newbuffer->releaseGbm();
+    }
+}
+
+void DrmOutput::cleanupBlackBuffer()
+{
+    if (m_blackBuffer) {
+        delete m_blackBuffer;
+        m_blackBuffer = nullptr;
+    }
+}
+
+bool DrmOutput::blank()
+{
+    if (!m_blackBuffer) {
+        m_blackBuffer = m_backend->createBuffer(size());
+        if (!m_blackBuffer->map()) {
+            cleanupBlackBuffer();
+            return false;
+        }
+        m_blackBuffer->image()->fill(Qt::black);
+    }
+    // TODO: Do this atomically
+    return setModeLegacy(m_blackBuffer);
+}
+
+bool DrmOutput::present(DrmBuffer *buffer)
+{
+    if (!buffer || buffer->bufferId() == 0) {
+            return false;
+    }
+    if (m_backend->atomicModeSetting()) {
+        return presentAtomically(buffer);
+    } else {
+        return presentLegacy(buffer);
+    }
+}
+
+bool DrmOutput::presentAtomically(DrmBuffer *buffer)
+{
+    if (!LogindIntegration::self()->isActiveSession()) {
+        qCWarning(KWIN_DRM) << "Logind session not active.";
+        return false;
+    }
+    if (m_dpmsMode != DpmsMode::On) {
+        qCWarning(KWIN_DRM) << "No present() while screen off.";
+        return false;
+    }
+    if (m_primaryPlane->next()) {
+        qCWarning(KWIN_DRM) << "Page not yet flipped.";
+        return false;
+    }
+
+    DrmObject::AtomicReturn ret;
+    uint32_t flags = DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT;
+
+    // TODO: throwing an exception would be really handy here! (would mean change of compile options)
+    drmModeAtomicReq *req = drmModeAtomicAlloc();
+    if (!req) {
+            qCWarning(KWIN_DRM) << "DRM: couldn't allocate atomic request";
+            delete buffer;
+            return false;
+    }
+
+    // Do we need to set a new mode first?
+    bool doModeset = !m_primaryPlane->current();
+    if (doModeset) {
+        qCDebug(KWIN_DRM) << "Atomic Modeset requested";
+
+        if (drmModeCreatePropertyBlob(m_backend->fd(), &m_mode, sizeof(m_mode), &m_blobId)) {
+            qCWarning(KWIN_DRM) << "Failed to create property blob";
+            delete buffer;
+            return false;
+        }
+
+        ret = atomicReqModesetPopulate(req, true);
+        if (ret == DrmObject::AtomicReturn::Error){
+            drmModeAtomicFree(req);
+            delete buffer;
+            return false;
+        }
+        if (ret == DrmObject::AtomicReturn::Success) {
+            flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
+        }
+    }
+
+    m_primaryPlane->setNext(buffer);            // TODO: Later not only use the primary plane for the buffer!
+                                                // i.e.: Assign planes
+    bool anyDamage = false;
+    foreach (DrmPlane* p, m_backend->planes()){
+        if (p->output() != this) {
+            continue;
+        }
+        ret = p->atomicReqPlanePopulate(req);
+        if (ret == DrmObject::AtomicReturn::Error) {
+            drmModeAtomicFree(req);
+            m_primaryPlane->setNext(nullptr);
+            m_planesFlipList.clear();
+            delete buffer;
+            return false;
+        }
+        if (ret == DrmObject::AtomicReturn::Success) {
+            anyDamage = true;
+            m_planesFlipList << p;
+        }
+    }
+
+    // no damage but force flip for atleast the primary plane anyway
+    if (!anyDamage) {
+        m_primaryPlane->setPropsValid(0);
+        if (m_primaryPlane->atomicReqPlanePopulate(req) == DrmObject::AtomicReturn::Error) {
+            drmModeAtomicFree(req);
+            m_primaryPlane->setNext(nullptr);
+            m_planesFlipList.clear();
+            delete buffer;
+            return false;
+        }
+        m_planesFlipList << m_primaryPlane;
+    }
+
+    if (drmModeAtomicCommit(m_backend->fd(), req, flags, this)) {
+        qCWarning(KWIN_DRM) << "Atomic request failed to commit:" << strerror(errno);
+        drmModeAtomicFree(req);
+        m_primaryPlane->setNext(nullptr);
+        m_planesFlipList.clear();
+        delete buffer;
+        return false;
+    }
+
+    if (doModeset) {
+        m_crtc->setPropsValid(m_crtc->propsValid() | m_crtc->propsPending());
+        m_conn->setPropsValid(m_conn->propsValid() | m_conn->propsPending());
+    }
+    foreach (DrmPlane* p, m_planesFlipList) {
+        p->setPropsValid(p->propsValid() | p->propsPending());
+    }
+
+    drmModeAtomicFree(req);
+    return true;
+}
+
+
+bool DrmOutput::presentLegacy(DrmBuffer *buffer)
+{
+    if (m_nextBuffer) {
+        return false;
+    }
+    if (!LogindIntegration::self()->isActiveSession()) {
+        m_nextBuffer = buffer;
+        return false;
+    }
+    if (m_dpmsMode != DpmsMode::On) {
+        return false;
+    }
+
+    // Do we need to set a new mode first?
+    if (m_lastStride != buffer->stride() || m_lastGbm != buffer->isGbm()){
+        if (!setModeLegacy(buffer))
+            return false;
+    }
+    int errno_save = 0;
+    const bool ok = drmModePageFlip(m_backend->fd(), m_crtcId, buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
+    if (ok) {
+        m_nextBuffer = buffer;
+    } else {
+        errno_save = errno;
+        qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
+        delete buffer;
+    }
+    return ok;
+}
+
+bool DrmOutput::setModeLegacy(DrmBuffer *buffer)
+{
+    if (drmModeSetCrtc(m_backend->fd(), m_crtcId, buffer->bufferId(), 0, 0, &m_connector, 1, &m_mode) == 0) {
+        m_lastStride = buffer->stride();
+        m_lastGbm = buffer->isGbm();
+        return true;
+    } else {
+        qCWarning(KWIN_DRM) << "Mode setting failed";
+        return false;
+    }
+}
+
+DrmObject::AtomicReturn DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
+{
+    if (enable) {
+        m_primaryPlane->setPropValue(int(DrmPlane::PropertyIndex::SrcW), m_mode.hdisplay << 16);
+        m_primaryPlane->setPropValue(int(DrmPlane::PropertyIndex::SrcH), m_mode.vdisplay << 16);
+        m_primaryPlane->setPropValue(int(DrmPlane::PropertyIndex::CrtcW), m_mode.hdisplay);
+        m_primaryPlane->setPropValue(int(DrmPlane::PropertyIndex::CrtcH), m_mode.vdisplay);
+    } else {
+        m_primaryPlane->setPropValue(int(DrmPlane::PropertyIndex::SrcW), 0);
+        m_primaryPlane->setPropValue(int(DrmPlane::PropertyIndex::SrcH), 0);
+        m_primaryPlane->setPropValue(int(DrmPlane::PropertyIndex::CrtcW), 0);
+        m_primaryPlane->setPropValue(int(DrmPlane::PropertyIndex::CrtcH), 0);
+    }
+
+    bool ret = true;
+
+    m_crtc->setPropsPending(0);
+    m_conn->setPropsPending(0);
+
+    ret &= m_conn->atomicAddProperty(req, int(DrmConnector::PropertyIndex::CrtcId), enable ? m_crtc->id() : 0);
+    ret &= m_crtc->atomicAddProperty(req, int(DrmCrtc::PropertyIndex::ModeId), enable ? m_blobId : 0);
+    ret &= m_crtc->atomicAddProperty(req, int(DrmCrtc::PropertyIndex::Active), enable);
+
+    if (!ret) {
+        qCWarning(KWIN_DRM) << "Failed to populate atomic modeset";
+        return DrmObject::AtomicReturn::Error;
+    }
+    if (!m_crtc->propsPending() && !m_conn->propsPending()) {
+        return DrmObject::AtomicReturn::NoChange;
+    }
+    return DrmObject::AtomicReturn::Success;
+}
 
 }
