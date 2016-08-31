@@ -719,7 +719,9 @@ ToplevelList Workspace::xStackingOrder() const
     if (waylandServer()) {
         const auto clients = waylandServer()->internalClients();
         for (auto c: clients) {
-            x_stacking << c;
+            if (c->isShown(false)) {
+                x_stacking << c;
+            }
         }
     }
     return x_stacking;

@@ -208,6 +208,8 @@ void InternalWindowTest::testEnterLeave()
     QVERIFY(c->isInternal());
     QCOMPARE(workspace()->findToplevel(&win), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 100));
+    QVERIFY(c->isShown(false));
+    QVERIFY(workspace()->xStackingOrder().contains(c));
 
     QSignalSpy enterSpy(&win, &HelperWindow::entered);
     QVERIFY(enterSpy.isValid());
@@ -236,6 +238,16 @@ void InternalWindowTest::testEnterLeave()
     // inside the mask we should still get an enter
     kwinApp()->platform()->pointerMotion(QPoint(25, 27), timestamp++);
     QTRY_COMPARE(enterSpy.count(), 2);
+
+    // hide the window, which should be removed from the stacking order
+    win.hide();
+    QTRY_VERIFY(!c->isShown(false));
+    QVERIFY(!workspace()->xStackingOrder().contains(c));
+
+    // show again
+    win.show();
+    QTRY_VERIFY(c->isShown(false));
+    QVERIFY(workspace()->xStackingOrder().contains(c));
 }
 
 void InternalWindowTest::testPointerPressRelease()

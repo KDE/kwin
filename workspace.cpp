@@ -411,6 +411,13 @@ void Workspace::init()
                         }
                     }
                 );
+                connect(c, &ShellClient::windowHidden, this,
+                    [this] {
+                        x_stacking_dirty = true;
+                        updateStackingOrder(true);
+                        updateClientArea();
+                    }
+                );
             }
         );
         connect(w, &WaylandServer::shellClientRemoved, this,
