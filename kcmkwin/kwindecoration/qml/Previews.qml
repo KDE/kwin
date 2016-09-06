@@ -26,27 +26,27 @@ import org.kde.plasma.core 2.0 as PlasmaCore;
 ScrollView {
     objectName: "themeList"
     frameVisible: true
-    ListView {
-        id: listView
+    GridView {
+        id: gridView
         objectName: "listView"
         model: decorationsModel
+        cellWidth: 20 * units.gridUnit
+        cellHeight: cellWidth / 1.6
         Rectangle {
             z: -1
             anchors.fill: parent
             color: baseColor
         }
         highlight: Rectangle {
-            width: listView.width
-            height: 10 * units.gridUnit
             color: highlightColor
-            opacity: 0.5
+            opacity: 0.6
         }
         highlightMoveDuration: units.longDuration
         boundsBehavior: Flickable.StopAtBounds
         property int borderSizesIndex: 3 // 3 == Normal
         delegate: Item {
-            width: listView.width
-            height: 10 * units.gridUnit
+            width: gridView.cellWidth
+            height: gridView.cellHeight
             KDecoration.Bridge {
                 id: bridgeItem
                 plugin: model["plugin"]
@@ -55,16 +55,16 @@ ScrollView {
             KDecoration.Settings {
                 id: settingsItem
                 bridge: bridgeItem.bridge
-                borderSizesIndex: listView.borderSizesIndex
+                borderSizesIndex: gridView.borderSizesIndex
             }
             MouseArea {
                 hoverEnabled: false
                 anchors.fill: parent
                 onClicked: {
-                    listView.currentIndex = index;
+                    gridView.currentIndex = index;
                 }
             }
-            RowLayout {
+            ColumnLayout {
                 anchors.fill: parent
                 Item {
                     KDecoration.Decoration {
@@ -99,17 +99,21 @@ ScrollView {
                         hoverEnabled: false
                         anchors.fill: parent
                         onClicked: {
-                            listView.currentIndex = index;
+                            gridView.currentIndex = index;
                         }
                     }
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                }
-                Button {
-                    id: configureButton
-                    enabled: model["configureable"]
-                    iconName: "configure"
-                    onClicked: bridgeItem.bridge.configure()
+                    Button {
+                        id: configureButton
+                        anchors {
+                            left: inactivePreview.left
+                            bottom: inactivePreview.bottom
+                        }
+                        enabled: model["configureable"]
+                        iconName: "configure"
+                        onClicked: bridgeItem.bridge.configure()
+                    }
                 }
             }
         }
