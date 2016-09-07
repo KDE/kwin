@@ -220,7 +220,6 @@ void Connection::processEvents()
             case LIBINPUT_EVENT_DEVICE_ADDED: {
                 auto device = new Device(event->nativeDevice());
                 device->moveToThread(s_thread);
-                device->setParent(this);
                 m_devices << device;
                 if (device->isKeyboard()) {
                     m_keyboard++;
