@@ -1,4 +1,5 @@
 add_executable(blendPictureTest blendpicture_test.cpp)
+add_test(xrenderutils-blendPictureTest blendPictureTest)
 target_link_libraries(blendPictureTest
     kwinxrenderutils
     Qt5::Test
