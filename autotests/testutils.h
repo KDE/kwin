@@ -24,14 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // XCB
 #include <xcb/xcb.h>
 
-// like QTEST_MAIN, just using a QApplication for X11 interaction
-#define KWIN_TEST_MAIN(TestObject) \
-int main(int argc, char *argv[]) { \
-    QApplication app(argc, argv); \
-    TestObject tc; \
-    return QTest::qExec(&tc, argc, argv); \
-}
-
 namespace KWin {
 
 /**

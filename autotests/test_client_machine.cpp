@@ -151,5 +151,5 @@ void TestClientMachine::emptyHostName()
     QCOMPARE(spy.isEmpty(), false);
 }
 
-KWIN_TEST_MAIN(TestClientMachine)
+QTEST_MAIN(TestClientMachine)
 #include "test_client_machine.moc"

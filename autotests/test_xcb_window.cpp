@@ -207,5 +207,5 @@ void TestXcbWindow::destroyNotManaged()
     QVERIFY(attribs);
 }
 
-KWIN_TEST_MAIN(TestXcbWindow)
+QTEST_MAIN(TestXcbWindow)
 #include "test_xcb_window.moc"
