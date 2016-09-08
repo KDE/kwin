@@ -24,6 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // XCB
 #include <xcb/xcb.h>
 
+namespace {
+    static void forceXcb() {
+        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("xcb"));
+    }
+}
+
 namespace KWin {
 
 /**

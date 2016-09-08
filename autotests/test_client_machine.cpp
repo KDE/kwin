@@ -151,5 +151,6 @@ void TestClientMachine::emptyHostName()
     QCOMPARE(spy.isEmpty(), false);
 }
 
+Q_CONSTRUCTOR_FUNCTION(forceXcb)
 QTEST_MAIN(TestClientMachine)
 #include "test_client_machine.moc"

@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mock_client.h"
 #include "mock_screens.h"
 #include "mock_workspace.h"
+#include "testutils.h"
 // Frameworks
 #include <KConfigGroup>
 // Qt
@@ -861,5 +862,6 @@ void TestScreenEdges::testClientEdge()
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
 }
 
+Q_CONSTRUCTOR_FUNCTION(forceXcb)
 QTEST_MAIN(TestScreenEdges)
 #include "test_screen_edges.moc"

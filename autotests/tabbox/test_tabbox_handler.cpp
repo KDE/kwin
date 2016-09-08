@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "mock_tabboxhandler.h"
 #include "clientmodel.h"
+#include "../testutils.h"
 #include <QtTest/QtTest>
 #include <QX11Info>
 
@@ -56,6 +57,7 @@ void TestTabBoxHandler::testDontCrashUpdateOutlineNullClient()
     tabboxhandler.show();
 }
 
+Q_CONSTRUCTOR_FUNCTION(forceXcb)
 QTEST_MAIN(TestTabBoxHandler)
 
 #include "test_tabbox_handler.moc"

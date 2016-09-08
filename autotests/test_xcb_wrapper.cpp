@@ -525,5 +525,6 @@ void TestXcbWrapper::testMotif()
     QTEST(hints.close(), "expectedClose");
 }
 
+Q_CONSTRUCTOR_FUNCTION(forceXcb)
 QTEST_MAIN(TestXcbWrapper)
 #include "test_xcb_wrapper.moc"

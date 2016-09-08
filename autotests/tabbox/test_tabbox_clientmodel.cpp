@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "test_tabbox_clientmodel.h"
 #include "mock_tabboxhandler.h"
 #include "clientmodel.h"
+#include "../testutils.h"
 
 #include <QtTest/QtTest>
 #include <QX11Info>
@@ -89,4 +90,5 @@ void TestTabBoxClientModel::testCreateClientListActiveClientNotInFocusChain()
     QCOMPARE(clientModel->rowCount(), 1);
 }
 
+Q_CONSTRUCTOR_FUNCTION(forceXcb)
 QTEST_MAIN(TestTabBoxClientModel)

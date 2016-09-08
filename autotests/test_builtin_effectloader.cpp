@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../effects/effect_builtins.h"
 #include "mock_effectshandler.h"
 #include "../scripting/scriptedeffect.h" // for mocking ScriptedEffect::create
+#include "testutils.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -563,5 +564,6 @@ void TestBuiltInEffectLoader::testLoadAllEffects()
     QCOMPARE(loadedEffects.at(1), QStringLiteral("mouseclick"));
 }
 
+Q_CONSTRUCTOR_FUNCTION(forceXcb)
 QTEST_MAIN(TestBuiltInEffectLoader)
 #include "test_builtin_effectloader.moc"
