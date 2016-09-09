@@ -1740,6 +1740,14 @@ WindowPixmap *OpenGLWindowPixmap::createChild(const QPointer<KWayland::Server::S
     return new OpenGLWindowPixmap(subSurface, this, m_scene);
 }
 
+bool OpenGLWindowPixmap::isValid() const
+{
+    if (!m_texture->isNull()) {
+        return true;
+    }
+    return WindowPixmap::isValid();
+}
+
 //****************************************
 // SceneOpenGL::EffectFrame
 //****************************************

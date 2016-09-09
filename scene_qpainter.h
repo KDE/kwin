@@ -163,6 +163,7 @@ public:
     explicit QPainterWindowPixmap(Scene::Window *window);
     virtual ~QPainterWindowPixmap();
     virtual void create() override;
+    bool isValid() const override;
 
     void updateBuffer() override;
     const QImage &image();

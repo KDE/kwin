@@ -362,7 +362,7 @@ public:
     /**
      * @return @c true if the pixmap has been created and is valid, @c false otherwise
      */
-    bool isValid() const;
+    virtual bool isValid() const;
     /**
      * @return The native X11 pixmap handle
      */

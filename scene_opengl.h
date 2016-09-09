@@ -275,6 +275,7 @@ public:
     virtual ~OpenGLWindowPixmap();
     SceneOpenGL::Texture *texture() const;
     bool bind();
+    bool isValid() const override;
 protected:
     WindowPixmap *createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface) override;
 private:

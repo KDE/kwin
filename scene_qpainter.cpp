@@ -490,6 +490,14 @@ void QPainterWindowPixmap::updateBuffer()
     }
 }
 
+bool QPainterWindowPixmap::isValid() const
+{
+    if (!m_image.isNull()) {
+        return true;
+    }
+    return WindowPixmap::isValid();
+}
+
 QPainterEffectFrame::QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene)
     : Scene::EffectFrame(frame)
     , m_scene(scene)
