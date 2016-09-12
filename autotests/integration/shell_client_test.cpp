@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/shell.h>
+#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
 
@@ -77,7 +78,7 @@ void TestShellClient::initTestCase()
 
 void TestShellClient::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Decoration));
 
     screens()->setCurrent(0);
     KWin::Cursor::setPos(QPoint(1280, 512));
@@ -295,9 +296,13 @@ void TestShellClient::testMinimizeActiveWindow()
 void TestShellClient::testFullscreen_data()
 {
     QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<ServerSideDecoration::Mode>("decoMode");
 
-    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell << ServerSideDecoration::Mode::Client;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << ServerSideDecoration::Mode::Client;
+
+    QTest::newRow("wlShell - deco") << Test::ShellSurfaceType::WlShell << ServerSideDecoration::Mode::Server;
+    QTest::newRow("xdgShellV5 - deco") << Test::ShellSurfaceType::XdgShellV5 << ServerSideDecoration::Mode::Server;
 }
 
 void TestShellClient::testFullscreen()
@@ -306,11 +311,22 @@ void TestShellClient::testFullscreen()
     QScopedPointer<Surface> surface(Test::createSurface());
     QFETCH(Test::ShellSurfaceType, type);
     QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+
+    // create deco
+    QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
+    QSignalSpy decoSpy(deco.data(), &ServerSideDecoration::modeChanged);
+    QVERIFY(decoSpy.isValid());
+    QVERIFY(decoSpy.wait());
+    QFETCH(ServerSideDecoration::Mode, decoMode);
+    deco->requestMode(decoMode);
+    QVERIFY(decoSpy.wait());
+    QCOMPARE(deco->mode(), decoMode);
+
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QVERIFY(c->isActive());
     QVERIFY(!c->isFullScreen());
-    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->clientSize(), QSize(100, 50));
     QSignalSpy fullscreenChangedSpy(c, &ShellClient::fullScreenChanged);
     QVERIFY(fullscreenChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &ShellClient::geometryChanged);
@@ -333,10 +349,12 @@ void TestShellClient::testFullscreen()
     QVERIFY(fullscreenChangedSpy.wait());
     QVERIFY(sizeChangeRequestedSpy.wait());
     QCOMPARE(sizeChangeRequestedSpy.count(), 1);
+    QEXPECT_FAIL("wlShell - deco", "BUG 366764", Continue);
+    QEXPECT_FAIL("xdgShellV5 - deco", "BUG 366764", Continue);
     QCOMPARE(sizeChangeRequestedSpy.first().first().toSize(), QSize(screens()->size(0)));
     // TODO: should switch to fullscreen once it's updated
     QVERIFY(c->isFullScreen());
-    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->clientSize(), QSize(100, 50));
     QVERIFY(geometryChangedSpy.isEmpty());
 
     // render at the new size
@@ -344,6 +362,8 @@ void TestShellClient::testFullscreen()
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(geometryChangedSpy.count(), 1);
     QVERIFY(c->isFullScreen());
+    QEXPECT_FAIL("wlShell - deco", "BUG 366764", Continue);
+    QEXPECT_FAIL("xdgShellV5 - deco", "BUG 366764", Continue);
     QCOMPARE(c->geometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.first().first().toSize()));
 
     // swap back to normal
