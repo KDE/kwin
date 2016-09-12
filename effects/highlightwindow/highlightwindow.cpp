@@ -62,7 +62,7 @@ void HighlightWindowEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& 
         if (*opacity < 0.98f)
             data.setTranslucent();
         if (oldOpacity != *opacity)
-            effects->addRepaint(w->geometry().adjusted(-16,-16,16,32)); // add some padding. w->addRepaintFull() is wrong for at least isInitiallyHidden ...
+            effects->addRepaint(w->expandedGeometry());
     } else if (m_finishing && m_windowOpacity.contains(w)) {
         // Final fading back in animation
         if (opacity == m_windowOpacity.end())
@@ -76,7 +76,7 @@ void HighlightWindowEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& 
         if (*opacity < 0.98f)
             data.setTranslucent();
         if (oldOpacity != *opacity)
-            effects->addRepaint(w->geometry().adjusted(-16,-16,16,32)); // ... see above ... because the window is pot. gone in the last pass
+            effects->addRepaint(w->expandedGeometry());
 
         if (*opacity > 0.98f || *opacity < 0.02f) {
             m_windowOpacity.remove(w);   // We default to 1.0
