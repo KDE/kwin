@@ -48,6 +48,8 @@ public:
     SurfaceInterface *icon = nullptr;
 
     DataSourceInterface *selection = nullptr;
+    QMetaObject::Connection selectionUnboundConnection;
+    QMetaObject::Connection selectionDestroyedConnection;
 
     struct Drag {
         SurfaceInterface *surface = nullptr;
@@ -120,10 +122,22 @@ void DataDeviceInterface::Private::setSelectionCallback(wl_client *client, wl_re
 void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
 {
     Q_Q(DataDeviceInterface);
+    QObject::disconnect(selectionUnboundConnection);
+    QObject::disconnect(selectionDestroyedConnection);
+    if (selection) {
+        selection->cancel();
+    }
     selection = dataSource;
     if (selection) {
+        auto clearSelection = [this] {
+            setSelection(nullptr);
+        };
+        selectionUnboundConnection = QObject::connect(selection, &Resource::unbound, q, clearSelection);
+        selectionDestroyedConnection = QObject::connect(selection, &QObject::destroyed, q, clearSelection);
         emit q->selectionChanged(selection);
     } else {
+        selectionUnboundConnection = QMetaObject::Connection();
+        selectionDestroyedConnection = QMetaObject::Connection();
         emit q->selectionCleared();
     }
 }

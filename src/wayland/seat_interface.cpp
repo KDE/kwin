@@ -321,6 +321,16 @@ void SeatInterface::Private::endDrag(quint32 serial)
 void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice, bool set)
 {
     if (keys.focus.surface && (keys.focus.surface->client() == dataDevice->client())) {
+        if (currentSelection) {
+            // cancel the previous selection
+            if (auto s = currentSelection->selection()) {
+                if (currentSelection != dataDevice) {
+                    // only if current selection is not on the same device
+                    // that would cancel the newly set source
+                    s->cancel();
+                }
+            }
+        }
         // new selection on a data device belonging to current keyboard focus
         currentSelection = dataDevice;
     }

@@ -53,6 +53,7 @@ private Q_SLOTS:
     void testDragInternally();
     void testSetSelection();
     void testSendSelectionOnSeat();
+    void testReplaceSource();
     void testDestroy();
 
 private:
@@ -453,6 +454,79 @@ void TestDataDevice::testSendSelectionOnSeat()
     dataDevice.reset();
     QVERIFY(unboundSpy.wait());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+}
+
+void TestDataDevice::testReplaceSource()
+{
+    // this test verifies that replacing a data source cancels the previous source
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // first add keyboard support to Seat
+    QSignalSpy keyboardChangedSpy(m_seat, &Seat::hasKeyboardChanged);
+    QVERIFY(keyboardChangedSpy.isValid());
+    m_seatInterface->setHasKeyboard(true);
+    QVERIFY(keyboardChangedSpy.wait());
+    // now create DataDevice, Keyboard and a Surface
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, &DataDeviceManagerInterface::dataDeviceCreated);
+    QVERIFY(dataDeviceCreatedSpy.isValid());
+    QScopedPointer<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
+    QVERIFY(dataDevice->isValid());
+    QVERIFY(dataDeviceCreatedSpy.wait());
+    auto serverDataDevice = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface*>();
+    QVERIFY(serverDataDevice);
+    QScopedPointer<Keyboard> keyboard(m_seat->createKeyboard());
+    QVERIFY(keyboard->isValid());
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surface->isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+
+    // now set the selection
+    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    QVERIFY(dataSource->isValid());
+    dataSource->offer(QStringLiteral("text/plain"));
+    dataDevice->setSelection(1, dataSource.data());
+    QSignalSpy sourceCancelledSpy(dataSource.data(), &DataSource::cancelled);
+    QVERIFY(sourceCancelledSpy.isValid());
+    // we should get a selection offered for that on the data device
+    QSignalSpy selectionOfferedSpy(dataDevice.data(), &DataDevice::selectionOffered);
+    QVERIFY(selectionOfferedSpy.isValid());
+    QVERIFY(selectionOfferedSpy.wait());
+    QCOMPARE(selectionOfferedSpy.count(), 1);
+
+    // create a second data source and replace previous one
+    QScopedPointer<DataSource> dataSource2(m_dataDeviceManager->createDataSource());
+    QVERIFY(dataSource2->isValid());
+    dataSource2->offer(QStringLiteral("text/plain"));
+    QSignalSpy sourceCancelled2Spy(dataSource2.data(), &DataSource::cancelled);
+    QVERIFY(sourceCancelled2Spy.isValid());
+    dataDevice->setSelection(1, dataSource2.data());
+    QCOMPARE(selectionOfferedSpy.count(), 1);
+    QVERIFY(sourceCancelledSpy.wait());
+    QCOMPARE(selectionOfferedSpy.count(), 2);
+    QVERIFY(sourceCancelled2Spy.isEmpty());
+
+    // create a new DataDevice and replace previous one
+    QScopedPointer<DataDevice> dataDevice2(m_dataDeviceManager->getDataDevice(m_seat));
+    QVERIFY(dataDevice2->isValid());
+    QScopedPointer<DataSource> dataSource3(m_dataDeviceManager->createDataSource());
+    QVERIFY(dataSource3->isValid());
+    dataSource3->offer(QStringLiteral("text/plain"));
+    dataDevice2->setSelection(1, dataSource3.data());
+    QVERIFY(sourceCancelled2Spy.wait());
+
+    // try to crash by first destroying dataSource3 and setting a new DataSource
+    QScopedPointer<DataSource> dataSource4(m_dataDeviceManager->createDataSource());
+    QVERIFY(dataSource4->isValid());
+    dataSource4->offer(QStringLiteral("text/plain"));
+    dataSource3.reset();
+    dataDevice2->setSelection(1, dataSource4.data());
+    QVERIFY(selectionOfferedSpy.wait());
 }
 
 void TestDataDevice::testDestroy()

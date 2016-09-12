@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "datasource_interface.h"
 #include "datadevicemanager_interface.h"
+#include "clientconnection.h"
 #include "resource_p.h"
 // Qt
 #include <QStringList>
@@ -103,7 +104,11 @@ void DataSourceInterface::requestData(const QString &mimeType, qint32 fd)
 void DataSourceInterface::cancel()
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     wl_data_source_send_cancelled(d->resource);
+    client()->flush();
 }
 
 QStringList DataSourceInterface::mimeTypes() const
