@@ -706,6 +706,10 @@ bool ShaderManager::selfTest()
         qCWarning(LIBKWINGLUTILS) << "Framebuffer objects not supported - skipping shader tests";
         return true;
     }
+    if (GLPlatform::instance()->isNvidia() && GLPlatform::instance()->glRendererString().contains("Quadro")) {
+        qCWarning(LIBKWINGLUTILS) << "Skipping self test as it is reported to return false positive results on Quadro hardware";
+        return true;
+    }
 
     // Create the source texture
     QImage image(2, 2, QImage::Format_ARGB32_Premultiplied);
