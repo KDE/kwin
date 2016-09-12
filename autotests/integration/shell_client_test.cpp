@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/xdgshell.h>
 
 #include <KWayland/Server/shell_interface.h>
 
@@ -52,6 +53,8 @@ private Q_SLOTS:
     void testTransientPositionAfterRemap();
     void testMinimizeActiveWindow_data();
     void testMinimizeActiveWindow();
+    void testFullscreen_data();
+    void testFullscreen();
 };
 
 void TestShellClient::initTestCase()
@@ -289,6 +292,80 @@ void TestShellClient::testMinimizeActiveWindow()
     QVERIFY(c->wantsTabFocus());
     QVERIFY(c->isShown(true));
     QCOMPARE(workspace()->activeClient(), c);
+}
+
+void TestShellClient::testFullscreen_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
+void TestShellClient::testFullscreen()
+{
+    // this test verifies that a window can be properly fullscreened
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QVERIFY(!c->isFullScreen());
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QSignalSpy fullscreenChangedSpy(c, &ShellClient::fullScreenChanged);
+    QVERIFY(fullscreenChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(c, &ShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy sizeChangeRequestedSpy(shellSurface.data(), SIGNAL(sizeChanged(QSize)));
+    QVERIFY(sizeChangeRequestedSpy.isValid());
+
+    // fullscreen the window
+    switch (type) {
+    case Test::ShellSurfaceType::WlShell:
+        qobject_cast<ShellSurface*>(shellSurface.data())->setFullscreen();
+        break;
+    case Test::ShellSurfaceType::XdgShellV5:
+        qobject_cast<XdgShellSurface*>(shellSurface.data())->setFullscreen(true);
+        break;
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+    QVERIFY(fullscreenChangedSpy.wait());
+    QVERIFY(sizeChangeRequestedSpy.wait());
+    QCOMPARE(sizeChangeRequestedSpy.count(), 1);
+    QCOMPARE(sizeChangeRequestedSpy.first().first().toSize(), QSize(screens()->size(0)));
+    // TODO: should switch to fullscreen once it's updated
+    QVERIFY(c->isFullScreen());
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QVERIFY(geometryChangedSpy.isEmpty());
+
+    // render at the new size
+    Test::render(surface.data(), sizeChangeRequestedSpy.first().first().toSize(), Qt::red);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(geometryChangedSpy.count(), 1);
+    QVERIFY(c->isFullScreen());
+    QCOMPARE(c->geometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.first().first().toSize()));
+
+    // swap back to normal
+    switch (type) {
+    case Test::ShellSurfaceType::WlShell:
+        qobject_cast<ShellSurface*>(shellSurface.data())->setToplevel();
+        break;
+    case Test::ShellSurfaceType::XdgShellV5:
+        qobject_cast<XdgShellSurface*>(shellSurface.data())->setFullscreen(false);
+        break;
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+    QVERIFY(fullscreenChangedSpy.wait());
+    QVERIFY(sizeChangeRequestedSpy.wait());
+    QCOMPARE(sizeChangeRequestedSpy.count(), 2);
+    QCOMPARE(sizeChangeRequestedSpy.last().first().toSize(), QSize(100, 50));
+    // TODO: should switch to fullscreen once it's updated
+    QVERIFY(!c->isFullScreen());
 }
 
 WAYLANDTEST_MAIN(TestShellClient)
