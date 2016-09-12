@@ -150,6 +150,10 @@ void ShellClient::initSurface(T *shellSurface)
     );
     connect(shellSurface, &T::maximizedChanged, this,
         [this] (bool maximized) {
+            if (m_shellSurface && isFullScreen()) {
+                // ignore for wl_shell - there it is mutual exclusive and messes with the geometry
+                return;
+            }
             maximize(maximized ? MaximizeFull : MaximizeRestore);
         }
     );
@@ -685,7 +689,7 @@ bool ShellClient::noBorder() const
     }
     if (m_serverDecoration) {
         if (m_serverDecoration->mode() == ServerSideDecorationManagerInterface::Mode::Server) {
-            return m_userNoBorder;
+            return m_userNoBorder || isFullScreen();
         }
     }
     return true;
@@ -916,10 +920,12 @@ void ShellClient::requestGeometry(const QRect &rect)
 
 void ShellClient::clientFullScreenChanged(bool fullScreen)
 {
+    RequestGeometryBlocker requestBlocker(this);
     StackingUpdatesBlocker blocker(workspace());
 
     const bool emitSignal = m_fullScreen != fullScreen;
     m_fullScreen = fullScreen;
+    updateDecoration(false, false);
 
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
 

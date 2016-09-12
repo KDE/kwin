@@ -56,6 +56,8 @@ private Q_SLOTS:
     void testMinimizeActiveWindow();
     void testFullscreen_data();
     void testFullscreen();
+    void testMaximizedToFullscreen_data();
+    void testMaximizedToFullscreen();
 };
 
 void TestShellClient::initTestCase()
@@ -328,6 +330,7 @@ void TestShellClient::testFullscreen()
     QCOMPARE(c->layer(), NormalLayer);
     QVERIFY(!c->isFullScreen());
     QCOMPARE(c->clientSize(), QSize(100, 50));
+    QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
     QSignalSpy fullscreenChangedSpy(c, &ShellClient::fullScreenChanged);
     QVERIFY(fullscreenChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &ShellClient::geometryChanged);
@@ -350,8 +353,6 @@ void TestShellClient::testFullscreen()
     QVERIFY(fullscreenChangedSpy.wait());
     QVERIFY(sizeChangeRequestedSpy.wait());
     QCOMPARE(sizeChangeRequestedSpy.count(), 1);
-    QEXPECT_FAIL("wlShell - deco", "BUG 366764", Continue);
-    QEXPECT_FAIL("xdgShellV5 - deco", "BUG 366764", Continue);
     QCOMPARE(sizeChangeRequestedSpy.first().first().toSize(), QSize(screens()->size(0)));
     // TODO: should switch to fullscreen once it's updated
     QVERIFY(c->isFullScreen());
@@ -363,8 +364,7 @@ void TestShellClient::testFullscreen()
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(geometryChangedSpy.count(), 1);
     QVERIFY(c->isFullScreen());
-    QEXPECT_FAIL("wlShell - deco", "BUG 366764", Continue);
-    QEXPECT_FAIL("xdgShellV5 - deco", "BUG 366764", Continue);
+    QVERIFY(!c->isDecorated());
     QCOMPARE(c->geometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.first().first().toSize()));
     QCOMPARE(c->layer(), ActiveLayer);
 
@@ -387,6 +387,123 @@ void TestShellClient::testFullscreen()
     // TODO: should switch to fullscreen once it's updated
     QVERIFY(!c->isFullScreen());
     QCOMPARE(c->layer(), NormalLayer);
+    QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
+}
+
+
+void TestShellClient::testMaximizedToFullscreen_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<ServerSideDecoration::Mode>("decoMode");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell << ServerSideDecoration::Mode::Client;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << ServerSideDecoration::Mode::Client;
+
+    QTest::newRow("wlShell - deco") << Test::ShellSurfaceType::WlShell << ServerSideDecoration::Mode::Server;
+    QTest::newRow("xdgShellV5 - deco") << Test::ShellSurfaceType::XdgShellV5 << ServerSideDecoration::Mode::Server;
+}
+
+void TestShellClient::testMaximizedToFullscreen()
+{
+    // this test verifies that a window can be properly fullscreened after maximizing
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+
+    // create deco
+    QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
+    QSignalSpy decoSpy(deco.data(), &ServerSideDecoration::modeChanged);
+    QVERIFY(decoSpy.isValid());
+    QVERIFY(decoSpy.wait());
+    QFETCH(ServerSideDecoration::Mode, decoMode);
+    deco->requestMode(decoMode);
+    QVERIFY(decoSpy.wait());
+    QCOMPARE(deco->mode(), decoMode);
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QVERIFY(!c->isFullScreen());
+    QCOMPARE(c->clientSize(), QSize(100, 50));
+    QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
+    QSignalSpy fullscreenChangedSpy(c, &ShellClient::fullScreenChanged);
+    QVERIFY(fullscreenChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(c, &ShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy sizeChangeRequestedSpy(shellSurface.data(), SIGNAL(sizeChanged(QSize)));
+    QVERIFY(sizeChangeRequestedSpy.isValid());
+
+    // change to maximize
+    switch (type) {
+    case Test::ShellSurfaceType::WlShell:
+        qobject_cast<ShellSurface*>(shellSurface.data())->setMaximized();
+        break;
+    case Test::ShellSurfaceType::XdgShellV5:
+        qobject_cast<XdgShellSurface*>(shellSurface.data())->setMaximized(true);
+        break;
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+    QVERIFY(sizeChangeRequestedSpy.wait());
+    QCOMPARE(sizeChangeRequestedSpy.count(), 1);
+    QCOMPARE(c->maximizeMode(), MaximizeFull);
+    QCOMPARE(geometryChangedSpy.isEmpty(), false);
+    geometryChangedSpy.clear();
+
+    // fullscreen the window
+    switch (type) {
+    case Test::ShellSurfaceType::WlShell:
+        qobject_cast<ShellSurface*>(shellSurface.data())->setFullscreen();
+        break;
+    case Test::ShellSurfaceType::XdgShellV5:
+        qobject_cast<XdgShellSurface*>(shellSurface.data())->setFullscreen(true);
+        break;
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+    QVERIFY(fullscreenChangedSpy.wait());
+    if (decoMode == ServerSideDecoration::Mode::Server) {
+        QVERIFY(sizeChangeRequestedSpy.wait());
+        QCOMPARE(sizeChangeRequestedSpy.count(), 2);
+    }
+    QCOMPARE(sizeChangeRequestedSpy.last().first().toSize(), QSize(screens()->size(0)));
+    // TODO: should switch to fullscreen once it's updated
+    QVERIFY(c->isFullScreen());
+    QCOMPARE(c->clientSize(), QSize(100, 50));
+    QVERIFY(geometryChangedSpy.isEmpty());
+
+    // render at the new size
+    Test::render(surface.data(), sizeChangeRequestedSpy.last().first().toSize(), Qt::red);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(geometryChangedSpy.count(), 1);
+    QVERIFY(c->isFullScreen());
+    QVERIFY(!c->isDecorated());
+    QCOMPARE(c->geometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.last().first().toSize()));
+    sizeChangeRequestedSpy.clear();
+
+    // swap back to normal
+    switch (type) {
+    case Test::ShellSurfaceType::WlShell:
+        qobject_cast<ShellSurface*>(shellSurface.data())->setToplevel();
+        break;
+    case Test::ShellSurfaceType::XdgShellV5:
+        qobject_cast<XdgShellSurface*>(shellSurface.data())->setFullscreen(false);
+        break;
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+    QVERIFY(fullscreenChangedSpy.wait());
+    QVERIFY(sizeChangeRequestedSpy.wait());
+    QCOMPARE(sizeChangeRequestedSpy.count(), 1);
+    QEXPECT_FAIL("wlShell - deco", "With decoration incorrect geometry requested", Continue);
+    QEXPECT_FAIL("xdgShellV5 - deco", "With decoration incorrect geometry requested", Continue);
+    QCOMPARE(sizeChangeRequestedSpy.last().first().toSize(), QSize(100, 50));
+    // TODO: should switch to fullscreen once it's updated
+    QVERIFY(!c->isFullScreen());
+    QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
 }
 
 WAYLANDTEST_MAIN(TestShellClient)
