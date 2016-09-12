@@ -267,8 +267,16 @@ void TestShellClient::testMinimizeActiveWindow()
     QVERIFY(c);
     QVERIFY(c->isActive());
     QCOMPARE(workspace()->activeClient(), c);
+    QVERIFY(c->wantsInput());
+    QVERIFY(c->wantsTabFocus());
+    QVERIFY(c->isShown(true));
 
     workspace()->slotWindowMinimize();
+    QVERIFY(!c->isShown(true));
+    QEXPECT_FAIL("wlShell", "BUG 368673", Continue);
+    QVERIFY(c->wantsInput());
+    QEXPECT_FAIL("wlShell", "BUG 368673", Continue);
+    QVERIFY(c->wantsTabFocus());
     QVERIFY(!c->isActive());
     QVERIFY(!workspace()->activeClient());
     QVERIFY(c->isMinimized());
@@ -277,6 +285,9 @@ void TestShellClient::testMinimizeActiveWindow()
     c->unminimize();
     QVERIFY(!c->isMinimized());
     QVERIFY(c->isActive());
+    QVERIFY(c->wantsInput());
+    QVERIFY(c->wantsTabFocus());
+    QVERIFY(c->isShown(true));
     QCOMPARE(workspace()->activeClient(), c);
 }
 
