@@ -807,12 +807,19 @@ bool ShellClient::acceptsFocus() const
             return false;
         }
     }
+    if (m_closing) {
+        // a closing window does not accept focus
+        return false;
+    }
+    if (m_unmapped) {
+        // an unmapped window does not accept focus
+        return false;
+    }
     if (m_shellSurface) {
         if (m_shellSurface->isPopup()) {
             return false;
         }
-        // if the window is not visible it doesn't get input
-        return m_shellSurface->acceptsKeyboardFocus() && isShown(true);
+        return m_shellSurface->acceptsKeyboardFocus();
     }
     if (m_xdgShellSurface) {
         // TODO: proper
