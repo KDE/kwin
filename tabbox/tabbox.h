@@ -113,7 +113,7 @@ private:
     AbstractClient* m_client;
 };
 
-class TabBox : public QObject
+class KWIN_EXPORT TabBox : public QObject
 {
     Q_OBJECT
 public:

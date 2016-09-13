@@ -1,0 +1,142 @@
+/********************************************************************
+KWin - the KDE window manager
+This file is part of the KDE project.
+
+Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*********************************************************************/
+#include "kwin_wayland_test.h"
+#include "cursor.h"
+#include "input.h"
+#include "platform.h"
+#include "screens.h"
+#include "shell_client.h"
+#include "tabbox/tabbox.h"
+#include "wayland_server.h"
+#include "workspace.h"
+
+#include <KWayland/Client/surface.h>
+#include <KConfigGroup>
+
+#include <linux/input.h>
+
+using namespace KWin;
+using namespace KWayland::Client;
+
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_tabbox-0");
+
+class TabBoxTest : public QObject
+{
+    Q_OBJECT
+private Q_SLOTS:
+    void initTestCase();
+    void init();
+    void cleanup();
+
+    void testCapsLock();
+};
+
+void TabBoxTest::initTestCase()
+{
+    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::AbstractClient*>();
+    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
+    QVERIFY(workspaceCreatedSpy.isValid());
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+
+    KSharedConfigPtr c = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    c->group("TabBox").writeEntry("ShowTabBox", false);
+    c->sync();
+    kwinApp()->setConfig(c);
+    qputenv("KWIN_XKB_DEFAULT_KEYMAP", "1");
+
+    kwinApp()->start();
+    QVERIFY(workspaceCreatedSpy.wait());
+    waylandServer()->initWorkspace();
+}
+
+void TabBoxTest::init()
+{
+    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    screens()->setCurrent(0);
+    KWin::Cursor::setPos(QPoint(640, 512));
+}
+
+void TabBoxTest::cleanup()
+{
+    Test::destroyWaylandConnection();
+}
+
+void TabBoxTest::testCapsLock()
+{
+    // this test verifies that Alt+tab works correctly also when Capslock is on
+    // bug 368590
+
+    // first create two windows
+    QScopedPointer<Surface> surface1(Test::createSurface());
+    QScopedPointer<QObject> shellSurface1(Test::createShellSurface(Test::ShellSurfaceType::WlShell, surface1.data()));
+    auto c1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c1);
+    QVERIFY(c1->isActive());
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<QObject> shellSurface2(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV5, surface2.data()));
+    auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::red);
+    QVERIFY(c2);
+    QVERIFY(c2->isActive());
+
+    // Setup tabbox signal spies
+    QSignalSpy tabboxAddedSpy(TabBox::TabBox::self(), &TabBox::TabBox::tabBoxAdded);
+    QVERIFY(tabboxAddedSpy.isValid());
+    QSignalSpy tabboxClosedSpy(TabBox::TabBox::self(), &TabBox::TabBox::tabBoxClosed);
+    QVERIFY(tabboxClosedSpy.isValid());
+
+    // enable capslock
+    quint32 timestamp = 0;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
+
+    // press alt+tab
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::AltModifier);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_TAB, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_TAB, timestamp++);
+
+    QVERIFY(tabboxAddedSpy.wait());
+    QVERIFY(TabBox::TabBox::self()->isGrabbed());
+
+    // release alt
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    QEXPECT_FAIL("", "bug 368590", Continue);
+    QCOMPARE(tabboxClosedSpy.count(), 1);
+    QEXPECT_FAIL("", "bug 368590", Continue);
+    QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
+
+    // release caps lock
+    kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
+    QCOMPARE(tabboxClosedSpy.count(), 1);
+    QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
+
+    surface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c2));
+    surface1.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c1));
+}
+
+WAYLANDTEST_MAIN(TabBoxTest)
+#include "tabbox_test.moc"
