@@ -917,10 +917,11 @@ void ShellClient::requestGeometry(const QRect &rect)
 void ShellClient::clientFullScreenChanged(bool fullScreen)
 {
     StackingUpdatesBlocker blocker(workspace());
-    workspace()->updateClientLayer(this);   // active fullscreens get different layer
 
     const bool emitSignal = m_fullScreen != fullScreen;
     m_fullScreen = fullScreen;
+
+    workspace()->updateClientLayer(this);   // active fullscreens get different layer
 
     if (fullScreen) {
         m_geomFsRestore = geometry();

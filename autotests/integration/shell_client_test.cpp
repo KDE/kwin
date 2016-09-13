@@ -366,7 +366,6 @@ void TestShellClient::testFullscreen()
     QEXPECT_FAIL("wlShell - deco", "BUG 366764", Continue);
     QEXPECT_FAIL("xdgShellV5 - deco", "BUG 366764", Continue);
     QCOMPARE(c->geometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.first().first().toSize()));
-    QEXPECT_FAIL("", "Fullscreen windows don't change layer", Continue);
     QCOMPARE(c->layer(), ActiveLayer);
 
     // swap back to normal
