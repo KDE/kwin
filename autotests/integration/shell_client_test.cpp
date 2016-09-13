@@ -325,6 +325,7 @@ void TestShellClient::testFullscreen()
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QVERIFY(c->isActive());
+    QCOMPARE(c->layer(), NormalLayer);
     QVERIFY(!c->isFullScreen());
     QCOMPARE(c->clientSize(), QSize(100, 50));
     QSignalSpy fullscreenChangedSpy(c, &ShellClient::fullScreenChanged);
@@ -365,6 +366,8 @@ void TestShellClient::testFullscreen()
     QEXPECT_FAIL("wlShell - deco", "BUG 366764", Continue);
     QEXPECT_FAIL("xdgShellV5 - deco", "BUG 366764", Continue);
     QCOMPARE(c->geometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.first().first().toSize()));
+    QEXPECT_FAIL("", "Fullscreen windows don't change layer", Continue);
+    QCOMPARE(c->layer(), ActiveLayer);
 
     // swap back to normal
     switch (type) {
@@ -384,6 +387,7 @@ void TestShellClient::testFullscreen()
     QCOMPARE(sizeChangeRequestedSpy.last().first().toSize(), QSize(100, 50));
     // TODO: should switch to fullscreen once it's updated
     QVERIFY(!c->isFullScreen());
+    QCOMPARE(c->layer(), NormalLayer);
 }
 
 WAYLANDTEST_MAIN(TestShellClient)
