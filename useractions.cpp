@@ -973,6 +973,7 @@ template <typename Slot>
 void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot, const QVariant &data)
 {
     QAction *a = new QAction(this);
+    a->setProperty("componentName", QStringLiteral(KWIN_NAME));
     a->setObjectName(actionName);
     a->setText(description);
     if (data.isValid()) {
@@ -1042,6 +1043,7 @@ void Workspace::clientShortcutUpdated(Client* c)
     if (!c->shortcut().isEmpty()) {
         if (action == NULL) { // new shortcut
             action = new QAction(this);
+            action->setProperty("componentName", QStringLiteral(KWIN_NAME));
             action->setObjectName(key);
             action->setText(i18n("Activate Window (%1)", c->caption()));
             connect(action, &QAction::triggered, c,

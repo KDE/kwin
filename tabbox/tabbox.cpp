@@ -518,6 +518,7 @@ template <typename Slot>
 void TabBox::key(const char *actionName, Slot slot, const QKeySequence &shortcut)
 {
     QAction *a = new QAction(this);
+    a->setProperty("componentName", QStringLiteral(KWIN_NAME));
     a->setObjectName(QString::fromUtf8(actionName));
     a->setText(i18n(actionName));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
