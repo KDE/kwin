@@ -85,7 +85,7 @@ void TabBoxTest::testCapsLock()
     // this test verifies that Alt+tab works correctly also when Capslock is on
     // bug 368590
 
-    // first create two windows
+    // first create three windows
     QScopedPointer<Surface> surface1(Test::createSurface());
     QScopedPointer<QObject> shellSurface1(Test::createShellSurface(Test::ShellSurfaceType::WlShell, surface1.data()));
     auto c1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
@@ -96,6 +96,11 @@ void TabBoxTest::testCapsLock()
     auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::red);
     QVERIFY(c2);
     QVERIFY(c2->isActive());
+    QScopedPointer<Surface> surface3(Test::createSurface());
+    QScopedPointer<QObject> shellSurface3(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV5, surface3.data()));
+    auto c3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::red);
+    QVERIFY(c3);
+    QVERIFY(c3->isActive());
 
     // Setup tabbox signal spies
     QSignalSpy tabboxAddedSpy(TabBox::TabBox::self(), &TabBox::TabBox::tabBoxAdded);
@@ -131,7 +136,11 @@ void TabBoxTest::testCapsLock()
     QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
+    QEXPECT_FAIL("", "capslock modifies the shortcut to walk back", Continue);
+    QCOMPARE(workspace()->activeClient(), c2);
 
+    surface3.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c3));
     surface2.reset();
     QVERIFY(Test::waitForWindowDestroyed(c2));
     surface1.reset();
