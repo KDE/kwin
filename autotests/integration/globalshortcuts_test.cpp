@@ -89,7 +89,6 @@ void GlobalShortcutsTest::testConsumedShift()
     kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
     kwinApp()->platform()->keyboardKeyPressed(KEY_5, timestamp++);
-    QEXPECT_FAIL("", "Consumed modifiers are not removed from checking", Continue);
     QTRY_COMPARE(triggeredSpy.count(), 1);
     kwinApp()->platform()->keyboardKeyReleased(KEY_5, timestamp++);
 

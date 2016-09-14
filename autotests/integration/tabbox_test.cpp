@@ -138,7 +138,6 @@ void TabBoxTest::testCapsLock()
     QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
-    QEXPECT_FAIL("", "capslock modifies the shortcut to walk back", Continue);
     QCOMPARE(workspace()->activeClient(), c2);
 
     surface3.reset();

@@ -91,6 +91,7 @@ Xkb::Xkb(InputRedirection *input)
     , m_altModifier(0)
     , m_metaModifier(0)
     , m_modifiers(Qt::NoModifier)
+    , m_consumedModifiers(Qt::NoModifier)
     , m_keysym(XKB_KEY_NoSymbol)
 {
     if (!m_context) {
@@ -295,6 +296,7 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
         }
     }
     updateModifiers();
+    updateConsumedModifiers(key);
     if (state == InputRedirection::KeyboardKeyPressed) {
         m_modOnlyShortcut.pressCount++;
         if (m_modOnlyShortcut.pressCount == 1 &&
@@ -366,6 +368,42 @@ void Xkb::updateModifiers()
                                                          xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED)),
                                                          layout);
     }
+}
+
+void Xkb::updateConsumedModifiers(uint32_t key)
+{
+    Qt::KeyboardModifiers mods = Qt::NoModifier;
+    if (xkb_state_mod_index_is_consumed(m_state, key + 8, m_shiftModifier) == 1) {
+        mods |= Qt::ShiftModifier;
+    }
+    if (xkb_state_mod_index_is_consumed(m_state, key + 8, m_altModifier) == 1) {
+        mods |= Qt::AltModifier;
+    }
+    if (xkb_state_mod_index_is_consumed(m_state, key + 8, m_controlModifier) == 1) {
+        mods |= Qt::ControlModifier;
+    }
+    if (xkb_state_mod_index_is_consumed(m_state, key + 8, m_metaModifier) == 1) {
+        mods |= Qt::MetaModifier;
+    }
+    m_consumedModifiers = mods;
+}
+
+Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts() const
+{
+    Qt::KeyboardModifiers mods = Qt::NoModifier;
+    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::ShiftModifier;
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::AltModifier;
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::ControlModifier;
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::MetaModifier;
+    }
+    return mods & ~m_consumedModifiers;
 }
 
 xkb_keysym_t Xkb::toKeysym(uint32_t key)

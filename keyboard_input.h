@@ -66,6 +66,7 @@ public:
     QString toString(xkb_keysym_t keysym);
     Qt::Key toQtKey(xkb_keysym_t keysym);
     Qt::KeyboardModifiers modifiers() const;
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
     bool shouldKeyRepeat(quint32 key) const;
 
     void switchToNextLayout();
@@ -76,6 +77,7 @@ private:
     void updateKeymap(xkb_keymap *keymap);
     void createKeymapFile();
     void updateModifiers();
+    void updateConsumedModifiers(uint32_t key);
     InputRedirection *m_input;
     xkb_context *m_context;
     xkb_keymap *m_keymap;
@@ -86,6 +88,7 @@ private:
     xkb_mod_index_t m_altModifier;
     xkb_mod_index_t m_metaModifier;
     Qt::KeyboardModifiers m_modifiers;
+    Qt::KeyboardModifiers m_consumedModifiers;
     xkb_keysym_t m_keysym;
     struct {
         uint pressCount = 0;
