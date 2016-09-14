@@ -58,6 +58,8 @@ private Q_SLOTS:
     void testFullscreen();
     void testMaximizedToFullscreen_data();
     void testMaximizedToFullscreen();
+    void testWindowOpensLargerThanScreen_data();
+    void testWindowOpensLargerThanScreen();
 };
 
 void TestShellClient::initTestCase()
@@ -504,6 +506,42 @@ void TestShellClient::testMaximizedToFullscreen()
     // TODO: should switch to fullscreen once it's updated
     QVERIFY(!c->isFullScreen());
     QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
+}
+
+void TestShellClient::testWindowOpensLargerThanScreen_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
+void TestShellClient::testWindowOpensLargerThanScreen()
+{
+    // this test creates a window which is as large as the screen, but is decorated
+    // the window should get resized to fit into the screen, BUG: 366632
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QSignalSpy sizeChangeRequestedSpy(shellSurface.data(), SIGNAL(sizeChanged(QSize)));
+    QVERIFY(sizeChangeRequestedSpy.isValid());
+
+    // create deco
+    QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
+    QSignalSpy decoSpy(deco.data(), &ServerSideDecoration::modeChanged);
+    QVERIFY(decoSpy.isValid());
+    QVERIFY(decoSpy.wait());
+    deco->requestMode(ServerSideDecoration::Mode::Server);
+    QVERIFY(decoSpy.wait());
+    QCOMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
+
+    auto c = Test::renderAndWaitForShown(surface.data(), screens()->size(0), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QCOMPARE(c->clientSize(), screens()->size(0));
+    QVERIFY(c->isDecorated());
+    QEXPECT_FAIL("", "BUG 366632", Continue);
+    QVERIFY(sizeChangeRequestedSpy.wait());
 }
 
 WAYLANDTEST_MAIN(TestShellClient)
