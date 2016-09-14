@@ -11,7 +11,7 @@ function(integrationTest)
     cmake_parse_arguments(ARGS "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_executable(${ARGS_NAME} ${ARGS_SRCS})
     target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework kwin Qt5::Test ${ARGS_LIBS})
-    add_test(kwin-${ARGS_NAME} ${ARGS_NAME})
+    add_test(NAME kwin-${ARGS_NAME} COMMAND dbus-run-session ${CMAKE_CURRENT_BINARY_DIR}/${ARGS_NAME})
 endfunction()
 
 integrationTest(NAME testStart SRCS start_test.cpp)

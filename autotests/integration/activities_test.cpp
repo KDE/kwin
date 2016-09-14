@@ -44,6 +44,7 @@ class ActivitiesTest : public QObject
     Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
+    void cleanupTestCase();
     void init();
     void cleanup();
     void testSetOnActivitiesValidates();
@@ -70,6 +71,11 @@ void ActivitiesTest::initTestCase()
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
     setenv("QT_QPA_PLATFORM", "wayland", true);
     waylandServer()->initWorkspace();
+}
+
+void ActivitiesTest::cleanupTestCase()
+{
+    QProcess::execute(QStringLiteral("kactivitymanagerd"), QStringList{QStringLiteral("stop")});
 }
 
 void ActivitiesTest::init()
