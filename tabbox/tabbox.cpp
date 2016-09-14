@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "effects.h"
 #include "input.h"
+#include "keyboard_input.h"
 #include "focuschain.h"
 #include "screenedge.h"
 #include "screens.h"
@@ -498,8 +499,6 @@ TabBox::TabBox(QObject *parent)
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
     connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
-
-    connect(input(), &InputRedirection::keyboardModifiersChanged, this, &TabBox::modifiersChanged);
 }
 
 TabBox::~TabBox()
@@ -1076,7 +1075,7 @@ static bool areModKeysDepressedX11(const QKeySequence &seq)
 static bool areModKeysDepressedWayland(const QKeySequence &seq)
 {
     const int mod = seq[seq.count()-1] & Qt::KeyboardModifierMask;
-    const Qt::KeyboardModifiers mods = input()->keyboardModifiers();
+    const Qt::KeyboardModifiers mods = input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts();
     if ((mod & Qt::SHIFT) && mods.testFlag(Qt::ShiftModifier)) {
         return true;
     }
@@ -1570,9 +1569,9 @@ void TabBox::keyRelease(const xcb_key_release_event_t *ev)
     }
 }
 
-void TabBox::modifiersChanged(Qt::KeyboardModifiers mods)
+void TabBox::modifiersReleased()
 {
-    if (m_noModifierGrab || !(!mods)) {
+    if (m_noModifierGrab) {
         return;
     }
     if (m_tabGrab) {

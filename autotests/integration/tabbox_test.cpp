@@ -127,9 +127,7 @@ void TabBoxTest::testCapsLock()
 
     // release alt
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    QEXPECT_FAIL("", "bug 368590", Continue);
     QCOMPARE(tabboxClosedSpy.count(), 1);
-    QEXPECT_FAIL("", "bug 368590", Continue);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
 
     // release caps lock

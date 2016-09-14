@@ -745,8 +745,11 @@ public:
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
-        if (event->type() == QEvent::KeyPress)
+        if (event->type() == QEvent::KeyPress) {
             TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
+        } else if (input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
+            TabBox::TabBox::self()->modifiersReleased();
+        }
         return true;
     }
     bool wheelEvent(QWheelEvent *event) override {
