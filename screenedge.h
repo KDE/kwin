@@ -43,7 +43,7 @@ class QMouseEvent;
 
 namespace KWin {
 
-class Client;
+class AbstractClient;
 class ScreenEdges;
 
 class KWIN_EXPORT Edge : public QObject
@@ -70,8 +70,8 @@ public:
     void startApproaching();
     void stopApproaching();
     bool isApproaching() const;
-    void setClient(Client *client);
-    Client *client() const;
+    void setClient(AbstractClient *client);
+    AbstractClient *client() const;
     const QRect &geometry() const;
 
     /**
@@ -129,7 +129,7 @@ private:
     int m_lastApproachingFactor;
     bool m_blocked;
     bool m_pushBackBlocked;
-    Client *m_client;
+    AbstractClient *m_client;
 };
 
 /**
@@ -257,7 +257,7 @@ public:
      * @param client The Client for which an Edge should be reserved
      * @param border The border which the client wants to use, only proper borders are supported (no corners)
      **/
-    void reserve(KWin::Client *client, ElectricBorder border);
+    void reserve(KWin::AbstractClient *client, ElectricBorder border);
     /**
      * Reserve desktop switching for screen edges, if @p isToReserve is @c true. Unreserve otherwise.
      * @param reserve indicated weather desktop switching should be reserved or unreseved
@@ -339,8 +339,8 @@ private:
     ElectricBorderAction actionForEdge(Edge *edge) const;
     bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
     bool handleDndNotify(xcb_window_t window, const QPoint &point);
-    void createEdgeForClient(Client *client, ElectricBorder border);
-    void deleteEdgeForClient(Client *client);
+    void createEdgeForClient(AbstractClient *client, ElectricBorder border);
+    void deleteEdgeForClient(AbstractClient *client);
     bool m_desktopSwitching;
     bool m_desktopSwitchingMovingClients;
     QSize m_cursorPushBackDistance;
@@ -452,12 +452,12 @@ inline bool Edge::isBlocked() const
     return m_blocked;
 }
 
-inline void Edge::setClient(Client *client)
+inline void Edge::setClient(AbstractClient *client)
 {
     m_client = client;
 }
 
-inline Client *Edge::client() const
+inline AbstractClient *Edge::client() const
 {
     return m_client;
 }

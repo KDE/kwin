@@ -127,6 +127,8 @@ public:
     bool setupCompositing() override;
     void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
 
+    void showOnScreenEdge() override;
+
     // TODO: const-ref
     void placeIn(QRect &area);
 
@@ -164,6 +166,7 @@ private:
     void setTransient();
     bool shouldExposeToWindowManagement();
     KWayland::Server::XdgShellSurfaceInterface::States xdgSurfaceStates() const;
+    void updateShowOnScreenEdge();
     static void deleteClient(ShellClient *c);
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;

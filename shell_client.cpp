@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "deleted.h"
 #include "placement.h"
+#include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -407,6 +408,7 @@ void ShellClient::markAsMapped()
     if (shouldExposeToWindowManagement()) {
         setupWindowManagementInterface();
     }
+    updateShowOnScreenEdge();
 }
 
 void ShellClient::createDecoration(const QRect &oldGeom)
@@ -1018,17 +1020,93 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
     connect(surface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
     connect(surface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
     connect(surface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this,
-        [] {
+        [this] {
+            updateShowOnScreenEdge();
             workspace()->updateClientArea();
         }
     );
     updatePosition();
     updateRole();
+    updateShowOnScreenEdge();
+    connect(this, &ShellClient::geometryChanged, this, &ShellClient::updateShowOnScreenEdge);
 
     setSkipTaskbar(surface->skipTaskbar());
     connect(surface, &PlasmaShellSurfaceInterface::skipTaskbarChanged, this, [this] {
         setSkipTaskbar(m_plasmaShellSurface->skipTaskbar());
     });
+}
+
+void ShellClient::updateShowOnScreenEdge()
+{
+    if (!ScreenEdges::self()) {
+        return;
+    }
+    if (m_unmapped || !m_plasmaShellSurface || m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
+        ScreenEdges::self()->reserve(this, ElectricNone);
+        return;
+    }
+    if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide ||
+        m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
+        // screen edge API requires an edge, thus we need to figure out which edge the window borders
+        Qt::Edges edges;
+        for (int i = 0; i < screens()->count(); i++) {
+            const auto &screenGeo = screens()->geometry(i);
+            if (screenGeo.x() == geom.x()) {
+                edges |= Qt::LeftEdge;
+            }
+            if (screenGeo.x() + screenGeo.width() == geom.x() + geom.width()) {
+                edges |= Qt::RightEdge;
+            }
+            if (screenGeo.y() == geom.y()) {
+                edges |= Qt::TopEdge;
+            }
+            if (screenGeo.y() + screenGeo.height() == geom.y() + geom.height()) {
+                edges |= Qt::BottomEdge;
+            }
+        }
+        // a panel might border multiple screen edges. E.g. a horizontal panel at the bottom will
+        // also border the left and right edge
+        // let's remove such cases
+        if (edges.testFlag(Qt::LeftEdge) && edges.testFlag(Qt::RightEdge)) {
+            edges = edges & (~(Qt::LeftEdge | Qt::RightEdge));
+        }
+        if (edges.testFlag(Qt::TopEdge) && edges.testFlag(Qt::BottomEdge)) {
+            edges = edges & (~(Qt::TopEdge | Qt::BottomEdge));
+        }
+        // it's still possible that a panel borders two edges, e.g. bottom and left
+        // in that case the one which is sharing more with the edge wins
+        auto check = [this](Qt::Edges edges, Qt::Edge horiz, Qt::Edge vert) {
+            if (edges.testFlag(horiz) && edges.testFlag(vert)) {
+                if (geom.width() >= geom.height()) {
+                    return edges & ~horiz;
+                } else {
+                    return edges & ~vert;
+                }
+            }
+            return edges;
+        };
+        edges = check(edges, Qt::LeftEdge, Qt::TopEdge);
+        edges = check(edges, Qt::LeftEdge, Qt::BottomEdge);
+        edges = check(edges, Qt::RightEdge, Qt::TopEdge);
+        edges = check(edges, Qt::RightEdge, Qt::BottomEdge);
+
+        ElectricBorder border = ElectricNone;
+        if (edges.testFlag(Qt::LeftEdge)) {
+            border = ElectricLeft;
+        }
+        if (edges.testFlag(Qt::RightEdge)) {
+            border = ElectricRight;
+        }
+        if (edges.testFlag(Qt::TopEdge)) {
+            border = ElectricTop;
+        }
+        if (edges.testFlag(Qt::BottomEdge)) {
+            border = ElectricBottom;
+        }
+        ScreenEdges::self()->reserve(this, border);
+    } else {
+        ScreenEdges::self()->reserve(this, ElectricNone);
+    }
 }
 
 bool ShellClient::isInitialPositionSet() const
@@ -1241,6 +1319,16 @@ void ShellClient::placeIn(QRect &area)
 {
     Placement::self()->place(this, area);
     setGeometryRestore(geometry());
+}
+
+void ShellClient::showOnScreenEdge()
+{
+    if (!m_plasmaShellSurface || m_unmapped) {
+        return;
+    }
+    // TODO: handle show
+    workspace()->raiseClient(this);
+    // TODO: inform the client about being shown again
 }
 
 }

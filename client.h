@@ -329,7 +329,7 @@ public:
      * Restores the Client after it had been hidden due to show on screen edge functionality.
      * In addition the property gets deleted so that the Client knows that it is visible again.
      **/
-    void showOnScreenEdge();
+    void showOnScreenEdge() override;
 
     static void cleanupX11();
 

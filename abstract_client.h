@@ -580,6 +580,13 @@ public:
 
     QRect inputGeometry() const override;
 
+    /**
+     * Restores the AbstractClient after it had been hidden due to show on screen edge functionality.
+     * The AbstractClient also gets raised (e.g. Panel mode windows can cover) and the AbstractClient
+     * gets informed in a window specific way that it is shown and raised again.
+     **/
+    virtual void showOnScreenEdge() = 0;
+
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 

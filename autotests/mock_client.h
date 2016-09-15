@@ -36,7 +36,7 @@ public:
     virtual ~Client();
 
     bool isResize() const;
-    void showOnScreenEdge();
+    void showOnScreenEdge() override;
 
 };
 

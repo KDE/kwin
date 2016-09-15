@@ -47,6 +47,7 @@ public:
     void setHiddenInternal(bool set);
     void setGeometry(const QRect &rect);
     void setKeepBelow(bool);
+    virtual void showOnScreenEdge() = 0;
 
 Q_SIGNALS:
     void geometryChanged();

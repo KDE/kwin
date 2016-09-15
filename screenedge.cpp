@@ -555,13 +555,7 @@ ScreenEdges::ScreenEdges(QObject *parent)
     QWidget w;
     m_cornerOffset = (w.physicalDpiX() + w.physicalDpiY() + 5) / 6;
 
-    connect(workspace(), &Workspace::clientRemoved, this, [this](KWin::AbstractClient *c) {
-        Client *client = qobject_cast<Client*>(c);
-        if (!client) {
-            return;
-        }
-        deleteEdgeForClient(client);
-    });
+    connect(workspace(), &Workspace::clientRemoved, this, &ScreenEdges::deleteEdgeForClient);
 }
 
 ScreenEdges::~ScreenEdges()
@@ -985,7 +979,7 @@ void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
     }
 }
 
-void ScreenEdges::reserve(Client *client, ElectricBorder border)
+void ScreenEdges::reserve(AbstractClient *client, ElectricBorder border)
 {
     bool hadBorder = false;
     auto it = m_edges.begin();
@@ -1014,7 +1008,7 @@ void ScreenEdges::reserve(Client *client, ElectricBorder border)
     }
 }
 
-void ScreenEdges::createEdgeForClient(Client *client, ElectricBorder border)
+void ScreenEdges::createEdgeForClient(AbstractClient *client, ElectricBorder border)
 {
     int y = 0;
     int x = 0;
@@ -1087,7 +1081,7 @@ void ScreenEdges::createEdgeForClient(Client *client, ElectricBorder border)
     }
 }
 
-void ScreenEdges::deleteEdgeForClient(Client* c)
+void ScreenEdges::deleteEdgeForClient(AbstractClient* c)
 {
     auto it = m_edges.begin();
     while (it != m_edges.end()) {
