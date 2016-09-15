@@ -85,9 +85,10 @@ public:
      *
      * @param modifiers The current hold modifiers
      * @param key The keysymbol which has been pressed
+     * @param keyQt The Qt::Key which got pressed
      * @return @c true if a shortcut triggered, @c false otherwise
      */
-    bool processKey(Qt::KeyboardModifiers modifiers, uint32_t key);
+    bool processKey(Qt::KeyboardModifiers modifiers, uint32_t key, int keyQt);
     bool processPointerPressed(Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons);
     /**
      * @brief Processes a pointer axis event to decide whether a shortcut needs to be triggered.

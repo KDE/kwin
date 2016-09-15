@@ -455,7 +455,7 @@ public:
     }
     bool keyEvent(QKeyEvent *event) override {
         if (event->type() == QEvent::KeyPress) {
-            return input()->shortcuts()->processKey(input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts(), event->nativeVirtualKey());
+            return input()->shortcuts()->processKey(input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts(), event->nativeVirtualKey(), event->key());
         }
         return false;
     }
