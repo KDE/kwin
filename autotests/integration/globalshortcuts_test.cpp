@@ -76,7 +76,7 @@ void GlobalShortcutsTest::testConsumedShift()
 {
     // this test verifies that a shortcut with a consumed shift modifier triggers
     // create the action
-    QScopedPointer<QAction> action(new QAction);
+    QScopedPointer<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
     QSignalSpy triggeredSpy(action.data(), &QAction::triggered);
