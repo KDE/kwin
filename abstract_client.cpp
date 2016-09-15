@@ -1627,4 +1627,12 @@ QRect AbstractClient::iconGeometry() const
     return candidateGeom.translated(candidatePanel->pos());
 }
 
+QRect AbstractClient::inputGeometry() const
+{
+    if (isDecorated()) {
+        return Toplevel::inputGeometry() + decoration()->resizeOnlyBorders();
+    }
+    return Toplevel::inputGeometry();
+}
+
 }

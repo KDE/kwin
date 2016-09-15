@@ -1451,7 +1451,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
                 continue;
             }
         }
-        if (t->geometry().contains(pos) && acceptsInput(t, pos)) {
+        if (t->inputGeometry().contains(pos) && acceptsInput(t, pos)) {
             return t;
         }
     } while (it != stacking.begin());
