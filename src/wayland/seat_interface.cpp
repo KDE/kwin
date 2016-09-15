@@ -132,14 +132,18 @@ void SeatInterface::Private::updatePointerButtonState(quint32 button, Pointer::S
     it.value() = state;
 }
 
-void SeatInterface::Private::updateKey(quint32 key, Keyboard::State state)
+bool SeatInterface::Private::updateKey(quint32 key, Keyboard::State state)
 {
     auto it = keys.states.find(key);
     if (it == keys.states.end()) {
         keys.states.insert(key, state);
-        return;
+        return true;
+    }
+    if (it.value() == state) {
+        return false;
     }
     it.value() = state;
+    return true;
 }
 
 void SeatInterface::Private::sendName(wl_resource *r)
@@ -825,7 +829,9 @@ void SeatInterface::keyPressed(quint32 key)
 {
     Q_D();
     d->keys.lastStateSerial = d->display->nextSerial();
-    d->updateKey(key, Private::Keyboard::State::Pressed);
+    if (!d->updateKey(key, Private::Keyboard::State::Pressed)) {
+        return;
+    }
     if (d->keys.focus.keyboard && d->keys.focus.surface) {
         d->keys.focus.keyboard->keyPressed(key, d->keys.lastStateSerial);
     }
@@ -835,7 +841,9 @@ void SeatInterface::keyReleased(quint32 key)
 {
     Q_D();
     d->keys.lastStateSerial = d->display->nextSerial();
-    d->updateKey(key, Private::Keyboard::State::Released);
+    if (!d->updateKey(key, Private::Keyboard::State::Released)) {
+        return;
+    }
     if (d->keys.focus.keyboard && d->keys.focus.surface) {
         d->keys.focus.keyboard->keyReleased(key, d->keys.lastStateSerial);
     }

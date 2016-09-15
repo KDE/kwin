@@ -124,7 +124,7 @@ public:
         } keyRepeat;
     };
     Keyboard keys;
-    void updateKey(quint32 key, Keyboard::State state);
+    bool updateKey(quint32 key, Keyboard::State state);
 
     struct TextInput {
         struct Focus {
