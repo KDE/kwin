@@ -744,7 +744,21 @@ public:
         if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
             return false;
         }
-        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+        auto seat = waylandServer()->seat();
+        seat->setFocusedKeyboardSurface(nullptr);
+        // pass the key event to the seat, so that it has a proper model of the currently hold keys
+        // this is important for combinations like alt+shift to ensure that shift is not considered pressed
+        switch (event->type()) {
+        case QEvent::KeyPress:
+            seat->keyPressed(event->nativeScanCode());
+            break;
+        case QEvent::KeyRelease:
+            seat->keyReleased(event->nativeScanCode());
+            break;
+        default:
+            break;
+        }
+
         if (event->type() == QEvent::KeyPress) {
             TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
         } else if (input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
