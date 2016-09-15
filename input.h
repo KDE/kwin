@@ -298,6 +298,9 @@ public:
     virtual bool swipeGestureUpdate(const QSizeF &delta, quint32 time);
     virtual bool swipeGestureEnd(quint32 time);
     virtual bool swipeGestureCancelled(quint32 time);
+
+protected:
+    void passToWaylandServer(QKeyEvent *event);
 };
 
 class InputDeviceHandler : public QObject

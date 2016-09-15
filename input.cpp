@@ -160,6 +160,24 @@ bool InputEventFilter::swipeGestureCancelled(quint32 time)
     return false;
 }
 
+void InputEventFilter::passToWaylandServer(QKeyEvent *event)
+{
+    Q_ASSERT(waylandServer());
+    if (event->isAutoRepeat()) {
+        return;
+    }
+    switch (event->type()) {
+    case QEvent::KeyPress:
+        waylandServer()->seat()->keyPressed(event->nativeScanCode());
+        break;
+    case QEvent::KeyRelease:
+        waylandServer()->seat()->keyReleased(event->nativeScanCode());
+        break;
+    default:
+        break;
+    }
+}
+
 #if HAVE_INPUT
 class VirtualTerminalFilter : public InputEventFilter {
 public:
@@ -341,6 +359,7 @@ public:
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+        passToWaylandServer(event);
         static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(event);
         return true;
     }
@@ -511,6 +530,7 @@ class InternalWindowEventFilter : public InputEventFilter {
         event->setAccepted(false);
         if (QCoreApplication::sendEvent(found, event)) {
             waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+            passToWaylandServer(event);
             return true;
         }
         return false;
@@ -748,16 +768,7 @@ public:
         seat->setFocusedKeyboardSurface(nullptr);
         // pass the key event to the seat, so that it has a proper model of the currently hold keys
         // this is important for combinations like alt+shift to ensure that shift is not considered pressed
-        switch (event->type()) {
-        case QEvent::KeyPress:
-            seat->keyPressed(event->nativeScanCode());
-            break;
-        case QEvent::KeyRelease:
-            seat->keyReleased(event->nativeScanCode());
-            break;
-        default:
-            break;
-        }
+        passToWaylandServer(event);
 
         if (event->type() == QEvent::KeyPress) {
             TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
@@ -920,16 +931,7 @@ public:
         auto seat = waylandServer()->seat();
         input()->keyboard()->update();
         seat->setTimestamp(event->timestamp());
-        switch (event->type()) {
-        case QEvent::KeyPress:
-            seat->keyPressed(event->nativeScanCode());
-            break;
-        case QEvent::KeyRelease:
-            seat->keyReleased(event->nativeScanCode());
-            break;
-        default:
-            break;
-        }
+        passToWaylandServer(event);
         return true;
     }
     bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
