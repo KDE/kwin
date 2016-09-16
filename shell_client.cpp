@@ -1062,7 +1062,7 @@ bool ShellClient::hasStrut() const
     if (m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
         return false;
     }
-    return m_plasmaShellSurface->panelBehavior() != PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow;
+    return m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible;
 }
 
 void ShellClient::updateIcon()

@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using namespace KWin;
 using namespace KWayland::Client;
 
+Q_DECLARE_METATYPE(KWin::Layer)
+
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_plasma_surface-0");
 
 class PlasmaSurfaceTest : public QObject
@@ -52,6 +54,8 @@ private Q_SLOTS:
 
     void testDesktopIsOpaque();
     void testOSDPlacement();
+    void testPanelTypeHasStrut_data();
+    void testPanelTypeHasStrut();
 
 private:
     ConnectionThread *m_connection = nullptr;
@@ -233,6 +237,50 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QCOMPARE(screens()->geometry(1), geometries.at(1));
 
     QCOMPARE(c->geometry(), QRect(590, 649, 100, 50));
+}
+
+void PlasmaSurfaceTest::testPanelTypeHasStrut_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<PlasmaShellSurface::PanelBehavior>("panelBehavior");
+    QTest::addColumn<bool>("expectedStrut");
+    QTest::addColumn<QRect>("expectedMaxArea");
+    QTest::addColumn<KWin::Layer>("expectedLayer");
+
+    QTest::newRow("always visible - wlShell") << Test::ShellSurfaceType::WlShell << PlasmaShellSurface::PanelBehavior::AlwaysVisible << true << QRect(0, 50, 1280, 974) << KWin::DockLayer;
+    QTest::newRow("always visible - xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << PlasmaShellSurface::PanelBehavior::AlwaysVisible << true << QRect(0, 50, 1280, 974) << KWin::DockLayer;
+    QTest::newRow("autohide - wlShell") << Test::ShellSurfaceType::WlShell << PlasmaShellSurface::PanelBehavior::AutoHide << false << QRect(0, 0, 1280, 1024) << KWin::AboveLayer;
+    QTest::newRow("autohide - xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << PlasmaShellSurface::PanelBehavior::AutoHide << false << QRect(0, 0, 1280, 1024) << KWin::AboveLayer;
+    QTest::newRow("windows can cover - wlShell") << Test::ShellSurfaceType::WlShell << PlasmaShellSurface::PanelBehavior::WindowsCanCover << false << QRect(0, 0, 1280, 1024) << KWin::NormalLayer;
+    QTest::newRow("windows can cover - xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << PlasmaShellSurface::PanelBehavior::WindowsCanCover << false << QRect(0, 0, 1280, 1024) << KWin::NormalLayer;
+    QTest::newRow("windows go below - wlShell") << Test::ShellSurfaceType::WlShell << PlasmaShellSurface::PanelBehavior::WindowsGoBelow << false << QRect(0, 0, 1280, 1024) << KWin::DockLayer;
+    QTest::newRow("windows go below - xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << PlasmaShellSurface::PanelBehavior::WindowsGoBelow << false << QRect(0, 0, 1280, 1024) << KWin::DockLayer;
+}
+
+void PlasmaSurfaceTest::testPanelTypeHasStrut()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QVERIFY(!plasmaSurface.isNull());
+    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setPosition(QPoint(0, 0));
+    QFETCH(PlasmaShellSurface::PanelBehavior, panelBehavior);
+    plasmaSurface->setPanelBehavior(panelBehavior);
+
+    // now render and map the window
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(c);
+    QCOMPARE(c->windowType(), NET::Dock);
+    QVERIFY(c->isDock());
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QTEST(c->hasStrut(), "expectedStrut");
+    QTEST(workspace()->clientArea(MaximizeArea, 0, 0), "expectedMaxArea");
+    QTEST(c->layer(), "expectedLayer");
 }
 
 WAYLANDTEST_MAIN(PlasmaSurfaceTest)
