@@ -178,7 +178,6 @@ void QuickTilingTest::testQuickTiling()
     c->sendToScreen(1);
     QCOMPARE(c->screen(), 1);
     // quick tile should not be changed
-    QEXPECT_FAIL("maximize", "Maximize loses the state", Continue);
     QCOMPARE(c->quickTileMode(), mode);
     QTEST(c->geometry(), "secondScreen");
 }

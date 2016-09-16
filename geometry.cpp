@@ -3299,6 +3299,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
             setMaximize(false, false);
         } else {
             QRect prev_geom_restore = geometryRestore(); // setMaximize() would set moveResizeGeom as geom_restore
+            m_quickTileMode = QuickTileMaximize;
             setMaximize(true, true);
             QRect clientArea = workspace()->clientArea(MaximizeArea, this);
             if (geometry().top() != clientArea.top()) {
@@ -3306,7 +3307,6 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 r.moveTop(clientArea.top());
                 setGeometry(r);
             }
-            m_quickTileMode = QuickTileMaximize;
             setGeometryRestore(prev_geom_restore);
         }
         emit quickTileModeChanged();
@@ -3326,8 +3326,6 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
         TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
 
-        setMaximize(false, false);
-
         if (mode != QuickTileNone) {
             m_quickTileMode = mode;
             // decorations may turn off some borders when tiled
@@ -3337,6 +3335,9 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         }
         // Store the mode change
         m_quickTileMode = mode;
+
+        setMaximize(false, false);
+
         emit quickTileModeChanged();
 
         return;

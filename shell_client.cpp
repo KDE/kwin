@@ -658,6 +658,15 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     if (changeMaximizeRecursion) {
         return;
     }
+
+    if (!isResizable()) {
+        return;
+    }
+
+    const QRect clientArea = isElectricBorderMaximizing() ?
+        workspace()->clientArea(MaximizeArea, Cursor::pos(), desktop()) :
+        workspace()->clientArea(MaximizeArea, this);
+
     MaximizeMode oldMode = m_maximizeMode;
     StackingUpdatesBlocker blocker(workspace());
     RequestGeometryBlocker geometryBlocker(this);
@@ -686,12 +695,45 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         changeMaximizeRecursion = false;
     }
 
+    // TODO: borderless maximized windows
+
+    // Conditional quick tiling exit points
+    const auto oldQuickTileMode = quickTileMode();
+    if (quickTileMode() != QuickTileNone) {
+        if (oldMode == MaximizeFull &&
+                !clientArea.contains(m_geomMaximizeRestore.center())) {
+            // Not restoring on the same screen
+            // TODO: The following doesn't work for some reason
+            //quick_tile_mode = QuickTileNone; // And exit quick tile mode manually
+        } else if ((oldMode == MaximizeVertical && m_maximizeMode == MaximizeRestore) ||
+                  (oldMode == MaximizeFull && m_maximizeMode == MaximizeHorizontal)) {
+            // Modifying geometry of a tiled window
+            updateQuickTileMode(QuickTileNone); // Exit quick tile mode without restoring geometry
+        }
+    }
+
     // TODO: check rules
     if (m_maximizeMode == MaximizeFull) {
         m_geomMaximizeRestore = geometry();
+        // TODO: Client has more checks
+        if (options->electricBorderMaximize()) {
+            updateQuickTileMode(QuickTileMaximize);
+        } else {
+            updateQuickTileMode(QuickTileNone);
+        }
+        if (quickTileMode() != oldQuickTileMode) {
+            emit quickTileModeChanged();
+        }
         requestGeometry(workspace()->clientArea(MaximizeArea, this));
         workspace()->raiseClient(this);
     } else {
+        if (m_maximizeMode == MaximizeRestore) {
+            updateQuickTileMode(QuickTileNone);
+        }
+        if (quickTileMode() != oldQuickTileMode) {
+            emit quickTileModeChanged();
+        }
+
         if (m_geomMaximizeRestore.isValid()) {
             requestGeometry(m_geomMaximizeRestore);
         } else {
