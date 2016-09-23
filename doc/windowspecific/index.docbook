@@ -199,7 +199,7 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
 <para><note><para>Both <guilabel>Exact Match</guilabel> and <guilabel>Substring Match</guilabel> implement case insensitive matching.  For example, <emphasis>AB</emphasis> matches the string <emphasis>AB</emphasis>, <emphasis>ab</emphasis>, <emphasis>Ab</emphasis> and <emphasis>aB</emphasis>.</para></note>
 </para>
 <itemizedlist>
-<listitem><para><guilabel>Regular Expression</guilabel> - Qt's regular expressions are implemented - see <ulink url="http://qt-project.org/doc/qt-4.8/qregexp.html">pattern matching using regular expressions</ulink>.</para></listitem>
+<listitem><para><guilabel>Regular Expression</guilabel> - Qt's regular expressions are implemented - see <ulink url="http://doc.qt.io/qt-5/qregexp.html">pattern matching using regular expressions</ulink>.</para></listitem>
 </itemizedlist>
 <sect1 id="detect-window-properties"><title>Detect Window Properties</title>
 <para>
