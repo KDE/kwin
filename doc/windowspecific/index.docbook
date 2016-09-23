@@ -165,7 +165,7 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
 <screeninfo></screeninfo>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="kwin-window-matching.png" format="PNG"/>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
     </imageobject>
     <textobject>
       <phrase></phrase>
