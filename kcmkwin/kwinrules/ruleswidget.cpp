@@ -298,6 +298,7 @@ int RulesWidget::comboToDesktop(int val) const
         return NET::OnAllDesktops;
     return val + 1;
 }
+
 #ifdef KWIN_BUILD_ACTIVITIES
 int RulesWidget::activityToCombo(QString d) const
 {
@@ -335,8 +336,19 @@ void RulesWidget::updateActivitiesList()
             activity->addItem(info.name(), activityId);
         }
     }
+
+    auto rules = this->rules();
+    if (rules->activityrule == Rules::UnusedSetRule) {
+        enable_activity->setChecked(false);
+        Ui::RulesWidgetBase::activity->setCurrentIndex(0);
+    } else {
+        enable_activity->setChecked(true);
+        Ui::RulesWidgetBase::activity->setCurrentIndex(activityToCombo(m_selectedActivityId));
+    }
+    updateEnableactivity();
 }
 #endif
+
 static int placementToCombo(Placement::Policy placement)
 {
     static const int conv[] = {
@@ -472,6 +484,7 @@ void RulesWidget::setRules(Rules* rules)
     COMBOBOX_SET_RULE(desktop, desktopToCombo);
     SPINBOX_SET_RULE(screen, inc);
 #ifdef KWIN_BUILD_ACTIVITIES
+    m_selectedActivityId = rules->activity;
     COMBOBOX_SET_RULE(activity, activityToCombo);
 #endif
     CHECKBOX_SET_RULE(maximizehoriz,);
