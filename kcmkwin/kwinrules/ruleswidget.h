@@ -111,6 +111,7 @@ private:
     QString comboToActivity(int val) const;
     void updateActivitiesList();
     KActivities::Consumer *m_activities;
+    QString m_selectedActivityId; // we need this for async activity loading
 #endif
     int comboToTiling(int val) const;
     int inc(int i) const { return i+1; }
