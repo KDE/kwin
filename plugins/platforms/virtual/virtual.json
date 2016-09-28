@@ -29,6 +29,7 @@
         "Description[uk]": "Обробляти до віртуального буфера кадрів.", 
         "Description[x-test]": "xxRender to a virtual framebuffer.xx", 
         "Description[zh_CN]": "渲染到虚拟帧缓冲。", 
+        "Description[zh_TW]": "成像到虛擬影格緩衝區。", 
         "Id": "KWinWaylandVirtualBackend", 
         "Name": "virtual", 
         "Name[ca@valencia]": "Virtual", 
@@ -45,7 +46,8 @@
         "Name[sr@latin]": "Virtuelno", 
         "Name[sr]": "Виртуелно", 
         "Name[sv]": "virtuell", 
-        "Name[x-test]": "xxvirtualxx"
+        "Name[x-test]": "xxvirtualxx", 
+        "Name[zh_TW]": "虛擬"
     }, 
     "input": true
 }

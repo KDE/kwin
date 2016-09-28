@@ -29,6 +29,7 @@
         "Description[uk]": "Обробляти через вузол DRM.", 
         "Description[x-test]": "xxRender through drm node.xx", 
         "Description[zh_CN]": "通过 drm 结点渲染。", 
+        "Description[zh_TW]": "透過 drm 節點成像。", 
         "Id": "KWinWaylandDrmBackend", 
         "Name": "drm", 
         "Name[ca@valencia]": "DRM", 

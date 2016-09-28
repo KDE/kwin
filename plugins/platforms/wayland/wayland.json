@@ -27,6 +27,7 @@
         "Description[uk]": "Обробляти у вкладене вікно запущеного засобу композиції Wayland.", 
         "Description[x-test]": "xxRender to a nested window on running Wayland compositor.xx", 
         "Description[zh_CN]": "渲染到 Wayland 混成器上的嵌套窗口中", 
+        "Description[zh_TW]": "成像到執行中的 Wayland 的巢狀視窗。", 
         "Id": "KWinWaylandWaylandBackend", 
         "Name": "wayland", 
         "Name[ca@valencia]": "Wayland", 
