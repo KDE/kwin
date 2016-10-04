@@ -181,8 +181,10 @@ bool EglOnXBackend::initRenderingContext()
         setHavePlatformBase(havePlatformBase);
         if (havePlatformBase) {
             // Make sure that the X11 platform is supported
-            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11"))) {
-                qCWarning(KWIN_CORE) << "EGL_EXT_platform_base is supported, but EGL_EXT_platform_x11 is not. Cannot create EGLDisplay on X11";
+            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11")) &&
+                !hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_x11")) {
+                qCWarning(KWIN_CORE) << "EGL_EXT_platform_base is supported, but neither EGL_EXT_platform_x11 nor EGL_KHR_platform_x11 is supported."
+                                     << "Cannot create EGLDisplay on X11";
                 return false;
             }
 
