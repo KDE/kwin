@@ -94,7 +94,7 @@ public:
     QString displayText(const QVariant &value, const QLocale &locale) const override;
 };
 
-class DebugConsole : public QWidget
+class KWIN_EXPORT DebugConsole : public QWidget
 {
     Q_OBJECT
 public:
