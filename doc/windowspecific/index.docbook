@@ -10,15 +10,15 @@
 <author>&Lauri.Watts; &Lauri.Watts.mail;</author>
 <author>
 <personname>
-      <firstname>Parts of this documentation was converted from the KDE UserBase <ulink url=" http://userbase.kde.org/KWin Rules">KWin Rules</ulink> page.</firstname>
+      <firstname>Parts of this documentation was converted from the KDE UserBase <ulink url=" http://userbase.kde.org/KWin Rules">KWin Rules</ulink> page and updated by the &kde; Documentation team to Plasma 5.8.</firstname>
 <surname></surname>
 </personname>
       </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
       </authorgroup>
 <legalnotice>&FDLNotice;</legalnotice>
-<date>2012-06-02</date>
-      <releaseinfo>&kde; SC 4.9</releaseinfo>
+<date>2016-06-23</date>
+      <releaseinfo>Plasma 5.8</releaseinfo>
 <abstract>
 <para>Here you can customize window settings specifically only for
 some windows.</para>
@@ -313,19 +313,19 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
     <para>The width and height of the window.</para>
      </listitem>
   </varlistentry>
-  <varlistentry><term><emphasis role="bold">Maximized horizontally, Maximized vertically, Fullscreen</emphasis></term>
+  <varlistentry><term><emphasis role="bold">Maximized horizontally, Maximized vertically</emphasis></term>
     <listitem>
-    <para>These attributes are used to toggle the maximum horizontal/minimum horizontal/full-screen window attribute.</para>
+    <para>These attributes are used to toggle the maximum horizontal/minimum horizontal window attribute.</para>
      </listitem>
   </varlistentry>
-  <varlistentry><term><emphasis role="bold">Desktop</emphasis></term>
+  <varlistentry><term><emphasis role="bold">Desktop, Activity, Screen</emphasis></term>
     <listitem>
-    <para>Place the window on the specified <emphasis>(Virtual) Desktop</emphasis>.  Use <guilabel>All Desktops</guilabel> to place the window on all <emphasis>Virtual Desktops</emphasis>.</para>
+    <para>Place the window on the specified <emphasis>(Virtual) Desktop</emphasis>, <emphasis>Activity</emphasis> or <emphasis>Screen</emphasis>.  Use <guilabel>All Desktops</guilabel> to place the window on all <emphasis>Virtual Desktops</emphasis>.</para>
      </listitem>
   </varlistentry>
-  <varlistentry><term><emphasis role="bold">Minimized, Shaded</emphasis></term>
+  <varlistentry><term><emphasis role="bold">Fullscreen, Minimized, Shaded</emphasis></term>
     <listitem>
-    <para>Toggle the Minimize and Shading window attribute.  For example, a window can be started Minimized or if it is started Minimized, it can be forced to not.</para>
+    <para>Toggle the Fullscreen, Minimize and Shading window attribute.  For example, a window can be started Minimized or if it is started Minimized, it can be forced to not.</para>
      </listitem>
   </varlistentry>
 </variablelist>
@@ -389,11 +389,7 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
     <para>Create a group via a user-defined ID.  More than one rule can share the same ID to allow for seemingly unrelated windows to be grouped.</para>
      </listitem>
   </varlistentry>
-  <varlistentry><term><emphasis role="bold">Tiling</emphasis></term>
-    <listitem>
-    <para>Override the default window behavior to either <guilabel>Tiled</guilabel> or <guilabel>Floating</guilabel>.</para>
-     </listitem>
-  </varlistentry>
+
   <varlistentry><term><emphasis role="bold">Skip taskbar</emphasis></term>
     <listitem>
     <para>Toggle whether to display the window in the taskbar.</para>
@@ -401,10 +397,10 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
   </varlistentry>
   <varlistentry><term><emphasis role="bold">Skip pager</emphasis></term>
     <listitem>
-    <para>Toggle whether to display the window in pager:</para>
+    <para>Toggle whether to display the window in pager.</para>
      </listitem>
   </varlistentry>
-</variablelist>
+    </variablelist>
 <para>
 <screenshot>
 <screeninfo></screeninfo>
@@ -438,6 +434,11 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
     <para>Toggle whether to display the titlebar and frame around the window.</para>
      </listitem>
   </varlistentry>
+  <varlistentry><term><emphasis role="bold">Titlebar color scheme</emphasis></term>
+    <listitem>
+    <para>Select a color scheme for the titlebar of the window.</para>
+     </listitem>
+  </varlistentry>
   <varlistentry><term><emphasis role="bold">Active/Inactive opacity</emphasis></term>
     <listitem>
     <para>When the window is active/inactive, set its opacity to the percentage specified.</para>
@@ -447,12 +448,6 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
 <para><tip><para><guilabel>Active/Inactive opacity</guilabel> can only be affected when <guilabel>Desktop Effects</guilabel> are enabled.</para></tip>
 </para>
 <variablelist>
-  <varlistentry><term><emphasis role="bold">Moving/resizing</emphasis></term>
-    <listitem>
-    <para><emphasis>Deprecated as of &gt;4.8</emphasis></para>
-    <!-- FIXME remove para in 4.9-->
-     </listitem>
-  </varlistentry>
   <varlistentry><term><emphasis role="bold">Focus stealing prevention</emphasis></term>
     <listitem>
     <para>When a window wants focus, control on a scale (from <guilabel>None</guilabel> to <guilabel>Extreme</guilabel>) whether to honor the request and place above all other windows, or ignore its request (potentially leaving the window behind other windows):</para>
