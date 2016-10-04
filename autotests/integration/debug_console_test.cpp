@@ -522,9 +522,7 @@ void DebugConsoleTest::testClosingDebugConsole()
     QCOMPARE(c->internalWindow(), console->windowHandle());
     QVERIFY(c->isDecorated());
     c->closeWindow();
-    QEXPECT_FAIL("", "BUG 369858", Continue);
     QVERIFY(destroyedSpy.wait());
-    QCOMPARE(console->windowHandle()->isVisible(), false);
 }
 
 }

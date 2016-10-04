@@ -101,6 +101,9 @@ public:
     DebugConsole();
     virtual ~DebugConsole();
 
+protected:
+    void showEvent(QShowEvent *event) override;
+
 private:
     void initGLTab();
 
