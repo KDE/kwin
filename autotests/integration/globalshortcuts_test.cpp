@@ -133,7 +133,6 @@ void GlobalShortcutsTest::testRepeatedTrigger()
     QVERIFY(triggeredSpy.wait());
     // now release the key
     kwinApp()->platform()->keyboardKeyReleased(KEY_5, timestamp++);
-    QEXPECT_FAIL("", "BUG 369091", Continue);
     QVERIFY(!triggeredSpy.wait(500));
 
     kwinApp()->platform()->keyboardKeyReleased(KEY_WAKEUP, timestamp++);

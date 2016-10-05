@@ -463,16 +463,24 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
 {
 }
 
-KeyboardInputRedirection::~KeyboardInputRedirection()
-{
-    qDeleteAll(m_repeatTimers);
-    m_repeatTimers.clear();
-}
+KeyboardInputRedirection::~KeyboardInputRedirection() = default;
 
 void KeyboardInputRedirection::init()
 {
     Q_ASSERT(!m_inited);
     m_inited = true;
+
+    // setup key repeat
+    m_keyRepeat.timer = new QTimer(this);
+    connect(m_keyRepeat.timer, &QTimer::timeout, this,
+        [this] {
+            if (waylandServer()->seat()->keyRepeatRate() != 0) {
+                m_keyRepeat.timer->setInterval(1000 / waylandServer()->seat()->keyRepeatRate());
+            }
+            // TODO: better time
+            processKey(m_keyRepeat.key, InputRedirection::KeyboardKeyAutoRepeat, m_keyRepeat.time);
+        }
+    );
 
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
@@ -615,26 +623,14 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
                    device);
     if (state == InputRedirection::KeyboardKeyPressed) {
         if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyRepeatDelay() != 0) {
-            QTimer *timer = new QTimer;
-            timer->setInterval(waylandServer()->seat()->keyRepeatDelay());
-            connect(timer, &QTimer::timeout, this,
-                [this, timer, time, key] {
-                    const int delay = 1000 / waylandServer()->seat()->keyRepeatRate();
-                    if (timer->interval() != delay) {
-                        timer->setInterval(delay);
-                    }
-                    // TODO: better time
-                    processKey(key, InputRedirection::KeyboardKeyAutoRepeat, time);
-                }
-            );
-            m_repeatTimers.insert(key, timer);
-            timer->start();
+            m_keyRepeat.timer->setInterval(waylandServer()->seat()->keyRepeatDelay());
+            m_keyRepeat.key = key;
+            m_keyRepeat.time = time;
+            m_keyRepeat.timer->start();
         }
     } else if (state == InputRedirection::KeyboardKeyReleased) {
-        auto it = m_repeatTimers.find(key);
-        if (it != m_repeatTimers.end()) {
-            delete it.value();
-            m_repeatTimers.erase(it);
+        if (key == m_keyRepeat.key) {
+            m_keyRepeat.timer->stop();
         }
     }
 
