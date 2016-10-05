@@ -29,7 +29,6 @@
         "Description[uk]": "Обробляти до буфера кадрів.", 
         "Description[x-test]": "xxRender to framebuffer.xx", 
         "Description[zh_CN]": "渲染到帧缓冲。", 
-        "Description[zh_TW]": "成像至 framebuffer。", 
         "Id": "KWinWaylandFbdevBackend", 
         "Name": "framebuffer", 
         "Name[ca@valencia]": "Framebuffer", 
@@ -45,8 +44,7 @@
         "Name[sr@latin]": "Kadrobafer", 
         "Name[sr]": "Кадробафер", 
         "Name[sv]": "rambuffer", 
-        "Name[x-test]": "xxframebufferxx", 
-        "Name[zh_TW]": "影格緩衝區（framebuffer）"
+        "Name[x-test]": "xxframebufferxx"
     }, 
     "input": false
 }
