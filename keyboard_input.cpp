@@ -403,6 +403,24 @@ Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts() const
     if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::MetaModifier;
     }
+
+    // workaround xkbcommon limitation concerning consumed modifiers
+    // if a key could be turned into a keysym with a modifier xkbcommon
+    // considers the modifier as consumed even if not pressed
+    // e.g. alt+F3 considers alt as consumed as there is a keysym generated
+    // with ctrl+alt+F3 (vt switching)
+    // For more information see:
+    // https://bugs.freedesktop.org/show_bug.cgi?id=92818
+    // https://github.com/xkbcommon/libxkbcommon/issues/17
+
+    // the workaround is to not consider the modifiers as consumed
+    // if they are not a currently
+    // this might have other side effects, though. The only proper way to
+    // handle this is through new API in xkbcommon which doesn't exist yet
+    if (m_consumedModifiers & ~m_modifiers) {
+        return mods;
+    }
+
     return mods & ~m_consumedModifiers;
 }
 

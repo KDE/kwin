@@ -164,7 +164,6 @@ void GlobalShortcutsTest::testUserActionsMenu()
     kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     kwinApp()->platform()->keyboardKeyPressed(KEY_F3, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_F3, timestamp++);
-    QEXPECT_FAIL("", "BUG 368989", Continue);
     QTRY_VERIFY(workspace()->userActionsMenu()->isShown());
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
 }
