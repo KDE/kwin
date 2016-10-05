@@ -46,6 +46,7 @@ static void readDisplay(int pipe);
 WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
     : Application(OperationModeXwayland, argc, argv)
 {
+    QStandardPaths::setTestModeEnabled(true);
 #ifdef KWIN_BUILD_ACTIVITIES
     setUseKActivities(false);
 #endif
