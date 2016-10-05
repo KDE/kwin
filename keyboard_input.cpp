@@ -90,10 +90,15 @@ Xkb::Xkb(InputRedirection *input)
     , m_controlModifier(0)
     , m_altModifier(0)
     , m_metaModifier(0)
+    , m_numLock(0)
+    , m_capsLock(0)
+    , m_scrollLock(0)
     , m_modifiers(Qt::NoModifier)
     , m_consumedModifiers(Qt::NoModifier)
     , m_keysym(XKB_KEY_NoSymbol)
+    , m_leds()
 {
+    qRegisterMetaType<KWin::Xkb::LEDs>();
     if (!m_context) {
         qCDebug(KWIN_XKB) << "Could not create xkb context";
     } else {
@@ -219,6 +224,11 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     m_controlModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CTRL);
     m_altModifier     = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
     m_metaModifier    = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
+
+    m_numLock         = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_NUM);
+    m_capsLock        = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_CAPS);
+    m_scrollLock      = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_SCROLL);
+
     m_currentLayout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
 
     createKeymapFile();
@@ -346,6 +356,23 @@ void Xkb::updateModifiers()
         mods |= Qt::MetaModifier;
     }
     m_modifiers = mods;
+
+    // update LEDs
+    LEDs leds;
+    if (xkb_state_led_index_is_active(m_state, m_numLock) == 1) {
+        leds = leds | LED::NumLock;
+    }
+    if (xkb_state_led_index_is_active(m_state, m_capsLock) == 1) {
+        leds = leds | LED::CapsLock;
+    }
+    if (xkb_state_led_index_is_active(m_state, m_scrollLock) == 1) {
+        leds = leds | LED::ScrollLock;
+    }
+    if (m_leds != leds) {
+        m_leds = leds;
+        emit m_input->keyboard()->ledsChanged(m_leds);
+    }
+
     const xkb_layout_index_t layout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
     if (layout != m_currentLayout) {
         m_currentLayout = layout;

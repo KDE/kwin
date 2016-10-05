@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_LIBINPUT_CONNECTION_H
 
 #include "../input.h"
+#include "../keyboard_input.h"
 #include <kwinglobals.h>
 
 #include <QObject>
@@ -82,6 +83,8 @@ public:
         return m_devices;
     }
 
+    void updateLEDs(KWin::Xkb::LEDs leds);
+
 Q_SIGNALS:
     void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time, KWin::LibInput::Device *device);
     void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time, KWin::LibInput::Device *device);
@@ -135,6 +138,7 @@ private:
     QVector<Device*> m_devices;
     KSharedConfigPtr m_config;
     bool m_touchpadsEnabled = true;
+    Xkb::LEDs m_leds;
 
     KWIN_SINGLETON(Connection)
     static QThread *s_thread;
