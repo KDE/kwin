@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include <KWayland/Server/seat_interface.h>
+
 #include <KGlobalAccel>
 #include <linux/input.h>
 
@@ -43,6 +45,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testConsumedShift();
+    void testRepeatedTrigger();
 };
 
 void GlobalShortcutsTest::initTestCase()
@@ -91,6 +94,44 @@ void GlobalShortcutsTest::testConsumedShift()
     kwinApp()->platform()->keyboardKeyPressed(KEY_5, timestamp++);
     QTRY_COMPARE(triggeredSpy.count(), 1);
     kwinApp()->platform()->keyboardKeyReleased(KEY_5, timestamp++);
+
+    // release shift
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+}
+
+void GlobalShortcutsTest::testRepeatedTrigger()
+{
+    // this test verifies that holding a key, triggers repeated global shortcut
+    // in addition pressing another key should stop triggering the shortcut
+
+    QScopedPointer<QAction> action(new QAction(nullptr));
+    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
+    QSignalSpy triggeredSpy(action.data(), &QAction::triggered);
+    QVERIFY(triggeredSpy.isValid());
+    KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::Key_Percent}, KGlobalAccel::NoAutoloading);
+    input()->registerShortcut(Qt::Key_Percent, action.data());
+
+    // we need to configure the key repeat first. It is only enabled on libinput
+    waylandServer()->seat()->setKeyRepeatInfo(25, 300);
+
+    // press shift+5
+    quint32 timestamp = 0;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_WAKEUP, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_5, timestamp++);
+    QTRY_COMPARE(triggeredSpy.count(), 1);
+    // and should repeat
+    QVERIFY(triggeredSpy.wait());
+    QVERIFY(triggeredSpy.wait());
+    // now release the key
+    kwinApp()->platform()->keyboardKeyReleased(KEY_5, timestamp++);
+    QEXPECT_FAIL("", "BUG 369091", Continue);
+    QVERIFY(!triggeredSpy.wait(500));
+
+    kwinApp()->platform()->keyboardKeyReleased(KEY_WAKEUP, timestamp++);
+    QVERIFY(!triggeredSpy.wait(500));
 
     // release shift
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);

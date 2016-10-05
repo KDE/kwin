@@ -94,12 +94,15 @@ public:
     QString displayText(const QVariant &value, const QLocale &locale) const override;
 };
 
-class DebugConsole : public QWidget
+class KWIN_EXPORT DebugConsole : public QWidget
 {
     Q_OBJECT
 public:
     DebugConsole();
     virtual ~DebugConsole();
+
+protected:
+    void showEvent(QShowEvent *event) override;
 
 private:
     void initGLTab();

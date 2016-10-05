@@ -536,6 +536,22 @@ void DebugConsole::initGLTab()
     m_ui->openGLExtensionsLabel->setText(extensionsString(openGLExtensions()));
 }
 
+void DebugConsole::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+
+    // delay the connection to the show event as in ctor the windowHandle returns null
+    connect(windowHandle(), &QWindow::visibleChanged, this,
+        [this] (bool visible) {
+            if (visible) {
+                // ignore
+                return;
+            }
+            deleteLater();
+        }
+    );
+}
+
 DebugConsoleDelegate::DebugConsoleDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
 {

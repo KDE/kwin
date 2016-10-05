@@ -578,6 +578,8 @@ public:
     */
     virtual void showContextHelp();
 
+    QRect inputGeometry() const override;
+
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 

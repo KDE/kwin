@@ -538,5 +538,10 @@ quint32 Toplevel::windowId() const
     return window();
 }
 
+QRect Toplevel::inputGeometry() const
+{
+    return geometry();
+}
+
 } // namespace
 

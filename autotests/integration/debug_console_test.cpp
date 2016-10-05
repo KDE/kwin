@@ -52,6 +52,7 @@ private Q_SLOTS:
     void testWaylandClient_data();
     void testWaylandClient();
     void testInternalWindow();
+    void testClosingDebugConsole();
 };
 
 void DebugConsoleTest::initTestCase()
@@ -500,6 +501,28 @@ void DebugConsoleTest::testInternalWindow()
     QVERIFY(rowsRemovedSpy.wait());
     QCOMPARE(rowsRemovedSpy.count(), 1);
     QCOMPARE(rowsRemovedSpy.first().first().value<QModelIndex>(), internalTopLevelIndex);
+}
+
+void DebugConsoleTest::testClosingDebugConsole()
+{
+    // this test verifies that the DebugConsole gets destroyed when closing the window
+    // BUG: 369858
+
+    DebugConsole *console = new DebugConsole;
+    QSignalSpy destroyedSpy(console, &QObject::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    console->show();
+    QCOMPARE(console->windowHandle()->isVisible(), true);
+    QTRY_COMPARE(clientAddedSpy.count(), 1);
+    ShellClient *c = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(c->isInternal());
+    QCOMPARE(c->internalWindow(), console->windowHandle());
+    QVERIFY(c->isDecorated());
+    c->closeWindow();
+    QVERIFY(destroyedSpy.wait());
 }
 
 }

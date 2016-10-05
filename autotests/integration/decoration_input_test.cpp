@@ -70,6 +70,8 @@ private Q_SLOTS:
     void testPressToMove();
     void testTapToMove_data();
     void testTapToMove();
+    void testResizeOutsideWindow_data();
+    void testResizeOutsideWindow();
 
 private:
     AbstractClient *showWindow(Test::ShellSurfaceType type);
@@ -496,6 +498,69 @@ void DecorationInputTest::testTapToMove()
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 2);
     // TODO: the offset should also be included
     QCOMPARE(c->pos(), oldPos + offset2 + offset3);
+}
+
+void DecorationInputTest::testResizeOutsideWindow_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Qt::Edge>("edge");
+    QTest::addColumn<Qt::CursorShape>("expectedCursor");
+
+    QTest::newRow("wlShell - left") << Test::ShellSurfaceType::WlShell << Qt::LeftEdge << Qt::SizeHorCursor;
+    QTest::newRow("xdgShellV5 - left") << Test::ShellSurfaceType::XdgShellV5 << Qt::LeftEdge << Qt::SizeHorCursor;
+    QTest::newRow("wlShell - right") << Test::ShellSurfaceType::WlShell << Qt::RightEdge << Qt::SizeHorCursor;
+    QTest::newRow("xdgShellV5 - right") << Test::ShellSurfaceType::XdgShellV5 << Qt::RightEdge << Qt::SizeHorCursor;
+    QTest::newRow("wlShell - bottom") << Test::ShellSurfaceType::WlShell << Qt::BottomEdge << Qt::SizeVerCursor;
+    QTest::newRow("xdgShellV5 - bottom") << Test::ShellSurfaceType::XdgShellV5 << Qt::BottomEdge << Qt::SizeVerCursor;
+}
+
+void DecorationInputTest::testResizeOutsideWindow()
+{
+    // this test verifies that one can resize the window outside the decoration with NoSideBorder
+
+    // first adjust config
+    kwinApp()->config()->group("org.kde.kdecoration2").writeEntry("BorderSize", QStringLiteral("None"));
+    kwinApp()->config()->sync();
+    workspace()->slotReconfigure();
+
+    // now create window
+    QFETCH(Test::ShellSurfaceType, type);
+    AbstractClient *c = showWindow(type);
+    QVERIFY(c);
+    QVERIFY(c->isDecorated());
+    QVERIFY(!c->noBorder());
+    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    QVERIFY(c->geometry() != c->inputGeometry());
+    QVERIFY(c->inputGeometry().contains(c->geometry()));
+    QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(startMoveResizedSpy.isValid());
+
+    // go to border
+    quint32 timestamp = 1;
+    QFETCH(Qt::Edge, edge);
+    switch (edge) {
+    case Qt::LeftEdge:
+        MOTION(QPoint(c->geometry().x() -1, c->geometry().center().y()));
+        break;
+    case Qt::RightEdge:
+        MOTION(QPoint(c->geometry().x() + c->geometry().width() +1, c->geometry().center().y()));
+        break;
+    case Qt::BottomEdge:
+        MOTION(QPoint(c->geometry().center().x(), c->geometry().y() + c->geometry().height() + 1));
+        break;
+    default:
+        break;
+    }
+    QVERIFY(!c->geometry().contains(KWin::Cursor::pos()));
+
+    // pressing should trigger resize
+    PRESS;
+    QVERIFY(!c->isResize());
+    QVERIFY(startMoveResizedSpy.wait());
+    QVERIFY(c->isResize());
+
+    RELEASE;
+    QVERIFY(!c->isResize());
 }
 
 }
