@@ -44,7 +44,7 @@ public:
     void sendCapabilities(wl_resource *r);
     void sendName(wl_resource *r);
     PointerInterface *pointerForSurface(SurfaceInterface *surface) const;
-    KeyboardInterface *keyboardForSurface(SurfaceInterface *surface) const;
+    QVector<KeyboardInterface *> keyboardsForSurface(SurfaceInterface *surface) const;
     TouchInterface *touchForSurface(SurfaceInterface *surface) const;
     DataDeviceInterface *dataDeviceForSurface(SurfaceInterface *surface) const;
     TextInputInterface *textInputForSurface(SurfaceInterface *surface) const;
@@ -111,7 +111,7 @@ public:
         Modifiers modifiers;
         struct Focus {
             SurfaceInterface *surface = nullptr;
-            KeyboardInterface *keyboard = nullptr;
+            QVector<KeyboardInterface*> keyboards;
             QMetaObject::Connection destroyConnection;
             quint32 serial = 0;
             DataDeviceInterface *selection = nullptr;
