@@ -334,6 +334,8 @@ public:
     */
     QModelIndex first() const;
 
+    bool eventFilter(QObject *watcher, QEvent *event) override;
+
 Q_SIGNALS:
     /**
     * This signal is fired when the TabBoxConfig changes
