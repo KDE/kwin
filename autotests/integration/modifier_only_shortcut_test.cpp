@@ -49,6 +49,8 @@ private Q_SLOTS:
     void testTrigger_data();
     void testTrigger();
     void testCapsLock();
+    void testGlobalShortcutsDisabled_data();
+    void testGlobalShortcutsDisabled();
 };
 
 class Target : public QObject
@@ -285,6 +287,75 @@ void ModifierOnlyShortcutTest::testCapsLock()
     kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
+    QCOMPARE(triggeredSpy.count(), 1);
+}
+
+void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled_data()
+{
+    QTest::addColumn<QStringList>("metaConfig");
+    QTest::addColumn<QStringList>("altConfig");
+    QTest::addColumn<QStringList>("controlConfig");
+    QTest::addColumn<QStringList>("shiftConfig");
+    QTest::addColumn<int>("modifier");
+
+    const QStringList trigger = QStringList{s_serviceName, s_path, s_serviceName, QStringLiteral("shortcut")};
+    const QStringList e = QStringList();
+
+    QTest::newRow("leftMeta") << trigger << e << e << e << KEY_LEFTMETA;
+    QTest::newRow("rightMeta") << trigger << e << e << e << KEY_RIGHTMETA;
+    QTest::newRow("leftAlt") << e << trigger << e << e << KEY_LEFTALT;
+    QTest::newRow("rightAlt") << e << trigger << e << e << KEY_RIGHTALT;
+    QTest::newRow("leftControl") << e << e << trigger << e << KEY_LEFTCTRL;
+    QTest::newRow("rightControl") << e << e << trigger << e << KEY_RIGHTCTRL;
+    QTest::newRow("leftShift") << e << e << e << trigger << KEY_LEFTSHIFT;
+    QTest::newRow("rightShift") << e << e <<  e << trigger <<KEY_RIGHTSHIFT;
+}
+
+void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled()
+{
+    // this test verifies that when global shortcuts are disabled inside KWin (e.g. through a window rule)
+    // the modifier only shortcuts do not trigger.
+    // see BUG: 370146
+    Target target;
+    QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
+    QVERIFY(triggeredSpy.isValid());
+
+    KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
+    QFETCH(QStringList, metaConfig);
+    QFETCH(QStringList, altConfig);
+    QFETCH(QStringList, shiftConfig);
+    QFETCH(QStringList, controlConfig);
+    group.writeEntry("Meta", metaConfig);
+    group.writeEntry("Alt", altConfig);
+    group.writeEntry("Shift", shiftConfig);
+    group.writeEntry("Control", controlConfig);
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // trigger once to verify the shortcut works
+    quint32 timestamp = 1;
+    QFETCH(int, modifier);
+    QVERIFY(!workspace()->globalShortcutsDisabled());
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QCOMPARE(triggeredSpy.count(), 1);
+    triggeredSpy.clear();
+
+    // now disable global shortcuts
+    workspace()->disableGlobalShortcutsForClient(true);
+    QVERIFY(workspace()->globalShortcutsDisabled());
+    // Should not get triggered
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
+    QCOMPARE(triggeredSpy.count(), 0);
+    triggeredSpy.clear();
+
+    // enable again
+    workspace()->disableGlobalShortcutsForClient(false);
+    QVERIFY(!workspace()->globalShortcutsDisabled());
+    // should get triggered again
+    kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 1);
 }
 

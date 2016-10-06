@@ -310,7 +310,8 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     } else {
         m_modOnlyShortcut.pressCount--;
         if (m_modOnlyShortcut.pressCount == 0 &&
-            m_modifiers == Qt::NoModifier) {
+            m_modifiers == Qt::NoModifier &&
+            !workspace()->globalShortcutsDisabled()) {
             if (m_modOnlyShortcut.modifier != Qt::NoModifier) {
                 const auto list = options->modifierOnlyDBusShortcut(m_modOnlyShortcut.modifier);
                 if (list.size() >= 4) {
@@ -403,6 +404,24 @@ Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts() const
     if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::MetaModifier;
     }
+
+    // workaround xkbcommon limitation concerning consumed modifiers
+    // if a key could be turned into a keysym with a modifier xkbcommon
+    // considers the modifier as consumed even if not pressed
+    // e.g. alt+F3 considers alt as consumed as there is a keysym generated
+    // with ctrl+alt+F3 (vt switching)
+    // For more information see:
+    // https://bugs.freedesktop.org/show_bug.cgi?id=92818
+    // https://github.com/xkbcommon/libxkbcommon/issues/17
+
+    // the workaround is to not consider the modifiers as consumed
+    // if they are not a currently
+    // this might have other side effects, though. The only proper way to
+    // handle this is through new API in xkbcommon which doesn't exist yet
+    if (m_consumedModifiers & ~m_modifiers) {
+        return mods;
+    }
+
     return mods & ~m_consumedModifiers;
 }
 
@@ -463,16 +482,24 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
 {
 }
 
-KeyboardInputRedirection::~KeyboardInputRedirection()
-{
-    qDeleteAll(m_repeatTimers);
-    m_repeatTimers.clear();
-}
+KeyboardInputRedirection::~KeyboardInputRedirection() = default;
 
 void KeyboardInputRedirection::init()
 {
     Q_ASSERT(!m_inited);
     m_inited = true;
+
+    // setup key repeat
+    m_keyRepeat.timer = new QTimer(this);
+    connect(m_keyRepeat.timer, &QTimer::timeout, this,
+        [this] {
+            if (waylandServer()->seat()->keyRepeatRate() != 0) {
+                m_keyRepeat.timer->setInterval(1000 / waylandServer()->seat()->keyRepeatRate());
+            }
+            // TODO: better time
+            processKey(m_keyRepeat.key, InputRedirection::KeyboardKeyAutoRepeat, m_keyRepeat.time);
+        }
+    );
 
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
@@ -615,26 +642,14 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
                    device);
     if (state == InputRedirection::KeyboardKeyPressed) {
         if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyRepeatDelay() != 0) {
-            QTimer *timer = new QTimer;
-            timer->setInterval(waylandServer()->seat()->keyRepeatDelay());
-            connect(timer, &QTimer::timeout, this,
-                [this, timer, time, key] {
-                    const int delay = 1000 / waylandServer()->seat()->keyRepeatRate();
-                    if (timer->interval() != delay) {
-                        timer->setInterval(delay);
-                    }
-                    // TODO: better time
-                    processKey(key, InputRedirection::KeyboardKeyAutoRepeat, time);
-                }
-            );
-            m_repeatTimers.insert(key, timer);
-            timer->start();
+            m_keyRepeat.timer->setInterval(waylandServer()->seat()->keyRepeatDelay());
+            m_keyRepeat.key = key;
+            m_keyRepeat.time = time;
+            m_keyRepeat.timer->start();
         }
     } else if (state == InputRedirection::KeyboardKeyReleased) {
-        auto it = m_repeatTimers.find(key);
-        if (it != m_repeatTimers.end()) {
-            delete it.value();
-            m_repeatTimers.erase(it);
+        if (key == m_keyRepeat.key) {
+            m_keyRepeat.timer->stop();
         }
     }
 

@@ -23,9 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "screens.h"
 #include "shell_client.h"
+#include "useractions.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include <KWayland/Client/shell.h>
+#include <KWayland/Client/surface.h>
 #include <KWayland/Server/seat_interface.h>
 
 #include <KGlobalAccel>
@@ -46,6 +49,7 @@ private Q_SLOTS:
 
     void testConsumedShift();
     void testRepeatedTrigger();
+    void testUserActionsMenu();
 };
 
 void GlobalShortcutsTest::initTestCase()
@@ -67,12 +71,14 @@ void GlobalShortcutsTest::initTestCase()
 
 void GlobalShortcutsTest::init()
 {
+    QVERIFY(Test::setupWaylandConnection(s_socketName));
     screens()->setCurrent(0);
     KWin::Cursor::setPos(QPoint(640, 512));
 }
 
 void GlobalShortcutsTest::cleanup()
 {
+    Test::destroyWaylandConnection();
 }
 
 void GlobalShortcutsTest::testConsumedShift()
@@ -127,7 +133,6 @@ void GlobalShortcutsTest::testRepeatedTrigger()
     QVERIFY(triggeredSpy.wait());
     // now release the key
     kwinApp()->platform()->keyboardKeyReleased(KEY_5, timestamp++);
-    QEXPECT_FAIL("", "BUG 369091", Continue);
     QVERIFY(!triggeredSpy.wait(500));
 
     kwinApp()->platform()->keyboardKeyReleased(KEY_WAKEUP, timestamp++);
@@ -135,6 +140,32 @@ void GlobalShortcutsTest::testRepeatedTrigger()
 
     // release shift
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+}
+
+void GlobalShortcutsTest::testUserActionsMenu()
+{
+    // this test tries to trigger the user actions menu with Alt+F3
+    // the problem here is that pressing F3 consumes modifiers as it's part of the
+    // Ctrl+alt+F3 keysym for vt switching. xkbcommon considers all modifiers as consumed
+    // which a transformation to any keysym would cause
+    // for more information see:
+    // https://bugs.freedesktop.org/show_bug.cgi?id=92818
+    // https://github.com/xkbcommon/libxkbcommon/issues/17
+
+    // first create a window
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+
+    quint32 timestamp = 0;
+    QVERIFY(!workspace()->userActionsMenu()->isShown());
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_F3, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_F3, timestamp++);
+    QTRY_VERIFY(workspace()->userActionsMenu()->isShown());
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
 }
 
 WAYLANDTEST_MAIN(GlobalShortcutsTest)

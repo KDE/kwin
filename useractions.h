@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_USERACTIONS_H
 #include "ui_shortcutdialog.h"
 
+#include <kwinglobals.h>
+
 // Qt
 #include <QDialog>
 #include <QObject>
@@ -52,7 +54,7 @@ class Client;
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  **/
-class UserActionsMenu : public QObject
+class KWIN_EXPORT UserActionsMenu : public QObject
 {
     Q_OBJECT
 public:
