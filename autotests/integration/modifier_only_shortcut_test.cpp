@@ -347,7 +347,6 @@ void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled()
     // Should not get triggered
     kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
-    QEXPECT_FAIL("", "BUG 370146", Continue);
     QCOMPARE(triggeredSpy.count(), 0);
     triggeredSpy.clear();
 

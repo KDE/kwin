@@ -310,7 +310,8 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     } else {
         m_modOnlyShortcut.pressCount--;
         if (m_modOnlyShortcut.pressCount == 0 &&
-            m_modifiers == Qt::NoModifier) {
+            m_modifiers == Qt::NoModifier &&
+            !workspace()->globalShortcutsDisabled()) {
             if (m_modOnlyShortcut.modifier != Qt::NoModifier) {
                 const auto list = options->modifierOnlyDBusShortcut(m_modOnlyShortcut.modifier);
                 if (list.size() >= 4) {
