@@ -699,6 +699,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             QRegion valid;
             // prepare rendering makes context current on the output
             QRegion repaint = m_backend->prepareRenderingForScreen(i);
+            GLVertexBuffer::setVirtualScreenGeometry(geo);
 
             const GLenum status = glGetGraphicsResetStatus();
             if (status != GL_NO_ERROR) {
@@ -725,6 +726,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             handleGraphicsReset(status);
             return 0;
         }
+        GLVertexBuffer::setVirtualScreenGeometry(screens()->geometry());
 
         int mask = 0;
         updateProjectionMatrix();
@@ -919,7 +921,6 @@ void SceneOpenGL::screenGeometryChanged(const QSize &size)
     glViewport(0,0, size.width(), size.height());
     m_backend->screenGeometryChanged(size);
     GLRenderTarget::setVirtualScreenSize(size);
-    GLVertexBuffer::setVirtualScreenSize(size);
 }
 
 void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
@@ -1009,7 +1010,6 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
 
     const QSize &s = screens()->size();
     GLRenderTarget::setVirtualScreenSize(s);
-    GLVertexBuffer::setVirtualScreenSize(s);
 
     // push one shader on the stack so that one is always bound
     ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
