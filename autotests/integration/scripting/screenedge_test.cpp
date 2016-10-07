@@ -25,6 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "scripting/scripting.h"
 #include "effect_builtins.h"
+#include "workspace.h"
+
+#define private public
+#include "screenedge.h"
+#undef private
 
 #include <KConfigGroup>
 
@@ -44,6 +49,10 @@ private Q_SLOTS:
 
     void testEdge_data();
     void testEdge();
+    void testEdgeUnregister();
+
+private:
+    void triggerConfigReload();
 };
 
 void ScreenEdgeTest::initTestCase()
@@ -64,7 +73,7 @@ void ScreenEdgeTest::initTestCase()
         plugins.writeEntry(name + QStringLiteral("Enabled"), false);
     }
 
-    // disable electric border pushaback
+    // disable electric border pushback
     config->group("Windows").writeEntry("ElectricBorderPushbackPixels", 0);
 
     config->sync();
@@ -73,6 +82,9 @@ void ScreenEdgeTest::initTestCase()
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QVERIFY(Scripting::self());
+
+    ScreenEdges::self()->setTimeThreshold(0);
+    ScreenEdges::self()->setReActivationThreshold(0);
 }
 
 void ScreenEdgeTest::init()
@@ -87,11 +99,13 @@ void ScreenEdgeTest::init()
 void ScreenEdgeTest::cleanup()
 {
     // try to unload the script
-    const QString scriptToLoad = QFINDTESTDATA("./scripts/screenedge.js");
-    if (!scriptToLoad.isEmpty()) {
-        if (Scripting::self()->isScriptLoaded(scriptToLoad)) {
-            QVERIFY(Scripting::self()->unloadScript(scriptToLoad));
-            QTRY_VERIFY(!Scripting::self()->isScriptLoaded(scriptToLoad));
+    const QStringList scripts = {QFINDTESTDATA("./scripts/screenedge.js"), QFINDTESTDATA("./scripts/screenedgeunregister.js")};
+    for (const QString &script: scripts) {
+        if (!script.isEmpty()) {
+            if (Scripting::self()->isScriptLoaded(script)) {
+                QVERIFY(Scripting::self()->unloadScript(script));
+                QTRY_VERIFY(!Scripting::self()->isScriptLoaded(script));
+            }
         }
     }
 }
@@ -109,6 +123,9 @@ void ScreenEdgeTest::testEdge_data()
     QTest::newRow("BottomLeft") << KWin::ElectricBottomLeft << QPoint(0, 1023);
     QTest::newRow("Left") << KWin::ElectricLeft << QPoint(0, 512);
     QTest::newRow("TopLeft") << KWin::ElectricTopLeft << QPoint(0, 0);
+
+    //repeat a row to show previously unloading and re-registering works
+    QTest::newRow("Top")      << KWin::ElectricTop << QPoint(512, 0);
 }
 
 void ScreenEdgeTest::testEdge()
@@ -143,6 +160,57 @@ void ScreenEdgeTest::testEdge()
     KWin::Cursor::setPos(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 1);
     QVERIFY(workspace()->showingDesktop());
+}
+
+void ScreenEdgeTest::triggerConfigReload() {
+    workspace()->slotReconfigure();
+}
+
+void ScreenEdgeTest::testEdgeUnregister()
+{
+    const QString scriptToLoad = QFINDTESTDATA("./scripts/screenedgeunregister.js");
+    QVERIFY(!scriptToLoad.isEmpty());
+
+    Scripting::self()->loadScript(scriptToLoad);
+    auto s = Scripting::self()->findScript(scriptToLoad);
+    auto configGroup = s->config();
+    configGroup.writeEntry("Edge", int(KWin::ElectricLeft));
+    configGroup.sync();
+    const QPoint triggerPos = QPoint(0, 512);
+
+    QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+    s->run();
+    QVERIFY(runningChangedSpy.wait());
+
+    QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
+    QVERIFY(showDesktopSpy.isValid());
+
+    //trigger the edge
+    KWin::Cursor::setPos(triggerPos);
+    QCOMPARE(showDesktopSpy.count(), 1);
+
+    //reset
+    KWin::Cursor::setPos(500,500);
+    workspace()->slotToggleShowDesktop();
+    showDesktopSpy.clear();
+
+    //trigger again, to show that retriggering works
+    KWin::Cursor::setPos(triggerPos);
+    QCOMPARE(showDesktopSpy.count(), 1);
+
+    //reset
+    KWin::Cursor::setPos(500,500);
+    workspace()->slotToggleShowDesktop();
+    showDesktopSpy.clear();
+
+    //make the script unregister the edge
+    configGroup.writeEntry("mode", "unregister");
+    triggerConfigReload();
+    KWin::Cursor::setPos(triggerPos);
+    QCOMPARE(showDesktopSpy.count(), 0); //not triggered
+
+    //force the script to unregister a non-registered edge to prove it doesn't explode
+    triggerConfigReload();
 }
 
 WAYLANDTEST_MAIN(ScreenEdgeTest)

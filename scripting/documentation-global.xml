@@ -59,6 +59,14 @@
             </memberdef>
             <memberdef kind="function">
                 <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::Scripting::unregisterScreenEdge</definition>
+                <argsstring>(ElectricBorder border)</argsstring>
+                <name>unregisterScreenEdge</name>
+                <read></read>
+                <detaileddescription>Unregisters the callback for the screen edge. This will disconnect all callbacks from this script to that edge.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
                 <definition>bool KWin::Scripting::registerShortcut</definition>
                 <argsstring>(QString title, QString text, QString keySequence, QScriptValue callback)</argsstring>
                 <name>registerShortcut</name>

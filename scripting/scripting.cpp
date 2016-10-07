@@ -154,6 +154,12 @@ QScriptValue kwinRegisterScreenEdge(QScriptContext *context, QScriptEngine *engi
     return KWin::registerScreenEdge<KWin::AbstractScript*>(context, engine);
 }
 
+QScriptValue kwinUnregisterScreenEdge(QScriptContext *context, QScriptEngine *engine)
+{
+    return KWin::unregisterScreenEdge<KWin::AbstractScript*>(context, engine);
+}
+
+
 QScriptValue kwinRegisterUserActionsMenu(QScriptContext *context, QScriptEngine *engine)
 {
     return KWin::registerUserActionsMenu<KWin::AbstractScript*>(context, engine);
@@ -277,6 +283,8 @@ void KWin::Script::installScriptFunctions(QScriptEngine* engine)
     registerGlobalShortcutFunction(this, engine, kwinScriptGlobalShortcut);
     // add screen edge
     registerScreenEdgeFunction(this, engine, kwinRegisterScreenEdge);
+    unregisterScreenEdgeFunction(this, engine, kwinUnregisterScreenEdge);
+
     // add user actions menu register function
     regesterUserActionsMenuFunction(this, engine, kwinRegisterUserActionsMenu);
     // add assertions

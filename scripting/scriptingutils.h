@@ -171,6 +171,31 @@ QScriptValue registerScreenEdge(QScriptContext *context, QScriptEngine *engine)
 }
 
 template<class T>
+QScriptValue unregisterScreenEdge(QScriptContext *context, QScriptEngine *engine)
+{
+    T script = qobject_cast<T>(context->callee().data().toQObject());
+    if (!script) {
+        return engine->undefinedValue();
+    }
+    if (!validateParameters(context, 1, 1)) {
+        return engine->undefinedValue();
+    }
+    if (!validateArgumentType<int>(context)) {
+        return engine->undefinedValue();
+    }
+
+    const int edge = context->argument(0).toVariant().toInt();
+    QHash<int, QList<QScriptValue> >::iterator it = script->screenEdgeCallbacks().find(edge);
+    if (it == script->screenEdgeCallbacks().end()) {
+        //not previously registered
+        return engine->newVariant(false);
+    }
+    ScreenEdges::self()->unreserve(static_cast<KWin::ElectricBorder>(edge), script);
+    script->screenEdgeCallbacks().erase(it);
+    return engine->newVariant(true);
+}
+
+template<class T>
 QScriptValue registerUserActionsMenu(QScriptContext *context, QScriptEngine *engine)
 {
     T script = qobject_cast<T>(context->callee().data().toQObject());
@@ -269,6 +294,13 @@ inline void registerScreenEdgeFunction(QObject *parent, QScriptEngine *engine, Q
     QScriptValue shortcutFunc = engine->newFunction(function);
     shortcutFunc.setData(engine->newQObject(parent));
     engine->globalObject().setProperty(QStringLiteral("registerScreenEdge"), shortcutFunc);
+}
+
+inline void unregisterScreenEdgeFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
+{
+    QScriptValue shortcutFunc = engine->newFunction(function);
+    shortcutFunc.setData(engine->newQObject(parent));
+    engine->globalObject().setProperty(QStringLiteral("unregisterScreenEdge"), shortcutFunc);
 }
 
 inline void regesterUserActionsMenuFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
