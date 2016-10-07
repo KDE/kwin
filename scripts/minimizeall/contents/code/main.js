@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
+var registeredBorders = [];
+
 function isRelevant(client) {
     return client.minimizable &&
            (client.onAllDesktops || client.desktop === workspace.currentDesktop);
@@ -48,4 +50,21 @@ var minimizeAllWindows = function() {
     clients = [];
 }
 
+function init() {
+    for (var i in registeredBorders) {
+        unregisterScreenEdge(registeredBorders[i]);
+    }
+
+    registeredBorders = [];
+
+    var borders = readConfig("BorderActivate", "").toString().split(",");
+    for (var i in borders) {
+        registeredBorders.push(borders[i]);
+        registerScreenEdge(borders[i], minimizeAllWindows);
+    }
+}
+
+options.configChanged.connect(init);
+
 registerShortcut("MinimizeAll", "MinimizeAll", "Meta+Shift+D", minimizeAllWindows);
+init();
