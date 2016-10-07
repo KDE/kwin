@@ -19,6 +19,7 @@ target_link_libraries( kcm_kwinscreenedges ${X11_LIBRARIES}
     KF5::ConfigWidgets
     KF5::I18n
     KF5::Service
+    KF5::Package
     KF5::Plasma
     kwin4_effect_builtins
     )

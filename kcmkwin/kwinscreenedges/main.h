@@ -62,6 +62,7 @@ private Q_SLOTS:
 private:
     KWinScreenEdgesConfigForm* m_ui;
     KSharedConfigPtr m_config;
+    QStringList m_scripts; //list of script IDs ordered in the list they are presented in the menu
 
     enum EffectActions {
         PresentWindowsAll = ELECTRIC_ACTION_COUNT, // Start at the end of built in actions
@@ -72,7 +73,8 @@ private:
         Cylinder,
         Sphere,
         TabBox,
-        TabBoxAlternative
+        TabBoxAlternative,
+        EffectCount
     };
 
     bool effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const;

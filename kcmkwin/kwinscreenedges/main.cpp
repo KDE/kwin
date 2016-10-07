@@ -27,6 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPluginFactory>
+#include <KPackage/Package>
+#include <KPackage/PackageLoader>
+#include <KPluginInfo>
 #include <QtDBus/QtDBus>
 
 K_PLUGIN_FACTORY(KWinScreenEdgesConfigFactory, registerPlugin<KWin::KWinScreenEdgesConfig>();)
@@ -205,6 +208,22 @@ void KWinScreenEdgesConfig::monitorInit()
     monitorAddItem(i18n("Toggle window switching"));
     monitorAddItem(i18n("Toggle alternative window switching"));
 
+    const QString scriptFolder = QStringLiteral("kwin/scripts/");
+    const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
+
+    KConfigGroup config(m_config, "Plugins");
+    for (const KPluginMetaData &script: scripts) {
+        if (script.value(QStringLiteral("X-KWin-Border-Activate")) != QLatin1String("true")) {
+            continue;
+        }
+
+        if (!config.readEntry(script.pluginId() + QStringLiteral("Enabled"), script.isEnabledByDefault())) {
+            continue;
+        }
+        m_scripts << script.pluginId();
+        monitorAddItem(script.name());
+    }
+
     monitorShowEvent();
 }
 
@@ -303,6 +322,16 @@ void KWinScreenEdgesConfig::monitorLoad()
     foreach (int i, list) {
         monitorChangeEdge(ElectricBorder(i), int(TabBoxAlternative));
     }
+
+    for (int i=0; i < m_scripts.size(); i++) {
+        int index = EffectCount + i;
+        KConfigGroup scriptConfig(m_config, "Script-"+m_scripts[i]);
+        list.append(int(ElectricNone));
+        list = scriptConfig.readEntry("BorderActivate", list);
+        for (int i: list) {
+            monitorChangeEdge(ElectricBorder(i), index);
+        }
+    }
 }
 
 void KWinScreenEdgesConfig::monitorSaveAction(int edge, const QString& configName)
@@ -366,6 +395,13 @@ void KWinScreenEdgesConfig::monitorSave()
                                 monitorCheckEffectHasEdge(int(TabBox)));
     tabBoxConfig.writeEntry("BorderAlternativeActivate",
                                 monitorCheckEffectHasEdge(int(TabBoxAlternative)));
+
+    for (int i=0; i < m_scripts.size(); i++) {
+        int index = EffectCount + i;
+        KConfigGroup scriptConfig(m_config, "Script-"+m_scripts[i]);
+            scriptConfig.writeEntry("BorderActivate",
+                                monitorCheckEffectHasEdge(index));
+    }
 }
 
 void KWinScreenEdgesConfig::monitorDefaults()

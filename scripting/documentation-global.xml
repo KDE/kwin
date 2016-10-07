@@ -55,7 +55,9 @@
                 <argsstring>(ElectricBorder border, QScriptValue callback)</argsstring>
                 <name>registerScreenEdge</name>
                 <read></read>
-                <detaileddescription>Registers the callback for the screen edge. When the mouse gets pushed against the given edge the callback will be invoked.</detaileddescription>
+                <detaileddescription>Registers the callback for the screen edge. When the mouse gets pushed against the given edge the callback will be invoked.
+                    Scripts can also add "X-KWin-Border-Activate" to their metadata file to have the effect listed in the screen edges KCM. This will write an entry BorderConfig= in the script configuration object with a list of ScreenEdges the user has selected.
+                    </detaileddescription>
             </memberdef>
             <memberdef kind="function">
                 <type>Q_SCRIPTABLE bool</type>
