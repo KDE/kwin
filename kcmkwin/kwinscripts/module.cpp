@@ -33,8 +33,10 @@
 #include <KMessageBox>
 #include <KMessageWidget>
 #include <KPluginInfo>
-#include <KServiceTypeTrader>
+#include <KPackage/PackageLoader>
+#include <KPackage/Package>
 #include <Plasma/Package>
+
 #include <KNewStuff3/KNS3/DownloadDialog>
 
 #include "version.h"
@@ -95,8 +97,18 @@ void Module::importScript()
 
 void Module::updateListViewContents()
 {
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Script", "not (exist [X-KWin-Exclude-Listing]) or [X-KWin-Exclude-Listing] == false");
-    QList<KPluginInfo> scriptinfos = KPluginInfo::fromServices(offers);
+    auto filter =  [](const KPluginMetaData &md) {
+        if (md.value(QStringLiteral("X-KWin-Exclude-Listing")) == QLatin1String("true") ) {
+            return false;
+        }
+        return true;
+    };
+
+    const QString scriptFolder = QStringLiteral("kwin/scripts/");
+    const auto scripts = KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), scriptFolder, filter);
+
+    QList<KPluginInfo> scriptinfos = KPluginInfo::fromMetaData(scripts.toVector());
+
     ui->scriptSelector->addPlugins(scriptinfos, KPluginSelector::ReadConfigFile, QString(), QString(), m_kwinConfig);
 }
 
