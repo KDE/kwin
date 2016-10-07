@@ -28,6 +28,7 @@ namespace KWayland
 {
 namespace Server
 {
+class RelativePointerInterface;
 
 class PointerInterface::Private : public Resource::Private
 {
@@ -39,9 +40,12 @@ public:
     QPointer<SurfaceInterface> focusedChildSurface;
     QMetaObject::Connection destroyConnection;
     Cursor *cursor = nullptr;
+    QVector<RelativePointerInterface*> relativePointers;
 
     void sendLeave(SurfaceInterface *surface, quint32 serial);
     void sendEnter(SurfaceInterface *surface, const QPointF &parentSurfacePosition, quint32 serial);
+
+    void registerRelativePointer(RelativePointerInterface *relativePointer);
 
 private:
     PointerInterface *q_func() {

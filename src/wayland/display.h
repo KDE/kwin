@@ -74,6 +74,8 @@ class TextInputManagerInterface;
 class XdgShellV5Interface;
 enum class XdgShellInterfaceVersion;
 class XdgShellInterface;
+enum class RelativePointerInterfaceVersion;
+class RelativePointerManagerInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -188,6 +190,14 @@ public:
      * @since 5.25
      **/
     XdgShellInterface *createXdgShell(const XdgShellInterfaceVersion &version, QObject *parent = nullptr);
+
+    /**
+     * Creates the RelativePointerManagerInterface in interface @p version
+     *
+     * @returns The created manager object
+     * @since 5.28
+     **/
+    RelativePointerManagerInterface *createRelativePointerManager(const RelativePointerInterfaceVersion &version, QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

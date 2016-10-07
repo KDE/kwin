@@ -20,6 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "pointer_interface.h"
 #include "pointer_interface_p.h"
 #include "resource_p.h"
+#include "relativepointer_interface_p.h"
 #include "seat_interface.h"
 #include "display.h"
 #include "subcompositor_interface.h"
@@ -75,6 +76,16 @@ void PointerInterface::Private::sendLeave(SurfaceInterface *surface, quint32 ser
     if (resource && surface->resource()) {
         wl_pointer_send_leave(resource, serial, surface->resource());
     }
+}
+
+void PointerInterface::Private::registerRelativePointer(RelativePointerInterface *relativePointer)
+{
+    relativePointers << relativePointer;
+    QObject::connect(relativePointer, &QObject::destroyed, q,
+        [this, relativePointer] {
+            relativePointers.removeOne(relativePointer);
+        }
+    );
 }
 
 namespace {
@@ -211,9 +222,26 @@ Cursor *PointerInterface::cursor() const
     return d->cursor;
 }
 
+void PointerInterface::relativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds)
+{
+    Q_D();
+    if (d->relativePointers.isEmpty()) {
+        return;
+    }
+    for (auto it = d->relativePointers.constBegin(), end = d->relativePointers.constEnd(); it != end; it++) {
+        (*it)->relativeMotion(delta, deltaNonAccelerated, microseconds);
+    }
+    client()->flush();
+}
+
 PointerInterface::Private *PointerInterface::d_func() const
 {
     return reinterpret_cast<Private*>(d.data());
+}
+
+PointerInterface *PointerInterface::get(wl_resource *native)
+{
+    return Private::get<PointerInterface>(native);
 }
 
 Cursor::Private::Private(Cursor *q, PointerInterface *pointer)

@@ -47,3 +47,5 @@ zwp_text_input_manager_v2;TextInputManagerUnstableV2
 xdg_shell;XdgShellV5
 xdg_surface;XdgSurfaceV5
 xdg_popup;XdgPopupV5
+zwp_relative_pointer_manager_v1;RelativePointerManagerUnstableV1
+zwp_relative_pointer_v1;RelativePointerUnstableV1

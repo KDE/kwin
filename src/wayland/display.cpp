@@ -35,6 +35,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow_interface.h"
 #include "blur_interface.h"
 #include "contrast_interface.h"
+#include "relativepointer_interface_p.h"
 #include "server_decoration_interface.h"
 #include "slide_interface.h"
 #include "shell_interface.h"
@@ -367,6 +368,18 @@ XdgShellInterface *Display::createXdgShell(const XdgShellInterfaceVersion &versi
     }
     connect(this, &Display::aboutToTerminate, x, [x] { delete x; });
     return x;
+}
+
+RelativePointerManagerInterface *Display::createRelativePointerManager(const RelativePointerInterfaceVersion &version, QObject *parent)
+{
+    RelativePointerManagerInterface *r = nullptr;
+    switch (version) {
+    case RelativePointerInterfaceVersion::UnstableV1:
+        r = new RelativePointerManagerUnstableV1Interface(this, parent);
+        break;
+    }
+    connect(this, &Display::aboutToTerminate, r, [r] { delete r; });
+    return r;
 }
 
 void Display::createShm()

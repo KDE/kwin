@@ -30,6 +30,7 @@ namespace Server
 {
 
 class Cursor;
+class RelativePointerManagerUnstableV1Interface;
 class SeatInterface;
 class SurfaceInterface;
 
@@ -55,6 +56,12 @@ public:
      **/
     Cursor *cursor() const;
 
+    /**
+     * @returns The PointerInterface for the @p native resource.
+     * @since 5.28
+     **/
+    static PointerInterface *get(wl_resource *native);
+
 Q_SIGNALS:
     /**
      * Signal emitted whenever the Cursor changes.
@@ -66,7 +73,9 @@ private:
     void buttonPressed(quint32 button, quint32 serial);
     void buttonReleased(quint32 button, quint32 serial);
     void axis(Qt::Orientation orientation, quint32 delta);
+    void relativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
     friend class SeatInterface;
+    friend class RelativePointerManagerUnstableV1Interface;
     explicit PointerInterface(SeatInterface *parent, wl_resource *parentResource);
     class Private;
     Private *d_func() const;

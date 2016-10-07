@@ -27,6 +27,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/registry.h"
 #include "../../src/client/output.h"
 #include "../../src/client/seat.h"
+#include "../../src/client/relativepointer.h"
 #include "../../src/client/server_decoration.h"
 #include "../../src/client/shell.h"
 #include "../../src/client/subcompositor.h"
@@ -47,6 +48,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/outputdevice_interface.h"
 #include "../../src/server/textinput_interface.h"
 #include "../../src/server/xdgshell_interface.h"
+#include "../../src/server/relativepointer_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
 #include <wayland-dpms-client-protocol.h>
@@ -54,6 +56,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <wayland-text-input-v0-client-protocol.h>
 #include <wayland-text-input-v2-client-protocol.h>
 #include <wayland-xdg-shell-v5-client-protocol.h>
+#include <wayland-relativepointer-unstable-v1-client-protocol.h>
 
 class TestWaylandRegistry : public QObject
 {
@@ -80,6 +83,7 @@ private Q_SLOTS:
     void testBindTextInputManagerUnstableV0();
     void testBindTextInputManagerUnstableV2();
     void testBindXdgShellUnstableV5();
+    void testBindRelativePointerManagerUnstableV1();
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
@@ -101,6 +105,7 @@ private:
     KWayland::Server::TextInputManagerInterface *m_textInputManagerV0;
     KWayland::Server::TextInputManagerInterface *m_textInputManagerV2;
     KWayland::Server::XdgShellInterface *m_xdgShellUnstableV5;
+    KWayland::Server::RelativePointerManagerInterface *m_relativePointerV1;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-registry-0");
@@ -120,6 +125,7 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_textInputManagerV0(nullptr)
     , m_textInputManagerV2(nullptr)
     , m_xdgShellUnstableV5(nullptr)
+    , m_relativePointerV1(nullptr)
 {
 }
 
@@ -161,6 +167,9 @@ void TestWaylandRegistry::init()
     m_xdgShellUnstableV5 = m_display->createXdgShell(KWayland::Server::XdgShellInterfaceVersion::UnstableV5);
     m_xdgShellUnstableV5->create();
     QCOMPARE(m_xdgShellUnstableV5->interfaceVersion(), KWayland::Server::XdgShellInterfaceVersion::UnstableV5);
+    m_relativePointerV1 = m_display->createRelativePointerManager(KWayland::Server::RelativePointerInterfaceVersion::UnstableV1);
+    m_relativePointerV1->create();
+    QCOMPARE(m_relativePointerV1->interfaceVersion(), KWayland::Server::RelativePointerInterfaceVersion::UnstableV1);
 }
 
 void TestWaylandRegistry::cleanup()
@@ -301,6 +310,11 @@ void TestWaylandRegistry::testBindTextInputManagerUnstableV2()
 void TestWaylandRegistry::testBindXdgShellUnstableV5()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::XdgShellUnstableV5, SIGNAL(xdgShellUnstableV5Announced(quint32,quint32)), bindXdgShellUnstableV5, xdg_shell_destroy)
+}
+
+void TestWaylandRegistry::testBindRelativePointerManagerUnstableV1()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::RelativePointerManagerUnstableV1, SIGNAL(relativePointerManagerUnstableV1Announced(quint32,quint32)), bindRelativePointerManagerUnstableV1, zwp_relative_pointer_manager_v1_destroy)
 }
 
 #undef TEST_BIND

@@ -23,6 +23,8 @@ set(SERVER_LIB_SRCS
     plasmawindowmanagement_interface.cpp
     qtsurfaceextension_interface.cpp
     region_interface.cpp
+    relativepointer_interface.cpp
+    relativepointer_interface_v1.cpp
     resource.cpp
     seat_interface.cpp
     slide_interface.cpp
@@ -93,6 +95,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/contrast.xml
     BASENAME contrast
+)
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/relative-pointer-unstable-v1.xml
+    BASENAME relativepointer-unstable-v1
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
@@ -180,6 +187,7 @@ install(FILES
   plasmawindowmanagement_interface.h
   qtsurfaceextension_interface.h
   region_interface.h
+  relativepointer_interface.h
   resource.h
   seat_interface.h
   server_decoration_interface.h

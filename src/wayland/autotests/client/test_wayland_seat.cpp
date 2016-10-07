@@ -30,6 +30,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/pointer.h"
 #include "../../src/client/surface.h"
 #include "../../src/client/registry.h"
+#include "../../src/client/relativepointer.h"
 #include "../../src/client/seat.h"
 #include "../../src/client/shm_pool.h"
 #include "../../src/client/subcompositor.h"
@@ -41,6 +42,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/display.h"
 #include "../../src/server/keyboard_interface.h"
 #include "../../src/server/pointer_interface.h"
+#include "../../src/server/relativepointer_interface.h"
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/subcompositor_interface.h"
 #include "../../src/server/surface_interface.h"
@@ -87,11 +89,13 @@ private:
     KWayland::Server::CompositorInterface *m_compositorInterface;
     KWayland::Server::SeatInterface *m_seatInterface;
     KWayland::Server::SubCompositorInterface *m_subCompositorInterface;
+    KWayland::Server::RelativePointerManagerInterface *m_relativePointerManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Seat *m_seat;
     KWayland::Client::ShmPool *m_shm;
     KWayland::Client::SubCompositor * m_subCompositor;
+    KWayland::Client::RelativePointerManager *m_relativePointerManager;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
 };
@@ -104,11 +108,13 @@ TestWaylandSeat::TestWaylandSeat(QObject *parent)
     , m_compositorInterface(nullptr)
     , m_seatInterface(nullptr)
     , m_subCompositorInterface(nullptr)
+    , m_relativePointerManagerInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_seat(nullptr)
     , m_shm(nullptr)
     , m_subCompositor(nullptr)
+    , m_relativePointerManager(nullptr)
     , m_queue(nullptr)
     , m_thread(nullptr)
 {
@@ -133,6 +139,11 @@ void TestWaylandSeat::init()
     QVERIFY(m_subCompositorInterface);
     m_subCompositorInterface->create();
     QVERIFY(m_subCompositorInterface->isValid());
+
+    m_relativePointerManagerInterface = m_display->createRelativePointerManager(RelativePointerInterfaceVersion::UnstableV1, m_display);
+    QVERIFY(m_relativePointerManagerInterface);
+    m_relativePointerManagerInterface->create();
+    QVERIFY(m_relativePointerManagerInterface->isValid());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -182,10 +193,19 @@ void TestWaylandSeat::init()
                                                    registry.interface(KWayland::Client::Registry::Interface::SubCompositor).version,
                                                    this);
     QVERIFY(m_subCompositor->isValid());
+
+    m_relativePointerManager = registry.createRelativePointerManager(registry.interface(KWayland::Client::Registry::Interface::RelativePointerManagerUnstableV1).name,
+                                                                     registry.interface(KWayland::Client::Registry::Interface::RelativePointerManagerUnstableV1).version,
+                                                                     this);
+    QVERIFY(m_relativePointerManager->isValid());
 }
 
 void TestWaylandSeat::cleanup()
 {
+    if (m_relativePointerManager) {
+        delete m_relativePointerManager;
+        m_relativePointerManager = nullptr;
+    }
     if (m_subCompositor) {
         delete m_subCompositor;
         m_subCompositor = nullptr;
@@ -225,6 +245,9 @@ void TestWaylandSeat::cleanup()
 
     delete m_subCompositorInterface;
     m_subCompositorInterface = nullptr;
+
+    delete m_relativePointerManagerInterface;
+    m_relativePointerManagerInterface = nullptr;
 
     delete m_display;
     m_display = nullptr;
@@ -342,6 +365,8 @@ void TestWaylandSeat::testPointer()
     Pointer *p = m_seat->createPointer(m_seat);
     const Pointer &cp = *p;
     QVERIFY(p->isValid());
+    QScopedPointer<RelativePointer> relativePointer(m_relativePointerManager->createRelativePointer(p));
+    QVERIFY(relativePointer->isValid());
     QSignalSpy pointerCreatedSpy(m_seatInterface, SIGNAL(pointerCreated(KWayland::Server::PointerInterface*)));
     QVERIFY(pointerCreatedSpy.isValid());
     // once the pointer is created it should be set as the focused pointer
@@ -372,6 +397,9 @@ void TestWaylandSeat::testPointer()
     QSignalSpy buttonSpy(p, SIGNAL(buttonStateChanged(quint32,quint32,quint32,KWayland::Client::Pointer::ButtonState)));
     QVERIFY(buttonSpy.isValid());
 
+    QSignalSpy relativeMotionSpy(relativePointer.data(), &RelativePointer::relativeMotion);
+    QVERIFY(relativeMotionSpy.isValid());
+
     QVERIFY(!p->enteredSurface());
     QVERIFY(!cp.enteredSurface());
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
@@ -392,6 +420,14 @@ void TestWaylandSeat::testPointer()
     QVERIFY(motionSpy.wait());
     QCOMPARE(motionSpy.first().first().toPoint(), QPoint(0, 1));
     QCOMPARE(motionSpy.first().last().value<quint32>(), quint32(1));
+
+    // test relative motion
+    m_seatInterface->relativePointerMotion(QSizeF(1, 2), QSizeF(3, 4), quint64(-1));
+    QVERIFY(relativeMotionSpy.wait());
+    QCOMPARE(relativeMotionSpy.count(), 1);
+    QCOMPARE(relativeMotionSpy.first().at(0).toSizeF(), QSizeF(1, 2));
+    QCOMPARE(relativeMotionSpy.first().at(1).toSizeF(), QSizeF(3, 4));
+    QCOMPARE(relativeMotionSpy.first().at(2).value<quint64>(), quint64(-1));
 
     // test axis
     m_seatInterface->setTimestamp(2);
@@ -460,12 +496,24 @@ void TestWaylandSeat::testPointer()
     QVERIFY(!p->enteredSurface());
     QVERIFY(!cp.enteredSurface());
 
+    // now a relative motion should not be sent to the relative pointer
+    m_seatInterface->relativePointerMotion(QSizeF(1, 2), QSizeF(3, 4), quint64(-1));
+    QVERIFY(!relativeMotionSpy.wait());
+
     // enter it again
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(0, 0));
     QCOMPARE(focusedPointerChangedSpy.count(), 6);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(p->enteredSurface(), s);
     QCOMPARE(cp.enteredSurface(), s);
+
+    // send another relative motion event
+    m_seatInterface->relativePointerMotion(QSizeF(4, 5), QSizeF(6, 7), quint64(1));
+    QVERIFY(relativeMotionSpy.wait());
+    QCOMPARE(relativeMotionSpy.count(), 2);
+    QCOMPARE(relativeMotionSpy.last().at(0).toSizeF(), QSizeF(4, 5));
+    QCOMPARE(relativeMotionSpy.last().at(1).toSizeF(), QSizeF(6, 7));
+    QCOMPARE(relativeMotionSpy.last().at(2).value<quint64>(), quint64(1));
 
     // destroy the focused pointer
     QSignalSpy unboundSpy(serverPointer, &Resource::unbound);
@@ -1368,6 +1416,7 @@ void TestWaylandSeat::testDestroy()
     connect(m_connection, &ConnectionThread::connectionDied, m_seat, &Seat::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_subCompositor, &SubCompositor::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_relativePointerManager, &RelativePointerManager::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
     QVERIFY(m_seat->isValid());
 
@@ -1378,6 +1427,7 @@ void TestWaylandSeat::testDestroy()
     m_compositorInterface = nullptr;
     m_seatInterface = nullptr;
     m_subCompositorInterface = nullptr;
+    m_relativePointerManagerInterface = nullptr;
     QVERIFY(connectionDiedSpy.wait());
 
     // now the seat should be destroyed;

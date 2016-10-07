@@ -367,6 +367,42 @@ public:
      * @since 5.6
      **/
     bool hasImplicitPointerGrab(quint32 serial) const;
+
+    /**
+     * A relative motion is in the same dimension as regular motion events,
+     * except they do not represent an absolute position. For example,
+     * moving a pointer from (x, y) to (x', y') would have the equivalent
+     * relative motion (x' - x, y' - y). If a pointer motion caused the
+     * absolute pointer position to be clipped by for example the edge of the
+     * monitor, the relative motion is unaffected by the clipping and will
+     * represent the unclipped motion.
+     *
+     * This method also contains non-accelerated motion deltas (@p deltaNonAccelerated).
+     * The non-accelerated delta is, when applicable, the regular pointer motion
+     * delta as it was before having applied motion acceleration and other
+     * transformations such as normalization.
+     *
+     * Note that the non-accelerated delta does not represent 'raw' events as
+     * they were read from some device. Pointer motion acceleration is device-
+     * and configuration-specific and non-accelerated deltas and accelerated
+     * deltas may have the same value on some devices.
+     *
+     * Relative motions are not coupled to wl_pointer.motion events (see @link{setPointerPos},
+     * and can be sent in combination with such events, but also independently. There may
+     * also be scenarios where wl_pointer.motion is sent, but there is no
+     * relative motion. The order of an absolute and relative motion event
+     * originating from the same physical motion is not guaranteed.
+     *
+     * Sending relative pointer events only makes sense if the RelativePointerManagerInterface
+     * is created on the Display.
+     *
+     * @param delta Motion vector
+     * @param deltaNonAccelerated non-accelerated motion vector
+     * @param microseconds timestamp with microseconds granularity
+     * @see setPointerPos
+     * @since 5.28
+     **/
+    void relativePointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
     ///@}
 
     /**

@@ -846,6 +846,14 @@ quint32 SeatInterface::pointerButtonSerial(quint32 button) const
     return it.value();
 }
 
+void SeatInterface::relativePointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds)
+{
+    Q_D();
+    if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
+        d->globalPointer.focus.pointer->relativeMotion(delta, deltaNonAccelerated, microseconds);
+    }
+}
+
 void SeatInterface::keyPressed(quint32 key)
 {
     Q_D();
