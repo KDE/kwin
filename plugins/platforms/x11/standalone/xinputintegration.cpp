@@ -132,6 +132,35 @@ private:
     Xkb *m_xkb = nullptr;
 };
 
+class XKeyPressReleaseEventFilter : public X11EventFilter
+{
+public:
+    XKeyPressReleaseEventFilter(uint32_t type)
+        : X11EventFilter(type)
+    {}
+    ~XKeyPressReleaseEventFilter() = default;
+
+    bool event(xcb_generic_event_t *event) override {
+        xcb_key_press_event_t *ke = reinterpret_cast<xcb_key_press_event_t *>(event);
+        if (m_xkb && ke->event == ke->root) {
+            const uint8_t eventType = event->response_type & ~0x80;
+            if (eventType == XCB_KEY_PRESS) {
+                m_xkb->updateKey(ke->detail - 8, InputRedirection::KeyboardKeyPressed);
+            } else {
+                m_xkb->updateKey(ke->detail - 8, InputRedirection::KeyboardKeyReleased);
+            }
+        }
+        return false;
+    }
+
+    void setXkb(Xkb *xkb) {
+        m_xkb = xkb;
+    }
+
+private:
+    // TODO: QPointer
+    Xkb *m_xkb = nullptr;
+};
 
 XInputIntegration::XInputIntegration(QObject *parent)
     : QObject(parent)
@@ -207,6 +236,10 @@ void XInputIntegration::startListening()
     m_xiEventFilter.reset(new XInputEventFilter(m_xiOpcode));
     m_xiEventFilter->setCursor(m_x11Cursor);
     m_xiEventFilter->setXkb(m_xkb);
+    m_keyPressFilter.reset(new XKeyPressReleaseEventFilter(XCB_KEY_PRESS));
+    m_keyPressFilter->setXkb(m_xkb);
+    m_keyReleaseFilter.reset(new XKeyPressReleaseEventFilter(XCB_KEY_RELEASE));
+    m_keyReleaseFilter->setXkb(m_xkb);
 }
 
 }

@@ -28,6 +28,7 @@ namespace KWin
 {
 
 class XInputEventFilter;
+class XKeyPressReleaseEventFilter;
 class X11Cursor;
 class Xkb;
 
@@ -58,6 +59,8 @@ private:
     Xkb *m_xkb = nullptr;
 
     QScopedPointer<XInputEventFilter> m_xiEventFilter;
+    QScopedPointer<XKeyPressReleaseEventFilter> m_keyPressFilter;
+    QScopedPointer<XKeyPressReleaseEventFilter> m_keyReleaseFilter;
 };
 
 }
