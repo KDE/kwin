@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "input.h"
+#include "input_event.h"
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "touch_input.h"
@@ -43,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/fakeinput_interface.h>
 #include <KWayland/Server/seat_interface.h>
+#include <KWayland/Server/relativepointer_interface.h>
 #include <decorations/decoratedclient.h>
 #include <KDecoration2/Decoration>
 //screenlocker
@@ -892,13 +894,18 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         switch (event->type()) {
-        case QEvent::MouseMove:
+        case QEvent::MouseMove: {
             if (event->buttons() == Qt::NoButton) {
                 // update pointer window only if no button is pressed
                 input()->pointer()->update();
             }
             seat->setPointerPos(event->globalPos());
+            MouseEvent *e = static_cast<MouseEvent*>(event);
+            if (e->delta() != QSizeF()) {
+                seat->relativePointerMotion(e->delta(), e->deltaUnaccelerated(), e->timestampMicroseconds());
+            }
             break;
+        }
         case QEvent::MouseButtonPress:
             seat->pointerButtonPressed(nativeButton);
             break;
@@ -1232,6 +1239,12 @@ void InputRedirection::setupLibInput()
     LibInput::Connection *conn = LibInput::Connection::create(this);
     m_libInput = conn;
     if (conn) {
+
+        if (waylandServer()) {
+            // create relative pointer manager
+            waylandServer()->display()->createRelativePointerManager(KWayland::Server::RelativePointerInterfaceVersion::UnstableV1, waylandServer()->display())->create();
+        }
+
         conn->setInputConfig(m_inputConfig);
         conn->setup();
         connect(conn, &LibInput::Connection::eventsRead, this,
@@ -1251,8 +1264,8 @@ void InputRedirection::setupLibInput()
         connect(conn, &LibInput::Connection::swipeGestureCancelled, m_pointer, &PointerInputRedirection::processSwipeGestureCancelled);
         connect(conn, &LibInput::Connection::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
         connect(conn, &LibInput::Connection::pointerMotion, this,
-            [this] (QPointF delta, uint32_t time, LibInput::Device *device) {
-                m_pointer->processMotion(m_pointer->pos() + delta, time, device);
+            [this] (const QSizeF &delta, const QSizeF &deltaNonAccel, uint32_t time, quint64 timeMicroseconds, LibInput::Device *device) {
+                m_pointer->processMotion(m_pointer->pos() + QPointF(delta.width(), delta.height()), delta, deltaNonAccel, time, timeMicroseconds, device);
             }
         );
         connect(conn, &LibInput::Connection::pointerMotionAbsolute, this,

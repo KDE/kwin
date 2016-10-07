@@ -75,8 +75,8 @@ int main(int argc, char **argv)
                 }
             );
             QObject::connect(conn, &Connection::pointerMotion,
-                [](QPointF delta) {
-                    std::cout << "Got pointer motion: " << delta.x() << "/" << delta.y() << std::endl;
+                [](const QSizeF &delta) {
+                    std::cout << "Got pointer motion: " << delta.width() << "/" << delta.height() << std::endl;
                 }
             );
             QObject::connect(conn, &Connection::pointerAxisChanged,

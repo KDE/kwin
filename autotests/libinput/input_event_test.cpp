@@ -58,7 +58,7 @@ void InputEventsTest::testInitMouseEvent()
     QFETCH(QEvent::Type, type);
     // now create our own event
     MouseEvent event(type, QPointF(100, 200), Qt::LeftButton, Qt::LeftButton | Qt::RightButton,
-                     Qt::ShiftModifier | Qt::ControlModifier, 300, &d);
+                     Qt::ShiftModifier | Qt::ControlModifier, 300, QSizeF(1, 2), QSizeF(3, 4), quint64(-1), &d);
     // and verify the contract of QMouseEvent
     QCOMPARE(event.type(), type);
     QCOMPARE(event.globalPos(), QPoint(100, 200));
@@ -70,6 +70,9 @@ void InputEventsTest::testInitMouseEvent()
     QCOMPARE(event.timestamp(), 300ul);
     // and our custom argument
     QCOMPARE(event.device(), &d);
+    QCOMPARE(event.delta(), QSizeF(1, 2));
+    QCOMPARE(event.deltaUnaccelerated(), QSizeF(3, 4));
+    QCOMPARE(event.timestampMicroseconds(), quint64(-1));
 }
 
 void InputEventsTest::testInitKeyEvent_data()

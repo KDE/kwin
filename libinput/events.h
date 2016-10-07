@@ -89,10 +89,12 @@ public:
 
     QPointF absolutePos() const;
     QPointF absolutePos(const QSize &size) const;
-    QPointF delta() const;
+    QSizeF delta() const;
+    QSizeF deltaUnaccelerated() const;
     uint32_t button() const;
     InputRedirection::PointerButtonState buttonState() const;
     uint32_t time() const;
+    quint64 timeMicroseconds() const;
     QVector<InputRedirection::PointerAxis> axis() const;
     qreal axisValue(InputRedirection::PointerAxis a) const;
 

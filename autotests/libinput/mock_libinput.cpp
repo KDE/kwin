@@ -450,9 +450,24 @@ double libinput_event_pointer_get_dy(struct libinput_event_pointer *event)
     return event->delta.height();
 }
 
+double libinput_event_pointer_get_dx_unaccelerated(struct libinput_event_pointer *event)
+{
+    return event->delta.width();
+}
+
+double libinput_event_pointer_get_dy_unaccelerated(struct libinput_event_pointer *event)
+{
+    return event->delta.height();
+}
+
 uint32_t libinput_event_pointer_get_time(struct libinput_event_pointer *event)
 {
     return event->time;
+}
+
+uint64_t libinput_event_pointer_get_time_usec(struct libinput_event_pointer *event)
+{
+    return quint64(event->time * 1000);
 }
 
 uint32_t libinput_event_pointer_get_button(struct libinput_event_pointer *event)

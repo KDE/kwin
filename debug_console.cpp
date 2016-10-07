@@ -68,6 +68,11 @@ static QString timestampRow(quint32 timestamp)
     return tableRow(i18n("Timestamp"), timestamp);
 }
 
+static QString timestampRowUsec(quint64 timestamp)
+{
+    return tableRow(i18n("Timestamp (µsec)"), timestamp);
+}
+
 static QString buttonToString(Qt::MouseButton button)
 {
     switch (button) {
@@ -171,14 +176,27 @@ bool DebugConsoleFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
 
     text.append(s_tableStart);
     switch (event->type()) {
-    case QEvent::MouseMove:
+    case QEvent::MouseMove: {
         text.append(tableHeaderRow(i18nc("A mouse pointer motion event", "Pointer Motion")));
+        auto e = static_cast<MouseEvent*>(event);
 #if HAVE_INPUT
-        text.append(deviceRow(static_cast<MouseEvent*>(event)->device()));
+        text.append(deviceRow(e->device()));
 #endif
         text.append(timestamp);
+        if (e->timestampMicroseconds() != 0) {
+            text.append(timestampRowUsec(e->timestampMicroseconds()));
+        }
+        if (e->delta() != QSizeF()) {
+            text.append(tableRow(i18nc("The relative mouse movement", "Delta"),
+                                 QStringLiteral("%1/%2").arg(e->delta().width()).arg(e->delta().height())));
+        }
+        if (e->deltaUnaccelerated() != QSizeF()) {
+            text.append(tableRow(i18nc("The relative mouse movement", "Delta (not accelerated)"),
+                                 QStringLiteral("%1/%2").arg(e->deltaUnaccelerated().width()).arg(e->deltaUnaccelerated().height())));
+        }
         text.append(tableRow(i18nc("The global mouse pointer position", "Global Position"), QStringLiteral("%1/%2").arg(event->pos().x()).arg(event->pos().y())));
         break;
+    }
     case QEvent::MouseButtonPress:
         text.append(tableHeaderRow(i18nc("A mouse pointer button press event", "Pointer Button Press")));
 #if HAVE_INPUT

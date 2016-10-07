@@ -328,20 +328,24 @@ void Connection::processEvents()
             }
             case LIBINPUT_EVENT_POINTER_MOTION: {
                 PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                QPointF delta = pe->delta();
+                auto delta = pe->delta();
+                auto deltaNonAccel = pe->deltaUnaccelerated();
                 quint32 latestTime = pe->time();
+                quint64 latestTimeUsec = pe->timeMicroseconds();
                 auto it = m_eventQueue.begin();
                 while (it != m_eventQueue.end()) {
                     if ((*it)->type() == LIBINPUT_EVENT_POINTER_MOTION) {
                         QScopedPointer<PointerEvent> p(static_cast<PointerEvent*>(*it));
                         delta += p->delta();
+                        deltaNonAccel += p->deltaUnaccelerated();
                         latestTime = p->time();
+                        latestTimeUsec = p->timeMicroseconds();
                         it = m_eventQueue.erase(it);
                     } else {
                         break;
                     }
                 }
-                emit pointerMotion(delta, latestTime, pe->device());
+                emit pointerMotion(delta, deltaNonAccel, latestTime, latestTimeUsec, pe->device());
                 break;
             }
             case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {

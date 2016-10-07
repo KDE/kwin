@@ -88,6 +88,10 @@ public:
     void processMotion(const QPointF &pos, uint32_t time, LibInput::Device *device = nullptr);
     /**
      * @internal
+     **/
+    void processMotion(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device);
+    /**
+     * @internal
      */
     void processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, LibInput::Device *device = nullptr);
     /**

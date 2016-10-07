@@ -162,12 +162,18 @@ void PointerInputRedirection::init()
 
 void PointerInputRedirection::processMotion(const QPointF &pos, uint32_t time, LibInput::Device *device)
 {
+    processMotion(pos, QSizeF(), QSizeF(), time, 0, device);
+}
+
+void PointerInputRedirection::processMotion(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device)
+{
     if (!m_inited) {
         return;
     }
     updatePosition(pos);
     MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
-                     m_input->keyboardModifiers(), time, device);
+                     m_input->keyboardModifiers(), time,
+                     delta, deltaNonAccelerated, timeUsec, device);
 
     const auto &filters = m_input->filters();
     for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
@@ -199,7 +205,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
     }
 
     MouseEvent event(type, m_pos, buttonToQtMouseButton(button), m_qtButtons,
-                     m_input->keyboardModifiers(), time, device);
+                     m_input->keyboardModifiers(), time, QSizeF(), QSizeF(), 0, device);
 
     const auto &filters = m_input->filters();
     for (auto it = filters.begin(), end = filters.end(); it != end; it++) {

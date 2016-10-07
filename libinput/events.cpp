@@ -133,15 +133,26 @@ QPointF PointerEvent::absolutePos(const QSize &size) const
                    libinput_event_pointer_get_absolute_y_transformed(m_pointerEvent, size.height()));
 }
 
-QPointF PointerEvent::delta() const
+QSizeF PointerEvent::delta() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_MOTION);
-    return QPointF(libinput_event_pointer_get_dx(m_pointerEvent), libinput_event_pointer_get_dy(m_pointerEvent));
+    return QSizeF(libinput_event_pointer_get_dx(m_pointerEvent), libinput_event_pointer_get_dy(m_pointerEvent));
+}
+
+QSizeF PointerEvent::deltaUnaccelerated() const
+{
+    Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_MOTION);
+    return QSizeF(libinput_event_pointer_get_dx_unaccelerated(m_pointerEvent), libinput_event_pointer_get_dy_unaccelerated(m_pointerEvent));
 }
 
 uint32_t PointerEvent::time() const
 {
     return libinput_event_pointer_get_time(m_pointerEvent);
+}
+
+quint64 PointerEvent::timeMicroseconds() const
+{
+    return libinput_event_pointer_get_time_usec(m_pointerEvent);
 }
 
 uint32_t PointerEvent::button() const

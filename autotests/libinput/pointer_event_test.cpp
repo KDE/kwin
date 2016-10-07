@@ -128,6 +128,7 @@ void TestLibinputPointerEvent::testButton()
     QTEST(pe->buttonState(), "expectedButtonState");
     QCOMPARE(pe->button(), button);
     QCOMPARE(pe->time(), time);
+    QCOMPARE(pe->timeMicroseconds(), quint64(time * 1000));
 }
 
 void TestLibinputPointerEvent::testAxis_data()
@@ -183,7 +184,7 @@ void TestLibinputPointerEvent::testMotion()
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_MOTION);
     QCOMPARE(pe->time(), 500u);
-    QCOMPARE(pe->delta(), QPointF(2.1, 4.5));
+    QCOMPARE(pe->delta(), QSizeF(2.1, 4.5));
 }
 
 void TestLibinputPointerEvent::testAbsoluteMotion()

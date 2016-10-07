@@ -24,8 +24,12 @@ namespace KWin
 
 MouseEvent::MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton button,
                        Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers,
-                       quint32 timestamp, LibInput::Device *device)
+                       quint32 timestamp, const QSizeF &delta, const QSizeF &deltaNonAccelerated,
+                       quint64 timestampMicroseconds, LibInput::Device *device)
             : QMouseEvent(type, pos, pos, button, buttons, modifiers)
+            , m_delta(delta)
+            , m_deltaUnccelerated(deltaNonAccelerated)
+            , m_timestampMicroseconds(timestampMicroseconds)
             , m_device(device)
 {
     setTimestamp(timestamp);

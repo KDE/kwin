@@ -86,7 +86,7 @@ Q_SIGNALS:
     void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time, KWin::LibInput::Device *device);
     void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time, KWin::LibInput::Device *device);
     void pointerMotionAbsolute(QPointF orig, QPointF screen, quint32 time, KWin::LibInput::Device *device);
-    void pointerMotion(QPointF delta, quint32 time, KWin::LibInput::Device *device);
+    void pointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
     void pointerAxisChanged(KWin::InputRedirection::PointerAxis axis, qreal delta, quint32 time, KWin::LibInput::Device *device);
     void touchFrame(KWin::LibInput::Device *device);
     void touchCanceled(KWin::LibInput::Device *device);
