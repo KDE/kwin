@@ -286,7 +286,7 @@ void KWin::Script::installScriptFunctions(QScriptEngine* engine)
     unregisterScreenEdgeFunction(this, engine, kwinUnregisterScreenEdge);
 
     // add user actions menu register function
-    regesterUserActionsMenuFunction(this, engine, kwinRegisterUserActionsMenu);
+    registerUserActionsMenuFunction(this, engine, kwinRegisterUserActionsMenu);
     // add assertions
     QScriptValue assertTrueFunc = engine->newFunction(kwinAssertTrue);
     engine->globalObject().setProperty(QStringLiteral("assertTrue"), assertTrueFunc);

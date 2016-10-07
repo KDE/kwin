@@ -303,7 +303,7 @@ inline void unregisterScreenEdgeFunction(QObject *parent, QScriptEngine *engine,
     engine->globalObject().setProperty(QStringLiteral("unregisterScreenEdge"), shortcutFunc);
 }
 
-inline void regesterUserActionsMenuFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
+inline void registerUserActionsMenuFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
 {
     QScriptValue shortcutFunc = engine->newFunction(function);
     shortcutFunc.setData(engine->newQObject(parent));
