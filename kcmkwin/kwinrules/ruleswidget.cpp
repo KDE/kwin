@@ -160,6 +160,19 @@ RulesWidget::RulesWidget(QWidget* parent)
 
     KColorSchemeManager *schemes = new KColorSchemeManager(this);
     decocolor->setModel(schemes->model());
+
+    // hide autogrouping as it's currently not supported
+    // BUG 370301
+    line_11->hide();
+    enable_autogroup->hide();
+    autogroup->hide();
+    rule_autogroup->hide();
+    enable_autogroupid->hide();
+    autogroupid->hide();
+    rule_autogroupid->hide();
+    enable_autogroupfg->hide();
+    autogroupfg->hide();
+    rule_autogroupfg->hide();
 }
 
 #undef SETUP
