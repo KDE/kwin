@@ -51,6 +51,7 @@ public:
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerTextInput(TextInputInterface *textInput);
     void endDrag(quint32 serial);
+    void cancelPreviousSelection(DataDeviceInterface *newlySelectedDataDevice);
 
     QString name;
     bool pointer = false;

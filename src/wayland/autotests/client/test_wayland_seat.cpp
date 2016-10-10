@@ -1487,6 +1487,19 @@ void TestWaylandSeat::testSelection()
     m_seatInterface->setSelection(nullptr);
     QVERIFY(selectionClearedSpy.wait());
     QCOMPARE(selectionSpy.count(), 2);
+
+    // create a second ddi and a data source
+    QScopedPointer<DataDevice> dd2(ddm->getDataDevice(m_seat));
+    QVERIFY(dd2->isValid());
+    QScopedPointer<DataSource> ds2(ddm->createDataSource());
+    QVERIFY(ds2->isValid());
+    ds2->offer(QStringLiteral("text/plain"));
+    dd2->setSelection(0, ds2.data());
+    QVERIFY(selectionSpy.wait());
+    QSignalSpy cancelledSpy(ds2.data(), &DataSource::cancelled);
+    QVERIFY(cancelledSpy.isValid());
+    m_seatInterface->setSelection(ddi);
+    QVERIFY(cancelledSpy.wait());
 }
 
 void TestWaylandSeat::testTouch()
