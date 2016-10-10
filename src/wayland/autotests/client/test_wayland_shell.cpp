@@ -65,6 +65,7 @@ private Q_SLOTS:
     void testResize();
     void testDisconnect();
     void testWhileDestroying();
+    void testClientDisconnecting();
 
 private:
     KWayland::Server::Display *m_display;
@@ -793,6 +794,47 @@ void TestWaylandShell::testWhileDestroying()
     QVERIFY(clientErrorSpy.isEmpty());
     QVERIFY(!clientErrorSpy.wait(100));
     QVERIFY(clientErrorSpy.isEmpty());
+}
+
+void TestWaylandShell::testClientDisconnecting()
+{
+    // this test tries to request a new surface size while the client is actually already destroyed
+    // see BUG: 370232
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // create ShellSurface
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QSignalSpy shellSurfaceCreatedSpy(m_shellInterface, &ShellInterface::surfaceCreated);
+    QVERIFY(shellSurfaceCreatedSpy.isValid());
+    QScopedPointer<ShellSurface> ps(m_shell->createSurface(s.data()));
+    QVERIFY(shellSurfaceCreatedSpy.wait());
+
+    auto serverShellSurface = shellSurfaceCreatedSpy.first().first().value<ShellSurfaceInterface*>();
+    QVERIFY(serverShellSurface);
+
+    QSignalSpy shellSurfaceUnboundSpy(serverShellSurface, &Resource::unbound);
+    QVERIFY(shellSurfaceUnboundSpy.isValid());
+
+    QScopedPointer<Surface> s2(m_compositor->createSurface());
+    QScopedPointer<ShellSurface> ps2(m_shell->createSurface(s2.data()));
+    QVERIFY(shellSurfaceCreatedSpy.wait());
+    auto serverShellSurface2 = shellSurfaceCreatedSpy.last().first().value<ShellSurfaceInterface*>();
+    QVERIFY(serverShellSurface2);
+
+    connect(serverShellSurface, &Resource::unbound, this,
+        [serverShellSurface, serverShellSurface2] {
+            serverShellSurface2->requestSize(QSize(100, 200));
+        }
+    );
+
+    m_connection->deleteLater();
+    m_connection = nullptr;
+    m_thread->quit();
+    m_thread->wait();
+    delete m_thread;
+    m_thread = nullptr;
+
+    QVERIFY(shellSurfaceUnboundSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestWaylandShell)

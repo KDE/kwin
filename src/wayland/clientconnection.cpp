@@ -66,7 +66,9 @@ ClientConnection::Private::Private(wl_client *c, Display *display, ClientConnect
 
 ClientConnection::Private::~Private()
 {
-    wl_list_remove(&listener.link);
+    if (client) {
+        wl_list_remove(&listener.link);
+    }
     s_allClients.removeAt(s_allClients.indexOf(this));
 }
 
@@ -80,9 +82,12 @@ void ClientConnection::Private::destroyListenerCallback(wl_listener *listener, v
         }
     );
     Q_ASSERT(it != s_allClients.constEnd());
-    auto q = (*it)->q;
+    auto p = (*it);
+    auto q = p->q;
+    p->client = nullptr;
+    wl_list_remove(&p->listener.link);
     emit q->disconnected(q);
-    delete q;
+    q->deleteLater();
 }
 
 ClientConnection::ClientConnection(wl_client *c, Display *parent)
@@ -95,21 +100,33 @@ ClientConnection::~ClientConnection() = default;
 
 void ClientConnection::flush()
 {
+    if (!d->client) {
+        return;
+    }
     wl_client_flush(d->client);
 }
 
 void ClientConnection::destroy()
 {
+    if (!d->client) {
+        return;
+    }
     wl_client_destroy(d->client);
 }
 
 wl_resource *ClientConnection::createResource(const wl_interface *interface, quint32 version, quint32 id)
 {
+    if (!d->client) {
+        return nullptr;
+    }
     return wl_resource_create(d->client, interface, version, id);
 }
 
 wl_resource *ClientConnection::getResource(quint32 id)
 {
+    if (!d->client) {
+        return nullptr;
+    }
     return wl_client_get_object(d->client, id);
 }
 
