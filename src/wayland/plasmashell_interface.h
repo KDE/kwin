@@ -139,6 +139,27 @@ public:
     bool skipTaskbar() const;
 
     /**
+     * Informs the PlasmaShellSurfaceInterface that the auto-hiding panel got hidden.
+     * Once it is shown again the method @link{showAutoHidingPanel} should be used.
+     *
+     * @see showAutoHidingPanel
+     * @see panelAutoHideHideRequested
+     * @see panelAutoHideShowRequested
+     * @since 5.28
+     **/
+    void hideAutoHidingPanel();
+
+    /**
+     * Informs the PlasmaShellSurfaceInterface that the auto-hiding panel got shown again.
+     *
+     * @see hideAutoHidingPanel
+     * @see panelAutoHideHideRequested
+     * @see panelAutoHideShowRequested
+     * @see 5.28
+     **/
+    void showAutoHidingPanel();
+
+    /**
      * @returns The PlasmaShellSurfaceInterface for the @p native resource.
      * @since 5.5
      **/
@@ -161,6 +182,35 @@ Q_SIGNALS:
      * A change in the skip taskbar property has been requested
      */
     void skipTaskbarChanged();
+
+    /**
+     * A surface with Role Panel and PanelBehavior AutoHide requested to be hidden.
+     *
+     * The compositor should inform the PlasmaShellSurfaceInterface about the actual change.
+     * Once the surface is hidden it should invoke @link{hideAutoHidingPanel}. If the compositor
+     * cannot hide the surface (e.g. because it doesn't border a screen edge) it should inform
+     * the surface through invoking @link{showAutoHidingPanel}. This method should also be invoked
+     * whenever the surface gets shown again due to triggering the screen edge.
+     *
+     * @see hideAutoHidingPanel
+     * @see showAutoHidingPanel
+     * @see panelAutoHideShowRequested
+     * @since 5.28
+     **/
+    void panelAutoHideHideRequested();
+
+    /**
+     * A surface with Role Panel and PanelBehavior AutoHide requested to be shown.
+     *
+     * The compositor should inform the PlasmaShellSurfaceInterface about the actual change.
+     * Once the surface is shown it should invoke @link{showAutoHidingPanel}.
+     *
+     * @see hideAutoHidingPanel
+     * @see showAutoHidingPanel
+     * @see panelAutoHideHideRequested
+     * @since 5.28
+     **/
+    void panelAutoHideShowRequested();
 
 private:
     friend class PlasmaShellInterface;

@@ -50,7 +50,7 @@ private:
     static const quint32 s_version;
 };
 
-const quint32 PlasmaShellInterface::Private::s_version = 3;
+const quint32 PlasmaShellInterface::Private::s_version = 4;
 
 PlasmaShellInterface::Private::Private(PlasmaShellInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_shell_interface, s_version)
@@ -84,6 +84,8 @@ private:
     static void setRoleCallback(wl_client *client, wl_resource *resource, uint32_t role);
     static void setPanelBehaviorCallback(wl_client *client, wl_resource *resource, uint32_t flag);
     static void setSkipTaskbarCallback(wl_client *client, wl_resource *resource, uint32_t skip);
+    static void panelAutoHideHideCallback(wl_client *client, wl_resource *resource);
+    static void panelAutoHideShowCallback(wl_client *client, wl_resource *resource);
 
     void setPosition(const QPoint &globalPos);
     void setRole(uint32_t role);
@@ -158,7 +160,9 @@ const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Priva
     setPositionCallback,
     setRoleCallback,
     setPanelBehaviorCallback,
-    setSkipTaskbarCallback
+    setSkipTaskbarCallback,
+    panelAutoHideHideCallback,
+    panelAutoHideShowCallback
 };
 #endif
 
@@ -270,6 +274,28 @@ void PlasmaShellSurfaceInterface::Private::setSkipTaskbarCallback(wl_client *cli
     emit s->q_func()->skipTaskbarChanged();
 }
 
+void PlasmaShellSurfaceInterface::Private::panelAutoHideHideCallback(wl_client *client, wl_resource *resource)
+{
+    auto s = cast<Private>(resource);
+    Q_ASSERT(client == *s->client);
+    if (s->m_role != Role::Panel || s->m_panelBehavior != PanelBehavior::AutoHide) {
+        wl_resource_post_error(s->resource, ORG_KDE_PLASMA_SURFACE_ERROR_PANEL_NOT_AUTO_HIDE, "Not an auto hide panel");
+        return;
+    }
+    emit s->q_func()->panelAutoHideHideRequested();
+}
+
+void PlasmaShellSurfaceInterface::Private::panelAutoHideShowCallback(wl_client *client, wl_resource *resource)
+{
+    auto s = cast<Private>(resource);
+    Q_ASSERT(client == *s->client);
+    if (s->m_role != Role::Panel || s->m_panelBehavior != PanelBehavior::AutoHide) {
+        wl_resource_post_error(s->resource, ORG_KDE_PLASMA_SURFACE_ERROR_PANEL_NOT_AUTO_HIDE, "Not an auto hide panel");
+        return;
+    }
+    emit s->q_func()->panelAutoHideShowRequested();
+}
+
 void PlasmaShellSurfaceInterface::Private::setPanelBehavior(org_kde_plasma_surface_panel_behavior behavior)
 {
     PanelBehavior newBehavior = PanelBehavior::AlwaysVisible;
@@ -323,6 +349,24 @@ bool PlasmaShellSurfaceInterface::skipTaskbar() const
 {
     Q_D();
     return d->m_skipTaskbar;
+}
+
+void PlasmaShellSurfaceInterface::hideAutoHidingPanel()
+{
+    Q_D();
+    if (!d->resource) {
+        return;
+    }
+    org_kde_plasma_surface_send_auto_hidden_panel_hidden(d->resource);
+}
+
+void PlasmaShellSurfaceInterface::showAutoHidingPanel()
+{
+    Q_D();
+    if (!d->resource) {
+        return;
+    }
+    org_kde_plasma_surface_send_auto_hidden_panel_shown(d->resource);
 }
 
 PlasmaShellSurfaceInterface *PlasmaShellSurfaceInterface::get(wl_resource *native)

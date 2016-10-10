@@ -49,6 +49,7 @@ private Q_SLOTS:
     void testSkipTaskbar();
     void testPanelBehavior_data();
     void testPanelBehavior();
+    void testAutoHidePanel();
     void testDisconnect();
     void testWhileDestroying();
 
@@ -339,6 +340,60 @@ void TestPlasmaShell::testPanelBehavior()
     ps->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
     QVERIFY(behaviorChangedSpy.wait());
     QCOMPARE(sps->panelBehavior(), PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible);
+}
+
+void TestPlasmaShell::testAutoHidePanel()
+{
+    // this test verifies that auto-hiding panels work correctly
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QVERIFY(plasmaSurfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+    ps->setRole(PlasmaShellSurface::Role::Panel);
+    ps->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AutoHide);
+    QVERIFY(plasmaSurfaceCreatedSpy.wait());
+    QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
+    auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface*>();
+    QVERIFY(sps);
+    QCOMPARE(sps->panelBehavior(), PlasmaShellSurfaceInterface::PanelBehavior::AutoHide);
+
+    QSignalSpy autoHideRequestedSpy(sps, &PlasmaShellSurfaceInterface::panelAutoHideHideRequested);
+    QVERIFY(autoHideRequestedSpy.isValid());
+    QSignalSpy autoHideShowRequestedSpy(sps, &PlasmaShellSurfaceInterface::panelAutoHideShowRequested);
+    QVERIFY(autoHideShowRequestedSpy.isValid());
+    ps->requestHideAutoHidingPanel();
+    QVERIFY(autoHideRequestedSpy.wait());
+    QCOMPARE(autoHideRequestedSpy.count(), 1);
+    QCOMPARE(autoHideShowRequestedSpy.count(), 0);
+
+    QSignalSpy panelShownSpy(ps.data(), &PlasmaShellSurface::autoHidePanelShown);
+    QVERIFY(panelShownSpy.isValid());
+    QSignalSpy panelHiddenSpy(ps.data(), &PlasmaShellSurface::autoHidePanelHidden);
+    QVERIFY(panelHiddenSpy.isValid());
+
+    sps->hideAutoHidingPanel();
+    QVERIFY(panelHiddenSpy.wait());
+    QCOMPARE(panelHiddenSpy.count(), 1);
+    QCOMPARE(panelShownSpy.count(), 0);
+
+    ps->requestShowAutoHidingPanel();
+    QVERIFY(autoHideShowRequestedSpy.wait());
+    QCOMPARE(autoHideRequestedSpy.count(), 1);
+    QCOMPARE(autoHideShowRequestedSpy.count(), 1);
+
+    sps->showAutoHidingPanel();
+    QVERIFY(panelShownSpy.wait());
+    QCOMPARE(panelHiddenSpy.count(), 1);
+    QCOMPARE(panelShownSpy.count(), 1);
+
+    // change panel type
+    ps->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
+    // requesting auto hide should raise error
+    QSignalSpy errorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QVERIFY(errorSpy.isValid());
+    ps->requestHideAutoHidingPanel();
+    QVERIFY(errorSpy.wait());
 }
 
 void TestPlasmaShell::testDisconnect()
