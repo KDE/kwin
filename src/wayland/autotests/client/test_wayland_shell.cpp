@@ -835,6 +835,16 @@ void TestWaylandShell::testClientDisconnecting()
     m_thread = nullptr;
 
     QVERIFY(shellSurfaceUnboundSpy.wait());
+
+    ps->destroy();
+    s->destroy();
+    ps2->destroy();
+    s2->destroy();
+    m_pointer->destroy();
+    m_seat->destroy();
+    m_shell->destroy();
+    m_compositor->destroy();
+    m_queue->destroy();
 }
 
 QTEST_GUILESS_MAIN(TestWaylandShell)
