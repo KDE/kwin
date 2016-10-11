@@ -1155,18 +1155,20 @@ bool ShellClient::hasStrut() const
 
 void ShellClient::updateIcon()
 {
+    const QString waylandIconName = QStringLiteral("wayland");
     QString desktopFile;
     if (m_shellSurface) {
         desktopFile = QString::fromUtf8(m_shellSurface->windowClass());
     }
     if (desktopFile.isEmpty()) {
-        setIcon(QIcon());
+        setIcon(QIcon::fromTheme(waylandIconName));
     }
     if (!desktopFile.endsWith(QLatin1String(".desktop"))) {
         desktopFile.append(QLatin1String(".desktop"));
     }
     KDesktopFile df(desktopFile);
-    setIcon(QIcon::fromTheme(df.readIcon()));
+    const QString iconName = df.readIcon();
+    setIcon(QIcon::fromTheme(iconName.isEmpty() ? waylandIconName : iconName));
 }
 
 bool ShellClient::isTransient() const
