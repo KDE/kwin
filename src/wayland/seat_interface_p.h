@@ -43,7 +43,7 @@ public:
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void sendCapabilities(wl_resource *r);
     void sendName(wl_resource *r);
-    PointerInterface *pointerForSurface(SurfaceInterface *surface) const;
+    QVector<PointerInterface *> pointersForSurface(SurfaceInterface *surface) const;
     QVector<KeyboardInterface *> keyboardsForSurface(SurfaceInterface *surface) const;
     TouchInterface *touchForSurface(SurfaceInterface *surface) const;
     DataDeviceInterface *dataDeviceForSurface(SurfaceInterface *surface) const;
@@ -77,7 +77,7 @@ public:
         QPointF pos;
         struct Focus {
             SurfaceInterface *surface = nullptr;
-            PointerInterface *pointer = nullptr;
+            QVector<PointerInterface *> pointers;
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
             QMatrix4x4 transformation;

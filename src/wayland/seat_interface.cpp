@@ -209,9 +209,9 @@ QVector<T *> interfacesForSurface(SurfaceInterface *surface, const QVector<T*> &
 }
 }
 
-PointerInterface *SeatInterface::Private::pointerForSurface(SurfaceInterface *surface) const
+QVector<PointerInterface *> SeatInterface::Private::pointersForSurface(SurfaceInterface *surface) const
 {
-    return interfaceForSurface(surface, pointers);
+    return interfacesForSurface(surface, pointers);
 }
 
 QVector<KeyboardInterface *> SeatInterface::Private::keyboardsForSurface(SurfaceInterface *surface) const
@@ -433,18 +433,20 @@ void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource
     pointers << pointer;
     if (globalPointer.focus.surface && globalPointer.focus.surface->client() == clientConnection) {
         // this is a pointer for the currently focused pointer surface
-        if (!globalPointer.focus.pointer) {
-            globalPointer.focus.pointer = pointer;
-            pointer->setFocusedSurface(globalPointer.focus.surface, globalPointer.focus.serial);
+        globalPointer.focus.pointers << pointer;
+        pointer->setFocusedSurface(globalPointer.focus.surface, globalPointer.focus.serial);
+        if (globalPointer.focus.pointers.count() == 1) {
+            // got a new pointer
             emit q->focusedPointerChanged(pointer);
         }
     }
     QObject::connect(pointer, &QObject::destroyed, q,
         [pointer,this] {
             pointers.removeAt(pointers.indexOf(pointer));
-            if (globalPointer.focus.pointer == pointer) {
-                globalPointer.focus.pointer = nullptr;
-                emit q->focusedPointerChanged(nullptr);
+            if (globalPointer.focus.pointers.removeOne(pointer)) {
+                if (globalPointer.focus.pointers.isEmpty()) {
+                    emit q->focusedPointerChanged(nullptr);
+                }
             }
         }
     );
@@ -647,19 +649,16 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QM
         return;
     }
     const quint32 serial = d->display->nextSerial();
-    if (d->globalPointer.focus.pointer) {
-        d->globalPointer.focus.pointer->setFocusedSurface(nullptr, serial);
+    for (auto it = d->globalPointer.focus.pointers.constBegin(), end = d->globalPointer.focus.pointers.constEnd(); it != end; ++it) {
+        (*it)->setFocusedSurface(nullptr, serial);
     }
     if (d->globalPointer.focus.surface) {
         disconnect(d->globalPointer.focus.destroyConnection);
     }
     d->globalPointer.focus = Private::Pointer::Focus();
     d->globalPointer.focus.surface = surface;
-    PointerInterface *p = d->pointerForSurface(surface);
-    if (p && !p->resource()) {
-        p = nullptr;
-    }
-    d->globalPointer.focus.pointer = p;
+    auto p = d->pointersForSurface(surface);
+    d->globalPointer.focus.pointers = p;
     if (d->globalPointer.focus.surface) {
         d->globalPointer.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
             [this] {
@@ -672,17 +671,24 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QM
         d->globalPointer.focus.transformation = transformation;
         d->globalPointer.focus.serial = serial;
     }
-    emit focusedPointerChanged(p);
-    if (!p) {
+    if (p.isEmpty()) {
+        emit focusedPointerChanged(nullptr);
         return;
     }
-    p->setFocusedSurface(surface, serial);
+    // TODO: signal with all pointers
+    emit focusedPointerChanged(p.first());
+    for (auto it = p.constBegin(), end = p.constEnd(); it != end; ++it) {
+        (*it)->setFocusedSurface(surface, serial);
+    }
 }
 
 PointerInterface *SeatInterface::focusedPointer() const
 {
     Q_D();
-    return d->globalPointer.focus.pointer;
+    if (d->globalPointer.focus.pointers.isEmpty()) {
+        return nullptr;
+    }
+    return d->globalPointer.focus.pointers.first();
 }
 
 void SeatInterface::setFocusedPointerSurfacePosition(const QPointF &surfacePosition)
@@ -767,8 +773,10 @@ void SeatInterface::pointerAxis(Qt::Orientation orientation, quint32 delta)
         // ignore
         return;
     }
-    if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
-        d->globalPointer.focus.pointer->axis(orientation, delta);
+    if (d->globalPointer.focus.surface) {
+        for (auto it = d->globalPointer.focus.pointers.constBegin(), end = d->globalPointer.focus.pointers.constEnd(); it != end; ++it) {
+            (*it)->axis(orientation, delta);
+        }
     }
 }
 
@@ -791,12 +799,17 @@ void SeatInterface::pointerButtonPressed(quint32 button)
         // ignore
         return;
     }
-    if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
-        d->globalPointer.focus.pointer->buttonPressed(button, serial);
+    if (d->globalPointer.focus.surface) {
+        for (auto it = d->globalPointer.focus.pointers.constBegin(), end = d->globalPointer.focus.pointers.constEnd(); it != end; ++it) {
+            (*it)->buttonPressed(button, serial);
+        }
         if (d->globalPointer.focus.surface == d->keys.focus.surface) {
             // update the focused child surface
-            for (auto it = d->keys.focus.keyboards.constBegin(), end = d->keys.focus.keyboards.constEnd(); it != end; ++it) {
-                (*it)->d_func()->focusChildSurface(d->globalPointer.focus.pointer->d_func()->focusedChildSurface, serial);
+            auto p = focusedPointer();
+            if (p) {
+                for (auto it = d->keys.focus.keyboards.constBegin(), end = d->keys.focus.keyboards.constEnd(); it != end; ++it) {
+                    (*it)->d_func()->focusChildSurface(p->d_func()->focusedChildSurface, serial);
+                }
             }
         }
     }
@@ -826,8 +839,10 @@ void SeatInterface::pointerButtonReleased(quint32 button)
         d->endDrag(serial);
         return;
     }
-    if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
-        d->globalPointer.focus.pointer->buttonReleased(button, serial);
+    if (d->globalPointer.focus.surface) {
+        for (auto it = d->globalPointer.focus.pointers.constBegin(), end = d->globalPointer.focus.pointers.constEnd(); it != end; ++it) {
+            (*it)->buttonReleased(button, serial);
+        }
     }
 }
 
@@ -849,8 +864,10 @@ quint32 SeatInterface::pointerButtonSerial(quint32 button) const
 void SeatInterface::relativePointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds)
 {
     Q_D();
-    if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
-        d->globalPointer.focus.pointer->relativeMotion(delta, deltaNonAccelerated, microseconds);
+    if (d->globalPointer.focus.surface) {
+        for (auto it = d->globalPointer.focus.pointers.constBegin(), end = d->globalPointer.focus.pointers.constEnd(); it != end; ++it) {
+            (*it)->relativeMotion(delta, deltaNonAccelerated, microseconds);
+        }
     }
 }
 
@@ -1135,18 +1152,20 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
         d->touchInterface.focus.touch->down(id, serial, globalPosition - d->touchInterface.focus.offset);
     } else if (id == 0 && focusedTouchSurface()) {
 #if HAVE_LINUX_INPUT_H
-        auto p = d->pointerForSurface(focusedTouchSurface());
-        if (!p) {
+        auto p = d->pointersForSurface(focusedTouchSurface());
+        if (p.isEmpty()) {
             return id;
         }
         const QPointF pos = globalPosition - d->touchInterface.focus.offset;
-        wl_pointer_send_enter(p->resource(), serial,
-                          focusedTouchSurface()->resource(),
-                          wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-        wl_pointer_send_motion(p->resource(), timestamp(),
-                                wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        for (auto it = p.constBegin(), end = p.constEnd(); it != end; ++it) {
+            wl_pointer_send_enter((*it)->resource(), serial,
+                            focusedTouchSurface()->resource(),
+                            wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+            wl_pointer_send_motion((*it)->resource(), timestamp(),
+                                    wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
 
-        wl_pointer_send_button(p->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_PRESSED);
+            wl_pointer_send_button((*it)->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_PRESSED);
+        }
 #endif
     }
 
@@ -1160,14 +1179,16 @@ void SeatInterface::touchMove(qint32 id, const QPointF &globalPosition)
     if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
         d->touchInterface.focus.touch->move(id, globalPosition - d->touchInterface.focus.offset);
     } else if (id == 0 && focusedTouchSurface()) {
-        auto p = d->pointerForSurface(focusedTouchSurface());
-        if (!p) {
+        auto p = d->pointersForSurface(focusedTouchSurface());
+        if (p.isEmpty()) {
             return;
         }
 
         const QPointF pos = globalPosition - d->touchInterface.focus.offset;
-        wl_pointer_send_motion(p->resource(), timestamp(),
-                                wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        for (auto it = p.constBegin(), end = p.constEnd(); it != end; ++it) {
+            wl_pointer_send_motion((*it)->resource(), timestamp(),
+                                   wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        }
     } 
 }
 
@@ -1180,12 +1201,14 @@ void SeatInterface::touchUp(qint32 id)
     } else if (id == 0 && focusedTouchSurface()) {
 #if HAVE_LINUX_INPUT_H
         const quint32 serial = display()->nextSerial();
-        auto p = d->pointerForSurface(focusedTouchSurface());
-        if (!p) {
+        auto p = d->pointersForSurface(focusedTouchSurface());
+        if (p.isEmpty()) {
             return;
         }
 
-        wl_pointer_send_button(p->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_RELEASED);
+        for (auto it = p.constBegin(), end = p.constEnd(); it != end; ++it) {
+            wl_pointer_send_button((*it)->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_RELEASED);
+        }
 #endif
     }
     d->touchInterface.ids.removeAll(id);
