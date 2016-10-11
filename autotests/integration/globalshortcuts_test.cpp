@@ -50,6 +50,7 @@ private Q_SLOTS:
     void testConsumedShift();
     void testRepeatedTrigger();
     void testUserActionsMenu();
+    void testMetaShiftW();
 };
 
 void GlobalShortcutsTest::initTestCase()
@@ -166,6 +167,33 @@ void GlobalShortcutsTest::testUserActionsMenu()
     kwinApp()->platform()->keyboardKeyReleased(KEY_F3, timestamp++);
     QTRY_VERIFY(workspace()->userActionsMenu()->isShown());
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+}
+
+void GlobalShortcutsTest::testMetaShiftW()
+{
+    // BUG 370341
+    QScopedPointer<QAction> action(new QAction(nullptr));
+    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
+    QSignalSpy triggeredSpy(action.data(), &QAction::triggered);
+    QVERIFY(triggeredSpy.isValid());
+    KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::META + Qt::SHIFT + Qt::Key_W}, KGlobalAccel::NoAutoloading);
+    input()->registerShortcut(Qt::META + Qt::SHIFT + Qt::Key_W, action.data());
+
+    // press meta+shift+w
+    quint32 timestamp = 0;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::MetaModifier);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::MetaModifier);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_W, timestamp++);
+    QEXPECT_FAIL("", "BUG 370341", Continue);
+    QTRY_COMPARE(triggeredSpy.count(), 1);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_W, timestamp++);
+
+    // release meta+shift
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 }
 
 WAYLANDTEST_MAIN(GlobalShortcutsTest)
