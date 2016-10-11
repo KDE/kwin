@@ -1832,6 +1832,7 @@ void TestWaylandSeat::testDisconnect()
     keyboard->destroy();
     pointer->destroy();
     touch->destroy();
+    m_relativePointerManager->destroy();
     m_compositor->destroy();
     m_seat->destroy();
     m_shm->destroy();
