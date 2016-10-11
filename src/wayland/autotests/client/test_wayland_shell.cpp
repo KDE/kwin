@@ -246,6 +246,8 @@ void TestWaylandShell::testCreateMultiple()
     QScopedPointer<ShellSurface> surface1(m_shell->createSurface(s1.data()));
     QVERIFY(!surface1.isNull());
     QVERIFY(surface1->isValid());
+    QVERIFY(!ShellSurface::get(nullptr));
+    QCOMPARE(ShellSurface::get(*(surface1.data())), surface1.data());
 
     QVERIFY(serverSurfaceSpy.wait());
     QCOMPARE(serverSurfaceSpy.count(), 1);
@@ -253,6 +255,7 @@ void TestWaylandShell::testCreateMultiple()
     QScopedPointer<ShellSurface> surface2(m_shell->createSurface(s2.data()));
     QVERIFY(!surface2.isNull());
     QVERIFY(surface2->isValid());
+    QCOMPARE(ShellSurface::get(*(surface2.data())), surface2.data());
 
     QVERIFY(serverSurfaceSpy.wait());
     QCOMPARE(serverSurfaceSpy.count(), 2);
@@ -261,6 +264,7 @@ void TestWaylandShell::testCreateMultiple()
     QScopedPointer<ShellSurface> surface3(m_shell->createSurface(s2.data()));
     QVERIFY(!surface3.isNull());
     QVERIFY(surface3->isValid());
+    QCOMPARE(ShellSurface::get(*(surface3.data())), surface3.data());
 
     QVERIFY(!serverSurfaceSpy.wait(100));
     QCOMPARE(serverSurfaceSpy.count(), 2);
