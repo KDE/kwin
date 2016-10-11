@@ -449,7 +449,18 @@ Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts() const
         return mods;
     }
 
-    return mods & ~m_consumedModifiers;
+    Qt::KeyboardModifiers consumedMods = m_consumedModifiers;
+    if ((mods & Qt::ShiftModifier) && (consumedMods == Qt::ShiftModifier)) {
+        // test whether current keysym is a letter
+        // in that case the shift should be removed from the consumed modifiers again
+        // otherwise it would not be possible to trigger e.g. Shift+W as a shortcut
+        // see BUG: 370341
+        if (QChar(toQtKey(m_keysym)).isLetter()) {
+            consumedMods = Qt::KeyboardModifiers();
+        }
+    }
+
+    return mods & ~consumedMods;
 }
 
 xkb_keysym_t Xkb::toKeysym(uint32_t key)
@@ -473,7 +484,7 @@ QString Xkb::toString(xkb_keysym_t keysym)
     return QString::fromUtf8(byteArray.constData());
 }
 
-Qt::Key Xkb::toQtKey(xkb_keysym_t keysym)
+Qt::Key Xkb::toQtKey(xkb_keysym_t keysym) const
 {
     int key = Qt::Key_unknown;
     KKeyServer::symXToKeyQt(keysym, &key);

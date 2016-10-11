@@ -174,7 +174,7 @@ void GlobalShortcutsTest::testMetaShiftW()
     // BUG 370341
     QScopedPointer<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
-    action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
+    action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
     QSignalSpy triggeredSpy(action.data(), &QAction::triggered);
     QVERIFY(triggeredSpy.isValid());
     KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::META + Qt::SHIFT + Qt::Key_W}, KGlobalAccel::NoAutoloading);
@@ -187,7 +187,6 @@ void GlobalShortcutsTest::testMetaShiftW()
     kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::MetaModifier);
     kwinApp()->platform()->keyboardKeyPressed(KEY_W, timestamp++);
-    QEXPECT_FAIL("", "BUG 370341", Continue);
     QTRY_COMPARE(triggeredSpy.count(), 1);
     kwinApp()->platform()->keyboardKeyReleased(KEY_W, timestamp++);
 

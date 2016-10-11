@@ -65,7 +65,7 @@ public:
         return m_keysym;
     }
     QString toString(xkb_keysym_t keysym);
-    Qt::Key toQtKey(xkb_keysym_t keysym);
+    Qt::Key toQtKey(xkb_keysym_t keysym) const;
     Qt::KeyboardModifiers modifiers() const;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
     bool shouldKeyRepeat(quint32 key) const;
