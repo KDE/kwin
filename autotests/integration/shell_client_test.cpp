@@ -60,6 +60,8 @@ private Q_SLOTS:
     void testMaximizedToFullscreen();
     void testWindowOpensLargerThanScreen_data();
     void testWindowOpensLargerThanScreen();
+    void testHidden_data();
+    void testHidden();
 };
 
 void TestShellClient::initTestCase()
@@ -542,6 +544,43 @@ void TestShellClient::testWindowOpensLargerThanScreen()
     QVERIFY(c->isDecorated());
     QEXPECT_FAIL("", "BUG 366632", Continue);
     QVERIFY(sizeChangeRequestedSpy.wait());
+}
+
+void TestShellClient::testHidden_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
+void TestShellClient::testHidden()
+{
+    // this test verifies that when hiding window it doesn't get shown
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QCOMPARE(workspace()->activeClient(), c);
+    QVERIFY(c->wantsInput());
+    QVERIFY(c->wantsTabFocus());
+    QVERIFY(c->isShown(true));
+
+    c->hideClient(true);
+    QVERIFY(!c->isShown(true));
+    QVERIFY(!c->isActive());
+    QVERIFY(c->wantsInput());
+    QVERIFY(c->wantsTabFocus());
+
+    // unhide again
+    c->hideClient(false);
+    QVERIFY(c->isShown(true));
+    QVERIFY(c->wantsInput());
+    QVERIFY(c->wantsTabFocus());
+
+    //QCOMPARE(workspace()->activeClient(), c);
 }
 
 WAYLANDTEST_MAIN(TestShellClient)

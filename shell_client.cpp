@@ -623,12 +623,22 @@ bool ShellClient::isResizable() const
 bool ShellClient::isShown(bool shaded_is_shown) const
 {
     Q_UNUSED(shaded_is_shown)
-    return !m_closing && !m_unmapped && !isMinimized();
+    return !m_closing && !m_unmapped && !isMinimized() && !m_hidden;
 }
 
 void ShellClient::hideClient(bool hide)
 {
-    Q_UNUSED(hide)
+    if (m_hidden == hide) {
+        return;
+    }
+    m_hidden = hide;
+    if (hide) {
+        addWorkspaceRepaint(visibleRect());
+        workspace()->clientHidden(this);
+        emit windowHidden(this);
+    } else {
+        emit windowShown(this);
+    }
 }
 
 static bool changeMaximizeRecursion = false;

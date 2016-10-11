@@ -190,6 +190,7 @@ private:
     bool m_userNoBorder = false;
     bool m_fullScreen = false;
     bool m_transient = false;
+    bool m_hidden = false;
     bool m_internal;
     qreal m_opacity = 1.0;
 
