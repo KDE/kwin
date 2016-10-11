@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "resource_p.h"
 
 #include <QPointer>
+#include <QVector>
 
 namespace KWayland
 {
