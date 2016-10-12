@@ -97,7 +97,9 @@ void DataSourceInterface::requestData(const QString &mimeType, qint32 fd)
 {
     Q_D();
     // TODO: does this require a sanity check on the possible mimeType?
-    wl_data_source_send_send(d->resource, mimeType.toUtf8().constData(), int32_t(fd));
+    if (d->resource) {
+        wl_data_source_send_send(d->resource, mimeType.toUtf8().constData(), int32_t(fd));
+    }
     close(fd);
 }
 

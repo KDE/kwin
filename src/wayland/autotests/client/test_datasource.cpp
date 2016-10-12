@@ -43,6 +43,7 @@ private Q_SLOTS:
     void testTargetAccepts_data();
     void testTargetAccepts();
     void testRequestSend();
+    void testRequestSendOnUnbound();
     void testCancel();
     void testServerGet();
     void testDestroy();
@@ -244,6 +245,28 @@ void TestDataSource::testRequestSend()
     QFile writeFile;
     QVERIFY(writeFile.open(sendRequestedSpy.first().last().value<qint32>(), QFile::WriteOnly, QFileDevice::AutoCloseHandle));
     writeFile.close();
+}
+
+void TestDataSource::testRequestSendOnUnbound()
+{
+    // this test verifies that the server doesn't crash when requesting a send on an unbound DataSource
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &DataDeviceManagerInterface::dataSourceCreated);
+    QVERIFY(dataSourceCreatedSpy.isValid());
+
+    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    QVERIFY(dataSource->isValid());
+    QVERIFY(dataSourceCreatedSpy.wait());
+    QCOMPARE(dataSourceCreatedSpy.count(), 1);
+    auto sds = dataSourceCreatedSpy.first().first().value<DataSourceInterface*>();
+    QVERIFY(sds);
+
+    QSignalSpy unboundSpy(sds, &Resource::unbound);
+    QVERIFY(unboundSpy.isValid());
+    dataSource.reset();
+    QVERIFY(unboundSpy.wait());
+    sds->requestData(QStringLiteral("text/plain"), -1);
 }
 
 void TestDataSource::testCancel()
