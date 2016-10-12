@@ -416,6 +416,18 @@ public:
     virtual const WindowRules* rules() const = 0;
     virtual void takeFocus() = 0;
     virtual bool wantsInput() const = 0;
+    /**
+     * Whether a dock window wants input.
+     *
+     * By default KWin doesn't pass focus to a dock window unless a force activate
+     * request is provided.
+     *
+     * This method allows to have dock windows take focus also through flags set on
+     * the window.
+     *
+     * The default implementation returns @c false.
+     **/
+    virtual bool dockWantsInput() const;
     void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2,  QRect oldClientGeometry = QRect());
     virtual xcb_timestamp_t userTime() const;
     virtual void updateWindowRules(Rules::Types selection) = 0;

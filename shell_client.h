@@ -96,6 +96,7 @@ public:
     bool userCanSetFullScreen() const override;
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
+    bool dockWantsInput() const override;
     using AbstractClient::resizeWithChecks;
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::setGeometry;

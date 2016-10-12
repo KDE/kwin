@@ -59,6 +59,8 @@ private Q_SLOTS:
     void testOSDPlacement();
     void testPanelTypeHasStrut_data();
     void testPanelTypeHasStrut();
+    void testPanelActivate_data();
+    void testPanelActivate();
 
 private:
     ConnectionThread *m_connection = nullptr;
@@ -366,6 +368,37 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     QCOMPARE(stackingOrder.count(), 2);
     QCOMPARE(stackingOrder.first(), c);
     QCOMPARE(stackingOrder.last(), panel);
+}
+
+void PlasmaSurfaceTest::testPanelActivate_data()
+{
+    QTest::addColumn<bool>("wantsFocus");
+    QTest::addColumn<bool>("active");
+
+    QTest::newRow("no focus") << false << false;
+    QTest::newRow("focus") << true << true;
+}
+
+void PlasmaSurfaceTest::testPanelActivate()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(Test::ShellSurfaceType::WlShell, surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QVERIFY(!plasmaSurface.isNull());
+    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    QFETCH(bool, wantsFocus);
+    plasmaSurface->setPanelTakesFocus(wantsFocus);
+
+    auto panel = Test::renderAndWaitForShown(surface.data(), QSize(100, 200), Qt::blue);
+
+    QVERIFY(panel);
+    QCOMPARE(panel->windowType(), NET::Dock);
+    QVERIFY(panel->isDock());
+    QFETCH(bool, active);
+    QCOMPARE(panel->dockWantsInput(), active);
+    QCOMPARE(panel->isActive(), active);
 }
 
 WAYLANDTEST_MAIN(PlasmaSurfaceTest)

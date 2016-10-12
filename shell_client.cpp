@@ -1373,4 +1373,14 @@ void ShellClient::showOnScreenEdge()
     }
 }
 
+bool ShellClient::dockWantsInput() const
+{
+    if (m_plasmaShellSurface) {
+        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Panel) {
+            return m_plasmaShellSurface->panelTakesFocus();
+        }
+    }
+    return false;
+}
+
 }

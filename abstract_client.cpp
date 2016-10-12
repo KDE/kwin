@@ -1634,4 +1634,9 @@ QRect AbstractClient::inputGeometry() const
     return Toplevel::inputGeometry();
 }
 
+bool AbstractClient::dockWantsInput() const
+{
+    return false;
+}
+
 }

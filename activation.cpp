@@ -371,8 +371,13 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
         }
         cancelDelayFocus();
     }
-    if (!flags.testFlag(ActivityFocusForce) && (c->isDock() || c->isSplash()))
-        flags &= ~ActivityFocus; // toplevel menus and dock windows don't take focus if not forced
+    if (!flags.testFlag(ActivityFocusForce) && (c->isDock() || c->isSplash())) {
+        // toplevel menus and dock windows don't take focus if not forced
+        // and don't have a flag that they take focus
+	if (!c->dockWantsInput()) {
+	    flags &= ~ActivityFocus;
+	}
+    }
     if (c->isShade()) {
         if (c->wantsInput() && (flags & ActivityFocus)) {
             // client cannot accept focus, but at least the window should be active (window menu, et. al. )
