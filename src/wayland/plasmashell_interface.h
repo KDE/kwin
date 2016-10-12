@@ -160,6 +160,16 @@ public:
     void showAutoHidingPanel();
 
     /**
+     * Whether a PlasmaShellSurfaceInterface with Role Panel wants to have focus.
+     *
+     * By default a Panel does not get focus, but the PlasmaShellSurfaceInterface can
+     * request that it wants to have focus. The compositor can use this information to
+     * pass focus to the panel.
+     * @since 5.28
+     **/
+    bool panelTakesFocus() const;
+
+    /**
      * @returns The PlasmaShellSurfaceInterface for the @p native resource.
      * @since 5.5
      **/

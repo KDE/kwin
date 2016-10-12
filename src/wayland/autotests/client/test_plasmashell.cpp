@@ -50,6 +50,7 @@ private Q_SLOTS:
     void testPanelBehavior_data();
     void testPanelBehavior();
     void testAutoHidePanel();
+    void testPanelTakesFocus();
     void testDisconnect();
     void testWhileDestroying();
 
@@ -394,6 +395,29 @@ void TestPlasmaShell::testAutoHidePanel()
     QVERIFY(errorSpy.isValid());
     ps->requestHideAutoHidingPanel();
     QVERIFY(errorSpy.wait());
+}
+
+void TestPlasmaShell::testPanelTakesFocus()
+{
+    // this test verifies that whether a panel wants to take focus is passed through correctly
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QVERIFY(plasmaSurfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+    ps->setRole(PlasmaShellSurface::Role::Panel);
+    QVERIFY(plasmaSurfaceCreatedSpy.wait());
+    QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
+    auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface*>();
+    QVERIFY(sps);
+    QCOMPARE(sps->role(), PlasmaShellSurfaceInterface::Role::Panel);
+    QCOMPARE(sps->panelTakesFocus(), false);
+
+    ps->setPanelTakesFocus(true);
+    m_connection->flush();
+    QTRY_COMPARE(sps->panelTakesFocus(), true);
+    ps->setPanelTakesFocus(false);
+    m_connection->flush();
+    QTRY_COMPARE(sps->panelTakesFocus(), false);
 }
 
 void TestPlasmaShell::testDisconnect()

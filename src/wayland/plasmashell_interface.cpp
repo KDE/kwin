@@ -76,6 +76,7 @@ public:
     bool m_positionSet = false;
     PanelBehavior m_panelBehavior = PanelBehavior::AlwaysVisible;
     bool m_skipTaskbar = false;
+    bool panelTakesFocus = false;
 
 private:
     // interface callbacks
@@ -86,6 +87,7 @@ private:
     static void setSkipTaskbarCallback(wl_client *client, wl_resource *resource, uint32_t skip);
     static void panelAutoHideHideCallback(wl_client *client, wl_resource *resource);
     static void panelAutoHideShowCallback(wl_client *client, wl_resource *resource);
+    static void panelTakesFocusCallback(wl_client *client, wl_resource *resource, uint32_t takesFocus);
 
     void setPosition(const QPoint &globalPos);
     void setRole(uint32_t role);
@@ -162,7 +164,8 @@ const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Priva
     setPanelBehaviorCallback,
     setSkipTaskbarCallback,
     panelAutoHideHideCallback,
-    panelAutoHideShowCallback
+    panelAutoHideShowCallback,
+    panelTakesFocusCallback
 };
 #endif
 
@@ -296,6 +299,13 @@ void PlasmaShellSurfaceInterface::Private::panelAutoHideShowCallback(wl_client *
     emit s->q_func()->panelAutoHideShowRequested();
 }
 
+void PlasmaShellSurfaceInterface::Private::panelTakesFocusCallback(wl_client *client, wl_resource *resource, uint32_t takesFocus)
+{
+    auto s = cast<Private>(resource);
+    Q_ASSERT(client == *s->client);
+    s->panelTakesFocus = takesFocus;
+}
+
 void PlasmaShellSurfaceInterface::Private::setPanelBehavior(org_kde_plasma_surface_panel_behavior behavior)
 {
     PanelBehavior newBehavior = PanelBehavior::AlwaysVisible;
@@ -367,6 +377,12 @@ void PlasmaShellSurfaceInterface::showAutoHidingPanel()
         return;
     }
     org_kde_plasma_surface_send_auto_hidden_panel_shown(d->resource);
+}
+
+bool PlasmaShellSurfaceInterface::panelTakesFocus() const
+{
+    Q_D();
+    return d->panelTakesFocus;
 }
 
 PlasmaShellSurfaceInterface *PlasmaShellSurfaceInterface::get(wl_resource *native)
