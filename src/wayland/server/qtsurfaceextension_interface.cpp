@@ -181,9 +181,12 @@ void QtExtendedSurfaceInterface::Private::setWindowFlagsCallback(wl_client *clie
 void QtExtendedSurfaceInterface::Private::updateGenericPropertyCallback(wl_client *client, wl_resource *resource, const char *name, wl_array *value)
 {
     Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(name)
-    Q_UNUSED(value)
+    QByteArray data = QByteArray::fromRawData(static_cast<char *>(value->data), value->size);
+
+    QVariant variantValue;
+    QDataStream ds(data);
+    ds >> variantValue;
+    cast<Private>(resource)->q_func()->setProperty(name, variantValue);
 }
 
 QtExtendedSurfaceInterface::QtExtendedSurfaceInterface(QtSurfaceExtensionInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
