@@ -101,7 +101,13 @@ public:
     void setMaximizeable(bool set);
     void setFullscreenable(bool set);
     void setSkipTaskbar(bool skip);
-    void setThemedIconName(const QString &iconName);
+    /**
+     * @deprecated since 5.28 use setIcon
+     * @see setIcon
+     **/
+#ifndef KWAYLANDSERVER_NO_DEPRECATED
+    void KWAYLANDSERVER_DEPRECATED setThemedIconName(const QString &iconName);
+#endif
     /**
      * @since 5.22
      */
@@ -154,6 +160,19 @@ public:
      * @since 5.25
      **/
     void setGeometry(const QRect &geometry);
+
+    /**
+     * Set the icon of the PlasmaWindowInterface.
+     *
+     * In case the icon has a themed name, only the name is sent to the client.
+     * Otherwise the client is only informed that there is an icon and the client
+     * can request the icon in an asynchronous way by passing a file descriptor
+     * into which the icon will be serialized.
+     *
+     * @param icon The new icon
+     * @since 5.28
+     **/
+    void setIcon(const QIcon &icon);
 
 Q_SIGNALS:
     void closeRequested();

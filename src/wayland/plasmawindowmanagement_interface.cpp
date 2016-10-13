@@ -23,6 +23,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "display.h"
 #include "surface_interface.h"
 
+#include <QtConcurrentRun>
+#include <QFile>
+#include <QIcon>
 #include <QList>
 #include <QVector>
 #include <QRect>
@@ -70,6 +73,7 @@ public:
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
     void setThemedIconName(const QString &iconName);
+    void setIcon(const QIcon &icon);
     void setVirtualDesktop(quint32 desktop);
     void unmap();
     void setState(org_kde_plasma_window_management_state flag, bool set);
@@ -97,6 +101,7 @@ private:
     static void setMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel, uint32_t x, uint32_t y, uint32_t width, uint32_t height);
     static void unsetMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel);
     static void destroyCallback(wl_client *client, wl_resource *resource);
+    static void getIconCallback(wl_client *client, wl_resource *resource, int32_t fd);
     static Private *cast(wl_resource *resource) {
         return reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
     }
@@ -105,13 +110,14 @@ private:
     QString m_title;
     QString m_appId;
     QString m_themedIconName;
+    QIcon m_icon;
     quint32 m_virtualDesktop = 0;
     quint32 m_state = 0;
     wl_listener listener;
     static const struct org_kde_plasma_window_interface s_interface;
 };
 
-const quint32 PlasmaWindowManagementInterface::Private::s_version = 6;
+const quint32 PlasmaWindowManagementInterface::Private::s_version = 7;
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_window_management_interface, s_version)
@@ -267,7 +273,8 @@ const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_i
     closeCallback,
     requestMoveCallback,
     requestResizeCallback,
-    destroyCallback
+    destroyCallback,
+    getIconCallback
 };
 #endif
 
@@ -326,7 +333,13 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_
         org_kde_plasma_window_send_title_changed(resource, m_title.toUtf8().constData());
     }
     org_kde_plasma_window_send_state_changed(resource, m_state);
-    org_kde_plasma_window_send_themed_icon_name_changed(resource, m_themedIconName.toUtf8().constData());
+    if (!m_themedIconName.isEmpty()) {
+        org_kde_plasma_window_send_themed_icon_name_changed(resource, m_themedIconName.toUtf8().constData());
+    } else {
+        if (wl_resource_get_version(resource) >= ORG_KDE_PLASMA_WINDOW_ICON_CHANGED_SINCE_VERSION) {
+            org_kde_plasma_window_send_icon_changed(resource);
+        }
+    }
 
     org_kde_plasma_window_send_parent_window(resource, resourceForParent(parentWindow, resource));
 
@@ -366,6 +379,34 @@ void PlasmaWindowInterface::Private::setThemedIconName(const QString &iconName)
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         org_kde_plasma_window_send_themed_icon_name_changed(*it, utf8.constData());
     }
+}
+
+void PlasmaWindowInterface::Private::setIcon(const QIcon &icon)
+{
+    m_icon = icon;
+    setThemedIconName(m_icon.name());
+    if (m_icon.name().isEmpty()) {
+        for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+            if (wl_resource_get_version(*it) >= ORG_KDE_PLASMA_WINDOW_ICON_CHANGED_SINCE_VERSION) {
+                org_kde_plasma_window_send_icon_changed(*it);
+            }
+        }
+    }
+}
+
+void PlasmaWindowInterface::Private::getIconCallback(wl_client *client, wl_resource *resource, int32_t fd)
+{
+    Q_UNUSED(client)
+    Private *p = cast(resource);
+    QtConcurrent::run(
+        [fd] (const QIcon &icon) {
+            QFile file;
+            file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle);
+            QDataStream ds(&file);
+            ds << icon;
+            file.close();
+        }, p->m_icon
+    );
 }
 
 void PlasmaWindowInterface::Private::setTitle(const QString &title)
@@ -699,9 +740,16 @@ void PlasmaWindowInterface::setSkipTaskbar(bool set)
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR, set);
 }
 
+#ifndef KWAYLANDSERVER_NO_DEPRECATED
 void PlasmaWindowInterface::setThemedIconName(const QString &iconName)
 {
     d->setThemedIconName(iconName);
+}
+#endif
+
+void PlasmaWindowInterface::setIcon(const QIcon &icon)
+{
+    d->setIcon(icon);
 }
 
 void PlasmaWindowInterface::setShadeable(bool set)

@@ -145,6 +145,7 @@ target_link_libraries(KF5WaylandServer
     PRIVATE
         Wayland::Server
         EGL::EGL
+        Qt5::Concurrent
 )
 
 if(IS_ABSOLUTE "${KF5_INCLUDE_INSTALL_DIR}")

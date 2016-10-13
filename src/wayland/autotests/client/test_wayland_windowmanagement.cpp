@@ -66,6 +66,7 @@ private Q_SLOTS:
     void testRequestShowingDesktop();
     void testParentWindow();
     void testGeometry();
+    void testIcon();
 
     void cleanup();
 
@@ -545,5 +546,40 @@ void TestWindowManagement::testGeometry()
     QCOMPARE(window->geometry(), QRect(0, 0, 35, 45));
 }
 
-QTEST_GUILESS_MAIN(TestWindowManagement)
+void TestWindowManagement::testIcon()
+{
+    using namespace KWayland::Client;
+    QVERIFY(m_window);
+    QSignalSpy iconChangedSpy(m_window, &PlasmaWindow::iconChanged);
+    QVERIFY(iconChangedSpy.isValid());
+    m_windowInterface->setIcon(QIcon());
+    // first goes from themed name to empty
+    QVERIFY(iconChangedSpy.wait());
+    if (!QIcon::hasThemeIcon(QStringLiteral("wayland"))) {
+        QEXPECT_FAIL("", "no icon", Continue);
+    }
+    QCOMPARE(m_window->icon().name(), QStringLiteral("wayland"));
+    QVERIFY(iconChangedSpy.wait());
+    if (!QIcon::hasThemeIcon(QStringLiteral("wayland"))) {
+        QEXPECT_FAIL("", "no icon", Continue);
+    }
+    QCOMPARE(m_window->icon().name(), QStringLiteral("wayland"));
+
+    // create an icon with a pixmap
+    QPixmap p(32, 32);
+    p.fill(Qt::red);
+    m_windowInterface->setIcon(p);
+    QVERIFY(iconChangedSpy.wait());
+    QCOMPARE(m_window->icon().pixmap(32, 32), p);
+
+    // let's set a themed icon
+    m_windowInterface->setIcon(QIcon::fromTheme(QStringLiteral("xorg")));
+    QVERIFY(iconChangedSpy.wait());
+    if (!QIcon::hasThemeIcon(QStringLiteral("xorg"))) {
+        QEXPECT_FAIL("", "no icon", Continue);
+    }
+    QCOMPARE(m_window->icon().name(), QStringLiteral("xorg"));
+}
+
+QTEST_MAIN(TestWindowManagement)
 #include "test_wayland_windowmanagement.moc"
