@@ -673,7 +673,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setMaximizeable(isMaximizable());
     w->setMinimizeable(isMinimizable());
     w->setFullscreenable(isFullScreenable());
-    w->setThemedIconName(icon().name().isEmpty() ? QStringLiteral("xorg") : icon().name());
+    w->setIcon(icon());
     w->setAppId(QString::fromUtf8(resourceName()));
     w->setSkipTaskbar(skipTaskbar());
     w->setShadeable(isShadeable());
@@ -713,8 +713,7 @@ void AbstractClient::setupWindowManagementInterface()
     connect(this, &AbstractClient::demandsAttentionChanged, w, [w, this] { w->setDemandsAttention(isDemandingAttention()); });
     connect(this, &AbstractClient::iconChanged, w,
         [w, this] {
-            const QIcon i = icon();
-            w->setThemedIconName(i.name().isEmpty() ? QStringLiteral("xorg") : i.name());
+            w->setIcon(icon());
         }
     );
     connect(this, &AbstractClient::windowClassChanged, w,
