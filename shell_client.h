@@ -46,6 +46,8 @@ public:
     ShellClient(KWayland::Server::XdgShellPopupInterface *surface);
     virtual ~ShellClient();
 
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
     QStringList activities() const override;
     QPoint clientContentPos() const override;
     QSize clientSize() const override;

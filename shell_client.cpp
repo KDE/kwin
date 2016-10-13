@@ -50,6 +50,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace KWayland::Server;
 
+static const QByteArray s_schemePropertyName = QByteArrayLiteral("KDE_COLOR_SCHEME_PATH");
+
 namespace KWin
 {
 
@@ -1137,6 +1139,18 @@ void ShellClient::installQtExtendedSurface(QtExtendedSurfaceInterface *surface)
     connect(m_qtExtendedSurface.data(), &QtExtendedSurfaceInterface::lowerRequested, this, [this]() {
         workspace()->lowerClientRequest(this);
     });
+    m_qtExtendedSurface->installEventFilter(this);
+}
+
+bool ShellClient::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_qtExtendedSurface.data() && event->type() == QEvent::DynamicPropertyChange) {
+        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
+        if (pe->propertyName() == s_schemePropertyName) {
+            updateColorScheme(rules()->checkDecoColor(m_qtExtendedSurface->property(pe->propertyName().constData()).toString()));
+        }
+    }
+    return false;
 }
 
 bool ShellClient::hasStrut() const
