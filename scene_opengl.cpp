@@ -710,7 +710,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 
             int mask = 0;
             updateProjectionMatrix();
-            paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid, projectionMatrix());   // call generic implementation
+            paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid, projectionMatrix(), geo);   // call generic implementation
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
 

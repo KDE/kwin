@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+#include <QMatrix4x4>
 #include <QtGui/QVector2D>
 #include <QVector3D>
 
@@ -57,11 +58,12 @@ void TestScreenPaintData::testCtor()
     QCOMPARE(data.rotationAngle(), 0.0);
     QCOMPARE(data.rotationOrigin(), QVector3D());
     QCOMPARE(data.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
+    QCOMPARE(data.outputGeometry(), QRect());
 }
 
 void TestScreenPaintData::testCopyCtor()
 {
-    ScreenPaintData data;
+    ScreenPaintData data(QMatrix4x4(), QRect(10, 20, 30, 40));
     ScreenPaintData data2(data);
     // no value had been changed
     QCOMPARE(data2.xScale(), 1.0);
@@ -74,6 +76,7 @@ void TestScreenPaintData::testCopyCtor()
     QCOMPARE(data2.rotationAngle(), 0.0);
     QCOMPARE(data2.rotationOrigin(), QVector3D());
     QCOMPARE(data2.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
+    QCOMPARE(data2.outputGeometry(), QRect(10, 20, 30, 40));
 
     data2.setScale(QVector3D(0.5, 2.0, 3.0));
     data2.translate(0.5, 2.0, 3.0);
@@ -97,13 +100,14 @@ void TestScreenPaintData::testCopyCtor()
 void TestScreenPaintData::testAssignmentOperator()
 {
     ScreenPaintData data;
-    ScreenPaintData data2;
+    ScreenPaintData data2(QMatrix4x4(), QRect(10, 20, 30, 40));
 
     data2.setScale(QVector3D(0.5, 2.0, 3.0));
     data2.translate(0.5, 2.0, 3.0);
     data2.setRotationAngle(45.0);
     data2.setRotationOrigin(QVector3D(1.0, 2.0, 3.0));
     data2.setRotationAxis(QVector3D(1.0, 1.0, 0.0));
+    QCOMPARE(data2.outputGeometry(), QRect(10, 20, 30, 40));
 
     data = data2;
     // data and data2 should be the same
@@ -117,6 +121,7 @@ void TestScreenPaintData::testAssignmentOperator()
     QCOMPARE(data.rotationAngle(), 45.0);
     QCOMPARE(data.rotationOrigin(), QVector3D(1.0, 2.0, 3.0));
     QCOMPARE(data.rotationAxis(), QVector3D(1.0, 1.0, 0.0));
+    QCOMPARE(data.outputGeometry(), QRect(10, 20, 30, 40));
     // data 2
     QCOMPARE(data2.xScale(), 0.5);
     QCOMPARE(data2.yScale(), 2.0);

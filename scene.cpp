@@ -107,7 +107,7 @@ Scene::~Scene()
 
 // returns mask and possibly modified region
 void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint,
-                        QRegion *updateRegion, QRegion *validRegion, const QMatrix4x4 &projection)
+                        QRegion *updateRegion, QRegion *validRegion, const QMatrix4x4 &projection, const QRect &outputGeometry)
 {
     const QSize &screenSize = screens()->size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
@@ -147,7 +147,7 @@ void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint
         paintBackground(region);
     }
 
-    ScreenPaintData data(projection);
+    ScreenPaintData data(projection, outputGeometry);
     effects->paintScreen(*mask, region, data);
 
     foreach (Window *w, stacking_order) {

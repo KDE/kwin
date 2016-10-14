@@ -2547,7 +2547,7 @@ class KWINEFFECTS_EXPORT ScreenPaintData : public PaintData
 {
 public:
     ScreenPaintData();
-    ScreenPaintData(const QMatrix4x4 &projectionMatrix);
+    ScreenPaintData(const QMatrix4x4 &projectionMatrix, const QRect &outputGeometry = QRect());
     ScreenPaintData(const ScreenPaintData &other);
     virtual ~ScreenPaintData();
     /**
@@ -2599,6 +2599,16 @@ public:
      * @since 5.6
      **/
     QMatrix4x4 projectionMatrix() const;
+
+    /**
+     * The geometry of the currently rendered output.
+     * Only set for per-output rendering (e.g. Wayland).
+     *
+     * This geometry can be used as a hint about the native window the OpenGL context
+     * is bound. OpenGL calls need to be translated to this geometry.
+     * @since 5.9
+     **/
+    QRect outputGeometry() const;
 private:
     class Private;
     QScopedPointer<Private> d;

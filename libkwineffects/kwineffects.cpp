@@ -435,6 +435,7 @@ class ScreenPaintData::Private
 {
 public:
     QMatrix4x4 projectionMatrix;
+    QRect outputGeometry;
 };
 
 ScreenPaintData::ScreenPaintData()
@@ -443,11 +444,12 @@ ScreenPaintData::ScreenPaintData()
 {
 }
 
-ScreenPaintData::ScreenPaintData(const QMatrix4x4 &projectionMatrix)
+ScreenPaintData::ScreenPaintData(const QMatrix4x4 &projectionMatrix, const QRect &outputGeometry)
     : PaintData()
     , d(new Private())
 {
     d->projectionMatrix = projectionMatrix;
+    d->outputGeometry = outputGeometry;
 }
 
 ScreenPaintData::~ScreenPaintData() = default;
@@ -464,6 +466,7 @@ ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
     setRotationAxis(other.rotationAxis());
     setRotationAngle(other.rotationAngle());
     d->projectionMatrix = other.d->projectionMatrix;
+    d->outputGeometry = other.d->outputGeometry;
 }
 
 ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
@@ -478,6 +481,7 @@ ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
     setRotationAxis(rhs.rotationAxis());
     setRotationAngle(rhs.rotationAngle());
     d->projectionMatrix = rhs.d->projectionMatrix;
+    d->outputGeometry = rhs.d->outputGeometry;
     return *this;
 }
 
@@ -528,6 +532,11 @@ ScreenPaintData &ScreenPaintData::operator+=(const QVector3D &translation)
 QMatrix4x4 ScreenPaintData::projectionMatrix() const
 {
     return d->projectionMatrix;
+}
+
+QRect ScreenPaintData::outputGeometry() const
+{
+    return d->outputGeometry;
 }
 
 //****************************************
