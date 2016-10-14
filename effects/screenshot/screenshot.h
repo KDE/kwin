@@ -22,13 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCREENSHOT_H
 
 #include <kwineffects.h>
+#include <QDBusContext>
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QObject>
 #include <QImage>
 
 namespace KWin
 {
 
-class ScreenShotEffect : public Effect
+class ScreenShotEffect : public Effect, protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Screenshot")
@@ -86,6 +89,9 @@ private:
     QString blitScreenshot(const QRect &geometry);
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;
+    QRect m_scheduledGeometry;
+    QDBusConnection m_replyConnection;
+    QDBusMessage m_replyMessage;
 };
 
 } // namespace

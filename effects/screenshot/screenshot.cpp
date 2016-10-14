@@ -41,6 +41,7 @@ bool ScreenShotEffect::supported()
 
 ScreenShotEffect::ScreenShotEffect()
     : m_scheduledScreenshot(0)
+    , m_replyConnection(QDBusConnection::sessionBus())
 {
     connect ( effects, SIGNAL(windowClosed(KWin::EffectWindow*)), SLOT(windowClosed(KWin::EffectWindow*)) );
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Screenshot"), this, QDBusConnection::ExportScriptableContents);
@@ -177,6 +178,11 @@ void ScreenShotEffect::postPaintScreen()
         }
         m_scheduledScreenshot = NULL;
     }
+
+    if (!m_scheduledGeometry.isNull()) {
+        m_replyConnection.send(m_replyMessage.createReply(blitScreenshot(m_scheduledGeometry)));
+        m_scheduledGeometry = QRect();
+    }
 }
 
 void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
@@ -210,17 +216,62 @@ void ScreenShotEffect::screenshotForWindow(qulonglong winid, int mask)
 
 QString ScreenShotEffect::screenshotFullscreen()
 {
-    return blitScreenshot(effects->virtualScreenGeometry());
+    if (!calledFromDBus()) {
+        return QString();
+    }
+    if (!m_scheduledGeometry.isNull()) {
+        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+        return QString();
+    }
+    m_replyConnection = connection();
+    m_replyMessage = message();
+    setDelayedReply(true);
+    m_scheduledGeometry = effects->virtualScreenGeometry();
+    effects->addRepaintFull();
+    return QString();
 }
 
 QString ScreenShotEffect::screenshotScreen(int screen)
 {
-    return blitScreenshot(effects->clientArea(FullScreenArea, screen, 0));
+    if (!calledFromDBus()) {
+        return QString();
+    }
+    if (!m_scheduledGeometry.isNull()) {
+        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+        return QString();
+    }
+    m_scheduledGeometry = effects->clientArea(FullScreenArea, screen, 0);
+    if (m_scheduledGeometry.isNull()) {
+        sendErrorReply(QDBusError::Failed, "Invalid screen requested");
+        return QString();
+    }
+    m_replyConnection = connection();
+    m_replyMessage = message();
+    setDelayedReply(true);
+    effects->addRepaint(m_scheduledGeometry);
+    return QString();
 }
 
 QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height)
 {
-    return blitScreenshot(QRect(x, y, width, height));
+    if (!calledFromDBus()) {
+        return QString();
+    }
+    if (!m_scheduledGeometry.isNull()) {
+        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+        return QString();
+    }
+    m_scheduledGeometry = QRect(x, y, width, height);
+    if (m_scheduledGeometry.isNull() || m_scheduledGeometry.isEmpty()) {
+        m_scheduledGeometry = QRect();
+        sendErrorReply(QDBusError::Failed, "Invalid area requested");
+        return QString();
+    }
+    m_replyConnection = connection();
+    m_replyMessage = message();
+    setDelayedReply(true);
+    effects->addRepaint(m_scheduledGeometry);
+    return QString();
 }
 
 QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
@@ -321,7 +372,7 @@ void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)
 
 bool ScreenShotEffect::isActive() const
 {
-    return m_scheduledScreenshot != NULL && !effects->isScreenLocked();
+    return (m_scheduledScreenshot != NULL || !m_scheduledGeometry.isNull()) && !effects->isScreenLocked();
 }
 
 void ScreenShotEffect::windowClosed( EffectWindow* w )
