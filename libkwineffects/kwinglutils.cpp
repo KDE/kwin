@@ -1129,6 +1129,7 @@ bool GLRenderTarget::sSupported = false;
 bool GLRenderTarget::s_blitSupported = false;
 QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
 QSize GLRenderTarget::s_virtualScreenSize;
+QRect GLRenderTarget::s_virtualScreenGeometry;
 
 void GLRenderTarget::initStatic()
 {
@@ -1327,10 +1328,11 @@ void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &desti
     GLRenderTarget::pushRenderTarget(this);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    const QRect s = source.isNull() ? QRect(0, 0, s_virtualScreenSize.width(), s_virtualScreenSize.height()) : source;
+    const QRect s = source.isNull() ? s_virtualScreenGeometry : source;
     const QRect d = destination.isNull() ? QRect(0, 0, mTexture.width(), mTexture.height()) : destination;
 
-    glBlitFramebuffer(s.x(), s_virtualScreenSize.height() - s.y() - s.height(), s.x() + s.width(), s_virtualScreenSize.height() - s.y(),
+    glBlitFramebuffer(s.x() - s_virtualScreenGeometry.x(), s_virtualScreenGeometry.height() - s_virtualScreenGeometry.y() - s.y() - s.height(),
+                      s.x() - s_virtualScreenGeometry.x() + s.width(), s_virtualScreenGeometry.height() - s_virtualScreenGeometry.y() - s.y(),
                       d.x(), mTexture.height() - d.y() - d.height(), d.x() + d.width(), mTexture.height() - d.y(),
                       GL_COLOR_BUFFER_BIT, filter);
     GLRenderTarget::popRenderTarget();

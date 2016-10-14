@@ -700,6 +700,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             // prepare rendering makes context current on the output
             QRegion repaint = m_backend->prepareRenderingForScreen(i);
             GLVertexBuffer::setVirtualScreenGeometry(geo);
+            GLRenderTarget::setVirtualScreenGeometry(geo);
 
             const GLenum status = glGetGraphicsResetStatus();
             if (status != GL_NO_ERROR) {
@@ -727,6 +728,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             return 0;
         }
         GLVertexBuffer::setVirtualScreenGeometry(screens()->geometry());
+        GLRenderTarget::setVirtualScreenGeometry(screens()->geometry());
 
         int mask = 0;
         updateProjectionMatrix();

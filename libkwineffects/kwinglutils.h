@@ -511,6 +511,16 @@ public:
         s_virtualScreenSize = s;
     }
 
+    /**
+     * Sets the virtual screen geometry to @p g.
+     * This is the geometry of the OpenGL window currently being rendered to
+     * in the virtual geometry space the rendering geometries use.
+     * @since 5.9
+     **/
+    static void setVirtualScreenGeometry(const QRect &g) {
+        s_virtualScreenGeometry = g;
+    }
+
 
 protected:
     void initFBO();
@@ -523,6 +533,7 @@ private:
     static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;
     static QSize s_virtualScreenSize;
+    static QRect s_virtualScreenGeometry;
 
     GLTexture mTexture;
     bool mValid;
