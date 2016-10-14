@@ -68,9 +68,15 @@ static QImage xPictureToImage(xcb_render_picture_t srcPic, const QRect &geometry
     QImage img((*xImage)->data, (*xImage)->width, (*xImage)->height, (*xImage)->stride, QImage::Format_ARGB32_Premultiplied);
     // TODO: byte order might need swapping
     xcb_free_pixmap(c, xpix);
-    return img;
+    return img.copy();
 }
 #endif
+
+void ScreenShotEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
+{
+    m_cachedOutputGeometry = data.outputGeometry();
+    effects->paintScreen(mask, region, data);
+}
 
 void ScreenShotEffect::postPaintScreen()
 {
@@ -180,9 +186,60 @@ void ScreenShotEffect::postPaintScreen()
     }
 
     if (!m_scheduledGeometry.isNull()) {
-        m_replyConnection.send(m_replyMessage.createReply(blitScreenshot(m_scheduledGeometry)));
-        m_scheduledGeometry = QRect();
+        if (!m_cachedOutputGeometry.isNull()) {
+            // special handling for per-output geometry rendering
+            const QRect intersection = m_scheduledGeometry.intersected(m_cachedOutputGeometry);
+            if (intersection.isEmpty()) {
+                // doesn't intersect, not going onto this screenshot
+                return;
+            }
+            const QImage img = blitScreenshot(intersection);
+            if (img.size() == m_scheduledGeometry.size()) {
+                // we are done
+                sendReplyImage(img);
+                return;
+            }
+            if (m_multipleOutputsImage.isNull()) {
+                m_multipleOutputsImage = QImage(m_scheduledGeometry.size(), QImage::Format_ARGB32);
+                m_multipleOutputsImage.fill(Qt::transparent);
+            }
+            QPainter p;
+            p.begin(&m_multipleOutputsImage);
+            p.drawImage(intersection.topLeft() - m_scheduledGeometry.topLeft(), img);
+            p.end();
+            m_multipleOutputsRendered = m_multipleOutputsRendered.united(intersection);
+            if (m_multipleOutputsRendered.boundingRect() == m_scheduledGeometry) {
+                sendReplyImage(m_multipleOutputsImage);
+            }
+
+        } else {
+            const QImage img = blitScreenshot(m_scheduledGeometry);
+            sendReplyImage(img);
+        }
     }
+}
+
+void ScreenShotEffect::sendReplyImage(const QImage &img)
+{
+    m_replyConnection.send(m_replyMessage.createReply(saveTempImage(img)));
+    m_scheduledGeometry = QRect();
+    m_multipleOutputsImage = QImage();
+    m_multipleOutputsRendered = QRegion();
+}
+
+QString ScreenShotEffect::saveTempImage(const QImage &img)
+{
+    if (img.isNull()) {
+        return QString();
+    }
+    QTemporaryFile temp(QDir::tempPath() + QDir::separator() + QLatin1String("kwin_screenshot_XXXXXX.png"));
+    temp.setAutoRemove(false);
+    if (!temp.open()) {
+        return QString();
+    }
+    img.save(&temp);
+    temp.close();
+    return temp.fileName();
 }
 
 void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
@@ -274,14 +331,14 @@ QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height)
     return QString();
 }
 
-QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
+QImage ScreenShotEffect::blitScreenshot(const QRect &geometry)
 {
     QImage img;
     if (effects->isOpenGLCompositing())
     {
         if (!GLRenderTarget::blitSupported()) {
             qCDebug(KWINEFFECTS) << "Framebuffer Blit not supported";
-            return QString();
+            return img;
         }
         GLTexture tex(GL_RGBA8, geometry.width(), geometry.height());
         GLRenderTarget target(tex);
@@ -299,27 +356,16 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
     }
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    xcb_image_t *xImage = NULL;
-#endif
     if (effects->compositingType() == XRenderCompositing) {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    xcb_image_t *xImage = NULL;
         img = xPictureToImage(effects->xrenderBufferPicture(), geometry, &xImage);
-#endif
+        if (xImage) {
+            xcb_image_destroy(xImage);
+        }
     }
+#endif
 
-    QTemporaryFile temp(QDir::tempPath() + QDir::separator() + QLatin1String("kwin_screenshot_XXXXXX.png"));
-    temp.setAutoRemove(false);
-    if (!temp.open()) {
-        return QString();
-    }
-    img.save(&temp);
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (xImage) {
-        xcb_image_destroy(xImage);
-    }
-#endif
-    temp.close();
-    return temp.fileName();
+    return img;
 }
 
 void ScreenShotEffect::grabPointerImage(QImage& snapshot, int offsetx, int offsety)

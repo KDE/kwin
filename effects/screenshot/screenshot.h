@@ -42,6 +42,7 @@ public:
     };
     ScreenShotEffect();
     virtual ~ScreenShotEffect();
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
@@ -86,12 +87,17 @@ private Q_SLOTS:
 
 private:
     void grabPointerImage(QImage& snapshot, int offsetx, int offsety);
-    QString blitScreenshot(const QRect &geometry);
+    QImage blitScreenshot(const QRect &geometry);
+    QString saveTempImage(const QImage &img);
+    void sendReplyImage(const QImage &img);
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;
     QRect m_scheduledGeometry;
     QDBusConnection m_replyConnection;
     QDBusMessage m_replyMessage;
+    QRect m_cachedOutputGeometry;
+    QImage m_multipleOutputsImage;
+    QRegion m_multipleOutputsRendered;
 };
 
 } // namespace
