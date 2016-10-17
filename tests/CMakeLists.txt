@@ -7,7 +7,7 @@ endif()
 # next target
 set(screenedgeshowtest_SRCS screenedgeshowtest.cpp)
 add_executable(screenedgeshowtest ${screenedgeshowtest_SRCS})
-target_link_libraries(screenedgeshowtest Qt5::Widgets Qt5::X11Extras KF5::ConfigCore KF5::WindowSystem ${XCB_XCB_LIBRARY})
+target_link_libraries(screenedgeshowtest Qt5::Widgets Qt5::X11Extras KF5::ConfigCore KF5::WindowSystem KF5::WaylandClient ${XCB_XCB_LIBRARY})
 
 if (KF5Wayland_FOUND)
     add_definitions(-DSOURCE_DIR="${KWIN_SOURCE_DIR}")

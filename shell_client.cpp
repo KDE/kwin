@@ -1037,6 +1037,20 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
             workspace()->updateClientArea();
         }
     );
+    connect(surface, &PlasmaShellSurfaceInterface::panelAutoHideHideRequested, this,
+        [this] {
+            hideClient(true);
+            m_plasmaShellSurface->hideAutoHidingPanel();
+            updateShowOnScreenEdge();
+        }
+    );
+    connect(surface, &PlasmaShellSurfaceInterface::panelAutoHideShowRequested, this,
+        [this] {
+            hideClient(false);
+            ScreenEdges::self()->reserve(this, ElectricNone);
+            m_plasmaShellSurface->showAutoHidingPanel();
+        }
+    );
     updatePosition();
     updateRole();
     updateShowOnScreenEdge();
@@ -1057,7 +1071,7 @@ void ShellClient::updateShowOnScreenEdge()
         ScreenEdges::self()->reserve(this, ElectricNone);
         return;
     }
-    if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide ||
+    if ((m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && m_hidden) ||
         m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
         // screen edge API requires an edge, thus we need to figure out which edge the window borders
         Qt::Edges edges;
@@ -1352,9 +1366,11 @@ void ShellClient::showOnScreenEdge()
     if (!m_plasmaShellSurface || m_unmapped) {
         return;
     }
-    // TODO: handle show
+    hideClient(false);
     workspace()->raiseClient(this);
-    // TODO: inform the client about being shown again
+    if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
+        m_plasmaShellSurface->showAutoHidingPanel();
+    }
 }
 
 }

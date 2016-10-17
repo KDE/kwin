@@ -20,82 +20,327 @@
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QMenu>
+#include <QPlatformSurfaceEvent>
 #include <QPushButton>
 #include <QScreen>
 #include <QTimer>
 #include <QToolButton>
+#include <QWindow>
 #include <QWidget>
 #include <QCheckBox>
 #include "../xcbutils.h"
+
+#include <KWindowSystem>
+
+#include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/registry.h>
+#include <KWayland/Client/plasmashell.h>
+#include <KWayland/Client/surface.h>
+
+class ScreenEdgeHelper : public QObject
+{
+    Q_OBJECT
+protected:
+    ScreenEdgeHelper(QWidget *widget, QObject *parent = nullptr);
+
+    QWindow *window() const {
+        return m_widget->windowHandle();
+    }
+
+    virtual void restore() = 0;
+
+public:
+    virtual ~ScreenEdgeHelper();
+
+    virtual void hide() = 0;
+    virtual void raiseOrShow(bool raise) = 0;
+    virtual void init() {};
+
+    virtual void moveToTop();
+    virtual void moveToRight();
+    virtual void moveToBottom();
+    virtual void moveToLeft();
+    virtual void moveToFloating();
+
+    void hideAndRestore() {
+        hide();
+        m_timer->start(10000);
+    }
+
+private:
+    QWidget *m_widget;
+    QTimer *m_timer;
+};
+
+class ScreenEdgeHelperX11 : public ScreenEdgeHelper
+{
+    Q_OBJECT
+public:
+    ScreenEdgeHelperX11(QWidget *widget, QObject *parent = nullptr);
+    virtual ~ScreenEdgeHelperX11() = default;
+
+    void hide() override;
+    void raiseOrShow(bool raise) override;
+
+    void moveToTop() override;
+    void moveToRight() override;
+    void moveToBottom() override;
+    void moveToLeft() override;
+    void moveToFloating() override;
+
+protected:
+    void restore() override;
+
+private:
+    uint32_t m_locationValue = 2;
+    uint32_t m_actionValue = 0;
+    KWin::Xcb::Atom m_atom;
+};
+
+class ScreenEdgeHelperWayland : public ScreenEdgeHelper
+{
+    Q_OBJECT
+public:
+    ScreenEdgeHelperWayland(QWidget *widget, QObject *parent = nullptr);
+    virtual ~ScreenEdgeHelperWayland() = default;
+
+    void hide() override;
+    void raiseOrShow(bool raise) override;
+    void init() override;
+
+    bool eventFilter(QObject * watched, QEvent * event) override;
+
+protected:
+    void restore() override;
+
+private:
+    void setupSurface();
+    KWayland::Client::PlasmaShell *m_shell = nullptr;
+    KWayland::Client::PlasmaShellSurface *m_shellSurface = nullptr;
+    bool m_autoHide = true;
+};
+
+ScreenEdgeHelper::ScreenEdgeHelper(QWidget *widget, QObject *parent)
+    : QObject(parent)
+    , m_widget(widget)
+    , m_timer(new QTimer(this))
+{
+    m_timer->setSingleShot(true);
+    connect(m_timer, &QTimer::timeout, this, &ScreenEdgeHelper::restore);
+}
+
+ScreenEdgeHelper::~ScreenEdgeHelper() = default;
+
+void ScreenEdgeHelper::moveToTop()
+{
+    const QRect geo = QGuiApplication::primaryScreen()->geometry();
+    m_widget->setGeometry(geo.x(), geo.y(), geo.width(), 100);
+}
+
+void ScreenEdgeHelper::moveToRight()
+{
+    const QRect geo = QGuiApplication::primaryScreen()->geometry();
+    m_widget->setGeometry(geo.x(), geo.y(), geo.width(), 100);
+}
+
+void ScreenEdgeHelper::moveToBottom()
+{
+    const QRect geo = QGuiApplication::primaryScreen()->geometry();
+    m_widget->setGeometry(geo.x(), geo.y() + geo.height() - 100, geo.width(), 100);
+}
+
+void ScreenEdgeHelper::moveToLeft()
+{
+    const QRect geo = QGuiApplication::primaryScreen()->geometry();
+    m_widget->setGeometry(geo.x(), geo.y(), 100, geo.height());
+}
+
+void ScreenEdgeHelper::moveToFloating()
+{
+    const QRect geo = QGuiApplication::primaryScreen()->geometry();
+    m_widget->setGeometry(QRect(geo.center(), QSize(100, 100)));
+}
+
+ScreenEdgeHelperX11::ScreenEdgeHelperX11(QWidget *widget, QObject *parent)
+    : ScreenEdgeHelper(widget, parent)
+    , m_atom(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"))
+{
+}
+
+void ScreenEdgeHelperX11::hide()
+{
+    uint32_t value = m_locationValue | (m_actionValue << 8);
+    xcb_change_property(QX11Info::connection(), XCB_PROP_MODE_REPLACE, window()->winId(), m_atom, XCB_ATOM_CARDINAL, 32, 1, &value);
+}
+
+void ScreenEdgeHelperX11::restore()
+{
+    xcb_delete_property(QX11Info::connection(), window()->winId(), m_atom);
+}
+
+void ScreenEdgeHelperX11::raiseOrShow(bool raise)
+{
+    m_actionValue = raise ? 1: 0;
+}
+
+void ScreenEdgeHelperX11::moveToBottom()
+{
+    ScreenEdgeHelper::moveToBottom();
+    m_locationValue = 2;
+}
+
+void ScreenEdgeHelperX11::moveToFloating()
+{
+    ScreenEdgeHelper::moveToFloating();
+    m_locationValue = 4;
+}
+
+void ScreenEdgeHelperX11::moveToLeft()
+{
+    ScreenEdgeHelper::moveToLeft();
+    m_locationValue = 3;
+}
+
+void ScreenEdgeHelperX11::moveToRight()
+{
+    ScreenEdgeHelper::moveToRight();
+    m_locationValue = 1;
+}
+
+void ScreenEdgeHelperX11::moveToTop()
+{
+    ScreenEdgeHelper::moveToTop();
+    m_locationValue = 0;
+}
+
+using namespace KWayland::Client;
+
+ScreenEdgeHelperWayland::ScreenEdgeHelperWayland(QWidget *widget, QObject *parent)
+    : ScreenEdgeHelper(widget, parent)
+{
+    ConnectionThread *connection = ConnectionThread::fromApplication(this);
+    Registry *registry = new Registry(connection);
+    registry->create(connection);
+
+    connect(registry, &Registry::interfacesAnnounced, this,
+        [registry, this] {
+            const auto interface = registry->interface(Registry::Interface::PlasmaShell);
+            if (interface.name == 0) {
+                return;
+            }
+            m_shell = registry->createPlasmaShell(interface.name, interface.version);
+        }
+    );
+
+    registry->setup();
+    connection->roundtrip();
+}
+
+void ScreenEdgeHelperWayland::init()
+{
+    window()->installEventFilter(this);
+    setupSurface();
+}
+
+void ScreenEdgeHelperWayland::setupSurface()
+{
+    if (!m_shell) {
+        return;
+    }
+    if (auto s = Surface::fromWindow(window())) {
+        m_shellSurface = m_shell->createSurface(s, window());
+        m_shellSurface->setRole(PlasmaShellSurface::Role::Panel);
+        m_shellSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AutoHide);
+        m_shellSurface->setPosition(window()->position());
+    }
+}
+
+void ScreenEdgeHelperWayland::hide()
+{
+    if (m_shellSurface && m_autoHide) {
+        m_shellSurface->requestHideAutoHidingPanel();
+    }
+}
+
+void ScreenEdgeHelperWayland::restore()
+{
+    if (m_shellSurface && m_autoHide) {
+        m_shellSurface->requestShowAutoHidingPanel();
+    }
+}
+
+void ScreenEdgeHelperWayland::raiseOrShow(bool raise)
+{
+    m_autoHide = !raise;
+    if (m_shellSurface) {
+        if (raise) {
+            m_shellSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::WindowsCanCover);
+        } else {
+            m_shellSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AutoHide);
+        }
+    }
+}
+
+bool ScreenEdgeHelperWayland::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched != window() || !m_shell) {
+        return false;
+    }
+    if (event->type() == QEvent::PlatformSurface) {
+        QPlatformSurfaceEvent *pe = static_cast<QPlatformSurfaceEvent*>(event);
+        if (pe->surfaceEventType() == QPlatformSurfaceEvent::SurfaceCreated) {
+            setupSurface();
+        } else {
+            delete m_shellSurface;
+            m_shellSurface = nullptr;
+        }
+    }
+    if (event->type() == QEvent::Move) {
+        if (m_shellSurface) {
+            m_shellSurface->setPosition(window()->position());
+        }
+    }
+    return false;
+}
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     QApplication::setApplicationDisplayName(QStringLiteral("Screen Edge Show Test App"));
-    app.setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
-
+    ScreenEdgeHelper *helper = nullptr;
     QScopedPointer<QWidget> widget(new QWidget(nullptr, Qt::FramelessWindowHint));
+    if (KWindowSystem::isPlatformX11()) {
+        app.setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+        helper = new ScreenEdgeHelperX11(widget.data(), &app);
+    } else if (KWindowSystem::isPlatformWayland()) {
+        helper = new ScreenEdgeHelperWayland(widget.data(), &app);
+    }
 
-    KWin::Xcb::Atom atom(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"));
-
-    uint32_t locationValue = 2;
-    uint32_t actionValue = 0;
+    if (!helper) {
+        return 2;
+    }
 
     QPushButton *hideWindowButton = new QPushButton(QStringLiteral("Hide"), widget.data());
 
-    QObject::connect(hideWindowButton, &QPushButton::clicked, [&widget, &atom, &locationValue, &actionValue]() {
-        uint32_t value = locationValue | (actionValue << 8);
-        xcb_change_property(QX11Info::connection(), XCB_PROP_MODE_REPLACE, widget->winId(), atom, XCB_ATOM_CARDINAL, 32, 1, &value);
-    });
+    QObject::connect(hideWindowButton, &QPushButton::clicked, helper, &ScreenEdgeHelper::hide);
 
     QPushButton *hideAndRestoreButton = new QPushButton(QStringLiteral("Hide and Restore after 10 sec"), widget.data());
-    QTimer *restoreTimer = new QTimer(hideAndRestoreButton);
-    restoreTimer->setSingleShot(true);
-    QObject::connect(hideAndRestoreButton, &QPushButton::clicked, [&widget, &atom, &locationValue, &actionValue, restoreTimer]() {
-        uint32_t value = locationValue | (actionValue << 8);
-        xcb_change_property(QX11Info::connection(), XCB_PROP_MODE_REPLACE, widget->winId(), atom, XCB_ATOM_CARDINAL, 32, 1, &value);
-        restoreTimer->start(10000);
-    });
-    QObject::connect(restoreTimer, &QTimer::timeout, [&widget, &atom]() {
-        xcb_delete_property(QX11Info::connection(), widget->winId(), atom);
-    });
+    QObject::connect(hideAndRestoreButton, &QPushButton::clicked, helper, &ScreenEdgeHelper::hideAndRestore);
 
     QToolButton *edgeButton = new QToolButton(widget.data());
 
     QCheckBox *raiseCheckBox = new QCheckBox("Raise:", widget.data());
-    QObject::connect(raiseCheckBox, &QCheckBox::toggled, [&actionValue](bool checked) {
-        actionValue = checked ? 1: 0;
-    });
+    QObject::connect(raiseCheckBox, &QCheckBox::toggled, helper, &ScreenEdgeHelper::raiseOrShow);
 
     edgeButton->setText(QStringLiteral("Edge"));
     edgeButton->setPopupMode(QToolButton::MenuButtonPopup);
     QMenu *edgeButtonMenu = new QMenu(edgeButton);
-    QObject::connect(edgeButtonMenu->addAction("Top"), &QAction::triggered, [&widget, &locationValue]() {
-        const QRect geo = QGuiApplication::primaryScreen()->geometry();
-        widget->setGeometry(geo.x(), geo.y(), geo.width(), 100);
-        locationValue = 0;
-    });
-    QObject::connect(edgeButtonMenu->addAction("Right"), &QAction::triggered, [&widget, &locationValue]() {
-        const QRect geo = QGuiApplication::primaryScreen()->geometry();
-        widget->setGeometry(geo.x() + geo.width() - 100, geo.y(), 100, geo.height());
-        locationValue = 1;
-    });
-    QObject::connect(edgeButtonMenu->addAction("Bottom"), &QAction::triggered, [&widget, &locationValue]() {
-        const QRect geo = QGuiApplication::primaryScreen()->geometry();
-        widget->setGeometry(geo.x(), geo.y() + geo.height() - 100, geo.width(), 100);
-        locationValue = 2;
-    });
-    QObject::connect(edgeButtonMenu->addAction("Left"), &QAction::triggered, [&widget, &locationValue]() {
-        const QRect geo = QGuiApplication::primaryScreen()->geometry();
-        widget->setGeometry(geo.x(), geo.y(), 100, geo.height());
-        locationValue = 3;
-    });
+    QObject::connect(edgeButtonMenu->addAction("Top"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToTop);
+    QObject::connect(edgeButtonMenu->addAction("Right"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToRight);
+    QObject::connect(edgeButtonMenu->addAction("Bottom"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToBottom);
+    QObject::connect(edgeButtonMenu->addAction("Left"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToLeft);
     edgeButtonMenu->addSeparator();
-    QObject::connect(edgeButtonMenu->addAction("Floating"), &QAction::triggered, [&widget, &locationValue]() {
-        const QRect geo = QGuiApplication::primaryScreen()->geometry();
-        widget->setGeometry(QRect(geo.center(), QSize(100, 100)));
-        locationValue = 4;
-    });
+    QObject::connect(edgeButtonMenu->addAction("Floating"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToFloating);
     edgeButton->setMenu(edgeButtonMenu);
 
     QHBoxLayout *layout = new QHBoxLayout(widget.data());
@@ -107,6 +352,9 @@ int main(int argc, char **argv)
     const QRect geo = QGuiApplication::primaryScreen()->geometry();
     widget->setGeometry(geo.x(), geo.y() + geo.height() - 100, geo.width(), 100);
     widget->show();
+    helper->init();
 
     return app.exec();
 }
+
+#include "screenedgeshowtest.moc"

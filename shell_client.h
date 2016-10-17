@@ -76,7 +76,7 @@ public:
     bool isResizable() const override;
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const override {
-        return m_unmapped;
+        return m_unmapped || m_hidden;
     }
     void hideClient(bool hide) override;
     MaximizeMode maximizeMode() const override;
