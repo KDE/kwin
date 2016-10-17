@@ -49,6 +49,8 @@ public:
     bool openGLCompositingIsBroken() const override;
     void createOpenGLSafePoint(OpenGLSafePoint safePoint) override;
 
+    PlatformCursorImage cursorImage() const override;
+
 private:
     /**
      * Tests whether GLX is supported and returns @c true

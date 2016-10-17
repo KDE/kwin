@@ -228,6 +228,8 @@ public:
 
     bool animationsSupported() const override;
 
+    PlatformCursorImage cursorImage() const override;
+
     Scene *scene() const {
         return m_scene;
     }

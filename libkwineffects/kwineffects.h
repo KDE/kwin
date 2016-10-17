@@ -1186,6 +1186,13 @@ public:
     virtual bool animationsSupported() const = 0;
 
     /**
+     * The current cursor image of the Platform.
+     * @see cursorPos
+     * @since 5.9
+     **/
+    virtual PlatformCursorImage cursorImage() const = 0;
+
+    /**
      * @return @ref KConfigGroup which holds given effect's config options
      **/
     static KConfigGroup effectConfig(const QString& effectname);

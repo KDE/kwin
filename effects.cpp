@@ -1559,6 +1559,11 @@ void EffectsHandlerImpl::highlightWindows(const QVector<EffectWindow *> &windows
     e->perform(Effect::HighlightWindows, QVariantList{QVariant::fromValue(windows)});
 }
 
+PlatformCursorImage EffectsHandlerImpl::cursorImage() const
+{
+    return kwinApp()->platform()->cursorImage();
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************

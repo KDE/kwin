@@ -237,6 +237,10 @@ public:
         m_animationsSuported = set;
     }
 
+    KWin::PlatformCursorImage cursorImage() const override {
+        return KWin::PlatformCursorImage();
+    }
+
 private:
     bool m_animationsSuported = true;
 };

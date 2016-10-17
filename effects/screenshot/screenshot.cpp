@@ -369,20 +369,13 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry)
 }
 
 void ScreenShotEffect::grabPointerImage(QImage& snapshot, int offsetx, int offsety)
-// Uses the X11_EXTENSIONS_XFIXES_H extension to grab the pointer image, and overlays it onto the snapshot.
 {
-    QScopedPointer<xcb_xfixes_get_cursor_image_reply_t, QScopedPointerPodDeleter> cursor(
-        xcb_xfixes_get_cursor_image_reply(xcbConnection(),
-                                          xcb_xfixes_get_cursor_image_unchecked(xcbConnection()),
-                                          NULL));
-    if (cursor.isNull())
+    const auto cursor = effects->cursorImage();
+    if (cursor.image().isNull())
         return;
 
-    QImage qcursorimg((uchar *) xcb_xfixes_get_cursor_image_cursor_image(cursor.data()), cursor->width, cursor->height,
-                      QImage::Format_ARGB32_Premultiplied);
-
     QPainter painter(&snapshot);
-    painter.drawImage(QPointF(cursor->x - cursor->xhot - offsetx, cursor->y - cursor ->yhot - offsety), qcursorimg);
+    painter.drawImage(effects->cursorPos() - cursor.hotSpot() - QPoint(offsetx, offsety), cursor.image());
 }
 
 void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)

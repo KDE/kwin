@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_PLATFORM_H
 #define KWIN_PLATFORM_H
 #include <kwin_export.h>
+#include <kwinglobals.h>
 #include <epoxy/egl.h>
 #include <fixx11h.h>
 #include <QImage>
@@ -160,6 +161,17 @@ public:
     QImage softwareCursor() const;
     QPoint softwareCursorHotspot() const;
     void markCursorAsRendered();
+
+    /**
+     * Returns a PlatformCursorImage. By default this is created by softwareCursor and
+     * softwareCursorHotspot. An implementing subclass can use this to provide a better
+     * suited PlatformCursorImage.
+     *
+     * @see softwareCursor
+     * @see softwareCursorHotspot
+     * @since 5.9
+     **/
+    virtual PlatformCursorImage cursorImage() const;
 
     bool handlesOutputs() const {
         return m_handlesOutputs;

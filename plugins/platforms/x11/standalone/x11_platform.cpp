@@ -208,4 +208,21 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
     group.sync();
 }
 
+PlatformCursorImage X11StandalonePlatform::cursorImage() const
+{
+    auto c = kwinApp()->x11Connection();
+    QScopedPointer<xcb_xfixes_get_cursor_image_reply_t, QScopedPointerPodDeleter> cursor(
+        xcb_xfixes_get_cursor_image_reply(c,
+                                          xcb_xfixes_get_cursor_image_unchecked(c),
+                                          nullptr));
+    if (cursor.isNull()) {
+        return PlatformCursorImage();
+    }
+
+    QImage qcursorimg((uchar *) xcb_xfixes_get_cursor_image_cursor_image(cursor.data()), cursor->width, cursor->height,
+                      QImage::Format_ARGB32_Premultiplied);
+    // deep copy of image as the data is going to be freed
+    return PlatformCursorImage(qcursorimg.copy(), QPoint(cursor->xhot, cursor->yhot));
+}
+
 }

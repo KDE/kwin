@@ -188,23 +188,17 @@ void ZoomEffect::hideCursor()
 void ZoomEffect::recreateTexture()
 {
     effects->makeOpenGLContextCurrent();
-    // load the cursor-theme image from the Xcursor-library
-    xcb_xfixes_get_cursor_image_cookie_t keks = xcb_xfixes_get_cursor_image_unchecked(xcbConnection());
-    xcb_xfixes_get_cursor_image_reply_t *ximg = xcb_xfixes_get_cursor_image_reply(xcbConnection(), keks, 0);
-    if (ximg) {
-        // turn the XcursorImage into a QImage that will be used to create the GLTexture/XRenderPicture.
-        imageWidth = ximg->width;
-        imageHeight = ximg->height;
-        cursorHotSpot = QPoint(ximg->xhot, ximg->yhot);
-        uint32_t *bits = xcb_xfixes_get_cursor_image_cursor_image(ximg);
-        QImage img((uchar*)bits, imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+    const auto cursor = effects->cursorImage();
+    if (!cursor.image().isNull()) {
+        imageWidth = cursor.image().width();
+        imageHeight = cursor.image().height();
+        cursorHotSpot = cursor.hotSpot();
         if (effects->isOpenGLCompositing())
-            texture.reset(new GLTexture(img));
+            texture.reset(new GLTexture(cursor.image()));
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (effects->compositingType() == XRenderCompositing)
-            xrenderPicture.reset(new XRenderPicture(img));
+            xrenderPicture.reset(new XRenderPicture(cursor.image()));
 #endif
-        free(ximg);
     }
     else {
         qCDebug(KWINEFFECTS) << "Falling back to proportional mouse tracking!";

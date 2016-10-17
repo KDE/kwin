@@ -5,7 +5,7 @@ ecm_setup_version(${PROJECT_VERSION}
                   VARIABLE_PREFIX KWINEFFECTS
                   VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kwineffects_version.h"
                   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfigVersion.cmake"
-                  SOVERSION 9
+                  SOVERSION 10
 )
 
 ### xrenderutils lib ###

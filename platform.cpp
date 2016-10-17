@@ -54,6 +54,11 @@ QPoint Platform::softwareCursorHotspot() const
     return input()->pointer()->cursorHotSpot();
 }
 
+PlatformCursorImage Platform::cursorImage() const
+{
+    return PlatformCursorImage(softwareCursor(), softwareCursorHotspot());
+}
+
 Screens *Platform::createScreens(QObject *parent)
 {
     Q_UNUSED(parent)
