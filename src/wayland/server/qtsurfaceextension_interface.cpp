@@ -24,6 +24,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "surface_interface.h"
 
 #include <QTimer>
+#include <QVariant>
 
 #include <wayland-server.h>
 #include <wayland-qt-surface-extension-server-protocol.h>
