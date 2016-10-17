@@ -92,6 +92,7 @@ public:
     */
     bool isShown;
     TabBoxClient *lastRaisedClient, *lastRaisedClientSucc;
+    int wheelAngleDelta = 0;
 
 private:
     QObject *createSwitcherItem(bool desktopMode);
@@ -335,6 +336,10 @@ void TabBoxHandlerPrivate::show()
         item->setCurrentIndex(index.row());
         // everything is prepared, so let's make the whole thing visible
         item->setVisible(true);
+    }
+    if (QWindow *w = window()) {
+        wheelAngleDelta = 0;
+        w->installEventFilter(q);
     }
 #endif
 }
@@ -605,6 +610,33 @@ QModelIndex TabBoxHandler::first() const
         return QModelIndex();
     }
     return model->index(0, 0);
+}
+
+bool TabBoxHandler::eventFilter(QObject *watched, QEvent *e)
+{
+    if (e->type() == QEvent::Wheel && watched == d->window()) {
+        QWheelEvent *event = static_cast<QWheelEvent*>(e);
+        // On x11 the delta for vertical scrolling might also be on X for whatever reason
+        const int delta = qAbs(event->angleDelta().x()) > qAbs(event->angleDelta().y()) ? event->angleDelta().x() : event->angleDelta().y();
+        d->wheelAngleDelta += delta;
+        while (d->wheelAngleDelta <= -120) {
+            d->wheelAngleDelta += 120;
+            const QModelIndex index = nextPrev(true);
+            if (index.isValid()) {
+                setCurrentIndex(index);
+            }
+        }
+        while (d->wheelAngleDelta >= 120) {
+            d->wheelAngleDelta -= 120;
+            const QModelIndex index = nextPrev(false);
+            if (index.isValid()) {
+                setCurrentIndex(index);
+            }
+        }
+        return true;
+    }
+    // pass on
+    return QObject::eventFilter(watched, e);
 }
 
 TabBoxHandler* tabBox = nullptr;

@@ -47,6 +47,21 @@ QThread *Connection::s_thread = nullptr;
 
 static Context *s_context = nullptr;
 
+static quint32 toLibinputLEDS(Xkb::LEDs leds)
+{
+    quint32 libinputLeds = 0;
+    if (leds.testFlag(Xkb::LED::NumLock)) {
+        libinputLeds = libinputLeds | LIBINPUT_LED_NUM_LOCK;
+    }
+    if (leds.testFlag(Xkb::LED::CapsLock)) {
+        libinputLeds = libinputLeds | LIBINPUT_LED_CAPS_LOCK;
+    }
+    if (leds.testFlag(Xkb::LED::ScrollLock)) {
+        libinputLeds = libinputLeds | LIBINPUT_LED_SCROLL_LOCK;
+    }
+    return libinputLeds;
+}
+
 Connection::Connection(QObject *parent)
     : Connection(nullptr, parent)
 {
@@ -95,6 +110,7 @@ Connection::Connection(Context *input, QObject *parent)
     , m_input(input)
     , m_notifier(nullptr)
     , m_mutex(QMutex::Recursive)
+    , m_leds()
 {
     Q_ASSERT(m_input);
 
@@ -246,6 +262,10 @@ void Connection::processEvents()
                     }
                 }
                 applyDeviceConfig(device);
+
+                // enable possible leds
+                libinput_device_led_update(device->device(), static_cast<libinput_led>(toLibinputLEDS(m_leds)));
+
                 emit deviceAdded(device);
                 break;
             }
@@ -514,6 +534,19 @@ void Connection::toggleTouchpads()
         );
         msg.setArguments({m_touchpadsEnabled});
         QDBusConnection::sessionBus().asyncCall(msg);
+    }
+}
+
+void Connection::updateLEDs(Xkb::LEDs leds)
+{
+    if (m_leds == leds) {
+        return;
+    }
+    m_leds = leds;
+    // update on devices
+    const libinput_led l = static_cast<libinput_led>(toLibinputLEDS(leds));
+    for (auto it = m_devices.constBegin(), end = m_devices.constEnd(); it != end; ++it) {
+        libinput_device_led_update((*it)->device(), l);
     }
 }
 

@@ -1246,7 +1246,9 @@ void InputRedirection::setupLibInput()
         }
 
         conn->setInputConfig(m_inputConfig);
+        conn->updateLEDs(m_keyboard->xkb()->leds());
         conn->setup();
+        connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, conn, &LibInput::Connection::updateLEDs);
         connect(conn, &LibInput::Connection::eventsRead, this,
             [this] {
                 m_libInput->processEvents();
