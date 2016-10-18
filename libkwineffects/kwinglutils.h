@@ -515,10 +515,21 @@ public:
      * Sets the virtual screen geometry to @p g.
      * This is the geometry of the OpenGL window currently being rendered to
      * in the virtual geometry space the rendering geometries use.
+     * @see virtualScreenGeometry
      * @since 5.9
      **/
     static void setVirtualScreenGeometry(const QRect &g) {
         s_virtualScreenGeometry = g;
+    }
+
+    /**
+     * The geometry of the OpenGL window currently being rendered to
+     * in the virtual geometry space the rendering system uses.
+     * @see setVirtualScreenGeometry
+     * @since 5.9
+     **/
+    static QRect virtualScreenGeometry() {
+        return s_virtualScreenGeometry;
     }
 
 
