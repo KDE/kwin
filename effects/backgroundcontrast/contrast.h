@@ -74,7 +74,7 @@ private:
     QRegion contrastRegion(const EffectWindow *w) const;
     bool shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateContrastRegion(EffectWindow *w) const;
-    void doContrast(const QRegion &shape, const QRect &screen, const float opacity);
+    void doContrast(const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection);
     void uploadRegion(QVector2D *&map, const QRegion &region);
     void uploadGeometry(GLVertexBuffer *vbo, const QRegion &region);
 

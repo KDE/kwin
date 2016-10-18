@@ -370,7 +370,7 @@ bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const Windo
 
 void ContrastEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    const QRect screen = effects->virtualScreenGeometry();
+    const QRect screen = GLRenderTarget::virtualScreenGeometry();
     if (shouldContrast(w, mask, data)) {
         QRegion shape = region & contrastRegion(w).translated(w->pos()) & screen;
 
@@ -397,7 +397,7 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, QRegion region, Windo
         }
 
         if (!shape.isEmpty()) {
-            doContrast(shape, screen, data.opacity());
+            doContrast(shape, screen, data.opacity(), data.screenProjectionMatrix());
         }
     }
 
@@ -411,7 +411,7 @@ void ContrastEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double
     effects->paintEffectFrame(frame, region, opacity, frameOpacity);
 }
 
-void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const float opacity)
+void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection)
 {
     const QRegion actualShape = shape & screen;
     const QRect r = actualShape.boundingRect();
@@ -428,7 +428,8 @@ void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();
 
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x(), effects->virtualScreenSize().height() - r.y() - r.height(),
+    const QRect sg = GLRenderTarget::virtualScreenGeometry();
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x() - sg.x(), sg.height() - sg.y() - r.y() - r.height(),
                         r.width(), r.height());
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
@@ -443,6 +444,7 @@ void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const
     textureMatrix.scale(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
     textureMatrix.translate(-r.x(), -scratch.height() - r.y(), 0);
     shader->setTextureMatrix(textureMatrix);
+    shader->setModelViewProjectionMatrix(screenProjection);
 
     vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
 

@@ -434,7 +434,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
 
 void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    const QRect screen = effects->virtualScreenGeometry();
+    const QRect screen = GLRenderTarget::virtualScreenGeometry();
     if (shouldBlur(w, mask, data)) {
         QRegion shape = region & blurRegion(w).translated(w->pos()) & screen;
 
@@ -529,7 +529,8 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();
 
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x(), effects->virtualScreenSize().height() - r.y() - r.height(),
+    const QRect sg = GLRenderTarget::virtualScreenGeometry();
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x() - sg.x(), sg.height() - sg.y() - r.y() - r.height(),
                         r.width(), r.height());
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
