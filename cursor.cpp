@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "keyboard_input.h"
 #include "main.h"
+#include "platform.h"
 #include "utils.h"
 #include "xcbutils.h"
 // KDE
@@ -228,11 +229,12 @@ void Cursor::doStopCursorTracking()
 
 void Cursor::notifyCursorChanged(uint32_t serial)
 {
+    Q_UNUSED(serial)
     if (m_cursorTrackingCounter <= 0) {
         // cursor change tracking is currently disabled, so don't emit signal
         return;
     }
-    emit cursorChanged(serial);
+    emit cursorChanged();
 }
 
 QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
@@ -388,13 +390,6 @@ InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
 #ifndef KCMRULES
     connect(input(), &InputRedirection::keyboardModifiersChanged,
             this, &InputRedirectionCursor::slotModifiersChanged);
-    connect(kwinApp(), &Application::x11ConnectionChanged, this,
-        [this] {
-            if (isCursorTracking()) {
-                doStartCursorTracking();
-            }
-        }, Qt::QueuedConnection
-    );
 #endif
 }
 
@@ -434,20 +429,16 @@ void InputRedirectionCursor::slotPointerButtonChanged()
 
 void InputRedirectionCursor::doStartCursorTracking()
 {
-    if (!kwinApp()->x11Connection()) {
-        return;
-    }
-    xcb_xfixes_select_cursor_input(connection(), rootWindow(), XCB_XFIXES_CURSOR_NOTIFY_MASK_DISPLAY_CURSOR);
-    // TODO: also track the Wayland cursor
+#ifndef KCMRULES
+    connect(kwinApp()->platform(), &Platform::cursorChanged, this, &Cursor::cursorChanged);
+#endif
 }
 
 void InputRedirectionCursor::doStopCursorTracking()
 {
-    if (!kwinApp()->x11Connection()) {
-        return;
-    }
-    xcb_xfixes_select_cursor_input(connection(), rootWindow(), 0);
-    // TODO: also track the Wayland cursor
+#ifndef KCMRULES
+    disconnect(kwinApp()->platform(), &Platform::cursorChanged, this, &Cursor::cursorChanged);
+#endif
 }
 
 } // namespace

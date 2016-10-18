@@ -141,11 +141,10 @@ Q_SIGNALS:
      *
      * To enable these signals use @link startCursorTracking.
      *
-     * @param serial The serial number of the new selected cursor.
      * @see startCursorTracking
      * @see stopCursorTracking
      */
-    void cursorChanged(uint32_t serial);
+    void cursorChanged();
     void themeChanged();
 
 protected:
