@@ -1178,7 +1178,8 @@ GLRenderTarget* GLRenderTarget::popRenderTarget()
     if (!s_renderTargets.isEmpty()) {
         s_renderTargets.top()->enable();
     } else {
-        glViewport (0, 0, s_virtualScreenSize.width(), s_virtualScreenSize.height());
+        glViewport (-s_virtualScreenGeometry.x(), s_virtualScreenGeometry.height() - s_virtualScreenSize.height() - s_virtualScreenGeometry.y(),
+                           s_virtualScreenSize.width(), s_virtualScreenSize.height());
     }
 
     return ret;
