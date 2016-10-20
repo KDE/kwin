@@ -776,15 +776,6 @@ public:
     static GLVertexBuffer *streamingBuffer();
 
     /**
-     * Sets the virtual screen size to @p s.
-     * @since 5.2
-     * @deprecated since 5.9 use setVirtualScreenGeometry
-     **/
-    static void KWINGLUTILS_DEPRECATED setVirtualScreenSize(const QSize &s) {
-        s_virtualScreenSize = s;
-    }
-
-    /**
      * Sets the virtual screen geometry to @p g.
      * This is the geometry of the OpenGL window currently being rendered to
      * in the virtual geometry space the rendering geometries use.
@@ -796,8 +787,6 @@ public:
 
 private:
     GLVertexBufferPrivate* const d;
-    // TODO: remove with next ABI break
-    static QSize s_virtualScreenSize;
     static QRect s_virtualScreenGeometry;
 };
 

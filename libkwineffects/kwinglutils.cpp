@@ -2024,7 +2024,6 @@ GLvoid *GLVertexBufferPrivate::mapNextFreeRange(size_t size)
 //*********************************
 // GLVertexBuffer
 //*********************************
-QSize GLVertexBuffer::s_virtualScreenSize;
 QRect GLVertexBuffer::s_virtualScreenGeometry;
 
 GLVertexBuffer::GLVertexBuffer(UsageHint hint)
