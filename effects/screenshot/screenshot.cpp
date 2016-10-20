@@ -225,6 +225,7 @@ void ScreenShotEffect::sendReplyImage(const QImage &img)
     m_scheduledGeometry = QRect();
     m_multipleOutputsImage = QImage();
     m_multipleOutputsRendered = QRegion();
+    m_captureCursor = false;
 }
 
 QString ScreenShotEffect::saveTempImage(const QImage &img)
@@ -271,7 +272,7 @@ void ScreenShotEffect::screenshotForWindow(qulonglong winid, int mask)
     }
 }
 
-QString ScreenShotEffect::screenshotFullscreen()
+QString ScreenShotEffect::screenshotFullscreen(bool captureCursor)
 {
     if (!calledFromDBus()) {
         return QString();
@@ -284,11 +285,12 @@ QString ScreenShotEffect::screenshotFullscreen()
     m_replyMessage = message();
     setDelayedReply(true);
     m_scheduledGeometry = effects->virtualScreenGeometry();
+    m_captureCursor = captureCursor;
     effects->addRepaintFull();
     return QString();
 }
 
-QString ScreenShotEffect::screenshotScreen(int screen)
+QString ScreenShotEffect::screenshotScreen(int screen, bool captureCursor)
 {
     if (!calledFromDBus()) {
         return QString();
@@ -302,6 +304,7 @@ QString ScreenShotEffect::screenshotScreen(int screen)
         sendErrorReply(QDBusError::Failed, "Invalid screen requested");
         return QString();
     }
+    m_captureCursor = captureCursor;
     m_replyConnection = connection();
     m_replyMessage = message();
     setDelayedReply(true);
@@ -309,7 +312,7 @@ QString ScreenShotEffect::screenshotScreen(int screen)
     return QString();
 }
 
-QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height)
+QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height, bool captureCursor)
 {
     if (!calledFromDBus()) {
         return QString();
@@ -324,6 +327,7 @@ QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height)
         sendErrorReply(QDBusError::Failed, "Invalid area requested");
         return QString();
     }
+    m_captureCursor = captureCursor;
     m_replyConnection = connection();
     m_replyMessage = message();
     setDelayedReply(true);
@@ -364,6 +368,10 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry)
         }
     }
 #endif
+
+    if (m_captureCursor) {
+        grabPointerImage(img, geometry.x(), geometry.y());
+    }
 
     return img;
 }

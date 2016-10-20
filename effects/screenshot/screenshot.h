@@ -58,16 +58,18 @@ public Q_SLOTS:
     /**
      * Saves a screenshot of all screen into a file and returns the path to the file.
      * Functionality requires hardware support, if not available a null string is returned.
+     * @param captureCursor Whether to include the cursor in the image
      * @returns Path to stored screenshot, or null string in failure case.
      **/
-    Q_SCRIPTABLE QString screenshotFullscreen();
+    Q_SCRIPTABLE QString screenshotFullscreen(bool captureCursor = false);
     /**
      * Saves a screenshot of the screen identified by @p screen into a file and returns the path to the file.
      * Functionality requires hardware support, if not available a null string is returned.
      * @param screen Number of screen as numbered by QDesktopWidget
+     * @param captureCursor Whether to include the cursor in the image
      * @returns Path to stored screenshot, or null string in failure case.
      **/
-    Q_SCRIPTABLE QString screenshotScreen(int screen);
+    Q_SCRIPTABLE QString screenshotScreen(int screen, bool captureCursor = false);
     /**
      * Saves a screenshot of the selected geometry into a file and returns the path to the file.
      * Functionality requires hardware support, if not available a null string is returned.
@@ -75,9 +77,10 @@ public Q_SLOTS:
      * @param y Left upper y coord of region
      * @param width Width of the region to screenshot
      * @param height Height of the region to screenshot
+     * @param captureCursor Whether to include the cursor in the image
      * @returns Path to stored screenshot, or null string in failure case.
      **/
-    Q_SCRIPTABLE QString screenshotArea(int x, int y, int width, int height);
+    Q_SCRIPTABLE QString screenshotArea(int x, int y, int width, int height, bool captureCursor = false);
 
 Q_SIGNALS:
     Q_SCRIPTABLE void screenshotCreated(qulonglong handle);
@@ -98,6 +101,7 @@ private:
     QRect m_cachedOutputGeometry;
     QImage m_multipleOutputsImage;
     QRegion m_multipleOutputsRendered;
+    bool m_captureCursor = false;
 };
 
 } // namespace
