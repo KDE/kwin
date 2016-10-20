@@ -172,16 +172,6 @@ Request::Request(const QString &name)
 
 Request::~Request() = default;
 
-bool Request::isDestructor() const
-{
-    for (const auto a: m_arguments) {
-        if (a.type() == Argument::Type::Destructor) {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool Request::isFactory() const
 {
     for (const auto a: m_arguments) {
@@ -330,6 +320,9 @@ Request Generator::parseRequest()
 {
     const auto attributes = m_xmlReader.attributes();
     Request request(attributes.value(QStringLiteral("name")).toString());
+    if (attributes.value(QStringLiteral("type")).toString().compare(QLatin1String("destructor")) == 0) {
+        request.markAsDestructor();
+    }
     while (!m_xmlReader.atEnd()) {
         if (!m_xmlReader.readNextStartElement()) {
             if (m_xmlReader.qualifiedName().compare(QLatin1String("request")) == 0) {
@@ -753,6 +746,9 @@ void Generator::generateServerPrivateGlobalClass(const Interface &interface)
 void Generator::generateServerPrivateCallbackDefinitions(const Interface &interface)
 {
     for (const auto &r: interface.requests()) {
+        if (r.isDestructor() && !interface.isGlobal()) {
+            continue;
+        }
         *m_stream.localData() << QStringLiteral("    static void %1Callback(wl_client *client, wl_resource *resource").arg(toCamelCase(r.name()));
         for (const auto &a: r.arguments()) {
             *m_stream.localData() << QStringLiteral(", %1 %2").arg(a.typeAsServerWl()).arg(a.name());
@@ -765,14 +761,24 @@ void Generator::generateServerPrivateCallbackDefinitions(const Interface &interf
 void Generator::generateServerPrivateCallbackImpl(const Interface &interface)
 {
     for (const auto &r: interface.requests()) {
+        if (r.isDestructor() && !interface.isGlobal()) {
+            continue;
+        }
         *m_stream.localData() << QStringLiteral("void %2::Private::%1Callback(wl_client *client, wl_resource *resource").arg(toCamelCase(r.name())).arg(interface.kwaylandServerName());
         for (const auto &a: r.arguments()) {
             *m_stream.localData() << QStringLiteral(", %1 %2").arg(a.typeAsServerWl()).arg(a.name());
         }
         *m_stream.localData() << QStringLiteral(
 ")\n"
-"{\n"
-"    // TODO: implement\n"
+"{\n");
+        if (r.isDestructor()) {
+            *m_stream.localData() << QStringLiteral(
+"    Q_UNUSED(client)\n"
+"    wl_resource_destroy(resource);\n");
+        } else {
+            *m_stream.localData() << QStringLiteral("    // TODO: implement\n");
+        }
+        *m_stream.localData() << QStringLiteral(
 "}\n"
 "\n");
     }
@@ -848,7 +854,11 @@ void Generator::generateServerPrivateInterfaceClass(const Interface &interface)
         } else {
             first = false;
         }
-        *m_stream.localData() << QStringLiteral("    %1Callback").arg(toCamelCase(r.name()));
+        if (r.isDestructor() && !interface.isGlobal()) {
+            *m_stream.localData() << QStringLiteral("    resourceDestroyedCallback");
+        } else {
+            *m_stream.localData() << QStringLiteral("    %1Callback").arg(toCamelCase(r.name()));
+        }
     }
     *m_stream.localData() << QStringLiteral("\n};\n#endif\n\n");
 }

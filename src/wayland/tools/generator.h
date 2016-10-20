@@ -95,12 +95,19 @@ public:
         return m_arguments;
     }
 
-    bool isDestructor() const;
+    bool isDestructor() const {
+        return m_destructor;
+    }
     bool isFactory() const;
+
+    void markAsDestructor() {
+        m_destructor = true;
+    }
 
 private:
     QString m_name;
     QVector<Argument> m_arguments;
+    bool m_destructor = false;
 };
 
 class Event
