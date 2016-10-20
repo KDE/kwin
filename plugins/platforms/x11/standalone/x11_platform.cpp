@@ -262,4 +262,14 @@ PlatformCursorImage X11StandalonePlatform::cursorImage() const
     return PlatformCursorImage(qcursorimg.copy(), QPoint(cursor->xhot, cursor->yhot));
 }
 
+void X11StandalonePlatform::doHideCursor()
+{
+    xcb_xfixes_hide_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
+}
+
+void X11StandalonePlatform::doShowCursor()
+{
+    xcb_xfixes_show_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
+}
+
 }

@@ -43,6 +43,7 @@ private Q_SLOTS:
     void testScreens();
     void testNoWindowsAtStart();
     void testCreateWindow();
+    void testHideShowCursor();
 };
 
 void StartTest::initTestCase()
@@ -127,6 +128,33 @@ void StartTest::testCreateWindow()
     // this should tear down everything again
     QVERIFY(shellClientRemovedSpy.wait());
     QVERIFY(waylandServer()->clients().isEmpty());
+}
+
+
+void StartTest::testHideShowCursor()
+{
+    QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
+    kwinApp()->platform()->hideCursor();
+    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
+    kwinApp()->platform()->showCursor();
+    QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
+
+
+    kwinApp()->platform()->hideCursor();
+    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
+    kwinApp()->platform()->hideCursor();
+    kwinApp()->platform()->hideCursor();
+    kwinApp()->platform()->hideCursor();
+    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
+
+    kwinApp()->platform()->showCursor();
+    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
+    kwinApp()->platform()->showCursor();
+    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
+    kwinApp()->platform()->showCursor();
+    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
+    kwinApp()->platform()->showCursor();
+    QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
 }
 
 }

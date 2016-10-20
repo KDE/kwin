@@ -59,6 +59,30 @@ PlatformCursorImage Platform::cursorImage() const
     return PlatformCursorImage(softwareCursor(), softwareCursorHotspot());
 }
 
+void Platform::hideCursor()
+{
+    m_hideCursorCounter++;
+    if (m_hideCursorCounter == 1) {
+        doHideCursor();
+    }
+}
+
+void Platform::doHideCursor()
+{
+}
+
+void Platform::showCursor()
+{
+    m_hideCursorCounter--;
+    if (m_hideCursorCounter == 0) {
+        doShowCursor();
+    }
+}
+
+void Platform::doShowCursor()
+{
+}
+
 Screens *Platform::createScreens(QObject *parent)
 {
     Q_UNUSED(parent)

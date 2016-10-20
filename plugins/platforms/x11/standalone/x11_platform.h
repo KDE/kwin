@@ -51,6 +51,10 @@ public:
 
     PlatformCursorImage cursorImage() const override;
 
+protected:
+    void doHideCursor() override;
+    void doShowCursor() override;
+
 private:
     /**
      * Tests whether GLX is supported and returns @c true

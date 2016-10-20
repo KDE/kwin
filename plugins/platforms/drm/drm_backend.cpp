@@ -619,9 +619,12 @@ void DrmBackend::updateCursor()
     if (usesSoftwareCursor()) {
         return;
     }
+    if (isCursorHidden()) {
+        return;
+    }
     const QImage &cursorImage = softwareCursor();
     if (cursorImage.isNull()) {
-        hideCursor();
+        doHideCursor();
         return;
     }
     QImage *c = m_cursor[m_cursorIndex]->image();
@@ -635,7 +638,12 @@ void DrmBackend::updateCursor()
     moveCursor();
 }
 
-void DrmBackend::hideCursor()
+void DrmBackend::doShowCursor()
+{
+    updateCursor();
+}
+
+void DrmBackend::doHideCursor()
 {
     if (!m_cursorEnabled) {
         return;
@@ -648,7 +656,7 @@ void DrmBackend::hideCursor()
 void DrmBackend::moveCursor()
 {
     const QPoint p = Cursor::pos() - softwareCursorHotspot();
-    if (!m_cursorEnabled) {
+    if (!m_cursorEnabled || isCursorHidden()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {

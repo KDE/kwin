@@ -176,6 +176,34 @@ public:
      **/
     virtual PlatformCursorImage cursorImage() const;
 
+    /**
+     * The Platform cursor image should be hidden.
+     * @see showCursor
+     * @see doHideCursor
+     * @see isCursorHidden
+     * @since 5.9
+     **/
+    void hideCursor();
+
+    /**
+     * The Platform cursor image should be shown again.
+     * @see hideCursor
+     * @see doShowCursor
+     * @see isCursorHidden
+     * @since 5.9
+     **/
+    void showCursor();
+
+    /**
+     * Whether the cursor is currently hidden.
+     * @see showCursor
+     * @see hideCursor
+     * @since 5.9
+     **/
+    bool isCursorHidden() const {
+        return m_hideCursorCounter > 0;
+    }
+
     bool handlesOutputs() const {
         return m_handlesOutputs;
     }
@@ -248,6 +276,30 @@ protected:
         m_pointerWarping = set;
     }
 
+    /**
+     * Actual platform specific way to hide the cursor.
+     * Sub-classes need to implement if they support hiding the cursor.
+     *
+     * This method is invoked by hideCursor if the cursor needs to be hidden.
+     * The default implementation does nothing.
+     *
+     * @see doShowCursor
+     * @see hideCursor
+     * @see showCursor
+     **/
+    virtual void doHideCursor();
+    /**
+     * Actual platform specific way to show the cursor.
+     * Sub-classes need to implement if they support showing the cursor.
+     *
+     * This method is invoked by showCursor if the cursor needs to be shown again.
+     *
+     * @see doShowCursor
+     * @see hideCursor
+     * @see showCursor
+     **/
+    virtual void doShowCursor();
+
 private:
     void triggerCursorRepaint();
     bool m_softWareCursor = false;
@@ -262,6 +314,7 @@ private:
     bool m_outputsEnabled = true;
     int m_initialOutputCount = 1;
     EGLDisplay m_eglDisplay;
+    int m_hideCursorCounter = 0;
 };
 
 }

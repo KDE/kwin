@@ -113,6 +113,11 @@ Q_SIGNALS:
     void outputRemoved(KWin::DrmOutput *output);
     void outputAdded(KWin::DrmOutput *output);
 
+protected:
+
+    void doHideCursor() override;
+    void doShowCursor() override;
+
 private:
     static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data);
     void openDrm();
@@ -122,7 +127,6 @@ private:
     void queryResources();
     void setCursor();
     void updateCursor();
-    void hideCursor();
     void moveCursor();
     void initCursor();
     quint32 findCrtc(drmModeRes *res, drmModeConnector *connector, bool *ok = nullptr);
