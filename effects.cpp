@@ -1564,6 +1564,16 @@ PlatformCursorImage EffectsHandlerImpl::cursorImage() const
     return kwinApp()->platform()->cursorImage();
 }
 
+void EffectsHandlerImpl::hideCursor()
+{
+    kwinApp()->platform()->hideCursor();
+}
+
+void EffectsHandlerImpl::showCursor()
+{
+    kwinApp()->platform()->showCursor();
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************

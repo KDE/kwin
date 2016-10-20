@@ -241,6 +241,10 @@ public:
         return KWin::PlatformCursorImage();
     }
 
+    void hideCursor() override {}
+
+    void showCursor() override {}
+
 private:
     bool m_animationsSuported = true;
 };

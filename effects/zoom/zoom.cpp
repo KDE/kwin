@@ -38,7 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinxrenderutils.h>
 #include <xcb/render.h>
 #endif
-#include <xcb/xfixes.h>
 
 namespace KWin
 {
@@ -153,7 +152,7 @@ void ZoomEffect::showCursor()
     if (isMouseHidden) {
         disconnect(effects, &EffectsHandler::cursorShapeChanged, this, &ZoomEffect::recreateTexture);
         // show the previously hidden mouse-pointer again and free the loaded texture/picture.
-        xcb_xfixes_show_cursor(xcbConnection(), x11RootWindow());
+        effects->showCursor();
         texture.reset();
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         xrenderPicture.reset();
@@ -178,7 +177,7 @@ void ZoomEffect::hideCursor()
 #endif
         }
         if (shouldHide) {
-            xcb_xfixes_hide_cursor(xcbConnection(), x11RootWindow());
+            effects->hideCursor();
             connect(effects, &EffectsHandler::cursorShapeChanged, this, &ZoomEffect::recreateTexture);
             isMouseHidden = true;
         }

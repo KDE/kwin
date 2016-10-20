@@ -1193,6 +1193,20 @@ public:
     virtual PlatformCursorImage cursorImage() const = 0;
 
     /**
+     * The cursor image should be hidden.
+     * @see showCursor
+     * @since 5.9
+     **/
+    virtual void hideCursor() = 0;
+
+    /**
+     * The cursor image should be shown again after having been hidden..
+     * @see hideCursor
+     * @since 5.9
+     **/
+    virtual void showCursor() = 0;
+
+    /**
      * @return @ref KConfigGroup which holds given effect's config options
      **/
     static KConfigGroup effectConfig(const QString& effectname);

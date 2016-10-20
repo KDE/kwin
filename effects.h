@@ -230,6 +230,9 @@ public:
 
     PlatformCursorImage cursorImage() const override;
 
+    void hideCursor() override;
+    void showCursor() override;
+
     Scene *scene() const {
         return m_scene;
     }
