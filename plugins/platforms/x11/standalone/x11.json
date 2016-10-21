@@ -10,6 +10,7 @@
         "Description[fi]": "Alustaliitännäinen itsenäiselle x11:lle kwin_x11:ssä.", 
         "Description[gl]": "Complemento de plataforma para x11 independente en kwin_x11.", 
         "Description[it]": "Estensione di piattaforma per x11 autonomo in kwin_x11.", 
+        "Description[ko]": "kwin_x11의 단독 X11 플러그인입니다.", 
         "Description[nl]": "Platform plug-in voor alleenstaande x11 in kwin_x11.", 
         "Description[nn]": "Plattformtillegg for frittståande X11 i kwin_x11.", 
         "Description[pl]": "Wtyczka platformy dla wolnostojącego x11 w kwin_x11.", 
