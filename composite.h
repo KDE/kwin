@@ -239,6 +239,7 @@ private:
     Scene *m_scene;
     bool m_bufferSwapPending;
     bool m_composeAtSwapCompletion;
+    int m_framesToTestForSafety = 3;
 
     KWIN_SINGLETON_VARIABLE(Compositor, s_compositor)
 };

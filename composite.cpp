@@ -135,6 +135,9 @@ Compositor::Compositor(QObject* workspace)
         }
     );
 
+    if (qEnvironmentVariableIsSet("KWIN_MAX_FRAMES_TESTED"))
+       m_framesToTestForSafety = qEnvironmentVariableIntValue("KWIN_MAX_FRAMES_TESTED");
+
     // register DBus
     new CompositorDBusInterface(this);
 }
@@ -207,7 +210,6 @@ void Compositor::slotCompositingOptionsInitialized()
 
             m_scene = SceneOpenGL::createScene(this);
 
-            // TODO: Add 30 second delay to protect against screen freezes as well
             kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
 
             if (m_scene && !m_scene->initFailed()) {
@@ -734,7 +736,19 @@ void Compositor::performCompositing()
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
 
+    if (m_framesToTestForSafety > 0 && (m_scene->compositingType() & OpenGLCompositing)) {
+        kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
+    }
     m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
+    if (m_framesToTestForSafety > 0) {
+        if (m_scene->compositingType() & OpenGLCompositing) {
+            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostFrame);
+        }
+        m_framesToTestForSafety--;
+        if (m_framesToTestForSafety == 0 && (m_scene->compositingType() & OpenGLCompositing)) {
+            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostLastGuardedFrame);
+        }
+    }
     m_timeSinceStart += m_timeSinceLastVBlank;
 
     if (waylandServer()) {

@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KLocalizedString>
 
+#include <QThread>
 #include <QOpenGLContext>
 #include <QX11Info>
 
@@ -200,12 +201,48 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
     switch (safePoint) {
     case OpenGLSafePoint::PreInit:
         group.writeEntry(unsafeKey, true);
+        group.sync();
+        // Deliberately continue with PreFrame
+    case OpenGLSafePoint::PreFrame:
+        if (m_openGLFreezeProtectionThread == nullptr) {
+            Q_ASSERT(m_openGLFreezeProtection == nullptr);
+            m_openGLFreezeProtectionThread = new QThread(this);
+            m_openGLFreezeProtectionThread->setObjectName("FreezeDetector");
+            m_openGLFreezeProtectionThread->start();
+            m_openGLFreezeProtection = new QTimer;
+            m_openGLFreezeProtection->setInterval(15000);
+            m_openGLFreezeProtection->setSingleShot(true);
+            m_openGLFreezeProtection->start();
+            m_openGLFreezeProtection->moveToThread(m_openGLFreezeProtectionThread);
+            connect(m_openGLFreezeProtection, &QTimer::timeout, m_openGLFreezeProtection,
+                [] {
+                    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
+                    auto group = KConfigGroup(kwinApp()->config(), "Compositing");
+                    group.writeEntry(unsafeKey, true);
+                    group.sync();
+                    qFatal("Freeze in OpenGL initialization detected");
+                }, Qt::DirectConnection);
+        } else {
+            Q_ASSERT(m_openGLFreezeProtection);
+            QMetaObject::invokeMethod(m_openGLFreezeProtection, "start", Qt::QueuedConnection);
+        }
         break;
     case OpenGLSafePoint::PostInit:
         group.writeEntry(unsafeKey, false);
+        group.sync();
+        // Deliberately continue with PostFrame
+    case OpenGLSafePoint::PostFrame:
+        QMetaObject::invokeMethod(m_openGLFreezeProtection, "stop", Qt::QueuedConnection);
+        break;
+    case OpenGLSafePoint::PostLastGuardedFrame:
+        m_openGLFreezeProtection->deleteLater();
+        m_openGLFreezeProtection = nullptr;
+        m_openGLFreezeProtectionThread->quit();
+        m_openGLFreezeProtectionThread->wait();
+        delete m_openGLFreezeProtectionThread;
+        m_openGLFreezeProtectionThread = nullptr;
         break;
     }
-    group.sync();
 }
 
 }
