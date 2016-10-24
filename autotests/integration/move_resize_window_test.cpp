@@ -30,9 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/plasmashell.h>
+#include <KWayland/Client/seat.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/xdgshell.h>
 
 #include <linux/input.h>
 #include <xcb/xcb_icccm.h>
@@ -61,6 +64,8 @@ private Q_SLOTS:
     void testGrowShrink();
     void testPointerMoveEnd_data();
     void testPointerMoveEnd();
+    void testClientSideMove_data();
+    void testClientSideMove();
     void testPlasmaShellSurfaceMovable_data();
     void testPlasmaShellSurfaceMovable();
     void testNetMove();
@@ -88,7 +93,8 @@ void MoveResizeWindowTest::initTestCase()
 
 void MoveResizeWindowTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::PlasmaShell));
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::PlasmaShell | Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::waitForWaylandPointer());
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
     m_shell = Test::waylandShell();
@@ -401,6 +407,68 @@ void MoveResizeWindowTest::testPointerMoveEnd()
     QVERIFY(!c->isMove());
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(c));
+}
+void MoveResizeWindowTest::testClientSideMove_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
+void MoveResizeWindowTest::testClientSideMove()
+{
+    using namespace KWayland::Client;
+    Cursor::setPos(640, 512);
+    QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
+    QSignalSpy pointerEnteredSpy(pointer.data(), &Pointer::entered);
+    QVERIFY(pointerEnteredSpy.isValid());
+    QSignalSpy pointerLeftSpy(pointer.data(), &Pointer::left);
+    QVERIFY(pointerLeftSpy.isValid());
+    QSignalSpy buttonSpy(pointer.data(), &Pointer::buttonStateChanged);
+    QVERIFY(buttonSpy.isValid());
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+
+    // move pointer into center of geometry
+    const QRect startGeometry = c->geometry();
+    Cursor::setPos(startGeometry.center());
+    QVERIFY(pointerEnteredSpy.wait());
+    QCOMPARE(pointerEnteredSpy.first().last().toPoint(), QPoint(49, 24));
+    // simulate press
+    quint32 timestamp = 1;
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QVERIFY(buttonSpy.wait());
+    QSignalSpy moveStartSpy(c, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(moveStartSpy.isValid());
+    if (auto s = qobject_cast<ShellSurface*>(shellSurface.data())) {
+        s->requestMove(Test::waylandSeat(), buttonSpy.first().first().value<quint32>());
+    } else if (auto s = qobject_cast<XdgShellSurface*>(shellSurface.data())) {
+        s->requestMove(Test::waylandSeat(), buttonSpy.first().first().value<quint32>());
+    }
+    QVERIFY(moveStartSpy.wait());
+    QCOMPARE(c->isMove(), true);
+    QVERIFY(pointerLeftSpy.wait());
+
+    // move a bit
+    QSignalSpy clientMoveStepSpy(c, &AbstractClient::clientStepUserMovedResized);
+    QVERIFY(clientMoveStepSpy.isValid());
+    const QPoint startPoint = startGeometry.center();
+    const int dragDistance = QApplication::startDragDistance();
+    // Why?
+    kwinApp()->platform()->pointerMotion(startPoint + QPoint(dragDistance, dragDistance) + QPoint(6, 6), timestamp++);
+    QCOMPARE(clientMoveStepSpy.count(), 1);
+
+    // and release again
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QVERIFY(pointerEnteredSpy.wait());
+    QCOMPARE(c->isMove(), false);
+    QCOMPARE(c->geometry(), startGeometry.translated(QPoint(dragDistance, dragDistance) + QPoint(6, 6)));
+    QCOMPARE(pointerEnteredSpy.last().last().toPoint(), QPoint(49, 24));
 }
 
 void MoveResizeWindowTest::testPlasmaShellSurfaceMovable_data()

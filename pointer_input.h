@@ -128,6 +128,7 @@ public:
     void processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device = nullptr);
 
 private:
+    void updateOnStartMoveResize();
     void updatePosition(const QPointF &pos);
     void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
     void warpXcbOnSurfaceLeft(KWayland::Server::SurfaceInterface *surface);
