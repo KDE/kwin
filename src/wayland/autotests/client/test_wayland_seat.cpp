@@ -79,6 +79,7 @@ private Q_SLOTS:
     void testCast();
     void testDestroy();
     void testSelection();
+    void testSelectionNoDataSource();
     void testTouch();
     void testDisconnect();
     void testPointerEnterOnUnboundSurface();
@@ -1550,6 +1551,51 @@ void TestWaylandSeat::testSelection()
     QVERIFY(cancelledSpy.isValid());
     m_seatInterface->setSelection(ddi);
     QVERIFY(cancelledSpy.wait());
+}
+
+void TestWaylandSeat::testSelectionNoDataSource()
+{
+    // this test verifies that the server doesn't crash when using setSelection with
+    // a DataDevice which doesn't have a DataSource yet
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // first create the DataDevice
+    QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
+    ddmi->create();
+    QSignalSpy ddiCreatedSpy(ddmi.data(), &DataDeviceManagerInterface::dataDeviceCreated);
+    QVERIFY(ddiCreatedSpy.isValid());
+    Registry registry;
+    QSignalSpy dataDeviceManagerSpy(&registry, &Registry::dataDeviceManagerAnnounced);
+    QVERIFY(dataDeviceManagerSpy.isValid());
+    registry.setEventQueue(m_queue);
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+
+    QVERIFY(dataDeviceManagerSpy.wait());
+    QScopedPointer<DataDeviceManager> ddm(registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(),
+                                                                           dataDeviceManagerSpy.first().last().value<quint32>()));
+    QVERIFY(ddm->isValid());
+
+    QScopedPointer<DataDevice> dd(ddm->getDataDevice(m_seat));
+    QVERIFY(dd->isValid());
+    QVERIFY(ddiCreatedSpy.wait());
+    auto ddi = ddiCreatedSpy.first().first().value<DataDeviceInterface*>();
+    QVERIFY(ddi);
+
+    // now create a surface and pass it keyboard focus
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surface->isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(!m_seatInterface->selection());
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+
+    // now let's set the selection
+    m_seatInterface->setSelection(ddi);
 }
 
 void TestWaylandSeat::testTouch()

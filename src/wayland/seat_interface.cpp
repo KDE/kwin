@@ -1344,7 +1344,7 @@ void SeatInterface::setSelection(DataDeviceInterface *dataDevice)
     d->cancelPreviousSelection(dataDevice);
     d->currentSelection = dataDevice;
     if (d->keys.focus.selection) {
-        if (dataDevice) {
+        if (dataDevice && dataDevice->selection()) {
             d->keys.focus.selection->sendSelection(dataDevice);
         } else {
             d->keys.focus.selection->sendClearSelection();

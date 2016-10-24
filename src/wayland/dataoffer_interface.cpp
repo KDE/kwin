@@ -93,6 +93,7 @@ void DataOfferInterface::Private::receive(const QString &mimeType, qint32 fd)
 DataOfferInterface::DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface, wl_resource *parentResource)
     : Resource(new Private(source, parentInterface, this, parentResource))
 {
+    Q_ASSERT(source);
     connect(source, &DataSourceInterface::mimeTypeOffered, this,
         [this](const QString &mimeType) {
             Q_D();
