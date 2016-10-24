@@ -1680,6 +1680,10 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     QVERIFY(dd->isValid());
     QVERIFY(ddiCreatedSpy.wait());
 
+    // unset surface and set again
+    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+
     // and delete the connection thread again
     dd1.reset();
     ddm1.reset();

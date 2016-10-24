@@ -929,7 +929,7 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
         // selection?
         d->keys.focus.selection = d->dataDeviceForSurface(surface);
         if (d->keys.focus.selection) {
-            if (d->currentSelection) {
+            if (d->currentSelection && d->currentSelection->selection()) {
                 d->keys.focus.selection->sendSelection(d->currentSelection);
             } else {
                 d->keys.focus.selection->sendClearSelection();
