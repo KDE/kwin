@@ -80,6 +80,7 @@ private Q_SLOTS:
     void testDestroy();
     void testSelection();
     void testSelectionNoDataSource();
+    void testDataDeviceForKeyboardSurface();
     void testTouch();
     void testDisconnect();
     void testPointerEnterOnUnboundSurface();
@@ -1596,6 +1597,99 @@ void TestWaylandSeat::testSelectionNoDataSource()
 
     // now let's set the selection
     m_seatInterface->setSelection(ddi);
+}
+
+void TestWaylandSeat::testDataDeviceForKeyboardSurface()
+{
+    // this test verifies that the server does not crash when creating a datadevice for the focused keyboard surface
+    // and the currentSelection does not have a DataSource.
+    // to properly test the functionality this test requires a second client
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // create the DataDeviceManager
+    QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
+    ddmi->create();
+    QSignalSpy ddiCreatedSpy(ddmi.data(), &DataDeviceManagerInterface::dataDeviceCreated);
+    QVERIFY(ddiCreatedSpy.isValid());
+
+    // create a second Wayland client connection to use it for setSelection
+    auto c = new ConnectionThread;
+    QSignalSpy connectedSpy(c, &ConnectionThread::connected);
+    QVERIFY(connectedSpy.isValid());
+    c->setSocketName(s_socketName);
+
+    auto thread = new QThread(this);
+    c->moveToThread(thread);
+    thread->start();
+
+    c->initConnection();
+    QVERIFY(connectedSpy.wait());
+
+    QScopedPointer<EventQueue> queue(new EventQueue);
+    queue->setup(c);
+
+    QScopedPointer<Registry> registry(new Registry);
+    QSignalSpy interfacesAnnouncedSpy(registry.data(), &Registry::interfacesAnnounced);
+    QVERIFY(interfacesAnnouncedSpy.isValid());
+    registry->setEventQueue(queue.data());
+    registry->create(c);
+    QVERIFY(registry->isValid());
+    registry->setup();
+
+    QVERIFY(interfacesAnnouncedSpy.wait());
+    QScopedPointer<Seat> seat(registry->createSeat(registry->interface(Registry::Interface::Seat).name,
+                                                   registry->interface(Registry::Interface::Seat).version));
+    QVERIFY(seat->isValid());
+    QScopedPointer<DataDeviceManager> ddm1(registry->createDataDeviceManager(registry->interface(Registry::Interface::DataDeviceManager).name,
+                                                                             registry->interface(Registry::Interface::DataDeviceManager).version));
+    QVERIFY(ddm1->isValid());
+
+    // now create our first datadevice
+    QScopedPointer<DataDevice> dd1(ddm1->getDataDevice(seat.data()));
+    QVERIFY(ddiCreatedSpy.wait());
+    auto ddi = ddiCreatedSpy.first().first().value<DataDeviceInterface*>();
+    QVERIFY(ddi);
+    m_seatInterface->setSelection(ddi);
+
+    // switch to other client
+    // create a surface and pass it keyboard focus
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surface->isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+
+    // now create a DataDevice
+    Registry registry2;
+    QSignalSpy dataDeviceManagerSpy(&registry2, &Registry::dataDeviceManagerAnnounced);
+    QVERIFY(dataDeviceManagerSpy.isValid());
+    registry2.setEventQueue(m_queue);
+    registry2.create(m_connection->display());
+    QVERIFY(registry2.isValid());
+    registry2.setup();
+
+    QVERIFY(dataDeviceManagerSpy.wait());
+    QScopedPointer<DataDeviceManager> ddm(registry2.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(),
+                                                                           dataDeviceManagerSpy.first().last().value<quint32>()));
+    QVERIFY(ddm->isValid());
+
+    QScopedPointer<DataDevice> dd(ddm->getDataDevice(m_seat));
+    QVERIFY(dd->isValid());
+    QVERIFY(ddiCreatedSpy.wait());
+
+    // and delete the connection thread again
+    dd1.reset();
+    ddm1.reset();
+    seat.reset();
+    registry.reset();
+    queue.reset();
+    c->deleteLater();
+    thread->quit();
+    thread->wait();
+    delete thread;
 }
 
 void TestWaylandSeat::testTouch()

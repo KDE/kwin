@@ -292,7 +292,7 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
         // same client?
         if (keys.focus.surface->client() == dataDevice->client()) {
             keys.focus.selection = dataDevice;
-            if (currentSelection) {
+            if (currentSelection && currentSelection->selection()) {
                 dataDevice->sendSelection(currentSelection);
             }
         }
