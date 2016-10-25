@@ -47,6 +47,7 @@ public:
     virtual ~X11WindowedBackend();
     void init() override;
     QVector<QRect> screenGeometries() const override;
+    QVector<qreal> screenScales() const override;
 
     xcb_connection_t *connection() const {
         return m_connection;

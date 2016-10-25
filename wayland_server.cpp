@@ -370,6 +370,7 @@ void WaylandServer::syncOutputsToWayland()
     Q_ASSERT(s);
     for (int i = 0; i < s->count(); ++i) {
         OutputInterface *output = m_display->createOutput(m_display);
+        output->setScale(s->scale(i));
         const QRect &geo = s->geometry(i);
         output->setGlobalPosition(geo.topLeft());
         output->setPhysicalSize(geo.size() / 3.8);

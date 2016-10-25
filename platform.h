@@ -106,6 +106,14 @@ public:
      * Base implementation returns one QRect positioned at 0/0 with screenSize() as size.
      **/
     virtual QVector<QRect> screenGeometries() const;
+
+    /**
+     * Implementing subclasses should provide all geometries in case the backend represents
+     * a basic screen and uses the BasicScreens.
+     *
+     * Base implementation returns a screen with a scale of 1.
+     **/
+    virtual QVector<qreal> screenScales() const;
     /**
      * Implement this method to receive configuration change requests through KWayland's
      * OutputManagement interface.
@@ -286,6 +294,12 @@ public:
     void setInitialOutputCount(int count) {
         m_initialOutputCount = count;
     }
+    qreal initialOutputScale() const {
+        return m_initialOutputScale;
+    }
+    void setInitialOutputScale(qreal scale) {
+        m_initialOutputScale = scale;
+    }
 
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
@@ -377,6 +391,7 @@ private:
     bool m_pointerWarping = false;
     bool m_outputsEnabled = true;
     int m_initialOutputCount = 1;
+    qreal m_initialOutputScale = 1;
     EGLDisplay m_eglDisplay;
     int m_hideCursorCounter = 0;
 };

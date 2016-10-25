@@ -91,6 +91,13 @@ float Screens::refreshRate(int screen) const
     return 60.0f;
 }
 
+qreal Screens::scale(int screen) const
+{
+    Q_UNUSED(screen)
+    qCWarning(KWIN_CORE, "%s::scale(qreal screen) is a stub, please reimplement it!", metaObject()->className());
+    return 1;
+}
+
 void Screens::reconfigure()
 {
     if (!m_config) {
@@ -213,9 +220,18 @@ QSize BasicScreens::size(int screen) const
     return QSize();
 }
 
+qreal BasicScreens::scale(int screen) const
+{
+    if (screen < m_scales.count()) {
+        return m_scales.at(screen);
+    }
+    return 1;
+}
+
 void BasicScreens::updateCount()
 {
     m_geometries = m_backend->screenGeometries();
+    m_scales = m_backend->screenScales();
     setCount(m_geometries.count());
 }
 

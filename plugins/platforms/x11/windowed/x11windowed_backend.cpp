@@ -472,4 +472,11 @@ QVector<QRect> X11WindowedBackend::screenGeometries() const
     return ret;
 }
 
+QVector<qreal> X11WindowedBackend::screenScales() const
+{
+    QVector<qreal> ret;
+    ret.fill(initialOutputScale(), m_windows.count());
+    return ret;
+}
+
 }
