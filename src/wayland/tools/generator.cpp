@@ -930,16 +930,6 @@ void Generator::generateClientCpp(const Interface &interface)
 "    d->%2.destroy();\n"
 "}\n"
 "\n"
-"void %1::setEventQueue(EventQueue *queue)\n"
-"{\n"
-"    d->queue = queue;\n"
-"}\n"
-"\n"
-"EventQueue *%1::eventQueue()\n"
-"{\n"
-"    return d->queue;\n"
-"}\n"
-"\n"
 "%1::operator %3*() {\n"
 "    return d->%2;\n"
 "}\n"
@@ -956,6 +946,20 @@ void Generator::generateClientCpp(const Interface &interface)
     *m_stream.localData() << templateString.arg(interface.kwaylandClientName())
                                            .arg(interface.kwaylandClientName().toLower())
                                            .arg(interface.name());
+    if (interface.isGlobal()) {
+        const QString templateStringGlobal = QStringLiteral(
+"void %1::setEventQueue(EventQueue *queue)\n"
+"{\n"
+"    d->queue = queue;\n"
+"}\n"
+"\n"
+"EventQueue *%1::eventQueue()\n"
+"{\n"
+"    return d->queue;\n"
+"}\n\n"
+        );
+        *m_stream.localData() << templateStringGlobal.arg(interface.kwaylandClientName());
+    }
 }
 
 void Generator::generateClientGlobalClassDoxy(const Interface &interface)
