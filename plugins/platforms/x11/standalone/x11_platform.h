@@ -64,6 +64,8 @@ private:
     static bool hasGlx();
 
     XInputIntegration *m_xinputIntegration = nullptr;
+    QThread *m_openGLFreezeProtectionThread = nullptr;
+    QTimer *m_openGLFreezeProtection = nullptr;
 
 };
 

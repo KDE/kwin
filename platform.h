@@ -143,7 +143,10 @@ public:
     virtual bool openGLCompositingIsBroken() const;
     enum class OpenGLSafePoint {
         PreInit,
-        PostInit
+        PostInit,
+        PreFrame,
+        PostFrame,
+        PostLastGuardedFrame
     };
     /**
      * This method is invoked before and after creating the OpenGL rendering Scene.
