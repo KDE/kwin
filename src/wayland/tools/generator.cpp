@@ -592,7 +592,7 @@ void Generator::generateCppIncludes()
     case Project::Client:
         *m_stream.localData() << QStringLiteral("#include \"%1.h\"\n").arg(m_baseFileName.toLower());
         *m_stream.localData() << QStringLiteral("#include \"event_queue.h\"\n");
-        *m_stream.localData() << QStringLiteral("#include \"wayland_pointer.h\"\n\n");
+        *m_stream.localData() << QStringLiteral("#include \"wayland_pointer_p.h\"\n\n");
         break;
     case Project::Server:
         *m_stream.localData() << QStringLiteral("#include \"%1_interface.h\"\n").arg(m_baseFileName.toLower());
