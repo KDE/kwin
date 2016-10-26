@@ -329,7 +329,13 @@ void UserActionsMenu::init()
             [this]() {
                 // opens the KWin configuration
                 QStringList args;
-                args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows") << configModules(false);
+                args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows");
+                const QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                            QStringLiteral("kservices5/kwinfocus.desktop"));
+                if (!path.isEmpty()) {
+                    args << QStringLiteral("--desktopfile") << path;
+                }
+                args << configModules(false);
                 QProcess *p = new Process(this);
                 p->setArguments(args);
                 p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
