@@ -21,6 +21,8 @@ set(SERVER_LIB_SRCS
     pointer_interface.cpp
     plasmashell_interface.cpp
     plasmawindowmanagement_interface.cpp
+    pointergestures_interface.cpp
+    pointergestures_interface_v1.cpp
     qtsurfaceextension_interface.cpp
     region_interface.cpp
     relativepointer_interface.cpp
@@ -127,6 +129,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME xdg-shell-v5
 )
 
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/pointer-gestures-unstable-v1.xml
+    BASENAME pointer-gestures-unstable-v1
+)
+
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
 generate_export_header(KF5WaylandServer
     BASE_NAME
@@ -178,6 +185,7 @@ install(FILES
   outputmanagement_interface.h
   output_interface.h
   pointer_interface.h
+  pointergestures_interface.h
   plasmashell_interface.h
   plasmawindowmanagement_interface.h
   qtsurfaceextension_interface.h

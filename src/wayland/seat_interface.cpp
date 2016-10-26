@@ -871,6 +871,120 @@ void SeatInterface::relativePointerMotion(const QSizeF &delta, const QSizeF &del
     }
 }
 
+void SeatInterface::startPointerSwipeGesture(quint32 fingerCount)
+{
+    Q_D();
+    if (!d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    d->globalPointer.gestureSurface = QPointer<SurfaceInterface>(d->globalPointer.focus.surface);
+    if (d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    const quint32 serial = d->display->nextSerial();
+    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
+    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
+        (*it)->d_func()->startSwipeGesture(serial, fingerCount);
+    }
+}
+
+void SeatInterface::updatePointerSwipeGesture(const QSizeF &delta)
+{
+    Q_D();
+    if (d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
+    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
+        (*it)->d_func()->updateSwipeGesture(delta);
+    }
+}
+
+void SeatInterface::endPointerSwipeGesture()
+{
+    Q_D();
+    if (d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    const quint32 serial = d->display->nextSerial();
+    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
+    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
+        (*it)->d_func()->endSwipeGesture(serial);
+    }
+    d->globalPointer.gestureSurface.clear();
+}
+
+void SeatInterface::cancelPointerSwipeGesture()
+{
+    Q_D();
+    if (d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    const quint32 serial = d->display->nextSerial();
+    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
+    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
+        (*it)->d_func()->cancelSwipeGesture(serial);
+    }
+    d->globalPointer.gestureSurface.clear();
+}
+
+void SeatInterface::startPointerPinchGesture(quint32 fingerCount)
+{
+    Q_D();
+    if (!d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    d->globalPointer.gestureSurface = QPointer<SurfaceInterface>(d->globalPointer.focus.surface);
+    if (d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    const quint32 serial = d->display->nextSerial();
+    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
+    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
+        (*it)->d_func()->startPinchGesture(serial, fingerCount);
+    }
+}
+
+void SeatInterface::updatePointerPinchGesture(const QSizeF &delta, qreal scale, qreal rotation)
+{
+    Q_D();
+    if (d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
+    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
+        (*it)->d_func()->updatePinchGesture(delta, scale, rotation);
+    }
+}
+
+void SeatInterface::endPointerPinchGesture()
+{
+    Q_D();
+    if (d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    const quint32 serial = d->display->nextSerial();
+    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
+    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
+        (*it)->d_func()->endPinchGesture(serial);
+    }
+    d->globalPointer.gestureSurface.clear();
+}
+
+void SeatInterface::cancelPointerPinchGesture()
+{
+    Q_D();
+    if (d->globalPointer.gestureSurface.isNull()) {
+        return;
+    }
+    const quint32 serial = d->display->nextSerial();
+    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
+    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
+        (*it)->d_func()->cancelPinchGesture(serial);
+    }
+    d->globalPointer.gestureSurface.clear();
+}
+
 void SeatInterface::keyPressed(quint32 key)
 {
     Q_D();

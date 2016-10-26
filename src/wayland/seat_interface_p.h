@@ -24,6 +24,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "global_p.h"
 // Qt
 #include <QHash>
+#include <QPointer>
 #include <QVector>
 // Wayland
 #include <wayland-server.h>
@@ -84,6 +85,7 @@ public:
             quint32 serial = 0;
         };
         Focus focus;
+        QPointer<SurfaceInterface> gestureSurface;
     };
     Pointer globalPointer;
     void updatePointerButtonSerial(quint32 button, quint32 serial);

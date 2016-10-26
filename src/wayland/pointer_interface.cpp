@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "pointer_interface.h"
 #include "pointer_interface_p.h"
+#include "pointergestures_interface_p.h"
 #include "resource_p.h"
 #include "relativepointer_interface_p.h"
 #include "seat_interface.h"
@@ -88,6 +89,27 @@ void PointerInterface::Private::registerRelativePointer(RelativePointerInterface
     );
 }
 
+
+void PointerInterface::Private::registerSwipeGesture(PointerSwipeGestureInterface *gesture)
+{
+    swipeGestures << gesture;
+    QObject::connect(gesture, &QObject::destroyed, q,
+        [this, gesture] {
+            swipeGestures.removeOne(gesture);
+        }
+    );
+}
+
+void PointerInterface::Private::registerPinchGesture(PointerPinchGestureInterface *gesture)
+{
+    pinchGestures << gesture;
+    QObject::connect(gesture, &QObject::destroyed, q,
+        [this, gesture] {
+            pinchGestures.removeOne(gesture);
+        }
+    );
+}
+
 namespace {
 static QPointF surfacePosition(SurfaceInterface *surface) {
     if (surface && surface->subSurface()) {
@@ -106,6 +128,86 @@ void PointerInterface::Private::sendEnter(SurfaceInterface *surface, const QPoin
     wl_pointer_send_enter(resource, serial,
                           surface->resource(),
                           wl_fixed_from_double(adjustedPos.x()), wl_fixed_from_double(adjustedPos.y()));
+}
+
+void PointerInterface::Private::startSwipeGesture(quint32 serial, quint32 fingerCount)
+{
+    if (swipeGestures.isEmpty()) {
+        return;
+    }
+    for (auto it = swipeGestures.constBegin(), end = swipeGestures.constEnd(); it != end; it++) {
+        (*it)->start(serial, fingerCount);
+    }
+}
+
+void PointerInterface::Private::updateSwipeGesture(const QSizeF &delta)
+{
+    if (swipeGestures.isEmpty()) {
+        return;
+    }
+    for (auto it = swipeGestures.constBegin(), end = swipeGestures.constEnd(); it != end; it++) {
+        (*it)->update(delta);
+    }
+}
+
+void PointerInterface::Private::endSwipeGesture(quint32 serial)
+{
+    if (swipeGestures.isEmpty()) {
+        return;
+    }
+    for (auto it = swipeGestures.constBegin(), end = swipeGestures.constEnd(); it != end; it++) {
+        (*it)->end(serial);
+    }
+}
+
+void PointerInterface::Private::cancelSwipeGesture(quint32 serial)
+{
+    if (swipeGestures.isEmpty()) {
+        return;
+    }
+    for (auto it = swipeGestures.constBegin(), end = swipeGestures.constEnd(); it != end; it++) {
+        (*it)->cancel(serial);
+    }
+}
+
+void PointerInterface::Private::startPinchGesture(quint32 serial, quint32 fingerCount)
+{
+    if (pinchGestures.isEmpty()) {
+        return;
+    }
+    for (auto it = pinchGestures.constBegin(), end = pinchGestures.constEnd(); it != end; it++) {
+        (*it)->start(serial, fingerCount);
+    }
+}
+
+void PointerInterface::Private::updatePinchGesture(const QSizeF &delta, qreal scale, qreal rotation)
+{
+    if (pinchGestures.isEmpty()) {
+        return;
+    }
+    for (auto it = pinchGestures.constBegin(), end = pinchGestures.constEnd(); it != end; it++) {
+        (*it)->update(delta, scale, rotation);
+    }
+}
+
+void PointerInterface::Private::endPinchGesture(quint32 serial)
+{
+    if (pinchGestures.isEmpty()) {
+        return;
+    }
+    for (auto it = pinchGestures.constBegin(), end = pinchGestures.constEnd(); it != end; it++) {
+        (*it)->end(serial);
+    }
+}
+
+void PointerInterface::Private::cancelPinchGesture(quint32 serial)
+{
+    if (pinchGestures.isEmpty()) {
+        return;
+    }
+    for (auto it = pinchGestures.constBegin(), end = pinchGestures.constEnd(); it != end; it++) {
+        (*it)->cancel(serial);
+    }
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

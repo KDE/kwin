@@ -29,6 +29,8 @@ namespace KWayland
 {
 namespace Server
 {
+class PointerPinchGestureInterface;
+class PointerSwipeGestureInterface;
 class RelativePointerInterface;
 
 class PointerInterface::Private : public Resource::Private
@@ -42,11 +44,25 @@ public:
     QMetaObject::Connection destroyConnection;
     Cursor *cursor = nullptr;
     QVector<RelativePointerInterface*> relativePointers;
+    QVector<PointerSwipeGestureInterface*> swipeGestures;
+    QVector<PointerPinchGestureInterface*> pinchGestures;
 
     void sendLeave(SurfaceInterface *surface, quint32 serial);
     void sendEnter(SurfaceInterface *surface, const QPointF &parentSurfacePosition, quint32 serial);
 
     void registerRelativePointer(RelativePointerInterface *relativePointer);
+    void registerSwipeGesture(PointerSwipeGestureInterface *gesture);
+    void registerPinchGesture(PointerPinchGestureInterface *gesture);
+
+    void startSwipeGesture(quint32 serial, quint32 fingerCount);
+    void updateSwipeGesture(const QSizeF &delta);
+    void endSwipeGesture(quint32 serial);
+    void cancelSwipeGesture(quint32 serial);
+
+    void startPinchGesture(quint32 serial, quint32 fingerCount);
+    void updatePinchGesture(const QSizeF &delta, qreal scale, qreal rotation);
+    void endPinchGesture(quint32 serial);
+    void cancelPinchGesture(quint32 serial);
 
 private:
     PointerInterface *q_func() {

@@ -28,6 +28,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/event_queue.h"
 #include "../../src/client/keyboard.h"
 #include "../../src/client/pointer.h"
+#include "../../src/client/pointergestures.h"
 #include "../../src/client/surface.h"
 #include "../../src/client/registry.h"
 #include "../../src/client/relativepointer.h"
@@ -42,6 +43,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/display.h"
 #include "../../src/server/keyboard_interface.h"
 #include "../../src/server/pointer_interface.h"
+#include "../../src/server/pointergestures_interface.h"
 #include "../../src/server/relativepointer_interface.h"
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/subcompositor_interface.h"
@@ -72,6 +74,10 @@ private Q_SLOTS:
     void testPointerButton_data();
     void testPointerButton();
     void testPointerSubSurfaceTree();
+    void testPointerSwipeGesture_data();
+    void testPointerSwipeGesture();
+    void testPointerPinchGesture_data();
+    void testPointerPinchGesture();
     void testKeyboardSubSurfaceTreeFromPointer();
     void testCursor();
     void testCursorDamage();
@@ -92,12 +98,14 @@ private:
     KWayland::Server::SeatInterface *m_seatInterface;
     KWayland::Server::SubCompositorInterface *m_subCompositorInterface;
     KWayland::Server::RelativePointerManagerInterface *m_relativePointerManagerInterface;
+    KWayland::Server::PointerGesturesInterface *m_pointerGesturesInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Seat *m_seat;
     KWayland::Client::ShmPool *m_shm;
     KWayland::Client::SubCompositor * m_subCompositor;
     KWayland::Client::RelativePointerManager *m_relativePointerManager;
+    KWayland::Client::PointerGestures *m_pointerGestures;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
 };
@@ -111,12 +119,14 @@ TestWaylandSeat::TestWaylandSeat(QObject *parent)
     , m_seatInterface(nullptr)
     , m_subCompositorInterface(nullptr)
     , m_relativePointerManagerInterface(nullptr)
+    , m_pointerGesturesInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_seat(nullptr)
     , m_shm(nullptr)
     , m_subCompositor(nullptr)
     , m_relativePointerManager(nullptr)
+    , m_pointerGestures(nullptr)
     , m_queue(nullptr)
     , m_thread(nullptr)
 {
@@ -146,6 +156,11 @@ void TestWaylandSeat::init()
     QVERIFY(m_relativePointerManagerInterface);
     m_relativePointerManagerInterface->create();
     QVERIFY(m_relativePointerManagerInterface->isValid());
+
+    m_pointerGesturesInterface = m_display->createPointerGestures(PointerGesturesInterfaceVersion::UnstableV1, m_display);
+    QVERIFY(m_pointerGesturesInterface);
+    m_pointerGesturesInterface->create();
+    QVERIFY(m_pointerGesturesInterface->isValid());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -200,10 +215,19 @@ void TestWaylandSeat::init()
                                                                      registry.interface(KWayland::Client::Registry::Interface::RelativePointerManagerUnstableV1).version,
                                                                      this);
     QVERIFY(m_relativePointerManager->isValid());
+
+    m_pointerGestures = registry.createPointerGestures(registry.interface(KWayland::Client::Registry::Interface::PointerGesturesUnstableV1).name,
+                                                       registry.interface(KWayland::Client::Registry::Interface::PointerGesturesUnstableV1).version,
+                                                       this);
+    QVERIFY(m_pointerGestures->isValid());
 }
 
 void TestWaylandSeat::cleanup()
 {
+    if (m_pointerGestures) {
+        delete m_pointerGestures;
+        m_pointerGestures = nullptr;
+    }
     if (m_relativePointerManager) {
         delete m_relativePointerManager;
         m_relativePointerManager = nullptr;
@@ -250,6 +274,9 @@ void TestWaylandSeat::cleanup()
 
     delete m_relativePointerManagerInterface;
     m_relativePointerManagerInterface = nullptr;
+
+    delete m_pointerGesturesInterface;
+    m_pointerGesturesInterface = nullptr;
 
     delete m_display;
     m_display = nullptr;
@@ -871,6 +898,242 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     QCOMPARE(pointer->enteredSurface(), parentSurface.data());
 }
 
+void TestWaylandSeat::testPointerSwipeGesture_data()
+{
+    QTest::addColumn<bool>("cancel");
+    QTest::addColumn<int>("expectedEndCount");
+    QTest::addColumn<int>("expectedCancelCount");
+
+    QTest::newRow("end") << false << 1 << 0;
+    QTest::newRow("cancel") << true << 0 << 1;
+}
+
+void TestWaylandSeat::testPointerSwipeGesture()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    // first create the pointer and pointer swipe gesture
+    QSignalSpy hasPointerChangedSpy(m_seat, &Seat::hasPointerChanged);
+    QVERIFY(hasPointerChangedSpy.isValid());
+    m_seatInterface->setHasPointer(true);
+    QVERIFY(hasPointerChangedSpy.wait());
+    QScopedPointer<Pointer> pointer(m_seat->createPointer());
+    QScopedPointer<PointerSwipeGesture> gesture(m_pointerGestures->createSwipeGesture(pointer.data()));
+    QVERIFY(gesture);
+    QVERIFY(gesture->isValid());
+    QVERIFY(gesture->surface().isNull());
+    QCOMPARE(gesture->fingerCount(), 0u);
+
+    QSignalSpy startSpy(gesture.data(), &PointerSwipeGesture::started);
+    QVERIFY(startSpy.isValid());
+    QSignalSpy updateSpy(gesture.data(), &PointerSwipeGesture::updated);
+    QVERIFY(updateSpy.isValid());
+    QSignalSpy endSpy(gesture.data(), &PointerSwipeGesture::ended);
+    QVERIFY(endSpy.isValid());
+    QSignalSpy cancelledSpy(gesture.data(), &PointerSwipeGesture::cancelled);
+    QVERIFY(cancelledSpy.isValid());
+
+    // now create a surface
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
+    QVERIFY(m_seatInterface->focusedPointer());
+
+    // send in the start
+    quint32 timestamp = 1;
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->startPointerSwipeGesture(2);
+    QVERIFY(startSpy.wait());
+    QCOMPARE(startSpy.count(), 1);
+    QCOMPARE(startSpy.first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(startSpy.first().at(1).value<quint32>(), 1u);
+    QCOMPARE(gesture->fingerCount(), 2u);
+    QCOMPARE(gesture->surface().data(), surface.data());
+
+    // another start should not be possible
+    m_seatInterface->startPointerSwipeGesture(2);
+    QVERIFY(!startSpy.wait());
+
+    // send in some updates
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->updatePointerSwipeGesture(QSizeF(2, 3));
+    QVERIFY(updateSpy.wait());
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->updatePointerSwipeGesture(QSizeF(4, 5));
+    QVERIFY(updateSpy.wait());
+    QCOMPARE(updateSpy.count(), 2);
+    QCOMPARE(updateSpy.at(0).at(0).toSizeF(), QSizeF(2, 3));
+    QCOMPARE(updateSpy.at(0).at(1).value<quint32>(), 2u);
+    QCOMPARE(updateSpy.at(1).at(0).toSizeF(), QSizeF(4, 5));
+    QCOMPARE(updateSpy.at(1).at(1).value<quint32>(), 3u);
+
+    // now end or cancel
+    QFETCH(bool, cancel);
+    QSignalSpy *spy;
+    m_seatInterface->setTimestamp(timestamp++);
+    if (cancel) {
+        m_seatInterface->cancelPointerSwipeGesture();
+        spy = &cancelledSpy;
+    } else {
+        m_seatInterface->endPointerSwipeGesture();
+        spy = &endSpy;
+    }
+    QVERIFY(spy->wait());
+    QTEST(endSpy.count(), "expectedEndCount");
+    QTEST(cancelledSpy.count(), "expectedCancelCount");
+    QCOMPARE(spy->count(), 1);
+    QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(spy->first().at(1).value<quint32>(), 4u);
+
+    QCOMPARE(gesture->fingerCount(), 0u);
+    QVERIFY(gesture->surface().isNull());
+
+    // now a start should be possible again
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->startPointerSwipeGesture(2);
+    QVERIFY(startSpy.wait());
+
+    // unsetting the focused pointer surface should not change anything
+    m_seatInterface->setFocusedPointerSurface(nullptr);
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->updatePointerSwipeGesture(QSizeF(6, 7));
+    QVERIFY(updateSpy.wait());
+    // and end
+    m_seatInterface->setTimestamp(timestamp++);
+    if (cancel) {
+        m_seatInterface->cancelPointerSwipeGesture();
+    } else {
+        m_seatInterface->endPointerSwipeGesture();
+    }
+    QVERIFY(spy->wait());
+}
+
+void TestWaylandSeat::testPointerPinchGesture_data()
+{
+    QTest::addColumn<bool>("cancel");
+    QTest::addColumn<int>("expectedEndCount");
+    QTest::addColumn<int>("expectedCancelCount");
+
+    QTest::newRow("end") << false << 1 << 0;
+    QTest::newRow("cancel") << true << 0 << 1;
+}
+
+void TestWaylandSeat::testPointerPinchGesture()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    // first create the pointer and pointer swipe gesture
+    QSignalSpy hasPointerChangedSpy(m_seat, &Seat::hasPointerChanged);
+    QVERIFY(hasPointerChangedSpy.isValid());
+    m_seatInterface->setHasPointer(true);
+    QVERIFY(hasPointerChangedSpy.wait());
+    QScopedPointer<Pointer> pointer(m_seat->createPointer());
+    QScopedPointer<PointerPinchGesture> gesture(m_pointerGestures->createPinchGesture(pointer.data()));
+    QVERIFY(gesture);
+    QVERIFY(gesture->isValid());
+    QVERIFY(gesture->surface().isNull());
+    QCOMPARE(gesture->fingerCount(), 0u);
+
+    QSignalSpy startSpy(gesture.data(), &PointerPinchGesture::started);
+    QVERIFY(startSpy.isValid());
+    QSignalSpy updateSpy(gesture.data(), &PointerPinchGesture::updated);
+    QVERIFY(updateSpy.isValid());
+    QSignalSpy endSpy(gesture.data(), &PointerPinchGesture::ended);
+    QVERIFY(endSpy.isValid());
+    QSignalSpy cancelledSpy(gesture.data(), &PointerPinchGesture::cancelled);
+    QVERIFY(cancelledSpy.isValid());
+
+    // now create a surface
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
+    QVERIFY(m_seatInterface->focusedPointer());
+
+    // send in the start
+    quint32 timestamp = 1;
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->startPointerPinchGesture(3);
+    QVERIFY(startSpy.wait());
+    QCOMPARE(startSpy.count(), 1);
+    QCOMPARE(startSpy.first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(startSpy.first().at(1).value<quint32>(), 1u);
+    QCOMPARE(gesture->fingerCount(), 3u);
+    QCOMPARE(gesture->surface().data(), surface.data());
+
+    // another start should not be possible
+    m_seatInterface->startPointerPinchGesture(3);
+    QVERIFY(!startSpy.wait());
+
+    // send in some updates
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->updatePointerPinchGesture(QSizeF(2, 3), 2, 45);
+    QVERIFY(updateSpy.wait());
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->updatePointerPinchGesture(QSizeF(4, 5), 1, 90);
+    QVERIFY(updateSpy.wait());
+    QCOMPARE(updateSpy.count(), 2);
+    QCOMPARE(updateSpy.at(0).at(0).toSizeF(), QSizeF(2, 3));
+    QCOMPARE(updateSpy.at(0).at(1).value<quint32>(), 2u);
+    QCOMPARE(updateSpy.at(0).at(2).value<quint32>(), 45u);
+    QCOMPARE(updateSpy.at(0).at(3).value<quint32>(), 2u);
+    QCOMPARE(updateSpy.at(1).at(0).toSizeF(), QSizeF(4, 5));
+    QCOMPARE(updateSpy.at(1).at(1).value<quint32>(), 1u);
+    QCOMPARE(updateSpy.at(1).at(2).value<quint32>(), 90u);
+    QCOMPARE(updateSpy.at(1).at(3).value<quint32>(), 3u);
+
+    // now end or cancel
+    QFETCH(bool, cancel);
+    QSignalSpy *spy;
+    m_seatInterface->setTimestamp(timestamp++);
+    if (cancel) {
+        m_seatInterface->cancelPointerPinchGesture();
+        spy = &cancelledSpy;
+    } else {
+        m_seatInterface->endPointerPinchGesture();
+        spy = &endSpy;
+    }
+    QVERIFY(spy->wait());
+    QTEST(endSpy.count(), "expectedEndCount");
+    QTEST(cancelledSpy.count(), "expectedCancelCount");
+    QCOMPARE(spy->count(), 1);
+    QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(spy->first().at(1).value<quint32>(), 4u);
+
+    QCOMPARE(gesture->fingerCount(), 0u);
+    QVERIFY(gesture->surface().isNull());
+
+    // now a start should be possible again
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->startPointerPinchGesture(3);
+    QVERIFY(startSpy.wait());
+
+    // unsetting the focused pointer surface should not change anything
+    m_seatInterface->setFocusedPointerSurface(nullptr);
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->updatePointerPinchGesture(QSizeF(6, 7), 2, -45);
+    QVERIFY(updateSpy.wait());
+    // and end
+    m_seatInterface->setTimestamp(timestamp++);
+    if (cancel) {
+        m_seatInterface->cancelPointerPinchGesture();
+    } else {
+        m_seatInterface->endPointerPinchGesture();
+    }
+    QVERIFY(spy->wait());
+}
+
 void TestWaylandSeat::testKeyboardSubSurfaceTreeFromPointer()
 {
     // this test verifies that when clicking on a sub-surface the keyboard focus passes to it
@@ -1419,6 +1682,7 @@ void TestWaylandSeat::testDestroy()
     connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_subCompositor, &SubCompositor::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_relativePointerManager, &RelativePointerManager::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_pointerGestures, &PointerGestures::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
     QVERIFY(m_seat->isValid());
 
@@ -1430,6 +1694,7 @@ void TestWaylandSeat::testDestroy()
     m_seatInterface = nullptr;
     m_subCompositorInterface = nullptr;
     m_relativePointerManagerInterface = nullptr;
+    m_pointerGesturesInterface = nullptr;
     QVERIFY(connectionDiedSpy.wait());
 
     // now the seat should be destroyed;
@@ -1977,6 +2242,7 @@ void TestWaylandSeat::testDisconnect()
     pointer->destroy();
     touch->destroy();
     m_relativePointerManager->destroy();
+    m_pointerGestures->destroy();
     m_compositor->destroy();
     m_seat->destroy();
     m_shm->destroy();

@@ -403,6 +403,115 @@ public:
      * @since 5.28
      **/
     void relativePointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
+
+    /**
+     * Starts a multi-finger swipe gesture for the currently focused pointer surface.
+     *
+     * Such gestures are normally reported through dedicated input devices such as touchpads.
+     *
+     * The gesture is usually initiated by multiple fingers moving in the
+     * same direction but once initiated the direction may change.
+     * The precise conditions of when such a gesture is detected are
+     * implementation-dependent.
+     *
+     * Only one gesture (either swipe or pinch) can be active at a given time.
+     *
+     * @param fingerCount The number of fingers involved in this multi-finger touchpad gesture
+     *
+     * @see PointerGesturesInterface
+     * @see focusedPointerSurface
+     * @see updatePointerSwipeGesture
+     * @see endPointerSwipeGesture
+     * @see cancelPointerSwipeGesture
+     * @see startPointerPinchGesture
+     * @since 5.29
+     **/
+    void startPointerSwipeGesture(quint32 fingerCount);
+
+    /**
+     * The position of the logical center of the currently active multi-finger swipe gesture changes.
+     *
+     * @param delta coordinates are relative coordinates of the logical center of the gesture compared to the previous event.
+     * @see startPointerSwipeGesture
+     * @see endPointerSwipeGesture
+     * @see cancelPointerSwipeGesture
+     * @since 5.29
+     **/
+    void updatePointerSwipeGesture(const QSizeF &delta);
+
+    /**
+     * The multi-finger swipe gesture ended. This may happen when one or more fingers are lifted.
+     * @see startPointerSwipeGesture
+     * @see updatePointerSwipeGesture
+     * @see cancelPointerSwipeGesture
+     * @see 5.29
+     **/
+    void endPointerSwipeGesture();
+
+    /**
+     * The multi-finger swipe gestures ended and got cancelled by the Wayland compositor.
+     * @see startPointerSwipeGesture
+     * @see updatePointerSwipeGesture
+     * @see endPointerSwipeGesture
+     * @since 5.29
+     **/
+    void cancelPointerSwipeGesture();
+
+    /**
+     * Starts a multi-finch pinch gesture for the currently focused pointer surface.
+     *
+     * Such gestures are normally reported through dedicated input devices such as touchpads.
+     *
+     * The gesture is usually initiated by multiple fingers moving towards
+     * each other or away from each other, or by two or more fingers rotating
+     * around a logical center of gravity. The precise conditions of when
+     * such a gesture is detected are implementation-dependent.
+     *
+     * Only one gesture (either swipe or pinch) can be active at a given time.
+     *
+     * @param fingerCount The number of fingers involved in this multi-touch touchpad gesture
+     *
+     * @see PointerGesturesInterface
+     * @see focusedPointerSurface
+     * @see updatePointerPinchGesture
+     * @see endPointerPinchGesture
+     * @see cancelPointerPinchGesture
+     * @see startPointerSwipeGesture
+     * @since 5.29
+     **/
+    void startPointerPinchGesture(quint32 fingerCount);
+
+    /**
+     * The position of the logical center, the rotation or the relative scale of this
+     * multi-finger pinch gesture changes.
+     *
+     * @param delta coordinates are relative coordinates of the logical center of the gesture compared to the previous event.
+     * @param scale an absolute scale compared to the gesture start
+     * @param rotation relative angle in degrees clockwise compared to the previous start of update
+     * @see startPointerPinchGesture
+     * @see endPointerPinchGesture
+     * @see cancelPointerPinchGesture
+     * @since 5.29
+     **/
+    void updatePointerPinchGesture(const QSizeF &delta, qreal scale, qreal rotation);
+
+    /**
+     *
+     * @see startPointerPinchGesture
+     * @see updatePointerPinchGesture
+     * @see cancelPointerPinchGesture
+     * @since 5.29
+     **/
+    void endPointerPinchGesture();
+
+    /**
+     *
+     * @see startPointerPinchGesture
+     * @see updatePointerPinchGesture
+     * @see endPointerPinchGesture
+     * @since 5.29
+     **/
+    void cancelPointerPinchGesture();
     ///@}
 
     /**

@@ -76,6 +76,8 @@ enum class XdgShellInterfaceVersion;
 class XdgShellInterface;
 enum class RelativePointerInterfaceVersion;
 class RelativePointerManagerInterface;
+enum class PointerGesturesInterfaceVersion;
+class PointerGesturesInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -198,6 +200,14 @@ public:
      * @since 5.28
      **/
     RelativePointerManagerInterface *createRelativePointerManager(const RelativePointerInterfaceVersion &version, QObject *parent = nullptr);
+
+    /**
+     * Creates the PointerGesturesInterface in interface @p version
+     *
+     * @returns The created manager object
+     * @since 5.29
+     **/
+    PointerGesturesInterface *createPointerGestures(const PointerGesturesInterfaceVersion &version, QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

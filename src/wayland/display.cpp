@@ -30,6 +30,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "output_interface.h"
 #include "plasmashell_interface.h"
 #include "plasmawindowmanagement_interface.h"
+#include "pointergestures_interface_p.h"
 #include "qtsurfaceextension_interface.h"
 #include "seat_interface.h"
 #include "shadow_interface.h"
@@ -380,6 +381,18 @@ RelativePointerManagerInterface *Display::createRelativePointerManager(const Rel
     }
     connect(this, &Display::aboutToTerminate, r, [r] { delete r; });
     return r;
+}
+
+PointerGesturesInterface *Display::createPointerGestures(const PointerGesturesInterfaceVersion &version, QObject *parent)
+{
+    PointerGesturesInterface *p = nullptr;
+    switch (version) {
+    case PointerGesturesInterfaceVersion::UnstableV1:
+        p = new PointerGesturesUnstableV1Interface(this, parent);
+        break;
+    }
+    connect(this, &Display::aboutToTerminate, p, [p] { delete p; });
+    return p;
 }
 
 void Display::createShm()

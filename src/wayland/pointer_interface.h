@@ -30,6 +30,7 @@ namespace Server
 {
 
 class Cursor;
+class PointerGesturesUnstableV1Interface;
 class RelativePointerManagerUnstableV1Interface;
 class SeatInterface;
 class SurfaceInterface;
@@ -76,6 +77,7 @@ private:
     void relativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
     friend class SeatInterface;
     friend class RelativePointerManagerUnstableV1Interface;
+    friend class PointerGesturesUnstableV1Interface;
     explicit PointerInterface(SeatInterface *parent, wl_resource *parentResource);
     class Private;
     Private *d_func() const;
