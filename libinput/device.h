@@ -57,6 +57,9 @@ class Device : public QObject
     Q_PROPERTY(bool supportsCalibrationMatrix READ supportsCalibrationMatrix CONSTANT)
     Q_PROPERTY(bool supportsDisableEvents READ supportsDisableEvents CONSTANT)
     Q_PROPERTY(bool supportsDisableEventsOnExternalMouse READ supportsDisableEventsOnExternalMouse CONSTANT)
+    Q_PROPERTY(bool supportsMiddleEmulation READ supportsMiddleEmulation CONSTANT)
+    Q_PROPERTY(bool middleEmulationEnabledByDefault READ middleEmulationEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool middleEmulation READ isMiddleEmulation WRITE setMiddleEmulation NOTIFY middleEmulationChanged)
     Q_PROPERTY(bool leftHanded READ isLeftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
     Q_PROPERTY(qreal pointerAcceleration READ pointerAcceleration WRITE setPointerAcceleration NOTIFY pointerAccelerationChanged)
     Q_PROPERTY(bool tapToClick READ isTapToClick WRITE setTapToClick NOTIFY tapToClickChanged)
@@ -156,6 +159,16 @@ public:
     bool supportsDisableEventsOnExternalMouse() const {
         return m_supportsDisableEventsOnExternalMouse;
     }
+    bool supportsMiddleEmulation() const {
+        return m_supportsMiddleEmulation;
+    }
+    bool middleEmulationEnabledByDefault() const {
+        return m_middleEmulationEnabledByDefault;
+    }
+    bool isMiddleEmulation() const {
+        return m_middleEmulation;
+    }
+    void setMiddleEmulation(bool set);
 
     bool isLeftHanded() const {
         return m_leftHanded;
@@ -201,6 +214,7 @@ Q_SIGNALS:
     void tapToClickChanged();
     void tapAndDragChanged();
     void tapDragLockChanged();
+    void middleEmulationChanged();
 
 private:
     libinput_device *m_device;
@@ -231,6 +245,9 @@ private:
     bool m_supportsCalibrationMatrix;
     bool m_supportsDisableEvents;
     bool m_supportsDisableEventsOnExternalMouse;
+    bool m_supportsMiddleEmulation;
+    bool m_middleEmulationEnabledByDefault;
+    bool m_middleEmulation;
     bool m_leftHanded;
     qreal m_pointerAcceleration;
     bool m_enabled;

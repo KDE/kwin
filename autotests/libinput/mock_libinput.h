@@ -52,6 +52,9 @@ struct libinput_device {
     bool supportsCalibrationMatrix = false;
     bool supportsDisableEvents = false;
     bool supportsDisableEventsOnExternalMouse = false;
+    bool supportsMiddleEmulation = false;
+    bool middleEmulationEnabledByDefault = false;
+    bool middleEmulation = false;
     qreal pointerAcceleration = 0.0;
     int setPointerAccelerationReturnValue = 0;
     bool leftHanded = false;
@@ -63,6 +66,7 @@ struct libinput_device {
     int setTapToClickReturnValue = 0;
     int setTapAndDragReturnValue = 0;
     int setTapDragLockReturnValue = 0;
+    int setMiddleEmulationReturnValue = 0;
 };
 
 struct libinput_event {

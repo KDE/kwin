@@ -587,3 +587,38 @@ int libinput_resume(struct libinput *libinput)
     Q_UNUSED(libinput)
     return 0;
 }
+
+int libinput_device_config_middle_emulation_is_available(struct libinput_device *device)
+{
+    return device->supportsMiddleEmulation;
+}
+
+enum libinput_config_status libinput_device_config_middle_emulation_set_enabled(struct libinput_device *device, enum libinput_config_middle_emulation_state enable)
+{
+    if (device->setMiddleEmulationReturnValue == 0) {
+        if (!device->supportsMiddleEmulation) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        device->middleEmulation = (enable == LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED);
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+enum libinput_config_middle_emulation_state libinput_device_config_middle_emulation_get_enabled(struct libinput_device *device)
+{
+    if (device->middleEmulation) {
+        return LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED;
+    } else {
+        return LIBINPUT_CONFIG_MIDDLE_EMULATION_DISABLED;
+    }
+}
+
+enum libinput_config_middle_emulation_state libinput_device_config_middle_emulation_get_default_enabled(struct libinput_device *device)
+{
+    if (device->middleEmulationEnabledByDefault) {
+        return LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED;
+    } else {
+        return LIBINPUT_CONFIG_MIDDLE_EMULATION_DISABLED;
+    }
+}
