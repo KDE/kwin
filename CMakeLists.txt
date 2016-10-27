@@ -241,7 +241,14 @@ set_package_properties(X11_XCB PROPERTIES
                        TYPE OPTIONAL)
 
 # dependencies for QPA plugin
-find_package(Qt5PlatformSupport REQUIRED)
+if(Qt5Core_VERSION VERSION_LESS "5.8.0")
+    find_package(Qt5PlatformSupport REQUIRED)
+else()
+    find_package(Qt5FontDatabaseSupport REQUIRED)
+    find_package(Qt5ThemeSupport REQUIRED)
+    find_package(Qt5EventDispatcherSupport REQUIRED)
+endif()
+
 find_package(Freetype REQUIRED)
 set_package_properties(Freetype PROPERTIES DESCRIPTION "A font rendering engine"
                        URL "http://www.freetype.org"
