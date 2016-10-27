@@ -651,6 +651,9 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         if (dirtyProperties2 & NET::WM2OpaqueRegion) {
             getWmOpaqueRegion();
         }
+        if (dirtyProperties2 & NET::WM2DesktopFileName) {
+            setDesktopFileName(QByteArray(info->desktopFileName()));
+        }
     }
 
     const uint8_t eventType = e->response_type & ~0x80;

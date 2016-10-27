@@ -39,6 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDecoration2/Decoration>
 
+#include <KDesktopFile>
+
 #include <QMouseEvent>
 #include <QStyleHints>
 
@@ -674,7 +676,10 @@ void AbstractClient::setupWindowManagementInterface()
     w->setMinimizeable(isMinimizable());
     w->setFullscreenable(isFullScreenable());
     w->setIcon(icon());
-    w->setAppId(QString::fromUtf8(resourceName()));
+    auto updateAppId = [this, w] {
+        w->setAppId(QString::fromUtf8(m_desktopFileName.isEmpty() ? resourceName() : m_desktopFileName));
+    };
+    updateAppId();
     w->setSkipTaskbar(skipTaskbar());
     w->setShadeable(isShadeable());
     w->setShaded(isShade());
@@ -716,11 +721,8 @@ void AbstractClient::setupWindowManagementInterface()
             w->setIcon(icon());
         }
     );
-    connect(this, &AbstractClient::windowClassChanged, w,
-        [w, this] {
-            w->setAppId(QString::fromUtf8(resourceName()));
-        }
-    );
+    connect(this, &AbstractClient::windowClassChanged, w, updateAppId);
+    connect(this, &AbstractClient::desktopFileNameChanged, w, updateAppId);
     connect(this, &AbstractClient::shadeChanged, w, [w, this] { w->setShaded(isShade()); });
     connect(this, &AbstractClient::transientChanged, w,
         [w, this] {
@@ -1637,6 +1639,28 @@ QRect AbstractClient::inputGeometry() const
 bool AbstractClient::dockWantsInput() const
 {
     return false;
+}
+
+void AbstractClient::setDesktopFileName(const QByteArray &name)
+{
+    if (name == m_desktopFileName) {
+        return;
+    }
+    m_desktopFileName = name;
+    emit desktopFileNameChanged();
+}
+
+QString AbstractClient::iconFromDesktopFile() const
+{
+    if (m_desktopFileName.isEmpty()) {
+        return QString();
+    }
+    QString desktopFile = QString::fromUtf8(m_desktopFileName);
+    if (!desktopFile.endsWith(QLatin1String(".desktop"))) {
+        desktopFile.append(QLatin1String(".desktop"));
+    }
+    KDesktopFile df(desktopFile);
+    return df.readIcon();
 }
 
 }

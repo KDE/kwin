@@ -1683,6 +1683,11 @@ void Client::getMotifHints()
 void Client::getIcons()
 {
     // First read icons from the window itself
+    const QString themedIconName = iconFromDesktopFile();
+    if (!themedIconName.isEmpty()) {
+        setIcon(QIcon::fromTheme(themedIconName));
+        return;
+    }
     QIcon icon;
     auto readIcon = [this, &icon](int size, bool scale = true) {
         const QPixmap pix = KWindowSystem::icon(window(), size, size, scale, KWindowSystem::NETWM | KWindowSystem::WMHints, info);

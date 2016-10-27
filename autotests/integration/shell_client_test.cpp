@@ -62,6 +62,7 @@ private Q_SLOTS:
     void testWindowOpensLargerThanScreen();
     void testHidden_data();
     void testHidden();
+    void testDesktopFileName();
 };
 
 void TestShellClient::initTestCase()
@@ -581,6 +582,38 @@ void TestShellClient::testHidden()
     QVERIFY(c->wantsTabFocus());
 
     //QCOMPARE(workspace()->activeClient(), c);
+}
+
+void TestShellClient::testDesktopFileName()
+{
+    // this test verifies that desktop file name is passed correctly to the window
+    QScopedPointer<Surface> surface(Test::createSurface());
+    // only xdg-shell as ShellSurface misses the setter
+    QScopedPointer<XdgShellSurface> shellSurface(qobject_cast<XdgShellSurface*>(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV5, surface.data())));
+    shellSurface->setAppId(QByteArrayLiteral("org.kde.foo"));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(c->desktopFileName(), QByteArrayLiteral("org.kde.foo"));
+    // the desktop file does not exist, so icon should be generic Wayland
+    QCOMPARE(c->icon().name(), QStringLiteral("wayland"));
+
+    QSignalSpy desktopFileNameChangedSpy(c, &AbstractClient::desktopFileNameChanged);
+    QVERIFY(desktopFileNameChangedSpy.isValid());
+    QSignalSpy iconChangedSpy(c, &ShellClient::iconChanged);
+    QVERIFY(iconChangedSpy.isValid());
+    shellSurface->setAppId(QByteArrayLiteral("org.kde.bar"));
+    QVERIFY(desktopFileNameChangedSpy.wait());
+    QCOMPARE(c->desktopFileName(), QByteArrayLiteral("org.kde.bar"));
+    // icon should still be wayland
+    QCOMPARE(c->icon().name(), QStringLiteral("wayland"));
+    QVERIFY(iconChangedSpy.isEmpty());
+
+    const QString dfPath = QFINDTESTDATA("data/example.desktop");
+    shellSurface->setAppId(dfPath.toUtf8());
+    QVERIFY(desktopFileNameChangedSpy.wait());
+    QCOMPARE(iconChangedSpy.count(), 1);
+    QCOMPARE(QString::fromUtf8(c->desktopFileName()), dfPath);
+    QCOMPARE(c->icon().name(), QStringLiteral("kwin"));
 }
 
 WAYLANDTEST_MAIN(TestShellClient)

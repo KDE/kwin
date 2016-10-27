@@ -108,12 +108,13 @@ void ShellClient::initSurface(T *shellSurface)
             performMouseCommand(Options::MouseMove, Cursor::pos());
         }
     );
-    connect(shellSurface, &T::windowClassChanged, this, &ShellClient::updateIcon);
 
     setResourceClass(shellSurface->windowClass());
+    setDesktopFileName(shellSurface->windowClass());
     connect(shellSurface, &T::windowClassChanged, this,
         [this] (const QByteArray &windowClass) {
             setResourceClass(windowClass);
+            setDesktopFileName(windowClass);
         }
     );
     connect(shellSurface, &T::resizeRequested, this,
@@ -168,6 +169,7 @@ void ShellClient::initSurface(T *shellSurface)
 
 void ShellClient::init()
 {
+    connect(this, &ShellClient::desktopFileNameChanged, this, &ShellClient::updateIcon);
     findInternalWindow();
     createWindowId();
     setupCompositing();
@@ -233,7 +235,6 @@ void ShellClient::init()
     } else if (m_xdgShellPopup) {
         connect(m_xdgShellPopup, &XdgShellPopupInterface::destroyed, this, &ShellClient::destroyClient);
     }
-    updateIcon();
 
     // setup shadow integration
     getShadow();
@@ -1184,19 +1185,12 @@ bool ShellClient::hasStrut() const
 void ShellClient::updateIcon()
 {
     const QString waylandIconName = QStringLiteral("wayland");
-    QString desktopFile;
-    if (m_shellSurface) {
-        desktopFile = QString::fromUtf8(m_shellSurface->windowClass());
+    const QString dfIconName = iconFromDesktopFile();
+    const QString iconName = dfIconName.isEmpty() ? waylandIconName : dfIconName;
+    if (iconName == icon().name()) {
+        return;
     }
-    if (desktopFile.isEmpty()) {
-        setIcon(QIcon::fromTheme(waylandIconName));
-    }
-    if (!desktopFile.endsWith(QLatin1String(".desktop"))) {
-        desktopFile.append(QLatin1String(".desktop"));
-    }
-    KDesktopFile df(desktopFile);
-    const QString iconName = df.readIcon();
-    setIcon(QIcon::fromTheme(iconName.isEmpty() ? waylandIconName : iconName));
+    setIcon(QIcon::fromTheme(iconName));
 }
 
 bool ShellClient::isTransient() const

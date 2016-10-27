@@ -244,6 +244,17 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Because of that there is no notify signal.
      **/
     Q_PROPERTY(bool resizeable READ isResizable)
+
+    /**
+     * The desktop file name of the application this AbstractClient belongs to.
+     *
+     * This is either the base name without full path and without file extension of the
+     * desktop file for the window's application (e.g. "org.kde.foo").
+     *
+     * The application's desktop file name can also be the full path to the desktop file
+     * (e.g. "/opt/kde/share/org.kde.foo.desktop") in case it's not in a standard location.
+     **/
+    Q_PROPERTY(QByteArray desktopFileName READ desktopFileName NOTIFY desktopFileNameChanged)
 public:
     virtual ~AbstractClient();
 
@@ -599,6 +610,10 @@ public:
      **/
     virtual void showOnScreenEdge() = 0;
 
+    QByteArray desktopFileName() const {
+        return m_desktopFileName;
+    }
+
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 
@@ -640,6 +655,7 @@ Q_SIGNALS:
     void minimizeableChanged(bool);
     void shadeableChanged(bool);
     void maximizeableChanged(bool);
+    void desktopFileNameChanged();
 
 protected:
     AbstractClient();
@@ -918,6 +934,9 @@ protected:
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
 
+    void setDesktopFileName(const QByteArray &name);
+    QString iconFromDesktopFile() const;
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -984,6 +1003,8 @@ private:
         QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
     } m_decoration;
+
+    QByteArray m_desktopFileName;
 
 
     static bool s_haveResizeEffect;

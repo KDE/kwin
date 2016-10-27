@@ -93,7 +93,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2Protocols |
         NET::WM2InitialMappingState |
         NET::WM2IconPixmap |
-        NET::WM2OpaqueRegion;
+        NET::WM2OpaqueRegion |
+        NET::WM2DesktopFileName;
 
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
@@ -142,7 +143,10 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     setModal((info->state() & NET::Modal) != 0);   // Needs to be valid before handling groups
     readTransientProperty(transientCookie);
+    setDesktopFileName(QByteArray(info->desktopFileName()));
     getIcons();
+    connect(this, &Client::desktopFileNameChanged, this, &Client::getIcons);
+
     m_geometryHints.read();
     getMotifHints();
     getWmOpaqueRegion();
