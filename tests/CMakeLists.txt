@@ -36,3 +36,7 @@ endif()
 
 add_executable(x11shadowreader x11shadowreader.cpp)
 target_link_libraries(x11shadowreader XCB::XCB Qt5::Widgets Qt5::X11Extras KF5::ConfigCore KF5::WindowSystem)
+
+add_executable(pointergestures pointergesturestest.cpp)
+add_definitions(-DDIR="${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries(pointergestures Qt5::Gui Qt5::Quick KF5::WaylandClient)

@@ -127,7 +127,13 @@ void PointerInputRedirection::init()
     connect(workspace(), &Workspace::stackingOrderChanged, this, &PointerInputRedirection::update);
     connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
     if (waylandServer()->hasScreenLockerIntegration()) {
-        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &PointerInputRedirection::update);
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
+            [this] {
+                waylandServer()->seat()->cancelPointerPinchGesture();
+                waylandServer()->seat()->cancelPointerSwipeGesture();
+                update();
+            }
+        );
     }
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });

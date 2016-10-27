@@ -326,6 +326,53 @@ public:
         }
         return true;
     }
+    bool pinchGestureBegin(int fingerCount, quint32 time) override {
+        Q_UNUSED(fingerCount)
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
+    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override {
+        Q_UNUSED(scale)
+        Q_UNUSED(angleDelta)
+        Q_UNUSED(delta)
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
+    bool pinchGestureEnd(quint32 time) override {
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
+    bool pinchGestureCancelled(quint32 time) override {
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
+
+    bool swipeGestureBegin(int fingerCount, quint32 time) override {
+        Q_UNUSED(fingerCount)
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
+    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override {
+        Q_UNUSED(delta)
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
+    bool swipeGestureEnd(quint32 time) override {
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
+    bool swipeGestureCancelled(quint32 time) override {
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
 private:
     bool surfaceAllowed(KWayland::Server::SurfaceInterface *(KWayland::Server::SeatInterface::*method)() const) const {
         if (KWayland::Server::SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
@@ -976,6 +1023,79 @@ public:
             seat->touchUp(kwaylandId);
             input()->touch()->removeId(id);
         }
+        return true;
+    }
+    bool pinchGestureBegin(int fingerCount, quint32 time) override {
+        if (!workspace()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->startPointerPinchGesture(fingerCount);
+        return true;
+    }
+    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override {
+        if (!workspace()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->updatePointerPinchGesture(delta, scale, angleDelta);
+        return true;
+    }
+    bool pinchGestureEnd(quint32 time) override {
+        if (!workspace()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->endPointerPinchGesture();
+        return true;
+    }
+    bool pinchGestureCancelled(quint32 time) override {
+        if (!workspace()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->cancelPointerPinchGesture();
+        return true;
+    }
+
+    bool swipeGestureBegin(int fingerCount, quint32 time) override {
+        if (!workspace()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->startPointerSwipeGesture(fingerCount);
+        return true;
+    }
+    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override {
+        if (!workspace()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->updatePointerSwipeGesture(delta);
+        return true;
+    }
+    bool swipeGestureEnd(quint32 time) override {
+        if (!workspace()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->endPointerSwipeGesture();
+        return true;
+    }
+    bool swipeGestureCancelled(quint32 time) override {
+        if (!workspace()) {
+            return false;
+        }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->cancelPointerSwipeGesture();
         return true;
     }
 };

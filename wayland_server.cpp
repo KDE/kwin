@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
+#include <KWayland/Server/pointergestures_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/server_decoration_interface.h>
@@ -184,6 +185,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_display->createShm();
     m_seat = m_display->createSeat(m_display);
     m_seat->create();
+    m_display->createPointerGestures(PointerGesturesInterfaceVersion::UnstableV1, m_display)->create();
     auto ddm = m_display->createDataDeviceManager(m_display);
     ddm->create();
     connect(ddm, &DataDeviceManagerInterface::dataDeviceCreated, this,
