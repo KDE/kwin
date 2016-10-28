@@ -238,12 +238,9 @@ void TranslucencyTest::testDialogClose()
     QVERIFY(windowDeletedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
     if (windowDeletedSpy.isEmpty()) {
-        QEXPECT_FAIL("", "BUG 342716", Continue);
         QVERIFY(windowDeletedSpy.wait());
     }
-    QEXPECT_FAIL("", "BUG 342716", Continue);
     QCOMPARE(windowDeletedSpy.count(), 1);
-    QEXPECT_FAIL("", "BUG 342716", Continue);
     QTRY_VERIFY(!m_translucencyEffect->isActive());
     xcb_destroy_window(c.data(), w);
     c.reset();
