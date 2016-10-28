@@ -226,16 +226,18 @@ void TestWaylandConnectionThread::testConnectFd()
     QVERIFY(connectedSpy.wait());
 
     // create the Registry
-    Registry registry;
-    QSignalSpy announcedSpy(&registry, SIGNAL(interfacesAnnounced()));
+    QScopedPointer<Registry> registry(new Registry);
+    QSignalSpy announcedSpy(registry.data(), SIGNAL(interfacesAnnounced()));
     QVERIFY(announcedSpy.isValid());
-    registry.create(connection);
-    EventQueue queue;
-    queue.setup(connection);
-    registry.setEventQueue(&queue);
-    registry.setup();
+    registry->create(connection);
+    QScopedPointer<EventQueue> queue(new EventQueue);
+    queue->setup(connection);
+    registry->setEventQueue(queue.data());
+    registry->setup();
     QVERIFY(announcedSpy.wait());
 
+    registry.reset();
+    queue.reset();
     connection->deleteLater();
     connectionThread->quit();
     connectionThread->wait();
