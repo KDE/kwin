@@ -53,12 +53,16 @@ struct libinput_device {
     bool supportsDisableEvents = false;
     bool supportsDisableEventsOnExternalMouse = false;
     bool supportsMiddleEmulation = false;
+    bool supportsNaturalScroll = false;
     bool middleEmulationEnabledByDefault = false;
     bool middleEmulation = false;
     qreal pointerAcceleration = 0.0;
     int setPointerAccelerationReturnValue = 0;
     bool leftHanded = false;
     int setLeftHandedReturnValue = 0;
+    bool naturalScrollEnabledByDefault = false;
+    bool naturalScroll = false;
+    int setNaturalScrollReturnValue = 0;
     Qt::MouseButtons supportedButtons;
     QVector<quint32> keys;
     bool enabled = true;

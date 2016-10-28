@@ -622,3 +622,30 @@ enum libinput_config_middle_emulation_state libinput_device_config_middle_emulat
         return LIBINPUT_CONFIG_MIDDLE_EMULATION_DISABLED;
     }
 }
+
+int libinput_device_config_scroll_has_natural_scroll(struct libinput_device *device)
+{
+    return device->supportsNaturalScroll;
+}
+
+enum libinput_config_status libinput_device_config_scroll_set_natural_scroll_enabled(struct libinput_device *device, int enable)
+{
+    if (device->setNaturalScrollReturnValue == 0) {
+        if (!device->supportsNaturalScroll) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        device->naturalScroll = enable;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+int libinput_device_config_scroll_get_natural_scroll_enabled(struct libinput_device *device)
+{
+    return device->naturalScroll;
+}
+
+int libinput_device_config_scroll_get_default_natural_scroll_enabled(struct libinput_device *device)
+{
+    return device->naturalScrollEnabledByDefault;
+}

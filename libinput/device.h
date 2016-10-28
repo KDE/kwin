@@ -58,9 +58,12 @@ class Device : public QObject
     Q_PROPERTY(bool supportsDisableEvents READ supportsDisableEvents CONSTANT)
     Q_PROPERTY(bool supportsDisableEventsOnExternalMouse READ supportsDisableEventsOnExternalMouse CONSTANT)
     Q_PROPERTY(bool supportsMiddleEmulation READ supportsMiddleEmulation CONSTANT)
+    Q_PROPERTY(bool supportsNaturalScroll READ supportsNaturalScroll CONSTANT)
     Q_PROPERTY(bool middleEmulationEnabledByDefault READ middleEmulationEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool naturalScrollEnabledByDefault READ naturalScrollEnabledByDefault CONSTANT)
     Q_PROPERTY(bool middleEmulation READ isMiddleEmulation WRITE setMiddleEmulation NOTIFY middleEmulationChanged)
     Q_PROPERTY(bool leftHanded READ isLeftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
+    Q_PROPERTY(bool naturalScroll READ isNaturalScroll WRITE setNaturalScroll NOTIFY naturalScrollChanged)
     Q_PROPERTY(qreal pointerAcceleration READ pointerAcceleration WRITE setPointerAcceleration NOTIFY pointerAccelerationChanged)
     Q_PROPERTY(bool tapToClick READ isTapToClick WRITE setTapToClick NOTIFY tapToClickChanged)
     Q_PROPERTY(bool tapAndDragEnabledByDefault READ tapAndDragEnabledByDefault CONSTANT)
@@ -162,13 +165,23 @@ public:
     bool supportsMiddleEmulation() const {
         return m_supportsMiddleEmulation;
     }
+    bool supportsNaturalScroll() const {
+        return m_supportsNaturalScroll;
+    }
     bool middleEmulationEnabledByDefault() const {
         return m_middleEmulationEnabledByDefault;
+    }
+    bool naturalScrollEnabledByDefault() const {
+        return m_naturalScrollEnabledByDefault;
     }
     bool isMiddleEmulation() const {
         return m_middleEmulation;
     }
     void setMiddleEmulation(bool set);
+    bool isNaturalScroll() const {
+        return m_naturalScroll;
+    }
+    void setNaturalScroll(bool set);
 
     bool isLeftHanded() const {
         return m_leftHanded;
@@ -215,6 +228,7 @@ Q_SIGNALS:
     void tapAndDragChanged();
     void tapDragLockChanged();
     void middleEmulationChanged();
+    void naturalScrollChanged();
 
 private:
     libinput_device *m_device;
@@ -246,9 +260,12 @@ private:
     bool m_supportsDisableEvents;
     bool m_supportsDisableEventsOnExternalMouse;
     bool m_supportsMiddleEmulation;
+    bool m_supportsNaturalScroll;
     bool m_middleEmulationEnabledByDefault;
+    bool m_naturalScrollEnabledByDefault;
     bool m_middleEmulation;
     bool m_leftHanded;
+    bool m_naturalScroll;
     qreal m_pointerAcceleration;
     bool m_enabled;
 

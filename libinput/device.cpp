@@ -104,9 +104,12 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportsDisableEvents(libinput_device_config_send_events_get_modes(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED)
     , m_supportsDisableEventsOnExternalMouse(libinput_device_config_send_events_get_modes(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE)
     , m_supportsMiddleEmulation(libinput_device_config_middle_emulation_is_available(m_device))
+    , m_supportsNaturalScroll(libinput_device_config_scroll_has_natural_scroll(m_device))
     , m_middleEmulationEnabledByDefault(libinput_device_config_middle_emulation_get_default_enabled(m_device) == LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED)
+    , m_naturalScrollEnabledByDefault(libinput_device_config_scroll_get_default_natural_scroll_enabled(m_device))
     , m_middleEmulation(libinput_device_config_middle_emulation_get_enabled(m_device) == LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED)
     , m_leftHanded(m_supportsLeftHanded ? libinput_device_config_left_handed_get(m_device) : false)
+    , m_naturalScroll(m_supportsNaturalScroll ? libinput_device_config_scroll_get_natural_scroll_enabled(m_device) : false)
     , m_pointerAcceleration(libinput_device_config_accel_get_speed(m_device))
     , m_enabled(m_supportsDisableEvents ? libinput_device_config_send_events_get_mode(m_device) == LIBINPUT_CONFIG_SEND_EVENTS_ENABLED : true)
 {
@@ -185,6 +188,19 @@ void Device::setPointerAcceleration(qreal acceleration)
         if (m_pointerAcceleration != acceleration) {
             m_pointerAcceleration = acceleration;
             emit pointerAccelerationChanged();
+        }
+    }
+}
+
+void Device::setNaturalScroll(bool set)
+{
+    if (!m_supportsNaturalScroll) {
+        return;
+    }
+    if (libinput_device_config_scroll_set_natural_scroll_enabled(m_device, set) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_naturalScroll != set) {
+            m_naturalScroll = set;
+            emit naturalScrollChanged();
         }
     }
 }
