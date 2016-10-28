@@ -46,6 +46,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testMoveAfterDesktopChange();
+    void testDialogClose();
 
 private:
     Effect *m_translucencyEffect = nullptr;
@@ -73,6 +74,8 @@ void TranslucencyTest::initTestCase()
 
     config->sync();
     kwinApp()->setConfig(config);
+    // TODO: make effects use KWin's config directly
+    KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals)->group("Effect-kwin4_effect_translucency").writeEntry(QStringLiteral("Dialogs"), 90);
 
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();
@@ -109,6 +112,14 @@ void TranslucencyTest::cleanup()
     m_translucencyEffect = nullptr;
 }
 
+struct XcbConnectionDeleter
+{
+    static inline void cleanup(xcb_connection_t *pointer)
+    {
+        xcb_disconnect(pointer);
+    }
+};
+
 void TranslucencyTest::testMoveAfterDesktopChange()
 {
     // test tries to simulate the condition of bug 366081
@@ -118,13 +129,6 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     QVERIFY(windowAddedSpy.isValid());
 
     // create an xcb window
-    struct XcbConnectionDeleter
-    {
-        static inline void cleanup(xcb_connection_t *pointer)
-        {
-            xcb_disconnect(pointer);
-        }
-    };
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
@@ -178,6 +182,69 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     QSignalSpy windowClosedSpy(client, &Client::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
+    xcb_destroy_window(c.data(), w);
+    c.reset();
+}
+
+void TranslucencyTest::testDialogClose()
+{
+    // this test simulates the condition of BUG 342716
+    // with translucency settings for window type dialog the effect never ends when the window gets destroyed
+    QVERIFY(!m_translucencyEffect->isActive());
+    QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
+    QVERIFY(windowAddedSpy.isValid());
+
+    // create an xcb window
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+    const QRect windowGeometry(0, 0, 100, 200);
+    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    NETWinInfo winInfo(c.data(), w, rootWindow(), NET::Properties(), NET::Properties2());
+    winInfo.setWindowType(NET::Dialog);
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+    // we should get a client for it
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(client);
+    QCOMPARE(client->window(), w);
+    QVERIFY(client->isDecorated());
+    QVERIFY(client->isDialog());
+
+    QVERIFY(windowAddedSpy.wait());
+    QTRY_VERIFY(m_translucencyEffect->isActive());
+    // and destroy the window again
+    xcb_unmap_window(c.data(), w);
+    xcb_flush(c.data());
+
+    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+
+    QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
+    QVERIFY(windowDeletedSpy.isValid());
+    QVERIFY(windowClosedSpy.wait());
+    if (windowDeletedSpy.isEmpty()) {
+        QEXPECT_FAIL("", "BUG 342716", Continue);
+        QVERIFY(windowDeletedSpy.wait());
+    }
+    QEXPECT_FAIL("", "BUG 342716", Continue);
+    QCOMPARE(windowDeletedSpy.count(), 1);
+    QEXPECT_FAIL("", "BUG 342716", Continue);
+    QTRY_VERIFY(!m_translucencyEffect->isActive());
     xcb_destroy_window(c.data(), w);
     c.reset();
 }
