@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_QPA_SCREEN_H
 
 #include <qpa/qplatformscreen.h>
+#include <QPointer>
 
 namespace KWayland
 {
@@ -50,7 +51,7 @@ public:
     QDpi logicalDpi() const override;
 
 private:
-    KWayland::Client::Output *m_output;
+    QPointer<KWayland::Client::Output> m_output;
     QScopedPointer<PlatformCursor> m_cursor;
 };
 

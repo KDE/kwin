@@ -226,7 +226,7 @@ void Integration::createWaylandOutput(quint32 name, quint32 version)
         m_dummyScreen = nullptr;
     }
     using namespace KWayland::Client;
-    auto o = m_registry->createOutput(name, version, this);
+    auto o = m_registry->createOutput(name, version, m_registry);
     connect(o, &Output::changed, this,
         [this, o] {
             disconnect(o, &Output::changed, nullptr, nullptr);
