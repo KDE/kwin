@@ -174,9 +174,15 @@ void TestWaylandOutputManagement::initTestCase()
 
 void TestWaylandOutputManagement::cleanupTestCase()
 {
+    delete m_outputConfiguration;
+    m_outputConfiguration = nullptr;
     if (m_queue) {
         delete m_queue;
         m_queue = nullptr;
+    }
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
     }
     if (m_thread) {
         m_thread->quit();
@@ -184,15 +190,11 @@ void TestWaylandOutputManagement::cleanupTestCase()
         delete m_thread;
         m_thread = nullptr;
     }
-    delete m_connection;
-    m_connection = nullptr;
 
     if (m_outputManagementInterface) {
         delete m_outputConfigurationInterface;
         m_outputConfigurationInterface = nullptr;
     }
-    delete m_outputConfiguration;
-    m_outputConfiguration = nullptr;
     delete m_display;
     m_display = nullptr;
 }
