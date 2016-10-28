@@ -410,6 +410,8 @@ void Client::createDecoration(const QRect& oldgeom)
                 emit geometryShapeChanged(this, oldgeom);
             }
         );
+        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::widthChanged, this, &Client::updateInputWindow);
+        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::heightChanged, this, &Client::updateInputWindow);
     }
     setDecoration(decoration);
 

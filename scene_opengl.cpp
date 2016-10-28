@@ -2527,7 +2527,8 @@ void SceneOpenGLDecorationRenderer::render()
     if (scheduled.isEmpty()) {
         return;
     }
-    if (areImageSizesDirty()) {
+    const bool dirty = areImageSizesDirty();
+    if (dirty) {
         resizeTexture();
         resetImageSizesDirty();
     }
@@ -2540,7 +2541,7 @@ void SceneOpenGLDecorationRenderer::render()
     QRect left, top, right, bottom;
     client()->client()->layoutDecorationRects(left, top, right, bottom);
 
-    const QRect geometry = scheduled.boundingRect();
+    const QRect geometry = dirty ? QRect(QPoint(0, 0), client()->client()->geometry().size()) : scheduled.boundingRect();
 
     auto renderPart = [this](const QRect &geo, const QRect &partRect, const QPoint &offset, bool rotated = false) {
         if (geo.isNull()) {

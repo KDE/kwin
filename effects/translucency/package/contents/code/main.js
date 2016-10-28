@@ -78,6 +78,9 @@ var translucencyEffect = {
                         to: value / 100.0
                     }]
                 });
+                if (window.translucencyWindowTypeAnimation !== undefined) {
+                    cancel(window.translucencyWindowTypeAnimation);
+                }
                 window.translucencyWindowTypeAnimation = ids;
             }
         };
