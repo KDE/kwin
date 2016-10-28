@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screen.h"
 #include "platformcursor.h"
+#include "wayland_server.h"
 
 #include <KWayland/Client/output.h>
 
@@ -29,7 +30,7 @@ namespace QPA
 
 Screen::Screen(KWayland::Client::Output *o)
     : QPlatformScreen()
-    , m_output(o)
+    , m_output(QPointer<KWayland::Client::Output>(o))
     , m_cursor(new PlatformCursor)
 {
     // TODO: connect to resolution changes
