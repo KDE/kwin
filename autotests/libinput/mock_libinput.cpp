@@ -649,3 +649,52 @@ int libinput_device_config_scroll_get_default_natural_scroll_enabled(struct libi
 {
     return device->naturalScrollEnabledByDefault;
 }
+
+uint32_t libinput_device_config_scroll_get_methods(struct libinput_device *device)
+{
+    return device->supportedScrollMethods;
+}
+
+enum libinput_config_scroll_method libinput_device_config_scroll_get_default_method(struct libinput_device *device)
+{
+    return device->defaultScrollMethod;
+}
+
+enum libinput_config_status libinput_device_config_scroll_set_method(struct libinput_device *device, enum libinput_config_scroll_method method)
+{
+    if (device->setScrollMethodReturnValue == 0) {
+        if (!(device->supportedScrollMethods & method)) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        device->scrollMethod = method;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+enum libinput_config_scroll_method libinput_device_config_scroll_get_method(struct libinput_device *device)
+{
+    return device->scrollMethod;
+}
+
+enum libinput_config_status libinput_device_config_scroll_set_button(struct libinput_device *device, uint32_t button)
+{
+    if (device->setScrollButtonReturnValue == 0) {
+        if (!(device->supportedScrollMethods & LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN)) {
+            return LIBINPUT_CONFIG_STATUS_UNSUPPORTED;
+        }
+        device->scrollButton = button;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+uint32_t libinput_device_config_scroll_get_button(struct libinput_device *device)
+{
+    return device->scrollButton;
+}
+
+uint32_t libinput_device_config_scroll_get_default_button(struct libinput_device *device)
+{
+    return device->defaultScrollButton;
+}

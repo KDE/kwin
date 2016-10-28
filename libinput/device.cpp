@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "device.h"
-#include <libinput.h>
 
 #include <QDBusConnection>
 
@@ -105,11 +104,16 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportsDisableEventsOnExternalMouse(libinput_device_config_send_events_get_modes(m_device) & LIBINPUT_CONFIG_SEND_EVENTS_DISABLED_ON_EXTERNAL_MOUSE)
     , m_supportsMiddleEmulation(libinput_device_config_middle_emulation_is_available(m_device))
     , m_supportsNaturalScroll(libinput_device_config_scroll_has_natural_scroll(m_device))
+    , m_supportedScrollMethods(libinput_device_config_scroll_get_methods(m_device))
     , m_middleEmulationEnabledByDefault(libinput_device_config_middle_emulation_get_default_enabled(m_device) == LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED)
     , m_naturalScrollEnabledByDefault(libinput_device_config_scroll_get_default_natural_scroll_enabled(m_device))
+    , m_defaultScrollMethod(libinput_device_config_scroll_get_default_method(m_device))
+    , m_defaultScrollButton(libinput_device_config_scroll_get_default_button(m_device))
     , m_middleEmulation(libinput_device_config_middle_emulation_get_enabled(m_device) == LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED)
     , m_leftHanded(m_supportsLeftHanded ? libinput_device_config_left_handed_get(m_device) : false)
     , m_naturalScroll(m_supportsNaturalScroll ? libinput_device_config_scroll_get_natural_scroll_enabled(m_device) : false)
+    , m_scrollMethod(libinput_device_config_scroll_get_method(m_device))
+    , m_scrollButton(libinput_device_config_scroll_get_button(m_device))
     , m_pointerAcceleration(libinput_device_config_accel_get_speed(m_device))
     , m_enabled(m_supportsDisableEvents ? libinput_device_config_send_events_get_mode(m_device) == LIBINPUT_CONFIG_SEND_EVENTS_ENABLED : true)
 {
@@ -201,6 +205,53 @@ void Device::setNaturalScroll(bool set)
         if (m_naturalScroll != set) {
             m_naturalScroll = set;
             emit naturalScrollChanged();
+        }
+    }
+}
+
+void Device::setScrollMethod(bool set, enum libinput_config_scroll_method method)
+{
+    if (!(m_supportedScrollMethods & method)) {
+        return;
+    }
+    if (set) {
+        if (m_scrollMethod == method) {
+            return;
+        }
+    } else {
+        if (m_scrollMethod != method) {
+            return;
+        }
+        method = LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    }
+
+    if (libinput_device_config_scroll_set_method(m_device, method) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        m_scrollMethod = method;
+        emit scrollMethodChanged();
+    }
+}
+
+void Device::setScrollTwoFinger(bool set) {
+    setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_2FG);
+}
+
+void Device::setScrollEdge(bool set) {
+    setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_EDGE);
+}
+
+void Device::setScrollOnButtonDown(bool set) {
+    setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN);
+}
+
+void Device::setScrollButton(quint32 button)
+{
+    if (!(m_supportedScrollMethods & LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN)) {
+        return;
+    }
+    if (libinput_device_config_scroll_set_button(m_device, button) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_scrollButton != button) {
+            m_scrollButton = button;
+            emit scrollButtonChanged();
         }
     }
 }

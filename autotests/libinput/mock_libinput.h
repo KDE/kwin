@@ -54,6 +54,7 @@ struct libinput_device {
     bool supportsDisableEventsOnExternalMouse = false;
     bool supportsMiddleEmulation = false;
     bool supportsNaturalScroll = false;
+    quint32 supportedScrollMethods = 0;
     bool middleEmulationEnabledByDefault = false;
     bool middleEmulation = false;
     qreal pointerAcceleration = 0.0;
@@ -63,6 +64,12 @@ struct libinput_device {
     bool naturalScrollEnabledByDefault = false;
     bool naturalScroll = false;
     int setNaturalScrollReturnValue = 0;
+    enum libinput_config_scroll_method defaultScrollMethod = LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    enum libinput_config_scroll_method scrollMethod = LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    int setScrollMethodReturnValue = 0;
+    quint32 defaultScrollButton = 0;
+    quint32 scrollButton = 0;
+    int setScrollButtonReturnValue = 0;
     Qt::MouseButtons supportedButtons;
     QVector<quint32> keys;
     bool enabled = true;

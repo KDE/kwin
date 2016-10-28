@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_LIBINPUT_DEVICE_H
 #define KWIN_LIBINPUT_DEVICE_H
 
+#include <libinput.h>
+
 #include <QObject>
 #include <QSizeF>
 #include <QVector>
@@ -59,11 +61,22 @@ class Device : public QObject
     Q_PROPERTY(bool supportsDisableEventsOnExternalMouse READ supportsDisableEventsOnExternalMouse CONSTANT)
     Q_PROPERTY(bool supportsMiddleEmulation READ supportsMiddleEmulation CONSTANT)
     Q_PROPERTY(bool supportsNaturalScroll READ supportsNaturalScroll CONSTANT)
+    Q_PROPERTY(bool supportsScrollTwoFinger READ supportsScrollTwoFinger CONSTANT)
+    Q_PROPERTY(bool supportsScrollEdge READ supportsScrollEdge CONSTANT)
+    Q_PROPERTY(bool supportsScrollOnButtonDown READ supportsScrollOnButtonDown CONSTANT)
     Q_PROPERTY(bool middleEmulationEnabledByDefault READ middleEmulationEnabledByDefault CONSTANT)
     Q_PROPERTY(bool naturalScrollEnabledByDefault READ naturalScrollEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool scrollTwoFingerEnabledByDefault READ scrollTwoFingerEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool scrollEdgeEnabledByDefault READ scrollEdgeEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool scrollOnButtonDownEnabledByDefault READ scrollOnButtonDownEnabledByDefault CONSTANT)
+    Q_PROPERTY(quint32 defaultScrollButton READ defaultScrollButton CONSTANT)
     Q_PROPERTY(bool middleEmulation READ isMiddleEmulation WRITE setMiddleEmulation NOTIFY middleEmulationChanged)
     Q_PROPERTY(bool leftHanded READ isLeftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
     Q_PROPERTY(bool naturalScroll READ isNaturalScroll WRITE setNaturalScroll NOTIFY naturalScrollChanged)
+    Q_PROPERTY(bool scrollTwoFinger READ isScrollTwoFinger WRITE setScrollTwoFinger NOTIFY scrollMethodChanged)
+    Q_PROPERTY(bool scrollEdge READ isScrollEdge WRITE setScrollEdge NOTIFY scrollMethodChanged)
+    Q_PROPERTY(bool scrollOnButtonDown READ isScrollOnButtonDown WRITE setScrollOnButtonDown NOTIFY scrollMethodChanged)
+    Q_PROPERTY(quint32 scrollButton READ scrollButton WRITE setScrollButton NOTIFY scrollButtonChanged)
     Q_PROPERTY(qreal pointerAcceleration READ pointerAcceleration WRITE setPointerAcceleration NOTIFY pointerAccelerationChanged)
     Q_PROPERTY(bool tapToClick READ isTapToClick WRITE setTapToClick NOTIFY tapToClickChanged)
     Q_PROPERTY(bool tapAndDragEnabledByDefault READ tapAndDragEnabledByDefault CONSTANT)
@@ -168,11 +181,32 @@ public:
     bool supportsNaturalScroll() const {
         return m_supportsNaturalScroll;
     }
+    bool supportsScrollTwoFinger() const {
+        return (m_supportedScrollMethods & LIBINPUT_CONFIG_SCROLL_2FG);
+    }
+    bool supportsScrollEdge() const {
+        return (m_supportedScrollMethods & LIBINPUT_CONFIG_SCROLL_EDGE);
+    }
+    bool supportsScrollOnButtonDown() const {
+        return (m_supportedScrollMethods & LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN);
+    }
     bool middleEmulationEnabledByDefault() const {
         return m_middleEmulationEnabledByDefault;
     }
     bool naturalScrollEnabledByDefault() const {
         return m_naturalScrollEnabledByDefault;
+    }
+    bool scrollTwoFingerEnabledByDefault() const {
+        return m_defaultScrollMethod == LIBINPUT_CONFIG_SCROLL_2FG;
+    }
+    bool scrollEdgeEnabledByDefault() const {
+        return m_defaultScrollMethod == LIBINPUT_CONFIG_SCROLL_EDGE;
+    }
+    bool scrollOnButtonDownEnabledByDefault() const {
+        return m_defaultScrollMethod == LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN;
+    }
+    quint32 defaultScrollButton() const {
+        return m_defaultScrollButton;
     }
     bool isMiddleEmulation() const {
         return m_middleEmulation;
@@ -182,6 +216,23 @@ public:
         return m_naturalScroll;
     }
     void setNaturalScroll(bool set);
+    void setScrollMethod(bool set, enum libinput_config_scroll_method method);
+    bool isScrollTwoFinger() const {
+        return m_scrollMethod & LIBINPUT_CONFIG_SCROLL_2FG;
+    }
+    void setScrollTwoFinger(bool set);
+    bool isScrollEdge() const {
+        return m_scrollMethod & LIBINPUT_CONFIG_SCROLL_EDGE;
+    }
+    void setScrollEdge(bool set);
+    bool isScrollOnButtonDown() const {
+        return m_scrollMethod & LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN;
+    }
+    void setScrollOnButtonDown(bool set);
+    quint32 scrollButton() const {
+        return m_scrollButton;
+    }
+    void setScrollButton(quint32 button);
 
     bool isLeftHanded() const {
         return m_leftHanded;
@@ -229,6 +280,8 @@ Q_SIGNALS:
     void tapDragLockChanged();
     void middleEmulationChanged();
     void naturalScrollChanged();
+    void scrollMethodChanged();
+    void scrollButtonChanged();
 
 private:
     libinput_device *m_device;
@@ -261,11 +314,18 @@ private:
     bool m_supportsDisableEventsOnExternalMouse;
     bool m_supportsMiddleEmulation;
     bool m_supportsNaturalScroll;
+    quint32 m_supportedScrollMethods;
+    bool m_supportsScrollEdge;
+    bool m_supportsScrollOnButtonDown;
     bool m_middleEmulationEnabledByDefault;
     bool m_naturalScrollEnabledByDefault;
+    enum libinput_config_scroll_method m_defaultScrollMethod;
+    quint32 m_defaultScrollButton;
     bool m_middleEmulation;
     bool m_leftHanded;
     bool m_naturalScroll;
+    enum libinput_config_scroll_method m_scrollMethod;
+    quint32 m_scrollButton;
     qreal m_pointerAcceleration;
     bool m_enabled;
 
