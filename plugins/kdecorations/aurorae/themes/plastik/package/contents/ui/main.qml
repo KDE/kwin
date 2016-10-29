@@ -146,7 +146,7 @@ Decoration {
                 bottomMargin: 1
                 topMargin: 1
             }
-            visible: !decoration.client.maximzied
+            visible: !decoration.client.maximized
             width: root.borders.right -1
             color: root.titleBarColor
             Rectangle {
@@ -169,7 +169,7 @@ Decoration {
                 rightMargin: 1
             }
             height: root.borders.bottom
-            visible: !decoration.client.maximzied
+            visible: !decoration.client.maximized
             color: root.titleBarColor
             Rectangle {
                 height: 1
