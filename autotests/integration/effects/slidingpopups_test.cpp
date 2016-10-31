@@ -70,7 +70,14 @@ void SlidingPopupsTest::initTestCase()
 
     config->sync();
     kwinApp()->setConfig(config);
+    // TODO: make effects use KWin's config directly
+    KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals)->group("Effect-Wobbly").writeEntry(QStringLiteral("Settings"), QStringLiteral("Custom"));
+    KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals)->group("Effect-Wobbly").writeEntry(QStringLiteral("OpenEffect"), true);
+    KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals)->group("Effect-Wobbly").writeEntry(QStringLiteral("CloseEffect"), true);
 
+    if (QFile::exists(QStringLiteral("/dev/dri/card0"))) {
+        qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
+    }
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
@@ -106,6 +113,17 @@ void SlidingPopupsTest::testWithOtherEffect_data()
 
     QTest::newRow("scale, slide") << QStringList{QStringLiteral("kwin4_effect_scalein"), QStringLiteral("slidingpopups")};
     QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_scalein")};
+    QTest::newRow("fade, slide") << QStringList{QStringLiteral("kwin4_effect_fade"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, fade") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_fade")};
+
+    if (effects->compositingType() & KWin::OpenGLCompositing) {
+        QTest::newRow("glide, slide") << QStringList{QStringLiteral("glide"), QStringLiteral("slidingpopups")};
+        QTest::newRow("slide, glide") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("glide")};
+        QTest::newRow("wobblywindows, slide") << QStringList{QStringLiteral("wobblywindows"), QStringLiteral("slidingpopups")};
+        QTest::newRow("slide, wobblywindows") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("wobblywindows")};
+        QTest::newRow("fallapart, slide") << QStringList{QStringLiteral("fallapart"), QStringLiteral("slidingpopups")};
+        QTest::newRow("slide, fallapart") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("fallapart")};
+    }
 }
 
 void SlidingPopupsTest::testWithOtherEffect()
@@ -161,6 +179,8 @@ void SlidingPopupsTest::testWithOtherEffect()
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    NETWinInfo winInfo(c.data(), w, rootWindow(), NET::Properties(), NET::Properties2());
+    winInfo.setWindowType(NET::Normal);
 
     // and get the slide atom
     const QByteArray effectAtomName = QByteArrayLiteral("_KDE_SLIDE");
@@ -183,15 +203,20 @@ void SlidingPopupsTest::testWithOtherEffect()
     Client *client = windowCreatedSpy.first().first().value<Client*>();
     QVERIFY(client);
     QCOMPARE(client->window(), w);
+    QVERIFY(client->isNormalWindow());
 
     // sliding popups should be active
     QVERIFY(windowAddedSpy.wait());
     QTRY_VERIFY(slidingPoupus->isActive());
     QEXPECT_FAIL("scale, slide", "bug 336866", Continue);
+    QEXPECT_FAIL("fade, slide", "bug 336866", Continue);
+    QEXPECT_FAIL("wobblywindows, slide", "bug 336866", Continue);
+    QEXPECT_FAIL("slide, wobblywindows", "bug 336866", Continue);
     QVERIFY(!otherEffect->isActive());
 
     // wait till effect ends
     QTRY_VERIFY(!slidingPoupus->isActive());
+    QTest::qWait(300);
     QVERIFY(!otherEffect->isActive());
 
     // and destroy the window again
@@ -207,12 +232,15 @@ void SlidingPopupsTest::testWithOtherEffect()
 
     // again we should have the sliding popups active
     QVERIFY(slidingPoupus->isActive());
+    QEXPECT_FAIL("wobblywindows, slide", "bug 336866", Continue);
+    QEXPECT_FAIL("slide, wobblywindows", "bug 336866", Continue);
     QVERIFY(!otherEffect->isActive());
 
     QVERIFY(windowDeletedSpy.wait());
 
     QCOMPARE(windowDeletedSpy.count(), 1);
     QTRY_VERIFY(!slidingPoupus->isActive());
+    QTest::qWait(300);
     QVERIFY(!otherEffect->isActive());
     xcb_destroy_window(c.data(), w);
     c.reset();
