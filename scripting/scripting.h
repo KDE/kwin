@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHash>
 #include <QStringList>
 #include <QtScript/QScriptEngineAgent>
+#include <QtQml/QJSValue>
 
 class QQmlComponent;
 class QQmlContext;
@@ -318,6 +319,7 @@ public:
 public Q_SLOTS:
     QVariant readConfig(const QString &key, QVariant defaultValue = QVariant());
     void registerWindow(QQuickWindow *window);
+    bool registerShortcut(const QString &name, const QString &text, const QKeySequence& keys, QJSValue function);
 
 private:
     DeclarativeScript *m_script;

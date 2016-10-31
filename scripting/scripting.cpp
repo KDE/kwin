@@ -595,6 +595,28 @@ void KWin::JSEngineGlobalMethodsWrapper::registerWindow(QQuickWindow *window)
     });
 }
 
+bool KWin::JSEngineGlobalMethodsWrapper::registerShortcut(const QString &name, const QString &text, const QKeySequence& keys, QJSValue function)
+{
+    if (!function.isCallable()) {
+        qCDebug(KWIN_SCRIPTING) << "Fourth and final argument must be a javascript function";
+        return false;
+    }
+
+    QAction *a = new QAction(this);
+    a->setObjectName(name);
+    a->setText(text);
+    const QKeySequence shortcut = QKeySequence(keys);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>{shortcut});
+    KWin::input()->registerShortcut(shortcut, a);
+
+    connect(a, &QAction::triggered, this, [=]() mutable {
+        QJSValueList arguments;
+        arguments << Scripting::self()->qmlEngine()->toScriptValue(a);
+        function.call(arguments);
+    });
+    return true;
+}
+
 KWin::Scripting *KWin::Scripting::s_self = nullptr;
 
 KWin::Scripting *KWin::Scripting::create(QObject *parent)

@@ -154,10 +154,25 @@ void PointerInputRedirection::init()
             }
         }
     );
+    // connect the move resize of all window
+    auto setupMoveResizeConnection = [this] (AbstractClient *c) {
+        connect(c, &AbstractClient::clientStartUserMovedResized, this, &PointerInputRedirection::updateOnStartMoveResize);
+        connect(c, &AbstractClient::clientFinishUserMovedResized, this, &PointerInputRedirection::update);
+    };
+    const auto clients = workspace()->allClientList();
+    std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
+    connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
+    connect(waylandServer(), &WaylandServer::shellClientAdded, this, setupMoveResizeConnection);
 
     // warp the cursor to center of screen
     warp(screens()->geometry().center());
     updateAfterScreenChange();
+}
+
+void PointerInputRedirection::updateOnStartMoveResize()
+{
+    m_window.clear();
+    waylandServer()->seat()->setFocusedPointerSurface(nullptr);
 }
 
 void PointerInputRedirection::processMotion(const QPointF &pos, uint32_t time, LibInput::Device *device)
