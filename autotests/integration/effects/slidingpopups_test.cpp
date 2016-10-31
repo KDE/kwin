@@ -170,6 +170,10 @@ void SlidingPopupsTest::testWithOtherEffect()
 
     QVERIFY(!slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
+
+    // give the compositor some time to render
+    QTest::qWait(50);
+
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
 
