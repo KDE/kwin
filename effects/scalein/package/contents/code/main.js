@@ -34,7 +34,7 @@ var scaleInEffect = {
     },
     scaleIn: function (window) {
         "use strict";
-        animate({
+        window.scaleInWindowTypeAnimation = animate({
             window: window,
             duration: scaleInEffect.duration,
             curve: QEasingCurve.InOutQuad,
@@ -56,10 +56,22 @@ var scaleInEffect = {
         }
         scaleInEffect.scaleIn(window);
     },
+    dataChanged: function (window, role) {
+        "use strict";
+        if (role == Effect.WindowAddedGrabRole) {
+            if (effect.isGrabbed(window, Effect.WindowAddedGrabRole)) {
+                if (window.scaleInWindowTypeAnimation !== undefined) {
+                    cancel(window.scaleInWindowTypeAnimation);
+                    window.scaleInWindowTypeAnimation = undefined;
+                }
+            }
+        }
+    },
     init: function () {
         "use strict";
         effect.configChanged.connect(scaleInEffect.loadConfig);
         effects.windowAdded.connect(scaleInEffect.added);
+        effects.windowDataChanged.connect(scaleInEffect.dataChanged);
     }
 };
 scaleInEffect.init();

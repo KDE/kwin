@@ -43,12 +43,12 @@ effect.configChanged.connect(function() {
 });
 effects.windowAdded.connect(function(w) {
     if (fadeWindows && isFadeWindow(w)) {
-        effect.animate(w, Effect.Opacity, fadeInTime, 1.0, 0.0);
+        w.fadeInWindowTypeAnimation = effect.animate(w, Effect.Opacity, fadeInTime, 1.0, 0.0);
     }
 });
 effects.windowClosed.connect(function(w) {
     if (fadeWindows && isFadeWindow(w)) {
-        animate({
+        w.fadeOutWindowTypeAnimation = animate({
             window: w,
             duration: fadeOutTime,
             animations: [{
@@ -57,5 +57,22 @@ effects.windowClosed.connect(function(w) {
                 to: 0.0
             }]
         });
+    }
+});
+effects.windowDataChanged.connect(function (window, role) {
+    if (role == Effect.WindowAddedGrabRole) {
+        if (effect.isGrabbed(window, Effect.WindowAddedGrabRole)) {
+            if (window.fadeInWindowTypeAnimation !== undefined) {
+                cancel(window.fadeInWindowTypeAnimation);
+                window.fadeInWindowTypeAnimation = undefined;
+            }
+        }
+    } else if (role == Effect.WindowClosedGrabRole) {
+        if (effect.isGrabbed(window, Effect.WindowClosedGrabRole)) {
+            if (window.fadeOutWindowTypeAnimation !== undefined) {
+                cancel(window.fadeOutWindowTypeAnimation);
+                window.fadeOutWindowTypeAnimation = undefined;
+            }
+        }
     }
 });

@@ -305,7 +305,6 @@ void SlidingPopupsEffect::startForShow(EffectWindow *w)
         mAppearingWindows.insert(w, new QTimeLine(mWindowsData[ w ].fadeInDuration, this));
         mAppearingWindows[ w ]->setCurveShape(QTimeLine::EaseInOutCurve);
 
-        // Tell other windowAdded() and windowClosed() effects to ignore this window
         w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
         w->setData(WindowForceBlurRole, true);

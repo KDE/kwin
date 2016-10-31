@@ -1537,6 +1537,21 @@ Q_SIGNALS:
      **/
     void windowHidden(KWin::EffectWindow *w);
 
+    /**
+     * This signal gets emitted when the data on EffectWindow @p w for @p role changed.
+     *
+     * An Effect can connect to this signal to read the new value and react on it.
+     * E.g. an Effect which does not operate on windows grabbed by another Effect wants
+     * to cancel the already scheduled animation if another Effect adds a grab.
+     *
+     * @param w The EffectWindow for which the data changed
+     * @param role The data role which changed
+     * @see EffectWindow::setData
+     * @see EffectWindow::data
+     * @since 5.8.4
+     **/
+    void windowDataChanged(KWin::EffectWindow *w, int role);
+
 protected:
     QVector< EffectPair > loaded_effects;
     //QHash< QString, EffectFactory* > effect_factories;
@@ -2017,6 +2032,9 @@ public:
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.
+     *
+     * Invoking this method will emit the signal EffectsHandler::windowDataChanged.
+     * @see EffectsHandler::windowDataChanged
      */
     Q_SCRIPTABLE virtual void setData(int role, const QVariant &data) = 0;
     Q_SCRIPTABLE virtual QVariant data(int role) const = 0;

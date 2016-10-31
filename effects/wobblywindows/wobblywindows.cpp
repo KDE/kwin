@@ -153,6 +153,8 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     connect(effects, SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(KWin::EffectWindow*,QRect)));
     connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowMaximizedStateChanged(KWin::EffectWindow*,bool,bool)), this, SLOT(slotWindowMaximizeStateChanged(KWin::EffectWindow*,bool,bool)));
+
+    connect(effects, &EffectsHandler::windowDataChanged, this, &WobblyWindowsEffect::cancelWindowGrab);
 }
 
 WobblyWindowsEffect::~WobblyWindowsEffect()
@@ -472,7 +474,7 @@ void WobblyWindowsEffect::stepMovedResized(EffectWindow* w)
 
 void WobblyWindowsEffect::slotWindowAdded(EffectWindow* w)
 {
-    if (m_openEffectEnabled && w->data(WindowAddedGrabRole).value<void*>() != this) {
+    if (m_openEffectEnabled && w->data(WindowAddedGrabRole).value<void*>() == nullptr) {
         if (windows.contains(w)) {
             // could this happen ??
             WindowWobblyInfos& wwi = windows[w];
@@ -499,7 +501,7 @@ void WobblyWindowsEffect::slotWindowClosed(EffectWindow* w)
             if (windows.isEmpty())
                 effects->addRepaintFull();
         }
-    } else if (m_closeEffectEnabled  && w->data(WindowAddedGrabRole).value<void*>() != this) {
+    } else if (m_closeEffectEnabled  && w->data(WindowClosedGrabRole).value<void*>() == nullptr) {
         WindowWobblyInfos new_wwi;
         initWobblyInfo(new_wwi, w->geometry());
         wobblyCloseInit(new_wwi, w);
@@ -1198,6 +1200,31 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** data_pointer, WindowWobbly
     Pair* tmp = data;
     *data_pointer = wwi.buffer;
     wwi.buffer = tmp;
+}
+
+
+void WobblyWindowsEffect::cancelWindowGrab(KWin::EffectWindow *w, int grabRole)
+{
+    if (grabRole == WindowAddedGrabRole) {
+         if (w->data(WindowAddedGrabRole).value<void*>() != this) {
+            auto it = windows.find(w);
+            if (it != windows.end()) {
+                freeWobblyInfo(it.value());
+                windows.erase(it);
+            }
+         }
+    } else if (grabRole == WindowClosedGrabRole) {
+         if (w->data(WindowClosedGrabRole).value<void*>() != this) {
+            auto it = windows.find(w);
+            if (it != windows.end()) {
+                if (it.value().status == Closing) {
+                    w->unrefWindow();
+                }
+                freeWobblyInfo(it.value());
+                windows.erase(it);
+            }
+         }
+    }
 }
 
 bool WobblyWindowsEffect::isActive() const
