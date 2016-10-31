@@ -31,6 +31,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KConfigGroup>
 
+#include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/registry.h>
+#include <KWayland/Client/surface.h>
+#include <KWayland/Client/shell.h>
+#include <KWayland/Client/slide.h>
+
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
 
@@ -47,6 +53,8 @@ private Q_SLOTS:
 
     void testWithOtherEffect_data();
     void testWithOtherEffect();
+    void testWithOtherEffectWayland_data();
+    void testWithOtherEffectWayland();
 };
 
 void SlidingPopupsTest::initTestCase()
@@ -86,10 +94,12 @@ void SlidingPopupsTest::initTestCase()
 
 void SlidingPopupsTest::init()
 {
+    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Decoration));
 }
 
 void SlidingPopupsTest::cleanup()
 {
+    Test::destroyWaylandConnection();
     EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
     while (!e->loadedEffects().isEmpty()) {
         const QString effect = e->loadedEffects().first();
@@ -244,6 +254,129 @@ void SlidingPopupsTest::testWithOtherEffect()
     QVERIFY(!otherEffect->isActive());
     xcb_destroy_window(c.data(), w);
     c.reset();
+}
+
+void SlidingPopupsTest::testWithOtherEffectWayland_data()
+{
+    QTest::addColumn<QStringList>("effectsToLoad");
+
+    QTest::newRow("scale, slide") << QStringList{QStringLiteral("kwin4_effect_scalein"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_scalein")};
+    QTest::newRow("fade, slide") << QStringList{QStringLiteral("kwin4_effect_fade"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, fade") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_fade")};
+
+    if (effects->compositingType() & KWin::OpenGLCompositing) {
+        QTest::newRow("glide, slide") << QStringList{QStringLiteral("glide"), QStringLiteral("slidingpopups")};
+        QTest::newRow("slide, glide") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("glide")};
+        QTest::newRow("wobblywindows, slide") << QStringList{QStringLiteral("wobblywindows"), QStringLiteral("slidingpopups")};
+        QTest::newRow("slide, wobblywindows") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("wobblywindows")};
+        QTest::newRow("fallapart, slide") << QStringList{QStringLiteral("fallapart"), QStringLiteral("slidingpopups")};
+        QTest::newRow("slide, fallapart") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("fallapart")};
+    }
+}
+
+void SlidingPopupsTest::testWithOtherEffectWayland()
+{
+    // this test verifies that slidingpopups effect grabs the window added role
+    // independently of the sequence how the effects are loaded.
+    // see BUG 336866
+    // the test is like testWithOtherEffect, but simulates using a Wayland window
+    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
+    // find the effectsloader
+    auto effectloader = e->findChild<AbstractEffectLoader*>();
+    QVERIFY(effectloader);
+    QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
+    QVERIFY(effectLoadedSpy.isValid());
+
+    Effect *slidingPoupus = nullptr;
+    Effect *otherEffect = nullptr;
+    QFETCH(QStringList, effectsToLoad);
+    for (const QString &effectName : effectsToLoad) {
+        QVERIFY(!e->isEffectLoaded(effectName));
+        QVERIFY(e->loadEffect(effectName));
+        QVERIFY(e->isEffectLoaded(effectName));
+
+        QCOMPARE(effectLoadedSpy.count(), 1);
+        Effect *effect = effectLoadedSpy.first().first().value<Effect*>();
+        if (effectName == QStringLiteral("slidingpopups")) {
+            slidingPoupus = effect;
+        } else {
+            otherEffect = effect;
+        }
+        effectLoadedSpy.clear();
+    }
+    QVERIFY(slidingPoupus);
+    QVERIFY(otherEffect);
+
+    QVERIFY(!slidingPoupus->isActive());
+    QVERIFY(!otherEffect->isActive());
+    QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
+    QVERIFY(windowAddedSpy.isValid());
+
+    using namespace KWayland::Client;
+    // the test created the slide protocol, let's create a Registry and listen for it
+    QScopedPointer<Registry> registry(new Registry);
+    registry->create(Test::waylandConnection());
+
+    QSignalSpy interfacesAnnouncedSpy(registry.data(), &Registry::interfacesAnnounced);
+    QVERIFY(interfacesAnnouncedSpy.isValid());
+    registry->setup();
+    QVERIFY(interfacesAnnouncedSpy.wait());
+    auto slideInterface = registry->interface(Registry::Interface::Slide);
+    QVERIFY(slideInterface.name != 0);
+    QScopedPointer<SlideManager> slideManager(registry->createSlideManager(slideInterface.name, slideInterface.version));
+    QVERIFY(slideManager);
+
+    // create Wayland window
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(surface);
+    QScopedPointer<Slide> slide(slideManager->createSlide(surface.data()));
+    slide->setLocation(Slide::Location::Left);
+    slide->commit();
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QVERIFY(shellSurface);
+    QCOMPARE(windowAddedSpy.count(), 0);
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(10, 20), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isNormalWindow());
+
+    // sliding popups should be active
+    QCOMPARE(windowAddedSpy.count(), 1);
+    QTRY_VERIFY(slidingPoupus->isActive());
+    QEXPECT_FAIL("scale, slide", "bug 336866", Continue);
+    QEXPECT_FAIL("fade, slide", "bug 336866", Continue);
+    QEXPECT_FAIL("wobblywindows, slide", "bug 336866", Continue);
+    QEXPECT_FAIL("slide, wobblywindows", "bug 336866", Continue);
+    QVERIFY(!otherEffect->isActive());
+
+    // wait till effect ends
+    QTRY_VERIFY(!slidingPoupus->isActive());
+    QTest::qWait(300);
+    QVERIFY(!otherEffect->isActive());
+
+    // and destroy the window again
+    shellSurface.reset();
+    surface.reset();
+
+    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+
+    QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
+    QVERIFY(windowDeletedSpy.isValid());
+    QVERIFY(windowClosedSpy.wait());
+
+    // again we should have the sliding popups active
+    QVERIFY(slidingPoupus->isActive());
+    QEXPECT_FAIL("wobblywindows, slide", "bug 336866", Continue);
+    QEXPECT_FAIL("slide, wobblywindows", "bug 336866", Continue);
+    QVERIFY(!otherEffect->isActive());
+
+    QVERIFY(windowDeletedSpy.wait());
+
+    QCOMPARE(windowDeletedSpy.count(), 1);
+    QTRY_VERIFY(!slidingPoupus->isActive());
+    QTest::qWait(300);
+    QVERIFY(!otherEffect->isActive());
 }
 
 WAYLANDTEST_MAIN(SlidingPopupsTest)
