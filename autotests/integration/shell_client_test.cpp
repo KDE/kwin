@@ -586,6 +586,7 @@ void TestShellClient::testHidden()
 
 void TestShellClient::testDesktopFileName()
 {
+    QIcon::setThemeName(QStringLiteral("breeze"));
     // this test verifies that desktop file name is passed correctly to the window
     QScopedPointer<Surface> surface(Test::createSurface());
     // only xdg-shell as ShellSurface misses the setter
