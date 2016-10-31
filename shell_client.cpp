@@ -90,12 +90,12 @@ ShellClient::~ShellClient() = default;
 template <class T>
 void ShellClient::initSurface(T *shellSurface)
 {
-    m_caption = shellSurface->title();
+    m_caption = shellSurface->title().simplified();
     connect(shellSurface, &T::titleChanged, this, &ShellClient::captionChanged);
     connect(shellSurface, &T::destroyed, this, &ShellClient::destroyClient);
     connect(shellSurface, &T::titleChanged, this,
         [this] (const QString &s) {
-            m_caption = s;
+            m_caption = s.simplified();
             emit captionChanged();
         }
     );

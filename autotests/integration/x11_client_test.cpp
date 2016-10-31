@@ -111,9 +111,7 @@ void X11ClientTest::testCaptionSimplified()
     Client *client = windowCreatedSpy.first().first().value<Client*>();
     QVERIFY(client);
     QCOMPARE(client->window(), w);
-    QEXPECT_FAIL("", "BUG 323798", Continue);
     QVERIFY(client->caption() != QString::fromUtf8(origTitle));
-    QEXPECT_FAIL("", "BUG 323798", Continue);
     QCOMPARE(client->caption(), QString::fromUtf8(origTitle).simplified());
 
     // and destroy the window again

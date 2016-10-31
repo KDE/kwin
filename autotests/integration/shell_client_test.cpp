@@ -556,9 +556,7 @@ void TestShellClient::testCaptionSimplified()
     shellSurface->setTitle(origTitle);
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QEXPECT_FAIL("", "BUG 323798", Continue);
     QVERIFY(c->caption() != origTitle);
-    QEXPECT_FAIL("", "BUG 323798", Continue);
     QCOMPARE(c->caption(), origTitle.simplified());
 }
 
