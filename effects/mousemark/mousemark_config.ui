@@ -17,10 +17,10 @@
       <string>Appearance</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
+      <item row="1" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>&amp;Width:</string>
+         <string>Wid&amp;th:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -30,26 +30,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="kcfg_LineWidth">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>10</number>
-        </property>
-        <property name="value">
-         <number>3</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>&amp;Color:</string>
@@ -62,7 +43,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="KColorCombo" name="kcfg_Color">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -72,15 +53,24 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="1">
+       <widget class="KPluralHandlingSpinBox" name="kcfg_LineWidth">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>3</number>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
    <item>
-    <widget class="KShortcutsEditor" name="editor" native="true">
-        <property name="actionTypes">
-            <enum>KShortcutsEditor::GlobalAction</enum>
-        </property>
-    </widget>
+    <widget class="KShortcutsEditor" name="editor"/>
    </item>
    <item>
     <widget class="QLabel" name="label_3">
@@ -106,8 +96,13 @@
   <customwidget>
    <class>KShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global">KShortcutsEditor</header>
+   <header>kshortcutseditor.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KPluralHandlingSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>kpluralhandlingspinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
