@@ -527,6 +527,8 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
                     continue;
                 if ((*l)->isMinimized())
                     continue; // is minimized
+                if (!(*l)->isShown(false))
+                    continue;
                 if ((*l)->tabGroup() && (*l) != (*l)->tabGroup()->current())
                     continue; // is not active tab
                 if (!((*l)->isOnDesktop(c->desktop()) || c->isOnDesktop((*l)->desktop())))
