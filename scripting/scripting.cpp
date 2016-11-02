@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QQmlContext>
 #include <QQmlEngine>
+#include <QQmlExpression>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValue>
 #include <QtCore/QStandardPaths>
@@ -293,7 +294,7 @@ void KWin::Script::installScriptFunctions(QScriptEngine* engine)
     QScriptValue assertNotNullFunc = engine->newFunction(kwinAssertNotNull);
     engine->globalObject().setProperty(QStringLiteral("assertNotNull"), assertNotNullFunc);
     // global properties
-    engine->globalObject().setProperty(QStringLiteral("KWin"), engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
+    engine->globalObject().setProperty(QStringLiteral("KWin"), engine->newQMetaObject(&QtScriptWorkspaceWrapper::staticMetaObject));
     QScriptValue workspace = engine->newQObject(Scripting::self()->workspaceWrapper(), QScriptEngine::QtOwnership,
                                                 QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
     engine->globalObject().setProperty(QStringLiteral("workspace"), workspace, QScriptValue::Undeletable);
@@ -527,7 +528,7 @@ void KWin::ScriptUnloaderAgent::scriptUnload(qint64 id)
 
 KWin::DeclarativeScript::DeclarativeScript(int id, QString scriptName, QString pluginName, QObject* parent)
     : AbstractScript(id, scriptName, pluginName, parent)
-    , m_context(new QQmlContext(Scripting::self()->qmlEngine(), this))
+    , m_context(new QQmlContext(Scripting::self()->declarativeScriptSharedContext(), this))
     , m_component(new QQmlComponent(Scripting::self()->qmlEngine(), this))
 {
     m_context->setContextProperty(QStringLiteral("KWin"), new JSEngineGlobalMethodsWrapper(this));
@@ -622,7 +623,8 @@ KWin::Scripting::Scripting(QObject *parent)
     : QObject(parent)
     , m_scriptsLock(new QMutex(QMutex::Recursive))
     , m_qmlEngine(new QQmlEngine(this))
-    , m_workspaceWrapper(new WorkspaceWrapper(this))
+    , m_declarativeScriptSharedContext(new QQmlContext(m_qmlEngine, this))
+    , m_workspaceWrapper(new QtScriptWorkspaceWrapper(this))
 {
     init();
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Scripting"), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
@@ -647,6 +649,11 @@ void KWin::Scripting::init()
 
     m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("workspace"), m_workspaceWrapper);
     m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("options"), options);
+
+    m_declarativeScriptSharedContext->setContextProperty(QStringLiteral("workspace"), new DeclarativeScriptWorkspaceWrapper(this));
+    // QQmlListProperty interfaces only work via properties, rebind them as functions here
+    QQmlExpression expr(m_declarativeScriptSharedContext, nullptr, "workspace.clientList = function() { return workspace.clients }");
+    expr.evaluate();
 }
 
 void KWin::Scripting::start()

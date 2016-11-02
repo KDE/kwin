@@ -90,12 +90,12 @@ void WorkspaceWrapper::setNumberOfDesktops(int count)
     VirtualDesktopManager::self()->setCount(count);
 }
 
-#define GETTER( rettype, getterName ) \
-rettype WorkspaceWrapper::getterName( ) const { \
+#define GETTER( klass, rettype, getterName ) \
+rettype klass::getterName( ) const { \
     return Workspace::self()->getterName(); \
 }
-GETTER(KWin::AbstractClient*, activeClient)
-GETTER(QList< KWin::Client* >, clientList)
+GETTER(WorkspaceWrapper, KWin::AbstractClient*, activeClient)
+GETTER(QtScriptWorkspaceWrapper, QList< KWin::Client* >, clientList)
 
 #undef GETTER
 
@@ -323,5 +323,27 @@ QSize WorkspaceWrapper::virtualScreenSize() const
 {
     return screens()->size();
 }
+
+QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject* parent)
+    : WorkspaceWrapper(parent) {}
+
+
+QQmlListProperty<KWin::Client> DeclarativeScriptWorkspaceWrapper::clients()
+{
+    return QQmlListProperty<KWin::Client>(this, 0, &DeclarativeScriptWorkspaceWrapper::countClientList, &DeclarativeScriptWorkspaceWrapper::atClientList);
+}
+
+int DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Client> *clients)
+{
+    return Workspace::self()->clientList().size();
+}
+
+KWin::Client *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Client> *clients, int index)
+{
+    return Workspace::self()->clientList().at(index);
+}
+
+DeclarativeScriptWorkspaceWrapper::DeclarativeScriptWorkspaceWrapper(QObject* parent)
+    : WorkspaceWrapper(parent) {}
 
 } // KWin

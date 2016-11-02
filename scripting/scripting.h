@@ -51,7 +51,7 @@ namespace KWin
 class AbstractClient;
 class Client;
 class ScriptUnloaderAgent;
-class WorkspaceWrapper;
+class QtScriptWorkspaceWrapper;
 
 class KWIN_EXPORT AbstractScript : public QObject
 {
@@ -362,7 +362,9 @@ public:
 
     QQmlEngine *qmlEngine() const;
     QQmlEngine *qmlEngine();
-    WorkspaceWrapper *workspaceWrapper() const;
+    QQmlContext *declarativeScriptSharedContext() const;
+    QQmlContext *declarativeScriptSharedContext();
+    QtScriptWorkspaceWrapper *workspaceWrapper() const;
 
     AbstractScript *findScript(const QString &pluginName) const;
 
@@ -381,7 +383,8 @@ private:
     LoadScriptList queryScriptsToLoad();
     static Scripting *s_self;
     QQmlEngine *m_qmlEngine;
-    WorkspaceWrapper *m_workspaceWrapper;
+    QQmlContext *m_declarativeScriptSharedContext;
+    QtScriptWorkspaceWrapper *m_workspaceWrapper;
 };
 
 inline
@@ -397,7 +400,19 @@ QQmlEngine *Scripting::qmlEngine()
 }
 
 inline
-WorkspaceWrapper *Scripting::workspaceWrapper() const
+QQmlContext *Scripting::declarativeScriptSharedContext() const
+{
+    return m_declarativeScriptSharedContext;
+}
+
+inline
+QQmlContext *Scripting::declarativeScriptSharedContext()
+{
+    return m_declarativeScriptSharedContext;
+}
+
+inline
+QtScriptWorkspaceWrapper *Scripting::workspaceWrapper() const
 {
     return m_workspaceWrapper;
 }
