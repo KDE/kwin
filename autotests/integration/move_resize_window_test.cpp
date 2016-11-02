@@ -72,6 +72,8 @@ private Q_SLOTS:
     void testNetMove();
     void testAdjustClientGeometryOfAutohidingX11Panel_data();
     void testAdjustClientGeometryOfAutohidingX11Panel();
+    void testAdjustClientGeometryOfAutohidingWaylandPanel_data();
+    void testAdjustClientGeometryOfAutohidingWaylandPanel();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -675,6 +677,84 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel()
 
     QSignalSpy panelClosedSpy(panel, &Client::windowClosed);
     QVERIFY(panelClosedSpy.isValid());
+    QVERIFY(panelClosedSpy.wait());
+
+    // snap once more
+    QCOMPARE(Workspace::self()->adjustClientPosition(testWindow, targetPoint, false), targetPoint);
+
+    // and close
+    QSignalSpy windowClosedSpy(testWindow, &ShellClient::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(windowClosedSpy.wait());
+}
+
+void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel_data()
+{
+    QTest::addColumn<QRect>("panelGeometry");
+    QTest::addColumn<QPoint>("targetPoint");
+    QTest::addColumn<QPoint>("expectedAdjustedPoint");
+
+    QTest::newRow("top") << QRect(0, 0, 100, 20) << QPoint(50, 25) << QPoint(50, 20);
+    QTest::newRow("bottom") << QRect(0, 1024-20, 100, 20) << QPoint(50, 1024 - 25 - 50) << QPoint(50, 1024 - 20 - 50);
+    QTest::newRow("left") << QRect(0, 0, 20, 100) << QPoint(25, 50) << QPoint(20, 50);
+    QTest::newRow("right") << QRect(1280 - 20, 0, 20, 100) << QPoint(1280 - 25 - 100, 50) << QPoint(1280 - 20 - 100, 50);
+}
+
+void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel()
+{
+    // this test verifies that auto hiding panels are ignored when adjusting client geometry
+    // see BUG 365892
+
+    // first create our panel
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> panelSurface(Test::createSurface());
+    QVERIFY(!panelSurface.isNull());
+    QScopedPointer<ShellSurface> panelShellSurface(Test::createShellSurface(panelSurface.data()));
+    QVERIFY(!panelShellSurface.isNull());
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.data()));
+    QVERIFY(!plasmaSurface.isNull());
+    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AutoHide);
+    QFETCH(QRect, panelGeometry);
+    plasmaSurface->setPosition(panelGeometry.topLeft());
+    // let's render
+    auto panel = Test::renderAndWaitForShown(panelSurface.data(), panelGeometry.size(), Qt::blue);
+    QVERIFY(panel);
+    QCOMPARE(panel->geometry(), panelGeometry);
+    QVERIFY(panel->isDock());
+
+    // let's create a window
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    auto testWindow = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(testWindow);
+    QVERIFY(testWindow->isMovable());
+    // panel is not yet hidden, we should snap against it
+    QFETCH(QPoint, targetPoint);
+    QTEST(Workspace::self()->adjustClientPosition(testWindow, targetPoint, false), "expectedAdjustedPoint");
+
+    // now let's hide the panel
+    QSignalSpy panelHiddenSpy(panel, &AbstractClient::windowHidden);
+    QVERIFY(panelHiddenSpy.isValid());
+    plasmaSurface->requestHideAutoHidingPanel();
+    QVERIFY(panelHiddenSpy.wait());
+
+    // now try to snap again
+    QEXPECT_FAIL("", "BUG 365892", Continue);
+    QCOMPARE(Workspace::self()->adjustClientPosition(testWindow, targetPoint, false), targetPoint);
+
+    // and destroy the panel again
+    QSignalSpy panelClosedSpy(panel, &ShellClient::windowClosed);
+    QVERIFY(panelClosedSpy.isValid());
+    plasmaSurface.reset();
+    panelShellSurface.reset();
+    panelSurface.reset();
     QVERIFY(panelClosedSpy.wait());
 
     // snap once more
