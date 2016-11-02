@@ -94,13 +94,13 @@ int main(int argc, char* argv[])
 
     QString question = i18nc("@info", "<b>Application \"%1\" is not responding</b>", appname);
     question += isLocal
-        ? xi18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3) but the application is not responding.</para>",
+        ? xi18nc("@info", "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: %3) but the application is not responding.</p>",
             caption, appname, pidString)
-        : xi18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3), running on host \"%4\", but the application is not responding.</para>",
+        : xi18nc("@info", "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: %3), running on host \"%4\", but the application is not responding.</p>",
             caption, appname, pidString, hostname);
     question += xi18nc("@info",
-        "<para>Do you want to terminate this application?</para>"
-        "<para><warning>Terminating the application will close all of its child windows. Any unsaved data will be lost.</warning></para>"
+        "<p>Do you want to terminate this application?</p>"
+        "<p><warning>Terminating the application will close all of its child windows. Any unsaved data will be lost.</warning></p>"
         );
 
     KGuiItem continueButton = KGuiItem(i18n("&Terminate Application %1", appname), QStringLiteral("edit-bomb"));
