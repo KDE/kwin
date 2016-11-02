@@ -63,6 +63,7 @@ private Q_SLOTS:
     void testHidden_data();
     void testHidden();
     void testDesktopFileName();
+    void testCaptionSimplified();
 };
 
 void TestShellClient::initTestCase()
@@ -615,6 +616,23 @@ void TestShellClient::testDesktopFileName()
     QCOMPARE(iconChangedSpy.count(), 1);
     QCOMPARE(QString::fromUtf8(c->desktopFileName()), dfPath);
     QCOMPARE(c->icon().name(), QStringLiteral("kwin"));
+}
+
+void TestShellClient::testCaptionSimplified()
+{
+    // this test verifies that caption is properly trimmed
+    // see BUG 323798 comment #12
+    QScopedPointer<Surface> surface(Test::createSurface());
+    // only done for xdg-shell as ShellSurface misses the setter
+    QScopedPointer<XdgShellSurface> shellSurface(qobject_cast<XdgShellSurface*>(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV5, surface.data())));
+    const QString origTitle = QString::fromUtf8(QByteArrayLiteral("Was tun, wenn Schüler Autismus haben?\342\200\250\342\200\250\342\200\250 – Marlies Hübner - Mozilla Firefox"));
+    shellSurface->setTitle(origTitle);
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QEXPECT_FAIL("", "BUG 323798", Continue);
+    QVERIFY(c->caption() != origTitle);
+    QEXPECT_FAIL("", "BUG 323798", Continue);
+    QCOMPARE(c->caption(), origTitle.simplified());
 }
 
 WAYLANDTEST_MAIN(TestShellClient)

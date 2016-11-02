@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "atoms.h"
 #include "platform.h"
 #include "abstract_client.h"
 #include "cursor.h"
@@ -69,6 +70,8 @@ private Q_SLOTS:
     void testPlasmaShellSurfaceMovable_data();
     void testPlasmaShellSurfaceMovable();
     void testNetMove();
+    void testAdjustClientGeometryOfAutohidingX11Panel_data();
+    void testAdjustClientGeometryOfAutohidingX11Panel();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -509,17 +512,18 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
     QVERIFY(Test::waitForWindowDestroyed(c));
 }
 
+struct XcbConnectionDeleter
+{
+    static inline void cleanup(xcb_connection_t *pointer)
+    {
+        xcb_disconnect(pointer);
+    }
+};
+
 void MoveResizeWindowTest::testNetMove()
 {
     // this test verifies that a move request for an X11 window through NET API works
     // create an xcb window
-    struct XcbConnectionDeleter
-    {
-        static inline void cleanup(xcb_connection_t *pointer)
-        {
-            xcb_disconnect(pointer);
-        }
-    };
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
 
@@ -587,6 +591,100 @@ void MoveResizeWindowTest::testNetMove()
 
     QSignalSpy windowClosedSpy(client, &Client::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
+    QVERIFY(windowClosedSpy.wait());
+}
+
+void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel_data()
+{
+    QTest::addColumn<QRect>("panelGeometry");
+    QTest::addColumn<QPoint>("targetPoint");
+    QTest::addColumn<QPoint>("expectedAdjustedPoint");
+    QTest::addColumn<quint32>("hideLocation");
+
+    QTest::newRow("top") << QRect(0, 0, 100, 20) << QPoint(50, 25) << QPoint(50, 20) << 0u;
+    QTest::newRow("bottom") << QRect(0, 1024-20, 100, 20) << QPoint(50, 1024 - 25 - 50) << QPoint(50, 1024 - 20 - 50) << 2u;
+    QTest::newRow("left") << QRect(0, 0, 20, 100) << QPoint(25, 50) << QPoint(20, 50) << 3u;
+    QTest::newRow("right") << QRect(1280 - 20, 0, 20, 100) << QPoint(1280 - 25 - 100, 50) << QPoint(1280 - 20 - 100, 50) << 1u;
+}
+
+void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel()
+{
+    // this test verifies that auto hiding panels are ignored when adjusting client geometry
+    // see BUG 365892
+
+    // first create our panel
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+
+    xcb_window_t w = xcb_generate_id(c.data());
+    QFETCH(QRect, panelGeometry);
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      panelGeometry.x(), panelGeometry.y(), panelGeometry.width(), panelGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, panelGeometry.x(), panelGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, panelGeometry.width(), panelGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    NETWinInfo winInfo(c.data(), w, rootWindow(), NET::WMWindowType, NET::Properties2());
+    winInfo.setWindowType(NET::Dock);
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    Client *panel = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(panel);
+    QCOMPARE(panel->window(), w);
+    QCOMPARE(panel->geometry(), panelGeometry);
+    QVERIFY(panel->isDock());
+
+    // let's create a window
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    auto testWindow = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(testWindow);
+    QVERIFY(testWindow->isMovable());
+    // panel is not yet hidden, we should snap against it
+    QFETCH(QPoint, targetPoint);
+    QTEST(Workspace::self()->adjustClientPosition(testWindow, targetPoint, false), "expectedAdjustedPoint");
+
+    // now let's hide the panel
+    QSignalSpy panelHiddenSpy(panel, &AbstractClient::windowHidden);
+    QVERIFY(panelHiddenSpy.isValid());
+    QFETCH(quint32, hideLocation);
+    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 32, 1, &hideLocation);
+    xcb_flush(c.data());
+    QVERIFY(panelHiddenSpy.wait());
+
+    // now try to snap again
+    QEXPECT_FAIL("", "BUG 365892", Continue);
+    QCOMPARE(Workspace::self()->adjustClientPosition(testWindow, targetPoint, false), targetPoint);
+
+    // and destroy the panel again
+    xcb_unmap_window(c.data(), w);
+    xcb_destroy_window(c.data(), w);
+    xcb_flush(c.data());
+    c.reset();
+
+    QSignalSpy panelClosedSpy(panel, &Client::windowClosed);
+    QVERIFY(panelClosedSpy.isValid());
+    QVERIFY(panelClosedSpy.wait());
+
+    // snap once more
+    QCOMPARE(Workspace::self()->adjustClientPosition(testWindow, targetPoint, false), targetPoint);
+
+    // and close
+    QSignalSpy windowClosedSpy(testWindow, &ShellClient::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+    shellSurface.reset();
+    surface.reset();
     QVERIFY(windowClosedSpy.wait());
 }
 
