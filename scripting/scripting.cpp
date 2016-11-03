@@ -296,7 +296,7 @@ void KWin::Script::installScriptFunctions(QScriptEngine* engine)
     // global properties
     engine->globalObject().setProperty(QStringLiteral("KWin"), engine->newQMetaObject(&QtScriptWorkspaceWrapper::staticMetaObject));
     QScriptValue workspace = engine->newQObject(Scripting::self()->workspaceWrapper(), QScriptEngine::QtOwnership,
-                                                QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
+                                                QScriptEngine::ExcludeDeleteLater);
     engine->globalObject().setProperty(QStringLiteral("workspace"), workspace, QScriptValue::Undeletable);
     // install meta functions
     KWin::MetaScripting::registration(engine);
