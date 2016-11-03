@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QStringList>
 #include <QRect>
+#include <QtQml/QQmlListProperty>
 #include <kwinglobals.h>
 
 namespace KWin
@@ -198,7 +199,10 @@ public:
         ElectricNone
     };
 
+protected:
     explicit WorkspaceWrapper(QObject* parent = nullptr);
+
+public:
 #define GETTERSETTERDEF( rettype, getter, setter ) \
 rettype getter() const; \
 void setter( rettype val );
@@ -222,10 +226,6 @@ void setter( rettype val );
     QSize virtualScreenSize() const;
     QRect virtualScreenGeometry() const;
 
-    /**
-     * List of Clients currently managed by KWin.
-     **/
-    Q_INVOKABLE QList< KWin::Client* > clientList() const;
     /**
      * Returns the geometry a Client can use with the specified option.
      * This method should be preferred over other methods providing screen sizes as the
@@ -347,6 +347,31 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void setupClientConnections(KWin::Client* client);
+};
+
+class QtScriptWorkspaceWrapper : public WorkspaceWrapper
+{
+    Q_OBJECT
+public:
+    /**
+     * List of Clients currently managed by KWin.
+     **/
+    Q_INVOKABLE QList< KWin::Client* > clientList() const;
+
+    explicit QtScriptWorkspaceWrapper(QObject* parent = nullptr);
+};
+
+class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QQmlListProperty<KWin::Client> clients READ clients)
+public:
+    QQmlListProperty<KWin::Client> clients();
+    static int countClientList(QQmlListProperty<KWin::Client> *clients);
+    static KWin::Client *atClientList(QQmlListProperty<KWin::Client> *clients, int index);
+
+    explicit DeclarativeScriptWorkspaceWrapper(QObject* parent = nullptr);
 };
 
 }
