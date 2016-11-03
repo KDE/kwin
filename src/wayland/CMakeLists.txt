@@ -44,86 +44,86 @@ set(SERVER_LIB_SRCS
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/output-management.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/output-management.xml
     BASENAME output-management
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/outputdevice.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/outputdevice.xml
     BASENAME org_kde_kwin_outputdevice
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/plasma-shell.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/plasma-shell.xml
     BASENAME plasma-shell
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/plasma-window-management.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/plasma-window-management.xml
     BASENAME plasma-window-management
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/surface-extension.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/surface-extension.xml
     BASENAME qt-surface-extension
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/idle.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/idle.xml
     BASENAME idle
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/fake-input.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/fake-input.xml
     BASENAME fake-input
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/shadow.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/shadow.xml
     BASENAME shadow
 )
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/dpms.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/dpms.xml
     BASENAME dpms
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/blur.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/blur.xml
     BASENAME blur
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/contrast.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/contrast.xml
     BASENAME contrast
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/relative-pointer-unstable-v1.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/relative-pointer-unstable-v1.xml
     BASENAME relativepointer-unstable-v1
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/slide.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/slide.xml
     BASENAME slide
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/server-decoration.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/server-decoration.xml
     BASENAME server_decoration
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/text-input.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/text-input.xml
     BASENAME text
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/text-input-unstable-v2.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/text-input-unstable-v2.xml
     BASENAME text-input-unstable-v2
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/xdg-shell-unstable-v5.xml
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/xdg-shell-unstable-v5.xml
     BASENAME xdg-shell-v5
 )
 
