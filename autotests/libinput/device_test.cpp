@@ -77,6 +77,10 @@ private Q_SLOTS:
     void testTapDragLockEnabledByDefault();
     void testTapDragLock_data();
     void testTapDragLock();
+    void testMiddleEmulation_data();
+    void testMiddleEmulation();
+    void testNaturalScroll_data();
+    void testNaturalScroll();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -762,6 +766,88 @@ void TestLibinputDevice::testTapDragLock()
     QFETCH(bool, expectedValue);
     QCOMPARE(d.isTapDragLock(), expectedValue);
     QCOMPARE(tapDragLockChangedSpy.isEmpty(), initValue == expectedValue);
+}
+
+void TestLibinputDevice::testMiddleEmulation_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("expectedValue");
+    QTest::addColumn<bool>("supportsMiddleButton");
+
+    QTest::newRow("true -> false") << true << false << false << false << true;
+    QTest::newRow("false -> true") << false << true << false << true << true;
+    QTest::newRow("set fails") << true << false << true << true << true;
+    QTest::newRow("true -> true") << true << true << false << true << true;
+    QTest::newRow("false -> false") << false << false << false << false << true;
+
+    QTest::newRow("false -> true, unsupported") << false << true << true << false << false;
+}
+
+void TestLibinputDevice::testMiddleEmulation()
+{
+    libinput_device device;
+    QFETCH(bool, initValue);
+    QFETCH(bool, setShouldFail);
+    QFETCH(bool, supportsMiddleButton);
+    device.supportsMiddleEmulation = supportsMiddleButton;
+    device.middleEmulation = initValue;
+    device.setMiddleEmulationReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.isMiddleEmulation(), initValue);
+    QCOMPARE(d.property("middleEmulation").toBool(), initValue);
+
+    QSignalSpy middleEmulationChangedSpy(&d, &Device::middleEmulationChanged);
+    QVERIFY(middleEmulationChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setMiddleEmulation(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.isMiddleEmulation(), expectedValue);
+    QCOMPARE(d.property("middleEmulation").toBool(), expectedValue);
+    QCOMPARE(middleEmulationChangedSpy.isEmpty(), initValue == expectedValue);
+}
+
+void TestLibinputDevice::testNaturalScroll_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("expectedValue");
+    QTest::addColumn<bool>("supportsNaturalScroll");
+
+    QTest::newRow("true -> false") << true << false << false << false << true;
+    QTest::newRow("false -> true") << false << true << false << true << true;
+    QTest::newRow("set fails") << true << false << true << true << true;
+    QTest::newRow("true -> true") << true << true << false << true << true;
+    QTest::newRow("false -> false") << false << false << false << false << true;
+
+    QTest::newRow("false -> true, unsupported") << false << true << true << false << false;
+}
+
+void TestLibinputDevice::testNaturalScroll()
+{
+    libinput_device device;
+    QFETCH(bool, initValue);
+    QFETCH(bool, setShouldFail);
+    QFETCH(bool, supportsNaturalScroll);
+    device.supportsNaturalScroll = supportsNaturalScroll;
+    device.naturalScroll = initValue;
+    device.setNaturalScrollReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.isNaturalScroll(), initValue);
+    QCOMPARE(d.property("naturalScroll").toBool(), initValue);
+
+    QSignalSpy naturalScrollChangedSpy(&d, &Device::naturalScrollChanged);
+    QVERIFY(naturalScrollChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setNaturalScroll(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.isNaturalScroll(), expectedValue);
+    QCOMPARE(d.property("naturalScroll").toBool(), expectedValue);
+    QCOMPARE(naturalScrollChangedSpy.isEmpty(), initValue == expectedValue);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)
