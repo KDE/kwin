@@ -335,11 +335,13 @@ QQmlListProperty<KWin::Client> DeclarativeScriptWorkspaceWrapper::clients()
 
 int DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Client> *clients)
 {
+    Q_UNUSED(clients)
     return Workspace::self()->clientList().size();
 }
 
 KWin::Client *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Client> *clients, int index)
 {
+    Q_UNUSED(clients)
     return Workspace::self()->clientList().at(index);
 }
 
