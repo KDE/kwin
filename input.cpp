@@ -492,8 +492,8 @@ class InternalWindowEventFilter : public InputEventFilter {
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
         QWheelEvent e(localPos, event->globalPosF(), QPoint(),
-                        event->angleDelta(),
-                        delta,
+                        event->angleDelta() * -1,
+                        delta * -1,
                         orientation,
                         event->buttons(),
                         event->modifiers());
