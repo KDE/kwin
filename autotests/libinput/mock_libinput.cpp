@@ -663,7 +663,7 @@ enum libinput_config_scroll_method libinput_device_config_scroll_get_default_met
 enum libinput_config_status libinput_device_config_scroll_set_method(struct libinput_device *device, enum libinput_config_scroll_method method)
 {
     if (device->setScrollMethodReturnValue == 0) {
-        if (!(device->supportedScrollMethods & method)) {
+        if (!(device->supportedScrollMethods & method) && method != LIBINPUT_CONFIG_SCROLL_NO_SCROLL) {
             return LIBINPUT_CONFIG_STATUS_INVALID;
         }
         device->scrollMethod = method;

@@ -81,6 +81,12 @@ private Q_SLOTS:
     void testMiddleEmulation();
     void testNaturalScroll_data();
     void testNaturalScroll();
+    void testScrollTwoFinger_data();
+    void testScrollTwoFinger();
+    void testScrollEdge_data();
+    void testScrollEdge();
+    void testScrollButtonDown_data();
+    void testScrollButtonDown();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -848,6 +854,129 @@ void TestLibinputDevice::testNaturalScroll()
     QCOMPARE(d.isNaturalScroll(), expectedValue);
     QCOMPARE(d.property("naturalScroll").toBool(), expectedValue);
     QCOMPARE(naturalScrollChangedSpy.isEmpty(), initValue == expectedValue);
+}
+
+void TestLibinputDevice::testScrollTwoFinger_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("expectedValue");
+    QTest::addColumn<bool>("supportsScrollTwoFinger");
+
+    QTest::newRow("true -> false") << true << false << false << false << true;
+    QTest::newRow("false -> true") << false << true << false << true << true;
+    QTest::newRow("set fails") << true << false << true << true << true;
+    QTest::newRow("true -> true") << true << true << false << true << true;
+    QTest::newRow("false -> false") << false << false << false << false << true;
+
+    QTest::newRow("false -> true, unsupported") << false << true << true << false << false;
+}
+
+void TestLibinputDevice::testScrollTwoFinger()
+{
+    libinput_device device;
+    QFETCH(bool, initValue);
+    QFETCH(bool, setShouldFail);
+    QFETCH(bool, supportsScrollTwoFinger);
+    device.supportedScrollMethods = supportsScrollTwoFinger ? LIBINPUT_CONFIG_SCROLL_2FG : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_2FG : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.setScrollMethodReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.isScrollTwoFinger(), initValue);
+    QCOMPARE(d.property("scrollTwoFinger").toBool(), initValue);
+
+    QSignalSpy scrollMethodChangedSpy(&d, &Device::scrollMethodChanged);
+    QVERIFY(scrollMethodChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setScrollTwoFinger(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.isScrollTwoFinger(), expectedValue);
+    QCOMPARE(d.property("scrollTwoFinger").toBool(), expectedValue);
+    QCOMPARE(scrollMethodChangedSpy.isEmpty(), initValue == expectedValue);
+}
+
+void TestLibinputDevice::testScrollEdge_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("expectedValue");
+    QTest::addColumn<bool>("supportsScrollEdge");
+
+    QTest::newRow("true -> false") << true << false << false << false << true;
+    QTest::newRow("false -> true") << false << true << false << true << true;
+    QTest::newRow("set fails") << true << false << true << true << true;
+    QTest::newRow("true -> true") << true << true << false << true << true;
+    QTest::newRow("false -> false") << false << false << false << false << true;
+
+    QTest::newRow("false -> true, unsupported") << false << true << true << false << false;
+}
+
+void TestLibinputDevice::testScrollEdge()
+{
+    libinput_device device;
+    QFETCH(bool, initValue);
+    QFETCH(bool, setShouldFail);
+    QFETCH(bool, supportsScrollEdge);
+    device.supportedScrollMethods = supportsScrollEdge ? LIBINPUT_CONFIG_SCROLL_EDGE : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_EDGE : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.setScrollMethodReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.isScrollEdge(), initValue);
+    QCOMPARE(d.property("scrollEdge").toBool(), initValue);
+
+    QSignalSpy scrollMethodChangedSpy(&d, &Device::scrollMethodChanged);
+    QVERIFY(scrollMethodChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setScrollEdge(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.isScrollEdge(), expectedValue);
+    QCOMPARE(d.property("scrollEdge").toBool(), expectedValue);
+    QCOMPARE(scrollMethodChangedSpy.isEmpty(), initValue == expectedValue);
+}
+
+void TestLibinputDevice::testScrollButtonDown_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("expectedValue");
+    QTest::addColumn<bool>("supportsScrollButtonDown");
+
+    QTest::newRow("true -> false") << true << false << false << false << true;
+    QTest::newRow("false -> true") << false << true << false << true << true;
+    QTest::newRow("set fails") << true << false << true << true << true;
+    QTest::newRow("true -> true") << true << true << false << true << true;
+    QTest::newRow("false -> false") << false << false << false << false << true;
+
+    QTest::newRow("false -> true, unsupported") << false << true << true << false << false;
+}
+
+void TestLibinputDevice::testScrollButtonDown()
+{
+    libinput_device device;
+    QFETCH(bool, initValue);
+    QFETCH(bool, setShouldFail);
+    QFETCH(bool, supportsScrollButtonDown);
+    device.supportedScrollMethods = supportsScrollButtonDown ? LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.setScrollMethodReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.isScrollOnButtonDown(), initValue);
+    QCOMPARE(d.property("scrollOnButtonDown").toBool(), initValue);
+
+    QSignalSpy scrollMethodChangedSpy(&d, &Device::scrollMethodChanged);
+    QVERIFY(scrollMethodChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setScrollOnButtonDown(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.isScrollOnButtonDown(), expectedValue);
+    QCOMPARE(d.property("scrollOnButtonDown").toBool(), expectedValue);
+    QCOMPARE(scrollMethodChangedSpy.isEmpty(), initValue == expectedValue);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)
