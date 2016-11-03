@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFutureWatcher>
 #include <QProcess>
 #include <QSocketNotifier>
+#include <QStyle>
 #include <QThread>
 #include <QDebug>
 #include <QWindow>
@@ -113,6 +114,9 @@ ApplicationWayland::~ApplicationWayland()
             processEvents(QEventLoop::WaitForMoreEvents);
         }
         waylandServer()->destroyXWaylandConnection();
+    }
+    if (QStyle *s = style()) {
+        s->unpolish(this);
     }
     waylandServer()->terminateClientConnections();
     destroyCompositor();
