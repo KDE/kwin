@@ -471,6 +471,10 @@ bool Connection::isSuspended() const
 
 void Connection::applyDeviceConfig(Device *device)
 {
+    // pass configuration to Device
+    device->setConfig(m_config->group("Libinput").group(QString::number(device->vendor())).group(QString::number(device->product())).group(device->name()));
+    device->loadConfiguration();
+
     if (device->isPointer()) {
         const KConfigGroup group = m_config->group("Mouse");
         device->setLeftHanded(group.readEntry("MouseButtonMapping", "RightHanded") == QLatin1String("LeftHanded"));

@@ -5,7 +5,7 @@ include_directories(${UDEV_INCLUDE_DIR})
 ########################################################
 set( testLibinputDevice_SRCS device_test.cpp mock_libinput.cpp ../../libinput/device.cpp )
 add_executable(testLibinputDevice ${testLibinputDevice_SRCS})
-target_link_libraries( testLibinputDevice Qt5::Test Qt5::DBus)
+target_link_libraries( testLibinputDevice Qt5::Test Qt5::DBus KF5::ConfigCore)
 add_test(kwin-testLibinputDevice testLibinputDevice)
 ecm_mark_as_test(testLibinputDevice)
 
@@ -94,6 +94,6 @@ ecm_mark_as_test(testLibinputContext)
 ########################################################
 set( testInputEvents_SRCS input_event_test.cpp mock_libinput.cpp ../../libinput/device.cpp ../../input_event.cpp )
 add_executable(testInputEvents ${testInputEvents_SRCS})
-target_link_libraries( testInputEvents Qt5::Test Qt5::DBus Qt5::Gui)
+target_link_libraries( testInputEvents Qt5::Test Qt5::DBus Qt5::Gui KF5::ConfigCore)
 add_test(kwin-testInputEvents testInputEvents)
 ecm_mark_as_test(testInputEvents)

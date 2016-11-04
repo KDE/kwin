@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <libinput.h>
 
+#include <KConfigGroup>
+
 #include <QObject>
 #include <QSizeF>
 #include <QVector>
@@ -32,6 +34,7 @@ namespace KWin
 {
 namespace LibInput
 {
+enum class ConfigKey;
 
 class Device : public QObject
 {
@@ -216,7 +219,7 @@ public:
         return m_naturalScroll;
     }
     void setNaturalScroll(bool set);
-    void setScrollMethod(bool set, enum libinput_config_scroll_method method);
+    bool setScrollMethod(bool set, enum libinput_config_scroll_method method);
     bool isScrollTwoFinger() const {
         return m_scrollMethod & LIBINPUT_CONFIG_SCROLL_2FG;
     }
@@ -261,6 +264,19 @@ public:
     }
 
     /**
+     * Sets the @p config to load the Device configuration from and to store each
+     * successful Device configuration.
+     **/
+    void setConfig(const KConfigGroup &config) {
+        m_config = config;
+    }
+
+    /**
+     * Loads the configuration and applies it to the Device
+     **/
+    void loadConfiguration();
+
+    /**
      * All created Devices
      **/
     static QVector<Device*> devices() {
@@ -284,6 +300,10 @@ Q_SIGNALS:
     void scrollButtonChanged();
 
 private:
+    template <typename T>
+    void writeEntry(const ConfigKey &key, const T &value);
+    template <typename T, typename Setter>
+    void readEntry(const QByteArray &key, const Setter &s, const T &defaultValue = T());
     libinput_device *m_device;
     bool m_keyboard;
     bool m_alphaNumericKeyboard = false;
@@ -328,6 +348,9 @@ private:
     quint32 m_scrollButton;
     qreal m_pointerAcceleration;
     bool m_enabled;
+
+    KConfigGroup m_config;
+    bool m_loading = false;
 
     static QVector<Device*> s_devices;
 };
