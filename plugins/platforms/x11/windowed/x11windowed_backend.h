@@ -91,6 +91,7 @@ private:
     struct Output {
         xcb_window_t window = XCB_WINDOW_NONE;
         QSize size;
+        qreal scale = 1;
         QPoint xPosition;
         QPoint internalPosition;
         NETWinInfo *winInfo = nullptr;

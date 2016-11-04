@@ -198,9 +198,11 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             if (it == m_windows.constEnd()) {
                 break;
             }
+            //generally we don't need to normalise input to the output scale; however because we're getting input
+            //from a host window that doesn't understand scaling, we need to apply it ourselves so the cursor matches
             pointerMotion(QPointF(event->root_x - (*it).xPosition.x() + (*it).internalPosition.x(),
-                                  event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()),
-                          event->time);
+                                    event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()) / it->scale,
+                                    event->time);
         }
         break;
     case XCB_KEY_PRESS:
@@ -230,8 +232,8 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
                 break;
             }
             pointerMotion(QPointF(event->root_x - (*it).xPosition.x() + (*it).internalPosition.x(),
-                                  event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()),
-                          event->time);
+                                    event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()) / it->scale,
+                                    event->time);
         }
         break;
     case XCB_CLIENT_MESSAGE:
@@ -364,9 +366,10 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
         button = event->detail + BTN_LEFT - 1;
         return;
     }
+
     pointerMotion(QPointF(event->root_x - (*it).xPosition.x() + (*it).internalPosition.x(),
-                          event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()),
-                  event->time);
+                            event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()) / it->scale,
+                            event->time);
     if (pressed) {
         pointerButtonPressed(button, event->time);
     } else {
@@ -476,7 +479,9 @@ QVector<QRect> X11WindowedBackend::screenGeometries() const
 QVector<qreal> X11WindowedBackend::screenScales() const
 {
     QVector<qreal> ret;
-    ret.fill(initialOutputScale(), m_windows.count());
+    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
+        ret << (*it).scale;
+    }
     return ret;
 }
 
