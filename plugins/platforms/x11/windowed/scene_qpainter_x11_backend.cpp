@@ -46,7 +46,7 @@ void X11WindowedQPainterBackend::createOutputs()
     for (int i = 0; i < screens()->count(); ++i) {
         Output *output = new Output;
         output->window = m_backend->windowForScreen(i);
-        output->buffer = QImage(screens()->size(i), QImage::Format_RGB32);
+        output->buffer = QImage(screens()->size(i) * screens()->scale(i), QImage::Format_RGB32);
         output->buffer.fill(Qt::black);
         m_outputs << output;
     }

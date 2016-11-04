@@ -127,10 +127,11 @@ void X11WindowedBackend::createWindow()
             XCB_EVENT_MASK_STRUCTURE_NOTIFY |
             XCB_EVENT_MASK_EXPOSURE
         };
-        o.size = initialWindowSize();
+        o.scale = initialOutputScale();
+        o.size = initialWindowSize() * o.scale;
         if (!m_windows.isEmpty()) {
             const auto &p = m_windows.last();
-            o.internalPosition = QPoint(p.internalPosition.x() + p.size.width(), 0);
+            o.internalPosition = QPoint(p.internalPosition.x() + p.size.width() / p.scale, 0);
         }
         xcb_create_window(m_connection, XCB_COPY_FROM_PARENT, o.window, m_screen->root,
                         0, 0, o.size.width(), o.size.height(),
@@ -388,11 +389,11 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
     QSize s = QSize(event->width, event->height);
     if (s != (*it).size) {
         (*it).size = s;
-        int x = (*it).internalPosition.x() + s.width();
+        int x = (*it).internalPosition.x() + (*it).size.width() / (*it).scale;
         it++;
         for (; it != m_windows.end(); ++it) {
             (*it).internalPosition.setX(x);
-            x += (*it).size.width();
+            x += (*it).size.width() / (*it).scale;
         }
         emit sizeChanged();
     }

@@ -253,7 +253,8 @@ static void paintSubSurface(QPainter *painter, const QPoint &pos, QPainterWindow
     if (!pixmap->subSurface().isNull()) {
         p += pixmap->subSurface()->position();
     }
-    painter->drawImage(p, pixmap->image());
+
+    painter->drawImage(QRect(pos, pixmap->size()), pixmap->image());
     const auto &children = pixmap->children();
     for (auto it = children.begin(); it != children.end(); ++it) {
         auto pixmap = static_cast<QPainterWindowPixmap*>(*it);
