@@ -587,6 +587,9 @@ bool ShellClient::isMaximizable() const
 
 bool ShellClient::isMinimizable() const
 {
+    if (m_internal) {
+        return false;
+    }
     return (!m_plasmaShellSurface || m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal);
 }
 

@@ -521,6 +521,7 @@ void DebugConsoleTest::testClosingDebugConsole()
     QVERIFY(c->isInternal());
     QCOMPARE(c->internalWindow(), console->windowHandle());
     QVERIFY(c->isDecorated());
+    QCOMPARE(c->isMinimizable(), false);
     c->closeWindow();
     QVERIFY(destroyedSpy.wait());
 }
