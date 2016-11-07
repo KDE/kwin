@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_GLIDE_H
 
 #include <kwineffects.h>
-#include <xcbutils.h>
 
 class QTimeLine;
 
@@ -75,7 +74,7 @@ private:
     void glideIn(EffectWindow* w, WindowPaintData& data, const InfoHash::const_iterator &info);
     void glideOut(EffectWindow* w, WindowPaintData& data, const InfoHash::const_iterator &info);
     bool isGlideWindow(EffectWindow* w);
-    Xcb::Atom m_atom;
+    void cancelWindowGrab(EffectWindow *w, int grabRole);
     InfoHash windows;
     float duration;
     int angle;
