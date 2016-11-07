@@ -114,7 +114,9 @@ public:
     BufferInterface *buffer();
     QPoint offset() const;
     /**
-     * The size of the Surface.
+     * The size of the Surface in global compositor space.
+     * @see For buffer size use BufferInterface::size
+     * from SurfaceInterface::buffer
      * @since 5.3
      **/
     QSize size() const;

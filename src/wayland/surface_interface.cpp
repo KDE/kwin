@@ -335,6 +335,9 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     }
     if (scaleFactorChanged) {
         emit q->scaleChanged(target->scale);
+        if (buffer && !sizeChanged) {
+            emit q->sizeChanged();
+        }
     }
     if (transformChanged) {
         emit q->transformChanged(target->transform);
@@ -634,9 +637,9 @@ QPointer< SubSurfaceInterface > SurfaceInterface::subSurface() const
 QSize SurfaceInterface::size() const
 {
     Q_D();
-    // TODO: apply transform and scale to the buffer size
+    // TODO: apply transform to the buffer size
     if (d->current.buffer) {
-        return d->current.buffer->size();
+        return d->current.buffer->size() / scale();
     }
     return QSize();
 }

@@ -671,6 +671,10 @@ void TestWaylandSurface::testScale()
 
     // let's change the scale factor
     QSignalSpy scaleChangedSpy(serverSurface, &SurfaceInterface::scaleChanged);
+
+    //changing the scale implicitly changes the size
+    QSignalSpy sizeChangedSpy(serverSurface, &SurfaceInterface::sizeChanged);
+
     QVERIFY(scaleChangedSpy.isValid());
     s->setScale(2);
     QCOMPARE(s->scale(), 2);
@@ -681,6 +685,11 @@ void TestWaylandSurface::testScale()
     QCOMPARE(scaleChangedSpy.count(), 1);
     QCOMPARE(scaleChangedSpy.first().first().toInt(), 2);
     QCOMPARE(serverSurface->scale(), 2);
+
+    //even though we've changed the scale, if we don't have a buffer we
+    //don't have a size. If we don't have a size it can't have changed
+    QCOMPARE(sizeChangedSpy.count(), 0);
+    QVERIFY(!serverSurface->size().isValid());
 
     // let's try changing to same factor, should not emit changed on server
     s->setScale(2);
@@ -695,6 +704,44 @@ void TestWaylandSurface::testScale()
     QCOMPARE(scaleChangedSpy.first().first().toInt(), 2);
     QCOMPARE(scaleChangedSpy.last().first().toInt(), 4);
     QCOMPARE(serverSurface->scale(), 4);
+    scaleChangedSpy.clear();
+
+    //attach a buffer of 100x100, our scale is 4, so this should be a size of 25x25
+    QImage red(100, 100, QImage::Format_ARGB32);
+    red.fill(QColor(255, 0, 0, 128));
+    auto redBuffer = m_shm->createBuffer(red);
+    s->attachBuffer(redBuffer.data());
+    s->damage(QRect(0,0, 25,25));
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(sizeChangedSpy.wait());
+    QCOMPARE(sizeChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->size(), QSize(25,25));
+    sizeChangedSpy.clear();
+    scaleChangedSpy.clear();
+
+    //set the scale to 1, buffer is still 100x100 so size should change to 100x100
+    s->setScale(1);
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(sizeChangedSpy.wait());
+    QCOMPARE(sizeChangedSpy.count(), 1);
+    QCOMPARE(scaleChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->scale(), 1);
+    QCOMPARE(serverSurface->size(), QSize(100,100));
+    sizeChangedSpy.clear();
+    scaleChangedSpy.clear();
+
+    //set scale and size in one commit, buffer is 50x50 at scale 2 so size should be 25x25
+    QImage blue(50, 50, QImage::Format_ARGB32);
+    red.fill(QColor(255, 0, 0, 128));
+    auto blueBuffer = m_shm->createBuffer(blue);
+    s->attachBuffer(blueBuffer.data());
+    s->setScale(2);
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(sizeChangedSpy.wait());
+    QCOMPARE(sizeChangedSpy.count(), 1);
+    QCOMPARE(scaleChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->scale(), 2);
+    QCOMPARE(serverSurface->size(), QSize(25,25));
 }
 
 void TestWaylandSurface::testDestroy()
