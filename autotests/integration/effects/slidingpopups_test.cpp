@@ -222,10 +222,6 @@ void SlidingPopupsTest::testWithOtherEffect()
     // sliding popups should be active
     QVERIFY(windowAddedSpy.wait());
     QTRY_VERIFY(slidingPoupus->isActive());
-    QEXPECT_FAIL("scale, slide", "bug 336866", Continue);
-    QEXPECT_FAIL("fade, slide", "bug 336866", Continue);
-    QEXPECT_FAIL("wobblywindows, slide", "bug 336866", Continue);
-    QEXPECT_FAIL("slide, wobblywindows", "bug 336866", Continue);
     QVERIFY(!otherEffect->isActive());
 
     // wait till effect ends
@@ -246,8 +242,6 @@ void SlidingPopupsTest::testWithOtherEffect()
 
     // again we should have the sliding popups active
     QVERIFY(slidingPoupus->isActive());
-    QEXPECT_FAIL("wobblywindows, slide", "bug 336866", Continue);
-    QEXPECT_FAIL("slide, wobblywindows", "bug 336866", Continue);
     QVERIFY(!otherEffect->isActive());
 
     QVERIFY(windowDeletedSpy.wait());
@@ -347,10 +341,6 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     // sliding popups should be active
     QCOMPARE(windowAddedSpy.count(), 1);
     QTRY_VERIFY(slidingPoupus->isActive());
-    QEXPECT_FAIL("scale, slide", "bug 336866", Continue);
-    QEXPECT_FAIL("fade, slide", "bug 336866", Continue);
-    QEXPECT_FAIL("wobblywindows, slide", "bug 336866", Continue);
-    QEXPECT_FAIL("slide, wobblywindows", "bug 336866", Continue);
     QVERIFY(!otherEffect->isActive());
 
     // wait till effect ends
@@ -371,8 +361,6 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
 
     // again we should have the sliding popups active
     QVERIFY(slidingPoupus->isActive());
-    QEXPECT_FAIL("wobblywindows, slide", "bug 336866", Continue);
-    QEXPECT_FAIL("slide, wobblywindows", "bug 336866", Continue);
     QVERIFY(!otherEffect->isActive());
 
     QVERIFY(windowDeletedSpy.wait());

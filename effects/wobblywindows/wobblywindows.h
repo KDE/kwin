@@ -136,6 +136,7 @@ public Q_SLOTS:
 
 private:
 
+    void cancelWindowGrab(KWin::EffectWindow *w, int grabRole);
     void startMovedResized(EffectWindow* w);
     void stepMovedResized(EffectWindow* w);
     bool updateWindowWobblyDatas(EffectWindow* w, qreal time);

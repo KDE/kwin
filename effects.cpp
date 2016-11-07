@@ -1703,6 +1703,7 @@ void EffectWindowImpl::setData(int role, const QVariant &data)
         dataMap[ role ] = data;
     else
         dataMap.remove(role);
+    emit effects->windowDataChanged(this, role);
 }
 
 QVariant EffectWindowImpl::data(int role) const
