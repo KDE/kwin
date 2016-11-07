@@ -32,6 +32,34 @@ namespace KWin {
 
 extern int screen_number;
 
+VirtualDesktop::VirtualDesktop(QObject *parent)
+    : QObject(parent)
+{
+}
+
+VirtualDesktop::~VirtualDesktop() = default;
+
+void VirtualDesktop::setId(const QByteArray &id)
+{
+    Q_ASSERT(m_id.isEmpty());
+    m_id = id;
+}
+
+void VirtualDesktop::setX11DesktopNumber(uint number)
+{
+    Q_ASSERT(m_x11DesktopNumber == 0);
+    m_x11DesktopNumber = number;
+}
+
+void VirtualDesktop::setName(const QString &name)
+{
+    if (m_name == name) {
+        return;
+    }
+    m_name = name;
+    emit nameChanged();
+}
+
 VirtualDesktopGrid::VirtualDesktopGrid()
     : m_size(1, 2) // Default to tow rows
     , m_grid(new uint[2])
@@ -90,8 +118,6 @@ KWIN_SINGLETON_FACTORY_VARIABLE(VirtualDesktopManager, s_manager)
 
 VirtualDesktopManager::VirtualDesktopManager(QObject *parent)
     : QObject(parent)
-    , m_current(0)
-    , m_count(0)
     , m_navigationWrapsAround(false)
     , m_rootInfo(NULL)
 {
@@ -237,14 +263,26 @@ uint VirtualDesktopManager::previous(uint id, bool wrap) const
     return desktop;
 }
 
+uint VirtualDesktopManager::current() const
+{
+    return m_current ? m_current->x11DesktopNumber() : 0;
+}
+
 bool VirtualDesktopManager::setCurrent(uint newDesktop)
 {
-    if (newDesktop < 1 || newDesktop > count() || newDesktop == m_current) {
+    if (newDesktop < 1 || newDesktop > count() || newDesktop == current()) {
         return false;
     }
-    const uint oldDesktop = m_current;
+    auto it = std::find_if(m_desktops.constBegin(), m_desktops.constEnd(),
+        [newDesktop] (VirtualDesktop *d) {
+            return d->x11DesktopNumber() == newDesktop;
+        }
+    );
+    Q_ASSERT(it != m_desktops.constEnd());
+    const uint oldDesktop = current();
+
     // change the desktop
-    m_current = newDesktop;
+    m_current = *it;
     emit currentChanged(oldDesktop, newDesktop);
     return true;
 }
@@ -252,26 +290,35 @@ bool VirtualDesktopManager::setCurrent(uint newDesktop)
 void VirtualDesktopManager::setCount(uint count)
 {
     count = qBound<uint>(1, count, VirtualDesktopManager::maximum());
-    if (count == m_count) {
+    if (count == uint(m_desktops.count())) {
         // nothing to change
         return;
     }
-    const uint oldCount = m_count;
-    m_count = count;
-
-    if (oldCount > m_count) {
-        handleDesktopsRemoved(oldCount);
+    const uint oldCount = m_desktops.count();
+    const uint oldCurrent = current();
+    while (uint(m_desktops.count()) > count) {
+        delete m_desktops.takeLast();
     }
+    while (uint(m_desktops.count()) < count) {
+        auto vd = new VirtualDesktop(this);
+        vd->setX11DesktopNumber(m_desktops.count() + 1);
+        m_desktops << vd;
+    }
+    if (oldCount > count) {
+        handleDesktopsRemoved(oldCount, oldCurrent);
+    }
+
     updateRootInfo();
 
     save();
-    emit countChanged(oldCount, m_count);
+    emit countChanged(oldCount, m_desktops.count());
 }
 
-void VirtualDesktopManager::handleDesktopsRemoved(uint previousCount)
+void VirtualDesktopManager::handleDesktopsRemoved(uint previousCount, uint previousCurrent)
 {
-    if (current() > count()) {
-        setCurrent(count());
+    if (!m_current) {
+        m_current = m_desktops.last();
+        emit currentChanged(previousCurrent, m_current->x11DesktopNumber());
     }
     emit desktopsRemoved(previousCount);
 }
@@ -399,15 +446,16 @@ QString VirtualDesktopManager::defaultName(int desktop) const
 void VirtualDesktopManager::setNETDesktopLayout(Qt::Orientation orientation, uint width, uint height, int startingCorner)
 {
     Q_UNUSED(startingCorner);   // Not really worth implementing right now.
+    const uint count = m_desktops.count();
 
     // Calculate valid grid size
     Q_ASSERT(width > 0 || height > 0);
     if ((width <= 0) && (height > 0)) {
-        width = (m_count + height - 1) / height;
+        width = (count + height - 1) / height;
     } else if ((height <= 0) && (width > 0)) {
-        height = (m_count + width - 1) / width;
+        height = (count + width - 1) / width;
     }
-    while (width * height < m_count) {
+    while (width * height < count) {
         if (orientation == Qt::Horizontal) {
             ++width;
         } else {

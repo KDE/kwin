@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt includes
 #include <QObject>
 #include <QPoint>
+#include <QPointer>
 #include <QSize>
 // KDE includes
 #include <KConfig>
@@ -33,6 +34,41 @@ class KLocalizedString;
 class NETRootInfo;
 
 namespace KWin {
+
+class VirtualDesktop : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QByteArray id READ id CONSTANT)
+    Q_PROPERTY(uint x11DesktopNumber READ x11DesktopNumber CONSTANT)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+public:
+    explicit VirtualDesktop(QObject *parent = nullptr);
+    virtual ~VirtualDesktop();
+
+    void setId(const QByteArray &id);
+    QByteArray id() const {
+        return m_id;
+    }
+
+    void setName(const QString &name);
+    QString name() const {
+        return m_name;
+    }
+
+    void setX11DesktopNumber(uint number);
+    uint x11DesktopNumber() const {
+        return m_x11DesktopNumber;
+    }
+
+Q_SIGNALS:
+    void nameChanged();
+
+private:
+    QByteArray m_id;
+    QString m_name;
+    int m_x11DesktopNumber = 0;
+
+};
 
 /**
  * @brief Two dimensional grid containing the ID of the virtual desktop at a specific position
@@ -309,10 +345,11 @@ private:
      * Emits the signal @link desktopsRemoved.
      *
      * @param previousCount The number of desktops prior to the change.
+     * @param previousCurrent The number of the previously current desktop.
      * @see setCount
      * @see desktopsRemoved
      **/
-    void handleDesktopsRemoved(uint previousCount);
+    void handleDesktopsRemoved(uint previousCount, uint previousCurrent);
     /**
      * Generate a desktop layout from EWMH _NET_DESKTOP_LAYOUT property parameters.
      */
@@ -350,8 +387,8 @@ private:
      **/
     void addAction(const QString &name, const QString &label, void (VirtualDesktopManager::*slot)());
 
-    uint m_current;
-    uint m_count;
+    QVector<VirtualDesktop*> m_desktops;
+    QPointer<VirtualDesktop> m_current;
     bool m_navigationWrapsAround;
     VirtualDesktopGrid m_grid;
     // TODO: QPointer
@@ -521,15 +558,9 @@ uint VirtualDesktopManager::maximum()
 }
 
 inline
-uint VirtualDesktopManager::current() const
-{
-    return m_current;
-}
-
-inline
 uint VirtualDesktopManager::count() const
 {
-    return m_count;
+    return m_desktops.count();
 }
 
 inline
