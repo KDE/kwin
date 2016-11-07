@@ -1064,7 +1064,6 @@ public:
     */
     virtual void registerPropertyType(long atom, bool reg) = 0;
     virtual QByteArray readRootProperty(long atom, long type, int format) const = 0;
-    virtual void deleteRootProperty(long atom) const = 0;
     /**
      * @brief Announces support for the feature with the given name. If no other Effect
      * has announced support for this feature yet, an X11 property will be installed on

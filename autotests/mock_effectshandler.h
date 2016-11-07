@@ -85,7 +85,6 @@ public:
         return false;
     }
     void defineCursor(Qt::CursorShape) override {}
-    void deleteRootProperty(long int) const override {}
     int desktopAbove(int, bool) const override {
         return 0;
     }

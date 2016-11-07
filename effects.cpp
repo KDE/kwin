@@ -830,11 +830,6 @@ QByteArray EffectsHandlerImpl::readRootProperty(long atom, long type, int format
     return readWindowProperty(rootWindow(), atom, type, format);
 }
 
-void EffectsHandlerImpl::deleteRootProperty(long atom) const
-{
-    deleteWindowProperty(rootWindow(), atom);
-}
-
 void EffectsHandlerImpl::activateWindow(EffectWindow* c)
 {
     if (AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(c)->window()))

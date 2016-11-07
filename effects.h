@@ -176,7 +176,6 @@ public:
     void reconfigure() override;
     void registerPropertyType(long atom, bool reg) override;
     QByteArray readRootProperty(long atom, long type, int format) const override;
-    void deleteRootProperty(long atom) const override;
     xcb_atom_t announceSupportProperty(const QByteArray& propertyName, Effect* effect) override;
     void removeSupportProperty(const QByteArray& propertyName, Effect* effect) override;
 
