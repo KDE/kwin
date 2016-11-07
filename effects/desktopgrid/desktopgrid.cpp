@@ -560,6 +560,9 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
             }
         } else if ((me->buttons() == Qt::MidButton || me->buttons() == Qt::RightButton) && windowMove == NULL) {
             EffectWindow* w = windowAt(me->pos());
+            if (w && w->isDesktop()) {
+                w = nullptr;
+            }
             if (w != NULL) {
                 int desktop = 0;
                 if (w->isOnAllDesktops()) {

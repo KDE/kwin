@@ -37,6 +37,7 @@ DEALINGS IN THE SOFTWARE.
 int main(int argc, char* argv[])
 {
     KLocalizedString::setApplicationDomain("kwin");
+    qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("xcb"));
     QApplication app(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     QCoreApplication::setApplicationName(QStringLiteral("kwin_killer_helper"));

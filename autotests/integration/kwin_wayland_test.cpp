@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAbstractEventDispatcher>
 #include <QPluginLoader>
 #include <QSocketNotifier>
+#include <QStyle>
 #include <QThread>
 #include <QtConcurrentRun>
 
@@ -79,6 +80,9 @@ WaylandTestApplication::~WaylandTestApplication()
             processEvents(QEventLoop::WaitForMoreEvents);
         }
         waylandServer()->destroyXWaylandConnection();
+    }
+    if (QStyle *s = style()) {
+        s->unpolish(this);
     }
     waylandServer()->terminateClientConnections();
     destroyCompositor();
