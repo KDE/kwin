@@ -1056,13 +1056,6 @@ public:
     virtual QPainter *scenePainter() = 0;
     virtual void reconfigure() = 0;
 
-    /**
-     Makes KWin core watch PropertyNotify events for the given atom,
-     or stops watching if reg is false (must be called the same number
-     of times as registering). Events are sent using Effect::propertyNotify().
-     Note that even events that haven't been registered for can be received.
-    */
-    virtual void registerPropertyType(long atom, bool reg) = 0;
     virtual QByteArray readRootProperty(long atom, long type, int format) const = 0;
     /**
      * @brief Announces support for the feature with the given name. If no other Effect

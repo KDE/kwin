@@ -174,7 +174,6 @@ public:
     unsigned long xrenderBufferPicture() override;
     QPainter* scenePainter() override;
     void reconfigure() override;
-    void registerPropertyType(long atom, bool reg) override;
     QByteArray readRootProperty(long atom, long type, int format) const override;
     xcb_atom_t announceSupportProperty(const QByteArray& propertyName, Effect* effect) override;
     void removeSupportProperty(const QByteArray& propertyName, Effect* effect) override;
@@ -287,6 +286,7 @@ protected:
     int next_window_quad_type;
 
 private:
+    void registerPropertyType(long atom, bool reg);
     typedef QVector< Effect*> EffectsList;
     typedef EffectsList::const_iterator EffectsIterator;
     EffectsList m_activeEffects;
