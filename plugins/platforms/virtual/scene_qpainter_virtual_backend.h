@@ -37,14 +37,17 @@ public:
     virtual ~VirtualQPainterBackend();
 
     QImage *buffer() override;
+    QImage *bufferForScreen(int screenId) override;
     bool needsFullRepaint() const override;
     bool usesOverlayWindow() const override;
     void prepareRenderingFrame() override;
     void present(int mask, const QRegion &damage) override;
-    void screenGeometryChanged(const QSize &size) override;
+    bool perScreenRendering() const override;
 
 private:
-    QImage m_backBuffer;
+    void createOutputs();
+
+    QVector<QImage> m_backBuffers;
     VirtualBackend *m_backend;
     int m_frameCounter = 0;
 };

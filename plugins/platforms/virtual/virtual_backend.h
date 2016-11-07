@@ -50,6 +50,9 @@ public:
     int outputCount() const {
         return m_outputCount;
     }
+    qreal outputScale() const {
+        return m_outputScale;
+    }
 
     bool saveFrames() const {
         return !m_screenshotDir.isNull();
@@ -62,6 +65,10 @@ public:
 
     Q_INVOKABLE void setOutputCount(int count) {
         m_outputCount = count;
+    }
+
+    Q_INVOKABLE void setOutputScale(qreal scale) {
+        m_outputScale = scale;
     }
 
     int drmFd() const {
@@ -85,6 +92,7 @@ Q_SIGNALS:
 private:
     QSize m_size;
     int m_outputCount = 1;
+    qreal m_outputScale = 1;
     QScopedPointer<QTemporaryDir> m_screenshotDir;
     int m_drmFd = -1;
     gbm_device *m_gbmDevice = nullptr;

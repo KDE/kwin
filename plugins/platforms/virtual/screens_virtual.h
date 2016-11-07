@@ -39,6 +39,7 @@ public:
     void updateCount() override;
 
 private:
+    void createOutputs();
     VirtualBackend *m_backend;
     QVector<QRect> m_geometries;
 };
