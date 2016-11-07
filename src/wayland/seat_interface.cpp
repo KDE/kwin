@@ -38,6 +38,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <linux/input.h>
 #endif
 
+#include <functional>
+
 namespace KWayland
 {
 
@@ -207,6 +209,24 @@ QVector<T *> interfacesForSurface(SurfaceInterface *surface, const QVector<T*> &
     }
     return ret;
 }
+
+template <typename T>
+static
+bool forEachInterface(SurfaceInterface *surface, const QVector<T*> &interfaces, std::function<void (T*)> method)
+{
+    if (!surface) {
+        return false;
+    }
+    bool calledAtLeastOne = false;
+    for (auto it = interfaces.begin(); it != interfaces.end(); ++it) {
+        if ((*it)->client() == surface->client() && (*it)->resource()) {
+            method(*it);
+            calledAtLeastOne = true;
+        }
+    }
+    return calledAtLeastOne;
+}
+
 }
 
 QVector<PointerInterface *> SeatInterface::Private::pointersForSurface(SurfaceInterface *surface) const
@@ -882,10 +902,11 @@ void SeatInterface::startPointerSwipeGesture(quint32 fingerCount)
         return;
     }
     const quint32 serial = d->display->nextSerial();
-    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
-    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
-        (*it)->d_func()->startSwipeGesture(serial, fingerCount);
-    }
+    forEachInterface<PointerInterface>(d->globalPointer.gestureSurface.data(), d->pointers,
+        [serial, fingerCount] (PointerInterface *p) {
+            p->d_func()->startSwipeGesture(serial, fingerCount);
+        }
+    );
 }
 
 void SeatInterface::updatePointerSwipeGesture(const QSizeF &delta)
@@ -894,10 +915,11 @@ void SeatInterface::updatePointerSwipeGesture(const QSizeF &delta)
     if (d->globalPointer.gestureSurface.isNull()) {
         return;
     }
-    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
-    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
-        (*it)->d_func()->updateSwipeGesture(delta);
-    }
+    forEachInterface<PointerInterface>(d->globalPointer.gestureSurface.data(), d->pointers,
+        [delta] (PointerInterface *p) {
+            p->d_func()->updateSwipeGesture(delta);
+        }
+    );
 }
 
 void SeatInterface::endPointerSwipeGesture()
@@ -907,10 +929,11 @@ void SeatInterface::endPointerSwipeGesture()
         return;
     }
     const quint32 serial = d->display->nextSerial();
-    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
-    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
-        (*it)->d_func()->endSwipeGesture(serial);
-    }
+    forEachInterface<PointerInterface>(d->globalPointer.gestureSurface.data(), d->pointers,
+        [serial] (PointerInterface *p) {
+            p->d_func()->endSwipeGesture(serial);
+        }
+    );
     d->globalPointer.gestureSurface.clear();
 }
 
@@ -921,10 +944,11 @@ void SeatInterface::cancelPointerSwipeGesture()
         return;
     }
     const quint32 serial = d->display->nextSerial();
-    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
-    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
-        (*it)->d_func()->cancelSwipeGesture(serial);
-    }
+    forEachInterface<PointerInterface>(d->globalPointer.gestureSurface.data(), d->pointers,
+        [serial] (PointerInterface *p) {
+            p->d_func()->cancelSwipeGesture(serial);
+        }
+    );
     d->globalPointer.gestureSurface.clear();
 }
 
@@ -939,10 +963,11 @@ void SeatInterface::startPointerPinchGesture(quint32 fingerCount)
         return;
     }
     const quint32 serial = d->display->nextSerial();
-    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
-    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
-        (*it)->d_func()->startPinchGesture(serial, fingerCount);
-    }
+    forEachInterface<PointerInterface>(d->globalPointer.gestureSurface.data(), d->pointers,
+        [serial, fingerCount] (PointerInterface *p) {
+            p->d_func()->startPinchGesture(serial, fingerCount);
+        }
+    );
 }
 
 void SeatInterface::updatePointerPinchGesture(const QSizeF &delta, qreal scale, qreal rotation)
@@ -951,10 +976,11 @@ void SeatInterface::updatePointerPinchGesture(const QSizeF &delta, qreal scale, 
     if (d->globalPointer.gestureSurface.isNull()) {
         return;
     }
-    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
-    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
-        (*it)->d_func()->updatePinchGesture(delta, scale, rotation);
-    }
+    forEachInterface<PointerInterface>(d->globalPointer.gestureSurface.data(), d->pointers,
+        [delta, scale, rotation] (PointerInterface *p) {
+            p->d_func()->updatePinchGesture(delta, scale, rotation);
+        }
+    );
 }
 
 void SeatInterface::endPointerPinchGesture()
@@ -964,11 +990,11 @@ void SeatInterface::endPointerPinchGesture()
         return;
     }
     const quint32 serial = d->display->nextSerial();
-    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
-    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
-        (*it)->d_func()->endPinchGesture(serial);
-    }
-    d->globalPointer.gestureSurface.clear();
+    forEachInterface<PointerInterface>(d->globalPointer.gestureSurface.data(), d->pointers,
+        [serial] (PointerInterface *p) {
+            p->d_func()->endPinchGesture(serial);
+        }
+    );
 }
 
 void SeatInterface::cancelPointerPinchGesture()
@@ -978,11 +1004,11 @@ void SeatInterface::cancelPointerPinchGesture()
         return;
     }
     const quint32 serial = d->display->nextSerial();
-    const auto interfaces = interfacesForSurface(d->globalPointer.gestureSurface.data(), d->pointers);
-    for (auto it = interfaces.constBegin(), end = interfaces.constEnd(); it != end; ++it) {
-        (*it)->d_func()->cancelPinchGesture(serial);
-    }
-    d->globalPointer.gestureSurface.clear();
+    forEachInterface<PointerInterface>(d->globalPointer.gestureSurface.data(), d->pointers,
+        [serial] (PointerInterface *p) {
+            p->d_func()->cancelPinchGesture(serial);
+        }
+    );
 }
 
 void SeatInterface::keyPressed(quint32 key)
@@ -1266,19 +1292,20 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
         d->touchInterface.focus.touch->down(id, serial, globalPosition - d->touchInterface.focus.offset);
     } else if (id == 0 && focusedTouchSurface()) {
 #if HAVE_LINUX_INPUT_H
-        auto p = d->pointersForSurface(focusedTouchSurface());
-        if (p.isEmpty()) {
-            return id;
-        }
         const QPointF pos = globalPosition - d->touchInterface.focus.offset;
-        for (auto it = p.constBegin(), end = p.constEnd(); it != end; ++it) {
-            wl_pointer_send_enter((*it)->resource(), serial,
-                            focusedTouchSurface()->resource(),
-                            wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-            wl_pointer_send_motion((*it)->resource(), timestamp(),
-                                    wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        const bool result = forEachInterface<PointerInterface>(focusedTouchSurface(), d->pointers,
+            [this, pos, serial] (PointerInterface *p) {
+                wl_pointer_send_enter(p->resource(), serial,
+                                focusedTouchSurface()->resource(),
+                                wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+                wl_pointer_send_motion(p->resource(), timestamp(),
+                                        wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
 
-            wl_pointer_send_button((*it)->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_PRESSED);
+                wl_pointer_send_button(p->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_PRESSED);
+            }
+        );
+        if (!result) {
+            return id;
         }
 #endif
     }
@@ -1293,16 +1320,13 @@ void SeatInterface::touchMove(qint32 id, const QPointF &globalPosition)
     if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
         d->touchInterface.focus.touch->move(id, globalPosition - d->touchInterface.focus.offset);
     } else if (id == 0 && focusedTouchSurface()) {
-        auto p = d->pointersForSurface(focusedTouchSurface());
-        if (p.isEmpty()) {
-            return;
-        }
-
         const QPointF pos = globalPosition - d->touchInterface.focus.offset;
-        for (auto it = p.constBegin(), end = p.constEnd(); it != end; ++it) {
-            wl_pointer_send_motion((*it)->resource(), timestamp(),
-                                   wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-        }
+        forEachInterface<PointerInterface>(focusedTouchSurface(), d->pointers,
+            [this, pos] (PointerInterface *p) {
+                wl_pointer_send_motion(p->resource(), timestamp(),
+                                       wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+            }
+        );
     } 
 }
 
@@ -1315,14 +1339,11 @@ void SeatInterface::touchUp(qint32 id)
     } else if (id == 0 && focusedTouchSurface()) {
 #if HAVE_LINUX_INPUT_H
         const quint32 serial = display()->nextSerial();
-        auto p = d->pointersForSurface(focusedTouchSurface());
-        if (p.isEmpty()) {
-            return;
-        }
-
-        for (auto it = p.constBegin(), end = p.constEnd(); it != end; ++it) {
-            wl_pointer_send_button((*it)->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_RELEASED);
-        }
+        forEachInterface<PointerInterface>(focusedTouchSurface(), d->pointers,
+            [this, serial] (PointerInterface *p) {
+                wl_pointer_send_button(p->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_RELEASED);
+            }
+        );
 #endif
     }
     d->touchInterface.ids.removeAll(id);
