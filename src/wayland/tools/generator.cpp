@@ -1304,7 +1304,11 @@ void Generator::generateClientCppRequests(const Interface &interface)
                 requestArguments.append(QStringLiteral(", *%1").arg(toCamelCase(a.name())));
             } else {
                 arguments.append(QStringLiteral("%1 %2").arg(a.typeAsQt()).arg(toCamelCase(a.name())));
-                requestArguments.append(QStringLiteral(", %1").arg(toCamelCase(a.name())));
+                QString arg = toCamelCase(a.name());
+                if (a.type() == Argument::Type::Fixed) {
+                    arg = QStringLiteral("wl_fixed_from_double(%1)").arg(arg);
+                }
+                requestArguments.append(QStringLiteral(", %1").arg(arg));
             }
         }
         if (factored.isEmpty()) {
