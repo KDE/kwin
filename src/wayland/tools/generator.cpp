@@ -889,6 +889,28 @@ void Generator::generateClientPrivateClass(const Interface &interface)
     } else {
         generateClientPrivateResourceClass(interface);
     }
+
+    const auto events = interface.events();
+    if (!events.isEmpty()) {
+        *m_stream.localData() << QStringLiteral("\nprivate:\n");
+        // generate the callbacks
+        for (auto event : events) {
+            const QString templateString = QStringLiteral("    static void %1Callback(void *data, %2 *%2");
+            *m_stream.localData() << templateString.arg(event.name()).arg(interface.name());
+            const auto arguments = event.arguments();
+            for (auto argument : arguments) {
+                if (argument.interface().isNull()) {
+                    *m_stream.localData() << QStringLiteral(", %1 %2").arg(argument.typeAsServerWl()).arg(argument.name());
+                } else {
+                    *m_stream.localData() << QStringLiteral(", %1 *%2").arg(argument.interface()).arg(argument.name());
+                }
+            }
+            *m_stream.localData() << ");\n";
+        }
+        *m_stream.localData() << QStringLiteral("\n    static const %1_listener s_listener;\n").arg(interface.name());
+    }
+
+    *m_stream.localData() << QStringLiteral("};\n\n");
 }
 
 void Generator::generateClientPrivateResourceClass(const Interface &interface)
@@ -904,8 +926,7 @@ void Generator::generateClientPrivateResourceClass(const Interface &interface)
 "    WaylandPointer<%2, %2_destroy> %3;\n"
 "\n"
 "private:\n"
-"    %1 *q;\n"
-"};\n\n");
+"    %1 *q;\n");
 
     *m_stream.localData() << templateString.arg(interface.kwaylandClientName()).arg(interface.name()).arg(interface.kwaylandClientName().toLower());
 }
@@ -921,14 +942,55 @@ void Generator::generateClientPrivateGlobalClass(const Interface &interface)
 "    void setup(%2 *arg);\n"
 "\n"
 "    WaylandPointer<%2, %2_destroy> %3;\n"
-"    EventQueue *queue = nullptr;\n"
-"};\n\n");
+"    EventQueue *queue = nullptr;\n");
 
     *m_stream.localData() << templateString.arg(interface.kwaylandClientName()).arg(interface.name()).arg(interface.kwaylandClientName().toLower());
 }
 
 void Generator::generateClientCpp(const Interface &interface)
 {
+    // TODO: generate listener and callbacks
+    const auto events = interface.events();
+    if (!events.isEmpty()) {
+        // listener
+        *m_stream.localData() << QStringLiteral("const %1_listener %2::Private::s_listener = {\n").arg(interface.name()).arg(interface.kwaylandClientName());
+        bool first = true;
+        for (auto event : events) {
+            if (!first) {
+                *m_stream.localData() << QStringLiteral(",\n");
+            }
+            *m_stream.localData() << QStringLiteral("    %1Callback").arg(event.name());
+            first = false;
+        }
+        *m_stream.localData() << QStringLiteral("\n};\n\n");
+
+        // callbacks
+        for (auto event : events) {
+            *m_stream.localData() << QStringLiteral("void %1::Private::%2Callback(void *data, %3 *%3").arg(interface.kwaylandClientName()).arg(event.name()).arg(interface.name());
+
+            const auto arguments = event.arguments();
+            for (auto argument : arguments) {
+                if (argument.interface().isNull()) {
+                    *m_stream.localData() << QStringLiteral(", %1 %2").arg(argument.typeAsServerWl()).arg(argument.name());
+                } else {
+                    *m_stream.localData() << QStringLiteral(", %1 *%2").arg(argument.interface()).arg(argument.name());
+                }
+            }
+
+            *m_stream.localData() << QStringLiteral(
+")\n"
+"{\n"
+"    auto p = reinterpret_cast<%1::Private*>(data);\n"
+"    Q_ASSERT(p->%2 == %3);\n").arg(interface.kwaylandClientName())
+                               .arg(interface.kwaylandClientName().toLower())
+                               .arg(interface.name());
+            for (auto argument : arguments) {
+                *m_stream.localData() << QStringLiteral("    Q_UNUSED(%1)\n").arg(argument.name());
+            }
+            *m_stream.localData() << QStringLiteral("    // TODO: implement\n}\n\n");
+        }
+    }
+
     if (interface.isGlobal()) {
         // generate ctor without this pointer to Private
         const QString templateString = QStringLiteral(
@@ -953,18 +1015,28 @@ void Generator::generateClientCpp(const Interface &interface)
 "}\n");
         *m_stream.localData() << templateString.arg(interface.kwaylandClientName());
     }
-    const QString templateString = QStringLiteral(
-"\n"
-"%1::~%1()\n"
-"{\n"
-"    release();\n"
-"}\n"
+
+    // setup call with optional add_listener
+    const QString setupTemplate = QStringLiteral(
 "\n"
 "void %1::Private::setup(%3 *arg)\n"
 "{\n"
 "    Q_ASSERT(arg);\n"
 "    Q_ASSERT(!%2);\n"
-"    %2.setup(arg);\n"
+"    %2.setup(arg);\n");
+    *m_stream.localData() << setupTemplate.arg(interface.kwaylandClientName())
+                                           .arg(interface.kwaylandClientName().toLower())
+                                           .arg(interface.name());
+    if (!interface.events().isEmpty()) {
+        *m_stream.localData() << QStringLiteral("    %1_add_listener(%2, &s_listener, this);\n").arg(interface.name()).arg(interface.kwaylandClientName().toLower());
+    }
+    *m_stream.localData() << QStringLiteral("}\n");
+
+    const QString templateString = QStringLiteral(
+"\n"
+"%1::~%1()\n"
+"{\n"
+"    release();\n"
 "}\n"
 "\n"
 "void %1::setup(%3 *%2)\n"
