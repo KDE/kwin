@@ -78,6 +78,8 @@ enum class RelativePointerInterfaceVersion;
 class RelativePointerManagerInterface;
 enum class PointerGesturesInterfaceVersion;
 class PointerGesturesInterface;
+enum class PointerConstraintsInterfaceVersion;
+class PointerConstraintsInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -208,6 +210,14 @@ public:
      * @since 5.29
      **/
     PointerGesturesInterface *createPointerGestures(const PointerGesturesInterfaceVersion &version, QObject *parent = nullptr);
+
+    /**
+     * Creates the PointerConstraintsInterface in interface @p version
+     *
+     * @returns The created manager object
+     * @since 5.29
+     **/
+    PointerConstraintsInterface *createPointerConstraints(const PointerConstraintsInterfaceVersion &version, QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

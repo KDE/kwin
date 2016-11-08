@@ -26,6 +26,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/event_queue.h"
 #include "../../src/client/registry.h"
 #include "../../src/client/output.h"
+#include "../../src/client/pointerconstraints.h"
 #include "../../src/client/pointergestures.h"
 #include "../../src/client/seat.h"
 #include "../../src/client/relativepointer.h"
@@ -47,6 +48,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/subcompositor_interface.h"
 #include "../../src/server/outputmanagement_interface.h"
 #include "../../src/server/outputdevice_interface.h"
+#include "../../src/server/pointerconstraints_interface.h"
 #include "../../src/server/pointergestures_interface.h"
 #include "../../src/server/textinput_interface.h"
 #include "../../src/server/xdgshell_interface.h"
@@ -60,6 +62,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <wayland-xdg-shell-v5-client-protocol.h>
 #include <wayland-relativepointer-unstable-v1-client-protocol.h>
 #include <wayland-pointer-gestures-unstable-v1-client-protocol.h>
+#include <wayland-pointer-constraints-unstable-v1-client-protocol.h>
 
 class TestWaylandRegistry : public QObject
 {
@@ -88,6 +91,7 @@ private Q_SLOTS:
     void testBindXdgShellUnstableV5();
     void testBindRelativePointerManagerUnstableV1();
     void testBindPointerGesturesUnstableV1();
+    void testBindPointerConstraintsUnstableV1();
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
@@ -111,6 +115,7 @@ private:
     KWayland::Server::XdgShellInterface *m_xdgShellUnstableV5;
     KWayland::Server::RelativePointerManagerInterface *m_relativePointerV1;
     KWayland::Server::PointerGesturesInterface *m_pointerGesturesV1;
+    KWayland::Server::PointerConstraintsInterface *m_pointerConstraintsV1;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-registry-0");
@@ -132,6 +137,7 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_xdgShellUnstableV5(nullptr)
     , m_relativePointerV1(nullptr)
     , m_pointerGesturesV1(nullptr)
+    , m_pointerConstraintsV1(nullptr)
 {
 }
 
@@ -179,6 +185,9 @@ void TestWaylandRegistry::init()
     m_pointerGesturesV1 = m_display->createPointerGestures(KWayland::Server::PointerGesturesInterfaceVersion::UnstableV1);
     m_pointerGesturesV1->create();
     QCOMPARE(m_pointerGesturesV1->interfaceVersion(), KWayland::Server::PointerGesturesInterfaceVersion::UnstableV1);
+    m_pointerConstraintsV1 = m_display->createPointerConstraints(KWayland::Server::PointerConstraintsInterfaceVersion::UnstableV1);
+    m_pointerConstraintsV1->create();
+    QCOMPARE(m_pointerConstraintsV1->interfaceVersion(), KWayland::Server::PointerConstraintsInterfaceVersion::UnstableV1);
 }
 
 void TestWaylandRegistry::cleanup()
@@ -329,6 +338,11 @@ void TestWaylandRegistry::testBindRelativePointerManagerUnstableV1()
 void TestWaylandRegistry::testBindPointerGesturesUnstableV1()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::PointerGesturesUnstableV1, SIGNAL(pointerGesturesUnstableV1Announced(quint32,quint32)), bindPointerGesturesUnstableV1, zwp_pointer_gestures_v1_destroy)
+}
+
+void TestWaylandRegistry::testBindPointerConstraintsUnstableV1()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1, SIGNAL(pointerConstraintsUnstableV1Announced(quint32,quint32)), bindPointerConstraintsUnstableV1, zwp_pointer_constraints_v1_destroy)
 }
 
 #undef TEST_BIND

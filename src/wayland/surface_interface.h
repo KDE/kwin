@@ -36,9 +36,12 @@ namespace Server
 class BlurManagerInterface;
 class BlurInterface;
 class BufferInterface;
+class ConfinedPointerInterface;
 class ContrastInterface;
 class ContrastManagerInterface;
 class CompositorInterface;
+class LockedPointerInterface;
+class PointerConstraintsUnstableV1Interface;
 class ShadowManagerInterface;
 class ShadowInterface;
 class SlideInterface;
@@ -226,6 +229,20 @@ public:
     QVector<OutputInterface *> outputs() const;
 
     /**
+     * Pointer confinement installed on this SurfaceInterface.
+     * @see pointerConstraintsChanged
+     * @since 5.29
+     **/
+    QPointer<ConfinedPointerInterface> confinedPointer() const;
+
+    /**
+     * Pointer lock installed on this SurfaceInterface.
+     * @see pointerConstraintsChanged
+     * @since 5.29
+     **/
+    QPointer<LockedPointerInterface> lockedPointer() const;
+
+    /**
      * @returns The SurfaceInterface for the @p native resource.
      **/
     static SurfaceInterface *get(wl_resource *native);
@@ -279,6 +296,18 @@ Q_SIGNALS:
      **/
     void subSurfaceTreeChanged();
 
+    /**
+     * Emitted whenever a pointer constraint get (un)installed on this SurfaceInterface.
+     *
+     * The pointer constraint does not get activated, the compositor needs to activate
+     * the lock/confinement.
+     *
+     * @see confinedPointer
+     * @see lockedPointer
+     * @since 5.29
+     **/
+    void pointerConstraintsChanged();
+
 private:
     friend class CompositorInterface;
     friend class SubSurfaceInterface;
@@ -286,6 +315,7 @@ private:
     friend class BlurManagerInterface;
     friend class SlideManagerInterface;
     friend class ContrastManagerInterface;
+    friend class PointerConstraintsUnstableV1Interface;
     explicit SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource);
 
     class Private;

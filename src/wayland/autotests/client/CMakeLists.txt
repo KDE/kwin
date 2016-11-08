@@ -348,3 +348,10 @@ target_link_libraries( testXdgShellV5 Qt5::Test Qt5::Gui KF5::WaylandServer KF5:
 add_test(kwayland-testXdgShellV5 testXdgShellV5)
 ecm_mark_as_test(testXdgShellV5)
 
+########################################################
+# Test Pointer Constraints
+########################################################
+add_executable(testPointerConstraints test_pointer_constraints.cpp)
+target_link_libraries( testPointerConstraints Qt5::Test Qt5::Gui KF5::WaylandServer KF5::WaylandClient Wayland::Client)
+add_test(kwayland-testPointerConstraints testPointerConstraints)
+ecm_mark_as_test(testPointerConstraints)

@@ -75,6 +75,8 @@ public:
     void setBlur(const QPointer<BlurInterface> &blur);
     void setContrast(const QPointer<ContrastInterface> &contrast);
     void setSlide(const QPointer<SlideInterface> &slide);
+    void installPointerConstraint(LockedPointerInterface *lock);
+    void installPointerConstraint(ConfinedPointerInterface *confinement);
 
     void commitSubSurface();
     void commit();
@@ -93,7 +95,13 @@ public:
 
     QVector<OutputInterface *> outputs;
 
+    QPointer<LockedPointerInterface> lockedPointer;
+    QPointer<ConfinedPointerInterface> confinedPointer;
+
 private:
+    QMetaObject::Connection constrainsOneShotConnection;
+    QMetaObject::Connection constrainsUnboundConnection;
+
     SurfaceInterface *q_func() {
         return reinterpret_cast<SurfaceInterface *>(q);
     }

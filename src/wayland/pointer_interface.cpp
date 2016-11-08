@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "pointer_interface.h"
 #include "pointer_interface_p.h"
+#include "pointerconstraints_interface.h"
 #include "pointergestures_interface_p.h"
 #include "resource_p.h"
 #include "relativepointer_interface_p.h"
@@ -228,6 +229,9 @@ PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentRes
             return;
         }
         if (d->focusedSurface && d->resource) {
+            if (!d->focusedSurface->lockedPointer().isNull() && d->focusedSurface->lockedPointer()->isLocked()) {
+                return;
+            }
             const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
             auto targetSurface = d->focusedSurface->surfaceAt(pos);
             if (!targetSurface) {
