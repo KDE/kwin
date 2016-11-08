@@ -1262,13 +1262,26 @@ void Generator::generateClientClassRequests(const Interface &interface)
 void Generator::generateClientCppRequests(const Interface &interface)
 {
     const auto requests = interface.requests();
-    const QString templateString = QStringLiteral("void %1::%2(%3)\n");
-    const QString factoryTemplateString = QStringLiteral("%2 *%1::%3(%4)\n");
+    const QString templateString = QStringLiteral("void %1::%2(%3)\n{\n}\n\n");
+    const QString factoryTemplateString = QStringLiteral(
+"%2 *%1::%3(%4)\n"
+"{\n"
+"    Q_ASSERT(isValid());\n"
+"    auto p = new %2(parent);\n"
+"    auto w = %5_%6(d->%7%8);\n"
+"    if (d->queue) {\n"
+"        d->queue->addProxy(w);\n"
+"    }\n"
+"    p->setup(w);\n"
+"    return p;\n"
+"}\n\n"
+    );
     for (const auto &r: requests) {
         if (r.isDestructor()) {
             continue;
         }
         QString arguments;
+        QString factoredArguments;
         bool first = true;
         QString factored;
         for (const auto &a: r.arguments()) {
@@ -1283,8 +1296,14 @@ void Generator::generateClientCppRequests(const Interface &interface)
             }
             if (a.type() == Argument::Type::Object) {
                 arguments.append(QStringLiteral("%1 *%2").arg(a.typeAsQt()).arg(toCamelCase(a.name())));
+                if (!factored.isEmpty()) {
+                    factoredArguments.append(QStringLiteral(", *%1").arg(toCamelCase(a.name())));
+                }
             } else {
                 arguments.append(QStringLiteral("%1 %2").arg(a.typeAsQt()).arg(toCamelCase(a.name())));
+                if (!factored.isEmpty()) {
+                    factoredArguments.append(QStringLiteral(", %1").arg(toCamelCase(a.name())));
+                }
             }
         }
         if (factored.isEmpty()) {
@@ -1294,9 +1313,15 @@ void Generator::generateClientCppRequests(const Interface &interface)
                 arguments.append(QStringLiteral(", "));
             }
             arguments.append(QStringLiteral("QObject *parent"));
-            *m_stream.localData() << factoryTemplateString.arg(interface.kwaylandClientName()).arg(toQtInterfaceName(factored)).arg(toCamelCase(r.name())).arg(arguments);
+            *m_stream.localData() << factoryTemplateString.arg(interface.kwaylandClientName())
+                                                          .arg(toQtInterfaceName(factored))
+                                                          .arg(toCamelCase(r.name()))
+                                                          .arg(arguments)
+                                                          .arg(interface.name())
+                                                          .arg(r.name())
+                                                          .arg(interface.kwaylandClientName().toLower())
+                                                          .arg(factoredArguments);
         }
-        *m_stream.localData() << QStringLiteral("{\n}\n\n");
     }
 }
 
