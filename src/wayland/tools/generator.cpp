@@ -897,11 +897,14 @@ void Generator::generateClientPrivateResourceClass(const Interface &interface)
 "class %1::Private\n"
 "{\n"
 "public:\n"
-"    Private() = default;\n"
+"    Private(%1 *q);\n"
 "\n"
 "    void setup(%2 *arg);\n"
 "\n"
 "    WaylandPointer<%2, %2_destroy> %3;\n"
+"\n"
+"private:\n"
+"    %1 *q;\n"
 "};\n\n");
 
     *m_stream.localData() << templateString.arg(interface.kwaylandClientName()).arg(interface.name()).arg(interface.kwaylandClientName().toLower());
@@ -926,12 +929,31 @@ void Generator::generateClientPrivateGlobalClass(const Interface &interface)
 
 void Generator::generateClientCpp(const Interface &interface)
 {
-    const QString templateString = QStringLiteral(
+    if (interface.isGlobal()) {
+        // generate ctor without this pointer to Private
+        const QString templateString = QStringLiteral(
 "%1::%1(QObject *parent)\n"
 "    : QObject(parent)\n"
 "    , d(new Private)\n"
 "{\n"
+"}\n");
+        *m_stream.localData() << templateString.arg(interface.kwaylandClientName());
+    } else {
+        // Private ctor
+        const QString templateString = QStringLiteral(
+"%1::Private::Private(%1 *q)\n"
+"    : q(q)\n"
+"{\n"
 "}\n"
+"\n"
+"%1::%1(QObject *parent)\n"
+"    : QObject(parent)\n"
+"    , d(new Private(this))\n"
+"{\n"
+"}\n");
+        *m_stream.localData() << templateString.arg(interface.kwaylandClientName());
+    }
+    const QString templateString = QStringLiteral(
 "\n"
 "%1::~%1()\n"
 "{\n"
