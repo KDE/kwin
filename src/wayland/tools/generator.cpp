@@ -884,19 +884,44 @@ void Generator::generateServerPrivateResourceCtorDtorClass(const Interface &inte
 
 void Generator::generateClientPrivateClass(const Interface &interface)
 {
+    if (interface.isGlobal()) {
+        generateClientPrivateGlobalClass(interface);
+    } else {
+        generateClientPrivateResourceClass(interface);
+    }
+}
+
+void Generator::generateClientPrivateResourceClass(const Interface &interface)
+{
     const QString templateString = QStringLiteral(
 "class %1::Private\n"
 "{\n"
 "public:\n"
 "    Private() = default;\n"
 "\n"
-"    WaylandPointer<%2, %2_destroy> %3;\n");
+"    void setup(%2 *arg);\n"
+"\n"
+"    WaylandPointer<%2, %2_destroy> %3;\n"
+"};\n\n");
 
     *m_stream.localData() << templateString.arg(interface.kwaylandClientName()).arg(interface.name()).arg(interface.kwaylandClientName().toLower());
-    if (interface.isGlobal()) {
-        *m_stream.localData() << "    EventQueue *queue = nullptr;\n";
-    }
-    *m_stream.localData() << "};\n\n";
+}
+
+void Generator::generateClientPrivateGlobalClass(const Interface &interface)
+{
+    const QString templateString = QStringLiteral(
+"class %1::Private\n"
+"{\n"
+"public:\n"
+"    Private() = default;\n"
+"\n"
+"    void setup(%2 *arg);\n"
+"\n"
+"    WaylandPointer<%2, %2_destroy> %3;\n"
+"    EventQueue *queue = nullptr;\n"
+"};\n\n");
+
+    *m_stream.localData() << templateString.arg(interface.kwaylandClientName()).arg(interface.name()).arg(interface.kwaylandClientName().toLower());
 }
 
 void Generator::generateClientCpp(const Interface &interface)
@@ -913,11 +938,16 @@ void Generator::generateClientCpp(const Interface &interface)
 "    release();\n"
 "}\n"
 "\n"
+"void %1::Private::setup(%3 *arg)\n"
+"{\n"
+"    Q_ASSERT(arg);\n"
+"    Q_ASSERT(!%2);\n"
+"    %2.setup(arg);\n"
+"}\n"
+"\n"
 "void %1::setup(%3 *%2)\n"
 "{\n"
-"    Q_ASSERT(%2);\n"
-"    Q_ASSERT(!d->%2);\n"
-"    d->%2.setup(%2);\n"
+"    d->setup(%2);\n"
 "}\n"
 "\n"
 "void %1::release()\n"

@@ -218,6 +218,8 @@ private:
     void generateCppIncludes();
     void generatePrivateClass(const Interface &interface);
     void generateClientPrivateClass(const Interface &interface);
+    void generateClientPrivateResourceClass(const Interface &interface);
+    void generateClientPrivateGlobalClass(const Interface &interface);
     void generateServerPrivateGlobalClass(const Interface &interface);
     void generateServerPrivateResourceClass(const Interface &interface);
     void generateServerPrivateInterfaceClass(const Interface &interface);
