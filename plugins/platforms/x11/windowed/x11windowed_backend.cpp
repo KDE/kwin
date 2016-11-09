@@ -471,7 +471,7 @@ QVector<QRect> X11WindowedBackend::screenGeometries() const
 {
     QVector<QRect> ret;
     for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-        ret << QRect((*it).internalPosition, (*it).size);
+        ret << QRect((*it).internalPosition, (*it).size / (*it).scale);
     }
     return ret;
 }
