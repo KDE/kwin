@@ -64,8 +64,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 // Variables
-// GLX version, use MAKE_GL_VERSION() macro for comparing with a specific version
-static int glXVersion;
 // EGL version, use MAKE_GL_VERSION() macro for comparing with a specific version
 static int eglVersion;
 // List of all supported GL, EGL and GLX extensions
@@ -80,10 +78,6 @@ int glTextureUnitsCount;
 void initGLX()
 {
 #if HAVE_EPOXY_GLX
-    // Get GLX version
-    int major, minor;
-    glXQueryVersion(display(), &major, &minor);
-    glXVersion = MAKE_GL_VERSION(major, minor, 0);
     // Get list of supported GLX extensions
     const QByteArray string = (const char *) glXQueryExtensionsString(display(), QX11Info::appScreen());
     s_glxExtensions = string.split(' ');
@@ -138,7 +132,6 @@ void cleanupGL()
     s_glxExtensions.clear();
     s_eglExtensions.clear();
 
-    glXVersion = 0;
     eglVersion = 0;
     glTextureUnitsCount = 0;
 }
@@ -146,11 +139,6 @@ void cleanupGL()
 bool hasGLVersion(int major, int minor, int release)
 {
     return GLPlatform::instance()->glVersion() >= kVersionNumber(major, minor, release);
-}
-
-bool hasGLXVersion(int major, int minor, int release)
-{
-    return glXVersion >= MAKE_GL_VERSION(major, minor, release);
 }
 
 bool hasEGLVersion(int major, int minor, int release)

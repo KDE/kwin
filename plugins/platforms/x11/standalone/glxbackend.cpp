@@ -153,7 +153,7 @@ void GlxBackend::init()
     initGLX();
 
     // Require at least GLX 1.3
-    if (!hasGLXVersion(1, 3)) {
+    if (!checkVersion()) {
         setFailed(QStringLiteral("Requires at least GLX 1.3"));
         return;
     }
@@ -244,6 +244,13 @@ void GlxBackend::init()
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
 
     qCDebug(KWIN_X11STANDALONE) << "Direct rendering:" << isDirectRendering();
+}
+
+bool GlxBackend::checkVersion()
+{
+    int major, minor;
+    glXQueryVersion(display(), &major, &minor);
+    return kVersionNumber(major, minor) >= kVersionNumber(1, 3);
 }
 
 bool GlxBackend::initRenderingContext()
