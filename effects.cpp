@@ -936,7 +936,10 @@ int EffectsHandlerImpl::workspaceHeight() const
 
 int EffectsHandlerImpl::desktopAtCoords(QPoint coords) const
 {
-    return VirtualDesktopManager::self()->grid().at(coords);
+    if (auto vd = VirtualDesktopManager::self()->grid().at(coords)) {
+        return vd->x11DesktopNumber();
+    }
+    return 0;
 }
 
 QPoint EffectsHandlerImpl::desktopGridCoords(int id) const

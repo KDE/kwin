@@ -1450,7 +1450,7 @@ void windowToDesktop(AbstractClient *c)
     Workspace *ws = Workspace::self();
     Direction functor;
     // TODO: why is options->isRollOverDesktops() not honored?
-    const int desktop = functor(0, true);
+    const auto desktop = functor(nullptr, true);
     if (c && !c->isDesktop()
             && !c->isDock()) {
         ws->setClientIsMoving(c);
