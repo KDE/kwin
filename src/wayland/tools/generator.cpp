@@ -33,6 +33,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDebug>
 
+#include <functional>
+
 namespace KWayland
 {
 namespace Tools
@@ -423,6 +425,27 @@ void Generator::startGenerateServerHeaderFile()
         generateHeaderIncludes();
         generateStartNamespace();
         generateNamespaceForwardDeclarations();
+        if (std::any_of(m_interfaces.constBegin(), m_interfaces.constEnd(), [] (const Interface &i) { return i.isUnstableInterface(); })) {
+            // generate the unstable semantic version
+            auto it = std::find_if(m_interfaces.constBegin(), m_interfaces.constEnd(), [] (const Interface &i) { return i.isGlobal(); });
+            if (it != m_interfaces.constEnd()) {
+                const QString templateString = QStringLiteral(
+"/**\n"
+" * Enum describing the interface versions the %1 can support.\n"
+" *\n"
+" * @since 5.XX\n"
+" **/\n"
+"enum class %1Version {\n"
+"    /**\n"
+"     * %2\n"
+"     **/\n"
+"     UnstableV%3\n"
+"};\n\n");
+                *m_stream.localData() << templateString.arg((*it).kwaylandServerName())
+                                                       .arg((*it).name())
+                                                       .arg((*it).name().mid((*it).name().lastIndexOf(QStringLiteral("_v")) + 2));
+            }
+        }
         for (auto it = m_interfaces.constBegin(); it != m_interfaces.constEnd(); ++it) {
             generateClass(*it);
         }
@@ -656,6 +679,10 @@ void Generator::generateClientResourceClass(const Interface &interface)
 
 void Generator::generateServerGlobalClass(const Interface &interface)
 {
+    if (interface.isUnstableInterface()) {
+        generateServerGlobalClassUnstable(interface);
+        return;
+    }
     const QString templateString = QStringLiteral(
 "class KWAYLANDSERVER_EXPORT %1 : public Global\n"
 "{\n"
@@ -672,8 +699,37 @@ void Generator::generateServerGlobalClass(const Interface &interface)
     *m_stream.localData() << templateString.arg(interface.kwaylandServerName());
 }
 
+void Generator::generateServerGlobalClassUnstable(const Interface &interface)
+{
+    const QString templateString = QStringLiteral(
+"class KWAYLANDSERVER_EXPORT %1 : public Global\n"
+"{\n"
+"    Q_OBJECT\n"
+"public:\n"
+"    virtual ~%1();\n"
+"\n"
+"    /**\n"
+"     * @returns The interface version used by this %1\n"
+"     **/\n"
+"    %1Version interfaceVersion() const;\n"
+"\n"
+"protected:\n"
+"    class Private;\n"
+"    explicit %1(Private *d, QObject *parent = nullptr);\n"
+"\n"
+"private:\n"
+"    Private *d_func() const;\n"
+"};\n"
+"\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName());
+}
+
 void Generator::generateServerResourceClass(const Interface &interface)
 {
+    if (interface.factory()->isUnstableInterface()) {
+        generateServerResourceClassUnstable(interface);
+        return;
+    }
     const QString templateString = QStringLiteral(
 "class KWAYLANDSERVER_EXPORT %1 : public Resource\n"
 "{\n"
@@ -686,6 +742,32 @@ void Generator::generateServerResourceClass(const Interface &interface)
 "    friend class %2;\n"
 "\n"
 "    class Private;\n"
+"    Private *d_func() const;\n"
+"};\n"
+"\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.factory()->kwaylandServerName());
+}
+
+void Generator::generateServerResourceClassUnstable(const Interface &interface)
+{
+    const QString templateString = QStringLiteral(
+"class KWAYLANDSERVER_EXPORT %1 : public Resource\n"
+"{\n"
+"    Q_OBJECT\n"
+"public:\n"
+"\n"
+"    virtual ~%1();\n"
+"\n"
+"    /**\n"
+"     * @returns The interface version used by this %1\n"
+"     **/\n"
+"    %2Version interfaceVersion() const;\n"
+"\n"
+"protected:\n"
+"    class Private;\n"
+"    explicit %1(Private *p, QObject *parent = nullptr);\n"
+"\n"
+"private:\n"
 "    Private *d_func() const;\n"
 "};\n"
 "\n");

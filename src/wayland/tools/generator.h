@@ -182,6 +182,10 @@ public:
         return m_factory;
     }
 
+    bool isUnstableInterface() const {
+        return m_name.startsWith(QLatin1String("zwp"));
+    }
+
 private:
     QString m_name;
     QString m_clientName;
@@ -232,7 +236,9 @@ private:
     void generateClientGlobalClass(const Interface &interface);
     void generateClientResourceClass(const Interface &interface);
     void generateServerGlobalClass(const Interface &interface);
+    void generateServerGlobalClassUnstable(const Interface &interface);
     void generateServerResourceClass(const Interface &interface);
+    void generateServerResourceClassUnstable(const Interface &interface);
     void generateClientClassQObjectDerived(const Interface &interface);
     void generateClientGlobalClassDoxy(const Interface &interface);
     void generateClientGlobalClassCtor(const Interface &interface);
