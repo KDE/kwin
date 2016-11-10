@@ -45,10 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 
-#if HAVE_EPOXY_GLX
-#include <epoxy/glx.h>
-#endif
-
 #define DEBUG_GLRENDERTARGET 0
 
 #define MAKE_GL_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
@@ -68,22 +64,12 @@ namespace KWin
 static int eglVersion;
 // List of all supported GL, EGL and GLX extensions
 static QList<QByteArray> glExtensions;
-static QList<QByteArray> s_glxExtensions;
 static QList<QByteArray> s_eglExtensions;
 
 int glTextureUnitsCount;
 
 
 // Functions
-void initGLX()
-{
-#if HAVE_EPOXY_GLX
-    // Get list of supported GLX extensions
-    const QByteArray string = (const char *) glXQueryExtensionsString(display(), QX11Info::appScreen());
-    s_glxExtensions = string.split(' ');
-    glxResolveFunctions();
-#endif
-}
 
 void initEGL()
 {
@@ -129,7 +115,6 @@ void cleanupGL()
     GLPlatform::cleanup();
 
     glExtensions.clear();
-    s_glxExtensions.clear();
     s_eglExtensions.clear();
 
     eglVersion = 0;
@@ -148,7 +133,7 @@ bool hasEGLVersion(int major, int minor, int release)
 
 bool hasGLExtension(const QByteArray &extension)
 {
-    return glExtensions.contains(extension) || s_glxExtensions.contains(extension) || s_eglExtensions.contains(extension);
+    return glExtensions.contains(extension) || s_eglExtensions.contains(extension);
 }
 
 QList<QByteArray> eglExtensions()

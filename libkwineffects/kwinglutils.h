@@ -48,9 +48,6 @@ namespace KWin
 class GLVertexBuffer;
 class GLVertexBufferPrivate;
 
-
-// Initializes GLX function pointers
-void KWINGLUTILS_EXPORT initGLX();
 // Initializes OpenGL stuff. This includes resolving function pointers as
 //  well as checking for GL version and extensions
 //  Note that GL context has to be created by the time this function is called

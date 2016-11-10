@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <deque>
 #include <algorithm>
+#include <dlfcn.h>
 
 #ifndef XCB_GLX_BUFFER_SWAP_COMPLETE
 #define XCB_GLX_BUFFER_SWAP_COMPLETE 1
@@ -148,10 +149,22 @@ GlxBackend::~GlxBackend()
     delete m_overlayWindow;
 }
 
+typedef void (*glXFuncPtr)();
+
+static glXFuncPtr getProcAddress(const char* name)
+{
+    glXFuncPtr ret = nullptr;
+#if HAVE_EPOXY_GLX
+    ret = glXGetProcAddress((const GLubyte*) name);
+#endif
+    if (ret == nullptr)
+        ret = (glXFuncPtr) dlsym(RTLD_DEFAULT, name);
+    return ret;
+}
+glXSwapIntervalMESA_func glXSwapIntervalMESA;
+
 void GlxBackend::init()
 {
-    initGLX();
-
     // Require at least GLX 1.3
     if (!checkVersion()) {
         setFailed(QStringLiteral("Requires at least GLX 1.3"));
@@ -159,6 +172,13 @@ void GlxBackend::init()
     }
 
     initExtensions();
+
+    // resolve glXSwapIntervalMESA if available
+    if (hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"))) {
+        glXSwapIntervalMESA = (glXSwapIntervalMESA_func) getProcAddress("glXSwapIntervalMESA");
+    } else {
+        glXSwapIntervalMESA = nullptr;
+    }
 
     initVisualDepthHashTable();
 

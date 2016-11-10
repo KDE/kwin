@@ -50,9 +50,6 @@ static void ReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum 
                         GLenum type, GLsizei bufSize, GLvoid *data);
 static void GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
-// GL_MESA_swap_control
-glXSwapIntervalMESA_func glXSwapIntervalMESA;
-
 // GL_ARB_robustness / GL_EXT_robustness
 glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
 glReadnPixels_func            glReadnPixels;
@@ -69,14 +66,6 @@ static glXFuncPtr getProcAddress(const char* name)
     if (ret == nullptr)
         ret = (glXFuncPtr) dlsym(RTLD_DEFAULT, name);
     return ret;
-}
-
-void glxResolveFunctions()
-{
-    if (hasGLExtension(QByteArrayLiteral("GLX_MESA_swap_control")))
-        glXSwapIntervalMESA = (glXSwapIntervalMESA_func) getProcAddress("glXSwapIntervalMESA");
-    else
-        glXSwapIntervalMESA = nullptr;
 }
 
 void eglResolveFunctions()

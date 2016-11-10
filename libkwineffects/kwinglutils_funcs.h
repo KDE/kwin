@@ -47,15 +47,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-void KWINGLUTILS_EXPORT glxResolveFunctions();
-
 void KWINGLUTILS_EXPORT eglResolveFunctions();
 
 void KWINGLUTILS_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
-
-// GLX_MESA_swap_interval
-using glXSwapIntervalMESA_func = int (*)(unsigned int interval);
-extern KWINGLUTILS_EXPORT glXSwapIntervalMESA_func glXSwapIntervalMESA;
 
 // GL_ARB_robustness / GL_EXT_robustness
 using glGetGraphicsResetStatus_func = GLenum (*)();

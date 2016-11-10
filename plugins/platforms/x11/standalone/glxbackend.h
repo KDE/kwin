@@ -29,6 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+// GLX_MESA_swap_interval
+using glXSwapIntervalMESA_func = int (*)(unsigned int interval);
+extern glXSwapIntervalMESA_func glXSwapIntervalMESA;
+
 class FBConfigInfo
 {
 public:
