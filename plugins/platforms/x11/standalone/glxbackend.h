@@ -79,6 +79,7 @@ protected:
 private:
     bool initBuffer();
     bool checkVersion();
+    void initExtensions();
     void waitSync();
     bool initRenderingContext();
     bool initFbConfig();

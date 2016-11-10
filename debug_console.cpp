@@ -18,9 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "debug_console.h"
+#include "composite.h"
 #include "client.h"
 #include "input_event.h"
 #include "main.h"
+#include "scene_opengl.h"
 #include "shell_client.h"
 #include "unmanaged.h"
 #include "wayland_server.h"
@@ -548,7 +550,7 @@ void DebugConsole::initGLTab()
         m_ui->eglExtensionsBox->setVisible(false);
         m_ui->glxExtensionsBox->setVisible(true);
 
-        m_ui->glxExtensionsLabel->setText(extensionsString(glxExtensions()));
+        m_ui->glxExtensionsLabel->setText(extensionsString(static_cast<SceneOpenGL*>(Compositor::self()->scene())->backend()->extensions()));
     }
 
     m_ui->openGLExtensionsLabel->setText(extensionsString(openGLExtensions()));

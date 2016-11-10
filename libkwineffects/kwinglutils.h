@@ -84,7 +84,6 @@ inline bool KWINGLUTILS_EXPORT isPowerOfTwo(int x)
 int KWINGLUTILS_EXPORT nearestPowerOfTwo(int x);
 
 QList<QByteArray> KWINGLUTILS_EXPORT eglExtensions();
-QList<QByteArray> KWINGLUTILS_EXPORT glxExtensions();
 QList<QByteArray> KWINGLUTILS_EXPORT openGLExtensions();
 
 class KWINGLUTILS_EXPORT GLShader

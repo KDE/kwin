@@ -156,11 +156,6 @@ QList<QByteArray> eglExtensions()
     return s_eglExtensions;
 }
 
-QList<QByteArray> glxExtensions()
-{
-    return s_glxExtensions;
-}
-
 QList<QByteArray> openGLExtensions()
 {
     return glExtensions;

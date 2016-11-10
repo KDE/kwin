@@ -158,6 +158,8 @@ void GlxBackend::init()
         return;
     }
 
+    initExtensions();
+
     initVisualDepthHashTable();
 
     if (!initBuffer()) {
@@ -180,12 +182,12 @@ void GlxBackend::init()
     initGL(GlxPlatformInterface);
 
     // Check whether certain features are supported
-    m_haveMESACopySubBuffer = hasGLExtension(QByteArrayLiteral("GLX_MESA_copy_sub_buffer"));
-    m_haveMESASwapControl   = hasGLExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
-    m_haveEXTSwapControl    = hasGLExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
-    m_haveSGISwapControl    = hasGLExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
+    m_haveMESACopySubBuffer = hasExtension(QByteArrayLiteral("GLX_MESA_copy_sub_buffer"));
+    m_haveMESASwapControl   = hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
+    m_haveEXTSwapControl    = hasExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
+    m_haveSGISwapControl    = hasExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
     // only enable Intel swap event if env variable is set, see BUG 342582
-    m_haveINTELSwapEvent    = hasGLExtension(QByteArrayLiteral("GLX_INTEL_swap_event"))
+    m_haveINTELSwapEvent    = hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event"))
                                 && qgetenv("KWIN_USE_INTEL_SWAP_EVENT") == QByteArrayLiteral("1");
 
     if (m_haveINTELSwapEvent) {
@@ -197,7 +199,7 @@ void GlxBackend::init()
 
     setSupportsBufferAge(false);
 
-    if (hasGLExtension(QByteArrayLiteral("GLX_EXT_buffer_age"))) {
+    if (hasExtension(QByteArrayLiteral("GLX_EXT_buffer_age"))) {
         const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
 
         if (useBufferAge != "0")
@@ -220,7 +222,7 @@ void GlxBackend::init()
                 gs_tripleBufferUndetected = false;
             }
             gs_tripleBufferNeedsDetection = gs_tripleBufferUndetected;
-        } else if (hasGLExtension(QByteArrayLiteral("GLX_SGI_video_sync"))) {
+        } else if (hasExtension(QByteArrayLiteral("GLX_SGI_video_sync"))) {
             unsigned int sync;
             if (glXGetVideoSyncSGI(&sync) == 0 && glXWaitVideoSyncSGI(1, 0, &sync) == 0) {
                 setSyncsToVBlank(true);
@@ -253,12 +255,18 @@ bool GlxBackend::checkVersion()
     return kVersionNumber(major, minor) >= kVersionNumber(1, 3);
 }
 
+void GlxBackend::initExtensions()
+{
+    const QByteArray string = (const char *) glXQueryExtensionsString(display(), QX11Info::appScreen());
+    setExtensions(string.split(' '));
+}
+
 bool GlxBackend::initRenderingContext()
 {
     const bool direct = true;
 
     // Use glXCreateContextAttribsARB() when it's available
-    if (hasGLExtension(QByteArrayLiteral("GLX_ARB_create_context"))) {
+    if (hasExtension(QByteArrayLiteral("GLX_ARB_create_context"))) {
         const int attribs_31_core_robustness[] = {
             GLX_CONTEXT_MAJOR_VERSION_ARB,               3,
             GLX_CONTEXT_MINOR_VERSION_ARB,               1,
@@ -285,7 +293,7 @@ bool GlxBackend::initRenderingContext()
             0
         };
 
-        const bool have_robustness = hasGLExtension(QByteArrayLiteral("GLX_ARB_create_context_robustness"));
+        const bool have_robustness = hasExtension(QByteArrayLiteral("GLX_ARB_create_context_robustness"));
 
         // Try to create a 3.1 context first
         if (options->glCoreProfile()) {
