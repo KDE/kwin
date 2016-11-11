@@ -142,9 +142,8 @@ ZoomEffect::~ZoomEffect()
     // switch off and free resources
     showCursor();
     // Save the zoom value.
-    KConfigGroup conf = EffectsHandler::effectConfig(QStringLiteral("Zoom"));
-    conf.writeEntry("InitialZoom", target_zoom);
-    conf.sync();
+    ZoomConfig::setInitialZoom(target_zoom);
+    ZoomConfig::self()->save();
 }
 
 void ZoomEffect::showCursor()
