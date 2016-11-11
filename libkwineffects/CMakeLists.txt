@@ -105,11 +105,6 @@ kwin4_add_glutils_backend(kwinglutils ${epoxy_INCLUDE_DIR} ${epoxy_LIBRARY})
 set_target_properties(kwinglutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glutils)
 
 target_link_libraries(kwinglutils PUBLIC ${epoxy_LIBRARY})
-# -ldl used by OpenGL code
-find_library(DL_LIBRARY dl)
-if (DL_LIBRARY)
-    target_link_libraries(kwinglutils PRIVATE ${DL_LIBRARY})
-endif()
 
 install( FILES
     kwinglobals.h

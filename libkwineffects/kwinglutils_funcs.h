@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fixx11h.h>
 
 #include <epoxy/gl.h>
+#include <functional>
 
 // qopengl.h declares GLdouble as a typedef of float when Qt is built
 // with GLES support.  This conflicts with the epoxy/gl_generated.h
@@ -49,7 +50,8 @@ namespace KWin
 
 void KWINGLUTILS_EXPORT eglResolveFunctions();
 
-void KWINGLUTILS_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
+typedef void (*resolveFuncPtr)();
+void KWINGLUTILS_EXPORT glResolveFunctions(std::function<resolveFuncPtr(const char*)> resolveFunction);
 
 // GL_ARB_robustness / GL_EXT_robustness
 using glGetGraphicsResetStatus_func = GLenum (*)();

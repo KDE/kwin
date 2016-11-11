@@ -84,7 +84,7 @@ void initEGL()
     eglResolveFunctions();
 }
 
-void initGL(OpenGLPlatformInterface platformInterface)
+void initGL(std::function<resolveFuncPtr(const char*)> resolveFunction)
 {
     // Get list of supported OpenGL extensions
     if (hasGLVersion(3, 0)) {
@@ -99,7 +99,7 @@ void initGL(OpenGLPlatformInterface platformInterface)
         glExtensions = QByteArray((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
     // handle OpenGL extensions functions
-    glResolveFunctions(platformInterface);
+    glResolveFunctions(resolveFunction);
 
     GLTexturePrivate::initStatic();
     GLRenderTarget::initStatic();

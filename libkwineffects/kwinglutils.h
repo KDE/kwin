@@ -51,7 +51,8 @@ class GLVertexBufferPrivate;
 // Initializes OpenGL stuff. This includes resolving function pointers as
 //  well as checking for GL version and extensions
 //  Note that GL context has to be created by the time this function is called
-void KWINGLUTILS_EXPORT initGL(OpenGLPlatformInterface platformInterface);
+typedef void (*resolveFuncPtr)();
+void KWINGLUTILS_EXPORT initGL(std::function<resolveFuncPtr(const char*)> resolveFunction);
 // Initializes EGL function pointers
 void KWINGLUTILS_EXPORT initEGL();
 // Cleans up all resources hold by the GL Context

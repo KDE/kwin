@@ -199,7 +199,7 @@ void GlxBackend::init()
     if (options->glPreferBufferSwap() == Options::AutoSwapStrategy)
         options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
     glPlatform->printResults();
-    initGL(GlxPlatformInterface);
+    initGL(&getProcAddress);
 
     // Check whether certain features are supported
     m_haveMESACopySubBuffer = hasExtension(QByteArrayLiteral("GLX_MESA_copy_sub_buffer"));

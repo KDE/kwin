@@ -107,6 +107,12 @@ bool AbstractEglBackend::initEglAPI()
     return true;
 }
 
+typedef void (*eglFuncPtr)();
+static eglFuncPtr getProcAddress(const char* name)
+{
+    return eglGetProcAddress(name);
+}
+
 void AbstractEglBackend::initKWinGL()
 {
     initEGL();
@@ -116,7 +122,7 @@ void AbstractEglBackend::initKWinGL()
     if (options->glPreferBufferSwap() == Options::AutoSwapStrategy)
         options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
     glPlatform->printResults();
-    initGL(EglPlatformInterface);
+    initGL(&getProcAddress);
 }
 
 void AbstractEglBackend::initBufferAge()
