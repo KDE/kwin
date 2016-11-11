@@ -51,19 +51,6 @@ void MagicLampEffect::reconfigure(ReconfigureFlags)
     MagicLampConfig::self()->read();
     // TODO: rename animationDuration to duration
     mAnimationDuration = animationTime(MagicLampConfig::animationDuration() != 0 ? MagicLampConfig::animationDuration() : 250);
-
-    KConfigGroup conf = effects->effectConfig(QStringLiteral("MagicLamp"));
-    conf = effects->effectConfig(QStringLiteral("Shadow"));
-    int v = conf.readEntry("Size", 5);
-    v += conf.readEntry("Fuzzyness", 10);
-    mShadowOffset[0] = mShadowOffset[1] = -v;
-    mShadowOffset[2] = mShadowOffset[3] = v;
-    v = conf.readEntry("XOffset", 0);
-    mShadowOffset[0] -= v;
-    mShadowOffset[2] += v;
-    v = conf.readEntry("YOffset", 3);
-    mShadowOffset[1] -= v;
-    mShadowOffset[3] += v;
 }
 
 void MagicLampEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -121,7 +108,7 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
         IconPosition position = Top;
         // If there's no icon geometry, minimize to the center of the screen
         if (!icon.isValid()) {
-            QRect extG = geo.adjusted(mShadowOffset[0], mShadowOffset[1], mShadowOffset[2], mShadowOffset[3]);
+            QRect extG = geo;
             QPoint pt = cursorPos();
             // focussing inside the window is no good, leads to ugly artefacts, find nearest border
             if (extG.contains(pt)) {

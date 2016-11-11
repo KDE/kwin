@@ -62,7 +62,6 @@ private:
     QHash< EffectWindow*, QTimeLine* > mTimeLineWindows;
     int mActiveAnimations;
     int mAnimationDuration;
-    int mShadowOffset[4];
 
     enum IconPosition {
         Top,
