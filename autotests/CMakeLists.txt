@@ -134,6 +134,7 @@ add_executable( testBuiltInEffectLoader ${testBuiltInEffectLoader_SRCS})
 target_link_libraries(testBuiltInEffectLoader
     Qt5::Concurrent
     Qt5::Test
+    Qt5::X11Extras
     KF5::Package
     kwineffects
     kwin4_effect_builtins
@@ -160,6 +161,7 @@ target_link_libraries(testScriptedEffectLoader
     Qt5::Concurrent
     Qt5::Script
     Qt5::Test
+    Qt5::X11Extras
     KF5::ConfigGui
     KF5::GlobalAccel
     KF5::I18n
@@ -184,6 +186,7 @@ add_executable( testPluginEffectLoader ${testPluginEffectLoader_SRCS})
 target_link_libraries(testPluginEffectLoader
     Qt5::Concurrent
     Qt5::Test
+    Qt5::X11Extras
     KF5::Package
     kwineffects
     kwin4_effect_builtins

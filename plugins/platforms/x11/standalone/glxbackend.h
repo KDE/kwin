@@ -65,7 +65,7 @@ private:
 class GlxBackend : public OpenGLBackend
 {
 public:
-    GlxBackend();
+    GlxBackend(Display *display);
     virtual ~GlxBackend();
     virtual void screenGeometryChanged(const QSize &size);
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
@@ -89,6 +89,9 @@ private:
     bool initFbConfig();
     void initVisualDepthHashTable();
     void setSwapInterval(int interval);
+    Display *display() const {
+        return m_x11Display;
+    }
 
     int visualDepth(xcb_visualid_t visual) const;
     FBConfigInfo *infoForVisual(xcb_visualid_t visual);
@@ -112,6 +115,7 @@ private:
     bool m_haveINTELSwapEvent = false;
     bool haveSwapInterval = false;
     bool haveWaitSync = false;
+    Display *m_x11Display;
     friend class GlxTexture;
 };
 
@@ -130,6 +134,9 @@ private:
     friend class GlxBackend;
     GlxTexture(SceneOpenGL::Texture *texture, GlxBackend *backend);
     bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual);
+    Display *display() const {
+        return m_backend->m_x11Display;
+    }
     SceneOpenGL::Texture *q;
     GlxBackend *m_backend;
     GLXPixmap m_glxpixmap; // the glx pixmap the texture is bound to

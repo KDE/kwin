@@ -46,10 +46,11 @@ namespace KWin
 
 X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     : Platform(parent)
+    , m_x11Display(QX11Info::display())
 {
 #if HAVE_X11_XINPUT
     if (!qEnvironmentVariableIsSet("KWIN_NO_XI2")) {
-        m_xinputIntegration = new XInputIntegration(this);
+        m_xinputIntegration = new XInputIntegration(m_x11Display, this);
         m_xinputIntegration->init();
         if (!m_xinputIntegration->hasXinput()) {
             delete m_xinputIntegration;
@@ -84,14 +85,14 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
 #if HAVE_EPOXY_GLX
     case GlxPlatformInterface:
         if (hasGlx()) {
-            return new GlxBackend();
+            return new GlxBackend(m_x11Display);
         } else {
             qCWarning(KWIN_X11STANDALONE) << "Glx not available, trying EGL instead.";
             // no break, needs fall-through
         }
 #endif
     case EglPlatformInterface:
-        return new EglOnXBackend();
+        return new EglOnXBackend(m_x11Display);
     default:
         // no backend available
         return nullptr;

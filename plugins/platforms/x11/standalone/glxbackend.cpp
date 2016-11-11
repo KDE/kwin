@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QDebug>
 #include <QOpenGLContext>
+#include <QX11Info>
 // system
 #include <unistd.h>
 
@@ -105,7 +106,7 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
 
 
 
-GlxBackend::GlxBackend()
+GlxBackend::GlxBackend(Display *display)
     : OpenGLBackend()
     , m_overlayWindow(new OverlayWindow())
     , window(None)
@@ -114,6 +115,7 @@ GlxBackend::GlxBackend()
     , ctx(nullptr)
     , m_bufferAge(0)
     , haveSwapInterval(false)
+    , m_x11Display(display)
 {
 }
 

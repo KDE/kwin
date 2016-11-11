@@ -70,6 +70,7 @@ private:
     XInputIntegration *m_xinputIntegration = nullptr;
     QThread *m_openGLFreezeProtectionThread = nullptr;
     QTimer *m_openGLFreezeProtection = nullptr;
+    Display *m_x11Display;
 
 };
 

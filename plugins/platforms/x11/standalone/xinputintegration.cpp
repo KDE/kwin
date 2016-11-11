@@ -162,8 +162,9 @@ private:
     Xkb *m_xkb = nullptr;
 };
 
-XInputIntegration::XInputIntegration(QObject *parent)
+XInputIntegration::XInputIntegration(Display *display, QObject *parent)
     : QObject(parent)
+    , m_x11Display(display)
 {
 }
 

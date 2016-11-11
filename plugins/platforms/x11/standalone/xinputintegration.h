@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QPointer>
 #include <QScopedPointer>
+typedef struct _XDisplay Display;
 
 namespace KWin
 {
@@ -36,7 +37,7 @@ class XInputIntegration : public QObject
 {
     Q_OBJECT
 public:
-    explicit XInputIntegration(QObject *parent);
+    explicit XInputIntegration(Display *display, QObject *parent);
     virtual ~XInputIntegration();
 
     void init();
@@ -49,6 +50,9 @@ public:
     void setXkb(Xkb *xkb);
 
 private:
+    Display *display() const {
+        return m_x11Display;
+    }
 
     bool m_hasXInput = false;
     int m_xiOpcode = 0;
@@ -57,6 +61,7 @@ private:
     QPointer<X11Cursor> m_x11Cursor;
     // TODO: QPointer
     Xkb *m_xkb = nullptr;
+    Display *m_x11Display;
 
     QScopedPointer<XInputEventFilter> m_xiEventFilter;
     QScopedPointer<XKeyPressReleaseEventFilter> m_keyPressFilter;

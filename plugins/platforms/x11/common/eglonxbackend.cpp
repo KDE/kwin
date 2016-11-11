@@ -38,14 +38,14 @@ Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtCriticalMsg)
 namespace KWin
 {
 
-EglOnXBackend::EglOnXBackend()
+EglOnXBackend::EglOnXBackend(Display *display)
     : AbstractEglBackend()
     , m_overlayWindow(new OverlayWindow())
     , surfaceHasSubPost(0)
     , m_bufferAge(0)
     , m_usesOverlayWindow(true)
     , m_connection(connection())
-    , m_x11Display(display())
+    , m_x11Display(display)
     , m_rootWindow(rootWindow())
     , m_x11ScreenNumber(kwinApp()->x11ScreenNumber())
 {

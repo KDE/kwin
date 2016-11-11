@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QPoint>
 #include <QVariant>
-#include <QtX11Extras/QX11Info>
 #include <QCoreApplication>
 #include <QVariant>
 
@@ -129,16 +128,6 @@ enum PointerAxisDirection {
     PointerAxisLeft,
     PointerAxisRight
 };
-
-inline
-KWIN_EXPORT Display* display()
-{
-    static Display *s_display = nullptr;
-    if (!s_display && QX11Info::isPlatformX11()) {
-        s_display = QX11Info::display();
-    }
-    return s_display;
-}
 
 inline
 KWIN_EXPORT xcb_connection_t *connection()

@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 // Qt
 #include <QtTest/QtTest>
+#include <QX11Info>
 // xcb
 #include <xcb/xcb.h>
 Q_DECLARE_METATYPE(KWin::ElectricBorder)

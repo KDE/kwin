@@ -28,6 +28,7 @@
 #include <QWindow>
 #include <QWidget>
 #include <QCheckBox>
+#include <QX11Info>
 #include "../xcbutils.h"
 
 #include <KWindowSystem>
