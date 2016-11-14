@@ -77,8 +77,14 @@ public:
     void setChanges(KWayland::Server::OutputChangeSet *changeset);
     bool commitChanges();
 
-    QSize size() const;
+    QSize pixelSize() const;
+    qreal scale() const;
+
+    /*
+     * The geometry of this output in global compositor co-ordinates (i.e scaled)
+     */
     QRect geometry() const;
+
     QString name() const;
     int currentRefreshRate() const;
     // These values are defined by the kernel
@@ -112,6 +118,7 @@ private:
     bool isCurrentMode(const drmModeModeInfo *mode) const;
     void initUuid();
     void setGlobalPos(const QPoint &pos);
+    void setScale(qreal scale);
 
     void pageFlippedBufferRemover(DrmBuffer *oldbuffer, DrmBuffer *newbuffer);
     bool initPrimaryPlane();
@@ -120,6 +127,7 @@ private:
 
     DrmBackend *m_backend;
     QPoint m_globalPos;
+    qreal m_scale = 1;
     quint32 m_crtcId = 0;
     quint32 m_connector = 0;
     quint32 m_lastStride = 0;

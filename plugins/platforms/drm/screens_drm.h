@@ -34,6 +34,7 @@ public:
     void init() override;
     QRect geometry(int screen) const override;
     int number(const QPoint &pos) const override;
+    qreal scale(int screen) const override;
     QSize size(int screen) const override;
     void updateCount() override;
     QString name(int screen) const override;

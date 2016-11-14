@@ -50,13 +50,22 @@ QRect DrmScreens::geometry(int screen) const
     return outputs.at(screen)->geometry();
 }
 
+qreal DrmScreens::scale(int screen) const
+{
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
+        return 1;
+    }
+    return outputs.at(screen)->scale();
+}
+
 QSize DrmScreens::size(int screen) const
 {
     const auto outputs = m_backend->outputs();
     if (screen >= outputs.size()) {
         return QSize();
     }
-    return outputs.at(screen)->size();
+    return outputs.at(screen)->geometry().size();
 }
 
 void DrmScreens::updateCount()
