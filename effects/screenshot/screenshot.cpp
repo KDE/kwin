@@ -168,17 +168,22 @@ void ScreenShotEffect::postPaintScreen()
                 grabPointerImage(img, m_scheduledScreenshot->x() + left, m_scheduledScreenshot->y() + top);
             }
 
-            const int depth = img.depth();
-            xcb_pixmap_t xpix = xcb_generate_id(xcbConnection());
-            xcb_create_pixmap(xcbConnection(), depth, xpix, x11RootWindow(), img.width(), img.height());
+            if (m_windowMode == WindowMode::Xpixmap) {
+                const int depth = img.depth();
+                xcb_pixmap_t xpix = xcb_generate_id(xcbConnection());
+                xcb_create_pixmap(xcbConnection(), depth, xpix, x11RootWindow(), img.width(), img.height());
 
-            xcb_gcontext_t cid = xcb_generate_id(xcbConnection());
-            xcb_create_gc(xcbConnection(), cid, xpix, 0, NULL);
-            xcb_put_image(xcbConnection(), XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(),
-                        0, 0, 0, depth, img.byteCount(), img.constBits());
-            xcb_free_gc(xcbConnection(), cid);
-            xcb_flush(xcbConnection());
-            emit screenshotCreated(xpix);
+                xcb_gcontext_t cid = xcb_generate_id(xcbConnection());
+                xcb_create_gc(xcbConnection(), cid, xpix, 0, NULL);
+                xcb_put_image(xcbConnection(), XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(),
+                            0, 0, 0, depth, img.byteCount(), img.constBits());
+                xcb_free_gc(xcbConnection(), cid);
+                xcb_flush(xcbConnection());
+                emit screenshotCreated(xpix);
+                m_windowMode = WindowMode::NoCapture;
+            } else if (m_windowMode == WindowMode::File) {
+                sendReplyImage(img);
+            }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (xImage) {
                 xcb_image_destroy(xImage);
@@ -229,6 +234,7 @@ void ScreenShotEffect::sendReplyImage(const QImage &img)
     m_multipleOutputsImage = QImage();
     m_multipleOutputsRendered = QRegion();
     m_captureCursor = false;
+    m_windowMode = WindowMode::NoCapture;
 }
 
 QString ScreenShotEffect::saveTempImage(const QImage &img)
@@ -274,9 +280,38 @@ void ScreenShotEffect::screenshotForWindow(qulonglong winid, int mask)
     m_type = (ScreenShotType) mask;
     EffectWindow* w = effects->findWindow(winid);
     if(w && !w->isMinimized() && !w->isDeleted()) {
+        m_windowMode = WindowMode::Xpixmap;
         m_scheduledScreenshot = w;
         m_scheduledScreenshot->addRepaintFull();
     }
+}
+
+QString ScreenShotEffect::interactive(int mask)
+{
+    if (!calledFromDBus()) {
+        return QString();
+    }
+    if (!m_scheduledGeometry.isNull() || m_windowMode != WindowMode::NoCapture) {
+        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+        return QString();
+    }
+    m_type = (ScreenShotType) mask;
+    m_windowMode = WindowMode::File;
+    m_replyConnection = connection();
+    m_replyMessage = message();
+    setDelayedReply(true);
+    effects->startInteractiveWindowSelection(
+        [this] (EffectWindow *w) {
+            if (!w) {
+                m_replyConnection.send(m_replyMessage.createErrorReply(QDBusError::Failed, "Screenshot got cancelled"));
+                m_windowMode = WindowMode::NoCapture;
+                return;
+            } else {
+                m_scheduledScreenshot = w;
+                m_scheduledScreenshot->addRepaintFull();
+            }
+    });
+    return QString();
 }
 
 QString ScreenShotEffect::screenshotFullscreen(bool captureCursor)

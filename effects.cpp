@@ -1572,6 +1572,19 @@ void EffectsHandlerImpl::showCursor()
     kwinApp()->platform()->showCursor();
 }
 
+void EffectsHandlerImpl::startInteractiveWindowSelection(std::function<void(KWin::EffectWindow*)> callback)
+{
+    kwinApp()->platform()->startInteractiveWindowSelection(
+        [callback] (KWin::Toplevel *t) {
+            if (t && t->effectWindow()) {
+                callback(t->effectWindow());
+            } else {
+                callback(nullptr);
+            }
+        }
+    );
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************

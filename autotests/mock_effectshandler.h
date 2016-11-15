@@ -245,6 +245,10 @@ public:
 
     void showCursor() override {}
 
+    void startInteractiveWindowSelection(std::function<void(KWin::EffectWindow*)> callback) override {
+        callback(nullptr);
+    }
+
 private:
     bool m_animationsSuported = true;
 };

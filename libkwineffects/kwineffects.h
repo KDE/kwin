@@ -48,6 +48,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <limits.h>
 #include <netwm.h>
 
+#include <functional>
+
 class KConfigGroup;
 class QFont;
 class QGraphicsScale;
@@ -1197,6 +1199,20 @@ public:
      * @since 5.9
      **/
     virtual void showCursor() = 0;
+
+    /**
+     * Starts an interactive window selection process.
+     *
+     * Once the user selected a window the @p callback is invoked with the selected EffectWindow as
+     * argument. In case the user cancels the interactive window selection or selecting a window is currently
+     * not possible (e.g. screen locked) the @p callback is invoked with a @c nullptr argument.
+     *
+     * During the interactive window selection the cursor is turned into a crosshair cursor.
+     *
+     * @param callback The function to invoke once the interactive window selection ends
+     * @since 5.9
+     **/
+    virtual void startInteractiveWindowSelection(std::function<void(KWin::EffectWindow*)> callback) = 0;
 
 Q_SIGNALS:
     /**

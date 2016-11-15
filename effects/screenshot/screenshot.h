@@ -54,6 +54,16 @@ public:
     static void convertFromGLImage(QImage &img, int w, int h);
 public Q_SLOTS:
     Q_SCRIPTABLE void screenshotForWindow(qulonglong winid, int mask = 0);
+    /**
+     * Starts an interactive window screenshot session. The user can select a window to
+     * screenshot.
+     *
+     * Once the window is selected the screenshot is saved into a file and the path gets
+     * returned to the DBus peer.
+     *
+     * @param mask The mask for what to include in the screenshot
+     **/
+    Q_SCRIPTABLE QString interactive(int mask = 0);
     Q_SCRIPTABLE void screenshotWindowUnderCursor(int mask = 0);
     /**
      * Saves a screenshot of all screen into a file and returns the path to the file.
@@ -102,6 +112,12 @@ private:
     QImage m_multipleOutputsImage;
     QRegion m_multipleOutputsRendered;
     bool m_captureCursor = false;
+    enum class WindowMode {
+        NoCapture,
+        Xpixmap,
+        File
+    };
+    WindowMode m_windowMode = WindowMode::NoCapture;
 };
 
 } // namespace
