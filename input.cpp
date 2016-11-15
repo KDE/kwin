@@ -1742,7 +1742,6 @@ bool InputRedirection::supportsPointerWarping() const
     return m_pointer->supportsWarping();
 }
 
-
 QPointF InputRedirection::globalPointer() const
 {
     return m_pointer->pos();
