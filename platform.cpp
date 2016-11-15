@@ -365,9 +365,11 @@ void Platform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 
 void Platform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
 {
-    // TODO: provide a basic implementation for Wayland platforms
-    Q_UNUSED(cursorName)
-    callback(nullptr);
+    if (!input()) {
+        callback(nullptr);
+        return;
+    }
+    input()->startInteractiveWindowSelection(callback, cursorName);
 }
 
 }

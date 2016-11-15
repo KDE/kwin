@@ -46,6 +46,7 @@ public:
     virtual ~WaylandCursorTheme();
 
     wl_cursor_image *get(Qt::CursorShape shape);
+    wl_cursor_image *get(const QByteArray &name);
 
 Q_SIGNALS:
     void themeChanged();

@@ -81,6 +81,8 @@ public:
     void markCursorAsRendered();
     void setEffectsOverrideCursor(Qt::CursorShape shape);
     void removeEffectsOverrideCursor();
+    void setWindowSelectionCursor(const QByteArray &shape);
+    void removeWindowSelectionCursor();
 
     /**
      * @internal
@@ -133,6 +135,7 @@ public:
 
 private:
     void updateOnStartMoveResize();
+    void updateToReset();
     void updatePosition(const QPointF &pos);
     void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
     void warpXcbOnSurfaceLeft(KWayland::Server::SurfaceInterface *surface);
@@ -155,6 +158,8 @@ public:
 
     void setEffectsOverrideCursor(Qt::CursorShape shape);
     void removeEffectsOverrideCursor();
+    void setWindowSelectionCursor(const QByteArray &shape);
+    void removeWindowSelectionCursor();
 
     QImage image() const;
     QPoint hotSpot() const;
@@ -178,6 +183,9 @@ private:
         QPoint hotSpot;
     };
     void loadThemeCursor(Qt::CursorShape shape, Image *image);
+    void loadThemeCursor(const QByteArray &shape, Image *image);
+    template <typename T>
+    void loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Image *image);
 
     enum class CursorSource {
         LockScreen,
@@ -186,7 +194,8 @@ private:
         PointerSurface,
         Decoration,
         DragAndDrop,
-        Fallback
+        Fallback,
+        WindowSelector
     };
     void setSource(CursorSource source);
 
@@ -204,7 +213,9 @@ private:
     QMetaObject::Connection m_decorationConnection;
     Image m_fallbackCursor;
     Image m_moveResizeCursor;
+    Image m_windowSelectionCursor;
     QHash<Qt::CursorShape, Image> m_cursors;
+    QHash<QByteArray, Image> m_cursorsByName;
     QElapsedTimer m_surfaceRenderedTimer;
     struct {
         Image cursor;

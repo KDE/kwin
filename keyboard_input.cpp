@@ -613,7 +613,7 @@ void KeyboardInputRedirection::update()
                 break;
             } while (it != stacking.begin());
         }
-    } else {
+    } else if (!input()->isSelectingWindow()) {
         found = workspace()->activeClient();
     }
     if (found && found->surface()) {

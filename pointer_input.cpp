@@ -181,6 +181,31 @@ void PointerInputRedirection::updateOnStartMoveResize()
     waylandServer()->seat()->setFocusedPointerSurface(nullptr);
 }
 
+void PointerInputRedirection::updateToReset()
+{
+    if (m_internalWindow) {
+        disconnect(m_internalWindowConnection);
+        m_internalWindowConnection = QMetaObject::Connection();
+        QEvent event(QEvent::Leave);
+        QCoreApplication::sendEvent(m_internalWindow.data(), &event);
+        m_internalWindow.clear();
+    }
+    if (m_decoration) {
+        QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
+        QCoreApplication::instance()->sendEvent(m_decoration->decoration(), &event);
+        m_decoration.clear();
+    }
+    if (m_window) {
+        if (AbstractClient *c = qobject_cast<AbstractClient*>(m_window.data())) {
+            c->leaveEvent();
+        }
+        disconnect(m_windowGeometryConnection);
+        m_windowGeometryConnection = QMetaObject::Connection();
+        m_window.clear();
+    }
+    waylandServer()->seat()->setFocusedPointerSurface(nullptr);
+}
+
 void PointerInputRedirection::processMotion(const QPointF &pos, uint32_t time, LibInput::Device *device)
 {
     processMotion(pos, QSizeF(), QSizeF(), time, 0, device);
@@ -387,6 +412,9 @@ void PointerInputRedirection::update()
     }
     if (waylandServer()->seat()->isDragPointer()) {
         // ignore during drag and drop
+        return;
+    }
+    if (input()->isSelectingWindow()) {
         return;
     }
     // TODO: handle pointer grab aka popups
@@ -606,6 +634,25 @@ void PointerInputRedirection::removeEffectsOverrideCursor()
     m_cursor->removeEffectsOverrideCursor();
 }
 
+void PointerInputRedirection::setWindowSelectionCursor(const QByteArray &shape)
+{
+    if (!m_inited) {
+        return;
+    }
+    // send leave to current pointer focus window
+    updateToReset();
+    m_cursor->setWindowSelectionCursor(shape);
+}
+
+void PointerInputRedirection::removeWindowSelectionCursor()
+{
+    if (!m_inited) {
+        return;
+    }
+    update();
+    m_cursor->removeWindowSelectionCursor();
+}
+
 CursorImage::CursorImage(PointerInputRedirection *parent)
     : QObject(parent)
     , m_pointer(parent)
@@ -815,6 +862,24 @@ void CursorImage::removeEffectsOverrideCursor()
     reevaluteSource();
 }
 
+void CursorImage::setWindowSelectionCursor(const QByteArray &shape)
+{
+    if (shape.isEmpty()) {
+        loadThemeCursor(Qt::CrossCursor, &m_windowSelectionCursor);
+    } else {
+        loadThemeCursor(shape, &m_windowSelectionCursor);
+    }
+    if (m_currentSource == CursorSource::WindowSelector) {
+        emit changed();
+    }
+    reevaluteSource();
+}
+
+void CursorImage::removeWindowSelectionCursor()
+{
+    reevaluteSource();
+}
+
 void CursorImage::updateDrag()
 {
     using namespace KWayland::Server;
@@ -881,12 +946,23 @@ void CursorImage::updateDragCursor()
 
 void CursorImage::loadThemeCursor(Qt::CursorShape shape, Image *image)
 {
+    loadThemeCursor(shape, m_cursors, image);
+}
+
+void CursorImage::loadThemeCursor(const QByteArray &shape, Image *image)
+{
+    loadThemeCursor(shape, m_cursorsByName, image);
+}
+
+template <typename T>
+void CursorImage::loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Image *image)
+{
     loadTheme();
     if (!m_cursorTheme) {
         return;
     }
-    auto it = m_cursors.constFind(shape);
-    if (it == m_cursors.constEnd()) {
+    auto it = cursors.constFind(shape);
+    if (it == cursors.constEnd()) {
         image->image = QImage();
         image->hotSpot = QPoint();
         wl_cursor_image *cursor = m_cursorTheme->get(shape);
@@ -903,7 +979,7 @@ void CursorImage::loadThemeCursor(Qt::CursorShape shape, Image *image)
         if (!buffer) {
             return;
         }
-        it = decltype(it)(m_cursors.insert(shape, {buffer->data().copy(), QPoint(cursor->hotspot_x, cursor->hotspot_y)}));
+        it = decltype(it)(cursors.insert(shape, {buffer->data().copy(), QPoint(cursor->hotspot_x, cursor->hotspot_y)}));
     }
     image->hotSpot = it.value().hotSpot;
     image->image = it.value().image;
@@ -918,6 +994,10 @@ void CursorImage::reevaluteSource()
     }
     if (waylandServer()->isScreenLocked()) {
         setSource(CursorSource::LockScreen);
+        return;
+    }
+    if (input()->isSelectingWindow()) {
+        setSource(CursorSource::WindowSelector);
         return;
     }
     if (effects && static_cast<EffectsHandlerImpl*>(effects)->isMouseInterception()) {
@@ -965,6 +1045,8 @@ QImage CursorImage::image() const
         return m_drag.cursor.image;
     case CursorSource::Fallback:
         return m_fallbackCursor.image;
+    case CursorSource::WindowSelector:
+        return m_windowSelectionCursor.image;
     default:
         Q_UNREACHABLE();
     }
@@ -987,6 +1069,8 @@ QPoint CursorImage::hotSpot() const
         return m_drag.cursor.hotSpot;
     case CursorSource::Fallback:
         return m_fallbackCursor.hotSpot;
+    case CursorSource::WindowSelector:
+        return m_windowSelectionCursor.hotSpot;
     default:
         Q_UNREACHABLE();
     }

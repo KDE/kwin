@@ -129,7 +129,7 @@ private:
     LEDs m_leds;
 };
 
-class KeyboardInputRedirection : public QObject
+class KWIN_EXPORT KeyboardInputRedirection : public QObject
 {
     Q_OBJECT
 public:

@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KSharedConfig>
 
+#include <functional>
+
 class KGlobalAccelInterface;
 class QKeySequence;
 class QMouseEvent;
@@ -42,6 +44,7 @@ class InputEventFilter;
 class KeyboardInputRedirection;
 class PointerInputRedirection;
 class TouchInputRedirection;
+class WindowSelectorFilter;
 
 namespace Decoration
 {
@@ -166,6 +169,9 @@ public:
 
     bool hasAlphaNumericKeyboard();
 
+    void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
+    bool isSelectingWindow() const;
+
 Q_SIGNALS:
     /**
      * @brief Emitted when the global pointer position changed
@@ -222,6 +228,8 @@ private:
     GlobalShortcutsManager *m_shortcuts;
 
     LibInput::Connection *m_libInput = nullptr;
+
+    WindowSelectorFilter *m_windowSelector = nullptr;
 
     QVector<InputEventFilter*> m_filters;
     KSharedConfigPtr m_inputConfig;

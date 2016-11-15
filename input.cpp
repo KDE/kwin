@@ -475,6 +475,105 @@ public:
     }
 };
 
+class WindowSelectorFilter : public InputEventFilter {
+public:
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+        Q_UNUSED(nativeButton)
+        if (!m_active) {
+            return false;
+        }
+        switch (event->type()) {
+        case QEvent::MouseButtonRelease:
+            if (event->buttons() == Qt::NoButton) {
+                if (event->button() == Qt::RightButton) {
+                    cancel();
+                } else {
+                    accept();
+                }
+            }
+            break;
+        default:
+            break;
+        }
+        return true;
+    }
+    bool wheelEvent(QWheelEvent *event) override {
+        Q_UNUSED(event)
+        // filter out while selecting a window
+        return m_active;
+    }
+    bool keyEvent(QKeyEvent *event) override {
+        Q_UNUSED(event)
+        if (!m_active) {
+            return false;
+        }
+        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+        passToWaylandServer(event);
+
+        if (event->type() == QEvent::KeyPress) {
+            // x11 variant does this on key press, so do the same
+            if (event->key() == Qt::Key_Escape) {
+                cancel();
+            } else if (event->key() == Qt::Key_Enter ||
+                       event->key() == Qt::Key_Return ||
+                       event->key() == Qt::Key_Space) {
+                accept();
+            }
+            if (input()->supportsPointerWarping()) {
+                int mx = 0;
+                int my = 0;
+                if (event->key() == Qt::Key_Left) {
+                    mx = -10;
+                }
+                if (event->key() == Qt::Key_Right) {
+                    mx = 10;
+                }
+                if (event->key() == Qt::Key_Up) {
+                    my = -10;
+                }
+                if (event->key() == Qt::Key_Down) {
+                    my = 10;
+                }
+                if (event->modifiers() & Qt::ControlModifier) {
+                    mx /= 10;
+                    my /= 10;
+                }
+                input()->warpPointer(input()->globalPointer() + QPointF(mx, my));
+            }
+        }
+        // filter out while selecting a window
+        return true;
+    }
+
+    bool isActive() const {
+        return m_active;
+    }
+    void start(std::function<void(KWin::Toplevel*)> callback) {
+        Q_ASSERT(!m_active);
+        m_active = true;
+        m_callback = callback;
+        input()->keyboard()->update();
+    }
+private:
+    void deactivate() {
+        m_active = false;
+        m_callback = std::function<void(KWin::Toplevel*)>();
+        input()->pointer()->removeWindowSelectionCursor();
+        input()->keyboard()->update();
+    }
+    void cancel() {
+        m_callback(nullptr);
+        deactivate();
+    }
+    void accept() {
+        // TODO: this ignores shaped windows
+        m_callback(input()->findToplevel(input()->globalPointer().toPoint()));
+        deactivate();
+    }
+    bool m_active = false;
+    std::function<void(KWin::Toplevel*)> m_callback;
+};
+
 class GlobalShortcutFilter : public InputEventFilter {
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
@@ -1307,6 +1406,8 @@ void InputRedirection::setupInputFilters()
         installInputEventFilter(new TerminateServerFilter);
         installInputEventFilter(new DragAndDropInputFilter);
         installInputEventFilter(new LockScreenFilter);
+        m_windowSelector = new WindowSelectorFilter;
+        installInputEventFilter(m_windowSelector);
     }
     installInputEventFilter(new ScreenEdgeInputFilter);
     installInputEventFilter(new EffectsFilter);
@@ -1645,6 +1746,21 @@ bool InputRedirection::supportsPointerWarping() const
 QPointF InputRedirection::globalPointer() const
 {
     return m_pointer->pos();
+}
+
+void InputRedirection::startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
+{
+    if (!m_windowSelector || m_windowSelector->isActive()) {
+        callback(nullptr);
+        return;
+    }
+    m_windowSelector->start(callback);
+    m_pointer->setWindowSelectionCursor(cursorName);
+}
+
+bool InputRedirection::isSelectingWindow() const
+{
+    return m_windowSelector ? m_windowSelector->isActive() : false;
 }
 
 InputDeviceHandler::InputDeviceHandler(InputRedirection *input)

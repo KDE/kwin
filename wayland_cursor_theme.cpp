@@ -81,6 +81,11 @@ void WaylandCursorTheme::destroyTheme()
 
 wl_cursor_image *WaylandCursorTheme::get(Qt::CursorShape shape)
 {
+    return get(Cursor::self()->cursorName(shape));
+}
+
+wl_cursor_image *WaylandCursorTheme::get(const QByteArray &name)
+{
     if (!m_theme) {
         loadTheme();
     }
@@ -88,7 +93,6 @@ wl_cursor_image *WaylandCursorTheme::get(Qt::CursorShape shape)
         // loading cursor failed
         return nullptr;
     }
-    const QByteArray name = Cursor::self()->cursorName(shape);
     wl_cursor *c = wl_cursor_theme_get_cursor(m_theme, name.constData());
     if (!c || c->image_count <= 0) {
         const auto &names = Cursor::self()->cursorAlternativeNames(name);

@@ -172,8 +172,7 @@ public:
      * @p cursorName is provided. The argument @p cursorName is a QByteArray instead of Qt::CursorShape
      * to support the "pirate" cursor for kill window which is not wrapped by Qt::CursorShape.
      *
-     * The default implementation does not support selecting windows yet and only invokes the
-     * @p callback with @c nullptr.
+     * The default implementation forwards to InputRedirection.
      *
      * @param callback The function to invoke once the interactive window selection ends
      * @param cursorName The optional name of the cursor shape to use, default is crosshair
