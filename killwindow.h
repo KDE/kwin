@@ -23,12 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_KILLWINDOW_H
 #define KWIN_KILLWINDOW_H
 
+#include "x11eventfilter.h"
+
 #include <xcb/xcb.h>
 
 namespace KWin
 {
 
-class KillWindow
+class KillWindow : public X11EventFilter
 {
 public:
 
@@ -39,8 +41,9 @@ public:
     bool isActive() const {
         return m_active;
     }
-    bool isResponsibleForEvent(int eventType) const;
     void processEvent(xcb_generic_event_t *event);
+
+    bool event(xcb_generic_event_t *event) override;
 
 private:
     xcb_cursor_t createCursor();

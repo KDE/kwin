@@ -35,7 +35,17 @@ namespace KWin
 {
 
 KillWindow::KillWindow()
-    : m_active(false)
+    : X11EventFilter(QVector<int>{XCB_BUTTON_PRESS,
+                                  XCB_BUTTON_RELEASE,
+                                  XCB_MOTION_NOTIFY,
+                                  XCB_ENTER_NOTIFY,
+                                  XCB_LEAVE_NOTIFY,
+                                  XCB_KEY_PRESS,
+                                  XCB_KEY_RELEASE,
+                                  XCB_FOCUS_IN,
+                                  XCB_FOCUS_OUT
+    })
+    , m_active(false)
 {
 }
 
@@ -89,24 +99,6 @@ xcb_cursor_t KillWindow::createCursor()
     return cursor;
 }
 
-bool KillWindow::isResponsibleForEvent(int eventType) const
-{
-    switch (eventType) {
-        case XCB_BUTTON_PRESS:
-        case XCB_BUTTON_RELEASE:
-        case XCB_MOTION_NOTIFY:
-        case XCB_ENTER_NOTIFY:
-        case XCB_LEAVE_NOTIFY:
-        case XCB_KEY_PRESS:
-        case XCB_KEY_RELEASE:
-        case XCB_FOCUS_IN:
-        case XCB_FOCUS_OUT:
-            return true;
-        default:
-            return false;
-    }
-}
-
 void KillWindow::processEvent(xcb_generic_event_t *event)
 {
     if (event->response_type == XCB_BUTTON_RELEASE) {
@@ -116,6 +108,16 @@ void KillWindow::processEvent(xcb_generic_event_t *event)
         xcb_key_press_event_t *keyEvent = reinterpret_cast<xcb_key_press_event_t*>(event);
         handleKeyPress(keyEvent->detail, keyEvent->state);
     }
+}
+
+bool KillWindow::event(xcb_generic_event_t *event)
+{
+    if (!m_active) {
+        return false;
+    }
+    processEvent(event);
+
+    return true;
 }
 
 void KillWindow::handleButtonRelease(xcb_button_t button, xcb_window_t window)

@@ -63,7 +63,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include "composite.h"
-#include "killwindow.h"
 #include "x11eventfilter.h"
 
 #include "wayland_server.h"
@@ -252,12 +251,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()
             && (eventType == XCB_KEY_PRESS || eventType == XCB_KEY_RELEASE))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()
-
-    if (!m_windowKiller.isNull() && m_windowKiller->isActive() && m_windowKiller->isResponsibleForEvent(eventType)) {
-        m_windowKiller->processEvent(e);
-        // filter out the event
-        return true;
-    }
 
     if (eventType == XCB_PROPERTY_NOTIFY || eventType == XCB_CLIENT_MESSAGE) {
         NET::Properties dirtyProtocols;
