@@ -138,6 +138,27 @@ static DrmOutput::DpmsMode fromWaylandDpmsMode(KWayland::Server::OutputInterface
     }
 }
 
+static QHash<int, QByteArray> s_connectorNames = {
+    {DRM_MODE_CONNECTOR_Unknown, QByteArrayLiteral("Unknown")},
+    {DRM_MODE_CONNECTOR_VGA, QByteArrayLiteral("VGA")},
+    {DRM_MODE_CONNECTOR_DVII, QByteArrayLiteral("DVI-I")},
+    {DRM_MODE_CONNECTOR_DVID, QByteArrayLiteral("DVI-D")},
+    {DRM_MODE_CONNECTOR_DVIA, QByteArrayLiteral("DVI-A")},
+    {DRM_MODE_CONNECTOR_Composite, QByteArrayLiteral("Composite")},
+    {DRM_MODE_CONNECTOR_SVIDEO, QByteArrayLiteral("SVIDEO")},
+    {DRM_MODE_CONNECTOR_LVDS, QByteArrayLiteral("LVDS")},
+    {DRM_MODE_CONNECTOR_Component, QByteArrayLiteral("Component")},
+    {DRM_MODE_CONNECTOR_9PinDIN, QByteArrayLiteral("DIN")},
+    {DRM_MODE_CONNECTOR_DisplayPort, QByteArrayLiteral("DP")},
+    {DRM_MODE_CONNECTOR_HDMIA, QByteArrayLiteral("HDMI-A")},
+    {DRM_MODE_CONNECTOR_HDMIB, QByteArrayLiteral("HDMI-B")},
+    {DRM_MODE_CONNECTOR_TV, QByteArrayLiteral("TV")},
+    {DRM_MODE_CONNECTOR_eDP, QByteArrayLiteral("eDP")},
+    {DRM_MODE_CONNECTOR_VIRTUAL, QByteArrayLiteral("Virtual")},
+    {DRM_MODE_CONNECTOR_DSI, QByteArrayLiteral("DSI")}
+};
+
+
 bool DrmOutput::init(drmModeConnector *connector)
 {
     initEdid(connector);
@@ -172,20 +193,25 @@ bool DrmOutput::init(drmModeConnector *connector)
     }
     m_waylandOutputDevice->setManufacturer(m_waylandOutput->manufacturer());
 
+    QString connectorName = s_connectorNames.value(connector->connector_type, QByteArrayLiteral("Unknown"));
+    QString modelName;
+
     if (!m_edid.monitorName.isEmpty()) {
         QString model = QString::fromLatin1(m_edid.monitorName);
         if (!m_edid.serialNumber.isEmpty()) {
             model.append('/');
             model.append(QString::fromLatin1(m_edid.serialNumber));
         }
-        m_waylandOutput->setModel(model);
+        modelName = model;
     } else if (!m_edid.serialNumber.isEmpty()) {
-        m_waylandOutput->setModel(QString::fromLatin1(m_edid.serialNumber));
+        modelName = QString::fromLatin1(m_edid.serialNumber);
     } else {
-        m_waylandOutput->setModel(i18n("unknown"));
+        modelName = i18n("unknown");
     }
-    m_waylandOutputDevice->setModel(m_waylandOutput->model());
 
+    m_waylandOutput->setModel(connectorName + QStringLiteral("-") + QString::number(connector->connector_type_id) + QStringLiteral("-") + modelName);
+    m_waylandOutputDevice->setModel(m_waylandOutput->model());
+    
     QSize physicalSize = !m_edid.physicalSize.isEmpty() ? m_edid.physicalSize : QSize(connector->mmWidth, connector->mmHeight);
     // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
     // as this information is used to calculate DPI info, it's going to result in everything being huge
