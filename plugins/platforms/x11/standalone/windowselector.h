@@ -19,37 +19,46 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#include "killwindow.h"
-#include "client.h"
-#include "main.h"
-#include "platform.h"
-#include "unmanaged.h"
+
+#ifndef KWIN_KILLWINDOW_H
+#define KWIN_KILLWINDOW_H
+
+#include "x11eventfilter.h"
+
+#include <xcb/xcb.h>
+
+#include <functional>
 
 namespace KWin
 {
+class Toplevel;
 
-KillWindow::KillWindow()
+class WindowSelector : public X11EventFilter
 {
-}
+public:
 
-KillWindow::~KillWindow()
-{
-}
+    WindowSelector();
+    ~WindowSelector();
 
-void KillWindow::start()
-{
-    kwinApp()->platform()->startInteractiveWindowSelection(
-        [] (KWin::Toplevel *t) {
-            if (!t) {
-                return;
-            }
-            if (Client *c = qobject_cast<Client*>(t)) {
-                c->killWindow();
-            } else if (Unmanaged *u = qobject_cast<Unmanaged*>(t)) {
-                xcb_kill_client(connection(), u->window());
-            }
-        }, QByteArrayLiteral("pirate")
-    );
-}
+    void start(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
+    bool isActive() const {
+        return m_active;
+    }
+    void processEvent(xcb_generic_event_t *event);
+
+    bool event(xcb_generic_event_t *event) override;
+
+private:
+    xcb_cursor_t createCursor(const QByteArray &cursorName);
+    void release();
+    void selectWindowUnderPointer();
+    void handleKeyPress(xcb_keycode_t keycode, uint16_t state);
+    void handleButtonRelease(xcb_button_t button, xcb_window_t window);
+    void selectWindowId(xcb_window_t window_to_kill);
+    bool m_active;
+    std::function<void(KWin::Toplevel*)> m_callback;
+};
 
 } // namespace
+
+#endif

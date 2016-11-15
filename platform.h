@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QObject>
 
+#include <functional>
+
 namespace KWayland {
     namespace Server {
         class OutputConfigurationInterface;
@@ -40,6 +42,7 @@ class OpenGLBackend;
 class QPainterBackend;
 class Screens;
 class ScreenEdges;
+class Toplevel;
 class WaylandCursorTheme;
 
 class KWIN_EXPORT Platform : public QObject
@@ -157,6 +160,25 @@ public:
      * @see openGLCompositingIsBroken.
      **/
     virtual void createOpenGLSafePoint(OpenGLSafePoint safePoint);
+
+    /**
+     * Starts an interactive window selection process.
+     *
+     * Once the user selected a window the @p callback is invoked with the selected Toplevel as
+     * argument. In case the user cancels the interactive window selection or selecting a window is currently
+     * not possible (e.g. screen locked) the @p callback is invoked with a @c nullptr argument.
+     *
+     * During the interactive window selection the cursor is turned into a crosshair cursor unless
+     * @p cursorName is provided. The argument @p cursorName is a QByteArray instead of Qt::CursorShape
+     * to support the "pirate" cursor for kill window which is not wrapped by Qt::CursorShape.
+     *
+     * The default implementation does not support selecting windows yet and only invokes the
+     * @p callback with @c nullptr.
+     *
+     * @param callback The function to invoke once the interactive window selection ends
+     * @param cursorName The optional name of the cursor shape to use, default is crosshair
+     **/
+    virtual void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName = QByteArray());
 
     bool usesSoftwareCursor() const {
         return m_softWareCursor;

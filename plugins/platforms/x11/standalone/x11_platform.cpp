@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "x11_platform.h"
 #include "x11cursor.h"
 #include "edge.h"
+#include "windowselector.h"
 #include <config-kwin.h>
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
@@ -271,6 +272,14 @@ void X11StandalonePlatform::doHideCursor()
 void X11StandalonePlatform::doShowCursor()
 {
     xcb_xfixes_show_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
+}
+
+void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
+{
+    if (m_windowSelector.isNull()) {
+        m_windowSelector.reset(new WindowSelector);
+    }
+    m_windowSelector->start(callback, cursorName);
 }
 
 }

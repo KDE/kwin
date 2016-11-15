@@ -4,6 +4,7 @@ set(X11PLATFORM_SOURCES
     x11cursor.cpp
     x11_platform.cpp
     screens_xrandr.cpp
+    windowselector.cpp
 )
 
 if(X11_Xinput_FOUND)
