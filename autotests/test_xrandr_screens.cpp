@@ -135,8 +135,8 @@ void TestXRandRScreens::testStartup()
 {
     KWin::MockWorkspace ws;
     QScopedPointer<XRandRScreens> screens(new XRandRScreens(this));
-    QVERIFY(screens->eventType() != 0);
-    QCOMPARE(screens->eventType(), Xcb::Extensions::self()->randrNotifyEvent());
+    QVERIFY(!screens->eventTypes().isEmpty());
+    QCOMPARE(screens->eventTypes().first(), Xcb::Extensions::self()->randrNotifyEvent());
     QCOMPARE(screens->extension(), 0);
     QCOMPARE(screens->genericEventTypes(), QVector<int>{0});
     screens->init();

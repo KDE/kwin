@@ -182,7 +182,7 @@ QVector<QByteArray> s_xcbEerrors({
 
 void Workspace::registerEventFilter(X11EventFilter *filter)
 {
-    if (filter->eventType() == XCB_GE_GENERIC)
+    if (filter->isGenericEvent())
         m_genericEventFilters.append(filter);
     else
         m_eventFilters.append(filter);
@@ -190,7 +190,7 @@ void Workspace::registerEventFilter(X11EventFilter *filter)
 
 void Workspace::unregisterEventFilter(X11EventFilter *filter)
 {
-    if (filter->eventType() == XCB_GE_GENERIC)
+    if (filter->isGenericEvent())
         m_genericEventFilters.removeOne(filter);
     else
         m_eventFilters.removeOne(filter);
@@ -243,7 +243,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
     } else {
         foreach (X11EventFilter *filter, m_eventFilters) {
-            if (filter->eventType() == eventType && filter->event(e)) {
+            if (filter->eventTypes().contains(eventType) && filter->event(e)) {
                 return true;
             }
         }

@@ -38,6 +38,7 @@ public:
      */
     X11EventFilter(int eventType, int opcode = 0, int genericEventType = 0);
     X11EventFilter(int eventType, int opcode, const QVector<int> &genericEventTypes);
+    X11EventFilter(const QVector<int> &eventTypes);
 
     /**
      * Destroys the event filter.
@@ -47,7 +48,7 @@ public:
     /**
      * Returns the type of events to filter.
      */
-    int eventType() const { return m_eventType; }
+    QVector<int> eventTypes() const { return m_eventTypes; }
 
     /**
      * Returns the major opcode of the extension.
@@ -70,8 +71,13 @@ public:
      */
     virtual bool event(xcb_generic_event_t *event) = 0;
 
+    /**
+     * Whether the event filter is for XCB_GE_GENERIC events.
+     **/
+    bool isGenericEvent() const;
+
 private:
-    int m_eventType;
+    QVector<int> m_eventTypes;
     int m_extension;
     QVector<int> m_genericEventTypes;
 };
