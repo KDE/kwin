@@ -614,6 +614,13 @@ public:
         return m_desktopFileName;
     }
 
+    /**
+     * Tries to terminate the process of this AbstractClient.
+     *
+     * Implementing subclasses can perform a windowing system solution for terminating.
+     **/
+    virtual void killWindow() = 0;
+
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 

@@ -132,6 +132,8 @@ public:
 
     void showOnScreenEdge() override;
 
+    void killWindow() override;
+
     // TODO: const-ref
     void placeIn(QRect &area);
 

@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/DecoratedClient>
 
 #include <KWayland/Client/surface.h>
+#include <KWayland/Server/clientconnection.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/surface_interface.h>
@@ -47,6 +48,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QOpenGLFramebufferObject>
 #include <QWindow>
+
+#include <sys/types.h>
+#include <unistd.h>
+#include <signal.h>
 
 using namespace KWayland::Server;
 
@@ -1378,6 +1383,24 @@ bool ShellClient::dockWantsInput() const
         }
     }
     return false;
+}
+
+void ShellClient::killWindow()
+{
+    if (isInternal()) {
+        return;
+    }
+    if (!surface()) {
+        return;
+    }
+    auto c = surface()->client();
+    if (c->processId() == getpid()) {
+        c->destroy();
+        return;
+    }
+    ::kill(c->processId(), SIGTERM);
+    // give it time to terminate and only if terminate fails, try destroy Wayland connection
+    QTimer::singleShot(5000, c, &ClientConnection::destroy);
 }
 
 }

@@ -249,7 +249,7 @@ public:
     static bool belongToSameApplication(const Client* c1, const Client* c2, bool active_hack = false);
     static bool sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack);
 
-    void killWindow();
+    void killWindow() override;
     void toggleShade();
     void showContextHelp() override;
     void cancelShadeHoverTimer();

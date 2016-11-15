@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "killwindow.h"
-#include "client.h"
+#include "abstract_client.h"
 #include "main.h"
 #include "platform.h"
 #include "unmanaged.h"
@@ -43,7 +43,7 @@ void KillWindow::start()
             if (!t) {
                 return;
             }
-            if (Client *c = qobject_cast<Client*>(t)) {
+            if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
                 c->killWindow();
             } else if (Unmanaged *u = qobject_cast<Unmanaged*>(t)) {
                 xcb_kill_client(connection(), u->window());
