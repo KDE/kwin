@@ -25,8 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 
-typedef union  _XEvent XEvent;
-
 namespace KWin
 {
 
@@ -42,8 +40,6 @@ public:
         return m_active;
     }
     bool isResponsibleForEvent(int eventType) const;
-    // TODO: remove once event handling is ported to XCB
-    void processEvent(XEvent *event);
     void processEvent(xcb_generic_event_t *event);
 
 private:

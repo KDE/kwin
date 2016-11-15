@@ -107,15 +107,6 @@ bool KillWindow::isResponsibleForEvent(int eventType) const
     }
 }
 
-void KillWindow::processEvent(XEvent *event)
-{
-    if (event->type == XCB_BUTTON_RELEASE) {
-        handleButtonRelease(event->xbutton.button, event->xbutton.subwindow);
-    } else if (event->type == XCB_KEY_PRESS) {
-        handleKeyPress(event->xkey.keycode, event->xkey.state);
-    }
-}
-
 void KillWindow::processEvent(xcb_generic_event_t *event)
 {
     if (event->response_type == XCB_BUTTON_RELEASE) {
