@@ -71,11 +71,10 @@ void TranslucencyTest::initTestCase()
         plugins.writeEntry(name + QStringLiteral("Enabled"), false);
     }
     config->group("Outline").writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
+    config->group("Effect-kwin4_effect_translucency").writeEntry(QStringLiteral("Dialogs"), 90);
 
     config->sync();
     kwinApp()->setConfig(config);
-    // TODO: make effects use KWin's config directly
-    KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals)->group("Effect-kwin4_effect_translucency").writeEntry(QStringLiteral("Dialogs"), 90);
 
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();

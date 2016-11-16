@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
 #include "../screenedge.h"
+#include "../main.h"
 #include "scripting_logging.h"
 // KDE
 #include <KConfigGroup>
@@ -482,7 +483,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     // does the effect contain an KConfigXT file?
     const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String(KWIN_NAME "/effects/") + m_effectName + QLatin1String("/contents/config/main.xml"));
     if (!kconfigXTFile.isNull()) {
-        KConfigGroup cg = effects->effectConfig(m_effectName);
+        KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Effect-%1").arg(m_effectName));
         QFile xmlFile(kconfigXTFile);
         m_config = new KConfigLoader(cg, &xmlFile, this);
         m_config->load();
