@@ -48,8 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-void KWINGLUTILS_EXPORT eglResolveFunctions();
-
 typedef void (*resolveFuncPtr)();
 void KWINGLUTILS_EXPORT glResolveFunctions(std::function<resolveFuncPtr(const char*)> resolveFunction);
 

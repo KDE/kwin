@@ -76,7 +76,6 @@ void initEGL()
         dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     const QByteArray string = eglQueryString(dpy, EGL_EXTENSIONS);
     s_eglExtensions = string.split(' ');
-    eglResolveFunctions();
 }
 
 void initGL(std::function<resolveFuncPtr(const char*)> resolveFunction)
