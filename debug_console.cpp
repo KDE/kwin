@@ -516,12 +516,12 @@ DebugConsole::~DebugConsole() = default;
 
 void DebugConsole::initGLTab()
 {
-    GLPlatform *gl = GLPlatform::instance();
-    if (!gl) {
+    if (!effects || !effects->isOpenGLCompositing()) {
         m_ui->noOpenGLLabel->setVisible(true);
         m_ui->glInfoScrollArea->setVisible(false);
         return;
     }
+    GLPlatform *gl = GLPlatform::instance();
     m_ui->noOpenGLLabel->setVisible(false);
     m_ui->glInfoScrollArea->setVisible(true);
     m_ui->glVendorStringLabel->setText(QString::fromLocal8Bit(gl->glVendorString()));
