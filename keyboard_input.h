@@ -82,6 +82,18 @@ public:
         return m_leds;
     }
 
+    xkb_keymap *keymap() const {
+        return m_keymap;
+    }
+
+    xkb_state *state() const {
+        return m_state;
+    }
+
+    quint32 currentLayout() const {
+        return m_currentLayout;
+    }
+
 private:
     xkb_keymap *loadKeymapFromConfig();
     xkb_keymap *loadDefaultKeymap();

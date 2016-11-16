@@ -49,6 +49,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMetaProperty>
 #include <QMetaType>
 
+// xkb
+#include <xkbcommon/xkbcommon.h>
+
+#include <functional>
+
 namespace KWin
 {
 
@@ -503,6 +508,10 @@ DebugConsole::DebugConsole()
                 m_inputFilter.reset(new DebugConsoleFilter(m_ui->inputTextEdit));
                 input()->prepandInputEventFilter(m_inputFilter.data());
             }
+            if (index == 5) {
+                updateKeyboardTab();
+                connect(input(), &InputRedirection::keyStateChanged, this, &DebugConsole::updateKeyboardTab);
+            }
         }
     );
 
@@ -554,6 +563,47 @@ void DebugConsole::initGLTab()
     }
 
     m_ui->openGLExtensionsLabel->setText(extensionsString(openGLExtensions()));
+}
+
+template <typename T>
+QString keymapComponentToString(xkb_keymap *map, const T &count, std::function<const char*(xkb_keymap*,T)> f)
+{
+    QString text = QStringLiteral("<ul>");
+    for (T i = 0; i < count; i++) {
+        text.append(QStringLiteral("<li>%1</li>").arg(QString::fromLocal8Bit(f(map, i))));
+    }
+    text.append(QStringLiteral("</ul>"));
+    return text;
+}
+
+template <typename T>
+QString stateActiveComponents(xkb_state *state, const T &count, std::function<int(xkb_state*,T)> f, std::function<const char*(xkb_keymap*,T)> name)
+{
+    QString text = QStringLiteral("<ul>");
+    xkb_keymap *map = xkb_state_get_keymap(state);
+    for (T i = 0; i < count; i++) {
+        if (f(state, i) == 1) {
+            text.append(QStringLiteral("<li>%1</li>").arg(QString::fromLocal8Bit(name(map, i))));
+        }
+    }
+    text.append(QStringLiteral("</ul>"));
+    return text;
+}
+
+void DebugConsole::updateKeyboardTab()
+{
+    auto xkb = input()->keyboard()->xkb();
+    xkb_keymap *map = xkb->keymap();
+    xkb_state *state = xkb->state();
+    m_ui->layoutsLabel->setText(keymapComponentToString<xkb_layout_index_t>(map, xkb_keymap_num_layouts(map), &xkb_keymap_layout_get_name));
+    m_ui->currentLayoutLabel->setText(xkb_keymap_layout_get_name(map, xkb->currentLayout()));
+    m_ui->modifiersLabel->setText(keymapComponentToString<xkb_mod_index_t>(map, xkb_keymap_num_mods(map), &xkb_keymap_mod_get_name));
+    m_ui->ledsLabel->setText(keymapComponentToString<xkb_led_index_t>(map, xkb_keymap_num_leds(map), &xkb_keymap_led_get_name));
+    m_ui->activeLedsLabel->setText(stateActiveComponents<xkb_led_index_t>(state, xkb_keymap_num_leds(map), &xkb_state_led_index_is_active, &xkb_keymap_led_get_name));
+
+    using namespace std::placeholders;
+    auto modActive = std::bind(xkb_state_mod_index_is_active, _1, _2, XKB_STATE_MODS_EFFECTIVE);
+    m_ui->activeModifiersLabel->setText(stateActiveComponents<xkb_mod_index_t>(state, xkb_keymap_num_mods(map), modActive, &xkb_keymap_mod_get_name));
 }
 
 void DebugConsole::showEvent(QShowEvent *event)

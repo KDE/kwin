@@ -106,6 +106,7 @@ protected:
 
 private:
     void initGLTab();
+    void updateKeyboardTab();
 
     QScopedPointer<Ui::DebugConsole> m_ui;
     QScopedPointer<DebugConsoleFilter> m_inputFilter;
