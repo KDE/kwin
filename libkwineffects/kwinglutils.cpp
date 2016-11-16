@@ -60,8 +60,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 // Variables
-// EGL version, use MAKE_GL_VERSION() macro for comparing with a specific version
-static int eglVersion;
 // List of all supported GL, EGL and GLX extensions
 static QList<QByteArray> glExtensions;
 static QList<QByteArray> s_eglExtensions;
@@ -76,9 +74,6 @@ void initEGL()
     EGLDisplay dpy = eglGetCurrentDisplay();
     if (dpy == EGL_NO_DISPLAY)
         dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-    int major, minor;
-    eglInitialize(dpy, &major, &minor);
-    eglVersion = MAKE_GL_VERSION(major, minor, 0);
     const QByteArray string = eglQueryString(dpy, EGL_EXTENSIONS);
     s_eglExtensions = string.split(' ');
     eglResolveFunctions();
@@ -117,18 +112,12 @@ void cleanupGL()
     glExtensions.clear();
     s_eglExtensions.clear();
 
-    eglVersion = 0;
     glTextureUnitsCount = 0;
 }
 
 bool hasGLVersion(int major, int minor, int release)
 {
     return GLPlatform::instance()->glVersion() >= kVersionNumber(major, minor, release);
-}
-
-bool hasEGLVersion(int major, int minor, int release)
-{
-    return eglVersion >= MAKE_GL_VERSION(major, minor, release);
 }
 
 bool hasGLExtension(const QByteArray &extension)
