@@ -54,6 +54,7 @@ class KWIN_EXPORT Application : public  QApplication
     Q_PROPERTY(quint32 x11RootWindow READ x11RootWindow CONSTANT)
     Q_PROPERTY(void *x11Connection READ x11Connection NOTIFY x11ConnectionChanged)
     Q_PROPERTY(int x11ScreenNumber READ x11ScreenNumber CONSTANT)
+    Q_PROPERTY(KSharedConfigPtr config READ config WRITE setConfig)
 public:
     /**
     * @brief This enum provides the various operation modes of KWin depending on the available

@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Q_DECLARE_METATYPE(KWin::LoadEffectFlag)
 Q_DECLARE_METATYPE(KWin::LoadEffectFlags)
 Q_DECLARE_METATYPE(KWin::Effect*)
+Q_DECLARE_METATYPE(KSharedConfigPtr)
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 
@@ -64,6 +65,7 @@ class TestScriptedEffectLoader : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase();
     void testHasEffect_data();
     void testHasEffect();
     void testKnownEffects();
@@ -74,6 +76,12 @@ private Q_SLOTS:
     void testLoadAllEffects();
     void testCancelLoadAllEffects();
 };
+
+void TestScriptedEffectLoader::initTestCase()
+{
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    QCoreApplication::instance()->setProperty("config", QVariant::fromValue(config));
+}
 
 void TestScriptedEffectLoader::testHasEffect_data()
 {

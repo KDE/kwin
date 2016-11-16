@@ -65,6 +65,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define XCB_GE_GENERIC 35
 #endif
 
+Q_DECLARE_METATYPE(KSharedConfigPtr)
+
 namespace KWin
 {
 
@@ -107,6 +109,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
     qRegisterMetaType<KWin::EffectWindow*>();
     qRegisterMetaType<KWayland::Server::SurfaceInterface *>("KWayland::Server::SurfaceInterface *");
+    qRegisterMetaType<KSharedConfigPtr>();
 }
 
 void Application::setConfigLock(bool lock)
