@@ -117,6 +117,7 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     presentwindows/presentwindowsconfig.kcfgc
     resize/resizeconfig.kcfgc
     showfps/showfpsconfig.kcfgc
+    slidingpopups/slidingpopupsconfig.kcfgc
     thumbnailaside/thumbnailasideconfig.kcfgc
     trackmouse/trackmouseconfig.kcfgc
     windowgeometry/windowgeometryconfig.kcfgc

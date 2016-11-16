@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "slidingpopups.h"
+#include "slidingpopupsconfig.h"
 
-#include <KConfigGroup>
 #include <QTimeLine>
 #include <QApplication>
 
@@ -57,9 +57,9 @@ SlidingPopupsEffect::~SlidingPopupsEffect()
 void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
-    KConfigGroup conf = effects->effectConfig(QStringLiteral("SlidingPopups"));
-    mFadeInTime = animationTime(conf, QStringLiteral("SlideInTime"), 150);
-    mFadeOutTime = animationTime(conf, QStringLiteral("SlideOutTime"), 250);
+    SlidingPopupsConfig::self()->read();
+    mFadeInTime = animationTime(SlidingPopupsConfig::slideInTime() != 0 ? SlidingPopupsConfig::slideInTime() : 150);
+    mFadeOutTime = animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? SlidingPopupsConfig::slideOutTime() : 250);
     QHash< const EffectWindow*, QTimeLine* >::iterator it = mAppearingWindows.begin();
     while (it != mAppearingWindows.end()) {
         it.value()->setDuration(animationTime(mFadeInTime));

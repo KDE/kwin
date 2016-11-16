@@ -1,0 +1,5 @@
+File=slidingpopups.kcfg
+ClassName=SlidingPopupsConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true
