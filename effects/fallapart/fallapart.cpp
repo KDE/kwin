@@ -19,9 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "fallapart.h"
+// KConfigSkeleton
+#include "fallapartconfig.h"
 #include <assert.h>
 #include <math.h>
-#include <KConfigGroup>
 
 namespace KWin
 {
@@ -40,8 +41,8 @@ FallApartEffect::FallApartEffect()
 
 void FallApartEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig(QStringLiteral("FallApart"));
-    blockSize = qBound(1, conf.readEntry("BlockSize", 40), 100000);
+    FallApartConfig::self()->read();
+    blockSize = FallApartConfig::blockSize();
 }
 
 void FallApartEffect::prePaintScreen(ScreenPrePaintData& data, int time)

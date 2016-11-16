@@ -106,6 +106,7 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     coverswitch/coverswitchconfig.kcfgc
     desktopgrid/desktopgridconfig.kcfgc
     diminactive/diminactiveconfig.kcfgc
+    fallapart/fallapartconfig.kcfgc
     flipswitch/flipswitchconfig.kcfgc
     glide/glideconfig.kcfgc
     lookingglass/lookingglassconfig.kcfgc
