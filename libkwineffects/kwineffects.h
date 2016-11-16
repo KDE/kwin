@@ -1198,11 +1198,6 @@ public:
      **/
     virtual void showCursor() = 0;
 
-    /**
-     * @return @ref KConfigGroup which holds given effect's config options
-     **/
-    static KConfigGroup effectConfig(const QString& effectname);
-
 Q_SIGNALS:
     /**
      * Signal emitted when the current desktop changed.

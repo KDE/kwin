@@ -760,12 +760,6 @@ bool EffectsHandler::isOpenGLCompositing() const
     return compositing_type & OpenGLCompositing;
 }
 
-KConfigGroup EffectsHandler::effectConfig(const QString& effectname)
-{
-    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals);
-    return kwinconfig->group(QLatin1String("Effect-") + effectname);
-}
-
 EffectsHandler* effects = nullptr;
 
 
