@@ -76,7 +76,6 @@ public:
     DrmBuffer *createBuffer(gbm_surface *surface);
     void present(DrmBuffer *buffer, DrmOutput *output);
 
-    QSize size() const;
     int fd() const {
         return m_fd;
     }

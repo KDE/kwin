@@ -664,14 +664,6 @@ void DrmBackend::moveCursor()
     }
 }
 
-QSize DrmBackend::size() const
-{
-    if (m_outputs.isEmpty()) {
-        return QSize();
-    }
-    return m_outputs.first()->size();
-}
-
 Screens *DrmBackend::createScreens(QObject *parent)
 {
     return new DrmScreens(this, parent);
