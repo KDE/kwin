@@ -20,6 +20,7 @@ set(kwin_effect_KDE_LIBS
     KF5::Plasma # screenedge effect
     KF5::IconThemes
     KF5::Service
+    KF5::Notifications # screenshot effect
 )
 
 set(kwin_effect_QT_LIBS

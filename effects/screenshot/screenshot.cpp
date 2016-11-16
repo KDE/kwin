@@ -30,6 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMatrix4x4>
 #include <xcb/xcb_image.h>
 
+#include <KLocalizedString>
+#include <KNotification>
+
 namespace KWin
 {
 
@@ -240,6 +243,10 @@ QString ScreenShotEffect::saveTempImage(const QImage &img)
     }
     img.save(&temp);
     temp.close();
+    KNotification::event(KNotification::Notification,
+                        i18nc("Notification caption that a screenshot got saved to file", "Screenshot"),
+                        i18nc("Notification with path to screenshot file", "Screenshot saved to %1", temp.fileName()),
+                        QStringLiteral("spectacle"));
     return temp.fileName();
 }
 
