@@ -550,18 +550,8 @@ void DebugConsole::initGLTab()
         text.append(QStringLiteral("</ul>"));
         return text;
     };
-    if (gl->platformInterface() == EglPlatformInterface) {
-        m_ui->eglExtensionsBox->setVisible(true);
-        m_ui->glxExtensionsBox->setVisible(false);
 
-        m_ui->eglExtensionsLabel->setText(extensionsString(static_cast<SceneOpenGL*>(Compositor::self()->scene())->backend()->extensions()));
-    } else {
-        m_ui->eglExtensionsBox->setVisible(false);
-        m_ui->glxExtensionsBox->setVisible(true);
-
-        m_ui->glxExtensionsLabel->setText(extensionsString(static_cast<SceneOpenGL*>(Compositor::self()->scene())->backend()->extensions()));
-    }
-
+    m_ui->platformExtensionsLabel->setText(extensionsString(static_cast<SceneOpenGL*>(Compositor::self()->scene())->backend()->extensions()));
     m_ui->openGLExtensionsLabel->setText(extensionsString(openGLExtensions()));
 }
 

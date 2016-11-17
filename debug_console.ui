@@ -249,29 +249,13 @@
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="eglExtensionsBox">
+            <widget class="QGroupBox" name="platformExtensionsBox">
              <property name="title">
-              <string>EGL Extensions</string>
+              <string>Platform Extensions</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
-               <widget class="QLabel" name="eglExtensionsLabel">
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="glxExtensionsBox">
-             <property name="title">
-              <string>GLX Extensions</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_9">
-              <item>
-               <widget class="QLabel" name="glxExtensionsLabel">
+               <widget class="QLabel" name="platformExtensionsLabel">
                 <property name="text">
                  <string/>
                 </property>
