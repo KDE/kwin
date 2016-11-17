@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglutils_export.h>
 #include <kwinconfig.h>
-#include <kwinglobals.h>
 
 #include <epoxy/egl.h>
 
