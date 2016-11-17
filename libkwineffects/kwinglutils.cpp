@@ -64,8 +64,6 @@ namespace KWin
 static QList<QByteArray> glExtensions;
 static QList<QByteArray> s_eglExtensions;
 
-int glTextureUnitsCount;
-
 
 // Functions
 
@@ -100,8 +98,6 @@ void cleanupGL()
     GLPlatform::cleanup();
 
     glExtensions.clear();
-
-    glTextureUnitsCount = 0;
 }
 
 bool hasGLVersion(int major, int minor, int release)

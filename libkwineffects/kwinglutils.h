@@ -56,9 +56,6 @@ void KWINGLUTILS_EXPORT initGL(std::function<resolveFuncPtr(const char*)> resolv
 // Cleans up all resources hold by the GL Context
 void KWINGLUTILS_EXPORT cleanupGL();
 
-// Number of supported texture units
-extern KWINGLUTILS_EXPORT int glTextureUnitsCount;
-
 
 bool KWINGLUTILS_EXPORT hasGLVersion(int major, int minor, int release = 0);
 // use for both OpenGL and GLX extensions
