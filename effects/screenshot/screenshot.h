@@ -118,6 +118,7 @@ private:
         File
     };
     WindowMode m_windowMode = WindowMode::NoCapture;
+    QScopedPointer<EffectFrame> m_infoFrame;
 };
 
 } // namespace

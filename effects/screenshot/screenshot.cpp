@@ -79,6 +79,10 @@ void ScreenShotEffect::paintScreen(int mask, QRegion region, ScreenPaintData &da
 {
     m_cachedOutputGeometry = data.outputGeometry();
     effects->paintScreen(mask, region, data);
+
+    if (m_infoFrame) {
+        m_infoFrame->render(region);
+    }
 }
 
 void ScreenShotEffect::postPaintScreen()
@@ -302,6 +306,7 @@ QString ScreenShotEffect::interactive(int mask)
     setDelayedReply(true);
     effects->startInteractiveWindowSelection(
         [this] (EffectWindow *w) {
+            m_infoFrame.reset();
             if (!w) {
                 m_replyConnection.send(m_replyMessage.createErrorReply(QDBusError::Failed, "Screenshot got cancelled"));
                 m_windowMode = WindowMode::NoCapture;
@@ -311,6 +316,18 @@ QString ScreenShotEffect::interactive(int mask)
                 m_scheduledScreenshot->addRepaintFull();
             }
     });
+
+
+    if (m_infoFrame.isNull()) {
+        m_infoFrame.reset(effects->effectFrame(EffectFrameStyled, false));
+        QFont font;
+        font.setBold(true);
+        m_infoFrame->setFont(font);
+        QRect area = effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop());
+        m_infoFrame->setPosition(QPoint(area.x() + area.width() / 2, area.y() + area.height() / 3));
+        m_infoFrame->setText(i18n("Select window to screen shot with left click or enter.\nEscape or right click to cancel."));
+        effects->addRepaintFull();
+    }
     return QString();
 }
 
@@ -461,7 +478,7 @@ void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)
 
 bool ScreenShotEffect::isActive() const
 {
-    return (m_scheduledScreenshot != NULL || !m_scheduledGeometry.isNull()) && !effects->isScreenLocked();
+    return (m_scheduledScreenshot != NULL || !m_scheduledGeometry.isNull() || !m_infoFrame.isNull()) && !effects->isScreenLocked();
 }
 
 void ScreenShotEffect::windowClosed( EffectWindow* w )
