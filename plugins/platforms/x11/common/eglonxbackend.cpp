@@ -93,17 +93,15 @@ EglOnXBackend::~EglOnXBackend()
 void EglOnXBackend::init()
 {
     qputenv("EGL_PLATFORM", "x11");
-    initEGL();       // required to toggle
-    initBufferAge(); // EGL_SWAP_BEHAVIOR_PRESERVED_BIT
     if (!initRenderingContext()) {
         setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
     }
 
     initKWinGL();
-    if (!hasGLExtension(QByteArrayLiteral("EGL_KHR_image")) &&
-        (!hasGLExtension(QByteArrayLiteral("EGL_KHR_image_base")) ||
-         !hasGLExtension(QByteArrayLiteral("EGL_KHR_image_pixmap")))) {
+    if (!hasExtension(QByteArrayLiteral("EGL_KHR_image")) &&
+        (!hasExtension(QByteArrayLiteral("EGL_KHR_image_base")) ||
+         !hasExtension(QByteArrayLiteral("EGL_KHR_image_pixmap")))) {
         setFailed(QStringLiteral("Required support for binding pixmaps to EGLImages not found, disabling compositing"));
         return;
     }
@@ -113,7 +111,7 @@ void EglOnXBackend::init()
     }
 
     // check for EGL_NV_post_sub_buffer and whether it can be used on the surface
-    if (hasGLExtension(QByteArrayLiteral("EGL_NV_post_sub_buffer"))) {
+    if (hasExtension(QByteArrayLiteral("EGL_NV_post_sub_buffer"))) {
         if (eglQuerySurface(eglDisplay(), surface(), EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost) == EGL_FALSE) {
             EGLint error = eglGetError();
             if (error != EGL_SUCCESS && error != EGL_BAD_ATTRIBUTE) {
@@ -124,8 +122,6 @@ void EglOnXBackend::init()
             }
         }
     }
-
-    initBufferAge();
 
     setSyncsToVBlank(false);
     setBlocksForRetrace(false);
@@ -280,6 +276,7 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
 
 bool EglOnXBackend::initBufferConfigs()
 {
+    initBufferAge();
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,         EGL_WINDOW_BIT | (supportsBufferAge() ? 0 : EGL_SWAP_BEHAVIOR_PRESERVED_BIT),
         EGL_RED_SIZE,             1,

@@ -69,15 +69,6 @@ int glTextureUnitsCount;
 
 // Functions
 
-void initEGL()
-{
-    EGLDisplay dpy = eglGetCurrentDisplay();
-    if (dpy == EGL_NO_DISPLAY)
-        dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-    const QByteArray string = eglQueryString(dpy, EGL_EXTENSIONS);
-    s_eglExtensions = string.split(' ');
-}
-
 void initGL(std::function<resolveFuncPtr(const char*)> resolveFunction)
 {
     // Get list of supported OpenGL extensions
@@ -109,7 +100,6 @@ void cleanupGL()
     GLPlatform::cleanup();
 
     glExtensions.clear();
-    s_eglExtensions.clear();
 
     glTextureUnitsCount = 0;
 }
@@ -121,12 +111,7 @@ bool hasGLVersion(int major, int minor, int release)
 
 bool hasGLExtension(const QByteArray &extension)
 {
-    return glExtensions.contains(extension) || s_eglExtensions.contains(extension);
-}
-
-QList<QByteArray> eglExtensions()
-{
-    return s_eglExtensions;
+    return glExtensions.contains(extension);
 }
 
 QList<QByteArray> openGLExtensions()

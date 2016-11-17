@@ -53,8 +53,6 @@ class GLVertexBufferPrivate;
 //  Note that GL context has to be created by the time this function is called
 typedef void (*resolveFuncPtr)();
 void KWINGLUTILS_EXPORT initGL(std::function<resolveFuncPtr(const char*)> resolveFunction);
-// Initializes EGL function pointers
-void KWINGLUTILS_EXPORT initEGL();
 // Cleans up all resources hold by the GL Context
 void KWINGLUTILS_EXPORT cleanupGL();
 
@@ -80,7 +78,6 @@ inline bool KWINGLUTILS_EXPORT isPowerOfTwo(int x)
 // TODO: Drop for Plasma 6, no longer needed after OpenGL 2.0
 int KWINGLUTILS_EXPORT nearestPowerOfTwo(int x);
 
-QList<QByteArray> KWINGLUTILS_EXPORT eglExtensions();
 QList<QByteArray> KWINGLUTILS_EXPORT openGLExtensions();
 
 class KWINGLUTILS_EXPORT GLShader

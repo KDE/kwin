@@ -554,7 +554,7 @@ void DebugConsole::initGLTab()
         m_ui->eglExtensionsBox->setVisible(true);
         m_ui->glxExtensionsBox->setVisible(false);
 
-        m_ui->eglExtensionsLabel->setText(extensionsString(eglExtensions()));
+        m_ui->eglExtensionsLabel->setText(extensionsString(static_cast<SceneOpenGL*>(Compositor::self()->scene())->backend()->extensions()));
     } else {
         m_ui->eglExtensionsBox->setVisible(false);
         m_ui->glxExtensionsBox->setVisible(true);

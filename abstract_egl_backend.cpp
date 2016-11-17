@@ -104,6 +104,8 @@ bool AbstractEglBackend::initEglAPI()
         return false;
     }
     qCDebug(KWIN_CORE) << "EGL version: " << major << "." << minor;
+    const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
+    setExtensions(eglExtensions.split(' '));
     return true;
 }
 
@@ -115,7 +117,6 @@ static eglFuncPtr getProcAddress(const char* name)
 
 void AbstractEglBackend::initKWinGL()
 {
-    initEGL();
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(EglPlatformInterface);
     options->setGlPreferBufferSwap(options->glPreferBufferSwap()); // resolve autosetting
@@ -129,7 +130,7 @@ void AbstractEglBackend::initBufferAge()
 {
     setSupportsBufferAge(false);
 
-    if (hasGLExtension(QByteArrayLiteral("EGL_EXT_buffer_age"))) {
+    if (hasExtension(QByteArrayLiteral("EGL_EXT_buffer_age"))) {
         const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
 
         if (useBufferAge != "0")
@@ -142,7 +143,7 @@ void AbstractEglBackend::initWayland()
     if (!WaylandServer::self()) {
         return;
     }
-    if (hasGLExtension(QByteArrayLiteral("EGL_WL_bind_wayland_display"))) {
+    if (hasExtension(QByteArrayLiteral("EGL_WL_bind_wayland_display"))) {
         eglBindWaylandDisplayWL = (eglBindWaylandDisplayWL_func)eglGetProcAddress("eglBindWaylandDisplayWL");
         eglUnbindWaylandDisplayWL = (eglUnbindWaylandDisplayWL_func)eglGetProcAddress("eglUnbindWaylandDisplayWL");
         eglQueryWaylandBufferWL = (eglQueryWaylandBufferWL_func)eglGetProcAddress("eglQueryWaylandBufferWL");
@@ -202,10 +203,8 @@ bool AbstractEglBackend::isOpenGLES() const
 
 bool AbstractEglBackend::createContext()
 {
-    const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
-    const QList<QByteArray> extensions = eglExtensions.split(' ');
-    const bool haveRobustness = extensions.contains(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
-    const bool haveCreateContext = extensions.contains(QByteArrayLiteral("EGL_KHR_create_context"));
+    const bool haveRobustness = hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
+    const bool haveCreateContext = hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
 
     EGLContext ctx = EGL_NO_CONTEXT;
     if (isOpenGLES()) {

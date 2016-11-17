@@ -285,7 +285,12 @@ void Platform::warpPointer(const QPointF &globalPos)
 
 bool Platform::supportsQpaContext() const
 {
-    return hasGLExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context"));
+    if (Compositor *c = Compositor::self()) {
+        if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
+            return s->backend()->hasExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context"));
+        }
+    }
+    return false;
 }
 
 EGLDisplay KWin::Platform::sceneEglDisplay() const
