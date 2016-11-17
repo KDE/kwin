@@ -115,7 +115,6 @@ Options::Options(QObject *parent)
     , m_compositingInitialized(Options::defaultCompositingInitialized())
     , m_hiddenPreviews(Options::defaultHiddenPreviews())
     , m_glSmoothScale(Options::defaultGlSmoothScale())
-    , m_colorCorrected(Options::defaultColorCorrected())
     , m_xrenderSmoothScale(Options::defaultXrenderSmoothScale())
     , m_maxFpsInterval(Options::defaultMaxFpsInterval())
     , m_refreshRate(Options::defaultRefreshRate())
@@ -643,15 +642,6 @@ void Options::setGlSmoothScale(int glSmoothScale)
     emit glSmoothScaleChanged();
 }
 
-void Options::setColorCorrected(bool colorCorrected)
-{
-    if (m_colorCorrected == colorCorrected) {
-        return;
-    }
-    m_colorCorrected = colorCorrected;
-    emit colorCorrectedChanged();
-}
-
 void Options::setXrenderSmoothScale(bool xrenderSmoothScale)
 {
     if (m_xrenderSmoothScale == xrenderSmoothScale) {
@@ -990,8 +980,6 @@ void Options::reloadCompositingSettings(bool force)
     if (c != 'a' && c != 'c' && c != 'p' && c != 'e')
         c = 0;
     setGlPreferBufferSwap(c);
-
-    setColorCorrected(config.readEntry("GLColorCorrection", Options::defaultColorCorrected()));
 
     m_xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);
 

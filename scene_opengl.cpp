@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "wayland_server.h"
 
-#include <kwinglcolorcorrection.h>
 #include <kwinglplatform.h>
 
 #include "utils.h"
@@ -992,7 +991,6 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
 SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
     : SceneOpenGL(backend, parent)
     , m_lanczosFilter(NULL)
-    , m_colorCorrection()
 {
     if (!init_ok) {
         // base ctor already failed
@@ -1005,10 +1003,6 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
         init_ok = false;
         return;
     }
-
-    // Initialize color correction before the shaders
-    slotColorCorrectedChanged(false);
-    connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()), Qt::QueuedConnection);
 
     const QSize &s = screens()->size();
     GLRenderTarget::setVirtualScreenSize(s);
@@ -1120,20 +1114,7 @@ void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region
     if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen() && !w->window()->isInputMethod()) {
         return;
     }
-    if (!m_colorCorrection.isNull() && m_colorCorrection->isEnabled()) {
-        // Split the painting for separate screens
-        const int numScreens = screens()->count();
-        for (int screen = 0; screen < numScreens; ++ screen) {
-            QRegion regionForScreen(region);
-            if (numScreens > 1)
-                regionForScreen = region.intersected(screens()->geometry(screen));
-
-            data.setScreen(screen);
-            performPaintWindow(w, mask, regionForScreen, data);
-        }
-    } else {
-        performPaintWindow(w, mask, region, data);
-    }
+    performPaintWindow(w, mask, region, data);
 }
 
 void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
@@ -1154,33 +1135,6 @@ void SceneOpenGL2::resetLanczosFilter()
     // TODO: Qt5 - replace by a lambda slot
     delete m_lanczosFilter;
     m_lanczosFilter = NULL;
-}
-
-ColorCorrection *SceneOpenGL2::colorCorrection()
-{
-    return m_colorCorrection.data();
-}
-
-void SceneOpenGL2::slotColorCorrectedChanged(bool recreateShaders)
-{
-    qCDebug(KWIN_CORE) << "Color correction:" << options->isColorCorrected();
-    if (options->isColorCorrected() && m_colorCorrection.isNull()) {
-        m_colorCorrection.reset(new ColorCorrection(this));
-        if (!m_colorCorrection->setEnabled(true)) {
-            m_colorCorrection.reset();
-            return;
-        }
-        connect(m_colorCorrection.data(), SIGNAL(changed()), Compositor::self(), SLOT(addRepaintFull()));
-        connect(m_colorCorrection.data(), SIGNAL(errorOccured()), options, SLOT(setColorCorrected()), Qt::QueuedConnection);
-        if (recreateShaders) {
-            // Reload all shaders
-            ShaderManager::cleanup();
-            ShaderManager::instance();
-        }
-    } else {
-        m_colorCorrection.reset();
-    }
-    Compositor::self()->addRepaintFull();
 }
 
 //****************************************
@@ -1521,8 +1475,6 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     if (!beginRenderWindow(mask, region, data))
         return;
 
-    SceneOpenGL2 *scene = static_cast<SceneOpenGL2 *>(m_scene);
-
     QMatrix4x4 windowMatrix = transformation(mask, data);
     const QMatrix4x4 modelViewProjection = modelViewProjectionMatrix(mask, data);
     const QMatrix4x4 mvpMatrix = modelViewProjection * windowMatrix;
@@ -1540,10 +1492,6 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         shader = ShaderManager::instance()->pushShader(traits);
     }
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
-
-    if (ColorCorrection *cc = scene->colorCorrection()) {
-        cc->setupForOutput(data.screen());
-    }
 
     shader->setUniform(GLShader::Saturation, data.saturation());
 

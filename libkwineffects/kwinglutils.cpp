@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // need to call GLTexturePrivate::initStatic()
 #include "kwingltexture_p.h"
 
-#include "kwinglcolorcorrection.h"
 #include "kwineffects.h"
 #include "kwinglplatform.h"
 #include "logging_p.h"
@@ -142,8 +141,6 @@ bool checkGLError(const char* txt)
 // GLShader
 //****************************************
 
-bool GLShader::sColorCorrect = false;
-
 GLShader::GLShader(unsigned int flags)
     : mValid(false)
     , mLocationsResolved(false)
@@ -229,10 +226,6 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
     if (GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0)) {
         ba.replace("#version 140", "#version 300 es\n\nprecision highp float;\n");
     }
-
-    // Inject color correction code for fragment shaders, if possible
-    if (shaderType == GL_FRAGMENT_SHADER && sColorCorrect)
-        ba = ColorCorrection::prepareFragmentShader(ba);
 
     return ba;
 }
@@ -345,8 +338,6 @@ void GLShader::resolveLocations()
     mVec4Location[ModulationConstant] = uniformLocation("modulation");
 
     mFloatLocation[Saturation]    = uniformLocation("saturation");
-
-    mIntLocation[ColorCorrectionLookupTextureUnit] = uniformLocation("u_ccLookupTexture");
 
     mColorLocation[Color] = uniformLocation("geometryColor");
 

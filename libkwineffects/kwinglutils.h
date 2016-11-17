@@ -139,7 +139,6 @@ public:
 
     enum IntUniform {
         AlphaToOne,     ///< @deprecated no longer used
-        ColorCorrectionLookupTextureUnit,
         IntUniformCount
     };
 
@@ -178,10 +177,6 @@ private:
     int mIntLocation[IntUniformCount];
     int mColorLocation[ColorUniformCount];
 
-    static bool sColorCorrect;
-
-    friend class ColorCorrection;
-    friend class ColorCorrectionPrivate;
     friend class ShaderManager;
 };
 

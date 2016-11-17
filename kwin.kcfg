@@ -243,9 +243,6 @@
         <entry name="GLLegacy" type="Bool">
             <default>false</default>
         </entry>
-        <entry name="GLColorCorrection" type="Bool">
-            <default>false</default>
-        </entry>
         <entry name="XRenderSmoothScale" type="Bool">
             <default>false</default>
         </entry>

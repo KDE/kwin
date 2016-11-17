@@ -42,7 +42,6 @@ Compositing::Compositing(QObject *parent)
     , m_glScaleFilter(0)
     , m_xrScaleFilter(false)
     , m_glSwapStrategy(0)
-    , m_glColorCorrection(false)
     , m_compositingType(0)
     , m_compositingEnabled(true)
     , m_changed(false)
@@ -57,7 +56,6 @@ Compositing::Compositing(QObject *parent)
     connect(this, &Compositing::glScaleFilterChanged,        this, &Compositing::changed);
     connect(this, &Compositing::xrScaleFilterChanged,        this, &Compositing::changed);
     connect(this, &Compositing::glSwapStrategyChanged,       this, &Compositing::changed);
-    connect(this, &Compositing::glColorCorrectionChanged,    this, &Compositing::changed);
     connect(this, &Compositing::compositingTypeChanged,      this, &Compositing::changed);
     connect(this, &Compositing::compositingEnabledChanged,   this, &Compositing::changed);
     connect(this, &Compositing::openGLPlatformInterfaceChanged, this, &Compositing::changed);
@@ -94,7 +92,6 @@ void Compositing::reset()
         return 0;
     };
     setGlSwapStrategy(swapStrategy());
-    setGlColorCorrection(kwinConfig.readEntry("GLColorCorrection", false));
 
     auto type = [&kwinConfig]{
         const QString backend = kwinConfig.readEntry("Backend", "OpenGL");
@@ -127,7 +124,6 @@ void Compositing::defaults()
     setGlScaleFilter(2);
     setXrScaleFilter(false);
     setGlSwapStrategy(1);
-    setGlColorCorrection(false);
     setCompositingType(CompositingType::OPENGL20_INDEX);
     const QModelIndex index = m_openGLPlatformInterfaceModel->indexForKey(QStringLiteral("glx"));
     setOpenGLPlatformInterface(index.isValid() ? index.row() : 0);
@@ -192,11 +188,6 @@ int Compositing::glSwapStrategy() const
     return m_glSwapStrategy;
 }
 
-bool Compositing::glColorCorrection() const
-{
-    return m_glColorCorrection;
-}
-
 int Compositing::compositingType() const
 {
     return m_compositingType;
@@ -214,15 +205,6 @@ void Compositing::setAnimationSpeed(int speed)
     }
     m_animationSpeed = speed;
     emit animationSpeedChanged(speed);
-}
-
-void Compositing::setGlColorCorrection(bool correction)
-{
-    if (correction == m_glColorCorrection) {
-        return;
-    }
-    m_glColorCorrection = correction;
-    emit glColorCorrectionChanged(correction);
 }
 
 void Compositing::setGlScaleFilter(int index)
@@ -309,7 +291,6 @@ void Compositing::save()
         }
     };
     kwinConfig.writeEntry("GLPreferBufferSwap", swapStrategy());
-    kwinConfig.writeEntry("GLColorCorrection", glColorCorrection());
     QString backend;
     bool glCore = false;
     switch (compositingType()) {

@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-class ColorCorrection;
 class LanczosFilter;
 class OpenGLBackend;
 class SyncManager;
@@ -128,7 +127,6 @@ public:
 
     static bool supported(OpenGLBackend *backend);
 
-    ColorCorrection *colorCorrection();
     QMatrix4x4 projectionMatrix() const override { return m_projectionMatrix; }
     QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
 
@@ -141,7 +139,6 @@ protected:
     virtual void updateProjectionMatrix() override;
 
 private Q_SLOTS:
-    void slotColorCorrectedChanged(bool recreateShaders = true);
     void resetLanczosFilter();
 
 private:
@@ -150,7 +147,6 @@ private:
 
 private:
     LanczosFilter *m_lanczosFilter;
-    QScopedPointer<ColorCorrection> m_colorCorrection;
     QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_screenProjectionMatrix;
     GLuint vao;

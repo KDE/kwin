@@ -167,11 +167,6 @@ void KWinCompositingSettings::init()
         }
     );
 
-    // color correction
-    m_form.colorCorrection->setChecked(m_compositing->glColorCorrection());
-    connect(m_compositing, &Compositing::glColorCorrectionChanged, m_form.colorCorrection, &QCheckBox::setChecked);
-    connect(m_form.colorCorrection, &QCheckBox::toggled, m_compositing, &Compositing::setGlColorCorrection);
-
     // windows blocking compositing
     m_form.windowsBlockCompositing->setChecked(m_compositing->windowsBlockCompositing());
     connect(m_compositing, &Compositing::windowsBlockCompositingChanged, m_form.windowsBlockCompositing, &QCheckBox::setChecked);
@@ -195,7 +190,6 @@ void KWinCompositingSettings::init()
         m_form.glScaleFilterLabel->setVisible(currentType != CompositingType::XRENDER_INDEX);
         m_form.xrScaleFilter->setVisible(currentType == CompositingType::XRENDER_INDEX);
         m_form.xrScaleFilterLabel->setVisible(currentType == CompositingType::XRENDER_INDEX);
-        m_form.colorCorrection->setEnabled(currentType == CompositingType::OPENGL31_INDEX || currentType == CompositingType::OPENGL20_INDEX);
     };
     showHideBasedOnType();
     connect(m_form.type, currentIndexChangedSignal,

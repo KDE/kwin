@@ -82,7 +82,6 @@ set(kwin_GLUTILSLIB_SRCS
     kwingltexture.cpp
     kwinglutils_funcs.cpp
     kwinglplatform.cpp
-    kwinglcolorcorrection.cpp
     logging.cpp
     )
 
@@ -90,7 +89,7 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
     include_directories(${glinclude})
     add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
     generate_export_header(${name} BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
-    target_link_libraries(${name} PUBLIC Qt5::DBus XCB::XCB KF5::CoreAddons KF5::WindowSystem)
+    target_link_libraries(${name} PUBLIC XCB::XCB KF5::CoreAddons KF5::WindowSystem)
     set_target_properties(${name} PROPERTIES
         VERSION ${KWINEFFECTS_VERSION_STRING}
         SOVERSION ${KWINEFFECTS_SOVERSION}

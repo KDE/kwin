@@ -175,7 +175,6 @@ class KWIN_EXPORT Options : public QObject
      * -1 = auto
      **/
     Q_PROPERTY(int glSmoothScale READ glSmoothScale WRITE setGlSmoothScale NOTIFY glSmoothScaleChanged)
-    Q_PROPERTY(bool colorCorrected READ isColorCorrected WRITE setColorCorrected NOTIFY colorCorrectedChanged)
     Q_PROPERTY(bool xrenderSmoothScale READ isXrenderSmoothScale WRITE setXrenderSmoothScale NOTIFY xrenderSmoothScaleChanged)
     Q_PROPERTY(qint64 maxFpsInterval READ maxFpsInterval WRITE setMaxFpsInterval NOTIFY maxFpsIntervalChanged)
     Q_PROPERTY(uint refreshRate READ refreshRate WRITE setRefreshRate NOTIFY refreshRateChanged)
@@ -558,9 +557,6 @@ public:
     int glSmoothScale() const {
         return m_glSmoothScale;
     }
-    bool isColorCorrected() const {
-        return m_colorCorrected;
-    }
     // XRender
     bool isXrenderSmoothScale() const {
         return m_xrenderSmoothScale;
@@ -743,9 +739,6 @@ public:
     static int defaultGlSmoothScale() {
         return 2;
     }
-    static bool defaultColorCorrected() {
-        return false;
-    }
     static bool defaultXrenderSmoothScale() {
         return false;
     }
@@ -845,7 +838,6 @@ Q_SIGNALS:
     void compositingInitializedChanged();
     void hiddenPreviewsChanged();
     void glSmoothScaleChanged();
-    void colorCorrectedChanged();
     void xrenderSmoothScaleChanged();
     void maxFpsIntervalChanged();
     void refreshRateChanged();
@@ -858,9 +850,6 @@ Q_SIGNALS:
     void windowsBlockCompositingChanged();
 
     void configChanged();
-
-public Q_SLOTS:
-    void setColorCorrected(bool colorCorrected = false);
 
 private:
     void setElectricBorders(int borders);
@@ -894,7 +883,6 @@ private:
     bool m_compositingInitialized;
     HiddenPreviews m_hiddenPreviews;
     int m_glSmoothScale;
-    bool m_colorCorrected;
     bool m_xrenderSmoothScale;
     qint64 m_maxFpsInterval;
     // Settings that should be auto-detected
