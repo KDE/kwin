@@ -145,24 +145,6 @@ bool checkGLError(const char* txt)
     return hasError;
 }
 
-// TODO: Drop for Plasma 6, no longer needed after OpenGL 2.0
-int nearestPowerOfTwo(int x)
-{
-    unsigned y = static_cast<unsigned>(x);
-
-    // From Hank Warren's "Hacker's Delight", clp2() method.
-    // Works for up to 32-bit integers.
-
-    y = y - 1;
-    y = y | (y >>  1);
-    y = y | (y >>  2);
-    y = y | (y >>  4);
-    y = y | (y >>  8);
-    y = y | (y >> 16);
-
-    return static_cast<int>(y + 1);
-}
-
 //****************************************
 // GLShader
 //****************************************

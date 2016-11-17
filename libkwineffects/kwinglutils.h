@@ -67,17 +67,6 @@ bool KWINGLUTILS_EXPORT hasGLExtension(const QByteArray &extension);
 // detect OpenGL error (add to various places in code to pinpoint the place)
 bool KWINGLUTILS_EXPORT checkGLError(const char* txt);
 
-inline bool KWINGLUTILS_EXPORT isPowerOfTwo(int x)
-{
-    return ((x & (x - 1)) == 0);
-}
-/**
- * @return power of two integer _greater or equal to_ x.
- *  E.g. nearestPowerOfTwo(513) = nearestPowerOfTwo(800) = 1024
- **/
-// TODO: Drop for Plasma 6, no longer needed after OpenGL 2.0
-int KWINGLUTILS_EXPORT nearestPowerOfTwo(int x);
-
 QList<QByteArray> KWINGLUTILS_EXPORT openGLExtensions();
 
 class KWINGLUTILS_EXPORT GLShader
