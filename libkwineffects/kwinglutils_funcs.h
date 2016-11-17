@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_GLUTILS_FUNCS_H
 
 #include <kwinglutils_export.h>
-#include <kwinconfig.h>
 
 #include <epoxy/egl.h>
 
