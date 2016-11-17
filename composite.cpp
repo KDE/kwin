@@ -772,32 +772,40 @@ void Compositor::performCompositing()
     }
 }
 
+template <class T>
+static bool repaintsPending(const QList<T*> &windows)
+{
+    return std::any_of(windows.begin(), windows.end(), [] (T *t) { return !t->repaints().isEmpty(); });
+}
+
 bool Compositor::windowRepaintsPending() const
 {
-    foreach (Toplevel * c, Workspace::self()->clientList())
-    if (!c->repaints().isEmpty())
+    if (repaintsPending(Workspace::self()->clientList())) {
         return true;
-    foreach (Toplevel * c, Workspace::self()->desktopList())
-    if (!c->repaints().isEmpty())
+    }
+    if (repaintsPending(Workspace::self()->desktopList())) {
         return true;
-    foreach (Toplevel * c, Workspace::self()->unmanagedList())
-    if (!c->repaints().isEmpty())
+    }
+    if (repaintsPending(Workspace::self()->unmanagedList())) {
         return true;
-    foreach (Toplevel * c, Workspace::self()->deletedList())
-    if (!c->repaints().isEmpty())
+    }
+    if (repaintsPending(Workspace::self()->deletedList())) {
         return true;
+    }
     if (auto w = waylandServer()) {
         const auto &clients = w->clients();
-        for (auto c : clients) {
-            if (c->readyForPainting() && !c->repaints().isEmpty()) {
-                return true;
-            }
+        auto test = [] (ShellClient *c) {
+            return c->readyForPainting() && !c->repaints().isEmpty();
+        };
+        if (std::any_of(clients.begin(), clients.end(), test)) {
+            return true;
         }
         const auto &internalClients = w->internalClients();
-        for (auto c : internalClients) {
-            if (c->isShown(true) && !c->repaints().isEmpty()) {
-                return true;
-            }
+        auto internalTest = [] (ShellClient *c) {
+            return c->isShown(true) && !c->repaints().isEmpty();
+        };
+        if (std::any_of(internalClients.begin(), internalClients.end(), internalTest)) {
+            return true;
         }
     }
     return false;
