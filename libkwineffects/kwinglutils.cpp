@@ -60,9 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 // Variables
-// List of all supported GL, EGL and GLX extensions
+// List of all supported GL extensions
 static QList<QByteArray> glExtensions;
-static QList<QByteArray> s_eglExtensions;
 
 
 // Functions
