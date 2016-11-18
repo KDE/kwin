@@ -41,13 +41,21 @@ loadConfig();
 effect.configChanged.connect(function() {
     loadConfig();
 });
-effects.windowAdded.connect(function(w) {
+function fadeInHandler(w) {
     if (fadeWindows && isFadeWindow(w)) {
+        if (w.fadeOutWindowTypeAnimation !== undefined) {
+            cancel(w.fadeOutWindowTypeAnimation);
+            w.fadeOutWindowTypeAnimation = undefined;
+        }
         w.fadeInWindowTypeAnimation = effect.animate(w, Effect.Opacity, fadeInTime, 1.0, 0.0);
     }
-});
-effects.windowClosed.connect(function(w) {
+}
+function fadeOutHandler(w) {
     if (fadeWindows && isFadeWindow(w)) {
+        if (w.fadeOutWindowTypeAnimation !== undefined) {
+            // don't animate again as it was already animated through window hidden
+            return;
+        }
         w.fadeOutWindowTypeAnimation = animate({
             window: w,
             duration: fadeOutTime,
@@ -58,7 +66,11 @@ effects.windowClosed.connect(function(w) {
             }]
         });
     }
-});
+}
+effects.windowAdded.connect(fadeInHandler);
+effects.windowShown.connect(fadeInHandler);
+effects.windowClosed.connect(fadeOutHandler);
+effects.windowHidden.connect(fadeOutHandler);
 effects.windowDataChanged.connect(function (window, role) {
     if (role == Effect.WindowAddedGrabRole) {
         if (effect.isGrabbed(window, Effect.WindowAddedGrabRole)) {
