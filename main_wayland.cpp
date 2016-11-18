@@ -451,6 +451,7 @@ int main(int argc, char * argv[])
         signal(SIGHUP, SIG_IGN);
     signal(SIGABRT, KWin::unsetDumpable);
     signal(SIGSEGV, KWin::unsetDumpable);
+    signal(SIGPIPE, SIG_IGN);
     // ensure that no thread takes SIGUSR
     sigset_t userSignals;
     sigemptyset(&userSignals);

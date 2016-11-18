@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
+#include <QtConcurrentRun>
+#include <QDataStream>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QDir>
 #include <QtDBus/QDBusConnection>
@@ -32,6 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KLocalizedString>
 #include <KNotification>
+
+#include <unistd.h>
 
 namespace KWin
 {
@@ -187,6 +191,20 @@ void ScreenShotEffect::postPaintScreen()
                 m_windowMode = WindowMode::NoCapture;
             } else if (m_windowMode == WindowMode::File) {
                 sendReplyImage(img);
+            } else if (m_windowMode == WindowMode::FileDescriptor) {
+                QtConcurrent::run(
+                    [] (int fd, const QImage &img) {
+                        QFile file;
+                        if (file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
+                            QDataStream ds(&file);
+                            ds << img;
+                            file.close();
+                        } else {
+                            close(fd);
+                        }
+                    }, m_fd, img);
+                m_windowMode = WindowMode::NoCapture;
+                m_fd = -1;
             }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (xImage) {
@@ -306,7 +324,7 @@ QString ScreenShotEffect::interactive(int mask)
     setDelayedReply(true);
     effects->startInteractiveWindowSelection(
         [this] (EffectWindow *w) {
-            m_infoFrame.reset();
+            hideInfoMessage();
             if (!w) {
                 m_replyConnection.send(m_replyMessage.createErrorReply(QDBusError::Failed, "Screenshot got cancelled"));
                 m_windowMode = WindowMode::NoCapture;
@@ -317,18 +335,62 @@ QString ScreenShotEffect::interactive(int mask)
             }
     });
 
-
-    if (m_infoFrame.isNull()) {
-        m_infoFrame.reset(effects->effectFrame(EffectFrameStyled, false));
-        QFont font;
-        font.setBold(true);
-        m_infoFrame->setFont(font);
-        QRect area = effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop());
-        m_infoFrame->setPosition(QPoint(area.x() + area.width() / 2, area.y() + area.height() / 3));
-        m_infoFrame->setText(i18n("Select window to screen shot with left click or enter.\nEscape or right click to cancel."));
-        effects->addRepaintFull();
-    }
+    showInfoMessage();
     return QString();
+}
+
+void ScreenShotEffect::interactive(QDBusUnixFileDescriptor fd, int mask)
+{
+    if (!calledFromDBus()) {
+        return;
+    }
+    if (!m_scheduledGeometry.isNull() || m_windowMode != WindowMode::NoCapture) {
+        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+        return;
+    }
+    m_fd = dup(fd.fileDescriptor());
+    if (m_fd == -1) {
+        sendErrorReply(QDBusError::Failed, "No valid file descriptor");
+        return;
+    }
+    m_type = (ScreenShotType) mask;
+    m_windowMode = WindowMode::FileDescriptor;
+
+    effects->startInteractiveWindowSelection(
+        [this] (EffectWindow *w) {
+            hideInfoMessage();
+            if (!w) {
+                close(m_fd);
+                m_fd = -1;
+                m_windowMode = WindowMode::NoCapture;
+                return;
+            } else {
+                m_scheduledScreenshot = w;
+                m_scheduledScreenshot->addRepaintFull();
+            }
+    });
+
+    showInfoMessage();
+}
+
+void ScreenShotEffect::showInfoMessage()
+{
+    if (!m_infoFrame.isNull()) {
+        return;
+    }
+    m_infoFrame.reset(effects->effectFrame(EffectFrameStyled, false));
+    QFont font;
+    font.setBold(true);
+    m_infoFrame->setFont(font);
+    QRect area = effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop());
+    m_infoFrame->setPosition(QPoint(area.x() + area.width() / 2, area.y() + area.height() / 3));
+    m_infoFrame->setText(i18n("Select window to screen shot with left click or enter.\nEscape or right click to cancel."));
+    effects->addRepaintFull();
+}
+
+void ScreenShotEffect::hideInfoMessage()
+{
+    m_infoFrame.reset();
 }
 
 QString ScreenShotEffect::screenshotFullscreen(bool captureCursor)

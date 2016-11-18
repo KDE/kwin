@@ -396,6 +396,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         signal(SIGINT, SIG_IGN);
     if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
+    signal(SIGPIPE, SIG_IGN);
 
     // Disable the glib event loop integration, since it seems to be responsible
     // for several bug reports about high CPU usage (bug #239963)

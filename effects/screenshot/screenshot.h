@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusContext>
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QDBusUnixFileDescriptor>
 #include <QObject>
 #include <QImage>
 
@@ -64,6 +65,18 @@ public Q_SLOTS:
      * @param mask The mask for what to include in the screenshot
      **/
     Q_SCRIPTABLE QString interactive(int mask = 0);
+    /**
+     * Starts an interactive window screenshot session. The user can select a window to
+     * screenshot.
+     *
+     * Once the window is selected the screenshot is saved into the @p fd passed to the
+     * method. It is intended to be used with a pipe, so that the invoking side can just
+     * read from the pipe. The image gets written into the fd using a QDataStream.
+     *
+     * @param fd File descriptor into which the screenshot should be saved
+     * @param mask The mask for what to include in the screenshot
+     **/
+    Q_SCRIPTABLE void interactive(QDBusUnixFileDescriptor fd, int mask = 0);
     Q_SCRIPTABLE void screenshotWindowUnderCursor(int mask = 0);
     /**
      * Saves a screenshot of all screen into a file and returns the path to the file.
@@ -103,6 +116,8 @@ private:
     QImage blitScreenshot(const QRect &geometry);
     QString saveTempImage(const QImage &img);
     void sendReplyImage(const QImage &img);
+    void showInfoMessage();
+    void hideInfoMessage();
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;
     QRect m_scheduledGeometry;
@@ -115,9 +130,11 @@ private:
     enum class WindowMode {
         NoCapture,
         Xpixmap,
-        File
+        File,
+        FileDescriptor
     };
     WindowMode m_windowMode = WindowMode::NoCapture;
+    int m_fd = -1;
     QScopedPointer<EffectFrame> m_infoFrame;
 };
 
