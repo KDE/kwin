@@ -346,6 +346,7 @@ void TestShellClient::testFullscreen()
     QVERIFY(!c->isFullScreen());
     QCOMPARE(c->clientSize(), QSize(100, 50));
     QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
+    QCOMPARE(c->sizeForClientSize(c->clientSize()), c->geometry().size());
     QSignalSpy fullscreenChangedSpy(c, &ShellClient::fullScreenChanged);
     QVERIFY(fullscreenChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &ShellClient::geometryChanged);

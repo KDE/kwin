@@ -1147,7 +1147,7 @@ QSize AbstractClient::sizeForClientSize(const QSize &wsize, Sizemode mode, bool 
 {
     Q_UNUSED(mode)
     Q_UNUSED(noframe)
-    return wsize;
+    return wsize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
 }
 
 void AbstractClient::addRepaintDuringGeometryUpdates()
