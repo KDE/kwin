@@ -815,14 +815,20 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
     if (cached_quad_list != NULL && !force)
         return *cached_quad_list;
     WindowQuadList ret;
+    qreal scale = 1.0;
+    if (toplevel->surface()) {
+        scale = toplevel->surface()->scale();
+    }
+
     if (toplevel->clientPos() == QPoint(0, 0) && toplevel->clientSize() == toplevel->decorationRect().size())
-        ret = makeQuads(WindowQuadContents, shape());  // has no decoration
+        ret = makeQuads(WindowQuadContents, shape(), QPoint(0,0), scale);  // has no decoration
     else {
         AbstractClient *client = dynamic_cast<AbstractClient*>(toplevel);
         QRegion contents = clientShape();
         QRegion center = toplevel->transparentRect();
         QRegion decoration = (client ? QRegion(client->decorationRect()) : shape()) - center;
-        ret = makeQuads(WindowQuadContents, contents, toplevel->clientContentPos());
+        ret = makeQuads(WindowQuadContents, contents, toplevel->clientContentPos(), scale);
+
 
         QRect rects[4];
         bool isShadedClient = false;
@@ -905,16 +911,21 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
     return list;
 }
 
-WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg, const QPoint &textureOffset) const
+WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg, const QPoint &textureOffset, qreal scale) const
 {
     WindowQuadList ret;
     foreach (const QRect & r, reg.rects()) {
         WindowQuad quad(type);
         // TODO asi mam spatne pravy dolni roh - bud tady, nebo v jinych castech
-        quad[ 0 ] = WindowVertex(r.x(), r.y(), r.x() + textureOffset.x(), r.y() + textureOffset.y());
-        quad[ 1 ] = WindowVertex(r.x() + r.width(), r.y(), r.x() + r.width() + textureOffset.x(), r.y() + textureOffset.y());
-        quad[ 2 ] = WindowVertex(r.x() + r.width(), r.y() + r.height(), r.x() + r.width() + textureOffset.x(), r.y() + r.height() + textureOffset.y());
-        quad[ 3 ] = WindowVertex(r.x(), r.y() + r.height(), r.x() + textureOffset.x(), r.y() + r.height() + textureOffset.y());
+        quad[ 0 ] = WindowVertex(QPointF(r.x(), r.y()),
+                                 QPointF(r.x() + textureOffset.x(), r.y() + textureOffset.y()) * scale);
+        quad[ 1 ] = WindowVertex(QPointF(r.x() + r.width(), r.y()),
+                                 QPointF(r.x() + r.width() + textureOffset.x(), r.y() + textureOffset.y()) * scale);
+        quad[ 2 ] = WindowVertex(QPointF(r.x() + r.width(), r.y() + r.height()),
+                                 QPointF(r.x() + r.width() + textureOffset.x(), r.y() + r.height() + textureOffset.y()) * scale);
+        quad[ 3 ] = WindowVertex(QPointF(r.x(), r.y() + r.height()),
+                                 QPointF(r.x() + textureOffset.x(), r.y() + r.height() + textureOffset.y()) * scale);
+
         ret.append(quad);
     }
     return ret;

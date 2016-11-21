@@ -2179,6 +2179,7 @@ class KWINEFFECTS_EXPORT WindowVertex
 {
 public:
     WindowVertex();
+    WindowVertex(const QPointF &position, const QPointF &textureCoordinate);
     WindowVertex(double x, double y, double tx, double ty);
 
     double x() const { return px; }
@@ -3200,6 +3201,13 @@ WindowVertex::WindowVertex()
 inline
 WindowVertex::WindowVertex(double _x, double _y, double _tx, double _ty)
     : px(_x), py(_y), ox(_x), oy(_y), tx(_tx), ty(_ty)
+{
+}
+
+
+inline
+WindowVertex::WindowVertex(const QPointF &position, const QPointF &texturePosition)
+    : px(position.x()), py(position.y()), ox(position.x()), oy(position.y()), tx(texturePosition.x()), ty(texturePosition.y())
 {
 }
 
