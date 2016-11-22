@@ -74,6 +74,7 @@ class Device : public QObject
     Q_PROPERTY(bool scrollOnButtonDownEnabledByDefault READ scrollOnButtonDownEnabledByDefault CONSTANT)
     Q_PROPERTY(quint32 defaultScrollButton READ defaultScrollButton CONSTANT)
     Q_PROPERTY(bool middleEmulation READ isMiddleEmulation WRITE setMiddleEmulation NOTIFY middleEmulationChanged)
+    Q_PROPERTY(bool leftHandedEnabledByDefault READ leftHandedEnabledByDefault CONSTANT)
     Q_PROPERTY(bool leftHanded READ isLeftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
     Q_PROPERTY(bool naturalScroll READ isNaturalScroll WRITE setNaturalScroll NOTIFY naturalScrollChanged)
     Q_PROPERTY(bool scrollTwoFinger READ isScrollTwoFinger WRITE setScrollTwoFinger NOTIFY scrollMethodChanged)
@@ -192,6 +193,9 @@ public:
     }
     bool supportsScrollOnButtonDown() const {
         return (m_supportedScrollMethods & LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN);
+    }
+    bool leftHandedEnabledByDefault() const {
+        return m_leftHandedEnabledByDefault;
     }
     bool middleEmulationEnabledByDefault() const {
         return m_middleEmulationEnabledByDefault;
@@ -337,6 +341,7 @@ private:
     quint32 m_supportedScrollMethods;
     bool m_supportsScrollEdge;
     bool m_supportsScrollOnButtonDown;
+    bool m_leftHandedEnabledByDefault;
     bool m_middleEmulationEnabledByDefault;
     bool m_naturalScrollEnabledByDefault;
     enum libinput_config_scroll_method m_defaultScrollMethod;

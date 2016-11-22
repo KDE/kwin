@@ -194,6 +194,11 @@ int libinput_device_config_left_handed_get(struct libinput_device *device)
     return device->leftHanded;
 }
 
+int libinput_device_config_left_handed_get_default(struct libinput_device *device)
+{
+    return device->leftHandedEnabledByDefault;
+}
+
 double libinput_device_config_accel_get_speed(struct libinput_device *device)
 {
     return device->pointerAcceleration;

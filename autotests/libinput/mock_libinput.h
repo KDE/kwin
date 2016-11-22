@@ -59,6 +59,7 @@ struct libinput_device {
     bool middleEmulation = false;
     qreal pointerAcceleration = 0.0;
     int setPointerAccelerationReturnValue = 0;
+    bool leftHandedEnabledByDefault = false;
     bool leftHanded = false;
     int setLeftHandedReturnValue = 0;
     bool naturalScrollEnabledByDefault = false;

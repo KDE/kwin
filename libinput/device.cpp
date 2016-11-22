@@ -74,6 +74,7 @@ Device *Device::getDevice(libinput_device *native)
 
 enum class ConfigKey {
     Enabled,
+    LeftHanded,
     TapToClick,
     TapAndDrag,
     TapDragLock,
@@ -99,6 +100,7 @@ struct ConfigData {
 
 static const QMap<ConfigKey, ConfigData> s_configData {
     {ConfigKey::Enabled, {QByteArrayLiteral("Enabled"), {&Device::setEnabled, std::function<bool (Device*)>()}, {}}},
+    {ConfigKey::LeftHanded, {QByteArrayLiteral("LeftHanded"), {&Device::setLeftHanded, &Device::leftHandedEnabledByDefault}, {}}},
     {ConfigKey::TapToClick, {QByteArrayLiteral("TapToClick"), {&Device::setTapToClick, &Device::tapToClickEnabledByDefault}, {}}},
     {ConfigKey::TapAndDrag, {QByteArrayLiteral("TapAndDrag"), {&Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault}, {}}},
     {ConfigKey::TapDragLock, {QByteArrayLiteral("TapDragLock"), {&Device::setTapDragLock, &Device::tapDragLockEnabledByDefault}, {}}},
@@ -146,6 +148,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportsNaturalScroll(libinput_device_config_scroll_has_natural_scroll(m_device))
     , m_supportedScrollMethods(libinput_device_config_scroll_get_methods(m_device))
     , m_middleEmulationEnabledByDefault(libinput_device_config_middle_emulation_get_default_enabled(m_device) == LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED)
+    , m_leftHandedEnabledByDefault(libinput_device_config_left_handed_get_default(m_device))
     , m_naturalScrollEnabledByDefault(libinput_device_config_scroll_get_default_natural_scroll_enabled(m_device))
     , m_defaultScrollMethod(libinput_device_config_scroll_get_default_method(m_device))
     , m_defaultScrollButton(libinput_device_config_scroll_get_default_button(m_device))
@@ -252,19 +255,6 @@ void Device::loadConfiguration()
     m_loading = false;
 }
 
-void Device::setLeftHanded(bool set)
-{
-    if (!m_supportsLeftHanded) {
-        return;
-    }
-    if (libinput_device_config_left_handed_set(m_device, set) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
-        if (m_leftHanded != set) {
-            m_leftHanded = set;
-            emit leftHandedChanged();
-        }
-    }
-}
-
 void Device::setPointerAcceleration(qreal acceleration)
 {
     if (!m_supportsPointerAcceleration) {
@@ -275,20 +265,6 @@ void Device::setPointerAcceleration(qreal acceleration)
         if (m_pointerAcceleration != acceleration) {
             m_pointerAcceleration = acceleration;
             emit pointerAccelerationChanged();
-        }
-    }
-}
-
-void Device::setNaturalScroll(bool set)
-{
-    if (!m_supportsNaturalScroll) {
-        return;
-    }
-    if (libinput_device_config_scroll_set_natural_scroll_enabled(m_device, set) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
-        if (m_naturalScroll != set) {
-            m_naturalScroll = set;
-            writeEntry(ConfigKey::NaturalScroll, m_naturalScroll);
-            emit naturalScrollChanged();
         }
     }
 }
@@ -320,18 +296,24 @@ bool Device::setScrollMethod(bool set, enum libinput_config_scroll_method method
 void Device::setScrollTwoFinger(bool set) {
     if (setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_2FG)) {
         writeEntry(ConfigKey::ScrollTwoFinger, set);
+        writeEntry(ConfigKey::ScrollEdge, !set);
+        writeEntry(ConfigKey::ScrollOnButton, !set);
     }
 }
 
 void Device::setScrollEdge(bool set) {
     if (setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_EDGE)) {
         writeEntry(ConfigKey::ScrollEdge, set);
+        writeEntry(ConfigKey::ScrollTwoFinger, !set);
+        writeEntry(ConfigKey::ScrollOnButton, !set);
     }
 }
 
 void Device::setScrollOnButtonDown(bool set) {
     if (setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN)) {
         writeEntry(ConfigKey::ScrollOnButton, set);
+        writeEntry(ConfigKey::ScrollTwoFinger, !set);
+        writeEntry(ConfigKey::ScrollEdge, !set);
     }
 }
 
@@ -348,6 +330,26 @@ void Device::setScrollButton(quint32 button)
         }
     }
 }
+
+#define CONFIG(method, condition, function, variable, key) \
+void Device::method(bool set) \
+{ \
+    if (condition) { \
+        return; \
+    } \
+    if (libinput_device_config_##function(m_device, set) == LIBINPUT_CONFIG_STATUS_SUCCESS) { \
+        if (m_##variable != set) { \
+            m_##variable = set; \
+            writeEntry(ConfigKey::key, m_##variable); \
+            emit variable##Changed(); \
+        }\
+    } \
+}
+
+CONFIG(setLeftHanded, !m_supportsLeftHanded, left_handed_set, leftHanded, LeftHanded)
+CONFIG(setNaturalScroll, !m_supportsNaturalScroll, scroll_set_natural_scroll_enabled, naturalScroll, NaturalScroll)
+
+#undef CONFIG
 
 #define CONFIG(method, condition, function, enum, variable, key) \
 void Device::method(bool set) \

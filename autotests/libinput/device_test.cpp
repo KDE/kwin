@@ -45,6 +45,8 @@ private Q_SLOTS:
     void testTapFingerCount();
     void testSize_data();
     void testSize();
+    void testLeftHandedEnabledByDefault_data();
+    void testLeftHandedEnabledByDefault();
     void testTapEnabledByDefault_data();
     void testTapEnabledByDefault();
     void testMiddleEmulationEnabledByDefault_data();
@@ -133,6 +135,8 @@ private Q_SLOTS:
     void testLoadScrollOnButton();
     void testLoadScrollButton_data();
     void testLoadScrollButton();
+    void testLoadLeftHanded_data();
+    void testLoadLeftHanded();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -325,6 +329,25 @@ void TestLibinputDevice::testSize()
     Device d(&device);
     QTEST(d.size(), "expectedSize");
     QTEST(d.property("size").toSizeF(), "expectedSize");
+}
+
+void TestLibinputDevice::testLeftHandedEnabledByDefault_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::newRow("enabled") << true;
+    QTest::newRow("disabled") << false;
+}
+
+void TestLibinputDevice::testLeftHandedEnabledByDefault()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.leftHandedEnabledByDefault = enabled;
+
+    Device d(&device);
+    QCOMPARE(d.leftHandedEnabledByDefault(), enabled);
+    QCOMPARE(d.property("leftHandedEnabledByDefault").toBool(), enabled);
 }
 
 void TestLibinputDevice::testTapEnabledByDefault_data()
@@ -1696,6 +1719,48 @@ void TestLibinputDevice::testLoadScrollButton()
     if (configValue != initValue) {
         d.setScrollButton(initValue);
         QCOMPARE(inputConfig.readEntry("ScrollButton", configValue), initValue);
+    }
+}
+
+void TestLibinputDevice::testLoadLeftHanded_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("configValue");
+
+    QTest::newRow("false -> true") << false << true;
+    QTest::newRow("true -> false") << true << false;
+    QTest::newRow("true -> true") << true << true;
+    QTest::newRow("false -> false") << false << false;
+}
+
+void TestLibinputDevice::testLoadLeftHanded()
+{
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+    QFETCH(bool, configValue);
+    QFETCH(bool, initValue);
+    inputConfig.writeEntry("LeftHanded", configValue);
+
+    libinput_device device;
+    device.supportsLeftHanded = true;
+    device.leftHanded = initValue;
+    device.setLeftHandedReturnValue = false;
+
+    Device d(&device);
+    QCOMPARE(d.isLeftHanded(), initValue);
+    // no config group set, should not change
+    d.loadConfiguration();
+    QCOMPARE(d.isLeftHanded(), initValue);
+
+    // set the group
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
+    QCOMPARE(d.isLeftHanded(), configValue);
+
+    // and try to store
+    if (configValue != initValue) {
+        d.setLeftHanded(initValue);
+        QCOMPARE(inputConfig.readEntry("LeftHanded", configValue), initValue);
     }
 }
 
