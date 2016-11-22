@@ -25,8 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <config-kwin.h>
 
-#include <functional>
-
 namespace KWin
 {
 namespace LibInput
@@ -80,36 +78,42 @@ enum class ConfigKey {
     TapDragLock,
     MiddleButtonEmulation,
     NaturalScroll,
-    ScrollTwoFinger,
-    ScrollEdge,
-    ScrollOnButton,
+    ScrollMethod,
     ScrollButton
 };
 
 struct ConfigData {
+    explicit ConfigData(QByteArray _key, void (Device::*_setter)(bool), bool (Device::*_defaultValue)() const = nullptr)
+        : key(_key)
+    { booleanSetter.setter = _setter; booleanSetter.defaultValue = _defaultValue; }
+
+    explicit ConfigData(QByteArray _key, void (Device::*_setter)(quint32), quint32 (Device::*_defaultValue)() const = nullptr)
+        : key(_key)
+    { quint32Setter.setter = _setter; quint32Setter.defaultValue = _defaultValue; }
+
     QByteArray key;
-    struct BooleanSetter {
-        std::function<void (Device*, bool)> setter;
-        std::function<bool (Device*)> defaultValue;
+
+    struct {
+        void (Device::*setter)(bool) = nullptr;
+        bool (Device::*defaultValue)() const;
     } booleanSetter;
-    struct UintSetter {
-        std::function<void (Device*, quint32)> setter;
-        std::function<quint32 (Device*)> defaultValue;
+
+    struct {
+        void (Device::*setter)(quint32) = nullptr;
+        quint32 (Device::*defaultValue)() const;
     } quint32Setter;
 };
 
 static const QMap<ConfigKey, ConfigData> s_configData {
-    {ConfigKey::Enabled, {QByteArrayLiteral("Enabled"), {&Device::setEnabled, std::function<bool (Device*)>()}, {}}},
-    {ConfigKey::LeftHanded, {QByteArrayLiteral("LeftHanded"), {&Device::setLeftHanded, &Device::leftHandedEnabledByDefault}, {}}},
-    {ConfigKey::TapToClick, {QByteArrayLiteral("TapToClick"), {&Device::setTapToClick, &Device::tapToClickEnabledByDefault}, {}}},
-    {ConfigKey::TapAndDrag, {QByteArrayLiteral("TapAndDrag"), {&Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault}, {}}},
-    {ConfigKey::TapDragLock, {QByteArrayLiteral("TapDragLock"), {&Device::setTapDragLock, &Device::tapDragLockEnabledByDefault}, {}}},
-    {ConfigKey::MiddleButtonEmulation, {QByteArrayLiteral("MiddleButtonEmulation"), {&Device::setMiddleEmulation, &Device::middleEmulationEnabledByDefault}, {}}},
-    {ConfigKey::NaturalScroll, {QByteArrayLiteral("NaturalScroll"), {&Device::setNaturalScroll, &Device::naturalScrollEnabledByDefault}, {}}},
-    {ConfigKey::ScrollTwoFinger, {QByteArrayLiteral("ScrollTwoFinger"), {&Device::setScrollTwoFinger, &Device::scrollTwoFingerEnabledByDefault}, {}}},
-    {ConfigKey::ScrollEdge, {QByteArrayLiteral("ScrollEdge"), {&Device::setScrollEdge, &Device::scrollEdgeEnabledByDefault}, {}}},
-    {ConfigKey::ScrollOnButton, {QByteArrayLiteral("ScrollOnButton"), {&Device::setScrollOnButtonDown, &Device::scrollOnButtonDownEnabledByDefault}, {}}},
-    {ConfigKey::ScrollButton, {QByteArrayLiteral("ScrollButton"), {}, {&Device::setScrollButton, &Device::defaultScrollButton}}}
+    {ConfigKey::Enabled, ConfigData(QByteArrayLiteral("Enabled"), &Device::setEnabled)},
+    {ConfigKey::LeftHanded, ConfigData(QByteArrayLiteral("LeftHanded"), &Device::setLeftHanded, &Device::leftHandedEnabledByDefault)},
+    {ConfigKey::TapToClick, ConfigData(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
+    {ConfigKey::TapAndDrag, ConfigData(QByteArrayLiteral("TapAndDrag"), &Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault)},
+    {ConfigKey::TapDragLock, ConfigData(QByteArrayLiteral("TapDragLock"), &Device::setTapDragLock, &Device::tapDragLockEnabledByDefault)},
+    {ConfigKey::MiddleButtonEmulation, ConfigData(QByteArrayLiteral("MiddleButtonEmulation"), &Device::setMiddleEmulation, &Device::middleEmulationEnabledByDefault)},
+    {ConfigKey::NaturalScroll, ConfigData(QByteArrayLiteral("NaturalScroll"), &Device::setNaturalScroll, &Device::naturalScrollEnabledByDefault)},
+    {ConfigKey::ScrollMethod, ConfigData(QByteArrayLiteral("ScrollMethod"), &Device::activateScrollMethodFromInt, &Device::defaultScrollMethodToInt)},
+    {ConfigKey::ScrollButton, ConfigData(QByteArrayLiteral("ScrollButton"), &Device::setScrollButton, &Device::defaultScrollButton)}
 };
 
 Device::Device(libinput_device *device, QObject *parent)
@@ -234,7 +238,8 @@ void Device::readEntry(const QByteArray &key, const Setter &s, const T &defaultV
     if (!s.setter) {
         return;
     }
-    s.setter(this, m_config.readEntry(key.constData(), s.defaultValue ? s.defaultValue(this) : defaultValue));
+
+    (this->*(s.setter))(m_config.readEntry(key.constData(), s.defaultValue ? (this->*(s.defaultValue))() : defaultValue));
 }
 
 void Device::loadConfiguration()
@@ -269,51 +274,21 @@ void Device::setPointerAcceleration(qreal acceleration)
     }
 }
 
-bool Device::setScrollMethod(bool set, enum libinput_config_scroll_method method)
+void Device::setScrollMethod(bool set, enum libinput_config_scroll_method method)
 {
-    if (!(m_supportedScrollMethods & method)) {
-        return false;
+    bool stays_the_same = (m_scrollMethod == method) == set;
+    if (!(m_supportedScrollMethods & method) || stays_the_same) {
+        return;
     }
-    if (set) {
-        if (m_scrollMethod == method) {
-            return false;
-        }
-    } else {
-        if (m_scrollMethod != method) {
-            return false;
-        }
+
+    if (!set) {
         method = LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
     }
 
     if (libinput_device_config_scroll_set_method(m_device, method) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
         m_scrollMethod = method;
         emit scrollMethodChanged();
-        return true;
-    }
-    return false;
-}
-
-void Device::setScrollTwoFinger(bool set) {
-    if (setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_2FG)) {
-        writeEntry(ConfigKey::ScrollTwoFinger, set);
-        writeEntry(ConfigKey::ScrollEdge, !set);
-        writeEntry(ConfigKey::ScrollOnButton, !set);
-    }
-}
-
-void Device::setScrollEdge(bool set) {
-    if (setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_EDGE)) {
-        writeEntry(ConfigKey::ScrollEdge, set);
-        writeEntry(ConfigKey::ScrollTwoFinger, !set);
-        writeEntry(ConfigKey::ScrollOnButton, !set);
-    }
-}
-
-void Device::setScrollOnButtonDown(bool set) {
-    if (setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN)) {
-        writeEntry(ConfigKey::ScrollOnButton, set);
-        writeEntry(ConfigKey::ScrollTwoFinger, !set);
-        writeEntry(ConfigKey::ScrollEdge, !set);
+        writeEntry(ConfigKey::ScrollMethod, (quint32) method);
     }
 }
 

@@ -127,12 +127,8 @@ private Q_SLOTS:
     void testLoadMiddleButtonEmulation();
     void testLoadNaturalScroll_data();
     void testLoadNaturalScroll();
-    void testLoadScrollTwoFinger_data();
-    void testLoadScrollTwoFinger();
-    void testLoadScrollEdge_data();
-    void testLoadScrollEdge();
-    void testLoadScrollOnButton_data();
-    void testLoadScrollOnButton();
+    void testLoadScrollMethod_data();
+    void testLoadScrollMethod();
     void testLoadScrollButton_data();
     void testLoadScrollButton();
     void testLoadLeftHanded_data();
@@ -1552,129 +1548,55 @@ void TestLibinputDevice::testLoadNaturalScroll()
     }
 }
 
-void TestLibinputDevice::testLoadScrollTwoFinger_data()
+void TestLibinputDevice::testLoadScrollMethod_data()
 {
-    QTest::addColumn<bool>("initValue");
-    QTest::addColumn<bool>("configValue");
+    QTest::addColumn<quint32>("initValue");
+    QTest::addColumn<QString>("initValuePropNameString");
+    QTest::addColumn<quint32>("configValue");
+    QTest::addColumn<QString>("configValuePropNameString");
 
-    QTest::newRow("false -> true") << false << true;
-    QTest::newRow("true -> false") << true << false;
-    QTest::newRow("true -> true") << true << true;
-    QTest::newRow("false -> false") << false << false;
+    QTest::newRow("scrollTwoFinger -> scrollEdge") << (quint32) LIBINPUT_CONFIG_SCROLL_2FG << "scrollTwoFinger" << (quint32) LIBINPUT_CONFIG_SCROLL_EDGE << "scrollEdge";
+    QTest::newRow("scrollOnButtonDown -> scrollTwoFinger") << (quint32) LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN << "scrollOnButtonDown" << (quint32) LIBINPUT_CONFIG_SCROLL_2FG << "scrollTwoFinger";
+    QTest::newRow("scrollEdge -> scrollEdge") << (quint32) LIBINPUT_CONFIG_SCROLL_EDGE << "scrollEdge" << (quint32) LIBINPUT_CONFIG_SCROLL_EDGE << "scrollEdge";
 }
 
-void TestLibinputDevice::testLoadScrollTwoFinger()
+void TestLibinputDevice::testLoadScrollMethod()
 {
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     KConfigGroup inputConfig(config, QStringLiteral("Test"));
-    QFETCH(bool, configValue);
-    QFETCH(bool, initValue);
-    inputConfig.writeEntry("ScrollTwoFinger", configValue);
+    QFETCH(quint32, initValue);
+    QFETCH(quint32, configValue);
+    QFETCH(QString, initValuePropNameString);
+    QFETCH(QString, configValuePropNameString);
+
+    QByteArray initValuePropName = initValuePropNameString.toLatin1();
+    QByteArray configValuePropName = configValuePropNameString.toLatin1();
+
+    inputConfig.writeEntry("ScrollMethod", configValue);
 
     libinput_device device;
-    device.supportedScrollMethods = LIBINPUT_CONFIG_SCROLL_2FG;
-    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_2FG : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    device.supportedScrollMethods = LIBINPUT_CONFIG_SCROLL_2FG | LIBINPUT_CONFIG_SCROLL_EDGE | LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN;
+    device.scrollMethod = (libinput_config_scroll_method) initValue;
     device.setScrollMethodReturnValue = false;
 
     Device d(&device);
-    QCOMPARE(d.isScrollTwoFinger(), initValue);
+    QCOMPARE(d.property(initValuePropName).toBool(), true);
+    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
     // no config group set, should not change
     d.loadConfiguration();
-    QCOMPARE(d.isScrollTwoFinger(), initValue);
+    QCOMPARE(d.property(initValuePropName).toBool(), true);
+    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
 
     // set the group
     d.setConfig(inputConfig);
     d.loadConfiguration();
-    QCOMPARE(d.isScrollTwoFinger(), configValue);
+    QCOMPARE(d.property(initValuePropName).toBool(), initValue == configValue);
+    QCOMPARE(d.property(configValuePropName).toBool(), true);
 
     // and try to store
     if (configValue != initValue) {
-        d.setScrollTwoFinger(initValue);
-        QCOMPARE(inputConfig.readEntry("ScrollTwoFinger", configValue), initValue);
-    }
-}
-
-void TestLibinputDevice::testLoadScrollEdge_data()
-{
-    QTest::addColumn<bool>("initValue");
-    QTest::addColumn<bool>("configValue");
-
-    QTest::newRow("false -> true") << false << true;
-    QTest::newRow("true -> false") << true << false;
-    QTest::newRow("true -> true") << true << true;
-    QTest::newRow("false -> false") << false << false;
-}
-
-void TestLibinputDevice::testLoadScrollEdge()
-{
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    KConfigGroup inputConfig(config, QStringLiteral("Test"));
-    QFETCH(bool, configValue);
-    QFETCH(bool, initValue);
-    inputConfig.writeEntry("ScrollEdge", configValue);
-
-    libinput_device device;
-    device.supportedScrollMethods = LIBINPUT_CONFIG_SCROLL_EDGE;
-    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_EDGE : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
-    device.setScrollMethodReturnValue = false;
-
-    Device d(&device);
-    QCOMPARE(d.isScrollEdge(), initValue);
-    // no config group set, should not change
-    d.loadConfiguration();
-    QCOMPARE(d.isScrollEdge(), initValue);
-
-    // set the group
-    d.setConfig(inputConfig);
-    d.loadConfiguration();
-    QCOMPARE(d.isScrollEdge(), configValue);
-
-    // and try to store
-    if (configValue != initValue) {
-        d.setScrollEdge(initValue);
-        QCOMPARE(inputConfig.readEntry("ScrollEdge", configValue), initValue);
-    }
-}
-
-void TestLibinputDevice::testLoadScrollOnButton_data()
-{
-    QTest::addColumn<bool>("initValue");
-    QTest::addColumn<bool>("configValue");
-
-    QTest::newRow("false -> true") << false << true;
-    QTest::newRow("true -> false") << true << false;
-    QTest::newRow("true -> true") << true << true;
-    QTest::newRow("false -> false") << false << false;
-}
-
-void TestLibinputDevice::testLoadScrollOnButton()
-{
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    KConfigGroup inputConfig(config, QStringLiteral("Test"));
-    QFETCH(bool, configValue);
-    QFETCH(bool, initValue);
-    inputConfig.writeEntry("ScrollOnButton", configValue);
-
-    libinput_device device;
-    device.supportedScrollMethods = LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN;
-    device.scrollMethod = initValue ? LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN : LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
-    device.setScrollMethodReturnValue = false;
-
-    Device d(&device);
-    QCOMPARE(d.isScrollOnButtonDown(), initValue);
-    // no config group set, should not change
-    d.loadConfiguration();
-    QCOMPARE(d.isScrollOnButtonDown(), initValue);
-
-    // set the group
-    d.setConfig(inputConfig);
-    d.loadConfiguration();
-    QCOMPARE(d.isScrollOnButtonDown(), configValue);
-
-    // and try to store
-    if (configValue != initValue) {
-        d.setScrollOnButtonDown(initValue);
-        QCOMPARE(inputConfig.readEntry("ScrollOnButton", configValue), initValue);
+        d.setProperty(initValuePropName, true);
+        QCOMPARE(inputConfig.readEntry("ScrollMethod", configValue), initValue);
     }
 }
 

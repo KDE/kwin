@@ -203,6 +203,12 @@ public:
     bool naturalScrollEnabledByDefault() const {
         return m_naturalScrollEnabledByDefault;
     }
+    enum libinput_config_scroll_method defaultScrollMethod() const {
+        return m_defaultScrollMethod;
+    }
+    quint32 defaultScrollMethodToInt() const {
+        return (quint32) m_defaultScrollMethod;
+    }
     bool scrollTwoFingerEnabledByDefault() const {
         return m_defaultScrollMethod == LIBINPUT_CONFIG_SCROLL_2FG;
     }
@@ -223,19 +229,28 @@ public:
         return m_naturalScroll;
     }
     void setNaturalScroll(bool set);
-    bool setScrollMethod(bool set, enum libinput_config_scroll_method method);
+    void setScrollMethod(bool set, enum libinput_config_scroll_method method);
     bool isScrollTwoFinger() const {
         return m_scrollMethod & LIBINPUT_CONFIG_SCROLL_2FG;
     }
-    void setScrollTwoFinger(bool set);
+    void setScrollTwoFinger(bool set) {
+        setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_2FG);
+    }
     bool isScrollEdge() const {
         return m_scrollMethod & LIBINPUT_CONFIG_SCROLL_EDGE;
     }
-    void setScrollEdge(bool set);
+    void setScrollEdge(bool set) {
+        setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_EDGE);
+    }
     bool isScrollOnButtonDown() const {
         return m_scrollMethod & LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN;
     }
-    void setScrollOnButtonDown(bool set);
+    void setScrollOnButtonDown(bool set) {
+        setScrollMethod(set, LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN);
+    }
+    void activateScrollMethodFromInt(quint32 method) {
+        setScrollMethod(true, (libinput_config_scroll_method) method);
+    }
     quint32 scrollButton() const {
         return m_scrollButton;
     }
