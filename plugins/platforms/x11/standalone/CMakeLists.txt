@@ -21,6 +21,10 @@ if(X11_Xinput_FOUND)
     target_link_libraries(KWinX11Platform ${X11_Xinput_LIB})
 endif()
 
+if(HAVE_DL_LIBRARY)
+    target_link_libraries(KWinX11Platform ${DL_LIBRARY})
+endif()
+
 install(
     TARGETS
         KWinX11Platform

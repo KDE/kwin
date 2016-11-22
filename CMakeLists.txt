@@ -148,6 +148,14 @@ set_package_properties(epoxy PROPERTIES DESCRIPTION "libepoxy"
                        PURPOSE "OpenGL dispatch library"
                       )
 
+set(HAVE_DL_LIBRARY FALSE)
+if(epoxy_HAS_GLX)
+    find_library(DL_LIBRARY dl)
+    if(DL_LIBRARY)
+        set(HAVE_DL_LIBRARY TRUE)
+    endif()
+endif()
+
 find_package(Wayland 1.2 REQUIRED COMPONENTS Cursor OPTIONAL_COMPONENTS Egl)
 set_package_properties(Wayland PROPERTIES
                        TYPE REQUIRED
@@ -573,11 +581,6 @@ target_link_libraries(kwin ${kwinLibs})
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 target_link_libraries(kwin kwinglutils ${epoxy_LIBRARY})
-# -ldl used by OpenGL code
-find_library(DL_LIBRARY dl)
-if (DL_LIBRARY)
-target_link_libraries(kwin ${DL_LIBRARY})
-endif()
 
 kf5_add_kdeinit_executable(kwin_x11 main_x11.cpp)
 target_link_libraries(kdeinit_kwin_x11 kwin KF5::Crash)

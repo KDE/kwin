@@ -43,7 +43,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <deque>
 #include <algorithm>
+#if HAVE_DL_LIBRARY
 #include <dlfcn.h>
+#endif
 
 #ifndef XCB_GLX_BUFFER_SWAP_COMPLETE
 #define XCB_GLX_BUFFER_SWAP_COMPLETE 1
@@ -159,8 +161,10 @@ static glXFuncPtr getProcAddress(const char* name)
 #if HAVE_EPOXY_GLX
     ret = glXGetProcAddress((const GLubyte*) name);
 #endif
+#if HAVE_DL_LIBRARY
     if (ret == nullptr)
         ret = (glXFuncPtr) dlsym(RTLD_DEFAULT, name);
+#endif
     return ret;
 }
 glXSwapIntervalMESA_func glXSwapIntervalMESA;
