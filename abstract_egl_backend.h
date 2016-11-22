@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_ABSTRACT_EGL_BACKEND_H
 #include "scene_opengl.h"
 
+#include <epoxy/egl.h>
+#include <fixx11h.h>
+
 class QOpenGLFramebufferObject;
 
 namespace KWin

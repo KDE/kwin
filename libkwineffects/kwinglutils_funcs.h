@@ -23,10 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglutils_export.h>
 
-#include <epoxy/egl.h>
-
-#include <fixx11h.h>
-
 #include <epoxy/gl.h>
 #include <functional>
 
