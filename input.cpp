@@ -963,7 +963,7 @@ public:
         }
         bool wasAction = false;
         Options::MouseCommand command = Options::MouseNothing;
-        if (event->modifiers() == options->commandAllModifier()) {
+        if (input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
             wasAction = true;
             switch (event->button()) {
             case Qt::LeftButton:
@@ -998,7 +998,7 @@ public:
         }
         bool wasAction = false;
         Options::MouseCommand command = Options::MouseNothing;
-        if (event->modifiers() == options->commandAllModifier()) {
+        if (input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
             wasAction = true;
             command = options->operationWindowMouseWheel(-1 * event->angleDelta().y());
         } else {

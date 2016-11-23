@@ -262,23 +262,39 @@ void PointerInputTest::testModifierClickUnrestrictedMove_data()
     QTest::addColumn<int>("modifierKey");
     QTest::addColumn<int>("mouseButton");
     QTest::addColumn<QString>("modKey");
+    QTest::addColumn<bool>("capsLock");
 
     const QString alt = QStringLiteral("Alt");
     const QString meta = QStringLiteral("Meta");
 
-    QTest::newRow("Left Alt + Left Click")    << KEY_LEFTALT  << BTN_LEFT   << alt;
-    QTest::newRow("Left Alt + Right Click")   << KEY_LEFTALT  << BTN_RIGHT  << alt;
-    QTest::newRow("Left Alt + Middle Click")  << KEY_LEFTALT  << BTN_MIDDLE << alt;
-    QTest::newRow("Right Alt + Left Click")   << KEY_RIGHTALT << BTN_LEFT   << alt;
-    QTest::newRow("Right Alt + Right Click")  << KEY_RIGHTALT << BTN_RIGHT  << alt;
-    QTest::newRow("Right Alt + Middle Click") << KEY_RIGHTALT << BTN_MIDDLE << alt;
+    QTest::newRow("Left Alt + Left Click")    << KEY_LEFTALT  << BTN_LEFT   << alt << false;
+    QTest::newRow("Left Alt + Right Click")   << KEY_LEFTALT  << BTN_RIGHT  << alt << false;
+    QTest::newRow("Left Alt + Middle Click")  << KEY_LEFTALT  << BTN_MIDDLE << alt << false;
+    QTest::newRow("Right Alt + Left Click")   << KEY_RIGHTALT << BTN_LEFT   << alt << false;
+    QTest::newRow("Right Alt + Right Click")  << KEY_RIGHTALT << BTN_RIGHT  << alt << false;
+    QTest::newRow("Right Alt + Middle Click") << KEY_RIGHTALT << BTN_MIDDLE << alt << false;
     // now everything with meta
-    QTest::newRow("Left Meta + Left Click")    << KEY_LEFTMETA  << BTN_LEFT   << meta;
-    QTest::newRow("Left Meta + Right Click")   << KEY_LEFTMETA  << BTN_RIGHT  << meta;
-    QTest::newRow("Left Meta + Middle Click")  << KEY_LEFTMETA  << BTN_MIDDLE << meta;
-    QTest::newRow("Right Meta + Left Click")   << KEY_RIGHTMETA << BTN_LEFT   << meta;
-    QTest::newRow("Right Meta + Right Click")  << KEY_RIGHTMETA << BTN_RIGHT  << meta;
-    QTest::newRow("Right Meta + Middle Click") << KEY_RIGHTMETA << BTN_MIDDLE << meta;
+    QTest::newRow("Left Meta + Left Click")    << KEY_LEFTMETA  << BTN_LEFT   << meta << false;
+    QTest::newRow("Left Meta + Right Click")   << KEY_LEFTMETA  << BTN_RIGHT  << meta << false;
+    QTest::newRow("Left Meta + Middle Click")  << KEY_LEFTMETA  << BTN_MIDDLE << meta << false;
+    QTest::newRow("Right Meta + Left Click")   << KEY_RIGHTMETA << BTN_LEFT   << meta << false;
+    QTest::newRow("Right Meta + Right Click")  << KEY_RIGHTMETA << BTN_RIGHT  << meta << false;
+    QTest::newRow("Right Meta + Middle Click") << KEY_RIGHTMETA << BTN_MIDDLE << meta << false;
+
+    // and with capslock
+    QTest::newRow("Left Alt + Left Click/CapsLock")    << KEY_LEFTALT  << BTN_LEFT   << alt << true;
+    QTest::newRow("Left Alt + Right Click/CapsLock")   << KEY_LEFTALT  << BTN_RIGHT  << alt << true;
+    QTest::newRow("Left Alt + Middle Click/CapsLock")  << KEY_LEFTALT  << BTN_MIDDLE << alt << true;
+    QTest::newRow("Right Alt + Left Click/CapsLock")   << KEY_RIGHTALT << BTN_LEFT   << alt << true;
+    QTest::newRow("Right Alt + Right Click/CapsLock")  << KEY_RIGHTALT << BTN_RIGHT  << alt << true;
+    QTest::newRow("Right Alt + Middle Click/CapsLock") << KEY_RIGHTALT << BTN_MIDDLE << alt << true;
+    // now everything with meta
+    QTest::newRow("Left Meta + Left Click/CapsLock")    << KEY_LEFTMETA  << BTN_LEFT   << meta << true;
+    QTest::newRow("Left Meta + Right Click/CapsLock")   << KEY_LEFTMETA  << BTN_RIGHT  << meta << true;
+    QTest::newRow("Left Meta + Middle Click/CapsLock")  << KEY_LEFTMETA  << BTN_MIDDLE << meta << true;
+    QTest::newRow("Right Meta + Left Click/CapsLock")   << KEY_RIGHTMETA << BTN_LEFT   << meta << true;
+    QTest::newRow("Right Meta + Right Click/CapsLock")  << KEY_RIGHTMETA << BTN_RIGHT  << meta << true;
+    QTest::newRow("Right Meta + Middle Click/CapsLock") << KEY_RIGHTMETA << BTN_MIDDLE << meta << true;
 }
 
 void PointerInputTest::testModifierClickUnrestrictedMove()
@@ -323,6 +339,10 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
 
     // simulate modifier+click
     quint32 timestamp = 1;
+    QFETCH(bool, capsLock);
+    if (capsLock) {
+        kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    }
     QFETCH(int, modifierKey);
     QFETCH(int, mouseButton);
     kwinApp()->platform()->keyboardKeyPressed(modifierKey, timestamp++);
@@ -335,6 +355,9 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     // but releasing the key should end move/resize
     kwinApp()->platform()->pointerButtonReleased(mouseButton, timestamp++);
     QVERIFY(!window->isMove());
+    if (capsLock) {
+        kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    }
 
     // all of that should not have triggered button events on the surface
     QCOMPARE(buttonSpy.count(), 0);
@@ -346,14 +369,19 @@ void PointerInputTest::testModifierScrollOpacity_data()
 {
     QTest::addColumn<int>("modifierKey");
     QTest::addColumn<QString>("modKey");
+    QTest::addColumn<bool>("capsLock");
 
     const QString alt = QStringLiteral("Alt");
     const QString meta = QStringLiteral("Meta");
 
-    QTest::newRow("Left Alt")   << KEY_LEFTALT  << alt;
-    QTest::newRow("Right Alt")  << KEY_RIGHTALT << alt;
-    QTest::newRow("Left Meta")  << KEY_LEFTMETA  << meta;
-    QTest::newRow("Right Meta") << KEY_RIGHTMETA << meta;
+    QTest::newRow("Left Alt")   << KEY_LEFTALT  << alt << false;
+    QTest::newRow("Right Alt")  << KEY_RIGHTALT << alt << false;
+    QTest::newRow("Left Meta")  << KEY_LEFTMETA  << meta << false;
+    QTest::newRow("Right Meta") << KEY_RIGHTMETA << meta << false;
+    QTest::newRow("Left Alt/CapsLock")   << KEY_LEFTALT  << alt << true;
+    QTest::newRow("Right Alt/CapsLock")  << KEY_RIGHTALT << alt << true;
+    QTest::newRow("Left Meta/CapsLock")  << KEY_LEFTMETA  << meta << true;
+    QTest::newRow("Right Meta/CapsLock") << KEY_RIGHTMETA << meta << true;
 }
 
 void PointerInputTest::testModifierScrollOpacity()
@@ -396,6 +424,10 @@ void PointerInputTest::testModifierScrollOpacity()
 
     // simulate modifier+wheel
     quint32 timestamp = 1;
+    QFETCH(bool, capsLock);
+    if (capsLock) {
+        kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    }
     QFETCH(int, modifierKey);
     kwinApp()->platform()->keyboardKeyPressed(modifierKey, timestamp++);
     kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
@@ -403,6 +435,9 @@ void PointerInputTest::testModifierScrollOpacity()
     kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
     kwinApp()->platform()->keyboardKeyReleased(modifierKey, timestamp++);
+    if (capsLock) {
+        kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    }
 
     // axis should have been filtered out
     QCOMPARE(axisSpy.count(), 0);
