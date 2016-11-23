@@ -1452,12 +1452,17 @@ static void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMat
     QMatrix4x4 newWindowMatrix = windowMatrix;
     newWindowMatrix.translate(pixmap->subSurface()->position().x(), pixmap->subSurface()->position().y());
 
+    qreal scale = 1.0;
+    if (pixmap->surface()) {
+        scale = pixmap->surface()->scale();
+    }
+
     if (!pixmap->texture()->isNull()) {
         // render this texture
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * newWindowMatrix);
         auto texture = pixmap->texture();
         texture->bind();
-        texture->render(QRegion(), QRect(0, 0, texture->width(), texture->height()));
+        texture->render(QRegion(), QRect(0, 0, texture->width() / scale, texture->height() / scale));
         texture->unbind();
     }
 
