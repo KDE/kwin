@@ -86,6 +86,20 @@ public Q_SLOTS:
      **/
     Q_SCRIPTABLE QString screenshotFullscreen(bool captureCursor = false);
     /**
+     * Starts an interactive screenshot session.
+     *
+     * The user is asked to confirm that a screenshot is taken by having to actively
+     * click and giving the possibility to cancel.
+     *
+     * Once the screenshot is taken it gets saved into the @p fd passed to the
+     * method. It is intended to be used with a pipe, so that the invoking side can just
+     * read from the pipe. The image gets written into the fd using a QDataStream.
+     *
+     * @param fd File descriptor into which the screenshot should be saved
+     * @param captureCursor Whether to include the mouse cursor
+     **/
+    Q_SCRIPTABLE void screenshotFullscreen(QDBusUnixFileDescriptor fd, bool captureCursor = false);
+    /**
      * Saves a screenshot of the screen identified by @p screen into a file and returns the path to the file.
      * Functionality requires hardware support, if not available a null string is returned.
      * @param screen Number of screen as numbered by QDesktopWidget
@@ -93,6 +107,19 @@ public Q_SLOTS:
      * @returns Path to stored screenshot, or null string in failure case.
      **/
     Q_SCRIPTABLE QString screenshotScreen(int screen, bool captureCursor = false);
+    /**
+     * Starts an interactive screenshot of a screen session.
+     *
+     * The user is asked to select the screen to screenshot.
+     *
+     * Once the screenshot is taken it gets saved into the @p fd passed to the
+     * method. It is intended to be used with a pipe, so that the invoking side can just
+     * read from the pipe. The image gets written into the fd using a QDataStream.
+     *
+     * @param fd File descriptor into which the screenshot should be saved
+     * @param captureCursor Whether to include the mouse cursor
+     **/
+    Q_SCRIPTABLE void screenshotScreen(QDBusUnixFileDescriptor fd, bool captureCursor = false);
     /**
      * Saves a screenshot of the selected geometry into a file and returns the path to the file.
      * Functionality requires hardware support, if not available a null string is returned.
@@ -116,7 +143,11 @@ private:
     QImage blitScreenshot(const QRect &geometry);
     QString saveTempImage(const QImage &img);
     void sendReplyImage(const QImage &img);
-    void showInfoMessage();
+    enum class InfoMessageMode {
+        Window,
+        Screen
+    };
+    void showInfoMessage(InfoMessageMode mode);
     void hideInfoMessage();
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;

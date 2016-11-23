@@ -232,6 +232,7 @@ public:
     void showCursor() override;
 
     void startInteractiveWindowSelection(std::function<void(KWin::EffectWindow*)> callback) override;
+    void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) override;
 
     Scene *scene() const {
         return m_scene;

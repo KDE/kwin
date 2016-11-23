@@ -179,6 +179,22 @@ public:
      **/
     virtual void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName = QByteArray());
 
+    /**
+     * Starts an interactive position selection process.
+     *
+     * Once the user selected a position on the screen the @p callback is invoked with
+     * the selected point as argument. In case the user cancels the interactive position selection
+     * or selecting a position is currently not possible (e.g. screen locked) the @p callback
+     * is invoked with a point at @c -1 as x and y argument.
+     *
+     * During the interactive window selection the cursor is turned into a crosshair cursor.
+     *
+     * The default implementation forwards to InputRedirection.
+     *
+     * @param callback The function to invoke once the interactive position selection ends
+     **/
+    virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
+
     bool usesSoftwareCursor() const {
         return m_softWareCursor;
     }

@@ -55,6 +55,8 @@ private Q_SLOTS:
     void testSelectOnWindowKeyboard();
     void testCancelOnWindowPointer();
     void testCancelOnWindowKeyboard();
+
+    void testSelectPointPointer();
 };
 
 void TestWindowSelection::initTestCase()
@@ -363,6 +365,90 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     QCOMPARE(pointerEnteredSpy.count(), 2);
     QCOMPARE(keyboardEnteredSpy.count(), 2);
     kwinApp()->platform()->keyboardKeyReleased(KEY_ESC, timestamp++);
+}
+
+void TestWindowSelection::testSelectPointPointer()
+{
+    // this test verifies point selection through pointer works
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
+    QScopedPointer<Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    QSignalSpy pointerEnteredSpy(pointer.data(), &Pointer::entered);
+    QVERIFY(pointerEnteredSpy.isValid());
+    QSignalSpy pointerLeftSpy(pointer.data(), &Pointer::left);
+    QVERIFY(pointerLeftSpy.isValid());
+    QSignalSpy keyboardEnteredSpy(keyboard.data(), &Keyboard::entered);
+    QVERIFY(keyboardEnteredSpy.isValid());
+    QSignalSpy keyboardLeftSpy(keyboard.data(), &Keyboard::left);
+    QVERIFY(keyboardLeftSpy.isValid());
+
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(keyboardEnteredSpy.wait());
+    KWin::Cursor::setPos(client->geometry().center());
+    QCOMPARE(input()->pointer()->window().data(), client);
+    QVERIFY(pointerEnteredSpy.wait());
+
+    QPoint point;
+    auto callback = [&point] (const QPoint &p) {
+        point = p;
+    };
+
+    // start the interaction
+    QCOMPARE(input()->isSelectingWindow(), false);
+    kwinApp()->platform()->startInteractivePositionSelection(callback);
+    QCOMPARE(input()->isSelectingWindow(), true);
+    QCOMPARE(point, QPoint());
+    QCOMPARE(keyboardLeftSpy.count(), 0);
+    QVERIFY(pointerLeftSpy.wait());
+    if (keyboardLeftSpy.isEmpty()) {
+        QVERIFY(keyboardLeftSpy.wait());
+    }
+    QCOMPARE(pointerLeftSpy.count(), 1);
+    QCOMPARE(keyboardLeftSpy.count(), 1);
+
+    // trying again should not be allowed
+    QPoint point2;
+    kwinApp()->platform()->startInteractivePositionSelection([&point2] (const QPoint &p) {
+        point2 = p;
+    });
+    QCOMPARE(point2, QPoint(-1, -1));
+
+    // simulate left button press
+    quint32 timestamp = 0;
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    // should not have ended the mode
+    QCOMPARE(input()->isSelectingWindow(), true);
+    QCOMPARE(point, QPoint());
+    QVERIFY(input()->pointer()->window().isNull());
+
+    // updating the pointer should not change anything
+    input()->pointer()->update();
+    QVERIFY(input()->pointer()->window().isNull());
+    // updating keyboard should also not change
+    input()->keyboard()->update();
+
+    // perform a right button click
+    kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
+    // should not have ended the mode
+    QCOMPARE(input()->isSelectingWindow(), true);
+    QCOMPARE(point, QPoint());
+    // now release
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(input()->isSelectingWindow(), false);
+    QCOMPARE(point, input()->globalPointer().toPoint());
+    QCOMPARE(input()->pointer()->window().data(), client);
+    // should give back keyboard and pointer
+    QVERIFY(pointerEnteredSpy.wait());
+    if (keyboardEnteredSpy.count() != 2) {
+        QVERIFY(keyboardEnteredSpy.wait());
+    }
+    QCOMPARE(pointerLeftSpy.count(), 1);
+    QCOMPARE(keyboardLeftSpy.count(), 1);
+    QCOMPARE(pointerEnteredSpy.count(), 2);
+    QCOMPARE(keyboardEnteredSpy.count(), 2);
 }
 
 WAYLANDTEST_MAIN(TestWindowSelection)

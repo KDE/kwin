@@ -251,7 +251,22 @@ void ScreenShotEffect::postPaintScreen()
 
 void ScreenShotEffect::sendReplyImage(const QImage &img)
 {
-    m_replyConnection.send(m_replyMessage.createReply(saveTempImage(img)));
+    if (m_fd != -1) {
+        QtConcurrent::run(
+            [] (int fd, const QImage &img) {
+                QFile file;
+                if (file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
+                    QDataStream ds(&file);
+                    ds << img;
+                    file.close();
+                } else {
+                    close(fd);
+                }
+            }, m_fd, img);
+        m_fd = -1;
+    } else {
+        m_replyConnection.send(m_replyMessage.createReply(saveTempImage(img)));
+    }
     m_scheduledGeometry = QRect();
     m_multipleOutputsImage = QImage();
     m_multipleOutputsRendered = QRegion();
@@ -335,7 +350,7 @@ QString ScreenShotEffect::interactive(int mask)
             }
     });
 
-    showInfoMessage();
+    showInfoMessage(InfoMessageMode::Window);
     return QString();
 }
 
@@ -370,10 +385,10 @@ void ScreenShotEffect::interactive(QDBusUnixFileDescriptor fd, int mask)
             }
     });
 
-    showInfoMessage();
+    showInfoMessage(InfoMessageMode::Window);
 }
 
-void ScreenShotEffect::showInfoMessage()
+void ScreenShotEffect::showInfoMessage(InfoMessageMode mode)
 {
     if (!m_infoFrame.isNull()) {
         return;
@@ -384,7 +399,14 @@ void ScreenShotEffect::showInfoMessage()
     m_infoFrame->setFont(font);
     QRect area = effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop());
     m_infoFrame->setPosition(QPoint(area.x() + area.width() / 2, area.y() + area.height() / 3));
-    m_infoFrame->setText(i18n("Select window to screen shot with left click or enter.\nEscape or right click to cancel."));
+    switch (mode) {
+    case InfoMessageMode::Window:
+        m_infoFrame->setText(i18n("Select window to screen shot with left click or enter.\nEscape or right click to cancel."));
+        break;
+    case InfoMessageMode::Screen:
+        m_infoFrame->setText(i18n("Create screen shot with left click or enter.\nEscape or right click to cancel."));
+        break;
+    }
     effects->addRepaintFull();
 }
 
@@ -411,6 +433,38 @@ QString ScreenShotEffect::screenshotFullscreen(bool captureCursor)
     return QString();
 }
 
+void ScreenShotEffect::screenshotFullscreen(QDBusUnixFileDescriptor fd, bool captureCursor)
+{
+    if (!calledFromDBus()) {
+        return;
+    }
+    if (!m_scheduledGeometry.isNull()) {
+        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+        return;
+    }
+    m_fd = dup(fd.fileDescriptor());
+    if (m_fd == -1) {
+        sendErrorReply(QDBusError::Failed, "No valid file descriptor");
+        return;
+    }
+    m_captureCursor = captureCursor;
+
+    showInfoMessage(InfoMessageMode::Screen);
+    effects->startInteractivePositionSelection(
+        [this] (const QPoint &p) {
+            hideInfoMessage();
+            if (p == QPoint(-1, -1)) {
+                // error condition
+                close(m_fd);
+                m_fd = -1;
+            } else {
+                m_scheduledGeometry = effects->virtualScreenGeometry();
+                effects->addRepaint(m_scheduledGeometry);
+            }
+        }
+    );
+}
+
 QString ScreenShotEffect::screenshotScreen(int screen, bool captureCursor)
 {
     if (!calledFromDBus()) {
@@ -431,6 +485,43 @@ QString ScreenShotEffect::screenshotScreen(int screen, bool captureCursor)
     setDelayedReply(true);
     effects->addRepaint(m_scheduledGeometry);
     return QString();
+}
+
+void ScreenShotEffect::screenshotScreen(QDBusUnixFileDescriptor fd, bool captureCursor)
+{
+    if (!calledFromDBus()) {
+        return;
+    }
+    if (!m_scheduledGeometry.isNull()) {
+        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+        return;
+    }
+    m_fd = dup(fd.fileDescriptor());
+    if (m_fd == -1) {
+        sendErrorReply(QDBusError::Failed, "No valid file descriptor");
+        return;
+    }
+    m_captureCursor = captureCursor;
+
+    showInfoMessage(InfoMessageMode::Screen);
+    effects->startInteractivePositionSelection(
+        [this] (const QPoint &p) {
+            hideInfoMessage();
+            if (p == QPoint(-1, -1)) {
+                // error condition
+                close(m_fd);
+                m_fd = -1;
+            } else {
+                m_scheduledGeometry = effects->clientArea(FullScreenArea, effects->screenNumber(p), 0);
+                if (m_scheduledGeometry.isNull()) {
+                    close(m_fd);
+                    m_fd = -1;
+                    return;
+                }
+                effects->addRepaint(m_scheduledGeometry);
+            }
+        }
+    );
 }
 
 QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height, bool captureCursor)

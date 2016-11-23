@@ -1214,6 +1214,21 @@ public:
      **/
     virtual void startInteractiveWindowSelection(std::function<void(KWin::EffectWindow*)> callback) = 0;
 
+    /**
+     * Starts an interactive position selection process.
+     *
+     * Once the user selected a position on the screen the @p callback is invoked with
+     * the selected point as argument. In case the user cancels the interactive position selection
+     * or selecting a position is currently not possible (e.g. screen locked) the @p callback
+     * is invoked with a point at @c -1 as x and y argument.
+     *
+     * During the interactive window selection the cursor is turned into a crosshair cursor.
+     *
+     * @param callback The function to invoke once the interactive position selection ends
+     * @since 5.9
+     **/
+    virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) = 0;
+
 Q_SIGNALS:
     /**
      * Signal emitted when the current desktop changed.

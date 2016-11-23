@@ -1585,6 +1585,11 @@ void EffectsHandlerImpl::startInteractiveWindowSelection(std::function<void(KWin
     );
 }
 
+void EffectsHandlerImpl::startInteractivePositionSelection(std::function<void(const QPoint&)> callback)
+{
+    kwinApp()->platform()->startInteractivePositionSelection(callback);
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************

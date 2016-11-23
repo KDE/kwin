@@ -554,24 +554,42 @@ public:
         m_callback = callback;
         input()->keyboard()->update();
     }
+    void start(std::function<void(const QPoint &)> callback) {
+        Q_ASSERT(!m_active);
+        m_active = true;
+        m_pointSelectionFallback = callback;
+        input()->keyboard()->update();
+    }
 private:
     void deactivate() {
         m_active = false;
         m_callback = std::function<void(KWin::Toplevel*)>();
+        m_pointSelectionFallback = std::function<void(const QPoint &)>();
         input()->pointer()->removeWindowSelectionCursor();
         input()->keyboard()->update();
     }
     void cancel() {
-        m_callback(nullptr);
+        if (m_callback) {
+            m_callback(nullptr);
+        }
+        if (m_pointSelectionFallback) {
+            m_pointSelectionFallback(QPoint(-1, -1));
+        }
         deactivate();
     }
     void accept() {
-        // TODO: this ignores shaped windows
-        m_callback(input()->findToplevel(input()->globalPointer().toPoint()));
+        if (m_callback) {
+            // TODO: this ignores shaped windows
+            m_callback(input()->findToplevel(input()->globalPointer().toPoint()));
+        }
+        if (m_pointSelectionFallback) {
+            m_pointSelectionFallback(input()->globalPointer().toPoint());
+        }
         deactivate();
     }
     bool m_active = false;
     std::function<void(KWin::Toplevel*)> m_callback;
+    std::function<void(const QPoint &)> m_pointSelectionFallback;
 };
 
 class GlobalShortcutFilter : public InputEventFilter {
@@ -1755,6 +1773,16 @@ void InputRedirection::startInteractiveWindowSelection(std::function<void(KWin::
     }
     m_windowSelector->start(callback);
     m_pointer->setWindowSelectionCursor(cursorName);
+}
+
+void InputRedirection::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+{
+    if (!m_windowSelector || m_windowSelector->isActive()) {
+        callback(QPoint(-1, -1));
+        return;
+    }
+    m_windowSelector->start(callback);
+    m_pointer->setWindowSelectionCursor(QByteArray());
 }
 
 bool InputRedirection::isSelectingWindow() const

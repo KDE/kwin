@@ -377,4 +377,13 @@ void Platform::startInteractiveWindowSelection(std::function<void(KWin::Toplevel
     input()->startInteractiveWindowSelection(callback, cursorName);
 }
 
+void Platform::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+{
+    if (!input()) {
+        callback(QPoint(-1, -1));
+        return;
+    }
+    input()->startInteractivePositionSelection(callback);
+}
+
 }

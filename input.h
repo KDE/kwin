@@ -170,6 +170,7 @@ public:
     bool hasAlphaNumericKeyboard();
 
     void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
+    void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
     bool isSelectingWindow() const;
 
 Q_SIGNALS:
