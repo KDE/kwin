@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
+#include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
@@ -47,13 +48,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/touch.h>
 #include <KWayland/Client/xdgshell.h>
 #include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/display.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
+
+#include <KLocalizedString>
 // Qt
 #include <QMetaMethod>
 #include <QThread>
 // Wayland
 #include <wayland-cursor.h>
+
+#include <linux/input.h>
 
 namespace KWin
 {
@@ -82,6 +88,9 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
                     [this](quint32 key, Keyboard::KeyState state, quint32 time) {
                         switch (state) {
                         case Keyboard::KeyState::Pressed:
+                            if (key == KEY_RIGHTCTRL) {
+                                m_backend->togglePointerConfinement();
+                            }
                             m_backend->keyboardKeyPressed(key, time);
                             break;
                         case Keyboard::KeyState::Released:
@@ -282,6 +291,9 @@ WaylandBackend::WaylandBackend(QObject *parent)
 
 WaylandBackend::~WaylandBackend()
 {
+    if (m_pointerConstraints) {
+        m_pointerConstraints->release();
+    }
     if (m_xdgShellSurface) {
         m_xdgShellSurface->release();
     }
@@ -331,6 +343,15 @@ void WaylandBackend::init()
     connect(m_registry, &Registry::shmAnnounced, this,
         [this](quint32 name) {
             m_shm->setup(m_registry->bindShm(name, 1));
+        }
+    );
+    connect(m_registry, &Registry::pointerConstraintsUnstableV1Announced, this,
+        [this](quint32 name, quint32 version) {
+            if (m_pointerConstraints) {
+                return;
+            }
+            m_pointerConstraints = m_registry->createPointerConstraints(name, version, this);
+            updateWindowTitle();
         }
     );
     connect(m_registry, &Registry::interfacesAnnounced, this, &WaylandBackend::createSurface);
@@ -452,6 +473,7 @@ void WaylandBackend::setupSurface(T *surface)
 {
     connect(surface, &T::sizeChanged, this, &WaylandBackend::shellSurfaceSizeChanged);
     surface->setSize(initialWindowSize());
+    updateWindowTitle();
     setReady(true);
     emit screensQueried();
 }
@@ -490,6 +512,70 @@ void WaylandBackend::flush()
 {
     if (m_connectionThreadObject) {
         m_connectionThreadObject->flush();
+    }
+}
+
+void WaylandBackend::togglePointerConfinement()
+{
+    if (!m_pointerConstraints) {
+        return;
+    }
+    if (!m_seat) {
+        return;
+    }
+    auto p = m_seat->pointer();
+    if (!p) {
+        return;
+    }
+    if (!m_surface) {
+        return;
+    }
+    if (m_pointerConfinement && m_isPointerConfined) {
+        delete m_pointerConfinement;
+        m_pointerConfinement = nullptr;
+        m_isPointerConfined = false;
+        updateWindowTitle();
+        flush();
+        return;
+    } else if (m_pointerConfinement) {
+        return;
+    }
+    m_pointerConfinement = m_pointerConstraints->confinePointer(m_surface, p, nullptr, PointerConstraints::LifeTime::Persistent, this);
+    connect(m_pointerConfinement, &ConfinedPointer::confined, this,
+        [this] {
+            m_isPointerConfined = true;
+            updateWindowTitle();
+        }
+    );
+    connect(m_pointerConfinement, &ConfinedPointer::unconfined, this,
+        [this] {
+            m_isPointerConfined = false;
+            updateWindowTitle();
+        }
+    );
+    updateWindowTitle();
+    flush();
+}
+
+void WaylandBackend::updateWindowTitle()
+{
+    if (!m_xdgShellSurface) {
+        return;
+    }
+    QString grab;
+    if (m_isPointerConfined) {
+        grab = i18n("Press right control to ungrab pointer");
+    } else {
+        if (!m_pointerConfinement && m_pointerConstraints) {
+            grab = i18n("Press right control key to grab pointer");
+        }
+    }
+    const QString title = i18nc("Title of nested KWin Wayland with Wayland socket identifier as argument",
+                                "KDE Wayland Compositor (%1)", waylandServer()->display()->socketName());
+    if (grab.isEmpty()) {
+        m_xdgShellSurface->setTitle(title);
+    } else {
+        m_xdgShellSurface->setTitle(title + QStringLiteral(" - ") + grab);
     }
 }
 

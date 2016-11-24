@@ -43,10 +43,12 @@ namespace Client
 class Buffer;
 class ShmPool;
 class Compositor;
+class ConfinedPointer;
 class ConnectionThread;
 class EventQueue;
 class Keyboard;
 class Pointer;
+class PointerConstraints;
 class Registry;
 class Seat;
 class Shell;
@@ -81,6 +83,11 @@ public:
     bool isInstallCursor() const {
         return m_installCursor;
     }
+
+    KWayland::Client::Pointer *pointer() const {
+        return m_pointer;
+    }
+
 private:
     void destroyPointer();
     void destroyKeyboard();
@@ -127,6 +134,8 @@ public:
 
     void flush();
 
+    void togglePointerConfinement();
+
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
     void systemCompositorDied();
@@ -136,6 +145,7 @@ private:
     void createSurface();
     template <class T>
     void setupSurface(T *surface);
+    void updateWindowTitle();
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;
@@ -148,7 +158,10 @@ private:
     QScopedPointer<WaylandSeat> m_seat;
     KWayland::Client::ShmPool *m_shm;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
+    KWayland::Client::PointerConstraints *m_pointerConstraints = nullptr;
+    KWayland::Client::ConfinedPointer *m_pointerConfinement = nullptr;
     QThread *m_connectionThread;
+    bool m_isPointerConfined = false;
 };
 
 inline
