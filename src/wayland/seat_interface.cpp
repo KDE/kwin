@@ -995,6 +995,7 @@ void SeatInterface::endPointerPinchGesture()
             p->d_func()->endPinchGesture(serial);
         }
     );
+    d->globalPointer.gestureSurface.clear();
 }
 
 void SeatInterface::cancelPointerPinchGesture()
@@ -1009,6 +1010,7 @@ void SeatInterface::cancelPointerPinchGesture()
             p->d_func()->cancelPinchGesture(serial);
         }
     );
+    d->globalPointer.gestureSurface.clear();
 }
 
 void SeatInterface::keyPressed(quint32 key)
