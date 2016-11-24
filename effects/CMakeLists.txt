@@ -72,6 +72,7 @@ set( kwin4_effect_builtins_sources
     effect_builtins.cpp
     blur/blur.cpp
     blur/blurshader.cpp
+    colorpicker/colorpicker.cpp
     cube/cube.cpp
     cube/cube_proxy.cpp
     cube/cubeslide.cpp

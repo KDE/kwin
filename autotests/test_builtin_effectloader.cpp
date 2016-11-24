@@ -81,6 +81,7 @@ void TestBuiltInEffectLoader::testHasEffect_data()
     QTest::newRow("blur")                           << QStringLiteral("blur")              << true;
     QTest::newRow("with kwin4_effect_ prefix")      << QStringLiteral("kwin4_effect_blur") << false;
     QTest::newRow("case sensitive")                 << QStringLiteral("BlUR")              << true;
+    QTest::newRow("Colorpicker")                    << QStringLiteral("colorpicker")       << true;
     QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << true;
     QTest::newRow("CoverSwitch")                    << QStringLiteral("coverswitch")       << true;
     QTest::newRow("Cube")                           << QStringLiteral("cube")              << true;
@@ -136,6 +137,7 @@ void TestBuiltInEffectLoader::testKnownEffects()
 {
     QStringList expectedEffects;
     expectedEffects << QStringLiteral("blur")
+                    << QStringLiteral("colorpicker")
                     << QStringLiteral("contrast")
                     << QStringLiteral("coverswitch")
                     << QStringLiteral("cube")
@@ -196,6 +198,8 @@ void TestBuiltInEffectLoader::testSupported_data()
     QTest::newRow("blur")                           << QStringLiteral("blur")              << false << xc << true;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
     QTest::newRow("blur-GL")                        << QStringLiteral("blur")              << false << oc << true;
+    QTest::newRow("Colorpicker")                    << QStringLiteral("colorpicker")       << false << xc << true;
+    QTest::newRow("Colorpicker-GL")                 << QStringLiteral("colorpicker")       << true  << oc << true;
     QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << false << xc << true;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
     QTest::newRow("Contrast-GL")                    << QStringLiteral("contrast")          << false << oc << true;
@@ -285,6 +289,8 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
     QTest::newRow("blur")                           << QStringLiteral("blur")              << false << xc;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
     QTest::newRow("blur-GL")                        << QStringLiteral("blur")              << false << oc;
+    QTest::newRow("Colorpicker")                    << QStringLiteral("colorpicker")       << false << xc;
+    QTest::newRow("Colorpicker-GL")                 << QStringLiteral("colorpicker")       << true  << oc;
     QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << false << xc;
     // fails for GL as it does proper tests on what's supported and doesn't just check whether it's GL
     QTest::newRow("Contrast-GL")                    << QStringLiteral("contrast")          << false << oc;

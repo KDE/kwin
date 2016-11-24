@@ -35,6 +35,7 @@ enum class BuiltInEffect
 {
     Invalid, ///< not a valid Effect
     Blur,
+    ColorPicker,
     Contrast,
     CoverSwitch,
     Cube,

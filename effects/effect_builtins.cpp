@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // common effects
 #include "backgroundcontrast/contrast.h"
 #include "blur/blur.h"
+#include "colorpicker/colorpicker.h"
 #include "kscreen/kscreen.h"
 #include "presentwindows/presentwindows.h"
 #include "screenedge/screenedgeeffect.h"
@@ -109,6 +110,21 @@ static const QVector<EffectData> s_effectData = {
         &createHelper<BlurEffect>,
         &BlurEffect::supported,
         &BlurEffect::enabledByDefault
+#endif
+EFFECT_FALLBACK
+    }, {
+        QStringLiteral("colorpicker"),
+        i18ndc("kwin_effects", "Name of a KWin Effect", "Color Picker"),
+        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Supports picking a color"),
+        QStringLiteral("Accessibility"),
+        QString(),
+        QUrl(),
+        true,
+        true,
+#ifdef EFFECT_BUILTINS
+        &createHelper<ColorPickerEffect>,
+        &ColorPickerEffect::supported,
+        nullptr
 #endif
 EFFECT_FALLBACK
     }, {
