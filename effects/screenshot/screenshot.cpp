@@ -62,13 +62,11 @@ ScreenShotEffect::ScreenShotEffect()
 {
     connect ( effects, SIGNAL(windowClosed(KWin::EffectWindow*)), SLOT(windowClosed(KWin::EffectWindow*)) );
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Screenshot"), this, QDBusConnection::ExportScriptableContents);
-    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.Screenshot"));
 }
 
 ScreenShotEffect::~ScreenShotEffect()
 {
     QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/Screenshot"));
-    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin.Screenshot"));
 }
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
