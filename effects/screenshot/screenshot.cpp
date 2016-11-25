@@ -40,6 +40,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+const static QString s_errorAlreadyTaking = QStringLiteral("org.kde.kwin.Screenshot.Error.AlreadyTaking");
+const static QString s_errorAlreadyTakingMsg = QStringLiteral("A screenshot is already been taken");
+const static QString s_errorFd = QStringLiteral("org.kde.kwin.Screenshot.Error.FileDescriptor");
+const static QString s_errorFdMsg = QStringLiteral("No valid file descriptor");
+const static QString s_errorCancelled = QStringLiteral("org.kde.kwin.Screenshot.Error.Cancelled");
+const static QString s_errorCancelledMsg = QStringLiteral("Screenshot got cancelled");
+const static QString s_errorInvalidArea = QStringLiteral("org.kde.kwin.Screenshot.Error.InvalidArea");
+const static QString s_errorInvalidAreaMsg = QStringLiteral("Invalid area requested");
+const static QString s_errorInvalidScreen = QStringLiteral("org.kde.kwin.Screenshot.Error.InvalidScreen");
+const static QString s_errorInvalidScreenMsg = QStringLiteral("Invalid screen requested");
+
 bool ScreenShotEffect::supported()
 {
     return  effects->compositingType() == XRenderCompositing ||
@@ -48,7 +59,6 @@ bool ScreenShotEffect::supported()
 
 ScreenShotEffect::ScreenShotEffect()
     : m_scheduledScreenshot(0)
-    , m_replyConnection(QDBusConnection::sessionBus())
 {
     connect ( effects, SIGNAL(windowClosed(KWin::EffectWindow*)), SLOT(windowClosed(KWin::EffectWindow*)) );
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Screenshot"), this, QDBusConnection::ExportScriptableContents);
@@ -265,7 +275,7 @@ void ScreenShotEffect::sendReplyImage(const QImage &img)
             }, m_fd, img);
         m_fd = -1;
     } else {
-        m_replyConnection.send(m_replyMessage.createReply(saveTempImage(img)));
+        QDBusConnection::sessionBus().send(m_replyMessage.createReply(saveTempImage(img)));
     }
     m_scheduledGeometry = QRect();
     m_multipleOutputsImage = QImage();
@@ -295,6 +305,10 @@ QString ScreenShotEffect::saveTempImage(const QImage &img)
 
 void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
 {
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+        return;
+    }
     m_type = (ScreenShotType)mask;
     const QPoint cursor = effects->cursorPos();
     EffectWindowList order = effects->stackingOrder();
@@ -328,20 +342,19 @@ QString ScreenShotEffect::interactive(int mask)
     if (!calledFromDBus()) {
         return QString();
     }
-    if (!m_scheduledGeometry.isNull() || m_windowMode != WindowMode::NoCapture) {
-        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
         return QString();
     }
     m_type = (ScreenShotType) mask;
     m_windowMode = WindowMode::File;
-    m_replyConnection = connection();
     m_replyMessage = message();
     setDelayedReply(true);
     effects->startInteractiveWindowSelection(
         [this] (EffectWindow *w) {
             hideInfoMessage();
             if (!w) {
-                m_replyConnection.send(m_replyMessage.createErrorReply(QDBusError::Failed, "Screenshot got cancelled"));
+                QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMsg));
                 m_windowMode = WindowMode::NoCapture;
                 return;
             } else {
@@ -359,13 +372,13 @@ void ScreenShotEffect::interactive(QDBusUnixFileDescriptor fd, int mask)
     if (!calledFromDBus()) {
         return;
     }
-    if (!m_scheduledGeometry.isNull() || m_windowMode != WindowMode::NoCapture) {
-        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
         return;
     }
     m_fd = dup(fd.fileDescriptor());
     if (m_fd == -1) {
-        sendErrorReply(QDBusError::Failed, "No valid file descriptor");
+        sendErrorReply(s_errorFd, s_errorFdMsg);
         return;
     }
     m_type = (ScreenShotType) mask;
@@ -420,11 +433,10 @@ QString ScreenShotEffect::screenshotFullscreen(bool captureCursor)
     if (!calledFromDBus()) {
         return QString();
     }
-    if (!m_scheduledGeometry.isNull()) {
-        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
         return QString();
     }
-    m_replyConnection = connection();
     m_replyMessage = message();
     setDelayedReply(true);
     m_scheduledGeometry = effects->virtualScreenGeometry();
@@ -438,13 +450,13 @@ void ScreenShotEffect::screenshotFullscreen(QDBusUnixFileDescriptor fd, bool cap
     if (!calledFromDBus()) {
         return;
     }
-    if (!m_scheduledGeometry.isNull()) {
-        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
         return;
     }
     m_fd = dup(fd.fileDescriptor());
     if (m_fd == -1) {
-        sendErrorReply(QDBusError::Failed, "No valid file descriptor");
+        sendErrorReply(s_errorFd, s_errorFdMsg);
         return;
     }
     m_captureCursor = captureCursor;
@@ -470,17 +482,16 @@ QString ScreenShotEffect::screenshotScreen(int screen, bool captureCursor)
     if (!calledFromDBus()) {
         return QString();
     }
-    if (!m_scheduledGeometry.isNull()) {
-        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
         return QString();
     }
     m_scheduledGeometry = effects->clientArea(FullScreenArea, screen, 0);
     if (m_scheduledGeometry.isNull()) {
-        sendErrorReply(QDBusError::Failed, "Invalid screen requested");
+        sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMsg);
         return QString();
     }
     m_captureCursor = captureCursor;
-    m_replyConnection = connection();
     m_replyMessage = message();
     setDelayedReply(true);
     effects->addRepaint(m_scheduledGeometry);
@@ -492,13 +503,13 @@ void ScreenShotEffect::screenshotScreen(QDBusUnixFileDescriptor fd, bool capture
     if (!calledFromDBus()) {
         return;
     }
-    if (!m_scheduledGeometry.isNull()) {
-        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
         return;
     }
     m_fd = dup(fd.fileDescriptor());
     if (m_fd == -1) {
-        sendErrorReply(QDBusError::Failed, "No valid file descriptor");
+        sendErrorReply(s_errorFd, s_errorFdMsg);
         return;
     }
     m_captureCursor = captureCursor;
@@ -529,18 +540,17 @@ QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height, bo
     if (!calledFromDBus()) {
         return QString();
     }
-    if (!m_scheduledGeometry.isNull()) {
-        sendErrorReply(QDBusError::Failed, "A screenshot is already been taken");
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
         return QString();
     }
     m_scheduledGeometry = QRect(x, y, width, height);
     if (m_scheduledGeometry.isNull() || m_scheduledGeometry.isEmpty()) {
         m_scheduledGeometry = QRect();
-        sendErrorReply(QDBusError::Failed, "Invalid area requested");
+        sendErrorReply(s_errorInvalidArea, s_errorInvalidAreaMsg);
         return QString();
     }
     m_captureCursor = captureCursor;
-    m_replyConnection = connection();
     m_replyMessage = message();
     setDelayedReply(true);
     effects->addRepaint(m_scheduledGeometry);
@@ -640,6 +650,20 @@ void ScreenShotEffect::windowClosed( EffectWindow* w )
         m_scheduledScreenshot = NULL;
         screenshotWindowUnderCursor(m_type);
     }
+}
+
+bool ScreenShotEffect::isTakingScreenshot() const
+{
+    if (!m_scheduledGeometry.isNull()) {
+        return true;
+    }
+    if (m_windowMode != WindowMode::NoCapture) {
+        return true;
+    }
+    if (m_fd != -1) {
+        return true;
+    }
+    return false;
 }
 
 } // namespace

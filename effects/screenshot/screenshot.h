@@ -149,10 +149,10 @@ private:
     };
     void showInfoMessage(InfoMessageMode mode);
     void hideInfoMessage();
+    bool isTakingScreenshot() const;
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;
     QRect m_scheduledGeometry;
-    QDBusConnection m_replyConnection;
     QDBusMessage m_replyMessage;
     QRect m_cachedOutputGeometry;
     QImage m_multipleOutputsImage;
