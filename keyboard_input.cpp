@@ -613,7 +613,7 @@ void KeyboardInputRedirection::update()
                 break;
             } while (it != stacking.begin());
         }
-    } else if (!input()->isSelectingWindow()) {
+    } else if (!input()->isSelectingWindow() && !input()->isBreakingPointerConstraints()) {
         found = workspace()->activeClient();
     }
     if (found && found->surface()) {

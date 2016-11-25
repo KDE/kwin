@@ -394,6 +394,71 @@ private:
     }
 };
 
+class PointerConstraintsFilter : public InputEventFilter {
+public:
+    explicit PointerConstraintsFilter()
+        : InputEventFilter()
+        , m_timer(new QTimer)
+    {
+        QObject::connect(m_timer.data(), &QTimer::timeout,
+            [this] {
+                input()->pointer()->breakPointerConstraints();
+                input()->pointer()->blockPointerConstraints();
+                // TODO: show notification
+                waylandServer()->seat()->keyReleased(m_keyCode);
+                cancel();
+            }
+        );
+    }
+
+    bool keyEvent(QKeyEvent *event) override {
+        if (isActive()) {
+            if (event->type() == QEvent::KeyPress) {
+                // is that another key that gets pressed?
+                if (!event->isAutoRepeat() && event->key() != Qt::Key_Escape) {
+                    cancel();
+                    return false;
+                }
+                if (event->isAutoRepeat() && event->key() == Qt::Key_Escape) {
+                    // filter out
+                    return true;
+                }
+            } else {
+                cancel();
+                return false;
+            }
+        } else if (input()->pointer()->isConstrained()) {
+            if (event->type() == QEvent::KeyPress &&
+                    event->key() == Qt::Key_Escape &&
+                    input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifiers()) {
+                // TODO: don't hard code
+                m_timer->start(3000);
+                input()->keyboard()->update();
+                m_keyCode = event->nativeScanCode();
+                passToWaylandServer(event);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void cancel() {
+        if (!isActive()) {
+            return;
+        }
+        m_timer->stop();
+        input()->keyboard()->update();
+    }
+
+    bool isActive() const {
+        return m_timer->isActive();
+    }
+
+private:
+    QScopedPointer<QTimer> m_timer;
+    int m_keyCode = 0;
+};
+
 class EffectsFilter : public InputEventFilter {
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
@@ -1062,6 +1127,7 @@ public:
             if (event->buttons() == Qt::NoButton) {
                 // update pointer window only if no button is pressed
                 input()->pointer()->update();
+                input()->pointer()->enablePointerConstraints();
             }
             seat->setPointerPos(event->globalPos());
             MouseEvent *e = static_cast<MouseEvent*>(event);
@@ -1424,6 +1490,8 @@ void InputRedirection::setupInputFilters()
         installInputEventFilter(new TerminateServerFilter);
         installInputEventFilter(new DragAndDropInputFilter);
         installInputEventFilter(new LockScreenFilter);
+        m_pointerConstraintsFilter = new PointerConstraintsFilter;
+        installInputEventFilter(m_pointerConstraintsFilter);
         m_windowSelector = new WindowSelectorFilter;
         installInputEventFilter(m_windowSelector);
     }
@@ -1788,6 +1856,11 @@ void InputRedirection::startInteractivePositionSelection(std::function<void(cons
 bool InputRedirection::isSelectingWindow() const
 {
     return m_windowSelector ? m_windowSelector->isActive() : false;
+}
+
+bool InputRedirection::isBreakingPointerConstraints() const
+{
+    return m_pointerConstraintsFilter ? m_pointerConstraintsFilter->isActive() : false;
 }
 
 InputDeviceHandler::InputDeviceHandler(InputRedirection *input)

@@ -84,6 +84,16 @@ public:
     void setWindowSelectionCursor(const QByteArray &shape);
     void removeWindowSelectionCursor();
 
+    void enablePointerConstraints();
+    void breakPointerConstraints();
+    void blockPointerConstraints() {
+        m_blockConstraint = true;
+    }
+
+    bool isConstrained() const {
+        return m_confined || m_locked;
+    }
+
     /**
      * @internal
      */
@@ -139,6 +149,10 @@ private:
     void updatePosition(const QPointF &pos);
     void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
     void warpXcbOnSurfaceLeft(KWayland::Server::SurfaceInterface *surface);
+    QPointF applyPointerConfinement(const QPointF &pos) const;
+    void disconnectConfinedPointerRegionConnection();
+    void disconnectPointerConstraintsConnection();
+    void breakPointerConstraints(KWayland::Server::SurfaceInterface *surface);
     CursorImage *m_cursor;
     bool m_inited = false;
     bool m_supportsWarping;
@@ -147,6 +161,11 @@ private:
     Qt::MouseButtons m_qtButtons;
     QMetaObject::Connection m_windowGeometryConnection;
     QMetaObject::Connection m_internalWindowConnection;
+    QMetaObject::Connection m_constraintsConnection;
+    QMetaObject::Connection m_confinedPointerRegionConnection;
+    bool m_confined = false;
+    bool m_locked = false;
+    bool m_blockConstraint = false;
 };
 
 class CursorImage : public QObject

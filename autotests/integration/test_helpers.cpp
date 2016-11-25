@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
+#include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shell.h>
@@ -58,6 +59,7 @@ static struct {
     Seat *seat = nullptr;
     PlasmaShell *plasmaShell = nullptr;
     PlasmaWindowManagement *windowManagement = nullptr;
+    PointerConstraints *pointerConstraints = nullptr;
     QThread *thread = nullptr;
 } s_waylandConnection;
 
@@ -147,6 +149,13 @@ bool setupWaylandConnection(const QString &socketName, AdditionalWaylandInterfac
             return false;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::PointerConstraints)) {
+        s_waylandConnection.pointerConstraints = registry.createPointerConstraints(registry.interface(Registry::Interface::PointerConstraintsUnstableV1).name,
+                                                                                   registry.interface(Registry::Interface::PointerConstraintsUnstableV1).version);
+        if (!s_waylandConnection.pointerConstraints->isValid()) {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -165,6 +174,8 @@ void destroyWaylandConnection()
     s_waylandConnection.decoration = nullptr;
     delete s_waylandConnection.seat;
     s_waylandConnection.seat = nullptr;
+    delete s_waylandConnection.pointerConstraints;
+    s_waylandConnection.pointerConstraints = nullptr;
     delete s_waylandConnection.xdgShellV5;
     s_waylandConnection.xdgShellV5 = nullptr;
     delete s_waylandConnection.shell;
@@ -225,6 +236,11 @@ PlasmaShell *waylandPlasmaShell()
 PlasmaWindowManagement *waylandWindowManagement()
 {
     return s_waylandConnection.windowManagement;
+}
+
+PointerConstraints *waylandPointerConstraints()
+{
+    return s_waylandConnection.pointerConstraints;
 }
 
 bool waitForWaylandPointer()

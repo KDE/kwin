@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/datadevice_interface.h>
 #include <KWayland/Server/display.h>
+#include <KWayland/Server/pointerconstraints_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
 // screenlocker
@@ -177,6 +178,8 @@ void PointerInputRedirection::init()
 
 void PointerInputRedirection::updateOnStartMoveResize()
 {
+    breakPointerConstraints(m_window ? m_window->surface() : nullptr);
+    disconnectPointerConstraintsConnection();
     m_window.clear();
     waylandServer()->seat()->setFocusedPointerSurface(nullptr);
 }
@@ -201,6 +204,8 @@ void PointerInputRedirection::updateToReset()
         }
         disconnect(m_windowGeometryConnection);
         m_windowGeometryConnection = QMetaObject::Connection();
+        breakPointerConstraints(m_window->surface());
+        disconnectPointerConstraintsConnection();
         m_window.clear();
     }
     waylandServer()->seat()->setFocusedPointerSurface(nullptr);
@@ -451,6 +456,8 @@ void PointerInputRedirection::update()
         }
         disconnect(m_windowGeometryConnection);
         m_windowGeometryConnection = QMetaObject::Connection();
+        breakPointerConstraints(oldWindow->surface());
+        disconnectPointerConstraintsConnection();
     }
     if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
         // only send enter if it wasn't on deco for the same client before
@@ -483,11 +490,130 @@ void PointerInputRedirection::update()
                 seat->setFocusedPointerSurfaceTransformation(m_window.data()->inputTransformation());
             }
         );
+        m_constraintsConnection = connect(m_window->surface(), &KWayland::Server::SurfaceInterface::pointerConstraintsChanged,
+                                          this, &PointerInputRedirection::enablePointerConstraints);
+        // check whether a pointer confinement/lock fires
+        m_blockConstraint = false;
+        enablePointerConstraints();
     } else {
         m_window.clear();
         warpXcbOnSurfaceLeft(nullptr);
         seat->setFocusedPointerSurface(nullptr);
         t = nullptr;
+    }
+}
+
+void PointerInputRedirection::breakPointerConstraints(KWayland::Server::SurfaceInterface *surface)
+{
+    // cancel pointer constraints
+    if (surface) {
+        auto c = surface->confinedPointer();
+        if (c && c->isConfined()) {
+            c->setConfined(false);
+        }
+        auto l = surface->lockedPointer();
+        if (l && l->isLocked()) {
+            l->setLocked(false);
+        }
+    }
+    disconnectConfinedPointerRegionConnection();
+    m_confined = false;
+    m_locked = false;
+}
+
+void PointerInputRedirection::breakPointerConstraints()
+{
+    breakPointerConstraints(m_window ? m_window->surface() : nullptr);
+}
+
+void PointerInputRedirection::disconnectConfinedPointerRegionConnection()
+{
+    disconnect(m_confinedPointerRegionConnection);
+    m_confinedPointerRegionConnection = QMetaObject::Connection();
+}
+
+void PointerInputRedirection::disconnectPointerConstraintsConnection()
+{
+    disconnect(m_constraintsConnection);
+    m_constraintsConnection = QMetaObject::Connection();
+}
+
+template <typename T>
+static QRegion getConstraintRegion(Toplevel *t, T *constraint)
+{
+    const QRegion windowShape = t->inputShape();
+    const QRegion windowRegion = windowShape.isEmpty() ? QRegion(0, 0, t->clientSize().width(), t->clientSize().height()) : windowShape;
+    const QRegion intersected = constraint->region().isEmpty() ? windowRegion : windowRegion.intersected(constraint->region());
+    return intersected.translated(t->pos() + t->clientPos());
+}
+
+void PointerInputRedirection::enablePointerConstraints()
+{
+    if (m_window.isNull()) {
+        return;
+    }
+    const auto s = m_window->surface();
+    if (!s) {
+        return;
+    }
+    if (s != waylandServer()->seat()->focusedPointerSurface()) {
+        return;
+    }
+    if (!supportsWarping()) {
+        return;
+    }
+    if (m_blockConstraint) {
+        return;
+    }
+    const auto cf = s->confinedPointer();
+    if (cf) {
+        if (cf->isConfined()) {
+            return;
+        }
+        const QRegion r = getConstraintRegion(m_window.data(), cf.data());
+        if (r.contains(m_pos.toPoint())) {
+            cf->setConfined(true);
+            m_confined = true;
+            m_confinedPointerRegionConnection = connect(cf, &KWayland::Server::ConfinedPointerInterface::regionChanged, this,
+                [this] {
+                    if (!m_window) {
+                        return;
+                    }
+                    const auto s = m_window->surface();
+                    if (!s) {
+                        return;
+                    }
+                    const auto cf = s->confinedPointer();
+                    if (!getConstraintRegion(m_window.data(), cf.data()).contains(m_pos.toPoint())) {
+                        // pointer no longer in confined region, break the confinement
+                        cf->setConfined(false);
+                        m_confined = false;
+                    } else {
+                        if (!cf->isConfined()) {
+                            cf->setConfined(true);
+                            m_confined = true;
+                        }
+                    }
+                }
+            );
+            // TODO: show notification
+            return;
+        }
+    } else {
+        disconnectConfinedPointerRegionConnection();
+    }
+    const auto lock = s->lockedPointer();
+    if (lock) {
+        if (lock->isLocked()) {
+            return;
+        }
+        const QRegion r = getConstraintRegion(m_window.data(), lock.data());
+        if (r.contains(m_pos.toPoint())) {
+            lock->setLocked(true);
+            m_locked = true;
+            // TODO: show notification
+            // TODO: connect to region change - is it needed at all? If the pointer is locked it's always in the region
+        }
     }
 }
 
@@ -519,8 +645,47 @@ void PointerInputRedirection::warpXcbOnSurfaceLeft(KWayland::Server::SurfaceInte
     xcb_flush(connection());
 }
 
+QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) const
+{
+    if (!m_window) {
+        return pos;
+    }
+    auto s = m_window->surface();
+    if (!s) {
+        return pos;
+    }
+    auto cf = s->confinedPointer();
+    if (!cf) {
+        return pos;
+    }
+    if (!cf->isConfined()) {
+        return pos;
+    }
+
+    const QRegion confinementRegion = getConstraintRegion(m_window.data(), cf.data());
+    if (confinementRegion.contains(pos.toPoint())) {
+        return pos;
+    }
+    QPointF p = pos;
+    // allow either x or y to pass
+    p = QPointF(m_pos.x(), pos.y());
+    if (confinementRegion.contains(p.toPoint())) {
+        return p;
+    }
+    p = QPointF(pos.x(), m_pos.y());
+    if (confinementRegion.contains(p.toPoint())) {
+        return p;
+    }
+
+    return m_pos;
+}
+
 void PointerInputRedirection::updatePosition(const QPointF &pos)
 {
+    if (m_locked) {
+        // locked pointer should not move
+        return;
+    }
     // verify that at least one screen contains the pointer position
     QPointF p = pos;
     if (!screenContainsPos(p)) {
@@ -532,6 +697,15 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
                 return;
             }
         }
+    }
+    p = applyPointerConfinement(p);
+    if (p == m_pos) {
+        // didn't change due to confinement
+        return;
+    }
+    // verify screen confinement
+    if (!screenContainsPos(p)) {
+        return;
     }
     m_pos = p;
     emit m_input->globalPointerChanged(m_pos);
