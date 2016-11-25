@@ -51,6 +51,7 @@ private Q_SLOTS:
 
     void testMaximizedPassedToDeco();
     void testInitiallyMaximized();
+    void testBorderlessMaximizedWindow();
 };
 
 void TestMaximized::initTestCase()
@@ -62,6 +63,8 @@ void TestMaximized::initTestCase()
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+
+    kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
@@ -82,6 +85,13 @@ void TestMaximized::init()
 void TestMaximized::cleanup()
 {
     Test::destroyWaylandConnection();
+
+    // adjust config
+    auto group = kwinApp()->config()->group("Windows");
+    group.writeEntry("BorderlessMaximizedWindows", false);
+    group.sync();
+    Workspace::self()->slotReconfigure();
+    QCOMPARE(options->borderlessMaximizedWindows(), false);
 }
 
 void TestMaximized::testMaximizedPassedToDeco()
@@ -159,6 +169,51 @@ void TestMaximized::testInitiallyMaximized()
     QEXPECT_FAIL("", "Should go out of maximzied", Continue);
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
     QVERIFY(client->shellSurface()->isMaximized());
+}
+
+void TestMaximized::testBorderlessMaximizedWindow()
+{
+    // test case verifies that borderless maximized window works
+    // see BUG 370982
+
+    // adjust config
+    auto group = kwinApp()->config()->group("Windows");
+    group.writeEntry("BorderlessMaximizedWindows", true);
+    group.sync();
+    Workspace::self()->slotReconfigure();
+    QCOMPARE(options->borderlessMaximizedWindows(), true);
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<ServerSideDecoration> ssd(Test::waylandServerSideDecoration()->create(surface.data()));
+
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client->isDecorated());
+    const QRect origGeo = client->geometry();
+
+    QSignalSpy sizeChangedSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangedSpy.isValid());
+
+    // go to maximized
+    shellSurface->setMaximized();
+    QVERIFY(sizeChangedSpy.wait());
+    QCOMPARE(shellSurface->size(), QSize(1280, 1024));
+    QSignalSpy geometryChangedSpy(client, &ShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    Test::render(surface.data(), shellSurface->size(), Qt::red);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->geometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(client->isDecorated(), false);
+
+    // go back to normal
+    shellSurface->setToplevel();
+    QVERIFY(sizeChangedSpy.wait());
+    QCOMPARE(shellSurface->size(), QSize(100, 50));
+    Test::render(surface.data(), QSize(100, 50), Qt::red);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->geometry(), origGeo);
+    QCOMPARE(client->isDecorated(), true);
 }
 
 WAYLANDTEST_MAIN(TestMaximized)

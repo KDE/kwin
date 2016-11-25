@@ -695,7 +695,13 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         changeMaximizeRecursion = false;
     }
 
-    // TODO: borderless maximized windows
+    if (options->borderlessMaximizedWindows()) {
+        // triggers a maximize change.
+        // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore geometry
+        changeMaximizeRecursion = true;
+        setNoBorder(rules()->checkNoBorder(m_maximizeMode == MaximizeFull));
+        changeMaximizeRecursion = false;
+    }
 
     // Conditional quick tiling exit points
     const auto oldQuickTileMode = quickTileMode();
