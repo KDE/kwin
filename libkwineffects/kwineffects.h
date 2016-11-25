@@ -3153,7 +3153,7 @@ extern KWINEFFECTS_EXPORT EffectsHandler* effects;
 
 inline
 WindowVertex::WindowVertex()
-    : px(0), py(0), tx(0), ty(0)
+    : px(0), py(0), ox(0), oy(0), tx(0), ty(0)
 {
 }
 
