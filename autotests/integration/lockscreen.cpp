@@ -238,14 +238,14 @@ void LockScreenTest::testPointer()
 
     LOCK
 
-    QVERIFY(leftSpy.wait(100));
+    QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
 
     // simulate moving out in and out again
     MOTION(c->geometry().center());
     MOTION(c->geometry().bottomRight() + QPoint(100, 100));
     MOTION(c->geometry().bottomRight() + QPoint(100, 100));
-    QVERIFY(!leftSpy.wait(100));
+    QVERIFY(!leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(enteredSpy.count(), 1);
 
@@ -254,7 +254,7 @@ void LockScreenTest::testPointer()
     // and unlock
     UNLOCK
 
-    QVERIFY(enteredSpy.wait(100));
+    QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     // move on the window
     MOTION(c->geometry().center() + QPoint(100, 100));
@@ -292,9 +292,9 @@ void LockScreenTest::testPointerButton()
 
     // and simulate a click
     PRESS;
-    QVERIFY(!buttonChangedSpy.wait(100));
+    QVERIFY(!buttonChangedSpy.wait());
     RELEASE;
-    QVERIFY(!buttonChangedSpy.wait(100));
+    QVERIFY(!buttonChangedSpy.wait());
 
     UNLOCK
     QVERIFY(enteredSpy.wait());
