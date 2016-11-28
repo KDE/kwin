@@ -1,9 +1,5 @@
 project(KWIN)
-<<<<<<< HEAD
 set(PROJECT_VERSION "5.8.90")
-=======
-set(PROJECT_VERSION "5.8.4")
->>>>>>> Plasma/5.8
 set(PROJECT_VERSION_MAJOR 5)
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
