@@ -107,8 +107,9 @@ ScrollView {
                     Button {
                         id: configureButton
                         anchors {
-                            left: inactivePreview.left
-                            bottom: inactivePreview.bottom
+                            left: parent.left
+                            bottom: parent.bottom
+                            margins: 20
                         }
                         enabled: model["configureable"]
                         iconName: "configure"
