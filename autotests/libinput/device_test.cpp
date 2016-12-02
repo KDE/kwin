@@ -45,6 +45,12 @@ private Q_SLOTS:
     void testTapFingerCount();
     void testSize_data();
     void testSize();
+    void testDefaultPointerAcceleration_data();
+    void testDefaultPointerAcceleration();
+    void testDefaultPointerAccelerationProfileFlat_data();
+    void testDefaultPointerAccelerationProfileFlat();
+    void testDefaultPointerAccelerationProfileAdaptive_data();
+    void testDefaultPointerAccelerationProfileAdaptive();
     void testLeftHandedEnabledByDefault_data();
     void testLeftHandedEnabledByDefault();
     void testTapEnabledByDefault_data();
@@ -59,6 +65,10 @@ private Q_SLOTS:
     void testScrollEdgeEnabledByDefault();
     void testScrollOnButtonDownEnabledByDefault_data();
     void testScrollOnButtonDownEnabledByDefault();
+    void testDisableWhileTypingEnabledByDefault_data();
+    void testDisableWhileTypingEnabledByDefault();
+    void testLmrTapButtonMapEnabledByDefault_data();
+    void testLmrTapButtonMapEnabledByDefault();
     void testSupportsDisableWhileTyping_data();
     void testSupportsDisableWhileTyping();
     void testSupportsPointerAcceleration_data();
@@ -115,8 +125,16 @@ private Q_SLOTS:
     void testScrollButtonDown();
     void testScrollButton_data();
     void testScrollButton();
+    void testDisableWhileTyping_data();
+    void testDisableWhileTyping();
+    void testLmrTapButtonMap_data();
+    void testLmrTapButtonMap();
     void testLoadEnabled_data();
     void testLoadEnabled();
+    void testLoadPointerAcceleration_data();
+    void testLoadPointerAcceleration();
+    void testLoadPointerAccelerationProfile_data();
+    void testLoadPointerAccelerationProfile();
     void testLoadTapToClick_data();
     void testLoadTapToClick();
     void testLoadTapAndDrag_data();
@@ -131,6 +149,10 @@ private Q_SLOTS:
     void testLoadScrollMethod();
     void testLoadScrollButton_data();
     void testLoadScrollButton();
+    void testLoadDisableWhileTyping_data();
+    void testLoadDisableWhileTyping();
+    void testLoadLmrTapButtonMap_data();
+    void testLoadLmrTapButtonMap();
     void testLoadLeftHanded_data();
     void testLoadLeftHanded();
 };
@@ -441,6 +463,44 @@ void TestLibinputDevice::testScrollEdgeEnabledByDefault()
     QCOMPARE(d.property("scrollEdgeEnabledByDefault").toBool(), enabled);
 }
 
+void TestLibinputDevice::testDefaultPointerAccelerationProfileFlat_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::newRow("enabled") << true;
+    QTest::newRow("disabled") << false;
+}
+
+void TestLibinputDevice::testDefaultPointerAccelerationProfileFlat()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.defaultPointerAccelerationProfile = enabled ? LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT : LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
+
+    Device d(&device);
+    QCOMPARE(d.defaultPointerAccelerationProfileFlat(), enabled);
+    QCOMPARE(d.property("defaultPointerAccelerationProfileFlat").toBool(), enabled);
+}
+
+void TestLibinputDevice::testDefaultPointerAccelerationProfileAdaptive_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::newRow("enabled") << true;
+    QTest::newRow("disabled") << false;
+}
+
+void TestLibinputDevice::testDefaultPointerAccelerationProfileAdaptive()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.defaultPointerAccelerationProfile = enabled ? LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE : LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
+
+    Device d(&device);
+    QCOMPARE(d.defaultPointerAccelerationProfileAdaptive(), enabled);
+    QCOMPARE(d.property("defaultPointerAccelerationProfileAdaptive").toBool(), enabled);
+}
+
 void TestLibinputDevice::testScrollOnButtonDownEnabledByDefault_data()
 {
     QTest::addColumn<bool>("enabled");
@@ -693,6 +753,28 @@ void TestLibinputDevice::testSupportsScrollOnButtonDown()
     Device d(&device);
     QCOMPARE(d.supportsScrollOnButtonDown(), enabled);
     QCOMPARE(d.property("supportsScrollOnButtonDown").toBool(), enabled);
+}
+
+void TestLibinputDevice::testDefaultPointerAcceleration_data()
+{
+    QTest::addColumn<qreal>("accel");
+
+    QTest::newRow("-1.0") << -1.0;
+    QTest::newRow("-0.5") << -0.5;
+    QTest::newRow("0.0") << 0.0;
+    QTest::newRow("0.3") << 0.3;
+    QTest::newRow("1.0") << 1.0;
+}
+
+void TestLibinputDevice::testDefaultPointerAcceleration()
+{
+    QFETCH(qreal, accel);
+    libinput_device device;
+    device.defaultPointerAcceleration = accel;
+
+    Device d(&device);
+    QCOMPARE(d.defaultPointerAcceleration(), accel);
+    QCOMPARE(d.property("defaultPointerAcceleration").toReal(), accel);
 }
 
 void TestLibinputDevice::testPointerAcceleration_data()
@@ -1298,6 +1380,135 @@ void TestLibinputDevice::testScrollButton()
     QCOMPARE(scrollButtonChangedSpy.isEmpty(), initValue == expectedValue);
 }
 
+void TestLibinputDevice::testDisableWhileTypingEnabledByDefault_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::newRow("enabled") << true;
+    QTest::newRow("disabled") << false;
+}
+
+void TestLibinputDevice::testDisableWhileTypingEnabledByDefault()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.disableWhileTypingEnabledByDefault = enabled ? LIBINPUT_CONFIG_DWT_ENABLED : LIBINPUT_CONFIG_DWT_DISABLED;
+
+    Device d(&device);
+    QCOMPARE(d.disableWhileTypingEnabledByDefault(), enabled);
+    QCOMPARE(d.property("disableWhileTypingEnabledByDefault").toBool(), enabled);
+}
+
+void TestLibinputDevice::testLmrTapButtonMapEnabledByDefault_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::newRow("enabled") << true;
+    QTest::newRow("disabled") << false;
+}
+
+void TestLibinputDevice::testLmrTapButtonMapEnabledByDefault()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.defaultTapButtonMap = enabled ? LIBINPUT_CONFIG_TAP_MAP_LMR : LIBINPUT_CONFIG_TAP_MAP_LRM;
+
+    Device d(&device);
+    QCOMPARE(d.lmrTapButtonMapEnabledByDefault(), enabled);
+    QCOMPARE(d.property("lmrTapButtonMapEnabledByDefault").toBool(), enabled);
+}
+
+void TestLibinputDevice::testLmrTapButtonMap_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("expectedValue");
+    QTest::addColumn<int>("fingerCount");
+
+    QTest::newRow("true -> false") << true << false << false << false << 3;
+    QTest::newRow("false -> true") << false << true << false << true << 3;
+    QTest::newRow("true -> false") << true << false << false << false << 2;
+    QTest::newRow("false -> true") << false << true << false << true << 2;
+
+    QTest::newRow("set fails") << true << false << true << true << 3;
+
+    QTest::newRow("true -> true") << true << true << false << true << 3;
+    QTest::newRow("false -> false") << false << false << false << false << 3;
+    QTest::newRow("true -> true") << true << true << false << true << 2;
+    QTest::newRow("false -> false") << false << false << false << false << 2;
+
+    QTest::newRow("false -> true, fingerCount 0") << false << true << true << false << 0;
+
+    // TODO: is this a fail in libinput?
+    //QTest::newRow("false -> true, fingerCount 1") << false << true << true << false << 1;
+}
+
+void TestLibinputDevice::testLmrTapButtonMap()
+{
+    libinput_device device;
+    QFETCH(bool, initValue);
+    QFETCH(bool, setShouldFail);
+    QFETCH(int, fingerCount);
+    device.tapFingerCount = fingerCount;
+    device.tapButtonMap = initValue ? LIBINPUT_CONFIG_TAP_MAP_LMR : LIBINPUT_CONFIG_TAP_MAP_LRM;
+    device.setTapButtonMapReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.lmrTapButtonMap(), initValue);
+    QCOMPARE(d.property("lmrTapButtonMap").toBool(), initValue);
+
+    QSignalSpy tapButtonMapChangedSpy(&d, &Device::tapButtonMapChanged);
+    QVERIFY(tapButtonMapChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setLmrTapButtonMap(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.lmrTapButtonMap(), expectedValue);
+    QCOMPARE(d.property("lmrTapButtonMap").toBool(), expectedValue);
+    QCOMPARE(tapButtonMapChangedSpy.isEmpty(), initValue == expectedValue);
+}
+
+void TestLibinputDevice::testDisableWhileTyping_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("setValue");
+    QTest::addColumn<bool>("setShouldFail");
+    QTest::addColumn<bool>("expectedValue");
+    QTest::addColumn<bool>("supportsDisableWhileTyping");
+
+    QTest::newRow("true -> false") << true << false << false << false << true;
+    QTest::newRow("false -> true") << false << true << false << true << true;
+    QTest::newRow("set fails") << true << false << true << true << true;
+    QTest::newRow("true -> true") << true << true << false << true << true;
+    QTest::newRow("false -> false") << false << false << false << false << true;
+
+    QTest::newRow("false -> true, unsupported") << false << true << true << false << false;
+}
+
+void TestLibinputDevice::testDisableWhileTyping()
+{
+    libinput_device device;
+    QFETCH(bool, initValue);
+    QFETCH(bool, setShouldFail);
+    QFETCH(bool, supportsDisableWhileTyping);
+    device.supportsDisableWhileTyping = supportsDisableWhileTyping;
+    device.disableWhileTyping = initValue ? LIBINPUT_CONFIG_DWT_ENABLED : LIBINPUT_CONFIG_DWT_DISABLED;
+    device.setDisableWhileTypingReturnValue = setShouldFail;
+
+    Device d(&device);
+    QCOMPARE(d.isDisableWhileTyping(), initValue);
+    QCOMPARE(d.property("disableWhileTyping").toBool(), initValue);
+
+    QSignalSpy disableWhileTypingChangedSpy(&d, &Device::disableWhileTypingChanged);
+    QVERIFY(disableWhileTypingChangedSpy.isValid());
+    QFETCH(bool, setValue);
+    d.setDisableWhileTyping(setValue);
+    QFETCH(bool, expectedValue);
+    QCOMPARE(d.isDisableWhileTyping(), expectedValue);
+    QCOMPARE(d.property("disableWhileTyping").toBool(), expectedValue);
+    QCOMPARE(disableWhileTypingChangedSpy.isEmpty(), initValue == expectedValue);
+}
+
 void TestLibinputDevice::testLoadEnabled_data()
 {
     QTest::addColumn<bool>("initValue");
@@ -1337,6 +1548,108 @@ void TestLibinputDevice::testLoadEnabled()
     if (configValue != initValue) {
         d.setEnabled(initValue);
         QCOMPARE(inputConfig.readEntry("Enabled", configValue), initValue);
+    }
+}
+
+void TestLibinputDevice::testLoadPointerAcceleration_data()
+{
+    QTest::addColumn<qreal>("initValue");
+    QTest::addColumn<qreal>("configValue");
+
+    QTest::newRow("-0.2 -> 0.9") << -0.2 << 0.9;
+    QTest::newRow("0.0 -> -1.0") << 0.0 << -1.0;
+    QTest::newRow("0.123 -> -0.456") << 0.123 << -0.456;
+    QTest::newRow("0.7 -> 0.7") << 0.7 << 0.7;
+}
+
+void TestLibinputDevice::testLoadPointerAcceleration()
+{
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+    QFETCH(qreal, configValue);
+    QFETCH(qreal, initValue);
+    inputConfig.writeEntry("PointerAcceleration", configValue);
+
+    libinput_device device;
+    device.supportsPointerAcceleration = true;
+    device.pointerAcceleration = initValue;
+    device.setPointerAccelerationReturnValue = false;
+
+    Device d(&device);
+    QCOMPARE(d.pointerAcceleration(), initValue);
+    QCOMPARE(d.property("pointerAcceleration").toReal(), initValue);
+    // no config group set, should not change
+    d.loadConfiguration();
+    QCOMPARE(d.pointerAcceleration(), initValue);
+    QCOMPARE(d.property("pointerAcceleration").toReal(), initValue);
+
+    // set the group
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
+    QCOMPARE(d.pointerAcceleration(), configValue);
+    QCOMPARE(d.property("pointerAcceleration").toReal(), configValue);
+
+    // and try to store
+    if (configValue != initValue) {
+        d.setPointerAcceleration(initValue);
+        QCOMPARE(inputConfig.readEntry("PointerAcceleration", configValue), initValue);
+    }
+}
+
+void TestLibinputDevice::testLoadPointerAccelerationProfile_data()
+{
+    QTest::addColumn<quint32>("initValue");
+    QTest::addColumn<QString>("initValuePropNameString");
+    QTest::addColumn<quint32>("configValue");
+    QTest::addColumn<QString>("configValuePropNameString");
+
+    QTest::newRow("pointerAccelerationProfileFlat -> pointerAccelerationProfileAdaptive")
+            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat"
+            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
+    QTest::newRow("pointerAccelerationProfileAdaptive -> pointerAccelerationProfileFlat")
+            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive"
+            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT << "pointerAccelerationProfileFlat";
+    QTest::newRow("pointerAccelerationProfileAdaptive -> pointerAccelerationProfileAdaptive")
+            << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive" << (quint32) LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE << "pointerAccelerationProfileAdaptive";
+}
+
+void TestLibinputDevice::testLoadPointerAccelerationProfile()
+{
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+    QFETCH(quint32, initValue);
+    QFETCH(quint32, configValue);
+    QFETCH(QString, initValuePropNameString);
+    QFETCH(QString, configValuePropNameString);
+
+    QByteArray initValuePropName = initValuePropNameString.toLatin1();
+    QByteArray configValuePropName = configValuePropNameString.toLatin1();
+
+    inputConfig.writeEntry("PointerAccelerationProfile", configValue);
+
+    libinput_device device;
+    device.supportedPointerAccelerationProfiles = LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT | LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE;
+    device.pointerAccelerationProfile = (libinput_config_accel_profile) initValue;
+    device.setPointerAccelerationProfileReturnValue = false;
+
+    Device d(&device);
+    QCOMPARE(d.property(initValuePropName).toBool(), true);
+    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+    // no config group set, should not change
+    d.loadConfiguration();
+    QCOMPARE(d.property(initValuePropName).toBool(), true);
+    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+
+    // set the group
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
+    QCOMPARE(d.property(initValuePropName).toBool(), initValue == configValue);
+    QCOMPARE(d.property(configValuePropName).toBool(), true);
+
+    // and try to store
+    if (configValue != initValue) {
+        d.setProperty(initValuePropName, true);
+        QCOMPARE(inputConfig.readEntry("PointerAccelerationProfile", configValue), initValue);
     }
 }
 
@@ -1683,6 +1996,90 @@ void TestLibinputDevice::testLoadLeftHanded()
     if (configValue != initValue) {
         d.setLeftHanded(initValue);
         QCOMPARE(inputConfig.readEntry("LeftHanded", configValue), initValue);
+    }
+}
+
+void TestLibinputDevice::testLoadDisableWhileTyping_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("configValue");
+
+    QTest::newRow("false -> true") << false << true;
+    QTest::newRow("true -> false") << true << false;
+    QTest::newRow("true -> true") << true << true;
+    QTest::newRow("false -> false") << false << false;
+}
+
+void TestLibinputDevice::testLoadDisableWhileTyping()
+{
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+    QFETCH(bool, configValue);
+    QFETCH(bool, initValue);
+    inputConfig.writeEntry("DisableWhileTyping", configValue);
+
+    libinput_device device;
+    device.supportsDisableWhileTyping = true;
+    device.disableWhileTyping = initValue ? LIBINPUT_CONFIG_DWT_ENABLED : LIBINPUT_CONFIG_DWT_DISABLED;
+    device.setDisableWhileTypingReturnValue = false;
+
+    Device d(&device);
+    QCOMPARE(d.isDisableWhileTyping(), initValue);
+    // no config group set, should not change
+    d.loadConfiguration();
+    QCOMPARE(d.isDisableWhileTyping(), initValue);
+
+    // set the group
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
+    QCOMPARE(d.isDisableWhileTyping(), configValue);
+
+    // and try to store
+    if (configValue != initValue) {
+        d.setDisableWhileTyping(initValue);
+        QCOMPARE(inputConfig.readEntry("DisableWhileTyping", configValue), initValue);
+    }
+}
+
+void TestLibinputDevice::testLoadLmrTapButtonMap_data()
+{
+    QTest::addColumn<bool>("initValue");
+    QTest::addColumn<bool>("configValue");
+
+    QTest::newRow("false -> true") << false << true;
+    QTest::newRow("true -> false") << true << false;
+    QTest::newRow("true -> true") << true << true;
+    QTest::newRow("false -> false") << false << false;
+}
+
+void TestLibinputDevice::testLoadLmrTapButtonMap()
+{
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+    QFETCH(bool, configValue);
+    QFETCH(bool, initValue);
+    inputConfig.writeEntry("LmrTapButtonMap", configValue);
+
+    libinput_device device;
+    device.tapFingerCount = 3;
+    device.tapButtonMap = initValue ? LIBINPUT_CONFIG_TAP_MAP_LMR : LIBINPUT_CONFIG_TAP_MAP_LRM;
+    device.setTapButtonMapReturnValue = false;
+
+    Device d(&device);
+    QCOMPARE(d.lmrTapButtonMap(), initValue);
+    // no config group set, should not change
+    d.loadConfiguration();
+    QCOMPARE(d.lmrTapButtonMap(), initValue);
+
+    // set the group
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
+    QCOMPARE(d.lmrTapButtonMap(), configValue);
+
+    // and try to store
+    if (configValue != initValue) {
+        d.setLmrTapButtonMap(initValue);
+        QCOMPARE(inputConfig.readEntry("LmrTapButtonMap", configValue), initValue);
     }
 }
 

@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QMutex>
 #include <QVector>
+#include <QStringList>
 
 class QSocketNotifier;
 class QThread;
@@ -44,6 +45,8 @@ class Context;
 class Connection : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.InputDeviceManager")
+    Q_PROPERTY(QStringList devicesSysNames READ devicesSysNames CONSTANT)
 public:
     ~Connection();
 
@@ -83,6 +86,8 @@ public:
         return m_devices;
     }
 
+    QStringList devicesSysNames() const;
+
     void updateLEDs(KWin::Xkb::LEDs leds);
 
 Q_SIGNALS:
@@ -102,6 +107,8 @@ Q_SIGNALS:
     void hasTouchChanged(bool);
     void deviceAdded(KWin::LibInput::Device *);
     void deviceRemoved(KWin::LibInput::Device *);
+    Q_SCRIPTABLE void deviceAddedSysName(QString);
+    Q_SCRIPTABLE void deviceRemovedSysName(QString);
     void swipeGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device);
     void swipeGestureUpdate(const QSizeF &delta, quint32 time, KWin::LibInput::Device *device);
     void swipeGestureEnd(quint32 time, KWin::LibInput::Device *device);

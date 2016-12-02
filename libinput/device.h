@@ -40,9 +40,12 @@ class Device : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.InputDevice")
+    //
+    // general
     Q_PROPERTY(bool keyboard READ isKeyboard CONSTANT)
     Q_PROPERTY(bool alphaNumericKeyboard READ isAlphaNumericKeyboard CONSTANT)
     Q_PROPERTY(bool pointer READ isPointer CONSTANT)
+    Q_PROPERTY(bool touchpad READ isTouchpad CONSTANT)
     Q_PROPERTY(bool touch READ isTouch CONSTANT)
     Q_PROPERTY(bool tabletTool READ isTabletTool CONSTANT)
     Q_PROPERTY(bool tabletPad READ isTabletPad CONSTANT)
@@ -53,41 +56,74 @@ class Device : public QObject
     Q_PROPERTY(QSizeF size READ size CONSTANT)
     Q_PROPERTY(quint32 product READ product CONSTANT)
     Q_PROPERTY(quint32 vendor READ vendor CONSTANT)
-    Q_PROPERTY(Qt::MouseButtons supportedButtons READ supportedButtons CONSTANT)
-    Q_PROPERTY(int tapFingerCount READ tapFingerCount CONSTANT)
-    Q_PROPERTY(bool tapToClickEnabledByDefault READ tapToClickEnabledByDefault CONSTANT)
-    Q_PROPERTY(bool supportsDisableWhileTyping READ supportsDisableWhileTyping CONSTANT)
-    Q_PROPERTY(bool supportsPointerAcceleration READ supportsPointerAcceleration CONSTANT)
-    Q_PROPERTY(bool supportsLeftHanded READ supportsLeftHanded CONSTANT)
-    Q_PROPERTY(bool supportsCalibrationMatrix READ supportsCalibrationMatrix CONSTANT)
     Q_PROPERTY(bool supportsDisableEvents READ supportsDisableEvents CONSTANT)
-    Q_PROPERTY(bool supportsDisableEventsOnExternalMouse READ supportsDisableEventsOnExternalMouse CONSTANT)
-    Q_PROPERTY(bool supportsMiddleEmulation READ supportsMiddleEmulation CONSTANT)
-    Q_PROPERTY(bool supportsNaturalScroll READ supportsNaturalScroll CONSTANT)
-    Q_PROPERTY(bool supportsScrollTwoFinger READ supportsScrollTwoFinger CONSTANT)
-    Q_PROPERTY(bool supportsScrollEdge READ supportsScrollEdge CONSTANT)
-    Q_PROPERTY(bool supportsScrollOnButtonDown READ supportsScrollOnButtonDown CONSTANT)
-    Q_PROPERTY(bool middleEmulationEnabledByDefault READ middleEmulationEnabledByDefault CONSTANT)
-    Q_PROPERTY(bool naturalScrollEnabledByDefault READ naturalScrollEnabledByDefault CONSTANT)
-    Q_PROPERTY(bool scrollTwoFingerEnabledByDefault READ scrollTwoFingerEnabledByDefault CONSTANT)
-    Q_PROPERTY(bool scrollEdgeEnabledByDefault READ scrollEdgeEnabledByDefault CONSTANT)
-    Q_PROPERTY(bool scrollOnButtonDownEnabledByDefault READ scrollOnButtonDownEnabledByDefault CONSTANT)
-    Q_PROPERTY(quint32 defaultScrollButton READ defaultScrollButton CONSTANT)
-    Q_PROPERTY(bool middleEmulation READ isMiddleEmulation WRITE setMiddleEmulation NOTIFY middleEmulationChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    //
+    // advanced
+    Q_PROPERTY(Qt::MouseButtons supportedButtons READ supportedButtons CONSTANT)
+    Q_PROPERTY(bool supportsCalibrationMatrix READ supportsCalibrationMatrix CONSTANT)
+
+    Q_PROPERTY(bool supportsLeftHanded READ supportsLeftHanded CONSTANT)
     Q_PROPERTY(bool leftHandedEnabledByDefault READ leftHandedEnabledByDefault CONSTANT)
     Q_PROPERTY(bool leftHanded READ isLeftHanded WRITE setLeftHanded NOTIFY leftHandedChanged)
-    Q_PROPERTY(bool naturalScroll READ isNaturalScroll WRITE setNaturalScroll NOTIFY naturalScrollChanged)
-    Q_PROPERTY(bool scrollTwoFinger READ isScrollTwoFinger WRITE setScrollTwoFinger NOTIFY scrollMethodChanged)
-    Q_PROPERTY(bool scrollEdge READ isScrollEdge WRITE setScrollEdge NOTIFY scrollMethodChanged)
-    Q_PROPERTY(bool scrollOnButtonDown READ isScrollOnButtonDown WRITE setScrollOnButtonDown NOTIFY scrollMethodChanged)
-    Q_PROPERTY(quint32 scrollButton READ scrollButton WRITE setScrollButton NOTIFY scrollButtonChanged)
+
+    Q_PROPERTY(bool supportsDisableEventsOnExternalMouse READ supportsDisableEventsOnExternalMouse CONSTANT)
+
+    Q_PROPERTY(bool supportsDisableWhileTyping READ supportsDisableWhileTyping CONSTANT)
+    Q_PROPERTY(bool disableWhileTypingEnabledByDefault READ disableWhileTypingEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool disableWhileTyping READ isDisableWhileTyping WRITE setDisableWhileTyping NOTIFY disableWhileTypingChanged)
+    //
+    // acceleration speed and profile
+    Q_PROPERTY(bool supportsPointerAcceleration READ supportsPointerAcceleration CONSTANT)
+    Q_PROPERTY(qreal defaultPointerAcceleration READ defaultPointerAcceleration CONSTANT)
     Q_PROPERTY(qreal pointerAcceleration READ pointerAcceleration WRITE setPointerAcceleration NOTIFY pointerAccelerationChanged)
+
+    Q_PROPERTY(bool supportsPointerAccelerationProfileFlat READ supportsPointerAccelerationProfileFlat CONSTANT)
+    Q_PROPERTY(bool defaultPointerAccelerationProfileFlat READ defaultPointerAccelerationProfileFlat CONSTANT)
+    Q_PROPERTY(bool pointerAccelerationProfileFlat READ pointerAccelerationProfileFlat WRITE setPointerAccelerationProfileFlat NOTIFY pointerAccelerationProfileChanged)
+
+    Q_PROPERTY(bool supportsPointerAccelerationProfileAdaptive READ supportsPointerAccelerationProfileAdaptive CONSTANT)
+    Q_PROPERTY(bool defaultPointerAccelerationProfileAdaptive READ defaultPointerAccelerationProfileAdaptive CONSTANT)
+    Q_PROPERTY(bool pointerAccelerationProfileAdaptive READ pointerAccelerationProfileAdaptive WRITE setPointerAccelerationProfileAdaptive NOTIFY pointerAccelerationProfileChanged)
+    //
+    // tapping
+    Q_PROPERTY(int tapFingerCount READ tapFingerCount CONSTANT)
+    Q_PROPERTY(bool tapToClickEnabledByDefault READ tapToClickEnabledByDefault CONSTANT)
     Q_PROPERTY(bool tapToClick READ isTapToClick WRITE setTapToClick NOTIFY tapToClickChanged)
+
+    Q_PROPERTY(bool supportsLmrTapButtonMap READ supportsLmrTapButtonMap CONSTANT)
+    Q_PROPERTY(bool lmrTapButtonMapEnabledByDefault READ lmrTapButtonMapEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool lmrTapButtonMap READ lmrTapButtonMap WRITE setLmrTapButtonMap NOTIFY tapButtonMapChanged)
+
     Q_PROPERTY(bool tapAndDragEnabledByDefault READ tapAndDragEnabledByDefault CONSTANT)
     Q_PROPERTY(bool tapAndDrag READ isTapAndDrag WRITE setTapAndDrag NOTIFY tapAndDragChanged)
     Q_PROPERTY(bool tapDragLockEnabledByDefault READ tapDragLockEnabledByDefault CONSTANT)
     Q_PROPERTY(bool tapDragLock READ isTapDragLock WRITE setTapDragLock NOTIFY tapDragLockChanged)
-    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+
+    Q_PROPERTY(bool supportsMiddleEmulation READ supportsMiddleEmulation CONSTANT)
+    Q_PROPERTY(bool middleEmulationEnabledByDefault READ middleEmulationEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool middleEmulation READ isMiddleEmulation WRITE setMiddleEmulation NOTIFY middleEmulationChanged)
+    //
+    // scrolling
+    Q_PROPERTY(bool supportsNaturalScroll READ supportsNaturalScroll CONSTANT)
+    Q_PROPERTY(bool naturalScrollEnabledByDefault READ naturalScrollEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool naturalScroll READ isNaturalScroll WRITE setNaturalScroll NOTIFY naturalScrollChanged)
+
+    Q_PROPERTY(bool supportsScrollTwoFinger READ supportsScrollTwoFinger CONSTANT)
+    Q_PROPERTY(bool scrollTwoFingerEnabledByDefault READ scrollTwoFingerEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool scrollTwoFinger READ isScrollTwoFinger WRITE setScrollTwoFinger NOTIFY scrollMethodChanged)
+
+    Q_PROPERTY(bool supportsScrollEdge READ supportsScrollEdge CONSTANT)
+    Q_PROPERTY(bool scrollEdgeEnabledByDefault READ scrollEdgeEnabledByDefault CONSTANT)
+    Q_PROPERTY(bool scrollEdge READ isScrollEdge WRITE setScrollEdge NOTIFY scrollMethodChanged)
+
+    Q_PROPERTY(bool supportsScrollOnButtonDown READ supportsScrollOnButtonDown CONSTANT)
+    Q_PROPERTY(bool scrollOnButtonDownEnabledByDefault READ scrollOnButtonDownEnabledByDefault CONSTANT)
+    Q_PROPERTY(quint32 defaultScrollButton READ defaultScrollButton CONSTANT)
+    Q_PROPERTY(bool scrollOnButtonDown READ isScrollOnButtonDown WRITE setScrollOnButtonDown NOTIFY scrollMethodChanged)
+    Q_PROPERTY(quint32 scrollButton READ scrollButton WRITE setScrollButton NOTIFY scrollButtonChanged)
+
+
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     virtual ~Device();
@@ -100,6 +136,14 @@ public:
     }
     bool isPointer() const {
         return m_pointer;
+    }
+    bool isTouchpad() const{
+        return m_pointer &&
+                // ignore all combined devices. E.g. a touchpad on a keyboard we don't want to toggle
+                // as that would result in the keyboard going off as well
+                !(m_keyboard || m_touch || m_tabletPad || m_tabletTool) &&
+                // is this a touch pad? We don't really know, let's do some assumptions
+                (m_tapFingerCount > 0  || m_supportsDisableWhileTyping || m_supportsDisableEventsOnExternalMouse);
     }
     bool isTouch() const {
         return m_touch;
@@ -164,6 +208,9 @@ public:
     bool supportsDisableWhileTyping() const {
         return m_supportsDisableWhileTyping;
     }
+    bool disableWhileTypingEnabledByDefault() const {
+        return m_disableWhileTypingEnabledByDefault;
+    }
     bool supportsPointerAcceleration() const {
         return m_supportsPointerAcceleration;
     }
@@ -218,6 +265,18 @@ public:
     bool scrollOnButtonDownEnabledByDefault() const {
         return m_defaultScrollMethod == LIBINPUT_CONFIG_SCROLL_ON_BUTTON_DOWN;
     }
+    bool supportsLmrTapButtonMap() const {
+        return m_tapFingerCount > 1;
+    }
+    bool lmrTapButtonMapEnabledByDefault() const {
+        return m_defaultTapButtonMap == LIBINPUT_CONFIG_TAP_MAP_LMR;
+    }
+
+    void setLmrTapButtonMap(bool set);
+    bool lmrTapButtonMap() const {
+        return m_tapButtonMap & LIBINPUT_CONFIG_TAP_MAP_LMR;
+    }
+
     quint32 defaultScrollButton() const {
         return m_defaultScrollButton;
     }
@@ -256,6 +315,10 @@ public:
     }
     void setScrollButton(quint32 button);
 
+    void setDisableWhileTyping(bool set);
+    bool isDisableWhileTyping() const {
+        return m_disableWhileTyping;
+    }
     bool isLeftHanded() const {
         return m_leftHanded;
     }
@@ -265,6 +328,9 @@ public:
      **/
     void setLeftHanded(bool set);
 
+    qreal defaultPointerAcceleration() const {
+        return m_defaultPointerAcceleration;
+    }
     qreal pointerAcceleration() const {
         return m_pointerAcceleration;
     }
@@ -272,7 +338,43 @@ public:
      * @param acceleration mapped to range [-1,1] with -1 being the slowest, 1 being the fastest supported acceleration.
      **/
     void setPointerAcceleration(qreal acceleration);
-
+    void setPointerAccelerationFromString(QString acceleration) {
+        setPointerAcceleration(acceleration.toDouble());
+    }
+    QString defaultPointerAccelerationToString() const {
+        return QString::number(m_pointerAcceleration, 'f', 3);
+    }
+    bool supportsPointerAccelerationProfileFlat() const {
+        return (m_supportedPointerAccelerationProfiles & LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT);
+    }
+    bool supportsPointerAccelerationProfileAdaptive() const {
+        return (m_supportedPointerAccelerationProfiles & LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE);
+    }
+    bool defaultPointerAccelerationProfileFlat() const {
+        return (m_defaultPointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT);
+    }
+    bool defaultPointerAccelerationProfileAdaptive() const {
+        return (m_defaultPointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE);
+    }
+    bool pointerAccelerationProfileFlat() const {
+        return (m_pointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT);
+    }
+    bool pointerAccelerationProfileAdaptive() const {
+        return (m_pointerAccelerationProfile & LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE);
+    }
+    void setPointerAccelerationProfile(bool set, enum  libinput_config_accel_profile profile);
+    void setPointerAccelerationProfileFlat(bool set) {
+        setPointerAccelerationProfile(set, LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT);
+    }
+    void setPointerAccelerationProfileAdaptive(bool set) {
+        setPointerAccelerationProfile(set, LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE);
+    }
+    void activatePointerAccelerationProfileFromInt(quint32 profile) {
+        setPointerAccelerationProfile(true, (libinput_config_accel_profile) profile);
+    }
+    quint32 defaultPointerAccelerationProfileToInt() const {
+        return (quint32) m_defaultPointerAccelerationProfile;
+    }
     bool isEnabled() const {
         return m_enabled;
     }
@@ -307,8 +409,11 @@ public:
     static Device *getDevice(libinput_device *native);
 
 Q_SIGNALS:
+    void tapButtonMapChanged();
     void leftHandedChanged();
+    void disableWhileTypingChanged();
     void pointerAccelerationChanged();
+    void pointerAccelerationProfileChanged();
     void enabledChanged();
     void tapToClickChanged();
     void tapAndDragChanged();
@@ -339,6 +444,8 @@ private:
     quint32 m_vendor;
     Qt::MouseButtons m_supportedButtons = Qt::NoButton;
     int m_tapFingerCount;
+    enum libinput_config_tap_button_map m_defaultTapButtonMap;
+    enum libinput_config_tap_button_map m_tapButtonMap;
     bool m_tapToClickEnabledByDefault;
     bool m_tapToClick;
     bool m_tapAndDragEnabledByDefault;
@@ -361,12 +468,18 @@ private:
     bool m_naturalScrollEnabledByDefault;
     enum libinput_config_scroll_method m_defaultScrollMethod;
     quint32 m_defaultScrollButton;
+    bool m_disableWhileTypingEnabledByDefault;
+    bool m_disableWhileTyping;
     bool m_middleEmulation;
     bool m_leftHanded;
     bool m_naturalScroll;
     enum libinput_config_scroll_method m_scrollMethod;
     quint32 m_scrollButton;
+    qreal m_defaultPointerAcceleration;
     qreal m_pointerAcceleration;
+    quint32 m_supportedPointerAccelerationProfiles;
+    enum libinput_config_accel_profile m_defaultPointerAccelerationProfile;
+    enum libinput_config_accel_profile m_pointerAccelerationProfile;
     bool m_enabled;
 
     KConfigGroup m_config;

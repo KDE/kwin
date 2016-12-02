@@ -99,11 +99,17 @@ Connection *Connection::create(QObject *parent)
     QObject::connect(s_thread, &QThread::finished, s_self, &QObject::deleteLater);
     QObject::connect(s_thread, &QThread::finished, s_thread, &QObject::deleteLater);
     QObject::connect(parent, &QObject::destroyed, s_thread, &QThread::quit);
+
+    connect(s_self, &Connection::deviceAdded, s_self, [s_self](Device* device) {
+                emit s_self->deviceAddedSysName(device->sysName());
+            });
+    connect(s_self, &Connection::deviceRemoved, s_self, [s_self](Device* device) {
+                emit s_self->deviceRemovedSysName(device->sysName());
+            });
     return s_self;
 }
 
 static const QString s_touchpadComponent = QStringLiteral("kcm_touchpad");
-static const QString s_serviceName = QStringLiteral("org.kde.KWin.InputDevice");
 
 Connection::Connection(Context *input, QObject *parent)
     : QObject(parent)
@@ -158,12 +164,15 @@ Connection::Connection(Context *input, QObject *parent)
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
 
-    QDBusConnection::sessionBus().registerService(s_serviceName);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice"),
+                                                 QStringLiteral("org.kde.KWin.InputDeviceManager"),
+                                                 this,
+                                                 QDBusConnection::ExportAllProperties | QDBusConnection::ExportScriptableSignals
+    );
 }
 
 Connection::~Connection()
 {
-    QDBusConnection::sessionBus().unregisterService(s_serviceName);
     s_self = nullptr;
     delete s_context;
     s_context = nullptr;
@@ -475,7 +484,7 @@ void Connection::applyDeviceConfig(Device *device)
     device->setConfig(m_config->group("Libinput").group(QString::number(device->vendor())).group(QString::number(device->product())).group(device->name()));
     device->loadConfiguration();
 
-    if (device->isPointer()) {
+    if (device->isPointer() && !device->isTouchpad()) {
         const KConfigGroup group = m_config->group("Mouse");
         device->setLeftHanded(group.readEntry("MouseButtonMapping", "RightHanded") == QLatin1String("LeftHanded"));
         qreal accel = group.readEntry("Acceleration", -1.0);
@@ -511,21 +520,13 @@ void Connection::toggleTouchpads()
     m_touchpadsEnabled = !m_touchpadsEnabled;
     for (auto it = m_devices.constBegin(); it != m_devices.constEnd(); ++it) {
         auto device = *it;
-        if (!device->isPointer()) {
+        if (!device->isTouchpad()) {
             continue;
         }
-        if (device->isKeyboard() || device->isTouch() || device->isTabletPad() || device->isTabletTool()) {
-            // ignore all combined devices. E.g. a touchpad on a keyboard we don't want to toggle
-            // as that would result in the keyboard going off as well
-            continue;
-        }
-        // is this a touch pad? We don't really know, let's do some assumptions
-        if (device->tapFingerCount() > 0 || device->supportsDisableWhileTyping() || device->supportsDisableEventsOnExternalMouse()) {
-            const bool old = device->isEnabled();
-            device->setEnabled(m_touchpadsEnabled);
-            if (old != device->isEnabled()) {
-                changed = true;
-            }
+        const bool old = device->isEnabled();
+        device->setEnabled(m_touchpadsEnabled);
+        if (old != device->isEnabled()) {
+            changed = true;
         }
     }
     if (changed) {
@@ -552,6 +553,14 @@ void Connection::updateLEDs(Xkb::LEDs leds)
     for (auto it = m_devices.constBegin(), end = m_devices.constEnd(); it != end; ++it) {
         libinput_device_led_update((*it)->device(), l);
     }
+}
+
+QStringList Connection::devicesSysNames() const {
+    QStringList sl;
+    foreach (Device *d, m_devices) {
+        sl.append(d->sysName());
+    }
+    return sl;
 }
 
 }

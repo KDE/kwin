@@ -162,6 +162,28 @@ int libinput_device_config_dwt_is_available(struct libinput_device *device)
     return device->supportsDisableWhileTyping;
 }
 
+enum libinput_config_status libinput_device_config_dwt_set_enabled(struct libinput_device *device, enum libinput_config_dwt_state state)
+{
+    if (device->setDisableWhileTypingReturnValue == 0) {
+        if (!device->supportsDisableWhileTyping) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        device->disableWhileTyping = state;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+enum libinput_config_dwt_state libinput_device_config_dwt_get_enabled(struct libinput_device *device)
+{
+    return device->disableWhileTyping;
+}
+
+enum libinput_config_dwt_state libinput_device_config_dwt_get_default_enabled(struct libinput_device *device)
+{
+    return device->disableWhileTypingEnabledByDefault;
+}
+
 int libinput_device_config_accel_is_available(struct libinput_device *device)
 {
     return device->supportsPointerAcceleration;
@@ -194,6 +216,11 @@ int libinput_device_config_left_handed_get(struct libinput_device *device)
     return device->leftHanded;
 }
 
+double libinput_device_config_accel_get_default_speed(struct libinput_device *device)
+{
+    return device->defaultPointerAcceleration;
+}
+
 int libinput_device_config_left_handed_get_default(struct libinput_device *device)
 {
     return device->leftHandedEnabledByDefault;
@@ -202,6 +229,33 @@ int libinput_device_config_left_handed_get_default(struct libinput_device *devic
 double libinput_device_config_accel_get_speed(struct libinput_device *device)
 {
     return device->pointerAcceleration;
+}
+
+uint32_t libinput_device_config_accel_get_profiles(struct libinput_device *device)
+{
+    return device->supportedPointerAccelerationProfiles;
+}
+
+enum libinput_config_accel_profile libinput_device_config_accel_get_default_profile(struct libinput_device *device)
+{
+    return device->defaultPointerAccelerationProfile;
+}
+
+enum libinput_config_status libinput_device_config_accel_set_profile(struct libinput_device *device, enum libinput_config_accel_profile profile)
+{
+    if (device->setPointerAccelerationProfileReturnValue == 0) {
+        if (!(device->supportedPointerAccelerationProfiles & profile) && profile!= LIBINPUT_CONFIG_ACCEL_PROFILE_NONE) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        device->pointerAccelerationProfile = profile;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+enum libinput_config_accel_profile libinput_device_config_accel_get_profile(struct libinput_device *device)
+{
+    return device->pointerAccelerationProfile;
 }
 
 uint32_t libinput_device_config_send_events_get_mode(struct libinput_device *device)
@@ -668,6 +722,28 @@ int libinput_device_config_scroll_get_natural_scroll_enabled(struct libinput_dev
 int libinput_device_config_scroll_get_default_natural_scroll_enabled(struct libinput_device *device)
 {
     return device->naturalScrollEnabledByDefault;
+}
+
+enum libinput_config_tap_button_map libinput_device_config_tap_get_default_button_map(struct libinput_device *device)
+{
+    return device->defaultTapButtonMap;
+}
+
+enum libinput_config_status libinput_device_config_tap_set_button_map(struct libinput_device *device, enum libinput_config_tap_button_map map)
+{
+    if (device->setTapButtonMapReturnValue == 0) {
+        if (device->tapFingerCount == 0) {
+            return LIBINPUT_CONFIG_STATUS_INVALID;
+        }
+        device->tapButtonMap = map;
+        return LIBINPUT_CONFIG_STATUS_SUCCESS;
+    }
+    return LIBINPUT_CONFIG_STATUS_INVALID;
+}
+
+enum libinput_config_tap_button_map libinput_device_config_tap_get_button_map(struct libinput_device *device)
+{
+    return device->tapButtonMap;
 }
 
 uint32_t libinput_device_config_scroll_get_methods(struct libinput_device *device)

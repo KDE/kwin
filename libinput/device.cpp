@@ -73,7 +73,11 @@ Device *Device::getDevice(libinput_device *native)
 enum class ConfigKey {
     Enabled,
     LeftHanded,
+    DisableWhileTyping,
+    PointerAcceleration,
+    PointerAccelerationProfile,
     TapToClick,
+    LmrTapButtonMap,
     TapAndDrag,
     TapDragLock,
     MiddleButtonEmulation,
@@ -91,6 +95,10 @@ struct ConfigData {
         : key(_key)
     { quint32Setter.setter = _setter; quint32Setter.defaultValue = _defaultValue; }
 
+    explicit ConfigData(QByteArray _key, void (Device::*_setter)(QString), QString (Device::*_defaultValue)() const = nullptr)
+        : key(_key)
+    { stringSetter.setter = _setter; stringSetter.defaultValue = _defaultValue; }
+
     QByteArray key;
 
     struct {
@@ -102,15 +110,23 @@ struct ConfigData {
         void (Device::*setter)(quint32) = nullptr;
         quint32 (Device::*defaultValue)() const;
     } quint32Setter;
+    struct {
+        void (Device::*setter)(QString) = nullptr;
+        QString (Device::*defaultValue)() const;
+    } stringSetter;
 };
 
 static const QMap<ConfigKey, ConfigData> s_configData {
     {ConfigKey::Enabled, ConfigData(QByteArrayLiteral("Enabled"), &Device::setEnabled)},
     {ConfigKey::LeftHanded, ConfigData(QByteArrayLiteral("LeftHanded"), &Device::setLeftHanded, &Device::leftHandedEnabledByDefault)},
+    {ConfigKey::DisableWhileTyping, ConfigData(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
+    {ConfigKey::PointerAcceleration, ConfigData(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
+    {ConfigKey::PointerAccelerationProfile, ConfigData(QByteArrayLiteral("PointerAccelerationProfile"), &Device::activatePointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
     {ConfigKey::TapToClick, ConfigData(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
     {ConfigKey::TapAndDrag, ConfigData(QByteArrayLiteral("TapAndDrag"), &Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault)},
     {ConfigKey::TapDragLock, ConfigData(QByteArrayLiteral("TapDragLock"), &Device::setTapDragLock, &Device::tapDragLockEnabledByDefault)},
     {ConfigKey::MiddleButtonEmulation, ConfigData(QByteArrayLiteral("MiddleButtonEmulation"), &Device::setMiddleEmulation, &Device::middleEmulationEnabledByDefault)},
+    {ConfigKey::LmrTapButtonMap, ConfigData(QByteArrayLiteral("LmrTapButtonMap"), &Device::setLmrTapButtonMap, &Device::lmrTapButtonMapEnabledByDefault)},
     {ConfigKey::NaturalScroll, ConfigData(QByteArrayLiteral("NaturalScroll"), &Device::setNaturalScroll, &Device::naturalScrollEnabledByDefault)},
     {ConfigKey::ScrollMethod, ConfigData(QByteArrayLiteral("ScrollMethod"), &Device::activateScrollMethodFromInt, &Device::defaultScrollMethodToInt)},
     {ConfigKey::ScrollButton, ConfigData(QByteArrayLiteral("ScrollButton"), &Device::setScrollButton, &Device::defaultScrollButton)}
@@ -138,6 +154,8 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_tapFingerCount(libinput_device_config_tap_get_finger_count(m_device))
     , m_tapToClickEnabledByDefault(libinput_device_config_tap_get_default_enabled(m_device) == LIBINPUT_CONFIG_TAP_ENABLED)
     , m_tapToClick(libinput_device_config_tap_get_enabled(m_device))
+    , m_defaultTapButtonMap(libinput_device_config_tap_get_default_button_map(m_device))
+    , m_tapButtonMap(libinput_device_config_tap_get_button_map(m_device))
     , m_tapAndDragEnabledByDefault(libinput_device_config_tap_get_default_drag_enabled(m_device))
     , m_tapAndDrag(libinput_device_config_tap_get_drag_enabled(m_device))
     , m_tapDragLockEnabledByDefault(libinput_device_config_tap_get_default_drag_lock_enabled(m_device))
@@ -156,12 +174,18 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_naturalScrollEnabledByDefault(libinput_device_config_scroll_get_default_natural_scroll_enabled(m_device))
     , m_defaultScrollMethod(libinput_device_config_scroll_get_default_method(m_device))
     , m_defaultScrollButton(libinput_device_config_scroll_get_default_button(m_device))
+    , m_disableWhileTypingEnabledByDefault(libinput_device_config_dwt_get_default_enabled(m_device))
+    , m_disableWhileTyping(m_supportsDisableWhileTyping ? libinput_device_config_dwt_get_enabled(m_device) : false)
     , m_middleEmulation(libinput_device_config_middle_emulation_get_enabled(m_device) == LIBINPUT_CONFIG_MIDDLE_EMULATION_ENABLED)
     , m_leftHanded(m_supportsLeftHanded ? libinput_device_config_left_handed_get(m_device) : false)
     , m_naturalScroll(m_supportsNaturalScroll ? libinput_device_config_scroll_get_natural_scroll_enabled(m_device) : false)
     , m_scrollMethod(libinput_device_config_scroll_get_method(m_device))
     , m_scrollButton(libinput_device_config_scroll_get_button(m_device))
+    , m_defaultPointerAcceleration(libinput_device_config_accel_get_default_speed(m_device))
     , m_pointerAcceleration(libinput_device_config_accel_get_speed(m_device))
+    , m_supportedPointerAccelerationProfiles(libinput_device_config_accel_get_profiles(m_device))
+    , m_defaultPointerAccelerationProfile(libinput_device_config_accel_get_default_profile(m_device))
+    , m_pointerAccelerationProfile(libinput_device_config_accel_get_profile(m_device))
     , m_enabled(m_supportsDisableEvents ? libinput_device_config_send_events_get_mode(m_device) == LIBINPUT_CONFIG_SEND_EVENTS_ENABLED : true)
     , m_config()
 {
@@ -255,6 +279,7 @@ void Device::loadConfiguration()
         }
         readEntry(key, it.value().booleanSetter, true);
         readEntry(key, it.value().quint32Setter, 0);
+        readEntry(key, it.value().stringSetter, "");
     };
 
     m_loading = false;
@@ -270,25 +295,8 @@ void Device::setPointerAcceleration(qreal acceleration)
         if (m_pointerAcceleration != acceleration) {
             m_pointerAcceleration = acceleration;
             emit pointerAccelerationChanged();
+            writeEntry(ConfigKey::PointerAcceleration, QString::number(acceleration, 'f', 3));
         }
-    }
-}
-
-void Device::setScrollMethod(bool set, enum libinput_config_scroll_method method)
-{
-    bool stays_the_same = (m_scrollMethod == method) == set;
-    if (!(m_supportedScrollMethods & method) || stays_the_same) {
-        return;
-    }
-
-    if (!set) {
-        method = LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
-    }
-
-    if (libinput_device_config_scroll_set_method(m_device, method) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
-        m_scrollMethod = method;
-        emit scrollMethodChanged();
-        writeEntry(ConfigKey::ScrollMethod, (quint32) method);
     }
 }
 
@@ -302,6 +310,63 @@ void Device::setScrollButton(quint32 button)
             m_scrollButton = button;
             writeEntry(ConfigKey::ScrollButton, m_scrollButton);
             emit scrollButtonChanged();
+        }
+    }
+}
+
+void Device::setPointerAccelerationProfile(bool set, enum  libinput_config_accel_profile profile) {
+
+    if (!(m_supportedPointerAccelerationProfiles & profile)) {
+        return;
+    }
+
+    if (!set) {
+        profile = LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
+    }
+
+    if (libinput_device_config_accel_set_profile(m_device, profile) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_pointerAccelerationProfile != profile) {
+            m_pointerAccelerationProfile = profile;
+            emit pointerAccelerationProfileChanged();
+            writeEntry(ConfigKey::PointerAccelerationProfile, (quint32) profile);
+        }
+    }
+}
+
+void Device::setScrollMethod(bool set, enum libinput_config_scroll_method method)
+{
+    if (!(m_supportedScrollMethods & method)) {
+        return;
+    }
+
+    if (!set) {
+        method = LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+    }
+
+    if (libinput_device_config_scroll_set_method(m_device, method) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_scrollMethod != method) {
+            m_scrollMethod = method;
+            emit scrollMethodChanged();
+            writeEntry(ConfigKey::ScrollMethod, (quint32) method);
+        }
+    }
+}
+
+void Device::setLmrTapButtonMap(bool set) {
+    enum libinput_config_tap_button_map map = set ? LIBINPUT_CONFIG_TAP_MAP_LMR : LIBINPUT_CONFIG_TAP_MAP_LRM;
+
+    if (m_tapFingerCount < 2) {
+        return;
+    }
+    if (!set) {
+        map = LIBINPUT_CONFIG_TAP_MAP_LRM;
+    }
+
+    if (libinput_device_config_tap_set_button_map(m_device, map) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_tapButtonMap != map) {
+            m_tapButtonMap = map;
+            writeEntry(ConfigKey::LmrTapButtonMap, set);
+            emit tapButtonMapChanged();
         }
     }
 }
@@ -342,6 +407,7 @@ void Device::method(bool set) \
 }
 
 CONFIG(setEnabled, !m_supportsDisableEvents, send_events_set_mode, SEND_EVENTS, enabled, Enabled)
+CONFIG(setDisableWhileTyping, !m_supportsDisableWhileTyping, dwt_set_enabled, DWT, disableWhileTyping, DisableWhileTyping)
 CONFIG(setTapToClick, m_tapFingerCount == 0, tap_set_enabled, TAP, tapToClick, TapToClick)
 CONFIG(setTapAndDrag, false, tap_set_drag_enabled, DRAG, tapAndDrag, TapAndDrag)
 CONFIG(setTapDragLock, false, tap_set_drag_lock_enabled, DRAG_LOCK, tapDragLock, TapDragLock)
