@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "presentwindows_config.h"
 // KConfigSkeleton
 #include "presentwindowsconfig.h"
+#include <config-kwin.h>
 #include <kwineffects_interface.h>
 #include <QAction>
 
@@ -84,6 +85,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
 
     connect(m_ui->shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
 
+    PresentWindowsConfig::instance(KWIN_CONFIG);
     addConfig(PresentWindowsConfig::self(), m_ui);
 
     load();

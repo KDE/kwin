@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KConfigSkeleton
 #include "mousemarkconfig.h"
+#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
@@ -58,6 +59,7 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
 
     layout->addWidget(m_ui);
 
+    MouseMarkConfig::instance(KWIN_CONFIG);
     addConfig(MouseMarkConfig::self(), m_ui);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!

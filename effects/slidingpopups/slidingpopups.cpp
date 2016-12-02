@@ -33,6 +33,7 @@ namespace KWin
 
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
+    initConfig<SlidingPopupsConfig>();
     KWayland::Server::Display *display = effects->waylandDisplay();
     if (display) {
         display->createSlideManager(this)->create();

@@ -35,6 +35,7 @@ static const int IsSheetWindow = 0x22A982D5;
 
 SheetEffect::SheetEffect()
 {
+    initConfig<SheetConfig>();
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));

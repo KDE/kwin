@@ -55,6 +55,7 @@ KscreenEffect::KscreenEffect()
     , m_state(StateNormal)
     , m_atom(effects->announceSupportProperty("_KDE_KWIN_KSCREEN_SUPPORT", this))
 {
+    initConfig<KscreenConfig>();
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), SLOT(propertyNotify(KWin::EffectWindow*,long)));
     reconfigure(ReconfigureAll);
 }

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "resize_config.h"
 // KConfigSkeleton
 #include "resizeconfig.h"
+#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <kconfiggroup.h>
@@ -49,6 +50,7 @@ ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args
 
     layout->addWidget(m_ui);
 
+    ResizeConfig::instance(KWIN_CONFIG);
     addConfig(ResizeConfig::self(), m_ui);
 
     load();

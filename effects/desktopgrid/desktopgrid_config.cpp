@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "desktopgrid_config.h"
 // KConfigSkeleton
 #include "desktopgridconfig.h"
+#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
@@ -83,6 +84,7 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     m_ui->desktopNameAlignmentCombo->addItem(i18n("Top-Left"), QVariant(Qt::AlignLeft | Qt::AlignTop));
     m_ui->desktopNameAlignmentCombo->addItem(i18n("Center"), QVariant(Qt::AlignCenter));
 
+    DesktopGridConfig::instance(KWIN_CONFIG);
     addConfig(DesktopGridConfig::self(), m_ui);
     connect(m_ui->kcfg_LayoutMode, SIGNAL(currentIndexChanged(int)), this, SLOT(layoutSelectionChanged()));
     connect(m_ui->desktopNameAlignmentCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));

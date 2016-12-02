@@ -34,6 +34,7 @@ bool FallApartEffect::supported()
 
 FallApartEffect::FallApartEffect()
 {
+    initConfig<FallApartConfig>();
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));

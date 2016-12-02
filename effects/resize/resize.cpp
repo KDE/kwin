@@ -40,6 +40,7 @@ ResizeEffect::ResizeEffect()
     , m_active(false)
     , m_resizeWindow(0)
 {
+    initConfig<ResizeConfig>();
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(KWin::EffectWindow*,QRect)));

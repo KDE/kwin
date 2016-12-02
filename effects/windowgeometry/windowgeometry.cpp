@@ -34,6 +34,7 @@ using namespace KWin;
 
 WindowGeometry::WindowGeometry()
 {
+    initConfig<WindowGeometryConfiguration>();
     iAmActivated = true;
     iAmActive = false;
     myResizeWindow = 0L;

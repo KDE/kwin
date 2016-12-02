@@ -48,6 +48,7 @@ FlipSwitchEffect::FlipSwitchEffect()
     , m_hasKeyboardGrab(false)
     , m_captionFrame(NULL)
 {
+    initConfig<FlipSwitchConfig>();
     reconfigure(ReconfigureAll);
 
     // Caption frame

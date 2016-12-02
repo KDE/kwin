@@ -46,6 +46,7 @@ namespace KWin
 
 MouseMarkEffect::MouseMarkEffect()
 {
+    initConfig<MouseMarkConfig>();
     QAction* a = new QAction(this);
     a->setObjectName(QStringLiteral("ClearMouseMarks"));
     a->setText(i18n("Clear All Mouse Marks"));

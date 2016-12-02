@@ -75,13 +75,13 @@ void SlidingPopupsTest::initTestCase()
     for (QString name : builtinNames) {
         plugins.writeEntry(name + QStringLiteral("Enabled"), false);
     }
+    KConfigGroup wobblyGroup = config->group("Effect-Wobbly");
+    wobblyGroup.writeEntry(QStringLiteral("Settings"), QStringLiteral("Custom"));
+    wobblyGroup.writeEntry(QStringLiteral("OpenEffect"), true);
+    wobblyGroup.writeEntry(QStringLiteral("CloseEffect"), true);
 
     config->sync();
     kwinApp()->setConfig(config);
-    // TODO: make effects use KWin's config directly
-    KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals)->group("Effect-Wobbly").writeEntry(QStringLiteral("Settings"), QStringLiteral("Custom"));
-    KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals)->group("Effect-Wobbly").writeEntry(QStringLiteral("OpenEffect"), true);
-    KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals)->group("Effect-Wobbly").writeEntry(QStringLiteral("CloseEffect"), true);
 
     if (QFile::exists(QStringLiteral("/dev/dri/card0"))) {
         qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));

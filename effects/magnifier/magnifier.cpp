@@ -50,6 +50,7 @@ MagnifierEffect::MagnifierEffect()
     , m_pixmap(XCB_PIXMAP_NONE)
 #endif
 {
+    initConfig<MagnifierConfig>();
     QAction* a;
     a = KStandardAction::zoomIn(this, SLOT(zoomIn()), this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);

@@ -39,6 +39,7 @@ static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEH
 
 BlurEffect::BlurEffect()
 {
+    initConfig<BlurConfig>();
     shader = BlurShader::create();
     m_simpleShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("logout-blur.frag"));
     if (!m_simpleShader->isValid()) {

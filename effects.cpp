@@ -1621,6 +1621,11 @@ void EffectsHandlerImpl::hideOnScreenMessage(OnScreenMessageHideFlags flags)
     OSD::hide(osdFlags);
 }
 
+KSharedConfigPtr EffectsHandlerImpl::config() const
+{
+    return kwinApp()->config();
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************

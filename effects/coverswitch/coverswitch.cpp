@@ -54,6 +54,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     , primaryTabBox(false)
     , secondaryTabBox(false)
 {
+    initConfig<CoverSwitchConfig>();
     reconfigure(ReconfigureAll);
 
     // Caption frame

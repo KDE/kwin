@@ -66,6 +66,7 @@ DesktopGridEffect::DesktopGridEffect()
     , m_proxy(0)
     , m_activateAction(new QAction(this))
 {
+    initConfig<DesktopGridConfig>();
     // Load shortcuts
     QAction* a = m_activateAction;
     a->setObjectName(QStringLiteral("ShowDesktopGrid"));

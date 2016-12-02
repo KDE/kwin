@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "thumbnailaside_config.h"
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
+#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
@@ -58,6 +59,7 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
 
+    ThumbnailAsideConfig::instance(KWIN_CONFIG);
     addConfig(ThumbnailAsideConfig::self(), this);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!

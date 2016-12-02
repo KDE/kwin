@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "diminactive_config.h"
 // KConfigSkeleton
 #include "diminactiveconfig.h"
+#include <config-kwin.h>
 
 #include <kwineffects_interface.h>
 
@@ -53,6 +54,7 @@ DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget* parent, const QVariant
 
     layout->addWidget(m_ui);
 
+    DimInactiveConfig::instance(KWIN_CONFIG);
     addConfig(DimInactiveConfig::self(), m_ui);
 
     load();

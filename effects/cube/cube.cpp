@@ -95,6 +95,7 @@ CubeEffect::CubeEffect()
     , m_cylinderAction(new QAction(this))
     , m_sphereAction(new QAction(this))
 {
+    initConfig<CubeConfig>();
     desktopNameFont.setBold(true);
     desktopNameFont.setPointSize(14);
 

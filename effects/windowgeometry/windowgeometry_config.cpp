@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "windowgeometry_config.h"
 // KConfigSkeleton
 #include "windowgeometryconfig.h"
+#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
@@ -46,6 +47,7 @@ WindowGeometryConfigForm::WindowGeometryConfigForm(QWidget* parent) : QWidget(pa
 WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& args)
     : KCModule(KAboutData::pluginData(QStringLiteral("windowgeometry")), parent, args)
 {
+    WindowGeometryConfiguration::instance(KWIN_CONFIG);
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(myUi = new WindowGeometryConfigForm(this));
 

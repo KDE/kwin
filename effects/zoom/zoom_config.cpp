@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "zoom_config.h"
 // KConfigSkeleton
 #include "zoomconfig.h"
+#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
@@ -49,6 +50,7 @@ ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget* parent) : QWidget(parent)
 ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
     KCModule(KAboutData::pluginData(QStringLiteral("zoom")), parent, args)
 {
+    ZoomConfig::instance(KWIN_CONFIG);
     m_ui = new ZoomEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);

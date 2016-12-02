@@ -43,6 +43,7 @@ namespace KWin
 
 MouseClickEffect::MouseClickEffect()
 {
+    initConfig<MouseClickConfig>();
     m_enabled = false;
 
     QAction* a = new QAction(this);

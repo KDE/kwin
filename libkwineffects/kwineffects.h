@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QScopedPointer>
 
 #include <KPluginFactory>
+#include <KSharedConfig>
 
 #include <assert.h>
 #include <limits.h>
@@ -665,6 +666,14 @@ public Q_SLOTS:
 protected:
     xcb_connection_t *xcbConnection() const;
     xcb_window_t x11RootWindow() const;
+
+    /**
+     * An implementing class can call this with it's kconfig compiled singleton class.
+     * This method will perform the instance on the class.
+     * @since 5.9
+     **/
+    template <typename T>
+    void initConfig();
 };
 
 
@@ -1290,6 +1299,12 @@ public:
      * @since 5.9
      **/
     virtual void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) = 0;
+
+    /*
+     * @returns The configuration used by the EffectsHandler.
+     * @since 5.10
+     **/
+    virtual KSharedConfigPtr config() const = 0;
 
 Q_SIGNALS:
     /**
@@ -3438,6 +3453,12 @@ template <typename T>
 int Effect::animationTime(int defaultDuration)
 {
     return animationTime(T::duration() != 0 ? T::duration() : defaultDuration);
+}
+
+template <typename T>
+void Effect::initConfig()
+{
+    T::instance(effects->config());
 }
 
 } // namespace

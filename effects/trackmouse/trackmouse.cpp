@@ -45,6 +45,7 @@ TrackMouseEffect::TrackMouseEffect()
     : m_active(false)
     , m_angle(0)
 {
+    initConfig<TrackMouseConfig>();
     m_texture[0] = m_texture[1] = 0;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     m_picture[0] = m_picture[1] = 0;

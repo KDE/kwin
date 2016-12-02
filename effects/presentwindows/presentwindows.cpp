@@ -65,6 +65,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_exposeAllAction(new QAction(this))
     , m_exposeClassAction(new QAction(this))
 {
+    initConfig<PresentWindowsConfig>();
     m_atomDesktop = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_DESKTOP", this);
     m_atomWindows = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_GROUP", this);
 

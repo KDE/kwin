@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wobblywindows_config.h"
 // KConfigSkeleton
 #include "wobblywindowsconfig.h"
+#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <KLocalizedString>
@@ -82,6 +83,7 @@ ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
 WobblyWindowsEffectConfig::WobblyWindowsEffectConfig(QWidget* parent, const QVariantList& args) :
     KCModule(KAboutData::pluginData(QStringLiteral("wobblywindows")), parent, args)
 {
+    WobblyWindowsConfig::instance(KWIN_CONFIG);
     m_ui.setupUi(this);
 
     addConfig(WobblyWindowsConfig::self(), this);

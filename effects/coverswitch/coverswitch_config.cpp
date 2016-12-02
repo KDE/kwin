@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coverswitch_config.h"
 // KConfigSkeleton
 #include "coverswitchconfig.h"
+#include <config-kwin.h>
 
 #include <kwineffects_interface.h>
 #include <KAboutData>
@@ -48,6 +49,7 @@ CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariant
 
     layout->addWidget(m_ui);
 
+    CoverSwitchConfig::instance(KWIN_CONFIG);
     addConfig(CoverSwitchConfig::self(), m_ui);
 }
 

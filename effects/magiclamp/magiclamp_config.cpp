@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "magiclamp_config.h"
 // KConfigSkeleton
 #include "magiclampconfig.h"
+#include <config-kwin.h>
 
 #include <kwineffects_interface.h>
 
@@ -50,6 +51,7 @@ MagicLampEffectConfig::MagicLampEffectConfig(QWidget* parent, const QVariantList
 
     layout->addWidget(m_ui);
 
+    MagicLampConfig::instance(KWIN_CONFIG);
     addConfig(MagicLampConfig::self(), m_ui);
 
     load();

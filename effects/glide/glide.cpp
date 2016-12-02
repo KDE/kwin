@@ -36,6 +36,7 @@ static const int IsGlideWindow = 0x22A982D4;
 GlideEffect::GlideEffect()
     : Effect()
 {
+    initConfig<GlideConfig>();
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));

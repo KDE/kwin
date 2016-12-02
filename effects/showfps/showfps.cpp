@@ -47,6 +47,7 @@ ShowFpsEffect::ShowFpsEffect()
     , frames_pos(0)
     , m_noBenchmark(effects->effectFrame(EffectFrameUnstyled, false))
 {
+    initConfig<ShowFpsConfig>();
     for (int i = 0;
             i < NUM_PAINTS;
             ++i) {

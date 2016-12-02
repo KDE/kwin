@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KConfigSkeleton
 #include "lookingglassconfig.h"
+#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
@@ -58,6 +59,7 @@ LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVaria
 
     layout->addWidget(m_ui);
 
+    LookingGlassConfig::instance(KWIN_CONFIG);
     addConfig(LookingGlassConfig::self(), m_ui);
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
 

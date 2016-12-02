@@ -30,6 +30,7 @@ namespace KWin
 
 DimInactiveEffect::DimInactiveEffect()
 {
+    initConfig<DimInactiveConfig>();
     reconfigure(ReconfigureAll);
     timeline.setDuration(animationTime(250));
     previousActiveTimeline.setDuration(animationTime(250));

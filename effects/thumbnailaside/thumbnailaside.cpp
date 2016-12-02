@@ -32,6 +32,7 @@ namespace KWin
 
 ThumbnailAsideEffect::ThumbnailAsideEffect()
 {
+    initConfig<ThumbnailAsideConfig>();
     QAction* a = new QAction(this);
     a->setObjectName(QStringLiteral("ToggleCurrentThumbnail"));
     a->setText(i18n("Toggle Thumbnail for Current Window"));

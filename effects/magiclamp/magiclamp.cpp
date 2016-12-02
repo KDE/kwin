@@ -34,6 +34,7 @@ namespace KWin
 
 MagicLampEffect::MagicLampEffect()
 {
+    initConfig<MagicLampConfig>();
     mActiveAnimations = 0;
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));

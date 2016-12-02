@@ -241,6 +241,8 @@ public:
     void showOnScreenMessage(const QString &message, const QString &iconName = QString()) override;
     void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) override;
 
+    KSharedConfigPtr config() const override;
+
     Scene *scene() const {
         return m_scene;
     }
