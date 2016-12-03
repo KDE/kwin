@@ -87,7 +87,7 @@ void TestPointerConstraints::initTestCase()
 
 void TestPointerConstraints::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::PointerConstraints));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::PointerConstraints));
     QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);

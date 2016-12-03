@@ -82,7 +82,7 @@ void StartTest::testCreateWindow()
 {
     // first we need to connect to the server
     using namespace KWayland::Client;
-    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QVERIFY(Test::setupWaylandConnection());
 
     QSignalSpy shellClientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(shellClientAddedSpy.isValid());

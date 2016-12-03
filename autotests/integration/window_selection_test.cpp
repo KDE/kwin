@@ -79,7 +79,7 @@ void TestWindowSelection::initTestCase()
 
 void TestWindowSelection::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);

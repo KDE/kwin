@@ -84,7 +84,7 @@ void FadeTest::initTestCase()
 
 void FadeTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QVERIFY(Test::setupWaylandConnection());
 
     // load the translucency effect
     EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);

@@ -322,7 +322,7 @@ void DebugConsoleTest::testWaylandClient()
     QVERIFY(rowsInsertedSpy.isValid());
 
     // create our connection
-    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QVERIFY(Test::setupWaylandConnection());
 
     // create the Surface and ShellSurface
     using namespace KWayland::Client;

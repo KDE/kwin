@@ -91,7 +91,7 @@ void QuickTilingTest::initTestCase()
 
 void QuickTilingTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QVERIFY(Test::setupWaylandConnection());
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
     m_shell = Test::waylandShell();

@@ -58,7 +58,7 @@ void TransientNoInputTest::initTestCase()
 
 void TransientNoInputTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QVERIFY(Test::setupWaylandConnection());
 }
 
 void TransientNoInputTest::cleanup()

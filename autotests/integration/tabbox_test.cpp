@@ -72,7 +72,7 @@ void TabBoxTest::initTestCase()
 
 void TabBoxTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QVERIFY(Test::setupWaylandConnection());
     screens()->setCurrent(0);
     KWin::Cursor::setPos(QPoint(640, 512));
 }

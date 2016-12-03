@@ -200,7 +200,7 @@ void LockScreenTest::initTestCase()
 
 void LockScreenTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();

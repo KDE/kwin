@@ -95,7 +95,7 @@ void TestShellClient::initTestCase()
 
 void TestShellClient::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Decoration));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
 
     screens()->setCurrent(0);
     KWin::Cursor::setPos(QPoint(1280, 512));

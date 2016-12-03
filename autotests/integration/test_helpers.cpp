@@ -35,11 +35,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
+#include <KWayland/Server/display.h>
 
 //screenlocker
 #include <KScreenLocker/KsldApp>
 
 #include <QThread>
+
+// system
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 using namespace KWayland::Client;
 
@@ -63,18 +69,24 @@ static struct {
     QThread *thread = nullptr;
 } s_waylandConnection;
 
-bool setupWaylandConnection(const QString &socketName, AdditionalWaylandInterfaces flags)
+bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
 {
     if (s_waylandConnection.connection) {
         return false;
     }
+
+    int sx[2];
+    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
+        return false;
+    }
+    KWin::waylandServer()->display()->createClient(sx[0]);
     // setup connection
     s_waylandConnection.connection = new ConnectionThread;
     QSignalSpy connectedSpy(s_waylandConnection.connection, &ConnectionThread::connected);
     if (!connectedSpy.isValid()) {
         return false;
     }
-    s_waylandConnection.connection->setSocketName(socketName);
+    s_waylandConnection.connection->setSocketFd(sx[1]);
 
     s_waylandConnection.thread = new QThread(kwinApp());
     s_waylandConnection.connection->moveToThread(s_waylandConnection.thread);

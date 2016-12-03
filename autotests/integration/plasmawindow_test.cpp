@@ -90,7 +90,7 @@ void PlasmaWindowTest::initTestCase()
 
 void PlasmaWindowTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::WindowManagement));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::WindowManagement));
     m_windowManagement = Test::waylandWindowManagement();
     m_compositor = Test::waylandCompositor();
     m_shell = Test::waylandShell();

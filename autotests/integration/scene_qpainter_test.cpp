@@ -149,7 +149,7 @@ void SceneQPainterTest::testWindow()
     KWin::Cursor::setPos(45, 45);
     // this test verifies that a window is rendered correctly
     using namespace KWayland::Client;
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
     QScopedPointer<Surface> s(Test::createSurface());
     QFETCH(Test::ShellSurfaceType, type);
@@ -205,7 +205,7 @@ void SceneQPainterTest::testCompositorRestart()
 
     // first create a window
     using namespace KWayland::Client;
-    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QVERIFY(Test::setupWaylandConnection());
     QScopedPointer<Surface> s(Test::createSurface());
     QFETCH(Test::ShellSurfaceType, type);
     QScopedPointer<QObject> ss(Test::createShellSurface(type, s.data()));

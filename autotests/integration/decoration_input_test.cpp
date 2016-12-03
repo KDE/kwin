@@ -149,7 +149,7 @@ void DecorationInputTest::initTestCase()
 void DecorationInputTest::init()
 {
     using namespace KWayland::Client;
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration));
     QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);

@@ -74,7 +74,7 @@ void TouchInputTest::initTestCase()
 void TouchInputTest::init()
 {
     using namespace KWayland::Client;
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandTouch());
     m_touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
     QVERIFY(m_touch);

@@ -87,7 +87,7 @@ void StrutsTest::initTestCase()
 
 void StrutsTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::PlasmaShell));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PlasmaShell));
     m_compositor = Test::waylandCompositor();
     m_plasmaShell = Test::waylandPlasmaShell();
 

@@ -183,7 +183,7 @@ void InternalWindowTest::initTestCase()
 void InternalWindowTest::init()
 {
     Cursor::setPos(QPoint(1280, 512));
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandKeyboard());
 }
 

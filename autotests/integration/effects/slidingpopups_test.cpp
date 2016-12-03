@@ -94,7 +94,7 @@ void SlidingPopupsTest::initTestCase()
 
 void SlidingPopupsTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName, Test::AdditionalWaylandInterface::Decoration));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
 }
 
 void SlidingPopupsTest::cleanup()

@@ -71,7 +71,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
 
 void DontCrashCancelAnimationFromAnimationEndedTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(s_socketName));
+    QVERIFY(Test::setupWaylandConnection());
 }
 
 void DontCrashCancelAnimationFromAnimationEndedTest::cleanup()
