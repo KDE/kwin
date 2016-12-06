@@ -369,7 +369,7 @@ public:
     void setPointerAccelerationProfileAdaptive(bool set) {
         setPointerAccelerationProfile(set, LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE);
     }
-    void activatePointerAccelerationProfileFromInt(quint32 profile) {
+    void setPointerAccelerationProfileFromInt(quint32 profile) {
         setPointerAccelerationProfile(true, (libinput_config_accel_profile) profile);
     }
     quint32 defaultPointerAccelerationProfileToInt() const {

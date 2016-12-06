@@ -121,7 +121,7 @@ static const QMap<ConfigKey, ConfigData> s_configData {
     {ConfigKey::LeftHanded, ConfigData(QByteArrayLiteral("LeftHanded"), &Device::setLeftHanded, &Device::leftHandedEnabledByDefault)},
     {ConfigKey::DisableWhileTyping, ConfigData(QByteArrayLiteral("DisableWhileTyping"), &Device::setDisableWhileTyping, &Device::disableWhileTypingEnabledByDefault)},
     {ConfigKey::PointerAcceleration, ConfigData(QByteArrayLiteral("PointerAcceleration"), &Device::setPointerAccelerationFromString, &Device::defaultPointerAccelerationToString)},
-    {ConfigKey::PointerAccelerationProfile, ConfigData(QByteArrayLiteral("PointerAccelerationProfile"), &Device::activatePointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
+    {ConfigKey::PointerAccelerationProfile, ConfigData(QByteArrayLiteral("PointerAccelerationProfile"), &Device::setPointerAccelerationProfileFromInt, &Device::defaultPointerAccelerationProfileToInt)},
     {ConfigKey::TapToClick, ConfigData(QByteArrayLiteral("TapToClick"), &Device::setTapToClick, &Device::tapToClickEnabledByDefault)},
     {ConfigKey::TapAndDrag, ConfigData(QByteArrayLiteral("TapAndDrag"), &Device::setTapAndDrag, &Device::tapAndDragEnabledByDefault)},
     {ConfigKey::TapDragLock, ConfigData(QByteArrayLiteral("TapDragLock"), &Device::setTapDragLock, &Device::tapDragLockEnabledByDefault)},
@@ -315,13 +315,14 @@ void Device::setScrollButton(quint32 button)
 }
 
 void Device::setPointerAccelerationProfile(bool set, enum  libinput_config_accel_profile profile) {
-
     if (!(m_supportedPointerAccelerationProfiles & profile)) {
         return;
     }
-
     if (!set) {
-        profile = LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
+        profile = (profile == LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT) ? LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE : LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT;
+        if (!(m_supportedPointerAccelerationProfiles & profile)) {
+            return;
+        }
     }
 
     if (libinput_device_config_accel_set_profile(m_device, profile) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
@@ -339,12 +340,18 @@ void Device::setScrollMethod(bool set, enum libinput_config_scroll_method method
         return;
     }
 
+    bool isCurrent = m_scrollMethod == method;
     if (!set) {
-        method = LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+        if (isCurrent) {
+            method = LIBINPUT_CONFIG_SCROLL_NO_SCROLL;
+            isCurrent = false;
+        } else {
+            return;
+        }
     }
 
     if (libinput_device_config_scroll_set_method(m_device, method) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
-        if (m_scrollMethod != method) {
+        if (!isCurrent) {
             m_scrollMethod = method;
             emit scrollMethodChanged();
             writeEntry(ConfigKey::ScrollMethod, (quint32) method);
