@@ -314,7 +314,8 @@ void Device::setScrollButton(quint32 button)
     }
 }
 
-void Device::setPointerAccelerationProfile(bool set, enum  libinput_config_accel_profile profile) {
+void Device::setPointerAccelerationProfile(bool set, enum  libinput_config_accel_profile profile)
+{
     if (!(m_supportedPointerAccelerationProfiles & profile)) {
         return;
     }
@@ -359,7 +360,8 @@ void Device::setScrollMethod(bool set, enum libinput_config_scroll_method method
     }
 }
 
-void Device::setLmrTapButtonMap(bool set) {
+void Device::setLmrTapButtonMap(bool set)
+{
     enum libinput_config_tap_button_map map = set ? LIBINPUT_CONFIG_TAP_MAP_LMR : LIBINPUT_CONFIG_TAP_MAP_LRM;
 
     if (m_tapFingerCount < 2) {
