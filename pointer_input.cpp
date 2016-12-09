@@ -574,7 +574,7 @@ void PointerInputRedirection::enablePointerConstraints()
         if (r.contains(m_pos.toPoint())) {
             cf->setConfined(true);
             m_confined = true;
-            m_confinedPointerRegionConnection = connect(cf, &KWayland::Server::ConfinedPointerInterface::regionChanged, this,
+            m_confinedPointerRegionConnection = connect(cf.data(), &KWayland::Server::ConfinedPointerInterface::regionChanged, this,
                 [this] {
                     if (!m_window) {
                         return;
