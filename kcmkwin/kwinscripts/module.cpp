@@ -37,7 +37,7 @@
 #include <KPackage/Package>
 #include <Plasma/Package>
 
-#include <KNewStuff3/KNS3/DownloadDialog>
+#include <KNewStuff3/KNS3/Button>
 
 #include "version.h"
 
@@ -58,11 +58,16 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     setAboutData(about);
 
     ui->setupUi(this);
-    ui->ghnsButton->setIcon(QIcon::fromTheme("get-hot-new-stuff"));
+
+    ui->ghnsButton->setConfigFile(QStringLiteral("kwinscripts.knsrc"));
+    connect(ui->ghnsButton, &KNS3::Button::dialogFinished, this, [this](const KNS3::Entry::List &changedEntries) {
+        if (!changedEntries.isEmpty()) {
+            updateListViewContents();
+        }
+    });
 
     connect(ui->scriptSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
     connect(ui->importScriptButton, SIGNAL(clicked()), SLOT(importScript()));
-    connect(ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
 
     ui->importScriptButton->setEnabled(false);
 
@@ -134,17 +139,6 @@ void Module::save()
     QDBusConnection::sessionBus().asyncCall(message);
 
     emit changed(false);
-}
-
-void Module::slotGHNSClicked()
-{
-    QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog("kwinscripts.knsrc", this);
-    if (downloadDialog->exec() == QDialog::Accepted) {
-        if (!downloadDialog->changedEntries().isEmpty()) {
-            updateListViewContents();
-        }
-    }
-    delete downloadDialog;
 }
 
 #include "module.moc"

@@ -43,7 +43,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="ghnsButton">
+        <widget class="KNS3::Button" name="ghnsButton">
          <property name="text">
           <string>Get New Script...</string>
          </property>
@@ -74,6 +74,11 @@
    <extends>QWidget</extends>
    <header>kpluginselector.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KNS3::Button</class>
+   <extends>QPushButton</extends>
+   <header>KNS3/Button</header>
   </customwidget>
  </customwidgets>
  <resources/>

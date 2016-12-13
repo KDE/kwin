@@ -53,7 +53,6 @@ protected Q_SLOTS:
      * Called when the import script button is clicked.
      */
     void importScript();
-    void slotGHNSClicked();
 
 private:
     /**
