@@ -223,6 +223,14 @@ void HwcomposerBackend::init()
     // unblank, setPowerMode?
     m_device = hwcDevice;
 
+	m_hwcVersion = m_device->common.version;
+	if ((m_hwcVersion & 0xffff0000) == 0) {
+		// Assume header version is always 1
+		uint32_t header_version = 1;
+		// Legacy version encoding
+		m_hwcVersion = (m_hwcVersion << 16) | header_version;
+	}
+
     // register callbacks
     hwc_procs_t *procs = new hwc_procs_t;
     procs->invalidate = [] (const struct hwc_procs* procs) {
@@ -309,8 +317,15 @@ void HwcomposerBackend::toggleBlankOutput()
     }
     m_outputBlank = !m_outputBlank;
     toggleScreenBrightness();
-    m_device->blank(m_device, 0, m_outputBlank ? 1 : 0);
-    // only disable Vsycn, enable happens after next frame rendered
+
+#if defined(HWC_DEVICE_API_VERSION_1_4) || defined(HWC_DEVICE_API_VERSION_1_5)
+    if (m_hwcVersion > HWC_DEVICE_API_VERSION_1_3)
+        m_device->setPowerMode(m_device, 0, m_outputBlank ? 0 : 2);
+    else
+#endif
+        m_device->blank(m_device, 0, m_outputBlank ? 1 : 0);
+
+    // only disable Vsync, enable happens after next frame rendered
     if (m_outputBlank) {
          enableVSync(false);
     }
