@@ -223,13 +223,13 @@ void HwcomposerBackend::init()
     // unblank, setPowerMode?
     m_device = hwcDevice;
 
-	m_hwcVersion = m_device->common.version;
-	if ((m_hwcVersion & 0xffff0000) == 0) {
-		// Assume header version is always 1
-		uint32_t header_version = 1;
-		// Legacy version encoding
-		m_hwcVersion = (m_hwcVersion << 16) | header_version;
-	}
+    m_hwcVersion = m_device->common.version;
+    if ((m_hwcVersion & 0xffff0000) == 0) {
+        // Assume header version is always 1
+        uint32_t header_version = 1;
+        // Legacy version encoding
+        m_hwcVersion = (m_hwcVersion << 16) | header_version;
+    }
 
     // register callbacks
     hwc_procs_t *procs = new hwc_procs_t;
