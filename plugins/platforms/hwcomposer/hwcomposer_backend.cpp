@@ -320,7 +320,7 @@ void HwcomposerBackend::toggleBlankOutput()
 
 #if defined(HWC_DEVICE_API_VERSION_1_4) || defined(HWC_DEVICE_API_VERSION_1_5)
     if (m_hwcVersion > HWC_DEVICE_API_VERSION_1_3)
-        m_device->setPowerMode(m_device, 0, m_outputBlank ? 0 : 2);
+        m_device->setPowerMode(m_device, 0, m_outputBlank ? HWC_POWER_MODE_OFF : HWC_POWER_MODE_NORMAL);
     else
 #endif
         m_device->blank(m_device, 0, m_outputBlank ? 1 : 0);
