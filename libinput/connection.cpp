@@ -100,10 +100,10 @@ Connection *Connection::create(QObject *parent)
     QObject::connect(s_thread, &QThread::finished, s_thread, &QObject::deleteLater);
     QObject::connect(parent, &QObject::destroyed, s_thread, &QThread::quit);
 
-    connect(s_self, &Connection::deviceAdded, s_self, [s_self](Device* device) {
+    connect(s_self, &Connection::deviceAdded, s_self, [](Device* device) {
                 emit s_self->deviceAddedSysName(device->sysName());
             });
-    connect(s_self, &Connection::deviceRemoved, s_self, [s_self](Device* device) {
+    connect(s_self, &Connection::deviceRemoved, s_self, [](Device* device) {
                 emit s_self->deviceRemovedSysName(device->sysName());
             });
     return s_self;
