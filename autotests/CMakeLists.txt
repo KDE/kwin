@@ -313,3 +313,21 @@ target_link_libraries(testScreenEdges
 
 add_test(kwin_testScreenEdges testScreenEdges)
 ecm_mark_as_test(testScreenEdges)
+
+########################################################
+# Test OnScreenNotification
+########################################################
+set( testOnScreenNotification_SRCS
+    onscreennotificationtest.cpp
+    ../onscreennotification.cpp
+)
+add_executable( testOnScreenNotification ${testOnScreenNotification_SRCS})
+
+target_link_libraries(testOnScreenNotification
+    Qt5::Test
+    Qt5::Quick
+    KF5::ConfigCore
+)
+
+add_test(kwin-testOnScreenNotification testOnScreenNotification)
+ecm_mark_as_test(testOnScreenNotification)

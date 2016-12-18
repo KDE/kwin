@@ -409,6 +409,8 @@ set(kwin_KDEINIT_SRCS
    xcbutils.cpp
    x11eventfilter.cpp
    logind.cpp
+   onscreennotification.cpp
+   osd.cpp
     screenedge.cpp
     scripting/scripting.cpp
     scripting/workspace_wrapper.cpp

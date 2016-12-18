@@ -1,0 +1,170 @@
+/*
+ * Copyright 2016  Martin Graesslin <mgraesslin@kde.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License or (at your option) version 3 or any later version
+ * accepted by the membership of KDE e.V. (or its successor approved
+ * by the membership of KDE e.V.), which shall act as a proxy
+ * defined in Section 14 of version 3 of the license.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#include "onscreennotification.h"
+#include <config-kwin.h>
+
+#include <QStandardPaths>
+#include <QTimer>
+#include <QQmlComponent>
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QQuickWindow>
+
+#include <KConfigGroup>
+
+#include <functional>
+
+using namespace KWin;
+
+OnScreenNotification::OnScreenNotification(QObject *parent)
+    : QObject(parent)
+    , m_timer(new QTimer(this))
+{
+    m_timer->setSingleShot(true);
+    connect(m_timer, &QTimer::timeout, this, std::bind(&OnScreenNotification::setVisible, this, false));
+    connect(this, &OnScreenNotification::visibleChanged, this,
+        [this] {
+            if (m_visible) {
+                show();
+            } else {
+                m_timer->stop();
+            }
+        }
+    );
+}
+
+OnScreenNotification::~OnScreenNotification()
+{
+    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+        w->hide();
+        w->destroy();
+    }
+}
+
+void OnScreenNotification::setConfig(KSharedConfigPtr config)
+{
+    m_config = config;
+}
+
+void OnScreenNotification::setEngine(QQmlEngine *engine)
+{
+    m_qmlEngine = engine;
+}
+
+bool OnScreenNotification::isVisible() const
+{
+    return m_visible;
+}
+
+void OnScreenNotification::setVisible(bool visible)
+{
+    if (m_visible == visible) {
+        return;
+    }
+    m_visible = visible;
+    emit visibleChanged();
+}
+
+QString OnScreenNotification::message() const
+{
+    return m_message;
+}
+
+void OnScreenNotification::setMessage(const QString &message)
+{
+    if (m_message == message) {
+        return;
+    }
+    m_message = message;
+    emit messageChanged();
+}
+
+QString OnScreenNotification::iconName() const
+{
+    return m_iconName;
+}
+
+void OnScreenNotification::setIconName(const QString &iconName)
+{
+    if (m_iconName == iconName) {
+        return;
+    }
+    m_iconName = iconName;
+    emit iconNameChanged();
+}
+
+int OnScreenNotification::timeout() const
+{
+    return m_timer->interval();
+}
+
+void OnScreenNotification::setTimeout(int timeout)
+{
+    if (m_timer->interval() == timeout) {
+        return;
+    }
+    m_timer->setInterval(timeout);
+    emit timeoutChanged();
+}
+
+void OnScreenNotification::show()
+{
+    Q_ASSERT(m_visible);
+    ensureQmlContext();
+    ensureQmlComponent();
+    if (m_timer->interval() != 0) {
+        m_timer->start();
+    }
+}
+
+void OnScreenNotification::ensureQmlContext()
+{
+    Q_ASSERT(m_qmlEngine);
+    if (!m_qmlContext.isNull()) {
+        return;
+    }
+    m_qmlContext.reset(new QQmlContext(m_qmlEngine));
+    m_qmlContext->setContextProperty(QStringLiteral("osd"), this);
+}
+
+void OnScreenNotification::ensureQmlComponent()
+{
+    Q_ASSERT(m_config);
+    Q_ASSERT(m_qmlEngine);
+    if (!m_qmlComponent.isNull()) {
+        return;
+    }
+    m_qmlComponent.reset(new QQmlComponent(m_qmlEngine));
+    const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                m_config->group(QStringLiteral("OnScreenNotification")).readEntry("QmlPath", QStringLiteral(KWIN_NAME "/onscreennotification/plasma/main.qml")));
+    if (fileName.isEmpty()) {
+        return;
+    }
+    m_qmlComponent->loadUrl(QUrl::fromLocalFile(fileName));
+    if (!m_qmlComponent->isError()) {
+        m_mainItem.reset(m_qmlComponent->create(m_qmlContext.data()));
+    } else {
+        m_qmlComponent.reset();
+    }
+}
+
+#include "onscreennotification.moc"
