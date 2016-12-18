@@ -23,7 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "main.h"
 #include "platform.h"
+#include "osd.h"
 #include "unmanaged.h"
+
+#include <KLocalizedString>
 
 namespace KWin
 {
@@ -38,8 +41,11 @@ KillWindow::~KillWindow()
 
 void KillWindow::start()
 {
+    OSD::show(i18n("Select window to force close with left click or enter.\nEscape or right click to cancel."),
+              QStringLiteral("window-close"));
     kwinApp()->platform()->startInteractiveWindowSelection(
         [] (KWin::Toplevel *t) {
+            OSD::hide();
             if (!t) {
                 return;
             }
