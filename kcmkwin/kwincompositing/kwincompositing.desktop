@@ -13,7 +13,6 @@ X-KDE-System-Settings-Parent-Category=display
 X-KDE-Weight=60
 
 Name=Compositor
-Name[ast]=Compositor
 Name[bs]=Compositor
 Name[ca]=Compositor
 Name[ca@valencia]=Compositor
@@ -57,7 +56,6 @@ Name[x-test]=xxCompositorxx
 Name[zh_CN]=混成器
 Name[zh_TW]=組合器
 Comment=Compositor Settings for Desktop Effects
-Comment[ast]=Axustes del compositor pa efeutos d'escritoriu
 Comment[bs]=Postavke Compositor-a  za Desktop Efekte
 Comment[ca]=Arranjament del compositor pels efectes d'escriptori
 Comment[ca@valencia]=Arranjament del compositor pels efectes d'escriptori

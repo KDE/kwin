@@ -13,7 +13,6 @@ X-KDE-Weight=60
 
 Name=Virtual Desktops
 Name[ar]=أسطح المكتب الافتراضية
-Name[ast]=Escritorios virtuales
 Name[bg]=Виртуални работни плотове
 Name[bs]=Virtuelne površi
 Name[ca]=Escriptoris virtuals
@@ -76,7 +75,6 @@ Name[zh_CN]=虚拟桌面
 Name[zh_TW]=虛擬桌面
 
 Comment=Navigation, Number and Layout of Virtual Desktops
-Comment[ast]=Navegación, numberación y distribución d'escritorios virtuales
 Comment[bs]=Navigacija, broj i izgled virtualnih desktopa
 Comment[ca]=Navegació, nombre i disposició dels escriptoris virtuals
 Comment[ca@valencia]=Navegació, nombre i disposició dels escriptoris virtuals

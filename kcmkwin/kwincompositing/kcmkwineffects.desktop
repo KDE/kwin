@@ -13,7 +13,6 @@ X-KDE-System-Settings-Parent-Category=desktopbehavior
 X-KDE-Weight=50
 
 Name=Desktop Effects
-Name[ast]=Efeutos d'escritoriu
 Name[bs]=Efekti površi
 Name[ca]=Efectes d'escriptori
 Name[ca@valencia]=Efectes d'escriptori
@@ -60,7 +59,6 @@ Name[x-test]=xxDesktop Effectsxx
 Name[zh_CN]=桌面特效
 Name[zh_TW]=桌面效果
 Comment=Desktop Effects
-Comment[ast]=Efeutos d'escritoriu
 Comment[bs]=Efekti površi
 Comment[ca]=Efectes d'escriptori
 Comment[ca@valencia]=Efectes d'escriptori
