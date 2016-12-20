@@ -1,4 +1,6 @@
 [KNewStuff3]
+Name=Window Manager Switching Layouts
+
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Switching Layouts
 StandardResource=tmp
