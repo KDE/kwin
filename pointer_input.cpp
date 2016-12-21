@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "effects.h"
 #include "input_event.h"
+#include "osd.h"
 #include "screens.h"
 #include "shell_client.h"
 #include "wayland_cursor_theme.h"
@@ -40,6 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/surface_interface.h>
 // screenlocker
 #include <KScreenLocker/KsldApp>
+
+#include <KLocalizedString>
 
 #include <QHoverEvent>
 #include <QWindow>
@@ -596,7 +599,9 @@ void PointerInputRedirection::enablePointerConstraints()
                     }
                 }
             );
-            // TODO: show notification
+            OSD::show(i18nc("notification about mouse pointer confined",
+                            "Pointer motion confined to the current window.\nTo release pointer hold Escape for 3 seconds."),
+                      QStringLiteral("preferences-desktop-mouse"), 5000);
             return;
         }
     } else {
@@ -611,7 +616,9 @@ void PointerInputRedirection::enablePointerConstraints()
         if (r.contains(m_pos.toPoint())) {
             lock->setLocked(true);
             m_locked = true;
-            // TODO: show notification
+            OSD::show(i18nc("notification about mouse pointer locked",
+                            "Pointer locked to current position.\nTo end pointer lock hold Escape for 3 seconds."),
+                      QStringLiteral("preferences-desktop-mouse"), 5000);
             // TODO: connect to region change - is it needed at all? If the pointer is locked it's always in the region
         }
     }
