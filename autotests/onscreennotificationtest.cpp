@@ -23,6 +23,7 @@
 #include "../onscreennotification.h"
 
 #include <KSharedConfig>
+#include <KConfigGroup>
 
 #include <QQmlEngine>
 #include <QSignalSpy>
@@ -35,7 +36,11 @@ using KWin::OnScreenNotification;
 void OnScreenNotificationTest::show()
 {
     OnScreenNotification notification;
-    notification.setConfig(KSharedConfig::openConfig(QString(), KSharedConfig::SimpleConfig));
+    auto config = KSharedConfig::openConfig(QString(), KSharedConfig::SimpleConfig);
+    KConfigGroup group = config->group("OnScreenNotification");
+    group.writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
+    group.sync();
+    notification.setConfig(config);
     notification.setEngine(new QQmlEngine(&notification));
     notification.setMessage(QStringLiteral("Some text so that we see it in the test"));
 
