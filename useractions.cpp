@@ -1568,12 +1568,36 @@ void Workspace::switchWindow(Direction direction)
     if (!active_client)
         return;
     AbstractClient *c = active_client;
-    Client *switchTo = 0;
-    int bestScore = 0;
-    int d = c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop();
+    int desktopNumber = c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop();
+
     // Centre of the active window
     QPoint curPos(c->pos().x() + c->geometry().width() / 2,
                   c->pos().y() + c->geometry().height() / 2);
+
+    if (!switchWindow(c, direction, curPos, desktopNumber)) {
+        auto opposite = [&] {
+            switch(direction) {
+            case DirectionNorth:
+                return QPoint(curPos.x(), screens()->geometry().height());
+            case DirectionSouth:
+                return QPoint(curPos.x(), 0);
+            case DirectionEast:
+                return QPoint(0, curPos.y());
+            case DirectionWest:
+                return QPoint(screens()->geometry().width(), curPos.y());
+            default:
+                Q_UNREACHABLE();
+            }
+        };
+
+        switchWindow(c, direction, opposite(), desktopNumber);
+    }
+}
+
+bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curPos, int d)
+{
+    Client *switchTo = nullptr;
+    int bestScore = 0;
 
     ToplevelList clist = stackingOrder();
     for (ToplevelList::Iterator i = clist.begin(); i != clist.end(); ++i) {
@@ -1626,6 +1650,8 @@ void Workspace::switchWindow(Direction direction)
             switchTo = switchTo->tabGroup()->current();
         activateClient(switchTo);
     }
+
+    return switchTo;
 }
 
 /*!

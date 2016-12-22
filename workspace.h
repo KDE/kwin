@@ -503,6 +503,7 @@ private:
         DirectionWest
     };
     void switchWindow(Direction direction);
+    bool switchWindow(AbstractClient *c, Direction direction, QPoint curPos, int desktop);
 
     void propagateClients(bool propagate_new_clients);   // Called only from updateStackingOrder
     ToplevelList constrainedStackingOrder();
