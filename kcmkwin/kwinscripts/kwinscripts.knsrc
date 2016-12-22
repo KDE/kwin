@@ -1,5 +1,11 @@
 [KNewStuff3]
 Name=Window Manager Scripts
+Name[ca]=Scripts del gestor de finestres
+Name[nl]=Scripts van vensterbeheerder
+Name[pt]=Programas do Gestor de Janelas
+Name[sv]=Fönsterhanteringsskript
+Name[uk]=Скрипти засобу керування вікнами
+Name[x-test]=xxWindow Manager Scriptsxx
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Scripts
