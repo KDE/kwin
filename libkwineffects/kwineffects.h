@@ -1229,6 +1229,23 @@ public:
      **/
     virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) = 0;
 
+    /**
+     * Shows an on-screen-message. To hide it again use @link{hideOnScreenMessage}.
+     *
+     * @param message The message to show
+     * @param iconName The optional themed icon name
+     * @see hideOnScreenMessage
+     * @since 5.9
+     **/
+    virtual void showOnScreenMessage(const QString &message, const QString &iconName = QString()) = 0;
+
+    /**
+     * Hides a previously shown on-screen-message again.
+     * @see showOnScreenMessage
+     * @since 5.9
+     **/
+    virtual void hideOnScreenMessage() = 0;
+
 Q_SIGNALS:
     /**
      * Signal emitted when the current desktop changed.

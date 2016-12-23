@@ -65,10 +65,6 @@ void ColorPickerEffect::paintScreen(int mask, QRegion region, ScreenPaintData &d
 {
     m_cachedOutputGeometry = data.outputGeometry();
     effects->paintScreen(mask, region, data);
-
-    if (m_infoFrame) {
-        m_infoFrame->render(region);
-    }
 }
 
 void ColorPickerEffect::postPaintScreen()
@@ -116,28 +112,17 @@ QColor ColorPickerEffect::pick()
 
 void ColorPickerEffect::showInfoMessage()
 {
-    if (!m_infoFrame.isNull()) {
-        return;
-    }
-    // TODO: turn the info message into a system wide service which performs hiding on mouse over
-    m_infoFrame.reset(effects->effectFrame(EffectFrameStyled, false));
-    QFont font;
-    font.setBold(true);
-    m_infoFrame->setFont(font);
-    QRect area = effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop());
-    m_infoFrame->setPosition(QPoint(area.x() + area.width() / 2, area.y() + area.height() / 3));
-    m_infoFrame->setText(i18n("Select a position for color picking with left click or enter.\nEscape or right click to cancel."));
-    effects->addRepaintFull();
+    effects->showOnScreenMessage(i18n("Select a position for color picking with left click or enter.\nEscape or right click to cancel."), QStringLiteral("color-picker"));
 }
 
 void ColorPickerEffect::hideInfoMessage()
 {
-    m_infoFrame.reset();
+    effects->hideOnScreenMessage();
 }
 
 bool ColorPickerEffect::isActive() const
 {
-    return m_picking && ((m_scheduledPosition != QPoint(-1, -1)) || !m_infoFrame.isNull()) && !effects->isScreenLocked();
+    return m_picking && ((m_scheduledPosition != QPoint(-1, -1))) && !effects->isScreenLocked();
 }
 
 } // namespace

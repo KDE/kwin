@@ -234,6 +234,9 @@ public:
     void startInteractiveWindowSelection(std::function<void(KWin::EffectWindow*)> callback) override;
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) override;
 
+    void showOnScreenMessage(const QString &message, const QString &iconName = QString()) override;
+    void hideOnScreenMessage() override;
+
     Scene *scene() const {
         return m_scene;
     }

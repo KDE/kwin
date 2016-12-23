@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "cursor.h"
 #include "group.h"
+#include "osd.h"
 #include "pointer_input.h"
 #include "scene_xrender.h"
 #include "scene_qpainter.h"
@@ -1588,6 +1589,16 @@ void EffectsHandlerImpl::startInteractiveWindowSelection(std::function<void(KWin
 void EffectsHandlerImpl::startInteractivePositionSelection(std::function<void(const QPoint&)> callback)
 {
     kwinApp()->platform()->startInteractivePositionSelection(callback);
+}
+
+void EffectsHandlerImpl::showOnScreenMessage(const QString &message, const QString &iconName)
+{
+    OSD::show(message, iconName);
+}
+
+void EffectsHandlerImpl::hideOnScreenMessage()
+{
+    OSD::hide();
 }
 
 //****************************************

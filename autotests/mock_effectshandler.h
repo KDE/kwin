@@ -251,6 +251,11 @@ public:
     void startInteractivePositionSelection(std::function<void (const QPoint &)> callback) override {
         callback(QPoint(-1, -1));
     }
+    void showOnScreenMessage(const QString &message, const QString &iconName = QString()) override {
+        Q_UNUSED(message)
+        Q_UNUSED(iconName)
+    }
+    void hideOnScreenMessage() override {}
 
 private:
     bool m_animationsSuported = true;

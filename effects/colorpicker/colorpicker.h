@@ -58,7 +58,6 @@ private:
     QRect m_cachedOutputGeometry;
     QPoint m_scheduledPosition;
     bool m_picking = false;
-    QScopedPointer<EffectFrame> m_infoFrame;
 };
 
 } // namespace
