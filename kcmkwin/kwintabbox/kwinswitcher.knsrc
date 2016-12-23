@@ -6,6 +6,7 @@ Name[pt]=Disposições da Mudança de Janelas do KWin
 Name[sv]=Fönsterbyteslayouter
 Name[uk]=Компонування засобу перемикання вікон
 Name[x-test]=xxWindow Manager Switching Layoutsxx
+Name[zh_CN]=窗口切换器布局
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Switching Layouts

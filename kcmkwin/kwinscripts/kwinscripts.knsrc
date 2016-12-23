@@ -6,6 +6,7 @@ Name[pt]=Programas do Gestor de Janelas
 Name[sv]=Fönsterhanteringsskript
 Name[uk]=Скрипти засобу керування вікнами
 Name[x-test]=xxWindow Manager Scriptsxx
+Name[zh_CN]=窗口管理器脚本
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Scripts
