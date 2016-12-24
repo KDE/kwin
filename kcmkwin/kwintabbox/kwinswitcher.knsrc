@@ -1,6 +1,7 @@
 [KNewStuff3]
 Name=Window Manager Switching Layouts
 Name[ca]=Disposicions del commutador del gestor de finestres
+Name[it]=Disposizione scambiafinestre del gestore delle finestre
 Name[nl]=Omschakelende indelingen van vensterbeheerder
 Name[pt]=Disposições da Mudança de Janelas do KWin
 Name[sv]=Fönsterbyteslayouter
