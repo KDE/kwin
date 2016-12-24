@@ -229,12 +229,7 @@ void PointerInputRedirection::processMotion(const QPointF &pos, const QSizeF &de
                      m_input->keyboardModifiers(), time,
                      delta, deltaNonAccelerated, timeUsec, device);
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->pointerEvent(&event, 0)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, 0));
 }
 
 void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, LibInput::Device *device)
@@ -261,12 +256,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
     MouseEvent event(type, m_pos, buttonToQtMouseButton(button), m_qtButtons,
                      m_input->keyboardModifiers(), time, QSizeF(), QSizeF(), 0, device);
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->pointerEvent(&event, button)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, button));
 }
 
 void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time, LibInput::Device *device)
@@ -285,12 +275,7 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
                            (axis == InputRedirection::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
                            m_qtButtons, m_input->keyboardModifiers(), time, device);
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->wheelEvent(&wheelEvent)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent));
 }
 
 void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device)
@@ -300,12 +285,7 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 
         return;
     }
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->swipeGestureBegin(fingerCount, time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::swipeGestureBegin, std::placeholders::_1, fingerCount, time));
 }
 
 void PointerInputRedirection::processSwipeGestureUpdate(const QSizeF &delta, quint32 time, KWin::LibInput::Device *device)
@@ -315,12 +295,7 @@ void PointerInputRedirection::processSwipeGestureUpdate(const QSizeF &delta, qui
         return;
     }
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->swipeGestureUpdate(delta, time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::swipeGestureUpdate, std::placeholders::_1, delta, time));
 }
 
 void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::LibInput::Device *device)
@@ -330,12 +305,7 @@ void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::LibInpu
         return;
     }
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->swipeGestureEnd(time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::swipeGestureEnd, std::placeholders::_1, time));
 }
 
 void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::LibInput::Device *device)
@@ -345,12 +315,7 @@ void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::L
         return;
     }
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->swipeGestureCancelled(time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::swipeGestureCancelled, std::placeholders::_1, time));
 }
 
 void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device)
@@ -360,12 +325,7 @@ void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 
         return;
     }
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->pinchGestureBegin(fingerCount, time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::pinchGestureBegin, std::placeholders::_1, fingerCount, time));
 }
 
 void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time, KWin::LibInput::Device *device)
@@ -375,12 +335,7 @@ void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angle
         return;
     }
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->pinchGestureUpdate(scale, angleDelta, delta, time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::pinchGestureUpdate, std::placeholders::_1, scale, angleDelta, delta, time));
 }
 
 void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::LibInput::Device *device)
@@ -390,12 +345,7 @@ void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::LibInpu
         return;
     }
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->pinchGestureEnd(time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::pinchGestureEnd, std::placeholders::_1, time));
 }
 
 void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device)
@@ -405,12 +355,7 @@ void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::L
         return;
     }
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->pinchGestureCancelled(time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::pinchGestureCancelled, std::placeholders::_1, time));
 }
 
 void PointerInputRedirection::update()

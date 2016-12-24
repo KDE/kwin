@@ -155,9 +155,16 @@ public:
         return m_shortcuts;
     }
 
-    QVector<InputEventFilter*> filters() const {
-        return m_filters;
-    }
+    /**
+     * Sends an event through all InputFilters.
+     * The method @p function is invoked on each input filter. Processing is stopped if
+     * a filter returns @c true for @p function.
+     *
+     * The intended usage is to std::bind the method to invoke on the filter with all arguments
+     * bind.
+     **/
+    void processFilters(std::function<bool(InputEventFilter*)> function);
+
     KeyboardInputRedirection *keyboard() const {
         return m_keyboard;
     }

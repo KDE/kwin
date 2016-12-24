@@ -691,12 +691,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
         }
     }
 
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->keyEvent(&event)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 }
 
 void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)

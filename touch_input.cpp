@@ -151,12 +151,7 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
         return;
     }
     m_windowUpdatedInCycle = false;
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->touchDown(id, pos, time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::touchDown, std::placeholders::_1, id, pos, time));
     m_windowUpdatedInCycle = false;
 }
 
@@ -167,12 +162,7 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time, LibInput::Device 
         return;
     }
     m_windowUpdatedInCycle = false;
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->touchUp(id, time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::touchUp, std::placeholders::_1, id, time));
     m_windowUpdatedInCycle = false;
 }
 
@@ -183,12 +173,7 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32
         return;
     }
     m_windowUpdatedInCycle = false;
-    const auto &filters = m_input->filters();
-    for (auto it = filters.begin(), end = filters.end(); it != end; it++) {
-        if ((*it)->touchMotion(id, pos, time)) {
-            return;
-        }
-    }
+    m_input->processFilters(std::bind(&InputEventFilter::touchMotion, std::placeholders::_1, id, pos, time));
     m_windowUpdatedInCycle = false;
 }
 

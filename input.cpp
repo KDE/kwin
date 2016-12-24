@@ -1863,6 +1863,11 @@ bool InputRedirection::isBreakingPointerConstraints() const
     return m_pointerConstraintsFilter ? m_pointerConstraintsFilter->isActive() : false;
 }
 
+void InputRedirection::processFilters(std::function<bool(InputEventFilter*)> function)
+{
+    std::any_of(m_filters.constBegin(), m_filters.constEnd(), function);
+}
+
 InputDeviceHandler::InputDeviceHandler(InputRedirection *input)
     : QObject(input)
     , m_input(input)
