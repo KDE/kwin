@@ -35,7 +35,6 @@
 #include <KPluginInfo>
 #include <KPackage/PackageLoader>
 #include <KPackage/Package>
-#include <Plasma/Package>
 
 #include <KNewStuff3/KNS3/Button>
 

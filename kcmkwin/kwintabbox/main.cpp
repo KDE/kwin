@@ -43,8 +43,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KShortcutsEditor>
 #include <KNewStuff3/KNS3/DownloadDialog>
 // Plasma
-#include <Plasma/Package>
-#include <Plasma/PluginLoader>
+#include <KPackage/Package>
+#include <KPackage/PackageLoader>
 
 // own
 #include "tabboxconfig.h"
@@ -162,9 +162,9 @@ KWinTabBoxConfig::~KWinTabBoxConfig()
 }
 
 
-static QList<Plasma::Package> availableLnFPackages()
+static QList<KPackage::Package> availableLnFPackages()
 {
-    QList<Plasma::Package> packages;
+    QList<KPackage::Package> packages;
     QStringList paths;
     const QStringList dataPaths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
 
@@ -175,9 +175,9 @@ static QList<Plasma::Package> availableLnFPackages()
 
     const auto &p = paths;
     for (const QString &path : p) {
-        Plasma::Package pkg = Plasma::PluginLoader::self()->loadPackage(QStringLiteral("Plasma/LookAndFeel"));
+        KPackage::Package pkg = KPackage::PackageLoader::self()->loadPackage(QStringLiteral("Plasma/LookAndFeel"));
         pkg.setPath(path);
-        pkg.setFallbackPackage(Plasma::Package());
+        pkg.setFallbackPackage(KPackage::Package());
         if (!pkg.filePath("defaults").isEmpty()) {
             KSharedConfigPtr conf = KSharedConfig::openConfig(pkg.filePath("defaults"));
             KConfigGroup cg = KConfigGroup(conf, "kwinrc");
@@ -205,7 +205,7 @@ void KWinTabBoxConfig::initLayoutLists()
     for (const auto &package : lnfPackages) {
         const auto &metaData = package.metadata();
         layoutNames << metaData.name();
-        layoutPlugins << metaData.pluginName();
+        layoutPlugins << metaData.pluginId();
         layoutPaths << package.filePath("windowswitcher", QStringLiteral("WindowSwitcher.qml"));
     }
 
