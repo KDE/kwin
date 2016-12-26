@@ -159,6 +159,9 @@ public:
     Qt::KeyboardModifiers modifiers() const {
         return m_xkb->modifiers();
     }
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const {
+        return m_xkb->modifiersRelevantForGlobalShortcuts();
+    }
 
 Q_SIGNALS:
     void ledsChanged(KWin::Xkb::LEDs);

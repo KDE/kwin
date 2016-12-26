@@ -430,7 +430,7 @@ public:
         } else if (input()->pointer()->isConstrained()) {
             if (event->type() == QEvent::KeyPress &&
                     event->key() == Qt::Key_Escape &&
-                    input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifiers()) {
+                    static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifiers()) {
                 // TODO: don't hard code
                 m_timer->start(3000);
                 input()->keyboard()->update();
@@ -686,7 +686,7 @@ public:
     }
     bool keyEvent(QKeyEvent *event) override {
         if (event->type() == QEvent::KeyPress) {
-            return input()->shortcuts()->processKey(input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts(), event->nativeVirtualKey(), event->key());
+            return input()->shortcuts()->processKey(static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts(), event->nativeVirtualKey(), event->key());
         }
         return false;
     }
@@ -1003,7 +1003,7 @@ public:
 
         if (event->type() == QEvent::KeyPress) {
             TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
-        } else if (input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
+        } else if (static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
             TabBox::TabBox::self()->modifiersReleased();
         }
         return true;
@@ -1046,7 +1046,7 @@ public:
         }
         bool wasAction = false;
         Options::MouseCommand command = Options::MouseNothing;
-        if (input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
+        if (static_cast<MouseEvent*>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
             wasAction = true;
             switch (event->button()) {
             case Qt::LeftButton:
@@ -1081,7 +1081,7 @@ public:
         }
         bool wasAction = false;
         Options::MouseCommand command = Options::MouseNothing;
-        if (input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
+        if (static_cast<WheelEvent*>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
             wasAction = true;
             command = options->operationWindowMouseWheel(-1 * event->angleDelta().y());
         } else {
@@ -1783,6 +1783,11 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
 Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
 {
     return m_keyboard->modifiers();
+}
+
+Qt::KeyboardModifiers InputRedirection::modifiersRelevantForGlobalShortcuts() const
+{
+    return m_keyboard->modifiersRelevantForGlobalShortcuts();
 }
 
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)

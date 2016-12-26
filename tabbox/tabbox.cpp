@@ -1075,7 +1075,7 @@ static bool areModKeysDepressedX11(const QKeySequence &seq)
 static bool areModKeysDepressedWayland(const QKeySequence &seq)
 {
     const int mod = seq[seq.count()-1] & Qt::KeyboardModifierMask;
-    const Qt::KeyboardModifiers mods = input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts();
+    const Qt::KeyboardModifiers mods = input()->modifiersRelevantForGlobalShortcuts();
     if ((mod & Qt::SHIFT) && mods.testFlag(Qt::ShiftModifier)) {
         return true;
     }

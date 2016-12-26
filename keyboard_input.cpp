@@ -661,6 +661,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
                    autoRepeat,
                    time,
                    device);
+    event.setModifiersRelevantForGlobalShortcuts(m_xkb->modifiersRelevantForGlobalShortcuts());
     if (state == InputRedirection::KeyboardKeyPressed) {
         if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyRepeatDelay() != 0) {
             m_keyRepeat.timer->setInterval(waylandServer()->seat()->keyRepeatDelay());

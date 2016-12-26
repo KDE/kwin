@@ -228,6 +228,7 @@ void PointerInputRedirection::processMotion(const QPointF &pos, const QSizeF &de
     MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
                      m_input->keyboardModifiers(), time,
                      delta, deltaNonAccelerated, timeUsec, device);
+    event.setModifiersRelevantForGlobalShortcuts(m_input->modifiersRelevantForGlobalShortcuts());
 
     m_input->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, 0));
 }
@@ -255,6 +256,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
 
     MouseEvent event(type, m_pos, buttonToQtMouseButton(button), m_qtButtons,
                      m_input->keyboardModifiers(), time, QSizeF(), QSizeF(), 0, device);
+    event.setModifiersRelevantForGlobalShortcuts(m_input->modifiersRelevantForGlobalShortcuts());
 
     m_input->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, button));
 }
@@ -274,6 +276,7 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
     WheelEvent wheelEvent(m_pos, delta,
                            (axis == InputRedirection::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
                            m_qtButtons, m_input->keyboardModifiers(), time, device);
+    wheelEvent.setModifiersRelevantForGlobalShortcuts(m_input->modifiersRelevantForGlobalShortcuts());
 
     m_input->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent));
 }
