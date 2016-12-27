@@ -1,11 +1,17 @@
 [KNewStuff3]
 Name=Window Manager Effects
 Name[ca]=Efectes del gestor de finestres
+Name[en_GB]=Window Manager Effects
 Name[es]=Efectos del gestor de ventanas
 Name[it]=Effetti del gestore delle finestre
 Name[nl]=Effecten van vensterbeheerder
 Name[pl]=Efekty zarządzania oknami
 Name[pt]=Efeitos do Gestor de Janelas
+Name[sk]=Efekty správcu okien
+Name[sr]=Ефекти менаџера прозора
+Name[sr@ijekavian]=Ефекти менаџера прозора
+Name[sr@ijekavianlatin]=Efekti menadžera prozora
+Name[sr@latin]=Efekti menadžera prozora
 Name[sv]=Fönsterhanteringseffekter
 Name[uk]=Ефекти засобу керування вікнами
 Name[x-test]=xxWindow Manager Effectsxx

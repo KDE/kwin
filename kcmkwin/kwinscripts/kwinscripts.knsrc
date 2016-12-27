@@ -1,11 +1,17 @@
 [KNewStuff3]
 Name=Window Manager Scripts
 Name[ca]=Scripts del gestor de finestres
+Name[en_GB]=Window Manager Scripts
 Name[es]=Guiones del gestor de ventanas
 Name[it]=Script del gestore delle finestre
 Name[nl]=Scripts van vensterbeheerder
 Name[pl]=Skrypty zarządzania oknami
 Name[pt]=Programas do Gestor de Janelas
+Name[sk]=Skripty správcu okien
+Name[sr]=Скрипте менаџера прозора
+Name[sr@ijekavian]=Скрипте менаџера прозора
+Name[sr@ijekavianlatin]=Skripte menadžera prozora
+Name[sr@latin]=Skripte menadžera prozora
 Name[sv]=Fönsterhanteringsskript
 Name[uk]=Скрипти засобу керування вікнами
 Name[x-test]=xxWindow Manager Scriptsxx
