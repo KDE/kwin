@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "effects.h"
 #include "input_event.h"
+#include "input_event_spy.h"
 #include "osd.h"
 #include "screens.h"
 #include "shell_client.h"
@@ -230,6 +231,7 @@ void PointerInputRedirection::processMotion(const QPointF &pos, const QSizeF &de
                      delta, deltaNonAccelerated, timeUsec, device);
     event.setModifiersRelevantForGlobalShortcuts(m_input->modifiersRelevantForGlobalShortcuts());
 
+    m_input->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
     m_input->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, 0));
 }
 
@@ -258,6 +260,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
                      m_input->keyboardModifiers(), time, QSizeF(), QSizeF(), 0, device);
     event.setModifiersRelevantForGlobalShortcuts(m_input->modifiersRelevantForGlobalShortcuts());
 
+    m_input->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
     m_input->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, button));
 }
 
@@ -278,6 +281,7 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
                            m_qtButtons, m_input->keyboardModifiers(), time, device);
     wheelEvent.setModifiersRelevantForGlobalShortcuts(m_input->modifiersRelevantForGlobalShortcuts());
 
+    m_input->processSpies(std::bind(&InputEventSpy::wheelEvent, std::placeholders::_1, &wheelEvent));
     m_input->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent));
 }
 
@@ -288,6 +292,7 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 
         return;
     }
 
+    m_input->processSpies(std::bind(&InputEventSpy::swipeGestureBegin, std::placeholders::_1, fingerCount, time));
     m_input->processFilters(std::bind(&InputEventFilter::swipeGestureBegin, std::placeholders::_1, fingerCount, time));
 }
 
@@ -298,6 +303,7 @@ void PointerInputRedirection::processSwipeGestureUpdate(const QSizeF &delta, qui
         return;
     }
 
+    m_input->processSpies(std::bind(&InputEventSpy::swipeGestureUpdate, std::placeholders::_1, delta, time));
     m_input->processFilters(std::bind(&InputEventFilter::swipeGestureUpdate, std::placeholders::_1, delta, time));
 }
 
@@ -308,6 +314,7 @@ void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::LibInpu
         return;
     }
 
+    m_input->processSpies(std::bind(&InputEventSpy::swipeGestureEnd, std::placeholders::_1, time));
     m_input->processFilters(std::bind(&InputEventFilter::swipeGestureEnd, std::placeholders::_1, time));
 }
 
@@ -318,6 +325,7 @@ void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::L
         return;
     }
 
+    m_input->processSpies(std::bind(&InputEventSpy::swipeGestureCancelled, std::placeholders::_1, time));
     m_input->processFilters(std::bind(&InputEventFilter::swipeGestureCancelled, std::placeholders::_1, time));
 }
 
@@ -328,6 +336,7 @@ void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 
         return;
     }
 
+    m_input->processSpies(std::bind(&InputEventSpy::pinchGestureBegin, std::placeholders::_1, fingerCount, time));
     m_input->processFilters(std::bind(&InputEventFilter::pinchGestureBegin, std::placeholders::_1, fingerCount, time));
 }
 
@@ -338,6 +347,7 @@ void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angle
         return;
     }
 
+    m_input->processSpies(std::bind(&InputEventSpy::pinchGestureUpdate, std::placeholders::_1, scale, angleDelta, delta, time));
     m_input->processFilters(std::bind(&InputEventFilter::pinchGestureUpdate, std::placeholders::_1, scale, angleDelta, delta, time));
 }
 
@@ -348,6 +358,7 @@ void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::LibInpu
         return;
     }
 
+    m_input->processSpies(std::bind(&InputEventSpy::pinchGestureEnd, std::placeholders::_1, time));
     m_input->processFilters(std::bind(&InputEventFilter::pinchGestureEnd, std::placeholders::_1, time));
 }
 
@@ -358,6 +369,7 @@ void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::L
         return;
     }
 
+    m_input->processSpies(std::bind(&InputEventSpy::pinchGestureCancelled, std::placeholders::_1, time));
     m_input->processFilters(std::bind(&InputEventFilter::pinchGestureCancelled, std::placeholders::_1, time));
 }
 

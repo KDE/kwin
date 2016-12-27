@@ -41,6 +41,7 @@ namespace KWin
 class GlobalShortcutsManager;
 class Toplevel;
 class InputEventFilter;
+class InputEventSpy;
 class KeyboardInputRedirection;
 class PointerConstraintsFilter;
 class PointerInputRedirection;
@@ -151,6 +152,17 @@ public:
      **/
     void prepandInputEventFilter(InputEventFilter *filter);
     void uninstallInputEventFilter(InputEventFilter *filter);
+
+    /**
+     * Installs the @p spy for spying on events.
+     **/
+    void installInputEventSpy(InputEventSpy *spy);
+
+    /**
+     * Uninstalls the @p spy. This happens automatically when deleting an InputEventSpy.
+     **/
+    void uninstallInputEventSpy(InputEventSpy *spy);
+
     Toplevel *findToplevel(const QPoint &pos);
     GlobalShortcutsManager *shortcuts() const {
         return m_shortcuts;
@@ -165,6 +177,24 @@ public:
      * bind.
      **/
     void processFilters(std::function<bool(InputEventFilter*)> function);
+
+    /**
+     * Sends an event through all input event spies.
+     * The @p function is invoked on each InputEventSpy.
+     *
+     * The UnaryFunction is defined like the UnaryFunction of std::for_each.
+     * The signature of the function should be equivalent to the following:
+     * @code
+     * void function(const InputEventSpy *spy);
+     * @endcode
+     *
+     * The intended usage is to std::bind the method to invoke on the spies with all arguments
+     * bind.
+     **/
+    template <class UnaryFunction>
+    void processSpies(UnaryFunction function) {
+        std::for_each(m_spies.constBegin(), m_spies.constEnd(), function);
+    }
 
     KeyboardInputRedirection *keyboard() const {
         return m_keyboard;
@@ -245,6 +275,7 @@ private:
     PointerConstraintsFilter *m_pointerConstraintsFilter = nullptr;
 
     QVector<InputEventFilter*> m_filters;
+    QVector<InputEventSpy*> m_spies;
     KSharedConfigPtr m_inputConfig;
 
     KWIN_SINGLETON(InputRedirection)

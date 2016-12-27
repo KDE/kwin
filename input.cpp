@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "input.h"
 #include "input_event.h"
+#include "input_event_spy.h"
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "touch_input.h"
@@ -1365,6 +1366,7 @@ InputRedirection::~InputRedirection()
 {
     s_self = NULL;
     qDeleteAll(m_filters);
+    qDeleteAll(m_spies);
 }
 
 void InputRedirection::installInputEventFilter(InputEventFilter *filter)
@@ -1380,6 +1382,16 @@ void InputRedirection::prepandInputEventFilter(InputEventFilter *filter)
 void InputRedirection::uninstallInputEventFilter(InputEventFilter *filter)
 {
     m_filters.removeAll(filter);
+}
+
+void InputRedirection::installInputEventSpy(InputEventSpy *spy)
+{
+    m_spies << spy;
+}
+
+void InputRedirection::uninstallInputEventSpy(InputEventSpy *spy)
+{
+    m_spies.removeOne(spy);
 }
 
 void InputRedirection::init()

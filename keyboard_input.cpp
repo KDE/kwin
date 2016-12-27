@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "keyboard_input.h"
 #include "input_event.h"
+#include "input_event_spy.h"
 #include "abstract_client.h"
 #include "options.h"
 #include "utils.h"
@@ -675,6 +676,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
         }
     }
 
+    m_input->processSpies(std::bind(&InputEventSpy::keyEvent, std::placeholders::_1, &event));
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 }
 

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touch_input.h"
 #include "abstract_client.h"
 #include "input.h"
+#include "input_event_spy.h"
 #include "toplevel.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -151,6 +152,7 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
         return;
     }
     m_windowUpdatedInCycle = false;
+    m_input->processSpies(std::bind(&InputEventSpy::touchDown, std::placeholders::_1, id, pos, time));
     m_input->processFilters(std::bind(&InputEventFilter::touchDown, std::placeholders::_1, id, pos, time));
     m_windowUpdatedInCycle = false;
 }
@@ -162,6 +164,7 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time, LibInput::Device 
         return;
     }
     m_windowUpdatedInCycle = false;
+    m_input->processSpies(std::bind(&InputEventSpy::touchUp, std::placeholders::_1, id, time));
     m_input->processFilters(std::bind(&InputEventFilter::touchUp, std::placeholders::_1, id, time));
     m_windowUpdatedInCycle = false;
 }
@@ -173,6 +176,7 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32
         return;
     }
     m_windowUpdatedInCycle = false;
+    m_input->processSpies(std::bind(&InputEventSpy::touchMotion, std::placeholders::_1, id, pos, time));
     m_input->processFilters(std::bind(&InputEventFilter::touchMotion, std::placeholders::_1, id, pos, time));
     m_windowUpdatedInCycle = false;
 }
