@@ -368,6 +368,7 @@ set(kwin_KDEINIT_SRCS
    globalshortcuts.cpp
    input.cpp
    input_event.cpp
+   input_event_spy.cpp
    keyboard_input.cpp
    pointer_input.cpp
    touch_input.cpp
