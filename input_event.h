@@ -61,12 +61,21 @@ public:
         m_modifiersRelevantForShortcuts = mods;
     }
 
+    quint32 nativeButton() const {
+        return m_nativeButton;
+    }
+
+    void setNativeButton(quint32 button) {
+        m_nativeButton = button;
+    }
+
 private:
     QSizeF m_delta;
     QSizeF m_deltaUnccelerated;
     quint64 m_timestampMicroseconds;
     LibInput::Device *m_device;
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
+    quint32 m_nativeButton = 0;
 };
 
 class WheelEvent : public QWheelEvent

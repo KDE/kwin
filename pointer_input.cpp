@@ -259,6 +259,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
     MouseEvent event(type, m_pos, buttonToQtMouseButton(button), m_qtButtons,
                      m_input->keyboardModifiers(), time, QSizeF(), QSizeF(), 0, device);
     event.setModifiersRelevantForGlobalShortcuts(m_input->modifiersRelevantForGlobalShortcuts());
+    event.setNativeButton(button);
 
     m_input->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
     m_input->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, button));
