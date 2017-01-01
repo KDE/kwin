@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwin_export.h>
 #include <config-kwin.h>
 #include "input.h"
+#include "input_event_spy.h"
 
 #include <QAbstractItemModel>
 #include <QStyledItemDelegate>
@@ -126,28 +127,28 @@ public:
     QModelIndex parent(const QModelIndex &child) const override;
 };
 
-class DebugConsoleFilter : public InputEventFilter
+class DebugConsoleFilter : public InputEventSpy
 {
 public:
     explicit DebugConsoleFilter(QTextEdit *textEdit);
     virtual ~DebugConsoleFilter();
 
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
-    bool wheelEvent(QWheelEvent *event) override;
-    bool keyEvent(QKeyEvent *event) override;
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
-    bool touchUp(quint32 id, quint32 time) override;
+    void pointerEvent(MouseEvent *event) override;
+    void wheelEvent(WheelEvent *event) override;
+    void keyEvent(KeyEvent *event) override;
+    void touchDown(quint32 id, const QPointF &pos, quint32 time) override;
+    void touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
+    void touchUp(quint32 id, quint32 time) override;
 
-    bool pinchGestureBegin(int fingerCount, quint32 time) override;
-    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override;
-    bool pinchGestureEnd(quint32 time) override;
-    bool pinchGestureCancelled(quint32 time) override;
+    void pinchGestureBegin(int fingerCount, quint32 time) override;
+    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override;
+    void pinchGestureEnd(quint32 time) override;
+    void pinchGestureCancelled(quint32 time) override;
 
-    bool swipeGestureBegin(int fingerCount, quint32 time) override;
-    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override;
-    bool swipeGestureEnd(quint32 time) override;
-    bool swipeGestureCancelled(quint32 time) override;
+    void swipeGestureBegin(int fingerCount, quint32 time) override;
+    void swipeGestureUpdate(const QSizeF &delta, quint32 time) override;
+    void swipeGestureEnd(quint32 time) override;
+    void swipeGestureCancelled(quint32 time) override;
 
 private:
     QTextEdit *m_textEdit;

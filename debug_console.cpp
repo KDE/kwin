@@ -170,14 +170,14 @@ static const QString s_tableStart = QStringLiteral("<table>");
 static const QString s_tableEnd = QStringLiteral("</table>");
 
 DebugConsoleFilter::DebugConsoleFilter(QTextEdit *textEdit)
-    : InputEventFilter()
+    : InputEventSpy()
     , m_textEdit(textEdit)
 {
 }
 
 DebugConsoleFilter::~DebugConsoleFilter() = default;
 
-bool DebugConsoleFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+void DebugConsoleFilter::pointerEvent(MouseEvent *event)
 {
     QString text = s_hr;
     const QString timestamp = timestampRow(event->timestamp());
@@ -186,21 +186,20 @@ bool DebugConsoleFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
     switch (event->type()) {
     case QEvent::MouseMove: {
         text.append(tableHeaderRow(i18nc("A mouse pointer motion event", "Pointer Motion")));
-        auto e = static_cast<MouseEvent*>(event);
 #if HAVE_INPUT
-        text.append(deviceRow(e->device()));
+        text.append(deviceRow(event->device()));
 #endif
         text.append(timestamp);
-        if (e->timestampMicroseconds() != 0) {
-            text.append(timestampRowUsec(e->timestampMicroseconds()));
+        if (event->timestampMicroseconds() != 0) {
+            text.append(timestampRowUsec(event->timestampMicroseconds()));
         }
-        if (e->delta() != QSizeF()) {
+        if (event->delta() != QSizeF()) {
             text.append(tableRow(i18nc("The relative mouse movement", "Delta"),
-                                 QStringLiteral("%1/%2").arg(e->delta().width()).arg(e->delta().height())));
+                                 QStringLiteral("%1/%2").arg(event->delta().width()).arg(event->delta().height())));
         }
-        if (e->deltaUnaccelerated() != QSizeF()) {
+        if (event->deltaUnaccelerated() != QSizeF()) {
             text.append(tableRow(i18nc("The relative mouse movement", "Delta (not accelerated)"),
-                                 QStringLiteral("%1/%2").arg(e->deltaUnaccelerated().width()).arg(e->deltaUnaccelerated().height())));
+                                 QStringLiteral("%1/%2").arg(event->deltaUnaccelerated().width()).arg(event->deltaUnaccelerated().height())));
         }
         text.append(tableRow(i18nc("The global mouse pointer position", "Global Position"), QStringLiteral("%1/%2").arg(event->pos().x()).arg(event->pos().y())));
         break;
@@ -208,21 +207,21 @@ bool DebugConsoleFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
     case QEvent::MouseButtonPress:
         text.append(tableHeaderRow(i18nc("A mouse pointer button press event", "Pointer Button Press")));
 #if HAVE_INPUT
-        text.append(deviceRow(static_cast<MouseEvent*>(event)->device()));
+        text.append(deviceRow(event->device()));
 #endif
         text.append(timestamp);
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
-        text.append(tableRow(i18nc("A button in a mouse press/release event",  "Native Button code"), nativeButton));
+        text.append(tableRow(i18nc("A button in a mouse press/release event",  "Native Button code"), event->nativeButton()));
         text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons())));
         break;
     case QEvent::MouseButtonRelease:
         text.append(tableHeaderRow(i18nc("A mouse pointer button release event", "Pointer Button Release")));
 #if HAVE_INPUT
-        text.append(deviceRow(static_cast<MouseEvent*>(event)->device()));
+        text.append(deviceRow(event->device()));
 #endif
         text.append(timestamp);
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
-        text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), nativeButton));
+        text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), event->nativeButton()));
         text.append(tableRow(i18nc("All currently pressed buttons in a mouse press/release event", "Pressed Buttons"), buttonsToString(event->buttons())));
         break;
     default:
@@ -232,16 +231,15 @@ bool DebugConsoleFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::wheelEvent(QWheelEvent *event)
+void DebugConsoleFilter::wheelEvent(WheelEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A mouse pointer axis (wheel) event", "Pointer Axis")));
 #if HAVE_INPUT
-        text.append(deviceRow(static_cast<WheelEvent*>(event)->device()));
+        text.append(deviceRow(event->device()));
 #endif
     text.append(timestampRow(event->timestamp()));
     const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
@@ -253,10 +251,9 @@ bool DebugConsoleFilter::wheelEvent(QWheelEvent *event)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::keyEvent(QKeyEvent *event)
+void DebugConsoleFilter::keyEvent(KeyEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -272,7 +269,7 @@ bool DebugConsoleFilter::keyEvent(QKeyEvent *event)
         break;
     }
 #if HAVE_INPUT
-        text.append(deviceRow(static_cast<KeyEvent*>(event)->device()));
+        text.append(deviceRow(event->device()));
 #endif
     auto modifiersToString = [event] {
         QString ret;
@@ -313,10 +310,9 @@ bool DebugConsoleFilter::keyEvent(QKeyEvent *event)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
+void DebugConsoleFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -329,10 +325,9 @@ bool DebugConsoleFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+void DebugConsoleFilter::touchMotion(quint32 id, const QPointF &pos, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -345,10 +340,9 @@ bool DebugConsoleFilter::touchMotion(quint32 id, const QPointF &pos, quint32 tim
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::touchUp(quint32 id, quint32 time)
+void DebugConsoleFilter::touchUp(quint32 id, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -359,10 +353,9 @@ bool DebugConsoleFilter::touchUp(quint32 id, quint32 time)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::pinchGestureBegin(int fingerCount, quint32 time)
+void DebugConsoleFilter::pinchGestureBegin(int fingerCount, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -373,10 +366,9 @@ bool DebugConsoleFilter::pinchGestureBegin(int fingerCount, quint32 time)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time)
+void DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -390,10 +382,9 @@ bool DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::pinchGestureEnd(quint32 time)
+void DebugConsoleFilter::pinchGestureEnd(quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -403,10 +394,9 @@ bool DebugConsoleFilter::pinchGestureEnd(quint32 time)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::pinchGestureCancelled(quint32 time)
+void DebugConsoleFilter::pinchGestureCancelled(quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -416,10 +406,9 @@ bool DebugConsoleFilter::pinchGestureCancelled(quint32 time)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::swipeGestureBegin(int fingerCount, quint32 time)
+void DebugConsoleFilter::swipeGestureBegin(int fingerCount, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -430,10 +419,9 @@ bool DebugConsoleFilter::swipeGestureBegin(int fingerCount, quint32 time)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::swipeGestureUpdate(const QSizeF &delta, quint32 time)
+void DebugConsoleFilter::swipeGestureUpdate(const QSizeF &delta, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -445,10 +433,9 @@ bool DebugConsoleFilter::swipeGestureUpdate(const QSizeF &delta, quint32 time)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::swipeGestureEnd(quint32 time)
+void DebugConsoleFilter::swipeGestureEnd(quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -458,10 +445,9 @@ bool DebugConsoleFilter::swipeGestureEnd(quint32 time)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
-bool DebugConsoleFilter::swipeGestureCancelled(quint32 time)
+void DebugConsoleFilter::swipeGestureCancelled(quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -471,7 +457,6 @@ bool DebugConsoleFilter::swipeGestureCancelled(quint32 time)
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
-    return false;
 }
 
 DebugConsole::DebugConsole()
@@ -507,7 +492,7 @@ DebugConsole::DebugConsole()
             // delay creation of input event filter until the tab is selected
             if (index == 2 && m_inputFilter.isNull()) {
                 m_inputFilter.reset(new DebugConsoleFilter(m_ui->inputTextEdit));
-                input()->prepandInputEventFilter(m_inputFilter.data());
+                input()->installInputEventSpy(m_inputFilter.data());
             }
             if (index == 5) {
                 updateKeyboardTab();
