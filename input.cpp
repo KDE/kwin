@@ -1371,17 +1371,19 @@ InputRedirection::~InputRedirection()
 
 void InputRedirection::installInputEventFilter(InputEventFilter *filter)
 {
+    Q_ASSERT(!m_filters.contains(filter));
     m_filters << filter;
 }
 
 void InputRedirection::prepandInputEventFilter(InputEventFilter *filter)
 {
+    Q_ASSERT(!m_filters.contains(filter));
     m_filters.prepend(filter);
 }
 
 void InputRedirection::uninstallInputEventFilter(InputEventFilter *filter)
 {
-    m_filters.removeAll(filter);
+    m_filters.removeOne(filter);
 }
 
 void InputRedirection::installInputEventSpy(InputEventSpy *spy)
