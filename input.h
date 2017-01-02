@@ -173,10 +173,19 @@ public:
      * The method @p function is invoked on each input filter. Processing is stopped if
      * a filter returns @c true for @p function.
      *
+     * The UnaryPredicate is defined like the UnaryPredicate of std::any_of.
+     * The signature of the function should be equivalent to the following:
+     * @code
+     * bool function(const InputEventFilter *spy);
+     * @endcode
+     *
      * The intended usage is to std::bind the method to invoke on the filter with all arguments
      * bind.
      **/
-    void processFilters(std::function<bool(InputEventFilter*)> function);
+    template <class UnaryPredicate>
+    void processFilters(UnaryPredicate function) {
+        std::any_of(m_filters.constBegin(), m_filters.constEnd(), function);
+    }
 
     /**
      * Sends an event through all input event spies.
