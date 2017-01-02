@@ -253,7 +253,7 @@ void HwcomposerBackend::init()
     initLights();
     toggleBlankOutput();
     m_filter.reset(new BacklightInputEventFilter(this));
-    input()->prepandInputEventFilter(m_filter.data());
+    input()->prependInputEventFilter(m_filter.data());
 
     // get display configuration
     auto output = createOutput(hwcDevice);

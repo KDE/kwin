@@ -120,7 +120,7 @@ void DrmBackend::outputWentOff()
         return;
     }
     m_dpmsFilter.reset(new DpmsInputEventFilter(this));
-    input()->prepandInputEventFilter(m_dpmsFilter.data());
+    input()->prependInputEventFilter(m_dpmsFilter.data());
 }
 
 void DrmBackend::turnOutputsOn()

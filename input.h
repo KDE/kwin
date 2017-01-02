@@ -150,7 +150,7 @@ public:
      * Note: the event filter will get events before the lock screen can get them, thus
      * this is a security relevant method.
      **/
-    void prepandInputEventFilter(InputEventFilter *filter);
+    void prependInputEventFilter(InputEventFilter *filter);
     void uninstallInputEventFilter(InputEventFilter *filter);
 
     /**

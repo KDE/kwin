@@ -1375,7 +1375,7 @@ void InputRedirection::installInputEventFilter(InputEventFilter *filter)
     m_filters << filter;
 }
 
-void InputRedirection::prepandInputEventFilter(InputEventFilter *filter)
+void InputRedirection::prependInputEventFilter(InputEventFilter *filter)
 {
     Q_ASSERT(!m_filters.contains(filter));
     m_filters.prepend(filter);
