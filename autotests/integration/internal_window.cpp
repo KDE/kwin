@@ -57,6 +57,7 @@ private Q_SLOTS:
     void testKeyboardShowWithoutActivating();
     void testKeyboardTriggersLeave();
     void testTouch();
+    void testOpacity();
 };
 
 class HelperWindow : public QRasterWindow
@@ -492,6 +493,29 @@ void InternalWindowTest::testTouch()
     QCOMPARE(moveSpy.count(), 1);
     QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
     QCOMPARE(win.pressedButtons(), Qt::MouseButtons());
+}
+
+void InternalWindowTest::testOpacity()
+{
+    // this test verifies that opacity is properly synced from QWindow to ShellClient
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setOpacity(0.5);
+    win.setGeometry(0, 0, 100, 100);
+    win.show();
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QVERIFY(internalClient->isInternal());
+    QCOMPARE(internalClient->opacity(), 0.5);
+
+    QSignalSpy opacityChangedSpy(internalClient, &ShellClient::opacityChanged);
+    QVERIFY(opacityChangedSpy.isValid());
+    win.setOpacity(0.75);
+    QCOMPARE(opacityChangedSpy.count(), 1);
+    QCOMPARE(internalClient->opacity(), 0.75);
 }
 
 }

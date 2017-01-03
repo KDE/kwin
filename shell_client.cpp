@@ -931,6 +931,7 @@ void ShellClient::findInternalWindow()
         connect(m_internalWindow, &QWindow::xChanged, this, &ShellClient::updateInternalWindowGeometry);
         connect(m_internalWindow, &QWindow::yChanged, this, &ShellClient::updateInternalWindowGeometry);
         connect(m_internalWindow, &QWindow::destroyed, this, [this] { m_internalWindow = nullptr; });
+        connect(m_internalWindow, &QWindow::opacityChanged, this, &ShellClient::setOpacity);
 
         // Try reading the window type from the QWindow. PlasmaCore.Dialog provides a dynamic type property
         // let's check whether it exists, if it does it's our window type
@@ -938,6 +939,7 @@ void ShellClient::findInternalWindow()
         if (!windowType.isNull()) {
             m_windowType = static_cast<NET::WindowType>(windowType.toInt());
         }
+        setOpacity(m_internalWindow->opacity());
         return;
     }
 }
