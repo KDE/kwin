@@ -482,7 +482,7 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 
 void ShellClient::doSetGeometry(const QRect &rect)
 {
-    if (geom == rect) {
+    if (geom == rect && pendingGeometryUpdate() == PendingGeometryNone) {
         return;
     }
     if (!m_unmapped) {
@@ -499,17 +499,30 @@ void ShellClient::doSetGeometry(const QRect &rect)
     if (!m_unmapped) {
         addWorkspaceRepaint(visibleRect());
     }
-    if (m_internalWindow) {
-        const QRect windowRect = QRect(geom.topLeft() + QPoint(borderLeft(), borderTop()),
-                                       geom.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
-        if (m_internalWindow->geometry() != windowRect) {
-            m_internalWindow->setGeometry(windowRect);
-        }
-    }
+    syncGeometryToInternalWindow();
     if (hasStrut()) {
         workspace()->updateClientArea();
     }
     emit geometryShapeChanged(this, old);
+}
+
+void ShellClient::doMove(int x, int y)
+{
+    Q_UNUSED(x)
+    Q_UNUSED(y)
+    syncGeometryToInternalWindow();
+}
+
+void ShellClient::syncGeometryToInternalWindow()
+{
+    if (!m_internalWindow) {
+        return;
+    }
+    const QRect windowRect = QRect(geom.topLeft() + QPoint(borderLeft(), borderTop()),
+                                    geom.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
+    if (m_internalWindow->geometry() != windowRect) {
+        m_internalWindow->setGeometry(windowRect);
+    }
 }
 
 QByteArray ShellClient::windowRole() const
