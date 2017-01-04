@@ -320,11 +320,13 @@ ecm_mark_as_test(testScreenEdges)
 set( testOnScreenNotification_SRCS
     onscreennotificationtest.cpp
     ../onscreennotification.cpp
+    ../input_event_spy.cpp
 )
 add_executable( testOnScreenNotification ${testOnScreenNotification_SRCS})
 
 target_link_libraries(testOnScreenNotification
     Qt5::Test
+    Qt5::Widgets # QAction include
     Qt5::Quick
     KF5::ConfigCore
 )

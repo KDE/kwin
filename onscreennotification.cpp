@@ -20,8 +20,12 @@
  */
 
 #include "onscreennotification.h"
+#include "input.h"
+#include "input_event.h"
+#include "input_event_spy.h"
 #include <config-kwin.h>
 
+#include <QPropertyAnimation>
 #include <QStandardPaths>
 #include <QTimer>
 #include <QQmlComponent>
@@ -35,6 +39,31 @@
 
 using namespace KWin;
 
+class KWin::OnScreenNotificationInputEventSpy : public InputEventSpy
+{
+public:
+    explicit OnScreenNotificationInputEventSpy(OnScreenNotification *parent);
+
+    void pointerEvent(MouseEvent *event) override;
+private:
+    OnScreenNotification *m_parent;
+};
+
+OnScreenNotificationInputEventSpy::OnScreenNotificationInputEventSpy(OnScreenNotification *parent)
+    : m_parent(parent)
+{
+}
+
+void OnScreenNotificationInputEventSpy::pointerEvent(MouseEvent *event)
+{
+    if (event->type() != QEvent::MouseMove) {
+        return;
+    }
+
+    m_parent->setContainsPointer(m_parent->geometry().contains(event->globalPos()));
+}
+
+
 OnScreenNotification::OnScreenNotification(QObject *parent)
     : QObject(parent)
     , m_timer(new QTimer(this))
@@ -47,6 +76,8 @@ OnScreenNotification::OnScreenNotification(QObject *parent)
                 show();
             } else {
                 m_timer->stop();
+                m_spy.reset();
+                m_containsPointer = false;
             }
         }
     );
@@ -131,6 +162,7 @@ void OnScreenNotification::show()
     Q_ASSERT(m_visible);
     ensureQmlContext();
     ensureQmlComponent();
+    createInputSpy();
     if (m_timer->interval() != 0) {
         m_timer->start();
     }
@@ -165,6 +197,43 @@ void OnScreenNotification::ensureQmlComponent()
     } else {
         m_qmlComponent.reset();
     }
+}
+
+void OnScreenNotification::createInputSpy()
+{
+    Q_ASSERT(m_spy.isNull());
+    if (auto w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+        m_spy.reset(new OnScreenNotificationInputEventSpy(this));
+        input()->installInputEventSpy(m_spy.data());
+        if (!m_animation) {
+            m_animation = new QPropertyAnimation(w, "opacity", this);
+            m_animation->setStartValue(1.0);
+            m_animation->setEndValue(0.0);
+            m_animation->setDuration(250);
+            m_animation->setEasingCurve(QEasingCurve::InOutQuad);
+        }
+    }
+}
+
+QRect OnScreenNotification::geometry() const
+{
+    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+        return w->geometry();
+    }
+    return QRect();
+}
+
+void OnScreenNotification::setContainsPointer(bool contains)
+{
+    if (m_containsPointer == contains) {
+        return;
+    }
+    m_containsPointer = contains;
+    if (!m_animation) {
+        return;
+    }
+    m_animation->setDirection(m_containsPointer ? QAbstractAnimation::Forward : QAbstractAnimation::Backward);
+    m_animation->start();
 }
 
 #include "onscreennotification.moc"

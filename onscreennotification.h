@@ -26,12 +26,15 @@
 
 #include <KSharedConfig>
 
+class QPropertyAnimation;
 class QTimer;
 class QQmlContext;
 class QQmlComponent;
 class QQmlEngine;
 
 namespace KWin {
+
+class OnScreenNotificationInputEventSpy;
 
 class OnScreenNotification : public QObject
 {
@@ -49,6 +52,8 @@ public:
     QString iconName() const;
     int timeout() const;
 
+    QRect geometry() const;
+
     void setVisible(bool m_visible);
     void setMessage(const QString &message);
     void setIconName(const QString &iconName);
@@ -56,6 +61,8 @@ public:
 
     void setConfig(KSharedConfigPtr config);
     void setEngine(QQmlEngine *engine);
+
+    void setContainsPointer(bool contains);
 
 Q_SIGNALS:
     void visibleChanged();
@@ -67,6 +74,7 @@ private:
     void show();
     void ensureQmlContext();
     void ensureQmlComponent();
+    void createInputSpy();
     bool m_visible = false;
     QString m_message;
     QString m_iconName;
@@ -76,6 +84,9 @@ private:
     QScopedPointer<QQmlComponent> m_qmlComponent;
     QQmlEngine *m_qmlEngine = nullptr;
     QScopedPointer<QObject> m_mainItem;
+    QScopedPointer<OnScreenNotificationInputEventSpy> m_spy;
+    QPropertyAnimation *m_animation = nullptr;
+    bool m_containsPointer = false;
 };
 }
 
