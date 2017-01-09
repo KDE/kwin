@@ -166,7 +166,7 @@ Connection::Connection(Context *input, QObject *parent)
 
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice"),
                                                  QStringLiteral("org.kde.KWin.InputDeviceManager"),
-                                                 this,
+                                                 s_self,
                                                  QDBusConnection::ExportAllProperties | QDBusConnection::ExportScriptableSignals
     );
 }
