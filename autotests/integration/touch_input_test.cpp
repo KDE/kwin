@@ -161,7 +161,6 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(sequenceStartedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 1);
     QCOMPARE(m_touch->sequence().first()->isDown(), true);
-    QEXPECT_FAIL("decorated", "BUG 374778", Continue);
     QCOMPARE(m_touch->sequence().first()->position(), QPointF(25, 25));
     QCOMPARE(pointAddedSpy.count(), 0);
     QCOMPARE(pointMovedSpy.count(), 0);
@@ -172,7 +171,6 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(pointAddedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
     QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
-    QEXPECT_FAIL("decorated", "BUG 374778", Continue);
     QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(-100, -100));
     QCOMPARE(pointMovedSpy.count(), 0);
 
@@ -182,7 +180,6 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
     QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
-    QEXPECT_FAIL("decorated", "BUG 374778", Continue);
     QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(0, 0));
 
     kwinApp()->platform()->touchUp(1, timestamp++);
