@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shell.h>
+#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
 
@@ -44,12 +45,13 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
+    void testMultipleTouchPoints_data();
     void testMultipleTouchPoints();
     void testCancel();
     void testTouchMouseAction();
 
 private:
-    AbstractClient *showWindow();
+    AbstractClient *showWindow(bool decorated = false);
     KWayland::Client::Touch *m_touch = nullptr;
 };
 
@@ -74,7 +76,7 @@ void TouchInputTest::initTestCase()
 void TouchInputTest::init()
 {
     using namespace KWayland::Client;
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration));
     QVERIFY(Test::waitForWaylandTouch());
     m_touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
     QVERIFY(m_touch);
@@ -91,7 +93,7 @@ void TouchInputTest::cleanup()
     Test::destroyWaylandConnection();
 }
 
-AbstractClient *TouchInputTest::showWindow()
+AbstractClient *TouchInputTest::showWindow(bool decorated)
 {
     using namespace KWayland::Client;
 #define VERIFY(statement) \
@@ -105,6 +107,15 @@ AbstractClient *TouchInputTest::showWindow()
     VERIFY(surface);
     ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
     VERIFY(shellSurface);
+    if (decorated) {
+        auto deco = Test::waylandServerSideDecoration()->create(surface, surface);
+        QSignalSpy decoSpy(deco, &ServerSideDecoration::modeChanged);
+        VERIFY(decoSpy.isValid());
+        VERIFY(decoSpy.wait());
+        deco->requestMode(ServerSideDecoration::Mode::Server);
+        VERIFY(decoSpy.wait());
+        COMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
+    }
     // let's render
     auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
 
@@ -117,10 +128,20 @@ AbstractClient *TouchInputTest::showWindow()
     return c;
 }
 
+void TouchInputTest::testMultipleTouchPoints_data()
+{
+    QTest::addColumn<bool>("decorated");
+
+    QTest::newRow("undecorated") << false;
+    QTest::newRow("decorated") << true;
+}
+
 void TouchInputTest::testMultipleTouchPoints()
 {
     using namespace KWayland::Client;
-    AbstractClient *c = showWindow();
+    QFETCH(bool, decorated);
+    AbstractClient *c = showWindow(decorated);
+    QCOMPARE(c->isDecorated(), decorated);
     c->move(100, 100);
     QVERIFY(c);
     QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
@@ -135,30 +156,33 @@ void TouchInputTest::testMultipleTouchPoints()
     QVERIFY(endedSpy.isValid());
 
     quint32 timestamp = 1;
-    kwinApp()->platform()->touchDown(1, QPointF(125, 125), timestamp++);
+    kwinApp()->platform()->touchDown(1, QPointF(125, 125) + c->clientPos(), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 1);
     QCOMPARE(m_touch->sequence().first()->isDown(), true);
+    QEXPECT_FAIL("decorated", "BUG 374778", Continue);
     QCOMPARE(m_touch->sequence().first()->position(), QPointF(25, 25));
     QCOMPARE(pointAddedSpy.count(), 0);
     QCOMPARE(pointMovedSpy.count(), 0);
 
     // a point outside the window
-    kwinApp()->platform()->touchDown(2, QPointF(0, 0), timestamp++);
+    kwinApp()->platform()->touchDown(2, QPointF(0, 0) + c->clientPos(), timestamp++);
     QVERIFY(pointAddedSpy.wait());
     QCOMPARE(pointAddedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
     QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
+    QEXPECT_FAIL("decorated", "BUG 374778", Continue);
     QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(-100, -100));
     QCOMPARE(pointMovedSpy.count(), 0);
 
     // let's move that one
-    kwinApp()->platform()->touchMotion(2, QPointF(100, 100), timestamp++);
+    kwinApp()->platform()->touchMotion(2, QPointF(100, 100) + c->clientPos(), timestamp++);
     QVERIFY(pointMovedSpy.wait());
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
     QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
+    QEXPECT_FAIL("decorated", "BUG 374778", Continue);
     QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(0, 0));
 
     kwinApp()->platform()->touchUp(1, timestamp++);
