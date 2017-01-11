@@ -91,10 +91,6 @@ void ScreenShotEffect::paintScreen(int mask, QRegion region, ScreenPaintData &da
 {
     m_cachedOutputGeometry = data.outputGeometry();
     effects->paintScreen(mask, region, data);
-
-    if (m_infoFrame) {
-        m_infoFrame->render(region);
-    }
 }
 
 void ScreenShotEffect::postPaintScreen()
@@ -401,29 +397,21 @@ void ScreenShotEffect::interactive(QDBusUnixFileDescriptor fd, int mask)
 
 void ScreenShotEffect::showInfoMessage(InfoMessageMode mode)
 {
-    if (!m_infoFrame.isNull()) {
-        return;
-    }
-    m_infoFrame.reset(effects->effectFrame(EffectFrameStyled, false));
-    QFont font;
-    font.setBold(true);
-    m_infoFrame->setFont(font);
-    QRect area = effects->clientArea(ScreenArea, effects->activeScreen(), effects->currentDesktop());
-    m_infoFrame->setPosition(QPoint(area.x() + area.width() / 2, area.y() + area.height() / 3));
+    QString text;
     switch (mode) {
     case InfoMessageMode::Window:
-        m_infoFrame->setText(i18n("Select window to screen shot with left click or enter.\nEscape or right click to cancel."));
+        text = i18n("Select window to screen shot with left click or enter.\nEscape or right click to cancel.");
         break;
     case InfoMessageMode::Screen:
-        m_infoFrame->setText(i18n("Create screen shot with left click or enter.\nEscape or right click to cancel."));
+        text = i18n("Create screen shot with left click or enter.\nEscape or right click to cancel.");
         break;
     }
-    effects->addRepaintFull();
+    effects->showOnScreenMessage(text, QStringLiteral("spectacle"));
 }
 
 void ScreenShotEffect::hideInfoMessage()
 {
-    m_infoFrame.reset();
+    effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
 }
 
 QString ScreenShotEffect::screenshotFullscreen(bool captureCursor)
@@ -639,7 +627,7 @@ void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)
 
 bool ScreenShotEffect::isActive() const
 {
-    return (m_scheduledScreenshot != NULL || !m_scheduledGeometry.isNull() || !m_infoFrame.isNull()) && !effects->isScreenLocked();
+    return (m_scheduledScreenshot != NULL || !m_scheduledGeometry.isNull()) && !effects->isScreenLocked();
 }
 
 void ScreenShotEffect::windowClosed( EffectWindow* w )

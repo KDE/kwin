@@ -1240,11 +1240,25 @@ public:
     virtual void showOnScreenMessage(const QString &message, const QString &iconName = QString()) = 0;
 
     /**
+     * Flags for how to hide a shown on-screen-message
+     * @see hideOnScreenMessage
+     * @since 5.9
+     **/
+    enum class OnScreenMessageHideFlag {
+        /**
+         * The on-screen-message should skip the close window animation.
+         * @see EffectWindow::skipsCloseAnimation
+         **/
+        SkipsCloseAnimation = 1
+    };
+    Q_DECLARE_FLAGS(OnScreenMessageHideFlags, OnScreenMessageHideFlag)
+    /**
      * Hides a previously shown on-screen-message again.
+     * @param flags The flags for how to hide the message
      * @see showOnScreenMessage
      * @since 5.9
      **/
-    virtual void hideOnScreenMessage() = 0;
+    virtual void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) = 0;
 
 Q_SIGNALS:
     /**

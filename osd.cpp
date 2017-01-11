@@ -68,12 +68,13 @@ void show(const QString &message, const QString &iconName)
     show(message, iconName, 0);
 }
 
-void hide()
+void hide(HideFlags flags)
 {
     if (!kwinApp()->shouldUseWaylandForCompositing()) {
         // FIXME: only supported on Wayland
         return;
     }
+    osd()->setSkipCloseAnimation(flags.testFlag(HideFlag::SkipCloseAnimation));
     osd()->setVisible(false);
 }
 

@@ -255,7 +255,7 @@ public:
         Q_UNUSED(message)
         Q_UNUSED(iconName)
     }
-    void hideOnScreenMessage() override {}
+    void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) override { Q_UNUSED(flags)}
 
 private:
     bool m_animationsSuported = true;
