@@ -435,6 +435,7 @@ set(kwin_KDEINIT_SRCS
     wayland_server.cpp
     wayland_cursor_theme.cpp
     virtualkeyboard.cpp
+    appmenu.cpp
    )
 
 if(KWIN_BUILD_TABBOX)
@@ -484,6 +485,8 @@ qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Compositing.xml dbusinterfa
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl )
 
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.ScreenSaver.xml screenlocker_interface)
+
+qt5_add_dbus_interface( kwin_KDEINIT_SRCS org.kde.kappmenu.xml appmenu_interface )
 
 qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 

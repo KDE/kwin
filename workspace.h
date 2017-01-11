@@ -285,6 +285,8 @@ public:
         return m_userActionsMenu;
     }
 
+    void showApplicationMenu(const QRect &pos, AbstractClient *c, int actionId);
+
     void updateMinimizedOfTransients(AbstractClient*);
     void updateOnAllDesktopsOfTransients(AbstractClient*);
     void checkTransients(xcb_window_t w);

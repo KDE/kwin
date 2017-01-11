@@ -331,6 +331,14 @@ public:
      **/
     void showOnScreenEdge() override;
 
+    Xcb::StringProperty fetchApplicationMenuServiceName() const;
+    void readApplicationMenuServiceName(Xcb::StringProperty &property);
+    void checkApplicationMenuServiceName();
+
+    Xcb::StringProperty fetchApplicationMenuObjectPath() const;
+    void readApplicationMenuObjectPath(Xcb::StringProperty &property);
+    void checkApplicationMenuObjectPath();
+
     static void cleanupX11();
 
 public Q_SLOTS:

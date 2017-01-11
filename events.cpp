@@ -923,6 +923,10 @@ void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
             updateShowOnScreenEdge();
         else if (e->atom == atoms->gtk_frame_extents)
             detectGtkFrameExtents();
+        else if (e->atom == atoms->kde_net_wm_appmenu_service_name)
+            checkApplicationMenuServiceName();
+        else if (e->atom == atoms->kde_net_wm_appmenu_object_path)
+            checkApplicationMenuObjectPath();
         break;
     }
 }

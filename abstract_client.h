@@ -255,6 +255,16 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * (e.g. "/opt/kde/share/org.kde.foo.desktop") in case it's not in a standard location.
      **/
     Q_PROPERTY(QByteArray desktopFileName READ desktopFileName NOTIFY desktopFileNameChanged)
+
+    /**
+     * Whether an application menu is available for this Client
+     */
+    Q_PROPERTY(bool hasApplicationMenu READ hasApplicationMenu NOTIFY hasApplicationMenuChanged)
+    /**
+     * Whether the application menu for this Client is currently opened
+     */
+    Q_PROPERTY(bool applicationMenuActive READ applicationMenuActive NOTIFY applicationMenuActiveChanged)
+
 public:
     virtual ~AbstractClient();
 
@@ -624,6 +634,25 @@ public:
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 
+    bool hasApplicationMenu() const;
+    bool applicationMenuActive() const {
+        return m_applicationMenuActive;
+    }
+    void setApplicationMenuActive(bool applicationMenuActive);
+
+    QString applicationMenuServiceName() const {
+        return m_applicationMenuServiceName;
+    }
+    QString applicationMenuObjectPath() const {
+        return m_applicationMenuObjectPath;
+    }
+
+    /**
+     * Request showing the application menu bar
+     * @param actionId The DBus menu ID of the action that should be highlighted, 0 for the root menu
+     */
+    void showApplicationMenu(int actionId);
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -663,6 +692,8 @@ Q_SIGNALS:
     void shadeableChanged(bool);
     void maximizeableChanged(bool);
     void desktopFileNameChanged();
+    void hasApplicationMenuChanged(bool);
+    void applicationMenuActiveChanged(bool);
 
 protected:
     AbstractClient();
@@ -944,6 +975,9 @@ protected:
     void setDesktopFileName(const QByteArray &name);
     QString iconFromDesktopFile() const;
 
+    void updateApplicationMenuServiceName(const QString &serviceName);
+    void updateApplicationMenuObjectPath(const QString &objectPath);
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -1010,9 +1044,11 @@ private:
         QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
     } m_decoration;
-
     QByteArray m_desktopFileName;
 
+    bool m_applicationMenuActive = false;
+    QString m_applicationMenuServiceName;
+    QString m_applicationMenuObjectPath;
 
     static bool s_haveResizeEffect;
 };

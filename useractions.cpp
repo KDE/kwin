@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "activities.h"
 #include <kactivities/info.h>
 #endif
+#include "appmenu.h"
 
 #include <KProcess>
 
@@ -1700,6 +1701,11 @@ void Workspace::slotWindowOperations()
 void Workspace::showWindowMenu(const QRect &pos, AbstractClient* cl)
 {
     m_userActionsMenu->show(pos, cl);
+}
+
+void Workspace::showApplicationMenu(const QRect &pos, AbstractClient *c, int actionId)
+{
+    ApplicationMenu::self()->showApplicationMenu(c->geometry().topLeft() + pos.bottomLeft(), c, actionId);
 }
 
 /*!

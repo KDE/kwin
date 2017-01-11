@@ -35,7 +35,7 @@ namespace Decoration
 
 class Renderer;
 
-class DecoratedClientImpl : public QObject, public KDecoration2::DecoratedClientPrivate
+class DecoratedClientImpl : public QObject, public KDecoration2::ApplicationMenuEnabledDecoratedClientPrivate
 {
     Q_OBJECT
 public:
@@ -69,15 +69,21 @@ public:
 
     Qt::Edges adjacentScreenEdges() const override;
 
+    bool hasApplicationMenu() const override;
+    bool isApplicationMenuActive() const override;
+
     void requestClose() override;
     void requestContextHelp() override;
     void requestToggleMaximization(Qt::MouseButtons buttons) override;
     void requestMinimize() override;
     void requestShowWindowMenu() override;
+    void requestShowApplicationMenu(const QRect &rect, int actionId) override;
     void requestToggleKeepAbove() override;
     void requestToggleKeepBelow() override;
     void requestToggleOnAllDesktops() override;
     void requestToggleShade() override;
+
+    void showApplicationMenu(int actionId);
 
     AbstractClient *client() {
         return m_client;

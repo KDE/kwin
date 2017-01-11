@@ -2152,5 +2152,37 @@ QSize Client::resizeIncrements() const
     return m_geometryHints.resizeIncrements();
 }
 
+Xcb::StringProperty Client::fetchApplicationMenuServiceName() const
+{
+    return Xcb::StringProperty(m_client, atoms->kde_net_wm_appmenu_service_name);
+}
+
+void Client::readApplicationMenuServiceName(Xcb::StringProperty &property)
+{
+    updateApplicationMenuServiceName(QString::fromUtf8(property));
+}
+
+void Client::checkApplicationMenuServiceName()
+{
+    Xcb::StringProperty property = fetchApplicationMenuServiceName();
+    readApplicationMenuServiceName(property);
+}
+
+Xcb::StringProperty Client::fetchApplicationMenuObjectPath() const
+{
+    return Xcb::StringProperty(m_client, atoms->kde_net_wm_appmenu_object_path);
+}
+
+void Client::readApplicationMenuObjectPath(Xcb::StringProperty &property)
+{
+    updateApplicationMenuObjectPath(QString::fromUtf8(property));
+}
+
+void Client::checkApplicationMenuObjectPath()
+{
+    Xcb::StringProperty property = fetchApplicationMenuObjectPath();
+    readApplicationMenuObjectPath(property);
+}
+
 } // namespace
 

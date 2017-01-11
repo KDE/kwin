@@ -38,6 +38,7 @@ ButtonsModel::ButtonsModel(const QVector< DecorationButtonType > &buttons, QObje
 ButtonsModel::ButtonsModel(QObject* parent)
     : ButtonsModel(QVector<DecorationButtonType>({
         DecorationButtonType::Menu,
+        DecorationButtonType::ApplicationMenu,
         DecorationButtonType::OnAllDesktops,
         DecorationButtonType::Minimize,
         DecorationButtonType::Maximize,

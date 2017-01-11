@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_client.h"
+
+#include "appmenu.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationpalette.h"
 #include "decorations/decorationbridge.h"
@@ -82,6 +84,10 @@ AbstractClient::AbstractClient()
             }
         }
     );
+
+    connect(ApplicationMenu::self(), &ApplicationMenu::applicationMenuEnabledChanged, this, [this] {
+        emit hasApplicationMenuChanged(hasApplicationMenu());
+    });
 }
 
 AbstractClient::~AbstractClient()
@@ -1674,6 +1680,55 @@ QString AbstractClient::iconFromDesktopFile() const
     }
     KDesktopFile df(desktopFile);
     return df.readIcon();
+}
+
+bool AbstractClient::hasApplicationMenu() const
+{
+    return ApplicationMenu::self()->applicationMenuEnabled() && !m_applicationMenuServiceName.isEmpty() && !m_applicationMenuObjectPath.isEmpty();
+}
+
+void AbstractClient::updateApplicationMenuServiceName(const QString &serviceName)
+{
+    const bool old_hasApplicationMenu = hasApplicationMenu();
+
+    m_applicationMenuServiceName = serviceName;
+
+    const bool new_hasApplicationMenu = hasApplicationMenu();
+
+    if (old_hasApplicationMenu != new_hasApplicationMenu) {
+        emit hasApplicationMenuChanged(new_hasApplicationMenu);
+    }
+}
+
+void AbstractClient::updateApplicationMenuObjectPath(const QString &objectPath)
+{
+    const bool old_hasApplicationMenu = hasApplicationMenu();
+
+    m_applicationMenuObjectPath = objectPath;
+
+    const bool new_hasApplicationMenu = hasApplicationMenu();
+
+    if (old_hasApplicationMenu != new_hasApplicationMenu) {
+        emit hasApplicationMenuChanged(new_hasApplicationMenu);
+    }
+}
+
+void AbstractClient::setApplicationMenuActive(bool applicationMenuActive)
+{
+    if (m_applicationMenuActive != applicationMenuActive) {
+        m_applicationMenuActive = applicationMenuActive;
+        emit applicationMenuActiveChanged(applicationMenuActive);
+    }
+}
+
+void AbstractClient::showApplicationMenu(int actionId)
+{
+    if (isDecorated()) {
+        decoration()->showApplicationMenu(actionId);
+    } else {
+        // we don't know where the application menu button will be, show it in the top left corner instead
+        Workspace::self()->showApplicationMenu(QRect(), this, actionId);
+    }
 }
 
 }

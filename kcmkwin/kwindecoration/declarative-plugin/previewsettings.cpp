@@ -72,6 +72,7 @@ PreviewSettings::PreviewSettings(DecorationSettings *parent)
     , m_closeOnDoubleClick(false)
     , m_leftButtons(new ButtonsModel(QVector<DecorationButtonType>({
             DecorationButtonType::Menu,
+            DecorationButtonType::ApplicationMenu,
             DecorationButtonType::OnAllDesktops
         }), this))
     , m_rightButtons(new ButtonsModel(QVector<DecorationButtonType>({

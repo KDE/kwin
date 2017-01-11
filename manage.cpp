@@ -104,6 +104,9 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     auto firstInTabBoxCookie = fetchFirstInTabBox();
     auto transientCookie = fetchTransient();
     auto activitiesCookie = fetchActivities();
+    auto applicationMenuServiceNameCookie = fetchApplicationMenuServiceName();
+    auto applicationMenuObjectPathCookie = fetchApplicationMenuObjectPath();
+
     m_geometryHints.init(window());
     m_motif.init(window());
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
@@ -390,6 +393,9 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     }
 
     readColorScheme(colorSchemeCookie);
+
+    readApplicationMenuServiceName(applicationMenuServiceNameCookie);
+    readApplicationMenuObjectPath(applicationMenuObjectPathCookie);
 
     updateDecoration(false);   // Also gravitates
     // TODO: Is CentralGravity right here, when resizing is done after gravitating?

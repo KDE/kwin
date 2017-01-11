@@ -56,6 +56,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using namespace KWayland::Server;
 
 static const QByteArray s_schemePropertyName = QByteArrayLiteral("KDE_COLOR_SCHEME_PATH");
+static const QByteArray s_appMenuServiceNamePropertyName = QByteArrayLiteral("KDE_APPMENU_SERVICE_NAME");
+static const QByteArray s_appMenuObjectPathPropertyName = QByteArrayLiteral("KDE_APPMENU_OBJECT_PATH");
 
 namespace KWin
 {
@@ -252,6 +254,7 @@ void ShellClient::init()
     }
 
     updateColorScheme(QString());
+    updateApplicationMenu();
 }
 
 void ShellClient::destroyClient()
@@ -1234,6 +1237,10 @@ bool ShellClient::eventFilter(QObject *watched, QEvent *event)
         QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (pe->propertyName() == s_schemePropertyName) {
             updateColorScheme(rules()->checkDecoColor(m_qtExtendedSurface->property(pe->propertyName().constData()).toString()));
+        } else if (pe->propertyName() == s_appMenuServiceNamePropertyName) {
+            updateApplicationMenuServiceName(m_qtExtendedSurface->property(pe->propertyName().constData()).toString());
+        } else if (pe->propertyName() == s_appMenuObjectPathPropertyName) {
+            updateApplicationMenuObjectPath(m_qtExtendedSurface->property(pe->propertyName().constData()).toString());
         }
     }
     return false;
@@ -1464,6 +1471,14 @@ void ShellClient::killWindow()
     ::kill(c->processId(), SIGTERM);
     // give it time to terminate and only if terminate fails, try destroy Wayland connection
     QTimer::singleShot(5000, c, &ClientConnection::destroy);
+}
+
+void ShellClient::updateApplicationMenu()
+{
+    if (m_qtExtendedSurface) {
+        updateApplicationMenuServiceName(m_qtExtendedSurface->property(s_appMenuObjectPathPropertyName).toString());
+        updateApplicationMenuObjectPath(m_qtExtendedSurface->property(s_appMenuServiceNamePropertyName).toString());
+    }
 }
 
 }

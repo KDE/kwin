@@ -155,6 +155,7 @@ void SettingsImpl::readSettings()
     KConfigGroup config = kwinApp()->config()->group(QStringLiteral("org.kde.kdecoration2"));
     const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType >({
         KDecoration2::DecorationButtonType::Menu,
+        KDecoration2::DecorationButtonType::ApplicationMenu,
         KDecoration2::DecorationButtonType::OnAllDesktops
     }));
     if (left != m_leftButtons) {

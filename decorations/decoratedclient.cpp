@@ -39,7 +39,7 @@ namespace Decoration
 
 DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration)
     : QObject()
-    , DecoratedClientPrivate(decoratedClient, decoration)
+    , ApplicationMenuEnabledDecoratedClientPrivate(decoratedClient, decoration)
     , m_client(client)
     , m_clientSize(client->clientSize())
     , m_renderer(nullptr)
@@ -110,6 +110,9 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
     connect(client, &AbstractClient::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizeableChanged);
 
     connect(client, &AbstractClient::paletteChanged, decoratedClient, &KDecoration2::DecoratedClient::paletteChanged);
+
+    connect(client, &AbstractClient::hasApplicationMenuChanged, decoratedClient, &KDecoration2::DecoratedClient::hasApplicationMenuChanged);
+    connect(client, &AbstractClient::applicationMenuActiveChanged, decoratedClient, &KDecoration2::DecoratedClient::applicationMenuActiveChanged);
 }
 
 DecoratedClientImpl::~DecoratedClientImpl() = default;
@@ -203,6 +206,16 @@ void DecoratedClientImpl::requestShowWindowMenu()
     Workspace::self()->showWindowMenu(QRect(Cursor::pos(), Cursor::pos()), m_client);
 }
 
+void DecoratedClientImpl::requestShowApplicationMenu(const QRect &rect, int actionId)
+{
+    Workspace::self()->showApplicationMenu(rect, m_client, actionId);
+}
+
+void DecoratedClientImpl::showApplicationMenu(int actionId)
+{
+    decoration()->showApplicationMenu(actionId);
+}
+
 void DecoratedClientImpl::requestToggleMaximization(Qt::MouseButtons buttons)
 {
     QMetaObject::invokeMethod(this, "delayedRequestToggleMaximization", Qt::QueuedConnection, Q_ARG(Options::WindowOperation, options->operationMaxButtonClick(buttons)));
@@ -263,6 +276,16 @@ Qt::Edges DecoratedClientImpl::adjacentScreenEdges() const
         edges |= Qt::BottomEdge;
     }
     return edges;
+}
+
+bool DecoratedClientImpl::hasApplicationMenu() const
+{
+    return m_client->hasApplicationMenu();
+}
+
+bool DecoratedClientImpl::isApplicationMenuActive() const
+{
+    return m_client->applicationMenuActive();
 }
 
 void DecoratedClientImpl::createRenderer()

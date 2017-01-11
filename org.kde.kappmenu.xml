@@ -1,0 +1,28 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.kappmenu">
+    <method name="showMenu">
+        <arg name="x" type="i" direction="in"/>
+        <arg name="y" type="i" direction="in"/>
+        <arg name="service" type="s" direction="in"/>
+        <arg name="objectPath" type="o" direction="in"/>
+        <arg name="actionId" type="i" direction="in"/>
+    </method>
+    <method name="reconfigure">
+    </method>
+    <signal name="reconfigured" />
+    <signal name="showRequest">
+        <arg name="service" type="s" direction="out"/>
+        <arg name="objectPath" type="o" direction="out"/>
+        <arg name="actionId" type="i" direction="out"/>
+    </signal>
+    <signal name="menuShown">
+        <arg name="service" type="s" direction="out"/>
+        <arg name="objectPath" type="o" direction="out"/>
+    </signal>
+    <signal name="menuHidden">
+        <arg name="service" type="s" direction="out"/>
+        <arg name="objectPath" type="o" direction="out"/>
+    </signal>
+  </interface>
+</node>

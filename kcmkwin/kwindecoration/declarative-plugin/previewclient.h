@@ -33,7 +33,7 @@ namespace KDecoration2
 {
 namespace Preview
 {
-class PreviewClient : public QObject, public DecoratedClientPrivate
+class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedClientPrivate
 {
     Q_OBJECT
     Q_PROPERTY(KDecoration2::Decoration *decoration READ decoration CONSTANT)
@@ -97,6 +97,9 @@ public:
     QColor color(ColorGroup group, ColorRole role) const override;
     Qt::Edges adjacentScreenEdges() const override;
 
+    bool hasApplicationMenu() const override;
+    bool isApplicationMenuActive() const override;
+
     void requestClose() override;
     void requestContextHelp() override;
     void requestToggleMaximization(Qt::MouseButtons buttons) override;
@@ -105,7 +108,10 @@ public:
     void requestToggleKeepBelow() override;
     void requestToggleShade() override;
     void requestShowWindowMenu() override;
+    void requestShowApplicationMenu(const QRect &rect, int actionId) override;
     void requestToggleOnAllDesktops() override;
+
+    void showApplicationMenu(int actionId);
 
     void setCaption(const QString &caption);
     void setActive(bool active);
@@ -176,6 +182,7 @@ Q_SIGNALS:
     void bordersBottomEdgeChanged(bool);
 
     void showWindowMenuRequested();
+    void showApplicationMenuRequested();
     void minimizeRequested();
     void closeRequested();
 

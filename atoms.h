@@ -68,6 +68,8 @@ public:
     Xcb::Atom kwin_dbus_service;
     Xcb::Atom utf8_string;
     Xcb::Atom wl_surface_id;
+    Xcb::Atom kde_net_wm_appmenu_service_name;
+    Xcb::Atom kde_net_wm_appmenu_object_path;
 
     /**
      * @internal

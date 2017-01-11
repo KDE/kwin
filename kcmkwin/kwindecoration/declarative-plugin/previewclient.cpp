@@ -36,7 +36,7 @@ namespace Preview
 
 PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     : QObject(decoration)
-    , DecoratedClientPrivate(c, decoration)
+    , ApplicationMenuEnabledDecoratedClientPrivate(c, decoration)
     , m_colorSchemeManager(new KColorSchemeManager(this))
     , m_colorSchemeIndex(0)
     , m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde")))
@@ -309,6 +309,16 @@ Qt::Edges PreviewClient::adjacentScreenEdges() const
     return edges;
 }
 
+bool PreviewClient::hasApplicationMenu() const
+{
+    return true;
+}
+
+bool PreviewClient::isApplicationMenuActive() const
+{
+    return false;
+}
+
 bool PreviewClient::bordersBottomEdge() const
 {
     return m_bordersBottomEdge;
@@ -406,6 +416,17 @@ void PreviewClient::requestToggleKeepBelow()
 void PreviewClient::requestShowWindowMenu()
 {
     emit showWindowMenuRequested();
+}
+
+void PreviewClient::requestShowApplicationMenu(const QRect &rect, int actionId)
+{
+    Q_UNUSED(rect);
+    Q_UNUSED(actionId);
+}
+
+void PreviewClient::showApplicationMenu(int actionId)
+{
+    Q_UNUSED(actionId)
 }
 
 void PreviewClient::requestToggleOnAllDesktops()
