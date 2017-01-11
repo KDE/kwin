@@ -58,6 +58,7 @@ using namespace KWayland::Server;
 static const QByteArray s_schemePropertyName = QByteArrayLiteral("KDE_COLOR_SCHEME_PATH");
 static const QByteArray s_appMenuServiceNamePropertyName = QByteArrayLiteral("KDE_APPMENU_SERVICE_NAME");
 static const QByteArray s_appMenuObjectPathPropertyName = QByteArrayLiteral("KDE_APPMENU_OBJECT_PATH");
+static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_CLOSE_ANIMATION");
 
 namespace KWin
 {
@@ -956,6 +957,10 @@ void ShellClient::findInternalWindow()
             m_windowType = static_cast<NET::WindowType>(windowType.toInt());
         }
         setOpacity(m_internalWindow->opacity());
+
+        // skip close animation support
+        setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
+        m_internalWindow->installEventFilter(this);
         return;
     }
 }
@@ -1241,6 +1246,12 @@ bool ShellClient::eventFilter(QObject *watched, QEvent *event)
             updateApplicationMenuServiceName(m_qtExtendedSurface->property(pe->propertyName().constData()).toString());
         } else if (pe->propertyName() == s_appMenuObjectPathPropertyName) {
             updateApplicationMenuObjectPath(m_qtExtendedSurface->property(pe->propertyName().constData()).toString());
+        }
+    }
+    if (watched == m_internalWindow && event->type() == QEvent::DynamicPropertyChange) {
+        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
+        if (pe->propertyName() == s_skipClosePropertyName) {
+            setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
         }
     }
     return false;

@@ -59,6 +59,8 @@ private Q_SLOTS:
     void testTouch();
     void testOpacity();
     void testMove();
+    void testSkipCloseAnimation_data();
+    void testSkipCloseAnimation();
 };
 
 class HelperWindow : public QRasterWindow
@@ -551,6 +553,39 @@ void InternalWindowTest::testMove()
     }
     // after destroying the blocker it should be synced
     QCOMPARE(win.geometry(), QRect(5, 10, 100, 100));
+}
+
+void InternalWindowTest::testSkipCloseAnimation_data()
+{
+    QTest::addColumn<bool>("initial");
+
+    QTest::newRow("set") << true;
+    QTest::newRow("not set") << false;
+}
+
+void InternalWindowTest::testSkipCloseAnimation()
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setOpacity(0.5);
+    win.setGeometry(0, 0, 100, 100);
+    QFETCH(bool, initial);
+    win.setProperty("KWIN_SKIP_CLOSE_ANIMATION", initial);
+    win.show();
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QCOMPARE(internalClient->skipsCloseAnimation(), initial);
+    QSignalSpy skipCloseChangedSpy(internalClient, &Toplevel::skipCloseAnimationChanged);
+    QVERIFY(skipCloseChangedSpy.isValid());
+    win.setProperty("KWIN_SKIP_CLOSE_ANIMATION", !initial);
+    QCOMPARE(skipCloseChangedSpy.count(), 1);
+    QCOMPARE(internalClient->skipsCloseAnimation(), !initial);
+    win.setProperty("KWIN_SKIP_CLOSE_ANIMATION", initial);
+    QCOMPARE(skipCloseChangedSpy.count(), 2);
+    QCOMPARE(internalClient->skipsCloseAnimation(), initial);
 }
 
 }
