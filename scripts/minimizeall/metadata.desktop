@@ -79,7 +79,7 @@ Type=Service
 
 X-Plasma-API=javascript
 X-Plasma-MainScript=code/main.js
-
+X-KWin-Border-Activate=true
 X-KDE-PluginInfo-Author=Thomas Lübking
 X-KDE-PluginInfo-Email=thomas.luebking@gmail.com
 X-KDE-PluginInfo-Name=minimizeall
