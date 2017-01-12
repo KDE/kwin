@@ -42,9 +42,49 @@ namespace KWin
 namespace LibInput
 {
 
+class ConnectionAdaptor : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.InputDeviceManager")
+    Q_PROPERTY(QStringList devicesSysNames READ devicesSysNames CONSTANT)
+
+private:
+    Connection *m_con;
+
+public:
+    ConnectionAdaptor(Connection *con)
+        : m_con(con)
+    {
+        connect(con, &Connection::deviceAddedSysName, this, &ConnectionAdaptor::deviceAdded, Qt::QueuedConnection);
+        connect(con, &Connection::deviceRemovedSysName, this, &ConnectionAdaptor::deviceRemoved, Qt::QueuedConnection);
+
+        QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice"),
+                                                     QStringLiteral("org.kde.KWin.InputDeviceManager"),
+                                                     this,
+                                                     QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals
+        );
+    }
+
+    ~ConnectionAdaptor() {
+        QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/org/kde/KWin/InputDeviceManager"));
+    }
+
+    QStringList devicesSysNames() {
+        // TODO: is this allowed? directly calling function of object in another thread!?
+        //       otherwise use signal-slot mechanism
+        return m_con->devicesSysNames();
+    }
+
+Q_SIGNALS:
+    void deviceAdded(QString sysName);
+    void deviceRemoved(QString sysName);
+
+};
+
 Connection *Connection::s_self = nullptr;
 QThread *Connection::s_thread = nullptr;
 
+static ConnectionAdaptor *s_adaptor = nullptr;
 static Context *s_context = nullptr;
 
 static quint32 toLibinputLEDS(Xkb::LEDs leds)
@@ -99,13 +139,10 @@ Connection *Connection::create(QObject *parent)
     QObject::connect(s_thread, &QThread::finished, s_self, &QObject::deleteLater);
     QObject::connect(s_thread, &QThread::finished, s_thread, &QObject::deleteLater);
     QObject::connect(parent, &QObject::destroyed, s_thread, &QThread::quit);
+    if (!s_adaptor) {
+        s_adaptor = new ConnectionAdaptor(s_self);
+    }
 
-    connect(s_self, &Connection::deviceAdded, s_self, [](Device* device) {
-                emit s_self->deviceAddedSysName(device->sysName());
-            });
-    connect(s_self, &Connection::deviceRemoved, s_self, [](Device* device) {
-                emit s_self->deviceRemovedSysName(device->sysName());
-            });
     return s_self;
 }
 
@@ -163,16 +200,12 @@ Connection::Connection(Context *input, QObject *parent)
     // need to connect to KGlobalSettings as the mouse KCM does not emit a dedicated signal
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
-
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice"),
-                                                 QStringLiteral("org.kde.KWin.InputDeviceManager"),
-                                                 s_self,
-                                                 QDBusConnection::ExportAllProperties | QDBusConnection::ExportScriptableSignals
-    );
 }
 
 Connection::~Connection()
 {
+    delete s_adaptor;
+    s_adaptor = nullptr;
     s_self = nullptr;
     delete s_context;
     s_context = nullptr;
@@ -185,6 +218,13 @@ void Connection::setup()
 
 void Connection::doSetup()
 {
+    connect(s_self, &Connection::deviceAdded, s_self, [](Device* device) {
+                emit s_self->deviceAddedSysName(device->sysName());
+            });
+    connect(s_self, &Connection::deviceRemoved, s_self, [](Device* device) {
+                emit s_self->deviceRemovedSysName(device->sysName());
+            });
+
     Q_ASSERT(!m_notifier);
     m_notifier = new QSocketNotifier(m_input->fileDescriptor(), QSocketNotifier::Read, this);
     connect(m_notifier, &QSocketNotifier::activated, this, &Connection::handleEvent);
@@ -565,3 +605,5 @@ QStringList Connection::devicesSysNames() const {
 
 }
 }
+
+#include "connection.moc"

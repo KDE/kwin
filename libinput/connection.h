@@ -45,8 +45,7 @@ class Context;
 class Connection : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.InputDeviceManager")
-    Q_PROPERTY(QStringList devicesSysNames READ devicesSysNames CONSTANT)
+
 public:
     ~Connection();
 
@@ -107,8 +106,8 @@ Q_SIGNALS:
     void hasTouchChanged(bool);
     void deviceAdded(KWin::LibInput::Device *);
     void deviceRemoved(KWin::LibInput::Device *);
-    Q_SCRIPTABLE void deviceAddedSysName(QString);
-    Q_SCRIPTABLE void deviceRemovedSysName(QString);
+    void deviceAddedSysName(QString);
+    void deviceRemovedSysName(QString);
     void swipeGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device);
     void swipeGestureUpdate(const QSizeF &delta, quint32 time, KWin::LibInput::Device *device);
     void swipeGestureEnd(quint32 time, KWin::LibInput::Device *device);
