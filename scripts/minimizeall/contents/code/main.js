@@ -59,8 +59,11 @@ function init() {
 
     var borders = readConfig("BorderActivate", "").toString().split(",");
     for (var i in borders) {
-        registeredBorders.push(borders[i]);
-        registerScreenEdge(borders[i], minimizeAllWindows);
+        var border = borders[i];
+        if (border != "") {
+            registeredBorders.push(border);
+            registerScreenEdge(border, minimizeAllWindows);
+        }
     }
 }
 
