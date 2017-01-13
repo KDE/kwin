@@ -43,6 +43,7 @@ namespace KWin
 {
 
 class InputRedirection;
+class ModifiersChangedSpy;
 class Toplevel;
 
 namespace LibInput
@@ -179,6 +180,7 @@ private:
         quint32 time = 0;
         QTimer *timer = nullptr;
     } m_keyRepeat;
+    ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
 };
 
 inline

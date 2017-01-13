@@ -506,10 +506,64 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
 
 KeyboardInputRedirection::~KeyboardInputRedirection() = default;
 
+class KeyStateChangedSpy : public InputEventSpy
+{
+public:
+    KeyStateChangedSpy(InputRedirection *input)
+        : m_input(input)
+    {
+    }
+
+    void keyEvent(KeyEvent *event) override
+    {
+        if (event->isAutoRepeat()) {
+            return;
+        }
+        emit m_input->keyStateChanged(event->nativeScanCode(), event->type() == QEvent::KeyPress ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased);
+    }
+
+private:
+    InputRedirection *m_input;
+};
+
+class ModifiersChangedSpy : public InputEventSpy
+{
+public:
+    ModifiersChangedSpy(InputRedirection *input)
+        : m_input(input)
+        , m_modifiers()
+    {
+    }
+
+    void keyEvent(KeyEvent *event) override
+    {
+        if (event->isAutoRepeat()) {
+            return;
+        }
+        updateModifiers(event->modifiers());
+    }
+
+    void updateModifiers(Qt::KeyboardModifiers mods)
+    {
+        if (mods == m_modifiers) {
+            return;
+        }
+        emit m_input->keyboardModifiersChanged(mods, m_modifiers);
+        m_modifiers = mods;
+    }
+
+private:
+    InputRedirection *m_input;
+    Qt::KeyboardModifiers m_modifiers;
+};
+
 void KeyboardInputRedirection::init()
 {
     Q_ASSERT(!m_inited);
     m_inited = true;
+    m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
+    m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
+    m_input->installInputEventSpy(m_modifiersChangedSpy);
 
     // setup key repeat
     m_keyRepeat.timer = new QTimer(this);
@@ -644,12 +698,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     }
 
     if (!autoRepeat) {
-        emit m_input->keyStateChanged(key, state);
-        const Qt::KeyboardModifiers oldMods = modifiers();
         m_xkb->updateKey(key, state);
-        if (oldMods != modifiers()) {
-            emit m_input->keyboardModifiersChanged(modifiers(), oldMods);
-        }
     }
 
     const xkb_keysym_t keySym = m_xkb->currentKeysym();
@@ -686,11 +735,8 @@ void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t
         return;
     }
     // TODO: send to proper Client and also send when active Client changes
-    Qt::KeyboardModifiers oldMods = modifiers();
     m_xkb->updateModifiers(modsDepressed, modsLatched, modsLocked, group);
-    if (oldMods != modifiers()) {
-        emit m_input->keyboardModifiersChanged(modifiers(), oldMods);
-    }
+    m_modifiersChangedSpy->updateModifiers(modifiers());
 }
 
 void KeyboardInputRedirection::processKeymapChange(int fd, uint32_t size)
