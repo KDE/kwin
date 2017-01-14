@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "keyboard_layout.h"
 #include "abstract_client.h"
 #include "options.h"
 #include "utils.h"
@@ -377,19 +378,6 @@ void Xkb::updateModifiers()
     const xkb_layout_index_t layout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
     if (layout != m_currentLayout) {
         m_currentLayout = layout;
-        // notify OSD service about the new layout
-        if (kwinApp()->usesLibinput()) {
-            // only if kwin is in charge of keyboard input
-            QDBusMessage msg = QDBusMessage::createMethodCall(
-            QStringLiteral("org.kde.plasmashell"),
-            QStringLiteral("/org/kde/osdService"),
-            QStringLiteral("org.kde.osdService"),
-            QStringLiteral("kbdLayoutChanged"));
-
-            msg << QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, layout));
-
-            QDBusConnection::sessionBus().asyncCall(msg);
-        }
     }
     if (waylandServer()) {
         waylandServer()->seat()->updateKeyboardModifiers(xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED)),
@@ -397,6 +385,11 @@ void Xkb::updateModifiers()
                                                          xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED)),
                                                          layout);
     }
+}
+
+QString Xkb::layoutName() const
+{
+    return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, m_currentLayout));
 }
 
 void Xkb::updateConsumedModifiers(uint32_t key)
@@ -564,6 +557,9 @@ void KeyboardInputRedirection::init()
     m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
     m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy);
+    m_keyboardLayout = new KeyboardLayout(m_xkb.data());
+    m_keyboardLayout->init();
+    m_input->installInputEventSpy(m_keyboardLayout);
 
     // setup key repeat
     m_keyRepeat.timer = new QTimer(this);
@@ -593,33 +589,6 @@ void KeyboardInputRedirection::init()
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
     }
-
-    QAction *switchKeyboardAction = new QAction(this);
-    switchKeyboardAction->setObjectName(QStringLiteral("Switch to Next Keyboard Layout"));
-    switchKeyboardAction->setProperty("componentName", QStringLiteral("KDE Keyboard Layout Switcher"));
-    const QKeySequence sequence = QKeySequence(Qt::ALT+Qt::CTRL+Qt::Key_K);
-    KGlobalAccel::self()->setDefaultShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
-    KGlobalAccel::self()->setShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
-    m_input->registerShortcut(sequence, switchKeyboardAction);
-    connect(switchKeyboardAction, &QAction::triggered, this,
-        [this] {
-            m_xkb->switchToNextLayout();
-        }
-    );
-
-    QDBusConnection::sessionBus().connect(QString(),
-                                          QStringLiteral("/Layouts"),
-                                          QStringLiteral("org.kde.keyboard"),
-                                          QStringLiteral("reloadConfig"),
-                                          this,
-                                          SLOT(reconfigure()));
-
-    m_xkb->reconfigure();
-}
-
-void KeyboardInputRedirection::reconfigure()
-{
-    m_xkb->reconfigure();
 }
 
 void KeyboardInputRedirection::update()
@@ -737,6 +706,7 @@ void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t
     // TODO: send to proper Client and also send when active Client changes
     m_xkb->updateModifiers(modsDepressed, modsLatched, modsLocked, group);
     m_modifiersChangedSpy->updateModifiers(modifiers());
+    m_keyboardLayout->checkLayoutChange();
 }
 
 void KeyboardInputRedirection::processKeymapChange(int fd, uint32_t size)
@@ -746,6 +716,7 @@ void KeyboardInputRedirection::processKeymapChange(int fd, uint32_t size)
     }
     // TODO: should we pass the keymap to our Clients? Or only to the currently active one and update
     m_xkb->installKeymap(fd, size);
+    m_keyboardLayout->resetLayout();
 }
 
 }

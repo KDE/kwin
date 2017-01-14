@@ -370,6 +370,7 @@ set(kwin_KDEINIT_SRCS
    input_event.cpp
    input_event_spy.cpp
    keyboard_input.cpp
+   keyboard_layout.cpp
    pointer_input.cpp
    touch_input.cpp
    netinfo.cpp

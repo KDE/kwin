@@ -43,6 +43,7 @@ namespace KWin
 {
 
 class InputRedirection;
+class KeyboardLayout;
 class ModifiersChangedSpy;
 class Toplevel;
 
@@ -94,6 +95,7 @@ public:
     quint32 currentLayout() const {
         return m_currentLayout;
     }
+    QString layoutName() const;
 
 private:
     xkb_keymap *loadKeymapFromConfig();
@@ -167,9 +169,6 @@ public:
 Q_SIGNALS:
     void ledsChanged(KWin::Xkb::LEDs);
 
-private Q_SLOTS:
-    void reconfigure();
-
 private:
     InputRedirection *m_input;
     bool m_inited = false;
@@ -181,6 +180,7 @@ private:
         QTimer *timer = nullptr;
     } m_keyRepeat;
     ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
+    KeyboardLayout *m_keyboardLayout = nullptr;
 };
 
 inline
