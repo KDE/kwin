@@ -57,7 +57,7 @@ static int startXServer()
         close(pipeFds[0]);
         char fdbuf[16];
         sprintf(fdbuf, "%d", pipeFds[1]);
-        execlp(process.constData(), process.constData(), "-displayfd", fdbuf, "-rootless", (char *)0);
+        execlp(process.constData(), process.constData(), "-displayfd", fdbuf, "-rootless", (char *)nullptr);
         close(pipeFds[1]);
         exit(20);
     }

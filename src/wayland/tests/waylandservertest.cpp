@@ -48,7 +48,7 @@ static int startXServer()
         close(pipeFds[0]);
         char fdbuf[16];
         sprintf(fdbuf, "%d", pipeFds[1]);
-        execlp(process.constData(), process.constData(), "-displayfd", fdbuf, (char *)0);
+        execlp(process.constData(), process.constData(), "-displayfd", fdbuf, (char *)nullptr);
         close(pipeFds[1]);
         exit(20);
     }
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
         eventDispatcher->processEvents(QEventLoop::WaitForMoreEvents);
         FD_ZERO(&rfds);
         FD_SET(pipe, &rfds);
-    } while (select(pipe + 1, &rfds, NULL, NULL, &tv) == 0);
+    } while (select(pipe + 1, &rfds, nullptr, nullptr, &tv) == 0);
 
     // now Xwayland is ready and we can read the pipe to get the display
     readDisplayFromPipe(pipe);
