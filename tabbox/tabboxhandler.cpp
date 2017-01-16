@@ -323,6 +323,9 @@ void TabBoxHandlerPrivate::show()
         }
     }
     if (SwitcherItem *item = switcherItem()) {
+        // In case the model isn't yet set (see below), index will be reset and therefore we
+        // need to save the current index row (https://bugs.kde.org/show_bug.cgi?id=333511).
+        int indexRow = index.row();
         if (!item->model()) {
             QAbstractItemModel *model = nullptr;
             if (desktopMode) {
@@ -333,7 +336,7 @@ void TabBoxHandlerPrivate::show()
             item->setModel(model);
         }
         item->setAllDesktops(config.clientDesktopMode() == TabBoxConfig::AllDesktopsClients);
-        item->setCurrentIndex(index.row());
+        item->setCurrentIndex(indexRow);
         // everything is prepared, so let's make the whole thing visible
         item->setVisible(true);
     }
