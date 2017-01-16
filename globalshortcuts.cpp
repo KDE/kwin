@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "utils.h"
 // KDE
-#include <kkeyserver.h>
-#include <KConfigGroup>
 #include <KGlobalAccel/private/kglobalacceld.h>
 #include <KGlobalAccel/private/kglobalaccel_interface.h>
 // Qt
@@ -93,7 +91,6 @@ void InternalGlobalShortcut::invoke()
 
 GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
     : QObject(parent)
-    , m_config(KSharedConfig::openConfig(QStringLiteral("kglobalshortcutsrc"), KConfig::SimpleConfig))
 {
 }
 
@@ -107,7 +104,6 @@ void clearShortcuts(T &shortcuts)
 
 GlobalShortcutsManager::~GlobalShortcutsManager()
 {
-    clearShortcuts(m_shortcuts);
     clearShortcuts(m_pointerShortcuts);
     clearShortcuts(m_axisShortcuts);
 }
@@ -148,7 +144,6 @@ void handleDestroyedAction(QObject *object, T &shortcuts)
 
 void GlobalShortcutsManager::objectDeleted(QObject *object)
 {
-    handleDestroyedAction(object, m_shortcuts);
     handleDestroyedAction(object, m_pointerShortcuts);
     handleDestroyedAction(object, m_axisShortcuts);
 }
@@ -168,35 +163,6 @@ void addShortcut(T &shortcuts, QAction *action, Qt::KeyboardModifiers modifiers,
     }
 }
 
-void GlobalShortcutsManager::registerShortcut(QAction *action, const QKeySequence &shortcut)
-{
-    QKeySequence s = getShortcutForAction(KWIN_NAME, action->objectName(), shortcut);
-    if (s.isEmpty()) {
-        // TODO: insert into a list of empty shortcuts to react on changes
-        return;
-    }
-    int keys = s[0];
-    Qt::KeyboardModifiers mods = Qt::NoModifier;
-    if (keys & Qt::ShiftModifier) {
-        mods |= Qt::ShiftModifier;
-    }
-    if (keys & Qt::ControlModifier) {
-        mods |= Qt::ControlModifier;
-    }
-    if (keys & Qt::AltModifier) {
-        mods |= Qt::AltModifier;
-    }
-    if (keys & Qt::MetaModifier) {
-        mods |= Qt::MetaModifier;
-    }
-    int keysym = 0;
-    if (!KKeyServer::keyQtToSymX(keys, &keysym)) {
-        return;
-    }
-    addShortcut(m_shortcuts, action, mods, static_cast<uint32_t>(keysym));
-    connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
-}
-
 void GlobalShortcutsManager::registerPointerShortcut(QAction *action, Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons)
 {
     addShortcut(m_pointerShortcuts, action, modifiers, pointerButtons);
@@ -207,26 +173,6 @@ void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardM
 {
     addShortcut(m_axisShortcuts, action, modifiers, axis);
     connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
-}
-
-QKeySequence GlobalShortcutsManager::getShortcutForAction(const QString &componentName, const QString &actionName, const QKeySequence &defaultShortcut)
-{
-    if (!m_config->hasGroup(componentName)) {
-        return defaultShortcut;
-    }
-    KConfigGroup group = m_config->group(componentName);
-    if (!group.hasKey(actionName)) {
-        return defaultShortcut;
-    }
-    QStringList parts = group.readEntry(actionName, QStringList());
-    // must consist of three parts
-    if (parts.size() != 3) {
-        return defaultShortcut;
-    }
-    if (parts.first() == "none") {
-        return defaultShortcut;
-    }
-    return QKeySequence(parts.first());
 }
 
 template <typename T, typename U>
@@ -273,9 +219,6 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, uint32_t key
                 return true;
             }
         }
-    }
-    if (processShortcut(mods, key, m_shortcuts)) {
-        return true;
     }
     return false;
 }

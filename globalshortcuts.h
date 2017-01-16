@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_GLOBALSHORTCUTS_H
 // KWin
 #include <kwinglobals.h>
-// KDE
-#include <KSharedConfig>
 // Qt
 #include <QKeySequence>
 
@@ -52,13 +50,6 @@ public:
     virtual ~GlobalShortcutsManager();
     void init();
 
-    /**
-     * @brief Registers an internal global shortcut
-     *
-     * @param action The action to trigger if the shortcut is pressed
-     * @param shortcut The key sequence which triggers this shortcut
-     */
-    void registerShortcut(QAction *action, const QKeySequence &shortcut);
     /**
      * @brief Registers an internal global pointer shortcut
      *
@@ -109,11 +100,8 @@ public:
 
 private:
     void objectDeleted(QObject *object);
-    QKeySequence getShortcutForAction(const QString &componentName, const QString &actionName, const QKeySequence &defaultShortcut);
-    QHash<Qt::KeyboardModifiers, QHash<uint32_t, GlobalShortcut*> > m_shortcuts;
     QHash<Qt::KeyboardModifiers, QHash<Qt::MouseButtons, GlobalShortcut*> > m_pointerShortcuts;
     QHash<Qt::KeyboardModifiers, QHash<PointerAxisDirection, GlobalShortcut*> > m_axisShortcuts;
-    KSharedConfigPtr m_config;
     KGlobalAccelD *m_kglobalAccel = nullptr;
     KGlobalAccelInterface *m_kglobalAccelInterface = nullptr;
 };

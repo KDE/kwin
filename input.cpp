@@ -1806,7 +1806,6 @@ Qt::KeyboardModifiers InputRedirection::modifiersRelevantForGlobalShortcuts() co
 
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
 {
-    m_shortcuts->registerShortcut(action, shortcut);
     kwinApp()->platform()->setupActionForGlobalAccel(action);
 }
 
