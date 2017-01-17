@@ -87,11 +87,6 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
    Q_UNUSED(action)
 }
 
-void InputRedirection::registerShortcutForGlobalAccelTimestamp(QAction *action)
-{
-    Q_UNUSED(action)
-}
-
 void updateXTime()
 {
 }

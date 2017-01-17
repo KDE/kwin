@@ -53,6 +53,8 @@ public:
 
     PlatformCursorImage cursorImage() const override;
 
+    void setupActionForGlobalAccel(QAction *action) override;
+
 protected:
     void doHideCursor() override;
     void doShowCursor() override;

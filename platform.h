@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <functional>
 
+class QAction;
+
 namespace KWayland {
     namespace Server {
         class OutputConfigurationInterface;
@@ -194,6 +196,22 @@ public:
      * @param callback The function to invoke once the interactive position selection ends
      **/
     virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
+
+    /**
+     * Platform specific preparation for an @p action which is used for KGlobalAccel.
+     *
+     * A platform might need to do preparation for an @p action before
+     * it can be used with KGlobalAccel.
+     *
+     * Code using KGlobalAccel should invoke this method for the @p action
+     * prior to setting up any shortcuts and connections.
+     *
+     * The default implementation does nothing.
+     *
+     * @param action The action which will be used with KGlobalAccel.
+     * @since 5.10
+     **/
+    virtual void setupActionForGlobalAccel(QAction *action);
 
     bool usesSoftwareCursor() const {
         return m_softWareCursor;

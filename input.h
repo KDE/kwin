@@ -267,7 +267,6 @@ Q_SIGNALS:
 private:
     void setupLibInput();
     void setupLibInputWithScreens();
-    void registerShortcutForGlobalAccelTimestamp(QAction *action);
     void setupWorkspace();
     void reconfigure();
     void setupInputFilters();

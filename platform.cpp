@@ -386,4 +386,9 @@ void Platform::startInteractivePositionSelection(std::function<void(const QPoint
     input()->startInteractivePositionSelection(callback);
 }
 
+void Platform::setupActionForGlobalAccel(QAction *action)
+{
+    Q_UNUSED(action)
+}
+
 }

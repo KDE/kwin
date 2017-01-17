@@ -1807,7 +1807,7 @@ Qt::KeyboardModifiers InputRedirection::modifiersRelevantForGlobalShortcuts() co
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
 {
     m_shortcuts->registerShortcut(action, shortcut);
-    registerShortcutForGlobalAccelTimestamp(action);
+    kwinApp()->platform()->setupActionForGlobalAccel(action);
 }
 
 void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)
@@ -1823,18 +1823,6 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
 void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
 {
     m_shortcuts->setKGlobalAccelInterface(interface);
-}
-
-void InputRedirection::registerShortcutForGlobalAccelTimestamp(QAction *action)
-{
-    connect(action, &QAction::triggered, kwinApp(), [action] {
-        QVariant timestamp = action->property("org.kde.kglobalaccel.activationTimestamp");
-        bool ok = false;
-        const quint32 t = timestamp.toULongLong(&ok);
-        if (ok) {
-            kwinApp()->setX11Time(t);
-        }
-    });
 }
 
 void InputRedirection::warpPointer(const QPointF &pos)

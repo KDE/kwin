@@ -282,4 +282,16 @@ void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(K
     m_windowSelector->start(callback, cursorName);
 }
 
+void X11StandalonePlatform::setupActionForGlobalAccel(QAction *action)
+{
+    connect(action, &QAction::triggered, kwinApp(), [action] {
+        QVariant timestamp = action->property("org.kde.kglobalaccel.activationTimestamp");
+        bool ok = false;
+        const quint32 t = timestamp.toULongLong(&ok);
+        if (ok) {
+            kwinApp()->setX11Time(t);
+        }
+    });
+}
+
 }
