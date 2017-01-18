@@ -43,6 +43,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //screenlocker
 #include <KScreenLocker/KsldApp>
 
+#include <KGlobalAccel>
+
 #include <linux/input.h>
 
 Q_DECLARE_METATYPE(Qt::Orientation)
@@ -680,7 +682,11 @@ void LockScreenTest::testKeyboardShortcut()
     QScopedPointer<QAction> action(new QAction(nullptr));
     QSignalSpy actionSpy(action.data(), &QAction::triggered);
     QVERIFY(actionSpy.isValid());
-    input()->registerShortcut(Qt::CTRL + Qt::META + Qt::ALT + Qt::Key_Space, action.data());
+    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setObjectName("LockScreenTest::testKeyboardShortcut");
+    KGlobalAccel::self()->setDefaultShortcut(action.data(), QList<QKeySequence>{Qt::CTRL + Qt::META + Qt::ALT + Qt::Key_Space});
+    KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::CTRL + Qt::META + Qt::ALT + Qt::Key_Space},
+                                          KGlobalAccel::NoAutoloading);
 
     // try to trigger the shortcut
     quint32 timestamp = 1;
@@ -688,26 +694,26 @@ void LockScreenTest::testKeyboardShortcut()
     KEYPRESS(KEY_LEFTMETA);
     KEYPRESS(KEY_LEFTALT);
     KEYPRESS(KEY_SPACE);
-    QCoreApplication::instance()->processEvents();
+    QVERIFY(actionSpy.wait());
     QCOMPARE(actionSpy.count(), 1);
     KEYRELEASE(KEY_SPACE);
-    QCoreApplication::instance()->processEvents();
+    QVERIFY(!actionSpy.wait());
     QCOMPARE(actionSpy.count(), 1);
 
     LOCK
     KEYPRESS(KEY_SPACE);
-    QCoreApplication::instance()->processEvents();
+    QVERIFY(!actionSpy.wait());
     QCOMPARE(actionSpy.count(), 1);
     KEYRELEASE(KEY_SPACE);
-    QCoreApplication::instance()->processEvents();
+    QVERIFY(!actionSpy.wait());
     QCOMPARE(actionSpy.count(), 1);
 
     UNLOCK
     KEYPRESS(KEY_SPACE);
-    QCoreApplication::instance()->processEvents();
+    QVERIFY(actionSpy.wait());
     QCOMPARE(actionSpy.count(), 2);
     KEYRELEASE(KEY_SPACE);
-    QCoreApplication::instance()->processEvents();
+    QVERIFY(!actionSpy.wait());
     QCOMPARE(actionSpy.count(), 2);
     KEYRELEASE(KEY_LEFTCTRL);
     KEYRELEASE(KEY_LEFTMETA);
