@@ -634,6 +634,7 @@ ecm_install_icons(
 add_subdirectory(qml)
 add_subdirectory(autotests)
 add_subdirectory(tests)
+add_subdirectory(packageplugins)
 
 if (KF5DocTools_FOUND)
     add_subdirectory(doc)

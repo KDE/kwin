@@ -197,8 +197,7 @@ void KWinTabBoxConfig::initLayoutLists()
     QString coverswitch = BuiltInEffects::effectData(BuiltInEffect::CoverSwitch).displayName;
     QString flipswitch = BuiltInEffects::effectData(BuiltInEffect::FlipSwitch).displayName;
 
-    KServiceTypeTrader* trader = KServiceTypeTrader::self();
-    KService::List offers = trader->query("KWin/WindowSwitcher");
+    QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages("KWin/WindowSwitcher");
     QStringList layoutNames, layoutPlugins, layoutPaths;
 
     const auto lnfPackages = availableLnFPackages();
@@ -209,15 +208,16 @@ void KWinTabBoxConfig::initLayoutLists()
         layoutPaths << package.filePath("windowswitcher", QStringLiteral("WindowSwitcher.qml"));
     }
 
-    foreach (KService::Ptr service, offers) {
-        const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
-        if (service->property("X-Plasma-API").toString() != "declarativeappletscript") {
+    for (const auto &offer : offers) {
+        const QString pluginName = offer.pluginId();
+        if (offer.value("X-Plasma-API") != "declarativeappletscript") {
             continue;
         }
-        if (service->property("X-KWin-Exclude-Listing").toBool()) {
+        //we don't have a proper servicetype
+        if (offer.value("X-KWin-Exclude-Listing") == QStringLiteral("true")) {
             continue;
         }
-        const QString scriptName = service->property("X-Plasma-MainScript").toString();
+        const QString scriptName = offer.value("X-Plasma-MainScript");
         const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                           QLatin1String("kwin/tabbox/") + pluginName + QLatin1String("/contents/")
                                                           + scriptName);
@@ -225,7 +225,7 @@ void KWinTabBoxConfig::initLayoutLists()
             continue;
         }
 
-        layoutNames << service->name();
+        layoutNames << offer.name();
         layoutPlugins << pluginName;
         layoutPaths << scriptFile;
     }

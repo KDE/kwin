@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=KWin Script
+Type=Service
+X-KDE-ServiceTypes=KPackage/PackageStructure
+X-KDE-Library=kwin_packagestructure_scripts
+
+X-KDE-PluginInfo-Author=Marco Martin
+X-KDE-PluginInfo-Email=notmart@gmail.com
+X-KDE-PluginInfo-Name=KWin/Script
+X-KDE-PluginInfo-Version=1

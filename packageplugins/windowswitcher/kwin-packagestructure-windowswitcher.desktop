@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=KWin Window Switcher
+Type=Service
+X-KDE-ServiceTypes=KPackage/PackageStructure
+X-KDE-Library=kwin_packagestructure_windowswitcher
+
+X-KDE-PluginInfo-Author=Marco Martin
+X-KDE-PluginInfo-Email=notmart@gmail.com
+X-KDE-PluginInfo-Name=KWin/WindowSwitcher
+X-KDE-PluginInfo-Version=1
