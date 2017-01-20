@@ -22,13 +22,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input_event.h"
 #include "main.h"
 #include "platform.h"
+#include "utils.h"
 
+#include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KNotifications/KStatusNotifierItem>
 #include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
+#include <QMenu>
 
 namespace KWin
 {
@@ -36,6 +40,7 @@ namespace KWin
 KeyboardLayout::KeyboardLayout(Xkb *xkb)
     : QObject()
     , m_xkb(xkb)
+    , m_notifierItem(nullptr)
 {
 }
 
@@ -50,12 +55,7 @@ void KeyboardLayout::init()
     KGlobalAccel::self()->setDefaultShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
     KGlobalAccel::self()->setShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
     kwinApp()->platform()->setupActionForGlobalAccel(switchKeyboardAction);
-    connect(switchKeyboardAction, &QAction::triggered, this,
-        [this] {
-            m_xkb->switchToNextLayout();
-            checkLayoutChange();
-        }
-    );
+    connect(switchKeyboardAction, &QAction::triggered, this, &KeyboardLayout::switchToNextLayout);
 
     QDBusConnection::sessionBus().connect(QString(),
                                           QStringLiteral("/Layouts"),
@@ -67,15 +67,81 @@ void KeyboardLayout::init()
     reconfigure();
 }
 
+void KeyboardLayout::initNotifierItem()
+{
+    bool showNotifier = true;
+    bool showSingle = false;
+    if (m_config) {
+        const auto config = m_config->group(QStringLiteral("Layout"));
+        showNotifier = config.readEntry("ShowLayoutIndicator", true);
+        showSingle = config.readEntry("ShowSingle", false);
+    }
+    const bool shouldShow = showNotifier && (showSingle || m_xkb->numberOfLayouts() > 1);
+    if (shouldShow) {
+        if (m_notifierItem) {
+            return;
+        }
+    } else {
+        delete m_notifierItem;
+        m_notifierItem = nullptr;
+        return;
+    }
+
+    m_notifierItem = new KStatusNotifierItem(this);
+    m_notifierItem->setCategory(KStatusNotifierItem::Hardware);
+    m_notifierItem->setStatus(KStatusNotifierItem::Active);
+    m_notifierItem->setToolTipTitle(i18nc("tooltip title", "Keyboard Layout"));
+    m_notifierItem->setTitle(i18nc("tooltip title", "Keyboard Layout"));
+    m_notifierItem->setToolTipIconByName(QStringLiteral("preferences-desktop-keyboard"));
+    m_notifierItem->setStandardActionsEnabled(false);
+
+    // TODO: proper icon
+    m_notifierItem->setIconByName(QStringLiteral("preferences-desktop-keyboard"));
+
+    connect(m_notifierItem, &KStatusNotifierItem::activateRequested, this, &KeyboardLayout::switchToNextLayout);
+    connect(m_notifierItem, &KStatusNotifierItem::scrollRequested, this,
+        [this] (int delta, Qt::Orientation orientation) {
+            if (orientation == Qt::Horizontal) {
+                return;
+            }
+            if (delta > 0) {
+                switchToNextLayout();
+            } else {
+                switchToPreviousLayout();
+            }
+        }
+    );
+
+    m_notifierItem->setStatus(KStatusNotifierItem::Active);
+}
+
+void KeyboardLayout::switchToNextLayout()
+{
+    m_xkb->switchToNextLayout();
+    checkLayoutChange();
+}
+
+void KeyboardLayout::switchToPreviousLayout()
+{
+    m_xkb->switchToPreviousLayout();
+    checkLayoutChange();
+}
+
 void KeyboardLayout::reconfigure()
 {
     m_xkb->reconfigure();
+    if (m_config) {
+        m_config->reparseConfiguration();
+    }
     resetLayout();
 }
 
 void KeyboardLayout::resetLayout()
 {
     m_layout = m_xkb->currentLayout();
+    initNotifierItem();
+    updateNotifier();
+    reinitNotifierMenu();
 }
 
 void KeyboardLayout::keyEvent(KeyEvent *event)
@@ -93,6 +159,7 @@ void KeyboardLayout::checkLayoutChange()
     }
     m_layout = layout;
     notifyLayoutChange();
+    updateNotifier();
 }
 
 void KeyboardLayout::notifyLayoutChange()
@@ -107,6 +174,54 @@ void KeyboardLayout::notifyLayoutChange()
     msg << i18nd("xkeyboard-config", m_xkb->layoutName().toUtf8().constData());
 
     QDBusConnection::sessionBus().asyncCall(msg);
+}
+
+void KeyboardLayout::updateNotifier()
+{
+    if (!m_notifierItem) {
+        return;
+    }
+    m_notifierItem->setToolTipSubTitle(i18nd("xkeyboard-config", m_xkb->layoutName().toUtf8().constData()));
+    // TODO: update icon
+}
+
+void KeyboardLayout::reinitNotifierMenu()
+{
+    if (!m_notifierItem) {
+        return;
+    }
+    const auto layouts = m_xkb->layoutNames();
+
+    QMenu *menu = new QMenu;
+    auto switchLayout = [this] (xkb_layout_index_t index) {
+        m_xkb->switchToLayout(index);
+        checkLayoutChange();
+    };
+    for (auto it = layouts.begin(); it != layouts.end(); it++) {
+        menu->addAction(i18nd("xkeyboard-config", it.value().toUtf8().constData()), std::bind(switchLayout, it.key()));
+    }
+
+    menu->addSeparator();
+    menu->addAction(QIcon::fromTheme(QStringLiteral("configure")), i18n("Configure Layouts..."), this,
+        [this] {
+            // TODO: introduce helper function to start kcmshell5
+            QProcess *p = new Process(this);
+            p->setArguments(QStringList{QStringLiteral("--args=--tab=layouts"), QStringLiteral("kcm_keyboard")});
+            p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
+            p->setProgram(QStringLiteral("kcmshell5"));
+            connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
+            connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
+                [p] (QProcess::ProcessError e) {
+                    if (e == QProcess::FailedToStart) {
+                        qCDebug(KWIN_CORE) << "Failed to start kcmshell5";
+                    }
+                }
+            );
+            p->start();
+        }
+    );
+
+    m_notifierItem->setContextMenu(menu);
 }
 
 }

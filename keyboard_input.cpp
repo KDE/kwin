@@ -389,7 +389,22 @@ void Xkb::updateModifiers()
 
 QString Xkb::layoutName() const
 {
-    return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, m_currentLayout));
+    return layoutName(m_currentLayout);
+}
+
+QString Xkb::layoutName(xkb_layout_index_t layout) const
+{
+    return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, layout));
+}
+
+QMap<xkb_layout_index_t, QString> Xkb::layoutNames() const
+{
+    QMap<xkb_layout_index_t, QString> layouts;
+    const auto size = xkb_keymap_num_layouts(m_keymap);
+    for (xkb_layout_index_t i = 0; i < size; i++) {
+        layouts.insert(i, layoutName(i));
+    }
+    return layouts;
 }
 
 void Xkb::updateConsumedModifiers(uint32_t key)
@@ -483,11 +498,39 @@ void Xkb::switchToNextLayout()
     }
     const xkb_layout_index_t numLayouts = xkb_keymap_num_layouts(m_keymap);
     const xkb_layout_index_t nextLayout = (xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE) + 1) % numLayouts;
+    switchToLayout(nextLayout);
+}
+
+void Xkb::switchToPreviousLayout()
+{
+    if (!m_keymap || !m_state) {
+        return;
+    }
+    const xkb_layout_index_t previousLayout = m_currentLayout == 0 ? numberOfLayouts() - 1 : m_currentLayout -1;
+    switchToLayout(previousLayout);
+}
+
+void Xkb::switchToLayout(xkb_layout_index_t layout)
+{
+    if (!m_keymap || !m_state) {
+        return;
+    }
+    if (layout >= numberOfLayouts()) {
+        return;
+    }
     const xkb_mod_mask_t depressed = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED));
     const xkb_mod_mask_t latched = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED));
     const xkb_mod_mask_t locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
-    xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, nextLayout);
+    xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, layout);
     updateModifiers();
+}
+
+quint32 Xkb::numberOfLayouts() const
+{
+    if (!m_keymap) {
+        return 0;
+    }
+    return xkb_keymap_num_layouts(m_keymap);
 }
 
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
@@ -558,6 +601,7 @@ void KeyboardInputRedirection::init()
     m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy);
     m_keyboardLayout = new KeyboardLayout(m_xkb.data());
+    m_keyboardLayout->setConfig(KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals));
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 

@@ -38,6 +38,7 @@ struct xkb_compose_state;
 typedef uint32_t xkb_mod_index_t;
 typedef uint32_t xkb_led_index_t;
 typedef uint32_t xkb_keysym_t;
+typedef uint32_t xkb_layout_index_t;
 
 namespace KWin
 {
@@ -73,6 +74,8 @@ public:
     bool shouldKeyRepeat(quint32 key) const;
 
     void switchToNextLayout();
+    void switchToPreviousLayout();
+    void switchToLayout(xkb_layout_index_t layout);
 
     enum class LED {
         NumLock = 1 << 0,
@@ -96,6 +99,8 @@ public:
         return m_currentLayout;
     }
     QString layoutName() const;
+    QMap<xkb_layout_index_t, QString> layoutNames() const;
+    quint32 numberOfLayouts() const;
 
 private:
     xkb_keymap *loadKeymapFromConfig();
@@ -104,6 +109,7 @@ private:
     void createKeymapFile();
     void updateModifiers();
     void updateConsumedModifiers(uint32_t key);
+    QString layoutName(xkb_layout_index_t layout) const;
     InputRedirection *m_input;
     xkb_context *m_context;
     xkb_keymap *m_keymap;

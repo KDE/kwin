@@ -22,7 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "input_event_spy.h"
 #include <QObject>
+
+#include <KSharedConfig>
 typedef uint32_t xkb_layout_index_t;
+
+class KStatusNotifierItem;
 
 namespace KWin
 {
@@ -34,6 +38,10 @@ class KeyboardLayout : public QObject, public InputEventSpy
 public:
     explicit KeyboardLayout(Xkb *xkb);
     ~KeyboardLayout() override;
+
+    void setConfig(KSharedConfigPtr config) {
+        m_config = config;
+    }
 
     void init();
 
@@ -47,8 +55,15 @@ private Q_SLOTS:
 
 private:
     void notifyLayoutChange();
+    void initNotifierItem();
+    void switchToNextLayout();
+    void switchToPreviousLayout();
+    void updateNotifier();
+    void reinitNotifierMenu();
     Xkb *m_xkb;
     xkb_layout_index_t m_layout = 0;
+    KStatusNotifierItem *m_notifierItem;
+    KSharedConfigPtr m_config;
 };
 
 }
