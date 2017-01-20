@@ -82,6 +82,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
 
     m_ui->editor->addCollection(m_actionCollection);
 
+    capsSelectionChanged();
     connect(m_ui->kcfg_Caps, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
     m_ui->kcfg_Wallpaper->setFilter(QStringLiteral("*.png *.jpeg *.jpg "));
     addConfig(CubeConfig::self(), m_ui);
