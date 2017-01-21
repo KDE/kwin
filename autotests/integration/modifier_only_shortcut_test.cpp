@@ -283,11 +283,26 @@ void ModifierOnlyShortcutTest::testCapsLock()
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
     QCOMPARE(triggeredSpy.count(), 1);
 
+    // meta on the other hand should trigger
+    group.writeEntry("Meta", QStringList{s_serviceName, s_path, s_serviceName, QStringLiteral("shortcut")});
+    group.writeEntry("Alt", QStringList());
+    group.writeEntry("Shift", QStringList{});
+    group.writeEntry("Control", QStringList());
+    group.sync();
+    workspace()->slotReconfigure();
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::MetaModifier);
+    QCOMPARE(input()->modifiersRelevantForGlobalShortcuts(), Qt::MetaModifier);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    QEXPECT_FAIL("", "BUG 375355", Continue);
+    QCOMPARE(triggeredSpy.count(), 2);
+
     // release caps lock
     kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
-    QCOMPARE(triggeredSpy.count(), 1);
+    QEXPECT_FAIL("", "BUG 375355", Continue);
+    QCOMPARE(triggeredSpy.count(), 2);
 }
 
 void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled_data()
