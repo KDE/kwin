@@ -98,10 +98,6 @@ void KeyboardLayout::checkLayoutChange()
 void KeyboardLayout::notifyLayoutChange()
 {
     // notify OSD service about the new layout
-    if (!kwinApp()->usesLibinput()) {
-        return;
-    }
-    // only if kwin is in charge of keyboard input
     QDBusMessage msg = QDBusMessage::createMethodCall(
         QStringLiteral("org.kde.plasmashell"),
         QStringLiteral("/org/kde/osdService"),
