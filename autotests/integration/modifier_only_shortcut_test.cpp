@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "cursor.h"
 #include "input.h"
+#include "keyboard_input.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -292,7 +293,7 @@ void ModifierOnlyShortcutTest::testCapsLock()
     workspace()->slotReconfigure();
     kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::MetaModifier);
-    QCOMPARE(input()->modifiersRelevantForGlobalShortcuts(), Qt::MetaModifier);
+    QCOMPARE(input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts(), Qt::MetaModifier);
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     QEXPECT_FAIL("", "BUG 375355", Continue);
     QCOMPARE(triggeredSpy.count(), 2);

@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KScreenLocker/KsldApp>
 // Frameworks
 #include <KKeyServer>
+#include <KLocalizedString>
 #include <KGlobalAccel>
 // Qt
 #include <QDBusConnection>
@@ -386,7 +387,7 @@ void Xkb::updateModifiers()
             QStringLiteral("org.kde.osdService"),
             QStringLiteral("kbdLayoutChanged"));
 
-            msg << QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, layout));
+            msg << i18nd("xkeyboard-config", xkb_keymap_layout_get_name(m_keymap, layout));
 
             QDBusConnection::sessionBus().asyncCall(msg);
         }
