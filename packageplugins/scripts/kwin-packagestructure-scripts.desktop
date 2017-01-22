@@ -1,5 +1,11 @@
 [Desktop Entry]
 Name=KWin Script
+Name[ca]=Script del KWin
+Name[nl]=KWin-script
+Name[pt]=Programa do KWin
+Name[sv]=Kwin-skript
+Name[uk]=Скрипт KWin
+Name[x-test]=xxKWin Scriptxx
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure
 X-KDE-Library=kwin_packagestructure_scripts
