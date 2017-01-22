@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 
 #include <KGlobalAccel>
+#include <KLocalizedString>
 #include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -107,7 +108,7 @@ void KeyboardLayout::notifyLayoutChange()
         QStringLiteral("org.kde.osdService"),
         QStringLiteral("kbdLayoutChanged"));
 
-    msg << m_xkb->layoutName();
+    msg << i18nd("xkeyboard-config", m_xkb->layoutName().toUtf8().constData());
 
     QDBusConnection::sessionBus().asyncCall(msg);
 }
