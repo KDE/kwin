@@ -1,7 +1,12 @@
 [Desktop Entry]
 Name=KWin Window Switcher
 Name[ca]=Commutador de finestres del KWin
+Name[ca@valencia]=Commutador de finestres del KWin
+Name[en_GB]=KWin Window Switcher
+Name[it]=Scambiafinestre di KWin
+Name[ko]=KWin 창 전환기
 Name[nl]=KWin-vensterwisselaar
+Name[pl]=Przełącznik okien KWin
 Name[pt]=Mudança de Janelas do KWin
 Name[sv]=Kwin-fönsterbyte
 Name[uk]=Перемикач вікон KWin
