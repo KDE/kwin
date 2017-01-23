@@ -46,6 +46,11 @@ KeyboardLayout::KeyboardLayout(Xkb *xkb)
 
 KeyboardLayout::~KeyboardLayout() = default;
 
+static QString translatedLayout(const QString &layout)
+{
+    return i18nd("xkeyboard-config", layout.toUtf8().constData());
+}
+
 void KeyboardLayout::init()
 {
     QAction *switchKeyboardAction = new QAction(this);
@@ -127,6 +132,12 @@ void KeyboardLayout::switchToPreviousLayout()
     checkLayoutChange();
 }
 
+void KeyboardLayout::switchToLayout(xkb_layout_index_t index)
+{
+    m_xkb->switchToLayout(index);
+    checkLayoutChange();
+}
+
 void KeyboardLayout::reconfigure()
 {
     m_xkb->reconfigure();
@@ -142,6 +153,30 @@ void KeyboardLayout::resetLayout()
     initNotifierItem();
     updateNotifier();
     reinitNotifierMenu();
+    loadShortcuts();
+}
+
+void KeyboardLayout::loadShortcuts()
+{
+    qDeleteAll(m_layoutShortcuts);
+    m_layoutShortcuts.clear();
+    const auto layouts = m_xkb->layoutNames();
+    const QString componentName = QStringLiteral("KDE Keyboard Layout Switcher");
+    for (auto it = layouts.begin(); it != layouts.end(); it++) {
+        // layout name is translated in the action name in keyboard kcm!
+        const QString action = QStringLiteral("Switch keyboard layout to %1").arg(translatedLayout(it.value()));
+        const auto shortcuts = KGlobalAccel::self()->globalShortcut(componentName, action);
+        if (shortcuts.isEmpty()) {
+            continue;
+        }
+        QAction *a = new QAction(this);
+        a->setObjectName(action);
+        a->setProperty("componentName", componentName);
+        connect(a, &QAction::triggered, this,
+                std::bind(&KeyboardLayout::switchToLayout, this, it.key()));
+        KGlobalAccel::self()->setShortcut(a, shortcuts, KGlobalAccel::Autoloading);
+        m_layoutShortcuts << a;
+    }
 }
 
 void KeyboardLayout::keyEvent(KeyEvent *event)
@@ -171,7 +206,7 @@ void KeyboardLayout::notifyLayoutChange()
         QStringLiteral("org.kde.osdService"),
         QStringLiteral("kbdLayoutChanged"));
 
-    msg << i18nd("xkeyboard-config", m_xkb->layoutName().toUtf8().constData());
+    msg << translatedLayout(m_xkb->layoutName());
 
     QDBusConnection::sessionBus().asyncCall(msg);
 }
@@ -181,7 +216,7 @@ void KeyboardLayout::updateNotifier()
     if (!m_notifierItem) {
         return;
     }
-    m_notifierItem->setToolTipSubTitle(i18nd("xkeyboard-config", m_xkb->layoutName().toUtf8().constData()));
+    m_notifierItem->setToolTipSubTitle(translatedLayout(m_xkb->layoutName()));
     // TODO: update icon
 }
 
@@ -193,12 +228,8 @@ void KeyboardLayout::reinitNotifierMenu()
     const auto layouts = m_xkb->layoutNames();
 
     QMenu *menu = new QMenu;
-    auto switchLayout = [this] (xkb_layout_index_t index) {
-        m_xkb->switchToLayout(index);
-        checkLayoutChange();
-    };
     for (auto it = layouts.begin(); it != layouts.end(); it++) {
-        menu->addAction(i18nd("xkeyboard-config", it.value().toUtf8().constData()), std::bind(switchLayout, it.key()));
+        menu->addAction(translatedLayout(it.value()), std::bind(&KeyboardLayout::switchToLayout, this, it.key()));
     }
 
     menu->addSeparator();
