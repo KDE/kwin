@@ -1,7 +1,13 @@
 [Desktop Entry]
 Name=KWin Script
 Name[ca]=Script del KWin
+Name[ca@valencia]=Script del KWin
+Name[en_GB]=KWin Script
+Name[it]=Script di KWin
+Name[ko]=KWin 스크립트
 Name[nl]=KWin-script
+Name[pl]=Skrypt KWin
+Name[sv]=Kwin-skript
 Name[uk]=Скрипт KWin
 Name[x-test]=xxKWin Scriptxx
 Type=Service
