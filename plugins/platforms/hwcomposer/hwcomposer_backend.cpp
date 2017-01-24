@@ -395,7 +395,7 @@ void HwcomposerBackend::wakeVSync()
     m_vsyncMutex.unlock();
 }
 
-static void initLayer(hwc_layer_1_t *layer, const hwc_rect_t &rect)
+static void initLayer(hwc_layer_1_t *layer, const hwc_rect_t &rect, int planeAlpha)
 {
     memset(layer, 0, sizeof(hwc_layer_1_t));
     layer->compositionType = HWC_FRAMEBUFFER;
@@ -410,7 +410,7 @@ static void initLayer(hwc_layer_1_t *layer, const hwc_rect_t &rect)
     layer->visibleRegionScreen.rects = &layer->displayFrame;
     layer->acquireFenceFd = -1;
     layer->releaseFenceFd = -1;
-    layer->planeAlpha = 0xFF;
+    layer->planeAlpha = planeAlpha;
 }
 
 HwcomposerWindow::HwcomposerWindow(HwcomposerBackend *backend)
@@ -435,8 +435,8 @@ HwcomposerWindow::HwcomposerWindow(HwcomposerBackend *backend)
         m_backend->size().width(),
         m_backend->size().height()
     };
-    initLayer(&list->hwLayers[0], rect);
-    initLayer(&list->hwLayers[1], rect);
+    initLayer(&list->hwLayers[0], rect, 1);
+    initLayer(&list->hwLayers[1], rect, 0xff);
 
     list->retireFenceFd = -1;
     list->flags = HWC_GEOMETRY_CHANGED;
