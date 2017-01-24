@@ -11,6 +11,7 @@ Name[pt]=Programa do KWin
 Name[sv]=Kwin-skript
 Name[uk]=Скрипт KWin
 Name[x-test]=xxKWin Scriptxx
+Name[zh_TW]=KWin 指令稿
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure
 X-KDE-Library=kwin_packagestructure_scripts

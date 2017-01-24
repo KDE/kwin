@@ -22,6 +22,7 @@ Name[sv]=Fönsterhanteringsskript
 Name[uk]=Скрипти засобу керування вікнами
 Name[x-test]=xxWindow Manager Scriptsxx
 Name[zh_CN]=窗口管理器脚本
+Name[zh_TW]=視窗管理員指令稿
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Scripts
