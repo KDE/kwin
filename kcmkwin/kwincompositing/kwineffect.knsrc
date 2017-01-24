@@ -21,6 +21,7 @@ Name[sv]=Fönsterhanteringseffekter
 Name[uk]=Ефекти засобу керування вікнами
 Name[x-test]=xxWindow Manager Effectsxx
 Name[zh_CN]=窗口管理器效果
+Name[zh_TW]=視窗管理員效果
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Effects
