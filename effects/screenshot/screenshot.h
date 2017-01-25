@@ -166,7 +166,6 @@ private:
     };
     WindowMode m_windowMode = WindowMode::NoCapture;
     int m_fd = -1;
-    QScopedPointer<EffectFrame> m_infoFrame;
 };
 
 } // namespace

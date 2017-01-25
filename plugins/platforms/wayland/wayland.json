@@ -4,7 +4,6 @@
         "Description[ca@valencia]": "Renderitza a una finestra imbricada en un compositor Wayland en execució.", 
         "Description[ca]": "Renderitza a una finestra imbricada en un compositor Wayland en execució.", 
         "Description[da]": "Rendér til et indlejret vindue på kørende Wayland-compositor.", 
-        "Description[de]": "In ein eingebettetes Fenster auf dem laufenden Wayland-Kompositor rendern.", 
         "Description[el]": "Αποτύπωση σε εμφωλευμένο παράθυρο κατά την εκτέλεση του συνθέτη Wayland.", 
         "Description[es]": "Renderizar en una ventana anidada en el compositor Wayland en ejecución.", 
         "Description[et]": "Renderdamine töötava Waylandi komposiitori pesastatud aknas.", 

@@ -235,7 +235,7 @@ public:
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) override;
 
     void showOnScreenMessage(const QString &message, const QString &iconName = QString()) override;
-    void hideOnScreenMessage() override;
+    void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) override;
 
     Scene *scene() const {
         return m_scene;

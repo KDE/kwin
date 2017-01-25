@@ -63,6 +63,7 @@ public:
     void setEngine(QQmlEngine *engine);
 
     void setContainsPointer(bool contains);
+    void setSkipCloseAnimation(bool skip);
 
 Q_SIGNALS:
     void visibleChanged();

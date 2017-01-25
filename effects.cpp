@@ -1596,9 +1596,13 @@ void EffectsHandlerImpl::showOnScreenMessage(const QString &message, const QStri
     OSD::show(message, iconName);
 }
 
-void EffectsHandlerImpl::hideOnScreenMessage()
+void EffectsHandlerImpl::hideOnScreenMessage(OnScreenMessageHideFlags flags)
 {
-    OSD::hide();
+    OSD::HideFlags osdFlags;
+    if (flags.testFlag(OnScreenMessageHideFlag::SkipsCloseAnimation)) {
+        osdFlags |= OSD::HideFlag::SkipCloseAnimation;
+    }
+    OSD::hide(osdFlags);
 }
 
 //****************************************

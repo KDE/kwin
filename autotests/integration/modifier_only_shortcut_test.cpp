@@ -251,7 +251,7 @@ void ModifierOnlyShortcutTest::testTrigger()
 void ModifierOnlyShortcutTest::testCapsLock()
 {
     // this test verifies that Capslock does not trigger the shift shortcut
-    // and that the shift modifier on capslock does not trigger either
+    // but other shortcuts still trigger even when Capslock is on
     Target target;
     QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
     QVERIFY(triggeredSpy.isValid());
@@ -278,13 +278,13 @@ void ModifierOnlyShortcutTest::testCapsLock()
     QCOMPARE(triggeredSpy.count(), 1);
 
     // currently caps lock is on
-    // shift is ignored
+    // shift still triggers
     kwinApp()->platform()->keyboardKeyPressed(modifier, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
-    QCOMPARE(triggeredSpy.count(), 1);
+    QCOMPARE(triggeredSpy.count(), 2);
 
-    // meta on the other hand should trigger
+    // meta should also trigger
     group.writeEntry("Meta", QStringList{s_serviceName, s_path, s_serviceName, QStringLiteral("shortcut")});
     group.writeEntry("Alt", QStringList());
     group.writeEntry("Shift", QStringList{});
@@ -295,15 +295,21 @@ void ModifierOnlyShortcutTest::testCapsLock()
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::MetaModifier);
     QCOMPARE(input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts(), Qt::MetaModifier);
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
-    QEXPECT_FAIL("", "BUG 375355", Continue);
-    QCOMPARE(triggeredSpy.count(), 2);
+    QCOMPARE(triggeredSpy.count(), 3);
+
+    // set back to shift to ensure we don't trigger with capslock
+    group.writeEntry("Meta", QStringList());
+    group.writeEntry("Alt", QStringList());
+    group.writeEntry("Shift", QStringList{s_serviceName, s_path, s_serviceName, QStringLiteral("shortcut")});
+    group.writeEntry("Control", QStringList());
+    group.sync();
+    workspace()->slotReconfigure();
 
     // release caps lock
     kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
-    QEXPECT_FAIL("", "BUG 375355", Continue);
-    QCOMPARE(triggeredSpy.count(), 2);
+    QCOMPARE(triggeredSpy.count(), 3);
 }
 
 void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled_data()

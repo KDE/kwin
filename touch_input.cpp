@@ -102,7 +102,8 @@ void TouchInputRedirection::update(const QPointF &pos)
         m_windowGeometryConnection = QMetaObject::Connection();
     }
     if (t && t->surface()) {
-        seat->setFocusedTouchSurface(t->surface(), t->pos());
+        // FIXME: add input transformation API to KWayland::Server::SeatInterface for touch input
+        seat->setFocusedTouchSurface(t->surface(), -1 * t->inputTransformation().map(t->pos()) + t->pos());
         m_windowGeometryConnection = connect(t, &Toplevel::geometryChanged, this,
             [this] {
                 if (m_window.isNull()) {
@@ -112,7 +113,8 @@ void TouchInputRedirection::update(const QPointF &pos)
                 if (m_window.data()->surface() != seat->focusedTouchSurface()) {
                     return;
                 }
-                seat->setFocusedTouchSurfacePosition(m_window.data()->pos());
+                auto t = m_window.data();
+                seat->setFocusedTouchSurfacePosition(-1 * t->inputTransformation().map(t->pos()) + t->pos());
             }
         );
     } else {
