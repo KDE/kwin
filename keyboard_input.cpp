@@ -287,7 +287,7 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     if (!m_keymap || !m_state) {
         return;
     }
-    const auto oldMods = m_modifiers;
+    const auto oldMods = modifiersRelevantForGlobalShortcuts();
     xkb_state_update_key(m_state, key + 8, static_cast<xkb_key_direction>(state));
     if (state == InputRedirection::KeyboardKeyPressed) {
         const auto sym = toKeysym(key);
@@ -315,14 +315,14 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
             !ScreenLockerWatcher::self()->isLocked() &&
             oldMods == Qt::NoModifier &&
             m_input->qtButtonStates() == Qt::NoButton) {
-            m_modOnlyShortcut.modifier = Qt::KeyboardModifier(int(m_modifiers));
+            m_modOnlyShortcut.modifier = Qt::KeyboardModifier(int(modifiersRelevantForGlobalShortcuts()));
         } else {
             m_modOnlyShortcut.modifier = Qt::NoModifier;
         }
     } else {
         m_modOnlyShortcut.pressCount--;
         if (m_modOnlyShortcut.pressCount == 0 &&
-            m_modifiers == Qt::NoModifier &&
+            modifiersRelevantForGlobalShortcuts() == Qt::NoModifier &&
             !workspace()->globalShortcutsDisabled()) {
             if (m_modOnlyShortcut.modifier != Qt::NoModifier) {
                 const auto list = options->modifierOnlyDBusShortcut(m_modOnlyShortcut.modifier);
