@@ -91,6 +91,7 @@ void VirtualKeyboard::init()
     }
 
     m_sni = new KStatusNotifierItem(QStringLiteral("kwin-virtual-keyboard"), this);
+    m_sni->setStandardActionsEnabled(false);
     m_sni->setCategory(KStatusNotifierItem::Hardware);
     m_sni->setStatus(KStatusNotifierItem::Passive);
     m_sni->setTitle(i18n("Virtual Keyboard"));
