@@ -166,19 +166,19 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(Cursor::pos(), cursorPos + QPoint(8, 0));
     QEXPECT_FAIL("", "First event is ignored", Continue);
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    clientStepUserMovedResizedSpy.clear();
+    windowStepUserMovedResizedSpy.clear();
 
     c->keyPressEvent(Qt::Key_Right);
     c->updateMoveResize(Cursor::pos());
     QCOMPARE(Cursor::pos(), cursorPos + QPoint(16, 0));
-    QEXPECT_FAIL("", "First event is ignored", Continue);
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
-    QEXPECT_FAIL("", "First event is ignored", Continue);
-    QCOMPARE(windowStepUserMovedResizedSpy.count(), 2);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(windowStepUserMovedResizedSpy.count(), 1);
 
     c->keyPressEvent(Qt::Key_Down | Qt::ALT);
     c->updateMoveResize(Cursor::pos());
-    QEXPECT_FAIL("", "First event is ignored", Continue);
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 3);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+    QCOMPARE(windowStepUserMovedResizedSpy.count(), 2);
     QCOMPARE(c->geometry(), QRect(16, 32, 100, 50));
     QCOMPARE(Cursor::pos(), cursorPos + QPoint(16, 32));
 
