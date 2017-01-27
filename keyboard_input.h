@@ -180,11 +180,6 @@ private:
     bool m_inited = false;
     QScopedPointer<Xkb> m_xkb;
     QMetaObject::Connection m_activeClientSurfaceChangedConnection;
-    struct {
-        quint32 key = 0;
-        quint32 time = 0;
-        QTimer *timer = nullptr;
-    } m_keyRepeat;
     ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
     KeyboardLayout *m_keyboardLayout = nullptr;
 };

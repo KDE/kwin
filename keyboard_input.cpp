@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "keyboard_layout.h"
+#include "keyboard_repeat.h"
 #include "abstract_client.h"
 #include "options.h"
 #include "utils.h"
@@ -605,17 +606,10 @@ void KeyboardInputRedirection::init()
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 
-    // setup key repeat
-    m_keyRepeat.timer = new QTimer(this);
-    connect(m_keyRepeat.timer, &QTimer::timeout, this,
-        [this] {
-            if (waylandServer()->seat()->keyRepeatRate() != 0) {
-                m_keyRepeat.timer->setInterval(1000 / waylandServer()->seat()->keyRepeatRate());
-            }
-            // TODO: better time
-            processKey(m_keyRepeat.key, InputRedirection::KeyboardKeyAutoRepeat, m_keyRepeat.time);
-        }
-    );
+    KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.data());
+    connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
+        std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputRedirection::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
+    m_input->installInputEventSpy(keyRepeatSpy);
 
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
@@ -725,18 +719,6 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
                    time,
                    device);
     event.setModifiersRelevantForGlobalShortcuts(m_xkb->modifiersRelevantForGlobalShortcuts());
-    if (state == InputRedirection::KeyboardKeyPressed) {
-        if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyRepeatDelay() != 0) {
-            m_keyRepeat.timer->setInterval(waylandServer()->seat()->keyRepeatDelay());
-            m_keyRepeat.key = key;
-            m_keyRepeat.time = time;
-            m_keyRepeat.timer->start();
-        }
-    } else if (state == InputRedirection::KeyboardKeyReleased) {
-        if (key == m_keyRepeat.key) {
-            m_keyRepeat.timer->stop();
-        }
-    }
 
     m_input->processSpies(std::bind(&InputEventSpy::keyEvent, std::placeholders::_1, &event));
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
