@@ -168,7 +168,10 @@ void Xkb::reconfigure()
 xkb_keymap *Xkb::loadKeymapFromConfig()
 {
     // load config
-    const KConfigGroup config = KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals)->group("Layout");
+    if (!m_config) {
+        return nullptr;
+    }
+    const KConfigGroup config = m_config->group("Layout");
     const QByteArray model = config.readEntry("Model", "pc104").toLocal8Bit();
     const QByteArray layout = config.readEntry("LayoutList", "").toLocal8Bit();
     const QByteArray options = config.readEntry("Options", "").toLocal8Bit();
@@ -598,11 +601,14 @@ void KeyboardInputRedirection::init()
 {
     Q_ASSERT(!m_inited);
     m_inited = true;
+    const auto config = kwinApp()->kxkbConfig();
+    m_xkb->setConfig(config);
+
     m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
     m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy);
     m_keyboardLayout = new KeyboardLayout(m_xkb.data());
-    m_keyboardLayout->setConfig(KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals));
+    m_keyboardLayout->setConfig(config);
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 

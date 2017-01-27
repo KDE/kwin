@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(KWIN_XKB)
 
+#include <KSharedConfig>
+
 class QWindow;
 struct xkb_context;
 struct xkb_keymap;
@@ -58,6 +60,9 @@ class KWIN_EXPORT Xkb
 public:
     Xkb(InputRedirection *input);
     ~Xkb();
+    void setConfig(KSharedConfigPtr config) {
+        m_config = config;
+    }
     void reconfigure();
 
     void installKeymap(int fd, uint32_t size);
@@ -136,6 +141,7 @@ private:
         xkb_compose_state *state = nullptr;
     } m_compose;
     LEDs m_leds;
+    KSharedConfigPtr m_config;
 };
 
 class KWIN_EXPORT KeyboardInputRedirection : public QObject

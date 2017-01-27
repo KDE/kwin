@@ -104,6 +104,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     , m_eventFilter(new XcbEventFilter())
     , m_configLock(false)
     , m_config()
+    , m_kxkbConfig()
     , m_operationMode(mode)
 {
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
@@ -143,6 +144,9 @@ void Application::start()
         // TODO: This shouldn't be necessary
         //config->setReadOnly( true );
         m_config->reparseConfiguration();
+    }
+    if (!m_kxkbConfig) {
+        m_kxkbConfig = KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals);
     }
 
     performStartup();

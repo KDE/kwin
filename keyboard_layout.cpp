@@ -140,10 +140,10 @@ void KeyboardLayout::switchToLayout(xkb_layout_index_t index)
 
 void KeyboardLayout::reconfigure()
 {
-    m_xkb->reconfigure();
     if (m_config) {
         m_config->reparseConfiguration();
     }
+    m_xkb->reconfigure();
     resetLayout();
 }
 
