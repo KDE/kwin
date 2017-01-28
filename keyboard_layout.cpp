@@ -70,6 +70,20 @@ void KeyboardLayout::init()
                                           SLOT(reconfigure()));
 
     reconfigure();
+
+    initDBusInterface();
+}
+
+void KeyboardLayout::initDBusInterface()
+{
+    auto dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, this);
+    connect(this, &KeyboardLayout::layoutChanged, dbusInterface,
+        [this, dbusInterface] {
+            emit dbusInterface->currentLayoutChanged(m_xkb->layoutName());
+        }
+    );
+    // TODO: the signal might be emitted even if the list didn't change
+    connect(this, &KeyboardLayout::layoutsReconfigured, dbusInterface, &KeyboardLayoutDBusInterface::layoutListChanged);
 }
 
 void KeyboardLayout::initNotifierItem()
@@ -154,6 +168,7 @@ void KeyboardLayout::resetLayout()
     updateNotifier();
     reinitNotifierMenu();
     loadShortcuts();
+    emit layoutsReconfigured();
 }
 
 void KeyboardLayout::loadShortcuts()
@@ -195,6 +210,7 @@ void KeyboardLayout::checkLayoutChange()
     m_layout = layout;
     notifyLayoutChange();
     updateNotifier();
+    emit layoutChanged();
 }
 
 void KeyboardLayout::notifyLayoutChange()
@@ -253,6 +269,58 @@ void KeyboardLayout::reinitNotifierMenu()
     );
 
     m_notifierItem->setContextMenu(menu);
+}
+
+static const QString s_keyboardService = QStringLiteral("org.kde.keyboard");
+static const QString s_keyboardObject = QStringLiteral("/Layouts");
+
+KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(Xkb *xkb, QObject *parent)
+    : QObject(parent)
+    , m_xkb(xkb)
+{
+    QDBusConnection::sessionBus().registerService(s_keyboardService);
+    QDBusConnection::sessionBus().registerObject(s_keyboardObject, this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
+}
+
+KeyboardLayoutDBusInterface::~KeyboardLayoutDBusInterface()
+{
+    QDBusConnection::sessionBus().unregisterService(s_keyboardService);
+}
+
+bool KeyboardLayoutDBusInterface::setLayout(const QString &layout)
+{
+    const auto layouts = m_xkb->layoutNames();
+    auto it = layouts.begin();
+    for (; it !=layouts.end(); it++) {
+        if (it.value() == layout) {
+            break;
+        }
+    }
+    if (it == layouts.end()) {
+        return false;
+    }
+    m_xkb->switchToLayout(it.key());
+    return true;
+}
+
+QString KeyboardLayoutDBusInterface::getCurrentLayout()
+{
+    return m_xkb->layoutName();
+}
+
+QStringList KeyboardLayoutDBusInterface::getLayoutsList()
+{
+    const auto layouts = m_xkb->layoutNames();
+    QStringList ret;
+    for (auto it = layouts.begin(); it != layouts.end(); it++) {
+        ret << it.value();
+    }
+    return ret;
+}
+
+QString KeyboardLayoutDBusInterface::getLayoutDisplayName(const QString &layout)
+{
+    return translatedLayout(layout);
 }
 
 }

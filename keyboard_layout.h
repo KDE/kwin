@@ -52,10 +52,15 @@ public:
 
     void keyEvent(KeyEvent *event) override;
 
+Q_SIGNALS:
+    void layoutChanged();
+    void layoutsReconfigured();
+
 private Q_SLOTS:
     void reconfigure();
 
 private:
+    void initDBusInterface();
     void notifyLayoutChange();
     void initNotifierItem();
     void switchToNextLayout();
@@ -69,6 +74,29 @@ private:
     KStatusNotifierItem *m_notifierItem;
     KSharedConfigPtr m_config;
     QVector<QAction*> m_layoutShortcuts;
+};
+
+class KeyboardLayoutDBusInterface : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KeyboardLayouts")
+
+public:
+    explicit KeyboardLayoutDBusInterface(Xkb *xkb, QObject *parent);
+    ~KeyboardLayoutDBusInterface() override;
+
+public Q_SLOTS:
+    bool setLayout(const QString &layout);
+    QString getCurrentLayout();
+    QStringList getLayoutsList();
+    QString getLayoutDisplayName(const QString &layout);
+
+Q_SIGNALS:
+    void currentLayoutChanged(QString layout);
+    void layoutListChanged();
+
+private:
+    Xkb *m_xkb;
 };
 
 }
