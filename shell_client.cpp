@@ -508,6 +508,10 @@ void ShellClient::doSetGeometry(const QRect &rect)
         workspace()->updateClientArea();
     }
     emit geometryShapeChanged(this, old);
+
+    if (isResize()) {
+        performMoveResize();
+    }
 }
 
 void ShellClient::doMove(int x, int y)
