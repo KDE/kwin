@@ -57,6 +57,7 @@ private Q_SLOTS:
     void init();
     void cleanup();
     void testMove();
+    void testResize();
     void testPackTo_data();
     void testPackTo();
     void testPackAgainstClient_data();
@@ -190,6 +191,90 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(windowFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(c->geometry(), QRect(16, 32, 100, 50));
     QCOMPARE(c->isMove(), false);
+    QVERIFY(workspace()->getMovingClient() == nullptr);
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c));
+}
+
+void MoveResizeWindowTest::testResize()
+{
+    // a test case which manually resizes a window
+    using namespace KWayland::Client;
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangeSpy.isValid());
+    // let's render
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QSignalSpy surfaceSizeChangedSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(surfaceSizeChangedSpy.isValid());
+
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(startMoveResizedSpy.isValid());
+    QSignalSpy moveResizedChangedSpy(c, &AbstractClient::moveResizedChanged);
+    QVERIFY(moveResizedChangedSpy.isValid());
+    QSignalSpy clientStepUserMovedResizedSpy(c, &AbstractClient::clientStepUserMovedResized);
+    QVERIFY(clientStepUserMovedResizedSpy.isValid());
+    QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
+    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
+
+    // begin resize
+    QVERIFY(workspace()->getMovingClient() == nullptr);
+    QCOMPARE(c->isMove(), false);
+    QCOMPARE(c->isResize(), false);
+    workspace()->slotWindowResize();
+    QCOMPARE(workspace()->getMovingClient(), c);
+    QCOMPARE(startMoveResizedSpy.count(), 1);
+    QCOMPARE(moveResizedChangedSpy.count(), 1);
+    QCOMPARE(c->isResize(), true);
+    QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
+
+    // trigger a change
+    const QPoint cursorPos = Cursor::pos();
+    c->keyPressEvent(Qt::Key_Right);
+    c->updateMoveResize(Cursor::pos());
+    QCOMPARE(Cursor::pos(), cursorPos + QPoint(8, 0));
+    // should result in a size change request
+    QVERIFY(surfaceSizeChangedSpy.wait());
+    QCOMPARE(surfaceSizeChangedSpy.count(), 1);
+    QCOMPARE(surfaceSizeChangedSpy.last().first().toSize(), QSize(108, 50));
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    // now render new size
+    Test::render(surface.data(), QSize(108, 50), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(c->geometry(), QRect(0, 0, 108, 50));
+    QEXPECT_FAIL("", "BUG 374869", Continue);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+
+    // go down
+    c->keyPressEvent(Qt::Key_Down);
+    c->updateMoveResize(Cursor::pos());
+    QCOMPARE(Cursor::pos(), cursorPos + QPoint(8, 8));
+    QVERIFY(surfaceSizeChangedSpy.wait());
+    QCOMPARE(surfaceSizeChangedSpy.count(), 2);
+    QCOMPARE(surfaceSizeChangedSpy.last().first().toSize(), QSize(108, 58));
+    // now render new size
+    Test::render(surface.data(), QSize(108, 58), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(c->geometry(), QRect(0, 0, 108, 58));
+    QEXPECT_FAIL("", "BUG 374869", Continue);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+
+    // let's end
+    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
+    c->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(moveResizedChangedSpy.count(), 2);
+    QCOMPARE(c->isResize(), false);
     QVERIFY(workspace()->getMovingClient() == nullptr);
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(c));
