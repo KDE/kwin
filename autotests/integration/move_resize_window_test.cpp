@@ -252,7 +252,6 @@ void MoveResizeWindowTest::testResize()
     Test::render(surface.data(), QSize(108, 50), Qt::blue);
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(c->geometry(), QRect(0, 0, 108, 50));
-    QEXPECT_FAIL("", "BUG 374869", Continue);
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
     // go down
@@ -266,7 +265,6 @@ void MoveResizeWindowTest::testResize()
     Test::render(surface.data(), QSize(108, 58), Qt::blue);
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(c->geometry(), QRect(0, 0, 108, 58));
-    QEXPECT_FAIL("", "BUG 374869", Continue);
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
 
     // let's end
