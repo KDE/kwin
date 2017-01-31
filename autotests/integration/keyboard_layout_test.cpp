@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QDBusPendingCall>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -41,7 +42,18 @@ private Q_SLOTS:
     void cleanup();
 
     void testReconfigure();
+    void testChangeLayoutThroughDBus();
+
+private:
+    void reconfigureLayouts();
 };
+
+void KeyboardLayoutTest::reconfigureLayouts()
+{
+    // create DBus signal to reload
+    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Layouts"), QStringLiteral("org.kde.keyboard"), QStringLiteral("reloadConfig"));
+    QDBusConnection::sessionBus().send(message);
+}
 
 void KeyboardLayoutTest::initTestCase()
 {
@@ -84,9 +96,7 @@ void KeyboardLayoutTest::testReconfigure()
     layoutGroup.writeEntry("LayoutList", QStringLiteral("de,us"));
     layoutGroup.sync();
 
-    // create DBus signal to reload
-    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Layouts"), QStringLiteral("org.kde.keyboard"), QStringLiteral("reloadConfig"));
-    QDBusConnection::sessionBus().send(message);
+    reconfigureLayouts();
     // now we should have two layouts
     QTRY_COMPARE(xkb->numberOfLayouts(), 2u);
     // default layout is German
@@ -97,6 +107,52 @@ void KeyboardLayoutTest::testReconfigure()
     QVERIFY(layouts.contains(1));
     QCOMPARE(layouts[0], QStringLiteral("German"));
     QCOMPARE(layouts[1], QStringLiteral("English (US)"));
+}
+
+void KeyboardLayoutTest::testChangeLayoutThroughDBus()
+{
+    // this test verifies that the layout can be changed through DBus
+    // first configure layouts
+    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group("Layout");
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("de,us,de(neo)"));
+    layoutGroup.sync();
+    reconfigureLayouts();
+    // now we should have two layouts
+    auto xkb = input()->keyboard()->xkb();
+    QTRY_COMPARE(xkb->numberOfLayouts(), 3u);
+    // default layout is German
+    xkb->switchToLayout(0);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+
+    // now change through DBus to english
+    auto changeLayout = [] (const QString &layoutName) {
+        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("setLayout"));
+        msg << layoutName;
+        return QDBusConnection::sessionBus().asyncCall(msg);
+    };
+    auto reply = changeLayout(QStringLiteral("English (US)"));
+    reply.waitForFinished();
+    QVERIFY(!reply.isError());
+    QCOMPARE(reply.reply().arguments().first().toBool(), true);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    // switch to a layout which does not exist
+    reply = changeLayout(QStringLiteral("French"));
+    QVERIFY(!reply.isError());
+    QCOMPARE(reply.reply().arguments().first().toBool(), false);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    // switch to another layout should work
+    reply = changeLayout(QStringLiteral("German"));
+    QVERIFY(!reply.isError());
+    QCOMPARE(reply.reply().arguments().first().toBool(), true);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+
+    // switching to same layout should also work
+    reply = changeLayout(QStringLiteral("German"));
+    QVERIFY(!reply.isError());
+    QCOMPARE(reply.reply().arguments().first().toBool(), true);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
 }
 
 WAYLANDTEST_MAIN(KeyboardLayoutTest)
