@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "keyboard_input.h"
+#include "keyboard_layout.h"
 #include "platform.h"
 #include "wayland_server.h"
 
@@ -78,6 +79,20 @@ void KeyboardLayoutTest::cleanup()
 {
 }
 
+class LayoutChangedSignalWrapper : public QObject
+{
+    Q_OBJECT
+public:
+    LayoutChangedSignalWrapper()
+        : QObject()
+    {
+        QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("currentLayoutChanged"), this, SIGNAL(layoutChanged(QString)));
+    }
+
+Q_SIGNALS:
+    void layoutChanged(const QString &name);
+};
+
 void KeyboardLayoutTest::testReconfigure()
 {
     // verifies that we can change the keymap
@@ -124,6 +139,10 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
     xkb->switchToLayout(0);
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
 
+    LayoutChangedSignalWrapper wrapper;
+    QSignalSpy layoutChangedSpy(&wrapper, &LayoutChangedSignalWrapper::layoutChanged);
+    QVERIFY(layoutChangedSpy.isValid());
+
     // now change through DBus to english
     auto changeLayout = [] (const QString &layoutName) {
         QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("setLayout"));
@@ -135,24 +154,34 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
     QVERIFY(!reply.isError());
     QCOMPARE(reply.reply().arguments().first().toBool(), true);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+    QVERIFY(layoutChangedSpy.wait());
+    QCOMPARE(layoutChangedSpy.count(), 1);
+    layoutChangedSpy.clear();
 
     // switch to a layout which does not exist
     reply = changeLayout(QStringLiteral("French"));
     QVERIFY(!reply.isError());
     QCOMPARE(reply.reply().arguments().first().toBool(), false);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+    QVERIFY(!layoutChangedSpy.wait());
+    QVERIFY(layoutChangedSpy.isEmpty());
 
     // switch to another layout should work
     reply = changeLayout(QStringLiteral("German"));
     QVERIFY(!reply.isError());
     QCOMPARE(reply.reply().arguments().first().toBool(), true);
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+    QVERIFY(layoutChangedSpy.wait());
+    QCOMPARE(layoutChangedSpy.count(), 1);
+    layoutChangedSpy.clear();
 
     // switching to same layout should also work
     reply = changeLayout(QStringLiteral("German"));
     QVERIFY(!reply.isError());
     QCOMPARE(reply.reply().arguments().first().toBool(), true);
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+    QVERIFY(!layoutChangedSpy.wait());
+    QVERIFY(layoutChangedSpy.isEmpty());
 }
 
 WAYLANDTEST_MAIN(KeyboardLayoutTest)

@@ -82,7 +82,7 @@ class KeyboardLayoutDBusInterface : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.kde.KeyboardLayouts")
 
 public:
-    explicit KeyboardLayoutDBusInterface(Xkb *xkb, QObject *parent);
+    explicit KeyboardLayoutDBusInterface(Xkb *xkb, KeyboardLayout *parent);
     ~KeyboardLayoutDBusInterface() override;
 
 public Q_SLOTS:
@@ -97,6 +97,7 @@ Q_SIGNALS:
 
 private:
     Xkb *m_xkb;
+    KeyboardLayout *m_keyboardLayout;
 };
 
 }

@@ -274,9 +274,10 @@ void KeyboardLayout::reinitNotifierMenu()
 static const QString s_keyboardService = QStringLiteral("org.kde.keyboard");
 static const QString s_keyboardObject = QStringLiteral("/Layouts");
 
-KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(Xkb *xkb, QObject *parent)
+KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(Xkb *xkb, KeyboardLayout *parent)
     : QObject(parent)
     , m_xkb(xkb)
+    , m_keyboardLayout(parent)
 {
     QDBusConnection::sessionBus().registerService(s_keyboardService);
     QDBusConnection::sessionBus().registerObject(s_keyboardObject, this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
@@ -300,6 +301,7 @@ bool KeyboardLayoutDBusInterface::setLayout(const QString &layout)
         return false;
     }
     m_xkb->switchToLayout(it.key());
+    m_keyboardLayout->checkLayoutChange();
     return true;
 }
 
