@@ -239,10 +239,6 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
 {
     updateButton(button, state);
 
-    if (!m_inited) {
-        return;
-    }
-
     QEvent::Type type;
     switch (state) {
     case InputRedirection::PointerButtonReleased:
@@ -262,6 +258,11 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
     event.setNativeButton(button);
 
     m_input->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
+
+    if (!m_inited) {
+        return;
+    }
+
     m_input->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, button));
 }
 
@@ -273,16 +274,16 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
 
     emit m_input->pointerAxisChanged(axis, delta);
 
-    if (!m_inited) {
-        return;
-    }
-
     WheelEvent wheelEvent(m_pos, delta,
                            (axis == InputRedirection::PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
                            m_qtButtons, m_input->keyboardModifiers(), time, device);
     wheelEvent.setModifiersRelevantForGlobalShortcuts(m_input->modifiersRelevantForGlobalShortcuts());
 
     m_input->processSpies(std::bind(&InputEventSpy::wheelEvent, std::placeholders::_1, &wheelEvent));
+
+    if (!m_inited) {
+        return;
+    }
     m_input->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent));
 }
 

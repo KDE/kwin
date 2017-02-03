@@ -23,8 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "x11cursor.h"
 
-#include "keyboard_input.h"
+#include "input.h"
 #include "x11eventfilter.h"
+#include "modifier_only_shortcuts.h"
 #include <kwinglobals.h>
 
 #include <X11/extensions/XInput2.h>
@@ -46,18 +47,17 @@ public:
     bool event(xcb_generic_event_t *event) override {
         xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(event);
         switch (ge->event_type) {
-        case XI_RawKeyPress:
-            if (m_xkb) {
-                m_xkb->updateKey(reinterpret_cast<xXIRawEvent*>(event)->detail - 8, InputRedirection::KeyboardKeyPressed);
-            }
+        case XI_RawKeyPress: {
+            auto re = reinterpret_cast<xXIRawEvent*>(event);
+            kwinApp()->platform()->keyboardKeyPressed(re->detail - 8, re->time);
             break;
-        case XI_RawKeyRelease:
-            if (m_xkb) {
-                m_xkb->updateKey(reinterpret_cast<xXIRawEvent*>(event)->detail - 8, InputRedirection::KeyboardKeyReleased);
-            }
+        }
+        case XI_RawKeyRelease: {
+            auto re = reinterpret_cast<xXIRawEvent*>(event);
+            kwinApp()->platform()->keyboardKeyReleased(re->detail - 8, re->time);
             break;
-        case XI_RawButtonPress:
-            if (m_xkb) {
+        }
+        case XI_RawButtonPress: {
                 auto e = reinterpret_cast<xXIRawEvent*>(event);
                 switch (e->detail) {
                 // TODO: this currently ignores left handed settings, for current usage not needed
@@ -82,8 +82,7 @@ public:
                 m_x11Cursor->schedulePoll();
             }
             break;
-        case XI_RawButtonRelease:
-            if (m_xkb) {
+        case XI_RawButtonRelease: {
                 auto e = reinterpret_cast<xXIRawEvent*>(event);
                 switch (e->detail) {
                 // TODO: this currently ignores left handed settings, for current usage not needed
@@ -122,14 +121,9 @@ public:
     void setCursor(const QPointer<X11Cursor> &cursor) {
         m_x11Cursor = cursor;
     }
-    void setXkb(Xkb *xkb) {
-        m_xkb = xkb;
-    }
 
 private:
     QPointer<X11Cursor> m_x11Cursor;
-    // TODO: QPointer
-    Xkb *m_xkb = nullptr;
 };
 
 class XKeyPressReleaseEventFilter : public X11EventFilter
@@ -142,24 +136,16 @@ public:
 
     bool event(xcb_generic_event_t *event) override {
         xcb_key_press_event_t *ke = reinterpret_cast<xcb_key_press_event_t *>(event);
-        if (m_xkb && ke->event == ke->root) {
+        if (ke->event == ke->root) {
             const uint8_t eventType = event->response_type & ~0x80;
             if (eventType == XCB_KEY_PRESS) {
-                m_xkb->updateKey(ke->detail - 8, InputRedirection::KeyboardKeyPressed);
+                kwinApp()->platform()->keyboardKeyPressed(ke->detail - 8, ke->time);
             } else {
-                m_xkb->updateKey(ke->detail - 8, InputRedirection::KeyboardKeyReleased);
+                kwinApp()->platform()->keyboardKeyReleased(ke->detail - 8, ke->time);
             }
         }
         return false;
     }
-
-    void setXkb(Xkb *xkb) {
-        m_xkb = xkb;
-    }
-
-private:
-    // TODO: QPointer
-    Xkb *m_xkb = nullptr;
 };
 
 XInputIntegration::XInputIntegration(Display *display, QObject *parent)
@@ -207,11 +193,6 @@ void XInputIntegration::setCursor(X11Cursor *cursor)
     m_x11Cursor = QPointer<X11Cursor>(cursor);
 }
 
-void XInputIntegration::setXkb(Xkb *xkb)
-{
-    m_xkb = xkb;
-}
-
 void XInputIntegration::startListening()
 {
     // this assumes KWin is the only one setting events on the root window
@@ -236,11 +217,11 @@ void XInputIntegration::startListening()
     XISelectEvents(display(), rootWindow(), evmasks, 1);
     m_xiEventFilter.reset(new XInputEventFilter(m_xiOpcode));
     m_xiEventFilter->setCursor(m_x11Cursor);
-    m_xiEventFilter->setXkb(m_xkb);
     m_keyPressFilter.reset(new XKeyPressReleaseEventFilter(XCB_KEY_PRESS));
-    m_keyPressFilter->setXkb(m_xkb);
     m_keyReleaseFilter.reset(new XKeyPressReleaseEventFilter(XCB_KEY_RELEASE));
-    m_keyReleaseFilter->setXkb(m_xkb);
+
+    // install the input event spies also relevant for X11 platform
+    input()->installInputEventSpy(new ModifierOnlyShortcuts);
 }
 
 }

@@ -130,10 +130,6 @@ private:
     Qt::KeyboardModifiers m_modifiers;
     Qt::KeyboardModifiers m_consumedModifiers;
     xkb_keysym_t m_keysym;
-    struct {
-        uint pressCount = 0;
-        Qt::KeyboardModifier modifier = Qt::NoModifier;
-    } m_modOnlyShortcut;
     quint32 m_currentLayout = 0;
 
     struct {

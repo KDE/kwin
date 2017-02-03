@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
 #include "abstract_client.h"
-#include "options.h"
+#include "modifier_only_shortcuts.h"
 #include "utils.h"
 #include "screenlockerwatcher.h"
 #include "toplevel.h"
@@ -38,9 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KKeyServer>
 #include <KGlobalAccel>
 // Qt
-#include <QDBusConnection>
-#include <QDBusMessage>
-#include <QDBusPendingCall>
 #include <QKeyEvent>
 #include <QTemporaryFile>
 // xkbcommon
@@ -124,13 +121,6 @@ Xkb::Xkb(InputRedirection *input)
             m_compose.state = xkb_compose_state_new(m_compose.table, XKB_COMPOSE_STATE_NO_FLAGS);
         }
     }
-
-    auto resetModOnlyShortcut = [this] {
-        m_modOnlyShortcut.modifier = Qt::NoModifier;
-    };
-    QObject::connect(m_input, &InputRedirection::pointerButtonStateChanged, resetModOnlyShortcut);
-    QObject::connect(m_input, &InputRedirection::pointerAxisChanged, resetModOnlyShortcut);
-    QObject::connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, m_input, resetModOnlyShortcut);
 }
 
 Xkb::~Xkb()
@@ -289,7 +279,6 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     if (!m_keymap || !m_state) {
         return;
     }
-    const auto oldMods = modifiersRelevantForGlobalShortcuts();
     xkb_state_update_key(m_state, key + 8, static_cast<xkb_key_direction>(state));
     if (state == InputRedirection::KeyboardKeyPressed) {
         const auto sym = toKeysym(key);
@@ -311,36 +300,6 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     }
     updateModifiers();
     updateConsumedModifiers(key);
-    if (state == InputRedirection::KeyboardKeyPressed) {
-        m_modOnlyShortcut.pressCount++;
-        if (m_modOnlyShortcut.pressCount == 1 &&
-            !ScreenLockerWatcher::self()->isLocked() &&
-            oldMods == Qt::NoModifier &&
-            m_input->qtButtonStates() == Qt::NoButton) {
-            m_modOnlyShortcut.modifier = Qt::KeyboardModifier(int(modifiersRelevantForGlobalShortcuts()));
-        } else {
-            m_modOnlyShortcut.modifier = Qt::NoModifier;
-        }
-    } else {
-        m_modOnlyShortcut.pressCount--;
-        if (m_modOnlyShortcut.pressCount == 0 &&
-            modifiersRelevantForGlobalShortcuts() == Qt::NoModifier &&
-            !workspace()->globalShortcutsDisabled()) {
-            if (m_modOnlyShortcut.modifier != Qt::NoModifier) {
-                const auto list = options->modifierOnlyDBusShortcut(m_modOnlyShortcut.modifier);
-                if (list.size() >= 4) {
-                    auto call = QDBusMessage::createMethodCall(list.at(0), list.at(1), list.at(2), list.at(3));
-                    QVariantList args;
-                    for (int i = 4; i < list.size(); ++i) {
-                        args << list.at(i);
-                    }
-                    call.setArguments(args);
-                    QDBusConnection::sessionBus().asyncCall(call);
-                }
-            }
-        }
-        m_modOnlyShortcut.modifier = Qt::NoModifier;
-    }
 }
 
 void Xkb::updateModifiers()
@@ -610,6 +569,8 @@ void KeyboardInputRedirection::init()
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 
+    m_input->installInputEventSpy(new ModifierOnlyShortcuts);
+
     KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.data());
     connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
         std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputRedirection::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
@@ -689,9 +650,6 @@ void KeyboardInputRedirection::update()
 
 void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, LibInput::Device *device)
 {
-    if (!m_inited) {
-        return;
-    }
     QEvent::Type type;
     bool autoRepeat = false;
     switch (state) {
@@ -725,6 +683,9 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     event.setModifiersRelevantForGlobalShortcuts(m_xkb->modifiersRelevantForGlobalShortcuts());
 
     m_input->processSpies(std::bind(&InputEventSpy::keyEvent, std::placeholders::_1, &event));
+    if (!m_inited) {
+        return;
+    }
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 }
 

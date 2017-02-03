@@ -31,7 +31,6 @@ namespace KWin
 class XInputEventFilter;
 class XKeyPressReleaseEventFilter;
 class X11Cursor;
-class Xkb;
 
 class XInputIntegration : public QObject
 {
@@ -47,7 +46,6 @@ public:
         return m_hasXInput;
     }
     void setCursor(X11Cursor *cursor);
-    void setXkb(Xkb *xkb);
 
 private:
     Display *display() const {
@@ -59,8 +57,6 @@ private:
     int m_majorVersion = 0;
     int m_minorVersion = 0;
     QPointer<X11Cursor> m_x11Cursor;
-    // TODO: QPointer
-    Xkb *m_xkb = nullptr;
     Display *m_x11Display;
 
     QScopedPointer<XInputEventFilter> m_xiEventFilter;

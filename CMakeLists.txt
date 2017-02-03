@@ -434,6 +434,7 @@ set(kwin_KDEINIT_SRCS
     wayland_cursor_theme.cpp
     virtualkeyboard.cpp
     appmenu.cpp
+    modifier_only_shortcuts.cpp
    )
 
 if(KWIN_BUILD_TABBOX)
