@@ -19,6 +19,7 @@ Name[sr@latin]=KWinov menjač prozora
 Name[sv]=Kwin-fönsterbyte
 Name[uk]=Перемикач вікон KWin
 Name[x-test]=xxKWin Window Switcherxx
+Name[zh_CN]=KWin 窗口切换器
 Name[zh_TW]=KWin 視窗切換器
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure
