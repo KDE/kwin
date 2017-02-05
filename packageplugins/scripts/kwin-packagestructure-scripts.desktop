@@ -19,6 +19,7 @@ Name[sr@latin]=KWinova skripta
 Name[sv]=Kwin-skript
 Name[uk]=Скрипт KWin
 Name[x-test]=xxKWin Scriptxx
+Name[zh_CN]=KWin 脚本
 Name[zh_TW]=KWin 指令稿
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure
