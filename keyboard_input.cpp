@@ -68,9 +68,7 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
         qCDebug(KWIN_XKB) << "XKB:" << buf;
         break;
     case XKB_LOG_LEVEL_INFO:
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
         qCInfo(KWIN_XKB) << "XKB:" << buf;
-#endif
         break;
     case XKB_LOG_LEVEL_WARNING:
         qCWarning(KWIN_XKB) << "XKB:" << buf;

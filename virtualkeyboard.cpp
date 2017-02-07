@@ -72,12 +72,8 @@ void VirtualKeyboard::init()
     m_inputWindow->setResizeMode(QQuickView::SizeRootObjectToView);
     m_inputWindow->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/virtualkeyboard/main.qml"))));
     if (m_inputWindow->status() != QQuickView::Status::Ready) {
-        // try enterprise
-        m_inputWindow->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/virtualkeyboard/main-enterprise.qml"))));
-        if (m_inputWindow->status() != QQuickView::Status::Ready) {
-            m_inputWindow.reset();
-            return;
-        }
+        m_inputWindow.reset();
+        return;
     }
     m_inputWindow->setProperty("__kwin_input_method", true);
 

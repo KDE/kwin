@@ -39,11 +39,7 @@ public:
     void doneCurrent() override;
     QSurfaceFormat format() const override;
     bool isValid() const override;
-#if (QT_VERSION < QT_VERSION_CHECK(5, 7, 0))
-    QFunctionPointer getProcAddress(const QByteArray &procName) override;
-#else
     QFunctionPointer getProcAddress(const char *procName) override;
-#endif
 
 protected:
     EGLDisplay eglDisplay() const {

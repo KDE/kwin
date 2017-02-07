@@ -119,17 +119,10 @@ QSurfaceFormat AbstractPlatformContext::format() const
     return m_format;
 }
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 7, 0))
-QFunctionPointer AbstractPlatformContext::getProcAddress(const QByteArray &procName)
-{
-    return eglGetProcAddress(procName.constData());
-}
-#else
 QFunctionPointer AbstractPlatformContext::getProcAddress(const char *procName)
 {
     return eglGetProcAddress(procName);
 }
-#endif
 
 bool AbstractPlatformContext::isValid() const
 {

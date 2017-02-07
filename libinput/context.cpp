@@ -44,9 +44,7 @@ static void libinputLogHandler(libinput *libinput, libinput_log_priority priorit
         qCDebug(KWIN_LIBINPUT) << "Libinput:" << buf;
         break;
     case LIBINPUT_LOG_PRIORITY_INFO:
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
         qCInfo(KWIN_LIBINPUT) << "Libinput:" << buf;
-#endif
         break;
     case LIBINPUT_LOG_PRIORITY_ERROR:
     default:

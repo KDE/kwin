@@ -468,9 +468,7 @@ int main(int argc, char * argv[])
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
     qputenv("QT_IM_MODULE", "qtvirtualkeyboard");
     qputenv("QSG_RENDER_LOOP", "basic");
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
     QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
-#endif
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
     // reset QT_QPA_PLATFORM to a sane value for any processes started from KWin

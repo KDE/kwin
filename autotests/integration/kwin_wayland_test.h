@@ -177,10 +177,6 @@ int main(int argc, char *argv[]) \
     return QTest::qExec(&tc, argc, argv); \
 }
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
 #define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling) )
-#else
-#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject,)
-#endif
 
 #endif

@@ -406,9 +406,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     setenv("QT_QPA_PLATFORM", "xcb", true);
 
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
     QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
-#endif
 
     KWin::ApplicationX11 a(argc, argv);
     a.setupTranslator();

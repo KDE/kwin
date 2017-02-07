@@ -227,9 +227,7 @@ void Integration::initializeWayland()
 void Integration::createWaylandOutput(quint32 name, quint32 version)
 {
     if (m_dummyScreen) {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
         destroyScreen(m_dummyScreen);
-#endif
         m_dummyScreen = nullptr;
     }
     using namespace KWayland::Client;
