@@ -144,17 +144,11 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     plasmaSurface2->setRole(role);
     QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
     QVERIFY(!shellSurface2.isNull());
-    Test::render(surface2.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(Test::waitForWaylandWindowShown());
+    auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c2);
+    QVERIFY(c != c2);
 
-    QVERIFY(workspace()->activeClient() != c);
-    c = workspace()->activeClient();
-    QEXPECT_FAIL("Desktop", "PS before WS not supported", Continue);
-    QEXPECT_FAIL("Panel", "PS before WS not supported", Continue);
-    QEXPECT_FAIL("OSD", "PS before WS not supported", Continue);
-    QEXPECT_FAIL("Notification", "PS before WS not supported", Continue);
-    QEXPECT_FAIL("ToolTip", "PS before WS not supported", Continue);
-    QCOMPARE(c->isOnAllDesktops(), expectedOnAllDesktops);
+    QCOMPARE(c2->isOnAllDesktops(), expectedOnAllDesktops);
 }
 
 void PlasmaSurfaceTest::testAcceptsFocus_data()
