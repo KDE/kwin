@@ -48,12 +48,8 @@ include(ECMOptionalAddSubdirectory)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -DQT_USE_QSTRINGBUILDER)
 
-# require at least gcc 4.8
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "4.8")
-        message(SEND_ERROR "Version ${CMAKE_CXX_COMPILER_VERSION} of the ${CMAKE_CXX_COMPILER_ID} C++ compiler is not supported. Please use version 4.8 or later.")
-    endif()
-endif()
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5Multimedia QUIET)
 set_package_properties(Qt5Multimedia PROPERTIES
