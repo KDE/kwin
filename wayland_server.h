@@ -50,6 +50,7 @@ class ServerSideDecorationManagerInterface;
 class SurfaceInterface;
 class OutputInterface;
 class PlasmaShellInterface;
+class PlasmaShellSurfaceInterface;
 class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
 class OutputManagementInterface;
@@ -232,6 +233,7 @@ private:
     QList<ShellClient*> m_internalClients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
     InitalizationFlags m_initFlags;
+    QVector<KWayland::Server::PlasmaShellSurfaceInterface*> m_plasmaShellSurfaces;
     KWIN_SINGLETON(WaylandServer)
 };
 

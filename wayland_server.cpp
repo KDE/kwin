@@ -130,6 +130,15 @@ void WaylandServer::createSurface(T *surface)
         ScreenLocker::KSldApp::self()->lockScreenShown();
     }
     auto client = new ShellClient(surface);
+    auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
+        [client] (PlasmaShellSurfaceInterface *surface) {
+            return client->surface() == surface->surface();
+        }
+    );
+    if (it != m_plasmaShellSurfaces.end()) {
+        client->installPlasmaShellSurface(*it);
+        m_plasmaShellSurfaces.erase(it);
+    }
     if (client->isInternal()) {
         m_internalClients << client;
     } else {
@@ -214,6 +223,13 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
         [this] (PlasmaShellSurfaceInterface *surface) {
             if (ShellClient *client = findClient(surface->surface())) {
                 client->installPlasmaShellSurface(surface);
+            } else {
+                m_plasmaShellSurfaces << surface;
+                connect(surface, &QObject::destroyed, this,
+                    [this, surface] {
+                        m_plasmaShellSurfaces.removeOne(surface);
+                    }
+                );
             }
         }
     );
