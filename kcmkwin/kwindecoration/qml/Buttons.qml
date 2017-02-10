@@ -63,7 +63,7 @@ Item {
                         id: leftButtonsView
                         anchors.left: parent.left;
                         height: buttonPreviewRow.height
-                        model: configurationModule.leftButtons
+                        model: leftButtons
                         key: "decoButtonLeft"
                     }
                     Item {
@@ -81,7 +81,7 @@ Item {
                         id: rightButtonsView
                         anchors.right: parent.right;
                         height: buttonPreviewRow.height
-                        model: configurationModule.rightButtons
+                        model: rightButtons
                         key: "decoButtonRight"
                     }
                     DropArea {
@@ -144,7 +144,7 @@ Item {
             GridView {
                 id: availableGrid
                 Layout.fillWidth: true
-                model: configurationModule.availableButtons
+                model: availableButtons
                 interactive: false
                 cellWidth: iconLabel.implicitWidth
                 cellHeight: units.iconSizes.small + iCannotBelieveIDoThis.implicitHeight + 4*units.smallSpacing
