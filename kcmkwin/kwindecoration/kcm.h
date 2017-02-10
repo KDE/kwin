@@ -47,16 +47,9 @@ public:
 class ConfigurationModule : public KCModule
 {
     Q_OBJECT
-    Q_PROPERTY(QAbstractItemModel* leftButtons READ leftButtons CONSTANT)
-    Q_PROPERTY(QAbstractItemModel* rightButtons READ rightButtons CONSTANT)
-    Q_PROPERTY(QAbstractItemModel* availableButtons READ availableButtons CONSTANT)
 public:
     explicit ConfigurationModule(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     virtual ~ConfigurationModule();
-
-    QAbstractItemModel *leftButtons() const;
-    QAbstractItemModel *rightButtons() const;
-    QAbstractItemModel *availableButtons() const;
 
     bool eventFilter(QObject *watched, QEvent *e) override;
 

@@ -100,7 +100,10 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     m_quickView->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_proxyModel);
     updateColors();
     m_quickView->rootContext()->setContextProperty("_borderSizesIndex", 3); // 3 is normal
-    m_quickView->rootContext()->setContextProperty("configurationModule", this);
+    m_quickView->rootContext()->setContextProperty("leftButtons", m_leftButtons);
+    m_quickView->rootContext()->setContextProperty("rightButtons", m_rightButtons);
+    m_quickView->rootContext()->setContextProperty("availableButtons", m_availableButtons);
+
     m_quickView->rootContext()->setContextProperty("titleFont", QFontDatabase::systemFont(QFontDatabase::TitleFont));
     m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
     m_quickView->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/kcm_kwindecoration/main.qml"))));
@@ -404,21 +407,6 @@ void ConfigurationModule::showKNS(const QString &config)
         }
     }
     delete downloadDialog;
-}
-
-QAbstractItemModel *ConfigurationModule::leftButtons() const
-{
-    return m_leftButtons;
-}
-
-QAbstractItemModel *ConfigurationModule::rightButtons() const
-{
-    return m_rightButtons;
-}
-
-QAbstractItemModel *ConfigurationModule::availableButtons() const
-{
-    return m_availableButtons;
 }
 
 bool ConfigurationModule::eventFilter(QObject *watched, QEvent *e)
