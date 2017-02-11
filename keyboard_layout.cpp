@@ -70,20 +70,26 @@ void KeyboardLayout::init()
                                           SLOT(reconfigure()));
 
     reconfigure();
-
-    initDBusInterface();
 }
 
 void KeyboardLayout::initDBusInterface()
 {
-    auto dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, this);
-    connect(this, &KeyboardLayout::layoutChanged, dbusInterface,
-        [this, dbusInterface] {
-            emit dbusInterface->currentLayoutChanged(m_xkb->layoutName());
+    if (m_xkb->numberOfLayouts() <= 1) {
+        delete m_dbusInterface;
+        m_dbusInterface = nullptr;
+        return;
+    }
+    if (m_dbusInterface) {
+        return;
+    }
+    m_dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, this);
+    connect(this, &KeyboardLayout::layoutChanged, m_dbusInterface,
+        [this] {
+            emit m_dbusInterface->currentLayoutChanged(m_xkb->layoutName());
         }
     );
     // TODO: the signal might be emitted even if the list didn't change
-    connect(this, &KeyboardLayout::layoutsReconfigured, dbusInterface, &KeyboardLayoutDBusInterface::layoutListChanged);
+    connect(this, &KeyboardLayout::layoutsReconfigured, m_dbusInterface, &KeyboardLayoutDBusInterface::layoutListChanged);
 }
 
 void KeyboardLayout::initNotifierItem()
@@ -169,6 +175,8 @@ void KeyboardLayout::resetLayout()
     reinitNotifierMenu();
     loadShortcuts();
     emit layoutsReconfigured();
+
+    initDBusInterface();
 }
 
 void KeyboardLayout::loadShortcuts()

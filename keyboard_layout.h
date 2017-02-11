@@ -33,6 +33,7 @@ class QAction;
 namespace KWin
 {
 class Xkb;
+class KeyboardLayoutDBusInterface;
 
 class KeyboardLayout : public QObject, public InputEventSpy
 {
@@ -74,6 +75,7 @@ private:
     KStatusNotifierItem *m_notifierItem;
     KSharedConfigPtr m_config;
     QVector<QAction*> m_layoutShortcuts;
+    KeyboardLayoutDBusInterface *m_dbusInterface = nullptr;
 };
 
 class KeyboardLayoutDBusInterface : public QObject

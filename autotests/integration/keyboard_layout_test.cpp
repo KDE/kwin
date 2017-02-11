@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
 
@@ -49,6 +50,7 @@ private Q_SLOTS:
     void testReconfigure();
     void testChangeLayoutThroughDBus();
     void testPerLayoutShortcut();
+    void testDBusServiceExport();
 
 private:
     void reconfigureLayouts();
@@ -240,6 +242,37 @@ void KeyboardLayoutTest::testPerLayoutShortcut()
     kwinApp()->platform()->keyboardKeyReleased(KEY_1, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+}
+
+void KeyboardLayoutTest::testDBusServiceExport()
+{
+    // verifies that the dbus service is only exported if there are at least two layouts
+
+    // first configure layouts, with just one layout
+    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group("Layout");
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us"));
+    layoutGroup.sync();
+    reconfigureLayouts();
+    auto xkb = input()->keyboard()->xkb();
+    QTRY_COMPARE(xkb->numberOfLayouts(), 1u);
+    // default layout is English
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+    // with one layout we should not have the dbus interface
+    QTRY_VERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
+
+    // reconfigure to two layouts
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de"));
+    layoutGroup.sync();
+    reconfigureLayouts();
+    QTRY_COMPARE(xkb->numberOfLayouts(), 2u);
+    QTRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
+
+    // and back to one layout
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us"));
+    layoutGroup.sync();
+    reconfigureLayouts();
+    QTRY_COMPARE(xkb->numberOfLayouts(), 1u);
+    QTRY_VERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
 }
 
 WAYLANDTEST_MAIN(KeyboardLayoutTest)
