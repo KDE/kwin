@@ -24,10 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 
 #include <KConfigGroup>
+#include <KGlobalAccel>
 
+#include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
+
+#include <linux/input.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -44,6 +48,7 @@ private Q_SLOTS:
 
     void testReconfigure();
     void testChangeLayoutThroughDBus();
+    void testPerLayoutShortcut();
 
 private:
     void reconfigureLayouts();
@@ -182,6 +187,59 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
     QVERIFY(!layoutChangedSpy.wait());
     QVERIFY(layoutChangedSpy.isEmpty());
+}
+
+void KeyboardLayoutTest::testPerLayoutShortcut()
+{
+    // this test verifies that per-layout global shortcuts are working correctly.
+    // first configure layouts
+    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group("Layout");
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));
+    layoutGroup.sync();
+
+    // and create the global shortcuts
+    const QString componentName = QStringLiteral("KDE Keyboard Layout Switcher");
+    QAction *a = new QAction(this);
+    a->setObjectName(QStringLiteral("Switch keyboard layout to English (US)"));
+    a->setProperty("componentName", componentName);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>{Qt::CTRL+Qt::ALT+Qt::Key_1}, KGlobalAccel::NoAutoloading);
+    delete a;
+    a = new QAction(this);
+    a->setObjectName(QStringLiteral("Switch keyboard layout to German"));
+    a->setProperty("componentName", componentName);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>{Qt::CTRL+Qt::ALT+Qt::Key_2}, KGlobalAccel::NoAutoloading);
+    delete a;
+
+    reconfigureLayouts();
+    // now we should have three layouts
+    auto xkb = input()->keyboard()->xkb();
+    QTRY_COMPARE(xkb->numberOfLayouts(), 3u);
+    // default layout is English
+    xkb->switchToLayout(0);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    LayoutChangedSignalWrapper wrapper;
+    QSignalSpy layoutChangedSpy(&wrapper, &LayoutChangedSignalWrapper::layoutChanged);
+    QVERIFY(layoutChangedSpy.isValid());
+
+    // now switch to English through the global shortcut
+    quint32 timestamp = 1;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_2, timestamp++);
+    QVERIFY(layoutChangedSpy.wait());
+    // now layout should be German
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+    // release keys again
+    kwinApp()->platform()->keyboardKeyReleased(KEY_2, timestamp++);
+    // switch back to English
+    kwinApp()->platform()->keyboardKeyPressed(KEY_1, timestamp++);
+    QVERIFY(layoutChangedSpy.wait());
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+    // release keys again
+    kwinApp()->platform()->keyboardKeyReleased(KEY_1, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
 }
 
 WAYLANDTEST_MAIN(KeyboardLayoutTest)
