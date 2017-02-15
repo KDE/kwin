@@ -45,8 +45,9 @@ void ModifierOnlyShortcuts::keyEvent(KeyEvent *event)
         return;
     }
     if (event->type() == QEvent::KeyPress) {
-        m_pressCount++;
-        if (m_pressCount == 1 &&
+        const bool wasEmpty = m_pressedKeys.isEmpty();
+        m_pressedKeys.insert(event->nativeScanCode());
+        if (wasEmpty && m_pressedKeys.size() == 1 &&
             !ScreenLockerWatcher::self()->isLocked() &&
             m_buttonPressCount == 0 &&
             m_cachedMods == Qt::NoModifier) {
@@ -54,9 +55,9 @@ void ModifierOnlyShortcuts::keyEvent(KeyEvent *event)
         } else {
             m_modifier = Qt::NoModifier;
         }
-    } else {
-        m_pressCount--;
-        if (m_pressCount == 0 &&
+    } else if (!m_pressedKeys.isEmpty()) {
+        m_pressedKeys.remove(event->nativeScanCode());
+        if (m_pressedKeys.isEmpty() &&
             event->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier &&
             !workspace()->globalShortcutsDisabled()) {
             if (m_modifier != Qt::NoModifier) {
@@ -72,6 +73,8 @@ void ModifierOnlyShortcuts::keyEvent(KeyEvent *event)
                 }
             }
         }
+        m_modifier = Qt::NoModifier;
+    } else {
         m_modifier = Qt::NoModifier;
     }
     m_cachedMods = event->modifiersRelevantForGlobalShortcuts();

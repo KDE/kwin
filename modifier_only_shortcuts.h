@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwin_export.h>
 
 #include <QObject>
+#include <QSet>
 
 namespace KWin
 {
@@ -44,10 +45,10 @@ public:
     }
 
 private:
-    uint m_pressCount = 0;
     Qt::KeyboardModifier m_modifier = Qt::NoModifier;
     Qt::KeyboardModifiers m_cachedMods;
     uint m_buttonPressCount = 0;
+    QSet<quint32> m_pressedKeys;
 };
 
 }
