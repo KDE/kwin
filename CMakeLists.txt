@@ -435,6 +435,7 @@ set(kwin_KDEINIT_SRCS
     virtualkeyboard.cpp
     appmenu.cpp
     modifier_only_shortcuts.cpp
+    xkb.cpp
    )
 
 if(KWIN_BUILD_TABBOX)
