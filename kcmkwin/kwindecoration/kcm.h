@@ -57,6 +57,8 @@ public Q_SLOTS:
     void defaults() override;
     void load() override;
     void save() override;
+    //what index is in the model the theme saved as current? needed to move the view at the proper index right at startup
+    int savedIndex() const;
 
 protected:
     void showEvent(QShowEvent *ev) override;
