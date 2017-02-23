@@ -99,6 +99,7 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
 
     m_quickView->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_proxyModel);
     updateColors();
+    m_quickView->rootContext()->setContextProperty("savedIndex", savedIndex());
     m_quickView->rootContext()->setContextProperty("_borderSizesIndex", 3); // 3 is normal
     m_quickView->rootContext()->setContextProperty("leftButtons", m_leftButtons);
     m_quickView->rootContext()->setContextProperty("rightButtons", m_rightButtons);
@@ -299,16 +300,20 @@ QVector< KDecoration2::DecorationButtonType > readDecorationButtons(const KConfi
     return buttonsFromString(config.readEntry(key, buttonsToString(defaultValue)));
 }
 
+int ConfigurationModule::savedIndex() const
+{
+    const KConfigGroup config = KSharedConfig::openConfig("kwinrc")->group(s_pluginName);
+    const QString plugin = config.readEntry("library", s_defaultPlugin);
+    const QString theme = config.readEntry("theme", s_defaultTheme);
+    return m_proxyModel->mapFromSource(m_model->findDecoration(plugin, theme)).row();
+}
+
 void ConfigurationModule::load()
 {
     s_loading = true;
     const KConfigGroup config = KSharedConfig::openConfig("kwinrc")->group(s_pluginName);
     const QString plugin = config.readEntry("library", s_defaultPlugin);
     const QString theme = config.readEntry("theme", s_defaultTheme);
-    const QModelIndex index = m_proxyModel->mapFromSource(m_model->findDecoration(plugin, theme));
-    if (auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView")) {
-        listView->setProperty("currentIndex", index.isValid() ? index.row() : -1);
-    }
     m_ui->closeWindowsDoubleClick->setChecked(config.readEntry("CloseOnDoubleClickOnMenu", false));
     const QVariant border = QVariant::fromValue(stringToSize(config.readEntry("BorderSize", s_borderSizeNormal)));
     m_ui->borderSizesCombo->setCurrentIndex(m_ui->borderSizesCombo->findData(border));
