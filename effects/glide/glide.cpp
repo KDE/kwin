@@ -206,6 +206,8 @@ bool GlideEffect::isGlideWindow(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return false;
+    if (!w->isVisible())
+        return false;
     if (w->data(IsGlideWindow).toBool())
         return true;
     if (w->hasDecoration())
