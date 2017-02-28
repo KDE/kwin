@@ -11,6 +11,7 @@
         "Description[fi]": "Renderöi virtuaaliseen framebufferiin.", 
         "Description[fr]": "Rendre sur un « framebuffer » factice.", 
         "Description[gl]": "Renderizar nun búfer de fotogramas virtual.", 
+        "Description[hu]": "Renderelés egy virtuális framebufferbe.", 
         "Description[it]": "Resa su un framebuffer virtuale.", 
         "Description[ko]": "가상 프레임버퍼에 렌더링합니다.", 
         "Description[nl]": "Naar een virtuele framebuffer renderen.", 
