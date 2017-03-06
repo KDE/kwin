@@ -534,6 +534,7 @@ private:
     static QSize s_virtualScreenSize;
     static QRect s_virtualScreenGeometry;
     static qreal s_virtualScreenScale;
+    static GLint s_virtualScreenViewport[4];
 
     GLTexture mTexture;
     bool mValid;
