@@ -417,6 +417,8 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion& shape, const QRe
     const QRegion actualShape = shape & screen;
     const QRect r = actualShape.boundingRect();
 
+    qreal scale = GLRenderTarget::virtualScreenScale();
+
     // Upload geometry for the horizontal and vertical passes
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     uploadGeometry(vbo, actualShape);
@@ -424,14 +426,14 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion& shape, const QRe
 
     // Create a scratch texture and copy the area in the back buffer that we're
     // going to blur into it
-    GLTexture scratch(GL_RGBA8, r.width(), r.height());
+    GLTexture scratch(GL_RGBA8, r.width() * scale, r.height() * scale);
     scratch.setFilter(GL_LINEAR);
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();
 
     const QRect sg = GLRenderTarget::virtualScreenGeometry();
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x() - sg.x(), sg.height() - sg.y() - r.y() - r.height(),
-                        r.width(), r.height());
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (r.x() - sg.x()) * scale, (sg.height() - sg.y() - r.y() - r.height()) * scale,
+                        scratch.width(), scratch.height());
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
 
@@ -443,8 +445,8 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion& shape, const QRe
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
     QMatrix4x4 textureMatrix;
-    textureMatrix.scale(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
-    textureMatrix.translate(-r.x(), -scratch.height() - r.y(), 0);
+    textureMatrix.scale(1.0 / r.width(), -1.0 / r.height(), 1);
+    textureMatrix.translate(-r.x(), -r.height() - r.y(), 0);
     shader->setTextureMatrix(textureMatrix);
     shader->setModelViewProjectionMatrix(screenProjection);
 
