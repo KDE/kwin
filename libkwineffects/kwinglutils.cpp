@@ -1037,6 +1037,7 @@ bool GLRenderTarget::s_blitSupported = false;
 QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
 QSize GLRenderTarget::s_virtualScreenSize;
 QRect GLRenderTarget::s_virtualScreenGeometry;
+qreal GLRenderTarget::s_virtualScreenScale = 1.0;
 
 void GLRenderTarget::initStatic()
 {
