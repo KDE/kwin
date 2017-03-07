@@ -4,6 +4,7 @@
         "Description[ca@valencia]": "Renderitza a una finestra imbricada en el sistema de finestres X11.", 
         "Description[ca]": "Renderitza a una finestra imbricada en el sistema de finestres X11.", 
         "Description[da]": "Rendér til et indlejret vindue på X11-vinduessystemet.", 
+        "Description[de]": "In ein eingebettetes Fenster auf X11-Fenstersystemen rendern.", 
         "Description[el]": "Αποτύπωση σε εμφωλευμένο παράθυρο σε παραθυρικό σύστημα X11.", 
         "Description[es]": "Renderizar en una ventana anidada en el sistema de ventanas X11.", 
         "Description[et]": "Pesastatud akna renderdamine X11 aknasüsteemis.", 
