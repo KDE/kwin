@@ -86,15 +86,16 @@ struct XcbConnectionDeleter
 void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11_data()
 {
     QTest::addColumn<QRect>("windowGeometry");
+    QTest::addColumn<QRect>("resizedWindowGeometry");
     QTest::addColumn<quint32>("location");
     QTest::addColumn<QPoint>("triggerPos");
 
-    QTest::newRow("bottom/left") << QRect(50, 1004, 1180, 20) << 2u << QPoint(100, 1023);
-    QTest::newRow("bottom/right") << QRect(1330, 1004, 1180, 20) << 2u << QPoint(1400, 1023);
-    QTest::newRow("top/left") << QRect(50, 0, 1180, 20) << 0u << QPoint(100, 0);
-    QTest::newRow("top/right") << QRect(1330, 0, 1180, 20) << 0u << QPoint(1400, 0);
-    QTest::newRow("left") << QRect(0, 10, 20, 1000) << 3u << QPoint(0, 50);
-    QTest::newRow("right") << QRect(2540, 10, 20, 1000) << 1u << QPoint(2559, 60);
+    QTest::newRow("bottom/left") << QRect(50, 1004, 1180, 20) << QRect(150, 1004, 1000, 20) << 2u << QPoint(100, 1023);
+    QTest::newRow("bottom/right") << QRect(1330, 1004, 1180, 20) << QRect(1410, 1004, 1000, 20) << 2u << QPoint(1400, 1023);
+    QTest::newRow("top/left") << QRect(50, 0, 1180, 20) << QRect(150, 0, 1000, 20) << 0u << QPoint(100, 0);
+    QTest::newRow("top/right") << QRect(1330, 0, 1180, 20) << QRect(1410, 0, 1000, 20) << 0u << QPoint(1400, 0);
+    QTest::newRow("left") << QRect(0, 10, 20, 1000) << QRect(0, 70, 20, 800) << 3u << QPoint(0, 50);
+    QTest::newRow("right") << QRect(2540, 10, 20, 1000) << QRect(2540, 70, 20, 800) << 1u << QPoint(2559, 60);
 }
 
 void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
@@ -160,6 +161,19 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     Cursor::setPos(triggerPos);
     QVERIFY(!client->isHiddenInternal());
     QCOMPARE(effectsWindowShownSpy.count(), 1);
+
+    //hide window again
+    Cursor::setPos(QPoint(640, 512));
+    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atom, XCB_ATOM_CARDINAL, 32, 1, &location);
+    xcb_flush(c.data());
+    QVERIFY(clientHiddenSpy.wait());
+    QVERIFY(client->isHiddenInternal());
+    QFETCH(QRect, resizedWindowGeometry);
+    //resizewhile hidden
+    client->setGeometry(resizedWindowGeometry);
+    //triggerPos shouldn't be valid anymore
+    Cursor::setPos(triggerPos);
+    QVERIFY(client->isHiddenInternal());
 
     // destroy window again
     QSignalSpy windowClosedSpy(client, &Client::windowClosed);

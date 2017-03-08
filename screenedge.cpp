@@ -986,15 +986,8 @@ void ScreenEdges::reserve(AbstractClient *client, ElectricBorder border)
     while (it != m_edges.end()) {
         if ((*it)->client() == client) {
             hadBorder = true;
-            if ((*it)->border() == border) {
-                if (!(*it)->isReserved()) {
-                    (*it)->reserve();
-                }
-                return;
-            } else {
-                delete *it;
-                it = m_edges.erase(it);
-            }
+            delete *it;
+            it = m_edges.erase(it);
         } else {
             it++;
         }

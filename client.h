@@ -604,6 +604,7 @@ private:
     bool m_clientSideDecorated;
 
     QMetaObject::Connection m_edgeRemoveConnection;
+    QMetaObject::Connection m_edgeGeometryTrackingConnection;
 };
 
 inline xcb_window_t Client::wrapperId() const

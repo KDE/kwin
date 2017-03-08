@@ -2066,6 +2066,7 @@ void Client::readShowOnScreenEdge(Xcb::Property &property)
     }
     if (border != ElectricNone) {
         disconnect(m_edgeRemoveConnection);
+        disconnect(m_edgeGeometryTrackingConnection);
         bool successfullyHidden = false;
 
         if (((value >> 8) & 0xFF) == 1) {
@@ -2081,8 +2082,9 @@ void Client::readShowOnScreenEdge(Xcb::Property &property)
             hideClient(true);
             successfullyHidden = isHiddenInternal();
 
-            m_edgeRemoveConnection = connect(this, &Client::geometryChanged, this, [this](){
-                ScreenEdges::self()->reserve(this, ElectricNone);
+            m_edgeGeometryTrackingConnection = connect(this, &Client::geometryChanged, this, [this, border](){
+                hideClient(true);
+                ScreenEdges::self()->reserve(this, border);
             });
         }
 
@@ -2100,6 +2102,7 @@ void Client::readShowOnScreenEdge(Xcb::Property &property)
         // TODO: add proper unreserve
 
         //this will call showOnScreenEdge to reset the state
+        disconnect(m_edgeGeometryTrackingConnection);
         ScreenEdges::self()->reserve(this, ElectricNone);
     }
 }
