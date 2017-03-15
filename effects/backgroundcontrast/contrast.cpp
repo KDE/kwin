@@ -88,7 +88,7 @@ void ContrastEffect::reconfigure(ReconfigureFlags flags)
     }
 }
 
-void ContrastEffect::updateContrastRegion(EffectWindow *w) const
+void ContrastEffect::updateContrastRegion(EffectWindow *w)
 {
     QRegion region;
     float colorTransform[16];
@@ -112,14 +112,14 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w) const
         }
 
         QMatrix4x4 colorMatrix(colorTransform);
-        shader->setColorMatrix(colorMatrix);
+        m_colorMatrices[w] = colorMatrix;
     }
 
     KWayland::Server::SurfaceInterface *surf = w->surface();
 
     if (surf && surf->contrast()) {
         region = surf->contrast()->region();
-        shader->setColorMatrix(colorMatrix(surf->contrast()->contrast(), surf->contrast()->intensity(), surf->contrast()->saturation()));
+        m_colorMatrices[w] = colorMatrix(surf->contrast()->contrast(), surf->contrast()->intensity(), surf->contrast()->saturation());
     }
 
     //!value.isNull() full window in X11 case, surf->contrast()
@@ -153,6 +153,7 @@ void ContrastEffect::slotWindowDeleted(EffectWindow *w)
     if (m_contrastChangedConnections.contains(w)) {
         disconnect(m_contrastChangedConnections[w]);
         m_contrastChangedConnections.remove(w);
+        m_colorMatrices.remove(w);
     }
 }
 
@@ -397,7 +398,7 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, QRegion region, Windo
         }
 
         if (!shape.isEmpty()) {
-            doContrast(shape, screen, data.opacity(), data.screenProjectionMatrix());
+            doContrast(w, shape, screen, data.opacity(), data.screenProjectionMatrix());
         }
     }
 
@@ -411,7 +412,7 @@ void ContrastEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double
     effects->paintEffectFrame(frame, region, opacity, frameOpacity);
 }
 
-void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection)
+void ContrastEffect::doContrast(EffectWindow *w, const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection)
 {
     const QRegion actualShape = shape & screen;
     const QRect r = actualShape.boundingRect();
@@ -434,6 +435,7 @@ void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
 
+    shader->setColorMatrix(m_colorMatrices.value(w));
     shader->bind();
 
 

@@ -73,8 +73,8 @@ public Q_SLOTS:
 private:
     QRegion contrastRegion(const EffectWindow *w) const;
     bool shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const;
-    void updateContrastRegion(EffectWindow *w) const;
-    void doContrast(const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection);
+    void updateContrastRegion(EffectWindow *w);
+    void doContrast(EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection);
     void uploadRegion(QVector2D *&map, const QRegion &region);
     void uploadGeometry(GLVertexBuffer *vbo, const QRegion &region);
 
@@ -83,6 +83,7 @@ private:
     long net_wm_contrast_region;
     QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
     QRegion m_currentContrast; // keeps track of the currently contrasted area of non-caching windows(from bottom to top)
+    QHash< const EffectWindow*, QMatrix4x4> m_colorMatrices;
     QHash< const EffectWindow*, QMetaObject::Connection > m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
     KWayland::Server::ContrastManagerInterface *m_contrastManager = nullptr;
 };
