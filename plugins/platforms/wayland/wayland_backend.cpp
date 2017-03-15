@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/pointerconstraints.h>
+#include <KWayland/Client/pointergestures.h>
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
@@ -120,6 +121,7 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
         [this](bool hasPointer) {
             if (hasPointer && !m_pointer) {
                 m_pointer = m_seat->createPointer(this);
+                setupPointerGestures();
                 connect(m_pointer, &Pointer::entered, this,
                     [this](quint32 serial) {
                         m_enteredSerial = serial;
@@ -219,6 +221,10 @@ WaylandSeat::~WaylandSeat()
 
 void WaylandSeat::destroyPointer()
 {
+    delete m_pinchGesture;
+    m_pinchGesture = nullptr;
+    delete m_swipeGesture;
+    m_swipeGesture = nullptr;
     delete m_pointer;
     m_pointer = nullptr;
 }
@@ -269,6 +275,61 @@ void WaylandSeat::setInstallCursor(bool install)
 {
     // TODO: remove, add?
     m_installCursor = install;
+}
+
+void WaylandSeat::setupPointerGestures()
+{
+    if (!m_pointer || !m_gesturesInterface) {
+        return;
+    }
+    if (m_pinchGesture || m_swipeGesture) {
+        return;
+    }
+    m_pinchGesture = m_gesturesInterface->createPinchGesture(m_pointer, this);
+    m_swipeGesture = m_gesturesInterface->createSwipeGesture(m_pointer, this);
+    connect(m_pinchGesture, &PointerPinchGesture::started, m_backend,
+        [this] (quint32 serial, quint32 time) {
+            Q_UNUSED(serial);
+            m_backend->processPinchGestureBegin(m_pinchGesture->fingerCount(), time);
+        }
+    );
+    connect(m_pinchGesture, &PointerPinchGesture::updated, m_backend,
+        [this] (const QSizeF &delta, qreal scale, qreal rotation, quint32 time) {
+            m_backend->processPinchGestureUpdate(scale, rotation, delta, time);
+        }
+    );
+    connect(m_pinchGesture, &PointerPinchGesture::ended, m_backend,
+        [this] (quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            m_backend->processPinchGestureEnd(time);
+        }
+    );
+    connect(m_pinchGesture, &PointerPinchGesture::cancelled, m_backend,
+        [this] (quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            m_backend->processPinchGestureCancelled(time);
+        }
+    );
+
+    connect(m_swipeGesture, &PointerSwipeGesture::started, m_backend,
+        [this] (quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            m_backend->processSwipeGestureBegin(m_swipeGesture->fingerCount(), time);
+        }
+    );
+    connect(m_swipeGesture, &PointerSwipeGesture::updated, m_backend, &Platform::processSwipeGestureUpdate);
+    connect(m_swipeGesture, &PointerSwipeGesture::ended, m_backend,
+        [this] (quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            m_backend->processSwipeGestureEnd(time);
+        }
+    );
+    connect(m_swipeGesture, &PointerSwipeGesture::cancelled, m_backend,
+        [this] (quint32 serial, quint32 time) {
+            Q_UNUSED(serial)
+            m_backend->processSwipeGestureCancelled(time);
+        }
+    );
 }
 
 WaylandBackend::WaylandBackend(QObject *parent)
@@ -355,6 +416,19 @@ void WaylandBackend::init()
         }
     );
     connect(m_registry, &Registry::interfacesAnnounced, this, &WaylandBackend::createSurface);
+    connect(m_registry, &Registry::interfacesAnnounced, this,
+        [this] {
+            if (!m_seat) {
+                return;
+            }
+            const auto gi = m_registry->interface(Registry::Interface::PointerGesturesUnstableV1);
+            if (gi.name == 0) {
+                return;
+            }
+            auto gesturesInterface = m_registry->createPointerGestures(gi.name, gi.version, m_seat.data());
+            m_seat->installGesturesInterface(gesturesInterface);
+        }
+    );
     if (!deviceIdentifier().isEmpty()) {
         m_connectionThreadObject->setSocketName(deviceIdentifier());
     }

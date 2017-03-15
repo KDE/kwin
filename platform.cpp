@@ -261,6 +261,70 @@ void Platform::touchUp(qint32 id, quint32 time)
     input()->processTouchUp(id, time);
 }
 
+void Platform::processSwipeGestureBegin(int fingerCount, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->pointer()->processSwipeGestureBegin(fingerCount, time);
+}
+
+void Platform::processSwipeGestureUpdate(const QSizeF &delta, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->pointer()->processSwipeGestureUpdate(delta, time);
+}
+
+void Platform::processSwipeGestureEnd(quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->pointer()->processSwipeGestureEnd(time);
+}
+
+void Platform::processSwipeGestureCancelled(quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->pointer()->processSwipeGestureCancelled(time);
+}
+
+void Platform::processPinchGestureBegin(int fingerCount, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->pointer()->processPinchGestureBegin(fingerCount, time);
+}
+
+void Platform::processPinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->pointer()->processPinchGestureUpdate(scale, angleDelta, delta, time);
+}
+
+void Platform::processPinchGestureEnd(quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->pointer()->processPinchGestureEnd(time);
+}
+
+void Platform::processPinchGestureCancelled(quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->pointer()->processPinchGestureCancelled(time);
+}
+
 void Platform::repaint(const QRect &rect)
 {
     if (!Compositor::self()) {

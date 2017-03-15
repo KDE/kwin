@@ -303,6 +303,15 @@ public Q_SLOTS:
     void touchCancel();
     void touchFrame();
 
+    void processSwipeGestureBegin(int fingerCount, quint32 time);
+    void processSwipeGestureUpdate(const QSizeF &delta, quint32 time);
+    void processSwipeGestureEnd(quint32 time);
+    void processSwipeGestureCancelled(quint32 time);
+    void processPinchGestureBegin(int fingerCount, quint32 time);
+    void processPinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time);
+    void processPinchGestureEnd(quint32 time);
+    void processPinchGestureCancelled(quint32 time);
+
 Q_SIGNALS:
     void screensQueried();
     void initFailed();
