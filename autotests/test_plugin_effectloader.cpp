@@ -116,6 +116,7 @@ void TestPluginEffectLoader::testHasEffect_data()
     QTest::newRow("FadeDesktop")       << QStringLiteral("kwin4_effect_fadedesktop")  << false;
     QTest::newRow("DialogParent")      << QStringLiteral("kwin4_effect_dialogparent") << false;
     QTest::newRow("Login")             << QStringLiteral("kwin4_effect_login")        << false;
+    QTest::newRow("Logout")            << QStringLiteral("kwin4_effect_logout")       << false;
     QTest::newRow("Maximize")          << QStringLiteral("kwin4_effect_maximize")     << false;
     QTest::newRow("ScaleIn")           << QStringLiteral("kwin4_effect_scalein")      << false;
     QTest::newRow("Translucency")      << QStringLiteral("kwin4_effect_translucency") << false;
