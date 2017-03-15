@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=KWin Aurorae
+Type=Service
+X-KDE-ServiceTypes=KPackage/PackageStructure
+X-KDE-Library=kwin_packagestructure_aurorae
+
+X-KDE-PluginInfo-Author=Demitrius Belai
+X-KDE-PluginInfo-Email=demitriusbelai@gmail.com
+X-KDE-PluginInfo-Name=KWin/Aurorae
+X-KDE-PluginInfo-Version=1
