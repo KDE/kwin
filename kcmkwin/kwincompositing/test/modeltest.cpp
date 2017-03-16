@@ -453,7 +453,7 @@ void ModelTest::data()
     // Check that the alignment is one we know about
     QVariant textAlignmentVariant = model->data ( model->index ( 0, 0 ), Qt::TextAlignmentRole );
     if ( textAlignmentVariant.isValid() ) {
-        unsigned int alignment = textAlignmentVariant.toInt();
+        int alignment = textAlignmentVariant.toInt();
         QCOMPARE( alignment, ( alignment & ( Qt::AlignHorizontal_Mask | Qt::AlignVertical_Mask ) ) );
     }
 
