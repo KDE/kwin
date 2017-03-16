@@ -732,12 +732,8 @@ void TestScreenEdges::testClientEdge()
 
     s->reserve(&client, KWin::ElectricBottom);
 
-    // let's set the client to be hidden
-    client.setHiddenInternal(true);
     QPointer<Edge> edge = s->findChildren<Edge*>().last();
 
-    s->reserve(&client, KWin::ElectricBottom);
-    QCOMPARE(edge.data(), s->findChildren<Edge*>().last());
     QCOMPARE(edge->isReserved(), true);
 
     //remove old reserves and resize to be in the middle of the screen
