@@ -85,6 +85,10 @@ AbstractClient::AbstractClient()
         }
     );
 
+    connect(this, &AbstractClient::paddingChanged, this, [this]() {
+        m_visibleRectBeforeGeometryUpdate = visibleRect();
+    });
+
     connect(ApplicationMenu::self(), &ApplicationMenu::applicationMenuEnabledChanged, this, [this] {
         emit hasApplicationMenuChanged(hasApplicationMenu());
     });
