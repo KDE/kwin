@@ -1,5 +1,11 @@
 [Desktop Entry]
 Name=KWin Aurorae
+Name[ca]=Aurorae del KWin
+Name[nl]=KWin Aurorae
+Name[pt]=Aurora do KWin
+Name[sv]=Kwin-aurora
+Name[uk]=KWin Aurorae
+Name[x-test]=xxKWin Auroraexx
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure
 X-KDE-Library=kwin_packagestructure_aurorae
