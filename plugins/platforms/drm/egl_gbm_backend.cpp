@@ -62,7 +62,6 @@ EglGbmBackend::EglGbmBackend(DrmBackend *b)
 
 EglGbmBackend::~EglGbmBackend()
 {
-    // TODO: cleanup front buffer?
     cleanup();
 }
 
@@ -75,7 +74,8 @@ void EglGbmBackend::cleanupSurfaces()
 
 void EglGbmBackend::cleanupOutput(const Output &o)
 {
-    // TODO: cleanup front buffer?
+    o.output->cleanup();
+
     if (o.eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(eglDisplay(), o.eglSurface);
     }

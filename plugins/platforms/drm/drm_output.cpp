@@ -69,6 +69,24 @@ DrmOutput::~DrmOutput()
     delete m_waylandOutputDevice.data();
 }
 
+void DrmOutput::cleanup()
+{
+    if (m_currentBuffer) {
+        m_currentBuffer->releaseGbm();
+    }
+    if (m_nextBuffer) {
+        m_nextBuffer->releaseGbm();
+    }
+    if (m_primaryPlane) {
+        if (m_primaryPlane->current()) {
+            m_primaryPlane->current()->releaseGbm();
+        }
+        if (m_primaryPlane->next()) {
+            m_primaryPlane->next()->releaseGbm();
+        }
+    }
+}
+
 void DrmOutput::hideCursor()
 {
     drmModeSetCursor(m_backend->fd(), m_crtcId, 0, 0, 0);
@@ -674,6 +692,10 @@ void DrmOutput::pageFlipped()
 
     } else {
         if (!m_nextBuffer) {
+            // on manual vt switch
+            if (m_currentBuffer) {
+                m_currentBuffer->releaseGbm();
+            }
             return;
         }
         pageFlippedBufferRemover(m_currentBuffer, m_nextBuffer);
@@ -685,14 +707,8 @@ void DrmOutput::pageFlipped()
 
 void DrmOutput::pageFlippedBufferRemover(DrmBuffer *oldbuffer, DrmBuffer *newbuffer)
 {
-    if (newbuffer->deleteAfterPageFlip()) {
-        if ( oldbuffer && oldbuffer != newbuffer ) {
-            delete oldbuffer;
-        }
-    } else {
-        // although oldbuffer's pointer is remapped in pageFlipped(),
-        // we ignore the pointer completely anywhere else in this case
-        newbuffer->releaseGbm();
+    if (oldbuffer && oldbuffer->deleteAfterPageFlip() && oldbuffer != newbuffer) {
+        delete oldbuffer;
     }
 }
 

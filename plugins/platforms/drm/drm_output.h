@@ -61,6 +61,7 @@ public:
         QSize physicalSize;
     };
     virtual ~DrmOutput();
+    void cleanup();
     void showCursor(DrmBuffer *buffer);
     void hideCursor();
     void moveCursor(const QPoint &globalPos);
