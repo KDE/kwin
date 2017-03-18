@@ -73,6 +73,7 @@ DesktopGridEffect::DesktopGridEffect()
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
     shortcut = KGlobalAccel::self()->shortcut(a);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F8, a);
+    effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &DesktopGridEffect::globalShortcutChanged);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));

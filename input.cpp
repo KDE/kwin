@@ -691,6 +691,26 @@ public:
         }
         return false;
     }
+    bool swipeGestureBegin(int fingerCount, quint32 time) override {
+        Q_UNUSED(time)
+        input()->shortcuts()->processSwipeStart(fingerCount);
+        return false;
+    }
+    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override {
+        Q_UNUSED(time)
+        input()->shortcuts()->processSwipeUpdate(delta);
+        return false;
+    }
+    bool swipeGestureCancelled(quint32 time) override {
+        Q_UNUSED(time)
+        input()->shortcuts()->processSwipeCancel();
+        return false;
+    }
+    bool swipeGestureEnd(quint32 time) override {
+        Q_UNUSED(time)
+        input()->shortcuts()->processSwipeEnd();
+        return false;
+    }
 };
 
 class InternalWindowEventFilter : public InputEventFilter {
@@ -1817,6 +1837,11 @@ void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, 
 void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
 {
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
+}
+
+void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action)
+{
+    m_shortcuts->registerTouchpadSwipe(action, direction);
 }
 
 void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)

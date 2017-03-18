@@ -876,6 +876,15 @@ public:
     virtual void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) = 0;
 
     /**
+     * @brief Registers a global touchpad swipe gesture shortcut with the provided @p action.
+     *
+     * @param direction The direction for the swipe
+     * @param action The action which gets triggered when the gesture triggers
+     * @since 5.10
+     **/
+    virtual void registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action) = 0;
+
+    /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if
      * the effect isn't loaded or doesn't have a proxy class.
      */

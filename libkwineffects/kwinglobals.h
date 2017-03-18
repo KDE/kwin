@@ -129,6 +129,18 @@ enum PointerAxisDirection {
     PointerAxisRight
 };
 
+/**
+ * @brief Directions for swipe gestures
+ * @since 5.10
+ **/
+enum class SwipeDirection {
+    Invalid,
+    Down,
+    Left,
+    Up,
+    Right
+};
+
 inline
 KWIN_EXPORT xcb_connection_t *connection()
 {

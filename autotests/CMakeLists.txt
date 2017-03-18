@@ -333,3 +333,19 @@ target_link_libraries(testOnScreenNotification
 
 add_test(kwin-testOnScreenNotification testOnScreenNotification)
 ecm_mark_as_test(testOnScreenNotification)
+
+########################################################
+# Test Gestures
+########################################################
+set( testGestures_SRCS
+    test_gestures.cpp
+    ../gestures.cpp
+)
+add_executable( testGestures ${testGestures_SRCS})
+
+target_link_libraries(testGestures
+    Qt5::Test
+)
+
+add_test(kwin-testGestures testGestures)
+ecm_mark_as_test(testGestures)

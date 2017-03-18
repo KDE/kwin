@@ -177,6 +177,7 @@ public:
     void registerAxisShortcut(Qt::KeyboardModifiers, KWin::PointerAxisDirection, QAction *) override {}
     void registerGlobalShortcut(const QKeySequence &, QAction *) override {}
     void registerPointerShortcut(Qt::KeyboardModifiers, Qt::MouseButton, QAction *) override {}
+    void registerTouchpadSwipeShortcut(KWin::SwipeDirection, QAction *) override {}
     void reloadEffect(KWin::Effect *) override {}
     void removeSupportProperty(const QByteArray &, KWin::Effect *) override {}
     void reserveElectricBorder(KWin::ElectricBorder, KWin::Effect *) override {}

@@ -108,6 +108,7 @@ public:
     void registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, void (T::*slot)());
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
+    void registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action);
     void registerGlobalAccel(KGlobalAccelInterface *interface);
 
     /**

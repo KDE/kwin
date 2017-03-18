@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include <config-kwin.h>
 #include "main.h"
+#include "gestures.h"
 #include "utils.h"
 // KDE
 #include <KGlobalAccel/private/kglobalacceld.h>
@@ -31,6 +32,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+
+uint qHash(SwipeDirection direction)
+{
+    return uint(direction);
+}
 
 GlobalShortcut::GlobalShortcut(const QKeySequence &shortcut)
     : m_shortcut(shortcut)
@@ -53,6 +59,15 @@ GlobalShortcut::GlobalShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirec
     , m_pointerModifiers(modifiers)
     , m_pointerButtons(Qt::NoButton)
     , m_axis(axis)
+{
+}
+
+GlobalShortcut::GlobalShortcut(SwipeDirection direction)
+    : m_shortcut(QKeySequence())
+    , m_pointerModifiers(Qt::NoModifier)
+    , m_pointerButtons(Qt::NoButton)
+    , m_axis(PointerAxisUp)
+    , m_swipeDirection(direction)
 {
 }
 
@@ -79,6 +94,35 @@ InternalGlobalShortcut::InternalGlobalShortcut(Qt::KeyboardModifiers axisModifie
 {
 }
 
+static SwipeGesture::Direction toSwipeDirection(SwipeDirection direction)
+{
+    switch (direction) {
+    case SwipeDirection::Up:
+        return SwipeGesture::Direction::Up;
+    case SwipeDirection::Down:
+        return SwipeGesture::Direction::Down;
+    case SwipeDirection::Left:
+        return SwipeGesture::Direction::Left;
+    case SwipeDirection::Right:
+        return SwipeGesture::Direction::Right;
+    case SwipeDirection::Invalid:
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+InternalGlobalShortcut::InternalGlobalShortcut(Qt::KeyboardModifiers swipeModifier, SwipeDirection direction, QAction *action)
+    : GlobalShortcut(direction)
+    , m_action(action)
+    , m_swipe(new SwipeGesture)
+{
+    Q_UNUSED(swipeModifier)
+    m_swipe->setDirection(toSwipeDirection(direction));
+    m_swipe->setMinimumFingerCount(4);
+    m_swipe->setMaximumFingerCount(4);
+    QObject::connect(m_swipe.data(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
+}
+
 InternalGlobalShortcut::~InternalGlobalShortcut()
 {
 }
@@ -91,6 +135,7 @@ void InternalGlobalShortcut::invoke()
 
 GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
     : QObject(parent)
+    , m_gestureRecognizer(new GestureRecognizer(this))
 {
 }
 
@@ -106,6 +151,7 @@ GlobalShortcutsManager::~GlobalShortcutsManager()
 {
     clearShortcuts(m_pointerShortcuts);
     clearShortcuts(m_axisShortcuts);
+    clearShortcuts(m_swipeShortcuts);
 }
 
 void GlobalShortcutsManager::init()
@@ -146,10 +192,11 @@ void GlobalShortcutsManager::objectDeleted(QObject *object)
 {
     handleDestroyedAction(object, m_pointerShortcuts);
     handleDestroyedAction(object, m_axisShortcuts);
+    handleDestroyedAction(object, m_swipeShortcuts);
 }
 
 template <typename T, typename R>
-void addShortcut(T &shortcuts, QAction *action, Qt::KeyboardModifiers modifiers, R value)
+GlobalShortcut *addShortcut(T &shortcuts, QAction *action, Qt::KeyboardModifiers modifiers, R value)
 {
     GlobalShortcut *cut = new InternalGlobalShortcut(modifiers, value, action);
     auto it = shortcuts.find(modifiers);
@@ -161,6 +208,7 @@ void addShortcut(T &shortcuts, QAction *action, Qt::KeyboardModifiers modifiers,
         s.insert(value, cut);
         shortcuts.insert(modifiers, s);
     }
+    return cut;
 }
 
 void GlobalShortcutsManager::registerPointerShortcut(QAction *action, Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons)
@@ -173,6 +221,13 @@ void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardM
 {
     addShortcut(m_axisShortcuts, action, modifiers, axis);
     connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
+}
+
+void GlobalShortcutsManager::registerTouchpadSwipe(QAction *action, SwipeDirection direction)
+{
+    auto shortcut = addShortcut(m_swipeShortcuts, action, Qt::NoModifier, direction);
+    connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
+    m_gestureRecognizer->registerGesture(static_cast<InternalGlobalShortcut*>(shortcut)->swipeGesture());
 }
 
 template <typename T, typename U>
@@ -231,6 +286,27 @@ bool GlobalShortcutsManager::processPointerPressed(Qt::KeyboardModifiers mods, Q
 bool GlobalShortcutsManager::processAxis(Qt::KeyboardModifiers mods, PointerAxisDirection axis)
 {
     return processShortcut(mods, axis, m_axisShortcuts);
+}
+
+void GlobalShortcutsManager::processSwipeStart(uint fingerCount)
+{
+    m_gestureRecognizer->startSwipeGesture(fingerCount);
+}
+
+void GlobalShortcutsManager::processSwipeUpdate(const QSizeF &delta)
+{
+    m_gestureRecognizer->updateSwipeGesture(delta);
+}
+
+void GlobalShortcutsManager::processSwipeCancel()
+{
+    m_gestureRecognizer->cancelSwipeGesture();
+}
+
+void GlobalShortcutsManager::processSwipeEnd()
+{
+    m_gestureRecognizer->endSwipeGesture();
+    // TODO: cancel on Wayland Seat if one triggered
 }
 
 } // namespace

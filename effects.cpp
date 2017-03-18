@@ -723,6 +723,11 @@ void EffectsHandlerImpl::registerAxisShortcut(Qt::KeyboardModifiers modifiers, P
     input()->registerAxisShortcut(modifiers, axis, action);
 }
 
+void EffectsHandlerImpl::registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action)
+{
+    input()->registerTouchpadSwipeShortcut(direction, action);
+}
+
 void* EffectsHandlerImpl::getProxy(QString name)
 {
     for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)

@@ -87,6 +87,10 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
    Q_UNUSED(action)
 }
 
+void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection, QAction*)
+{
+}
+
 void updateXTime()
 {
 }

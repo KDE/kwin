@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class KLocalizedString;
 class NETRootInfo;
+class QAction;
 
 namespace KWin {
 
@@ -420,7 +421,7 @@ private:
      * @param key The global shortcut for the action
      * @param slot The slot to invoke when the action is triggered
      **/
-    void addAction(const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
+    QAction *addAction(const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
     /**
      * Creates an action and connects it to the @p slot in this Manager.
      * Overloaded method for the case that no additional value needs to be passed to the action and
@@ -429,7 +430,7 @@ private:
      * @param label The localized name for the action to be created
      * @param slot The slot to invoke when the action is triggered
      **/
-    void addAction(const QString &name, const QString &label, void (VirtualDesktopManager::*slot)());
+    QAction *addAction(const QString &name, const QString &label, void (VirtualDesktopManager::*slot)());
 
     QVector<VirtualDesktop*> m_desktops;
     QPointer<VirtualDesktop> m_current;

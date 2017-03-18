@@ -44,6 +44,10 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
    Q_UNUSED(action)
 }
 
+void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection, QAction*)
+{
+}
+
 }
 
 Q_DECLARE_METATYPE(Qt::Orientation)
