@@ -1,11 +1,14 @@
 [Desktop Entry]
 Name=logout
 Name[ca]=sortida
+Name[ca@valencia]=eixida
+Name[hu]=Kijelentkezés
 Name[nl]=afmelden
 Name[pt]=encerramento
 Name[sv]=utloggning
 Name[uk]=вихід
 Name[x-test]=xxlogoutxx
+Name[zh_CN]=注销
 Icon=preferences-system-windows-effect-logout
 Comment=Smoothly fade to the desktop when logging in
 Comment[ar]=اظهار سطح المكتب بنعومة عند الولوج

@@ -1,11 +1,14 @@
 [Desktop Entry]
 Name=KWin Decoration
 Name[ca]=Decoració del KWin
+Name[ca@valencia]=Decoració del KWin
+Name[hu]=KWin dekoráció
 Name[nl]=KWin-decoraties
 Name[pt]=Decorações do KWin
 Name[sv]=Kwin-dekoration
 Name[uk]=Обрамлення вікон KWin
 Name[x-test]=xxKWin Decorationxx
+Name[zh_CN]=KWin 装饰
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure
 X-KDE-Library=kwin_packagestructure_decoration
