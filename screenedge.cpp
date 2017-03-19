@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KWin
 #include "atoms.h"
+#include "gestures.h"
 #include <client.h>
 #include "cursor.h"
 #include "main.h"
@@ -72,7 +73,33 @@ Edge::Edge(ScreenEdges *parent)
     , m_blocked(false)
     , m_pushBackBlocked(false)
     , m_client(nullptr)
+    , m_gesture(new SwipeGesture(this))
 {
+    m_gesture->setMinimumFingerCount(1);
+    m_gesture->setMaximumFingerCount(1);
+    connect(m_gesture, &Gesture::triggered, this,
+        [this] {
+            stopApproaching();
+            if (m_client) {
+                m_client->showOnScreenEdge();
+                unreserve();
+                return;
+            }
+            handleAction();
+            handleByCallback();
+        }, Qt::QueuedConnection
+    );
+    connect(m_gesture, &SwipeGesture::started, this, &Edge::startApproaching);
+    connect(m_gesture, &SwipeGesture::cancelled, this, &Edge::stopApproaching);
+    connect(m_gesture, &SwipeGesture::progress, this,
+        [this] (qreal progress) {
+            int factor = progress * 256.0f;
+            if (m_lastApproachingFactor != factor) {
+                m_lastApproachingFactor = factor;
+                emit approaching(border(), m_lastApproachingFactor/256.0f, m_approachGeometry);
+            }
+        }
+    );
 }
 
 Edge::~Edge()
@@ -436,13 +463,31 @@ void Edge::doUpdateBlocking()
 
 void Edge::doGeometryUpdate()
 {
+    if (isScreenEdge()) {
+        m_gesture->setStartGeometry(m_geometry);
+        m_gesture->setMinimumDelta(screens()->size(screens()->number(m_geometry.center())) * 0.2);
+    }
 }
 
 void Edge::activate()
 {
+    if (isScreenEdge() && !m_edges->isDesktopSwitching()) {
+        m_edges->gestureRecognizer()->registerGesture(m_gesture);
+    }
+    doActivate();
+}
+
+void Edge::doActivate()
+{
 }
 
 void Edge::deactivate()
+{
+    m_edges->gestureRecognizer()->unregisterGesture(m_gesture);
+    doDeactivate();
+}
+
+void Edge::doDeactivate()
 {
 }
 
@@ -531,6 +576,27 @@ quint32 Edge::approachWindow() const
     return 0;
 }
 
+void Edge::setBorder(ElectricBorder border)
+{
+    m_border = border;
+    switch (m_border) {
+    case ElectricTop:
+        m_gesture->setDirection(SwipeGesture::Direction::Down);
+        break;
+    case ElectricRight:
+        m_gesture->setDirection(SwipeGesture::Direction::Left);
+        break;
+    case ElectricBottom:
+        m_gesture->setDirection(SwipeGesture::Direction::Up);
+        break;
+    case ElectricLeft:
+        m_gesture->setDirection(SwipeGesture::Direction::Right);
+        break;
+    default:
+        break;
+    }
+}
+
 /**********************************************************
  * ScreenEdges
  *********************************************************/
@@ -551,6 +617,7 @@ ScreenEdges::ScreenEdges(QObject *parent)
     , m_actionBottom(ElectricActionNone)
     , m_actionBottomLeft(ElectricActionNone)
     , m_actionLeft(ElectricActionNone)
+    , m_gestureRecognizer(new GestureRecognizer(this))
 {
     QWidget w;
     m_cornerOffset = (w.physicalDpiX() + w.physicalDpiY() + 5) / 6;

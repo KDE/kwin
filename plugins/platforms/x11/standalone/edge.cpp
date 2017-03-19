@@ -44,14 +44,14 @@ WindowBasedEdge::~WindowBasedEdge()
 {
 }
 
-void WindowBasedEdge::activate()
+void WindowBasedEdge::doActivate()
 {
     createWindow();
     createApproachWindow();
     doUpdateBlocking();
 }
 
-void WindowBasedEdge::deactivate()
+void WindowBasedEdge::doDeactivate()
 {
     m_window.reset();
     m_approachWindow.reset();

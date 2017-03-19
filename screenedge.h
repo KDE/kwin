@@ -44,7 +44,9 @@ class QMouseEvent;
 namespace KWin {
 
 class AbstractClient;
+class GestureRecognizer;
 class ScreenEdges;
+class SwipeGesture;
 
 class KWIN_EXPORT Edge : public QObject
 {
@@ -103,12 +105,14 @@ protected:
     const ScreenEdges *edges() const;
     bool isBlocked() const;
     virtual void doGeometryUpdate();
-    virtual void activate();
-    virtual void deactivate();
+    virtual void doActivate();
+    virtual void doDeactivate();
     virtual void doStartApproaching();
     virtual void doStopApproaching();
     virtual void doUpdateBlocking();
 private:
+    void activate();
+    void deactivate();
     bool canActivate(const QPoint &cursorPos, const QDateTime &triggerTime);
     void handle(const QPoint &cursorPos);
     bool handleAction();
@@ -130,6 +134,7 @@ private:
     bool m_blocked;
     bool m_pushBackBlocked;
     AbstractClient *m_client;
+    SwipeGesture *m_gesture;
 };
 
 /**
@@ -304,6 +309,10 @@ public:
     ElectricBorderAction actionBottomLeft() const;
     ElectricBorderAction actionLeft() const;
 
+    GestureRecognizer *gestureRecognizer() const {
+        return m_gestureRecognizer;
+    }
+
 public Q_SLOTS:
     void reconfigure();
     /**
@@ -358,6 +367,7 @@ private:
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
     int m_cornerOffset;
+    GestureRecognizer *m_gestureRecognizer;
 
     KWIN_SINGLETON(ScreenEdges)
 };
@@ -410,11 +420,6 @@ inline bool Edge::isReserved() const
 inline void Edge::setAction(ElectricBorderAction action)
 {
     m_action = action;
-}
-
-inline void Edge::setBorder(ElectricBorder border)
-{
-    m_border = border;
 }
 
 inline ScreenEdges *Edge::edges()

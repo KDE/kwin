@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touch_input.h"
 #include "client.h"
 #include "effects.h"
+#include "gestures.h"
 #include "globalshortcuts.h"
 #include "logind.h"
 #include "main.h"
@@ -1047,6 +1048,46 @@ public:
         // always forward
         return false;
     }
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+        Q_UNUSED(time)
+        // TODO: better check whether a touch sequence is in progess
+        if (m_touchInProgress || waylandServer()->seat()->isTouchSequence()) {
+            // cancel existing touch
+            ScreenEdges::self()->gestureRecognizer()->cancelSwipeGesture();
+            m_touchInProgress = false;
+            m_id = 0;
+            return false;
+        }
+        if (ScreenEdges::self()->gestureRecognizer()->startSwipeGesture(pos) > 0) {
+            m_touchInProgress = true;
+            m_id = id;
+            m_lastPos = pos;
+            return true;
+        }
+        return false;
+    }
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+        Q_UNUSED(time)
+        if (m_touchInProgress && m_id == id) {
+            ScreenEdges::self()->gestureRecognizer()->updateSwipeGesture(QSizeF(pos.x() - m_lastPos.x(), pos.y() - m_lastPos.y()));
+            m_lastPos = pos;
+            return true;
+        }
+        return false;
+    }
+    bool touchUp(quint32 id, quint32 time) override {
+        Q_UNUSED(time)
+        if (m_touchInProgress && m_id == id) {
+            ScreenEdges::self()->gestureRecognizer()->endSwipeGesture();
+            m_touchInProgress = false;
+            return true;
+        }
+        return false;
+    }
+private:
+    bool m_touchInProgress = false;
+    quint32 m_id = 0;
+    QPointF m_lastPos;
 };
 
 /**

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "gestures.h"
 
-#include <QSizeF>
+#include <QRect>
 #include <functional>
 
 namespace KWin
@@ -38,6 +38,36 @@ SwipeGesture::SwipeGesture(QObject *parent)
 }
 
 SwipeGesture::~SwipeGesture() = default;
+
+void SwipeGesture::setStartGeometry(const QRect &geometry)
+{
+    setMinimumX(geometry.x());
+    setMinimumY(geometry.y());
+    setMaximumX(geometry.x() + geometry.width());
+    setMaximumY(geometry.y() + geometry.height());
+}
+
+qreal SwipeGesture::minimumDeltaReachedProgress(const QSizeF &delta) const
+{
+    if (!m_minimumDeltaRelevant || m_minimumDelta.isNull()) {
+        return 1.0;
+    }
+    switch (m_direction) {
+    case Direction::Up:
+    case Direction::Down:
+        return std::min(std::abs(delta.height()) / std::abs(m_minimumDelta.height()), 1.0);
+    case Direction::Left:
+    case Direction::Right:
+        return std::min(std::abs(delta.width()) / std::abs(m_minimumDelta.width()), 1.0);
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+bool SwipeGesture::minimumDeltaReached(const QSizeF &delta) const
+{
+    return minimumDeltaReachedProgress(delta) >= 1.0;
+}
 
 GestureRecognizer::GestureRecognizer(QObject *parent)
     : QObject(parent)
@@ -67,8 +97,9 @@ void GestureRecognizer::unregisterGesture(KWin::Gesture* gesture)
     }
 }
 
-void GestureRecognizer::startSwipeGesture(uint fingerCount)
+int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startPos, StartPositionBehavior startPosBehavior)
 {
+    int count = 0;
     // TODO: verify that no gesture is running
     for (Gesture *gesture : qAsConst(m_gestures)) {
         SwipeGesture *swipeGesture = qobject_cast<SwipeGesture*>(gesture);
@@ -85,10 +116,34 @@ void GestureRecognizer::startSwipeGesture(uint fingerCount)
                 continue;
             }
         }
+        if (startPosBehavior == StartPositionBehavior::Relevant) {
+            if (swipeGesture->minimumXIsRelevant()) {
+                if (swipeGesture->minimumX() > startPos.x()) {
+                    continue;
+                }
+            }
+            if (swipeGesture->maximumXIsRelevant()) {
+                if (swipeGesture->maximumX() < startPos.x()) {
+                    continue;
+                }
+            }
+            if (swipeGesture->minimumYIsRelevant()) {
+                if (swipeGesture->minimumY() > startPos.y()) {
+                    continue;
+                }
+            }
+            if (swipeGesture->maximumYIsRelevant()) {
+                if (swipeGesture->maximumY() < startPos.y()) {
+                    continue;
+                }
+            }
+        }
         // direction doesn't matter yet
         m_activeSwipeGestures << swipeGesture;
+        count++;
         emit swipeGesture->started();
     }
+    return count;
 }
 
 void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
@@ -108,9 +163,13 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
         // vertical
         direction = delta.height() < 0 ? SwipeGesture::Direction::Up : SwipeGesture::Direction::Down;
     }
+    const QSizeF combinedDelta = std::accumulate(m_swipeUpdates.constBegin(), m_swipeUpdates.constEnd(), QSizeF(0, 0));
     for (auto it = m_activeSwipeGestures.begin(); it != m_activeSwipeGestures.end();) {
         auto g = qobject_cast<SwipeGesture*>(*it);
         if (g->direction() == direction) {
+            if (g->isMinimumDeltaRelevant()) {
+                emit g->progress(g->minimumDeltaReachedProgress(combinedDelta));
+            }
             it++;
         } else {
             emit g->cancelled();
@@ -135,8 +194,13 @@ void GestureRecognizer::cancelSwipeGesture()
 
 void GestureRecognizer::endSwipeGesture()
 {
+    const QSizeF delta = std::accumulate(m_swipeUpdates.constBegin(), m_swipeUpdates.constEnd(), QSizeF(0, 0));
     for (auto g : qAsConst(m_activeSwipeGestures)) {
-        emit g->triggered();
+        if (static_cast<SwipeGesture*>(g)->minimumDeltaReached(delta)) {
+            emit g->triggered();
+        } else {
+            emit g->cancelled();
+        }
     }
     m_activeSwipeGestures.clear();
     m_swipeUpdates.clear();

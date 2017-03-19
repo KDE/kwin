@@ -281,6 +281,7 @@ set( testScreenEdges_SRCS
     mock_screens.cpp
     mock_workspace.cpp
     ../atoms.cpp
+    ../gestures.cpp
     ../screens.cpp
     ../screenedge.cpp
     ../virtualdesktops.cpp

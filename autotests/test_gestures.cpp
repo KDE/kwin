@@ -34,6 +34,18 @@ private Q_SLOTS:
     void testSwipeMaxFinger();
     void testDirection_data();
     void testDirection();
+    void testMinimumX_data();
+    void testMinimumX();
+    void testMinimumY_data();
+    void testMinimumY();
+    void testMaximumX_data();
+    void testMaximumX();
+    void testMaximumY_data();
+    void testMaximumY();
+    void testStartGeometry();
+    void testSetMinimumDelta();
+    void testMinimumDeltaReached_data();
+    void testMinimumDeltaReached();
     void testUnregisterSwipeCancels();
     void testDeleteSwipeCancels();
     void testSwipeCancel_data();
@@ -45,6 +57,8 @@ private Q_SLOTS:
     void testSwipeMinFingerStart();
     void testSwipeMaxFingerStart_data();
     void testSwipeMaxFingerStart();
+    void testSwipeGeometryStart_data();
+    void testSwipeGeometryStart();
     void testSwipeDiagonalCancels_data();
     void testSwipeDiagonalCancels();
 };
@@ -117,6 +131,178 @@ void GestureTest::testDirection()
     // back to down
     gesture.setDirection(SwipeGesture::Direction::Down);
     QCOMPARE(gesture.direction(), SwipeGesture::Direction::Down);
+}
+
+void GestureTest::testMinimumX_data()
+{
+    QTest::addColumn<int>("min");
+
+    QTest::newRow("0") << 0;
+    QTest::newRow("-1") << -1;
+    QTest::newRow("1") << 1;
+}
+
+void GestureTest::testMinimumX()
+{
+    SwipeGesture gesture;
+    QCOMPARE(gesture.minimumX(), 0);
+    QCOMPARE(gesture.minimumXIsRelevant(), false);
+    QFETCH(int, min);
+    gesture.setMinimumX(min);
+    QCOMPARE(gesture.minimumX(), min);
+    QCOMPARE(gesture.minimumXIsRelevant(), true);
+}
+
+void GestureTest::testMinimumY_data()
+{
+    QTest::addColumn<int>("min");
+
+    QTest::newRow("0") << 0;
+    QTest::newRow("-1") << -1;
+    QTest::newRow("1") << 1;
+}
+
+void GestureTest::testMinimumY()
+{
+    SwipeGesture gesture;
+    QCOMPARE(gesture.minimumY(), 0);
+    QCOMPARE(gesture.minimumYIsRelevant(), false);
+    QFETCH(int, min);
+    gesture.setMinimumY(min);
+    QCOMPARE(gesture.minimumY(), min);
+    QCOMPARE(gesture.minimumYIsRelevant(), true);
+}
+
+void GestureTest::testMaximumX_data()
+{
+    QTest::addColumn<int>("max");
+
+    QTest::newRow("0") << 0;
+    QTest::newRow("-1") << -1;
+    QTest::newRow("1") << 1;
+}
+
+void GestureTest::testMaximumX()
+{
+    SwipeGesture gesture;
+    QCOMPARE(gesture.maximumX(), 0);
+    QCOMPARE(gesture.maximumXIsRelevant(), false);
+    QFETCH(int, max);
+    gesture.setMaximumX(max);
+    QCOMPARE(gesture.maximumX(), max);
+    QCOMPARE(gesture.maximumXIsRelevant(), true);
+}
+
+void GestureTest::testMaximumY_data()
+{
+    QTest::addColumn<int>("max");
+
+    QTest::newRow("0") << 0;
+    QTest::newRow("-1") << -1;
+    QTest::newRow("1") << 1;
+}
+
+void GestureTest::testMaximumY()
+{
+    SwipeGesture gesture;
+    QCOMPARE(gesture.maximumY(), 0);
+    QCOMPARE(gesture.maximumYIsRelevant(), false);
+    QFETCH(int, max);
+    gesture.setMaximumY(max);
+    QCOMPARE(gesture.maximumY(), max);
+    QCOMPARE(gesture.maximumYIsRelevant(), true);
+}
+
+void GestureTest::testStartGeometry()
+{
+    SwipeGesture gesture;
+    gesture.setStartGeometry(QRect(1, 2, 20, 30));
+    QCOMPARE(gesture.minimumXIsRelevant(), true);
+    QCOMPARE(gesture.minimumYIsRelevant(), true);
+    QCOMPARE(gesture.maximumXIsRelevant(), true);
+    QCOMPARE(gesture.maximumYIsRelevant(), true);
+    QCOMPARE(gesture.minimumX(), 1);
+    QCOMPARE(gesture.minimumY(), 2);
+    QCOMPARE(gesture.maximumX(), 21);
+    QCOMPARE(gesture.maximumY(), 32);
+}
+
+void GestureTest::testSetMinimumDelta()
+{
+    SwipeGesture gesture;
+    QCOMPARE(gesture.isMinimumDeltaRelevant(), false);
+    QCOMPARE(gesture.minimumDelta(), QSizeF());
+    QCOMPARE(gesture.minimumDeltaReached(QSizeF()), true);
+    gesture.setMinimumDelta(QSizeF(2, 3));
+    QCOMPARE(gesture.isMinimumDeltaRelevant(), true);
+    QCOMPARE(gesture.minimumDelta(), QSizeF(2, 3));
+    QCOMPARE(gesture.minimumDeltaReached(QSizeF()), false);
+    QCOMPARE(gesture.minimumDeltaReached(QSizeF(2, 3)), true);
+}
+
+void GestureTest::testMinimumDeltaReached_data()
+{
+    QTest::addColumn<KWin::SwipeGesture::Direction>("direction");
+    QTest::addColumn<QSizeF>("minimumDelta");
+    QTest::addColumn<QSizeF>("delta");
+    QTest::addColumn<bool>("reached");
+    QTest::addColumn<qreal>("progress");
+
+    QTest::newRow("Up (more)") << KWin::SwipeGesture::Direction::Up << QSizeF(0, -30) << QSizeF(0, -40) << true << 1.0;
+    QTest::newRow("Up (exact)") << KWin::SwipeGesture::Direction::Up << QSizeF(0, -30) << QSizeF(0, -30) << true << 1.0;
+    QTest::newRow("Up (less)") << KWin::SwipeGesture::Direction::Up << QSizeF(0, -30) << QSizeF(0, -29) << false << 29.0/30.0;
+    QTest::newRow("Left (more)") << KWin::SwipeGesture::Direction::Left << QSizeF(-30, -30) << QSizeF(-40, 20) << true << 1.0;
+    QTest::newRow("Left (exact)") << KWin::SwipeGesture::Direction::Left << QSizeF(-30, -40) << QSizeF(-30, 0) << true << 1.0;
+    QTest::newRow("Left (less)") << KWin::SwipeGesture::Direction::Left << QSizeF(-30, -30) << QSizeF(-29, 0) << false << 29.0/30.0;
+    QTest::newRow("Right (more)") << KWin::SwipeGesture::Direction::Right << QSizeF(30, -30) << QSizeF(40, 20) << true << 1.0;
+    QTest::newRow("Right (exact)") << KWin::SwipeGesture::Direction::Right << QSizeF(30, -40) << QSizeF(30, 0) << true << 1.0;
+    QTest::newRow("Right (less)") << KWin::SwipeGesture::Direction::Right << QSizeF(30, -30) << QSizeF(29, 0) << false << 29.0/30.0;
+    QTest::newRow("Down (more)") << KWin::SwipeGesture::Direction::Down << QSizeF(0, 30) << QSizeF(0, 40) << true << 1.0;
+    QTest::newRow("Down (exact)") << KWin::SwipeGesture::Direction::Down << QSizeF(0, 30) << QSizeF(0, 30) << true << 1.0;
+    QTest::newRow("Down (less)") << KWin::SwipeGesture::Direction::Down << QSizeF(0, 30) << QSizeF(0, 29) << false << 29.0/30.0;
+}
+
+void GestureTest::testMinimumDeltaReached()
+{
+    SwipeGesture gesture;
+    QFETCH(SwipeGesture::Direction, direction);
+    gesture.setDirection(direction);
+    QFETCH(QSizeF, minimumDelta);
+    gesture.setMinimumDelta(minimumDelta);
+    QFETCH(QSizeF, delta);
+    QFETCH(bool, reached);
+    QCOMPARE(gesture.minimumDeltaReached(delta), reached);
+
+    GestureRecognizer recognizer;
+    recognizer.registerGesture(&gesture);
+
+    QSignalSpy startedSpy(&gesture, &SwipeGesture::started);
+    QVERIFY(startedSpy.isValid());
+    QSignalSpy triggeredSpy(&gesture, &SwipeGesture::triggered);
+    QVERIFY(triggeredSpy.isValid());
+    QSignalSpy cancelledSpy(&gesture, &SwipeGesture::cancelled);
+    QVERIFY(cancelledSpy.isValid());
+    QSignalSpy progressSpy(&gesture, &SwipeGesture::progress);
+    QVERIFY(progressSpy.isValid());
+
+    recognizer.startSwipeGesture(1);
+    QCOMPARE(startedSpy.count(), 1);
+    QCOMPARE(triggeredSpy.count(), 0);
+    QCOMPARE(cancelledSpy.count(), 0);
+    QCOMPARE(progressSpy.count(), 0);
+
+    recognizer.updateSwipeGesture(delta);
+    QCOMPARE(startedSpy.count(), 1);
+    QCOMPARE(triggeredSpy.count(), 0);
+    QCOMPARE(cancelledSpy.count(), 0);
+    QCOMPARE(progressSpy.count(), 1);
+    QTEST(progressSpy.first().first().value<qreal>(), "progress");
+
+    recognizer.endSwipeGesture();
+    QCOMPARE(startedSpy.count(), 1);
+    QCOMPARE(progressSpy.count(), 1);
+    QCOMPARE(triggeredSpy.isEmpty(), !reached);
+    QCOMPARE(cancelledSpy.isEmpty(), reached);
 }
 
 void GestureTest::testUnregisterSwipeCancels()
@@ -219,12 +405,21 @@ void GestureTest::testSwipeUpdateCancel()
     QSignalSpy leftTriggeredSpy(&leftGesture, &SwipeGesture::triggered);
     QVERIFY(leftTriggeredSpy.isValid());
 
+    QSignalSpy upProgressSpy(&upGesture, &SwipeGesture::progress);
+    QVERIFY(upProgressSpy.isValid());
+    QSignalSpy downProgressSpy(&downGesture, &SwipeGesture::progress);
+    QVERIFY(downProgressSpy.isValid());
+    QSignalSpy leftProgressSpy(&leftGesture, &SwipeGesture::progress);
+    QVERIFY(leftProgressSpy.isValid());
+    QSignalSpy rightProgressSpy(&rightGesture, &SwipeGesture::progress);
+    QVERIFY(rightProgressSpy.isValid());
+
     recognizer.registerGesture(&upGesture);
     recognizer.registerGesture(&downGesture);
     recognizer.registerGesture(&rightGesture);
     recognizer.registerGesture(&leftGesture);
 
-    recognizer.startSwipeGesture(4);
+    QCOMPARE(recognizer.startSwipeGesture(4), 4);
 
     // first a down gesture
     recognizer.updateSwipeGesture(QSizeF(1, 20));
@@ -251,6 +446,11 @@ void GestureTest::testSwipeUpdateCancel()
     QCOMPARE(downTriggeredSpy.count(), 0);
     QCOMPARE(leftTriggeredSpy.count(), 0);
     QCOMPARE(rightTriggeredSpy.count(), 0);
+
+    QCOMPARE(upProgressSpy.count(), 0);
+    QCOMPARE(downProgressSpy.count(), 0);
+    QCOMPARE(leftProgressSpy.count(), 0);
+    QCOMPARE(rightProgressSpy.count(), 0);
 }
 
 void GestureTest::testSwipeUpdateTrigger_data()
@@ -340,6 +540,39 @@ void GestureTest::testSwipeMaxFingerStart()
     recognizer.registerGesture(&gesture);
     QFETCH(uint, count);
     recognizer.startSwipeGesture(count);
+    QTEST(!startedSpy.isEmpty(), "started");
+}
+
+void GestureTest::testSwipeGeometryStart_data()
+{
+    QTest::addColumn<QRect>("geometry");
+    QTest::addColumn<QPointF>("startPos");
+    QTest::addColumn<bool>("started");
+
+    QTest::newRow("top left") << QRect(0, 0, 10, 20) << QPointF(0, 0) << true;
+    QTest::newRow("top right") << QRect(0, 0, 10, 20) << QPointF(10, 0) << true;
+    QTest::newRow("bottom left") << QRect(0, 0, 10, 20) << QPointF(0, 20) << true;
+    QTest::newRow("bottom right") << QRect(0, 0, 10, 20) << QPointF(10, 20) << true;
+    QTest::newRow("x too small") << QRect(10, 20, 30, 40) << QPointF(9, 25) << false;
+    QTest::newRow("y too small") << QRect(10, 20, 30, 40) << QPointF(25, 19) << false;
+    QTest::newRow("x too large") << QRect(10, 20, 30, 40) << QPointF(41, 25) << false;
+    QTest::newRow("y too large") << QRect(10, 20, 30, 40) << QPointF(25, 61) << false;
+    QTest::newRow("inside") << QRect(10, 20, 30, 40) << QPointF(25, 25) << true;
+}
+
+void GestureTest::testSwipeGeometryStart()
+{
+    GestureRecognizer recognizer;
+    SwipeGesture gesture;
+    QFETCH(QRect, geometry);
+    gesture.setStartGeometry(geometry);
+
+    QSignalSpy startedSpy(&gesture, &SwipeGesture::started);
+    QVERIFY(startedSpy.isValid());
+
+    recognizer.registerGesture(&gesture);
+    QFETCH(QPointF, startPos);
+    recognizer.startSwipeGesture(startPos);
     QTEST(!startedSpy.isEmpty(), "started");
 }
 
