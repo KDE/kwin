@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfig>
 #include <KConfigGroup>
 
+#include <QGuiApplication>
+#include <QScreen>
+
 namespace Aurorae
 {
 
@@ -122,45 +125,53 @@ void ThemeConfig::load(const KConfig &conf)
     m_shadow = general.readEntry("Shadow", defaultShadow());
     m_decorationPosition = general.readEntry("DecorationPosition", defaultDecorationPosition());
 
+    int scaleFactor = 1;
+    QScreen *primary = QGuiApplication::primaryScreen();
+    if (primary) {
+        const qreal dpi = primary->logicalDotsPerInchX();
+        scaleFactor = (qreal)dpi / (qreal)96;
+    }
+
     KConfigGroup border(&conf, QStringLiteral("Layout"));
     // default values taken from KCommonDecoration::layoutMetric() in kcommondecoration.cpp
-    m_borderLeft = border.readEntry("BorderLeft", defaultBorderLeft());
-    m_borderRight = border.readEntry("BorderRight", defaultBorderRight());
-    m_borderBottom = border.readEntry("BorderBottom", defaultBorderBottom());
-    m_borderTop = border.readEntry("BorderTop", defaultBorderTop());
+    m_borderLeft = scaleFactor * border.readEntry("BorderLeft", defaultBorderLeft());
+    m_borderRight = scaleFactor * border.readEntry("BorderRight", defaultBorderRight());
+    m_borderBottom = scaleFactor * border.readEntry("BorderBottom", defaultBorderBottom());
+    m_borderTop = scaleFactor * border.readEntry("BorderTop", defaultBorderTop());
 
-    m_titleEdgeTop = border.readEntry("TitleEdgeTop", defaultTitleEdgeTop());
-    m_titleEdgeBottom = border.readEntry("TitleEdgeBottom", defaultTitleEdgeBottom());
-    m_titleEdgeLeft = border.readEntry("TitleEdgeLeft", defaultTitleEdgeLeft());
-    m_titleEdgeRight = border.readEntry("TitleEdgeRight", defaultTitleEdgeRight());
-    m_titleEdgeTopMaximized = border.readEntry("TitleEdgeTopMaximized", defaultTitleEdgeTopMaximized());
-    m_titleEdgeBottomMaximized = border.readEntry("TitleEdgeBottomMaximized", defaultTitleEdgeBottomMaximized());
-    m_titleEdgeLeftMaximized = border.readEntry("TitleEdgeLeftMaximized", defaultTitleEdgeLeftMaximized());
-    m_titleEdgeRightMaximized = border.readEntry("TitleEdgeRightMaximized", defaultTitleEdgeRightMaximized());
-    m_titleBorderLeft = border.readEntry("TitleBorderLeft", defaultTitleBorderLeft());
-    m_titleBorderRight = border.readEntry("TitleBorderRight", defaultTitleBorderRight());
-    m_titleHeight = border.readEntry("TitleHeight", defaultTitleHeight());
+    m_titleEdgeTop = scaleFactor * border.readEntry("TitleEdgeTop", defaultTitleEdgeTop());
+    m_titleEdgeBottom = scaleFactor * border.readEntry("TitleEdgeBottom", defaultTitleEdgeBottom());
+    m_titleEdgeLeft = scaleFactor * border.readEntry("TitleEdgeLeft", defaultTitleEdgeLeft());
+    m_titleEdgeRight = scaleFactor * border.readEntry("TitleEdgeRight", defaultTitleEdgeRight());
+    m_titleEdgeTopMaximized = scaleFactor * border.readEntry("TitleEdgeTopMaximized", defaultTitleEdgeTopMaximized());
+    m_titleEdgeBottomMaximized = scaleFactor * border.readEntry("TitleEdgeBottomMaximized", defaultTitleEdgeBottomMaximized());
+    m_titleEdgeLeftMaximized = scaleFactor * border.readEntry("TitleEdgeLeftMaximized", defaultTitleEdgeLeftMaximized());
+    m_titleEdgeRightMaximized = scaleFactor * border.readEntry("TitleEdgeRightMaximized", defaultTitleEdgeRightMaximized());
+    m_titleBorderLeft = scaleFactor * border.readEntry("TitleBorderLeft", defaultTitleBorderLeft());
+    m_titleBorderRight = scaleFactor * border.readEntry("TitleBorderRight", defaultTitleBorderRight());
+    m_titleHeight = scaleFactor * border.readEntry("TitleHeight", defaultTitleHeight());
 
     m_buttonWidth = border.readEntry("ButtonWidth", defaultButtonWidth());
-    m_buttonWidthMinimize = border.readEntry("ButtonWidthMinimize", m_buttonWidth);
-    m_buttonWidthMaximizeRestore = border.readEntry("ButtonWidthMaximizeRestore", m_buttonWidth);
-    m_buttonWidthClose = border.readEntry("ButtonWidthClose", m_buttonWidth);
-    m_buttonWidthAllDesktops = border.readEntry("ButtonWidthAlldesktops", m_buttonWidth);
-    m_buttonWidthKeepAbove = border.readEntry("ButtonWidthKeepabove", m_buttonWidth);
-    m_buttonWidthKeepBelow = border.readEntry("ButtonWidthKeepbelow", m_buttonWidth);
-    m_buttonWidthShade = border.readEntry("ButtonWidthShade", m_buttonWidth);
-    m_buttonWidthHelp = border.readEntry("ButtonWidthHelp", m_buttonWidth);
-    m_buttonWidthMenu = border.readEntry("ButtonWidthMenu", m_buttonWidth);
-    m_buttonWidthAppMenu = border.readEntry("ButtonWidthAppMenu", m_buttonWidthMenu);
-    m_buttonHeight = border.readEntry("ButtonHeight", defaultButtonHeight());
-    m_buttonSpacing = border.readEntry("ButtonSpacing", defaultButtonSpacing());
-    m_buttonMarginTop = border.readEntry("ButtonMarginTop", defaultButtonMarginTop());
-    m_explicitButtonSpacer = border.readEntry("ExplicitButtonSpacer", defaultExplicitButtonSpacer());
+    m_buttonWidthMinimize = scaleFactor * border.readEntry("ButtonWidthMinimize", m_buttonWidth);
+    m_buttonWidthMaximizeRestore = scaleFactor * border.readEntry("ButtonWidthMaximizeRestore", m_buttonWidth);
+    m_buttonWidthClose = scaleFactor * border.readEntry("ButtonWidthClose", m_buttonWidth);
+    m_buttonWidthAllDesktops = scaleFactor * border.readEntry("ButtonWidthAlldesktops", m_buttonWidth);
+    m_buttonWidthKeepAbove = scaleFactor * border.readEntry("ButtonWidthKeepabove", m_buttonWidth);
+    m_buttonWidthKeepBelow = scaleFactor * border.readEntry("ButtonWidthKeepbelow", m_buttonWidth);
+    m_buttonWidthShade = scaleFactor * border.readEntry("ButtonWidthShade", m_buttonWidth);
+    m_buttonWidthHelp = scaleFactor * border.readEntry("ButtonWidthHelp", m_buttonWidth);
+    m_buttonWidthMenu = scaleFactor * border.readEntry("ButtonWidthMenu", m_buttonWidth);
+    m_buttonWidthAppMenu = scaleFactor * border.readEntry("ButtonWidthAppMenu", m_buttonWidthMenu);
+    m_buttonWidth *= scaleFactor;
+    m_buttonHeight = scaleFactor * border.readEntry("ButtonHeight", defaultButtonHeight());
+    m_buttonSpacing = scaleFactor * border.readEntry("ButtonSpacing", defaultButtonSpacing());
+    m_buttonMarginTop = scaleFactor * border.readEntry("ButtonMarginTop", defaultButtonMarginTop());
+    m_explicitButtonSpacer = scaleFactor * border.readEntry("ExplicitButtonSpacer", defaultExplicitButtonSpacer());
 
-    m_paddingLeft = border.readEntry("PaddingLeft", defaultPaddingLeft());
-    m_paddingRight = border.readEntry("PaddingRight", defaultPaddingRight());
-    m_paddingTop = border.readEntry("PaddingTop", defaultPaddingTop());
-    m_paddingBottom = border.readEntry("PaddingBottom", defaultPaddingBottom());
+    m_paddingLeft = scaleFactor * border.readEntry("PaddingLeft", defaultPaddingLeft());
+    m_paddingRight = scaleFactor * border.readEntry("PaddingRight", defaultPaddingRight());
+    m_paddingTop = scaleFactor * border.readEntry("PaddingTop", defaultPaddingTop());
+    m_paddingBottom = scaleFactor * border.readEntry("PaddingBottom", defaultPaddingBottom());
 }
 
 QColor ThemeConfig::activeTextColor(bool useTabs, bool focused) const
