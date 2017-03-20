@@ -79,6 +79,7 @@ private:
     QMouseEvent translatedMouseEvent(QMouseEvent *orig);
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_buffer;
+    QRect m_contentRect; //the geometry of the part of the buffer that is not a shadow when buffer was created.
     QPointer<QQuickWindow> m_view;
     QQuickItem *m_item;
     KWin::Borders *m_borders;
@@ -90,7 +91,6 @@ private:
     QScopedPointer<QTimer> m_updateTimer;
     QScopedPointer<QOpenGLContext> m_context;
     QScopedPointer<QOffscreenSurface> m_offscreenSurface;
-    QSharedPointer<KDecoration2::DecorationShadow> m_scheduledShadow;
     QElapsedTimer m_doubleClickTimer;
 };
 

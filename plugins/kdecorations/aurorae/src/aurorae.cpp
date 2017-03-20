@@ -364,6 +364,15 @@ void Decoration::init()
 
                 m_view->resetOpenGLState();
                 m_buffer = m_fbo->toImage();
+
+                m_contentRect = QRect(QPoint(0, 0), m_buffer.size());
+                if (m_padding &&
+                        (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) &&
+                        !client().data()->isMaximized()) {
+                    m_contentRect = m_contentRect.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
+                }
+                updateShadow();
+
                 QOpenGLFramebufferObject::bindDefault();
                 update();
             }
@@ -450,13 +459,16 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
 {
     Q_UNUSED(repaintRegion)
     painter->fillRect(rect(), Qt::transparent);
-    QRectF r(QPointF(0, 0), m_buffer.size());
+    painter->drawImage(rect(), m_buffer, m_contentRect);
+}
+
+void Decoration::updateShadow()
+{
     bool updateShadow = false;
     const auto oldShadow = shadow();
     if (m_padding &&
             (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) &&
             !client().data()->isMaximized()) {
-        r = r.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
         if (oldShadow.isNull()) {
             updateShadow = true;
         } else {
@@ -491,24 +503,15 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
                                         m_padding->top(),
                                         m_buffer.width() - m_padding->left() - m_padding->right(),
                                         m_buffer.height() - m_padding->top() - m_padding->bottom()));
-            m_scheduledShadow = s;
+            setShadow(s);
         }
     } else {
         if (!oldShadow.isNull()) {
-            m_scheduledShadow = QSharedPointer<KDecoration2::DecorationShadow>();
-            updateShadow = true;
+            setShadow(QSharedPointer<KDecoration2::DecorationShadow>());
         }
     }
-    if (updateShadow) {
-        QMetaObject::invokeMethod(this, "updateShadow", Qt::QueuedConnection);
-    }
-    painter->drawImage(rect(), m_buffer, r);
 }
 
-void Decoration::updateShadow()
-{
-    setShadow(m_scheduledShadow);
-}
 
 QMouseEvent Decoration::translatedMouseEvent(QMouseEvent *orig)
 {
