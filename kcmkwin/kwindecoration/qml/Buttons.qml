@@ -39,7 +39,7 @@ Item {
         anchors.fill: parent
         anchors.topMargin: units.gridUnit / 2
         border.width: Math.ceil(units.gridUnit / 16.0)
-        color: SystemPalette.base;
+        color: backgroundColor;
         border.color: highlightColor;
         ColumnLayout {
             id: layout
@@ -51,7 +51,7 @@ Item {
                 Layout.fillWidth: true
                 border.width: Math.ceil(units.gridUnit / 16.0)
                 border.color: highlightColor
-                color: SystemPalette.base;
+                color: backgroundColor;
                 RowLayout {
                     id: buttonPreviewRow
                     anchors.top: parent.top;
@@ -194,7 +194,7 @@ Item {
                 id: dragHint
                 visible: !(leftButtonsView.dragging || rightButtonsView.dragging || availableGrid.dragging)
                 Layout.fillWidth: true
-                color: SystemPalette.text;
+                color: backgroundColor;
                 opacity: 0.66
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignTop
