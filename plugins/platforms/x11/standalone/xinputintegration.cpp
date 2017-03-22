@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xinputintegration.h"
 #include "main.h"
 #include "logging.h"
+#include "gestures.h"
 #include "platform.h"
+#include "screenedge.h"
 #include "x11cursor.h"
 
 #include "input.h"
@@ -36,16 +38,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+static inline qreal fixed1616ToReal(FP1616 val)
+{
+    return (val) * 1.0 / (1 << 16);
+}
+
 class XInputEventFilter : public X11EventFilter
 {
 public:
     XInputEventFilter(int xi_opcode)
-        : X11EventFilter(XCB_GE_GENERIC, xi_opcode, QVector<int>{XI_RawMotion, XI_RawButtonPress, XI_RawButtonRelease, XI_RawKeyPress, XI_RawKeyRelease})
+        : X11EventFilter(XCB_GE_GENERIC, xi_opcode, QVector<int>{XI_RawMotion, XI_RawButtonPress, XI_RawButtonRelease, XI_RawKeyPress, XI_RawKeyRelease, XI_TouchBegin, XI_TouchUpdate, XI_TouchOwnership, XI_TouchEnd})
         {}
     virtual ~XInputEventFilter() = default;
 
     bool event(xcb_generic_event_t *event) override {
         xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(event);
+        xi2PrepareXIGenericDeviceEvent(ge);
         switch (ge->event_type) {
         case XI_RawKeyPress: {
             auto re = reinterpret_cast<xXIRawEvent*>(event);
@@ -109,6 +117,43 @@ public:
                 m_x11Cursor->schedulePoll();
             }
             break;
+        case XI_TouchBegin: {
+            auto e = reinterpret_cast<xXIDeviceEvent*>(ge);
+            m_lastTouchPositions.insert(e->detail, QPointF(fixed1616ToReal(e->event_x), fixed1616ToReal(e->event_y)));
+            break;
+        }
+        case XI_TouchUpdate: {
+            auto e = reinterpret_cast<xXIDeviceEvent*>(event);
+            const QPointF touchPosition = QPointF(fixed1616ToReal(e->event_x), fixed1616ToReal(e->event_y));
+            if (e->detail == m_trackingTouchId) {
+                const auto last = m_lastTouchPositions.value(e->detail);
+                ScreenEdges::self()->gestureRecognizer()->updateSwipeGesture(QSizeF(touchPosition.x() - last.x(), touchPosition.y() - last.y()));
+            }
+            m_lastTouchPositions.insert(e->detail, touchPosition);
+            break;
+        }
+        case XI_TouchEnd: {
+            auto e = reinterpret_cast<xXIDeviceEvent*>(event);
+            if (e->detail == m_trackingTouchId) {
+                ScreenEdges::self()->gestureRecognizer()->endSwipeGesture();
+            }
+            m_lastTouchPositions.remove(e->detail);
+            m_trackingTouchId = 0;
+            break;
+        }
+        case XI_TouchOwnership: {
+            auto e = reinterpret_cast<xXITouchOwnershipEvent*>(event);
+            auto it = m_lastTouchPositions.constFind(e->touchid);
+            if (it == m_lastTouchPositions.constEnd()) {
+                XIAllowTouchEvents(display(), e->deviceid,  e->sourceid, e->touchid, XIRejectTouch);
+            } else {
+                if (ScreenEdges::self()->gestureRecognizer()->startSwipeGesture(it.value()) > 0) {
+                    m_trackingTouchId = e->touchid;
+                }
+                XIAllowTouchEvents(display(), e->deviceid, e->sourceid, e->touchid, m_trackingTouchId == e->touchid ? XIAcceptTouch : XIRejectTouch);
+            }
+            break;
+        }
         default:
             if (m_x11Cursor) {
                 m_x11Cursor->schedulePoll();
@@ -121,9 +166,27 @@ public:
     void setCursor(const QPointer<X11Cursor> &cursor) {
         m_x11Cursor = cursor;
     }
+    void setDisplay(Display *display) {
+        m_x11Display = display;
+    }
 
 private:
+    Display *display() const {
+        return m_x11Display;
+    }
+
+    void xi2PrepareXIGenericDeviceEvent(xcb_ge_generic_event_t *event) {
+        // xcb event structs contain stuff that wasn't on the wire, the full_sequence field
+        // adds an extra 4 bytes and generic events cookie data is on the wire right after the standard 32 bytes.
+        // Move this data back to have the same layout in memory as it was on the wire
+        // and allow casting, overwriting the full_sequence field.
+        memmove((char*) event + 32, (char*) event + 36, event->length * 4);
+    }
+
     QPointer<X11Cursor> m_x11Cursor;
+    Display *m_x11Display = nullptr;
+    uint32_t m_trackingTouchId = 0;
+    QHash<uint32_t, QPointF> m_lastTouchPositions;
 };
 
 class XKeyPressReleaseEventFilter : public X11EventFilter
@@ -167,19 +230,15 @@ void XInputIntegration::init()
     }
 
     // verify that the XInput extension is at at least version 2.0
-    int major = 2, minor = 0;
+    int major = 2, minor = 2;
     int result = XIQueryVersion(dpy, &major, &minor);
-    if (result == BadImplementation) {
-        // Xinput 2.2 returns BadImplementation if checked against 2.0
-        major = 2;
-        minor = 2;
+    if (result != Success) {
+        qCDebug(KWIN_X11STANDALONE) << "Failed to init XInput 2.2, trying 2.0";
+        minor = 0;
         if (XIQueryVersion(dpy, &major, &minor) != Success) {
             qCDebug(KWIN_X11STANDALONE) << "Failed to init XInput";
             return;
         }
-    } else if (result != Success) {
-        qCDebug(KWIN_X11STANDALONE) << "Failed to init XInput";
-        return;
     }
     m_hasXInput = true;
     m_xiOpcode = xi_opcode;
@@ -210,13 +269,40 @@ void XInputIntegration::startListening()
         XISetMask(mask1, XI_RawKeyPress);
         XISetMask(mask1, XI_RawKeyRelease);
     }
+    if (m_majorVersion >=2 && m_minorVersion >= 2) {
+        // touch events since 2.2
+        XISetMask(mask1, XI_TouchBegin);
+        XISetMask(mask1, XI_TouchUpdate);
+        XISetMask(mask1, XI_TouchOwnership);
+        XISetMask(mask1, XI_TouchEnd);
+    }
 
     evmasks[0].deviceid = XIAllMasterDevices;
     evmasks[0].mask_len = sizeof(mask1);
     evmasks[0].mask = mask1;
     XISelectEvents(display(), rootWindow(), evmasks, 1);
+
+    if (m_majorVersion >=2 && m_minorVersion >= 2) {
+        XIGrabModifiers mods = { int(XIAnyModifier), 0 };
+        XIEventMask touchEvmasks[1];
+        unsigned char touchMask[XIMaskLen(XI_LASTEVENT)];
+
+        memset(touchMask, 0, sizeof(touchMask));
+
+        XISetMask(touchMask, XI_TouchBegin);
+        XISetMask(touchMask, XI_TouchUpdate);
+        XISetMask(touchMask, XI_TouchOwnership);
+        XISetMask(touchMask, XI_TouchEnd);
+
+        touchEvmasks[0].deviceid = XIAllMasterDevices;
+        touchEvmasks[0].mask_len = sizeof(touchMask);
+        touchEvmasks[0].mask = touchMask;
+
+        XIGrabTouchBegin(display(), XIAllMasterDevices, rootWindow(), False, touchEvmasks, 1, &mods);
+    }
     m_xiEventFilter.reset(new XInputEventFilter(m_xiOpcode));
     m_xiEventFilter->setCursor(m_x11Cursor);
+    m_xiEventFilter->setDisplay(display());
     m_keyPressFilter.reset(new XKeyPressReleaseEventFilter(XCB_KEY_PRESS));
     m_keyReleaseFilter.reset(new XKeyPressReleaseEventFilter(XCB_KEY_RELEASE));
 
