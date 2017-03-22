@@ -144,8 +144,7 @@ DecorationButton {
             visible = Qt.binding(function() { return decoration.client.providesContextHelp});
         }
         if (buttonType == DecorationOptions.DecorationButtonApplicationMenu) {
-//             visible = decoration.appMenu;
-            visible = false;
+            visible = Qt.binding(function() { return decoration.client.hasApplicationMenu; });
         }
     }
     onHoveredChanged: colorize()
