@@ -62,7 +62,8 @@ Item {
                 break;
             case DecorationOptions.DecorationButtonApplicationMenu:
                 // app menu
-//                 decoration.appMenuClicked();
+                var pos = button.mapToItem(null, 0, 0); // null = "map to scene"
+                decoration.requestShowApplicationMenu(Qt.rect(pos.x, pos.y, button.width, button.height), 0)
                 break;
             case DecorationOptions.DecorationButtonOnAllDesktops:
                 // all desktops
