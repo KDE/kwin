@@ -1,30 +1,5 @@
 [KNewStuff3]
 Name=Window Manager Switching Layouts
-Name[ca]=Disposicions del commutador del gestor de finestres
-Name[ca@valencia]=Disposicions del commutador del gestor de finestres
-Name[cs]=Přepínání rozvržení správce oken
-Name[da]=Skifterlayouts til vindueshåndtering
-Name[de]=Wechsel-Layout für Fensterverwaltung
-Name[el]=Διατάξεις εναλλαγής διαχειριστή παραθύρων
-Name[en_GB]=Window Manager Switching Layouts
-Name[es]=Esquemas de cambio del gestor de ventanas
-Name[ia]=Disposition de commutator de gerente de fenestra
-Name[it]=Disposizione scambiafinestre del gestore delle finestre
-Name[ko]=창 관리자 전환기 레이아웃
-Name[nl]=Omschakelende indelingen van vensterbeheerder
-Name[pl]=Układ przełączania zarządzana oknami
-Name[pt]=Disposições da Mudança de Janelas do KWin
-Name[pt_BR]=Layouts de mudança do gerenciador de Janelas
-Name[sk]=Prepínanie rozložení správcu okien
-Name[sr]=Распореди пребацивања менаџера прозора
-Name[sr@ijekavian]=Распореди пребацивања менаџера прозора
-Name[sr@ijekavianlatin]=Rasporedi prebacivanja menadžera prozora
-Name[sr@latin]=Rasporedi prebacivanja menadžera prozora
-Name[sv]=Fönsterbyteslayouter
-Name[uk]=Компонування засобу перемикання вікон
-Name[x-test]=xxWindow Manager Switching Layoutsxx
-Name[zh_CN]=窗口切换器布局
-Name[zh_TW]=視窗切換器佈局
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Switching Layouts

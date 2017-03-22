@@ -13,6 +13,7 @@ X-KDE-Weight=40
 
 Name=Window Decorations
 Name[ar]=زخارف النوافذ
+Name[ast]=Decoraciones de ventanes
 Name[bg]=Декорации на прозорците
 Name[bs]=Dekoracije prozora
 Name[ca]=Decoració de les finestres
@@ -73,6 +74,7 @@ Name[zh_CN]=窗口装饰
 Name[zh_TW]=視窗裝飾
 
 Comment=Look and Feel of Window Titles
+Comment[ast]=Aspeutu y sentir de los títulos de ventana
 Comment[bs]=Izgled i osjećaj naslova prozora
 Comment[ca]=Aspecte i comportament dels títols de les finestres
 Comment[ca@valencia]=Aspecte i comportament dels títols de les finestres
@@ -120,7 +122,6 @@ X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,ha
 X-KDE-Keywords[bs]=kwin,prozor,upravitelj,granica,stil,tema,izgled,osjećati,izgled,dugme,držati,ivica,kwm,dekoracija
 X-KDE-Keywords[ca]=kwin,finestra,gestor,vora,estil,tema,aspecte,aparença,disposició,botó,gestió,vora,kwm,decoració
 X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,vora,estil,tema,aspecte,aparença,disposició,botó,gestió,vora,kwm,decoració
-X-KDE-Keywords[cs]=kwin,okna,správce,okraj,styl,motiv,vzhled,pocit,rozvržení,tlačítko,madlo,okraj,kwm,dekorace
 X-KDE-Keywords[da]=kwin,vindueshåndtering,window,manager,kant,stil,tema,udseende,layout,knap,håndtag,kant,kwm,dekoration
 X-KDE-Keywords[de]=KWin,Kwm,Fenster,Manager,Rahmen,Design,Stile,Themes,Optik,Erscheinungsbild,Layout,Knöpfe,Ränder,Dekorationen
 X-KDE-Keywords[el]=kwin,παράθυρο,διαχειριστής,περίγραμμα,στιλ,θέμα,εμφάνιση,αίσθηση,διάταξη,κουμπί,χειρισμός,άκρη,kwm,διακόσμηση
