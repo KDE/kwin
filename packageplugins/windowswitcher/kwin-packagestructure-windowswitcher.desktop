@@ -1,5 +1,9 @@
 [Desktop Entry]
 Name=KWin Window Switcher
+Name[de]=KWin-Fensterwechsler
+Name[pt]=Mudança de Janelas do KWin
+Name[sv]=Kwin-fönsterbyte
+Name[x-test]=xxKWin Window Switcherxx
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure
 X-KDE-Library=kwin_packagestructure_windowswitcher

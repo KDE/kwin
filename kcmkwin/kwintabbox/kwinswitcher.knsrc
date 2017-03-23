@@ -1,5 +1,9 @@
 [KNewStuff3]
 Name=Window Manager Switching Layouts
+Name[de]=Wechsel-Layout für Fensterverwaltung
+Name[pt]=Disposições de Mudança do Gestor de Janelas
+Name[sv]=Fönsterbyteslayouter
+Name[x-test]=xxWindow Manager Switching Layoutsxx
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Switching Layouts

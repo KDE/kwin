@@ -1,5 +1,9 @@
 [KNewStuff3]
 Name=Aurorae Window Decorations
+Name[de]=Aurorae-Fensterdekoration
+Name[pt]=Decorações das Janelas do Aurorae
+Name[sv]=Aurora-fönsterdekorationer
+Name[x-test]=xxAurorae Window Decorationsxx
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=Window Decoration Aurorae
