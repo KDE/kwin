@@ -985,6 +985,9 @@ bool ShellClient::isInternal() const
 
 bool ShellClient::isLockScreen() const
 {
+    if (m_internalWindow) {
+        return m_internalWindow->property("org_kde_ksld_emergency").toBool();
+    }
     return surface()->client() == waylandServer()->screenLockerClientConnection();
 }
 
