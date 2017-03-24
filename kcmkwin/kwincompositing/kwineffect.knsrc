@@ -1,31 +1,10 @@
 [KNewStuff3]
 Name=Window Manager Effects
-Name[ca]=Efectes del gestor de finestres
-Name[ca@valencia]=Efectes del gestor de finestres
-Name[cs]=Efekty správce oken
-Name[da]=Vindueshåndteringseffekter
 Name[de]=Fensterverwaltungs-Effekte
-Name[el]=Εφέ διαχειριστή παραθύρων
-Name[en_GB]=Window Manager Effects
-Name[es]=Efectos del gestor de ventanas
-Name[ia]=Gerente de effectos de fenestra
-Name[it]=Effetti del gestore delle finestre
-Name[ko]=창 관리자 효과
-Name[nl]=Effecten van vensterbeheerder
-Name[nn]=Effektar for vindaugshandsamar
-Name[pl]=Efekty zarządzania oknami
 Name[pt]=Efeitos do Gestor de Janelas
-Name[pt_BR]=Efeitos do gerenciador de janelas
-Name[sk]=Efekty správcu okien
-Name[sr]=Ефекти менаџера прозора
-Name[sr@ijekavian]=Ефекти менаџера прозора
-Name[sr@ijekavianlatin]=Efekti menadžera prozora
-Name[sr@latin]=Efekti menadžera prozora
 Name[sv]=Fönsterhanteringseffekter
 Name[uk]=Ефекти засобу керування вікнами
 Name[x-test]=xxWindow Manager Effectsxx
-Name[zh_CN]=窗口管理器效果
-Name[zh_TW]=視窗管理員效果
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Effects

@@ -13,6 +13,7 @@ X-KDE-Weight=120
 
 Name=Window Rules
 Name[ar]=قواعد النوافذ
+Name[ast]=Regles de ventanes
 Name[bg]=Правила за прозорци
 Name[bs]=Pravila prozora
 Name[ca]=Regles de les finestres
@@ -74,6 +75,7 @@ Name[zh_CN]=窗口规则
 Name[zh_TW]=視窗規則
 
 Comment=Individual Window Behavior
+Comment[ast]=Comportamientu individual de ventanes
 Comment[bs]=Ponašanje pojedinog prozora
 Comment[ca]=Comportament individual de les finestres
 Comment[ca@valencia]=Comportament individual de les finestres

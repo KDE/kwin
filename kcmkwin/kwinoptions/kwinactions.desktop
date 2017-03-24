@@ -12,6 +12,7 @@ X-KDE-PluginKeyword=kwinactions
 Name=Actions
 Name[af]=Aksies
 Name[ar]=إجراءات
+Name[ast]=Aiciones
 Name[be]=Дзеянні
 Name[be@latin]=Aperacyi
 Name[bg]=Действия
@@ -100,6 +101,7 @@ Name[zh_CN]=动作
 Name[zh_TW]=動作
 
 Comment=Mouse Actions on Windows
+Comment[ast]=Aiciones del mur en ventanes
 Comment[bs]=Akcioje miša na prozorima
 Comment[ca]=Accions del ratolí en les finestres
 Comment[ca@valencia]=Accions del ratolí en les finestres
