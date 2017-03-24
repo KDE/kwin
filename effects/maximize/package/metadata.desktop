@@ -48,6 +48,7 @@ Comment[zh_TW]=視窗最大化/回復時的動畫
 Encoding=UTF-8
 Icon=preferences-system-windows-effect-maximize
 Name=Maximize
+Name[ast]=Maximizar
 Name[bs]=Maksimiziraj
 Name[ca]=Maximitza
 Name[ca@valencia]=Maximitza
