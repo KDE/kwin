@@ -3,6 +3,7 @@ Name=KWin Script
 Name[de]=KWin-Skript
 Name[pt]=Programa do KWin
 Name[sv]=Kwin-skript
+Name[uk]=Скрипт KWin
 Name[x-test]=xxKWin Scriptxx
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure

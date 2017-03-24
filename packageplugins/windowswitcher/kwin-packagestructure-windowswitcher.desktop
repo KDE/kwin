@@ -3,6 +3,7 @@ Name=KWin Window Switcher
 Name[de]=KWin-Fensterwechsler
 Name[pt]=Mudança de Janelas do KWin
 Name[sv]=Kwin-fönsterbyte
+Name[uk]=Перемикач вікон KWin
 Name[x-test]=xxKWin Window Switcherxx
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure

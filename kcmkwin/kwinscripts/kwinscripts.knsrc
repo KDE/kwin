@@ -3,6 +3,7 @@ Name=Window Manager Scripts
 Name[de]=Fensterverwaltungs-Skripte
 Name[pt]=Programas do Gestor de Janelas
 Name[sv]=Fönsterhanteringsskript
+Name[uk]=Скрипти засобу керування вікнами
 Name[x-test]=xxWindow Manager Scriptsxx
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
