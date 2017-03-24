@@ -162,8 +162,18 @@ void ButtonsModel::move(int sourceIndex, int targetIndex)
     if (sourceIndex == qMax(0, targetIndex)) {
         return;
     }
-    beginMoveRows(QModelIndex(), sourceIndex, sourceIndex, QModelIndex(), targetIndex + 1);
-    m_buttons.insert(qMax(0, targetIndex), m_buttons.takeAt(sourceIndex));
+
+    /* When moving an item down, the destination index needs to be incremented
+       by one, as explained in the documentation:
+       http://doc.qt.nokia.com/qabstractitemmodel.html#beginMoveRows */
+    if (targetIndex > sourceIndex) {
+        // Row will be moved down
+        beginMoveRows(QModelIndex(), sourceIndex, sourceIndex, QModelIndex(), targetIndex + 1);
+    } else {
+        beginMoveRows(QModelIndex(), sourceIndex, sourceIndex, QModelIndex(), qMax(0, targetIndex));
+    }
+
+    m_buttons.move(sourceIndex, qMax(0, targetIndex));
     endMoveRows();
 }
 
