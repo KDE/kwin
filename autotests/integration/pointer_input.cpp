@@ -72,6 +72,7 @@ private Q_SLOTS:
     void testMouseActionActiveWindow();
     void testCursorImage();
     void testEffectOverrideCursorImage();
+    void testPopup();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -962,6 +963,86 @@ void PointerInputTest::testEffectOverrideCursorImage()
     effects->stopMouseInterception(effect.data());
     QVERIFY(enteredSpy.wait());
     QVERIFY(p->cursorImage().isNull());
+}
+
+void PointerInputTest::testPopup()
+{
+    // this test validates the basic popup behavior
+    // a button press outside the window should dismiss the popup
+
+    // first create a parent surface
+    using namespace KWayland::Client;
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy enteredSpy(pointer, &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(pointer, &Pointer::left);
+    QVERIFY(leftSpy.isValid());
+    QSignalSpy buttonStateChangedSpy(pointer, &Pointer::buttonStateChanged);
+    QVERIFY(buttonStateChangedSpy.isValid());
+    QSignalSpy motionSpy(pointer, &Pointer::motion);
+    QVERIFY(motionSpy.isValid());
+
+    Cursor::setPos(800, 800);
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = Test::createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+    QCOMPARE(window->hasPopupGrab(), false);
+    // move pointer into window
+    QVERIFY(!window->geometry().contains(QPoint(800, 800)));
+    Cursor::setPos(window->geometry().center());
+    QVERIFY(enteredSpy.wait());
+    // click inside window to create serial
+    quint32 timestamp = 0;
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QVERIFY(buttonStateChangedSpy.wait());
+
+    // now create the popup surface
+    Surface *popupSurface = Test::createSurface(m_compositor);
+    QVERIFY(popupSurface);
+    ShellSurface *popupShellSurface = Test::createShellSurface(popupSurface, popupSurface);
+    QVERIFY(popupShellSurface);
+    QSignalSpy popupDoneSpy(popupShellSurface, &ShellSurface::popupDone);
+    QVERIFY(popupDoneSpy.isValid());
+    // TODO: proper serial
+    popupShellSurface->setTransientPopup(surface, m_seat, 0, QPoint(80, 20));
+    render(popupSurface);
+    QVERIFY(clientAddedSpy.wait());
+    auto popupClient = clientAddedSpy.last().first().value<ShellClient*>();
+    QVERIFY(popupClient);
+    QVERIFY(popupClient != window);
+    QCOMPARE(window, workspace()->activeClient());
+    QCOMPARE(popupClient->transientFor(), window);
+    QCOMPARE(popupClient->pos(), window->pos() + QPoint(80, 20));
+    QCOMPARE(popupClient->hasPopupGrab(), true);
+
+    // let's move the pointer into the center of the window
+    Cursor::setPos(popupClient->geometry().center());
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
+    QCOMPARE(leftSpy.count(), 1);
+    QCOMPARE(pointer->enteredSurface(), popupSurface);
+
+    // let's move the pointer outside of the popup window
+    // this should not really change anything, it gets a leave event
+    Cursor::setPos(popupClient->geometry().bottomRight() + QPoint(2, 2));
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(leftSpy.count(), 2);
+    QVERIFY(popupDoneSpy.isEmpty());
+    // now click, should trigger popupDone
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QVERIFY(popupDoneSpy.wait());
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
 }
 
 }

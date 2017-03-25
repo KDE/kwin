@@ -394,6 +394,32 @@ public:
     virtual QMatrix4x4 inputTransformation() const;
 
     /**
+     * The window has a popup grab. This means that when it got mapped the
+     * parent window had an implicit (pointer) grab.
+     *
+     * Normally this is only relevant for transient windows.
+     *
+     * Once the popup grab ends (e.g. pointer press outside of any Toplevel of
+     * the client), the method popupDone should be invoked.
+     *
+     * The default implementation returns @c false.
+     * @see popupDone
+     * @since 5.10
+     **/
+    virtual bool hasPopupGrab() const {
+        return false;
+    }
+    /**
+     * This method should be invoked for Toplevels with a popup grab when
+     * the grab ends.
+     *
+     * The default implementation does nothing.
+     * @see hasPopupGrab
+     * @since 5.10
+     **/
+    virtual void popupDone() {};
+
+    /**
      * @brief Finds the Toplevel matching the condition expressed in @p func in @p list.
      *
      * The method is templated to operate on either a list of Toplevels or on a list of

@@ -436,7 +436,6 @@ void PointerInputRedirection::update()
     if (input()->isSelectingWindow()) {
         return;
     }
-    // TODO: handle pointer grab aka popups
     Toplevel *t = m_input->findToplevel(m_pos.toPoint());
     const auto oldDeco = m_decoration;
     updateInternalWindow(m_pos);

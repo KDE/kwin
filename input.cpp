@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "libinput/device.h"
 #endif
 #include "platform.h"
+#include "popup_input_filter.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 #include <KWayland/Server/display.h>
@@ -1609,6 +1610,7 @@ void InputRedirection::setupInputFilters()
         installInputEventFilter(new TerminateServerFilter);
         installInputEventFilter(new DragAndDropInputFilter);
         installInputEventFilter(new LockScreenFilter);
+        installInputEventFilter(new PopupInputFilter);
         m_pointerConstraintsFilter = new PointerConstraintsFilter;
         installInputEventFilter(m_pointerConstraintsFilter);
         m_windowSelector = new WindowSelectorFilter;

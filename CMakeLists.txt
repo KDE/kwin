@@ -437,6 +437,7 @@ set(kwin_KDEINIT_SRCS
     modifier_only_shortcuts.cpp
     xkb.cpp
     gestures.cpp
+    popup_input_filter.cpp
    )
 
 if(KWIN_BUILD_TABBOX)

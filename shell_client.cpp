@@ -1499,4 +1499,20 @@ void ShellClient::updateApplicationMenu()
     }
 }
 
+bool ShellClient::hasPopupGrab() const
+{
+    if (m_shellSurface) {
+        // TODO: verify grab serial
+        return m_shellSurface->isPopup();
+    }
+    return false;
+}
+
+void ShellClient::popupDone()
+{
+    if (m_shellSurface) {
+        m_shellSurface->popupDone();
+    }
+}
+
 }

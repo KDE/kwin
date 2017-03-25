@@ -139,6 +139,9 @@ public:
 
     void updateApplicationMenu();
 
+    bool hasPopupGrab() const override;
+    void popupDone() override;
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
