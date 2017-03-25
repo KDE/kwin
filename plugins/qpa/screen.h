@@ -49,6 +49,7 @@ public:
     QSizeF physicalSize() const override;
     QPlatformCursor *cursor() const override;
     QDpi logicalDpi() const override;
+    qreal devicePixelRatio() const override;
 
 private:
     QPointer<KWayland::Client::Output> m_output;

@@ -50,7 +50,7 @@ QImage::Format Screen::format() const
 
 QRect Screen::geometry() const
 {
-    return m_output ? m_output->geometry() : QRect(0, 0, 1, 1);
+    return m_output ? QRect(m_output->globalPosition(), m_output->pixelSize() / m_output->scale()) : QRect(0, 0, 1, 1);
 }
 
 QSizeF Screen::physicalSize() const
@@ -71,6 +71,11 @@ QDpi Screen::logicalDpi() const
     }
 
     return QPlatformScreen::logicalDpi();
+}
+
+qreal Screen::devicePixelRatio() const
+{
+    return m_output ? (qreal)m_output->scale() : 1.0;
 }
 
 }
