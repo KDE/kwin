@@ -231,6 +231,18 @@ public:
      **/
     bool acceptsKeyboardFocus() const;
 
+    /**
+     * Sends a popup done event to the shell surface.
+     * This is only relevant for popup windows. It indicates that the popup grab
+     * got canceled. This happens when e.g. the user clicks outside of any surface
+     * of the same client as this ShellSurfaceInterface. It is the task of the
+     * compositor to send the popupDone event appropriately.
+     *
+     * @see isPopup
+     * @since 5.33
+     **/
+    void popupDone();
+
 Q_SIGNALS:
     /**
      * Emitted whenever the title changes.

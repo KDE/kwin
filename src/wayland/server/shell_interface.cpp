@@ -379,6 +379,9 @@ void ShellSurfaceInterface::Private::setPopupCallback(wl_client *client, wl_reso
     emit s->q_func()->transientChanged(!s->transientFor.isNull());
     emit s->q_func()->transientOffsetChanged(s->transientOffset);
     emit s->q_func()->transientForChanged();
+    // we ignore the flags as Qt requests keyboard focus for popups
+    // if we would honor the flag this could break compositors
+    // compare QtWayland (5.6), file qwaylandwlshellsurface.cpp:208
     s->setAcceptsFocus(WL_SHELL_SURFACE_TRANSIENT_INACTIVE);
 }
 
@@ -447,6 +450,14 @@ bool ShellSurfaceInterface::acceptsKeyboardFocus() const
 {
     Q_D();
     return d->acceptsKeyboardFocus;
+}
+
+void ShellSurfaceInterface::popupDone()
+{
+    Q_D();
+    if (isPopup() && d->resource) {
+        wl_shell_surface_send_popup_done(d->resource);
+    }
 }
 
 QPointer< SurfaceInterface > ShellSurfaceInterface::transientFor() const
