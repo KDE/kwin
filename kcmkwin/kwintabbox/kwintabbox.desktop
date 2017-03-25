@@ -12,7 +12,6 @@ X-KDE-Weight=60
 
 Name=Task Switcher
 Name[ar]=مبدّل المهام
-Name[ast]=Conmutador de xeres
 Name[bg]=Превключване на задачи
 Name[bs]=Prebacivanje zadataka
 Name[ca]=Commutador de tasques
@@ -72,7 +71,6 @@ Name[x-test]=xxTask Switcherxx
 Name[zh_CN]=任务切换器
 Name[zh_TW]=工作切換器
 Comment=Navigation Through Windows
-Comment[ast]=Navegación pente ventanes
 Comment[bs]=Kretanje kroz prozore
 Comment[ca]=Navegació per les finestres
 Comment[ca@valencia]=Navegació per les finestres

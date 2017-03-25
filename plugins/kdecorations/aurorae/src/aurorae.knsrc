@@ -1,10 +1,30 @@
 [KNewStuff3]
 Name=Aurorae Window Decorations
+Name[ca]=Decoracions de finestra Aurorae
+Name[ca@valencia]=Decoracions de finestra Aurorae
+Name[cs]=Dekorace oken Aurorae
+Name[da]=Aurorae vinduesdekorationer
 Name[de]=Aurorae-Fensterdekoration
+Name[el]=Διακοσμήσεις παραθύρου Aurorae
+Name[en_GB]=Aurorae Window Decorations
+Name[es]=Decoración de ventanas Aurorae
+Name[ia]=Decorationes de fenestra Aurorae
+Name[it]=Decorazioni delle finestre Aurorae
+Name[ko]=Aurorae 창 장식
+Name[nl]=Aurorea-vensterdecoraties
+Name[pl]=Ozdoby okienne Aurorae
 Name[pt]=Decorações das Janelas do Aurorae
-Name[sv]=Aurora-fönsterdekorationer
+Name[pt_BR]=Decorações de janela Aurorae
+Name[sk]=Dekorácie okien Aurorae
+Name[sr]=Декорације прозора за Ауроре
+Name[sr@ijekavian]=Декорације прозора за Ауроре
+Name[sr@ijekavianlatin]=Dekoracije prozora za Aurore
+Name[sr@latin]=Dekoracije prozora za Aurore
+Name[sv]=Aurorae-fönsterdekorationer
 Name[uk]=Обрамлення вікон Aurorae
 Name[x-test]=xxAurorae Window Decorationsxx
+Name[zh_CN]=Aurorae 窗口装饰
+Name[zh_TW]=Aurorae 視窗裝飾
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=Window Decoration Aurorae

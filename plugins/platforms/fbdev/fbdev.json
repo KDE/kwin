@@ -45,8 +45,7 @@
         "Name[sr@latin]": "Kadrobafer", 
         "Name[sr]": "Кадробафер", 
         "Name[sv]": "rambuffer", 
-        "Name[x-test]": "xxframebufferxx", 
-        "Name[zh_TW]": "影格緩衝區（framebuffer）"
+        "Name[x-test]": "xxframebufferxx"
     }, 
     "input": false
 }

@@ -1,10 +1,32 @@
 [KNewStuff3]
 Name=Window Manager Scripts
+Name[ca]=Scripts del gestor de finestres
+Name[ca@valencia]=Scripts del gestor de finestres
+Name[cs]=Skripty správce oken
+Name[da]=Vindueshåndteringsscripts
 Name[de]=Fensterverwaltungs-Skripte
+Name[el]=Σενάρια διαχειριστή παραθύρων
+Name[en_GB]=Window Manager Scripts
+Name[es]=Guiones del gestor de ventanas
+Name[ia]=Gerente de scripts de fenestra 
+Name[it]=Script del gestore delle finestre
+Name[ko]=창 관리자 스크립트
+Name[nl]=Scripts van vensterbeheerder
+Name[nn]=Skript for vindaugshandsamar
+Name[pl]=Skrypty zarządzania oknami
 Name[pt]=Programas do Gestor de Janelas
+Name[pt_BR]=Scripts do gerenciador de janelas
+Name[ru]=Сценарии для диспетчера окон KWin
+Name[sk]=Skripty správcu okien
+Name[sr]=Скрипте менаџера прозора
+Name[sr@ijekavian]=Скрипте менаџера прозора
+Name[sr@ijekavianlatin]=Skripte menadžera prozora
+Name[sr@latin]=Skripte menadžera prozora
 Name[sv]=Fönsterhanteringsskript
 Name[uk]=Скрипти засобу керування вікнами
 Name[x-test]=xxWindow Manager Scriptsxx
+Name[zh_CN]=窗口管理器脚本
+Name[zh_TW]=視窗管理員指令稿
 
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Scripts
