@@ -220,11 +220,60 @@ void PointerInputRedirection::processMotion(const QPointF &pos, uint32_t time, L
     processMotion(pos, QSizeF(), QSizeF(), time, 0, device);
 }
 
+class PositionUpdateBlocker
+{
+public:
+    PositionUpdateBlocker(PointerInputRedirection *pointer)
+        : m_pointer(pointer)
+    {
+        s_counter++;
+    }
+    ~PositionUpdateBlocker() {
+        s_counter--;
+        if (s_counter == 0) {
+            if (!s_scheduledPositions.isEmpty()) {
+                const auto pos = s_scheduledPositions.takeFirst();
+                m_pointer->processMotion(pos.pos, pos.delta, pos.deltaNonAccelerated, pos.time, pos.timeUsec, nullptr);
+            }
+        }
+    }
+
+    static bool isPositionBlocked() {
+        return s_counter > 0;
+    }
+
+    static void schedulePosition(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec) {
+        s_scheduledPositions.append({pos, delta, deltaNonAccelerated, time, timeUsec});
+    }
+
+private:
+    static int s_counter;
+    struct ScheduledPosition {
+        QPointF pos;
+        QSizeF delta;
+        QSizeF deltaNonAccelerated;
+        quint32 time;
+        quint64 timeUsec;
+    };
+    static QVector<ScheduledPosition> s_scheduledPositions;
+
+    PointerInputRedirection *m_pointer;
+};
+
+int PositionUpdateBlocker::s_counter = 0;
+QVector<PositionUpdateBlocker::ScheduledPosition> PositionUpdateBlocker::s_scheduledPositions;
+
 void PointerInputRedirection::processMotion(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device)
 {
     if (!m_inited) {
         return;
     }
+    if (PositionUpdateBlocker::isPositionBlocked()) {
+        PositionUpdateBlocker::schedulePosition(pos, delta, deltaNonAccelerated, time, timeUsec);
+        return;
+    }
+
+    PositionUpdateBlocker blocker(this);
     updatePosition(pos);
     MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
                      m_input->keyboardModifiers(), time,

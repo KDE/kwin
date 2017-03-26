@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "effects.h"
 #include "pointer_input.h"
 #include "options.h"
 #include "screenedge.h"
@@ -57,6 +58,7 @@ private Q_SLOTS:
     void cleanup();
     void testWarpingUpdatesFocus();
     void testWarpingGeneratesPointerMotion();
+    void testWarpingDuringFilter();
     void testUpdateFocusAfterScreenChange();
     void testModifierClickUnrestrictedMove_data();
     void testModifierClickUnrestrictedMove();
@@ -209,6 +211,50 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     QVERIFY(movedSpy.wait());
     QCOMPARE(movedSpy.count(), 1);
     QCOMPARE(movedSpy.last().first().toPointF(), QPointF(26, 26));
+}
+
+void PointerInputTest::testWarpingDuringFilter()
+{
+    // this test verifies that pointer motion is handled correctly if
+    // the pointer gets warped during processing of input events
+    using namespace KWayland::Client;
+
+    // create pointer
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy movedSpy(pointer, &Pointer::motion);
+    QVERIFY(movedSpy.isValid());
+
+    // warp cursor into expected geometry
+    Cursor::setPos(10, 10);
+
+    // create a window
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = Test::createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+
+    QCOMPARE(window->pos(), QPoint(0, 0));
+    QVERIFY(window->geometry().contains(Cursor::pos()));
+
+    // is PresentWindows effect for top left screen edge loaded
+    QVERIFY(static_cast<EffectsHandlerImpl*>(effects)->isEffectLoaded("presentwindows"));
+    QVERIFY(movedSpy.isEmpty());
+    quint32 timestamp = 0;
+    kwinApp()->platform()->pointerMotion(QPoint(0, 0), timestamp++);
+    // screen edges push back
+    QCOMPARE(Cursor::pos(), QPoint(1, 1));
+    QVERIFY(movedSpy.wait());
+    QCOMPARE(movedSpy.count(), 2);
+    QCOMPARE(movedSpy.at(0).first().toPoint(), QPoint(0, 0));
+    QCOMPARE(movedSpy.at(1).first().toPoint(), QPoint(1, 1));
 }
 
 void PointerInputTest::testUpdateFocusAfterScreenChange()
