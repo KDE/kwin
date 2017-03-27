@@ -555,7 +555,7 @@ public:
                 if (event->button() == Qt::RightButton) {
                     cancel();
                 } else {
-                    accept();
+                    accept(event->globalPos());
                 }
             }
             break;
@@ -584,7 +584,7 @@ public:
             } else if (event->key() == Qt::Key_Enter ||
                        event->key() == Qt::Key_Return ||
                        event->key() == Qt::Key_Space) {
-                accept();
+                accept(input()->globalPointer());
             }
             if (input()->supportsPointerWarping()) {
                 int mx = 0;
@@ -612,6 +612,43 @@ public:
         return true;
     }
 
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+        Q_UNUSED(time)
+        if (!isActive()) {
+            return false;
+        }
+        m_touchPoints.insert(id, pos);
+        return true;
+    }
+
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+        Q_UNUSED(time)
+        if (!isActive()) {
+            return false;
+        }
+        auto it = m_touchPoints.find(id);
+        if (it != m_touchPoints.end()) {
+            *it = pos;
+        }
+        return true;
+    }
+
+    bool touchUp(quint32 id, quint32 time) override {
+        Q_UNUSED(time)
+        if (!isActive()) {
+            return false;
+        }
+        auto it = m_touchPoints.find(id);
+        if (it != m_touchPoints.end()) {
+            const auto pos = it.value();
+            m_touchPoints.erase(it);
+            if (m_touchPoints.isEmpty()) {
+                accept(pos);
+            }
+        }
+        return true;
+    }
+
     bool isActive() const {
         return m_active;
     }
@@ -620,12 +657,14 @@ public:
         m_active = true;
         m_callback = callback;
         input()->keyboard()->update();
+        input()->cancelTouch();
     }
     void start(std::function<void(const QPoint &)> callback) {
         Q_ASSERT(!m_active);
         m_active = true;
         m_pointSelectionFallback = callback;
         input()->keyboard()->update();
+        input()->cancelTouch();
     }
 private:
     void deactivate() {
@@ -634,6 +673,7 @@ private:
         m_pointSelectionFallback = std::function<void(const QPoint &)>();
         input()->pointer()->removeWindowSelectionCursor();
         input()->keyboard()->update();
+        m_touchPoints.clear();
     }
     void cancel() {
         if (m_callback) {
@@ -644,19 +684,23 @@ private:
         }
         deactivate();
     }
-    void accept() {
+    void accept(const QPoint &pos) {
         if (m_callback) {
             // TODO: this ignores shaped windows
-            m_callback(input()->findToplevel(input()->globalPointer().toPoint()));
+            m_callback(input()->findToplevel(pos));
         }
         if (m_pointSelectionFallback) {
-            m_pointSelectionFallback(input()->globalPointer().toPoint());
+            m_pointSelectionFallback(pos);
         }
         deactivate();
+    }
+    void accept(const QPointF &pos) {
+        accept(pos.toPoint());
     }
     bool m_active = false;
     std::function<void(KWin::Toplevel*)> m_callback;
     std::function<void(const QPoint &)> m_pointSelectionFallback;
+    QMap<quint32, QPointF> m_touchPoints;
 };
 
 class GlobalShortcutFilter : public InputEventFilter {

@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/touch.h>
 
 #include <linux/input.h>
 
@@ -53,10 +54,12 @@ private Q_SLOTS:
     void testSelectOnWindowPointer();
     void testSelectOnWindowKeyboard_data();
     void testSelectOnWindowKeyboard();
+    void testSelectOnWindowTouch();
     void testCancelOnWindowPointer();
     void testCancelOnWindowKeyboard();
 
     void testSelectPointPointer();
+    void testSelectPointTouch();
 };
 
 void TestWindowSelection::initTestCase()
@@ -247,6 +250,69 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     QCOMPARE(pointerEnteredSpy.count(), 1);
     QCOMPARE(keyboardEnteredSpy.count(), 2);
     kwinApp()->platform()->keyboardKeyReleased(key, timestamp++);
+}
+
+void TestWindowSelection::testSelectOnWindowTouch()
+{
+    // this test verifies window selection through touch
+    QScopedPointer<Touch> touch(Test::waylandSeat()->createTouch());
+    QSignalSpy touchStartedSpy(touch.data(), &Touch::sequenceStarted);
+    QVERIFY(touchStartedSpy.isValid());
+    QSignalSpy touchCanceledSpy(touch.data(), &Touch::sequenceCanceled);
+    QVERIFY(touchCanceledSpy.isValid());
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+
+    Toplevel *selectedWindow = nullptr;
+    auto callback = [&selectedWindow] (Toplevel *t) {
+        selectedWindow = t;
+    };
+
+    // start the interaction
+    QCOMPARE(input()->isSelectingWindow(), false);
+    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    QCOMPARE(input()->isSelectingWindow(), true);
+    QVERIFY(!selectedWindow);
+
+    // simulate touch down
+    quint32 timestamp = 0;
+    kwinApp()->platform()->touchDown(0, client->geometry().center(), timestamp++);
+    QVERIFY(!selectedWindow);
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QCOMPARE(input()->isSelectingWindow(), false);
+    QCOMPARE(selectedWindow, client);
+
+    // with movement
+    selectedWindow = nullptr;
+    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    kwinApp()->platform()->touchDown(0, client->geometry().bottomRight() + QPoint(20, 20), timestamp++);
+    QVERIFY(!selectedWindow);
+    kwinApp()->platform()->touchMotion(0, client->geometry().bottomRight() - QPoint(1, 1), timestamp++);
+    QVERIFY(!selectedWindow);
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QCOMPARE(selectedWindow, client);
+    QCOMPARE(input()->isSelectingWindow(), false);
+
+    // it cancels active touch sequence on the window
+    kwinApp()->platform()->touchDown(0, client->geometry().center(), timestamp++);
+    QVERIFY(touchStartedSpy.wait());
+    selectedWindow = nullptr;
+    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    QCOMPARE(input()->isSelectingWindow(), true);
+    QVERIFY(touchCanceledSpy.wait());
+    QVERIFY(!selectedWindow);
+    // this touch up does not yet select the window, it was started prior to the selection
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QVERIFY(!selectedWindow);
+    kwinApp()->platform()->touchDown(0, client->geometry().center(), timestamp++);
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QCOMPARE(selectedWindow, client);
+    QCOMPARE(input()->isSelectingWindow(), false);
+
+    QCOMPARE(touchStartedSpy.count(), 1);
+    QCOMPARE(touchCanceledSpy.count(), 1);
 }
 
 void TestWindowSelection::testCancelOnWindowPointer()
@@ -449,6 +515,43 @@ void TestWindowSelection::testSelectPointPointer()
     QCOMPARE(keyboardLeftSpy.count(), 1);
     QCOMPARE(pointerEnteredSpy.count(), 2);
     QCOMPARE(keyboardEnteredSpy.count(), 2);
+}
+
+void TestWindowSelection::testSelectPointTouch()
+{
+    // this test verifies point selection through touch works
+    QPoint point;
+    auto callback = [&point] (const QPoint &p) {
+        point = p;
+    };
+
+    // start the interaction
+    QCOMPARE(input()->isSelectingWindow(), false);
+    kwinApp()->platform()->startInteractivePositionSelection(callback);
+    QCOMPARE(input()->isSelectingWindow(), true);
+    QCOMPARE(point, QPoint());
+
+    // let's create multiple touch points
+    quint32 timestamp = 0;
+    kwinApp()->platform()->touchDown(0, QPointF(0, 1), timestamp++);
+    QCOMPARE(input()->isSelectingWindow(), true);
+    kwinApp()->platform()->touchDown(1, QPointF(10, 20), timestamp++);
+    QCOMPARE(input()->isSelectingWindow(), true);
+    kwinApp()->platform()->touchDown(2, QPointF(30, 40), timestamp++);
+    QCOMPARE(input()->isSelectingWindow(), true);
+
+    // let's move our points
+    kwinApp()->platform()->touchMotion(0, QPointF(5, 10), timestamp++);
+    kwinApp()->platform()->touchMotion(2, QPointF(20, 25), timestamp++);
+    kwinApp()->platform()->touchMotion(1, QPointF(25, 35), timestamp++);
+    QCOMPARE(input()->isSelectingWindow(), true);
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QCOMPARE(input()->isSelectingWindow(), true);
+    kwinApp()->platform()->touchUp(2, timestamp++);
+    QCOMPARE(input()->isSelectingWindow(), true);
+    kwinApp()->platform()->touchUp(1, timestamp++);
+    QCOMPARE(input()->isSelectingWindow(), false);
+    QCOMPARE(point, QPoint(25, 35));
 }
 
 WAYLANDTEST_MAIN(TestWindowSelection)
