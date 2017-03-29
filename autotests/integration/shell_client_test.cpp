@@ -220,9 +220,6 @@ void TestShellClient::testDesktopPresenceChanged()
     QCOMPARE(c->desktop(), 2);
     QCOMPARE(desktopPresenceChangedClientSpy.count(), 1);
     QCOMPARE(desktopPresenceChangedWorkspaceSpy.count(), 1);
-    // effects is delayed by one cycle
-    QCOMPARE(desktopPresenceChangedEffectsSpy.count(), 0);
-    QVERIFY(desktopPresenceChangedEffectsSpy.wait());
     QCOMPARE(desktopPresenceChangedEffectsSpy.count(), 1);
 
     // verify the arguments
