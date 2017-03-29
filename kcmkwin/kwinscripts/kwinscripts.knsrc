@@ -1,5 +1,7 @@
 [KNewStuff3]
 Name=Window Manager Scripts
+Name[ca]=Scripts del gestor de finestres
+Name[ca@valencia]=Scripts del gestor de finestres
 Name[de]=Fensterverwaltungs-Skripte
 Name[it]=Script del gestore delle finestre
 Name[pt]=Programas do Gestor de Janelas
