@@ -75,6 +75,10 @@ public:
     void setClient(AbstractClient *client);
     AbstractClient *client() const;
     const QRect &geometry() const;
+    void setTouchAction(ElectricBorderAction action);
+
+    bool activatesForPointer() const;
+    bool activatesForTouchGesture() const;
 
     /**
      * The window id of the native window representing the edge.
@@ -100,6 +104,7 @@ public Q_SLOTS:
     void checkBlocking();
 Q_SIGNALS:
     void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
+    void activatesForTouchGestureChanged();
 protected:
     ScreenEdges *edges();
     const ScreenEdges *edges() const;
@@ -115,13 +120,20 @@ private:
     void deactivate();
     bool canActivate(const QPoint &cursorPos, const QDateTime &triggerTime);
     void handle(const QPoint &cursorPos);
-    bool handleAction();
+    bool handleAction(ElectricBorderAction action);
+    bool handlePointerAction() {
+        return handleAction(m_action);
+    }
+    bool handleTouchAction() {
+        return handleAction(m_touchAction);
+    }
     bool handleByCallback();
     void switchDesktop(const QPoint &cursorPos);
     void pushCursorBack(const QPoint &cursorPos);
     ScreenEdges *m_edges;
     ElectricBorder m_border;
     ElectricBorderAction m_action;
+    ElectricBorderAction m_touchAction = ElectricActionNone;
     int m_reserved;
     QRect m_geometry;
     QRect m_approachGeometry;
@@ -345,7 +357,9 @@ private:
     void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea);
     Edge *createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction = true);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
+    void setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue);
     ElectricBorderAction actionForEdge(Edge *edge) const;
+    ElectricBorderAction actionForTouchEdge(Edge *edge) const;
     bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
     bool handleDndNotify(xcb_window_t window, const QPoint &point);
     void createEdgeForClient(AbstractClient *client, ElectricBorder border);
@@ -366,6 +380,7 @@ private:
     ElectricBorderAction m_actionBottom;
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
+    QMap<ElectricBorder, ElectricBorderAction> m_touchActions;
     int m_cornerOffset;
     GestureRecognizer *m_gestureRecognizer;
 
@@ -455,11 +470,6 @@ inline const QHash< QObject *, QByteArray > &Edge::callBacks() const
 inline bool Edge::isBlocked() const
 {
     return m_blocked;
-}
-
-inline void Edge::setClient(AbstractClient *client)
-{
-    m_client = client;
 }
 
 inline AbstractClient *Edge::client() const

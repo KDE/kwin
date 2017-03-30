@@ -85,8 +85,7 @@ Edge::Edge(ScreenEdges *parent)
                 unreserve();
                 return;
             }
-            handleAction();
-            handleByCallback();
+            handleTouchAction();
         }, Qt::QueuedConnection
     );
     connect(m_gesture, &SwipeGesture::started, this, &Edge::startApproaching);
@@ -97,6 +96,17 @@ Edge::Edge(ScreenEdges *parent)
             if (m_lastApproachingFactor != factor) {
                 m_lastApproachingFactor = factor;
                 emit approaching(border(), m_lastApproachingFactor/256.0f, m_approachGeometry);
+            }
+        }
+    );
+    connect(this, &Edge::activatesForTouchGestureChanged, this,
+        [this] {
+            if (isReserved()) {
+                if (activatesForTouchGesture()) {
+                    m_edges->gestureRecognizer()->registerGesture(m_gesture);
+                } else {
+                    m_edges->gestureRecognizer()->unregisterGesture(m_gesture);
+                }
             }
         }
     );
@@ -140,9 +150,43 @@ void Edge::unreserve(QObject *object)
     }
 }
 
+bool Edge::activatesForPointer() const
+{
+    if (m_client) {
+        return true;
+    }
+    if (m_edges->isDesktopSwitching()) {
+        return true;
+    }
+    if (!m_callBacks.isEmpty()) {
+        return true;
+    }
+    if (m_action != ElectricActionNone) {
+        return true;
+    }
+    return false;
+}
+
+bool Edge::activatesForTouchGesture() const
+{
+    if (!isScreenEdge()) {
+        return false;
+    }
+    if (m_client) {
+        return true;
+    }
+    if (m_touchAction != ElectricActionNone) {
+        return true;
+    }
+    return false;
+}
+
 bool Edge::triggersFor(const QPoint &cursorPos) const
 {
     if (isBlocked()) {
+        return false;
+    }
+    if (!activatesForPointer()) {
         return false;
     }
     if (!m_geometry.contains(cursorPos)) {
@@ -243,7 +287,7 @@ void Edge::handle(const QPoint &cursorPos)
         return;
     }
 
-    if (handleAction() || handleByCallback()) {
+    if (handlePointerAction() || handleByCallback()) {
         pushCursorBack(cursorPos);
         return;
     }
@@ -253,9 +297,9 @@ void Edge::handle(const QPoint &cursorPos)
     }
 }
 
-bool Edge::handleAction()
+bool Edge::handleAction(ElectricBorderAction action)
 {
-    switch (m_action) {
+    switch (action) {
     case ElectricActionShowDesktop: {
         Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
         return true;
@@ -439,6 +483,11 @@ void Edge::setGeometry(const QRect &geometry)
     }
     m_approachGeometry = QRect(x, y, width, height);
     doGeometryUpdate();
+
+    if (isScreenEdge()) {
+        m_gesture->setStartGeometry(m_geometry);
+        m_gesture->setMinimumDelta(screens()->size(screens()->number(m_geometry.center())) * 0.2);
+    }
 }
 
 void Edge::checkBlocking()
@@ -463,15 +512,11 @@ void Edge::doUpdateBlocking()
 
 void Edge::doGeometryUpdate()
 {
-    if (isScreenEdge()) {
-        m_gesture->setStartGeometry(m_geometry);
-        m_gesture->setMinimumDelta(screens()->size(screens()->number(m_geometry.center())) * 0.2);
-    }
 }
 
 void Edge::activate()
 {
-    if (isScreenEdge() && !m_edges->isDesktopSwitching()) {
+    if (activatesForTouchGesture()) {
         m_edges->gestureRecognizer()->registerGesture(m_gesture);
     }
     doActivate();
@@ -597,6 +642,23 @@ void Edge::setBorder(ElectricBorder border)
     }
 }
 
+void Edge::setTouchAction(ElectricBorderAction action) {
+    const bool wasTouch = activatesForTouchGesture();
+    m_touchAction = action;
+    if (wasTouch != activatesForTouchGesture()) {
+        emit activatesForTouchGestureChanged();
+    }
+}
+
+void Edge::setClient(AbstractClient *client)
+{
+    const bool wasTouch = activatesForTouchGesture();
+    m_client = client;
+    if (wasTouch != activatesForTouchGesture()) {
+        emit activatesForTouchGestureChanged();
+    }
+}
+
 /**********************************************************
  * ScreenEdges
  *********************************************************/
@@ -693,6 +755,12 @@ void ScreenEdges::reconfigure()
                        electricBorderAction(borderConfig.readEntry("BottomLeft", "None")));
     setActionForBorder(ElectricLeft,        &m_actionLeft,
                        electricBorderAction(borderConfig.readEntry("Left", "None")));
+
+    borderConfig = m_config->group("TouchEdges");
+    setActionForTouchBorder(ElectricTop, electricBorderAction(borderConfig.readEntry("Top", "None")));
+    setActionForTouchBorder(ElectricRight, electricBorderAction(borderConfig.readEntry("Right", "None")));
+    setActionForTouchBorder(ElectricBottom, electricBorderAction(borderConfig.readEntry("Bottom", "None")));
+    setActionForTouchBorder(ElectricLeft, electricBorderAction(borderConfig.readEntry("Left", "None")));
 }
 
 void ScreenEdges::setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue)
@@ -721,6 +789,44 @@ void ScreenEdges::setActionForBorder(ElectricBorder border, ElectricBorderAction
     for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
         if ((*it)->border() == border) {
             (*it)->setAction(newValue);
+        }
+    }
+}
+
+void ScreenEdges::setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue)
+{
+    auto it = m_touchActions.find(border);
+    ElectricBorderAction oldValue = ElectricActionNone;
+    if (it != m_touchActions.constEnd()) {
+        oldValue = it.value();
+    }
+    if (oldValue == newValue) {
+        return;
+    }
+    if (oldValue == ElectricActionNone) {
+        // have to reserve
+        for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+            if ((*it)->border() == border) {
+                (*it)->reserve();
+            }
+        }
+    }
+    if (newValue == ElectricActionNone) {
+        // have to unreserve
+        for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+            if ((*it)->border() == border) {
+                (*it)->unreserve();
+            }
+        }
+
+        m_touchActions.erase(it);
+    } else {
+        m_touchActions.insert(border, newValue);
+    }
+    // update action on all Edges for given border
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+        if ((*it)->border() == border) {
+            (*it)->setTouchAction(newValue);
         }
     }
 }
@@ -963,6 +1069,11 @@ Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, in
             edge->reserve();
             edge->setAction(action);
         }
+        const ElectricBorderAction touchAction = actionForTouchEdge(edge);
+        if (touchAction != KWin::ElectricActionNone) {
+            edge->reserve();
+            edge->setTouchAction(touchAction);
+        }
     }
     if (isDesktopSwitching()) {
         if (edge->isCorner()) {
@@ -1005,6 +1116,15 @@ ElectricBorderAction ScreenEdges::actionForEdge(Edge *edge) const
     default:
         // fall through
         break;
+    }
+    return ElectricActionNone;
+}
+
+ElectricBorderAction ScreenEdges::actionForTouchEdge(Edge *edge) const
+{
+    auto it = m_touchActions.find(edge->border());
+    if (it != m_touchActions.end()) {
+        return it.value();
     }
     return ElectricActionNone;
 }
@@ -1204,6 +1324,9 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
         if (!edge->isReserved()) {
             continue;
         }
+        if (!edge->activatesForPointer()) {
+            continue;
+        }
         if (edge->approachGeometry().contains(event->globalPos())) {
             if (!edge->isApproaching()) {
                 edge->startApproaching();
@@ -1243,6 +1366,9 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
             continue;
         }
         if (!edge->isReserved()) {
+            continue;
+        }
+        if (!edge->activatesForPointer()) {
             continue;
         }
         if (edge->window() == window) {
