@@ -360,7 +360,9 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
 
     if (data.length() < 1) {
         // Property was removed, thus also remove the effect for window
-        w->setData(WindowClosedGrabRole, QVariant());
+        if (w->data(WindowClosedGrabRole).value<void *>() == this) {
+            w->setData(WindowClosedGrabRole, QVariant());
+        }
         delete mAppearingWindows.take(w);
         delete mDisappearingWindows.take(w);
         mWindowsData.remove(w);
