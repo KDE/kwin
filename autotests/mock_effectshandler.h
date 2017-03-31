@@ -181,6 +181,8 @@ public:
     void reloadEffect(KWin::Effect *) override {}
     void removeSupportProperty(const QByteArray &, KWin::Effect *) override {}
     void reserveElectricBorder(KWin::ElectricBorder, KWin::Effect *) override {}
+    void registerTouchBorder(KWin::ElectricBorder, QAction *) override {}
+    void unregisterTouchBorder(KWin::ElectricBorder, QAction *) override {}
     QPainter *scenePainter() override {
         return nullptr;
     }

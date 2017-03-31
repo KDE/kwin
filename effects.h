@@ -172,6 +172,9 @@ public:
     void reserveElectricBorder(ElectricBorder border, Effect *effect) override;
     void unreserveElectricBorder(ElectricBorder border, Effect *effect) override;
 
+    void registerTouchBorder(ElectricBorder border, QAction *action) override;
+    void unregisterTouchBorder(ElectricBorder border, QAction *action) override;
+
     unsigned long xrenderBufferPicture() override;
     QPainter* scenePainter() override;
     void reconfigure() override;

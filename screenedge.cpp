@@ -48,6 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // frameworks
 #include <KConfigGroup>
 // Qt
+#include <QAction>
 #include <QMouseEvent>
 #include <QSharedPointer>
 #include <QTimer>
@@ -86,6 +87,7 @@ Edge::Edge(ScreenEdges *parent)
                 return;
             }
             handleTouchAction();
+            handleTouchCallback();
         }, Qt::QueuedConnection
     );
     connect(m_gesture, &SwipeGesture::started, this, &Edge::startApproaching);
@@ -132,6 +134,29 @@ void Edge::reserve(QObject *object, const char *slot)
     reserve();
 }
 
+void Edge::reserveTouchCallBack(QAction *action)
+{
+    if (m_touchActions.contains(action)) {
+        return;
+    }
+    connect(action, &QAction::destroyed, this,
+        [this, action] {
+            unreserveTouchCallBack(action);
+        }
+    );
+    m_touchActions << action;
+    reserve();
+}
+
+void Edge::unreserveTouchCallBack(QAction *action)
+{
+    auto it = std::find_if(m_touchActions.begin(), m_touchActions.end(), [action] (QAction *a) { return a == action; });
+    if (it != m_touchActions.end()) {
+        m_touchActions.erase(it);
+        unreserve();
+    }
+}
+
 void Edge::unreserve()
 {
     m_reserved--;
@@ -176,6 +201,9 @@ bool Edge::activatesForTouchGesture() const
         return true;
     }
     if (m_touchAction != ElectricActionNone) {
+        return true;
+    }
+    if (!m_touchActions.isEmpty()) {
         return true;
     }
     return false;
@@ -363,6 +391,14 @@ bool Edge::handleByCallback()
         }
     }
     return false;
+}
+
+void Edge::handleTouchCallback()
+{
+    if (m_touchActions.isEmpty()) {
+        return;
+    }
+    m_touchActions.first()->trigger();
 }
 
 void Edge::switchDesktop(const QPoint &cursorPos)
@@ -1002,6 +1038,10 @@ void ScreenEdges::recreateEdges()
                     ++callback) {
                 edge->reserve(callback.key(), callback.value().constData());
             }
+            const auto touchCallBacks = oldEdge->touchCallBacks();
+            for (auto a : touchCallBacks) {
+                edge->reserveTouchCallBack(a);
+            }
         }
     }
     qDeleteAll(oldEdges);
@@ -1185,6 +1225,24 @@ void ScreenEdges::reserve(AbstractClient *client, ElectricBorder border)
     } else {
         if (hadBorder) // show again
             client->showOnScreenEdge();
+    }
+}
+
+void ScreenEdges::reserveTouch(ElectricBorder border, QAction *action)
+{
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+        if ((*it)->border() == border) {
+            (*it)->reserveTouchCallBack(action);
+        }
+    }
+}
+
+void ScreenEdges::unreserveTouch(ElectricBorder border, QAction *action)
+{
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+        if ((*it)->border() == border) {
+            (*it)->unreserveTouchCallBack(action);
+        }
     }
 }
 

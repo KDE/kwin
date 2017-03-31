@@ -130,6 +130,8 @@ private Q_SLOTS:
     void testFullScreenBlocking();
     void testClientEdge();
     void testTouchEdge();
+    void testTouchCallback_data();
+    void testTouchCallback();
 };
 
 void TestScreenEdges::initTestCase()
@@ -938,6 +940,98 @@ void TestScreenEdges::testTouchEdge()
         QCOMPARE(e->activatesForTouchGesture(), false);
     }
 
+}
+
+void TestScreenEdges::testTouchCallback_data()
+{
+    QTest::addColumn<KWin::ElectricBorder>("border");
+    QTest::addColumn<QPoint>("startPos");
+    QTest::addColumn<QSizeF>("delta");
+
+    QTest::newRow("left") << KWin::ElectricLeft << QPoint(0, 50) << QSizeF(250, 20);
+    QTest::newRow("top") << KWin::ElectricTop << QPoint(50, 0) << QSizeF(20, 250);
+    QTest::newRow("right") << KWin::ElectricRight << QPoint(99, 50) << QSizeF(-200, 0);
+    QTest::newRow("bottom") << KWin::ElectricBottom << QPoint(50, 99) << QSizeF(0, -200);
+}
+
+void TestScreenEdges::testTouchCallback()
+{
+    qRegisterMetaType<KWin::ElectricBorder>("ElectricBorder");
+    using namespace KWin;
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    auto group = config->group("TouchEdges");
+    group.writeEntry("Top", "none");
+    group.writeEntry("Left", "none");
+    group.writeEntry("Bottom", "none");
+    group.writeEntry("Right", "none");
+    config->sync();
+
+    auto s = ScreenEdges::self();
+    s->setConfig(config);
+    s->init();
+
+    // none of our actions should be reserved
+    const QList<Edge*> edges = s->findChildren<Edge*>(QString(), Qt::FindDirectChildrenOnly);
+    QCOMPARE(edges.size(), 8);
+    for (auto e : edges) {
+        QCOMPARE(e->isReserved(), false);
+        QCOMPARE(e->activatesForPointer(), false);
+        QCOMPARE(e->activatesForTouchGesture(), false);
+    }
+
+    // let's reserve an action
+    QAction action;
+    QSignalSpy actionTriggeredSpy(&action, &QAction::triggered);
+    QVERIFY(actionTriggeredSpy.isValid());
+    QSignalSpy approachingSpy(s, &ScreenEdges::approaching);
+    QVERIFY(approachingSpy.isValid());
+
+    // reserve on edge
+    QFETCH(KWin::ElectricBorder, border);
+    s->reserveTouch(border, &action);
+    for (auto e : edges) {
+        QCOMPARE(e->isReserved(), e->border() == border);
+        QCOMPARE(e->activatesForPointer(), false);
+        QCOMPARE(e->activatesForTouchGesture(), e->border() == border);
+    }
+
+    QVERIFY(approachingSpy.isEmpty());
+    QFETCH(QPoint, startPos);
+    QCOMPARE(s->gestureRecognizer()->startSwipeGesture(startPos), 1);
+    QVERIFY(actionTriggeredSpy.isEmpty());
+    QCOMPARE(approachingSpy.count(), 1);
+    QFETCH(QSizeF, delta);
+    s->gestureRecognizer()->updateSwipeGesture(delta);
+    QCOMPARE(approachingSpy.count(), 2);
+    QVERIFY(actionTriggeredSpy.isEmpty());
+    s->gestureRecognizer()->endSwipeGesture();
+    QVERIFY(actionTriggeredSpy.wait());
+    QCOMPARE(actionTriggeredSpy.count(), 1);
+    QCOMPARE(approachingSpy.count(), 3);
+
+    // unreserve again
+    s->unreserveTouch(border, &action);
+    for (auto e : edges) {
+        QCOMPARE(e->isReserved(), false);
+        QCOMPARE(e->activatesForPointer(), false);
+        QCOMPARE(e->activatesForTouchGesture(), false);
+    }
+
+    // reserve another action
+    QScopedPointer<QAction> action2(new QAction);
+    s->reserveTouch(border, action2.data());
+    for (auto e : edges) {
+        QCOMPARE(e->isReserved(), e->border() == border);
+        QCOMPARE(e->activatesForPointer(), false);
+        QCOMPARE(e->activatesForTouchGesture(), e->border() == border);
+    }
+    // and unreserve by destroying
+    action2.reset();
+    for (auto e : edges) {
+        QCOMPARE(e->isReserved(), false);
+        QCOMPARE(e->activatesForPointer(), false);
+        QCOMPARE(e->activatesForTouchGesture(), false);
+    }
 }
 
 Q_CONSTRUCTOR_FUNCTION(forceXcb)

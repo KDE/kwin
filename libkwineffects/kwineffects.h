@@ -897,6 +897,28 @@ public:
     virtual void reserveElectricBorder(ElectricBorder border, Effect *effect) = 0;
     virtual void unreserveElectricBorder(ElectricBorder border, Effect *effect) = 0;
 
+    /**
+     * Registers the given @p action for the given @p border to be activated through
+     * a touch swipe gesture.
+     *
+     * If the @p border gets triggered through a touch swipe gesture the @link{QAction::triggered}
+     * signal gets invoked.
+     *
+     * To unregister the touch screen action either delete the @p action or
+     * invoke @link{unregisterTouchBorder}.
+     *
+     * @see unregisterTouchBorder
+     * @since 5.10
+     **/
+    virtual void registerTouchBorder(ElectricBorder border, QAction *action) = 0;
+    /**
+     * Unregisters the given @p action for the given touch @p border.
+     *
+     * @see registerTouchBorder
+     * @since 5.10
+     **/
+    virtual void unregisterTouchBorder(ElectricBorder border, QAction *action) = 0;
+
     // functions that allow controlling windows/desktop
     virtual void activateWindow(KWin::EffectWindow* c) = 0;
     virtual KWin::EffectWindow* activeWindow() const = 0 ;

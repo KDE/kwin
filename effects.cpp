@@ -1306,6 +1306,16 @@ void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border, Effect *
     ScreenEdges::self()->unreserve(border, effect);
 }
 
+void EffectsHandlerImpl::registerTouchBorder(ElectricBorder border, QAction *action)
+{
+    ScreenEdges::self()->reserveTouch(border, action);
+}
+
+void EffectsHandlerImpl::unregisterTouchBorder(ElectricBorder border, QAction *action)
+{
+    ScreenEdges::self()->unreserveTouch(border, action);
+}
+
 unsigned long EffectsHandlerImpl::xrenderBufferPicture()
 {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

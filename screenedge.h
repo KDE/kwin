@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDateTime>
 #include <QRect>
 
+class QAction;
 class QMouseEvent;
 
 namespace KWin {
@@ -69,6 +70,11 @@ public:
     ElectricBorder border() const;
     void reserve(QObject *object, const char *slot);
     const QHash<QObject *, QByteArray> &callBacks() const;
+    void reserveTouchCallBack(QAction *action);
+    void unreserveTouchCallBack(QAction *action);
+    QVector<QAction *> touchCallBacks() const {
+        return m_touchActions;
+    }
     void startApproaching();
     void stopApproaching();
     bool isApproaching() const;
@@ -128,6 +134,7 @@ private:
         return handleAction(m_touchAction);
     }
     bool handleByCallback();
+    void handleTouchCallback();
     void switchDesktop(const QPoint &cursorPos);
     void pushCursorBack(const QPoint &cursorPos);
     ScreenEdges *m_edges;
@@ -147,6 +154,7 @@ private:
     bool m_pushBackBlocked;
     AbstractClient *m_client;
     SwipeGesture *m_gesture;
+    QVector<QAction *> m_touchActions;
 };
 
 /**
@@ -275,6 +283,25 @@ public:
      * @param border The border which the client wants to use, only proper borders are supported (no corners)
      **/
     void reserve(KWin::AbstractClient *client, ElectricBorder border);
+
+    /**
+     * Mark the specified screen edge as reserved for touch gestures. This method is provided for
+     * external activation like effects and scripts.
+     * When the effect/script does no longer need the edge it is supposed
+     * to call @link unreserveTouch.
+     * @param border the screen edge to mark as reserved
+     * @param action The action which gets triggered
+     * @see unreserveTouch
+     * @since 5.10
+     **/
+    void reserveTouch(ElectricBorder border, QAction *action);
+    /**
+     * Unreserves the specified @p border from activating the @p action for touch gestures.
+     * @see reserveTouch
+     * @since 5.10
+     **/
+    void unreserveTouch(ElectricBorder border, QAction *action);
+
     /**
      * Reserve desktop switching for screen edges, if @p isToReserve is @c true. Unreserve otherwise.
      * @param reserve indicated weather desktop switching should be reserved or unreseved
