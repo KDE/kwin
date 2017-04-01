@@ -64,9 +64,10 @@ DesktopGridEffect::DesktopGridEffect()
     , scaledSize()
     , scaledOffset()
     , m_proxy(0)
+    , m_activateAction(new QAction(this))
 {
     // Load shortcuts
-    QAction* a = new QAction(this);
+    QAction* a = m_activateAction;
     a->setObjectName(QStringLiteral("ShowDesktopGrid"));
     a->setText(i18n("Show Desktop Grid"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
@@ -117,6 +118,16 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     layoutMode = DesktopGridConfig::layoutMode();
     customLayoutRows = DesktopGridConfig::customLayoutRows();
     m_usePresentWindows = DesktopGridConfig::presentWindows();
+
+    // deactivate and activate all touch border
+    const QVector<ElectricBorder> relevantBorders{ElectricLeft, ElectricTop, ElectricRight, ElectricBottom};
+    for (auto e : relevantBorders) {
+        effects->unregisterTouchBorder(e, m_activateAction);
+    }
+    const auto touchBorders = DesktopGridConfig::touchBorderActivate();
+    for (int i : touchBorders) {
+        effects->registerTouchBorder(ElectricBorder(i), m_activateAction);
+    }
 }
 
 //-----------------------------------------------------------------------------

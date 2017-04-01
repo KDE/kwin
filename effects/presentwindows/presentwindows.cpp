@@ -61,11 +61,14 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_filterFrame(NULL)
     , m_closeView(NULL)
     , m_closeWindow(NULL)
+    , m_exposeAction(new QAction(this))
+    , m_exposeAllAction(new QAction(this))
+    , m_exposeClassAction(new QAction(this))
 {
     m_atomDesktop = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_DESKTOP", this);
     m_atomWindows = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_GROUP", this);
 
-    QAction* exposeAction = new QAction(this);
+    QAction* exposeAction = m_exposeAction;
     exposeAction->setObjectName(QStringLiteral("Expose"));
     exposeAction->setText(i18n("Toggle Present Windows (Current desktop)"));
     KGlobalAccel::self()->setDefaultShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
@@ -73,7 +76,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     shortcut = KGlobalAccel::self()->shortcut(exposeAction);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F9, exposeAction);
     connect(exposeAction, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
-    QAction* exposeAllAction = new QAction(this);
+    QAction* exposeAllAction = m_exposeAllAction;
     exposeAllAction->setObjectName(QStringLiteral("ExposeAll"));
     exposeAllAction->setText(i18n("Toggle Present Windows (All desktops)"));
     KGlobalAccel::self()->setDefaultShortcut(exposeAllAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F10 << Qt::Key_LaunchC);
@@ -82,7 +85,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F10, exposeAllAction);
     effects->registerTouchpadSwipeShortcut(SwipeDirection::Down, exposeAllAction);
     connect(exposeAllAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
-    QAction* exposeClassAction = new QAction(this);
+    QAction* exposeClassAction = m_exposeClassAction;
     exposeClassAction->setObjectName(QStringLiteral("ExposeClass"));
     exposeClassAction->setText(i18n("Toggle Present Windows (Window class)"));
     KGlobalAccel::self()->setDefaultShortcut(exposeClassAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F7);
@@ -154,6 +157,22 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
     m_leftButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::leftButtonDesktop();
     m_middleButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::middleButtonDesktop();
     m_rightButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::rightButtonDesktop();
+
+    // touch screen edges
+    const QVector<ElectricBorder> relevantBorders{ElectricLeft, ElectricTop, ElectricRight, ElectricBottom};
+    for (auto e : relevantBorders) {
+        effects->unregisterTouchBorder(e, m_exposeAction);
+        effects->unregisterTouchBorder(e, m_exposeAllAction);
+        effects->unregisterTouchBorder(e, m_exposeClassAction);
+    }
+    auto touchEdge = [] (const QList<int> touchBorders, QAction *action) {
+        for (int i : touchBorders) {
+            effects->registerTouchBorder(ElectricBorder(i), action);
+        }
+    };
+    touchEdge(PresentWindowsConfig::touchBorderActivate(), m_exposeAction);
+    touchEdge(PresentWindowsConfig::touchBorderActivateAll(), m_exposeAllAction);
+    touchEdge(PresentWindowsConfig::touchBorderActivateClass(), m_exposeClassAction);
 }
 
 void* PresentWindowsEffect::proxy()

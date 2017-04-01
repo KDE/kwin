@@ -245,6 +245,10 @@ private:
     // proxy
     CubeEffectProxy m_proxy;
     QList< CubeInsideEffect* > m_cubeInsideEffects;
+
+    QAction *m_cubeAction;
+    QAction *m_cylinderAction;
+    QAction *m_sphereAction;
 };
 
 } // namespace

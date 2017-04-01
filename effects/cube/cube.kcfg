@@ -9,6 +9,9 @@
         <entry name="BorderActivate" type="IntList" />
         <entry name="BorderActivateCylinder" type="IntList" />
         <entry name="BorderActivateSphere" type="IntList" />
+        <entry name="TouchBorderActivate" type="IntList" />
+        <entry name="TouchBorderActivateCylinder" type="IntList" />
+        <entry name="TouchBorderActivateSphere" type="IntList" />
         <entry name="RotationDuration" type="Int">
             <default>0</default>
         </entry>

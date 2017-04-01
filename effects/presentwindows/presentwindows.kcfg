@@ -52,5 +52,8 @@
             <default code="true">QList&lt;int&gt;() &lt;&lt; int(ElectricTopLeft)</default>
         </entry>
         <entry name="BorderActivateClass" type="IntList" />
+        <entry name="TouchBorderActivate" type="IntList" />
+        <entry name="TouchBorderActivateAll" type="IntList"/>
+        <entry name="TouchBorderActivateClass" type="IntList" />
     </group>
 </kcfg>

@@ -91,6 +91,9 @@ CubeEffect::CubeEffect()
     , mAddedHeightCoeff2(0.0f)
     , m_cubeCapBuffer(NULL)
     , m_proxy(this)
+    , m_cubeAction(new QAction(this))
+    , m_cylinderAction(new QAction(this))
+    , m_sphereAction(new QAction(this))
 {
     desktopNameFont.setBold(true);
     desktopNameFont.setPointSize(14);
@@ -184,7 +187,7 @@ void CubeEffect::reconfigure(ReconfigureFlags)
 
     // do not connect the shortcut if we use cylinder or sphere
     if (!shortcutsRegistered) {
-        QAction* cubeAction = new QAction(this);
+        QAction* cubeAction = m_cubeAction;
         cubeAction->setObjectName(QStringLiteral("Cube"));
         cubeAction->setText(i18n("Desktop Cube"));
         KGlobalAccel::self()->setDefaultShortcut(cubeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F11);
@@ -192,13 +195,13 @@ void CubeEffect::reconfigure(ReconfigureFlags)
         effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F11, cubeAction);
         effects->registerPointerShortcut(Qt::ControlModifier | Qt::AltModifier, Qt::LeftButton, cubeAction);
         cubeShortcut = KGlobalAccel::self()->shortcut(cubeAction);
-        QAction* cylinderAction = new QAction(this);
+        QAction* cylinderAction = m_cylinderAction;
         cylinderAction->setObjectName(QStringLiteral("Cylinder"));
         cylinderAction->setText(i18n("Desktop Cylinder"));
         KGlobalAccel::self()->setShortcut(cylinderAction, QList<QKeySequence>());
         effects->registerGlobalShortcut(QKeySequence(), cylinderAction);
         cylinderShortcut = KGlobalAccel::self()->shortcut(cylinderAction);
-        QAction* sphereAction = new QAction(this);
+        QAction* sphereAction = m_sphereAction;
         sphereAction->setObjectName(QStringLiteral("Sphere"));
         sphereAction->setText(i18n("Desktop Sphere"));
         KGlobalAccel::self()->setShortcut(sphereAction, QList<QKeySequence>());
@@ -216,6 +219,22 @@ void CubeEffect::reconfigure(ReconfigureFlags)
         ShaderBinder binder(m_capShader);
         m_capShader->setUniform(GLShader::Color, capColor);
     }
+
+    // touch borders
+    const QVector<ElectricBorder> relevantBorders{ElectricLeft, ElectricTop, ElectricRight, ElectricBottom};
+    for (auto e : relevantBorders) {
+        effects->unregisterTouchBorder(e, m_cubeAction);
+        effects->unregisterTouchBorder(e, m_sphereAction);
+        effects->unregisterTouchBorder(e, m_cylinderAction);
+    }
+    auto touchEdge = [] (const QList<int> touchBorders, QAction *action) {
+        for (int i : touchBorders) {
+            effects->registerTouchBorder(ElectricBorder(i), action);
+        }
+    };
+    touchEdge(CubeConfig::touchBorderActivate(), m_cubeAction);
+    touchEdge(CubeConfig::touchBorderActivateCylinder(), m_cylinderAction);
+    touchEdge(CubeConfig::touchBorderActivateSphere(), m_sphereAction);
 }
 
 CubeEffect::~CubeEffect()

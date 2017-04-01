@@ -339,6 +339,10 @@ private:
         quint32 id = 0;
         bool active = false;
     } m_touch;
+
+    QAction *m_exposeAction;
+    QAction *m_exposeAllAction;
+    QAction *m_exposeClassAction;
 };
 
 } // namespace

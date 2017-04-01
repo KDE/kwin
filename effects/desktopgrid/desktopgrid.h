@@ -183,6 +183,8 @@ private:
 
     QVector<DesktopButtonsView*> m_desktopButtonsViews;
 
+    QAction *m_activateAction;
+
 };
 
 } // namespace
