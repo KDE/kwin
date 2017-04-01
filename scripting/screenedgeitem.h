@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <kwinglobals.h>
 
+class QAction;
+
 namespace KWin
 {
 
@@ -46,6 +48,7 @@ class ScreenEdgeItem : public QObject
 {
     Q_OBJECT
     Q_ENUMS(Edge)
+    Q_ENUMS(Mode)
     /**
      * @brief Whether the edge is currently enabled, that is reserved. Default value is @c true.
      *
@@ -56,6 +59,10 @@ class ScreenEdgeItem : public QObject
      *
      */
     Q_PROPERTY(Edge edge READ edge WRITE setEdge NOTIFY edgeChanged)
+    /**
+     * @brief The operation mode for this edge. Default value is @c Mode::Pointer
+     **/
+    Q_PROPERTY(Mode mode READ mode WRITE setMode NOTIFY modeChanged)
 public:
     enum Edge {
         TopEdge,
@@ -69,18 +76,30 @@ public:
         EDGE_COUNT,
         NoEdge
     };
+    /**
+     * Enum describing the operation modes of the edge.
+     **/
+    enum class Mode {
+        Pointer,
+        Touch
+    };
     explicit ScreenEdgeItem(QObject *parent = 0);
     virtual ~ScreenEdgeItem();
     bool isEnabled() const;
     Edge edge() const;
+    Mode mode() const {
+        return m_mode;
+    }
 
 public Q_SLOTS:
     void setEnabled(bool enabled);
     void setEdge(Edge edge);
+    void setMode(Mode mode);
 
 Q_SIGNALS:
     void enabledChanged();
     void edgeChanged();
+    void modeChanged();
 
     void activated();
 
@@ -91,6 +110,8 @@ private:
     void disableEdge();
     bool m_enabled;
     Edge m_edge;
+    Mode m_mode = Mode::Pointer;
+    QAction *m_action;
 };
 
 inline bool ScreenEdgeItem::isEnabled() const

@@ -50,6 +50,7 @@ private Q_SLOTS:
     void testEdge_data();
     void testEdge();
     void testEdgeUnregister();
+    void testDeclarativeTouchEdge();
 
 private:
     void triggerConfigReload();
@@ -211,6 +212,30 @@ void ScreenEdgeTest::testEdgeUnregister()
 
     //force the script to unregister a non-registered edge to prove it doesn't explode
     triggerConfigReload();
+}
+
+void ScreenEdgeTest::testDeclarativeTouchEdge()
+{
+    const QString scriptToLoad = QFINDTESTDATA("./scripts/screenedgetouch.qml");
+    QVERIFY(!scriptToLoad.isEmpty());
+    QVERIFY(Scripting::self()->loadDeclarativeScript(scriptToLoad) != -1);
+    QVERIFY(Scripting::self()->isScriptLoaded(scriptToLoad));
+
+    auto s = Scripting::self()->findScript(scriptToLoad);
+    QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+    s->run();
+    QTRY_COMPARE(runningChangedSpy.count(), 1);
+
+    QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
+    QVERIFY(showDesktopSpy.isValid());
+
+    // Trigger the edge through touch
+    quint32 timestamp = 0;
+    kwinApp()->platform()->touchDown(0, QPointF(0, 50), timestamp++);
+    kwinApp()->platform()->touchMotion(0, QPointF(500, 50), timestamp++);
+    kwinApp()->platform()->touchUp(0, timestamp++);
+
+    QVERIFY(showDesktopSpy.wait());
 }
 
 WAYLANDTEST_MAIN(ScreenEdgeTest)

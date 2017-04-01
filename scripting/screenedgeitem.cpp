@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-kwin.h>
 #include "screenedge.h"
 
+#include <QAction>
+
 namespace KWin
 {
 
@@ -28,7 +30,9 @@ ScreenEdgeItem::ScreenEdgeItem(QObject* parent)
     : QObject(parent)
     , m_enabled(true)
     , m_edge(NoEdge)
+    , m_action(new QAction(this))
 {
+    connect(m_action, &QAction::triggered, this, &ScreenEdgeItem::activated);
 }
 
 ScreenEdgeItem::~ScreenEdgeItem()
@@ -62,7 +66,16 @@ void ScreenEdgeItem::enableEdge()
     if (!m_enabled || m_edge == NoEdge) {
         return;
     }
-    ScreenEdges::self()->reserve(static_cast<ElectricBorder>(m_edge), this, "borderActivated");
+    switch (m_mode) {
+    case Mode::Pointer:
+        ScreenEdges::self()->reserve(static_cast<ElectricBorder>(m_edge), this, "borderActivated");
+        break;
+    case Mode::Touch:
+        ScreenEdges::self()->reserveTouch(static_cast<ElectricBorder>(m_edge), m_action);
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
 }
 
 void ScreenEdgeItem::disableEdge()
@@ -70,7 +83,16 @@ void ScreenEdgeItem::disableEdge()
     if (!m_enabled || m_edge == NoEdge) {
         return;
     }
-    ScreenEdges::self()->unreserve(static_cast<ElectricBorder>(m_edge), this);
+    switch (m_mode) {
+    case Mode::Pointer:
+        ScreenEdges::self()->unreserve(static_cast<ElectricBorder>(m_edge), this);
+        break;
+    case Mode::Touch:
+        ScreenEdges::self()->unreserveTouch(static_cast<ElectricBorder>(m_edge), m_action);
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
 }
 
 bool ScreenEdgeItem::borderActivated(ElectricBorder edge)
@@ -80,6 +102,17 @@ bool ScreenEdgeItem::borderActivated(ElectricBorder edge)
     }
     emit activated();
     return true;
+}
+
+void ScreenEdgeItem::setMode(Mode mode)
+{
+    if (m_mode == mode) {
+        return;
+    }
+    disableEdge();
+    m_mode = mode;
+    enableEdge();
+    emit modeChanged();
 }
 
 } // namespace
