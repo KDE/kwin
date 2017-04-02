@@ -49,6 +49,8 @@ private Q_SLOTS:
 
     void testEdge_data();
     void testEdge();
+    void testTouchEdge_data();
+    void testTouchEdge();
     void testEdgeUnregister();
     void testDeclarativeTouchEdge();
 
@@ -100,7 +102,7 @@ void ScreenEdgeTest::init()
 void ScreenEdgeTest::cleanup()
 {
     // try to unload the script
-    const QStringList scripts = {QFINDTESTDATA("./scripts/screenedge.js"), QFINDTESTDATA("./scripts/screenedgeunregister.js")};
+    const QStringList scripts = {QFINDTESTDATA("./scripts/screenedge.js"), QFINDTESTDATA("./scripts/screenedgeunregister.js"), QFINDTESTDATA("./scripts/touchScreenedge.js")};
     for (const QString &script: scripts) {
         if (!script.isEmpty()) {
             if (Scripting::self()->isScriptLoaded(script)) {
@@ -159,6 +161,60 @@ void ScreenEdgeTest::testEdge()
     // trigger the edge
     QFETCH(QPoint, triggerPos);
     KWin::Cursor::setPos(triggerPos);
+    QCOMPARE(showDesktopSpy.count(), 1);
+    QVERIFY(workspace()->showingDesktop());
+}
+
+void ScreenEdgeTest::testTouchEdge_data()
+{
+    QTest::addColumn<KWin::ElectricBorder>("edge");
+    QTest::addColumn<QPoint>("triggerPos");
+    QTest::addColumn<QPoint>("motionPos");
+
+    QTest::newRow("Top")      << KWin::ElectricTop << QPoint(50, 0) << QPoint(50, 500);
+    QTest::newRow("Right")    << KWin::ElectricRight << QPoint(1279, 50) << QPoint(500, 50);
+    QTest::newRow("Bottom") << KWin::ElectricBottom << QPoint(512, 1023) << QPoint(512, 500);
+    QTest::newRow("Left") << KWin::ElectricLeft << QPoint(0, 50) << QPoint(500, 50);
+
+    //repeat a row to show previously unloading and re-registering works
+    QTest::newRow("Top")      << KWin::ElectricTop << QPoint(512, 0) << QPoint(512, 500);
+}
+
+void ScreenEdgeTest::testTouchEdge()
+{
+    const QString scriptToLoad = QFINDTESTDATA("./scripts/touchScreenedge.js");
+    QVERIFY(!scriptToLoad.isEmpty());
+
+    // mock the config
+    auto config = kwinApp()->config();
+    QFETCH(KWin::ElectricBorder, edge);
+    config->group(QLatin1String("Script-") + scriptToLoad).writeEntry("Edge", int(edge));
+    config->sync();
+
+    QVERIFY(!Scripting::self()->isScriptLoaded(scriptToLoad));
+    const int id = Scripting::self()->loadScript(scriptToLoad);
+    QVERIFY(id != -1);
+    QVERIFY(Scripting::self()->isScriptLoaded(scriptToLoad));
+    auto s = Scripting::self()->findScript(scriptToLoad);
+    QVERIFY(s);
+    QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+    QVERIFY(runningChangedSpy.isValid());
+    s->run();
+    QVERIFY(runningChangedSpy.wait());
+    QCOMPARE(runningChangedSpy.count(), 1);
+    QCOMPARE(runningChangedSpy.first().first().toBool(), true);
+    // triggering the edge will result in show desktop being triggered
+    QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
+    QVERIFY(showDesktopSpy.isValid());
+
+    // trigger the edge
+    QFETCH(QPoint, triggerPos);
+    quint32 timestamp = 0;
+    kwinApp()->platform()->touchDown(0, triggerPos, timestamp++);
+    QFETCH(QPoint, motionPos);
+    kwinApp()->platform()->touchMotion(0, motionPos, timestamp++);
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QVERIFY(showDesktopSpy.wait());
     QCOMPARE(showDesktopSpy.count(), 1);
     QVERIFY(workspace()->showingDesktop());
 }

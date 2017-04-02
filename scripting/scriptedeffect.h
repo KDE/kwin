@@ -91,6 +91,9 @@ public:
         return m_screenEdgeCallbacks;
     }
 
+    bool registerTouchScreenCallback(int edge, QScriptValue callback);
+    bool unregisterTouchScreenCallback(int edge);
+
 public Q_SLOTS:
     quint64 animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
     quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
@@ -121,6 +124,7 @@ private:
     QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
     KConfigLoader *m_config;
     int m_chainPosition;
+    QHash<int, QAction*> m_touchScreenEdgeCallbacks;
 };
 
 }

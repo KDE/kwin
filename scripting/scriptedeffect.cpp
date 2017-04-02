@@ -91,6 +91,16 @@ QScriptValue kwinScriptScreenEdge(QScriptContext *context, QScriptEngine *engine
     return registerScreenEdge<KWin::ScriptedEffect*>(context, engine);
 }
 
+QScriptValue kwinRegisterTouchScreenEdge(QScriptContext *context, QScriptEngine *engine)
+{
+    return registerTouchScreenEdge<KWin::ScriptedEffect*>(context, engine);
+}
+
+QScriptValue kwinUnregisterTouchScreenEdge(QScriptContext *context, QScriptEngine *engine)
+{
+    return unregisterTouchScreenEdge<KWin::ScriptedEffect*>(context, engine);
+}
+
 struct AnimationSettings {
     enum { Type = 1<<0, Curve = 1<<1, Delay = 1<<2, Duration = 1<<3 };
     AnimationEffect::Attribute type;
@@ -518,6 +528,8 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     // add global Shortcut
     registerGlobalShortcutFunction(this, m_engine, kwinScriptGlobalShortcut);
     registerScreenEdgeFunction(this, m_engine, kwinScriptScreenEdge);
+    registerTouchScreenEdgeFunction(this, m_engine, kwinRegisterTouchScreenEdge);
+    unregisterTouchScreenEdgeFunction(this, m_engine, kwinUnregisterTouchScreenEdge);
     // add the animate method
     QScriptValue animateFunc = m_engine->newFunction(kwinEffectAnimate);
     animateFunc.setData(m_engine->newQObject(this));
@@ -635,6 +647,34 @@ QVariant ScriptedEffect::readConfig(const QString &key, const QVariant defaultVa
         return defaultValue;
     }
     return m_config->property(key);
+}
+
+bool ScriptedEffect::registerTouchScreenCallback(int edge, QScriptValue callback)
+{
+    if (m_touchScreenEdgeCallbacks.constFind(edge) != m_touchScreenEdgeCallbacks.constEnd()) {
+        return false;
+    }
+    QAction *action = new QAction(this);
+    connect(action, &QAction::triggered, this,
+        [callback] {
+            QScriptValue invoke(callback);
+            invoke.call();
+        }
+    );
+    ScreenEdges::self()->reserveTouch(KWin::ElectricBorder(edge), action);
+    m_touchScreenEdgeCallbacks.insert(edge, action);
+    return true;
+}
+
+bool ScriptedEffect::unregisterTouchScreenCallback(int edge)
+{
+    auto it = m_touchScreenEdgeCallbacks.find(edge);
+    if (it == m_touchScreenEdgeCallbacks.constEnd()) {
+        return false;
+    }
+    delete it.value();
+    m_touchScreenEdgeCallbacks.erase(it);
+    return true;
 }
 
 } // namespace

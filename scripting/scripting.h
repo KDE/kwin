@@ -229,6 +229,9 @@ public:
         return m_engine;
     }
 
+    bool registerTouchScreenCallback(int edge, QScriptValue callback);
+    bool unregisterTouchScreenCallback(int edge);
+
 public Q_SLOTS:
     Q_SCRIPTABLE void run();
 
@@ -256,6 +259,7 @@ private:
     QScriptEngine *m_engine;
     bool m_starting;
     QScopedPointer<ScriptUnloaderAgent> m_agent;
+    QHash<int, QAction*> m_touchScreenEdgeCallbacks;
 };
 
 class ScriptUnloaderAgent : public QScriptEngineAgent
