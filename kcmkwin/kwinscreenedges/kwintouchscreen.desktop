@@ -1,0 +1,16 @@
+[Desktop Entry]
+Exec=kcmshell5 kwintouchscreen
+Icon=preferences-desktop
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kcm_kwintouchscreen
+X-KDE-ParentApp=kcontrol
+
+X-KDE-System-Settings-Parent-Category=desktopbehavior
+X-KDE-Weight=50
+
+Name=Touch Screen
+Comment=Touch screen swipe gestures
+
+X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen
