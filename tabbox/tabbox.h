@@ -241,6 +241,8 @@ private:
 
     void shadeActivate(AbstractClient *c);
 
+    bool toggleMode(TabBoxMode mode);
+
 private Q_SLOTS:
     void reconfigure();
     void globalShortcutChanged(QAction *action, const QKeySequence &seq);
@@ -276,6 +278,8 @@ private:
     bool m_forcedGlobalMouseGrab;
     bool m_ready; // indicates whether the config is completely loaded
     QList<ElectricBorder> m_borderActivate, m_borderAlternativeActivate;
+    QHash<ElectricBorder, QAction *> m_touchActivate;
+    QHash<ElectricBorder, QAction *> m_touchAlternativeActivate;
 
     static TabBox *s_self;
 };

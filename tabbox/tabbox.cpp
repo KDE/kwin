@@ -815,6 +815,29 @@ void TabBox::reconfigure()
         borders = &m_borderAlternativeActivate;
         borderConfig = QStringLiteral("BorderAlternativeActivate");
     }
+
+    auto touchConfig = [this, config] (const QString &key, QHash<ElectricBorder, QAction *> &actions, TabBoxMode mode) {
+        // fist erase old config
+        for (auto it = actions.begin(); it != actions.end(); ) {
+            delete it.value();
+            it = actions.erase(it);
+        }
+        // now new config
+        const QStringList list = config.readEntry(key, QStringList());
+        for (const auto &s : list) {
+            bool ok;
+            const int i = s.toInt(&ok);
+            if (!ok) {
+                continue;
+            }
+            QAction *a = new QAction(this);
+            connect(a, &QAction::triggered, this, std::bind(&TabBox::toggleMode, this, mode));
+            ScreenEdges::self()->reserveTouch(ElectricBorder(i), a);
+            actions.insert(ElectricBorder(i), a);
+        }
+    };
+    touchConfig(QStringLiteral("TouchBorderActivate"), m_touchActivate, TabBoxWindowsMode);
+    touchConfig(QStringLiteral("TouchBorderAlternativeActivate"), m_touchAlternativeActivate, TabBoxWindowsAlternativeMode);
 }
 
 void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
@@ -1221,6 +1244,15 @@ void TabBox::shadeActivate(AbstractClient *c)
 
 bool TabBox::toggle(ElectricBorder eb)
 {
+    if (m_borderAlternativeActivate.contains(eb)) {
+        return toggleMode(TabBoxWindowsAlternativeMode);
+    } else {
+        return toggleMode(TabBoxWindowsMode);
+    }
+}
+
+bool TabBox::toggleMode(TabBoxMode mode)
+{
     if (!options->focusPolicyIsReasonable())
         return false; // not supported.
     if (isDisplayed()) {
@@ -1230,10 +1262,7 @@ bool TabBox::toggle(ElectricBorder eb)
     if (!establishTabBoxGrab())
         return false;
     m_noModifierGrab = m_tabGrab = true;
-    if (m_borderAlternativeActivate.contains(eb))
-        setMode(TabBoxWindowsAlternativeMode);
-    else
-        setMode(TabBoxWindowsMode);
+    setMode(mode);
     reset();
     show();
     return true;
