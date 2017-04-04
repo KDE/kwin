@@ -309,10 +309,6 @@ void Compositing::save()
     }
     kwinConfig.writeEntry("Backend", backend);
     kwinConfig.writeEntry("GLCore", glCore);
-    const QModelIndex glIndex = m_openGLPlatformInterfaceModel->index(m_openGLPlatformInterface);
-    if (glIndex.isValid()) {
-        kwinConfig.writeEntry("GLPlatformInterface", glIndex.data(Qt::UserRole).toString());
-    }
     if (!compositingRequired()) {
         kwinConfig.writeEntry("WindowsBlockCompositing", windowsBlockCompositing());
     }
