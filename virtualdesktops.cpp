@@ -39,7 +39,10 @@ VirtualDesktop::VirtualDesktop(QObject *parent)
 {
 }
 
-VirtualDesktop::~VirtualDesktop() = default;
+VirtualDesktop::~VirtualDesktop()
+{
+    emit aboutToBeDestroyed();
+}
 
 void VirtualDesktop::setId(const QByteArray &id)
 {
@@ -325,6 +328,11 @@ VirtualDesktop *VirtualDesktopManager::desktopForX11Id(uint id) const
 uint VirtualDesktopManager::current() const
 {
     return m_current ? m_current->x11DesktopNumber() : 0;
+}
+
+VirtualDesktop *VirtualDesktopManager::currentDesktop() const
+{
+    return m_current;
 }
 
 bool VirtualDesktopManager::setCurrent(uint newDesktop)

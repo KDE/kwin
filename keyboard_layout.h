@@ -35,6 +35,11 @@ namespace KWin
 class Xkb;
 class KeyboardLayoutDBusInterface;
 
+namespace KeyboardLayoutSwitching
+{
+class Policy;
+}
+
 class KeyboardLayout : public QObject, public InputEventSpy
 {
     Q_OBJECT
@@ -76,6 +81,7 @@ private:
     KSharedConfigPtr m_config;
     QVector<QAction*> m_layoutShortcuts;
     KeyboardLayoutDBusInterface *m_dbusInterface = nullptr;
+    KeyboardLayoutSwitching::Policy *m_policy = nullptr;
 };
 
 class KeyboardLayoutDBusInterface : public QObject

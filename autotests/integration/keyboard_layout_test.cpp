@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
 #include "platform.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 
 #include <KConfigGroup>
@@ -51,6 +52,7 @@ private Q_SLOTS:
     void testChangeLayoutThroughDBus();
     void testPerLayoutShortcut();
     void testDBusServiceExport();
+    void testVirtualDesktopPolicy();
 
 private:
     void reconfigureLayouts();
@@ -273,6 +275,66 @@ void KeyboardLayoutTest::testDBusServiceExport()
     reconfigureLayouts();
     QTRY_COMPARE(xkb->numberOfLayouts(), 1u);
     QTRY_VERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
+}
+
+void KeyboardLayoutTest::testVirtualDesktopPolicy()
+{
+    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group("Layout");
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));
+    layoutGroup.writeEntry("SwitchMode", QStringLiteral("Desktop"));
+    layoutGroup.sync();
+    reconfigureLayouts();
+    auto xkb = input()->keyboard()->xkb();
+    QTRY_COMPARE(xkb->numberOfLayouts(), 3u);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    VirtualDesktopManager::self()->setCount(4);
+    QCOMPARE(VirtualDesktopManager::self()->count(), 4u);
+
+    auto changeLayout = [] (const QString &layoutName) {
+        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("setLayout"));
+        msg << layoutName;
+        return QDBusConnection::sessionBus().asyncCall(msg);
+    };
+    auto reply = changeLayout(QStringLiteral("German"));
+    reply.waitForFinished();
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German"));
+
+    // switch to another virtual desktop
+    auto desktops = VirtualDesktopManager::self()->desktops();
+    QCOMPARE(desktops.count(), 4);
+    QCOMPARE(desktops.first(), VirtualDesktopManager::self()->currentDesktop());
+    VirtualDesktopManager::self()->setCurrent(desktops.at(1));
+    QCOMPARE(desktops.at(1), VirtualDesktopManager::self()->currentDesktop());
+    // should be reset to English
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));reply = changeLayout(QStringLiteral("German (Neo 2)"));
+    reply.waitForFinished();
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+
+    // back to desktop 0 -> German
+    VirtualDesktopManager::self()->setCurrent(desktops.at(0));
+    QCOMPARE(desktops.first(), VirtualDesktopManager::self()->currentDesktop());
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German"));
+    // desktop 2 -> English
+    VirtualDesktopManager::self()->setCurrent(desktops.at(2));
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+    // desktop 1 -> Neo
+    VirtualDesktopManager::self()->setCurrent(desktops.at(1));
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+
+    // remove virtual desktops
+    VirtualDesktopManager::self()->setCount(1);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German"));
+
+    // add another desktop
+    VirtualDesktopManager::self()->setCount(2);
+    // switching to it should result in going to default
+    desktops = VirtualDesktopManager::self()->desktops();
+    QCOMPARE(desktops.count(), 2);
+    QCOMPARE(desktops.first(), VirtualDesktopManager::self()->currentDesktop());
+    VirtualDesktopManager::self()->setCurrent(desktops.last());
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
 }
 
 WAYLANDTEST_MAIN(KeyboardLayoutTest)

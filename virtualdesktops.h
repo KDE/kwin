@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_VIRTUAL_DESKTOPS_H
 // KWin
 #include <kwinglobals.h>
+#include <kwin_export.h>
 // Qt includes
 #include <QObject>
 #include <QPoint>
@@ -36,7 +37,7 @@ class QAction;
 
 namespace KWin {
 
-class VirtualDesktop : public QObject
+class KWIN_EXPORT VirtualDesktop : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QByteArray id READ id CONSTANT)
@@ -63,6 +64,10 @@ public:
 
 Q_SIGNALS:
     void nameChanged();
+    /**
+     * Emitted just before the desktop gets destroyed.
+     **/
+    void aboutToBeDestroyed();
 
 private:
     QByteArray m_id;
@@ -124,7 +129,7 @@ private:
  * of an adjacent desktop or to switch to an adjacent desktop. Interested parties should make use of
  * these methods and not replicate the logic to switch to the next desktop.
  **/
-class VirtualDesktopManager : public QObject
+class KWIN_EXPORT VirtualDesktopManager : public QObject
 {
     Q_OBJECT
     /**
@@ -162,6 +167,12 @@ public:
      * @see currentChanged
      */
     uint current() const;
+    /**
+     * @returns The current desktop
+     * @see setCurrent
+     * @see currentChanged
+     **/
+    VirtualDesktop *currentDesktop() const;
     /**
      * Moves to the desktop through the algorithm described by Direction.
      * @param wrap If @c true wraps around to the other side of the layout

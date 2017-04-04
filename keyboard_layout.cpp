@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "keyboard_layout.h"
+#include "keyboard_layout_switching.h"
 #include "keyboard_input.h"
 #include "input_event.h"
 #include "main.h"
@@ -162,6 +163,11 @@ void KeyboardLayout::reconfigure()
 {
     if (m_config) {
         m_config->reparseConfiguration();
+        const QString policyKey = m_config->group(QStringLiteral("Layout")).readEntry("SwitchMode", QStringLiteral("Global"));
+        if (!m_policy || m_policy->name() != policyKey) {
+            delete m_policy;
+            m_policy = KeyboardLayoutSwitching::Policy::create(m_xkb, this, policyKey);
+        }
     }
     m_xkb->reconfigure();
     resetLayout();
