@@ -1735,4 +1735,18 @@ void AbstractClient::showApplicationMenu(int actionId)
     }
 }
 
+bool AbstractClient::unresponsive() const
+{
+    return m_unresponsive;
+}
+
+void AbstractClient::setUnresponsive(bool unresponsive)
+{
+    if (m_unresponsive != unresponsive) {
+        m_unresponsive = unresponsive;
+        emit unresponsiveChanged(m_unresponsive);
+        emit captionChanged();
+    }
+}
+
 }

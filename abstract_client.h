@@ -265,6 +265,14 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      */
     Q_PROPERTY(bool applicationMenuActive READ applicationMenuActive NOTIFY applicationMenuActiveChanged)
 
+    /**
+     * Whether this client is unresponsive.
+     *
+     * When an application failed to react on a ping request in time, it is
+     * considered unresponsive. This usually indicates that the application froze or crashed.
+     */
+    Q_PROPERTY(bool unresponsive READ unresponsive NOTIFY unresponsiveChanged)
+
 public:
     virtual ~AbstractClient();
 
@@ -653,6 +661,8 @@ public:
      */
     void showApplicationMenu(int actionId);
 
+    bool unresponsive() const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -694,6 +704,7 @@ Q_SIGNALS:
     void desktopFileNameChanged();
     void hasApplicationMenuChanged(bool);
     void applicationMenuActiveChanged(bool);
+    void unresponsiveChanged(bool);
 
 protected:
     AbstractClient();
@@ -978,6 +989,8 @@ protected:
     void updateApplicationMenuServiceName(const QString &serviceName);
     void updateApplicationMenuObjectPath(const QString &objectPath);
 
+    void setUnresponsive(bool unresponsive);
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -1049,6 +1062,8 @@ private:
     bool m_applicationMenuActive = false;
     QString m_applicationMenuServiceName;
     QString m_applicationMenuObjectPath;
+
+    bool m_unresponsive = false;
 
     static bool s_haveResizeEffect;
 };

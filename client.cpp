@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
 // KDE
+#include <KLocalizedString>
 #include <KWindowSystem>
 #include <KColorScheme>
 // Qt
@@ -1124,14 +1125,24 @@ void Client::pingWindow()
     ping_timer = new QTimer(this);
     connect(ping_timer, &QTimer::timeout, this,
         [this]() {
-            qCDebug(KWIN_CORE) << "Ping timeout:" << caption();
-            ping_timer->deleteLater();
-            ping_timer = nullptr;
-            killProcess(true, m_pingTimestamp);
+            if (unresponsive()) {
+                qCDebug(KWIN_CORE) << "Final ping timeout, asking to kill:" << caption();
+                ping_timer->deleteLater();
+                ping_timer = nullptr;
+                killProcess(true, m_pingTimestamp);
+                return;
+            }
+
+            qCDebug(KWIN_CORE) << "First ping timeout:" << caption();
+
+            setUnresponsive(true);
+            ping_timer->start();
         }
     );
     ping_timer->setSingleShot(true);
-    ping_timer->start(options->killPingTimeout());
+    // we'll run the timer twice, at first we'll desaturate the window
+    // and the second time we'll show the "do you want to kill" prompt
+    ping_timer->start(options->killPingTimeout() / 2);
     m_pingTimestamp = xTime();
     workspace()->sendPingToWindow(window(), m_pingTimestamp);
 }
@@ -1143,6 +1154,9 @@ void Client::gotPing(xcb_timestamp_t timestamp)
         return;
     delete ping_timer;
     ping_timer = NULL;
+
+    setUnresponsive(false);
+
     if (m_killHelperPID && !::kill(m_killHelperPID, 0)) { // means the process is alive
         ::kill(m_killHelperPID, SIGTERM);
         m_killHelperPID = 0;
@@ -1536,8 +1550,13 @@ void Client::fetchIconicName()
 QString Client::caption(bool full, bool stripped) const
 {
     QString cap = stripped ? cap_deco : cap_normal;
-    if (full)
+    if (full) {
         cap += cap_suffix;
+        if (unresponsive()) {
+            cap += QLatin1String(" ");
+            cap += i18nc("Application is not responding, appended to window title", "(Not Responding)");
+        }
+    }
     return cap;
 }
 

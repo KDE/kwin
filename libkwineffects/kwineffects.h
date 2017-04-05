@@ -1443,6 +1443,14 @@ Q_SIGNALS:
      **/
     void windowModalityChanged(KWin::EffectWindow *w);
     /**
+     * Signal emitted when a window either became unresponsive (eg. app froze or crashed)
+     * or respoonsive
+     * @param w The window that became (un)responsive
+     * @param unresponsive Whether the window is responsive or unresponsive
+     * @since 5.10
+     */
+    void windowUnresponsiveChanged(KWin::EffectWindow *w, bool unresponsive);
+    /**
      * Signal emitted when an area of a window is scheduled for repainting.
      * Use this signal in an effect if another area needs to be synced as well.
      * @param w The window which is scheduled for repainting
@@ -1867,6 +1875,16 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * @since 5.6
      **/
     Q_PROPERTY(bool fullScreen READ isFullScreen)
+
+    /**
+     * Whether this client is unresponsive.
+     *
+     * When an application failed to react on a ping request in time, it is
+     * considered unresponsive. This usually indicates that the application froze or crashed.
+     *
+     * @since 5.10
+     */
+    Q_PROPERTY(bool unresponsive READ isUnresponsive)
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -2108,6 +2126,11 @@ public:
      * @since 5.6
      **/
     bool isFullScreen() const;
+
+    /**
+     * @since 5.10
+     */
+    bool isUnresponsive() const;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

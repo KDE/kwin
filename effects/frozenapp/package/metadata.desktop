@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=Desaturate Unresponsive Applications
+Icon=preferences-system-windows-effect-frozenapp
+Comment=Desaturate windows of unresponsive (frozen) applications
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect,KCModule
+X-KDE-PluginInfo-Author=Kai Uwe Broulik
+X-KDE-PluginInfo-Email=kde@privat.broulik.de
+X-KDE-PluginInfo-Name=kwin4_effect_frozenapp
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Ordering=60
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
+X-KDE-PluginKeyword=kwin4_effect_frozenapp
+X-KDE-Library=kcm_kwin4_genericscripted
+X-KDE-ParentComponents=kwin4_effect_frozen
+X-KWin-Config-TranslationDomain=kwin_effects

@@ -873,6 +873,7 @@ WINDOW_HELPER_DEFAULT(bool, isSkipSwitcher, "skipSwitcher", false)
 WINDOW_HELPER_DEFAULT(bool, isCurrentTab, "isCurrentTab", true)
 WINDOW_HELPER_DEFAULT(bool, decorationHasAlpha, "decorationHasAlpha", false)
 WINDOW_HELPER_DEFAULT(bool, isFullScreen, "fullScreen", false)
+WINDOW_HELPER_DEFAULT(bool, isUnresponsive, "unresponsive", false)
 
 #undef WINDOW_HELPER_DEFAULT
 
