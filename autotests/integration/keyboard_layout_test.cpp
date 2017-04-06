@@ -21,11 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
 #include "platform.h"
+#include "shell_client.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "workspace.h"
 
 #include <KConfigGroup>
 #include <KGlobalAccel>
+
+#include <KWayland/Client/surface.h>
+#include <KWayland/Client/shell.h>
 
 #include <QAction>
 #include <QDBusConnection>
@@ -53,6 +58,7 @@ private Q_SLOTS:
     void testPerLayoutShortcut();
     void testDBusServiceExport();
     void testVirtualDesktopPolicy();
+    void testWindowPolicy();
 
 private:
     void reconfigureLayouts();
@@ -67,6 +73,8 @@ void KeyboardLayoutTest::reconfigureLayouts()
 
 void KeyboardLayoutTest::initTestCase()
 {
+    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -82,10 +90,12 @@ void KeyboardLayoutTest::initTestCase()
 
 void KeyboardLayoutTest::init()
 {
+    QVERIFY(Test::setupWaylandConnection());
 }
 
 void KeyboardLayoutTest::cleanup()
 {
+    Test::destroyWaylandConnection();
 }
 
 class LayoutChangedSignalWrapper : public QObject
@@ -335,6 +345,53 @@ void KeyboardLayoutTest::testVirtualDesktopPolicy()
     VirtualDesktopManager::self()->setCurrent(desktops.last());
     QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
+}
+
+void KeyboardLayoutTest::testWindowPolicy()
+{
+    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group("Layout");
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));
+    layoutGroup.writeEntry("SwitchMode", QStringLiteral("Window"));
+    layoutGroup.sync();
+    reconfigureLayouts();
+    auto xkb = input()->keyboard()->xkb();
+    QTRY_COMPARE(xkb->numberOfLayouts(), 3u);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    // create a window
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto c1 = Test::renderAndWaitForShown(surface.data(), QSize(100, 100), Qt::blue);
+    QVERIFY(c1);
+
+    // now switch layout
+    auto changeLayout = [] (const QString &layoutName) {
+        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("setLayout"));
+        msg << layoutName;
+        return QDBusConnection::sessionBus().asyncCall(msg);
+    };
+    auto reply = changeLayout(QStringLiteral("German"));
+    reply.waitForFinished();
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German"));
+
+    // create a second window
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
+    auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 100), Qt::red);
+    QVERIFY(c2);
+    // this should have switched back to English
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+    // now change to another layout
+    reply = changeLayout(QStringLiteral("German (Neo 2)"));
+    reply.waitForFinished();
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+
+    // activate other window
+    workspace()->activateClient(c1);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German"));
+    workspace()->activateClient(c2);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
 }
 
 WAYLANDTEST_MAIN(KeyboardLayoutTest)

@@ -19,7 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "keyboard_layout_switching.h"
 #include "keyboard_layout.h"
+#include "abstract_client.h"
+#include "deleted.h"
 #include "virtualdesktops.h"
+#include "workspace.h"
 #include "xkb.h"
 
 namespace KWin
@@ -54,6 +57,9 @@ Policy *Policy::create(Xkb *xkb, KeyboardLayout *layout, const QString &policy)
     if (policy.toLower() == QStringLiteral("desktop")) {
         return new VirtualDesktopPolicy(xkb, layout);
     }
+    if (policy.toLower() == QStringLiteral("window")) {
+        return new WindowPolicy(xkb, layout);
+    }
     return new GlobalPolicy(xkb, layout);
 }
 
@@ -77,19 +83,26 @@ void VirtualDesktopPolicy::clearCache()
     m_layouts.clear();
 }
 
+namespace {
+template <typename T, typename U>
+quint32 getLayout(const T &layouts, const U &reference)
+{
+    auto it = layouts.constFind(reference);
+    if (it == layouts.constEnd()) {
+        return 0;
+    } else {
+        return it.value();
+    }
+}
+}
+
 void VirtualDesktopPolicy::desktopChanged()
 {
     auto d = VirtualDesktopManager::self()->currentDesktop();
     if (!d) {
         return;
     }
-    auto it = m_layouts.constFind(d);
-    if (it == m_layouts.constEnd()) {
-        // new desktop - go to default;
-        setLayout(0);
-    } else {
-        setLayout(it.value());
-    }
+    setLayout(getLayout(m_layouts, d));
 }
 
 void VirtualDesktopPolicy::layoutChanged()
@@ -105,6 +118,60 @@ void VirtualDesktopPolicy::layoutChanged()
         connect(d, &VirtualDesktop::aboutToBeDestroyed, this,
             [this, d] {
                 m_layouts.remove(d);
+            }
+        );
+    } else {
+        if (it.value() == l) {
+            return;
+        }
+        it.value() = l;
+    }
+}
+
+WindowPolicy::WindowPolicy(KWin::Xkb* xkb, KWin::KeyboardLayout* layout)
+    : Policy(xkb, layout)
+{
+    connect(workspace(), &Workspace::clientActivated, this,
+        [this] (AbstractClient *c) {
+            if (!c) {
+                return;
+            }
+            // ignore some special types
+            if (c->isDesktop() || c->isDock()) {
+                return;
+            }
+            setLayout(getLayout(m_layouts, c));
+        }
+    );
+}
+
+WindowPolicy::~WindowPolicy()
+{
+}
+
+void WindowPolicy::clearCache()
+{
+    m_layouts.clear();
+}
+
+void WindowPolicy::layoutChanged()
+{
+    auto c = workspace()->activeClient();
+    if (!c) {
+        return;
+    }
+    // ignore some special types
+    if (c->isDesktop() || c->isDock()) {
+        return;
+    }
+
+    auto it = m_layouts.find(c);
+    const auto l = layout();
+    if (it == m_layouts.constEnd()) {
+        m_layouts.insert(c, l);
+        connect(c, &AbstractClient::windowClosed, this,
+            [this, c] {
+                m_layouts.remove(c);
             }
         );
     } else {

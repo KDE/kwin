@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class AbstractClient;
 class KeyboardLayout;
 class Xkb;
 class VirtualDesktop;
@@ -90,6 +91,25 @@ protected:
 private:
     void desktopChanged();
     QHash<VirtualDesktop *, quint32> m_layouts;
+};
+
+class WindowPolicy : public Policy
+{
+    Q_OBJECT
+public:
+    explicit WindowPolicy(Xkb *xkb, KeyboardLayout *layout);
+    ~WindowPolicy() override;
+
+    QString name() const override {
+        return QStringLiteral("Window");
+    }
+
+protected:
+    void clearCache() override;
+    void layoutChanged() override;
+
+private:
+    QHash<AbstractClient*, quint32> m_layouts;
 };
 
 }
