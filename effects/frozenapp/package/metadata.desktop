@@ -1,7 +1,17 @@
 [Desktop Entry]
 Name=Desaturate Unresponsive Applications
+Name[nl]=Verzadiging van niet responsieve toepassingen verminderen
+Name[pt]=Reduzir a Saturação das Aplicações Bloqueadas
+Name[sv]=Avmätta oemottagliga program
+Name[uk]=Зненасичення вікон, які не відповідають на запити
+Name[x-test]=xxDesaturate Unresponsive Applicationsxx
 Icon=preferences-system-windows-effect-frozenapp
 Comment=Desaturate windows of unresponsive (frozen) applications
+Comment[nl]=Verzadiging van vensters van niet responsieve (bevroren) toepassingen verminderen
+Comment[pt]=Reduzir a saturação das janelas das aplicações sem resposta (bloqueadas)
+Comment[sv]=Avmätta fönster för oemottagliga (frysta) program
+Comment[uk]=Зменшення насиченості кольорів вікон програм, які не відповідають на запити (повисли)
+Comment[x-test]=xxDesaturate windows of unresponsive (frozen) applicationsxx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect,KCModule
