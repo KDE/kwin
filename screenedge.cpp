@@ -833,7 +833,7 @@ void ScreenEdges::setActionForTouchBorder(ElectricBorder border, ElectricBorderA
 {
     auto it = m_touchActions.find(border);
     ElectricBorderAction oldValue = ElectricActionNone;
-    if (it != m_touchActions.constEnd()) {
+    if (it != m_touchActions.end()) {
         oldValue = it.value();
     }
     if (oldValue == newValue) {
