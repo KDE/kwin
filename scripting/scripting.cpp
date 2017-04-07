@@ -552,7 +552,7 @@ bool KWin::Script::registerTouchScreenCallback(int edge, QScriptValue callback)
 bool KWin::Script::unregisterTouchScreenCallback(int edge)
 {
     auto it = m_touchScreenEdgeCallbacks.find(edge);
-    if (it == m_touchScreenEdgeCallbacks.constEnd()) {
+    if (it == m_touchScreenEdgeCallbacks.end()) {
         return false;
     }
     delete it.value();
