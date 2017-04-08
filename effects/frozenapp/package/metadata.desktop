@@ -1,14 +1,26 @@
 [Desktop Entry]
 Name=Desaturate Unresponsive Applications
+Name[ca]=Desatura les aplicacions que no responen
+Name[es]=Desaturar las aplicaciones que no responden
 Name[nl]=Verzadiging van niet responsieve toepassingen verminderen
 Name[pt]=Reduzir a Saturação das Aplicações Bloqueadas
+Name[sr]=Посивљавање програма без одзива
+Name[sr@ijekavian]=Посивљавање програма без одзива
+Name[sr@ijekavianlatin]=Posivljavanje programa bez odziva
+Name[sr@latin]=Posivljavanje programa bez odziva
 Name[sv]=Avmätta oemottagliga program
 Name[uk]=Зненасичення вікон, які не відповідають на запити
 Name[x-test]=xxDesaturate Unresponsive Applicationsxx
 Icon=preferences-system-windows-effect-frozenapp
 Comment=Desaturate windows of unresponsive (frozen) applications
+Comment[ca]=Desatura les finestres de les aplicacions que no responen (congelades)
+Comment[es]=Desaturar las ventanas de las aplicaciones que no responden (congeladas)
 Comment[nl]=Verzadiging van vensters van niet responsieve (bevroren) toepassingen verminderen
 Comment[pt]=Reduzir a saturação das janelas das aplicações sem resposta (bloqueadas)
+Comment[sr]=Прозори програма који се не одазивају (смрзнутих) бивају посивљени
+Comment[sr@ijekavian]=Прозори програма који се не одазивају (смрзнутих) бивају посивљени
+Comment[sr@ijekavianlatin]=Prozori programa koji se ne odazivaju (smrznutih) bivaju posivljeni
+Comment[sr@latin]=Prozori programa koji se ne odazivaju (smrznutih) bivaju posivljeni
 Comment[sv]=Avmätta fönster för oemottagliga (frysta) program
 Comment[uk]=Зменшення насиченості кольорів вікон програм, які не відповідають на запити (повисли)
 Comment[x-test]=xxDesaturate windows of unresponsive (frozen) applicationsxx
