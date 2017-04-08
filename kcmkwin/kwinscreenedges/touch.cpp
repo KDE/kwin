@@ -278,7 +278,7 @@ void KWinScreenEdgesConfig::monitorLoad()
 
 void KWinScreenEdgesConfig::monitorSaveAction(int edge, const QString& configName)
 {
-    KConfigGroup config(m_config, "ElectricBorders");
+    KConfigGroup config(m_config, "TouchEdges");
     int item = m_ui->monitor->selectedEdgeItem(edge);
     if (item == 1)
         config.writeEntry(configName, "ShowDesktop");
