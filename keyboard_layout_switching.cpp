@@ -60,6 +60,9 @@ Policy *Policy::create(Xkb *xkb, KeyboardLayout *layout, const QString &policy)
     if (policy.toLower() == QStringLiteral("window")) {
         return new WindowPolicy(xkb, layout);
     }
+    if (policy.toLower() == QStringLiteral("winclass")) {
+        return new ApplicationPolicy(xkb, layout);
+    }
     return new GlobalPolicy(xkb, layout);
 }
 
@@ -177,6 +180,75 @@ void WindowPolicy::layoutChanged()
     } else {
         if (it.value() == l) {
             return;
+        }
+        it.value() = l;
+    }
+}
+
+ApplicationPolicy::ApplicationPolicy(KWin::Xkb* xkb, KWin::KeyboardLayout* layout)
+    : Policy(xkb, layout)
+{
+    connect(workspace(), &Workspace::clientActivated, this, &ApplicationPolicy::clientActivated);
+}
+
+ApplicationPolicy::~ApplicationPolicy()
+{
+}
+
+void ApplicationPolicy::clientActivated(AbstractClient *c)
+{
+    if (!c) {
+        return;
+    }
+    // ignore some special types
+    if (c->isDesktop() || c->isDock()) {
+        return;
+    }
+    quint32 layout = 0;
+    for (auto it = m_layouts.constBegin(); it != m_layouts.constEnd(); it++) {
+        if (AbstractClient::belongToSameApplication(c, it.key())) {
+            layout = it.value();
+            break;
+        }
+    }
+    setLayout(layout);
+}
+
+void ApplicationPolicy::clearCache()
+{
+    m_layouts.clear();
+}
+
+void ApplicationPolicy::layoutChanged()
+{
+    auto c = workspace()->activeClient();
+    if (!c) {
+        return;
+    }
+    // ignore some special types
+    if (c->isDesktop() || c->isDock()) {
+        return;
+    }
+
+    auto it = m_layouts.find(c);
+    const auto l = layout();
+    if (it == m_layouts.constEnd()) {
+        m_layouts.insert(c, l);
+        connect(c, &AbstractClient::windowClosed, this,
+            [this, c] {
+                m_layouts.remove(c);
+            }
+        );
+    } else {
+        if (it.value() == l) {
+            return;
+        }
+        it.value() = l;
+    }
+    // update all layouts for the application
+    for (it = m_layouts.begin(); it != m_layouts.end(); it++) {
+        if (!AbstractClient::belongToSameApplication(it.key(), c)) {
+            continue;
         }
         it.value() = l;
     }

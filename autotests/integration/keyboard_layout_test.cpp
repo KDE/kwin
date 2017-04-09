@@ -59,6 +59,7 @@ private Q_SLOTS:
     void testDBusServiceExport();
     void testVirtualDesktopPolicy();
     void testWindowPolicy();
+    void testApplicationPolicy();
 
 private:
     void reconfigureLayouts();
@@ -391,6 +392,68 @@ void KeyboardLayoutTest::testWindowPolicy()
     workspace()->activateClient(c1);
     QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German"));
     workspace()->activateClient(c2);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+}
+
+void KeyboardLayoutTest::testApplicationPolicy()
+{
+    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group("Layout");
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));
+    layoutGroup.writeEntry("SwitchMode", QStringLiteral("WinClass"));
+    layoutGroup.sync();
+    reconfigureLayouts();
+    auto xkb = input()->keyboard()->xkb();
+    QTRY_COMPARE(xkb->numberOfLayouts(), 3u);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    // create a window
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto c1 = Test::renderAndWaitForShown(surface.data(), QSize(100, 100), Qt::blue);
+    QVERIFY(c1);
+
+    // now switch layout
+    auto changeLayout = [] (const QString &layoutName) {
+        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("setLayout"));
+        msg << layoutName;
+        return QDBusConnection::sessionBus().asyncCall(msg);
+    };
+    LayoutChangedSignalWrapper wrapper;
+    QSignalSpy layoutChangedSpy(&wrapper, &LayoutChangedSignalWrapper::layoutChanged);
+    QVERIFY(layoutChangedSpy.isValid());
+    auto reply = changeLayout(QStringLiteral("German"));
+    QVERIFY(layoutChangedSpy.wait());
+    QCOMPARE(layoutChangedSpy.count(), 1);
+    reply.waitForFinished();
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German"));
+
+    // create a second window
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
+    auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 100), Qt::red);
+    QVERIFY(c2);
+    // it is the same application and should not switch the layout
+    QVERIFY(!layoutChangedSpy.wait());
+    QCOMPARE(layoutChangedSpy.count(), 1);
+    // now change to another layout
+    reply = changeLayout(QStringLiteral("German (Neo 2)"));
+    QVERIFY(layoutChangedSpy.wait());
+    QCOMPARE(layoutChangedSpy.count(), 2);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+
+    // activate other window
+    workspace()->activateClient(c1);
+    QVERIFY(!layoutChangedSpy.wait());
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+    workspace()->activateClient(c2);
+    QVERIFY(!layoutChangedSpy.wait());
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+
+    shellSurface2.reset();
+    surface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c2));
+    QVERIFY(!layoutChangedSpy.wait());
     QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
 }
 

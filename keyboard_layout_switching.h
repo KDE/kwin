@@ -112,6 +112,26 @@ private:
     QHash<AbstractClient*, quint32> m_layouts;
 };
 
+class ApplicationPolicy : public Policy
+{
+    Q_OBJECT
+public:
+    explicit ApplicationPolicy(Xkb *xkb, KeyboardLayout *layout);
+    ~ApplicationPolicy() override;
+
+    QString name() const override {
+        return QStringLiteral("WinClass");
+    }
+
+protected:
+    void clearCache() override;
+    void layoutChanged() override;
+
+private:
+    void clientActivated(AbstractClient *c);
+    QHash<AbstractClient*, quint32> m_layouts;
+};
+
 }
 }
 
