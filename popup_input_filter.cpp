@@ -65,6 +65,14 @@ bool PopupInputFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
             // filter out this press
             return true;
         }
+        if (pointerFocus && pointerFocus->isDecorated()) {
+            // test whether it is on the decoration
+            const QRect clientRect = QRect(pointerFocus->clientPos(), pointerFocus->clientSize()).translated(pointerFocus->pos());
+            if (!clientRect.contains(event->globalPos())) {
+                cancelPopups();
+                return true;
+            }
+        }
     }
     return false;
 }

@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/seat.h>
+#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
@@ -73,6 +74,7 @@ private Q_SLOTS:
     void testCursorImage();
     void testEffectOverrideCursorImage();
     void testPopup();
+    void testDecoCancelsPopup();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -108,7 +110,7 @@ void PointerInputTest::initTestCase()
 
 void PointerInputTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration));
     QVERIFY(Test::waitForWaylandPointer());
     m_compositor = Test::waylandCompositor();
     m_shell = Test::waylandShell();
@@ -1043,6 +1045,84 @@ void PointerInputTest::testPopup()
     kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(popupDoneSpy.wait());
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+}
+
+void PointerInputTest::testDecoCancelsPopup()
+{
+    // this test verifies that clicking the window decoration of parent window
+    // cancels the popup
+
+    // first create a parent surface
+    using namespace KWayland::Client;
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy enteredSpy(pointer, &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(pointer, &Pointer::left);
+    QVERIFY(leftSpy.isValid());
+    QSignalSpy buttonStateChangedSpy(pointer, &Pointer::buttonStateChanged);
+    QVERIFY(buttonStateChangedSpy.isValid());
+    QSignalSpy motionSpy(pointer, &Pointer::motion);
+    QVERIFY(motionSpy.isValid());
+
+    Cursor::setPos(800, 800);
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = Test::createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
+    QVERIFY(shellSurface);
+
+    auto deco = Test::waylandServerSideDecoration()->create(surface, surface);
+    QSignalSpy decoSpy(deco, &ServerSideDecoration::modeChanged);
+    QVERIFY(decoSpy.isValid());
+    QVERIFY(decoSpy.wait());
+    deco->requestMode(ServerSideDecoration::Mode::Server);
+    QVERIFY(decoSpy.wait());
+    QCOMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+    QCOMPARE(window->hasPopupGrab(), false);
+    QVERIFY(window->isDecorated());
+
+    // move pointer into window
+    QVERIFY(!window->geometry().contains(QPoint(800, 800)));
+    Cursor::setPos(window->geometry().center());
+    QVERIFY(enteredSpy.wait());
+    // click inside window to create serial
+    quint32 timestamp = 0;
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QVERIFY(buttonStateChangedSpy.wait());
+
+    // now create the popup surface
+    Surface *popupSurface = Test::createSurface(m_compositor);
+    QVERIFY(popupSurface);
+    ShellSurface *popupShellSurface = Test::createShellSurface(popupSurface, popupSurface);
+    QVERIFY(popupShellSurface);
+    QSignalSpy popupDoneSpy(popupShellSurface, &ShellSurface::popupDone);
+    QVERIFY(popupDoneSpy.isValid());
+    // TODO: proper serial
+    popupShellSurface->setTransientPopup(surface, m_seat, 0, QPoint(80, 20));
+    render(popupSurface);
+    QVERIFY(clientAddedSpy.wait());
+    auto popupClient = clientAddedSpy.last().first().value<ShellClient*>();
+    QVERIFY(popupClient);
+    QVERIFY(popupClient != window);
+    QCOMPARE(window, workspace()->activeClient());
+    QCOMPARE(popupClient->transientFor(), window);
+    QCOMPARE(popupClient->pos(), window->pos() + window->clientPos() + QPoint(80, 20));
+    QCOMPARE(popupClient->hasPopupGrab(), true);
+
+    // let's move the pointer into the center of the deco
+    Cursor::setPos(window->geometry().center().x(), window->y() + (window->height() - window->clientSize().height()) / 2);
+
+    kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, timestamp++);
+    QVERIFY(popupDoneSpy.wait());
+    kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
 }
 
 }
