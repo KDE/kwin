@@ -61,6 +61,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DRM_CAP_CURSOR_HEIGHT 0x9
 #endif
 
+#define KWIN_DRM_EVENT_CONTEXT_VERSION 2
+
 namespace KWin
 {
 
@@ -240,7 +242,7 @@ void DrmBackend::openDrm()
             }
             drmEventContext e;
             memset(&e, 0, sizeof e);
-            e.version = DRM_EVENT_CONTEXT_VERSION;
+            e.version = KWIN_DRM_EVENT_CONTEXT_VERSION;
             e.page_flip_handler = pageFlipHandler;
             drmHandleEvent(m_fd, &e);
         }
