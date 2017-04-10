@@ -12,6 +12,8 @@ X-KDE-Weight=50
 
 Name=Touch Screen
 Name[ca]=Pantalla tàctil
+Name[ca@valencia]=Pantalla tàctil
+Name[es]=Pantalla táctil
 Name[nl]=Aanraakscherm
 Name[pl]=Ekran dotykowy
 Name[pt]=Ecrã Táctil
@@ -21,6 +23,8 @@ Name[uk]=Сенсорна панель
 Name[x-test]=xxTouch Screenxx
 Comment=Touch screen swipe gestures
 Comment[ca]=Gestos de lliscament en la pantalla tàctil
+Comment[ca@valencia]=Gestos de lliscament en la pantalla tàctil
+Comment[es]=Gestos de deslizamiento en pantalla táctil
 Comment[nl]=Veeggebaren voor aanraakscherm
 Comment[pl]=Gesty na ekranie dotykowym
 Comment[pt]=Gestos para deslizar o ecrã táctil
@@ -31,6 +35,8 @@ Comment[x-test]=xxTouch screen swipe gesturesxx
 
 X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,vora,borde,acció,canvi,escriptori,vores d'escriptori,vores de pantalla,costat de pantalla,comportament de la pantalla,pantalla tàctil
+X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,efecte,vora,borde,acció,canvi,escriptori,vores d'escriptori,vores de pantalla,costat de pantalla,comportament de la pantalla,pantalla tàctil
+X-KDE-Keywords[es]=kwin,ventana,gestor,efecto,esquina,borde,acción,cambiar,escritorio,bordes del escritorio,bordes de la pantalla,lado de la pantalla,comportamiento de la pantalla,pantalla táctil
 X-KDE-Keywords[nl]=kwin,venster,beheerder,effect,kant,rand,actie,omschakelen,bureaublad,bureaubladkanten,schermkanten,zijkant van het scherm,schermgedrag,aanraakscherm
 X-KDE-Keywords[pl]=kwin,okno,menadżer,efekt,krawędź,obramowanie,działanie,przełącz,pulpit,krawędzie pulpitu,krawędzie ekranu,strona ekranu,zachowanie ekranu,ekran dotykowy
 X-KDE-Keywords[pt]=kwin,janela,gestor,efeito,extremo,contorno,acção,mudar,ecrã,extremos do ecrã no kwin,extremos do ecrã,maximizar as janelas,janelas lado-a-lado,lado do ecrã,comportamento do ecrã,ecrã táctil
