@@ -197,6 +197,9 @@ bool Edge::activatesForTouchGesture() const
     if (!isScreenEdge()) {
         return false;
     }
+    if (m_blocked) {
+        return false;
+    }
     if (m_client) {
         return true;
     }
@@ -538,7 +541,11 @@ void Edge::checkBlocking()
     if (newValue == m_blocked) {
         return;
     }
+    const bool wasTouch = activatesForTouchGesture();
     m_blocked = newValue;
+    if (wasTouch != activatesForTouchGesture()) {
+        emit activatesForTouchGestureChanged();
+    }
     doUpdateBlocking();
 }
 

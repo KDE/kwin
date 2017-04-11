@@ -652,8 +652,13 @@ void TestScreenEdges::testFullScreenBlocking()
     QVERIFY(spy.isValid());
     s->reserve(KWin::ElectricLeft, &callback, "callback");
     s->reserve(KWin::ElectricBottomRight, &callback, "callback");
+    QAction action;
+    s->reserveTouch(KWin::ElectricRight, &action);
     // currently there is no active client yet, so check blocking shouldn't do anything
     emit s->checkBlocking();
+    for (auto e: s->findChildren<Edge*>()) {
+        QCOMPARE(e->activatesForTouchGesture(), e->border() == KWin::ElectricRight);
+    }
 
     xcb_enter_notify_event_t event;
     Cursor::setPos(0, 50);
@@ -678,6 +683,7 @@ void TestScreenEdges::testFullScreenBlocking()
     // the signal doesn't trigger for corners, let's go over all windows just to be sure that it doesn't call for corners
     for (auto e: s->findChildren<Edge*>()) {
         e->checkBlocking();
+        QCOMPARE(e->activatesForTouchGesture(), false);
     }
     // calling again should not trigger
     QTest::qWait(160);
@@ -691,6 +697,9 @@ void TestScreenEdges::testFullScreenBlocking()
     // let's make the client not fullscreen, which should trigger
     client.setFullScreen(false);
     emit s->checkBlocking();
+    for (auto e: s->findChildren<Edge*>()) {
+        QCOMPARE(e->activatesForTouchGesture(), e->border() == KWin::ElectricRight);
+    }
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(s->isEntered(&event));
     QVERIFY(!spy.isEmpty());
