@@ -14,6 +14,7 @@ Name[sr@latin]=Posivljavanje programa bez odziva
 Name[sv]=Avmätta oemottagliga program
 Name[uk]=Зненасичення вікон, які не відповідають на запити
 Name[x-test]=xxDesaturate Unresponsive Applicationsxx
+Name[zh_TW]=淡化無回應的應用程式
 Icon=preferences-system-windows-effect-frozenapp
 Comment=Desaturate windows of unresponsive (frozen) applications
 Comment[ca]=Dessatura les finestres de les aplicacions que no responen (congelades)
@@ -30,6 +31,7 @@ Comment[sr@latin]=Prozori programa koji se ne odazivaju (smrznutih) bivaju posiv
 Comment[sv]=Avmätta fönster för oemottagliga (frysta) program
 Comment[uk]=Зменшення насиченості кольорів вікон програм, які не відповідають на запити (повисли)
 Comment[x-test]=xxDesaturate windows of unresponsive (frozen) applicationsxx
+Comment[zh_TW]=淡化無回應（凍結）的應用程式視窗
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect,KCModule
