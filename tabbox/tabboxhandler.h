@@ -336,6 +336,12 @@ public:
 
     bool eventFilter(QObject *watcher, QEvent *event) override;
 
+    /**
+     * @returns whether the TabBox operates in a no modifier grab mode.
+     * In this mode a click on an item should directly accept and close the tabbox.
+     **/
+    virtual bool noModifierGrab() const = 0;
+
 Q_SIGNALS:
     /**
     * This signal is fired when the TabBoxConfig changes

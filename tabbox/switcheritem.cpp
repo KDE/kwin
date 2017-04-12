@@ -102,5 +102,14 @@ void SwitcherItem::setAllDesktops(bool all)
     emit allDesktopsChanged();
 }
 
+void SwitcherItem::setNoModifierGrab(bool set)
+{
+    if (m_noModifierGrab == set) {
+        return;
+    }
+    m_noModifierGrab = set;
+    emit noModifierGrabChanged();
+}
+
 }
 }

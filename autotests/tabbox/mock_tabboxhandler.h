@@ -98,6 +98,10 @@ public:
         Q_UNUSED(controller)
     }
 
+    bool noModifierGrab() const override {
+        return false;
+    }
+
     // mock methods
     QWeakPointer<TabBox::TabBoxClient> createMockWindow(const QString &caption, WId id);
     void closeWindow(TabBox::TabBoxClient *client);

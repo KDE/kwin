@@ -75,6 +75,7 @@ public:
     virtual QWeakPointer< TabBoxClient > desktopClient() const;
     virtual void activateAndClose();
     void highlightWindows(TabBoxClient *window = nullptr, QWindow *controller = nullptr) override;
+    bool noModifierGrab() const override;
 
 private:
     bool checkDesktop(TabBoxClient* client, int desktop) const;
@@ -185,6 +186,10 @@ public:
 
     bool forcedGlobalMouseGrab() const {
         return m_forcedGlobalMouseGrab;
+    }
+
+    bool noModifierGrab() const {
+        return m_noModifierGrab;
     }
 
     static TabBox *self();

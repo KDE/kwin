@@ -38,6 +38,7 @@ class SwitcherItem : public QObject
     Q_PROPERTY(bool visible READ isVisible NOTIFY visibleChanged)
     Q_PROPERTY(bool allDesktops READ isAllDesktops NOTIFY allDesktopsChanged)
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
+    Q_PROPERTY(bool noModifierGrab READ noModifierGrab NOTIFY noModifierGrabChanged)
 
     /**
      * The main QML item that will be displayed in the Dialog
@@ -57,11 +58,15 @@ public:
     void setCurrentIndex(int index);
     QObject *item() const;
     void setItem(QObject *item);
+    bool noModifierGrab() const {
+        return m_noModifierGrab;
+    }
 
     // for usage from outside
     void setModel(QAbstractItemModel *model);
     void setAllDesktops(bool all);
     void setVisible(bool visible);
+    void setNoModifierGrab(bool set);
 
 Q_SIGNALS:
     void visibleChanged();
@@ -70,6 +75,7 @@ Q_SIGNALS:
     void allDesktopsChanged();
     void screenGeometryChanged();
     void itemChanged();
+    void noModifierGrabChanged();
 
 private:
     QAbstractItemModel *m_model;
@@ -78,6 +84,7 @@ private:
     bool m_allDesktops;
     int m_currentIndex;
     QMetaObject::Connection m_selectedIndexConnection;
+    bool m_noModifierGrab = false;
 };
 
 inline QAbstractItemModel *SwitcherItem::model() const

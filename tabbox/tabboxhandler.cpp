@@ -337,6 +337,7 @@ void TabBoxHandlerPrivate::show()
         }
         item->setAllDesktops(config.clientDesktopMode() == TabBoxConfig::AllDesktopsClients);
         item->setCurrentIndex(indexRow);
+        item->setNoModifierGrab(q->noModifierGrab());
         // everything is prepared, so let's make the whole thing visible
         item->setVisible(true);
     }

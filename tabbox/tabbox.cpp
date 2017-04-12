@@ -359,6 +359,11 @@ void TabBoxHandlerImpl::highlightWindows(TabBoxClient *window, QWindow *controll
     static_cast<EffectsHandlerImpl*>(effects)->highlightWindows(windows);
 }
 
+bool TabBoxHandlerImpl::noModifierGrab() const
+{
+    return m_tabBox->noModifierGrab();
+}
+
 /*********************************************************
 * TabBoxClientImpl
 *********************************************************/
