@@ -1339,6 +1339,9 @@ void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPus
         if (!(*it)->isReserved()) {
             continue;
         }
+        if (!(*it)->activatesForPointer()) {
+            continue;
+        }
         if ((*it)->approachGeometry().contains(pos)) {
             (*it)->startApproaching();
         }

@@ -918,6 +918,9 @@ void TestScreenEdges::testTouchEdge()
     setPos(QPoint(0, 50));
     QCOMPARE(s->isEntered(&event), false);
     QVERIFY(approachingSpy.isEmpty());
+    // let's also verify the check
+    s->check(QPoint(0, 50), QDateTime::currentDateTime(), false);
+    QVERIFY(approachingSpy.isEmpty());
 
     s->gestureRecognizer()->startSwipeGesture(QPoint(0, 50));
     QCOMPARE(approachingSpy.count(), 1);
