@@ -83,6 +83,8 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
 {
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModel->sort(0);
     connect(m_ui->filter, &QLineEdit::textChanged, m_proxyModel, &QSortFilterProxyModel::setFilterFixedString);
 
     m_quickView = new QQuickView(0);
