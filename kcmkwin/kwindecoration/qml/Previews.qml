@@ -33,7 +33,9 @@ ScrollView {
         cellWidth: 20 * units.gridUnit
         cellHeight: cellWidth / 1.6
         onContentHeightChanged: {
-            gridView.currentIndex = savedIndex;
+            if (gridView.currentIndex == -1) {
+                gridView.currentIndex = savedIndex;
+            }
             gridView.positionViewAtIndex(gridView.currentIndex, GridView.Visible);
         }
 
