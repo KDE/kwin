@@ -151,6 +151,9 @@ QSharedPointer<QOpenGLFramebufferObject> Window::swapFBO()
 void Window::createFBO()
 {
     const QRect &r = geometry();
+    if (m_contentFBO && r.size().isEmpty()) {
+        return;
+    }
     m_contentFBO.reset(new QOpenGLFramebufferObject(r.width(), r.height(), QOpenGLFramebufferObject::CombinedDepthStencil));
     if (!m_contentFBO->isValid()) {
         qCWarning(KWIN_QPA) << "Content FBO is not valid";
