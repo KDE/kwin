@@ -213,7 +213,12 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
 
     m_currentLayout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
 
+    m_modifierState.depressed = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED));
+    m_modifierState.latched = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED));
+    m_modifierState.locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
+
     createKeymapFile();
+    forwardModifiers();
 }
 
 void Xkb::createKeymapFile()
@@ -260,6 +265,7 @@ void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t
     }
     xkb_state_update_mask(m_state, modsDepressed, modsLatched, modsLocked, 0, 0, group);
     updateModifiers();
+    forwardModifiers();
 }
 
 void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
@@ -324,16 +330,21 @@ void Xkb::updateModifiers()
         emit m_input->keyboard()->ledsChanged(m_leds);
     }
 
-    const xkb_layout_index_t layout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
-    if (layout != m_currentLayout) {
-        m_currentLayout = layout;
+    m_currentLayout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
+    m_modifierState.depressed = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED));
+    m_modifierState.latched = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED));
+    m_modifierState.locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
+}
+
+void Xkb::forwardModifiers()
+{
+    if (!waylandServer()) {
+        return;
     }
-    if (waylandServer()) {
-        waylandServer()->seat()->updateKeyboardModifiers(xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED)),
-                                                         xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED)),
-                                                         xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED)),
-                                                         layout);
-    }
+    waylandServer()->seat()->updateKeyboardModifiers(m_modifierState.depressed,
+                                                     m_modifierState.latched,
+                                                     m_modifierState.locked,
+                                                     m_currentLayout);
 }
 
 QString Xkb::layoutName() const
@@ -472,6 +483,7 @@ void Xkb::switchToLayout(xkb_layout_index_t layout)
     const xkb_mod_mask_t locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
     xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, layout);
     updateModifiers();
+    forwardModifiers();
 }
 
 quint32 Xkb::numberOfLayouts() const

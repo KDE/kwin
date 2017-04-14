@@ -93,6 +93,11 @@ public:
     QMap<xkb_layout_index_t, QString> layoutNames() const;
     quint32 numberOfLayouts() const;
 
+    /**
+     * Forwards the current modifier state to the Wayland seat
+     **/
+    void forwardModifiers();
+
 private:
     xkb_keymap *loadKeymapFromConfig();
     xkb_keymap *loadDefaultKeymap();
@@ -124,6 +129,12 @@ private:
     } m_compose;
     LEDs m_leds;
     KSharedConfigPtr m_config;
+
+    struct {
+        xkb_mod_index_t depressed = 0;
+        xkb_mod_index_t latched = 0;
+        xkb_mod_index_t locked = 0;
+    } m_modifierState;
 };
 
 inline
