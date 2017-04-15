@@ -436,6 +436,17 @@ void PointerInputRedirection::update()
     if (input()->isSelectingWindow()) {
         return;
     }
+    auto areButtonsPressed = [this] {
+        for (auto state : qAsConst(m_buttons)) {
+            if (state == InputRedirection::PointerButtonPressed) {
+                return true;
+            }
+        }
+        return false;
+    };
+    if (areButtonsPressed()) {
+        return;
+    }
     Toplevel *t = m_input->findToplevel(m_pos.toPoint());
     const auto oldDeco = m_decoration;
     updateInternalWindow(m_pos);

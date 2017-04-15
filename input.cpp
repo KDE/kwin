@@ -223,10 +223,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         if (event->type() == QEvent::MouseMove) {
-            if (event->buttons() == Qt::NoButton) {
-                // update pointer window only if no button is pressed
-                input()->pointer()->update();
-            }
+            input()->pointer()->update();
             if (pointerSurfaceAllowed()) {
                 seat->setPointerPos(event->screenPos().toPoint());
             }

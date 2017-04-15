@@ -75,6 +75,7 @@ private Q_SLOTS:
     void testEffectOverrideCursorImage();
     void testPopup();
     void testDecoCancelsPopup();
+    void testWindowUnderCursorWhileButtonPressed();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -1123,6 +1124,63 @@ void PointerInputTest::testDecoCancelsPopup()
     kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, timestamp++);
     QVERIFY(popupDoneSpy.wait());
     kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
+}
+
+void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
+{
+    // this test verifies that opening a window underneath the mouse cursor does not
+    // trigger a leave event if a button is pressed
+    // see BUG: 372876
+
+    // first create a parent surface
+    using namespace KWayland::Client;
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy enteredSpy(pointer, &Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(pointer, &Pointer::left);
+    QVERIFY(leftSpy.isValid());
+
+    Cursor::setPos(800, 800);
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = Test::createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+
+    // move cursor over window
+    QVERIFY(!window->geometry().contains(QPoint(800, 800)));
+    Cursor::setPos(window->geometry().center());
+    QVERIFY(enteredSpy.wait());
+    // click inside window
+    quint32 timestamp = 0;
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+
+    // now create a second window as transient
+    Surface *popupSurface = Test::createSurface(m_compositor);
+    QVERIFY(popupSurface);
+    ShellSurface *popupShellSurface = Test::createShellSurface(popupSurface, popupSurface);
+    QVERIFY(popupShellSurface);
+    popupShellSurface->setTransient(surface, QPoint(0, 0));
+    render(popupSurface);
+    QVERIFY(clientAddedSpy.wait());
+    auto popupClient = clientAddedSpy.last().first().value<ShellClient*>();
+    QVERIFY(popupClient);
+    QVERIFY(popupClient != window);
+    QCOMPARE(window->geometry(), popupClient->geometry());
+    QVERIFY(!leftSpy.wait());
+
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    // now that the button is no longer pressed we should get the leave event
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(leftSpy.count(), 1);
+    QCOMPARE(enteredSpy.count(), 2);
 }
 
 }
