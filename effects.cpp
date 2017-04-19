@@ -1626,6 +1626,11 @@ KSharedConfigPtr EffectsHandlerImpl::config() const
     return kwinApp()->config();
 }
 
+KSharedConfigPtr EffectsHandlerImpl::inputConfig() const
+{
+    return kwinApp()->inputConfig();
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************

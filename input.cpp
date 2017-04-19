@@ -1458,7 +1458,6 @@ InputRedirection::InputRedirection(QObject *parent)
                 }
             );
         }
-        m_inputConfig = KSharedConfig::openConfig(QStringLiteral("kcminputrc"));
     }
 #endif
     connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);
@@ -1632,8 +1631,9 @@ void InputRedirection::reconfigure()
 {
 #if HAVE_INPUT
     if (Application::usesLibinput()) {
-        m_inputConfig->reparseConfiguration();
-        const auto config = m_inputConfig->group(QStringLiteral("keyboard"));
+        auto inputConfig = kwinApp()->inputConfig();
+        inputConfig->reparseConfiguration();
+        const auto config = inputConfig->group(QStringLiteral("keyboard"));
         const int delay = config.readEntry("RepeatDelay", 660);
         const int rate = config.readEntry("RepeatRate", 25);
         const bool enabled = config.readEntry("KeyboardRepeating", 0) == 0;
@@ -1670,7 +1670,7 @@ void InputRedirection::setupLibInput()
             waylandServer()->display()->createRelativePointerManager(KWayland::Server::RelativePointerInterfaceVersion::UnstableV1, waylandServer()->display())->create();
         }
 
-        conn->setInputConfig(m_inputConfig);
+        conn->setInputConfig(kwinApp()->inputConfig());
         conn->updateLEDs(m_keyboard->xkb()->leds());
         conn->setup();
         connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, conn, &LibInput::Connection::updateLEDs);

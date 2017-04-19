@@ -285,7 +285,6 @@ private:
 
     QVector<InputEventFilter*> m_filters;
     QVector<InputEventSpy*> m_spies;
-    KSharedConfigPtr m_inputConfig;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();

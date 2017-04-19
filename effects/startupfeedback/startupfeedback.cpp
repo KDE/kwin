@@ -283,7 +283,7 @@ void StartupFeedbackEffect::start(const QString& icon)
     prepareTextures(iconPixmap);
     auto readCursorSize = []() -> int {
         // read details about the mouse-cursor theme define per default
-        KConfigGroup mousecfg(KSharedConfig::openConfig(QStringLiteral("kcminputrc")), "Mouse");
+        KConfigGroup mousecfg(effects->inputConfig(), "Mouse");
         QString size  = mousecfg.readEntry("cursorSize", QString());
 
         // fetch a reasonable size for the cursor-theme image

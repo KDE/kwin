@@ -261,6 +261,7 @@ public:
     void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) override { Q_UNUSED(flags)}
 
     KSharedConfigPtr config() const override;
+    KSharedConfigPtr inputConfig() const override;
 
 private:
     bool m_animationsSuported = true;

@@ -30,3 +30,9 @@ KSharedConfigPtr MockEffectsHandler::config() const
     static const KSharedConfigPtr s_config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     return s_config;
 }
+
+KSharedConfigPtr MockEffectsHandler::inputConfig() const
+{
+    static const KSharedConfigPtr s_inputConfig = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    return s_inputConfig;
+}

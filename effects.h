@@ -242,6 +242,7 @@ public:
     void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) override;
 
     KSharedConfigPtr config() const override;
+    KSharedConfigPtr inputConfig() const override;
 
     Scene *scene() const {
         return m_scene;

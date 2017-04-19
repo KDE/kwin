@@ -1306,6 +1306,12 @@ public:
      **/
     virtual KSharedConfigPtr config() const = 0;
 
+    /**
+     * @returns The global input configuration (kcminputrc)
+     * @since 5.10
+     **/
+    virtual KSharedConfigPtr inputConfig() const = 0;
+
 Q_SIGNALS:
     /**
      * Signal emitted when the current desktop changed.
