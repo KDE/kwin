@@ -77,6 +77,9 @@ void WindowBasedEdge::createWindow()
 
 void WindowBasedEdge::createApproachWindow()
 {
+    if (!activatesForPointer()) {
+        return;
+    }
     if (m_approachWindow.isValid()) {
         return;
     }
@@ -95,11 +98,16 @@ void WindowBasedEdge::createApproachWindow()
 void WindowBasedEdge::doGeometryUpdate()
 {
     m_window.setGeometry(geometry());
-    m_approachWindow.setGeometry(approachGeometry());
+    if (m_approachWindow.isValid()) {
+        m_approachWindow.setGeometry(approachGeometry());
+    }
 }
 
 void WindowBasedEdge::doStartApproaching()
 {
+    if (!activatesForPointer()) {
+        return;
+    }
     m_approachWindow.unmap();
     Cursor *cursor = Cursor::self();
     connect(cursor, SIGNAL(posChanged(QPoint)), SLOT(updateApproaching(QPoint)));
@@ -108,6 +116,9 @@ void WindowBasedEdge::doStartApproaching()
 
 void WindowBasedEdge::doStopApproaching()
 {
+    if (!activatesForPointer()) {
+        return;
+    }
     Cursor *cursor = Cursor::self();
     disconnect(cursor, SIGNAL(posChanged(QPoint)), this, SLOT(updateApproaching(QPoint)));
     cursor->stopMousePolling();
@@ -117,6 +128,9 @@ void WindowBasedEdge::doStopApproaching()
 void WindowBasedEdge::doUpdateBlocking()
 {
     if (!isReserved()) {
+        return;
+    }
+    if (!activatesForPointer()) {
         return;
     }
     if (isBlocked()) {
