@@ -282,24 +282,6 @@ void XInputIntegration::startListening()
     evmasks[0].mask = mask1;
     XISelectEvents(display(), rootWindow(), evmasks, 1);
 
-    if (m_majorVersion >=2 && m_minorVersion >= 2) {
-        XIGrabModifiers mods = { int(XIAnyModifier), 0 };
-        XIEventMask touchEvmasks[1];
-        unsigned char touchMask[XIMaskLen(XI_LASTEVENT)];
-
-        memset(touchMask, 0, sizeof(touchMask));
-
-        XISetMask(touchMask, XI_TouchBegin);
-        XISetMask(touchMask, XI_TouchUpdate);
-        XISetMask(touchMask, XI_TouchOwnership);
-        XISetMask(touchMask, XI_TouchEnd);
-
-        touchEvmasks[0].deviceid = XIAllMasterDevices;
-        touchEvmasks[0].mask_len = sizeof(touchMask);
-        touchEvmasks[0].mask = touchMask;
-
-        XIGrabTouchBegin(display(), XIAllMasterDevices, rootWindow(), False, touchEvmasks, 1, &mods);
-    }
     m_xiEventFilter.reset(new XInputEventFilter(m_xiOpcode));
     m_xiEventFilter->setCursor(m_x11Cursor);
     m_xiEventFilter->setDisplay(display());
