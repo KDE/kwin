@@ -116,7 +116,7 @@ void VirtualDesktopPolicy::layoutChanged()
     }
     auto it = m_layouts.find(d);
     const auto l = layout();
-    if (it == m_layouts.constEnd()) {
+    if (it == m_layouts.end()) {
         m_layouts.insert(d, l);
         connect(d, &VirtualDesktop::aboutToBeDestroyed, this,
             [this, d] {
@@ -170,7 +170,7 @@ void WindowPolicy::layoutChanged()
 
     auto it = m_layouts.find(c);
     const auto l = layout();
-    if (it == m_layouts.constEnd()) {
+    if (it == m_layouts.end()) {
         m_layouts.insert(c, l);
         connect(c, &AbstractClient::windowClosed, this,
             [this, c] {
@@ -232,7 +232,7 @@ void ApplicationPolicy::layoutChanged()
 
     auto it = m_layouts.find(c);
     const auto l = layout();
-    if (it == m_layouts.constEnd()) {
+    if (it == m_layouts.end()) {
         m_layouts.insert(c, l);
         connect(c, &AbstractClient::windowClosed, this,
             [this, c] {
