@@ -252,7 +252,7 @@ void KWinScreenEdgesConfig::monitorLoad()
     KConfigGroup tabBoxConfig(m_config, "TabBox");
     list.clear();
     // TabBox
-    list.append(int(ElectricNone));
+    list.append(int(ElectricLeft));
     list = tabBoxConfig.readEntry("TouchBorderActivate", list);
     foreach (int i, list) {
         monitorChangeEdge(ElectricBorder(i), int(TabBox));
@@ -347,6 +347,8 @@ void KWinScreenEdgesConfig::monitorDefaults()
     // Clear all edges
     for (int i = 0; i < 8; i++)
         m_ui->monitor->selectEdgeItem(i, 0);
+    // select TabBox
+    m_ui->monitor->selectEdgeItem(int(Monitor::Left), int(TabBox));
 }
 
 void KWinScreenEdgesConfig::monitorShowEvent()

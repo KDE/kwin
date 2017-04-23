@@ -821,14 +821,14 @@ void TabBox::reconfigure()
         borderConfig = QStringLiteral("BorderAlternativeActivate");
     }
 
-    auto touchConfig = [this, config] (const QString &key, QHash<ElectricBorder, QAction *> &actions, TabBoxMode mode) {
+    auto touchConfig = [this, config] (const QString &key, QHash<ElectricBorder, QAction *> &actions, TabBoxMode mode, const QStringList &defaults = QStringList{}) {
         // fist erase old config
         for (auto it = actions.begin(); it != actions.end(); ) {
             delete it.value();
             it = actions.erase(it);
         }
         // now new config
-        const QStringList list = config.readEntry(key, QStringList());
+        const QStringList list = config.readEntry(key, defaults);
         for (const auto &s : list) {
             bool ok;
             const int i = s.toInt(&ok);
@@ -841,7 +841,7 @@ void TabBox::reconfigure()
             actions.insert(ElectricBorder(i), a);
         }
     };
-    touchConfig(QStringLiteral("TouchBorderActivate"), m_touchActivate, TabBoxWindowsMode);
+    touchConfig(QStringLiteral("TouchBorderActivate"), m_touchActivate, TabBoxWindowsMode, QStringList{QString::number(int(ElectricLeft))});
     touchConfig(QStringLiteral("TouchBorderAlternativeActivate"), m_touchAlternativeActivate, TabBoxWindowsAlternativeMode);
 }
 
