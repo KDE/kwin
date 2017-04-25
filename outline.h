@@ -45,6 +45,8 @@ class OutlineVisual;
 class Outline : public QObject {
     Q_OBJECT
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(QRect visualParentGeometry READ visualParentGeometry NOTIFY visualParentGeometryChanged)
+    Q_PROPERTY(QRect unifiedGeometry READ unifiedGeometry NOTIFY unifiedGeometryChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 public:
     ~Outline();
@@ -56,6 +58,14 @@ public:
      * @see showOutline
      */
     void setGeometry(const QRect &outlineGeometry);
+
+    /**
+     * Set the visual parent geometry.
+     * This is the geometry from which the will emerge.
+     * @param visualParentGeometry The visual geometry of the visual parent
+     * @see showOutline
+     */
+    void setVisualParentGeometry(const QRect &visualParentGeometry);
 
     /**
      * Shows the outline of a window using either an effect or the X implementation.
@@ -74,12 +84,26 @@ public:
     void show(const QRect &outlineGeometry);
 
     /**
+     * Shows the outline for the given @p outlineGeometry animated from @p visualParentGeometry.
+     * This is the same as setOutlineGeometry followed by setVisualParentGeometry
+     * and then showOutline.
+     * To stop the outline process use @link hideOutline.
+     * @param outlineGeometry The geometry of the outline to be shown
+     * @param visualParentGeometry The geometry from where the outline should emerge
+     * @see hideOutline
+     * @since 5.10
+     */
+    void show(const QRect &outlineGeometry, const QRect &visualParentGeometry);
+
+    /**
      * Hides shown outline.
      * @see showOutline
      */
     void hide();
 
     const QRect &geometry() const;
+    const QRect &visualParentGeometry() const;
+    QRect unifiedGeometry() const;
 
     bool isActive() const;
 
@@ -89,11 +113,14 @@ private Q_SLOTS:
 Q_SIGNALS:
     void activeChanged();
     void geometryChanged();
+    void unifiedGeometryChanged();
+    void visualParentGeometryChanged();
 
 private:
     void createHelper();
     QScopedPointer<OutlineVisual> m_visual;
     QRect m_outlineGeometry;
+    QRect m_visualParentGeometry;
     bool m_active;
     KWIN_SINGLETON(Outline)
 };
@@ -154,6 +181,12 @@ inline
 const QRect &Outline::geometry() const
 {
     return m_outlineGeometry;
+}
+
+inline
+const QRect &Outline::visualParentGeometry() const
+{
+    return m_visualParentGeometry;
 }
 
 inline

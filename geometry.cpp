@@ -3254,7 +3254,7 @@ void AbstractClient::setElectricBorderMaximizing(bool maximizing)
 {
     m_electricMaximizing = maximizing;
     if (maximizing)
-        outline()->show(electricBorderMaximizeGeometry(Cursor::pos(), desktop()));
+        outline()->show(electricBorderMaximizeGeometry(Cursor::pos(), desktop()), moveResizeGeometry());
     else
         outline()->hide();
     elevate(maximizing);

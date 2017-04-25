@@ -55,8 +55,6 @@ Outline::~Outline()
 
 void Outline::show()
 {
-    m_active = true;
-    emit activeChanged();
     if (m_visual.isNull()) {
         createHelper();
     }
@@ -65,6 +63,8 @@ void Outline::show()
         return;
     }
     m_visual->show();
+    m_active = true;
+    emit activeChanged();
 }
 
 void Outline::hide()
@@ -82,7 +82,13 @@ void Outline::hide()
 
 void Outline::show(const QRect& outlineGeometry)
 {
+    show(outlineGeometry, QRect());
+}
+
+void Outline::show(const QRect &outlineGeometry, const QRect &visualParentGeometry)
+{
     setGeometry(outlineGeometry);
+    setVisualParentGeometry(visualParentGeometry);
     show();
 }
 
@@ -93,6 +99,22 @@ void Outline::setGeometry(const QRect& outlineGeometry)
     }
     m_outlineGeometry = outlineGeometry;
     emit geometryChanged();
+    emit unifiedGeometryChanged();
+}
+
+void Outline::setVisualParentGeometry(const QRect &visualParentGeometry)
+{
+    if (m_visualParentGeometry == visualParentGeometry) {
+        return;
+    }
+    m_visualParentGeometry = visualParentGeometry;
+    emit visualParentGeometryChanged();
+    emit unifiedGeometryChanged();
+}
+
+QRect Outline::unifiedGeometry() const
+{
+    return m_outlineGeometry | m_visualParentGeometry;
 }
 
 void Outline::createHelper()
