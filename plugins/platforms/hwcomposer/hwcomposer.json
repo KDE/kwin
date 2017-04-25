@@ -26,6 +26,7 @@
         "Description[sr@latin]": "Renderovanje kroz HWcomposer kroz libhybris.",
         "Description[sr]": "Рендеровање кроз ХВ‑композер кроз libhybris.",
         "Description[sv]": "Återge via på hårdvarusammansättare via libhybris.",
+        "Description[tr]": "libhybris aracılığıyla hwcomposer içinden gerçekle.",
         "Description[uk]": "Обробляти за допомогою апаратного засобу композиції через libhybris.",
         "Description[x-test]": "xxRender through hwcomposer through libhybris.xx",
         "Description[zh_CN]": "使用 libhybris 通过 hwcomposer 渲染。",

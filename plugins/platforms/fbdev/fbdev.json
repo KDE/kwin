@@ -27,6 +27,7 @@
         "Description[sr@latin]": "Renderovanje u kadrobafer.",
         "Description[sr]": "Рендеровање у кадробафер.",
         "Description[sv]": "Återge i rambuffer.",
+        "Description[tr]": "Çerçeve tamponuna gerçekle.",
         "Description[uk]": "Обробляти до буфера кадрів.",
         "Description[x-test]": "xxRender to framebuffer.xx",
         "Description[zh_CN]": "渲染到帧缓冲。",
@@ -46,6 +47,7 @@
         "Name[sr@latin]": "Kadrobafer",
         "Name[sr]": "Кадробафер",
         "Name[sv]": "rambuffer",
+        "Name[tr]": "çerçeve tampon",
         "Name[x-test]": "xxframebufferxx"
     },
     "input": false

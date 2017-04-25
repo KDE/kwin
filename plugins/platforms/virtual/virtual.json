@@ -27,6 +27,7 @@
         "Description[sr@latin]": "Renderovanje u virtuelni kadrobafer.",
         "Description[sr]": "Рендеровање у виртуелни кадробафер.",
         "Description[sv]": "Återge i en virtuell rambuffer.",
+        "Description[tr]": "Sanal bir çerçeve tamponuna gerçekle.",
         "Description[uk]": "Обробляти до віртуального буфера кадрів.",
         "Description[x-test]": "xxRender to a virtual framebuffer.xx",
         "Description[zh_CN]": "渲染到虚拟帧缓冲。",
@@ -48,6 +49,7 @@
         "Name[sr@latin]": "Virtuelno",
         "Name[sr]": "Виртуелно",
         "Name[sv]": "virtuell",
+        "Name[tr]": "sanal",
         "Name[x-test]": "xxvirtualxx",
         "Name[zh_TW]": "虛擬"
     },

@@ -27,6 +27,7 @@
         "Description[sr@latin]": "Renderovanje kroz DRM čvor.",
         "Description[sr]": "Рендеровање кроз ДРМ чвор.",
         "Description[sv]": "Återge via DRM-nod.",
+        "Description[tr]": "Drm düğümü aracılığıyla gerçekle.",
         "Description[uk]": "Обробляти через вузол DRM.",
         "Description[x-test]": "xxRender through drm node.xx",
         "Description[zh_CN]": "通过 drm 结点渲染。",
