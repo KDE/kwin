@@ -58,6 +58,8 @@ Module::Module(QWidget *parent, const QVariantList &args) :
 
     ui->setupUi(this);
 
+    ui->messageWidget->hide();
+
     ui->ghnsButton->setConfigFile(QStringLiteral("kwinscripts.knsrc"));
     connect(ui->ghnsButton, &KNS3::Button::dialogFinished, this, [this](const KNS3::Entry::List &changedEntries) {
         if (!changedEntries.isEmpty()) {
@@ -67,8 +69,6 @@ Module::Module(QWidget *parent, const QVariantList &args) :
 
     connect(ui->scriptSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
     connect(ui->importScriptButton, SIGNAL(clicked()), SLOT(importScript()));
-
-    ui->importScriptButton->setEnabled(false);
 
     updateListViewContents();
 }
@@ -80,23 +80,49 @@ Module::~Module()
 
 void Module::importScript()
 {
+    ui->messageWidget->animatedHide();
+
     QString path = QFileDialog::getOpenFileName(nullptr, i18n("Import KWin Script"), QDir::homePath(),
                                                 i18n("*.kwinscript|KWin scripts (*.kwinscript)"));
 
     if (path.isNull()) {
         return;
     }
-#warning Needs adjustments to changes in Plasma::Package
-#if 0
-    if (!Plasma::Package::installPackage(path, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/kwin/scripts/", "kwin-script-")) {
-        KMessageWidget* msgWidget = new KMessageWidget;
-        msgWidget->setText(ki18n("Cannot import selected script: maybe a script already exists with the same name or there is a permission problem.").toString());
-        msgWidget->setMessageType(KMessageWidget::Error);
-        ui->verticalLayout2->insertWidget(0, msgWidget);
-        msgWidget->animatedShow();
+
+    using namespace KPackage;
+    PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
+    Package package(structure);
+
+    KJob *installJob = package.update(path);
+    installJob->setProperty("packagePath", path); // so we can retrieve it later for showing the script's name
+    connect(installJob, &KJob::result, this, &Module::importScriptInstallFinished);
+}
+
+void Module::importScriptInstallFinished(KJob *job)
+{
+    // if the applet is already installed, just add it to the containment
+    if (job->error() != KJob::NoError) {
+        ui->messageWidget->setText(i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
+        ui->messageWidget->setMessageType(KMessageWidget::Error);
+        ui->messageWidget->animatedShow();
+        return;
     }
-#endif
-    // TODO: reload list after successful import
+
+    using namespace KPackage;
+
+    // so we can show the name of the package we just imported
+    PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
+    Package package(structure);
+    package.setPath(job->property("packagePath").toString());
+    Q_ASSERT(package.isValid());
+
+    ui->messageWidget->setText(i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", package.metadata().name()));
+    ui->messageWidget->setMessageType(KMessageWidget::Information);
+    ui->messageWidget->animatedShow();
+
+    updateListViewContents();
+
+    emit changed(true);
 }
 
 void Module::updateListViewContents()

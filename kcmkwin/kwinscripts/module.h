@@ -27,6 +27,8 @@ namespace Ui
 class Module;
 }
 
+class KJob;
+
 class Module : public KCModule
 {
     Q_OBJECT
@@ -53,6 +55,8 @@ protected Q_SLOTS:
      * Called when the import script button is clicked.
      */
     void importScript();
+
+    void importScriptInstallFinished(KJob *job);
 
 private:
     /**
