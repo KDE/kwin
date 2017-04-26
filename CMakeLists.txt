@@ -313,6 +313,7 @@ check_include_files(malloc.h HAVE_MALLOC_H)
 
 check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
 check_symbol_exists(PR_SET_DUMPABLE "sys/prctl.h" HAVE_PR_SET_DUMPABLE)
+check_symbol_exists(PR_SET_PDEATHSIG "sys/prctl.h" HAVE_PR_SET_PDEATHSIG)
 check_include_file("sys/procctl.h" HAVE_SYS_PROCCTL_H)
 check_symbol_exists(PROC_TRACE_CTL "sys/procctl.h" HAVE_PROC_TRACE_CTL)
 if (HAVE_PR_SET_DUMPABLE OR HAVE_PROC_TRACE_CTL)

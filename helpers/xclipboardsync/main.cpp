@@ -21,8 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QGuiApplication>
 
+#include <config-kwin.h>
+#if HAVE_PR_SET_PDEATHSIG
+#include <sys/prctl.h>
+#include <signal.h>
+#endif
+
 int main(int argc, char *argv[])
 {
+#if HAVE_PR_SET_PDEATHSIG
+    prctl(PR_SET_PDEATHSIG, SIGTERM);
+#endif
     qputenv("QT_QPA_PLATFORM", "xcb");
     QGuiApplication app(argc, argv);
     // perform sanity checks
