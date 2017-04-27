@@ -132,8 +132,6 @@ public:
     void releaseWindow(bool on_shutdown = false);
     void destroyClient();
 
-    virtual int desktop() const;
-
     virtual QStringList activities() const;
     void setOnActivity(const QString &activity, bool enable);
     void setOnAllActivities(bool set) override;

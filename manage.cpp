@@ -596,35 +596,10 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         else
             allow = workspace()->allowClientActivation(this, userTime(), false);
 
-        if (!(isMapped || session)) {
-            if (workspace()->sessionSaving()) {
-                /*
-                 * If we get a new window during session saving, we assume it's some 'save file?' dialog
-                 * which the user really needs to see (to know why logout's stalled).
-                 *
-                 * Given the current session management protocol, I can't see a nicer way of doing this.
-                 * Someday I'd like to see a protocol that tells the windowmanager who's doing SessionInteract.
-                 */
-                needsSessionInteract = true;
-                //show the parent too
-                auto mainclients = mainClients();
-                for (auto it = mainclients.constBegin();
-                        it != mainclients.constEnd(); ++it) {
-                    if (Client *mc = dynamic_cast<Client*>((*it))) {
-                        mc->setSessionInteract(true);
-                    }
-                    (*it)->unminimize();
-                }
-            } else if (allow) {
-                // also force if activation is allowed
-                if (!isOnCurrentDesktop() && options->focusPolicyIsReasonable()) {
-                    VirtualDesktopManager::self()->setCurrent(desktop());
-                }
-                /*if (!isOnCurrentActivity()) {
-                    workspace()->setCurrentActivity( activities().first() );
-                } FIXME no such method*/
-            }
-        }
+        // If session saving, force showing new windows (i.e. "save file?" dialogs etc.)
+        // also force if activation is allowed
+        if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving() ))
+            VirtualDesktopManager::self()->setCurrent( desktop());
 
         if (isOnCurrentDesktop() && !isMapped && !allow && (!session || session->stackingOrder < 0))
             workspace()->restackClientUnderActive(this);

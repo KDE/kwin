@@ -272,6 +272,12 @@ public:
     virtual bool isLockScreen() const;
     virtual bool isInputMethod() const;
 
+    /**
+     * Returns the virtual desktop within the workspace() the client window
+     * is located in, 0 if it isn't located on any special desktop (not mapped yet),
+     * or NET::OnAllDesktops. Do not use desktop() directly, use
+     * isOnDesktop() instead.
+     */
     virtual int desktop() const = 0;
     virtual QStringList activities() const = 0;
     bool isOnDesktop(int d) const;

@@ -1320,20 +1320,6 @@ void Client::updateActivities(bool includeTransients)
 }
 
 /**
- * Returns the virtual desktop within the workspace() the client window
- * is located in, 0 if it isn't located on any special desktop (not mapped yet),
- * or NET::OnAllDesktops. Do not use desktop() directly, use
- * isOnDesktop() instead.
- */
-int Client::desktop() const
-{
-    if (needsSessionInteract) {
-        return NET::OnAllDesktops;
-    }
-    return AbstractClient::desktop();
-}
-
-/**
  * Returns the list of activities the client window is on.
  * if it's on all activities, the list will be empty.
  * Don't use this, use isOnActivity() and friends (from class Toplevel)
