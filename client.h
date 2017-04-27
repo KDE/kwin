@@ -314,8 +314,8 @@ public:
     void readColorScheme(Xcb::StringProperty &property);
     void updateColorScheme();
 
-    //sets whether the client should be treated as a SessionInteract window
-    void setSessionInteract(bool needed);
+    //sets whether the client should be faked as being on all activities (and be shown during session save)
+    void setSessionActivityOverride(bool needed);
     virtual bool isClient() const;
 
     template <typename T>
@@ -590,7 +590,7 @@ private:
     void checkActivities();
     bool activitiesDefined; //whether the x property was actually set
 
-    bool needsSessionInteract;
+    bool sessionActivityOverride;
     bool needsXWindowMove;
 
     Xcb::Window m_decoInputExtent;

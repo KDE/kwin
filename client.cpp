@@ -120,7 +120,7 @@ Client::Client()
     , shade_geometry_change(false)
     , sm_stacking_order(-1)
     , activitiesDefined(false)
-    , needsSessionInteract(false)
+    , sessionActivityOverride(false)
     , needsXWindowMove(false)
     , m_decoInputExtent()
     , m_focusOutTimer(nullptr)
@@ -1326,7 +1326,7 @@ void Client::updateActivities(bool includeTransients)
  */
 QStringList Client::activities() const
 {
-    if (needsSessionInteract) {
+    if (sessionActivityOverride) {
         return QStringList();
     }
     return activityList;
@@ -1959,9 +1959,10 @@ void Client::checkActivities()
 #endif
 }
 
-void Client::setSessionInteract(bool needed)
+void Client::setSessionActivityOverride(bool needed)
 {
-    needsSessionInteract = needed;
+    sessionActivityOverride = needed;
+    updateActivities(false);
 }
 
 QRect Client::decorationRect() const

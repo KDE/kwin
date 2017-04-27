@@ -140,7 +140,7 @@ void Workspace::storeSession(KConfig* config, SMSavePhase phase)
 
 void Workspace::storeClient(KConfigGroup &cg, int num, Client *c)
 {
-    c->setSessionInteract(false); //make sure we get the real values
+    c->setSessionActivityOverride(false); //make sure we get the real values
     QString n = QString::number(num);
     cg.writeEntry(QLatin1String("sessionId") + n, c->sessionId().constData());
     cg.writeEntry(QLatin1String("windowRole") + n, c->windowRole().constData());
@@ -519,9 +519,8 @@ void SessionSaveDoneHelper::processData()
 void Workspace::sessionSaveDone()
 {
     session_saving = false;
-    //remove sessionInteract flag from all clients
     foreach (Client * c, clients) {
-        c->setSessionInteract(false);
+        c->setSessionActivityOverride(false);
     }
 }
 

@@ -601,6 +601,16 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving() ))
             VirtualDesktopManager::self()->setCurrent( desktop());
 
+        // If the window is on an inactive activity during session saving, temporarily force it to show.
+        if( !isMapped && !session && workspace()->sessionSaving() && !isOnCurrentActivity()) {
+            setSessionActivityOverride( true );
+            foreach( AbstractClient* c, mainClients()) {
+                if (Client *mc = dynamic_cast<Client*>(c)) {
+                    mc->setSessionActivityOverride(true);
+                }
+            }
+        }
+
         if (isOnCurrentDesktop() && !isMapped && !allow && (!session || session->stackingOrder < 0))
             workspace()->restackClientUnderActive(this);
 
