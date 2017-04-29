@@ -189,7 +189,7 @@ void ShellClient::init()
             setupWindowManagementInterface();
         }
         m_unmapped = false;
-        m_clientSize = s->buffer()->size();
+        m_clientSize = s->size();
     } else {
         ready_for_painting = false;
     }
@@ -207,7 +207,7 @@ void ShellClient::init()
 
     connect(s, &SurfaceInterface::sizeChanged, this,
         [this] {
-            m_clientSize = surface()->buffer()->size();
+            m_clientSize = surface()->size();
             doSetGeometry(QRect(geom.topLeft(), m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
         }
     );
@@ -375,8 +375,8 @@ void ShellClient::setOpacity(double opacity)
 void ShellClient::addDamage(const QRegion &damage)
 {
     auto s = surface();
-    if (s->buffer()->size().isValid()) {
-        m_clientSize = s->buffer()->size();
+    if (s->size().isValid()) {
+        m_clientSize = s->size();
         QPoint position = geom.topLeft();
         if (m_positionAfterResize.isValid()) {
             addLayerRepaint(geometry());
@@ -397,8 +397,11 @@ void ShellClient::setInternalFramebufferObject(const QSharedPointer<QOpenGLFrame
         unmap();
         return;
     }
-    markAsMapped();
+
+    //Kwin currently scales internal windows to 1, so this is currently always correct
+    //when that changes, this needs adjusting
     m_clientSize = fbo->size();
+    markAsMapped();
     doSetGeometry(QRect(geom.topLeft(), m_clientSize));
     Toplevel::setInternalFramebufferObject(fbo);
     Toplevel::addDamage(QRegion(0, 0, width(), height()));

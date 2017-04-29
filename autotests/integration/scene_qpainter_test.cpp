@@ -49,6 +49,7 @@ private Q_SLOTS:
     void testCursorMoving();
     void testWindow_data();
     void testWindow();
+    void testWindowScaled();
     void testCompositorRestart_data();
     void testCompositorRestart();
 };
@@ -187,6 +188,44 @@ void SceneQPainterTest::testWindow()
     QVERIFY(frameRenderedSpy.wait());
     painter.fillRect(0, 0, 200, 300, Qt::blue);
     painter.fillRect(5, 5, 10, 10, Qt::red);
+    QCOMPARE(referenceImage, *scene->backend()->buffer());
+}
+
+void SceneQPainterTest::testWindowScaled()
+{
+    KWin::Cursor::setPos(10, 10);
+    // this test verifies that a window is rendered correctly
+    using namespace KWayland::Client;
+    QVERIFY(Test::waitForWaylandPointer());
+    QScopedPointer<Surface> s(Test::createSurface());
+    QScopedPointer<ShellSurface> ss(Test::createShellSurface(s.data()));
+    QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
+
+    auto scene = qobject_cast<SceneQPainter*>(KWin::Compositor::self()->scene());
+    QVERIFY(scene);
+    QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
+    QVERIFY(frameRenderedSpy.isValid());
+
+    // now let's set a cursor image
+    QScopedPointer<Surface> cs(Test::createSurface());
+    QVERIFY(!cs.isNull());
+    Test::render(cs.data(), QSize(10, 10), Qt::red);
+    p->setCursor(cs.data(), QPoint(5, 5));
+
+    // now let's map the window
+    s->setScale(2);
+    QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(400, 600), Qt::blue));
+
+    // which should trigger a frame
+    if (frameRenderedSpy.isEmpty()) {
+        QVERIFY(frameRenderedSpy.wait());
+    }
+    QImage referenceImage(QSize(1280, 1024), QImage::Format_RGB32);
+    referenceImage.fill(Qt::black);
+    QPainter painter(&referenceImage);
+    painter.fillRect(0, 0, 200, 300, Qt::blue);
+    painter.fillRect(5, 5, 10, 10, Qt::red); //cursor
+
     QCOMPARE(referenceImage, *scene->backend()->buffer());
 }
 

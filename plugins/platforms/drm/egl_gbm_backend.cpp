@@ -156,7 +156,9 @@ void EglGbmBackend::createOutput(DrmOutput *drmOutput)
 {
     Output o;
     o.output = drmOutput;
-    o.gbmSurface = gbm_surface_create(m_backend->gbmDevice(), drmOutput->size().width(), drmOutput->size().height(),
+    auto size = drmOutput->pixelSize();
+
+    o.gbmSurface = gbm_surface_create(m_backend->gbmDevice(), size.width(), size.height(),
                                         GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
     if (!o.gbmSurface) {
         qCCritical(KWIN_DRM) << "Create gbm surface failed";
@@ -191,7 +193,11 @@ bool EglGbmBackend::makeContextCurrent(const Output &output)
     const QSize &overall = screens()->size();
     const QRect &v = output.output->geometry();
     // TODO: are the values correct?
-    glViewport(-v.x(), v.height() - overall.height() - v.y(), overall.width(), overall.height());
+
+    qreal scale = output.output->scale();
+
+    glViewport(-v.x() * scale, (v.height() - overall.height() - v.y()) * scale,
+               overall.width() * scale, overall.height() * scale);
     return true;
 }
 

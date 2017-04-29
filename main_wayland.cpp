@@ -526,6 +526,12 @@ int main(int argc, char * argv[])
                                     i18n("The height for windowed mode. Default height is 768."),
                                     QStringLiteral("height"));
     heightOption.setDefaultValue(QString::number(768));
+
+    QCommandLineOption scaleOption(QStringLiteral("scale"),
+                                    i18n("The scale for windowed mode. Default value is 1."),
+                                    QStringLiteral("scale"));
+    scaleOption.setDefaultValue(QString::number(1));
+
     QCommandLineOption outputCountOption(QStringLiteral("output-count"),
                                     i18n("The number of windows to open as outputs in windowed mode. Default value is 1"),
                                     QStringLiteral("height"));
@@ -554,6 +560,7 @@ int main(int argc, char * argv[])
     if (hasSizeOption) {
         parser.addOption(widthOption);
         parser.addOption(heightOption);
+        parser.addOption(scaleOption);
     }
     if (hasOutputCountOption) {
         parser.addOption(outputCountOption);
@@ -632,6 +639,7 @@ int main(int argc, char * argv[])
     QSize initialWindowSize;
     QByteArray deviceIdentifier;
     int outputCount = 1;
+    qreal outputScale = 1;
 
 #if HAVE_DRM
     if (hasDrmOption && parser.isSet(drmOption)) {
@@ -651,6 +659,13 @@ int main(int argc, char * argv[])
             std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
             return 1;
         }
+        const qreal scale = parser.value(scaleOption).toDouble(&ok);
+        if (!ok || scale < 1) {
+            std::cerr << "FATAL ERROR incorrect value for scale" << std::endl;
+            return 1;
+        }
+
+        outputScale = scale;
         initialWindowSize = QSize(width, height);
     }
 
@@ -732,6 +747,7 @@ int main(int argc, char * argv[])
     if (initialWindowSize.isValid()) {
         a.platform()->setInitialWindowSize(initialWindowSize);
     }
+    a.platform()->setInitialOutputScale(outputScale);
     a.platform()->setInitialOutputCount(outputCount);
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);

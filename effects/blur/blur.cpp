@@ -523,16 +523,20 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     uploadGeometry(vbo, expanded, shape);
     vbo->bindArrays();
 
+    const qreal scale = GLRenderTarget::virtualScreenScale();
+
     // Create a scratch texture and copy the area in the back buffer that we're
     // going to blur into it
-    GLTexture scratch(GL_RGBA8, r.width(), r.height());
+    // for HIGH DPI scratch is captured in native resolution, it is then implicitly downsampled
+    // when rendering into tex
+    GLTexture scratch(GL_RGBA8, r.width() * scale, r.height() * scale);
     scratch.setFilter(GL_LINEAR);
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();
 
     const QRect sg = GLRenderTarget::virtualScreenGeometry();
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x() - sg.x(), sg.height() - sg.y() - r.y() - r.height(),
-                        r.width(), r.height());
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (r.x() - sg.x()) * scale, (sg.height() - sg.y() - r.y() - r.height()) * scale,
+                        scratch.width(), scratch.height());
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
     target->attachTexture(tex);
@@ -549,8 +553,8 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
     QMatrix4x4 textureMatrix;
-    textureMatrix.scale(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
-    textureMatrix.translate(-r.x(), -scratch.height() - r.y(), 0);
+    textureMatrix.scale(1.0 / r.width(), -1.0 / r.height(), 1);
+    textureMatrix.translate(-r.x(), (-r.height() - r.y()), 0);
     shader->setTextureMatrix(textureMatrix);
 
     vbo->draw(GL_TRIANGLES, 0, expanded.rectCount() * 6);

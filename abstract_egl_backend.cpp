@@ -356,27 +356,31 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
     q->bind();
     const QRegion damage = s->trackedDamage();
     s->resetTrackedDamage();
+    auto scale = s->scale(); //damage is normalised, so needs converting up to match texture
 
     // TODO: this should be shared with GLTexture::update
     if (GLPlatform::instance()->isGLES()) {
         if (s_supportsARGB32 && (image.format() == QImage::Format_ARGB32 || image.format() == QImage::Format_ARGB32_Premultiplied)) {
             const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
             for (const QRect &rect : damage.rects()) {
-                glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
-                                GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+                auto scaledRect = QRect(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale);
+                glTexSubImage2D(m_target, 0, scaledRect.x(), scaledRect.y(), scaledRect.width(), scaledRect.height(),
+                                GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.copy(scaledRect).bits());
             }
         } else {
             const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
             for (const QRect &rect : damage.rects()) {
-                glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
-                                GL_RGBA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+                auto scaledRect = QRect(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale);
+                glTexSubImage2D(m_target, 0, scaledRect.x(), scaledRect.y(), scaledRect.width(), scaledRect.height(),
+                                GL_RGBA, GL_UNSIGNED_BYTE, im.copy(scaledRect).bits());
             }
         }
     } else {
         const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         for (const QRect &rect : damage.rects()) {
-            glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
-                            GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+            auto scaledRect = QRect(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale);
+            glTexSubImage2D(m_target, 0, scaledRect.x(), scaledRect.y(), scaledRect.width(), scaledRect.height(),
+                            GL_BGRA, GL_UNSIGNED_BYTE, im.copy(scaledRect).bits());
         }
     }
     q->unbind();

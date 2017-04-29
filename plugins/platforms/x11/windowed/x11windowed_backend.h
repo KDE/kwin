@@ -47,6 +47,7 @@ public:
     virtual ~X11WindowedBackend();
     void init() override;
     QVector<QRect> screenGeometries() const override;
+    QVector<qreal> screenScales() const override;
 
     xcb_connection_t *connection() const {
         return m_connection;
@@ -90,6 +91,7 @@ private:
     struct Output {
         xcb_window_t window = XCB_WINDOW_NONE;
         QSize size;
+        qreal scale = 1;
         QPoint xPosition;
         QPoint internalPosition;
         NETWinInfo *winInfo = nullptr;

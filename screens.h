@@ -86,6 +86,11 @@ public:
      * @see size()
      **/
     virtual QSize size(int screen) const = 0;
+
+    /*
+     * The output scale for this display, for use by high DPI displays
+     */
+    virtual qreal scale(int screen) const;
     /**
      * The bounding size of all screens combined. Overlapping areas
      * are not counted multiple times.
@@ -164,11 +169,13 @@ public:
     QRect geometry(int screen) const override;
     int number(const QPoint &pos) const override;
     QSize size(int screen) const override;
+    qreal scale(int screen) const override;
     void updateCount() override;
 
 private:
     Platform *m_backend;
     QVector<QRect> m_geometries;
+    QVector<qreal> m_scales;
 };
 
 inline

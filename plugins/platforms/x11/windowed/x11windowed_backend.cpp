@@ -127,10 +127,11 @@ void X11WindowedBackend::createWindow()
             XCB_EVENT_MASK_STRUCTURE_NOTIFY |
             XCB_EVENT_MASK_EXPOSURE
         };
-        o.size = initialWindowSize();
+        o.scale = initialOutputScale();
+        o.size = initialWindowSize() * o.scale;
         if (!m_windows.isEmpty()) {
             const auto &p = m_windows.last();
-            o.internalPosition = QPoint(p.internalPosition.x() + p.size.width(), 0);
+            o.internalPosition = QPoint(p.internalPosition.x() + p.size.width() / p.scale, 0);
         }
         xcb_create_window(m_connection, XCB_COPY_FROM_PARENT, o.window, m_screen->root,
                         0, 0, o.size.width(), o.size.height(),
@@ -197,9 +198,11 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             if (it == m_windows.constEnd()) {
                 break;
             }
+            //generally we don't need to normalise input to the output scale; however because we're getting input
+            //from a host window that doesn't understand scaling, we need to apply it ourselves so the cursor matches
             pointerMotion(QPointF(event->root_x - (*it).xPosition.x() + (*it).internalPosition.x(),
-                                  event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()),
-                          event->time);
+                                    event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()) / it->scale,
+                                    event->time);
         }
         break;
     case XCB_KEY_PRESS:
@@ -229,8 +232,8 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
                 break;
             }
             pointerMotion(QPointF(event->root_x - (*it).xPosition.x() + (*it).internalPosition.x(),
-                                  event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()),
-                          event->time);
+                                    event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()) / it->scale,
+                                    event->time);
         }
         break;
     case XCB_CLIENT_MESSAGE:
@@ -363,9 +366,10 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
         button = event->detail + BTN_LEFT - 1;
         return;
     }
+
     pointerMotion(QPointF(event->root_x - (*it).xPosition.x() + (*it).internalPosition.x(),
-                          event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()),
-                  event->time);
+                            event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()) / it->scale,
+                            event->time);
     if (pressed) {
         pointerButtonPressed(button, event->time);
     } else {
@@ -388,11 +392,11 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
     QSize s = QSize(event->width, event->height);
     if (s != (*it).size) {
         (*it).size = s;
-        int x = (*it).internalPosition.x() + s.width();
+        int x = (*it).internalPosition.x() + (*it).size.width() / (*it).scale;
         it++;
         for (; it != m_windows.end(); ++it) {
             (*it).internalPosition.setX(x);
-            x += (*it).size.width();
+            x += (*it).size.width() / (*it).scale;
         }
         emit sizeChanged();
     }
@@ -467,7 +471,16 @@ QVector<QRect> X11WindowedBackend::screenGeometries() const
 {
     QVector<QRect> ret;
     for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-        ret << QRect((*it).internalPosition, (*it).size);
+        ret << QRect((*it).internalPosition, (*it).size / (*it).scale);
+    }
+    return ret;
+}
+
+QVector<qreal> X11WindowedBackend::screenScales() const
+{
+    QVector<qreal> ret;
+    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
+        ret << (*it).scale;
     }
     return ret;
 }

@@ -505,6 +505,21 @@ public:
         return s_virtualScreenGeometry;
     }
 
+    /**
+     * The scale of the OpenGL window currently being rendered to
+     *
+     * @returns the ratio between the virtual geometry space the rendering
+     * system uses and the target
+     * @since 5.10
+     */
+    static void setVirtualScreenScale(qreal scale) {
+        s_virtualScreenScale = scale;
+    }
+
+    static qreal virtualScreenScale() {
+        return s_virtualScreenScale;
+    }
+
 
 protected:
     void initFBO();
@@ -518,6 +533,8 @@ private:
     static QStack<GLRenderTarget*> s_renderTargets;
     static QSize s_virtualScreenSize;
     static QRect s_virtualScreenGeometry;
+    static qreal s_virtualScreenScale;
+    static GLint s_virtualScreenViewport[4];
 
     GLTexture mTexture;
     bool mValid;

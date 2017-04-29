@@ -59,7 +59,7 @@ void VirtualQPainterBackend::createOutputs()
 {
     m_backBuffers.clear();
     for (int i = 0; i < screens()->count(); ++i) {
-        QImage buffer(screens()->size(i), QImage::Format_RGB32);
+        QImage buffer(screens()->size(i) * screens()->scale(i), QImage::Format_RGB32);
         buffer.fill(Qt::black);
         m_backBuffers << buffer;
     }

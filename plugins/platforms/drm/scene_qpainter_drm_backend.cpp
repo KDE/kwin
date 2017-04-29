@@ -64,7 +64,7 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
 {
     Output o;
     auto initBuffer = [&o, output, this] (int index) {
-        o.buffer[index] = m_backend->createBuffer(output->size());
+        o.buffer[index] = m_backend->createBuffer(output->pixelSize());
         o.buffer[index]->map();
         o.buffer[index]->image()->fill(Qt::black);
     };

@@ -108,19 +108,25 @@ void DrmOutput::showCursor(DrmBuffer *c)
 
 void DrmOutput::moveCursor(const QPoint &globalPos)
 {
-    const QPoint p = globalPos - m_globalPos;
+    const QPoint p = (globalPos - m_globalPos) * m_scale;
     drmModeMoveCursor(m_backend->fd(), m_crtcId, p.x(), p.y());
 }
 
-QSize DrmOutput::size() const
+QSize DrmOutput::pixelSize() const
 {
     return QSize(m_mode.hdisplay, m_mode.vdisplay);
 }
 
 QRect DrmOutput::geometry() const
 {
-    return QRect(m_globalPos, size());
+    return QRect(m_globalPos, pixelSize() / scale());
 }
+
+qreal DrmOutput::scale() const
+{
+    return m_scale;
+}
+
 
 static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
 {
@@ -633,6 +639,17 @@ void DrmOutput::setGlobalPos(const QPoint &pos)
     }
 }
 
+void DrmOutput::setScale(qreal scale)
+{
+    m_scale = scale;
+    if (m_waylandOutput) {
+        m_waylandOutput->setScale(scale);
+    }
+    if (m_waylandOutputDevice) {
+        m_waylandOutputDevice->setScale(scale);
+    }
+}
+
 void DrmOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
 {
     m_changeset = changes;
@@ -674,8 +691,7 @@ bool DrmOutput::commitChanges()
     }
     if (m_changeset->scaleChanged()) {
         qCDebug(KWIN_DRM) << "Setting scale:" << m_changeset->scale();
-        m_waylandOutputDevice->setScale(m_changeset->scale());
-        // FIXME: implement for wl_output
+        setScale(m_changeset->scale());
     }
     return true;
 }
@@ -723,7 +739,7 @@ void DrmOutput::cleanupBlackBuffer()
 bool DrmOutput::blank()
 {
     if (!m_blackBuffer) {
-        m_blackBuffer = m_backend->createBuffer(size());
+        m_blackBuffer = m_backend->createBuffer(pixelSize());
         if (!m_blackBuffer->map()) {
             cleanupBlackBuffer();
             return false;
