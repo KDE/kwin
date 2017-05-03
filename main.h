@@ -104,8 +104,12 @@ public:
     xcb_timestamp_t x11Time() const {
         return m_x11Time;
     }
-    void setX11Time(xcb_timestamp_t timestamp) {
-        if (timestamp > m_x11Time) {
+    enum class TimestampUpdate {
+        OnlyIfLarger,
+        Always
+    };
+    void setX11Time(xcb_timestamp_t timestamp, TimestampUpdate force = TimestampUpdate::OnlyIfLarger) {
+        if (timestamp > m_x11Time || force == TimestampUpdate::Always) {
             m_x11Time = timestamp;
         }
     }

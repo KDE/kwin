@@ -143,12 +143,12 @@ MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
 
 template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 
-void updateXTime();
+void KWIN_EXPORT updateXTime();
 void grabXServer();
 void ungrabXServer();
 bool grabbedXServer();
-bool grabXKeyboard(xcb_window_t w = rootWindow());
-void ungrabXKeyboard();
+bool KWIN_EXPORT grabXKeyboard(xcb_window_t w = rootWindow());
+void KWIN_EXPORT ungrabXKeyboard();
 
 /**
  * Small helper class which performs @link grabXServer in the ctor and
