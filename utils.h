@@ -143,7 +143,7 @@ MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
 
 template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 
-void updateXTime();
+void KWIN_EXPORT updateXTime();
 void KWIN_EXPORT grabXServer();
 void KWIN_EXPORT ungrabXServer();
 bool grabbedXServer();

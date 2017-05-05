@@ -350,3 +350,14 @@ target_link_libraries(testGestures
 
 add_test(kwin-testGestures testGestures)
 ecm_mark_as_test(testGestures)
+
+########################################################
+# Test X11 TimestampUpdate
+########################################################
+add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
+target_link_libraries(testX11TimestampUpdate
+    Qt5::Test
+    kwin
+)
+add_test(kwin-testX11TimestampUpdate testX11TimestampUpdate)
+ecm_mark_as_test(testX11TimestampUpdate)
