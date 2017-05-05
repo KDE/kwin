@@ -333,3 +333,14 @@ target_link_libraries(testOnScreenNotification
 
 add_test(kwin-testOnScreenNotification testOnScreenNotification)
 ecm_mark_as_test(testOnScreenNotification)
+
+########################################################
+# Test X11 TimestampUpdate
+########################################################
+add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
+target_link_libraries(testX11TimestampUpdate
+    Qt5::Test
+    kwin
+)
+add_test(kwin-testX11TimestampUpdate testX11TimestampUpdate)
+ecm_mark_as_test(testX11TimestampUpdate)
