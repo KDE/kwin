@@ -96,7 +96,7 @@ void TextInputUnstableV2Interface::Private::requestDeactivate(SeatInterface *sea
 
 void TextInputUnstableV2Interface::Private::sendEnter(SurfaceInterface *surface, quint32 serial)
 {
-    if (!resource) {
+    if (!resource || !surface || !surface->resource()) {
         return;
     }
     zwp_text_input_v2_send_enter(resource, serial, surface->resource());
@@ -104,7 +104,7 @@ void TextInputUnstableV2Interface::Private::sendEnter(SurfaceInterface *surface,
 
 void TextInputUnstableV2Interface::Private::sendLeave(quint32 serial, SurfaceInterface *surface)
 {
-    if (!resource || !surface) {
+    if (!resource || !surface || !surface->resource()) {
         return;
     }
     zwp_text_input_v2_send_leave(resource, serial, surface->resource());

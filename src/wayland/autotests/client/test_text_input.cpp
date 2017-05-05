@@ -306,6 +306,21 @@ void TextInputTest::testEnterLeave()
     QCOMPARE(textInputChangedSpy.count(), 3);
     // should still be the same text input
     QCOMPARE(m_seatInterface->focusedTextInput(), serverTextInput);
+    //reset
+    textInput->enable(surface.data());
+    QVERIFY(enabledChangedSpy.wait());
+
+    //trigger an enter again and leave, but this
+    //time we try sending an event after the surface is unbound
+    //but not yet destroyed. It should work without errors
+    QCOMPARE(textInput->enteredSurface(), surface.data());
+    connect(serverSurface, &Resource::unbound, [=]() {
+        m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    });
+    //delete the client and wait for the server to catch up
+    QSignalSpy unboundSpy(serverSurface, &QObject::destroyed);
+    surface.reset();
+    QVERIFY(unboundSpy.wait());
 }
 
 void TextInputTest::testShowHidePanel_data()
