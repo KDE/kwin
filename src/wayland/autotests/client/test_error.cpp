@@ -35,6 +35,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <wayland-client-protocol.h>
 
+#include <errno.h>  // For EPROTO
+
 using namespace KWayland::Client;
 using namespace KWayland::Server;
 
