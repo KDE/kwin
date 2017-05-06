@@ -50,6 +50,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/relativepointer_interface.h>
 #include <decorations/decoratedclient.h>
 #include <KDecoration2/Decoration>
+#include <KGlobalAccel>
+
 //screenlocker
 #include <KScreenLocker/KsldApp>
 // Qt
@@ -1430,6 +1432,8 @@ public:
 
 KWIN_SINGLETON_FACTORY(InputRedirection)
 
+static const QString s_touchpadComponent = QStringLiteral("kcm_touchpad");
+
 InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
     , m_keyboard(new KeyboardInputRedirection(this))
@@ -1750,6 +1754,40 @@ void InputRedirection::setupLibInput()
             }
         );
     }
+    setupTouchpadShortcuts();
+#endif
+}
+
+void InputRedirection::setupTouchpadShortcuts()
+{
+    if (!m_libInput) {
+        return;
+    }
+#ifdef HAVE_INPUT
+    QAction *touchpadToggleAction = new QAction(this);
+    QAction *touchpadOnAction = new QAction(this);
+    QAction *touchpadOffAction = new QAction(this);
+
+    touchpadToggleAction->setObjectName(QStringLiteral("Toggle Touchpad"));
+    touchpadToggleAction->setProperty("componentName", s_touchpadComponent);
+    touchpadOnAction->setObjectName(QStringLiteral("Enable Touchpad"));
+    touchpadOnAction->setProperty("componentName", s_touchpadComponent);
+    touchpadOffAction->setObjectName(QStringLiteral("Disable Touchpad"));
+    touchpadOffAction->setProperty("componentName", s_touchpadComponent);
+    KGlobalAccel::self()->setDefaultShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle});
+    KGlobalAccel::self()->setShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle});
+    KGlobalAccel::self()->setDefaultShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
+    KGlobalAccel::self()->setShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
+    KGlobalAccel::self()->setDefaultShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
+    KGlobalAccel::self()->setShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
+#ifndef KWIN_BUILD_TESTING
+    registerShortcut(Qt::Key_TouchpadToggle, touchpadToggleAction);
+    registerShortcut(Qt::Key_TouchpadOn, touchpadOnAction);
+    registerShortcut(Qt::Key_TouchpadOff, touchpadOffAction);
+#endif
+    connect(touchpadToggleAction, &QAction::triggered, m_libInput, &LibInput::Connection::toggleTouchpads);
+    connect(touchpadOnAction, &QAction::triggered, m_libInput, &LibInput::Connection::enableTouchpads);
+    connect(touchpadOffAction, &QAction::triggered, m_libInput, &LibInput::Connection::disableTouchpads);
 #endif
 }
 

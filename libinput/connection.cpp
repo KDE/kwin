@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "libinput_logging.h"
 
 #include <KConfigGroup>
-#include <KGlobalAccel>
 
 #include <QDBusMessage>
 #include <QDBusConnection>
@@ -146,7 +145,6 @@ Connection *Connection::create(QObject *parent)
     return s_self;
 }
 
-static const QString s_touchpadComponent = QStringLiteral("kcm_touchpad");
 
 Connection::Connection(Context *input, QObject *parent)
     : QObject(parent)
@@ -156,47 +154,6 @@ Connection::Connection(Context *input, QObject *parent)
     , m_leds()
 {
     Q_ASSERT(m_input);
-
-    // steal touchpad shortcuts
-    QAction *touchpadToggleAction = new QAction(this);
-    QAction *touchpadOnAction = new QAction(this);
-    QAction *touchpadOffAction = new QAction(this);
-
-    touchpadToggleAction->setObjectName(QStringLiteral("Toggle Touchpad"));
-    touchpadToggleAction->setProperty("componentName", s_touchpadComponent);
-    touchpadOnAction->setObjectName(QStringLiteral("Enable Touchpad"));
-    touchpadOnAction->setProperty("componentName", s_touchpadComponent);
-    touchpadOffAction->setObjectName(QStringLiteral("Disable Touchpad"));
-    touchpadOffAction->setProperty("componentName", s_touchpadComponent);
-    KGlobalAccel::self()->setDefaultShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle});
-    KGlobalAccel::self()->setShortcut(touchpadToggleAction, QList<QKeySequence>{Qt::Key_TouchpadToggle});
-    KGlobalAccel::self()->setDefaultShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
-    KGlobalAccel::self()->setShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
-    KGlobalAccel::self()->setDefaultShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
-    KGlobalAccel::self()->setShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
-#ifndef KWIN_BUILD_TESTING
-    InputRedirection::self()->registerShortcut(Qt::Key_TouchpadToggle, touchpadToggleAction);
-    InputRedirection::self()->registerShortcut(Qt::Key_TouchpadOn, touchpadOnAction);
-    InputRedirection::self()->registerShortcut(Qt::Key_TouchpadOff, touchpadOffAction);
-#endif
-    connect(touchpadToggleAction, &QAction::triggered, this, &Connection::toggleTouchpads);
-    connect(touchpadOnAction, &QAction::triggered, this,
-        [this] {
-            if (m_touchpadsEnabled) {
-                return;
-            }
-            toggleTouchpads();
-        }
-    );
-    connect(touchpadOffAction, &QAction::triggered, this,
-        [this] {
-            if (!m_touchpadsEnabled) {
-                return;
-            }
-            toggleTouchpads();
-        }
-    );
-
     // need to connect to KGlobalSettings as the mouse KCM does not emit a dedicated signal
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
@@ -580,6 +537,22 @@ void Connection::toggleTouchpads()
         msg.setArguments({m_touchpadsEnabled});
         QDBusConnection::sessionBus().asyncCall(msg);
     }
+}
+
+void Connection::enableTouchpads()
+{
+    if (m_touchpadsEnabled) {
+        return;
+    }
+    toggleTouchpads();
+}
+
+void Connection::disableTouchpads()
+{
+    if (!m_touchpadsEnabled) {
+        return;
+    }
+    toggleTouchpads();
 }
 
 void Connection::updateLEDs(Xkb::LEDs leds)

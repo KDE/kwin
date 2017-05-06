@@ -80,6 +80,8 @@ public:
     void processEvents();
 
     void toggleTouchpads();
+    void enableTouchpads();
+    void disableTouchpads();
 
     QVector<Device*> devices() const {
         return m_devices;

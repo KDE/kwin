@@ -267,6 +267,7 @@ Q_SIGNALS:
 
 private:
     void setupLibInput();
+    void setupTouchpadShortcuts();
     void setupLibInputWithScreens();
     void setupWorkspace();
     void reconfigure();
