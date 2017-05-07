@@ -110,7 +110,7 @@ public:
         Always
     };
     void setX11Time(xcb_timestamp_t timestamp, TimestampUpdate force = TimestampUpdate::OnlyIfLarger) {
-        if (timestamp > m_x11Time || force == TimestampUpdate::Always) {
+        if ((timestamp > m_x11Time || force == TimestampUpdate::Always) && timestamp != 0) {
             m_x11Time = timestamp;
         }
     }
