@@ -981,6 +981,11 @@ void ShellClient::updateInternalWindowGeometry()
                         m_internalWindow->geometry().size() + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
 }
 
+pid_t ShellClient::pid() const
+{
+    return surface()->client()->processId();
+}
+
 bool ShellClient::isInternal() const
 {
     return m_internal;

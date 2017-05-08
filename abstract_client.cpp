@@ -704,6 +704,7 @@ void AbstractClient::setupWindowManagementInterface()
     };
     updateAppId();
     w->setSkipTaskbar(skipTaskbar());
+    w->setPid(pid());
     w->setShadeable(isShadeable());
     w->setShaded(isShade());
     w->setResizable(isResizable());
