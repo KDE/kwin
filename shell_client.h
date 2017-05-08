@@ -113,7 +113,7 @@ public:
      * The process for this client.
      * Note that processes started by kwin will share its process id.
      * @since 5.11
-     * @returns the process id for this client.
+     * @returns the process if for this client.
      **/
     pid_t pid() const override;
 
