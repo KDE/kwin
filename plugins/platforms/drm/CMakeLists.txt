@@ -13,7 +13,7 @@ set(DRM_SOURCES
 )
 
 if(HAVE_GBM)
-    set(DRM_SOURCES ${DRM_SOURCES} egl_gbm_backend.cpp)
+    set(DRM_SOURCES ${DRM_SOURCES} egl_gbm_backend.cpp drm_buffer_gbm.cpp)
 endif()
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})

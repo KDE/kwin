@@ -2,7 +2,8 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2016 Roman Gilg <subdiff@gmail.com>
+Copyright 2017 Roman Gilg <subdiff@gmail.com>
+Copyright 2015 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,59 +18,41 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_DRM_OBJECT_CRTC_H
-#define KWIN_DRM_OBJECT_CRTC_H
+#ifndef KWIN_DRM_BUFFER_GBM_H
+#define KWIN_DRM_BUFFER_GBM_H
 
-#include "drm_object.h"
+#include "drm_buffer.h"
+
+struct gbm_bo;
+struct gbm_surface;
 
 namespace KWin
 {
 
 class DrmBackend;
-class DrmBuffer;
-class DrmDumbBuffer;
 
-class DrmCrtc : public DrmObject
+class DrmSurfaceBuffer : public DrmBuffer
 {
 public:
-    DrmCrtc(uint32_t crtc_id, int fd, int resIndex);
+    DrmSurfaceBuffer(DrmBackend *backend, gbm_surface *surface);
+    ~DrmSurfaceBuffer();
 
-    virtual ~DrmCrtc();
-
-    bool init();
-
-    enum class PropertyIndex {
-        ModeId = 0,
-        Active,
-        Count
-    };
-    
-    bool initProps();
-
-    int resIndex() const {
-        return m_resIndex;
+    bool needsModeChange(DrmBuffer *b) const override {
+        if (DrmSurfaceBuffer *sb = dynamic_cast<DrmSurfaceBuffer*>(b)) {
+            return hasBo() != sb->hasBo();
+        } else {
+            return true;
+        }
     }
 
-    DrmBuffer *current() {
-        return m_currentBuffer;
+    bool hasBo() const {
+        return m_bo != nullptr;
     }
-    DrmBuffer *next() {
-        return m_nextBuffer;
-    }
-    void setNext(DrmBuffer *buffer) {
-        m_nextBuffer = buffer;
-    }
-
-    void flipBuffer();
-    bool blank();
+    void releaseGbm() override;
 
 private:
-    DrmBackend *m_backend;
-    int m_resIndex;
-
-    DrmBuffer *m_currentBuffer = nullptr;
-    DrmBuffer *m_nextBuffer = nullptr;
-    DrmDumbBuffer *m_blackBuffer = nullptr;
+    gbm_surface *m_surface = nullptr;
+    gbm_bo *m_bo = nullptr;
 };
 
 }

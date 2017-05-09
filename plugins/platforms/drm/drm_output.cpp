@@ -84,7 +84,7 @@ void DrmOutput::hideCursor()
     drmModeSetCursor(m_backend->fd(), m_crtc->id(), 0, 0, 0);
 }
 
-void DrmOutput::showCursor(DrmBuffer *c)
+void DrmOutput::showCursor(DrmDumbBuffer *c)
 {
     const QSize &s = c->size();
     drmModeSetCursor(m_backend->fd(), m_crtc->id(), c->handle(), s.width(), s.height());
@@ -706,7 +706,7 @@ void DrmOutput::pageFlipped()
 
 void DrmOutput::pageFlippedBufferRemover(DrmBuffer *oldbuffer, DrmBuffer *newbuffer)
 {
-    if (oldbuffer && oldbuffer->deleteAfterPageFlip() && oldbuffer != newbuffer) {
+    if (oldbuffer && m_backend->deleteBufferAfterPageFlip() && oldbuffer != newbuffer) {
         delete oldbuffer;
     }
 }
@@ -841,9 +841,10 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
     }
 
     // Do we need to set a new mode first?
-    if (m_lastStride != buffer->stride() || m_lastGbm != buffer->isGbm()){
-        if (!setModeLegacy(buffer))
+    if (!m_crtc->current() || m_crtc->current()->needsModeChange(buffer)) {
+        if (!setModeLegacy(buffer)) {
             return false;
+        }
     }
     int errno_save = 0;
     const bool ok = drmModePageFlip(m_backend->fd(), m_crtc->id(), buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
@@ -861,8 +862,6 @@ bool DrmOutput::setModeLegacy(DrmBuffer *buffer)
 {
     uint32_t connId = m_conn->id();
     if (drmModeSetCrtc(m_backend->fd(), m_crtc->id(), buffer->bufferId(), 0, 0, &connId, 1, &m_mode) == 0) {
-        m_lastStride = buffer->stride();
-        m_lastGbm = buffer->isGbm();
         return true;
     } else {
         qCWarning(KWIN_DRM) << "Mode setting failed";

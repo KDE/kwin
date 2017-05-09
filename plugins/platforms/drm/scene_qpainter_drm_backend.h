@@ -26,7 +26,7 @@ namespace KWin
 {
 
 class DrmBackend;
-class DrmBuffer;
+class DrmDumbBuffer;
 class DrmOutput;
 
 class DrmQPainterBackend : public QObject, public QPainterBackend
@@ -47,7 +47,7 @@ public:
 private:
     void initOutput(DrmOutput *output);
     struct Output {
-        DrmBuffer *buffer[2];
+        DrmDumbBuffer *buffer[2];
         DrmOutput *output;
         int index = 0;
     };

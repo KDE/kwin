@@ -23,9 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QSize>
 
-struct gbm_bo;
-struct gbm_surface;
-
 namespace KWin
 {
 
@@ -34,50 +31,53 @@ class DrmBackend;
 class DrmBuffer
 {
 public:
-    ~DrmBuffer();
+    DrmBuffer(DrmBackend *backend);
+    virtual ~DrmBuffer() = default;
 
-    bool map(QImage::Format format = QImage::Format_RGB32);
-    QImage *image() const {
-        return m_image;
-    }
-    quint32 handle() const {
-        return m_handle;
-    }
-    const QSize &size() const {
-        return m_size;
-    }
+    virtual bool needsModeChange(DrmBuffer *b) const {Q_UNUSED(b) return false;}
+
     quint32 bufferId() const {
         return m_bufferId;
     }
+
+    const QSize &size() const {
+        return m_size;
+    }
+
+    virtual void releaseGbm() {}
+
+protected:
+    DrmBackend *m_backend;
+    quint32 m_bufferId = 0;
+    QSize m_size;
+};
+
+class DrmDumbBuffer : public DrmBuffer
+{
+public:
+    DrmDumbBuffer(DrmBackend *backend, const QSize &size);
+    ~DrmDumbBuffer();
+
+    bool needsModeChange(DrmBuffer *b) const override;
+
+    bool map(QImage::Format format = QImage::Format_RGB32);
+    quint32 handle() const {
+        return m_handle;
+    }
+    QImage *image() const {
+        return m_image;
+    }
+
     quint32 stride() const {
         return m_stride;
     }
-    gbm_bo *gbm() const {
-        return m_bo;
-    }
-    bool isGbm() const {
-        return m_bo != nullptr;
-    }
-    bool deleteAfterPageFlip() const {
-        return m_deleteAfterPageFlip;
-    }
-    void releaseGbm();
 
 private:
-    friend class DrmBackend;
-    DrmBuffer(DrmBackend *backend, const QSize &size);
-    DrmBuffer(DrmBackend *backend, gbm_surface *surface);
-    DrmBackend *m_backend;
-    gbm_surface *m_surface = nullptr;
-    gbm_bo *m_bo = nullptr;
-    QSize m_size;
     quint32 m_handle = 0;
-    quint32 m_bufferId = 0;
-    quint32 m_stride = 0;
     quint64 m_bufferSize = 0;
     void *m_memory = nullptr;
     QImage *m_image = nullptr;
-    bool m_deleteAfterPageFlip = false;
+    quint32 m_stride = 0;
 };
 
 }

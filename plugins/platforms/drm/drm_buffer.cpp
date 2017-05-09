@@ -27,18 +27,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <errno.h>
 // drm
 #include <xf86drm.h>
-#if HAVE_GBM
-#include <gbm.h>
-#endif
 
 namespace KWin
 {
 
-
-DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
+DrmBuffer:: DrmBuffer(DrmBackend *backend)
     : m_backend(backend)
-    , m_size(size)
 {
+}
+
+// DrmDumbBuffer
+DrmDumbBuffer::DrmDumbBuffer(DrmBackend *backend, const QSize &size)
+    : DrmBuffer(backend)
+{
+    m_size = size;
     drm_mode_create_dumb createArgs;
     memset(&createArgs, 0, sizeof createArgs);
     createArgs.bpp = 32;
@@ -57,46 +59,12 @@ DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
     }
 }
 
-
-#if HAVE_GBM
-static void gbmCallback(gbm_bo *bo, void *data)
-{
-    DrmBackend *backend = reinterpret_cast<DrmBackend*>(data);
-    const auto &buffers = backend->buffers();
-    for (auto buffer: buffers) {
-        if (buffer->gbm() == bo) {
-            delete buffer;
-            return;
-        }
-    }
-}
-#endif
-
-DrmBuffer::DrmBuffer(DrmBackend *backend, gbm_surface *surface)
-    : m_backend(backend)
-    , m_surface(surface)
-{
-#if HAVE_GBM
-    m_bo = gbm_surface_lock_front_buffer(surface);
-    if (!m_bo) {
-        qCWarning(KWIN_DRM) << "Locking front buffer failed";
-        return;
-    }
-    m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
-    m_stride = gbm_bo_get_stride(m_bo);
-    if (drmModeAddFB(m_backend->fd(), m_size.width(), m_size.height(), 24, 32, m_stride, gbm_bo_get_handle(m_bo).u32, &m_bufferId) != 0) {
-        qCWarning(KWIN_DRM) << "drmModeAddFB failed";
-    }
-    gbm_bo_set_user_data(m_bo, m_backend, gbmCallback);
-#endif
-}
-
-DrmBuffer::~DrmBuffer()
+DrmDumbBuffer::~DrmDumbBuffer()
 {
     if (m_bufferId) {
         drmModeRmFB(m_backend->fd(), m_bufferId);
     }
-    m_backend->bufferDestroyed(this);
+
     delete m_image;
     if (m_memory) {
         munmap(m_memory, m_bufferSize);
@@ -106,10 +74,17 @@ DrmBuffer::~DrmBuffer()
         destroyArgs.handle = m_handle;
         drmIoctl(m_backend->fd(), DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
     }
-    releaseGbm();
 }
 
-bool DrmBuffer::map(QImage::Format format)
+bool DrmDumbBuffer::needsModeChange(DrmBuffer *b) const {
+    if (DrmDumbBuffer *db = dynamic_cast<DrmDumbBuffer*>(b)) {
+        return m_stride != db->stride();
+    } else {
+        return true;
+    }
+}
+
+bool DrmDumbBuffer::map(QImage::Format format)
 {
     if (!m_handle || !m_bufferId) {
         return false;
@@ -127,16 +102,6 @@ bool DrmBuffer::map(QImage::Format format)
     m_memory = address;
     m_image = new QImage((uchar*)m_memory, m_size.width(), m_size.height(), m_stride, format);
     return !m_image->isNull();
-}
-
-void DrmBuffer::releaseGbm()
-{
-#if HAVE_GBM
-    if (m_bo) {
-        gbm_surface_release_buffer(m_surface, m_bo);
-        m_bo = nullptr;
-    }
-#endif
 }
 
 }

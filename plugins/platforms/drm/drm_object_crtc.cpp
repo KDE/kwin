@@ -69,7 +69,7 @@ bool DrmCrtc::initProps()
 
 void DrmCrtc::flipBuffer()
 {
-    if (m_currentBuffer && m_currentBuffer->deleteAfterPageFlip() && m_currentBuffer != m_nextBuffer) {
+    if (m_currentBuffer && m_output->m_backend->deleteBufferAfterPageFlip() && m_currentBuffer != m_nextBuffer) {
         delete m_currentBuffer;
     }
     m_currentBuffer = m_nextBuffer;
@@ -82,7 +82,7 @@ void DrmCrtc::flipBuffer()
 bool DrmCrtc::blank()
 {
     if (!m_blackBuffer) {
-        DrmBuffer *blackBuffer = m_output->m_backend->createBuffer(m_output->pixelSize());
+        DrmDumbBuffer *blackBuffer = m_output->m_backend->createBuffer(m_output->pixelSize());
         if (!blackBuffer->map()) {
             delete blackBuffer;
             return false;
@@ -93,7 +93,7 @@ bool DrmCrtc::blank()
 
     // TODO: Do this atomically
     if (m_output->setModeLegacy(m_blackBuffer)) {
-        if (m_currentBuffer && m_currentBuffer->deleteAfterPageFlip()) {
+        if (m_currentBuffer && m_output->m_backend->deleteBufferAfterPageFlip()) {
             delete m_currentBuffer;
             delete m_nextBuffer;
         }

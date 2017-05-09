@@ -23,6 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 
 #include "drm_buffer.h"
+#if HAVE_GBM
+#include "drm_buffer_gbm.h"
+#endif
 #include "drm_inputeventfilter.h"
 #include "drm_pointer.h"
 
@@ -74,8 +77,8 @@ public:
     OpenGLBackend* createOpenGLBackend() override;
 
     void init() override;
-    DrmBuffer *createBuffer(const QSize &size);
-    DrmBuffer *createBuffer(gbm_surface *surface);
+    DrmDumbBuffer *createBuffer(const QSize &size);
+    DrmSurfaceBuffer *createBuffer(gbm_surface *surface);
     void present(DrmBuffer *buffer, DrmOutput *output);
 
     int fd() const {
@@ -84,17 +87,17 @@ public:
     QVector<DrmOutput*> outputs() const {
         return m_outputs;
     }
-    QVector<DrmBuffer*> buffers() const {
-        return m_buffers;
-    }
     QVector<DrmPlane*> planes() const {
         return m_planes;
     }
-    void bufferDestroyed(DrmBuffer *b);
 
     void outputWentOff();
     void checkOutputsAreOn();
 
+    // QPainter reuses buffers
+    bool deleteBufferAfterPageFlip() const {
+        return m_deleteBufferAfterPageFlip;
+    }
     // returns use of AMS, default is not/legacy
     bool atomicModeSetting() const {
         return m_atomicModeSetting;
@@ -145,13 +148,13 @@ private:
     QVector<DrmConnector*> m_connectors;
     // currently active output pipelines (planes + crtc + encoder + connector)
     QVector<DrmOutput*> m_outputs;
-    DrmBuffer *m_cursor[2];
+    DrmDumbBuffer *m_cursor[2];
+    bool m_deleteBufferAfterPageFlip;
     bool m_atomicModeSetting = false;
     bool m_cursorEnabled = false;
     int m_cursorIndex = 0;
     int m_pageFlipsPending = 0;
     bool m_active = false;
-    QVector<DrmBuffer*> m_buffers;
     // all available planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;

@@ -46,6 +46,7 @@ namespace KWin
 
 class DrmBackend;
 class DrmBuffer;
+class DrmDumbBuffer;
 class DrmPlane;
 class DrmConnector;
 class DrmCrtc;
@@ -62,7 +63,7 @@ public:
     };
     virtual ~DrmOutput();
     void releaseGbm();
-    void showCursor(DrmBuffer *buffer);
+    void showCursor(DrmDumbBuffer *buffer);
     void hideCursor();
     void moveCursor(const QPoint &globalPos);
     bool init(drmModeConnector *connector);
@@ -129,7 +130,6 @@ private:
     DrmCrtc *m_crtc = nullptr;
     QPoint m_globalPos;
     qreal m_scale = 1;
-    quint32 m_lastStride = 0;
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
     Edid m_edid;

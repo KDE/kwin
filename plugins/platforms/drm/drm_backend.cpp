@@ -167,7 +167,7 @@ void DrmBackend::reactivate()
     }
     m_active = true;
     if (!usesSoftwareCursor()) {
-        DrmBuffer *c = m_cursor[(m_cursorIndex + 1) % 2];
+        DrmDumbBuffer *c = m_cursor[(m_cursorIndex + 1) % 2];
         const QPoint cp = Cursor::pos() - softwareCursorHotspot();
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
             DrmOutput *o = *it;
@@ -608,7 +608,7 @@ void DrmBackend::initCursor()
 
 void DrmBackend::setCursor()
 {
-    DrmBuffer *c = m_cursor[m_cursorIndex];
+    DrmDumbBuffer *c = m_cursor[m_cursorIndex];
     m_cursorIndex = (m_cursorIndex + 1) % 2;
     if (m_cursorEnabled) {
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
@@ -675,40 +675,34 @@ Screens *DrmBackend::createScreens(QObject *parent)
 
 QPainterBackend *DrmBackend::createQPainterBackend()
 {
+    m_deleteBufferAfterPageFlip = false;
     return new DrmQPainterBackend(this);
 }
 
 OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
 #if HAVE_GBM
+    m_deleteBufferAfterPageFlip = true;
     return new EglGbmBackend(this);
 #else
     return Platform::createOpenGLBackend();
 #endif
 }
 
-DrmBuffer *DrmBackend::createBuffer(const QSize &size)
+DrmDumbBuffer *DrmBackend::createBuffer(const QSize &size)
 {
-    DrmBuffer *b = new DrmBuffer(this, size);
-    m_buffers << b;
+    DrmDumbBuffer *b = new DrmDumbBuffer(this, size);
     return b;
 }
 
-DrmBuffer *DrmBackend::createBuffer(gbm_surface *surface)
+DrmSurfaceBuffer *DrmBackend::createBuffer(gbm_surface *surface)
 {
 #if HAVE_GBM
-    DrmBuffer *b = new DrmBuffer(this, surface);
-    b->m_deleteAfterPageFlip = true;
-    m_buffers << b;
+    DrmSurfaceBuffer *b = new DrmSurfaceBuffer(this, surface);
     return b;
 #else
     return nullptr;
 #endif
-}
-
-void DrmBackend::bufferDestroyed(DrmBuffer *b)
-{
-    m_buffers.removeAll(b);
 }
 
 void DrmBackend::outputDpmsChanged()
