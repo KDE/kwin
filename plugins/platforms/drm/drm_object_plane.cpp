@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_object_plane.h"
+#include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_pointer.h"
 #include "logging.h"
@@ -25,17 +26,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-DrmPlane::DrmPlane(uint32_t plane_id, int fd)
-    : DrmObject(plane_id, fd)
+DrmPlane::DrmPlane(uint32_t plane_id, DrmBackend *backend)
+    : DrmObject(plane_id, backend)
 {
 }
 
-DrmPlane::~DrmPlane() = default;
-
-bool DrmPlane::init()
+DrmPlane::~DrmPlane()
 {
-    qCDebug(KWIN_DRM) << "Initialize plane" << m_id;
-    ScopedDrmPointer<_drmModePlane, &drmModeFreePlane> p(drmModeGetPlane(m_fd, m_id));
+    delete m_current;
+    delete m_next;
+}
+
+bool DrmPlane::atomicInit()
+{
+    qCDebug(KWIN_DRM) << "Atomic init for plane:" << m_id;
+    ScopedDrmPointer<_drmModePlane, &drmModeFreePlane> p(drmModeGetPlane(m_backend->fd(), m_id));
 
     if (!p) {
         qCWarning(KWIN_DRM) << "Failed to get kernel plane" << m_id;
@@ -44,8 +49,9 @@ bool DrmPlane::init()
 
     m_possibleCrtcs = p->possible_crtcs;
 
-    m_formats.resize(p->count_formats);
-    for (int i = 0; i < p->count_formats; i++) {
+    int count_formats = p->count_formats;
+    m_formats.resize(count_formats);
+    for (int i = 0; i < count_formats; i++) {
         m_formats[i] = p->formats[i];
     }
 
@@ -77,7 +83,7 @@ bool DrmPlane::initProps()
         QByteArrayLiteral("Overlay"),
     };
 
-    drmModeObjectProperties *properties = drmModeObjectGetProperties(m_fd, m_id, DRM_MODE_OBJECT_PLANE);
+    drmModeObjectProperties *properties = drmModeObjectGetProperties(m_backend->fd(), m_id, DRM_MODE_OBJECT_PLANE);
     if (!properties){
         qCWarning(KWIN_DRM) << "Failed to get properties for plane " << m_id ;
         return false;
@@ -98,77 +104,48 @@ bool DrmPlane::initProps()
 
 DrmPlane::TypeIndex DrmPlane::type()
 {
-    uint64_t value = propValue(int(PropertyIndex::Type));
+    uint64_t v = value(int(PropertyIndex::Type));
     int typeCount = int(TypeIndex::Count);
     for (int i = 0; i < typeCount; i++) {
-            if (m_props[int(PropertyIndex::Type)]->enumMap(i) == value) {
+            if (m_props[int(PropertyIndex::Type)]->enumMap(i) == v) {
                     return TypeIndex(i);
             }
     }
     return TypeIndex::Overlay;
 }
 
-bool DrmPlane::isCrtcSupported(uint32_t crtc)
-{
-    ScopedDrmPointer<_drmModeRes, &drmModeFreeResources> res(drmModeGetResources(m_fd));
-    if (!res) {
-        qCWarning(KWIN_DRM) << "Failed to get drm resources";
-    }
-    for (int c = 0; c < res->count_crtcs; c++) {
-        if (res->crtcs[c] != crtc) {
-            continue;
-        }
-        qCDebug(KWIN_DRM) <<  "Mask " << m_possibleCrtcs << ", idx " << c;
-        if (m_possibleCrtcs & (1 << c)) {
-            return true;
-        }
-    }
-    qCDebug(KWIN_DRM) <<  "CRTC" << crtc << "not supported";
-    return false;
+void DrmPlane::setNext(DrmBuffer *b){
+    setValue(int(PropertyIndex::FbId), b ? b->bufferId() : 0);
+    m_next = b;
 }
 
-
-void DrmPlane::setFormats(uint32_t const *f, int fcount)
-{
-    m_formats.resize(fcount);
-    for (int i = 0; i < fcount; i++) {
-        m_formats[i] = *f;
-    }
-}
-
-DrmObject::AtomicReturn DrmPlane::atomicReqPlanePopulate(drmModeAtomicReq *req)
+bool DrmPlane::atomicPopulate(drmModeAtomicReq *req)
 {
     bool ret = true;
 
-    if (m_next) {
-        setPropValue(int(PropertyIndex::FbId), m_next->bufferId());
-    } else {
-        setPropValue(int(PropertyIndex::FbId), 0);
-        setPropValue(int(PropertyIndex::SrcX), 0);
-        setPropValue(int(PropertyIndex::SrcY), 0);
-        setPropValue(int(PropertyIndex::SrcW), 0);
-        setPropValue(int(PropertyIndex::SrcH), 0);
-        setPropValue(int(PropertyIndex::CrtcX), 0);
-        setPropValue(int(PropertyIndex::CrtcY), 0);
-        setPropValue(int(PropertyIndex::CrtcW), 0);
-        setPropValue(int(PropertyIndex::CrtcH), 0);
+    for (int i = 1; i < m_props.size(); i++) {
+        ret &= atomicAddProperty(req, i, m_props[i]->value());
     }
-
-    m_propsPending = 0;
-
-    for (int i = int(PropertyIndex::SrcX); i < int(PropertyIndex::CrtcId); i++) {
-        ret &= atomicAddProperty(req, i, propValue(i));
-    }
-    ret &= atomicAddProperty(req, int(PropertyIndex::CrtcId), m_next ? propValue(int(PropertyIndex::CrtcId)) : 0);
 
     if (!ret) {
         qCWarning(KWIN_DRM) << "Failed to populate atomic plane" << m_id;
-        return DrmObject::AtomicReturn::Error;
+        return false;
     }
-    if (!m_propsPending) {
-        return DrmObject::AtomicReturn::NoChange;
+    return true;
+}
+
+void DrmPlane::flipBuffer()
+{
+    m_current = m_next;
+    m_next = nullptr;
+}
+
+void DrmPlane::flipBufferWithDelete()
+{
+    if (m_current != m_next) {
+        delete m_current;
     }
-    return DrmObject::AtomicReturn::Success;
+    flipBuffer();
 }
 
 }

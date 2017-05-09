@@ -32,9 +32,9 @@ class DrmBuffer;
 class DrmPlane : public DrmObject
 {
 public:
-    DrmPlane(uint32_t plane_id, int fd);
+    DrmPlane(uint32_t plane_id, DrmBackend *backend);
 
-    virtual ~DrmPlane();
+    ~DrmPlane();
 
     enum class PropertyIndex {
         Type = 0,
@@ -58,36 +58,31 @@ public:
         Count
     };
     
-    bool init();
+    bool atomicInit();
     bool initProps();
     TypeIndex type();
-    bool isCrtcSupported(uint32_t crtc);
-    DrmObject::AtomicReturn atomicReqPlanePopulate(drmModeAtomicReq *req);
 
-    DrmBuffer *current(){
-        return m_current;
+    bool isCrtcSupported(int resIndex) const {
+        return (m_possibleCrtcs & (1 << resIndex));
     }
-    DrmBuffer *next(){
-        return m_next;
-    }
-    void setCurrent(DrmBuffer *b){
-        m_current = b;
-    }
-    void setNext(DrmBuffer *b){
-        m_next = b;
-    }
-
-    QVector<uint32_t> formats(){
+    QVector<uint32_t> formats() const {
         return m_formats;
     }
-    void setFormats(uint32_t const *f, int fcount);
 
-    void setPossibleCrtcs(uint32_t value){
-        m_possibleCrtcs = value;
+    DrmBuffer *current() const {
+        return m_current;
     }
-    uint32_t possibleCrtcs(){
-        return m_possibleCrtcs;
+    DrmBuffer *next() const {
+        return m_next;
     }
+    void setCurrent(DrmBuffer *b) {
+        m_current = b;
+    }
+    void setNext(DrmBuffer *b);
+
+    bool atomicPopulate(drmModeAtomicReq *req);
+    void flipBuffer();
+    void flipBufferWithDelete();
 
 private:
     DrmBuffer *m_current = nullptr;

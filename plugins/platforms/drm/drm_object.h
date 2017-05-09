@@ -30,73 +30,58 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class DrmBackend;
 class DrmOutput;
 
 class DrmObject
 {
 public:
     // creates drm object by its id delivered by the kernel
-    DrmObject(uint32_t object_id, int fd);
+    DrmObject(uint32_t object_id, DrmBackend *backend);
 
     virtual ~DrmObject() = 0;
 
-    enum class AtomicReturn {
-        NoChange,
-        Success,
-        Error
-    };
-
-    virtual bool init() = 0;
+    virtual bool atomicInit() = 0;
 
     uint32_t id() const {
         return m_id;
     }
 
-    DrmOutput* output() const {
+    DrmOutput *output() const {
         return m_output;
     }
     void setOutput(DrmOutput* output) {
         m_output = output;
     }
     
-    uint32_t propId(int index) {
-        return m_props[index]->propId();
+    uint32_t propId(int prop) {
+        return m_props[prop]->propId();
     }
-    uint64_t propValue(int index) {
-        return m_props[index]->value();
-    }
-    void setPropValue(int index, uint64_t new_value);
-
-    uint32_t propsPending() {
-        return m_propsPending;
-    }
-    uint32_t propsValid() {
-        return m_propsValid;
-    }
-    void setPropsPending(uint32_t value) {
-        m_propsPending = value;
-    }
-    void setPropsValid(uint32_t value) {
-        m_propsValid = value;
+    uint64_t value(int prop) {
+        return m_props[prop]->value();
     }
 
-    bool atomicAddProperty(drmModeAtomicReq *req, int prop, uint64_t value);
+    void setValue(int prop, uint64_t new_value)
+    {
+        Q_ASSERT(prop < m_props.size());
+        m_props[prop]->setValue(new_value);
+    }
+
+    virtual bool atomicPopulate(drmModeAtomicReq *req);
 
 protected:
-    const int m_fd = 0;
-    const uint32_t m_id = 0;
-
-    DrmOutput *m_output = nullptr;
-
-    QVector<QByteArray> m_propsNames;       // for comparision with received name of DRM object
-    class Property;
-    QVector<Property*> m_props;
-
-    uint32_t m_propsPending = 0;
-    uint32_t m_propsValid = 0;
-
     virtual bool initProps() = 0;           // only derived classes know names and quantity of properties
     void initProp(int n, drmModeObjectProperties *properties, QVector<QByteArray> enumNames = QVector<QByteArray>(0));
+    bool atomicAddProperty(drmModeAtomicReq *req, int prop, uint64_t value);
+
+    DrmBackend *m_backend;
+    const uint32_t m_id = 0;
+    DrmOutput *m_output = nullptr;
+
+    // for comparision with received name of DRM object
+    QVector<QByteArray> m_propsNames;
+    class Property;
+    QVector<Property *> m_props;
 
     class Property
     {
@@ -113,7 +98,7 @@ protected:
         uint32_t propId() {
             return m_propId;
         }
-        uint32_t value() {
+        uint64_t value() {
             return m_value;
         }
         void setValue(uint64_t new_value) {

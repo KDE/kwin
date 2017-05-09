@@ -32,11 +32,11 @@ class DrmDumbBuffer;
 class DrmCrtc : public DrmObject
 {
 public:
-    DrmCrtc(uint32_t crtc_id, int fd, int resIndex);
+    DrmCrtc(uint32_t crtc_id, DrmBackend *backend, int resIndex);
 
     virtual ~DrmCrtc();
 
-    bool init();
+    bool atomicInit();
 
     enum class PropertyIndex {
         ModeId = 0,
@@ -64,7 +64,6 @@ public:
     bool blank();
 
 private:
-    DrmBackend *m_backend;
     int m_resIndex;
 
     DrmBuffer *m_currentBuffer = nullptr;

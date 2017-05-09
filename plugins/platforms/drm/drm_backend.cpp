@@ -154,8 +154,10 @@ void DrmBackend::checkOutputsAreOn()
 void DrmBackend::activate(bool active)
 {
     if (active) {
+        qCDebug(KWIN_DRM) << "Activating session.";
         reactivate();
     } else {
+        qCDebug(KWIN_DRM) << "Deactivating session.";
         deactivate();
     }
 }
@@ -171,7 +173,9 @@ void DrmBackend::reactivate()
         const QPoint cp = Cursor::pos() - softwareCursorHotspot();
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
             DrmOutput *o = *it;
-            o->pageFlipped();
+            // only relevant in atomic mode
+            o->m_modesetRequested = true;
+            o->pageFlipped();   // TODO: Do we really need this?
             o->m_crtc->blank();
             o->showCursor(c);
             o->moveCursor(cp);
@@ -214,6 +218,12 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
     if (output->m_backend->m_pageFlipsPending == 0) {
         // TODO: improve, this currently means we wait for all page flips or all outputs.
         // It would be better to driver the repaint per output
+
+        if (output->m_dpmsAtomicOffPending) {
+            output->m_modesetRequested = true;
+            output->dpmsAtomicOff();
+        }
+
         if (Compositor::self()) {
             Compositor::self()->bufferSwapComplete();
         }
@@ -268,12 +278,12 @@ void DrmBackend::openDrm()
                 // create the plane objects
                 for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
                     drmModePlane *kplane = drmModeGetPlane(m_fd, planeResources->planes[i]);
-                    DrmPlane *p = new DrmPlane(kplane->plane_id, m_fd);
-
-                    if (p->init()) {
-                        p->setPossibleCrtcs(kplane->possible_crtcs);
-                        p->setFormats(kplane->formats, kplane->count_formats);
+                    DrmPlane *p = new DrmPlane(kplane->plane_id, this);
+                    if (p->atomicInit()) {
                         m_planes << p;
+                        if (p->type() == DrmPlane::TypeIndex::Overlay) {
+                            m_overlayPlanes << p;
+                        }
                     } else {
                         delete p;
                     }
@@ -297,26 +307,26 @@ void DrmBackend::openDrm()
     }
 
     for (int i = 0; i < res->count_connectors; ++i) {
-        m_connectors << new DrmConnector(res->connectors[i], m_fd);
+        m_connectors << new DrmConnector(res->connectors[i], this);
     }
     for (int i = 0; i < res->count_crtcs; ++i) {
-        m_crtcs << new DrmCrtc(res->crtcs[i], m_fd, i);
+        m_crtcs << new DrmCrtc(res->crtcs[i], this, i);
     }
 
     if (m_atomicModeSetting) {
-        auto tryInit = [] (DrmObject *o) -> bool {
-            if (o->init()) {
+        auto tryAtomicInit = [] (DrmObject *obj) -> bool {
+            if (obj->atomicInit()) {
                 return false;
             } else {
-                delete o;
+                delete obj;
                 return true;
             }
         };
-        m_connectors.erase(std::remove_if(m_connectors.begin(), m_connectors.end(), tryInit), m_connectors.end());
-        m_crtcs.erase(std::remove_if(m_crtcs.begin(), m_crtcs.end(), tryInit), m_crtcs.end());
+        m_connectors.erase(std::remove_if(m_connectors.begin(), m_connectors.end(), tryAtomicInit), m_connectors.end());
+        m_crtcs.erase(std::remove_if(m_crtcs.begin(), m_crtcs.end(), tryAtomicInit), m_crtcs.end());
     }
 
-    queryResources();
+    updateOutputs();
 
     if (m_outputs.isEmpty()) {
         qCWarning(KWIN_DRM) << "No outputs, cannot render, will terminate now";
@@ -341,7 +351,7 @@ void DrmBackend::openDrm()
                     }
                     if (device->hasProperty("HOTPLUG", "1")) {
                         qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
-                        queryResources();
+                        updateOutputs();
                         m_cursorIndex = (m_cursorIndex + 1) % 2;
                         updateCursor();
                     }
@@ -355,7 +365,7 @@ void DrmBackend::openDrm()
     initCursor();
 }
 
-void DrmBackend::queryResources()
+void DrmBackend::updateOutputs()
 {
     if (m_fd < 0) {
         return;
@@ -716,6 +726,5 @@ void DrmBackend::outputDpmsChanged()
     }
     setOutputsEnabled(enabled);
 }
-
 
 }

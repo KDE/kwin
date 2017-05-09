@@ -28,11 +28,11 @@ namespace KWin
 class DrmConnector : public DrmObject
 {
 public:
-    DrmConnector(uint32_t connector_id, int fd);
+    DrmConnector(uint32_t connector_id, DrmBackend *backend);
 
     virtual ~DrmConnector();
 
-    bool init();
+    bool atomicInit();
 
     enum class PropertyIndex {
         CrtcId = 0,

@@ -90,6 +90,9 @@ public:
     QVector<DrmPlane*> planes() const {
         return m_planes;
     }
+    QVector<DrmPlane*> overlayPlanes() const {
+        return m_overlayPlanes;
+    }
 
     void outputWentOff();
     void checkOutputsAreOn();
@@ -128,7 +131,7 @@ private:
     void activate(bool active);
     void reactivate();
     void deactivate();
-    void queryResources();
+    void updateOutputs();
     void setCursor();
     void updateCursor();
     void moveCursor();
@@ -157,6 +160,7 @@ private:
     bool m_active = false;
     // all available planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;
+    QVector<DrmPlane*> m_overlayPlanes;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
     KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
     gbm_device *m_gbmDevice = nullptr;

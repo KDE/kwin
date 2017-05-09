@@ -95,7 +95,8 @@ public:
     };
     void setDpms(DpmsMode mode);
     bool isDpmsEnabled() const {
-        return m_dpmsMode == DpmsMode::On;
+        // We care for current as well as pending mode in order to allow first present in AMS.
+        return m_dpmsModePending == DpmsMode::On;
     }
 
     QByteArray uuid() const {
@@ -111,6 +112,13 @@ private:
                             //       and save the connector ids in the DrmCrtc instance.
     DrmOutput(DrmBackend *backend);
     bool presentAtomically(DrmBuffer *buffer);
+
+    enum class AtomicCommitMode {
+        Test,
+        Real
+    };
+    bool doAtomicCommit(AtomicCommitMode mode);
+
     bool presentLegacy(DrmBuffer *buffer);
     bool setModeLegacy(DrmBuffer *buffer);
     void initEdid(drmModeConnector *connector);
@@ -120,10 +128,13 @@ private:
     void setGlobalPos(const QPoint &pos);
     void setScale(qreal scale);
 
-    void pageFlippedBufferRemover(DrmBuffer *oldbuffer, DrmBuffer *newbuffer);
     bool initPrimaryPlane();
     bool initCursorPlane();
-    DrmObject::AtomicReturn atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
+
+    void dpmsOnHandler();
+    void dpmsOffHandler();
+    bool dpmsAtomicOff();
+    bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
 
     DrmBackend *m_backend;
     DrmConnector *m_conn = nullptr;
@@ -138,12 +149,16 @@ private:
     QPointer<KWayland::Server::OutputChangeSet> m_changeset;
     KWin::ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
     DpmsMode m_dpmsMode = DpmsMode::On;
+    DpmsMode m_dpmsModePending = DpmsMode::On;
     QByteArray m_uuid;
 
     uint32_t m_blobId = 0;
     DrmPlane* m_primaryPlane = nullptr;
     DrmPlane* m_cursorPlane = nullptr;
-    QVector<DrmPlane*> m_planesFlipList;
+    QVector<DrmPlane*> m_nextPlanesFlipList;
+    bool m_pageFlipPending = false;
+    bool m_dpmsAtomicOffPending = false;
+    bool m_modesetRequested = true;
 };
 
 }

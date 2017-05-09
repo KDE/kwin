@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_object.h"
+
+#include "drm_backend.h"
 #include "logging.h"
 
 namespace KWin
@@ -27,8 +29,8 @@ namespace KWin
  * Defintions for class DrmObject
  */
 
-DrmObject::DrmObject(uint32_t object_id, int fd)
-    : m_fd(fd)
+DrmObject::DrmObject(uint32_t object_id, DrmBackend *backend)
+    : m_backend(backend)
     , m_id(object_id)
 {
 }
@@ -43,7 +45,7 @@ void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QBy
 {
     m_props.resize(m_propsNames.size());
     for (unsigned int i = 0; i < properties->count_props; ++i) {
-        drmModePropertyRes *prop = drmModeGetProperty(m_fd, properties->props[i]);
+        drmModePropertyRes *prop = drmModeGetProperty(m_backend->fd(), properties->props[i]);
         if (!prop) {
             continue;
         }
@@ -56,27 +58,27 @@ void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QBy
     }
 }
 
-void DrmObject::setPropValue(int index, uint64_t new_value)
-{
-    Q_ASSERT(index < m_props.size());
-    m_props[index]->setValue(new_value);
-    return;
-}
-
 bool DrmObject::atomicAddProperty(drmModeAtomicReq *req, int prop, uint64_t value)
 {
-    uint32_t mask = 1U << prop;
-    if ((m_propsPending | m_propsValid) & mask && value == propValue(prop)) {
-        // no change necessary, don't add property for next atomic commit
-        return true;
-    }
-    if (drmModeAtomicAddProperty(req, m_id, m_props[prop]->propId(), value) < 0) {
-        // error when adding property
+    if (drmModeAtomicAddProperty(req, m_id, m_props[prop]->propId(), value) <= 0) {
+        qCWarning(KWIN_DRM) << "Adding property" << m_propsNames[prop] << "to atomic commit failed for object" << this;
         return false;
     }
-    m_propsPending |= mask;
-    m_propsValid &= ~mask;
-    // adding property was successful
+    return true;
+}
+
+bool DrmObject::atomicPopulate(drmModeAtomicReq *req)
+{
+    bool ret = true;
+
+    for (int i = 0; i < m_props.size(); i++) {
+        ret &= atomicAddProperty(req, i, m_props[i]->value());
+    }
+
+    if (!ret) {
+        qCWarning(KWIN_DRM) << "Failed to populate atomic plane" << m_id;
+        return false;
+    }
     return true;
 }
 

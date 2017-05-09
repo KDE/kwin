@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(uint32_t crtc_id, int fd, int resIndex)
-    : DrmObject(crtc_id, fd),
+DrmCrtc::DrmCrtc(uint32_t crtc_id, DrmBackend *backend, int resIndex)
+    : DrmObject(crtc_id, backend),
       m_resIndex(resIndex)
 {
 }
@@ -36,7 +36,7 @@ DrmCrtc::~DrmCrtc()
 {
 }
 
-bool DrmCrtc::init()
+bool DrmCrtc::atomicInit()
 {
     qCDebug(KWIN_DRM) << "Atomic init for CRTC:" << resIndex() << "id:" << m_id;
 
@@ -53,7 +53,7 @@ bool DrmCrtc::initProps()
         QByteArrayLiteral("ACTIVE"),
     };
 
-    drmModeObjectProperties *properties = drmModeObjectGetProperties(m_fd, m_id, DRM_MODE_OBJECT_CRTC);
+    drmModeObjectProperties *properties = drmModeObjectGetProperties(m_backend->fd(), m_id, DRM_MODE_OBJECT_CRTC);
     if (!properties) {
         qCWarning(KWIN_DRM) << "Failed to get properties for crtc " << m_id ;
         return false;
@@ -69,7 +69,7 @@ bool DrmCrtc::initProps()
 
 void DrmCrtc::flipBuffer()
 {
-    if (m_currentBuffer && m_output->m_backend->deleteBufferAfterPageFlip() && m_currentBuffer != m_nextBuffer) {
+    if (m_currentBuffer && m_backend->deleteBufferAfterPageFlip() && m_currentBuffer != m_nextBuffer) {
         delete m_currentBuffer;
     }
     m_currentBuffer = m_nextBuffer;
@@ -82,7 +82,7 @@ void DrmCrtc::flipBuffer()
 bool DrmCrtc::blank()
 {
     if (!m_blackBuffer) {
-        DrmDumbBuffer *blackBuffer = m_output->m_backend->createBuffer(m_output->pixelSize());
+        DrmDumbBuffer *blackBuffer = m_backend->createBuffer(m_output->pixelSize());
         if (!blackBuffer->map()) {
             delete blackBuffer;
             return false;
@@ -91,9 +91,8 @@ bool DrmCrtc::blank()
         m_blackBuffer = blackBuffer;
     }
 
-    // TODO: Do this atomically
     if (m_output->setModeLegacy(m_blackBuffer)) {
-        if (m_currentBuffer && m_output->m_backend->deleteBufferAfterPageFlip()) {
+        if (m_currentBuffer && m_backend->deleteBufferAfterPageFlip()) {
             delete m_currentBuffer;
             delete m_nextBuffer;
         }
