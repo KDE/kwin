@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_object_connector.h"
+#include "drm_pointer.h"
 #include "logging.h"
 
 namespace KWin
@@ -26,7 +27,13 @@ namespace KWin
 DrmConnector::DrmConnector(uint32_t connector_id, int fd)
     : DrmObject(connector_id, fd)
 {
-
+    ScopedDrmPointer<_drmModeConnector, &drmModeFreeConnector> con(drmModeGetConnector(fd, connector_id));
+    if (!con) {
+        return;
+    }
+    for (int i = 0; i < con->count_encoders; ++i) {
+        m_encoders << con->encoders[i];
+    }
 }
 
 DrmConnector::~DrmConnector() = default;
@@ -59,6 +66,15 @@ bool DrmConnector::initProps()
     }
     drmModeFreeObjectProperties(properties);
     return true;
+}
+
+bool DrmConnector::isConnected()
+{
+    ScopedDrmPointer<_drmModeConnector, &drmModeFreeConnector> con(drmModeGetConnector(m_fd, m_id));
+    if (!con) {
+        return false;
+    }
+    return con->connection == DRM_MODE_CONNECTED;
 }
 
 }

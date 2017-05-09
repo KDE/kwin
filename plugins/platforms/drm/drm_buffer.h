@@ -61,7 +61,6 @@ public:
     bool deleteAfterPageFlip() const {
         return m_deleteAfterPageFlip;
     }
-
     void releaseGbm();
 
 private:

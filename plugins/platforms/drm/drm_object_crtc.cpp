@@ -18,21 +18,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_object_crtc.h"
+#include "drm_backend.h"
+#include "drm_output.h"
+#include "drm_buffer.h"
 #include "logging.h"
 
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(uint32_t crtc_id, int fd)
-    : DrmObject(crtc_id, fd)
+DrmCrtc::DrmCrtc(uint32_t crtc_id, int fd, int resIndex)
+    : DrmObject(crtc_id, fd),
+      m_resIndex(resIndex)
 {
 }
 
-DrmCrtc::~DrmCrtc() = default;
+DrmCrtc::~DrmCrtc()
+{
+}
 
 bool DrmCrtc::init()
 {
-    qCDebug(KWIN_DRM) << "Creating CRTC" << m_id;
+    qCDebug(KWIN_DRM) << "Atomic init for CRTC:" << resIndex() << "id:" << m_id;
 
     if (!initProps()) {
         return false;
@@ -59,6 +65,43 @@ bool DrmCrtc::initProps()
     }
     drmModeFreeObjectProperties(properties);
     return true;
+}
+
+void DrmCrtc::flipBuffer()
+{
+    if (m_currentBuffer && m_currentBuffer->deleteAfterPageFlip() && m_currentBuffer != m_nextBuffer) {
+        delete m_currentBuffer;
+    }
+    m_currentBuffer = m_nextBuffer;
+    m_nextBuffer = nullptr;
+
+    delete m_blackBuffer;
+    m_blackBuffer = nullptr;
+}
+
+bool DrmCrtc::blank()
+{
+    if (!m_blackBuffer) {
+        DrmBuffer *blackBuffer = m_output->m_backend->createBuffer(m_output->pixelSize());
+        if (!blackBuffer->map()) {
+            delete blackBuffer;
+            return false;
+        }
+        blackBuffer->image()->fill(Qt::black);
+        m_blackBuffer = blackBuffer;
+    }
+
+    // TODO: Do this atomically
+    if (m_output->setModeLegacy(m_blackBuffer)) {
+        if (m_currentBuffer && m_currentBuffer->deleteAfterPageFlip()) {
+            delete m_currentBuffer;
+            delete m_nextBuffer;
+        }
+        m_currentBuffer = nullptr;
+        m_nextBuffer = nullptr;
+        return true;
+    }
+    return false;
 }
 
 }

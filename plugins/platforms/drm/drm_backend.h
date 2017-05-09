@@ -55,6 +55,8 @@ class UdevMonitor;
 
 class DrmOutput;
 class DrmPlane;
+class DrmCrtc;
+class DrmConnector;
 
 
 class KWIN_EXPORT DrmBackend : public Platform
@@ -128,8 +130,6 @@ private:
     void updateCursor();
     void moveCursor();
     void initCursor();
-    quint32 findCrtc(drmModeRes *res, drmModeConnector *connector, bool *ok = nullptr);
-    bool crtcIsUsed(quint32 crtc);
     void outputDpmsChanged();
     void readOutputsConfiguration();
     QByteArray generateOutputConfigurationUuid() const;
@@ -139,6 +139,11 @@ private:
     QScopedPointer<UdevMonitor> m_udevMonitor;
     int m_fd = -1;
     int m_drmId = 0;
+    // all crtcs
+    QVector<DrmCrtc*> m_crtcs;
+    // all connectors
+    QVector<DrmConnector*> m_connectors;
+    // currently active output pipelines (planes + crtc + encoder + connector)
     QVector<DrmOutput*> m_outputs;
     DrmBuffer *m_cursor[2];
     bool m_atomicModeSetting = false;

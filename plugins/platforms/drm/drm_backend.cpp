@@ -89,8 +89,10 @@ DrmBackend::~DrmBackend()
         while (m_pageFlipsPending != 0) {
             QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
         }
-        qDeleteAll(m_planes);
         qDeleteAll(m_outputs);
+        qDeleteAll(m_planes);
+        qDeleteAll(m_crtcs);
+        qDeleteAll(m_connectors);
         delete m_cursor[0];
         delete m_cursor[1];
         close(m_fd);
@@ -170,7 +172,7 @@ void DrmBackend::reactivate()
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
             DrmOutput *o = *it;
             o->pageFlipped();
-            o->blank();
+            o->m_crtc->blank();
             o->showCursor(c);
             o->moveCursor(cp);
         }
@@ -196,7 +198,6 @@ void DrmBackend::deactivate()
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         DrmOutput *o = *it;
         o->hideCursor();
-        o->restoreSaved();
     }
     m_active = false;
 }
@@ -288,7 +289,35 @@ void DrmBackend::openDrm()
         }
     }
 
+    ScopedDrmPointer<_drmModeRes, &drmModeFreeResources> resources(drmModeGetResources(m_fd));
+    drmModeRes *res = resources.data();
+    if (!resources) {
+        qCWarning(KWIN_DRM) << "drmModeGetResources failed";
+        return;
+    }
+
+    for (int i = 0; i < res->count_connectors; ++i) {
+        m_connectors << new DrmConnector(res->connectors[i], m_fd);
+    }
+    for (int i = 0; i < res->count_crtcs; ++i) {
+        m_crtcs << new DrmCrtc(res->crtcs[i], m_fd, i);
+    }
+
+    if (m_atomicModeSetting) {
+        auto tryInit = [] (DrmObject *o) -> bool {
+            if (o->init()) {
+                return false;
+            } else {
+                delete o;
+                return true;
+            }
+        };
+        m_connectors.erase(std::remove_if(m_connectors.begin(), m_connectors.end(), tryInit), m_connectors.end());
+        m_crtcs.erase(std::remove_if(m_crtcs.begin(), m_crtcs.end(), tryInit), m_crtcs.end());
+    }
+
     queryResources();
+
     if (m_outputs.isEmpty()) {
         qCWarning(KWIN_DRM) << "No outputs, cannot render, will terminate now";
         emit initFailed();
@@ -331,6 +360,7 @@ void DrmBackend::queryResources()
     if (m_fd < 0) {
         return;
     }
+
     ScopedDrmPointer<_drmModeRes, &drmModeFreeResources> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
@@ -338,74 +368,21 @@ void DrmBackend::queryResources()
     }
 
     QVector<DrmOutput*> connectedOutputs;
-    for (int i = 0; i < resources->count_connectors; ++i) {
-        const auto id = resources->connectors[i];
-        ScopedDrmPointer<_drmModeConnector, &drmModeFreeConnector> connector(drmModeGetConnector(m_fd, id));
-        if (!connector) {
+    QVector<DrmConnector*> pendingConnectors;
+
+    // split up connected connectors in already or not yet assigned ones
+    for (DrmConnector *con : qAsConst(m_connectors)) {
+        if (!con->isConnected()) {
             continue;
         }
-        if (connector->connection != DRM_MODE_CONNECTED) {
-            continue;
-        }
-        if (connector->count_modes == 0) {
-            continue;
-        }
-        if (DrmOutput *o = findOutput(connector->connector_id)) {
+
+        if (DrmOutput *o = findOutput(con->id())) {
             connectedOutputs << o;
-            continue;
-        }
-        bool crtcFound = false;
-        const quint32 crtcId = findCrtc(resources.data(), connector.data(), &crtcFound);
-        if (!crtcFound) {
-            continue;
-        }
-        ScopedDrmPointer<_drmModeCrtc, &drmModeFreeCrtc> crtc(drmModeGetCrtc(m_fd, crtcId));
-        if (!crtc) {
-            continue;
-        }
-        DrmOutput *drmOutput = new DrmOutput(this);
-        connect(drmOutput, &DrmOutput::dpmsChanged, this, &DrmBackend::outputDpmsChanged);
-        drmOutput->m_crtcId = crtcId;
-        drmOutput->m_connector = connector->connector_id;
-
-        if (m_atomicModeSetting) {
-            drmOutput->m_crtc = new DrmCrtc(crtcId, m_fd);
-            if (drmOutput->m_crtc->init()) {
-                drmOutput->m_crtc->setOutput(drmOutput);
-            } else {
-                qCWarning(KWIN_DRM) << "Crtc object failed, skipping output on connector" << connector->connector_id;
-                delete drmOutput->m_crtc;
-                delete drmOutput;
-                continue;
-            }
-
-            drmOutput->m_conn = new DrmConnector(connector->connector_id, m_fd);
-            if (drmOutput->m_conn->init()) {
-                drmOutput->m_conn->setOutput(drmOutput);
-            } else {
-                qCWarning(KWIN_DRM) << "Connector object failed, skipping output on connector" << connector->connector_id;
-                delete drmOutput->m_conn;
-                delete drmOutput;
-                continue;
-            }
-        }
-
-        if (crtc->mode_valid) {
-            drmOutput->m_mode = crtc->mode;
         } else {
-            drmOutput->m_mode = connector->modes[0];
+            pendingConnectors << con;
         }
-        qCDebug(KWIN_DRM) << "For new output use mode " << drmOutput->m_mode.name;
-
-        if (!drmOutput->init(connector.data())) {
-            qCWarning(KWIN_DRM) << "Failed to create output for connector " << connector->connector_id;
-            delete drmOutput;
-            continue;
-        }
-        qCDebug(KWIN_DRM) << "Found new output with uuid" << drmOutput->uuid();
-        connectedOutputs << drmOutput;
     }
-    std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_connector < b->m_connector; });
+
     // check for outputs which got removed
     auto it = m_outputs.begin();
     while (it != m_outputs.end()) {
@@ -418,11 +395,80 @@ void DrmBackend::queryResources()
         emit outputRemoved(removed);
         delete removed;
     }
-    for (auto it = connectedOutputs.constBegin(); it != connectedOutputs.constEnd(); ++it) {
-        if (!m_outputs.contains(*it)) {
-            emit outputAdded(*it);
+
+    // now check new connections
+    for (DrmConnector *con : qAsConst(pendingConnectors)) {
+        ScopedDrmPointer<_drmModeConnector, &drmModeFreeConnector> connector(drmModeGetConnector(m_fd, con->id()));
+        if (!connector) {
+            continue;
+        }
+        if (connector->count_modes == 0) {
+            continue;
+        }
+        bool outputDone = false;
+
+        QVector<uint32_t> encoders = con->encoders();
+        for (auto encId : qAsConst(encoders)) {
+            ScopedDrmPointer<_drmModeEncoder, &drmModeFreeEncoder> encoder(drmModeGetEncoder(m_fd, encId));
+            if (!encoder) {
+                continue;
+            }
+            for (DrmCrtc *crtc : qAsConst(m_crtcs)) {
+                if (!(encoder->possible_crtcs & (1 << crtc->resIndex()))) {
+                        continue;
+                }
+
+                // check if crtc isn't used yet -- currently we don't allow multiple outputs on one crtc (cloned mode)
+                auto it = std::find_if(connectedOutputs.constBegin(), connectedOutputs.constEnd(),
+                    [crtc] (DrmOutput *o) {
+                        return o->m_crtc == crtc;
+                    }
+                );
+                if (it != connectedOutputs.constEnd()) {
+                    continue;
+                }
+
+                // we found a suitable encoder+crtc
+                // TODO: we could avoid these lib drm calls if we store all struct data in DrmCrtc and DrmConnector in the beginning
+                ScopedDrmPointer<_drmModeCrtc, &drmModeFreeCrtc> modeCrtc(drmModeGetCrtc(m_fd, crtc->id()));
+                if (!modeCrtc) {
+                    continue;
+                }
+
+                DrmOutput *output = new DrmOutput(this);
+                con->setOutput(output);
+                output->m_conn = con;
+                crtc->setOutput(output);
+                output->m_crtc = crtc;
+                connect(output, &DrmOutput::dpmsChanged, this, &DrmBackend::outputDpmsChanged);
+
+                if (modeCrtc->mode_valid) {
+                    output->m_mode = modeCrtc->mode;
+                } else {
+                    output->m_mode = connector->modes[0];
+                }
+                qCDebug(KWIN_DRM) << "For new output use mode " << output->m_mode.name;
+
+                if (!output->init(connector.data())) {
+                    qCWarning(KWIN_DRM) << "Failed to create output for connector " << con->id();
+                    con->setOutput(nullptr);
+                    crtc->setOutput(nullptr);
+                    delete output;
+                    continue;
+                }
+                qCDebug(KWIN_DRM) << "Found new output with uuid" << output->uuid();
+
+                connectedOutputs << output;
+                emit outputAdded(output);
+                outputDone = true;
+                break;
+            }
+            if (outputDone) {
+                break;
+            }
         }
     }
+    std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
     m_outputs = connectedOutputs;
     readOutputsConfiguration();
     if (!m_outputs.isEmpty()) {
@@ -484,7 +530,7 @@ void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurat
 DrmOutput *DrmBackend::findOutput(quint32 connector)
 {
     auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [connector] (DrmOutput *o) {
-        return o->m_connector == connector;
+        return o->m_conn->id() == connector;
     });
     if (it != m_outputs.constEnd()) {
         return *it;
@@ -501,51 +547,6 @@ DrmOutput *DrmBackend::findOutput(const QByteArray &uuid)
         return *it;
     }
     return nullptr;
-}
-
-quint32 DrmBackend::findCrtc(drmModeRes *res, drmModeConnector *connector, bool *ok)
-{
-    if (ok) {
-        *ok = false;
-    }
-    ScopedDrmPointer<_drmModeEncoder, &drmModeFreeEncoder> encoder(drmModeGetEncoder(m_fd, connector->encoder_id));
-    if (encoder) {
-        if (!crtcIsUsed(encoder->crtc_id)) {
-            if (ok) {
-                *ok = true;
-            }
-            return encoder->crtc_id;
-        }
-    }
-    // let's iterate over all encoders to find a suitable crtc
-    for (int i = 0; i < connector->count_encoders; ++i) {
-        ScopedDrmPointer<_drmModeEncoder, &drmModeFreeEncoder> encoder(drmModeGetEncoder(m_fd, connector->encoders[i]));
-        if (!encoder) {
-            continue;
-        }
-        for (int j = 0; j < res->count_crtcs; ++j) {
-            if (!(encoder->possible_crtcs & (1 << j))) {
-                continue;
-            }
-            if (!crtcIsUsed(res->crtcs[j])) {
-                if (ok) {
-                    *ok = true;
-                }
-                return res->crtcs[j];
-            }
-        }
-    }
-    return 0;
-}
-
-bool DrmBackend::crtcIsUsed(quint32 crtc)
-{
-    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
-        [crtc] (DrmOutput *o) {
-            return o->m_crtcId == crtc;
-        }
-    );
-    return it != m_outputs.constEnd();
 }
 
 void DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)

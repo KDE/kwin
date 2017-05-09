@@ -74,7 +74,7 @@ void EglGbmBackend::cleanupSurfaces()
 
 void EglGbmBackend::cleanupOutput(const Output &o)
 {
-    o.output->cleanup();
+    o.output->releaseGbm();
 
     if (o.eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(eglDisplay(), o.eglSurface);

@@ -62,54 +62,38 @@ DrmOutput::DrmOutput(DrmBackend *backend)
 DrmOutput::~DrmOutput()
 {
     hideCursor();
-    cleanupBlackBuffer();
-    delete m_crtc;
-    delete m_conn;
+    m_crtc->blank();
     delete m_waylandOutput.data();
     delete m_waylandOutputDevice.data();
 }
 
-void DrmOutput::cleanup()
+void DrmOutput::releaseGbm()
 {
-    if (m_currentBuffer) {
-        m_currentBuffer->releaseGbm();
-    }
-    if (m_nextBuffer) {
-        m_nextBuffer->releaseGbm();
+    if (DrmBuffer *b = m_crtc->current()) {
+        b->releaseGbm();
     }
     if (m_primaryPlane) {
         if (m_primaryPlane->current()) {
             m_primaryPlane->current()->releaseGbm();
-        }
-        if (m_primaryPlane->next()) {
-            m_primaryPlane->next()->releaseGbm();
         }
     }
 }
 
 void DrmOutput::hideCursor()
 {
-    drmModeSetCursor(m_backend->fd(), m_crtcId, 0, 0, 0);
-}
-
-void DrmOutput::restoreSaved()
-{
-    if (!m_savedCrtc.isNull()) {
-        drmModeSetCrtc(m_backend->fd(), m_savedCrtc->crtc_id, m_savedCrtc->buffer_id,
-                       m_savedCrtc->x, m_savedCrtc->y, &m_connector, 1, &m_savedCrtc->mode);
-    }
+    drmModeSetCursor(m_backend->fd(), m_crtc->id(), 0, 0, 0);
 }
 
 void DrmOutput::showCursor(DrmBuffer *c)
 {
     const QSize &s = c->size();
-    drmModeSetCursor(m_backend->fd(), m_crtcId, c->handle(), s.width(), s.height());
+    drmModeSetCursor(m_backend->fd(), m_crtc->id(), c->handle(), s.width(), s.height());
 }
 
 void DrmOutput::moveCursor(const QPoint &globalPos)
 {
     const QPoint p = (globalPos - m_globalPos) * m_scale;
-    drmModeMoveCursor(m_backend->fd(), m_crtcId, p.x(), p.y());
+    drmModeMoveCursor(m_backend->fd(), m_crtc->id(), p.x(), p.y());
 }
 
 QSize DrmOutput::pixelSize() const
@@ -193,8 +177,7 @@ bool DrmOutput::init(drmModeConnector *connector)
             return false;
         }
     }
-    m_savedCrtc.reset(drmModeGetCrtc(m_backend->fd(), m_crtcId));
-    if (!blank()) {
+    if (!m_crtc->blank()) {
         return false;
     }
     setDpms(DpmsMode::On);
@@ -312,7 +295,7 @@ bool DrmOutput::init(drmModeConnector *connector)
 void DrmOutput::initUuid()
 {
     QCryptographicHash hash(QCryptographicHash::Md5);
-    hash.addData(QByteArray::number(m_connector));
+    hash.addData(QByteArray::number(m_conn->id()));
     hash.addData(m_edid.eisaId);
     hash.addData(m_edid.monitorName);
     hash.addData(m_edid.serialNumber);
@@ -513,12 +496,12 @@ bool DrmOutput::initPrimaryPlane()
         if (m_primaryPlane) {     // Output already has a primary plane
             continue;
         }
-        if (!p->isCrtcSupported(m_crtcId)) {
+        if (!p->isCrtcSupported(m_crtc->id())) {
             continue;
         }
         p->setOutput(this);
         m_primaryPlane = p;
-        qCDebug(KWIN_DRM) << "Initialized primary plane" << p->id() << "on CRTC" << m_crtcId;
+        qCDebug(KWIN_DRM) << "Initialized primary plane" << p->id() << "on CRTC" << m_crtc->id();
         return true;
     }
     qCCritical(KWIN_DRM) << "Failed to initialize primary plane.";
@@ -541,12 +524,12 @@ bool DrmOutput::initCursorPlane()       // TODO: Add call in init (but needs lay
         if (m_cursorPlane) {     // Output already has a cursor plane
             continue;
         }
-        if (!p->isCrtcSupported(m_crtcId)) {
+        if (!p->isCrtcSupported(m_crtc->id())) {
             continue;
         }
         p->setOutput(this);
         m_cursorPlane = p;
-        qCDebug(KWIN_DRM) << "Initialized cursor plane" << p->id() << "on CRTC" << m_crtcId;
+        qCDebug(KWIN_DRM) << "Initialized cursor plane" << p->id() << "on CRTC" << m_crtc->id();
         return true;
     }
     return false;
@@ -580,17 +563,17 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
         drmModeAtomicReq *req = drmModeAtomicAlloc();
 
         if (atomicReqModesetPopulate(req, mode == DpmsMode::On) == DrmObject::AtomicReturn::Error) {
-            qCWarning(KWIN_DRM) << "Failed to populate atomic request for output" << m_crtcId;
+            qCWarning(KWIN_DRM) << "Failed to populate atomic request for output" << m_crtc->id();
             return;
         }
         if (drmModeAtomicCommit(m_backend->fd(), req, DRM_MODE_ATOMIC_ALLOW_MODESET, this)) {
-            qCWarning(KWIN_DRM) << "Failed to commit atomic request for output" << m_crtcId;
+            qCWarning(KWIN_DRM) << "Failed to commit atomic request for output" << m_crtc->id();
         } else {
-            qCDebug(KWIN_DRM) << "DPMS set for output" << m_crtcId;
+            qCDebug(KWIN_DRM) << "DPMS set for output" << m_crtc->id();
         }
         drmModeAtomicFree(req);
     } else {
-        if (drmModeConnectorSetProperty(m_backend->fd(), m_connector, m_dpms->prop_id, uint64_t(mode)) < 0) {
+        if (drmModeConnectorSetProperty(m_backend->fd(), m_conn->id(), m_dpms->prop_id, uint64_t(mode)) < 0) {
             qCWarning(KWIN_DRM) << "Setting DPMS failed";
             return;
         }
@@ -605,7 +588,7 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
         m_backend->outputWentOff();
     } else {
         m_backend->checkOutputsAreOn();
-        blank();
+        m_crtc->blank();
         if (Compositor *compositor = Compositor::self()) {
             compositor->addRepaintFull();
         }
@@ -698,6 +681,9 @@ bool DrmOutput::commitChanges()
 
 void DrmOutput::pageFlipped()
 {
+    if (!m_crtc) {
+        return;
+    }
     if (m_backend->atomicModeSetting()){
         foreach (DrmPlane *p, m_planesFlipList) {
             pageFlippedBufferRemover(p->current(), p->next());
@@ -707,18 +693,15 @@ void DrmOutput::pageFlipped()
         m_planesFlipList.clear();
 
     } else {
-        if (!m_nextBuffer) {
+        if (!m_crtc->next()) {
             // on manual vt switch
-            if (m_currentBuffer) {
-                m_currentBuffer->releaseGbm();
+            if (DrmBuffer *b = m_crtc->current()) {
+                b->releaseGbm();
             }
             return;
         }
-        pageFlippedBufferRemover(m_currentBuffer, m_nextBuffer);
-        m_currentBuffer = m_nextBuffer;
-        m_nextBuffer = nullptr;
+        m_crtc->flipBuffer();
     }
-    cleanupBlackBuffer();
 }
 
 void DrmOutput::pageFlippedBufferRemover(DrmBuffer *oldbuffer, DrmBuffer *newbuffer)
@@ -726,28 +709,6 @@ void DrmOutput::pageFlippedBufferRemover(DrmBuffer *oldbuffer, DrmBuffer *newbuf
     if (oldbuffer && oldbuffer->deleteAfterPageFlip() && oldbuffer != newbuffer) {
         delete oldbuffer;
     }
-}
-
-void DrmOutput::cleanupBlackBuffer()
-{
-    if (m_blackBuffer) {
-        delete m_blackBuffer;
-        m_blackBuffer = nullptr;
-    }
-}
-
-bool DrmOutput::blank()
-{
-    if (!m_blackBuffer) {
-        m_blackBuffer = m_backend->createBuffer(pixelSize());
-        if (!m_blackBuffer->map()) {
-            cleanupBlackBuffer();
-            return false;
-        }
-        m_blackBuffer->image()->fill(Qt::black);
-    }
-    // TODO: Do this atomically
-    return setModeLegacy(m_blackBuffer);
 }
 
 bool DrmOutput::present(DrmBuffer *buffer)
@@ -868,11 +829,11 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
 
 bool DrmOutput::presentLegacy(DrmBuffer *buffer)
 {
-    if (m_nextBuffer) {
+    if (m_crtc->next()) {
         return false;
     }
     if (!LogindIntegration::self()->isActiveSession()) {
-        m_nextBuffer = buffer;
+        m_crtc->setNext(buffer);
         return false;
     }
     if (m_dpmsMode != DpmsMode::On) {
@@ -885,9 +846,9 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
             return false;
     }
     int errno_save = 0;
-    const bool ok = drmModePageFlip(m_backend->fd(), m_crtcId, buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
+    const bool ok = drmModePageFlip(m_backend->fd(), m_crtc->id(), buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
     if (ok) {
-        m_nextBuffer = buffer;
+        m_crtc->setNext(buffer);
     } else {
         errno_save = errno;
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
@@ -898,7 +859,8 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
 
 bool DrmOutput::setModeLegacy(DrmBuffer *buffer)
 {
-    if (drmModeSetCrtc(m_backend->fd(), m_crtcId, buffer->bufferId(), 0, 0, &m_connector, 1, &m_mode) == 0) {
+    uint32_t connId = m_conn->id();
+    if (drmModeSetCrtc(m_backend->fd(), m_crtc->id(), buffer->bufferId(), 0, 0, &connId, 1, &m_mode) == 0) {
         m_lastStride = buffer->stride();
         m_lastGbm = buffer->isGbm();
         return true;

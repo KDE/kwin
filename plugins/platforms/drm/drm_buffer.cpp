@@ -93,13 +93,13 @@ DrmBuffer::DrmBuffer(DrmBackend *backend, gbm_surface *surface)
 
 DrmBuffer::~DrmBuffer()
 {
+    if (m_bufferId) {
+        drmModeRmFB(m_backend->fd(), m_bufferId);
+    }
     m_backend->bufferDestroyed(this);
     delete m_image;
     if (m_memory) {
         munmap(m_memory, m_bufferSize);
-    }
-    if (m_bufferId) {
-        drmModeRmFB(m_backend->fd(), m_bufferId);
     }
     if (m_handle) {
         drm_mode_destroy_dumb destroyArgs;

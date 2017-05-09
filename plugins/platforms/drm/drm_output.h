@@ -61,15 +61,13 @@ public:
         QSize physicalSize;
     };
     virtual ~DrmOutput();
-    void cleanup();
+    void releaseGbm();
     void showCursor(DrmBuffer *buffer);
     void hideCursor();
     void moveCursor(const QPoint &globalPos);
     bool init(drmModeConnector *connector);
     bool present(DrmBuffer *buffer);
     void pageFlipped();
-    void restoreSaved();
-    bool blank();
 
     /**
      * This sets the changes and tests them against the DRM output
@@ -108,8 +106,9 @@ Q_SIGNALS:
 
 private:
     friend class DrmBackend;
+    friend class DrmCrtc;   // TODO: For use of setModeLegacy. Remove later when we allow multiple connectors per crtc
+                            //       and save the connector ids in the DrmCrtc instance.
     DrmOutput(DrmBackend *backend);
-    void cleanupBlackBuffer();
     bool presentAtomically(DrmBuffer *buffer);
     bool presentLegacy(DrmBuffer *buffer);
     bool setModeLegacy(DrmBuffer *buffer);
@@ -126,23 +125,14 @@ private:
     DrmObject::AtomicReturn atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
 
     DrmBackend *m_backend;
+    DrmConnector *m_conn = nullptr;
+    DrmCrtc *m_crtc = nullptr;
     QPoint m_globalPos;
     qreal m_scale = 1;
-    quint32 m_crtcId = 0;
-    quint32 m_connector = 0;
     quint32 m_lastStride = 0;
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
-    DrmBuffer *m_currentBuffer = nullptr;
-    DrmBuffer *m_nextBuffer = nullptr;
-    DrmBuffer *m_blackBuffer = nullptr;
-    struct CrtcCleanup {
-        static void inline cleanup(_drmModeCrtc *ptr) {
-            drmModeFreeCrtc(ptr);       // TODO: Atomically? See compositor-drm.c l.3670
-        }
-    };
     Edid m_edid;
-    QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
     QPointer<KWayland::Server::OutputChangeSet> m_changeset;
@@ -150,8 +140,6 @@ private:
     DpmsMode m_dpmsMode = DpmsMode::On;
     QByteArray m_uuid;
 
-    DrmConnector *m_conn = nullptr;
-    DrmCrtc *m_crtc = nullptr;
     uint32_t m_blobId = 0;
     DrmPlane* m_primaryPlane = nullptr;
     DrmPlane* m_cursorPlane = nullptr;

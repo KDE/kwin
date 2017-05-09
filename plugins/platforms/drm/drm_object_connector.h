@@ -38,8 +38,17 @@ public:
         CrtcId = 0,
         Count
     };
+
+    QVector<uint32_t> encoders() {
+        return m_encoders;
+    }
     
     bool initProps();
+    bool isConnected();
+
+
+private:
+    QVector<uint32_t> m_encoders;
 };
 
 }
