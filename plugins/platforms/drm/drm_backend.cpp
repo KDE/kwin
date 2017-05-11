@@ -494,10 +494,10 @@ void DrmBackend::readOutputsConfiguration()
     const QByteArray uuid = generateOutputConfigurationUuid();
     const auto outputGroup = kwinApp()->config()->group("DrmOutputs");
     const auto configGroup = outputGroup.group(uuid);
-    qCDebug(KWIN_DRM) << "Reading output configuration for" << uuid;
     // default position goes from left to right
     QPoint pos(0, 0);
     for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
+        qCDebug(KWIN_DRM) << "Reading output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
         const auto outputConfig = configGroup.group((*it)->uuid());
         (*it)->setGlobalPos(outputConfig.readEntry<QPoint>("Position", pos));
         // TODO: add mode
