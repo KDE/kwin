@@ -705,15 +705,14 @@ DrmDumbBuffer *DrmBackend::createBuffer(const QSize &size)
     return b;
 }
 
+#if HAVE_GBM
 DrmSurfaceBuffer *DrmBackend::createBuffer(gbm_surface *surface)
 {
-#if HAVE_GBM
     DrmSurfaceBuffer *b = new DrmSurfaceBuffer(this, surface);
     return b;
-#else
     return nullptr;
-#endif
 }
+#endif
 
 void DrmBackend::outputDpmsChanged()
 {
