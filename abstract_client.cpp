@@ -700,7 +700,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setFullscreenable(isFullScreenable());
     w->setIcon(icon());
     auto updateAppId = [this, w] {
-        w->setAppId(QString::fromUtf8(m_desktopFileName.isEmpty() ? resourceName() : m_desktopFileName));
+        w->setAppId(QString::fromUtf8(m_desktopFileName.isEmpty() ? resourceClass() : m_desktopFileName));
     };
     updateAppId();
     w->setSkipTaskbar(skipTaskbar());
