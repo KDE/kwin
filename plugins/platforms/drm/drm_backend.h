@@ -78,7 +78,9 @@ public:
 
     void init() override;
     DrmDumbBuffer *createBuffer(const QSize &size);
+#if HAVE_GBM
     DrmSurfaceBuffer *createBuffer(gbm_surface *surface);
+#endif
     void present(DrmBuffer *buffer, DrmOutput *output);
 
     int fd() const {
