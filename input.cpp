@@ -404,6 +404,10 @@ public:
     {
         QObject::connect(m_timer.data(), &QTimer::timeout,
             [this] {
+                if (waylandServer()) {
+                    // break keyboard focus, this cancels the pressed ESC
+                    waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+                }
                 input()->pointer()->breakPointerConstraints();
                 input()->pointer()->blockPointerConstraints();
                 // TODO: show notification
@@ -435,10 +439,8 @@ public:
                     static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifiers()) {
                 // TODO: don't hard code
                 m_timer->start(3000);
-                input()->keyboard()->update();
                 m_keyCode = event->nativeScanCode();
-                passToWaylandServer(event);
-                return true;
+                return false;
             }
         }
         return false;

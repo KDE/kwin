@@ -340,16 +340,17 @@ void TestPointerConstraints::testBreakConstrainedPointer()
     // now try to break
     quint32 timestamp = 0;
     kwinApp()->platform()->keyboardKeyPressed(KEY_ESC, timestamp++);
-    QVERIFY(keyboardLeftSpy.wait());
+    QVERIFY(keyChangedSpy.wait());
     // and just waiting should break constrain
     QVERIFY(unlockedSpy.wait());
+    QCOMPARE(keyboardLeftSpy.count(), 1);
     QCOMPARE(input()->pointer()->isConstrained(), false);
     // and should enter again
     QTRY_COMPARE(keyboardEnteredSpy.count(), 2);
     QCOMPARE(waylandServer()->seat()->focusedKeyboardSurface(), c->surface());
     kwinApp()->platform()->keyboardKeyReleased(KEY_ESC, timestamp++);
     QVERIFY(!keyChangedSpy.wait());
-    QVERIFY(keyChangedSpy.isEmpty());
+    QCOMPARE(keyChangedSpy.count(), 1);
 
     // now lock again
     // need to move out and in
