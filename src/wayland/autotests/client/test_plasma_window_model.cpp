@@ -79,6 +79,7 @@ private Q_SLOTS:
     void testGeometry();
     void testTitle();
     void testAppId();
+    void testPid();
     void testVirtualDesktop();
     // TODO icon: can we ensure a theme is installed on CI?
     void testRequests();
@@ -220,6 +221,7 @@ void PlasmaWindowModelTest::testRoleNames_data()
     QTest::newRow("decoration") << int(Qt::DecorationRole) << QByteArrayLiteral("DecorationRole");
 
     QTest::newRow("AppId")                << int(PlasmaWindowModel::AppId) << QByteArrayLiteral("AppId");
+    QTest::newRow("Pid")                  << int(PlasmaWindowModel::Pid) << QByteArrayLiteral("Pid");
     QTest::newRow("IsActive")             << int(PlasmaWindowModel::IsActive) << QByteArrayLiteral("IsActive");
     QTest::newRow("IsFullscreenable")     << int(PlasmaWindowModel::IsFullscreenable) << QByteArrayLiteral("IsFullscreenable");
     QTest::newRow("IsFullscreen")         << int(PlasmaWindowModel::IsFullscreen) << QByteArrayLiteral("IsFullscreen");
@@ -332,6 +334,7 @@ void PlasmaWindowModelTest::testDefaultData_data()
     QTest::newRow("IsVirtualDesktopChangeable") << int(PlasmaWindowModel::IsVirtualDesktopChangeable) << QVariant(false);
     QTest::newRow("IsCloseable")          << int(PlasmaWindowModel::IsCloseable) << QVariant(false);
     QTest::newRow("Geometry")             << int(PlasmaWindowModel::Geometry) << QVariant(QRect());
+    QTest::newRow("Pid")                  << int(PlasmaWindowModel::Pid) << QVariant(0);
 }
 
 void PlasmaWindowModelTest::testDefaultData()
@@ -519,6 +522,31 @@ void PlasmaWindowModelTest::testAppId()
     QCOMPARE(dataChangedSpy.last().first().toModelIndex(), index);
     QCOMPARE(dataChangedSpy.last().last().value<QVector<int>>(), QVector<int>{int(PlasmaWindowModel::AppId)});
     QCOMPARE(model->data(index, PlasmaWindowModel::AppId).toString(), QStringLiteral("org.kde.testapp"));
+}
+
+void PlasmaWindowModelTest::testPid()
+{
+    auto model = m_pw->createWindowModel();
+    QVERIFY(model);
+    QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
+    QVERIFY(rowInsertedSpy.isValid());
+    auto w = m_pwInterface->createWindow(m_pwInterface);
+    QVERIFY(w);
+    QVERIFY(rowInsertedSpy.wait());
+    m_connection->flush();
+    m_display->dispatchEvents();
+    QSignalSpy dataChangedSpy(model, &PlasmaWindowModel::dataChanged);
+    QVERIFY(dataChangedSpy.isValid());
+
+    const QModelIndex index = model->index(0);
+    QCOMPARE(model->data(index, PlasmaWindowModel::Pid).toInt(), 0);
+
+    w->setPid(1337);
+    QVERIFY(dataChangedSpy.wait());
+    QCOMPARE(dataChangedSpy.count(), 1);
+    QCOMPARE(dataChangedSpy.last().first().toModelIndex(), index);
+    QCOMPARE(dataChangedSpy.last().last().value<QVector<int>>(), QVector<int>{int(PlasmaWindowModel::Pid)});
+    QCOMPARE(model->data(index, PlasmaWindowModel::Pid).toInt(), 1337);
 }
 
 void PlasmaWindowModelTest::testVirtualDesktop()

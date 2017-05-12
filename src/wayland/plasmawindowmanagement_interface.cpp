@@ -72,6 +72,7 @@ public:
     void createResource(wl_resource *parent, uint32_t id);
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
+    void setPid(quint32 pid);
     void setThemedIconName(const QString &iconName);
     void setIcon(const QIcon &icon);
     void setVirtualDesktop(quint32 desktop);
@@ -109,6 +110,7 @@ private:
     PlasmaWindowInterface *q;
     QString m_title;
     QString m_appId;
+    quint32 m_pid = 0;
     QString m_themedIconName;
     QIcon m_icon;
     quint32 m_virtualDesktop = 0;
@@ -329,6 +331,9 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_
     if (!m_appId.isEmpty()) {
         org_kde_plasma_window_send_app_id_changed(resource, m_appId.toUtf8().constData());
     }
+    if (m_pid != 0) {
+        org_kde_plasma_window_send_pid_changed(resource, m_pid);
+    }
     if (!m_title.isEmpty()) {
         org_kde_plasma_window_send_title_changed(resource, m_title.toUtf8().constData());
     }
@@ -366,6 +371,17 @@ void PlasmaWindowInterface::Private::setAppId(const QString &appId)
     const QByteArray utf8 = m_appId.toUtf8();
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         org_kde_plasma_window_send_app_id_changed(*it, utf8.constData());
+    }
+}
+
+void PlasmaWindowInterface::Private::setPid(quint32 pid)
+{
+    if (m_pid == pid) {
+        return;
+    }
+    m_pid = pid;
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+        org_kde_plasma_window_send_pid_changed(*it, pid);
     }
 }
 
@@ -653,6 +669,11 @@ PlasmaWindowInterface::~PlasmaWindowInterface() = default;
 void PlasmaWindowInterface::setAppId(const QString &appId)
 {
     d->setAppId(appId);
+}
+
+void PlasmaWindowInterface::setPid(quint32 pid)
+{
+    d->setPid(pid);
 }
 
 void PlasmaWindowInterface::setTitle(const QString &title)

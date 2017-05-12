@@ -87,6 +87,7 @@ public:
 
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
+    void setPid(quint32 pid);
     void setVirtualDesktop(quint32 desktop);
     void setActive(bool set);
     void setMinimized(bool set);

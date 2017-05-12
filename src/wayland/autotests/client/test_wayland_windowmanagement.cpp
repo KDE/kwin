@@ -67,6 +67,7 @@ private Q_SLOTS:
     void testParentWindow();
     void testGeometry();
     void testIcon();
+    void testPid();
 
     void cleanup();
 
@@ -579,6 +580,25 @@ void TestWindowManagement::testIcon()
         QEXPECT_FAIL("", "no icon", Continue);
     }
     QCOMPARE(m_window->icon().name(), QStringLiteral("xorg"));
+}
+
+void TestWindowManagement::testPid()
+{
+    using namespace KWayland::Client;
+    QVERIFY(m_window);
+    QVERIFY(m_windowInterface);
+    QVERIFY(m_window->pid() == 0);
+    QSignalSpy pidChangedSpy(m_window, &PlasmaWindow::pidChanged);
+    QVERIFY(pidChangedSpy.isValid());
+    // doing nothing does nothing
+    QVERIFY(!pidChangedSpy.wait(10));
+    m_windowInterface->setPid(1984);
+    QVERIFY(pidChangedSpy.wait());
+    QVERIFY(m_window->pid() == 1984);
+    // no signal when the same value is set twice
+    m_windowInterface->setPid(1984);
+    QVERIFY(!pidChangedSpy.wait(10));
+    QVERIFY(m_window->pid() == 1984);
 }
 
 QTEST_MAIN(TestWindowManagement)
