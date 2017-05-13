@@ -108,6 +108,15 @@ public:
     quint32 windowId() const override {
         return m_windowId;
     }
+
+    /**
+     * The process for this client.
+     * Note that processes started by kwin will share its process id.
+     * @since 5.11
+     * @returns the process if for this client.
+     **/
+    pid_t pid() const override;
+
     bool isInternal() const;
     bool isLockScreen() const override;
     bool isInputMethod() const override;
