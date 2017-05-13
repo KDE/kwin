@@ -1765,7 +1765,7 @@ void InputRedirection::setupTouchpadShortcuts()
     if (!m_libInput) {
         return;
     }
-#ifdef HAVE_INPUT
+#if HAVE_INPUT
     QAction *touchpadToggleAction = new QAction(this);
     QAction *touchpadOnAction = new QAction(this);
     QAction *touchpadOffAction = new QAction(this);
