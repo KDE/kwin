@@ -531,21 +531,14 @@ void PlasmaWindowModelTest::testPid()
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     QVERIFY(rowInsertedSpy.isValid());
     auto w = m_pwInterface->createWindow(m_pwInterface);
+    w->setPid(1337);
     QVERIFY(w);
-    QVERIFY(rowInsertedSpy.wait());
     m_connection->flush();
     m_display->dispatchEvents();
-    QSignalSpy dataChangedSpy(model, &PlasmaWindowModel::dataChanged);
-    QVERIFY(dataChangedSpy.isValid());
+    QVERIFY(rowInsertedSpy.wait());
 
+    //pid should be set as soon as the new row appears
     const QModelIndex index = model->index(0);
-    QCOMPARE(model->data(index, PlasmaWindowModel::Pid).toInt(), 0);
-
-    w->setPid(1337);
-    QVERIFY(dataChangedSpy.wait());
-    QCOMPARE(dataChangedSpy.count(), 1);
-    QCOMPARE(dataChangedSpy.last().first().toModelIndex(), index);
-    QCOMPARE(dataChangedSpy.last().last().value<QVector<int>>(), QVector<int>{int(PlasmaWindowModel::Pid)});
     QCOMPARE(model->data(index, PlasmaWindowModel::Pid).toInt(), 1337);
 }
 

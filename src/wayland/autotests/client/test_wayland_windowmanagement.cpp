@@ -161,6 +161,7 @@ void TestWindowManagement::init()
     QSignalSpy windowSpy(m_windowManagement, SIGNAL(windowCreated(KWayland::Client::PlasmaWindow *)));
     QVERIFY(windowSpy.isValid());
     m_windowInterface = m_windowManagementInterface->createWindow(this);
+    m_windowInterface->setPid(1337);
 
     QVERIFY(windowSpy.wait());
     m_window = windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>();
@@ -586,19 +587,17 @@ void TestWindowManagement::testPid()
 {
     using namespace KWayland::Client;
     QVERIFY(m_window);
-    QVERIFY(m_windowInterface);
-    QVERIFY(m_window->pid() == 0);
-    QSignalSpy pidChangedSpy(m_window, &PlasmaWindow::pidChanged);
-    QVERIFY(pidChangedSpy.isValid());
-    // doing nothing does nothing
-    QVERIFY(!pidChangedSpy.wait(10));
-    m_windowInterface->setPid(1984);
-    QVERIFY(pidChangedSpy.wait());
-    QVERIFY(m_window->pid() == 1984);
-    // no signal when the same value is set twice
-    m_windowInterface->setPid(1984);
-    QVERIFY(!pidChangedSpy.wait(10));
-    QVERIFY(m_window->pid() == 1984);
+    QVERIFY(m_window->pid() == 1337);
+
+    //test server not setting a PID for whatever reason
+    QScopedPointer<KWayland::Server::PlasmaWindowInterface> newWindowInterface(m_windowManagementInterface->createWindow(this));
+    QSignalSpy windowSpy(m_windowManagement, SIGNAL(windowCreated(KWayland::Client::PlasmaWindow *)));
+    QVERIFY(windowSpy.wait());
+    QScopedPointer<PlasmaWindow> newWindow( windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>());
+    QVERIFY(newWindow);
+    QVERIFY(newWindow->pid() == 0);
+
+
 }
 
 QTEST_MAIN(TestWindowManagement)
