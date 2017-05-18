@@ -142,11 +142,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             if (!c->effectWindow()) {
                 return;
             }
-            // the visibility update hasn't happed yet, thus the signal is delayed to prevent glitches, see also BUG 347490
-            QMetaObject::invokeMethod(this, "desktopPresenceChanged", Qt::QueuedConnection,
-                                      Q_ARG(KWin::EffectWindow*, c->effectWindow()),
-                                      Q_ARG(int, old),
-                                      Q_ARG(int, c->desktop()));
+            emit desktopPresenceChanged(c->effectWindow(), old, c->desktop());
         }
     );
     connect(ws, &Workspace::clientAdded, this,
