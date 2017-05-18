@@ -710,7 +710,6 @@ DrmSurfaceBuffer *DrmBackend::createBuffer(gbm_surface *surface)
 {
     DrmSurfaceBuffer *b = new DrmSurfaceBuffer(this, surface);
     return b;
-    return nullptr;
 }
 #endif
 
