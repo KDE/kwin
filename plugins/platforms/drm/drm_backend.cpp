@@ -261,7 +261,7 @@ void DrmBackend::openDrm()
     m_drmId = device->sysNum();
 
     // trying to activate Atomic Mode Setting (this means also Universal Planes)
-    if (qEnvironmentVariableIsSet("KWIN_DRM_AMS")) {
+    if (!qEnvironmentVariableIsSet("KWIN_DRM_NO_AMS")) {
         if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
             qCDebug(KWIN_DRM) << "Using Atomic Mode Setting.";
             m_atomicModeSetting = true;
