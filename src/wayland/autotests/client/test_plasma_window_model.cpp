@@ -592,6 +592,10 @@ void PlasmaWindowModelTest::testRequests()
     QVERIFY(resizeRequestedSpy.isValid());
     QSignalSpy virtualDesktopRequestedSpy(w, &PlasmaWindowInterface::virtualDesktopRequested);
     QVERIFY(virtualDesktopRequestedSpy.isValid());
+    QSignalSpy keepAboveRequestedSpy(w, &PlasmaWindowInterface::keepAboveRequested);
+    QVERIFY(keepAboveRequestedSpy.isValid());
+    QSignalSpy keepBelowRequestedSpy(w, &PlasmaWindowInterface::keepBelowRequested);
+    QVERIFY(keepBelowRequestedSpy.isValid());
     QSignalSpy minimizedRequestedSpy(w, &PlasmaWindowInterface::minimizedRequested);
     QVERIFY(minimizedRequestedSpy.isValid());
     QSignalSpy maximizeRequestedSpy(w, &PlasmaWindowInterface::maximizedRequested);
@@ -603,6 +607,8 @@ void PlasmaWindowModelTest::testRequests()
     model->requestActivate(-1);
     model->requestClose(-1);
     model->requestVirtualDesktop(-1, 1);
+    model->requestToggleKeepAbove(-1);
+    model->requestToggleKeepBelow(-1);
     model->requestToggleMinimized(-1);
     model->requestToggleMaximized(-1);
     model->requestActivate(1);
@@ -610,6 +616,8 @@ void PlasmaWindowModelTest::testRequests()
     model->requestMove(1);
     model->requestResize(1);
     model->requestVirtualDesktop(1, 1);
+    model->requestToggleKeepAbove(1);
+    model->requestToggleKeepBelow(1);
     model->requestToggleMinimized(1);
     model->requestToggleMaximized(1);
     model->requestToggleShaded(1);
@@ -682,6 +690,30 @@ void PlasmaWindowModelTest::testRequests()
     QCOMPARE(minimizedRequestedSpy.count(), 0);
     QCOMPARE(maximizeRequestedSpy.count(), 0);
     QCOMPARE(shadeRequestedSpy.count(), 0);
+    // keep above
+    model->requestToggleKeepAbove(0);
+    QVERIFY(keepAboveRequestedSpy.wait());
+    QCOMPARE(keepAboveRequestedSpy.count(), 1);
+    QCOMPARE(keepAboveRequestedSpy.first().first().toBool(), true);
+    QCOMPARE(activateRequestedSpy.count(), 1);
+    QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.count(), 1);
+    QCOMPARE(resizeRequestedSpy.count(), 1);
+    QCOMPARE(virtualDesktopRequestedSpy.count(), 1);
+    QCOMPARE(maximizeRequestedSpy.count(), 0);
+    QCOMPARE(shadeRequestedSpy.count(), 0);
+    // keep Below
+    model->requestToggleKeepBelow(0);
+    QVERIFY(keepBelowRequestedSpy.wait());
+    QCOMPARE(keepBelowRequestedSpy.count(), 1);
+    QCOMPARE(keepBelowRequestedSpy.first().first().toBool(), true);
+    QCOMPARE(activateRequestedSpy.count(), 1);
+    QCOMPARE(closeRequestedSpy.count(), 1);
+    QCOMPARE(moveRequestedSpy.count(), 1);
+    QCOMPARE(resizeRequestedSpy.count(), 1);
+    QCOMPARE(virtualDesktopRequestedSpy.count(), 1);
+    QCOMPARE(maximizeRequestedSpy.count(), 0);
+    QCOMPARE(shadeRequestedSpy.count(), 0);
     // minimize
     model->requestToggleMinimized(0);
     QVERIFY(minimizedRequestedSpy.wait());
@@ -721,6 +753,20 @@ void PlasmaWindowModelTest::testRequests()
     // the toggles can also support a different state
     QSignalSpy dataChangedSpy(model, &PlasmaWindowModel::dataChanged);
     QVERIFY(dataChangedSpy.isValid());
+    // keepAbove
+    w->setKeepAbove(true);
+    QVERIFY(dataChangedSpy.wait());
+    model->requestToggleKeepAbove(0);
+    QVERIFY(keepAboveRequestedSpy.wait());
+    QCOMPARE(keepAboveRequestedSpy.count(), 2);
+    QCOMPARE(keepAboveRequestedSpy.last().first().toBool(), false);
+    // keepBelow
+    w->setKeepBelow(true);
+    QVERIFY(dataChangedSpy.wait());
+    model->requestToggleKeepBelow(0);
+    QVERIFY(keepBelowRequestedSpy.wait());
+    QCOMPARE(keepBelowRequestedSpy.count(), 2);
+    QCOMPARE(keepBelowRequestedSpy.last().first().toBool(), false);
     // minimize
     w->setMinimized(true);
     QVERIFY(dataChangedSpy.wait());

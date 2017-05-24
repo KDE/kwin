@@ -61,6 +61,8 @@ private Q_SLOTS:
     void testRequests();
     void testRequestsBoolean_data();
     void testRequestsBoolean();
+    void testKeepAbove();
+    void testKeepBelow();
     void testShowingDesktop();
     void testRequestShowingDesktop_data();
     void testRequestShowingDesktop();
@@ -475,6 +477,50 @@ void TestWindowManagement::testRequestShowingDesktop()
     QVERIFY(requestSpy.wait());
     QCOMPARE(requestSpy.count(), 1);
     QTEST(requestSpy.first().first().value<PlasmaWindowManagementInterface::ShowingDesktopState>(), "expectedValue");
+}
+
+void TestWindowManagement::testKeepAbove()
+{
+    using namespace KWayland::Server;
+    // this test verifies setting the keep above state
+    QVERIFY(!m_window->isKeepAbove());
+    QSignalSpy keepAboveChangedSpy(m_window, &KWayland::Client::PlasmaWindow::keepAboveChanged);
+    QVERIFY(keepAboveChangedSpy.isValid());
+    m_windowInterface->setKeepAbove(true);
+    QVERIFY(keepAboveChangedSpy.wait());
+    QCOMPARE(keepAboveChangedSpy.count(), 1);
+    QVERIFY(m_window->isKeepAbove());
+    // setting to same should not change
+    m_windowInterface->setKeepAbove(true);
+    QVERIFY(!keepAboveChangedSpy.wait(100));
+    QCOMPARE(keepAboveChangedSpy.count(), 1);
+    // setting to other state should change
+    m_windowInterface->setKeepAbove(false);
+    QVERIFY(keepAboveChangedSpy.wait());
+    QCOMPARE(keepAboveChangedSpy.count(), 2);
+    QVERIFY(!m_window->isKeepAbove());
+}
+
+void TestWindowManagement::testKeepBelow()
+{
+    using namespace KWayland::Server;
+    // this test verifies setting the keep below state
+    QVERIFY(!m_window->isKeepBelow());
+    QSignalSpy keepBelowChangedSpy(m_window, &KWayland::Client::PlasmaWindow::keepBelowChanged);
+    QVERIFY(keepBelowChangedSpy.isValid());
+    m_windowInterface->setKeepBelow(true);
+    QVERIFY(keepBelowChangedSpy.wait());
+    QCOMPARE(keepBelowChangedSpy.count(), 1);
+    QVERIFY(m_window->isKeepBelow());
+    // setting to same should not change
+    m_windowInterface->setKeepBelow(true);
+    QVERIFY(!keepBelowChangedSpy.wait(100));
+    QCOMPARE(keepBelowChangedSpy.count(), 1);
+    // setting to other state should change
+    m_windowInterface->setKeepBelow(false);
+    QVERIFY(keepBelowChangedSpy.wait());
+    QCOMPARE(keepBelowChangedSpy.count(), 2);
+    QVERIFY(!m_window->isKeepBelow());
 }
 
 void TestWindowManagement::testParentWindow()
