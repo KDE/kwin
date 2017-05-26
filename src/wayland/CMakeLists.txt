@@ -169,7 +169,7 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
 
 install(TARGETS KF5WaylandServer EXPORT KF5WaylandTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(FILES
+set(SERVER_LIB_HEADERS
   ${CMAKE_CURRENT_BINARY_DIR}/KWayland/Server/kwaylandserver_export.h
   blur_interface.h
   contrast_interface.h
@@ -210,8 +210,15 @@ install(FILES
   textinput_interface.h
   touch_interface.h
   xdgshell_interface.h
+)
+
+install(FILES
+  ${SERVER_LIB_HEADERS}
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server COMPONENT Devel
 )
+
+# make available to ecm_add_qch in parent folder
+set(KWaylandServer_APIDOX_SRCS ${SERVER_LIB_HEADERS} PARENT_SCOPE)
 
 include(ECMGeneratePriFile)
 ecm_generate_pri_file(BASE_NAME KWaylandServer LIB_NAME KF5WaylandServer DEPS "core" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5})
