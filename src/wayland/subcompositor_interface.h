@@ -39,6 +39,9 @@ class Display;
 class SurfaceInterface;
 class SubSurfaceInterface;
 
+/**
+ * @todo Add documentation
+ */
 class KWAYLANDSERVER_EXPORT SubCompositorInterface : public Global
 {
     Q_OBJECT
@@ -54,6 +57,9 @@ private:
     class Private;
 };
 
+/**
+ * @todo Add documentation
+ */
 class KWAYLANDSERVER_EXPORT SubSurfaceInterface : public Resource
 {
     Q_OBJECT

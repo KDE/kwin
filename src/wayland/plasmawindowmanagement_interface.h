@@ -38,6 +38,9 @@ class Display;
 class PlasmaWindowInterface;
 class SurfaceInterface;
 
+/**
+ * @todo Add documentation
+ */
 class KWAYLANDSERVER_EXPORT PlasmaWindowManagementInterface : public Global
 {
     Q_OBJECT
@@ -79,6 +82,9 @@ private:
     Private *d_func() const;
 };
 
+/**
+ * @todo Add documentation
+ */
 class KWAYLANDSERVER_EXPORT PlasmaWindowInterface : public QObject
 {
     Q_OBJECT
