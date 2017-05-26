@@ -169,16 +169,16 @@ public:
     bool isMapped() const;
 
     /**
-     * Returns the tracked damage since the last call to @link resetTrackedDamage.
-     * In contrast to @link damage this method does not reset the damage when
+     * Returns the tracked damage since the last call to  {@link resetTrackedDamage}.
+     * In contrast to {@link damage} this method does not reset the damage when
      * a new BufferInterface gets committed. This allows a compositor to properly
      * track the damage over multiple commits even if it didn't render each new
      * BufferInterface.
      *
-     * The damage gets reset whenever @link resetTrackedDamage is called.
+     * The damage gets reset whenever {@link resetTrackedDamage} is called.
      * This allows a compositor to properly track the change in its rendering scene
      * for this SurfaceInterface. After it updates its internal state (e.g. by creating
-     * an OpenGL texture from the BufferInterface) it can invoke @link resetTrackedDamage
+     * an OpenGL texture from the BufferInterface) it can invoke {@link resetTrackedDamage}
      * and the damage tracker will start to track further damage changes.
      *
      * @returns Combined damage since last call to resetTrackedDamage

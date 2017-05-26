@@ -53,8 +53,8 @@ public:
     QList<PlasmaWindowInterface*> windows() const;
 
     /**
-     * Unmaps the @p window previously created with @link{createWindow}.
-     * The window will be unmapped and removed from the list of @link{windows}.
+     * Unmaps the @p window previously created with {@link createWindow}.
+     * The window will be unmapped and removed from the list of {@link windows}.
      *
      * Unmapping a @p window indicates to the client that it should destroy the
      * resource created for the window. Once all resources for the @p window are
@@ -134,7 +134,7 @@ public:
      * This method removes the Window and the Client is supposed to release the resource
      * bound for this Window. Once all resources are released the Window gets deleted.
      *
-     * Prefer using @link{PlasmaWindowManagementInterface::unmapWindow}.
+     * Prefer using {@link PlasmaWindowManagementInterface::unmapWindow}.
      * @see PlasmaWindowManagementInterface::unmapWindow
      **/
     void unmap();

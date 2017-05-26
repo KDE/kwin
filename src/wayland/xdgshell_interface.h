@@ -138,7 +138,7 @@ public:
      * This tells the Surface the current @p states it is in and the @p size it should have.
      * If @p size has width and height at @c 0, the Surface can choose the size.
      *
-     * The Surface acknowledges the configure event with @link{configureAcknowledged}.
+     * The Surface acknowledges the configure event with {@link configureAcknowledged}.
      *
      * @param states The states the surface is in
      * @param size The requested size

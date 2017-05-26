@@ -140,7 +140,7 @@ public:
 
     /**
      * Informs the PlasmaShellSurfaceInterface that the auto-hiding panel got hidden.
-     * Once it is shown again the method @link{showAutoHidingPanel} should be used.
+     * Once it is shown again the method {@link showAutoHidingPanel} should be used.
      *
      * @see showAutoHidingPanel
      * @see panelAutoHideHideRequested
@@ -197,9 +197,9 @@ Q_SIGNALS:
      * A surface with Role Panel and PanelBehavior AutoHide requested to be hidden.
      *
      * The compositor should inform the PlasmaShellSurfaceInterface about the actual change.
-     * Once the surface is hidden it should invoke @link{hideAutoHidingPanel}. If the compositor
+     * Once the surface is hidden it should invoke {@link hideAutoHidingPanel}. If the compositor
      * cannot hide the surface (e.g. because it doesn't border a screen edge) it should inform
-     * the surface through invoking @link{showAutoHidingPanel}. This method should also be invoked
+     * the surface through invoking {@link showAutoHidingPanel}. This method should also be invoked
      * whenever the surface gets shown again due to triggering the screen edge.
      *
      * @see hideAutoHidingPanel
@@ -213,7 +213,7 @@ Q_SIGNALS:
      * A surface with Role Panel and PanelBehavior AutoHide requested to be shown.
      *
      * The compositor should inform the PlasmaShellSurfaceInterface about the actual change.
-     * Once the surface is shown it should invoke @link{showAutoHidingPanel}.
+     * Once the surface is shown it should invoke {@link showAutoHidingPanel}.
      *
      * @see hideAutoHidingPanel
      * @see showAutoHidingPanel

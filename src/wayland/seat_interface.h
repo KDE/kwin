@@ -387,7 +387,7 @@ public:
      * and configuration-specific and non-accelerated deltas and accelerated
      * deltas may have the same value on some devices.
      *
-     * Relative motions are not coupled to wl_pointer.motion events (see @link{setPointerPos},
+     * Relative motions are not coupled to wl_pointer.motion events (see {@link setPointerPos},
      * and can be sent in combination with such events, but also independently. There may
      * also be scenarios where wl_pointer.motion is sent, but there is no
      * relative motion. The order of an absolute and relative motion event
@@ -624,7 +624,7 @@ public:
      * The currently focused text input, may be @c null even if there is a
      * focused text input surface set.
      *
-     * The focused text input might not be enabled for the @link{focusedTextInputSurface}.
+     * The focused text input might not be enabled for the {@link focusedTextInputSurface}.
      * It is recommended to check the enabled state before interacting with the
      * TextInputInterface.
      *

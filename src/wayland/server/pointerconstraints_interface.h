@@ -50,7 +50,7 @@ enum class PointerConstraintsInterfaceVersion {
 /**
  * Manager object to create pointer constraints.
  *
- * To create this manager use @link{Display::createPointerConstraints}
+ * To create this manager use {@link Display::createPointerConstraints}
  *
  * @see ConfinedPointerInterface
  * @see LockedPointerInterface
@@ -82,9 +82,9 @@ private:
  * to a position.
  *
  * It is up to the compositor whether the lock gets activated.
- * To activate it needs to use @link{LockedPointerInterface::setLocked}.
+ * To activate it needs to use {@link LockedPointerInterface::setLocked}.
  * The compositor needs to ensure that the SurfaceInterface has pointer focus
- * and that the pointer is inside the @link{LockedPointerInterface::region} when
+ * and that the pointer is inside the {@link LockedPointerInterface::region} when
  * it activates the lock.
  *
  * While the lock is active the PointerInterface does no longer emit pointer motion
@@ -136,7 +136,7 @@ public:
      *
      * A pointer lock can only be activated if the SurfaceInterface
      * this LockedPointerInterface was created for has pointer focus
-     * and the pointer is inside the @link{region}.
+     * and the pointer is inside the {@link region}.
      *
      * @param locked Whether the lock should be active
      * @see isLocked
@@ -153,7 +153,7 @@ Q_SIGNALS:
     void regionChanged();
 
     /**
-     * Emitted whenever the @link{isLocked} state changes.
+     * Emitted whenever the {@link isLocked} state changes.
      * @see isLocked
      * @see setLocked
      **/
@@ -175,14 +175,14 @@ private:
  * pointer to a region of the SurfaceInterface.
  *
  * It is up to the compositor whether the confinement gets activated.
- * To activate it needs to use @link{ConfinedPointerInterface::setConfined}.
+ * To activate it needs to use {@link ConfinedPointerInterface::setConfined}.
  * The compositor needs to ensure that the SurfaceInterface has pointer focus
- * and that the pointer is inside the @link{ConfinedPointerInterface::region} when
+ * and that the pointer is inside the {@link ConfinedPointerInterface::region} when
  * it activates the confinement.
  *
  * From client side the confinement gets deactivated by destroying the ConfinedPointerInterface.
  * From compositor side the confinement can be deactivated by setting
- * @link{ConfinedPointerInterface::setConfined} to @c false.
+ * {@link ConfinedPointerInterface::setConfined} to @c false.
  *
  * @since 5.29
  **/
@@ -230,7 +230,7 @@ public:
      *
      * A pointer confinement can only be activated if the SurfaceInterface
      * this ConfinedPointerInterface was created for has pointer focus
-     * and the pointer is inside the @link{region}.
+     * and the pointer is inside the {@link region}.
      *
      * @param confined Whether the confinement should be active
      * @see isConfined
@@ -247,7 +247,7 @@ Q_SIGNALS:
     void regionChanged();
 
     /**
-     * Emitted whenever the @link{isConfined} state changes.
+     * Emitted whenever the {@link isConfined} state changes.
      * @see isConfined
      * @see setConfined
      **/

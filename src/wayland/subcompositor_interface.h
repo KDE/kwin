@@ -72,7 +72,7 @@ public:
 
     /**
      * Whether this SubSurfaceInterface is in synchronized mode.
-     * A SubSurface is in synchronized mode if either @link mode is
+     * A SubSurface is in synchronized mode if either {@link mode} is
      * @c Mode::Synchronized or if the parent surface is in synchronized
      * mode. If a SubSurfaceInterface is in synchronized mode all child
      * SubSurfaceInterfaces are also in synchronized mode ignoring the actual mode.

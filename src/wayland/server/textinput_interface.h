@@ -59,9 +59,9 @@ enum class TextInputInterfaceVersion {
  * @brief Represent the Global for the interface.
  *
  * The class can represent different interfaces. Which concrete interface is represented
- * can be determined through @link{interfaceVersion}.
+ * can be determined through {@link interfaceVersion}.
  *
- * To create a TextInputManagerInterface use @link{Display::createTextInputManager}
+ * To create a TextInputManagerInterface use {@link Display::createTextInputManager}
  *
  * @since 5.23
  **/
@@ -91,9 +91,9 @@ private:
  * for any interface which implements a text input, e.g. the unstable wl_text_input interface.
  *
  * It does not expose the actual interface to cover up the fact that the interface is unstable
- * and might change. If one needs to know the actual used protocol, use the method @link{interfaceVersion}.
+ * and might change. If one needs to know the actual used protocol, use the method {@link interfaceVersion}.
  *
- * A TextInputInterface gets created by the @link{TextInputManagerInterface}. The individual
+ * A TextInputInterface gets created by the {@link TextInputManagerInterface}. The individual
  * instances are not exposed directly. The SeatInterface provides access to the currently active
  * TextInputInterface. This is evaluated automatically based on which SurfaceInterface has
  * keyboard focus.
@@ -256,13 +256,13 @@ public:
      **/
     QByteArray surroundingText() const;
     /**
-     * @returns The byte offset of current cursor position within the @link {surroundingText}
+     * @returns The byte offset of current cursor position within the {@link surroundingText}
      * @see surroundingText
      * @see surroundingTextChanged
      **/
     qint32 surroundingTextCursorPosition() const;
     /**
-     * The byte offset of the selection anchor within the @link{surroundingText}.
+     * The byte offset of the selection anchor within the {@link surroundingText}.
      *
      * If there is no selected text this is the same as cursor.
      * @return The byte offset of the selection anchor
@@ -303,9 +303,9 @@ public:
     /**
      * Notify when @p text should be inserted into the editor widget.
      * The text to commit could be either just a single character after a key press or the
-     * result of some composing (@link{preEdit}). It could be also an empty text
-     * when some text should be removed (see @link{deleteSurroundingText}) or when
-     * the input cursor should be moved (see @link{cursorPosition}).
+     * result of some composing ({@link preEdit}). It could be also an empty text
+     * when some text should be removed (see {@link deleteSurroundingText}) or when
+     * the input cursor should be moved (see {@link cursorPosition}).
      *
      * Any previously set composing text should be removed.
      * @param text The utf8-encoded text to be inserted into the editor widget
@@ -318,7 +318,7 @@ public:
      * Sets the cursor position inside the composing text (as byte offset) relative to the
      * start of the composing text. When @p index is a negative number no cursor is shown.
      *
-     * The Client applies the @p index together with @link{preEdit}.
+     * The Client applies the @p index together with {@link preEdit}.
      * @param index The cursor position relative to the start of the composing text
      * @see preEdit
      **/
@@ -393,14 +393,14 @@ Q_SIGNALS:
      **/
     void cursorRectangleChanged(const QRect &rect);
     /**
-     * Emitted when the @link{contentPurpose} and/or @link{contentHints} changes.
+     * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose
      * @see contentHints
      **/
     void contentTypeChanged();
     /**
-     * Emitted when the @link{surroundingText}, @link{surroundingTextCursorPosition}
-     * and/or @link{surroundingTextSelectionAnchor} changed.
+     * Emitted when the {@link surroundingText}, {@link surroundingTextCursorPosition}
+     * and/or {@link surroundingTextSelectionAnchor} changed.
      * @see surroundingText
      * @see surroundingTextCursorPosition
      * @see surroundingTextSelectionAnchor
