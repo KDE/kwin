@@ -32,6 +32,9 @@ namespace Server
 
 class Display;
 
+/**
+ * TODO
+ */
 class KWAYLANDSERVER_EXPORT SlideManagerInterface : public Global
 {
     Q_OBJECT
@@ -44,6 +47,9 @@ private:
     class Private;
 };
 
+/**
+ * TODO
+ */
 class KWAYLANDSERVER_EXPORT SlideInterface : public Resource
 {
     Q_OBJECT

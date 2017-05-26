@@ -39,6 +39,9 @@ class Display;
 class SurfaceInterface;
 class QtExtendedSurfaceInterface;
 
+/**
+ * TODO
+ */
 class KWAYLANDSERVER_EXPORT QtSurfaceExtensionInterface : public Global
 {
     Q_OBJECT
@@ -54,6 +57,9 @@ private:
     class Private;
 };
 
+/**
+ * TODO
+ */
 class KWAYLANDSERVER_EXPORT QtExtendedSurfaceInterface : public Resource
 {
     Q_OBJECT

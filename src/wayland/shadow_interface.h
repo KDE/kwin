@@ -36,6 +36,9 @@ namespace Server
 class BufferInterface;
 class Display;
 
+/**
+ * TODO
+ */
 class KWAYLANDSERVER_EXPORT ShadowManagerInterface : public Global
 {
     Q_OBJECT
@@ -48,6 +51,9 @@ private:
     class Private;
 };
 
+/**
+ * TODO
+ */
 class KWAYLANDSERVER_EXPORT ShadowInterface : public Resource
 {
     Q_OBJECT
