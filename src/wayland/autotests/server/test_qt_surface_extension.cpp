@@ -79,7 +79,7 @@ void TestQtSurfaceExtension::testCloseWindow()
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert(QStringLiteral("WAYLAND_DISPLAY"), s_socketName);
     process.setProcessEnvironment(env);
-    process.start(binary);
+    process.start(binary, QStringList());
     QVERIFY(surfaceExtensionSpy.wait());
     QCOMPARE(surfaceExtensionSpy.count(), 1);
     auto *extension = surfaceExtensionSpy.first().first().value<QtExtendedSurfaceInterface*>();
