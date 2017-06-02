@@ -41,9 +41,9 @@ class DimInactiveEffect
     Q_PROPERTY(int dimStrength READ configuredDimStrength)
 public:
     DimInactiveEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
+    void prePaintScreen(ScreenPrePaintData& data, int time) Q_DECL_OVERRIDE;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) Q_DECL_OVERRIDE;
 
     int requestedEffectChainPosition() const override {
         return 50;

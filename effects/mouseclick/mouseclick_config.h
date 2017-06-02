@@ -44,7 +44,7 @@ public:
     explicit MouseClickEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     virtual ~MouseClickEffectConfig();
 
-    virtual void save();
+    void save() Q_DECL_OVERRIDE;
 
 private:
     MouseClickEffectConfigForm* m_ui;

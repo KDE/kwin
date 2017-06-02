@@ -39,9 +39,9 @@ class MouseMarkEffect
 public:
     MouseMarkEffect();
     ~MouseMarkEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual bool isActive() const;
+    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) Q_DECL_OVERRIDE;
+    bool isActive() const Q_DECL_OVERRIDE;
 
     // for properties
     int configuredWidth() const {

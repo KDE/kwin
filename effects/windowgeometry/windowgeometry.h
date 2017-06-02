@@ -35,12 +35,12 @@ public:
     WindowGeometry();
     ~WindowGeometry();
 
-    inline bool provides(Effect::Feature ef) {
+    inline bool provides(Effect::Feature ef) Q_DECL_OVERRIDE {
         return ef == Effect::GeometryTip;
     }
-    void reconfigure(ReconfigureFlags);
-    void paintScreen(int mask, QRegion region, ScreenPaintData &data);
-    virtual bool isActive() const;
+    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) Q_DECL_OVERRIDE;
+    bool isActive() const Q_DECL_OVERRIDE;
 
     int requestedEffectChainPosition() const override {
         return 90;

@@ -55,25 +55,25 @@ public:
     explicit TabBoxHandlerImpl(TabBox* tabBox);
     virtual ~TabBoxHandlerImpl();
 
-    virtual int activeScreen() const;
-    virtual QWeakPointer< TabBoxClient > activeClient() const;
-    virtual int currentDesktop() const;
-    virtual QString desktopName(TabBoxClient* client) const;
-    virtual QString desktopName(int desktop) const;
-    virtual bool isKWinCompositing() const;
-    virtual QWeakPointer< TabBoxClient > nextClientFocusChain(TabBoxClient* client) const;
-    virtual QWeakPointer< TabBoxClient > firstClientFocusChain() const;
-    virtual bool isInFocusChain (TabBoxClient* client) const;
-    virtual int nextDesktopFocusChain(int desktop) const;
-    virtual int numberOfDesktops() const;
-    virtual TabBoxClientList stackingOrder() const;
-    virtual void elevateClient(TabBoxClient* c, QWindow *tabbox, bool elevate) const;
-    virtual void raiseClient(TabBoxClient *client) const;
-    virtual void restack(TabBoxClient *c, TabBoxClient *under);
-    virtual void shadeClient(TabBoxClient *c, bool b) const;
-    virtual QWeakPointer< TabBoxClient > clientToAddToList(KWin::TabBox::TabBoxClient* client, int desktop) const;
-    virtual QWeakPointer< TabBoxClient > desktopClient() const;
-    virtual void activateAndClose();
+    int activeScreen() const Q_DECL_OVERRIDE;
+    QWeakPointer< TabBoxClient > activeClient() const Q_DECL_OVERRIDE;
+    int currentDesktop() const Q_DECL_OVERRIDE;
+    QString desktopName(TabBoxClient* client) const Q_DECL_OVERRIDE;
+    QString desktopName(int desktop) const Q_DECL_OVERRIDE;
+    bool isKWinCompositing() const Q_DECL_OVERRIDE;
+    QWeakPointer< TabBoxClient > nextClientFocusChain(TabBoxClient* client) const Q_DECL_OVERRIDE;
+    QWeakPointer< TabBoxClient > firstClientFocusChain() const Q_DECL_OVERRIDE;
+    bool isInFocusChain (TabBoxClient* client) const Q_DECL_OVERRIDE;
+    int nextDesktopFocusChain(int desktop) const Q_DECL_OVERRIDE;
+    int numberOfDesktops() const Q_DECL_OVERRIDE;
+    TabBoxClientList stackingOrder() const Q_DECL_OVERRIDE;
+    void elevateClient(TabBoxClient* c, QWindow *tabbox, bool elevate) const Q_DECL_OVERRIDE;
+    void raiseClient(TabBoxClient *client) const Q_DECL_OVERRIDE;
+    void restack(TabBoxClient *c, TabBoxClient *under) Q_DECL_OVERRIDE;
+    void shadeClient(TabBoxClient *c, bool b) const Q_DECL_OVERRIDE;
+    QWeakPointer< TabBoxClient > clientToAddToList(KWin::TabBox::TabBoxClient* client, int desktop) const Q_DECL_OVERRIDE;
+    QWeakPointer< TabBoxClient > desktopClient() const Q_DECL_OVERRIDE;
+    void activateAndClose() Q_DECL_OVERRIDE;
     void highlightWindows(TabBoxClient *window = nullptr, QWindow *controller = nullptr) override;
     bool noModifierGrab() const override;
 
@@ -94,17 +94,17 @@ public:
     explicit TabBoxClientImpl(AbstractClient *client);
     virtual ~TabBoxClientImpl();
 
-    virtual QString caption() const;
+    QString caption() const Q_DECL_OVERRIDE;
     virtual QIcon icon() const override;
-    virtual WId window() const;
-    virtual bool isMinimized() const;
-    virtual int x() const;
-    virtual int y() const;
-    virtual int width() const;
-    virtual int height() const;
-    virtual bool isCloseable() const;
-    virtual void close();
-    virtual bool isFirstInTabBox() const;
+    WId window() const Q_DECL_OVERRIDE;
+    bool isMinimized() const Q_DECL_OVERRIDE;
+    int x() const Q_DECL_OVERRIDE;
+    int y() const Q_DECL_OVERRIDE;
+    int width() const Q_DECL_OVERRIDE;
+    int height() const Q_DECL_OVERRIDE;
+    bool isCloseable() const Q_DECL_OVERRIDE;
+    void close() Q_DECL_OVERRIDE;
+    bool isFirstInTabBox() const Q_DECL_OVERRIDE;
 
     AbstractClient* client() const {
         return m_client;

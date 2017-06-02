@@ -55,23 +55,23 @@ class MockEffectWindow : public EffectWindow
     Q_OBJECT
 public:
     MockEffectWindow(QObject *parent = nullptr);
-    virtual WindowQuadList buildQuads(bool force = false) const;
-    virtual QVariant data(int role) const;
-    virtual QRect decorationInnerRect() const;
-    virtual void deleteProperty(long int atom) const;
-    virtual void disablePainting(int reason);
-    virtual void enablePainting(int reason);
-    virtual EffectWindow *findModal();
-    virtual const EffectWindowGroup *group() const;
-    virtual bool isPaintingEnabled();
-    virtual EffectWindowList mainWindows() const;
-    virtual QByteArray readProperty(long int atom, long int type, int format) const;
-    virtual void refWindow();
-    virtual void unrefWindow();
-    virtual QRegion shape() const;
-    virtual void setData(int role, const QVariant &data);
-    virtual void referencePreviousWindowPixmap() {}
-    virtual void unreferencePreviousWindowPixmap() {}
+    WindowQuadList buildQuads(bool force = false) const Q_DECL_OVERRIDE;
+    QVariant data(int role) const Q_DECL_OVERRIDE;
+    QRect decorationInnerRect() const Q_DECL_OVERRIDE;
+    void deleteProperty(long int atom) const Q_DECL_OVERRIDE;
+    void disablePainting(int reason) Q_DECL_OVERRIDE;
+    void enablePainting(int reason) Q_DECL_OVERRIDE;
+    EffectWindow *findModal() Q_DECL_OVERRIDE;
+    const EffectWindowGroup *group() const Q_DECL_OVERRIDE;
+    bool isPaintingEnabled() Q_DECL_OVERRIDE;
+    EffectWindowList mainWindows() const Q_DECL_OVERRIDE;
+    QByteArray readProperty(long int atom, long int type, int format) const Q_DECL_OVERRIDE;
+    void refWindow() Q_DECL_OVERRIDE;
+    void unrefWindow() Q_DECL_OVERRIDE;
+    QRegion shape() const Q_DECL_OVERRIDE;
+    void setData(int role, const QVariant &data) Q_DECL_OVERRIDE;
+    void referencePreviousWindowPixmap() Q_DECL_OVERRIDE {}
+    void unreferencePreviousWindowPixmap() Q_DECL_OVERRIDE {}
 };
 
 MockEffectWindow::MockEffectWindow(QObject *parent)

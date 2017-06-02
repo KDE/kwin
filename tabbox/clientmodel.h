@@ -59,11 +59,11 @@ public:
     };
     explicit ClientModel(QObject* parent = nullptr);
     ~ClientModel();
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex& child) const;
-    virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex& child) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
     Q_INVOKABLE QString longestCaption() const;
 
     /**

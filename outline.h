@@ -144,8 +144,8 @@ class CompositedOutlineVisual : public OutlineVisual
 public:
     CompositedOutlineVisual(Outline *outline);
     virtual ~CompositedOutlineVisual();
-    virtual void show();
-    virtual void hide();
+    void show() Q_DECL_OVERRIDE;
+    void hide() Q_DECL_OVERRIDE;
 private:
     QScopedPointer<QQmlContext> m_qmlContext;
     QScopedPointer<QQmlComponent> m_qmlComponent;
@@ -157,8 +157,8 @@ class NonCompositedOutlineVisual : public OutlineVisual
 public:
     NonCompositedOutlineVisual(Outline *outline);
     virtual ~NonCompositedOutlineVisual();
-    virtual void show();
-    virtual void hide();
+    void show() Q_DECL_OVERRIDE;
+    void hide() Q_DECL_OVERRIDE;
 
 private:
     // TODO: variadic template arguments for adding method arguments

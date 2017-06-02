@@ -40,12 +40,12 @@ public:
     InvertEffect();
     ~InvertEffect();
 
-    virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
-    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
-    virtual void paintEffectFrame(KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
-    virtual bool isActive() const;
-    virtual bool provides(Feature);
+    void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) Q_DECL_OVERRIDE;
+    void prePaintScreen(ScreenPrePaintData &data, int time) Q_DECL_OVERRIDE;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) Q_DECL_OVERRIDE;
+    void paintEffectFrame(KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity) Q_DECL_OVERRIDE;
+    bool isActive() const Q_DECL_OVERRIDE;
+    bool provides(Feature) Q_DECL_OVERRIDE;
 
     static bool supported();
 

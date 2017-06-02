@@ -35,14 +35,14 @@ class ResizeEffect
 public:
     ResizeEffect();
     ~ResizeEffect();
-    virtual inline bool provides(Effect::Feature ef) {
+    inline bool provides(Effect::Feature ef) Q_DECL_OVERRIDE {
         return ef == Effect::Resize;
     }
-    inline bool isActive() const { return m_active || AnimationEffect::isActive(); }
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void reconfigure(ReconfigureFlags);
+    inline bool isActive() const Q_DECL_OVERRIDE { return m_active || AnimationEffect::isActive(); }
+    void prePaintScreen(ScreenPrePaintData& data, int time) Q_DECL_OVERRIDE;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) Q_DECL_OVERRIDE;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) Q_DECL_OVERRIDE;
+    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
 
     int requestedEffectChainPosition() const override {
         return 60;

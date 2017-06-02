@@ -43,11 +43,11 @@ class ShowFpsEffect
     Q_PROPERTY(QColor textColor READ configuredTextColor)
 public:
     ShowFpsEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void postPaintScreen();
+    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
+    void prePaintScreen(ScreenPrePaintData& data, int time) Q_DECL_OVERRIDE;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) Q_DECL_OVERRIDE;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) Q_DECL_OVERRIDE;
+    void postPaintScreen() Q_DECL_OVERRIDE;
     enum { INSIDE_GRAPH, NOWHERE, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }; // fps text position
 
     // for properties

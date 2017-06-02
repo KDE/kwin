@@ -47,22 +47,22 @@ public:
     void refWindow();
     void unrefWindow();
     void discard();
-    virtual int desktop() const;
-    virtual QStringList activities() const;
-    virtual QPoint clientPos() const;
-    virtual QSize clientSize() const;
+    int desktop() const Q_DECL_OVERRIDE;
+    QStringList activities() const Q_DECL_OVERRIDE;
+    QPoint clientPos() const Q_DECL_OVERRIDE;
+    QSize clientSize() const Q_DECL_OVERRIDE;
     QPoint clientContentPos() const override {
         return m_contentPos;
     }
-    virtual QRect transparentRect() const;
-    virtual bool isDeleted() const;
+    QRect transparentRect() const Q_DECL_OVERRIDE;
+    bool isDeleted() const Q_DECL_OVERRIDE;
     virtual xcb_window_t frameId() const override;
     bool noBorder() const {
         return no_border;
     }
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
-    QRect decorationRect() const;
-    virtual Layer layer() const {
+    QRect decorationRect() const Q_DECL_OVERRIDE;
+    Layer layer() const Q_DECL_OVERRIDE {
         return m_layer;
     }
     bool isMinimized() const {
@@ -74,7 +74,7 @@ public:
     QList<AbstractClient*> mainClients() const {
         return m_mainClients;
     }
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const Q_DECL_OVERRIDE;
     bool wasClient() const {
         return m_wasClient;
     }
@@ -93,7 +93,7 @@ public:
         return m_wasCurrentTab;
     }
 protected:
-    virtual void debug(QDebug& stream) const;
+    void debug(QDebug& stream) const Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void mainClientClosed(KWin::Toplevel *client);
 private:

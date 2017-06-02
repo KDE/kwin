@@ -32,8 +32,8 @@ class ShowPaintEffect
 public:
     ShowPaintEffect();
     ~ShowPaintEffect();
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) Q_DECL_OVERRIDE;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) Q_DECL_OVERRIDE;
 private:
     void paintGL(const QMatrix4x4 &projection);
     void paintXrender();

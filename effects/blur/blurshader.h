@@ -96,16 +96,16 @@ public:
     GLSLBlurShader();
     ~GLSLBlurShader();
 
-    void setPixelDistance(float val);
-    void bind();
-    void unbind();
-    void setTextureMatrix(const QMatrix4x4 &matrix);
-    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
+    void setPixelDistance(float val) Q_DECL_OVERRIDE;
+    void bind() Q_DECL_OVERRIDE;
+    void unbind() Q_DECL_OVERRIDE;
+    void setTextureMatrix(const QMatrix4x4 &matrix) Q_DECL_OVERRIDE;
+    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) Q_DECL_OVERRIDE;
 
 protected:
-    void init();
-    void reset();
-    int maxKernelSize() const;
+    void init() Q_DECL_OVERRIDE;
+    void reset() Q_DECL_OVERRIDE;
+    int maxKernelSize() const Q_DECL_OVERRIDE;
 
 private:
     GLShader *shader;

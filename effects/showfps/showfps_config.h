@@ -36,7 +36,7 @@ public:
     ~ShowFpsEffectConfig();
 
 public Q_SLOTS:
-    virtual void save();
+    void save() Q_DECL_OVERRIDE;
 
 private:
     Ui::ShowFpsEffectConfigForm *m_ui;

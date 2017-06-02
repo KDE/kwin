@@ -43,7 +43,7 @@ public:
     explicit CubeEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
 public Q_SLOTS:
-    virtual void save();
+    void save() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void capsSelectionChanged();

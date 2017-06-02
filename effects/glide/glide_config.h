@@ -35,7 +35,7 @@ public:
     explicit GlideEffectConfig(QWidget *parent = 0, const QVariantList& args = QVariantList());
     ~GlideEffectConfig();
 
-    void save();
+    void save() Q_DECL_OVERRIDE;
 
 private:
     ::Ui::GlideEffectConfig ui;

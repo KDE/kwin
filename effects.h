@@ -360,8 +360,8 @@ public:
 
     void elevate(bool elevate);
 
-    void setData(int role, const QVariant &data);
-    QVariant data(int role) const;
+    void setData(int role, const QVariant &data) Q_DECL_OVERRIDE;
+    QVariant data(int role) const Q_DECL_OVERRIDE;
 
     void registerThumbnail(AbstractThumbnailItem *item);
     QHash<WindowThumbnailItem*, QWeakPointer<EffectWindowImpl> > const &thumbnails() const {

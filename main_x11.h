@@ -31,9 +31,9 @@ class KWinSelectionOwner
 public:
     explicit KWinSelectionOwner(int screen);
 protected:
-    virtual bool genericReply(xcb_atom_t target, xcb_atom_t property, xcb_window_t requestor);
-    virtual void replyTargets(xcb_atom_t property, xcb_window_t requestor);
-    virtual void getAtoms();
+    bool genericReply(xcb_atom_t target, xcb_atom_t property, xcb_window_t requestor) Q_DECL_OVERRIDE;
+    void replyTargets(xcb_atom_t property, xcb_window_t requestor) Q_DECL_OVERRIDE;
+    void getAtoms() Q_DECL_OVERRIDE;
 private:
     xcb_atom_t make_selection_atom(int screen);
     static xcb_atom_t xa_version;

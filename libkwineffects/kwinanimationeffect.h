@@ -116,7 +116,7 @@ public:
     AnimationEffect();
     ~AnimationEffect();
 
-    bool isActive() const;
+    bool isActive() const Q_DECL_OVERRIDE;
     /**
      * Set and get predefined metatypes.
      * The first 24 bits are reserved for the AnimationEffect class - you can use the last 8 bits for custom hints.
@@ -128,11 +128,11 @@ public:
     /**
      * Reimplemented from KWIn::Effect
      */
-    QString debug(const QString &parameter) const;
-    virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-    virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-    virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-    virtual void postPaintScreen();
+    QString debug(const QString &parameter) const Q_DECL_OVERRIDE;
+    void prePaintScreen( ScreenPrePaintData& data, int time ) Q_DECL_OVERRIDE;
+    void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time ) Q_DECL_OVERRIDE;
+    void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) Q_DECL_OVERRIDE;
+    void postPaintScreen() Q_DECL_OVERRIDE;
 
     /**
      * Gaussian (bumper) animation curve for QEasingCurve

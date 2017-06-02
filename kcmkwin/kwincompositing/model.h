@@ -182,7 +182,7 @@ public Q_SLOTS:
     void setFilter(const QString &filter);
 
 protected:
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void effectModelChanged();

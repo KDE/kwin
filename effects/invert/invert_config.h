@@ -36,9 +36,9 @@ public:
     ~InvertEffectConfig();
 
 public Q_SLOTS:
-    virtual void save();
-    virtual void load();
-    virtual void defaults();
+    void save() Q_DECL_OVERRIDE;
+    void load() Q_DECL_OVERRIDE;
+    void defaults() Q_DECL_OVERRIDE;
 
 private:
     KShortcutsEditor* mShortcutEditor;

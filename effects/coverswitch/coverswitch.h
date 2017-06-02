@@ -52,13 +52,13 @@ public:
     CoverSwitchEffect();
     ~CoverSwitchEffect();
 
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowInputMouseEvent(QEvent* e);
-    virtual bool isActive() const;
+    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
+    void prePaintScreen(ScreenPrePaintData& data, int time) Q_DECL_OVERRIDE;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) Q_DECL_OVERRIDE;
+    void postPaintScreen() Q_DECL_OVERRIDE;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) Q_DECL_OVERRIDE;
+    void windowInputMouseEvent(QEvent* e) Q_DECL_OVERRIDE;
+    bool isActive() const Q_DECL_OVERRIDE;
 
     static bool supported();
 

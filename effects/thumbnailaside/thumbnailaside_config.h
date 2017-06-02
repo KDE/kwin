@@ -44,7 +44,7 @@ public:
     explicit ThumbnailAsideEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     virtual ~ThumbnailAsideEffectConfig();
 
-    virtual void save();
+    void save() Q_DECL_OVERRIDE;
 
 private:
     ThumbnailAsideEffectConfigForm* m_ui;

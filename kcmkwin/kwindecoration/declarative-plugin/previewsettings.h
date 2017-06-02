@@ -100,7 +100,7 @@ public:
     }
     void setBorderSizesIndex(int index);
 
-    QFont font() const {
+    QFont font() const Q_DECL_OVERRIDE {
         return m_font;
     }
     void setFont(const QFont &font);

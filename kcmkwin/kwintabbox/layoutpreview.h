@@ -52,8 +52,8 @@ public:
     explicit ExampleClientModel(QObject *parent = nullptr);
     virtual ~ExampleClientModel();
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     Q_INVOKABLE QString longestCaption() const;
 
 private:

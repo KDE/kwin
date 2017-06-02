@@ -35,11 +35,11 @@ public:
     SnapHelperEffect();
     ~SnapHelperEffect();
 
-    virtual void reconfigure(ReconfigureFlags);
+    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
 
-    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
+    void prePaintScreen(ScreenPrePaintData &data, int time) Q_DECL_OVERRIDE;
     void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
-    virtual bool isActive() const;
+    bool isActive() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *w);

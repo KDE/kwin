@@ -52,13 +52,13 @@ public:
     static bool enabledByDefault();
 
     static QMatrix4x4 colorMatrix(qreal contrast, qreal intensity, qreal saturation);
-    void reconfigure(ReconfigureFlags flags);
-    void prePaintScreen(ScreenPrePaintData &data, int time);
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
-    void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
-    void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
+    void reconfigure(ReconfigureFlags flags) Q_DECL_OVERRIDE;
+    void prePaintScreen(ScreenPrePaintData &data, int time) Q_DECL_OVERRIDE;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) Q_DECL_OVERRIDE;
+    void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) Q_DECL_OVERRIDE;
+    void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity) Q_DECL_OVERRIDE;
 
-    virtual bool provides(Feature feature);
+    bool provides(Feature feature) Q_DECL_OVERRIDE;
 
     int requestedEffectChainPosition() const override {
         return 76;

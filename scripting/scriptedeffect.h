@@ -59,7 +59,7 @@ public:
     const QString &scriptFile() const {
         return m_scriptFile;
     }
-    virtual void reconfigure(ReconfigureFlags flags);
+    void reconfigure(ReconfigureFlags flags) Q_DECL_OVERRIDE;
     int requestedEffectChainPosition() const override {
         return m_chainPosition;
     }
@@ -99,7 +99,7 @@ public Q_SLOTS:
     quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
     bool retarget(quint64 animationId, KWin::FPx2 newTarget, int newRemainingTime = -1);
     bool cancel(quint64 animationId) { return AnimationEffect::cancel(animationId); }
-    virtual bool borderActivated(ElectricBorder border);
+    bool borderActivated(ElectricBorder border) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     /**
@@ -109,7 +109,7 @@ Q_SIGNALS:
     void animationEnded(KWin::EffectWindow *w, quint64 animationId);
 
 protected:
-    void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta);
+    void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void signalHandlerException(const QScriptValue &value);

@@ -29,69 +29,69 @@ class MockTabBoxHandler : public TabBox::TabBoxHandler
 public:
     MockTabBoxHandler(QObject *parent = nullptr);
     virtual ~MockTabBoxHandler();
-    virtual void activateAndClose() {
+    void activateAndClose() Q_DECL_OVERRIDE {
     }
-    virtual QWeakPointer< TabBox::TabBoxClient > activeClient() const;
+    QWeakPointer< TabBox::TabBoxClient > activeClient() const Q_DECL_OVERRIDE;
     void setActiveClient(const QWeakPointer<TabBox::TabBoxClient> &client);
-    virtual int activeScreen() const {
+    int activeScreen() const Q_DECL_OVERRIDE {
         return 0;
     }
-    virtual QWeakPointer< TabBox::TabBoxClient > clientToAddToList(TabBox::TabBoxClient *client, int desktop) const;
-    virtual int currentDesktop() const {
+    QWeakPointer< TabBox::TabBoxClient > clientToAddToList(TabBox::TabBoxClient *client, int desktop) const Q_DECL_OVERRIDE;
+    int currentDesktop() const Q_DECL_OVERRIDE {
         return 1;
     }
-    virtual QWeakPointer< TabBox::TabBoxClient > desktopClient() const {
+    QWeakPointer< TabBox::TabBoxClient > desktopClient() const Q_DECL_OVERRIDE {
         return QWeakPointer<TabBox::TabBoxClient>();
     }
-    virtual QString desktopName(int desktop) const {
+    QString desktopName(int desktop) const Q_DECL_OVERRIDE {
         Q_UNUSED(desktop)
         return "desktop 1";
     }
-    virtual QString desktopName(TabBox::TabBoxClient *client) const {
+    QString desktopName(TabBox::TabBoxClient *client) const Q_DECL_OVERRIDE {
         Q_UNUSED(client)
         return "desktop";
     }
-    virtual void elevateClient(TabBox::TabBoxClient *c, QWindow *tabbox, bool elevate) const {
+    void elevateClient(TabBox::TabBoxClient *c, QWindow *tabbox, bool elevate) const Q_DECL_OVERRIDE {
         Q_UNUSED(c)
         Q_UNUSED(tabbox)
         Q_UNUSED(elevate)
     }
-    virtual void shadeClient(TabBox::TabBoxClient *c, bool b) const {
+    void shadeClient(TabBox::TabBoxClient *c, bool b) const Q_DECL_OVERRIDE {
         Q_UNUSED(c)
         Q_UNUSED(b)
     }
     virtual void hideOutline() {
     }
-    virtual QWeakPointer< TabBox::TabBoxClient > nextClientFocusChain(TabBox::TabBoxClient *client) const;
-    virtual QWeakPointer<TabBox::TabBoxClient> firstClientFocusChain() const;
-    virtual bool isInFocusChain (TabBox::TabBoxClient* client) const;
-    virtual int nextDesktopFocusChain(int desktop) const {
+    QWeakPointer< TabBox::TabBoxClient > nextClientFocusChain(TabBox::TabBoxClient *client) const Q_DECL_OVERRIDE;
+    QWeakPointer<TabBox::TabBoxClient> firstClientFocusChain() const Q_DECL_OVERRIDE;
+    bool isInFocusChain (TabBox::TabBoxClient* client) const Q_DECL_OVERRIDE;
+    int nextDesktopFocusChain(int desktop) const Q_DECL_OVERRIDE {
         Q_UNUSED(desktop)
         return 1;
     }
-    virtual int numberOfDesktops() const {
+    int numberOfDesktops() const Q_DECL_OVERRIDE {
         return 1;
     }
     virtual QVector< xcb_window_t > outlineWindowIds() const {
         return QVector<xcb_window_t>();
     }
-    virtual bool isKWinCompositing() const {
+    bool isKWinCompositing() const Q_DECL_OVERRIDE {
         return false;
     }
-    virtual void raiseClient(TabBox::TabBoxClient *c) const {
+    void raiseClient(TabBox::TabBoxClient *c) const Q_DECL_OVERRIDE {
         Q_UNUSED(c)
     }
-    virtual void restack(TabBox::TabBoxClient *c, TabBox::TabBoxClient *under) {
+    void restack(TabBox::TabBoxClient *c, TabBox::TabBoxClient *under) Q_DECL_OVERRIDE {
         Q_UNUSED(c)
         Q_UNUSED(under)
     }
     virtual void showOutline(const QRect &outline) {
         Q_UNUSED(outline)
     }
-    virtual TabBox::TabBoxClientList stackingOrder() const {
+    TabBox::TabBoxClientList stackingOrder() const Q_DECL_OVERRIDE {
         return TabBox::TabBoxClientList();
     }
-    virtual void grabbedKeyEvent(QKeyEvent *event) const;
+    void grabbedKeyEvent(QKeyEvent *event) const Q_DECL_OVERRIDE;
 
     void highlightWindows(TabBox::TabBoxClient *window = nullptr, QWindow *controller = nullptr) override {
         Q_UNUSED(window)

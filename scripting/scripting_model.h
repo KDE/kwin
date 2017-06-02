@@ -69,11 +69,11 @@ public:
     Q_FLAGS(LevelRestrictions)
     explicit ClientModel(QObject *parent);
     virtual ~ClientModel();
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex &child) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     void setExclusions(ClientModel::Exclusions exclusions);
     Exclusions exclusions() const;
@@ -180,16 +180,16 @@ class ForkLevel : public AbstractLevel
 public:
     ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictions, ClientModel *model, AbstractLevel *parent);
     virtual ~ForkLevel();
-    virtual int count() const;
-    virtual void init();
-    virtual quint32 idForRow(int row) const;
+    int count() const Q_DECL_OVERRIDE;
+    void init() Q_DECL_OVERRIDE;
+    quint32 idForRow(int row) const Q_DECL_OVERRIDE;
     void addChild(AbstractLevel *child);
-    virtual void setScreen(uint screen);
-    virtual void setVirtualDesktop(uint virtualDesktop);
-    virtual void setActivity(const QString &activity);
-    virtual const AbstractLevel *levelForId(quint32 id) const;
-    virtual AbstractLevel *parentForId(quint32 child) const;
-    virtual int rowForId(quint32 child) const;
+    void setScreen(uint screen) Q_DECL_OVERRIDE;
+    void setVirtualDesktop(uint virtualDesktop) Q_DECL_OVERRIDE;
+    void setActivity(const QString &activity) Q_DECL_OVERRIDE;
+    const AbstractLevel *levelForId(quint32 id) const Q_DECL_OVERRIDE;
+    AbstractLevel *parentForId(quint32 child) const Q_DECL_OVERRIDE;
+    int rowForId(quint32 child) const Q_DECL_OVERRIDE;
     virtual AbstractClient *clientForId(quint32 child) const override;
 private Q_SLOTS:
     void desktopCountChanged(uint previousCount, uint newCount);
@@ -218,14 +218,14 @@ public:
     explicit ClientLevel(ClientModel *model, AbstractLevel *parent);
     virtual ~ClientLevel();
 
-    void init();
+    void init() Q_DECL_OVERRIDE;
 
-    int count() const;
-    quint32 idForRow(int row) const;
+    int count() const Q_DECL_OVERRIDE;
+    quint32 idForRow(int row) const Q_DECL_OVERRIDE;
     bool containsId(quint32 id) const;
-    int rowForId(quint32 row) const;
-    AbstractClient *clientForId(quint32 child) const;
-    virtual const AbstractLevel *levelForId(quint32 id) const;
+    int rowForId(quint32 row) const Q_DECL_OVERRIDE;
+    AbstractClient *clientForId(quint32 child) const Q_DECL_OVERRIDE;
+    const AbstractLevel *levelForId(quint32 id) const Q_DECL_OVERRIDE;
     virtual AbstractLevel *parentForId(quint32 child) const override;
 public Q_SLOTS:
     void clientAdded(KWin::AbstractClient *client);
@@ -288,7 +288,7 @@ public Q_SLOTS:
     void setFilter(const QString &filter);
 
 protected:
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void clientModelChanged();

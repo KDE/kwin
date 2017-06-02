@@ -34,7 +34,7 @@ public:
     explicit BlurEffectConfig(QWidget *parent = 0, const QVariantList& args = QVariantList());
     ~BlurEffectConfig();
 
-    void save();
+    void save() Q_DECL_OVERRIDE;
 
 private:
     ::Ui::BlurEffectConfig ui;

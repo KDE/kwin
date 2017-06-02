@@ -72,7 +72,7 @@ Q_SIGNALS:
     void changed();
     void edgeSelectionChanged(int edge, int index);
 protected:
-    virtual void resizeEvent(QResizeEvent* e);
+    void resizeEvent(QResizeEvent* e) Q_DECL_OVERRIDE;
 private:
     class Corner;
     void popup(Corner* c, QPoint pos);
@@ -96,11 +96,11 @@ public:
     void setActive(bool active);
     bool active() const;
 protected:
-    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* e);
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* e);
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent * e);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent * e);
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent* e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QGraphicsSceneMouseEvent* e) Q_DECL_OVERRIDE;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent * e) Q_DECL_OVERRIDE;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent * e) Q_DECL_OVERRIDE;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) Q_DECL_OVERRIDE;
 private:
     Monitor* monitor;
     Plasma::FrameSvg *button;

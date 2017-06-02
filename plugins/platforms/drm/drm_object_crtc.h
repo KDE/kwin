@@ -36,7 +36,7 @@ public:
 
     virtual ~DrmCrtc();
 
-    bool atomicInit();
+    bool atomicInit() Q_DECL_OVERRIDE;
 
     enum class PropertyIndex {
         ModeId = 0,
@@ -44,7 +44,7 @@ public:
         Count
     };
     
-    bool initProps();
+    bool initProps() Q_DECL_OVERRIDE;
 
     int resIndex() const {
         return m_resIndex;

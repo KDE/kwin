@@ -34,10 +34,10 @@ public:
     EglOnXBackend(Display *display);
     explicit EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow);
     virtual ~EglOnXBackend();
-    virtual void screenGeometryChanged(const QSize &size);
-    virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
-    virtual QRegion prepareRenderingFrame();
-    virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
+    void screenGeometryChanged(const QSize &size) Q_DECL_OVERRIDE;
+    SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) Q_DECL_OVERRIDE;
+    QRegion prepareRenderingFrame() Q_DECL_OVERRIDE;
+    void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) Q_DECL_OVERRIDE;
     virtual OverlayWindow* overlayWindow() override;
     virtual bool usesOverlayWindow() const override;
     void init() override;
@@ -47,7 +47,7 @@ public:
     }
 
 protected:
-    virtual void present();
+    void present() Q_DECL_OVERRIDE;
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
     virtual bool createSurfaces();
     EGLSurface createSurface(xcb_window_t window);
@@ -90,7 +90,7 @@ class EglTexture : public AbstractEglTexture
 {
 public:
     virtual ~EglTexture();
-    virtual void onDamage();
+    void onDamage() Q_DECL_OVERRIDE;
     bool loadTexture(WindowPixmap *pixmap) override;
 
 private:

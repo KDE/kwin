@@ -108,23 +108,23 @@ public:
     PresentWindowsEffect();
     virtual ~PresentWindowsEffect();
 
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void* proxy();
+    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
+    void* proxy() Q_DECL_OVERRIDE;
 
     // Screen painting
-    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData &data);
-    virtual void postPaintScreen();
+    void prePaintScreen(ScreenPrePaintData &data, int time) Q_DECL_OVERRIDE;
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) Q_DECL_OVERRIDE;
+    void postPaintScreen() Q_DECL_OVERRIDE;
 
     // Window painting
-    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
-    virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) Q_DECL_OVERRIDE;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) Q_DECL_OVERRIDE;
 
     // User interaction
-    virtual bool borderActivated(ElectricBorder border);
-    virtual void windowInputMouseEvent(QEvent *e);
-    virtual void grabbedKeyboardEvent(QKeyEvent *e);
-    virtual bool isActive() const;
+    bool borderActivated(ElectricBorder border) Q_DECL_OVERRIDE;
+    void windowInputMouseEvent(QEvent *e) Q_DECL_OVERRIDE;
+    void grabbedKeyboardEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    bool isActive() const Q_DECL_OVERRIDE;
 
     bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
     bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;

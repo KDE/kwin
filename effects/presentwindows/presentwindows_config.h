@@ -44,8 +44,8 @@ public:
     ~PresentWindowsEffectConfig();
 
 public Q_SLOTS:
-    virtual void save();
-    virtual void defaults();
+    void save() Q_DECL_OVERRIDE;
+    void defaults() Q_DECL_OVERRIDE;
 
 private:
     PresentWindowsEffectConfigForm* m_ui;

@@ -232,9 +232,9 @@ public:
     explicit InputRedirectionCursor(QObject *parent);
     virtual ~InputRedirectionCursor();
 protected:
-    virtual void doSetPos();
-    virtual void doStartCursorTracking();
-    virtual void doStopCursorTracking();
+    void doSetPos() Q_DECL_OVERRIDE;
+    void doStartCursorTracking() Q_DECL_OVERRIDE;
+    void doStopCursorTracking() Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void slotPosChanged(const QPointF &pos);
     void slotPointerButtonChanged();

@@ -268,14 +268,14 @@ class ShortcutDialog
     Q_OBJECT
 public:
     explicit ShortcutDialog(const QKeySequence& cut);
-    virtual void accept();
+    void accept() Q_DECL_OVERRIDE;
     QKeySequence shortcut() const;
 public Q_SLOTS:
     void keySequenceChanged();
 Q_SIGNALS:
     void dialogDone(bool ok);
 protected:
-    virtual void done(int r);
+    void done(int r) Q_DECL_OVERRIDE;
 private:
     Ui::ShortcutDialog m_ui;
     QKeySequence _shortcut;
