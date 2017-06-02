@@ -86,6 +86,7 @@ void TestQtSurfaceExtension::testCloseWindow()
     QVERIFY(extension);
     QSignalSpy surfaceExtensionDestroyedSpy(extension, &QObject::destroyed);
     QVERIFY(surfaceExtensionSpy.isValid());
+    qRegisterMetaType<QProcess::ProcessState>();
     QSignalSpy processStateChangedSpy(&process, &QProcess::stateChanged);
     QVERIFY(processStateChangedSpy.isValid());
     extension->close();
