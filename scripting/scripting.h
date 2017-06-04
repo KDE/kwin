@@ -233,7 +233,7 @@ public:
     bool unregisterTouchScreenCallback(int edge);
 
 public Q_SLOTS:
-    Q_SCRIPTABLE void run() Q_DECL_OVERRIDE;
+    Q_SCRIPTABLE void run() override;
 
 Q_SIGNALS:
     Q_SCRIPTABLE void printError(const QString &text);
@@ -266,7 +266,7 @@ class ScriptUnloaderAgent : public QScriptEngineAgent
 {
 public:
     explicit ScriptUnloaderAgent(Script *script);
-    void scriptUnload(qint64 id) Q_DECL_OVERRIDE;
+    void scriptUnload(qint64 id) override;
 
 private:
     Script *m_script;
@@ -281,7 +281,7 @@ public:
     virtual ~DeclarativeScript();
 
 public Q_SLOTS:
-    Q_SCRIPTABLE void run() Q_DECL_OVERRIDE;
+    Q_SCRIPTABLE void run() override;
 
 private Q_SLOTS:
     void createComponent();

@@ -48,7 +48,7 @@ class PreviewItem : public QQuickPaintedItem
 public:
     PreviewItem(QQuickItem *parent = nullptr);
     virtual ~PreviewItem();
-    void paint(QPainter *painter) Q_DECL_OVERRIDE;
+    void paint(QPainter *painter) override;
 
     KDecoration2::Decoration *decoration() const;
     void setDecoration(KDecoration2::Decoration *deco);

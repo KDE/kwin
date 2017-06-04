@@ -83,7 +83,7 @@ public:
     void requestToggleOnAllDesktops() override;
     void requestToggleShade() override;
 
-    void showApplicationMenu(int actionId) Q_DECL_OVERRIDE;
+    void showApplicationMenu(int actionId) override;
 
     AbstractClient *client() {
         return m_client;

@@ -47,22 +47,22 @@ public:
     void refWindow();
     void unrefWindow();
     void discard();
-    int desktop() const Q_DECL_OVERRIDE;
-    QStringList activities() const Q_DECL_OVERRIDE;
-    QPoint clientPos() const Q_DECL_OVERRIDE;
-    QSize clientSize() const Q_DECL_OVERRIDE;
+    int desktop() const override;
+    QStringList activities() const override;
+    QPoint clientPos() const override;
+    QSize clientSize() const override;
     QPoint clientContentPos() const override {
         return m_contentPos;
     }
-    QRect transparentRect() const Q_DECL_OVERRIDE;
-    bool isDeleted() const Q_DECL_OVERRIDE;
+    QRect transparentRect() const override;
+    bool isDeleted() const override;
     virtual xcb_window_t frameId() const override;
     bool noBorder() const {
         return no_border;
     }
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
-    QRect decorationRect() const Q_DECL_OVERRIDE;
-    Layer layer() const Q_DECL_OVERRIDE {
+    QRect decorationRect() const override;
+    Layer layer() const override {
         return m_layer;
     }
     bool isMinimized() const {
@@ -74,7 +74,7 @@ public:
     QList<AbstractClient*> mainClients() const {
         return m_mainClients;
     }
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const Q_DECL_OVERRIDE;
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool wasClient() const {
         return m_wasClient;
     }
@@ -93,7 +93,7 @@ public:
         return m_wasCurrentTab;
     }
 protected:
-    void debug(QDebug& stream) const Q_DECL_OVERRIDE;
+    void debug(QDebug& stream) const override;
 private Q_SLOTS:
     void mainClientClosed(KWin::Toplevel *client);
 private:

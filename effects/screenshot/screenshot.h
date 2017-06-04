@@ -44,8 +44,8 @@ public:
     ScreenShotEffect();
     virtual ~ScreenShotEffect();
     void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
-    void postPaintScreen() Q_DECL_OVERRIDE;
-    bool isActive() const Q_DECL_OVERRIDE;
+    void postPaintScreen() override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 50;

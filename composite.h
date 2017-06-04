@@ -187,7 +187,7 @@ Q_SIGNALS:
     void sceneCreated();
 
 protected:
-    void timerEvent(QTimerEvent *te) Q_DECL_OVERRIDE;
+    void timerEvent(QTimerEvent *te) override;
 
 private Q_SLOTS:
     void setup();

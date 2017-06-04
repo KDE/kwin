@@ -44,8 +44,8 @@ public:
     explicit LookingGlassEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     virtual ~LookingGlassEffectConfig();
 
-    void save() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void save() override;
+    void defaults() override;
 
 private:
     LookingGlassEffectConfigForm* m_ui;

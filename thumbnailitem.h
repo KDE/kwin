@@ -88,12 +88,12 @@ public:
     void setWId(qulonglong wId);
     AbstractClient *client() const;
     void setClient(AbstractClient *client);
-    void paint(QPainter *painter) Q_DECL_OVERRIDE;
+    void paint(QPainter *painter) override;
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
     void clientChanged();
 protected Q_SLOTS:
-    void repaint(KWin::EffectWindow* w) Q_DECL_OVERRIDE;
+    void repaint(KWin::EffectWindow* w) override;
 private:
     qulonglong m_wId;
     AbstractClient *m_client;
@@ -111,11 +111,11 @@ public:
         return m_desktop;
     }
     void setDesktop(int desktop);
-    void paint(QPainter *painter) Q_DECL_OVERRIDE;
+    void paint(QPainter *painter) override;
 Q_SIGNALS:
     void desktopChanged(int desktop);
 protected Q_SLOTS:
-    void repaint(KWin::EffectWindow* w) Q_DECL_OVERRIDE;
+    void repaint(KWin::EffectWindow* w) override;
 private:
     int m_desktop;
 };

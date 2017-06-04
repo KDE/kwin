@@ -44,8 +44,8 @@ public:
     ~WindowGeometryConfig();
 
 public Q_SLOTS:
-    void save() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void save() override;
+    void defaults() override;
 
 private:
     WindowGeometryConfigForm* myUi;

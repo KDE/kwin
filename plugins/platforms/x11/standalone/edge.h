@@ -49,12 +49,12 @@ public:
     quint32 approachWindow() const override;
 
 protected:
-    void doGeometryUpdate() Q_DECL_OVERRIDE;
+    void doGeometryUpdate() override;
     virtual void doActivate() override;
     virtual void doDeactivate() override;
-    void doStartApproaching() Q_DECL_OVERRIDE;
-    void doStopApproaching() Q_DECL_OVERRIDE;
-    void doUpdateBlocking() Q_DECL_OVERRIDE;
+    void doStartApproaching() override;
+    void doStopApproaching() override;
+    void doUpdateBlocking() override;
 
 private:
     void createWindow();

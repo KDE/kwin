@@ -32,7 +32,7 @@ public:
 
     virtual ~DrmConnector();
 
-    bool atomicInit() Q_DECL_OVERRIDE;
+    bool atomicInit() override;
 
     enum class PropertyIndex {
         CrtcId = 0,
@@ -43,7 +43,7 @@ public:
         return m_encoders;
     }
     
-    bool initProps() Q_DECL_OVERRIDE;
+    bool initProps() override;
     bool isConnected();
 
 

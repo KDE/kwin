@@ -38,7 +38,7 @@ public:
     ~WobblyWindowsEffectConfig();
 
 public Q_SLOTS:
-    void save() Q_DECL_OVERRIDE;
+    void save() override;
 
 private Q_SLOTS:
     void wobblinessChanged();

@@ -36,10 +36,10 @@ class KCMRules
     Q_OBJECT
 public:
     KCMRules(QWidget *parent, const QVariantList &args);
-    void load() Q_DECL_OVERRIDE;
-    void save() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
-    QString quickHelp() const Q_DECL_OVERRIDE;
+    void load() override;
+    void save() override;
+    void defaults() override;
+    QString quickHelp() const override;
 protected Q_SLOTS:
     void moduleChanged(bool state);
 private:

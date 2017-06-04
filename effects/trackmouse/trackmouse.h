@@ -39,11 +39,11 @@ class TrackMouseEffect
 public:
     TrackMouseEffect();
     virtual ~TrackMouseEffect();
-    void prePaintScreen(ScreenPrePaintData& data, int time) Q_DECL_OVERRIDE;
-    void paintScreen(int mask, QRegion region, ScreenPaintData& data) Q_DECL_OVERRIDE;
-    void postPaintScreen() Q_DECL_OVERRIDE;
-    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
-    bool isActive() const Q_DECL_OVERRIDE;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    void reconfigure(ReconfigureFlags) override;
+    bool isActive() const override;
 
     // for properties
     Qt::KeyboardModifiers modifiers() const {

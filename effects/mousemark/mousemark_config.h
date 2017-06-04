@@ -44,7 +44,7 @@ public:
     explicit MouseMarkEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     virtual ~MouseMarkEffectConfig();
 
-    void save() Q_DECL_OVERRIDE;
+    void save() override;
 
 private:
     MouseMarkEffectConfigForm* m_ui;

@@ -37,20 +37,20 @@ public:
     bool windowEvent(xcb_generic_event_t *e);
     bool track(Window w);
     static void deleteUnmanaged(Unmanaged* c);
-    int desktop() const Q_DECL_OVERRIDE;
-    QStringList activities() const Q_DECL_OVERRIDE;
-    QPoint clientPos() const Q_DECL_OVERRIDE;
-    QSize clientSize() const Q_DECL_OVERRIDE;
-    QRect transparentRect() const Q_DECL_OVERRIDE;
-    Layer layer() const Q_DECL_OVERRIDE {
+    int desktop() const override;
+    QStringList activities() const override;
+    QPoint clientPos() const override;
+    QSize clientSize() const override;
+    QRect transparentRect() const override;
+    Layer layer() const override {
         return UnmanagedLayer;
     }
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const Q_DECL_OVERRIDE;
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
 
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);
 protected:
-    void debug(QDebug& stream) const Q_DECL_OVERRIDE;
+    void debug(QDebug& stream) const override;
     void addDamage(const QRegion &damage) override;
 private:
     virtual ~Unmanaged(); // use release()

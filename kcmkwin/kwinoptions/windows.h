@@ -73,12 +73,12 @@ public:
     KFocusConfig(bool _standAlone, KConfig *_config, QWidget *parent);
     ~KFocusConfig();
 
-    void load() Q_DECL_OVERRIDE;
-    void save() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *ev) override;
 
 private Q_SLOTS:
     void setDelayFocusEnabled();
@@ -121,12 +121,12 @@ public:
     KMovingConfig(bool _standAlone, KConfig *config, QWidget *parent);
     ~KMovingConfig();
 
-    void load() Q_DECL_OVERRIDE;
-    void save() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *ev) override;
 
 private Q_SLOTS:
     void changed() {
@@ -158,12 +158,12 @@ public:
     KAdvancedConfig(bool _standAlone, KConfig *config, QWidget *parent);
     ~KAdvancedConfig();
 
-    void load() Q_DECL_OVERRIDE;
-    void save() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *ev) override;
 
 private Q_SLOTS:
     void shadeHoverChanged(bool);

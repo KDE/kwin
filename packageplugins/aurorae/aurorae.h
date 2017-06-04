@@ -26,8 +26,8 @@ class AuroraePackage : public KPackage::PackageStructure
 {
 public:
     AuroraePackage(QObject*, const QVariantList &) {}
-    void initPackage(KPackage::Package *package) Q_DECL_OVERRIDE;
-    void pathChanged(KPackage::Package *package) Q_DECL_OVERRIDE;
+    void initPackage(KPackage::Package *package) override;
+    void pathChanged(KPackage::Package *package) override;
 };
 
 #endif

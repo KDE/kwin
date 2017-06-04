@@ -45,9 +45,9 @@ class ThumbnailAsideEffect
     Q_PROPERTY(int screen READ configuredScreen)
 public:
     ThumbnailAsideEffect();
-    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
-    void paintScreen(int mask, QRegion region, ScreenPaintData& data) Q_DECL_OVERRIDE;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) Q_DECL_OVERRIDE;
+    void reconfigure(ReconfigureFlags) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     // for properties
     int configuredMaxWidth() const {
@@ -67,7 +67,7 @@ private Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
     void slotWindowDamaged(KWin::EffectWindow* w, const QRect& damage);
-    bool isActive() const Q_DECL_OVERRIDE;
+    bool isActive() const override;
     void repaintAll();
 private:
     void addThumbnail(EffectWindow* w);

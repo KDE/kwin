@@ -29,69 +29,69 @@ class MockTabBoxHandler : public TabBox::TabBoxHandler
 public:
     MockTabBoxHandler(QObject *parent = nullptr);
     virtual ~MockTabBoxHandler();
-    void activateAndClose() Q_DECL_OVERRIDE {
+    void activateAndClose() override {
     }
-    QWeakPointer< TabBox::TabBoxClient > activeClient() const Q_DECL_OVERRIDE;
+    QWeakPointer< TabBox::TabBoxClient > activeClient() const override;
     void setActiveClient(const QWeakPointer<TabBox::TabBoxClient> &client);
-    int activeScreen() const Q_DECL_OVERRIDE {
+    int activeScreen() const override {
         return 0;
     }
-    QWeakPointer< TabBox::TabBoxClient > clientToAddToList(TabBox::TabBoxClient *client, int desktop) const Q_DECL_OVERRIDE;
-    int currentDesktop() const Q_DECL_OVERRIDE {
+    QWeakPointer< TabBox::TabBoxClient > clientToAddToList(TabBox::TabBoxClient *client, int desktop) const override;
+    int currentDesktop() const override {
         return 1;
     }
-    QWeakPointer< TabBox::TabBoxClient > desktopClient() const Q_DECL_OVERRIDE {
+    QWeakPointer< TabBox::TabBoxClient > desktopClient() const override {
         return QWeakPointer<TabBox::TabBoxClient>();
     }
-    QString desktopName(int desktop) const Q_DECL_OVERRIDE {
+    QString desktopName(int desktop) const override {
         Q_UNUSED(desktop)
         return "desktop 1";
     }
-    QString desktopName(TabBox::TabBoxClient *client) const Q_DECL_OVERRIDE {
+    QString desktopName(TabBox::TabBoxClient *client) const override {
         Q_UNUSED(client)
         return "desktop";
     }
-    void elevateClient(TabBox::TabBoxClient *c, QWindow *tabbox, bool elevate) const Q_DECL_OVERRIDE {
+    void elevateClient(TabBox::TabBoxClient *c, QWindow *tabbox, bool elevate) const override {
         Q_UNUSED(c)
         Q_UNUSED(tabbox)
         Q_UNUSED(elevate)
     }
-    void shadeClient(TabBox::TabBoxClient *c, bool b) const Q_DECL_OVERRIDE {
+    void shadeClient(TabBox::TabBoxClient *c, bool b) const override {
         Q_UNUSED(c)
         Q_UNUSED(b)
     }
     virtual void hideOutline() {
     }
-    QWeakPointer< TabBox::TabBoxClient > nextClientFocusChain(TabBox::TabBoxClient *client) const Q_DECL_OVERRIDE;
-    QWeakPointer<TabBox::TabBoxClient> firstClientFocusChain() const Q_DECL_OVERRIDE;
-    bool isInFocusChain (TabBox::TabBoxClient* client) const Q_DECL_OVERRIDE;
-    int nextDesktopFocusChain(int desktop) const Q_DECL_OVERRIDE {
+    QWeakPointer< TabBox::TabBoxClient > nextClientFocusChain(TabBox::TabBoxClient *client) const override;
+    QWeakPointer<TabBox::TabBoxClient> firstClientFocusChain() const override;
+    bool isInFocusChain (TabBox::TabBoxClient* client) const override;
+    int nextDesktopFocusChain(int desktop) const override {
         Q_UNUSED(desktop)
         return 1;
     }
-    int numberOfDesktops() const Q_DECL_OVERRIDE {
+    int numberOfDesktops() const override {
         return 1;
     }
     virtual QVector< xcb_window_t > outlineWindowIds() const {
         return QVector<xcb_window_t>();
     }
-    bool isKWinCompositing() const Q_DECL_OVERRIDE {
+    bool isKWinCompositing() const override {
         return false;
     }
-    void raiseClient(TabBox::TabBoxClient *c) const Q_DECL_OVERRIDE {
+    void raiseClient(TabBox::TabBoxClient *c) const override {
         Q_UNUSED(c)
     }
-    void restack(TabBox::TabBoxClient *c, TabBox::TabBoxClient *under) Q_DECL_OVERRIDE {
+    void restack(TabBox::TabBoxClient *c, TabBox::TabBoxClient *under) override {
         Q_UNUSED(c)
         Q_UNUSED(under)
     }
     virtual void showOutline(const QRect &outline) {
         Q_UNUSED(outline)
     }
-    TabBox::TabBoxClientList stackingOrder() const Q_DECL_OVERRIDE {
+    TabBox::TabBoxClientList stackingOrder() const override {
         return TabBox::TabBoxClientList();
     }
-    void grabbedKeyEvent(QKeyEvent *event) const Q_DECL_OVERRIDE;
+    void grabbedKeyEvent(QKeyEvent *event) const override;
 
     void highlightWindows(TabBox::TabBoxClient *window = nullptr, QWindow *controller = nullptr) override {
         Q_UNUSED(window)

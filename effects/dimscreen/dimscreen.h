@@ -35,11 +35,11 @@ public:
     DimScreenEffect();
     ~DimScreenEffect();
 
-    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
-    void prePaintScreen(ScreenPrePaintData& data, int time) Q_DECL_OVERRIDE;
-    void postPaintScreen() Q_DECL_OVERRIDE;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) Q_DECL_OVERRIDE;
-    bool isActive() const Q_DECL_OVERRIDE;
+    void reconfigure(ReconfigureFlags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void postPaintScreen() override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    bool isActive() const override;
 
 public Q_SLOTS:
     void slotWindowActivated(KWin::EffectWindow *w);

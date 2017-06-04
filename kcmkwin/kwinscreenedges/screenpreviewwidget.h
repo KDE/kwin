@@ -41,9 +41,9 @@ public:
     QRect previewRect() const;
 
 protected:
-    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
-    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 
 Q_SIGNALS:
     void imageDropped(const QString &);

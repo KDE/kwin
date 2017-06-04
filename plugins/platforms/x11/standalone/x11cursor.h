@@ -36,14 +36,14 @@ public:
     }
 
 protected:
-    xcb_cursor_t getX11Cursor(Qt::CursorShape shape) Q_DECL_OVERRIDE;
+    xcb_cursor_t getX11Cursor(Qt::CursorShape shape) override;
     xcb_cursor_t getX11Cursor(const QByteArray &name) override;
-    void doSetPos() Q_DECL_OVERRIDE;
-    void doGetPos() Q_DECL_OVERRIDE;
-    void doStartMousePolling() Q_DECL_OVERRIDE;
-    void doStopMousePolling() Q_DECL_OVERRIDE;
-    void doStartCursorTracking() Q_DECL_OVERRIDE;
-    void doStopCursorTracking() Q_DECL_OVERRIDE;
+    void doSetPos() override;
+    void doGetPos() override;
+    void doStartMousePolling() override;
+    void doStopMousePolling() override;
+    void doStartCursorTracking() override;
+    void doStopCursorTracking() override;
 
 private Q_SLOTS:
     /**

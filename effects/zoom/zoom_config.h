@@ -45,7 +45,7 @@ public:
     virtual ~ZoomEffectConfig();
 
 public Q_SLOTS:
-    void save() Q_DECL_OVERRIDE;
+    void save() override;
 
 private:
     ZoomEffectConfigForm* m_ui;

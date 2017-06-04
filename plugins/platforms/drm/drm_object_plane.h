@@ -58,8 +58,8 @@ public:
         Count
     };
     
-    bool atomicInit() Q_DECL_OVERRIDE;
-    bool initProps() Q_DECL_OVERRIDE;
+    bool atomicInit() override;
+    bool initProps() override;
     TypeIndex type();
 
     bool isCrtcSupported(int resIndex) const {
@@ -80,7 +80,7 @@ public:
     }
     void setNext(DrmBuffer *b);
 
-    bool atomicPopulate(drmModeAtomicReq *req) Q_DECL_OVERRIDE;
+    bool atomicPopulate(drmModeAtomicReq *req) override;
     void flipBuffer();
     void flipBufferWithDelete();
 

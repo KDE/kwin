@@ -35,13 +35,13 @@ public:
     KscreenEffect();
     virtual ~KscreenEffect();
 
-    void prePaintScreen(ScreenPrePaintData &data, int time) Q_DECL_OVERRIDE;
-    void postPaintScreen() Q_DECL_OVERRIDE;
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) Q_DECL_OVERRIDE;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) Q_DECL_OVERRIDE;
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void postPaintScreen() override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
-    void reconfigure(ReconfigureFlags flags) Q_DECL_OVERRIDE;
-    bool isActive() const Q_DECL_OVERRIDE;
+    void reconfigure(ReconfigureFlags flags) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 99;

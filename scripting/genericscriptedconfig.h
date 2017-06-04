@@ -49,7 +49,7 @@ public:
     virtual ~GenericScriptedConfig();
 
 public Q_SLOTS:
-    void save() Q_DECL_OVERRIDE;
+    void save() override;
 
 protected:
     const QString &packageName() const;
@@ -70,9 +70,9 @@ public:
     ScriptedEffectConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args);
     virtual ~ScriptedEffectConfig();
 protected:
-    QString typeName() const Q_DECL_OVERRIDE;
-    KConfigGroup configGroup() Q_DECL_OVERRIDE;
-    void reload() Q_DECL_OVERRIDE;
+    QString typeName() const override;
+    KConfigGroup configGroup() override;
+    void reload() override;
 };
 
 class ScriptingConfig : public GenericScriptedConfig
@@ -83,9 +83,9 @@ public:
     virtual ~ScriptingConfig();
 
 protected:
-    QString typeName() const Q_DECL_OVERRIDE;
-    KConfigGroup configGroup() Q_DECL_OVERRIDE;
-    void reload() Q_DECL_OVERRIDE;
+    QString typeName() const override;
+    KConfigGroup configGroup() override;
+    void reload() override;
 };
 
 inline

@@ -43,7 +43,7 @@ public:
     explicit ResizeEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
 public Q_SLOTS:
-    void save() Q_DECL_OVERRIDE;
+    void save() override;
 
 private:
     ResizeEffectConfigForm* m_ui;

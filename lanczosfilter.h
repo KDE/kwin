@@ -51,7 +51,7 @@ public:
     void performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
 
 protected:
-    void timerEvent(QTimerEvent*) Q_DECL_OVERRIDE;
+    void timerEvent(QTimerEvent*) override;
 private:
     void init();
     void updateOffscreenSurfaces();

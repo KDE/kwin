@@ -38,11 +38,11 @@ public:
     StartupFeedbackEffect();
     virtual ~StartupFeedbackEffect();
 
-    void reconfigure(ReconfigureFlags flags) Q_DECL_OVERRIDE;
-    void prePaintScreen(ScreenPrePaintData& data, int time) Q_DECL_OVERRIDE;
-    void paintScreen(int mask, QRegion region, ScreenPaintData& data) Q_DECL_OVERRIDE;
-    void postPaintScreen() Q_DECL_OVERRIDE;
-    bool isActive() const Q_DECL_OVERRIDE;
+    void reconfigure(ReconfigureFlags flags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 90;

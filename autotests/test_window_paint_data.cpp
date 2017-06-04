@@ -55,23 +55,23 @@ class MockEffectWindow : public EffectWindow
     Q_OBJECT
 public:
     MockEffectWindow(QObject *parent = nullptr);
-    WindowQuadList buildQuads(bool force = false) const Q_DECL_OVERRIDE;
-    QVariant data(int role) const Q_DECL_OVERRIDE;
-    QRect decorationInnerRect() const Q_DECL_OVERRIDE;
-    void deleteProperty(long int atom) const Q_DECL_OVERRIDE;
-    void disablePainting(int reason) Q_DECL_OVERRIDE;
-    void enablePainting(int reason) Q_DECL_OVERRIDE;
-    EffectWindow *findModal() Q_DECL_OVERRIDE;
-    const EffectWindowGroup *group() const Q_DECL_OVERRIDE;
-    bool isPaintingEnabled() Q_DECL_OVERRIDE;
-    EffectWindowList mainWindows() const Q_DECL_OVERRIDE;
-    QByteArray readProperty(long int atom, long int type, int format) const Q_DECL_OVERRIDE;
-    void refWindow() Q_DECL_OVERRIDE;
-    void unrefWindow() Q_DECL_OVERRIDE;
-    QRegion shape() const Q_DECL_OVERRIDE;
-    void setData(int role, const QVariant &data) Q_DECL_OVERRIDE;
-    void referencePreviousWindowPixmap() Q_DECL_OVERRIDE {}
-    void unreferencePreviousWindowPixmap() Q_DECL_OVERRIDE {}
+    WindowQuadList buildQuads(bool force = false) const override;
+    QVariant data(int role) const override;
+    QRect decorationInnerRect() const override;
+    void deleteProperty(long int atom) const override;
+    void disablePainting(int reason) override;
+    void enablePainting(int reason) override;
+    EffectWindow *findModal() override;
+    const EffectWindowGroup *group() const override;
+    bool isPaintingEnabled() override;
+    EffectWindowList mainWindows() const override;
+    QByteArray readProperty(long int atom, long int type, int format) const override;
+    void refWindow() override;
+    void unrefWindow() override;
+    QRegion shape() const override;
+    void setData(int role, const QVariant &data) override;
+    void referencePreviousWindowPixmap() override {}
+    void unreferencePreviousWindowPixmap() override {}
 };
 
 MockEffectWindow::MockEffectWindow(QObject *parent)

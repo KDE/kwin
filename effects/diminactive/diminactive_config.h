@@ -41,7 +41,7 @@ class DimInactiveEffectConfig : public KCModule
 public:
     explicit DimInactiveEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
-    void save() Q_DECL_OVERRIDE;
+    void save() override;
 
 private:
     DimInactiveEffectConfigForm* m_ui;

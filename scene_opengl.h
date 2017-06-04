@@ -47,16 +47,16 @@ public:
     class TexturePrivate;
     class Window;
     virtual ~SceneOpenGL();
-    bool initFailed() const Q_DECL_OVERRIDE;
-    bool hasPendingFlush() const Q_DECL_OVERRIDE;
-    qint64 paint(QRegion damage, ToplevelList windows) Q_DECL_OVERRIDE;
-    Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) Q_DECL_OVERRIDE;
-    Shadow *createShadow(Toplevel *toplevel) Q_DECL_OVERRIDE;
-    void screenGeometryChanged(const QSize &size) Q_DECL_OVERRIDE;
-    OverlayWindow *overlayWindow() Q_DECL_OVERRIDE;
-    bool usesOverlayWindow() const Q_DECL_OVERRIDE;
-    bool blocksForRetrace() const Q_DECL_OVERRIDE;
-    bool syncsToVBlank() const Q_DECL_OVERRIDE;
+    bool initFailed() const override;
+    bool hasPendingFlush() const override;
+    qint64 paint(QRegion damage, ToplevelList windows) override;
+    Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
+    Shadow *createShadow(Toplevel *toplevel) override;
+    void screenGeometryChanged(const QSize &size) override;
+    OverlayWindow *overlayWindow() override;
+    bool usesOverlayWindow() const override;
+    bool blocksForRetrace() const override;
+    bool syncsToVBlank() const override;
     virtual bool makeOpenGLContextCurrent() override;
     virtual void doneOpenGLContextCurrent() override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
@@ -66,7 +66,7 @@ public:
 
     void insertWait();
 
-    void idle() Q_DECL_OVERRIDE;
+    void idle() override;
 
     bool debug() const { return m_debug; }
     void initDebugOutput();
@@ -91,10 +91,10 @@ public:
 
 protected:
     SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
-    void paintBackground(QRegion region) Q_DECL_OVERRIDE;
-    void extendPaintRegion(QRegion &region, bool opaqueFullscreen) Q_DECL_OVERRIDE;
+    void paintBackground(QRegion region) override;
+    void extendPaintRegion(QRegion &region, bool opaqueFullscreen) override;
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
-    void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) Q_DECL_OVERRIDE;
+    void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
 
     void handleGraphicsReset(GLenum status);
 
@@ -121,7 +121,7 @@ class SceneOpenGL2 : public SceneOpenGL
 public:
     explicit SceneOpenGL2(OpenGLBackend *backend, QObject *parent = nullptr);
     virtual ~SceneOpenGL2();
-    CompositingType compositingType() const Q_DECL_OVERRIDE {
+    CompositingType compositingType() const override {
         return OpenGL2Compositing;
     }
 
@@ -131,11 +131,11 @@ public:
     QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
 
 protected:
-    void paintSimpleScreen(int mask, QRegion region) Q_DECL_OVERRIDE;
-    void paintGenericScreen(int mask, ScreenPaintData data) Q_DECL_OVERRIDE;
-    void doPaintBackground(const QVector< float >& vertices) Q_DECL_OVERRIDE;
-    Scene::Window *createWindow(Toplevel *t) Q_DECL_OVERRIDE;
-    void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data) Q_DECL_OVERRIDE;
+    void paintSimpleScreen(int mask, QRegion region) override;
+    void paintGenericScreen(int mask, ScreenPaintData data) override;
+    void doPaintBackground(const QVector< float >& vertices) override;
+    Scene::Window *createWindow(Toplevel *t) override;
+    void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data) override;
     virtual void updateProjectionMatrix() override;
 
 private Q_SLOTS:
@@ -198,7 +198,7 @@ class SceneOpenGL::Window
 public:
     virtual ~Window();
     bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
-    void performPaint(int mask, QRegion region, WindowPaintData data) Q_DECL_OVERRIDE = 0;
+    void performPaint(int mask, QRegion region, WindowPaintData data) override = 0;
     void endRenderWindow();
     bool bindTexture();
     void setScene(SceneOpenGL *scene) {
@@ -206,7 +206,7 @@ public:
     }
 
 protected:
-    WindowPixmap* createWindowPixmap() Q_DECL_OVERRIDE;
+    WindowPixmap* createWindowPixmap() override;
     Window(Toplevel* c);
     enum TextureType {
         Content,
@@ -255,7 +255,7 @@ protected:
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void setupLeafNodes(LeafNode *nodes, const WindowQuadList *quads, const WindowPaintData &data);
-    void performPaint(int mask, QRegion region, WindowPaintData data) Q_DECL_OVERRIDE;
+    void performPaint(int mask, QRegion region, WindowPaintData data) override;
 
 private:
     /**
@@ -287,15 +287,15 @@ public:
     EffectFrame(EffectFrameImpl* frame, SceneOpenGL *scene);
     virtual ~EffectFrame();
 
-    void free() Q_DECL_OVERRIDE;
-    void freeIconFrame() Q_DECL_OVERRIDE;
-    void freeTextFrame() Q_DECL_OVERRIDE;
-    void freeSelection() Q_DECL_OVERRIDE;
+    void free() override;
+    void freeIconFrame() override;
+    void freeTextFrame() override;
+    void freeSelection() override;
 
-    void render(QRegion region, double opacity, double frameOpacity) Q_DECL_OVERRIDE;
+    void render(QRegion region, double opacity, double frameOpacity) override;
 
-    void crossFadeIcon() Q_DECL_OVERRIDE;
-    void crossFadeText() Q_DECL_OVERRIDE;
+    void crossFadeIcon() override;
+    void crossFadeText() override;
 
     static void cleanup();
 
@@ -335,8 +335,8 @@ public:
         return m_texture.data();
     }
 protected:
-    void buildQuads() Q_DECL_OVERRIDE;
-    bool prepareBackend() Q_DECL_OVERRIDE;
+    void buildQuads() override;
+    bool prepareBackend() override;
 private:
     QSharedPointer<GLTexture> m_texture;
 };

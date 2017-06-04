@@ -68,16 +68,16 @@ class DesktopGridEffect
 public:
     DesktopGridEffect();
     ~DesktopGridEffect();
-    void reconfigure(ReconfigureFlags) Q_DECL_OVERRIDE;
-    void prePaintScreen(ScreenPrePaintData& data, int time) Q_DECL_OVERRIDE;
-    void paintScreen(int mask, QRegion region, ScreenPaintData& data) Q_DECL_OVERRIDE;
-    void postPaintScreen() Q_DECL_OVERRIDE;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) Q_DECL_OVERRIDE;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) Q_DECL_OVERRIDE;
-    void windowInputMouseEvent(QEvent* e) Q_DECL_OVERRIDE;
-    void grabbedKeyboardEvent(QKeyEvent* e) Q_DECL_OVERRIDE;
-    bool borderActivated(ElectricBorder border) Q_DECL_OVERRIDE;
-    bool isActive() const Q_DECL_OVERRIDE;
+    void reconfigure(ReconfigureFlags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void windowInputMouseEvent(QEvent* e) override;
+    void grabbedKeyboardEvent(QKeyEvent* e) override;
+    bool borderActivated(ElectricBorder border) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 50;

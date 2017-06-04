@@ -44,8 +44,8 @@ public:
     explicit MagnifierEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     virtual ~MagnifierEffectConfig();
 
-    void save() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void save() override;
+    void defaults() override;
 
 private:
     MagnifierEffectConfigForm* m_ui;

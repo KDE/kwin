@@ -53,15 +53,15 @@ class EglWaylandBackend : public QObject, public AbstractEglBackend
 public:
     EglWaylandBackend(Wayland::WaylandBackend *b);
     virtual ~EglWaylandBackend();
-    void screenGeometryChanged(const QSize &size) Q_DECL_OVERRIDE;
-    SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) Q_DECL_OVERRIDE;
-    QRegion prepareRenderingFrame() Q_DECL_OVERRIDE;
-    void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) Q_DECL_OVERRIDE;
+    void screenGeometryChanged(const QSize &size) override;
+    SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) override;
+    QRegion prepareRenderingFrame() override;
+    void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     virtual bool usesOverlayWindow() const override;
     void init() override;
 
 protected:
-    void present() Q_DECL_OVERRIDE;
+    void present() override;
 
 private Q_SLOTS:
     void overlaySizeChanged(const QSize &size);

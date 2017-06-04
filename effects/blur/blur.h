@@ -52,18 +52,18 @@ public:
     static bool supported();
     static bool enabledByDefault();
 
-    void reconfigure(ReconfigureFlags flags) Q_DECL_OVERRIDE;
-    void prePaintScreen(ScreenPrePaintData &data, int time) Q_DECL_OVERRIDE;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) Q_DECL_OVERRIDE;
-    void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) Q_DECL_OVERRIDE;
-    void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity) Q_DECL_OVERRIDE;
+    void reconfigure(ReconfigureFlags flags) override;
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity) override;
 
     // for dynamic setting extraction
     int blurRadius() const;
     bool isCacheTexture() const {
         return m_shouldCache;
     }
-    bool provides(Feature feature) Q_DECL_OVERRIDE;
+    bool provides(Feature feature) override;
 
     int requestedEffectChainPosition() const override {
         return 75;

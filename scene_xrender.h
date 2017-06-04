@@ -132,11 +132,11 @@ public:
     X11XRenderBackend();
     ~X11XRenderBackend();
 
-    void present(int mask, const QRegion &damage) Q_DECL_OVERRIDE;
-    OverlayWindow* overlayWindow() Q_DECL_OVERRIDE;
-    void showOverlay() Q_DECL_OVERRIDE;
-    void screenGeometryChanged(const QSize &size) Q_DECL_OVERRIDE;
-    bool usesOverlayWindow() const Q_DECL_OVERRIDE;
+    void present(int mask, const QRegion &damage) override;
+    OverlayWindow* overlayWindow() override;
+    void showOverlay() override;
+    void screenGeometryChanged(const QSize &size) override;
+    bool usesOverlayWindow() const override;
 private:
     void init(bool createOverlay);
     void createBuffer();
@@ -152,22 +152,22 @@ class SceneXrender
 public:
     class EffectFrame;
     virtual ~SceneXrender();
-    bool initFailed() const Q_DECL_OVERRIDE;
-    CompositingType compositingType() const Q_DECL_OVERRIDE {
+    bool initFailed() const override;
+    CompositingType compositingType() const override {
         return XRenderCompositing;
     }
-    qint64 paint(QRegion damage, ToplevelList windows) Q_DECL_OVERRIDE;
-    Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) Q_DECL_OVERRIDE;
-    Shadow *createShadow(Toplevel *toplevel) Q_DECL_OVERRIDE;
-    void screenGeometryChanged(const QSize &size) Q_DECL_OVERRIDE;
+    qint64 paint(QRegion damage, ToplevelList windows) override;
+    Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
+    Shadow *createShadow(Toplevel *toplevel) override;
+    void screenGeometryChanged(const QSize &size) override;
     xcb_render_picture_t bufferPicture();
-    OverlayWindow *overlayWindow() Q_DECL_OVERRIDE {
+    OverlayWindow *overlayWindow() override {
         return m_backend->overlayWindow();
     }
-    bool usesOverlayWindow() const Q_DECL_OVERRIDE {
+    bool usesOverlayWindow() const override {
         return m_backend->usesOverlayWindow();
     }
-    Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) Q_DECL_OVERRIDE;
+    Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) override;
 
     bool animationsSupported() const override {
         return true;
@@ -175,10 +175,10 @@ public:
 
     static SceneXrender *createScene(QObject *parent);
 protected:
-    Scene::Window *createWindow(Toplevel *toplevel) Q_DECL_OVERRIDE;
-    void paintBackground(QRegion region) Q_DECL_OVERRIDE;
-    void paintGenericScreen(int mask, ScreenPaintData data) Q_DECL_OVERRIDE;
-    void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) Q_DECL_OVERRIDE;
+    Scene::Window *createWindow(Toplevel *toplevel) override;
+    void paintBackground(QRegion region) override;
+    void paintGenericScreen(int mask, ScreenPaintData data) override;
+    void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
 private:
     explicit SceneXrender(XRenderBackend *backend, QObject *parent = nullptr);
     static ScreenPaintData screen_paint;
@@ -192,12 +192,12 @@ class SceneXrender::Window
 public:
     Window(Toplevel* c, SceneXrender *scene);
     virtual ~Window();
-    void performPaint(int mask, QRegion region, WindowPaintData data) Q_DECL_OVERRIDE;
+    void performPaint(int mask, QRegion region, WindowPaintData data) override;
     QRegion transformedShape() const;
     void setTransformedShape(const QRegion& shape);
     static void cleanup();
 protected:
-    WindowPixmap* createWindowPixmap() Q_DECL_OVERRIDE;
+    WindowPixmap* createWindowPixmap() override;
 private:
     QRect mapToScreen(int mask, const WindowPaintData &data, const QRect &rect) const;
     QPoint mapToScreen(int mask, const WindowPaintData &data, const QPoint &point) const;
@@ -218,7 +218,7 @@ public:
     explicit XRenderWindowPixmap(Scene::Window *window, xcb_render_pictformat_t format);
     virtual ~XRenderWindowPixmap();
     xcb_render_picture_t picture() const;
-    void create() Q_DECL_OVERRIDE;
+    void create() override;
 private:
     xcb_render_picture_t m_picture;
     xcb_render_pictformat_t m_format;
@@ -231,13 +231,13 @@ public:
     EffectFrame(EffectFrameImpl* frame);
     virtual ~EffectFrame();
 
-    void free() Q_DECL_OVERRIDE;
-    void freeIconFrame() Q_DECL_OVERRIDE;
-    void freeTextFrame() Q_DECL_OVERRIDE;
-    void freeSelection() Q_DECL_OVERRIDE;
-    void crossFadeIcon() Q_DECL_OVERRIDE;
-    void crossFadeText() Q_DECL_OVERRIDE;
-    void render(QRegion region, double opacity, double frameOpacity) Q_DECL_OVERRIDE;
+    void free() override;
+    void freeIconFrame() override;
+    void freeTextFrame() override;
+    void freeSelection() override;
+    void crossFadeIcon() override;
+    void crossFadeText() override;
+    void render(QRegion region, double opacity, double frameOpacity) override;
     static void cleanup();
 
 private:
@@ -308,8 +308,8 @@ public:
     xcb_render_picture_t picture(ShadowElements element) const;
 
 protected:
-    void buildQuads() Q_DECL_OVERRIDE;
-    bool prepareBackend() Q_DECL_OVERRIDE;
+    void buildQuads() override;
+    bool prepareBackend() override;
 private:
     XRenderPicture* m_pictures[ShadowElementsCount];
 };

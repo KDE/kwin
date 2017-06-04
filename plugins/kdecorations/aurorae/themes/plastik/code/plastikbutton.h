@@ -26,7 +26,7 @@ class PlastikButtonProvider : public QQuickImageProvider
 {
 public:
     explicit PlastikButtonProvider();
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) Q_DECL_OVERRIDE;
+    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) override;
 
 private:
     enum ButtonIcon {

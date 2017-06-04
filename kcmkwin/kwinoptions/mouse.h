@@ -56,13 +56,13 @@ public:
     KTitleBarActionsConfig(bool _standAlone, KConfig *_config, QWidget *parent);
     ~KTitleBarActionsConfig();
 
-    void load() Q_DECL_OVERRIDE;
-    void save() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev) Q_DECL_OVERRIDE;
-    void changeEvent(QEvent *ev) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *ev) override;
+    void changeEvent(QEvent *ev) override;
 
 public Q_SLOTS:
     void changed() {
@@ -100,12 +100,12 @@ public:
     KWindowActionsConfig(bool _standAlone, KConfig *_config, QWidget *parent);
     ~KWindowActionsConfig();
 
-    void load() Q_DECL_OVERRIDE;
-    void save() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *ev) override;
 
 public Q_SLOTS:
     void changed() {

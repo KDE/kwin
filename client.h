@@ -121,18 +121,18 @@ public:
     QSize minSize() const override;
     QSize maxSize() const override;
     QSize basicUnit() const;
-    QSize clientSize() const Q_DECL_OVERRIDE;
+    QSize clientSize() const override;
     QPoint inputPos() const { return input_offset; } // Inside of geometry()
 
     bool windowEvent(xcb_generic_event_t *e);
     void syncEvent(xcb_sync_alarm_notify_event_t* e);
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const Q_DECL_OVERRIDE;
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
     void destroyClient();
 
-    QStringList activities() const Q_DECL_OVERRIDE;
+    QStringList activities() const override;
     void setOnActivity(const QString &activity, bool enable);
     void setOnAllActivities(bool set) override;
     void setOnActivities(QStringList newActivitiesList);
@@ -216,7 +216,7 @@ public:
     void hideClient(bool hide) override;
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
-    bool setupCompositing() Q_DECL_OVERRIDE;
+    bool setupCompositing() override;
     void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing() { return blocks_compositing; }
@@ -298,9 +298,9 @@ public:
     bool hasOffscreenXineramaStrut() const;
 
     // Decorations <-> Effects
-    QRect decorationRect() const Q_DECL_OVERRIDE;
+    QRect decorationRect() const override;
 
-    QRect transparentRect() const Q_DECL_OVERRIDE;
+    QRect transparentRect() const override;
 
     bool isClientSideDecorated() const;
     bool wantsShadowToBeRendered() const override;
@@ -316,7 +316,7 @@ public:
 
     //sets whether the client should be faked as being on all activities (and be shown during session save)
     void setSessionActivityOverride(bool needed);
-    bool isClient() const Q_DECL_OVERRIDE;
+    bool isClient() const override;
 
     template <typename T>
     void print(T &stream) const;
@@ -363,7 +363,7 @@ private:
     void leaveNotifyEvent(xcb_leave_notify_event_t *e);
     void focusInEvent(xcb_focus_in_event_t *e);
     void focusOutEvent(xcb_focus_out_event_t *e);
-    void damageNotifyEvent() Q_DECL_OVERRIDE;
+    void damageNotifyEvent() override;
 
     bool buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time = XCB_CURRENT_TIME);
     bool buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
@@ -372,7 +372,7 @@ private:
     Client* findAutogroupCandidate() const;
 
 protected:
-    void debug(QDebug& stream) const Q_DECL_OVERRIDE;
+    void debug(QDebug& stream) const override;
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
     void doSetActive() override;

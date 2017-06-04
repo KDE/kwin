@@ -67,10 +67,10 @@ class GlxBackend : public OpenGLBackend
 public:
     GlxBackend(Display *display);
     virtual ~GlxBackend();
-    void screenGeometryChanged(const QSize &size) Q_DECL_OVERRIDE;
-    SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) Q_DECL_OVERRIDE;
-    QRegion prepareRenderingFrame() Q_DECL_OVERRIDE;
-    void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) Q_DECL_OVERRIDE;
+    void screenGeometryChanged(const QSize &size) override;
+    SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) override;
+    QRegion prepareRenderingFrame() override;
+    void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) override;
     virtual bool makeCurrent() override;
     virtual void doneCurrent() override;
     virtual OverlayWindow* overlayWindow() override;
@@ -78,7 +78,7 @@ public:
     void init() override;
 
 protected:
-    void present() Q_DECL_OVERRIDE;
+    void present() override;
 
 private:
     bool initBuffer();
@@ -126,9 +126,9 @@ class GlxTexture : public SceneOpenGL::TexturePrivate
 {
 public:
     virtual ~GlxTexture();
-    void onDamage() Q_DECL_OVERRIDE;
+    void onDamage() override;
     virtual bool loadTexture(WindowPixmap *pixmap) override;
-    OpenGLBackend *backend() Q_DECL_OVERRIDE;
+    OpenGLBackend *backend() override;
 
 private:
     friend class GlxBackend;

@@ -52,11 +52,11 @@ public:
 
 public Q_SLOTS:
     virtual void groupChanged();
-    void save() Q_DECL_OVERRIDE;
-    void load() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void save() override;
+    void load() override;
+    void defaults() override;
 protected:
-    void showEvent(QShowEvent* e) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent* e) override;
 private Q_SLOTS:
     void sanitizeCooldown();
 private:

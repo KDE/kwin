@@ -46,9 +46,9 @@ public:
     ~TrackMouseEffectConfig();
 
 public Q_SLOTS:
-    void save() Q_DECL_OVERRIDE;
-    void load() Q_DECL_OVERRIDE;
-    void defaults() Q_DECL_OVERRIDE;
+    void save() override;
+    void load() override;
+    void defaults() override;
 private Q_SLOTS:
     void shortcutChanged(const QKeySequence &seq);
 private:
