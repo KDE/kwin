@@ -125,53 +125,53 @@ void ThemeConfig::load(const KConfig &conf)
     m_shadow = general.readEntry("Shadow", defaultShadow());
     m_decorationPosition = general.readEntry("DecorationPosition", defaultDecorationPosition());
 
-    int scaleFactor = 1;
+    qreal scaleFactor = 1;
     QScreen *primary = QGuiApplication::primaryScreen();
     if (primary) {
         const qreal dpi = primary->logicalDotsPerInchX();
-        scaleFactor = (qreal)dpi / (qreal)96;
+        scaleFactor = dpi / 96.0f;
     }
 
     KConfigGroup border(&conf, QStringLiteral("Layout"));
     // default values taken from KCommonDecoration::layoutMetric() in kcommondecoration.cpp
-    m_borderLeft = scaleFactor * border.readEntry("BorderLeft", defaultBorderLeft());
-    m_borderRight = scaleFactor * border.readEntry("BorderRight", defaultBorderRight());
-    m_borderBottom = scaleFactor * border.readEntry("BorderBottom", defaultBorderBottom());
-    m_borderTop = scaleFactor * border.readEntry("BorderTop", defaultBorderTop());
+    m_borderLeft = qRound(scaleFactor * border.readEntry("BorderLeft", defaultBorderLeft()));
+    m_borderRight = qRound(scaleFactor * border.readEntry("BorderRight", defaultBorderRight()));
+    m_borderBottom = qRound(scaleFactor * border.readEntry("BorderBottom", defaultBorderBottom()));
+    m_borderTop = qRound(scaleFactor * border.readEntry("BorderTop", defaultBorderTop()));
 
-    m_titleEdgeTop = scaleFactor * border.readEntry("TitleEdgeTop", defaultTitleEdgeTop());
-    m_titleEdgeBottom = scaleFactor * border.readEntry("TitleEdgeBottom", defaultTitleEdgeBottom());
-    m_titleEdgeLeft = scaleFactor * border.readEntry("TitleEdgeLeft", defaultTitleEdgeLeft());
-    m_titleEdgeRight = scaleFactor * border.readEntry("TitleEdgeRight", defaultTitleEdgeRight());
-    m_titleEdgeTopMaximized = scaleFactor * border.readEntry("TitleEdgeTopMaximized", defaultTitleEdgeTopMaximized());
-    m_titleEdgeBottomMaximized = scaleFactor * border.readEntry("TitleEdgeBottomMaximized", defaultTitleEdgeBottomMaximized());
-    m_titleEdgeLeftMaximized = scaleFactor * border.readEntry("TitleEdgeLeftMaximized", defaultTitleEdgeLeftMaximized());
-    m_titleEdgeRightMaximized = scaleFactor * border.readEntry("TitleEdgeRightMaximized", defaultTitleEdgeRightMaximized());
-    m_titleBorderLeft = scaleFactor * border.readEntry("TitleBorderLeft", defaultTitleBorderLeft());
-    m_titleBorderRight = scaleFactor * border.readEntry("TitleBorderRight", defaultTitleBorderRight());
-    m_titleHeight = scaleFactor * border.readEntry("TitleHeight", defaultTitleHeight());
+    m_titleEdgeTop = qRound(scaleFactor * border.readEntry("TitleEdgeTop", defaultTitleEdgeTop()));
+    m_titleEdgeBottom = qRound(scaleFactor * border.readEntry("TitleEdgeBottom", defaultTitleEdgeBottom()));
+    m_titleEdgeLeft = qRound(scaleFactor * border.readEntry("TitleEdgeLeft", defaultTitleEdgeLeft()));
+    m_titleEdgeRight = qRound(scaleFactor * border.readEntry("TitleEdgeRight", defaultTitleEdgeRight()));
+    m_titleEdgeTopMaximized = qRound(scaleFactor * border.readEntry("TitleEdgeTopMaximized", defaultTitleEdgeTopMaximized()));
+    m_titleEdgeBottomMaximized = qRound(scaleFactor * border.readEntry("TitleEdgeBottomMaximized", defaultTitleEdgeBottomMaximized()));
+    m_titleEdgeLeftMaximized = qRound(scaleFactor * border.readEntry("TitleEdgeLeftMaximized", defaultTitleEdgeLeftMaximized()));
+    m_titleEdgeRightMaximized = qRound(scaleFactor * border.readEntry("TitleEdgeRightMaximized", defaultTitleEdgeRightMaximized()));
+    m_titleBorderLeft = qRound(scaleFactor * border.readEntry("TitleBorderLeft", defaultTitleBorderLeft()));
+    m_titleBorderRight = qRound(scaleFactor * border.readEntry("TitleBorderRight", defaultTitleBorderRight()));
+    m_titleHeight = qRound(scaleFactor * border.readEntry("TitleHeight", defaultTitleHeight()));
 
     m_buttonWidth = border.readEntry("ButtonWidth", defaultButtonWidth());
-    m_buttonWidthMinimize = scaleFactor * border.readEntry("ButtonWidthMinimize", m_buttonWidth);
-    m_buttonWidthMaximizeRestore = scaleFactor * border.readEntry("ButtonWidthMaximizeRestore", m_buttonWidth);
-    m_buttonWidthClose = scaleFactor * border.readEntry("ButtonWidthClose", m_buttonWidth);
-    m_buttonWidthAllDesktops = scaleFactor * border.readEntry("ButtonWidthAlldesktops", m_buttonWidth);
-    m_buttonWidthKeepAbove = scaleFactor * border.readEntry("ButtonWidthKeepabove", m_buttonWidth);
-    m_buttonWidthKeepBelow = scaleFactor * border.readEntry("ButtonWidthKeepbelow", m_buttonWidth);
-    m_buttonWidthShade = scaleFactor * border.readEntry("ButtonWidthShade", m_buttonWidth);
-    m_buttonWidthHelp = scaleFactor * border.readEntry("ButtonWidthHelp", m_buttonWidth);
-    m_buttonWidthMenu = scaleFactor * border.readEntry("ButtonWidthMenu", m_buttonWidth);
-    m_buttonWidthAppMenu = scaleFactor * border.readEntry("ButtonWidthAppMenu", m_buttonWidthMenu);
-    m_buttonWidth *= scaleFactor;
-    m_buttonHeight = scaleFactor * border.readEntry("ButtonHeight", defaultButtonHeight());
-    m_buttonSpacing = scaleFactor * border.readEntry("ButtonSpacing", defaultButtonSpacing());
-    m_buttonMarginTop = scaleFactor * border.readEntry("ButtonMarginTop", defaultButtonMarginTop());
-    m_explicitButtonSpacer = scaleFactor * border.readEntry("ExplicitButtonSpacer", defaultExplicitButtonSpacer());
+    m_buttonWidthMinimize = qRound(scaleFactor * border.readEntry("ButtonWidthMinimize", m_buttonWidth));
+    m_buttonWidthMaximizeRestore = qRound(scaleFactor * border.readEntry("ButtonWidthMaximizeRestore", m_buttonWidth));
+    m_buttonWidthClose = qRound(scaleFactor * border.readEntry("ButtonWidthClose", m_buttonWidth));
+    m_buttonWidthAllDesktops = qRound(scaleFactor * border.readEntry("ButtonWidthAlldesktops", m_buttonWidth));
+    m_buttonWidthKeepAbove = qRound(scaleFactor * border.readEntry("ButtonWidthKeepabove", m_buttonWidth));
+    m_buttonWidthKeepBelow = qRound(scaleFactor * border.readEntry("ButtonWidthKeepbelow", m_buttonWidth));
+    m_buttonWidthShade = qRound(scaleFactor * border.readEntry("ButtonWidthShade", m_buttonWidth));
+    m_buttonWidthHelp = qRound(scaleFactor * border.readEntry("ButtonWidthHelp", m_buttonWidth));
+    m_buttonWidthMenu = qRound(scaleFactor * border.readEntry("ButtonWidthMenu", m_buttonWidth));
+    m_buttonWidthAppMenu = qRound(scaleFactor * border.readEntry("ButtonWidthAppMenu", m_buttonWidthMenu));
+    m_buttonWidth = qRound(m_buttonWidth * scaleFactor);
+    m_buttonHeight = qRound(scaleFactor * border.readEntry("ButtonHeight", defaultButtonHeight()));
+    m_buttonSpacing = qRound(scaleFactor * border.readEntry("ButtonSpacing", defaultButtonSpacing()));
+    m_buttonMarginTop = qRound(scaleFactor * border.readEntry("ButtonMarginTop", defaultButtonMarginTop()));
+    m_explicitButtonSpacer = qRound(scaleFactor * border.readEntry("ExplicitButtonSpacer", defaultExplicitButtonSpacer()));
 
-    m_paddingLeft = scaleFactor * border.readEntry("PaddingLeft", defaultPaddingLeft());
-    m_paddingRight = scaleFactor * border.readEntry("PaddingRight", defaultPaddingRight());
-    m_paddingTop = scaleFactor * border.readEntry("PaddingTop", defaultPaddingTop());
-    m_paddingBottom = scaleFactor * border.readEntry("PaddingBottom", defaultPaddingBottom());
+    m_paddingLeft = qRound(scaleFactor * border.readEntry("PaddingLeft", defaultPaddingLeft()));
+    m_paddingRight = qRound(scaleFactor * border.readEntry("PaddingRight", defaultPaddingRight()));
+    m_paddingTop = qRound(scaleFactor * border.readEntry("PaddingTop", defaultPaddingTop()));
+    m_paddingBottom = qRound(scaleFactor * border.readEntry("PaddingBottom", defaultPaddingBottom()));
 }
 
 QColor ThemeConfig::activeTextColor(bool useTabs, bool focused) const
