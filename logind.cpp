@@ -29,6 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusMetaType>
 
 #include <sys/stat.h>
+#include <sys/types.h>
+#ifndef major
+#include <sys/sysmacros.h>
+#endif
 #include <unistd.h>
 #include "utils.h"
 
