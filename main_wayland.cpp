@@ -408,7 +408,9 @@ static void disablePtrace()
 #if HAVE_PR_SET_DUMPABLE
     // check whether we are running under a debugger
     const QFileInfo parent(QStringLiteral("/proc/%1/exe").arg(getppid()));
-    if (parent.isSymLink() && parent.symLinkTarget().endsWith(QLatin1String("/gdb"))) {
+    if (parent.isSymLink() &&
+            (parent.symLinkTarget().endsWith(QLatin1String("/gdb")) ||
+             parent.symLinkTarget().endsWith(QLatin1String("/gdbserver")))) {
         // debugger, don't adjust
         return;
     }
