@@ -134,10 +134,10 @@ public:
 protected:
     virtual void paintBackground(QRegion region) override;
     virtual Scene::Window *createWindow(Toplevel *toplevel) override;
+    void paintCursor() override;
 
 private:
     explicit SceneQPainter(QPainterBackend *backend, QObject *parent = nullptr);
-    void paintCursor();
     QScopedPointer<QPainterBackend> m_backend;
     QScopedPointer<QPainter> m_painter;
     class Window;

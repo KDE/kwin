@@ -137,6 +137,7 @@ protected:
     virtual Scene::Window *createWindow(Toplevel *t);
     virtual void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
     virtual void updateProjectionMatrix() override;
+    void paintCursor() override;
 
 private Q_SLOTS:
     void resetLanczosFilter();
@@ -147,6 +148,7 @@ private:
 
 private:
     LanczosFilter *m_lanczosFilter;
+    QScopedPointer<GLTexture> m_cursorTexture;
     QMatrix4x4 m_projectionMatrix;
     QMatrix4x4 m_screenProjectionMatrix;
     GLuint vao;

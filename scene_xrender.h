@@ -179,6 +179,7 @@ protected:
     virtual void paintBackground(QRegion region);
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
+    void paintCursor() override;
 private:
     explicit SceneXrender(XRenderBackend *backend, QObject *parent = nullptr);
     static ScreenPaintData screen_paint;

@@ -1296,3 +1296,9 @@ void SceneXRenderDecorationRenderer::reparent(Deleted *deleted)
 
 } // namespace
 #endif
+
+
+void KWin::SceneXrender::paintCursor()
+{
+
+}

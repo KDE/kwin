@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "overlaywindow.h"
 #include "screens.h"
+#include "cursor.h"
 #include "decorations/decoratedclient.h"
 
 #include <KWayland/Server/subcompositor_interface.h>
@@ -678,6 +679,57 @@ void SceneOpenGL::insertWait()
     }
 }
 
+/**
+ * Render cursor texture in case hardware cursor is disabled.
+ * Useful for screen recording apps or backends that can't do planes.
+ */
+void SceneOpenGL2::paintCursor()
+{
+    // don't paint if we use hardware cursor
+    if (!kwinApp()->platform()->usesSoftwareCursor()) {
+        return;
+    }
+
+    // lazy init texture cursor only in case we need software rendering
+    if (!m_cursorTexture) {
+        auto updateCursorTexture = [this] {
+            // don't paint if no image for cursor is set
+            const QImage img = kwinApp()->platform()->softwareCursor();
+            if (img.isNull()) {
+                return;
+            }
+            m_cursorTexture.reset(new GLTexture(img));
+        };
+
+        // init now
+        updateCursorTexture();
+
+        // handle shape update on case cursor image changed
+        connect(Cursor::self(), &Cursor::cursorChanged, this, updateCursorTexture);
+    }
+
+    // get cursor position in projection coordinates
+    const QPoint cursorPos = Cursor::pos() - kwinApp()->platform()->softwareCursorHotspot();
+    const QRect cursorRect(0, 0, m_cursorTexture->width(), m_cursorTexture->height());
+    QMatrix4x4 mvp = m_projectionMatrix;
+    mvp.translate(cursorPos.x(), cursorPos.y());
+
+    // handle transparence
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // paint texture in cursor offset
+    m_cursorTexture->bind();
+    ShaderBinder binder(ShaderTrait::MapTexture);
+    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+    m_cursorTexture->render(QRegion(cursorRect), cursorRect);
+    m_cursorTexture->unbind();
+
+    kwinApp()->platform()->markCursorAsRendered();
+
+    glDisable(GL_BLEND);
+}
+
 qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame
@@ -711,6 +763,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             int mask = 0;
             updateProjectionMatrix();
             paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid, projectionMatrix(), geo);   // call generic implementation
+            paintCursor();
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
 
