@@ -2,6 +2,7 @@
 Name=Desaturate Unresponsive Applications
 Name[ca]=Dessatura les aplicacions que no responen
 Name[ca@valencia]=Dessatura les aplicacions que no responen
+Name[el]=Αποκορεσμός χρωμάτων μη αποκρινόμενων εφαρμογών
 Name[en_GB]=Desaturate Unresponsive Applications
 Name[es]=Desaturar las aplicaciones que no responden
 Name[fi]=Vähennä värikylläisyyttä sovelluksilta, jotka eivät vastaa
@@ -25,6 +26,7 @@ Icon=preferences-system-windows-effect-frozenapp
 Comment=Desaturate windows of unresponsive (frozen) applications
 Comment[ca]=Dessatura les finestres de les aplicacions que no responen (congelades)
 Comment[ca@valencia]=Dessatura les finestres de les aplicacions que no responen (congelades)
+Comment[el]=Αποκορεσμός χρωμάτων παραθύρων μη αποκρινόμενων (κολλημένων) εφαρμογών
 Comment[en_GB]=Desaturate windows of unresponsive (frozen) applications
 Comment[es]=Desaturar las ventanas de las aplicaciones que no responden (congeladas)
 Comment[fi]=Vähennä värikylläisyyttä sovelluksilta, jotka eivät vastaa (ovat jumittuneet)
