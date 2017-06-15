@@ -2006,8 +2006,8 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     if (resized) {
         if (oldClientSize != QSize(w,h))
             discardWindowPixmap();
-        emit geometryShapeChanged(this, geometryBeforeUpdateBlocking());
     }
+    emit geometryShapeChanged(this, geometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
 
