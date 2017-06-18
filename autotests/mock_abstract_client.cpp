@@ -30,6 +30,7 @@ AbstractClient::AbstractClient(QObject *parent)
     , m_hiddenInternal(false)
     , m_keepBelow(false)
     , m_geometry()
+    , m_resize(false)
 {
 }
 
@@ -101,6 +102,16 @@ void AbstractClient::setKeepBelow(bool keepBelow)
 {
     m_keepBelow = keepBelow;
     emit keepBelowChanged();
+}
+
+bool AbstractClient::isResize() const
+{
+    return m_resize;
+}
+
+void AbstractClient::setResize(bool set)
+{
+    m_resize = set;
 }
 
 }

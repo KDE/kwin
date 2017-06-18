@@ -392,6 +392,27 @@ void TestScreenEdges::testCreatingInitialEdges()
         QCOMPARE(e->activatesForTouchGesture(), false);
         QCOMPARE(e->approachGeometry(), expectedGeometries.at(i*2+1));
     }
+
+    // let's start a move of window.
+    Client client(workspace());
+    workspace()->setMovingClient(&client);
+    for (int i = 0; i < 8; ++i) {
+        auto e = edges.at(i);
+        QVERIFY(!e->isReserved());
+        QCOMPARE(e->activatesForPointer(), true);
+        QCOMPARE(e->activatesForTouchGesture(), false);
+        QCOMPARE(e->approachGeometry(), expectedGeometries.at(i*2+1));
+    }
+    // not for resize
+    client.setResize(true);
+    for (int i = 0; i < 8; ++i) {
+        auto e = edges.at(i);
+        QVERIFY(!e->isReserved());
+        QCOMPARE(e->activatesForPointer(), false);
+        QCOMPARE(e->activatesForTouchGesture(), false);
+        QCOMPARE(e->approachGeometry(), expectedGeometries.at(i*2+1));
+    }
+    workspace()->setMovingClient(nullptr);
 }
 
 void TestScreenEdges::testCallback()

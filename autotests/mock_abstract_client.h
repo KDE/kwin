@@ -47,6 +47,8 @@ public:
     void setHiddenInternal(bool set);
     void setGeometry(const QRect &rect);
     void setKeepBelow(bool);
+    bool isResize() const;
+    void setResize(bool set);
     virtual void showOnScreenEdge() = 0;
 
 Q_SIGNALS:
@@ -60,6 +62,7 @@ private:
     bool m_hiddenInternal;
     bool m_keepBelow;
     QRect m_geometry;
+    bool m_resize;
 };
 
 }

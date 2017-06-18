@@ -183,6 +183,12 @@ bool Edge::activatesForPointer() const
     if (m_edges->isDesktopSwitching()) {
         return true;
     }
+    if (m_edges->isDesktopSwitchingMovingClients()) {
+        auto c = Workspace::self()->getMovingClient();
+        if (c && !c->isResize()) {
+            return true;
+        }
+    }
     if (!m_callBacks.isEmpty()) {
         return true;
     }
