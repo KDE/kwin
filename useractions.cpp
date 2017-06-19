@@ -1597,12 +1597,12 @@ void Workspace::switchWindow(Direction direction)
 
 bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curPos, int d)
 {
-    Client *switchTo = nullptr;
+    AbstractClient *switchTo = nullptr;
     int bestScore = 0;
 
     ToplevelList clist = stackingOrder();
     for (ToplevelList::Iterator i = clist.begin(); i != clist.end(); ++i) {
-        Client *client = qobject_cast<Client*>(*i);
+        auto client = qobject_cast<AbstractClient*>(*i);
         if (!client) {
             continue;
         }
