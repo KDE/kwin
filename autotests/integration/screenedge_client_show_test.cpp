@@ -164,6 +164,9 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QVERIFY(!client->isHiddenInternal());
     QCOMPARE(effectsWindowShownSpy.count(), 1);
 
+    // go into event loop to trigger xcb_flush
+    QTest::qWait(1);
+
     //hide window again
     Cursor::setPos(QPoint(640, 512));
     xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atom, XCB_ATOM_CARDINAL, 32, 1, &location);
