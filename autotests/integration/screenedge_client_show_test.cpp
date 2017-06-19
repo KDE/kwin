@@ -60,6 +60,14 @@ void ScreenEdgeClientShowTest::initTestCase()
     QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
+    // set custom config which disable touch edge
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup group = config->group("TabBox");
+    group.writeEntry(QStringLiteral("TouchBorderActivate"), "9");
+    group.sync();
+
+    kwinApp()->setConfig(config);
+
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QCOMPARE(screens()->count(), 2);
