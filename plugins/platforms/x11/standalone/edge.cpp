@@ -130,9 +130,6 @@ void WindowBasedEdge::doUpdateBlocking()
     if (!isReserved()) {
         return;
     }
-    if (!activatesForPointer()) {
-        return;
-    }
     if (isBlocked()) {
         m_window.unmap();
         m_approachWindow.unmap();
