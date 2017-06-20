@@ -284,7 +284,7 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
     ToplevelList stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
     foreach (Toplevel *toplevel, stacking) {
-        if (Client *client = qobject_cast<Client*>(toplevel)) {
+        if (auto client = qobject_cast<AbstractClient*>(toplevel)) {
             ret.append(client->tabBoxClient());
         }
     }
@@ -331,7 +331,7 @@ void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
     foreach (Toplevel *toplevel, Workspace::self()->stackingOrder()) {
-        Client *client = qobject_cast<Client*>(toplevel);
+        auto client = qobject_cast<AbstractClient*>(toplevel);
         if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->screen() == screens()->current()) {
             return client->tabBoxClient();
         }
@@ -1319,7 +1319,7 @@ void TabBox::walkThroughDesktops(bool forward)
 
 void TabBox::CDEWalkThroughWindows(bool forward)
 {
-    Client* c = nullptr;
+    AbstractClient* c = nullptr;
 // this function find the first suitable client for unreasonable focus
 // policies - the topmost one, with some exceptions (can't be keepabove/below,
 // otherwise it gets stuck on them)
@@ -1327,7 +1327,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     for (int i = Workspace::self()->stackingOrder().size() - 1;
             i >= 0 ;
             --i) {
-        Client* it = qobject_cast<Client*>(Workspace::self()->stackingOrder().at(i));
+        auto it = qobject_cast<AbstractClient*>(Workspace::self()->stackingOrder().at(i));
         if (it && it->isOnCurrentActivity() && it->isOnCurrentDesktop() && !it->isSpecialWindow()
                 && it->isShown(false) && it->wantsTabFocus()
                 && !it->keepAbove() && !it->keepBelow()) {
@@ -1335,14 +1335,14 @@ void TabBox::CDEWalkThroughWindows(bool forward)
             break;
         }
     }
-    Client* nc = c;
+    AbstractClient* nc = c;
     bool options_traverse_all;
     {
         KConfigGroup group(kwinApp()->config(), "TabBox");
         options_traverse_all = group.readEntry("TraverseAll", false);
     }
 
-    Client* firstClient = nullptr;
+    AbstractClient* firstClient = nullptr;
     do {
         nc = forward ? nextClientStatic(nc) : previousClientStatic(nc);
         if (!firstClient) {
@@ -1641,34 +1641,36 @@ int TabBox::previousDesktopStatic(int iDesktop) const
   auxiliary functions to travers all clients according to the static
   order. Useful for the CDE-style Alt-tab feature.
 */
-Client* TabBox::nextClientStatic(Client* c) const
+AbstractClient* TabBox::nextClientStatic(AbstractClient* c) const
 {
-    if (!c || Workspace::self()->clientList().isEmpty())
+    const auto &list = Workspace::self()->allClientList();
+    if (!c || list.isEmpty())
         return 0;
-    int pos = Workspace::self()->clientList().indexOf(c);
+    int pos = list.indexOf(c);
     if (pos == -1)
-        return Workspace::self()->clientList().first();
+        return list.first();
     ++pos;
-    if (pos == Workspace::self()->clientList().count())
-        return Workspace::self()->clientList().first();
-    return Workspace::self()->clientList()[ pos ];
+    if (pos == list.count())
+        return list.first();
+    return list.at(pos);
 }
 
 /*!
   auxiliary functions to travers all clients according to the static
   order. Useful for the CDE-style Alt-tab feature.
 */
-Client* TabBox::previousClientStatic(Client* c) const
+AbstractClient* TabBox::previousClientStatic(AbstractClient* c) const
 {
-    if (!c || Workspace::self()->clientList().isEmpty())
+    const auto &list = Workspace::self()->allClientList();
+    if (!c || list.isEmpty())
         return 0;
-    int pos = Workspace::self()->clientList().indexOf(c);
+    int pos = list.indexOf(c);
     if (pos == -1)
-        return Workspace::self()->clientList().last();
+        return list.last();
     if (pos == 0)
-        return Workspace::self()->clientList().last();
+        return list.last();
     --pos;
-    return Workspace::self()->clientList()[ pos ];
+    return list.at(pos);
 }
 
 bool TabBox::establishTabBoxGrab()

@@ -176,8 +176,8 @@ public:
 
     void initShortcuts();
 
-    Client* nextClientStatic(Client*) const;
-    Client* previousClientStatic(Client*) const;
+    AbstractClient* nextClientStatic(AbstractClient*) const;
+    AbstractClient* previousClientStatic(AbstractClient*) const;
     int nextDesktopStatic(int iDesktop) const;
     int previousDesktopStatic(int iDesktop) const;
     void keyPress(int key);

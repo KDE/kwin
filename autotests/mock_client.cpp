@@ -35,9 +35,4 @@ void Client::showOnScreenEdge()
     setHiddenInternal(false);
 }
 
-bool Client::isResize() const
-{
-    return false;
-}
-
 }

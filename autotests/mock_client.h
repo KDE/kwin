@@ -34,8 +34,6 @@ class Client : public AbstractClient
 public:
     explicit Client(QObject *parent);
     virtual ~Client();
-
-    bool isResize() const;
     void showOnScreenEdge() override;
 
 };

@@ -48,6 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglutils.h"
 
 #include <QDebug>
+#include <QDesktopWidget>
 
 #include <Plasma/Theme>
 
@@ -599,6 +600,11 @@ bool EffectsHandlerImpl::grabKeyboard(Effect* effect)
         bool ret = grabXKeyboard();
         if (!ret)
             return false;
+        // Workaround for Qt 5.9 regression introduced with 2b34aefcf02f09253473b096eb4faffd3e62b5f4
+        // we no longer get any events for the root window, one needs to call winId() on the desktop window
+        // TODO: change effects event handling to create the appropriate QKeyEvent without relying on Qt
+        // as it's done already in the Wayland case.
+        qApp->desktop()->winId();
     }
     keyboard_grab_effect = effect;
     return true;

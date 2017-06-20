@@ -354,13 +354,16 @@ QString Xkb::layoutName() const
 
 QString Xkb::layoutName(xkb_layout_index_t layout) const
 {
+    if (!m_keymap) {
+        return QString{};
+    }
     return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, layout));
 }
 
 QMap<xkb_layout_index_t, QString> Xkb::layoutNames() const
 {
     QMap<xkb_layout_index_t, QString> layouts;
-    const auto size = xkb_keymap_num_layouts(m_keymap);
+    const auto size = m_keymap ? xkb_keymap_num_layouts(m_keymap) : 0u;
     for (xkb_layout_index_t i = 0; i < size; i++) {
         layouts.insert(i, layoutName(i));
     }
@@ -387,6 +390,9 @@ void Xkb::updateConsumedModifiers(uint32_t key)
 
 Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts() const
 {
+    if (!m_state) {
+        return Qt::NoModifier;
+    }
     Qt::KeyboardModifiers mods = Qt::NoModifier;
     if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::ShiftModifier;
