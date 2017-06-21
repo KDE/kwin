@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector>
 // std
 #include <functional>
+#include <memory>
 
 // TODO: Cleanup the order of things in this .h file
 
@@ -47,6 +48,7 @@ namespace KWin
 
 namespace Xcb
 {
+class Tree;
 class Window;
 }
 
@@ -365,6 +367,8 @@ public:
     void registerEventFilter(X11EventFilter *filter);
     void unregisterEventFilter(X11EventFilter *filter);
 
+    void markXStackingOrderAsDirty();
+
 public Q_SLOTS:
     void performWindowOperation(KWin::AbstractClient* c, Options::WindowOperation op);
     // Keybindings
@@ -546,7 +550,7 @@ private:
     static NET::WindowType txtToWindowType(const char* txt);
     static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
 
-    void markXStackingOrderAsDirty();
+    void updateXStackingOrder();
 
     AbstractClient* active_client;
     AbstractClient* last_active_client;
@@ -567,8 +571,8 @@ private:
     ToplevelList unconstrained_stacking_order; // Topmost last
     ToplevelList stacking_order; // Topmost last
     bool force_restacking;
-    mutable ToplevelList x_stacking; // From XQueryTree()
-    mutable bool x_stacking_dirty;
+    ToplevelList x_stacking; // From XQueryTree()
+    std::unique_ptr<Xcb::Tree> m_xStackingQueryTree;
     QList<AbstractClient*> should_get_focus; // Last is most recent
     QList<AbstractClient*> attention_chain;
 

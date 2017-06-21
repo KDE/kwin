@@ -296,6 +296,7 @@ void Compositor::startupWithWorkspace()
     if (!m_starting) {
         return;
     }
+    Workspace::self()->markXStackingOrderAsDirty();
     Q_ASSERT(m_scene);
     connect(workspace(), &Workspace::destroyed, this, [this] { compositeTimer.stop(); });
     claimCompositorSelection();

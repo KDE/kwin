@@ -687,18 +687,23 @@ bool Workspace::keepTransientAbove(const AbstractClient* mainwindow, const Abstr
 // Returns all windows in their stacking order on the root window.
 ToplevelList Workspace::xStackingOrder() const
 {
-    if (!x_stacking_dirty)
-        return x_stacking;
-    x_stacking_dirty = false;
+    if (m_xStackingQueryTree) {
+        const_cast<Workspace*>(this)->updateXStackingOrder();
+    }
+    return x_stacking;
+}
+
+void Workspace::updateXStackingOrder()
+{
     x_stacking.clear();
-    Xcb::Tree tree(rootWindow());
+    std::unique_ptr<Xcb::Tree> tree{std::move(m_xStackingQueryTree)};
     // use our own stacking order, not the X one, as they may differ
     foreach (Toplevel * c, stacking_order)
     x_stacking.append(c);
 
-    if (!tree.isNull()) {
-        xcb_window_t *windows = tree.children();
-        const auto count = tree->children_len;
+    if (!tree->isNull()) {
+        xcb_window_t *windows = tree->children();
+        const auto count = tree->data()->children_len;
         int foundUnmanagedCount = unmanaged.count();
         for (unsigned int i = 0;
                 i < count;
@@ -724,7 +729,6 @@ ToplevelList Workspace::xStackingOrder() const
             }
         }
     }
-    return x_stacking;
 }
 
 //*******************************

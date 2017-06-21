@@ -112,7 +112,6 @@ Workspace::Workspace(const QString &sessionKey)
     , movingClient(0)
     , delayfocus_client(0)
     , force_restacking(false)
-    , x_stacking_dirty(true)
     , showing_desktop(false)
     , was_user_interaction(false)
     , session_saving(false)
@@ -1768,7 +1767,7 @@ Toplevel *Workspace::findInternal(QWindow *w) const
 
 void Workspace::markXStackingOrderAsDirty()
 {
-    x_stacking_dirty = true;
+    m_xStackingQueryTree.reset(new Xcb::Tree(rootWindow()));
 }
 
 } // namespace
