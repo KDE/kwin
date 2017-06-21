@@ -330,7 +330,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         break;
     case XCB_CONFIGURE_NOTIFY:
         if (reinterpret_cast<xcb_configure_notify_event_t*>(e)->event == rootWindow())
-            x_stacking_dirty = true;
+            markXStackingOrderAsDirty();
         break;
     };
 

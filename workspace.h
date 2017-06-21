@@ -546,6 +546,8 @@ private:
     static NET::WindowType txtToWindowType(const char* txt);
     static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
 
+    void markXStackingOrderAsDirty();
+
     AbstractClient* active_client;
     AbstractClient* last_active_client;
     AbstractClient* most_recently_raised; // Used ONLY by raiseOrLowerClient()

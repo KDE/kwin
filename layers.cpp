@@ -226,7 +226,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
 
     // Make the cached stacking order invalid here, in case we need the new stacking order before we get
     // the matching event, due to X being asynchronous.
-    x_stacking_dirty = true;
+    markXStackingOrderAsDirty();
 }
 
 /*!
