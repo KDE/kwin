@@ -64,6 +64,10 @@ typedef struct xcb_glx_buffer_swap_complete_event_t {
 } xcb_glx_buffer_swap_complete_event_t;
 #endif
 
+#ifndef GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV
+#define GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV 0x20F7
+#endif
+
 #include <tuple>
 
 #if __cplusplus <= 201103L
@@ -293,6 +297,15 @@ bool GlxBackend::initRenderingContext()
 
     // Use glXCreateContextAttribsARB() when it's available
     if (hasExtension(QByteArrayLiteral("GLX_ARB_create_context"))) {
+        const int attribs_31_core_nv_robustness[] = {
+            GLX_CONTEXT_MAJOR_VERSION_ARB,               3,
+            GLX_CONTEXT_MINOR_VERSION_ARB,               1,
+            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
+            GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
+            GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
+            0
+        };
+
         const int attribs_31_core_robustness[] = {
             GLX_CONTEXT_MAJOR_VERSION_ARB,               3,
             GLX_CONTEXT_MINOR_VERSION_ARB,               1,
@@ -304,6 +317,13 @@ bool GlxBackend::initRenderingContext()
         const int attribs_31_core[] = {
             GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
             GLX_CONTEXT_MINOR_VERSION_ARB, 1,
+            0
+        };
+
+        const int attribs_legacy_nv_robustness[] = {
+            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
+            GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
+            GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
             0
         };
 
@@ -320,18 +340,31 @@ bool GlxBackend::initRenderingContext()
         };
 
         const bool have_robustness = hasExtension(QByteArrayLiteral("GLX_ARB_create_context_robustness"));
+        const bool haveVideoMemoryPurge = hasExtension(QByteArrayLiteral("GLX_NV_robustness_video_memory_purge"));
 
         // Try to create a 3.1 context first
         if (options->glCoreProfile()) {
-            if (have_robustness)
-                ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core_robustness);
+            if (have_robustness)  {
+                if (haveVideoMemoryPurge) {
+                    ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core_nv_robustness);
+                }
+                if (!ctx) {
+                    ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core_robustness);
+                }
+            }
 
             if (!ctx)
                 ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core);
         }
 
-        if (!ctx && have_robustness)
-            ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy_robustness);
+        if (!ctx && have_robustness) {
+            if (haveVideoMemoryPurge) {
+                ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy_nv_robustness);
+            }
+            if (!ctx) {
+                ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy_robustness);
+            }
+        }
 
         if (!ctx)
             ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy);
