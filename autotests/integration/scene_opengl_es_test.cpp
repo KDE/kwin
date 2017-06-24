@@ -2,7 +2,7 @@
 KWin - the KDE window manager
 This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2017 Martin Flöser <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,12 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "generic_scene_opengl_test.h"
 
-class SceneOpenGLTest : public GenericSceneOpenGLTest
+class SceneOpenGLESTest : public GenericSceneOpenGLTest
 {
     Q_OBJECT
 public:
-    SceneOpenGLTest() : GenericSceneOpenGLTest(QByteArrayLiteral("O2")) {}
+    SceneOpenGLESTest() : GenericSceneOpenGLTest(QByteArrayLiteral("O2ES")) {}
 };
 
-WAYLANDTEST_MAIN(SceneOpenGLTest)
-#include "scene_opengl_test.moc"
+WAYLANDTEST_MAIN(SceneOpenGLESTest)
+#include "scene_opengl_es_test.moc"
