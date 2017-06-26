@@ -2301,12 +2301,12 @@ void SceneOpenGLShadow::buildQuads()
     const QRectF outerRect(QPointF(-leftOffset(), -topOffset()),
                            QPointF(topLevel()->width() + rightOffset(), topLevel()->height() + bottomOffset()));
 
-    const int width = qMax(topLeft.width(), bottomLeft.width()) +
-                      qMax(top.width(), bottom.width()) +
-                      qMax(topRight.width(), bottomRight.width());
-    const int height = qMax(topLeft.height(), topRight.height()) +
-                       qMax(left.height(), right.height()) +
-                       qMax(bottomLeft.height(), bottomRight.height());
+    const int width = std::max({topLeft.width(), left.width(), bottomLeft.width()}) +
+                      std::max(top.width(), bottom.width()) +
+                      std::max({topRight.width(), right.width(), bottomRight.width()});
+    const int height = std::max({topLeft.height(), top.height(), topRight.height()}) +
+                       std::max(left.height(), right.height()) +
+                       std::max({bottomLeft.height(), bottom.height(), bottomRight.height()});
 
     qreal tx1(0.0), tx2(0.0), ty1(0.0), ty2(0.0);
 
@@ -2408,13 +2408,12 @@ bool SceneOpenGLShadow::prepareBackend()
     const QSize topLeft(shadowPixmap(ShadowElementTopLeft).size());
     const QSize bottomRight(shadowPixmap(ShadowElementBottomRight).size());
 
-    const int width = qMax(topLeft.width(), bottomLeft.width()) +
-                      qMax(top.width(), bottom.width()) +
-                      qMax(topRight.width(), bottomRight.width());
-
-    const int height = qMax(topRight.height(), topLeft.height()) +
-                       qMax(left.height(), right.height()) +
-                       qMax(bottomLeft.height(), bottomRight.height());
+    const int width = std::max({topLeft.width(), left.width(), bottomLeft.width()}) +
+                      std::max(top.width(), bottom.width()) +
+                      std::max({topRight.width(), right.width(), bottomRight.width()});
+    const int height = std::max({topLeft.height(), top.height(), topRight.height()}) +
+                       std::max(left.height(), right.height()) +
+                       std::max({bottomLeft.height(), bottom.height(), bottomRight.height()});
 
     if (width == 0 || height == 0) {
         return false;
