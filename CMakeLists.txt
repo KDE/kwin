@@ -440,6 +440,8 @@ set(kwin_KDEINIT_SRCS
     xkb.cpp
     gestures.cpp
     popup_input_filter.cpp
+    abstract_opengl_context_attribute_builder.cpp
+    egl_context_attribute_builder.cpp
    )
 
 if(KWIN_BUILD_TABBOX)

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_egl_backend.h"
+#include "egl_context_attribute_builder.h"
 #include "options.h"
 #include "platform.h"
 #include "wayland_server.h"
@@ -29,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
+
+#include <memory>
 
 namespace KWin
 {
@@ -206,63 +209,44 @@ bool AbstractEglBackend::createContext()
     const bool haveRobustness = hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
     const bool haveCreateContext = hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
 
-    EGLContext ctx = EGL_NO_CONTEXT;
+    std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
     if (isOpenGLES()) {
         if (haveCreateContext && haveRobustness) {
-            const EGLint context_attribs[] = {
-                EGL_CONTEXT_CLIENT_VERSION,                         2,
-                EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT,               EGL_TRUE,
-                EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, EGL_LOSE_CONTEXT_ON_RESET_EXT,
-                EGL_NONE
-            };
-            ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, context_attribs);
+            auto glesRobust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            glesRobust->setVersion(2);
+            glesRobust->setRobust(true);
+            candidates.push_back(std::move(glesRobust));
         }
-        if (ctx == EGL_NO_CONTEXT) {
-            const EGLint context_attribs[] = {
-                EGL_CONTEXT_CLIENT_VERSION, 2,
-                EGL_NONE
-            };
-
-            ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, context_attribs);
-        }
+        auto gles = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+        gles->setVersion(2);
+        candidates.push_back(std::move(gles));
     } else {
-        // Try to create a 3.1 core context
         if (options->glCoreProfile() && haveCreateContext) {
             if (haveRobustness) {
-                const int attribs[] = {
-                    EGL_CONTEXT_MAJOR_VERSION_KHR,                      3,
-                    EGL_CONTEXT_MINOR_VERSION_KHR,                      1,
-                    EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-                    EGL_CONTEXT_FLAGS_KHR,                              EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
-                    EGL_NONE
-                };
-                ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, attribs);
+                auto robustCore = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                robustCore->setVersion(3, 1);
+                robustCore->setRobust(true);
+                candidates.push_back(std::move(robustCore));
             }
-            if (ctx == EGL_NO_CONTEXT) {
-                // try without robustness
-                const EGLint attribs[] = {
-                    EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
-                    EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-                    EGL_NONE
-                };
-                ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, attribs);
-            }
+            auto core = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            core->setVersion(3, 1);
+            candidates.push_back(std::move(core));
         }
+        if (haveRobustness && haveCreateContext) {
+            auto robust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            robust->setRobust(true);
+            candidates.push_back(std::move(robust));
+        }
+        candidates.emplace_back(new EglContextAttributeBuilder);
+    }
 
-        if (ctx == EGL_NO_CONTEXT && haveRobustness && haveCreateContext) {
-            const int attribs[] = {
-                EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
-                EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-                EGL_NONE
-            };
-            ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, attribs);
-        }
-        if (ctx == EGL_NO_CONTEXT) {
-            // and last but not least: try without robustness
-            const EGLint attribs[] = {
-                EGL_NONE
-            };
-            ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, attribs);
+    EGLContext ctx = EGL_NO_CONTEXT;
+    for (auto it = candidates.begin(); it != candidates.end(); it++) {
+        const auto attribs = (*it)->build();
+        ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, attribs.data());
+        if (ctx != EGL_NO_CONTEXT) {
+            qCDebug(KWIN_CORE) << "Created EGL context with attributes:" << (*it).get();
+            break;
         }
     }
 

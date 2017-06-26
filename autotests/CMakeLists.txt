@@ -361,3 +361,8 @@ target_link_libraries(testX11TimestampUpdate
 )
 add_test(kwin-testX11TimestampUpdate testX11TimestampUpdate)
 ecm_mark_as_test(testX11TimestampUpdate)
+
+add_executable(testOpenGLContextAttributeBuilder opengl_context_attribute_builder_test.cpp ../abstract_opengl_context_attribute_builder.cpp ../egl_context_attribute_builder.cpp)
+target_link_libraries(testOpenGLContextAttributeBuilder Qt5::Test)
+add_test(kwin-testOpenGLContextAttributeBuilder testOpenGLContextAttributeBuilder)
+ecm_mark_as_test(testOpenGLContextAttributeBuilder)
