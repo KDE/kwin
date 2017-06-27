@@ -13,7 +13,7 @@ if(X11_Xinput_FOUND)
 endif()
 
 if(HAVE_EPOXY_GLX)
-    set(X11PLATFORM_SOURCES ${X11PLATFORM_SOURCES} glxbackend.cpp)
+    set(X11PLATFORM_SOURCES ${X11PLATFORM_SOURCES} glxbackend.cpp glx_context_attribute_builder.cpp)
 endif()
 
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})

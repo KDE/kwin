@@ -366,7 +366,16 @@ target_link_libraries(testX11TimestampUpdate
 add_test(kwin-testX11TimestampUpdate testX11TimestampUpdate)
 ecm_mark_as_test(testX11TimestampUpdate)
 
-add_executable(testOpenGLContextAttributeBuilder opengl_context_attribute_builder_test.cpp ../abstract_opengl_context_attribute_builder.cpp ../egl_context_attribute_builder.cpp)
+set(testOpenGLContextAttributeBuilder_SRCS
+    opengl_context_attribute_builder_test.cpp
+    ../abstract_opengl_context_attribute_builder.cpp
+    ../egl_context_attribute_builder.cpp
+)
+
+if(HAVE_EPOXY_GLX)
+    set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../plugins/platforms/x11/standalone/glx_context_attribute_builder.cpp)
+endif()
+add_executable(testOpenGLContextAttributeBuilder ${testOpenGLContextAttributeBuilder_SRCS})
 target_link_libraries(testOpenGLContextAttributeBuilder Qt5::Test)
 add_test(kwin-testOpenGLContextAttributeBuilder testOpenGLContextAttributeBuilder)
 ecm_mark_as_test(testOpenGLContextAttributeBuilder)

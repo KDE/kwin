@@ -86,6 +86,14 @@ public:
         return m_compatibilityProfile;
     }
 
+    void setResetOnVideoMemoryPurge(bool reset) {
+        m_resetOnVideoMemoryPurge = reset;
+    }
+
+    bool isResetOnVideoMemoryPurge() const {
+        return m_resetOnVideoMemoryPurge;
+    }
+
     virtual std::vector<int> build() const = 0;
 
     QDebug operator<<(QDebug dbg) const;
@@ -98,6 +106,7 @@ private:
     bool m_forwardCompatible = false;
     bool m_coreProfile = false;
     bool m_compatibilityProfile = false;
+    bool m_resetOnVideoMemoryPurge = false;
 };
 
 inline QDebug operator<<(QDebug dbg, const AbstractOpenGLContextAttributeBuilder *attribs)

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "glxbackend.h"
 #include "logging.h"
+#include "glx_context_attribute_builder.h"
 // kwin
 #include "options.h"
 #include "overlaywindow.h"
@@ -63,10 +64,6 @@ typedef struct xcb_glx_buffer_swap_complete_event_t {
     uint32_t           msc_lo; /**<  */
     uint32_t           sbc; /**<  */
 } xcb_glx_buffer_swap_complete_event_t;
-#endif
-
-#ifndef GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV
-#define GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV 0x20F7
 #endif
 
 #include <tuple>
@@ -288,77 +285,51 @@ bool GlxBackend::initRenderingContext()
 
     // Use glXCreateContextAttribsARB() when it's available
     if (hasExtension(QByteArrayLiteral("GLX_ARB_create_context"))) {
-        const int attribs_31_core_nv_robustness[] = {
-            GLX_CONTEXT_MAJOR_VERSION_ARB,               3,
-            GLX_CONTEXT_MINOR_VERSION_ARB,               1,
-            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-            GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-            GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
-            0
-        };
-
-        const int attribs_31_core_robustness[] = {
-            GLX_CONTEXT_MAJOR_VERSION_ARB,               3,
-            GLX_CONTEXT_MINOR_VERSION_ARB,               1,
-            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-            GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-            0
-        };
-
-        const int attribs_31_core[] = {
-            GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-            GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-            0
-        };
-
-        const int attribs_legacy_nv_robustness[] = {
-            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-            GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-            GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV, GL_TRUE,
-            0
-        };
-
-        const int attribs_legacy_robustness[] = {
-            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
-            GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
-            0
-        };
-
-        const int attribs_legacy[] = {
-            GLX_CONTEXT_MAJOR_VERSION_ARB,               2,
-            GLX_CONTEXT_MINOR_VERSION_ARB,               1,
-            0
-        };
-
         const bool have_robustness = hasExtension(QByteArrayLiteral("GLX_ARB_create_context_robustness"));
         const bool haveVideoMemoryPurge = hasExtension(QByteArrayLiteral("GLX_NV_robustness_video_memory_purge"));
 
-        // Try to create a 3.1 context first
+        std::vector<GlxContextAttributeBuilder> candidates;
         if (options->glCoreProfile()) {
-            if (have_robustness)  {
+            if (have_robustness) {
                 if (haveVideoMemoryPurge) {
-                    ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core_nv_robustness);
+                    GlxContextAttributeBuilder purgeMemoryCore;
+                    purgeMemoryCore.setVersion(3, 1);
+                    purgeMemoryCore.setRobust(true);
+                    purgeMemoryCore.setResetOnVideoMemoryPurge(true);
+                    candidates.emplace_back(std::move(purgeMemoryCore));
                 }
-                if (!ctx) {
-                    ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core_robustness);
+                GlxContextAttributeBuilder robustCore;
+                robustCore.setVersion(3, 1);
+                robustCore.setRobust(true);
+                candidates.emplace_back(std::move(robustCore));
+            }
+            GlxContextAttributeBuilder core;
+            core.setVersion(3, 1);
+            candidates.emplace_back(std::move(core));
+        } else {
+            if (have_robustness) {
+                if (haveVideoMemoryPurge) {
+                    GlxContextAttributeBuilder purgeMemoryLegacy;
+                    purgeMemoryLegacy.setRobust(true);
+                    purgeMemoryLegacy.setResetOnVideoMemoryPurge(true);
+                    candidates.emplace_back(std::move(purgeMemoryLegacy));
                 }
+                GlxContextAttributeBuilder robustLegacy;
+                robustLegacy.setRobust(true);
+                candidates.emplace_back(std::move(robustLegacy));
             }
-
-            if (!ctx)
-                ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core);
+            GlxContextAttributeBuilder legacy;
+            legacy.setVersion(2, 1);
+            candidates.emplace_back(std::move(legacy));
         }
-
-        if (!ctx && have_robustness) {
-            if (haveVideoMemoryPurge) {
-                ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy_nv_robustness);
-            }
-            if (!ctx) {
-                ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy_robustness);
+        for (auto it = candidates.begin(); it != candidates.end(); it++) {
+            const auto attribs = it->build();
+            ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, true, attribs.data());
+            if (ctx) {
+                qCDebug(KWIN_X11STANDALONE) << "Created GLX context with attributes:" << &(*it);
+                break;
             }
         }
-
-        if (!ctx)
-            ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy);
     }
 
     if (!ctx)
