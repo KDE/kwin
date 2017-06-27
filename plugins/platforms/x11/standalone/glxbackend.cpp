@@ -334,8 +334,8 @@ bool GlxBackend::initRenderingContext()
         };
 
         const int attribs_legacy[] = {
-            GLX_CONTEXT_MAJOR_VERSION_ARB,               1,
-            GLX_CONTEXT_MINOR_VERSION_ARB,               2,
+            GLX_CONTEXT_MAJOR_VERSION_ARB,               2,
+            GLX_CONTEXT_MINOR_VERSION_ARB,               1,
             0
         };
 
