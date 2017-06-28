@@ -614,6 +614,10 @@ bool ShaderManager::selfTest()
         qCWarning(LIBKWINGLUTILS) << "Skipping self test as it is reported to return false positive results on Quadro hardware";
         return true;
     }
+    if (GLPlatform::instance()->isMesaDriver() && GLPlatform::instance()->mesaVersion() >= kVersionNumber(17, 0)) {
+        qCWarning(LIBKWINGLUTILS) << "Skipping self test as it is reported to return false positive results on Mesa drivers";
+        return true;
+    }
 
     // Create the source texture
     QImage image(2, 2, QImage::Format_ARGB32_Premultiplied);
