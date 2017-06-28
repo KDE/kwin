@@ -44,6 +44,7 @@ integrationTest(NAME testWindowSelection SRCS window_selection_test.cpp)
 integrationTest(NAME testPointerConstraints SRCS pointer_constraints_test.cpp)
 integrationTest(NAME testKeyboardLayout SRCS keyboard_layout_test.cpp)
 integrationTest(NAME testKeymapCreationFailure SRCS keymap_creation_failure_test.cpp)
+integrationTest(NAME testShowingDesktop SRCS showing_desktop_test.cpp)
 
 if (XCB_ICCCM_FOUND)
     integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp LIBS XCB::ICCCM)
