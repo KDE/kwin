@@ -128,11 +128,19 @@ static QString formatGLError(GLenum err)
 bool checkGLError(const char* txt)
 {
     GLenum err = glGetError();
+    if (err == GL_CONTEXT_LOST) {
+        qCWarning(LIBKWINGLUTILS) << "GL error: context lost";
+        return true;
+    }
     bool hasError = false;
     while (err != GL_NO_ERROR) {
         qCWarning(LIBKWINGLUTILS) << "GL error (" << txt << "): " << formatGLError(err);
         hasError = true;
         err = glGetError();
+        if (err == GL_CONTEXT_LOST) {
+            qCWarning(LIBKWINGLUTILS) << "GL error: context lost";
+            break;
+        }
     }
     return hasError;
 }
