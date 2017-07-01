@@ -407,8 +407,8 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         init_ok = false;
         return; // error
     }
-    if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(8, 0)) {
-        qCCritical(KWIN_CORE) << "KWin requires at least Mesa 8.0 for OpenGL compositing.";
+    if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(10, 0)) {
+        qCCritical(KWIN_CORE) << "KWin requires at least Mesa 10.0 for OpenGL compositing.";
         init_ok = false;
         return;
     }

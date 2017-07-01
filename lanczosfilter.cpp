@@ -78,9 +78,6 @@ void LanczosFilter::init()
         // The lanczos filter is reported to be broken with the Intel driver prior SandyBridge
         if (gl->driver() == Driver_Intel && gl->chipClass() < SandyBridge)
             return;
-        // Broken on Intel chips with Mesa 9.1 - BUG 313613
-        if (gl->driver() == Driver_Intel && gl->mesaVersion() >= kVersionNumber(9, 1) && gl->mesaVersion() < kVersionNumber(9, 2))
-            return;
         // also radeon before R600 has trouble
         if (gl->isRadeon() && gl->chipClass() < R600)
             return;
