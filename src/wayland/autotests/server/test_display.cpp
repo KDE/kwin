@@ -133,7 +133,13 @@ void TestWaylandServerDisplay::testClientConnection()
     ClientConnection *connection = display.getConnection(client);
     QVERIFY(connection);
     QCOMPARE(connection->client(), client);
+    if (getuid() == 0) {
+        QEXPECT_FAIL("", "Please don't run test as root", Continue);
+    }
     QVERIFY(connection->userId() != 0);
+    if (getgid() == 0) {
+        QEXPECT_FAIL("", "Please don't run test as root", Continue);
+    }
     QVERIFY(connection->groupId() != 0);
     QVERIFY(connection->processId() != 0);
     QCOMPARE(connection->display(), &display);
