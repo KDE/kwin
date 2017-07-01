@@ -1307,8 +1307,14 @@ void Workspace::setShowingDesktop(bool showing)
     }
     } // ~StackingUpdatesBlocker
 
-    if (showing_desktop && topDesk)
+    if (showing_desktop && topDesk) {
         requestFocus(topDesk);
+    } else if (!showing_desktop && changed) {
+        const auto client = FocusChain::self()->getForActivation(VirtualDesktopManager::self()->current());
+        if (client) {
+            activateClient(client);
+        }
+    }
     if (changed)
         emit showingDesktopChanged(showing);
 }
