@@ -74,6 +74,9 @@ void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &o
     Q_UNUSED(region)
     Q_UNUSED(offset)
     auto s = static_cast<Window *>(window->handle())->surface();
+    if (!s) {
+        return;
+    }
     s->attachBuffer(m_buffer);
     // TODO: proper damage region
     s->damage(QRect(QPoint(0, 0), m_backBuffer.size()));

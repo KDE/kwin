@@ -73,7 +73,9 @@ void *NativeInterface::nativeResourceForWindow(const QByteArray &resource, QWind
     }
     if (r == s_surfaceKey && window) {
         if (auto handle = window->handle()) {
-            return static_cast<wl_surface*>(*static_cast<Window*>(handle)->surface());
+            if (auto surface = static_cast<Window*>(handle)->surface()) {
+                return static_cast<wl_surface*>(*surface);
+            }
         }
     }
     return nullptr;
