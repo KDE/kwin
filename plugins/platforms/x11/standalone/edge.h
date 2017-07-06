@@ -61,6 +61,7 @@ private:
     void createApproachWindow();
     Xcb::Window m_window;
     Xcb::Window m_approachWindow;
+    QMetaObject::Connection m_cursorPollingConnection;
 };
 
 inline quint32 WindowBasedEdge::window() const

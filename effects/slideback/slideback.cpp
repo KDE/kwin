@@ -307,8 +307,11 @@ bool SlideBackEffect::intersects(EffectWindow* windowUnder, const QRect &windowO
 EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList & allWindows)
 {
     EffectWindowList retList;
+    auto isWindowVisible = [] (const EffectWindow *window) {
+        return window && effects->virtualScreenGeometry().intersects(window->geometry());
+    };
     foreach (EffectWindow * tmp, allWindows) {
-        if (isWindowUsable(tmp)) {
+        if (isWindowUsable(tmp) && isWindowVisible(tmp)) {
             retList.append(tmp);
         }
     }
