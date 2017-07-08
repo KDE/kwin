@@ -90,6 +90,15 @@ void WaylandServer::destroyInternalConnection()
 {
     emit terminatingInternalClientConnection();
     if (m_internalConnection.client) {
+        // delete all connections hold by plugins like e.g. widget style
+        const auto connections = KWayland::Client::ConnectionThread::connections();
+        for (auto c : connections) {
+            if (c == m_internalConnection.client) {
+                continue;
+            }
+            emit c->connectionDied();
+        }
+
         delete m_internalConnection.registry;
         delete m_internalConnection.shm;
         dispatch();
