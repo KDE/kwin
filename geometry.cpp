@@ -150,6 +150,10 @@ void Workspace::updateClientArea(bool force)
             }
         }
         StrutRects strutRegion = (*it)->strutRects();
+        const QRect clientsScreenRect = KWin::screens()->geometry((*it)->screen());
+        for (auto strut = strutRegion.begin(); strut != strutRegion.end(); strut++) {
+            *strut = StrutRect((*strut).intersected(clientsScreenRect), (*strut).area());
+        }
 
         // Ignore offscreen xinerama struts. These interfere with the larger monitors on the setup
         // and should be ignored so that applications that use the work area to work out where
