@@ -78,7 +78,9 @@ void TestWaylandConnectionThread::cleanup()
 
 void TestWaylandConnectionThread::testInitConnectionNoThread()
 {
+    QVERIFY(KWayland::Client::ConnectionThread::connections().isEmpty());
     QScopedPointer<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread);
+    QVERIFY(KWayland::Client::ConnectionThread::connections().contains(connection.data()));
     QCOMPARE(connection->socketName(), QStringLiteral("wayland-0"));
     connection->setSocketName(s_socketName);
     QCOMPARE(connection->socketName(), s_socketName);
@@ -90,6 +92,9 @@ void TestWaylandConnectionThread::testInitConnectionNoThread()
     QCOMPARE(connectedSpy.count(), 1);
     QCOMPARE(failedSpy.count(), 0);
     QVERIFY(connection->display());
+
+    connection.reset();
+    QVERIFY(KWayland::Client::ConnectionThread::connections().isEmpty());
 }
 
 void TestWaylandConnectionThread::testConnectionFailure()
