@@ -65,6 +65,9 @@ void TestDontCrashUseractionsMenu::initTestCase()
     QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
+    // force style to breeze as that's the one which triggered the crash
+    QVERIFY(kwinApp()->setStyle(QStringLiteral("breeze")));
+
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QCOMPARE(screens()->count(), 2);
