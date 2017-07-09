@@ -58,11 +58,25 @@ Q_DECLARE_METATYPE(DBusLogindSeat)
 namespace KWin
 {
 
+const static QString s_login1Name = QStringLiteral("logind");
 const static QString s_login1Service = QStringLiteral("org.freedesktop.login1");
 const static QString s_login1Path = QStringLiteral("/org/freedesktop/login1");
 const static QString s_login1ManagerInterface = QStringLiteral("org.freedesktop.login1.Manager");
+const static QString s_login1SeatInterface = QStringLiteral("org.freedesktop.login1.Seat");
 const static QString s_login1SessionInterface = QStringLiteral("org.freedesktop.login1.Session");
+const static QString s_login1ActivateProperty = QStringLiteral("Activate");
+
+const static QString s_ck2Name = QStringLiteral("ConsoleKit");
+const static QString s_ck2Service = QStringLiteral("org.freedesktop.ConsoleKit");
+const static QString s_ck2Path = QStringLiteral("/org/freedesktop/ConsoleKit/Manager");
+const static QString s_ck2ManagerInterface = QStringLiteral("org.freedesktop.ConsoleKit.Manager");
+const static QString s_ck2SeatInterface = QStringLiteral("org.freedesktop.ConsoleKit.Seat");
+const static QString s_ck2SessionInterface = QStringLiteral("org.freedesktop.ConsoleKit.Session");
+const static QString s_ck2ActivateProperty = QStringLiteral("activate");
+
 const static QString s_dbusPropertiesInterface = QStringLiteral("org.freedesktop.DBus.Properties");
+
+
 
 LogindIntegration *LogindIntegration::s_self = nullptr;
 
@@ -76,22 +90,10 @@ LogindIntegration *LogindIntegration::create(QObject *parent)
 LogindIntegration::LogindIntegration(const QDBusConnection &connection, QObject *parent)
     : QObject(parent)
     , m_bus(connection)
-    , m_logindServiceWatcher(new QDBusServiceWatcher(s_login1Service,
-                                                     m_bus,
-                                                     QDBusServiceWatcher::WatchForUnregistration | QDBusServiceWatcher::WatchForRegistration,
-                                                     this))
     , m_connected(false)
     , m_sessionControl(false)
     , m_sessionActive(false)
 {
-    connect(m_logindServiceWatcher, &QDBusServiceWatcher::serviceRegistered, this, &LogindIntegration::logindServiceRegistered);
-    connect(m_logindServiceWatcher, &QDBusServiceWatcher::serviceUnregistered, this,
-        [this]() {
-            m_connected = false;
-            emit connectedChanged();
-        }
-    );
-
     // check whether the logind service is registered
     QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.DBus"),
                                                           QStringLiteral("/"),
@@ -107,8 +109,11 @@ LogindIntegration::LogindIntegration(const QDBusConnection &connection, QObject 
                 return;
             }
             if (reply.value().contains(s_login1Service)) {
-                logindServiceRegistered();
+                setupSessionController(SessionControllerLogind);
+            } else if (reply.value().contains(s_ck2Service)) {
+                setupSessionController(SessionControllerConsoleKit);
             }
+
         }
     );
 }
@@ -121,6 +126,53 @@ LogindIntegration::LogindIntegration(QObject *parent)
 LogindIntegration::~LogindIntegration()
 {
     s_self = nullptr;
+}
+
+void LogindIntegration::setupSessionController(SessionController controller)
+{
+    if (controller == SessionControllerLogind) {
+        // We have the logind serivce, set it up and use it
+        m_sessionControllerName = s_login1Name;
+        m_sessionControllerService = s_login1Service;
+        m_sessionControllerPath = s_login1Path;
+        m_sessionControllerManagerInterface = s_login1ManagerInterface;
+        m_sessionControllerSeatInterface = s_login1SeatInterface;
+        m_sessionControllerSessionInterface = s_login1SessionInterface;
+        m_sessionControllerActivateProperty = s_login1ActivateProperty;
+        m_logindServiceWatcher = new QDBusServiceWatcher(m_sessionControllerService,
+                                                         m_bus,
+                                                         QDBusServiceWatcher::WatchForUnregistration | QDBusServiceWatcher::WatchForRegistration,
+                                                         this);
+        connect(m_logindServiceWatcher, &QDBusServiceWatcher::serviceRegistered, this, &LogindIntegration::logindServiceRegistered);
+        connect(m_logindServiceWatcher, &QDBusServiceWatcher::serviceUnregistered, this,
+                [this]() {
+                    m_connected = false;
+                    emit connectedChanged();
+                }
+        );
+        logindServiceRegistered();
+    } else if (controller == SessionControllerConsoleKit) {
+        // We have the ConsoleKit serivce, set it up and use it
+        m_sessionControllerName = s_ck2Name;
+        m_sessionControllerService = s_ck2Service;
+        m_sessionControllerPath = s_ck2Path;
+        m_sessionControllerManagerInterface = s_ck2ManagerInterface;
+        m_sessionControllerSeatInterface = s_ck2SeatInterface;
+        m_sessionControllerSessionInterface = s_ck2SessionInterface;
+        m_sessionControllerActivateProperty = s_ck2ActivateProperty;
+        m_logindServiceWatcher = new QDBusServiceWatcher(m_sessionControllerService,
+                                                         m_bus,
+                                                         QDBusServiceWatcher::WatchForUnregistration | QDBusServiceWatcher::WatchForRegistration,
+                                                         this);
+        connect(m_logindServiceWatcher, &QDBusServiceWatcher::serviceRegistered, this, &LogindIntegration::logindServiceRegistered);
+        connect(m_logindServiceWatcher, &QDBusServiceWatcher::serviceUnregistered, this,
+                [this]() {
+                    m_connected = false;
+                    emit connectedChanged();
+                }
+        );
+        logindServiceRegistered();
+    }
 }
 
 void LogindIntegration::logindServiceRegistered()
@@ -136,9 +188,9 @@ void LogindIntegration::logindServiceRegistered()
         args << QString::fromLocal8Bit(sessionId);
     }
     // get the current session
-    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
-                                                          s_login1Path,
-                                                          s_login1ManagerInterface,
+    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
+                                                          m_sessionControllerPath,
+                                                          m_sessionControllerManagerInterface,
                                                           methodName);
     message.setArguments(args);
     QDBusPendingReply<QDBusObjectPath> session = m_bus.asyncCall(message);
@@ -151,7 +203,7 @@ void LogindIntegration::logindServiceRegistered()
                 return;
             }
             if (!reply.isValid()) {
-                qCDebug(KWIN_CORE) << "The session is not registered with logind" << reply.error().message();
+                qCDebug(KWIN_CORE) << "The session is not registered with " << m_sessionControllerName << " " << reply.error().message();
                 return;
             }
             m_sessionPath = reply.value().path();
@@ -159,9 +211,9 @@ void LogindIntegration::logindServiceRegistered()
             m_connected = true;
             connectSessionPropertiesChanged();
             // activate the session, in case we are not on it
-            QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+            QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
                                                                 m_sessionPath,
-                                                                s_login1SessionInterface,
+                                                                m_sessionControllerSessionInterface,
                                                                 QStringLiteral("Activate"));
             // blocking on purpose
             m_bus.call(message);
@@ -176,13 +228,13 @@ void LogindIntegration::logindServiceRegistered()
 
 void LogindIntegration::connectSessionPropertiesChanged()
 {
-    m_bus.connect(s_login1Service,
+    m_bus.connect(m_sessionControllerService,
                   m_sessionPath,
                   s_dbusPropertiesInterface,
                   QStringLiteral("PropertiesChanged"),
                   this,
                   SLOT(getSessionActive()));
-    m_bus.connect(s_login1Service,
+    m_bus.connect(m_sessionControllerService,
                   m_sessionPath,
                   s_dbusPropertiesInterface,
                   QStringLiteral("PropertiesChanged"),
@@ -195,11 +247,11 @@ void LogindIntegration::getSessionActive()
     if (!m_connected || m_sessionPath.isEmpty()) {
         return;
     }
-    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
                                                           m_sessionPath,
                                                           s_dbusPropertiesInterface,
                                                           QStringLiteral("Get"));
-    message.setArguments(QVariantList({s_login1SessionInterface, QStringLiteral("Active")}));
+    message.setArguments(QVariantList({m_sessionControllerSessionInterface, m_sessionControllerActivateProperty}));
     QDBusPendingReply<QVariant> reply = m_bus.asyncCall(message);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this,
@@ -207,7 +259,7 @@ void LogindIntegration::getSessionActive()
             QDBusPendingReply<QVariant> reply = *self;
             self->deleteLater();
             if (!reply.isValid()) {
-                qCDebug(KWIN_CORE) << "Failed to get Active Property of logind session:" << reply.error().message();
+                qCDebug(KWIN_CORE) << "Failed to get Active Property of " << m_sessionControllerName << " session:" << reply.error().message();
                 return;
             }
             const bool active = reply.value().toBool();
@@ -224,11 +276,11 @@ void LogindIntegration::getVirtualTerminal()
     if (!m_connected || m_sessionPath.isEmpty()) {
         return;
     }
-    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
                                                           m_sessionPath,
                                                           s_dbusPropertiesInterface,
                                                           QStringLiteral("Get"));
-    message.setArguments(QVariantList({s_login1SessionInterface, QStringLiteral("VTNr")}));
+    message.setArguments(QVariantList({m_sessionControllerSessionInterface, QStringLiteral("VTNr")}));
     QDBusPendingReply<QVariant> reply = m_bus.asyncCall(message);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this,
@@ -236,7 +288,7 @@ void LogindIntegration::getVirtualTerminal()
             QDBusPendingReply<QVariant> reply = *self;
             self->deleteLater();
             if (!reply.isValid()) {
-                qCDebug(KWIN_CORE) << "Failed to get VTNr Property of logind session:" << reply.error().message();
+                qCDebug(KWIN_CORE) << "Failed to get VTNr Property of " << m_sessionControllerName << " session:" << reply.error().message();
                 return;
             }
             const int vt = reply.value().toUInt();
@@ -259,9 +311,9 @@ void LogindIntegration::takeControl()
     }
     s_recursionCheck = true;
 
-    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
                                                           m_sessionPath,
-                                                          s_login1SessionInterface,
+                                                          m_sessionControllerSessionInterface,
                                                           QStringLiteral("TakeControl"));
     message.setArguments(QVariantList({QVariant(false)}));
     QDBusPendingReply<void> session = m_bus.asyncCall(message);
@@ -279,8 +331,8 @@ void LogindIntegration::takeControl()
             qCDebug(KWIN_CORE) << "Gained session control";
             m_sessionControl = true;
             emit hasSessionControlChanged(true);
-            m_bus.connect(s_login1Service, m_sessionPath,
-                          s_login1SessionInterface, QStringLiteral("PauseDevice"),
+            m_bus.connect(m_sessionControllerService, m_sessionPath,
+                          m_sessionControllerSessionInterface, QStringLiteral("PauseDevice"),
                           this, SLOT(pauseDevice(uint,uint,QString)));
         }
     );
@@ -292,9 +344,9 @@ void LogindIntegration::releaseControl()
         return;
     }
 
-    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
                                                           m_sessionPath,
-                                                          s_login1SessionInterface,
+                                                          m_sessionControllerSessionInterface,
                                                           QStringLiteral("ReleaseControl"));
     m_bus.asyncCall(message);
     m_sessionControl = false;
@@ -308,9 +360,9 @@ int LogindIntegration::takeDevice(const char *path)
         qCDebug(KWIN_CORE) << "Could not stat the path";
         return -1;
     }
-    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
                                                           m_sessionPath,
-                                                          s_login1SessionInterface,
+                                                          m_sessionControllerSessionInterface,
                                                           QStringLiteral("TakeDevice"));
     message.setArguments(QVariantList({QVariant(major(st.st_rdev)), QVariant(minor(st.st_rdev))}));
     // intended to be a blocking call
@@ -329,9 +381,9 @@ void LogindIntegration::releaseDevice(int fd)
         qCDebug(KWIN_CORE) << "Could not stat the file descriptor";
         return;
     }
-    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
                                                           m_sessionPath,
-                                                          s_login1SessionInterface,
+                                                          m_sessionControllerSessionInterface,
                                                           QStringLiteral("ReleaseDevice"));
     message.setArguments(QVariantList({QVariant(major(st.st_rdev)), QVariant(minor(st.st_rdev))}));
     m_bus.asyncCall(message);
@@ -341,7 +393,7 @@ void LogindIntegration::pauseDevice(uint devMajor, uint devMinor, const QString 
 {
     if (QString::compare(type, QStringLiteral("pause"), Qt::CaseInsensitive) == 0) {
         // unconditionally call complete
-        QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service, m_sessionPath, s_login1SessionInterface, QStringLiteral("PauseDeviceComplete"));
+        QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService, m_sessionPath, m_sessionControllerSessionInterface, QStringLiteral("PauseDeviceComplete"));
         message.setArguments(QVariantList({QVariant(devMajor), QVariant(devMinor)}));
         m_bus.asyncCall(message);
     }
@@ -353,11 +405,12 @@ void LogindIntegration::getSeat()
         return;
     }
     qDBusRegisterMetaType<DBusLogindSeat>();
-    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
                                                           m_sessionPath,
                                                           s_dbusPropertiesInterface,
                                                           QStringLiteral("Get"));
-    message.setArguments(QVariantList({s_login1SessionInterface, QStringLiteral("Seat")}));
+    message.setArguments(QVariantList({m_sessionControllerSessionInterface, QStringLiteral("Seat")}));
+    message.setArguments(QVariantList({m_sessionControllerSessionInterface, QStringLiteral("Seat")}));
     QDBusPendingReply<QVariant> reply = m_bus.asyncCall(message);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this,
@@ -365,12 +418,13 @@ void LogindIntegration::getSeat()
             QDBusPendingReply<QVariant> reply = *self;
             self->deleteLater();
             if (!reply.isValid()) {
-                qCDebug(KWIN_CORE) << "Failed to get Seat Property of logind session:" << reply.error().message();
+                qCDebug(KWIN_CORE) << "Failed to get Seat Property of " << m_sessionControllerName << " session:" << reply.error().message();
                 return;
             }
             DBusLogindSeat seat = qdbus_cast<DBusLogindSeat>(reply.value().value<QDBusArgument>());
             const QString seatPath = seat.path.path();
-            qCDebug(KWIN_CORE) << "Logind seat:" << seat.name << "/" << seatPath;
+            qCDebug(KWIN_CORE) << m_sessionControllerName << " seat:" << seat.name << "/" << seatPath;
+            qCDebug(KWIN_CORE) << m_sessionControllerName << " seat:" << seat.name << "/" << seatPath;
             if (m_seatPath != seatPath) {
                 m_seatPath = seatPath;
             }
@@ -383,9 +437,9 @@ void LogindIntegration::switchVirtualTerminal(quint32 vtNr)
     if (!m_connected || m_seatPath.isEmpty()) {
         return;
     }
-    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
                                                           m_seatPath,
-                                                          QStringLiteral("org.freedesktop.login1.Seat"),
+                                                          m_sessionControllerSeatInterface,
                                                           QStringLiteral("SwitchTo"));
     message.setArguments(QVariantList{vtNr});
     m_bus.asyncCall(message);

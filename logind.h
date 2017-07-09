@@ -78,6 +78,11 @@ private:
     explicit LogindIntegration(const QDBusConnection &connection, QObject *parent = nullptr);
     void logindServiceRegistered();
     void connectSessionPropertiesChanged();
+    enum SessionController {
+        SessionControllerLogind,
+        SessionControllerConsoleKit,
+    };
+    void setupSessionController(SessionController controller);
     void getSeat();
     QDBusConnection m_bus;
     QDBusServiceWatcher *m_logindServiceWatcher;
@@ -87,6 +92,13 @@ private:
     bool m_sessionActive;
     int m_vt = -1;
     QString m_seatPath;
+    QString m_sessionControllerName;
+    QString m_sessionControllerService;
+    QString m_sessionControllerPath;
+    QString m_sessionControllerManagerInterface;
+    QString m_sessionControllerSeatInterface;
+    QString m_sessionControllerSessionInterface;
+    QString m_sessionControllerActivateProperty;
     KWIN_SINGLETON(LogindIntegration)
 };
 
