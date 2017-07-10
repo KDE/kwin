@@ -229,7 +229,23 @@ void Workspace::updateClientArea(bool force)
                 }
                 return margins;
             };
-            // TODO: implement restrictedMoveArea adjustments
+            auto marginsToStrutArea = [] (const QMargins &margins) {
+                if (margins.left() != 0) {
+                    return StrutAreaLeft;
+                }
+                if (margins.right() != 0) {
+                    return StrutAreaRight;
+                }
+                if (margins.top() != 0) {
+                    return StrutAreaTop;
+                }
+                if (margins.bottom() != 0) {
+                    return StrutAreaBottom;
+                }
+                return StrutAreaInvalid;
+            };
+            const auto strut = margins(KWin::screens()->geometry(c->screen()));
+            const StrutRects strutRegion = StrutRects{StrutRect(c->geometry(), marginsToStrutArea(strut))};
             QRect r = desktopArea - margins(KWin::screens()->geometry());
             if (c->isOnAllDesktops()) {
                 for (int i = 1; i <= numberOfDesktops; ++i) {
@@ -237,12 +253,14 @@ void Workspace::updateClientArea(bool force)
                     for (int iS = 0; iS < nscreens; ++iS) {
                         new_sareas[ i ][ iS ] = new_sareas[ i ][ iS ].intersected(screens[iS] - margins(screens[iS]));
                     }
+                    new_rmoveareas[ i ] += strutRegion;
                 }
             } else {
                 new_wareas[c->desktop()] = new_wareas[c->desktop()].intersected(r);
                 for (int iS = 0; iS < nscreens; iS++) {
                     new_sareas[c->desktop()][ iS ] = new_sareas[c->desktop()][ iS ].intersected(screens[iS] - margins(screens[iS]));
                 }
+                new_rmoveareas[ c->desktop() ] += strutRegion;
             }
         };
         const auto clients = waylandServer()->clients();
