@@ -69,17 +69,7 @@ typedef struct xcb_glx_buffer_swap_complete_event_t {
 #endif
 
 #include <tuple>
-
-#if __cplusplus <= 201103L
-namespace std {
-    // C++-14
-    template<class T, class... Args>
-    unique_ptr<T> make_unique(Args&&... args) {
-        return unique_ptr<T>(new T(std::forward<Args>(args)...));
-    }
-}
-#endif
-
+#include <memory>
 
 namespace KWin
 {
