@@ -121,9 +121,12 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
     if (!d->focusedSurface) {
         return;
     }
-    d->destroyConnection = connect(d->focusedSurface, &QObject::destroyed, this,
+    d->destroyConnection = connect(d->focusedSurface, &Resource::aboutToBeUnbound, this,
         [this] {
             Q_D();
+            if (d->resource) {
+                wl_keyboard_send_leave(d->resource, d->global->display()->nextSerial(), d->focusedSurface->resource());
+            }
             d->focusedSurface = nullptr;
             d->focusedChildSurface.clear();
         }

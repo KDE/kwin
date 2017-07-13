@@ -1563,7 +1563,8 @@ void TestWaylandSeat::testKeyboard()
     QSignalSpy serverSurfaceDestroyedSpy(serverSurface, &QObject::destroyed);
     QVERIFY(serverSurfaceDestroyedSpy.isValid());
     delete s;
-    QVERIFY(serverSurfaceDestroyedSpy.wait());
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(serverSurfaceDestroyedSpy.count(), 1);
     QVERIFY(!m_seatInterface->focusedKeyboardSurface());
     QVERIFY(!m_seatInterface->focusedKeyboard());
     QVERIFY(!serverKeyboard->focusedSurface());

@@ -81,6 +81,16 @@ Q_SIGNALS:
      * @since 5.24
      **/
     void unbound();
+    /**
+     * This signal is emitted when the client is in the process of unbinding the Resource.
+     * In opposite to @link{unbound} the @link{resource} is still valid and allows to perform
+     * cleanup tasks. Example: send a keyboard leave for the Surface which is in the process of
+     * getting destroyed.
+     *
+     * @see unbound
+     * @since 5.37
+     **/
+    void aboutToBeUnbound();
 
 protected:
     class Private;
