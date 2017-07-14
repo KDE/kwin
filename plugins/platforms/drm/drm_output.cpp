@@ -765,9 +765,6 @@ void DrmOutput::pageFlipped()
 
 bool DrmOutput::present(DrmBuffer *buffer)
 {
-    if (!buffer || buffer->bufferId() == 0) {
-            return false;
-    }
     if (m_backend->atomicModeSetting()) {
         return presentAtomically(buffer);
     } else {
@@ -816,14 +813,13 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
 
     if (!doAtomicCommit(AtomicCommitMode::Test)) {
         //TODO: When we use planes for layered rendering, fallback to renderer instead. Also for direct scanout?
+        //TODO: Probably should undo setNext and reset the flip list
         qCDebug(KWIN_DRM) << "Atomic test commit failed. Aborting present.";
-        if (this->m_backend->deleteBufferAfterPageFlip()) {
-            delete buffer;
-        }
         return false;
     }
     if (!doAtomicCommit(AtomicCommitMode::Real)) {
         qCDebug(KWIN_DRM) << "Atomic commit failed. This should have never happened! Aborting present.";
+        //TODO: Probably should undo setNext and reset the flip list
         return false;
     }
     m_pageFlipPending = true;
@@ -856,7 +852,6 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
     } else {
         errno_save = errno;
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
-        delete buffer;
     }
     return ok;
 }
