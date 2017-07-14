@@ -98,7 +98,7 @@ private:
     QString m_sessionControllerManagerInterface;
     QString m_sessionControllerSeatInterface;
     QString m_sessionControllerSessionInterface;
-    QString m_sessionControllerActivateProperty;
+    QString m_sessionControllerActiveProperty;
     KWIN_SINGLETON(LogindIntegration)
 };
 

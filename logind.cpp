@@ -64,7 +64,7 @@ const static QString s_login1Path = QStringLiteral("/org/freedesktop/login1");
 const static QString s_login1ManagerInterface = QStringLiteral("org.freedesktop.login1.Manager");
 const static QString s_login1SeatInterface = QStringLiteral("org.freedesktop.login1.Seat");
 const static QString s_login1SessionInterface = QStringLiteral("org.freedesktop.login1.Session");
-const static QString s_login1ActivateProperty = QStringLiteral("Activate");
+const static QString s_login1ActiveProperty = QStringLiteral("Active");
 
 const static QString s_ck2Name = QStringLiteral("ConsoleKit");
 const static QString s_ck2Service = QStringLiteral("org.freedesktop.ConsoleKit");
@@ -72,7 +72,7 @@ const static QString s_ck2Path = QStringLiteral("/org/freedesktop/ConsoleKit/Man
 const static QString s_ck2ManagerInterface = QStringLiteral("org.freedesktop.ConsoleKit.Manager");
 const static QString s_ck2SeatInterface = QStringLiteral("org.freedesktop.ConsoleKit.Seat");
 const static QString s_ck2SessionInterface = QStringLiteral("org.freedesktop.ConsoleKit.Session");
-const static QString s_ck2ActivateProperty = QStringLiteral("activate");
+const static QString s_ck2ActiveProperty = QStringLiteral("activate");
 
 const static QString s_dbusPropertiesInterface = QStringLiteral("org.freedesktop.DBus.Properties");
 
@@ -138,7 +138,7 @@ void LogindIntegration::setupSessionController(SessionController controller)
         m_sessionControllerManagerInterface = s_login1ManagerInterface;
         m_sessionControllerSeatInterface = s_login1SeatInterface;
         m_sessionControllerSessionInterface = s_login1SessionInterface;
-        m_sessionControllerActivateProperty = s_login1ActivateProperty;
+        m_sessionControllerActiveProperty = s_login1ActiveProperty;
         m_logindServiceWatcher = new QDBusServiceWatcher(m_sessionControllerService,
                                                          m_bus,
                                                          QDBusServiceWatcher::WatchForUnregistration | QDBusServiceWatcher::WatchForRegistration,
@@ -159,7 +159,7 @@ void LogindIntegration::setupSessionController(SessionController controller)
         m_sessionControllerManagerInterface = s_ck2ManagerInterface;
         m_sessionControllerSeatInterface = s_ck2SeatInterface;
         m_sessionControllerSessionInterface = s_ck2SessionInterface;
-        m_sessionControllerActivateProperty = s_ck2ActivateProperty;
+        m_sessionControllerActiveProperty = s_ck2ActiveProperty;
         m_logindServiceWatcher = new QDBusServiceWatcher(m_sessionControllerService,
                                                          m_bus,
                                                          QDBusServiceWatcher::WatchForUnregistration | QDBusServiceWatcher::WatchForRegistration,
@@ -251,7 +251,7 @@ void LogindIntegration::getSessionActive()
                                                           m_sessionPath,
                                                           s_dbusPropertiesInterface,
                                                           QStringLiteral("Get"));
-    message.setArguments(QVariantList({m_sessionControllerSessionInterface, m_sessionControllerActivateProperty}));
+    message.setArguments(QVariantList({m_sessionControllerSessionInterface, m_sessionControllerActiveProperty}));
     QDBusPendingReply<QVariant> reply = m_bus.asyncCall(message);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this,
