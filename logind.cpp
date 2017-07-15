@@ -72,7 +72,7 @@ const static QString s_ck2Path = QStringLiteral("/org/freedesktop/ConsoleKit/Man
 const static QString s_ck2ManagerInterface = QStringLiteral("org.freedesktop.ConsoleKit.Manager");
 const static QString s_ck2SeatInterface = QStringLiteral("org.freedesktop.ConsoleKit.Seat");
 const static QString s_ck2SessionInterface = QStringLiteral("org.freedesktop.ConsoleKit.Session");
-const static QString s_ck2ActiveProperty = QStringLiteral("activate");
+const static QString s_ck2ActiveProperty = QStringLiteral("active");
 
 const static QString s_dbusPropertiesInterface = QStringLiteral("org.freedesktop.DBus.Properties");
 
