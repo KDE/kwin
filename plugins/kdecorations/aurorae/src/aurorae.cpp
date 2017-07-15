@@ -405,6 +405,7 @@ void Decoration::init()
         connect(m_extendedBorders, &KWin::Borders::bottomChanged, this, updateExtendedBorders);
     }
     connect(client().data(), &KDecoration2::DecoratedClient::maximizedChanged, this, &Decoration::updateBorders, Qt::QueuedConnection);
+    connect(client().data(), &KDecoration2::DecoratedClient::shadedChanged, this, &Decoration::updateBorders);
     updateBorders();
     if (!m_view.isNull()) {
         auto resizeWindow = [this] {
@@ -418,6 +419,7 @@ void Decoration::init()
         connect(client().data(), &KDecoration2::DecoratedClient::widthChanged, this, resizeWindow);
         connect(client().data(), &KDecoration2::DecoratedClient::heightChanged, this, resizeWindow);
         connect(client().data(), &KDecoration2::DecoratedClient::maximizedChanged, this, resizeWindow);
+        connect(client().data(), &KDecoration2::DecoratedClient::shadedChanged, this, resizeWindow);
         resizeWindow();
     } else {
         // create a dummy shadow for the configuration interface

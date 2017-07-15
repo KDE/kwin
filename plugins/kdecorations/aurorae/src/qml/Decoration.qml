@@ -32,5 +32,5 @@ Item {
     }
     property bool alpha: true
     width: decoration.client.width + decoration.borderLeft + decoration.borderRight + (decoration.client.maximized ? 0 : (padding.left + padding.right))
-    height: decoration.client.height + decoration.borderTop + decoration.borderBottom + (decoration.client.maximized ? 0 : (padding.top + padding.bottom))
+    height: (decoration.client.shaded ? 0 : decoration.client.height) + decoration.borderTop + (decoration.client.shaded ? 0 : decoration.borderBottom) + (decoration.client.maximized ? 0 : (padding.top + padding.bottom))
 }
