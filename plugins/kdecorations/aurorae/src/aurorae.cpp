@@ -339,6 +339,7 @@ void Decoration::init()
         m_renderControl = new QQuickRenderControl(this);
         m_view = new QQuickWindow(m_renderControl);
         m_view->setColor(Qt::transparent);
+        m_view->setFlags(Qt::FramelessWindowHint);
 
         // delay rendering a little bit for better performance
         m_updateTimer.reset(new QTimer);
