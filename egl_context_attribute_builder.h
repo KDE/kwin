@@ -19,17 +19,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #pragma once
 #include "abstract_opengl_context_attribute_builder.h"
+#include <kwin_export.h>
 
 namespace KWin
 {
 
-class EglContextAttributeBuilder : public AbstractOpenGLContextAttributeBuilder
+class KWIN_EXPORT EglContextAttributeBuilder : public AbstractOpenGLContextAttributeBuilder
 {
 public:
     std::vector<int> build() const override;
 };
 
-class EglOpenGLESContextAttributeBuilder : public AbstractOpenGLContextAttributeBuilder
+class KWIN_EXPORT EglOpenGLESContextAttributeBuilder : public AbstractOpenGLContextAttributeBuilder
 {
 public:
     std::vector<int> build() const override;

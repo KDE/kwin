@@ -29,7 +29,10 @@ QDebug AbstractOpenGLContextAttributeBuilder::operator<<(QDebug dbg) const
     if (isVersionRequested()) {
         dbg.nospace() << "Version:\t" << majorVersion() << "." << minorVersion() << "\n";
     }
-    dbg.nospace() << "Robust:\t" << isRobust();
+    dbg.nospace() << "Robust:\t" << isRobust() << "\n";
+    dbg.nospace() << "Forward compatible:\t" << isForwardCompatible() << "\n";
+    dbg.nospace() << "Core profile:\t" << isCoreProfile() << "\n";
+    dbg.nospace() << "Compatibility profile:\t" << isCompatibilityProfile();
     return dbg;
 }
 

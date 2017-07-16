@@ -31,11 +31,26 @@ std::vector<int> EglContextAttributeBuilder::build() const
         attribs.emplace_back(EGL_CONTEXT_MINOR_VERSION_KHR);
         attribs.emplace_back(minorVersion());
     }
+    int contextFlags = 0;
     if (isRobust()) {
         attribs.emplace_back(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR);
         attribs.emplace_back(EGL_LOSE_CONTEXT_ON_RESET_KHR);
+        contextFlags |= EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR;
+    }
+    if (isForwardCompatible()) {
+        contextFlags |= EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR;
+    }
+    if (contextFlags != 0) {
         attribs.emplace_back(EGL_CONTEXT_FLAGS_KHR);
-        attribs.emplace_back(EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR);
+        attribs.emplace_back(contextFlags);
+    }
+    if (isCoreProfile() || isCompatibilityProfile()) {
+        attribs.emplace_back(EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR);
+        if (isCoreProfile()) {
+            attribs.emplace_back(EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR);
+        } else if (isCompatibilityProfile()) {
+            attribs.emplace_back(EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR);
+        }
     }
     attribs.emplace_back(EGL_NONE);
     return attribs;

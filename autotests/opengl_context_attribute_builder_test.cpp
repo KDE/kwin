@@ -30,6 +30,8 @@ class OpenGLContextAttributeBuilderTest : public QObject
 private Q_SLOTS:
     void testCtor();
     void testRobust();
+    void testForwardCompatible();
+    void testProfile();
     void testVersionMajor();
     void testVersionMajorAndMinor();
     void testEgl_data();
@@ -56,6 +58,9 @@ void OpenGLContextAttributeBuilderTest::testCtor()
     QCOMPARE(builder.majorVersion(), 0);
     QCOMPARE(builder.minorVersion(), 0);
     QCOMPARE(builder.isRobust(), false);
+    QCOMPARE(builder.isForwardCompatible(), false);
+    QCOMPARE(builder.isCoreProfile(), false);
+    QCOMPARE(builder.isCompatibilityProfile(), false);
 }
 
 void OpenGLContextAttributeBuilderTest::testRobust()
@@ -66,6 +71,32 @@ void OpenGLContextAttributeBuilderTest::testRobust()
     QCOMPARE(builder.isRobust(), true);
     builder.setRobust(false);
     QCOMPARE(builder.isRobust(), false);
+}
+
+void OpenGLContextAttributeBuilderTest::testForwardCompatible()
+{
+    MockOpenGLContextAttributeBuilder builder;
+    QCOMPARE(builder.isForwardCompatible(), false);
+    builder.setForwardCompatible(true);
+    QCOMPARE(builder.isForwardCompatible(), true);
+    builder.setForwardCompatible(false);
+    QCOMPARE(builder.isForwardCompatible(), false);
+}
+
+void OpenGLContextAttributeBuilderTest::testProfile()
+{
+    MockOpenGLContextAttributeBuilder builder;
+    QCOMPARE(builder.isCoreProfile(), false);
+    QCOMPARE(builder.isCompatibilityProfile(), false);
+    builder.setCoreProfile(true);
+    QCOMPARE(builder.isCoreProfile(), true);
+    QCOMPARE(builder.isCompatibilityProfile(), false);
+    builder.setCompatibilityProfile(true);
+    QCOMPARE(builder.isCoreProfile(), false);
+    QCOMPARE(builder.isCompatibilityProfile(), true);
+    builder.setCoreProfile(true);
+    QCOMPARE(builder.isCoreProfile(), true);
+    QCOMPARE(builder.isCompatibilityProfile(), false);
 }
 
 void OpenGLContextAttributeBuilderTest::testVersionMajor()
@@ -100,25 +131,71 @@ void OpenGLContextAttributeBuilderTest::testEgl_data()
     QTest::addColumn<int>("major");
     QTest::addColumn<int>("minor");
     QTest::addColumn<bool>("robust");
+    QTest::addColumn<bool>("forwardCompatible");
+    QTest::addColumn<bool>("coreProfile");
+    QTest::addColumn<bool>("compatibilityProfile");
     QTest::addColumn<std::vector<int>>("expectedAttribs");
 
-    QTest::newRow("fallback") << false << 0 << 0 << false << std::vector<int>{EGL_NONE};
-    QTest::newRow("legacy/robust") << false << 0 << 0 << true <<
+    QTest::newRow("fallback") << false << 0 << 0 << false << false << false << false << std::vector<int>{EGL_NONE};
+    QTest::newRow("legacy/robust") << false << 0 << 0 << true << false << false << false <<
         std::vector<int>{
             EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
             EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
             EGL_NONE};
-    QTest::newRow("core") << true << 3 << 1 << false <<
+    QTest::newRow("core") << true << 3 << 1 << false << false << false << false <<
         std::vector<int>{
             EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
             EGL_CONTEXT_MINOR_VERSION_KHR, 1,
             EGL_NONE};
-    QTest::newRow("core/robust") << true << 3 << 1 << true <<
+    QTest::newRow("core/robust") << true << 3 << 1 << true << false << false << false <<
         std::vector<int>{
             EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
             EGL_CONTEXT_MINOR_VERSION_KHR, 1,
             EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
             EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
+            EGL_NONE};
+    QTest::newRow("core/robust/forward compatible") << true << 3 << 1 << true << true << false << false <<
+        std::vector<int>{
+            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+            EGL_NONE};
+    QTest::newRow("core/forward compatible") << true << 3 << 1 << false << true << false << false <<
+        std::vector<int>{
+            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+            EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+            EGL_NONE};
+    QTest::newRow("core profile/forward compatible") << true << 3 << 2 << false << true << true << false <<
+        std::vector<int>{
+            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+            EGL_NONE};
+    QTest::newRow("compatibility profile/forward compatible") << true << 3 << 2 << false << true << false << true <<
+        std::vector<int>{
+            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
+            EGL_NONE};
+    QTest::newRow("core profile/robust/forward compatible") << true << 3 << 2 << true << true << true << false <<
+        std::vector<int>{
+            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+            EGL_NONE};
+    QTest::newRow("compatibility profile/robust/forward compatible") << true << 3 << 2 << true << true << false << true <<
+        std::vector<int>{
+            EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+            EGL_CONTEXT_MINOR_VERSION_KHR, 2,
+            EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
+            EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
             EGL_NONE};
 }
 
@@ -128,12 +205,18 @@ void OpenGLContextAttributeBuilderTest::testEgl()
     QFETCH(int, major);
     QFETCH(int, minor);
     QFETCH(bool, robust);
+    QFETCH(bool, forwardCompatible);
+    QFETCH(bool, coreProfile);
+    QFETCH(bool, compatibilityProfile);
 
     EglContextAttributeBuilder builder;
     if (requestVersion) {
         builder.setVersion(major, minor);
     }
     builder.setRobust(robust);
+    builder.setForwardCompatible(forwardCompatible);
+    builder.setCoreProfile(coreProfile);
+    builder.setCompatibilityProfile(compatibilityProfile);
 
     auto attribs = builder.build();
     QTEST(attribs, "expectedAttribs");

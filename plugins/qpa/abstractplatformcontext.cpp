@@ -19,7 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstractplatformcontext.h"
 #include "integration.h"
+#include "egl_context_attribute_builder.h"
 #include <logging.h>
+
+#include <memory>
 
 namespace KWin
 {
@@ -145,66 +148,58 @@ void AbstractPlatformContext::createContext(EGLContext shareContext)
     const bool haveRobustness = extensions.contains(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
     const bool haveCreateContext = extensions.contains(QByteArrayLiteral("EGL_KHR_create_context"));
 
-    EGLContext context = EGL_NO_CONTEXT;
+    std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
     if (isOpenGLES()) {
         if (haveCreateContext && haveRobustness) {
-            const EGLint context_attribs[] = {
-                EGL_CONTEXT_CLIENT_VERSION,                         2,
-                EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT,               EGL_TRUE,
-                EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT, EGL_LOSE_CONTEXT_ON_RESET_EXT,
-                EGL_NONE
-            };
-            context = eglCreateContext(eglDisplay(), config(), shareContext, context_attribs);
+            auto glesRobust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            glesRobust->setVersion(2);
+            glesRobust->setRobust(true);
+            candidates.push_back(std::move(glesRobust));
         }
-        if (context == EGL_NO_CONTEXT) {
-            const EGLint context_attribs[] = {
-                EGL_CONTEXT_CLIENT_VERSION, 2,
-                EGL_NONE
-            };
-
-            context = eglCreateContext(eglDisplay(), config(), shareContext, context_attribs);
-        }
+        auto gles = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+        gles->setVersion(2);
+        candidates.push_back(std::move(gles));
     } else {
         // Try to create a 3.1 core context
         if (m_format.majorVersion() >= 3 && haveCreateContext) {
             if (haveRobustness) {
-                const int attribs[] = {
-                    EGL_CONTEXT_MAJOR_VERSION_KHR,                      m_format.majorVersion(),
-                    EGL_CONTEXT_MINOR_VERSION_KHR,                      m_format.minorVersion(),
-                    EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-                    EGL_CONTEXT_FLAGS_KHR,                              EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR | EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-                    EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR,                m_format.profile() == QSurfaceFormat::CoreProfile ? EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR : EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
-                    EGL_NONE
-                };
-                context = eglCreateContext(eglDisplay(), config(), shareContext, attribs);
+                auto robustCore = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                robustCore->setVersion(m_format.majorVersion(), m_format.minorVersion());
+                robustCore->setRobust(true);
+                robustCore->setForwardCompatible(true);
+                if (m_format.profile() == QSurfaceFormat::CoreProfile) {
+                    robustCore->setCoreProfile(true);
+                } else if (m_format.profile() == QSurfaceFormat::CompatibilityProfile) {
+                    robustCore->setCompatibilityProfile(true);
+                }
+                candidates.push_back(std::move(robustCore));
             }
-            if (context == EGL_NO_CONTEXT) {
-                // try without robustness
-                const EGLint attribs[] = {
-                    EGL_CONTEXT_MAJOR_VERSION_KHR, m_format.majorVersion(),
-                    EGL_CONTEXT_MINOR_VERSION_KHR, m_format.minorVersion(),
-                    EGL_CONTEXT_FLAGS_KHR,         EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
-                    EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, m_format.profile() == QSurfaceFormat::CoreProfile ? EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR : EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR,
-                    EGL_NONE
-                };
-                context = eglCreateContext(eglDisplay(), config(), shareContext, attribs);
+            auto core = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            core->setVersion(m_format.majorVersion(), m_format.minorVersion());
+            core->setForwardCompatible(true);
+            if (m_format.profile() == QSurfaceFormat::CoreProfile) {
+                core->setCoreProfile(true);
+            } else if (m_format.profile() == QSurfaceFormat::CompatibilityProfile) {
+                core->setCompatibilityProfile(true);
             }
+            candidates.push_back(std::move(core));
         }
 
-        if (context == EGL_NO_CONTEXT && haveRobustness && haveCreateContext) {
-            const int attribs[] = {
-                EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR,
-                EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, EGL_LOSE_CONTEXT_ON_RESET_KHR,
-                EGL_NONE
-            };
-            context = eglCreateContext(eglDisplay(), config(), shareContext, attribs);
+        if (haveRobustness && haveCreateContext) {
+            auto robust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            robust->setRobust(true);
+            candidates.push_back(std::move(robust));
         }
-        if (context == EGL_NO_CONTEXT) {
-            // and last but not least: try without robustness
-            const EGLint attribs[] = {
-                EGL_NONE
-            };
-            context = eglCreateContext(eglDisplay(), config(), shareContext, attribs);
+        candidates.emplace_back(new EglContextAttributeBuilder);
+    }
+
+    EGLContext context = EGL_NO_CONTEXT;
+    for (auto it = candidates.begin(); it != candidates.end(); it++) {
+        const auto attribs = (*it)->build();
+        context = eglCreateContext(eglDisplay(), config(), shareContext, attribs.data());
+        if (context != EGL_NO_CONTEXT) {
+            qCDebug(KWIN_QPA) << "Created EGL context with attributes:" << (*it).get();
+            break;
         }
     }
 
