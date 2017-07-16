@@ -63,7 +63,14 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
 #endif
 }
 
-X11StandalonePlatform::~X11StandalonePlatform() = default;
+X11StandalonePlatform::~X11StandalonePlatform()
+{
+    if (m_openGLFreezeProtectionThread) {
+        m_openGLFreezeProtectionThread->quit();
+        m_openGLFreezeProtectionThread->wait();
+        delete m_openGLFreezeProtectionThread;
+    }
+}
 
 void X11StandalonePlatform::init()
 {
