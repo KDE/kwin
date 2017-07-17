@@ -37,7 +37,6 @@ public:
     Private(SeatInterface *parent, wl_resource *parentResource, TouchInterface *q);
 
     SeatInterface *seat;
-    SurfaceInterface *focusedSurface = nullptr;
     QMetaObject::Connection destroyConnection;
 
 private:
