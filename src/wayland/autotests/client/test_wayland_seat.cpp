@@ -591,10 +591,11 @@ void TestWaylandSeat::testPointer()
     QSignalSpy entered2Spy(p, &Pointer::entered);
     QVERIFY(entered2Spy.wait());
     QCOMPARE(p->enteredSurface(), s);
+    QSignalSpy leftSpy2(p, &Pointer::left);
+    QVERIFY(leftSpy2.isValid());
     delete s;
     QVERIFY(!p->enteredSurface());
-    wl_display_flush(m_connection->display());
-    QVERIFY(focusedPointerChangedSpy.wait());
+    QVERIFY(leftSpy2.wait());
     QCOMPARE(focusedPointerChangedSpy.count(), 10);
     QVERIFY(!m_seatInterface->focusedPointerSurface());
     QVERIFY(!m_seatInterface->focusedPointer());

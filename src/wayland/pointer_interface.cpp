@@ -265,9 +265,10 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 seri
         return;
     }
     d->focusedSurface = surface;
-    d->destroyConnection = connect(d->focusedSurface, &QObject::destroyed, this,
+    d->destroyConnection = connect(d->focusedSurface, &Resource::aboutToBeUnbound, this,
         [this] {
             Q_D();
+            d->sendLeave(d->focusedChildSurface.data(), d->global->display()->nextSerial());
             d->focusedSurface = nullptr;
             d->focusedChildSurface.clear();
         }
