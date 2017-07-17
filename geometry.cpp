@@ -3407,7 +3407,9 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 whichScreen = screens[nextScreen].center();
 
                 // Swap sides
-                mode = ~mode & QuickTileHorizontal;
+                if (mode & QuickTileHorizontal) {
+                    mode = (~mode & QuickTileHorizontal) | (mode & QuickTileVertical);
+                }
             }
             setElectricBorderMode(mode); // used by ::electricBorderMaximizeGeometry(.)
         } else if (quickTileMode() == QuickTileNone) {

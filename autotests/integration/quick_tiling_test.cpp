@@ -117,20 +117,21 @@ void QuickTilingTest::testQuickTiling_data()
     QTest::addColumn<AbstractClient::QuickTileMode>("mode");
     QTest::addColumn<QRect>("expectedGeometry");
     QTest::addColumn<QRect>("secondScreen");
+    QTest::addColumn<AbstractClient::QuickTileMode>("expectedModeAfterToggle");
 
 #define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
 
-    QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024)   << QRect(1280, 0, 640, 1024);
-    QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512)   << QRect(1280, 0, 1280, 512);
-    QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024) << QRect(1920, 0, 640, 1024);
-    QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512) << QRect(1280, 512, 1280, 512);
+    QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024)   << QRect(1280, 0, 640, 1024) << FLAG(Right);
+    QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512)   << QRect(1280, 0, 1280, 512) << FLAG(Top);
+    QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024) << QRect(1920, 0, 640, 1024) << AbstractClient::QuickTileMode();
+    QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512) << QRect(1280, 512, 1280, 512) << FLAG(Bottom);
 
-    QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512)     << QRect(1280, 0, 640, 512);
-    QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512)   << QRect(1920, 0, 640, 512);
-    QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512)   << QRect(1280, 512, 640, 512);
-    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512) << QRect(1920, 512, 640, 512);
+    QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512)     << QRect(1280, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
+    QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512)   << QRect(1920, 0, 640, 512) << AbstractClient::QuickTileMode();
+    QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512)   << QRect(1280, 512, 640, 512) << (FLAG(Right)  | FLAG(Bottom));
+    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512) << QRect(1920, 512, 640, 512) << AbstractClient::QuickTileMode();
 
-    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024);
+    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024) << AbstractClient::QuickTileMode();
 
 #undef FLAG
 }
@@ -188,6 +189,10 @@ void QuickTilingTest::testQuickTiling()
     // quick tile should not be changed
     QCOMPARE(c->quickTileMode(), mode);
     QTEST(c->geometry(), "secondScreen");
+
+    // now try to toggle again
+    c->setQuickTileMode(mode, true);
+    QTEST(c->quickTileMode(), "expectedModeAfterToggle");
 }
 
 void QuickTilingTest::testQuickMaximizing_data()
@@ -426,20 +431,22 @@ void QuickTilingTest::testX11QuickTiling_data()
 {
     QTest::addColumn<AbstractClient::QuickTileMode>("mode");
     QTest::addColumn<QRect>("expectedGeometry");
+    QTest::addColumn<int>("screen");
+    QTest::addColumn<AbstractClient::QuickTileMode>("modeAfterToggle");
 
 #define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
 
-    QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024);
-    QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512);
-    QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024);
-    QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
+    QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024) << 0 << AbstractClient::QuickTileMode();
+    QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512) << 1 << FLAG(Top);
+    QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024) << 1 << FLAG(Left);
+    QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512) << 1 << FLAG(Bottom);
 
-    QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512);
-    QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512);
-    QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512);
-    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512);
+    QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512) << 0 << AbstractClient::QuickTileMode();
+    QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512) << 1 << (FLAG(Left) | FLAG(Top));
+    QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512) << 0 << AbstractClient::QuickTileMode();
+    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512) << 1 << (FLAG(Left) | FLAG(Bottom));
 
-    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024);
+    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << 0 << AbstractClient::QuickTileMode();
 
 #undef FLAG
 }
@@ -482,6 +489,13 @@ void QuickTilingTest::testX11QuickTiling()
     QCOMPARE(client->geometryRestore(), origGeo);
     QEXPECT_FAIL("maximize", "For maximize we get two changed signals", Continue);
     QCOMPARE(quickTileChangedSpy.count(), 1);
+
+    // quick tile to same edge again should also act like send to screen
+    QCOMPARE(client->screen(), 0);
+    client->setQuickTileMode(mode, true);
+    QTEST(client->screen(), "screen");
+    QTEST(client->quickTileMode(), "modeAfterToggle");
+    QCOMPARE(client->geometryRestore(), origGeo);
 
     // and destroy the window again
     xcb_unmap_window(c.data(), w);
