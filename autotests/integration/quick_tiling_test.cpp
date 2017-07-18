@@ -768,8 +768,7 @@ void QuickTilingTest::testScript()
     QCOMPARE(c->quickTileMode(), expectedMode);
 
     // but we got requested a new geometry
-    QVERIFY(sizeChangeSpy.wait());
-    QCOMPARE(sizeChangeSpy.count(), 1);
+    QTRY_COMPARE(sizeChangeSpy.count(), 1);
     QCOMPARE(sizeChangeSpy.first().first().toSize(), expectedGeometry.size());
 
     // attach a new image
