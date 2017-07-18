@@ -104,8 +104,8 @@ public:
      * to the @p slot being invoked. If not using this overload it's required to ensure that
      * registerShortcut is called before connecting to QAction's triggered signal.
      **/
-    template <typename T>
-    void registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, void (T::*slot)());
+    template <typename T, typename Slot>
+    void registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, Slot slot);
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
     void registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action);
@@ -406,9 +406,9 @@ InputRedirection *input()
     return InputRedirection::s_self;
 }
 
-template <typename T>
+template <typename T, typename Slot>
 inline
-void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, void (T::*slot)()) {
+void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, Slot slot) {
     registerShortcut(shortcut, action);
     connect(action, &QAction::triggered, receiver, slot);
 }

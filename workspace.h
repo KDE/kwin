@@ -369,6 +369,8 @@ public:
 
     void markXStackingOrderAsDirty();
 
+    void quickTileWindow(QuickTileMode mode);
+
 public Q_SLOTS:
     void performWindowOperation(KWin::AbstractClient* c, Options::WindowOperation op);
     // Keybindings
@@ -401,14 +403,6 @@ public Q_SLOTS:
     void slotWindowGrowVertical();
     void slotWindowShrinkHorizontal();
     void slotWindowShrinkVertical();
-    void slotWindowQuickTileLeft();
-    void slotWindowQuickTileRight();
-    void slotWindowQuickTileTop();
-    void slotWindowQuickTileBottom();
-    void slotWindowQuickTileTopLeft();
-    void slotWindowQuickTileTopRight();
-    void slotWindowQuickTileBottomLeft();
-    void slotWindowQuickTileBottomRight();
 
     void slotSwitchWindowUp();
     void slotSwitchWindowDown();

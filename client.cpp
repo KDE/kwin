@@ -1585,9 +1585,9 @@ bool Client::untab(const QRect &toGeometry, bool clientRemoved)
         setClientShown(!(isMinimized() || isShade()));
         bool keepSize = toGeometry.size() == size();
         bool changedSize = false;
-        if (quickTileMode() != QuickTileNone) {
+        if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
             changedSize = true;
-            setQuickTileMode(QuickTileNone); // if we leave a quicktiled group, assume that the user wants to untile
+            setQuickTileMode(QuickTileFlag::None); // if we leave a quicktiled group, assume that the user wants to untile
         }
         if (toGeometry.isValid()) {
             if (maximizeMode() != MaximizeRestore) {

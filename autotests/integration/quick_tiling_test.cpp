@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <linux/input.h>
 
-Q_DECLARE_METATYPE(KWin::AbstractClient::QuickTileMode)
+Q_DECLARE_METATYPE(KWin::QuickTileMode)
 Q_DECLARE_METATYPE(KWin::MaximizeMode)
 
 namespace KWin
@@ -125,24 +125,24 @@ void QuickTilingTest::cleanup()
 
 void QuickTilingTest::testQuickTiling_data()
 {
-    QTest::addColumn<AbstractClient::QuickTileMode>("mode");
+    QTest::addColumn<QuickTileMode>("mode");
     QTest::addColumn<QRect>("expectedGeometry");
     QTest::addColumn<QRect>("secondScreen");
-    QTest::addColumn<AbstractClient::QuickTileMode>("expectedModeAfterToggle");
+    QTest::addColumn<QuickTileMode>("expectedModeAfterToggle");
 
-#define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
+#define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
     QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024)   << QRect(1280, 0, 640, 1024) << FLAG(Right);
     QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512)   << QRect(1280, 0, 1280, 512) << FLAG(Top);
-    QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024) << QRect(1920, 0, 640, 1024) << AbstractClient::QuickTileMode();
+    QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024) << QRect(1920, 0, 640, 1024) << QuickTileMode();
     QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512) << QRect(1280, 512, 1280, 512) << FLAG(Bottom);
 
     QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512)     << QRect(1280, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
-    QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512)   << QRect(1920, 0, 640, 512) << AbstractClient::QuickTileMode();
+    QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512)   << QRect(1920, 0, 640, 512) << QuickTileMode();
     QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512)   << QRect(1280, 512, 640, 512) << (FLAG(Right)  | FLAG(Bottom));
-    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512) << QRect(1920, 512, 640, 512) << AbstractClient::QuickTileMode();
+    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512) << QRect(1920, 512, 640, 512) << QuickTileMode();
 
-    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024) << AbstractClient::QuickTileMode();
+    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024) << QuickTileMode();
 
 #undef FLAG
 }
@@ -164,13 +164,13 @@ void QuickTilingTest::testQuickTiling()
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
-    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
     QVERIFY(geometryChangedSpy.isValid());
 
-    QFETCH(AbstractClient::QuickTileMode, mode);
+    QFETCH(QuickTileMode, mode);
     QFETCH(QRect, expectedGeometry);
     c->setQuickTileMode(mode, true);
     QCOMPARE(quickTileChangedSpy.count(), 1);
@@ -208,9 +208,9 @@ void QuickTilingTest::testQuickTiling()
 
 void QuickTilingTest::testQuickMaximizing_data()
 {
-    QTest::addColumn<AbstractClient::QuickTileMode>("mode");
+    QTest::addColumn<QuickTileMode>("mode");
 
-#define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
+#define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
     QTest::newRow("maximize") << FLAG(Maximize);
     QTest::newRow("none") << FLAG(None);
@@ -235,7 +235,7 @@ void QuickTilingTest::testQuickMaximizing()
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
-    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
@@ -246,7 +246,7 @@ void QuickTilingTest::testQuickMaximizing()
     QSignalSpy maximizeChangedSpy2(c, SIGNAL(clientMaximizedStateChanged(KWin::AbstractClient*,bool,bool)));
     QVERIFY(maximizeChangedSpy2.isValid());
 
-    c->setQuickTileMode(AbstractClient::QuickTileMaximize, true);
+    c->setQuickTileMode(QuickTileFlag::Maximize, true);
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QCOMPARE(maximizeChangedSpy1.count(), 1);
     QCOMPARE(maximizeChangedSpy1.first().first().value<KWin::AbstractClient*>(), c);
@@ -258,7 +258,7 @@ void QuickTilingTest::testQuickMaximizing()
     // at this point the geometry did not yet change
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     // but quick tile mode already changed
-    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileMaximize);
+    QCOMPARE(c->quickTileMode(), QuickTileFlag::Maximize);
     QCOMPARE(c->maximizeMode(), MaximizeFull);
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 
@@ -277,7 +277,7 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 
     // go back to quick tile none
-    QFETCH(AbstractClient::QuickTileMode, mode);
+    QFETCH(QuickTileMode, mode);
     c->setQuickTileMode(mode, true);
     QCOMPARE(quickTileChangedSpy.count(), 2);
     QCOMPARE(maximizeChangedSpy1.count(), 2);
@@ -287,7 +287,7 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(maximizeChangedSpy2.last().first().value<KWin::AbstractClient*>(), c);
     QCOMPARE(maximizeChangedSpy2.last().at(1).toBool(), false);
     QCOMPARE(maximizeChangedSpy2.last().at(2).toBool(), false);
-    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
     // geometry not yet changed
     QCOMPARE(c->geometry(), QRect(0, 0, 1280, 1024));
@@ -310,14 +310,14 @@ void QuickTilingTest::testQuickMaximizing()
 void QuickTilingTest::testQuickTilingKeyboardMove_data()
 {
     QTest::addColumn<QPoint>("targetPos");
-    QTest::addColumn<AbstractClient::QuickTileMode>("expectedMode");
+    QTest::addColumn<QuickTileMode>("expectedMode");
 
-    QTest::newRow("topRight") << QPoint(2559, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileRight);
-    QTest::newRow("right") << QPoint(2559, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileRight);
-    QTest::newRow("bottomRight") << QPoint(2559, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileRight);
-    QTest::newRow("bottomLeft") << QPoint(0, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileLeft);
-    QTest::newRow("Left") << QPoint(0, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileLeft);
-    QTest::newRow("topLeft") << QPoint(0, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileLeft);
+    QTest::newRow("topRight") << QPoint(2559, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Right);
+    QTest::newRow("right") << QPoint(2559, 512) << QuickTileMode(QuickTileFlag::Right);
+    QTest::newRow("bottomRight") << QPoint(2559, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Right);
+    QTest::newRow("bottomLeft") << QPoint(0, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Left);
+    QTest::newRow("Left") << QPoint(0, 512) << QuickTileMode(QuickTileFlag::Left);
+    QTest::newRow("topLeft") << QPoint(0, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Left);
 }
 
 void QuickTilingTest::testQuickTilingKeyboardMove()
@@ -337,7 +337,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
-    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
 
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
@@ -381,14 +381,14 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 void QuickTilingTest::testQuickTilingPointerMove_data()
 {
     QTest::addColumn<QPoint>("targetPos");
-    QTest::addColumn<AbstractClient::QuickTileMode>("expectedMode");
+    QTest::addColumn<QuickTileMode>("expectedMode");
 
-    QTest::newRow("topRight") << QPoint(2559, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileRight);
-    QTest::newRow("right") << QPoint(2559, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileRight);
-    QTest::newRow("bottomRight") << QPoint(2559, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileRight);
-    QTest::newRow("bottomLeft") << QPoint(0, 1023) << AbstractClient::QuickTileMode(AbstractClient::QuickTileBottom | AbstractClient::QuickTileLeft);
-    QTest::newRow("Left") << QPoint(0, 512) << AbstractClient::QuickTileMode(AbstractClient::QuickTileLeft);
-    QTest::newRow("topLeft") << QPoint(0, 24) << AbstractClient::QuickTileMode(AbstractClient::QuickTileTop | AbstractClient::QuickTileLeft);
+    QTest::newRow("topRight") << QPoint(2559, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Right);
+    QTest::newRow("right") << QPoint(2559, 512) << QuickTileMode(QuickTileFlag::Right);
+    QTest::newRow("bottomRight") << QPoint(2559, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Right);
+    QTest::newRow("bottomLeft") << QPoint(0, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Left);
+    QTest::newRow("Left") << QPoint(0, 512) << QuickTileMode(QuickTileFlag::Left);
+    QTest::newRow("topLeft") << QPoint(0, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Left);
 }
 
 void QuickTilingTest::testQuickTilingPointerMove()
@@ -408,7 +408,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
-    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
 
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
@@ -440,24 +440,24 @@ struct XcbConnectionDeleter
 
 void QuickTilingTest::testX11QuickTiling_data()
 {
-    QTest::addColumn<AbstractClient::QuickTileMode>("mode");
+    QTest::addColumn<QuickTileMode>("mode");
     QTest::addColumn<QRect>("expectedGeometry");
     QTest::addColumn<int>("screen");
-    QTest::addColumn<AbstractClient::QuickTileMode>("modeAfterToggle");
+    QTest::addColumn<QuickTileMode>("modeAfterToggle");
 
-#define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
+#define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024) << 0 << AbstractClient::QuickTileMode();
+    QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024) << 0 << QuickTileMode();
     QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512) << 1 << FLAG(Top);
     QTest::newRow("right")  << FLAG(Right)  << QRect(640, 0, 640, 1024) << 1 << FLAG(Left);
     QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512) << 1 << FLAG(Bottom);
 
-    QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512) << 0 << AbstractClient::QuickTileMode();
+    QTest::newRow("top left")     << (FLAG(Left)  | FLAG(Top))    << QRect(0, 0, 640, 512) << 0 << QuickTileMode();
     QTest::newRow("top right")    << (FLAG(Right) | FLAG(Top))    << QRect(640, 0, 640, 512) << 1 << (FLAG(Left) | FLAG(Top));
-    QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512) << 0 << AbstractClient::QuickTileMode();
+    QTest::newRow("bottom left")  << (FLAG(Left)  | FLAG(Bottom)) << QRect(0, 512, 640, 512) << 0 << QuickTileMode();
     QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512) << 1 << (FLAG(Left) | FLAG(Bottom));
 
-    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << 0 << AbstractClient::QuickTileMode();
+    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << 0 << QuickTileMode();
 
 #undef FLAG
 }
@@ -493,7 +493,7 @@ void QuickTilingTest::testX11QuickTiling()
     QSignalSpy quickTileChangedSpy(client, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
     const QRect origGeo = client->geometry();
-    QFETCH(AbstractClient::QuickTileMode, mode);
+    QFETCH(QuickTileMode, mode);
     client->setQuickTileMode(mode, true);
     QCOMPARE(client->quickTileMode(), mode);
     QTEST(client->geometry(), "expectedGeometry");
@@ -521,10 +521,10 @@ void QuickTilingTest::testX11QuickTiling()
 
 void QuickTilingTest::testX11QuickTilingAfterVertMaximize_data()
 {
-    QTest::addColumn<AbstractClient::QuickTileMode>("mode");
+    QTest::addColumn<QuickTileMode>("mode");
     QTest::addColumn<QRect>("expectedGeometry");
 
-#define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
+#define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
     QTest::newRow("left")   << FLAG(Left)   << QRect(0, 0, 640, 1024);
     QTest::newRow("top")    << FLAG(Top)    << QRect(0, 0, 1280, 512);
@@ -580,7 +580,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     // now quick tile
     QSignalSpy quickTileChangedSpy(client, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
-    QFETCH(AbstractClient::QuickTileMode, mode);
+    QFETCH(QuickTileMode, mode);
     client->setQuickTileMode(mode, true);
     QEXPECT_FAIL("left", "Quick tiling not working", Continue);
     QEXPECT_FAIL("right", "Quick tiling not working", Continue);
@@ -617,10 +617,10 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
 void QuickTilingTest::testShortcut_data()
 {
     QTest::addColumn<QString>("shortcut");
-    QTest::addColumn<AbstractClient::QuickTileMode>("expectedMode");
+    QTest::addColumn<QuickTileMode>("expectedMode");
     QTest::addColumn<QRect>("expectedGeometry");
 
-#define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
+#define FLAG(name) QuickTileMode(QuickTileFlag::name)
     QTest::newRow("top") << QStringLiteral("Window Quick Tile Top") << FLAG(Top) << QRect(0, 0, 1280, 512);
     QTest::newRow("left") << QStringLiteral("Window Quick Tile Left") << FLAG(Left) << QRect(0, 0, 640, 1024);
     QTest::newRow("bottom") << QStringLiteral("Window Quick Tile Bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
@@ -651,14 +651,14 @@ void QuickTilingTest::testShortcut()
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
-    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
     QVERIFY(geometryChangedSpy.isValid());
 
     QFETCH(QString, shortcut);
-    QFETCH(AbstractClient::QuickTileMode, expectedMode);
+    QFETCH(QuickTileMode, expectedMode);
     QFETCH(QRect, expectedGeometry);
 
     // invoke global shortcut through dbus
@@ -695,10 +695,10 @@ void QuickTilingTest::testShortcut()
 void QuickTilingTest::testScript_data()
 {
     QTest::addColumn<QString>("action");
-    QTest::addColumn<AbstractClient::QuickTileMode>("expectedMode");
+    QTest::addColumn<QuickTileMode>("expectedMode");
     QTest::addColumn<QRect>("expectedGeometry");
 
-#define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
+#define FLAG(name) QuickTileMode(QuickTileFlag::name)
     QTest::newRow("top") << QStringLiteral("Top") << FLAG(Top) << QRect(0, 0, 1280, 512);
     QTest::newRow("left") << QStringLiteral("Left") << FLAG(Left) << QRect(0, 0, 640, 1024);
     QTest::newRow("bottom") << QStringLiteral("Bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
@@ -729,7 +729,7 @@ void QuickTilingTest::testScript()
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
-    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
@@ -744,7 +744,7 @@ void QuickTilingTest::testScript()
     out << "workspace.slotWindowQuickTile" << action << "()";
     out.flush();
 
-    QFETCH(AbstractClient::QuickTileMode, expectedMode);
+    QFETCH(QuickTileMode, expectedMode);
     QFETCH(QRect, expectedGeometry);
 
     const int id = Scripting::self()->loadScript(tmpFile.fileName());

@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <linux/input.h>
 #include <xcb/xcb_icccm.h>
 
-Q_DECLARE_METATYPE(KWin::AbstractClient::QuickTileMode)
+Q_DECLARE_METATYPE(KWin::QuickTileMode)
 Q_DECLARE_METATYPE(KWin::MaximizeMode)
 
 namespace KWin
