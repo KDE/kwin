@@ -26,11 +26,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "shell_client.h"
+#include "scripting/scripting.h"
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
+
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCall>
+#include <QTemporaryFile>
+#include <QTextStream>
 
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
@@ -64,6 +71,10 @@ private Q_SLOTS:
     void testX11QuickTiling();
     void testX11QuickTilingAfterVertMaximize_data();
     void testX11QuickTilingAfterVertMaximize();
+    void testShortcut_data();
+    void testShortcut();
+    void testScript_data();
+    void testScript();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -601,6 +612,174 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     QSignalSpy windowClosedSpy(client, &Client::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
+}
+
+void QuickTilingTest::testShortcut_data()
+{
+    QTest::addColumn<QString>("shortcut");
+    QTest::addColumn<AbstractClient::QuickTileMode>("expectedMode");
+    QTest::addColumn<QRect>("expectedGeometry");
+
+#define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
+    QTest::newRow("top") << QStringLiteral("Window Quick Tile Top") << FLAG(Top) << QRect(0, 0, 1280, 512);
+    QTest::newRow("left") << QStringLiteral("Window Quick Tile Left") << FLAG(Left) << QRect(0, 0, 640, 1024);
+    QTest::newRow("bottom") << QStringLiteral("Window Quick Tile Bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
+    QTest::newRow("right") << QStringLiteral("Window Quick Tile Right") << FLAG(Right) << QRect(640, 0, 640, 1024);
+
+    QTest::newRow("top right") << QStringLiteral("Window Quick Tile Top Right") << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
+    QTest::newRow("top left") << QStringLiteral("Window Quick Tile Top Left") << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
+    QTest::newRow("bottom right") << QStringLiteral("Window Quick Tile Bottom Right") << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
+    QTest::newRow("bottom left") << QStringLiteral("Window Quick Tile Bottom Left") << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
+
+#undef FLAG
+}
+
+void QuickTilingTest::testShortcut()
+{
+    using namespace KWayland::Client;
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangeSpy.isValid());
+    // let's render
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
+    QVERIFY(quickTileChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+
+    QFETCH(QString, shortcut);
+    QFETCH(AbstractClient::QuickTileMode, expectedMode);
+    QFETCH(QRect, expectedGeometry);
+
+    // invoke global shortcut through dbus
+    auto msg = QDBusMessage::createMethodCall(
+        QStringLiteral("org.kde.kglobalaccel"),
+        QStringLiteral("/component/kwin"),
+        QStringLiteral("org.kde.kglobalaccel.Component"),
+        QStringLiteral("invokeShortcut"));
+    msg.setArguments(QList<QVariant>{shortcut});
+    QDBusConnection::sessionBus().asyncCall(msg);
+
+    QVERIFY(quickTileChangedSpy.wait());
+    QCOMPARE(quickTileChangedSpy.count(), 1);
+    // at this point the geometry did not yet change
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    // but quick tile mode already changed
+    QCOMPARE(c->quickTileMode(), expectedMode);
+
+    // but we got requested a new geometry
+    QVERIFY(sizeChangeSpy.wait());
+    QCOMPARE(sizeChangeSpy.count(), 1);
+    QCOMPARE(sizeChangeSpy.first().first().toSize(), expectedGeometry.size());
+
+    // attach a new image
+    Test::render(surface.data(), expectedGeometry.size(), Qt::red);
+    m_connection->flush();
+
+    QVERIFY(geometryChangedSpy.wait());
+    QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);
+    QCOMPARE(geometryChangedSpy.count(), 1);
+    QCOMPARE(c->geometry(), expectedGeometry);
+}
+
+void QuickTilingTest::testScript_data()
+{
+    QTest::addColumn<QString>("action");
+    QTest::addColumn<AbstractClient::QuickTileMode>("expectedMode");
+    QTest::addColumn<QRect>("expectedGeometry");
+
+#define FLAG(name) AbstractClient::QuickTileMode(AbstractClient::QuickTile##name)
+    QTest::newRow("top") << QStringLiteral("Top") << FLAG(Top) << QRect(0, 0, 1280, 512);
+    QTest::newRow("left") << QStringLiteral("Left") << FLAG(Left) << QRect(0, 0, 640, 1024);
+    QTest::newRow("bottom") << QStringLiteral("Bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
+    QTest::newRow("right") << QStringLiteral("Right") << FLAG(Right) << QRect(640, 0, 640, 1024);
+
+    QTest::newRow("top right") << QStringLiteral("TopRight") << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
+    QTest::newRow("top left") << QStringLiteral("TopLeft") << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
+    QTest::newRow("bottom right") << QStringLiteral("BottomRight") << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
+    QTest::newRow("bottom left") << QStringLiteral("BottomLeft") << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
+
+#undef FLAG
+}
+
+void QuickTilingTest::testScript()
+{
+    using namespace KWayland::Client;
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QVERIFY(sizeChangeSpy.isValid());
+    // let's render
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->quickTileMode(), AbstractClient::QuickTileNone);
+    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
+    QVERIFY(quickTileChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+
+    QVERIFY(Scripting::self());
+    QTemporaryFile tmpFile;
+    QVERIFY(tmpFile.open());
+    QTextStream out(&tmpFile);
+
+    QFETCH(QString, action);
+    out << "workspace.slotWindowQuickTile" << action << "()";
+    out.flush();
+
+    QFETCH(AbstractClient::QuickTileMode, expectedMode);
+    QFETCH(QRect, expectedGeometry);
+
+    const int id = Scripting::self()->loadScript(tmpFile.fileName());
+    QVERIFY(id != -1);
+    QVERIFY(Scripting::self()->isScriptLoaded(tmpFile.fileName()));
+    auto s = Scripting::self()->findScript(tmpFile.fileName());
+    QVERIFY(s);
+    QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+    QVERIFY(runningChangedSpy.isValid());
+    s->run();
+
+    QVERIFY(quickTileChangedSpy.wait());
+    QCOMPARE(quickTileChangedSpy.count(), 1);
+
+    QCOMPARE(runningChangedSpy.count(), 1);
+    QCOMPARE(runningChangedSpy.first().first().toBool(), true);
+
+    // at this point the geometry did not yet change
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    // but quick tile mode already changed
+    QCOMPARE(c->quickTileMode(), expectedMode);
+
+    // but we got requested a new geometry
+    QVERIFY(sizeChangeSpy.wait());
+    QCOMPARE(sizeChangeSpy.count(), 1);
+    QCOMPARE(sizeChangeSpy.first().first().toSize(), expectedGeometry.size());
+
+    // attach a new image
+    Test::render(surface.data(), expectedGeometry.size(), Qt::red);
+    m_connection->flush();
+
+    QVERIFY(geometryChangedSpy.wait());
+    QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);
+    QCOMPARE(geometryChangedSpy.count(), 1);
+    QCOMPARE(c->geometry(), expectedGeometry);
 }
 
 }
