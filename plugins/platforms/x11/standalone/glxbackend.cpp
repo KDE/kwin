@@ -509,6 +509,22 @@ int GlxBackend::visualDepth(xcb_visualid_t visual) const
     return m_visualDepthHash.value(visual);
 }
 
+static inline int bitCount(uint32_t mask)
+{
+#if defined(__GNUC__)
+    return __builtin_popcount(mask);
+#else
+    int count = 0;
+
+    while (mask) {
+        count += (mask & 1);
+        mask >>= 1;
+    }
+
+    return count;
+#endif
+}
+
 FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
 {
     auto it = m_fbconfigHash.constFind(visual);
