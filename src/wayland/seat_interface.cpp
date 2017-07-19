@@ -1437,7 +1437,7 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
     }
     d->textInput.focus.textInput = t;
     if (d->textInput.focus.surface) {
-        d->textInput.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
+        d->textInput.focus.destroyConnection = connect(surface, &Resource::aboutToBeUnbound, this,
             [this] {
                 setFocusedTextInputSurface(nullptr);
             }
