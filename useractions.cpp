@@ -1055,11 +1055,7 @@ void Workspace::clientShortcutUpdated(AbstractClient* c)
             action->setProperty("componentName", QStringLiteral(KWIN_NAME));
             action->setObjectName(key);
             action->setText(i18n("Activate Window (%1)", c->caption()));
-            connect(action, &QAction::triggered, c,
-                [c]() {
-                    workspace()->activateClient(c, true);
-                }
-            );
+            connect(action, &QAction::triggered, c, std::bind(&Workspace::activateClient, this, c, true));
         }
 
         // no autoloading, since it's configured explicitly here and is not meant to be reused
@@ -1842,13 +1838,8 @@ void Client::setShortcutInternal()
     // Workaround for kwin<->kglobalaccel deadlock, when KWin has X grab and the kded
     // kglobalaccel module tries to create the key grab. KWin should preferably grab
     // they keys itself anyway :(.
-    QTimer::singleShot(0, this, SLOT(delayedSetShortcut()));
+    QTimer::singleShot(0, this, std::bind(&Workspace::clientShortcutUpdated, workspace(), this));
 #endif
-}
-
-void Client::delayedSetShortcut()
-{
-    workspace()->clientShortcutUpdated(this);
 }
 
 bool Workspace::shortcutAvailable(const QKeySequence &cut, AbstractClient* ignore) const

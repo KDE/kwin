@@ -392,9 +392,6 @@ protected:
     QSize resizeIncrements() const override;
     bool acceptsFocus() const override;
 
-private Q_SLOTS:
-    void delayedSetShortcut();
-
     //Signals for the scripting interface
     //Signals make an excellent way for communication
     //in between objects as compared to simple function
