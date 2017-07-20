@@ -112,14 +112,14 @@ DEF4("Window Quick Tile Top Right", I18N_NOOP("Quick Tile Window to the Top Righ
      0, std::bind(&Workspace::quickTileWindow, this, QuickTileFlag::Top | QuickTileFlag::Right));
 DEF4("Window Quick Tile Bottom Right", I18N_NOOP("Quick Tile Window to the Bottom Right"),
      0, std::bind(&Workspace::quickTileWindow, this, QuickTileFlag::Bottom | QuickTileFlag::Right));
-DEF2("Switch Window Up", I18N_NOOP("Switch to Window Above"),
-     Qt::META + Qt::ALT + Qt::Key_Up, slotSwitchWindowUp);
-DEF2("Switch Window Down", I18N_NOOP("Switch to Window Below"),
-     Qt::META + Qt::ALT + Qt::Key_Down, slotSwitchWindowDown);
-DEF2("Switch Window Right", I18N_NOOP("Switch to Window to the Right"),
-     Qt::META + Qt::ALT + Qt::Key_Right, slotSwitchWindowRight);
-DEF2("Switch Window Left", I18N_NOOP("Switch to Window to the Left"),
-     Qt::META + Qt::ALT + Qt::Key_Left, slotSwitchWindowLeft);
+DEF4("Switch Window Up", I18N_NOOP("Switch to Window Above"),
+     Qt::META + Qt::ALT + Qt::Key_Up, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionNorth));
+DEF4("Switch Window Down", I18N_NOOP("Switch to Window Below"),
+     Qt::META + Qt::ALT + Qt::Key_Down, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionSouth));
+DEF4("Switch Window Right", I18N_NOOP("Switch to Window to the Right"),
+     Qt::META + Qt::ALT + Qt::Key_Right, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionEast));
+DEF4("Switch Window Left", I18N_NOOP("Switch to Window to the Left"),
+     Qt::META + Qt::ALT + Qt::Key_Left, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionWest));
 DEF2("Increase Opacity", I18N_NOOP("Increase Opacity of Active Window by 5 %"),
     0, slotIncreaseWindowOpacity);
 DEF2("Decrease Opacity", I18N_NOOP("Decrease Opacity of Active Window by 5 %"),

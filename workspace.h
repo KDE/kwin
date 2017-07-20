@@ -371,6 +371,14 @@ public:
 
     void quickTileWindow(QuickTileMode mode);
 
+    enum Direction {
+        DirectionNorth,
+        DirectionEast,
+        DirectionSouth,
+        DirectionWest
+    };
+    void switchWindow(Direction direction);
+
 public Q_SLOTS:
     void performWindowOperation(KWin::AbstractClient* c, Options::WindowOperation op);
     // Keybindings
@@ -403,11 +411,6 @@ public Q_SLOTS:
     void slotWindowGrowVertical();
     void slotWindowShrinkHorizontal();
     void slotWindowShrinkVertical();
-
-    void slotSwitchWindowUp();
-    void slotSwitchWindowDown();
-    void slotSwitchWindowRight();
-    void slotSwitchWindowLeft();
 
     void slotIncreaseWindowOpacity();
     void slotLowerWindowOpacity();
@@ -496,13 +499,6 @@ private:
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,
                       Slot slot, const QVariant &data = QVariant());
     void setupWindowShortcut(AbstractClient* c);
-    enum Direction {
-        DirectionNorth,
-        DirectionEast,
-        DirectionSouth,
-        DirectionWest
-    };
-    void switchWindow(Direction direction);
     bool switchWindow(AbstractClient *c, Direction direction, QPoint curPos, int desktop);
 
     void propagateClients(bool propagate_new_clients);   // Called only from updateStackingOrder

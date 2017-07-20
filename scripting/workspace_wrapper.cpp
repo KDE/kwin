@@ -150,11 +150,6 @@ SLOTWRAPPER(slotWindowGrowVertical)
 SLOTWRAPPER(slotWindowShrinkHorizontal)
 SLOTWRAPPER(slotWindowShrinkVertical)
 
-SLOTWRAPPER(slotSwitchWindowUp)
-SLOTWRAPPER(slotSwitchWindowDown)
-SLOTWRAPPER(slotSwitchWindowRight)
-SLOTWRAPPER(slotSwitchWindowLeft)
-
 SLOTWRAPPER(slotIncreaseWindowOpacity)
 SLOTWRAPPER(slotLowerWindowOpacity)
 
@@ -190,6 +185,18 @@ SLOTWRAPPER(slotWindowQuickTileTopLeft, QuickTileFlag::Top | QuickTileFlag::Left
 SLOTWRAPPER(slotWindowQuickTileTopRight, QuickTileFlag::Top | QuickTileFlag::Right)
 SLOTWRAPPER(slotWindowQuickTileBottomLeft, QuickTileFlag::Bottom | QuickTileFlag::Left)
 SLOTWRAPPER(slotWindowQuickTileBottomRight, QuickTileFlag::Bottom | QuickTileFlag::Right)
+
+#undef SLOTWRAPPER
+
+#define SLOTWRAPPER(name,direction) \
+void WorkspaceWrapper::name() { \
+    Workspace::self()->switchWindow(Workspace::direction); \
+}
+
+SLOTWRAPPER(slotSwitchWindowUp, DirectionNorth)
+SLOTWRAPPER(slotSwitchWindowDown, DirectionSouth)
+SLOTWRAPPER(slotSwitchWindowRight, DirectionEast)
+SLOTWRAPPER(slotSwitchWindowLeft, DirectionWest)
 
 #undef SLOTWRAPPER
 

@@ -1658,38 +1658,6 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
 }
 
 /*!
-  Switches to upper window
- */
-void Workspace::slotSwitchWindowUp()
-{
-    switchWindow(DirectionNorth);
-}
-
-/*!
-  Switches to lower window
- */
-void Workspace::slotSwitchWindowDown()
-{
-    switchWindow(DirectionSouth);
-}
-
-/*!
-  Switches to window on the right
- */
-void Workspace::slotSwitchWindowRight()
-{
-    switchWindow(DirectionEast);
-}
-
-/*!
-  Switches to window on the left
- */
-void Workspace::slotSwitchWindowLeft()
-{
-    switchWindow(DirectionWest);
-}
-
-/*!
   Shows the window operations popup menu for the activeClient()
  */
 void Workspace::slotWindowOperations()
