@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "client.h"
 #include "cursor.h"
 #include "input.h"
 #include "platform.h"
@@ -33,6 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KGlobalAccel>
 #include <linux/input.h>
+
+#include <netwm.h>
+#include <xcb/xcb_icccm.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -51,6 +55,7 @@ private Q_SLOTS:
     void testRepeatedTrigger();
     void testUserActionsMenu();
     void testMetaShiftW();
+    void testX11ClientShortcut();
 };
 
 void GlobalShortcutsTest::initTestCase()
@@ -193,6 +198,83 @@ void GlobalShortcutsTest::testMetaShiftW()
     // release meta+shift
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+}
+
+struct XcbConnectionDeleter
+{
+    static inline void cleanup(xcb_connection_t *pointer)
+    {
+        xcb_disconnect(pointer);
+    }
+};
+
+void GlobalShortcutsTest::testX11ClientShortcut()
+{
+    // create an X11 window
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+    xcb_window_t w = xcb_generate_id(c.data());
+    const QRect windowGeometry = QRect(0, 0, 10, 20);
+    const uint32_t values[] = {
+        XCB_EVENT_MASK_ENTER_WINDOW |
+        XCB_EVENT_MASK_LEAVE_WINDOW
+    };
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, XCB_CW_EVENT_MASK, values);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    NETWinInfo info(c.data(), w, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    info.setWindowType(NET::Normal);
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client = windowCreatedSpy.last().first().value<Client*>();
+    QVERIFY(client);
+
+    QCOMPARE(workspace()->activeClient(), client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->shortcut(), QKeySequence());
+    const QKeySequence seq(Qt::META + Qt::SHIFT + Qt::Key_Y);
+    QVERIFY(workspace()->shortcutAvailable(seq));
+    client->setShortcut(seq.toString());
+    QCOMPARE(client->shortcut(), seq);
+    QVERIFY(!workspace()->shortcutAvailable(seq));
+    QCOMPARE(client->caption(), QStringLiteral(" {Meta+Shift+Y}"));
+
+    // it's delayed
+    QCoreApplication::processEvents();
+
+    workspace()->activateClient(nullptr);
+    QVERIFY(!workspace()->activeClient());
+    QVERIFY(!client->isActive());
+
+    // now let's trigger the shortcut
+    quint32 timestamp = 0;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_Y, timestamp++);
+    QTRY_COMPARE(workspace()->activeClient(), client);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_Y, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+
+    // destroy window again
+    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+    xcb_unmap_window(c.data(), w);
+    xcb_destroy_window(c.data(), w);
+    xcb_flush(c.data());
+    QVERIFY(windowClosedSpy.wait());
 }
 
 WAYLANDTEST_MAIN(GlobalShortcutsTest)
