@@ -128,6 +128,15 @@ void KWinBindingsTest::testSwitchWindow()
     QTRY_COMPARE(workspace()->activeClient(), c3);
     invokeShortcut(QStringLiteral("Switch Window Left"));
     QTRY_COMPARE(workspace()->activeClient(), c4);
+    // test opposite direction
+    invokeShortcut(QStringLiteral("Switch Window Left"));
+    QTRY_COMPARE(workspace()->activeClient(), c3);
+    invokeShortcut(QStringLiteral("Switch Window Down"));
+    QTRY_COMPARE(workspace()->activeClient(), c2);
+    invokeShortcut(QStringLiteral("Switch Window Right"));
+    QTRY_COMPARE(workspace()->activeClient(), c1);
+    invokeShortcut(QStringLiteral("Switch Window Up"));
+    QTRY_COMPARE(workspace()->activeClient(), c4);
 }
 
 void KWinBindingsTest::testSwitchWindowScript()
