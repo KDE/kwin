@@ -39,6 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEF4( name, descr, key, functor ) \
     initShortcut(QStringLiteral(name), i18n(descr), key, functor);
 
+#define DEF5( name, key, functor, value )                            \
+    initShortcut(QStringLiteral(name).arg(value), i18n(name, value), key, functor, value);
+
 
 DEF(I18N_NOOP("Walk Through Window Tabs"),             0, slotActivateNextTab);
 DEF(I18N_NOOP("Walk Through Window Tabs (Reverse)"),   0, slotActivatePrevTab);
@@ -129,7 +132,7 @@ DEF2("Window On All Desktops", I18N_NOOP("Keep Window on All Desktops"),
      0, slotWindowOnAllDesktops);
 
 for (int i = 1; i < 21; ++i) {
-    DEF3(I18N_NOOP("Window to Desktop %1"),        0, slotWindowToDesktop, i);
+    DEF5(I18N_NOOP("Window to Desktop %1"),        0, std::bind(&Workspace::slotWindowToDesktop, this, i), i);
 }
 DEF(I18N_NOOP("Window to Next Desktop"),           0, slotWindowToNextDesktop);
 DEF(I18N_NOOP("Window to Previous Desktop"),       0, slotWindowToPreviousDesktop);

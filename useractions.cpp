@@ -1247,10 +1247,9 @@ static uint senderValue(QObject *sender)
 
 #define USABLE_ACTIVE_CLIENT (active_client && !(active_client->isDesktop() || active_client->isDock()))
 
-void Workspace::slotWindowToDesktop()
+void Workspace::slotWindowToDesktop(uint i)
 {
     if (USABLE_ACTIVE_CLIENT) {
-        const uint i = senderValue(sender());
         if (i < 1)
             return;
 
