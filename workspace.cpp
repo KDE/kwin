@@ -434,6 +434,12 @@ void Workspace::init()
                 if (c == last_active_client) {
                     last_active_client = nullptr;
                 }
+                if (client_keys_client == c) {
+                    setupWindowShortcutDone(false);
+                }
+                if (!c->shortcut().isEmpty()) {
+                    c->setShortcut(QString());   // Remove from client_keys
+                }
                 clientHidden(c);
                 emit clientRemoved(c);
                 markXStackingOrderAsDirty();

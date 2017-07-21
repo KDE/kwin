@@ -56,6 +56,7 @@ private Q_SLOTS:
     void testUserActionsMenu();
     void testMetaShiftW();
     void testX11ClientShortcut();
+    void testWaylandClientShortcut();
 };
 
 void GlobalShortcutsTest::initTestCase()
@@ -276,6 +277,44 @@ void GlobalShortcutsTest::testX11ClientShortcut()
     xcb_flush(c.data());
     QVERIFY(windowClosedSpy.wait());
 }
+
+void GlobalShortcutsTest::testWaylandClientShortcut()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QCOMPARE(workspace()->activeClient(), client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->shortcut(), QKeySequence());
+    const QKeySequence seq(Qt::META + Qt::SHIFT + Qt::Key_Y);
+    QVERIFY(workspace()->shortcutAvailable(seq));
+    client->setShortcut(seq.toString());
+    QCOMPARE(client->shortcut(), seq);
+    QVERIFY(!workspace()->shortcutAvailable(seq));
+    QEXPECT_FAIL("", "Caption adjustment not yet implemented", Continue);
+    QCOMPARE(client->caption(), QStringLiteral(" {Meta+Shift+Y}"));
+
+    workspace()->activateClient(nullptr);
+    QVERIFY(!workspace()->activeClient());
+    QVERIFY(!client->isActive());
+
+    // now let's trigger the shortcut
+    quint32 timestamp = 0;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_Y, timestamp++);
+    QTRY_COMPARE(workspace()->activeClient(), client);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_Y, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(workspace()->shortcutAvailable(seq));
+}
+
 
 WAYLANDTEST_MAIN(GlobalShortcutsTest)
 #include "globalshortcuts_test.moc"

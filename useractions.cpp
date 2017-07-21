@@ -1044,7 +1044,7 @@ void Workspace::setupWindowShortcutDone(bool ok)
         active_client->takeFocus();
 }
 
-void Workspace::clientShortcutUpdated(Client* c)
+void Workspace::clientShortcutUpdated(AbstractClient* c)
 {
     QString key = QStringLiteral("_k_session:%1").arg(c->window());
     QAction* action = findChild<QAction*>(key);
@@ -1794,11 +1794,19 @@ void Workspace::slotInvertScreen()
 
 #undef USABLE_ACTIVE_CLIENT
 
-void Client::setShortcut(const QString& _cut)
+void AbstractClient::setShortcut(const QString& _cut)
 {
     QString cut = rules()->checkShortcut(_cut);
-    if (cut.isEmpty())
-        return setShortcutInternal();
+    auto updateShortcut  = [this](const QKeySequence &cut = QKeySequence()) {
+        if (_shortcut == cut)
+            return;
+        _shortcut = cut;
+        setShortcutInternal();
+    };
+    if (cut.isEmpty()) {
+        updateShortcut();
+        return;
+    }
     if (cut == shortcut().toString()) {
         return; // no change
     }
@@ -1807,9 +1815,9 @@ void Client::setShortcut(const QString& _cut)
 // E.g. Alt+Ctrl+(ABCDEF);Meta+X,Meta+(ABCDEF)
     if (!cut.contains(QLatin1Char('(')) && !cut.contains(QLatin1Char(')')) && !cut.contains(QLatin1String(" - "))) {
         if (workspace()->shortcutAvailable(cut, this))
-            setShortcutInternal(QKeySequence(cut));
+            updateShortcut(QKeySequence(cut));
         else
-            setShortcutInternal();
+            updateShortcut();
         return;
     }
     QList< QKeySequence > keys;
@@ -1846,18 +1854,20 @@ void Client::setShortcut(const QString& _cut)
             it != keys.constEnd();
             ++it) {
         if (workspace()->shortcutAvailable(*it, this)) {
-            setShortcutInternal(*it);
+            updateShortcut(*it);
             return;
         }
     }
-    setShortcutInternal();
+    updateShortcut();
 }
 
-void Client::setShortcutInternal(const QKeySequence &cut)
+void AbstractClient::setShortcutInternal()
 {
-    if (_shortcut == cut)
-        return;
-    _shortcut = cut;
+    workspace()->clientShortcutUpdated(this);
+}
+
+void Client::setShortcutInternal()
+{
     updateCaption();
 #if 0
     workspace()->clientShortcutUpdated(this);
@@ -1874,7 +1884,7 @@ void Client::delayedSetShortcut()
     workspace()->clientShortcutUpdated(this);
 }
 
-bool Workspace::shortcutAvailable(const QKeySequence &cut, Client* ignore) const
+bool Workspace::shortcutAvailable(const QKeySequence &cut, AbstractClient* ignore) const
 {
     if (ignore && cut == ignore->shortcut())
         return true;
@@ -1882,8 +1892,8 @@ bool Workspace::shortcutAvailable(const QKeySequence &cut, Client* ignore) const
     if (!KGlobalAccel::getGlobalShortcutsByKey(cut).isEmpty()) {
         return false;
     }
-    for (ClientList::ConstIterator it = clients.constBegin();
-            it != clients.constEnd();
+    for (auto it = m_allClients.constBegin();
+            it != m_allClients.constEnd();
             ++it) {
         if ((*it) != ignore && (*it)->shortcut() == cut)
             return false;

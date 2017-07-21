@@ -820,17 +820,6 @@ void ShellClient::setOnAllActivities(bool set)
     Q_UNUSED(set)
 }
 
-void ShellClient::setShortcut(const QString &cut)
-{
-    Q_UNUSED(cut)
-}
-
-const QKeySequence &ShellClient::shortcut() const
-{
-    static QKeySequence seq;
-    return seq;
-}
-
 void ShellClient::takeFocus()
 {
     if (rules()->checkAcceptFocus(wantsInput())) {

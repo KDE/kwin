@@ -89,8 +89,6 @@ public:
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void setOnAllActivities(bool set) override;
-    void setShortcut(const QString &cut) override;
-    const QKeySequence &shortcut() const override;
     void takeFocus() override;
     void updateWindowRules(Rules::Types selection) override;
     bool userCanSetFullScreen() const override;

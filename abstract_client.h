@@ -384,8 +384,10 @@ public:
      */
     bool isSpecialWindow() const;
     void sendToScreen(int screen);
-    virtual const QKeySequence &shortcut() const  = 0;
-    virtual void setShortcut(const QString &cut) = 0;
+    const QKeySequence &shortcut() const {
+        return _shortcut;
+    }
+    void setShortcut(const QString &cut);
     virtual bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos);
     void setOnAllDesktops(bool set);
     void setDesktop(int);
@@ -991,6 +993,8 @@ protected:
 
     void setUnresponsive(bool unresponsive);
 
+    virtual void setShortcutInternal();
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -1064,6 +1068,8 @@ private:
     QString m_applicationMenuObjectPath;
 
     bool m_unresponsive = false;
+
+    QKeySequence _shortcut;
 
     static bool s_haveResizeEffect;
 };

@@ -200,8 +200,6 @@ public:
     QSize sizeForClientSize(const QSize&, Sizemode mode = SizemodeAny, bool noframe = false) const override;
 
     bool providesContextHelp() const override;
-    const QKeySequence &shortcut() const override;
-    void setShortcut(const QString& cut) override;
 
     Options::WindowOperation mouseButtonToWindowOperation(Qt::MouseButtons button);
     bool performMouseCommand(Options::MouseCommand, const QPoint& globalPos) override;
@@ -451,7 +449,7 @@ private:
     void setCaption(const QString& s, bool force = false);
     bool hasTransientInternal(const Client* c, bool indirect, ConstClientList& set) const;
     void finishWindowRules();
-    void setShortcutInternal(const QKeySequence &cut = QKeySequence());
+    void setShortcutInternal() override;
 
     void configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool);
     NETExtendedStrut strut() const;
@@ -579,7 +577,6 @@ private:
         bool isPending;
     } syncRequest;
     static bool check_active_modal; ///< \see Client::checkActiveModal()
-    QKeySequence _shortcut;
     int sm_stacking_order;
     friend struct ResetupRulesProcedure;
 
@@ -736,11 +733,6 @@ inline const WindowRules* Client::rules() const
 inline xcb_window_t Client::moveResizeGrabWindow() const
 {
     return m_moveResizeGrabWindow;
-}
-
-inline const QKeySequence &Client::shortcut() const
-{
-    return _shortcut;
 }
 
 inline void Client::removeRule(Rules* rule)
