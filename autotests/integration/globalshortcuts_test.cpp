@@ -57,6 +57,7 @@ private Q_SLOTS:
     void testMetaShiftW();
     void testX11ClientShortcut();
     void testWaylandClientShortcut();
+    void testSetupWindowShortcut();
 };
 
 void GlobalShortcutsTest::initTestCase()
@@ -314,6 +315,47 @@ void GlobalShortcutsTest::testWaylandClientShortcut()
     QVERIFY(workspace()->shortcutAvailable(seq));
 }
 
+void GlobalShortcutsTest::testSetupWindowShortcut()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QCOMPARE(workspace()->activeClient(), client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->shortcut(), QKeySequence());
+
+    QSignalSpy shortcutDialogAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(shortcutDialogAddedSpy.isValid());
+    workspace()->slotSetupWindowShortcut();
+    QTRY_COMPARE(shortcutDialogAddedSpy.count(), 1);
+    auto dialog = shortcutDialogAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(dialog);
+    QVERIFY(dialog->isInternal());
+    auto sequenceEdit = workspace()->shortcutDialog()->findChild<QKeySequenceEdit*>();
+    QVERIFY(sequenceEdit);
+
+    // the QKeySequenceEdit field does not get focus, we need to pass it focus manually
+    QEXPECT_FAIL("", "Edit does not have focus", Continue);
+    QVERIFY(sequenceEdit->hasFocus());
+    sequenceEdit->setFocus();
+    QTRY_VERIFY(sequenceEdit->hasFocus());
+
+    quint32 timestamp = 0;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_Y, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_Y, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+
+    // the sequence gets accepted after one second, so wait a bit longer
+    QTest::qWait(2000);
+    // now send in enter
+    kwinApp()->platform()->keyboardKeyPressed(KEY_ENTER, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_ENTER, timestamp++);
+    QTRY_COMPARE(client->shortcut(), QKeySequence(Qt::META + Qt::SHIFT + Qt::Key_Y));
+}
 
 WAYLANDTEST_MAIN(GlobalShortcutsTest)
 #include "globalshortcuts_test.moc"

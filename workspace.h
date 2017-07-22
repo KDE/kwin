@@ -379,6 +379,10 @@ public:
     };
     void switchWindow(Direction direction);
 
+    ShortcutDialog *shortcutDialog() const {
+        return client_keys_dialog;
+    }
+
 public Q_SLOTS:
     void performWindowOperation(KWin::AbstractClient* c, Options::WindowOperation op);
     // Keybindings
