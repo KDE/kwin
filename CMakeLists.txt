@@ -325,6 +325,14 @@ add_feature_info("prctl/procctl tracing control"
 
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 
+check_include_file("linux/vt.h" HAVE_LINUX_VT_H)
+add_feature_info("linux/vt.h"
+                 HAVE_LINUX_VT_H
+                 "Required for virtual terminal support under wayland")
+check_include_file("linux/fb.h"    HAVE_LINUX_FB_H)
+add_feature_info("linux/fb.h"
+                 HAVE_LINUX_FB_H
+                 "Required for the fbdev backend")
 
 ########### global ###############
 set(kwin_effects_dbus_xml ${CMAKE_CURRENT_SOURCE_DIR}/org.kde.kwin.Effects.xml)
@@ -480,8 +488,13 @@ if(HAVE_INPUT)
         libinput/device.cpp
         libinput/events.cpp
         libinput/libinput_logging.cpp
-        virtual_terminal.cpp
     )
+    if (HAVE_LINUX_VT_H)
+         set(kwin_KDEINIT_SRCS
+             ${kwin_KDEINIT_SRCS}
+             virtual_terminal.cpp
+         )
+    endif()
 endif()
 
 kconfig_add_kcfg_files(kwin_KDEINIT_SRCS settings.kcfgc)
