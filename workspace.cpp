@@ -428,6 +428,9 @@ void Workspace::init()
                 if (c == delayfocus_client) {
                     cancelDelayFocus();
                 }
+                if (c == last_active_client) {
+                    last_active_client = nullptr;
+                }
                 clientHidden(c);
                 emit clientRemoved(c);
                 markXStackingOrderAsDirty();
