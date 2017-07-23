@@ -202,6 +202,49 @@ void X11ClientTest::testFullscreenLayerWithActiveWaylandWindow()
     QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
     QCOMPARE(workspace()->xStackingOrder().last(), waylandClient);
 
+    // back to x window
+    workspace()->activateClient(client);
+    QTRY_VERIFY(client->isActive());
+    // remove fullscreen
+    QVERIFY(client->isFullScreen());
+    workspace()->slotWindowFullScreen();
+    QVERIFY(!client->isFullScreen());
+    // and fullscreen again
+    workspace()->slotWindowFullScreen();
+    QVERIFY(client->isFullScreen());
+    QCOMPARE(workspace()->stackingOrder().last(), client);
+    QCOMPARE(workspace()->xStackingOrder().last(), client);
+
+    // activate wayland window again
+    workspace()->activateClient(waylandClient);
+    QTRY_VERIFY(waylandClient->isActive());
+    QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
+    QCOMPARE(workspace()->xStackingOrder().last(), waylandClient);
+
+    // back to X11 window
+    workspace()->activateClient(client);
+    QTRY_VERIFY(client->isActive());
+    // remove fullscreen
+    QVERIFY(client->isFullScreen());
+    workspace()->slotWindowFullScreen();
+    QVERIFY(!client->isFullScreen());
+    // and fullscreen through X API
+    NETWinInfo info(c.data(), w, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    info.setState(NET::FullScreen, NET::FullScreen);
+    NETRootInfo rootInfo(c.data(), NET::Properties());
+    rootInfo.setActiveWindow(w, NET::FromApplication, XCB_CURRENT_TIME, XCB_WINDOW_NONE);
+    xcb_flush(c.data());
+    QTRY_VERIFY(client->isFullScreen());
+    QCOMPARE(workspace()->stackingOrder().last(), client);
+    QCOMPARE(workspace()->xStackingOrder().last(), client);
+
+    // activate wayland window again
+    workspace()->activateClient(waylandClient);
+    QTRY_VERIFY(waylandClient->isActive());
+    QCOMPARE(workspace()->stackingOrder().last(), waylandClient);
+    QCOMPARE(workspace()->xStackingOrder().last(), waylandClient);
+    QCOMPARE(client->layer(), NormalLayer);
+
     // close the window
     shellSurface.reset();
     surface.reset();
