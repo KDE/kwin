@@ -425,6 +425,9 @@ void Workspace::init()
         connect(w, &WaylandServer::shellClientRemoved, this,
             [this] (ShellClient *c) {
                 m_allClients.removeAll(c);
+                if (c == most_recently_raised) {
+                    most_recently_raised = nullptr;
+                }
                 if (c == delayfocus_client) {
                     cancelDelayFocus();
                 }
