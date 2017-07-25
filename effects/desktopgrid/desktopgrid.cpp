@@ -1379,7 +1379,7 @@ bool DesktopGridEffect::isActive() const
 
 bool DesktopGridEffect::isRelevantWithPresentWindows(EffectWindow *w) const
 {
-    return !(w->isDesktop() || w->isDock() || w->isSkipSwitcher()) &&
+    return !(w->isDesktop() || w->isDock() || w->isSkipSwitcher() || w->isOnScreenDisplay()) &&
             w->isCurrentTab() && w->isOnCurrentActivity();
 }
 

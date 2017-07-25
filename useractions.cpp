@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "workspace.h"
 #include "effects.h"
+#include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "scripting/scripting.h"
@@ -1050,6 +1051,7 @@ void Workspace::clientShortcutUpdated(Client* c)
     if (!c->shortcut().isEmpty()) {
         if (action == NULL) { // new shortcut
             action = new QAction(this);
+            kwinApp()->platform()->setupActionForGlobalAccel(action);
             action->setProperty("componentName", QStringLiteral(KWIN_NAME));
             action->setObjectName(key);
             action->setText(i18n("Activate Window (%1)", c->caption()));
