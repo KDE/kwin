@@ -146,12 +146,13 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QVERIFY(client->isDecorated());
     QVERIFY(client->isActive());
     // verify that it gets the keyboard focus
-    QVERIFY(!client->surface());
-    // we don't have a surface yet, so focused keyboard surface if set is not ours
-    QVERIFY(!waylandServer()->seat()->focusedKeyboardSurface());
-    QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
-    QVERIFY(surfaceChangedSpy.isValid());
-    QVERIFY(surfaceChangedSpy.wait());
+    if (!client->surface()) {
+        // we don't have a surface yet, so focused keyboard surface if set is not ours
+        QVERIFY(!waylandServer()->seat()->focusedKeyboardSurface());
+        QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
+        QVERIFY(surfaceChangedSpy.isValid());
+        QVERIFY(surfaceChangedSpy.wait());
+    }
     QVERIFY(client->surface());
     QCOMPARE(waylandServer()->seat()->focusedKeyboardSurface(), client->surface());
 
