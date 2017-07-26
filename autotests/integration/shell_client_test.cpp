@@ -73,6 +73,8 @@ private Q_SLOTS:
     void testCaptionSimplified();
     void testKillWindow_data();
     void testKillWindow();
+    void testX11WindowId_data();
+    void testX11WindowId();
 };
 
 void TestShellClient::initTestCase()
@@ -686,6 +688,25 @@ void TestShellClient::testKillWindow()
     killClient->killWindow();
     QVERIFY(finishedSpy.wait());
     QVERIFY(!finishedSpy.isEmpty());
+}
+
+void TestShellClient::testX11WindowId_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
+void TestShellClient::testX11WindowId()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->windowId() != 0);
+    QCOMPARE(c->window(), 0u);
 }
 
 WAYLANDTEST_MAIN(TestShellClient)
