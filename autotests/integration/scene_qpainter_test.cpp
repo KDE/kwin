@@ -372,7 +372,6 @@ void SceneQPainterTest::testX11Window()
 
     const QPoint startPos = client->pos() + client->clientPos();
     auto image = scene->backend()->buffer();
-    QEXPECT_FAIL("", "BUG 382748", Continue);
     QCOMPARE(image->copy(QRect(startPos, client->clientSize())), compareImage);
 
     // and destroy the window again
