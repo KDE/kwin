@@ -97,6 +97,7 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
         } else {
             qCWarning(KWIN_X11STANDALONE) << "Glx not available, trying EGL instead.";
             // no break, needs fall-through
+            Q_FALLTHROUGH();
         }
 #endif
     case EglPlatformInterface:
@@ -211,6 +212,7 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
         group.writeEntry(unsafeKey, true);
         group.sync();
         // Deliberately continue with PreFrame
+        Q_FALLTHROUGH();
     case OpenGLSafePoint::PreFrame:
         if (m_openGLFreezeProtectionThread == nullptr) {
             Q_ASSERT(m_openGLFreezeProtection == nullptr);
@@ -239,6 +241,7 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
         group.writeEntry(unsafeKey, false);
         group.sync();
         // Deliberately continue with PostFrame
+        Q_FALLTHROUGH();
     case OpenGLSafePoint::PostFrame:
         QMetaObject::invokeMethod(m_openGLFreezeProtection, "stop", Qt::QueuedConnection);
         break;

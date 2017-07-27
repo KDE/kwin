@@ -525,6 +525,7 @@ void SceneOpenGL::initDebugOutput()
             if (strstr(message, "Buffer detailed info:") && strstr(message, "has been updated"))
                 scheduleVboReInit();
             // fall through! for general message printing
+            Q_FALLTHROUGH();
         case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
         case GL_DEBUG_TYPE_PORTABILITY:
         case GL_DEBUG_TYPE_PERFORMANCE:
