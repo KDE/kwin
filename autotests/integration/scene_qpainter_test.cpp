@@ -20,12 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "composite.h"
 #include "effectloader.h"
+#include "client.h"
 #include "cursor.h"
 #include "platform.h"
 #include "scene_qpainter.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "effect_builtins.h"
+#include "workspace.h"
 
 #include <KConfigGroup>
 
@@ -35,6 +37,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/pointer.h>
 
 #include <QPainter>
+
+#include <netwm.h>
+#include <xcb/xcb_icccm.h>
 
 using namespace KWin;
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_scene_qpainter-0");
@@ -52,6 +57,7 @@ private Q_SLOTS:
     void testWindowScaled();
     void testCompositorRestart_data();
     void testCompositorRestart();
+    void testX11Window();
 };
 
 void SceneQPainterTest::cleanup()
@@ -279,6 +285,86 @@ void SceneQPainterTest::testCompositorRestart()
     QVERIFY(!cursorImage.isNull());
     painter.drawImage(QPoint(400, 400) - kwinApp()->platform()->softwareCursorHotspot(), cursorImage);
     QCOMPARE(referenceImage, *scene->backend()->buffer());
+}
+
+struct XcbConnectionDeleter
+{
+    static inline void cleanup(xcb_connection_t *pointer)
+    {
+        xcb_disconnect(pointer);
+    }
+};
+
+void SceneQPainterTest::testX11Window()
+{
+    // this test verifies the condition of BUG: 382748
+
+    // create X11 window
+    QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
+    QVERIFY(windowAddedSpy.isValid());
+
+    // create an xcb window
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+    const QRect windowGeometry(0, 0, 100, 200);
+    xcb_window_t w = xcb_generate_id(c.data());
+    uint32_t value = defaultScreen()->white_pixel;
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, XCB_CW_BACK_PIXEL, &value);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+
+    // we should get a client for it
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(client);
+    QCOMPARE(client->window(), w);
+    QCOMPARE(client->clientSize(), QSize(100, 200));
+
+    // enough time for rendering the window
+    QTest::qWait(100);
+
+    auto scene = qobject_cast<SceneQPainter*>(KWin::Compositor::self()->scene());
+    QVERIFY(scene);
+
+    // this should directly trigger a frame
+    KWin::Compositor::self()->addRepaintFull();
+    QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
+    QVERIFY(frameRenderedSpy.isValid());
+    QVERIFY(frameRenderedSpy.wait());
+
+    const QPoint startPos = client->pos() + client->clientPos();
+    auto image = scene->backend()->buffer();
+    for (auto y = startPos.y(); y < startPos.y() + client->clientSize().height(); y++) {
+        for (auto x = startPos.x(); x < startPos.x() + client->clientSize().width(); x++) {
+            if ((x >= 95 && y >= 41) || y >= 203) {
+                QEXPECT_FAIL("", "BUG 382748", Continue);
+            }
+            QCOMPARE(image->pixel(x, y), qRgb(255, 255, 255));
+        }
+    }
+
+    // and destroy the window again
+    xcb_unmap_window(c.data(), w);
+    xcb_flush(c.data());
+
+    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+    QVERIFY(windowClosedSpy.wait());
+    xcb_destroy_window(c.data(), w);
+    c.reset();
 }
 
 WAYLANDTEST_MAIN(SceneQPainterTest)
