@@ -332,6 +332,13 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(client);
     QCOMPARE(client->window(), w);
     QCOMPARE(client->clientSize(), QSize(100, 200));
+    if (!client->surface()) {
+        // wait for surface
+        QSignalSpy surfaceChangedSpy(client, &Toplevel::surfaceChanged);
+        QVERIFY(surfaceChangedSpy.isValid());
+        QVERIFY(surfaceChangedSpy.wait());
+    }
+    QVERIFY(client->surface());
 
     // enough time for rendering the window
     QTest::qWait(100);
