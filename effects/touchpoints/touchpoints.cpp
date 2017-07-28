@@ -74,6 +74,7 @@ Qt::GlobalColor TouchPointsEffect::colorForId(quint32 id)
 
 bool TouchPointsEffect::touchDown(quint32 id, const QPointF &pos, quint32 time)
 {
+    Q_UNUSED(time)
     TouchPoint point;
     point.pos = pos;
     point.press = true;
@@ -86,6 +87,7 @@ bool TouchPointsEffect::touchDown(quint32 id, const QPointF &pos, quint32 time)
 
 bool TouchPointsEffect::touchMotion(quint32 id, const QPointF &pos, quint32 time)
 {
+    Q_UNUSED(time)
     TouchPoint point;
     point.pos = pos;
     point.press = true;
@@ -98,6 +100,7 @@ bool TouchPointsEffect::touchMotion(quint32 id, const QPointF &pos, quint32 time
 
 bool TouchPointsEffect::touchUp(quint32 id, quint32 time)
 {
+    Q_UNUSED(time)
     auto it = m_latestPositions.constFind(id);
     if (it != m_latestPositions.constEnd()) {
         TouchPoint point;

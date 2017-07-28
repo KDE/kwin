@@ -734,7 +734,7 @@ public:
     }
     bool keyEvent(QKeyEvent *event) override {
         if (event->type() == QEvent::KeyPress) {
-            return input()->shortcuts()->processKey(static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts(), event->nativeVirtualKey(), event->key());
+            return input()->shortcuts()->processKey(static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts(), event->key());
         }
         return false;
     }
@@ -1950,6 +1950,7 @@ Qt::KeyboardModifiers InputRedirection::modifiersRelevantForGlobalShortcuts() co
 
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
 {
+    Q_UNUSED(shortcut)
     kwinApp()->platform()->setupActionForGlobalAccel(action);
 }
 

@@ -245,7 +245,7 @@ bool processShortcut(Qt::KeyboardModifiers mods, T key, U &shortcuts)
     return true;
 }
 
-bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, uint32_t key, int keyQt)
+bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
 {
     if (m_kglobalAccelInterface) {
         auto check = [this] (Qt::KeyboardModifiers mods, int keyQt) {

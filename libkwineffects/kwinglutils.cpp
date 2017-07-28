@@ -222,6 +222,7 @@ bool GLShader::link()
 
 const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &source) const
 {
+    Q_UNUSED(shaderType)
     // Prepare the source code
     QByteArray ba;
     if (GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() < kVersionNumber(3, 0)) {
