@@ -343,6 +343,9 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(client->surface());
     QTRY_VERIFY(client->surface()->buffer());
     QTRY_COMPARE(client->surface()->buffer()->data().size(), client->geometry().size());
+    QImage compareImage(client->clientSize(), QImage::Format_RGB32);
+    compareImage.fill(Qt::white);
+    QCOMPARE(client->surface()->buffer()->data().copy(QRect(client->clientPos(), client->clientSize())), compareImage);
 
     // enough time for rendering the window
     QTest::qWait(100);
@@ -358,14 +361,8 @@ void SceneQPainterTest::testX11Window()
 
     const QPoint startPos = client->pos() + client->clientPos();
     auto image = scene->backend()->buffer();
-    for (auto y = startPos.y(); y < startPos.y() + client->clientSize().height(); y++) {
-        for (auto x = startPos.x(); x < startPos.x() + client->clientSize().width(); x++) {
-            if ((x >= 95 && y >= 41) || y >= 203) {
-                QEXPECT_FAIL("", "BUG 382748", Continue);
-            }
-            QCOMPARE(image->pixel(x, y), qRgb(255, 255, 255));
-        }
-    }
+    QEXPECT_FAIL("", "BUG 382748", Continue);
+    QCOMPARE(image->copy(QRect(startPos, client->clientSize())), compareImage);
 
     // and destroy the window again
     xcb_unmap_window(c.data(), w);
