@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/pointer.h>
+#include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/surface_interface.h>
 
 #include <QPainter>
@@ -341,6 +342,7 @@ void SceneQPainterTest::testX11Window()
     }
     QVERIFY(client->surface());
     QTRY_VERIFY(client->surface()->buffer());
+    QTRY_COMPARE(client->surface()->buffer()->data().size(), client->geometry().size());
 
     // enough time for rendering the window
     QTest::qWait(100);
