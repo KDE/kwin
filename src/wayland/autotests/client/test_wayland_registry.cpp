@@ -537,24 +537,37 @@ void TestWaylandRegistry::testDestroy()
     QVERIFY(connectedSpy.wait());
 
     Registry registry;
+    QSignalSpy shellAnnouncedSpy(&registry, SIGNAL(shellAnnounced(quint32,quint32)));
+
     QVERIFY(!registry.isValid());
-    registry.create(connection.display());
+    registry.create(&connection);
     registry.setup();
     QVERIFY(registry.isValid());
 
-    connect(&connection, &ConnectionThread::connectionDied, &registry, &Registry::destroy);
+    //create some arbitrary Interface
+    shellAnnouncedSpy.wait();
+    QScopedPointer<Shell> shell(registry.createShell(registry.interface(Registry::Interface::Shell).name, registry.interface(Registry::Interface::Shell).version, &registry));
+
 
     QSignalSpy connectionDiedSpy(&connection, SIGNAL(connectionDied()));
+    QSignalSpy registryDiedSpy(&registry, SIGNAL(registryDestroyed()));
+
     QVERIFY(connectionDiedSpy.isValid());
+    QVERIFY(registryDiedSpy.isValid());
+
     delete m_display;
     m_display = nullptr;
     QVERIFY(connectionDiedSpy.wait());
+
+    QVERIFY(connectionDiedSpy.count() == 1);
+    QVERIFY(registryDiedSpy.count() == 1);
 
     // now the registry should be destroyed;
     QVERIFY(!registry.isValid());
 
     // calling destroy again should not fail
     registry.destroy();
+    shell->destroy();
 }
 
 void TestWaylandRegistry::testGlobalSync()
