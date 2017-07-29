@@ -74,7 +74,7 @@ void XRandRScreens::update()
         float refreshRate = -1.0f;
         for (int j = 0; j < resources->num_modes; ++j) {
             if (info->mode == modes[j].id) {
-                if (modes[j].htotal*modes[j].vtotal) { // BUG 313996
+                if (modes[j].htotal != 0 && modes[j].vtotal != 0) { // BUG 313996
                     // refresh rate calculation - WTF was wikipedia 1998 when I needed it?
                     int dotclock = modes[j].dot_clock,
                           vtotal = modes[j].vtotal;
