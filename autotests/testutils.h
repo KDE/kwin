@@ -35,6 +35,7 @@ namespace KWin {
 /**
  * Wrapper to create an 0,0x10,10 input only window for testing purposes
  **/
+#ifndef NO_NONE_WINDOW
 static xcb_window_t createWindow()
 {
     xcb_window_t w = xcb_generate_id(connection());
@@ -45,14 +46,17 @@ static xcb_window_t createWindow()
                       XCB_CW_OVERRIDE_REDIRECT, values);
     return w;
 }
+#endif
 
 /**
  * casts XCB_WINDOW_NONE to uint32_t. Needed to make QCOMPARE working.
  **/
+#ifndef NO_NONE_WINDOW
 static uint32_t noneWindow()
 {
     return XCB_WINDOW_NONE;
 }
+#endif
 
 } // namespace
 

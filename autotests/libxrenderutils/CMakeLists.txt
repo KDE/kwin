@@ -1,4 +1,5 @@
 add_executable(blendPictureTest blendpicture_test.cpp)
+set_target_properties(blendPictureTest PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 add_test(xrenderutils-blendPictureTest blendPictureTest)
 target_link_libraries(blendPictureTest
     kwinxrenderutils

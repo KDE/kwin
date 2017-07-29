@@ -54,6 +54,7 @@ set( testClientMachine_SRCS
      ../client_machine.cpp
 )
 add_executable( testClientMachine ${testClientMachine_SRCS} )
+set_target_properties(testClientMachine PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 
 target_link_libraries( testClientMachine
                        Qt5::Concurrent
@@ -90,6 +91,7 @@ ecm_mark_as_test(testXcbWrapper)
 
 if (XCB_ICCCM_FOUND)
     add_executable( testXcbSizeHints test_xcb_size_hints.cpp )
+    set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
     target_link_libraries( testXcbSizeHints
                            Qt5::Test
                            Qt5::X11Extras
@@ -130,6 +132,7 @@ set( testBuiltInEffectLoader_SRCS
     ../effectloader.cpp
 )
 add_executable( testBuiltInEffectLoader ${testBuiltInEffectLoader_SRCS})
+set_target_properties(testBuiltInEffectLoader PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 
 target_link_libraries(testBuiltInEffectLoader
     Qt5::Concurrent
@@ -292,6 +295,7 @@ kconfig_add_kcfg_files(testScreenEdges_SRCS ../settings.kcfgc)
 qt5_add_dbus_interface( testScreenEdges_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.freedesktop.ScreenSaver.xml screenlocker_interface)
 
 add_executable( testScreenEdges ${testScreenEdges_SRCS})
+set_target_properties(testScreenEdges PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 target_include_directories(testScreenEdges BEFORE PRIVATE ./)
 target_link_libraries(testScreenEdges
     Qt5::DBus
