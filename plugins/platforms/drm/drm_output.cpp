@@ -845,12 +845,10 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
             return false;
         }
     }
-    int errno_save = 0;
     const bool ok = drmModePageFlip(m_backend->fd(), m_crtc->id(), buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
     if (ok) {
         m_crtc->setNext(buffer);
     } else {
-        errno_save = errno;
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
     }
     return ok;
