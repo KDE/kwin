@@ -143,7 +143,7 @@ void TestWaylandServerDisplay::testClientConnection()
     QVERIFY(connection->groupId() != 0);
     QVERIFY(connection->processId() != 0);
     QCOMPARE(connection->display(), &display);
-    QCOMPARE(connection->executablePath(), QStringLiteral("%1/testWaylandServerDisplay").arg(AUTOTEST_CURRENT_BIN_DIR));
+    QCOMPARE(connection->executablePath(), QCoreApplication::applicationFilePath());
     QCOMPARE((wl_client*)*connection, client);
     const ClientConnection &constRef = *connection;
     QCOMPARE((wl_client*)constRef, client);

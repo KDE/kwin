@@ -1,7 +1,6 @@
 ########################################################
 # Test WaylandServerDisplay
 ########################################################
-add_definitions(-DAUTOTEST_CURRENT_BIN_DIR="${CMAKE_CURRENT_BINARY_DIR}")
 set( testWaylandServerDisplay_SRCS
         test_display.cpp
     )
