@@ -21,6 +21,7 @@
 #cmakedefine01 HAVE_PR_SET_PDEATHSIG
 #cmakedefine01 HAVE_SYS_PROCCTL_H
 #cmakedefine01 HAVE_PROC_TRACE_CTL
+#cmakedefine01 HAVE_SYS_SYSMACROS_H
 #cmakedefine01 HAVE_BREEZE_DECO
 #cmakedefine01 HAVE_UDEV
 #if HAVE_BREEZE_DECO
