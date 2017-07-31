@@ -247,8 +247,7 @@ bool UdevDevice::hasProperty(const char *key, const char *value)
 }
 
 UdevMonitor::UdevMonitor(Udev *udev)
-    : m_udev(udev)
-    , m_monitor(udev_monitor_new_from_netlink(*udev, "udev"))
+    : m_monitor(udev_monitor_new_from_netlink(*udev, "udev"))
 {
 }
 

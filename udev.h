@@ -69,7 +69,6 @@ public:
     UdevDevice::Ptr getDevice();
 
 private:
-    Udev *m_udev;
     udev_monitor *m_monitor;
 };
 
