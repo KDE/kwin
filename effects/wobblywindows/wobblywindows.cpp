@@ -686,6 +686,7 @@ static inline void fixVectorBounds(WobblyWindowsEffect::Pair& vec, qreal min, qr
     }
 }
 
+#if defined COMPUTE_STATS
 static inline void computeVectorBounds(WobblyWindowsEffect::Pair& vec, WobblyWindowsEffect::Pair& bound)
 {
     if (fabs(vec.x) < bound.x) {
@@ -699,6 +700,7 @@ static inline void computeVectorBounds(WobblyWindowsEffect::Pair& vec, WobblyWin
         bound.y = fabs(vec.y);
     }
 }
+#endif
 
 } // close the anonymous namespace
 
