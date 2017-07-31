@@ -131,7 +131,7 @@ void DecorationBridge::initPlugin()
     KPluginLoader loader(offers.first().fileName());
     KPluginFactory *factory = loader.factory();
     if (!factory) {
-        qCWarning(KWIN_DECORATIONS) << "Error loading plugin:" << loader.errorString();
+        qCWarning(KWIN_DECORATIONS) << "Error loading plugin" << offers.first().fileName() << ":" << loader.errorString();
     } else {
         m_factory = factory;
         loadMetaData(loader.metaData().value(QStringLiteral("MetaData")).toObject());
