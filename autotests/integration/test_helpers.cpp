@@ -295,8 +295,13 @@ void render(Surface *surface, const QSize &size, const QColor &color, const QIma
 {
     QImage img(size, format);
     img.fill(color);
+    render(surface, img);
+}
+
+void render(Surface *surface, const QImage &img)
+{
     surface->attachBuffer(s_waylandConnection.shm->createBuffer(img));
-    surface->damage(QRect(QPoint(0, 0), size));
+    surface->damage(QRect(QPoint(0, 0), img.size()));
     surface->commit(Surface::CommitFlag::None);
 }
 

@@ -223,7 +223,17 @@ void SceneQPainterTest::testWindowScaled()
 
     // now let's map the window
     s->setScale(2);
-    QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(400, 600), Qt::blue));
+
+    //draw a blue square@400x600 with red rectangle@200x200 in the middle
+    const QSize size(400,600);
+    QImage img(size, QImage::Format_ARGB32);
+    img.fill(Qt::blue);
+    QPainter surfacePainter(&img);
+    surfacePainter.fillRect(200,300,200,200, Qt::red);
+
+    //add buffer
+    Test::render(s.data(), img);
+    Test::waitForWaylandWindowShown();
 
     // which should trigger a frame
     if (frameRenderedSpy.isEmpty()) {
@@ -233,6 +243,7 @@ void SceneQPainterTest::testWindowScaled()
     referenceImage.fill(Qt::black);
     QPainter painter(&referenceImage);
     painter.fillRect(0, 0, 200, 300, Qt::blue);
+    painter.fillRect(100, 150, 100, 100, Qt::red);
     painter.fillRect(5, 5, 10, 10, Qt::red); //cursor
 
     QCOMPARE(referenceImage, *scene->backend()->buffer());
