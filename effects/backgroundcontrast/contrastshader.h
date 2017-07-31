@@ -65,7 +65,6 @@ private:
     int mvpMatrixLocation;
     int textureMatrixLocation;
     int colorMatrixLocation;
-    int pixelSizeLocation;
     int opacityLocation;
     float m_opacity;
 };
