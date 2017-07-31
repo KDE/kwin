@@ -180,7 +180,7 @@ UdevDevice::Ptr Udev::renderNode()
 
 UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)
 {
-    return std::move(UdevDevice::Ptr(new UdevDevice(udev_device_new_from_syspath(m_udev, syspath))));
+    return UdevDevice::Ptr(new UdevDevice(udev_device_new_from_syspath(m_udev, syspath)));
 }
 
 UdevMonitor *Udev::monitor()
@@ -285,9 +285,9 @@ void UdevMonitor::enable()
 UdevDevice::Ptr UdevMonitor::getDevice()
 {
     if (!m_monitor) {
-        return std::move(UdevDevice::Ptr());
+        return UdevDevice::Ptr();
     }
-    return std::move(UdevDevice::Ptr(new UdevDevice(udev_monitor_receive_device(m_monitor))));
+    return UdevDevice::Ptr(new UdevDevice(udev_monitor_receive_device(m_monitor)));
 }
 
 }
