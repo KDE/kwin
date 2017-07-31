@@ -130,6 +130,9 @@ void Window::createEglSurface(EGLDisplay dpy, EGLConfig config)
         return;
     }
     m_eglSurface = eglCreateWindowSurface(dpy, config, m_eglWaylandWindow, nullptr);
+#else
+    Q_UNUSED(dpy)
+    Q_UNUSED(config)
 #endif
 }
 

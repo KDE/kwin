@@ -31,7 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QOpenGLFramebufferObject;
 
+#if HAVE_WAYLAND_EGL
 struct wl_egl_window;
+#endif
 
 namespace KWayland
 {
@@ -87,7 +89,9 @@ private:
     QSharedPointer<QOpenGLFramebufferObject> m_contentFBO;
     bool m_resized = false;
     ShellClient *m_shellClient = nullptr;
+#if HAVE_WAYLAND_EGL
     wl_egl_window *m_eglWaylandWindow = nullptr;
+#endif
     quint32 m_windowId;
     const Integration *m_integration;
 };
