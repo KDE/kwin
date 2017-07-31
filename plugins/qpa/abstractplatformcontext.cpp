@@ -96,9 +96,8 @@ static QSurfaceFormat formatFromConfig(EGLDisplay dpy, EGLConfig config)
     return format;
 }
 
-AbstractPlatformContext::AbstractPlatformContext(QOpenGLContext *context, Integration *integration, EGLDisplay display, EGLConfig config)
+AbstractPlatformContext::AbstractPlatformContext(QOpenGLContext *context, EGLDisplay display, EGLConfig config)
     : QPlatformOpenGLContext()
-    , m_integration(integration)
     , m_eglDisplay(display)
     , m_config(config ? config :configFromGLFormat(m_eglDisplay, context->format()))
     , m_format(formatFromConfig(m_eglDisplay, m_config))

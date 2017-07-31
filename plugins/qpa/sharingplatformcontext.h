@@ -31,8 +31,8 @@ class Integration;
 class SharingPlatformContext : public AbstractPlatformContext
 {
 public:
-    explicit SharingPlatformContext(QOpenGLContext *context, Integration *integration);
-    explicit SharingPlatformContext(QOpenGLContext *context, Integration *integration, const EGLSurface &surface, EGLConfig config = nullptr);
+    explicit SharingPlatformContext(QOpenGLContext *context);
+    explicit SharingPlatformContext(QOpenGLContext *context, const EGLSurface &surface, EGLConfig config = nullptr);
 
     void swapBuffers(QPlatformSurface *surface) override;
 

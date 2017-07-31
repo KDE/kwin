@@ -33,7 +33,7 @@ class Integration;
 class AbstractPlatformContext : public QPlatformOpenGLContext
 {
 public:
-    explicit AbstractPlatformContext(QOpenGLContext *context, Integration *integration, EGLDisplay display, EGLConfig config = nullptr);
+    explicit AbstractPlatformContext(QOpenGLContext *context, EGLDisplay display, EGLConfig config = nullptr);
     virtual ~AbstractPlatformContext();
 
     void doneCurrent() override;
@@ -55,7 +55,6 @@ protected:
     void createContext(EGLContext shareContext = EGL_NO_CONTEXT);
 
 private:
-    Integration *m_integration;
     EGLDisplay m_eglDisplay;
     EGLConfig m_config;
     EGLContext m_context = EGL_NO_CONTEXT;

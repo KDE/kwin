@@ -33,13 +33,13 @@ namespace KWin
 namespace QPA
 {
 
-SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, Integration *integration)
-    : SharingPlatformContext(context, integration, EGL_NO_SURFACE)
+SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context)
+    : SharingPlatformContext(context, EGL_NO_SURFACE)
 {
 }
 
-SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, Integration *integration, const EGLSurface &surface, EGLConfig config)
-    : AbstractPlatformContext(context, integration, kwinApp()->platform()->sceneEglDisplay(), config)
+SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, const EGLSurface &surface, EGLConfig config)
+    : AbstractPlatformContext(context, kwinApp()->platform()->sceneEglDisplay(), config)
     , m_surface(surface)
 {
     create();
