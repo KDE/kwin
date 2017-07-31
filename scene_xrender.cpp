@@ -315,7 +315,6 @@ SceneXrender::Window::Window(Toplevel* c, SceneXrender *scene)
     : Scene::Window(c)
     , m_scene(scene)
     , format(XRenderUtils::findPictFormat(c->visual()))
-    , alpha_cached_opacity(0.0)
 {
 }
 
