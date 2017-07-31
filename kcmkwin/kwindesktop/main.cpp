@@ -580,7 +580,7 @@ void KWinDesktopConfig::slotAboutEffectClicked()
         const QString icon    = pluginInfo.icon();
 
         KAboutData aboutData(name, name, version, comment, KAboutLicense::byKeyword(license).key(), QString(), QString(), website.toLatin1());
-        aboutData.setProgramIconName(icon);
+        aboutData.setProgramLogo(icon);
         const QStringList authors = author.split(',');
         const QStringList emails = email.split(',');
         int i = 0;
@@ -600,7 +600,7 @@ void KWinDesktopConfig::slotAboutEffectClicked()
                              QStringLiteral(KWIN_VERSION_STRING),
                              data.comment,
                              KAboutLicense::GPL_V2);
-        aboutData.setProgramIconName(QStringLiteral("preferences-system-windows"));
+        aboutData.setProgramLogo(QIcon::fromTheme(QStringLiteral("preferences-system-windows")));
         aboutData.addAuthor(i18n("KWin development team"));
         showDialog(aboutData);
     }
