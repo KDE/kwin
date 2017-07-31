@@ -327,6 +327,7 @@ add_feature_info("prctl/procctl tracing control"
                  CAN_DISABLE_PTRACE
                  "Required for disallowing ptrace on kwin_wayland process")
 
+check_include_file("sys/sysmacros.h" HAVE_SYS_SYSMACROS_H)
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 
 check_include_file("linux/vt.h" HAVE_LINUX_VT_H)
@@ -337,7 +338,6 @@ check_include_file("linux/fb.h"    HAVE_LINUX_FB_H)
 add_feature_info("linux/fb.h"
                  HAVE_LINUX_FB_H
                  "Required for the fbdev backend")
-check_include_file("sys/sysmacros.h" HAVE_SYS_SYSMACROS_H)
 
 ########### global ###############
 set(kwin_effects_dbus_xml ${CMAKE_CURRENT_SOURCE_DIR}/org.kde.kwin.Effects.xml)
