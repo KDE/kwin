@@ -63,7 +63,6 @@ private Q_SLOTS:
     void testPanelActivate();
 
 private:
-    ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     Shell *m_shell = nullptr;
     PlasmaShell *m_plasmaShell = nullptr;
