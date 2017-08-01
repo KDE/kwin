@@ -52,6 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // XLib
 #include <X11/Xutil.h>
 #include <fixx11h.h>
+#include <xcb/xcb_icccm.h>
 // system
 #include <unistd.h>
 #include <signal.h>
@@ -1411,12 +1412,30 @@ void Client::fetchName()
     setCaption(readName());
 }
 
+static inline QString readNameProperty(xcb_window_t w, xcb_atom_t atom)
+{
+    const auto cookie = xcb_icccm_get_text_property_unchecked(connection(), w, atom);
+    xcb_icccm_get_text_property_reply_t reply;
+    if (xcb_icccm_get_wm_name_reply(connection(), cookie, &reply, nullptr)) {
+        QString retVal;
+        if (reply.encoding == atoms->utf8_string) {
+            retVal = QString::fromUtf8(QByteArray(reply.name, reply.name_len));
+        } else if (reply.encoding == XCB_ATOM_STRING) {
+            retVal = QString::fromLocal8Bit(QByteArray(reply.name, reply.name_len));
+        }
+        xcb_icccm_get_text_property_reply_wipe(&reply);
+        return retVal.simplified();
+    }
+    return QString();
+}
+
 QString Client::readName() const
 {
     if (info->name() && info->name()[0] != '\0')
         return QString::fromUtf8(info->name()).simplified();
-    else
-        return KWindowSystem::readNameProperty(window(), XCB_ATOM_WM_NAME).simplified();
+    else {
+        return readNameProperty(window(), XCB_ATOM_WM_NAME);
+    }
 }
 
 // The list is taken from http://www.unicode.org/reports/tr9/ (#154840)
@@ -1487,7 +1506,7 @@ void Client::fetchIconicName()
     if (info->iconName() && info->iconName()[0] != '\0')
         s = QString::fromUtf8(info->iconName());
     else
-        s = KWindowSystem::readNameProperty(window(), XCB_ATOM_WM_ICON_NAME);
+        s = readNameProperty(window(), XCB_ATOM_WM_ICON_NAME);
     if (s != cap_iconic) {
         bool was_set = !cap_iconic.isEmpty();
         cap_iconic = s;

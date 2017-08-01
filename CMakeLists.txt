@@ -233,7 +233,6 @@ find_package(XCB 1.10
         SHM
         GLX
         CURSOR
-    OPTIONAL_COMPONENTS
         ICCCM
 )
 set_package_properties(XCB PROPERTIES TYPE REQUIRED)
@@ -570,6 +569,7 @@ set(kwin_XCB_LIBS
     XCB::KEYSYMS
     XCB::SHM
     XCB::GLX
+    XCB::ICCCM
 )
 
 set(kwin_WAYLAND_LIBS

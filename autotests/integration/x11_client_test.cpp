@@ -52,6 +52,7 @@ private Q_SLOTS:
     void testFocusInWithWaylandLastActiveWindow();
     void testX11WindowId();
     void testCaptionChanges();
+    void testCaptionWmName();
 };
 
 void X11ClientTest::initTestCase()
@@ -425,6 +426,28 @@ void X11ClientTest::testCaptionChanges()
     QVERIFY(windowClosedSpy.wait());
     xcb_destroy_window(c.data(), w);
     c.reset();
+}
+
+void X11ClientTest::testCaptionWmName()
+{
+    // this test verifies that a caption set through WM_NAME is read correctly
+
+    // open glxgears as that one only uses WM_NAME
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    QProcess glxgears;
+    glxgears.start(QStringLiteral("glxgears"));
+    QVERIFY(glxgears.waitForStarted());
+
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    QCOMPARE(workspace()->clientList().count(), 1);
+    Client *glxgearsClient = workspace()->clientList().first();
+    QCOMPARE(glxgearsClient->caption(), QStringLiteral("glxgears"));
+
+    glxgears.terminate();
+    QVERIFY(glxgears.waitForFinished());
 }
 
 WAYLANDTEST_MAIN(X11ClientTest)
