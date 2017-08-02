@@ -7,6 +7,5 @@ install(TARGETS kwin5_update_default_rules DESTINATION ${LIB_INSTALL_DIR}/kconf_
 
 ########### install files ###############
 
-install( FILES stripTitle.js  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 install( FILES org_kde_kwin.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
 

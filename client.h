@@ -555,7 +555,7 @@ private:
     QRect geom_fs_restore;
     QTimer* shadeHoverTimer;
     xcb_colormap_t m_colormap;
-    QString cap_normal, cap_iconic, cap_suffix, cap_deco;
+    QString cap_normal, cap_iconic, cap_suffix;
     Group* in_group;
     TabGroup* tab_group;
     QTimer* ping_timer;
