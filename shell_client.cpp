@@ -554,10 +554,9 @@ void ShellClient::blockActivityUpdates(bool b)
     Q_UNUSED(b)
 }
 
-QString ShellClient::caption(bool full, bool stripped) const
+QString ShellClient::caption(bool full) const
 {
     Q_UNUSED(full)
-    Q_UNUSED(stripped)
     return m_caption;
 }
 

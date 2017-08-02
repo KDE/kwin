@@ -63,7 +63,7 @@ public:
     }
 
     void blockActivityUpdates(bool b = true) override;
-    QString caption(bool full = true, bool stripped = false) const override;
+    QString caption(bool full = true) const override;
     void closeWindow() override;
     AbstractClient *findModal(bool allow_itself = false) override;
     bool isCloseable() const override;

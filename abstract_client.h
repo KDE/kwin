@@ -343,7 +343,7 @@ public:
     }
 
     virtual void updateMouseGrab();
-    virtual QString caption(bool full = true, bool stripped = false) const = 0;
+    virtual QString caption(bool full = true) const = 0;
     virtual bool isCloseable() const = 0;
     // TODO: remove boolean trap
     virtual bool isShown(bool shaded_is_shown) const = 0;

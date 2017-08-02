@@ -1527,9 +1527,9 @@ void Client::fetchIconicName()
 /**
  * \reimp
  */
-QString Client::caption(bool full, bool stripped) const
+QString Client::caption(bool full) const
 {
-    QString cap = stripped ? cap_deco : cap_normal;
+    QString cap = cap_normal;
     if (full) {
         cap += cap_suffix;
         if (unresponsive()) {

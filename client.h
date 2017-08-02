@@ -219,7 +219,7 @@ public:
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing() { return blocks_compositing; }
 
-    QString caption(bool full = true, bool stripped = false) const override;
+    QString caption(bool full = true) const override;
 
     using AbstractClient::keyPressEvent;
     void keyPressEvent(uint key_code, xcb_timestamp_t time);   // FRAME ??
