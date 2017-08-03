@@ -556,8 +556,20 @@ void ShellClient::blockActivityUpdates(bool b)
 
 QString ShellClient::caption(bool full) const
 {
-    Q_UNUSED(full)
-    return m_caption;
+    QString caption = m_caption;
+    if (full) {
+        caption += m_captionSuffix;
+    }
+    return caption;
+}
+
+void ShellClient::updateCaption()
+{
+    const QString oldSuffix = m_captionSuffix;
+    m_captionSuffix = shortcutCaptionSuffix();
+    if (m_captionSuffix != oldSuffix) {
+        emit captionChanged();
+    }
 }
 
 void ShellClient::closeWindow()

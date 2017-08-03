@@ -1826,6 +1826,7 @@ void AbstractClient::setShortcut(const QString& _cut)
 
 void AbstractClient::setShortcutInternal()
 {
+    updateCaption();
     workspace()->clientShortcutUpdated(this);
 }
 

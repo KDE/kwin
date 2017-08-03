@@ -1750,4 +1750,12 @@ void AbstractClient::setUnresponsive(bool unresponsive)
     }
 }
 
+QString AbstractClient::shortcutCaptionSuffix() const
+{
+    if (shortcut().isEmpty()) {
+        return QString();
+    }
+    return QLatin1String(" {") + shortcut().toString() + QLatin1Char('}');
+}
+
 }

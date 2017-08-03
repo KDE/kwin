@@ -1442,7 +1442,7 @@ void Client::setCaption(const QString& _s, bool force)
         if (clientMachine()->hostName() != ClientMachine::localhost() && !clientMachine()->isLocal())
             machine_suffix = QLatin1String(" <@") + QString::fromUtf8(clientMachine()->hostName()) + QLatin1Char('>') + LRM;
     }
-    QString shortcut_suffix = !shortcut().isEmpty() ? (QLatin1String(" {") + shortcut().toString() + QLatin1Char('}')) : QString();
+    QString shortcut_suffix = shortcutCaptionSuffix();
     cap_suffix = machine_suffix + shortcut_suffix;
     auto fetchNameInternalPredicate = [this](const Client *cl) {
         return (!cl->isSpecialWindow() || cl->isToolbar()) &&

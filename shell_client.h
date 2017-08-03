@@ -163,6 +163,7 @@ protected:
     bool acceptsFocus() const override;
     void doMinimize() override;
     void doMove(int x, int y) override;
+    void updateCaption() override;
 
 private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);
@@ -236,6 +237,7 @@ private:
     int m_requestGeometryBlockCounter = 0;
     QRect m_blockedRequestGeometry;
     QString m_caption;
+    QString m_captionSuffix;
 
     bool m_compositingSetup = false;
 };

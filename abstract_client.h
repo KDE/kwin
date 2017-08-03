@@ -983,6 +983,8 @@ protected:
     void setUnresponsive(bool unresponsive);
 
     virtual void setShortcutInternal();
+    QString shortcutCaptionSuffix() const;
+    virtual void updateCaption() = 0;
 
 private:
     void handlePaletteChange();

@@ -292,7 +292,6 @@ void GlobalShortcutsTest::testWaylandClientShortcut()
     client->setShortcut(seq.toString());
     QCOMPARE(client->shortcut(), seq);
     QVERIFY(!workspace()->shortcutAvailable(seq));
-    QEXPECT_FAIL("", "Caption adjustment not yet implemented", Continue);
     QCOMPARE(client->caption(), QStringLiteral(" {Meta+Shift+Y}"));
 
     workspace()->activateClient(nullptr);

@@ -339,7 +339,7 @@ public:
 
 public Q_SLOTS:
     void closeWindow() override;
-    void updateCaption();
+    void updateCaption() override;
     void evaluateWindowRules();
 
 private Q_SLOTS:
