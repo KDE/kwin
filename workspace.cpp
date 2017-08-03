@@ -1299,7 +1299,9 @@ void Workspace::focusToNull()
 void Workspace::setShowingDesktop(bool showing)
 {
     const bool changed = showing != showing_desktop;
-    rootInfo()->setShowingDesktop(showing);
+    if (rootInfo() && changed) {
+        rootInfo()->setShowingDesktop(showing);
+    }
     showing_desktop = showing;
 
     AbstractClient *topDesk = nullptr;
