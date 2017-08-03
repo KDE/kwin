@@ -271,7 +271,7 @@ void Workspace::setActiveClient(AbstractClient* c)
     updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 
     if (rootInfo()) {
-        rootInfo()->setActiveWindow(active_client ? active_client->window() : 0);
+        rootInfo()->setActiveClient(active_client);
     }
 
     emit clientActivated(active_client);

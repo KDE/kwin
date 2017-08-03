@@ -138,6 +138,7 @@ void RootInfo::destroy()
 RootInfo::RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
                    NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr)
     : NETRootInfo(connection(), w, name, properties, types, states, properties2, actions, scr)
+    , m_activeWindow(activeWindow())
 {
 }
 
@@ -222,6 +223,16 @@ void RootInfo::gotPing(xcb_window_t w, xcb_timestamp_t timestamp)
 void RootInfo::changeShowingDesktop(bool showing)
 {
     Workspace::self()->setShowingDesktop(showing);
+}
+
+void RootInfo::setActiveClient(AbstractClient *client)
+{
+    const xcb_window_t w = client ? client->window() : xcb_window_t{XCB_WINDOW_NONE};
+    if (m_activeWindow == w) {
+        return;
+    }
+    m_activeWindow = w;
+    setActiveWindow(m_activeWindow);
 }
 
 // ****************************************

@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class AbstractClient;
 class Client;
 
 /**
@@ -43,6 +44,8 @@ private:
 public:
     static RootInfo *create();
     static void destroy();
+
+    void setActiveClient(AbstractClient *client);
 
 protected:
     virtual void changeNumberOfDesktops(int n) override;
@@ -60,6 +63,8 @@ private:
              NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr = -1);
     static RootInfo *s_self;
     friend RootInfo *rootInfo();
+
+    xcb_window_t m_activeWindow;
 };
 
 inline RootInfo *rootInfo()
