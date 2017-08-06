@@ -1477,7 +1477,7 @@ void ShellClient::killWindow()
         return;
     }
     auto c = surface()->client();
-    if (c->processId() == getpid()) {
+    if (c->processId() == getpid() || c->processId() == 0) {
         c->destroy();
         return;
     }
