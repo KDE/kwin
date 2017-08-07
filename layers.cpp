@@ -151,6 +151,9 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
  */
 void Workspace::stackScreenEdgesUnderOverrideRedirect()
 {
+    if (!rootInfo()) {
+        return;
+    }
     Xcb::restackWindows(QVector<xcb_window_t>() << rootInfo()->supportWindow() << ScreenEdges::self()->windows());
 }
 
@@ -160,6 +163,9 @@ void Workspace::stackScreenEdgesUnderOverrideRedirect()
  */
 void Workspace::propagateClients(bool propagate_new_clients)
 {
+    if (!rootInfo()) {
+        return;
+    }
     // restack the windows according to the stacking order
     // supportWindow > electric borders > clients > hidden clients
     QVector<xcb_window_t> newWindowStack;

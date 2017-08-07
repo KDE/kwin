@@ -948,7 +948,9 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newD
         }
     }
     // Now propagate the change, after hiding, before showing
-    rootInfo()->setCurrentDesktop(VirtualDesktopManager::self()->current());
+    if (rootInfo()) {
+        rootInfo()->setCurrentDesktop(VirtualDesktopManager::self()->current());
+    }
 
     if (movingClient && !movingClient->isOnDesktop(newDesktop)) {
         movingClient->setDesktop(newDesktop);
@@ -1246,7 +1248,9 @@ void Workspace::sendClientToScreen(AbstractClient* c, int screen)
 
 void Workspace::sendPingToWindow(xcb_window_t window, xcb_timestamp_t timestamp)
 {
-    rootInfo()->sendPing(window, timestamp);
+    if (rootInfo()) {
+        rootInfo()->sendPing(window, timestamp);
+    }
 }
 
 /**

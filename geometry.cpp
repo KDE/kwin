@@ -70,10 +70,12 @@ extern bool is_multihead;
 void Workspace::desktopResized()
 {
     QRect geom = screens()->geometry();
-    NETSize desktop_geometry;
-    desktop_geometry.width = geom.width();
-    desktop_geometry.height = geom.height();
-    rootInfo()->setDesktopGeometry(desktop_geometry);
+    if (rootInfo()) {
+        NETSize desktop_geometry;
+        desktop_geometry.width = geom.width();
+        desktop_geometry.height = geom.height();
+        rootInfo()->setDesktopGeometry(desktop_geometry);
+    }
 
     updateClientArea();
     saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
@@ -309,13 +311,15 @@ void Workspace::updateClientArea(bool force)
         oldrestrictedmovearea = restrictedmovearea;
         restrictedmovearea = new_rmoveareas;
         screenarea = new_sareas;
-        NETRect r;
-        for (int i = 1; i <= numberOfDesktops; i++) {
-            r.pos.x = workarea[ i ].x();
-            r.pos.y = workarea[ i ].y();
-            r.size.width = workarea[ i ].width();
-            r.size.height = workarea[ i ].height();
-            rootInfo()->setWorkArea(i, r);
+        if (rootInfo()) {
+            NETRect r;
+            for (int i = 1; i <= numberOfDesktops; i++) {
+                r.pos.x = workarea[ i ].x();
+                r.pos.y = workarea[ i ].y();
+                r.size.width = workarea[ i ].width();
+                r.size.height = workarea[ i ].height();
+                rootInfo()->setWorkArea(i, r);
+            }
         }
 
         for (auto it = m_allClients.constBegin();
