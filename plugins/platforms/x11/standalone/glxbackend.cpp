@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "overlaywindow.h"
 #include "composite.h"
+#include "platform.h"
 #include "screens.h"
 #include "xcbutils.h"
 // kwin libs
@@ -104,7 +105,7 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
 
 GlxBackend::GlxBackend(Display *display)
     : OpenGLBackend()
-    , m_overlayWindow(new OverlayWindow())
+    , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
     , window(None)
     , fbconfig(NULL)
     , glxWindow(None)

@@ -40,7 +40,7 @@ namespace KWin
 
 EglOnXBackend::EglOnXBackend(Display *display)
     : AbstractEglBackend()
-    , m_overlayWindow(new OverlayWindow())
+    , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
     , surfaceHasSubPost(0)
     , m_bufferAge(0)
     , m_usesOverlayWindow(true)

@@ -40,6 +40,7 @@ namespace KWin
 {
 
 class Edge;
+class OverlayWindow;
 class OpenGLBackend;
 class QPainterBackend;
 class Screens;
@@ -300,6 +301,12 @@ public:
     void setInitialOutputScale(qreal scale) {
         m_initialOutputScale = scale;
     }
+
+    /**
+     * Creates the OverlayWindow required for X11 based compositors.
+     * Default implementation returns @c nullptr.
+     **/
+    virtual OverlayWindow *createOverlayWindow();
 
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);

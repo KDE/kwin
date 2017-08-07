@@ -5,6 +5,7 @@ set(X11PLATFORM_SOURCES
     x11_platform.cpp
     screens_xrandr.cpp
     windowselector.cpp
+    overlaywindow_x11.cpp
 )
 
 if(X11_Xinput_FOUND)

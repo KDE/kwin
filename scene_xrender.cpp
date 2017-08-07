@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "main.h"
 #include "overlaywindow.h"
+#include "platform.h"
 #include "xcbutils.h"
 #include "kwinxrenderutils.h"
 #include "decorations/decoratedclient.h"
@@ -109,7 +110,7 @@ void XRenderBackend::screenGeometryChanged(const QSize &size)
 //****************************************
 X11XRenderBackend::X11XRenderBackend()
     : XRenderBackend()
-    , m_overlayWindow(new OverlayWindow())
+    , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
     , m_front(XCB_RENDER_PICTURE_NONE)
     , m_format(0)
 {

@@ -55,6 +55,8 @@ public:
 
     void setupActionForGlobalAccel(QAction *action) override;
 
+    OverlayWindow *createOverlayWindow() override;
+
 protected:
     void doHideCursor() override;
     void doShowCursor() override;

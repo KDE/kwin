@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "cursor.h"
 #include "input.h"
+#include "overlaywindow.h"
 #include "pointer_input.h"
 #include "scene_opengl.h"
 #include "screenedge.h"
@@ -458,6 +459,11 @@ void Platform::startInteractivePositionSelection(std::function<void(const QPoint
 void Platform::setupActionForGlobalAccel(QAction *action)
 {
     Q_UNUSED(action)
+}
+
+OverlayWindow *Platform::createOverlayWindow()
+{
+    return nullptr;
 }
 
 }

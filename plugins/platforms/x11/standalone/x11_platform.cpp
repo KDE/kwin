@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging.h"
 #include "screens_xrandr.h"
 #include "options.h"
+#include "overlaywindow_x11.h"
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -307,6 +308,11 @@ void X11StandalonePlatform::setupActionForGlobalAccel(QAction *action)
             kwinApp()->setX11Time(t);
         }
     });
+}
+
+OverlayWindow *X11StandalonePlatform::createOverlayWindow()
+{
+    return new OverlayWindowX11();
 }
 
 }
