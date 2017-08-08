@@ -22,9 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_OVERLAYWINDOW_X11_H
 
 #include "../../../../overlaywindow.h"
+#include "../../../../x11eventfilter.h"
 
 namespace KWin {
-class KWIN_EXPORT OverlayWindowX11 : public OverlayWindow {
+class KWIN_EXPORT OverlayWindowX11 : public OverlayWindow, public X11EventFilter {
 public:
     OverlayWindowX11();
     ~OverlayWindowX11();
@@ -41,6 +42,8 @@ public:
     xcb_window_t window() const override;
     bool isVisible() const override;
     void setVisibility(bool visible) override;
+
+    bool event(xcb_generic_event_t *event) override;
 private:
     void setNoneBackgroundPixmap(xcb_window_t window);
     void setupInputShape(xcb_window_t window);

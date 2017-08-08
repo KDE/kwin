@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow_x11.h"
 
 #include "kwinglobals.h"
+#include "composite.h"
 #include "screens.h"
 #include "utils.h"
 #include "xcbutils.h"
@@ -38,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin {
 OverlayWindowX11::OverlayWindowX11()
     : OverlayWindow()
+    , X11EventFilter(QVector<int>{XCB_EXPOSE, XCB_VISIBILITY_NOTIFY})
     , m_visible(true)
     , m_shown(false)
     , m_window(XCB_WINDOW_NONE)
@@ -179,6 +181,32 @@ void OverlayWindowX11::destroy()
 xcb_window_t OverlayWindowX11::window() const
 {
     return m_window;
+}
+
+bool OverlayWindowX11::event(xcb_generic_event_t *event)
+{
+    const uint8_t eventType = event->response_type & ~0x80;
+    if (eventType == XCB_EXPOSE) {
+        const auto *expose = reinterpret_cast<xcb_expose_event_t*>(event);
+        if (expose->window == rootWindow()   // root window needs repainting
+                || (m_window != XCB_WINDOW_NONE && expose->window == m_window)) { // overlay needs repainting
+            Compositor::self()->addRepaint(expose->x, expose->y, expose->width, expose->height);
+        }
+    } else if (eventType == XCB_VISIBILITY_NOTIFY) {
+        const auto *visibility = reinterpret_cast<xcb_visibility_notify_event_t*>(event);
+        if (m_window != XCB_WINDOW_NONE && visibility->window == m_window) {
+            bool was_visible = isVisible();
+            setVisibility((visibility->state != XCB_VISIBILITY_FULLY_OBSCURED));
+            auto compositor = Compositor::self();
+            if (!was_visible && m_visible) {
+                // hack for #154825
+                compositor->addRepaintFull();
+                QTimer::singleShot(2000, compositor, &Compositor::addRepaintFull);
+            }
+            compositor->scheduleRepaint();
+        }
+    }
+    return false;
 }
 
 } // namespace KWin

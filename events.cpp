@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox.h"
 #endif
 #include "group.h"
-#include "overlaywindow.h"
 #include "rules.h"
 #include "unmanaged.h"
 #include "useractions.h"
@@ -506,29 +505,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         if (ScreenEdges::self()->isEntered(reinterpret_cast<xcb_client_message_event_t*>(e)))
             return true;
         break;
-    case XCB_EXPOSE: {
-        const auto *event = reinterpret_cast<xcb_expose_event_t*>(e);
-        if (compositing()
-                && (event->window == rootWindow()   // root window needs repainting
-                    || (m_compositor->overlayWindow() != XCB_WINDOW_NONE && event->window == m_compositor->overlayWindow()))) { // overlay needs repainting
-            m_compositor->addRepaint(event->x, event->y, event->width, event->height);
-        }
-        break;
-    }
-    case XCB_VISIBILITY_NOTIFY: {
-        const auto *event = reinterpret_cast<xcb_visibility_notify_event_t*>(e);
-        if (compositing() && m_compositor->overlayWindow() != XCB_WINDOW_NONE && event->window == m_compositor->overlayWindow()) {
-            bool was_visible = m_compositor->isOverlayWindowVisible();
-            m_compositor->setOverlayWindowVisibility((event->state != XCB_VISIBILITY_FULLY_OBSCURED));
-            if (!was_visible && m_compositor->isOverlayWindowVisible()) {
-                // hack for #154825
-                m_compositor->addRepaintFull();
-                QTimer::singleShot(2000, m_compositor, SLOT(addRepaintFull()));
-            }
-            m_compositor->scheduleRepaint();
-        }
-        break;
-    }
     default:
         if (eventType == Xcb::Extensions::self()->randrNotifyEvent() && Xcb::Extensions::self()->isRandrAvailable()) {
             auto *event = reinterpret_cast<xcb_randr_screen_change_notify_event_t*>(e);

@@ -905,17 +905,6 @@ bool Compositor::checkForOverlayWindow(WId w) const
     return w == m_scene->overlayWindow()->window();
 }
 
-WId Compositor::overlayWindow() const
-{
-    if (!hasScene()) {
-        return None;
-    }
-    if (!m_scene->overlayWindow()) {
-        return None;
-    }
-    return m_scene->overlayWindow()->window();
-}
-
 bool Compositor::isOverlayWindowVisible() const
 {
     if (!hasScene()) {
@@ -925,13 +914,6 @@ bool Compositor::isOverlayWindowVisible() const
         return false;
     }
     return m_scene->overlayWindow()->isVisible();
-}
-
-void Compositor::setOverlayWindowVisibility(bool visible)
-{
-    if (hasScene() && m_scene->overlayWindow()) {
-        m_scene->overlayWindow()->setVisibility(visible);
-    }
 }
 
 /*****************************************************

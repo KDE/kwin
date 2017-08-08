@@ -79,17 +79,9 @@ public:
      **/
     bool checkForOverlayWindow(WId w) const;
     /**
-     * @returns The Scene's Overlay X Window.
-     **/
-    WId overlayWindow() const;
-    /**
      * @returns Whether the Scene's Overlay X Window is visible.
      **/
     bool isOverlayWindowVisible() const;
-    /**
-     * Set's the Scene's Overlay X Window visibility to @p visible.
-     **/
-    void setOverlayWindowVisibility(bool visible);
 
     Scene *scene() {
         return m_scene;
