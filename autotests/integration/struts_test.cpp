@@ -77,6 +77,14 @@ void StrutsTest::initTestCase()
     QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
+    // set custom config which disables the Outline
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup group = config->group("Outline");
+    group.writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
+    group.sync();
+
+    kwinApp()->setConfig(config);
+
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QCOMPARE(screens()->count(), 2);
