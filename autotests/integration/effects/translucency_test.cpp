@@ -172,7 +172,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     client->endMoveResize();
     QVERIFY(m_translucencyEffect->isActive());
     QTest::qWait(500);
-    QVERIFY(!m_translucencyEffect->isActive());
+    QTRY_VERIFY(!m_translucencyEffect->isActive());
 
     // and destroy the window again
     xcb_unmap_window(c.data(), w);
