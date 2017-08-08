@@ -280,7 +280,7 @@ void SceneXrender::paintBackground(QRegion region)
 {
     xcb_render_color_t col = { 0, 0, 0, 0xffff }; // black
     const QVector<xcb_rectangle_t> &rects = Xcb::regionToRects(region);
-    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, bufferPicture(), col, rects.count(), rects.data());
+    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, xrenderBufferPicture(), col, rects.count(), rects.data());
 }
 
 Scene::Window *SceneXrender::createWindow(Toplevel *toplevel)
@@ -515,7 +515,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     const bool blitInTempPixmap = xRenderOffscreen() || (data.crossFadeProgress() < 1.0 && !opaque) ||
                                  (scaled && (wantShadow || (client && !client->noBorder()) || (deleted && !deleted->noBorder())));
 
-    xcb_render_picture_t renderTarget = m_scene->bufferPicture();
+    xcb_render_picture_t renderTarget = m_scene->xrenderBufferPicture();
     if (blitInTempPixmap) {
         if (scene_xRenderOffscreenTarget()) {
             temp_visibleRect = toplevel->visibleRect().translated(-toplevel->pos());
@@ -729,7 +729,7 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
             xcb_render_set_picture_transform(connection(), *s_tempPicture, xform);
             setPictureFilter(*s_tempPicture, filter);
             xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *s_tempPicture,
-                                 XCB_RENDER_PICTURE_NONE, m_scene->bufferPicture(),
+                                 XCB_RENDER_PICTURE_NONE, m_scene->xrenderBufferPicture(),
                                  0, 0, 0, 0, r.x(), r.y(), r.width(), r.height());
             xcb_render_set_picture_transform(connection(), *s_tempPicture, identity);
         }

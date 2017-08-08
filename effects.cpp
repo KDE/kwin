@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "osd.h"
 #include "pointer_input.h"
-#include "scene_xrender.h"
 #include "scene_qpainter.h"
 #include "unmanaged.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -1324,11 +1323,7 @@ void EffectsHandlerImpl::unregisterTouchBorder(ElectricBorder border, QAction *a
 
 unsigned long EffectsHandlerImpl::xrenderBufferPicture()
 {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (SceneXrender* s = dynamic_cast< SceneXrender* >(m_scene))
-        return s->bufferPicture();
-#endif
-    return None;
+    return m_scene->xrenderBufferPicture();
 }
 
 QPainter *EffectsHandlerImpl::scenePainter()

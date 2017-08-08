@@ -160,7 +160,7 @@ public:
     virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame);
     virtual Shadow *createShadow(Toplevel *toplevel);
     virtual void screenGeometryChanged(const QSize &size);
-    xcb_render_picture_t bufferPicture();
+    xcb_render_picture_t xrenderBufferPicture() const override;
     virtual OverlayWindow *overlayWindow() {
         return m_backend->overlayWindow();
     }
@@ -253,7 +253,7 @@ private:
 };
 
 inline
-xcb_render_picture_t SceneXrender::bufferPicture()
+xcb_render_picture_t SceneXrender::xrenderBufferPicture() const
 {
     return m_backend->buffer();
 }

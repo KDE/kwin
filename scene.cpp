@@ -652,6 +652,11 @@ QMatrix4x4 Scene::screenProjectionMatrix() const
     return QMatrix4x4();
 }
 
+xcb_render_picture_t Scene::xrenderBufferPicture() const
+{
+    return XCB_RENDER_PICTURE_NONE;
+}
+
 //****************************************
 // Scene::Window
 //****************************************
