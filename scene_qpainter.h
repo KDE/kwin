@@ -123,7 +123,7 @@ public:
         return false;
     }
 
-    QPainter *painter();
+    QPainter *scenePainter() const override;
 
     QPainterBackend *backend() const {
         return m_backend.data();
@@ -252,7 +252,7 @@ OverlayWindow* SceneQPainter::overlayWindow()
 }
 
 inline
-QPainter* SceneQPainter::painter()
+QPainter* SceneQPainter::scenePainter() const
 {
     return m_painter.data();
 }

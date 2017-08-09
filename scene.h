@@ -163,6 +163,12 @@ public:
      **/
     virtual xcb_render_picture_t xrenderBufferPicture() const;
 
+    /**
+     * The QPainter used by a QPainter based compositor scene.
+     * Default implementation returns @c nullptr;
+     **/
+    virtual QPainter *scenePainter() const;
+
 Q_SIGNALS:
     void frameRendered();
 

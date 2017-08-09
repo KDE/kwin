@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "osd.h"
 #include "pointer_input.h"
-#include "scene_qpainter.h"
 #include "unmanaged.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
@@ -1328,11 +1327,7 @@ unsigned long EffectsHandlerImpl::xrenderBufferPicture()
 
 QPainter *EffectsHandlerImpl::scenePainter()
 {
-    if (SceneQPainter *s = dynamic_cast<SceneQPainter*>(m_scene)) {
-        return s->painter();
-    } else {
-        return NULL;
-    }
+    return m_scene->scenePainter();
 }
 
 void EffectsHandlerImpl::toggleEffect(const QString& name)

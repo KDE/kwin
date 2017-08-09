@@ -657,6 +657,11 @@ xcb_render_picture_t Scene::xrenderBufferPicture() const
     return XCB_RENDER_PICTURE_NONE;
 }
 
+QPainter *Scene::scenePainter() const
+{
+    return nullptr;
+}
+
 //****************************************
 // Scene::Window
 //****************************************

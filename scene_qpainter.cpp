@@ -281,7 +281,7 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
         toplevel->resetDamage();
     }
 
-    QPainter *scenePainter = m_scene->painter();
+    QPainter *scenePainter = m_scene->scenePainter();
     QPainter *painter = scenePainter;
     painter->save();
     painter->setClipRegion(region);
@@ -523,7 +523,7 @@ void QPainterEffectFrame::render(QRegion region, double opacity, double frameOpa
     if (m_effectFrame->geometry().isEmpty()) {
         return; // Nothing to display
     }
-    QPainter *painter = m_scene->painter();
+    QPainter *painter = m_scene->scenePainter();
 
 
     // Render the actual frame
