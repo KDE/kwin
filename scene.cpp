@@ -1124,4 +1124,13 @@ Scene::EffectFrame::~EffectFrame()
 {
 }
 
+SceneFactory::SceneFactory(QObject *parent)
+    : QObject(parent)
+{
+}
+
+SceneFactory::~SceneFactory()
+{
+}
+
 } // namespace

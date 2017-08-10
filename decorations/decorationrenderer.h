@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 
+#include <kwin_export.h>
+
 class QTimer;
 
 namespace KWin
@@ -37,7 +39,7 @@ namespace Decoration
 
 class DecoratedClientImpl;
 
-class Renderer : public QObject
+class KWIN_EXPORT Renderer : public QObject
 {
     Q_OBJECT
 public:

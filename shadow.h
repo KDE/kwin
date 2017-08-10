@@ -58,7 +58,7 @@ class Toplevel;
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @todo React on Toplevel size changes.
  **/
-class Shadow : public QObject
+class KWIN_EXPORT Shadow : public QObject
 {
     Q_OBJECT
 public:

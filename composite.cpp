@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "overlaywindow.h"
 #include "scene.h"
-#include "scene_xrender.h"
 #include "scene_opengl.h"
 #include "scene_qpainter.h"
 #include "screens.h"
@@ -54,6 +53,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QOpenGLContext>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KPluginLoader>
+#include <KPluginMetaData>
 #include <KNotification>
 #include <KSelectionWatcher>
 
@@ -199,54 +200,73 @@ void Compositor::slotCompositingOptionsInitialized()
         }
     }
 
-    switch(options->compositingMode()) {
-    case OpenGLCompositing: {
-        qCDebug(KWIN_CORE) << "Initializing OpenGL compositing";
+    const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.scenes"));
 
-        // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
-        if (kwinApp()->platform()->openGLCompositingIsBroken())
-            qCWarning(KWIN_CORE) << "KWin has detected that your OpenGL library is unsafe to use";
-        else {
-            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
-
-            m_scene = SceneOpenGL::createScene(this);
-
-            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
-
-            if (m_scene && !m_scene->initFailed()) {
-                connect(static_cast<SceneOpenGL*>(m_scene), &SceneOpenGL::resetCompositing, this, &Compositor::restart);
-                break; // -->
+    const auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
+        [] (const auto &plugin) {
+            const auto &metaData = plugin.rawData();
+            auto it = metaData.find(QStringLiteral("CompositingType"));
+            if (it != metaData.end()) {
+                if ((*it).toInt() == int{options->compositingMode()}) {
+                    return true;
+                }
             }
-            delete m_scene;
-            m_scene = NULL;
+            return false;
+        });
+    if (pluginIt != availablePlugins.end()) {
+        std::unique_ptr<SceneFactory> factory{qobject_cast<SceneFactory*>(pluginIt->instantiate())};
+        if (factory) {
+            m_scene = factory->create(this);
+            if (m_scene) {
+                qCDebug(KWIN_CORE) << "Instantiated compositing plugin:" << pluginIt->name();
+            }
         }
-
-        // Do not Fall back to XRender - it causes problems when selfcheck fails during startup, but works later on
-        break;
     }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    case XRenderCompositing:
-        qCDebug(KWIN_CORE) << "Initializing XRender compositing";
-        m_scene = SceneXrender::createScene(this);
-        break;
-#endif
-    case QPainterCompositing:
-        qCDebug(KWIN_CORE) << "Initializing QPainter compositing";
-        m_scene = SceneQPainter::createScene(this);
-        break;
-    default:
-        qCDebug(KWIN_CORE) << "No compositing enabled";
-        m_starting = false;
-        if (cm_selection) {
-            cm_selection->owning = false;
-            cm_selection->release();
+
+    if (!m_scene) {
+        switch(options->compositingMode()) {
+        case OpenGLCompositing: {
+            qCDebug(KWIN_CORE) << "Initializing OpenGL compositing";
+
+            // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
+            if (kwinApp()->platform()->openGLCompositingIsBroken())
+                qCWarning(KWIN_CORE) << "KWin has detected that your OpenGL library is unsafe to use";
+            else {
+                kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
+
+                m_scene = SceneOpenGL::createScene(this);
+
+                kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
+
+                if (m_scene && !m_scene->initFailed()) {
+                    connect(static_cast<SceneOpenGL*>(m_scene), &SceneOpenGL::resetCompositing, this, &Compositor::restart);
+                    break; // -->
+                }
+                delete m_scene;
+                m_scene = NULL;
+            }
+
+            // Do not Fall back to XRender - it causes problems when selfcheck fails during startup, but works later on
+            break;
         }
-        if (kwinApp()->platform()->requiresCompositing()) {
-            qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
-            qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
-            qApp->quit();
+        case QPainterCompositing:
+            qCDebug(KWIN_CORE) << "Initializing QPainter compositing";
+            m_scene = SceneQPainter::createScene(this);
+            break;
+        default:
+            qCDebug(KWIN_CORE) << "No compositing enabled";
+            m_starting = false;
+            if (cm_selection) {
+                cm_selection->owning = false;
+                cm_selection->release();
+            }
+            if (kwinApp()->platform()->requiresCompositing()) {
+                qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
+                qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
+                qApp->quit();
+            }
+            return;
         }
-        return;
     }
     if (m_scene == NULL || m_scene->initFailed()) {
         qCCritical(KWIN_CORE) << "Failed to initialize compositing, compositing disabled";

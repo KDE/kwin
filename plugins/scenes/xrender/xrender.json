@@ -1,0 +1,8 @@
+{
+    "KPlugin": {
+        "Description": "KWin Compositor plugin rendering through XRender",
+        "Id": "KWinSceneXRender",
+        "Name": "SceneXRender"
+    },
+    "CompositingType": 2
+}

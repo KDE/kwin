@@ -393,7 +393,7 @@ private:
     Group* group;
 };
 
-class EffectFrameImpl
+class KWIN_EXPORT EffectFrameImpl
     : public QObject, public EffectFrame
 {
     Q_OBJECT

@@ -409,7 +409,6 @@ set(kwin_KDEINIT_SRCS
    toplevel.cpp
    unmanaged.cpp
    scene.cpp
-   scene_xrender.cpp
    scene_opengl.cpp
    scene_qpainter.cpp
    screenlockerwatcher.cpp

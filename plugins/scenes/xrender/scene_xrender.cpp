@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
+#include "logging.h"
 #include "toplevel.h"
 #include "client.h"
 #include "composite.h"
@@ -96,7 +97,7 @@ void XRenderBackend::setBuffer(xcb_render_picture_t buffer)
 
 void XRenderBackend::setFailed(const QString& reason)
 {
-    qCCritical(KWIN_CORE) << "Creating the XRender backend failed: " << reason;
+    qCCritical(KWIN_XRENDER) << "Creating the XRender backend failed: " << reason;
     m_failed = true;
 }
 
@@ -1296,6 +1297,23 @@ void SceneXRenderDecorationRenderer::reparent(Deleted *deleted)
 
 #undef DOUBLE_TO_FIXED
 #undef FIXED_TO_DOUBLE
+
+XRenderFactory::XRenderFactory(QObject *parent)
+    : SceneFactory(parent)
+{
+}
+
+XRenderFactory::~XRenderFactory() = default;
+
+Scene *XRenderFactory::create(QObject *parent) const
+{
+    auto s = SceneXrender::createScene(parent);
+    if (s && s->initFailed()) {
+        delete s;
+        s = nullptr;
+    }
+    return s;
+}
 
 } // namespace
 #endif
