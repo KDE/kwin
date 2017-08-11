@@ -124,6 +124,7 @@ public:
     }
 
     QPainter *scenePainter() const override;
+    QImage *qpainterRenderBuffer() const override;
 
     QPainterBackend *backend() const {
         return m_backend.data();

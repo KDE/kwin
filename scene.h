@@ -169,6 +169,12 @@ public:
      **/
     virtual QPainter *scenePainter() const;
 
+    /**
+     * The render buffer used by a QPainter based compositor.
+     * Default implementation returns @c nullptr.
+     **/
+    virtual QImage *qpainterRenderBuffer() const;
+
 Q_SIGNALS:
     void frameRendered();
 

@@ -666,6 +666,11 @@ QPainter *Scene::scenePainter() const
     return nullptr;
 }
 
+QImage *Scene::qpainterRenderBuffer() const
+{
+    return nullptr;
+}
+
 //****************************************
 // Scene::Window
 //****************************************

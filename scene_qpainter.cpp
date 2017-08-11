@@ -233,6 +233,11 @@ void SceneQPainter::screenGeometryChanged(const QSize &size)
     m_backend->screenGeometryChanged(size);
 }
 
+QImage *SceneQPainter::qpainterRenderBuffer() const
+{
+    return m_backend->buffer();
+}
+
 //****************************************
 // SceneQPainter::Window
 //****************************************
