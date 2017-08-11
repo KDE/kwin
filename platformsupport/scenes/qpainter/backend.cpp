@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,36 +17,52 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_SCENE_QPAINTER_FB_BACKEND_H
-#define KWIN_SCENE_QPAINTER_FB_BACKEND_H
-#include <platformsupport/scenes/qpainter/backend.h>
+#include "backend.h"
+#include <logging.h>
 
-#include <QObject>
-#include <QImage>
+#include <QtGlobal>
 
 namespace KWin
 {
-class FramebufferBackend;
 
-class FramebufferQPainterBackend : public QObject, public QPainterBackend
+QPainterBackend::QPainterBackend()
+    : m_failed(false)
 {
-    Q_OBJECT
-public:
-    FramebufferQPainterBackend(FramebufferBackend *backend);
-    virtual ~FramebufferQPainterBackend();
-
-    QImage *buffer() override;
-    bool needsFullRepaint() const override;
-    bool usesOverlayWindow() const override;
-    void prepareRenderingFrame() override;
-    void present(int mask, const QRegion &damage) override;
-
-private:
-    QImage m_renderBuffer;
-    QImage m_backBuffer;
-    FramebufferBackend *m_backend;
-};
-
 }
 
-#endif
+QPainterBackend::~QPainterBackend()
+{
+}
+
+OverlayWindow* QPainterBackend::overlayWindow()
+{
+    return nullptr;
+}
+
+void QPainterBackend::showOverlay()
+{
+}
+
+void QPainterBackend::screenGeometryChanged(const QSize &size)
+{
+    Q_UNUSED(size)
+}
+
+void QPainterBackend::setFailed(const QString &reason)
+{
+    qCWarning(KWIN_QPAINTER) << "Creating the QPainter backend failed: " << reason;
+    m_failed = true;
+}
+
+bool QPainterBackend::perScreenRendering() const
+{
+    return false;
+}
+
+QImage *QPainterBackend::bufferForScreen(int screenId)
+{
+    Q_UNUSED(screenId)
+    return buffer();
+}
+
+}

@@ -6,7 +6,7 @@ set(X11BACKEND_SOURCES
 )
 
 add_library(KWinWaylandX11Backend MODULE ${X11BACKEND_SOURCES})
-target_link_libraries(KWinWaylandX11Backend eglx11common kwin X11::XCB)
+target_link_libraries(KWinWaylandX11Backend eglx11common kwin X11::XCB SceneQPainterBackend)
 
 install(
     TARGETS

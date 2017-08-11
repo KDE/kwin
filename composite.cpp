@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "scene.h"
 #include "scene_opengl.h"
-#include "scene_qpainter.h"
 #include "screens.h"
 #include "shadow.h"
 #include "useractions.h"
@@ -249,10 +248,6 @@ void Compositor::slotCompositingOptionsInitialized()
             // Do not Fall back to XRender - it causes problems when selfcheck fails during startup, but works later on
             break;
         }
-        case QPainterCompositing:
-            qCDebug(KWIN_CORE) << "Initializing QPainter compositing";
-            m_scene = SceneQPainter::createScene(this);
-            break;
         default:
             qCDebug(KWIN_CORE) << "No compositing enabled";
             m_starting = false;

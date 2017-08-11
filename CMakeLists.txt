@@ -347,6 +347,7 @@ include_directories(BEFORE
     ${CMAKE_CURRENT_SOURCE_DIR}/libkwineffects
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
     ${CMAKE_CURRENT_SOURCE_DIR}/tabbox
+    ${CMAKE_CURRENT_SOURCE_DIR}/platformsupport
     )
 
 add_subdirectory( libkwineffects )
@@ -410,7 +411,6 @@ set(kwin_KDEINIT_SRCS
    unmanaged.cpp
    scene.cpp
    scene_opengl.cpp
-   scene_qpainter.cpp
    screenlockerwatcher.cpp
    thumbnailitem.cpp
    lanczosfilter.cpp
@@ -625,6 +625,7 @@ target_link_libraries(kwin_wayland kwin)
 
 install(TARGETS kwin_wayland         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
+add_subdirectory(platformsupport)
 add_subdirectory(plugins)
 
 ########### install files ###############

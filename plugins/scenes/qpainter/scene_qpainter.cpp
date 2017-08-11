@@ -42,49 +42,6 @@ namespace KWin
 {
 
 //****************************************
-// QPainterBackend
-//****************************************
-QPainterBackend::QPainterBackend()
-    : m_failed(false)
-{
-}
-
-QPainterBackend::~QPainterBackend()
-{
-}
-
-OverlayWindow* QPainterBackend::overlayWindow()
-{
-    return NULL;
-}
-
-void QPainterBackend::showOverlay()
-{
-}
-
-void QPainterBackend::screenGeometryChanged(const QSize &size)
-{
-    Q_UNUSED(size)
-}
-
-void QPainterBackend::setFailed(const QString &reason)
-{
-    qCWarning(KWIN_CORE) << "Creating the XRender backend failed: " << reason;
-    m_failed = true;
-}
-
-bool QPainterBackend::perScreenRendering() const
-{
-    return false;
-}
-
-QImage *QPainterBackend::bufferForScreen(int screenId)
-{
-    Q_UNUSED(screenId)
-    return buffer();
-}
-
-//****************************************
 // SceneQPainter
 //****************************************
 SceneQPainter *SceneQPainter::createScene(QObject *parent)
@@ -686,6 +643,24 @@ void SceneQPainterDecorationRenderer::reparent(Deleted *deleted)
 {
     render();
     Renderer::reparent(deleted);
+}
+
+
+QPainterFactory::QPainterFactory(QObject *parent)
+    : SceneFactory(parent)
+{
+}
+
+QPainterFactory::~QPainterFactory() = default;
+
+Scene *QPainterFactory::create(QObject *parent) const
+{
+    auto s = SceneQPainter::createScene(parent);
+    if (s && s->initFailed()) {
+        delete s;
+        s = nullptr;
+    }
+    return s;
 }
 
 } // KWin

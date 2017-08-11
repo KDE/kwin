@@ -5,7 +5,7 @@ set(FBDEV_SOURCES
 )
 
 add_library(KWinWaylandFbdevBackend MODULE ${FBDEV_SOURCES})
-target_link_libraries(KWinWaylandFbdevBackend kwin)
+target_link_libraries(KWinWaylandFbdevBackend kwin SceneQPainterBackend)
 
 install(
     TARGETS

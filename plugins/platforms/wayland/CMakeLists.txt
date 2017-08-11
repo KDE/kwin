@@ -9,7 +9,7 @@ if(HAVE_WAYLAND_EGL)
 endif()
 
 add_library(KWinWaylandWaylandBackend MODULE ${WAYLAND_BACKEND_SOURCES})
-target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient)
+target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient SceneQPainterBackend)
 
 if(HAVE_WAYLAND_EGL)
     target_link_libraries(KWinWaylandWaylandBackend Wayland::Egl)
