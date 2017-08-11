@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effectloader.h"
 #include "cursor.h"
 #include "platform.h"
-#include "scene_qpainter.h"
 #include "screens.h"
 #include "shell_client.h"
 #include "wayland_server.h"
