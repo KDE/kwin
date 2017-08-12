@@ -283,6 +283,17 @@ set_package_properties(Libcap PROPERTIES
 )
 set(HAVE_LIBCAP ${Libcap_FOUND})
 
+include(ECMQMLModules)
+ecm_find_qmlmodule(QtQuick 2.3)
+ecm_find_qmlmodule(QtQuick.Controls 1.2)
+ecm_find_qmlmodule(QtQuick.Layouts 1.3)
+ecm_find_qmlmodule(QtQuick.VirtualKeyboard 2.1)
+ecm_find_qmlmodule(QtQuick.Window 2.1)
+ecm_find_qmlmodule(QtMultimedia 5.0)
+ecm_find_qmlmodule(org.kde.kquickcontrolsaddons 2.0)
+ecm_find_qmlmodule(org.kde.plasma.core 2.0)
+ecm_find_qmlmodule(org.kde.plasma.components 2.0)
+
 ########### configure tests ###############
 include(CMakeDependentOption)
 
