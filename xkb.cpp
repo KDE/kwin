@@ -446,6 +446,9 @@ Qt::Key Xkb::toQtKey(xkb_keysym_t keysym) const
 {
     int key = Qt::Key_unknown;
     KKeyServer::symXToKeyQt(keysym, &key);
+    if (key & Qt::KeyboardModifierMask) {
+        key &= ~Qt::KeyboardModifierMask;
+    }
     return static_cast<Qt::Key>(key);
 }
 
