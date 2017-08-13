@@ -51,6 +51,7 @@ private Q_SLOTS:
     void testFullscreenLayerWithActiveWaylandWindow();
     void testFocusInWithWaylandLastActiveWindow();
     void testX11WindowId();
+    void testCaptionChanges();
 };
 
 void X11ClientTest::initTestCase()
@@ -374,6 +375,57 @@ void X11ClientTest::testX11WindowId()
     // and destroy the window again
     xcb_unmap_window(c.data(), w);
     xcb_flush(c.data());
+}
+
+void X11ClientTest::testCaptionChanges()
+{
+    // verifies that caption is updated correctly when the X11 window updates it
+    // BUG: 383444
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+    const QRect windowGeometry(0, 0, 100, 200);
+    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    NETWinInfo info(c.data(), w, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    info.setName("foo");
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+    // we should get a client for it
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(client);
+    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->caption(), QStringLiteral("foo"));
+
+    QSignalSpy captionChangedSpy(client, &Client::captionChanged);
+    QVERIFY(captionChangedSpy.isValid());
+    info.setName("bar");
+    xcb_flush(c.data());
+    QEXPECT_FAIL("", "BUG 383444", Continue);
+    QVERIFY(captionChangedSpy.wait());
+    QCOMPARE(client->caption(), QStringLiteral("bar"));
+
+    // and destroy the window again
+    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+    xcb_unmap_window(c.data(), w);
+    xcb_flush(c.data());
+    QVERIFY(windowClosedSpy.wait());
+    xcb_destroy_window(c.data(), w);
+    c.reset();
 }
 
 WAYLANDTEST_MAIN(X11ClientTest)
