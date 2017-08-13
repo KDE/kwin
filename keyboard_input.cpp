@@ -48,6 +48,9 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     , m_xkb(new Xkb(parent))
 {
     connect(m_xkb.data(), &Xkb::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
+    if (waylandServer()) {
+        m_xkb->setSeat(waylandServer()->seat());
+    }
 }
 
 KeyboardInputRedirection::~KeyboardInputRedirection() = default;

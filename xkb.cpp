@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "xkb.h"
 #include "utils.h"
-#include "wayland_server.h"
 // frameworks
 #include <KConfigGroup>
 #include <KKeyServer>
@@ -222,7 +221,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
 
 void Xkb::createKeymapFile()
 {
-    if (!waylandServer()) {
+    if (!m_seat) {
         return;
     }
     // TODO: uninstall keymap on server?
@@ -254,7 +253,7 @@ void Xkb::createKeymapFile()
         delete tmp;
         return;
     }
-    waylandServer()->seat()->setKeymap(tmp->handle(), size);
+    m_seat->setKeymap(tmp->handle(), size);
 }
 
 void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
@@ -337,10 +336,10 @@ void Xkb::updateModifiers()
 
 void Xkb::forwardModifiers()
 {
-    if (!waylandServer()) {
+    if (!m_seat) {
         return;
     }
-    waylandServer()->seat()->updateKeyboardModifiers(m_modifierState.depressed,
+    m_seat->updateKeyboardModifiers(m_modifierState.depressed,
                                                      m_modifierState.latched,
                                                      m_modifierState.locked,
                                                      m_currentLayout);
@@ -500,6 +499,11 @@ quint32 Xkb::numberOfLayouts() const
         return 0;
     }
     return xkb_keymap_num_layouts(m_keymap);
+}
+
+void Xkb::setSeat(KWayland::Server::SeatInterface *seat)
+{
+    m_seat = QPointer<KWayland::Server::SeatInterface>(seat);
 }
 
 }
