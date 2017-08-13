@@ -186,7 +186,7 @@ void KWinBindingsTest::testSwitchWindowScript()
         QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
         QVERIFY(runningChangedSpy.isValid());
         s->run();
-        QVERIFY(runningChangedSpy.wait());
+        QTRY_COMPARE(runningChangedSpy.count(), 1);
     };
 
     runScript(QStringLiteral("slotSwitchWindowUp"));
