@@ -41,10 +41,11 @@ typedef uint32_t xkb_layout_index_t;
 namespace KWin
 {
 
-class KWIN_EXPORT Xkb
+class KWIN_EXPORT Xkb : public QObject
 {
+    Q_OBJECT
 public:
-    Xkb(InputRedirection *input);
+    Xkb(QObject *parent = nullptr);
     ~Xkb();
     void setConfig(KSharedConfigPtr config) {
         m_config = config;
@@ -98,6 +99,9 @@ public:
      **/
     void forwardModifiers();
 
+Q_SIGNALS:
+    void ledsChanged(const LEDs &leds);
+
 private:
     xkb_keymap *loadKeymapFromConfig();
     xkb_keymap *loadDefaultKeymap();
@@ -106,7 +110,6 @@ private:
     void updateModifiers();
     void updateConsumedModifiers(uint32_t key);
     QString layoutName(xkb_layout_index_t layout) const;
-    InputRedirection *m_input;
     xkb_context *m_context;
     xkb_keymap *m_keymap;
     xkb_state *m_state;

@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "xkb.h"
-#include "keyboard_input.h"
 #include "utils.h"
 #include "wayland_server.h"
 // frameworks
@@ -66,8 +65,8 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
     }
 }
 
-Xkb::Xkb(InputRedirection *input)
-    : m_input(input)
+Xkb::Xkb(QObject *parent)
+    : QObject(parent)
     , m_context(xkb_context_new(static_cast<xkb_context_flags>(0)))
     , m_keymap(NULL)
     , m_state(NULL)
@@ -237,7 +236,7 @@ void Xkb::createKeymapFile()
     }
     const uint size = qstrlen(keymapString.data()) + 1;
 
-    QTemporaryFile *tmp = new QTemporaryFile(m_input);
+    QTemporaryFile *tmp = new QTemporaryFile(this);
     if (!tmp->open()) {
         delete tmp;
         return;
@@ -327,7 +326,7 @@ void Xkb::updateModifiers()
     }
     if (m_leds != leds) {
         m_leds = leds;
-        emit m_input->keyboard()->ledsChanged(m_leds);
+        emit ledsChanged(m_leds);
     }
 
     m_currentLayout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
