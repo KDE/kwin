@@ -414,7 +414,6 @@ void X11ClientTest::testCaptionChanges()
     QVERIFY(captionChangedSpy.isValid());
     info.setName("bar");
     xcb_flush(c.data());
-    QEXPECT_FAIL("", "BUG 383444", Continue);
     QVERIFY(captionChangedSpy.wait());
     QCOMPARE(client->caption(), QStringLiteral("bar"));
 

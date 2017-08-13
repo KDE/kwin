@@ -1431,8 +1431,10 @@ void Client::setCaption(const QString& _s, bool force)
         if (!s[i].isPrint())
             s[i] = QChar(u' ');
     cap_normal = s;
-    if (!force)
+    if (!force) {
+        emit captionChanged();
         return;
+    }
 
     bool reset_name = force;
     bool was_suffix = (!cap_suffix.isEmpty());
