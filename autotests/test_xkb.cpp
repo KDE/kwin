@@ -484,36 +484,6 @@ void XkbTest::testToQtKey()
 {
     Xkb xkb;
     QFETCH(xkb_keysym_t, keySym);
-    QEXPECT_FAIL("e0", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("e1", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("e2", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("e3", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("e4", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("e5", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("e6", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("e7", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("e8", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("e9", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("ea", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("eb", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("ec", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("ed", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("ee", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("ef", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("f0", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("f1", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("f2", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("f3", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("f4", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("f5", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("f6", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("f8", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("f9", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("fa", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("fb", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("fc", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("fd", "Incorrectly mapped by KKeyServer", Continue);
-    QEXPECT_FAIL("fe", "Incorrectly mapped by KKeyServer", Continue);
     QTEST(xkb.toQtKey(keySym), "qt");
 }
 

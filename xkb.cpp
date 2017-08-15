@@ -18,10 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "xkb.h"
+#include "xkb_qt_mapping.h"
 #include "utils.h"
 // frameworks
 #include <KConfigGroup>
-#include <KKeyServer>
 // KWayland
 #include <KWayland/Server/seat_interface.h>
 // Qt
@@ -442,12 +442,7 @@ QString Xkb::toString(xkb_keysym_t keysym)
 
 Qt::Key Xkb::toQtKey(xkb_keysym_t keysym) const
 {
-    int key = Qt::Key_unknown;
-    KKeyServer::symXToKeyQt(keysym, &key);
-    if (key & Qt::KeyboardModifierMask) {
-        key &= ~Qt::KeyboardModifierMask;
-    }
-    return static_cast<Qt::Key>(key);
+    return xkbToQtKey(keysym);
 }
 
 bool Xkb::shouldKeyRepeat(quint32 key) const
