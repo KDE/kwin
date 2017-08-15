@@ -201,7 +201,12 @@ DataSourceInterface *DataDeviceInterface::selection() const
 void DataDeviceInterface::sendSelection(DataDeviceInterface *other)
 {
     Q_D();
-    auto r = d->createDataOffer(other->selection());
+    auto otherSelection = other->selection();
+    if (!otherSelection) {
+        sendClearSelection();
+        return;
+    }
+    auto r = d->createDataOffer(otherSelection);
     if (!r) {
         return;
     }

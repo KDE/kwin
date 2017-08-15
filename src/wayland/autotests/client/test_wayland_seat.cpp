@@ -1821,6 +1821,9 @@ void TestWaylandSeat::testSelection()
     QVERIFY(cancelledSpy.isValid());
     m_seatInterface->setSelection(ddi);
     QVERIFY(cancelledSpy.wait());
+
+    // Copy already cleared selection,  BUG 383054
+    ddi->sendSelection(ddi);
 }
 
 void TestWaylandSeat::testSelectionNoDataSource()
