@@ -370,3 +370,20 @@ add_executable(testOpenGLContextAttributeBuilder opengl_context_attribute_builde
 target_link_libraries(testOpenGLContextAttributeBuilder Qt5::Test)
 add_test(kwin-testOpenGLContextAttributeBuilder testOpenGLContextAttributeBuilder)
 ecm_mark_as_test(testOpenGLContextAttributeBuilder)
+
+set(testXkb_SRCS
+    test_xkb.cpp
+    ../xkb.cpp
+)
+add_executable(testXkb ${testXkb_SRCS})
+target_link_libraries(testXkb
+    Qt5::Test
+    Qt5::Gui
+    Qt5::Widgets
+    KF5::ConfigCore
+    KF5::WindowSystem
+    KF5::WaylandServer
+    XKB::XKB
+)
+add_test(kwin-testXkb testXkb)
+ecm_mark_as_test(testXkb)
