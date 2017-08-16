@@ -273,6 +273,45 @@ static inline Qt::Key xkbToQtKey(xkb_keysym_t keySym)
     return key;
 }
 
+static inline xkb_keysym_t qtKeyToXkb(Qt::Key qtKey, Qt::KeyboardModifiers modifiers)
+{
+    xkb_keysym_t sym = XKB_KEY_NoSymbol;
+    if (modifiers.testFlag(Qt::KeypadModifier) && qtKey >= Qt::Key_0 && qtKey <= Qt::Key_9) {
+        sym = XKB_KEY_KP_0 + qtKey - Qt::Key_0;
+    } else if (qtKey < 0x1000 && !modifiers.testFlag(Qt::KeypadModifier)) {
+        QChar character(qtKey);
+        if (!modifiers.testFlag(Qt::ShiftModifier)) {
+            character = character.toLower();
+        }
+        sym = character.unicode();
+    }
+
+    if (sym == XKB_KEY_NoSymbol) {
+        std::vector<xkb_keysym_t> possibleMatches;
+        for (auto pair : s_mapping) {
+            if (pair.second == qtKey) {
+                possibleMatches.emplace_back(pair.first);
+            }
+        }
+        if (!possibleMatches.empty()) {
+            sym = possibleMatches.front();
+            for (auto match : possibleMatches) {
+                // is the current match better than existing?
+                if (modifiers.testFlag(Qt::KeypadModifier)) {
+                    if (match >= XKB_KEY_KP_Space && match <= XKB_KEY_KP_9) {
+                        sym = match;
+                    }
+                } else {
+                    if (sym >= XKB_KEY_KP_Space && sym <= XKB_KEY_KP_9) {
+                        sym = match;
+                    }
+                }
+            }
+        }
+    }
+    return sym;
+}
+
 }
 
 #endif

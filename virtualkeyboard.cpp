@@ -19,16 +19,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "virtualkeyboard.h"
 #include "input.h"
+#include "keyboard_input.h"
 #include "utils.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "xkb.h"
 
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/textinput_interface.h>
 
-#include <KKeyServer>
 #include <KStatusNotifierItem>
 #include <KLocalizedString>
 
@@ -409,12 +410,7 @@ bool VirtualKeyboard::eventFilter(QObject *o, QEvent *e)
         QKeyEvent *event = static_cast<QKeyEvent*>(e);
         if (event->nativeScanCode() == 0) {
             // this is a key composed by the virtual keyboard - we need to send it to the client
-            // TODO: proper xkb support in KWindowSystem needed
-            int sym = xkb_keysym_from_name(event->text().toUtf8().constData(), XKB_KEYSYM_NO_FLAGS);
-            if (sym == XKB_KEY_NoSymbol) {
-                // mapping from text failed, try mapping through KKeyServer
-                KKeyServer::keyQtToSymX(event->key(), &sym);
-            }
+            const auto sym = input()->keyboard()->xkb()->fromKeyEvent(event);
             if (sym != 0) {
                 if (waylandServer()) {
                     auto t = waylandServer()->seat()->focusedTextInput();

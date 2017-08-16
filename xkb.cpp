@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/seat_interface.h>
 // Qt
 #include <QTemporaryFile>
+#include <QKeyEvent>
 // xkbcommon
 #include <xkbcommon/xkbcommon.h>
 #include <xkbcommon/xkbcommon-compose.h>
@@ -443,6 +444,21 @@ QString Xkb::toString(xkb_keysym_t keysym)
 Qt::Key Xkb::toQtKey(xkb_keysym_t keysym) const
 {
     return xkbToQtKey(keysym);
+}
+
+xkb_keysym_t Xkb::fromQtKey(Qt::Key key, Qt::KeyboardModifiers mods) const
+{
+    return qtKeyToXkb(key, mods);
+}
+
+xkb_keysym_t Xkb::fromKeyEvent(QKeyEvent *event) const
+{
+    xkb_keysym_t sym = xkb_keysym_from_name(event->text().toUtf8().constData(), XKB_KEYSYM_NO_FLAGS);
+    if (sym == XKB_KEY_NoSymbol) {
+        // mapping from text failed, try mapping through KKeyServer
+        sym = fromQtKey(Qt::Key(event->key() & ~Qt::KeyboardModifierMask), event->modifiers());
+    }
+    return sym;
 }
 
 bool Xkb::shouldKeyRepeat(quint32 key) const
