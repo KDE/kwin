@@ -54,6 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "virtualdesktops.h"
 #include "shell_client.h"
+#include "was_user_interaction_x11_filter.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
 #include "main.h"
@@ -214,6 +215,9 @@ Workspace::Workspace(const QString &sessionKey)
 
 void Workspace::init()
 {
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        m_wasUserInteractionFilter.reset(new WasUserInteractionX11Filter);
+    }
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
     KSharedConfigPtr config = kwinApp()->config();
     kwinApp()->createScreens();
@@ -1784,6 +1788,20 @@ Toplevel *Workspace::findInternal(QWindow *w) const
 void Workspace::markXStackingOrderAsDirty()
 {
     m_xStackingQueryTree.reset(new Xcb::Tree(rootWindow()));
+}
+
+void Workspace::setWasUserInteraction()
+{
+    if (was_user_interaction) {
+        return;
+    }
+    was_user_interaction = true;
+    // might be called from within the filter, so delay till we now the filter returned
+    QTimer::singleShot(0, this,
+        [this] {
+            m_wasUserInteractionFilter.reset();
+        }
+    );
 }
 
 } // namespace

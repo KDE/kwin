@@ -571,6 +571,7 @@ private:
     GroupList groups;
 
     bool was_user_interaction;
+    QScopedPointer<X11EventFilter> m_wasUserInteractionFilter;
     bool session_saving;
     int session_active_client;
     int session_desktop;
@@ -689,11 +690,6 @@ inline const ToplevelList& Workspace::stackingOrder() const
 {
     // TODO: Q_ASSERT( block_stacking_updates == 0 );
     return stacking_order;
-}
-
-inline void Workspace::setWasUserInteraction()
-{
-    was_user_interaction = true;
 }
 
 inline bool Workspace::wasUserInteraction() const

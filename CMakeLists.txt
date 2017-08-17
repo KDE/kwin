@@ -455,6 +455,7 @@ set(kwin_KDEINIT_SRCS
     popup_input_filter.cpp
     abstract_opengl_context_attribute_builder.cpp
     egl_context_attribute_builder.cpp
+    was_user_interaction_x11_filter.cpp
    )
 
 if(KWIN_BUILD_TABBOX)

@@ -265,7 +265,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     switch (eventType) {
     case XCB_BUTTON_PRESS:
     case XCB_BUTTON_RELEASE: {
-        was_user_interaction = true;
         auto *mouseEvent = reinterpret_cast<xcb_button_press_event_t*>(e);
 #ifdef KWIN_BUILD_TABBOX
         if (TabBox::TabBox::self()->isGrabbed()) {
@@ -301,7 +300,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         break;
     }
     case XCB_KEY_PRESS: {
-        was_user_interaction = true;
         int keyQt;
         xcb_key_press_event_t *event = reinterpret_cast<xcb_key_press_event_t*>(e);
         KKeyServer::xcbKeyPressEventToQt(event, &keyQt);
@@ -319,7 +317,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         break;
     }
     case XCB_KEY_RELEASE:
-        was_user_interaction = true;
 #ifdef KWIN_BUILD_TABBOX
         if (TabBox::TabBox::self()->isGrabbed()) {
             TabBox::TabBox::self()->keyRelease(reinterpret_cast<xcb_key_release_event_t*>(e));
@@ -644,12 +641,10 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         break;
     case XCB_KEY_PRESS:
         updateUserTime(reinterpret_cast<xcb_key_press_event_t*>(e)->time);
-        workspace()->setWasUserInteraction();
         break;
     case XCB_BUTTON_PRESS: {
         const auto *event = reinterpret_cast<xcb_button_press_event_t*>(e);
         updateUserTime(event->time);
-        workspace()->setWasUserInteraction();
         buttonPressEvent(event->event, event->detail, event->state,
                          event->event_x, event->event_y, event->root_x, event->root_y, event->time);
         break;
@@ -1068,7 +1063,6 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
     if (w == wrapperId() || w == frameId() || w == inputId()) {
         // FRAME neco s tohohle by se melo zpracovat, nez to dostane dekorace
         updateUserTime(time);
-        workspace()->setWasUserInteraction();
         const bool bModKeyHeld = modKeyDown(state);
 
         if (isSplash()
