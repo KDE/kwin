@@ -624,6 +624,7 @@ private:
 
     QList<X11EventFilter *> m_eventFilters;
     QList<X11EventFilter *> m_genericEventFilters;
+    QScopedPointer<X11EventFilter> m_movingClientFilter;
 
 private:
     friend bool performTransiencyCheck();

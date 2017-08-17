@@ -304,10 +304,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         xcb_key_press_event_t *event = reinterpret_cast<xcb_key_press_event_t*>(e);
         KKeyServer::xcbKeyPressEventToQt(event, &keyQt);
 //            qDebug() << "Workspace::keyPress( " << keyQt << " )";
-        if (Client *c = dynamic_cast<Client*>(movingClient)) {
-            c->keyPressEvent(keyQt, event->time);
-            return true;
-        }
 #ifdef KWIN_BUILD_TABBOX
         if (TabBox::TabBox::self()->isGrabbed()) {
             TabBox::TabBox::self()->keyPress(keyQt);
@@ -354,13 +350,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 if (event->window == rootWindow()) {
                     emit propertyNotify(event->atom);
                 }
-            }
-        }
-    }
-    if (Client *c = dynamic_cast<Client*>(movingClient)) {
-        if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE || eventType == XCB_MOTION_NOTIFY) {
-            if (c->moveResizeGrabWindow() == reinterpret_cast<xcb_button_press_event_t*>(e)->event && c->windowEvent(e)) {
-                return true;
             }
         }
     }

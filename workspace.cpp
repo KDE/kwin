@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "input.h"
 #include "logind.h"
+#include "moving_client_x11_filter.h"
 #include "killwindow.h"
 #include "netinfo.h"
 #include "outline.h"
@@ -217,6 +218,7 @@ void Workspace::init()
 {
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         m_wasUserInteractionFilter.reset(new WasUserInteractionX11Filter);
+        m_movingClientFilter.reset(new MovingClientX11Filter);
     }
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
     KSharedConfigPtr config = kwinApp()->config();
