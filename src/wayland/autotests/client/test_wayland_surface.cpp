@@ -1076,6 +1076,12 @@ void TestWaylandSurface::testOutput()
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(leftSpy.count(), 1);
+
+    //test the client handles a misbehaving server that removes a display before updating clients
+    m_display->removeOutput(serverOutput);
+    QCOMPARE(leftSpy.count(), 1);
+    QVERIFY(s->outputs().isEmpty());
+
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSurface)
