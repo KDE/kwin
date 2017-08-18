@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox/tabboxconfig.h"
 #include "tabbox/desktopchain.h"
 #include "tabbox/tabbox_logging.h"
+#include "tabbox/x11_filter.h"
 // kwin
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -504,6 +505,10 @@ TabBox::TabBox(QObject *parent)
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
     connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
+
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        m_x11EventFilter.reset(new X11Filter);
+    }
 }
 
 TabBox::~TabBox()
@@ -901,47 +906,6 @@ void TabBox::delayedShow()
 
     m_delayedShowTimer.setSingleShot(true);
     m_delayedShowTimer.start(m_delayShowTime);
-}
-
-bool TabBox::handleMouseEvent(xcb_button_press_event_t *e)
-{
-    xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, XCB_CURRENT_TIME);
-    if (!m_isShown && isDisplayed()) {
-        // tabbox has been replaced, check effects
-        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
-            return true;
-    }
-    if ((e->response_type & ~0x80) == XCB_BUTTON_PRESS) {
-        // press outside Tabbox?
-        QPoint pos(e->root_x, e->root_y);
-
-        if ((!m_isShown && isDisplayed())
-                || (!m_tabBox->containsPos(pos) &&
-                    (e->detail == XCB_BUTTON_INDEX_1 || e->detail == XCB_BUTTON_INDEX_2 || e->detail == XCB_BUTTON_INDEX_3))) {
-            close();  // click outside closes tab
-            return true;
-        }
-        if (e->detail == XCB_BUTTON_INDEX_5 || e->detail == XCB_BUTTON_INDEX_4) {
-            // mouse wheel event
-            const QModelIndex index = m_tabBox->nextPrev(e->detail == XCB_BUTTON_INDEX_5);
-            if (index.isValid()) {
-                setCurrentIndex(index);
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-bool TabBox::handleMouseEvent(xcb_motion_notify_event_t *e)
-{
-    xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, XCB_CURRENT_TIME);
-    if (!m_isShown && isDisplayed()) {
-        // tabbox has been replaced, check effects
-        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
-            return true;
-    }
-    return false;
 }
 
 bool TabBox::handleMouseEvent(QMouseEvent *event)
@@ -1536,70 +1500,6 @@ void TabBox::accept(bool closeTabBox)
         shadeActivate(c);
         if (c->isDesktop())
             Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
-    }
-}
-
-/*!
-  Handles alt-tab / control-tab releasing
- */
-void TabBox::keyRelease(const xcb_key_release_event_t *ev)
-{
-    if (m_noModifierGrab) {
-        return;
-    }
-    unsigned int mk = ev->state &
-                      (KKeyServer::modXShift() |
-                       KKeyServer::modXCtrl() |
-                       KKeyServer::modXAlt() |
-                       KKeyServer::modXMeta());
-    // ev.state is state before the key release, so just checking mk being 0 isn't enough
-    // using XQueryPointer() also doesn't seem to work well, so the check that all
-    // modifiers are released: only one modifier is active and the currently released
-    // key is this modifier - if yes, release the grab
-    int mod_index = -1;
-    for (int i = XCB_MAP_INDEX_SHIFT;
-            i <= XCB_MAP_INDEX_5;
-            ++i)
-        if ((mk & (1 << i)) != 0) {
-            if (mod_index >= 0)
-                return;
-            mod_index = i;
-        }
-    bool release = false;
-    if (mod_index == -1)
-        release = true;
-    else {
-        Xcb::ModifierMapping xmk;
-        if (xmk) {
-            xcb_keycode_t *keycodes = xmk.keycodes();
-            const int maxIndex = xmk.size();
-            for (int i = 0; i < xmk->keycodes_per_modifier; ++i) {
-                const int index = xmk->keycodes_per_modifier * mod_index + i;
-                if (index >= maxIndex) {
-                    continue;
-                }
-                if (keycodes[index] == ev->detail) {
-                    release = true;
-                }
-            }
-        }
-    }
-    if (!release)
-        return;
-    if (m_tabGrab) {
-        bool old_control_grab = m_desktopGrab;
-        accept();
-        m_desktopGrab = old_control_grab;
-    }
-    if (m_desktopGrab) {
-        bool old_tab_grab = m_tabGrab;
-        int desktop = currentDesktop();
-        close();
-        m_tabGrab = old_tab_grab;
-        if (desktop != -1) {
-            setCurrentDesktop(desktop);
-            VirtualDesktopManager::self()->setCurrent(desktop);
-        }
     }
 }
 

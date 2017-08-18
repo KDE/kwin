@@ -35,15 +35,13 @@ class QMouseEvent;
 class QKeyEvent;
 class QWheelEvent;
 
-struct xcb_button_press_event_t;
-struct xcb_motion_notify_event_t;
-
 namespace KWin
 {
 
 class Workspace;
 class AbstractClient;
 class Client;
+class X11EventFilter;
 namespace TabBox
 {
 class DesktopChainManager;
@@ -164,8 +162,13 @@ public:
         return m_displayRefcount > 0;
     };
 
-    bool handleMouseEvent(xcb_button_press_event_t *e);
-    bool handleMouseEvent(xcb_motion_notify_event_t *e);
+    /**
+     * @returns @c true if TabBox is shown, @c false if replaced by Effect
+     **/
+    bool isShown() const {
+        return m_isShown;
+    }
+
     bool handleMouseEvent(QMouseEvent *event);
     bool handleWheelEvent(QWheelEvent *event);
     void grabbedKeyEvent(QKeyEvent* event);
@@ -181,7 +184,6 @@ public:
     int nextDesktopStatic(int iDesktop) const;
     int previousDesktopStatic(int iDesktop) const;
     void keyPress(int key);
-    void keyRelease(const xcb_key_release_event_t *ev);
     void modifiersReleased();
 
     bool forcedGlobalMouseGrab() const {
@@ -191,6 +193,7 @@ public:
     bool noModifierGrab() const {
         return m_noModifierGrab;
     }
+    void setCurrentIndex(QModelIndex index, bool notifyEffects = true);
 
     static TabBox *self();
     static TabBox *create(QObject *parent);
@@ -224,7 +227,6 @@ Q_SIGNALS:
 
 private:
     explicit TabBox(QObject *parent);
-    void setCurrentIndex(QModelIndex index, bool notifyEffects = true);
     void loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig);
 
     bool startKDEWalkThroughWindows(TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
@@ -285,6 +287,7 @@ private:
     QList<ElectricBorder> m_borderActivate, m_borderAlternativeActivate;
     QHash<ElectricBorder, QAction *> m_touchActivate;
     QHash<ElectricBorder, QAction *> m_touchAlternativeActivate;
+    QScopedPointer<X11EventFilter> m_x11EventFilter;
 
     static TabBox *s_self;
 };

@@ -266,11 +266,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_BUTTON_PRESS:
     case XCB_BUTTON_RELEASE: {
         auto *mouseEvent = reinterpret_cast<xcb_button_press_event_t*>(e);
-#ifdef KWIN_BUILD_TABBOX
-        if (TabBox::TabBox::self()->isGrabbed()) {
-            return TabBox::TabBox::self()->handleMouseEvent(mouseEvent);
-        }
-#endif
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(mouseEvent)) {
             return true;
         }
@@ -283,12 +278,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
         auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t*>(e);
         const QPoint rootPos(mouseEvent->root_x, mouseEvent->root_y);
-#ifdef KWIN_BUILD_TABBOX
-        if (TabBox::TabBox::self()->isGrabbed()) {
-            ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(xTime()), true);
-            return TabBox::TabBox::self()->handleMouseEvent(mouseEvent);
-        }
-#endif
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(mouseEvent)) {
             return true;
         }
@@ -299,27 +288,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
         break;
     }
-    case XCB_KEY_PRESS: {
-        int keyQt;
-        xcb_key_press_event_t *event = reinterpret_cast<xcb_key_press_event_t*>(e);
-        KKeyServer::xcbKeyPressEventToQt(event, &keyQt);
-//            qDebug() << "Workspace::keyPress( " << keyQt << " )";
-#ifdef KWIN_BUILD_TABBOX
-        if (TabBox::TabBox::self()->isGrabbed()) {
-            TabBox::TabBox::self()->keyPress(keyQt);
-            return true;
-        }
-#endif
-        break;
-    }
-    case XCB_KEY_RELEASE:
-#ifdef KWIN_BUILD_TABBOX
-        if (TabBox::TabBox::self()->isGrabbed()) {
-            TabBox::TabBox::self()->keyRelease(reinterpret_cast<xcb_key_release_event_t*>(e));
-            return true;
-        }
-#endif
-        break;
     case XCB_CONFIGURE_NOTIFY:
         if (reinterpret_cast<xcb_configure_notify_event_t*>(e)->event == rootWindow())
             markXStackingOrderAsDirty();
