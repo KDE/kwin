@@ -48,7 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QMouseEvent>
 #include <QProcess>
-#include <QWhatsThis>
 // XLib
 #include <X11/Xutil.h>
 #include <fixx11h.h>
@@ -1399,7 +1398,6 @@ void Client::showContextHelp()
 {
     if (info->supportsProtocol(NET::ContextHelpProtocol)) {
         sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_context_help);
-        QWhatsThis::enterWhatsThisMode(); // SELI TODO: ?
     }
 }
 

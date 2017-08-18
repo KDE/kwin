@@ -51,7 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QStyleHints>
-#include <QWhatsThis>
 #include <QWheelEvent>
 
 #include <kkeyserver.h>
@@ -385,23 +384,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     }
 
     case XCB_ENTER_NOTIFY: {
-        if (QWhatsThis::inWhatsThisMode()) {
-            QWidget* w = QWidget::find(reinterpret_cast<xcb_enter_notify_event_t*>(e)->event);
-            if (w)
-                QWhatsThis::leaveWhatsThisMode();
-        }
         if (ScreenEdges::self()->isEntered(reinterpret_cast<xcb_enter_notify_event_t*>(e)))
             return true;
-        break;
-    }
-    case XCB_LEAVE_NOTIFY: {
-        if (!QWhatsThis::inWhatsThisMode())
-            break;
-        // TODO is this cliente ever found, given that client events are searched above?
-        const auto *event = reinterpret_cast<xcb_leave_notify_event_t*>(e);
-        Client* c = findClient(Predicate::FrameIdMatch, event->event);
-        if (c && event->detail != XCB_NOTIFY_DETAIL_INFERIOR)
-            QWhatsThis::leaveWhatsThisMode();
         break;
     }
     case XCB_CONFIGURE_REQUEST: {
