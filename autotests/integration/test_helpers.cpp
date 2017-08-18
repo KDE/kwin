@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
+#include <KWayland/Client/output.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
 #include <KWayland/Server/display.h>
@@ -66,7 +67,9 @@ static struct {
     PlasmaShell *plasmaShell = nullptr;
     PlasmaWindowManagement *windowManagement = nullptr;
     PointerConstraints *pointerConstraints = nullptr;
+    Registry *registry = nullptr;
     QThread *thread = nullptr;
+    QVector<Output*> outputs;
 } s_waylandConnection;
 
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
@@ -103,67 +106,78 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
         return false;
     }
 
-    Registry registry;
-    registry.setEventQueue(s_waylandConnection.queue);
-    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
+    Registry *registry = new Registry;
+    s_waylandConnection.registry = registry;
+    registry->setEventQueue(s_waylandConnection.queue);
+
+    QObject::connect(registry, &Registry::outputAnnounced, [=](quint32 name, quint32 version) {
+        auto output = registry->createOutput(name, version, s_waylandConnection.registry);
+        s_waylandConnection.outputs << output;
+        QObject::connect(output, &Output::removed, [=]() {
+            output->deleteLater();
+            s_waylandConnection.outputs.removeOne(output);
+        });
+    });
+
+    QSignalSpy allAnnounced(registry, &Registry::interfacesAnnounced);
     if (!allAnnounced.isValid()) {
         return false;
     }
-    registry.create(s_waylandConnection.connection);
-    if (!registry.isValid()) {
+    registry->create(s_waylandConnection.connection);
+    if (!registry->isValid()) {
         return false;
     }
-    registry.setup();
+    registry->setup();
     if (!allAnnounced.wait()) {
         return false;
     }
 
-    s_waylandConnection.compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version);
+    s_waylandConnection.compositor = registry->createCompositor(registry->interface(Registry::Interface::Compositor).name, registry->interface(Registry::Interface::Compositor).version);
     if (!s_waylandConnection.compositor->isValid()) {
         return false;
     }
-    s_waylandConnection.shm = registry.createShmPool(registry.interface(Registry::Interface::Shm).name, registry.interface(Registry::Interface::Shm).version);
+    s_waylandConnection.shm = registry->createShmPool(registry->interface(Registry::Interface::Shm).name, registry->interface(Registry::Interface::Shm).version);
     if (!s_waylandConnection.shm->isValid()) {
         return false;
     }
-    s_waylandConnection.shell = registry.createShell(registry.interface(Registry::Interface::Shell).name, registry.interface(Registry::Interface::Shell).version);
+    s_waylandConnection.shell = registry->createShell(registry->interface(Registry::Interface::Shell).name, registry->interface(Registry::Interface::Shell).version);
     if (!s_waylandConnection.shell->isValid()) {
         return false;
     }
-    s_waylandConnection.xdgShellV5 = registry.createXdgShell(registry.interface(Registry::Interface::XdgShellUnstableV5).name, registry.interface(Registry::Interface::XdgShellUnstableV5).version);
+    s_waylandConnection.xdgShellV5 = registry->createXdgShell(registry->interface(Registry::Interface::XdgShellUnstableV5).name, registry->interface(Registry::Interface::XdgShellUnstableV5).version);
     if (!s_waylandConnection.xdgShellV5->isValid()) {
         return false;
     }
     if (flags.testFlag(AdditionalWaylandInterface::Seat)) {
-        s_waylandConnection.seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version);
+        s_waylandConnection.seat = registry->createSeat(registry->interface(Registry::Interface::Seat).name, registry->interface(Registry::Interface::Seat).version);
         if (!s_waylandConnection.seat->isValid()) {
             return false;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::Decoration)) {
-        s_waylandConnection.decoration = registry.createServerSideDecorationManager(registry.interface(Registry::Interface::ServerSideDecorationManager).name,
-                                                                                    registry.interface(Registry::Interface::ServerSideDecorationManager).version);
+        s_waylandConnection.decoration = registry->createServerSideDecorationManager(registry->interface(Registry::Interface::ServerSideDecorationManager).name,
+                                                                                    registry->interface(Registry::Interface::ServerSideDecorationManager).version);
         if (!s_waylandConnection.decoration->isValid()) {
             return false;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::PlasmaShell)) {
-        s_waylandConnection.plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name,
-                                                                     registry.interface(Registry::Interface::PlasmaShell).version);
+        s_waylandConnection.plasmaShell = registry->createPlasmaShell(registry->interface(Registry::Interface::PlasmaShell).name,
+                                                                     registry->interface(Registry::Interface::PlasmaShell).version);
         if (!s_waylandConnection.plasmaShell->isValid()) {
             return false;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::WindowManagement)) {
-        s_waylandConnection.windowManagement = registry.createPlasmaWindowManagement(registry.interface(Registry::Interface::PlasmaWindowManagement).name,
-                                                                                     registry.interface(Registry::Interface::PlasmaWindowManagement).version);
+        s_waylandConnection.windowManagement = registry->createPlasmaWindowManagement(registry->interface(Registry::Interface::PlasmaWindowManagement).name,
+                                                                                     registry->interface(Registry::Interface::PlasmaWindowManagement).version);
         if (!s_waylandConnection.windowManagement->isValid()) {
             return false;
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::PointerConstraints)) {
-        s_waylandConnection.pointerConstraints = registry.createPointerConstraints(registry.interface(Registry::Interface::PointerConstraintsUnstableV1).name,
-                                                                                   registry.interface(Registry::Interface::PointerConstraintsUnstableV1).version);
+        s_waylandConnection.pointerConstraints = registry->createPointerConstraints(registry->interface(Registry::Interface::PointerConstraintsUnstableV1).name,
+                                                                                   registry->interface(Registry::Interface::PointerConstraintsUnstableV1).version);
         if (!s_waylandConnection.pointerConstraints->isValid()) {
             return false;
         }
@@ -196,6 +210,8 @@ void destroyWaylandConnection()
     s_waylandConnection.shm = nullptr;
     delete s_waylandConnection.queue;
     s_waylandConnection.queue = nullptr;
+    delete s_waylandConnection.registry;
+    s_waylandConnection.registry = nullptr;
     if (s_waylandConnection.thread) {
         QSignalSpy spy(s_waylandConnection.connection, &QObject::destroyed);
         s_waylandConnection.connection->deleteLater();
