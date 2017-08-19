@@ -6,6 +6,7 @@ set(X11PLATFORM_SOURCES
     screens_xrandr.cpp
     windowselector.cpp
     overlaywindow_x11.cpp
+    screenedges_filter.cpp
 )
 
 if(X11_Xinput_FOUND)

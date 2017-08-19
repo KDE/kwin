@@ -312,14 +312,6 @@ public:
      * to do this if an effect input window is active.
      */
     void ensureOnTop();
-    /**
-    * Called when the user entered an electric border with the mouse.
-    * It may switch to another virtual desktop.
-    * @param e the X event which is passed to this method.
-    */
-    bool isEntered(xcb_generic_event_t *e);
-    bool isEntered(xcb_enter_notify_event_t *e);
-    bool isEntered(xcb_client_message_event_t *e);
     bool isEntered(QMouseEvent *event);
 
     /**
@@ -351,6 +343,9 @@ public:
     GestureRecognizer *gestureRecognizer() const {
         return m_gestureRecognizer;
     }
+
+    bool handleDndNotify(xcb_window_t window, const QPoint &point);
+    bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
 
 public Q_SLOTS:
     void reconfigure();
@@ -387,8 +382,6 @@ private:
     void setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue);
     ElectricBorderAction actionForEdge(Edge *edge) const;
     ElectricBorderAction actionForTouchEdge(Edge *edge) const;
-    bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
-    bool handleDndNotify(xcb_window_t window, const QPoint &point);
     void createEdgeForClient(AbstractClient *client, ElectricBorder border);
     void deleteEdgeForClient(AbstractClient *client);
     bool m_desktopSwitching;

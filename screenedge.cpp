@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenedge.h"
 
 // KWin
-#include "atoms.h"
 #include "gestures.h"
 #include <client.h>
 #include "cursor.h"
@@ -1365,22 +1364,6 @@ void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPus
             }
         }
     }
-}
-
-bool ScreenEdges::isEntered(xcb_enter_notify_event_t *event)
-{
-    return handleEnterNotifiy(event->event,
-                              QPoint(event->root_x, event->root_y),
-                              QDateTime::fromMSecsSinceEpoch(event->time));
-}
-
-bool ScreenEdges::isEntered(xcb_client_message_event_t *event)
-{
-    if (event->type != atoms->xdnd_position) {
-        return false;
-    }
-    return handleDndNotify(event->window,
-                           QPoint(event->data.data32[2] >> 16, event->data.data32[2] & 0xffff));
 }
 
 bool ScreenEdges::isEntered(QMouseEvent *event)

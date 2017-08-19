@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_input.h"
 #include "logging.h"
 #include "screens_xrandr.h"
+#include "screenedges_filter.h"
 #include "options.h"
 #include "overlaywindow_x11.h"
 
@@ -113,6 +114,9 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
 
 Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
 {
+    if (m_screenEdgesFilter.isNull()) {
+        m_screenEdgesFilter.reset(new ScreenEdgesFilter);
+    }
     return new WindowBasedEdge(edges);
 }
 

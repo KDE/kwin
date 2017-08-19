@@ -29,6 +29,7 @@ namespace KWin
 {
 class XInputIntegration;
 class WindowSelector;
+class X11EventFilter;
 
 class KWIN_EXPORT X11StandalonePlatform : public Platform
 {
@@ -80,6 +81,7 @@ private:
     QTimer *m_openGLFreezeProtection = nullptr;
     Display *m_x11Display;
     QScopedPointer<WindowSelector> m_windowSelector;
+    QScopedPointer<X11EventFilter> m_screenEdgesFilter;
 
 };
 

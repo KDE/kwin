@@ -466,7 +466,10 @@ void TestScreenEdges::testCallback()
     event.same_screen_focus = 1;
     event.time = QDateTime::currentMSecsSinceEpoch();
     setPos(QPoint(0, 50));
-    QVERIFY(s->isEntered(&event));
+    auto isEntered = [s] (xcb_enter_notify_event_t *event) {
+        return s->handleEnterNotifiy(event->event, QPoint(event->root_x, event->root_y), QDateTime::fromMSecsSinceEpoch(event->time));
+    };
+    QVERIFY(isEntered(&event));
     // doesn't trigger as the edge was not triggered yet
     QVERIFY(spy.isEmpty());
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
@@ -475,7 +478,7 @@ void TestScreenEdges::testCallback()
     QTest::qWait(160);
     setPos(QPoint(0, 100));
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     QCOMPARE(Cursor::pos(), QPoint(1, 100));
 
@@ -483,7 +486,7 @@ void TestScreenEdges::testCallback()
     QTest::qWait(200);
     setPos(QPoint(0, 101));
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     QCOMPARE(Cursor::pos(), QPoint(1, 101));
 
@@ -491,7 +494,7 @@ void TestScreenEdges::testCallback()
     QTest::qWait(50);
     setPos(QPoint(0, 100));
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     QCOMPARE(Cursor::pos(), QPoint(1, 100));
 
@@ -499,7 +502,7 @@ void TestScreenEdges::testCallback()
     QTest::qWait(110);
     setPos(QPoint(0, 101));
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(!spy.isEmpty());
     QCOMPARE(Cursor::pos(), QPoint(1, 101));
 
@@ -507,21 +510,21 @@ void TestScreenEdges::testCallback()
     QTest::qWait(351);
     setPos(QPoint(0, 100));
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(Cursor::pos(), QPoint(1, 100));
     // it's still under the reactivation
     QTest::qWait(50);
     setPos(QPoint(0, 100));
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(Cursor::pos(), QPoint(1, 100));
     // now it should trigger again
     QTest::qWait(250);
     setPos(QPoint(0, 100));
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QCOMPARE(spy.count(), 2);
     QCOMPARE(spy.first().first().value<ElectricBorder>(), ElectricLeft);
     QCOMPARE(spy.last().first().value<ElectricBorder>(), ElectricLeft);
@@ -536,7 +539,7 @@ void TestScreenEdges::testCallback()
     // it should trigger directly
     QTest::qWait(350);
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QCOMPARE(spy.count(), 3);
     QCOMPARE(spy.at(0).first().value<ElectricBorder>(), ElectricLeft);
     QCOMPARE(spy.at(1).first().value<ElectricBorder>(), ElectricLeft);
@@ -645,7 +648,10 @@ void TestScreenEdges::testPushBack()
     event.event = s->windows().first();
     event.same_screen_focus = 1;
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    auto isEntered = [s] (xcb_enter_notify_event_t *event) {
+        return s->handleEnterNotifiy(event->event, QPoint(event->root_x, event->root_y), QDateTime::fromMSecsSinceEpoch(event->time));
+    };
+    QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     QTEST(Cursor::pos(), "expected");
 
@@ -692,7 +698,10 @@ void TestScreenEdges::testFullScreenBlocking()
     event.event = s->windows().first();
     event.same_screen_focus = 1;
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    auto isEntered = [s] (xcb_enter_notify_event_t *event) {
+        return s->handleEnterNotifiy(event->event, QPoint(event->root_x, event->root_y), QDateTime::fromMSecsSinceEpoch(event->time));
+    };
+    QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
 
@@ -710,7 +719,7 @@ void TestScreenEdges::testFullScreenBlocking()
     QTest::qWait(160);
     Cursor::setPos(0, 50);
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     // and no pushback
     QCOMPARE(Cursor::pos(), QPoint(0, 50));
@@ -722,7 +731,7 @@ void TestScreenEdges::testFullScreenBlocking()
         QCOMPARE(e->activatesForTouchGesture(), e->border() == KWin::ElectricRight);
     }
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(!spy.isEmpty());
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
 
@@ -734,7 +743,7 @@ void TestScreenEdges::testFullScreenBlocking()
     spy.clear();
     Cursor::setPos(0, 50);
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     // and a pushback
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
@@ -743,7 +752,7 @@ void TestScreenEdges::testFullScreenBlocking()
     client.setGeometry(screens()->geometry());
     emit s->checkBlocking();
     Cursor::setPos(0, 50);
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     // and no pushback
     QCOMPARE(Cursor::pos(), QPoint(0, 50));
@@ -757,14 +766,14 @@ void TestScreenEdges::testFullScreenBlocking()
     event.event = s->windows().first();
     event.time = QDateTime::currentMSecsSinceEpoch();
     Cursor::setPos(99, 99);
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     // and pushback
     QCOMPARE(Cursor::pos(), QPoint(98, 98));
     QTest::qWait(160);
     event.time = QDateTime::currentMSecsSinceEpoch();
     Cursor::setPos(99, 99);
-    QVERIFY(s->isEntered(&event));
+    QVERIFY(isEntered(&event));
     QVERIFY(!spy.isEmpty());
 }
 
@@ -812,7 +821,10 @@ void TestScreenEdges::testClientEdge()
     event.event = s->windows().first();
     event.same_screen_focus = 1;
     event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    auto isEntered = [s] (xcb_enter_notify_event_t *event) {
+        return s->handleEnterNotifiy(event->event, QPoint(event->root_x, event->root_y), QDateTime::fromMSecsSinceEpoch(event->time));
+    };
+    QVERIFY(isEntered(&event));
     // autohiding panels shall activate instantly
     QCOMPARE(client.isHiddenInternal(), false);
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
@@ -882,7 +894,7 @@ void TestScreenEdges::testClientEdge()
     event2.event = s->windows().first();
     event2.same_screen_focus = 1;
     event2.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event2));
+    QVERIFY(isEntered(&event2));
     QCOMPARE(client.keepBelow(), false);
     QCOMPARE(client.isHiddenInternal(), false);
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
@@ -946,7 +958,10 @@ void TestScreenEdges::testTouchEdge()
     event.same_screen_focus = 1;
     event.time = QDateTime::currentMSecsSinceEpoch();
     setPos(QPoint(0, 50));
-    QCOMPARE(s->isEntered(&event), false);
+    auto isEntered = [s] (xcb_enter_notify_event_t *event) {
+        return s->handleEnterNotifiy(event->event, QPoint(event->root_x, event->root_y), QDateTime::fromMSecsSinceEpoch(event->time));
+    };
+    QCOMPARE(isEntered(&event), false);
     QVERIFY(approachingSpy.isEmpty());
     // let's also verify the check
     s->check(QPoint(0, 50), QDateTime::currentDateTime(), false);

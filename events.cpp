@@ -39,7 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "useractions.h"
 #include "effects.h"
-#include "screenedge.h"
 #include "screens.h"
 #include "xcbutils.h"
 
@@ -276,14 +275,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             return true;
         }
         auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t*>(e);
-        const QPoint rootPos(mouseEvent->root_x, mouseEvent->root_y);
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(mouseEvent)) {
             return true;
-        }
-        if (QWidget::mouseGrabber()) {
-            ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(xTime()), true);
-        } else {
-            ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(mouseEvent->time));
         }
         break;
     }
@@ -383,11 +376,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         return (event->event != event->window);   // hide wm typical event from Qt
     }
 
-    case XCB_ENTER_NOTIFY: {
-        if (ScreenEdges::self()->isEntered(reinterpret_cast<xcb_enter_notify_event_t*>(e)))
-            return true;
-        break;
-    }
     case XCB_CONFIGURE_REQUEST: {
         const auto *event = reinterpret_cast<xcb_configure_request_event_t*>(e);
         if (event->parent == rootWindow()) {
@@ -439,10 +427,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         // fall through
     case XCB_FOCUS_OUT:
         return true; // always eat these, they would tell Qt that KWin is the active app
-    case XCB_CLIENT_MESSAGE:
-        if (ScreenEdges::self()->isEntered(reinterpret_cast<xcb_client_message_event_t*>(e)))
-            return true;
-        break;
     default:
         if (eventType == Xcb::Extensions::self()->randrNotifyEvent() && Xcb::Extensions::self()->isRandrAvailable()) {
             auto *event = reinterpret_cast<xcb_randr_screen_change_notify_event_t*>(e);
