@@ -42,7 +42,6 @@ GlobalShortcut::GlobalShortcut(const QKeySequence &shortcut)
     : m_shortcut(shortcut)
     , m_pointerModifiers(Qt::NoModifier)
     , m_pointerButtons(Qt::NoButton)
-    , m_axis(PointerAxisUp)
 {
 }
 
@@ -50,15 +49,13 @@ GlobalShortcut::GlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt:
     : m_shortcut(QKeySequence())
     , m_pointerModifiers(pointerButtonModifiers)
     , m_pointerButtons(pointerButtons)
-    , m_axis(PointerAxisUp)
 {
 }
 
-GlobalShortcut::GlobalShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis)
+GlobalShortcut::GlobalShortcut(Qt::KeyboardModifiers modifiers)
     : m_shortcut(QKeySequence())
     , m_pointerModifiers(modifiers)
     , m_pointerButtons(Qt::NoButton)
-    , m_axis(axis)
 {
 }
 
@@ -66,7 +63,6 @@ GlobalShortcut::GlobalShortcut(SwipeDirection direction)
     : m_shortcut(QKeySequence())
     , m_pointerModifiers(Qt::NoModifier)
     , m_pointerButtons(Qt::NoButton)
-    , m_axis(PointerAxisUp)
     , m_swipeDirection(direction)
 {
 }
@@ -89,9 +85,10 @@ InternalGlobalShortcut::InternalGlobalShortcut(Qt::KeyboardModifiers pointerButt
 }
 
 InternalGlobalShortcut::InternalGlobalShortcut(Qt::KeyboardModifiers axisModifiers, PointerAxisDirection axis, QAction *action)
-    : GlobalShortcut(axisModifiers, axis)
+    : GlobalShortcut(axisModifiers)
     , m_action(action)
 {
+    Q_UNUSED(axis)
 }
 
 static SwipeGesture::Direction toSwipeDirection(SwipeDirection direction)

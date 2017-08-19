@@ -132,14 +132,13 @@ public:
 protected:
     GlobalShortcut(const QKeySequence &shortcut);
     GlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons);
-    GlobalShortcut(Qt::KeyboardModifiers axisModifiers, PointerAxisDirection axis);
+    GlobalShortcut(Qt::KeyboardModifiers axisModifiers);
     GlobalShortcut(SwipeDirection direction);
 
 private:
     QKeySequence m_shortcut;
     Qt::KeyboardModifiers m_pointerModifiers;
     Qt::MouseButtons m_pointerButtons;
-    PointerAxisDirection m_axis;
     SwipeDirection m_swipeDirection = SwipeDirection::Invalid;;
 };
 
