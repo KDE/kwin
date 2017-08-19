@@ -116,13 +116,13 @@ UdevDevice::Ptr UdevEnumerate::find(std::function<bool(const UdevDevice::Ptr &de
             continue;
         }
         if (test(device)) {
-            return std::move(device);
+            return device;
         }
         if (!firstFound) {
             firstFound.swap(device);
         }
     }
-    return std::move(firstFound);
+    return firstFound;
 }
 
 UdevDevice::Ptr Udev::primaryGpu()
