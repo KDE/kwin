@@ -1180,7 +1180,7 @@ void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
         QString hostname = clientMachine()->isLocal() ? QStringLiteral("localhost") : QString::fromUtf8(clientMachine()->hostName());
         QProcess::startDetached(QStringLiteral(KWIN_KILLER_BIN),
                                 QStringList() << QStringLiteral("--pid") << QString::number(unsigned(pid)) << QStringLiteral("--hostname") << hostname
-                                << QStringLiteral("--windowname") << caption(false /*full*/)
+                                << QStringLiteral("--windowname") << captionNormal()
                                 << QStringLiteral("--applicationname") << QString::fromUtf8(resourceClass())
                                 << QStringLiteral("--wid") << QString::number(window())
                                 << QStringLiteral("--timestamp") << QString::number(timestamp),

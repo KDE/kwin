@@ -460,7 +460,7 @@ bool Rules::match(const Client* c) const
                          // QueuedConnection, because title may change before
                          // the client is ready (could segfault!)
                          static_cast<Qt::ConnectionType>(Qt::QueuedConnection|Qt::UniqueConnection));
-    if (!matchTitle(c->caption(false)))
+    if (!matchTitle(c->captionNormal()))
         return false;
     return true;
 }
