@@ -64,6 +64,12 @@ public:
 
     void blockActivityUpdates(bool b = true) override;
     QString caption(bool full = true) const override;
+    QString captionNormal() const override {
+        return m_caption;
+    }
+    QString captionSuffix() const override {
+        return m_captionSuffix;
+    }
     void closeWindow() override;
     AbstractClient *findModal(bool allow_itself = false) override;
     bool isCloseable() const override;

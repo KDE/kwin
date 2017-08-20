@@ -220,6 +220,12 @@ public:
     inline bool isBlockingCompositing() { return blocks_compositing; }
 
     QString caption(bool full = true) const override;
+    QString captionNormal() const override {
+        return cap_normal;
+    }
+    QString captionSuffix() const override {
+        return cap_suffix;
+    }
 
     using AbstractClient::keyPressEvent;
     void keyPressEvent(uint key_code, xcb_timestamp_t time);   // FRAME ??

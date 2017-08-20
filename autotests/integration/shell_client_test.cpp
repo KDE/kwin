@@ -74,6 +74,7 @@ private Q_SLOTS:
     void testHidden();
     void testDesktopFileName();
     void testCaptionSimplified();
+    void testCaptionMultipleWindows();
     void testKillWindow_data();
     void testKillWindow();
     void testX11WindowId_data();
@@ -691,6 +692,53 @@ void TestShellClient::testCaptionSimplified()
     QVERIFY(c);
     QVERIFY(c->caption() != origTitle);
     QCOMPARE(c->caption(), origTitle.simplified());
+}
+
+void TestShellClient::testCaptionMultipleWindows()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(qobject_cast<XdgShellSurface*>(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV5, surface.data())));
+    shellSurface->setTitle(QStringLiteral("foo"));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(c->caption(), QStringLiteral("foo"));
+    QCOMPARE(c->captionNormal(), QStringLiteral("foo"));
+    QCOMPARE(c->captionSuffix(), QString());
+
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface2(qobject_cast<XdgShellSurface*>(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV5, surface2.data())));
+    shellSurface2->setTitle(QStringLiteral("foo"));
+    auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c2);
+    QCOMPARE(c2->caption(), QStringLiteral("foo <2>"));
+    QCOMPARE(c2->captionNormal(), QStringLiteral("foo"));
+    QCOMPARE(c2->captionSuffix(), QStringLiteral(" <2>"));
+
+    QScopedPointer<Surface> surface3(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface3(qobject_cast<XdgShellSurface*>(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV5, surface3.data())));
+    shellSurface3->setTitle(QStringLiteral("foo"));
+    auto c3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c3);
+    QCOMPARE(c3->caption(), QStringLiteral("foo <3>"));
+    QCOMPARE(c3->captionNormal(), QStringLiteral("foo"));
+    QCOMPARE(c3->captionSuffix(), QStringLiteral(" <3>"));
+
+    QScopedPointer<Surface> surface4(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface4(qobject_cast<XdgShellSurface*>(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV5, surface4.data())));
+    shellSurface4->setTitle(QStringLiteral("bar"));
+    auto c4 = Test::renderAndWaitForShown(surface4.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c4);
+    QCOMPARE(c4->caption(), QStringLiteral("bar"));
+    QCOMPARE(c4->captionNormal(), QStringLiteral("bar"));
+    QCOMPARE(c4->captionSuffix(), QString());
+    QSignalSpy captionChangedSpy(c4, &ShellClient::captionChanged);
+    QVERIFY(captionChangedSpy.isValid());
+    shellSurface4->setTitle(QStringLiteral("foo"));
+    QVERIFY(captionChangedSpy.wait());
+    QCOMPARE(captionChangedSpy.count(), 1);
+    QCOMPARE(c4->caption(), QStringLiteral("foo <4>"));
+    QCOMPARE(c4->captionNormal(), QStringLiteral("foo"));
+    QCOMPARE(c4->captionSuffix(), QStringLiteral(" <4>"));
 }
 
 void TestShellClient::testKillWindow_data()

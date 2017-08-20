@@ -343,7 +343,24 @@ public:
     }
 
     virtual void updateMouseGrab();
+    /**
+     * @returns The caption consisting of @link{captionNormal} and @link{captionSuffix}
+     * @see captionNormal
+     * @see captionSuffix
+     **/
     virtual QString caption(bool full = true) const = 0;
+    /**
+     * @returns The caption as set by the AbstractClient without any suffix.
+     * @see caption
+     * @see captionSuffix
+     **/
+    virtual QString captionNormal() const = 0;
+    /**
+     * @returns The suffix added to the caption (e.g. shortcut, machine name, etc.)
+     * @see caption
+     * @see captionNormal
+     **/
+    virtual QString captionSuffix() const = 0;
     virtual bool isCloseable() const = 0;
     // TODO: remove boolean trap
     virtual bool isShown(bool shaded_is_shown) const = 0;
@@ -985,6 +1002,12 @@ protected:
     virtual void setShortcutInternal();
     QString shortcutCaptionSuffix() const;
     virtual void updateCaption() = 0;
+
+    /**
+     * Looks for another AbstractClient with same @link{captionNormal} and @link{captionSuffix}.
+     * If no such AbstractClient exists @c nullptr is returned.
+     **/
+    AbstractClient *findClientWithSameCaption() const;
 
 private:
     void handlePaletteChange();

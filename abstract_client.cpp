@@ -1758,4 +1758,12 @@ QString AbstractClient::shortcutCaptionSuffix() const
     return QLatin1String(" {") + shortcut().toString() + QLatin1Char('}');
 }
 
+AbstractClient *AbstractClient::findClientWithSameCaption() const
+{
+    auto fetchNameInternalPredicate = [this](const AbstractClient *cl) {
+        return (!cl->isSpecialWindow() || cl->isToolbar()) && cl != this && cl->captionNormal() == captionNormal() && cl->captionSuffix() == captionSuffix();
+    };
+    return workspace()->findAbstractClient(fetchNameInternalPredicate);
+}
+
 }

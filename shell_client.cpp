@@ -104,12 +104,19 @@ template <class T>
 void ShellClient::initSurface(T *shellSurface)
 {
     m_caption = shellSurface->title().simplified();
-    connect(shellSurface, &T::titleChanged, this, &ShellClient::captionChanged);
+    // delay till end of init
+    QTimer::singleShot(0, this, &ShellClient::updateCaption);
     connect(shellSurface, &T::destroyed, this, &ShellClient::destroyClient);
     connect(shellSurface, &T::titleChanged, this,
         [this] (const QString &s) {
+            const auto oldSuffix = m_captionSuffix;
             m_caption = s.simplified();
-            emit captionChanged();
+            updateCaption();
+            if (m_captionSuffix == oldSuffix) {
+                // don't emit caption change twice
+                // it already got emitted by the changing suffix
+                emit captionChanged();
+            }
         }
     );
     connect(shellSurface, &T::moveRequested, this,
@@ -571,7 +578,15 @@ QString ShellClient::caption(bool full) const
 void ShellClient::updateCaption()
 {
     const QString oldSuffix = m_captionSuffix;
-    m_captionSuffix = shortcutCaptionSuffix();
+    const auto shortcut = shortcutCaptionSuffix();
+    m_captionSuffix = shortcut;
+    if ((!isSpecialWindow() || isToolbar()) && findClientWithSameCaption()) {
+        int i = 2;
+        do {
+            m_captionSuffix = shortcut + QLatin1String(" <") + QString::number(i) + QLatin1Char('>');
+            i++;
+        } while (findClientWithSameCaption());
+    }
     if (m_captionSuffix != oldSuffix) {
         emit captionChanged();
     }

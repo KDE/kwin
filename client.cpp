@@ -1463,16 +1463,12 @@ void Client::setCaption(const QString& _s, bool force)
     }
     QString shortcut_suffix = shortcutCaptionSuffix();
     cap_suffix = machine_suffix + shortcut_suffix;
-    auto fetchNameInternalPredicate = [this](const Client *cl) {
-        return (!cl->isSpecialWindow() || cl->isToolbar()) &&
-                cl != this && cl->caption() == caption();
-    };
-    if ((!isSpecialWindow() || isToolbar()) && workspace()->findClient(fetchNameInternalPredicate)) {
+    if ((!isSpecialWindow() || isToolbar()) && findClientWithSameCaption()) {
         int i = 2;
         do {
             cap_suffix = machine_suffix + QLatin1String(" <") + QString::number(i) + QLatin1Char('>') + LRM;
             i++;
-        } while (workspace()->findClient(fetchNameInternalPredicate));
+        } while (findClientWithSameCaption());
         info->setVisibleName(caption().toUtf8().constData());
         reset_name = false;
     }
