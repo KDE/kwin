@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "cursor.h"
 #include "options.h"
-#include "scene.h"
+#include "platform.h"
 #include "workspace.h"
 
 #include <KDecoration2/DecoratedClient>
@@ -290,11 +290,7 @@ bool DecoratedClientImpl::isApplicationMenuActive() const
 
 void DecoratedClientImpl::createRenderer()
 {
-    if (Compositor::self()->hasScene()) {
-        m_renderer = Compositor::self()->scene()->createDecorationRenderer(this);
-    } else {
-        m_renderer = new X11Renderer(this);
-    }
+    m_renderer = kwinApp()->platform()->createDecorationRenderer(this);
 }
 
 void DecoratedClientImpl::destroyRenderer()

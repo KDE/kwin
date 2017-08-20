@@ -60,6 +60,7 @@ public:
 
     void updateXTime() override;
     OutlineVisual *createOutline(Outline *outline) override;
+    Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) override;
 
 protected:
     void doHideCursor() override;

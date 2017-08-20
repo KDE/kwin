@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "overlaywindow_x11.h"
 #include "non_composited_outline.h"
+#include "x11_decoration_renderer.h"
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -344,6 +345,15 @@ OutlineVisual *X11StandalonePlatform::createOutline(Outline *outline)
         ret = new NonCompositedOutlineVisual(outline);
     }
     return ret;
+}
+
+Decoration::Renderer *X11StandalonePlatform::createDecorationRenderer(Decoration::DecoratedClientImpl *client)
+{
+    auto renderer = Platform::createDecorationRenderer(client);
+    if (!renderer) {
+        renderer = new Decoration::X11Renderer(client);
+    }
+    return renderer;
 }
 
 }

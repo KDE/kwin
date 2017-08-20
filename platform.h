@@ -50,6 +50,12 @@ class ScreenEdges;
 class Toplevel;
 class WaylandCursorTheme;
 
+namespace Decoration
+{
+class Renderer;
+class DecoratedClientImpl;
+}
+
 class KWIN_EXPORT Platform : public QObject
 {
     Q_OBJECT
@@ -324,6 +330,13 @@ public:
      * Default implementation creates an OutlineVisual suited for composited usage.
      **/
     virtual OutlineVisual *createOutline(Outline *outline);
+
+    /**
+     * Creates the Decoration::Renderer for the given @p client.
+     *
+     * The default implementation creates a Renderer suited for the Compositor, @c nullptr if there is no Compositor.
+     **/
+    virtual Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client);
 
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);

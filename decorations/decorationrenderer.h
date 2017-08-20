@@ -23,11 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QRegion>
 
-#include <xcb/xcb.h>
-
 #include <kwin_export.h>
-
-class QTimer;
 
 namespace KWin
 {
@@ -82,23 +78,6 @@ private:
     DecoratedClientImpl *m_client;
     QRegion m_scheduled;
     bool m_imageSizesDirty;
-};
-
-class X11Renderer : public Renderer
-{
-    Q_OBJECT
-public:
-    explicit X11Renderer(DecoratedClientImpl *client);
-    virtual ~X11Renderer();
-
-    void reparent(Deleted *deleted) override;
-
-protected:
-    void render() override;
-
-private:
-    QTimer *m_scheduleTimer;
-    xcb_gcontext_t m_gc;
 };
 
 }
