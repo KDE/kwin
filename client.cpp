@@ -1513,22 +1513,6 @@ void Client::fetchIconicName()
     }
 }
 
-/**
- * \reimp
- */
-QString Client::caption(bool full) const
-{
-    QString cap = cap_normal;
-    if (full) {
-        cap += cap_suffix;
-        if (unresponsive()) {
-            cap += QLatin1String(" ");
-            cap += i18nc("Application is not responding, appended to window title", "(Not Responding)");
-        }
-    }
-    return cap;
-}
-
 bool Client::tabTo(Client *other, bool behind, bool activate)
 {
     Q_ASSERT(other && other != this);

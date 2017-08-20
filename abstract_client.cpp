@@ -1766,4 +1766,17 @@ AbstractClient *AbstractClient::findClientWithSameCaption() const
     return workspace()->findAbstractClient(fetchNameInternalPredicate);
 }
 
+QString AbstractClient::caption(bool full) const
+{
+    QString cap = captionNormal();
+    if (full) {
+        cap += captionSuffix();
+        if (unresponsive()) {
+            cap += QLatin1String(" ");
+            cap += i18nc("Application is not responding, appended to window title", "(Not Responding)");
+        }
+    }
+    return cap;
+}
+
 }

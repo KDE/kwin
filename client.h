@@ -219,7 +219,6 @@ public:
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing() { return blocks_compositing; }
 
-    QString caption(bool full = true) const override;
     QString captionNormal() const override {
         return cap_normal;
     }

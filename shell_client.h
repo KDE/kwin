@@ -63,7 +63,6 @@ public:
     }
 
     void blockActivityUpdates(bool b = true) override;
-    QString caption(bool full = true) const override;
     QString captionNormal() const override {
         return m_caption;
     }

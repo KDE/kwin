@@ -348,7 +348,7 @@ public:
      * @see captionNormal
      * @see captionSuffix
      **/
-    virtual QString caption(bool full = true) const = 0;
+    QString caption(bool full = true) const;
     /**
      * @returns The caption as set by the AbstractClient without any suffix.
      * @see caption

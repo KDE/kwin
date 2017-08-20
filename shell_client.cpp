@@ -566,15 +566,6 @@ void ShellClient::blockActivityUpdates(bool b)
     Q_UNUSED(b)
 }
 
-QString ShellClient::caption(bool full) const
-{
-    QString caption = m_caption;
-    if (full) {
-        caption += m_captionSuffix;
-    }
-    return caption;
-}
-
 void ShellClient::updateCaption()
 {
     const QString oldSuffix = m_captionSuffix;
