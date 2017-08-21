@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenedges_filter.h"
 #include "options.h"
 #include "overlaywindow_x11.h"
+#include "non_composited_outline.h"
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -335,5 +336,14 @@ void X11StandalonePlatform::updateXTime()
     kwinApp()->setX11Time(QX11Info::getTimestamp(), Application::TimestampUpdate::Always);
 }
 
+OutlineVisual *X11StandalonePlatform::createOutline(Outline *outline)
+{
+    // first try composited Outline
+    auto ret = Platform::createOutline(outline);
+    if (!ret) {
+        ret = new NonCompositedOutlineVisual(outline);
+    }
+    return ret;
+}
 
 }

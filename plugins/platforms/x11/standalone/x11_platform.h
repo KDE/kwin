@@ -59,6 +59,7 @@ public:
     OverlayWindow *createOverlayWindow() override;
 
     void updateXTime() override;
+    OutlineVisual *createOutline(Outline *outline) override;
 
 protected:
     void doHideCursor() override;

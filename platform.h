@@ -42,6 +42,8 @@ namespace KWin
 class Edge;
 class OverlayWindow;
 class OpenGLBackend;
+class Outline;
+class OutlineVisual;
 class QPainterBackend;
 class Screens;
 class ScreenEdges;
@@ -316,6 +318,12 @@ public:
      * might not be working. E.g. synced X11 window resizing
      **/
     virtual void updateXTime();
+
+    /**
+     * Creates the OutlineVisual for the given @p outline.
+     * Default implementation creates an OutlineVisual suited for composited usage.
+     **/
+    virtual OutlineVisual *createOutline(Outline *outline);
 
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);

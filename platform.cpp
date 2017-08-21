@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "input.h"
 #include "overlaywindow.h"
+#include "outline.h"
 #include "pointer_input.h"
 #include "scene_opengl.h"
 #include "screenedge.h"
@@ -468,6 +469,14 @@ OverlayWindow *Platform::createOverlayWindow()
 
 void Platform::updateXTime()
 {
+}
+
+OutlineVisual *Platform::createOutline(Outline *outline)
+{
+    if (Compositor::compositing()) {
+       return new CompositedOutlineVisual(outline);
+    }
+    return nullptr;
 }
 
 }

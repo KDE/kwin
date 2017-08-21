@@ -20,10 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KWIN_OUTLINE_H
 #define KWIN_OUTLINE_H
-#include "xcbutils.h"
 #include <kwinglobals.h>
 #include <QRect>
-#include <QWidget>
+#include <QObject>
+
+#include <kwin_export.h>
 
 class QQmlContext;
 class QQmlComponent;
@@ -125,7 +126,7 @@ private:
     KWIN_SINGLETON(Outline)
 };
 
-class OutlineVisual
+class KWIN_EXPORT OutlineVisual
 {
 public:
     OutlineVisual(Outline *outline);
@@ -150,25 +151,6 @@ private:
     QScopedPointer<QQmlContext> m_qmlContext;
     QScopedPointer<QQmlComponent> m_qmlComponent;
     QScopedPointer<QObject> m_mainItem;
-};
-
-class NonCompositedOutlineVisual : public OutlineVisual
-{
-public:
-    NonCompositedOutlineVisual(Outline *outline);
-    virtual ~NonCompositedOutlineVisual();
-    virtual void show();
-    virtual void hide();
-
-private:
-    // TODO: variadic template arguments for adding method arguments
-    template <typename T>
-    void forEachWindow(T method);
-    bool m_initialized;
-    Xcb::Window m_topOutline;
-    Xcb::Window m_rightOutline;
-    Xcb::Window m_bottomOutline;
-    Xcb::Window m_leftOutline;
 };
 
 inline
@@ -199,16 +181,6 @@ inline
 const Outline *OutlineVisual::outline() const
 {
     return m_outline;
-}
-
-template <typename T>
-inline
-void NonCompositedOutlineVisual::forEachWindow(T method)
-{
-    (m_topOutline.*method)();
-    (m_rightOutline.*method)();
-    (m_bottomOutline.*method)();
-    (m_leftOutline.*method)();
 }
 
 inline

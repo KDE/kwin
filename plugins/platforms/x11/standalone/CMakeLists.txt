@@ -7,6 +7,7 @@ set(X11PLATFORM_SOURCES
     windowselector.cpp
     overlaywindow_x11.cpp
     screenedges_filter.cpp
+    non_composited_outline.cpp
 )
 
 if(X11_Xinput_FOUND)
