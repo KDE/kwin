@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_X11_XINPUT
 #include "xinputintegration.h"
 #endif
+#include "abstract_client.h"
 #include "eglonxbackend.h"
 #include "keyboard_input.h"
 #include "logging.h"
@@ -37,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "overlaywindow_x11.h"
 #include "non_composited_outline.h"
+#include "workspace.h"
 #include "x11_decoration_renderer.h"
 
 #include <KConfigGroup>
@@ -354,6 +356,48 @@ Decoration::Renderer *X11StandalonePlatform::createDecorationRenderer(Decoration
         renderer = new Decoration::X11Renderer(client);
     }
     return renderer;
+}
+
+void X11StandalonePlatform::invertScreen()
+{
+    using namespace Xcb::RandR;
+    bool succeeded = false;
+
+    if (Xcb::Extensions::self()->isRandrAvailable()) {
+        const auto active_client = workspace()->activeClient();
+        ScreenResources res((active_client && active_client->window() != XCB_WINDOW_NONE) ? active_client->window() : rootWindow());
+
+        if (!res.isNull()) {
+            for (int j = 0; j < res->num_crtcs; ++j) {
+                auto crtc = res.crtcs()[j];
+                CrtcGamma gamma(crtc);
+                if (gamma.isNull()) {
+                    continue;
+                }
+                if (gamma->size) {
+                    qCDebug(KWIN_CORE) << "inverting screen using xcb_randr_set_crtc_gamma";
+                    const int half = gamma->size / 2 + 1;
+
+                    uint16_t *red = gamma.red();
+                    uint16_t *green = gamma.green();
+                    uint16_t *blue = gamma.blue();
+                    for (int i = 0; i < half; ++i) {
+                        auto invert = [&gamma, i](uint16_t *ramp) {
+                            qSwap(ramp[i], ramp[gamma->size - 1 - i]);
+                        };
+                        invert(red);
+                        invert(green);
+                        invert(blue);
+                    }
+                    xcb_randr_set_crtc_gamma(connection(), crtc, gamma->size, red, green, blue);
+                    succeeded = true;
+                }
+            }
+        }
+    }
+    if (!succeeded) {
+        Platform::invertScreen();
+    }
 }
 
 }

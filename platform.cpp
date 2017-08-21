@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_egl_backend.h"
 #include "composite.h"
 #include "cursor.h"
+#include "effects.h"
 #include "input.h"
 #include "overlaywindow.h"
 #include "outline.h"
@@ -485,6 +486,16 @@ Decoration::Renderer *Platform::createDecorationRenderer(Decoration::DecoratedCl
         Compositor::self()->scene()->createDecorationRenderer(client);
     }
     return nullptr;
+}
+
+void Platform::invertScreen()
+{
+    if (effects) {
+        if (Effect *inverter = static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::ScreenInversion)) {
+            qCDebug(KWIN_CORE) << "inverting screen using Effect plugin";
+            QMetaObject::invokeMethod(inverter, "toggleScreenInversion", Qt::DirectConnection);
+        }
+    }
 }
 
 }

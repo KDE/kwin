@@ -1705,54 +1705,7 @@ void Workspace::slotWindowResize()
 
 void Workspace::slotInvertScreen()
 {
-    using namespace Xcb::RandR;
-    bool succeeded = false;
-
-    if (Xcb::Extensions::self()->isRandrAvailable()) {
-        ScreenResources res((active_client && active_client->window() != XCB_WINDOW_NONE) ? active_client->window() : rootWindow());
-
-        if (!res.isNull()) {
-            for (int j = 0; j < res->num_crtcs; ++j) {
-                auto crtc = res.crtcs()[j];
-                CrtcGamma gamma(crtc);
-                if (gamma.isNull()) {
-                    continue;
-                }
-                if (gamma->size) {
-                    qCDebug(KWIN_CORE) << "inverting screen using xcb_randr_set_crtc_gamma";
-                    const int half = gamma->size / 2 + 1;
-
-                    uint16_t *red = gamma.red();
-                    uint16_t *green = gamma.green();
-                    uint16_t *blue = gamma.blue();
-                    for (int i = 0; i < half; ++i) {
-                        auto invert = [&gamma, i](uint16_t *ramp) {
-                            qSwap(ramp[i], ramp[gamma->size - 1 - i]);
-                        };
-                        invert(red);
-                        invert(green);
-                        invert(blue);
-                    }
-                    xcb_randr_set_crtc_gamma(connection(), crtc, gamma->size, red, green, blue);
-                    succeeded = true;
-                }
-            }
-        }
-    }
-    if (succeeded)
-        return;
-
-    //BEGIN effect plugin inversion - atm only works with OpenGL and has an overhead to it
-    if (effects) {
-        if (Effect *inverter = static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::ScreenInversion)) {
-            qCDebug(KWIN_CORE) << "inverting screen using Effect plugin";
-            QMetaObject::invokeMethod(inverter, "toggleScreenInversion", Qt::DirectConnection);
-        }
-    }
-
-    if (!succeeded)
-        qCDebug(KWIN_CORE) << "sorry - neither Xrandr, nor XF86VidModeSetGammaRamp worked and there's no inversion supplying effect plugin either";
-
+    kwinApp()->platform()->invertScreen();
 }
 
 #undef USABLE_ACTIVE_CLIENT

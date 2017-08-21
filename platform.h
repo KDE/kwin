@@ -338,6 +338,12 @@ public:
      **/
     virtual Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client);
 
+    /**
+     * Platform specific way to invert the screen.
+     * Default implementation invokes the invert effect
+     **/
+    virtual void invertScreen();
+
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);

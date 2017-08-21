@@ -62,6 +62,8 @@ public:
     OutlineVisual *createOutline(Outline *outline) override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) override;
 
+    void invertScreen() override;
+
 protected:
     void doHideCursor() override;
     void doShowCursor() override;
