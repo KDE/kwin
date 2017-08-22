@@ -1,5 +1,5 @@
 project(KWIN)
-set(PROJECT_VERSION "5.10.4")
+set(PROJECT_VERSION "5.10.5")
 set(PROJECT_VERSION_MAJOR 5)
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
