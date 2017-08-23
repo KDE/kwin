@@ -64,6 +64,7 @@ DBusInterface::DBusInterface(QObject *parent)
     }
     dbus.connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
                  Workspace::self(), SLOT(slotReloadConfig()));
+    connect(kwinApp(), &Application::x11ConnectionChanged, this, &DBusInterface::announceService);
 }
 
 void DBusInterface::becomeKWinService(const QString &service)
@@ -81,13 +82,18 @@ DBusInterface::~DBusInterface()
     QDBusConnection::sessionBus().unregisterService(m_serviceName);
     // KApplication automatically also grabs org.kde.kwin, so it's often been used externally - ensure to free it as well
     QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin"));
-    xcb_delete_property(connection(), rootWindow(), atoms->kwin_dbus_service);
+    if (kwinApp()->x11Connection()) {
+        xcb_delete_property(kwinApp()->x11Connection(), kwinApp()->x11RootWindow(), atoms->kwin_dbus_service);
+    }
 }
 
 void DBusInterface::announceService()
 {
+    if (!kwinApp()->x11Connection()) {
+        return;
+    }
     const QByteArray service = m_serviceName.toUtf8();
-    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, rootWindow(), atoms->kwin_dbus_service,
+    xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, kwinApp()->x11RootWindow(), atoms->kwin_dbus_service,
                         atoms->utf8_string, 8, service.size(), service.constData());
 }
 
