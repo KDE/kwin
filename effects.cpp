@@ -93,6 +93,26 @@ static void deleteWindowProperty(Window win, long int atom)
     xcb_delete_property(connection(), win, atom);
 }
 
+static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
+{
+    auto c = kwinApp()->x11Connection();
+    if (!c) {
+        return XCB_ATOM_NONE;
+    }
+    // get the atom for the propertyName
+    ScopedCPointer<xcb_intern_atom_reply_t> atomReply(xcb_intern_atom_reply(c,
+        xcb_intern_atom_unchecked(c, false, propertyName.size(), propertyName.constData()),
+        NULL));
+    if (atomReply.isNull()) {
+        return XCB_ATOM_NONE;
+    }
+    // announce property on root window
+    unsigned char dummy = 0;
+    xcb_change_property(c, XCB_PROP_MODE_REPLACE, kwinApp()->x11RootWindow(), atomReply->atom, atomReply->atom, 8, 1, &dummy);
+    // TODO: add to _NET_SUPPORTED
+    return atomReply->atom;
+}
+
 //---------------------
 
 EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
@@ -198,6 +218,22 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 #endif
     connect(ScreenEdges::self(), &ScreenEdges::approaching, this, &EffectsHandler::screenEdgeApproaching);
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
+
+    connect(kwinApp(), &Application::x11ConnectionChanged, this,
+        [this] {
+            registered_atoms.clear();
+            for (auto it = m_propertiesForEffects.keyBegin(); it != m_propertiesForEffects.keyEnd(); it++) {
+                const auto atom = registerSupportProperty(*it);
+                if (atom == XCB_ATOM_NONE) {
+                    continue;
+                }
+                m_compositor->keepSupportProperty(atom);
+                m_managedProperties.insert(*it, atom);
+                registerPropertyType(atom, true);
+            }
+        }
+    );
+
     // connect all clients
     for (Client *c : ws->clientList()) {
         setupClientConnections(c);
@@ -794,24 +830,17 @@ xcb_atom_t EffectsHandlerImpl::announceSupportProperty(const QByteArray &propert
         if (!it.value().contains(effect)) {
             it.value().append(effect);
         }
-        return m_managedProperties.value(propertyName);
+        return m_managedProperties.value(propertyName, XCB_ATOM_NONE);
     }
-    // get the atom for the propertyName
-    ScopedCPointer<xcb_intern_atom_reply_t> atomReply(xcb_intern_atom_reply(connection(),
-        xcb_intern_atom_unchecked(connection(), false, propertyName.size(), propertyName.constData()),
-        NULL));
-    if (atomReply.isNull()) {
-        return XCB_ATOM_NONE;
-    }
-    m_compositor->keepSupportProperty(atomReply->atom);
-    // announce property on root window
-    unsigned char dummy = 0;
-    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, rootWindow(), atomReply->atom, atomReply->atom, 8, 1, &dummy);
-    // TODO: add to _NET_SUPPORTED
-    m_managedProperties.insert(propertyName, atomReply->atom);
     m_propertiesForEffects.insert(propertyName, QList<Effect*>() << effect);
-    registerPropertyType(atomReply->atom, true);
-    return atomReply->atom;
+    const auto atom = registerSupportProperty(propertyName);
+    if (atom == XCB_ATOM_NONE) {
+        return atom;
+    }
+    m_compositor->keepSupportProperty(atom);
+    m_managedProperties.insert(propertyName, atom);
+    registerPropertyType(atom, true);
+    return atom;
 }
 
 void EffectsHandlerImpl::removeSupportProperty(const QByteArray &propertyName, Effect *effect)
