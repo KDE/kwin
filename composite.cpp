@@ -464,10 +464,10 @@ void Compositor::deleteUnusedSupportProperties()
         m_unusedSupportPropertyTimer.start();
         return;
     }
-    if (kwinApp()->x11Connection()) {
+    if (const auto c = kwinApp()->x11Connection()) {
         foreach (const xcb_atom_t &atom, m_unusedSupportProperties) {
             // remove property from root window
-            xcb_delete_property(connection(), rootWindow(), atom);
+            xcb_delete_property(c, kwinApp()->x11RootWindow(), atom);
         }
     }
 }
