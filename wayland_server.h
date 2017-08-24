@@ -56,6 +56,7 @@ class QtSurfaceExtensionInterface;
 class OutputManagementInterface;
 class OutputConfigurationInterface;
 class XdgShellInterface;
+class XdgForeignUnstableInterface;
 }
 }
 
@@ -229,6 +230,7 @@ private:
         KWayland::Server::ClientConnection *client = nullptr;
         QPointer<KWayland::Server::DataDeviceInterface> ddi;
     } m_xclipbaordSync;
+    KWayland::Server::XdgForeignUnstableInterface *m_XdgForeign = nullptr;
     QList<ShellClient*> m_clients;
     QList<ShellClient*> m_internalClients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;

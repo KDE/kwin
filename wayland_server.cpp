@@ -158,6 +158,7 @@ void WaylandServer::createSurface(T *surface)
     } else {
         connect(client, &ShellClient::windowShown, this, &WaylandServer::shellClientShown);
     }
+    client->installXdgForeignUnstableInterface(m_XdgForeign);
 }
 
 bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
@@ -300,6 +301,9 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_outputManagement->create();
 
     m_display->createSubCompositor(m_display)->create();
+
+    m_XdgForeign = m_display->createXdgForeignUnstableInterface(m_display);
+    m_XdgForeign->create();
 
     return true;
 }
