@@ -1722,7 +1722,9 @@ void Client::getIcons()
 
 void Client::getSyncCounter()
 {
-    if (!Xcb::Extensions::self()->isSyncAvailable())
+    // TODO: make sync working on XWayland
+    static const bool isX11 = kwinApp()->operationMode() == Application::OperationModeX11;
+    if (!Xcb::Extensions::self()->isSyncAvailable() || !isX11)
         return;
 
     Xcb::Property syncProp(false, window(), atoms->net_wm_sync_request_counter, XCB_ATOM_CARDINAL, 0, 1);
