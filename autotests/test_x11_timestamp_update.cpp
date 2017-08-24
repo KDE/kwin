@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTest>
 #include <QX11Info>
 
+#include <KPluginMetaData>
+
 #include "main.h"
 #include "utils.h"
 
@@ -44,6 +46,7 @@ X11TestApplication::X11TestApplication(int &argc, char **argv)
 {
     setX11Connection(QX11Info::connection());
     setX11RootWindow(QX11Info::appRootWindow());
+    initPlatform(KPluginMetaData(QStringLiteral(KWINBACKENDPATH)));
 }
 
 X11TestApplication::~X11TestApplication()

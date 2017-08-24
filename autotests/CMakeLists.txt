@@ -359,8 +359,10 @@ ecm_mark_as_test(testGestures)
 # Test X11 TimestampUpdate
 ########################################################
 add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
+target_compile_definitions(testX11TimestampUpdate PRIVATE KWINBACKENDPATH="${CMAKE_BINARY_DIR}/plugins/platforms/x11/standalone/KWinX11Platform.so")
 target_link_libraries(testX11TimestampUpdate
     Qt5::Test
+    KF5::CoreAddons
     kwin
 )
 add_test(kwin-testX11TimestampUpdate testX11TimestampUpdate)
