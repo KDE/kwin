@@ -57,6 +57,8 @@ public:
 
     OverlayWindow *createOverlayWindow() override;
 
+    void updateXTime() override;
+
 protected:
     void doHideCursor() override;
     void doShowCursor() override;

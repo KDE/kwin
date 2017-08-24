@@ -532,7 +532,6 @@ set(kwin_QT_LIBS
     Qt5::DBus
     Qt5::Quick
     Qt5::Script
-    Qt5::X11Extras
 )
 
 set(kwin_KDE_LIBS
@@ -614,7 +613,7 @@ generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 target_link_libraries(kwin kwinglutils ${epoxy_LIBRARY})
 
 kf5_add_kdeinit_executable(kwin_x11 main_x11.cpp)
-target_link_libraries(kdeinit_kwin_x11 kwin KF5::Crash)
+target_link_libraries(kdeinit_kwin_x11 kwin KF5::Crash Qt5::X11Extras)
 
 install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP )
 install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )

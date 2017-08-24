@@ -308,6 +308,15 @@ public:
      **/
     virtual OverlayWindow *createOverlayWindow();
 
+    /**
+     * Allows a platform to update the X11 timestamp.
+     * Mostly for the X11 standalone platform to interact with QX11Info.
+     *
+     * Default implementation does nothing. This means code relying on the X timestamp being up to date,
+     * might not be working. E.g. synced X11 window resizing
+     **/
+    virtual void updateXTime();
+
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);

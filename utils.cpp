@@ -35,12 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QDebug>
 
-#include <QX11Info>
 #include <X11/Xlib.h>
 
 #include <stdio.h>
 
 #include "atoms.h"
+#include "platform.h"
 #include "workspace.h"
 
 #include <signal.h>
@@ -72,20 +72,9 @@ StrutRect::StrutRect(const StrutRect& other)
 #endif
 
 #ifndef KCMRULES
-/*
- Updates xTime(). This used to simply fetch current timestamp from the server,
- but that can cause xTime() to be newer than timestamp of events that are
- still in our events queue, thus e.g. making XSetInputFocus() caused by such
- event to be ignored. Therefore events queue is searched for first
- event with timestamp, and extra PropertyNotify is generated in order to make
- sure such event is found.
-*/
 void updateXTime()
 {
-    // NOTE: QX11Info::getTimestamp does not yet search the event queue as the old
-    // solution did. This means there might be regressions currently. See the
-    // documentation above on how it should be done properly.
-    kwinApp()->setX11Time(QX11Info::getTimestamp(), Application::TimestampUpdate::Always);
+    kwinApp()->platform()->updateXTime();
 }
 
 static int server_grab_count = 0;

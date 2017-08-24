@@ -466,4 +466,8 @@ OverlayWindow *Platform::createOverlayWindow()
     return nullptr;
 }
 
+void Platform::updateXTime()
+{
+}
+
 }
