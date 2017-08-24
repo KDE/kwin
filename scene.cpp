@@ -399,6 +399,10 @@ void Scene::windowAdded(Toplevel *c)
     m_windows[ c ] = w;
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
+    //A change of scale won't affect the geometry in compositor co-ordinates, but will affect the window quads.
+    if (c->surface()) {
+        connect(c->surface(), &KWayland::Server::SurfaceInterface::scaleChanged, this, std::bind(&Scene::windowGeometryShapeChanged, this, c));
+    }
     c->effectWindow()->setSceneWindow(w);
     c->getShadow();
     w->updateShadow(c->shadow());
