@@ -127,6 +127,9 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     }
     const auto touchBorders = DesktopGridConfig::touchBorderActivate();
     for (int i : touchBorders) {
+        if (!relevantBorders.contains(ElectricBorder(i))) {
+            continue;
+        }
         effects->registerTouchBorder(ElectricBorder(i), m_activateAction);
     }
 }

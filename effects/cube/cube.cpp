@@ -228,8 +228,11 @@ void CubeEffect::reconfigure(ReconfigureFlags)
         effects->unregisterTouchBorder(e, m_sphereAction);
         effects->unregisterTouchBorder(e, m_cylinderAction);
     }
-    auto touchEdge = [] (const QList<int> touchBorders, QAction *action) {
+    auto touchEdge = [&relevantBorders] (const QList<int> touchBorders, QAction *action) {
         for (int i : touchBorders) {
+            if (!relevantBorders.contains(ElectricBorder(i))) {
+                continue;
+            }
             effects->registerTouchBorder(ElectricBorder(i), action);
         }
     };

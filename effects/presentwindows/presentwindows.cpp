@@ -166,8 +166,11 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
         effects->unregisterTouchBorder(e, m_exposeAllAction);
         effects->unregisterTouchBorder(e, m_exposeClassAction);
     }
-    auto touchEdge = [] (const QList<int> touchBorders, QAction *action) {
+    auto touchEdge = [&relevantBorders] (const QList<int> touchBorders, QAction *action) {
         for (int i : touchBorders) {
+            if (!relevantBorders.contains(ElectricBorder(i))) {
+                continue;
+            }
             effects->registerTouchBorder(ElectricBorder(i), action);
         }
     };
