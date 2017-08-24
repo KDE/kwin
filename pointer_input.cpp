@@ -652,10 +652,11 @@ void PointerInputRedirection::warpXcbOnSurfaceLeft(KWayland::Server::SurfaceInte
         // No XWayland, no point in warping the x cursor
         return;
     }
-    if (!kwinApp()->x11Connection()) {
+    const auto c = kwinApp()->x11Connection();
+    if (!c) {
         return;
     }
-    static bool s_hasXWayland119 = xcb_get_setup(kwinApp()->x11Connection())->release_number >= 11900000;
+    static bool s_hasXWayland119 = xcb_get_setup(c)->release_number >= 11900000;
     if (s_hasXWayland119) {
         return;
     }
@@ -669,8 +670,8 @@ void PointerInputRedirection::warpXcbOnSurfaceLeft(KWayland::Server::SurfaceInte
         return;
     }
     // warp pointer to 0/0 to trigger leave events on previously focused X window
-    xcb_warp_pointer(connection(), XCB_WINDOW_NONE, rootWindow(), 0, 0, 0, 0, 0, 0),
-    xcb_flush(connection());
+    xcb_warp_pointer(c, XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 0, 0),
+    xcb_flush(c);
 }
 
 QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) const
