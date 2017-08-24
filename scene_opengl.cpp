@@ -428,7 +428,7 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         ? hasGLVersion(3, 0)
         : hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
 
-    if (hasGLExtension("GL_EXT_x11_sync_object") && haveSyncObjects) {
+    if (hasGLExtension("GL_EXT_x11_sync_object") && haveSyncObjects && kwinApp()->operationMode() == Application::OperationModeX11) {
         const QByteArray useExplicitSync = qgetenv("KWIN_EXPLICIT_SYNC");
 
         if (useExplicitSync != "0") {
