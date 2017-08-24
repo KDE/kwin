@@ -28,12 +28,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
+#include "screens.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/decoratedclient.h"
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
 
 #include <KWayland/Client/surface.h>
+#include <KWayland/Server/display.h>
 #include <KWayland/Server/clientconnection.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shell_interface.h>
@@ -173,6 +175,9 @@ void ShellClient::initSurface(T *shellSurface)
     connect(shellSurface, &T::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
 
     connect(shellSurface, &T::transientForChanged, this, &ShellClient::setTransient);
+
+    connect(this, &ShellClient::geometryChanged, this, &ShellClient::updateClientOutputs);
+    connect(screens(), &Screens::changed, this, &ShellClient::updateClientOutputs);
 }
 
 void ShellClient::init()
@@ -1520,6 +1525,19 @@ void ShellClient::popupDone()
     if (m_shellSurface) {
         m_shellSurface->popupDone();
     }
+}
+
+void ShellClient::updateClientOutputs()
+{
+    QVector<OutputInterface*> clientOutputs;
+    const auto outputs = waylandServer()->display()->outputs();
+    for (OutputInterface* output: qAsConst(outputs)) {
+        const QRect outputGeom(output->globalPosition(), output->pixelSize() / output->scale());
+        if (geometry().intersects(outputGeom)) {
+            clientOutputs << output;
+        }
+    }
+    surface()->setOutputs(clientOutputs);
 }
 
 }

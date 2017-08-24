@@ -185,6 +185,7 @@ private:
     void markAsMapped();
     void setTransient();
     bool shouldExposeToWindowManagement();
+    void updateClientOutputs();
     KWayland::Server::XdgShellSurfaceInterface::States xdgSurfaceStates() const;
     void updateShowOnScreenEdge();
     static void deleteClient(ShellClient *c);

@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/shell.h>
+#include <KWayland/Client/output.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
@@ -59,6 +60,8 @@ private Q_SLOTS:
     void testMapUnmapMap();
     void testDesktopPresenceChanged();
     void testTransientPositionAfterRemap();
+    void testWindowOutputs_data();
+    void testWindowOutputs();
     void testMinimizeActiveWindow_data();
     void testMinimizeActiveWindow();
     void testFullscreen_data();
@@ -81,6 +84,8 @@ void TestShellClient::initTestCase()
 {
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWayland::Client::Output*>();
+
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -267,6 +272,52 @@ void TestShellClient::testTransientPositionAfterRemap()
     Test::render(transientSurface.data(), QSize(50, 40), Qt::blue);
     QVERIFY(windowShownSpy.wait());
     QCOMPARE(transient->geometry(), QRect(c->geometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
+}
+
+void TestShellClient::testWindowOutputs_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+}
+
+void TestShellClient::testWindowOutputs()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    auto size = QSize(200,200);
+
+    QSignalSpy outputEnteredSpy(surface.data(), &Surface::outputEntered);
+    QSignalSpy outputLeftSpy(surface.data(), &Surface::outputLeft);
+
+    auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
+    //move to be in the first screen
+    c->setGeometry(QRect(QPoint(100,100), size));
+    //we don't don't know where the compositor first placed this window,
+    //this might fire, it might not
+    outputEnteredSpy.wait(5);
+    outputEnteredSpy.clear();
+
+    QCOMPARE(surface->outputs().count(), 1);
+    QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(0,0));
+
+    //move to overlapping both first and second screen
+    c->setGeometry(QRect(QPoint(1250,100), size));
+    QVERIFY(outputEnteredSpy.wait());
+    QCOMPARE(outputEnteredSpy.count(), 1);
+    QCOMPARE(outputLeftSpy.count(), 0);
+    QCOMPARE(surface->outputs().count(), 2);
+    QVERIFY(surface->outputs()[0] != surface->outputs()[1]);
+
+    //move entirely into second screen
+    c->setGeometry(QRect(QPoint(1400,100), size));
+    QVERIFY(outputLeftSpy.wait());
+    QCOMPARE(outputEnteredSpy.count(), 1);
+    QCOMPARE(outputLeftSpy.count(), 1);
+    QCOMPARE(surface->outputs().count(), 1);
+    QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(1280,0));
 }
 
 void TestShellClient::testMinimizeActiveWindow_data()
