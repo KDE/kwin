@@ -190,7 +190,7 @@ extern bool is_multihead;
 
 void Compositor::slotCompositingOptionsInitialized()
 {
-    claimCompositorSelection();
+    setupX11Support();
 
     // There might still be a deleted around, needs to be cleared before creating the scene (BUG 333275)
     if (Workspace::self()) {
@@ -290,7 +290,7 @@ void Compositor::slotCompositingOptionsInitialized()
 
 void Compositor::claimCompositorSelection()
 {
-    if (!cm_selection && kwinApp()->x11Connection()) {
+    if (!cm_selection) {
         char selection_name[ 100 ];
         sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
         cm_selection = new CompositorSelectionOwner(selection_name);
@@ -306,15 +306,28 @@ void Compositor::claimCompositorSelection()
     }
 }
 
+void Compositor::setupX11Support()
+{
+    auto c = kwinApp()->x11Connection();
+    if (!c) {
+        delete cm_selection;
+        cm_selection = nullptr;
+        return;
+    }
+    claimCompositorSelection();
+    xcb_composite_redirect_subwindows(c, kwinApp()->x11RootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+}
+
 void Compositor::startupWithWorkspace()
 {
     if (!m_starting) {
         return;
     }
+    connect(kwinApp(), &Application::x11ConnectionChanged, this, &Compositor::setupX11Support, Qt::UniqueConnection);
     Workspace::self()->markXStackingOrderAsDirty();
     Q_ASSERT(m_scene);
     connect(workspace(), &Workspace::destroyed, this, [this] { compositeTimer.stop(); });
-    claimCompositorSelection();
+    setupX11Support();
     m_xrrRefreshRate = KWin::currentRefreshRate();
     fpsInterval = options->maxFpsInterval();
     if (m_scene->syncsToVBlank()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
@@ -324,7 +337,6 @@ void Compositor::startupWithWorkspace()
         vBlankInterval = milliToNano(1); // no sync - DO NOT set "0", would cause div-by-zero segfaults.
     m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now" - we don't have even a slight idea when the first vsync will occur
     scheduleRepaint();
-    xcb_composite_redirect_subwindows(connection(), rootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
     new EffectsHandlerImpl(this, m_scene);   // sets also the 'effects' pointer
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::windowDeleted);
     connect(effects, SIGNAL(screenGeometryChanged(QSize)), SLOT(addRepaintFull()));
@@ -392,7 +404,9 @@ void Compositor::finish()
         c->finishCompositing();
         foreach (Deleted * c, Workspace::self()->deletedList())
         c->finishCompositing();
-        xcb_composite_unredirect_subwindows(connection(), rootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+        if (auto c = kwinApp()->x11Connection()) {
+            xcb_composite_unredirect_subwindows(c, kwinApp()->x11RootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+        }
     }
     if (waylandServer()) {
         foreach (ShellClient *c, waylandServer()->clients()) {

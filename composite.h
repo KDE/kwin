@@ -207,6 +207,7 @@ private:
      * Continues the startup after Scene And Workspace are created
      **/
     void startupWithWorkspace();
+    void setupX11Support();
 
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
