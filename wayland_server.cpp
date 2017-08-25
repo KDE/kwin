@@ -52,6 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/outputmanagement_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
 #include <KWayland/Server/xdgshell_interface.h>
+#include <KWayland/Server/xdgforeign_interface.h>
 
 // Qt
 #include <QThread>
@@ -158,7 +159,24 @@ void WaylandServer::createSurface(T *surface)
     } else {
         connect(client, &ShellClient::windowShown, this, &WaylandServer::shellClientShown);
     }
-    client->installXdgForeignUnstableInterface(m_XdgForeign);
+    //client->installXdgForeignInterface(m_XdgForeign);
+    connect(m_XdgForeign, &KWayland::Server::XdgForeignInterface::transientChanged, client, [this, client](KWayland::Server::SurfaceInterface *child, KWayland::Server::SurfaceInterface *parent) {
+        ShellClient *childClient = findClient(child);
+        //we are the parent, child is changed, manage all in this branch
+        if (findClient(parent) == client) {
+            if (!childClient || !childClient->xdgShellSurface() || !client->xdgShellSurface()) {
+                return;
+            }
+            if (client && client->surface() == parent) {
+                childClient->xdgShellSurface()->setTransientFor(client->xdgShellSurface());
+                childClient->setModal(true);
+            }
+        //we are the child, just manage parent lost in this case
+        } else if (childClient == client && !parent) {
+            childClient->xdgShellSurface()->setTransientFor(nullptr);
+            childClient->setModal(false);
+        }
+    });
 }
 
 bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)

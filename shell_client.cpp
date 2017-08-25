@@ -1320,9 +1320,6 @@ void ShellClient::setTransient()
     if (m_xdgShellPopup) {
         s = m_xdgShellPopup->transientFor().data();
     }
-    if (m_XdgForeign) {
-        s = m_XdgForeign->transientFor(surface());
-    }
     auto t = waylandServer()->findClient(s);
     if (t != transientFor()) {
         // remove from main client
@@ -1400,13 +1397,6 @@ void ShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecora
             }
         }
     );
-}
-
-void ShellClient::installXdgForeignUnstableInterface(KWayland::Server::XdgForeignUnstableInterface *foreign)
-{
-    m_XdgForeign = foreign;
-    connect(m_XdgForeign, &KWayland::Server::XdgForeignUnstableInterface::transientChanged, this, &ShellClient::setTransient);
-    setTransient();
 }
 
 bool ShellClient::shouldExposeToWindowManagement()

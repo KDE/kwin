@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "abstract_client.h"
 #include <KWayland/Server/xdgshell_interface.h>
-#include <KWayland/Server/xdgforeign_interface.h>
 
 namespace KWayland
 {
@@ -61,6 +60,9 @@ public:
 
     KWayland::Server::ShellSurfaceInterface *shellSurface() const {
         return m_shellSurface;
+    }
+    KWayland::Server::XdgShellSurfaceInterface *xdgShellSurface() const {
+        return m_xdgShellSurface;
     }
 
     void blockActivityUpdates(bool b = true) override;
@@ -126,7 +128,6 @@ public:
     void installPlasmaShellSurface(KWayland::Server::PlasmaShellSurfaceInterface *surface);
     void installQtExtendedSurface(KWayland::Server::QtExtendedSurfaceInterface *surface);
     void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
-    void installXdgForeignUnstableInterface(KWayland::Server::XdgForeignUnstableInterface *foreign);
 
     bool isInitialPositionSet() const;
 
@@ -210,7 +211,6 @@ private:
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWayland::Server::QtExtendedSurfaceInterface> m_qtExtendedSurface;
     KWayland::Server::ServerSideDecorationInterface *m_serverDecoration = nullptr;
-    QPointer<KWayland::Server::XdgForeignUnstableInterface> m_XdgForeign = nullptr;
     bool m_userNoBorder = false;
     bool m_fullScreen = false;
     bool m_transient = false;
