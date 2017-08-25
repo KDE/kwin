@@ -114,6 +114,11 @@ public:
     ShellClient *findClient(QWindow *w) const;
 
     /**
+     * return a transient parent of a surface imported with the foreign protocol, if any
+     */
+    KWayland::Server::SurfaceInterface *findForeignTransientForSurface(KWayland::Server::SurfaceInterface *surface);
+
+    /**
      * @returns file descriptor for Xwayland to connect to.
      **/
     int createXWaylandConnection();
@@ -190,6 +195,7 @@ Q_SIGNALS:
     void shellClientRemoved(KWin::ShellClient*);
     void terminatingInternalClientConnection();
     void initialized();
+    void foreignTransientChanged(KWayland::Server::SurfaceInterface *child, KWayland::Server::SurfaceInterface *parent);
 
 private:
     void setupX11ClipboardSync();

@@ -253,6 +253,12 @@ void ShellClient::init()
     getShadow();
     connect(s, &SurfaceInterface::shadowChanged, this, &Toplevel::getShadow);
 
+    connect(waylandServer(), &WaylandServer::foreignTransientChanged, this, [this](KWayland::Server::SurfaceInterface *child, KWayland::Server::SurfaceInterface *parent) {
+        Q_UNUSED(parent)
+        if (child == surface()) {
+            setTransient();
+        }
+    });
     setTransient();
     // check whether we have a ServerSideDecoration
     if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(s)) {
@@ -1319,6 +1325,9 @@ void ShellClient::setTransient()
     }
     if (m_xdgShellPopup) {
         s = m_xdgShellPopup->transientFor().data();
+    }
+    if (!s) {
+        s = waylandServer()->findForeignTransientForSurface(surface());
     }
     auto t = waylandServer()->findClient(s);
     if (t != transientFor()) {
