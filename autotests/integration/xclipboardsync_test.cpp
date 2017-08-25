@@ -97,9 +97,9 @@ void XClipboardSyncTest::testSync_data()
 void XClipboardSyncTest::testSync()
 {
     // this test verifies the syncing of X11 to Wayland clipboard
-    const QString copy = QFINDTESTDATA(QStringLiteral("helper/copy"));
+    const QString copy = QFINDTESTDATA(QStringLiteral("copy"));
     QVERIFY(!copy.isEmpty());
-    const QString paste = QFINDTESTDATA(QStringLiteral("helper/paste"));
+    const QString paste = QFINDTESTDATA(QStringLiteral("paste"));
     QVERIFY(!paste.isEmpty());
 
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);

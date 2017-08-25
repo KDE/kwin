@@ -19,7 +19,7 @@ function(drmTest)
     cmake_parse_arguments(ARGS "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_executable(${ARGS_NAME} ${ARGS_SRCS})
     target_link_libraries(${ARGS_NAME} mockDrm Qt5::Test)
-    add_test(kwin-drm-${ARGS_NAME} ${ARGS_NAME})
+    add_test(NAME kwin-drm-${ARGS_NAME} COMMAND ${ARGS_NAME})
     ecm_mark_as_test(${ARGS_NAME})
 endfunction()
 

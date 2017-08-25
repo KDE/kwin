@@ -46,7 +46,7 @@ X11TestApplication::X11TestApplication(int &argc, char **argv)
 {
     setX11Connection(QX11Info::connection());
     setX11RootWindow(QX11Info::appRootWindow());
-    initPlatform(KPluginMetaData(QStringLiteral(KWINBACKENDPATH)));
+    initPlatform(KPluginMetaData(QStringLiteral("KWinX11Platform.so")));
 }
 
 X11TestApplication::~X11TestApplication()

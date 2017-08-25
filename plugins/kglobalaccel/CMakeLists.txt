@@ -3,6 +3,7 @@ set(kglobalaccel_plugin_SRCS
 )
 
 add_library(KF5GlobalAccelPrivateKWin MODULE ${kglobalaccel_plugin_SRCS})
+set_target_properties(KF5GlobalAccelPrivateKWin PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kglobalaccel5.platforms/")
 target_link_libraries(KF5GlobalAccelPrivateKWin
     KF5::GlobalAccelPrivate
     kwin

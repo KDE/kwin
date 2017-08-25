@@ -871,7 +871,7 @@ void TestShellClient::testUnresponsiveWindow()
 {
     // this test verifies that killWindow properly terminates a process
     // for this an external binary is launched
-    const QString kill = QFINDTESTDATA(QStringLiteral("helper/kill"));
+    const QString kill = QFINDTESTDATA(QStringLiteral("kill"));
     QVERIFY(!kill.isEmpty());
     QSignalSpy shellClientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(shellClientAddedSpy.isValid());

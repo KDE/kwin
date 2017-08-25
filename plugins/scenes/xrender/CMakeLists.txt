@@ -13,6 +13,7 @@ ecm_qt_declare_logging_category(
 )
 
 add_library(KWinSceneXRender MODULE ${SCENE_XRENDER_SRCS})
+set_target_properties(KWinSceneXRender PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.scenes/")
 target_link_libraries(KWinSceneXRender
     kwin
     kwinxrenderutils

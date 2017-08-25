@@ -29,7 +29,7 @@ target_link_libraries( testTabBoxClientModel
     KF5::WindowSystem
     XCB::XCB
 )
-add_test(kwin-testTabBoxClientModel testTabBoxClientModel)
+add_test(NAME kwin-testTabBoxClientModel COMMAND testTabBoxClientModel)
 ecm_mark_as_test(testTabBoxClientModel)
 
 ########################################################
@@ -61,7 +61,7 @@ target_link_libraries( testTabBoxHandler
     KF5::WindowSystem
     XCB::XCB
 )
-add_test(kwin-testTabBoxHandler testTabBoxHandler)
+add_test(NAME kwin-testTabBoxHandler COMMAND testTabBoxHandler)
 ecm_mark_as_test(testTabBoxHandler)
 
 ########################################################
@@ -75,7 +75,7 @@ set( testTabBoxConfig_SRCS
 
 add_executable( testTabBoxConfig ${testTabBoxConfig_SRCS} )
 target_link_libraries( testTabBoxConfig Qt5::Core Qt5::Test )
-add_test(kwin-testTabBoxConfig testTabBoxConfig)
+add_test(NAME kwin-testTabBoxConfig COMMAND testTabBoxConfig)
 ecm_mark_as_test(testTabBoxConfig)
 
 
@@ -90,5 +90,5 @@ set( testDesktopChain_SRCS
 
 add_executable( testDesktopChain ${testDesktopChain_SRCS} )
 target_link_libraries( testDesktopChain Qt5::Core Qt5::Test )
-add_test(kwin-testDesktopChain testDesktopChain)
+add_test(NAME kwin-testDesktopChain COMMAND testDesktopChain)
 ecm_mark_as_test(testDesktopChain)

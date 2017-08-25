@@ -52,7 +52,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     setUseKActivities(false);
 #endif
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
-    initPlatform(KPluginMetaData(QStringLiteral(KWINBACKENDPATH)));
+    initPlatform(KPluginMetaData(QStringLiteral("KWinWaylandVirtualBackend.so")));
     WaylandServer::create(this);
 }
 
