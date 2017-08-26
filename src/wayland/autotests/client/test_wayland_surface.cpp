@@ -1077,11 +1077,11 @@ void TestWaylandSurface::testOutput()
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(leftSpy.count(), 1);
 
-    //test the client handles a misbehaving server that removes a display before updating clients
-    m_display->removeOutput(serverOutput);
-    QCOMPARE(leftSpy.count(), 1);
-    QVERIFY(s->outputs().isEmpty());
-
+    //delete output client is on.
+    //client should get an exit and be left on no outputs (which is allowed)
+    serverOutput->deleteLater();
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>());
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSurface)

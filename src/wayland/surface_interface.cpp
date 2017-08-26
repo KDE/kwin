@@ -793,19 +793,25 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
         for (wl_resource *r : resources) {
             wl_surface_send_leave(d->resource, r);
         }
+        disconnect(d->outputDestroyedConnections.take(*it));
     }
-    // TODO: send leave when OutputInterface gets destroyed
-
     QVector<OutputInterface *> addedOutputsOutputs = outputs;
     for (auto it = d->outputs.constBegin(), end = d->outputs.constEnd(); it != end; ++it) {
         const auto o = *it;
         addedOutputsOutputs.removeOne(o);
     }
     for (auto it = addedOutputsOutputs.constBegin(), end = addedOutputsOutputs.constEnd(); it != end; ++it) {
-        const auto resources = (*it)->clientResources(client());
+        const auto o = *it;
+        const auto resources = o->clientResources(client());
         for (wl_resource *r : resources) {
             wl_surface_send_enter(d->resource, r);
         }
+        d->outputDestroyedConnections[o] = connect(o, &Global::aboutToDestroyGlobal, this, [this, o] {
+            Q_D();
+            auto outputs = d->outputs;
+            if (outputs.removeOne(o)) {
+                setOutputs(outputs);
+            }});
     }
     // TODO: send enter when the client binds the OutputInterface another time
 

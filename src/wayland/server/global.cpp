@@ -70,6 +70,7 @@ void Global::destroy()
     if (!d->global) {
         return;
     }
+    emit aboutToDestroyGlobal();
     wl_global_destroy(d->global);
     d->global = nullptr;
 }

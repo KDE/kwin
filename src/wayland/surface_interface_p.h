@@ -97,6 +97,7 @@ public:
 
     QPointer<LockedPointerInterface> lockedPointer;
     QPointer<ConfinedPointerInterface> confinedPointer;
+    QHash<OutputInterface*, QMetaObject::Connection> outputDestroyedConnections;
 
 private:
     QMetaObject::Connection constrainsOneShotConnection;

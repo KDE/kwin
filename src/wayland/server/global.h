@@ -90,6 +90,14 @@ public:
      **/
     operator wl_global*() const;
 
+Q_SIGNALS:
+    /**
+     * This signal is emitted when the client is in the process of removing the wl_global.
+     * At the time the signal is emitted the global is still valid and allows to perform
+     * cleanup tasks.
+     */
+    void aboutToDestroyGlobal();
+
 protected:
     class Private;
     explicit Global(Private *d, QObject *parent = nullptr);
