@@ -195,7 +195,7 @@ Q_SIGNALS:
     void shellClientRemoved(KWin::ShellClient*);
     void terminatingInternalClientConnection();
     void initialized();
-    void foreignTransientChanged(KWayland::Server::SurfaceInterface *child, KWayland::Server::SurfaceInterface *parent);
+    void foreignTransientChanged(KWayland::Server::SurfaceInterface *child);
 
 private:
     void setupX11ClipboardSync();

@@ -61,9 +61,6 @@ public:
     KWayland::Server::ShellSurfaceInterface *shellSurface() const {
         return m_shellSurface;
     }
-    KWayland::Server::XdgShellSurfaceInterface *xdgShellSurface() const {
-        return m_xdgShellSurface;
-    }
 
     void blockActivityUpdates(bool b = true) override;
     QString caption(bool full = true) const override;

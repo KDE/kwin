@@ -253,8 +253,7 @@ void ShellClient::init()
     getShadow();
     connect(s, &SurfaceInterface::shadowChanged, this, &Toplevel::getShadow);
 
-    connect(waylandServer(), &WaylandServer::foreignTransientChanged, this, [this](KWayland::Server::SurfaceInterface *child, KWayland::Server::SurfaceInterface *parent) {
-        Q_UNUSED(parent)
+    connect(waylandServer(), &WaylandServer::foreignTransientChanged, this, [this](KWayland::Server::SurfaceInterface *child) {
         if (child == surface()) {
             setTransient();
         }
