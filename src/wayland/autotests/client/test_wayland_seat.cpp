@@ -830,7 +830,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
 
     // let's map the surfaces
     auto render = [this] (Surface *s, const QSize &size) {
-        QImage image(size, QImage::Format_ARGB32);
+        QImage image(size, QImage::Format_ARGB32_Premultiplied);
         image.fill(Qt::black);
         s->attachBuffer(m_shm->createBuffer(image));
         s->damage(QRect(QPoint(0, 0), size));
@@ -1171,7 +1171,7 @@ void TestWaylandSeat::testKeyboardSubSurfaceTreeFromPointer()
 
     // let's map the surfaces
     auto render = [this] (Surface *s, const QSize &size) {
-        QImage image(size, QImage::Format_ARGB32);
+        QImage image(size, QImage::Format_ARGB32_Premultiplied);
         image.fill(Qt::black);
         s->attachBuffer(m_shm->createBuffer(image));
         s->damage(QRect(QPoint(0, 0), size));
@@ -1328,7 +1328,7 @@ void TestWaylandSeat::testCursor()
     QCOMPARE(cursor->surface()->buffer()->data(), img);
 
     // and add another image to the surface
-    QImage blue(QSize(10, 20), QImage::Format_ARGB32);
+    QImage blue(QSize(10, 20), QImage::Format_ARGB32_Premultiplied);
     blue.fill(Qt::blue);
     cursorSurface->attachBuffer(m_shm->createBuffer(blue));
     cursorSurface->damage(QRect(0, 0, 10, 20));
@@ -1382,7 +1382,7 @@ void TestWaylandSeat::testCursorDamage()
     // now let's set the cursor
     Surface *cursorSurface = m_compositor->createSurface(m_compositor);
     QVERIFY(cursorSurface);
-    QImage red(QSize(10, 10), QImage::Format_ARGB32);
+    QImage red(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
     red.fill(Qt::red);
     cursorSurface->attachBuffer(m_shm->createBuffer(red));
     cursorSurface->damage(QRect(0, 0, 10, 10));
@@ -1392,7 +1392,7 @@ void TestWaylandSeat::testCursorDamage()
     QCOMPARE(pointer->cursor()->surface()->buffer()->data(), red);
 
     // and damage the surface
-    QImage blue(QSize(10, 10), QImage::Format_ARGB32);
+    QImage blue(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
     blue.fill(Qt::blue);
     cursorSurface->attachBuffer(m_shm->createBuffer(blue));
     cursorSurface->damage(QRect(0, 0, 10, 10));

@@ -204,28 +204,28 @@ void ShadowTest::testShadowElements()
 
     // now create the shadow
     QScopedPointer<Shadow> shadow(m_shadow->createShadow(surface.data()));
-    QImage topLeftImage(QSize(10, 10), QImage::Format_ARGB32);
+    QImage topLeftImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
     topLeftImage.fill(Qt::white);
     shadow->attachTopLeft(m_shm->createBuffer(topLeftImage));
-    QImage topImage(QSize(11, 11), QImage::Format_ARGB32);
+    QImage topImage(QSize(11, 11), QImage::Format_ARGB32_Premultiplied);
     topImage.fill(Qt::black);
     shadow->attachTop(m_shm->createBuffer(topImage));
-    QImage topRightImage(QSize(12, 12), QImage::Format_ARGB32);
+    QImage topRightImage(QSize(12, 12), QImage::Format_ARGB32_Premultiplied);
     topRightImage.fill(Qt::red);
     shadow->attachTopRight(m_shm->createBuffer(topRightImage));
-    QImage rightImage(QSize(13, 13), QImage::Format_ARGB32);
+    QImage rightImage(QSize(13, 13), QImage::Format_ARGB32_Premultiplied);
     rightImage.fill(Qt::darkRed);
     shadow->attachRight(m_shm->createBuffer(rightImage));
-    QImage bottomRightImage(QSize(14, 14), QImage::Format_ARGB32);
+    QImage bottomRightImage(QSize(14, 14), QImage::Format_ARGB32_Premultiplied);
     bottomRightImage.fill(Qt::green);
     shadow->attachBottomRight(m_shm->createBuffer(bottomRightImage));
-    QImage bottomImage(QSize(15, 15), QImage::Format_ARGB32);
+    QImage bottomImage(QSize(15, 15), QImage::Format_ARGB32_Premultiplied);
     bottomImage.fill(Qt::darkGreen);
     shadow->attachBottom(m_shm->createBuffer(bottomImage));
-    QImage bottomLeftImage(QSize(16, 16), QImage::Format_ARGB32);
+    QImage bottomLeftImage(QSize(16, 16), QImage::Format_ARGB32_Premultiplied);
     bottomLeftImage.fill(Qt::blue);
     shadow->attachBottomLeft(m_shm->createBuffer(bottomLeftImage));
-    QImage leftImage(QSize(17, 17), QImage::Format_ARGB32);
+    QImage leftImage(QSize(17, 17), QImage::Format_ARGB32_Premultiplied);
     leftImage.fill(Qt::darkBlue);
     shadow->attachLeft(m_shm->createBuffer(leftImage));
     shadow->setOffsets(QMarginsF(1, 2, 3, 4));

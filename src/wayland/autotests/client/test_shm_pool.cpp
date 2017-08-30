@@ -44,6 +44,7 @@ private Q_SLOTS:
     void testCreateBufferNullSize();
     void testCreateBufferInvalidSize();
     void testCreateBufferFromImage();
+    void testCreateBufferFromImageWithAlpha();
     void testCreateBufferFromData();
     void testReuseBuffer();
     void testDestroy();
@@ -154,33 +155,46 @@ void TestShmPool::testCreateBufferInvalidSize()
 void TestShmPool::testCreateBufferFromImage()
 {
     QVERIFY(m_shmPool->isValid());
-    QImage img(24, 24, QImage::Format_ARGB32);
+    QImage img(24, 24, QImage::Format_RGB32);
     img.fill(Qt::black);
     QVERIFY(!img.isNull());
     auto buffer = m_shmPool->createBuffer(img).toStrongRef();
     QVERIFY(buffer);
     QCOMPARE(buffer->size(), img.size());
-    QImage img2(buffer->address(), img.width(), img.height(), QImage::Format_ARGB32);
+    QImage img2(buffer->address(), img.width(), img.height(), QImage::Format_RGB32);
+    QCOMPARE(img2, img);
+}
+
+void TestShmPool::testCreateBufferFromImageWithAlpha()
+{
+    QVERIFY(m_shmPool->isValid());
+    QImage img(24, 24, QImage::Format_ARGB32_Premultiplied);
+    img.fill(QColor(255,0,0,100)); //red with alpha
+    QVERIFY(!img.isNull());
+    auto buffer = m_shmPool->createBuffer(img).toStrongRef();
+    QVERIFY(buffer);
+    QCOMPARE(buffer->size(), img.size());
+    QImage img2(buffer->address(), img.width(), img.height(), QImage::Format_ARGB32_Premultiplied);
     QCOMPARE(img2, img);
 }
 
 void TestShmPool::testCreateBufferFromData()
 {
     QVERIFY(m_shmPool->isValid());
-    QImage img(24, 24, QImage::Format_ARGB32);
+    QImage img(24, 24, QImage::Format_ARGB32_Premultiplied);
     img.fill(Qt::black);
     QVERIFY(!img.isNull());
     auto buffer = m_shmPool->createBuffer(img.size(), img.bytesPerLine(), img.constBits()).toStrongRef();
     QVERIFY(buffer);
     QCOMPARE(buffer->size(), img.size());
-    QImage img2(buffer->address(), img.width(), img.height(), QImage::Format_ARGB32);
+    QImage img2(buffer->address(), img.width(), img.height(), QImage::Format_ARGB32_Premultiplied);
     QCOMPARE(img2, img);
 }
 
 void TestShmPool::testReuseBuffer()
 {
     QVERIFY(m_shmPool->isValid());
-    QImage img(24, 24, QImage::Format_ARGB32);
+    QImage img(24, 24, QImage::Format_ARGB32_Premultiplied);
     img.fill(Qt::black);
     QVERIFY(!img.isNull());
     auto buffer = m_shmPool->createBuffer(img).toStrongRef();

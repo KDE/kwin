@@ -619,7 +619,7 @@ void TestSubSurface::testSyncMode()
     QSignalSpy childDamagedSpy(childSurface, &SurfaceInterface::damaged);
     QVERIFY(childDamagedSpy.isValid());
 
-    QImage image(QSize(200, 200), QImage::Format_ARGB32);
+    QImage image(QSize(200, 200), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::black);
     surface->attachBuffer(m_shm->createBuffer(image));
     surface->damage(QRect(0, 0, 200, 200));
@@ -632,7 +632,7 @@ void TestSubSurface::testSyncMode()
     QVERIFY(!childSurface->isMapped());
     QVERIFY(!parentSurface->isMapped());
 
-    QImage image2(QSize(400, 400), QImage::Format_ARGB32);
+    QImage image2(QSize(400, 400), QImage::Format_ARGB32_Premultiplied);
     image2.fill(Qt::red);
     parent->attachBuffer(m_shm->createBuffer(image2));
     parent->damage(QRect(0, 0, 400, 400));
@@ -681,7 +681,7 @@ void TestSubSurface::testDeSyncMode()
     QSignalSpy childDamagedSpy(childSurface, &SurfaceInterface::damaged);
     QVERIFY(childDamagedSpy.isValid());
 
-    QImage image(QSize(200, 200), QImage::Format_ARGB32);
+    QImage image(QSize(200, 200), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::black);
     surface->attachBuffer(m_shm->createBuffer(image));
     surface->damage(QRect(0, 0, 200, 200));
@@ -853,7 +853,7 @@ void TestSubSurface::testMappingOfSurfaceTree()
     // first map the child, should not map it
     QSignalSpy child3DamageSpy(child3->surface().data(), &SurfaceInterface::damaged);
     QVERIFY(child3DamageSpy.isValid());
-    QImage image(QSize(200, 200), QImage::Format_ARGB32);
+    QImage image(QSize(200, 200), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::black);
     childLevel3Surface->attachBuffer(m_shm->createBuffer(image));
     childLevel3Surface->damage(QRect(0, 0, 200, 200));
@@ -1025,7 +1025,7 @@ void TestSubSurface::testDestroyAttachedBuffer()
     m_subCompositor->createSubSurface(child.data(), parent.data());
 
     // let's damage this surface, will be in sub-surface pending state
-    QImage image(QSize(100, 100), QImage::Format_ARGB32);
+    QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::red);
     child->attachBuffer(m_shm->createBuffer(image));
     child->damage(QRect(0, 0, 100, 100));

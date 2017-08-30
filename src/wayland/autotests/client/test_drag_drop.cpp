@@ -187,7 +187,7 @@ KWayland::Client::Surface *TestDragAndDrop::createSurface()
     using namespace KWayland::Client;
     auto s = m_compositor->createSurface();
 
-    QImage img(QSize(100, 200), QImage::Format_ARGB32);
+    QImage img(QSize(100, 200), QImage::Format_RGB32);
     img.fill(Qt::red);
     s->attachBuffer(m_shm->createBuffer(img));
     s->damage(QRect(0, 0, 100, 200));

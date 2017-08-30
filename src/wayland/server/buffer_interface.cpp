@@ -224,7 +224,7 @@ QImage::Format BufferInterface::Private::format() const
     }
     switch (wl_shm_buffer_get_format(shmBuffer)) {
     case WL_SHM_FORMAT_ARGB8888:
-        return QImage::Format_ARGB32;
+        return QImage::Format_ARGB32_Premultiplied;
     case WL_SHM_FORMAT_XRGB8888:
         return QImage::Format_RGB32;
     default:
