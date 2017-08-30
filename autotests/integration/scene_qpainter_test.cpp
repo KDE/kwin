@@ -226,7 +226,7 @@ void SceneQPainterTest::testWindowScaled()
 
     //draw a blue square@400x600 with red rectangle@200x200 in the middle
     const QSize size(400,600);
-    QImage img(size, QImage::Format_ARGB32);
+    QImage img(size, QImage::Format_ARGB32_Premultiplied);
     img.fill(Qt::blue);
     QPainter surfacePainter(&img);
     surfacePainter.fillRect(200,300,200,200, Qt::red);

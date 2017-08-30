@@ -848,7 +848,7 @@ void PointerInputTest::testCursorImage()
     QVERIFY(cursorSurface);
     QSignalSpy cursorRenderedSpy(cursorSurface, &Surface::frameRendered);
     QVERIFY(cursorRenderedSpy.isValid());
-    QImage red = QImage(QSize(10, 10), QImage::Format_ARGB32);
+    QImage red = QImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
     red.fill(Qt::red);
     cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(red));
     cursorSurface->damage(QRect(0, 0, 10, 10));
@@ -864,7 +864,7 @@ void PointerInputTest::testCursorImage()
     QCOMPARE(p->cursorImage(), red);
 
     // change the buffer
-    QImage blue = QImage(QSize(10, 10), QImage::Format_ARGB32);
+    QImage blue = QImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
     blue.fill(Qt::blue);
     auto b = Test::waylandShmPool()->createBuffer(blue);
     cursorSurface->attachBuffer(b);

@@ -129,7 +129,7 @@ KWayland::Client::XdgShellSurface *createXdgShellV5Surface(KWayland::Client::Sur
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.
  * The @p surface gets damaged and committed, thus it's rendered.
  **/
-void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32);
+void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32_Premultiplied);
 
 /**
  * Creates a shared memory buffer using the supplied image @p img and attaches it to the @p surface
