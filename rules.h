@@ -306,6 +306,7 @@ private Q_SLOTS:
 
 private:
     void deleteAll();
+    void initWithX11();
     QTimer *m_updateTimer;
     bool m_updatesDisabled;
     QList<Rules*> m_rules;
