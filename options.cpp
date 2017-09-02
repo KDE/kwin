@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "screens.h"
 #include "settings.h"
-#include "xcbutils.h"
 #include <kwinglplatform.h>
 #include <QOpenGLContext>
 
@@ -67,10 +66,6 @@ int currentRefreshRate()
             }
         }
         rate = qRound(Screens::self()->refreshRate(syncScreen)); // TODO forward float precision?
-    } else if (Xcb::Extensions::self()->isRandrAvailable()) {
-        // last restort - query XRandR screenInfo rate - probably wrong on nvidia systems
-        Xcb::RandR::ScreenInfo screenInfo(rootWindow());
-        rate = screenInfo->rate;
     }
 
     // 0Hz or less is invalid, so we fallback to a default rate
