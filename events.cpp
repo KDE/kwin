@@ -81,8 +81,6 @@ typedef struct xcb_ge_generic_event_t {
 namespace KWin
 {
 
-extern int currentRefreshRate();
-
 // ****************************************
 // Workspace
 // ****************************************
@@ -428,29 +426,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_FOCUS_OUT:
         return true; // always eat these, they would tell Qt that KWin is the active app
     default:
-        if (eventType == Xcb::Extensions::self()->randrNotifyEvent() && Xcb::Extensions::self()->isRandrAvailable()) {
-            auto *event = reinterpret_cast<xcb_randr_screen_change_notify_event_t*>(e);
-            xcb_screen_t *screen = defaultScreen();
-            if (event->rotation & (XCB_RANDR_ROTATION_ROTATE_90 | XCB_RANDR_ROTATION_ROTATE_270)) {
-                screen->width_in_pixels = event->height;
-                screen->height_in_pixels = event->width;
-                screen->width_in_millimeters = event->mheight;
-                screen->height_in_millimeters = event->mwidth;
-            } else {
-                screen->width_in_pixels = event->width;
-                screen->height_in_pixels = event->height;
-                screen->width_in_millimeters = event->mwidth;
-                screen->height_in_millimeters = event->mheight;
-            }
-            if (compositing()) {
-                // desktopResized() should take care of when the size or
-                // shape of the desktop has changed, but we also want to
-                // catch refresh rate changes
-                if (m_compositor->xrrRefreshRate() != currentRefreshRate())
-                    m_compositor->setCompositeResetTimer(0);
-            }
-
-        } else if (eventType == Xcb::Extensions::self()->syncAlarmNotifyEvent() && Xcb::Extensions::self()->isSyncAvailable()) {
+        if (eventType == Xcb::Extensions::self()->syncAlarmNotifyEvent() && Xcb::Extensions::self()->isSyncAvailable()) {
             for (Client *c : clients)
                 c->syncEvent(reinterpret_cast< xcb_sync_alarm_notify_event_t* >(e));
             for (Client *c : desktops)

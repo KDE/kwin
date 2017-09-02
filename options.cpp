@@ -43,6 +43,11 @@ namespace KWin
 
 int currentRefreshRate()
 {
+    return Options::currentRefreshRate();
+}
+
+int Options::currentRefreshRate()
+{
     int rate = -1;
     QString syncScreenName(QLatin1String("primary screen"));
     if (options->refreshRate() > 0) {  // use manually configured refresh rate

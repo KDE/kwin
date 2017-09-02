@@ -18,6 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screens_xrandr.h"
+#include "composite.h"
+#include "options.h"
+#include "workspace.h"
 #include "xcbutils.h"
 
 
@@ -185,6 +188,29 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
     Q_ASSERT((event->response_type & ~0x80) == Xcb::Extensions::self()->randrNotifyEvent());
     // let's try to gather a few XRandR events, unlikely that there is just one
     startChangedTimer();
+
+    // update default screen
+    auto *xrrEvent = reinterpret_cast<xcb_randr_screen_change_notify_event_t*>(event);
+    xcb_screen_t *screen = defaultScreen();
+    if (xrrEvent->rotation & (XCB_RANDR_ROTATION_ROTATE_90 | XCB_RANDR_ROTATION_ROTATE_270)) {
+        screen->width_in_pixels = xrrEvent->height;
+        screen->height_in_pixels = xrrEvent->width;
+        screen->width_in_millimeters = xrrEvent->mheight;
+        screen->height_in_millimeters = xrrEvent->mwidth;
+    } else {
+        screen->width_in_pixels = xrrEvent->width;
+        screen->height_in_pixels = xrrEvent->height;
+        screen->width_in_millimeters = xrrEvent->mwidth;
+        screen->height_in_millimeters = xrrEvent->mheight;
+    }
+    if (workspace()->compositing()) {
+        // desktopResized() should take care of when the size or
+        // shape of the desktop has changed, but we also want to
+        // catch refresh rate changes
+        if (Compositor::self()->xrrRefreshRate() != Options::currentRefreshRate())
+            Compositor::self()->setCompositeResetTimer(0);
+    }
+
     return false;
 }
 
