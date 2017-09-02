@@ -90,7 +90,7 @@ static void deleteWindowProperty(Window win, long int atom)
     if (win == XCB_WINDOW_NONE) {
         return;
     }
-    xcb_delete_property(connection(), win, atom);
+    xcb_delete_property(kwinApp()->x11Connection(), win, atom);
 }
 
 static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
@@ -867,7 +867,10 @@ void EffectsHandlerImpl::removeSupportProperty(const QByteArray &propertyName, E
 
 QByteArray EffectsHandlerImpl::readRootProperty(long atom, long type, int format) const
 {
-    return readWindowProperty(rootWindow(), atom, type, format);
+    if (!kwinApp()->x11Connection()) {
+        return QByteArray();
+    }
+    return readWindowProperty(kwinApp()->x11RootWindow(), atom, type, format);
 }
 
 void EffectsHandlerImpl::activateWindow(EffectWindow* c)
@@ -1737,12 +1740,17 @@ QRect EffectWindowImpl::decorationInnerRect() const
 
 QByteArray EffectWindowImpl::readProperty(long atom, long type, int format) const
 {
+    if (!kwinApp()->x11Connection()) {
+        return QByteArray();
+    }
     return readWindowProperty(window()->window(), atom, type, format);
 }
 
 void EffectWindowImpl::deleteProperty(long int atom) const
 {
-    deleteWindowProperty(window()->window(), atom);
+    if (kwinApp()->x11Connection()) {
+        deleteWindowProperty(window()->window(), atom);
+    }
 }
 
 EffectWindow* EffectWindowImpl::findModal()
