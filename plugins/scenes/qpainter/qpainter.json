@@ -1,9 +1,8 @@
 {
+    "CompositingType": 4,
     "KPlugin": {
         "Description": "KWin Compositor plugin rendering through QPainter",
         "Id": "KWinSceneQPainter",
         "Name": "SceneQPainter"
-    },
-    "CompositingType": 4
+    }
 }
-
