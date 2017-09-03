@@ -47,7 +47,7 @@ namespace Wayland {
  * repaints, which is obviously not optimal. Best solution is probably to go for buffer_age extension
  * and make it the only available solution next to fullscreen repaints.
  **/
-class EglWaylandBackend : public QObject, public AbstractEglBackend
+class EglWaylandBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:

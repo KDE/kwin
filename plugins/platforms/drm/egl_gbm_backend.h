@@ -33,7 +33,7 @@ class DrmOutput;
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
  **/
-class EglGbmBackend : public QObject, public AbstractEglBackend
+class EglGbmBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:

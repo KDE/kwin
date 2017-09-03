@@ -31,9 +31,8 @@ class GLRenderTarget;
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
  **/
-class EglGbmBackend : public QObject, public AbstractEglBackend
+class EglGbmBackend : public AbstractEglBackend
 {
-    Q_OBJECT
 public:
     EglGbmBackend(VirtualBackend *b);
     virtual ~EglGbmBackend();

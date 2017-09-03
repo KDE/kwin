@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "composite.h"
 
-#include "abstract_egl_backend.h"
 #include "dbusinterface.h"
 #include "utils.h"
 #include <QTextStream>
@@ -146,7 +145,6 @@ Compositor::Compositor(QObject* workspace)
 Compositor::~Compositor()
 {
     emit aboutToDestroy();
-    AbstractEglBackend::unbindWaylandDisplay();
     finish();
     deleteUnusedSupportProperties();
     delete cm_selection;

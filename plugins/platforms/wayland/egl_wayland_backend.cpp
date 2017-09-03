@@ -39,8 +39,7 @@ namespace KWin
 {
 
 EglWaylandBackend::EglWaylandBackend(Wayland::WaylandBackend *b)
-    : QObject(NULL)
-    , AbstractEglBackend()
+    : AbstractEglBackend()
     , m_bufferAge(0)
     , m_wayland(b)
     , m_overlay(NULL)

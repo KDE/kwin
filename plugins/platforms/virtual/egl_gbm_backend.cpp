@@ -42,8 +42,7 @@ namespace KWin
 {
 
 EglGbmBackend::EglGbmBackend(VirtualBackend *b)
-    : QObject(nullptr)
-    , AbstractEglBackend()
+    : AbstractEglBackend()
     , m_backend(b)
 {
     // Egl is always direct rendering

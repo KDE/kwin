@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_egl_backend.h"
+#include "composite.h"
 #include "egl_context_attribute_builder.h"
 #include "options.h"
 #include "platform.h"
@@ -54,17 +55,18 @@ eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 #endif
 
 AbstractEglBackend::AbstractEglBackend()
-    : OpenGLBackend()
+    : QObject(nullptr)
+    , OpenGLBackend()
 {
+    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::unbindWaylandDisplay);
 }
 
 AbstractEglBackend::~AbstractEglBackend() = default;
 
 void AbstractEglBackend::unbindWaylandDisplay()
 {
-    auto display = kwinApp()->platform()->sceneEglDisplay();
-    if (eglUnbindWaylandDisplayWL && display != EGL_NO_DISPLAY) {
-        eglUnbindWaylandDisplayWL(display, *(WaylandServer::self()->display()));
+    if (eglUnbindWaylandDisplayWL && m_display != EGL_NO_DISPLAY) {
+        eglUnbindWaylandDisplayWL(m_display, *(WaylandServer::self()->display()));
     }
 }
 

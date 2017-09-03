@@ -29,8 +29,9 @@ class QOpenGLFramebufferObject;
 namespace KWin
 {
 
-class KWIN_EXPORT AbstractEglBackend : public OpenGLBackend
+class KWIN_EXPORT AbstractEglBackend : public QObject, public OpenGLBackend
 {
+    Q_OBJECT
 public:
     virtual ~AbstractEglBackend();
     bool makeCurrent() override;
@@ -48,8 +49,6 @@ public:
     EGLConfig config() const {
         return m_config;
     }
-
-    static void unbindWaylandDisplay();
 
 protected:
     AbstractEglBackend();
@@ -69,6 +68,8 @@ protected:
     bool createContext();
 
 private:
+    void unbindWaylandDisplay();
+
     EGLDisplay m_display = EGL_NO_DISPLAY;
     EGLSurface m_surface = EGL_NO_SURFACE;
     EGLContext m_context = EGL_NO_CONTEXT;
