@@ -2,7 +2,15 @@
     "CompositingType": 4,
     "KPlugin": {
         "Description": "KWin Compositor plugin rendering through QPainter",
+        "Description[ca]": "Connector del Compositor del KWin que renderitza a través del QPainter",
+        "Description[nl]": "KWin-compositor-plug-in rendering via QPainter",
+        "Description[pt]": "'Plugin' de Composição do KWin com desenho via QPainter",
+        "Description[sv]": "Kwin sammansättningsinsticksprogram återger via QPainter",
+        "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням QPainter",
+        "Description[x-test]": "xxKWin Compositor plugin rendering through QPainterxx",
         "Id": "KWinSceneQPainter",
-        "Name": "SceneQPainter"
+        "Name": "SceneQPainter",
+        "Name[sv]": "Scen QPainter",
+        "Name[x-test]": "xxSceneQPainterxx"
     }
 }
