@@ -53,6 +53,8 @@ public:
      **/
     XdgSurfaceV5Interface *getSurface(wl_resource *native);
 
+    void ping();
+
 private:
     explicit XdgShellV5Interface(Display *display, QObject *parent = nullptr);
     friend class Display;

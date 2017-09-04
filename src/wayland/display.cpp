@@ -44,6 +44,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "subcompositor_interface.h"
 #include "textinput_interface_p.h"
 #include "xdgshell_v5_interface_p.h"
+#include "xdgshell_v6_interface_p.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -366,6 +367,9 @@ XdgShellInterface *Display::createXdgShell(const XdgShellInterfaceVersion &versi
     switch (version) {
     case XdgShellInterfaceVersion::UnstableV5:
         x = new XdgShellV5Interface(this, parent);
+        break;
+    case XdgShellInterfaceVersion::UnstableV6:
+        x = new XdgShellV6Interface(this, parent);
         break;
     }
     connect(this, &Display::aboutToTerminate, x, [x] { delete x; });

@@ -24,6 +24,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "generic_shell_surface_p.h"
 #include "resource_p.h"
 
+#include <QTimer>
+
 namespace KWayland
 {
 namespace Server
@@ -33,6 +35,11 @@ class XdgShellInterface::Private : public Global::Private
 {
 public:
     XdgShellInterfaceVersion interfaceVersion;
+
+    virtual quint32 ping(XdgShellSurfaceInterface * surface) = 0;
+    void setupTimer(quint32 serial);
+    //pingserial/timer correspondence
+    QHash <quint32, QTimer *> pingTimers;
 
 protected:
     Private(XdgShellInterfaceVersion interfaceVersion, XdgShellInterface *q, Display *d, const wl_interface *interface, quint32 version);
@@ -56,8 +63,7 @@ public:
     XdgShellInterfaceVersion interfaceVersion;
 
 protected:
-    Private(XdgShellInterfaceVersion interfaceVersion, XdgShellSurfaceInterface *q, XdgShellInterface *c, SurfaceInterface *surface, wl_resource *parentResource, const wl_interface *interface, const void *implementation);
-
+    Private(XdgShellInterfaceVersion interfaceVersion, XdgShellSurfaceInterface *q, Global *c, SurfaceInterface *surface, wl_resource *parentResource, const wl_interface *interface, const void *implementation);
 };
 
 class XdgShellPopupInterface::Private : public Resource::Private, public GenericShellSurface<XdgShellPopupInterface>
@@ -70,8 +76,24 @@ public:
         return reinterpret_cast<XdgShellPopupInterface *>(q);
     }
 
+    virtual quint32 configure(const QRect &rect) {
+        Q_UNUSED(rect)
+        return 0;
+    };
+
+    QVector<quint32> configureSerials;
     QPointer<SurfaceInterface> parent;
-    QPoint transientOffset;
+    QSize initialSize;
+
+    /*
+     *
+     */
+    QRect anchorRect;
+    Qt::Edges anchorEdge;
+    Qt::Edges gravity;
+    PositionerConstraints constraintAdjustments;
+    QPoint anchorOffset;
+
     XdgShellInterfaceVersion interfaceVersion;
 
 protected:

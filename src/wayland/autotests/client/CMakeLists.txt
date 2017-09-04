@@ -342,11 +342,24 @@ ecm_mark_as_test(testSelection)
 ########################################################
 set( testXdgShellV5_SRCS
       test_xdg_shell.cpp
+      test_xdg_shell_v5.cpp
       )
 add_executable(testXdgShellV5 ${testXdgShellV5_SRCS})
 target_link_libraries( testXdgShellV5 Qt5::Test Qt5::Gui KF5::WaylandServer KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testXdgShellV5 COMMAND testXdgShellV5)
 ecm_mark_as_test(testXdgShellV5)
+
+########################################################
+# Test XdgShellV6
+########################################################
+set( testXdgShellV6_SRCS
+      test_xdg_shell.cpp
+      test_xdg_shell_v6.cpp
+      )
+add_executable(testXdgShellV6 ${testXdgShellV6_SRCS})
+target_link_libraries( testXdgShellV6 Qt5::Test Qt5::Gui KF5::WaylandServer KF5::WaylandClient Wayland::Client)
+add_test(kwayland-testXdgShellV6 testXdgShellV6)
+ecm_mark_as_test(testXdgShellV6)
 
 ########################################################
 # Test Pointer Constraints

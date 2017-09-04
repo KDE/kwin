@@ -45,11 +45,14 @@ private:
     void createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface, wl_resource *parentResource);
     void createPopup(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface, SurfaceInterface *parent, SeatInterface *seat, quint32 serial, const QPoint &pos, wl_resource *parentResource);
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
+    quint32 ping(XdgShellSurfaceInterface * surface) override;
 
     static void unbind(wl_resource *resource);
     static Private *cast(wl_resource *r) {
         return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
     }
+
+    QHash<wl_client *, wl_resource*> resources;
 
     static void destroyCallback(wl_client *client, wl_resource *resource);
     static void useUnstableVersionCallback(wl_client *client, wl_resource *resource, int32_t version);
@@ -145,17 +148,30 @@ void XdgShellV5Interface::Private::createPopup(wl_client *client, uint32_t versi
     XdgPopupV5Interface *popupSurface = new XdgPopupV5Interface(q, surface, parentResource);
     auto d = popupSurface->d_func();
     d->parent = QPointer<SurfaceInterface>(parent);
-    d->transientOffset = pos;
+    d->anchorRect = QRect(pos, QSize(0,0));
+    //default open like a normal popup
+    d->anchorEdge = Qt::BottomEdge;
+    d->gravity = Qt::TopEdge;
     d->create(display->getConnection(client), version, id);
+
+    //compat
     emit q->popupCreated(popupSurface, seat, serial);
+
+    //new system
+    emit q->xdgPopupCreated(popupSurface);
+    emit popupSurface->grabRequested(seat, serial);
 }
 
 void XdgShellV5Interface::Private::pongCallback(wl_client *client, wl_resource *resource, uint32_t serial)
 {
     Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(serial)
-    // TODO: implement
+    auto s = cast(resource);
+    auto timerIt = s->pingTimers.find(serial);
+    if (timerIt != s->pingTimers.end() && timerIt.value()->isActive()) {
+        delete timerIt.value();
+        s->pingTimers.erase(timerIt);
+        emit s->q->pongReceived(serial);
+    }
 }
 
 XdgShellV5Interface::Private::Private(XdgShellV5Interface *q, Display *d)
@@ -167,19 +183,20 @@ XdgShellV5Interface::Private::Private(XdgShellV5Interface *q, Display *d)
 void XdgShellV5Interface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {
     auto c = display->getConnection(client);
-    wl_resource *resource = c->createResource(&xdg_shell_interface, qMin(version, s_version), id);
+    auto resource = c->createResource(&xdg_shell_interface, qMin(version, s_version), id);
     if (!resource) {
         wl_client_post_no_memory(client);
         return;
     }
+    resources[client] = resource;
     wl_resource_set_implementation(resource, &s_interface, this, unbind);
-    // TODO: should we track, yes we need to track to be able to ping!
 }
 
 void XdgShellV5Interface::Private::unbind(wl_resource *resource)
 {
-    Q_UNUSED(resource)
-    // TODO: implement?
+    auto s = cast(resource);
+    auto client = wl_resource_get_client(resource);
+    s->resources.remove(client);
 }
 
 XdgSurfaceV5Interface *XdgShellV5Interface::getSurface(wl_resource *resource)
@@ -197,6 +214,22 @@ XdgSurfaceV5Interface *XdgShellV5Interface::getSurface(wl_resource *resource)
         return *it;
     }
     return nullptr;
+}
+
+quint32 XdgShellV5Interface::Private::ping(XdgShellSurfaceInterface * surface)
+{
+    auto client = surface->client()->client();
+    //from here we can get the resource bound to our global.
+    
+    auto clientXdgShellResource = resources.value(client);
+    if (!clientXdgShellResource) {
+        return 0;
+    }
+    const quint32 pingSerial = display->nextSerial();
+    xdg_shell_send_ping(clientXdgShellResource, pingSerial);
+
+    setupTimer(pingSerial);
+    return pingSerial;
 }
 
 XdgShellV5Interface::Private *XdgShellV5Interface::d_func() const

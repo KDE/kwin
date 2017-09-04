@@ -59,3 +59,8 @@ endif()
 add_executable(plasmasurface-test plasmasurfacetest.cpp)
 target_link_libraries(plasmasurface-test Qt5::Gui KF5::WaylandClient)
 ecm_mark_as_test(plasmasurface-test)
+
+
+add_executable(xdg-test xdgtest.cpp)
+target_link_libraries(xdg-test Qt5::Gui KF5::WaylandClient)
+ecm_mark_as_test(xdg-test)
