@@ -4,12 +4,14 @@
         "Description": "KWin Compositor plugin rendering through XRender",
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través de l'XRender",
         "Description[nl]": "KWin-compositor-plug-in rendering via XRender",
+        "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez XRender",
         "Description[pt]": "'Plugin' de Composição do KWin com desenho via XRender",
         "Description[sv]": "Kwin sammansättningsinsticksprogram återger via XRender",
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням XRender",
         "Description[x-test]": "xxKWin Compositor plugin rendering through XRenderxx",
         "Id": "KWinSceneXRender",
         "Name": "SceneXRender",
+        "Name[pl]": "XRender sceny",
         "Name[sv]": "Scen XRender",
         "Name[x-test]": "xxSceneXRenderxx"
     }
