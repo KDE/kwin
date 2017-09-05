@@ -370,36 +370,6 @@ void Platform::setSceneEglDisplay(EGLDisplay display)
     m_eglDisplay = display;
 }
 
-EGLContext Platform::sceneEglContext() const
-{
-    if (Compositor *c = Compositor::self()) {
-        if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
-            return static_cast<AbstractEglBackend*>(s->backend())->context();
-        }
-    }
-    return EGL_NO_CONTEXT;
-}
-
-EGLSurface Platform::sceneEglSurface() const
-{
-    if (Compositor *c = Compositor::self()) {
-        if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
-            return static_cast<AbstractEglBackend*>(s->backend())->surface();
-        }
-    }
-    return EGL_NO_SURFACE;
-}
-
-EGLConfig Platform::sceneEglConfig() const
-{
-    if (Compositor *c = Compositor::self()) {
-        if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
-            return static_cast<AbstractEglBackend*>(s->backend())->config();
-        }
-    }
-    return nullptr;
-}
-
 QSize Platform::screenSize() const
 {
     return QSize();

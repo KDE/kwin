@@ -90,16 +90,42 @@ public:
     /**
      * The EGLContext used by the compositing scene.
      **/
-    virtual EGLContext sceneEglContext() const;
+    virtual EGLContext sceneEglContext() const {
+        return m_context;
+    }
+    /**
+     * Sets the @p context used by the compositing scene.
+     **/
+    void setSceneEglContext(EGLContext context) {
+        m_context = context;
+    }
     /**
      * The first (in case of multiple) EGLSurface used by the compositing scene.
      **/
-    EGLSurface sceneEglSurface() const;
+    EGLSurface sceneEglSurface() const {
+        return m_surface;
+    }
+    /**
+     * Sets the first @p surface used by the compositing scene.
+     * @see sceneEglSurface
+     **/
+    void setSceneEglSurface(EGLSurface surface) {
+        m_surface = surface;
+    }
 
     /**
      * The EglConfig used by the compositing scene.
      **/
-    EGLConfig sceneEglConfig() const;
+    EGLConfig sceneEglConfig() const {
+        return m_eglConfig;
+    }
+    /**
+     * Sets the @p config used by the compositing scene.
+     * @see sceneEglConfig
+     **/
+    void setSceneEglConfig(EGLConfig config) {
+        m_eglConfig = config;
+    }
 
     /**
      * Implementing subclasses should provide a size in case the backend represents
@@ -436,6 +462,9 @@ private:
     int m_initialOutputCount = 1;
     qreal m_initialOutputScale = 1;
     EGLDisplay m_eglDisplay;
+    EGLConfig m_eglConfig = nullptr;
+    EGLContext m_context = EGL_NO_CONTEXT;
+    EGLSurface m_surface = EGL_NO_SURFACE;
     int m_hideCursorCounter = 0;
 };
 

@@ -75,6 +75,9 @@ void AbstractEglBackend::cleanup()
     eglDestroyContext(m_display, m_context);
     cleanupSurfaces();
     eglReleaseThread();
+    kwinApp()->platform()->setSceneEglContext(EGL_NO_CONTEXT);
+    kwinApp()->platform()->setSceneEglSurface(EGL_NO_SURFACE);
+    kwinApp()->platform()->setSceneEglConfig(nullptr);
 }
 
 void AbstractEglBackend::cleanupSurfaces()
@@ -255,12 +258,25 @@ bool AbstractEglBackend::createContext()
         return false;
     }
     m_context = ctx;
+    kwinApp()->platform()->setSceneEglContext(m_context);
     return true;
 }
 
 void AbstractEglBackend::setEglDisplay(const EGLDisplay &display) {
     m_display = display;
     kwinApp()->platform()->setSceneEglDisplay(display);
+}
+
+void AbstractEglBackend::setConfig(const EGLConfig &config)
+{
+    m_config = config;
+    kwinApp()->platform()->setSceneEglConfig(config);
+}
+
+void AbstractEglBackend::setSurface(const EGLSurface &surface)
+{
+    m_surface = surface;
+    kwinApp()->platform()->setSceneEglSurface(surface);
 }
 
 AbstractEglTexture::AbstractEglTexture(SceneOpenGL::Texture *texture, AbstractEglBackend *backend)

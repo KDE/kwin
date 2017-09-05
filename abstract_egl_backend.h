@@ -54,12 +54,8 @@ public:
 protected:
     AbstractEglBackend();
     void setEglDisplay(const EGLDisplay &display);
-    void setSurface(const EGLSurface &surface) {
-        m_surface = surface;
-    }
-    void setConfig(const EGLConfig &config) {
-        m_config = config;
-    }
+    void setSurface(const EGLSurface &surface);
+    void setConfig(const EGLConfig &config);
     void cleanup();
     virtual void cleanupSurfaces();
     bool initEglAPI();
