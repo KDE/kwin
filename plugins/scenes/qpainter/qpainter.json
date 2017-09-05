@@ -3,6 +3,7 @@
     "KPlugin": {
         "Description": "KWin Compositor plugin rendering through QPainter",
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través del QPainter",
+        "Description[it]": "Estensione del compositore di KWin per la resa tramite QPainter",
         "Description[nl]": "KWin-compositor-plug-in rendering via QPainter",
         "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez QPainter",
         "Description[pt]": "'Plugin' de Composição do KWin com desenho via QPainter",
