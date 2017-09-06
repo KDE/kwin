@@ -538,11 +538,11 @@ void InternalWindowTest::testMove()
     // normal move should be synced
     internalClient->move(5, 10);
     QCOMPARE(internalClient->geometry(), QRect(5, 10, 100, 100));
-    QCOMPARE(win.geometry(), QRect(5, 10, 100, 100));
+    QTRY_COMPARE(win.geometry(), QRect(5, 10, 100, 100));
     // another move should also be synced
     internalClient->move(10, 20);
     QCOMPARE(internalClient->geometry(), QRect(10, 20, 100, 100));
-    QCOMPARE(win.geometry(), QRect(10, 20, 100, 100));
+    QTRY_COMPARE(win.geometry(), QRect(10, 20, 100, 100));
 
     // now move with a Geometry update blocker
     {
@@ -552,7 +552,7 @@ void InternalWindowTest::testMove()
         QCOMPARE(win.geometry(), QRect(10, 20, 100, 100));
     }
     // after destroying the blocker it should be synced
-    QCOMPARE(win.geometry(), QRect(5, 10, 100, 100));
+    QTRY_COMPARE(win.geometry(), QRect(5, 10, 100, 100));
 }
 
 void InternalWindowTest::testSkipCloseAnimation_data()

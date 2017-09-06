@@ -543,7 +543,8 @@ void ShellClient::syncGeometryToInternalWindow()
     const QRect windowRect = QRect(geom.topLeft() + QPoint(borderLeft(), borderTop()),
                                     geom.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
     if (m_internalWindow->geometry() != windowRect) {
-        m_internalWindow->setGeometry(windowRect);
+        // delay to end of cycle to prevent freeze, see BUG 384441
+        QTimer::singleShot(0, m_internalWindow, std::bind(static_cast<void (QWindow::*)(const QRect&)>(&QWindow::setGeometry), m_internalWindow, windowRect));
     }
 }
 
