@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMutex>
 #include <QWaitCondition>
 
+#include <android-config.h>
 // libhybris
 #include <hwcomposer_window.h>
 // needed as hwcomposer_window.h includes EGL which on non-arm includes Xlib
