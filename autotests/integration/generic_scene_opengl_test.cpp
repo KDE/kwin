@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effectloader.h"
 #include "cursor.h"
 #include "platform.h"
-#include "scene_opengl.h"
+#include "scene.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "effect_builtins.h"
@@ -105,8 +105,9 @@ void GenericSceneOpenGLTest::testRestart()
         QVERIFY(sceneCreatedSpy.wait());
     }
     QCOMPARE(sceneCreatedSpy.count(), 1);
-    auto scene = qobject_cast<SceneOpenGL*>(KWin::Compositor::self()->scene());
+    auto scene = KWin::Compositor::self()->scene();
     QVERIFY(scene);
+    QCOMPARE(scene->compositingType(), KWin::OpenGL2Compositing);
 
     // trigger a repaint
     KWin::Compositor::self()->addRepaintFull();
