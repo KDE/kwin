@@ -53,14 +53,14 @@ enum class XdgShellInterfaceVersion
     UnstableV5,
     /**
      * zxdg_shell_v6 (unstable v6)
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      **/
     UnstableV6
 };
 
 /**
  * Flags describing how a popup should be reposition if constrained
- * @since 5.XDGMERGE_VERSION
+ * @since 5.39
  */
 enum class PositionerConstraint {
     /**
@@ -117,7 +117,7 @@ public:
      * Will result in pong being emitted
      *
      * @returns unique identifier for this request
-     * @since XDGMERGE_VERSION
+     * @since 5.39
      */
     quint32 ping(XdgShellSurfaceInterface * surface);
 
@@ -144,7 +144,7 @@ Q_SIGNALS:
      * Emitted whenever a new popup gets created.
      *
      * @param surface The popup xdg shell surface which got created
-     * @since XDGMERGE_VERSION
+     * @since 5.39
      */
     void xdgPopupCreated(KWayland::Server::XdgShellPopupInterface *surface);
 
@@ -152,7 +152,7 @@ Q_SIGNALS:
      * Emitted in response to a ping request
      *
      * @param serial unique identifier for the request
-     * @since XDGMERGE_VERSION
+     * @since 5.39
      */
     void pongReceived(quint32 serial);
 
@@ -162,7 +162,7 @@ Q_SIGNALS:
      * eventuallt pingTimeout gets emitted
      *
      * @param serial unique identifier for the request
-     * @since XDGMERGE_VERSION
+     * @since 5.39
      */
     void pingDelayed(quint32 serial);
 
@@ -171,7 +171,7 @@ Q_SIGNALS:
      * and the serve gave up on it
      *
      * @param serial unique identifier for the request
-     * @since XDGMERGE_VERSION
+     * @since 5.39
      */
     void pingTimeout(quint32 serial);
 
@@ -330,13 +330,13 @@ Q_SIGNALS:
 
     /**
      * Emitted whenever the maximun size hint changes
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
     void maxSizeChanged(const QSize &size);
 
     /**
      * Emitted whenever the minimum size hint changes
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
     void minSizeChanged(const QSize &size);
 
@@ -368,7 +368,7 @@ public:
      * Ask the popup surface to configure itself for the given configuration.
      *
      * @arg rect. The position of the surface relative to the transient parent
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
     quint32 configure(const QRect &rect);
 
@@ -391,26 +391,26 @@ public:
     /**
      * The size of the surface that is to be positioned.
      *
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
     QSize initialSize() const;
 
     /**
      * The area this popup should be positioned around
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
     QRect anchorRect() const;
 
     /**
      * Which edge of the anchor should the popup be positioned around
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
     Qt::Edges anchorEdge() const;
 
     /**
      * An additional offset that should be applied to the popup from the anchor rect
      *
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
     QPoint anchorOffset() const;
 
@@ -419,7 +419,7 @@ public:
      * i.e if the gravity is "bottom", then then the top of top of the poup will be at the anchor edge
      * if the gravity is top, then the bottom of the popup will be at the anchor edge
      *
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
 
     //DAVE left + right is illegal, so this is possible a useless return value? Maybe an enum with 9 entries left, topleft, top, ..
@@ -427,7 +427,7 @@ public:
 
     /**
      * Specifies how the compositor should position the popup if it does not fit in the requested position
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
     PositionerConstraints constraintAdjustments() const;
 
@@ -443,7 +443,7 @@ Q_SIGNALS:
      * A configure event with @p serial got acknowledged.
      * Note: XdgV6 only
      * @see configure
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      **/
     void configureAcknowledged(quint32 serial);
 
@@ -452,7 +452,7 @@ Q_SIGNALS:
      *
      * @param seat The seat on which an action triggered the popup
      * @param serial The serial of the action on the seat
-     * @since 5.XDGMERGE_VERSION
+     * @since 5.39
      */
     void grabRequested(KWayland::Server::SeatInterface *seat, quint32 serial);
 
