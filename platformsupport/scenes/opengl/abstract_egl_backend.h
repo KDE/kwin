@@ -19,12 +19,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_ABSTRACT_EGL_BACKEND_H
 #define KWIN_ABSTRACT_EGL_BACKEND_H
-#include "scene_opengl.h"
+#include "backend.h"
+#include "texture.h"
 
+#include <QObject>
 #include <epoxy/egl.h>
 #include <fixx11h.h>
 
 class QOpenGLFramebufferObject;
+
+namespace KWayland
+{
+namespace Server
+{
+class BufferInterface;
+}
+}
 
 namespace KWin
 {
@@ -77,7 +87,7 @@ private:
     QList<QByteArray> m_clientExtensions;
 };
 
-class KWIN_EXPORT AbstractEglTexture : public SceneOpenGL::TexturePrivate
+class KWIN_EXPORT AbstractEglTexture : public SceneOpenGLTexturePrivate
 {
 public:
     virtual ~AbstractEglTexture();
@@ -86,14 +96,14 @@ public:
     OpenGLBackend *backend() override;
 
 protected:
-    AbstractEglTexture(SceneOpenGL::Texture *texture, AbstractEglBackend *backend);
+    AbstractEglTexture(SceneOpenGLTexture *texture, AbstractEglBackend *backend);
     EGLImageKHR image() const {
         return m_image;
     }
     void setImage(const EGLImageKHR &img) {
         m_image = img;
     }
-    SceneOpenGL::Texture *texture() const {
+    SceneOpenGLTexture *texture() const {
         return q;
     }
 
@@ -102,7 +112,7 @@ private:
     bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
     EGLImageKHR attach(const QPointer<KWayland::Server::BufferInterface> &buffer);
     bool updateFromFBO(const QSharedPointer<QOpenGLFramebufferObject> &fbo);
-    SceneOpenGL::Texture *q;
+    SceneOpenGLTexture *q;
     AbstractEglBackend *m_backend;
     EGLImageKHR m_image;
 };

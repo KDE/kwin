@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_EGL_GBM_BACKEND_H
 #define KWIN_EGL_GBM_BACKEND_H
 #include "abstract_egl_backend.h"
-#include "scene_opengl.h"
 
 namespace KWin
 {
@@ -37,7 +36,7 @@ public:
     EglGbmBackend(VirtualBackend *b);
     virtual ~EglGbmBackend();
     void screenGeometryChanged(const QSize &size) override;
-    SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) override;
+    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion prepareRenderingFrame() override;
     void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool usesOverlayWindow() const override;
@@ -68,7 +67,7 @@ public:
 
 private:
     friend class EglGbmBackend;
-    EglGbmTexture(SceneOpenGL::Texture *texture, EglGbmBackend *backend);
+    EglGbmTexture(SceneOpenGLTexture *texture, EglGbmBackend *backend);
 };
 
 } // namespace

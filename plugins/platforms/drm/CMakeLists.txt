@@ -16,8 +16,10 @@ if(HAVE_GBM)
     set(DRM_SOURCES ${DRM_SOURCES} egl_gbm_backend.cpp drm_buffer_gbm.cpp)
 endif()
 
+include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
+
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})
-target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm SceneQPainterBackend)
+target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm SceneQPainterBackend SceneOpenGLBackend)
 
 if(HAVE_GBM)
     target_link_libraries(KWinWaylandDrmBackend gbm::gbm)

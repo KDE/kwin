@@ -410,7 +410,6 @@ set(kwin_KDEINIT_SRCS
    toplevel.cpp
    unmanaged.cpp
    scene.cpp
-   scene_opengl.cpp
    screenlockerwatcher.cpp
    thumbnailitem.cpp
    lanczosfilter.cpp
@@ -440,7 +439,6 @@ set(kwin_KDEINIT_SRCS
     decorations/settings.cpp
     decorations/decorationrenderer.cpp
     decorations/decorations_logging.cpp
-    abstract_egl_backend.cpp
     platform.cpp
     shell_client.cpp
     wayland_server.cpp

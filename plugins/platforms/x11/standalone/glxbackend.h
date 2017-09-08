@@ -19,11 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_GLX_BACKEND_H
 #define KWIN_GLX_BACKEND_H
-#include "scene_opengl.h"
+#include "backend.h"
+#include "texture.h"
+#include "swap_profiler.h"
 #include "x11eventfilter.h"
 
 #include <xcb/glx.h>
 #include <epoxy/glx.h>
+#include <fixx11h.h>
 #include <memory>
 
 namespace KWin
@@ -68,7 +71,7 @@ public:
     GlxBackend(Display *display);
     virtual ~GlxBackend();
     virtual void screenGeometryChanged(const QSize &size);
-    virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
+    virtual SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     virtual QRegion prepareRenderingFrame();
     virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
     virtual bool makeCurrent() override;
@@ -116,13 +119,14 @@ private:
     bool haveSwapInterval = false;
     bool haveWaitSync = false;
     Display *m_x11Display;
+    SwapProfiler m_swapProfiler;
     friend class GlxTexture;
 };
 
 /**
  * @brief Texture using an GLXPixmap.
  **/
-class GlxTexture : public SceneOpenGL::TexturePrivate
+class GlxTexture : public SceneOpenGLTexturePrivate
 {
 public:
     virtual ~GlxTexture();
@@ -132,12 +136,12 @@ public:
 
 private:
     friend class GlxBackend;
-    GlxTexture(SceneOpenGL::Texture *texture, GlxBackend *backend);
+    GlxTexture(SceneOpenGLTexture *texture, GlxBackend *backend);
     bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual);
     Display *display() const {
         return m_backend->m_x11Display;
     }
-    SceneOpenGL::Texture *q;
+    SceneOpenGLTexture *q;
     GlxBackend *m_backend;
     GLXPixmap m_glxpixmap; // the glx pixmap the texture is bound to
 };

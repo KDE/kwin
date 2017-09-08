@@ -1,0 +1,9 @@
+{
+    "CompositingType": 1,
+    "KPlugin": {
+        "Description": "KWin Compositor plugin rendering through OpenGL",
+        "Id": "KWinSceneOpenGL",
+        "Name": "SceneOpenGL"
+    }
+}
+

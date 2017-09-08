@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "platform.h"
 #include "wayland_server.h"
+#include "platformsupport/scenes/opengl/texture.h"
 
 #include <kwinglplatform.h>
 
@@ -44,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
+#include <logging.h>
 
 #include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/surface_interface.h>
@@ -180,18 +182,18 @@ bool SyncObject::finish()
     glGetSynciv(m_sync, GL_SYNC_STATUS, 1, nullptr, &value);
 
     if (value != GL_SIGNALED) {
-        qCDebug(KWIN_CORE) << "Waiting for X fence to finish";
+        qCDebug(KWIN_OPENGL) << "Waiting for X fence to finish";
 
         // Wait for the fence to become signaled with a one second timeout
         const GLenum result = glClientWaitSync(m_sync, 0, 1000000000);
 
         switch (result) {
         case GL_TIMEOUT_EXPIRED:
-            qCWarning(KWIN_CORE) << "Timeout while waiting for X fence";
+            qCWarning(KWIN_OPENGL) << "Timeout while waiting for X fence";
             return false;
 
         case GL_WAIT_FAILED:
-            qCWarning(KWIN_CORE) << "glClientWaitSync() failed";
+            qCWarning(KWIN_OPENGL) << "glClientWaitSync() failed";
             return false;
         }
     }
@@ -302,85 +304,6 @@ bool SyncManager::updateFences()
 
 // -----------------------------------------------------------------------
 
-
-
-//****************************************
-// SceneOpenGL
-//****************************************
-OpenGLBackend::OpenGLBackend()
-    : m_syncsToVBlank(false)
-    , m_blocksForRetrace(false)
-    , m_directRendering(false)
-    , m_haveBufferAge(false)
-    , m_failed(false)
-{
-}
-
-OpenGLBackend::~OpenGLBackend()
-{
-}
-
-void OpenGLBackend::setFailed(const QString &reason)
-{
-    qCWarning(KWIN_CORE) << "Creating the OpenGL rendering failed: " << reason;
-    m_failed = true;
-}
-
-void OpenGLBackend::idle()
-{
-    if (hasPendingFlush()) {
-        effects->makeOpenGLContextCurrent();
-        present();
-    }
-}
-
-void OpenGLBackend::addToDamageHistory(const QRegion &region)
-{
-    if (m_damageHistory.count() > 10)
-        m_damageHistory.removeLast();
-
-    m_damageHistory.prepend(region);
-}
-
-QRegion OpenGLBackend::accumulatedDamageHistory(int bufferAge) const
-{
-    QRegion region;
-
-    // Note: An age of zero means the buffer contents are undefined
-    if (bufferAge > 0 && bufferAge <= m_damageHistory.count()) {
-        for (int i = 0; i < bufferAge - 1; i++)
-            region |= m_damageHistory[i];
-    } else {
-        const QSize &s = screens()->size();
-        region = QRegion(0, 0, s.width(), s.height());
-    }
-
-    return region;
-}
-
-OverlayWindow* OpenGLBackend::overlayWindow()
-{
-    return NULL;
-}
-
-QRegion OpenGLBackend::prepareRenderingForScreen(int screenId)
-{
-    // fallback to repaint complete screen
-    return screens()->geometry(screenId);
-}
-
-void OpenGLBackend::endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion)
-{
-    Q_UNUSED(screenId)
-    Q_UNUSED(damage)
-    Q_UNUSED(damagedRegion)
-}
-
-bool OpenGLBackend::perScreenRendering() const
-{
-    return false;
-}
-
 /************************************************
  * SceneOpenGL
  ***********************************************/
@@ -403,12 +326,12 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
     GLPlatform *glPlatform = GLPlatform::instance();
     if (!glPlatform->isGLES() && !hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"))
             && !hasGLExtension(QByteArrayLiteral("GL_ARB_texture_rectangle"))) {
-        qCCritical(KWIN_CORE) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
+        qCCritical(KWIN_OPENGL) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         init_ok = false;
         return; // error
     }
     if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(10, 0)) {
-        qCCritical(KWIN_CORE) << "KWin requires at least Mesa 10.0 for OpenGL compositing.";
+        qCCritical(KWIN_OPENGL) << "KWin requires at least Mesa 10.0 for OpenGL compositing.";
         init_ok = false;
         return;
     }
@@ -432,10 +355,10 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         const QByteArray useExplicitSync = qgetenv("KWIN_EXPLICIT_SYNC");
 
         if (useExplicitSync != "0") {
-            qCDebug(KWIN_CORE) << "Initializing fences for synchronization with the X command stream";
+            qCDebug(KWIN_OPENGL) << "Initializing fences for synchronization with the X command stream";
             m_syncManager = new SyncManager;
         } else {
-            qCDebug(KWIN_CORE) << "Explicit synchronization with the X command stream disabled by environment variable";
+            qCDebug(KWIN_OPENGL) << "Explicit synchronization with the X command stream disabled by environment variable";
         }
     }
 }
@@ -514,7 +437,7 @@ void SceneOpenGL::initDebugOutput()
         switch (type) {
         case GL_DEBUG_TYPE_ERROR:
         case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-            qCWarning(KWIN_CORE, "%#x: %.*s", id, length, message);
+            qCWarning(KWIN_OPENGL, "%#x: %.*s", id, length, message);
             break;
 
         case GL_DEBUG_TYPE_OTHER:
@@ -532,7 +455,7 @@ void SceneOpenGL::initDebugOutput()
         case GL_DEBUG_TYPE_PORTABILITY:
         case GL_DEBUG_TYPE_PERFORMANCE:
         default:
-            qCDebug(KWIN_CORE, "%#x: %.*s", id, length, message);
+            qCDebug(KWIN_OPENGL, "%#x: %.*s", id, length, message);
             break;
         }
     };
@@ -584,9 +507,9 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
     }
     if (!scene) {
         if (GLPlatform::instance()->recommendedCompositor() == XRenderCompositing) {
-            qCCritical(KWIN_CORE) << "OpenGL driver recommends XRender based compositing. Falling back to XRender.";
-            qCCritical(KWIN_CORE) << "To overwrite the detection use the environment variable KWIN_COMPOSE";
-            qCCritical(KWIN_CORE) << "For more information see http://community.kde.org/KWin/Environment_Variables#KWIN_COMPOSE";
+            qCCritical(KWIN_OPENGL) << "OpenGL driver recommends XRender based compositing. Falling back to XRender.";
+            qCCritical(KWIN_OPENGL) << "To overwrite the detection use the environment variable KWIN_COMPOSE";
+            qCCritical(KWIN_OPENGL) << "For more information see http://community.kde.org/KWin/Environment_Variables#KWIN_COMPOSE";
             QTimer::singleShot(0, Compositor::self(), SLOT(fallbackToXRenderCompositing()));
         }
         delete backend;
@@ -621,32 +544,19 @@ bool SceneOpenGL::initFailed() const
     return !init_ok;
 }
 
-void SceneOpenGL::copyPixels(const QRegion &region)
-{
-    const int height = screens()->size().height();
-    foreach (const QRect &r, region.rects()) {
-        const int x0 = r.x();
-        const int y0 = height - r.y() - r.height();
-        const int x1 = r.x() + r.width();
-        const int y1 = height - r.y();
-
-        glBlitFramebuffer(x0, y0, x1, y1, x0, y0, x1, y1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    }
-}
-
 void SceneOpenGL::handleGraphicsReset(GLenum status)
 {
     switch (status) {
     case GL_GUILTY_CONTEXT_RESET:
-        qCDebug(KWIN_CORE) << "A graphics reset attributable to the current GL context occurred.";
+        qCDebug(KWIN_OPENGL) << "A graphics reset attributable to the current GL context occurred.";
         break;
 
     case GL_INNOCENT_CONTEXT_RESET:
-        qCDebug(KWIN_CORE) << "A graphics reset not attributable to the current GL context occurred.";
+        qCDebug(KWIN_OPENGL) << "A graphics reset not attributable to the current GL context occurred.";
         break;
 
     case GL_UNKNOWN_CONTEXT_RESET:
-        qCDebug(KWIN_CORE) << "A graphics reset of an unknown cause occurred.";
+        qCDebug(KWIN_OPENGL) << "A graphics reset of an unknown cause occurred.";
         break;
 
     default:
@@ -660,7 +570,7 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
     while (timer.elapsed() < 10000 && glGetGraphicsResetStatus() != GL_NO_ERROR)
         usleep(50);
 
-    qCDebug(KWIN_CORE) << "Attempting to reset compositing.";
+    qCDebug(KWIN_OPENGL) << "Attempting to reset compositing.";
     QMetaObject::invokeMethod(this, "resetCompositing", Qt::QueuedConnection);
 
     KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
@@ -800,7 +710,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
                 options->glPreferBufferSwap() == Options::CopyFrontBuffer &&
                 validRegion != displayRegion) {
                 glReadBuffer(GL_FRONT);
-                copyPixels(displayRegion - validRegion);
+                m_backend->copyPixels(displayRegion - validRegion);
                 glReadBuffer(GL_BACK);
                 validRegion = displayRegion;
             }
@@ -815,8 +725,8 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 
     if (m_currentFence) {
         if (!m_syncManager->updateFences()) {
-            qCDebug(KWIN_CORE) << "Aborting explicit synchronization with the X command stream.";
-            qCDebug(KWIN_CORE) << "Future frames will be rendered unsynchronized.";
+            qCDebug(KWIN_OPENGL) << "Aborting explicit synchronization with the X command stream.";
+            qCDebug(KWIN_OPENGL) << "Future frames will be rendered unsynchronized.";
             delete m_syncManager;
             m_syncManager = nullptr;
         }
@@ -902,9 +812,9 @@ void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
     }
 }
 
-SceneOpenGL::Texture *SceneOpenGL::createTexture()
+SceneOpenGLTexture *SceneOpenGL::createTexture()
 {
-    return new Texture(m_backend);
+    return new SceneOpenGLTexture(m_backend);
 }
 
 bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
@@ -1034,7 +944,7 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
     const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
     if (!forceEnv.isEmpty()) {
         if (qstrcmp(forceEnv, "O2") == 0 || qstrcmp(forceEnv, "O2ES") == 0) {
-            qCDebug(KWIN_CORE) << "OpenGL 2 compositing enforced by environment variable";
+            qCDebug(KWIN_OPENGL) << "OpenGL 2 compositing enforced by environment variable";
             return true;
         } else {
             // OpenGL 2 disabled by environment variable
@@ -1045,7 +955,7 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
         return false;
     }
     if (GLPlatform::instance()->recommendedCompositor() < OpenGL2Compositing) {
-        qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL 2 compositing";
+        qCDebug(KWIN_OPENGL) << "Driver does not recommend OpenGL 2 compositing";
         return false;
     }
     return true;
@@ -1062,7 +972,7 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
 
     // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
     if (!hasGLVersion(2, 0)) {
-        qCDebug(KWIN_CORE) << "OpenGL 2.0 is not supported";
+        qCDebug(KWIN_OPENGL) << "OpenGL 2.0 is not supported";
         init_ok = false;
         return;
     }
@@ -1074,7 +984,7 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
     // push one shader on the stack so that one is always bound
     ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
     if (checkGLError("Init")) {
-        qCCritical(KWIN_CORE) << "OpenGL 2 compositing setup failed";
+        qCCritical(KWIN_OPENGL) << "OpenGL 2 compositing setup failed";
         init_ok = false;
         return; // error
     }
@@ -1086,12 +996,12 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
     }
 
     if (!ShaderManager::instance()->selfTest()) {
-        qCCritical(KWIN_CORE) << "ShaderManager self test failed";
+        qCCritical(KWIN_OPENGL) << "ShaderManager self test failed";
         init_ok = false;
         return;
     }
 
-    qCDebug(KWIN_CORE) << "OpenGL 2 compositing successfully initialized";
+    qCDebug(KWIN_OPENGL) << "OpenGL 2 compositing successfully initialized";
     init_ok = true;
 }
 
@@ -1201,65 +1111,6 @@ void SceneOpenGL2::resetLanczosFilter()
 }
 
 //****************************************
-// SceneOpenGL::Texture
-//****************************************
-
-SceneOpenGL::Texture::Texture(OpenGLBackend *backend)
-    : GLTexture(*backend->createBackendTexture(this))
-{
-}
-
-SceneOpenGL::Texture::~Texture()
-{
-}
-
-SceneOpenGL::Texture& SceneOpenGL::Texture::operator = (const SceneOpenGL::Texture& tex)
-{
-    d_ptr = tex.d_ptr;
-    return *this;
-}
-
-void SceneOpenGL::Texture::discard()
-{
-    d_ptr = d_func()->backend()->createBackendTexture(this);
-}
-
-bool SceneOpenGL::Texture::load(WindowPixmap *pixmap)
-{
-    if (!pixmap->isValid()) {
-        return false;
-    }
-
-    // decrease the reference counter for the old texture
-    d_ptr = d_func()->backend()->createBackendTexture(this); //new TexturePrivate();
-
-    Q_D(Texture);
-    return d->loadTexture(pixmap);
-}
-
-void SceneOpenGL::Texture::updateFromPixmap(WindowPixmap *pixmap)
-{
-    Q_D(Texture);
-    d->updateTexture(pixmap);
-}
-
-//****************************************
-// SceneOpenGL::Texture
-//****************************************
-SceneOpenGL::TexturePrivate::TexturePrivate()
-{
-}
-
-SceneOpenGL::TexturePrivate::~TexturePrivate()
-{
-}
-
-void SceneOpenGL::TexturePrivate::updateTexture(WindowPixmap *pixmap)
-{
-    Q_UNUSED(pixmap)
-}
-
-//****************************************
 // SceneOpenGL::Window
 //****************************************
 
@@ -1273,7 +1124,7 @@ SceneOpenGL::Window::~Window()
 {
 }
 
-static SceneOpenGL::Texture *s_frameTexture = NULL;
+static SceneOpenGLTexture *s_frameTexture = NULL;
 // Bind the window pixmap to an OpenGL texture.
 bool SceneOpenGL::Window::bindTexture()
 {
@@ -1750,7 +1601,7 @@ bool OpenGLWindowPixmap::bind()
             toplevel()->resetDamage();
         }
     } else
-        qCDebug(KWIN_CORE) << "Failed to bind window";
+        qCDebug(KWIN_OPENGL) << "Failed to bind window";
     return success;
 }
 
@@ -2475,36 +2326,6 @@ bool SceneOpenGLShadow::prepareBackend()
     return true;
 }
 
-SwapProfiler::SwapProfiler()
-{
-    init();
-}
-
-void SwapProfiler::init()
-{
-    m_time = 2 * 1000*1000; // we start with a long time mean of 2ms ...
-    m_counter = 0;
-}
-
-void SwapProfiler::begin()
-{
-    m_timer.start();
-}
-
-char SwapProfiler::end()
-{
-    // .. and blend in actual values.
-    // this way we prevent extremes from killing our long time mean
-    m_time = (10*m_time + m_timer.nsecsElapsed())/11;
-    if (++m_counter > 500) {
-        const bool blocks = m_time > 1000 * 1000; // 1ms, i get ~250µs and ~7ms w/o triple buffering...
-        qCDebug(KWIN_CORE) << "Triple buffering detection:" << QString(blocks ? QStringLiteral("NOT available") : QStringLiteral("Available")) <<
-                        " - Mean block time:" << m_time/(1000.0*1000.0) << "ms";
-        return blocks ? 'd' : 't';
-    }
-    return 0;
-}
-
 SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::DecoratedClientImpl *client)
     : Renderer(client)
     , m_texture()
@@ -2610,6 +2431,33 @@ void SceneOpenGLDecorationRenderer::reparent(Deleted *deleted)
 {
     render();
     Renderer::reparent(deleted);
+}
+
+
+OpenGLFactory::OpenGLFactory(QObject *parent)
+    : SceneFactory(parent)
+{
+}
+
+OpenGLFactory::~OpenGLFactory() = default;
+
+Scene *OpenGLFactory::create(QObject *parent) const
+{
+    qCDebug(KWIN_OPENGL) << "Initializing OpenGL compositing";
+
+    // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
+    if (kwinApp()->platform()->openGLCompositingIsBroken()) {
+        qCWarning(KWIN_OPENGL) << "KWin has detected that your OpenGL library is unsafe to use";
+        return nullptr;
+    }
+    kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
+    auto s = SceneOpenGL::createScene(parent);
+    kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
+    if (s && s->initFailed()) {
+        delete s;
+        return nullptr;
+    }
+    return s;
 }
 
 } // namespace

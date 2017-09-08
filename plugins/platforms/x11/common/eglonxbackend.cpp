@@ -23,11 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "overlaywindow.h"
 #include "platform.h"
+#include "scene.h"
 #include "screens.h"
 #include "xcbutils.h"
+#include "texture.h"
 // kwin libs
 #include <kwinglplatform.h>
+#include <kwinglutils.h>
 // Qt
+#include <QLoggingCategory>
 #include <QDebug>
 #include <QOpenGLContext>
 // system
@@ -386,7 +390,7 @@ void EglOnXBackend::screenGeometryChanged(const QSize &size)
     m_bufferAge = 0;
 }
 
-SceneOpenGL::TexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGL::Texture *texture)
+SceneOpenGLTexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGLTexture *texture)
 {
     return new EglTexture(texture, this);
 }
@@ -473,7 +477,7 @@ bool EglOnXBackend::makeContextCurrent(const EGLSurface &surface)
  * EglTexture
  ************************************************/
 
-EglTexture::EglTexture(KWin::SceneOpenGL::Texture *texture, KWin::EglOnXBackend *backend)
+EglTexture::EglTexture(KWin::SceneOpenGLTexture *texture, KWin::EglOnXBackend *backend)
     : AbstractEglTexture(texture, backend)
     , m_backend(backend)
 {

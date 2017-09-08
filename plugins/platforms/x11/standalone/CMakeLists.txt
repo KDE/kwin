@@ -19,8 +19,10 @@ if(HAVE_EPOXY_GLX)
     set(X11PLATFORM_SOURCES ${X11PLATFORM_SOURCES} glxbackend.cpp glx_context_attribute_builder.cpp)
 endif()
 
+include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
+
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
-target_link_libraries(KWinX11Platform eglx11common kwin Qt5::X11Extras XCB::CURSOR)
+target_link_libraries(KWinX11Platform eglx11common kwin SceneOpenGLBackend Qt5::X11Extras XCB::CURSOR)
 if(X11_Xinput_FOUND)
     target_link_libraries(KWinX11Platform ${X11_Xinput_LIB})
 endif()

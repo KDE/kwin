@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <logging.h>
 // kwin libs
 #include <kwinglplatform.h>
+#include <kwinglutils.h>
 // Qt
 #include <QOpenGLContext>
 // system
@@ -214,7 +215,7 @@ void EglGbmBackend::screenGeometryChanged(const QSize &size)
     // TODO, create new buffer?
 }
 
-SceneOpenGL::TexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGL::Texture *texture)
+SceneOpenGLTexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGLTexture *texture)
 {
     return new EglGbmTexture(texture, this);
 }
@@ -282,7 +283,7 @@ bool EglGbmBackend::usesOverlayWindow() const
  * EglTexture
  ************************************************/
 
-EglGbmTexture::EglGbmTexture(KWin::SceneOpenGL::Texture *texture, EglGbmBackend *backend)
+EglGbmTexture::EglGbmTexture(KWin::SceneOpenGLTexture *texture, EglGbmBackend *backend)
     : AbstractEglTexture(texture, backend)
 {
 }

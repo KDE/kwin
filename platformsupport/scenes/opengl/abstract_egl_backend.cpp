@@ -18,16 +18,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_egl_backend.h"
+#include "texture.h"
 #include "composite.h"
 #include "egl_context_attribute_builder.h"
 #include "options.h"
 #include "platform.h"
+#include "scene.h"
 #include "wayland_server.h"
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/surface_interface.h>
 // kwin libs
+#include <logging.h>
 #include <kwinglplatform.h>
+#include <kwinglutils.h>
 // Qt
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
@@ -93,25 +97,25 @@ bool AbstractEglBackend::initEglAPI()
 {
     EGLint major, minor;
     if (eglInitialize(m_display, &major, &minor) == EGL_FALSE) {
-        qCWarning(KWIN_CORE) << "eglInitialize failed";
+        qCWarning(KWIN_OPENGL) << "eglInitialize failed";
         EGLint error = eglGetError();
         if (error != EGL_SUCCESS) {
-            qCWarning(KWIN_CORE) << "Error during eglInitialize " << error;
+            qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << error;
         }
         return false;
     }
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_CORE) << "Error during eglInitialize " << error;
+        qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << error;
         return false;
     }
-    qCDebug(KWIN_CORE) << "Egl Initialize succeeded";
+    qCDebug(KWIN_OPENGL) << "Egl Initialize succeeded";
 
     if (eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API) == EGL_FALSE) {
-        qCCritical(KWIN_CORE) << "bind OpenGL API failed";
+        qCCritical(KWIN_OPENGL) << "bind OpenGL API failed";
         return false;
     }
-    qCDebug(KWIN_CORE) << "EGL version: " << major << "." << minor;
+    qCDebug(KWIN_OPENGL) << "EGL version: " << major << "." << minor;
     const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
     setExtensions(eglExtensions.split(' '));
     return true;
@@ -250,13 +254,13 @@ bool AbstractEglBackend::createContext()
         const auto attribs = (*it)->build();
         ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, attribs.data());
         if (ctx != EGL_NO_CONTEXT) {
-            qCDebug(KWIN_CORE) << "Created EGL context with attributes:" << (*it).get();
+            qCDebug(KWIN_OPENGL) << "Created EGL context with attributes:" << (*it).get();
             break;
         }
     }
 
     if (ctx == EGL_NO_CONTEXT) {
-        qCCritical(KWIN_CORE) << "Create Context failed";
+        qCCritical(KWIN_OPENGL) << "Create Context failed";
         return false;
     }
     m_context = ctx;
@@ -281,8 +285,8 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     kwinApp()->platform()->setSceneEglSurface(surface);
 }
 
-AbstractEglTexture::AbstractEglTexture(SceneOpenGL::Texture *texture, AbstractEglBackend *backend)
-    : SceneOpenGL::TexturePrivate()
+AbstractEglTexture::AbstractEglTexture(SceneOpenGLTexture *texture, AbstractEglBackend *backend)
+    : SceneOpenGLTexturePrivate()
     , q(texture)
     , m_backend(backend)
     , m_image(EGL_NO_IMAGE_KHR)
@@ -453,7 +457,7 @@ bool AbstractEglTexture::loadEglTexture(const QPointer< KWayland::Server::Buffer
     q->unbind();
 
     if (EGL_NO_IMAGE_KHR == m_image) {
-        qCDebug(KWIN_CORE) << "failed to create egl image";
+        qCDebug(KWIN_OPENGL) << "failed to create egl image";
         q->discard();
         return false;
     }
@@ -466,7 +470,7 @@ EGLImageKHR AbstractEglTexture::attach(const QPointer< KWayland::Server::BufferI
     EGLint format, yInverted;
     eglQueryWaylandBufferWL(m_backend->eglDisplay(), buffer->resource(), EGL_TEXTURE_FORMAT, &format);
     if (format != EGL_TEXTURE_RGB && format != EGL_TEXTURE_RGBA) {
-        qCDebug(KWIN_CORE) << "Unsupported texture format: " << format;
+        qCDebug(KWIN_OPENGL) << "Unsupported texture format: " << format;
         return EGL_NO_IMAGE_KHR;
     }
     if (!eglQueryWaylandBufferWL(m_backend->eglDisplay(), buffer->resource(), EGL_WAYLAND_Y_INVERTED_WL, &yInverted)) {

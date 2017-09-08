@@ -18,3 +18,4 @@ kwin_xkbcommon KWin xkbcommon integration
 kwin_qpa_plugin KWin QtPlatformAbstraction plugin
 kwin_scene_xrender KWin XRender based compositor scene plugin
 kwin_scene_qpainter KWin QPainter based compositor scene plugin
+kwin_scene_opengl KWin OpenGL based compositor scene plugins

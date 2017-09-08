@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "overlaywindow.h"
 #include "scene.h"
-#include "scene_opengl.h"
 #include "screens.h"
 #include "shadow.h"
 #include "useractions.h"
@@ -38,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "decorations/decoratedclient.h"
+
+#include <kwingltexture.h>
 
 #include <KWayland/Server/surface_interface.h>
 
@@ -220,47 +221,6 @@ void Compositor::slotCompositingOptionsInitialized()
         }
     }
 
-    if (!m_scene) {
-        switch(options->compositingMode()) {
-        case OpenGLCompositing: {
-            qCDebug(KWIN_CORE) << "Initializing OpenGL compositing";
-
-            // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
-            if (kwinApp()->platform()->openGLCompositingIsBroken())
-                qCWarning(KWIN_CORE) << "KWin has detected that your OpenGL library is unsafe to use";
-            else {
-                kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
-
-                m_scene = SceneOpenGL::createScene(this);
-
-                kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
-
-                if (m_scene && !m_scene->initFailed()) {
-                    connect(static_cast<SceneOpenGL*>(m_scene), &SceneOpenGL::resetCompositing, this, &Compositor::restart);
-                    break; // -->
-                }
-                delete m_scene;
-                m_scene = NULL;
-            }
-
-            // Do not Fall back to XRender - it causes problems when selfcheck fails during startup, but works later on
-            break;
-        }
-        default:
-            qCDebug(KWIN_CORE) << "No compositing enabled";
-            m_starting = false;
-            if (cm_selection) {
-                cm_selection->owning = false;
-                cm_selection->release();
-            }
-            if (kwinApp()->platform()->requiresCompositing()) {
-                qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
-                qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
-                qApp->quit();
-            }
-            return;
-        }
-    }
     if (m_scene == NULL || m_scene->initFailed()) {
         qCCritical(KWIN_CORE) << "Failed to initialize compositing, compositing disabled";
         delete m_scene;
@@ -277,6 +237,7 @@ void Compositor::slotCompositingOptionsInitialized()
         }
         return;
     }
+    connect(m_scene, &Scene::resetCompositing, this, &Compositor::restart);
     emit sceneCreated();
 
     if (Workspace::self()) {

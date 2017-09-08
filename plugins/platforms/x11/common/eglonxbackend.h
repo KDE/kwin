@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_EGL_ON_X_BACKEND_H
 #define KWIN_EGL_ON_X_BACKEND_H
 #include "abstract_egl_backend.h"
-#include "scene_opengl.h"
+#include "swap_profiler.h"
+
+#include <xcb/xcb.h>
 
 namespace KWin
 {
@@ -35,7 +37,7 @@ public:
     explicit EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow);
     virtual ~EglOnXBackend();
     virtual void screenGeometryChanged(const QSize &size);
-    virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
+    virtual SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     virtual QRegion prepareRenderingFrame();
     virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
     virtual OverlayWindow* overlayWindow() override;
@@ -80,6 +82,7 @@ private:
     xcb_window_t m_renderingWindow = XCB_WINDOW_NONE;
     bool m_havePlatformBase = false;
     bool m_x11TextureFromPixmapSupported = true;
+    SwapProfiler m_swapProfiler;
     friend class EglTexture;
 };
 
@@ -96,7 +99,7 @@ public:
 private:
     bool loadTexture(xcb_pixmap_t pix, const QSize &size);
     friend class EglOnXBackend;
-    EglTexture(SceneOpenGL::Texture *texture, EglOnXBackend *backend);
+    EglTexture(SceneOpenGLTexture *texture, EglOnXBackend *backend);
     EglOnXBackend *m_backend;
 };
 

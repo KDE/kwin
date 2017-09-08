@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QSharedData>
 #include <QImage>
+#include <QMatrix4x4>
+#include <epoxy/gl.h>
 
 namespace KWin
 {
