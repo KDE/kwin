@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "platform.h"
 #include <config-kwin.h>
-#include "abstract_egl_backend.h"
 #include "composite.h"
 #include "cursor.h"
 #include "effects.h"
@@ -27,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "outline.h"
 #include "pointer_input.h"
-#include "scene_opengl.h"
+#include "scene.h"
 #include "screenedge.h"
 #include "wayland_server.h"
 
@@ -353,9 +352,7 @@ void Platform::warpPointer(const QPointF &globalPos)
 bool Platform::supportsQpaContext() const
 {
     if (Compositor *c = Compositor::self()) {
-        if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
-            return s->backend()->hasExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context"));
-        }
+        return c->scene()->openGLPlatformInterfaceExtensions().contains(QByteArrayLiteral("EGL_KHR_surfaceless_context"));
     }
     return false;
 }

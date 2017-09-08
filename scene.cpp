@@ -671,6 +671,11 @@ QImage *Scene::qpainterRenderBuffer() const
     return nullptr;
 }
 
+QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
+{
+    return QVector<QByteArray>{};
+}
+
 //****************************************
 // Scene::Window
 //****************************************
