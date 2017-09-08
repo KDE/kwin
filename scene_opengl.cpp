@@ -1021,6 +1021,11 @@ bool SceneOpenGL::animationsSupported() const
     return !GLPlatform::instance()->isSoftwareEmulation();
 }
 
+QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
+{
+    return m_backend->extensions().toVector();
+}
+
 //****************************************
 // SceneOpenGL2
 //****************************************

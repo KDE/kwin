@@ -82,6 +82,8 @@ public:
         return m_backend;
     }
 
+    QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
+
     /**
      * Copy a region of pixels from the current read to the current draw buffer
      */

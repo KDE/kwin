@@ -175,6 +175,15 @@ public:
      **/
     virtual QImage *qpainterRenderBuffer() const;
 
+    /**
+     * The backend specific extensions (e.g. EGL/GLX extensions).
+     *
+     * Not the OpenGL (ES) extension!
+     *
+     * Default implementation returns empty list
+     **/
+    virtual QVector<QByteArray> openGLPlatformInterfaceExtensions() const;
+
 Q_SIGNALS:
     void frameRendered();
 

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "input_event.h"
 #include "main.h"
-#include "scene_opengl.h"
+#include "scene.h"
 #include "shell_client.h"
 #include "unmanaged.h"
 #include "wayland_server.h"
@@ -528,7 +528,7 @@ void DebugConsole::initGLTab()
     m_ui->glVersionLabel->setText(GLPlatform::versionToString(gl->glVersion()));
     m_ui->glslLabel->setText(GLPlatform::versionToString(gl->glslVersion()));
 
-    auto extensionsString = [] (const QList<QByteArray> &extensions) {
+    auto extensionsString = [] (const auto &extensions) {
         QString text = QStringLiteral("<ul>");
         for (auto extension : extensions) {
             text.append(QStringLiteral("<li>%1</li>").arg(QString::fromLocal8Bit(extension)));
@@ -537,7 +537,7 @@ void DebugConsole::initGLTab()
         return text;
     };
 
-    m_ui->platformExtensionsLabel->setText(extensionsString(static_cast<SceneOpenGL*>(Compositor::self()->scene())->backend()->extensions()));
+    m_ui->platformExtensionsLabel->setText(extensionsString(Compositor::self()->scene()->openGLPlatformInterfaceExtensions()));
     m_ui->openGLExtensionsLabel->setText(extensionsString(openGLExtensions()));
 }
 
