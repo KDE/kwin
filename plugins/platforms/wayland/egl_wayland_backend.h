@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_EGL_WAYLAND_BACKEND_H
 #define KWIN_EGL_WAYLAND_BACKEND_H
 #include "abstract_egl_backend.h"
-#include "scene_opengl.h"
 // wayland
 #include <wayland-egl.h>
 
@@ -54,7 +53,7 @@ public:
     EglWaylandBackend(Wayland::WaylandBackend *b);
     virtual ~EglWaylandBackend();
     virtual void screenGeometryChanged(const QSize &size);
-    virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
+    virtual SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     virtual QRegion prepareRenderingFrame();
     virtual void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     virtual bool usesOverlayWindow() const override;
@@ -88,7 +87,7 @@ public:
 
 private:
     friend class EglWaylandBackend;
-    EglWaylandTexture(SceneOpenGL::Texture *texture, EglWaylandBackend *backend);
+    EglWaylandTexture(SceneOpenGLTexture *texture, EglWaylandBackend *backend);
 };
 
 } // namespace

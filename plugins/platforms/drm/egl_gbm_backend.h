@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_EGL_GBM_BACKEND_H
 #define KWIN_EGL_GBM_BACKEND_H
 #include "abstract_egl_backend.h"
-#include "scene_opengl.h"
 
 struct gbm_surface;
 
@@ -40,7 +39,7 @@ public:
     EglGbmBackend(DrmBackend *b);
     virtual ~EglGbmBackend();
     void screenGeometryChanged(const QSize &size) override;
-    SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) override;
+    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion prepareRenderingFrame() override;
     void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
@@ -87,7 +86,7 @@ public:
 
 private:
     friend class EglGbmBackend;
-    EglGbmTexture(SceneOpenGL::Texture *texture, EglGbmBackend *backend);
+    EglGbmTexture(SceneOpenGLTexture *texture, EglGbmBackend *backend);
 };
 
 } // namespace

@@ -213,7 +213,7 @@ void EglWaylandBackend::screenGeometryChanged(const QSize &size)
     m_bufferAge = 0;
 }
 
-SceneOpenGL::TexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGL::Texture *texture)
+SceneOpenGLTexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGLTexture *texture)
 {
     return new EglWaylandTexture(texture, this);
 }
@@ -280,7 +280,7 @@ bool EglWaylandBackend::usesOverlayWindow() const
  * EglTexture
  ************************************************/
 
-EglWaylandTexture::EglWaylandTexture(KWin::SceneOpenGL::Texture *texture, KWin::EglWaylandBackend *backend)
+EglWaylandTexture::EglWaylandTexture(KWin::SceneOpenGLTexture *texture, KWin::EglWaylandBackend *backend)
     : AbstractEglTexture(texture, backend)
 {
 }

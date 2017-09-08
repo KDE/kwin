@@ -33,7 +33,7 @@ public:
     EglHwcomposerBackend(HwcomposerBackend *backend);
     virtual ~EglHwcomposerBackend();
     bool usesOverlayWindow() const override;
-    SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) override;
+    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     void screenGeometryChanged(const QSize &size) override;
     QRegion prepareRenderingFrame() override;
     void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -58,7 +58,7 @@ public:
 
 private:
     friend class EglHwcomposerBackend;
-    EglHwcomposerTexture(SceneOpenGL::Texture *texture, EglHwcomposerBackend *backend);
+    EglHwcomposerTexture(SceneOpenGLTexture *texture, EglHwcomposerBackend *backend);
 };
 
 }

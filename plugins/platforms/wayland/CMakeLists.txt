@@ -8,11 +8,12 @@ if(HAVE_WAYLAND_EGL)
     set(WAYLAND_BACKEND_SOURCES egl_wayland_backend.cpp ${WAYLAND_BACKEND_SOURCES})
 endif()
 
+include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
 add_library(KWinWaylandWaylandBackend MODULE ${WAYLAND_BACKEND_SOURCES})
 target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient SceneQPainterBackend)
 
 if(HAVE_WAYLAND_EGL)
-    target_link_libraries(KWinWaylandWaylandBackend Wayland::Egl)
+    target_link_libraries(KWinWaylandWaylandBackend SceneOpenGLBackend Wayland::Egl)
 endif()
 
 install(

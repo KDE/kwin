@@ -27,8 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinxrenderutils.h>
 // KDE
 #include <KLocalizedString>
+#include <NETWM>
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
+#include <QIcon>
 #include <QSocketNotifier>
 // kwayland
 #include <KWayland/Server/buffer_interface.h>

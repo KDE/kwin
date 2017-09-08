@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector4D>
 
 #include <kwinconfig.h>
+#include <kwin_export.h>
 
 namespace KWin
 {
@@ -40,7 +41,7 @@ class GLTexture;
 class GLRenderTarget;
 class GLShader;
 
-class LanczosFilter
+class KWIN_EXPORT LanczosFilter
     : public QObject
 {
     Q_OBJECT

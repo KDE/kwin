@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // system
 #include <fcntl.h>
 #include <unistd.h>
+#include <config-kwin.h>
 #if HAVE_GBM
 #include <gbm.h>
 #endif

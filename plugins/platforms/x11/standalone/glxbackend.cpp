@@ -31,10 +31,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "composite.h"
 #include "platform.h"
+#include "scene.h"
 #include "screens.h"
 #include "xcbutils.h"
+#include "texture.h"
 // kwin libs
 #include <kwinglplatform.h>
+#include <kwinglutils.h>
 #include <kwinxrenderutils.h>
 // Qt
 #include <QDebug>
@@ -48,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_DL_LIBRARY
 #include <dlfcn.h>
 #endif
+#include <assert.h>
 
 #ifndef XCB_GLX_BUFFER_SWAP_COMPLETE
 #define XCB_GLX_BUFFER_SWAP_COMPLETE 1
@@ -722,7 +726,7 @@ void GlxBackend::present()
         }
     } else { // Copy Pixels (horribly slow on Mesa)
         glDrawBuffer(GL_FRONT);
-        SceneOpenGL::copyPixels(lastDamage());
+        copyPixels(lastDamage());
         glDrawBuffer(GL_BACK);
     }
 
@@ -748,7 +752,7 @@ void GlxBackend::screenGeometryChanged(const QSize &size)
     m_bufferAge = 0;
 }
 
-SceneOpenGL::TexturePrivate *GlxBackend::createBackendTexture(SceneOpenGL::Texture *texture)
+SceneOpenGLTexturePrivate *GlxBackend::createBackendTexture(SceneOpenGLTexture *texture)
 {
     return new GlxTexture(texture, this);
 }
@@ -844,8 +848,8 @@ bool GlxBackend::usesOverlayWindow() const
 /********************************************************
  * GlxTexture
  *******************************************************/
-GlxTexture::GlxTexture(SceneOpenGL::Texture *texture, GlxBackend *backend)
-    : SceneOpenGL::TexturePrivate()
+GlxTexture::GlxTexture(SceneOpenGLTexture *texture, GlxBackend *backend)
+    : SceneOpenGLTexturePrivate()
     , q(texture)
     , m_backend(backend)
     , m_glxpixmap(None)

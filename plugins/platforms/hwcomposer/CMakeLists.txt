@@ -5,12 +5,14 @@ set(HWCOMPOSER_SOURCES
     screens_hwcomposer.cpp
 )
 
+include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
 add_library(KWinWaylandHwcomposerBackend MODULE ${HWCOMPOSER_SOURCES})
 target_link_libraries(KWinWaylandHwcomposerBackend
     kwin
     libhybris::libhardware
     libhybris::hwcomposer
     libhybris::hybriseglplatform
+    SceneOpenGLBackend
 )
 
 install(
