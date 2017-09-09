@@ -3,5 +3,17 @@
   <file>shaders/1.10/lanczos-fragment.glsl</file>
 
   <file>shaders/1.40/lanczos-fragment.glsl</file>
+
+  <file>shaders/vulkan/color_vert.spv</file>
+  <file>shaders/vulkan/texture_vert.spv</file>
+  <file>shaders/vulkan/crossfade_vert.spv</file>
+  <file>shaders/vulkan/updatedecoration_vert.spv</file>
+  <file>shaders/vulkan/color_frag.spv</file>
+  <file>shaders/vulkan/texture_frag.spv</file>
+  <file>shaders/vulkan/modulate_frag.spv</file>
+  <file>shaders/vulkan/desaturate_frag.spv</file>
+  <file>shaders/vulkan/crossfade_frag.spv</file>
+  <file>shaders/vulkan/updatedecoration_frag.spv</file>
+
   </qresource>
 </RCC>
