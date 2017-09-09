@@ -136,14 +136,38 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </item>
     </layout>
    </item>
-   <item row="4" column="0">
+   <item row="4" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Rendering backend:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QComboBox" name="type"/>
+   </item>
+   <item row="6" column="0" colspan="2">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
     <widget class="QLabel" name="glScaleFilterLabel">
      <property name="text">
       <string>Scale method:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="7" column="1">
     <widget class="QComboBox" name="glScaleFilter">
      <item>
       <property name="text">
@@ -162,14 +186,14 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </item>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="8" column="0">
     <widget class="QLabel" name="xrScaleFilterLabel">
      <property name="text">
       <string>Scale method:</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="8" column="1">
     <widget class="QComboBox" name="xrScaleFilter">
      <item>
       <property name="text">
@@ -181,30 +205,6 @@ Alternatively, you might want to use the XRender backend instead.</string>
        <string>Smooth (slower)</string>
       </property>
      </item>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="2">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Rendering backend:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QComboBox" name="type"/>
-   </item>
-   <item row="8" column="0" colspan="2">
-    <widget class="Line" name="line_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
     </widget>
    </item>
    <item row="9" column="0">
