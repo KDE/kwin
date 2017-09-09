@@ -186,6 +186,8 @@ void KWinCompositingSettings::init()
     );
     auto showHideBasedOnType = [this, type]() {
         const int currentType = type->compositingTypeForIndex(m_form.type->currentIndex());
+        const bool currentIsOpenGL = currentType == CompositingType::OPENGL31_INDEX ||
+                                     currentType == CompositingType::OPENGL20_INDEX;
         auto &layout = m_form.formLayout;
 
         // Remove all backend-specific rows from the form layout
@@ -198,7 +200,7 @@ void KWinCompositingSettings::init()
         // Now insert the rows for the selected backend
         constexpr int firstRow = 7;
 
-        if (currentType != CompositingType::XRENDER_INDEX) {
+        if (currentIsOpenGL) {
             layout->insertRow(firstRow + 0, m_form.glScaleFilterLabel,     m_form.glScaleFilter);
             layout->insertRow(firstRow + 1, m_form.tearingPreventionLabel, m_form.tearingPrevention);
         } else if (currentType == CompositingType::XRENDER_INDEX) {
@@ -206,10 +208,12 @@ void KWinCompositingSettings::init()
             layout->insertRow(firstRow + 1, m_form.tearingPreventionLabel, m_form.tearingPrevention);
         }
 
-        m_form.glScaleFilter->setVisible(currentType != CompositingType::XRENDER_INDEX);
-        m_form.glScaleFilterLabel->setVisible(currentType != CompositingType::XRENDER_INDEX);
+        m_form.glScaleFilter->setVisible(currentIsOpenGL);
+        m_form.glScaleFilterLabel->setVisible(currentIsOpenGL);
         m_form.xrScaleFilter->setVisible(currentType == CompositingType::XRENDER_INDEX);
         m_form.xrScaleFilterLabel->setVisible(currentType == CompositingType::XRENDER_INDEX);
+        m_form.tearingPrevention->setVisible(currentType != CompositingType::VULKAN_INDEX);
+        m_form.tearingPreventionLabel->setVisible(currentType != CompositingType::VULKAN_INDEX);
     };
     showHideBasedOnType();
     connect(m_form.type, currentIndexChangedSignal,

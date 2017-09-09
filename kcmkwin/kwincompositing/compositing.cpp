@@ -97,7 +97,9 @@ void Compositing::reset()
         const QString backend = kwinConfig.readEntry("Backend", "OpenGL");
         const bool glCore = kwinConfig.readEntry("GLCore", false);
 
-        if (backend == QStringLiteral("OpenGL")) {
+        if (backend == QStringLiteral("Vulkan")) {
+            return CompositingType::VULKAN_INDEX;
+        } else if (backend == QStringLiteral("OpenGL")) {
             if (glCore) {
                 return CompositingType::OPENGL31_INDEX;
             } else {
@@ -294,6 +296,10 @@ void Compositing::save()
     QString backend;
     bool glCore = false;
     switch (compositingType()) {
+    case CompositingType::VULKAN_INDEX:
+        backend = "Vulkan";
+        glCore = false;
+        break;
     case CompositingType::OPENGL31_INDEX:
         backend = "OpenGL";
         glCore = true;
@@ -375,6 +381,7 @@ void CompositingType::generateCompositing()
 {
     QHash<QString, CompositingType::CompositingTypeIndex> compositingTypes;
 
+    compositingTypes[i18n("Vulkan")] = CompositingType::VULKAN_INDEX;
     compositingTypes[i18n("OpenGL 3.1")] = CompositingType::OPENGL31_INDEX;
     compositingTypes[i18n("OpenGL 2.0")] = CompositingType::OPENGL20_INDEX;
     compositingTypes[i18n("XRender")] = CompositingType::XRENDER_INDEX;

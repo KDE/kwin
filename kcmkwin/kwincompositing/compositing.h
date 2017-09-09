@@ -122,7 +122,8 @@ class CompositingType : public QAbstractItemModel
 public:
 
     enum CompositingTypeIndex {
-        OPENGL31_INDEX = 0,
+        VULKAN_INDEX = 0,
+        OPENGL31_INDEX,
         OPENGL20_INDEX,
         XRENDER_INDEX
     };
