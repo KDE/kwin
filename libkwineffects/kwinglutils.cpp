@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwineffects.h"
 #include "kwinglplatform.h"
 #include "logging_p.h"
+#include "../utils.h"
 
 
 #include <QPixmap>
@@ -1518,12 +1519,6 @@ static const uint16_t indices[] = {
      2029, 2028, 2031, 2031, 2030, 2029, 2033, 2032, 2035, 2035, 2034, 2033, 2037, 2036, 2039, 2039, 2038, 2037,
      2041, 2040, 2043, 2043, 2042, 2041, 2045, 2044, 2047, 2047, 2046, 2045
 };
-
-template <typename T>
-T align(T value, int bytes)
-{
-    return (value + bytes - 1) & ~T(bytes - 1);
-}
 
 class IndexBuffer
 {

@@ -38,6 +38,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QProcess>
 // system
 #include <limits.h>
+#include <assert.h>
+
 Q_DECLARE_LOGGING_CATEGORY(KWIN_CORE)
 namespace KWin
 {
@@ -191,6 +193,17 @@ Qt::MouseButton x11ToQtMouseButton(int button);
 Qt::MouseButton KWIN_EXPORT x11ToQtMouseButton(int button);
 Qt::MouseButtons KWIN_EXPORT x11ToQtMouseButtons(int state);
 Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
+
+/**
+ * Aligns the given value to alignment.
+ * Note that alignment must be a power-of-two.
+ */
+template <typename T>
+constexpr T align(T value, unsigned int alignment)
+{
+    assert(alignment != 0 && alignment == (alignment & -alignment));
+    return (value + alignment - 1) & ~T(alignment - 1);
+}
 
 /**
  * Separate the concept of an unet QPoint and 0,0

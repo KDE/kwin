@@ -2398,11 +2398,6 @@ void SceneOpenGLDecorationRenderer::render()
     renderPart(bottom.intersected(geometry), bottom, QPoint(0, top.height() + 1));
 }
 
-static int align(int value, int align)
-{
-    return (value + align - 1) & ~(align - 1);
-}
-
 void SceneOpenGLDecorationRenderer::resizeTexture()
 {
     QRect left, top, right, bottom;
