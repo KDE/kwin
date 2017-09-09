@@ -40,3 +40,5 @@
 #define XCB_ICCCM_WM_STATE_NORMAL 1
 #define XCB_ICCCM_WM_STATE_ICONIC 3
 #endif
+
+#cmakedefine HAVE_VULKAN 1
