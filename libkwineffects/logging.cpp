@@ -21,3 +21,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Q_LOGGING_CATEGORY(LIBKWINEFFECTS, "libkwineffects", QtCriticalMsg)
 Q_LOGGING_CATEGORY(LIBKWINGLUTILS, "libkwinglutils", QtCriticalMsg)
 Q_LOGGING_CATEGORY(LIBKWINXRENDERUTILS, "libkwinxrenderutils", QtCriticalMsg)
+Q_LOGGING_CATEGORY(LIBKWINVULKANUTILS, "libkwinvulkanutils", QtCriticalMsg)
