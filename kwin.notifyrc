@@ -283,3 +283,8 @@ Comment[x-test]=xxA graphics reset event occurredxx
 Comment[zh_CN]=发生了图形重置事件
 Comment[zh_TW]=發生了圖形重置事件
 Action=Popup
+
+[Event/compositingfailed]
+Name=Compositing Failed
+Comment=Desktop effects have been suspended due to a fatal error
+Action=Popup
