@@ -260,6 +260,7 @@ void Compositor::slotCompositingOptionsInitialized()
     }
 
     connect(m_scene, &Scene::resetCompositing, this, &Compositor::restart);
+    connect(m_scene, &Scene::compositingFailed, this, &Compositor::finish);
     emit sceneCreated();
 
     if (Workspace::self()) {
