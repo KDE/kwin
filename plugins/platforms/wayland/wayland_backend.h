@@ -139,6 +139,7 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend *createQPainterBackend() override;
+    VulkanBackend *createVulkanBackend() override;
 
     QSize screenSize() const override {
         return shellSurfaceSize();

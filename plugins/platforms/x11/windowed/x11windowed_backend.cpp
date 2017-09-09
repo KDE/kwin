@@ -17,6 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
+#include <config-kwin.h>
 #include "x11windowed_backend.h"
 #include "scene_qpainter_x11_backend.h"
 #include "logging.h"
@@ -25,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "egl_x11_backend.h"
 #include "screens.h"
 #include <kwinxrenderutils.h>
+#if HAVE_VULKAN
+#include "x11_vulkan_backend.h"
+#endif
 // KDE
 #include <KLocalizedString>
 #include <NETWM>
@@ -454,11 +458,33 @@ QPainterBackend *X11WindowedBackend::createQPainterBackend()
     return new X11WindowedQPainterBackend(this);
 }
 
+VulkanBackend *X11WindowedBackend::createVulkanBackend()
+{
+#if HAVE_VULKAN
+    return new X11VulkanBackend(this);
+#else
+    return nullptr;
+#endif
+}
+
 void X11WindowedBackend::warpPointer(const QPointF &globalPos)
 {
     const xcb_window_t w = m_windows.at(0).window;
     xcb_warp_pointer(m_connection, w, w, 0, 0, 0, 0, globalPos.x(), globalPos.y());
     xcb_flush(m_connection);
+}
+
+QVector<CompositingType> X11WindowedBackend::supportedCompositors() const
+{
+    QVector<CompositingType> types;
+
+    types << OpenGLCompositing;
+#ifdef HAVE_VULKAN
+    types << VulkanCompositing;
+#endif
+    types << QPainterCompositing;
+
+    return types;
 }
 
 xcb_window_t X11WindowedBackend::windowForScreen(int screen) const

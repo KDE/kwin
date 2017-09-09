@@ -54,6 +54,7 @@ class Scene;
 class Screens;
 class ScreenEdges;
 class Toplevel;
+class VulkanBackend;
 class WaylandCursorTheme;
 
 namespace Decoration
@@ -72,6 +73,7 @@ public:
     virtual Screens *createScreens(QObject *parent = nullptr);
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
+    virtual VulkanBackend *createVulkanBackend();
     /**
      * Allows the platform to create a platform specific screen edge.
      * The default implementation creates a Edge.

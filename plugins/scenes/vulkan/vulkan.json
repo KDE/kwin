@@ -1,0 +1,9 @@
+{
+    "CompositingType": 16,
+    "KPlugin": {
+        "Description": "KWin Vulkan compositor plugin",
+        "Id": "KWinSceneVulkan",
+        "Name": "SceneVulkan",
+        "Name[x-test]": "xxSceneVulkanxx"
+    }
+}

@@ -218,6 +218,8 @@ QString CompositorDBusInterface::compositingType() const
         } else {
             return QStringLiteral("gl2");
         }
+    case VulkanCompositing:
+        return QStringLiteral("vulkan");
     case QPainterCompositing:
         return QStringLiteral("qpainter");
     case NoCompositing:

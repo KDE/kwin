@@ -106,6 +106,11 @@ QPainterBackend *Platform::createQPainterBackend()
     return nullptr;
 }
 
+VulkanBackend *Platform::createVulkanBackend()
+{
+    return nullptr;
+}
+
 Edge *Platform::createScreenEdge(ScreenEdges *edges)
 {
     return new Edge(edges);

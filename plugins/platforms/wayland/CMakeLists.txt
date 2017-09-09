@@ -9,11 +9,20 @@ if(HAVE_WAYLAND_EGL)
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
+
+if(Vulkan_FOUND)
+    set(WAYLAND_BACKEND_SOURCES ${WAYLAND_BACKEND_SOURCES} wayland_vulkan_backend.cpp)
+endif()
+
 add_library(KWinWaylandWaylandBackend MODULE ${WAYLAND_BACKEND_SOURCES})
 target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient SceneQPainterBackend)
 
 if(HAVE_WAYLAND_EGL)
     target_link_libraries(KWinWaylandWaylandBackend SceneOpenGLBackend Wayland::Egl)
+endif()
+
+if(Vulkan_FOUND)
+    target_link_libraries(KWinWaylandWaylandBackend SceneVulkanBackend kwinvulkanutils)
 endif()
 
 install(

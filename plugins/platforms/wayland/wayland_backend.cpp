@@ -31,6 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
 #endif
+#if HAVE_VULKAN
+#include "wayland_vulkan_backend.h"
+#endif
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -582,6 +585,15 @@ QPainterBackend *WaylandBackend::createQPainterBackend()
     return new WaylandQPainterBackend(this);
 }
 
+VulkanBackend *WaylandBackend::createVulkanBackend()
+{
+#if HAVE_VULKAN
+    return new WaylandVulkanBackend(this);
+#else
+    return nullptr;
+#endif
+}
+
 void WaylandBackend::flush()
 {
     if (m_connectionThreadObject) {
@@ -655,11 +667,15 @@ void WaylandBackend::updateWindowTitle()
 
 QVector<CompositingType> WaylandBackend::supportedCompositors() const
 {
+    QVector<CompositingType> types;
 #if HAVE_WAYLAND_EGL
-    return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
-#else
-    return QVector<CompositingType>{QPainterCompositing};
+    types << OpenGLCompositing;
 #endif
+#if HAVE_VULKAN
+    types << VulkanCompositing;
+#endif
+    types << QPainterCompositing;
+    return types;
 }
 
 

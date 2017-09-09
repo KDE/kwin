@@ -23,12 +23,22 @@ if(HAVE_EPOXY_GLX)
     set(X11PLATFORM_SOURCES ${X11PLATFORM_SOURCES} glxbackend.cpp glx_context_attribute_builder.cpp)
 endif()
 
+
 include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
+include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/vulkan)
+
+if (Vulkan_FOUND)
+    set(X11PLATFORM_SOURCES ${X11PLATFORM_SOURCES} vulkanbackend.cpp)
+endif()
 
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
 target_link_libraries(KWinX11Platform eglx11common kwin kwinxrenderutils SceneOpenGLBackend Qt5::X11Extras XCB::CURSOR KF5::Crash)
 if(X11_Xinput_FOUND)
     target_link_libraries(KWinX11Platform ${X11_Xinput_LIB})
+endif()
+
+if (Vulkan_FOUND)
+    target_link_libraries(KWinX11Platform SceneVulkanBackend kwinvulkanutils)
 endif()
 
 if(HAVE_DL_LIBRARY)

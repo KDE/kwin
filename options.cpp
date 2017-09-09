@@ -901,6 +901,8 @@ bool Options::loadCompositingConfig (bool force)
         compositingMode = XRenderCompositing;
     else if (compositingBackend == "QPainter")
         compositingMode = QPainterCompositing;
+    else if (compositingBackend == "Vulkan")
+        compositingMode = VulkanCompositing;
     else
         compositingMode = OpenGLCompositing;
 
@@ -919,6 +921,11 @@ bool Options::loadCompositingConfig (bool force)
         case 'Q':
             qCDebug(KWIN_CORE) << "Compositing forced to QPainter mode by environment variable";
             compositingMode = QPainterCompositing;
+            useCompositing = true;
+            break;
+        case 'V':
+            qCDebug(KWIN_CORE) << "Compositing forced to Vulkan mode by environment variable";
+            compositingMode = VulkanCompositing;
             useCompositing = true;
             break;
         case 'N':

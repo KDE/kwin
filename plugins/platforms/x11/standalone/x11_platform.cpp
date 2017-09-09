@@ -27,6 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_EPOXY_GLX
 #include "glxbackend.h"
 #endif
+#if HAVE_VULKAN
+#include "vulkanbackend.h"
+#endif
 #if HAVE_X11_XINPUT
 #include "xinputintegration.h"
 #endif
@@ -128,6 +131,15 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
         // no backend available
         return nullptr;
     }
+}
+
+VulkanBackend *X11StandalonePlatform::createVulkanBackend()
+{
+#ifdef HAVE_VULKAN
+    return new X11VulkanBackend(this);
+#else
+    return nullptr;
+#endif
 }
 
 Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
@@ -430,6 +442,9 @@ QVector<CompositingType> X11StandalonePlatform::supportedCompositors() const
     QVector<CompositingType> compositors;
 #if HAVE_EPOXY_GLX
     compositors << OpenGLCompositing;
+#endif
+#ifdef HAVE_VULKAN
+    compositors << VulkanCompositing;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     compositors << XRenderCompositing;
