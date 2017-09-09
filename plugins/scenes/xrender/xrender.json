@@ -3,6 +3,7 @@
     "KPlugin": {
         "Description": "KWin Compositor plugin rendering through XRender",
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través de l'XRender",
+        "Description[el]": "Αποτύπωση πρσοθέτου συνθέτη KWin μέσω XRender",
         "Description[it]": "Estensione del compositore di KWin per la resa tramite XRender",
         "Description[nl]": "KWin-compositor-plug-in rendering via XRender",
         "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez XRender",
