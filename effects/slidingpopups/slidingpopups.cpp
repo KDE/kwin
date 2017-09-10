@@ -48,6 +48,11 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
     connect(effects, &EffectsHandler::windowShown, this, &SlidingPopupsEffect::startForShow);
     connect(effects, &EffectsHandler::windowHidden, this, &SlidingPopupsEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this,
+        [this] {
+            mAtom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
+        }
+    );
     reconfigure(ReconfigureAll);
 }
 
@@ -273,7 +278,9 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow* w)
 void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 {
     //X11
-    slotPropertyNotify(w, mAtom);
+    if (mAtom != XCB_ATOM_NONE) {
+        slotPropertyNotify(w, mAtom);
+    }
 
     //Wayland
     if (auto surf = w->surface()) {
@@ -354,7 +361,7 @@ void SlidingPopupsEffect::slotWindowDeleted(EffectWindow* w)
 
 void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
-    if (!w || a != mAtom)
+    if (!w || a != mAtom || mAtom == XCB_ATOM_NONE)
         return;
 
     QByteArray data = w->readProperty(mAtom, mAtom, 32);

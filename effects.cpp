@@ -231,6 +231,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
                 m_managedProperties.insert(*it, atom);
                 registerPropertyType(atom, true);
             }
+            emit xcbConnectionChanged();
         }
     );
 

@@ -58,6 +58,13 @@ ContrastEffect::ContrastEffect()
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
     connect(effects, SIGNAL(screenGeometryChanged(QSize)), this, SLOT(slotScreenGeometryChanged()));
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this,
+        [this] {
+            if (shader && shader->isValid()) {
+                net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
+            }
+        }
+    );
 
     // Fetch the contrast regions for all windows
     foreach (EffectWindow *window, effects->stackingOrder())
@@ -92,27 +99,30 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
 {
     QRegion region;
     float colorTransform[16];
+    QByteArray value;
 
-    const QByteArray value = w->readProperty(net_wm_contrast_region, net_wm_contrast_region, 32);
+    if (net_wm_contrast_region != XCB_ATOM_NONE) {
+        value = w->readProperty(net_wm_contrast_region, net_wm_contrast_region, 32);
 
-    if (value.size() > 0 && !((value.size() - (16 * sizeof(uint32_t))) % ((4 * sizeof(uint32_t))))) {
-        const uint32_t *cardinals = reinterpret_cast<const uint32_t*>(value.constData());
-        const float *floatCardinals = reinterpret_cast<const float*>(value.constData());
-        unsigned int i = 0;
-        for (; i < ((value.size() - (16 * sizeof(uint32_t)))) / sizeof(uint32_t);) {
-            int x = cardinals[i++];
-            int y = cardinals[i++];
-            int w = cardinals[i++];
-            int h = cardinals[i++];
-            region += QRect(x, y, w, h);
+        if (value.size() > 0 && !((value.size() - (16 * sizeof(uint32_t))) % ((4 * sizeof(uint32_t))))) {
+            const uint32_t *cardinals = reinterpret_cast<const uint32_t*>(value.constData());
+            const float *floatCardinals = reinterpret_cast<const float*>(value.constData());
+            unsigned int i = 0;
+            for (; i < ((value.size() - (16 * sizeof(uint32_t)))) / sizeof(uint32_t);) {
+                int x = cardinals[i++];
+                int y = cardinals[i++];
+                int w = cardinals[i++];
+                int h = cardinals[i++];
+                region += QRect(x, y, w, h);
+            }
+
+            for (unsigned int j = 0; j < 16; ++j) {
+                colorTransform[j] = floatCardinals[i + j];
+            }
+
+            QMatrix4x4 colorMatrix(colorTransform);
+            m_colorMatrices[w] = colorMatrix;
         }
-
-        for (unsigned int j = 0; j < 16; ++j) {
-            colorTransform[j] = floatCardinals[i + j];
-        }
-
-        QMatrix4x4 colorMatrix(colorTransform);
-        m_colorMatrices[w] = colorMatrix;
     }
 
     KWayland::Server::SurfaceInterface *surf = w->surface();
@@ -159,7 +169,7 @@ void ContrastEffect::slotWindowDeleted(EffectWindow *w)
 
 void ContrastEffect::slotPropertyNotify(EffectWindow *w, long atom)
 {
-    if (w && atom == net_wm_contrast_region) {
+    if (w && atom == net_wm_contrast_region && net_wm_contrast_region != XCB_ATOM_NONE) {
         updateContrastRegion(w);
     }
 }

@@ -66,8 +66,12 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_exposeClassAction(new QAction(this))
 {
     initConfig<PresentWindowsConfig>();
-    m_atomDesktop = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_DESKTOP", this);
-    m_atomWindows = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_GROUP", this);
+    auto announceSupportProperties = [this] {
+        m_atomDesktop = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_DESKTOP", this);
+        m_atomWindows = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_GROUP", this);
+    };
+    announceSupportProperties();
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this, announceSupportProperties);
 
     QAction* exposeAction = m_exposeAction;
     exposeAction->setObjectName(QStringLiteral("Expose"));
@@ -829,6 +833,9 @@ void PresentWindowsEffect::grabbedKeyboardEvent(QKeyEvent *e)
 // Atom handling
 void PresentWindowsEffect::slotPropertyNotify(EffectWindow* w, long a)
 {
+    if (m_atomDesktop == XCB_ATOM_NONE && m_atomWindows == XCB_ATOM_NONE) {
+        return;
+    }
     if (!w || (a != m_atomDesktop && a != m_atomWindows))
         return; // Not our atom
 
@@ -1617,9 +1624,9 @@ void PresentWindowsEffect::setActive(bool active)
 
         // destroy atom on manager window
         if (m_managerWindow) {
-            if (m_mode == ModeSelectedDesktop)
+            if (m_mode == ModeSelectedDesktop && m_atomDesktop != XCB_ATOM_NONE)
                 m_managerWindow->deleteProperty(m_atomDesktop);
-            else if (m_mode == ModeWindowGroup)
+            else if (m_mode == ModeWindowGroup && m_atomWindows != XCB_ATOM_NONE)
                 m_managerWindow->deleteProperty(m_atomWindows);
             m_managerWindow = NULL;
         }

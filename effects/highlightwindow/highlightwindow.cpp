@@ -33,6 +33,11 @@ HighlightWindowEffect::HighlightWindowEffect()
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this,
+        [this] {
+            m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);
+        }
+    );
 }
 
 HighlightWindowEffect::~HighlightWindowEffect()
@@ -131,7 +136,7 @@ void HighlightWindowEffect::slotWindowDeleted(EffectWindow* w)
 
 void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a, EffectWindow *addedWindow)
 {
-    if (a != m_atom)
+    if (a != m_atom || m_atom == XCB_ATOM_NONE)
         return; // Not our atom
 
     // if the window is null, the property was set on the root window - see events.cpp

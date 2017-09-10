@@ -57,6 +57,11 @@ KscreenEffect::KscreenEffect()
 {
     initConfig<KscreenConfig>();
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), SLOT(propertyNotify(KWin::EffectWindow*,long)));
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this,
+        [this] {
+            m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_KWIN_KSCREEN_SUPPORT"), this);
+        }
+    );
     reconfigure(ReconfigureAll);
 }
 
@@ -119,7 +124,7 @@ void KscreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Windo
 
 void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
 {
-    if (window || atom != m_atom) {
+    if (window || atom != m_atom || m_atom == XCB_ATOM_NONE) {
         return;
     }
     QByteArray byteData = effects->readRootProperty(m_atom, XCB_ATOM_CARDINAL, 32);
@@ -169,7 +174,7 @@ void KscreenEffect::switchState()
         m_state = StateNormal;
         value = 0l;
     }
-    if (value != -1l) {
+    if (value != -1l && m_atom != XCB_ATOM_NONE) {
         xcb_change_property(xcbConnection(), XCB_PROP_MODE_REPLACE, x11RootWindow(), m_atom, XCB_ATOM_CARDINAL, 32, 1, &value);
     }
 }
