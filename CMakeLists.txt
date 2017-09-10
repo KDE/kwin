@@ -526,7 +526,6 @@ ki18n_wrap_ui(kwin_KDEINIT_SRCS
 
 set(kwin_OWN_LIBS
     kwineffects
-    kwinxrenderutils
     kwin4_effect_builtins
 )
 

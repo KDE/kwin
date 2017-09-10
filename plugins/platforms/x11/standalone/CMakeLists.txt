@@ -20,7 +20,7 @@ if(HAVE_EPOXY_GLX)
 endif()
 
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
-target_link_libraries(KWinX11Platform eglx11common kwin Qt5::X11Extras XCB::CURSOR)
+target_link_libraries(KWinX11Platform eglx11common kwin kwinxrenderutils Qt5::X11Extras XCB::CURSOR)
 if(X11_Xinput_FOUND)
     target_link_libraries(KWinX11Platform ${X11_Xinput_LIB})
 endif()

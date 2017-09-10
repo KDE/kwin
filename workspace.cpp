@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 // kwin libs
 #include <kwinglplatform.h>
-#include <kwinxrenderutils.h>
 // kwin
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -183,10 +182,6 @@ Workspace::Workspace(const QString &sessionKey)
     TabBox::TabBox::create(this);
 #endif
 
-    // init XRenderUtils
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        XRenderUtils::init(connection(), rootWindow());
-    }
     if (Compositor::self()) {
         m_compositor = Compositor::self();
     } else {
@@ -514,9 +509,6 @@ Workspace::~Workspace()
 
     // TODO: ungrabXServer();
 
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        XRenderUtils::cleanup();
-    }
     Xcb::Extensions::destroy();
     _self = 0;
 }

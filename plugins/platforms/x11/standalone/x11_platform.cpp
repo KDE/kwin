@@ -41,6 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "x11_decoration_renderer.h"
 
+#include <kwinxrenderutils.h>
+
 #include <KConfigGroup>
 #include <KLocalizedString>
 
@@ -76,6 +78,7 @@ X11StandalonePlatform::~X11StandalonePlatform()
         m_openGLFreezeProtectionThread->wait();
         delete m_openGLFreezeProtectionThread;
     }
+    XRenderUtils::cleanup();
 }
 
 void X11StandalonePlatform::init()
@@ -84,6 +87,7 @@ void X11StandalonePlatform::init()
         emit initFailed();
         return;
     }
+    XRenderUtils::init(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
     setReady(true);
     emit screensQueried();
 }

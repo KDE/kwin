@@ -15,6 +15,7 @@ ecm_qt_declare_logging_category(
 add_library(KWinSceneXRender MODULE ${SCENE_XRENDER_SRCS})
 target_link_libraries(KWinSceneXRender
     kwin
+    kwinxrenderutils
 )
 
 install(
