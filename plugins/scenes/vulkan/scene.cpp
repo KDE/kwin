@@ -735,6 +735,14 @@ bool VulkanScene::init()
                                                   VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
                                                   m_physicalDeviceProperties.limits);
 
+    m_stagingImageAllocator =
+            std::make_unique<VulkanStagingImageAllocator>(device(),
+                                                          deviceMemoryAllocator(),
+                                                          4 * 1024 * 1024,
+                                                          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT,
+                                                          m_physicalDeviceProperties.limits);
+
+
 
     // Create the descriptor pools
     // ---------------------------
@@ -1217,12 +1225,14 @@ qint64 VulkanScene::paint(QRegion damage, ToplevelList windows)
 
             m_uploadManager->getNonCoherentAllocatedRanges(std::back_inserter(ranges));
             m_imageUploadManager->getNonCoherentAllocatedRanges(std::back_inserter(ranges));
+            m_stagingImageAllocator->getNonCoherentAllocatedRanges(std::back_inserter(ranges));
 
             if (!ranges.empty())
                 m_device->flushMappedMemoryRanges(ranges.size(), ranges.data());
 
             addBusyReference(m_uploadManager->createFrameBoundary());
             addBusyReference(m_imageUploadManager->createFrameBoundary());
+            addBusyReference(m_stagingImageAllocator->createFrameBoundary());
 
 
             // Submit the command buffers to the graphics queue

@@ -148,6 +148,7 @@ public:
     VulkanUploadManager *uploadManager() const { return m_uploadManager.get(); }
     VulkanUploadManager *imageUploadManager() const { return m_imageUploadManager.get(); }
     VulkanDeviceMemoryAllocator *deviceMemoryAllocator() const { return m_deviceMemoryAllocator.get(); }
+    VulkanStagingImageAllocator *stagingImageAllocator() const { return m_stagingImageAllocator.get(); }
     SceneDescriptorPool *textureDescriptorPool() const { return m_textureDescriptorPool.get(); }
     SceneDescriptorPool *crossFadeDescriptorPool() const { return m_crossFadeDescriptorPool.get(); }
     SceneDescriptorPool *colorDescriptorPool() const { return m_colorDescriptorPool.get(); }
@@ -204,6 +205,7 @@ private:
     std::unique_ptr<VulkanUploadManager>                     m_uploadManager;
     std::unique_ptr<VulkanUploadManager>                     m_imageUploadManager;
     std::unique_ptr<VulkanDeviceMemoryAllocator>             m_deviceMemoryAllocator;
+    std::unique_ptr<VulkanStagingImageAllocator>             m_stagingImageAllocator;
     std::unique_ptr<SceneDescriptorPool>                     m_textureDescriptorPool;
     std::unique_ptr<SceneDescriptorPool>                     m_crossFadeDescriptorPool;
     std::unique_ptr<SceneDescriptorPool>                     m_colorDescriptorPool;
