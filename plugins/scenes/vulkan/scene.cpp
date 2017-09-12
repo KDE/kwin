@@ -25,6 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorationrenderer.h"
 #include "descriptorset.h"
 #include "utils.h"
+#include "wayland_server.h"
+#include <wayland-server-core.h>
+#include <KWayland/Server/display.h>
 
 #include "effectframe.h"
 #include "platform.h"
@@ -596,6 +599,10 @@ bool VulkanScene::init()
 
     m_haveMaintenance1 = supportedDeviceExtensions.contains(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
 
+    // Advertise the supported shared memory formats
+    advertiseSurfaceFormats();
+
+
     // Create the command pools
     // ------------------------
     if (m_separatePresentQueue)
@@ -769,6 +776,58 @@ bool VulkanScene::init()
 
     m_valid = true;
     return m_valid;
+}
+
+
+void VulkanScene::advertiseSurfaceFormats()
+{
+    WaylandServer *server = WaylandServer::self();
+    if (!server)
+        return;
+
+    wl_display * const display = *server->display();
+    if (!display)
+        return;
+
+    VulkanPhysicalDevice gpu = device()->physicalDevice();
+
+    static const struct {
+        VkFormat vulkanFormat;
+        std::initializer_list<wl_shm_format> waylandFormats;
+    } table[] = {
+        { VK_FORMAT_B4G4R4A4_UNORM_PACK16,    { WL_SHM_FORMAT_ARGB4444, WL_SHM_FORMAT_XRGB4444, WL_SHM_FORMAT_BGRA4444, WL_SHM_FORMAT_BGRX4444 } },
+        { VK_FORMAT_R4G4B4A4_UNORM_PACK16,    { WL_SHM_FORMAT_ABGR4444, WL_SHM_FORMAT_XBGR4444, WL_SHM_FORMAT_RGBA4444, WL_SHM_FORMAT_RGBX4444 } },
+
+        { VK_FORMAT_A1R5G5B5_UNORM_PACK16,    { WL_SHM_FORMAT_ARGB1555, WL_SHM_FORMAT_XRGB1555                                                 } },
+        { VK_FORMAT_R5G5B5A1_UNORM_PACK16,    { WL_SHM_FORMAT_RGBA5551, WL_SHM_FORMAT_RGBX5551                                                 } },
+        { VK_FORMAT_B5G5R5A1_UNORM_PACK16,    { WL_SHM_FORMAT_BGRA5551, WL_SHM_FORMAT_BGRX5551                                                 } },
+
+        { VK_FORMAT_R5G6B5_UNORM_PACK16,      { WL_SHM_FORMAT_RGB565                                                                           } },
+        { VK_FORMAT_B5G6R5_UNORM_PACK16,      { WL_SHM_FORMAT_BGR565                                                                           } },
+
+        { VK_FORMAT_B8G8R8A8_UNORM,           { WL_SHM_FORMAT_ARGB8888, WL_SHM_FORMAT_XRGB8888, WL_SHM_FORMAT_BGRA8888, WL_SHM_FORMAT_BGRX8888 } },
+        { VK_FORMAT_A8B8G8R8_UNORM_PACK32,    { WL_SHM_FORMAT_ABGR8888, WL_SHM_FORMAT_XBGR8888, WL_SHM_FORMAT_RGBA8888, WL_SHM_FORMAT_RGBX8888 } },
+
+        { VK_FORMAT_A2R10G10B10_UNORM_PACK32, { WL_SHM_FORMAT_ARGB2101010, WL_SHM_FORMAT_XRGB2101010                                           } },
+        { VK_FORMAT_A2B10G10R10_UNORM_PACK32, { WL_SHM_FORMAT_ABGR2101010, WL_SHM_FORMAT_XBGR2101010                                           } },
+    };
+
+    VkFormatFeatureFlags features = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
+                                    VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+
+    if (m_haveMaintenance1)
+        features |= VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR;
+
+    for (const auto &entry : table) {
+        VkFormatProperties formatProperties;
+        gpu.getFormatProperties(entry.vulkanFormat, &formatProperties);
+
+        if ((formatProperties.optimalTilingFeatures & features) != features)
+            continue;
+
+        for (const wl_shm_format format : entry.waylandFormats)
+            wl_display_add_shm_format(display, format);
+    }
 }
 
 

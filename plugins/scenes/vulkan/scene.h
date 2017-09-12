@@ -185,6 +185,7 @@ protected:
 
 private:
     bool init();
+    void advertiseSurfaceFormats();
     bool createRenderPasses();
     void beginRenderPass(VulkanCommandBuffer *cmd);
     QMatrix4x4 createProjectionMatrix() const;
