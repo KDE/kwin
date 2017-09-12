@@ -1,8 +1,9 @@
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+
 project(KWIN)
 set(PROJECT_VERSION "5.10.90")
 set(PROJECT_VERSION_MAJOR 5)
 
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.7.0")
 set(KF5_MIN_VERSION "5.34.0")
 
@@ -668,9 +669,9 @@ endif()
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
-include(ECMPackageConfigHelpers)
+include(CMakePackageConfigHelpers)
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KWinDBusInterface")
-ecm_configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
+configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake"
     PATH_VARS KDE_INSTALL_DBUSINTERFACEDIR
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR})
