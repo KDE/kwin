@@ -46,11 +46,20 @@ public:
 
     VulkanScene *scene() const { return m_scene; }
 
+    const std::shared_ptr<VulkanImage> &image() const { return m_image; }
+    const std::shared_ptr<VulkanImageView> &imageView() const { return m_imageView; }
+    const std::shared_ptr<VulkanDeviceMemory> &memory() const { return m_memory; }
+
     void render() override;
     void reparent(Deleted *deleted) override;
+    void resizeAtlas();
 
 private:
     VulkanScene *m_scene;
+    std::shared_ptr<VulkanDeviceMemory> m_memory;
+    std::shared_ptr<VulkanImage> m_image;
+    std::shared_ptr<VulkanImageView> m_imageView;
+    std::shared_ptr<VulkanFramebuffer> m_framebuffer;
 };
 
 } // namespace KWin
