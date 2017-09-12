@@ -2247,6 +2247,13 @@ struct GLVertex3D
     QVector2D texcoord;
 };
 
+struct GLCrossFadeVertex2D
+{
+    QVector2D position;
+    QVector2D texcoord1;
+    QVector2D texcoord2;
+};
+
 
 /**
  * @short Vertex class
