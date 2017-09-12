@@ -594,6 +594,7 @@ bool VulkanScene::init()
     for (auto &extension : enabledDeviceExtensions)
         qCInfo(KWIN_VULKAN) << "    " << extension;
 
+    m_haveMaintenance1 = supportedDeviceExtensions.contains(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
 
     // Create the command pools
     // ------------------------

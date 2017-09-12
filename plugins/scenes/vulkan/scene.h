@@ -242,6 +242,7 @@ private:
     bool                                                     m_commandBuffersPending = false;
     bool                                                     m_clearPending = false;
     bool                                                     m_usedIndexBuffer = false;
+    bool                                                     m_haveMaintenance1 = false;
 };
 
 } // namespace KWin
