@@ -2,6 +2,7 @@
     "CompositingType": 2,
     "KPlugin": {
         "Description": "KWin Compositor plugin rendering through XRender",
+        "Description[ca@valencia]": "Connector del Compositor del KWin que renderitza a través de l'XRender",
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través de l'XRender",
         "Description[el]": "Αποτύπωση πρσοθέτου συνθέτη KWin μέσω XRender",
         "Description[es]": "Complemento compositor de KWin renderizando mediante XRender",

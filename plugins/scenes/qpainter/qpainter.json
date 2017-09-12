@@ -2,6 +2,7 @@
     "CompositingType": 4,
     "KPlugin": {
         "Description": "KWin Compositor plugin rendering through QPainter",
+        "Description[ca@valencia]": "Connector del Compositor del KWin que renderitza a través del QPainter",
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través del QPainter",
         "Description[el]": "Αποτύπωση πρσοθέτου συνθέτη KWin μέσω QPainter",
         "Description[es]": "Complemento compositor de KWin renderizando mediante QPainter",
