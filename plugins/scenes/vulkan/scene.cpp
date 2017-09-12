@@ -782,6 +782,17 @@ bool VulkanScene::init()
                                                       }
                                                   });
 
+    m_decorationImagesDescriptorPool =
+            std::make_unique<SceneDescriptorPool>(SceneDescriptorPool::CreateInfo {
+                                                      .device = device(),
+                                                      .descriptorSetLayout =
+                                                              pipelineManager()->descriptorSetLayout(VulkanPipelineManager::DecorationStagingImages),
+                                                      .maxSets = 16,
+                                                      .poolSizes = {
+                                                          { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 64 }
+                                                      }
+                                                  });
+
     m_valid = true;
     return m_valid;
 }

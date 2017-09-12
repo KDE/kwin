@@ -168,6 +168,74 @@ void TextureDescriptorSet::update(VkSampler sampler,
 
 
 
+DecorationImagesDescriptorSet::DecorationImagesDescriptorSet(SceneDescriptorPool *pool)
+    : m_pool(pool)
+{
+    m_set = m_pool->allocateDescriptorSet();
+}
+
+
+DecorationImagesDescriptorSet::~DecorationImagesDescriptorSet()
+{
+    if (m_pool && m_set)
+        m_pool->freeDescriptorSet(m_set);
+}
+
+
+void DecorationImagesDescriptorSet::update(const std::shared_ptr<VulkanImageView> &imageView1,
+                                           const std::shared_ptr<VulkanImageView> &imageView2,
+                                           const std::shared_ptr<VulkanImageView> &imageView3,
+                                           const std::shared_ptr<VulkanImageView> &imageView4,
+                                           VkImageLayout imageLayout)
+{
+    const VkDescriptorImageInfo imageInfo[] = {
+        {
+            .sampler = VK_NULL_HANDLE,
+            .imageView = imageView1->handle(),
+            .imageLayout = imageLayout
+        },
+        {
+            .sampler = VK_NULL_HANDLE,
+            .imageView = imageView2->handle(),
+            .imageLayout = imageLayout
+        },
+        {
+            .sampler = VK_NULL_HANDLE,
+            .imageView = imageView3->handle(),
+            .imageLayout = imageLayout
+        },
+        {
+            .sampler = VK_NULL_HANDLE,
+            .imageView = imageView4->handle(),
+            .imageLayout = imageLayout
+        },
+    };
+
+    const VkWriteDescriptorSet descriptorWrites[] = {
+        {
+            .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+            .pNext = nullptr,
+            .dstSet = m_set,
+            .dstBinding = 0,
+            .dstArrayElement = 0,
+            .descriptorCount = 4,
+            .descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+            .pImageInfo = imageInfo,
+            .pBufferInfo = nullptr,
+            .pTexelBufferView = nullptr
+        },
+    };
+
+    m_pool->device()->updateDescriptorSets(ARRAY_SIZE(descriptorWrites), descriptorWrites, 0, nullptr);
+}
+
+
+
+// ------------------------------------------------------------------
+
+
+
+
 CrossFadeDescriptorSet::CrossFadeDescriptorSet(SceneDescriptorPool *pool)
     : m_pool(pool)
 {

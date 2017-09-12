@@ -110,6 +110,60 @@ private:
 
 
 /**
+ * DecorationImagesDescriptorSet encapsulates a descriptor set with an array of four
+ * sampled-images, and an immutable nearest-neighbor sampler.
+ *
+ * Note that this descriptor set does not have a uniform buffer binding.
+ */
+class DecorationImagesDescriptorSet : public VulkanObject
+{
+public:
+    DecorationImagesDescriptorSet(SceneDescriptorPool *pool);
+
+    DecorationImagesDescriptorSet(const DecorationImagesDescriptorSet &other) = delete;
+
+    DecorationImagesDescriptorSet(DecorationImagesDescriptorSet &&other)
+        : m_pool(other.m_pool),
+          m_set(other.m_set)
+    {
+        other.m_pool = nullptr;
+        other.m_set = VK_NULL_HANDLE;
+    }
+
+    ~DecorationImagesDescriptorSet() override;
+
+    void update(const std::shared_ptr<VulkanImageView> &imageView1,
+                const std::shared_ptr<VulkanImageView> &imageView2,
+                const std::shared_ptr<VulkanImageView> &imageView3,
+                const std::shared_ptr<VulkanImageView> &imageView4,
+                VkImageLayout imageLayout);
+
+    VkDescriptorSet handle() const { return m_set; }
+    operator VkDescriptorSet () const { return m_set; }
+
+    DecorationImagesDescriptorSet &operator = (const DecorationImagesDescriptorSet &other) = delete;
+
+    DecorationImagesDescriptorSet &operator = (DecorationImagesDescriptorSet &&other) {
+        m_pool = other.m_pool;
+        m_set = other.m_set;
+
+        other.m_pool = nullptr;
+        other.m_set = VK_NULL_HANDLE;
+        return *this;
+    }
+
+private:
+    SceneDescriptorPool *m_pool;
+    VkDescriptorSet m_set;
+};
+
+
+
+// ------------------------------------------------------------------
+
+
+
+/**
  * CrossFadeDescriptorSet encapsulates a descriptor set with an array of two sampled-images,
  * and a dynamic uniform buffer binding.
  */
@@ -280,6 +334,7 @@ private:
 friend class TextureDescriptorSet;
 friend class CrossFadeDescriptorSet;
 friend class ColorDescriptorSet;
+friend class DecorationImagesDescriptorSet;
 };
 
 } // namespace KWin
