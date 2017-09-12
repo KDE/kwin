@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WINDOWPIXMAP_H
 
 #include "../../../scene.h"
+#include "kwinvulkanutils_funcs.h"
 
 #include <QPointer>
 #include <memory>
@@ -31,6 +32,8 @@ namespace KWayland {
         class SubSurfaceInterface;
     }
 }
+
+struct wl_shm_buffer;
 
 namespace KWin
 {
@@ -61,8 +64,24 @@ public:
 
     void aboutToRender();
 
+    const std::shared_ptr<VulkanImage> &image() const { return m_image; }
+    const std::shared_ptr<VulkanImageView> &imageView() const { return m_imageView; }
+    const std::shared_ptr<VulkanDeviceMemory> &memory() const { return m_memory; }
+
+    VkImageLayout imageLayout() const { return m_imageLayout; }
+
+protected:
+    void createTexture(VkFormat format, uint32_t width, uint32_t height, const VkComponentMapping &swizzle);
+    void updateTexture(wl_shm_buffer *buffer, const QRegion &damage, VkImageLayout layout);
+
 private:
     VulkanScene *m_scene;
+    std::shared_ptr<VulkanImage> m_image;
+    std::shared_ptr<VulkanImageView> m_imageView;
+    std::shared_ptr<VulkanDeviceMemory> m_memory;
+    VkImageLayout m_imageLayout;
+    uint32_t m_bufferFormat;
+    uint32_t m_bitsPerPixel;
 };
 
 } // namespace KWin

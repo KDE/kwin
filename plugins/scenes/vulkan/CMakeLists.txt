@@ -25,6 +25,7 @@ target_link_libraries(KWinSceneVulkan
     kwin
     SceneVulkanBackend
     kwinvulkanutils
+    Wayland::Server
 )
 
 install(
