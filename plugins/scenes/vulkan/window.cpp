@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "client.h"
 #include "deleted.h"
+#include "decorationrenderer.h"
+#include "decorations/decoratedclient.h"
 
 #include <QGraphicsScale>
 
@@ -120,6 +122,37 @@ VulkanWindow::Texture VulkanWindow::getPreviousContentTexture()
 }
 
 
+VulkanWindow::Texture VulkanWindow::getDecorationTexture() const
+{
+    if (AbstractClient *client = dynamic_cast<AbstractClient *>(toplevel)) {
+        if (client->noBorder()) {
+            return Texture();
+        }
+
+        if (!client->isDecorated()) {
+            return Texture();
+        }
+
+        if (VulkanDecorationRenderer *renderer = static_cast<VulkanDecorationRenderer*>(client->decoratedClient()->renderer())) {
+            renderer->render();
+            return Texture(renderer->image(), renderer->imageView(), renderer->memory(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        }
+    } else if (toplevel->isDeleted()) {
+        Deleted *deleted = static_cast<Deleted *>(toplevel);
+
+        if (!deleted->wasClient() || deleted->noBorder()) {
+            return Texture();
+        }
+
+        if (const VulkanDecorationRenderer *renderer = static_cast<const VulkanDecorationRenderer*>(deleted->decorationRenderer())) {
+            return Texture(renderer->image(), renderer->imageView(), renderer->memory(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        }
+    }
+
+    return Texture();
+}
+
+
 void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData data)
 {
     if (data.quads.isEmpty())
@@ -140,21 +173,27 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
 
     const Texture contentTexture         = getContentTexture();
     const Texture previousContentTexture = getPreviousContentTexture();
+    const Texture decorationTexture      = getDecorationTexture();
 
-    // Select the pipeline for the window contents
-    // -------------------------------------------
+
+    // Select the pipelines for the contents and decorations respectively
+    // ------------------------------------------------------------------
     VulkanPipelineManager::Material contentMaterial    = VulkanPipelineManager::Texture;
+    VulkanPipelineManager::Material decorationMaterial = VulkanPipelineManager::Texture;
     VulkanPipelineManager::Traits contentTraits        = VulkanPipelineManager::NoTraits;
+    VulkanPipelineManager::Traits decorationTraits     = VulkanPipelineManager::PreMultipliedAlphaBlend;
 
     if (!isOpaque() || data.opacity() != 1.0)
         contentTraits |= VulkanPipelineManager::PreMultipliedAlphaBlend;
 
     if (data.opacity() != 1.0 || data.brightness() != 1.0) {
-        contentTraits |= VulkanPipelineManager::Modulate;
+        contentTraits    |= VulkanPipelineManager::Modulate;
+        decorationTraits |= VulkanPipelineManager::Modulate;
     }
 
     if (data.saturation() != 1.0) {
-        contentTraits |= VulkanPipelineManager::Desaturate;
+        contentTraits    |= VulkanPipelineManager::Desaturate;
+        decorationTraits |= VulkanPipelineManager::Desaturate;
     }
 
     if (data.crossFadeProgress() != 1.0 && previousContentTexture.imageView()) {
@@ -167,6 +206,15 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
 
     std::tie(contentPipeline, contentPipelineLayout) =
             pipelineManager->pipeline(contentMaterial, contentTraits,
+                                      VulkanPipelineManager::DescriptorSet,
+                                      VulkanPipelineManager::TriangleList,
+                                      VulkanPipelineManager::SwapchainRenderPass);
+
+    VkPipeline decorationPipeline;
+    VkPipelineLayout decorationPipelineLayout;
+
+    std::tie(decorationPipeline, decorationPipelineLayout) =
+            pipelineManager->pipeline(decorationMaterial, decorationTraits,
                                       VulkanPipelineManager::DescriptorSet,
                                       VulkanPipelineManager::TriangleList,
                                       VulkanPipelineManager::SwapchainRenderPass);
@@ -207,18 +255,64 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
         }
     }
 
+    // Allocate space in the upload buffer for the vertices
+    size_t quadCount = decorationQuads.count() + shadowQuads.count();
+
+    if (!(contentTraits & VulkanPipelineManager::CrossFade))
+        quadCount += contentQuads.count();
+
+    const size_t maxQuads = std::max(decorationQuads.count(), std::max(contentQuads.count(), shadowQuads.count()));
+    const VulkanBufferRange vbo = uploadManager->allocate(quadCount * 4 * sizeof(GLVertex2D));
+
+    // Bind the index and vertex buffers
+    cmd->bindIndexBuffer(scene()->indexBufferForQuadCount(maxQuads), 0, VK_INDEX_TYPE_UINT16);
+    cmd->bindVertexBuffers(0, { vbo.handle() }, { vbo.offset() });
+
+    GLVertex2D *vertices = static_cast<GLVertex2D *>(vbo.data());
+    size_t vertexOffset = 0;
+
+    if (!vertices)
+        return;
+
     VulkanClippedDrawHelper clip(cmd, clipRegion);
+
+
+    // Draw the decoration
+    // -------------------
+    if (!decorationQuads.isEmpty() && decorationTexture) {
+        decorationQuads.makeInterleavedArrays(GL_QUADS, &vertices[vertexOffset], QMatrix4x4());
+
+        const auto &view = decorationTexture.imageView();
+        auto &set = m_decorationDescriptorSet;
+
+        // Update the descriptor set if necessary
+        if (!set || set->sampler() != sampler || set->imageView() != view || set->uniformBuffer() != ubo.buffer()) {
+            // Orphan the descriptor set if it is busy
+            if (!set || set.use_count() > 1)
+                set = std::make_shared<TextureDescriptorSet>(scene()->textureDescriptorPool());
+
+            set->update(sampler, view, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, ubo.buffer());
+        }
+
+        cmd->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, decorationPipeline);
+        cmd->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, decorationPipelineLayout, 0, { set->handle() }, { (uint32_t) ubo.offset() });
+
+        clip.drawIndexed(decorationQuads.count() * 6, 1, 0, vertexOffset, 0);
+
+        vertexOffset += decorationQuads.count() * 4;
+
+        scene()->addBusyReference(set);
+        scene()->addBusyReference(decorationTexture.image());
+        scene()->addBusyReference(decorationTexture.imageView());
+        scene()->addBusyReference(decorationTexture.memory());
+    }
 
 
     // Draw the contents
     // -----------------
     if (!contentQuads.isEmpty() && contentTexture) {
         if (!(contentTraits & VulkanPipelineManager::CrossFade)) {
-            // Allocate and upload vertices
-            auto vbo = uploadManager->allocate(contentQuads.count() * 4 * sizeof(GLVertex2D));
-            GLVertex2D *vertices = static_cast<GLVertex2D *>(vbo.data());
-
-            contentQuads.makeInterleavedArrays(GL_QUADS, vertices, QMatrix4x4());
+            contentQuads.makeInterleavedArrays(GL_QUADS, &vertices[vertexOffset], QMatrix4x4());
 
             const auto &view = contentTexture.imageView();
             const auto imageLayout = contentTexture.imageLayout();
@@ -234,11 +328,11 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
             }
 
             cmd->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, contentPipeline);
-            cmd->bindIndexBuffer(scene()->indexBufferForQuadCount(contentQuads.count()), 0, VK_INDEX_TYPE_UINT16);
-            cmd->bindVertexBuffers(0, { vbo.handle() }, { vbo.offset() });
             cmd->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, contentPipelineLayout, 0, { set->handle() }, { (uint32_t) ubo.offset() });
 
-            clip.drawIndexed(contentQuads.count() * 6, 1, 0, 0, 0);
+            clip.drawIndexed(contentQuads.count() * 6, 1, 0, vertexOffset, 0);
+
+            vertexOffset += contentQuads.count() * 4;
 
             scene()->addBusyReference(set);
             scene()->addBusyReference(contentTexture.image());

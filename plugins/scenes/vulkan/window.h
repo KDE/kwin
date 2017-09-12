@@ -84,9 +84,11 @@ protected:
 
     Texture getContentTexture();
     Texture getPreviousContentTexture();
+    Texture getDecorationTexture() const;
 
 private:
     VulkanScene *m_scene;
+    std::shared_ptr<TextureDescriptorSet> m_decorationDescriptorSet;
     std::shared_ptr<TextureDescriptorSet> m_contentDescriptorSet;
     std::shared_ptr<CrossFadeDescriptorSet> m_crossFadeDescriptorSet;
 };
