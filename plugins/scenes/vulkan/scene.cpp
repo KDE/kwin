@@ -679,7 +679,7 @@ bool VulkanScene::init()
 
     m_pipelineManager = std::make_unique<VulkanPipelineManager>(device(), m_pipelineCache.get(),
                                                                 m_nearestSampler, m_linearSampler,
-                                                                m_loadRenderPass, (VkRenderPass) VK_NULL_HANDLE,
+                                                                m_loadRenderPass, m_offscreenLoadRenderPass,
                                                                 supportedDeviceExtensions.contains(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME));
 
     if (!m_pipelineManager->isValid()) {
@@ -1694,6 +1694,18 @@ bool VulkanScene::createRenderPasses()
         .finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
     };
 
+    const VkAttachmentDescription loadOffScreenAttachment {
+        .flags = 0,
+        .format = VK_FORMAT_R8G8B8A8_UNORM,
+        .samples = VK_SAMPLE_COUNT_1_BIT,
+        .loadOp = VK_ATTACHMENT_LOAD_OP_LOAD,
+        .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+        .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+        .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+        .initialLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        .finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+    };
+
     const VkAttachmentDescription transitionBackBufferAttachment {
         .flags = 0,
         .format = m_surfaceFormat,
@@ -1716,6 +1728,18 @@ bool VulkanScene::createRenderPasses()
         .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
         .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
         .finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+    };
+
+    const VkAttachmentDescription clearOffScreenAttachment {
+        .flags = 0,
+        .format = VK_FORMAT_R8G8B8A8_UNORM,
+        .samples = VK_SAMPLE_COUNT_1_BIT,
+        .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+        .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+        .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+        .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+        .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+        .finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
     };
 
     static const VkAttachmentReference colorAttachmentRef {
@@ -1766,6 +1790,26 @@ bool VulkanScene::createRenderPasses()
         .dependencyFlags = 0
     };
 
+    static const VkSubpassDependency offscreenStartDependency = {
+        .srcSubpass = VK_SUBPASS_EXTERNAL,
+        .dstSubpass = 0,
+        .srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+        .dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+        .srcAccessMask = 0,
+        .dstAccessMask = 0,
+        .dependencyFlags = 0
+    };
+
+    static const VkSubpassDependency offscreenEndDependency = {
+        .srcSubpass = VK_SUBPASS_EXTERNAL,
+        .dstSubpass = 0,
+        .srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+        .dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+        .srcAccessMask = 0,
+        .dstAccessMask = 0,
+        .dependencyFlags = 0
+    };
+
     static const VkSubpassDependency endDependency = {
         .srcSubpass = 0,
         .dstSubpass = VK_SUBPASS_EXTERNAL,
@@ -1779,6 +1823,8 @@ bool VulkanScene::createRenderPasses()
     m_clearRenderPass          = VulkanRenderPass(device(), { clearBackBufferAttachment      }, { subpass }, { clearStartDependency,      endDependency });
     m_transitionRenderPass     = VulkanRenderPass(device(), { transitionBackBufferAttachment }, { subpass }, { transitionStartDependency, endDependency });
     m_loadRenderPass           = VulkanRenderPass(device(), { loadBackBufferAttachment       }, { subpass }, { loadStartDependency,       endDependency });
+    m_offscreenLoadRenderPass  = VulkanRenderPass(device(), { loadOffScreenAttachment        }, { subpass }, { offscreenStartDependency,  offscreenEndDependency });
+    m_offscreenClearRenderPass = VulkanRenderPass(device(), { clearOffScreenAttachment       }, { subpass }, { offscreenStartDependency,  offscreenEndDependency });
 
     return true;
 }

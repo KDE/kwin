@@ -175,6 +175,9 @@ public:
     VkSampler linearSampler() const { return m_linearSampler.handle(); }
     VkSampler nearestSampler() const { return m_nearestSampler.handle(); }
 
+    VkRenderPass offscreenLoadRenderPass() const { return m_offscreenLoadRenderPass; }
+    VkRenderPass offscreenClearRenderPass() const { return m_offscreenClearRenderPass; }
+
     uint32_t optimalBufferCopyOffsetAlignment() const { return m_physicalDeviceProperties.limits.optimalBufferCopyOffsetAlignment; }
     uint32_t optimalBufferCopyRowPitchAlignment() const { return m_physicalDeviceProperties.limits.optimalBufferCopyRowPitchAlignment; }
 
@@ -216,6 +219,8 @@ private:
     VulkanRenderPass                                         m_clearRenderPass;
     VulkanRenderPass                                         m_transitionRenderPass;
     VulkanRenderPass                                         m_loadRenderPass;
+    VulkanRenderPass                                         m_offscreenClearRenderPass;
+    VulkanRenderPass                                         m_offscreenLoadRenderPass;
     VkFormat                                                 m_surfaceFormat;
     VkColorSpaceKHR                                          m_surfaceColorSpace;
     VkPresentModeKHR                                         m_presentMode;
