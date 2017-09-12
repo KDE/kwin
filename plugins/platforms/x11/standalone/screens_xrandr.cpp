@@ -18,9 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screens_xrandr.h"
+#ifndef KWIN_UNIT_TEST
 #include "composite.h"
 #include "options.h"
 #include "workspace.h"
+#endif
 #include "xcbutils.h"
 
 
@@ -203,6 +205,7 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
         screen->width_in_millimeters = xrrEvent->mwidth;
         screen->height_in_millimeters = xrrEvent->mheight;
     }
+#ifndef KWIN_UNIT_TEST
     if (workspace()->compositing()) {
         // desktopResized() should take care of when the size or
         // shape of the desktop has changed, but we also want to
@@ -210,6 +213,7 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
         if (Compositor::self()->xrrRefreshRate() != Options::currentRefreshRate())
             Compositor::self()->setCompositeResetTimer(0);
     }
+#endif
 
     return false;
 }
