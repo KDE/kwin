@@ -26,8 +26,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class TextureDescriptorSet;
+class CrossFadeDescriptorSet;
+
 class VulkanWindow : public Scene::Window
 {
+    /**
+     * Texture is a tuple of an image, an image-view, a device memory object and an image layout.
+     */
+    class Texture
+    {
+    public:
+        Texture() = default;
+
+        Texture(const std::shared_ptr<VulkanImage> &image,
+                const std::shared_ptr<VulkanImageView> &imageView,
+                const std::shared_ptr<VulkanDeviceMemory> &memory,
+                VkImageLayout imageLayout)
+            : m_image(image),
+              m_imageView(imageView),
+              m_memory(memory),
+              m_imageLayout(imageLayout)
+        {
+        }
+
+        operator bool () const { return m_image && m_imageView && m_memory; }
+
+        std::shared_ptr<VulkanImage> image() const { return m_image; }
+        std::shared_ptr<VulkanImageView> imageView() const { return m_imageView; }
+        std::shared_ptr<VulkanDeviceMemory> memory() const { return m_memory; }
+
+        VkImageLayout imageLayout() const { return m_imageLayout; }
+
+    private:
+        std::shared_ptr<VulkanImage> m_image;
+        std::shared_ptr<VulkanImageView> m_imageView;
+        std::shared_ptr<VulkanDeviceMemory> m_memory;
+        VkImageLayout m_imageLayout;
+    };
+
 public:
     explicit VulkanWindow(Toplevel *toplevel, VulkanScene *scene);
     ~VulkanWindow() override;
@@ -39,12 +76,19 @@ public:
 protected:
     virtual WindowPixmap *createWindowPixmap();
 
-private:
     VulkanPipelineManager *pipelineManager() { return scene()->pipelineManager(); }
     VulkanUploadManager *uploadManager() { return scene()->uploadManager(); }
 
+    QMatrix4x4 windowMatrix(int mask, const WindowPaintData &data) const;
+    QMatrix4x4 modelViewProjectionMatrix(int mask, const WindowPaintData &data) const;
+
+    Texture getContentTexture();
+    Texture getPreviousContentTexture();
+
 private:
     VulkanScene *m_scene;
+    std::shared_ptr<TextureDescriptorSet> m_contentDescriptorSet;
+    std::shared_ptr<CrossFadeDescriptorSet> m_crossFadeDescriptorSet;
 };
 
 } // namespace KWin
