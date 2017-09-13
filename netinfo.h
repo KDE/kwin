@@ -26,12 +26,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <NETWM>
 
 #include <xcb/xcb.h>
+#include <memory>
 
 namespace KWin
 {
 
 class AbstractClient;
 class Client;
+class RootInfoFilter;
 
 /**
  * NET WM Protocol handler class
@@ -65,6 +67,7 @@ private:
     friend RootInfo *rootInfo();
 
     xcb_window_t m_activeWindow;
+    std::unique_ptr<RootInfoFilter> m_eventFilter;
 };
 
 inline RootInfo *rootInfo()

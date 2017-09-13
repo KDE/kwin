@@ -247,16 +247,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             && (eventType == XCB_KEY_PRESS || eventType == XCB_KEY_RELEASE))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()
 
-    if (eventType == XCB_PROPERTY_NOTIFY || eventType == XCB_CLIENT_MESSAGE) {
-        NET::Properties dirtyProtocols;
-        NET::Properties2 dirtyProtocols2;
-        rootInfo()->event(e, &dirtyProtocols, &dirtyProtocols2);
-        if (dirtyProtocols & NET::DesktopNames)
-            VirtualDesktopManager::self()->save();
-        if (dirtyProtocols2 & NET::WM2DesktopLayout)
-            VirtualDesktopManager::self()->updateLayout();
-    }
-
     // events that should be handled before Clients can get them
     switch (eventType) {
     case XCB_CONFIGURE_NOTIFY:
