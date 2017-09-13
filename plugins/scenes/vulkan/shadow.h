@@ -36,12 +36,19 @@ public:
 
     VulkanScene *scene() const { return m_scene; }
 
+    const std::shared_ptr<VulkanImage> &image() const { return m_image; }
+    const std::shared_ptr<VulkanImageView> &imageView() const { return m_imageView; }
+    const std::shared_ptr<VulkanDeviceMemory> &memory() const { return m_memory; }
+
 protected:
     void buildQuads() override final;
     bool prepareBackend() override final;
 
 private:
     VulkanScene *m_scene;
+    std::shared_ptr<VulkanImage> m_image;
+    std::shared_ptr<VulkanImageView> m_imageView;
+    std::shared_ptr<VulkanDeviceMemory> m_memory;
 };
 
 } // namespace KWin
