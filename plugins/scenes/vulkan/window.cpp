@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "decorationrenderer.h"
 #include "decorations/decoratedclient.h"
+#include "shadow.h"
 
 #include <QGraphicsScale>
 
@@ -153,6 +154,17 @@ VulkanWindow::Texture VulkanWindow::getDecorationTexture() const
 }
 
 
+VulkanWindow::Texture VulkanWindow::getShadowTexture() const
+{
+    if (m_shadow) {
+        auto shadow = static_cast<VulkanShadow *>(m_shadow);
+        return Texture(shadow->image(), shadow->imageView(), shadow->memory(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    }
+
+    return Texture();
+}
+
+
 void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData data)
 {
     if (data.quads.isEmpty())
@@ -174,6 +186,7 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
     const Texture contentTexture         = getContentTexture();
     const Texture previousContentTexture = getPreviousContentTexture();
     const Texture decorationTexture      = getDecorationTexture();
+    const Texture shadowTexture          = getShadowTexture();
 
 
     // Select the pipelines for the contents and decorations respectively
@@ -275,6 +288,37 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
         return;
 
     VulkanClippedDrawHelper clip(cmd, clipRegion);
+
+
+    // Draw the shadow
+    // ---------------
+    if (!shadowQuads.isEmpty() && shadowTexture) {
+        shadowQuads.makeInterleavedArrays(GL_QUADS, &vertices[vertexOffset], QMatrix4x4());
+
+        const auto &view = shadowTexture.imageView();
+        auto &set = m_shadowDescriptorSet;
+
+        // Update the descriptor set if necessary
+        if (!set || set->sampler() != sampler || set->imageView() != view || set->uniformBuffer() != ubo.buffer()) {
+            // Orphan the descriptor set if it is busy
+            if (!set || set.use_count() > 1)
+                set = std::make_shared<TextureDescriptorSet>(scene()->textureDescriptorPool());
+
+            set->update(sampler, view, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, ubo.buffer());
+        }
+
+        cmd->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, decorationPipeline);
+        cmd->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, decorationPipelineLayout, 0, { set->handle() }, { (uint32_t) ubo.offset() });
+
+        clip.drawIndexed(shadowQuads.count() * 6, 1, 0, vertexOffset, 0);
+
+        vertexOffset += shadowQuads.count() * 4;
+
+        scene()->addBusyReference(set);
+        scene()->addBusyReference(shadowTexture.image());
+        scene()->addBusyReference(shadowTexture.imageView());
+        scene()->addBusyReference(shadowTexture.memory());
+    }
 
 
     // Draw the decoration
