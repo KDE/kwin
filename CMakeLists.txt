@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project(KWIN)
-set(PROJECT_VERSION "5.10.90")
+set(PROJECT_VERSION "5.10.95")
 set(PROJECT_VERSION_MAJOR 5)
 
 set(QT_MIN_VERSION "5.7.0")
