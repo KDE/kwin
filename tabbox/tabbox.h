@@ -175,7 +175,7 @@ public:
 
     bool isGrabbed() const {
         return m_tabGrab || m_desktopGrab;
-    };
+    }
 
     void initShortcuts();
 
