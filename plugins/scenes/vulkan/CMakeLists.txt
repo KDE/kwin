@@ -5,6 +5,7 @@ set(SCENE_VULKAN_SRCS
     window.cpp
     windowpixmap.cpp
     shadow.cpp
+    shadowtexturemanager.cpp
     effectframe.cpp
     decorationrenderer.cpp)
 

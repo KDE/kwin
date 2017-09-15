@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scene.h"
 #include "../../../shadow.h"
+#include "shadowtexturemanager.h"
 
 
 namespace KWin
@@ -36,9 +37,9 @@ public:
 
     VulkanScene *scene() const { return m_scene; }
 
-    const std::shared_ptr<VulkanImage> &image() const { return m_image; }
-    const std::shared_ptr<VulkanImageView> &imageView() const { return m_imageView; }
-    const std::shared_ptr<VulkanDeviceMemory> &memory() const { return m_memory; }
+    const std::shared_ptr<VulkanImage> &image() const { return m_texture->image; }
+    const std::shared_ptr<VulkanImageView> &imageView() const { return m_texture->imageView; }
+    const std::shared_ptr<VulkanDeviceMemory> &memory() const { return m_texture->memory; }
 
 protected:
     void buildQuads() override final;
@@ -46,9 +47,7 @@ protected:
 
 private:
     VulkanScene *m_scene;
-    std::shared_ptr<VulkanImage> m_image;
-    std::shared_ptr<VulkanImageView> m_imageView;
-    std::shared_ptr<VulkanDeviceMemory> m_memory;
+    std::shared_ptr<ShadowData> m_texture;
 };
 
 } // namespace KWin

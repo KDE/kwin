@@ -743,6 +743,10 @@ bool VulkanScene::init()
                                                           m_physicalDeviceProperties.limits);
 
 
+    // Create the shadow texture manager
+    // ---------------------------------
+    m_shadowTextureManager = std::make_unique<ShadowTextureManager>(this);
+
 
     // Create the descriptor pools
     // ---------------------------

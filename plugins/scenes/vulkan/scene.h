@@ -38,6 +38,7 @@ class SceneDescriptorPool;
 class TextureDescriptorSet;
 class ColorDescriptorSet;
 class Shadow;
+class ShadowTextureManager;
 
 
 
@@ -153,6 +154,7 @@ public:
     SceneDescriptorPool *textureDescriptorPool() const { return m_textureDescriptorPool.get(); }
     SceneDescriptorPool *crossFadeDescriptorPool() const { return m_crossFadeDescriptorPool.get(); }
     SceneDescriptorPool *colorDescriptorPool() const { return m_colorDescriptorPool.get(); }
+    ShadowTextureManager *shadowTextureManager() const { return m_shadowTextureManager.get(); }
 
     VkBuffer indexBufferForQuadCount(uint32_t quadCount);
 
@@ -214,6 +216,7 @@ private:
     std::unique_ptr<SceneDescriptorPool>                     m_crossFadeDescriptorPool;
     std::unique_ptr<SceneDescriptorPool>                     m_colorDescriptorPool;
     std::unique_ptr<SceneDescriptorPool>                     m_decorationImagesDescriptorPool;
+    std::unique_ptr<ShadowTextureManager>                    m_shadowTextureManager;
     VulkanCommandPool                                        m_presentCommandPool;
     std::unique_ptr<VulkanSwapchain>                         m_swapchain;
     VulkanQueue                                              m_graphicsQueue;
