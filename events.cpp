@@ -259,25 +259,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 
     // events that should be handled before Clients can get them
     switch (eventType) {
-    case XCB_BUTTON_PRESS:
-    case XCB_BUTTON_RELEASE: {
-        auto *mouseEvent = reinterpret_cast<xcb_button_press_event_t*>(e);
-        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(mouseEvent)) {
-            return true;
-        }
-        break;
-    }
-    case XCB_MOTION_NOTIFY: {
-        if (kwinApp()->operationMode() != Application::OperationModeX11) {
-            // ignore X11 pointer events generated on X windows if we are not on X
-            return true;
-        }
-        auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t*>(e);
-        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(mouseEvent)) {
-            return true;
-        }
-        break;
-    }
     case XCB_CONFIGURE_NOTIFY:
         if (reinterpret_cast<xcb_configure_notify_event_t*>(e)->event == rootWindow())
             markXStackingOrderAsDirty();

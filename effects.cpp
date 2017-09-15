@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 
 #include "effectsadaptor.h"
+#include "effects_mouse_interception_x11_filter.h"
 #include "effectloader.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -690,6 +691,7 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
     }
     m_mouseInterceptionWindow.map();
     m_mouseInterceptionWindow.raise();
+    m_x11MouseInterception = std::make_unique<EffectsMouseInterceptionX11Filter>(m_mouseInterceptionWindow, this);
     // Raise electric border windows above the input windows
     // so they can still be triggered.
     ScreenEdges::self()->ensureOnTop();
@@ -707,6 +709,7 @@ void EffectsHandlerImpl::stopMouseInterception(Effect *effect)
     }
     if (m_grabbedMouseEffects.isEmpty()) {
         m_mouseInterceptionWindow.unmap();
+        m_x11MouseInterception.reset();
         Workspace::self()->stackScreenEdgesUnderOverrideRedirect();
     }
 }

@@ -58,6 +58,7 @@ class Client;
 class Compositor;
 class Deleted;
 class EffectLoader;
+class EffectsMouseInterceptionX11Filter;
 class Unmanaged;
 
 class KWIN_EXPORT EffectsHandlerImpl : public EffectsHandler
@@ -319,6 +320,7 @@ private:
     QList<Effect*> m_grabbedMouseEffects;
     EffectLoader *m_effectLoader;
     int m_trackingCursorChanges;
+    std::unique_ptr<EffectsMouseInterceptionX11Filter> m_x11MouseInterception;
 };
 
 class EffectWindowImpl : public EffectWindow
