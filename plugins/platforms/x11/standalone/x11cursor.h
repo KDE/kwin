@@ -21,8 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_X11CURSOR_H
 #include "cursor.h"
 
+#include <memory>
+
 namespace KWin
 {
+class XFixesCursorEventFilter;
 
 class KWIN_EXPORT X11Cursor : public Cursor
 {
@@ -34,6 +37,13 @@ public:
     void schedulePoll() {
         m_needsPoll = true;
     }
+
+    /**
+     * @internal
+     *
+     * Called from X11 event handler.
+     */
+    void notifyCursorChanged();
 
 protected:
     virtual xcb_cursor_t getX11Cursor(Qt::CursorShape shape);
@@ -63,6 +73,9 @@ private:
     QTimer *m_mousePollingTimer;
     bool m_hasXInput;
     bool m_needsPoll;
+
+    std::unique_ptr<XFixesCursorEventFilter> m_xfixesFilter;
+
     friend class Cursor;
 };
 

@@ -9,6 +9,7 @@ set(X11PLATFORM_SOURCES
     screenedges_filter.cpp
     non_composited_outline.cpp
     x11_decoration_renderer.cpp
+    xfixes_cursor_event_filter.cpp
 )
 
 if(X11_Xinput_FOUND)

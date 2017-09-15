@@ -80,12 +80,6 @@ public:
      * @see startCursorTracking
      */
     void stopCursorTracking();
-    /**
-     * @internal
-     *
-     * Called from X11 event handler.
-     */
-    void notifyCursorChanged(uint32_t serial);
 
     /**
      * @brief The name of the currently used Cursor theme.

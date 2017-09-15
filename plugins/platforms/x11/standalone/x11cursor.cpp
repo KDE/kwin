@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_input.h"
 #include "utils.h"
 #include "xcbutils.h"
+#include "xfixes_cursor_event_filter.h"
 
 #include <QAbstractEventDispatcher>
 #include <QTimer>
@@ -51,6 +52,16 @@ X11Cursor::X11Cursor(QObject *parent, bool xInputSupport)
     if (m_hasXInput) {
         connect(qApp->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11Cursor::aboutToBlock);
     }
+
+#ifndef KCMRULES
+    connect(kwinApp(), &Application::workspaceCreated, this,
+        [this] {
+            if (Xcb::Extensions::self()->isFixesAvailable()) {
+                m_xfixesFilter = std::make_unique<XFixesCursorEventFilter>(this);
+            }
+        }
+    );
+#endif
 }
 
 X11Cursor::~X11Cursor()
@@ -171,6 +182,15 @@ xcb_cursor_t X11Cursor::createCursor(const QByteArray &name)
     }
     xcb_cursor_context_free(ctx);
     return cursor;
+}
+
+void X11Cursor::notifyCursorChanged()
+{
+    if (!isCursorTracking()) {
+        // cursor change tracking is currently disabled, so don't emit signal
+        return;
+    }
+    emit cursorChanged();
 }
 
 }

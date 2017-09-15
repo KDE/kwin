@@ -391,8 +391,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 c->syncEvent(reinterpret_cast< xcb_sync_alarm_notify_event_t* >(e));
             for (Client *c : desktops)
                 c->syncEvent(reinterpret_cast< xcb_sync_alarm_notify_event_t* >(e));
-        } else if (eventType == Xcb::Extensions::self()->fixesCursorNotifyEvent() && Xcb::Extensions::self()->isFixesAvailable()) {
-            Cursor::self()->notifyCursorChanged(reinterpret_cast<xcb_xfixes_cursor_notify_event_t*>(e)->cursor_serial);
         }
         break;
     }

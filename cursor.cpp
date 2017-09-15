@@ -227,16 +227,6 @@ void Cursor::doStopCursorTracking()
 {
 }
 
-void Cursor::notifyCursorChanged(uint32_t serial)
-{
-    Q_UNUSED(serial)
-    if (m_cursorTrackingCounter <= 0) {
-        // cursor change tracking is currently disabled, so don't emit signal
-        return;
-    }
-    emit cursorChanged();
-}
-
 QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
 {
     static const QHash<QByteArray, QVector<QByteArray>> alternatives = {
