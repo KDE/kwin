@@ -6,6 +6,7 @@
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través de l'XRender",
         "Description[el]": "Αποτύπωση πρσοθέτου συνθέτη KWin μέσω XRender",
         "Description[es]": "Complemento compositor de KWin renderizando mediante XRender",
+        "Description[fr]": "Module du compositeur KWin effectuant le rendu avec XRender",
         "Description[it]": "Estensione del compositore di KWin per la resa tramite XRender",
         "Description[nl]": "KWin-compositor-plug-in rendering via XRender",
         "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez XRender",

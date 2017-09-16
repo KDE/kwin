@@ -6,6 +6,7 @@
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través del QPainter",
         "Description[el]": "Αποτύπωση πρσοθέτου συνθέτη KWin μέσω QPainter",
         "Description[es]": "Complemento compositor de KWin renderizando mediante QPainter",
+        "Description[fr]": "Module du compositeur KWin effectuant le rendu avec QPainter",
         "Description[it]": "Estensione del compositore di KWin per la resa tramite QPainter",
         "Description[nl]": "KWin-compositor-plug-in rendering via QPainter",
         "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez QPainter",
