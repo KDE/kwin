@@ -37,18 +37,6 @@ X11Filter::X11Filter()
 {
 }
 
-template <typename T>
-static bool passToEffects(T *e)
-{
-    const auto tab = TabBox::TabBox::self();
-    if (!tab->isShown() && tab->isDisplayed()) {
-        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool X11Filter::event(xcb_generic_event_t *event)
 {
     if (!TabBox::TabBox::self()->isGrabbed()) {
@@ -60,8 +48,12 @@ bool X11Filter::event(xcb_generic_event_t *event)
     case XCB_BUTTON_RELEASE: {
         auto e = reinterpret_cast<xcb_button_press_event_t*>(event);
         xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, XCB_CURRENT_TIME);
-        if (passToEffects(e)) {
-            return true;
+        const auto tab = TabBox::TabBox::self();
+        if (!tab->isShown() && tab->isDisplayed()) {
+            if (effects && static_cast<EffectsHandlerImpl*>(effects)->isMouseInterception()) {
+                // pass on to effects, effects will filter out the event
+                return false;
+            }
         }
         if (eventType == XCB_BUTTON_PRESS) {
             return buttonPress(e);
@@ -69,7 +61,8 @@ bool X11Filter::event(xcb_generic_event_t *event)
         return false;
     }
     case XCB_MOTION_NOTIFY: {
-        return motion(event);
+        motion(event);
+        break;
     }
     case XCB_KEY_PRESS: {
         keyPress(event);
@@ -103,17 +96,13 @@ bool X11Filter::buttonPress(xcb_button_press_event_t *event)
     return false;
 }
 
-bool X11Filter::motion(xcb_generic_event_t *event)
+void X11Filter::motion(xcb_generic_event_t *event)
 {
     auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t*>(event);
     const QPoint rootPos(mouseEvent->root_x, mouseEvent->root_y);
     // TODO: this should be in ScreenEdges directly
     ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(xTime()), true);
     xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, XCB_CURRENT_TIME);
-    if (passToEffects(mouseEvent)) {
-        return true;
-    }
-    return false;
 }
 
 void X11Filter::keyPress(xcb_generic_event_t *event)

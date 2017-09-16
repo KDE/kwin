@@ -35,7 +35,7 @@ public:
 
 private:
     bool buttonPress(xcb_button_press_event_t *event);
-    bool motion(xcb_generic_event_t *event);
+    void motion(xcb_generic_event_t *event);
     void keyPress(xcb_generic_event_t *event);
     void keyRelease(xcb_generic_event_t *event);
 };
