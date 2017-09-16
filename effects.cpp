@@ -703,11 +703,11 @@ void EffectsHandlerImpl::stopMouseInterception(Effect *effect)
         return;
     }
     m_grabbedMouseEffects.removeAll(effect);
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        input()->pointer()->removeEffectsOverrideCursor();
-        return;
-    }
     if (m_grabbedMouseEffects.isEmpty()) {
+        if (kwinApp()->operationMode() != Application::OperationModeX11) {
+            input()->pointer()->removeEffectsOverrideCursor();
+            return;
+        }
         m_mouseInterceptionWindow.unmap();
         m_x11MouseInterception.reset();
         Workspace::self()->stackScreenEdgesUnderOverrideRedirect();
