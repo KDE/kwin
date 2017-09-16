@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenlockerwatcher.h"
 #include "thumbnailitem.h"
 #include "virtualdesktops.h"
+#include "window_property_notify_x11_filter.h"
 #include "workspace.h"
 #include "kwinglutils.h"
 
@@ -192,13 +193,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     );
     connect(vds, &VirtualDesktopManager::countChanged, this, &EffectsHandler::numberDesktopsChanged);
     connect(Cursor::self(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
-    connect(ws, &Workspace::propertyNotify, this,
-        [this](long int atom) {
-            if (!registered_atoms.contains(atom))
-                return;
-            emit propertyNotify(nullptr, atom);
-        }
-    );
     connect(screens(), &Screens::countChanged,    this, &EffectsHandler::numberScreensChanged);
     connect(screens(), &Screens::sizeChanged,     this, &EffectsHandler::virtualScreenSizeChanged);
     connect(screens(), &Screens::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
@@ -232,9 +226,18 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
                 m_managedProperties.insert(*it, atom);
                 registerPropertyType(atom, true);
             }
+            if (kwinApp()->x11Connection()) {
+                m_x11WindowPropertyNotify = std::make_unique<WindowPropertyNotifyX11Filter>(this);
+            } else {
+                m_x11WindowPropertyNotify.reset();
+            }
             emit xcbConnectionChanged();
         }
     );
+
+    if (kwinApp()->x11Connection()) {
+        m_x11WindowPropertyNotify = std::make_unique<WindowPropertyNotifyX11Filter>(this);
+    }
 
     // connect all clients
     for (Client *c : ws->clientList()) {
@@ -342,7 +345,6 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
 {
     setupAbstractClientConnections(c);
     connect(c, &Client::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
-    connect(c, &Client::propertyNotify,       this, &EffectsHandlerImpl::slotPropertyNotify);
 }
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
@@ -352,7 +354,6 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
     connect(u, &Unmanaged::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
     connect(u, &Unmanaged::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
     connect(u, &Unmanaged::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
-    connect(u, &Unmanaged::propertyNotify,       this, &EffectsHandlerImpl::slotPropertyNotify);
 }
 
 void EffectsHandlerImpl::reconfigure()
@@ -806,13 +807,6 @@ void EffectsHandlerImpl::desktopResized(const QSize &size)
         m_mouseInterceptionWindow.setGeometry(QRect(0, 0, size.width(), size.height()));
     }
     emit screenGeometryChanged(size);
-}
-
-void EffectsHandlerImpl::slotPropertyNotify(Toplevel* t, long int atom)
-{
-    if (!registered_atoms.contains(atom))
-        return;
-    emit propertyNotify(t->effectWindow(), atom);
 }
 
 void EffectsHandlerImpl::registerPropertyType(long atom, bool reg)

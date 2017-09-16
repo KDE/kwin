@@ -483,7 +483,6 @@ Q_SIGNALS:
     void unmanagedAdded(KWin::Unmanaged*);
     void unmanagedRemoved(KWin::Unmanaged*);
     void deletedRemoved(KWin::Deleted*);
-    void propertyNotify(long a);
     void configChanged();
     void reinitializeCompositing();
     void showingDesktopChanged(bool showing);
