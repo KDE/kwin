@@ -225,7 +225,10 @@ QPointF TouchEvent::absolutePos(const QSize &size) const
 qint32 TouchEvent::id() const
 {
     Q_ASSERT(type() != LIBINPUT_EVENT_TOUCH_CANCEL && type() != LIBINPUT_EVENT_TOUCH_FRAME);
-    return libinput_event_touch_get_slot(m_touchEvent);
+
+    const qint32 slot = libinput_event_touch_get_slot(m_touchEvent);
+
+    return slot == -1 ? 0 : slot;
 }
 
 GestureEvent::GestureEvent(libinput_event *event, libinput_event_type type)

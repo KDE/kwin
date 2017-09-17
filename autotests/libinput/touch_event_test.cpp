@@ -40,6 +40,7 @@ private Q_SLOTS:
     void testType();
     void testAbsoluteMotion_data();
     void testAbsoluteMotion();
+    void testNoAssignedSlot();
 
 private:
     libinput_device *m_nativeDevice = nullptr;
@@ -124,6 +125,20 @@ void TestLibinputTouchEvent::testAbsoluteMotion()
     QCOMPARE(te->time(), 500u);
     QCOMPARE(te->absolutePos(), QPointF(6.25, 6.9));
     QCOMPARE(te->absolutePos(QSize(1280, 1024)), QPointF(640, 512));
+}
+
+void TestLibinputTouchEvent::testNoAssignedSlot()
+{
+    // this test verifies that touch events without an assigned slot get id == 0
+    libinput_event_touch *touchEvent = new libinput_event_touch;
+    touchEvent->type = LIBINPUT_EVENT_TOUCH_UP;
+    touchEvent->device = m_nativeDevice;
+    // touch events without an assigned slot have slot == -1
+    touchEvent->slot = -1;
+
+    QScopedPointer<Event> event(Event::create(touchEvent));
+    QVERIFY(dynamic_cast<TouchEvent*>(event.data()));
+    QCOMPARE(dynamic_cast<TouchEvent*>(event.data())->id(), 0);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputTouchEvent)
