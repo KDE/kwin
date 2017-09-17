@@ -994,6 +994,32 @@ bool VulkanScene::checkResult(VkResult result, std::function<void(void)> printDe
 }
 
 
+void VulkanScene::checkFences(uint32_t first, uint32_t count)
+{
+    // Release resources referenced by any previous paint passes that have finished
+    for (uint32_t i = 0; i < count; i++) {
+        const uint32_t index = (first + i) % m_paintPassData.size();
+        PaintPassData &paintPass = m_paintPassData[index];
+
+        if (!paintPass.fenceSubmitted)
+            continue;
+
+        if (!paintPass.fence.isSignalled())
+            break;
+
+        // Reset the command pools
+        for (auto &pool : paintPass.commandPools)
+            pool.reset();
+
+        // Clear lists of Vulkan objects referenced by the paint pass
+        paintPass.busyObjects.clear();
+
+        paintPass.fence.reset();
+        paintPass.fenceSubmitted = false;
+    }
+}
+
+
 struct ScopeGuard
 {
     ~ScopeGuard() { destructor(); }
@@ -1097,6 +1123,9 @@ qint64 VulkanScene::paint(QRegion damage, ToplevelList windows)
             paintPass.fence.reset();
             paintPass.fenceSubmitted = false;
         }
+
+        // Drop references to resources that are no longer busy
+        checkFences(m_paintPassIndex + 1, FramesInFlight - 1);
 
 
         // After this call, updateRegion will contain the damaged region in the
@@ -1411,6 +1440,9 @@ qint64 VulkanScene::paint(QRegion damage, ToplevelList windows)
             // rendered again in the next paint pass.
             m_bufferAge = 1;
         }
+
+        // Drop references to resources that are no longer busy
+        checkFences(m_paintPassIndex, FramesInFlight);
     }
 
     return timer.nsecsElapsed();
@@ -1509,6 +1541,15 @@ void VulkanScene::paintCursor()
         return;
 
     // TODO
+}
+
+
+void VulkanScene::idle()
+{
+    // Drop references to resources that are no longer busy
+    checkFences(m_paintPassIndex, FramesInFlight);
+
+    Scene::idle();
 }
 
 

@@ -129,6 +129,7 @@ public:
     void paintGenericScreen(int mask, ScreenPaintData data) override;
     void paintBackground(QRegion region) override;
     void paintCursor() override;
+    void idle() override;
     CompositingType compositingType() const override;
     bool initFailed() const override;
     EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
@@ -200,6 +201,7 @@ private:
     void handleDeviceLostError();
     void handleFatalError();
     bool checkResult(VkResult result, std::function<void(void)> debugMessage);
+    void checkFences(uint32_t first, uint32_t count);
 
 private:
     VulkanInstance                                           m_instance;
