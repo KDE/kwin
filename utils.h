@@ -158,7 +158,7 @@ template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPod
 void KWIN_EXPORT updateXTime();
 void KWIN_EXPORT grabXServer();
 void KWIN_EXPORT ungrabXServer();
-bool KWIN_EXPORT grabXKeyboard(xcb_window_t w = rootWindow());
+bool KWIN_EXPORT grabXKeyboard(xcb_window_t w = XCB_WINDOW_NONE);
 void KWIN_EXPORT ungrabXKeyboard();
 
 /**
