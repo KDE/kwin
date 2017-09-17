@@ -693,7 +693,7 @@ bool Workspace::keepTransientAbove(const AbstractClient* mainwindow, const Abstr
 // Returns all windows in their stacking order on the root window.
 ToplevelList Workspace::xStackingOrder() const
 {
-    if (m_xStackingQueryTree) {
+    if (m_xStackingDirty) {
         const_cast<Workspace*>(this)->updateXStackingOrder();
     }
     return x_stacking;
@@ -707,7 +707,7 @@ void Workspace::updateXStackingOrder()
     foreach (Toplevel * c, stacking_order)
     x_stacking.append(c);
 
-    if (!tree->isNull()) {
+    if (tree && !tree->isNull()) {
         xcb_window_t *windows = tree->children();
         const auto count = tree->data()->children_len;
         int foundUnmanagedCount = unmanaged.count();
@@ -735,6 +735,7 @@ void Workspace::updateXStackingOrder()
             }
         }
     }
+    m_xStackingDirty = false;
 }
 
 //*******************************

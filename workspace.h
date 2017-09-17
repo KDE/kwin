@@ -565,6 +565,7 @@ private:
     bool force_restacking;
     ToplevelList x_stacking; // From XQueryTree()
     std::unique_ptr<Xcb::Tree> m_xStackingQueryTree;
+    bool m_xStackingDirty = false;
     QList<AbstractClient*> should_get_focus; // Last is most recent
     QList<AbstractClient*> attention_chain;
 

@@ -1696,7 +1696,10 @@ Toplevel *Workspace::findInternal(QWindow *w) const
 
 void Workspace::markXStackingOrderAsDirty()
 {
-    m_xStackingQueryTree.reset(new Xcb::Tree(rootWindow()));
+    m_xStackingDirty = true;
+    if (kwinApp()->x11Connection()) {
+        m_xStackingQueryTree.reset(new Xcb::Tree(kwinApp()->x11RootWindow()));
+    }
 }
 
 void Workspace::setWasUserInteraction()
