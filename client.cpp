@@ -1447,8 +1447,9 @@ void Client::setCaption(const QString& _s, bool force)
     for (int i = 0; i < s.length(); ++i)
         if (!s[i].isPrint())
             s[i] = QChar(u' ');
+    const bool changed = (s != cap_normal);
     cap_normal = s;
-    if (!force) {
+    if (!force && !changed) {
         emit captionChanged();
         return;
     }
