@@ -99,6 +99,7 @@ void PointerInputTest::initTestCase()
 
     qputenv("XCURSOR_THEME", QByteArrayLiteral("DMZ-White"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("24"));
+    qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());

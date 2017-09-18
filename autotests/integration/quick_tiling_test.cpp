@@ -101,6 +101,8 @@ void QuickTilingTest::initTestCase()
 
     kwinApp()->setConfig(config);
 
+    qputenv("XKB_DEFAULT_RULES", "evdev");
+
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QCOMPARE(screens()->count(), 2);

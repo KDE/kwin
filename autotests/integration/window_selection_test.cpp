@@ -71,6 +71,7 @@ void TestWindowSelection::initTestCase()
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+    qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
