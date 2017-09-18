@@ -104,7 +104,7 @@ void DrmOutput::showCursor(DrmDumbBuffer *c)
 
 void DrmOutput::moveCursor(const QPoint &globalPos)
 {
-    const QPoint p = (globalPos - m_globalPos) * m_scale;
+    const QPoint p = (globalPos * m_scale) - m_backend->softwareCursorHotspot();
     drmModeMoveCursor(m_backend->fd(), m_crtc->id(), p.x(), p.y());
 }
 
