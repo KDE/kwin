@@ -678,12 +678,11 @@ void DrmBackend::doHideCursor()
 
 void DrmBackend::moveCursor()
 {
-    const QPoint p = Cursor::pos() - softwareCursorHotspot();
     if (!m_cursorEnabled || isCursorHidden()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->moveCursor(p);
+        (*it)->moveCursor(Cursor::pos());
     }
 }
 
