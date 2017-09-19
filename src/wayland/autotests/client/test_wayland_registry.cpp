@@ -20,6 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtTest/QtTest>
 // KWin
+#include "../../src/client/blur.h"
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/dpms.h"
@@ -32,6 +33,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/relativepointer.h"
 #include "../../src/client/server_decoration.h"
 #include "../../src/client/shell.h"
+#include "../../src/client/surface.h"
 #include "../../src/client/subcompositor.h"
 #include "../../src/client/xdgshell.h"
 #include "../../src/server/compositor_interface.h"
@@ -95,6 +97,7 @@ private Q_SLOTS:
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
+    void testOutOfSyncRemoval();
     void testDestroy();
     void testAnnounceMultiple();
     void testAnnounceMultipleOutputDevices();
@@ -116,6 +119,7 @@ private:
     KWayland::Server::RelativePointerManagerInterface *m_relativePointerV1;
     KWayland::Server::PointerGesturesInterface *m_pointerGesturesV1;
     KWayland::Server::PointerConstraintsInterface *m_pointerConstraintsV1;
+    KWayland::Server::BlurManagerInterface *m_blur;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-registry-0");
@@ -138,6 +142,7 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_relativePointerV1(nullptr)
     , m_pointerGesturesV1(nullptr)
     , m_pointerConstraintsV1(nullptr)
+    , m_blur(nullptr)
 {
 }
 
@@ -164,7 +169,8 @@ void TestWaylandRegistry::init()
     m_outputDevice = m_display->createOutputDevice();
     m_outputDevice->create();
     QVERIFY(m_outputManagement->isValid());
-    m_display->createBlurManager(this)->create();
+    m_blur = m_display->createBlurManager(this);
+    m_blur->create();
     m_display->createContrastManager(this)->create();
     m_display->createSlideManager(this)->create();
     m_display->createDpmsManager()->create();
@@ -380,6 +386,8 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(outputManagementAnnouncedSpy.isValid());
     QSignalSpy serverSideDecorationManagerAnnouncedSpy(&registry, &Registry::serverSideDecorationManagerAnnounced);
     QVERIFY(serverSideDecorationManagerAnnouncedSpy.isValid());
+    QSignalSpy blurAnnouncedSpy(&registry, &Registry::blurAnnounced);
+    QVERIFY(blurAnnouncedSpy.isValid());
 
     QVERIFY(!registry.isValid());
     registry.create(connection.display());
@@ -394,6 +402,8 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!subCompositorAnnouncedSpy.isEmpty());
     QVERIFY(!outputManagementAnnouncedSpy.isEmpty());
     QVERIFY(!serverSideDecorationManagerAnnouncedSpy.isEmpty());
+    QVERIFY(!blurAnnouncedSpy.isEmpty());
+
 
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Compositor));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Output));
@@ -405,6 +415,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::FullscreenShell));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::OutputManagement));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::ServerSideDecorationManager));
+    QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Blur));
 
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Compositor).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Output).isEmpty());
@@ -416,6 +427,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::FullscreenShell).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::OutputManagement).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::ServerSideDecorationManager).isEmpty());
+    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Blur).isEmpty());
 
     QSignalSpy seatRemovedSpy(&registry, SIGNAL(seatRemoved(quint32)));
     QVERIFY(seatRemovedSpy.isValid());
@@ -426,6 +438,8 @@ void TestWaylandRegistry::testRemoval()
     Compositor *compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, &registry);
     SubCompositor *subcompositor = registry.createSubCompositor(registry.interface(Registry::Interface::SubCompositor).name, registry.interface(Registry::Interface::SubCompositor).version, &registry);
     ServerSideDecorationManager *serverSideDeco = registry.createServerSideDecorationManager(registry.interface(Registry::Interface::ServerSideDecorationManager).name, registry.interface(Registry::Interface::ServerSideDecorationManager).version, &registry);
+    BlurManager *blurManager = registry.createBlurManager(registry.interface(Registry::Interface::Blur).name, registry.interface(Registry::Interface::Blur).version, &registry);
+
     connection.flush();
     m_display->dispatchEvents();
     QSignalSpy seatObjectRemovedSpy(seat, &Seat::removed);
@@ -516,6 +530,18 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::ServerSideDecorationManager).isEmpty());
     QCOMPARE(serverSideDecoManagerObjectRemovedSpy.count(), 1);
 
+    QSignalSpy blurRemovedSpy(&registry, &Registry::blurRemoved);
+    QVERIFY(blurRemovedSpy.isValid());
+    QSignalSpy blurObjectRemovedSpy(blurManager, &BlurManager::removed);
+    QVERIFY(blurObjectRemovedSpy.isValid());
+
+    delete m_blur;
+    QVERIFY(blurRemovedSpy.wait());
+    QCOMPARE(blurRemovedSpy.first().first(), blurRemovedSpy.first().first());
+    QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::Blur));
+    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::Blur).isEmpty());
+    QCOMPARE(blurObjectRemovedSpy.count(), 1);
+
     // cannot test shmRemoved as there is no functionality for it
 
     // verify everything has been removed only once
@@ -525,6 +551,63 @@ void TestWaylandRegistry::testRemoval()
     QCOMPARE(compositorObjectRemovedSpy.count(), 1);
     QCOMPARE(subcompositorObjectRemovedSpy.count(), 1);
     QCOMPARE(serverSideDecoManagerObjectRemovedSpy.count(), 1);
+    QCOMPARE(blurObjectRemovedSpy.count(), 1);
+}
+
+void TestWaylandRegistry::testOutOfSyncRemoval()
+{
+    //This tests the following sequence of events
+    //server announces global
+    //client binds to that global
+
+    //server removes the global
+    //(simultaneously) the client legimitely uses the bound resource to the global
+    //client then gets the server events...it should no-op, not be a protcol error
+
+    using namespace KWayland::Client;
+    KWayland::Client::ConnectionThread connection;
+    QSignalSpy connectedSpy(&connection, SIGNAL(connected()));
+    connection.setSocketName(s_socketName);
+    connection.initConnection();
+    QVERIFY(connectedSpy.wait());
+    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, &connection,
+        [&connection] {
+            wl_display_flush(connection.display());
+        }
+    );
+
+    KWayland::Client::Registry registry;
+    QVERIFY(!registry.isValid());
+    registry.create(connection.display());
+    registry.setup();
+    QSignalSpy blurAnnouncedSpy(&registry, &Registry::blurAnnounced);
+    blurAnnouncedSpy.wait();
+    BlurManager *blurManager = registry.createBlurManager(registry.interface(Registry::Interface::Blur).name, registry.interface(Registry::Interface::Blur).version, &registry);
+
+    connection.flush();
+    m_display->dispatchEvents();
+
+
+    QScopedPointer<Compositor> compositor(registry.createCompositor(registry.interface(Registry::Interface::Compositor).name,
+                                             registry.interface(Registry::Interface::Compositor).version));
+    QScopedPointer<Surface> surface(compositor->createSurface());
+    QVERIFY(surface);
+
+    QSignalSpy blurRemovedSpy(&registry, &Registry::blurRemoved);
+
+    delete m_blur;
+
+    //client hasn't processed the event yet
+    QVERIFY(blurRemovedSpy.count() == 0);
+
+    //use the in the client
+    blurManager->createBlur(surface.data(), 0);
+
+    //now process events,
+    QVERIFY(blurRemovedSpy.wait());
+    QVERIFY(blurRemovedSpy.count() == 1);
+
+
 }
 
 void TestWaylandRegistry::testDestroy()

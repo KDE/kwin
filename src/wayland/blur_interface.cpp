@@ -46,9 +46,12 @@ private:
     static void unsetCallback(wl_client *client, wl_resource *resource, wl_resource *surface);
     static void unbind(wl_resource *resource);
     static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
+        auto blurManager = reinterpret_cast<QPointer<BlurManagerInterface>*>(wl_resource_get_user_data(r))->data();
+        if (blurManager) {
+            return static_cast<Private*>(blurManager->d.data());
+        }
+        return nullptr;
     }
-
     BlurManagerInterface *q;
     static const struct org_kde_kwin_blur_manager_interface s_interface;
     static const quint32 s_version;
@@ -77,19 +80,22 @@ void BlurManagerInterface::Private::bind(wl_client *client, uint32_t version, ui
         wl_client_post_no_memory(client);
         return;
     }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
-    // TODO: should we track?
+    auto ref = new QPointer<BlurManagerInterface>(q);//deleted in unbind
+    wl_resource_set_implementation(resource, &s_interface, ref, unbind);
 }
 
-void BlurManagerInterface::Private::unbind(wl_resource *resource)
+void BlurManagerInterface::Private::unbind(wl_resource *r)
 {
-    Q_UNUSED(resource)
-    // TODO: implement?
+    delete reinterpret_cast<QPointer<BlurManagerInterface>*>(wl_resource_get_user_data(r));
 }
 
 void BlurManagerInterface::Private::createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
 {
-    cast(resource)->createBlur(client, resource, id, surface);
+    auto m = cast(resource);
+    if (!m) {
+        return;// will happen if global is deleted
+    }
+    m->createBlur(client, resource, id, surface);
 }
 
 void BlurManagerInterface::Private::createBlur(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
