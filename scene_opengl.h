@@ -141,9 +141,6 @@ protected:
     virtual void updateProjectionMatrix() override;
     void paintCursor() override;
 
-private Q_SLOTS:
-    void resetLanczosFilter();
-
 private:
     void performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
     QMatrix4x4 createProjectionMatrix() const;
