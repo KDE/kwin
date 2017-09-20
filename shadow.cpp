@@ -57,7 +57,7 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     if (!shadow && waylandServer()) {
         shadow = createShadowFromWayland(toplevel);
     }
-    if (!shadow) {
+    if (!shadow && kwinApp()->x11Connection()) {
         shadow = createShadowFromX11(toplevel);
     }
     if (shadow) {
