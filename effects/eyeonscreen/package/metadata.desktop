@@ -74,7 +74,7 @@ Comment[sv]=Sug in fönster i skrivbordet för att visa det senare. Det kanske p
 Comment[tr]=İlerisini göstermek için pencereleri masaüstüne topla. Bu size bir şey hatırlatabilir.
 Comment[uk]=Втягнути вікна до стільниці, щоб показати останню. Так вам простіше буде щось згадати.
 Comment[x-test]=xxSuck windows into desktop to show the latter. This might remind you of something.xx
-Comment[zh_CN]=将窗口吸入桌面并显示桌面。这可能会让你想起什么。
+Comment[zh_CN]=将窗口吸入桌面并显示桌面。这可能会让您想起什么。
 Comment[zh_TW]=將視窗「吸」入桌面。
 
 Type=Service
