@@ -494,6 +494,7 @@ Q_SIGNALS:
 
 private:
     void init();
+    void initWithX11();
     void initShortcuts();
     template <typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,

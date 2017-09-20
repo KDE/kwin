@@ -133,9 +133,6 @@ Workspace::Workspace(const QString &sessionKey)
 
     _self = this;
 
-    // first initialize the extensions
-    Xcb::Extensions::self();
-
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = nullptr;
     if (kwinApp()->usesKActivities()) {
@@ -151,8 +148,6 @@ Workspace::Workspace(const QString &sessionKey)
 
     options->loadConfig();
     options->loadCompositingConfig(false);
-    ColorMapper *colormaps = new ColorMapper(this);
-    connect(this, &Workspace::clientActivated, colormaps, &ColorMapper::update);
 
     delayFocusTimer = 0;
 
@@ -162,13 +157,6 @@ Workspace::Workspace(const QString &sessionKey)
     connect(qApp, &QGuiApplication::saveStateRequest, this, &Workspace::saveState);
 
     RuleBook::create(this)->load();
-
-    // Call this before XSelectInput() on the root window
-    startup = new KStartupInfo(
-        KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
-
-    // Select windowmanager privileges
-    selectWmInputEventMask();
 
     ScreenEdges::create(this);
 
@@ -196,12 +184,6 @@ Workspace::Workspace(const QString &sessionKey)
 
     new DBusInterface(this);
 
-    // Compatibility
-    int32_t data = 1;
-
-    xcb_change_property(connection(), XCB_PROP_MODE_APPEND, rootWindow(), atoms->kwin_running,
-                        atoms->kwin_running, 32, 1, &data);
-
     Outline::create(this);
 
     initShortcuts();
@@ -211,11 +193,6 @@ Workspace::Workspace(const QString &sessionKey)
 
 void Workspace::init()
 {
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        m_wasUserInteractionFilter.reset(new WasUserInteractionX11Filter);
-        m_movingClientFilter.reset(new MovingClientX11Filter);
-    }
-    updateXTime(); // Needed for proper initialization of user_time in Client ctor
     KSharedConfigPtr config = kwinApp()->config();
     kwinApp()->createScreens();
     Screens *screens = Screens::self();
@@ -239,12 +216,6 @@ void Workspace::init()
     connect(options, SIGNAL(separateScreenFocusChanged(bool)), focusChain, SLOT(setSeparateScreenFocus(bool)));
     focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
-    const uint32_t nullFocusValues[] = {true};
-    m_nullFocus.reset(new Xcb::Window(QRect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues));
-    m_nullFocus->map();
-
-    RootInfo *rootInfo = RootInfo::create();
-
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     connect(vds, SIGNAL(desktopsRemoved(uint)), SLOT(moveClientsFromRemovedDesktops()));
@@ -252,7 +223,6 @@ void Workspace::init()
     connect(vds, SIGNAL(currentChanged(uint,uint)), SLOT(slotCurrentDesktopChanged(uint,uint)));
     vds->setNavigationWrappingAround(options->isRollOverDesktops());
     connect(options, SIGNAL(rollOverDesktopsChanged(bool)), vds, SLOT(setNavigationWrappingAround(bool)));
-    vds->setRootInfo(rootInfo);
     vds->setConfig(config);
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
@@ -262,10 +232,6 @@ void Workspace::init()
     vds->load();
     vds->updateLayout();
 
-    // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
-    NETRootInfo client_info(connection(), NET::ActiveWindow | NET::CurrentDesktop);
-    if (!qApp->isSessionRestored())
-        m_initialDesktop = client_info.currentDesktop();
     if (!VirtualDesktopManager::self()->setCurrent(m_initialDesktop))
         VirtualDesktopManager::self()->setCurrent(1);
 
@@ -284,87 +250,8 @@ void Workspace::init()
                                           this, SLOT(reconfigure()));
 
     active_client = NULL;
-    rootInfo->setActiveWindow(None);
-    focusToNull();
-    if (!qApp->isSessionRestored())
-        ++block_focus; // Because it will be set below
 
-    {
-        // Begin updates blocker block
-        StackingUpdatesBlocker blocker(this);
-
-        Xcb::Tree tree(rootWindow());
-        xcb_window_t *wins = xcb_query_tree_children(tree.data());
-
-        QVector<Xcb::WindowAttributes> windowAttributes(tree->children_len);
-        QVector<Xcb::WindowGeometry> windowGeometries(tree->children_len);
-
-        // Request the attributes and geometries of all toplevel windows
-        for (int i = 0; i < tree->children_len; i++) {
-            windowAttributes[i] = Xcb::WindowAttributes(wins[i]);
-            windowGeometries[i] = Xcb::WindowGeometry(wins[i]);
-        }
-
-        // Get the replies
-        for (int i = 0; i < tree->children_len; i++) {
-            Xcb::WindowAttributes attr(windowAttributes.at(i));
-
-            if (attr.isNull()) {
-                continue;
-            }
-
-            if (attr->override_redirect) {
-                if (attr->map_state == XCB_MAP_STATE_VIEWABLE &&
-                    attr->_class != XCB_WINDOW_CLASS_INPUT_ONLY)
-                    // ### This will request the attributes again
-                    createUnmanaged(wins[i]);
-            } else if (attr->map_state != XCB_MAP_STATE_UNMAPPED) {
-                if (Application::wasCrash()) {
-                    fixPositionAfterCrash(wins[i], windowGeometries.at(i).data());
-                }
-
-                // ### This will request the attributes again
-                createClient(wins[i], true);
-            }
-        }
-
-        // Propagate clients, will really happen at the end of the updates blocker block
-        updateStackingOrder(true);
-
-        saveOldScreenSizes();
-        updateClientArea();
-
-        // NETWM spec says we have to set it to (0,0) if we don't support it
-        NETPoint* viewports = new NETPoint[VirtualDesktopManager::self()->count()];
-        rootInfo->setDesktopViewport(VirtualDesktopManager::self()->count(), *viewports);
-        delete[] viewports;
-        QRect geom;
-        for (int i = 0; i < screens->count(); i++) {
-            geom |= screens->geometry(i);
-        }
-        NETSize desktop_geometry;
-        desktop_geometry.width = geom.width();
-        desktop_geometry.height = geom.height();
-        rootInfo->setDesktopGeometry(desktop_geometry);
-        setShowingDesktop(false);
-
-    } // End updates blocker block
-
-    AbstractClient* new_active_client = nullptr;
-    if (!qApp->isSessionRestored()) {
-        --block_focus;
-        new_active_client = findClient(Predicate::WindowMatch, client_info.activeWindow());
-    }
-    if (new_active_client == NULL
-            && activeClient() == NULL && should_get_focus.count() == 0) {
-        // No client activated in manage()
-        if (new_active_client == NULL)
-            new_active_client = topClientOnDesktop(VirtualDesktopManager::self()->current(), -1);
-        if (new_active_client == NULL && !desktops.isEmpty())
-            new_active_client = findDesktop(true, VirtualDesktopManager::self()->current());
-    }
-    if (new_active_client != NULL)
-        activateClient(new_active_client);
+    initWithX11();
 
     Scripting::create(this);
 
@@ -459,6 +346,141 @@ void Workspace::init()
     QMetaObject::invokeMethod(this, "workspaceInitialized", Qt::QueuedConnection);
 
     // TODO: ungrabXServer()
+}
+
+void Workspace::initWithX11()
+{
+    if (!kwinApp()->x11Connection()) {
+        connect(kwinApp(), &Application::x11ConnectionChanged, this, &Workspace::initWithX11, Qt::UniqueConnection);
+        return;
+    }
+    disconnect(kwinApp(), &Application::x11ConnectionChanged, this, &Workspace::initWithX11);
+
+    atoms->retrieveHelpers();
+
+    // first initialize the extensions
+    Xcb::Extensions::self();
+    ColorMapper *colormaps = new ColorMapper(this);
+    connect(this, &Workspace::clientActivated, colormaps, &ColorMapper::update);
+
+    // Call this before XSelectInput() on the root window
+    startup = new KStartupInfo(
+        KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
+
+    // Select windowmanager privileges
+    selectWmInputEventMask();
+
+    // Compatibility
+    int32_t data = 1;
+
+    xcb_change_property(connection(), XCB_PROP_MODE_APPEND, rootWindow(), atoms->kwin_running,
+                        atoms->kwin_running, 32, 1, &data);
+
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        m_wasUserInteractionFilter.reset(new WasUserInteractionX11Filter);
+        m_movingClientFilter.reset(new MovingClientX11Filter);
+    }
+    updateXTime(); // Needed for proper initialization of user_time in Client ctor
+
+    const uint32_t nullFocusValues[] = {true};
+    m_nullFocus.reset(new Xcb::Window(QRect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues));
+    m_nullFocus->map();
+
+    RootInfo *rootInfo = RootInfo::create();
+    VirtualDesktopManager::self()->setRootInfo(rootInfo);
+
+    // TODO: only in X11 mode
+    // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
+    NETRootInfo client_info(connection(), NET::ActiveWindow | NET::CurrentDesktop);
+    if (!qApp->isSessionRestored())
+        m_initialDesktop = client_info.currentDesktop();
+    if (!VirtualDesktopManager::self()->setCurrent(m_initialDesktop))
+        VirtualDesktopManager::self()->setCurrent(1);
+
+    // TODO: better value
+    rootInfo->setActiveWindow(None);
+    focusToNull();
+
+    if (!qApp->isSessionRestored())
+        ++block_focus; // Because it will be set below
+
+    {
+        // Begin updates blocker block
+        StackingUpdatesBlocker blocker(this);
+
+        Xcb::Tree tree(rootWindow());
+        xcb_window_t *wins = xcb_query_tree_children(tree.data());
+
+        QVector<Xcb::WindowAttributes> windowAttributes(tree->children_len);
+        QVector<Xcb::WindowGeometry> windowGeometries(tree->children_len);
+
+        // Request the attributes and geometries of all toplevel windows
+        for (int i = 0; i < tree->children_len; i++) {
+            windowAttributes[i] = Xcb::WindowAttributes(wins[i]);
+            windowGeometries[i] = Xcb::WindowGeometry(wins[i]);
+        }
+
+        // Get the replies
+        for (int i = 0; i < tree->children_len; i++) {
+            Xcb::WindowAttributes attr(windowAttributes.at(i));
+
+            if (attr.isNull()) {
+                continue;
+            }
+
+            if (attr->override_redirect) {
+                if (attr->map_state == XCB_MAP_STATE_VIEWABLE &&
+                    attr->_class != XCB_WINDOW_CLASS_INPUT_ONLY)
+                    // ### This will request the attributes again
+                    createUnmanaged(wins[i]);
+            } else if (attr->map_state != XCB_MAP_STATE_UNMAPPED) {
+                if (Application::wasCrash()) {
+                    fixPositionAfterCrash(wins[i], windowGeometries.at(i).data());
+                }
+
+                // ### This will request the attributes again
+                createClient(wins[i], true);
+            }
+        }
+
+        // Propagate clients, will really happen at the end of the updates blocker block
+        updateStackingOrder(true);
+
+        saveOldScreenSizes();
+        updateClientArea();
+
+        // NETWM spec says we have to set it to (0,0) if we don't support it
+        NETPoint* viewports = new NETPoint[VirtualDesktopManager::self()->count()];
+        rootInfo->setDesktopViewport(VirtualDesktopManager::self()->count(), *viewports);
+        delete[] viewports;
+        QRect geom;
+        for (int i = 0; i < screens()->count(); i++) {
+            geom |= screens()->geometry(i);
+        }
+        NETSize desktop_geometry;
+        desktop_geometry.width = geom.width();
+        desktop_geometry.height = geom.height();
+        rootInfo->setDesktopGeometry(desktop_geometry);
+        setShowingDesktop(false);
+
+    } // End updates blocker block
+
+    // TODO: only on X11?
+    AbstractClient* new_active_client = nullptr;
+    if (!qApp->isSessionRestored()) {
+        --block_focus;
+        new_active_client = findClient(Predicate::WindowMatch, client_info.activeWindow());
+    }
+    if (new_active_client == NULL
+            && activeClient() == NULL && should_get_focus.count() == 0) {
+        // No client activated in manage()
+        if (new_active_client == NULL)
+            new_active_client = topClientOnDesktop(VirtualDesktopManager::self()->current(), -1);
+        if (new_active_client == NULL && !desktops.isEmpty())
+            new_active_client = findDesktop(true, VirtualDesktopManager::self()->current());
+    }
+    if (new_active_client != NULL)
+        activateClient(new_active_client);
 }
 
 Workspace::~Workspace()
@@ -1207,7 +1229,9 @@ bool Workspace::checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KSt
  */
 void Workspace::focusToNull()
 {
-    m_nullFocus->focus();
+    if (m_nullFocus) {
+        m_nullFocus->focus();
+    }
 }
 
 void Workspace::setShowingDesktop(bool showing)
