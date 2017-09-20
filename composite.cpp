@@ -709,7 +709,9 @@ void Compositor::performCompositing()
 
     if (damaged.count() > 0) {
         m_scene->triggerFence();
-        xcb_flush(connection());
+        if (auto c = kwinApp()->x11Connection()) {
+            xcb_flush(c);
+        }
     }
 
     // Move elevated windows to the top of the stacking order
