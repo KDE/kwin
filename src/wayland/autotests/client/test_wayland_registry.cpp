@@ -21,6 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtTest/QtTest>
 // KWin
 #include "../../src/client/blur.h"
+#include "../../src/client/contrast.h"
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/dpms.h"
@@ -120,6 +121,8 @@ private:
     KWayland::Server::PointerGesturesInterface *m_pointerGesturesV1;
     KWayland::Server::PointerConstraintsInterface *m_pointerConstraintsV1;
     KWayland::Server::BlurManagerInterface *m_blur;
+    KWayland::Server::ContrastManagerInterface *m_contrast;
+
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-registry-0");
@@ -143,6 +146,7 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_pointerGesturesV1(nullptr)
     , m_pointerConstraintsV1(nullptr)
     , m_blur(nullptr)
+    , m_contrast(nullptr)
 {
 }
 
@@ -171,7 +175,8 @@ void TestWaylandRegistry::init()
     QVERIFY(m_outputManagement->isValid());
     m_blur = m_display->createBlurManager(this);
     m_blur->create();
-    m_display->createContrastManager(this)->create();
+    m_contrast = m_display->createContrastManager(this);
+    m_contrast->create();
     m_display->createSlideManager(this)->create();
     m_display->createDpmsManager()->create();
     m_serverSideDecorationManager = m_display->createServerSideDecorationManager();
@@ -581,18 +586,22 @@ void TestWaylandRegistry::testOutOfSyncRemoval()
     registry.create(connection.display());
     registry.setup();
     QSignalSpy blurAnnouncedSpy(&registry, &Registry::blurAnnounced);
+    QSignalSpy contrastAnnouncedSpy(&registry, &Registry::blurAnnounced);
+
     blurAnnouncedSpy.wait();
+    contrastAnnouncedSpy.wait();
     BlurManager *blurManager = registry.createBlurManager(registry.interface(Registry::Interface::Blur).name, registry.interface(Registry::Interface::Blur).version, &registry);
+    ContrastManager *contrastManager = registry.createContrastManager(registry.interface(Registry::Interface::Contrast).name, registry.interface(Registry::Interface::Contrast).version, &registry);
 
     connection.flush();
     m_display->dispatchEvents();
-
 
     QScopedPointer<Compositor> compositor(registry.createCompositor(registry.interface(Registry::Interface::Compositor).name,
                                              registry.interface(Registry::Interface::Compositor).version));
     QScopedPointer<Surface> surface(compositor->createSurface());
     QVERIFY(surface);
 
+    //remove blur
     QSignalSpy blurRemovedSpy(&registry, &Registry::blurRemoved);
 
     delete m_blur;
@@ -607,6 +616,20 @@ void TestWaylandRegistry::testOutOfSyncRemoval()
     QVERIFY(blurRemovedSpy.wait());
     QVERIFY(blurRemovedSpy.count() == 1);
 
+    //remove background contrast
+    QSignalSpy contrastRemovedSpy(&registry, &Registry::contrastRemoved);
+
+    delete m_contrast;
+
+    //client hasn't processed the event yet
+    QVERIFY(contrastRemovedSpy.count() == 0);
+
+    //use the in the client
+    contrastManager->createContrast(surface.data(), 0);
+
+    //now process events,
+    QVERIFY(contrastRemovedSpy.wait());
+    QVERIFY(contrastRemovedSpy.count() == 1);
 
 }
 

@@ -46,7 +46,11 @@ private:
     static void unsetCallback(wl_client *client, wl_resource *resource, wl_resource *surface);
     static void unbind(wl_resource *resource);
     static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
+        auto contrastManager = reinterpret_cast<QPointer<ContrastManagerInterface>*>(wl_resource_get_user_data(r))->data();
+        if (contrastManager) {
+            return static_cast<Private*>(contrastManager->d.data());
+         }
+        return nullptr;
     }
 
     ContrastManagerInterface *q;
@@ -77,19 +81,22 @@ void ContrastManagerInterface::Private::bind(wl_client *client, uint32_t version
         wl_client_post_no_memory(client);
         return;
     }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
-    // TODO: should we track?
+    auto ref = new QPointer<ContrastManagerInterface>(q);//deleted in unbind
+    wl_resource_set_implementation(resource, &s_interface, ref, unbind);
 }
 
 void ContrastManagerInterface::Private::unbind(wl_resource *resource)
 {
-    Q_UNUSED(resource)
-    // TODO: implement?
+    delete reinterpret_cast<QPointer<ContrastManagerInterface>*>(wl_resource_get_user_data(resource));
 }
 
 void ContrastManagerInterface::Private::createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
 {
-    cast(resource)->createContrast(client, resource, id, surface);
+    auto m = cast(resource);
+    if (!m) {
+        return;// will happen if global is deleted
+    }
+    m->createContrast(client, resource, id, surface);
 }
 
 void ContrastManagerInterface::Private::createContrast(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
