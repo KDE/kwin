@@ -1185,19 +1185,17 @@ void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, QRegion reg
     if (mask & PAINT_WINDOW_LANCZOS) {
         if (!m_lanczosFilter) {
             m_lanczosFilter = new LanczosFilter(this);
-            // recreate the lanczos filter when the screen gets resized
-            connect(screens(), SIGNAL(changed()), SLOT(resetLanczosFilter()));
+            // reset the lanczos filter when the screen gets resized
+            // it will get created next paint
+            connect(screens(), &Screens::changed, this, [this]() {
+                makeOpenGLContextCurrent();
+                delete m_lanczosFilter;
+                m_lanczosFilter = NULL;
+            });
         }
         m_lanczosFilter->performPaint(w, mask, region, data);
     } else
         w->sceneWindow()->performPaint(mask, region, data);
-}
-
-void SceneOpenGL2::resetLanczosFilter()
-{
-    // TODO: Qt5 - replace by a lambda slot
-    delete m_lanczosFilter;
-    m_lanczosFilter = NULL;
 }
 
 //****************************************
