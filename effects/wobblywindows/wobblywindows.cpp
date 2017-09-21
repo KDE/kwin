@@ -225,7 +225,8 @@ void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
 
 bool WobblyWindowsEffect::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return (effects->isOpenGLCompositing() || effects->compositingType() == VulkanCompositing) &&
+            effects->animationsSupported();
 }
 
 void WobblyWindowsEffect::setParameterSet(const ParameterSet& pset)
