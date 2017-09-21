@@ -358,7 +358,7 @@ set( testXdgShellV6_SRCS
       )
 add_executable(testXdgShellV6 ${testXdgShellV6_SRCS})
 target_link_libraries( testXdgShellV6 Qt5::Test Qt5::Gui KF5::WaylandServer KF5::WaylandClient Wayland::Client)
-add_test(kwayland-testXdgShellV6 testXdgShellV6)
+add_test(kwayland-testXdgShellV6 COMMAND testXdgShellV6)
 ecm_mark_as_test(testXdgShellV6)
 
 ########################################################
