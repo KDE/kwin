@@ -44,7 +44,7 @@ SheetEffect::SheetEffect()
 
 bool SheetEffect::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return (effects->isOpenGLCompositing() || effects->compositingType() == VulkanCompositing) && effects->animationsSupported();
 }
 
 void SheetEffect::reconfigure(ReconfigureFlags)
