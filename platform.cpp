@@ -23,12 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "effects.h"
 #include "input.h"
+#include <KCoreAddons>
 #include "overlaywindow.h"
 #include "outline.h"
 #include "pointer_input.h"
 #include "scene.h"
 #include "screenedge.h"
 #include "wayland_server.h"
+#include <KWayland/Server/outputconfiguration_interface.h>
 
 namespace KWin
 {
@@ -115,6 +117,11 @@ void Platform::configurationChangeRequested(KWayland::Server::OutputConfiguratio
 {
     Q_UNUSED(config)
     qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
+
+    // KCoreAddons needs kwayland's 2b3f9509ac1 to not crash
+    if (KCoreAddons::version() >= QT_VERSION_CHECK(5, 39, 0)) {
+        config->setFailed();
+    }
 }
 
 void Platform::setSoftWareCursor(bool set)

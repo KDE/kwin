@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/outputconfiguration_interface.h>
 // KF5
 #include <KConfigGroup>
+#include <KCoreAddons>
 #include <KLocalizedString>
 #include <KSharedConfig>
 // Qt
@@ -535,6 +536,10 @@ void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurat
         drmoutput->setChanges(changeset);
     }
     emit screens()->changed();
+    // KCoreAddons needs kwayland's 2b3f9509ac1 to not crash
+    if (KCoreAddons::version() >= QT_VERSION_CHECK(5, 39, 0)) {
+        config->setApplied();
+    }
 }
 
 DrmOutput *DrmBackend::findOutput(quint32 connector)
