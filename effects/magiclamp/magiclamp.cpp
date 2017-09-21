@@ -44,7 +44,7 @@ MagicLampEffect::MagicLampEffect()
 
 bool MagicLampEffect::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return (effects->isOpenGLCompositing() || effects->compositingType() == VulkanCompositing) && effects->animationsSupported();
 }
 
 void MagicLampEffect::reconfigure(ReconfigureFlags)
