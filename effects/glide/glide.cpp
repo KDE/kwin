@@ -50,7 +50,7 @@ GlideEffect::~GlideEffect() = default;
 
 bool GlideEffect::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return (effects->isOpenGLCompositing() || effects->compositingType() == VulkanCompositing) && effects->animationsSupported();
 }
 
 void GlideEffect::reconfigure(ReconfigureFlags)
