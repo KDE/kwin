@@ -227,9 +227,7 @@ void OutputConfigurationInterface::setApplied()
 
 void OutputConfigurationInterface::Private::sendApplied()
 {
-    for (const auto &r: s_allResources) {
-        org_kde_kwin_outputconfiguration_send_applied(r->resource);
-    }
+    org_kde_kwin_outputconfiguration_send_applied(resource);
 }
 
 void OutputConfigurationInterface::setFailed()
@@ -241,9 +239,7 @@ void OutputConfigurationInterface::setFailed()
 
 void OutputConfigurationInterface::Private::sendFailed()
 {
-    for (const auto &r: s_allResources) {
-        org_kde_kwin_outputconfiguration_send_failed(r->resource);
-    }
+    org_kde_kwin_outputconfiguration_send_failed(resource);
 }
 
 OutputChangeSet* OutputConfigurationInterface::Private::pendingChanges(OutputDeviceInterface *outputdevice)
