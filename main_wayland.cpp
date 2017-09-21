@@ -159,7 +159,14 @@ void ApplicationWayland::continueStartupWithScreens()
     createScreens();
 
     if (!m_startXWayland) {
-        continueStartupWithX();
+        createCompositor();
+        connect(Compositor::self(), &Compositor::sceneCreated, this,
+            [this] {
+                startSession();
+                createWorkspace();
+                notifyKSplash();
+            }
+        );
         return;
     }
     createCompositor();
@@ -214,6 +221,18 @@ void ApplicationWayland::continueStartupWithX()
         ::exit(1);
     }
 
+    m_environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
+
+    startSession();
+    createWorkspace();
+
+    Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+
+    notifyKSplash();
+}
+
+void ApplicationWayland::startSession()
+{
     if (!m_inputMethodServerToStart.isEmpty()) {
         int socket = dup(waylandServer()->createInputMethodConnection());
         if (socket >= 0) {
@@ -239,7 +258,6 @@ void ApplicationWayland::continueStartupWithX()
         }
     }
 
-    m_environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
     // start session
     if (!m_sessionArgument.isEmpty()) {
         QProcess *p = new Process(this);
@@ -260,12 +278,6 @@ void ApplicationWayland::continueStartupWithX()
             p->start(application);
         }
     }
-
-    createWorkspace();
-
-    Xcb::sync(); // Trigger possible errors, there's still a chance to abort
-
-    notifyKSplash();
 }
 
 void ApplicationWayland::createX11Connection()

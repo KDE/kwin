@@ -63,6 +63,7 @@ private:
     void continueStartupWithScreens();
     void continueStartupWithX();
     void startXwaylandServer();
+    void startSession();
 
     bool m_startXWayland = false;
     int m_xcbConnectionFd = -1;
