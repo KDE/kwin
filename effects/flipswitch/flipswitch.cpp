@@ -85,7 +85,7 @@ FlipSwitchEffect::~FlipSwitchEffect()
 
 bool FlipSwitchEffect::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return (effects->isOpenGLCompositing() || effects->compositingType() == VulkanCompositing) && effects->animationsSupported();
 }
 
 void FlipSwitchEffect::reconfigure(ReconfigureFlags)
