@@ -315,9 +315,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         //window manager who does the reparenting.
         return true;
     }
-    case XCB_DESTROY_NOTIFY: {
-        return false;
-    }
     case XCB_MAP_REQUEST: {
         updateXTime();
 
