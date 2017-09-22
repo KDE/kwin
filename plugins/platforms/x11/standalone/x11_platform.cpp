@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "x11_platform.h"
 #include "x11cursor.h"
 #include "edge.h"
+#include "sync_filter.h"
 #include "windowselector.h"
 #include <config-kwin.h>
 #include <kwinconfig.h>
@@ -70,6 +71,13 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
         }
     }
 #endif
+    connect(kwinApp(), &Application::workspaceCreated, this,
+        [this] {
+            if (Xcb::Extensions::self()->isSyncAvailable()) {
+                m_syncFilter = std::make_unique<SyncFilter>();
+            }
+        }
+    );
 }
 
 X11StandalonePlatform::~X11StandalonePlatform()

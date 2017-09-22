@@ -386,12 +386,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_FOCUS_OUT:
         return true; // always eat these, they would tell Qt that KWin is the active app
     default:
-        if (eventType == Xcb::Extensions::self()->syncAlarmNotifyEvent() && Xcb::Extensions::self()->isSyncAvailable()) {
-            for (Client *c : clients)
-                c->syncEvent(reinterpret_cast< xcb_sync_alarm_notify_event_t* >(e));
-            for (Client *c : desktops)
-                c->syncEvent(reinterpret_cast< xcb_sync_alarm_notify_event_t* >(e));
-        }
         break;
     }
     return false;
@@ -1221,23 +1215,6 @@ void Client::keyPressEvent(uint key_code, xcb_timestamp_t time)
 {
     updateUserTime(time);
     AbstractClient::keyPressEvent(key_code);
-}
-
-void Client::syncEvent(xcb_sync_alarm_notify_event_t* e)
-{
-    if (e->alarm == syncRequest.alarm && e->counter_value.hi == syncRequest.value.hi && e->counter_value.lo == syncRequest.value.lo) {
-        setReadyForPainting();
-        setupWindowManagementInterface();
-        syncRequest.isPending = false;
-        if (syncRequest.failsafeTimeout)
-            syncRequest.failsafeTimeout->stop();
-        if (isResize()) {
-            if (syncRequest.timeout)
-                syncRequest.timeout->stop();
-            performMoveResize();
-        } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
-            addRepaintFull();
-    }
 }
 
 // ****************************************

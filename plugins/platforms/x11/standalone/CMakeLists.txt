@@ -12,6 +12,7 @@ set(X11PLATFORM_SOURCES
     xfixes_cursor_event_filter.cpp
     effects_x11.cpp
     effects_mouse_interception_x11_filter.cpp
+    sync_filter.cpp
 )
 
 if(X11_Xinput_FOUND)

@@ -43,8 +43,6 @@ class QTimer;
 class KStartupInfoData;
 class KStartupInfoId;
 
-struct xcb_sync_alarm_notify_event_t;
-
 namespace KWin
 {
 
@@ -121,7 +119,6 @@ public:
     QPoint inputPos() const { return input_offset; } // Inside of geometry()
 
     bool windowEvent(xcb_generic_event_t *e);
-    void syncEvent(xcb_sync_alarm_notify_event_t* e);
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
 
     bool manage(xcb_window_t w, bool isMapped);
@@ -335,6 +332,19 @@ public:
     Xcb::StringProperty fetchApplicationMenuObjectPath() const;
     void readApplicationMenuObjectPath(Xcb::StringProperty &property);
     void checkApplicationMenuObjectPath();
+
+    struct SyncRequest {
+        xcb_sync_counter_t counter;
+        xcb_sync_int64_t value;
+        xcb_sync_alarm_t alarm;
+        xcb_timestamp_t lastTimestamp;
+        QTimer *timeout, *failsafeTimeout;
+        bool isPending;
+    };
+    const SyncRequest &getSyncRequest() const {
+        return syncRequest;
+    }
+    void handleSync();
 
     static void cleanupX11();
 
@@ -563,14 +573,7 @@ private:
     NET::Actions allowed_actions;
     QSize client_size;
     bool shade_geometry_change;
-    struct {
-        xcb_sync_counter_t counter;
-        xcb_sync_int64_t value;
-        xcb_sync_alarm_t alarm;
-        xcb_timestamp_t lastTimestamp;
-        QTimer *timeout, *failsafeTimeout;
-        bool isPending;
-    } syncRequest;
+    SyncRequest syncRequest;
     static bool check_active_modal; ///< \see Client::checkActiveModal()
     int sm_stacking_order;
     friend struct ResetupRulesProcedure;

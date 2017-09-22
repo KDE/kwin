@@ -2155,5 +2155,20 @@ void Client::checkApplicationMenuObjectPath()
     readApplicationMenuObjectPath(property);
 }
 
+void Client::handleSync()
+{
+    setReadyForPainting();
+    setupWindowManagementInterface();
+    syncRequest.isPending = false;
+    if (syncRequest.failsafeTimeout)
+        syncRequest.failsafeTimeout->stop();
+    if (isResize()) {
+        if (syncRequest.timeout)
+            syncRequest.timeout->stop();
+        performMoveResize();
+    } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
+        addRepaintFull();
+}
+
 } // namespace
 
