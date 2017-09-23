@@ -188,6 +188,8 @@ public:
     QMatrix4x4 ortho(float left, float right, float bottom, float top, float near, float far) const;
     QMatrix4x4 frustum(float left, float right, float bottom, float top, float zNear, float zFar) const;
 
+    CullModeFlags cullMode() const { return m_cullMode; }
+
 protected:
     Scene::Window *createWindow(Toplevel *toplevel) override;
 
@@ -246,6 +248,7 @@ private:
     VulkanSampler                                            m_linearSampler;
     QMatrix4x4                                               m_projectionMatrix;
     QMatrix4x4                                               m_screenProjectionMatrix;
+    CullModeFlags                                            m_cullMode = CullModeFlag::None;
     int                                                      m_frameIndex = 0;
     int                                                      m_paintPassIndex = 0;
     int                                                      m_bufferAge = 0;

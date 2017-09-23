@@ -1461,7 +1461,13 @@ void VulkanScene::paintGenericScreen(int mask, ScreenPaintData data)
 {
     m_screenProjectionMatrix = m_projectionMatrix * screenMatrix(mask, data);
 
+    if (mask & PAINT_SCREEN_WITH_FACE_CULLING)
+        m_cullMode = data.cullMode();
+
     Scene::paintGenericScreen(mask, data);
+
+    if (mask & PAINT_SCREEN_WITH_FACE_CULLING)
+        m_cullMode = CullModeFlag::None;
 }
 
 

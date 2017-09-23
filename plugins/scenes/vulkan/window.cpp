@@ -214,6 +214,18 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
         contentTraits |= VulkanPipelineManager::CrossFade;
     }
 
+    const CullModeFlags cullMode = scene()->cullMode();
+
+    if (cullMode & CullModeFlag::Front) {
+        contentTraits |= VulkanPipelineManager::CullFront;
+        decorationTraits |= VulkanPipelineManager::CullFront;
+    }
+
+    if (cullMode & CullModeFlag::Back) {
+        contentTraits |= VulkanPipelineManager::CullBack;
+        decorationTraits |= VulkanPipelineManager::CullBack;
+    }
+
     VkPipeline contentPipeline;
     VkPipelineLayout contentPipelineLayout;
 
