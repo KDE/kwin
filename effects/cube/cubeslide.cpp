@@ -83,12 +83,13 @@ void CubeSlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 void CubeSlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
     if (!slideRotations.empty()) {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_FRONT);
+        mask |= PAINT_SCREEN_WITH_FACE_CULLING;
+
+        data.setCullMode(CullModeFlag::Front);
         paintSlideCube(mask, region, data);
-        glCullFace(GL_BACK);
+
+        data.setCullMode(CullModeFlag::Back);
         paintSlideCube(mask, region, data);
-        glDisable(GL_CULL_FACE);
 
         if (dontSlidePanels) {
             foreach (EffectWindow * w, panels) {
