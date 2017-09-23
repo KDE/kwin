@@ -158,7 +158,6 @@ template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPod
 void KWIN_EXPORT updateXTime();
 void KWIN_EXPORT grabXServer();
 void KWIN_EXPORT ungrabXServer();
-bool grabbedXServer();
 bool KWIN_EXPORT grabXKeyboard(xcb_window_t w = rootWindow());
 void KWIN_EXPORT ungrabXKeyboard();
 
@@ -188,9 +187,7 @@ public:
 #endif
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states
-int qtToX11Button(Qt::MouseButton button);
 Qt::MouseButton x11ToQtMouseButton(int button);
-int qtToX11State(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
 Qt::MouseButtons KWIN_EXPORT x11ToQtMouseButtons(int state);
 Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
 

@@ -94,11 +94,6 @@ void ungrabXServer()
     }
 }
 
-bool grabbedXServer()
-{
-    return server_grab_count > 0;
-}
-
 static bool keyboard_grabbed = false;
 
 bool grabXKeyboard(xcb_window_t w)
@@ -154,17 +149,6 @@ void Process::setupChildProcess()
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states
 
-int qtToX11Button(Qt::MouseButton button)
-{
-    if (button == Qt::LeftButton)
-        return XCB_BUTTON_INDEX_1;
-    else if (button == Qt::MidButton)
-        return XCB_BUTTON_INDEX_2;
-    else if (button == Qt::RightButton)
-        return XCB_BUTTON_INDEX_3;
-    return XCB_BUTTON_INDEX_ANY; // 0
-}
-
 Qt::MouseButton x11ToQtMouseButton(int button)
 {
     if (button == XCB_BUTTON_INDEX_1)
@@ -178,26 +162,6 @@ Qt::MouseButton x11ToQtMouseButton(int button)
     if (button == XCB_BUTTON_INDEX_5)
         return Qt::XButton2;
     return Qt::NoButton;
-}
-
-int qtToX11State(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers)
-{
-    int ret = 0;
-    if (buttons & Qt::LeftButton)
-        ret |= XCB_KEY_BUT_MASK_BUTTON_1;
-    if (buttons & Qt::MidButton)
-        ret |= XCB_KEY_BUT_MASK_BUTTON_2;
-    if (buttons & Qt::RightButton)
-        ret |= XCB_KEY_BUT_MASK_BUTTON_3;
-    if (modifiers & Qt::ShiftModifier)
-        ret |= XCB_KEY_BUT_MASK_SHIFT;
-    if (modifiers & Qt::ControlModifier)
-        ret |= XCB_KEY_BUT_MASK_CONTROL;
-    if (modifiers & Qt::AltModifier)
-        ret |= KKeyServer::modXAlt();
-    if (modifiers & Qt::MetaModifier)
-        ret |= KKeyServer::modXMeta();
-    return ret;
 }
 
 Qt::MouseButtons x11ToQtMouseButtons(int state)
