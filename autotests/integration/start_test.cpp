@@ -101,7 +101,7 @@ void StartTest::testCreateWindow()
     QVERIFY(waylandServer()->clients().isEmpty());
     // now dispatch should give us the client
     waylandServer()->dispatch();
-    QCOMPARE(waylandServer()->clients().count(), 1);
+    QTRY_COMPARE(waylandServer()->clients().count(), 1);
     // but still not yet in workspace
     QVERIFY(workspace()->allClientList().isEmpty());
 
