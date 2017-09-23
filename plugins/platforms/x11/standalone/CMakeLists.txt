@@ -10,6 +10,8 @@ set(X11PLATFORM_SOURCES
     non_composited_outline.cpp
     x11_decoration_renderer.cpp
     xfixes_cursor_event_filter.cpp
+    effects_x11.cpp
+    effects_mouse_interception_x11_filter.cpp
 )
 
 if(X11_Xinput_FOUND)

@@ -296,7 +296,7 @@ void Compositor::startupWithWorkspace()
         vBlankInterval = milliToNano(1); // no sync - DO NOT set "0", would cause div-by-zero segfaults.
     m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now" - we don't have even a slight idea when the first vsync will occur
     scheduleRepaint();
-    new EffectsHandlerImpl(this, m_scene);   // sets also the 'effects' pointer
+    kwinApp()->platform()->createEffectsHandler(this, m_scene);   // sets also the 'effects' pointer
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::windowDeleted);
     connect(effects, SIGNAL(screenGeometryChanged(QSize)), SLOT(addRepaintFull()));
     addRepaintFull();

@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "scene.h"
-#include "xcbutils.h"
 
 #include <QHash>
 #include <Plasma/FrameSvg>
@@ -58,7 +57,6 @@ class Client;
 class Compositor;
 class Deleted;
 class EffectLoader;
-class EffectsMouseInterceptionX11Filter;
 class Unmanaged;
 class WindowPropertyNotifyX11Filter;
 
@@ -294,6 +292,30 @@ protected:
     void setupClientConnections(KWin::Client *c);
     void setupUnmanagedConnections(KWin::Unmanaged *u);
 
+    /**
+     * Default implementation does nothing and returns @c true.
+     **/
+    virtual bool doGrabKeyboard();
+    /**
+     * Default implementation does nothing.
+     **/
+    virtual void doUngrabKeyboard();
+
+    /**
+     * Default implementation sets Effects override cursor on the PointerInputRedirection.
+     **/
+    virtual void doStartMouseInterception(Qt::CursorShape shape);
+
+    /**
+     * Default implementation removes the Effects override cursor on the PointerInputRedirection.
+     **/
+    virtual void doStopMouseInterception();
+
+    /**
+     * Default implementation does nothing
+     **/
+    virtual void doCheckInputWindowStacking();
+
     Effect* keyboard_grab_effect;
     Effect* fullscreen_effect;
     QList<EffectWindow*> elevated_windows;
@@ -318,11 +340,9 @@ private:
     Scene *m_scene;
     bool m_desktopRendering;
     int m_currentRenderedDesktop;
-    Xcb::Window m_mouseInterceptionWindow;
     QList<Effect*> m_grabbedMouseEffects;
     EffectLoader *m_effectLoader;
     int m_trackingCursorChanges;
-    std::unique_ptr<EffectsMouseInterceptionX11Filter> m_x11MouseInterception;
     std::unique_ptr<WindowPropertyNotifyX11Filter> m_x11WindowPropertyNotify;
 };
 

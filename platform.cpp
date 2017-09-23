@@ -472,4 +472,9 @@ void Platform::invertScreen()
     }
 }
 
+void Platform::createEffectsHandler(Compositor *compositor, Scene *scene)
+{
+    new EffectsHandlerImpl(compositor, scene);
+}
+
 }

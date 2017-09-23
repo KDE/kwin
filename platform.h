@@ -40,11 +40,13 @@ namespace KWin
 {
 
 class Edge;
+class Compositor;
 class OverlayWindow;
 class OpenGLBackend;
 class Outline;
 class OutlineVisual;
 class QPainterBackend;
+class Scene;
 class Screens;
 class ScreenEdges;
 class Toplevel;
@@ -369,6 +371,11 @@ public:
      * Default implementation invokes the invert effect
      **/
     virtual void invertScreen();
+
+    /**
+     * Default implementation creates an EffectsHandlerImp;
+     **/
+    virtual void createEffectsHandler(Compositor *compositor, Scene *scene);
 
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);

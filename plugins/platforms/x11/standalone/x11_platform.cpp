@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xinputintegration.h"
 #endif
 #include "abstract_client.h"
+#include "effects_x11.h"
 #include "eglonxbackend.h"
 #include "keyboard_input.h"
 #include "logging.h"
@@ -402,6 +403,11 @@ void X11StandalonePlatform::invertScreen()
     if (!succeeded) {
         Platform::invertScreen();
     }
+}
+
+void X11StandalonePlatform::createEffectsHandler(Compositor *compositor, Scene *scene)
+{
+    new EffectsHandlerImplX11(compositor, scene);
 }
 
 }

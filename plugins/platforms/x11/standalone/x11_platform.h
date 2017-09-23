@@ -64,6 +64,8 @@ public:
 
     void invertScreen() override;
 
+    void createEffectsHandler(Compositor *compositor, Scene *scene) override;
+
 protected:
     void doHideCursor() override;
     void doShowCursor() override;
