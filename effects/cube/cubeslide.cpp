@@ -50,7 +50,7 @@ CubeSlideEffect::~CubeSlideEffect()
 
 bool CubeSlideEffect::supported()
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
+    return (effects->isOpenGLCompositing() || effects->compositingType() == VulkanCompositing) && effects->animationsSupported();
 }
 
 void CubeSlideEffect::reconfigure(ReconfigureFlags)
