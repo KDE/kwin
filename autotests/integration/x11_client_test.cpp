@@ -52,6 +52,7 @@ private Q_SLOTS:
     void testX11WindowId();
     void testCaptionChanges();
     void testCaptionWmName();
+    void testCaptionMultipleWindows();
 };
 
 void X11ClientTest::initTestCase()
@@ -447,6 +448,79 @@ void X11ClientTest::testCaptionWmName()
 
     glxgears.terminate();
     QVERIFY(glxgears.waitForFinished());
+}
+
+void X11ClientTest::testCaptionMultipleWindows()
+{
+    // BUG 384760
+    // create first window
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+    const QRect windowGeometry(0, 0, 100, 200);
+    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    NETWinInfo info(c.data(), w, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    info.setName("foo");
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(client);
+    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->caption(), QStringLiteral("foo"));
+
+    // create second window with same caption
+    xcb_window_t w2 = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w2, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_icccm_set_wm_normal_hints(c.data(), w2, &hints);
+    NETWinInfo info2(c.data(), w2, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    info2.setName("foo");
+    info2.setIconName("foo");
+    xcb_map_window(c.data(), w2);
+    xcb_flush(c.data());
+
+    windowCreatedSpy.clear();
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client2 = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(client2);
+    QCOMPARE(client2->windowId(), w2);
+    QCOMPARE(client2->caption(), QStringLiteral("foo <2>\u200E"));
+    NETWinInfo info3(kwinApp()->x11Connection(), w2, kwinApp()->x11RootWindow(), NET::WMVisibleName | NET::WMVisibleIconName, NET::Properties2());
+    QCOMPARE(QByteArray(info3.visibleName()), QByteArrayLiteral("foo <2>\u200E"));
+    QCOMPARE(QByteArray(info3.visibleIconName()), QByteArrayLiteral("foo <2>\u200E"));
+
+    QSignalSpy captionChangedSpy(client2, &Client::captionChanged);
+    QVERIFY(captionChangedSpy.isValid());
+
+    NETWinInfo info4(c.data(), w2, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    info4.setName("foobar");
+    info4.setIconName("foobar");
+    xcb_map_window(c.data(), w2);
+    xcb_flush(c.data());
+
+    QVERIFY(captionChangedSpy.wait());
+    QCOMPARE(client2->caption(), QStringLiteral("foobar"));
+    NETWinInfo info5(kwinApp()->x11Connection(), w2, kwinApp()->x11RootWindow(), NET::WMVisibleName | NET::WMVisibleIconName, NET::Properties2());
+    QCOMPARE(QByteArray(info5.visibleName()), QByteArray());
+    QTRY_COMPARE(QByteArray(info5.visibleIconName()), QByteArray());
 }
 
 WAYLANDTEST_MAIN(X11ClientTest)
