@@ -585,7 +585,6 @@ void Workspace::addClient(Client* c)
     updateStackingOrder(true);   // Propagate new client
     if (c->isUtility() || c->isMenu() || c->isToolbar())
         updateToolWindows(true);
-    checkNonExistentClients();
 #ifdef KWIN_BUILD_TABBOX
     if (TabBox::TabBox::self()->isDisplayed())
         TabBox::TabBox::self()->reset(true);

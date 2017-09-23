@@ -48,148 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-/*
- Consistency checks for window relations. Since transients are determined
- using Client::transiency_list and main windows are determined using Client::transientFor()
- or the group for group transients, these have to match both ways.
-*/
-//#define ENABLE_TRANSIENCY_CHECK
-
-#ifdef NDEBUG
-#undef ENABLE_TRANSIENCY_CHECK
-#endif
-
-#ifdef ENABLE_TRANSIENCY_CHECK
-static bool transiencyCheckNonExistent = false;
-
-bool performTransiencyCheck()
-{
-    bool ret = true;
-    ClientList clients = Workspace::self()->clients;
-    for (ClientList::ConstIterator it1 = clients.constBegin();
-            it1 != clients.constEnd();
-            ++it1) {
-        if ((*it1)->deleting)
-            continue;
-        if ((*it1)->in_group == NULL) {
-            qCDebug(KWIN_CORE) << "TC: " << *it1 << " in not in a group" << endl;
-            ret = false;
-        } else if (!(*it1)->in_group->members().contains(*it1)) {
-            qCDebug(KWIN_CORE) << "TC: " << *it1 << " has a group " << (*it1)->in_group << " but group does not contain it" << endl;
-            ret = false;
-        }
-        if (!(*it1)->isTransient()) {
-            if (!(*it1)->mainClients().isEmpty()) {
-                qCDebug(KWIN_CORE) << "TC: " << *it1 << " is not transient, has main clients:" << (*it1)->mainClients() << endl;
-                ret = false;
-            }
-        } else {
-            ClientList mains = (*it1)->mainClients();
-            for (ClientList::ConstIterator it2 = mains.constBegin();
-                    it2 != mains.constEnd();
-                    ++it2) {
-                if (transiencyCheckNonExistent
-                        && !Workspace::self()->clients.contains(*it2)
-                        && !Workspace::self()->desktops.contains(*it2)) {
-                    qCDebug(KWIN_CORE) << "TC:" << *it1 << " has non-existent main client ";
-                    qCDebug(KWIN_CORE) << "TC2:" << *it2; // this may crash
-                    ret = false;
-                    continue;
-                }
-                if (!(*it2)->transients().contains(*it1)) {
-                    kdDebug(1212) << "TC:" << *it1 << " has main client " << *it2 << " but main client does not have it as a transient" << endl;
-                    ret = false;
-                }
-            }
-        }
-        auto trans = (*it1)->transients();
-        for (auto it2 = trans.constBegin();
-                it2 != trans.constEnd();
-                ++it2) {
-            if (transiencyCheckNonExistent
-                    && !Workspace::self()->clients.contains(*it2)
-                    && !Workspace::self()->desktops.contains(*it2)) {
-                qCDebug(KWIN_CORE) << "TC:" << *it1 << " has non-existent transient ";
-                qCDebug(KWIN_CORE) << "TC2:" << *it2; // this may crash
-                ret = false;
-                continue;
-            }
-            if (!(*it2)->mainClients().contains(*it1)) {
-                kdDebug(1212) << "TC:" << *it1 << " has transient " << *it2 << " but transient does not have it as a main client" << endl;
-                ret = false;
-            }
-        }
-    }
-    GroupList groups = Workspace::self()->groups;
-    for (GroupList::ConstIterator it1 = groups.constBegin();
-            it1 != groups.constEnd();
-            ++it1) {
-        ClientList members = (*it1)->members();
-        for (ClientList::ConstIterator it2 = members.constBegin();
-                it2 != members.constEnd();
-                ++it2) {
-            if ((*it2)->in_group != *it1) {
-                qCDebug(KWIN_CORE) << "TC: Group " << *it1 << " contains client " << *it2 << " but client is not in that group" << endl;
-                ret = false;
-            }
-        }
-    }
-    return ret;
-}
-
-static QString transiencyCheckStartBt;
-static const Client* transiencyCheckClient;
-static int transiencyCheck = 0;
-
-static void startTransiencyCheck(const QString& bt, const Client* c, bool ne)
-{
-    if (++transiencyCheck == 1) {
-        transiencyCheckStartBt = bt;
-        transiencyCheckClient = c;
-    }
-    if (ne)
-        transiencyCheckNonExistent = true;
-}
-static void checkTransiency()
-{
-    if (--transiencyCheck == 0) {
-        if (!performTransiencyCheck()) {
-            qCDebug(KWIN_CORE) << "BT:" << transiencyCheckStartBt << endl;
-            qCDebug(KWIN_CORE) << "CLIENT:" << transiencyCheckClient << endl;
-            abort();
-        }
-        transiencyCheckNonExistent = false;
-    }
-}
-class TransiencyChecker
-{
-public:
-    TransiencyChecker(const QString& bt, const Client*c) {
-        startTransiencyCheck(bt, c, false);
-    }
-    ~TransiencyChecker() {
-        checkTransiency();
-    }
-};
-
-void checkNonExistentClients()
-{
-    startTransiencyCheck(kdBacktrace(), NULL, true);
-    checkTransiency();
-}
-
-#define TRANSIENCY_CHECK( c ) TransiencyChecker transiency_checker( kdBacktrace(), c )
-
-#else
-
-#define TRANSIENCY_CHECK( c )
-
-void checkNonExistentClients()
-{
-}
-
-#endif
-
 //********************************************
 // Group
 //********************************************
@@ -241,7 +99,6 @@ QIcon Group::icon() const
 
 void Group::addMember(Client* member_P)
 {
-    TRANSIENCY_CHECK(member_P);
     _members.append(member_P);
 //    qDebug() << "GROUPADD:" << this << ":" << member_P;
 //    qDebug() << kBacktrace();
@@ -249,7 +106,6 @@ void Group::addMember(Client* member_P)
 
 void Group::removeMember(Client* member_P)
 {
-    TRANSIENCY_CHECK(member_P);
 //    qDebug() << "GROUPREMOVE:" << this << ":" << member_P;
 //    qDebug() << kBacktrace();
     Q_ASSERT(_members.contains(member_P));
@@ -312,7 +168,6 @@ Group* Workspace::findGroup(xcb_window_t leader) const
 // group with windows with the same client leader.
 Group* Workspace::findClientLeaderGroup(const Client* c) const
 {
-    TRANSIENCY_CHECK(c);
     Group* ret = NULL;
     for (ClientList::ConstIterator it = clients.constBegin();
             it != clients.constEnd();
@@ -395,7 +250,6 @@ void Workspace::updateOnAllDesktopsOfTransients(AbstractClient* c)
 // A new window has been mapped. Check if it's not a mainwindow for some already existing transient window.
 void Workspace::checkTransients(xcb_window_t w)
 {
-    TRANSIENCY_CHECK(NULL);
     for (ClientList::ConstIterator it = clients.constBegin();
             it != clients.constEnd();
             ++it)
@@ -557,7 +411,6 @@ Xcb::TransientFor Client::fetchTransient() const
 
 void Client::readTransientProperty(Xcb::TransientFor &transientFor)
 {
-    TRANSIENCY_CHECK(this);
     xcb_window_t new_transient_for_id = XCB_WINDOW_NONE;
     if (transientFor.getTransientFor(&new_transient_for_id)) {
         m_originalTransientForId = new_transient_for_id;
@@ -577,7 +430,6 @@ void Client::readTransient()
 
 void Client::setTransient(xcb_window_t new_transient_for_id)
 {
-    TRANSIENCY_CHECK(this);
     if (new_transient_for_id != m_transientForId) {
         removeFromMainClients();
         Client *transient_for = nullptr;
@@ -597,7 +449,6 @@ void Client::setTransient(xcb_window_t new_transient_for_id)
 
 void Client::removeFromMainClients()
 {
-    TRANSIENCY_CHECK(this);
     if (transientFor())
         transientFor()->removeTransient(this);
     if (groupTransient()) {
@@ -614,7 +465,6 @@ void Client::removeFromMainClients()
 // related lists.
 void Client::cleanGrouping()
 {
-    TRANSIENCY_CHECK(this);
 //    qDebug() << "CLEANGROUPING:" << this;
 //    for ( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
@@ -682,7 +532,6 @@ void Client::cleanGrouping()
 // Non-group transients not causing loops are checked in verifyTransientFor().
 void Client::checkGroupTransients()
 {
-    TRANSIENCY_CHECK(this);
     for (ClientList::ConstIterator it1 = group()->members().constBegin();
             it1 != group()->members().constEnd();
             ++it1) {
@@ -799,7 +648,6 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
 
 void Client::addTransient(AbstractClient* cl)
 {
-    TRANSIENCY_CHECK(this);
     AbstractClient::addTransient(cl);
     if (workspace()->mostRecentlyActivatedClient() == this && cl->isModal())
         check_active_modal = true;
@@ -813,7 +661,6 @@ void Client::addTransient(AbstractClient* cl)
 
 void Client::removeTransient(AbstractClient* cl)
 {
-    TRANSIENCY_CHECK(this);
 //    qDebug() << "REMOVETRANS:" << this << ":" << cl;
 //    qDebug() << kBacktrace();
     // cl is transient for this, but this is going away
@@ -832,7 +679,6 @@ void Client::removeTransient(AbstractClient* cl)
 // A new window has been mapped. Check if it's not a mainwindow for this already existing window.
 void Client::checkTransient(xcb_window_t w)
 {
-    TRANSIENCY_CHECK(this);
     if (m_originalTransientForId != w)
         return;
     w = verifyTransientFor(w, true);
@@ -921,7 +767,6 @@ AbstractClient* Client::findModal(bool allow_itself)
 // Argument is only when some specific group needs to be set.
 void Client::checkGroup(Group* set_group, bool force)
 {
-    TRANSIENCY_CHECK(this);
     Group* old_group = in_group;
     if (old_group != NULL)
         old_group->ref(); // turn off automatic deleting

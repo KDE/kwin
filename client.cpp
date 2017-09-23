@@ -263,7 +263,6 @@ void Client::releaseWindow(bool on_shutdown)
         disownDataPassedToDeleted();
         del->unrefWindow();
     }
-    checkNonExistentClients();
     deleteClient(this);
     ungrabXServer();
 }
@@ -303,7 +302,6 @@ void Client::destroyClient()
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     disownDataPassedToDeleted();
     del->unrefWindow();
-    checkNonExistentClients();
     deleteClient(this);
 }
 

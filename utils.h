@@ -191,8 +191,6 @@ Qt::MouseButton x11ToQtMouseButton(int button);
 Qt::MouseButtons KWIN_EXPORT x11ToQtMouseButtons(int state);
 Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
 
-void checkNonExistentClients();
-
 /**
  * Separate the concept of an unet QPoint and 0,0
  */
