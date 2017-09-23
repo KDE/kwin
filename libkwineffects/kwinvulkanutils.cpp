@@ -726,14 +726,22 @@ VkPipeline VulkanPipelineManager::createPipeline(Material material, Traits trait
 
     // Rasterization state
     // -------------------
-    static const VkPipelineRasterizationStateCreateInfo rasterizationState {
+    VkCullModeFlags cullMode = VK_CULL_MODE_NONE;
+
+    if (traits & CullFront)
+        cullMode |= VK_CULL_MODE_FRONT_BIT;
+
+    if (traits & CullBack)
+        cullMode |= VK_CULL_MODE_BACK_BIT;
+
+    const VkPipelineRasterizationStateCreateInfo rasterizationState {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
         .pNext = nullptr,
         .flags = 0,
         .depthClampEnable = VK_FALSE,
         .rasterizerDiscardEnable = VK_FALSE,
         .polygonMode = VK_POLYGON_MODE_FILL,
-        .cullMode = VK_CULL_MODE_NONE,
+        .cullMode = cullMode,
         .frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE,
         .depthBiasEnable = VK_FALSE,
         .depthBiasConstantFactor = 0.0f,
@@ -1054,11 +1062,11 @@ std::tuple<VkPipeline, VkPipelineLayout> VulkanPipelineManager::pipeline(Materia
     union {
         struct {
             unsigned material:3;
-            unsigned traits:5;
+            unsigned traits:6;
             unsigned topology:3;
             unsigned descriptorType:1;
             unsigned renderPassType:1;
-            unsigned unused:19;
+            unsigned unused:18;
         } u;
         uint32_t value;
     } key;

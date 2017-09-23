@@ -3368,6 +3368,9 @@ public:
         Modulate                 = (1 << 1),
         Desaturate               = (1 << 2),
         CrossFade                = (1 << 3),
+        CullFront                = (1 << 4),
+        CullBack                 = (1 << 5),
+        CullFrontAndBack         = (CullFront | CullBack)
     };
 
     Q_DECLARE_FLAGS(Traits, Trait);
