@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "cursor.h"
 #include "client.h"
+#include "composite.h"
 #include "input.h"
 #include "workspace.h"
 #include "effects.h"

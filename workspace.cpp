@@ -1654,13 +1654,6 @@ QString Workspace::supportInformation() const
     return support;
 }
 
-void Workspace::slotToggleCompositing()
-{
-    if (m_compositor) {
-        m_compositor->slotToggleCompositing();
-    }
-}
-
 Client *Workspace::findClient(std::function<bool (const Client*)> func) const
 {
     if (Client *ret = Toplevel::findInList(clients, func)) {

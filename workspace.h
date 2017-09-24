@@ -443,7 +443,6 @@ public Q_SLOTS:
 
     void slotSetupWindowShortcut();
     void setupWindowShortcutDone(bool);
-    void slotToggleCompositing();
 
     void updateClientArea();
 
