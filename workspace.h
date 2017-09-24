@@ -301,7 +301,6 @@ public:
     SessionInfo* takeSessionInfo(Client*);
 
     // D-Bus interface
-    bool waitForCompositingSetup();
     QString supportInformation() const;
 
     void setCurrentScreen(int new_screen);

@@ -804,24 +804,6 @@ void Workspace::reconfigure()
 }
 
 /**
- * This D-Bus call is used by the compositing kcm. Since the reconfigure()
- * D-Bus call delays the actual reconfiguring, it is not possible to immediately
- * call compositingActive(). Therefore the kcm will instead call this to ensure
- * the reconfiguring has already happened.
- */
-bool Workspace::waitForCompositingSetup()
-{
-    if (reconfigureTimer.isActive()) {
-        reconfigureTimer.stop();
-        slotReconfigure();
-    }
-    if (m_compositor) {
-        return m_compositor->isActive();
-    }
-    return false;
-}
-
-/**
  * Reread settings
  */
 
