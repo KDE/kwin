@@ -843,60 +843,6 @@ void Workspace::slotReconfigure()
     }
 }
 
-/**
- * During virt. desktop switching, desktop areas covered by windows that are
- * going to be hidden are first obscured by new windows with no background
- * ( i.e. transparent ) placed right below the windows. These invisible windows
- * are removed after the switch is complete.
- * Reduces desktop ( wallpaper ) repaints during desktop switching
- */
-class ObscuringWindows
-{
-public:
-    ~ObscuringWindows();
-    void create(Client* c);
-private:
-    QList<xcb_window_t> obscuring_windows;
-    static QList<xcb_window_t>* cached;
-    static unsigned int max_cache_size;
-};
-
-QList<xcb_window_t>* ObscuringWindows::cached = nullptr;
-unsigned int ObscuringWindows::max_cache_size = 0;
-
-void ObscuringWindows::create(Client* c)
-{
-    if (!cached)
-        cached = new QList<xcb_window_t>;
-    Xcb::Window obs_win(XCB_WINDOW_NONE, false);
-    if (cached->count() > 0) {
-        obs_win.reset(cached->first(), false);
-        cached->removeAll(obs_win);
-        obs_win.setGeometry(c->geometry());
-    } else {
-        uint32_t values[] = {XCB_PIXMAP_NONE, true};
-        obs_win.create(c->geometry(), XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_CW_BACK_PIXMAP | XCB_CW_OVERRIDE_REDIRECT, values);
-    }
-    uint32_t values[] = {c->frameId(), XCB_STACK_MODE_BELOW};
-    xcb_configure_window(connection(), obs_win, XCB_CONFIG_WINDOW_SIBLING | XCB_CONFIG_WINDOW_STACK_MODE, values);
-    obs_win.map();
-    obscuring_windows.append(obs_win);
-}
-
-ObscuringWindows::~ObscuringWindows()
-{
-    max_cache_size = qMax(int(max_cache_size), obscuring_windows.count() + 4) - 1;
-    for (auto it = obscuring_windows.constBegin();
-            it != obscuring_windows.constEnd();
-            ++it) {
-        xcb_unmap_window(connection(), *it);
-        if (cached->count() < int(max_cache_size))
-            cached->prepend(*it);
-        else
-            xcb_destroy_window(connection(), *it);
-    }
-}
-
 void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
 {
     closeActivePopup();
@@ -912,7 +858,6 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
 
 void Workspace::updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newDesktop)
 {
-    ObscuringWindows obs_wins;
     for (ToplevelList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it) {
@@ -921,8 +866,6 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newD
             continue;
         }
         if (!c->isOnDesktop(newDesktop) && c != movingClient && c->isOnCurrentActivity()) {
-            if (c->isShown(true) && c->isOnDesktop(oldDesktop) && !compositing())
-                obs_wins.create(c);
             (c)->updateVisibility();
         }
     }
@@ -1026,8 +969,6 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     // mapping done from front to back => less exposure events
     //Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
 
-    ObscuringWindows obs_wins;
-
     const QString &old_activity = Activities::self()->previous();
 
     for (ToplevelList::ConstIterator it = stacking_order.constBegin();
@@ -1038,8 +979,6 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
             continue;
         }
         if (!c->isOnActivity(new_activity) && c != movingClient && c->isOnCurrentDesktop()) {
-            if (c->isShown(true) && c->isOnActivity(old_activity) && !compositing())
-                obs_wins.create(c);
             c->updateVisibility();
         }
     }
