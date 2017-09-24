@@ -444,7 +444,6 @@ public Q_SLOTS:
     void slotSetupWindowShortcut();
     void setupWindowShortcutDone(bool);
     void slotToggleCompositing();
-    void slotInvertScreen();
 
     void updateClientArea();
 
@@ -502,6 +501,8 @@ private:
     template <typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,
                       Slot slot, const QVariant &data = QVariant());
+    template <typename T, typename Slot>
+    void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, const QVariant &data = QVariant());
     void setupWindowShortcut(AbstractClient* c);
     bool switchWindow(AbstractClient *c, Direction direction, QPoint curPos, int desktop);
 

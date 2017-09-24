@@ -980,6 +980,12 @@ void Workspace::closeActivePopup()
 template <typename Slot>
 void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot, const QVariant &data)
 {
+    initShortcut(actionName, description, shortcut, this, slot, data);
+}
+
+template <typename T, typename Slot>
+void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, const QVariant &data)
+{
     QAction *a = new QAction(this);
     a->setProperty("componentName", QStringLiteral(KWIN_NAME));
     a->setObjectName(actionName);
@@ -989,7 +995,7 @@ void Workspace::initShortcut(const QString &actionName, const QString &descripti
     }
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << shortcut);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
-    input()->registerShortcut(shortcut, a, this, slot);
+    input()->registerShortcut(shortcut, a, receiver, slot);
 }
 
 /*!
@@ -1701,11 +1707,6 @@ void Workspace::slotWindowResize()
 {
     if (USABLE_ACTIVE_CLIENT)
         performWindowOperation(active_client, Options::UnrestrictedResizeOp);
-}
-
-void Workspace::slotInvertScreen()
-{
-    kwinApp()->platform()->invertScreen();
 }
 
 #undef USABLE_ACTIVE_CLIENT

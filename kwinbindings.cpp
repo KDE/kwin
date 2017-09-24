@@ -42,6 +42,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEF5( name, key, functor, value )                            \
     initShortcut(QStringLiteral(name).arg(value), i18n(name, value), key, functor, value);
 
+#define DEF6( name, key, target, fnSlot )                                    \
+    initShortcut(QStringLiteral(name), i18n(name), key, target, &fnSlot);
+
 
 DEF(I18N_NOOP("Walk Through Window Tabs"),             0, slotActivateNextTab);
 DEF(I18N_NOOP("Walk Through Window Tabs (Reverse)"),   0, slotActivatePrevTab);
@@ -157,7 +160,7 @@ DEF(I18N_NOOP("Switch to Previous Screen"),        0, slotSwitchToPrevScreen);
 
 DEF(I18N_NOOP("Kill Window"),                      Qt::CTRL + Qt::ALT + Qt::Key_Escape, slotKillWindow);
 DEF(I18N_NOOP("Suspend Compositing"),              Qt::SHIFT + Qt::ALT + Qt::Key_F12, slotToggleCompositing);
-DEF(I18N_NOOP("Invert Screen Colors"),             0, slotInvertScreen);
+DEF6(I18N_NOOP("Invert Screen Colors"),            0, kwinApp()->platform(), Platform::invertScreen);
 
 #undef DEF
 #undef DEF2
