@@ -228,8 +228,12 @@ void ShellClient::init()
     connect(s, &SurfaceInterface::destroyed, this, &ShellClient::destroyClient);
     if (m_shellSurface) {
         initSurface(m_shellSurface);
-        // TODO: verify grab serial
-        m_hasPopupGrab = m_shellSurface->isPopup();
+        auto setPopup = [this] {
+            // TODO: verify grab serial
+            m_hasPopupGrab = m_shellSurface->isPopup();
+        };
+        connect(m_shellSurface, &ShellSurfaceInterface::popupChanged, this, setPopup);
+        setPopup();
     } else if (m_xdgShellSurface) {
         initSurface(m_xdgShellSurface);
 
