@@ -37,6 +37,14 @@ class QtExtendedSurfaceInterface;
 namespace KWin
 {
 
+/**
+ * @brief The reason for which the server pinged a client surface
+ */
+enum class PingReason {
+    CloseWindow = 0,
+    FocusWindow
+};
+    
 class KWIN_EXPORT ShellClient : public AbstractClient
 {
     Q_OBJECT
@@ -218,6 +226,7 @@ private:
     bool m_transient = false;
     bool m_hidden = false;
     bool m_internal;
+    bool m_hasPopupGrab = false;
     qreal m_opacity = 1.0;
 
     class RequestGeometryBlocker {
@@ -244,6 +253,7 @@ private:
     QRect m_blockedRequestGeometry;
     QString m_caption;
     QString m_captionSuffix;
+    QHash<qint32, PingReason> m_pingSerials;
 
     bool m_compositingSetup = false;
 };

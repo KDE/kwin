@@ -118,7 +118,8 @@ void flushWaylandConnection();
 KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
 enum class ShellSurfaceType {
     WlShell,
-    XdgShellV5
+    XdgShellV5,
+    XdgShellV6
 };
 QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent = nullptr);
 KWayland::Client::ShellSurface *createShellSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr);

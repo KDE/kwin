@@ -18,7 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include <QApplication>
+#include <QEventLoop>
+#include <QTimer>
 #include <QWidget>
+#include <unistd.h>
 
 int main(int argc, char *argv[])
 {
@@ -27,6 +30,15 @@ int main(int argc, char *argv[])
     QWidget w;
     w.setGeometry(QRect(0, 0, 100, 200));
     w.show();
+
+    //after showing the window block the main thread
+    //1 as we want it to come after the singleshots in qApp construction
+    QTimer::singleShot(1, []() {
+        //block
+        while(true) {
+            sleep(100000);
+        }
+    });
 
     return app.exec();
 }

@@ -228,8 +228,48 @@ void ShellClient::init()
     connect(s, &SurfaceInterface::destroyed, this, &ShellClient::destroyClient);
     if (m_shellSurface) {
         initSurface(m_shellSurface);
+        // TODO: verify grab serial
+        m_hasPopupGrab = m_shellSurface->isPopup();
     } else if (m_xdgShellSurface) {
         initSurface(m_xdgShellSurface);
+
+        auto global = static_cast<XdgShellInterface *>(m_xdgShellSurface->global());
+        connect(global, &XdgShellInterface::pingDelayed,
+            this, [this](qint32 serial) {
+                auto it = m_pingSerials.find(serial);
+                if (it != m_pingSerials.end()) {
+                    qCDebug(KWIN_CORE) << "First ping timeout:" << caption();
+                    setUnresponsive(true);
+                }
+            });
+
+        connect(global, &XdgShellInterface::pingTimeout,
+            this, [this](qint32 serial) {
+                auto it = m_pingSerials.find(serial);
+                if (it != m_pingSerials.end()) {
+                    if (it.value() == PingReason::CloseWindow) {
+                        qCDebug(KWIN_CORE) << "Final ping timeout on a close attempt, asking to kill:" << caption();
+
+                        //for internal windows, killing the window will delete this
+                        QPointer<QObject> guard(this);
+                        killWindow();
+                        if (!guard) {
+                            return;
+                        }
+                    }
+                    m_pingSerials.erase(it);
+                }
+            });
+
+        connect(global, &XdgShellInterface::pongReceived,
+            this, [this](qint32 serial){
+                auto it = m_pingSerials.find(serial);
+                if (it != m_pingSerials.end()) {
+                    setUnresponsive(false);
+                    m_pingSerials.erase(it);
+                }
+            });
+
         connect(m_xdgShellSurface, &XdgShellSurfaceInterface::windowMenuRequested, this,
             [this] (SeatInterface *seat, quint32 serial, const QPoint &surfacePos) {
                 // TODO: check serial on seat
@@ -249,10 +289,21 @@ void ShellClient::init()
             }
             m_xdgShellSurface->configure(xdgSurfaceStates());
         };
+        configure();
         connect(this, &AbstractClient::activeChanged, this, configure);
         connect(this, &AbstractClient::clientStartUserMovedResized, this, configure);
         connect(this, &AbstractClient::clientFinishUserMovedResized, this, configure);
     } else if (m_xdgShellPopup) {
+        connect(m_xdgShellPopup, &XdgShellPopupInterface::grabRequested, this, [this](SeatInterface *seat, quint32 serial) {
+            Q_UNUSED(seat)
+            Q_UNUSED(serial)
+            //TODO - should check the parent had focus
+            m_hasPopupGrab = true;
+        });
+
+        QRect position = QRect(m_xdgShellPopup->transientOffset(), m_xdgShellPopup->initialSize());
+        m_xdgShellPopup->configure(position);
+
         connect(m_xdgShellPopup, &XdgShellPopupInterface::destroyed, this, &ShellClient::destroyClient);
     }
 
@@ -588,12 +639,11 @@ void ShellClient::closeWindow()
 {
     if (m_xdgShellSurface && isCloseable()) {
         m_xdgShellSurface->close();
-        return;
-    }
-    if (m_qtExtendedSurface && isCloseable()) {
+        const qint32 pingSerial = static_cast<XdgShellInterface *>(m_xdgShellSurface->global())->ping(m_xdgShellSurface);
+        m_pingSerials.insert(pingSerial, PingReason::CloseWindow);
+    } else if (m_qtExtendedSurface && isCloseable()) {
         m_qtExtendedSurface->close();
-    }
-    if (m_internalWindow) {
+    } else if (m_internalWindow) {
         m_internalWindow->hide();
     }
 }
@@ -846,6 +896,10 @@ void ShellClient::setOnAllActivities(bool set)
 void ShellClient::takeFocus()
 {
     if (rules()->checkAcceptFocus(wantsInput())) {
+        if (m_xdgShellSurface) {
+            const qint32 pingSerial = static_cast<XdgShellInterface *>(m_xdgShellSurface->global())->ping(m_xdgShellSurface);
+            m_pingSerials.insert(pingSerial, PingReason::FocusWindow);
+        }
         setActive(true);
     }
 
@@ -1032,6 +1086,15 @@ void ShellClient::requestGeometry(const QRect &rect)
     if (m_xdgShellSurface) {
         m_xdgShellSurface->configure(xdgSurfaceStates(), size);
     }
+    if (m_xdgShellPopup) {
+        auto parent = transientFor();
+        if (parent) {
+            const QPoint globalClientContentPos = parent->geometry().topLeft() + parent->clientPos();
+            const QPoint relativeOffset = rect.topLeft() -globalClientContentPos;
+            m_xdgShellPopup->configure(QRect(relativeOffset, rect.size()));
+        }
+    }
+
     m_blockedRequestGeometry = QRect();
     if (m_internal) {
         m_internalWindow->setGeometry(QRect(rect.topLeft() + QPoint(borderLeft(), borderTop()), rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
@@ -1414,6 +1477,9 @@ bool ShellClient::shouldExposeToWindowManagement()
     if (isLockScreen()) {
         return false;
     }
+    if (m_xdgShellPopup) {
+        return false;
+    }
     if (m_shellSurface) {
         if (m_shellSurface->isTransient() && !m_shellSurface->acceptsKeyboardFocus()) {
             return false;
@@ -1520,17 +1586,16 @@ void ShellClient::updateApplicationMenu()
 
 bool ShellClient::hasPopupGrab() const
 {
-    if (m_shellSurface) {
-        // TODO: verify grab serial
-        return m_shellSurface->isPopup();
-    }
-    return false;
+    return m_hasPopupGrab;
 }
 
 void ShellClient::popupDone()
 {
     if (m_shellSurface) {
         m_shellSurface->popupDone();
+    }
+    if (m_xdgShellPopup) {
+        m_xdgShellPopup->popupDone();
     }
 }
 
