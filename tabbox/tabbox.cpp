@@ -505,10 +505,6 @@ TabBox::TabBox(QObject *parent)
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
     connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
-
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        m_x11EventFilter.reset(new X11Filter);
-    }
 }
 
 TabBox::~TabBox()
@@ -1591,6 +1587,7 @@ bool TabBox::establishTabBoxGrab()
     m_forcedGlobalMouseGrab = true;
     if (Workspace::self()->activeClient() != nullptr)
         Workspace::self()->activeClient()->updateMouseGrab();
+    m_x11EventFilter.reset(new X11Filter);
     return true;
 }
 
@@ -1606,6 +1603,7 @@ void TabBox::removeTabBoxGrab()
     m_forcedGlobalMouseGrab = false;
     if (Workspace::self()->activeClient() != nullptr)
         Workspace::self()->activeClient()->updateMouseGrab();
+    m_x11EventFilter.reset();
 }
 } // namespace TabBox
 } // namespace
