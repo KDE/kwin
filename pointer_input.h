@@ -153,6 +153,7 @@ private:
     void disconnectConfinedPointerRegionConnection();
     void disconnectPointerConstraintsConnection();
     void breakPointerConstraints(KWayland::Server::SurfaceInterface *surface);
+    bool areButtonsPressed() const;
     CursorImage *m_cursor;
     bool m_inited = false;
     bool m_supportsWarping;
@@ -163,6 +164,7 @@ private:
     QMetaObject::Connection m_internalWindowConnection;
     QMetaObject::Connection m_constraintsConnection;
     QMetaObject::Connection m_confinedPointerRegionConnection;
+    QMetaObject::Connection m_decorationGeometryConnection;
     bool m_confined = false;
     bool m_locked = false;
     bool m_blockConstraint = false;
