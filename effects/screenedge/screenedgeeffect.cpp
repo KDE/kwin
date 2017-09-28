@@ -37,10 +37,8 @@ namespace KWin {
 
 ScreenEdgeEffect::ScreenEdgeEffect()
     : Effect()
-    , m_glow(new Plasma::Svg(this))
     , m_cleanupTimer(new QTimer(this))
 {
-    m_glow->setImagePath(QStringLiteral("widgets/glowbar"));
     connect(effects, SIGNAL(screenEdgeApproaching(ElectricBorder,qreal,QRect)), SLOT(edgeApproaching(ElectricBorder,qreal,QRect)));
     m_cleanupTimer->setInterval(5000);
     m_cleanupTimer->setSingleShot(true);
@@ -57,6 +55,14 @@ ScreenEdgeEffect::ScreenEdgeEffect()
 ScreenEdgeEffect::~ScreenEdgeEffect()
 {
     cleanup();
+}
+
+void ScreenEdgeEffect::ensureGlowSvg()
+{
+    if (!m_glow) {
+        m_glow = new Plasma::Svg(this);
+        m_glow->setImagePath(QStringLiteral("widgets/glowbar"));
+    }
 }
 
 void ScreenEdgeEffect::cleanup()
@@ -263,6 +269,8 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
 template <typename T>
 T *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
 {
+    ensureGlowSvg();
+
     switch (border) {
     case ElectricTopLeft:
         return new T(m_glow->pixmap(QStringLiteral("bottomright")).toImage());
@@ -277,8 +285,10 @@ T *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
     }
 }
 
-QSize ScreenEdgeEffect::cornerGlowSize(ElectricBorder border) const
+QSize ScreenEdgeEffect::cornerGlowSize(ElectricBorder border)
 {
+    ensureGlowSvg();
+
     switch (border) {
     case ElectricTopLeft:
         return m_glow->elementSize(QStringLiteral("bottomright"));
@@ -296,6 +306,8 @@ QSize ScreenEdgeEffect::cornerGlowSize(ElectricBorder border) const
 template <typename T>
 T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
 {
+    ensureGlowSvg();
+
     QPoint pixmapPosition(0, 0);
     QPixmap l, r, c;
     switch (border) {

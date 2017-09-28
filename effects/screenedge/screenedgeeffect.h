@@ -48,13 +48,14 @@ private Q_SLOTS:
     void edgeApproaching(ElectricBorder border, qreal factor, const QRect &geometry);
     void cleanup();
 private:
+    void ensureGlowSvg();
     Glow *createGlow(ElectricBorder border, qreal factor, const QRect &geometry);
     template <typename T>
     T *createCornerGlow(ElectricBorder border);
     template <typename T>
     T *createEdgeGlow(ElectricBorder border, const QSize &size);
-    QSize cornerGlowSize(ElectricBorder border) const;
-    Plasma::Svg *m_glow;
+    QSize cornerGlowSize(ElectricBorder border);
+    Plasma::Svg *m_glow = nullptr;
     QHash<ElectricBorder, Glow*> m_borders;
     QTimer *m_cleanupTimer;
 };
