@@ -46,14 +46,7 @@ BlurEffect::BlurEffect()
         qCDebug(KWINEFFECTS) << "Simple blur shader failed to load";
     }
 
-    // Offscreen texture that's used as the target for the horizontal blur pass
-    // and the source for the vertical pass.
-    tex = GLTexture(GL_RGBA8, effects->virtualScreenSize());
-    tex.setFilter(GL_LINEAR);
-    tex.setWrapMode(GL_CLAMP_TO_EDGE);
-
-    target = new GLRenderTarget(tex);
-
+    updateTexture();
     reconfigure(ReconfigureAll);
 
     // ### Hackish way to announce support.
@@ -97,7 +90,23 @@ BlurEffect::~BlurEffect()
 
 void BlurEffect::slotScreenGeometryChanged()
 {
-    effects->reloadEffect(this);
+    effects->makeOpenGLContextCurrent();
+    updateTexture();
+    // Fetch the blur regions for all windows
+    foreach (EffectWindow *window, effects->stackingOrder())
+        updateBlurRegion(window);
+    effects->doneOpenGLContextCurrent();
+}
+
+void BlurEffect::updateTexture() {
+    delete target;
+    // Offscreen texture that's used as the target for the horizontal blur pass
+    // and the source for the vertical pass.
+    tex = GLTexture(GL_RGBA8, effects->virtualScreenSize());
+    tex.setFilter(GL_LINEAR);
+    tex.setWrapMode(GL_CLAMP_TO_EDGE);
+
+    target = new GLRenderTarget(tex);
 }
 
 void BlurEffect::reconfigure(ReconfigureFlags flags)

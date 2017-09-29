@@ -76,6 +76,7 @@ public Q_SLOTS:
     void slotScreenGeometryChanged();
 
 private:
+    void updateTexture();
     QRect expand(const QRect &rect) const;
     QRegion expand(const QRegion &region) const;
     QRegion blurRegion(const EffectWindow *w) const;
@@ -90,7 +91,7 @@ private:
 private:
     BlurShader *shader;
     GLShader *m_simpleShader;
-    GLRenderTarget *target;
+    GLRenderTarget *target = nullptr;
     GLTexture tex;
     long net_wm_blur_region;
     QRegion m_damagedArea; // keeps track of the area which has been damaged (from bottom to top)
