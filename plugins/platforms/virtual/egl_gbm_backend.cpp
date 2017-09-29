@@ -67,11 +67,11 @@ void EglGbmBackend::initGbmDevice()
         return;
     }
     QScopedPointer<Udev> udev(new Udev);
-    UdevDevice::Ptr device = udev->renderNode();
+    UdevDevice::Ptr device = udev->virtualGpu();
     if (!device) {
-        // if we don't have a render node, try to find a virtual (vgem) device
-        qCDebug(KWIN_VIRTUAL) << "No render node, looking for a vgem device";
-        device = udev->virtualGpu();
+        // if we don't have a virtual (vgem) device, try to find a render node
+        qCDebug(KWIN_VIRTUAL) << "No vgem device, looking for a render node";
+        device = udev->renderNode();
     }
     if (!device) {
         qCDebug(KWIN_VIRTUAL) << "Neither a render node, nor a vgem device found";
