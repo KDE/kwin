@@ -67,8 +67,9 @@ ContrastEffect::ContrastEffect()
     );
 
     // Fetch the contrast regions for all windows
-    foreach (EffectWindow *window, effects->stackingOrder())
+    for (EffectWindow *window: effects->stackingOrder()) {
         updateContrastRegion(window);
+    }
 }
 
 ContrastEffect::~ContrastEffect()
@@ -78,7 +79,14 @@ ContrastEffect::~ContrastEffect()
 
 void ContrastEffect::slotScreenGeometryChanged()
 {
-    effects->reloadEffect(this);
+    effects->makeOpenGLContextCurrent();
+    if (!supported()) {
+        effects->reloadEffect(this);
+        return;
+    }
+    for (EffectWindow *window: effects->stackingOrder()) {
+        updateContrastRegion(window);
+    }
 }
 
 void ContrastEffect::reconfigure(ReconfigureFlags flags)
