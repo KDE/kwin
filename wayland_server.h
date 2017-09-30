@@ -200,6 +200,7 @@ private:
     void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
     template <class T>
     void createSurface(T *surface);
+    void initScreenLocker();
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
@@ -222,6 +223,7 @@ private:
         QThread *clientThread = nullptr;
         KWayland::Client::Registry *registry = nullptr;
         KWayland::Client::ShmPool *shm = nullptr;
+        bool interfacesAnnounced = false;
 
     } m_internalConnection;
     struct {
