@@ -70,10 +70,9 @@ public:
         */
         OperationModeX11,
         /**
-        * @brief KWin uses X11 for managing windows, but renders to a Wayland compositor.
-        * Input is received from the Wayland compositor.
+         * @brief KWin uses only Wayland
         */
-        OperationModeWaylandAndX11,
+        OperationModeWaylandOnly,
         /**
          * @brief KWin uses Wayland and controls a nested Xwayland server.
          **/

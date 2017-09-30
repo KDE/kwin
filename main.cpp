@@ -131,7 +131,7 @@ void Application::setOperationMode(OperationMode mode)
 
 bool Application::shouldUseWaylandForCompositing() const
 {
-    return m_operationMode == OperationModeWaylandAndX11 || m_operationMode == OperationModeXwayland;
+    return m_operationMode == OperationModeWaylandOnly || m_operationMode == OperationModeXwayland;
 }
 
 void Application::start()

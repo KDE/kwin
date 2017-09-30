@@ -87,7 +87,7 @@ static void readDisplay(int pipe);
 //************************************
 
 ApplicationWayland::ApplicationWayland(int &argc, char **argv)
-    : Application(OperationModeWaylandAndX11, argc, argv)
+    : Application(OperationModeWaylandOnly, argc, argv)
 {
 }
 
@@ -130,7 +130,9 @@ ApplicationWayland::~ApplicationWayland()
 
 void ApplicationWayland::performStartup()
 {
-    setOperationMode(m_startXWayland ? OperationModeXwayland : OperationModeWaylandAndX11);
+    if (m_startXWayland) {
+        setOperationMode(OperationModeXwayland);
+    }
     // first load options - done internally by a different thread
     createOptions();
     waylandServer()->createInternalConnection();
@@ -158,7 +160,7 @@ void ApplicationWayland::continueStartupWithScreens()
     disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
     createScreens();
 
-    if (!m_startXWayland) {
+    if (operationMode() == OperationModeWaylandOnly) {
         createCompositor();
         connect(Compositor::self(), &Compositor::sceneCreated, this,
             [this] {
