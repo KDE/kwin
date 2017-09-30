@@ -82,6 +82,28 @@ static void sighandler(int)
 
 static void readDisplay(int pipe);
 
+enum class RealTimeFlags
+{
+    DontReset,
+    ResetOnFork
+};
+
+namespace {
+void gainRealTime(RealTimeFlags flags = RealTimeFlags::DontReset)
+{
+#if HAVE_SCHED_RESET_ON_FORK
+    const int minPriority = sched_get_priority_min(SCHED_RR);
+    struct sched_param sp;
+    sp.sched_priority = minPriority;
+    int policy = SCHED_RR;
+    if (flags == RealTimeFlags::ResetOnFork) {
+        policy |= SCHED_RESET_ON_FORK;
+    }
+    sched_setscheduler(0, policy, &sp);
+#endif
+}
+}
+
 //************************************
 // ApplicationWayland
 //************************************
@@ -139,6 +161,9 @@ void ApplicationWayland::performStartup()
 
     // try creating the Wayland Backend
     createInput();
+    // now libinput thread has been created, adjust scheduler to not leak into other processes
+    gainRealTime(RealTimeFlags::ResetOnFork);
+
     VirtualKeyboard::create(this);
     createBackend();
 }
@@ -458,16 +483,6 @@ static void unsetDumpable(int sig)
     signal(sig, SIG_IGN);
     raise(sig);
     return;
-}
-
-void gainRealTime()
-{
-#if HAVE_SCHED_RESET_ON_FORK
-    const int minPriority = sched_get_priority_min(SCHED_RR);
-    struct sched_param sp;
-    sp.sched_priority = minPriority;
-    sched_setscheduler(0, SCHED_RR | SCHED_RESET_ON_FORK, &sp);
-#endif
 }
 
 void dropNiceCapability()

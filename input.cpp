@@ -1460,6 +1460,7 @@ InputRedirection::InputRedirection(QObject *parent)
         if (LogindIntegration::self()->hasSessionControl()) {
             setupLibInput();
         } else {
+            LibInput::Connection::createThread();
             if (LogindIntegration::self()->isConnected()) {
                 LogindIntegration::self()->takeControl();
             } else {

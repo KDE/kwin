@@ -81,7 +81,7 @@ Q_SIGNALS:
 };
 
 Connection *Connection::s_self = nullptr;
-QThread *Connection::s_thread = nullptr;
+QPointer<QThread> Connection::s_thread;
 
 static ConnectionAdaptor *s_adaptor = nullptr;
 static Context *s_context = nullptr;
@@ -105,6 +105,16 @@ Connection::Connection(QObject *parent)
     : Connection(nullptr, parent)
 {
     // only here to fix build, using will crash, BUG 343529
+}
+
+void Connection::createThread()
+{
+    if (s_thread) {
+        return;
+    }
+    s_thread = new QThread();
+    s_thread->setObjectName(QStringLiteral("libinput-connection"));
+    s_thread->start();
 }
 
 Connection *Connection::create(QObject *parent)
@@ -131,10 +141,9 @@ Connection *Connection::create(QObject *parent)
             return nullptr;
         }
     }
-    s_thread = new QThread();
+    Connection::createThread();
     s_self = new Connection(s_context);
     s_self->moveToThread(s_thread);
-    s_thread->start();
     QObject::connect(s_thread, &QThread::finished, s_self, &QObject::deleteLater);
     QObject::connect(s_thread, &QThread::finished, s_thread, &QObject::deleteLater);
     QObject::connect(parent, &QObject::destroyed, s_thread, &QThread::quit);
