@@ -54,7 +54,7 @@ class WaylandTestApplication : public Application
 {
     Q_OBJECT
 public:
-    WaylandTestApplication(int &argc, char **argv);
+    WaylandTestApplication(OperationMode mode, int &argc, char **argv);
     virtual ~WaylandTestApplication();
 
 protected:
@@ -171,19 +171,23 @@ bool unlockScreen();
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
 Q_DECLARE_METATYPE(KWin::Test::ShellSurfaceType)
 
-#define WAYLANDTEST_MAIN_HELPER(TestObject, DPI) \
+#define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode) \
 int main(int argc, char *argv[]) \
 { \
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true); \
     setenv("QT_QPA_PLATFORM_PLUGIN_PATH", KWINQPAPATH, true); \
     setenv("KWIN_FORCE_OWN_QPA", "1", true); \
     DPI; \
-    KWin::WaylandTestApplication app(argc, argv); \
+    KWin::WaylandTestApplication app(OperationMode, argc, argv); \
     app.setAttribute(Qt::AA_Use96Dpi, true); \
     TestObject tc; \
     return QTest::qExec(&tc, argc, argv); \
 }
 
-#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling) )
+#ifdef NO_XWAYLAND
+#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling), KWin::Application::OperationModeWaylandOnly)
+#else
+#define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling), KWin::Application::OperationModeXwayland)
+#endif
 
 #endif

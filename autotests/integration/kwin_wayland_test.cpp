@@ -44,8 +44,8 @@ namespace KWin
 
 static void readDisplay(int pipe);
 
-WaylandTestApplication::WaylandTestApplication(int &argc, char **argv)
-    : Application(OperationModeXwayland, argc, argv)
+WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, char **argv)
+    : Application(mode, argc, argv)
 {
     QStandardPaths::setTestModeEnabled(true);
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -117,6 +117,15 @@ void WaylandTestApplication::continueStartupWithScreens()
     disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &WaylandTestApplication::continueStartupWithScreens);
     createScreens();
 
+    if (operationMode() == OperationModeWaylandOnly) {
+        createCompositor();
+        connect(Compositor::self(), &Compositor::sceneCreated, this,
+            [this] {
+                createWorkspace();
+            }
+        );
+        return;
+    }
     createCompositor();
     connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::startXwaylandServer);
 }
