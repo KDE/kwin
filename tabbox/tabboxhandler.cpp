@@ -384,7 +384,9 @@ void TabBoxHandler::show()
         d->show();
     }
     if (d->config.isHighlightWindows()) {
-        Xcb::sync();
+        if (kwinApp()->x11Connection()) {
+            Xcb::sync();
+        }
         // TODO this should be
         // QMetaObject::invokeMethod(this, "initHighlightWindows", Qt::QueuedConnection);
         // but we somehow need to cross > 1 event cycle (likely because of queued invocation in the effects)
