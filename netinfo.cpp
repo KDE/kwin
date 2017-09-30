@@ -129,7 +129,9 @@ RootInfo *RootInfo::create()
 
 void RootInfo::destroy()
 {
-    Q_ASSERT(s_self);
+    if (!s_self) {
+        return;
+    }
     xcb_window_t supportWindow = s_self->supportWindow();
     delete s_self;
     s_self = NULL;

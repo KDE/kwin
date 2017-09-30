@@ -512,7 +512,10 @@ Workspace::~Workspace()
     Client::cleanupX11();
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release(ReleaseReason::KWinShutsDown);
-    xcb_delete_property(connection(), rootWindow(), atoms->kwin_running);
+
+    if (auto c = kwinApp()->x11Connection()) {
+        xcb_delete_property(c, kwinApp()->x11RootWindow(), atoms->kwin_running);
+    }
 
     for (auto it = deleted.begin(); it != deleted.end();) {
         emit deletedRemoved(*it);
