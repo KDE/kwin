@@ -865,8 +865,8 @@ void Workspace::slotReconfigure()
             !options->borderlessMaximizedWindows()) {
         // in case borderless maximized windows option changed and new option
         // is to have borders, we need to unset the borders for all maximized windows
-        for (ClientList::Iterator it = clients.begin();
-                it != clients.end();
+        for (auto it = m_allClients.begin();
+                it != m_allClients.end();
                 ++it) {
             if ((*it)->maximizeMode() == MaximizeFull)
                 (*it)->checkNoBorder();

@@ -162,7 +162,7 @@ public:
     bool noBorder() const override;
     void setNoBorder(bool set) override;
     bool userCanSetNoBorder() const override;
-    void checkNoBorder();
+    void checkNoBorder() override;
 
     int sessionStackingOrder() const;
 

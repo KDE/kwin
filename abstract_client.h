@@ -460,6 +460,7 @@ public:
     virtual QRect iconGeometry() const;
     virtual bool userCanSetFullScreen() const = 0;
     virtual bool userCanSetNoBorder() const = 0;
+    virtual void checkNoBorder();
     virtual void setOnActivities(QStringList newActivitiesList);
     virtual void setOnAllActivities(bool set) = 0;
     const WindowRules* rules() const {

@@ -1797,4 +1797,9 @@ void AbstractClient::setOnActivities(QStringList newActivitiesList)
     Q_UNUSED(newActivitiesList)
 }
 
+void AbstractClient::checkNoBorder()
+{
+    setNoBorder(false);
+}
+
 }
