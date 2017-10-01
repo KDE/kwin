@@ -162,17 +162,19 @@ void ApplicationWayland::continueStartupWithScreens()
 
     if (operationMode() == OperationModeWaylandOnly) {
         createCompositor();
-        connect(Compositor::self(), &Compositor::sceneCreated, this,
-            [this] {
-                startSession();
-                createWorkspace();
-                notifyKSplash();
-            }
-        );
+        connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithSceen);
         return;
     }
     createCompositor();
     connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::startXwaylandServer);
+}
+
+void ApplicationWayland::continueStartupWithSceen()
+{
+    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithSceen);
+    startSession();
+    createWorkspace();
+    notifyKSplash();
 }
 
 void ApplicationWayland::continueStartupWithX()
