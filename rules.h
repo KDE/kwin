@@ -49,7 +49,7 @@ class WindowRules
 public:
     explicit WindowRules(const QVector< Rules* >& rules);
     WindowRules();
-    void update(Client*, int selection);
+    void update(AbstractClient*, int selection);
     void discardTemporary();
     bool contains(const Rules* rule) const;
     void remove(Rules* rule);
@@ -116,8 +116,8 @@ public:
     bool isEmpty() const;
 #ifndef KCMRULES
     void discardUsed(bool withdrawn);
-    bool match(const Client* c) const;
-    bool update(Client*, int selection);
+    bool match(const AbstractClient* c) const;
+    bool update(AbstractClient*, int selection);
     bool isTemporary() const;
     bool discardTemporary(bool force);   // removes if temporary and forced or too old
     bool applyPlacement(Placement::Policy& placement) const;
@@ -292,7 +292,7 @@ class KWIN_EXPORT RuleBook : public QObject
     Q_OBJECT
 public:
     virtual ~RuleBook();
-    WindowRules find(const Client*, bool);
+    WindowRules find(const AbstractClient*, bool);
     void discardUsed(Client* c, bool withdraw);
     void setUpdatesDisabled(bool disable);
     bool areUpdatesDisabled() const;

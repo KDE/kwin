@@ -641,7 +641,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     delete session;
 
-    client_rules.discardTemporary();
+    discardTemporaryRules();
     applyWindowRules(); // Just in case
     RuleBook::self()->discardUsed(this, false);   // Remove ApplyNow rules
     updateWindowRules(Rules::All); // Was blocked while !isManaged()

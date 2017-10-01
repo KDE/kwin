@@ -1487,12 +1487,6 @@ void Client::updateCaption()
     setCaption(cap_normal, true);
 }
 
-void Client::evaluateWindowRules()
-{
-    setupWindowRules(true);
-    applyWindowRules();
-}
-
 void Client::fetchIconicName()
 {
     QString s;
@@ -1987,7 +1981,7 @@ NET::WindowType Client::windowType(bool direct, int supportedTypes) const
     if (direct) {
         return wt;
     }
-    NET::WindowType wt2 = client_rules.checkType(wt);
+    NET::WindowType wt2 = rules()->checkType(wt);
     if (wt != wt2) {
         wt = wt2;
         info->setWindowType(wt);   // force hint change

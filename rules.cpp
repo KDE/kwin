@@ -445,7 +445,7 @@ bool Rules::matchClientMachine(const QByteArray& match_machine, bool local) cons
 }
 
 #ifndef KCMRULES
-bool Rules::match(const Client* c) const
+bool Rules::match(const AbstractClient* c) const
 {
     if (!matchType(c->windowType(true)))
         return false;
@@ -456,7 +456,7 @@ bool Rules::match(const Client* c) const
     if (!matchClientMachine(c->clientMachine()->hostName(), c->clientMachine()->isLocal()))
         return false;
     if (titlematch != UnimportantMatch) // track title changes to rematch rules
-        QObject::connect(c, &Client::captionChanged, c, &Client::evaluateWindowRules,
+        QObject::connect(c, &AbstractClient::captionChanged, c, &AbstractClient::evaluateWindowRules,
                          // QueuedConnection, because title may change before
                          // the client is ready (could segfault!)
                          static_cast<Qt::ConnectionType>(Qt::QueuedConnection|Qt::UniqueConnection));
@@ -467,7 +467,7 @@ bool Rules::match(const Client* c) const
 
 #define NOW_REMEMBER(_T_, _V_) ((selection & _T_) && (_V_##rule == (SetRule)Remember))
 
-bool Rules::update(Client* c, int selection)
+bool Rules::update(AbstractClient* c, int selection)
 {
     // TODO check this setting is for this client ?
     bool updated = false;
@@ -759,7 +759,7 @@ void WindowRules::discardTemporary()
     rules.erase(it2, rules.end());
 }
 
-void WindowRules::update(Client* c, int selection)
+void WindowRules::update(AbstractClient* c, int selection)
 {
     bool updated = false;
     for (QVector< Rules* >::ConstIterator it = rules.constBegin();
@@ -872,22 +872,23 @@ CHECK_FORCE_RULE(DisableGlobalShortcuts, bool)
 
 // Client
 
-void Client::setupWindowRules(bool ignore_temporary)
+void AbstractClient::setupWindowRules(bool ignore_temporary)
 {
-    disconnect(this, &Client::captionChanged, this, &Client::evaluateWindowRules);
-    client_rules = RuleBook::self()->find(this, ignore_temporary);
+    disconnect(this, &AbstractClient::captionChanged, this, &AbstractClient::evaluateWindowRules);
+    m_rules = RuleBook::self()->find(this, ignore_temporary);
     // check only after getting the rules, because there may be a rule forcing window type
 }
 
 // Applies Force, ForceTemporarily and ApplyNow rules
 // Used e.g. after the rules have been modified using the kcm.
-void Client::applyWindowRules()
+void AbstractClient::applyWindowRules()
 {
     // apply force rules
     // Placement - does need explicit update, just like some others below
     // Geometry : setGeometry() doesn't check rules
+    auto client_rules = rules();
     QRect orig_geom = QRect(pos(), sizeForClientSize(clientSize()));   // handle shading
-    QRect geom = client_rules.checkGeometry(orig_geom);
+    QRect geom = client_rules->checkGeometry(orig_geom);
     if (geom != orig_geom)
         setGeometry(geom);
     // MinSize, MaxSize handled by Geometry
@@ -898,7 +899,7 @@ void Client::applyWindowRules()
     // Type
     maximize(maximizeMode());
     // Minimize : functions don't check, and there are two functions
-    if (client_rules.checkMinimize(isMinimized()))
+    if (client_rules->checkMinimize(isMinimized()))
         minimize();
     else
         unminimize();
@@ -914,7 +915,7 @@ void Client::applyWindowRules()
     // FSP
     // AcceptFocus :
     if (workspace()->mostRecentlyActivatedClient() == this
-            && !client_rules.checkAcceptFocus(true))
+            && !client_rules->checkAcceptFocus(true))
         workspace()->activateNextClient(this);
     // Closeable
     QSize s = adjustedSize();
@@ -937,15 +938,20 @@ void Client::updateWindowRules(Rules::Types selection)
 {
     if (!isManaged())  // not fully setup yet
         return;
-    if (RuleBook::self()->areUpdatesDisabled())
-        return;
-    client_rules.update(this, selection);
+    AbstractClient::updateWindowRules(selection);
 }
 
-void Client::finishWindowRules()
+void AbstractClient::updateWindowRules(Rules::Types selection)
+{
+    if (RuleBook::self()->areUpdatesDisabled())
+        return;
+    m_rules.update(this, selection);
+}
+
+void AbstractClient::finishWindowRules()
 {
     updateWindowRules(Rules::All);
-    client_rules = WindowRules();
+    m_rules = WindowRules();
 }
 
 // Workspace
@@ -987,7 +993,7 @@ void RuleBook::deleteAll()
     m_rules.clear();
 }
 
-WindowRules RuleBook::find(const Client* c, bool ignore_temporary)
+WindowRules RuleBook::find(const AbstractClient* c, bool ignore_temporary)
 {
     QVector< Rules* > ret;
     for (QList< Rules* >::Iterator it = m_rules.begin();

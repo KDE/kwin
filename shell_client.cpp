@@ -321,7 +321,7 @@ void ShellClient::init()
         installServerSideDecoration(deco);
     }
 
-    updateColorScheme(QString());
+    AbstractClient::updateColorScheme(QString());
     updateApplicationMenu();
 }
 
@@ -866,12 +866,6 @@ bool ShellClient::noBorder() const
     return true;
 }
 
-const WindowRules *ShellClient::rules() const
-{
-    static WindowRules s_rules;
-    return &s_rules;
-}
-
 void ShellClient::setFullScreen(bool set, bool user)
 {
     Q_UNUSED(set)
@@ -932,11 +926,6 @@ void ShellClient::doSetActive()
     }
     StackingUpdatesBlocker blocker(workspace());
     workspace()->focusToNull();
-}
-
-void ShellClient::updateWindowRules(Rules::Types selection)
-{
-    Q_UNUSED(selection)
 }
 
 bool ShellClient::userCanSetFullScreen() const
@@ -1334,7 +1323,7 @@ bool ShellClient::eventFilter(QObject *watched, QEvent *event)
     if (watched == m_qtExtendedSurface.data() && event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (pe->propertyName() == s_schemePropertyName) {
-            updateColorScheme(rules()->checkDecoColor(m_qtExtendedSurface->property(pe->propertyName().constData()).toString()));
+            AbstractClient::updateColorScheme(rules()->checkDecoColor(m_qtExtendedSurface->property(pe->propertyName().constData()).toString()));
         } else if (pe->propertyName() == s_appMenuServiceNamePropertyName) {
             updateApplicationMenuServiceName(m_qtExtendedSurface->property(pe->propertyName().constData()).toString());
         } else if (pe->propertyName() == s_appMenuObjectPathPropertyName) {
@@ -1348,6 +1337,15 @@ bool ShellClient::eventFilter(QObject *watched, QEvent *event)
         }
     }
     return false;
+}
+
+void ShellClient::updateColorScheme()
+{
+    if (m_qtExtendedSurface) {
+        AbstractClient::updateColorScheme(rules()->checkDecoColor(m_qtExtendedSurface->property(s_schemePropertyName.constData()).toString()));
+    } else {
+        AbstractClient::updateColorScheme(rules()->checkDecoColor(QString()));
+    }
 }
 
 bool ShellClient::hasStrut() const

@@ -1776,4 +1776,25 @@ QString AbstractClient::caption() const
     return cap;
 }
 
+void AbstractClient::removeRule(Rules* rule)
+{
+    m_rules.remove(rule);
+}
+
+void AbstractClient::discardTemporaryRules()
+{
+    m_rules.discardTemporary();
+}
+
+void AbstractClient::evaluateWindowRules()
+{
+    setupWindowRules(true);
+    applyWindowRules();
+}
+
+void AbstractClient::setOnActivities(QStringList newActivitiesList)
+{
+    Q_UNUSED(newActivitiesList)
+}
+
 }

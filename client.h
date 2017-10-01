@@ -109,10 +109,6 @@ public:
     Group* group();
     void checkGroup(Group* gr = NULL, bool force = false);
     void changeClientLeaderGroup(Group* gr);
-    const WindowRules* rules() const override;
-    void removeRule(Rules* r);
-    void setupWindowRules(bool ignore_temporary);
-    void applyWindowRules();
     void updateWindowRules(Rules::Types selection) override;
     void updateFullscreenMonitors(NETFullscreenMonitors topology);
 
@@ -135,7 +131,7 @@ public:
     virtual QStringList activities() const;
     void setOnActivity(const QString &activity, bool enable);
     void setOnAllActivities(bool set) override;
-    void setOnActivities(QStringList newActivitiesList);
+    void setOnActivities(QStringList newActivitiesList) override;
     void updateActivities(bool includeTransients);
     void blockActivityUpdates(bool b = true) override;
 
@@ -315,7 +311,7 @@ public:
     void updateFirstInTabBox();
     Xcb::StringProperty fetchColorScheme() const;
     void readColorScheme(Xcb::StringProperty &property);
-    void updateColorScheme();
+    void updateColorScheme() override;
 
     //sets whether the client should be faked as being on all activities (and be shown during session save)
     void setSessionActivityOverride(bool needed);
@@ -345,7 +341,6 @@ public:
 public Q_SLOTS:
     void closeWindow() override;
     void updateCaption() override;
-    void evaluateWindowRules();
 
 private Q_SLOTS:
     void shadeHover();
@@ -450,7 +445,6 @@ private:
     QString readName() const;
     void setCaption(const QString& s, bool force = false);
     bool hasTransientInternal(const Client* c, bool indirect, ConstClientList& set) const;
-    void finishWindowRules();
     void setShortcutInternal() override;
 
     void configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool);
@@ -547,7 +541,6 @@ private:
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     bool blocks_compositing;
-    WindowRules client_rules;
     // DON'T reorder - Saved to config files !!!
     enum FullScreenMode {
         FullScreenNone,
@@ -727,19 +720,9 @@ inline bool Client::hasUserTimeSupport() const
     return info->userTime() != -1U;
 }
 
-inline const WindowRules* Client::rules() const
-{
-    return &client_rules;
-}
-
 inline xcb_window_t Client::moveResizeGrabWindow() const
 {
     return m_moveResizeGrabWindow;
-}
-
-inline void Client::removeRule(Rules* rule)
-{
-    client_rules.remove(rule);
 }
 
 inline bool Client::hiddenPreview() const

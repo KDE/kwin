@@ -97,13 +97,11 @@ public:
         return m_geomMaximizeRestore;
     }
     bool noBorder() const override;
-    const WindowRules *rules() const override;
     void setFullScreen(bool set, bool user = true) override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void setOnAllActivities(bool set) override;
     void takeFocus() override;
-    void updateWindowRules(Rules::Types selection) override;
     bool userCanSetFullScreen() const override;
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
@@ -161,6 +159,8 @@ public:
 
     bool hasPopupGrab() const override;
     void popupDone() override;
+
+    void updateColorScheme() override;
 
 protected:
     void addDamage(const QRegion &damage) override;
