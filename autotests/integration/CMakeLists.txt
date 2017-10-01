@@ -53,6 +53,7 @@ integrationTest(WAYLAND_ONLY NAME testKeymapCreationFailure SRCS keymap_creation
 integrationTest(WAYLAND_ONLY NAME testShowingDesktop SRCS showing_desktop_test.cpp)
 integrationTest(NAME testDontCrashUseractionsMenu SRCS dont_crash_useractions_menu.cpp)
 integrationTest(WAYLAND_ONLY NAME testKWinBindings SRCS kwinbindings_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testVirtualDesktop SRCS virtual_desktop_test.cpp)
 
 if (XCB_ICCCM_FOUND)
     integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp LIBS XCB::ICCCM)

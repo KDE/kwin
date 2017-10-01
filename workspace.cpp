@@ -1069,7 +1069,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 
 void Workspace::moveClientsFromRemovedDesktops()
 {
-    for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
+    for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
         if (!(*it)->isOnAllDesktops() && (*it)->desktop() > static_cast<int>(VirtualDesktopManager::self()->count()))
             sendClientToDesktop(*it, VirtualDesktopManager::self()->count(), true);
     }
