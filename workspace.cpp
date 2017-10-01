@@ -387,7 +387,11 @@ void Workspace::initWithX11()
     m_nullFocus->map();
 
     RootInfo *rootInfo = RootInfo::create();
-    VirtualDesktopManager::self()->setRootInfo(rootInfo);
+    const auto vds = VirtualDesktopManager::self();
+    vds->setRootInfo(rootInfo);
+    // load again to sync to RootInfo, see BUG 385260
+    vds->load();
+    vds->updateRootInfo();
 
     // TODO: only in X11 mode
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties

@@ -264,6 +264,11 @@ public:
     VirtualDesktop *desktopForX11Id(uint id) const;
 
     /**
+     * Updates the net root info for new number of desktops
+     **/
+    void updateRootInfo();
+
+    /**
      * @returns The maximum number of desktops that KWin supports.
      */
     static uint maximum();
@@ -410,10 +415,6 @@ private:
      * Generate a desktop layout from EWMH _NET_DESKTOP_LAYOUT property parameters.
      */
     void setNETDesktopLayout(Qt::Orientation orientation, uint width, uint height, int startingCorner);
-    /**
-     * Updates the net root info for new number of desktops
-     **/
-    void updateRootInfo();
     /**
      * @returns A default name for the given @p desktop
      **/
