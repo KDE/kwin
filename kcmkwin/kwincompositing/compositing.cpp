@@ -49,6 +49,7 @@ Compositing::Compositing(QObject *parent)
     , m_xrScaleFilter(false)
     , m_glSwapStrategy(0)
     , m_vkDevice(0)
+    , m_vkVSync(1)
     , m_compositingType(0)
     , m_compositingEnabled(true)
     , m_changed(false)
@@ -69,6 +70,7 @@ Compositing::Compositing(QObject *parent)
     connect(this, &Compositing::xrScaleFilterChanged,        this, &Compositing::changed);
     connect(this, &Compositing::glSwapStrategyChanged,       this, &Compositing::changed);
     connect(this, &Compositing::vkDeviceChanged,             this, &Compositing::changed);
+    connect(this, &Compositing::vkVSyncChanged,              this, &Compositing::changed);
     connect(this, &Compositing::compositingTypeChanged,      this, &Compositing::changed);
     connect(this, &Compositing::compositingEnabledChanged,   this, &Compositing::changed);
     connect(this, &Compositing::openGLPlatformInterfaceChanged, this, &Compositing::changed);
@@ -124,6 +126,14 @@ void Compositing::reset()
     setVkDevice(row != -1 ? row : 0);
 #endif
 
+    const QString vulkanVSync = kwinConfig.readEntry("VulkanVSync", "Doublebuffer");
+    if (vulkanVSync == "Off")
+        setVkVSync(0);
+    else if (vulkanVSync == "Triplebuffer")
+        setVkVSync(2);
+    else
+        setVkVSync(1);
+
     auto type = [&kwinConfig]{
         const QString backend = kwinConfig.readEntry("Backend", "OpenGL");
         const bool glCore = kwinConfig.readEntry("GLCore", false);
@@ -158,6 +168,7 @@ void Compositing::defaults()
     setXrScaleFilter(false);
     setGlSwapStrategy(1);
     setVkDevice(0);
+    setVkVSync(1);
     setCompositingType(CompositingType::OPENGL20_INDEX);
     const QModelIndex index = m_openGLPlatformInterfaceModel->indexForKey(QStringLiteral("glx"));
     setOpenGLPlatformInterface(index.isValid() ? index.row() : 0);
@@ -227,6 +238,11 @@ int Compositing::vkDevice() const
     return m_vkDevice;
 }
 
+int Compositing::vkVSync() const
+{
+    return m_vkVSync;
+}
+
 int Compositing::compositingType() const
 {
     return m_compositingType;
@@ -271,6 +287,15 @@ void Compositing::setVkDevice(int device)
     }
     m_vkDevice = device;
     emit vkDeviceChanged(device);
+}
+
+void Compositing::setVkVSync(int vsync)
+{
+    if (vsync == m_vkVSync) {
+        return;
+    }
+    m_vkVSync = vsync;
+    emit vkVSyncChanged(vsync);
 }
 
 void Compositing::setWindowThumbnail(int index)
@@ -348,6 +373,18 @@ void Compositing::save()
         kwinConfig.writeEntry("VulkanDevice", entry);
     }
 #endif
+    switch (vkVSync()) {
+    case 0:
+        kwinConfig.writeEntry("VulkanVSync", "Off");
+        break;
+    default:
+    case 1:
+        kwinConfig.writeEntry("VulkanVSync", "Doublebuffer");
+        break;
+    case 2:
+        kwinConfig.writeEntry("VulkanVSync", "Triplebuffer");
+        break;
+    }
     QString backend;
     bool glCore = false;
     switch (compositingType()) {

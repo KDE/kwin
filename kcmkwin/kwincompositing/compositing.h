@@ -42,6 +42,7 @@ class Compositing : public QObject
     Q_PROPERTY(int glScaleFilter READ glScaleFilter WRITE setGlScaleFilter NOTIFY glScaleFilterChanged)
     Q_PROPERTY(bool xrScaleFilter READ xrScaleFilter WRITE setXrScaleFilter NOTIFY xrScaleFilterChanged)
     Q_PROPERTY(int glSwapStrategy READ glSwapStrategy WRITE setGlSwapStrategy NOTIFY glSwapStrategyChanged)
+    Q_PROPERTY(int vkVSync READ vkVSync WRITE setVkVSync NOTIFY vkVSyncChanged)
     Q_PROPERTY(int compositingType READ compositingType WRITE setCompositingType NOTIFY compositingTypeChanged)
     Q_PROPERTY(bool compositingEnabled READ compositingEnabled WRITE setCompositingEnabled NOTIFY compositingEnabledChanged)
     Q_PROPERTY(KWin::Compositing::OpenGLPlatformInterfaceModel *openGLPlatformInterfaceModel READ openGLPlatformInterfaceModel CONSTANT)
@@ -60,6 +61,7 @@ public:
     bool xrScaleFilter() const;
     int glSwapStrategy() const;
     int vkDevice() const;
+    int vkVSync() const;
     int compositingType() const;
     bool compositingEnabled() const;
     int openGLPlatformInterface() const;
@@ -75,6 +77,7 @@ public:
     void setXrScaleFilter(bool filter);
     void setGlSwapStrategy(int strategy);
     void setVkDevice(int device);
+    void setVkVSync(int vsync);
     void setCompositingType(int index);
     void setCompositingEnabled(bool enalbed);
     void setOpenGLPlatformInterface(int interface);
@@ -94,6 +97,7 @@ Q_SIGNALS:
     void xrScaleFilterChanged(int);
     void glSwapStrategyChanged(int);
     void vkDeviceChanged(int);
+    void vkVSyncChanged(int);
     void compositingTypeChanged(int);
     void compositingEnabledChanged(bool);
     void openGLPlatformInterfaceChanged(int);
@@ -106,6 +110,7 @@ private:
     bool m_xrScaleFilter;
     int m_glSwapStrategy;
     int m_vkDevice;
+    int m_vkVSync;
     int m_compositingType;
     bool m_compositingEnabled;
     bool m_changed;
