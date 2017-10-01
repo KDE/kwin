@@ -121,15 +121,6 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     bool changed = (force_restacking || new_stacking_order != stacking_order);
     force_restacking = false;
     stacking_order = new_stacking_order;
-#if 0
-    qCDebug(KWIN_CORE) << "stacking:" << changed;
-    if (changed || propagate_new_clients) {
-        for (ClientList::ConstIterator it = stacking_order.begin();
-                it != stacking_order.end();
-                ++it)
-            qCDebug(KWIN_CORE) << (void*)(*it) << *it << ":" << (*it)->layer();
-    }
-#endif
     if (changed || propagate_new_clients) {
         propagateClients(propagate_new_clients);
         emit stackingOrderChanged();
@@ -506,13 +497,6 @@ ToplevelList Workspace::constrainedStackingOrder()
 {
     ToplevelList layer[ NumLayers ];
 
-#if 0
-    qCDebug(KWIN_CORE) << "stacking1:";
-    for (ClientList::ConstIterator it = unconstrained_stacking_order.begin();
-            it != unconstrained_stacking_order.end();
-            ++it)
-        qCDebug(KWIN_CORE) << (void*)(*it) << *it << ":" << (*it)->layer();
-#endif
     // build the order from layers
     QVector< QMap<Group*, Layer> > minimum_layer(screens()->count());
     for (ToplevelList::ConstIterator it = unconstrained_stacking_order.constBegin(),
@@ -539,13 +523,6 @@ ToplevelList Workspace::constrainedStackingOrder()
             lay < NumLayers;
             ++lay)
         stacking += layer[ lay ];
-#if 0
-    qCDebug(KWIN_CORE) << "stacking2:";
-    for (ClientList::ConstIterator it = stacking.begin();
-            it != stacking.end();
-            ++it)
-        qCDebug(KWIN_CORE) << (void*)(*it) << *it << ":" << (*it)->layer();
-#endif
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
     for (int i = stacking.size() - 1;
@@ -606,14 +583,6 @@ ToplevelList Workspace::constrainedStackingOrder()
         ++i2; // insert after (on top of) the mainwindow, it's ok if it2 is now stacking.end()
         stacking.insert(i2, current);
     }
-#if 0
-    qCDebug(KWIN_CORE) << "stacking3:";
-    for (ClientList::ConstIterator it = stacking.begin();
-            it != stacking.end();
-            ++it)
-        qCDebug(KWIN_CORE) << (void*)(*it) << *it << ":" << (*it)->layer();
-    qCDebug(KWIN_CORE) << "\n\n";
-#endif
     return stacking;
 }
 
