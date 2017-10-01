@@ -851,8 +851,8 @@ void Workspace::slotReconfigure()
     updateToolWindows(true);
 
     RuleBook::self()->load();
-    for (ClientList::Iterator it = clients.begin();
-            it != clients.end();
+    for (auto it = m_allClients.begin();
+            it != m_allClients.end();
             ++it) {
         (*it)->setupWindowRules(true);
         (*it)->applyWindowRules();

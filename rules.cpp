@@ -1108,7 +1108,7 @@ void RuleBook::cleanupTemporaryRules()
         QTimer::singleShot(60000, this, SLOT(cleanupTemporaryRules()));
 }
 
-void RuleBook::discardUsed(Client* c, bool withdrawn)
+void RuleBook::discardUsed(AbstractClient* c, bool withdrawn)
 {
     bool updated = false;
     for (QList< Rules* >::Iterator it = m_rules.begin();

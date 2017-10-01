@@ -293,7 +293,7 @@ class KWIN_EXPORT RuleBook : public QObject
 public:
     virtual ~RuleBook();
     WindowRules find(const AbstractClient*, bool);
-    void discardUsed(Client* c, bool withdraw);
+    void discardUsed(AbstractClient* c, bool withdraw);
     void setUpdatesDisabled(bool disable);
     bool areUpdatesDisabled() const;
     void load();
