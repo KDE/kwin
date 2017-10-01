@@ -125,6 +125,7 @@ Options::Options(QObject *parent)
     , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
     , m_glPlatformInterface(Options::defaultGlPlatformInterface())
     , m_vulkanDevice(0, 0, 0)
+    , m_vulkanVsync(1)
     , m_windowsBlockCompositing(true)
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
@@ -741,6 +742,16 @@ void Options::setVulkanDevice(const VulkanDeviceId &device)
     }
 }
 
+void Options::setVulkanVsync(int vsync)
+{
+    vsync = std::min(std::max(vsync, 0), 2);
+
+    if (m_vulkanVsync != vsync) {
+        m_vulkanVsync = vsync;
+        emit vulkanVsyncChanged();
+    }
+}
+
 void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
 {
     // check environment variable
@@ -1008,6 +1019,14 @@ void Options::reloadCompositingSettings(bool force)
     } else {
         setVulkanDevice(VulkanDeviceId(0, 0, 0));
     }
+
+    const QString vulkanVsync = config.readEntry("VulkanVSync", "Doublebuffer");
+    if (vulkanVsync == QStringLiteral("Off"))
+        setVulkanVsync(0);
+    else if (vulkanVsync == QStringLiteral("Triplebuffer"))
+        setVulkanVsync(2);
+    else
+        setVulkanVsync(1);
 
     HiddenPreviews previews = Options::defaultHiddenPreviews();
     // 4 - off, 5 - shown, 6 - always, other are old values

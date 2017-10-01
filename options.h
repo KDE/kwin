@@ -222,6 +222,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool glCoreProfile READ glCoreProfile WRITE setGLCoreProfile NOTIFY glCoreProfileChanged)
     Q_PROPERTY(GlSwapStrategy glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
     Q_PROPERTY(VulkanDeviceId vulkanDevice READ vulkanDevice WRITE setVulkanDevice NOTIFY vulkanDeviceChanged)
+    Q_PROPERTY(int vulkanVsync READ vulkanVsync WRITE setVulkanVsync NOTIFY vulkanVsyncChanged)
     Q_PROPERTY(KWin::OpenGLPlatformInterface glPlatformInterface READ glPlatformInterface WRITE setGlPlatformInterface NOTIFY glPlatformInterfaceChanged)
     Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
 public:
@@ -628,6 +629,10 @@ public:
         return m_vulkanDevice;
     }
 
+    int vulkanVsync() const {
+        return m_vulkanVsync;
+    }
+
     bool windowsBlockCompositing() const
     {
         return m_windowsBlockCompositing;
@@ -697,6 +702,7 @@ public:
     void setGlPreferBufferSwap(char glPreferBufferSwap);
     void setGlPlatformInterface(OpenGLPlatformInterface interface);
     void setVulkanDevice(const VulkanDeviceId &device);
+    void setVulkanVsync(int vsync);
     void setWindowsBlockCompositing(bool set);
 
     // default values
@@ -808,6 +814,9 @@ public:
     static VulkanDeviceId defaultVulkanDevice() {
         return VulkanDeviceId(0, 0, 0);
     }
+    static int defaultVulkanVSync() {
+        return 1;
+    }
     static OpenGLPlatformInterface defaultGlPlatformInterface() {
         return kwinApp()->shouldUseWaylandForCompositing() ? EglPlatformInterface : GlxPlatformInterface;
     };
@@ -892,6 +901,7 @@ Q_SIGNALS:
     void glPreferBufferSwapChanged();
     void glPlatformInterfaceChanged();
     void vulkanDeviceChanged();
+    void vulkanVsyncChanged();
     void windowsBlockCompositingChanged();
 
     void configChanged();
@@ -939,6 +949,7 @@ private:
     GlSwapStrategy m_glPreferBufferSwap;
     OpenGLPlatformInterface m_glPlatformInterface;
     VulkanDeviceId m_vulkanDevice;
+    int m_vulkanVsync;
     bool m_windowsBlockCompositing;
 
     WindowOperation OpTitlebarDblClick;
