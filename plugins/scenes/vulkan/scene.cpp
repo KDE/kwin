@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "logging.h"
 #include "platformsupport/scenes/vulkan/backend.h"
+#include "options.h"
 
 #include <QGraphicsScale>
 #include <KNotification>
@@ -454,18 +455,37 @@ bool VulkanScene::init()
     uint32_t swapchainImageCount;
 
     if (supportedPresentModes.size() > 0) {
-        const VkPresentModeKHR preferredPresentModes[] {
-            VK_PRESENT_MODE_MAILBOX_KHR,
-            VK_PRESENT_MODE_FIFO_KHR,
-            VK_PRESENT_MODE_FIFO_RELAXED_KHR,
-            VK_PRESENT_MODE_IMMEDIATE_KHR
+        const std::array<VkPresentModeKHR, 4> presentModes[] = {
+            // VSync off
+            {
+                VK_PRESENT_MODE_IMMEDIATE_KHR,
+                VK_PRESENT_MODE_FIFO_RELAXED_KHR,
+                VK_PRESENT_MODE_FIFO_KHR,
+                VK_PRESENT_MODE_MAILBOX_KHR,
+            },
+            // Double buffer
+            {
+                VK_PRESENT_MODE_FIFO_KHR,
+                VK_PRESENT_MODE_MAILBOX_KHR,
+                VK_PRESENT_MODE_FIFO_RELAXED_KHR,
+                VK_PRESENT_MODE_IMMEDIATE_KHR
+            },
+            // Triple buffer
+            {
+                VK_PRESENT_MODE_MAILBOX_KHR,
+                VK_PRESENT_MODE_FIFO_KHR,
+                VK_PRESENT_MODE_FIFO_RELAXED_KHR,
+                VK_PRESENT_MODE_IMMEDIATE_KHR
+            },
         };
 
-        // Find the first supported mode in preferredPresentModes
-        auto result = std::find_first_of(std::begin(preferredPresentModes), std::end(preferredPresentModes),
-                                         std::begin(supportedPresentModes), std::end(supportedPresentModes));
+        const auto &preferredPresentModes = presentModes[options->vulkanVsync()];
 
-        if (result != std::end(preferredPresentModes))
+        // Find the first supported mode in preferredPresentModes
+        auto result = std::find_first_of(preferredPresentModes.begin(), preferredPresentModes.end(),
+                                         supportedPresentModes.begin(), supportedPresentModes.end());
+
+        if (result != preferredPresentModes.end())
             m_presentMode = *result;
         else
             m_presentMode = supportedPresentModes[0];
