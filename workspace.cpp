@@ -873,7 +873,7 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
     closeActivePopup();
     ++block_focus;
     StackingUpdatesBlocker blocker(this);
-    updateClientVisibilityOnDesktopChange(oldDesktop, newDesktop);
+    updateClientVisibilityOnDesktopChange(newDesktop);
     // Restore the focus on this desktop
     --block_focus;
 
@@ -881,7 +881,7 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
     emit currentDesktopChanged(oldDesktop, movingClient);
 }
 
-void Workspace::updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newDesktop)
+void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
 {
     for (ToplevelList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
@@ -993,8 +993,6 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     // Optimized Desktop switching: unmapping done from back to front
     // mapping done from front to back => less exposure events
     //Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
-
-    const QString &old_activity = Activities::self()->previous();
 
     for (ToplevelList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
