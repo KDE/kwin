@@ -2,7 +2,17 @@
     "CompositingType": 1,
     "KPlugin": {
         "Description": "KWin Compositor plugin rendering through OpenGL",
+        "Description[ca]": "Connector del Compositor del KWin que renderitza a través de l'OpenGL",
+        "Description[nl]": "KWin-compositor-plug-in rendering via OpenGL",
+        "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez OpenGL",
+        "Description[pt]": "'Plugin' de Composição do KWin com desenho via OpenGL",
+        "Description[sv]": "Kwin sammansättningsinsticksprogram återger via OpenGL",
+        "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням OpenGL",
+        "Description[x-test]": "xxKWin Compositor plugin rendering through OpenGLxx",
         "Id": "KWinSceneOpenGL",
-        "Name": "SceneOpenGL"
+        "Name": "SceneOpenGL",
+        "Name[pl]": "OpenGL sceny",
+        "Name[sv]": "Scen OpenGL",
+        "Name[x-test]": "xxSceneOpenGLxx"
     }
 }
