@@ -80,7 +80,6 @@ void VirtualDesktopTest::testLastDesktopRemoved_data()
 
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
 }
 
 void VirtualDesktopTest::testLastDesktopRemoved()
