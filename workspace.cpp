@@ -525,6 +525,7 @@ void Workspace::setupClientConnections(AbstractClient *c)
 {
     connect(c, &Toplevel::needsRepaint, m_compositor, &Compositor::scheduleRepaint);
     connect(c, &AbstractClient::desktopPresenceChanged, this, &Workspace::desktopPresenceChanged);
+    connect(c, &AbstractClient::minimizedChanged, this, std::bind(&Workspace::clientMinimizedChanged, this, c));
 }
 
 Client* Workspace::createClient(xcb_window_t w, bool is_mapped)

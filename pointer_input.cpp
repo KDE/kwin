@@ -130,6 +130,7 @@ void PointerInputRedirection::init()
     connect(m_cursor, &CursorImage::changed, kwinApp()->platform(), &Platform::cursorChanged);
     emit m_cursor->changed();
     connect(workspace(), &Workspace::stackingOrderChanged, this, &PointerInputRedirection::update);
+    connect(workspace(), &Workspace::clientMinimizedChanged, this, &PointerInputRedirection::update);
     connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
