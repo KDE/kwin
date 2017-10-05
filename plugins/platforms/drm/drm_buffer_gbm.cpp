@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_backend.h"
 #include "drm_buffer_gbm.h"
+#include "gbm_surface.h"
 
 #include "logging.h"
 
@@ -34,11 +35,11 @@ namespace KWin
 {
 
 // DrmSurfaceBuffer
-DrmSurfaceBuffer::DrmSurfaceBuffer(DrmBackend *backend, gbm_surface *surface)
+DrmSurfaceBuffer::DrmSurfaceBuffer(DrmBackend *backend, const std::shared_ptr<GbmSurface> &surface)
     : DrmBuffer(backend)
     , m_surface(surface)
 {
-    m_bo = gbm_surface_lock_front_buffer(surface);
+    m_bo = m_surface->lockFrontBuffer();
     if (!m_bo) {
         qCWarning(KWIN_DRM) << "Locking front buffer failed";
         return;
@@ -60,10 +61,8 @@ DrmSurfaceBuffer::~DrmSurfaceBuffer()
 
 void DrmSurfaceBuffer::releaseGbm()
 {
-    if (m_bo) {
-        gbm_surface_release_buffer(m_surface, m_bo);
-        m_bo = nullptr;
-    }
+    m_surface->releaseBuffer(m_bo);
+    m_bo = nullptr;
 }
 
 }

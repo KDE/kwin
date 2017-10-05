@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <xf86drmMode.h>
 
+#include <memory>
+
 struct gbm_bo;
 struct gbm_device;
 struct gbm_surface;
@@ -60,6 +62,7 @@ class DrmOutput;
 class DrmPlane;
 class DrmCrtc;
 class DrmConnector;
+class GbmSurface;
 
 
 class KWIN_EXPORT DrmBackend : public Platform
@@ -79,7 +82,7 @@ public:
     void init() override;
     DrmDumbBuffer *createBuffer(const QSize &size);
 #if HAVE_GBM
-    DrmSurfaceBuffer *createBuffer(gbm_surface *surface);
+    DrmSurfaceBuffer *createBuffer(const std::shared_ptr<GbmSurface> &surface);
 #endif
     void present(DrmBuffer *buffer, DrmOutput *output);
 
