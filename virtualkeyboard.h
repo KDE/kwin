@@ -45,6 +45,9 @@ public:
 
     QWindow *inputPanel() const;
 
+Q_SIGNALS:
+    void enabledChanged(bool enabled);
+
 private:
     void show();
     void hide();

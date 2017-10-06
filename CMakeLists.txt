@@ -457,6 +457,7 @@ set(kwin_KDEINIT_SRCS
     wayland_server.cpp
     wayland_cursor_theme.cpp
     virtualkeyboard.cpp
+    virtualkeyboard_dbus.cpp
     appmenu.cpp
     modifier_only_shortcuts.cpp
     xkb.cpp

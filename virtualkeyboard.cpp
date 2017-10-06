@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "virtualkeyboard.h"
+#include "virtualkeyboard_dbus.h"
 #include "input.h"
 #include "keyboard_input.h"
 #include "utils.h"
@@ -98,6 +99,12 @@ void VirtualKeyboard::init()
             setEnabled(!m_enabled);
         }
     );
+    connect(this, &VirtualKeyboard::enabledChanged, this, &VirtualKeyboard::updateSni);
+
+    auto dbus = new VirtualKeyboardDBus(this);
+    dbus->setEnabled(m_enabled);
+    connect(dbus, &VirtualKeyboardDBus::activateRequested, this, &VirtualKeyboard::setEnabled);
+    connect(this, &VirtualKeyboard::enabledChanged, dbus, &VirtualKeyboardDBus::setEnabled);
 
     if (waylandServer()) {
         // we can announce support for the text input interface
@@ -186,8 +193,7 @@ void VirtualKeyboard::setEnabled(bool enabled)
     }
     m_enabled = enabled;
     qApp->inputMethod()->update(Qt::ImQueryAll);
-
-    updateSni();
+    emit enabledChanged(m_enabled);
 
     // send OSD message
     QDBusMessage msg = QDBusMessage::createMethodCall(
