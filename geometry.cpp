@@ -2173,6 +2173,9 @@ void AbstractClient::blockGeometryUpdates(bool block)
 
 void AbstractClient::maximize(MaximizeMode m)
 {
+    if (m == maximizeMode()) {
+        return;
+    }
     setMaximize(m & MaximizeVertical, m & MaximizeHorizontal);
 }
 

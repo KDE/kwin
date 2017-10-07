@@ -185,6 +185,10 @@ void ShellClient::initSurface(T *shellSurface)
 
     connect(this, &ShellClient::geometryChanged, this, &ShellClient::updateClientOutputs);
     connect(screens(), &Screens::changed, this, &ShellClient::updateClientOutputs);
+
+    if (!m_internal) {
+        setupWindowRules(false);
+    }
 }
 
 void ShellClient::init()
@@ -207,11 +211,9 @@ void ShellClient::init()
     }
     if (m_internalWindow) {
         updateInternalWindowGeometry();
-        setOnAllDesktops(true);
         updateDecoration(true);
     } else {
         doSetGeometry(QRect(QPoint(0, 0), m_clientSize));
-        setDesktop(VirtualDesktopManager::self()->current());
     }
     if (waylandServer()->inputMethodConnection() == s->client()) {
         m_windowType = NET::OnScreenDisplay;
@@ -311,6 +313,9 @@ void ShellClient::init()
         connect(m_xdgShellPopup, &XdgShellPopupInterface::destroyed, this, &ShellClient::destroyClient);
     }
 
+    // set initial desktop
+    setDesktop(rules()->checkDesktop(m_internal ? int(NET::OnAllDesktops) : VirtualDesktopManager::self()->current(), true));
+
     // setup shadow integration
     getShadow();
     connect(s, &SurfaceInterface::shadowChanged, this, &Toplevel::getShadow);
@@ -328,6 +333,13 @@ void ShellClient::init()
 
     AbstractClient::updateColorScheme(QString());
     updateApplicationMenu();
+
+    if (!m_internal) {
+        discardTemporaryRules();
+        applyWindowRules(); // Just in case
+        RuleBook::self()->discardUsed(this, false);   // Remove ApplyNow rules
+        updateWindowRules(Rules::All); // Was blocked while !isManaged()
+    }
 }
 
 void ShellClient::destroyClient()
