@@ -315,6 +315,10 @@ void ShellClient::init()
 
     // set initial desktop
     setDesktop(rules()->checkDesktop(m_internal ? int(NET::OnAllDesktops) : VirtualDesktopManager::self()->current(), true));
+    // TODO: merge in checks from Client::manage?
+    if (rules()->checkMinimize(false, true)) {
+        minimize(true);   // No animation
+    }
 
     // setup shadow integration
     getShadow();

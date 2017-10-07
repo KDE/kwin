@@ -282,7 +282,7 @@ void Workspace::init()
                 markXStackingOrderAsDirty();
                 updateStackingOrder(true);
                 updateClientArea();
-                if (c->wantsInput()) {
+                if (c->wantsInput() && !c->isMinimized()) {
                     activateClient(c);
                 }
                 connect(c, &ShellClient::windowShown, this,

@@ -43,6 +43,8 @@ private Q_SLOTS:
 
     void testApplyInitialDesktop_data();
     void testApplyInitialDesktop();
+    void testApplyInitialMinimize_data();
+    void testApplyInitialMinimize();
 };
 
 void TestShellClientRules::initTestCase()
@@ -66,6 +68,7 @@ void TestShellClientRules::initTestCase()
 
 void TestShellClientRules::init()
 {
+    VirtualDesktopManager::self()->setCurrent(VirtualDesktopManager::self()->desktops().first());
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
 
     screens()->setCurrent(0);
@@ -116,6 +119,50 @@ void TestShellClientRules::testApplyInitialDesktop()
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(c->desktop(), 2);
+    QCOMPARE(c->isMinimized(), false);
+    QCOMPARE(c->isActive(), true);
+}
+
+void TestShellClientRules::testApplyInitialMinimize_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<int>("ruleNumber");
+
+    QTest::newRow("wlShell|Force") << Test::ShellSurfaceType::WlShell << 2;
+    QTest::newRow("xdgShellV5|Force") << Test::ShellSurfaceType::XdgShellV5 << 2;
+    QTest::newRow("xdgShellV6|Force") << Test::ShellSurfaceType::XdgShellV6 << 2;
+
+    QTest::newRow("wlShell|Apply") << Test::ShellSurfaceType::WlShell << 3;
+    QTest::newRow("xdgShellV5|Apply") << Test::ShellSurfaceType::XdgShellV5 << 3;
+    QTest::newRow("xdgShellV6|Apply") << Test::ShellSurfaceType::XdgShellV6 << 3;
+
+    QTest::newRow("wlShell|ApplyNow") << Test::ShellSurfaceType::WlShell << 5;
+    QTest::newRow("xdgShellV5|ApplyNow") << Test::ShellSurfaceType::XdgShellV5 << 5;
+    QTest::newRow("xdgShellV6|ApplyNow") << Test::ShellSurfaceType::XdgShellV6 << 5;
+
+    QTest::newRow("wlShell|ForceTemporarily") << Test::ShellSurfaceType::WlShell << 6;
+    QTest::newRow("xdgShellV5|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV5 << 6;
+    QTest::newRow("xdgShellV6|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV6 << 6;
+}
+
+void TestShellClientRules::testApplyInitialMinimize()
+{
+    // install the temporary rule
+    QFETCH(int, ruleNumber);
+    QString rule = QStringLiteral("minimize=1\nminimizerule=%1").arg(ruleNumber);
+    QMetaObject::invokeMethod(RuleBook::self(), "temporaryRulesMessage", Q_ARG(QString, rule));
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(c->desktop(), 1);
+    QCOMPARE(c->isMinimized(), true);
+    QCOMPARE(c->isActive(), false);
+    c->setMinimized(false);
+    QCOMPARE(c->isMinimized(), false);
 }
 
 WAYLANDTEST_MAIN(TestShellClientRules)
