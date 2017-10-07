@@ -80,7 +80,6 @@ public:
     void closeWindow() override;
     AbstractClient *findModal(bool allow_itself = false) override;
     bool isCloseable() const override;
-    bool isFullScreenable() const override;
     bool isFullScreen() const override;
     bool isMaximizable() const override;
     bool isMinimizable() const override;

@@ -149,8 +149,6 @@ public:
 
     void setFullScreen(bool set, bool user = true) override;
     bool isFullScreen() const override;
-    bool isFullScreenable() const override;
-    bool isFullScreenable(bool fullscreen_hack) const;
     bool userCanSetFullScreen() const override;
     QRect geometryFSRestore() const {
         return geom_fs_restore;    // Only for session saving

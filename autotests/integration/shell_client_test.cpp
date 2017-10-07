@@ -66,6 +66,11 @@ private Q_SLOTS:
     void testMinimizeActiveWindow();
     void testFullscreen_data();
     void testFullscreen();
+    void testUserCanSetFullscreen_data();
+    void testUserCanSetFullscreen();
+    void testUserSetFullscreenWlShell();
+    void testUserSetFullscreenXdgShell_data();
+    void testUserSetFullscreenXdgShell();
     void testMaximizedToFullscreen_data();
     void testMaximizedToFullscreen();
     void testWindowOpensLargerThanScreen_data();
@@ -465,6 +470,97 @@ void TestShellClient::testFullscreen()
     QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
 }
 
+void TestShellClient::testUserCanSetFullscreen_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<bool>("expected");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell << false;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << true;
+    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6 << true;
+}
+
+void TestShellClient::testUserCanSetFullscreen()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QVERIFY(!c->isFullScreen());
+    QTEST(c->userCanSetFullScreen(), "expected");
+}
+
+void TestShellClient::testUserSetFullscreenWlShell()
+{
+    // wlshell cannot sync fullscreen to the client
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QVERIFY(!c->isFullScreen());
+    QSignalSpy fullscreenChangedSpy(c, &AbstractClient::fullScreenChanged);
+    QVERIFY(fullscreenChangedSpy.isValid());
+    c->setFullScreen(true);
+    QCOMPARE(fullscreenChangedSpy.count(), 0);
+    QVERIFY(!c->isFullScreen());
+}
+
+void TestShellClient::testUserSetFullscreenXdgShell_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+}
+
+void TestShellClient::testUserSetFullscreenXdgShell()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> shellSurface(dynamic_cast<XdgShellSurface*>(Test::createShellSurface(type, surface.data())));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QVERIFY(!c->isFullScreen());
+
+    // two, one for initial sync, second as it becomes active
+    QTRY_COMPARE(configureRequestedSpy.count(), 2);
+
+    QSignalSpy fullscreenChangedSpy(c, &AbstractClient::fullScreenChanged);
+    QVERIFY(fullscreenChangedSpy.isValid());
+    c->setFullScreen(true);
+    QCOMPARE(c->isFullScreen(), true);
+    configureRequestedSpy.clear();
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
+    QCOMPARE(configureRequestedSpy.first().at(0).toSize(), screens()->size(0));
+    const auto states = configureRequestedSpy.first().at(1).value<KWayland::Client::XdgShellSurface::States>();
+    QVERIFY(states.testFlag(KWayland::Client::XdgShellSurface::State::Fullscreen));
+    QVERIFY(states.testFlag(KWayland::Client::XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(KWayland::Client::XdgShellSurface::State::Maximized));
+    QVERIFY(!states.testFlag(KWayland::Client::XdgShellSurface::State::Resizing));
+    QCOMPARE(fullscreenChangedSpy.count(), 1);
+    QVERIFY(c->isFullScreen());
+
+    shellSurface->ackConfigure(configureRequestedSpy.first().at(2).value<quint32>());
+
+    // unset fullscreen again
+    c->setFullScreen(false);
+    QCOMPARE(c->isFullScreen(), false);
+    configureRequestedSpy.clear();
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
+    QCOMPARE(configureRequestedSpy.first().at(0).toSize(), QSize(100, 50));
+    QVERIFY(!configureRequestedSpy.first().at(1).value<KWayland::Client::XdgShellSurface::States>().testFlag(KWayland::Client::XdgShellSurface::State::Fullscreen));
+    QCOMPARE(fullscreenChangedSpy.count(), 2);
+    QVERIFY(!c->isFullScreen());
+}
 
 void TestShellClient::testMaximizedToFullscreen_data()
 {

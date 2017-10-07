@@ -565,7 +565,7 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 {
     Q_UNUSED(force)
     // TODO: better merge with Client's implementation
-    if (QSize(w, h) == geom.size()) {
+    if (QSize(w, h) == geom.size() && !m_positionAfterResize.isValid()) {
         // size didn't change, update directly
         doSetGeometry(QRect(x, y, w, h));
     } else {
@@ -691,11 +691,6 @@ bool ShellClient::isCloseable() const
         return true;
     }
     return m_qtExtendedSurface ? true : false;
-}
-
-bool ShellClient::isFullScreenable() const
-{
-    return false;
 }
 
 bool ShellClient::isFullScreen() const
@@ -889,8 +884,46 @@ bool ShellClient::noBorder() const
 
 void ShellClient::setFullScreen(bool set, bool user)
 {
-    Q_UNUSED(set)
-    Q_UNUSED(user)
+    if (!isFullScreen() && !set)
+        return;
+    if (user && !userCanSetFullScreen())
+        return;
+    set = rules()->checkFullScreen(set && !isSpecialWindow());
+    setShade(ShadeNone);
+    bool was_fs = isFullScreen();
+    if (was_fs)
+        workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event
+    else
+        m_geomFsRestore = geometry();
+    m_fullScreen = set;
+    if (was_fs == isFullScreen())
+        return;
+    if (set) {
+        untab();
+        workspace()->raiseClient(this);
+    }
+    RequestGeometryBlocker requestBlocker(this);
+    StackingUpdatesBlocker blocker1(workspace());
+    workspace()->updateClientLayer(this);   // active fullscreens get different layer
+    updateDecoration(false, false);
+    if (isFullScreen()) {
+        setGeometry(workspace()->clientArea(FullScreenArea, this));
+    } else {
+        if (!m_geomFsRestore.isNull()) {
+            int currentScreen = screen();
+            setGeometry(QRect(m_geomFsRestore.topLeft(), adjustedSize(m_geomFsRestore.size())));
+            if( currentScreen != screen())
+                workspace()->sendClientToScreen( this, currentScreen );
+        } else {
+            // does this ever happen?
+            setGeometry(workspace()->clientArea(MaximizeArea, this));
+        }
+    }
+    updateWindowRules(Rules::Fullscreen|Rules::Position|Rules::Size);
+
+    if (was_fs != isFullScreen()) {
+        emit fullScreenChanged();
+    }
 }
 
 void ShellClient::setNoBorder(bool set)
@@ -951,6 +984,9 @@ void ShellClient::doSetActive()
 
 bool ShellClient::userCanSetFullScreen() const
 {
+    if (m_xdgShellSurface) {
+        return true;
+    }
     return false;
 }
 
@@ -1117,29 +1153,7 @@ void ShellClient::requestGeometry(const QRect &rect)
 
 void ShellClient::clientFullScreenChanged(bool fullScreen)
 {
-    RequestGeometryBlocker requestBlocker(this);
-    StackingUpdatesBlocker blocker(workspace());
-
-    const bool emitSignal = m_fullScreen != fullScreen;
-    m_fullScreen = fullScreen;
-    updateDecoration(false, false);
-
-    workspace()->updateClientLayer(this);   // active fullscreens get different layer
-
-    if (fullScreen) {
-        m_geomFsRestore = geometry();
-        requestGeometry(workspace()->clientArea(FullScreenArea, this));
-        workspace()->raiseClient(this);
-    } else {
-        if (m_geomFsRestore.isValid()) {
-            requestGeometry(m_geomFsRestore);
-        } else {
-            requestGeometry(workspace()->clientArea(MaximizeArea, this));
-        }
-    }
-    if (emitSignal) {
-        emit fullScreenChanged();
-    }
+    setFullScreen(fullScreen, false);
 }
 
 void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
