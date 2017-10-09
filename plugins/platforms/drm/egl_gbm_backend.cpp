@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "drm_backend.h"
 #include "drm_output.h"
+#include "gbm_surface.h"
 #include "logging.h"
 #include "options.h"
 #include "screens.h"
@@ -69,6 +70,7 @@ void EglGbmBackend::cleanupSurfaces()
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         cleanupOutput(*it);
     }
+    m_outputs.clear();
 }
 
 void EglGbmBackend::cleanupOutput(const Output &o)
@@ -77,9 +79,6 @@ void EglGbmBackend::cleanupOutput(const Output &o)
 
     if (o.eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(eglDisplay(), o.eglSurface);
-    }
-    if (o.gbmSurface) {
-        gbm_surface_destroy(o.gbmSurface);
     }
 }
 
@@ -157,16 +156,16 @@ void EglGbmBackend::createOutput(DrmOutput *drmOutput)
     o.output = drmOutput;
     auto size = drmOutput->pixelSize();
 
-    o.gbmSurface = gbm_surface_create(m_backend->gbmDevice(), size.width(), size.height(),
+    o.gbmSurface = std::make_shared<GbmSurface>(m_backend->gbmDevice(), size.width(), size.height(),
                                         GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
     if (!o.gbmSurface) {
         qCCritical(KWIN_DRM) << "Create gbm surface failed";
         return;
     }
-    o.eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)o.gbmSurface, nullptr);
+    o.eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)((gbm_surface*)o.gbmSurface.get()), nullptr);
     if (o.eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Create Window Surface failed";
-        gbm_surface_destroy(o.gbmSurface);
+        o.gbmSurface.reset();
         return;
     }
     m_outputs << o;

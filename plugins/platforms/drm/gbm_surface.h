@@ -2,8 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright 2017 Roman Gilg <subdiff@gmail.com>
-Copyright 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2017 Martin Flöser <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,46 +17,39 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_DRM_BUFFER_GBM_H
-#define KWIN_DRM_BUFFER_GBM_H
+#ifndef KWIN_DRM_GBM_SURFACE_H
+#define KWIN_DRM_GBM_SURFACE_H
 
-#include "drm_buffer.h"
-
-#include <memory>
+#include <stdint.h>
 
 struct gbm_bo;
+struct gbm_device;
+struct gbm_surface;
 
 namespace KWin
 {
 
-class DrmBackend;
-class GbmSurface;
-
-class DrmSurfaceBuffer : public DrmBuffer
+class GbmSurface
 {
 public:
-    DrmSurfaceBuffer(DrmBackend *backend, const std::shared_ptr<GbmSurface> &surface);
-    ~DrmSurfaceBuffer();
+    explicit GbmSurface(gbm_device *gbm, uint32_t width, uint32_t height, uint32_t format, uint32_t flags);
+    ~GbmSurface();
 
-    bool needsModeChange(DrmBuffer *b) const override {
-        if (DrmSurfaceBuffer *sb = dynamic_cast<DrmSurfaceBuffer*>(b)) {
-            return hasBo() != sb->hasBo();
-        } else {
-            return true;
-        }
+    gbm_bo *lockFrontBuffer();
+    void releaseBuffer(gbm_bo *bo);
+
+    operator bool() const {
+        return m_surface != nullptr;
     }
 
-    bool hasBo() const {
-        return m_bo != nullptr;
+    operator gbm_surface*() const {
+        return m_surface;
     }
-    void releaseGbm() override;
 
 private:
-    std::shared_ptr<GbmSurface> m_surface;
-    gbm_bo *m_bo = nullptr;
+    gbm_surface *m_surface;
 };
 
 }
 
 #endif
-

@@ -719,7 +719,7 @@ DrmDumbBuffer *DrmBackend::createBuffer(const QSize &size)
 }
 
 #if HAVE_GBM
-DrmSurfaceBuffer *DrmBackend::createBuffer(gbm_surface *surface)
+DrmSurfaceBuffer *DrmBackend::createBuffer(const std::shared_ptr<GbmSurface> &surface)
 {
     DrmSurfaceBuffer *b = new DrmSurfaceBuffer(this, surface);
     return b;
