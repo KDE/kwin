@@ -8,7 +8,6 @@ set(SERVER_LIB_SRCS
     datasource_interface.cpp
     display.cpp
     dpms_interface.cpp
-    filtered_display.cpp
     global.cpp
     idle_interface.cpp
     fakeinput_interface.cpp
@@ -189,7 +188,6 @@ set(SERVER_LIB_HEADERS
   datasource_interface.h
   display.h
   dpms_interface.h
-  filtered_display.h
   fakeinput_interface.h
   global.h
   idle_interface.h
