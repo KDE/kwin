@@ -646,7 +646,7 @@ if (HAVE_LIBCAP)
             COMMAND
                 ${SETCAP_EXECUTABLE}
                 CAP_SYS_NICE=+ep
-                $ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/kwin_wayland)"
+                \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/kwin_wayland)"
     )
 endif()
 
