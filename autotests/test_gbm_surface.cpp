@@ -78,7 +78,7 @@ private Q_SLOTS:
 void GbmSurfaceTest::testCreate()
 {
     GbmSurface surface(nullptr, 2, 3, 4, 5);
-    gbm_surface *native = surface;
+    gbm_surface *native = surface.surface();
     QVERIFY(surface);
     QCOMPARE(native->width, 2u);
     QCOMPARE(native->height, 3u);
@@ -91,7 +91,7 @@ void GbmSurfaceTest::testCreateFailure()
     gbm_device dev{true};
     GbmSurface surface(&dev, 2, 3, 4, 5);
     QVERIFY(!surface);
-    gbm_surface *native = surface;
+    gbm_surface *native = surface.surface();
     QVERIFY(!native);
 }
 

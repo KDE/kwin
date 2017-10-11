@@ -162,7 +162,7 @@ void EglGbmBackend::createOutput(DrmOutput *drmOutput)
         qCCritical(KWIN_DRM) << "Create gbm surface failed";
         return;
     }
-    o.eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)((gbm_surface*)o.gbmSurface.get()), nullptr);
+    o.eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)(o.gbmSurface->surface()), nullptr);
     if (o.eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Create Window Surface failed";
         o.gbmSurface.reset();
