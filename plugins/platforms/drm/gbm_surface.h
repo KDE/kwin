@@ -42,7 +42,7 @@ public:
         return m_surface != nullptr;
     }
 
-    operator gbm_surface*() const {
+    gbm_surface* surface() const {
         return m_surface;
     }
 
