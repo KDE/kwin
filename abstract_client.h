@@ -678,6 +678,10 @@ public:
 
     bool unresponsive() const;
 
+    virtual bool isInitialPositionSet() const {
+        return false;
+    }
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 

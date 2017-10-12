@@ -137,7 +137,7 @@ public:
     void installQtExtendedSurface(KWayland::Server::QtExtendedSurfaceInterface *surface);
     void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
 
-    bool isInitialPositionSet() const;
+    bool isInitialPositionSet() const override;
 
     bool isTransient() const override;
     bool hasTransientPlacementHint() const override;
