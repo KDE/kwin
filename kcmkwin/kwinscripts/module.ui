@@ -48,7 +48,7 @@
        <item>
         <widget class="KNS3::Button" name="ghnsButton">
          <property name="text">
-          <string>Get New Script...</string>
+          <string>Get New Scripts...</string>
          </property>
         </widget>
        </item>
