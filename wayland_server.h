@@ -56,6 +56,7 @@ class QtSurfaceExtensionInterface;
 class OutputManagementInterface;
 class OutputConfigurationInterface;
 class XdgShellInterface;
+class XdgForeignInterface;
 }
 }
 
@@ -111,6 +112,11 @@ public:
     ShellClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
     AbstractClient *findAbstractClient(KWayland::Server::SurfaceInterface *surface) const;
     ShellClient *findClient(QWindow *w) const;
+
+    /**
+     * return a transient parent of a surface imported with the foreign protocol, if any
+     */
+    KWayland::Server::SurfaceInterface *findForeignTransientForSurface(KWayland::Server::SurfaceInterface *surface);
 
     /**
      * @returns file descriptor for Xwayland to connect to.
@@ -189,6 +195,7 @@ Q_SIGNALS:
     void shellClientRemoved(KWin::ShellClient*);
     void terminatingInternalClientConnection();
     void initialized();
+    void foreignTransientChanged(KWayland::Server::SurfaceInterface *child);
 
 private:
     void setupX11ClipboardSync();
@@ -232,6 +239,7 @@ private:
         KWayland::Server::ClientConnection *client = nullptr;
         QPointer<KWayland::Server::DataDeviceInterface> ddi;
     } m_xclipbaordSync;
+    KWayland::Server::XdgForeignInterface *m_XdgForeign = nullptr;
     QList<ShellClient*> m_clients;
     QList<ShellClient*> m_internalClients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;

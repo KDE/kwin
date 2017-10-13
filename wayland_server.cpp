@@ -52,6 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/outputmanagement_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
 #include <KWayland/Server/xdgshell_interface.h>
+#include <KWayland/Server/xdgforeign_interface.h>
 
 // Qt
 #include <QThread>
@@ -158,6 +159,11 @@ void WaylandServer::createSurface(T *surface)
     } else {
         connect(client, &ShellClient::windowShown, this, &WaylandServer::shellClientShown);
     }
+
+    //not directly connected as the connection is tied to client instead of this
+    connect(m_XdgForeign, &KWayland::Server::XdgForeignInterface::transientChanged, client, [this](KWayland::Server::SurfaceInterface *child, KWayland::Server::SurfaceInterface *parent) {
+        emit foreignTransientChanged(child);
+    });
 }
 
 bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
@@ -308,7 +314,15 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 
     m_display->createSubCompositor(m_display)->create();
 
+    m_XdgForeign = m_display->createXdgForeignInterface(m_display);
+    m_XdgForeign->create();
+
     return true;
+}
+
+SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface *surface)
+{
+    return m_XdgForeign->transientFor(surface);
 }
 
 void WaylandServer::shellClientShown(Toplevel *t)
