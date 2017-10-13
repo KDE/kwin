@@ -350,6 +350,17 @@ add_test(NAME kwayland-testXdgShellV5 COMMAND testXdgShellV5)
 ecm_mark_as_test(testXdgShellV5)
 
 ########################################################
+# Test XdgForeign
+########################################################
+set( testXdgForeign_SRCS
+      test_xdg_foreign.cpp
+      )
+add_executable(testXdgForeign ${testXdgForeign_SRCS})
+target_link_libraries( testXdgForeign Qt5::Test Qt5::Gui KF5::WaylandServer KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testXdgForeign COMMAND testXdgForeign)
+ecm_mark_as_test(testXdgForeign)
+
+########################################################
 # Test XdgShellV6
 ########################################################
 set( testXdgShellV6_SRCS
