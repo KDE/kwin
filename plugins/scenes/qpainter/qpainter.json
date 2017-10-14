@@ -11,6 +11,7 @@
         "Description[nl]": "KWin-compositor-plug-in rendering via QPainter",
         "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez QPainter",
         "Description[pt]": "'Plugin' de Composição do KWin com desenho via QPainter",
+        "Description[sk]": "Renderovací plugin kompozítora KWin cez QPainter",
         "Description[sr@ijekavian]": "К‑винов прикључак слагача за рендеровање кроз QPainter",
         "Description[sr@ijekavianlatin]": "KWinov priključak slagača za renderovanje kroz QPainter",
         "Description[sr@latin]": "KWinov priključak slagača za renderovanje kroz QPainter",
