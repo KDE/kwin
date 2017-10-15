@@ -479,6 +479,7 @@ Q_SIGNALS:
     void clientRemoved(KWin::AbstractClient*);
     void clientActivated(KWin::AbstractClient*);
     void clientDemandsAttentionChanged(KWin::AbstractClient*, bool);
+    void clientMinimizedChanged(KWin::AbstractClient*);
     void groupAdded(KWin::Group*);
     void unmanagedAdded(KWin::Unmanaged*);
     void unmanagedRemoved(KWin::Unmanaged*);
