@@ -151,7 +151,7 @@ void KCMRulesList::exportClicked()
     int pos = rules_listbox->currentRow();
     assert(pos != -1);
     QString path = QFileDialog::getSaveFileName(this, i18n("Export Rule"), QDir::home().absolutePath(),
-                                                i18n("KWin Rule (*.kwinrule)"));
+                                                i18n("KWin Rules (*.kwinrule)"));
     if (path.isEmpty())
         return;
     KConfig config(path, KConfig::SimpleConfig);
@@ -163,7 +163,7 @@ void KCMRulesList::exportClicked()
 void KCMRulesList::importClicked()
 {
     QString path = QFileDialog::getOpenFileName(this, i18n("Import Rules"), QDir::home().absolutePath(),
-                                                i18n("KWin Rule (*.kwinrule)"));
+                                                i18n("KWin Rules (*.kwinrule)"));
     if (path.isEmpty())
         return;
     KConfig config(path, KConfig::SimpleConfig);
