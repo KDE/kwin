@@ -69,6 +69,10 @@ public:
     QPainterBackend* createQPainterBackend() override;
     void warpPointer(const QPointF &globalPos) override;
 
+    QVector<CompositingType> supportedCompositors() const override {
+        return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
+    }
+
 Q_SIGNALS:
     void sizeChanged();
 

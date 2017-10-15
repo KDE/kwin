@@ -82,6 +82,10 @@ public:
         return m_outputBlank;
     }
 
+    QVector<CompositingType> supportedCompositors() const override {
+        return QVector<CompositingType>{OpenGLCompositing};
+    }
+
 Q_SIGNALS:
     void outputBlankChanged();
 

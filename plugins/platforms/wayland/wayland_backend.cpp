@@ -653,6 +653,16 @@ void WaylandBackend::updateWindowTitle()
     }
 }
 
+QVector<CompositingType> WaylandBackend::supportedCompositors() const
+{
+#if HAVE_WAYLAND_EGL
+    return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
+#else
+    return QVector<CompositingType>{QPainterCompositing};
+#endif
+}
+
+
 }
 
 } // KWin

@@ -148,6 +148,8 @@ public:
 
     void togglePointerConfinement();
 
+    QVector<CompositingType> supportedCompositors() const override;
+
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
     void systemCompositorDied();

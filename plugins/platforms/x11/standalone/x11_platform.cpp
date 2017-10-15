@@ -410,4 +410,17 @@ void X11StandalonePlatform::createEffectsHandler(Compositor *compositor, Scene *
     new EffectsHandlerImplX11(compositor, scene);
 }
 
+QVector<CompositingType> X11StandalonePlatform::supportedCompositors() const
+{
+    QVector<CompositingType> compositors;
+#if HAVE_EPOXY_GLX
+    compositors << OpenGLCompositing;
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    compositors << XRenderCompositing;
+#endif
+    compositors << NoCompositing;
+    return compositors;
+}
+
 }

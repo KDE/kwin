@@ -738,4 +738,13 @@ void DrmBackend::outputDpmsChanged()
     setOutputsEnabled(enabled);
 }
 
+QVector<CompositingType> DrmBackend::supportedCompositors() const
+{
+#if HAVE_GBM
+    return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
+#else
+    return QVector<CompositingType>{QPainterCompositing};
+#endif
+}
+
 }

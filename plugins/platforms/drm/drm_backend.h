@@ -118,6 +118,8 @@ public:
         return m_gbmDevice;
     }
 
+    QVector<CompositingType> supportedCompositors() const override;
+
 public Q_SLOTS:
     void turnOutputsOn();
 

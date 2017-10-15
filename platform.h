@@ -376,6 +376,12 @@ public:
      * Default implementation creates an EffectsHandlerImp;
      **/
     virtual void createEffectsHandler(Compositor *compositor, Scene *scene);
+    /**
+     * The CompositingTypes supported by the Platform.
+     * The first item should be the most preferred one.
+     * @since 5.11
+     **/
+    virtual QVector<CompositingType> supportedCompositors() const = 0;
 
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);

@@ -78,6 +78,10 @@ public:
         return m_bgr;
     }
 
+    QVector<CompositingType> supportedCompositors() const override {
+        return QVector<CompositingType>{QPainterCompositing};
+    }
+
 private:
     void openFrameBuffer();
     bool queryScreenInfo();

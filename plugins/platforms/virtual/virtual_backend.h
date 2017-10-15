@@ -85,6 +85,10 @@ public:
         m_gbmDevice = device;
     }
 
+    QVector<CompositingType> supportedCompositors() const override {
+        return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
+    }
+
 Q_SIGNALS:
     void sizeChanged();
     void outputGeometriesChanged(const QVector<QRect> &geometries);
