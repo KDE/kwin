@@ -166,6 +166,26 @@ void PointerInputRedirection::init()
             }
         }
     );
+    connect(this, &PointerInputRedirection::decorationChanged, this,
+        [this] {
+            disconnect(m_decorationGeometryConnection);
+            m_decorationGeometryConnection = QMetaObject::Connection();
+            if (m_decoration) {
+                m_decorationGeometryConnection = connect(m_decoration->client(), &AbstractClient::geometryChanged, this,
+                    [this] {
+                        // ensure maximize button gets the leave event when maximizing/restore a window, see BUG 385140
+                        const auto oldDeco = m_decoration;
+                        update();
+                        if (oldDeco && oldDeco == m_decoration && !m_decoration->client()->isMove() && !m_decoration->client()->isResize() && !areButtonsPressed()) {
+                            // position of window did not change, we need to send HoverMotion manually
+                            const QPointF p = m_pos - m_decoration->client()->pos();
+                            QHoverEvent event(QEvent::HoverMove, p, p);
+                            QCoreApplication::instance()->sendEvent(m_decoration->decoration(), &event);
+                        }
+                    }, Qt::QueuedConnection);
+            }
+        }
+    );
     // connect the move resize of all window
     auto setupMoveResizeConnection = [this] (AbstractClient *c) {
         connect(c, &AbstractClient::clientStartUserMovedResized, this, &PointerInputRedirection::updateOnStartMoveResize);
@@ -425,6 +445,16 @@ void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::L
     m_input->processFilters(std::bind(&InputEventFilter::pinchGestureCancelled, std::placeholders::_1, time));
 }
 
+bool PointerInputRedirection::areButtonsPressed() const
+{
+    for (auto state : m_buttons) {
+        if (state == InputRedirection::PointerButtonPressed) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void PointerInputRedirection::update()
 {
     if (!m_inited) {
@@ -437,14 +467,6 @@ void PointerInputRedirection::update()
     if (input()->isSelectingWindow()) {
         return;
     }
-    auto areButtonsPressed = [this] {
-        for (auto state : qAsConst(m_buttons)) {
-            if (state == InputRedirection::PointerButtonPressed) {
-                return true;
-            }
-        }
-        return false;
-    };
     if (areButtonsPressed()) {
         return;
     }
