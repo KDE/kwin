@@ -101,7 +101,7 @@ Rectangle {
 
             Button {
                 id: ghnsButton
-                text: i18n("Get New Effects ...")
+                text: i18n("Get New Effects...")
                 iconName: "get-hot-new-stuff"
                 onClicked: effectConfig.openGHNS()
             }
