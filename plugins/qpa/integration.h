@@ -66,19 +66,18 @@ public:
     EGLDisplay eglDisplay() const;
 
 private:
-    void initializeWayland();
-    void createWaylandOutput(quint32 name, quint32 version);
+    void initScreens();
     void initEgl();
     KWayland::Client::Shell *shell() const;
 
     QPlatformFontDatabase *m_fontDb;
     QPlatformNativeInterface *m_nativeInterface;
-    KWayland::Client::Registry *m_registry = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::Shell *m_shell = nullptr;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     Screen *m_dummyScreen = nullptr;
     QScopedPointer<QPlatformInputContext> m_inputContext;
+    QVector<Screen*> m_screens;
 };
 
 }

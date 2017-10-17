@@ -19,21 +19,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screen.h"
 #include "platformcursor.h"
+#include "screens.h"
 #include "wayland_server.h"
-
-#include <KWayland/Client/output.h>
 
 namespace KWin
 {
 namespace QPA
 {
 
-Screen::Screen(KWayland::Client::Output *o)
+Screen::Screen(int screen)
     : QPlatformScreen()
-    , m_output(QPointer<KWayland::Client::Output>(o))
+    , m_screen(screen)
     , m_cursor(new PlatformCursor)
 {
-    // TODO: connect to resolution changes
 }
 
 Screen::~Screen() = default;
@@ -50,12 +48,12 @@ QImage::Format Screen::format() const
 
 QRect Screen::geometry() const
 {
-    return m_output ? QRect(m_output->globalPosition(), m_output->pixelSize() / m_output->scale()) : QRect(0, 0, 1, 1);
+    return m_screen != -1 ? screens()->geometry(m_screen) : QRect(0, 0, 1, 1);
 }
 
 QSizeF Screen::physicalSize() const
 {
-    return m_output ? m_output->physicalSize() : QPlatformScreen::physicalSize();
+    return m_screen != -1 ? screens()->physicalSize(m_screen) : QPlatformScreen::physicalSize();
 }
 
 QPlatformCursor *Screen::cursor() const
@@ -75,7 +73,7 @@ QDpi Screen::logicalDpi() const
 
 qreal Screen::devicePixelRatio() const
 {
-    return m_output ? (qreal)m_output->scale() : 1.0;
+    return m_screen != -1 ? screens()->scale(m_screen) : 1.0;
 }
 
 }

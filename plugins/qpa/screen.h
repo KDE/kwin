@@ -21,15 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_QPA_SCREEN_H
 
 #include <qpa/qplatformscreen.h>
-#include <QPointer>
-
-namespace KWayland
-{
-namespace Client
-{
-class Output;
-}
-}
+#include <QScopedPointer>
 
 namespace KWin
 {
@@ -40,7 +32,7 @@ class PlatformCursor;
 class Screen : public QPlatformScreen
 {
 public:
-    explicit Screen(KWayland::Client::Output *o);
+    explicit Screen(int screen);
     virtual ~Screen();
 
     QRect geometry() const override;
@@ -52,7 +44,7 @@ public:
     qreal devicePixelRatio() const override;
 
 private:
-    QPointer<KWayland::Client::Output> m_output;
+    int m_screen;
     QScopedPointer<PlatformCursor> m_cursor;
 };
 

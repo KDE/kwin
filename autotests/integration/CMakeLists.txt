@@ -51,7 +51,7 @@ integrationTest(WAYLAND_ONLY NAME testPointerConstraints SRCS pointer_constraint
 integrationTest(WAYLAND_ONLY NAME testKeyboardLayout SRCS keyboard_layout_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testKeymapCreationFailure SRCS keymap_creation_failure_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testShowingDesktop SRCS showing_desktop_test.cpp)
-integrationTest(NAME testDontCrashUseractionsMenu SRCS dont_crash_useractions_menu.cpp)
+integrationTest(WAYLAND_ONLY NAME testDontCrashUseractionsMenu SRCS dont_crash_useractions_menu.cpp)
 integrationTest(WAYLAND_ONLY NAME testKWinBindings SRCS kwinbindings_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testVirtualDesktop SRCS virtual_desktop_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testShellClientRules SRCS shell_client_rules_test.cpp)

@@ -28,11 +28,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "window.h"
 #include "../../virtualkeyboard.h"
 #include "../../main.h"
+#include "../../screens.h"
 #include "../../wayland_server.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/output.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
@@ -97,11 +97,16 @@ bool Integration::hasCapability(Capability cap) const
 
 void Integration::initialize()
 {
-    // TODO: start initialize Wayland once the internal Wayland connection is created
-    connect(kwinApp(), &Application::screensCreated, this, &Integration::initializeWayland, Qt::QueuedConnection);
+    connect(kwinApp(), &Application::screensCreated, this,
+        [this] {
+            connect(screens(), &Screens::changed, this, &Integration::initScreens);
+            initScreens();
+        }
+    );
     QPlatformIntegration::initialize();
-    m_dummyScreen = new Screen(nullptr);
-    screenAdded(m_dummyScreen);
+    auto dummyScreen = new Screen(-1);
+    screenAdded(dummyScreen);
+    m_screens << dummyScreen;
     m_inputContext.reset(QPlatformInputContextFactory::create(QStringLiteral("qtvirtualkeyboard")));
     qunsetenv("QT_IM_MODULE");
     if (!m_inputContext.isNull()) {
@@ -203,43 +208,18 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
     return new PlatformContextWayland(context, const_cast<Integration*>(this));
 }
 
-void Integration::initializeWayland()
+void Integration::initScreens()
 {
-    if (m_registry) {
-        return;
+    QVector<Screen*> newScreens;
+    for (int i = 0; i < screens()->count(); i++) {
+        auto screen = new Screen(i);
+        screenAdded(screen);
+        newScreens << screen;
     }
-    using namespace KWayland::Client;
-    auto setupRegistry = [this] {
-        m_registry = waylandServer()->internalClientRegistry();
-        connect(m_registry, &Registry::outputAnnounced, this, &Integration::createWaylandOutput);
-        const auto outputs = m_registry->interfaces(Registry::Interface::Output);
-        for (const auto &o : outputs) {
-            createWaylandOutput(o.name, o.version);
-        }
-    };
-    if (waylandServer()->internalClientRegistry()) {
-        setupRegistry();
-    } else {
-        connect(waylandServer()->internalClientConection(), &ConnectionThread::connected, this, setupRegistry, Qt::QueuedConnection);
+    while (!m_screens.isEmpty()) {
+        destroyScreen(m_screens.takeLast());
     }
-}
-
-void Integration::createWaylandOutput(quint32 name, quint32 version)
-{
-    if (m_dummyScreen) {
-        destroyScreen(m_dummyScreen);
-        m_dummyScreen = nullptr;
-    }
-    using namespace KWayland::Client;
-    auto o = m_registry->createOutput(name, version, m_registry);
-    connect(o, &Output::changed, this,
-        [this, o] {
-            disconnect(o, &Output::changed, nullptr, nullptr);
-            // TODO: handle screen removal
-            screenAdded(new Screen(o));
-        }
-    );
-    waylandServer()->internalClientConection()->flush();
+    m_screens = newScreens;
 }
 
 KWayland::Client::Compositor *Integration::compositor() const
