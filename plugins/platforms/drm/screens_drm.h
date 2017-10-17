@@ -40,6 +40,8 @@ public:
     QString name(int screen) const override;
     float refreshRate(int screen) const override;
 
+    QSizeF physicalSize(int screen) const override;
+
 private:
     DrmBackend *m_backend;
 };

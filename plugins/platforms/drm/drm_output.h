@@ -103,6 +103,10 @@ public:
         return m_uuid;
     }
 
+    QSize physicalSize() const {
+        return m_physicalSize;
+    }
+
 Q_SIGNALS:
     void dpmsChanged();
 
@@ -159,6 +163,7 @@ private:
     bool m_pageFlipPending = false;
     bool m_dpmsAtomicOffPending = false;
     bool m_modesetRequested = true;
+    QSize m_physicalSize;
 };
 
 }

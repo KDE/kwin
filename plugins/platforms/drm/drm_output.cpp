@@ -243,6 +243,7 @@ bool DrmOutput::init(drmModeConnector *connector)
         qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId << "/" << m_edid.monitorName << "/" << m_edid.serialNumber << " from " << physicalSize << "to " << overwriteSize;
         physicalSize = overwriteSize;
     }
+    m_physicalSize = physicalSize;
     m_waylandOutput->setPhysicalSize(physicalSize);
     m_waylandOutputDevice->setPhysicalSize(physicalSize);
 

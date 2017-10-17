@@ -194,8 +194,9 @@ static KWayland::Server::OutputInterface *createOutput(hwc_composer_device_1_t *
 
     if (attr_values[2] != 0 && attr_values[3] != 0) {
          static const qreal factor = 25.4;
-         o->setPhysicalSize(QSizeF(qreal(pixel.width() * 1000) / qreal(attr_values[2]) * factor,
-                                   qreal(pixel.height() * 1000) / qreal(attr_values[3]) * factor).toSize());
+         m_physicalSize = QSizeF(qreal(pixel.width() * 1000) / qreal(attr_values[2]) * factor,
+                                 qreal(pixel.height() * 1000) / qreal(attr_values[3]) * factor);
+         o->setPhysicalSize(m_physicalSize.toSize());
     } else {
          // couldn't read physical size, assume 96 dpi
          o->setPhysicalSize(pixel / 3.8);

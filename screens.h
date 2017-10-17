@@ -117,6 +117,13 @@ public:
      **/
     virtual QSize displaySize() const;
 
+
+    /**
+     * The physical size of @p screen in mm.
+     * Default implementation returns a size derived from 96 DPI.
+     **/
+    virtual QSizeF physicalSize(int screen) const;
+
 public Q_SLOTS:
     void reconfigure();
 

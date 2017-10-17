@@ -37,4 +37,13 @@ float HwcomposerScreens::refreshRate(int screen) const
     return m_backend->refreshRate() / 1000.0f;
 }
 
+QSizeF HwcomposerScreens::physicalSize(int screen) const
+{
+    const QSizeF size = m_backend->physicalSize();
+    if (size.isValid()) {
+        return size;
+    }
+    return Screens::physicalSize(screen);
+}
+
 }

@@ -113,4 +113,13 @@ float DrmScreens::refreshRate(int screen) const
     return outputs.at(screen)->currentRefreshRate() / 1000.0f;
 }
 
+QSizeF DrmScreens::physicalSize(int screen) const
+{
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
+        return Screens::physicalSize(screen);
+    }
+    return outputs.at(screen)->physicalSize();
+}
+
 }

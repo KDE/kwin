@@ -414,7 +414,7 @@ void WaylandServer::syncOutputsToWayland()
         output->setScale(s->scale(i));
         const QRect &geo = s->geometry(i);
         output->setGlobalPosition(geo.topLeft());
-        output->setPhysicalSize(geo.size() / 3.8);
+        output->setPhysicalSize(s->physicalSize(i).toSize());
         output->addMode(geo.size());
         output->create();
     }

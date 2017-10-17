@@ -85,6 +85,9 @@ public:
     QVector<CompositingType> supportedCompositors() const override {
         return QVector<CompositingType>{OpenGLCompositing};
     }
+    QSizeF physicalSize() const {
+        return m_physicalSize;
+    }
 
 Q_SIGNALS:
     void outputBlankChanged();
@@ -110,6 +113,7 @@ private:
     QMutex m_vsyncMutex;
     QWaitCondition m_vsyncWaitCondition;
     QScopedPointer<BacklightInputEventFilter> m_filter;
+    QSizeF m_physicalSize;
 };
 
 class HwcomposerWindow : public HWComposerNativeWindow

@@ -32,6 +32,7 @@ public:
     HwcomposerScreens(HwcomposerBackend *backend, QObject *parent = nullptr);
     virtual ~HwcomposerScreens();
     float refreshRate(int screen) const override;
+    QSizeF physicalSize(int screen) const override;
 
 private:
     HwcomposerBackend *m_backend;

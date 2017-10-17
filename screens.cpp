@@ -190,6 +190,11 @@ QSize Screens::displaySize() const
     return size();
 }
 
+QSizeF Screens::physicalSize(int screen) const
+{
+    return QSizeF(size(screen)) / 3.8;
+}
+
 BasicScreens::BasicScreens(Platform *backend, QObject *parent)
     : Screens(parent)
     , m_backend(backend)
