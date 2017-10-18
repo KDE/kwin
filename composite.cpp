@@ -477,17 +477,6 @@ void Compositor::deleteUnusedSupportProperties()
     }
 }
 
-// OpenGL self-check failed, fallback to XRender
-void Compositor::fallbackToXRenderCompositing()
-{
-    finish();
-    KConfigGroup config(kwinApp()->config(), "Compositing");
-    config.writeEntry("Backend", "XRender");
-    config.sync();
-    options->setCompositingMode(XRenderCompositing);
-    setup();
-}
-
 void Compositor::slotConfigChanged()
 {
     if (!m_suspended) {

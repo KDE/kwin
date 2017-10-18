@@ -193,7 +193,6 @@ private Q_SLOTS:
      * That is the Compositor will be stopped and started again.
      **/
     void restart();
-    void fallbackToXRenderCompositing();
     void performCompositing();
     void slotConfigChanged();
     void releaseCompositorSelection();
