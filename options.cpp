@@ -933,19 +933,16 @@ bool Options::loadCompositingConfig (bool force)
             break;
         }
     }
-    if (kwinApp()->shouldUseWaylandForCompositing() && (compositingMode == XRenderCompositing || compositingMode == NoCompositing)) {
-        qCDebug(KWIN_CORE) << "Compositing forced to QPainter mode by invalid compositor selection";
-        compositingMode = QPainterCompositing;
-    }
     setCompositingMode(compositingMode);
 
-    if (m_compositingMode == NoCompositing) {
+    const bool platformSupportsNoCompositing = kwinApp()->platform()->supportedCompositors().contains(NoCompositing);
+    if (m_compositingMode == NoCompositing && platformSupportsNoCompositing) {
         setUseCompositing(false);
         return false; // do not even detect compositing preferences if explicitly disabled
     }
 
     // it's either enforced by env or by initial resume from "suspend" or we check the settings
-    setUseCompositing(useCompositing || force || config.readEntry("Enabled", Options::defaultUseCompositing()));
+    setUseCompositing(useCompositing || force || config.readEntry("Enabled", Options::defaultUseCompositing() || !platformSupportsNoCompositing));
 
     if (!m_useCompositing)
         return false; // not enforced or necessary and not "enabled" by settings

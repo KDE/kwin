@@ -198,25 +198,42 @@ void Compositor::slotCompositingOptionsInitialized()
         }
     }
 
+    auto supportedCompositors = kwinApp()->platform()->supportedCompositors();
+    const auto userConfigIt = std::find(supportedCompositors.begin(), supportedCompositors.end(), options->compositingMode());
+    if (userConfigIt != supportedCompositors.end()) {
+        supportedCompositors.erase(userConfigIt);
+        supportedCompositors.prepend(options->compositingMode());
+    } else {
+        qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
+    }
+
     const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.scenes"));
 
-    const auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
-        [] (const auto &plugin) {
-            const auto &metaData = plugin.rawData();
-            auto it = metaData.find(QStringLiteral("CompositingType"));
-            if (it != metaData.end()) {
-                if ((*it).toInt() == int{options->compositingMode()}) {
-                    return true;
+    for (auto type : qAsConst(supportedCompositors)) {
+        const auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
+            [type] (const auto &plugin) {
+                const auto &metaData = plugin.rawData();
+                auto it = metaData.find(QStringLiteral("CompositingType"));
+                if (it != metaData.end()) {
+                    if ((*it).toInt() == int{type}) {
+                        return true;
+                    }
                 }
-            }
-            return false;
-        });
-    if (pluginIt != availablePlugins.end()) {
-        std::unique_ptr<SceneFactory> factory{qobject_cast<SceneFactory*>(pluginIt->instantiate())};
-        if (factory) {
-            m_scene = factory->create(this);
-            if (m_scene) {
-                qCDebug(KWIN_CORE) << "Instantiated compositing plugin:" << pluginIt->name();
+                return false;
+            });
+        if (pluginIt != availablePlugins.end()) {
+            std::unique_ptr<SceneFactory> factory{qobject_cast<SceneFactory*>(pluginIt->instantiate())};
+            if (factory) {
+                m_scene = factory->create(this);
+                if (m_scene) {
+                    if (!m_scene->initFailed()) {
+                        qCDebug(KWIN_CORE) << "Instantiated compositing plugin:" << pluginIt->name();
+                        break;
+                    } else {
+                        delete m_scene;
+                        m_scene = nullptr;
+                    }
+                }
             }
         }
     }
@@ -230,7 +247,7 @@ void Compositor::slotCompositingOptionsInitialized()
             cm_selection->owning = false;
             cm_selection->release();
         }
-        if (kwinApp()->platform()->requiresCompositing()) {
+        if (!supportedCompositors.contains(NoCompositing)) {
             qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
             qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
             qApp->quit();
