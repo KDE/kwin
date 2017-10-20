@@ -40,6 +40,7 @@ class ConfinedPointerInterface;
 class ContrastInterface;
 class ContrastManagerInterface;
 class CompositorInterface;
+class IdleInhibitManagerUnstableV1Interface;
 class LockedPointerInterface;
 class PointerConstraintsUnstableV1Interface;
 class ShadowManagerInterface;
@@ -243,6 +244,13 @@ public:
     QPointer<LockedPointerInterface> lockedPointer() const;
 
     /**
+     * @returns Whether this SurfaceInterface wants idle to be inhibited on the Output it is shown
+     * @see inhibitsIdleChanged
+     * @since 5.41
+     **/
+    bool inhibitsIdle() const;
+
+    /**
      * @returns The SurfaceInterface for the @p native resource.
      **/
     static SurfaceInterface *get(wl_resource *native);
@@ -308,6 +316,13 @@ Q_SIGNALS:
      **/
     void pointerConstraintsChanged();
 
+    /**
+     * Emitted whenever the SurfaceInterface starts/ends to inhibit idle.
+     * @see inhibitsIdle
+     * @since 5.41
+     **/
+    void inhibitsIdleChanged();
+
 private:
     friend class CompositorInterface;
     friend class SubSurfaceInterface;
@@ -315,6 +330,7 @@ private:
     friend class BlurManagerInterface;
     friend class SlideManagerInterface;
     friend class ContrastManagerInterface;
+    friend class IdleInhibitManagerUnstableV1Interface;
     friend class PointerConstraintsUnstableV1Interface;
     explicit SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource);
 

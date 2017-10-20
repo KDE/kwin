@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "buffer_interface.h"
 #include "clientconnection.h"
 #include "compositor_interface.h"
+#include "idleinhibit_interface_p.h"
 #include "pointerconstraints_interface_p.h"
 #include "region_interface.h"
 #include "subcompositor_interface.h"
@@ -211,6 +212,22 @@ void SurfaceInterface::Private::installPointerConstraint(LockedPointerInterface 
         }
     );
     emit q_func()->pointerConstraintsChanged();
+}
+
+void SurfaceInterface::Private::installIdleInhibitor(IdleInhibitorInterface *inhibitor)
+{
+    idleInhibitors << inhibitor;
+    QObject::connect(inhibitor, &IdleInhibitorInterface::aboutToBeUnbound, q,
+        [this, inhibitor] {
+            idleInhibitors.removeOne(inhibitor);
+            if (idleInhibitors.isEmpty()) {
+                emit q_func()->inhibitsIdleChanged();
+            }
+        }
+    );
+    if (idleInhibitors.count() == 1) {
+        emit q_func()->inhibitsIdleChanged();
+    }
 }
 
 void SurfaceInterface::Private::installPointerConstraint(ConfinedPointerInterface *confinement)
@@ -854,6 +871,12 @@ QPointer<ConfinedPointerInterface> SurfaceInterface::confinedPointer() const
 {
     Q_D();
     return d->confinedPointer;
+}
+
+bool SurfaceInterface::inhibitsIdle() const
+{
+    Q_D();
+    return !d->idleInhibitors.isEmpty();
 }
 
 SurfaceInterface::Private *SurfaceInterface::d_func() const

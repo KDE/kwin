@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "outputmanagement_interface.h"
 #include "outputdevice_interface.h"
 #include "idle_interface.h"
+#include "idleinhibit_interface_p.h"
 #include "fakeinput_interface.h"
 #include "logging_p.h"
 #include "output_interface.h"
@@ -418,6 +419,18 @@ XdgForeignInterface *Display::createXdgForeignInterface(QObject *parent)
     XdgForeignInterface *foreign = new XdgForeignInterface(this, parent);
     connect(this, &Display::aboutToTerminate, foreign, [this,foreign] { delete foreign; });
     return foreign;
+}
+
+IdleInhibitManagerInterface *Display::createIdleInhibitManager(const IdleInhibitManagerInterfaceVersion &version, QObject *parent)
+{
+    IdleInhibitManagerInterface *i = nullptr;
+    switch (version) {
+    case IdleInhibitManagerInterfaceVersion::UnstableV1:
+        i = new IdleInhibitManagerUnstableV1Interface(this, parent);
+        break;
+    }
+    connect(this, &Display::aboutToTerminate, i, [this,i] { delete i; });
+    return i;
 }
 
 void Display::createShm()

@@ -58,3 +58,5 @@ zwp_pointer_gesture_pinch_v1;PointerPinchGestureUnstableV1
 zwp_pointer_constraints_v1;PointerConstraints
 zwp_locked_pointer_v1;LockedPointer
 zwp_confined_pointer_v1;ConfinedPointer
+zwp_idle_inhibit_manager_v1;IdleInhibitManager
+zwp_idle_inhibitor_v1;IdleInhibitor

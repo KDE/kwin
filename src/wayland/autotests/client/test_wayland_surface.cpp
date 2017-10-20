@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/event_queue.h"
+#include "../../src/client/idleinhibit.h"
 #include "../../src/client/output.h"
 #include "../../src/client/surface.h"
 #include "../../src/client/region.h"
@@ -33,9 +34,12 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/buffer_interface.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
+#include "../../src/server/idleinhibit_interface.h"
 #include "../../src/server/surface_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
+
+using KWayland::Client::Registry;
 
 class TestWaylandSurface : public QObject
 {
@@ -62,14 +66,17 @@ private Q_SLOTS:
     void testDestroyWithPendingCallback();
     void testOutput();
     void testDisconnect();
+    void testInhibit();
 
 private:
     KWayland::Server::Display *m_display;
     KWayland::Server::CompositorInterface *m_compositorInterface;
+    KWayland::Server::IdleInhibitManagerInterface *m_idleInhibitInterface = nullptr;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ShmPool *m_shm;
     KWayland::Client::EventQueue *m_queue;
+    KWayland::Client::IdleInhibitManager *m_idleInhibitManager = nullptr;
     QThread *m_thread;
 };
 
@@ -99,6 +106,11 @@ void TestWaylandSurface::init()
     QVERIFY(m_compositorInterface);
     m_compositorInterface->create();
     QVERIFY(m_compositorInterface->isValid());
+
+    m_idleInhibitInterface = m_display->createIdleInhibitManager(IdleInhibitManagerInterfaceVersion::UnstableV1, m_display);
+    QVERIFY(m_idleInhibitInterface);
+    m_idleInhibitInterface->create();
+    QVERIFY(m_idleInhibitInterface->isValid());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -143,6 +155,9 @@ void TestWaylandSurface::init()
     QVERIFY(m_compositor->isValid());
     m_shm = registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
     QVERIFY(m_shm->isValid());
+
+    m_idleInhibitManager = registry.createIdleInhibitManager(registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).name, registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).version, this);
+    QVERIFY(m_idleInhibitManager->isValid());
 }
 
 void TestWaylandSurface::cleanup()
@@ -1089,6 +1104,54 @@ void TestWaylandSurface::testOutput()
     serverOutput->deleteLater();
     QVERIFY(leftSpy.wait());
     QCOMPARE(serverSurface->outputs(), QVector<OutputInterface*>());
+}
+
+void TestWaylandSurface::testInhibit()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    // wait for the surface on the Server side
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    QCOMPARE(serverSurface->inhibitsIdle(), false);
+
+    QSignalSpy inhibitsChangedSpy(serverSurface, &SurfaceInterface::inhibitsIdleChanged);
+    QVERIFY(inhibitsChangedSpy.isValid());
+
+    // now create an idle inhibition
+    QScopedPointer<IdleInhibitor> inhibitor1(m_idleInhibitManager->createInhibitor(s.data()));
+    QVERIFY(inhibitsChangedSpy.wait());
+    QCOMPARE(serverSurface->inhibitsIdle(), true);
+
+    // creating a second idle inhibition should not trigger the signal
+    QScopedPointer<IdleInhibitor> inhibitor2(m_idleInhibitManager->createInhibitor(s.data()));
+    QVERIFY(!inhibitsChangedSpy.wait());
+    QCOMPARE(serverSurface->inhibitsIdle(), true);
+
+    // and also deleting the first inhibitor should not yet change the inhibition
+    inhibitor1.reset();
+    QVERIFY(!inhibitsChangedSpy.wait());
+    QCOMPARE(serverSurface->inhibitsIdle(), true);
+
+    // but deleting also the second inhibitor should trigger
+    inhibitor2.reset();
+    QVERIFY(inhibitsChangedSpy.wait());
+    QCOMPARE(serverSurface->inhibitsIdle(), false);
+    QCOMPARE(inhibitsChangedSpy.count(), 2);
+
+    // recreate inhibitor1 should inhibit again
+    inhibitor1.reset(m_idleInhibitManager->createInhibitor(s.data()));
+    QVERIFY(inhibitsChangedSpy.wait());
+    QCOMPARE(serverSurface->inhibitsIdle(), true);
+    // and destroying should uninhibit
+    inhibitor1.reset();
+    QVERIFY(inhibitsChangedSpy.wait());
+    QCOMPARE(serverSurface->inhibitsIdle(), false);
+    QCOMPARE(inhibitsChangedSpy.count(), 4);
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSurface)

@@ -53,6 +53,8 @@ class CompositorInterface;
 class DataDeviceManagerInterface;
 class DpmsManagerInterface;
 class IdleInterface;
+enum class IdleInhibitManagerInterfaceVersion;
+class IdleInhibitManagerInterface;
 class FakeInputInterface;
 class OutputInterface;
 class OutputDeviceInterface;
@@ -227,6 +229,15 @@ public:
      * @since 5.40
      **/
     XdgForeignInterface *createXdgForeignInterface(QObject *parent = nullptr);
+
+    /**
+     * Creates the IdleInhibitManagerInterface in interface @p version.
+     *
+     * @returns The created manager object
+     * @since 5.41
+     **/
+    IdleInhibitManagerInterface *createIdleInhibitManager(const IdleInhibitManagerInterfaceVersion &version, QObject *parent = nullptr);
+
     /**
      * Gets the ClientConnection for the given @p client.
      * If there is no ClientConnection yet for the given @p client, it will be created.

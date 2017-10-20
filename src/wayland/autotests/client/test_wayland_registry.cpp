@@ -30,6 +30,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/output.h"
 #include "../../src/client/pointerconstraints.h"
 #include "../../src/client/pointergestures.h"
+#include "../../src/client/idleinhibit.h"
 #include "../../src/client/seat.h"
 #include "../../src/client/relativepointer.h"
 #include "../../src/client/server_decoration.h"
@@ -41,6 +42,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/datadevicemanager_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/dpms_interface.h"
+#include "../../src/server/idleinhibit_interface.h"
 #include "../../src/server/output_interface.h"
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/shell_interface.h"
@@ -59,6 +61,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // Wayland
 #include <wayland-client-protocol.h>
 #include <wayland-dpms-client-protocol.h>
+#include <wayland-idle-inhibit-unstable-v1-client-protocol.h>
 #include <wayland-server-decoration-client-protocol.h>
 #include <wayland-text-input-v0-client-protocol.h>
 #include <wayland-text-input-v2-client-protocol.h>
@@ -95,6 +98,7 @@ private Q_SLOTS:
     void testBindRelativePointerManagerUnstableV1();
     void testBindPointerGesturesUnstableV1();
     void testBindPointerConstraintsUnstableV1();
+    void testBindIdleIhibitManagerUnstableV1();
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
@@ -122,6 +126,7 @@ private:
     KWayland::Server::PointerConstraintsInterface *m_pointerConstraintsV1;
     KWayland::Server::BlurManagerInterface *m_blur;
     KWayland::Server::ContrastManagerInterface *m_contrast;
+    KWayland::Server::IdleInhibitManagerInterface *m_idleInhibit;
 
 };
 
@@ -147,6 +152,7 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_pointerConstraintsV1(nullptr)
     , m_blur(nullptr)
     , m_contrast(nullptr)
+    , m_idleInhibit(nullptr)
 {
 }
 
@@ -199,6 +205,9 @@ void TestWaylandRegistry::init()
     m_pointerConstraintsV1 = m_display->createPointerConstraints(KWayland::Server::PointerConstraintsInterfaceVersion::UnstableV1);
     m_pointerConstraintsV1->create();
     QCOMPARE(m_pointerConstraintsV1->interfaceVersion(), KWayland::Server::PointerConstraintsInterfaceVersion::UnstableV1);
+    m_idleInhibit = m_display->createIdleInhibitManager(KWayland::Server::IdleInhibitManagerInterfaceVersion::UnstableV1);
+    m_idleInhibit->create();
+    QCOMPARE(m_idleInhibit->interfaceVersion(), KWayland::Server::IdleInhibitManagerInterfaceVersion::UnstableV1);
 }
 
 void TestWaylandRegistry::cleanup()
@@ -356,6 +365,11 @@ void TestWaylandRegistry::testBindPointerConstraintsUnstableV1()
     TEST_BIND(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1, SIGNAL(pointerConstraintsUnstableV1Announced(quint32,quint32)), bindPointerConstraintsUnstableV1, zwp_pointer_constraints_v1_destroy)
 }
 
+void TestWaylandRegistry::testBindIdleIhibitManagerUnstableV1()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::IdleInhibitManagerUnstableV1, SIGNAL(idleInhibitManagerUnstableV1Announced(quint32,quint32)), bindIdleInhibitManagerUnstableV1, zwp_idle_inhibit_manager_v1_destroy)
+}
+
 #undef TEST_BIND
 
 void TestWaylandRegistry::testRemoval()
@@ -393,6 +407,8 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(serverSideDecorationManagerAnnouncedSpy.isValid());
     QSignalSpy blurAnnouncedSpy(&registry, &Registry::blurAnnounced);
     QVERIFY(blurAnnouncedSpy.isValid());
+    QSignalSpy idleInhibitManagerUnstableV1AnnouncedSpy(&registry, &Registry::idleInhibitManagerUnstableV1Announced);
+    QVERIFY(idleInhibitManagerUnstableV1AnnouncedSpy.isValid());
 
     QVERIFY(!registry.isValid());
     registry.create(connection.display());
@@ -408,6 +424,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!outputManagementAnnouncedSpy.isEmpty());
     QVERIFY(!serverSideDecorationManagerAnnouncedSpy.isEmpty());
     QVERIFY(!blurAnnouncedSpy.isEmpty());
+    QVERIFY(!idleInhibitManagerUnstableV1AnnouncedSpy.isEmpty());
 
 
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Compositor));
@@ -421,6 +438,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::OutputManagement));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::ServerSideDecorationManager));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Blur));
+    QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::IdleInhibitManagerUnstableV1));
 
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Compositor).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Output).isEmpty());
@@ -433,6 +451,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::OutputManagement).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::ServerSideDecorationManager).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Blur).isEmpty());
+    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::IdleInhibitManagerUnstableV1).isEmpty());
 
     QSignalSpy seatRemovedSpy(&registry, SIGNAL(seatRemoved(quint32)));
     QVERIFY(seatRemovedSpy.isValid());
@@ -444,6 +463,7 @@ void TestWaylandRegistry::testRemoval()
     SubCompositor *subcompositor = registry.createSubCompositor(registry.interface(Registry::Interface::SubCompositor).name, registry.interface(Registry::Interface::SubCompositor).version, &registry);
     ServerSideDecorationManager *serverSideDeco = registry.createServerSideDecorationManager(registry.interface(Registry::Interface::ServerSideDecorationManager).name, registry.interface(Registry::Interface::ServerSideDecorationManager).version, &registry);
     BlurManager *blurManager = registry.createBlurManager(registry.interface(Registry::Interface::Blur).name, registry.interface(Registry::Interface::Blur).version, &registry);
+    auto idleInhibitManager = registry.createIdleInhibitManager(registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).name, registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).version, &registry);
 
     connection.flush();
     m_display->dispatchEvents();
@@ -457,6 +477,8 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(compositorObjectRemovedSpy.isValid());
     QSignalSpy subcompositorObjectRemovedSpy(subcompositor, &SubCompositor::removed);
     QVERIFY(subcompositorObjectRemovedSpy.isValid());
+    QSignalSpy idleInhibitManagerObjectRemovedSpy(idleInhibitManager, &IdleInhibitManager::removed);
+    QVERIFY(idleInhibitManagerObjectRemovedSpy.isValid());
 
     delete m_seat;
     QVERIFY(seatRemovedSpy.wait());
@@ -547,6 +569,14 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::Blur).isEmpty());
     QCOMPARE(blurObjectRemovedSpy.count(), 1);
 
+    QSignalSpy idleInhibitManagerUnstableV1RemovedSpy(&registry, &Registry::idleInhibitManagerUnstableV1Removed);
+    QVERIFY(idleInhibitManagerUnstableV1RemovedSpy.isValid());
+    delete m_idleInhibit;
+    QVERIFY(idleInhibitManagerUnstableV1RemovedSpy.wait());
+    QCOMPARE(idleInhibitManagerUnstableV1RemovedSpy.first().first(), idleInhibitManagerUnstableV1AnnouncedSpy.first().first());
+    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::IdleInhibitManagerUnstableV1).isEmpty());
+    QCOMPARE(idleInhibitManagerObjectRemovedSpy.count(), 1);
+
     // cannot test shmRemoved as there is no functionality for it
 
     // verify everything has been removed only once
@@ -557,6 +587,7 @@ void TestWaylandRegistry::testRemoval()
     QCOMPARE(subcompositorObjectRemovedSpy.count(), 1);
     QCOMPARE(serverSideDecoManagerObjectRemovedSpy.count(), 1);
     QCOMPARE(blurObjectRemovedSpy.count(), 1);
+    QCOMPARE(idleInhibitManagerObjectRemovedSpy.count(), 1);
 }
 
 void TestWaylandRegistry::testOutOfSyncRemoval()

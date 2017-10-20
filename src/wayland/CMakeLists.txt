@@ -10,6 +10,8 @@ set(SERVER_LIB_SRCS
     dpms_interface.cpp
     global.cpp
     idle_interface.cpp
+    idleinhibit_interface.cpp
+    idleinhibit_interface_v1.cpp
     fakeinput_interface.cpp
     keyboard_interface.cpp
     outputconfiguration_interface.cpp
@@ -154,6 +156,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME xdg-foreign-unstable-v2
 )
 
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/idle-inhibit-unstable-v1.xml
+    BASENAME idle-inhibit-unstable-v1
+)
+
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
 generate_export_header(KF5WaylandServer
     BASE_NAME
@@ -198,6 +205,7 @@ set(SERVER_LIB_HEADERS
   fakeinput_interface.h
   global.h
   idle_interface.h
+  idleinhibit_interface.h
   keyboard_interface.h
   outputdevice_interface.h
   outputchangeset.h

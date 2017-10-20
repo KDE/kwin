@@ -32,6 +32,8 @@ namespace KWayland
 namespace Server
 {
 
+class IdleInhibitorInterface;
+
 class SurfaceInterface::Private : public Resource::Private
 {
 public:
@@ -77,6 +79,7 @@ public:
     void setSlide(const QPointer<SlideInterface> &slide);
     void installPointerConstraint(LockedPointerInterface *lock);
     void installPointerConstraint(ConfinedPointerInterface *confinement);
+    void installIdleInhibitor(IdleInhibitorInterface *inhibitor);
 
     void commitSubSurface();
     void commit();
@@ -98,6 +101,7 @@ public:
     QPointer<LockedPointerInterface> lockedPointer;
     QPointer<ConfinedPointerInterface> confinedPointer;
     QHash<OutputInterface*, QMetaObject::Connection> outputDestroyedConnections;
+    QVector<IdleInhibitorInterface*> idleInhibitors;
 
 private:
     QMetaObject::Connection constrainsOneShotConnection;
