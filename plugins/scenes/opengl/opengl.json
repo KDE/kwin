@@ -16,6 +16,7 @@
         "Description[sv]": "Kwin sammansättningsinsticksprogram återger via OpenGL",
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням OpenGL",
         "Description[x-test]": "xxKWin Compositor plugin rendering through OpenGLxx",
+        "Description[zh_CN]": "使用 OpenGL 渲染的 KWin 混成插件",
         "Id": "KWinSceneOpenGL",
         "Name": "SceneOpenGL",
         "Name[pl]": "OpenGL sceny",
