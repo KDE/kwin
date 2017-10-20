@@ -58,10 +58,57 @@ class KWAYLANDSERVER_EXPORT IdleInterface : public Global
 public:
     virtual ~IdleInterface();
 
+    /**
+     * Inhibits the IdleInterface. While inhibited no IdleTimeoutInterface interface gets
+     * notified about an idle timeout.
+     *
+     * This can be used to inhibit power management, screen locking, etc. directly from
+     * Compositor side.
+     *
+     * To resume idle timeouts invoke @link{uninhibit}. It is possible to invoke inhibit several
+     * times, in that case uninhibit needs to called the same amount as inhibit has been called.
+     * @see uninhibit
+     * @see isInhibited
+     * @see inhibitedChanged
+     * @since 5.41
+     **/
+    void inhibit();
+
+    /**
+     * Unhibits the IdleInterface. The idle timeouts are only restarted if uninhibit has been
+     * called the same amount as inhibit.
+     *
+     * @see inhibit
+     * @see isInhibited
+     * @see inhibitedChanged
+     * @since 5.41
+     **/
+    void uninhibit();
+
+    /**
+     * @returns Whether idle timeouts are currently inhibited
+     * @see inhibit
+     * @see uninhibit
+     * @see inhibitedChanged
+     * @since 5.41
+     **/
+    bool isInhibited() const;
+
+Q_SIGNALS:
+    /**
+     * Emitted when the system gets inhibited or uninhibited.
+     * @see inhibit
+     * @see uninhibit
+     * @see isInhibited
+     * @since 5.41
+     **/
+    void inhibitedChanged();
+
 private:
     explicit IdleInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
     class Private;
+    Private *d_func() const;
 };
 
 // TODO: KF6 make private class

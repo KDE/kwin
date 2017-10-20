@@ -42,6 +42,8 @@ private Q_SLOTS:
 
     void testTimeout();
     void testSimulateUserActivity();
+    void testIdleInhibit();
+    void testIdleInhibitBlocksTimeout();
 
 private:
     Display *m_display = nullptr;
@@ -180,6 +182,74 @@ void IdleTest::testSimulateUserActivity()
     QVERIFY(resumedFormIdleSpy.isEmpty());
     timeout->simulateUserActivity();
     QVERIFY(resumedFormIdleSpy.wait());
+
+    timeout.reset();
+    m_connection->flush();
+    m_display->dispatchEvents();
+}
+
+void IdleTest::testIdleInhibit()
+{
+    QCOMPARE(m_idleInterface->isInhibited(), false);
+    QSignalSpy idleInhibitedSpy(m_idleInterface, &IdleInterface::inhibitedChanged);
+    QVERIFY(idleInhibitedSpy.isValid());
+    m_idleInterface->inhibit();
+    QCOMPARE(m_idleInterface->isInhibited(), true);
+    QCOMPARE(idleInhibitedSpy.count(), 1);
+    m_idleInterface->inhibit();
+    QCOMPARE(m_idleInterface->isInhibited(), true);
+    QCOMPARE(idleInhibitedSpy.count(), 1);
+    m_idleInterface->uninhibit();
+    QCOMPARE(m_idleInterface->isInhibited(), true);
+    QCOMPARE(idleInhibitedSpy.count(), 1);
+    m_idleInterface->uninhibit();
+    QCOMPARE(m_idleInterface->isInhibited(), false);
+    QCOMPARE(idleInhibitedSpy.count(), 2);
+}
+
+void IdleTest::testIdleInhibitBlocksTimeout()
+{
+    // this test verifies that a timeout does not fire when the system is inhibited
+
+    // so first inhibit
+    QCOMPARE(m_idleInterface->isInhibited(), false);
+    m_idleInterface->inhibit();
+
+    QScopedPointer<IdleTimeout> timeout(m_idle->getTimeout(1, m_seat));
+    QVERIFY(timeout->isValid());
+    QSignalSpy idleSpy(timeout.data(), &IdleTimeout::idle);
+    QVERIFY(idleSpy.isValid());
+    QSignalSpy resumedFormIdleSpy(timeout.data(), &IdleTimeout::resumeFromIdle);
+    QVERIFY(resumedFormIdleSpy.isValid());
+
+    // we requested a timeout of 1 msec, but the minimum the server sets is 5 sec
+    QVERIFY(!idleSpy.wait(500));
+    // the default of 5 sec won't pass
+    QVERIFY(!idleSpy.wait());
+
+    // simulate some activity
+    QVERIFY(resumedFormIdleSpy.isEmpty());
+    m_seatInterface->setTimestamp(1);
+    // resume from idle should not fire
+    QVERIFY(!resumedFormIdleSpy.wait());
+
+    // let's uninhibit
+    m_idleInterface->uninhibit();
+    QCOMPARE(m_idleInterface->isInhibited(), false);
+    // we requested a timeout of 1 msec, but the minimum the server sets is 5 sec
+    QVERIFY(!idleSpy.wait(500));
+    // the default of 5 sec will now pass
+    QVERIFY(idleSpy.wait());
+
+    // if we inhibit now it will trigger a resume from idle
+    QVERIFY(resumedFormIdleSpy.isEmpty());
+    m_idleInterface->inhibit();
+    QVERIFY(resumedFormIdleSpy.wait());
+
+    // let's wait again just to verify that also inhibit for already existing IdleTimeout works
+    QVERIFY(!idleSpy.wait(500));
+    QVERIFY(!idleSpy.wait());
+    QCOMPARE(idleSpy.count(), 1);
 
     timeout.reset();
     m_connection->flush();
