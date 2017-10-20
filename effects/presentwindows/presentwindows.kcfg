@@ -26,6 +26,9 @@
         <entry name="Accuracy" type="Int">
             <default>1</default>
         </entry>
+        <entry name="unhoverBright" type="Double">
+            <default>0.23</default>
+        </entry>
         <entry name="FillGaps" type="Bool">
             <default>true</default>
         </entry>
