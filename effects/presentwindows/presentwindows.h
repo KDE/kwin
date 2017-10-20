@@ -71,6 +71,7 @@ class PresentWindowsEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int unhoverBright READ unhoverBright)
     Q_PROPERTY(int layoutMode READ layoutMode)
     Q_PROPERTY(bool showCaptions READ isShowCaptions)
     Q_PROPERTY(bool showIcons READ isShowIcons)
@@ -158,6 +159,9 @@ public:
     };
 
     // for properties
+    double unhoverBright() const {
+        return m_unhoverBright;
+    }
     int layoutMode() const {
         return m_layoutMode;
     }
@@ -287,6 +291,7 @@ private:
     bool m_fillGaps;
     double m_fadeDuration;
     bool m_showPanel;
+    double m_unhoverBright;
 
     // Activation
     bool m_activated;

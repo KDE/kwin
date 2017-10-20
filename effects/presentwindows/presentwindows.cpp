@@ -162,6 +162,7 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
     m_leftButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::leftButtonDesktop();
     m_middleButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::middleButtonDesktop();
     m_rightButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::rightButtonDesktop();
+    m_unhoverBright = PresentWindowsConfig::unhoverBright();
 
     // touch screen edges
     const QVector<ElectricBorder> relevantBorders{ElectricLeft, ElectricTop, ElectricRight, ElectricBottom};
@@ -313,7 +314,7 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
         if (w == m_highlightedWindow || w == m_closeWindow || !m_activated)
             winData->highlight = qMin(1.0, winData->highlight + time / m_fadeDuration);
         else if (!isInMotion && w->isDesktop())
-            winData->highlight = 0.3;
+            winData->highlight = m_unhoverBright;
         else
             winData->highlight = qMax(0.0, winData->highlight - time / m_fadeDuration);
 
@@ -2055,4 +2056,3 @@ QPoint CloseWindowView::mapFromGlobal(const QPoint &pos) const
 }
 
 } // namespace
-
