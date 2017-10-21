@@ -68,6 +68,27 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
         o.buffer[index]->map();
         o.buffer[index]->image()->fill(Qt::black);
     };
+    connect(output, &DrmOutput::modeChanged, this,
+        [output, this] {
+            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+                [output] (const auto &o) {
+                    return o.output == output;
+                }
+            );
+            if (it == m_outputs.end()) {
+                return;
+            }
+            delete (*it).buffer[0];
+            delete (*it).buffer[1];
+            auto initBuffer = [it, output, this] (int index) {
+                it->buffer[index] = m_backend->createBuffer(output->pixelSize());
+                it->buffer[index]->map();
+                it->buffer[index]->image()->fill(Qt::black);
+            };
+            initBuffer(0);
+            initBuffer(1);
+        }
+    );
     initBuffer(0);
     initBuffer(1);
     o.output = output;

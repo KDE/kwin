@@ -150,25 +150,51 @@ bool EglGbmBackend::initRenderingContext()
     return makeContextCurrent(m_outputs.first());
 }
 
-void EglGbmBackend::createOutput(DrmOutput *drmOutput)
+bool EglGbmBackend::resetOutput(Output &o, DrmOutput *drmOutput)
 {
-    Output o;
     o.output = drmOutput;
     auto size = drmOutput->pixelSize();
 
-    o.gbmSurface = std::make_shared<GbmSurface>(m_backend->gbmDevice(), size.width(), size.height(),
+    auto gbmSurface = std::make_shared<GbmSurface>(m_backend->gbmDevice(), size.width(), size.height(),
                                         GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-    if (!o.gbmSurface) {
+    if (!gbmSurface) {
         qCCritical(KWIN_DRM) << "Create gbm surface failed";
-        return;
+        return false;
     }
-    o.eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)(o.gbmSurface->surface()), nullptr);
-    if (o.eglSurface == EGL_NO_SURFACE) {
+    auto eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)(gbmSurface->surface()), nullptr);
+    if (eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Create Window Surface failed";
-        o.gbmSurface.reset();
-        return;
+        return false;
+    } else {
+        // destroy previous surface
+        if (o.eglSurface != EGL_NO_SURFACE) {
+            eglDestroySurface(eglDisplay(), eglSurface);
+        }
+        o.eglSurface = eglSurface;
+        o.gbmSurface = gbmSurface;
     }
-    m_outputs << o;
+    return true;
+}
+
+void EglGbmBackend::createOutput(DrmOutput *drmOutput)
+{
+    Output o;
+    if (resetOutput(o, drmOutput)) {
+        connect(drmOutput, &DrmOutput::modeChanged, this,
+            [drmOutput, this] {
+                auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+                    [drmOutput] (const auto &o) {
+                        return o.output == drmOutput;
+                    }
+                );
+                if (it == m_outputs.end()) {
+                    return;
+                }
+                resetOutput(*it, drmOutput);
+            }
+        );
+        m_outputs << o;
+    }
 }
 
 bool EglGbmBackend::makeContextCurrent(const Output &output)

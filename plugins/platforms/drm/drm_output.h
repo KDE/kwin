@@ -109,6 +109,7 @@ public:
 
 Q_SIGNALS:
     void dpmsChanged();
+    void modeChanged();
 
 private:
     friend class DrmBackend;
@@ -139,6 +140,7 @@ private:
     void dpmsOffHandler();
     bool dpmsAtomicOff();
     bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
+    void updateMode(int modeIndex);
 
     DrmBackend *m_backend;
     DrmConnector *m_conn = nullptr;
@@ -147,6 +149,7 @@ private:
     qreal m_scale = 1;
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
+    drmModeModeInfo m_previousMode;
     Edid m_edid;
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;

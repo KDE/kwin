@@ -696,6 +696,7 @@ bool DrmOutput::commitChanges()
     if (m_changeset->modeChanged()) {
         qCDebug(KWIN_DRM) << "Setting new mode:" << m_changeset->mode();
         m_waylandOutputDevice->setCurrentMode(m_changeset->mode());
+        updateMode(m_changeset->mode());
         // FIXME: implement for wl_output
     }
     if (m_changeset->transformChanged()) {
@@ -715,6 +716,24 @@ bool DrmOutput::commitChanges()
         setScale(m_changeset->scale());
     }
     return true;
+}
+
+void DrmOutput::updateMode(int modeIndex)
+{
+    // get all modes on the connector
+    ScopedDrmPointer<_drmModeConnector, &drmModeFreeConnector> connector(drmModeGetConnector(m_backend->fd(), m_conn->id()));
+    if (connector->count_modes <= modeIndex) {
+        // TODO: error?
+        return;
+    }
+    if (isCurrentMode(&connector->modes[modeIndex])) {
+        // nothing to do
+        return;
+    }
+    m_previousMode = m_mode;
+    m_mode = connector->modes[modeIndex];
+    m_modesetRequested = true;
+    emit modeChanged();
 }
 
 void DrmOutput::pageFlipped()

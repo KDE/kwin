@@ -70,6 +70,7 @@ private:
         */
         QList<QRegion> damageHistory;
     };
+    bool resetOutput(Output &output, DrmOutput *drmOutput);
     bool makeContextCurrent(const Output &output);
     void presentOnOutput(Output &output);
     void cleanupOutput(const Output &output);
