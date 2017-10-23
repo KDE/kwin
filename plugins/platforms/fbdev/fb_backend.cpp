@@ -194,6 +194,17 @@ void FramebufferBackend::initImageFormat()
             m_red.offset == 16) {
         qCDebug(KWIN_FB) << "Framebuffer format is RGB32";
         m_imageFormat = QImage::Format_RGB32;
+    } else if (m_bitsPerPixel == 32 &&
+            m_red.length == 8 &&
+            m_green.length == 8 &&
+            m_blue.length == 8 &&
+            m_alpha.length == 8 &&
+            m_red.offset == 0 &&
+            m_green.offset == 8 &&
+            m_blue.offset == 16 &&
+            m_alpha.offset == 24) {
+        qCDebug(KWIN_FB) << "Framebuffer format is RGBA8888";
+        m_imageFormat = QImage::Format_RGBA8888;
     } else if (m_bitsPerPixel == 24 &&
             m_red.length == 8 &&
             m_green.length == 8 &&
