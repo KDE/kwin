@@ -28,9 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <android-config.h>
 // libhybris
+#include <hardware/hwcomposer.h>
 #include <hwcomposer_window.h>
 // needed as hwcomposer_window.h includes EGL which on non-arm includes Xlib
 #include <fixx11h.h>
+
+#include <KWayland/Server/output_interface.h>
 
 typedef struct hwc_display_contents_1 hwc_display_contents_1_t;
 typedef struct hwc_layer_1 hwc_layer_1_t;
@@ -101,6 +104,7 @@ private Q_SLOTS:
 private:
     void initLights();
     void toggleScreenBrightness();
+    KWayland::Server::OutputInterface* createOutput(hwc_composer_device_1_t *device);
     QSize m_displaySize;
     hwc_composer_device_1_t *m_device = nullptr;
     light_device_t *m_lights = nullptr;

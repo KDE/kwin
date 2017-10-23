@@ -27,14 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 // KWayland
 #include <KWayland/Server/display.h>
-#include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/seat_interface.h>
 // Qt
 #include <QKeyEvent>
 #include <QDBusConnection>
 // hybris/android
 #include <hardware/hardware.h>
-#include <hardware/hwcomposer.h>
 #include <hardware/lights.h>
 // linux
 #include <linux/input.h>
@@ -164,7 +162,7 @@ HwcomposerBackend::~HwcomposerBackend()
     }
 }
 
-static KWayland::Server::OutputInterface *createOutput(hwc_composer_device_1_t *device)
+KWayland::Server::OutputInterface* HwcomposerBackend::createOutput(hwc_composer_device_1_t *device)
 {
     uint32_t configs[5];
     size_t numConfigs = 5;
