@@ -194,7 +194,7 @@ bool EglGbmBackend::makeContextCurrent(const Output &output)
 
     qreal scale = output.output->scale();
 
-    glViewport(-v.x() * scale, (v.height() - overall.height() - v.y()) * scale,
+    glViewport(-v.x() * scale, (v.height() - overall.height() + v.y()) * scale,
                overall.width() * scale, overall.height() * scale);
     return true;
 }
