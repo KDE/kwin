@@ -664,6 +664,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             QRegion repaint = m_backend->prepareRenderingForScreen(i);
             GLVertexBuffer::setVirtualScreenGeometry(geo);
             GLRenderTarget::setVirtualScreenGeometry(geo);
+            GLVertexBuffer::setVirtualScreenScale(screens()->scale(i));
             GLRenderTarget::setVirtualScreenScale(screens()->scale(i));
 
             const GLenum status = glGetGraphicsResetStatus();
@@ -694,6 +695,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         }
         GLVertexBuffer::setVirtualScreenGeometry(screens()->geometry());
         GLRenderTarget::setVirtualScreenGeometry(screens()->geometry());
+        GLVertexBuffer::setVirtualScreenScale(1);
         GLRenderTarget::setVirtualScreenScale(1);
 
         int mask = 0;

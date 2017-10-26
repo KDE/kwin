@@ -775,9 +775,21 @@ public:
         s_virtualScreenGeometry = g;
     }
 
+    /**
+     * The scale of the OpenGL window currently being rendered to
+     *
+     * @returns the ratio between the virtual geometry space the rendering
+     * system uses and the target
+     * @since 5.11.3
+     */
+    static void setVirtualScreenScale(qreal s) {
+        s_virtualScreenScale = s;
+    }
+
 private:
     GLVertexBufferPrivate* const d;
     static QRect s_virtualScreenGeometry;
+    static qreal s_virtualScreenScale;
 };
 
 } // namespace
