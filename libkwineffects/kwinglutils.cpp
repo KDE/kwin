@@ -2123,7 +2123,7 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
         } else {
             // Clip using scissoring
             foreach (const QRect &r, region.rects()) {
-                glScissor(r.x() - s_virtualScreenGeometry.x(), s_virtualScreenGeometry.height() - s_virtualScreenGeometry.y() - r.y() - r.height(), r.width(), r.height());
+                glScissor(r.x() - s_virtualScreenGeometry.x(), s_virtualScreenGeometry.height() + s_virtualScreenGeometry.y() - r.y() - r.height(), r.width(), r.height());
                 glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, first);
             }
         }
@@ -2135,7 +2135,7 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
     } else {
         // Clip using scissoring
         foreach (const QRect &r, region.rects()) {
-            glScissor(r.x() - s_virtualScreenGeometry.x(), s_virtualScreenGeometry.height()  - s_virtualScreenGeometry.y() - r.y() - r.height(), r.width(), r.height());
+            glScissor(r.x() - s_virtualScreenGeometry.x(), s_virtualScreenGeometry.height() + s_virtualScreenGeometry.y() - r.y() - r.height(), r.width(), r.height());
             glDrawArrays(primitiveMode, first, count);
         }
     }
