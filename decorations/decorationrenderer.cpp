@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorationrenderer.h"
 #include "decoratedclient.h"
 #include "deleted.h"
+#include "abstract_client.h"
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
@@ -38,6 +39,9 @@ Renderer::Renderer(DecoratedClientImpl *client)
     , m_imageSizesDirty(true)
 {
     auto markImageSizesDirty = [this]{ m_imageSizesDirty = true; };
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        connect(client->client(), &AbstractClient::screenChanged, this, markImageSizesDirty);
+    }
     connect(client->decoration(), &KDecoration2::Decoration::bordersChanged, this, markImageSizesDirty);
     connect(client->decoratedClient(), &KDecoration2::DecoratedClient::widthChanged, this, markImageSizesDirty);
     connect(client->decoratedClient(), &KDecoration2::DecoratedClient::heightChanged, this, markImageSizesDirty);

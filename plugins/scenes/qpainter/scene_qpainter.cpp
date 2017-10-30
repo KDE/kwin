@@ -594,10 +594,14 @@ void SceneQPainterDecorationRenderer::render()
         resetImageSizesDirty();
     }
 
-    const QRect top(QPoint(0, 0), m_images[int(DecorationPart::Top)].size());
-    const QRect left(QPoint(0, top.height()), m_images[int(DecorationPart::Left)].size());
-    const QRect right(QPoint(top.width() - m_images[int(DecorationPart::Right)].size().width(), top.height()), m_images[int(DecorationPart::Right)].size());
-    const QRect bottom(QPoint(0, left.y() + left.height()), m_images[int(DecorationPart::Bottom)].size());
+    auto imageSize = [this](DecorationPart part) {
+        return m_images[int(part)].size() / m_images[int(part)].devicePixelRatio();
+    };
+
+    const QRect top(QPoint(0, 0), imageSize(DecorationPart::Top));
+    const QRect left(QPoint(0, top.height()), imageSize(DecorationPart::Left));
+    const QRect right(QPoint(top.width() - imageSize(DecorationPart::Right).width(), top.height()), imageSize(DecorationPart::Right));
+    const QRect bottom(QPoint(0, left.y() + left.height()), imageSize(DecorationPart::Bottom));
 
     const QRect geometry = scheduled.boundingRect();
     auto renderPart = [this](const QRect &rect, const QRect &partRect, int index) {
@@ -606,7 +610,7 @@ void SceneQPainterDecorationRenderer::render()
         }
         QPainter painter(&m_images[index]);
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.setWindow(partRect);
+        painter.setWindow(QRect(partRect.topLeft(), partRect.size() * m_images[index].devicePixelRatio()));
         painter.setClipRect(rect);
         painter.save();
         // clear existing part
@@ -628,8 +632,12 @@ void SceneQPainterDecorationRenderer::resizeImages()
     client()->client()->layoutDecorationRects(left, top, right, bottom);
 
     auto checkAndCreate = [this](int index, const QSize &size) {
-        if (m_images[index].size() != size) {
-            m_images[index] = QImage(size, QImage::Format_ARGB32_Premultiplied);
+        auto dpr = screens()->scale(client()->client()->screen());
+        if (m_images[index].size() != size * dpr ||
+            m_images[index].devicePixelRatio() != dpr)
+        {
+            m_images[index] = QImage(size * dpr, QImage::Format_ARGB32_Premultiplied);
+            m_images[index].setDevicePixelRatio(dpr);
             m_images[index].fill(Qt::transparent);
         }
     };
