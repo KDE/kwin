@@ -1360,7 +1360,7 @@ QMatrix4x4 SceneOpenGL2Window::modelViewProjectionMatrix(int mask, const WindowP
     return scene->projectionMatrix() * mvMatrix;
 }
 
-static void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap)
+static void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping)
 {
     QMatrix4x4 newWindowMatrix = windowMatrix;
     newWindowMatrix.translate(pixmap->subSurface()->position().x(), pixmap->subSurface()->position().y());
@@ -1375,7 +1375,7 @@ static void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMat
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * newWindowMatrix);
         auto texture = pixmap->texture();
         texture->bind();
-        texture->render(QRegion(), QRect(0, 0, texture->width() / scale, texture->height() / scale));
+        texture->render(region, QRect(0, 0, texture->width() / scale, texture->height() / scale), hardwareClipping);
         texture->unbind();
     }
 
@@ -1384,7 +1384,7 @@ static void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMat
         if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
             continue;
         }
-        renderSubSurface(shader, mvp, newWindowMatrix, static_cast<OpenGLWindowPixmap*>(pixmap));
+        renderSubSurface(shader, mvp, newWindowMatrix, static_cast<OpenGLWindowPixmap*>(pixmap), region, hardwareClipping);
     }
 }
 
@@ -1527,7 +1527,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
             continue;
         }
-        renderSubSurface(shader, modelViewProjection, windowMatrix, static_cast<OpenGLWindowPixmap*>(pixmap));
+        renderSubSurface(shader, modelViewProjection, windowMatrix, static_cast<OpenGLWindowPixmap*>(pixmap), region, m_hardwareClipping);
     }
 
     if (!data.shader)
