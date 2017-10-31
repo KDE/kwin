@@ -237,6 +237,24 @@ static QHash<int, QByteArray> s_connectorNames = {
     {DRM_MODE_CONNECTOR_DSI, QByteArrayLiteral("DSI")}
 };
 
+namespace {
+quint64 refreshRateForMode(_drmModeModeInfo *m)
+{
+    // Calculate higher precision (mHz) refresh rate
+    // logic based on Weston, see compositor-drm.c
+    quint64 refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
+    if (m->flags & DRM_MODE_FLAG_INTERLACE) {
+        refreshRate *= 2;
+    }
+    if (m->flags & DRM_MODE_FLAG_DBLSCAN) {
+        refreshRate /= 2;
+    }
+    if (m->vscan > 1) {
+        refreshRate /= m->vscan;
+    }
+    return refreshRate;
+}
+}
 
 bool DrmOutput::init(drmModeConnector *connector)
 {
@@ -257,6 +275,14 @@ bool DrmOutput::init(drmModeConnector *connector)
         m_waylandOutput.clear();
     }
     m_waylandOutput = waylandServer()->display()->createOutput();
+    connect(this, &DrmOutput::modeChanged, this,
+        [this] {
+            if (m_waylandOutput.isNull()) {
+                return;
+            }
+            m_waylandOutput->setCurrentMode(QSize(m_mode.hdisplay, m_mode.vdisplay), refreshRateForMode(&m_mode));
+        }
+    );
     if (!m_waylandOutputDevice.isNull()) {
         delete m_waylandOutputDevice.data();
         m_waylandOutputDevice.clear();
@@ -324,18 +350,7 @@ bool DrmOutput::init(drmModeConnector *connector)
             deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred;
         }
 
-        // Calculate higher precision (mHz) refresh rate
-        // logic based on Weston, see compositor-drm.c
-        quint64 refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
-        if (m->flags & DRM_MODE_FLAG_INTERLACE) {
-            refreshRate *= 2;
-        }
-        if (m->flags & DRM_MODE_FLAG_DBLSCAN) {
-            refreshRate /= 2;
-        }
-        if (m->vscan > 1) {
-            refreshRate /= m->vscan;
-        }
+        const auto refreshRate = refreshRateForMode(m);
         m_waylandOutput->addMode(QSize(m->hdisplay, m->vdisplay), flags, refreshRate);
 
         KWayland::Server::OutputDeviceInterface::Mode mode;
@@ -756,7 +771,6 @@ bool DrmOutput::commitChanges()
         qCDebug(KWIN_DRM) << "Setting new mode:" << m_changeset->mode();
         m_waylandOutputDevice->setCurrentMode(m_changeset->mode());
         updateMode(m_changeset->mode());
-        // FIXME: implement for wl_output
     }
     if (m_changeset->transformChanged()) {
         qCDebug(KWIN_DRM) << "Server setting transform: " << (int)(m_changeset->transform());
