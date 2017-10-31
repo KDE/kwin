@@ -168,7 +168,7 @@ bool EglGbmBackend::resetOutput(Output &o, DrmOutput *drmOutput)
     } else {
         // destroy previous surface
         if (o.eglSurface != EGL_NO_SURFACE) {
-            eglDestroySurface(eglDisplay(), eglSurface);
+            eglDestroySurface(eglDisplay(), o.eglSurface);
         }
         o.eglSurface = eglSurface;
         o.gbmSurface = gbmSurface;
