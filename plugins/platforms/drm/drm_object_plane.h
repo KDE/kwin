@@ -48,6 +48,7 @@ public:
         CrtcH,
         FbId,
         CrtcId,
+        Rotation,
         Count
     };
 
@@ -57,7 +58,17 @@ public:
         Overlay,
         Count
     };
-    
+
+    enum class Transformation {
+        Rotate0 = 1 << 0,
+        Rotate90 = 1 << 1,
+        Rotate180 = 1 << 2,
+        Rotate270 = 1 << 3,
+        ReflectX = 1 << 4,
+        ReflectY = 1 << 5
+    };
+    Q_DECLARE_FLAGS(Transformations, Transformation);
+
     bool atomicInit();
     bool initProps();
     TypeIndex type();
@@ -79,6 +90,7 @@ public:
         m_current = b;
     }
     void setNext(DrmBuffer *b);
+    void setTransformation(Transformations t);
 
     bool atomicPopulate(drmModeAtomicReq *req);
     void flipBuffer();
@@ -96,6 +108,8 @@ private:
 };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::DrmPlane::Transformations)
 
 #endif
 

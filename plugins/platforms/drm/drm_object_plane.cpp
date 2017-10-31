@@ -75,6 +75,7 @@ bool DrmPlane::initProps()
         QByteArrayLiteral("CRTC_H"),
         QByteArrayLiteral("FB_ID"),
         QByteArrayLiteral("CRTC_ID"),
+        QByteArrayLiteral("rotation")
     };
 
     QVector<QByteArray> typeNames = {
@@ -117,6 +118,11 @@ DrmPlane::TypeIndex DrmPlane::type()
 void DrmPlane::setNext(DrmBuffer *b){
     setValue(int(PropertyIndex::FbId), b ? b->bufferId() : 0);
     m_next = b;
+}
+
+void DrmPlane::setTransformation(Transformations t)
+{
+    setValue(int(PropertyIndex::Rotation), int(t));
 }
 
 bool DrmPlane::atomicPopulate(drmModeAtomicReq *req)
