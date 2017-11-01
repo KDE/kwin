@@ -236,6 +236,12 @@ public:
     bool isOnScreen(int screen) const;   // true if it's at least partially there
     bool isOnActiveScreen() const;
     int screen() const; // the screen where the center is
+    /**
+     * The scale of the screen this window is currently on
+     * @Note: The buffer scale can be different.
+     * @since 5.12
+     */
+    qreal screenScale() const; //
     virtual QPoint clientPos() const = 0; // inside of geometry()
     /**
      * Describes how the client's content maps to the window geometry including the frame.
@@ -490,6 +496,13 @@ Q_SIGNALS:
      **/
     void surfaceChanged();
 
+    /*
+     * Emitted when the client's screen changes onto a screen of a different scale
+     * or the screen we're on changes
+     * @since 5.12
+     */
+    void screenScaleChanged();
+
 protected Q_SLOTS:
     /**
      * Checks whether the screen number for this Toplevel changed and updates if needed.
@@ -570,6 +583,7 @@ private:
      **/
     QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
     // when adding new data members, check also copyToDeleted()
+    qreal m_screenScale = 1.0;
 };
 
 inline xcb_window_t Toplevel::window() const

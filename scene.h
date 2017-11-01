@@ -338,7 +338,7 @@ public:
     void unreferencePreviousPixmap();
 protected:
     WindowQuadList makeQuads(WindowQuadType type, const QRegion& reg, const QPoint &textureOffset = QPoint(0, 0), qreal textureScale = 1.0) const;
-    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region) const;
+    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
     /**
      * @brief Returns the WindowPixmap for this Window.
      *

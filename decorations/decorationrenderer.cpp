@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decoratedclient.h"
 #include "deleted.h"
 #include "abstract_client.h"
+#include "screens.h"
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
@@ -38,10 +39,10 @@ Renderer::Renderer(DecoratedClientImpl *client)
     , m_client(client)
     , m_imageSizesDirty(true)
 {
-    auto markImageSizesDirty = [this]{ m_imageSizesDirty = true; };
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        connect(client->client(), &AbstractClient::screenChanged, this, markImageSizesDirty);
-    }
+    auto markImageSizesDirty = [this]{
+        m_imageSizesDirty = true;
+    };
+    connect(client->client(), &AbstractClient::screenScaleChanged, this, markImageSizesDirty);
     connect(client->decoration(), &KDecoration2::Decoration::bordersChanged, this, markImageSizesDirty);
     connect(client->decoratedClient(), &KDecoration2::DecoratedClient::widthChanged, this, markImageSizesDirty);
     connect(client->decoratedClient(), &KDecoration2::DecoratedClient::heightChanged, this, markImageSizesDirty);
@@ -65,11 +66,13 @@ QRegion Renderer::getScheduled()
 QImage Renderer::renderToImage(const QRect &geo)
 {
     Q_ASSERT(m_client);
-    QImage image(geo.width(), geo.height(), QImage::Format_ARGB32_Premultiplied);
+    auto dpr = client()->client()->screenScale();
+    QImage image(geo.width() * dpr, geo.height() * dpr, QImage::Format_ARGB32_Premultiplied);
+    image.setDevicePixelRatio(dpr);
     image.fill(Qt::transparent);
     QPainter p(&image);
     p.setRenderHint(QPainter::Antialiasing);
-    p.setWindow(geo);
+    p.setWindow(QRect(geo.topLeft(), geo.size() * dpr));
     p.setClipRect(geo);
     client()->decoration()->paint(&p, geo);
     return image;

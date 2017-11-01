@@ -2336,13 +2336,16 @@ SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer() = default;
 // and flips it vertically
 static QImage rotate(const QImage &srcImage, const QRect &srcRect)
 {
-    QImage image(srcRect.height(), srcRect.width(), srcImage.format());
+    auto dpr = srcImage.devicePixelRatio();
+    QImage image(srcRect.height() * dpr, srcRect.width() * dpr, srcImage.format());
+    image.setDevicePixelRatio(dpr);
+    const QPoint srcPoint(srcRect.x() * dpr, srcRect.y() * dpr);
 
     const uint32_t *src = reinterpret_cast<const uint32_t *>(srcImage.bits());
     uint32_t *dst = reinterpret_cast<uint32_t *>(image.bits());
 
     for (int x = 0; x < image.width(); x++) {
-        const uint32_t *s = src + (srcRect.y() + x) * srcImage.width() + srcRect.x();
+        const uint32_t *s = src + (srcPoint.y() + x) * srcImage.width() + srcPoint.x();
         uint32_t *d = dst + x;
 
         for (int y = 0; y < image.height(); y++) {
@@ -2357,10 +2360,10 @@ static QImage rotate(const QImage &srcImage, const QRect &srcRect)
 void SceneOpenGLDecorationRenderer::render()
 {
     const QRegion scheduled = getScheduled();
-    if (scheduled.isEmpty()) {
+    const bool dirty = areImageSizesDirty();
+    if (scheduled.isEmpty() && !dirty) {
         return;
     }
-    const bool dirty = areImageSizesDirty();
     if (dirty) {
         resizeTexture();
         resetImageSizesDirty();
@@ -2385,7 +2388,7 @@ void SceneOpenGLDecorationRenderer::render()
             // TODO: get this done directly when rendering to the image
             image = rotate(image, QRect(geo.topLeft() - partRect.topLeft(), geo.size()));
         }
-        m_texture->update(image, geo.topLeft() - partRect.topLeft() + offset);
+        m_texture->update(image, (geo.topLeft() - partRect.topLeft() + offset) * image.devicePixelRatio());
     };
     renderPart(left.intersected(geometry), left, QPoint(0, top.height() + bottom.height() + 2), true);
     renderPart(top.intersected(geometry), top, QPoint(0, 0));
@@ -2411,6 +2414,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
 
     size.rwidth() = align(size.width(), 128);
 
+    size *= client()->client()->screenScale();
     if (m_texture && m_texture->size() == size)
         return;
 

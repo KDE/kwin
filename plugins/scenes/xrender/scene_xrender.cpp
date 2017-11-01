@@ -1230,6 +1230,7 @@ void SceneXRenderDecorationRenderer::render()
             return;
         }
         QImage image = renderToImage(geo);
+        Q_ASSERT(image.devicePixelRatio() == 1);
         xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, m_pixmaps[index], m_gc,
                       image.width(), image.height(), geo.x() - offset.x(), geo.y() - offset.y(), 0, 32,
                       image.byteCount(), image.constBits());

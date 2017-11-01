@@ -281,12 +281,17 @@ void Toplevel::checkScreen()
             m_screen = 0;
             emit screenChanged();
         }
-        return;
+    } else {
+        const int s = screens()->number(geometry().center());
+        if (s != m_screen) {
+            m_screen = s;
+            emit screenChanged();
+        }
     }
-    const int s = screens()->number(geometry().center());
-    if (s != m_screen) {
-        m_screen = s;
-        emit screenChanged();
+    qreal newScale = screens()->scale(m_screen);
+    if (newScale != m_screenScale) {
+        m_screenScale = newScale;
+        emit screenScaleChanged();
     }
 }
 
@@ -306,6 +311,11 @@ void Toplevel::removeCheckScreenConnection()
 int Toplevel::screen() const
 {
     return m_screen;
+}
+
+qreal Toplevel::screenScale() const
+{
+    return m_screenScale;
 }
 
 bool Toplevel::isOnScreen(int screen) const
