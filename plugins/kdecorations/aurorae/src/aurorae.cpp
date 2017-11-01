@@ -324,47 +324,55 @@ void Decoration::init()
         m_item->setParentItem(visualParent.value<QQuickItem*>());
         visualParent.value<QQuickItem*>()->setProperty("drawBackground", false);
     } else {
-        // first create the context
-        QSurfaceFormat format;
-        format.setDepthBufferSize(16);
-        format.setStencilBufferSize(8);
-        m_context.reset(new QOpenGLContext);
-        m_context->setFormat(format);
-        m_context->create();
-        // and the offscreen surface
-        m_offscreenSurface.reset(new QOffscreenSurface);
-        m_offscreenSurface->setFormat(m_context->format());
-        m_offscreenSurface->create();
-
         m_renderControl = new QQuickRenderControl(this);
         m_view = new QQuickWindow(m_renderControl);
+        bool usingGL = m_view->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL;
         m_view->setColor(Qt::transparent);
         m_view->setFlags(Qt::FramelessWindowHint);
+        if (usingGL) {
+            // first create the context
+            QSurfaceFormat format;
+            format.setDepthBufferSize(16);
+            format.setStencilBufferSize(8);
+            m_context.reset(new QOpenGLContext);
+            m_context->setFormat(format);
+            m_context->create();
+            // and the offscreen surface
+            m_offscreenSurface.reset(new QOffscreenSurface);
+            m_offscreenSurface->setFormat(m_context->format());
+            m_offscreenSurface->create();
 
+        }
+
+        //workaround for https://codereview.qt-project.org/#/c/207198/
+#if (QT_VERSION < QT_VERSION_CHECK(5, 10, 0))
+        if (!usingGL) {
+            m_renderControl->sync();
+        }
+#endif
         // delay rendering a little bit for better performance
         m_updateTimer.reset(new QTimer);
         m_updateTimer->setSingleShot(true);
         m_updateTimer->setInterval(5);
         connect(m_updateTimer.data(), &QTimer::timeout, this,
-            [this] {
-                if (!m_context->makeCurrent(m_offscreenSurface.data())) {
-                    return;
-                }
-                if (m_fbo.isNull() || m_fbo->size() != m_view->size()) {
-                    m_fbo.reset(new QOpenGLFramebufferObject(m_view->size(), QOpenGLFramebufferObject::CombinedDepthStencil));
-                    if (!m_fbo->isValid()) {
-                        qCWarning(AURORAE) << "Creating FBO as render target failed";
-                        m_fbo.reset();
+            [this, usingGL] {
+                if (usingGL) {
+                    if (!m_context->makeCurrent(m_offscreenSurface.data())) {
                         return;
                     }
+                    if (m_fbo.isNull() || m_fbo->size() != m_view->size()) {
+                        m_fbo.reset(new QOpenGLFramebufferObject(m_view->size(), QOpenGLFramebufferObject::CombinedDepthStencil));
+                        if (!m_fbo->isValid()) {
+                            qCWarning(AURORAE) << "Creating FBO as render target failed";
+                            m_fbo.reset();
+                            return;
+                        }
+                    }
+                    m_view->setRenderTarget(m_fbo.data());
+                    m_view->resetOpenGLState();
                 }
-                m_view->setRenderTarget(m_fbo.data());
-                m_renderControl->polishItems();
-                m_renderControl->sync();
-                m_renderControl->render();
 
-                m_view->resetOpenGLState();
-                m_buffer = m_fbo->toImage();
+                m_buffer = m_renderControl->grab();
 
                 m_contentRect = QRect(QPoint(0, 0), m_buffer.size());
                 if (m_padding &&
@@ -389,9 +397,11 @@ void Decoration::init()
 
         m_item->setParentItem(m_view->contentItem());
 
-        m_context->makeCurrent(m_offscreenSurface.data());
-        m_renderControl->initialize(m_context.data());
-        m_context->doneCurrent();
+        if (usingGL) {
+            m_context->makeCurrent(m_offscreenSurface.data());
+            m_renderControl->initialize(m_context.data());
+            m_context->doneCurrent();
+        }
     }
     setupBorders(m_item);
     if (m_extendedBorders) {
