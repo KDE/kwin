@@ -1403,19 +1403,21 @@ QString Workspace::supportInformation() const
 #endif
     support.append(QStringLiteral("\n"));
 
-    support.append(QStringLiteral("X11\n"));
-    support.append(QStringLiteral("===\n"));
-    auto x11setup = xcb_get_setup(connection());
-    support.append(QStringLiteral("Vendor: %1\n").arg(QString::fromUtf8(QByteArray::fromRawData(xcb_setup_vendor(x11setup), xcb_setup_vendor_length(x11setup)))));
-    support.append(QStringLiteral("Vendor Release: %1\n").arg(x11setup->release_number));
-    support.append(QStringLiteral("Protocol Version/Revision: %1/%2\n").arg(x11setup->protocol_major_version).arg(x11setup->protocol_minor_version));
-    const auto extensions = Xcb::Extensions::self()->extensions();
-    for (const auto &e : extensions) {
-        support.append(QStringLiteral("%1: %2; Version: 0x%3\n").arg(QString::fromUtf8(e.name))
-                                                                .arg(e.present ? yes.trimmed() : no.trimmed())
-                                                                .arg(QString::number(e.version, 16)));
+    if (auto c = kwinApp()->x11Connection()) {
+        support.append(QStringLiteral("X11\n"));
+        support.append(QStringLiteral("===\n"));
+        auto x11setup = xcb_get_setup(c);
+        support.append(QStringLiteral("Vendor: %1\n").arg(QString::fromUtf8(QByteArray::fromRawData(xcb_setup_vendor(x11setup), xcb_setup_vendor_length(x11setup)))));
+        support.append(QStringLiteral("Vendor Release: %1\n").arg(x11setup->release_number));
+        support.append(QStringLiteral("Protocol Version/Revision: %1/%2\n").arg(x11setup->protocol_major_version).arg(x11setup->protocol_minor_version));
+        const auto extensions = Xcb::Extensions::self()->extensions();
+        for (const auto &e : extensions) {
+            support.append(QStringLiteral("%1: %2; Version: 0x%3\n").arg(QString::fromUtf8(e.name))
+                                                                    .arg(e.present ? yes.trimmed() : no.trimmed())
+                                                                    .arg(QString::number(e.version, 16)));
+        }
+        support.append(QStringLiteral("\n"));
     }
-    support.append(QStringLiteral("\n"));
 
     if (auto bridge = Decoration::DecorationBridge::self()) {
         support.append(QStringLiteral("Decoration\n"));
