@@ -110,7 +110,18 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
 
 QSize DrmOutput::pixelSize() const
 {
+    if (m_orientation == Qt::PortraitOrientation || m_orientation == Qt::InvertedPortraitOrientation) {
+        return QSize(m_mode.vdisplay, m_mode.hdisplay);
+    }
     return QSize(m_mode.hdisplay, m_mode.vdisplay);
+}
+
+QSize DrmOutput::physicalSize() const
+{
+    if (m_orientation == Qt::PortraitOrientation || m_orientation == Qt::InvertedPortraitOrientation) {
+        return QSize(m_physicalSize.height(), m_physicalSize.width());
+    }
+    return m_physicalSize;
 }
 
 QRect DrmOutput::geometry() const
@@ -702,7 +713,72 @@ bool DrmOutput::commitChanges()
     if (m_changeset->transformChanged()) {
         qCDebug(KWIN_DRM) << "Server setting transform: " << (int)(m_changeset->transform());
         m_waylandOutputDevice->setTransform(m_changeset->transform());
-        // FIXME: implement for wl_output
+        using KWayland::Server::OutputDeviceInterface;
+        using KWayland::Server::OutputInterface;
+        switch (m_changeset->transform()) {
+        case OutputDeviceInterface::Transform::Normal:
+            if (m_primaryPlane) {
+                m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
+            }
+            if (m_waylandOutput) {
+                m_waylandOutput->setTransform(OutputInterface::Transform::Normal);
+            }
+            m_orientation = Qt::PrimaryOrientation;
+            break;
+        case OutputDeviceInterface::Transform::Rotated90:
+            if (m_primaryPlane) {
+                m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate90);
+            }
+            if (m_waylandOutput) {
+                m_waylandOutput->setTransform(OutputInterface::Transform::Rotated90);
+            }
+            m_orientation = Qt::PortraitOrientation;
+            break;
+        case OutputDeviceInterface::Transform::Rotated180:
+            if (m_primaryPlane) {
+                m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate180);
+            }
+            if (m_waylandOutput) {
+                m_waylandOutput->setTransform(OutputInterface::Transform::Rotated180);
+            }
+            m_orientation = Qt::InvertedLandscapeOrientation;
+            break;
+        case OutputDeviceInterface::Transform::Rotated270:
+            if (m_primaryPlane) {
+                m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate270);
+            }
+            if (m_waylandOutput) {
+                m_waylandOutput->setTransform(OutputInterface::Transform::Rotated270);
+            }
+            m_orientation = Qt::InvertedPortraitOrientation;
+            break;
+        case OutputDeviceInterface::Transform::Flipped:
+            // TODO: what is this exactly?
+            if (m_waylandOutput) {
+                m_waylandOutput->setTransform(OutputInterface::Transform::Flipped);
+            }
+            break;
+        case OutputDeviceInterface::Transform::Flipped90:
+            // TODO: what is this exactly?
+            if (m_waylandOutput) {
+                m_waylandOutput->setTransform(OutputInterface::Transform::Flipped90);
+            }
+            break;
+        case OutputDeviceInterface::Transform::Flipped180:
+            // TODO: what is this exactly?
+            if (m_waylandOutput) {
+                m_waylandOutput->setTransform(OutputInterface::Transform::Flipped180);
+            }
+            break;
+        case OutputDeviceInterface::Transform::Flipped270:
+            // TODO: what is this exactly?
+            if (m_waylandOutput) {
+                m_waylandOutput->setTransform(OutputInterface::Transform::Flipped270);
+            }
+            break;
+        }
+        m_modesetRequested = true;
+        emit modeChanged();
     }
     if (m_changeset->positionChanged()) {
         qCDebug(KWIN_DRM) << "Server setting position: " << m_changeset->position();

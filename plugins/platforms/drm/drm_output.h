@@ -103,9 +103,7 @@ public:
         return m_uuid;
     }
 
-    QSize physicalSize() const {
-        return m_physicalSize;
-    }
+    QSize physicalSize() const;
 
 Q_SIGNALS:
     void dpmsChanged();
@@ -167,6 +165,7 @@ private:
     bool m_dpmsAtomicOffPending = false;
     bool m_modesetRequested = true;
     QSize m_physicalSize;
+    Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
 };
 
 }
