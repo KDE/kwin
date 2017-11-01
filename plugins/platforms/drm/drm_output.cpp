@@ -706,8 +706,6 @@ bool DrmOutput::commitChanges()
     }
     if (m_changeset->positionChanged()) {
         qCDebug(KWIN_DRM) << "Server setting position: " << m_changeset->position();
-        m_waylandOutput->setGlobalPosition(m_changeset->position());
-        m_waylandOutputDevice->setGlobalPosition(m_changeset->position());
         setGlobalPos(m_changeset->position());
         // may just work already!
     }
