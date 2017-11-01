@@ -87,7 +87,9 @@ X11StandalonePlatform::~X11StandalonePlatform()
         m_openGLFreezeProtectionThread->wait();
         delete m_openGLFreezeProtectionThread;
     }
-    XRenderUtils::cleanup();
+    if (isReady()) {
+        XRenderUtils::cleanup();
+    }
 }
 
 void X11StandalonePlatform::init()
