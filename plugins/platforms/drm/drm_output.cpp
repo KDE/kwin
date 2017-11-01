@@ -804,7 +804,6 @@ void DrmOutput::updateMode(int modeIndex)
         // nothing to do
         return;
     }
-    m_previousMode = m_mode;
     m_mode = connector->modes[modeIndex];
     m_modesetRequested = true;
     emit modeChanged();
@@ -909,12 +908,36 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
         //TODO: When we use planes for layered rendering, fallback to renderer instead. Also for direct scanout?
         //TODO: Probably should undo setNext and reset the flip list
         qCDebug(KWIN_DRM) << "Atomic test commit failed. Aborting present.";
+        // go back to previous state
+        if (m_lastWorkingState.valid) {
+            m_mode = m_lastWorkingState.mode;
+            m_orientation = m_lastWorkingState.orientation;
+            setGlobalPos(m_lastWorkingState.globalPos);
+            if (m_primaryPlane) {
+                m_primaryPlane->setTransformation(m_lastWorkingState.planeTransformations);
+            }
+            m_modesetRequested = true;
+            // TODO: forward to OutputInterface and OutputDeviceInterface
+            emit modeChanged();
+            emit screens()->changed();
+        }
         return false;
     }
+    const bool wasModeset = m_modesetRequested;
     if (!doAtomicCommit(AtomicCommitMode::Real)) {
         qCDebug(KWIN_DRM) << "Atomic commit failed. This should have never happened! Aborting present.";
         //TODO: Probably should undo setNext and reset the flip list
         return false;
+    }
+    if (wasModeset) {
+        // store current mode set as new good state
+        m_lastWorkingState.mode = m_mode;
+        m_lastWorkingState.orientation = m_orientation;
+        m_lastWorkingState.globalPos = m_globalPos;
+        if (m_primaryPlane) {
+            m_lastWorkingState.planeTransformations = m_primaryPlane->transformation();
+        }
+        m_lastWorkingState.valid = true;
     }
     m_pageFlipPending = true;
     return true;

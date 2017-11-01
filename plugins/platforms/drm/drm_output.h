@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "drm_pointer.h"
 #include "drm_object.h"
+#include "drm_object_plane.h"
 
 #include <QObject>
 #include <QPoint>
@@ -147,7 +148,6 @@ private:
     qreal m_scale = 1;
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
-    drmModeModeInfo m_previousMode;
     Edid m_edid;
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
@@ -166,6 +166,14 @@ private:
     bool m_modesetRequested = true;
     QSize m_physicalSize;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
+
+    struct {
+        Qt::ScreenOrientation orientation;
+        drmModeModeInfo mode;
+        DrmPlane::Transformations planeTransformations;
+        QPoint globalPos;
+        bool valid = false;
+    } m_lastWorkingState;
 };
 
 }

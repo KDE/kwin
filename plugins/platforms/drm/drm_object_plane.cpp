@@ -125,6 +125,11 @@ void DrmPlane::setTransformation(Transformations t)
     setValue(int(PropertyIndex::Rotation), int(t));
 }
 
+DrmPlane::Transformations DrmPlane::transformation()
+{
+    return Transformations(int(value(int(PropertyIndex::Rotation))));
+}
+
 bool DrmPlane::atomicPopulate(drmModeAtomicReq *req)
 {
     bool ret = true;

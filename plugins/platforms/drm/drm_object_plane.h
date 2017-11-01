@@ -91,6 +91,7 @@ public:
     }
     void setNext(DrmBuffer *b);
     void setTransformation(Transformations t);
+    Transformations transformation();
 
     bool atomicPopulate(drmModeAtomicReq *req);
     void flipBuffer();
