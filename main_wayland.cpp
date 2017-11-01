@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <KPluginLoader>
 #include <KPluginMetaData>
+#include <KQuickAddons/QtQuickSettings>
+
 // Qt
 #include <qplatformdefs.h>
 #include <QAbstractEventDispatcher>
@@ -547,6 +549,7 @@ int main(int argc, char * argv[])
     setenv("QT_QPA_PLATFORM", "wayland", true);
 
     KWin::Application::createAboutData();
+    KQuickAddons::QtQuickSettings::init();
 
     const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"));
     auto hasPlugin = [&availablePlugins] (const QString &name) {

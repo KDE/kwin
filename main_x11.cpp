@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <KPluginLoader>
 #include <KPluginMetaData>
+#include <KQuickAddons/QtQuickSettings>
 // Qt
 #include <qplatformdefs.h>
 #include <QComboBox>
@@ -412,6 +413,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     a.setupTranslator();
 
     KWin::Application::createAboutData();
+    KQuickAddons::QtQuickSettings::init();
 
     QCommandLineOption replaceOption(QStringLiteral("replace"), i18n("Replace already-running ICCCM2.0-compliant window manager"));
 

@@ -555,6 +555,7 @@ set(kwin_KDE_LIBS
     KF5::Package
     KF5::Plasma
     KF5::WindowSystem
+    KF5::QuickAddons
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
     PW::KScreenLocker
