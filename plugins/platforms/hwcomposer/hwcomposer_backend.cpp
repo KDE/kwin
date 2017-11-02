@@ -417,6 +417,9 @@ static void initLayer(hwc_layer_1_t *layer, const hwc_rect_t &rect, int layerCom
     layer->acquireFenceFd = -1;
     layer->releaseFenceFd = -1;
     layer->planeAlpha = 0xFF;
+#ifdef HWC_DEVICE_API_VERSION_1_5
+    layer->surfaceDamage.numRects = 0;
+#endif
 }
 
 HwcomposerWindow::HwcomposerWindow(HwcomposerBackend *backend)
