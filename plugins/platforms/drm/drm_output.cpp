@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <KSharedConfig>
 // Qt
+#include <QMatrix4x4>
 #include <QCryptographicHash>
 // drm
 #include <xf86drm.h>
@@ -104,7 +105,15 @@ void DrmOutput::showCursor(DrmDumbBuffer *c)
 
 void DrmOutput::moveCursor(const QPoint &globalPos)
 {
-    const QPoint p = ((globalPos - m_globalPos) * m_scale) - m_backend->softwareCursorHotspot();
+    QMatrix4x4 matrix;
+    if (m_orientation == Qt::InvertedLandscapeOrientation) {
+        matrix.translate(pixelSize().width() /2, pixelSize().height() / 2);
+        matrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+        matrix.translate(-pixelSize().width() /2, -pixelSize().height() / 2);
+    }
+    matrix.scale(m_scale);
+    matrix.translate(-m_globalPos.x(), -m_globalPos.y());
+    const QPoint p = matrix.map(globalPos) - m_backend->softwareCursorHotspot();
     drmModeMoveCursor(m_backend->fd(), m_crtc->id(), p.x(), p.y());
 }
 
