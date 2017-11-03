@@ -84,6 +84,15 @@ bool DrmPlane::initProps()
         QByteArrayLiteral("Overlay"),
     };
 
+    const QVector<QByteArray> rotationNames{
+        QByteArrayLiteral("rotate-0"),
+        QByteArrayLiteral("rotate-90"),
+        QByteArrayLiteral("rotate-180"),
+        QByteArrayLiteral("rotate-270"),
+        QByteArrayLiteral("reflect-x"),
+        QByteArrayLiteral("reflect-y")
+    };
+
     drmModeObjectProperties *properties = drmModeObjectGetProperties(m_backend->fd(), m_id, DRM_MODE_OBJECT_PLANE);
     if (!properties){
         qCWarning(KWIN_DRM) << "Failed to get properties for plane " << m_id ;
@@ -94,6 +103,21 @@ bool DrmPlane::initProps()
     for (int j = 0; j < propCount; ++j) {
         if (j == int(PropertyIndex::Type)) {
             initProp(j, properties, typeNames);
+        } else if (j == int(PropertyIndex::Rotation)) {
+            initProp(j, properties, rotationNames);
+            m_supportedTransformations = Transformations();
+            auto testTransform = [j, this] (uint64_t value, Transformation t) {
+                if (propHasEnum(j, value)) {
+                    m_supportedTransformations |= t;
+                }
+            };
+            testTransform(0, Transformation::Rotate0);
+            testTransform(1, Transformation::Rotate90);
+            testTransform(2, Transformation::Rotate180);
+            testTransform(3, Transformation::Rotate270);
+            testTransform(4, Transformation::ReflectX);
+            testTransform(5, Transformation::ReflectY);
+            qCDebug(KWIN_DRM) << "Supported Transformations: " << m_supportedTransformations << " on plane " << m_id;
         } else {
             initProp(j, properties);
         }

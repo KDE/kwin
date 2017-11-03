@@ -61,6 +61,10 @@ public:
         return m_props[prop]->value();
     }
 
+    bool propHasEnum(int prop, uint64_t value) const {
+        return m_props[prop]->hasEnum(value);
+    }
+
     void setValue(int prop, uint64_t new_value)
     {
         Q_ASSERT(prop < m_props.size());
@@ -93,6 +97,9 @@ protected:
 
         uint64_t enumMap(int n) {
             return m_enumMap[n];    // TODO: test on index out of bounds?
+        }
+        bool hasEnum(uint64_t value) const {
+            return m_enumMap.contains(value);
         }
 
         uint32_t propId() {

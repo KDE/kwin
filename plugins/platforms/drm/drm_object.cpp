@@ -102,7 +102,7 @@ DrmObject::Property::~Property() = default;
 
 void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
 {
-    if (!(prop->flags & DRM_MODE_PROP_ENUM) || prop->count_enums < 1) {
+    if (!((prop->flags & DRM_MODE_PROP_ENUM) || (prop->flags & DRM_MODE_PROP_BITMASK)) || prop->count_enums < 1) {
         qCWarning(KWIN_DRM) << "Property '" << prop->name << "' ( id ="
                           << m_propId << ") should be enum valued, but it is not.";
         return;

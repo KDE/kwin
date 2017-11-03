@@ -106,6 +106,8 @@ private:
 
     // TODO: when using overlay planes in the future: restrict possible screens / crtcs of planes
     uint32_t m_possibleCrtcs;
+
+    Transformations m_supportedTransformations = Transformation::Rotate0;
 };
 
 }
