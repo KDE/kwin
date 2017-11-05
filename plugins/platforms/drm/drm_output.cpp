@@ -140,14 +140,19 @@ void DrmOutput::updateCursor()
 void DrmOutput::moveCursor(const QPoint &globalPos)
 {
     QMatrix4x4 matrix;
+    QMatrix4x4 hotspotMatrix;
     if (m_orientation == Qt::InvertedLandscapeOrientation) {
-        matrix.translate(pixelSize().width() /2, pixelSize().height() / 2);
+        matrix.translate(pixelSize().width() /2.0, pixelSize().height() / 2.0);
         matrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
-        matrix.translate(-pixelSize().width() /2, -pixelSize().height() / 2);
+        matrix.translate(-pixelSize().width() /2.0, -pixelSize().height() / 2.0);
+        const auto cursorSize = m_backend->softwareCursor().size();
+        hotspotMatrix.translate(cursorSize.width()/2.0, cursorSize.height()/2.0);
+        hotspotMatrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+        hotspotMatrix.translate(-cursorSize.width()/2.0, -cursorSize.height()/2.0);
     }
     matrix.scale(m_scale);
     matrix.translate(-m_globalPos.x(), -m_globalPos.y());
-    const QPoint p = matrix.map(globalPos) - m_backend->softwareCursorHotspot();
+    const QPoint p = matrix.map(globalPos) - hotspotMatrix.map(m_backend->softwareCursorHotspot());
     drmModeMoveCursor(m_backend->fd(), m_crtc->id(), p.x(), p.y());
 }
 
