@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KConfigGroup>
 #include <KLocalizedString>
+#include <KCrash>
 
 #include <QThread>
 #include <QOpenGLContext>
@@ -236,13 +237,15 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
             m_openGLFreezeProtection->setInterval(15000);
             m_openGLFreezeProtection->setSingleShot(true);
             m_openGLFreezeProtection->start();
+            const QString configName = kwinApp()->config()->name();
             m_openGLFreezeProtection->moveToThread(m_openGLFreezeProtectionThread);
             connect(m_openGLFreezeProtection, &QTimer::timeout, m_openGLFreezeProtection,
-                [] {
+                [configName] {
                     const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
-                    auto group = KConfigGroup(kwinApp()->config(), "Compositing");
+                    auto group = KConfigGroup(KSharedConfig::openConfig(configName), "Compositing");
                     group.writeEntry(unsafeKey, true);
                     group.sync();
+                    KCrash::setDrKonqiEnabled(false);
                     qFatal("Freeze in OpenGL initialization detected");
                 }, Qt::DirectConnection);
         } else {
