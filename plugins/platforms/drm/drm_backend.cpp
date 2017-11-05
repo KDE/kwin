@@ -74,8 +74,6 @@ DrmBackend::DrmBackend(QObject *parent)
     , m_dpmsFilter()
 {
     handleOutputs();
-    m_cursor[0] = nullptr;
-    m_cursor[1] = nullptr;
 }
 
 DrmBackend::~DrmBackend()
@@ -94,8 +92,6 @@ DrmBackend::~DrmBackend()
         qDeleteAll(m_planes);
         qDeleteAll(m_crtcs);
         qDeleteAll(m_connectors);
-        delete m_cursor[0];
-        delete m_cursor[1];
         close(m_fd);
     }
 }
@@ -170,7 +166,6 @@ void DrmBackend::reactivate()
     }
     m_active = true;
     if (!usesSoftwareCursor()) {
-        DrmDumbBuffer *c = m_cursor[(m_cursorIndex + 1) % 2];
         const QPoint cp = Cursor::pos() - softwareCursorHotspot();
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
             DrmOutput *o = *it;
@@ -178,7 +173,7 @@ void DrmBackend::reactivate()
             o->m_modesetRequested = true;
             o->pageFlipped();   // TODO: Do we really need this?
             o->m_crtc->blank();
-            o->showCursor(c);
+            o->showCursor();
             o->moveCursor(cp);
         }
     }
@@ -327,6 +322,7 @@ void DrmBackend::openDrm()
         m_crtcs.erase(std::remove_if(m_crtcs.begin(), m_crtcs.end(), tryAtomicInit), m_crtcs.end());
     }
 
+    initCursor();
     updateOutputs();
 
     if (m_outputs.isEmpty()) {
@@ -353,7 +349,6 @@ void DrmBackend::openDrm()
                     if (device->hasProperty("HOTPLUG", "1")) {
                         qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
                         updateOutputs();
-                        m_cursorIndex = (m_cursorIndex + 1) % 2;
                         updateCursor();
                     }
                 }
@@ -362,8 +357,6 @@ void DrmBackend::openDrm()
         }
     }
     setReady(true);
-
-    initCursor();
 }
 
 void DrmBackend::updateOutputs()
@@ -466,6 +459,9 @@ void DrmBackend::updateOutputs()
                     crtc->setOutput(nullptr);
                     delete output;
                     continue;
+                }
+                if (!output->initCursor(m_cursorSize)) {
+                    setSoftWareCursor(true);
                 }
                 qCDebug(KWIN_DRM) << "Found new output with uuid" << output->uuid();
 
@@ -594,7 +590,7 @@ void DrmBackend::initCursor()
             }
             for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
                 if (m_cursorEnabled) {
-                    (*it)->showCursor(m_cursor[m_cursorIndex]);
+                    (*it)->showCursor();
                 } else {
                     (*it)->hideCursor();
                 }
@@ -613,18 +609,7 @@ void DrmBackend::initCursor()
     } else {
         cursorSize.setHeight(64);
     }
-    auto createCursor = [this, cursorSize] (int index) {
-        m_cursor[index] = createBuffer(cursorSize);
-        if (!m_cursor[index]->map(QImage::Format_ARGB32_Premultiplied)) {
-            return false;
-        }
-        m_cursor[index]->image()->fill(Qt::transparent);
-        return true;
-    };
-    if (!createCursor(0) || !createCursor(1)) {
-        setSoftWareCursor(true);
-        return;
-    }
+    m_cursorSize = cursorSize;
     // now we have screens and can set cursors, so start tracking
     connect(this, &DrmBackend::cursorChanged, this, &DrmBackend::updateCursor);
     connect(Cursor::self(), &Cursor::posChanged, this, &DrmBackend::moveCursor);
@@ -632,11 +617,9 @@ void DrmBackend::initCursor()
 
 void DrmBackend::setCursor()
 {
-    DrmDumbBuffer *c = m_cursor[m_cursorIndex];
-    m_cursorIndex = (m_cursorIndex + 1) % 2;
     if (m_cursorEnabled) {
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-            (*it)->showCursor(c);
+            (*it)->showCursor();
         }
     }
     markCursorAsRendered();
@@ -655,12 +638,9 @@ void DrmBackend::updateCursor()
         doHideCursor();
         return;
     }
-    QImage *c = m_cursor[m_cursorIndex]->image();
-    c->fill(Qt::transparent);
-    QPainter p;
-    p.begin(c);
-    p.drawImage(QPoint(0, 0), cursorImage);
-    p.end();
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        (*it)->updateCursor();
+    }
 
     setCursor();
     moveCursor();

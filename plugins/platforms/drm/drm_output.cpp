@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QMatrix4x4>
 #include <QCryptographicHash>
+#include <QPainter>
 // drm
 #include <xf86drm.h>
 #include <xf86drmMode.h>
@@ -80,6 +81,8 @@ DrmOutput::~DrmOutput()
 
     delete m_waylandOutput.data();
     delete m_waylandOutputDevice.data();
+    delete m_cursor[0];
+    delete m_cursor[1];
 }
 
 void DrmOutput::releaseGbm()
@@ -101,6 +104,37 @@ void DrmOutput::showCursor(DrmDumbBuffer *c)
 {
     const QSize &s = c->size();
     drmModeSetCursor(m_backend->fd(), m_crtc->id(), c->handle(), s.width(), s.height());
+}
+
+void DrmOutput::showCursor()
+{
+    showCursor(m_cursor[m_cursorIndex]);
+    if (m_hasNewCursor) {
+        m_cursorIndex = (m_cursorIndex + 1) % 2;
+        m_hasNewCursor = false;
+    }
+}
+
+void DrmOutput::updateCursor()
+{
+    QImage cursorImage = m_backend->softwareCursor();
+    if (cursorImage.isNull()) {
+        return;
+    }
+    m_hasNewCursor = true;
+    QImage *c = m_cursor[m_cursorIndex]->image();
+    c->fill(Qt::transparent);
+    QPainter p;
+    p.begin(c);
+    if (m_orientation == Qt::InvertedLandscapeOrientation) {
+        QMatrix4x4 matrix;
+        matrix.translate(cursorImage.width() / 2.0, cursorImage.height() / 2.0);
+        matrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+        matrix.translate(-cursorImage.width() / 2.0, -cursorImage.height() / 2.0);
+        p.setWorldTransform(matrix.toTransform());
+    }
+    p.drawImage(QPoint(0, 0), cursorImage);
+    p.end();
 }
 
 void DrmOutput::moveCursor(const QPoint &globalPos)
@@ -787,6 +821,9 @@ bool DrmOutput::commitChanges()
             break;
         }
         m_modesetRequested = true;
+        // the cursor might need to get rotated
+        updateCursor();
+        showCursor();
         emit modeChanged();
     }
     if (m_changeset->positionChanged()) {
@@ -926,6 +963,9 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
                 m_primaryPlane->setTransformation(m_lastWorkingState.planeTransformations);
             }
             m_modesetRequested = true;
+            // the cursor might need to get rotated
+            updateCursor();
+            showCursor();
             // TODO: forward to OutputInterface and OutputDeviceInterface
             emit modeChanged();
             emit screens()->changed();
@@ -1120,6 +1160,21 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
     ret &= m_crtc->atomicPopulate(req);
 
     return ret;
+}
+
+bool DrmOutput::initCursor(const QSize &cursorSize)
+{
+    auto createCursor = [this, cursorSize] (int index) {
+        m_cursor[index] = m_backend->createBuffer(cursorSize);
+        if (!m_cursor[index]->map(QImage::Format_ARGB32_Premultiplied)) {
+            return false;
+        }
+        return true;
+    };
+    if (!createCursor(0) || !createCursor(1)) {
+        return false;
+    }
+    return true;
 }
 
 }

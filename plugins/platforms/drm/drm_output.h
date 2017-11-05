@@ -65,7 +65,9 @@ public:
     virtual ~DrmOutput();
     void releaseGbm();
     void showCursor(DrmDumbBuffer *buffer);
+    void showCursor();
     void hideCursor();
+    void updateCursor();
     void moveCursor(const QPoint &globalPos);
     bool init(drmModeConnector *connector);
     bool present(DrmBuffer *buffer);
@@ -105,6 +107,8 @@ public:
     }
 
     QSize physicalSize() const;
+
+    bool initCursor(const QSize &cursorSize);
 
 Q_SIGNALS:
     void dpmsChanged();
@@ -174,6 +178,9 @@ private:
         QPoint globalPos;
         bool valid = false;
     } m_lastWorkingState;
+    DrmDumbBuffer *m_cursor[2] = {nullptr, nullptr};
+    int m_cursorIndex = 0;
+    bool m_hasNewCursor = false;
 };
 
 }

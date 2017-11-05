@@ -158,11 +158,10 @@ private:
     QVector<DrmConnector*> m_connectors;
     // currently active output pipelines (planes + crtc + encoder + connector)
     QVector<DrmOutput*> m_outputs;
-    DrmDumbBuffer *m_cursor[2];
     bool m_deleteBufferAfterPageFlip;
     bool m_atomicModeSetting = false;
     bool m_cursorEnabled = false;
-    int m_cursorIndex = 0;
+    QSize m_cursorSize;
     int m_pageFlipsPending = 0;
     bool m_active = false;
     // all available planes: primarys, cursors and overlays
