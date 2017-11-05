@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTimerEvent>
 #include <QDateTime>
 #include <QOpenGLContext>
+#include <QQuickWindow>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KPluginLoader>
@@ -254,6 +255,12 @@ void Compositor::slotCompositingOptionsInitialized()
         }
         return;
     }
+
+    if (!Workspace::self() && m_scene && m_scene->compositingType() == QPainterCompositing) {
+        // Force Software QtQuick on first startup with QPainter
+        QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
+    }
+
     connect(m_scene, &Scene::resetCompositing, this, &Compositor::restart);
     emit sceneCreated();
 
