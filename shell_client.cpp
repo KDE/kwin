@@ -553,9 +553,13 @@ QByteArray ShellClient::windowRole() const
     return QByteArray();
 }
 
-bool ShellClient::belongsToSameApplication(const AbstractClient *other, bool active_hack) const
+bool ShellClient::belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const
 {
-    Q_UNUSED(active_hack)
+    if (checks.testFlag(SameApplicationCheck::AllowCrossProcesses)) {
+        if (other->desktopFileName() == desktopFileName()) {
+            return true;
+        }
+    }
     if (auto s = other->surface()) {
         return s->client() == surface()->client();
     }
@@ -854,7 +858,7 @@ void ShellClient::takeFocus()
         // check that it doesn't belong to the desktop
         const auto &clients = waylandServer()->clients();
         for (auto c: clients) {
-            if (!belongsToSameApplication(c, false)) {
+            if (!belongsToSameApplication(c, SameApplicationChecks())) {
                 continue;
             }
             if (c->isDesktop()) {

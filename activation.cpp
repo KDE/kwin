@@ -609,7 +609,7 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
 
     // Unconditionally allow intra-client passing around for lower stealing protections
     // unless the active client has High interest
-    if (AbstractClient::belongToSameApplication(c, ac, true) && protection < FSP::High) {
+    if (AbstractClient::belongToSameApplication(c, ac, AbstractClient::SameApplicationCheck::RelaxedForActive) && protection < FSP::High) {
         qCDebug(KWIN_CORE) << "Activation: Belongs to active application";
         return true;
     }
@@ -659,7 +659,7 @@ bool Workspace::allowFullClientRaising(const KWin::AbstractClient *c, xcb_timest
         return true; // no active client -> always allow
     }
     // TODO window urgency  -> return true?
-    if (AbstractClient::belongToSameApplication(c, ac, true)) {
+    if (AbstractClient::belongToSameApplication(c, ac, AbstractClient::SameApplicationCheck::RelaxedForActive)) {
         qCDebug(KWIN_CORE) << "Raising: Belongs to active application";
         return true;
     }
@@ -753,13 +753,13 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
         // from already running application if this application
         // is not the active one (unless focus stealing prevention is turned off).
         Client* act = dynamic_cast<Client*>(workspace()->mostRecentlyActivatedClient());
-        if (act != NULL && !belongToSameApplication(act, this, true)) {
+        if (act != NULL && !belongToSameApplication(act, this, SameApplicationCheck::RelaxedForActive)) {
             bool first_window = true;
             auto sameApplicationActiveHackPredicate = [this](const Client *cl) {
                 // ignore already existing splashes, toolbars, utilities and menus,
                 // as the app may show those before the main window
                 return !cl->isSplash() && !cl->isToolbar() && !cl->isUtility() && !cl->isMenu()
-                        && cl != this && Client::belongToSameApplication(cl, this, true);
+                        && cl != this && Client::belongToSameApplication(cl, this, SameApplicationCheck::RelaxedForActive);
             };
             if (isTransient()) {
                 auto clientMainClients = [this] () -> ClientList {

@@ -247,7 +247,7 @@ public:
     /// Does 'delete c;'
     static void deleteClient(Client* c);
 
-    static bool belongToSameApplication(const Client* c1, const Client* c2, bool active_hack = false);
+    static bool belongToSameApplication(const Client* c1, const Client* c2, SameApplicationChecks checks = SameApplicationChecks());
     static bool sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack);
 
     void killWindow() override;
@@ -377,7 +377,7 @@ private:
 protected:
     virtual void debug(QDebug& stream) const;
     void addDamage(const QRegion &damage) override;
-    bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
+    bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
     void doSetActive() override;
     void doSetKeepAbove() override;
     void doSetKeepBelow() override;
