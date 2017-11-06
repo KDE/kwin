@@ -97,6 +97,10 @@ public:
     void flipBuffer();
     void flipBufferWithDelete();
 
+    Transformations supportedTransformations() const {
+        return m_supportedTransformations;
+    }
+
 private:
     DrmBuffer *m_current = nullptr;
     DrmBuffer *m_next = nullptr;

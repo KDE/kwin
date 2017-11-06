@@ -122,4 +122,22 @@ QSizeF DrmScreens::physicalSize(int screen) const
     return outputs.at(screen)->physicalSize();
 }
 
+bool DrmScreens::isInternal(int screen) const
+{
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
+        return false;
+    }
+    return outputs.at(screen)->isInternal();
+}
+
+bool DrmScreens::supportsTransformations(int screen) const
+{
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
+        return false;
+    }
+    return outputs.at(screen)->supportsTransformations();
+}
+
 }

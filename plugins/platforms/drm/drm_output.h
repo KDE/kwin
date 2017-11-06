@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector>
 #include <xf86drmMode.h>
 
+#include <KWayland/Server/outputdevice_interface.h>
+
 namespace KWayland
 {
 namespace Server
@@ -110,6 +112,12 @@ public:
 
     bool initCursor(const QSize &cursorSize);
 
+    bool supportsTransformations() const;
+
+    bool isInternal() const {
+        return m_internal;
+    }
+
 Q_SIGNALS:
     void dpmsChanged();
     void modeChanged();
@@ -144,6 +152,9 @@ private:
     bool dpmsAtomicOff();
     bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
     void updateMode(int modeIndex);
+
+    void transform(KWayland::Server::OutputDeviceInterface::Transform transform);
+    void automaticRotation();
 
     DrmBackend *m_backend;
     DrmConnector *m_conn = nullptr;
@@ -181,6 +192,7 @@ private:
     DrmDumbBuffer *m_cursor[2] = {nullptr, nullptr};
     int m_cursorIndex = 0;
     bool m_hasNewCursor = false;
+    bool m_internal = false;
 };
 
 }

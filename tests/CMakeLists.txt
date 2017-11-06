@@ -43,3 +43,6 @@ target_link_libraries(pointergestures Qt5::Gui Qt5::Quick KF5::WaylandClient)
 
 add_executable(cursorhotspottest cursorhotspottest.cpp)
 target_link_libraries(cursorhotspottest Qt5::Widgets)
+
+add_executable(orientationtest orientationtest.cpp ../orientation_sensor.cpp)
+target_link_libraries(orientationtest Qt5::Widgets Qt5::Sensors KF5::Notifications KF5::I18n)

@@ -24,6 +24,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     DBus
     Quick
     QuickWidgets
+    Sensors
     Script
     UiTools
     Widgets
@@ -465,6 +466,7 @@ set(kwin_KDEINIT_SRCS
     moving_client_x11_filter.cpp
     window_property_notify_x11_filter.cpp
     rootinfo_filter.cpp
+    orientation_sensor.cpp
    )
 
 if(KWIN_BUILD_TABBOX)
@@ -541,6 +543,7 @@ set(kwin_QT_LIBS
     Qt5::Concurrent
     Qt5::DBus
     Qt5::Quick
+    Qt5::Sensors
     Qt5::Script
 )
 

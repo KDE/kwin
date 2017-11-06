@@ -35,6 +35,7 @@ namespace KWin
 {
 class AbstractClient;
 class Platform;
+class OrientationSensor;
 
 class KWIN_EXPORT Screens : public QObject
 {
@@ -124,6 +125,28 @@ public:
      **/
     virtual QSizeF physicalSize(int screen) const;
 
+    /**
+     * @returns @c true if the @p screen is connected through an internal display (e.g. LVDS).
+     * Default implementation returns @c false.
+     **/
+    virtual bool isInternal(int screen) const;
+
+    /**
+     * @returns @c true if the @p screen can be rotated.
+     * Default implementation returns @c false
+     **/
+    virtual bool supportsTransformations(int screen) const;
+
+    /**
+     * Provides access to the OrientationSensor. The OrientationSensor is controlled by the
+     * base implementation. The implementing subclass can use this to get notifications about
+     * changes of the orientation and current orientation. There is no need to enable/disable it,
+     * that is done by the base implementation
+     **/
+    OrientationSensor *orientationSensor() const {
+        return m_orientationSensor;
+    }
+
 public Q_SLOTS:
     void reconfigure();
 
@@ -170,6 +193,7 @@ private:
     QTimer *m_changedTimer;
     KSharedConfig::Ptr m_config;
     QSize m_boundingSize;
+    OrientationSensor *m_orientationSensor;
 
     KWIN_SINGLETON(Screens)
 };

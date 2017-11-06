@@ -161,6 +161,7 @@ set( testScriptedEffectLoader_SRCS
     ../scripting/scriptingutils.cpp
     ../scripting/scripting_logging.cpp
     ../screens.cpp
+    ../orientation_sensor.cpp
 )
 kconfig_add_kcfg_files(testScriptedEffectLoader_SRCS ../settings.kcfgc)
 add_executable( testScriptedEffectLoader ${testScriptedEffectLoader_SRCS})
@@ -169,11 +170,13 @@ target_link_libraries(testScriptedEffectLoader
     Qt5::Concurrent
     Qt5::Qml
     Qt5::Script
+    Qt5::Sensors
     Qt5::Test
     Qt5::X11Extras
     KF5::ConfigGui
     KF5::GlobalAccel
     KF5::I18n
+    KF5::Notifications
     KF5::Package
     kwineffects
     kwin4_effect_builtins
@@ -229,16 +232,20 @@ set( testScreens_SRCS
     mock_workspace.cpp
     ../screens.cpp
     ../x11eventfilter.cpp
+    ../orientation_sensor.cpp
 )
 kconfig_add_kcfg_files(testScreens_SRCS ../settings.kcfgc)
 
 add_executable( testScreens ${testScreens_SRCS})
 target_include_directories(testScreens BEFORE PRIVATE ./)
 target_link_libraries(testScreens
+    Qt5::Sensors
     Qt5::Test
     Qt5::X11Extras
     KF5::ConfigCore
     KF5::ConfigGui
+    KF5::I18n
+    KF5::Notifications
     KF5::WindowSystem
 )
 
@@ -258,14 +265,18 @@ set( testXRandRScreens_SRCS
      ../plugins/platforms/x11/standalone/screens_xrandr.cpp
      ../xcbutils.cpp # init of extensions
      ../x11eventfilter.cpp
+     ../orientation_sensor.cpp
 )
 kconfig_add_kcfg_files(testXRandRScreens_SRCS ../settings.kcfgc)
 add_executable( testXRandRScreens ${testXRandRScreens_SRCS} )
 target_link_libraries( testXRandRScreens
                        Qt5::Test
                        Qt5::Gui
+                       Qt5::Sensors
                        KF5::ConfigCore
                        KF5::ConfigGui
+                       KF5::I18n
+                       KF5::Notifications
                        KF5::WindowSystem
                        XCB::XCB
                        XCB::RANDR
@@ -296,6 +307,7 @@ set( testScreenEdges_SRCS
     ../virtualdesktops.cpp
     ../xcbutils.cpp # init of extensions
     ../plugins/platforms/x11/standalone/edge.cpp
+    ../orientation_sensor.cpp
 )
 kconfig_add_kcfg_files(testScreenEdges_SRCS ../settings.kcfgc)
 qt5_add_dbus_interface( testScreenEdges_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.freedesktop.ScreenSaver.xml screenlocker_interface)
@@ -305,12 +317,14 @@ set_target_properties(testScreenEdges PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WI
 target_include_directories(testScreenEdges BEFORE PRIVATE ./)
 target_link_libraries(testScreenEdges
     Qt5::DBus
+    Qt5::Sensors
     Qt5::Test
     Qt5::X11Extras
     KF5::ConfigCore
     KF5::ConfigGui
     KF5::I18n
     KF5::GlobalAccel
+    KF5::Notifications
     KF5::WindowSystem
     XCB::XCB
     XCB::RANDR
