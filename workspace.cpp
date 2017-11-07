@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "screenedge.h"
 #include "screens.h"
+#include "platform.h"
 #include "scripting/scripting.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
@@ -1425,6 +1426,11 @@ QString Workspace::supportInformation() const
         support.append(bridge->supportInformation());
         support.append(QStringLiteral("\n"));
     }
+    support.append(QStringLiteral("Platform\n"));
+    support.append(QStringLiteral("==========\n"));
+    support.append(kwinApp()->platform()->supportInformation());
+    support.append(QStringLiteral("\n"));
+
     support.append(QStringLiteral("Options\n"));
     support.append(QStringLiteral("=======\n"));
     const QMetaObject *metaOptions = options->metaObject();

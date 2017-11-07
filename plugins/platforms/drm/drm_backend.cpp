@@ -727,4 +727,15 @@ QVector<CompositingType> DrmBackend::supportedCompositors() const
 #endif
 }
 
+QString DrmBackend::supportInformation() const
+{
+    QString supportInfo;
+    QDebug s(&supportInfo);
+    s.nospace();
+    s << "Name: " << "DRM" << endl;
+    s << "Active: " << m_active << endl;
+    s << "Atomic Mode Setting: " << m_atomicModeSetting << endl;
+    return supportInfo;
+}
+
 }

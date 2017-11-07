@@ -383,6 +383,15 @@ public:
      **/
     virtual QVector<CompositingType> supportedCompositors() const = 0;
 
+    /*
+     * A string of information to include in kwin debug output
+     * It should not be translated.
+     *
+     * The base implementation prints the name.
+     * @since 5.12
+     */
+    virtual QString supportInformation() const;
+
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);

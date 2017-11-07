@@ -120,6 +120,8 @@ public:
 
     QVector<CompositingType> supportedCompositors() const override;
 
+    QString supportInformation() const override;
+
 public Q_SLOTS:
     void turnOutputsOn();
 

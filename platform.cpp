@@ -477,4 +477,9 @@ void Platform::createEffectsHandler(Compositor *compositor, Scene *scene)
     new EffectsHandlerImpl(compositor, scene);
 }
 
+QString Platform::supportInformation() const
+{
+    return QStringLiteral("Name: %1\n").arg(metaObject()->className());
+}
+
 }
