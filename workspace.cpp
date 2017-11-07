@@ -1481,6 +1481,7 @@ QString Workspace::supportInformation() const
                               .arg(geo.y())
                               .arg(geo.width())
                               .arg(geo.height()));
+        support.append(QStringLiteral("Scale: %1\n").arg(screens()->scale(i)));
         support.append(QStringLiteral("Refresh Rate: %1\n\n").arg(screens()->refreshRate(i)));
     }
     support.append(QStringLiteral("\nCompositing\n"));
