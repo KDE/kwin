@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRegion>
 #include <QSize>
 #include <QTimeLine>
+#include <QFont>
 #include <QQueue>
 
 #include <kwineffects.h>

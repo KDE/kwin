@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMatrix4x4>
 #include <QQueue>
 #include <QTimeLine>
+#include <QFont>
 
 namespace KWin
 {

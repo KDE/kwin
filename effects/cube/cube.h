@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQueue>
 #include <QMatrix4x4>
 #include <QTimeLine>
+#include <QFont>
 #include "cube_inside.h"
 #include "cube_proxy.h"
 

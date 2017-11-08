@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QTimeLine>
 #include <QApplication>
+#include <QFontMetrics>
 
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/slide_interface.h>

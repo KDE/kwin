@@ -95,6 +95,7 @@ if (XCB_ICCCM_FOUND)
     target_link_libraries( testXcbSizeHints
                            Qt5::Test
                            Qt5::X11Extras
+                           Qt5::Widgets
                            KF5::ConfigCore
                            KF5::WindowSystem
                            XCB::XCB
@@ -237,6 +238,7 @@ target_include_directories(testScreens BEFORE PRIVATE ./)
 target_link_libraries(testScreens
     Qt5::Test
     Qt5::X11Extras
+    Qt5::Widgets
     KF5::ConfigCore
     KF5::ConfigGui
     KF5::WindowSystem
@@ -263,7 +265,7 @@ kconfig_add_kcfg_files(testXRandRScreens_SRCS ../settings.kcfgc)
 add_executable( testXRandRScreens ${testXRandRScreens_SRCS} )
 target_link_libraries( testXRandRScreens
                        Qt5::Test
-                       Qt5::Gui
+		       Qt5::Widgets
                        KF5::ConfigCore
                        KF5::ConfigGui
                        KF5::WindowSystem

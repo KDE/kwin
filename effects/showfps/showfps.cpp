@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 #include <QPainter>
 #include <QVector2D>
+#include <QPalette>
 
 namespace KWin
 {
