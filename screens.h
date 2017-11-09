@@ -224,12 +224,6 @@ private:
 };
 
 inline
-void Screens::setConfig(KSharedConfig::Ptr config)
-{
-    m_config = config;
-}
-
-inline
 int Screens::count() const
 {
     return m_count;

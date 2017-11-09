@@ -226,6 +226,14 @@ Qt::ScreenOrientation Screens::orientation(int screen) const
     return Qt::PrimaryOrientation;
 }
 
+void Screens::setConfig(KSharedConfig::Ptr config)
+{
+    m_config = config;
+    if (m_orientationSensor) {
+        m_orientationSensor->setConfig(config);
+    }
+}
+
 BasicScreens::BasicScreens(Platform *backend, QObject *parent)
     : Screens(parent)
     , m_backend(backend)

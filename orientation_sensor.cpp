@@ -18,10 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "orientation_sensor.h"
+#include <orientationsensoradaptor.h>
 
 #include <QOrientationSensor>
 #include <QOrientationReading>
 
+#include <KConfigGroup>
 #include <KStatusNotifierItem>
 #include <KLocalizedString>
 
@@ -84,12 +86,24 @@ void OrientationSensor::setEnabled(bool enabled)
     }
     m_enabled = enabled;
     if (m_enabled) {
+        loadConfig();
         setupStatusNotifier();
+        m_adaptor = new OrientationSensorAdaptor(this);
     } else {
         delete m_sni;
         m_sni = nullptr;
+        delete m_adaptor;
+        m_adaptor = nullptr;
     }
     startStopSensor();
+}
+
+void OrientationSensor::loadConfig()
+{
+    if (!m_config) {
+        return;
+    }
+    m_userEnabled = m_config->group("OrientationSensor").readEntry("Enabled", true);
 }
 
 void OrientationSensor::setupStatusNotifier()
@@ -110,6 +124,7 @@ void OrientationSensor::setupStatusNotifier()
         [this] {
             m_userEnabled = !m_userEnabled;
             startStopSensor();
+            emit userEnabledChanged(m_userEnabled);
         }
     );
 }
@@ -121,6 +136,18 @@ void OrientationSensor::startStopSensor()
     } else {
         m_sensor->stop();
     }
+}
+
+void OrientationSensor::setUserEnabled(bool enabled)
+{
+    if (m_userEnabled == enabled) {
+        return;
+    }
+    m_userEnabled = enabled;
+    if (m_config) {
+        m_config->group("OrientationSensor").writeEntry("Enabled", m_userEnabled);
+    }
+    emit userEnabledChanged(m_userEnabled);
 }
 
 }

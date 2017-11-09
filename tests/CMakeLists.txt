@@ -44,5 +44,11 @@ target_link_libraries(pointergestures Qt5::Gui Qt5::Quick KF5::WaylandClient)
 add_executable(cursorhotspottest cursorhotspottest.cpp)
 target_link_libraries(cursorhotspottest Qt5::Widgets)
 
-add_executable(orientationtest orientationtest.cpp ../orientation_sensor.cpp)
-target_link_libraries(orientationtest Qt5::Widgets Qt5::Sensors KF5::Notifications KF5::I18n)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set( orientationtest_SRCS
+    orientationtest.cpp
+    ../orientation_sensor.cpp
+)
+qt5_add_dbus_adaptor( orientationtest_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.kde.kwin.OrientationSensor.xml ${CMAKE_CURRENT_SOURCE_DIR}/../orientation_sensor.h KWin::OrientationSensor)
+add_executable(orientationtest ${orientationtest_SRCS})
+target_link_libraries(orientationtest Qt5::DBus Qt5::Widgets Qt5::Sensors KF5::ConfigCore KF5::Notifications KF5::I18n)

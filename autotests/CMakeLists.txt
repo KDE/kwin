@@ -168,6 +168,7 @@ set( testScriptedEffectLoader_SRCS
     ../orientation_sensor.cpp
 )
 kconfig_add_kcfg_files(testScriptedEffectLoader_SRCS ../settings.kcfgc)
+qt5_add_dbus_adaptor( testScriptedEffectLoader_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.kde.kwin.OrientationSensor.xml ${CMAKE_CURRENT_SOURCE_DIR}/../orientation_sensor.h KWin::OrientationSensor)
 add_executable( testScriptedEffectLoader ${testScriptedEffectLoader_SRCS})
 
 target_link_libraries(testScriptedEffectLoader
@@ -239,10 +240,12 @@ set( testScreens_SRCS
     ../orientation_sensor.cpp
 )
 kconfig_add_kcfg_files(testScreens_SRCS ../settings.kcfgc)
+qt5_add_dbus_adaptor( testScreens_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.kde.kwin.OrientationSensor.xml ${CMAKE_CURRENT_SOURCE_DIR}/../orientation_sensor.h KWin::OrientationSensor)
 
 add_executable( testScreens ${testScreens_SRCS})
 target_include_directories(testScreens BEFORE PRIVATE ./)
 target_link_libraries(testScreens
+    Qt5::DBus
     Qt5::Sensors
     Qt5::Test
     Qt5::X11Extras
@@ -273,9 +276,12 @@ set( testXRandRScreens_SRCS
      ../orientation_sensor.cpp
 )
 kconfig_add_kcfg_files(testXRandRScreens_SRCS ../settings.kcfgc)
+qt5_add_dbus_adaptor( testXRandRScreens_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.kde.kwin.OrientationSensor.xml ${CMAKE_CURRENT_SOURCE_DIR}/../orientation_sensor.h KWin::OrientationSensor)
 add_executable( testXRandRScreens ${testXRandRScreens_SRCS} )
 target_link_libraries( testXRandRScreens
                        Qt5::Test
+                       Qt5::DBus
+                       Qt5::Gui
                        Qt5::Sensors
 		       Qt5::Widgets
                        KF5::ConfigCore
@@ -316,6 +322,7 @@ set( testScreenEdges_SRCS
 )
 kconfig_add_kcfg_files(testScreenEdges_SRCS ../settings.kcfgc)
 qt5_add_dbus_interface( testScreenEdges_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.freedesktop.ScreenSaver.xml screenlocker_interface)
+qt5_add_dbus_adaptor( testScreenEdges_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.kde.kwin.OrientationSensor.xml ${CMAKE_CURRENT_SOURCE_DIR}/../orientation_sensor.h KWin::OrientationSensor)
 
 add_executable( testScreenEdges ${testScreenEdges_SRCS})
 set_target_properties(testScreenEdges PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
