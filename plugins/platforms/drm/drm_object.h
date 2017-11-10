@@ -53,38 +53,35 @@ public:
     void setOutput(DrmOutput* output) {
         m_output = output;
     }
-    
-    uint32_t propId(int prop) {
-        return m_props[prop]->propId();
-    }
-    uint64_t value(int prop) {
-        return m_props[prop]->value();
-    }
 
     bool propHasEnum(int prop, uint64_t value) const {
-        return m_props[prop]->hasEnum(value);
+        auto property = m_props.at(prop);
+        return property ? property->hasEnum(value) : false;
     }
 
     void setValue(int prop, uint64_t new_value)
     {
         Q_ASSERT(prop < m_props.size());
-        m_props[prop]->setValue(new_value);
+        auto property = m_props.at(prop);
+        if (property) {
+            property->setValue(new_value);
+        }
     }
 
     virtual bool atomicPopulate(drmModeAtomicReq *req);
 
 protected:
     virtual bool initProps() = 0;           // only derived classes know names and quantity of properties
+    void setPropertyNames(QVector<QByteArray> &&vector);
     void initProp(int n, drmModeObjectProperties *properties, QVector<QByteArray> enumNames = QVector<QByteArray>(0));
-    bool atomicAddProperty(drmModeAtomicReq *req, int prop, uint64_t value);
+    class Property;
+    bool atomicAddProperty(drmModeAtomicReq *req, Property *property);
 
     DrmBackend *m_backend;
     const uint32_t m_id = 0;
     DrmOutput *m_output = nullptr;
 
     // for comparision with received name of DRM object
-    QVector<QByteArray> m_propsNames;
-    class Property;
     QVector<Property *> m_props;
 
     class Property
@@ -102,14 +99,17 @@ protected:
             return m_enumMap.contains(value);
         }
 
-        uint32_t propId() {
+        uint32_t propId() const {
             return m_propId;
         }
-        uint64_t value() {
+        uint64_t value() const {
             return m_value;
         }
         void setValue(uint64_t new_value) {
             m_value = new_value;
+        }
+        const QByteArray &name() const {
+            return m_propName;
         }
 
     private:
@@ -120,6 +120,9 @@ protected:
         QVector<uint64_t> m_enumMap;
         QVector<QByteArray> m_enumNames;
     };
+
+private:
+    QVector<QByteArray> m_propsNames;
 };
 
 

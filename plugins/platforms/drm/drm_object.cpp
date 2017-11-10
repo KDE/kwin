@@ -41,9 +41,14 @@ DrmObject::~DrmObject()
         delete p;
 }
 
+void DrmObject::setPropertyNames(QVector<QByteArray> &&vector)
+{
+    m_propsNames = std::move(vector);
+    m_props.fill(nullptr, m_propsNames.size());
+}
+
 void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QByteArray> enumNames)
 {
-    m_props.resize(m_propsNames.size());
     for (unsigned int i = 0; i < properties->count_props; ++i) {
         drmModePropertyRes *prop = drmModeGetProperty(m_backend->fd(), properties->props[i]);
         if (!prop) {
@@ -58,10 +63,10 @@ void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QBy
     }
 }
 
-bool DrmObject::atomicAddProperty(drmModeAtomicReq *req, int prop, uint64_t value)
+bool DrmObject::atomicAddProperty(drmModeAtomicReq *req, Property *property)
 {
-    if (drmModeAtomicAddProperty(req, m_id, m_props[prop]->propId(), value) <= 0) {
-        qCWarning(KWIN_DRM) << "Adding property" << m_propsNames[prop] << "to atomic commit failed for object" << this;
+    if (drmModeAtomicAddProperty(req, m_id, property->propId(), property->value()) <= 0) {
+        qCWarning(KWIN_DRM) << "Adding property" << property->name() << "to atomic commit failed for object" << this;
         return false;
     }
     return true;
@@ -72,7 +77,11 @@ bool DrmObject::atomicPopulate(drmModeAtomicReq *req)
     bool ret = true;
 
     for (int i = 0; i < m_props.size(); i++) {
-        ret &= atomicAddProperty(req, i, m_props[i]->value());
+        auto property = m_props.at(i);
+        if (!property) {
+            continue;
+        }
+        ret &= atomicAddProperty(req, property);
     }
 
     if (!ret) {

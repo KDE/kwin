@@ -51,9 +51,9 @@ bool DrmConnector::atomicInit()
 
 bool DrmConnector::initProps()
 {
-    m_propsNames = {
+    setPropertyNames( {
         QByteArrayLiteral("CRTC_ID"),
-    };
+    });
 
     drmModeObjectProperties *properties = drmModeObjectGetProperties(m_backend->fd(), m_id, DRM_MODE_OBJECT_CONNECTOR);
     if (!properties) {

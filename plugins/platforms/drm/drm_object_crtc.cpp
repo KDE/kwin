@@ -48,10 +48,10 @@ bool DrmCrtc::atomicInit()
 
 bool DrmCrtc::initProps()
 {
-    m_propsNames = {
+    setPropertyNames({
         QByteArrayLiteral("MODE_ID"),
         QByteArrayLiteral("ACTIVE"),
-    };
+    });
 
     drmModeObjectProperties *properties = drmModeObjectGetProperties(m_backend->fd(), m_id, DRM_MODE_OBJECT_CRTC);
     if (!properties) {
@@ -81,6 +81,9 @@ void DrmCrtc::flipBuffer()
 
 bool DrmCrtc::blank()
 {
+    if (!m_output) {
+        return false;
+    }
     if (!m_blackBuffer) {
         DrmDumbBuffer *blackBuffer = m_backend->createBuffer(m_output->pixelSize());
         if (!blackBuffer->map()) {

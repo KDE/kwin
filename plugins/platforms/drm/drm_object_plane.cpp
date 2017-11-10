@@ -63,7 +63,7 @@ bool DrmPlane::atomicInit()
 
 bool DrmPlane::initProps()
 {
-    m_propsNames = {
+    setPropertyNames( {
         QByteArrayLiteral("type"),
         QByteArrayLiteral("SRC_X"),
         QByteArrayLiteral("SRC_Y"),
@@ -76,7 +76,7 @@ bool DrmPlane::initProps()
         QByteArrayLiteral("FB_ID"),
         QByteArrayLiteral("CRTC_ID"),
         QByteArrayLiteral("rotation")
-    };
+    });
 
     QVector<QByteArray> typeNames = {
         QByteArrayLiteral("Primary"),
@@ -129,29 +129,40 @@ bool DrmPlane::initProps()
 
 DrmPlane::TypeIndex DrmPlane::type()
 {
-    uint64_t v = value(int(PropertyIndex::Type));
+    auto property = m_props.at(int(PropertyIndex::Type));
+    if (!property) {
+        return TypeIndex::Overlay;
+    }
     int typeCount = int(TypeIndex::Count);
     for (int i = 0; i < typeCount; i++) {
-            if (m_props[int(PropertyIndex::Type)]->enumMap(i) == v) {
+            if (property->enumMap(i) == property->value()) {
                     return TypeIndex(i);
             }
     }
     return TypeIndex::Overlay;
 }
 
-void DrmPlane::setNext(DrmBuffer *b){
-    setValue(int(PropertyIndex::FbId), b ? b->bufferId() : 0);
+void DrmPlane::setNext(DrmBuffer *b)
+{
+    if (auto property = m_props.at(int(PropertyIndex::FbId))) {
+        property->setValue(b ? b->bufferId() : 0);
+    }
     m_next = b;
 }
 
 void DrmPlane::setTransformation(Transformations t)
 {
-    setValue(int(PropertyIndex::Rotation), int(t));
+    if (auto property = m_props.at(int(PropertyIndex::Rotation))) {
+        property->setValue(int(t));
+    }
 }
 
 DrmPlane::Transformations DrmPlane::transformation()
 {
-    return Transformations(int(value(int(PropertyIndex::Rotation))));
+    if (auto property = m_props.at(int(PropertyIndex::Rotation))) {
+        return Transformations(int(property->value()));
+    }
+    return Transformations(Transformation::Rotate0);
 }
 
 bool DrmPlane::atomicPopulate(drmModeAtomicReq *req)
@@ -159,7 +170,11 @@ bool DrmPlane::atomicPopulate(drmModeAtomicReq *req)
     bool ret = true;
 
     for (int i = 1; i < m_props.size(); i++) {
-        ret &= atomicAddProperty(req, i, m_props[i]->value());
+        auto property = m_props.at(i);
+        if (!property) {
+            continue;
+        }
+        ret &= atomicAddProperty(req, property);
     }
 
     if (!ret) {
