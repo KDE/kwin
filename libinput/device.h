@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 
 #include <QObject>
+#include <QMatrix4x4>
 #include <QSizeF>
 #include <QVector>
 
@@ -393,6 +394,22 @@ public:
     }
 
     /**
+     * The id of the screen in KWin identifiers. Set from KWin through @link setScreenId.
+     **/
+    int screenId() const {
+        return m_screenId;
+    }
+
+    /**
+     * Sets the KWin screen id for the device
+     **/
+    void setScreenId(int screenId) {
+        m_screenId = screenId;
+    }
+
+    void setOrientation(Qt::ScreenOrientation orientation);
+
+    /**
      * Loads the configuration and applies it to the Device
      **/
     void loadConfiguration();
@@ -484,6 +501,10 @@ private:
 
     KConfigGroup m_config;
     bool m_loading = false;
+
+    int m_screenId = 0;
+    Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
+    QMatrix4x4 m_defaultCalibrationMatrix;
 
     static QVector<Device*> s_devices;
 };

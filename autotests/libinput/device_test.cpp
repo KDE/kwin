@@ -155,6 +155,10 @@ private Q_SLOTS:
     void testLoadLmrTapButtonMap();
     void testLoadLeftHanded_data();
     void testLoadLeftHanded();
+    void testScreenId();
+    void testOrientation_data();
+    void testOrientation();
+    void testCalibrationWithDefault();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -2093,6 +2097,67 @@ void TestLibinputDevice::testLoadLmrTapButtonMap()
         d.setLmrTapButtonMap(initValue);
         QCOMPARE(inputConfig.readEntry("LmrTapButtonMap", configValue), initValue);
     }
+}
+
+void TestLibinputDevice::testScreenId()
+{
+    libinput_device device;
+    Device d(&device);
+    QCOMPARE(d.screenId(), 0);
+    d.setScreenId(1);
+    QCOMPARE(d.screenId(), 1);
+}
+
+void TestLibinputDevice::testOrientation_data()
+{
+    QTest::addColumn<Qt::ScreenOrientation>("orientation");
+    QTest::addColumn<float>("m11");
+    QTest::addColumn<float>("m12");
+    QTest::addColumn<float>("m13");
+    QTest::addColumn<float>("m21");
+    QTest::addColumn<float>("m22");
+    QTest::addColumn<float>("m23");
+    QTest::addColumn<bool>("defaultIsIdentity");
+
+    QTest::newRow("Primary") << Qt::PrimaryOrientation << 1.0f << 2.0f << 3.0f << 4.0f << 5.0f << 6.0f << false;
+    QTest::newRow("Landscape") << Qt::LandscapeOrientation << 1.0f << 2.0f << 3.0f << 4.0f << 5.0f << 6.0f << false;
+    QTest::newRow("Portrait") << Qt::PortraitOrientation << 0.0f << -1.0f << 1.0f << 1.0f << 0.0f << 0.0f << true;
+    QTest::newRow("InvertedLandscape") << Qt::InvertedLandscapeOrientation << -1.0f << 0.0f << 1.0f << 0.0f << -1.0f << 1.0f << true;
+    QTest::newRow("InvertedPortrait") << Qt::InvertedPortraitOrientation << 0.0f << 1.0f << 0.0f << -1.0f << 0.0f << 1.0f << true;
+}
+
+void TestLibinputDevice::testOrientation()
+{
+    libinput_device device;
+    device.supportsCalibrationMatrix = true;
+    device.defaultCalibrationMatrix = std::array<float, 6>{{1.0, 2.0, 3.0, 4.0, 5.0, 6.0}};
+    QFETCH(bool, defaultIsIdentity);
+    device.defaultCalibrationMatrixIsIdentity = defaultIsIdentity;
+    Device d(&device);
+    QFETCH(Qt::ScreenOrientation, orientation);
+    d.setOrientation(orientation);
+    QTEST(device.calibrationMatrix[0], "m11");
+    QTEST(device.calibrationMatrix[1], "m12");
+    QTEST(device.calibrationMatrix[2], "m13");
+    QTEST(device.calibrationMatrix[3], "m21");
+    QTEST(device.calibrationMatrix[4], "m22");
+    QTEST(device.calibrationMatrix[5], "m23");
+}
+
+void TestLibinputDevice::testCalibrationWithDefault()
+{
+    libinput_device device;
+    device.supportsCalibrationMatrix = true;
+    device.defaultCalibrationMatrix = std::array<float, 6>{{2.0, 3.0, 0.0, 4.0, 5.0, 0.0}};
+    device.defaultCalibrationMatrixIsIdentity = false;
+    Device d(&device);
+    d.setOrientation(Qt::PortraitOrientation);
+    QCOMPARE(device.calibrationMatrix[0], 3.0f);
+    QCOMPARE(device.calibrationMatrix[1], -2.0f);
+    QCOMPARE(device.calibrationMatrix[2], 2.0f);
+    QCOMPARE(device.calibrationMatrix[3], 5.0f);
+    QCOMPARE(device.calibrationMatrix[4], -4.0f);
+    QCOMPARE(device.calibrationMatrix[5], 4.0f);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)

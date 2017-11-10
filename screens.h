@@ -137,6 +137,8 @@ public:
      **/
     virtual bool supportsTransformations(int screen) const;
 
+    virtual Qt::ScreenOrientation orientation(int screen) const;
+
     /**
      * Provides access to the OrientationSensor. The OrientationSensor is controlled by the
      * base implementation. The implementing subclass can use this to get notifications about

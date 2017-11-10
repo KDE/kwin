@@ -220,6 +220,12 @@ bool Screens::supportsTransformations(int screen) const
     return false;
 }
 
+Qt::ScreenOrientation Screens::orientation(int screen) const
+{
+    Q_UNUSED(screen)
+    return Qt::PrimaryOrientation;
+}
+
 BasicScreens::BasicScreens(Platform *backend, QObject *parent)
     : Screens(parent)
     , m_backend(backend)

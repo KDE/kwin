@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "context.h"
 #include "device.h"
 #include "events.h"
+#ifndef KWIN_BUILD_TESTING
+#include "../screens.h"
+#endif
 #include "../logind.h"
 #include "../udev.h"
 #include "libinput_logging.h"
@@ -277,6 +280,7 @@ void Connection::processEvents()
                     }
                 }
                 applyDeviceConfig(device);
+                applyScreenToDevice(device);
 
                 // enable possible leds
                 libinput_device_led_update(device->device(), static_cast<libinput_led>(toLibinputLEDS(m_leds)));
@@ -389,9 +393,12 @@ void Connection::processEvents()
                 break;
             }
             case LIBINPUT_EVENT_TOUCH_DOWN: {
+#ifndef KWIN_BUILD_TESTING
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                emit touchDown(te->id(), te->absolutePos(m_size), te->time(), te->device());
+                const auto &geo = screens()->geometry(te->device()->screenId());
+                emit touchDown(te->id(), geo.topLeft() + te->absolutePos(geo.size()), te->time(), te->device());
                 break;
+#endif
             }
             case LIBINPUT_EVENT_TOUCH_UP: {
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
@@ -399,9 +406,12 @@ void Connection::processEvents()
                 break;
             }
             case LIBINPUT_EVENT_TOUCH_MOTION: {
+#ifndef KWIN_BUILD_TESTING
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                emit touchMotion(te->id(), te->absolutePos(m_size), te->time(), te->device());
+                const auto &geo = screens()->geometry(te->device()->screenId());
+                emit touchMotion(te->id(), geo.topLeft() + te->absolutePos(geo.size()), te->time(), te->device());
                 break;
+#endif
             }
             case LIBINPUT_EVENT_TOUCH_CANCEL: {
                 emit touchCanceled(event->device());
@@ -474,6 +484,79 @@ void Connection::processEvents()
 void Connection::setScreenSize(const QSize &size)
 {
     m_size = size;
+}
+
+void Connection::updateScreens()
+{
+    QMutexLocker locker(&m_mutex);
+    for (auto device: qAsConst(m_devices)) {
+        applyScreenToDevice(device);
+    }
+}
+
+
+void Connection::applyScreenToDevice(Device *device)
+{
+#ifndef KWIN_BUILD_TESTING
+    QMutexLocker locker(&m_mutex);
+    if (!device->isTouch()) {
+        return;
+    }
+    int id = -1;
+    // let's try to find a screen for it
+    if (screens()->count() == 1) {
+        id = 0;
+    }
+    if (id == -1 && !device->outputName().isEmpty()) {
+        // we have an output name, try to find a screen with matching name
+        for (int i = 0; i < screens()->count(); i++) {
+            if (screens()->name(i) == device->outputName()) {
+                id = i;
+                break;
+            }
+        }
+    }
+    if (id == -1) {
+        // do we have an internal screen?
+        int internalId = -1;
+        for (int i = 0; i < screens()->count(); i++) {
+            if (screens()->isInternal(i)) {
+                internalId = i;
+                break;
+            }
+        }
+        auto testScreenMatches = [device] (int id) {
+            const auto &size = device->size();
+            const auto &screenSize = screens()->physicalSize(id);
+            return std::round(size.width()) == std::round(screenSize.width())
+                && std::round(size.height()) == std::round(screenSize.height());
+        };
+        if (internalId != -1 && testScreenMatches(internalId)) {
+            id = internalId;
+        }
+        // let's compare all screens for size
+        for (int i = 0; i < screens()->count(); i++) {
+            if (testScreenMatches(i)) {
+                id = i;
+                break;
+            }
+        }
+        if (id == -1) {
+            // still not found
+            if (internalId != -1) {
+                // we have an internal id, so let's use that
+                id = internalId;
+            } else {
+                // just take first screen, we have no clue
+                id = 0;
+            }
+        }
+    }
+    device->setScreenId(id);
+    device->setOrientation(screens()->orientation(id));
+#else
+    Q_UNUSED(device)
+#endif
 }
 
 bool Connection::isSuspended() const

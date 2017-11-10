@@ -194,6 +194,22 @@ int libinput_device_config_calibration_has_matrix(struct libinput_device *device
     return device->supportsCalibrationMatrix;
 }
 
+enum libinput_config_status libinput_device_config_calibration_set_matrix(struct libinput_device *device, const float matrix[6])
+{
+    for (std::size_t i = 0; i < 6; i++) {
+        device->calibrationMatrix[i] = matrix[i];
+    }
+    return LIBINPUT_CONFIG_STATUS_SUCCESS;
+}
+
+int libinput_device_config_calibration_get_default_matrix(struct libinput_device *device, float matrix[6])
+{
+    for (std::size_t i = 0; i < 6; i++) {
+        matrix[i] = device->defaultCalibrationMatrix[i];
+    }
+    return device->defaultCalibrationMatrixIsIdentity ? 0 : 1;
+}
+
 int libinput_device_config_left_handed_is_available(struct libinput_device *device)
 {
     return device->supportsLeftHanded;

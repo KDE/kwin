@@ -1861,11 +1861,13 @@ void InputRedirection::setupLibInputWithScreens()
         return;
     }
     m_libInput->setScreenSize(screens()->size());
+    m_libInput->updateScreens();
     connect(screens(), &Screens::sizeChanged, this,
         [this] {
             m_libInput->setScreenSize(screens()->size());
         }
     );
+    connect(screens(), &Screens::changed, m_libInput, &LibInput::Connection::updateScreens);
 #endif
 }
 

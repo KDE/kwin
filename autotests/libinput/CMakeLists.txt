@@ -5,7 +5,7 @@ include_directories(${UDEV_INCLUDE_DIR})
 ########################################################
 set( testLibinputDevice_SRCS device_test.cpp mock_libinput.cpp ../../libinput/device.cpp )
 add_executable(testLibinputDevice ${testLibinputDevice_SRCS})
-target_link_libraries( testLibinputDevice Qt5::Test Qt5::DBus KF5::ConfigCore)
+target_link_libraries( testLibinputDevice Qt5::Test Qt5::DBus Qt5::Gui KF5::ConfigCore)
 add_test(NAME kwin-testLibinputDevice COMMAND testLibinputDevice)
 ecm_mark_as_test(testLibinputDevice)
 

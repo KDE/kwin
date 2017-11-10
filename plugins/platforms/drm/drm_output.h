@@ -127,6 +127,10 @@ public:
         return m_internal;
     }
 
+    Qt::ScreenOrientation orientation() const {
+        return m_orientation;
+    }
+
 Q_SIGNALS:
     void dpmsChanged();
     void modeChanged();

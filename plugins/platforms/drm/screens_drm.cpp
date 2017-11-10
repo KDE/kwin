@@ -140,4 +140,13 @@ bool DrmScreens::supportsTransformations(int screen) const
     return outputs.at(screen)->supportsTransformations();
 }
 
+Qt::ScreenOrientation DrmScreens::orientation(int screen) const
+{
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
+        return Qt::PrimaryOrientation;
+    }
+    return outputs.at(screen)->orientation();
+}
+
 }

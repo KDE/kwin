@@ -61,6 +61,8 @@ public:
      **/
     void setScreenSize(const QSize &size);
 
+    void updateScreens();
+
     bool hasKeyboard() const {
         return m_keyboard > 0;
     }
@@ -132,6 +134,7 @@ private:
     Connection(Context *input, QObject *parent = nullptr);
     void handleEvent();
     void applyDeviceConfig(Device *device);
+    void applyScreenToDevice(Device *device);
     Context *m_input;
     QSocketNotifier *m_notifier;
     QSize m_size;

@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSizeF>
 #include <QVector>
 
+#include <array>
+
 struct libinput_device {
     bool keyboard = false;
     bool pointer = false;
@@ -90,6 +92,11 @@ struct libinput_device {
     enum libinput_config_accel_profile defaultPointerAccelerationProfile = LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
     enum libinput_config_accel_profile pointerAccelerationProfile = LIBINPUT_CONFIG_ACCEL_PROFILE_NONE;
     bool setPointerAccelerationProfileReturnValue = 0;
+    std::array<float, 6> defaultCalibrationMatrix{{1.0f, 0.0f, 0.0f,
+                                                   0.0f, 1.0f, 0.0f}};
+    std::array<float, 6> calibrationMatrix{{1.0f, 0.0f, 0.0f,
+                                            0.0f, 1.0f, 0.0f}};
+    bool defaultCalibrationMatrixIsIdentity = true;
 };
 
 struct libinput_event {
