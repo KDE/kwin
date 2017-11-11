@@ -72,6 +72,10 @@ private Q_SLOTS:
     void testTapToMove();
     void testResizeOutsideWindow_data();
     void testResizeOutsideWindow();
+    void testModifierClickUnrestrictedMove_data();
+    void testModifierClickUnrestrictedMove();
+    void testModifierScrollOpacity_data();
+    void testModifierScrollOpacity();
 
 private:
     AbstractClient *showWindow(Test::ShellSurfaceType type);
@@ -561,6 +565,176 @@ void DecorationInputTest::testResizeOutsideWindow()
 
     RELEASE;
     QVERIFY(!c->isResize());
+}
+
+void DecorationInputTest::testModifierClickUnrestrictedMove_data()
+{
+    QTest::addColumn<int>("modifierKey");
+    QTest::addColumn<int>("mouseButton");
+    QTest::addColumn<QString>("modKey");
+    QTest::addColumn<bool>("capsLock");
+    QTest::addColumn<Test::ShellSurfaceType>("surfaceType");
+
+    const QString alt = QStringLiteral("Alt");
+    const QString meta = QStringLiteral("Meta");
+
+    const QVector<std::pair<Test::ShellSurfaceType, QByteArray>> surfaceTypes{
+        {Test::ShellSurfaceType::WlShell, QByteArrayLiteral("WlShell")},
+        {Test::ShellSurfaceType::XdgShellV5, QByteArrayLiteral("XdgShellV5")},
+        {Test::ShellSurfaceType::XdgShellV6, QByteArrayLiteral("XdgShellV6")},
+    };
+
+    for (const auto &type: surfaceTypes) {
+        QTest::newRow("Left Alt + Left Click" + type.second)    << KEY_LEFTALT  << BTN_LEFT   << alt << false << type.first;
+        QTest::newRow("Left Alt + Right Click" + type.second)   << KEY_LEFTALT  << BTN_RIGHT  << alt << false << type.first;
+        QTest::newRow("Left Alt + Middle Click" + type.second)  << KEY_LEFTALT  << BTN_MIDDLE << alt << false << type.first;
+        QTest::newRow("Right Alt + Left Click" + type.second)   << KEY_RIGHTALT << BTN_LEFT   << alt << false << type.first;
+        QTest::newRow("Right Alt + Right Click" + type.second)  << KEY_RIGHTALT << BTN_RIGHT  << alt << false << type.first;
+        QTest::newRow("Right Alt + Middle Click" + type.second) << KEY_RIGHTALT << BTN_MIDDLE << alt << false << type.first;
+        // now everything with meta
+        QTest::newRow("Left Meta + Left Click" + type.second)    << KEY_LEFTMETA  << BTN_LEFT   << meta << false << type.first;
+        QTest::newRow("Left Meta + Right Click" + type.second)   << KEY_LEFTMETA  << BTN_RIGHT  << meta << false << type.first;
+        QTest::newRow("Left Meta + Middle Click" + type.second)  << KEY_LEFTMETA  << BTN_MIDDLE << meta << false << type.first;
+        QTest::newRow("Right Meta + Left Click" + type.second)   << KEY_RIGHTMETA << BTN_LEFT   << meta << false << type.first;
+        QTest::newRow("Right Meta + Right Click" + type.second)  << KEY_RIGHTMETA << BTN_RIGHT  << meta << false << type.first;
+        QTest::newRow("Right Meta + Middle Click" + type.second) << KEY_RIGHTMETA << BTN_MIDDLE << meta << false << type.first;
+
+        // and with capslock
+        QTest::newRow("Left Alt + Left Click/CapsLock" + type.second)    << KEY_LEFTALT  << BTN_LEFT   << alt << true << type.first;
+        QTest::newRow("Left Alt + Right Click/CapsLock" + type.second)   << KEY_LEFTALT  << BTN_RIGHT  << alt << true << type.first;
+        QTest::newRow("Left Alt + Middle Click/CapsLock" + type.second)  << KEY_LEFTALT  << BTN_MIDDLE << alt << true << type.first;
+        QTest::newRow("Right Alt + Left Click/CapsLock" + type.second)   << KEY_RIGHTALT << BTN_LEFT   << alt << true << type.first;
+        QTest::newRow("Right Alt + Right Click/CapsLock" + type.second)  << KEY_RIGHTALT << BTN_RIGHT  << alt << true << type.first;
+        QTest::newRow("Right Alt + Middle Click/CapsLock" + type.second) << KEY_RIGHTALT << BTN_MIDDLE << alt << true << type.first;
+        // now everything with meta
+        QTest::newRow("Left Meta + Left Click/CapsLock" + type.second)    << KEY_LEFTMETA  << BTN_LEFT   << meta << true << type.first;
+        QTest::newRow("Left Meta + Right Click/CapsLock" + type.second)   << KEY_LEFTMETA  << BTN_RIGHT  << meta << true << type.first;
+        QTest::newRow("Left Meta + Middle Click/CapsLock" + type.second)  << KEY_LEFTMETA  << BTN_MIDDLE << meta << true << type.first;
+        QTest::newRow("Right Meta + Left Click/CapsLock" + type.second)   << KEY_RIGHTMETA << BTN_LEFT   << meta << true << type.first;
+        QTest::newRow("Right Meta + Right Click/CapsLock" + type.second)  << KEY_RIGHTMETA << BTN_RIGHT  << meta << true << type.first;
+        QTest::newRow("Right Meta + Middle Click/CapsLock" + type.second) << KEY_RIGHTMETA << BTN_MIDDLE << meta << true << type.first;
+    }
+}
+
+void DecorationInputTest::testModifierClickUnrestrictedMove()
+{
+    // this test ensures that Alt+mouse button press triggers unrestricted move
+
+    // first modify the config for this run
+    QFETCH(QString, modKey);
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", modKey);
+    group.writeEntry("CommandAll1", "Move");
+    group.writeEntry("CommandAll2", "Move");
+    group.writeEntry("CommandAll3", "Move");
+    group.sync();
+    workspace()->slotReconfigure();
+    QCOMPARE(options->commandAllModifier(), modKey == QStringLiteral("Alt") ? Qt::AltModifier : Qt::MetaModifier);
+    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+
+    // create a window
+    QFETCH(Test::ShellSurfaceType, surfaceType);
+    AbstractClient *c = showWindow(surfaceType);
+    QVERIFY(c);
+    QVERIFY(c->isDecorated());
+    QVERIFY(!c->noBorder());
+    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    // move cursor on window
+    Cursor::setPos(QPoint(c->geometry().center().x(), c->y() + c->clientPos().y() / 2));
+
+    // simulate modifier+click
+    quint32 timestamp = 1;
+    QFETCH(bool, capsLock);
+    if (capsLock) {
+        kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    }
+    QFETCH(int, modifierKey);
+    QFETCH(int, mouseButton);
+    kwinApp()->platform()->keyboardKeyPressed(modifierKey, timestamp++);
+    QVERIFY(!c->isMove());
+    kwinApp()->platform()->pointerButtonPressed(mouseButton, timestamp++);
+    QVERIFY(c->isMove());
+    // release modifier should not change it
+    kwinApp()->platform()->keyboardKeyReleased(modifierKey, timestamp++);
+    QVERIFY(c->isMove());
+    // but releasing the key should end move/resize
+    kwinApp()->platform()->pointerButtonReleased(mouseButton, timestamp++);
+    QVERIFY(!c->isMove());
+    if (capsLock) {
+        kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    }
+}
+
+void DecorationInputTest::testModifierScrollOpacity_data()
+{
+    QTest::addColumn<int>("modifierKey");
+    QTest::addColumn<QString>("modKey");
+    QTest::addColumn<bool>("capsLock");
+    QTest::addColumn<Test::ShellSurfaceType>("surfaceType");
+
+    const QString alt = QStringLiteral("Alt");
+    const QString meta = QStringLiteral("Meta");
+
+    const QVector<std::pair<Test::ShellSurfaceType, QByteArray>> surfaceTypes{
+        {Test::ShellSurfaceType::WlShell, QByteArrayLiteral("WlShell")},
+        {Test::ShellSurfaceType::XdgShellV5, QByteArrayLiteral("XdgShellV5")},
+        {Test::ShellSurfaceType::XdgShellV6, QByteArrayLiteral("XdgShellV6")},
+    };
+
+    for (const auto &type: surfaceTypes) {
+        QTest::newRow("Left Alt" + type.second)   << KEY_LEFTALT  << alt << false << type.first;
+        QTest::newRow("Right Alt" + type.second)  << KEY_RIGHTALT << alt << false << type.first;
+        QTest::newRow("Left Meta" + type.second)  << KEY_LEFTMETA  << meta << false << type.first;
+        QTest::newRow("Right Meta" + type.second) << KEY_RIGHTMETA << meta << false << type.first;
+        QTest::newRow("Left Alt/CapsLock" + type.second)   << KEY_LEFTALT  << alt << true << type.first;
+        QTest::newRow("Right Alt/CapsLock" + type.second)  << KEY_RIGHTALT << alt << true << type.first;
+        QTest::newRow("Left Meta/CapsLock" + type.second)  << KEY_LEFTMETA  << meta << true << type.first;
+        QTest::newRow("Right Meta/CapsLock" + type.second) << KEY_RIGHTMETA << meta << true << type.first;
+    }
+}
+
+void DecorationInputTest::testModifierScrollOpacity()
+{
+    // this test verifies that mod+wheel performs a window operation
+
+    // first modify the config for this run
+    QFETCH(QString, modKey);
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", modKey);
+    group.writeEntry("CommandAllWheel", "change opacity");
+    group.sync();
+    workspace()->slotReconfigure();
+
+    QFETCH(Test::ShellSurfaceType, surfaceType);
+    AbstractClient *c = showWindow(surfaceType);
+    QVERIFY(c);
+    QVERIFY(c->isDecorated());
+    QVERIFY(!c->noBorder());
+    c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
+    // move cursor on window
+    Cursor::setPos(QPoint(c->geometry().center().x(), c->y() + c->clientPos().y() / 2));
+    // set the opacity to 0.5
+    c->setOpacity(0.5);
+    QCOMPARE(c->opacity(), 0.5);
+
+    // simulate modifier+wheel
+    quint32 timestamp = 1;
+    QFETCH(bool, capsLock);
+    if (capsLock) {
+        kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    }
+    QFETCH(int, modifierKey);
+    kwinApp()->platform()->keyboardKeyPressed(modifierKey, timestamp++);
+    kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
+    QCOMPARE(c->opacity(), 0.6);
+    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    QCOMPARE(c->opacity(), 0.5);
+    kwinApp()->platform()->keyboardKeyReleased(modifierKey, timestamp++);
+    if (capsLock) {
+        kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    }
 }
 
 }
