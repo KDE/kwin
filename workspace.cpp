@@ -1531,7 +1531,7 @@ QString Workspace::supportInformation() const
     for (int i=0; i<screens()->count(); ++i) {
         const QRect geo = screens()->geometry(i);
         support.append(QStringLiteral("Screen %1:\n").arg(i));
-        support.append(QStringLiteral("---------\n").arg(i));
+        support.append(QStringLiteral("---------\n"));
         support.append(QStringLiteral("Name: %1\n").arg(screens()->name(i)));
         support.append(QStringLiteral("Geometry: %1,%2,%3x%4\n")
                               .arg(geo.x())
