@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_object.h"
 
-#include "drm_backend.h"
 #include "logging.h"
 
 namespace KWin
@@ -29,8 +28,8 @@ namespace KWin
  * Defintions for class DrmObject
  */
 
-DrmObject::DrmObject(uint32_t object_id, DrmBackend *backend)
-    : m_backend(backend)
+DrmObject::DrmObject(uint32_t object_id, int fd)
+    : m_fd(fd)
     , m_id(object_id)
 {
 }
@@ -50,7 +49,7 @@ void DrmObject::setPropertyNames(QVector<QByteArray> &&vector)
 void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QByteArray> enumNames)
 {
     for (unsigned int i = 0; i < properties->count_props; ++i) {
-        drmModePropertyRes *prop = drmModeGetProperty(m_backend->fd(), properties->props[i]);
+        drmModePropertyRes *prop = drmModeGetProperty(fd(), properties->props[i]);
         if (!prop) {
             continue;
         }

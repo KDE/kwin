@@ -28,7 +28,7 @@ namespace KWin
 class DrmConnector : public DrmObject
 {
 public:
-    DrmConnector(uint32_t connector_id, DrmBackend *backend);
+    DrmConnector(uint32_t connector_id, int fd);
 
     virtual ~DrmConnector();
 

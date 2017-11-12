@@ -27,8 +27,9 @@ namespace KWin
 {
 
 DrmCrtc::DrmCrtc(uint32_t crtc_id, DrmBackend *backend, int resIndex)
-    : DrmObject(crtc_id, backend),
-      m_resIndex(resIndex)
+    : DrmObject(crtc_id, backend->fd()),
+      m_resIndex(resIndex),
+      m_backend(backend)
 {
 }
 
@@ -53,7 +54,7 @@ bool DrmCrtc::initProps()
         QByteArrayLiteral("ACTIVE"),
     });
 
-    drmModeObjectProperties *properties = drmModeObjectGetProperties(m_backend->fd(), m_id, DRM_MODE_OBJECT_CRTC);
+    drmModeObjectProperties *properties = drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_CRTC);
     if (!properties) {
         qCWarning(KWIN_DRM) << "Failed to get properties for crtc " << m_id ;
         return false;

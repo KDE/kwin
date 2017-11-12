@@ -111,7 +111,7 @@ if(NOT WIN32)
 
     # compatibility variables
     set(Libdrm_LIBRARIES ${Libdrm_LIBRARY})
-    set(Libdrm_INCLUDE_DIRS ${Libdrm_INCLUDE_DIR})
+    set(Libdrm_INCLUDE_DIRS ${Libdrm_INCLUDE_DIR} "${Libdrm_INCLUDE_DIR}/libdrm")
     set(Libdrm_VERSION_STRING ${Libdrm_VERSION})
 
 else()

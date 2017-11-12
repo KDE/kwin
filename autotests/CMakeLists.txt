@@ -6,6 +6,9 @@ add_subdirectory(integration)
 if (HAVE_INPUT)
     add_subdirectory(libinput)
 endif()
+if (HAVE_DRM)
+    add_subdirectory(drm)
+endif()
 add_subdirectory(tabbox)
 
 ########################################################

@@ -32,7 +32,7 @@ class DrmBuffer;
 class DrmPlane : public DrmObject
 {
 public:
-    DrmPlane(uint32_t plane_id, DrmBackend *backend);
+    DrmPlane(uint32_t plane_id, int fd);
 
     ~DrmPlane();
 

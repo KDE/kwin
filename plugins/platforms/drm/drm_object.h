@@ -37,9 +37,9 @@ class DrmObject
 {
 public:
     // creates drm object by its id delivered by the kernel
-    DrmObject(uint32_t object_id, DrmBackend *backend);
+    DrmObject(uint32_t object_id, int fd);
 
-    virtual ~DrmObject() = 0;
+    virtual ~DrmObject();
 
     virtual bool atomicInit() = 0;
 
@@ -68,6 +68,10 @@ public:
         }
     }
 
+    int fd() const {
+        return m_fd;
+    }
+
     virtual bool atomicPopulate(drmModeAtomicReq *req);
 
 protected:
@@ -77,8 +81,8 @@ protected:
     class Property;
     bool atomicAddProperty(drmModeAtomicReq *req, Property *property);
 
-    DrmBackend *m_backend;
-    const uint32_t m_id = 0;
+    int m_fd;
+    const uint32_t m_id;
     DrmOutput *m_output = nullptr;
 
     // for comparision with received name of DRM object

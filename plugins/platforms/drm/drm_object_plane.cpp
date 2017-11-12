@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_object_plane.h"
-#include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_pointer.h"
 #include "logging.h"
@@ -26,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-DrmPlane::DrmPlane(uint32_t plane_id, DrmBackend *backend)
-    : DrmObject(plane_id, backend)
+DrmPlane::DrmPlane(uint32_t plane_id, int fd)
+    : DrmObject(plane_id, fd)
 {
 }
 
@@ -40,7 +39,7 @@ DrmPlane::~DrmPlane()
 bool DrmPlane::atomicInit()
 {
     qCDebug(KWIN_DRM) << "Atomic init for plane:" << m_id;
-    ScopedDrmPointer<_drmModePlane, &drmModeFreePlane> p(drmModeGetPlane(m_backend->fd(), m_id));
+    ScopedDrmPointer<_drmModePlane, &drmModeFreePlane> p(drmModeGetPlane(fd(), m_id));
 
     if (!p) {
         qCWarning(KWIN_DRM) << "Failed to get kernel plane" << m_id;
@@ -93,7 +92,7 @@ bool DrmPlane::initProps()
         QByteArrayLiteral("reflect-y")
     };
 
-    drmModeObjectProperties *properties = drmModeObjectGetProperties(m_backend->fd(), m_id, DRM_MODE_OBJECT_PLANE);
+    drmModeObjectProperties *properties = drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_PLANE);
     if (!properties){
         qCWarning(KWIN_DRM) << "Failed to get properties for plane " << m_id ;
         return false;

@@ -26,12 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class DrmBackend;
-
 class DrmBuffer
 {
 public:
-    DrmBuffer(DrmBackend *backend);
+    DrmBuffer(int fd);
     virtual ~DrmBuffer() = default;
 
     virtual bool needsModeChange(DrmBuffer *b) const {Q_UNUSED(b) return false;}
@@ -46,16 +44,20 @@ public:
 
     virtual void releaseGbm() {}
 
+    int fd() const {
+        return m_fd;
+    }
+
 protected:
-    DrmBackend *m_backend;
     quint32 m_bufferId = 0;
     QSize m_size;
+    int m_fd;
 };
 
 class DrmDumbBuffer : public DrmBuffer
 {
 public:
-    DrmDumbBuffer(DrmBackend *backend, const QSize &size);
+    DrmDumbBuffer(int fd, const QSize &size);
     ~DrmDumbBuffer();
 
     bool needsModeChange(DrmBuffer *b) const override;

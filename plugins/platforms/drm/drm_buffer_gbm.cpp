@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#include "drm_backend.h"
 #include "drm_buffer_gbm.h"
 #include "gbm_surface.h"
 
@@ -29,14 +28,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <errno.h>
 // drm
 #include <xf86drm.h>
+#include <xf86drmMode.h>
 #include <gbm.h>
 
 namespace KWin
 {
 
 // DrmSurfaceBuffer
-DrmSurfaceBuffer::DrmSurfaceBuffer(DrmBackend *backend, const std::shared_ptr<GbmSurface> &surface)
-    : DrmBuffer(backend)
+DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, const std::shared_ptr<GbmSurface> &surface)
+    : DrmBuffer(fd)
     , m_surface(surface)
 {
     m_bo = m_surface->lockFrontBuffer();
@@ -45,7 +45,7 @@ DrmSurfaceBuffer::DrmSurfaceBuffer(DrmBackend *backend, const std::shared_ptr<Gb
         return;
     }
     m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
-    if (drmModeAddFB(m_backend->fd(), m_size.width(), m_size.height(), 24, 32, gbm_bo_get_stride(m_bo), gbm_bo_get_handle(m_bo).u32, &m_bufferId) != 0) {
+    if (drmModeAddFB(fd, m_size.width(), m_size.height(), 24, 32, gbm_bo_get_stride(m_bo), gbm_bo_get_handle(m_bo).u32, &m_bufferId) != 0) {
         qCWarning(KWIN_DRM) << "drmModeAddFB failed";
     }
     gbm_bo_set_user_data(m_bo, this, nullptr);
@@ -54,7 +54,7 @@ DrmSurfaceBuffer::DrmSurfaceBuffer(DrmBackend *backend, const std::shared_ptr<Gb
 DrmSurfaceBuffer::~DrmSurfaceBuffer()
 {
     if (m_bufferId) {
-        drmModeRmFB(m_backend->fd(), m_bufferId);
+        drmModeRmFB(fd(), m_bufferId);
     }
     releaseGbm();
 }

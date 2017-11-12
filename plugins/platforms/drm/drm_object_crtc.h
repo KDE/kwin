@@ -69,6 +69,7 @@ private:
     DrmBuffer *m_currentBuffer = nullptr;
     DrmBuffer *m_nextBuffer = nullptr;
     DrmDumbBuffer *m_blackBuffer = nullptr;
+    DrmBackend *m_backend;
 };
 
 }

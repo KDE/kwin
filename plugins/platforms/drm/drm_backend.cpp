@@ -274,7 +274,7 @@ void DrmBackend::openDrm()
                 // create the plane objects
                 for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
                     drmModePlane *kplane = drmModeGetPlane(m_fd, planeResources->planes[i]);
-                    DrmPlane *p = new DrmPlane(kplane->plane_id, this);
+                    DrmPlane *p = new DrmPlane(kplane->plane_id, m_fd);
                     if (p->atomicInit()) {
                         m_planes << p;
                         if (p->type() == DrmPlane::TypeIndex::Overlay) {
@@ -303,7 +303,7 @@ void DrmBackend::openDrm()
     }
 
     for (int i = 0; i < res->count_connectors; ++i) {
-        m_connectors << new DrmConnector(res->connectors[i], this);
+        m_connectors << new DrmConnector(res->connectors[i], m_fd);
     }
     for (int i = 0; i < res->count_crtcs; ++i) {
         m_crtcs << new DrmCrtc(res->crtcs[i], this, i);
@@ -726,14 +726,14 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
 
 DrmDumbBuffer *DrmBackend::createBuffer(const QSize &size)
 {
-    DrmDumbBuffer *b = new DrmDumbBuffer(this, size);
+    DrmDumbBuffer *b = new DrmDumbBuffer(m_fd, size);
     return b;
 }
 
 #if HAVE_GBM
 DrmSurfaceBuffer *DrmBackend::createBuffer(const std::shared_ptr<GbmSurface> &surface)
 {
-    DrmSurfaceBuffer *b = new DrmSurfaceBuffer(this, surface);
+    DrmSurfaceBuffer *b = new DrmSurfaceBuffer(m_fd, surface);
     return b;
 }
 #endif
