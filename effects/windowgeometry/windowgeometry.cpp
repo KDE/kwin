@@ -48,15 +48,6 @@ WindowGeometry::WindowGeometry()
                         " %3 and %4 are the resp. increments - avoid reformatting or suffixes like 'px'", \
                         "X: %1 (%3)\nY: %2 (%4)"
     reconfigure(ReconfigureAll);
-    QFont fnt; fnt.setBold(true); fnt.setPointSize(12);
-    for (int i = 0; i < 3; ++i) {
-        myMeasure[i] = effects->effectFrame(EffectFrameUnstyled, false);
-        myMeasure[i]->setFont(fnt);
-    }
-    myMeasure[0]->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    myMeasure[1]->setAlignment(Qt::AlignCenter);
-    myMeasure[2]->setAlignment(Qt::AlignRight | Qt::AlignBottom);
-
     QAction* a = new QAction(this);
     a->setObjectName(QStringLiteral("WindowGeometry"));
     a->setText(i18n("Toggle window geometry display (effect only)"));
@@ -78,6 +69,22 @@ WindowGeometry::~WindowGeometry()
         delete myMeasure[i];
 }
 
+void WindowGeometry::createFrames()
+{
+    if (myMeasure[0]) {
+        return;
+    }
+    QFont fnt; fnt.setBold(true); fnt.setPointSize(12);
+    for (int i = 0; i < 3; ++i) {
+        myMeasure[i] = effects->effectFrame(EffectFrameUnstyled, false);
+        myMeasure[i]->setFont(fnt);
+    }
+    myMeasure[0]->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    myMeasure[1]->setAlignment(Qt::AlignCenter);
+    myMeasure[2]->setAlignment(Qt::AlignRight | Qt::AlignBottom);
+
+}
+
 void WindowGeometry::reconfigure(ReconfigureFlags)
 {
     WindowGeometryConfiguration::self()->read();
@@ -97,6 +104,7 @@ void WindowGeometry::paintScreen(int mask, QRegion region, ScreenPaintData &data
 void WindowGeometry::toggle()
 {
     iAmActivated = !iAmActivated;
+    createFrames();
 }
 
 void WindowGeometry::slotWindowStartUserMovedResized(EffectWindow *w)
@@ -108,6 +116,7 @@ void WindowGeometry::slotWindowStartUserMovedResized(EffectWindow *w)
     if (w->isUserMove() && !iHandleMoves)
         return;
 
+    createFrames();
     iAmActive = true;
     myResizeWindow = w;
     myOriginalGeometry = w->geometry();

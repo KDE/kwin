@@ -59,8 +59,9 @@ private Q_SLOTS:
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
     void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const QRect &geometry);
 private:
+    void createFrames();
     EffectWindow *myResizeWindow;
-    EffectFrame *myMeasure[3];
+    EffectFrame *myMeasure[3] = {nullptr, nullptr, nullptr};
     QRect myOriginalGeometry, myCurrentGeometry;
     QRect myExtraDirtyArea;
     bool iAmActive, iAmActivated, iHandleMoves, iHandleResizes;
