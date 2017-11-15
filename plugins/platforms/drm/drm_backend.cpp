@@ -455,8 +455,6 @@ void DrmBackend::updateOutputs()
 
                 if (!output->init(connector.data())) {
                     qCWarning(KWIN_DRM) << "Failed to create output for connector " << con->id();
-                    con->setOutput(nullptr);
-                    crtc->setOutput(nullptr);
                     delete output;
                     continue;
                 }
