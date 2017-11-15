@@ -139,11 +139,13 @@ private:
     bool setModeLegacy(DrmBuffer *buffer);
     void initEdid(drmModeConnector *connector);
     void initDpms(drmModeConnector *connector);
+    void initOutputDevice(drmModeConnector *connector);
+
     bool isCurrentMode(const drmModeModeInfo *mode) const;
     void initUuid();
     void setGlobalPos(const QPoint &pos);
     void setScale(qreal scale);
-
+    void initOutput();
     bool initPrimaryPlane();
     bool initCursorPlane();
 

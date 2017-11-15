@@ -270,7 +270,51 @@ bool DrmOutput::init(drmModeConnector *connector)
         return false;
     }
 
+    m_internal = connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP;
+
     setDpms(DpmsMode::On);
+
+    if (m_internal) {
+        connect(kwinApp(), &Application::screensCreated, this,
+            [this] {
+                connect(screens()->orientationSensor(), &OrientationSensor::orientationChanged, this, &DrmOutput::automaticRotation);
+            }
+        );
+    }
+
+    QSize physicalSize = !m_edid.physicalSize.isEmpty() ? m_edid.physicalSize : QSize(connector->mmWidth, connector->mmHeight);
+    // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
+    // as this information is used to calculate DPI info, it's going to result in everything being huge
+    const QByteArray unknown = QByteArrayLiteral("unkown");
+    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId.isEmpty() ? unknown : m_edid.eisaId)
+                                                       .group(m_edid.monitorName.isEmpty() ? unknown : m_edid.monitorName)
+                                                       .group(m_edid.serialNumber.isEmpty() ? unknown : m_edid.serialNumber);
+    if (group.hasKey("PhysicalSize")) {
+        const QSize overwriteSize = group.readEntry("PhysicalSize", physicalSize);
+        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId << "/" << m_edid.monitorName << "/" << m_edid.serialNumber << " from " << physicalSize << "to " << overwriteSize;
+        physicalSize = overwriteSize;
+    }
+    m_physicalSize = physicalSize;
+
+    initOutputDevice(connector);
+    initOutput();
+
+    return true;
+}
+
+void DrmOutput::initUuid()
+{
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    hash.addData(QByteArray::number(m_conn->id()));
+    hash.addData(m_edid.eisaId);
+    hash.addData(m_edid.monitorName);
+    hash.addData(m_edid.serialNumber);
+    m_uuid = hash.result().toHex().left(10);
+}
+
+void DrmOutput::initOutput()
+{
+    Q_ASSERT(m_waylandOutputDevice);
     if (!m_waylandOutput.isNull()) {
         delete m_waylandOutput.data();
         m_waylandOutput.clear();
@@ -284,6 +328,37 @@ bool DrmOutput::init(drmModeConnector *connector)
             m_waylandOutput->setCurrentMode(QSize(m_mode.hdisplay, m_mode.vdisplay), refreshRateForMode(&m_mode));
         }
     );
+    m_waylandOutput->setManufacturer(m_waylandOutputDevice->manufacturer());
+    m_waylandOutput->setModel(m_waylandOutputDevice->model());
+    m_waylandOutput->setPhysicalSize(m_physicalSize);
+
+    // set dpms
+    if (!m_dpms.isNull()) {
+        m_waylandOutput->setDpmsSupported(true);
+        m_waylandOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsMode));
+        connect(m_waylandOutput.data(), &KWayland::Server::OutputInterface::dpmsModeRequested, this,
+            [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
+                setDpms(fromWaylandDpmsMode(mode));
+            }, Qt::QueuedConnection
+        );
+    }
+
+    for(const auto &mode: m_waylandOutputDevice->modes()) {
+        KWayland::Server::OutputInterface::ModeFlags flags;
+        if (mode.flags & KWayland::Server::OutputDeviceInterface::ModeFlag::Current) {
+            flags |= KWayland::Server::OutputInterface::ModeFlag::Current;
+        }
+        if (mode.flags & KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred) {
+            flags |= KWayland::Server::OutputInterface::ModeFlag::Preferred;
+        }
+        m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
+    }
+
+    m_waylandOutput->create();
+}
+
+void DrmOutput::initOutputDevice(drmModeConnector *connector)
+{
     if (!m_waylandOutputDevice.isNull()) {
         delete m_waylandOutputDevice.data();
         m_waylandOutputDevice.clear();
@@ -292,23 +367,13 @@ bool DrmOutput::init(drmModeConnector *connector)
     m_waylandOutputDevice->setUuid(m_uuid);
 
     if (!m_edid.eisaId.isEmpty()) {
-        m_waylandOutput->setManufacturer(QString::fromLatin1(m_edid.eisaId));
+        m_waylandOutputDevice->setManufacturer(QString::fromLatin1(m_edid.eisaId));
     } else {
-        m_waylandOutput->setManufacturer(i18n("unknown"));
+        m_waylandOutputDevice->setManufacturer(i18n("unknown"));
     }
-    m_waylandOutputDevice->setManufacturer(m_waylandOutput->manufacturer());
 
     QString connectorName = s_connectorNames.value(connector->connector_type, QByteArrayLiteral("Unknown"));
     QString modelName;
-    m_internal = connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP;
-
-    if (m_internal) {
-        connect(kwinApp(), &Application::screensCreated, this,
-            [this] {
-                connect(screens()->orientationSensor(), &OrientationSensor::orientationChanged, this, &DrmOutput::automaticRotation);
-            }
-        );
-    }
 
     if (!m_edid.monitorName.isEmpty()) {
         QString model = QString::fromLatin1(m_edid.monitorName);
@@ -323,45 +388,24 @@ bool DrmOutput::init(drmModeConnector *connector)
         modelName = i18n("unknown");
     }
 
-    m_waylandOutput->setModel(connectorName + QStringLiteral("-") + QString::number(connector->connector_type_id) + QStringLiteral("-") + modelName);
-    m_waylandOutputDevice->setModel(m_waylandOutput->model());
-    
-    QSize physicalSize = !m_edid.physicalSize.isEmpty() ? m_edid.physicalSize : QSize(connector->mmWidth, connector->mmHeight);
-    // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
-    // as this information is used to calculate DPI info, it's going to result in everything being huge
-    const QByteArray unknown = QByteArrayLiteral("unkown");
-    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId.isEmpty() ? unknown : m_edid.eisaId)
-                                                       .group(m_edid.monitorName.isEmpty() ? unknown : m_edid.monitorName)
-                                                       .group(m_edid.serialNumber.isEmpty() ? unknown : m_edid.serialNumber);
-    if (group.hasKey("PhysicalSize")) {
-        const QSize overwriteSize = group.readEntry("PhysicalSize", physicalSize);
-        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId << "/" << m_edid.monitorName << "/" << m_edid.serialNumber << " from " << physicalSize << "to " << overwriteSize;
-        physicalSize = overwriteSize;
-    }
-    m_physicalSize = physicalSize;
-    m_waylandOutput->setPhysicalSize(physicalSize);
-    m_waylandOutputDevice->setPhysicalSize(physicalSize);
+    m_waylandOutputDevice->setModel(connectorName + QStringLiteral("-") + QString::number(connector->connector_type_id) + QStringLiteral("-") + modelName);
+
+    m_waylandOutputDevice->setPhysicalSize(m_physicalSize);
 
     // read in mode information
     for (int i = 0; i < connector->count_modes; ++i) {
-
         // TODO: in AMS here we could read and store for later every mode's blob_id
         // would simplify isCurrentMode(..) and presentAtomically(..) in case of mode set
-
         auto *m = &connector->modes[i];
-        KWayland::Server::OutputInterface::ModeFlags flags;
         KWayland::Server::OutputDeviceInterface::ModeFlags deviceflags;
         if (isCurrentMode(m)) {
-            flags |= KWayland::Server::OutputInterface::ModeFlag::Current;
             deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
         }
         if (m->type & DRM_MODE_TYPE_PREFERRED) {
-            flags |= KWayland::Server::OutputInterface::ModeFlag::Preferred;
             deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred;
         }
 
         const auto refreshRate = refreshRateForMode(m);
-        m_waylandOutput->addMode(QSize(m->hdisplay, m->vdisplay), flags, refreshRate);
 
         KWayland::Server::OutputDeviceInterface::Mode mode;
         mode.id = i;
@@ -371,32 +415,7 @@ bool DrmOutput::init(drmModeConnector *connector)
         qCDebug(KWIN_DRM) << "Adding mode: " << i << mode.size;
         m_waylandOutputDevice->addMode(mode);
     }
-
-    // set dpms
-    if (!m_dpms.isNull()) {
-        m_waylandOutput->setDpmsSupported(true);
-        m_waylandOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsMode));
-        connect(m_waylandOutput.data(), &KWayland::Server::OutputInterface::dpmsModeRequested, this,
-            [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
-                setDpms(fromWaylandDpmsMode(mode));
-            }, Qt::QueuedConnection
-        );
-    }
-
-    m_waylandOutput->create();
-    qCDebug(KWIN_DRM) << "Created OutputDevice";
     m_waylandOutputDevice->create();
-    return true;
-}
-
-void DrmOutput::initUuid()
-{
-    QCryptographicHash hash(QCryptographicHash::Md5);
-    hash.addData(QByteArray::number(m_conn->id()));
-    hash.addData(m_edid.eisaId);
-    hash.addData(m_edid.monitorName);
-    hash.addData(m_edid.serialNumber);
-    m_uuid = hash.result().toHex().left(10);
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
