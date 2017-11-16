@@ -273,7 +273,7 @@ bool Toplevel::resourceMatch(const Toplevel* c1, const Toplevel* c2)
 // Client
 //****************************************
 
-bool Client::belongToSameApplication(const Client* c1, const Client* c2, bool active_hack)
+bool Client::belongToSameApplication(const Client* c1, const Client* c2, SameApplicationChecks checks)
 {
     bool same_app = false;
 
@@ -292,16 +292,18 @@ bool Client::belongToSameApplication(const Client* c1, const Client* c2, bool ac
         same_app = true; // same client leader
 
     // tests that mean they most probably don't belong together
-    else if (c1->pid() != c2->pid()
+    else if ((c1->pid() != c2->pid() && !checks.testFlag(SameApplicationCheck::AllowCrossProcesses))
             || c1->wmClientMachine(false) != c2->wmClientMachine(false))
         ; // different processes
     else if (c1->wmClientLeader() != c2->wmClientLeader()
             && c1->wmClientLeader() != c1->window() // if WM_CLIENT_LEADER is not set, it returns window(),
-            && c2->wmClientLeader() != c2->window()) // don't use in this test then
+            && c2->wmClientLeader() != c2->window() // don't use in this test then
+            && !checks.testFlag(SameApplicationCheck::AllowCrossProcesses))
         ; // different client leader
     else if (!resourceMatch(c1, c2))
         ; // different apps
-    else if (!sameAppWindowRoleMatch(c1, c2, active_hack))
+    else if (!sameAppWindowRoleMatch(c1, c2, checks.testFlag(SameApplicationCheck::RelaxedForActive))
+            && !checks.testFlag(SameApplicationCheck::AllowCrossProcesses))
         ; // "different" apps
     else if (c1->pid() == 0 || c2->pid() == 0)
         ; // old apps that don't have _NET_WM_PID, consider them different

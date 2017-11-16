@@ -2102,13 +2102,13 @@ void Client::addDamage(const QRegion &damage)
     Toplevel::addDamage(damage);
 }
 
-bool Client::belongsToSameApplication(const AbstractClient *other, bool active_hack) const
+bool Client::belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const
 {
     const Client *c2 = dynamic_cast<const Client*>(other);
     if (!c2) {
         return false;
     }
-    return Client::belongToSameApplication(this, c2, active_hack);
+    return Client::belongToSameApplication(this, c2, checks);
 }
 
 void Client::updateTabGroupStates(TabGroup::States states)

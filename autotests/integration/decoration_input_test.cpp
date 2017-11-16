@@ -603,7 +603,6 @@ void DecorationInputTest::testModifierClickUnrestrictedMove_data()
     const QVector<std::pair<Test::ShellSurfaceType, QByteArray>> surfaceTypes{
         {Test::ShellSurfaceType::WlShell, QByteArrayLiteral("WlShell")},
         {Test::ShellSurfaceType::XdgShellV5, QByteArrayLiteral("XdgShellV5")},
-        {Test::ShellSurfaceType::XdgShellV6, QByteArrayLiteral("XdgShellV6")},
     };
 
     for (const auto &type: surfaceTypes) {
@@ -702,7 +701,6 @@ void DecorationInputTest::testModifierScrollOpacity_data()
     const QVector<std::pair<Test::ShellSurfaceType, QByteArray>> surfaceTypes{
         {Test::ShellSurfaceType::WlShell, QByteArrayLiteral("WlShell")},
         {Test::ShellSurfaceType::XdgShellV5, QByteArrayLiteral("XdgShellV5")},
-        {Test::ShellSurfaceType::XdgShellV6, QByteArrayLiteral("XdgShellV6")},
     };
 
     for (const auto &type: surfaceTypes) {

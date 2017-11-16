@@ -200,7 +200,7 @@ bool TabBoxHandlerImpl::checkApplications(TabBoxClient* client) const
                 continue;
             }
             if ((c = dynamic_cast< TabBoxClientImpl* >(client.data()))) {
-                if (AbstractClient::belongToSameApplication(c->client(), current)) {
+                if (AbstractClient::belongToSameApplication(c->client(), current, AbstractClient::SameApplicationCheck::AllowCrossProcesses)) {
                     return false;
                 }
             }
@@ -212,7 +212,7 @@ bool TabBoxHandlerImpl::checkApplications(TabBoxClient* client) const
             return false;
         }
         if ((c = dynamic_cast< TabBoxClientImpl* >(pointer.data()))) {
-            if (AbstractClient::belongToSameApplication(c->client(), current)) {
+            if (AbstractClient::belongToSameApplication(c->client(), current, AbstractClient::SameApplicationCheck::AllowCrossProcesses)) {
                 return true;
             }
         }

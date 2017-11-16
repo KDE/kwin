@@ -104,9 +104,9 @@ void AbstractClient::updateMouseGrab()
 {
 }
 
-bool AbstractClient::belongToSameApplication(const AbstractClient *c1, const AbstractClient *c2, bool active_hack)
+bool AbstractClient::belongToSameApplication(const AbstractClient *c1, const AbstractClient *c2, SameApplicationChecks checks)
 {
-    return c1->belongsToSameApplication(c2, active_hack);
+    return c1->belongsToSameApplication(c2, checks);
 }
 
 bool AbstractClient::isTransient() const
