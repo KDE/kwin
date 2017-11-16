@@ -53,6 +53,7 @@ integrationTest(WAYLAND_ONLY NAME testDontCrashUseractionsMenu SRCS dont_crash_u
 integrationTest(WAYLAND_ONLY NAME testKWinBindings SRCS kwinbindings_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testVirtualDesktop SRCS virtual_desktop_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testShellClientRules SRCS shell_client_rules_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testIdleInhibition SRCS idle_inhibition_test.cpp)
 
 if (XCB_ICCCM_FOUND)
     integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp LIBS XCB::ICCCM)

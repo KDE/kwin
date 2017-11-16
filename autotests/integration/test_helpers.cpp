@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
+#include <KWayland/Client/idleinhibit.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
@@ -71,6 +72,7 @@ static struct {
     Registry *registry = nullptr;
     QThread *thread = nullptr;
     QVector<Output*> outputs;
+    IdleInhibitManager *idleInhibit = nullptr;
 } s_waylandConnection;
 
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
@@ -187,6 +189,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::IdleInhibition)) {
+        s_waylandConnection.idleInhibit = registry->createIdleInhibitManager(registry->interface(Registry::Interface::IdleInhibitManagerUnstableV1).name,
+                                                                            registry->interface(Registry::Interface::IdleInhibitManagerUnstableV1).version);
+        if (!s_waylandConnection.idleInhibit->isValid()) {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -213,6 +222,8 @@ void destroyWaylandConnection()
     s_waylandConnection.xdgShellV6 = nullptr;
     delete s_waylandConnection.shell;
     s_waylandConnection.shell = nullptr;
+    delete s_waylandConnection.idleInhibit;
+    s_waylandConnection.idleInhibit = nullptr;
     delete s_waylandConnection.shm;
     s_waylandConnection.shm = nullptr;
     delete s_waylandConnection.queue;
@@ -276,6 +287,11 @@ PlasmaWindowManagement *waylandWindowManagement()
 PointerConstraints *waylandPointerConstraints()
 {
     return s_waylandConnection.pointerConstraints;
+}
+
+IdleInhibitManager *waylandIdleInhibitManager()
+{
+    return s_waylandConnection.idleInhibit;
 }
 
 bool waitForWaylandPointer()

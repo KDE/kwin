@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "platform.h"
 #include "composite.h"
+#include "idle_inhibition.h"
 #include "screens.h"
 #include "shell_client.h"
 #include "workspace.h"
@@ -37,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/dpms_interface.h>
 #include <KWayland/Server/idle_interface.h>
+#include <KWayland/Server/idleinhibit_interface.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
@@ -238,7 +240,11 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             }
         }
     );
-    m_display->createIdle(m_display)->create();
+    auto idle = m_display->createIdle(m_display);
+    idle->create();
+    auto idleInhibition = new IdleInhibition(idle);
+    connect(this, &WaylandServer::shellClientAdded, idleInhibition, &IdleInhibition::registerShellClient);
+    m_display->createIdleInhibitManager(IdleInhibitManagerInterfaceVersion::UnstableV1, m_display)->create();
     m_plasmaShell = m_display->createPlasmaShell(m_display);
     m_plasmaShell->create();
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,

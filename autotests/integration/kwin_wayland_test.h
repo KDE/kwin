@@ -31,6 +31,7 @@ namespace Client
 {
 class ConnectionThread;
 class Compositor;
+class IdleInhibitManager;
 class PlasmaShell;
 class PlasmaWindowManagement;
 class PointerConstraints;
@@ -81,7 +82,8 @@ enum class AdditionalWaylandInterface {
     Decoration = 1 << 1,
     PlasmaShell = 1 << 2,
     WindowManagement = 1 << 3,
-    PointerConstraints = 1 << 4
+    PointerConstraints = 1 << 4,
+    IdleInhibition = 1 << 5
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -109,6 +111,7 @@ KWayland::Client::ServerSideDecorationManager *waylandServerSideDecoration();
 KWayland::Client::PlasmaShell *waylandPlasmaShell();
 KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 KWayland::Client::PointerConstraints *waylandPointerConstraints();
+KWayland::Client::IdleInhibitManager *waylandIdleInhibitManager();
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();

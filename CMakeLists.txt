@@ -5,7 +5,7 @@ set(PROJECT_VERSION "5.11.90")
 set(PROJECT_VERSION_MAJOR 5)
 
 set(QT_MIN_VERSION "5.9.0")
-set(KF5_MIN_VERSION "5.34.0")
+set(KF5_MIN_VERSION "5.41.0")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH} )
 
@@ -467,6 +467,7 @@ set(kwin_KDEINIT_SRCS
     window_property_notify_x11_filter.cpp
     rootinfo_filter.cpp
     orientation_sensor.cpp
+    idle_inhibition.cpp
    )
 
 if(KWIN_BUILD_TABBOX)
