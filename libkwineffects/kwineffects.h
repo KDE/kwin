@@ -56,6 +56,7 @@ class QFont;
 class QGraphicsScale;
 class QKeyEvent;
 class QMatrix4x4;
+class QAction;
 
 /**
  * Logging category to be used inside the KWin effects.

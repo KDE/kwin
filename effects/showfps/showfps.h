@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SHOWFPS_H
 
 #include <QTime>
+#include <QFont>
 
 #include <kwineffects.h>
 
