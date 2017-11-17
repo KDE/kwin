@@ -379,3 +379,15 @@ add_executable(testPointerConstraints test_pointer_constraints.cpp)
 target_link_libraries( testPointerConstraints Qt5::Test Qt5::Gui KF5::WaylandServer KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testPointerConstraints COMMAND testPointerConstraints)
 ecm_mark_as_test(testPointerConstraints)
+
+
+########################################################
+# Test Filter
+########################################################
+set( testFilter_SRCS
+        test_wayland_filter.cpp
+    )
+add_executable(testFilter ${testFilter_SRCS})
+target_link_libraries( testFilter Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Server)
+add_test(NAME kwayland-testFilter COMMAND testFilter)
+ecm_mark_as_test(testFilter)
