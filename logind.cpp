@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef major
 #include <sys/types.h>
 #endif
+#include <fcntl.h>
 #include <unistd.h>
 #include "utils.h"
 
@@ -378,7 +379,9 @@ int LogindIntegration::takeDevice(const char *path)
         qCDebug(KWIN_CORE) << "Could not take device" << path << ", cause: " << reply.errorMessage();
         return -1;
     }
-    return dup(reply.arguments().first().value<QDBusUnixFileDescriptor>().fileDescriptor());
+
+    // The dup syscall removes the CLOEXEC flag as a side-effect. So use fcntl's F_DUPFD_CLOEXEC cmd.
+    return fcntl(reply.arguments().first().value<QDBusUnixFileDescriptor>().fileDescriptor(), F_DUPFD_CLOEXEC, 0);
 }
 
 void LogindIntegration::releaseDevice(int fd)
