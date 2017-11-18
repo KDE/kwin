@@ -1728,13 +1728,13 @@ void InputRedirection::setupLibInput()
 
         conn->setInputConfig(kwinApp()->inputConfig());
         conn->updateLEDs(m_keyboard->xkb()->leds());
-        conn->setup();
         connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, conn, &LibInput::Connection::updateLEDs);
         connect(conn, &LibInput::Connection::eventsRead, this,
             [this] {
                 m_libInput->processEvents();
             }, Qt::QueuedConnection
         );
+        conn->setup();
         connect(conn, &LibInput::Connection::pointerButtonChanged, m_pointer, &PointerInputRedirection::processButton);
         connect(conn, &LibInput::Connection::pointerAxisChanged, m_pointer, &PointerInputRedirection::processAxis);
         connect(conn, &LibInput::Connection::pinchGestureBegin, m_pointer, &PointerInputRedirection::processPinchGestureBegin);
