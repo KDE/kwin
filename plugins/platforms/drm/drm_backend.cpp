@@ -127,7 +127,7 @@ void DrmBackend::outputWentOff()
 void DrmBackend::turnOutputsOn()
 {
     m_dpmsFilter.reset();
-    for (auto it = m_outputs.constBegin(), end = m_outputs.constEnd(); it != end; it++) {
+    for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
         (*it)->setDpms(DrmOutput::DpmsMode::On);
     }
 }
@@ -138,7 +138,7 @@ void DrmBackend::checkOutputsAreOn()
         // already disabled, all outputs are on
         return;
     }
-    for (auto it = m_outputs.constBegin(), end = m_outputs.constEnd(); it != end; it++) {
+    for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
         if (!(*it)->isDpmsEnabled()) {
             // dpms still disabled, need to keep the filter
             return;
@@ -396,6 +396,7 @@ void DrmBackend::updateOutputs()
         }
         DrmOutput *removed = *it;
         it = m_outputs.erase(it);
+        m_enabledOutputs.removeOne(removed);
         emit outputRemoved(removed);
         delete removed;
     }
@@ -475,6 +476,7 @@ void DrmBackend::updateOutputs()
     }
     std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
     m_outputs = connectedOutputs;
+    m_enabledOutputs = connectedOutputs;
     readOutputsConfiguration();
     if (!m_outputs.isEmpty()) {
         emit screensQueried();
@@ -518,18 +520,50 @@ QByteArray DrmBackend::generateOutputConfigurationUuid() const
 void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
 {
     const auto changes = config->changes();
-    for (auto it = changes.begin(); it != changes.end(); it++) {
+    bool countChanged = false;
 
+    //process all non-disabling changes
+    for (auto it = changes.begin(); it != changes.end(); it++) {
         KWayland::Server::OutputChangeSet *changeset = it.value();
 
         auto drmoutput = findOutput(it.key()->uuid());
         if (drmoutput == nullptr) {
             qCWarning(KWIN_DRM) << "Could NOT find DrmOutput matching " << it.key()->uuid();
-            return;
+            continue;
+        }
+        if (changeset->enabledChanged() && changeset->enabled() == KWayland::Server::OutputDeviceInterface::Enablement::Enabled) {
+            drmoutput->setEnabled(true);
+            m_enabledOutputs << drmoutput;
+            emit outputAdded(drmoutput);
+            countChanged = true;
         }
         drmoutput->setChanges(changeset);
     }
-    emit screens()->changed();
+    //process any disable requests
+    for (auto it = changes.begin(); it != changes.end(); it++) {
+        KWayland::Server::OutputChangeSet *changeset = it.value();
+        if (changeset->enabledChanged() && changeset->enabled() == KWayland::Server::OutputDeviceInterface::Enablement::Disabled) {
+            if (m_enabledOutputs.count() == 1) {
+                qCWarning(KWIN_DRM) << "Not disabling final screen" << it.key()->uuid();
+                continue;
+            }
+            auto drmoutput = findOutput(it.key()->uuid());
+            if (drmoutput == nullptr) {
+                qCWarning(KWIN_DRM) << "Could NOT find DrmOutput matching " << it.key()->uuid();
+                continue;
+            }
+            drmoutput->setEnabled(false);
+            m_enabledOutputs.removeOne(drmoutput);
+            emit outputRemoved(drmoutput);
+            countChanged = true;
+        }
+    }
+
+    if (countChanged) {
+        emit screensQueried();
+    } else {
+        emit screens()->changed();
+    }
     // KCoreAddons needs kwayland's 2b3f9509ac1 to not crash
     if (KCoreAddons::version() >= QT_VERSION_CHECK(5, 39, 0)) {
         config->setApplied();
@@ -706,11 +740,11 @@ DrmSurfaceBuffer *DrmBackend::createBuffer(const std::shared_ptr<GbmSurface> &su
 
 void DrmBackend::outputDpmsChanged()
 {
-    if (m_outputs.isEmpty()) {
+    if (m_enabledOutputs.isEmpty()) {
         return;
     }
     bool enabled = false;
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+    for (auto it = m_enabledOutputs.constBegin(); it != m_enabledOutputs.constEnd(); ++it) {
         enabled = enabled || (*it)->isDpmsEnabled();
     }
     setOutputsEnabled(enabled);

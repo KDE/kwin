@@ -183,6 +183,26 @@ qreal DrmOutput::scale() const
     return m_scale;
 }
 
+void DrmOutput::setEnabled(bool enabled)
+{
+    if (enabled == isEnabled()) {
+        return;
+    }
+    if (enabled) {
+        setDpms(DpmsMode::On);
+        initOutput();
+    } else {
+        setDpms(DpmsMode::Off);
+        delete m_waylandOutput.data();
+    }
+    m_waylandOutputDevice->setEnabled(enabled ?
+    KWayland::Server::OutputDeviceInterface::Enablement::Enabled : KWayland::Server::OutputDeviceInterface::Enablement::Disabled);
+}
+
+bool DrmOutput::isEnabled() const
+{
+    return !m_waylandOutput.isNull();
+}
 
 static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
 {
@@ -272,8 +292,6 @@ bool DrmOutput::init(drmModeConnector *connector)
 
     m_internal = connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP;
 
-    setDpms(DpmsMode::On);
-
     if (m_internal) {
         connect(kwinApp(), &Application::screensCreated, this,
             [this] {
@@ -297,8 +315,8 @@ bool DrmOutput::init(drmModeConnector *connector)
     m_physicalSize = physicalSize;
 
     initOutputDevice(connector);
-    initOutput();
 
+    setEnabled(true);
     return true;
 }
 
@@ -784,18 +802,13 @@ void DrmOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
 bool DrmOutput::commitChanges()
 {
     Q_ASSERT(!m_waylandOutputDevice.isNull());
-    Q_ASSERT(!m_waylandOutput.isNull());
 
     if (m_changeset.isNull()) {
         qCDebug(KWIN_DRM) << "no changes";
         // No changes to an output is an entirely valid thing
         return true;
     }
-
-    if (m_changeset->enabledChanged()) {
-        qCDebug(KWIN_DRM) << "Setting enabled:";
-        m_waylandOutputDevice->setEnabled(m_changeset->enabled());
-    }
+    //enabledChanged is handled by drmbackend
     if (m_changeset->modeChanged()) {
         qCDebug(KWIN_DRM) << "Setting new mode:" << m_changeset->mode();
         m_waylandOutputDevice->setCurrentMode(m_changeset->mode());

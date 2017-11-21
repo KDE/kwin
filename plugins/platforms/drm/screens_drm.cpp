@@ -43,7 +43,7 @@ void DrmScreens::init()
 
 QRect DrmScreens::geometry(int screen) const
 {
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->enabledOutputs();
     if (screen >= outputs.size()) {
         return QRect();
     }
@@ -52,7 +52,7 @@ QRect DrmScreens::geometry(int screen) const
 
 qreal DrmScreens::scale(int screen) const
 {
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->enabledOutputs();
     if (screen >= outputs.size()) {
         return 1;
     }
@@ -61,7 +61,7 @@ qreal DrmScreens::scale(int screen) const
 
 QSize DrmScreens::size(int screen) const
 {
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->enabledOutputs();
     if (screen >= outputs.size()) {
         return QSize();
     }
@@ -70,14 +70,14 @@ QSize DrmScreens::size(int screen) const
 
 void DrmScreens::updateCount()
 {
-    setCount(m_backend->outputs().size());
+    setCount(m_backend->enabledOutputs().size());
 }
 
 int DrmScreens::number(const QPoint &pos) const
 {
     int bestScreen = 0;
     int minDistance = INT_MAX;
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->enabledOutputs();
     for (int i = 0; i < outputs.size(); ++i) {
         const QRect &geo = outputs.at(i)->geometry();
         if (geo.contains(pos)) {
@@ -97,7 +97,7 @@ int DrmScreens::number(const QPoint &pos) const
 
 QString DrmScreens::name(int screen) const
 {
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->enabledOutputs();
     if (screen >= outputs.size()) {
         return Screens::name(screen);
     }
@@ -106,7 +106,7 @@ QString DrmScreens::name(int screen) const
 
 float DrmScreens::refreshRate(int screen) const
 {
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->enabledOutputs();
     if (screen >= outputs.size()) {
         return Screens::refreshRate(screen);
     }
@@ -115,7 +115,7 @@ float DrmScreens::refreshRate(int screen) const
 
 QSizeF DrmScreens::physicalSize(int screen) const
 {
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->enabledOutputs();
     if (screen >= outputs.size()) {
         return Screens::physicalSize(screen);
     }
@@ -124,7 +124,7 @@ QSizeF DrmScreens::physicalSize(int screen) const
 
 bool DrmScreens::isInternal(int screen) const
 {
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->enabledOutputs();
     if (screen >= outputs.size()) {
         return false;
     }
@@ -133,7 +133,7 @@ bool DrmScreens::isInternal(int screen) const
 
 bool DrmScreens::supportsTransformations(int screen) const
 {
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->enabledOutputs();
     if (screen >= outputs.size()) {
         return false;
     }

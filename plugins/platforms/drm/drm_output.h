@@ -76,6 +76,15 @@ public:
     void pageFlipped();
 
     /**
+     * Enable or disable the output.
+     * This differs from setDpms as it also
+     * removes the wl_output
+     * The default is on
+     */
+    void setEnabled(bool enabled);
+    bool isEnabled() const;
+
+    /**
      * This sets the changes and tests them against the DRM output
      */
     void setChanges(KWayland::Server::OutputChangeSet *changeset);

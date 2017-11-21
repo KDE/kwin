@@ -92,6 +92,9 @@ public:
     QVector<DrmOutput*> outputs() const {
         return m_outputs;
     }
+    QVector<DrmOutput*> enabledOutputs() const {
+        return m_enabledOutputs;
+    }
     QVector<DrmPlane*> planes() const {
         return m_planes;
     }
@@ -126,7 +129,13 @@ public Q_SLOTS:
     void turnOutputsOn();
 
 Q_SIGNALS:
+    /**
+     * Emitted whenever an output is removed/disabled
+     */
     void outputRemoved(KWin::DrmOutput *output);
+    /**
+     * Emitted whenever an output is added/enabled
+     */
     void outputAdded(KWin::DrmOutput *output);
 
 protected:
@@ -158,8 +167,11 @@ private:
     QVector<DrmCrtc*> m_crtcs;
     // all connectors
     QVector<DrmConnector*> m_connectors;
-    // currently active output pipelines (planes + crtc + encoder + connector)
+    // active output pipelines (planes + crtc + encoder + connector)
     QVector<DrmOutput*> m_outputs;
+    // active and enabled pipelines (above + wl_output)
+    QVector<DrmOutput*> m_enabledOutputs;
+
     bool m_deleteBufferAfterPageFlip;
     bool m_atomicModeSetting = false;
     bool m_cursorEnabled = false;
