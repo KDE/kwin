@@ -563,7 +563,22 @@ void ShellClient::updateDecoration(bool check_workspace_pos, bool force)
 
 void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 {
-    Q_UNUSED(force)
+    if (areGeometryUpdatesBlocked()) {
+        // when the GeometryUpdateBlocker exits the current geom is passed to setGeometry
+        // thus we need to set it here.
+        geom = QRect(x, y, w, h);
+        if (pendingGeometryUpdate() == PendingGeometryForced)
+            {} // maximum, nothing needed
+        else if (force == ForceGeometrySet)
+            setPendingGeometryUpdate(PendingGeometryForced);
+        else
+            setPendingGeometryUpdate(PendingGeometryNormal);
+        return;
+    }
+    if (pendingGeometryUpdate() != PendingGeometryNone) {
+        // reset geometry to the one before blocking, so that we can compare properly
+        geom = geometryBeforeUpdateBlocking();
+    }
     // TODO: better merge with Client's implementation
     if (QSize(w, h) == geom.size() && !m_positionAfterResize.isValid()) {
         // size didn't change, update directly
@@ -582,7 +597,6 @@ void ShellClient::doSetGeometry(const QRect &rect)
     if (!m_unmapped) {
         addWorkspaceRepaint(visibleRect());
     }
-    const QRect old = geom;
     geom = rect;
 
     if (m_unmapped && m_geomMaximizeRestore.isEmpty() && !geom.isEmpty()) {
@@ -597,6 +611,8 @@ void ShellClient::doSetGeometry(const QRect &rect)
     if (hasStrut()) {
         workspace()->updateClientArea();
     }
+    const auto old = geometryBeforeUpdateBlocking();
+    updateGeometryBeforeUpdateBlocking();
     emit geometryShapeChanged(this, old);
 
     if (isResize()) {
@@ -850,7 +866,7 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (quickTileMode() != oldQuickTileMode) {
             emit quickTileModeChanged();
         }
-        requestGeometry(workspace()->clientArea(MaximizeArea, this));
+        setGeometry(workspace()->clientArea(MaximizeArea, this));
         workspace()->raiseClient(this);
     } else {
         if (m_maximizeMode == MaximizeRestore) {
@@ -861,9 +877,9 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         }
 
         if (m_geomMaximizeRestore.isValid()) {
-            requestGeometry(m_geomMaximizeRestore);
+            setGeometry(m_geomMaximizeRestore);
         } else {
-            requestGeometry(workspace()->clientArea(PlacementArea, this));
+            setGeometry(workspace()->clientArea(PlacementArea, this));
         }
     }
 }
@@ -908,6 +924,7 @@ void ShellClient::setFullScreen(bool set, bool user)
     }
     RequestGeometryBlocker requestBlocker(this);
     StackingUpdatesBlocker blocker1(workspace());
+    GeometryUpdatesBlocker blocker2(this);
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
     updateDecoration(false, false);
     if (isFullScreen()) {
