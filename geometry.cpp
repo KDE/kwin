@@ -3360,16 +3360,19 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
 
         if (mode != QuickTileMode(QuickTileFlag::None)) {
-            m_quickTileMode = mode;
             // decorations may turn off some borders when tiled
             const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
             m_quickTileMode = int(QuickTileFlag::None); // Temporary, so the maximize code doesn't get all confused
-            setGeometry(electricBorderMaximizeGeometry(keyboard ? geometry().center() : Cursor::pos(), desktop()), geom_mode);
-        }
-        // Store the mode change
-        m_quickTileMode = mode;
 
-        setMaximize(false, false);
+            setMaximize(false, false);
+
+            setGeometry(electricBorderMaximizeGeometry(keyboard ? geometry().center() : Cursor::pos(), desktop()), geom_mode);
+            // Store the mode change
+            m_quickTileMode = mode;
+        } else {
+            m_quickTileMode = mode;
+            setMaximize(false, false);
+        }
 
         emit quickTileModeChanged();
 
