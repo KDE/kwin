@@ -48,6 +48,9 @@ public:
     int requestedEffectChainPosition() const override {
         return 40;
     }
+
+    static bool supported();
+
     // TODO react also on virtual desktop changes
 
     // for properties

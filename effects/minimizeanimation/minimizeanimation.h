@@ -49,6 +49,8 @@ public:
         return 50;
     }
 
+    static bool supported();
+
 public Q_SLOTS:
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowMinimized(KWin::EffectWindow *w);

@@ -47,6 +47,8 @@ public:
         return 50;
     }
 
+    static bool supported();
+
 private Q_SLOTS:
     void slotDesktopChanged(int old, int current);
 

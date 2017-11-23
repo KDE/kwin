@@ -61,6 +61,11 @@ SlidingPopupsEffect::~SlidingPopupsEffect()
 {
 }
 
+bool SlidingPopupsEffect::supported()
+{
+     return effects->animationsSupported();
+}
+
 void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)

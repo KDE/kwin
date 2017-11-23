@@ -38,6 +38,11 @@ SlideEffect::SlideEffect()
     reconfigure(ReconfigureAll);
 }
 
+bool SlideEffect::supported()
+{
+    return effects->animationsSupported();
+}
+
 void SlideEffect::reconfigure(ReconfigureFlags)
 {
     mTimeLine.setDuration(animationTime(250));

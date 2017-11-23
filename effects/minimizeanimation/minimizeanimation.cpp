@@ -33,6 +33,10 @@ MinimizeAnimationEffect::MinimizeAnimationEffect()
     connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), this, SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
 }
 
+bool MinimizeAnimationEffect::supported()
+{
+    return effects->animationsSupported();
+}
 
 void MinimizeAnimationEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {

@@ -378,7 +378,7 @@ EFFECT_FALLBACK
         false,
 #ifdef EFFECT_BUILTINS
         &createHelper<MinimizeAnimationEffect>,
-        nullptr,
+        &MinimizeAnimationEffect::supported,
         nullptr
 #endif
 EFFECT_FALLBACK
@@ -528,7 +528,7 @@ EFFECT_FALLBACK
         false,
 #ifdef EFFECT_BUILTINS
         &createHelper<SlideEffect>,
-        nullptr,
+        &SlideEffect::supported,
         nullptr
 #endif
 EFFECT_FALLBACK
@@ -558,7 +558,7 @@ EFFECT_FALLBACK
         false,
 #ifdef EFFECT_BUILTINS
         &createHelper<SlidingPopupsEffect>,
-        nullptr,
+        &SlidingPopupsEffect::supported,
         nullptr
 #endif
 EFFECT_FALLBACK
