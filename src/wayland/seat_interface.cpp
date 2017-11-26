@@ -350,6 +350,9 @@ void SeatInterface::Private::endDrag(quint32 serial)
 {
     auto target = drag.target;
     QObject::disconnect(drag.destroyConnection);
+    if (drag.source) {
+        drag.source->dragSource()->dropPerformed();
+    }
     if (target) {
         target->drop();
         target->updateDragTarget(nullptr, serial);

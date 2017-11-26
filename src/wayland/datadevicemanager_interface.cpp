@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "datadevicemanager_interface.h"
+#include "datasource_interface.h"
 #include "global_p.h"
 #include "display.h"
 #include "seat_interface_p.h"
@@ -53,9 +54,9 @@ private:
     static const qint32 s_dataSourceVersion;
 };
 
-const quint32 DataDeviceManagerInterface::Private::s_version = 2;
-const qint32 DataDeviceManagerInterface::Private::s_dataDeviceVersion = 2;
-const qint32 DataDeviceManagerInterface::Private::s_dataSourceVersion = 1;
+const quint32 DataDeviceManagerInterface::Private::s_version = 3;
+const qint32 DataDeviceManagerInterface::Private::s_dataDeviceVersion = 3;
+const qint32 DataDeviceManagerInterface::Private::s_dataSourceVersion = 3;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_data_device_manager_interface DataDeviceManagerInterface::Private::s_interface = {

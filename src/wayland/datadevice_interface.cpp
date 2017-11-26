@@ -19,7 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "datadevice_interface.h"
 #include "datadevicemanager_interface.h"
-#include "dataoffer_interface.h"
+#include "dataoffer_interface_p.h"
 #include "datasource_interface.h"
 #include "display.h"
 #include "resource_p.h"
@@ -55,6 +55,8 @@ public:
         SurfaceInterface *surface = nullptr;
         QMetaObject::Connection destroyConnection;
         QMetaObject::Connection pointerPosConnection;
+        QMetaObject::Connection sourceActionConnection;
+        QMetaObject::Connection targetActionConnection;
         quint32 serial = 0;
     };
     Drag drag;
@@ -121,6 +123,10 @@ void DataDeviceInterface::Private::setSelectionCallback(wl_client *client, wl_re
 
 void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
 {
+    if (dataSource->supportedDragAndDropActions()) {
+        wl_resource_post_error(dataSource->resource(), WL_DATA_SOURCE_ERROR_INVALID_SOURCE, "Data source is for drag and drop");
+        return;
+    }
     Q_Q(DataDeviceInterface);
     QObject::disconnect(selectionUnboundConnection);
     QObject::disconnect(selectionDestroyedConnection);
@@ -232,6 +238,13 @@ void DataDeviceInterface::drop()
         return;
     }
     wl_data_device_send_drop(d->resource);
+    if (d->drag.pointerPosConnection) {
+        disconnect(d->drag.pointerPosConnection);
+        d->drag.pointerPosConnection = QMetaObject::Connection();
+    }
+    disconnect(d->drag.destroyConnection);
+    d->drag.destroyConnection = QMetaObject::Connection();
+    d->drag.surface = nullptr;
     client()->flush();
 }
 
@@ -249,12 +262,22 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         disconnect(d->drag.destroyConnection);
         d->drag.destroyConnection = QMetaObject::Connection();
         d->drag.surface = nullptr;
+        if (d->drag.sourceActionConnection) {
+            disconnect(d->drag.sourceActionConnection);
+            d->drag.sourceActionConnection = QMetaObject::Connection();
+        }
+        if (d->drag.targetActionConnection) {
+            disconnect(d->drag.targetActionConnection);
+            d->drag.targetActionConnection = QMetaObject::Connection();
+        }
         // don't update serial, we need it
     }
     if (!surface) {
+        d->seat->dragSource()->dragSource()->dndAction(DataDeviceManagerInterface::DnDAction::None);
         return;
     }
-    DataOfferInterface *offer = d->createDataOffer(d->seat->dragSource()->dragSource());
+    auto *source = d->seat->dragSource()->dragSource();
+    DataOfferInterface *offer = d->createDataOffer(source);
     d->drag.surface = surface;
     if (d->seat->isDragPointer()) {
         d->drag.pointerPosConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this,
@@ -285,6 +308,30 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
     wl_data_device_send_enter(d->resource, serial, surface->resource(),
                               wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
+    if (offer) {
+        offer->d_func()->sendSourceActions();
+        auto matchOffers = [source, offer] {
+            DataDeviceManagerInterface::DnDAction action{DataDeviceManagerInterface::DnDAction::None};
+            if (source->supportedDragAndDropActions().testFlag(offer->preferredDragAndDropAction())) {
+                action = offer->preferredDragAndDropAction();
+            } else {
+                if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy) &&
+                    offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy)) {
+                    action = DataDeviceManagerInterface::DnDAction::Copy;
+                } else if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move) &&
+                    offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move)) {
+                    action = DataDeviceManagerInterface::DnDAction::Move;
+                } else if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask) &&
+                    offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask)) {
+                    action = DataDeviceManagerInterface::DnDAction::Ask;
+                }
+            }
+            offer->dndAction(action);
+            source->dndAction(action);
+        };
+        d->drag.targetActionConnection = connect(offer, &DataOfferInterface::dragAndDropActionsChanged, offer, matchOffers);
+        d->drag.sourceActionConnection = connect(source, &DataSourceInterface::supportedDragAndDropActionsChanged, source, matchOffers);
+    }
     d->client->flush();
 }
 

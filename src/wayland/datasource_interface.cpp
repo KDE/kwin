@@ -40,6 +40,8 @@ public:
     ~Private();
 
     QStringList mimeTypes;
+    // sensible default for < version 3
+    DataDeviceManagerInterface::DnDActions supportedDnDActions = DataDeviceManagerInterface::DnDAction::Copy;
 
 private:
     DataSourceInterface *q_func() {
@@ -48,6 +50,7 @@ private:
     void offer(const QString &mimeType);
 
     static void offerCallback(wl_client *client, wl_resource *resource, const char *mimeType);
+    static void setActionsCallback(wl_client *client, wl_resource *resource, uint32_t dnd_actions);
 
     const static struct wl_data_source_interface s_interface;
 };
@@ -55,7 +58,8 @@ private:
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_data_source_interface DataSourceInterface::Private::s_interface = {
     offerCallback,
-    resourceDestroyedCallback
+    resourceDestroyedCallback,
+    setActionsCallback
 };
 #endif
 
@@ -77,6 +81,31 @@ void DataSourceInterface::Private::offer(const QString &mimeType)
     mimeTypes << mimeType;
     Q_Q(DataSourceInterface);
     emit q->mimeTypeOffered(mimeType);
+}
+
+void DataSourceInterface::Private::setActionsCallback(wl_client *client, wl_resource *resource, uint32_t dnd_actions)
+{
+    Q_UNUSED(client)
+    DataDeviceManagerInterface::DnDActions supportedActions;
+    if (dnd_actions & WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY) {
+        supportedActions |= DataDeviceManagerInterface::DnDAction::Copy;
+    }
+    if (dnd_actions & WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE) {
+        supportedActions |= DataDeviceManagerInterface::DnDAction::Move;
+    }
+    if (dnd_actions & WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK) {
+        supportedActions |= DataDeviceManagerInterface::DnDAction::Ask;
+    }
+    // verify that the no other actions are sent
+    if (dnd_actions & ~(WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY | WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE | WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK)) {
+        wl_resource_post_error(resource, WL_DATA_SOURCE_ERROR_INVALID_ACTION_MASK, "Invalid action mask");
+        return;
+    }
+    auto p = cast<Private>(resource);
+    if (p->supportedDnDActions!= supportedActions) {
+        p->supportedDnDActions = supportedActions;
+        emit p->q_func()->supportedDragAndDropActionsChanged();
+    }
 }
 
 DataSourceInterface::DataSourceInterface(DataDeviceManagerInterface *parent, wl_resource *parentResource)
@@ -127,6 +156,47 @@ DataSourceInterface *DataSourceInterface::get(wl_resource *native)
 DataSourceInterface::Private *DataSourceInterface::d_func() const
 {
     return reinterpret_cast<DataSourceInterface::Private*>(d.data());
+}
+
+DataDeviceManagerInterface::DnDActions DataSourceInterface::supportedDragAndDropActions() const
+{
+    Q_D();
+    return d->supportedDnDActions;
+}
+
+void DataSourceInterface::dropPerformed()
+{
+    Q_D();
+    if (wl_resource_get_version(d->resource) < WL_DATA_SOURCE_DND_DROP_PERFORMED_SINCE_VERSION) {
+        return;
+    }
+    wl_data_source_send_dnd_drop_performed(d->resource);
+}
+
+void DataSourceInterface::dndFinished()
+{
+    Q_D();
+    if (wl_resource_get_version(d->resource) < WL_DATA_SOURCE_DND_FINISHED_SINCE_VERSION) {
+        return;
+    }
+    wl_data_source_send_dnd_finished(d->resource);
+}
+
+void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
+{
+    Q_D();
+    if (wl_resource_get_version(d->resource) < WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
+        return;
+    }
+    uint32_t wlAction = WL_DATA_DEVICE_MANAGER_DND_ACTION_NONE;
+    if (action == DataDeviceManagerInterface::DnDAction::Copy) {
+        wlAction = WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY;
+    } else if (action == DataDeviceManagerInterface::DnDAction::Move ) {
+        wlAction = WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE;
+    } else if (action == DataDeviceManagerInterface::DnDAction::Ask) {
+        wlAction = WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK;
+    }
+    wl_data_source_send_action(d->resource, wlAction);
 }
 
 }

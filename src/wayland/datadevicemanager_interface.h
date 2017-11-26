@@ -25,7 +25,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/kwaylandserver_export.h>
 #include "global.h"
 #include "datadevice_interface.h"
-#include "datasource_interface.h"
 
 namespace KWayland
 {
@@ -33,6 +32,7 @@ namespace Server
 {
 
 class Display;
+class DataSourceInterface;
 
 /**
  * @brief Represents the Global for wl_data_device_manager interface.
@@ -43,6 +43,18 @@ class KWAYLANDSERVER_EXPORT DataDeviceManagerInterface : public Global
     Q_OBJECT
 public:
     virtual ~DataDeviceManagerInterface();
+
+    /**
+     * Drag and Drop actions supported by the DataSourceInterface.
+     * @since 5.XX
+     **/
+    enum class DnDAction {
+        None = 0,
+        Copy = 1 << 0,
+        Move = 1 << 1,
+        Ask = 1 << 2
+    };
+    Q_DECLARE_FLAGS(DnDActions, DnDAction)
 
 Q_SIGNALS:
     void dataSourceCreated(KWayland::Server::DataSourceInterface*);
@@ -56,5 +68,7 @@ private:
 
 }
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWayland::Server::DataDeviceManagerInterface::DnDActions)
 
 #endif

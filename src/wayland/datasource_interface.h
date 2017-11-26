@@ -25,12 +25,12 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/kwaylandserver_export.h>
 
 #include "resource.h"
+#include "datadevicemanager_interface.h"
 
 namespace KWayland
 {
 namespace Server
 {
-class DataDeviceManagerInterface;
 
 /**
  * @brief Represents the Resource for the wl_data_source interface.
@@ -49,8 +49,36 @@ public:
 
     static DataSourceInterface *get(wl_resource *native);
 
+    /**
+     * @returns The Drag and Drop actions supported by this DataSourceInterface.
+     * @since 5.42
+     **/
+    DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const;
+
+    /**
+     * The user performed the drop action during a drag and drop operation.
+     * @since 5.42
+     **/
+    void dropPerformed();
+    /**
+     * The drop destination finished interoperating with this data source.
+     * @since 5.42
+     **/
+    void dndFinished();
+    /**
+     * This event indicates the @p action selected by the compositor after matching the
+     * source/destination side actions. Only one action (or none) will be offered here.
+     * @since 5.42
+     **/
+    void dndAction(DataDeviceManagerInterface::DnDAction action);
+
 Q_SIGNALS:
     void mimeTypeOffered(const QString&);
+    /**
+     * Emitted whenever this DataSourceInterface changes the supported drag and drop actions
+     * @since 5.42
+     **/
+    void supportedDragAndDropActionsChanged();
 
 private:
     friend class DataDeviceManagerInterface;
