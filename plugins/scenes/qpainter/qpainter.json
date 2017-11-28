@@ -4,6 +4,8 @@
         "Description": "KWin Compositor plugin rendering through QPainter",
         "Description[ca@valencia]": "Connector del Compositor del KWin que renderitza a través del QPainter",
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través del QPainter",
+        "Description[da]": "KWin-compositorplugin som renderer igennem QPainter",
+        "Description[de]": "KWin-Compositor-Modul zum Rendern mit QPainter",
         "Description[el]": "Αποτύπωση πρσοθέτου συνθέτη KWin μέσω QPainter",
         "Description[es]": "Complemento compositor de KWin renderizando mediante QPainter",
         "Description[fr]": "Module du compositeur KWin effectuant le rendu avec QPainter",
