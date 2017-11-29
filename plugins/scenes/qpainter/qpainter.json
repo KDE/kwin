@@ -20,7 +20,7 @@
         "Description[sr@latin]": "KWinov priključak slagača za renderovanje kroz QPainter",
         "Description[sr]": "К‑винов прикључак слагача за рендеровање кроз QPainter",
         "Description[sv]": "Kwin sammansättningsinsticksprogram återger via QPainter",
-        "Description[tr]": "QPainter üzerinden KWin Compositor eklentisi oluşturma",
+        "Description[tr]": "QPainter üzerinden KWin Dizgici eklentisi oluşturma",
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням QPainter",
         "Description[x-test]": "xxKWin Compositor plugin rendering through QPainterxx",
         "Description[zh_CN]": "使用 QPainter 渲染的 KWin 混成插件",

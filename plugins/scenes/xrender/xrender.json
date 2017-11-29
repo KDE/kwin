@@ -20,7 +20,7 @@
         "Description[sr@latin]": "KWinov priključak slagača za renderovanje kroz XRender",
         "Description[sr]": "К‑винов прикључак слагача за рендеровање кроз Икс‑рендер",
         "Description[sv]": "Kwin sammansättningsinsticksprogram återger via XRender",
-        "Description[tr]": "XRender üzerinden KWin Compositor eklentisi oluşturma",
+        "Description[tr]": "XRender üzerinden KWin Dizgici eklentisi oluşturma",
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням XRender",
         "Description[x-test]": "xxKWin Compositor plugin rendering through XRenderxx",
         "Description[zh_CN]": "使用 XRender 渲染的 KWin 混成插件",
