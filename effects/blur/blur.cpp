@@ -238,7 +238,7 @@ QRegion BlurEffect::expand(const QRegion &region) const
 {
     QRegion expanded;
 
-    foreach (const QRect & rect, region.rects()) {
+    for (const QRect &rect : region) {
         expanded += expand(rect);
     }
 
@@ -276,7 +276,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
 
 void BlurEffect::uploadRegion(QVector2D *&map, const QRegion &region)
 {
-    foreach (const QRect &r, region.rects()) {
+    for (const QRect &r : region) {
         const QVector2D topLeft(r.x(), r.y());
         const QVector2D topRight(r.x() + r.width(), r.y());
         const QVector2D bottomLeft(r.x(), r.y() + r.height());
@@ -339,7 +339,7 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     QRegion newClip;
     const QRegion oldClip = data.clip;
     const int radius = shader->radius();
-    foreach (const QRect& rect, data.clip.rects()) {
+    for (const QRect &rect : data.clip) {
         newClip |= rect.adjusted(radius,radius,-radius,-radius);
     }
     data.clip = newClip;

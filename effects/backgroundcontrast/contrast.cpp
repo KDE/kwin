@@ -271,7 +271,7 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
 
 void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region)
 {
-    foreach (const QRect &r, region.rects()) {
+    for (const QRect &r : region) {
         const QVector2D topLeft(r.x(), r.y());
         const QVector2D topRight(r.x() + r.width(), r.y());
         const QVector2D bottomLeft(r.x(), r.y() + r.height());
