@@ -27,10 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorationrenderer.h"
 #include "decorations/decoratedclient.h"
 #include "shadow.h"
+#include "quadsplitter.h"
 
 #include <QGraphicsScale>
-
-#define GL_QUADS 0x0007
 
 
 namespace KWin
@@ -256,41 +255,19 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
     const VkSampler sampler = (mask & (Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED)) ?
             scene()->linearSampler() : scene()->nearestSampler();
 
-    WindowQuadList decorationQuads;
-    WindowQuadList contentQuads;
-    WindowQuadList shadowQuads;
-
     // Split the quads into separate lists for each type
-    for (const WindowQuad &quad : qAsConst(data.quads)) {
-        switch (quad.type()) {
-        case WindowQuadDecoration:
-            decorationQuads.append(quad);
-            continue;
-
-        case WindowQuadContents:
-            contentQuads.append(quad);
-            continue;
-
-        case WindowQuadShadow:
-            shadowQuads.append(quad);
-            continue;
-
-        default:
-            continue;
-        }
-    }
+    QuadSplitter quads(data.quads);
 
     // Allocate space in the upload buffer for the vertices
-    size_t quadCount = decorationQuads.count() + shadowQuads.count();
+    size_t quadCount = quads.decoration().count() + quads.shadow().count();
 
     if (!(contentTraits & VulkanPipelineManager::CrossFade))
-        quadCount += contentQuads.count();
+        quadCount += quads.content().count();
 
-    const size_t maxQuads = std::max(decorationQuads.count(), std::max(contentQuads.count(), shadowQuads.count()));
     const VulkanBufferRange vbo = uploadManager->allocate(quadCount * 4 * sizeof(GLVertex2D));
 
     // Bind the index and vertex buffers
-    cmd->bindIndexBuffer(scene()->indexBufferForQuadCount(maxQuads), 0, VK_INDEX_TYPE_UINT16);
+    cmd->bindIndexBuffer(scene()->indexBufferForQuadCount(quads.maxQuadCount()), 0, VK_INDEX_TYPE_UINT16);
     cmd->bindVertexBuffers(0, { vbo.handle() }, { vbo.offset() });
 
     GLVertex2D *vertices = static_cast<GLVertex2D *>(vbo.data());
@@ -304,8 +281,8 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
 
     // Draw the shadow
     // ---------------
-    if (!shadowQuads.isEmpty() && shadowTexture) {
-        shadowQuads.makeInterleavedArrays(GL_QUADS, &vertices[vertexOffset], QMatrix4x4());
+    if (!quads.shadow().isEmpty() && shadowTexture) {
+        quads.shadow().writeVertices(&vertices[vertexOffset]);
 
         const auto &view = shadowTexture.imageView();
         auto &set = m_shadowDescriptorSet;
@@ -322,9 +299,9 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
         cmd->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, decorationPipeline);
         cmd->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, decorationPipelineLayout, 0, { set->handle() }, { (uint32_t) ubo.offset() });
 
-        clip.drawIndexed(shadowQuads.count() * 6, 1, 0, vertexOffset, 0);
+        clip.drawIndexed(quads.shadow().count() * 6, 1, 0, vertexOffset, 0);
 
-        vertexOffset += shadowQuads.count() * 4;
+        vertexOffset += quads.shadow().count() * 4;
 
         scene()->addBusyReference(set);
         scene()->addBusyReference(shadowTexture.image());
@@ -335,8 +312,8 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
 
     // Draw the decoration
     // -------------------
-    if (!decorationQuads.isEmpty() && decorationTexture) {
-        decorationQuads.makeInterleavedArrays(GL_QUADS, &vertices[vertexOffset], QMatrix4x4());
+    if (!quads.decoration().isEmpty() && decorationTexture) {
+        quads.decoration().writeVertices(&vertices[vertexOffset]);
 
         const auto &view = decorationTexture.imageView();
         auto &set = m_decorationDescriptorSet;
@@ -353,9 +330,9 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
         cmd->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, decorationPipeline);
         cmd->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, decorationPipelineLayout, 0, { set->handle() }, { (uint32_t) ubo.offset() });
 
-        clip.drawIndexed(decorationQuads.count() * 6, 1, 0, vertexOffset, 0);
+        clip.drawIndexed(quads.decoration().count() * 6, 1, 0, vertexOffset, 0);
 
-        vertexOffset += decorationQuads.count() * 4;
+        vertexOffset += quads.decoration().count() * 4;
 
         scene()->addBusyReference(set);
         scene()->addBusyReference(decorationTexture.image());
@@ -366,9 +343,9 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
 
     // Draw the contents
     // -----------------
-    if (!contentQuads.isEmpty() && contentTexture) {
+    if (!quads.content().isEmpty() && contentTexture) {
         if (!(contentTraits & VulkanPipelineManager::CrossFade)) {
-            contentQuads.makeInterleavedArrays(GL_QUADS, &vertices[vertexOffset], QMatrix4x4());
+            quads.content().writeVertices(&vertices[vertexOffset]);
 
             const auto &view = contentTexture.imageView();
             const auto imageLayout = contentTexture.imageLayout();
@@ -386,9 +363,9 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
             cmd->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, contentPipeline);
             cmd->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, contentPipelineLayout, 0, { set->handle() }, { (uint32_t) ubo.offset() });
 
-            clip.drawIndexed(contentQuads.count() * 6, 1, 0, vertexOffset, 0);
+            clip.drawIndexed(quads.content().count() * 6, 1, 0, vertexOffset, 0);
 
-            vertexOffset += contentQuads.count() * 4;
+            vertexOffset += quads.content().count() * 4;
 
             scene()->addBusyReference(set);
             scene()->addBusyReference(contentTexture.image());
@@ -399,13 +376,13 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
             m_crossFadeDescriptorSet = nullptr;
         } else {
             // Allocate and upload vertices
-            auto vbo = uploadManager->allocate(contentQuads.count() * 4 * sizeof(GLCrossFadeVertex2D));
+            auto vbo = uploadManager->allocate(quads.content().count() * 4 * sizeof(GLCrossFadeVertex2D));
             GLCrossFadeVertex2D *vertex = static_cast<GLCrossFadeVertex2D *>(vbo.data());
 
             VulkanWindowPixmap *previous = previousWindowPixmap<VulkanWindowPixmap>();
             const QRect &oldGeometry = previous->contentsRect();
 
-            for (const WindowQuad &quad : qAsConst(contentQuads)) {
+            for (const WindowQuad &quad : quads.content()) {
                 for (int i = 0; i < 4; ++i) {
                     const double xFactor = double(quad[i].u() -  toplevel->clientPos().x()) / double(toplevel->clientSize().width());
                     const double yFactor = double(quad[i].v() -  toplevel->clientPos().y()) / double(toplevel->clientSize().height());
@@ -441,7 +418,7 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
             cmd->bindVertexBuffers(0, { vbo.handle() }, { vbo.offset() });
             cmd->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, contentPipelineLayout, 0, { set->handle() }, { (uint32_t) ubo.offset() });
 
-            clip.drawIndexed(contentQuads.count() * 6, 1, 0, 0, 0);
+            clip.drawIndexed(quads.content().count() * 6, 1, 0, 0, 0);
 
             scene()->addBusyReference(set);
 
