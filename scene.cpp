@@ -899,7 +899,8 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
     };
 
     for (int i = 0; i < 4; i++) {
-        foreach (const QRect &r, (region & rects[i]).rects()) {
+        const QRegion intersectedRegion = (region & rects[i]);
+        for (const QRect &r : intersectedRegion) {
             if (!r.isValid())
                 continue;
 
@@ -940,7 +941,8 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
 WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg, const QPoint &textureOffset, qreal scale) const
 {
     WindowQuadList ret;
-    foreach (const QRect & r, reg.rects()) {
+    ret.reserve(reg.rectCount());
+    for (const QRect &r : reg) {
         WindowQuad quad(type);
         // TODO asi mam spatne pravy dolni roh - bud tady, nebo v jinych castech
         quad[ 0 ] = WindowVertex(QPointF(r.x(), r.y()),
