@@ -7,7 +7,8 @@ set(SCENE_VULKAN_SRCS
     shadow.cpp
     shadowtexturemanager.cpp
     effectframe.cpp
-    decorationrenderer.cpp)
+    decorationrenderer.cpp
+    quadsplitter.cpp)
 
 include(ECMQtDeclareLoggingCategory)
 ecm_qt_declare_logging_category(
