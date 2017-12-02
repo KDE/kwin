@@ -382,7 +382,7 @@ void VulkanWindow::performPaint(int mask, QRegion clipRegion, WindowPaintData da
             VulkanWindowPixmap *previous = previousWindowPixmap<VulkanWindowPixmap>();
             const QRect &oldGeometry = previous->contentsRect();
 
-            for (const WindowQuad &quad : quads.content()) {
+            for (const QuadSplitter::Quad &quad : quads.content()) {
                 for (int i = 0; i < 4; ++i) {
                     const double xFactor = double(quad[i].u() -  toplevel->clientPos().x()) / double(toplevel->clientSize().width());
                     const double yFactor = double(quad[i].v() -  toplevel->clientPos().y()) / double(toplevel->clientSize().height());

@@ -54,7 +54,7 @@ QuadSplitter::QuadSplitter(const WindowQuadList &quads)
 
     // Allocate space
     size_t count = shadowCount + decorationCount + contentCount;
-    m_data = static_cast<WindowQuad *>(std::malloc(count * sizeof(WindowQuad)));
+    m_data = static_cast<Quad *>(std::malloc(count * sizeof(Quad)));
 
     uintptr_t shadowOffset     = 0;
     uintptr_t decorationOffset = shadowOffset + shadowCount;

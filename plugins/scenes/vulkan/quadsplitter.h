@@ -37,49 +37,81 @@ class QuadSplitter
 {
 public:
     /**
-     * Fixed size WindowQuad array
+     * Vertex is a version of a WindowVertex that can be copied directly into a vertex buffer.
+     *
+     * It differs from WindowVertex in that the coordinates are stored as 32-bit single-precision
+     * floating point values, and it does not have the original position.
+     */
+    struct Vertex : public GLVertex2D
+    {
+        Vertex(const WindowVertex &other) {
+            position = { float(other.x()), float(other.y())};
+            texcoord = { float(other.u()), float(other.v())};
+        }
+
+        float x() const { return position.x(); }
+        float y() const { return position.y(); }
+        float u() const { return texcoord.x(); }
+        float v() const { return texcoord.y(); }
+    };
+
+
+    /**
+     * Quad is a version of a WindowQuad that can be copied directly into a vertex buffer.
+     *
+     * It differs from WindowQuad in that it contains 32-bit single-precision floating point
+     * vertices, and is missing the type and quad ID.
+     */
+    class Quad
+    {
+    public:
+        Quad(const WindowQuad &other)
+            : m_vertices{other[0], other[1], other[2], other[3]}
+        {
+        }
+
+        const Vertex &operator [](size_t index) const { return m_vertices[index]; }
+
+    private:
+        Vertex m_vertices[4];
+    };
+
+
+    /**
+     * Fixed size Quad array
      */
     class Array
     {
     public:
         Array() = default;
-        Array(WindowQuad *data, size_t count) : m_data(data), m_count(count) {}
+        Array(Quad *data, size_t count) : m_data(data), m_count(count) {}
 
         size_t count() const { return m_count; }
         bool isEmpty() const { return m_count == 0; }
 
-        // STL compatibility
+        // For STL compatibility
         size_t size() const { return m_count; }
         bool empty() const { return m_count == 0; }
 
-        const WindowQuad &first() const { return m_data[0]; }
-        const WindowQuad &last() const { return m_data[m_count - 1]; }
-        const WindowQuad *cbegin() const { return m_data; }
-        const WindowQuad *cend() const { return m_data + m_count; }
-        const WindowQuad *begin() const { return m_data; }
-        const WindowQuad *end() const { return m_data + m_count; }
+        const Quad &first() const { return m_data[0]; }
+        const Quad &last() const { return m_data[m_count - 1]; }
+        const Quad *cbegin() const { return m_data; }
+        const Quad *cend() const { return m_data + m_count; }
+        const Quad *begin() const { return m_data; }
+        const Quad *end() const { return m_data + m_count; }
 
-        WindowQuad &at(size_t index) { return m_data[index]; }
-        const WindowQuad &at(size_t index) const { return m_data[index]; }
+        Quad &at(size_t index) { return m_data[index]; }
+        const Quad &at(size_t index) const { return m_data[index]; }
 
-        WindowQuad &operator [](size_t index) { return m_data[index]; }
-        const WindowQuad &operator [](size_t index) const { return m_data[index]; }
+        Quad &operator [](size_t index) { return m_data[index]; }
+        const Quad &operator [](size_t index) const { return m_data[index]; }
 
         void writeVertices(GLVertex2D *dst) const {
-            for (const WindowQuad &quad : *this) {
-                for (int i = 0; i < 4; i++) {
-                    const WindowVertex &vertex = quad[i];
-
-                    *dst++ = GLVertex2D {
-                        .position = { float(vertex.x()), float(vertex.y()) },
-                        .texcoord = { float(vertex.u()), float(vertex.v()) }
-                    };
-                }
-            }
+            memcpy(dst, m_data, m_count * sizeof(Quad));
         }
 
     private:
-        WindowQuad *m_data;
+        Quad *m_data;
         size_t m_count;
     };
 
@@ -93,7 +125,7 @@ public:
     const Array &content() const { return m_content; }
 
 private:
-    WindowQuad *m_data;
+    Quad *m_data;
     size_t m_maxQuadCount;
     Array m_shadow;
     Array m_decoration;
