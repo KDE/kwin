@@ -798,7 +798,7 @@ void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
         // movie aspect - two times ;-) It's a Fox format, though, so maybe we want to restrict
         // to 2.20:1 - Panavision - which has actually been used for interesting movies ...)
         // would be 57% of 5/4
-        foreach (const QRect &r, region.rects()) {
+        for (const QRect &r : region) {
 //                 damagedPixels += r.width() * r.height(); // combined window damage test
             damagedPixels = r.width() * r.height(); // experimental single window damage testing
             if (damagedPixels > fullRepaintLimit) {
@@ -1178,7 +1178,7 @@ bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, Win
         const QRegion filterRegion = region.translated(-x(), -y());
         // split all quads in bounding rect with the actual rects in the region
         foreach (const WindowQuad &quad, data.quads) {
-            foreach (const QRect &r, filterRegion.rects()) {
+            for (const QRect &r : filterRegion) {
                 const QRectF rf(r);
                 const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
                 const QRectF &intersected = rf.intersected(quadRect);
