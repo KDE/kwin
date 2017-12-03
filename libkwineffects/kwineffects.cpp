@@ -1490,14 +1490,14 @@ QRegion PaintClipper::paintArea()
 struct PaintClipper::Iterator::Data {
     Data() : index(0) {}
     int index;
-    QVector< QRect > rects;
+    QRegion region;
 };
 
 PaintClipper::Iterator::Iterator()
     : data(new Data)
 {
     if (clip() && effects->isOpenGLCompositing()) {
-        data->rects = paintArea().rects();
+        data->region = paintArea();
         data->index = -1;
         next(); // move to the first one
     }
@@ -1523,7 +1523,7 @@ bool PaintClipper::Iterator::isDone()
     if (!clip())
         return data->index == 1; // run once
     if (effects->isOpenGLCompositing())
-        return data->index >= data->rects.count(); // run once per each area
+        return data->index >= data->region.rectCount(); // run once per each area
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing)
         return data->index == 1; // run once
@@ -1541,10 +1541,10 @@ QRect PaintClipper::Iterator::boundingRect() const
     if (!clip())
         return infiniteRegion();
     if (effects->isOpenGLCompositing())
-        return data->rects[ data->index ];
+        return *(data->region.begin() + data->index);
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing)
-        return paintArea().boundingRect();
+        return data->region.boundingRect();
 #endif
     abort();
     return infiniteRegion();
