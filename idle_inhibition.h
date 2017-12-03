@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 #include <QVector>
+#include <QMap>
 
 #include <algorithm>
 
@@ -60,5 +61,6 @@ private:
 
     IdleInterface *m_idle;
     QVector<ShellClient*> m_idleInhibitors;
+    QMap<ShellClient*, QMetaObject::Connection> m_connections;
 };
 }

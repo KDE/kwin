@@ -42,7 +42,7 @@ IdleInhibition::~IdleInhibition() = default;
 void IdleInhibition::registerShellClient(ShellClient *client)
 {
     auto surface = client->surface();
-    connect(surface, &SurfaceInterface::inhibitsIdleChanged, this,
+    m_connections.insert(client, connect(surface, &SurfaceInterface::inhibitsIdleChanged, this,
         [this, client] {
             // TODO: only inhibit if the ShellClient is visible
             if (client->surface()->inhibitsIdle()) {
@@ -51,8 +51,17 @@ void IdleInhibition::registerShellClient(ShellClient *client)
                 uninhibit(client);
             }
         }
+    ));
+    connect(client, &ShellClient::windowClosed, this,
+        [this, client] {
+            uninhibit(client);
+            auto it = m_connections.find(client);
+            if (it != m_connections.end()) {
+                disconnect(it.value());
+                m_connections.erase(it);
+            }
+        }
     );
-    connect(client, &ShellClient::windowClosed, this, std::bind(&IdleInhibition::uninhibit, this, client));
 }
 
 void IdleInhibition::inhibit(ShellClient *client)
