@@ -21,9 +21,6 @@
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
 
-#include <KColorScheme>
-#include <KColorSchemeManager>
-
 #include <QDebug>
 #include <QCoreApplication>
 #include <QEvent>
@@ -37,8 +34,6 @@ namespace Preview
 PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     : QObject(decoration)
     , ApplicationMenuEnabledDecoratedClientPrivate(c, decoration)
-    , m_colorSchemeManager(new KColorSchemeManager(this))
-    , m_colorSchemeIndex(0)
     , m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde")))
     , m_iconName(m_icon.name())
     , m_palette(QStringLiteral("kdeglobals"))
@@ -270,25 +265,6 @@ QPalette PreviewClient::palette() const
 QColor PreviewClient::color(ColorGroup group, ColorRole role) const
 {
     return m_palette.color(group, role);
-}
-
-QAbstractItemModel *PreviewClient::colorSchemeModel() const
-{
-    return m_colorSchemeManager->model();
-}
-
-int PreviewClient::colorSchemeIndex() const
-{
-    return m_colorSchemeIndex;
-}
-
-void PreviewClient::setColorSchemeIndex(int index)
-{
-    if (m_colorSchemeIndex == index) {
-        return;
-    }
-    m_colorSchemeIndex = index;
-    emit colorSchemeIndexChanged(m_colorSchemeIndex);
 }
 
 Qt::Edges PreviewClient::adjacentScreenEdges() const

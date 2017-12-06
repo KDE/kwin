@@ -26,7 +26,6 @@
 #include <QObject>
 #include <QPalette>
 
-class KColorSchemeManager;
 class QAbstractItemModel;
 
 namespace KDecoration2
@@ -40,8 +39,6 @@ class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedClie
     Q_PROPERTY(QString caption READ caption WRITE setCaption NOTIFY captionChanged)
     Q_PROPERTY(QIcon icon READ icon WRITE setIcon NOTIFY iconChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconNameChanged)
-    Q_PROPERTY(QAbstractItemModel *colorSchemeModel READ colorSchemeModel CONSTANT)
-    Q_PROPERTY(int colorSchemeIndex READ colorSchemeIndex WRITE setColorSchemeIndex NOTIFY colorSchemeIndexChanged)
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
     Q_PROPERTY(bool closeable READ isCloseable WRITE setCloseable NOTIFY closeableChanged)
     Q_PROPERTY(bool keepAbove READ isKeepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
@@ -137,10 +134,6 @@ public:
     void setIconName(const QString &icon);
     void setIcon(const QIcon &icon);
 
-    QAbstractItemModel *colorSchemeModel() const;
-    int colorSchemeIndex() const;
-    void setColorSchemeIndex(int index);
-
     bool bordersTopEdge() const;
     bool bordersLeftEdge() const;
     bool bordersRightEdge() const;
@@ -174,7 +167,6 @@ Q_SIGNALS:
     void desktopChanged(int);
     void widthChanged(int);
     void heightChanged(int);
-    void colorSchemeIndexChanged(int);
     void paletteChanged(const QPalette&);
     void bordersTopEdgeChanged(bool);
     void bordersLeftEdgeChanged(bool);
@@ -187,8 +179,6 @@ Q_SIGNALS:
     void closeRequested();
 
 private:
-    KColorSchemeManager *m_colorSchemeManager;
-    int m_colorSchemeIndex;
     QString m_caption;
     QIcon m_icon;
     QString m_iconName;
