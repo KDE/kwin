@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "window.h"
 #include "shadow.h"
 #include "decorationrenderer.h"
+#include "decorationthread.h"
 #include "descriptorset.h"
 #include "utils.h"
 #include "wayland_server.h"
@@ -92,12 +93,18 @@ VulkanScene::~VulkanScene()
     if (!m_device)
         return;
 
+    if (m_decorationThread)
+        m_decorationThread->stop();
+
     m_device->waitIdle();
 
     for (FrameData &data : m_frameData) {
         if (data.imageAcquisitionFenceSubmitted)
             data.imageAcquisitionFence.wait();
     }
+
+    if (m_decorationThread)
+        m_decorationThread->wait();
 }
 
 
@@ -797,6 +804,11 @@ bool VulkanScene::init()
                                                       }
                                                   });
 
+    // Create the decoration thread
+    // ----------------------------
+    m_decorationThread = std::make_unique<VulkanDecorationThread>();
+    m_decorationThread->start();
+
     m_valid = true;
     return m_valid;
 }
@@ -1270,6 +1282,9 @@ qint64 VulkanScene::paint(QRegion damage, ToplevelList windows)
             m_uploadManager->getNonCoherentAllocatedRanges(std::back_inserter(ranges));
             m_imageUploadManager->getNonCoherentAllocatedRanges(std::back_inserter(ranges));
             m_stagingImageAllocator->getNonCoherentAllocatedRanges(std::back_inserter(ranges));
+
+            // Wait for the decoration thread to finish before flushing the mapped ranges
+            decorationThread()->waitForIdle();
 
             if (!ranges.empty())
                 m_device->flushMappedMemoryRanges(ranges.size(), ranges.data());

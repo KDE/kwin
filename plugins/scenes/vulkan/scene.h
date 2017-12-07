@@ -39,6 +39,7 @@ class TextureDescriptorSet;
 class ColorDescriptorSet;
 class Shadow;
 class ShadowTextureManager;
+class VulkanDecorationThread;
 
 
 
@@ -190,6 +191,8 @@ public:
 
     CullModeFlags cullMode() const { return m_cullMode; }
 
+    VulkanDecorationThread *decorationThread() const { return m_decorationThread.get(); }
+
 protected:
     Scene::Window *createWindow(Toplevel *toplevel) override;
 
@@ -221,6 +224,7 @@ private:
     std::unique_ptr<SceneDescriptorPool>                     m_colorDescriptorPool;
     std::unique_ptr<SceneDescriptorPool>                     m_decorationImagesDescriptorPool;
     std::unique_ptr<ShadowTextureManager>                    m_shadowTextureManager;
+    std::unique_ptr<VulkanDecorationThread>                  m_decorationThread;
     VulkanCommandPool                                        m_presentCommandPool;
     std::unique_ptr<VulkanSwapchain>                         m_swapchain;
     VulkanQueue                                              m_graphicsQueue;

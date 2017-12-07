@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "decorationrenderer.h"
+#include "decorationthread.h"
 #include "decorations/decoratedclient.h"
 #include "descriptorset.h"
 #include "client.h"
@@ -70,6 +71,9 @@ void VulkanDecorationRenderer::render()
     std::array<GLVertex2D, 4 * 4> vertices;
     GLVertex2D *v = vertices.data();
     uint32_t count = 0;
+
+    std::vector<VulkanDecorationThread::Task> tasks;
+    tasks.reserve(4);
 
     auto imageAllocator = scene()->stagingImageAllocator();
 
@@ -152,15 +156,24 @@ void VulkanDecorationRenderer::render()
 
         QImage im(image->data() + layout.offset, width, height, layout.rowPitch, QImage::Format_ARGB32_Premultiplied);
         im.setDevicePixelRatio(dpr);
-        im.fill(0);
 
-        QPainter p;
-        p.begin(&im);
-        p.setRenderHint(QPainter::Antialiasing);
-        p.setWindow(QRect(r.topLeft(), r.size() * dpr));
-        p.setClipRect(r);
-        client()->decoration()->paint(&p, r);
-        p.end();
+        if (true) {
+            tasks.emplace_back(VulkanDecorationThread::Task {
+                                   .client = client(),
+                                   .image = std::move(im),
+                                   .rect = r
+                               });
+        } else {
+            im.fill(0);
+
+            QPainter p;
+            p.begin(&im);
+            p.setRenderHint(QPainter::Antialiasing);
+            p.setWindow(QRect(r.topLeft(), r.size() * dpr));
+            p.setClipRect(r);
+            client()->decoration()->paint(&p, r);
+            p.end();
+        }
 
         const QRectF nominalDstRect = r.translated(-section.topLeft());
 
@@ -213,6 +226,9 @@ void VulkanDecorationRenderer::render()
     renderPart(top,    Qt::Horizontal, QPoint(0, 0));
     renderPart(right,  Qt::Vertical,   QPoint(0, top.height() + bottom.height() + left.width() + 3));
     renderPart(bottom, Qt::Horizontal, QPoint(0, top.height() + 1));
+
+    if (!tasks.empty())
+        scene()->decorationThread()->enqueue(std::move(tasks));
 
     if (count > 0) {
         uint32_t width = m_image->width();
