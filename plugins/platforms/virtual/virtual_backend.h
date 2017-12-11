@@ -32,6 +32,11 @@ struct gbm_device;
 
 namespace KWin
 {
+namespace ColorCorrect {
+class Manager;
+struct GammaRamp;
+}
+
 
 class KWIN_EXPORT VirtualBackend : public Platform
 {
@@ -65,6 +70,8 @@ public:
 
     Q_INVOKABLE void setOutputCount(int count) {
         m_outputCount = count;
+        m_gammaSizes = QVector<int>(count, 200);
+        m_gammaResults = QVector<bool>(count, true);
     }
 
     Q_INVOKABLE void setOutputScale(qreal scale) {
@@ -84,6 +91,8 @@ public:
     void setGbmDevice(gbm_device *device) {
         m_gbmDevice = device;
     }
+    virtual int gammaRampSize(int screen) const override;
+    virtual bool setGammaRamp(int screen, ColorCorrect::GammaRamp &gamma) override;
 
     QVector<CompositingType> supportedCompositors() const override {
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
@@ -100,6 +109,9 @@ private:
     QScopedPointer<QTemporaryDir> m_screenshotDir;
     int m_drmFd = -1;
     gbm_device *m_gbmDevice = nullptr;
+
+    QVector<int> m_gammaSizes = QVector<int>(1, 200);
+    QVector<bool> m_gammaResults = QVector<bool>(1, true);
 };
 
 }

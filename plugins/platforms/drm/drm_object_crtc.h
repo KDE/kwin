@@ -25,6 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+namespace ColorCorrect {
+struct GammaRamp;
+}
+
 class DrmBackend;
 class DrmBuffer;
 class DrmDumbBuffer;
@@ -63,8 +67,14 @@ public:
     void flipBuffer();
     bool blank();
 
+    int getGammaRampSize() const {
+        return m_gammaRampSize;
+    }
+    bool setGammaRamp(ColorCorrect::GammaRamp &gamma);
+
 private:
     int m_resIndex;
+    uint32_t m_gammaRampSize = 0;
 
     DrmBuffer *m_currentBuffer = nullptr;
     DrmBuffer *m_nextBuffer = nullptr;

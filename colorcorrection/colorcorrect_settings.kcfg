@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile arg="true" />
+    <group name="NightColor">
+        <entry name="ActiveEnabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="Active" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="ModeEnabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="Mode" type="Enum">
+            <choices name="KWin::ColorCorrect::NightColorMode">
+                <choice name="Automatic"/>
+                <choice name="Location"/>
+                <choice name="Times"/>
+            </choices>
+            <default>NightColorMode::Automatic</default>
+        </entry>
+        <entry name="NightTemperatureEnabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="NightTemperature" type="Int">
+            <default>4500</default>
+        </entry>
+        <entry name="LatitudeAuto" type="Double">
+            <default>0.</default>
+        </entry>
+        <entry name="LongitudeAuto" type="Double">
+            <default>0.</default>
+        </entry>
+        <entry name="LocationEnabled" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="LatitudeFixed" type="Double">
+            <default>0.</default>
+        </entry>
+        <entry name="LongitudeFixed" type="Double">
+            <default>0.</default>
+        </entry>
+        <entry name="MorningBeginFixed" type="String">
+            <default>"0600"</default>
+        </entry>
+        <entry name="EveningBeginFixed" type="String">
+            <default>"1800"</default>
+        </entry>
+        <entry name="TransitionTime" type="Int">
+            <default>30</default>
+        </entry>
+    </group>
+</kcfg>

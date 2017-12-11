@@ -471,6 +471,9 @@ set(kwin_KDEINIT_SRCS
     xkb.cpp
     gestures.cpp
     popup_input_filter.cpp
+    colorcorrection/manager.cpp
+    colorcorrection/colorcorrectdbusinterface.cpp
+    colorcorrection/suncalc.cpp
     abstract_opengl_context_attribute_builder.cpp
     egl_context_attribute_builder.cpp
     was_user_interaction_x11_filter.cpp
@@ -480,6 +483,18 @@ set(kwin_KDEINIT_SRCS
     orientation_sensor.cpp
     idle_inhibition.cpp
    )
+
+include(ECMQtDeclareLoggingCategory)
+ecm_qt_declare_logging_category(kwin_KDEINIT_SRCS
+    HEADER
+        colorcorrect_logging.h
+    IDENTIFIER
+        KWIN_COLORCORRECTION
+    CATEGORY_NAME
+        kwin_colorcorrection
+    DEFAULT_SEVERITY
+        Critical
+)
 
 if(KWIN_BUILD_TABBOX)
     set(
@@ -528,9 +543,11 @@ if(HAVE_INPUT)
 endif()
 
 kconfig_add_kcfg_files(kwin_KDEINIT_SRCS settings.kcfgc)
+kconfig_add_kcfg_files(kwin_KDEINIT_SRCS colorcorrection/colorcorrect_settings.kcfgc)
 
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface )
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface )
+qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.ColorCorrect.xml colorcorrection/colorcorrectdbusinterface.h KWin::ColorCorrect::ColorCorrectDBusInterface )
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl )
 
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.ScreenSaver.xml screenlocker_interface)
@@ -668,11 +685,13 @@ add_subdirectory(plugins)
 ########### install files ###############
 
 install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} RENAME ${KWIN_NAME}.kcfg )
+install( FILES colorcorrection/colorcorrect_settings.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} RENAME ${KWIN_NAME}_colorcorrect.kcfg )
 install( FILES kwin.notifyrc  DESTINATION  ${KNOTIFYRC_INSTALL_DIR} RENAME ${KWIN_NAME}.notifyrc)
 install(
     FILES
         org.kde.KWin.xml
         org.kde.kwin.Compositing.xml
+        org.kde.kwin.ColorCorrect.xml
         org.kde.kwin.Effects.xml
     DESTINATION
         ${KDE_INSTALL_DBUSINTERFACEDIR}
