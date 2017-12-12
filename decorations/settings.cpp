@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
+#include "appmenu.h"
 
 #include <config-kwin.h>
 
@@ -155,7 +156,6 @@ void SettingsImpl::readSettings()
     KConfigGroup config = kwinApp()->config()->group(QStringLiteral("org.kde.kdecoration2"));
     const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType >({
         KDecoration2::DecorationButtonType::Menu,
-        KDecoration2::DecorationButtonType::ApplicationMenu,
         KDecoration2::DecorationButtonType::OnAllDesktops
     }));
     if (left != m_leftButtons) {
@@ -172,6 +172,7 @@ void SettingsImpl::readSettings()
         m_rightButtons = right;
         emit decorationSettings()->decorationButtonsRightChanged(m_rightButtons);
     }
+    ApplicationMenu::self()->setViewEnabled(left.contains(KDecoration2::DecorationButtonType::ApplicationMenu) || right.contains(KDecoration2::DecorationButtonType::ApplicationMenu));
     const bool close = config.readEntry("CloseOnDoubleClickOnMenu", false);
     if (close != m_closeDoubleClickMenu) {
         m_closeDoubleClickMenu = close;

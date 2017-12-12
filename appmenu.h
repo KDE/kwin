@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class QPoint;
 class OrgKdeKappmenuInterface;
 class QDBusObjectPath;
+class QDBusServiceWatcher;
 
 namespace KWin
 {
@@ -48,19 +49,19 @@ public:
 
     bool applicationMenuEnabled() const;
 
+    void setViewEnabled(bool enabled);
+
 signals:
     void applicationMenuEnabledChanged(bool enabled);
 
 private Q_SLOTS:
-    void slotReconfigured();
     void slotShowRequest(const QString &serviceName, const QDBusObjectPath &menuObjectPath, int actionId);
     void slotMenuShown(const QString &serviceName, const QDBusObjectPath &menuObjectPath);
     void slotMenuHidden(const QString &serviceName, const QDBusObjectPath &menuObjectPath);
 
 private:
-    void updateApplicationMenuEnabled();
-
     OrgKdeKappmenuInterface *m_appmenuInterface;
+    QDBusServiceWatcher *m_kappMenuWatcher;
 
     AbstractClient *findAbstractClientWithApplicationMenu(const QString &serviceName, const QDBusObjectPath &menuObjectPath);
 

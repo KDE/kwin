@@ -25,10 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <appmenu_interface.h>
 
 #include <QDBusObjectPath>
+#include <QDBusServiceWatcher>
 
 using namespace KWin;
 
 KWIN_SINGLETON_FACTORY(ApplicationMenu)
+
+static const QString s_viewService(QStringLiteral("org.kde.kappmenuview"));
 
 ApplicationMenu::ApplicationMenu(QObject *parent)
     : QObject(parent)
@@ -37,9 +40,22 @@ ApplicationMenu::ApplicationMenu(QObject *parent)
     connect(m_appmenuInterface, &OrgKdeKappmenuInterface::showRequest, this, &ApplicationMenu::slotShowRequest);
     connect(m_appmenuInterface, &OrgKdeKappmenuInterface::menuShown, this, &ApplicationMenu::slotMenuShown);
     connect(m_appmenuInterface, &OrgKdeKappmenuInterface::menuHidden, this, &ApplicationMenu::slotMenuHidden);
-    connect(m_appmenuInterface, &OrgKdeKappmenuInterface::reconfigured, this, &ApplicationMenu::slotReconfigured);
+    
+    m_kappMenuWatcher = new QDBusServiceWatcher(QStringLiteral("org.kde.kappmenu"), QDBusConnection::sessionBus(),
+            QDBusServiceWatcher::WatchForRegistration|QDBusServiceWatcher::WatchForUnregistration, this);
 
-    updateApplicationMenuEnabled();
+    connect(m_kappMenuWatcher, &QDBusServiceWatcher::serviceRegistered,
+            this, [this] () {
+                m_applicationMenuEnabled = true;
+                emit applicationMenuEnabledChanged(true);
+            });
+    connect(m_kappMenuWatcher, &QDBusServiceWatcher::serviceUnregistered,
+            this, [this] () {
+                m_applicationMenuEnabled = false;
+                emit applicationMenuEnabledChanged(false);
+            });
+
+    m_applicationMenuEnabled = QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.kappmenu"));
 }
 
 ApplicationMenu::~ApplicationMenu()
@@ -47,28 +63,19 @@ ApplicationMenu::~ApplicationMenu()
     s_self = nullptr;
 }
 
-void ApplicationMenu::slotReconfigured()
-{
-    updateApplicationMenuEnabled();
-}
-
 bool ApplicationMenu::applicationMenuEnabled() const
 {
     return m_applicationMenuEnabled;
 }
 
-void ApplicationMenu::updateApplicationMenuEnabled()
+void ApplicationMenu::setViewEnabled(bool enabled)
 {
-    const bool old_enabled = m_applicationMenuEnabled;
-
-    KConfigGroup config(KSharedConfig::openConfig(QStringLiteral("kdeglobals")), QStringLiteral("Appmenu Style"));
-    const QString &menuStyle = config.readEntry(QStringLiteral("Style"));
-
-    const bool enabled = (menuStyle == QLatin1String("Decoration"));
-
-    if (old_enabled != enabled) {
-        m_applicationMenuEnabled = enabled;
-        emit applicationMenuEnabledChanged(enabled);
+    if (enabled) {
+        QDBusConnection::sessionBus().interface()->registerService(s_viewService,
+                    QDBusConnectionInterface::QueueService,
+                    QDBusConnectionInterface::DontAllowReplacement);
+    } else {
+        QDBusConnection::sessionBus().interface()->unregisterService(s_viewService);
     }
 }
 
