@@ -9,7 +9,7 @@
         "Description[es]": "Renderizar en una ventana anidada en el compositor Wayland en ejecución.",
         "Description[et]": "Renderdamine töötava Waylandi komposiitori pesastatud aknas.",
         "Description[eu]": "Errendatu Wayland konposatzailean habiaratutako leiho batera.",
-        "Description[fi]": "Renderöi sisäkkäiseen ikkunaan, jota hallitsee Wayland-koostin.",
+        "Description[fi]": "Hahmonna sisäkkäiseen ikkunaan, jota hallitsee Wayland-koostin.",
         "Description[fr]": "Rendre sur une fenêtre imbriquée sur un compositeur Wayland en cours de fonctionnement.",
         "Description[gl]": "Renderizar unha xanela aniñada no compositor de Wayland en execución.",
         "Description[hu]": "Renderelés egy Wayland kompozitoron futó beágyazott ablakba.",
