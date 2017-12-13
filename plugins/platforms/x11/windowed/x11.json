@@ -9,7 +9,7 @@
         "Description[es]": "Renderizar en una ventana anidada en el sistema de ventanas X11.",
         "Description[et]": "Pesastatud akna renderdamine X11 aknasüsteemis.",
         "Description[eu]": "Errendatu X11 leiho sistemaren leiho habiaratu batera.",
-        "Description[fi]": "Renderöi sisäkkäiseen ikkunaan, joka on X11-ikkunointijärjestelmässä.",
+        "Description[fi]": "Hahmonna X11-ikkunointijärjestelmän sisäkkäiseen ikkunaan.",
         "Description[fr]": "Rendre sur une fenêtre imbriquée sur le système de fenêtrage X11.",
         "Description[gl]": "Renderizar unha xanela aniñada no sistema de xanelas X11.",
         "Description[hu]": "Renderelés egy X11 ablakkezelő rendszeren futó beágyazott ablakba.",
