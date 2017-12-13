@@ -239,13 +239,14 @@ void XdgImporterUnstableV2Interface::Private::destroyCallback(wl_client *client,
     Q_UNUSED(client)
 }
 
-void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, wl_resource *resource, uint32_t id, const char * handle)
+void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, wl_resource *resource, uint32_t id, const char *h)
 {
     auto s = cast(resource);
 
     Q_ASSERT(s->foreignInterface);
+    const QString handle = QString::fromUtf8(h);
 
-    XdgExportedUnstableV2Interface *exp = s->foreignInterface->d->exporter->exportedSurface(QString::fromUtf8(handle));
+    XdgExportedUnstableV2Interface *exp = s->foreignInterface->d->exporter->exportedSurface(handle);
     if (!exp) {
         zxdg_imported_v2_send_destroyed(resource);
         return;
@@ -268,8 +269,8 @@ void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, 
                     zxdg_imported_v2_send_destroyed(imp->resource());
                     imp->deleteLater();
                 }
-                s->importedSurfaces.remove(QString::fromUtf8(handle));
-                emit s->q->surfaceUnimported(QString::fromUtf8(handle));
+                s->importedSurfaces.remove(handle);
+                emit s->q->surfaceUnimported(handle);
             });
 
     connect(imp.data(), &XdgImportedUnstableV2Interface::childChanged,
@@ -291,9 +292,10 @@ void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, 
                         s->q, [s, child]() {
                             auto it = s->parents.find(child);
                             if (it != s->parents.end()) {
+                                KWayland::Server::XdgImportedUnstableV2Interface* parent = *it;
                                 s->children.remove(*it);
                                 s->parents.erase(it);
-                                emit s->q->transientChanged(nullptr, SurfaceInterface::get((*it)->parentResource()));
+                                emit s->q->transientChanged(nullptr, SurfaceInterface::get(parent->parentResource()));
                             }
                         });
             });
@@ -301,14 +303,15 @@ void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, 
     //surface no longer imported
     connect(imp.data(), &XdgImportedUnstableV2Interface::unbound,
             s->q, [s, handle, imp]() {
-                s->importedSurfaces.remove(QString::fromUtf8(handle));
-                emit s->q->surfaceUnimported(QString::fromUtf8(handle));
+                s->importedSurfaces.remove(handle);
+                emit s->q->surfaceUnimported(handle);
 
                 auto it = s->children.find(imp);
                 if (it != s->children.end()) {
+                    KWayland::Server::SurfaceInterface* child = *it;
                     s->parents.remove(*it);
                     s->children.erase(it);
-                    emit s->q->transientChanged(*it, nullptr);
+                    emit s->q->transientChanged(child, nullptr);
                 }
             });
 
@@ -318,8 +321,8 @@ void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, 
         return;
     }
 
-    s->importedSurfaces[QString::fromUtf8(handle)] = imp;
-    emit s->q->surfaceImported(QString::fromUtf8(handle), imp);
+    s->importedSurfaces[handle] = imp;
+    emit s->q->surfaceImported(handle, imp);
 }
 
 XdgImporterUnstableV2Interface::Private::Private(XdgImporterUnstableV2Interface *q, Display *d, XdgForeignInterface *foreignInterface)
