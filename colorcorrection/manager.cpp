@@ -35,7 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusConnection>
 #include <QSocketNotifier>
 
+#ifdef Q_OS_LINUX
 #include <sys/timerfd.h>
+#endif
 #include <unistd.h>
 #include <fcntl.h>
 
