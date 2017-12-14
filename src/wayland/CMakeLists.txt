@@ -162,6 +162,56 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME idle-inhibit-unstable-v1
 )
 
+set(SERVER_GENERATED_SRCS
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-org_kde_kwin_outputdevice-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-org_kde_kwin_outputdevice-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-plasma-shell-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-plasma-shell-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-plasma-window-management-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-plasma-window-management-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-qt-surface-extension-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-qt-surface-extension-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-idle-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-idle-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-fake-input-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-fake-input-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-shadow-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-shadow-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-dpms-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-dpms-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-contrast-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-contrast-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-relativepointer-unstable-v1-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-relativepointer-unstable-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-slide-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-slide-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-server_decoration-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-server_decoration-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-input-unstable-v2-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-input-unstable-v2-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-v5-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-v5-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-v6-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-v6-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-pointer-gestures-unstable-v1-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-pointer-gestures-unstable-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-pointer-constraints-unstable-v1-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-pointer-constraints-unstable-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-foreign-unstable-v2-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-foreign-unstable-v2-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-idle-inhibit-unstable-v1-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-idle-inhibit-unstable-v1-server-protocol.h
+)
+
+set_source_files_properties(${SERVER_GENERATED_SRCS} PROPERTIES SKIP_AUTOMOC ON)
+
+
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
 generate_export_header(KF5WaylandServer
     BASE_NAME
