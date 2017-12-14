@@ -156,7 +156,15 @@ void Manager::readConfig()
     s->load();
 
     m_active = s->active();
-    m_mode = s->mode();
+
+    NightColorMode mode = s->mode();
+    if (mode == NightColorMode::Location || mode == NightColorMode::Timings) {
+        m_mode = mode;
+    } else {
+        // also fallback for invalid setting values
+        m_mode = NightColorMode::Automatic;
+    }
+
     m_nightTargetTemp = qBound(MIN_TEMPERATURE, s->nightTemperature(), NEUTRAL_TEMPERATURE);
 
     double lat, lng;
