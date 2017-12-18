@@ -396,3 +396,14 @@ add_executable(testFilter ${testFilter_SRCS})
 target_link_libraries( testFilter Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Server)
 add_test(NAME kwayland-testFilter COMMAND testFilter)
 ecm_mark_as_test(testFilter)
+
+########################################################
+# Test Appmenu
+########################################################
+set( testAppmenu_SRCS
+        test_wayland_appmenu.cpp
+    )
+add_executable(testAppmenu ${testAppmenu_SRCS})
+target_link_libraries( testAppmenu Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(NAME kwayland-testAppmenu COMMAND testAppmenu)
+ecm_mark_as_test(testAppmenu)

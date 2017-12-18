@@ -1,4 +1,5 @@
 set(SERVER_LIB_SRCS
+    appmenu_interface.cpp
     buffer_interface.cpp
     clientconnection.cpp
     compositor_interface.cpp
@@ -162,6 +163,10 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME idle-inhibit-unstable-v1
 )
 
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/appmenu.xml
+    BASENAME appmenu
+)
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-server-protocol.h
@@ -211,7 +216,6 @@ set(SERVER_GENERATED_SRCS
 
 set_source_files_properties(${SERVER_GENERATED_SRCS} PROPERTIES SKIP_AUTOMOC ON)
 
-
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
 generate_export_header(KF5WaylandServer
     BASE_NAME
@@ -242,6 +246,7 @@ install(TARGETS KF5WaylandServer EXPORT KF5WaylandTargets ${KF5_INSTALL_TARGETS_
 
 set(SERVER_LIB_HEADERS
   ${CMAKE_CURRENT_BINARY_DIR}/KWayland/Server/kwaylandserver_export.h
+  appmenu_interface.h
   blur_interface.h
   contrast_interface.h
   buffer_interface.h

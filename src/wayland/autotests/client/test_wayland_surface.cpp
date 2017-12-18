@@ -166,6 +166,10 @@ void TestWaylandSurface::cleanup()
         delete m_compositor;
         m_compositor = nullptr;
     }
+    if (m_idleInhibitManager) {
+        delete m_idleInhibitManager;
+        m_idleInhibitManager = nullptr;
+    }
     if (m_shm) {
         delete m_shm;
         m_shm = nullptr;

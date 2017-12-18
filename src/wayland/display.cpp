@@ -47,6 +47,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "xdgshell_v5_interface_p.h"
 #include "xdgforeign_interface.h"
 #include "xdgshell_v6_interface_p.h"
+#include "appmenu_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -431,6 +432,13 @@ IdleInhibitManagerInterface *Display::createIdleInhibitManager(const IdleInhibit
     }
     connect(this, &Display::aboutToTerminate, i, [this,i] { delete i; });
     return i;
+}
+
+AppMenuManagerInterface *Display::createAppMenuManagerInterface(QObject *parent)
+{
+    auto b = new AppMenuManagerInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, b, [this, b] { delete b; });
+    return b;
 }
 
 void Display::createShm()

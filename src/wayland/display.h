@@ -83,6 +83,7 @@ class PointerGesturesInterface;
 enum class PointerConstraintsInterfaceVersion;
 class PointerConstraintsInterface;
 class XdgForeignInterface;
+class AppMenuManagerInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -237,6 +238,15 @@ public:
      * @since 5.41
      **/
     IdleInhibitManagerInterface *createIdleInhibitManager(const IdleInhibitManagerInterfaceVersion &version, QObject *parent = nullptr);
+
+    /**
+     * Creates the AppMenuManagerInterface in interface @p version.
+     *
+     * @returns The created manager object
+     * @since 5.XX
+     **/
+    AppMenuManagerInterface *createAppMenuManagerInterface(QObject *parent = nullptr);
+
 
     /**
      * Gets the ClientConnection for the given @p client.
