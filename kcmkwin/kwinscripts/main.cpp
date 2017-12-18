@@ -22,3 +22,5 @@
 
 K_PLUGIN_FACTORY(KcmKWinScriptsFactory,
                  registerPlugin<Module>("kwin-scripts");)
+
+#include "main.moc"
