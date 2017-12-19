@@ -35,7 +35,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace KWayland::Client;
 
-Q_DECLARE_METATYPE(KWayland::Server::AppMenuInterface::InterfaceAddress);
+Q_DECLARE_METATYPE(KWayland::Server::AppMenuInterface::InterfaceAddress)
 
 class TestAppmenu : public QObject
 {
@@ -181,8 +181,8 @@ void TestAppmenu::testCreateAndSet()
     appmenu->setAddress("net.somename", "/test/path");
 
     QVERIFY(appMenuChangedSpy.wait());
-    QCOMPARE(appMenuInterface->address().serviceName, "net.somename");
-    QCOMPARE(appMenuInterface->address().objectPath, "/test/path");
+    QCOMPARE(appMenuInterface->address().serviceName, QString("net.somename"));
+    QCOMPARE(appMenuInterface->address().objectPath, QString("/test/path"));
 
     // and destroy
     QSignalSpy destroyedSpy(appMenuInterface, &QObject::destroyed);
