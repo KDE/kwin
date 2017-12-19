@@ -165,20 +165,9 @@ void TestForeign::cleanup()
         variable = nullptr; \
     }
 
-    //some tests delete it beforehand
-    if (m_exportedSurfaceInterface) {
-        QSignalSpy exportedSurfaceDestroyedSpy(m_exportedSurfaceInterface.data(), &QObject::destroyed);
-        QVERIFY(exportedSurfaceDestroyedSpy.isValid());
-        CLEANUP(m_exportedSurface)
-        exportedSurfaceDestroyedSpy.wait();
-    }
+    CLEANUP(m_exportedSurfaceInterface)
+    CLEANUP(m_childSurfaceInterface)
 
-    if (m_childSurfaceInterface) {
-        QSignalSpy childSurfaceDestroyedSpy(m_childSurfaceInterface.data(), &QObject::destroyed);
-        QVERIFY(childSurfaceDestroyedSpy.isValid());
-        CLEANUP(m_childSurface)
-        childSurfaceDestroyedSpy.wait();
-    }
 
 
     CLEANUP(m_compositor)
@@ -197,7 +186,16 @@ void TestForeign::cleanup()
     }
     CLEANUP(m_compositorInterface)
     CLEANUP(m_foreignInterface)
-    CLEANUP(m_display)
+
+    //internally there are some deleteLaters on exported interfaces
+    //we want them processed before we delete the connection
+    if (m_display) {
+        QSignalSpy destroyedSpy(m_display, &QObject::destroyed);
+        m_display->deleteLater();
+        m_display = nullptr;
+        destroyedSpy.wait();
+    }
+
 #undef CLEANUP
 }
 
