@@ -1029,6 +1029,7 @@ void TestWaylandSurface::testDisconnect()
     m_shm->destroy();
     m_compositor->destroy();
     m_queue->destroy();
+    m_idleInhibitManager->destroy();
 }
 
 void TestWaylandSurface::testOutput()
