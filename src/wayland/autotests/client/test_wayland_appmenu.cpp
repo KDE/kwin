@@ -166,7 +166,7 @@ void TestAppmenu::testCreateAndSet()
     auto serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
     QSignalSpy appMenuCreated(m_appmenuManagerInterface, &KWayland::Server::AppMenuManagerInterface::appMenuCreated);
 
-    QCOMPARE(m_appmenuManagerInterface->appMenuForSurface(serverSurface), nullptr);
+    QVERIFY(!m_appmenuManagerInterface->appMenuForSurface(serverSurface));
 
     auto appmenu = m_appmenuManager->create(surface.data(), surface.data());
     QVERIFY(appMenuCreated.wait());
@@ -189,7 +189,7 @@ void TestAppmenu::testCreateAndSet()
     QVERIFY(destroyedSpy.isValid());
     delete appmenu;
     QVERIFY(destroyedSpy.wait());
-    QCOMPARE(m_appmenuManagerInterface->appMenuForSurface(serverSurface), nullptr);
+    QVERIFY(!m_appmenuManagerInterface->appMenuForSurface(serverSurface));
 }
 
 QTEST_GUILESS_MAIN(TestAppmenu)
