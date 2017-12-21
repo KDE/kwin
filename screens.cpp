@@ -108,7 +108,6 @@ float Screens::refreshRate(int screen) const
 qreal Screens::scale(int screen) const
 {
     Q_UNUSED(screen)
-    qCWarning(KWIN_CORE, "%s::scale(qreal screen) is a stub, please reimplement it!", metaObject()->className());
     return 1;
 }
 
