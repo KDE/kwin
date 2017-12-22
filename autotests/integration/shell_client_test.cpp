@@ -970,8 +970,8 @@ void TestShellClient::testAppMenu()
     menu->setAddress("service.name", "object/path");
     spy.wait();
     QCOMPARE(c->hasApplicationMenu(), true);
-    QCOMPARE(c->applicationMenuServiceName(), "service.name");
-    QCOMPARE(c->applicationMenuObjectPath(), "object/path");
+    QCOMPARE(c->applicationMenuServiceName(), QString("service.name"));
+    QCOMPARE(c->applicationMenuObjectPath(), QString("object/path"));
 }
 
 
