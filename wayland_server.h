@@ -40,6 +40,7 @@ class Surface;
 }
 namespace Server
 {
+class AppMenuManagerInterface;
 class ClientConnection;
 class CompositorInterface;
 class Display;
@@ -219,6 +220,7 @@ private:
     KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
     KWayland::Server::ServerSideDecorationManagerInterface *m_decorationManager = nullptr;
     KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
+    KWayland::Server::AppMenuManagerInterface *m_appMenuManager = nullptr;
     struct {
         KWayland::Server::ClientConnection *client = nullptr;
         QMetaObject::Connection destroyConnection;

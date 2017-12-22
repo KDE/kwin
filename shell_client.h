@@ -29,6 +29,7 @@ namespace Server
 {
 class ShellSurfaceInterface;
 class ServerSideDecorationInterface;
+class AppMenuInterface;
 class PlasmaShellSurfaceInterface;
 class QtExtendedSurfaceInterface;
 }
@@ -135,6 +136,7 @@ public:
     void installPlasmaShellSurface(KWayland::Server::PlasmaShellSurfaceInterface *surface);
     void installQtExtendedSurface(KWayland::Server::QtExtendedSurfaceInterface *surface);
     void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
+    void installAppMenu(KWayland::Server::AppMenuInterface *appmenu);
 
     bool isInitialPositionSet() const override;
 
@@ -153,8 +155,6 @@ public:
 
     // TODO: const-ref
     void placeIn(QRect &area);
-
-    void updateApplicationMenu();
 
     bool hasPopupGrab() const override;
     void popupDone() override;
@@ -219,6 +219,7 @@ private:
     NET::WindowType m_windowType = NET::Normal;
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWayland::Server::QtExtendedSurfaceInterface> m_qtExtendedSurface;
+    QPointer<KWayland::Server::AppMenuInterface> m_appMenuInterface;
     KWayland::Server::ServerSideDecorationInterface *m_serverDecoration = nullptr;
     bool m_userNoBorder = false;
     bool m_fullScreen = false;

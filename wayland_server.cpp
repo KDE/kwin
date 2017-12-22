@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 // Server
+#include <KWayland/Server/appmenu_interface.h>
 #include <KWayland/Server/compositor_interface.h>
 #include <KWayland/Server/datadevicemanager_interface.h>
 #include <KWayland/Server/display.h>
@@ -151,6 +152,9 @@ void WaylandServer::createSurface(T *surface)
         client->installPlasmaShellSurface(*it);
         m_plasmaShellSurfaces.erase(it);
     }
+    if (auto menu = m_appMenuManager->appMenuForSurface(surface->surface())) {
+        client->installAppMenu(menu);
+    }
     if (client->isInternal()) {
         m_internalClients << client;
     } else {
@@ -261,6 +265,8 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             }
         }
     );
+
+
     m_qtExtendedSurface = m_display->createQtSurfaceExtension(m_display);
     m_qtExtendedSurface->create();
     connect(m_qtExtendedSurface, &QtSurfaceExtensionInterface::surfaceCreated,
@@ -270,6 +276,16 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             }
         }
     );
+    m_appMenuManager = m_display->createAppMenuManagerInterface(m_display);
+    m_appMenuManager->create();
+    connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated,
+        [this] (AppMenuInterface *appMenu) {
+            if (ShellClient *client = findClient(appMenu->surface())) {
+                client->installAppMenu(appMenu);
+            }
+        }
+    );
+
     m_windowManagement = m_display->createPlasmaWindowManagement(m_display);
     m_windowManagement->create();
     m_windowManagement->setShowingDesktopState(PlasmaWindowManagementInterface::ShowingDesktopState::Disabled);

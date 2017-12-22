@@ -33,10 +33,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
+#include <KWayland/Client/appmenu.h>
 
 #include <KWayland/Server/clientconnection.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/shell_interface.h>
+
 
 // system
 #include <sys/types.h>
@@ -84,6 +86,7 @@ private Q_SLOTS:
     void testUnresponsiveWindow();
     void testX11WindowId_data();
     void testX11WindowId();
+    void testAppMenu();
 };
 
 void TestShellClient::initTestCase()
@@ -108,7 +111,8 @@ void TestShellClient::initTestCase()
 
 void TestShellClient::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration |
+                                         Test::AdditionalWaylandInterface::AppMenu));
 
     screens()->setCurrent(0);
     KWin::Cursor::setPos(QPoint(1280, 512));
@@ -954,6 +958,22 @@ void TestShellClient::testX11WindowId()
     QVERIFY(c->windowId() != 0);
     QCOMPARE(c->window(), 0u);
 }
+
+void TestShellClient::testAppMenu()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV6, surface.data()));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QScopedPointer<AppMenu> menu(Test::waylandAppMenuManager()->create(surface.data()));
+    QSignalSpy spy(c, &ShellClient::hasApplicationMenuChanged);
+    menu->setAddress("service.name", "object/path");
+    spy.wait();
+    QCOMPARE(c->hasApplicationMenu(), true);
+    QCOMPARE(c->applicationMenuServiceName(), "service.name");
+    QCOMPARE(c->applicationMenuObjectPath(), "object/path");
+}
+
 
 WAYLANDTEST_MAIN(TestShellClient)
 #include "shell_client_test.moc"

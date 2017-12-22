@@ -46,6 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/server_decoration_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
+#include <KWayland/Server/appmenu_interface.h>
+
 #include <KDesktopFile>
 
 #include <QOpenGLFramebufferObject>
@@ -58,8 +60,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using namespace KWayland::Server;
 
 static const QByteArray s_schemePropertyName = QByteArrayLiteral("KDE_COLOR_SCHEME_PATH");
-static const QByteArray s_appMenuServiceNamePropertyName = QByteArrayLiteral("KDE_APPMENU_SERVICE_NAME");
-static const QByteArray s_appMenuObjectPathPropertyName = QByteArrayLiteral("KDE_APPMENU_OBJECT_PATH");
 static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_CLOSE_ANIMATION");
 
 namespace KWin
@@ -336,7 +336,6 @@ void ShellClient::init()
     }
 
     AbstractClient::updateColorScheme(QString());
-    updateApplicationMenu();
 
     if (!m_internal) {
         discardTemporaryRules();
@@ -1374,16 +1373,26 @@ void ShellClient::installQtExtendedSurface(QtExtendedSurfaceInterface *surface)
     m_qtExtendedSurface->installEventFilter(this);
 }
 
+void ShellClient::installAppMenu(AppMenuInterface *menu)
+{
+    m_appMenuInterface = menu;
+
+    auto updateMenu = [this](AppMenuInterface::InterfaceAddress address) {
+        updateApplicationMenuServiceName(address.serviceName);
+        updateApplicationMenuObjectPath(address.objectPath);
+    };
+    connect(m_appMenuInterface, &AppMenuInterface::addressChanged, this, [=](AppMenuInterface::InterfaceAddress address) {
+        updateMenu(address);
+    });
+    updateMenu(menu->address());
+}
+
 bool ShellClient::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == m_qtExtendedSurface.data() && event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (pe->propertyName() == s_schemePropertyName) {
             AbstractClient::updateColorScheme(rules()->checkDecoColor(m_qtExtendedSurface->property(pe->propertyName().constData()).toString()));
-        } else if (pe->propertyName() == s_appMenuServiceNamePropertyName) {
-            updateApplicationMenuServiceName(m_qtExtendedSurface->property(pe->propertyName().constData()).toString());
-        } else if (pe->propertyName() == s_appMenuObjectPathPropertyName) {
-            updateApplicationMenuObjectPath(m_qtExtendedSurface->property(pe->propertyName().constData()).toString());
         }
     }
     if (watched == m_internalWindow && event->type() == QEvent::DynamicPropertyChange) {
@@ -1635,14 +1644,6 @@ void ShellClient::killWindow()
     ::kill(c->processId(), SIGTERM);
     // give it time to terminate and only if terminate fails, try destroy Wayland connection
     QTimer::singleShot(5000, c, &ClientConnection::destroy);
-}
-
-void ShellClient::updateApplicationMenu()
-{
-    if (m_qtExtendedSurface) {
-        updateApplicationMenuServiceName(m_qtExtendedSurface->property(s_appMenuObjectPathPropertyName).toString());
-        updateApplicationMenuObjectPath(m_qtExtendedSurface->property(s_appMenuServiceNamePropertyName).toString());
-    }
 }
 
 bool ShellClient::hasPopupGrab() const

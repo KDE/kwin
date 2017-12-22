@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/xdgshell.h>
 #include <KWayland/Server/display.h>
 
@@ -73,6 +74,7 @@ static struct {
     QThread *thread = nullptr;
     QVector<Output*> outputs;
     IdleInhibitManager *idleInhibit = nullptr;
+    AppMenuManager *appMenu = nullptr;
 } s_waylandConnection;
 
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
@@ -196,6 +198,12 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::AppMenu)) {
+        s_waylandConnection.appMenu = registry->createAppMenuManager(registry->interface(Registry::Interface::AppMenu).name, registry->interface(Registry::Interface::AppMenu).version);
+        if (!s_waylandConnection.appMenu->isValid()) {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -230,6 +238,8 @@ void destroyWaylandConnection()
     s_waylandConnection.queue = nullptr;
     delete s_waylandConnection.registry;
     s_waylandConnection.registry = nullptr;
+    delete s_waylandConnection.appMenu;
+    s_waylandConnection.appMenu = nullptr;
     if (s_waylandConnection.thread) {
         QSignalSpy spy(s_waylandConnection.connection, &QObject::destroyed);
         s_waylandConnection.connection->deleteLater();
@@ -292,6 +302,11 @@ PointerConstraints *waylandPointerConstraints()
 IdleInhibitManager *waylandIdleInhibitManager()
 {
     return s_waylandConnection.idleInhibit;
+}
+
+AppMenuManager* waylandAppMenuManager()
+{
+    return s_waylandConnection.appMenu;
 }
 
 bool waitForWaylandPointer()
