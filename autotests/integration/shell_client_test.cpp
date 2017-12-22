@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include <QDBusConnection>
+
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/shell.h>
@@ -961,6 +963,9 @@ void TestShellClient::testX11WindowId()
 
 void TestShellClient::testAppMenu()
 {
+    //register a faux appmenu client
+    QVERIFY (QDBusConnection::sessionBus().registerService("org.kde.kappmenu"));
+
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<QObject> shellSurface(Test::createShellSurface(Test::ShellSurfaceType::XdgShellV6, surface.data()));
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
@@ -972,6 +977,8 @@ void TestShellClient::testAppMenu()
     QCOMPARE(c->hasApplicationMenu(), true);
     QCOMPARE(c->applicationMenuServiceName(), QString("service.name"));
     QCOMPARE(c->applicationMenuObjectPath(), QString("object/path"));
+
+    QVERIFY (QDBusConnection::sessionBus().unregisterService("org.kde.kappmenu"));
 }
 
 
