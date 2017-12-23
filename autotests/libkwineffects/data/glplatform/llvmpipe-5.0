@@ -1,0 +1,22 @@
+[Driver]
+Vendor=VMware, Inc.
+Renderer=llvmpipe (LLVM 5.0, 256 bits)
+Version=3.0 Mesa 17.2.6
+ShadingLanguageVersion=1.30
+
+[Settings]
+LooseBinding=true
+GLSL=true
+TextureNPOT=true
+Mesa=true
+Gallium=true
+SoftwareEmulation=true
+GLVersion=3,0
+GLSLVersion=1,30
+MesaVersion=17,2,6
+GalliumVersion=0,4
+DriverVersion=17,2,6
+Driver=12
+ChipClass=99999
+Compositor=9
+

@@ -702,14 +702,69 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_chipClass = detectIntelClass(chipset);
     }
 
+    // Properietary drivers
+    // ====================================================
+    else if (m_vendor == "ATI Technologies Inc.") {
+        m_chipClass = detectRadeonClass(m_renderer);
+        m_driver = Driver_Catalyst;
+
+        if (versionTokens.count() > 1 && versionTokens.at(2)[0] == '(')
+            m_driverVersion = parseVersionString(versionTokens.at(1));
+        else if (versionTokens.count() > 0)
+            m_driverVersion = parseVersionString(versionTokens.at(0));
+        else
+            m_driverVersion = 0;
+    }
+
+    else if (m_vendor == "NVIDIA Corporation") {
+        m_chipClass = detectNVidiaClass(m_renderer);
+        m_driver = Driver_NVidia;
+
+        int index = versionTokens.indexOf("NVIDIA");
+        if (versionTokens.count() > index)
+            m_driverVersion = parseVersionString(versionTokens.at(index + 1));
+        else
+            m_driverVersion = 0;
+    }
+
+    else if (m_vendor == "Qualcomm") {
+        m_driver = Driver_Qualcomm;
+        m_chipClass = detectQualcommClass(m_renderer);
+    }
+
+    else if (m_renderer == "Software Rasterizer") {
+        m_driver = Driver_Swrast;
+    }
+
+    // Virtual Hardware
+    // ====================================================
+    else if (m_vendor == "Humper" && m_renderer == "Chromium") {
+        // Virtual Box
+        m_driver = Driver_VirtualBox;
+
+        const int index = versionTokens.indexOf("Chromium");
+        if (versionTokens.count() > index)
+            m_driverVersion = parseVersionString(versionTokens.at(index + 1));
+        else
+            m_driverVersion = 0;
+    }
+
     // Gallium drivers
     // ====================================================
-    else if (m_renderer.contains("Gallium")) {
-        // Sample renderer string: Gallium 0.4 on AMD RV740
+    else {
         const QList<QByteArray> tokens = m_renderer.split(' ');
-        m_galliumVersion = parseVersionString(tokens.at(1));
-        m_chipset = (tokens.at(3) == "AMD" || tokens.at(3) == "ATI") ?
-                    tokens.at(4) : tokens.at(3);
+        if (m_renderer.contains("Gallium")) {
+            // Sample renderer string: Gallium 0.4 on AMD RV740
+            m_galliumVersion = parseVersionString(tokens.at(1));
+            m_chipset = (tokens.at(3) == "AMD" || tokens.at(3) == "ATI") ?
+                        tokens.at(4) : tokens.at(3);
+        }
+        else {
+            // The renderer string does not contain "Gallium" anymore.
+            m_chipset = tokens.at(0);
+            // We don't know the actual version anymore, but it's at least 0.4.
+            m_galliumVersion = kVersionNumber(0, 4, 0);
+        }
 
         // R300G
         if (m_vendor == QByteArrayLiteral("X.Org R300 Project")) {
@@ -763,55 +818,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_driver = Driver_VMware;
         }
     }
-
-
-    // Properietary drivers
-    // ====================================================
-    else if (m_vendor == "ATI Technologies Inc.") {
-        m_chipClass = detectRadeonClass(m_renderer);
-        m_driver = Driver_Catalyst;
-
-        if (versionTokens.count() > 1 && versionTokens.at(2)[0] == '(')
-            m_driverVersion = parseVersionString(versionTokens.at(1));
-        else if (versionTokens.count() > 0)
-            m_driverVersion = parseVersionString(versionTokens.at(0));
-        else
-            m_driverVersion = 0;
-    }
-
-    else if (m_vendor == "NVIDIA Corporation") {
-        m_chipClass = detectNVidiaClass(m_renderer);
-        m_driver = Driver_NVidia;
-
-        int index = versionTokens.indexOf("NVIDIA");
-        if (versionTokens.count() > index)
-            m_driverVersion = parseVersionString(versionTokens.at(index + 1));
-        else
-            m_driverVersion = 0;
-    }
-
-    else if (m_vendor == "Qualcomm") {
-        m_driver = Driver_Qualcomm;
-        m_chipClass = detectQualcommClass(m_renderer);
-    }
-
-    else if (m_renderer == "Software Rasterizer") {
-        m_driver = Driver_Swrast;
-    }
-
-    // Virtual Hardware
-    // ====================================================
-    else if (m_vendor == "Humper" && m_renderer == "Chromium") {
-        // Virtual Box
-        m_driver = Driver_VirtualBox;
-
-        const int index = versionTokens.indexOf("Chromium");
-        if (versionTokens.count() > index)
-            m_driverVersion = parseVersionString(versionTokens.at(index + 1));
-        else
-            m_driverVersion = 0;
-    }
-
 
     // Driver/GPU specific features
     // ====================================================
