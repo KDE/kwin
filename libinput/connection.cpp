@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QThread>
 
 #include <libinput.h>
+#include <cmath>
 
 namespace KWin
 {
