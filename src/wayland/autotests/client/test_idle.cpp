@@ -42,6 +42,7 @@ private Q_SLOTS:
 
     void testTimeout();
     void testSimulateUserActivity();
+    void testServerSimulateUserActivity();
     void testIdleInhibit();
     void testIdleInhibitBlocksTimeout();
 
@@ -181,6 +182,34 @@ void IdleTest::testSimulateUserActivity()
     // now simulating user activity should emit a resumedFromIdle
     QVERIFY(resumedFormIdleSpy.isEmpty());
     timeout->simulateUserActivity();
+    QVERIFY(resumedFormIdleSpy.wait());
+
+    timeout.reset();
+    m_connection->flush();
+    m_display->dispatchEvents();
+}
+
+void IdleTest::testServerSimulateUserActivity()
+{
+    // this test verifies that simulate user activity doesn't fire the timer
+    QScopedPointer<IdleTimeout> timeout(m_idle->getTimeout(6000, m_seat));
+    QVERIFY(timeout->isValid());
+    QSignalSpy idleSpy(timeout.data(), &IdleTimeout::idle);
+    QVERIFY(idleSpy.isValid());
+    QSignalSpy resumedFormIdleSpy(timeout.data(), &IdleTimeout::resumeFromIdle);
+    QVERIFY(resumedFormIdleSpy.isValid());
+    m_connection->flush();
+
+    QTest::qWait(4000);
+    m_idleInterface->simulateUserActivity();
+    // waiting default five sec should fail
+    QVERIFY(!idleSpy.wait());
+    // another 2 sec should fire
+    QVERIFY(idleSpy.wait(2000));
+
+    // now simulating user activity should emit a resumedFromIdle
+    QVERIFY(resumedFormIdleSpy.isEmpty());
+    m_idleInterface->simulateUserActivity();
     QVERIFY(resumedFormIdleSpy.wait());
 
     timeout.reset();

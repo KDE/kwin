@@ -94,6 +94,15 @@ public:
      **/
     bool isInhibited() const;
 
+    /**
+     * Calling this method allows the Compositor to simulate user activity.
+     * This means the same action is performed as if the user interacted with
+     * an input device on the SeatInterface.
+     * Idle timeouts are resumed and the idle time gets restarted.
+     * @since 5.42
+     **/
+    void simulateUserActivity();
+
 Q_SIGNALS:
     /**
      * Emitted when the system gets inhibited or uninhibited.
