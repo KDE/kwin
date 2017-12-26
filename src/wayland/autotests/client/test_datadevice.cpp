@@ -73,6 +73,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-datade
 
 void TestDataDevice::init()
 {
+    qRegisterMetaType<KWayland::Server::DataSourceInterface*>();
     using namespace KWayland::Server;
     delete m_display;
     m_display = new Display(this);

@@ -132,6 +132,7 @@ void TestDataSource::testOffer()
     using namespace KWayland::Client;
     using namespace KWayland::Server;
 
+    qRegisterMetaType<KWayland::Server::DataSourceInterface*>();
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWayland::Server::DataSourceInterface*)));
     QVERIFY(dataSourceCreatedSpy.isValid());
 

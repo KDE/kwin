@@ -123,7 +123,7 @@ void DataDeviceInterface::Private::setSelectionCallback(wl_client *client, wl_re
 
 void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
 {
-    if (dataSource->supportedDragAndDropActions()) {
+    if (dataSource && dataSource->supportedDragAndDropActions() && wl_resource_get_version(dataSource->resource()) >= WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
         wl_resource_post_error(dataSource->resource(), WL_DATA_SOURCE_ERROR_INVALID_SOURCE, "Data source is for drag and drop");
         return;
     }
