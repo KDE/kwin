@@ -243,7 +243,7 @@ public:
      * Creates the AppMenuManagerInterface in interface @p version.
      *
      * @returns The created manager object
-     * @since 5.XX
+     * @since 5.42
      **/
     AppMenuManagerInterface *createAppMenuManagerInterface(QObject *parent = nullptr);
 
