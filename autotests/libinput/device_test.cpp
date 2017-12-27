@@ -159,6 +159,8 @@ private Q_SLOTS:
     void testOrientation_data();
     void testOrientation();
     void testCalibrationWithDefault();
+    void testSwitch_data();
+    void testSwitch();
 };
 
 void TestLibinputDevice::testStaticGetter()
@@ -209,15 +211,19 @@ void TestLibinputDevice::testDeviceType_data()
     QTest::addColumn<bool>("pointer");
     QTest::addColumn<bool>("touch");
     QTest::addColumn<bool>("tabletTool");
+    QTest::addColumn<bool>("switchDevice");
 
-    QTest::newRow("keyboard") << true << false << false << false;
-    QTest::newRow("pointer") << false << true << false << false;
-    QTest::newRow("touch") << false << false << true << false;
-    QTest::newRow("keyboard/pointer") << true << true << false << false;
-    QTest::newRow("keyboard/touch") << true << false << true << false;
-    QTest::newRow("pointer/touch") << false << true << true << false;
-    QTest::newRow("keyboard/pointer/touch") << true << true << true << false;
-    QTest::newRow("tabletTool") << false << false << false << true;
+    QTest::newRow("keyboard") << true << false << false << false << false;
+    QTest::newRow("pointer") << false << true << false << false << false;
+    QTest::newRow("touch") << false << false << true << false << false;
+    QTest::newRow("keyboard/pointer") << true << true << false << false << false;
+    QTest::newRow("keyboard/touch") << true << false << true << false << false;
+    QTest::newRow("pointer/touch") << false << true << true << false << false;
+    QTest::newRow("keyboard/pointer/touch") << true << true << true << false << false;
+    QTest::newRow("tabletTool") << false << false << false << true << false;
+#if HAVE_INPUT_1_9
+    QTest::newRow("switch") << false << false << false << false << true;
+#endif
 }
 
 void TestLibinputDevice::testDeviceType()
@@ -227,12 +233,14 @@ void TestLibinputDevice::testDeviceType()
     QFETCH(bool, pointer);
     QFETCH(bool, touch);
     QFETCH(bool, tabletTool);
+    QFETCH(bool, switchDevice);
 
     libinput_device device;
     device.keyboard = keyboard;
     device.pointer = pointer;
     device.touch = touch;
     device.tabletTool = tabletTool;
+    device.switchDevice = switchDevice;
 
     Device d(&device);
     QCOMPARE(d.isKeyboard(), keyboard);
@@ -245,6 +253,8 @@ void TestLibinputDevice::testDeviceType()
     QCOMPARE(d.property("tabletPad").toBool(), false);
     QCOMPARE(d.isTabletTool(), tabletTool);
     QCOMPARE(d.property("tabletTool").toBool(), tabletTool);
+    QCOMPARE(d.isSwitch(), switchDevice);
+    QCOMPARE(d.property("switchDevice").toBool(), switchDevice);
 
     QCOMPARE(d.device(), &device);
 }
@@ -2158,6 +2168,36 @@ void TestLibinputDevice::testCalibrationWithDefault()
     QCOMPARE(device.calibrationMatrix[3], 5.0f);
     QCOMPARE(device.calibrationMatrix[4], -4.0f);
     QCOMPARE(device.calibrationMatrix[5], 4.0f);
+}
+
+void TestLibinputDevice::testSwitch_data()
+{
+    QTest::addColumn<bool>("lid");
+    QTest::addColumn<bool>("tablet");
+
+    QTest::newRow("lid") << true << false;
+    QTest::newRow("tablet") << false << true;
+}
+
+void TestLibinputDevice::testSwitch()
+{
+#if HAVE_INPUT_1_9
+    libinput_device device;
+    device.switchDevice = true;
+    QFETCH(bool, lid);
+    QFETCH(bool, tablet);
+    device.lidSwitch = lid;
+    device.tabletModeSwitch = tablet;
+
+    Device d(&device);
+    QCOMPARE(d.isSwitch(), true);
+    QCOMPARE(d.isLidSwitch(), lid);
+    QCOMPARE(d.property("lidSwitch").toBool(), lid);
+    QCOMPARE(d.isTabletModeSwitch(), tablet);
+    QCOMPARE(d.property("tabletModeSwitch").toBool(), tablet);
+#else
+    QSKIP("Requires libinput 1.9");
+#endif
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)

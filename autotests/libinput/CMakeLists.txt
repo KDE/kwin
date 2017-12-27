@@ -66,6 +66,22 @@ add_test(NAME kwin-testLibinputGestureEvent COMMAND testLibinputGestureEvent)
 ecm_mark_as_test(testLibinputGestureEvent)
 
 ########################################################
+# Test Switch Event
+########################################################
+if(HAVE_INPUT_1_9)
+    set( testLibinputSwitchEvent_SRCS
+            switch_event_test.cpp
+            mock_libinput.cpp
+            ../../libinput/device.cpp
+            ../../libinput/events.cpp
+        )
+    add_executable(testLibinputSwitchEvent ${testLibinputSwitchEvent_SRCS})
+    target_link_libraries(testLibinputSwitchEvent Qt5::Test Qt5::DBus Qt5::Widgets KF5::ConfigCore)
+    add_test(NAME kwin-testLibinputSwitchEvent COMMAND testLibinputSwitchEvent)
+    ecm_mark_as_test(testLibinputSwitchEvent)
+endif()
+
+########################################################
 # Test Context
 ########################################################
 set( testLibinputContext_SRCS

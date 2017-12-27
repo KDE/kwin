@@ -185,8 +185,12 @@ set_package_properties(UDev PROPERTIES  URL "http://www.freedesktop.org/software
                                         PURPOSE "Required for input handling on Wayland."
                         )
 set(HAVE_INPUT FALSE)
+set(HAVE_INPUT_1_9 FALSE)
 if (Libinput_FOUND AND UDEV_FOUND)
     set(HAVE_INPUT TRUE)
+    if(Libinput_VERSION VERSION_GREATER_EQUAL "1.9.0")
+        set(HAVE_INPUT_1_9 TRUE)
+    endif()
 endif()
 set(HAVE_UDEV FALSE)
 if (UDEV_FOUND)

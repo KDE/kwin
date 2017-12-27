@@ -124,6 +124,11 @@ class Device : public QObject
     Q_PROPERTY(bool scrollOnButtonDown READ isScrollOnButtonDown WRITE setScrollOnButtonDown NOTIFY scrollMethodChanged)
     Q_PROPERTY(quint32 scrollButton READ scrollButton WRITE setScrollButton NOTIFY scrollButtonChanged)
 
+    // switches
+    Q_PROPERTY(bool switchDevice READ isSwitch CONSTANT)
+    Q_PROPERTY(bool lidSwitch READ isLidSwitch CONSTANT)
+    Q_PROPERTY(bool tabletModeSwitch READ isTabletModeSwitch CONSTANT)
+
 
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
@@ -414,6 +419,18 @@ public:
      **/
     void loadConfiguration();
 
+    bool isSwitch() const {
+        return m_switch;
+    }
+
+    bool isLidSwitch() const {
+        return m_lidSwitch;
+    }
+
+    bool isTabletModeSwitch() const {
+        return m_tabletSwitch;
+    }
+
     /**
      * All created Devices
      **/
@@ -453,6 +470,9 @@ private:
     bool m_tabletTool;
     bool m_tabletPad;
     bool m_supportsGesture;
+    bool m_switch = false;
+    bool m_lidSwitch = false;
+    bool m_tabletSwitch = false;
     QString m_name;
     QString m_sysName;
     QString m_outputName;

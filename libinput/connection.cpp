@@ -460,6 +460,22 @@ void Connection::processEvents()
                 }
                 break;
             }
+#if HAVE_INPUT_1_9
+            case LIBINPUT_EVENT_SWITCH_TOGGLE: {
+                SwitchEvent *se = static_cast<SwitchEvent*>(event.data());
+                switch (se->state()) {
+                case SwitchEvent::State::Off:
+                    emit switchToggledOff(se->time(), se->timeMicroseconds(), se->device());
+                    break;
+                case SwitchEvent::State::On:
+                    emit switchToggledOn(se->time(), se->timeMicroseconds(), se->device());
+                    break;
+                default:
+                    Q_UNREACHABLE();
+                }
+                break;
+            }
+#endif
             default:
                 // nothing
                 break;
