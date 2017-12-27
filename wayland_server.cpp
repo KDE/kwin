@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/appmenu_interface.h>
 #include <KWayland/Server/compositor_interface.h>
 #include <KWayland/Server/datadevicemanager_interface.h>
+#include <KWayland/Server/datasource_interface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/dpms_interface.h>
 #include <KWayland/Server/idle_interface.h>
