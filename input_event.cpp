@@ -51,4 +51,13 @@ KeyEvent::KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifie
     setTimestamp(timestamp);
 }
 
+SwitchEvent::SwitchEvent(State state, quint32 timestamp, quint64 timestampMicroseconds, LibInput::Device* device)
+    : QInputEvent(QEvent::User)
+    , m_state(state)
+    , m_timestampMicroseconds(timestampMicroseconds)
+    , m_device(device)
+{
+    setTimestamp(timestamp);
+}
+
 }

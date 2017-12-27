@@ -150,6 +150,8 @@ public:
     void swipeGestureEnd(quint32 time) override;
     void swipeGestureCancelled(quint32 time) override;
 
+    void switchEvent(SwitchEvent *event) override;
+
 private:
     QTextEdit *m_textEdit;
 };

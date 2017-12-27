@@ -47,6 +47,7 @@ class PointerConstraintsFilter;
 class PointerInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
+class SwitchEvent;
 
 namespace Decoration
 {
@@ -359,6 +360,8 @@ public:
     virtual bool swipeGestureUpdate(const QSizeF &delta, quint32 time);
     virtual bool swipeGestureEnd(quint32 time);
     virtual bool swipeGestureCancelled(quint32 time);
+
+    virtual bool switchEvent(SwitchEvent *event);
 
 protected:
     void passToWaylandServer(QKeyEvent *event);

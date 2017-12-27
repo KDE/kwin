@@ -116,4 +116,9 @@ void InputEventSpy::swipeGestureCancelled(quint32 time)
     Q_UNUSED(time)
 }
 
+void InputEventSpy::switchEvent(SwitchEvent *event)
+{
+    Q_UNUSED(event)
+}
+
 }

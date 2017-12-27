@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtTest/QtTest>
 
+Q_DECLARE_METATYPE(KWin::SwitchEvent::State);
+
 using namespace KWin;
 using namespace KWin::LibInput;
 
@@ -36,6 +38,8 @@ private Q_SLOTS:
     void testInitKeyEvent();
     void testInitWheelEvent_data();
     void testInitWheelEvent();
+    void testInitSwitchEvent_data();
+    void testInitSwitchEvent();
 };
 
 void InputEventsTest::testInitMouseEvent_data()
@@ -147,6 +151,33 @@ void InputEventsTest::testInitWheelEvent()
     // and our custom argument
     QCOMPARE(event.device(), &d);
 
+}
+
+void InputEventsTest::testInitSwitchEvent_data()
+{
+    QTest::addColumn<KWin::SwitchEvent::State>("state");
+    QTest::addColumn<quint32>("timestamp");
+    QTest::addColumn<quint64>("micro");
+
+    QTest::newRow("on") << SwitchEvent::State::On << 23u << quint64{23456790};
+    QTest::newRow("off") << SwitchEvent::State::Off << 456892u << quint64{45689235987};
+}
+
+void InputEventsTest::testInitSwitchEvent()
+{
+    // this test verifies that a SwitchEvent is constructed correctly
+    libinput_device device;
+    Device d(&device);
+
+    QFETCH(SwitchEvent::State, state);
+    QFETCH(quint32, timestamp);
+    QFETCH(quint64, micro);
+    SwitchEvent event(state, timestamp, micro, &d);
+
+    QCOMPARE(event.state(), state);
+    QCOMPARE(event.timestamp(), ulong(timestamp));
+    QCOMPARE(event.timestampMicroseconds(), micro);
+    QCOMPARE(event.device(), &d);
 }
 
 QTEST_GUILESS_MAIN(InputEventsTest)

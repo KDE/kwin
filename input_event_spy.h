@@ -31,6 +31,7 @@ namespace KWin
 class KeyEvent;
 class MouseEvent;
 class WheelEvent;
+class SwitchEvent;
 
 
 /**
@@ -80,6 +81,8 @@ public:
     virtual void swipeGestureUpdate(const QSizeF &delta, quint32 time);
     virtual void swipeGestureEnd(quint32 time);
     virtual void swipeGestureCancelled(quint32 time);
+
+    virtual void switchEvent(SwitchEvent *event);
 
 };
 

@@ -167,6 +167,12 @@ bool InputEventFilter::swipeGestureCancelled(quint32 time)
     return false;
 }
 
+bool InputEventFilter::switchEvent(SwitchEvent *event)
+{
+    Q_UNUSED(event)
+    return false;
+}
+
 void InputEventFilter::passToWaylandServer(QKeyEvent *event)
 {
     Q_ASSERT(waylandServer());
@@ -1766,6 +1772,15 @@ void InputRedirection::setupLibInput()
         connect(conn, &LibInput::Connection::touchMotion, m_touch, &TouchInputRedirection::processMotion);
         connect(conn, &LibInput::Connection::touchCanceled, m_touch, &TouchInputRedirection::cancel);
         connect(conn, &LibInput::Connection::touchFrame, m_touch, &TouchInputRedirection::frame);
+        auto handleSwitchEvent = [this] (SwitchEvent::State state, quint32 time, quint64 timeMicroseconds, LibInput::Device *device) {
+            SwitchEvent event(state, time, timeMicroseconds, device);
+            processSpies(std::bind(&InputEventSpy::switchEvent, std::placeholders::_1, &event));
+            processFilters(std::bind(&InputEventFilter::switchEvent, std::placeholders::_1, &event));
+        };
+        connect(conn, &LibInput::Connection::switchToggledOn, this,
+                std::bind(handleSwitchEvent, SwitchEvent::State::On, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        connect(conn, &LibInput::Connection::switchToggledOff, this,
+                std::bind(handleSwitchEvent, SwitchEvent::State::Off, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         if (screens()) {
             setupLibInputWithScreens();
         } else {

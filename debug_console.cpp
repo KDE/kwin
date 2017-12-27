@@ -459,6 +459,43 @@ void DebugConsoleFilter::swipeGestureCancelled(quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
+void DebugConsoleFilter::switchEvent(SwitchEvent *event)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A hardware switch (e.g. notebook lid) got toggled", "Switch toggled")));
+    text.append(timestampRow(event->timestamp()));
+    if (event->timestampMicroseconds() != 0) {
+        text.append(timestampRowUsec(event->timestampMicroseconds()));
+    }
+#if HAVE_INPUT
+    text.append(deviceRow(event->device()));
+    QString switchName;
+    if (event->device()->isLidSwitch()) {
+        switchName = i18nc("Name of a hardware switch", "Notebook lid");
+    } else if (event->device()->isTabletModeSwitch()) {
+        switchName = i18nc("Name of a hardware switch", "Tablet mode");
+    }
+    text.append(tableRow(i18nc("A hardware switch", "Switch"), switchName));
+#endif
+    QString switchState;
+    switch (event->state()) {
+    case SwitchEvent::State::Off:
+        switchState = i18nc("The hardware switch got turned off", "Off");
+        break;
+    case SwitchEvent::State::On:
+        switchState = i18nc("The hardware switch got turned on", "On");
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
+    text.append(tableRow(i18nc("State of a hardware switch (on/off)", "State"), switchState));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
 DebugConsole::DebugConsole()
     : QWidget()
     , m_ui(new Ui::DebugConsole)

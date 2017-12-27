@@ -124,6 +124,33 @@ private:
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
 };
 
+class SwitchEvent : public QInputEvent
+{
+public:
+    enum class State {
+        Off,
+        On
+    };
+    explicit SwitchEvent(State state, quint32 timestamp, quint64 timestampMicroseconds, LibInput::Device *device);
+
+    State state() const {
+        return m_state;
+    }
+
+    quint64 timestampMicroseconds() const {
+        return m_timestampMicroseconds;
+    }
+
+    LibInput::Device *device() const {
+        return m_device;
+    }
+
+private:
+    State m_state;
+    quint64 m_timestampMicroseconds;
+    LibInput::Device *m_device;
+};
+
 }
 
 #endif
