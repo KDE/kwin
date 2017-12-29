@@ -1589,18 +1589,21 @@ void InputRedirection::setupWorkspace()
                     [this] (const QSizeF &delta) {
                         // TODO: Fix time
                         m_pointer->processMotion(globalPointer() + QPointF(delta.width(), delta.height()), 0);
+                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::pointerButtonPressRequested, this,
                     [this] (quint32 button) {
                         // TODO: Fix time
                         m_pointer->processButton(button, InputRedirection::PointerButtonPressed, 0);
+                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::pointerButtonReleaseRequested, this,
                     [this] (quint32 button) {
                         // TODO: Fix time
                         m_pointer->processButton(button, InputRedirection::PointerButtonReleased, 0);
+                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::pointerAxisRequested, this,
@@ -1620,24 +1623,28 @@ void InputRedirection::setupWorkspace()
                         }
                         // TODO: Fix time
                         m_pointer->processAxis(axis, delta, 0);
+                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::touchDownRequested, this,
                    [this] (quint32 id, const QPointF &pos) {
                        // TODO: Fix time
                        m_touch->processDown(id, pos, 0);
+                        waylandServer()->simulateUserActivity();
                    }
                 );
                 connect(device, &FakeInputDevice::touchMotionRequested, this,
                    [this] (quint32 id, const QPointF &pos) {
                        // TODO: Fix time
                        m_touch->processMotion(id, pos, 0);
+                        waylandServer()->simulateUserActivity();
                    }
                 );
                 connect(device, &FakeInputDevice::touchUpRequested, this,
                     [this] (quint32 id) {
                         // TODO: Fix time
                         m_touch->processUp(id, 0);
+                        waylandServer()->simulateUserActivity();
                     }
                 );
                 connect(device, &FakeInputDevice::touchCancelRequested, this,

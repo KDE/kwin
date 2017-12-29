@@ -249,9 +249,9 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             }
         }
     );
-    auto idle = m_display->createIdle(m_display);
-    idle->create();
-    auto idleInhibition = new IdleInhibition(idle);
+    m_idle = m_display->createIdle(m_display);
+    m_idle->create();
+    auto idleInhibition = new IdleInhibition(m_idle);
     connect(this, &WaylandServer::shellClientAdded, idleInhibition, &IdleInhibition::registerShellClient);
     m_display->createIdleInhibitManager(IdleInhibitManagerInterfaceVersion::UnstableV1, m_display)->create();
     m_plasmaShell = m_display->createPlasmaShell(m_display);
@@ -747,6 +747,13 @@ bool WaylandServer::isScreenLocked() const
 bool WaylandServer::hasScreenLockerIntegration() const
 {
     return !m_initFlags.testFlag(InitalizationFlag::NoLockScreenIntegration);
+}
+
+void WaylandServer::simulateUserActivity()
+{
+    if (m_idle) {
+        m_idle->simulateUserActivity();
+    }
 }
 
 }

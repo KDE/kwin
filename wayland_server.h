@@ -45,6 +45,7 @@ class ClientConnection;
 class CompositorInterface;
 class Display;
 class DataDeviceInterface;
+class IdleInterface;
 class ShellInterface;
 class SeatInterface;
 class ServerSideDecorationManagerInterface;
@@ -192,6 +193,8 @@ public:
      **/
     SocketPairConnection createConnection();
 
+    void simulateUserActivity();
+
 Q_SIGNALS:
     void shellClientAdded(KWin::ShellClient*);
     void shellClientRemoved(KWin::ShellClient*);
@@ -223,6 +226,7 @@ private:
     KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
     KWayland::Server::AppMenuManagerInterface *m_appMenuManager = nullptr;
     KWayland::Server::ServerSideDecorationPaletteManagerInterface *m_paletteManager = nullptr;
+    KWayland::Server::IdleInterface *m_idle = nullptr;
     struct {
         KWayland::Server::ClientConnection *client = nullptr;
         QMetaObject::Connection destroyConnection;
