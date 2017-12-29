@@ -33,7 +33,7 @@
    <item>
     <widget class="QLabel" name="label_7">
      <property name="text">
-      <string>To trigger an action swipe from the screen edge towards the center of the screen.</string>
+      <string>Trigger an action by swiping from the screen edge towards the center of the screen</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

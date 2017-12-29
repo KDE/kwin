@@ -14,7 +14,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
-      <string>Active Screen Edge Actions</string>
+      <string>Active Screen Corners and Edges</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -33,7 +33,7 @@
       <item>
        <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>To trigger an action push your mouse cursor against the edge of the screen in the action's direction.</string>
+         <string>Trigger an action by pushing the mouse cursor against the corresponding screen edge or corner</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -55,14 +55,14 @@
       <item>
        <widget class="QCheckBox" name="quickMaximizeBox">
         <property name="text">
-         <string>Maximize windows by dragging them to the top of the screen</string>
+         <string>Maximize windows by dragging them to the top edge of the screen</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="quickTileBox">
         <property name="text">
-         <string>Tile windows by dragging them to the side of the screen</string>
+         <string>Tile windows by dragging them to the left or right edges of the screen</string>
         </property>
        </widget>
       </item>
