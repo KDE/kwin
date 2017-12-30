@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kwin_slide_config
+X-KDE-ParentComponents=slide
+
+Name=Slide
+Name[x-test]=xxSlidexx

@@ -91,6 +91,7 @@ set( kwin4_effect_builtins_sources
     presentwindows/presentwindows_proxy.cpp
     resize/resize.cpp
     showfps/showfps.cpp
+    slide/slide.cpp
     thumbnailaside/thumbnailaside.cpp
     touchpoints/touchpoints.cpp
     trackmouse/trackmouse.cpp
@@ -119,6 +120,7 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     presentwindows/presentwindowsconfig.kcfgc
     resize/resizeconfig.kcfgc
     showfps/showfpsconfig.kcfgc
+    slide/slideconfig.kcfgc
     slidingpopups/slidingpopupsconfig.kcfgc
     thumbnailaside/thumbnailasideconfig.kcfgc
     trackmouse/trackmouseconfig.kcfgc
@@ -158,7 +160,7 @@ add_subdirectory( resize )
 include( screenedge/CMakeLists.txt )
 add_subdirectory( showfps )
 include( showpaint/CMakeLists.txt )
-include( slide/CMakeLists.txt )
+add_subdirectory( slide )
 include( slideback/CMakeLists.txt )
 include( slidingpopups/CMakeLists.txt )
 add_subdirectory( thumbnailaside )

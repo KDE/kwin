@@ -1,0 +1,5 @@
+File=slide.kcfg
+ClassName=SlideConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

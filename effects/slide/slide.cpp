@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "slide.h"
+// KConfigSkeleton
+#include "slideconfig.h"
 
 #include <math.h>
 
@@ -29,6 +31,7 @@ namespace KWin
 SlideEffect::SlideEffect()
     : slide(false)
 {
+    initConfig<SlideConfig>();
     connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int,int)));
     connect(effects, &EffectsHandler::windowAdded, this, &SlideEffect::windowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, [this](EffectWindow *w) {
@@ -45,7 +48,11 @@ bool SlideEffect::supported()
 
 void SlideEffect::reconfigure(ReconfigureFlags)
 {
-    mTimeLine.setDuration(animationTime(250));
+    SlideConfig::self()->read();
+
+    const auto d = animationTime(
+        SlideConfig::duration() != 0 ? SlideConfig::duration() : 250);
+    mTimeLine.setDuration(d);
 }
 
 void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
