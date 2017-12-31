@@ -40,6 +40,13 @@ Name[x-test]=xxMinimizeAllxx
 Name[zh_CN]=最小化所有
 Name[zh_TW]=全部最小化
 Comment=Adds a shortcut to minimize and restore all windows
+Comment[ca]=Afegeix una drecera per a minimitzar i restaurar totes les finestres
+Comment[ca@valencia]=Afig una drecera per a minimitzar i restaurar totes les finestres
+Comment[en_GB]=Adds a shortcut to minimise and restore all windows
+Comment[nl]=Voegt een sneltoets toe om alle vensters te minimaliseren en te herstellen
+Comment[pt]=Adiciona um atalho para minimizar ou repor todas as janelas
+Comment[uk]=Додає скорочення мінімізації усіх вікон або скасування такої мінімізації для усіх вікон
+Comment[x-test]=xxAdds a shortcut to minimize and restore all windowsxx
 Icon=preferences-system-windows-script-test
 
 Type=Service
