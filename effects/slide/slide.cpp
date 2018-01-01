@@ -32,11 +32,10 @@ SlideEffect::SlideEffect()
     : slide(false)
 {
     initConfig<SlideConfig>();
-    connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int,int)));
+    connect(effects, SIGNAL(desktopChanged(int,int,KWin::EffectWindow*)),
+            this, SLOT(slotDesktopChanged(int,int,KWin::EffectWindow*)));
     connect(effects, &EffectsHandler::windowAdded, this, &SlideEffect::windowAdded);
-    connect(effects, &EffectsHandler::windowDeleted, this, [this](EffectWindow *w) {
-        m_backgroundContrastForcedBefore.removeAll(w);
-    });
+    connect(effects, &EffectsHandler::windowDeleted, this, &SlideEffect::windowDeleted);
     mTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     reconfigure(ReconfigureAll);
 }
@@ -72,6 +71,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
                 }
             }
             m_backgroundContrastForcedBefore.clear();
+            m_movingWindow = nullptr;
             slide = false;
             mTimeLine.setCurrentTime(0);
             effects->setActiveFullScreenEffect(NULL);
@@ -82,7 +82,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
 void SlideEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
-    if (slide) {
+    if (slide && w != m_movingWindow) {
         if (w->isOnAllDesktops()) {
             bool keep_above = w->keepAbove() || w->isDock();
             if ((!slide_painting_sticky || keep_above) &&
@@ -182,8 +182,8 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 void SlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (slide) {
-        // don't move windows on all desktops (compensate screen transformation)
-        if (!w->isOnAllDesktops()) { // TODO also fix 'Workspace::movingClient'
+        // Do not move a window if it is on all desktops or being moved to another desktop.
+        if (!w->isOnAllDesktops() && w != m_movingWindow) {
             data += slide_painting_diff;
         }
     }
@@ -205,7 +205,7 @@ QRect SlideEffect::desktopRect(int desktop) const
     return rect;
 }
 
-void SlideEffect::slotDesktopChanged(int old, int current)
+void SlideEffect::slotDesktopChanged(int old, int current, EffectWindow* with)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
@@ -275,6 +275,9 @@ void SlideEffect::slotDesktopChanged(int old, int current)
         }
         effects->setActiveFullScreenEffect(this);
     }
+
+    m_movingWindow = with;
+
     effects->addRepaintFull();
 }
 
@@ -284,6 +287,13 @@ void SlideEffect::windowAdded(EffectWindow *w)
         m_backgroundContrastForcedBefore.append(w);
         w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     }
+}
+
+void SlideEffect::windowDeleted(EffectWindow *w)
+{
+    m_backgroundContrastForcedBefore.removeAll(w);
+    if (w == m_movingWindow)
+        m_movingWindow = nullptr;
 }
 
 bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow *w) const
