@@ -819,6 +819,9 @@ class InternalWindowEventFilter : public InputEventFilter {
                 if (w->property("_q_showWithoutActivating").toBool()) {
                     continue;
                 }
+                if (w->property("outputOnly").toBool()) {
+                    continue;
+                }
                 found = w;
                 break;
             }
