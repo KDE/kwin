@@ -45,8 +45,10 @@ Comment[ca@valencia]=Afig una drecera per a minimitzar i restaurar totes les fin
 Comment[en_GB]=Adds a shortcut to minimise and restore all windows
 Comment[nl]=Voegt een sneltoets toe om alle vensters te minimaliseren en te herstellen
 Comment[pt]=Adiciona um atalho para minimizar ou repor todas as janelas
+Comment[sv]=Lägger till en genväg för att minimera och återställa alla fönster
 Comment[uk]=Додає скорочення мінімізації усіх вікон або скасування такої мінімізації для усіх вікон
 Comment[x-test]=xxAdds a shortcut to minimize and restore all windowsxx
+Comment[zh_CN]=添加最小化与恢复所有窗口的快捷方式
 Icon=preferences-system-windows-script-test
 
 Type=Service
