@@ -57,7 +57,7 @@ private:
     QThread *m_thread;
 };
 
-static const QString s_socketName = QStringLiteral("kwayland-test-wayland-appmenu-0");
+static const QString s_socketName = QStringLiteral("kwayland-test-wayland-decopalette-0");
 
 TestServerSideDecorationPalette::TestServerSideDecorationPalette(QObject *parent)
     : QObject(parent)
@@ -161,22 +161,22 @@ void TestServerSideDecorationPalette::testCreateAndSet()
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
-    QSignalSpy appMenuCreated(m_paletteManagerInterface, &KWayland::Server::ServerSideDecorationPaletteManagerInterface::appMenuCreated);
+    QSignalSpy paletteCreatedSpy(m_paletteManagerInterface, &KWayland::Server::ServerSideDecorationPaletteManagerInterface::paletteCreated);
 
-    QVERIFY(!m_paletteManagerInterface->appMenuForSurface(serverSurface));
+    QVERIFY(!m_paletteManagerInterface->paletteForSurface(serverSurface));
 
     auto palette = m_paletteManager->create(surface.data(), surface.data());
-    QVERIFY(appMenuCreated.wait());
-    auto paletteInterface = appMenuCreated.first().first().value<KWayland::Server::ServerSideDecorationPaletteInterface*>();
-    QCOMPARE(m_paletteManagerInterface->appMenuForSurface(serverSurface), paletteInterface);
+    QVERIFY(paletteCreatedSpy.wait());
+    auto paletteInterface = paletteCreatedSpy.first().first().value<KWayland::Server::ServerSideDecorationPaletteInterface*>();
+    QCOMPARE(m_paletteManagerInterface->paletteForSurface(serverSurface), paletteInterface);
 
     QCOMPARE(paletteInterface->palette(), QString());
 
-    QSignalSpy appMenuChangedSpy(paletteInterface, &KWayland::Server::ServerSideDecorationPaletteInterface::paletteChanged);
+    QSignalSpy changedSpy(paletteInterface, &KWayland::Server::ServerSideDecorationPaletteInterface::paletteChanged);
 
     palette->setPalette("foobar");
 
-    QVERIFY(appMenuChangedSpy.wait());
+    QVERIFY(changedSpy.wait());
     QCOMPARE(paletteInterface->palette(), QString("foobar"));
 
     // and destroy
@@ -184,7 +184,7 @@ void TestServerSideDecorationPalette::testCreateAndSet()
     QVERIFY(destroyedSpy.isValid());
     delete palette;
     QVERIFY(destroyedSpy.wait());
-    QVERIFY(!m_paletteManagerInterface->appMenuForSurface(serverSurface));
+    QVERIFY(!m_paletteManagerInterface->paletteForSurface(serverSurface));
 }
 
 QTEST_GUILESS_MAIN(TestServerSideDecorationPalette)
