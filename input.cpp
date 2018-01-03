@@ -2156,6 +2156,9 @@ void InputDeviceHandler::updateInternalWindow(const QPointF &pos)
                     if (!mask.isEmpty() && !mask.contains(pos.toPoint())) {
                         continue;
                     }
+                    if (w->property("outputOnly").toBool()) {
+                        continue;
+                    }
                     m_internalWindow = QPointer<QWindow>(w);
                     found = true;
                     break;
