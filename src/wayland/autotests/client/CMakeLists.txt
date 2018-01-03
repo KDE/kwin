@@ -407,3 +407,15 @@ add_executable(testAppmenu ${testAppmenu_SRCS})
 target_link_libraries( testAppmenu Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
 add_test(NAME kwayland-testAppmenu COMMAND testAppmenu)
 ecm_mark_as_test(testAppmenu)
+
+########################################################
+# Test Appmenu
+########################################################
+set( testServerSideDecorationPalette_SRCS
+        test_server_side_decoration_palette.cpp
+    )
+add_executable(testServerSideDecorationPalette ${testServerSideDecorationPalette_SRCS})
+target_link_libraries( testServerSideDecorationPalette Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(NAME kwayland-testServerSideDecorationPalette COMMAND testServerSideDecorationPalette)
+ecm_mark_as_test(testServerSideDecorationPalette)
+

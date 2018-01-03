@@ -84,6 +84,7 @@ enum class PointerConstraintsInterfaceVersion;
 class PointerConstraintsInterface;
 class XdgForeignInterface;
 class AppMenuManagerInterface;
+class ServerSideDecorationPaletteManagerInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -246,6 +247,14 @@ public:
      * @since 5.42
      **/
     AppMenuManagerInterface *createAppMenuManagerInterface(QObject *parent = nullptr);
+
+    /**
+     * Creates the ServerSideDecorationPaletteManagerInterface in interface @p version.
+     *
+     * @returns The created manager object
+     * @since 5.42
+     **/
+    ServerSideDecorationPaletteManagerInterface *createServerSideDecorationPaletteManager(QObject *parent = nullptr);
 
 
     /**

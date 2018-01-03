@@ -40,6 +40,7 @@ set(SERVER_LIB_SRCS
     blur_interface.cpp
     contrast_interface.cpp
     server_decoration_interface.cpp
+    server_decoration_palette_interface.cpp
     shell_interface.cpp
     surface_interface.cpp
     subcompositor_interface.cpp
@@ -167,6 +168,12 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/appmenu.xml
     BASENAME appmenu
 )
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/server-decoration-palette.xml
+    BASENAME server_decoration_palette
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-server-protocol.h
@@ -196,6 +203,8 @@ set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-slide-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-server_decoration-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-server_decoration-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-server_decoration_palette-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-server_decoration_palette-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-input-unstable-v2-client-protocol.h
@@ -280,6 +289,7 @@ set(SERVER_LIB_HEADERS
   resource.h
   seat_interface.h
   server_decoration_interface.h
+  server_decoration_palette_interface.h
   shadow_interface.h
   shell_interface.h
   slide_interface.h

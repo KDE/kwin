@@ -48,6 +48,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "xdgforeign_interface.h"
 #include "xdgshell_v6_interface_p.h"
 #include "appmenu_interface.h"
+#include "server_decoration_palette_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -437,6 +438,13 @@ IdleInhibitManagerInterface *Display::createIdleInhibitManager(const IdleInhibit
 AppMenuManagerInterface *Display::createAppMenuManagerInterface(QObject *parent)
 {
     auto b = new AppMenuManagerInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, b, [this, b] { delete b; });
+    return b;
+}
+
+ServerSideDecorationPaletteManagerInterface *Display::createServerSideDecorationPaletteManager(QObject *parent)
+{
+    auto b = new ServerSideDecorationPaletteManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, b, [this, b] { delete b; });
     return b;
 }
