@@ -29,6 +29,7 @@ namespace Server
 {
 class ShellSurfaceInterface;
 class ServerSideDecorationInterface;
+class ServerSideDecorationPaletteInterface;
 class AppMenuInterface;
 class PlasmaShellSurfaceInterface;
 class QtExtendedSurfaceInterface;
@@ -137,6 +138,7 @@ public:
     void installQtExtendedSurface(KWayland::Server::QtExtendedSurfaceInterface *surface);
     void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
     void installAppMenu(KWayland::Server::AppMenuInterface *appmenu);
+    void installPalette(KWayland::Server::ServerSideDecorationPaletteInterface *palette);
 
     bool isInitialPositionSet() const override;
 
@@ -220,6 +222,7 @@ private:
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWayland::Server::QtExtendedSurfaceInterface> m_qtExtendedSurface;
     QPointer<KWayland::Server::AppMenuInterface> m_appMenuInterface;
+    QPointer<KWayland::Server::ServerSideDecorationPaletteInterface> m_paletteInterface;
     KWayland::Server::ServerSideDecorationInterface *m_serverDecoration = nullptr;
     bool m_userNoBorder = false;
     bool m_fullScreen = false;

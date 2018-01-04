@@ -48,6 +48,7 @@ class DataDeviceInterface;
 class ShellInterface;
 class SeatInterface;
 class ServerSideDecorationManagerInterface;
+class ServerSideDecorationPaletteManagerInterface;
 class SurfaceInterface;
 class OutputInterface;
 class PlasmaShellInterface;
@@ -221,6 +222,7 @@ private:
     KWayland::Server::ServerSideDecorationManagerInterface *m_decorationManager = nullptr;
     KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
     KWayland::Server::AppMenuManagerInterface *m_appMenuManager = nullptr;
+    KWayland::Server::ServerSideDecorationPaletteManagerInterface *m_paletteManager = nullptr;
     struct {
         KWayland::Server::ClientConnection *client = nullptr;
         QMetaObject::Connection destroyConnection;

@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
 #include <KWayland/Server/appmenu_interface.h>
+#include <KWayland/Server/server_decoration_palette_interface.h>
 
 #include <KDesktopFile>
 
@@ -59,7 +60,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace KWayland::Server;
 
-static const QByteArray s_schemePropertyName = QByteArrayLiteral("KDE_COLOR_SCHEME_PATH");
 static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_CLOSE_ANIMATION");
 
 namespace KWin
@@ -1387,14 +1387,25 @@ void ShellClient::installAppMenu(AppMenuInterface *menu)
     updateMenu(menu->address());
 }
 
+void ShellClient::installPalette(ServerSideDecorationPaletteInterface *palette)
+{
+    m_paletteInterface = palette;
+
+    auto updatePalette = [this](const QString &palette) {
+        AbstractClient::updateColorScheme(rules()->checkDecoColor(palette));
+    };
+    connect(m_paletteInterface, &ServerSideDecorationPaletteInterface::paletteChanged, this, [=](const QString &palette) {
+        updatePalette(palette);
+    });
+    connect(m_paletteInterface, &QObject::destroyed, this, [=]() {
+        updatePalette(QString());
+    });
+    updatePalette(palette->palette());
+}
+
+
 bool ShellClient::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == m_qtExtendedSurface.data() && event->type() == QEvent::DynamicPropertyChange) {
-        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
-        if (pe->propertyName() == s_schemePropertyName) {
-            AbstractClient::updateColorScheme(rules()->checkDecoColor(m_qtExtendedSurface->property(pe->propertyName().constData()).toString()));
-        }
-    }
     if (watched == m_internalWindow && event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (pe->propertyName() == s_skipClosePropertyName) {
@@ -1406,8 +1417,8 @@ bool ShellClient::eventFilter(QObject *watched, QEvent *event)
 
 void ShellClient::updateColorScheme()
 {
-    if (m_qtExtendedSurface) {
-        AbstractClient::updateColorScheme(rules()->checkDecoColor(m_qtExtendedSurface->property(s_schemePropertyName.constData()).toString()));
+    if (m_paletteInterface) {
+        AbstractClient::updateColorScheme(rules()->checkDecoColor(m_paletteInterface->palette()));
     } else {
         AbstractClient::updateColorScheme(rules()->checkDecoColor(QString()));
     }

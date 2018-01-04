@@ -49,6 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/server_decoration_interface.h>
+#include <KWayland/Server/server_decoration_palette_interface.h>
 #include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/blur_interface.h>
@@ -155,6 +156,9 @@ void WaylandServer::createSurface(T *surface)
     }
     if (auto menu = m_appMenuManager->appMenuForSurface(surface->surface())) {
         client->installAppMenu(menu);
+    }
+    if (auto palette = m_paletteManager->paletteForSurface(surface->surface())) {
+        client->installPalette(palette);
     }
     if (client->isInternal()) {
         m_internalClients << client;
@@ -283,6 +287,15 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
         [this] (AppMenuInterface *appMenu) {
             if (ShellClient *client = findClient(appMenu->surface())) {
                 client->installAppMenu(appMenu);
+            }
+        }
+    );
+    m_paletteManager = m_display->createServerSideDecorationPaletteManager(m_display);
+    m_paletteManager->create();
+    connect(m_paletteManager, &ServerSideDecorationPaletteManagerInterface::paletteCreated,
+        [this] (ServerSideDecorationPaletteInterface *palette) {
+            if (ShellClient *client = findClient(palette->surface())) {
+                client->installPalette(palette);
             }
         }
     );
