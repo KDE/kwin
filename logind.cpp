@@ -438,6 +438,9 @@ void LogindIntegration::getSeat()
             if (m_seatPath != seatPath) {
                 m_seatPath = seatPath;
             }
+            if (m_seatName != seat.name) {
+                m_seatName = seat.name;
+            }
         }
     );
 }

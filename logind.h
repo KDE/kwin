@@ -56,6 +56,10 @@ public:
     int takeDevice(const char *path);
     void releaseDevice(int fd);
 
+    const QString seat() const {
+        return m_seatName;
+    }
+
 Q_SIGNALS:
     void connectedChanged();
     void hasSessionControlChanged(bool);
@@ -91,6 +95,7 @@ private:
     bool m_sessionControl;
     bool m_sessionActive;
     int m_vt = -1;
+    QString m_seatName = QStringLiteral("seat0");
     QString m_seatPath;
     QString m_sessionControllerName;
     QString m_sessionControllerService;
