@@ -819,19 +819,4 @@ bool rec_checkTransientOnTop(const QList<AbstractClient*> &transients, const Cli
     return false;
 }
 
-bool Client::isActiveFullScreen() const
-{
-    if (AbstractClient::isActiveFullScreen()) {
-        return true;
-    }
-    if (!isFullScreen())
-        return false;
-
-    const Client* ac = dynamic_cast<Client*>(workspace()->mostRecentlyActivatedClient()); // instead of activeClient() - avoids flicker
-    // according to NETWM spec implementation notes suggests
-    // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
-    // we'll also take the screen into account
-    return ac && (this->group() == ac->group());
-}
-
 } // namespace

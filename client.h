@@ -389,7 +389,6 @@ protected:
     void doSetSkipPager() override;
     void doSetSkipTaskbar() override;
     bool belongsToDesktop() const override;
-    bool isActiveFullScreen() const override;
     void setGeometryRestore(const QRect &geo) override;
     void updateTabGroupStates(TabGroup::States states) override;
     void doMove(int x, int y) override;

@@ -803,7 +803,7 @@ protected:
     Layer belongsToLayer() const;
     virtual bool belongsToDesktop() const;
     void invalidateLayer();
-    virtual bool isActiveFullScreen() const;
+    bool isActiveFullScreen() const;
     virtual Layer layerForDock() const;
 
     // electric border / quick tiling

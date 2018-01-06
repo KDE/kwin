@@ -593,8 +593,11 @@ void X11ClientTest::testFullscreenWindowGroups()
     // first client should be moved back to normal layer
     QCOMPARE(client->isActive(), false);
     QCOMPARE(client->isFullScreen(), true);
-    QEXPECT_FAIL("", "BUG 388310", Continue);
     QCOMPARE(client->layer(), NormalLayer);
+
+    // activating the fullscreen window again, should move it to active layer
+    workspace()->activateClient(client);
+    QTRY_COMPARE(client->layer(), ActiveLayer);
 }
 
 WAYLANDTEST_MAIN(X11ClientTest)
