@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "atoms.h"
 #include "composite.h"
 #include "effects.h"
 #include "effectloader.h"
@@ -53,6 +54,7 @@ private Q_SLOTS:
     void testCaptionChanges();
     void testCaptionWmName();
     void testCaptionMultipleWindows();
+    void testFullscreenWindowGroups();
 };
 
 void X11ClientTest::initTestCase()
@@ -521,6 +523,78 @@ void X11ClientTest::testCaptionMultipleWindows()
     NETWinInfo info5(kwinApp()->x11Connection(), w2, kwinApp()->x11RootWindow(), NET::WMVisibleName | NET::WMVisibleIconName, NET::Properties2());
     QCOMPARE(QByteArray(info5.visibleName()), QByteArray());
     QTRY_COMPARE(QByteArray(info5.visibleIconName()), QByteArray());
+}
+
+
+void X11ClientTest::testFullscreenWindowGroups()
+{
+    // this test creates an X11 window and puts it to full screen
+    // then a second window is created which is in the same window group
+    // BUG: 388310
+
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+    const QRect windowGeometry(0, 0, 100, 200);
+    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &w);
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(client);
+    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->isActive(), true);
+
+    QCOMPARE(client->isFullScreen(), false);
+    QCOMPARE(client->layer(), NormalLayer);
+    workspace()->slotWindowFullScreen();
+    QCOMPARE(client->isFullScreen(), true);
+    QCOMPARE(client->layer(), ActiveLayer);
+
+    // now let's create a second window
+    windowCreatedSpy.clear();
+    xcb_window_t w2 = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w2, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints2;
+    memset(&hints2, 0, sizeof(hints2));
+    xcb_icccm_size_hints_set_position(&hints2, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints2, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w2, &hints2);
+    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w2, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &w);
+    xcb_map_window(c.data(), w2);
+    xcb_flush(c.data());
+
+    QVERIFY(windowCreatedSpy.wait());
+    Client *client2 = windowCreatedSpy.first().first().value<Client*>();
+    QVERIFY(client2);
+    QVERIFY(client != client2);
+    QCOMPARE(client2->windowId(), w2);
+    QCOMPARE(client2->isActive(), true);
+    QCOMPARE(client2->group(), client->group());
+    // first client should be moved back to normal layer
+    QCOMPARE(client->isActive(), false);
+    QCOMPARE(client->isFullScreen(), true);
+    QEXPECT_FAIL("", "BUG 388310", Continue);
+    QCOMPARE(client->layer(), NormalLayer);
 }
 
 WAYLANDTEST_MAIN(X11ClientTest)
