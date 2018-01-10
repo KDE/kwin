@@ -154,8 +154,8 @@ Decoration {
                 anchors {
                     bottom: parent.bottom
                     top: parent.top
+                    right: parent.right
                 }
-                x: parent.x + parent.width - 1
                 color: colorHelper.shade(root.titleBarColor, ColorHelper.DarkShade, colorHelper.contrast - (decoration.client.active ? 0.4 : 0.8))
             }
         }
@@ -176,8 +176,8 @@ Decoration {
                 anchors {
                     left: parent.left
                     right: parent.right
+                    bottom: parent.bottom
                 }
-                y: parent.y + parent.height - 1
                 color: colorHelper.shade(root.titleBarColor, ColorHelper.DarkShade, colorHelper.contrast - (decoration.client.active ? 0.4 : 0.8))
             }
         }
