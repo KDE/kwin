@@ -667,7 +667,7 @@ install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELIN
 install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-add_executable(kwin_wayland main_wayland.cpp)
+add_executable(kwin_wayland tabletmodemanager.cpp main_wayland.cpp)
 target_link_libraries(kwin_wayland kwin)
 if (HAVE_LIBCAP)
     target_link_libraries(kwin_wayland ${Libcap_LIBRARIES})

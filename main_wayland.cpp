@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "platform.h"
 #include "effects.h"
+#include "tabletmodemanager.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
 
@@ -168,6 +169,7 @@ void ApplicationWayland::performStartup()
 
     VirtualKeyboard::create(this);
     createBackend();
+    TabletModeManager::create(this);
 }
 
 void ApplicationWayland::createBackend()
