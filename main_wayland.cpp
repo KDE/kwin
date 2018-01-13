@@ -678,12 +678,6 @@ int main(int argc, char * argv[])
                                              QStringLiteral("/path/to/session"));
     parser.addOption(exitWithSessionOption);
 
-#ifdef KWIN_BUILD_ACTIVITIES
-    QCommandLineOption noActivitiesOption(QStringLiteral("no-kactivities"),
-                                        i18n("Disable KActivities integration."));
-    parser.addOption(noActivitiesOption);
-#endif
-
     parser.addPositionalArgument(QStringLiteral("applications"),
                                  i18n("Applications to start once Wayland and Xwayland server are started"),
                                  QStringLiteral("[/path/to/application...]"));
@@ -692,9 +686,7 @@ int main(int argc, char * argv[])
     a.processCommandLine(&parser);
 
 #ifdef KWIN_BUILD_ACTIVITIES
-    if (parser.isSet(noActivitiesOption)) {
-        a.setUseKActivities(false);
-    }
+    a.setUseKActivities(false);
 #endif
 
     if (parser.isSet(listBackendsOption)) {
