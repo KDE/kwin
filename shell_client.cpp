@@ -319,6 +319,9 @@ void ShellClient::init()
     if (rules()->checkMinimize(false, true)) {
         minimize(true);   // No animation
     }
+    setSkipTaskbar(rules()->checkSkipTaskbar(m_plasmaShellSurface ? m_plasmaShellSurface->skipTaskbar() : false, true));
+    setSkipPager(rules()->checkSkipPager(false, true));
+    setSkipSwitcher(rules()->checkSkipSwitcher(false, true));
 
     // setup shadow integration
     getShadow();
