@@ -153,7 +153,6 @@ void AbstractClient::setSkipPager(bool b)
         return;
     m_skipPager = b;
     doSetSkipPager();
-    info->setState(b ? NET::SkipPager : NET::States(0), NET::SkipPager);
     updateWindowRules(Rules::SkipPager);
     emit skipPagerChanged();
 }
