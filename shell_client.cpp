@@ -324,6 +324,7 @@ void ShellClient::init()
     setSkipSwitcher(rules()->checkSkipSwitcher(false, true));
     setKeepAbove(rules()->checkKeepAbove(false, true));
     setKeepBelow(rules()->checkKeepBelow(false, true));
+    setShortcut(rules()->checkShortcut(QString(), true));
 
     // setup shadow integration
     getShadow();
