@@ -118,7 +118,7 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     if (shader)
         shader->setRadius(radius);
 
-    m_shouldCache = BlurConfig::cacheTexture();
+    m_shouldCache = effects->waylandDisplay() ? false : BlurConfig::cacheTexture();
 
     windows.clear();
 
