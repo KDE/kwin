@@ -140,6 +140,36 @@ void Xkb::reconfigure()
     }
 }
 
+static bool stringIsEmptyOrNull(const char *str)
+{
+    return str == nullptr || str[0] == '\0';
+}
+
+/**
+ * libxkbcommon uses secure_getenv to read the XKB_DEFAULT_* variables.
+ * As kwin_wayland may have the CAP_SET_NICE capability, it returns nullptr
+ * so we need to do it ourselves (see xkb_context_sanitize_rule_names).
+**/
+static void applyEnvironmentRules(xkb_rule_names &ruleNames)
+{
+    if (stringIsEmptyOrNull(ruleNames.rules)) {
+        ruleNames.rules = getenv("XKB_DEFAULT_RULES");
+    }
+
+    if (stringIsEmptyOrNull(ruleNames.model)) {
+        ruleNames.model = getenv("XKB_DEFAULT_MODEL");
+    }
+
+    if (stringIsEmptyOrNull(ruleNames.layout)) {
+        ruleNames.layout = getenv("XKB_DEFAULT_LAYOUT");
+        ruleNames.variant = getenv("XKB_DEFAULT_VARIANT");
+    }
+
+    if (ruleNames.options == nullptr) {
+        ruleNames.options = getenv("XKB_DEFAULT_OPTIONS");
+    }
+}
+
 xkb_keymap *Xkb::loadKeymapFromConfig()
 {
     // load config
@@ -158,12 +188,15 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
         .variant = nullptr,
         .options = options.constData()
     };
+    applyEnvironmentRules(ruleNames);
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
 xkb_keymap *Xkb::loadDefaultKeymap()
 {
-    return xkb_keymap_new_from_names(m_context, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
+    xkb_rule_names ruleNames = {};
+    applyEnvironmentRules(ruleNames);
+    return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
 void Xkb::installKeymap(int fd, uint32_t size)
