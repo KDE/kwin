@@ -51,6 +51,10 @@ private Q_SLOTS:
     void testApplyInitialSkipPager();
     void testApplyInitialSkipSwitcher_data();
     void testApplyInitialSkipSwitcher();
+    void testApplyInitialKeepAbove_data();
+    void testApplyInitialKeepAbove();
+    void testApplyInitialKeepBelow_data();
+    void testApplyInitialKeepBelow();
 };
 
 void TestShellClientRules::initTestCase()
@@ -129,6 +133,8 @@ void TestShellClientRules::testApplyInitialDesktop()
     QCOMPARE(c->skipTaskbar(), false);
     QCOMPARE(c->skipPager(), false);
     QCOMPARE(c->skipSwitcher(), false);
+    QCOMPARE(c->keepAbove(), false);
+    QCOMPARE(c->keepBelow(), false);
 }
 
 TEST_DATA(testApplyInitialMinimize)
@@ -154,6 +160,8 @@ void TestShellClientRules::testApplyInitialMinimize()
     QCOMPARE(c->skipTaskbar(), false);
     QCOMPARE(c->skipPager(), false);
     QCOMPARE(c->skipSwitcher(), false);
+    QCOMPARE(c->keepAbove(), false);
+    QCOMPARE(c->keepBelow(), false);
 }
 
 TEST_DATA(testApplyInitialSkipTaskbar)
@@ -177,6 +185,8 @@ void TestShellClientRules::testApplyInitialSkipTaskbar()
     QCOMPARE(c->skipTaskbar(), true);
     QCOMPARE(c->skipPager(), false);
     QCOMPARE(c->skipSwitcher(), false);
+    QCOMPARE(c->keepAbove(), false);
+    QCOMPARE(c->keepBelow(), false);
 }
 
 TEST_DATA(testApplyInitialSkipPager)
@@ -200,6 +210,8 @@ void TestShellClientRules::testApplyInitialSkipPager()
     QCOMPARE(c->skipTaskbar(), false);
     QCOMPARE(c->skipPager(), true);
     QCOMPARE(c->skipSwitcher(), false);
+    QCOMPARE(c->keepAbove(), false);
+    QCOMPARE(c->keepBelow(), false);
 }
 
 TEST_DATA(testApplyInitialSkipSwitcher)
@@ -223,6 +235,58 @@ void TestShellClientRules::testApplyInitialSkipSwitcher()
     QCOMPARE(c->skipTaskbar(), false);
     QCOMPARE(c->skipPager(), false);
     QCOMPARE(c->skipSwitcher(), true);
+    QCOMPARE(c->keepAbove(), false);
+    QCOMPARE(c->keepBelow(), false);
+}
+
+TEST_DATA(testApplyInitialKeepAbove)
+
+void TestShellClientRules::testApplyInitialKeepAbove()
+{
+    // install the temporary rule
+    QFETCH(int, ruleNumber);
+    QString rule = QStringLiteral("above=true\naboverule=%1").arg(ruleNumber);
+    QMetaObject::invokeMethod(RuleBook::self(), "temporaryRulesMessage", Q_ARG(QString, rule));
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(c->desktop(), 1);
+    QCOMPARE(c->isMinimized(), false);
+    QCOMPARE(c->isActive(), true);
+    QCOMPARE(c->skipTaskbar(), false);
+    QCOMPARE(c->skipPager(), false);
+    QCOMPARE(c->skipSwitcher(), false);
+    QCOMPARE(c->keepAbove(), true);
+    QCOMPARE(c->keepBelow(), false);
+}
+
+TEST_DATA(testApplyInitialKeepBelow)
+
+void TestShellClientRules::testApplyInitialKeepBelow()
+{
+    // install the temporary rule
+    QFETCH(int, ruleNumber);
+    QString rule = QStringLiteral("below=true\nbelowrule=%1").arg(ruleNumber);
+    QMetaObject::invokeMethod(RuleBook::self(), "temporaryRulesMessage", Q_ARG(QString, rule));
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(c->desktop(), 1);
+    QCOMPARE(c->isMinimized(), false);
+    QCOMPARE(c->isActive(), true);
+    QCOMPARE(c->skipTaskbar(), false);
+    QCOMPARE(c->skipPager(), false);
+    QCOMPARE(c->skipSwitcher(), false);
+    QCOMPARE(c->keepAbove(), false);
+    QCOMPARE(c->keepBelow(), true);
 }
 
 WAYLANDTEST_MAIN(TestShellClientRules)

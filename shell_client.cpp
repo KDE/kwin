@@ -322,6 +322,8 @@ void ShellClient::init()
     setSkipTaskbar(rules()->checkSkipTaskbar(m_plasmaShellSurface ? m_plasmaShellSurface->skipTaskbar() : false, true));
     setSkipPager(rules()->checkSkipPager(false, true));
     setSkipSwitcher(rules()->checkSkipSwitcher(false, true));
+    setKeepAbove(rules()->checkKeepAbove(false, true));
+    setKeepBelow(rules()->checkKeepBelow(false, true));
 
     // setup shadow integration
     getShadow();
