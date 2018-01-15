@@ -25,6 +25,7 @@
 #include <kwineffects_interface.h>
 #include <KAboutData>
 #include <KPluginFactory>
+#include <KWindowSystem>
 
 K_PLUGIN_FACTORY_WITH_JSON(BlurEffectConfigFactory,
                            "blur_config.json",
@@ -37,6 +38,9 @@ BlurEffectConfig::BlurEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(KAboutData::pluginData(QStringLiteral("blur")), parent, args)
 {
     ui.setupUi(this);
+    if (KWindowSystem::isPlatformWayland()) {
+        ui.kcfg_CacheTexture->setVisible(false);
+    }
     BlurConfig::instance(KWIN_CONFIG);
     addConfig(BlurConfig::self(), this);
 
