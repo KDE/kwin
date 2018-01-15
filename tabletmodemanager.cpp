@@ -82,11 +82,6 @@ TabletModeManager::TabletModeManager(QObject *parent)
     );
 }
 
-TabletModeManager::~TabletModeManager()
-{
-    delete m_spy;
-}
-
 bool TabletModeManager::isTablet() const
 {
     return m_isTabletMode;

@@ -36,7 +36,7 @@ class TabletModeManager : public QObject
     Q_PROPERTY(bool tabletMode READ isTablet NOTIFY tabletModeChanged)
 
 public:
-    ~TabletModeManager();
+    ~TabletModeManager() = default;
     bool isTablet() const;
     void setIsTablet(bool tablet);
 
