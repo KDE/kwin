@@ -41,10 +41,8 @@ int libinput_device_has_capability(struct libinput_device *device, enum libinput
         return device->gestureSupported;
     case LIBINPUT_DEVICE_CAP_TABLET_TOOL:
         return device->tabletTool;
-#if HAVE_INPUT_1_9
     case LIBINPUT_DEVICE_CAP_SWITCH:
         return device->switchDevice;
-#endif
     default:
         return 0;
     }
@@ -815,8 +813,6 @@ uint32_t libinput_device_config_scroll_get_default_button(struct libinput_device
     return device->defaultScrollButton;
 }
 
-#if HAVE_INPUT_1_9
-
 int libinput_device_switch_has_switch(struct libinput_device *device, enum libinput_switch sw)
 {
     switch (sw) {
@@ -860,5 +856,3 @@ uint64_t libinput_event_switch_get_time_usec(struct libinput_event_switch *event
 {
     return event->timeMicroseconds;
 }
-
-#endif

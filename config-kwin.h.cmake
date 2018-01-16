@@ -10,7 +10,6 @@
 #define KWIN_RULES_DIALOG_BIN "${CMAKE_INSTALL_FULL_LIBEXECDIR}/kwin_rules_dialog"
 #define KWIN_XCLIPBOARD_SYNC_BIN "${CMAKE_INSTALL_FULL_LIBEXECDIR}/org_kde_kwin_xclipboard_syncer"
 #cmakedefine01 HAVE_INPUT
-#cmakedefine01 HAVE_INPUT_1_9
 #cmakedefine01 HAVE_X11_XCB
 #cmakedefine01 HAVE_X11_XINPUT
 #cmakedefine01 HAVE_DRM

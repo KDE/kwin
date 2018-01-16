@@ -460,7 +460,6 @@ void Connection::processEvents()
                 }
                 break;
             }
-#if HAVE_INPUT_1_9
             case LIBINPUT_EVENT_SWITCH_TOGGLE: {
                 SwitchEvent *se = static_cast<SwitchEvent*>(event.data());
                 switch (se->state()) {
@@ -475,7 +474,6 @@ void Connection::processEvents()
                 }
                 break;
             }
-#endif
             default:
                 // nothing
                 break;

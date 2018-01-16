@@ -24,11 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <libinput.h>
 
-#include <config-kwin.h>
-#if !(HAVE_INPUT_1_9)
-struct libinput_event_switch;
-#endif
-
 namespace KWin
 {
 namespace LibInput

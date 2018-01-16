@@ -221,9 +221,7 @@ void TestLibinputDevice::testDeviceType_data()
     QTest::newRow("pointer/touch") << false << true << true << false << false;
     QTest::newRow("keyboard/pointer/touch") << true << true << true << false << false;
     QTest::newRow("tabletTool") << false << false << false << true << false;
-#if HAVE_INPUT_1_9
     QTest::newRow("switch") << false << false << false << false << true;
-#endif
 }
 
 void TestLibinputDevice::testDeviceType()
@@ -2181,7 +2179,6 @@ void TestLibinputDevice::testSwitch_data()
 
 void TestLibinputDevice::testSwitch()
 {
-#if HAVE_INPUT_1_9
     libinput_device device;
     device.switchDevice = true;
     QFETCH(bool, lid);
@@ -2195,9 +2192,6 @@ void TestLibinputDevice::testSwitch()
     QCOMPARE(d.property("lidSwitch").toBool(), lid);
     QCOMPARE(d.isTabletModeSwitch(), tablet);
     QCOMPARE(d.property("tabletModeSwitch").toBool(), tablet);
-#else
-    QSKIP("Requires libinput 1.9");
-#endif
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)

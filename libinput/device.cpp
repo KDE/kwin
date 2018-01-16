@@ -163,11 +163,9 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_tabletPad(false)
 #endif
     , m_supportsGesture(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_GESTURE))
-#if HAVE_INPUT_1_9
     , m_switch(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_SWITCH))
     , m_lidSwitch(m_switch ? libinput_device_switch_has_switch(m_device, LIBINPUT_SWITCH_LID) : false)
     , m_tabletSwitch(m_switch ? libinput_device_switch_has_switch(m_device, LIBINPUT_SWITCH_TABLET_MODE) : false)
-#endif
     , m_name(QString::fromLocal8Bit(libinput_device_get_name(m_device)))
     , m_sysName(QString::fromLocal8Bit(libinput_device_get_sysname(m_device)))
     , m_outputName(QString::fromLocal8Bit(libinput_device_get_output_name(m_device)))
