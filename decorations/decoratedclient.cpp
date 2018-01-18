@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/Decoration>
 
 #include <QDebug>
+#include <QToolTip>
 
 namespace KWin
 {
@@ -198,6 +199,17 @@ QColor DecoratedClientImpl::color(KDecoration2::ColorGroup group, KDecoration2::
     }
 
     return QColor();
+}
+
+void DecoratedClientImpl::requestShowToolTip(const QString &text)
+{
+    QPoint pos = Cursor::pos();
+    QToolTip::showText(pos, text);
+}
+
+void DecoratedClientImpl::requestHideToolTip()
+{
+    QToolTip::hideText();
 }
 
 void DecoratedClientImpl::requestShowWindowMenu()
