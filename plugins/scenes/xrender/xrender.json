@@ -10,6 +10,7 @@
         "Description[es]": "Complemento compositor de KWin renderizando mediante XRender",
         "Description[fi]": "XRenderillä hahmontava KWin-koostajaliitännäinen",
         "Description[fr]": "Module du compositeur KWin effectuant le rendu avec XRender",
+        "Description[gl]": "Complemento de compositor de KWin que renderiza a través de XRender.",
         "Description[it]": "Estensione del compositore di KWin per la resa tramite XRender",
         "Description[ko]": "XRender로 렌더링하는 KWin 컴포지터 플러그인",
         "Description[nl]": "KWin-compositor-plug-in rendering via XRender",
