@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/xdgshell.h>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -67,6 +68,8 @@ private Q_SLOTS:
     void testQuickTilingKeyboardMove();
     void testQuickTilingPointerMove_data();
     void testQuickTilingPointerMove();
+    void testQuickTilingPointerMoveXdgShell_data();
+    void testQuickTilingPointerMoveXdgShell();
     void testX11QuickTiling_data();
     void testX11QuickTiling();
     void testX11QuickTilingAfterVertMaximize_data();
@@ -430,6 +433,69 @@ void QuickTilingTest::testQuickTilingPointerMove()
 
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(c->quickTileMode(), "expectedMode");
+    QTRY_COMPARE(sizeChangeSpy.count(), 1);
+}
+
+
+void QuickTilingTest::testQuickTilingPointerMoveXdgShell_data()
+{
+    QTest::addColumn<QPoint>("targetPos");
+    QTest::addColumn<QuickTileMode>("expectedMode");
+
+    QTest::newRow("topRight") << QPoint(2559, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Right);
+    QTest::newRow("right") << QPoint(2559, 512) << QuickTileMode(QuickTileFlag::Right);
+    QTest::newRow("bottomRight") << QPoint(2559, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Right);
+    QTest::newRow("bottomLeft") << QPoint(0, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Left);
+    QTest::newRow("Left") << QPoint(0, 512) << QuickTileMode(QuickTileFlag::Left);
+    QTest::newRow("topLeft") << QPoint(0, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Left);
+}
+
+void QuickTilingTest::testQuickTilingPointerMoveXdgShell()
+{
+    using namespace KWayland::Client;
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellV6Surface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    // let's render
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+    QCOMPARE(c->maximizeMode(), MaximizeRestore);
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 2);
+
+    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
+    QVERIFY(quickTileChangedSpy.isValid());
+
+    workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
+    QCOMPARE(c, workspace()->getMovingClient());
+    QCOMPARE(Cursor::pos(), QPoint(49, 24));
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 3);
+
+    QFETCH(QPoint, targetPos);
+    quint32 timestamp = 1;
+    kwinApp()->platform()->pointerMotion(targetPos, timestamp++);
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(Cursor::pos(), targetPos);
+    QVERIFY(!workspace()->getMovingClient());
+
+    QCOMPARE(quickTileChangedSpy.count(), 1);
+    QTEST(c->quickTileMode(), "expectedMode");
+    QVERIFY(configureRequestedSpy.wait());
+    QEXPECT_FAIL("", "BUG 388072", Continue);
+    QCOMPARE(configureRequestedSpy.count(), 4);
+    QEXPECT_FAIL("", "BUG 388072", Continue);
+    QCOMPARE(false, configureRequestedSpy.last().first().toSize().isEmpty());
 }
 
 struct XcbConnectionDeleter
