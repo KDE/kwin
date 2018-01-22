@@ -726,7 +726,7 @@ bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientLi
     for (auto it = transients().constBegin();
             it != transients().constEnd();
             ++it) {
-        Client *c = dynamic_cast<Client *>(*it);
+        const Client *c = qobject_cast<const Client *>(*it);
         if (!c) {
             continue;
         }
