@@ -1547,8 +1547,6 @@ void ShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecora
     connect(m_serverDecoration, &ServerSideDecorationInterface::modeRequested, this,
         [this] (ServerSideDecorationManagerInterface::Mode mode) {
             const bool changed = mode != m_serverDecoration->mode();
-            // always acknowledge the requested mode
-            m_serverDecoration->setMode(mode);
             if (changed && !m_unmapped) {
                 updateDecoration(false);
             }

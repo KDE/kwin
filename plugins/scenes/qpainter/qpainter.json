@@ -27,7 +27,7 @@
         "Description[tr]": "QPainter üzerinden KWin Dizgici eklentisi oluşturma",
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням QPainter",
         "Description[x-test]": "xxKWin Compositor plugin rendering through QPainterxx",
-        "Description[zh_CN]": "使用 QPainter 渲染的 KWin 合成插件",
+        "Description[zh_CN]": "使用 QPainter 渲染的 KWin 混成插件",
         "Id": "KWinSceneQPainter",
         "Name": "SceneQPainter",
         "Name[pl]": "QPainter sceny",

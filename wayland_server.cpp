@@ -337,6 +337,12 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             if (ShellClient *c = findClient(deco->surface())) {
                 c->installServerSideDecoration(deco);
             }
+            connect(deco, &ServerSideDecorationInterface::modeRequested, this,
+                [this, deco] (ServerSideDecorationManagerInterface::Mode mode) {
+                    // always acknowledge the requested mode
+                    deco->setMode(mode);
+                }
+            );
         }
     );
     m_decorationManager->create();
