@@ -173,6 +173,8 @@ protected:
     bool m_hardwareClipping;
 };
 
+class OpenGLWindowPixmap;
+
 class SceneOpenGL2Window : public SceneOpenGL::Window
 {
 public:
@@ -209,6 +211,7 @@ protected:
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
 
 private:
+    void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping);
     /**
      * Whether prepareStates enabled blending and restore states should disable again.
      **/
