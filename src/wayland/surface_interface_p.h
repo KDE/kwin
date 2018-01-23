@@ -123,7 +123,7 @@ private:
 
     static void attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy);
     static void damageCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
-    static void frameCallaback(wl_client *client, wl_resource *resource, uint32_t callback);
+    static void frameCallback(wl_client *client, wl_resource *resource, uint32_t callback);
     static void opaqueRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
     static void inputRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
     static void commitCallback(wl_client *client, wl_resource *resource);

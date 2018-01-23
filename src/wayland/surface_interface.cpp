@@ -273,7 +273,7 @@ const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
     resourceDestroyedCallback,
     attachCallback,
     damageCallback,
-    frameCallaback,
+    frameCallback,
     opaqueRegionCallback,
     inputRegionCallback,
     commitCallback,
@@ -605,7 +605,7 @@ void SurfaceInterface::Private::damageCallback(wl_client *client, wl_resource *r
     cast<Private>(resource)->damage(QRect(x, y, width, height));
 }
 
-void SurfaceInterface::Private::frameCallaback(wl_client *client, wl_resource *resource, uint32_t callback)
+void SurfaceInterface::Private::frameCallback(wl_client *client, wl_resource *resource, uint32_t callback)
 {
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
