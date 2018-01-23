@@ -440,7 +440,6 @@ void Application::initPlatform(const KPluginMetaData &plugin)
     m_platform = qobject_cast<Platform *>(plugin.instantiate());
     if (m_platform) {
         m_platform->setParent(this);
-#if HAVE_INPUT
         // check whether it needs libinput
         const QJsonObject &metaData = plugin.rawData();
         auto it = metaData.find(QStringLiteral("input"));
@@ -452,7 +451,6 @@ void Application::initPlatform(const KPluginMetaData &plugin)
                 }
             }
         }
-#endif
     }
 }
 

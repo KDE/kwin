@@ -23,9 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "virtual_backend.h"
 #include "options.h"
 #include "screens.h"
-#if HAVE_UDEV
 #include "udev.h"
-#endif
 #include <logging.h>
 // kwin libs
 #include <kwinglplatform.h>
@@ -62,7 +60,6 @@ EglGbmBackend::~EglGbmBackend()
 
 void EglGbmBackend::initGbmDevice()
 {
-#if HAVE_UDEV
     if (m_backend->drmFd() != -1) {
         // already initialized
         return;
@@ -91,7 +88,6 @@ void EglGbmBackend::initGbmDevice()
         qCWarning(KWIN_VIRTUAL) << "Failed to open gbm device";
     }
     m_backend->setGbmDevice(gbmDevice);
-#endif
 #endif
 }
 

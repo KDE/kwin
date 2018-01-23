@@ -648,11 +648,9 @@ int main(int argc, char * argv[])
         parser.addOption(hwcomposerOption);
     }
 #endif
-#if HAVE_INPUT
     QCommandLineOption libinputOption(QStringLiteral("libinput"),
                                       i18n("Enable libinput support for input events processing. Note: never use in a nested session."));
     parser.addOption(libinputOption);
-#endif
 #if HAVE_DRM
     QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
     if (hasDrmOption) {
@@ -700,9 +698,7 @@ int main(int argc, char * argv[])
         a.setSessionArgument(parser.value(exitWithSessionOption));
     }
 
-#if HAVE_INPUT
     KWin::Application::setUseLibinput(parser.isSet(libinputOption));
-#endif
 
     QString pluginName;
     QSize initialWindowSize;

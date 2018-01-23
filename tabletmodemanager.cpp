@@ -24,9 +24,7 @@
 #include "input_event.h"
 #include "input_event_spy.h"
 
-#if HAVE_INPUT
 #include "libinput/device.h"
-#endif
 
 #include <QDBusConnection>
 

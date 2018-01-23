@@ -156,8 +156,6 @@ private:
     QTextEdit *m_textEdit;
 };
 
-#if HAVE_INPUT
-
 namespace LibInput
 {
 class Device;
@@ -180,7 +178,6 @@ private:
     void setupDeviceConnections(LibInput::Device *device);
     QVector<LibInput::Device*> m_devices;
 };
-#endif
 
 }
 

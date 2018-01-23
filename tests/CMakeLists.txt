@@ -18,21 +18,19 @@ if (KF5Wayland_FOUND)
     target_link_libraries(waylandclienttest Qt5::Core Qt5::Gui KF5::WaylandClient)
 endif()
 
-if (HAVE_INPUT)
-    set(libinputtest_SRCS
-            libinputtest.cpp
-            ${KWIN_SOURCE_DIR}/libinput/context.cpp
-            ${KWIN_SOURCE_DIR}/libinput/connection.cpp
-            ${KWIN_SOURCE_DIR}/libinput/device.cpp
-            ${KWIN_SOURCE_DIR}/libinput/events.cpp
-            ${KWIN_SOURCE_DIR}/libinput/libinput_logging.cpp
-            ${KWIN_SOURCE_DIR}/logind.cpp
-            ${KWIN_SOURCE_DIR}/udev.cpp
-    )
-    add_executable(libinputtest ${libinputtest_SRCS})
-    add_definitions(-DKWIN_BUILD_TESTING)
-    target_link_libraries(libinputtest Qt5::Core Qt5::DBus Libinput::Libinput ${UDEV_LIBS} KF5::ConfigCore KF5::GlobalAccel KF5::WindowSystem)
-endif()
+set(libinputtest_SRCS
+        libinputtest.cpp
+        ${KWIN_SOURCE_DIR}/libinput/context.cpp
+        ${KWIN_SOURCE_DIR}/libinput/connection.cpp
+        ${KWIN_SOURCE_DIR}/libinput/device.cpp
+        ${KWIN_SOURCE_DIR}/libinput/events.cpp
+        ${KWIN_SOURCE_DIR}/libinput/libinput_logging.cpp
+        ${KWIN_SOURCE_DIR}/logind.cpp
+        ${KWIN_SOURCE_DIR}/udev.cpp
+)
+add_executable(libinputtest ${libinputtest_SRCS})
+add_definitions(-DKWIN_BUILD_TESTING)
+target_link_libraries(libinputtest Qt5::Core Qt5::DBus Libinput::Libinput ${UDEV_LIBS} KF5::ConfigCore KF5::GlobalAccel KF5::WindowSystem)
 
 add_executable(x11shadowreader x11shadowreader.cpp)
 target_link_libraries(x11shadowreader XCB::XCB Qt5::Widgets Qt5::X11Extras KF5::ConfigCore KF5::WindowSystem)

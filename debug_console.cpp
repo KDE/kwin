@@ -28,10 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "keyboard_input.h"
-#if HAVE_INPUT
 #include "libinput/connection.h"
 #include "libinput/device.h"
-#endif
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 
@@ -143,7 +141,6 @@ static QString buttonToString(Qt::MouseButton button)
     }
 }
 
-#if HAVE_INPUT
 static QString deviceRow(LibInput::Device *device)
 {
     if (!device) {
@@ -151,7 +148,6 @@ static QString deviceRow(LibInput::Device *device)
     }
     return tableRow(i18n("Input Device"), QStringLiteral("%1 (%2)").arg(device->name()).arg(device->sysName()));
 }
-#endif
 
 static QString buttonsToString(Qt::MouseButtons buttons)
 {
@@ -186,9 +182,7 @@ void DebugConsoleFilter::pointerEvent(MouseEvent *event)
     switch (event->type()) {
     case QEvent::MouseMove: {
         text.append(tableHeaderRow(i18nc("A mouse pointer motion event", "Pointer Motion")));
-#if HAVE_INPUT
         text.append(deviceRow(event->device()));
-#endif
         text.append(timestamp);
         if (event->timestampMicroseconds() != 0) {
             text.append(timestampRowUsec(event->timestampMicroseconds()));
@@ -206,9 +200,7 @@ void DebugConsoleFilter::pointerEvent(MouseEvent *event)
     }
     case QEvent::MouseButtonPress:
         text.append(tableHeaderRow(i18nc("A mouse pointer button press event", "Pointer Button Press")));
-#if HAVE_INPUT
         text.append(deviceRow(event->device()));
-#endif
         text.append(timestamp);
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
         text.append(tableRow(i18nc("A button in a mouse press/release event",  "Native Button code"), event->nativeButton()));
@@ -216,9 +208,7 @@ void DebugConsoleFilter::pointerEvent(MouseEvent *event)
         break;
     case QEvent::MouseButtonRelease:
         text.append(tableHeaderRow(i18nc("A mouse pointer button release event", "Pointer Button Release")));
-#if HAVE_INPUT
         text.append(deviceRow(event->device()));
-#endif
         text.append(timestamp);
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Button"), buttonToString(event->button())));
         text.append(tableRow(i18nc("A button in a mouse press/release event", "Native Button code"), event->nativeButton()));
@@ -238,9 +228,7 @@ void DebugConsoleFilter::wheelEvent(WheelEvent *event)
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A mouse pointer axis (wheel) event", "Pointer Axis")));
-#if HAVE_INPUT
-        text.append(deviceRow(event->device()));
-#endif
+    text.append(deviceRow(event->device()));
     text.append(timestampRow(event->timestamp()));
     const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
     text.append(tableRow(i18nc("The orientation of a pointer axis event", "Orientation"),
@@ -268,9 +256,7 @@ void DebugConsoleFilter::keyEvent(KeyEvent *event)
     default:
         break;
     }
-#if HAVE_INPUT
-        text.append(deviceRow(event->device()));
-#endif
+    text.append(deviceRow(event->device()));
     auto modifiersToString = [event] {
         QString ret;
         if (event->modifiers().testFlag(Qt::ShiftModifier)) {
@@ -468,7 +454,6 @@ void DebugConsoleFilter::switchEvent(SwitchEvent *event)
     if (event->timestampMicroseconds() != 0) {
         text.append(timestampRowUsec(event->timestampMicroseconds()));
     }
-#if HAVE_INPUT
     text.append(deviceRow(event->device()));
     QString switchName;
     if (event->device()->isLidSwitch()) {
@@ -477,7 +462,6 @@ void DebugConsoleFilter::switchEvent(SwitchEvent *event)
         switchName = i18nc("Name of a hardware switch", "Tablet mode");
     }
     text.append(tableRow(i18nc("A hardware switch", "Switch"), switchName));
-#endif
     QString switchState;
     switch (event->state()) {
     case SwitchEvent::State::Off:
@@ -505,12 +489,10 @@ DebugConsole::DebugConsole()
     m_ui->windowsView->setItemDelegate(new DebugConsoleDelegate(this));
     m_ui->windowsView->setModel(new DebugConsoleModel(this));
     m_ui->surfacesView->setModel(new SurfaceTreeModel(this));
-#if HAVE_INPUT
     if (kwinApp()->usesLibinput()) {
         m_ui->inputDevicesView->setModel(new InputDeviceModel(this));
         m_ui->inputDevicesView->setItemDelegate(new DebugConsoleDelegate(this));
     }
-#endif
     m_ui->quitButton->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
     m_ui->tabWidget->setTabIcon(0, QIcon::fromTheme(QStringLiteral("view-list-tree")));
     m_ui->tabWidget->setTabIcon(1, QIcon::fromTheme(QStringLiteral("view-list-tree")));
@@ -1408,7 +1390,6 @@ QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-#if HAVE_INPUT
 InputDeviceModel::InputDeviceModel(QObject *parent)
     : QAbstractItemModel(parent)
     , m_devices(LibInput::Connection::self()->devices())
@@ -1540,7 +1521,5 @@ void InputDeviceModel::setupDeviceConnections(LibInput::Device *device)
         }
     );
 }
-
-#endif
 
 }
