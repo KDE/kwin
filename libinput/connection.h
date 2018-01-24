@@ -75,6 +75,9 @@ public:
     bool hasPointer() const {
         return m_pointer > 0;
     }
+    bool hasTabletModeSwitch() const {
+        return m_tabletModeSwitch > 0;
+    }
 
     bool isSuspended() const;
 
@@ -111,6 +114,7 @@ Q_SIGNALS:
     void hasAlphaNumericKeyboardChanged(bool);
     void hasPointerChanged(bool);
     void hasTouchChanged(bool);
+    void hasTabletModeSwitchChanged(bool);
     void deviceAdded(KWin::LibInput::Device *);
     void deviceRemoved(KWin::LibInput::Device *);
     void deviceAddedSysName(QString);
@@ -144,10 +148,12 @@ private:
     int m_alphaNumericKeyboard = 0;
     int m_pointer = 0;
     int m_touch = 0;
+    int m_tabletModeSwitch = 0;
     bool m_keyboardBeforeSuspend = false;
     bool m_alphaNumericKeyboardBeforeSuspend = false;
     bool m_pointerBeforeSuspend = false;
     bool m_touchBeforeSuspend = false;
+    bool m_tabletModeSwitchBeforeSuspend = false;
     QMutex m_mutex;
     QVector<Event*> m_eventQueue;
     bool wasSuspended = false;

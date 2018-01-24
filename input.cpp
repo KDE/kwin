@@ -1807,6 +1807,14 @@ void InputRedirection::setupLibInput()
                     emit hasAlphaNumericKeyboardChanged(set);
                 }
             );
+            connect(conn, &LibInput::Connection::hasTabletModeSwitchChanged, this,
+                [this] (bool set) {
+                    if (m_libInput->isSuspended()) {
+                        return;
+                    }
+                    emit hasTabletModeSwitchChanged(set);
+                }
+            );
             connect(conn, &LibInput::Connection::hasPointerChanged, this,
                 [this, s] (bool set) {
                     if (m_libInput->isSuspended()) {
@@ -1877,6 +1885,16 @@ bool InputRedirection::hasAlphaNumericKeyboard()
     }
 #endif
     return true;
+}
+
+bool InputRedirection::hasTabletModeSwitch()
+{
+#if HAVE_INPUT
+    if (m_libInput) {
+        return m_libInput->hasTabletModeSwitch();
+    }
+#endif
+    return false;
 }
 
 void InputRedirection::setupLibInputWithScreens()

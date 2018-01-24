@@ -218,6 +218,7 @@ public:
     }
 
     bool hasAlphaNumericKeyboard();
+    bool hasTabletModeSwitch();
 
     void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
@@ -265,6 +266,7 @@ Q_SIGNALS:
     void keyStateChanged(quint32 keyCode, InputRedirection::KeyboardKeyState state);
 
     void hasAlphaNumericKeyboardChanged(bool set);
+    void hasTabletModeSwitchChanged(bool set);
 
 private:
     void setupLibInput();

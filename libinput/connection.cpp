@@ -225,6 +225,7 @@ void Connection::deactivate()
     m_alphaNumericKeyboardBeforeSuspend = hasAlphaNumericKeyboard();
     m_pointerBeforeSuspend = hasPointer();
     m_touchBeforeSuspend = hasTouch();
+    m_tabletModeSwitchBeforeSuspend = hasTabletModeSwitch();
     m_input->suspend();
     handleEvent();
 }
@@ -280,6 +281,12 @@ void Connection::processEvents()
                         emit hasTouchChanged(true);
                     }
                 }
+                if (device->isTabletModeSwitch()) {
+                    m_tabletModeSwitch++;
+                    if (m_tabletModeSwitch == 1) {
+                        emit hasTabletModeSwitchChanged(true);
+                    }
+                }
                 applyDeviceConfig(device);
                 applyScreenToDevice(device);
 
@@ -321,6 +328,12 @@ void Connection::processEvents()
                     m_touch--;
                     if (m_touch == 0) {
                         emit hasTouchChanged(false);
+                    }
+                }
+                if (device->isTabletModeSwitch()) {
+                    m_tabletModeSwitch--;
+                    if (m_tabletModeSwitch == 0) {
+                        emit hasTabletModeSwitchChanged(false);
                     }
                 }
                 device->deleteLater();
@@ -491,6 +504,9 @@ void Connection::processEvents()
         }
         if (m_touchBeforeSuspend && !m_touch) {
             emit hasTouchChanged(false);
+        }
+        if (m_tabletModeSwitchBeforeSuspend && !m_tabletModeSwitch) {
+            emit hasTabletModeSwitchChanged(false);
         }
         wasSuspended = false;
     }

@@ -80,6 +80,13 @@ TabletModeManager::TabletModeManager(QObject *parent)
                                                  this,
                                                  QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals
     );
+
+    connect(input(), &InputRedirection::hasTabletModeSwitchChanged, this, &TabletModeManager::tabletModeAvailableChanged);
+}
+
+bool TabletModeManager::isTabletModeAvailable() const
+{
+    return input()->hasTabletModeSwitch();
 }
 
 bool TabletModeManager::isTablet() const
