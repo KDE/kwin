@@ -27,7 +27,7 @@
         "Description[tr]": "XRender üzerinden KWin Dizgici eklentisi oluşturma",
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням XRender",
         "Description[x-test]": "xxKWin Compositor plugin rendering through XRenderxx",
-        "Description[zh_CN]": "使用 XRender 渲染的 KWin 混成插件",
+        "Description[zh_CN]": "使用 XRender 渲染的 KWin 合成插件",
         "Id": "KWinSceneXRender",
         "Name": "SceneXRender",
         "Name[pl]": "XRender sceny",
