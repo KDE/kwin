@@ -12,7 +12,6 @@ target_link_libraries(kwin_blur_config
     KF5::ConfigWidgets
     KF5::I18n
     KF5::Service
-    KF5::WindowSystem
 )
 
 kcoreaddons_desktop_to_json(kwin_blur_config blur_config.desktop SERVICE_TYPES kcmodule.desktop)

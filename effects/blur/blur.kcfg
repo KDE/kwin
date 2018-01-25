@@ -5,11 +5,11 @@
     http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true"/>
     <group name="Effect-Blur">
-        <entry name="BlurRadius" type="Int">
-            <default>12</default>
+        <entry name="BlurStrength" type="Int">
+            <default>5</default>
         </entry>
-        <entry name="CacheTexture" type="Bool">
-            <default>true</default>
+        <entry name="UseSimpleBlur" type="Bool">
+            <default>false</default>
         </entry>
     </group>
 </kcfg>

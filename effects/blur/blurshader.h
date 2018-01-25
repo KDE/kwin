@@ -1,5 +1,6 @@
 /*
  *   Copyright © 2010 Fredrik Höglund <fredrik@kde.org>
+ *   Copyright © 2018 Alex Nemeth <alex.nemeth329@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,21 +22,14 @@
 #define BLURSHADER_H
 
 #include <kwinglutils.h>
+#include <QVector2D>
+#include <QVector4D>
+
 
 class QMatrix4x4;
 
 namespace KWin
 {
-
-struct KernelValue
-{
-    KernelValue() {}
-    KernelValue(float x, float g) : x(x), g(g) {}
-    bool operator < (const KernelValue &other) const { return x < other.x; }
-
-    float x;
-    float g;
-};
 
 class BlurShader
 {
@@ -49,39 +43,28 @@ public:
         return mValid;
     }
 
-    // Sets the radius in pixels
-    void setRadius(int radius);
-    int radius() const {
-        return mRadius;
-    }
-
-    // Sets the blur direction
-    void setDirection(Qt::Orientation direction);
-    Qt::Orientation direction() const {
-        return mDirection;
-    }
-
-    // Sets the distance between two pixels
-    virtual void setPixelDistance(float val) = 0;
-    virtual void setTextureMatrix(const QMatrix4x4 &matrix) = 0;
     virtual void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) = 0;
+    virtual void setOffset(float offset) = 0;
+    virtual void setTargetSize(QSize renderTextureSize) = 0;
+    virtual void setBlurRect(QRect blurRect, QSize screenSize) = 0;
 
-    virtual void bind() = 0;
+    enum SampleType {
+        DownSampleType,
+        UpSampleType,
+        CopySampleType
+    };
+
+    virtual void bind(SampleType sampleType) = 0;
     virtual void unbind() = 0;
 
 protected:
-    float gaussian(float x, float sigma) const;
-    QList<KernelValue> gaussianKernel() const;
     void setIsValid(bool value) {
         mValid = value;
     }
     virtual void init() = 0;
     virtual void reset() = 0;
-    virtual int maxKernelSize() const = 0;
 
 private:
-    int mRadius;
-    Qt::Orientation mDirection;
     bool mValid;
 };
 
@@ -96,25 +79,54 @@ public:
     GLSLBlurShader();
     ~GLSLBlurShader();
 
-    void setPixelDistance(float val);
-    void bind();
-    void unbind();
-    void setTextureMatrix(const QMatrix4x4 &matrix);
-    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
+    void bind(SampleType sampleType) override final;
+    void unbind() override final;
+    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) override final;
+    void setOffset(float offset) override final;
+    void setTargetSize(QSize renderTextureSize) override final;
+    void setBlurRect(QRect blurRect, QSize screenSize) override final;
 
 protected:
-    void init();
-    void reset();
-    int maxKernelSize() const;
+    void init() override final;
+    void reset() override final;
 
 private:
-    GLShader *shader;
-    int mvpMatrixLocation;
-    int textureMatrixLocation;
-    int pixelSizeLocation;
+    GLShader *m_shaderDownsample = nullptr;
+    GLShader *m_shaderUpsample = nullptr;
+    GLShader *m_shaderCopysample = nullptr;
+
+    int m_mvpMatrixLocationDownsample;
+    int m_offsetLocationDownsample;
+    int m_renderTextureSizeLocationDownsample;
+    int m_halfpixelLocationDownsample;
+
+    int m_mvpMatrixLocationUpsample;
+    int m_offsetLocationUpsample;
+    int m_renderTextureSizeLocationUpsample;
+    int m_halfpixelLocationUpsample;
+
+    int m_mvpMatrixLocationCopysample;
+    int m_renderTextureSizeLocationCopysample;
+    int m_blurRectLocationCopysample;
+
+
+    //Caching uniform values to aviod unnecessary setUniform calls
+    int m_activeSampleType;
+
+    float m_offsetDownsample;
+    QMatrix4x4 m_matrixDownsample;
+    QSize m_renderTextureSizeDownsample;
+
+    float m_offsetUpsample;
+    QMatrix4x4 m_matrixUpsample;
+    QSize m_renderTextureSizeUpsample;
+
+    QMatrix4x4 m_matrixCopysample;
+    QSize m_renderTextureSizeCopysample;
+    QRect m_blurRectCopysample;
+
 };
 
 } // namespace KWin
 
 #endif
-

@@ -1,5 +1,6 @@
 /*
  *   Copyright © 2010 Fredrik Höglund <fredrik@kde.org>
+ *   Copyright © 2018 Alex Nemeth <alex.nemeth329@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -26,6 +27,7 @@
 
 #include <QVector>
 #include <QVector2D>
+#include <QStack>
 
 namespace KWayland
 {
@@ -38,13 +40,14 @@ class BlurManagerInterface;
 namespace KWin
 {
 
+static const int borderSize = 5;
+
 class BlurShader;
 
 class BlurEffect : public KWin::Effect
 {
     Q_OBJECT
-    Q_PROPERTY(int blurRadius READ blurRadius)
-    Q_PROPERTY(bool cacheTexture READ isCacheTexture)
+
 public:
     BlurEffect();
     ~BlurEffect();
@@ -58,11 +61,6 @@ public:
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
 
-    // for dynamic setting extraction
-    int blurRadius() const;
-    bool isCacheTexture() const {
-        return m_shouldCache;
-    }
     virtual bool provides(Feature feature);
 
     int requestedEffectChainPosition() const override {
@@ -76,39 +74,59 @@ public Q_SLOTS:
     void slotScreenGeometryChanged();
 
 private:
-    void updateTexture();
     QRect expand(const QRect &rect) const;
     QRegion expand(const QRegion &region) const;
+    bool renderTargetsValid() const;
+    void deleteFBOs();
+    void initBlurStrengthValues();
+    void updateTexture();
     QRegion blurRegion(const EffectWindow *w) const;
     bool shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateBlurRegion(EffectWindow *w) const;
     void doSimpleBlur(EffectWindow *w, const float opacity, const QMatrix4x4 &screenProjection);
-    void doBlur(const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection);
-    void doCachedBlur(EffectWindow *w, const QRegion& region, const float opacity, const QMatrix4x4 &screenProjection);
-    void uploadRegion(QVector2D *&map, const QRegion &region);
-    void uploadGeometry(GLVertexBuffer *vbo, const QRegion &horizontal, const QRegion &vertical);
+    void doBlur(const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock);
+    void uploadRegion(QVector2D *&map, const QRegion &region, const int downSampleIterations);
+    void uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, const QRegion &windowRegion);
+
+    void downSampleTexture(GLVertexBuffer *vbo, int blurRectCount);
+    void upSampleTexture(GLVertexBuffer *vbo, int blurRectCount);
+    void copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount, QRegion blurShape, QSize screenSize, QMatrix4x4 screenProjection);
 
 private:
-    BlurShader *shader;
     GLShader *m_simpleShader;
-    GLRenderTarget *target = nullptr;
-    GLTexture tex;
+    GLRenderTarget *m_simpleTarget;
+
+    BlurShader *m_shader;
+    QVector <GLRenderTarget*> m_renderTargets;
+    QVector <GLTexture> m_renderTextures;
+    QStack <GLRenderTarget*> m_renderTargetStack;
+    bool m_renderTargetsValid;
     long net_wm_blur_region;
     QRegion m_damagedArea; // keeps track of the area which has been damaged (from bottom to top)
     QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
-    QRegion m_currentBlur; // keeps track of the currently blured area of non-caching windows(from bottom to top)
-    bool m_shouldCache;
+    QRegion m_currentBlur; // keeps track of the currently blured area of the windows(from bottom to top)
+    bool m_useSimpleBlur;
 
-    struct BlurWindowInfo {
-        GLTexture blurredBackground; // keeps the horizontally blurred background
-        QRegion damagedRegion;
-        QPoint windowPos;
-        bool dropCache;
-        QMetaObject::Connection blurChangedConnection;
+    int m_downSampleIterations; // number of times the texture will be downsized to half size
+    int m_offset;
+    int m_expandSize;
+
+    struct OffsetStruct {
+        float minOffset;
+        float maxOffset;
+        int expandSize;
     };
 
-    QHash< const EffectWindow*, BlurWindowInfo > windows;
-    typedef QHash<const EffectWindow*, BlurWindowInfo>::iterator CacheEntry;
+    QVector <OffsetStruct> blurOffsets;
+
+    struct BlurValuesStruct {
+        int iteration;
+        float offset;
+    };
+
+    QVector <BlurValuesStruct> blurStrengthValues;
+
+    QMap <EffectWindow*, QMetaObject::Connection> windowBlurChangedConnections;
     KWayland::Server::BlurManagerInterface *m_blurManager = nullptr;
 };
 
