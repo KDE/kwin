@@ -105,11 +105,14 @@ void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, Su
         return;
     }
     // TODO: source is allowed to be null, handled client internally!
+    Q_Q(DataDeviceInterface);
     source = dataSource;
+    if (dataSource) {
+        QObject::connect(dataSource, &Resource::aboutToBeUnbound, q, [this] { source = nullptr; });
+    }
     surface = origin;
     icon = i;
     drag.serial = serial;
-    Q_Q(DataDeviceInterface);
     emit q->dragStarted();
 }
 
@@ -273,7 +276,9 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         // don't update serial, we need it
     }
     if (!surface) {
-        d->seat->dragSource()->dragSource()->dndAction(DataDeviceManagerInterface::DnDAction::None);
+        if (auto s = d->seat->dragSource()->dragSource()) {
+            s->dndAction(DataDeviceManagerInterface::DnDAction::None);
+        }
         return;
     }
     auto *source = d->seat->dragSource()->dragSource();

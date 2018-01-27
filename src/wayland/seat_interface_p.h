@@ -165,6 +165,7 @@ public:
         PointerInterface *sourcePointer = nullptr;
         QMatrix4x4 transformation;
         QMetaObject::Connection destroyConnection;
+        QMetaObject::Connection dragSourceDestroyConnection;
     };
     Drag drag;
 

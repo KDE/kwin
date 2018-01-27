@@ -302,6 +302,20 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
                     endDrag(display->nextSerial());
                 }
             );
+            if (dataDevice->dragSource()) {
+                drag.dragSourceDestroyConnection = QObject::connect(dataDevice->dragSource(), &Resource::aboutToBeUnbound, q,
+                    [this] {
+                        const auto serial = display->nextSerial();
+                        if (drag.target) {
+                            drag.target->updateDragTarget(nullptr, serial);
+                            drag.target = nullptr;
+                        }
+                        endDrag(serial);
+                    }
+                );
+            } else {
+                drag.dragSourceDestroyConnection = QMetaObject::Connection();
+            }
             dataDevice->updateDragTarget(dataDevice->origin(), dataDevice->dragImplicitGrabSerial());
             emit q->dragStarted();
             emit q->dragSurfaceChanged();
@@ -350,7 +364,8 @@ void SeatInterface::Private::endDrag(quint32 serial)
 {
     auto target = drag.target;
     QObject::disconnect(drag.destroyConnection);
-    if (drag.source) {
+    QObject::disconnect(drag.dragSourceDestroyConnection);
+    if (drag.source && drag.source->dragSource()) {
         drag.source->dragSource()->dropPerformed();
     }
     if (target) {
