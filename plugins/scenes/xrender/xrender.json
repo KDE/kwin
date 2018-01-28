@@ -14,6 +14,7 @@
         "Description[it]": "Estensione del compositore di KWin per la resa tramite XRender",
         "Description[ko]": "XRender로 렌더링하는 KWin 컴포지터 플러그인",
         "Description[nl]": "KWin-compositor-plug-in rendering via XRender",
+        "Description[nn]": "KWin-samansetjartillegg som brukar XRender",
         "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez XRender",
         "Description[pt]": "'Plugin' de Composição do KWin com desenho via XRender",
         "Description[pt_BR]": "Plugin do compositor KWin renderizando pelo XRender",
