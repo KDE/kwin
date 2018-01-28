@@ -470,7 +470,7 @@ void QuickTilingTest::testQuickTilingPointerMoveXdgShell()
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
     QVERIFY(configureRequestedSpy.wait());
-    QCOMPARE(configureRequestedSpy.count(), 2);
+    QTRY_COMPARE(configureRequestedSpy.count(), 2);
 
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
@@ -492,9 +492,7 @@ void QuickTilingTest::testQuickTilingPointerMoveXdgShell()
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(c->quickTileMode(), "expectedMode");
     QVERIFY(configureRequestedSpy.wait());
-    QEXPECT_FAIL("", "BUG 388072", Continue);
     QCOMPARE(configureRequestedSpy.count(), 4);
-    QEXPECT_FAIL("", "BUG 388072", Continue);
     QCOMPARE(false, configureRequestedSpy.last().first().toSize().isEmpty());
 }
 
