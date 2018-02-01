@@ -211,6 +211,14 @@ void PointerInterface::Private::cancelPinchGesture(quint32 serial)
     }
 }
 
+void PointerInterface::Private::sendFrame()
+{
+    if (!resource || wl_resource_get_version(resource) < WL_POINTER_FRAME_SINCE_VERSION) {
+        return;
+    }
+    wl_pointer_send_frame(resource);
+}
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_pointer_interface PointerInterface::Private::s_interface = {
     setCursorCallback,
@@ -242,11 +250,13 @@ PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentRes
                 d->sendLeave(d->focusedChildSurface.data(), serial);
                 d->focusedChildSurface = QPointer<SurfaceInterface>(targetSurface);
                 d->sendEnter(targetSurface, pos, serial);
+                d->sendFrame();
                 d->client->flush();
             } else {
                 const QPointF adjustedPos = pos - surfacePosition(d->focusedChildSurface);
                 wl_pointer_send_motion(d->resource, d->seat->timestamp(),
                                        wl_fixed_from_double(adjustedPos.x()), wl_fixed_from_double(adjustedPos.y()));
+                d->sendFrame();
             }
         }
     });
@@ -269,6 +279,7 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 seri
         [this] {
             Q_D();
             d->sendLeave(d->focusedChildSurface.data(), d->global->display()->nextSerial());
+            d->sendFrame();
             d->focusedSurface = nullptr;
             d->focusedChildSurface.clear();
         }
@@ -291,6 +302,7 @@ void PointerInterface::buttonPressed(quint32 button, quint32 serial)
         return;
     }
     wl_pointer_send_button(d->resource, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_PRESSED);
+    d->sendFrame();
 }
 
 void PointerInterface::buttonReleased(quint32 button, quint32 serial)
@@ -301,6 +313,7 @@ void PointerInterface::buttonReleased(quint32 button, quint32 serial)
         return;
     }
     wl_pointer_send_button(d->resource, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_RELEASED);
+    d->sendFrame();
 }
 
 void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
@@ -313,6 +326,7 @@ void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
     wl_pointer_send_axis(d->resource, d->seat->timestamp(),
                          (orientation == Qt::Vertical) ? WL_POINTER_AXIS_VERTICAL_SCROLL : WL_POINTER_AXIS_HORIZONTAL_SCROLL,
                          wl_fixed_from_int(delta));
+    d->sendFrame();
 }
 
 void PointerInterface::Private::setCursorCallback(wl_client *client, wl_resource *resource, uint32_t serial,

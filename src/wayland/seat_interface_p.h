@@ -186,6 +186,7 @@ private:
     static void getPointerCallback(wl_client *client, wl_resource *resource, uint32_t id);
     static void getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id);
     static void getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id);
+    static void releaseCallback(wl_client *client, wl_resource *resource);
     static const struct wl_seat_interface s_interface;
     static const quint32 s_version;
     static const qint32 s_pointerVersion;

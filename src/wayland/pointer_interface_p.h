@@ -49,6 +49,7 @@ public:
 
     void sendLeave(SurfaceInterface *surface, quint32 serial);
     void sendEnter(SurfaceInterface *surface, const QPointF &parentSurfacePosition, quint32 serial);
+    void sendFrame();
 
     void registerRelativePointer(RelativePointerInterface *relativePointer);
     void registerSwipeGesture(PointerSwipeGestureInterface *gesture);

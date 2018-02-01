@@ -46,10 +46,10 @@ namespace KWayland
 namespace Server
 {
 
-const quint32 SeatInterface::Private::s_version = 4;
-const qint32 SeatInterface::Private::s_pointerVersion = 3;
-const qint32 SeatInterface::Private::s_touchVersion = 3;
-const qint32 SeatInterface::Private::s_keyboardVersion = 4;
+const quint32 SeatInterface::Private::s_version = 5;
+const qint32 SeatInterface::Private::s_pointerVersion = 5;
+const qint32 SeatInterface::Private::s_touchVersion = 5;
+const qint32 SeatInterface::Private::s_keyboardVersion = 5;
 
 SeatInterface::Private::Private(SeatInterface *q, Display *display)
     : Global::Private(display, &wl_seat_interface, s_version)
@@ -61,7 +61,8 @@ SeatInterface::Private::Private(SeatInterface *q, Display *display)
 const struct wl_seat_interface SeatInterface::Private::s_interface = {
     getPointerCallback,
     getKeyboardCallback,
-    getTouchCallback
+    getTouchCallback,
+    releaseCallback
 };
 #endif
 
@@ -112,6 +113,12 @@ void SeatInterface::Private::bind(wl_client *client, uint32_t version, uint32_t 
 void SeatInterface::Private::unbind(wl_resource *r)
 {
     cast(r)->resources.removeAll(r);
+}
+
+void SeatInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    wl_resource_destroy(resource);
 }
 
 void SeatInterface::Private::updatePointerButtonSerial(quint32 button, quint32 serial)
@@ -473,6 +480,7 @@ void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource
         // this is a pointer for the currently focused pointer surface
         globalPointer.focus.pointers << pointer;
         pointer->setFocusedSurface(globalPointer.focus.surface, globalPointer.focus.serial);
+        pointer->d_func()->sendFrame();
         if (globalPointer.focus.pointers.count() == 1) {
             // got a new pointer
             emit q->focusedPointerChanged(pointer);
@@ -687,8 +695,10 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QM
         return;
     }
     const quint32 serial = d->display->nextSerial();
+    QSet<PointerInterface *> framePointers;
     for (auto it = d->globalPointer.focus.pointers.constBegin(), end = d->globalPointer.focus.pointers.constEnd(); it != end; ++it) {
         (*it)->setFocusedSurface(nullptr, serial);
+        framePointers << *it;
     }
     if (d->globalPointer.focus.surface) {
         disconnect(d->globalPointer.focus.destroyConnection);
@@ -711,12 +721,21 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QM
     }
     if (p.isEmpty()) {
         emit focusedPointerChanged(nullptr);
+        for (auto p : qAsConst(framePointers))
+        {
+            p->d_func()->sendFrame();
+        }
         return;
     }
     // TODO: signal with all pointers
     emit focusedPointerChanged(p.first());
     for (auto it = p.constBegin(), end = p.constEnd(); it != end; ++it) {
         (*it)->setFocusedSurface(surface, serial);
+        framePointers << *it;
+    }
+    for (auto p : qAsConst(framePointers))
+    {
+        p->d_func()->sendFrame();
     }
 }
 
@@ -1322,6 +1341,7 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
                                         wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
 
                 wl_pointer_send_button(p->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_PRESSED);
+                p->d_func()->sendFrame();
             }
         );
         if (!result) {
