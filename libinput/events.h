@@ -42,9 +42,7 @@ public:
     virtual ~Event();
 
     libinput_event_type type() const;
-    Device *device() const {
-        return m_device;
-    }
+    Device *device() const;
     libinput_device *nativeDevice() const;
 
     operator libinput_event*() {
@@ -62,7 +60,7 @@ protected:
 private:
     libinput_event *m_event;
     libinput_event_type m_type;
-    Device *m_device;
+    mutable Device *m_device;
 };
 
 class KeyEvent : public Event
