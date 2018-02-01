@@ -6,7 +6,7 @@
     <kcfgfile arg="true"/>
     <group name="Effect-Blur">
         <entry name="BlurStrength" type="Int">
-            <default>5</default>
+            <default>10</default>
         </entry>
         <entry name="UseSimpleBlur" type="Bool">
             <default>false</default>
