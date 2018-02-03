@@ -67,13 +67,21 @@ Event *Event::create(libinput_event *event)
 Event::Event(libinput_event *event, libinput_event_type type)
     : m_event(event)
     , m_type(type)
-    , m_device(Device::getDevice(libinput_event_get_device(m_event)))
+    , m_device(nullptr)
 {
 }
 
 Event::~Event()
 {
     libinput_event_destroy(m_event);
+}
+
+Device *Event::device() const
+{
+    if (!m_device) {
+        m_device = Device::getDevice(libinput_event_get_device(m_event));
+    }
+    return m_device;
 }
 
 libinput_device *Event::nativeDevice() const
