@@ -8,8 +8,5 @@
         <entry name="BlurStrength" type="Int">
             <default>10</default>
         </entry>
-        <entry name="UseSimpleBlur" type="Bool">
-            <default>false</default>
-        </entry>
     </group>
 </kcfg>

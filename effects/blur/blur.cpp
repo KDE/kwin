@@ -43,12 +43,6 @@ BlurEffect::BlurEffect()
 {
     initConfig<BlurConfig>();
     m_shader = BlurShader::create();
-    m_simpleShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("logout-blur.frag"));
-    m_simpleTarget = new GLRenderTarget();
-
-    if (!m_simpleShader->isValid()) {
-        qCDebug(KWINEFFECTS) << "Simple blur shader failed to load";
-    }
 
     initBlurStrengthValues();
     reconfigure(ReconfigureAll);
@@ -86,12 +80,6 @@ BlurEffect::BlurEffect()
 BlurEffect::~BlurEffect()
 {
     deleteFBOs();
-
-    delete m_simpleTarget;
-    m_simpleTarget = nullptr;
-
-    delete m_simpleShader;
-    m_simpleShader = nullptr;
 
     delete m_shader;
     m_shader = nullptr;
@@ -234,8 +222,6 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     Q_UNUSED(flags)
 
     BlurConfig::self()->read();
-
-    m_useSimpleBlur = BlurConfig::useSimpleBlur();
 
     int blurStrength = BlurConfig::blurStrength() - 1;
     m_downSampleIterations = blurStrengthValues[blurStrength].iteration;
@@ -564,16 +550,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
         }
 
         if (!shape.isEmpty()) {
-            if (m_useSimpleBlur &&
-                w->isFullScreen() &&
-                GLRenderTarget::blitSupported() &&
-                m_simpleShader->isValid() &&
-                !GLPlatform::instance()->supports(LimitedNPOT) &&
-                shape.boundingRect() == w->geometry()) {
-                    doSimpleBlur(w, data.opacity(), data.screenProjectionMatrix());
-            } else {
-                doBlur(shape, screen, data.opacity(), data.screenProjectionMatrix(), w->isDock());
-            }
+            doBlur(shape, screen, data.opacity(), data.screenProjectionMatrix(), w->isDock());
         }
     }
 
@@ -592,32 +569,6 @@ void BlurEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double opa
         doBlur(shape, screen, opacity * frameOpacity, frame->screenProjectionMatrix(), false);
     }
     effects->paintEffectFrame(frame, region, opacity, frameOpacity);
-}
-
-void BlurEffect::doSimpleBlur(EffectWindow *w, const float opacity, const QMatrix4x4 &screenProjection)
-{
-    // The fragment shader uses a LOD bias of 1.75, so we need 3 mipmap levels.
-    GLTexture blurTexture = GLTexture(GL_RGBA8, w->size(), 3);
-    blurTexture.setFilter(GL_LINEAR_MIPMAP_LINEAR);
-    blurTexture.setWrapMode(GL_CLAMP_TO_EDGE);
-
-    m_simpleTarget->attachTexture(blurTexture);
-    m_simpleTarget->blitFromFramebuffer(w->geometry(), QRect(QPoint(0, 0), w->size()));
-    m_simpleTarget->detachTexture();
-
-    // Unmodified base image
-    ShaderBinder binder(m_simpleShader);
-    QMatrix4x4 mvp = screenProjection;
-    mvp.translate(w->x(), w->y());
-    m_simpleShader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_simpleShader->setUniform("u_alphaProgress", opacity);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    blurTexture.bind();
-    blurTexture.generateMipmaps();
-    blurTexture.render(infiniteRegion(), w->geometry());
-    blurTexture.unbind();
-    glDisable(GL_BLEND);
 }
 
 void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock)

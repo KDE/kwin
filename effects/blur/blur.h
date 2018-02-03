@@ -83,7 +83,6 @@ private:
     QRegion blurRegion(const EffectWindow *w) const;
     bool shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateBlurRegion(EffectWindow *w) const;
-    void doSimpleBlur(EffectWindow *w, const float opacity, const QMatrix4x4 &screenProjection);
     void doBlur(const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock);
     void uploadRegion(QVector2D *&map, const QRegion &region, const int downSampleIterations);
     void uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, const QRegion &windowRegion);
@@ -93,9 +92,6 @@ private:
     void copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount, QRegion blurShape, QSize screenSize, QMatrix4x4 screenProjection);
 
 private:
-    GLShader *m_simpleShader;
-    GLRenderTarget *m_simpleTarget;
-
     BlurShader *m_shader;
     QVector <GLRenderTarget*> m_renderTargets;
     QVector <GLTexture> m_renderTextures;
@@ -105,7 +101,6 @@ private:
     QRegion m_damagedArea; // keeps track of the area which has been damaged (from bottom to top)
     QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
     QRegion m_currentBlur; // keeps track of the currently blured area of the windows(from bottom to top)
-    bool m_useSimpleBlur;
 
     int m_downSampleIterations; // number of times the texture will be downsized to half size
     int m_offset;
