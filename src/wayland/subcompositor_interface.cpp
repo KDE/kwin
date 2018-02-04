@@ -360,6 +360,9 @@ bool SubSurfaceInterface::isSynchronized() const
 QPointer<SurfaceInterface> SubSurfaceInterface::mainSurface() const
 {
     Q_D();
+    if (!d->parent) {
+        return QPointer<SurfaceInterface>();
+    }
     if (d->parent->d_func()->subSurface) {
         return d->parent->d_func()->subSurface->mainSurface();
     }

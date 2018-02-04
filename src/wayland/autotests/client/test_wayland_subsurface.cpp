@@ -59,6 +59,7 @@ private Q_SLOTS:
     void testMappingOfSurfaceTree();
     void testSurfaceAt();
     void testDestroyAttachedBuffer();
+    void testDestroyParentSurface();
 
 private:
     KWayland::Server::Display *m_display;
@@ -1037,6 +1038,52 @@ void TestSubSurface::testDestroyAttachedBuffer()
     QVERIFY(destroySpy.isValid());
     delete m_shm;
     m_shm = nullptr;
+    child.reset();
+    QVERIFY(destroySpy.wait());
+}
+
+void TestSubSurface::testDestroyParentSurface()
+{
+    // this test verifies that destroying a parent surface does not create problems
+    // see BUG 389231
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // create surface
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreated.isValid());
+    QScopedPointer<Surface> parent(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverParentSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+    QScopedPointer<Surface> child(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverChildSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+    QScopedPointer<Surface> grandChild(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverGrandChildSurface = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+    // create sub-surface in desynchronized mode as Qt uses them
+    auto sub1 = m_subCompositor->createSubSurface(child.data(), parent.data());
+    sub1->setMode(SubSurface::Mode::Desynchronized);
+    auto sub2 = m_subCompositor->createSubSurface(grandChild.data(), child.data());
+    sub2->setMode(SubSurface::Mode::Desynchronized);
+
+    // let's damage this surface
+    // and at the same time delete the parent surface
+    parent.reset();
+    QSignalSpy parentDestroyedSpy(serverParentSurface, &QObject::destroyed);
+    QVERIFY(parentDestroyedSpy.isValid());
+    QVERIFY(parentDestroyedSpy.wait());
+    QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::red);
+    grandChild->attachBuffer(m_shm->createBuffer(image));
+    grandChild->damage(QRect(0, 0, 100, 100));
+    grandChild->commit(Surface::CommitFlag::None);
+    QSignalSpy damagedSpy(serverGrandChildSurface, &SurfaceInterface::damaged);
+    QVERIFY(damagedSpy.isValid());
+    QVERIFY(damagedSpy.wait());
+
+    // Let's try to destroy it
+    QSignalSpy destroySpy(serverChildSurface, &QObject::destroyed);
+    QVERIFY(destroySpy.isValid());
     child.reset();
     QVERIFY(destroySpy.wait());
 }
