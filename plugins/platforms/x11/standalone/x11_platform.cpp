@@ -318,6 +318,14 @@ void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(K
     m_windowSelector->start(callback, cursorName);
 }
 
+void X11StandalonePlatform::startInteractivePositionSelection(std::function<void (const QPoint &)> callback)
+{
+    if (m_windowSelector.isNull()) {
+        m_windowSelector.reset(new WindowSelector);
+    }
+    m_windowSelector->start(callback);
+}
+
 void X11StandalonePlatform::setupActionForGlobalAccel(QAction *action)
 {
     connect(action, &QAction::triggered, kwinApp(), [action] {
