@@ -197,6 +197,7 @@ void ShellClient::init()
     findInternalWindow();
     createWindowId();
     setupCompositing();
+    updateIcon();
     SurfaceInterface *s = surface();
     Q_ASSERT(s);
     if (s->buffer()) {

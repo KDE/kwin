@@ -211,6 +211,7 @@ void InternalWindowTest::testEnterLeave()
     QVERIFY(!workspace()->activeClient());
     ShellClient *c = clientAddedSpy.first().first().value<ShellClient*>();
     QVERIFY(c->isInternal());
+    QCOMPARE(c->icon().name(), QStringLiteral("wayland"));
     QCOMPARE(workspace()->findToplevel(&win), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 100));
     QVERIFY(c->isShown(false));

@@ -160,6 +160,7 @@ void TestShellClient::testMapUnmapMap()
     QCOMPARE(client->readyForPainting(), true);
     QCOMPARE(client->depth(), 32);
     QVERIFY(client->hasAlpha());
+    QCOMPARE(client->icon().name(), QStringLiteral("wayland"));
     QCOMPARE(workspace()->activeClient(), client);
     QVERIFY(effectsWindowShownSpy.isEmpty());
     QVERIFY(client->isMaximizable());
