@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorations/decoratedclient.h"
 #include <logging.h>
 
+#include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/surface_interface.h>
 
@@ -1358,7 +1359,7 @@ QMatrix4x4 SceneOpenGL2Window::modelViewProjectionMatrix(int mask, const WindowP
     return scene->projectionMatrix() * mvMatrix;
 }
 
-static void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping)
+void SceneOpenGL2Window::renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping)
 {
     QMatrix4x4 newWindowMatrix = windowMatrix;
     newWindowMatrix.translate(pixmap->subSurface()->position().x(), pixmap->subSurface()->position().y());
@@ -1369,6 +1370,7 @@ static void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMat
     }
 
     if (!pixmap->texture()->isNull()) {
+        setBlendEnabled(pixmap->buffer() && pixmap->buffer()->hasAlphaChannel());
         // render this texture
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * newWindowMatrix);
         auto texture = pixmap->texture();
@@ -1515,8 +1517,6 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
 
     vbo->unbindArrays();
 
-    setBlendEnabled(false);
-
     // render sub-surfaces
     auto wp = windowPixmap<OpenGLWindowPixmap>();
     const auto &children = wp ? wp->children() : QVector<WindowPixmap*>();
@@ -1527,6 +1527,8 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         }
         renderSubSurface(shader, modelViewProjection, windowMatrix, static_cast<OpenGLWindowPixmap*>(pixmap), region, m_hardwareClipping);
     }
+
+    setBlendEnabled(false);
 
     if (!data.shader)
         ShaderManager::instance()->popShader();

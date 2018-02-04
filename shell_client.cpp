@@ -293,6 +293,9 @@ void ShellClient::init()
             if (m_closing) {
                 return;
             }
+            if (m_requestGeometryBlockCounter != 0 || areGeometryUpdatesBlocked()) {
+                return;
+            }
             m_xdgShellSurface->configure(xdgSurfaceStates());
         };
         configure();

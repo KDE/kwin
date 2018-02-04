@@ -2745,6 +2745,7 @@ bool Client::doStartMoveResize()
 
 void AbstractClient::finishMoveResize(bool cancel)
 {
+    GeometryUpdatesBlocker blocker(this);
     const bool wasResize = isResize(); // store across leaveMoveResize
     leaveMoveResize();
 
