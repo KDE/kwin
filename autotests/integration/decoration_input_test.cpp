@@ -76,6 +76,8 @@ private Q_SLOTS:
     void testModifierClickUnrestrictedMove();
     void testModifierScrollOpacity_data();
     void testModifierScrollOpacity();
+    void testTouchEvents_data();
+    void testTouchEvents();
 
 private:
     AbstractClient *showWindow(Test::ShellSurfaceType type);
@@ -755,6 +757,81 @@ void DecorationInputTest::testModifierScrollOpacity()
     if (capsLock) {
         kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     }
+}
+
+void DecorationInputTest::testTouchEvents_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+}
+
+class EventHelper : public QObject
+{
+    Q_OBJECT
+public:
+    EventHelper() : QObject() {}
+    ~EventHelper() override = default;
+
+    bool eventFilter(QObject *watched, QEvent *event) override
+    {
+        Q_UNUSED(watched)
+        if (event->type() == QEvent::HoverMove) {
+            emit hoverMove();
+        } else if (event->type() == QEvent::HoverLeave) {
+            emit hoverLeave();
+        }
+        return false;
+    }
+
+Q_SIGNALS:
+    void hoverMove();
+    void hoverLeave();
+};
+
+void DecorationInputTest::testTouchEvents()
+{
+    // this test verifies that the decoration gets a hover leave event on touch release
+    // see BUG 386231
+    QFETCH(Test::ShellSurfaceType, type);
+    AbstractClient *c = showWindow(type);
+    QVERIFY(c);
+    QVERIFY(c->isDecorated());
+    QVERIFY(!c->noBorder());
+
+    EventHelper helper;
+    c->decoration()->installEventFilter(&helper);
+    QSignalSpy hoverMoveSpy(&helper, &EventHelper::hoverMove);
+    QVERIFY(hoverMoveSpy.isValid());
+    QSignalSpy hoverLeaveSpy(&helper, &EventHelper::hoverLeave);
+    QVERIFY(hoverLeaveSpy.isValid());
+
+    quint32 timestamp = 1;
+    const QPoint tapPoint(c->geometry().center().x(), c->clientPos().y() / 2);
+
+    QVERIFY(!input()->touch()->decoration());
+    kwinApp()->platform()->touchDown(0, tapPoint, timestamp++);
+    QVERIFY(input()->touch()->decoration());
+    QCOMPARE(input()->touch()->decoration()->decoration(), c->decoration());
+    QCOMPARE(hoverMoveSpy.count(), 1);
+    QCOMPARE(hoverLeaveSpy.count(), 0);
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QCOMPARE(hoverMoveSpy.count(), 1);
+    QCOMPARE(hoverLeaveSpy.count(), 1);
+
+    QCOMPARE(c->isMove(), false);
+
+    // let's check that a hover motion is sent if the pointer is on deco, when touch release
+    Cursor::setPos(tapPoint);
+    QCOMPARE(hoverMoveSpy.count(), 2);
+    kwinApp()->platform()->touchDown(0, tapPoint, timestamp++);
+    QCOMPARE(hoverMoveSpy.count(), 3);
+    QCOMPARE(hoverLeaveSpy.count(), 1);
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QCOMPARE(hoverMoveSpy.count(), 4);
+    QCOMPARE(hoverLeaveSpy.count(), 1);
 }
 
 }

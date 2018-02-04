@@ -1130,6 +1130,16 @@ public:
             e.setAccepted(false);
             QCoreApplication::sendEvent(decoration->decoration(), &e);
             decoration->client()->processDecorationButtonRelease(&e);
+            if (input()->pointer()->decoration() == decoration) {
+                // send motion to current pointer position
+                const QPointF p = input()->pointer()->pos() - decoration->client()->pos();
+                QHoverEvent event(QEvent::HoverMove, p, p);
+                QCoreApplication::instance()->sendEvent(decoration->decoration(), &event);
+            } else {
+                // send leave
+                QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
+                QCoreApplication::instance()->sendEvent(decoration->decoration(), &event);
+            }
         }
 
         m_lastGlobalTouchPos = QPointF();

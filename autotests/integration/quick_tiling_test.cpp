@@ -560,7 +560,7 @@ void QuickTilingTest::testQuickTilingTouchMoveXdgShell()
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(c->quickTileMode(), "expectedMode");
     QVERIFY(configureRequestedSpy.wait());
-    QCOMPARE(configureRequestedSpy.count(), 5);
+    QTRY_COMPARE(configureRequestedSpy.count(), 5);
     QCOMPARE(false, configureRequestedSpy.last().first().toSize().isEmpty());
 }
 
