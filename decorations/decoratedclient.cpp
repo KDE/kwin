@@ -200,6 +200,15 @@ QColor DecoratedClientImpl::color(KDecoration2::ColorGroup group, KDecoration2::
     return QColor();
 }
 
+void DecoratedClientImpl::requestShowToolTip(const QString &text)
+{
+    Q_UNUSED(text)
+}
+
+void DecoratedClientImpl::requestHideToolTip()
+{
+}
+
 void DecoratedClientImpl::requestShowWindowMenu()
 {
     // TODO: add rect to requestShowWindowMenu

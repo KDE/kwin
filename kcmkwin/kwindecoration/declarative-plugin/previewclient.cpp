@@ -351,6 +351,15 @@ void PreviewClient::setBordersTopEdge(bool enabled)
     emit bordersTopEdgeChanged(enabled);
 }
 
+void PreviewClient::requestShowToolTip(const QString &text)
+{
+    Q_UNUSED(text)
+}
+
+void PreviewClient::requestHideToolTip()
+{
+}
+
 void PreviewClient::requestClose()
 {
     emit closeRequested();
