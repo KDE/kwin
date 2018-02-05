@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <functional>
 
+class QPoint;
+
 namespace KWin
 {
 class Toplevel;
@@ -41,6 +43,7 @@ public:
     ~WindowSelector();
 
     void start(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
+    void start(std::function<void (const QPoint &)> callback);
     bool isActive() const {
         return m_active;
     }
@@ -55,8 +58,11 @@ private:
     void handleKeyPress(xcb_keycode_t keycode, uint16_t state);
     void handleButtonRelease(xcb_button_t button, xcb_window_t window);
     void selectWindowId(xcb_window_t window_to_kill);
+    bool activate(const QByteArray &cursorName = QByteArray());
+    void cancelCallback();
     bool m_active;
     std::function<void(KWin::Toplevel*)> m_callback;
+    std::function<void(const QPoint &)> m_pointSelectionFallback;
 };
 
 } // namespace

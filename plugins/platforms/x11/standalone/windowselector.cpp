@@ -56,11 +56,37 @@ WindowSelector::~WindowSelector()
 
 void WindowSelector::start(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
 {
-    xcb_cursor_t cursor = createCursor(cursorName);
     if (m_active) {
         callback(nullptr);
         return;
     }
+
+    m_active = activate(cursorName);
+    if (!m_active) {
+        callback(nullptr);
+        return;
+    }
+    m_callback = callback;
+}
+
+void WindowSelector::start(std::function<void (const QPoint &)> callback)
+{
+    if (m_active) {
+        callback(QPoint(-1, -1));
+        return;
+    }
+
+    m_active = activate();
+    if (!m_active) {
+        callback(QPoint(-1, -1));
+        return;
+    }
+    m_pointSelectionFallback = callback;
+}
+
+bool WindowSelector::activate(const QByteArray &cursorName)
+{
+    xcb_cursor_t cursor = createCursor(cursorName);
 
     xcb_connection_t *c = connection();
     ScopedCPointer<xcb_grab_pointer_reply_t> grabPointer(xcb_grab_pointer_reply(c, xcb_grab_pointer_unchecked(c, false, rootWindow(),
@@ -70,17 +96,15 @@ void WindowSelector::start(std::function<void(KWin::Toplevel*)> callback, const 
         XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, XCB_WINDOW_NONE,
         cursor, XCB_TIME_CURRENT_TIME), NULL));
     if (grabPointer.isNull() || grabPointer->status != XCB_GRAB_STATUS_SUCCESS) {
-        callback(nullptr);
-        return;
+        return false;
     }
-    m_active = grabXKeyboard();
-    if (!m_active) {
+    const bool grabbed = grabXKeyboard();
+    if (grabbed) {
+        grabXServer();
+    } else {
         xcb_ungrab_pointer(connection(), XCB_TIME_CURRENT_TIME);
-        callback(nullptr);
-        return;
     }
-    grabXServer();
-    m_callback = callback;
+    return grabbed;
 }
 
 xcb_cursor_t WindowSelector::createCursor(const QByteArray &cursorName)
@@ -136,12 +160,16 @@ bool WindowSelector::event(xcb_generic_event_t *event)
 void WindowSelector::handleButtonRelease(xcb_button_t button, xcb_window_t window)
 {
     if (button == XCB_BUTTON_INDEX_3) {
-        m_callback(nullptr);
+        cancelCallback();
         release();
         return;
     }
     if (button == XCB_BUTTON_INDEX_1 || button == XCB_BUTTON_INDEX_2) {
-        selectWindowId(window);
+        if (m_callback) {
+            selectWindowId(window);
+        } else if (m_pointSelectionFallback) {
+            m_pointSelectionFallback(Cursor::pos());
+        }
         release();
         return;
     }
@@ -173,11 +201,15 @@ void WindowSelector::handleKeyPress(xcb_keycode_t keycode, uint16_t state)
     }
     Cursor::setPos(Cursor::pos() + QPoint(mx, my));
     if (returnPressed) {
-        selectWindowUnderPointer();
+        if (m_callback) {
+            selectWindowUnderPointer();
+        } else if (m_pointSelectionFallback) {
+            m_pointSelectionFallback(Cursor::pos());
+        }
     }
     if (returnPressed || escapePressed) {
         if (escapePressed) {
-            m_callback(nullptr);
+            cancelCallback();
         }
         release();
     }
@@ -199,6 +231,7 @@ void WindowSelector::release()
     ungrabXServer();
     m_active = false;
     m_callback = std::function<void(KWin::Toplevel*)>();
+    m_pointSelectionFallback = std::function<void(const QPoint&)>();
 }
 
 void WindowSelector::selectWindowId(xcb_window_t window_to_select)
@@ -225,6 +258,15 @@ void WindowSelector::selectWindowId(xcb_window_t window_to_select)
         m_callback(client);
     } else {
         m_callback(Workspace::self()->findUnmanaged(window));
+    }
+}
+
+void WindowSelector::cancelCallback()
+{
+    if (m_callback) {
+        m_callback(nullptr);
+    } else if (m_pointSelectionFallback) {
+        m_pointSelectionFallback(QPoint(-1, -1));
     }
 }
 
