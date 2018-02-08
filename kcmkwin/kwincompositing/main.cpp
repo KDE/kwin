@@ -153,6 +153,14 @@ void KWinCompositingSettings::init()
         }
     );
 
+    // Vulkan device
+    if (auto *model = m_compositing->vulkanDeviceModel()) {
+        m_form.vulkanDevice->setModel((QAbstractItemModel *) model);
+        m_form.vulkanDevice->setCurrentIndex(m_compositing->vkDevice());
+    }
+    connect(m_compositing, &Compositing::vkDeviceChanged, m_form.vulkanDevice, &QComboBox::setCurrentIndex);
+    connect(m_form.vulkanDevice, currentIndexChangedSignal, m_compositing, &Compositing::setVkDevice);
+
     // windowThumbnail
     m_form.windowThumbnail->setCurrentIndex(m_compositing->windowThumbnail());
     connect(m_compositing, &Compositing::windowThumbnailChanged, m_form.windowThumbnail, &QComboBox::setCurrentIndex);
@@ -191,7 +199,7 @@ void KWinCompositingSettings::init()
         auto &layout = m_form.formLayout;
 
         // Remove all backend-specific rows from the form layout
-        for (auto *widget : { m_form.glScaleFilter, m_form.xrScaleFilter, m_form.tearingPrevention }) {
+        for (auto *widget : { m_form.glScaleFilter, m_form.xrScaleFilter, m_form.tearingPrevention, m_form.vulkanDevice }) {
             if (layout->indexOf(widget) != -1) {
                 layout->takeRow(widget);
             }
@@ -206,6 +214,8 @@ void KWinCompositingSettings::init()
         } else if (currentType == CompositingType::XRENDER_INDEX) {
             layout->insertRow(firstRow + 0, m_form.xrScaleFilterLabel,     m_form.xrScaleFilter);
             layout->insertRow(firstRow + 1, m_form.tearingPreventionLabel, m_form.tearingPrevention);
+        } else if (currentType == CompositingType::VULKAN_INDEX) {
+            layout->insertRow(firstRow + 0, m_form.vulkanDeviceLabel,      m_form.vulkanDevice);
         }
 
         m_form.glScaleFilter->setVisible(currentIsOpenGL);
@@ -214,6 +224,8 @@ void KWinCompositingSettings::init()
         m_form.xrScaleFilterLabel->setVisible(currentType == CompositingType::XRENDER_INDEX);
         m_form.tearingPrevention->setVisible(currentType != CompositingType::VULKAN_INDEX);
         m_form.tearingPreventionLabel->setVisible(currentType != CompositingType::VULKAN_INDEX);
+        m_form.vulkanDevice->setVisible(currentType == CompositingType::VULKAN_INDEX);
+        m_form.vulkanDeviceLabel->setVisible(currentType == CompositingType::VULKAN_INDEX);
     };
     showHideBasedOnType();
     connect(m_form.type, currentIndexChangedSignal,

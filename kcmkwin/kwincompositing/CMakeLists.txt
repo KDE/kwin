@@ -23,6 +23,10 @@ set(kwincomposing_SRC
     compositing.cpp
     effectconfig.cpp)
 
+if (Vulkan_FOUND)
+    set (kwincomposing_SRC ${kwincomposing_SRC} vulkandevicemodel.cpp)
+endif()
+
 qt5_add_dbus_interface( kwincomposing_SRC
   ${KWIN_SOURCE_DIR}/org.kde.kwin.Compositing.xml kwin_compositing_interface)
 qt5_add_dbus_interface( kwincomposing_SRC
@@ -46,6 +50,9 @@ target_link_libraries(kwincompositing
     kwin4_effect_builtins
 )
 
+if (Vulkan_FOUND)
+    target_link_libraries(kwincompositing kwinvulkanutils)
+endif()
 
 set(modelTest_SRC
     model.cpp
@@ -53,6 +60,10 @@ set(modelTest_SRC
     compositing.cpp
     test/effectmodeltest.cpp
     test/modeltest.cpp)
+
+if (Vulkan_FOUND)
+    set (modelTest_SRC ${modelTest_SRC} vulkandevicemodel.cpp)
+endif()
 
 qt5_add_dbus_interface( modelTest_SRC
   ${KWIN_SOURCE_DIR}/org.kde.kwin.Compositing.xml kwin_compositing_interface)
@@ -77,6 +88,10 @@ target_link_libraries(effectModelTest
     kwineffects
     kwin4_effect_builtins
 )
+
+if (Vulkan_FOUND)
+    target_link_libraries(effectModelTest kwinvulkanutils)
+endif()
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})
