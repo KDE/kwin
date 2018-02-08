@@ -179,10 +179,8 @@ void Compositor::setup()
 
     if (!options->isCompositingInitialized()) {
         options->reloadCompositingSettings(true);
-        slotCompositingOptionsInitialized();
-    } else {
-        slotCompositingOptionsInitialized();
     }
+    slotCompositingOptionsInitialized();
 }
 
 extern int screen_number; // main.cpp
