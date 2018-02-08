@@ -247,7 +247,10 @@ bool VulkanScene::init()
     uint32_t presentQueueFamilyIndex = 0;
     uint32_t bestScore = 0;
 
-    for (VulkanPhysicalDevice &device : m_instance.enumeratePhysicalDevices()) {
+    std::vector<VulkanPhysicalDevice> devices = m_instance.enumeratePhysicalDevices();
+    for (uint32_t index = 0; index < devices.size(); index++) {
+        VulkanPhysicalDevice &device = devices[index];
+
         // Enumerate the device extensions
         supportedDeviceExtensions = device.enumerateDeviceExtensionProperties();
 
@@ -323,6 +326,10 @@ bool VulkanScene::init()
         const auto it = std::find_if(std::cbegin(scores), std::cend(scores), [&](const auto &entry) { return entry.type == properties.deviceType; });
         if (it != std::cend(scores))
             score = it->score;
+
+        // Assign the highest score to the device selected by the user
+        if (options->vulkanDevice() == VulkanDeviceId(index, properties.vendorID, properties.deviceID))
+            score = 1000;
 
         if (score > bestScore) {
             bestScore                = score;
