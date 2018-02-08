@@ -124,6 +124,7 @@ Options::Options(QObject *parent)
     , m_glCoreProfile(Options::defaultGLCoreProfile())
     , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
     , m_glPlatformInterface(Options::defaultGlPlatformInterface())
+    , m_vulkanDevice(0, 0, 0)
     , m_windowsBlockCompositing(true)
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
@@ -732,6 +733,14 @@ void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
     emit glPreferBufferSwapChanged();
 }
 
+void Options::setVulkanDevice(const VulkanDeviceId &device)
+{
+    if (m_vulkanDevice != device) {
+        m_vulkanDevice = device;
+        emit vulkanDeviceChanged();
+    }
+}
+
 void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
 {
     // check environment variable
@@ -986,6 +995,19 @@ void Options::reloadCompositingSettings(bool force)
     setGlPreferBufferSwap(c);
 
     m_xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);
+
+    const QStringList vulkanDeviceEntry = config.readEntry("VulkanDevice", QStringList());
+    if (vulkanDeviceEntry.count() == 3) {
+        uint32_t index, vendorId, deviceId;
+        bool ok = true;
+        if (ok) index    = vulkanDeviceEntry.at(0).toUInt(&ok, 0);
+        if (ok) vendorId = vulkanDeviceEntry.at(1).toUInt(&ok, 0);
+        if (ok) deviceId = vulkanDeviceEntry.at(2).toUInt(&ok, 0);
+        if (!ok) index = vendorId = deviceId = 0;
+        setVulkanDevice(VulkanDeviceId(index, vendorId, deviceId));
+    } else {
+        setVulkanDevice(VulkanDeviceId(0, 0, 0));
+    }
 
     HiddenPreviews previews = Options::defaultHiddenPreviews();
     // 4 - off, 5 - shown, 6 - always, other are old values
