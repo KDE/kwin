@@ -51,9 +51,11 @@ TabletModeInputEventSpy::TabletModeInputEventSpy(TabletModeManager *parent)
 
 void TabletModeInputEventSpy::switchEvent(SwitchEvent *event)
 {
+#if HAVE_INPUT
     if (!event->device()->isTabletModeSwitch()) {
         return;
     }
+#endif
 
     switch (event->state()) {
     case SwitchEvent::State::Off:
