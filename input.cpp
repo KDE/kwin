@@ -1873,11 +1873,9 @@ bool InputRedirection::hasAlphaNumericKeyboard()
 
 bool InputRedirection::hasTabletModeSwitch()
 {
-#if HAVE_INPUT
     if (m_libInput) {
         return m_libInput->hasTabletModeSwitch();
     }
-#endif
     return false;
 }
 
