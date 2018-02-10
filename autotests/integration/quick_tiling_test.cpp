@@ -28,8 +28,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include "scripting/scripting.h"
 
+#include <KDecoration2/Decoration>
+
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
@@ -70,6 +73,8 @@ private Q_SLOTS:
     void testQuickTilingPointerMove();
     void testQuickTilingPointerMoveXdgShell_data();
     void testQuickTilingPointerMoveXdgShell();
+    void testQuickTilingTouchMoveXdgShell_data();
+    void testQuickTilingTouchMoveXdgShell();
     void testX11QuickTiling_data();
     void testX11QuickTiling();
     void testX11QuickTilingAfterVertMaximize_data();
@@ -115,7 +120,7 @@ void QuickTilingTest::initTestCase()
 
 void QuickTilingTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection());
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
     m_shell = Test::waylandShell();
@@ -493,6 +498,69 @@ void QuickTilingTest::testQuickTilingPointerMoveXdgShell()
     QTEST(c->quickTileMode(), "expectedMode");
     QVERIFY(configureRequestedSpy.wait());
     QCOMPARE(configureRequestedSpy.count(), 4);
+    QCOMPARE(false, configureRequestedSpy.last().first().toSize().isEmpty());
+}
+
+void QuickTilingTest::testQuickTilingTouchMoveXdgShell_data()
+{
+    QTest::addColumn<QPoint>("targetPos");
+    QTest::addColumn<QuickTileMode>("expectedMode");
+
+    QTest::newRow("topRight") << QPoint(2559, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Right);
+    QTest::newRow("right") << QPoint(2559, 512) << QuickTileMode(QuickTileFlag::Right);
+    QTest::newRow("bottomRight") << QPoint(2559, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Right);
+    QTest::newRow("bottomLeft") << QPoint(0, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Left);
+    QTest::newRow("Left") << QPoint(0, 512) << QuickTileMode(QuickTileFlag::Left);
+    QTest::newRow("topLeft") << QPoint(0, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Left);
+}
+
+void QuickTilingTest::testQuickTilingTouchMoveXdgShell()
+{
+    // test verifies that touch on decoration also allows quick tiling
+    // see BUG: 390113
+    using namespace KWayland::Client;
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+    QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
+
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellV6Surface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    // let's render
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(1000, 50), Qt::blue);
+
+    QVERIFY(c);
+    QVERIFY(c->isDecorated());
+    const auto decoration = c->decoration();
+    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(c->geometry(), QRect(-decoration->borderLeft(), 0,
+                                  1000 + decoration->borderLeft() + decoration->borderRight(),
+                                  50 + decoration->borderTop() + decoration->borderBottom()));
+    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+    QCOMPARE(c->maximizeMode(), MaximizeRestore);
+    QVERIFY(configureRequestedSpy.wait());
+    QTRY_COMPARE(configureRequestedSpy.count(), 2);
+
+    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
+    QVERIFY(quickTileChangedSpy.isValid());
+
+    quint32 timestamp = 1;
+    kwinApp()->platform()->touchDown(0, QPointF(c->geometry().center().x(), c->geometry().y() + decoration->borderTop() / 2), timestamp++);
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(c, workspace()->getMovingClient());
+    QCOMPARE(configureRequestedSpy.count(), 3);
+
+    QFETCH(QPoint, targetPos);
+    kwinApp()->platform()->touchMotion(0, targetPos, timestamp++);
+    kwinApp()->platform()->touchUp(0, timestamp++);
+    QVERIFY(!workspace()->getMovingClient());
+
+    QCOMPARE(quickTileChangedSpy.count(), 1);
+    QTEST(c->quickTileMode(), "expectedMode");
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 5);
     QCOMPARE(false, configureRequestedSpy.last().first().toSize().isEmpty());
 }
 
