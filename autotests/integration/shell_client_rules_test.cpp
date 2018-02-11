@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "workspace.h"
 
 #include <KWayland/Client/surface.h>
 
@@ -57,6 +58,8 @@ private Q_SLOTS:
     void testApplyInitialKeepBelow();
     void testApplyInitialShortcut_data();
     void testApplyInitialShortcut();
+    void testOpacityActive_data();
+    void testOpacityActive();
 };
 
 void TestShellClientRules::initTestCase()
@@ -109,6 +112,20 @@ void TestShellClientRules::name##_data() \
     QTest::newRow("xdgShellV5|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV5 << 6; \
     QTest::newRow("xdgShellV6|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV6 << 6; \
 }
+
+#define TEST_FORCE_DATA( name ) \
+void TestShellClientRules::name##_data() \
+{ \
+    QTest::addColumn<Test::ShellSurfaceType>("type"); \
+    QTest::addColumn<int>("ruleNumber"); \
+    QTest::newRow("wlShell|Force") << Test::ShellSurfaceType::WlShell << 2; \
+    QTest::newRow("xdgShellV5|Force") << Test::ShellSurfaceType::XdgShellV5 << 2; \
+    QTest::newRow("xdgShellV6|Force") << Test::ShellSurfaceType::XdgShellV6 << 2; \
+    QTest::newRow("wlShell|ForceTemporarily") << Test::ShellSurfaceType::WlShell << 6; \
+    QTest::newRow("xdgShellV5|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV5 << 6; \
+    QTest::newRow("xdgShellV6|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV6 << 6; \
+}
+
 
 TEST_DATA(testApplyInitialDesktop)
 
@@ -323,6 +340,51 @@ void TestShellClientRules::testApplyInitialShortcut()
     QCOMPARE(c->keepAbove(), false);
     QCOMPARE(c->keepBelow(), false);
     QCOMPARE(c->shortcut(), sequence);
+}
+
+TEST_FORCE_DATA(testOpacityActive)
+
+void TestShellClientRules::testOpacityActive()
+{
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+
+    auto group = config->group("1");
+    group.writeEntry("opacityactive", 90);
+    group.writeEntry("opacityinactive", 80);
+    QFETCH(int, ruleNumber);
+    group.writeEntry("opacityactiverule", ruleNumber);
+    group.writeEntry("opacityinactiverule", ruleNumber);
+    group.sync();
+
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QCOMPARE(c->opacity(), 0.9);
+
+    // open a second window
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<QObject> shellSurface2(Test::createShellSurface(type, surface2.data()));
+
+    auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c2);
+    QVERIFY(c2->isActive());
+    QVERIFY(!c->isActive());
+    QCOMPARE(c2->opacity(), 0.9);
+    QCOMPARE(c->opacity(), 0.8);
+
+    workspace()->activateClient(c);
+    QVERIFY(!c2->isActive());
+    QVERIFY(c->isActive());
+    QCOMPARE(c->opacity(), 0.9);
+    QCOMPARE(c2->opacity(), 0.8);
 }
 
 WAYLANDTEST_MAIN(TestShellClientRules)

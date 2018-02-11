@@ -1043,12 +1043,14 @@ void RuleBook::edit(AbstractClient* c, bool whole_app)
 void RuleBook::load()
 {
     deleteAll();
-    KConfig cfg(QStringLiteral(KWIN_NAME "rulesrc"), KConfig::NoGlobals);
-    int count = cfg.group("General").readEntry("count", 0);
+    if (!m_config) {
+        m_config = KSharedConfig::openConfig(QStringLiteral(KWIN_NAME "rulesrc"), KConfig::NoGlobals);
+    }
+    int count = m_config->group("General").readEntry("count", 0);
     for (int i = 1;
             i <= count;
             ++i) {
-        KConfigGroup cg(&cfg, QString::number(i));
+        KConfigGroup cg(m_config, QString::number(i));
         Rules* rule = new Rules(cg);
         m_rules.append(rule);
     }

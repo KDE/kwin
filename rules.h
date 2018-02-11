@@ -299,6 +299,11 @@ public:
     void load();
     void edit(AbstractClient* c, bool whole_app);
     void requestDiskStorage();
+
+    void setConfig(const KSharedConfig::Ptr &config) {
+        m_config = config;
+    }
+
 private Q_SLOTS:
     void temporaryRulesMessage(const QString&);
     void cleanupTemporaryRules();
@@ -311,6 +316,7 @@ private:
     bool m_updatesDisabled;
     QList<Rules*> m_rules;
     QScopedPointer<KXMessages> m_temporaryRulesMessages;
+    KSharedConfig::Ptr m_config;
 
     KWIN_SINGLETON(RuleBook)
 };
