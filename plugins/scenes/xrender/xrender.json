@@ -8,6 +8,7 @@
         "Description[de]": "KWin-Compositor-Modul zum Rendern mit XRender",
         "Description[el]": "Αποτύπωση πρσοθέτου συνθέτη KWin μέσω XRender",
         "Description[es]": "Complemento compositor de KWin renderizando mediante XRender",
+        "Description[eu]": "Kwin konposatzailearen plugina XRender bidez errendatzen",
         "Description[fi]": "XRenderillä hahmontava KWin-koostajaliitännäinen",
         "Description[fr]": "Module du compositeur KWin effectuant le rendu avec XRender",
         "Description[gl]": "Complemento de compositor de KWin que renderiza a través de XRender.",
