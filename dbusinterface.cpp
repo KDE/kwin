@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "compositingadaptor.h"
 
 // kwin
+#include "abstract_client.h"
 #include "atoms.h"
 #include "composite.h"
 #include "debug_console.h"
@@ -185,6 +186,46 @@ void DBusInterface::showDebugConsole()
 {
     DebugConsole *console = new DebugConsole;
     console->show();
+}
+
+QVariantMap DBusInterface::queryWindowInfo()
+{
+    m_replyQueryWindowInfo = message();
+    setDelayedReply(true);
+    kwinApp()->platform()->startInteractiveWindowSelection(
+        [this] (Toplevel *t) {
+            if (auto c = qobject_cast<AbstractClient*>(t)) {
+                const QVariantMap ret{
+                    {QStringLiteral("resourceClass"), c->resourceClass()},
+                    {QStringLiteral("resourceName"), c->resourceName()},
+                    {QStringLiteral("role"), c->windowRole()},
+                    {QStringLiteral("caption"), c->captionNormal()},
+                    {QStringLiteral("clientMachine"), c->wmClientMachine(true)},
+                    {QStringLiteral("type"), c->windowType()},
+                    {QStringLiteral("x"), c->x()},
+                    {QStringLiteral("y"), c->y()},
+                    {QStringLiteral("width"), c->width()},
+                    {QStringLiteral("height"), c->height()},
+                    {QStringLiteral("x11DesktopNumber"), c->desktop()},
+                    {QStringLiteral("minimized"), c->isMinimized()},
+                    {QStringLiteral("shaded"), c->isShade()},
+                    {QStringLiteral("fullscreen"), c->isFullScreen()},
+                    {QStringLiteral("keepAbove"), c->keepAbove()},
+                    {QStringLiteral("keepBelow"), c->keepBelow()},
+                    {QStringLiteral("noBorder"), c->noBorder()},
+                    {QStringLiteral("skipTaskbar"), c->skipTaskbar()},
+                    {QStringLiteral("skipPager"), c->skipPager()},
+                    {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
+                    {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
+                    {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical}
+                };
+                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(ret));
+            } else {
+                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(QString(), QString()));
+            }
+        }
+    );
+    return QVariantMap{};
 }
 
 CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)

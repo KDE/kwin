@@ -22,7 +22,6 @@
 
 #include <QDialog>
 #include <kwindowsystem.h>
-#include <QAbstractNativeEventFilter>
 
 #include "../../rules.h"
 //Added by qt3to4:
@@ -43,12 +42,12 @@ public:
 };
 
 class DetectDialog
-    : public QDialog, public QAbstractNativeEventFilter
+    : public QDialog
 {
     Q_OBJECT
 public:
     explicit DetectDialog(QWidget* parent = nullptr, const char* name = nullptr);
-    void detect(WId window, int secs = 0);
+    void detect(int secs = 0);
     QByteArray selectedClass() const;
     bool selectedWholeClass() const;
     QByteArray selectedRole() const;
@@ -57,17 +56,17 @@ public:
     QString selectedTitle() const;
     Rules::StringMatch titleMatch() const;
     QByteArray selectedMachine() const;
-    const KWindowInfo& windowInfo() const;
 
-    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long int* result) override;
+    const QVariantMap &windowInfo() const {
+        return m_windowInfo;
+    }
+
 Q_SIGNALS:
     void detectionDone(bool);
 private Q_SLOTS:
     void selectWindow();
 private:
-    void readWindow(WId window);
     void executeDialog();
-    WId findWindow();
     QByteArray wmclass_class;
     QByteArray wmclass_name;
     QByteArray role;
@@ -76,16 +75,8 @@ private:
     QByteArray extrarole;
     QByteArray machine;
     DetectWidget* widget;
-    QScopedPointer<QDialog> grabber;
-    QScopedPointer<KWindowInfo> info;
+    QVariantMap m_windowInfo;
 };
-
-inline
-const KWindowInfo& DetectDialog::windowInfo() const
-{
-    Q_ASSERT(!info.isNull());
-    return *(info.data());
-}
 
 } // namespace
 

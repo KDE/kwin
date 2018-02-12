@@ -43,7 +43,7 @@ class Compositor;
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  **/
-class DBusInterface: public QObject
+class DBusInterface: public QObject, protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin")
@@ -66,12 +66,15 @@ public Q_SLOTS: // METHODS
     Q_NOREPLY void unclutterDesktop();
     Q_NOREPLY void showDebugConsole();
 
+    QVariantMap queryWindowInfo();
+
 private Q_SLOTS:
     void becomeKWinService(const QString &service);
 
 private:
     void announceService();
     QString m_serviceName;
+    QDBusMessage m_replyQueryWindowInfo;
 };
 
 class CompositorDBusInterface : public QObject

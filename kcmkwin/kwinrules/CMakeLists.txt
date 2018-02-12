@@ -29,7 +29,6 @@ set(kcm_libs
     KF5::Service
     KF5::WindowSystem
     KF5::XmlGui
-    ${X11_LIBRARIES}
 )
 
 if(KWIN_BUILD_ACTIVITIES)

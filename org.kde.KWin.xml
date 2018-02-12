@@ -36,5 +36,9 @@
         <arg type="s" direction="out"/>
     </method>
     <method name="showDebugConsole"/>
+    <method name="queryWindowInfo">
+        <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+        <arg type="a{sv}" direction="out"/>
+    </method>
   </interface>
 </node>

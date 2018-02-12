@@ -31,11 +31,12 @@
 #include <QByteArray>
 #include <QTimer>
 
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-#include <X11/Xutil.h>
-#include <fixx11h.h>
-#include <QX11Info>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
+
+Q_DECLARE_METATYPE(NET::WindowType)
 
 namespace KWin
 {
@@ -47,8 +48,7 @@ DetectWidget::DetectWidget(QWidget* parent)
 }
 
 DetectDialog::DetectDialog(QWidget* parent, const char* name)
-    : QDialog(parent),
-      grabber()
+    : QDialog(parent)
 {
     setObjectName(name);
     setModal(true);
@@ -64,34 +64,9 @@ DetectDialog::DetectDialog(QWidget* parent, const char* name)
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
 }
 
-void DetectDialog::detect(WId window, int secs)
+void DetectDialog::detect(int secs)
 {
-    if (window == 0)
-        QTimer::singleShot(secs*1000, this, SLOT(selectWindow()));
-    else
-        readWindow(window);
-}
-
-void DetectDialog::readWindow(WId w)
-{
-    if (w == 0) {
-        emit detectionDone(false);
-        return;
-    }
-    info.reset(new KWindowInfo(w, NET::WMAllProperties, NET::WM2AllProperties));   // read everything
-    if (!info->valid()) {
-        emit detectionDone(false);
-        return;
-    }
-    wmclass_class = info->windowClassClass();
-    wmclass_name = info->windowClassName();
-    role = info->windowRole();
-    type = info->windowType(NET::NormalMask | NET::DesktopMask | NET::DockMask
-                           | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
-                           | NET::UtilityMask | NET::SplashMask);
-    title = info->name();
-    machine = info->clientMachine();
-    executeDialog();
+    QTimer::singleShot(secs*1000, this, SLOT(selectWindow()));
 }
 
 void DetectDialog::executeDialog()
@@ -170,79 +145,31 @@ QByteArray DetectDialog::selectedMachine() const
 
 void DetectDialog::selectWindow()
 {
-    if (!KWin::Cursor::self()) {
-        qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
-        qApp->setProperty("x11RootWindow", QVariant::fromValue(QX11Info::appRootWindow()));
-        new X11Cursor(this);
-    }
-    // use a dialog, so that all user input is blocked
-    // use WX11BypassWM and moving away so that it's not actually visible
-    // grab only mouse, so that keyboard can be used e.g. for switching windows
-    grabber.reset(new QDialog(nullptr, Qt::X11BypassWindowManagerHint));
-    grabber->move(-1000, -1000);
-    grabber->setModal(true);
-    grabber->show();
-    // Qt uses QX11Info::appTime() to grab the pointer, what can silently fail (#318437) ...
-    XSync(QX11Info::display(), false);
-    if (XGrabPointer(QX11Info::display(), grabber->winId(), false, ButtonReleaseMask,
-                     GrabModeAsync, GrabModeAsync, None, KWin::Cursor::x11Cursor(Qt::CrossCursor),
-                     CurrentTime) == Success) { // ...so we use the far more convincing CurrentTime
-        QCoreApplication::instance()->installNativeEventFilter(this);
-    } else {
-        // ... and if we fail, cleanup, so we won't receive random events
-        grabber.reset();
-    }
-}
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"),
+                                                          QStringLiteral("/KWin"),
+                                                          QStringLiteral("org.kde.KWin"),
+                                                          QStringLiteral("queryWindowInfo"));
+    QDBusPendingReply<QVariantMap> async = QDBusConnection::sessionBus().asyncCall(message);
 
-bool DetectDialog::nativeEventFilter(const QByteArray &eventType, void *message, long int*)
-{
-    if (eventType != QByteArrayLiteral("xcb_generic_event_t")) {
-        return false;
-    }
-    auto *event = reinterpret_cast<xcb_generic_event_t *>(message);
-    if ((event->response_type & ~0x80) != XCB_BUTTON_RELEASE) {
-        return false;
-    }
-    QCoreApplication::instance()->removeNativeEventFilter(this);
-    grabber.reset();
-    auto *me = reinterpret_cast<xcb_button_press_event_t*>(event);
-    if (me->detail != XCB_BUTTON_INDEX_1) {
-        emit detectionDone(false);
-        return true;
-    }
-    readWindow(findWindow());
-    return true;
-}
-
-WId DetectDialog::findWindow()
-{
-    Window root;
-    Window child;
-    uint mask;
-    int rootX, rootY, x, y;
-    Window parent = QX11Info::appRootWindow();
-    Atom wm_state = XInternAtom(QX11Info::display(), "WM_STATE", False);
-    for (int i = 0;
-            i < 10;
-            ++i) {
-        XQueryPointer(QX11Info::display(), parent, &root, &child,
-                      &rootX, &rootY, &x, &y, &mask);
-        if (child == None)
-            return 0;
-        Atom type;
-        int format;
-        unsigned long nitems, after;
-        unsigned char* prop;
-        if (XGetWindowProperty(QX11Info::display(), child, wm_state, 0, 0, False, AnyPropertyType,
-                              &type, &format, &nitems, &after, &prop) == Success) {
-            if (prop != nullptr)
-                XFree(prop);
-            if (type != None)
-                return child;
+    QDBusPendingCallWatcher *callWatcher = new QDBusPendingCallWatcher(async, this);
+    connect(callWatcher, &QDBusPendingCallWatcher::finished, this,
+        [this](QDBusPendingCallWatcher *self) {
+            QDBusPendingReply<QVariantMap> reply = *self;
+            self->deleteLater();
+            if (!reply.isValid()) {
+                emit detectionDone(false);
+                return;
+            }
+            m_windowInfo = reply.value();
+            wmclass_class = m_windowInfo.value("resourceClass").toByteArray();
+            wmclass_name = m_windowInfo.value("resourceName").toByteArray();
+            role = m_windowInfo.value("role").toByteArray();
+            type = m_windowInfo.value("type").value<NET::WindowType>();
+            title = m_windowInfo.value("caption").toString();
+            machine = m_windowInfo.value("clientMachine").toByteArray();
+            executeDialog();
         }
-        parent = child;
-    }
-    return 0;
+    );
 }
 
 } // namespace
