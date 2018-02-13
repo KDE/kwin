@@ -125,6 +125,8 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
             { GL_RGB10_A2, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV }, // QImage::Format_A2BGR30_Premultiplied
             { GL_RGB10,    GL_BGRA, GL_UNSIGNED_INT_2_10_10_10_REV }, // QImage::Format_RGB30
             { GL_RGB10_A2, GL_BGRA, GL_UNSIGNED_INT_2_10_10_10_REV }, // QImage::Format_A2RGB30_Premultiplied
+            { GL_R8,       GL_RED,  GL_UNSIGNED_BYTE               }, // QImage::Format_Alpha8
+            { GL_R8,       GL_RED,  GL_UNSIGNED_BYTE               }, // QImage::Format_Grayscale8
         };
 
         QImage im;

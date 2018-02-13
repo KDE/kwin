@@ -8,5 +8,8 @@
         <entry name="BlurStrength" type="Int">
             <default>10</default>
         </entry>
+        <entry name="NoiseStrength" type="Int">
+            <default>5</default>
+        </entry>
     </group>
 </kcfg>

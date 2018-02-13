@@ -73,6 +73,9 @@ void GLSLBlurShader::reset()
     delete m_shaderCopysample;
     m_shaderCopysample = nullptr;
 
+    delete m_shaderNoisesample;
+    m_shaderNoisesample = nullptr;
+
     setIsValid(false);
 }
 
@@ -105,6 +108,14 @@ void GLSLBlurShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
             m_matrixDownsample = matrix;
             m_shaderDownsample->setUniform(m_mvpMatrixLocationDownsample, matrix);
             break;
+
+        case NoiseSampleType:
+            if (matrix == m_matrixNoisesample)
+                return;
+
+            m_matrixNoisesample = matrix;
+            m_shaderNoisesample->setUniform(m_mvpMatrixLocationNoisesample, matrix);
+            break;
     }
 }
 
@@ -129,10 +140,18 @@ void GLSLBlurShader::setOffset(float offset)
             m_offsetDownsample = offset;
             m_shaderDownsample->setUniform(m_offsetLocationDownsample, offset);
             break;
+
+        case NoiseSampleType:
+            if (offset == m_offsetNoisesample)
+                return;
+
+            m_offsetNoisesample = offset;
+            m_shaderNoisesample->setUniform(m_offsetLocationNoisesample, offset);
+            break;
     }
 }
 
-void GLSLBlurShader::setTargetSize(QSize renderTextureSize)
+void GLSLBlurShader::setTargetTextureSize(QSize renderTextureSize)
 {
     if (!isValid())
         return;
@@ -141,31 +160,39 @@ void GLSLBlurShader::setTargetSize(QSize renderTextureSize)
 
     switch (m_activeSampleType) {
         case CopySampleType:
-            if (renderTextureSize == m_renderTextureSizeCopysample)
-                return;
-
-            m_renderTextureSizeCopysample = renderTextureSize;
             m_shaderCopysample->setUniform(m_renderTextureSizeLocationCopysample, texSize);
             break;
 
         case UpSampleType:
-            if (renderTextureSize == m_renderTextureSizeUpsample)
-                return;
-
-            m_renderTextureSizeUpsample = renderTextureSize;
             m_shaderUpsample->setUniform(m_renderTextureSizeLocationUpsample, texSize);
             m_shaderUpsample->setUniform(m_halfpixelLocationUpsample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
             break;
 
         case DownSampleType:
-            if (renderTextureSize == m_renderTextureSizeDownsample)
-                return;
-
-            m_renderTextureSizeDownsample = renderTextureSize;
             m_shaderDownsample->setUniform(m_renderTextureSizeLocationDownsample, texSize);
             m_shaderDownsample->setUniform(m_halfpixelLocationDownsample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
             break;
+
+        case NoiseSampleType:
+            m_shaderNoisesample->setUniform(m_renderTextureSizeLocationNoisesample, texSize);
+            m_shaderNoisesample->setUniform(m_halfpixelLocationNoisesample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
+            break;
     }
+}
+
+void GLSLBlurShader::setNoiseTextureSize(QSize noiseTextureSize)
+{
+    QVector2D noiseTexSize = QVector2D(noiseTextureSize.width(), noiseTextureSize.height());
+
+    if (noiseTexSize != m_noiseTextureSizeNoisesample) {
+        m_noiseTextureSizeNoisesample = noiseTexSize;
+        m_shaderNoisesample->setUniform(m_noiseTextureSizeLocationNoisesample, noiseTexSize);
+    }
+}
+
+void GLSLBlurShader::setTexturePosition(QPoint texPos)
+{
+    m_shaderNoisesample->setUniform(m_texStartPosLocationNoisesample, QVector2D(-texPos.x(), texPos.y()));
 }
 
 void GLSLBlurShader::setBlurRect(QRect blurRect, QSize screenSize)
@@ -177,9 +204,9 @@ void GLSLBlurShader::setBlurRect(QRect blurRect, QSize screenSize)
 
     QVector4D rect = QVector4D(
         blurRect.bottomLeft().x()       / float(screenSize.width()),
-        1.0 - blurRect.bottomLeft().y() / float(screenSize.height()),
-        blurRect.topRight().x()         / float(screenSize.width()),
-        1.0 - blurRect.topRight().y()   / float(screenSize.height())
+                               1.0 - blurRect.bottomLeft().y() / float(screenSize.height()),
+                               blurRect.topRight().x()         / float(screenSize.width()),
+                               1.0 - blurRect.topRight().y()   / float(screenSize.height())
     );
 
     m_shaderCopysample->setUniform(m_blurRectLocationCopysample, rect);
@@ -202,6 +229,10 @@ void GLSLBlurShader::bind(SampleType sampleType)
         case DownSampleType:
             ShaderManager::instance()->pushShader(m_shaderDownsample);
             break;
+
+        case NoiseSampleType:
+            ShaderManager::instance()->pushShader(m_shaderNoisesample);
+            break;
     }
 
     m_activeSampleType = sampleType;
@@ -222,6 +253,7 @@ void GLSLBlurShader::init()
     QByteArray fragmentDownSource;
     QByteArray fragmentUpSource;
     QByteArray fragmentCopySource;
+    QByteArray fragmentNoiseSource;
 
     const QByteArray attribute = core ? "in"        : "attribute";
     const QByteArray texture2D = core ? "texture"   : "texture2D";
@@ -331,12 +363,46 @@ void GLSLBlurShader::init()
 
     streamFragCopy.flush();
 
+    // Fragment shader - Noise texture
+    // ===================================================================
+    QTextStream streamFragNoise(&fragmentNoiseSource);
 
-    m_shaderDownsample = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentDownSource);
-    m_shaderUpsample   = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentUpSource);
-    m_shaderCopysample = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentCopySource);
+    streamFragNoise << glHeaderString << glUniformString;
 
-    bool areShadersValid = m_shaderDownsample->isValid() && m_shaderUpsample->isValid() && m_shaderCopysample->isValid();
+    streamFragNoise << "uniform sampler2D noiseTexUnit;\n";
+    streamFragNoise << "uniform vec2 noiseTextureSize;\n";
+    streamFragNoise << "uniform vec2 texStartPos;\n";
+
+    // Upsampling + Noise
+    streamFragNoise << "void main(void)\n";
+    streamFragNoise << "{\n";
+    streamFragNoise << "    vec2 uv = vec2(gl_FragCoord.xy / renderTextureSize);\n";
+    streamFragNoise << "    vec2 uvNoise = vec2((texStartPos.xy + gl_FragCoord.xy) / noiseTextureSize);\n";
+    streamFragNoise << "    \n";
+    streamFragNoise << "    vec4 sum = " << texture2D << "(texUnit, uv + vec2(-halfpixel.x * 2.0, 0.0) * offset);\n";
+    streamFragNoise << "    sum += " << texture2D << "(texUnit, uv + vec2(-halfpixel.x, halfpixel.y) * offset) * 2.0;\n";
+    streamFragNoise << "    sum += " << texture2D << "(texUnit, uv + vec2(0.0, halfpixel.y * 2.0) * offset);\n";
+    streamFragNoise << "    sum += " << texture2D << "(texUnit, uv + vec2(halfpixel.x, halfpixel.y) * offset) * 2.0;\n";
+    streamFragNoise << "    sum += " << texture2D << "(texUnit, uv + vec2(halfpixel.x * 2.0, 0.0) * offset);\n";
+    streamFragNoise << "    sum += " << texture2D << "(texUnit, uv + vec2(halfpixel.x, -halfpixel.y) * offset) * 2.0;\n";
+    streamFragNoise << "    sum += " << texture2D << "(texUnit, uv + vec2(0.0, -halfpixel.y * 2.0) * offset);\n";
+    streamFragNoise << "    sum += " << texture2D << "(texUnit, uv + vec2(-halfpixel.x, -halfpixel.y) * offset) * 2.0;\n";
+    streamFragNoise << "    \n";
+    streamFragNoise << "    " << fragColor << " = sum / 12.0 - (vec4(0.5, 0.5, 0.5, 0) - vec4(" << texture2D << "(noiseTexUnit, uvNoise).rrr, 0));\n";
+    streamFragNoise << "}\n";
+
+    streamFragNoise.flush();
+
+
+    m_shaderDownsample  = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentDownSource);
+    m_shaderUpsample    = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentUpSource);
+    m_shaderCopysample  = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentCopySource);
+    m_shaderNoisesample = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentNoiseSource);
+
+    bool areShadersValid = m_shaderDownsample->isValid() &&
+        m_shaderUpsample->isValid() &&
+        m_shaderCopysample->isValid() &&
+        m_shaderNoisesample->isValid();
     setIsValid(areShadersValid);
 
     if (areShadersValid) {
@@ -353,6 +419,13 @@ void GLSLBlurShader::init()
         m_mvpMatrixLocationCopysample = m_shaderCopysample->uniformLocation("modelViewProjectionMatrix");
         m_renderTextureSizeLocationCopysample = m_shaderCopysample->uniformLocation("renderTextureSize");
         m_blurRectLocationCopysample = m_shaderCopysample->uniformLocation("blurRect");
+
+        m_mvpMatrixLocationNoisesample = m_shaderNoisesample->uniformLocation("modelViewProjectionMatrix");
+        m_offsetLocationNoisesample = m_shaderNoisesample->uniformLocation("offset");
+        m_renderTextureSizeLocationNoisesample = m_shaderNoisesample->uniformLocation("renderTextureSize");
+        m_noiseTextureSizeLocationNoisesample = m_shaderNoisesample->uniformLocation("noiseTextureSize");
+        m_texStartPosLocationNoisesample = m_shaderNoisesample->uniformLocation("texStartPos");
+        m_halfpixelLocationNoisesample = m_shaderNoisesample->uniformLocation("halfpixel");
 
         QMatrix4x4 modelViewProjection;
         const QSize screenSize = effects->virtualScreenSize();
@@ -379,6 +452,32 @@ void GLSLBlurShader::init()
         m_shaderCopysample->setUniform(m_blurRectLocationCopysample, QVector4D(1.0, 1.0, 1.0, 1.0));
         ShaderManager::instance()->popShader();
 
+        ShaderManager::instance()->pushShader(m_shaderNoisesample);
+        m_shaderNoisesample->setUniform(m_mvpMatrixLocationNoisesample, modelViewProjection);
+        m_shaderNoisesample->setUniform(m_offsetLocationNoisesample, float(1.0));
+        m_shaderNoisesample->setUniform(m_renderTextureSizeLocationNoisesample, QVector2D(1.0, 1.0));
+        m_shaderNoisesample->setUniform(m_noiseTextureSizeLocationNoisesample, QVector2D(1.0, 1.0));
+        m_shaderNoisesample->setUniform(m_texStartPosLocationNoisesample, QVector2D(1.0, 1.0));
+        m_shaderNoisesample->setUniform(m_halfpixelLocationNoisesample, QVector2D(1.0, 1.0));
+
+        glUniform1i(m_shaderNoisesample->uniformLocation("texUnit"), 0);
+        glUniform1i(m_shaderNoisesample->uniformLocation("noiseTexUnit"), 1);
+
+        ShaderManager::instance()->popShader();
+
         m_activeSampleType = -1;
+
+        m_offsetDownsample = 0.0;
+        m_matrixDownsample = QMatrix4x4();
+
+        m_offsetUpsample = 0.0;
+        m_matrixUpsample = QMatrix4x4();
+
+        m_matrixCopysample = QMatrix4x4();
+        m_blurRectCopysample = QRect();
+
+        m_offsetNoisesample = 0.0;
+        m_noiseTextureSizeNoisesample = QVector2D();
+        m_matrixNoisesample = QMatrix4x4();
     }
 }

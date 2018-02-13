@@ -45,13 +45,16 @@ public:
 
     virtual void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) = 0;
     virtual void setOffset(float offset) = 0;
-    virtual void setTargetSize(QSize renderTextureSize) = 0;
+    virtual void setTargetTextureSize(QSize renderTextureSize) = 0;
+    virtual void setNoiseTextureSize(QSize noiseTextureSize) = 0;
+    virtual void setTexturePosition(QPoint texPos) = 0;
     virtual void setBlurRect(QRect blurRect, QSize screenSize) = 0;
 
     enum SampleType {
         DownSampleType,
         UpSampleType,
-        CopySampleType
+        CopySampleType,
+        NoiseSampleType
     };
 
     virtual void bind(SampleType sampleType) = 0;
@@ -83,7 +86,9 @@ public:
     void unbind() override final;
     void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) override final;
     void setOffset(float offset) override final;
-    void setTargetSize(QSize renderTextureSize) override final;
+    void setTargetTextureSize(QSize renderTextureSize) override final;
+    void setNoiseTextureSize(QSize noiseTextureSize) override final;
+    void setTexturePosition(QPoint texPos) override final;
     void setBlurRect(QRect blurRect, QSize screenSize) override final;
 
 protected:
@@ -94,6 +99,7 @@ private:
     GLShader *m_shaderDownsample = nullptr;
     GLShader *m_shaderUpsample = nullptr;
     GLShader *m_shaderCopysample = nullptr;
+    GLShader *m_shaderNoisesample = nullptr;
 
     int m_mvpMatrixLocationDownsample;
     int m_offsetLocationDownsample;
@@ -109,21 +115,29 @@ private:
     int m_renderTextureSizeLocationCopysample;
     int m_blurRectLocationCopysample;
 
+    int m_mvpMatrixLocationNoisesample;
+    int m_offsetLocationNoisesample;
+    int m_renderTextureSizeLocationNoisesample;
+    int m_noiseTextureSizeLocationNoisesample;
+    int m_texStartPosLocationNoisesample;
+    int m_halfpixelLocationNoisesample;
+
 
     //Caching uniform values to aviod unnecessary setUniform calls
     int m_activeSampleType;
 
     float m_offsetDownsample;
     QMatrix4x4 m_matrixDownsample;
-    QSize m_renderTextureSizeDownsample;
 
     float m_offsetUpsample;
     QMatrix4x4 m_matrixUpsample;
-    QSize m_renderTextureSizeUpsample;
 
     QMatrix4x4 m_matrixCopysample;
-    QSize m_renderTextureSizeCopysample;
     QRect m_blurRectCopysample;
+
+    float m_offsetNoisesample;
+    QVector2D m_noiseTextureSizeNoisesample;
+    QMatrix4x4 m_matrixNoisesample;
 
 };
 

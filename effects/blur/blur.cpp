@@ -27,12 +27,16 @@
 
 #include <QMatrix4x4>
 #include <QLinkedList>
+#include <QScreen> // for QGuiApplication
+#include <QTime>
 #include <cmath> // for ceil()
 
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/blur_interface.h>
 #include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/display.h>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 namespace KWin
 {
@@ -143,7 +147,7 @@ void BlurEffect::updateTexture()
 
     // Prepare the stack for the rendering
     m_renderTargetStack.clear();
-    m_renderTargets.reserve(m_downSampleIterations * 2 - 1);
+    m_renderTargetStack.reserve(m_downSampleIterations * 2);
 
     // Upsample
     for (int i = 1; i < m_downSampleIterations; i++) {
@@ -157,6 +161,9 @@ void BlurEffect::updateTexture()
 
     // Copysample
     m_renderTargetStack.push(m_renderTargets[0]);
+
+    // Generate the noise helper texture
+    generateNoiseTexture();
 }
 
 void BlurEffect::initBlurStrengthValues()
@@ -227,6 +234,9 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     m_downSampleIterations = blurStrengthValues[blurStrength].iteration;
     m_offset = blurStrengthValues[blurStrength].offset;
     m_expandSize = blurOffsets[m_downSampleIterations - 1].expandSize;
+    m_noiseStrength = BlurConfig::noiseStrength();
+
+    m_scalingFactor = QGuiApplication::primaryScreen()->logicalDotsPerInch() / 96.0;
 
     updateTexture();
 
@@ -550,7 +560,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
         }
 
         if (!shape.isEmpty()) {
-            doBlur(shape, screen, data.opacity(), data.screenProjectionMatrix(), w->isDock());
+            doBlur(shape, screen, data.opacity(), data.screenProjectionMatrix(), w->isDock(), w->geometry());
         }
     }
 
@@ -566,12 +576,39 @@ void BlurEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double opa
     QRegion shape = frame->geometry().adjusted(-borderSize, -borderSize, borderSize, borderSize) & screen;
 
     if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()) && frame->style() != EffectFrameNone) {
-        doBlur(shape, screen, opacity * frameOpacity, frame->screenProjectionMatrix(), false);
+        doBlur(shape, screen, opacity * frameOpacity, frame->screenProjectionMatrix(), false, frame->geometry());
     }
     effects->paintEffectFrame(frame, region, opacity, frameOpacity);
 }
 
-void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock)
+void BlurEffect::generateNoiseTexture()
+{
+    if (m_noiseStrength == 0) {
+        return;
+    }
+
+    // Init randomness based on time
+    qsrand((uint)QTime::currentTime().msec());
+
+    QImage noiseImage(QSize(256, 256), QImage::Format_Grayscale8);
+
+    for (int y = 0; y < noiseImage.height(); y++) {
+        uint8_t *noiseImageLine = (uint8_t *) noiseImage.scanLine(y);
+
+        for (int x = 0; x < noiseImage.width(); x++) {
+            noiseImageLine[x] = qrand() % m_noiseStrength + (128 - m_noiseStrength / 2);
+        }
+    }
+
+    // The noise texture looks distorted when not scaled with integer
+    noiseImage = noiseImage.scaled(noiseImage.size() * m_scalingFactor);
+
+    m_noiseTexture = GLTexture(noiseImage);
+    m_noiseTexture.setFilter(GL_NEAREST);
+    m_noiseTexture.setWrapMode(GL_REPEAT);
+}
+
+void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock, QRect windowRect)
 {
     QRegion expandedBlurRegion = expand(shape) & expand(screen);
 
@@ -628,24 +665,40 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
         glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
     }
 
-    //Final upscale to the screen
-    m_shader->bind(BlurShader::UpSampleType);
-    m_shader->setOffset(m_offset);
-
-    m_shader->setModelViewProjectionMatrix(screenProjection);
-    m_shader->setTargetSize(m_renderTextures[0].size());
-
-    //Copy the image from this texture
-    m_renderTextures[1].bind();
-
-    //Render to the screen
-    vbo->draw(GL_TRIANGLES, blurRectCount * (m_downSampleIterations + 1), shape.rectCount() * 6);
+    upscaleRenderToScreen(vbo, blurRectCount * (m_downSampleIterations + 1), shape.rectCount() * 6, screenProjection, shape.boundingRect(), windowRect.topLeft());
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);
     }
 
     vbo->unbindArrays();
+}
+
+void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int blurRectCount, QMatrix4x4 screenProjection, QRect windowShape, QPoint windowPosition)
+{
+    glActiveTexture(GL_TEXTURE0);
+    m_renderTextures[1].bind();
+
+    if (m_noiseStrength > 0) {
+        m_shader->bind(BlurShader::NoiseSampleType);
+        m_shader->setTargetTextureSize(m_renderTextures[0].size());
+        m_shader->setNoiseTextureSize(m_noiseTexture.size());
+        m_shader->setTexturePosition(windowPosition);
+
+        glActiveTexture(GL_TEXTURE1);
+        m_noiseTexture.bind();
+    } else {
+        m_shader->bind(BlurShader::UpSampleType);
+        m_shader->setTargetTextureSize(m_renderTextures[0].size());
+    }
+
+    m_shader->setOffset(m_offset);
+    m_shader->setModelViewProjectionMatrix(screenProjection);
+
+    //Render to the screen
+    vbo->draw(GL_TRIANGLES, vboStart, blurRectCount);
+
+    glActiveTexture(GL_TEXTURE0);
     m_shader->unbind();
 }
 
@@ -661,7 +714,7 @@ void BlurEffect::downSampleTexture(GLVertexBuffer *vbo, int blurRectCount)
         modelViewProjectionMatrix.ortho(0, m_renderTextures[i].width(), m_renderTextures[i].height(), 0 , 0, 65535);
 
         m_shader->setModelViewProjectionMatrix(modelViewProjectionMatrix);
-        m_shader->setTargetSize(m_renderTextures[i].size());
+        m_shader->setTargetTextureSize(m_renderTextures[i].size());
 
         //Copy the image from this texture
         m_renderTextures[i - 1].bind();
@@ -680,12 +733,12 @@ void BlurEffect::upSampleTexture(GLVertexBuffer *vbo, int blurRectCount)
     m_shader->bind(BlurShader::UpSampleType);
     m_shader->setOffset(m_offset);
 
-    for (int i = m_downSampleIterations - 1; i > 0; i--) {
+    for (int i = m_downSampleIterations - 1; i >= 1; i--) {
         modelViewProjectionMatrix.setToIdentity();
         modelViewProjectionMatrix.ortho(0, m_renderTextures[i].width(), m_renderTextures[i].height(), 0 , 0, 65535);
 
         m_shader->setModelViewProjectionMatrix(modelViewProjectionMatrix);
-        m_shader->setTargetSize(m_renderTextures[i].size());
+        m_shader->setTargetTextureSize(m_renderTextures[i].size());
 
         //Copy the image from this texture
         m_renderTextures[i + 1].bind();
@@ -702,7 +755,7 @@ void BlurEffect::copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount,
     m_shader->bind(BlurShader::CopySampleType);
 
     m_shader->setModelViewProjectionMatrix(screenProjection);
-    m_shader->setTargetSize(screenSize);
+    m_shader->setTargetTextureSize(screenSize);
 
     /*
      * This '1' sized adjustment is necessary do avoid windows affecting the blur that are
