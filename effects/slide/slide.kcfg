@@ -6,8 +6,17 @@
     http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true"/>
     <group name="Effect-Slide">
-        <entry name="Duration" type="Int">
+        <entry name="Duration" type="UInt">
             <default>0</default>
+        </entry>
+        <entry name="HorizontalGap" type="UInt">
+            <default>45</default>
+        </entry>
+        <entry name="VerticalGap" type="UInt">
+            <default>20</default>
+        </entry>
+        <entry name="SlideDocks" type="Bool">
+            <default>true</default>
         </entry>
     </group>
 </kcfg>

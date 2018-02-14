@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2017 Vlad Zagorodniy <vladzzag@gmail.com>
+Copyright (C) 2017, 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,13 +33,13 @@ class SlideEffectConfig : public KCModule
     Q_OBJECT
 
 public:
-    explicit SlideEffectConfig(QWidget *parent = 0, const QVariantList& args = QVariantList());
+    explicit SlideEffectConfig(QWidget *parent = nullptr, const QVariantList& args = QVariantList());
     ~SlideEffectConfig();
 
     void save();
 
 private:
-    ::Ui::SlideEffectConfig mUi;
+    ::Ui::SlideEffectConfig m_ui;
 };
 
 } // namespace KWin

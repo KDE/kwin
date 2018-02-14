@@ -520,7 +520,7 @@ EFFECT_FALLBACK
     }, {
         QStringLiteral("slide"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Slide"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Slide windows across the screen when switching virtual desktops"),
+        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Slide desktops when switching virtual desktops"),
         QStringLiteral("Virtual Desktop Switching Animation"),
         QStringLiteral("desktop-animations"),
         QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/slide.ogv")),

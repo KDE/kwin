@@ -4,6 +4,7 @@
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,25 +20,39 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
+// Qt
+#include <QEasingCurve>
+
+// KWayland
+#include <KWayland/Server/surface_interface.h>
+#include <KWayland/Server/blur_interface.h>
+#include <KWayland/Server/contrast_interface.h>
+
 #include "slide.h"
 // KConfigSkeleton
 #include "slideconfig.h"
-
-#include <math.h>
 
 namespace KWin
 {
 
 SlideEffect::SlideEffect()
-    : slide(false)
 {
     initConfig<SlideConfig>();
-    connect(effects, SIGNAL(desktopChanged(int,int,KWin::EffectWindow*)),
-            this, SLOT(slotDesktopChanged(int,int,KWin::EffectWindow*)));
-    connect(effects, &EffectsHandler::windowAdded, this, &SlideEffect::windowAdded);
-    connect(effects, &EffectsHandler::windowDeleted, this, &SlideEffect::windowDeleted);
-    mTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     reconfigure(ReconfigureAll);
+
+    QEasingCurve curve(QEasingCurve::OutCubic);
+    m_timeline.setEasingCurve(curve);
+
+    connect(effects, static_cast<void (EffectsHandler::*)(int,int,EffectWindow*)>(&EffectsHandler::desktopChanged),
+            this, &SlideEffect::desktopChanged);
+    connect(effects, &EffectsHandler::windowAdded,
+            this, &SlideEffect::windowAdded);
+    connect(effects, &EffectsHandler::windowDeleted,
+            this, &SlideEffect::windowDeleted);
+    connect(effects, &EffectsHandler::numberDesktopsChanged,
+            this, &SlideEffect::numberDesktopsChanged);
+    connect(effects, &EffectsHandler::numberScreensChanged,
+            this, &SlideEffect::numberScreensChanged);
 }
 
 bool SlideEffect::supported()
@@ -49,266 +64,474 @@ void SlideEffect::reconfigure(ReconfigureFlags)
 {
     SlideConfig::self()->read();
 
-    const auto d = animationTime(
-        SlideConfig::duration() != 0 ? SlideConfig::duration() : 250);
-    mTimeLine.setDuration(d);
+    const int d = animationTime(
+        SlideConfig::duration() > 0 ? SlideConfig::duration() : 500);
+    m_timeline.setDuration(d);
+
+    m_hGap = SlideConfig::horizontalGap();
+    m_vGap = SlideConfig::verticalGap();
+    m_slideDocks = SlideConfig::slideDocks();
 }
 
 void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (slide) {
-        mTimeLine.setCurrentTime(mTimeLine.currentTime() + time);
+    if (m_active) {
+        m_timeline.setCurrentTime(m_timeline.currentTime() + time);
+        data.mask |= PAINT_SCREEN_TRANSFORMED
+                  |  PAINT_SCREEN_BACKGROUND_FIRST;
+    }
 
-        // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
-        // so with normal screen painting second screen paint would erase parts of the first paint
-        if (mTimeLine.currentValue() != 1)
-            data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
-        else {
-            foreach (EffectWindow * w, effects->stackingOrder()) {
-                w->setData(WindowForceBlurRole, QVariant(false));
-                if (m_backgroundContrastForcedBefore.contains(w)) {
-                    w->setData(WindowForceBackgroundContrastRole, QVariant());
-                }
+    effects->prePaintScreen(data, time);
+}
+
+/**
+ * Wrap vector @p diff around grid @p w x @p h.
+ *
+ * Wrapping is done in such a way that magnitude of x and y component of vector
+ * @p diff is less than half of @p w and half of @p h, respectively. This will
+ * result in having the "shortest" path between two points.
+ *
+ * @param diff Vector between two points
+ * @param w Width of the desktop grid
+ * @param h Height of the desktop grid
+ */
+inline void wrapDiff(QPoint& diff, int w, int h)
+{
+    if (diff.x() > w/2) {
+        diff.setX(diff.x() - w);
+    } else if (diff.x() < -w/2) {
+        diff.setX(diff.x() + w);
+    }
+
+    if (diff.y() > h/2) {
+        diff.setY(diff.y() - h);
+    } else if (diff.y() < -h/2) {
+        diff.setY(diff.y() + h);
+    }
+}
+
+inline QRegion buildClipRegion(QPoint pos, int w, int h)
+{
+    const QSize screenSize = effects->virtualScreenSize();
+    QRegion r = QRect(pos, screenSize);
+    if (effects->optionRollOverDesktops()) {
+        r |= (r & QRect(-w, 0, w, h)).translated(w, 0);  // W
+        r |= (r & QRect(w, 0, w, h)).translated(-w, 0);  // E
+
+        r |= (r & QRect(0, -h, w, h)).translated(0, h);  // N
+        r |= (r & QRect(0, h, w, h)).translated(0, -h);  // S
+
+        r |= (r & QRect(-w, -h, w, h)).translated(w, h); // NW
+        r |= (r & QRect(w, -h, w, h)).translated(-w, h); // NE
+        r |= (r & QRect(w, h, w, h)).translated(-w, -h); // SE
+        r |= (r & QRect(-w, h, w, h)).translated(w, -h); // SW
+    }
+    return r;
+}
+
+void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+{
+    if (! m_active) {
+        effects->paintScreen(mask, region, data);
+        return;
+    }
+
+    const bool wrap = effects->optionRollOverDesktops();
+    const int w = workspaceWidth();
+    const int h = workspaceHeight();
+
+    QPoint currentPos = m_startPos + m_diff * m_timeline.currentValue();
+
+    // When "Desktop navigation wraps around" checkbox is checked, currentPos
+    // can be outside the rectangle Rect{x:-w, y:-h, width:2*w, height: 2*h},
+    // so we map currentPos back to the rect.
+    if (wrap) {
+        currentPos.setX(currentPos.x() % w);
+        currentPos.setY(currentPos.y() % h);
+    }
+
+    QVector<int> visibleDesktops;
+    visibleDesktops.reserve(4); // 4 - maximum number of visible desktops
+    QRegion clipRegion = buildClipRegion(currentPos, w, h);
+    for (int i = 1; i <= effects->numberOfDesktops(); i++) {
+        QRect desktopGeo = desktopGeometry(i);
+        if (! clipRegion.contains(desktopGeo)) {
+            continue;
+        }
+        visibleDesktops << i;
+    }
+
+    // When we enter a virtual desktop that has a window in fullscreen mode,
+    // stacking order is fine. When we leave a virtual desktop that has
+    // a window in fullscreen mode, stacking order is no longer valid
+    // because panels are raised above the fullscreen window. Construct
+    // a list of fullscreen windows, so we can decide later whether
+    // docks should be visible on different virtual desktops.
+    if (m_slideDocks) {
+        const auto windows = effects->stackingOrder();
+        m_paintCtx.fullscreenWindows.clear();
+        for (EffectWindow* w : windows) {
+            if (! w->isFullScreen()) {
+                continue;
             }
-            m_backgroundContrastForcedBefore.clear();
-            m_movingWindow = nullptr;
-            slide = false;
-            mTimeLine.setCurrentTime(0);
-            effects->setActiveFullScreenEffect(NULL);
+            m_paintCtx.fullscreenWindows << w;
         }
     }
-    effects->prePaintScreen(data, time);
+
+    // If screen is painted with either PAINT_SCREEN_TRANSFORMED or
+    // PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS there is no clipping!!
+    // Push the screen geometry to the paint clipper so everything outside
+    // of the screen geometry is clipped.
+    PaintClipper pc(QRegion(effects->virtualScreenGeometry()));
+
+    // Screen is painted in several passes. Each painting pass paints
+    // a single virtual desktop. There could be either 2 or 4 painting
+    // passes, depending how an user moves between virtual desktops.
+    // Windows, such as docks or keep-above windows, are painted in
+    // the last pass so they are above other windows.
+    const int lastDesktop = visibleDesktops.last();
+    for (int desktop : qAsConst(visibleDesktops)) {
+        m_paintCtx.desktop = desktop;
+        m_paintCtx.lastPass = (lastDesktop == desktop);
+        m_paintCtx.translation = desktopCoords(desktop) - currentPos;
+        if (wrap) {
+            wrapDiff(m_paintCtx.translation, w, h);
+        }
+        effects->paintScreen(mask, region, data);
+    }
+}
+
+/**
+ * Decide whether given window @p w should be transformed/translated.
+ * @returns @c true if given window @p w should be transformed, otherwise @c false
+ */
+bool SlideEffect::isTranslated(const EffectWindow* w) const
+{
+    if (w->isOnAllDesktops()) {
+        if (w->isDock()) {
+            return m_slideDocks;
+        }
+        return w->isDesktop();
+    } else if (w == m_movingWindow) {
+        return false;
+    } else if (w->isOnDesktop(m_paintCtx.desktop)) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Decide whether given window @p w should be painted.
+ * @returns @c true if given window @p w should be painted, otherwise @c false
+ */
+bool SlideEffect::isPainted(const EffectWindow* w) const
+{
+    if (w->isOnAllDesktops()) {
+        if (w->isDock()) {
+            if (! m_slideDocks) {
+                return m_paintCtx.lastPass;
+            }
+            for (const EffectWindow* fw : qAsConst(m_paintCtx.fullscreenWindows)) {
+                if (fw->isOnDesktop(m_paintCtx.desktop)
+                    && fw->screen() == w->screen()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        // In order to make sure that 'keep above' windows are above
+        // other windows during transition to another virtual desktop,
+        // they should be painted in the last pass.
+        if (w->keepAbove()) {
+            return m_paintCtx.lastPass;
+        }
+        return true;
+    } else if (w == m_movingWindow) {
+        return m_paintCtx.lastPass;
+    } else if (w->isOnDesktop(m_paintCtx.desktop)) {
+        return true;
+    }
+    return false;
 }
 
 void SlideEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
-    if (slide && w != m_movingWindow) {
-        if (w->isOnAllDesktops()) {
-            bool keep_above = w->keepAbove() || w->isDock();
-            if ((!slide_painting_sticky || keep_above) &&
-                (!keep_above || !slide_painting_keep_above)) {
-                w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-            }
-        } else if (w->isOnDesktop(painting_desktop)) {
-            data.setTransformed();
+    if (m_active) {
+        const bool painted = isPainted(w);
+        if (painted) {
             w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
         } else {
             w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+        }
+        if (painted && isTranslated(w)) {
+            data.setTransformed();
         }
     }
     effects->prePaintWindow(w, data, time);
 }
 
-void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
-{
-    if (mTimeLine.currentValue() == 0) {
-        effects->paintScreen(mask, region, data);
-        return;
-    }
-
-    /*
-     Transformations are done by remembering starting position of the change and the progress
-     of it, the destination is computed from the current desktop. Positions of desktops
-     are done using their topleft corner.
-    */
-    QPoint destPos = desktopRect(effects->currentDesktop()).topLeft();
-    QPoint diffPos = destPos - slide_start_pos;
-    int w = 0;
-    int h = 0;
-    if (effects->optionRollOverDesktops()) {
-        w = effects->workspaceWidth();
-        h = effects->workspaceHeight();
-        // wrap around if shorter
-        if (diffPos.x() > 0 && diffPos.x() > w / 2)
-            diffPos.setX(diffPos.x() - w);
-        if (diffPos.x() < 0 && abs(diffPos.x()) > w / 2)
-            diffPos.setX(diffPos.x() + w);
-        if (diffPos.y() > 0 && diffPos.y() > h / 2)
-            diffPos.setY(diffPos.y() - h);
-        if (diffPos.y() < 0 && abs(diffPos.y()) > h / 2)
-            diffPos.setY(diffPos.y() + h);
-    }
-    QPoint currentPos = slide_start_pos + mTimeLine.currentValue() * diffPos;
-    QRegion currentRegion = QRect(currentPos, effects->virtualScreenSize());
-    if (effects->optionRollOverDesktops()) {
-        currentRegion |= (currentRegion & QRect(-w, 0, w, h)).translated(w, 0);
-        currentRegion |= (currentRegion & QRect(0, -h, w, h)).translated(0, h);
-        currentRegion |= (currentRegion & QRect(w, 0, w, h)).translated(-w, 0);
-        currentRegion |= (currentRegion & QRect(0, h, w, h)).translated(0, -h);
-    }
-    bool do_sticky = true;
-    // Assure that the windows that are on all desktops and always on top
-    // are painted with the last screen (e.g. plasma's tooltips). All other windows
-    // that are on all desktops (e.g. the background window) are painted together
-    // with the first screen.
-    int last_desktop = 0;
-    QList<QRect> desktop_rects;
-    for (int desktop = 1;
-            desktop <= effects->numberOfDesktops();
-            ++desktop) {
-        QRect rect = desktopRect(desktop);
-        desktop_rects << rect;
-        if (currentRegion.contains(rect)) {
-            last_desktop = desktop;
-        }
-    }
-    for (int desktop = 1;
-            desktop <= effects->numberOfDesktops();
-            ++desktop) {
-        QRect rect = desktop_rects[desktop-1];
-        if (currentRegion.contains(rect)) {  // part of the desktop needs painting
-            painting_desktop = desktop;
-            slide_painting_sticky = do_sticky;
-            slide_painting_keep_above = (last_desktop == desktop);
-            slide_painting_diff = rect.topLeft() - currentPos;
-            const QSize screenSize = effects->virtualScreenSize();
-            if (effects->optionRollOverDesktops()) {
-                if (slide_painting_diff.x() > screenSize.width())
-                    slide_painting_diff.setX(slide_painting_diff.x() - w);
-                if (slide_painting_diff.x() < -screenSize.width())
-                    slide_painting_diff.setX(slide_painting_diff.x() + w);
-                if (slide_painting_diff.y() > screenSize.height())
-                    slide_painting_diff.setY(slide_painting_diff.y() - h);
-                if (slide_painting_diff.y() < -screenSize.height())
-                    slide_painting_diff.setY(slide_painting_diff.y() + h);
-            }
-            do_sticky = false; // paint on-all-desktop windows only once
-            // TODO mask parts that are not visible?
-            effects->paintScreen(mask, region, data);
-        }
-    }
-}
-
 void SlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (slide) {
-        // Do not move a window if it is on all desktops or being moved to another desktop.
-        if (!w->isOnAllDesktops() && w != m_movingWindow) {
-            data += slide_painting_diff;
-        }
+    if (m_active && isTranslated(w)) {
+        data += m_paintCtx.translation;
     }
     effects->paintWindow(w, mask, region, data);
 }
 
 void SlideEffect::postPaintScreen()
 {
-    if (slide)
+    if (m_active) {
+        if (m_timeline.currentValue() == 1) {
+            stop();
+        }
         effects->addRepaintFull();
+    }
     effects->postPaintScreen();
 }
 
-// Gives a position of the given desktop when all desktops are arranged in a grid
-QRect SlideEffect::desktopRect(int desktop) const
+/**
+ * Get position of the top-left corner of desktop @p id within desktop grid with gaps.
+ * @param id ID of a virtual desktop
+ */
+QPoint SlideEffect::desktopCoords(int id) const
 {
-    QRect rect = effects->virtualScreenGeometry();
-    rect.translate(effects->desktopCoords(desktop));
-    return rect;
+    QPoint c = effects->desktopCoords(id);
+    QPoint gridPos = effects->desktopGridCoords(id);
+    c.setX(c.x() + m_hGap * gridPos.x());
+    c.setY(c.y() + m_vGap * gridPos.y());
+    return c;
 }
 
-void SlideEffect::slotDesktopChanged(int old, int current, EffectWindow* with)
+/**
+ * Get geometry of desktop @p id within desktop grid with gaps.
+ * @param id ID of a virtual desktop
+ */
+QRect SlideEffect::desktopGeometry(int id) const
 {
-    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
-        return;
+    QRect g = effects->virtualScreenGeometry();
+    g.translate(desktopCoords(id));
+    return g;
+}
 
-    if (slide) { // old slide still in progress
-        QPoint diffPos = desktopRect(old).topLeft() - slide_start_pos;
-        int w = 0;
-        int h = 0;
-        if (effects->optionRollOverDesktops()) {
-            w = effects->workspaceWidth();
-            h = effects->workspaceHeight();
-            // wrap around if shorter
-            if (diffPos.x() > 0 && diffPos.x() > w / 2)
-                diffPos.setX(diffPos.x() - w);
-            if (diffPos.x() < 0 && abs(diffPos.x()) > w / 2)
-                diffPos.setX(diffPos.x() + w);
-            if (diffPos.y() > 0 && diffPos.y() > h / 2)
-                diffPos.setY(diffPos.y() - h);
-            if (diffPos.y() < 0 && abs(diffPos.y()) > h / 2)
-                diffPos.setY(diffPos.y() + h);
-        }
-        QPoint currentPos = slide_start_pos + mTimeLine.currentValue() * diffPos;
-        const QSize screenSize = effects->virtualScreenSize();
-        QRegion currentRegion = QRect(currentPos, screenSize);
-        if (effects->optionRollOverDesktops()) {
-            currentRegion |= (currentRegion & QRect(-w, 0, w, h)).translated(w, 0);
-            currentRegion |= (currentRegion & QRect(0, -h, w, h)).translated(0, h);
-            currentRegion |= (currentRegion & QRect(w, 0, w, h)).translated(-w, 0);
-            currentRegion |= (currentRegion & QRect(0, h, w, h)).translated(0, -h);
-        }
-        QRect rect = desktopRect(current);
-        if (currentRegion.contains(rect)) {
-            // current position is in new current desktop (e.g. quickly changing back),
-            // don't do full progress
-            if (abs(currentPos.x() - rect.x()) > abs(currentPos.y() - rect.y()))
-                mTimeLine.setCurrentTime((1.0 - abs(currentPos.x() - rect.x()) / double(screenSize.width()))*(qreal)mTimeLine.currentValue());
-            else
-                mTimeLine.setCurrentTime((1.0 - abs(currentPos.y() - rect.y()) / double(screenSize.height()))*(qreal)mTimeLine.currentValue());
-        } else // current position is not on current desktop, do full progress
-            mTimeLine.setCurrentTime(0);
-        diffPos = rect.topLeft() - currentPos;
-        if (mTimeLine.currentValue() <= 0) {
-            // Compute starting point for this new move (given current and end positions)
-            slide_start_pos = rect.topLeft() - diffPos * 1 / (1 - mTimeLine.currentValue());
-        } else {
-            // at the end, stop
-            foreach (EffectWindow * w, m_backgroundContrastForcedBefore) {
-                w->setData(WindowForceBackgroundContrastRole, QVariant());
-            }
-            m_backgroundContrastForcedBefore.clear();
-            slide = false;
-            mTimeLine.setCurrentTime(0);
-            effects->setActiveFullScreenEffect(NULL);
-        }
-    } else {
-        if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
-            return;
-        mTimeLine.setCurrentTime(0);
-        slide_start_pos = desktopRect(old).topLeft();
-        slide = true;
-        foreach (EffectWindow * w, effects->stackingOrder()) {
-            w->setData(WindowForceBlurRole, QVariant(true));
-            if (shouldForceBackgroundContrast(w)) {
-                m_backgroundContrastForcedBefore.append(w);
-                w->setData(WindowForceBackgroundContrastRole, QVariant(true));
-            }
-        }
-        effects->setActiveFullScreenEffect(this);
+/**
+ * Get width of a virtual desktop grid.
+ */
+int SlideEffect::workspaceWidth() const
+{
+    int w = effects->workspaceWidth();
+    w += m_hGap * effects->desktopGridWidth();
+    return w;
+}
+
+/**
+ * Get height of a virtual desktop grid.
+ */
+int SlideEffect::workspaceHeight() const
+{
+    int h = effects->workspaceHeight();
+    h += m_vGap * effects->desktopGridHeight();
+    return h;
+}
+
+bool SlideEffect::shouldForceBlur(const EffectWindow* w) const
+{
+    // While there is an active fullscreen effect, the blur effect
+    // tends to do nothing, i.e. it doesn't blur behind windows.
+    // So, we should force the blur effect to blur by setting
+    // WindowForceBlurRole.
+
+    if (w->data(WindowForceBlurRole).toBool()) {
+        return false;
     }
 
-    m_movingWindow = with;
+    if (w->data(WindowBlurBehindRole).isValid()) {
+        return true;
+    }
 
+    if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
+        return true;
+    }
+
+    // FIXME: it should be something like this:
+    //        if (surf) {
+    //            return !surf->blur().isNull();
+    //        }
+    KWayland::Server::SurfaceInterface* surf = w->surface();
+    if (surf && surf->blur()) {
+        return true;
+    }
+
+    // TODO: make it X11-specific(check _KDE_NET_WM_BLUR_BEHIND_REGION)
+    //       or delete it in the future
+    return w->hasAlpha();
+}
+
+bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow* w) const
+{
+    // While there is an active fullscreen effect, the background
+    // contrast effect tends to do nothing, i.e. it doesn't change
+    // contrast. So, we should force the background contrast effect
+    // to change contrast by setting WindowForceBackgroundContrastRole.
+
+    if (w->data(WindowForceBackgroundContrastRole).toBool()) {
+        return false;
+    }
+
+    if (w->data(WindowBackgroundContrastRole).isValid()) {
+        return true;
+    }
+
+    // FIXME: it should be something like this:
+    //        if (surf) {
+    //            return !surf->contrast().isNull();
+    //        }
+    KWayland::Server::SurfaceInterface* surf = w->surface();
+    if (surf && surf->contrast()) {
+        return true;
+    }
+
+    // TODO: make it X11-specific(check _KDE_NET_WM_BACKGROUND_CONTRAST_REGION)
+    //       or delete it in the future
+    return w->hasAlpha()
+        && w->isOnAllDesktops()
+        && (w->isDock() || w->keepAbove());
+}
+
+bool SlideEffect::shouldElevate(const EffectWindow* w) const
+{
+    // Static docks(i.e. this effect doesn't slide docks) should be elevated
+    // so they can properly animate themselves when an user enters or leaves
+    // a virtual desktop with a window in fullscreen mode.
+    return w->isDock() && !m_slideDocks;
+}
+
+void SlideEffect::start(int old, int current, EffectWindow* movingWindow)
+{
+    m_movingWindow = movingWindow;
+
+    const bool wrap = effects->optionRollOverDesktops();
+    const int w = workspaceWidth();
+    const int h = workspaceHeight();
+
+    if (m_active) {
+        QPoint passed = m_diff * m_timeline.currentValue();
+        QPoint currentPos = m_startPos + passed;
+        QPoint delta = desktopCoords(current) - desktopCoords(old);
+        if (wrap) {
+            wrapDiff(delta, w, h);
+        }
+        m_diff += delta - passed;
+        m_startPos = currentPos;
+        m_timeline.setCurrentTime(0);
+        return;
+    }
+
+    const auto windows = effects->stackingOrder();
+    for (EffectWindow* w : windows) {
+        if (shouldForceBlur(w)) {
+            w->setData(WindowForceBlurRole, QVariant(true));
+            m_forcedRoles.blur << w;
+        }
+        if (shouldForceBackgroundContrast(w)) {
+            w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+            m_forcedRoles.backgroundContrast << w;
+        }
+        if (shouldElevate(w)) {
+            effects->setElevatedWindow(w, true);
+            m_elevatedWindows << w;
+        }
+    }
+
+    m_diff = desktopCoords(current) - desktopCoords(old);
+    if (wrap) {
+        wrapDiff(m_diff, w, h);
+    }
+    m_startPos = desktopCoords(old);
+    m_timeline.setCurrentTime(0);
+    m_active = true;
+    effects->setActiveFullScreenEffect(this);
     effects->addRepaintFull();
+}
+
+void SlideEffect::stop()
+{
+    for (EffectWindow* w : m_forcedRoles.blur) {
+        w->setData(WindowForceBlurRole, QVariant(false));
+    }
+    m_forcedRoles.blur.clear();
+
+    for (EffectWindow* w : m_forcedRoles.backgroundContrast) {
+        w->setData(WindowForceBackgroundContrastRole, QVariant(false));
+    }
+    m_forcedRoles.backgroundContrast.clear();
+
+    for (EffectWindow* w : m_elevatedWindows) {
+        effects->setElevatedWindow(w, false);
+    }
+    m_elevatedWindows.clear();
+
+    m_paintCtx.fullscreenWindows.clear();
+    m_timeline.setCurrentTime(0);
+    m_movingWindow = nullptr;
+    m_active = false;
+    effects->setActiveFullScreenEffect(nullptr);
+}
+
+void SlideEffect::desktopChanged(int old, int current, EffectWindow* with)
+{
+    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this) {
+        return;
+    }
+    start(old, current, with);
 }
 
 void SlideEffect::windowAdded(EffectWindow *w)
 {
-    if (slide && shouldForceBackgroundContrast(w)) {
-        m_backgroundContrastForcedBefore.append(w);
+    if (! m_active) {
+        return;
+    }
+    if (shouldForceBlur(w)) {
+        w->setData(WindowForceBlurRole, QVariant(true));
+        m_forcedRoles.blur << w;
+    }
+    if (shouldForceBackgroundContrast(w)) {
         w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+        m_forcedRoles.backgroundContrast << w;
+    }
+    if (shouldElevate(w)) {
+        effects->setElevatedWindow(w, true);
+        m_elevatedWindows << w;
     }
 }
 
 void SlideEffect::windowDeleted(EffectWindow *w)
 {
-    m_backgroundContrastForcedBefore.removeAll(w);
-    if (w == m_movingWindow)
+    if (! m_active) {
+        return;
+    }
+    if (w == m_movingWindow) {
         m_movingWindow = nullptr;
+    }
+    m_forcedRoles.blur.removeAll(w);
+    m_forcedRoles.backgroundContrast.removeAll(w);
+    m_elevatedWindows.removeAll(w);
+    m_paintCtx.fullscreenWindows.removeAll(w);
 }
 
-bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow *w) const
+void SlideEffect::numberDesktopsChanged(uint)
 {
-    // Windows that are docks, kept above (such as panel popups), and do not
-    // have the background contrast explicitely disabled should be forced on
-    // during the slide animation
-    const bool bgWindow = (w->hasAlpha() && w->isOnAllDesktops() && (w->isDock() || w->keepAbove()));
-    return bgWindow && (!w->data(WindowForceBackgroundContrastRole).isValid());
+    if (! m_active) {
+        return;
+    }
+    stop();
 }
 
-bool SlideEffect::isActive() const
+void SlideEffect::numberScreensChanged()
 {
-    return slide;
+    if (! m_active) {
+        return;
+    }
+    stop();
 }
 
 } // namespace
-
