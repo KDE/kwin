@@ -260,6 +260,8 @@ private:
      * The Client for which the menu is shown.
      **/
     QWeakPointer<AbstractClient> m_client;
+    QAction *m_rulesOperation = nullptr;
+    QAction *m_applicationRulesOperation = nullptr;
 };
 
 class ShortcutDialog

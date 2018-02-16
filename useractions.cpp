@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "platform.h"
 #include "screens.h"
+#include "shell_client.h"
 #include "virtualdesktops.h"
 #include "scripting/scripting.h"
 
@@ -318,10 +319,12 @@ void UserActionsMenu::init()
     QAction *action = advancedMenu->addAction(i18n("Special &Window Settings..."));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::WindowRulesOp);
+    m_rulesOperation = action;
 
     action = advancedMenu->addAction(i18n("S&pecial Application Settings..."));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::ApplicationRulesOp);
+    m_applicationRulesOperation = action;
     if (!kwinApp()->config()->isImmutable() &&
             !KAuthorized::authorizeControlModules(configModules(true)).isEmpty()) {
         advancedMenu->addSeparator();
@@ -463,6 +466,15 @@ void UserActionsMenu::menuAboutToShow()
         // set it as the first item after desktop
         m_menu->insertAction(m_closeOperation, action);
         action->setText(i18n("&Extensions"));
+    }
+
+    // disable rules for Wayland windows - dialog is X11 only
+    if (qobject_cast<ShellClient*>(m_client.data())) {
+        m_rulesOperation->setEnabled(false);
+        m_applicationRulesOperation->setEnabled(false);
+    } else {
+        m_rulesOperation->setEnabled(true);
+        m_applicationRulesOperation->setEnabled(true);
     }
 
     showHideActivityMenu();

@@ -248,6 +248,7 @@ static int edit(Window wid, bool whole_app)
 extern "C"
 KWIN_EXPORT int kdemain(int argc, char* argv[])
 {
+    qputenv("QT_QPA_PLATFORM", "xcb");
     QApplication app(argc, argv);
     app.setApplicationDisplayName(i18n("KWin"));
     app.setApplicationName("kwin_rules_dialog");
