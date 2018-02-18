@@ -36,6 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
 
+#include <unistd.h>
+
 #include <memory>
 
 namespace KWin
@@ -48,6 +50,11 @@ eglBindWaylandDisplayWL_func eglBindWaylandDisplayWL = nullptr;
 eglUnbindWaylandDisplayWL_func eglUnbindWaylandDisplayWL = nullptr;
 eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 
+typedef EGLBoolean (*eglQueryDmaBufFormatsEXT_func) (EGLDisplay dpy, EGLint max_formats, EGLint *formats, EGLint *num_formats);
+typedef EGLBoolean (*eglQueryDmaBufModifiersEXT_func) (EGLDisplay dpy, EGLint format, EGLint max_modifiers, EGLuint64KHR *modifiers, EGLBoolean *external_only, EGLint *num_modifiers);
+eglQueryDmaBufFormatsEXT_func eglQueryDmaBufFormatsEXT = nullptr;
+eglQueryDmaBufModifiersEXT_func eglQueryDmaBufModifiersEXT = nullptr;
+
 #ifndef EGL_WAYLAND_BUFFER_WL
 #define EGL_WAYLAND_BUFFER_WL                   0x31D5
 #endif
@@ -58,6 +65,45 @@ eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 #define EGL_WAYLAND_Y_INVERTED_WL               0x31DB
 #endif
 
+#ifndef EGL_EXT_image_dma_buf_import
+#define EGL_LINUX_DMA_BUF_EXT                     0x3270
+#define EGL_LINUX_DRM_FOURCC_EXT                  0x3271
+#define EGL_DMA_BUF_PLANE0_FD_EXT                 0x3272
+#define EGL_DMA_BUF_PLANE0_OFFSET_EXT             0x3273
+#define EGL_DMA_BUF_PLANE0_PITCH_EXT              0x3274
+#define EGL_DMA_BUF_PLANE1_FD_EXT                 0x3275
+#define EGL_DMA_BUF_PLANE1_OFFSET_EXT             0x3276
+#define EGL_DMA_BUF_PLANE1_PITCH_EXT              0x3277
+#define EGL_DMA_BUF_PLANE2_FD_EXT                 0x3278
+#define EGL_DMA_BUF_PLANE2_OFFSET_EXT             0x3279
+#define EGL_DMA_BUF_PLANE2_PITCH_EXT              0x327A
+#define EGL_YUV_COLOR_SPACE_HINT_EXT              0x327B
+#define EGL_SAMPLE_RANGE_HINT_EXT                 0x327C
+#define EGL_YUV_CHROMA_HORIZONTAL_SITING_HINT_EXT 0x327D
+#define EGL_YUV_CHROMA_VERTICAL_SITING_HINT_EXT   0x327E
+#define EGL_ITU_REC601_EXT                        0x327F
+#define EGL_ITU_REC709_EXT                        0x3280
+#define EGL_ITU_REC2020_EXT                       0x3281
+#define EGL_YUV_FULL_RANGE_EXT                    0x3282
+#define EGL_YUV_NARROW_RANGE_EXT                  0x3283
+#define EGL_YUV_CHROMA_SITING_0_EXT               0x3284
+#define EGL_YUV_CHROMA_SITING_0_5_EXT             0x3285
+#endif // EGL_EXT_image_dma_buf_import
+
+#ifndef EGL_EXT_image_dma_buf_import_modifiers
+#define EGL_DMA_BUF_PLANE3_FD_EXT                 0x3440
+#define EGL_DMA_BUF_PLANE3_OFFSET_EXT             0x3441
+#define EGL_DMA_BUF_PLANE3_PITCH_EXT              0x3442
+#define EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT        0x3443
+#define EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT        0x3444
+#define EGL_DMA_BUF_PLANE1_MODIFIER_LO_EXT        0x3445
+#define EGL_DMA_BUF_PLANE1_MODIFIER_HI_EXT        0x3446
+#define EGL_DMA_BUF_PLANE2_MODIFIER_LO_EXT        0x3447
+#define EGL_DMA_BUF_PLANE2_MODIFIER_HI_EXT        0x3448
+#define EGL_DMA_BUF_PLANE3_MODIFIER_LO_EXT        0x3449
+#define EGL_DMA_BUF_PLANE3_MODIFIER_HI_EXT        0x344A
+#endif // EGL_EXT_image_dma_buf_import_modifiers
+
 AbstractEglBackend::AbstractEglBackend()
     : QObject(nullptr)
     , OpenGLBackend()
@@ -65,7 +111,12 @@ AbstractEglBackend::AbstractEglBackend()
     connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::unbindWaylandDisplay);
 }
 
-AbstractEglBackend::~AbstractEglBackend() = default;
+AbstractEglBackend::~AbstractEglBackend()
+{
+    for (auto *dmabuf : qAsConst(m_dmabufBuffers)) {
+        dmabuf->destroyImage();
+    }
+}
 
 void AbstractEglBackend::unbindWaylandDisplay()
 {
@@ -169,6 +220,13 @@ void AbstractEglBackend::initWayland()
             }
         }
     }
+
+    if (hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import_modifiers"))) {
+        eglQueryDmaBufFormatsEXT = (eglQueryDmaBufFormatsEXT_func) eglGetProcAddress("eglQueryDmaBufFormatsEXT");
+        eglQueryDmaBufModifiersEXT = (eglQueryDmaBufModifiersEXT_func) eglGetProcAddress("eglQueryDmaBufModifiersEXT");
+    }
+
+    m_haveDmabufImport = hasExtension(QByteArrayLiteral("EGL_EXT_image_dma_buf_import"));
 }
 
 void AbstractEglBackend::initClientExtensions()
@@ -285,6 +343,91 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     kwinApp()->platform()->setSceneEglSurface(surface);
 }
 
+void AbstractEglBackend::aboutToDestroy(EglDmabufBuffer *buffer)
+{
+    m_dmabufBuffers.removeOne(buffer);
+}
+
+QVector<uint32_t> AbstractEglBackend::supportedDrmFormats()
+{
+    if (!m_haveDmabufImport || eglQueryDmaBufFormatsEXT == nullptr)
+        return QVector<uint32_t>();
+
+    EGLint count = 0;
+    EGLBoolean success = eglQueryDmaBufFormatsEXT(m_display, 0, NULL, &count);
+
+    if (success && count > 0) {
+        QVector<uint32_t> formats(count);
+        if (eglQueryDmaBufFormatsEXT(m_display, count, (EGLint *) formats.data(), &count)) {
+            return formats;
+        }
+    }
+
+    return QVector<uint32_t>();
+}
+
+QVector<uint64_t> AbstractEglBackend::supportedDrmModifiers(uint32_t format)
+{
+    if (!m_haveDmabufImport || eglQueryDmaBufModifiersEXT == nullptr)
+        return QVector<uint64_t>();
+
+    EGLint count = 0;
+    EGLBoolean success = eglQueryDmaBufModifiersEXT(m_display, format, 0, NULL, NULL, &count);
+
+    if (success && count > 0) {
+        QVector<uint64_t> modifiers(count);
+        if (eglQueryDmaBufModifiersEXT(m_display, format, count, modifiers.data(), NULL, &count)) {
+            return modifiers;
+        }
+    }
+
+    return QVector<uint64_t>();
+}
+
+KWayland::Server::LinuxDmabuf::Buffer *AbstractEglBackend::importDmabufBuffer(const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                                                                              uint32_t format,
+                                                                              const QSize &size,
+                                                                              KWayland::Server::LinuxDmabuf::Flags flags)
+{
+    if (!m_haveDmabufImport)
+        return nullptr;
+
+    // FIXME: Add support for multi-planar images
+    if (planes.count() != 1)
+        return nullptr;
+
+    const EGLint attribs[] = {
+        EGL_WIDTH,                          size.width(),
+        EGL_HEIGHT,                         size.height(),
+        EGL_LINUX_DRM_FOURCC_EXT,           EGLint(format),
+        EGL_DMA_BUF_PLANE0_FD_EXT,          planes[0].fd,
+        EGL_DMA_BUF_PLANE0_OFFSET_EXT,      EGLint(planes[0].offset),
+        EGL_DMA_BUF_PLANE0_PITCH_EXT,       EGLint(planes[0].stride),
+        EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT, EGLint(planes[0].modifier & 0xffffffff),
+        EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT, EGLint(planes[0].modifier >> 32),
+        EGL_NONE
+    };
+
+    // Note that the EGLImage does NOT take onwership of the file descriptors
+    EGLImage image = eglCreateImageKHR(m_display, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, (EGLClientBuffer) nullptr, attribs);
+    if (image == EGL_NO_IMAGE_KHR)
+        return nullptr;
+
+    EglDmabufBuffer *buffer = new EglDmabufBuffer(image, planes, format, size, flags, this);
+
+    // We keep a list of the buffers we have imported so we can clean up the EGL images
+    // from the AbstractEglBackend destructor.
+    m_dmabufBuffers.append(buffer);
+
+    return buffer;
+}
+
+
+
+// --------------------------------------------------------------------
+
+
+
 AbstractEglTexture::AbstractEglTexture(SceneOpenGLTexture *texture, AbstractEglBackend *backend)
     : SceneOpenGLTexturePrivate()
     , q(texture)
@@ -319,11 +462,13 @@ bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
     if (auto s = pixmap->surface()) {
         s->resetTrackedDamage();
     }
-    if (buffer->shmBuffer()) {
+    if (buffer->linuxDmabufBuffer()) {
+        return loadDmabufTexture(buffer);
+    } else if (buffer->shmBuffer()) {
         return loadShmTexture(buffer);
-    } else {
-        return loadEglTexture(buffer);
     }
+
+    return loadEglTexture(buffer);
 }
 
 void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
@@ -340,12 +485,32 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         return;
     }
     auto s = pixmap->surface();
+    if (EglDmabufBuffer *dmabuf = static_cast<EglDmabufBuffer *>(buffer->linuxDmabufBuffer())) {
+        q->bind();
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) dmabuf->image());
+        q->unbind();
+        if (m_image != EGL_NO_IMAGE_KHR) {
+            eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
+        }
+        m_image = EGL_NO_IMAGE_KHR; // The wl_buffer has ownership of the image
+        const bool yInverted = dmabuf->flags() & KWayland::Server::LinuxDmabuf::YInverted;
+        if (m_size != dmabuf->size() || yInverted != q->isYInverted()) {
+            m_size = dmabuf->size();
+            q->setYInverted(yInverted);
+        }
+        if (s) {
+            s->resetTrackedDamage();
+        }
+        return;
+    }
     if (!buffer->shmBuffer()) {
         q->bind();
         EGLImageKHR image = attach(buffer);
         q->unbind();
         if (image != EGL_NO_IMAGE_KHR) {
-            eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
+            if (m_image != EGL_NO_IMAGE_KHR) {
+                eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
+            }
             m_image = image;
         }
         if (s) {
@@ -465,6 +630,30 @@ bool AbstractEglTexture::loadEglTexture(const QPointer< KWayland::Server::Buffer
     return true;
 }
 
+bool AbstractEglTexture::loadDmabufTexture(const QPointer< KWayland::Server::BufferInterface > &buffer)
+{
+    EglDmabufBuffer *dmabuf = static_cast<EglDmabufBuffer *>(buffer->linuxDmabufBuffer());
+    if (!dmabuf || dmabuf->image() == EGL_NO_IMAGE_KHR) {
+        qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
+        q->discard();
+        return false;
+    }
+
+    assert(m_image == EGL_NO_IMAGE_KHR);
+
+    glGenTextures(1, &m_texture);
+    q->setWrapMode(GL_CLAMP_TO_EDGE);
+    q->setFilter(GL_NEAREST);
+    q->bind();
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) dmabuf->image());
+    q->unbind();
+
+    m_size = dmabuf->size();
+    q->setYInverted(dmabuf->flags() & KWayland::Server::LinuxDmabuf::YInverted);
+
+    return true;
+}
+
 EGLImageKHR AbstractEglTexture::attach(const QPointer< KWayland::Server::BufferInterface > &buffer)
 {
     EGLint format, yInverted;
@@ -507,5 +696,51 @@ bool AbstractEglTexture::updateFromFBO(const QSharedPointer<QOpenGLFramebufferOb
     return true;
 }
 
+
+
+// --------------------------------------------------------------------
+
+
+
+EglDmabufBuffer::EglDmabufBuffer(EGLImage image,
+                                 const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                                 uint32_t format,
+                                 const QSize &size,
+                                 KWayland::Server::LinuxDmabuf::Flags flags,
+                                 AbstractEglBackend *backend)
+    : KWayland::Server::LinuxDmabuf::Buffer(format, size),
+      m_backend(backend),
+      m_image(image),
+      m_planes(planes),
+      m_flags(flags)
+{
 }
+
+EglDmabufBuffer::~EglDmabufBuffer()
+{
+    if (m_backend) {
+        m_backend->aboutToDestroy(this);
+
+        assert(m_image != EGL_NO_IMAGE_KHR);
+        eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
+    }
+
+    // Close all open file descriptors
+    for (int i = 0; i < m_planes.count(); i++) {
+        if (m_planes[i].fd != -1)
+            ::close(m_planes[i].fd);
+        m_planes[i].fd = -1;
+    }
+}
+
+void EglDmabufBuffer::destroyImage()
+{
+    assert(m_image != EGL_NO_IMAGE_KHR);
+    eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
+    m_image = EGL_NO_IMAGE_KHR;
+    m_backend = nullptr;
+}
+
+
+} // namespace KWin
 

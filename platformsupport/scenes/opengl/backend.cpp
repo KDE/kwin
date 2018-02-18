@@ -116,4 +116,30 @@ void OpenGLBackend::copyPixels(const QRegion &region)
     }
 }
 
+QVector<uint32_t> OpenGLBackend::supportedDrmFormats()
+{
+    return QVector<uint32_t>();
+}
+
+QVector<uint64_t> OpenGLBackend::supportedDrmModifiers(uint32_t format)
+{
+    Q_UNUSED(format)
+
+    return QVector<uint64_t>();
+}
+
+KWayland::Server::LinuxDmabuf::Buffer *OpenGLBackend::importDmabufBuffer(const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                                                                         uint32_t format,
+                                                                         const QSize &size,
+                                                                         KWayland::Server::LinuxDmabuf::Flags flags)
+{
+    Q_UNUSED(planes)
+    Q_UNUSED(format)
+    Q_UNUSED(size)
+    Q_UNUSED(flags)
+
+    return nullptr;
+}
+
+
 }

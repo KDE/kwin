@@ -738,6 +738,24 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     return m_backend->renderTime();
 }
 
+QVector<uint32_t> SceneOpenGL::supportedDrmFormats()
+{
+    return m_backend->supportedDrmFormats();
+}
+
+QVector<uint64_t> SceneOpenGL::supportedDrmModifiers(uint32_t format)
+{
+    return m_backend->supportedDrmModifiers(format);
+}
+
+KWayland::Server::LinuxDmabuf::Buffer *SceneOpenGL::importDmabufBuffer(const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                                                                       uint32_t format,
+                                                                       const QSize &size,
+                                                                       KWayland::Server::LinuxDmabuf::Flags flags)
+{
+    return m_backend->importDmabufBuffer(planes, format, size, flags);
+}
+
 QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) const
 {
     QMatrix4x4 matrix;

@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "kwineffects.h"
 
+#include <KWayland/Server/linuxdmabuf_v1_interface.h>
+
 #include <QElapsedTimer>
 #include <QMatrix4x4>
 
@@ -183,6 +185,30 @@ public:
      * Default implementation returns empty list
      **/
     virtual QVector<QByteArray> openGLPlatformInterfaceExtensions() const;
+
+    /**
+     * Returns the DRM formats supported by the underlying graphics stack.
+     *
+     * The default implementation returns an empty vector.
+     */
+    virtual QVector<uint32_t> supportedDrmFormats();
+
+    /**
+     * Returns the DRM modifiers supported with the given format.
+     *
+     * The default implementation returns an empty vector.
+     */
+    virtual QVector<uint64_t> supportedDrmModifiers(uint32_t format);
+
+    /**
+     * Imports a dmabuf-buffer into the graphics system used by the scene.
+     *
+     * The default implementation returns nullptr.
+     */
+    virtual KWayland::Server::LinuxDmabuf::Buffer *importDmabufBuffer(const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                                                                      uint32_t format,
+                                                                      const QSize &size,
+                                                                      KWayland::Server::LinuxDmabuf::Flags flags = 0);
 
 Q_SIGNALS:
     void frameRendered();

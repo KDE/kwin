@@ -60,6 +60,7 @@ class OutputManagementInterface;
 class OutputConfigurationInterface;
 class XdgShellInterface;
 class XdgForeignInterface;
+class LinuxDmabufUnstableV1Interface;
 }
 }
 
@@ -69,6 +70,8 @@ class ShellClient;
 
 class AbstractClient;
 class Toplevel;
+
+class LinuxDmabufBridge;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -253,6 +256,8 @@ private:
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
     InitalizationFlags m_initFlags;
     QVector<KWayland::Server::PlasmaShellSurfaceInterface*> m_plasmaShellSurfaces;
+    KWayland::Server::LinuxDmabufUnstableV1Interface *m_linuxDmabuf;
+    LinuxDmabufBridge *m_linuxDmabufBridge;
     KWIN_SINGLETON(WaylandServer)
 };
 

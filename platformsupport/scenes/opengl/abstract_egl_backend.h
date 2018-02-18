@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "texture.h"
 
 #include <QObject>
+#include <QLinkedList>
 #include <epoxy/egl.h>
 #include <fixx11h.h>
 
@@ -38,6 +39,8 @@ class BufferInterface;
 
 namespace KWin
 {
+
+class EglDmabufBuffer;
 
 class KWIN_EXPORT AbstractEglBackend : public QObject, public OpenGLBackend
 {
@@ -59,6 +62,15 @@ public:
     EGLConfig config() const {
         return m_config;
     }
+
+    void aboutToDestroy(EglDmabufBuffer *buffer);
+
+    QVector<uint32_t> supportedDrmFormats() override;
+    QVector<uint64_t> supportedDrmModifiers(uint32_t format) override;
+    KWayland::Server::LinuxDmabuf::Buffer *importDmabufBuffer(const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                                                              uint32_t format,
+                                                              const QSize &size,
+                                                              KWayland::Server::LinuxDmabuf::Flags flags) override;
 
 protected:
     AbstractEglBackend();
@@ -85,6 +97,8 @@ private:
     EGLContext m_context = EGL_NO_CONTEXT;
     EGLConfig m_config = nullptr;
     QList<QByteArray> m_clientExtensions;
+    QLinkedList<EglDmabufBuffer *> m_dmabufBuffers;
+    bool m_haveDmabufImport = false;
 };
 
 class KWIN_EXPORT AbstractEglTexture : public SceneOpenGLTexturePrivate
@@ -110,11 +124,36 @@ protected:
 private:
     bool loadShmTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
     bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
+    bool loadDmabufTexture(const QPointer< KWayland::Server::BufferInterface > &buffer);
     EGLImageKHR attach(const QPointer<KWayland::Server::BufferInterface> &buffer);
     bool updateFromFBO(const QSharedPointer<QOpenGLFramebufferObject> &fbo);
     SceneOpenGLTexture *q;
     AbstractEglBackend *m_backend;
     EGLImageKHR m_image;
+};
+
+class KWIN_EXPORT EglDmabufBuffer : public KWayland::Server::LinuxDmabuf::Buffer
+{
+public:
+    EglDmabufBuffer(EGLImage image,
+                    const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                    uint32_t format,
+                    const QSize &size,
+                    KWayland::Server::LinuxDmabuf::Flags flags,
+                    AbstractEglBackend *backend);
+    ~EglDmabufBuffer() override;
+
+    EGLImage image() const { return m_image; }
+    KWayland::Server::LinuxDmabuf::Flags flags() const { return m_flags; }
+    const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes() const { return m_planes; }
+
+    void destroyImage();
+
+private:
+    AbstractEglBackend *m_backend;
+    EGLImage m_image;
+    QVector<KWayland::Server::LinuxDmabuf::Plane> m_planes;
+    KWayland::Server::LinuxDmabuf::Flags m_flags;
 };
 
 }

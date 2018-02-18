@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "shell_client.h"
 #include "workspace.h"
+#include "scene.h"
 
 // Client
 #include <KWayland/Client/connection_thread.h>
@@ -58,6 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/outputconfiguration_interface.h>
 #include <KWayland/Server/xdgshell_interface.h>
 #include <KWayland/Server/xdgforeign_interface.h>
+#include <KWayland/Server/linuxdmabuf_v1_interface.h>
 
 // Qt
 #include <QThread>
@@ -78,6 +80,39 @@ namespace KWin
 
 KWIN_SINGLETON_FACTORY(WaylandServer)
 
+
+class LinuxDmabufBridge : public LinuxDmabufUnstableV1Interface::Bridge
+{
+public:
+    LinuxDmabufBridge() = default;
+    ~LinuxDmabufBridge() = default;
+
+    QVector<uint32_t> supportedFormats() const override final;
+    QVector<uint64_t> supportedModifiers(uint32_t format) const override final;
+    LinuxDmabuf::Buffer *importBuffer(const QVector<LinuxDmabuf::Plane> &planes, uint32_t format, const QSize &size, LinuxDmabuf::Flags flags) override final;
+};
+
+QVector<uint32_t> LinuxDmabufBridge::supportedFormats() const
+{
+    return Compositor::self()->scene()->supportedDrmFormats();
+}
+
+QVector<uint64_t> LinuxDmabufBridge::supportedModifiers(uint32_t format) const
+{
+    return Compositor::self()->scene()->supportedDrmModifiers(format);
+}
+
+LinuxDmabuf::Buffer *LinuxDmabufBridge::importBuffer(const QVector<LinuxDmabuf::Plane> &planes, uint32_t format, const QSize &size, LinuxDmabuf::Flags flags)
+{
+    return Compositor::self()->scene()->importDmabufBuffer(planes, format, size, flags);
+}
+
+
+
+// --------------------------------------------------------------------
+
+
+
 WaylandServer::WaylandServer(QObject *parent)
     : QObject(parent)
 {
@@ -90,6 +125,8 @@ WaylandServer::WaylandServer(QObject *parent)
 WaylandServer::~WaylandServer()
 {
     destroyInputMethodConnection();
+    m_linuxDmabuf->setBridge(nullptr);
+    delete m_linuxDmabufBridge;
 }
 
 void WaylandServer::destroyInternalConnection()
@@ -358,6 +395,12 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 
     m_XdgForeign = m_display->createXdgForeignInterface(m_display);
     m_XdgForeign->create();
+
+    m_linuxDmabufBridge = new LinuxDmabufBridge;
+
+    m_linuxDmabuf = m_display->createLinuxDmabufInterface(m_display);
+    m_linuxDmabuf->setBridge(m_linuxDmabufBridge);
+    m_linuxDmabuf->create();
 
     return true;
 }

@@ -82,6 +82,13 @@ public:
 
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
 
+    QVector<uint32_t> supportedDrmFormats() override final;
+    QVector<uint64_t> supportedDrmModifiers(uint32_t format) override final;
+    KWayland::Server::LinuxDmabuf::Buffer *importDmabufBuffer(const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                                                              uint32_t format,
+                                                              const QSize &size,
+                                                              KWayland::Server::LinuxDmabuf::Flags flags = 0) override final;
+
     static SceneOpenGL *createScene(QObject *parent);
 
 protected:

@@ -677,6 +677,31 @@ QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
     return QVector<QByteArray>{};
 }
 
+QVector<uint32_t> Scene::supportedDrmFormats()
+{
+    return QVector<uint32_t>();
+}
+
+QVector<uint64_t> Scene::supportedDrmModifiers(uint32_t format)
+{
+    Q_UNUSED(format)
+
+    return QVector<uint64_t>();
+}
+
+KWayland::Server::LinuxDmabuf::Buffer *Scene::importDmabufBuffer(const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                                                                 uint32_t format,
+                                                                 const QSize &size,
+                                                                 KWayland::Server::LinuxDmabuf::Flags flags)
+{
+    Q_UNUSED(planes)
+    Q_UNUSED(format)
+    Q_UNUSED(size)
+    Q_UNUSED(flags)
+
+    return nullptr;
+}
+
 //****************************************
 // Scene::Window
 //****************************************

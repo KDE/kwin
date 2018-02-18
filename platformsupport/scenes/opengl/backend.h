@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwin_export.h>
 
+#include <KWayland/Server/linuxdmabuf_v1_interface.h>
+
 namespace KWin
 {
 class OpenGLBackend;
@@ -196,6 +198,30 @@ public:
      * Copy a region of pixels from the current read to the current draw buffer
      */
     void copyPixels(const QRegion &region);
+
+    /**
+     * Returns the list of the DRM format codes supported by the underlying graphics stack.
+     *
+     * The default implementation returns an empty vector.
+     */
+    virtual QVector<uint32_t> supportedDrmFormats();
+
+    /**
+     * Returns the list of the DRM modifiers supported with the given format.
+     *
+     * The default implementation returns an empty vector.
+     */
+    virtual QVector<uint64_t> supportedDrmModifiers(uint32_t format);
+
+    /**
+     * Imports a dmabuf-buffer into the graphics system.
+     *
+     * The default implementation returns nullptr.
+     */
+    virtual KWayland::Server::LinuxDmabuf::Buffer *importDmabufBuffer(const QVector<KWayland::Server::LinuxDmabuf::Plane> &planes,
+                                                                      uint32_t format,
+                                                                      const QSize &size,
+                                                                      KWayland::Server::LinuxDmabuf::Flags flags);
 
 protected:
     /**
