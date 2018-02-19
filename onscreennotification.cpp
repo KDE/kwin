@@ -193,7 +193,14 @@ void OnScreenNotification::ensureQmlComponent()
     }
     m_qmlComponent->loadUrl(QUrl::fromLocalFile(fileName));
     if (!m_qmlComponent->isError()) {
-        m_mainItem.reset(m_qmlComponent->create(m_qmlContext.data()));
+        m_mainItem.reset(m_qmlComponent->beginCreate(m_qmlContext.data()));
+        if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+            QObject::connect(w, &QQuickWindow::sceneGraphError, [&](QQuickWindow::SceneGraphError error, const QString &message) {
+                                 Q_UNUSED(error)
+                                 qCritical() << "Scene graph error in OnScreenNotification:" << message;
+                             });
+            m_qmlComponent->completeCreate();
+        }
     } else {
         m_qmlComponent.reset();
     }

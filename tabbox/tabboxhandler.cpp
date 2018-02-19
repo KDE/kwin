@@ -284,7 +284,14 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
                                             "Contact your distribution about this.") << QStringLiteral("20");
         KProcess::startDetached(QStringLiteral("kdialog"), args);
     } else {
-        QObject *object = m_qmlComponent->create(m_qmlContext.data());
+        QObject *object = m_qmlComponent->beginCreate(m_qmlContext.data());
+        if (QQuickWindow *w = qobject_cast<QQuickWindow*>(object)) {
+            QObject::connect(w, &QQuickWindow::sceneGraphError, [](QQuickWindow::SceneGraphError error, const QString &message) {
+                                 Q_UNUSED(error)
+                                 qCCritical(KWIN_TABBOX) << "Scene graph error in TabBoxHandlerPrivate:" << message;
+                             });
+            m_qmlComponent->completeCreate();
+        }
         if (desktopMode) {
             m_desktopTabBoxes.insert(config.layoutName(), object);
         } else {

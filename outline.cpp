@@ -178,7 +178,14 @@ void CompositedOutlineVisual::show()
         if (m_qmlComponent->isError()) {
             qCDebug(KWIN_CORE) << "Component failed to load: " << m_qmlComponent->errors();
         } else {
-            m_mainItem.reset(m_qmlComponent->create(m_qmlContext.data()));
+            m_mainItem.reset(m_qmlComponent->beginCreate(m_qmlContext.data()));
+            if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
+                QObject::connect(w, &QQuickWindow::sceneGraphError, [&](QQuickWindow::SceneGraphError error, const QString &message) {
+                                     Q_UNUSED(error)
+                                     qCCritical(KWIN_CORE) << "Scene graph error in CompositedOutlineVisual: " << message;
+                                 });
+                m_qmlComponent->completeCreate();
+            }
         }
     }
 }
