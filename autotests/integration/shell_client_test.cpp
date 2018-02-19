@@ -89,6 +89,8 @@ private Q_SLOTS:
     void testX11WindowId_data();
     void testX11WindowId();
     void testAppMenu();
+    void testNoDecorationModeRequested_data();
+    void testNoDecorationModeRequested();
 };
 
 void TestShellClient::initTestCase()
@@ -981,6 +983,33 @@ void TestShellClient::testAppMenu()
     QVERIFY (QDBusConnection::sessionBus().unregisterService("org.kde.kappmenu"));
 }
 
+void TestShellClient::testNoDecorationModeRequested_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+}
+
+void TestShellClient::testNoDecorationModeRequested()
+{
+    // this test verifies that the decoration follows the default mode if no mode is explicitly requested
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
+    QSignalSpy decoSpy(deco.data(), &ServerSideDecoration::modeChanged);
+    QVERIFY(decoSpy.isValid());
+    if (deco->mode() != ServerSideDecoration::Mode::Server) {
+        QVERIFY(decoSpy.wait());
+    }
+    QCOMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(c->noBorder(), false);
+    QCOMPARE(c->isDecorated(), true);
+}
 
 WAYLANDTEST_MAIN(TestShellClient)
 #include "shell_client_test.moc"
