@@ -1096,9 +1096,13 @@ public:
         }
         m_lastGlobalTouchPos = pos;
         m_lastLocalTouchPos = pos - decoration->client()->pos();
-        QHoverEvent e(QEvent::HoverMove, m_lastLocalTouchPos, m_lastLocalTouchPos);
-        QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-        decoration->client()->processDecorationMove(m_lastLocalTouchPos.toPoint(), pos.toPoint());
+        if (auto c = workspace()->getMovingClient()) {
+            c->updateMoveResize(pos);
+        } else {
+            QHoverEvent e(QEvent::HoverMove, m_lastLocalTouchPos, m_lastLocalTouchPos);
+            QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
+            decoration->client()->processDecorationMove(m_lastLocalTouchPos.toPoint(), pos.toPoint());
+        }
         return true;
     }
     bool touchUp(quint32 id, quint32 time) override {
@@ -1115,10 +1119,14 @@ public:
             return true;
         }
         // send mouse up
-        QMouseEvent e(QEvent::MouseButtonRelease, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::MouseButtons(), input()->keyboardModifiers());
-        e.setAccepted(false);
-        QCoreApplication::sendEvent(decoration->decoration(), &e);
-        decoration->client()->processDecorationButtonRelease(&e);
+        if (auto c = workspace()->getMovingClient()) {
+            c->endMoveResize();
+        } else {
+            QMouseEvent e(QEvent::MouseButtonRelease, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::MouseButtons(), input()->keyboardModifiers());
+            e.setAccepted(false);
+            QCoreApplication::sendEvent(decoration->decoration(), &e);
+            decoration->client()->processDecorationButtonRelease(&e);
+        }
 
         m_lastGlobalTouchPos = QPointF();
         m_lastLocalTouchPos = QPointF();
