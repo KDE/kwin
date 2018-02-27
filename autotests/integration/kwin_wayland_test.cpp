@@ -48,6 +48,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     : Application(mode, argc, argv)
 {
     QStandardPaths::setTestModeEnabled(true);
+    QIcon::setThemeName(QStringLiteral("breeze"));
 #ifdef KWIN_BUILD_ACTIVITIES
     setUseKActivities(false);
 #endif
