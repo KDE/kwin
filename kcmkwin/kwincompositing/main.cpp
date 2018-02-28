@@ -23,6 +23,7 @@
 #include "compositing.h"
 #include "model.h"
 #include "ui_compositing.h"
+#include <QAction>
 #include <QApplication>
 #include <QLayout>
 
