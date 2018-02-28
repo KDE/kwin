@@ -62,6 +62,7 @@ public:
 
 private:
     static Private *cast(wl_resource *native);
+    static void releaseCallback(wl_client *client, wl_resource *resource);
     static void unbind(wl_resource *resource);
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     int32_t toTransform() const;
@@ -71,11 +72,12 @@ private:
 
     OutputInterface *q;
     static QVector<Private*> s_privates;
+    static const struct wl_output_interface s_interface;
     static const quint32 s_version;
 };
 
 QVector<OutputInterface::Private*> OutputInterface::Private::s_privates;
-const quint32 OutputInterface::Private::s_version = 2;
+const quint32 OutputInterface::Private::s_version = 3;
 
 OutputInterface::Private::Private(OutputInterface *q, Display *d)
     : Global::Private(d, &wl_output_interface, s_version)
@@ -87,6 +89,18 @@ OutputInterface::Private::Private(OutputInterface *q, Display *d)
 OutputInterface::Private::~Private()
 {
     s_privates.removeAll(this);
+}
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+const struct wl_output_interface OutputInterface::Private::s_interface = {
+    releaseCallback
+};
+#endif
+
+void OutputInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client);
+    unbind(resource);
 }
 
 OutputInterface *OutputInterface::Private::get(wl_resource *native)
@@ -303,7 +317,7 @@ void OutputInterface::Private::bind(wl_client *client, uint32_t version, uint32_
         return;
     }
     wl_resource_set_user_data(resource, this);
-    wl_resource_set_destructor(resource, unbind);
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
     ResourceData r;
     r.resource = resource;
     r.version = version;
