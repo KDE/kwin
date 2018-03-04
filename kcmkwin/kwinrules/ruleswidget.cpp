@@ -58,6 +58,8 @@ RulesWidget::RulesWidget(QWidget* parent)
 {
     Q_UNUSED(parent);
     setupUi(this);
+    detect->setVisible(KWindowSystem::isPlatformX11());
+    detection_delay->setVisible(KWindowSystem::isPlatformX11());
     QRegularExpressionValidator* validator = new QRegularExpressionValidator(QRegularExpression("[0-9\\-+,xX:]*"), this);
     maxsize->setValidator(validator);
     minsize->setValidator(validator);

@@ -61,6 +61,8 @@ private Q_SLOTS:
     void testMove();
     void testSkipCloseAnimation_data();
     void testSkipCloseAnimation();
+    void testModifierClickUnrestrictedMove();
+    void testModifierScroll();
 };
 
 class HelperWindow : public QRasterWindow
@@ -175,6 +177,7 @@ void InternalWindowTest::initTestCase()
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setOutputCount", Qt::DirectConnection, Q_ARG(int, 2));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+    kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
@@ -212,6 +215,7 @@ void InternalWindowTest::testEnterLeave()
     ShellClient *c = clientAddedSpy.first().first().value<ShellClient*>();
     QVERIFY(c->isInternal());
     QCOMPARE(c->icon().name(), QStringLiteral("wayland"));
+    QVERIFY(!c->isDecorated());
     QCOMPARE(workspace()->findToplevel(&win), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 100));
     QVERIFY(c->isShown(false));
@@ -587,6 +591,84 @@ void InternalWindowTest::testSkipCloseAnimation()
     win.setProperty("KWIN_SKIP_CLOSE_ANIMATION", initial);
     QCOMPARE(skipCloseChangedSpy.count(), 2);
     QCOMPARE(internalClient->skipsCloseAnimation(), initial);
+}
+
+void InternalWindowTest::testModifierClickUnrestrictedMove()
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    win.setFlags(win.flags() & ~Qt::FramelessWindowHint);
+    win.show();
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QVERIFY(internalClient->isDecorated());
+
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAll1", "Move");
+    group.writeEntry("CommandAll2", "Move");
+    group.writeEntry("CommandAll3", "Move");
+    group.sync();
+    workspace()->slotReconfigure();
+    QCOMPARE(options->commandAllModifier(), Qt::AltModifier);
+    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+
+    // move cursor on window
+    Cursor::setPos(internalClient->geometry().center());
+
+    // simulate modifier+click
+    quint32 timestamp = 1;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    QVERIFY(!internalClient->isMove());
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QVERIFY(internalClient->isMove());
+    // release modifier should not change it
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    QVERIFY(internalClient->isMove());
+    // but releasing the key should end move/resize
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    QVERIFY(!internalClient->isMove());
+}
+
+void InternalWindowTest::testModifierScroll()
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    win.setFlags(win.flags() & ~Qt::FramelessWindowHint);
+    win.show();
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QVERIFY(internalClient->isDecorated());
+
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAllWheel", "change opacity");
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // move cursor on window
+    Cursor::setPos(internalClient->geometry().center());
+
+    // set the opacity to 0.5
+    internalClient->setOpacity(0.5);
+    QCOMPARE(internalClient->opacity(), 0.5);
+    quint32 timestamp = 1;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
+    QCOMPARE(internalClient->opacity(), 0.6);
+    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    QCOMPARE(internalClient->opacity(), 0.5);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
 }
 
 }

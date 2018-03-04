@@ -50,12 +50,6 @@ void WaylandCursorTheme::loadTheme()
         return;
     }
     Cursor *c = Cursor::self();
-    if (!m_theme) {
-        // so far the theme had not been created, this means we need to start tracking theme changes
-        connect(c, &Cursor::themeChanged, this, &WaylandCursorTheme::loadTheme);
-    } else {
-        destroyTheme();
-    }
     int size = c->themeSize();
     if (size == 0) {
         // resolution depended
@@ -63,11 +57,25 @@ void WaylandCursorTheme::loadTheme()
         KWayland::Server::Display *display = waylandServer()->display();
         auto output = display->outputs().first();
         // calculate dots per inch, multiplied with magic constants from Cursor::loadThemeSettings()
-        size = qreal(output->pixelSize().height()) / (qreal(output->physicalSize().height()) * 0.0393701) * 16.0 / 72.0;
+        if (output->physicalSize().height()) {
+            size = qreal(output->pixelSize().height()) / (qreal(output->physicalSize().height()) * 0.0393701) * 16.0 / 72.0;
+        } else {
+            // use sensible default
+            size = 24;
+        }
     }
-    m_theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
+    auto theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
                                    size, m_shm->shm());
-    emit themeChanged();
+    if (theme) {
+        if (!m_theme) {
+            // so far the theme had not been created, this means we need to start tracking theme changes
+            connect(c, &Cursor::themeChanged, this, &WaylandCursorTheme::loadTheme);
+        } else {
+            destroyTheme();
+        }
+        m_theme = theme;
+        emit themeChanged();
+    }
 }
 
 void WaylandCursorTheme::destroyTheme()
