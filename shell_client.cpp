@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDesktopFile>
 
+#include <QFileInfo>
 #include <QOpenGLFramebufferObject>
 #include <QWindow>
 
@@ -126,11 +127,18 @@ void ShellClient::initSurface(T *shellSurface)
         }
     );
 
-    setResourceClass(shellSurface->windowClass());
+    // determine the resource name, this is inspired from ICCCM 4.1.2.5
+    // the binary name of the invoked client
+    QFileInfo info{shellSurface->client()->executablePath()};
+    QByteArray resourceName;
+    if (info.exists()) {
+        resourceName = info.fileName().toUtf8();
+    }
+    setResourceClass(resourceName, shellSurface->windowClass());
     setDesktopFileName(shellSurface->windowClass());
     connect(shellSurface, &T::windowClassChanged, this,
-        [this] (const QByteArray &windowClass) {
-            setResourceClass(windowClass);
+        [this, resourceName] (const QByteArray &windowClass) {
+            setResourceClass(resourceName, windowClass);
             setDesktopFileName(windowClass);
         }
     );
