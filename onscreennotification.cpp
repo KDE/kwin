@@ -242,5 +242,3 @@ void OnScreenNotification::setSkipCloseAnimation(bool skip)
         w->setProperty("KWIN_SKIP_CLOSE_ANIMATION", skip);
     }
 }
-
-#include "onscreennotification.moc"
