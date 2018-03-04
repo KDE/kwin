@@ -1155,6 +1155,12 @@ WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
         const double quadTop    = quad.top();
         const double quadBottom = quad.bottom();
 
+        // sanity check, see BUG 390953
+        if (quadLeft == quadRight || quadTop == quadBottom) {
+            ret.append(quad);
+            continue;
+        }
+
         // Compute the top-left corner of the first intersecting grid cell
         const double xBegin = left + qFloor((quadLeft - left) / maxQuadSize) * maxQuadSize;
         const double yBegin = top  + qFloor((quadTop  - top)  / maxQuadSize) * maxQuadSize;
@@ -1208,6 +1214,12 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
         const double quadRight  = quad.right();
         const double quadTop    = quad.top();
         const double quadBottom = quad.bottom();
+
+        // sanity check, see BUG 390953
+        if (quadLeft == quadRight || quadTop == quadBottom) {
+            ret.append(quad);
+            continue;
+        }
 
         // Compute the top-left corner of the first intersecting grid cell
         const double xBegin = left + qFloor((quadLeft - left) / xIncrement) * xIncrement;
