@@ -303,7 +303,7 @@ bool DrmOutput::init(drmModeConnector *connector)
     QSize physicalSize = !m_edid.physicalSize.isEmpty() ? m_edid.physicalSize : QSize(connector->mmWidth, connector->mmHeight);
     // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
     // as this information is used to calculate DPI info, it's going to result in everything being huge
-    const QByteArray unknown = QByteArrayLiteral("unkown");
+    const QByteArray unknown = QByteArrayLiteral("unknown");
     KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId.isEmpty() ? unknown : m_edid.eisaId)
                                                        .group(m_edid.monitorName.isEmpty() ? unknown : m_edid.monitorName)
                                                        .group(m_edid.serialNumber.isEmpty() ? unknown : m_edid.serialNumber);
