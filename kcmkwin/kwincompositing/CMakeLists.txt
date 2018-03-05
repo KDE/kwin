@@ -34,6 +34,7 @@ add_library(kwincompositing MODULE ${kwincomposing_SRC})
 
 target_link_libraries(kwincompositing
     Qt5::Quick
+    Qt5::QuickWidgets
     Qt5::DBus
     Qt5::Widgets
     KF5::CoreAddons
@@ -64,6 +65,7 @@ ecm_mark_as_test(effectModelTest)
 
 target_link_libraries(effectModelTest
     Qt5::Quick
+    Qt5::QuickWidgets
     Qt5::DBus
     Qt5::Test
     Qt5::Widgets

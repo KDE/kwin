@@ -27,7 +27,7 @@
 #include <QAbstractItemModel>
 #include <QHash>
 #include <QList>
-#include <QQuickView>
+#include <QQuickWidget>
 #include <QSortFilterProxyModel>
 #include <QString>
 #include <KPluginInfo>
@@ -114,7 +114,7 @@ private:
 
 };
 
-class EffectView : public QQuickView
+class EffectView : public QQuickWidget
 {
 
     Q_OBJECT
@@ -124,7 +124,7 @@ public:
         DesktopEffectsView,
         CompositingSettingsView
     };
-    EffectView(ViewType type, QWindow *parent = 0);
+    EffectView(ViewType type, QWidget *parent = 0);
 
     void save();
     void load();
