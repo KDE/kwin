@@ -581,8 +581,8 @@ void EffectFilterModel::defaults()
     m_effectModel->defaults();
 }
 
-EffectView::EffectView(ViewType type, QWindow *parent)
-    : QQuickView(parent)
+EffectView::EffectView(ViewType type, QWidget *parent)
+    : QQuickWidget(parent)
 {
     qRegisterMetaType<OpenGLPlatformInterfaceModel*>();
     qmlRegisterType<EffectConfig>("org.kde.kwin.kwincompositing", 1, 0, "EffectConfig");
@@ -608,7 +608,7 @@ void EffectView::init(ViewType type)
         break;
     }
     QString mainFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, path, QStandardPaths::LocateFile);
-    setResizeMode(QQuickView::SizeRootObjectToView);
+    setResizeMode(QQuickWidget::SizeRootObjectToView);
     setSource(QUrl(mainFile));
     rootObject()->setProperty("color",
                               KColorScheme(QPalette::Active, KColorScheme::Window, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color());

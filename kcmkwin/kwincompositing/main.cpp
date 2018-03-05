@@ -229,16 +229,12 @@ KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args
 {
     QVBoxLayout *vl = new QVBoxLayout(this);
 
-    QWidget *w = QWidget::createWindowContainer(m_view.data(), this);
-    connect(m_view.data(), &QWindow::minimumWidthChanged, w, &QWidget::setMinimumWidth);
-    connect(m_view.data(), &QWindow::minimumHeightChanged, w, &QWidget::setMinimumHeight);
-    w->setMinimumSize(m_view->initialSize());
-    vl->addWidget(w);
+    vl->addWidget(m_view.data());
     setLayout(vl);
     connect(m_view.data(), &KWin::Compositing::EffectView::changed, [this]{
         emit changed(true);
     });
-    w->setFocusPolicy(Qt::StrongFocus);
+    m_view->setFocusPolicy(Qt::StrongFocus);
 }
 
 KWinCompositingKCM::~KWinCompositingKCM()
