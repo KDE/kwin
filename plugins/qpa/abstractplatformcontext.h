@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_QPA_ABSTRACTPLATFORMCONTEXT_H
 
 #include <epoxy/egl.h>
+#include "fixqopengl.h"
 #include <fixx11h.h>
 #include <qpa/qplatformopenglcontext.h>
 
