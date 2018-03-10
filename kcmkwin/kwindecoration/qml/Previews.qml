@@ -72,6 +72,8 @@ ScrollView {
                 }
             }
             ColumnLayout {
+                id: decorationPreviews
+                property string themeName: model["display"]
                 anchors.fill: parent
                 Item {
                     KDecoration.Decoration {
@@ -80,7 +82,7 @@ ScrollView {
                         settings: settingsItem
                         anchors.fill: parent
                         Component.onCompleted: {
-                            client.caption = Qt.binding(function() { return model["display"]; });
+                            client.caption = decorationPreviews.themeName
                             client.active = false;
                             anchors.leftMargin = Qt.binding(function() { return 40 - (inactivePreview.shadow ? inactivePreview.shadow.paddingLeft : 0);});
                             anchors.rightMargin = Qt.binding(function() { return 10 - (inactivePreview.shadow ? inactivePreview.shadow.paddingRight : 0);});
@@ -94,7 +96,7 @@ ScrollView {
                         settings: settingsItem
                         anchors.fill: parent
                         Component.onCompleted: {
-                            client.caption = Qt.binding(function() { return model["display"]; });
+                            client.caption = decorationPreviews.themeName
                             client.active = true;
                             anchors.leftMargin = Qt.binding(function() { return 10 - (activePreview.shadow ? activePreview.shadow.paddingLeft : 0);});
                             anchors.rightMargin = Qt.binding(function() { return 40 - (activePreview.shadow ? activePreview.shadow.paddingRight : 0);});
@@ -111,16 +113,35 @@ ScrollView {
                     }
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    Button {
-                        id: configureButton
+                    /* Create an invisible rectangle that's the same size as the inner content rect
+                       of the foreground window preview so that we can center the button within it.
+                       We have to center rather than using anchors because the button width varies
+                       with different localizations */
+                    Item {
                         anchors {
                             left: parent.left
+                            leftMargin: 10
+                            right: parent.right
+                            rightMargin: 40
+                            top: parent.top
+                            topMargin: 68
                             bottom: parent.bottom
-                            margins: 20
+                            bottomMargin: 10
                         }
-                        enabled: model["configureable"]
-                        iconName: "configure"
-                        onClicked: bridgeItem.bridge.configure()
+                        Button {
+                            id: configureButton
+                            anchors {
+                                horizontalCenter: parent.horizontalCenter
+                                verticalCenter: parent.verticalCenter
+                            }
+                            enabled: model["configureable"]
+                            iconName: "configure"
+                            text: i18n("Configure %1...", decorationPreviews.themeName)
+                            onClicked: {
+                                gridView.currentIndex = index
+                                bridgeItem.bridge.configure()
+                            }
+                        }
                     }
                 }
             }
