@@ -34,7 +34,6 @@ Comment[uk]=Анімація зі зміною освітленості під �
 Comment[x-test]=xxCross fade animation when Tooltips or Notifications change their geometryxx
 Comment[zh_CN]=在工具提示或者通知大小变化时交叉淡入淡出的动画
 Comment[zh_TW]=當工具提示或通知變更位置時交錯的淡出動畫
-Encoding=UTF-8
 Icon=preferences-system-windows-effect-morphingpopups
 Name=Morphing popups
 Name[ca]=Missatges emergents en metamorfosi
