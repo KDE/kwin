@@ -198,6 +198,7 @@ QVariantMap DBusInterface::queryWindowInfo()
                 const QVariantMap ret{
                     {QStringLiteral("resourceClass"), c->resourceClass()},
                     {QStringLiteral("resourceName"), c->resourceName()},
+                    {QStringLiteral("desktopFile"), c->desktopFileName()},
                     {QStringLiteral("role"), c->windowRole()},
                     {QStringLiteral("caption"), c->captionNormal()},
                     {QStringLiteral("clientMachine"), c->wmClientMachine(true)},

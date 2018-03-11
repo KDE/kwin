@@ -1664,12 +1664,14 @@ bool AbstractClient::dockWantsInput() const
     return false;
 }
 
-void AbstractClient::setDesktopFileName(const QByteArray &name)
+void AbstractClient::setDesktopFileName(QByteArray name)
 {
+    name = rules()->checkDesktopFile(name).toUtf8();
     if (name == m_desktopFileName) {
         return;
     }
     m_desktopFileName = name;
+    updateWindowRules(Rules::DesktopFile);
     emit desktopFileNameChanged();
 }
 

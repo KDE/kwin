@@ -1008,7 +1008,7 @@ protected:
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
 
-    void setDesktopFileName(const QByteArray &name);
+    void setDesktopFileName(QByteArray name);
     QString iconFromDesktopFile() const;
 
     void updateApplicationMenuServiceName(const QString &serviceName);

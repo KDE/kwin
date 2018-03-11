@@ -135,7 +135,6 @@ void ShellClient::initSurface(T *shellSurface)
         resourceName = info.fileName().toUtf8();
     }
     setResourceClass(resourceName, shellSurface->windowClass());
-    setDesktopFileName(shellSurface->windowClass());
     connect(shellSurface, &T::windowClassChanged, this,
         [this, resourceName] (const QByteArray &windowClass) {
             setResourceClass(resourceName, windowClass);
@@ -197,6 +196,7 @@ void ShellClient::initSurface(T *shellSurface)
     if (!m_internal) {
         setupWindowRules(false);
     }
+    setDesktopFileName(rules()->checkDesktopFile(shellSurface->windowClass(), true).toUtf8());
 }
 
 void ShellClient::init()

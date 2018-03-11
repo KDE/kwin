@@ -101,6 +101,7 @@ private Q_SLOTS:
     void updateEnableshortcut();
     void updateEnabledisableglobalshortcuts();
     void updateEnableblockcompositing();
+    void updateEnabledesktopfile();
     // internal
     void detected(bool);
 private:

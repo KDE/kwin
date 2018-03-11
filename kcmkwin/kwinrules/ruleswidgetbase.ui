@@ -2501,21 +2501,78 @@ while it's active!</string>
          </item>
         </widget>
        </item>
-       <item row="15" column="1" colspan="5">
+       <item row="15" column="1">
+        <widget class="QCheckBox" name="enable_desktopfile">
+         <property name="text">
+          <string>Desktop file name</string>
+         </property>
+         <property name="shortcut">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="2" colspan="3">
+        <widget class="QComboBox" name="rule_desktopfile">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="15" column="5">
+        <widget class="QLineEdit" name="desktopfile">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="placeholderText">
+          <string>org.kde.kwin</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1" colspan="5">
         <widget class="Line" name="line_7">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="16" column="1">
+       <item row="17" column="1">
         <widget class="QCheckBox" name="enable_blockcompositing">
          <property name="text">
           <string>Block compositing</string>
          </property>
         </widget>
        </item>
-       <item row="16" column="2" colspan="3">
+       <item row="17" column="2" colspan="3">
         <widget class="QComboBox" name="rule_blockcompositing">
          <property name="enabled">
           <bool>false</bool>
@@ -2537,14 +2594,14 @@ while it's active!</string>
          </item>
         </widget>
        </item>
-       <item row="16" column="5">
+       <item row="17" column="5">
         <widget class="YesNoBox" name="blockcompositing" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="17" column="2">
+       <item row="18" column="2">
         <spacer name="verticalSpacer_5">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -2684,6 +2741,9 @@ while it's active!</string>
   <tabstop>enable_type</tabstop>
   <tabstop>rule_type</tabstop>
   <tabstop>type</tabstop>
+  <tabstop>enable_desktopfile</tabstop>
+  <tabstop>rule_desktopfile</tabstop>
+  <tabstop>desktopfile</tabstop>
   <tabstop>enable_blockcompositing</tabstop>
   <tabstop>rule_blockcompositing</tabstop>
   <tabstop>tabs</tabstop>

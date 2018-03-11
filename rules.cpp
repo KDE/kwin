@@ -82,6 +82,7 @@ Rules::Rules()
     , strictgeometryrule(UnusedForceRule)
     , shortcutrule(UnusedSetRule)
     , disableglobalshortcutsrule(UnusedForceRule)
+    , desktopfilerule(UnusedSetRule)
 {
 }
 
@@ -192,6 +193,7 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
     READ_FORCE_RULE(strictgeometry, , false);
     READ_SET_RULE(shortcut, , QString());
     READ_FORCE_RULE(disableglobalshortcuts, , false);
+    READ_SET_RULE(desktopfile, , QString());
 }
 
 #undef READ_MATCH_STRING
@@ -290,6 +292,7 @@ void Rules::write(KConfigGroup& cfg) const
     WRITE_FORCE_RULE(strictgeometry,);
     WRITE_SET_RULE(shortcut,);
     WRITE_FORCE_RULE(disableglobalshortcuts,);
+    WRITE_SET_RULE(desktopfile,);
 }
 
 #undef WRITE_MATCH_STRING
@@ -333,7 +336,8 @@ bool Rules::isEmpty() const
            && autogroupidrule == UnusedForceRule
            && strictgeometryrule == UnusedForceRule
            && shortcutrule == UnusedSetRule
-           && disableglobalshortcutsrule == UnusedForceRule);
+           && disableglobalshortcutsrule == UnusedForceRule
+           && desktopfilerule == UnusedSetRule);
 }
 
 Rules::SetRule Rules::readSetRule(const KConfigGroup& cfg, const QString& key)
@@ -553,6 +557,10 @@ bool Rules::update(AbstractClient* c, int selection)
         updated = updated || noborder != c->noBorder();
         noborder = c->noBorder();
     }
+    if NOW_REMEMBER(DesktopFile, desktopfile) {
+        updated = updated || desktopfile != c->desktopFileName();
+        desktopfile = c->desktopFileName();
+    }
     return updated;
 }
 
@@ -663,6 +671,7 @@ APPLY_FORCE_RULE(autogroupid, AutogroupById, QString)
 APPLY_FORCE_RULE(strictgeometry, StrictGeometry, bool)
 APPLY_RULE(shortcut, Shortcut, QString)
 APPLY_FORCE_RULE(disableglobalshortcuts, DisableGlobalShortcuts, bool)
+APPLY_RULE(desktopfile, DesktopFile, QString)
 
 
 #undef APPLY_RULE
@@ -732,6 +741,7 @@ void Rules::discardUsed(bool withdrawn)
     DISCARD_USED_FORCE_RULE(strictgeometry);
     DISCARD_USED_SET_RULE(shortcut);
     DISCARD_USED_FORCE_RULE(disableglobalshortcuts);
+    DISCARD_USED_SET_RULE(desktopfile);
 }
 #undef DISCARD_USED_SET_RULE
 #undef DISCARD_USED_FORCE_RULE
@@ -866,6 +876,7 @@ CHECK_FORCE_RULE(AutogroupById, QString)
 CHECK_FORCE_RULE(StrictGeometry, bool)
 CHECK_RULE(Shortcut, QString)
 CHECK_FORCE_RULE(DisableGlobalShortcuts, bool)
+CHECK_RULE(DesktopFile, QString)
 
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE
@@ -932,6 +943,7 @@ void AbstractClient::applyWindowRules()
         workspace()->disableGlobalShortcutsForClient(rules()->checkDisableGlobalShortcuts(false));
     } else
         setOpacity(rules()->checkOpacityInactive(qRound(opacity() * 100.0)) / 100.0);
+    setDesktopFileName(rules()->checkDesktopFile(desktopFileName()).toUtf8());
 }
 
 void Client::updateWindowRules(Rules::Types selection)

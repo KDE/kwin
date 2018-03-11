@@ -58,6 +58,8 @@ private Q_SLOTS:
     void testApplyInitialKeepBelow();
     void testApplyInitialShortcut_data();
     void testApplyInitialShortcut();
+    void testApplyInitialDesktopfile_data();
+    void testApplyInitialDesktopfile();
     void testOpacityActive_data();
     void testOpacityActive();
 };
@@ -340,6 +342,33 @@ void TestShellClientRules::testApplyInitialShortcut()
     QCOMPARE(c->keepAbove(), false);
     QCOMPARE(c->keepBelow(), false);
     QCOMPARE(c->shortcut(), sequence);
+}
+
+TEST_DATA(testApplyInitialDesktopfile)
+
+void TestShellClientRules::testApplyInitialDesktopfile()
+{
+    // install the temporary rule
+    QFETCH(int, ruleNumber);
+    QString rule = QStringLiteral("desktopfile=org.kde.kwin\ndesktopfilerule=%1").arg(ruleNumber);
+    QMetaObject::invokeMethod(RuleBook::self(), "temporaryRulesMessage", Q_ARG(QString, rule));
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(c->desktop(), 1);
+    QCOMPARE(c->isMinimized(), false);
+    QCOMPARE(c->isActive(), true);
+    QCOMPARE(c->skipTaskbar(), false);
+    QCOMPARE(c->skipPager(), false);
+    QCOMPARE(c->skipSwitcher(), false);
+    QCOMPARE(c->keepAbove(), false);
+    QCOMPARE(c->keepBelow(), false);
+    QCOMPARE(c->shortcut(), QKeySequence());
+    QCOMPARE(c->desktopFileName(), QByteArrayLiteral("org.kde.kwin"));
 }
 
 TEST_FORCE_DATA(testOpacityActive)

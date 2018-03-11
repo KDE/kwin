@@ -125,6 +125,7 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(fsplevel, force);
     SETUP(fpplevel, force);
     SETUP(type, force);
+    SETUP(desktopfile, set);
     SETUP(ignoregeometry, set);
     SETUP(minsize, force);
     SETUP(maxsize, force);
@@ -230,6 +231,7 @@ UPDATE_ENABLE_SLOT(maxsize)
 UPDATE_ENABLE_SLOT(strictgeometry)
 UPDATE_ENABLE_SLOT(disableglobalshortcuts)
 UPDATE_ENABLE_SLOT(blockcompositing)
+UPDATE_ENABLE_SLOT(desktopfile)
 
 #undef UPDATE_ENABLE_SLOT
 
@@ -546,6 +548,7 @@ void RulesWidget::setRules(Rules* rules)
     CHECKBOX_FORCE_RULE(strictgeometry,);
     CHECKBOX_FORCE_RULE(disableglobalshortcuts,);
     CHECKBOX_FORCE_RULE(blockcompositing,);
+    LINEEDIT_SET_RULE(desktopfile,)
 }
 
 #undef GENERIC_RULE
@@ -650,6 +653,7 @@ Rules* RulesWidget::rules() const
     CHECKBOX_FORCE_RULE(strictgeometry,);
     CHECKBOX_FORCE_RULE(disableglobalshortcuts,);
     CHECKBOX_FORCE_RULE(blockcompositing,);
+    LINEEDIT_SET_RULE(desktopfile,);
     return rules;
 }
 
@@ -770,6 +774,7 @@ void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
     //CHECKBOX_PREFILL( strictgeometry, );
     //CHECKBOX_PREFILL( disableglobalshortcuts, );
     //CHECKBOX_PREFILL( blockcompositing, );
+    LINEEDIT_PREFILL(desktopfile, , info.desktopFileName());
 }
 
 void RulesWidget::prefillUnusedValues(const QVariantMap& info)
@@ -808,6 +813,7 @@ void RulesWidget::prefillUnusedValues(const QVariantMap& info)
     //CHECKBOX_PREFILL( strictgeometry, );
     //CHECKBOX_PREFILL( disableglobalshortcuts, );
     //CHECKBOX_PREFILL( blockcompositing, );
+    LINEEDIT_PREFILL(desktopfile, , info.value("desktopFile").toString());
 }
 
 #undef GENERIC_PREFILL
