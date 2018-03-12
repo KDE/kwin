@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/xdgshell.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -62,6 +63,7 @@ private Q_SLOTS:
     void testApplyInitialDesktopfile();
     void testOpacityActive_data();
     void testOpacityActive();
+    void testMatchAfterNameChange();
 };
 
 void TestShellClientRules::initTestCase()
@@ -414,6 +416,38 @@ void TestShellClientRules::testOpacityActive()
     QVERIFY(c->isActive());
     QCOMPARE(c->opacity(), 0.9);
     QCOMPARE(c2->opacity(), 0.8);
+}
+
+void TestShellClientRules::testMatchAfterNameChange()
+{
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+
+    auto group = config->group("1");
+    group.writeEntry("above", true);
+    group.writeEntry("aboverule", 2);
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", 1);
+    group.sync();
+
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellV6Surface(surface.data()));
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(c->isActive());
+    QCOMPARE(c->keepAbove(), false);
+
+    QSignalSpy desktopFileNameSpy(c, &AbstractClient::desktopFileNameChanged);
+    QVERIFY(desktopFileNameSpy.isValid());
+
+    shellSurface->setAppId(QByteArrayLiteral("org.kde.foo"));
+    QVERIFY(desktopFileNameSpy.wait());
+    QCOMPARE(c->keepAbove(), true);
 }
 
 WAYLANDTEST_MAIN(TestShellClientRules)

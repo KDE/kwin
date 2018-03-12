@@ -138,6 +138,10 @@ void ShellClient::initSurface(T *shellSurface)
     connect(shellSurface, &T::windowClassChanged, this,
         [this, resourceName] (const QByteArray &windowClass) {
             setResourceClass(resourceName, windowClass);
+            if (!m_internal) {
+                setupWindowRules(true);
+                applyWindowRules();
+            }
             setDesktopFileName(windowClass);
         }
     );
