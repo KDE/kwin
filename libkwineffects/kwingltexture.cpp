@@ -201,7 +201,6 @@ GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
     d->m_size = QSize(width, height);
     d->m_canUseMipmaps = levels > 1;
     d->m_mipLevels = levels;
-    d->m_canUseMipmaps = true;
     d->m_filter = levels > 1 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
 
     d->updateMatrix();
