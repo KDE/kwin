@@ -82,33 +82,33 @@ ZoomEffect::ZoomEffect()
     a = new QAction(this);
     a->setObjectName(QStringLiteral("MoveZoomLeft"));
     a->setText(i18n("Move Zoomed Area to Left"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Left);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Left);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_Left, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_Left);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_Left);
+    effects->registerGlobalShortcut(Qt::META + Qt::CTRL + Qt::Key_Left, a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomLeft()));
 
     a = new QAction(this);
     a->setObjectName(QStringLiteral("MoveZoomRight"));
     a->setText(i18n("Move Zoomed Area to Right"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Right);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Right);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_Right, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_Right);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_Right);
+    effects->registerGlobalShortcut(Qt::META + Qt::CTRL + Qt::Key_Right, a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomRight()));
 
     a = new QAction(this);
     a->setObjectName(QStringLiteral("MoveZoomUp"));
     a->setText(i18n("Move Zoomed Area Upwards"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Up);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Up);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_Up, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_Up);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_Up);
+    effects->registerGlobalShortcut(Qt::META + Qt::CTRL + Qt::Key_Up, a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomUp()));
 
     a = new QAction(this);
     a->setObjectName(QStringLiteral("MoveZoomDown"));
     a->setText(i18n("Move Zoomed Area Downwards"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Down);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Down);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_Down, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_Down);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_Down);
+    effects->registerGlobalShortcut(Qt::META + Qt::CTRL + Qt::Key_Down, a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomDown()));
 
     // TODO: these two actions don't belong into the effect. They need to be moved into KWin core
