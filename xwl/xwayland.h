@@ -15,6 +15,7 @@
 #include <QFutureWatcher>
 #include <QProcess>
 #include <QSocketNotifier>
+#include <QTemporaryFile>
 
 class KSelectionOwner;
 
@@ -104,6 +105,7 @@ private:
     QProcess *m_xwaylandProcess = nullptr;
     QSocketNotifier *m_socketNotifier = nullptr;
     QTimer *m_resetCrashCountTimer = nullptr;
+    QTemporaryFile m_xwaylandAuthority;
     QByteArray m_displayName;
     QFutureWatcher<QByteArray> *m_watcher = nullptr;
     ApplicationWaylandAbstract *m_app;

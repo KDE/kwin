@@ -649,6 +649,7 @@ target_link_libraries(kwin
     XCB::SYNC
     XCB::XCB
     XCB::XFIXES
+    ${X11_Xau_LIB}
 
     Libinput::Libinput
     UDev::UDev

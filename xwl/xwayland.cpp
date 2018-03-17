@@ -38,6 +38,8 @@
 #include <sys/socket.h>
 #include <cerrno>
 #include <cstring>
+#include <iostream>
+#include <X11/Xauth.h>
 
 static QByteArray readDisplay(int pipe)
 {
@@ -76,6 +78,73 @@ Xwayland::~Xwayland()
     stop();
 }
 
+static QByteArray getRandomData(qint64 bytes)
+{
+    QFile random(QStringLiteral("/dev/urandom"));
+    if (!random.open(QIODevice::ReadOnly))
+        return {};
+
+    QByteArray data;
+    data.resize(bytes);
+    while (bytes) {
+        auto bytesRead = random.read(data.data() + data.size() - bytes, bytes);
+        if (bytesRead == -1)
+            return {};
+
+        bytes -= bytesRead;
+    }
+
+    return data;
+}
+
+static bool addCookieToFile(QString filename, QString display, QString &hostname)
+{
+    QByteArray cookie = getRandomData(16);
+    QByteArray displayUtf8 = display.toUtf8();
+
+    if(displayUtf8.size() < 2 || displayUtf8[0] != ':' || cookie.count() != 16) {
+        return false;
+    }
+
+    FILE *authFp = fopen(qPrintable(filename), "wb");
+    if (authFp == nullptr) {
+        return false;
+    }
+
+    char localhost[HOST_NAME_MAX + 1] = "";
+    if (gethostname(localhost, HOST_NAME_MAX) < 0) {
+        strcpy(localhost, "localhost");
+    }
+
+    hostname = QString::fromUtf8(localhost);
+
+    Xauth auth = {};
+    char cookieName[] = "MIT-MAGIC-COOKIE-1";
+
+    auth.family = FamilyLocal;
+    auth.address = localhost;
+    auth.address_length = strlen(auth.address);
+    auth.number = displayUtf8.data() + 1;
+    auth.number_length = strlen(auth.number);
+    auth.name = cookieName;
+    auth.name_length = sizeof(cookieName) - 1;
+    auth.data = cookie.data();
+    auth.data_length = cookie.count();
+
+    if (XauWriteAuth(authFp, &auth) == 0) {
+        fclose(authFp);
+        return false;
+    }
+
+    auth.family = FamilyWild;
+    auth.address_length = 0;
+    bool success = XauWriteAuth(authFp, &auth) != 0 && fflush(authFp) != EOF;
+
+    fclose(authFp);
+
+    return success;
+}
+
 QProcess *Xwayland::process() const
 {
     return m_xwaylandProcess;
@@ -85,6 +154,16 @@ void Xwayland::start()
 {
     if (m_xwaylandProcess) {
         return;
+    }
+
+    QString dir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+    if (!dir.isEmpty()) {
+        m_xwaylandAuthority.setFileTemplate(dir + QStringLiteral("/xauth_XXXXXX"));
+        m_xwaylandAuthority.open();
+    }
+
+    if (m_xwaylandAuthority.fileName().isEmpty()) {
+        std::cerr << "Warning: Could not create a Xauthority file for Xwayland." << std::endl;
     }
 
     int pipeFds[2];
@@ -132,11 +211,15 @@ void Xwayland::start()
         env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
     }
     m_xwaylandProcess->setProcessEnvironment(env);
-    m_xwaylandProcess->setArguments({QStringLiteral("-displayfd"),
+    QStringList args{QStringLiteral("-displayfd"),
                            QString::number(pipeFds[1]),
                            QStringLiteral("-rootless"),
                            QStringLiteral("-wm"),
-                           QString::number(fd)});
+                           QString::number(fd)};
+    if (!m_xwaylandAuthority.fileName().isEmpty()) {
+        args << QStringLiteral("-auth") << m_xwaylandAuthority.fileName();
+    }
+    m_xwaylandProcess->setArguments(args);
     connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &Xwayland::handleXwaylandError);
     connect(m_xwaylandProcess, &QProcess::started, this, &Xwayland::handleXwaylandStarted);
     connect(m_xwaylandProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
@@ -335,6 +418,23 @@ void Xwayland::handleXwaylandReady()
 
 bool Xwayland::createX11Connection()
 {
+    if (!m_xwaylandAuthority.fileName().isEmpty()) {
+        QString hostname;
+        if (addCookieToFile(m_xwaylandAuthority.fileName(), m_displayName, hostname)) {
+            setenv("XAUTHORITY", qPrintable(m_xwaylandAuthority.fileName()), 1);
+            setenv("XAUTHLOCALHOSTNAME", qPrintable(hostname), 1);
+            auto env = m_app->processStartupEnvironment();
+            env.insert(QStringLiteral("XAUTHORITY"), m_xwaylandAuthority.fileName());
+            env.insert(QStringLiteral("XAUTHLOCALHOSTNAME"), hostname);
+            m_app->setProcessStartupEnvironment(env);
+        }
+        else {
+            qCWarning(KWIN_XWL) << "Could not generate Xauthority entry";
+            // We can't authenticate using it so the server must not see any entries either
+            m_xwaylandAuthority.resize(0);
+        }
+    }
+
     xcb_connection_t *connection = xcb_connect_to_fd(m_xcbConnectionFd, nullptr);
 
     const int errorCode = xcb_connection_has_error(connection);
