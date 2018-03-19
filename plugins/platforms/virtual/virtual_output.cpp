@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2018 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,33 +17,26 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_SCREENS_VIRTUAL_H
-#define KWIN_SCREENS_VIRTUAL_H
-#include "screens.h"
-#include <QVector>
+#include "virtual_output.h"
 
 namespace KWin
 {
-class VirtualBackend;
 
-class VirtualScreens : public Screens
+VirtualOutput::VirtualOutput(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    VirtualScreens(VirtualBackend *backend, QObject *parent = nullptr);
-    virtual ~VirtualScreens();
-    void init() override;
-    QRect geometry(int screen) const override;
-    int number(const QPoint &pos) const override;
-    QSize size(int screen) const override;
-    void updateCount() override;
-
-private:
-    void createOutputs();
-    VirtualBackend *m_backend;
-};
-
 }
 
-#endif
+VirtualOutput::VirtualOutput(const VirtualOutput &o)
+    : m_geo(o.m_geo),
+      m_outputScale(o.m_outputScale),
+      m_gammaSize(o.m_gammaSize),
+      m_gammaResult(o.m_gammaResult)
+{
+}
 
+VirtualOutput::~VirtualOutput()
+{
+}
+
+}

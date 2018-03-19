@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2018 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,33 +17,39 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_SCREENS_VIRTUAL_H
-#define KWIN_SCREENS_VIRTUAL_H
-#include "screens.h"
-#include <QVector>
+#ifndef KWIN_VIRTUAL_OUTPUT_H
+#define KWIN_VIRTUAL_OUTPUT_H
+
+#include <QObject>
+#include <QRect>
 
 namespace KWin
 {
 class VirtualBackend;
 
-class VirtualScreens : public Screens
+class VirtualOutput : public QObject
 {
     Q_OBJECT
+
 public:
-    VirtualScreens(VirtualBackend *backend, QObject *parent = nullptr);
-    virtual ~VirtualScreens();
-    void init() override;
-    QRect geometry(int screen) const override;
-    int number(const QPoint &pos) const override;
-    QSize size(int screen) const override;
-    void updateCount() override;
+    VirtualOutput(QObject *parent = nullptr);
+    VirtualOutput(const VirtualOutput &o);
+    virtual ~VirtualOutput();
+
+    QRect geometry() const {
+        return m_geo;
+    }
 
 private:
-    void createOutputs();
-    VirtualBackend *m_backend;
+    friend class VirtualBackend;
+
+    QRect m_geo;
+    qreal m_outputScale = 1;
+
+    int m_gammaSize = 200;
+    bool m_gammaResult = true;
 };
 
 }
 
 #endif
-

@@ -68,12 +68,25 @@ VirtualBackend::~VirtualBackend()
 
 void VirtualBackend::init()
 {
+    /*
+     * Some tests currently expect one output present at start,
+     * others set them explicitly.
+     *
+     * TODO: rewrite all tests to explicitly set the outputs.
+     */
+    if (!m_outputs.size()) {
+        auto dummyOutput = VirtualOutput(this);
+        dummyOutput.m_geo = QRect(QPoint(0, 0), initialWindowSize());
+        m_outputs = { dummyOutput };
+    }
+
+
     setSoftWareCursor(true);
-    m_size = initialWindowSize();
     setReady(true);
     waylandServer()->seat()->setHasPointer(true);
     waylandServer()->seat()->setHasKeyboard(true);
     waylandServer()->seat()->setHasTouch(true);
+
     emit screensQueried();
 }
 
@@ -100,13 +113,34 @@ OpenGLBackend *VirtualBackend::createOpenGLBackend()
     return new EglGbmBackend(this);
 }
 
+void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries)
+{
+    Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
+
+    bool countChanged = m_outputs.size() != count;
+    m_outputs.resize(count);
+
+    int sumWidth = 0;
+    for (int i = 0; i < count; i++) {
+        VirtualOutput& o = m_outputs[i];
+        if (geometries.size()) {
+            o.m_geo = geometries.at(i);
+        } else if (!o.m_geo.isValid()) {
+            o.m_geo = QRect(QPoint(sumWidth, 0), initialWindowSize());
+            sumWidth += o.m_geo.width();
+        }
+    }
+
+    emit virtualOutputsSet(countChanged);
+}
+
 int VirtualBackend::gammaRampSize(int screen) const {
-    return m_gammaSizes[screen];
+    return m_outputs[screen].m_gammaSize;
 }
 
 bool VirtualBackend::setGammaRamp(int screen, ColorCorrect::GammaRamp &gamma) {
     Q_UNUSED(gamma);
-    return m_gammaResults[screen];
+    return m_outputs[screen].m_gammaResult;
 }
 
 }

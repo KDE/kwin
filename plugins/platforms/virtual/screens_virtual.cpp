@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screens_virtual.h"
 #include "virtual_backend.h"
+#include "virtual_output.h"
 
 namespace KWin
 {
@@ -35,28 +36,27 @@ void VirtualScreens::init()
 {
     updateCount();
     KWin::Screens::init();
-    connect(m_backend, &VirtualBackend::sizeChanged,
-            this, &VirtualScreens::startChangedTimer);
-    connect(m_backend, &VirtualBackend::outputGeometriesChanged, this,
-        [this] (const QVector<QRect> &geometries) {
-            const int oldCount = m_geometries.count();
-            m_geometries = geometries;
-            if (oldCount != m_geometries.count()) {
-                setCount(m_geometries.count());
+
+    connect(m_backend, &VirtualBackend::virtualOutputsSet, this,
+        [this] (bool countChanged) {
+            if (countChanged) {
+                setCount(m_backend->outputCount());
             } else {
                 emit changed();
             }
         }
     );
+
     emit changed();
 }
 
 QRect VirtualScreens::geometry(int screen) const
 {
-    if (screen >= m_geometries.count()) {
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
         return QRect();
     }
-    return m_geometries.at(screen);
+    return outputs.at(screen).geometry();
 }
 
 QSize VirtualScreens::size(int screen) const
@@ -66,11 +66,6 @@ QSize VirtualScreens::size(int screen) const
 
 void VirtualScreens::updateCount()
 {
-    m_geometries.clear();
-    const QSize size = m_backend->size();
-    for (int i = 0; i < m_backend->outputCount(); ++i) {
-        m_geometries.append(QRect(size.width() * i, 0, size.width(), size.height()));
-    }
     setCount(m_backend->outputCount());
 }
 
@@ -78,8 +73,9 @@ int VirtualScreens::number(const QPoint &pos) const
 {
     int bestScreen = 0;
     int minDistance = INT_MAX;
-    for (int i = 0; i < m_geometries.count(); ++i) {
-        const QRect &geo = m_geometries.at(i);
+    const auto outputs = m_backend->outputs();
+    for (int i = 0; i < outputs.size(); ++i) {
+        const QRect &geo = outputs.at(i).geometry();
         if (geo.contains(pos)) {
             return i;
         }
