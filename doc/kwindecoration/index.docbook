@@ -13,8 +13,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2016-04-14</date>
-<releaseinfo>Plasma 5.6</releaseinfo>
+<date>2018-03-18</date>
+<releaseinfo>Plasma 5.12</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -64,12 +64,12 @@ edges.</para>
 <para>You are encouraged to experiment with the different styles until
 you find one which best suits your pattern of work.</para>
 
-<para>In the preview pane at the right of each style you find a <inlinemediaobject><imageobject>
+<para>In the preview of each style you find a <inlinemediaobject><imageobject>
 <imagedata fileref="configure.png" format="PNG"/></imageobject></inlinemediaobject> 
 configure button to open configuration dialogs for the decoration.</para>
 
 <para>The options in this configuration dialog are applied to all windows. 
-Some window decorations (&eg; <quote>Breeze</quote> or <quote>Oxygen</quote>)
+Some window decorations (&eg; <quote>Breeze</quote>)
 provide a <guilabel>Window-Specific Overrides</guilabel> tab.
 On this tab you can change the border size and the visibility 
 of the window titlebar for particular windows.</para>
@@ -114,7 +114,8 @@ The available options depend on the selected style.
 <title>Buttons</title>
 
 <para>This tab allows you to customize the button location on the titlebar. 
-You can drag buttons into the titlebar, remove them or drag around the
+You can drag buttons &eg; the <guilabel>Application menu</guilabel> into the 
+titlebar, remove them or drag around the
 buttons until you have the order that makes you comfortable.
 </para>
 
