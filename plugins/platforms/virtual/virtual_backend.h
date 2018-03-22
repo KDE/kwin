@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_VIRTUAL_BACKEND_H
 #define KWIN_VIRTUAL_BACKEND_H
 #include "platform.h"
-#include "virtual_output.h"
 
 #include <kwin_export.h>
 
@@ -33,7 +32,7 @@ struct gbm_device;
 
 namespace KWin
 {
-struct ColorCorrect::GammaRamp;
+class VirtualOutput;
 
 class KWIN_EXPORT VirtualBackend : public Platform
 {
@@ -49,7 +48,7 @@ public:
     int outputCount() const {
         return m_outputs.size();
     }
-    const QVector<VirtualOutput> outputs() const {
+    const QVector<VirtualOutput*> outputs() const {
         return m_outputs;
     }
     qreal outputScale() const {
@@ -95,7 +94,7 @@ Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
 
 private:
-    QVector<VirtualOutput> m_outputs;
+    QVector<VirtualOutput*> m_outputs;
 
     qreal m_outputScale = 1;
 

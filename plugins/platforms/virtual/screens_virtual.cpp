@@ -56,7 +56,7 @@ QRect VirtualScreens::geometry(int screen) const
     if (screen >= outputs.size()) {
         return QRect();
     }
-    return outputs.at(screen).geometry();
+    return outputs.at(screen)->geometry();
 }
 
 QSize VirtualScreens::size(int screen) const
@@ -75,7 +75,7 @@ int VirtualScreens::number(const QPoint &pos) const
     int minDistance = INT_MAX;
     const auto outputs = m_backend->outputs();
     for (int i = 0; i < outputs.size(); ++i) {
-        const QRect &geo = outputs.at(i).geometry();
+        const QRect &geo = outputs.at(i)->geometry();
         if (geo.contains(pos)) {
             return i;
         }

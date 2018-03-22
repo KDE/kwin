@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "virtual_backend.h"
+#include "virtual_output.h"
 #include "scene_qpainter_virtual_backend.h"
 #include "screens_virtual.h"
 #include "wayland_server.h"
@@ -33,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_GBM
 #include <gbm.h>
 #endif
-#include <colorcorrection/manager.h>
 
 namespace KWin
 {
@@ -75,8 +75,8 @@ void VirtualBackend::init()
      * TODO: rewrite all tests to explicitly set the outputs.
      */
     if (!m_outputs.size()) {
-        auto dummyOutput = VirtualOutput(this);
-        dummyOutput.m_geo = QRect(QPoint(0, 0), initialWindowSize());
+        VirtualOutput *dummyOutput = new VirtualOutput(this);
+        dummyOutput->m_geo = QRect(QPoint(0, 0), initialWindowSize());
         m_outputs = { dummyOutput };
     }
 
@@ -118,29 +118,31 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries)
     Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
 
     bool countChanged = m_outputs.size() != count;
+    qDeleteAll(m_outputs.begin(), m_outputs.end());
     m_outputs.resize(count);
 
     int sumWidth = 0;
     for (int i = 0; i < count; i++) {
-        VirtualOutput& o = m_outputs[i];
+        VirtualOutput *vo = new VirtualOutput(this);
         if (geometries.size()) {
-            o.m_geo = geometries.at(i);
-        } else if (!o.m_geo.isValid()) {
-            o.m_geo = QRect(QPoint(sumWidth, 0), initialWindowSize());
-            sumWidth += o.m_geo.width();
+            vo->m_geo = geometries.at(i);
+        } else if (!vo->m_geo.isValid()) {
+            vo->m_geo = QRect(QPoint(sumWidth, 0), initialWindowSize());
+            sumWidth += vo->m_geo.width();
         }
+        m_outputs[i] = vo;
     }
 
     emit virtualOutputsSet(countChanged);
 }
 
 int VirtualBackend::gammaRampSize(int screen) const {
-    return m_outputs[screen].m_gammaSize;
+    return m_outputs[screen]->m_gammaSize;
 }
 
 bool VirtualBackend::setGammaRamp(int screen, ColorCorrect::GammaRamp &gamma) {
     Q_UNUSED(gamma);
-    return m_outputs[screen].m_gammaResult;
+    return m_outputs[screen]->m_gammaResult;
 }
 
 }
