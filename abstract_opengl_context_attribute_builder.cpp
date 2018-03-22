@@ -32,7 +32,8 @@ QDebug AbstractOpenGLContextAttributeBuilder::operator<<(QDebug dbg) const
     dbg.nospace() << "Robust:\t" << isRobust() << "\n";
     dbg.nospace() << "Forward compatible:\t" << isForwardCompatible() << "\n";
     dbg.nospace() << "Core profile:\t" << isCoreProfile() << "\n";
-    dbg.nospace() << "Compatibility profile:\t" << isCompatibilityProfile();
+    dbg.nospace() << "Compatibility profile:\t" << isCompatibilityProfile() << "\n";
+    dbg.nospace() << "High priority:\t" << isHighPriority();
     return dbg;
 }
 

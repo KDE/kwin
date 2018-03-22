@@ -94,6 +94,14 @@ public:
         return m_resetOnVideoMemoryPurge;
     }
 
+    void setHighPriority(bool highPriority) {
+        m_highPriority = highPriority;
+    }
+
+    bool isHighPriority() const {
+        return m_highPriority;
+    }
+
     virtual std::vector<int> build() const = 0;
 
     QDebug operator<<(QDebug dbg) const;
@@ -107,6 +115,7 @@ private:
     bool m_coreProfile = false;
     bool m_compatibilityProfile = false;
     bool m_resetOnVideoMemoryPurge = false;
+    bool m_highPriority = false;
 };
 
 inline QDebug operator<<(QDebug dbg, const AbstractOpenGLContextAttributeBuilder *attribs)

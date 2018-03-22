@@ -52,6 +52,10 @@ std::vector<int> EglContextAttributeBuilder::build() const
             attribs.emplace_back(EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR);
         }
     }
+    if (isHighPriority()) {
+        attribs.emplace_back(EGL_CONTEXT_PRIORITY_LEVEL_IMG);
+        attribs.emplace_back(EGL_CONTEXT_PRIORITY_HIGH_IMG);
+    }
     attribs.emplace_back(EGL_NONE);
     return attribs;
 }
@@ -66,6 +70,10 @@ std::vector<int> EglOpenGLESContextAttributeBuilder::build() const
         attribs.emplace_back(EGL_TRUE);
         attribs.emplace_back(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT);
         attribs.emplace_back(EGL_LOSE_CONTEXT_ON_RESET_EXT);
+    }
+    if (isHighPriority()) {
+        attribs.emplace_back(EGL_CONTEXT_PRIORITY_LEVEL_IMG);
+        attribs.emplace_back(EGL_CONTEXT_PRIORITY_HIGH_IMG);
     }
     attribs.emplace_back(EGL_NONE);
     return attribs;
