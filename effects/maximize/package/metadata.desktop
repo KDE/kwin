@@ -111,5 +111,4 @@ X-KDE-Ordering=60
 X-Plasma-API=javascript
 X-Plasma-DefaultSize=200,100
 X-Plasma-MainScript=code/maximize.js
-X-Plasma-RemoteLocation=
 X-KWin-Video-Url=http://files.kde.org/plasma/kwin/effect-videos/maximize.ogv

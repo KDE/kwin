@@ -85,5 +85,4 @@ X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Ordering=60
 X-Plasma-API=javascript
 X-Plasma-MainScript=code/morphingpopups.js
-X-Plasma-RemoteLocation=
 X-KWin-Video-Url=http://files.kde.org/plasma/kwin/effect-videos/morphingpopups.ogv
