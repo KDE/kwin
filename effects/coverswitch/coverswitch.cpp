@@ -677,8 +677,7 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
     if (reflectedWindow) {
         QMatrix4x4 reflectionMatrix;
         reflectionMatrix.scale(1.0, -1.0, 1.0);
-        data.setProjectionMatrix(data.screenProjectionMatrix());
-        data.setModelViewMatrix(reflectionMatrix);
+        data.setModelViewMatrix(reflectionMatrix*data.modelViewMatrix());
         data.setYTranslation(- area.height() - windowRect.y() - windowRect.height());
         if (start) {
             data.multiplyOpacity(timeLine.currentValue());
