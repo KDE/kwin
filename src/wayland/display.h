@@ -54,6 +54,7 @@ class DataDeviceManagerInterface;
 class DpmsManagerInterface;
 class IdleInterface;
 enum class IdleInhibitManagerInterfaceVersion;
+class RemoteAccessManagerInterface;
 class IdleInhibitManagerInterface;
 class FakeInputInterface;
 class OutputInterface;
@@ -176,6 +177,7 @@ public:
     PlasmaWindowManagementInterface *createPlasmaWindowManagement(QObject *parent = nullptr);
     QtSurfaceExtensionInterface *createQtSurfaceExtension(QObject *parent = nullptr);
     IdleInterface *createIdle(QObject *parent = nullptr);
+    RemoteAccessManagerInterface *createRemoteAccessManager(QObject *parent = nullptr);
     FakeInputInterface *createFakeInput(QObject *parent = nullptr);
     ShadowManagerInterface *createShadowManager(QObject *parent = nullptr);
     BlurManagerInterface *createBlurManager(QObject *parent = nullptr);
