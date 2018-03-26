@@ -27,6 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusObjectPath>
 #include <QDBusServiceWatcher>
 
+#include "decorations/decorationbridge.h"
+#include <KDecoration2/DecorationSettings>
+
 using namespace KWin;
 
 KWIN_SINGLETON_FACTORY(ApplicationMenu)
@@ -81,6 +84,13 @@ void ApplicationMenu::setViewEnabled(bool enabled)
 
 void ApplicationMenu::slotShowRequest(const QString &serviceName, const QDBusObjectPath &menuObjectPath, int actionId)
 {
+    // Ignore show request when user has not configured the application menu title bar button
+    auto decorationSettings = Decoration::DecorationBridge::self()->settings();
+    if (!decorationSettings->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::ApplicationMenu)
+            && !decorationSettings->decorationButtonsRight().contains(KDecoration2::DecorationButtonType::ApplicationMenu)) {
+        return;
+    }
+
     if (AbstractClient *c = findAbstractClientWithApplicationMenu(serviceName, menuObjectPath)) {
         c->showApplicationMenu(actionId);
     }
