@@ -71,6 +71,8 @@ void Manager::init()
         return;
     }
 
+    connect(Screens::self(), &Screens::countChanged, this, &Manager::hardReset);
+
     connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, this,
             [this](bool active) {
                 if (active) {
