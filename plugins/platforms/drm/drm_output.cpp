@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/outputchangeset.h>
-#include <KWayland/Server/outputdevice_interface.h>
 #include <KWayland/Server/outputmanagement_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
 #include <KWayland/Server/xdgoutput_interface.h>
@@ -53,13 +52,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
 
-#include <cmath>
-
 namespace KWin
 {
 
 DrmOutput::DrmOutput(DrmBackend *backend)
-    : QObject()
+    : AbstractOutput(backend)
     , m_backend(backend)
 {
 }
@@ -91,8 +88,6 @@ void DrmOutput::teardown()
     m_crtc->setOutput(nullptr);
     m_conn->setOutput(nullptr);
 
-    delete m_waylandOutput.data();
-    delete m_waylandOutputDevice.data();
     delete m_cursor[0];
     delete m_cursor[1];
     if (!m_pageFlipPending) {
@@ -146,11 +141,11 @@ void DrmOutput::updateCursor()
     m_hasNewCursor = true;
     QImage *c = m_cursor[m_cursorIndex]->image();
     c->fill(Qt::transparent);
-    c->setDevicePixelRatio(m_scale);
+    c->setDevicePixelRatio(scale());
 
     QPainter p;
     p.begin(c);
-    if (m_orientation == Qt::InvertedLandscapeOrientation) {
+    if (orientation() == Qt::InvertedLandscapeOrientation) {
         QMatrix4x4 matrix;
         matrix.translate(cursorImage.width() / 2.0, cursorImage.height() / 2.0);
         matrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
@@ -165,7 +160,7 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
 {
     QMatrix4x4 matrix;
     QMatrix4x4 hotspotMatrix;
-    if (m_orientation == Qt::InvertedLandscapeOrientation) {
+    if (orientation() == Qt::InvertedLandscapeOrientation) {
         matrix.translate(pixelSize().width() /2.0, pixelSize().height() / 2.0);
         matrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
         matrix.translate(-pixelSize().width() /2.0, -pixelSize().height() / 2.0);
@@ -174,37 +169,21 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
         hotspotMatrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
         hotspotMatrix.translate(-cursorSize.width()/2.0, -cursorSize.height()/2.0);
     }
-    hotspotMatrix.scale(m_scale);
-    matrix.scale(m_scale);
-    matrix.translate(-m_globalPos.x(), -m_globalPos.y());
+    hotspotMatrix.scale(scale());
+    matrix.scale(scale());
+    const auto outputGlobalPos = AbstractOutput::globalPos();
+    matrix.translate(-outputGlobalPos.x(), -outputGlobalPos.y());
     const QPoint p = matrix.map(globalPos) - hotspotMatrix.map(m_backend->softwareCursorHotspot());
     drmModeMoveCursor(m_backend->fd(), m_crtc->id(), p.x(), p.y());
 }
 
 QSize DrmOutput::pixelSize() const
 {
-    if (m_orientation == Qt::PortraitOrientation || m_orientation == Qt::InvertedPortraitOrientation) {
+    auto orient = orientation();
+    if (orient == Qt::PortraitOrientation || orient == Qt::InvertedPortraitOrientation) {
         return QSize(m_mode.vdisplay, m_mode.hdisplay);
     }
     return QSize(m_mode.hdisplay, m_mode.vdisplay);
-}
-
-QSize DrmOutput::physicalSize() const
-{
-    if (m_orientation == Qt::PortraitOrientation || m_orientation == Qt::InvertedPortraitOrientation) {
-        return QSize(m_physicalSize.height(), m_physicalSize.width());
-    }
-    return m_physicalSize;
-}
-
-QRect DrmOutput::geometry() const
-{
-    return QRect(m_globalPos, pixelSize() / m_scale);
-}
-
-qreal DrmOutput::scale() const
-{
-    return m_scale;
 }
 
 void DrmOutput::setEnabled(bool enabled)
@@ -217,15 +196,10 @@ void DrmOutput::setEnabled(bool enabled)
         initOutput();
     } else {
         setDpms(DpmsMode::Off);
-        delete m_waylandOutput.data();
+        delete waylandOutput().data();
     }
-    m_waylandOutputDevice->setEnabled(enabled ?
+    waylandOutputDevice()->setEnabled(enabled ?
     KWayland::Server::OutputDeviceInterface::Enablement::Enabled : KWayland::Server::OutputDeviceInterface::Enablement::Disabled);
-}
-
-bool DrmOutput::isEnabled() const
-{
-    return !m_waylandOutput.isNull();
 }
 
 static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
@@ -314,9 +288,9 @@ bool DrmOutput::init(drmModeConnector *connector)
         return false;
     }
 
-    m_internal = connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP;
+    setInternal(connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP);
 
-    if (m_internal) {
+    if (internal()) {
         connect(kwinApp(), &Application::screensCreated, this,
             [this] {
                 connect(screens()->orientationSensor(), &OrientationSensor::orientationChanged, this, &DrmOutput::automaticRotation);
@@ -336,7 +310,7 @@ bool DrmOutput::init(drmModeConnector *connector)
         qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId << "/" << m_edid.monitorName << "/" << m_edid.serialNumber << " from " << physicalSize << "to " << overwriteSize;
         physicalSize = overwriteSize;
     }
-    m_physicalSize = physicalSize;
+    setRawPhysicalSize(physicalSize);
 
     initOutputDevice(connector);
 
@@ -356,41 +330,48 @@ void DrmOutput::initUuid()
 
 void DrmOutput::initOutput()
 {
-    Q_ASSERT(m_waylandOutputDevice);
-    if (!m_waylandOutput.isNull()) {
-        delete m_waylandOutput.data();
-        m_waylandOutput.clear();
+    auto wlOutputDevice = waylandOutputDevice();
+    Q_ASSERT(wlOutputDevice);
+
+    auto wlOutput = waylandOutput();
+    if (!wlOutput.isNull()) {
+        delete wlOutput.data();
+        wlOutput.clear();
     }
-    m_waylandOutput = waylandServer()->display()->createOutput();
-    m_xdgOutput = waylandServer()->xdgOutputManager()->createXdgOutput(m_waylandOutput, m_waylandOutput);
+    wlOutput = waylandServer()->display()->createOutput();
+    setWaylandOutput(wlOutput.data());
+    createXdgOutput();
     connect(this, &DrmOutput::modeChanged, this,
         [this] {
-            if (m_waylandOutput.isNull()) {
+            auto wlOutput = waylandOutput();
+            if (wlOutput.isNull()) {
                 return;
             }
-            m_waylandOutput->setCurrentMode(QSize(m_mode.hdisplay, m_mode.vdisplay), refreshRateForMode(&m_mode));
-            if (m_xdgOutput) {
-                m_xdgOutput->setLogicalSize(pixelSize() / m_scale);
-                m_xdgOutput->done();
+            wlOutput->setCurrentMode(QSize(m_mode.hdisplay, m_mode.vdisplay),
+                                          refreshRateForMode(&m_mode));
+            auto xdg = xdgOutput();
+            if (xdg) {
+                xdg->setLogicalSize(pixelSize() / scale());
+                xdg->done();
             }
         }
     );
-    m_waylandOutput->setManufacturer(m_waylandOutputDevice->manufacturer());
-    m_waylandOutput->setModel(m_waylandOutputDevice->model());
-    m_waylandOutput->setPhysicalSize(m_physicalSize);
+    wlOutput->setManufacturer(wlOutputDevice->manufacturer());
+    wlOutput->setModel(wlOutputDevice->model());
+    wlOutput->setPhysicalSize(rawPhysicalSize());
 
     // set dpms
     if (!m_dpms.isNull()) {
-        m_waylandOutput->setDpmsSupported(true);
-        m_waylandOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsMode));
-        connect(m_waylandOutput.data(), &KWayland::Server::OutputInterface::dpmsModeRequested, this,
+        wlOutput->setDpmsSupported(true);
+        wlOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsMode));
+        connect(wlOutput.data(), &KWayland::Server::OutputInterface::dpmsModeRequested, this,
             [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
                 setDpms(fromWaylandDpmsMode(mode));
             }, Qt::QueuedConnection
         );
     }
 
-    for(const auto &mode: m_waylandOutputDevice->modes()) {
+    for(const auto &mode: wlOutputDevice->modes()) {
         KWayland::Server::OutputInterface::ModeFlags flags;
         if (mode.flags & KWayland::Server::OutputDeviceInterface::ModeFlag::Current) {
             flags |= KWayland::Server::OutputInterface::ModeFlag::Current;
@@ -398,25 +379,26 @@ void DrmOutput::initOutput()
         if (mode.flags & KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred) {
             flags |= KWayland::Server::OutputInterface::ModeFlag::Preferred;
         }
-        m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
+        wlOutput->addMode(mode.size, flags, mode.refreshRate);
     }
 
-    m_waylandOutput->create();
+    wlOutput->create();
 }
 
 void DrmOutput::initOutputDevice(drmModeConnector *connector)
 {
-    if (!m_waylandOutputDevice.isNull()) {
-        delete m_waylandOutputDevice.data();
-        m_waylandOutputDevice.clear();
+    auto wlOutputDevice = waylandOutputDevice();
+    if (!wlOutputDevice.isNull()) {
+        delete wlOutputDevice.data();
+        wlOutputDevice.clear();
     }
-    m_waylandOutputDevice = waylandServer()->display()->createOutputDevice();
-    m_waylandOutputDevice->setUuid(m_uuid);
+    wlOutputDevice = waylandServer()->display()->createOutputDevice();
+    wlOutputDevice->setUuid(m_uuid);
 
     if (!m_edid.eisaId.isEmpty()) {
-        m_waylandOutputDevice->setManufacturer(QString::fromLatin1(m_edid.eisaId));
+        wlOutputDevice->setManufacturer(QString::fromLatin1(m_edid.eisaId));
     } else {
-        m_waylandOutputDevice->setManufacturer(i18n("unknown"));
+        wlOutputDevice->setManufacturer(i18n("unknown"));
     }
 
     QString connectorName = s_connectorNames.value(connector->connector_type, QByteArrayLiteral("Unknown"));
@@ -435,9 +417,9 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         modelName = i18n("unknown");
     }
 
-    m_waylandOutputDevice->setModel(connectorName + QStringLiteral("-") + QString::number(connector->connector_type_id) + QStringLiteral("-") + modelName);
+    wlOutputDevice->setModel(connectorName + QStringLiteral("-") + QString::number(connector->connector_type_id) + QStringLiteral("-") + modelName);
 
-    m_waylandOutputDevice->setPhysicalSize(m_physicalSize);
+    wlOutputDevice->setPhysicalSize(rawPhysicalSize());
 
     // read in mode information
     for (int i = 0; i < connector->count_modes; ++i) {
@@ -460,9 +442,10 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         mode.flags = deviceflags;
         mode.refreshRate = refreshRate;
         qCDebug(KWIN_DRM) << "Adding mode: " << i << mode.size;
-        m_waylandOutputDevice->addMode(mode);
+        wlOutputDevice->addMode(mode);
     }
-    m_waylandOutputDevice->create();
+    wlOutputDevice->create();
+    setWaylandOutputDevice(wlOutputDevice.data());
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
@@ -757,8 +740,9 @@ void DrmOutput::dpmsOnHandler()
 {
     qCDebug(KWIN_DRM) << "DPMS mode set for output" << m_crtc->id() << "to On.";
 
-    if (m_waylandOutput) {
-        m_waylandOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsModePending));
+    auto wlOutput = waylandOutput();
+    if (wlOutput) {
+        wlOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsModePending));
     }
     emit dpmsChanged();
 
@@ -775,168 +759,124 @@ void DrmOutput::dpmsOffHandler()
 {
     qCDebug(KWIN_DRM) << "DPMS mode set for output" << m_crtc->id() << "to Off.";
 
-    if (m_waylandOutput) {
-        m_waylandOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsModePending));
+    auto wlOutput = waylandOutput();
+    if (wlOutput) {
+        wlOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsModePending));
     }
     emit dpmsChanged();
 
     m_backend->outputWentOff();
 }
 
-QString DrmOutput::name() const
-{
-    if (!m_waylandOutput) {
-        return i18n("unknown");
-    }
-    return QStringLiteral("%1 %2").arg(m_waylandOutput->manufacturer()).arg(m_waylandOutput->model());
-}
-
 int DrmOutput::currentRefreshRate() const
 {
-    if (!m_waylandOutput) {
+    auto wlOutput = waylandOutput();
+    if (!wlOutput) {
         return 60000;
     }
-    return m_waylandOutput->refreshRate();
-}
-
-void DrmOutput::setGlobalPos(const QPoint &pos)
-{
-    m_globalPos = pos;
-    if (m_waylandOutput) {
-        m_waylandOutput->setGlobalPosition(pos);
-    }
-    if (m_waylandOutputDevice) {
-        m_waylandOutputDevice->setGlobalPosition(pos);
-    }
-    if (m_xdgOutput) {
-        m_xdgOutput->setLogicalPosition(pos);
-        m_xdgOutput->done();
-    }
-}
-
-void DrmOutput::setScale(qreal scale)
-{
-    m_scale = scale;
-    if (m_waylandOutput) {
-        // this is the scale that clients will ideally use for their buffers
-        // this has to be an int which is fine
-
-        // I don't know whether we want to round or ceil
-        // or maybe even set this to 3 when we're scaling to 1.5
-        // don't treat this like it's chosen deliberately
-        m_waylandOutput->setScale(std::ceil(scale));
-    }
-    if (m_waylandOutputDevice) {
-        m_waylandOutputDevice->setScaleF(scale);
-    }
-    if (m_xdgOutput) {
-        m_xdgOutput->setLogicalSize(pixelSize() / m_scale);
-        m_xdgOutput->done();
-    }
-}
-
-void DrmOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
-{
-    m_changeset = changes;
-    qCDebug(KWIN_DRM) << "set changes in DrmOutput";
-    commitChanges();
+    return wlOutput->refreshRate();
 }
 
 bool DrmOutput::commitChanges()
 {
-    Q_ASSERT(!m_waylandOutputDevice.isNull());
+    auto wlOutputDevice = waylandOutputDevice();
+    Q_ASSERT(!wlOutputDevice.isNull());
 
-    if (m_changeset.isNull()) {
+    auto changeset = changes();
+
+    if (changeset.isNull()) {
         qCDebug(KWIN_DRM) << "no changes";
         // No changes to an output is an entirely valid thing
         return true;
     }
     //enabledChanged is handled by drmbackend
-    if (m_changeset->modeChanged()) {
-        qCDebug(KWIN_DRM) << "Setting new mode:" << m_changeset->mode();
-        m_waylandOutputDevice->setCurrentMode(m_changeset->mode());
-        updateMode(m_changeset->mode());
+    if (changeset->modeChanged()) {
+        qCDebug(KWIN_DRM) << "Setting new mode:" << changeset->mode();
+        wlOutputDevice->setCurrentMode(changeset->mode());
+        updateMode(changeset->mode());
     }
-    if (m_changeset->transformChanged()) {
-        qCDebug(KWIN_DRM) << "Server setting transform: " << (int)(m_changeset->transform());
-        transform(m_changeset->transform());
+    if (changeset->transformChanged()) {
+        qCDebug(KWIN_DRM) << "Server setting transform: " << (int)(changeset->transform());
+        transform(changeset->transform());
     }
-    if (m_changeset->positionChanged()) {
-        qCDebug(KWIN_DRM) << "Server setting position: " << m_changeset->position();
-        setGlobalPos(m_changeset->position());
+    if (changeset->positionChanged()) {
+        qCDebug(KWIN_DRM) << "Server setting position: " << changeset->position();
+        setGlobalPos(changeset->position());
         // may just work already!
     }
-    if (m_changeset->scaleChanged()) {
-        qCDebug(KWIN_DRM) << "Setting scale:" << m_changeset->scale();
-        setScale(m_changeset->scaleF());
+    if (changeset->scaleChanged()) {
+        qCDebug(KWIN_DRM) << "Setting scale:" << changeset->scale();
+        setScale(changeset->scaleF());
     }
     return true;
 }
 
 void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform transform)
 {
-    m_waylandOutputDevice->setTransform(transform);
+    waylandOutputDevice()->setTransform(transform);
     using KWayland::Server::OutputDeviceInterface;
     using KWayland::Server::OutputInterface;
+    auto wlOutput = waylandOutput();
+
     switch (transform) {
     case OutputDeviceInterface::Transform::Normal:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
         }
-        if (m_waylandOutput) {
-            m_waylandOutput->setTransform(OutputInterface::Transform::Normal);
+        if (wlOutput) {
+            wlOutput->setTransform(OutputInterface::Transform::Normal);
         }
-        m_orientation = Qt::PrimaryOrientation;
+        setOrientation(Qt::PrimaryOrientation);
         break;
     case OutputDeviceInterface::Transform::Rotated90:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate90);
         }
-        if (m_waylandOutput) {
-            m_waylandOutput->setTransform(OutputInterface::Transform::Rotated90);
+        if (wlOutput) {
+            wlOutput->setTransform(OutputInterface::Transform::Rotated90);
         }
-        m_orientation = Qt::PortraitOrientation;
+        setOrientation(Qt::PortraitOrientation);
         break;
     case OutputDeviceInterface::Transform::Rotated180:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate180);
         }
-        if (m_waylandOutput) {
-            m_waylandOutput->setTransform(OutputInterface::Transform::Rotated180);
+        if (wlOutput) {
+            wlOutput->setTransform(OutputInterface::Transform::Rotated180);
         }
-        m_orientation = Qt::InvertedLandscapeOrientation;
+        setOrientation(Qt::InvertedLandscapeOrientation);
         break;
     case OutputDeviceInterface::Transform::Rotated270:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate270);
         }
-        if (m_waylandOutput) {
-            m_waylandOutput->setTransform(OutputInterface::Transform::Rotated270);
+        if (wlOutput) {
+            wlOutput->setTransform(OutputInterface::Transform::Rotated270);
         }
-        m_orientation = Qt::InvertedPortraitOrientation;
+        setOrientation(Qt::InvertedPortraitOrientation);
         break;
     case OutputDeviceInterface::Transform::Flipped:
         // TODO: what is this exactly?
-        if (m_waylandOutput) {
-            m_waylandOutput->setTransform(OutputInterface::Transform::Flipped);
+        if (wlOutput) {
+            wlOutput->setTransform(OutputInterface::Transform::Flipped);
         }
         break;
     case OutputDeviceInterface::Transform::Flipped90:
         // TODO: what is this exactly?
-        if (m_waylandOutput) {
-            m_waylandOutput->setTransform(OutputInterface::Transform::Flipped90);
+        if (wlOutput) {
+            wlOutput->setTransform(OutputInterface::Transform::Flipped90);
         }
         break;
     case OutputDeviceInterface::Transform::Flipped180:
         // TODO: what is this exactly?
-        if (m_waylandOutput) {
-            m_waylandOutput->setTransform(OutputInterface::Transform::Flipped180);
+        if (wlOutput) {
+            wlOutput->setTransform(OutputInterface::Transform::Flipped180);
         }
         break;
     case OutputDeviceInterface::Transform::Flipped270:
         // TODO: what is this exactly?
-        if (m_waylandOutput) {
-            m_waylandOutput->setTransform(OutputInterface::Transform::Flipped270);
+        if (wlOutput) {
+            wlOutput->setTransform(OutputInterface::Transform::Flipped270);
         }
         break;
     }
@@ -1070,7 +1010,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
         // go back to previous state
         if (m_lastWorkingState.valid) {
             m_mode = m_lastWorkingState.mode;
-            m_orientation = m_lastWorkingState.orientation;
+            setOrientation(m_lastWorkingState.orientation);
             setGlobalPos(m_lastWorkingState.globalPos);
             if (m_primaryPlane) {
                 m_primaryPlane->setTransformation(m_lastWorkingState.planeTransformations);
@@ -1094,8 +1034,8 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
     if (wasModeset) {
         // store current mode set as new good state
         m_lastWorkingState.mode = m_mode;
-        m_lastWorkingState.orientation = m_orientation;
-        m_lastWorkingState.globalPos = m_globalPos;
+        m_lastWorkingState.orientation = orientation();
+        m_lastWorkingState.globalPos = globalPos();
         if (m_primaryPlane) {
             m_lastWorkingState.planeTransformations = m_primaryPlane->transformation();
         }

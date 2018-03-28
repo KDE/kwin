@@ -30,7 +30,7 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
     , QPainterBackend()
     , m_backend(backend)
 {
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->drmOutputs();
     for (auto output: outputs) {
         initOutput(output);
     }

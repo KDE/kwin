@@ -141,7 +141,7 @@ bool EglGbmBackend::initRenderingContext()
         return false;
     }
 
-    const auto outputs = m_backend->outputs();
+    const auto outputs = m_backend->drmOutputs();
     for (DrmOutput *drmOutput: outputs) {
         createOutput(drmOutput);
     }

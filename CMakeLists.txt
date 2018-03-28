@@ -453,6 +453,7 @@ set(kwin_KDEINIT_SRCS
     decorations/decorationrenderer.cpp
     decorations/decorations_logging.cpp
     platform.cpp
+    abstract_output.cpp
     shell_client.cpp
     wayland_server.cpp
     wayland_cursor_theme.cpp

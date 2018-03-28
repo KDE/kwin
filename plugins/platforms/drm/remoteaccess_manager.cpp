@@ -82,7 +82,7 @@ void RemoteAccessManager::passBuffer(DrmOutput *output, DrmBuffer *buffer)
     buf->setStride(gbm_bo_get_stride(bo));
     buf->setFormat(gbm_bo_get_format(bo));
 
-    m_interface->sendBufferReady(output->getWaylandInterface().data(), buf);
+    m_interface->sendBufferReady(output->waylandOutput().data(), buf);
 }
 
 } // KWin namespace

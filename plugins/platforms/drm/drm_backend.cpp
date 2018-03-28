@@ -49,6 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSocketNotifier>
 #include <QPainter>
 // system
+#include <algorithm>
 #include <unistd.h>
 // drm
 #include <xf86drm.h>
@@ -90,7 +91,11 @@ DrmBackend::~DrmBackend()
         while (m_pageFlipsPending != 0) {
             QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
         }
+        // we need to first remove all outputs
         qDeleteAll(m_outputs);
+        m_outputs.clear();
+        m_enabledOutputs.clear();
+
         qDeleteAll(m_planes);
         qDeleteAll(m_crtcs);
         qDeleteAll(m_connectors);
@@ -114,6 +119,16 @@ void DrmBackend::init()
     } else {
         connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
     }
+}
+
+Outputs DrmBackend::outputs() const
+{
+    return m_outputs;
+}
+
+Outputs DrmBackend::enabledOutputs() const
+{
+    return m_enabledOutputs;
 }
 
 void DrmBackend::outputWentOff()

@@ -45,6 +45,7 @@ class Manager;
 struct GammaRamp;
 }
 
+class AbstractOutput;
 class Edge;
 class Compositor;
 class OverlayWindow;
@@ -63,6 +64,17 @@ namespace Decoration
 class Renderer;
 class DecoratedClientImpl;
 }
+
+class KWIN_EXPORT Outputs : public QVector<AbstractOutput*>
+{
+public:
+    Outputs(){};
+    template <typename T>
+    Outputs(const QVector<T> &other) {
+        resize(other.size());
+        std::copy(other.constBegin(), other.constEnd(), begin());
+    }
+};
 
 class KWIN_EXPORT Platform : public QObject
 {
@@ -409,6 +421,15 @@ public:
         Q_UNUSED(screen);
         Q_UNUSED(gamma);
         return false;
+    }
+
+    // outputs with connections (org_kde_kwin_outputdevice)
+    virtual Outputs outputs() const {
+        return Outputs();
+    }
+    // actively compositing outputs (wl_output)
+    virtual Outputs enabledOutputs() const {
+        return Outputs();
     }
 
     /*

@@ -48,7 +48,7 @@ public:
     int outputCount() const {
         return m_outputs.size();
     }
-    const QVector<VirtualOutput*> outputs() const {
+    const QVector<VirtualOutput*> virtualOutputs() const {
         return m_outputs;
     }
     qreal outputScale() const {

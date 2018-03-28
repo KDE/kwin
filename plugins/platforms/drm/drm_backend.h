@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QPointer>
 #include <QSize>
+#include <QVector>
 #include <xf86drmMode.h>
 
 #include <memory>
@@ -93,12 +94,15 @@ public:
     int fd() const {
         return m_fd;
     }
-    QVector<DrmOutput*> outputs() const {
+    Outputs outputs() const override;
+    Outputs enabledOutputs() const override;
+    QVector<DrmOutput*> drmOutputs() const {
         return m_outputs;
     }
-    QVector<DrmOutput*> enabledOutputs() const {
+    QVector<DrmOutput*> drmEnabledOutputs() const {
         return m_enabledOutputs;
     }
+
     QVector<DrmPlane*> planes() const {
         return m_planes;
     }

@@ -20,30 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DRM_OUTPUT_H
 #define KWIN_DRM_OUTPUT_H
 
+#include "abstract_output.h"
 #include "drm_pointer.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"
 
 #include <QObject>
 #include <QPoint>
-#include <QPointer>
 #include <QSize>
 #include <QVector>
 #include <xf86drmMode.h>
 
 #include <KWayland/Server/outputdevice_interface.h>
-
-namespace KWayland
-{
-namespace Server
-{
-class OutputInterface;
-class OutputDeviceInterface;
-class OutputChangeSet;
-class OutputManagementInterface;
-class XdgOutputInterface;
-}
-}
 
 namespace KWin
 {
@@ -55,7 +43,7 @@ class DrmPlane;
 class DrmConnector;
 class DrmCrtc;
 
-class DrmOutput : public QObject
+class KWIN_EXPORT DrmOutput : public AbstractOutput
 {
     Q_OBJECT
 public:
@@ -86,23 +74,11 @@ public:
      * The default is on
      */
     void setEnabled(bool enabled);
-    bool isEnabled() const;
 
-    /**
-     * This sets the changes and tests them against the DRM output
-     */
-    void setChanges(KWayland::Server::OutputChangeSet *changeset);
-    bool commitChanges();
+    bool commitChanges() override;
 
-    QSize pixelSize() const;
-    qreal scale() const;
+    QSize pixelSize() const override;
 
-    /*
-     * The geometry of this output in global compositor co-ordinates (i.e scaled)
-     */
-    QRect geometry() const;
-
-    QString name() const;
     int currentRefreshRate() const;
     // These values are defined by the kernel
     enum class DpmsMode {
@@ -121,23 +97,9 @@ public:
         return m_uuid;
     }
 
-    QSize physicalSize() const;
-
     bool initCursor(const QSize &cursorSize);
 
     bool supportsTransformations() const;
-
-    bool isInternal() const {
-        return m_internal;
-    }
-
-    Qt::ScreenOrientation orientation() const {
-        return m_orientation;
-    }
-
-    const QPointer<KWayland::Server::OutputInterface> getWaylandInterface() const {
-        return m_waylandOutput;
-    }
 
 Q_SIGNALS:
     void dpmsChanged();
@@ -165,8 +127,6 @@ private:
 
     bool isCurrentMode(const drmModeModeInfo *mode) const;
     void initUuid();
-    void setGlobalPos(const QPoint &pos);
-    void setScale(qreal scale);
     void initOutput();
     bool initPrimaryPlane();
     bool initCursorPlane();
@@ -183,15 +143,9 @@ private:
     DrmBackend *m_backend;
     DrmConnector *m_conn = nullptr;
     DrmCrtc *m_crtc = nullptr;
-    QPoint m_globalPos;
-    qreal m_scale = 1;
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
     Edid m_edid;
-    QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
-    QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;
-    QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
-    QPointer<KWayland::Server::OutputChangeSet> m_changeset;
     KWin::ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
     DpmsMode m_dpmsMode = DpmsMode::On;
     DpmsMode m_dpmsModePending = DpmsMode::On;
@@ -204,8 +158,6 @@ private:
     bool m_pageFlipPending = false;
     bool m_dpmsAtomicOffPending = false;
     bool m_modesetRequested = true;
-    QSize m_physicalSize;
-    Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
 
     struct {
         Qt::ScreenOrientation orientation;
