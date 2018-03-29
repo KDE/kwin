@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2018 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,27 +17,39 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_SCREENS_DRM_H
-#define KWIN_SCREENS_DRM_H
-#include "outputscreens.h"
+#ifndef KWIN_OUTPUTSCREENS_H
+#define KWIN_OUTPUTSCREENS_H
+
+#include "screens.h"
 
 namespace KWin
 {
-class DrmBackend;
 
-class DrmScreens : public OutputScreens
+/**
+ * @brief Implementation for backends with Outputs
+ **/
+class KWIN_EXPORT OutputScreens : public Screens
 {
     Q_OBJECT
 public:
-    DrmScreens(DrmBackend *backend, QObject *parent = nullptr);
-    virtual ~DrmScreens();
+    OutputScreens(Platform *platform, QObject *parent = nullptr);
+    virtual ~OutputScreens();
 
-    float refreshRate(int screen) const override;
-    bool supportsTransformations(int screen) const override;
+    void init() override;
+    QString name(int screen) const override;
+    bool isInternal(int screen) const;
+    QSizeF physicalSize(int screen) const;
+    QRect geometry(int screen) const override;
+    QSize size(int screen) const override;
+    qreal scale(int screen) const override;
+    Qt::ScreenOrientation orientation(int screen) const;
+    void updateCount() override;
+    int number(const QPoint &pos) const override;
 
-    DrmBackend *m_backend;
+protected:
+    Platform *m_platform;
 };
 
 }
 
-#endif
+#endif // KWIN_OUTPUTSCREENS_H

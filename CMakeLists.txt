@@ -410,6 +410,7 @@ set(kwin_KDEINIT_SRCS
    killwindow.cpp
    geometrytip.cpp
    screens.cpp
+   outputscreens.cpp
    shadow.cpp
    sm.cpp
    group.cpp

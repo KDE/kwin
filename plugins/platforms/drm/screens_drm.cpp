@@ -25,7 +25,7 @@ namespace KWin
 {
 
 DrmScreens::DrmScreens(DrmBackend *backend, QObject *parent)
-    : Screens(parent)
+    : OutputScreens(backend, parent)
     , m_backend(backend)
 {
     connect(backend, &DrmBackend::screensQueried, this, &DrmScreens::updateCount);
@@ -34,120 +34,22 @@ DrmScreens::DrmScreens(DrmBackend *backend, QObject *parent)
 
 DrmScreens::~DrmScreens() = default;
 
-void DrmScreens::init()
-{
-    updateCount();
-    KWin::Screens::init();
-    emit changed();
-}
-
-QRect DrmScreens::geometry(int screen) const
-{
-    const auto outputs = m_backend->enabledOutputs();
-    if (screen >= outputs.size()) {
-        return QRect();
-    }
-    return outputs.at(screen)->geometry();
-}
-
-qreal DrmScreens::scale(int screen) const
-{
-    const auto outputs = m_backend->enabledOutputs();
-    if (screen >= outputs.size()) {
-        return 1;
-    }
-    return outputs.at(screen)->scale();
-}
-
-QSize DrmScreens::size(int screen) const
-{
-    const auto outputs = m_backend->enabledOutputs();
-    if (screen >= outputs.size()) {
-        return QSize();
-    }
-    return outputs.at(screen)->geometry().size();
-}
-
-void DrmScreens::updateCount()
-{
-    setCount(m_backend->drmEnabledOutputs().size());
-}
-
-int DrmScreens::number(const QPoint &pos) const
-{
-    int bestScreen = 0;
-    int minDistance = INT_MAX;
-    const auto outputs = m_backend->drmEnabledOutputs();
-    for (int i = 0; i < outputs.size(); ++i) {
-        auto o = outputs.at(i);
-        const QRect &geo = o->geometry();
-        if (geo.contains(pos)) {
-            return i;
-        }
-        int distance = QPoint(geo.topLeft() - pos).manhattanLength();
-        distance = qMin(distance, QPoint(geo.topRight() - pos).manhattanLength());
-        distance = qMin(distance, QPoint(geo.bottomRight() - pos).manhattanLength());
-        distance = qMin(distance, QPoint(geo.bottomLeft() - pos).manhattanLength());
-        if (distance < minDistance) {
-            minDistance = distance;
-            bestScreen = i;
-        }
-    }
-    return bestScreen;
-}
-
-QString DrmScreens::name(int screen) const
-{
-    const auto outputs = m_backend->drmEnabledOutputs();
-    if (screen >= outputs.size()) {
-        return Screens::name(screen);
-    }
-    return outputs.at(screen)->name();
-}
-
 float DrmScreens::refreshRate(int screen) const
 {
-    const auto outputs = m_backend->drmEnabledOutputs();
-    if (screen >= outputs.size()) {
+    const auto enOuts = m_backend->drmEnabledOutputs();
+    if (screen >= enOuts.size()) {
         return Screens::refreshRate(screen);
     }
-    return outputs.at(screen)->currentRefreshRate() / 1000.0f;
-}
-
-QSizeF DrmScreens::physicalSize(int screen) const
-{
-    const auto outputs = m_backend->drmEnabledOutputs();
-    if (screen >= outputs.size()) {
-        return Screens::physicalSize(screen);
-    }
-    return outputs.at(screen)->physicalSize();
-}
-
-bool DrmScreens::isInternal(int screen) const
-{
-    const auto outputs = m_backend->drmEnabledOutputs();
-    if (screen >= outputs.size()) {
-        return false;
-    }
-    return outputs.at(screen)->isInternal();
+    return enOuts.at(screen)->currentRefreshRate() / 1000.0f;
 }
 
 bool DrmScreens::supportsTransformations(int screen) const
 {
-    const auto outputs = m_backend->drmEnabledOutputs();
-    if (screen >= outputs.size()) {
+    const auto enOuts = m_backend->drmEnabledOutputs();
+    if (screen >= enOuts.size()) {
         return false;
     }
-    return outputs.at(screen)->supportsTransformations();
-}
-
-Qt::ScreenOrientation DrmScreens::orientation(int screen) const
-{
-    const auto outputs = m_backend->drmOutputs();
-    if (screen >= outputs.size()) {
-        return Qt::PrimaryOrientation;
-    }
-    return outputs.at(screen)->orientation();
+    return enOuts.at(screen)->supportsTransformations();
 }
 
 }
