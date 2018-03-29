@@ -40,6 +40,7 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
+    void testNetCurrentDesktop();
     void testLastDesktopRemoved_data();
     void testLastDesktopRemoved();
 };
@@ -60,6 +61,16 @@ void VirtualDesktopTest::initTestCase()
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     waylandServer()->initWorkspace();
+
+    if (kwinApp()->x11Connection()) {
+        // verify the current desktop x11 property on startup, see BUG: 391034
+        Xcb::Atom currentDesktopAtom("_NET_CURRENT_DESKTOP");
+        QVERIFY(currentDesktopAtom.isValid());
+        Xcb::Property currentDesktop(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
+        bool ok = true;
+        QCOMPARE(currentDesktop.value(0, &ok), 0);
+        QVERIFY(ok);
+    }
 }
 
 void VirtualDesktopTest::init()
@@ -72,6 +83,47 @@ void VirtualDesktopTest::init()
 void VirtualDesktopTest::cleanup()
 {
     Test::destroyWaylandConnection();
+}
+
+void VirtualDesktopTest::testNetCurrentDesktop()
+{
+    if (!kwinApp()->x11Connection()) {
+        QSKIP("Skipped on Wayland only");
+    }
+    QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
+    VirtualDesktopManager::self()->setCount(4);
+    QCOMPARE(VirtualDesktopManager::self()->count(), 4u);
+
+    Xcb::Atom currentDesktopAtom("_NET_CURRENT_DESKTOP");
+    QVERIFY(currentDesktopAtom.isValid());
+    Xcb::Property currentDesktop(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
+    bool ok = true;
+    QCOMPARE(currentDesktop.value(0, &ok), 0);
+    QVERIFY(ok);
+
+    // go to desktop 2
+    VirtualDesktopManager::self()->setCurrent(2);
+    currentDesktop = Xcb::Property(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
+    QCOMPARE(currentDesktop.value(0, &ok), 1);
+    QVERIFY(ok);
+
+    // go to desktop 3
+    VirtualDesktopManager::self()->setCurrent(3);
+    currentDesktop = Xcb::Property(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
+    QCOMPARE(currentDesktop.value(0, &ok), 2);
+    QVERIFY(ok);
+
+    // go to desktop 4
+    VirtualDesktopManager::self()->setCurrent(4);
+    currentDesktop = Xcb::Property(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
+    QCOMPARE(currentDesktop.value(0, &ok), 3);
+    QVERIFY(ok);
+
+    // and back to first
+    VirtualDesktopManager::self()->setCurrent(1);
+    currentDesktop = Xcb::Property(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
+    QCOMPARE(currentDesktop.value(0, &ok), 0);
+    QVERIFY(ok);
 }
 
 void VirtualDesktopTest::testLastDesktopRemoved_data()
