@@ -45,16 +45,6 @@ public:
     virtual ~VirtualBackend();
     void init() override;
 
-    int outputCount() const {
-        return m_outputs.size();
-    }
-    const QVector<VirtualOutput*> virtualOutputs() const {
-        return m_outputs;
-    }
-    qreal outputScale() const {
-        return m_outputScale;
-    }
-
     bool saveFrames() const {
         return !m_screenshotDir.isNull();
     }
@@ -66,9 +56,8 @@ public:
 
     Q_INVOKABLE void setVirtualOutputs(int count, QVector<QRect> geometries = QVector<QRect>());
 
-    Q_INVOKABLE void setOutputScale(qreal scale) {
-        m_outputScale = scale;
-    }
+    Outputs outputs() const override;
+    Outputs enabledOutputs() const override;
 
     int drmFd() const {
         return m_drmFd;
@@ -95,8 +84,7 @@ Q_SIGNALS:
 
 private:
     QVector<VirtualOutput*> m_outputs;
-
-    qreal m_outputScale = 1;
+    QVector<VirtualOutput*> m_enabledOutputs;
 
     QScopedPointer<QTemporaryDir> m_screenshotDir;
     int m_drmFd = -1;

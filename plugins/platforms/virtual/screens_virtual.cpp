@@ -25,7 +25,7 @@ namespace KWin
 {
 
 VirtualScreens::VirtualScreens(VirtualBackend *backend, QObject *parent)
-    : Screens(parent)
+    : OutputScreens(backend, parent)
     , m_backend(backend)
 {
 }
@@ -40,7 +40,7 @@ void VirtualScreens::init()
     connect(m_backend, &VirtualBackend::virtualOutputsSet, this,
         [this] (bool countChanged) {
             if (countChanged) {
-                setCount(m_backend->outputCount());
+                setCount(m_backend->outputs().size());
             } else {
                 emit changed();
             }
@@ -48,47 +48,6 @@ void VirtualScreens::init()
     );
 
     emit changed();
-}
-
-QRect VirtualScreens::geometry(int screen) const
-{
-    const auto outputs = m_backend->virtualOutputs();
-    if (screen >= outputs.size()) {
-        return QRect();
-    }
-    return outputs.at(screen)->geometry();
-}
-
-QSize VirtualScreens::size(int screen) const
-{
-    return geometry(screen).size();
-}
-
-void VirtualScreens::updateCount()
-{
-    setCount(m_backend->outputCount());
-}
-
-int VirtualScreens::number(const QPoint &pos) const
-{
-    int bestScreen = 0;
-    int minDistance = INT_MAX;
-    const auto outputs = m_backend->virtualOutputs();
-    for (int i = 0; i < outputs.size(); ++i) {
-        const QRect &geo = outputs.at(i)->geometry();
-        if (geo.contains(pos)) {
-            return i;
-        }
-        int distance = QPoint(geo.topLeft() - pos).manhattanLength();
-        distance = qMin(distance, QPoint(geo.topRight() - pos).manhattanLength());
-        distance = qMin(distance, QPoint(geo.bottomRight() - pos).manhattanLength());
-        distance = qMin(distance, QPoint(geo.bottomLeft() - pos).manhattanLength());
-        if (distance < minDistance) {
-            minDistance = distance;
-            bestScreen = i;
-        }
-    }
-    return bestScreen;
 }
 
 }

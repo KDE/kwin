@@ -76,8 +76,9 @@ void VirtualBackend::init()
      */
     if (!m_outputs.size()) {
         VirtualOutput *dummyOutput = new VirtualOutput(this);
-        dummyOutput->m_geo = QRect(QPoint(0, 0), initialWindowSize());
-        m_outputs = { dummyOutput };
+        dummyOutput->setGeometry(QRect(QPoint(0, 0), initialWindowSize()));
+        m_outputs << dummyOutput ;
+        m_enabledOutputs << dummyOutput ;
     }
 
 
@@ -113,6 +114,16 @@ OpenGLBackend *VirtualBackend::createOpenGLBackend()
     return new EglGbmBackend(this);
 }
 
+Outputs VirtualBackend::outputs() const
+{
+    return m_outputs;
+}
+
+Outputs VirtualBackend::enabledOutputs() const
+{
+    return m_enabledOutputs;
+}
+
 void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries)
 {
     Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
@@ -120,17 +131,18 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries)
     bool countChanged = m_outputs.size() != count;
     qDeleteAll(m_outputs.begin(), m_outputs.end());
     m_outputs.resize(count);
+    m_enabledOutputs.resize(count);
 
     int sumWidth = 0;
     for (int i = 0; i < count; i++) {
         VirtualOutput *vo = new VirtualOutput(this);
         if (geometries.size()) {
-            vo->m_geo = geometries.at(i);
-        } else if (!vo->m_geo.isValid()) {
-            vo->m_geo = QRect(QPoint(sumWidth, 0), initialWindowSize());
-            sumWidth += vo->m_geo.width();
+            vo->setGeometry(geometries.at(i));
+        } else if (!vo->geometry().isValid()) {
+            vo->setGeometry(QRect(QPoint(sumWidth, 0), initialWindowSize()));
+            sumWidth += initialWindowSize().width();
         }
-        m_outputs[i] = vo;
+        m_outputs[i] = m_enabledOutputs[i] = vo;
     }
 
     emit virtualOutputsSet(countChanged);

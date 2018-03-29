@@ -291,15 +291,15 @@ void DecorationInputTest::testDoubleTap_data()
     QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
     QTest::addColumn<Test::ShellSurfaceType>("type");
 
-    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("topLeft|xdgv5") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("top|xdgv5") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("topRight|xdgv5") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("topLeft|xdgv6") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV6;
-    QTest::newRow("top|xdgv6") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV6;
-    QTest::newRow("topRight|xdgv6") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("topLeft") << QPoint(10, 10) << Qt::TopLeftSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("top") << QPoint(260, 10) << Qt::TopSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("topRight") << QPoint(509, 10) << Qt::TopRightSection << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("topLeft|xdgv5") << QPoint(10, 10) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("top|xdgv5") << QPoint(260, 10) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("topRight|xdgv5") << QPoint(509, 10) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("topLeft|xdgv6") << QPoint(10, 10) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("top|xdgv6") << QPoint(260, 10) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("topRight|xdgv6") << QPoint(509, 10) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV6;
 
 }
 
@@ -329,7 +329,10 @@ void KWin::DecorationInputTest::testDoubleTap()
     QVERIFY(!c->isOnAllDesktops());
 
     // test top most deco pixel, BUG: 362860
-    c->move(0, 0);
+    //
+    // Not directly at (0, 0), otherwise ScreenEdgeInputFilter catches
+    // event before DecorationEventFilter.
+    c->move(10, 10);
     QFETCH(QPoint, decoPoint);
     // double click
     kwinApp()->platform()->touchDown(0, decoPoint, timestamp++);

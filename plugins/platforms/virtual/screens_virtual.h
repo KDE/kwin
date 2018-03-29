@@ -19,24 +19,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_SCREENS_VIRTUAL_H
 #define KWIN_SCREENS_VIRTUAL_H
-#include "screens.h"
+#include "outputscreens.h"
 #include <QVector>
 
 namespace KWin
 {
 class VirtualBackend;
 
-class VirtualScreens : public Screens
+class VirtualScreens : public OutputScreens
 {
     Q_OBJECT
 public:
     VirtualScreens(VirtualBackend *backend, QObject *parent = nullptr);
     virtual ~VirtualScreens();
     void init() override;
-    QRect geometry(int screen) const override;
-    int number(const QPoint &pos) const override;
-    QSize size(int screen) const override;
-    void updateCount() override;
 
 private:
     void createOutputs();

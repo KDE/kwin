@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_VIRTUAL_OUTPUT_H
 #define KWIN_VIRTUAL_OUTPUT_H
 
+#include "abstract_output.h"
+
 #include <QObject>
 #include <QRect>
 
@@ -27,7 +29,7 @@ namespace KWin
 {
 class VirtualBackend;
 
-class VirtualOutput : public QObject
+class VirtualOutput : public AbstractOutput
 {
     Q_OBJECT
 
@@ -35,16 +37,15 @@ public:
     VirtualOutput(QObject *parent = nullptr);
     virtual ~VirtualOutput();
 
-    QRect geometry() const {
-        return m_geo;
-    }
+    QSize pixelSize() const override;
+
+    void setGeometry(const QRect &geo);
 
 private:
     Q_DISABLE_COPY(VirtualOutput);
     friend class VirtualBackend;
 
-    QRect m_geo;
-    qreal m_outputScale = 1;
+    QSize m_pixelSize;
 
     int m_gammaSize = 200;
     bool m_gammaResult = true;

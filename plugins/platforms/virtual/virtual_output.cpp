@@ -23,12 +23,26 @@ namespace KWin
 {
 
 VirtualOutput::VirtualOutput(QObject *parent)
-    : QObject(parent)
+    : AbstractOutput()
 {
+    Q_UNUSED(parent);
+
+    setScale(1.);
 }
 
 VirtualOutput::~VirtualOutput()
 {
+}
+
+QSize VirtualOutput::pixelSize() const
+{
+    return m_pixelSize;
+}
+
+void VirtualOutput::setGeometry(const QRect &geo)
+{
+    m_pixelSize = geo.size();
+    setGlobalPos(geo.topLeft());
 }
 
 }
