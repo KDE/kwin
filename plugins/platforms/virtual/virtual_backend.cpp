@@ -148,13 +148,4 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries)
     emit virtualOutputsSet(countChanged);
 }
 
-int VirtualBackend::gammaRampSize(int screen) const {
-    return m_outputs[screen]->m_gammaSize;
-}
-
-bool VirtualBackend::setGammaRamp(int screen, ColorCorrect::GammaRamp &gamma) {
-    Q_UNUSED(gamma);
-    return m_outputs[screen]->m_gammaResult;
-}
-
 }

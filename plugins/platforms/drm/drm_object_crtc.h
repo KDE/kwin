@@ -70,7 +70,7 @@ public:
     int getGammaRampSize() const {
         return m_gammaRampSize;
     }
-    bool setGammaRamp(ColorCorrect::GammaRamp &gamma);
+    bool setGammaRamp(const ColorCorrect::GammaRamp &gamma);
 
 private:
     int m_resIndex;

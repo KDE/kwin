@@ -56,10 +56,6 @@ class OutputManagementInterface;
 namespace KWin
 {
 
-namespace ColorCorrect {
-struct GammaRamp;
-}
-
 class Udev;
 class UdevMonitor;
 
@@ -128,8 +124,6 @@ public:
     gbm_device *gbmDevice() const {
         return m_gbmDevice;
     }
-    int gammaRampSize(int screen) const override;
-    bool setGammaRamp(int screen, ColorCorrect::GammaRamp &gamma) override;
 
     QVector<CompositingType> supportedCompositors() const override;
 

@@ -112,7 +112,7 @@ bool DrmCrtc::blank()
     return false;
 }
 
-bool DrmCrtc::setGammaRamp(ColorCorrect::GammaRamp &gamma) {
+bool DrmCrtc::setGammaRamp(const ColorCorrect::GammaRamp &gamma) {
     bool isError = drmModeCrtcSetGamma(m_backend->fd(), m_id, gamma.size,
                                 gamma.red, gamma.green, gamma.blue);
     return !isError;

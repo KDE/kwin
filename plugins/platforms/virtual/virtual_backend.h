@@ -72,8 +72,6 @@ public:
     void setGbmDevice(gbm_device *device) {
         m_gbmDevice = device;
     }
-    virtual int gammaRampSize(int screen) const override;
-    virtual bool setGammaRamp(int screen, ColorCorrect::GammaRamp &gamma) override;
 
     QVector<CompositingType> supportedCompositors() const override {
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};

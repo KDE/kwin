@@ -42,7 +42,6 @@ namespace KWin
 {
 namespace ColorCorrect {
 class Manager;
-struct GammaRamp;
 }
 
 class AbstractOutput;
@@ -411,16 +410,6 @@ public:
 
     ColorCorrect::Manager *colorCorrectManager() {
         return m_colorCorrect;
-    }
-
-    virtual int gammaRampSize(int screen) const {
-        Q_UNUSED(screen);
-        return 0;
-    }
-    virtual bool setGammaRamp(int screen, ColorCorrect::GammaRamp &gamma) {
-        Q_UNUSED(screen);
-        Q_UNUSED(gamma);
-        return false;
     }
 
     // outputs with connections (org_kde_kwin_outputdevice)

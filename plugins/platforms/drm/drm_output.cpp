@@ -1282,4 +1282,14 @@ void DrmOutput::automaticRotation()
     emit screens()->changed();
 }
 
+int DrmOutput::getGammaRampSize() const
+{
+    return m_crtc->getGammaRampSize();
+}
+
+bool DrmOutput::setGammaRamp(const ColorCorrect::GammaRamp &gamma)
+{
+    return m_crtc->setGammaRamp(gamma);
+}
+
 }

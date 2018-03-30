@@ -140,6 +140,9 @@ private:
     void transform(KWayland::Server::OutputDeviceInterface::Transform transform);
     void automaticRotation();
 
+    int getGammaRampSize() const override;
+    bool setGammaRamp(const ColorCorrect::GammaRamp &gamma) override;
+
     DrmBackend *m_backend;
     DrmConnector *m_conn = nullptr;
     DrmCrtc *m_crtc = nullptr;

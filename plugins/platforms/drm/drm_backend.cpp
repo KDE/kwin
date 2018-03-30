@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens_drm.h"
 #include "udev.h"
 #include "wayland_server.h"
-#include <colorcorrection/gammaramp.h>
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #include <gbm.h>
@@ -778,22 +777,6 @@ QVector<CompositingType> DrmBackend::supportedCompositors() const
 #else
     return QVector<CompositingType>{QPainterCompositing};
 #endif
-}
-
-int DrmBackend::gammaRampSize(int screen) const
-{
-  if (m_outputs.size() <= screen) {
-      return 0;
-  }
-  return m_outputs.at(screen)->m_crtc->getGammaRampSize();
-}
-
-bool DrmBackend::setGammaRamp(int screen, ColorCorrect::GammaRamp &gamma)
-{
-  if (m_outputs.size() <= screen) {
-      return false;
-  }
-  return m_outputs.at(screen)->m_crtc->setGammaRamp(gamma);
 }
 
 QString DrmBackend::supportInformation() const

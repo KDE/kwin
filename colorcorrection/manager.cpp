@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <main.h>
 #include <platform.h>
+#include <abstract_output.h>
 #include <screens.h>
 #include <workspace.h>
 #include <logind.h>
@@ -509,10 +510,10 @@ int Manager::currentTargetTemp() const
 
 void Manager::commitGammaRamps(int temperature)
 {
-    int nscreens = Screens::self()->count();
+    const auto outs = kwinApp()->platform()->outputs();
 
-    for (int screen = 0; screen < nscreens; screen++) {
-        int rampsize = kwinApp()->platform()->gammaRampSize(screen);
+    for (auto *o : outs) {
+        int rampsize = o->getGammaRampSize();
         GammaRamp ramp(rampsize);
 
         /*
@@ -542,13 +543,13 @@ void Manager::commitGammaRamps(int temperature)
             ramp.blue[i] = (double)ramp.blue[i] / (UINT16_MAX+1) * whitePoint[2] * (UINT16_MAX+1);
         }
 
-        if (kwinApp()->platform()->setGammaRamp(screen, ramp)) {
+        if (o->setGammaRamp(ramp)) {
             m_currentTemp = temperature;
             m_failedCommitAttempts = 0;
         } else {
             m_failedCommitAttempts++;
             if (m_failedCommitAttempts < 10) {
-                qCWarning(KWIN_COLORCORRECTION).nospace() << "Committing Gamma Ramp failed for screen " << screen <<
+                qCWarning(KWIN_COLORCORRECTION).nospace() << "Committing Gamma Ramp failed for output " << o->name() <<
                          ". Trying " << (10 - m_failedCommitAttempts) << " times more.";
             } else {
                 // TODO: On multi monitor setups we could try to rollback earlier changes for already commited outputs

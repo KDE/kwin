@@ -45,6 +45,10 @@ class XdgOutputInterface;
 namespace KWin
 {
 
+namespace ColorCorrect {
+struct GammaRamp;
+}
+
 /**
  * Generic output representation in a Wayland session
  **/
@@ -88,6 +92,14 @@ public:
 
     QPointer<KWayland::Server::OutputInterface> waylandOutput() const {
         return m_waylandOutput;
+    }
+
+    virtual int getGammaRampSize() const {
+        return 0;
+    }
+    virtual bool setGammaRamp(const ColorCorrect::GammaRamp &gamma) {
+        Q_UNUSED(gamma);
+        return false;
     }
 
 protected:
