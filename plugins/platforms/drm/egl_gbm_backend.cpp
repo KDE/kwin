@@ -258,17 +258,41 @@ bool EglGbmBackend::initBufferConfigs()
 
     EGLint count;
     EGLConfig configs[1024];
-    if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
+    if (!eglChooseConfig(eglDisplay(), config_attribs, configs, sizeof(configs)/sizeof(EGLConfig), &count)) {
         qCCritical(KWIN_DRM) << "choose config failed";
         return false;
     }
-    if (count != 1) {
-        qCCritical(KWIN_DRM) << "choose config did not return a config" << count;
-        return false;
-    }
-    setConfig(configs[0]);
 
-    return true;
+    qCDebug(KWIN_DRM) << "EGL buffer configs count:" << count;
+
+    // loop through all configs, chosing the first one that has suitable format
+    for (EGLint i = 0; i < count; i++) {
+        EGLint gbmFormat;
+        // query some configuration parameters, to show in debug log
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
+
+        if (KWIN_DRM().isDebugEnabled()) {
+            // GBM formats are declared as FOURCC code (integer from ASCII chars, so use this fact)
+            char gbmFormatStr[sizeof(EGLint) + 1] = {0};
+            memcpy(gbmFormatStr, &gbmFormat, sizeof(EGLint));
+            // query number of bits for color channel
+            EGLint blueSize, redSize, greenSize, alphaSize;
+            eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &redSize);
+            eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &greenSize);
+            eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blueSize);
+            eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
+            qCDebug(KWIN_DRM) << "  EGL config #" << i << " has GBM FOURCC format:" << gbmFormatStr
+                              << "; color sizes (RGBA order):" << redSize << greenSize << blueSize << alphaSize;
+        }
+
+        if ((gbmFormat == GBM_FORMAT_XRGB8888) || (gbmFormat == GBM_FORMAT_ARGB8888)) {
+            setConfig(configs[i]);
+            return true;
+        }
+    }
+
+    qCCritical(KWIN_DRM) << "choose EGL config did not return a suitable config" << count;
+    return false;
 }
 
 void EglGbmBackend::present()
