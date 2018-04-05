@@ -178,6 +178,28 @@ UdevDevice::Ptr Udev::renderNode()
     });
 }
 
+UdevDevice::Ptr Udev::primaryFramebuffer()
+{
+    if (!m_udev) {
+        return UdevDevice::Ptr();
+    }
+    UdevEnumerate enumerate(this);
+    enumerate.addMatch(UdevEnumerate::Match::SubSystem, "graphics");
+    enumerate.addMatch(UdevEnumerate::Match::SysName, "fb[0-9]*");
+    enumerate.scan();
+    return enumerate.find([](const UdevDevice::Ptr &device) {
+        auto pci = device->getParentWithSubsystemDevType("pci");
+        if (!pci) {
+            return false;
+        }
+        const char *systAttrValue = udev_device_get_sysattr_value(pci, "boot_vga");
+        if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
+            return true;
+        }
+        return false;
+    });
+}
+
 UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)
 {
     return UdevDevice::Ptr(new UdevDevice(udev_device_new_from_syspath(m_udev, syspath)));
