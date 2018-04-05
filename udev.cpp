@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "udev.h"
+#include "logind.h"
 // Qt
 #include <QByteArray>
 #include <QScopedPointer>
@@ -106,6 +107,7 @@ UdevDevice::Ptr UdevEnumerate::find(std::function<bool(const UdevDevice::Ptr &de
     if (m_enumerate.isNull()) {
         return UdevDevice::Ptr();
     }
+    QString defaultSeat = QStringLiteral("seat0");
     udev_list_entry *it = udev_enumerate_get_list_entry(m_enumerate.data());
     UdevDevice::Ptr firstFound;
     while (it) {
@@ -113,6 +115,13 @@ UdevDevice::Ptr UdevEnumerate::find(std::function<bool(const UdevDevice::Ptr &de
         it = udev_list_entry_get_next(it);
         auto device = m_udev->deviceFromSyspath(udev_list_entry_get_name(current));
         if (!device) {
+            continue;
+        }
+        QString deviceSeat = device->property("ID_SEAT");
+        if (deviceSeat.isEmpty()) {
+            deviceSeat = defaultSeat;
+        }
+        if (deviceSeat != LogindIntegration::self()->seat()) {
             continue;
         }
         if (test(device)) {
@@ -135,7 +144,6 @@ UdevDevice::Ptr Udev::primaryGpu()
     enumerate.addMatch(UdevEnumerate::Match::SysName, "card[0-9]*");
     enumerate.scan();
     return enumerate.find([](const UdevDevice::Ptr &device) {
-        // TODO: check seat
         auto pci = device->getParentWithSubsystemDevType("pci");
         if (!pci) {
             return false;
