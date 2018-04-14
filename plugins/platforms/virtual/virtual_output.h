@@ -33,7 +33,6 @@ class VirtualOutput : public QObject
 
 public:
     VirtualOutput(QObject *parent = nullptr);
-    VirtualOutput(const VirtualOutput &o);
     virtual ~VirtualOutput();
 
     QRect geometry() const {
@@ -41,6 +40,7 @@ public:
     }
 
 private:
+    Q_DISABLE_COPY(VirtualOutput);
     friend class VirtualBackend;
 
     QRect m_geo;

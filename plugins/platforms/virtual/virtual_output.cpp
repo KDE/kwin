@@ -27,14 +27,6 @@ VirtualOutput::VirtualOutput(QObject *parent)
 {
 }
 
-VirtualOutput::VirtualOutput(const VirtualOutput &o)
-    : m_geo(o.m_geo),
-      m_outputScale(o.m_outputScale),
-      m_gammaSize(o.m_gammaSize),
-      m_gammaResult(o.m_gammaResult)
-{
-}
-
 VirtualOutput::~VirtualOutput()
 {
 }
