@@ -30,7 +30,7 @@ Rectangle {
             Layout.fillHeight: true
         }
         Buttons {
-            anchors.top: parent.top
+            Layout.alignment: Qt.AlignTop
             Layout.fillWidth: true
         }
     }

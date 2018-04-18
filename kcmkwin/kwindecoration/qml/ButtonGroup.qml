@@ -30,6 +30,8 @@ ListView {
     orientation: ListView.Horizontal
     interactive: false
     spacing: units.smallSpacing
+    implicitHeight: units.iconSizes.small
+    implicitWidth: count * (units.iconSizes.small + units.smallSpacing) - Math.min(1, count) * units.smallSpacing
     delegate: Item {
         width: units.iconSizes.small
         height: units.iconSizes.small
@@ -70,5 +72,4 @@ ListView {
     displaced: Transition {
         NumberAnimation { properties: "x,y"; duration: units.longDuration; easing.type: Easing.OutBounce }
     }
-    Layout.preferredWidth: count * (units.iconSizes.small + units.smallSpacing) - Math.min(1, count) * units.smallSpacing
 }

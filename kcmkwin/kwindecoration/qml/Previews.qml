@@ -21,7 +21,6 @@ import QtQuick 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
-import org.kde.plasma.core 2.0 as PlasmaCore;
 
 ScrollView {
     objectName: "themeList"
