@@ -41,6 +41,7 @@ Platform::Platform(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
+    setSoftWareCursor(false);
      m_colorCorrect = new ColorCorrect::Manager(this);
 }
 
@@ -129,6 +130,9 @@ void Platform::configurationChangeRequested(KWayland::Server::OutputConfiguratio
 
 void Platform::setSoftWareCursor(bool set)
 {
+    if (qEnvironmentVariableIsSet("KWIN_FORCE_SW_CURSOR")) {
+        set = true;
+    }
     if (m_softWareCursor == set) {
         return;
     }
