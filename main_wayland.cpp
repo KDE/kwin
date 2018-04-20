@@ -103,6 +103,8 @@ void gainRealTime(RealTimeFlags flags = RealTimeFlags::DontReset)
         policy |= SCHED_RESET_ON_FORK;
     }
     sched_setscheduler(0, policy, &sp);
+#else
+    Q_UNUSED(flags);
 #endif
 }
 }

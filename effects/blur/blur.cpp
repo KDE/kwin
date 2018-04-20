@@ -665,7 +665,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
         glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
     }
 
-    upscaleRenderToScreen(vbo, blurRectCount * (m_downSampleIterations + 1), shape.rectCount() * 6, screenProjection, shape.boundingRect(), windowRect.topLeft());
+    upscaleRenderToScreen(vbo, blurRectCount * (m_downSampleIterations + 1), shape.rectCount() * 6, screenProjection, windowRect.topLeft());
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);
@@ -674,7 +674,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     vbo->unbindArrays();
 }
 
-void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int blurRectCount, QMatrix4x4 screenProjection, QRect windowShape, QPoint windowPosition)
+void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int blurRectCount, QMatrix4x4 screenProjection, QPoint windowPosition)
 {
     glActiveTexture(GL_TEXTURE0);
     m_renderTextures[1].bind();
