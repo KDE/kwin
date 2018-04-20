@@ -125,30 +125,26 @@ void MinimizeAnimationEffect::slotWindowMinimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;
-    QTimeLine *timeline;
-    if (mTimeLineWindows.contains(w)) {
-        timeline = mTimeLineWindows[w];
-    } else {
-        timeline = new QTimeLine(animationTime(250), this);
+
+    if (!mTimeLineWindows.contains(w)) {
+        auto *timeline = new QTimeLine(animationTime(250), this);
+        timeline->setCurrentTime(0);
+        timeline->setCurveShape(QTimeLine::EaseInOutCurve);
         mTimeLineWindows.insert(w, timeline);
     }
-    timeline->setCurveShape(QTimeLine::EaseInCurve);
-    timeline->setCurrentTime(0.0);
 }
 
 void MinimizeAnimationEffect::slotWindowUnminimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;
-    QTimeLine *timeline;
-    if (mTimeLineWindows.contains(w)) {
-        timeline = mTimeLineWindows[w];
-    } else {
-        timeline = new QTimeLine(animationTime(250), this);
+
+    if (!mTimeLineWindows.contains(w)) {
+        auto *timeline = new QTimeLine(animationTime(250), this);
+        timeline->setCurrentTime(timeline->duration());
+        timeline->setCurveShape(QTimeLine::EaseInOutCurve);
         mTimeLineWindows.insert(w, timeline);
     }
-    timeline->setCurveShape(QTimeLine::EaseInOutCurve);
-    timeline->setCurrentTime(timeline->duration());
 }
 
 bool MinimizeAnimationEffect::isActive() const
