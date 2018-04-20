@@ -967,7 +967,8 @@ void PresentWindowsEffect::rearrangeWindows()
         // Don't rearrange if the grid is the same size as what it was before to prevent
         // windows moving to a better spot if one was filtered out.
         if (m_layoutMode == LayoutRegularGrid &&
-                m_gridSizes[screen].columns * m_gridSizes[screen].rows &&
+                m_gridSizes[screen].columns &&
+                m_gridSizes[screen].rows &&
                 windows.size() < m_gridSizes[screen].columns * m_gridSizes[screen].rows &&
                 windows.size() > (m_gridSizes[screen].columns - 1) * m_gridSizes[screen].rows &&
                 windows.size() > m_gridSizes[screen].columns *(m_gridSizes[screen].rows - 1))
