@@ -342,9 +342,9 @@ void MagicLampEffect::slotWindowMinimized(EffectWindow* w)
         return;
     if (!mTimeLineWindows.contains(w)) {
         mTimeLineWindows.insert(w, new QTimeLine(mAnimationDuration, this));
+        mTimeLineWindows[w]->setCurrentTime(0);
         mTimeLineWindows[w]->setCurveShape(QTimeLine::LinearCurve);
     }
-    mTimeLineWindows[w]->setCurrentTime(0);
 }
 
 void MagicLampEffect::slotWindowUnminimized(EffectWindow* w)
@@ -353,9 +353,9 @@ void MagicLampEffect::slotWindowUnminimized(EffectWindow* w)
         return;
     if (!mTimeLineWindows.contains(w)) {
         mTimeLineWindows.insert(w, new QTimeLine(mAnimationDuration, this));
+        mTimeLineWindows[w]->setCurrentTime(mAnimationDuration);
         mTimeLineWindows[w]->setCurveShape(QTimeLine::LinearCurve);
     }
-    mTimeLineWindows[w]->setCurrentTime(mAnimationDuration);
 }
 
 bool MagicLampEffect::isActive() const
