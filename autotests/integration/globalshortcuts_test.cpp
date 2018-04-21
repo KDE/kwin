@@ -55,6 +55,7 @@ private Q_SLOTS:
     void testRepeatedTrigger();
     void testUserActionsMenu();
     void testMetaShiftW();
+    void testComponseKey();
     void testX11ClientShortcut();
     void testWaylandClientShortcut();
     void testSetupWindowShortcut();
@@ -201,6 +202,25 @@ void GlobalShortcutsTest::testMetaShiftW()
     // release meta+shift
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+}
+
+void GlobalShortcutsTest::testComponseKey()
+{
+    // BUG 390110
+    QScopedPointer<QAction> action(new QAction(nullptr));
+    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setObjectName(QStringLiteral("globalshortcuts-accent"));
+    QSignalSpy triggeredSpy(action.data(), &QAction::triggered);
+    QVERIFY(triggeredSpy.isValid());
+    KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::UNICODE_ACCEL}, KGlobalAccel::NoAutoloading);
+    input()->registerShortcut(Qt::UNICODE_ACCEL, action.data());
+
+    // press & release `
+    quint32 timestamp = 0;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_RESERVED, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_RESERVED, timestamp++);
+
+    QTRY_COMPARE(triggeredSpy.count(), 0);
 }
 
 struct XcbConnectionDeleter
