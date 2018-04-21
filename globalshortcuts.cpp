@@ -245,6 +245,9 @@ bool processShortcut(Qt::KeyboardModifiers mods, T key, U &shortcuts)
 bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
 {
     if (m_kglobalAccelInterface) {
+        if (!keyQt && !mods) {
+            return false;
+        }
         auto check = [this] (Qt::KeyboardModifiers mods, int keyQt) {
             bool retVal = false;
             QMetaObject::invokeMethod(m_kglobalAccelInterface,
