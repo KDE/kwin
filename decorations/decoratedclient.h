@@ -23,7 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDecoration2/Private/DecoratedClientPrivate>
 
+#include <QDeadlineTimer>
 #include <QObject>
+#include <QTimer>
 
 namespace KWin
 {
@@ -109,6 +111,10 @@ private:
     QSize m_clientSize;
     Renderer *m_renderer;
     QMetaObject::Connection m_compositorToggledConnection;
+
+    QString m_toolTipText;
+    QTimer m_toolTipWakeUp;
+    QDeadlineTimer m_toolTipFallAsleep;
 };
 
 }
