@@ -17,6 +17,7 @@
         "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez OpenGL",
         "Description[pt]": "'Plugin' de Composição do KWin com desenho via OpenGL",
         "Description[pt_BR]": "Plugin do compositor KWin renderizando pelo OpenGL",
+        "Description[ru]": "Отрисовка подключаемым модулем компоновщика KWin через OpenGL",
         "Description[sk]": "Renderovací plugin kompozítora KWin cez OpenGL",
         "Description[sl]": "Izrisovanje vstavka upravljalnika skladnje KWin preko OpenGL-ja",
         "Description[sr@ijekavian]": "К‑винов прикључак слагача за рендеровање кроз опенГЛ",
