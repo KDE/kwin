@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_qpainter_fb_backend.h"
 #include "screens.h"
 #include "virtual_terminal.h"
+#include "udev.h"
 // system
 #include <fcntl.h>
 #include <unistd.h>
@@ -81,13 +82,18 @@ void FramebufferBackend::init()
 void FramebufferBackend::openFrameBuffer()
 {
     VirtualTerminal::self()->init();
-    int fd = LogindIntegration::self()->takeDevice(deviceIdentifier().constData());
-    if (fd < 0) {
-        qCWarning(KWIN_FB) << "Failed to open frame buffer device through logind, trying without";
+    QString framebufferDevice = deviceIdentifier().constData();
+    if (framebufferDevice.isEmpty()) {
+        framebufferDevice = QString(Udev().primaryFramebuffer()->devNode());
     }
-    fd = open(deviceIdentifier().constData(), O_RDWR | O_CLOEXEC);
+    int fd = LogindIntegration::self()->takeDevice(framebufferDevice.toUtf8().constData());
+    qCDebug(KWIN_FB) << "Using frame buffer device:" << framebufferDevice;
     if (fd < 0) {
-        qCWarning(KWIN_FB) << "failed to open frame buffer device";
+        qCWarning(KWIN_FB) << "Failed to open frame buffer device:" << framebufferDevice << "through logind, trying without";
+    }
+    fd = open(framebufferDevice.toUtf8().constData(), O_RDWR | O_CLOEXEC);
+    if (fd < 0) {
+        qCWarning(KWIN_FB) << "failed to open frame buffer device:" << framebufferDevice;
         emit initFailed();
         return;
     }
