@@ -224,8 +224,9 @@ void FramebufferBackend::initImageFormat()
             m_red.offset == 11) {
         qCDebug(KWIN_FB) << "Framebuffer Format is RGB16";
         m_imageFormat = QImage::Format_RGB16;
+    } else {
+        qCWarning(KWIN_FB) << "Framebuffer format is unknown";
     }
-    qCWarning(KWIN_FB) << "Framebuffer format is unknown";
 }
 
 }
