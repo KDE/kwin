@@ -20,6 +20,7 @@
         "Description[pl]": "Wtyczka platformy dla wolnostojącego x11 w kwin_x11.",
         "Description[pt]": "'Plugin' de plataformas para um X11 autónomo no X11 do KWin.",
         "Description[pt_BR]": "Plugin de plataforma para um x11 independente no kwin_x11.",
+        "Description[ru]": "Подключаемый модуль выделенного х11 в kwin_x11.",
         "Description[sk]": "Platformový plugin pre standalone x11 v kwin_x11.",
         "Description[sl]": "Okoljski vstavek za samostojni x11 v kwin_x11.",
         "Description[sr@ijekavian]": "Платформски прикључак за самостални Икс11 у К‑вину.",
