@@ -589,7 +589,6 @@ int main(int argc, char * argv[])
     QCommandLineOption framebufferDeviceOption(QStringLiteral("fb-device"),
                                                i18n("The framebuffer device to render to."),
                                                QStringLiteral("fbdev"));
-    framebufferDeviceOption.setDefaultValue(QStringLiteral("/dev/fb0"));
     QCommandLineOption x11DisplayOption(QStringLiteral("x11-display"),
                                         i18n("The X11 Display to use in windowed mode on platform X11."),
                                         QStringLiteral("display"));
