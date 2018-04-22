@@ -135,9 +135,8 @@ Connection *Connection::create(QObject *parent)
             s_context = nullptr;
             return nullptr;
         }
-        // TODO: don't hardcode seat name
-        if (!s_context->assignSeat("seat0")) {
-            qCWarning(KWIN_LIBINPUT) << "Failed to assign seat seat0";
+        if (!s_context->assignSeat(LogindIntegration::self()->seat().toUtf8().constData())) {
+            qCWarning(KWIN_LIBINPUT) << "Failed to assign seat" << LogindIntegration::self()->seat();
             delete s_context;
             s_context = nullptr;
             return nullptr;
