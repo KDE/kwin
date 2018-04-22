@@ -96,24 +96,30 @@ void DrmOutput::releaseGbm()
     }
 }
 
-void DrmOutput::hideCursor()
+bool DrmOutput::hideCursor()
 {
-    drmModeSetCursor(m_backend->fd(), m_crtc->id(), 0, 0, 0);
+    return drmModeSetCursor(m_backend->fd(), m_crtc->id(), 0, 0, 0) == 0;
 }
 
-void DrmOutput::showCursor(DrmDumbBuffer *c)
+bool DrmOutput::showCursor(DrmDumbBuffer *c)
 {
     const QSize &s = c->size();
-    drmModeSetCursor(m_backend->fd(), m_crtc->id(), c->handle(), s.width(), s.height());
+    return drmModeSetCursor(m_backend->fd(), m_crtc->id(), c->handle(), s.width(), s.height()) == 0;
 }
 
-void DrmOutput::showCursor()
+bool DrmOutput::showCursor()
 {
-    showCursor(m_cursor[m_cursorIndex]);
+    const bool ret = showCursor(m_cursor[m_cursorIndex]);
+    if (!ret) {
+        return ret;
+    }
+
     if (m_hasNewCursor) {
         m_cursorIndex = (m_cursorIndex + 1) % 2;
         m_hasNewCursor = false;
     }
+
+    return ret;
 }
 
 void DrmOutput::updateCursor()

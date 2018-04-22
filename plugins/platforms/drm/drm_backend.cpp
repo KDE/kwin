@@ -624,7 +624,9 @@ void DrmBackend::initCursor()
             }
             for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
                 if (m_cursorEnabled) {
-                    (*it)->showCursor();
+                    if (!(*it)->showCursor()) {
+                        setSoftWareCursor(true);
+                    }
                 } else {
                     (*it)->hideCursor();
                 }
@@ -653,7 +655,9 @@ void DrmBackend::setCursor()
 {
     if (m_cursorEnabled) {
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-            (*it)->showCursor();
+            if (!(*it)->showCursor()) {
+                setSoftWareCursor(true);
+            }
         }
     }
     markCursorAsRendered();

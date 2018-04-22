@@ -66,9 +66,9 @@ public:
     };
     virtual ~DrmOutput();
     void releaseGbm();
-    void showCursor(DrmDumbBuffer *buffer);
-    void showCursor();
-    void hideCursor();
+    bool showCursor(DrmDumbBuffer *buffer);
+    bool showCursor();
+    bool hideCursor();
     void updateCursor();
     void moveCursor(const QPoint &globalPos);
     bool init(drmModeConnector *connector);
