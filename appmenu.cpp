@@ -112,6 +112,9 @@ void ApplicationMenu::slotMenuHidden(const QString &serviceName, const QDBusObje
 
 void ApplicationMenu::showApplicationMenu(const QPoint &p, AbstractClient *c, int actionId)
 {
+    if (!c->hasApplicationMenu()) {
+        return;
+    }
     m_appmenuInterface->showMenu(p.x(), p.y(), c->applicationMenuServiceName(), QDBusObjectPath(c->applicationMenuObjectPath()), actionId);
 }
 
