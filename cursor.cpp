@@ -66,16 +66,7 @@ void Cursor::loadThemeSettings()
     QString themeName = QString::fromUtf8(qgetenv("XCURSOR_THEME"));
     bool ok = false;
     // XCURSOR_SIZE might not be set (e.g. by startkde)
-    uint themeSize = 0;
-    if (qEnvironmentVariableIsSet("XCURSOR_SIZE")) {
-        themeSize = qgetenv("XCURSOR_SIZE").toUInt(&ok);
-    }
-    if (!ok) {
-        if (QScreen *s = QGuiApplication::primaryScreen()) {
-            themeSize = s->logicalDotsPerInchY() * 16 / 72;
-            ok = true;
-        }
-    }
+    const uint themeSize = qEnvironmentVariableIntValue("XCURSOR_SIZE", &ok);
     if (!themeName.isEmpty() && ok) {
         updateTheme(themeName, themeSize);
         return;
@@ -88,11 +79,7 @@ void Cursor::loadThemeFromKConfig()
 {
     KConfigGroup mousecfg(kwinApp()->inputConfig(), "Mouse");
     const QString themeName = mousecfg.readEntry("cursorTheme", "default");
-    bool ok = false;
-    uint themeSize = mousecfg.readEntry("cursorSize", QString("24")).toUInt(&ok);
-    if (!ok) {
-        themeSize = 24;
-    }
+    const uint themeSize = mousecfg.readEntry("cursorSize", 0);
     updateTheme(themeName, themeSize);
 }
 
