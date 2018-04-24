@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_qpainter_fb_backend.h"
 #include "fb_backend.h"
 #include "composite.h"
+#include "logind.h"
 #include "cursor.h"
 #include "virtual_terminal.h"
 // Qt
@@ -75,7 +76,7 @@ void FramebufferQPainterBackend::present(int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)
-    if (!VirtualTerminal::self()->isActive()) {
+    if (!LogindIntegration::self()->isActiveSession()) {
         return;
     }
     QPainter p(&m_backBuffer);
