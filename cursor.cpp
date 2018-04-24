@@ -109,6 +109,7 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 {
     Q_UNUSED(arg)
     if (type == 5 /*CursorChanged*/) {
+        kwinApp()->inputConfig()->reparseConfiguration();
         loadThemeFromKConfig();
         // sync to environment
         qputenv("XCURSOR_THEME", m_themeName.toUtf8());
