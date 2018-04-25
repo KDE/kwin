@@ -29,6 +29,7 @@
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням OpenGL",
         "Description[x-test]": "xxKWin Compositor plugin rendering through OpenGLxx",
         "Description[zh_CN]": "使用 OpenGL 渲染的 KWin 混成插件",
+        "Description[zh_TW]": "透過 OpenGL 繪製 KWin 合成器附加元件",
         "Id": "KWinSceneOpenGL",
         "Name": "SceneOpenGL",
         "Name[pl]": "OpenGL sceny",
