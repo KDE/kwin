@@ -908,6 +908,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         connect(m_cursorTheme, &WaylandCursorTheme::themeChanged, this,
             [this] {
                 m_cursors.clear();
+                m_cursorsByName.clear();
                 loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
                 updateDecorationCursor();
                 updateMoveResize();
