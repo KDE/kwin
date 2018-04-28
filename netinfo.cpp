@@ -95,8 +95,7 @@ RootInfo *RootInfo::create()
         NET::Hidden |
         NET::FullScreen |
         NET::KeepBelow |
-        NET::DemandsAttention |
-        NET::SkipSwitcher;
+        NET::DemandsAttention;
     NET::Properties2 properties2 = NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2AllowedActions |
@@ -285,8 +284,6 @@ void WinInfo::changeState(NET::States state, NET::States mask)
         m_client->setOriginalSkipTaskbar((state & NET::SkipTaskbar) != 0);
     if (mask & NET::SkipPager)
         m_client->setSkipPager((state & NET::SkipPager) != 0);
-    if (mask & NET::SkipSwitcher)
-        m_client->setSkipSwitcher((state & NET::SkipSwitcher) != 0);
     if (mask & NET::DemandsAttention)
         m_client->demandAttention((state & NET::DemandsAttention) != 0);
     if (mask & NET::Modal)

@@ -756,7 +756,7 @@ void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
     CHECKBOX_PREFILL(noborder, , info.frameGeometry() == info.geometry());
     CHECKBOX_PREFILL(skiptaskbar, , info.state() & NET::SkipTaskbar);
     CHECKBOX_PREFILL(skippager, , info.state() & NET::SkipPager);
-    CHECKBOX_PREFILL(skipswitcher, , info.state() & NET::SkipSwitcher);
+    CHECKBOX_PREFILL(skipswitcher, , false);
     //CHECKBOX_PREFILL( acceptfocus, );
     //CHECKBOX_PREFILL( closeable, );
     //CHECKBOX_PREFILL( autogroup, );

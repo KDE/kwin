@@ -1299,11 +1299,6 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
     connect(surface, &PlasmaShellSurfaceInterface::skipTaskbarChanged, this, [this] {
         setSkipTaskbar(m_plasmaShellSurface->skipTaskbar());
     });
-
-    setSkipSwitcher(surface->skipSwitcher());
-    connect(surface, &PlasmaShellSurfaceInterface::skipSwitcherChanged, this, [this] {
-        setSkipSwitcher(m_plasmaShellSurface->skipSwitcher());
-    });
 }
 
 void ShellClient::updateShowOnScreenEdge()
