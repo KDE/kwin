@@ -105,19 +105,23 @@ void KscreenEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, in
 
 void KscreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
+    //fade to black and fully opaque
     switch (m_state) {
-    case StateFadingOut:
-        data.multiplyOpacity(1.0 - m_timeLine.currentValue());
-        break;
-    case StateFadedOut:
-        data.multiplyOpacity(0.0);
-        break;
-    case StateFadingIn:
-        data.multiplyOpacity(m_timeLine.currentValue());
-        break;
-    default:
-        // no adjustment
-        break;
+        case StateFadingOut:
+            data.setOpacity(data.opacity() + (1.0 - data.opacity()) * m_timeLine.currentValue());
+            data.multiplyBrightness(1.0 - m_timeLine.currentValue());
+            break;
+        case StateFadedOut:
+            data.multiplyOpacity(0.0);
+            data.multiplyBrightness(0.0);
+            break;
+        case StateFadingIn:
+            data.setOpacity(data.opacity() + (1.0 - data.opacity()) * (1.0 - m_timeLine.currentValue()));
+            data.multiplyBrightness(m_timeLine.currentValue());
+            break;
+        default:
+            // no adjustment
+            break;
     }
     effects->paintWindow(w, mask, region, data);
 }

@@ -1,7 +1,7 @@
 /********************************************************************
  This file is part of the KDE project.
 
- Copyright (C) 2012 Martin Gr‰ﬂlin <mgraesslin@kde.org>
+ Copyright (C) 2012 Martin Gr√§√ülin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
