@@ -162,6 +162,12 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         if (!activated && timeline.currentValue() == 0 && !(isUsingPresentWindows() && isMotionManagerMovingWindows()))
             finish();
     }
+
+    for (auto const &w : effects->stackingOrder()) {
+        m_windowForceBlurRoleState[w] = w->data(WindowForceBlurRole).toBool();
+        w->setData(WindowForceBlurRole, QVariant(true));
+    }
+
     effects->prePaintScreen(data, time);
 }
 
@@ -249,6 +255,11 @@ void DesktopGridEffect::postPaintScreen()
             }
         }
     }
+
+    for (auto &w : effects->stackingOrder()) {
+        w->setData(WindowForceBlurRole, m_windowForceBlurRoleState.value(w, false));
+    }
+
     effects->postPaintScreen();
 }
 

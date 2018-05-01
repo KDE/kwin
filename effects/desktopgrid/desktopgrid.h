@@ -175,6 +175,9 @@ private:
     // Shortcut - needed to toggle the effect
     QList<QKeySequence> shortcut;
 
+    // State of WindowForceBlurRole before this effect
+    QMap <EffectWindow*, bool> m_windowForceBlurRoleState;
+
     PresentWindowsEffectProxy* m_proxy;
     QList<WindowMotionManager> m_managers;
     bool m_usePresentWindows;
