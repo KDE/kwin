@@ -182,12 +182,11 @@ void SceneQPainterTest::testWindow()
     if (frameRenderedSpy.isEmpty()) {
         QVERIFY(frameRenderedSpy.wait());
     }
-    // we didn't set a cursor image on the surface yet, so it should be just black + window
+    // we didn't set a cursor image on the surface yet, so it should be just black + window and previous cursor
     QImage referenceImage(QSize(1280, 1024), QImage::Format_RGB32);
     referenceImage.fill(Qt::black);
     QPainter painter(&referenceImage);
     painter.fillRect(0, 0, 200, 300, Qt::blue);
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
 
     // now let's set a cursor image
     QScopedPointer<Surface> cs(Test::createSurface());
@@ -215,6 +214,8 @@ void SceneQPainterTest::testWindowScaled()
     QScopedPointer<Surface> s(Test::createSurface());
     QScopedPointer<ShellSurface> ss(Test::createShellSurface(s.data()));
     QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
+    QSignalSpy pointerEnteredSpy(p.data(), &Pointer::entered);
+    QVERIFY(pointerEnteredSpy.isValid());
 
     auto scene = KWin::Compositor::self()->scene();
     QVERIFY(scene);
@@ -225,7 +226,6 @@ void SceneQPainterTest::testWindowScaled()
     QScopedPointer<Surface> cs(Test::createSurface());
     QVERIFY(!cs.isNull());
     Test::render(cs.data(), QSize(10, 10), Qt::red);
-    p->setCursor(cs.data(), QPoint(5, 5));
 
     // now let's map the window
     s->setScale(2);
@@ -239,12 +239,11 @@ void SceneQPainterTest::testWindowScaled()
 
     //add buffer
     Test::render(s.data(), img);
-    Test::waitForWaylandWindowShown();
+    QVERIFY(pointerEnteredSpy.wait());
+    p->setCursor(cs.data(), QPoint(5, 5));
 
     // which should trigger a frame
-    if (frameRenderedSpy.isEmpty()) {
-        QVERIFY(frameRenderedSpy.wait());
-    }
+    QVERIFY(frameRenderedSpy.wait());
     QImage referenceImage(QSize(1280, 1024), QImage::Format_RGB32);
     referenceImage.fill(Qt::black);
     QPainter painter(&referenceImage);

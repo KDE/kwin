@@ -455,6 +455,8 @@ bool PointerInputRedirection::areButtonsPressed() const
     return false;
 }
 
+static bool s_cursorUpdateBlocking = false;
+
 void PointerInputRedirection::update()
 {
     if (!m_inited) {
@@ -517,7 +519,9 @@ void PointerInputRedirection::update()
         m_window = QPointer<Toplevel>(t);
         // TODO: add convenient API to update global pos together with updating focused surface
         warpXcbOnSurfaceLeft(t->surface());
+        s_cursorUpdateBlocking = true;
         seat->setFocusedPointerSurface(nullptr);
+        s_cursorUpdateBlocking = false;
         seat->setPointerPos(m_pos.toPoint());
         seat->setFocusedPointerSurface(t->surface(), t->inputTransformation());
         m_windowGeometryConnection = connect(t, &Toplevel::geometryChanged, this,
@@ -964,6 +968,9 @@ void CursorImage::markAsRendered()
 
 void CursorImage::update()
 {
+    if (s_cursorUpdateBlocking) {
+        return;
+    }
     using namespace KWayland::Server;
     disconnect(m_serverCursor.connection);
     auto p = waylandServer()->seat()->focusedPointer();
@@ -971,8 +978,8 @@ void CursorImage::update()
         m_serverCursor.connection = connect(p, &PointerInterface::cursorChanged, this, &CursorImage::updateServerCursor);
     } else {
         m_serverCursor.connection = QMetaObject::Connection();
+        reevaluteSource();
     }
-    updateServerCursor();
 }
 
 void CursorImage::updateDecoration()
@@ -1238,7 +1245,7 @@ void CursorImage::reevaluteSource()
         setSource(CursorSource::Decoration);
         return;
     }
-    if (!m_pointer->window().isNull()) {
+    if (!m_pointer->window().isNull() && waylandServer()->seat()->focusedPointer()) {
         setSource(CursorSource::PointerSurface);
         return;
     }
