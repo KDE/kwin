@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*global effect, effects, animate, animationTime, Effect*/
 var maximizeEffect = {
     duration: animationTime(250),
+    windowForceBlurRoleState: false,
     loadConfig: function () {
         "use strict";
         maximizeEffect.duration = animationTime(250);
@@ -28,6 +29,8 @@ var maximizeEffect = {
         if (!window.oldGeometry) {
             return;
         }
+        maximizeEffect.windowForceBlurRoleState = window.data(5);
+        window.setData(5, true);
         var oldGeometry, newGeometry;
         oldGeometry = window.oldGeometry;
         newGeometry = window.geometry;
@@ -72,6 +75,9 @@ var maximizeEffect = {
             });
         }
     },
+    restoreForceBlurState: function(window) {
+        window.setData(5, maximizeEffect.windowForceBlurRoleState);
+    },
     geometryChange: function (window, oldGeometry) {
         "use strict";
         if (window.maximizeAnimation1) {
@@ -93,6 +99,7 @@ var maximizeEffect = {
         effect.configChanged.connect(maximizeEffect.loadConfig);
         effects.windowGeometryShapeChanged.connect(maximizeEffect.geometryChange);
         effects.windowMaximizedStateChanged.connect(maximizeEffect.maximizeChanged);
+        effect.animationEnded.connect(maximizeEffect.restoreForceBlurState);
     }
 };
 maximizeEffect.init();
