@@ -1064,6 +1064,8 @@ void RuleBook::load()
     deleteAll();
     if (!m_config) {
         m_config = KSharedConfig::openConfig(QStringLiteral(KWIN_NAME "rulesrc"), KConfig::NoGlobals);
+    } else {
+        m_config->reparseConfiguration();
     }
     int count = m_config->group("General").readEntry("count", 0);
     for (int i = 1;
