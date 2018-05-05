@@ -502,7 +502,7 @@ void UserActionsMenu::selectPopupClientTab(QAction* action)
     if (!(!m_client.isNull() && m_client.data()->tabGroup()) || !action->data().isValid())
         return;
 
-    if (Client *other = action->data().value<Client*>()) {
+    if (AbstractClient *other = action->data().value<AbstractClient*>()) {
         m_client.data()->tabGroup()->setCurrent(other);
         return;
     }
@@ -547,10 +547,10 @@ void UserActionsMenu::entabPopupClient(QAction* action)
 {
     if (m_client.isNull() || !action->data().isValid())
         return;
-    Client *other = dynamic_cast<Client*>(action->data().value<AbstractClient*>());
-    if (!Workspace::self()->clientList().contains(other)) // might have been lost betwenn pop-up and selection
+    AbstractClient *other = action->data().value<AbstractClient*>();
+    if (!Workspace::self()->allClientList().contains(other)) // might have been lost betwenn pop-up and selection
         return;
-    Client *c = dynamic_cast<Client*>(m_client.data());
+    AbstractClient *c = m_client.data();
     if (!c) {
         return;
     }
@@ -564,9 +564,8 @@ void UserActionsMenu::rebuildTabGroupPopup()
     Q_ASSERT(m_addTabsMenu);
 
     m_addTabsMenu->clear();
-    QList<Client*> handled;
-    const ClientList &clientList = Workspace::self()->clientList();
-    for (QList<Client*>::const_iterator i = clientList.constBegin(), end = clientList.constEnd(); i != end; ++i) {
+    const auto &clientList = Workspace::self()->allClientList();
+    for (auto i = clientList.constBegin(), end = clientList.constEnd(); i != end; ++i) {
         if (*i == m_client.data() || (*i)->noBorder())
             continue;
         m_addTabsMenu->addAction(shortCaption((*i)->caption()))->setData(QVariant::fromValue(*i));
