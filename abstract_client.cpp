@@ -119,6 +119,16 @@ TabGroup *AbstractClient::tabGroup() const
     return nullptr;
 }
 
+void AbstractClient::setTabGroup(TabGroup* group)
+{
+    Q_UNUSED(group)
+}
+
+void AbstractClient::setClientShown(bool shown)
+{
+    Q_UNUSED(shown)
+}
+
 bool AbstractClient::untab(const QRect &toGeometry, bool clientRemoved)
 {
     Q_UNUSED(toGeometry)

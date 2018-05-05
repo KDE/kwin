@@ -534,7 +534,7 @@ void UserActionsMenu::rebuildTabListPopup()
 
     m_switchToTabMenu->addSeparator();
 
-    for (QList<Client*>::const_iterator i = m_client.data()->tabGroup()->clients().constBegin(),
+    for (auto i = m_client.data()->tabGroup()->clients().constBegin(),
                                         end = m_client.data()->tabGroup()->clients().constEnd(); i != end; ++i) {
         if ((*i)->noBorder() || *i == m_client.data()->tabGroup()->current())
             continue; // cannot tab there anyway

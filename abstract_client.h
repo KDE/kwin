@@ -423,6 +423,8 @@ public:
     }
     virtual void setFullScreen(bool set, bool user = true) = 0;
     virtual TabGroup *tabGroup() const;
+    virtual void setTabGroup(TabGroup* group);
+    virtual void setClientShown(bool shown);
     Q_INVOKABLE virtual bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
     virtual bool isCurrentTab() const;
     virtual QRect geometryRestore() const = 0;

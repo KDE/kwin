@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class Client;
+class AbstractClient;
 
 /**
  * This class represents a group of clients for use in window tabbing. All
@@ -52,7 +52,7 @@ public:
     /**
      * Creates a new group containing \p c.
      */
-    explicit TabGroup(Client* c);
+    explicit TabGroup(AbstractClient* c);
     ~TabGroup();
 
     enum State {
@@ -87,7 +87,7 @@ public:
     /**
      * Whether client \p c is member of this group
      */
-    bool contains(Client* c) const;
+    bool contains(AbstractClient* c) const;
 
     /**
      * The amount of clients in this group
@@ -107,22 +107,22 @@ public:
     /**
      * Returns the list of all the clients contained in this group in their current order.
      */
-    const ClientList &clients() const;
+    const QVector<AbstractClient*> &clients() const;
 
     /**
      * Returns the currently visible client.
      */
-    Client* current() const;
+    AbstractClient* current() const;
     /**
      * Makes \p c the visible client in the group - force is only used when the window becomes ready for painting.
      * Any other usage just causes pointless action
      */
-    void setCurrent(Client* c, bool force = false);
+    void setCurrent(AbstractClient* c, bool force = false);
 
     /**
      * Alignes the dynamic Qt @param property of all clients to the one of @param c
      */
-    void sync(const char *property, Client *c);
+    void sync(const char *property, AbstractClient *c);
 
     /**
      * Returns combined minimum size of all clients in the group.
@@ -138,7 +138,7 @@ public:
      * \p main as the primary client to copy the settings off. If \p only is set then only
      * that client is updated to match \p main.
      */
-    void updateStates(Client* main, States states, Client* only = NULL);
+    void updateStates(AbstractClient* main, States states, AbstractClient* only = NULL);
 
     /**
      * updates geometry restrictions of this group, basically called from Client::getWmNormalHints(), otherwise rather private
@@ -152,21 +152,21 @@ Q_SIGNALS:
 private:
     friend class Client;
 //     friend bool Client::tabTo(Client*, bool, bool);
-    bool add(KWin::Client *c, Client *other, bool behind, bool activateC);
-    void move(KWin::Client* c, KWin::Client* before, bool behind);
+    bool add(KWin::AbstractClient *c, AbstractClient *other, bool behind, bool activateC);
+    void move(KWin::AbstractClient* c, KWin::AbstractClient* before, bool behind);
 
 //     friend bool Client::untab(const QRect&);
-    bool remove(KWin::Client *c);
+    bool remove(KWin::AbstractClient *c);
 
-    ClientList m_clients;
-    Client *m_current;
+    QVector<AbstractClient*> m_clients;
+    AbstractClient *m_current;
     QSize m_minSize;
     QSize m_maxSize;
     int m_stateUpdatesBlocked;
     States m_pendingUpdates;
 };
 
-inline bool TabGroup::contains(Client* c) const
+inline bool TabGroup::contains(AbstractClient* c) const
 {
     return c && m_clients.contains(c);
 }
@@ -176,7 +176,7 @@ inline int TabGroup::count() const
     return m_clients.count();
 }
 
-inline const ClientList &TabGroup::clients() const
+inline const QVector<AbstractClient*> &TabGroup::clients() const
 {
     return m_clients;
 }
@@ -186,7 +186,7 @@ inline bool TabGroup::isEmpty() const
     return m_clients.isEmpty();
 }
 
-inline Client* TabGroup::current() const
+inline AbstractClient* TabGroup::current() const
 {
     return m_current;
 }

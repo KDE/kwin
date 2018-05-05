@@ -270,14 +270,14 @@ public:
     /**
      * Set tab group - this is to be invoked by TabGroup::add/remove(client) and NO ONE ELSE
      */
-    void setTabGroup(TabGroup* group);
+    void setTabGroup(TabGroup* group) override;
     /*
     *   If shown is true the client is mapped and raised, if false
     *   the client is unmapped and hidden, this function is called
     *   when the tabbing group of the client switches its visible
     *   client.
     */
-    void setClientShown(bool shown);
+    void setClientShown(bool shown) override;
     /*
     *   When a click is done in the decoration and it calls the group
     *   to change the visible client it starts to move-resize the new

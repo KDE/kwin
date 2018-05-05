@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-TabGroup::TabGroup(Client *c)
+TabGroup::TabGroup(AbstractClient *c)
     : m_clients()
     , m_current(c)
     , m_minSize(c->minSize())
@@ -58,7 +58,7 @@ void TabGroup::activatePrev()
     setCurrent(m_clients.at((index > 0) ? index - 1 : m_clients.count() - 1));
 }
 
-bool TabGroup::add(Client* c, Client *other, bool after, bool becomeVisible)
+bool TabGroup::add(AbstractClient* c, AbstractClient *other, bool after, bool becomeVisible)
 {
     Q_ASSERT(!c->tabGroup());
 
@@ -144,7 +144,7 @@ bool TabGroup::add(Client* c, Client *other, bool after, bool becomeVisible)
     return true;
 }
 
-bool TabGroup::remove(Client* c)
+bool TabGroup::remove(AbstractClient* c)
 {
     if (!c)
         return false;
@@ -189,15 +189,15 @@ void TabGroup::closeAll()
     // after this function exits.
     // However later Wayland support or similar might not share this bahaviour - and we really had
     // enough trouble with a polluted client list around the tabbing code ....
-    ClientList list(m_clients);
-    for (ClientList::const_iterator i = list.constBegin(), end = list.constEnd(); i != end; ++i)
+    auto list(m_clients);
+    for (auto i = list.constBegin(), end = list.constEnd(); i != end; ++i)
         if (*i != m_current)
             (*i)->closeWindow();
 
     m_current->closeWindow();
 }
 
-void TabGroup::move(Client *c, Client *other, bool after)
+void TabGroup::move(AbstractClient *c, AbstractClient *other, bool after)
 {
     if (c == other)
         return;
@@ -222,10 +222,10 @@ void TabGroup::move(Client *c, Client *other, bool after)
 
 bool TabGroup::isActive() const
 {
-    return contains(dynamic_cast<Client*>(Workspace::self()->activeClient()));
+    return contains(Workspace::self()->activeClient());
 }
 
-void TabGroup::setCurrent(Client* c, bool force)
+void TabGroup::setCurrent(AbstractClient* c, bool force)
 {
     if ((c == m_current && !force) || !contains(c))
         return;
@@ -236,18 +236,18 @@ void TabGroup::setCurrent(Client* c, bool force)
 
     m_current = c;
     c->setClientShown(true); // reduce flicker?
-    for (ClientList::const_iterator i = m_clients.constBegin(), end = m_clients.constEnd(); i != end; ++i)
+    for (auto i = m_clients.constBegin(), end = m_clients.constEnd(); i != end; ++i)
         (*i)->setClientShown((*i) == m_current);
 }
 
-void TabGroup::sync(const char *property, Client *c)
+void TabGroup::sync(const char *property, AbstractClient *c)
 {
     if (c->metaObject()->indexOfProperty(property) > -1) {
         qCWarning(KWIN_CORE, "caught attempt to sync non dynamic property: %s", property);
         return;
     }
     QVariant v = c->property(property);
-    for (ClientList::iterator i = m_clients.begin(), end = m_clients.end(); i != end; ++i) {
+    for (auto i = m_clients.begin(), end = m_clients.end(); i != end; ++i) {
         if (*i != m_current)
             (*i)->setProperty(property, v);
     }
@@ -263,7 +263,7 @@ void TabGroup::updateMinMaxSize()
     m_minSize = QSize(0, 0);
     m_maxSize = QSize(INT_MAX, INT_MAX);
 
-    for (ClientList::const_iterator i = m_clients.constBegin(); i != m_clients.constEnd(); ++i) {
+    for (auto i = m_clients.constBegin(); i != m_clients.constEnd(); ++i) {
         m_minSize = m_minSize.expandedTo((*i)->minSize());
         m_maxSize = m_maxSize.boundedTo((*i)->maxSize());
     }
@@ -276,7 +276,7 @@ void TabGroup::updateMinMaxSize()
     const QSize size = m_current->clientSize().expandedTo(m_minSize).boundedTo(m_maxSize);
     if (size != m_current->clientSize()) {
         const QRect r(m_current->pos(), m_current->sizeForClientSize(size));
-        for (ClientList::const_iterator i = m_clients.constBegin(), end = m_clients.constEnd(); i != end; ++i)
+        for (auto i = m_clients.constBegin(), end = m_clients.constEnd(); i != end; ++i)
             (*i)->setGeometry(r);
     }
 }
@@ -290,7 +290,7 @@ void TabGroup::blockStateUpdates(bool more) {
     }
 }
 
-void TabGroup::updateStates(Client* main, States states, Client* only)
+void TabGroup::updateStates(AbstractClient* main, States states, AbstractClient* only)
 {
     if (main == only)
         return; // there's no need to only align "us" to "us"
@@ -302,15 +302,15 @@ void TabGroup::updateStates(Client* main, States states, Client* only)
     states |= m_pendingUpdates;
     m_pendingUpdates = TabGroup::None;
 
-    ClientList toBeRemoved, onlyDummy;
-    ClientList *list = &m_clients;
+    QVector<AbstractClient*> toBeRemoved, onlyDummy;
+    auto *list = &m_clients;
     if (only) {
         onlyDummy << only;
         list = &onlyDummy;
     }
 
-    for (ClientList::const_iterator i = list->constBegin(), end = list->constEnd(); i != end; ++i) {
-        Client *c = (*i);
+    for (auto i = list->constBegin(), end = list->constEnd(); i != end; ++i) {
+        auto *c = (*i);
         if (c != main) {
             if ((states & Minimized) && c->isMinimized() != main->isMinimized()) {
                 if (main->isMinimized())
@@ -353,7 +353,7 @@ void TabGroup::updateStates(Client* main, States states, Client* only)
         }
     }
 
-    for (ClientList::const_iterator i = toBeRemoved.constBegin(), end = toBeRemoved.constEnd(); i != end; ++i)
+    for (auto i = toBeRemoved.constBegin(), end = toBeRemoved.constEnd(); i != end; ++i)
         remove(*i);
 }
 
