@@ -150,6 +150,7 @@ Q_SIGNALS:
     void maxSizeChanged();
 
 private:
+    friend class AbstractClient;
     friend class Client;
 //     friend bool Client::tabTo(Client*, bool, bool);
     bool add(KWin::AbstractClient *c, AbstractClient *other, bool behind, bool activateC);

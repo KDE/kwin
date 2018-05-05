@@ -71,10 +71,6 @@ class KWIN_EXPORT Client
      */
     Q_PROPERTY(QSize basicUnit READ basicUnit)
     /**
-     * The "Window Tabs" Group this Client belongs to.
-     **/
-    Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
-    /**
      * A client can block compositing. That is while the Client is alive and the state is set,
      * Compositing is suspended and is resumed when there are no Clients blocking compositing any
      * more.
@@ -250,27 +246,6 @@ public:
     StrutRects strutRects() const;
     bool hasStrut() const override;
 
-    // Tabbing functions
-    TabGroup* tabGroup() const override; // Returns a pointer to client_group
-    Q_INVOKABLE inline bool tabBefore(Client *other, bool activate) { return tabTo(other, false, activate); }
-    Q_INVOKABLE inline bool tabBehind(Client *other, bool activate) { return tabTo(other, true, activate); }
-    /**
-     * Syncs the *dynamic* @param property @param fromThisClient or the @link currentTab() to
-     * all members of the @link tabGroup() (if there is one)
-     *
-     * eg. if you call:
-     * client->setProperty("kwin_tiling_floats", true);
-     * client->syncTabGroupFor("kwin_tiling_floats", true)
-     * all clients in this tabGroup will have ::property("kwin_tiling_floats").toBool() == true
-     *
-     * WARNING: non dynamic properties are ignored - you're not supposed to alter/update such explicitly
-     */
-    Q_INVOKABLE void syncTabGroupFor(QString property, bool fromThisClient = false);
-    Q_INVOKABLE bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false) override;
-    /**
-     * Set tab group - this is to be invoked by TabGroup::add/remove(client) and NO ONE ELSE
-     */
-    void setTabGroup(TabGroup* group) override;
     /*
     *   If shown is true the client is mapped and raised, if false
     *   the client is unmapped and hidden, this function is called
@@ -278,12 +253,6 @@ public:
     *   client.
     */
     void setClientShown(bool shown) override;
-    /*
-    *   When a click is done in the decoration and it calls the group
-    *   to change the visible client it starts to move-resize the new
-    *   client, this function stops it.
-    */
-    bool isCurrentTab() const override;
 
     /**
      * Whether or not the window has a strut that expands through the invisible area of
@@ -408,12 +377,6 @@ Q_SIGNALS:
     void clientFullScreenSet(KWin::Client*, bool, bool);
 
     /**
-     * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to
-     * another group, but not when a Client gets added or removed to the Client's ClientGroup.
-     **/
-    void tabGroupChanged();
-
-    /**
      * Emitted whenever the Client want to show it menu
      */
     void showRequest();
@@ -497,8 +460,6 @@ private:
 
     void updateInputWindow();
 
-    bool tabTo(Client *other, bool behind, bool activate);
-
     Xcb::Property fetchShowOnScreenEdge() const;
     void readShowOnScreenEdge(Xcb::Property &property);
     /**
@@ -562,7 +523,6 @@ private:
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
     Group* in_group;
-    TabGroup* tab_group;
     QTimer* ping_timer;
     qint64 m_killHelperPID;
     xcb_timestamp_t m_pingTimestamp;
@@ -632,11 +592,6 @@ inline const Group* Client::group() const
 inline Group* Client::group()
 {
     return in_group;
-}
-
-inline TabGroup* Client::tabGroup() const
-{
-    return tab_group;
 }
 
 inline bool Client::isShown(bool shaded_is_shown) const

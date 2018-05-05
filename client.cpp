@@ -108,7 +108,6 @@ Client::Client()
     , shadeHoverTimer(NULL)
     , m_colormap(XCB_COLORMAP_NONE)
     , in_group(NULL)
-    , tab_group(NULL)
     , ping_timer(NULL)
     , m_killHelperPID(0)
     , m_pingTimestamp(XCB_TIME_CURRENT_TIME)
@@ -166,6 +165,17 @@ Client::Client()
                 XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
         }
     });
+
+    connect(this, &Client::tabGroupChanged, this,
+        [this] {
+            auto group = tabGroup();
+            if (group) {
+                unsigned long data[] = {qHash(group)}; //->id();
+                m_client.changeProperty(atoms->kde_net_wm_tab_group, XCB_ATOM_CARDINAL, 32, 1, data);
+            }
+            else
+                m_client.deleteProperty(atoms->kde_net_wm_tab_group);
+        });
 
     // SELI TODO: Initialize xsizehints??
 }
@@ -1504,95 +1514,6 @@ void Client::fetchIconicName()
                 info->setVisibleIconName("");
         }
     }
-}
-
-bool Client::tabTo(Client *other, bool behind, bool activate)
-{
-    Q_ASSERT(other && other != this);
-
-    if (tab_group && tab_group == other->tabGroup()) { // special case: move inside group
-        tab_group->move(this, other, behind);
-        return true;
-    }
-
-    GeometryUpdatesBlocker blocker(this);
-    const bool wasBlocking = signalsBlocked();
-    blockSignals(true); // prevent client emitting "retabbed to nowhere" cause it's about to be entabbed the next moment
-    untab();
-    blockSignals(wasBlocking);
-
-    TabGroup *newGroup = other->tabGroup() ? other->tabGroup() : new TabGroup(other);
-
-    if (!newGroup->add(this, other, behind, activate)) {
-        if (newGroup->count() < 2) { // adding "c" to "to" failed for whatever reason
-            newGroup->remove(other);
-            delete newGroup;
-        }
-        return false;
-    }
-    return true;
-}
-
-bool Client::untab(const QRect &toGeometry, bool clientRemoved)
-{
-    TabGroup *group = tab_group;
-    if (group && group->remove(this)) { // remove sets the tabgroup to "0", therefore the pointer is cached
-        if (group->isEmpty()) {
-            delete group;
-        }
-        if (clientRemoved)
-            return true; // there's been a broadcast signal that this client is now removed - don't touch it
-        setClientShown(!(isMinimized() || isShade()));
-        bool keepSize = toGeometry.size() == size();
-        bool changedSize = false;
-        if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-            changedSize = true;
-            setQuickTileMode(QuickTileFlag::None); // if we leave a quicktiled group, assume that the user wants to untile
-        }
-        if (toGeometry.isValid()) {
-            if (maximizeMode() != MaximizeRestore) {
-                changedSize = true;
-                maximize(MaximizeRestore); // explicitly calling for a geometry -> unmaximize
-            }
-            if (keepSize && changedSize) {
-                geom_restore = geometry(); // checkWorkspacePosition() invokes it
-                QPoint cpoint = Cursor::pos();
-                QPoint point = cpoint;
-                point.setX((point.x() - toGeometry.x()) * geom_restore.width() / toGeometry.width());
-                point.setY((point.y() - toGeometry.y()) * geom_restore.height() / toGeometry.height());
-                geom_restore.moveTo(cpoint-point);
-            } else {
-                geom_restore = toGeometry; // checkWorkspacePosition() invokes it
-            }
-            setGeometry(geom_restore);
-            checkWorkspacePosition();
-        }
-        return true;
-    }
-    return false;
-}
-
-void Client::setTabGroup(TabGroup *group)
-{
-    tab_group = group;
-    if (group) {
-        unsigned long data[] = {qHash(group)}; //->id();
-        m_client.changeProperty(atoms->kde_net_wm_tab_group, XCB_ATOM_CARDINAL, 32, 1, data);
-    }
-    else
-        m_client.deleteProperty(atoms->kde_net_wm_tab_group);
-    emit tabGroupChanged();
-}
-
-bool Client::isCurrentTab() const
-{
-    return !tab_group || tab_group->current() == this;
-}
-
-void Client::syncTabGroupFor(QString property, bool fromThisClient)
-{
-    if (tab_group)
-        tab_group->sync(property.toAscii().data(), fromThisClient ? this : tab_group->current());
 }
 
 void Client::setClientShown(bool shown)

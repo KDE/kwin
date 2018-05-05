@@ -272,6 +272,10 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * considered unresponsive. This usually indicates that the application froze or crashed.
      */
     Q_PROPERTY(bool unresponsive READ unresponsive NOTIFY unresponsiveChanged)
+    /**
+     * The "Window Tabs" Group this Client belongs to.
+     **/
+    Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
 
 public:
     virtual ~AbstractClient();
@@ -422,11 +426,34 @@ public:
         return m_minimized;
     }
     virtual void setFullScreen(bool set, bool user = true) = 0;
-    virtual TabGroup *tabGroup() const;
-    virtual void setTabGroup(TabGroup* group);
+    // Tabbing functions
+    Q_INVOKABLE inline bool tabBefore(AbstractClient *other, bool activate) { return tabTo(other, false, activate); }
+    Q_INVOKABLE inline bool tabBehind(AbstractClient *other, bool activate) { return tabTo(other, true, activate); }
+    /**
+     * Syncs the *dynamic* @param property @param fromThisClient or the @link currentTab() to
+     * all members of the @link tabGroup() (if there is one)
+     *
+     * eg. if you call:
+     * client->setProperty("kwin_tiling_floats", true);
+     * client->syncTabGroupFor("kwin_tiling_floats", true)
+     * all clients in this tabGroup will have ::property("kwin_tiling_floats").toBool() == true
+     *
+     * WARNING: non dynamic properties are ignored - you're not supposed to alter/update such explicitly
+     */
+    Q_INVOKABLE void syncTabGroupFor(QString property, bool fromThisClient = false);
+    TabGroup *tabGroup() const;
+    /**
+     * Set tab group - this is to be invoked by TabGroup::add/remove(client) and NO ONE ELSE
+     */
+    void setTabGroup(TabGroup* group);
     virtual void setClientShown(bool shown);
-    Q_INVOKABLE virtual bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
-    virtual bool isCurrentTab() const;
+    Q_INVOKABLE bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
+    /*
+    *   When a click is done in the decoration and it calls the group
+    *   to change the visible client it starts to move-resize the new
+    *   client, this function stops it.
+    */
+    bool isCurrentTab() const;
     virtual QRect geometryRestore() const = 0;
     virtual MaximizeMode maximizeMode() const = 0;
     void maximize(MaximizeMode);
@@ -732,6 +759,11 @@ Q_SIGNALS:
     void hasApplicationMenuChanged(bool);
     void applicationMenuActiveChanged(bool);
     void unresponsiveChanged(bool);
+    /**
+     * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to
+     * another group, but not when a Client gets added or removed to the Client's ClientGroup.
+     **/
+    void tabGroupChanged();
 
 protected:
     AbstractClient();
@@ -1031,6 +1063,8 @@ protected:
     void finishWindowRules();
     void discardTemporaryRules();
 
+    bool tabTo(AbstractClient *other, bool behind, bool activate);
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -1108,6 +1142,7 @@ private:
     QKeySequence _shortcut;
 
     WindowRules m_rules;
+    TabGroup* tab_group = nullptr;
 
     static bool s_haveResizeEffect;
 };
@@ -1173,6 +1208,11 @@ inline AbstractClient::PendingGeometry_t AbstractClient::pendingGeometryUpdate()
 inline void AbstractClient::setPendingGeometryUpdate(PendingGeometry_t update)
 {
     m_pendingGeometryUpdate = update;
+}
+
+inline TabGroup* AbstractClient::tabGroup() const
+{
+    return tab_group;
 }
 
 }

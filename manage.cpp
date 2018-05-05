@@ -370,7 +370,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
                 }
             }
         }
-        if (!(tab_group || isMapped || session)) {
+        if (!(tabGroup() || isMapped || session)) {
             // Attempt to automatically group similar windows
             Client* similar = findAutogroupCandidate();
             if (similar && !similar->noBorder()) {

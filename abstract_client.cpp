@@ -114,14 +114,10 @@ bool AbstractClient::isTransient() const
     return false;
 }
 
-TabGroup *AbstractClient::tabGroup() const
-{
-    return nullptr;
-}
-
 void AbstractClient::setTabGroup(TabGroup* group)
 {
-    Q_UNUSED(group)
+    tab_group = group;
+    emit tabGroupChanged();
 }
 
 void AbstractClient::setClientShown(bool shown)
@@ -131,14 +127,81 @@ void AbstractClient::setClientShown(bool shown)
 
 bool AbstractClient::untab(const QRect &toGeometry, bool clientRemoved)
 {
-    Q_UNUSED(toGeometry)
-    Q_UNUSED(clientRemoved)
+    TabGroup *group = tab_group;
+    if (group && group->remove(this)) { // remove sets the tabgroup to "0", therefore the pointer is cached
+        if (group->isEmpty()) {
+            delete group;
+        }
+        if (clientRemoved)
+            return true; // there's been a broadcast signal that this client is now removed - don't touch it
+        setClientShown(!(isMinimized() || isShade()));
+        bool keepSize = toGeometry.size() == size();
+        bool changedSize = false;
+        if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+            changedSize = true;
+            setQuickTileMode(QuickTileFlag::None); // if we leave a quicktiled group, assume that the user wants to untile
+        }
+        if (toGeometry.isValid()) {
+            if (maximizeMode() != MaximizeRestore) {
+                changedSize = true;
+                maximize(MaximizeRestore); // explicitly calling for a geometry -> unmaximize
+            }
+            if (keepSize && changedSize) {
+                setGeometryRestore(geometry()); // checkWorkspacePosition() invokes it
+                QPoint cpoint = Cursor::pos();
+                QPoint point = cpoint;
+                point.setX((point.x() - toGeometry.x()) * geometryRestore().width() / toGeometry.width());
+                point.setY((point.y() - toGeometry.y()) * geometryRestore().height() / toGeometry.height());
+                auto geometry_restore = geometryRestore();
+                geometry_restore.moveTo(cpoint-point);
+                setGeometryRestore(geometry_restore);
+            } else {
+                setGeometryRestore(toGeometry); // checkWorkspacePosition() invokes it
+            }
+            setGeometry(geometryRestore());
+            checkWorkspacePosition();
+        }
+        return true;
+    }
     return false;
+}
+
+bool AbstractClient::tabTo(AbstractClient *other, bool behind, bool activate)
+{
+    Q_ASSERT(other && other != this);
+
+    if (tab_group && tab_group == other->tabGroup()) { // special case: move inside group
+        tab_group->move(this, other, behind);
+        return true;
+    }
+
+    GeometryUpdatesBlocker blocker(this);
+    const bool wasBlocking = signalsBlocked();
+    blockSignals(true); // prevent client emitting "retabbed to nowhere" cause it's about to be entabbed the next moment
+    untab();
+    blockSignals(wasBlocking);
+
+    TabGroup *newGroup = other->tabGroup() ? other->tabGroup() : new TabGroup(other);
+
+    if (!newGroup->add(this, other, behind, activate)) {
+        if (newGroup->count() < 2) { // adding "c" to "to" failed for whatever reason
+            newGroup->remove(other);
+            delete newGroup;
+        }
+        return false;
+    }
+    return true;
+}
+
+void AbstractClient::syncTabGroupFor(QString property, bool fromThisClient)
+{
+    if (tab_group)
+        tab_group->sync(property.toAscii().data(), fromThisClient ? this : tab_group->current());
 }
 
 bool AbstractClient::isCurrentTab() const
 {
-    return true;
+    return !tab_group || tab_group->current() == this;
 }
 
 xcb_timestamp_t AbstractClient::userTime() const
