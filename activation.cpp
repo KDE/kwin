@@ -389,7 +389,7 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
         flags &= ~ActivityFocus;
     }
     if (c->tabGroup() && c->tabGroup()->current() != c)
-        c->tabGroup()->setCurrent(dynamic_cast<Client*>(c));
+        c->tabGroup()->setCurrent(c);
     if (!c->isShown(true)) {  // shouldn't happen, call activateClient() if needed
         qCWarning(KWIN_CORE) << "takeActivity: not shown" ;
         return;
