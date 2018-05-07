@@ -1080,20 +1080,23 @@ void RuleBook::load()
 void RuleBook::save()
 {
     m_updateTimer->stop();
-    KConfig cfg(QStringLiteral(KWIN_NAME "rulesrc"), KConfig::NoGlobals);
-    QStringList groups = cfg.groupList();
+    if (!m_config) {
+        qCWarning(KWIN_CORE) << "RuleBook::save invoked without prior invokation of RuleBook::load";
+        return;
+    }
+    QStringList groups = m_config->groupList();
     for (QStringList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();
             ++it)
-        cfg.deleteGroup(*it);
-    cfg.group("General").writeEntry("count", m_rules.count());
+        m_config->deleteGroup(*it);
+    m_config->group("General").writeEntry("count", m_rules.count());
     int i = 1;
     for (QList< Rules* >::ConstIterator it = m_rules.constBegin();
             it != m_rules.constEnd();
             ++it) {
         if ((*it)->isTemporary())
             continue;
-        KConfigGroup cg(&cfg, QString::number(i));
+        KConfigGroup cg(m_config, QString::number(i));
         (*it)->write(cg);
         ++i;
     }
