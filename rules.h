@@ -115,7 +115,7 @@ public:
     void write(KConfigGroup&) const;
     bool isEmpty() const;
 #ifndef KCMRULES
-    void discardUsed(bool withdrawn);
+    bool discardUsed(bool withdrawn);
     bool match(const AbstractClient* c) const;
     bool update(AbstractClient*, int selection);
     bool isTemporary() const;
