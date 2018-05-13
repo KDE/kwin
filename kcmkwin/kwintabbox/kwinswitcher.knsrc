@@ -41,5 +41,5 @@ Name[zh_TW]=視窗切換器佈局
 ProvidersUrl=https://download.kde.org/ocs/providers.xml
 Categories=KWin Switching Layouts
 StandardResource=tmp
-InstallationCommand=plasmapkg2 -t windowswitcher -i %f
-UninstallCommand=plasmapkg2 -t windowswitcher -r %f
+InstallationCommand=kpackagetool5 --type KWin/WindowSwitcher --install %f
+UninstallCommand=kpackagetool5 --type KWin/WindowSwitcher --remove %f

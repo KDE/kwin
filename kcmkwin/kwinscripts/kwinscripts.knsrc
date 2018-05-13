@@ -40,5 +40,5 @@ Name[zh_TW]=視窗管理員指令稿
 ProvidersUrl=https://download.kde.org/ocs/providers.xml
 Categories=KWin Scripts
 StandardResource=tmp
-InstallationCommand=plasmapkg2 -t kwinscript -i %f
-UninstallCommand=plasmapkg2 -t kwinscript -r %f
+InstallationCommand=kpackagetool5 --type KWin/Script --install %f
+UninstallCommand=kpackagetool5 --type KWin/Script --remove %f

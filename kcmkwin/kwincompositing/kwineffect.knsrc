@@ -41,5 +41,5 @@ Name[zh_TW]=視窗管理員效果
 ProvidersUrl=https://download.kde.org/ocs/providers.xml
 Categories=KWin Effects
 StandardResource=tmp
-InstallationCommand=plasmapkg2 -t kwineffect -i %f
-UninstallCommand=plasmapkg2 -t kwineffect -r %f
+InstallationCommand=kpackagetool5 --type KWin/Effect --install %f
+UninstallCommand=kpackagetool5 --type KWin/Effect --remove %f
