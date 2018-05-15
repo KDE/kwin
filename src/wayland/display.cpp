@@ -50,6 +50,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "xdgshell_v6_interface_p.h"
 #include "appmenu_interface.h"
 #include "server_decoration_palette_interface.h"
+#include "xdgoutput_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -453,6 +454,13 @@ AppMenuManagerInterface *Display::createAppMenuManagerInterface(QObject *parent)
 ServerSideDecorationPaletteManagerInterface *Display::createServerSideDecorationPaletteManager(QObject *parent)
 {
     auto b = new ServerSideDecorationPaletteManagerInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, b, [this, b] { delete b; });
+    return b;
+}
+
+XdgOutputManagerInterface *Display::createXdgOutputManager(QObject *parent)
+{
+    auto b = new XdgOutputManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, b, [this, b] { delete b; });
     return b;
 }

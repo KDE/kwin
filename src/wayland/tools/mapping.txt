@@ -62,3 +62,5 @@ zwp_idle_inhibit_manager_v1;IdleInhibitManager
 zwp_idle_inhibitor_v1;IdleInhibitor
 org_kde_kwin_remote_access_manager;RemoteAccessManager
 org_kde_kwin_remote_buffer;RemoteBuffer
+zxdg_output_v1;XdgOutput
+zxdg_output_manager_v1;XdgOutputManager

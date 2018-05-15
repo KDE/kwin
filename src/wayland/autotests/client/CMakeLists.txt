@@ -429,3 +429,14 @@ add_executable(testRemoteAccess ${testRemoteAccess_SRCS})
 target_link_libraries( testRemoteAccess Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
 add_test(NAME kwayland-testRemoteAccess COMMAND testRemoteAccess)
 ecm_mark_as_test(testRemoteAccess)
+
+########################################################
+# Test XDG Output
+########################################################
+set( testXdgOutput_SRCS
+        test_xdg_output.cpp
+    )
+add_executable(testXdgOutput ${testXdgOutput_SRCS})
+target_link_libraries( testXdgOutput Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client Wayland::Server)
+add_test(NAME kwayland-testXdgOutput COMMAND testXdgOutput)
+ecm_mark_as_test(testXdgOutput)

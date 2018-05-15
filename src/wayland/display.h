@@ -86,6 +86,7 @@ class PointerConstraintsInterface;
 class XdgForeignInterface;
 class AppMenuManagerInterface;
 class ServerSideDecorationPaletteManagerInterface;
+class XdgOutputManagerInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -257,6 +258,14 @@ public:
      * @since 5.42
      **/
     ServerSideDecorationPaletteManagerInterface *createServerSideDecorationPaletteManager(QObject *parent = nullptr);
+
+    /**
+     * Creates the XdgOutputManagerInterface
+     *
+     * @return the created manager
+     * @since 5.XDGOUTPUTVERSION
+     */
+    XdgOutputManagerInterface *createXdgOutputManager(QObject *parent = nullptr);
 
 
     /**
