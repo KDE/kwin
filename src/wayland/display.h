@@ -263,7 +263,7 @@ public:
      * Creates the XdgOutputManagerInterface
      *
      * @return the created manager
-     * @since 5.XDGOUTPUTVERSION
+     * @since 5.47
      */
     XdgOutputManagerInterface *createXdgOutputManager(QObject *parent = nullptr);
 
