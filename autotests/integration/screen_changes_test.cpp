@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 
 #include <KWayland/Client/output.h>
+#include <KWayland/Client/xdgoutput.h>
 #include <KWayland/Client/registry.h>
 
 using namespace KWin;
@@ -84,6 +85,8 @@ void ScreenChangesTest::testScreenAddRemove()
     QVERIFY(registry.isValid());
     registry.setup();
     QVERIFY(allAnnounced.wait());
+    const auto xdgOMData = registry.interface(Registry::Interface::XdgOutputUnstableV1);
+    auto xdgOutputManager = registry.createXdgOutputManager(xdgOMData.name, xdgOMData.version);
 
     // should be one output
     QCOMPARE(screens()->count(), 1);
@@ -137,6 +140,20 @@ void ScreenChangesTest::testScreenAddRemove()
     QVERIFY(o2ChangedSpy.isValid());
     QVERIFY(o2ChangedSpy.wait());
     QCOMPARE(o2->geometry(), geometries.at(1));
+
+    //and check XDGOutput is synced
+    QScopedPointer<XdgOutput> xdgO1(xdgOutputManager->getXdgOutput(o1.data()));
+    QSignalSpy xdgO1ChangedSpy(xdgO1.data(), &XdgOutput::changed);
+    QVERIFY(xdgO1ChangedSpy.isValid());
+    QVERIFY(xdgO1ChangedSpy.wait());
+    QCOMPARE(xdgO1->logicalPosition(), geometries.at(0).topLeft());
+    QCOMPARE(xdgO1->logicalSize(), geometries.at(0).size());
+    QScopedPointer<XdgOutput> xdgO2(xdgOutputManager->getXdgOutput(o2.data()));
+    QSignalSpy xdgO2ChangedSpy(xdgO2.data(), &XdgOutput::changed);
+    QVERIFY(xdgO2ChangedSpy.isValid());
+    QVERIFY(xdgO2ChangedSpy.wait());
+    QCOMPARE(xdgO2->logicalPosition(), geometries.at(1).topLeft());
+    QCOMPARE(xdgO2->logicalSize(), geometries.at(1).size());
 
     // now let's try to remove one output again
     outputAnnouncedSpy.clear();

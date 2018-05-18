@@ -58,6 +58,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/outputconfiguration_interface.h>
 #include <KWayland/Server/xdgshell_interface.h>
 #include <KWayland/Server/xdgforeign_interface.h>
+#include <KWayland/Server/xdgoutput_interface.h>
+
 
 // Qt
 #include <QThread>
@@ -354,6 +356,9 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     });
     m_outputManagement->create();
 
+    m_xdgOutputManager = m_display->createXdgOutputManager(m_display);
+    m_xdgOutputManager->create();
+
     m_display->createSubCompositor(m_display)->create();
 
     m_XdgForeign = m_display->createXdgForeignInterface(m_display);
@@ -453,11 +458,18 @@ void WaylandServer::syncOutputsToWayland()
     Q_ASSERT(s);
     for (int i = 0; i < s->count(); ++i) {
         OutputInterface *output = m_display->createOutput(m_display);
+        auto xdgOutput = xdgOutputManager()->createXdgOutput(output, output);
+
         output->setScale(s->scale(i));
         const QRect &geo = s->geometry(i);
         output->setGlobalPosition(geo.topLeft());
         output->setPhysicalSize(s->physicalSize(i).toSize());
         output->addMode(geo.size());
+
+        xdgOutput->setLogicalPosition(geo.topLeft());
+        xdgOutput->setLogicalSize(geo.size());
+        xdgOutput->done();
+
         output->create();
     }
 }

@@ -41,6 +41,7 @@ class OutputInterface;
 class OutputDeviceInterface;
 class OutputChangeSet;
 class OutputManagementInterface;
+class XdgOutputInterface;
 }
 }
 
@@ -184,6 +185,7 @@ private:
     drmModeModeInfo m_mode;
     Edid m_edid;
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
+    QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;
     QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
     QPointer<KWayland::Server::OutputChangeSet> m_changeset;
     KWin::ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;

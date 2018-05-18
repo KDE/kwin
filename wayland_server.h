@@ -60,6 +60,7 @@ class OutputManagementInterface;
 class OutputConfigurationInterface;
 class XdgShellInterface;
 class XdgForeignInterface;
+class XdgOutputManagerInterface;
 }
 }
 
@@ -104,6 +105,10 @@ public:
     KWayland::Server::ServerSideDecorationManagerInterface *decorationManager() const {
         return m_decorationManager;
     }
+    KWayland::Server::XdgOutputManagerInterface *xdgOutputManager() const {
+        return m_xdgOutputManager;
+    }
+
     QList<ShellClient*> clients() const {
         return m_clients;
     }
@@ -227,6 +232,7 @@ private:
     KWayland::Server::AppMenuManagerInterface *m_appMenuManager = nullptr;
     KWayland::Server::ServerSideDecorationPaletteManagerInterface *m_paletteManager = nullptr;
     KWayland::Server::IdleInterface *m_idle = nullptr;
+    KWayland::Server::XdgOutputManagerInterface *m_xdgOutputManager = nullptr;
     struct {
         KWayland::Server::ClientConnection *client = nullptr;
         QMetaObject::Connection destroyConnection;

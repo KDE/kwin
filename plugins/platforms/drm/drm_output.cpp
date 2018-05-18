@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/outputdevice_interface.h>
 #include <KWayland/Server/outputmanagement_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
+#include <KWayland/Server/xdgoutput_interface.h>
 // KF5
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -181,7 +182,7 @@ QSize DrmOutput::physicalSize() const
 
 QRect DrmOutput::geometry() const
 {
-    return QRect(m_globalPos, pixelSize() / scale());
+    return QRect(m_globalPos, pixelSize() / m_scale);
 }
 
 qreal DrmOutput::scale() const
@@ -344,12 +345,17 @@ void DrmOutput::initOutput()
         m_waylandOutput.clear();
     }
     m_waylandOutput = waylandServer()->display()->createOutput();
+    m_xdgOutput = waylandServer()->xdgOutputManager()->createXdgOutput(m_waylandOutput, m_waylandOutput);
     connect(this, &DrmOutput::modeChanged, this,
         [this] {
             if (m_waylandOutput.isNull()) {
                 return;
             }
             m_waylandOutput->setCurrentMode(QSize(m_mode.hdisplay, m_mode.vdisplay), refreshRateForMode(&m_mode));
+            if (m_xdgOutput) {
+                m_xdgOutput->setLogicalSize(pixelSize() / m_scale);
+                m_xdgOutput->done();
+            }
         }
     );
     m_waylandOutput->setManufacturer(m_waylandOutputDevice->manufacturer());
@@ -785,6 +791,10 @@ void DrmOutput::setGlobalPos(const QPoint &pos)
     if (m_waylandOutputDevice) {
         m_waylandOutputDevice->setGlobalPosition(pos);
     }
+    if (m_xdgOutput) {
+        m_xdgOutput->setLogicalPosition(pos);
+        m_xdgOutput->done();
+    }
 }
 
 void DrmOutput::setScale(qreal scale)
@@ -795,6 +805,10 @@ void DrmOutput::setScale(qreal scale)
     }
     if (m_waylandOutputDevice) {
         m_waylandOutputDevice->setScale(scale);
+    }
+    if (m_xdgOutput) {
+        m_xdgOutput->setLogicalSize(pixelSize() / m_scale);
+        m_xdgOutput->done();
     }
 }
 
