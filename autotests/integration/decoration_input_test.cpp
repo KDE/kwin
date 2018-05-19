@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shell.h>
@@ -78,6 +79,8 @@ private Q_SLOTS:
     void testModifierScrollOpacity();
     void testTouchEvents_data();
     void testTouchEvents();
+    void testTooltipDoesntEatKeyEvents_data();
+    void testTooltipDoesntEatKeyEvents();
 
 private:
     AbstractClient *showWindow(Test::ShellSurfaceType type);
@@ -832,6 +835,55 @@ void DecorationInputTest::testTouchEvents()
     kwinApp()->platform()->touchUp(0, timestamp++);
     QCOMPARE(hoverMoveSpy.count(), 4);
     QCOMPARE(hoverLeaveSpy.count(), 1);
+}
+
+void DecorationInputTest::testTooltipDoesntEatKeyEvents_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+}
+
+void DecorationInputTest::testTooltipDoesntEatKeyEvents()
+{
+    // this test verifies that a tooltip on the decoration does not steal key events
+    // BUG: 393253
+
+    // first create a keyboard
+    auto keyboard = Test::waylandSeat()->createKeyboard(Test::waylandSeat());
+    QVERIFY(keyboard);
+    QSignalSpy enteredSpy(keyboard, &KWayland::Client::Keyboard::entered);
+    QVERIFY(enteredSpy.isValid());
+
+    QFETCH(Test::ShellSurfaceType, type);
+    AbstractClient *c = showWindow(type);
+    QVERIFY(c);
+    QVERIFY(c->isDecorated());
+    QVERIFY(!c->noBorder());
+    QTRY_COMPARE(enteredSpy.count(), 1);
+
+    QSignalSpy keyEvent(keyboard, &KWayland::Client::Keyboard::keyChanged);
+    QVERIFY(keyEvent.isValid());
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    c->decoratedClient()->requestShowToolTip(QStringLiteral("test"));
+    // now we should get an internal window
+    QVERIFY(clientAddedSpy.wait());
+    ShellClient *internal = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internal->isInternal());
+    QVERIFY(internal->internalWindow()->flags().testFlag(Qt::ToolTip));
+
+    // now send a key
+    quint32 timestamp = 0;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    QVERIFY(keyEvent.wait());
+    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    QVERIFY(keyEvent.wait());
+
+    c->decoratedClient()->requestHideToolTip();
+    Test::waitForWindowDestroyed(internal);
 }
 
 }

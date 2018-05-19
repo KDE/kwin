@@ -910,6 +910,9 @@ class InternalWindowEventFilter : public InputEventFilter {
                 if (w->property("outputOnly").toBool()) {
                     continue;
                 }
+                if (w->flags().testFlag(Qt::ToolTip)) {
+                    continue;
+                }
                 found = w;
                 break;
             }
