@@ -830,7 +830,8 @@ void PointerInputTest::testCursorImage()
     Cursor::setPos(800, 800);
     auto p = input()->pointer();
     // at the moment it should be the fallback cursor
-    QVERIFY(!p->cursorImage().isNull());
+    const QImage fallbackCursor = p->cursorImage();
+    QVERIFY(!fallbackCursor.isNull());
 
     // create a window
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
@@ -844,10 +845,10 @@ void PointerInputTest::testCursorImage()
     AbstractClient *window = workspace()->activeClient();
     QVERIFY(window);
 
-    // move cursor to center of window, this should first set a null pointer
+    // move cursor to center of window, this should first set a null pointer, so we still show old cursor
     Cursor::setPos(window->geometry().center());
     QCOMPARE(p->window().data(), window);
-    QVERIFY(p->cursorImage().isNull());
+    QCOMPARE(p->cursorImage(), fallbackCursor);
     QVERIFY(enteredSpy.wait());
 
     // create a cursor on the pointer
@@ -890,6 +891,7 @@ void PointerInputTest::testCursorImage()
     Cursor::setPos(window->geometry().bottomLeft() + QPoint(20, 20));
     QVERIFY(p->window().isNull());
     QVERIFY(!p->cursorImage().isNull());
+    QCOMPARE(p->cursorImage(), fallbackCursor);
 }
 
 class HelperEffect : public Effect
@@ -935,8 +937,8 @@ void PointerInputTest::testEffectOverrideCursorImage()
     QVERIFY(!window->geometry().contains(QPoint(800, 800)));
     Cursor::setPos(window->geometry().center());
     QVERIFY(enteredSpy.wait());
-    // cursor image should be null
-    QVERIFY(p->cursorImage().isNull());
+    // cursor image should still be fallback
+    QCOMPARE(p->cursorImage(), fallback);
 
     // now create an effect and set an override cursor
     QScopedPointer<HelperEffect> effect(new HelperEffect);
