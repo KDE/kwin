@@ -525,7 +525,7 @@ void WaylandBackend::createSurface()
         m_seat->setInstallCursor(true);
     }
     // check for xdg shell
-    auto xdgIface = m_registry->interface(Registry::Interface::XdgShellUnstableV5);
+    auto xdgIface = m_registry->interface(Registry::Interface::XdgShellUnstableV6);
     if (xdgIface.name != 0) {
         m_xdgShell = m_registry->createXdgShell(xdgIface.name, xdgIface.version, this);
         if (m_xdgShell && m_xdgShell->isValid()) {

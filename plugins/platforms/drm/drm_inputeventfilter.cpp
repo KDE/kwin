@@ -19,8 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_inputeventfilter.h"
 #include "drm_backend.h"
+#include "wayland_server.h"
 
 #include <QApplication>
+
+#include <KWayland/Server/seat_interface.h>
 
 namespace KWin
 {
@@ -82,10 +85,10 @@ bool DpmsInputEventFilter::touchDown(quint32 id, const QPointF &pos, quint32 tim
 
 bool DpmsInputEventFilter::touchUp(quint32 id, quint32 time)
 {
-    Q_UNUSED(time)
     m_touchPoints.removeAll(id);
     if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
         if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {
+            waylandServer()->seat()->setTimestamp(time);
             notify();
         }
         m_doubleTapTimer.invalidate();
