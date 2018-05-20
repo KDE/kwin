@@ -695,17 +695,22 @@ bool Rules::discardTemporary(bool force)
 
 #define DISCARD_USED_SET_RULE( var ) \
     do { \
-        if ( var##rule == ( SetRule ) ApplyNow || ( withdrawn && var##rule == ( SetRule ) ForceTemporarily )) \
+        if ( var##rule == ( SetRule ) ApplyNow || ( withdrawn && var##rule == ( SetRule ) ForceTemporarily )) { \
             var##rule = UnusedSetRule; \
+            changed = true; \
+        } \
     } while ( false )
 #define DISCARD_USED_FORCE_RULE( var ) \
     do { \
-        if ( withdrawn && var##rule == ( ForceRule ) ForceTemporarily ) \
+        if ( withdrawn && var##rule == ( ForceRule ) ForceTemporarily ) { \
             var##rule = UnusedForceRule; \
+            changed = true; \
+        } \
     } while ( false )
 
-void Rules::discardUsed(bool withdrawn)
+bool Rules::discardUsed(bool withdrawn)
 {
+    bool changed = false;
     DISCARD_USED_FORCE_RULE(placement);
     DISCARD_USED_SET_RULE(position);
     DISCARD_USED_SET_RULE(size);
@@ -742,6 +747,8 @@ void Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(shortcut);
     DISCARD_USED_FORCE_RULE(disableglobalshortcuts);
     DISCARD_USED_SET_RULE(desktopfile);
+
+    return changed;
 }
 #undef DISCARD_USED_SET_RULE
 #undef DISCARD_USED_FORCE_RULE
@@ -1129,8 +1136,9 @@ void RuleBook::discardUsed(AbstractClient* c, bool withdrawn)
             it != m_rules.end();
        ) {
         if (c->rules()->contains(*it)) {
-            updated = true;
-            (*it)->discardUsed(withdrawn);
+            if ((*it)->discardUsed(withdrawn)) {
+                updated = true;
+            }
             if ((*it)->isEmpty()) {
                 c->removeRule(*it);
                 Rules* r = *it;
