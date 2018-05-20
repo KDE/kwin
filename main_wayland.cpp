@@ -516,6 +516,10 @@ void dropNiceCapability()
 
 int main(int argc, char * argv[])
 {
+    if (getuid() == 0) {
+        std::cerr << "kwin_wayland does not support running as root." << std::endl;
+        return 1;
+    }
     KWin::disablePtrace();
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
