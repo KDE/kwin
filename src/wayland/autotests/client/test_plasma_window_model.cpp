@@ -70,6 +70,7 @@ private Q_SLOTS:
     void testIsOnAllDesktops();
     void testIsDemandingAttention();
     void testSkipTaskbar();
+    void testSkipSwitcher();
     void testIsShadeable();
     void testIsShaded();
     void testIsMovable();
@@ -235,6 +236,7 @@ void PlasmaWindowModelTest::testRoleNames_data()
     QTest::newRow("IsOnAllDesktops")      << int(PlasmaWindowModel::IsOnAllDesktops) << QByteArrayLiteral("IsOnAllDesktops");
     QTest::newRow("IsDemandingAttention") << int(PlasmaWindowModel::IsDemandingAttention) << QByteArrayLiteral("IsDemandingAttention");
     QTest::newRow("SkipTaskbar")          << int(PlasmaWindowModel::SkipTaskbar) << QByteArrayLiteral("SkipTaskbar");
+    QTest::newRow("SkipSwitcher")         << int(PlasmaWindowModel::SkipSwitcher) << QByteArrayLiteral("SkipSwitcher");
     QTest::newRow("IsShadeable")           << int(PlasmaWindowModel::IsShadeable) << QByteArrayLiteral("IsShadeable");
     QTest::newRow("IsShaded")             << int(PlasmaWindowModel::IsShaded) << QByteArrayLiteral("IsShaded");
     QTest::newRow("IsMovable")            << int(PlasmaWindowModel::IsMovable) << QByteArrayLiteral("IsMovable");
@@ -412,6 +414,11 @@ void PlasmaWindowModelTest::testIsDemandingAttention()
 void PlasmaWindowModelTest::testSkipTaskbar()
 {
     QVERIFY(testBooleanData(PlasmaWindowModel::SkipTaskbar, &PlasmaWindowInterface::setSkipTaskbar));
+}
+
+void PlasmaWindowModelTest::testSkipSwitcher()
+{
+    QVERIFY(testBooleanData(PlasmaWindowModel::SkipSwitcher, &PlasmaWindowInterface::setSkipSwitcher));
 }
 
 void PlasmaWindowModelTest::testIsShadeable()

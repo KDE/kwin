@@ -135,8 +135,15 @@ public:
      * @returns true if this window doesn't want to be listed
      * in the taskbar
      * @since 5.5
-     */
+     **/
     bool skipTaskbar() const;
+
+    /**
+     * @returns true if this window doesn't want to be listed
+     * in a window switcher
+     * @since 5.45
+     **/
+    bool skipSwitcher() const;
 
     /**
      * Informs the PlasmaShellSurfaceInterface that the auto-hiding panel got hidden.
@@ -192,6 +199,10 @@ Q_SIGNALS:
      * A change in the skip taskbar property has been requested
      */
     void skipTaskbarChanged();
+    /**
+     * A change in the skip switcher property has been requested
+     **/
+    void skipSwitcherChanged();
 
     /**
      * A surface with Role Panel and PanelBehavior AutoHide requested to be hidden.

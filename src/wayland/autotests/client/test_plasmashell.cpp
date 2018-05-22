@@ -47,6 +47,7 @@ private Q_SLOTS:
     void testRole();
     void testPosition();
     void testSkipTaskbar();
+    void testSkipSwitcher();
     void testPanelBehavior_data();
     void testPanelBehavior();
     void testAutoHidePanel();
@@ -295,6 +296,41 @@ void TestPlasmaShell::testSkipTaskbar()
     ps->setSkipTaskbar(false);
     QVERIFY(skipTaskbarChangedSpy.wait());
     QVERIFY(!sps->skipTaskbar());
+}
+
+void TestPlasmaShell::testSkipSwitcher()
+{
+    // this test verifies that Skip Switcher is properly passed to server
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QVERIFY(plasmaSurfaceCreatedSpy.isValid());
+
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
+    QVERIFY(plasmaSurfaceCreatedSpy.wait());
+    QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
+
+    // verify that we got a plasma shell surface
+    auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface*>();
+    QVERIFY(sps);
+    QVERIFY(sps->surface());
+    QVERIFY(!sps->skipSwitcher());
+
+    // now change
+    QSignalSpy skipSwitcherChangedSpy(sps, &PlasmaShellSurfaceInterface::skipSwitcherChanged);
+    QVERIFY(skipSwitcherChangedSpy.isValid());
+    ps->setSkipSwitcher(true);
+    QVERIFY(skipSwitcherChangedSpy.wait());
+    QVERIFY(sps->skipSwitcher());
+    // setting to same again should not emit the signal
+    ps->setSkipSwitcher(true);
+    QEXPECT_FAIL("", "Should not be emitted if not changed", Continue);
+    QVERIFY(!skipSwitcherChangedSpy.wait(100));
+    QVERIFY(sps->skipSwitcher());
+
+    // setting to false should change again
+    ps->setSkipSwitcher(false);
+    QVERIFY(skipSwitcherChangedSpy.wait());
+    QVERIFY(!sps->skipSwitcher());
 }
 
 void TestPlasmaShell::testPanelBehavior_data()

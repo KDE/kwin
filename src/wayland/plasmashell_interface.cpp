@@ -50,7 +50,7 @@ private:
     static const quint32 s_version;
 };
 
-const quint32 PlasmaShellInterface::Private::s_version = 4;
+const quint32 PlasmaShellInterface::Private::s_version = 5;
 
 PlasmaShellInterface::Private::Private(PlasmaShellInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_shell_interface, s_version)
@@ -76,6 +76,7 @@ public:
     bool m_positionSet = false;
     PanelBehavior m_panelBehavior = PanelBehavior::AlwaysVisible;
     bool m_skipTaskbar = false;
+    bool m_skipSwitcher = false;
     bool panelTakesFocus = false;
 
 private:
@@ -85,6 +86,7 @@ private:
     static void setRoleCallback(wl_client *client, wl_resource *resource, uint32_t role);
     static void setPanelBehaviorCallback(wl_client *client, wl_resource *resource, uint32_t flag);
     static void setSkipTaskbarCallback(wl_client *client, wl_resource *resource, uint32_t skip);
+    static void setSkipSwitcherCallback(wl_client *client, wl_resource *resource, uint32_t skip);
     static void panelAutoHideHideCallback(wl_client *client, wl_resource *resource);
     static void panelAutoHideShowCallback(wl_client *client, wl_resource *resource);
     static void panelTakesFocusCallback(wl_client *client, wl_resource *resource, uint32_t takesFocus);
@@ -165,7 +167,8 @@ const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Priva
     setSkipTaskbarCallback,
     panelAutoHideHideCallback,
     panelAutoHideShowCallback,
-    panelTakesFocusCallback
+    panelTakesFocusCallback,
+    setSkipSwitcherCallback
 };
 #endif
 
@@ -277,6 +280,14 @@ void PlasmaShellSurfaceInterface::Private::setSkipTaskbarCallback(wl_client *cli
     emit s->q_func()->skipTaskbarChanged();
 }
 
+void PlasmaShellSurfaceInterface::Private::setSkipSwitcherCallback(wl_client *client, wl_resource *resource, uint32_t skip)
+{
+    auto s = cast<Private>(resource);
+    Q_ASSERT(client == *s->client);
+    s->m_skipSwitcher = (bool)skip;
+    emit s->q_func()->skipSwitcherChanged();
+}
+
 void PlasmaShellSurfaceInterface::Private::panelAutoHideHideCallback(wl_client *client, wl_resource *resource)
 {
     auto s = cast<Private>(resource);
@@ -359,6 +370,12 @@ bool PlasmaShellSurfaceInterface::skipTaskbar() const
 {
     Q_D();
     return d->m_skipTaskbar;
+}
+
+bool PlasmaShellSurfaceInterface::skipSwitcher() const
+{
+    Q_D();
+    return d->m_skipSwitcher;
 }
 
 void PlasmaShellSurfaceInterface::hideAutoHidingPanel()

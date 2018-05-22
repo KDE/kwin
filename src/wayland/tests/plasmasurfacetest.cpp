@@ -49,6 +49,10 @@ public:
         m_skipTaskbar = set;
     }
 
+    void setSkipSwitcher(bool set) {
+        m_skipSwitcher = set;
+    }
+
 private:
     void setupRegistry(Registry *registry);
     void render();
@@ -64,6 +68,7 @@ private:
     PlasmaShellSurface *m_plasmaShellSurface = nullptr;
     PlasmaShellSurface::Role m_role = PlasmaShellSurface::Role::Normal;
     bool m_skipTaskbar = false;
+    bool m_skipSwitcher = false;
 };
 
 PlasmaSurfaceTest::PlasmaSurfaceTest(QObject *parent)
@@ -136,6 +141,7 @@ void PlasmaSurfaceTest::setupRegistry(Registry *registry)
             m_plasmaShellSurface = m_plasmaShell->createSurface(m_surface, this);
             Q_ASSERT(m_plasmaShellSurface);
             m_plasmaShellSurface->setSkipTaskbar(m_skipTaskbar);
+            m_plasmaShellSurface->setSkipSwitcher(m_skipSwitcher);
             m_plasmaShellSurface->setRole(m_role);
             render();
         }
@@ -177,6 +183,9 @@ int main(int argc, char **argv)
     QCommandLineOption skipTaskbarOption(QStringLiteral("skipTaskbar"));
     parser.addOption(skipTaskbarOption);
     parser.process(app);
+    QCommandLineOption skipSwitcherOption(QStringLiteral("skipSwitcher"));
+    parser.addOption(skipSwitcherOption);
+    parser.process(app);
 
     PlasmaSurfaceTest client;
 
@@ -192,6 +201,7 @@ int main(int argc, char **argv)
         client.setRole(PlasmaShellSurface::Role::ToolTip);
     }
     client.setSkipTaskbar(parser.isSet(skipTaskbarOption));
+    client.setSkipSwitcher(parser.isSet(skipSwitcherOption));
 
     client.init();
 

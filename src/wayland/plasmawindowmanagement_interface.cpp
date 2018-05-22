@@ -119,7 +119,7 @@ private:
     static const struct org_kde_plasma_window_interface s_interface;
 };
 
-const quint32 PlasmaWindowManagementInterface::Private::s_version = 7;
+const quint32 PlasmaWindowManagementInterface::Private::s_version = 9;
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_window_management_interface, s_version)
@@ -602,6 +602,9 @@ void PlasmaWindowInterface::Private::setStateCallback(wl_client *client, wl_reso
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR) {
         emit p->q->skipTaskbarRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR);
     }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPSWITCHER) {
+        emit p->q->skipSwitcherRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPSWITCHER);
+    }
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADEABLE) {
         emit p->q->shadeableRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SHADEABLE);
     }
@@ -759,6 +762,11 @@ void PlasmaWindowInterface::setMinimizeable(bool set)
 void PlasmaWindowInterface::setSkipTaskbar(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPTASKBAR, set);
+}
+
+void PlasmaWindowInterface::setSkipSwitcher(bool skip)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPSWITCHER, skip);
 }
 
 #ifndef KWAYLANDSERVER_NO_DEPRECATED
