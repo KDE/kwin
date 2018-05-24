@@ -215,6 +215,7 @@ void AbstractClient::setSkipSwitcher(bool set)
     if (set == skipSwitcher())
         return;
     m_skipSwitcher = set;
+    doSetSkipSwitcher();
     updateWindowRules(Rules::SkipSwitcher);
     emit skipSwitcherChanged();
 }
@@ -255,6 +256,11 @@ void AbstractClient::setOriginalSkipTaskbar(bool b)
 }
 
 void AbstractClient::doSetSkipTaskbar()
+{
+
+}
+
+void AbstractClient::doSetSkipSwitcher()
 {
 
 }
@@ -776,6 +782,7 @@ void AbstractClient::setupWindowManagementInterface()
     };
     updateAppId();
     w->setSkipTaskbar(skipTaskbar());
+    w->setSkipSwitcher(skipSwitcher());
     w->setPid(pid());
     w->setShadeable(isShadeable());
     w->setShaded(isShade());
@@ -787,6 +794,11 @@ void AbstractClient::setupWindowManagementInterface()
     connect(this, &AbstractClient::skipTaskbarChanged, w,
         [w, this] {
             w->setSkipTaskbar(skipTaskbar());
+        }
+    );
+    connect(this, &AbstractClient::skipSwitcherChanged, w,
+         [w, this] {
+            w->setSkipSwitcher(skipSwitcher());
         }
     );
     connect(this, &AbstractClient::captionChanged, w, [w, this] { w->setTitle(caption()); });

@@ -1206,6 +1206,11 @@ void Client::doSetSkipPager()
     info->setState(skipPager() ? NET::SkipPager : NET::States(0), NET::SkipPager);
 }
 
+void Client::doSetSkipSwitcher()
+{
+    info->setState(skipSwitcher() ? NET::SkipSwitcher : NET::States(0), NET::SkipSwitcher);
+}
+
 void Client::doSetDesktop(int desktop, int was_desk)
 {
     Q_UNUSED(desktop)
