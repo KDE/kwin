@@ -110,7 +110,7 @@ inline void wrapDiff(QPoint& diff, int w, int h)
     }
 }
 
-inline QRegion buildClipRegion(QPoint pos, int w, int h)
+inline QRegion buildClipRegion(const QPoint& pos, int w, int h)
 {
     const QSize screenSize = effects->virtualScreenSize();
     QRegion r = QRect(pos, screenSize);
@@ -152,9 +152,9 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
     QVector<int> visibleDesktops;
     visibleDesktops.reserve(4); // 4 - maximum number of visible desktops
-    QRegion clipRegion = buildClipRegion(currentPos, w, h);
+    const QRegion clipRegion = buildClipRegion(currentPos, w, h);
     for (int i = 1; i <= effects->numberOfDesktops(); i++) {
-        QRect desktopGeo = desktopGeometry(i);
+        const QRect desktopGeo = desktopGeometry(i);
         if (! clipRegion.contains(desktopGeo)) {
             continue;
         }
@@ -296,7 +296,7 @@ void SlideEffect::postPaintScreen()
 QPoint SlideEffect::desktopCoords(int id) const
 {
     QPoint c = effects->desktopCoords(id);
-    QPoint gridPos = effects->desktopGridCoords(id);
+    const QPoint gridPos = effects->desktopGridCoords(id);
     c.setX(c.x() + m_hGap * gridPos.x());
     c.setY(c.y() + m_vGap * gridPos.y());
     return c;
@@ -356,7 +356,7 @@ bool SlideEffect::shouldForceBlur(const EffectWindow* w) const
     //        if (surf) {
     //            return !surf->blur().isNull();
     //        }
-    KWayland::Server::SurfaceInterface* surf = w->surface();
+    const KWayland::Server::SurfaceInterface* surf = w->surface();
     if (surf && surf->blur()) {
         return true;
     }
@@ -385,7 +385,7 @@ bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow* w) const
     //        if (surf) {
     //            return !surf->contrast().isNull();
     //        }
-    KWayland::Server::SurfaceInterface* surf = w->surface();
+    const KWayland::Server::SurfaceInterface* surf = w->surface();
     if (surf && surf->contrast()) {
         return true;
     }
