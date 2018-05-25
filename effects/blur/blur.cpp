@@ -303,10 +303,12 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
 
 void BlurEffect::slotWindowDeleted(EffectWindow *w)
 {
-    if (windowBlurChangedConnections.contains(w)) {
-        disconnect(windowBlurChangedConnections[w]);
-        windowBlurChangedConnections.remove(w);
+    auto it = windowBlurChangedConnections.find(w);
+    if (it == windowBlurChangedConnections.end()) {
+        return;
     }
+    disconnect(*it);
+    windowBlurChangedConnections.erase(it);
 }
 
 void BlurEffect::slotPropertyNotify(EffectWindow *w, long atom)
