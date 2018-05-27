@@ -29,8 +29,8 @@ var maximizeEffect = {
         if (!window.oldGeometry) {
             return;
         }
-        maximizeEffect.windowForceBlurRoleState = window.data(5);
-        window.setData(5, true);
+        maximizeEffect.windowForceBlurRoleState = window.data(Effect.WindowForceBlurRole);
+        window.setData(Effect.WindowForceBlurRole, true);
         var oldGeometry, newGeometry;
         oldGeometry = window.oldGeometry;
         newGeometry = window.geometry;
@@ -76,7 +76,7 @@ var maximizeEffect = {
         }
     },
     restoreForceBlurState: function(window) {
-        window.setData(5, maximizeEffect.windowForceBlurRoleState);
+        window.setData(Effect.WindowForceBlurRole, maximizeEffect.windowForceBlurRoleState);
     },
     geometryChange: function (window, oldGeometry) {
         "use strict";
