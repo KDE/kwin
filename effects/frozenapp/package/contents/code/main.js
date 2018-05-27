@@ -90,7 +90,6 @@ var frozenAppEffect = {
     cancelAnimation: function (window) {
         "use strict";
         if (window.unresponsiveAnimation) {
-            print(window);
             cancel(window.unresponsiveAnimation);
             window.unresponsiveAnimation = undefined;
         }
@@ -100,7 +99,6 @@ var frozenAppEffect = {
 
         var windows = effects.stackingOrder;
         for (var i = 0, length = windows.length; i < length; ++i) {
-            print(i);
             var window = windows[i];
             frozenAppEffect.cancelAnimation(window);
             frozenAppEffect.restartAnimation(window);
