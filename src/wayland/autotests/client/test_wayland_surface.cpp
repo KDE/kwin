@@ -71,12 +71,12 @@ private Q_SLOTS:
 private:
     KWayland::Server::Display *m_display;
     KWayland::Server::CompositorInterface *m_compositorInterface;
-    KWayland::Server::IdleInhibitManagerInterface *m_idleInhibitInterface = nullptr;
+    KWayland::Server::IdleInhibitManagerInterface *m_idleInhibitInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ShmPool *m_shm;
     KWayland::Client::EventQueue *m_queue;
-    KWayland::Client::IdleInhibitManager *m_idleInhibitManager = nullptr;
+    KWayland::Client::IdleInhibitManager *m_idleInhibitManager;
     QThread *m_thread;
 };
 
@@ -189,6 +189,9 @@ void TestWaylandSurface::cleanup()
 
     delete m_compositorInterface;
     m_compositorInterface = nullptr;
+
+    delete m_idleInhibitInterface;
+    m_idleInhibitInterface = nullptr;
 
     delete m_display;
     m_display = nullptr;
@@ -779,13 +782,19 @@ void TestWaylandSurface::testDestroy()
     connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_idleInhibitManager, &IdleInhibitManager::destroy);
     QVERIFY(s->isValid());
 
     QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
     QVERIFY(connectionDiedSpy.isValid());
+
+    delete m_compositorInterface;
+    m_compositorInterface = nullptr;
+    delete m_idleInhibitInterface;
+    m_idleInhibitInterface = nullptr;
     delete m_display;
     m_display = nullptr;
-    m_compositorInterface = nullptr;
+
     QVERIFY(connectionDiedSpy.wait());
 
     // now the Surface should be destroyed;
