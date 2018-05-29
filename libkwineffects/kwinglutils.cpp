@@ -1301,9 +1301,9 @@ void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &desti
     const QRect d = destination.isNull() ? QRect(0, 0, mTexture.width(), mTexture.height()) : destination;
 
     glBlitFramebuffer((s.x() - s_virtualScreenGeometry.x()) * s_virtualScreenScale,
-                      (s_virtualScreenGeometry.height() - s_virtualScreenGeometry.y() + s.y() - s.height()) * s_virtualScreenScale,
+                      (s_virtualScreenGeometry.height() - (s.y() - s_virtualScreenGeometry.y() + s.height())) * s_virtualScreenScale,
                       (s.x() - s_virtualScreenGeometry.x() + s.width()) * s_virtualScreenScale,
-                      (s_virtualScreenGeometry.height() - s_virtualScreenGeometry.y() + s.y()) * s_virtualScreenScale,
+                      (s_virtualScreenGeometry.height() - (s.y() - s_virtualScreenGeometry.y())) * s_virtualScreenScale,
                       d.x(), mTexture.height() - d.y() - d.height(), d.x() + d.width(), mTexture.height() - d.y(),
                       GL_COLOR_BUFFER_BIT, filter);
     GLRenderTarget::popRenderTarget();
