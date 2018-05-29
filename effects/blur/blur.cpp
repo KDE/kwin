@@ -610,12 +610,24 @@ void BlurEffect::generateNoiseTexture()
 
 void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock, QRect windowRect)
 {
-    QRegion expandedBlurRegion = expand(shape) & expand(screen);
+    // Blur would not render correctly on a secondary monitor because of wrong coordinates
+    // BUG: 393723
+    const int xTranslate = -screen.x();
+    const int yTranslate = effects->virtualScreenSize().height() - screen.height() - screen.y();
+
+    const QRegion expandedBlurRegion = expand(shape) & expand(screen);
 
     // Upload geometry for the down and upsample iterations
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    uploadGeometry(vbo, expandedBlurRegion, shape);
+
+    uploadGeometry(vbo, expandedBlurRegion.translated(xTranslate, yTranslate), shape);
     vbo->bindArrays();
+
+    const QRect sourceRect = expandedBlurRegion.boundingRect() & screen;
+    const QRect destRect = sourceRect.translated(xTranslate, yTranslate);
+
+    GLRenderTarget::pushRenderTargets(m_renderTargetStack);
+    int blurRectCount = expandedBlurRegion.rectCount() * 6;
 
     /*
      * If the window is a dock or panel we avoid the "extended blur" effect.
@@ -624,26 +636,12 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
      * We want to avoid this on panels, because it looks really weird and ugly
      * when maximized windows or windows near the panel affect the dock blur.
      */
-    isDock ? m_renderTextures.last().bind() : m_renderTextures[0].bind();
-
-    QRect copyRect = expandedBlurRegion.boundingRect() & screen;
-    glCopyTexSubImage2D(
-        GL_TEXTURE_2D,
-        0,
-        copyRect.x(),
-        effects->virtualScreenSize().height() - copyRect.y() - copyRect.height(),
-        copyRect.x(),
-        effects->virtualScreenSize().height() - copyRect.y() - copyRect.height(),
-        copyRect.width(),
-        copyRect.height()
-    );
-
-    GLRenderTarget::pushRenderTargets(m_renderTargetStack);
-    int blurRectCount = expandedBlurRegion.rectCount() * 6;
-
     if (isDock) {
-        copyScreenSampleTexture(vbo, blurRectCount, shape, screen.size(), screenProjection);
+        m_renderTargets.last()->blitFromFramebuffer(sourceRect, destRect);
+        copyScreenSampleTexture(vbo, blurRectCount, shape.translated(xTranslate, yTranslate), screenProjection);
     } else {
+        m_renderTargets.first()->blitFromFramebuffer(sourceRect, destRect);
+
         // Remove the m_renderTargets[0] from the top of the stack that we will not use
         GLRenderTarget::popRenderTarget();
     }
@@ -750,18 +748,19 @@ void BlurEffect::upSampleTexture(GLVertexBuffer *vbo, int blurRectCount)
     m_shader->unbind();
 }
 
-void BlurEffect::copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount, QRegion blurShape, QSize screenSize, QMatrix4x4 screenProjection)
+void BlurEffect::copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount, QRegion blurShape, QMatrix4x4 screenProjection)
 {
     m_shader->bind(BlurShader::CopySampleType);
 
     m_shader->setModelViewProjectionMatrix(screenProjection);
-    m_shader->setTargetTextureSize(screenSize);
+    m_shader->setTargetTextureSize(effects->virtualScreenSize());
 
     /*
      * This '1' sized adjustment is necessary do avoid windows affecting the blur that are
      * right next to this window.
      */
-    m_shader->setBlurRect(blurShape.boundingRect().adjusted(1, 1, -1, -1), screenSize);
+    m_shader->setBlurRect(blurShape.boundingRect().adjusted(1, 1, -1, -1), effects->virtualScreenSize());
+    m_renderTextures.last().bind();
 
     vbo->draw(GL_TRIANGLES, 0, blurRectCount);
     GLRenderTarget::popRenderTarget();
