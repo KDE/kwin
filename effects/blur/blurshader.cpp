@@ -21,227 +21,17 @@
 #include "blurshader.h"
 
 #include <kwineffects.h>
-#include "kwinglutils.h"
 #include <kwinglplatform.h>
+#include <kwinglutils.h>
 
 #include <QByteArray>
-#include <QMatrix4x4>
 #include <QTextStream>
-#include <QVector2D>
 
-#include <cmath>
-
-using namespace KWin;
-
-
-BlurShader::BlurShader()
-    : mValid(false)
+namespace KWin
 {
-}
 
-BlurShader::~BlurShader()
-{
-}
-
-BlurShader *BlurShader::create()
-{
-    return new GLSLBlurShader();
-}
-
-// ----------------------------------------------------------------------------
-
-
-
-GLSLBlurShader::GLSLBlurShader()
-{
-    init();
-}
-
-GLSLBlurShader::~GLSLBlurShader()
-{
-    reset();
-}
-
-void GLSLBlurShader::reset()
-{
-    delete m_shaderDownsample;
-    m_shaderDownsample = nullptr;
-
-    delete m_shaderUpsample;
-    m_shaderUpsample = nullptr;
-
-    delete m_shaderCopysample;
-    m_shaderCopysample = nullptr;
-
-    delete m_shaderNoisesample;
-    m_shaderNoisesample = nullptr;
-
-    setIsValid(false);
-}
-
-void GLSLBlurShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
-{
-    if (!isValid())
-        return;
-
-    switch (m_activeSampleType) {
-        case CopySampleType:
-            if (matrix == m_matrixCopysample)
-                return;
-
-            m_matrixCopysample = matrix;
-            m_shaderCopysample->setUniform(m_mvpMatrixLocationCopysample, matrix);
-            break;
-
-        case UpSampleType:
-            if (matrix == m_matrixUpsample)
-                return;
-
-            m_matrixUpsample = matrix;
-            m_shaderUpsample->setUniform(m_mvpMatrixLocationUpsample, matrix);
-            break;
-
-        case DownSampleType:
-            if (matrix == m_matrixDownsample)
-                return;
-
-            m_matrixDownsample = matrix;
-            m_shaderDownsample->setUniform(m_mvpMatrixLocationDownsample, matrix);
-            break;
-
-        case NoiseSampleType:
-            if (matrix == m_matrixNoisesample)
-                return;
-
-            m_matrixNoisesample = matrix;
-            m_shaderNoisesample->setUniform(m_mvpMatrixLocationNoisesample, matrix);
-            break;
-    }
-}
-
-void GLSLBlurShader::setOffset(float offset)
-{
-    if (!isValid())
-        return;
-
-    switch (m_activeSampleType) {
-        case UpSampleType:
-            if (offset == m_offsetUpsample)
-                return;
-
-            m_offsetUpsample = offset;
-            m_shaderUpsample->setUniform(m_offsetLocationUpsample, offset);
-            break;
-
-        case DownSampleType:
-            if (offset == m_offsetDownsample)
-                return;
-
-            m_offsetDownsample = offset;
-            m_shaderDownsample->setUniform(m_offsetLocationDownsample, offset);
-            break;
-
-        case NoiseSampleType:
-            if (offset == m_offsetNoisesample)
-                return;
-
-            m_offsetNoisesample = offset;
-            m_shaderNoisesample->setUniform(m_offsetLocationNoisesample, offset);
-            break;
-    }
-}
-
-void GLSLBlurShader::setTargetTextureSize(QSize renderTextureSize)
-{
-    if (!isValid())
-        return;
-
-    QVector2D texSize = QVector2D(renderTextureSize.width(), renderTextureSize.height());
-
-    switch (m_activeSampleType) {
-        case CopySampleType:
-            m_shaderCopysample->setUniform(m_renderTextureSizeLocationCopysample, texSize);
-            break;
-
-        case UpSampleType:
-            m_shaderUpsample->setUniform(m_renderTextureSizeLocationUpsample, texSize);
-            m_shaderUpsample->setUniform(m_halfpixelLocationUpsample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
-            break;
-
-        case DownSampleType:
-            m_shaderDownsample->setUniform(m_renderTextureSizeLocationDownsample, texSize);
-            m_shaderDownsample->setUniform(m_halfpixelLocationDownsample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
-            break;
-
-        case NoiseSampleType:
-            m_shaderNoisesample->setUniform(m_renderTextureSizeLocationNoisesample, texSize);
-            m_shaderNoisesample->setUniform(m_halfpixelLocationNoisesample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
-            break;
-    }
-}
-
-void GLSLBlurShader::setNoiseTextureSize(QSize noiseTextureSize)
-{
-    QVector2D noiseTexSize = QVector2D(noiseTextureSize.width(), noiseTextureSize.height());
-
-    if (noiseTexSize != m_noiseTextureSizeNoisesample) {
-        m_noiseTextureSizeNoisesample = noiseTexSize;
-        m_shaderNoisesample->setUniform(m_noiseTextureSizeLocationNoisesample, noiseTexSize);
-    }
-}
-
-void GLSLBlurShader::setTexturePosition(QPoint texPos)
-{
-    m_shaderNoisesample->setUniform(m_texStartPosLocationNoisesample, QVector2D(-texPos.x(), texPos.y()));
-}
-
-void GLSLBlurShader::setBlurRect(QRect blurRect, QSize screenSize)
-{
-    if (!isValid())
-        return;
-
-    QVector4D rect = QVector4D(
-        blurRect.bottomLeft().x()       / float(screenSize.width()),
-        1.0 - blurRect.bottomLeft().y() / float(screenSize.height()),
-        blurRect.topRight().x()         / float(screenSize.width()),
-        1.0 - blurRect.topRight().y()   / float(screenSize.height())
-    );
-
-    m_shaderCopysample->setUniform(m_blurRectLocationCopysample, rect);
-}
-
-void GLSLBlurShader::bind(SampleType sampleType)
-{
-    if (!isValid())
-        return;
-
-    switch (sampleType) {
-        case CopySampleType:
-            ShaderManager::instance()->pushShader(m_shaderCopysample);
-            break;
-
-        case UpSampleType:
-            ShaderManager::instance()->pushShader(m_shaderUpsample);
-            break;
-
-        case DownSampleType:
-            ShaderManager::instance()->pushShader(m_shaderDownsample);
-            break;
-
-        case NoiseSampleType:
-            ShaderManager::instance()->pushShader(m_shaderNoisesample);
-            break;
-    }
-
-    m_activeSampleType = sampleType;
-}
-
-void GLSLBlurShader::unbind()
-{
-    ShaderManager::instance()->popShader();
-}
-
-void GLSLBlurShader::init()
+BlurShader::BlurShader(QObject *parent)
+    : QObject(parent)
 {
     const bool gles = GLPlatform::instance()->isGLES();
     const bool glsl_140 = !gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
@@ -278,9 +68,7 @@ void GLSLBlurShader::init()
         glUniformString += "out vec4 fragColor;\n\n";
     }
 
-
     // Vertex shader
-    // ===================================================================
     QTextStream streamVert(&vertexSource);
 
     streamVert << glHeaderString;
@@ -296,7 +84,6 @@ void GLSLBlurShader::init()
     streamVert.flush();
 
     // Fragment shader (Dual Kawase Blur) - Downsample
-    // ===================================================================
     QTextStream streamFragDown(&fragmentDownSource);
 
     streamFragDown << glHeaderString << glUniformString;
@@ -317,7 +104,6 @@ void GLSLBlurShader::init()
     streamFragDown.flush();
 
     // Fragment shader (Dual Kawase Blur) - Upsample
-    // ===================================================================
     QTextStream streamFragUp(&fragmentUpSource);
 
     streamFragUp << glHeaderString << glUniformString;
@@ -341,7 +127,6 @@ void GLSLBlurShader::init()
     streamFragUp.flush();
 
     // Fragment shader - Copy texture
-    // ===================================================================
     QTextStream streamFragCopy(&fragmentCopySource);
 
     streamFragCopy << glHeaderString;
@@ -350,8 +135,9 @@ void GLSLBlurShader::init()
     streamFragCopy << "uniform vec2 renderTextureSize;\n";
     streamFragCopy << "uniform vec4 blurRect;\n";
 
-    if (core)
+    if (core) {
         streamFragCopy << "out vec4 fragColor;\n\n";
+    }
 
     streamFragCopy << "void main(void)\n";
     streamFragCopy << "{\n";
@@ -362,7 +148,6 @@ void GLSLBlurShader::init()
     streamFragCopy.flush();
 
     // Fragment shader - Noise texture
-    // ===================================================================
     QTextStream streamFragNoise(&fragmentNoiseSource);
 
     streamFragNoise << glHeaderString << glUniformString;
@@ -391,19 +176,17 @@ void GLSLBlurShader::init()
 
     streamFragNoise.flush();
 
+    m_shaderDownsample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentDownSource));
+    m_shaderUpsample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentUpSource));
+    m_shaderCopysample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentCopySource));
+    m_shaderNoisesample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentNoiseSource));
 
-    m_shaderDownsample  = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentDownSource);
-    m_shaderUpsample    = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentUpSource);
-    m_shaderCopysample  = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentCopySource);
-    m_shaderNoisesample = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentNoiseSource);
-
-    bool areShadersValid = m_shaderDownsample->isValid() &&
+    m_valid = m_shaderDownsample->isValid() &&
         m_shaderUpsample->isValid() &&
         m_shaderCopysample->isValid() &&
         m_shaderNoisesample->isValid();
-    setIsValid(areShadersValid);
 
-    if (areShadersValid) {
+    if (m_valid) {
         m_mvpMatrixLocationDownsample = m_shaderDownsample->uniformLocation("modelViewProjectionMatrix");
         m_offsetLocationDownsample = m_shaderDownsample->uniformLocation("offset");
         m_renderTextureSizeLocationDownsample = m_shaderDownsample->uniformLocation("renderTextureSize");
@@ -430,27 +213,27 @@ void GLSLBlurShader::init()
         modelViewProjection.ortho(0, screenSize.width(), screenSize.height(), 0, 0, 65535);
 
         //Add default values to the uniforms of the shaders
-        ShaderManager::instance()->pushShader(m_shaderDownsample);
+        ShaderManager::instance()->pushShader(m_shaderDownsample.data());
         m_shaderDownsample->setUniform(m_mvpMatrixLocationDownsample, modelViewProjection);
         m_shaderDownsample->setUniform(m_offsetLocationDownsample, float(1.0));
         m_shaderDownsample->setUniform(m_renderTextureSizeLocationDownsample, QVector2D(1.0, 1.0));
         m_shaderDownsample->setUniform(m_halfpixelLocationDownsample, QVector2D(1.0, 1.0));
         ShaderManager::instance()->popShader();
 
-        ShaderManager::instance()->pushShader(m_shaderUpsample);
+        ShaderManager::instance()->pushShader(m_shaderUpsample.data());
         m_shaderUpsample->setUniform(m_mvpMatrixLocationUpsample, modelViewProjection);
         m_shaderUpsample->setUniform(m_offsetLocationUpsample, float(1.0));
         m_shaderUpsample->setUniform(m_renderTextureSizeLocationUpsample, QVector2D(1.0, 1.0));
         m_shaderUpsample->setUniform(m_halfpixelLocationUpsample, QVector2D(1.0, 1.0));
         ShaderManager::instance()->popShader();
 
-        ShaderManager::instance()->pushShader(m_shaderCopysample);
+        ShaderManager::instance()->pushShader(m_shaderCopysample.data());
         m_shaderCopysample->setUniform(m_mvpMatrixLocationCopysample, modelViewProjection);
         m_shaderCopysample->setUniform(m_renderTextureSizeLocationCopysample, QVector2D(1.0, 1.0));
         m_shaderCopysample->setUniform(m_blurRectLocationCopysample, QVector4D(1.0, 1.0, 1.0, 1.0));
         ShaderManager::instance()->popShader();
 
-        ShaderManager::instance()->pushShader(m_shaderNoisesample);
+        ShaderManager::instance()->pushShader(m_shaderNoisesample.data());
         m_shaderNoisesample->setUniform(m_mvpMatrixLocationNoisesample, modelViewProjection);
         m_shaderNoisesample->setUniform(m_offsetLocationNoisesample, float(1.0));
         m_shaderNoisesample->setUniform(m_renderTextureSizeLocationNoisesample, QVector2D(1.0, 1.0));
@@ -462,19 +245,201 @@ void GLSLBlurShader::init()
         glUniform1i(m_shaderNoisesample->uniformLocation("noiseTexUnit"), 1);
 
         ShaderManager::instance()->popShader();
-
-        m_activeSampleType = -1;
-
-        m_offsetDownsample = 0.0;
-        m_matrixDownsample = QMatrix4x4();
-
-        m_offsetUpsample = 0.0;
-        m_matrixUpsample = QMatrix4x4();
-
-        m_matrixCopysample = QMatrix4x4();
-
-        m_offsetNoisesample = 0.0;
-        m_noiseTextureSizeNoisesample = QVector2D();
-        m_matrixNoisesample = QMatrix4x4();
     }
 }
+
+BlurShader::~BlurShader()
+{
+}
+
+void BlurShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
+{
+    if (!isValid()) {
+        return;
+    }
+
+    switch (m_activeSampleType) {
+    case CopySampleType:
+        if (matrix == m_matrixCopysample) {
+            return;
+        }
+
+        m_matrixCopysample = matrix;
+        m_shaderCopysample->setUniform(m_mvpMatrixLocationCopysample, matrix);
+        break;
+
+    case UpSampleType:
+        if (matrix == m_matrixUpsample) {
+            return;
+        }
+
+        m_matrixUpsample = matrix;
+        m_shaderUpsample->setUniform(m_mvpMatrixLocationUpsample, matrix);
+        break;
+
+    case DownSampleType:
+        if (matrix == m_matrixDownsample) {
+            return;
+        }
+
+        m_matrixDownsample = matrix;
+        m_shaderDownsample->setUniform(m_mvpMatrixLocationDownsample, matrix);
+        break;
+
+    case NoiseSampleType:
+        if (matrix == m_matrixNoisesample) {
+            return;
+        }
+
+        m_matrixNoisesample = matrix;
+        m_shaderNoisesample->setUniform(m_mvpMatrixLocationNoisesample, matrix);
+        break;
+
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+}
+
+void BlurShader::setOffset(float offset)
+{
+    if (!isValid()) {
+        return;
+    }
+
+    switch (m_activeSampleType) {
+    case UpSampleType:
+        if (offset == m_offsetUpsample) {
+            return;
+        }
+
+        m_offsetUpsample = offset;
+        m_shaderUpsample->setUniform(m_offsetLocationUpsample, offset);
+        break;
+
+    case DownSampleType:
+        if (offset == m_offsetDownsample) {
+            return;
+        }
+
+        m_offsetDownsample = offset;
+        m_shaderDownsample->setUniform(m_offsetLocationDownsample, offset);
+        break;
+
+    case NoiseSampleType:
+        if (offset == m_offsetNoisesample) {
+            return;
+        }
+
+        m_offsetNoisesample = offset;
+        m_shaderNoisesample->setUniform(m_offsetLocationNoisesample, offset);
+        break;
+
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+}
+
+void BlurShader::setTargetTextureSize(const QSize &renderTextureSize)
+{
+    if (!isValid()) {
+        return;
+    }
+
+    const QVector2D texSize(renderTextureSize.width(), renderTextureSize.height());
+
+    switch (m_activeSampleType) {
+    case CopySampleType:
+        m_shaderCopysample->setUniform(m_renderTextureSizeLocationCopysample, texSize);
+        break;
+
+    case UpSampleType:
+        m_shaderUpsample->setUniform(m_renderTextureSizeLocationUpsample, texSize);
+        m_shaderUpsample->setUniform(m_halfpixelLocationUpsample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
+        break;
+
+    case DownSampleType:
+        m_shaderDownsample->setUniform(m_renderTextureSizeLocationDownsample, texSize);
+        m_shaderDownsample->setUniform(m_halfpixelLocationDownsample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
+        break;
+
+    case NoiseSampleType:
+        m_shaderNoisesample->setUniform(m_renderTextureSizeLocationNoisesample, texSize);
+        m_shaderNoisesample->setUniform(m_halfpixelLocationNoisesample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
+        break;
+
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+}
+
+void BlurShader::setNoiseTextureSize(const QSize &noiseTextureSize)
+{
+    const QVector2D noiseTexSize(noiseTextureSize.width(), noiseTextureSize.height());
+
+    if (noiseTexSize != m_noiseTextureSizeNoisesample) {
+        m_noiseTextureSizeNoisesample = noiseTexSize;
+        m_shaderNoisesample->setUniform(m_noiseTextureSizeLocationNoisesample, noiseTexSize);
+    }
+}
+
+void BlurShader::setTexturePosition(const QPoint &texPos)
+{
+    m_shaderNoisesample->setUniform(m_texStartPosLocationNoisesample, QVector2D(-texPos.x(), texPos.y()));
+}
+
+void BlurShader::setBlurRect(const QRect &blurRect, const QSize &screenSize)
+{
+    if (!isValid()) {
+        return;
+    }
+
+    const QVector4D rect(
+        blurRect.left()         / float(screenSize.width()),
+        1.0 - blurRect.bottom() / float(screenSize.height()),
+        blurRect.right()        / float(screenSize.width()),
+        1.0 - blurRect.top()    / float(screenSize.height())
+    );
+
+    m_shaderCopysample->setUniform(m_blurRectLocationCopysample, rect);
+}
+
+void BlurShader::bind(SampleType sampleType)
+{
+    if (!isValid()) {
+        return;
+    }
+
+    switch (sampleType) {
+    case CopySampleType:
+        ShaderManager::instance()->pushShader(m_shaderCopysample.data());
+        break;
+
+    case UpSampleType:
+        ShaderManager::instance()->pushShader(m_shaderUpsample.data());
+        break;
+
+    case DownSampleType:
+        ShaderManager::instance()->pushShader(m_shaderDownsample.data());
+        break;
+
+    case NoiseSampleType:
+        ShaderManager::instance()->pushShader(m_shaderNoisesample.data());
+        break;
+
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+
+    m_activeSampleType = sampleType;
+}
+
+void BlurShader::unbind()
+{
+    ShaderManager::instance()->popShader();
+}
+
+} // namespace KWin

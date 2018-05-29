@@ -22,33 +22,25 @@
 #define BLURSHADER_H
 
 #include <kwinglutils.h>
+
+#include <QMatrix4x4>
+#include <QObject>
+#include <QScopedPointer>
 #include <QVector2D>
 #include <QVector4D>
-
-
-class QMatrix4x4;
 
 namespace KWin
 {
 
-class BlurShader
+class BlurShader : public QObject
 {
+    Q_OBJECT
+
 public:
-    BlurShader();
-    virtual ~BlurShader();
+    BlurShader(QObject *parent = nullptr);
+    ~BlurShader() override;
 
-    static BlurShader *create();
-
-    bool isValid() const {
-        return mValid;
-    }
-
-    virtual void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) = 0;
-    virtual void setOffset(float offset) = 0;
-    virtual void setTargetTextureSize(QSize renderTextureSize) = 0;
-    virtual void setNoiseTextureSize(QSize noiseTextureSize) = 0;
-    virtual void setTexturePosition(QPoint texPos) = 0;
-    virtual void setBlurRect(QRect blurRect, QSize screenSize) = 0;
+    bool isValid() const;
 
     enum SampleType {
         DownSampleType,
@@ -57,49 +49,21 @@ public:
         NoiseSampleType
     };
 
-    virtual void bind(SampleType sampleType) = 0;
-    virtual void unbind() = 0;
+    void bind(SampleType sampleType);
+    void unbind();
 
-protected:
-    void setIsValid(bool value) {
-        mValid = value;
-    }
-    virtual void init() = 0;
-    virtual void reset() = 0;
-
-private:
-    bool mValid;
-};
-
-
-// ----------------------------------------------------------------------------
-
-
-
-class GLSLBlurShader : public BlurShader
-{
-public:
-    GLSLBlurShader();
-    ~GLSLBlurShader();
-
-    void bind(SampleType sampleType) override final;
-    void unbind() override final;
-    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) override final;
-    void setOffset(float offset) override final;
-    void setTargetTextureSize(QSize renderTextureSize) override final;
-    void setNoiseTextureSize(QSize noiseTextureSize) override final;
-    void setTexturePosition(QPoint texPos) override final;
-    void setBlurRect(QRect blurRect, QSize screenSize) override final;
-
-protected:
-    void init() override final;
-    void reset() override final;
+    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
+    void setOffset(float offset);
+    void setTargetTextureSize(const QSize &renderTextureSize);
+    void setNoiseTextureSize(const QSize &noiseTextureSize);
+    void setTexturePosition(const QPoint &texPos);
+    void setBlurRect(const QRect &blurRect, const QSize &screenSize);
 
 private:
-    GLShader *m_shaderDownsample = nullptr;
-    GLShader *m_shaderUpsample = nullptr;
-    GLShader *m_shaderCopysample = nullptr;
-    GLShader *m_shaderNoisesample = nullptr;
+    QScopedPointer<GLShader> m_shaderDownsample;
+    QScopedPointer<GLShader> m_shaderUpsample;
+    QScopedPointer<GLShader> m_shaderCopysample;
+    QScopedPointer<GLShader> m_shaderNoisesample;
 
     int m_mvpMatrixLocationDownsample;
     int m_offsetLocationDownsample;
@@ -122,23 +86,30 @@ private:
     int m_texStartPosLocationNoisesample;
     int m_halfpixelLocationNoisesample;
 
-
     //Caching uniform values to aviod unnecessary setUniform calls
-    int m_activeSampleType;
+    int m_activeSampleType = -1;
 
-    float m_offsetDownsample;
+    float m_offsetDownsample = 0.0;
     QMatrix4x4 m_matrixDownsample;
 
-    float m_offsetUpsample;
+    float m_offsetUpsample = 0.0;
     QMatrix4x4 m_matrixUpsample;
 
     QMatrix4x4 m_matrixCopysample;
 
-    float m_offsetNoisesample;
+    float m_offsetNoisesample = 0.0;
     QVector2D m_noiseTextureSizeNoisesample;
     QMatrix4x4 m_matrixNoisesample;
 
+    bool m_valid = false;
+
+    Q_DISABLE_COPY(BlurShader);
 };
+
+inline bool BlurShader::isValid() const
+{
+    return m_valid;
+}
 
 } // namespace KWin
 

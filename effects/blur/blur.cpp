@@ -46,7 +46,7 @@ static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEH
 BlurEffect::BlurEffect()
 {
     initConfig<BlurConfig>();
-    m_shader = BlurShader::create();
+    m_shader = new BlurShader(this);
 
     initBlurStrengthValues();
     reconfigure(ReconfigureAll);
@@ -84,9 +84,6 @@ BlurEffect::BlurEffect()
 BlurEffect::~BlurEffect()
 {
     deleteFBOs();
-
-    delete m_shader;
-    m_shader = nullptr;
 }
 
 void BlurEffect::slotScreenGeometryChanged()
