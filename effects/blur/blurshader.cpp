@@ -197,16 +197,14 @@ void GLSLBlurShader::setTexturePosition(QPoint texPos)
 
 void GLSLBlurShader::setBlurRect(QRect blurRect, QSize screenSize)
 {
-    if (!isValid() || blurRect == m_blurRectCopysample)
+    if (!isValid())
         return;
-
-    m_blurRectCopysample = blurRect;
 
     QVector4D rect = QVector4D(
         blurRect.bottomLeft().x()       / float(screenSize.width()),
-                               1.0 - blurRect.bottomLeft().y() / float(screenSize.height()),
-                               blurRect.topRight().x()         / float(screenSize.width()),
-                               1.0 - blurRect.topRight().y()   / float(screenSize.height())
+        1.0 - blurRect.bottomLeft().y() / float(screenSize.height()),
+        blurRect.topRight().x()         / float(screenSize.width()),
+        1.0 - blurRect.topRight().y()   / float(screenSize.height())
     );
 
     m_shaderCopysample->setUniform(m_blurRectLocationCopysample, rect);
@@ -474,7 +472,6 @@ void GLSLBlurShader::init()
         m_matrixUpsample = QMatrix4x4();
 
         m_matrixCopysample = QMatrix4x4();
-        m_blurRectCopysample = QRect();
 
         m_offsetNoisesample = 0.0;
         m_noiseTextureSizeNoisesample = QVector2D();

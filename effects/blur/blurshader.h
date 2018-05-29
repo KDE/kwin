@@ -133,7 +133,6 @@ private:
     QMatrix4x4 m_matrixUpsample;
 
     QMatrix4x4 m_matrixCopysample;
-    QRect m_blurRectCopysample;
 
     float m_offsetNoisesample;
     QVector2D m_noiseTextureSizeNoisesample;
