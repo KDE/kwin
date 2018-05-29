@@ -181,34 +181,68 @@ void SurfaceInterface::Private::installPointerConstraint(LockedPointerInterface 
     Q_ASSERT(lockedPointer.isNull());
     Q_ASSERT(confinedPointer.isNull());
     lockedPointer = QPointer<LockedPointerInterface>(lock);
+
+    auto cleanUp = [this]() {
+        lockedPointer.clear();
+        disconnect(constrainsOneShotConnection);
+        constrainsOneShotConnection = QMetaObject::Connection();
+        disconnect(constrainsUnboundConnection);
+        constrainsUnboundConnection = QMetaObject::Connection();
+        emit q_func()->pointerConstraintsChanged();
+    };
+
     if (lock->lifeTime() == LockedPointerInterface::LifeTime::OneShot) {
         constrainsOneShotConnection = QObject::connect(lock, &LockedPointerInterface::lockedChanged, q_func(),
-            [this] {
-                if (lockedPointer.isNull()) {
+            [this, cleanUp] {
+                if (lockedPointer.isNull() || lockedPointer->isLocked()) {
                     return;
                 }
-                if (!lockedPointer->isLocked()) {
-                    lockedPointer.clear();
-                    disconnect(constrainsOneShotConnection);
-                    constrainsOneShotConnection = QMetaObject::Connection();
-                    disconnect(constrainsUnboundConnection);
-                    constrainsUnboundConnection = QMetaObject::Connection();
-                    emit q_func()->pointerConstraintsChanged();
-                }
+                cleanUp();
             }
         );
     }
     constrainsUnboundConnection = QObject::connect(lock, &LockedPointerInterface::unbound, q_func(),
-        [this] {
+        [this, cleanUp] {
             if (lockedPointer.isNull()) {
                 return;
             }
-            lockedPointer.clear();
-            disconnect(constrainsOneShotConnection);
-            constrainsOneShotConnection = QMetaObject::Connection();
-            disconnect(constrainsUnboundConnection);
-            constrainsUnboundConnection = QMetaObject::Connection();
-            emit q_func()->pointerConstraintsChanged();
+            cleanUp();
+        }
+    );
+    emit q_func()->pointerConstraintsChanged();
+}
+
+void SurfaceInterface::Private::installPointerConstraint(ConfinedPointerInterface *confinement)
+{
+    Q_ASSERT(lockedPointer.isNull());
+    Q_ASSERT(confinedPointer.isNull());
+    confinedPointer = QPointer<ConfinedPointerInterface>(confinement);
+
+    auto cleanUp = [this]() {
+        confinedPointer.clear();
+        disconnect(constrainsOneShotConnection);
+        constrainsOneShotConnection = QMetaObject::Connection();
+        disconnect(constrainsUnboundConnection);
+        constrainsUnboundConnection = QMetaObject::Connection();
+        emit q_func()->pointerConstraintsChanged();
+    };
+
+    if (confinement->lifeTime() == ConfinedPointerInterface::LifeTime::OneShot) {
+        constrainsOneShotConnection = QObject::connect(confinement, &ConfinedPointerInterface::confinedChanged, q_func(),
+            [this, cleanUp] {
+                if (confinedPointer.isNull() || confinedPointer->isConfined()) {
+                    return;
+                }
+                cleanUp();
+            }
+        );
+    }
+    constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerInterface::unbound, q_func(),
+        [this, cleanUp] {
+            if (confinedPointer.isNull()) {
+                return;
+            }
+            cleanUp();
         }
     );
     emit q_func()->pointerConstraintsChanged();
@@ -228,44 +262,6 @@ void SurfaceInterface::Private::installIdleInhibitor(IdleInhibitorInterface *inh
     if (idleInhibitors.count() == 1) {
         emit q_func()->inhibitsIdleChanged();
     }
-}
-
-void SurfaceInterface::Private::installPointerConstraint(ConfinedPointerInterface *confinement)
-{
-    Q_ASSERT(lockedPointer.isNull());
-    Q_ASSERT(confinedPointer.isNull());
-    confinedPointer = QPointer<ConfinedPointerInterface>(confinement);
-    if (confinement->lifeTime() == ConfinedPointerInterface::LifeTime::OneShot) {
-        constrainsOneShotConnection = QObject::connect(confinement, &ConfinedPointerInterface::confinedChanged, q_func(),
-            [this] {
-                if (confinedPointer.isNull()) {
-                    return;
-                }
-                if (!confinedPointer->isConfined()) {
-                    confinedPointer.clear();
-                    disconnect(constrainsOneShotConnection);
-                    constrainsOneShotConnection = QMetaObject::Connection();
-                    disconnect(constrainsUnboundConnection);
-                    constrainsUnboundConnection = QMetaObject::Connection();
-                    emit q_func()->pointerConstraintsChanged();
-                }
-            }
-        );
-    }
-    constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerInterface::unbound, q_func(),
-        [this] {
-            if (confinedPointer.isNull()) {
-                return;
-            }
-            confinedPointer.clear();
-            disconnect(constrainsOneShotConnection);
-            constrainsOneShotConnection = QMetaObject::Connection();
-            disconnect(constrainsUnboundConnection);
-            constrainsUnboundConnection = QMetaObject::Connection();
-            emit q_func()->pointerConstraintsChanged();
-        }
-    );
-    emit q_func()->pointerConstraintsChanged();
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
