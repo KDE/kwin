@@ -352,7 +352,7 @@ void PointerInterface::relativeMotion(const QSizeF &delta, const QSizeF &deltaNo
     for (auto it = d->relativePointers.constBegin(), end = d->relativePointers.constEnd(); it != end; it++) {
         (*it)->relativeMotion(delta, deltaNonAccelerated, microseconds);
     }
-    client()->flush();
+    d->sendFrame();
 }
 
 PointerInterface::Private *PointerInterface::d_func() const
