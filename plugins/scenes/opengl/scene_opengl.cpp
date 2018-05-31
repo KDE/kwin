@@ -823,61 +823,7 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
     if (limit[0] < size.width() || limit[1] < size.height()) {
         QMetaObject::invokeMethod(Compositor::self(), "suspend",
                                   Qt::QueuedConnection, Q_ARG(Compositor::SuspendReason, Compositor::AllReasonSuspend));
-        const QString message = i18n("<h1>OpenGL desktop effects not possible</h1>"
-                                     "Your system cannot perform OpenGL Desktop Effects at the "
-                                     "current resolution<br><br>"
-                                     "You can try to select the XRender backend, but it "
-                                     "might be very slow for this resolution as well.<br>"
-                                     "Alternatively, lower the combined resolution of all screens "
-                                     "to %1x%2 ", limit[0], limit[1]);
-        const QString details = i18n("The demanded resolution exceeds the GL_MAX_VIEWPORT_DIMS "
-                                     "limitation of your GPU and is therefore not compatible "
-                                     "with the OpenGL compositor.<br>"
-                                     "XRender does not know such limitation, but the performance "
-                                     "will usually be impacted by the hardware limitations that "
-                                     "restrict the OpenGL viewport size.");
-        const int oldTimeout = QDBusConnection::sessionBus().interface()->timeout();
-        QDBusConnection::sessionBus().interface()->setTimeout(500);
-        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.kwinCompositingDialog")).value()) {
-            QDBusInterface dialog( QStringLiteral("org.kde.kwinCompositingDialog"), QStringLiteral("/CompositorSettings"), QStringLiteral("org.kde.kwinCompositingDialog") );
-            dialog.asyncCall(QStringLiteral("warn"), message, details, QString());
-        } else {
-            const QString args = QLatin1String("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QLatin1String(" details ") + QString::fromUtf8(details.toLocal8Bit().toBase64());
-            KProcess::startDetached(QStringLiteral("kcmshell5"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
-        }
-        QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);
         return false;
-    }
-    glGetIntegerv(GL_MAX_TEXTURE_SIZE, limit);
-    if (limit[0] < size.width() || limit[0] < size.height()) {
-        KConfig cfg(QStringLiteral("kwin_dialogsrc"));
-
-        if (!KConfigGroup(&cfg, "Notification Messages").readEntry("max_tex_warning", true))
-            return true;
-
-        const QString message = i18n("<h1>OpenGL desktop effects might be unusable</h1>"
-                                     "OpenGL Desktop Effects at the current resolution are supported "
-                                     "but might be exceptionally slow.<br>"
-                                     "Also large windows will turn entirely black.<br><br>"
-                                     "Consider to suspend compositing, switch to the XRender backend "
-                                     "or lower the resolution to %1x%1." , limit[0]);
-        const QString details = i18n("The demanded resolution exceeds the GL_MAX_TEXTURE_SIZE "
-                                     "limitation of your GPU, thus windows of that size cannot be "
-                                     "assigned to textures and will be entirely black.<br>"
-                                     "Also this limit will often be a performance level barrier despite "
-                                     "below GL_MAX_VIEWPORT_DIMS, because the driver might fall back to "
-                                     "software rendering in this case.");
-        const int oldTimeout = QDBusConnection::sessionBus().interface()->timeout();
-        QDBusConnection::sessionBus().interface()->setTimeout(500);
-        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.kwinCompositingDialog")).value()) {
-            QDBusInterface dialog( QStringLiteral("org.kde.kwinCompositingDialog"), QStringLiteral("/CompositorSettings"), QStringLiteral("org.kde.kwinCompositingDialog") );
-            dialog.asyncCall(QStringLiteral("warn"), message, details, QStringLiteral("kwin_dialogsrc:max_tex_warning"));
-        } else {
-            const QString args = QLatin1String("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QLatin1String(" details ") +
-                                 QString::fromUtf8(details.toLocal8Bit().toBase64()) + QLatin1String(" dontagain kwin_dialogsrc:max_tex_warning");
-            KProcess::startDetached(QStringLiteral("kcmshell5"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
-        }
-        QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);
     }
     return true;
 }
