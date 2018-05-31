@@ -681,15 +681,15 @@ void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int bl
 
     if (m_noiseStrength > 0) {
         m_shader->bind(BlurShader::NoiseSampleType);
-        m_shader->setTargetTextureSize(m_renderTextures[0].size());
-        m_shader->setNoiseTextureSize(m_noiseTexture.size());
-        m_shader->setTexturePosition(windowPosition);
+        m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());
+        m_shader->setNoiseTextureSize(m_noiseTexture.size() * GLRenderTarget::virtualScreenScale());
+        m_shader->setTexturePosition(windowPosition * GLRenderTarget::virtualScreenScale());
 
         glActiveTexture(GL_TEXTURE1);
         m_noiseTexture.bind();
     } else {
         m_shader->bind(BlurShader::UpSampleType);
-        m_shader->setTargetTextureSize(m_renderTextures[0].size());
+        m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());
     }
 
     m_shader->setOffset(m_offset);
