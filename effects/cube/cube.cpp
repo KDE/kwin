@@ -51,7 +51,6 @@ CubeEffect::CubeEffect()
     : activated(false)
     , cube_painting(false)
     , keyboard_grab(false)
-    , schedule_close(false)
     , painting_desktop(1)
     , frontDesktop(0)
     , cubeOpacity(1.0)
@@ -59,20 +58,11 @@ CubeEffect::CubeEffect()
     , displayDesktopName(false)
     , desktopNameFrame(NULL)
     , reflection(true)
-    , rotating(false)
     , desktopChangedWhileRotating(false)
     , paintCaps(true)
-    , rotationDirection(Left)
-    , verticalRotationDirection(Upwards)
-    , verticalPosition(Normal)
     , wallpaper(NULL)
     , texturedCaps(true)
     , capTexture(NULL)
-    , manualAngle(0.0)
-    , manualVerticalAngle(0.0)
-    , currentShape(QTimeLine::EaseInOutCurve)
-    , start(false)
-    , stop(false)
     , reflectionPainting(false)
     , activeScreen(0)
     , bottomCap(false)
@@ -338,17 +328,55 @@ bool CubeEffect::loadShader()
     return true;
 }
 
+void CubeEffect::startAnimation(AnimationState state)
+{
+    QTimeLine::CurveShape shape;
+    /* If this is first and only animation -> EaseInOut
+     *                      there is more  -> EaseIn
+     * If there was an animation before, and this is the last one -> EaseOut
+     *                                       there is more        -> Linear */
+    if (animationState == AnimationState::None) {
+        shape = animations.empty() ? QTimeLine::EaseInOutCurve : QTimeLine::EaseInCurve;
+    } else {
+        shape = animations.empty() ? QTimeLine::EaseOutCurve : QTimeLine::LinearCurve;
+    }
+    timeLine.setCurveShape(shape);
+    timeLine.setCurrentTime(0);
+    startAngle = currentAngle;
+    startFrontDesktop = frontDesktop;
+    animationState = state;
+}
+
+void CubeEffect::startVerticalAnimation(VerticalAnimationState state)
+{
+    /* Ignore if there is nowhere to rotate */
+    if ((qFuzzyIsNull(verticalCurrentAngle - 90.0f) && state == VerticalAnimationState::Upwards) ||
+        (qFuzzyIsNull(verticalCurrentAngle + 90.0f) && state == VerticalAnimationState::Downwards)) {
+        return;
+    }
+    verticalTimeLine.setCurrentTime(0);
+    verticalStartAngle = verticalCurrentAngle;
+    verticalAnimationState = state;
+}
+
 void CubeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
     if (activated) {
         data.mask |= PAINT_SCREEN_TRANSFORMED | Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
-
-        if (rotating || start || stop) {
-            timeLine.setCurrentTime(timeLine.currentTime() + time);
-            rotateCube();
+        if (animationState == AnimationState::None && !animations.empty()) {
+            startAnimation(animations.dequeue());
         }
-        if (verticalRotating) {
-            verticalTimeLine.setCurrentTime(verticalTimeLine.currentTime() + time);
+        if (verticalAnimationState == VerticalAnimationState::None && !verticalAnimations.empty()) {
+            startVerticalAnimation(verticalAnimations.dequeue());
+        }
+
+        if (animationState != AnimationState::None || verticalAnimationState != VerticalAnimationState::None) {
+            if (animationState != AnimationState::None) {
+                timeLine.setCurrentTime(timeLine.currentTime() + time);
+            }
+            if (verticalAnimationState != VerticalAnimationState::None) {
+                verticalTimeLine.setCurrentTime(verticalTimeLine.currentTime() + time);
+            }
             rotateCube();
         }
     }
@@ -383,26 +411,34 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
         float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
         float zTranslate = zPosition + zoom;
-        if (start)
+        if (animationState == AnimationState::Start) {
             zTranslate *= timeLine.currentValue();
-        if (stop)
+        } else if (animationState == AnimationState::Stop) {
             zTranslate *= (1.0 - timeLine.currentValue());
+        }
         // reflection
-        if (reflection && mode != Sphere) {
+        if (reflection) {
             // we can use a huge scale factor (needed to calculate the rearground vertices)
             float scaleFactor = 1000000 * tan(60.0 * M_PI / 360.0f) / rect.height();
             m_reflectionMatrix.setToIdentity();
             m_reflectionMatrix.scale(1.0, -1.0, 1.0);
 
-            // TODO reflection is not correct when mixing manual (mouse) rotating with rotation by cursor keys
-            // there's also a small bug when zooming
-            float addedHeight1 = -sin(asin(float(rect.height()) / mAddedHeightCoeff1) + fabs(manualVerticalAngle) * M_PI / 180.0f) * mAddedHeightCoeff1;
-            float addedHeight2 = -sin(asin(float(rect.height()) / mAddedHeightCoeff2) + fabs(manualVerticalAngle) * M_PI / 180.0f) * mAddedHeightCoeff2 - addedHeight1;
-            if (manualVerticalAngle > 0.0f && effects->numberOfDesktops() & 1) {
-                m_reflectionMatrix.translate(0.0, cos(fabs(manualAngle) * M_PI / 360.0f * float(effects->numberOfDesktops())) * addedHeight2 + addedHeight1 - float(rect.height()), 0.0);
+            double translate = 0.0;
+            if (mode == Cube) {
+                double addedHeight1 = -rect.height() * cos(verticalCurrentAngle*M_PI/180.0f) - rect.width() * sin(fabs(verticalCurrentAngle)*M_PI/180.0f)/tan(M_PI/effects->numberOfDesktops());
+                double addedHeight2 = -rect.width() * sin(fabs(verticalCurrentAngle)*M_PI/180.0f)*tan(M_PI*0.5f/effects->numberOfDesktops());
+                if (verticalCurrentAngle > 0.0f && effects->numberOfDesktops() & 1)
+                    translate = cos(fabs(currentAngle)*effects->numberOfDesktops()*M_PI/360.0f) * addedHeight2 + addedHeight1 - float(rect.height());
+                else
+                    translate = sin(fabs(currentAngle)*effects->numberOfDesktops()*M_PI/360.0f) * addedHeight2 + addedHeight1 - float(rect.height());
+            } else if (mode == Cylinder) {
+                double addedHeight1 = -rect.height() * cos(verticalCurrentAngle*M_PI/180.0f) - rect.width() * sin(fabs(verticalCurrentAngle)*M_PI/180.0f)/tan(M_PI/effects->numberOfDesktops());
+                translate = addedHeight1 - float(rect.height());
             } else {
-                m_reflectionMatrix.translate(0.0, sin(fabs(manualAngle) * M_PI / 360.0f * float(effects->numberOfDesktops())) * addedHeight2 + addedHeight1 - float(rect.height()), 0.0);
+                float radius = (rect.width() * 0.5) / cos(cubeAngle * 0.5 * M_PI / 180.0);
+                translate = -rect.height()-2*radius;
             }
+            m_reflectionMatrix.translate(0.0f, translate, 0.0f);
 
             reflectionPainting = true;
             glEnable(GL_CULL_FACE);
@@ -429,10 +465,11 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             };
             // foreground
             float alpha = 0.7;
-            if (start)
+            if (animationState == AnimationState::Start) {
                 alpha = 0.3 + 0.4 * timeLine.currentValue();
-            if (stop)
+            } else if (animationState == AnimationState::Stop) {
                 alpha = 0.3 + 0.4 * (1.0 - timeLine.currentValue());
+            }
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             if (m_reflectionShader && m_reflectionShader->isValid()) {
@@ -485,10 +522,11 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         // desktop name box - inspired from coverswitch
         if (displayDesktopName) {
             double opacity = 1.0;
-            if (start)
+            if (animationState == AnimationState::Start) {
                 opacity = timeLine.currentValue();
-            if (stop)
+            } else if (animationState == AnimationState::Stop) {
                 opacity = 1.0 - timeLine.currentValue();
+            }
             QRect screenRect = effects->clientArea(ScreenArea, activeScreen, frontDesktop);
             QRect frameRect = QRect(screenRect.width() * 0.33f + screenRect.x(), screenRect.height() * 0.95f + screenRect.y(),
                                     screenRect.width() * 0.34f, QFontMetrics(desktopNameFont).height());
@@ -508,109 +546,59 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 void CubeEffect::rotateCube()
 {
     QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
-
     m_rotationMatrix.setToIdentity();
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     float zTranslate = zPosition + zoom;
-    if (start)
-        zTranslate *= timeLine.currentValue();
-    if (stop)
-        zTranslate *= (1.0 - timeLine.currentValue());
-    // Rotation of the cube
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
     float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
-    if (verticalRotating || verticalPosition != Normal || manualVerticalAngle != 0.0) {
-        // change the verticalPosition if manualVerticalAngle > 90 or < -90 degrees
-        if (manualVerticalAngle <= -90.0) {
-            manualVerticalAngle += 90.0;
-            if (verticalPosition == Normal)
-                verticalPosition = Down;
-            if (verticalPosition == Up)
-                verticalPosition = Normal;
+    /* Animations */
+    if (animationState == AnimationState::Start) {
+        zTranslate *= timeLine.currentValue();
+    } else if (animationState == AnimationState::Stop) {
+        currentAngle = startAngle * (1.0 - timeLine.currentValue());
+        zTranslate *= (1.0 - timeLine.currentValue());
+    } else if (animationState != AnimationState::None) {
+        /* Left or right */
+        float endAngle = animationState == AnimationState::Right ? internalCubeAngle : -internalCubeAngle;
+        currentAngle = startAngle + timeLine.currentValue() * (endAngle - startAngle);
+        frontDesktop = startFrontDesktop;
+    }
+    /* Switching to next desktop: either by mouse or due to animation */
+    if (currentAngle > internalCubeAngle * 0.5f) {
+        currentAngle -= internalCubeAngle;
+        frontDesktop--;
+        if (frontDesktop < 1) {
+            frontDesktop = effects->numberOfDesktops();
         }
-        if (manualVerticalAngle >= 90.0) {
-            manualVerticalAngle -= 90.0;
-            if (verticalPosition == Normal)
-                verticalPosition = Up;
-            if (verticalPosition == Down)
-                verticalPosition = Normal;
+    }
+    if (currentAngle < -internalCubeAngle * 0.5f) {
+        currentAngle += internalCubeAngle;
+        frontDesktop++;
+        if (frontDesktop > effects->numberOfDesktops()) {
+            frontDesktop = 1;
         }
-        float angle = 0.0;
-        if (verticalPosition == Up) {
-            angle = 90.0;
-            if (!verticalRotating) {
-                if (manualVerticalAngle < 0.0)
-                    angle += manualVerticalAngle;
-                else
-                    manualVerticalAngle = 0.0;
-            }
-        } else if (verticalPosition == Down) {
-            angle = -90.0;
-            if (!verticalRotating) {
-                if (manualVerticalAngle > 0.0)
-                    angle += manualVerticalAngle;
-                else
-                    manualVerticalAngle = 0.0;
-            }
-        } else {
-            angle = manualVerticalAngle;
+    }
+    /* Vertical animations */
+    if (verticalAnimationState != VerticalAnimationState::None) {
+        float verticalEndAngle = 0.0;
+        if (verticalAnimationState == VerticalAnimationState::Upwards && verticalStartAngle >= 0.0) {
+            verticalEndAngle = 90.0;
         }
-        if (verticalRotating) {
-            angle *= verticalTimeLine.currentValue();
-            if (verticalPosition == Normal && verticalRotationDirection == Upwards)
-                angle = -90.0 + 90 * verticalTimeLine.currentValue();
-            if (verticalPosition == Normal && verticalRotationDirection == Downwards)
-                angle = 90.0 - 90 * verticalTimeLine.currentValue();
-            angle += manualVerticalAngle * (1.0 - verticalTimeLine.currentValue());
+        if (verticalAnimationState == VerticalAnimationState::Downwards && verticalStartAngle <= 0.0) {
+            verticalEndAngle = -90.0;
         }
-        if (stop)
-            angle *= (1.0 - timeLine.currentValue());
+        // This also handles the "VerticalAnimationState::Stop" correctly, since it has endAngle = 0.0
+        verticalCurrentAngle = verticalStartAngle + verticalTimeLine.currentValue() * (verticalEndAngle - verticalStartAngle);
+    }
+    /* Updating rotation matrix */
+    if (verticalAnimationState != VerticalAnimationState::None || verticalCurrentAngle != 0.0f) {
         m_rotationMatrix.translate(rect.width() / 2, rect.height() / 2, -point - zTranslate);
-        m_rotationMatrix.rotate(angle, 1.0, 0.0, 0.0);
+        m_rotationMatrix.rotate(verticalCurrentAngle, 1.0, 0.0, 0.0);
         m_rotationMatrix.translate(-rect.width() / 2, -rect.height() / 2, point + zTranslate);
     }
-    if (rotating || (manualAngle != 0.0)) {
-        int tempFrontDesktop = frontDesktop;
-        if (manualAngle > internalCubeAngle * 0.5f) {
-            manualAngle -= internalCubeAngle;
-            tempFrontDesktop--;
-            if (tempFrontDesktop == 0)
-                tempFrontDesktop = effects->numberOfDesktops();
-        }
-        if (manualAngle < -internalCubeAngle * 0.5f) {
-            manualAngle += internalCubeAngle;
-            tempFrontDesktop++;
-            if (tempFrontDesktop > effects->numberOfDesktops())
-                tempFrontDesktop = 1;
-        }
-        float rotationAngle = internalCubeAngle * timeLine.currentValue();
-        if (rotationAngle > internalCubeAngle * 0.5f) {
-            rotationAngle -= internalCubeAngle;
-            if (!desktopChangedWhileRotating) {
-                desktopChangedWhileRotating = true;
-                if (rotationDirection == Left) {
-                    tempFrontDesktop++;
-                } else if (rotationDirection == Right) {
-                    tempFrontDesktop--;
-                }
-                if (tempFrontDesktop > effects->numberOfDesktops())
-                    tempFrontDesktop = 1;
-                else if (tempFrontDesktop == 0)
-                    tempFrontDesktop = effects->numberOfDesktops();
-            }
-        }
-        // don't change front desktop during stop animation as this would break some logic
-        if (!stop)
-            frontDesktop = tempFrontDesktop;
-        if (rotationDirection == Left) {
-            rotationAngle *= -1;
-        }
-        if (stop)
-            rotationAngle = manualAngle * (1.0 - timeLine.currentValue());
-        else
-            rotationAngle += manualAngle * (1.0 - timeLine.currentValue());
+    if (animationState != AnimationState::None || currentAngle != 0.0f) {
         m_rotationMatrix.translate(rect.width() / 2, rect.height() / 2, -point - zTranslate);
-        m_rotationMatrix.rotate(rotationAngle, 0.0, 1.0, 0.0);
+        m_rotationMatrix.rotate(currentAngle, 0.0, 1.0, 0.0);
         m_rotationMatrix.translate(-rect.width() / 2, -rect.height() / 2, point + zTranslate);
     }
 }
@@ -621,10 +609,11 @@ void CubeEffect::paintCube(int mask, QRegion region, ScreenPaintData& data)
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     cube_painting = true;
     float zTranslate = zPosition + zoom;
-    if (start)
+    if (animationState == AnimationState::Start) {
         zTranslate *= timeLine.currentValue();
-    if (stop)
+    } else if (animationState == AnimationState::Stop) {
         zTranslate *= (1.0 - timeLine.currentValue());
+    }
 
     // Rotation of the cube
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
@@ -689,9 +678,9 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset, const QMatrix4x4 &proj
         capShader = true;
         ShaderManager::instance()->pushShader(m_capShader);
         float opacity = cubeOpacity;
-        if (start) {
+        if (animationState == AnimationState::Start) {
             opacity *= timeLine.currentValue();
-        } else if (stop) {
+        } else if (animationState == AnimationState::Stop) {
             opacity *= (1.0 - timeLine.currentValue());
         }
         m_capShader->setUniform("u_opacity", opacity);
@@ -913,10 +902,10 @@ void CubeEffect::paintSphereCap()
     for (int i = 0; i < 30; i++) {
         float topAngle = angle * i * M_PI / 180.0;
         float bottomAngle = angle * (i + 1) * M_PI / 180.0;
-        float yTop = rect.height() * 0.5 - radius * cos(topAngle);
-        yTop -= (yTop - rect.height() * 0.5) * capDeformationFactor;
+        float yTop = (rect.height() * 0.5 - radius * cos(topAngle));
+        yTop *= (1.0f-capDeformationFactor);
         float yBottom = rect.height() * 0.5 - radius * cos(bottomAngle);
-        yBottom -= (yBottom - rect.height() * 0.5) * capDeformationFactor;
+        yBottom *= (1.0f - capDeformationFactor);
         for (int j = 0; j < 36; j++) {
             const float x1 = radius * sin(topAngle) * sin((90.0 + j * 10.0) * M_PI / 180.0);
             const float z1 = radius * sin(topAngle) * cos((90.0 + j * 10.0) * M_PI / 180.0);
@@ -959,125 +948,48 @@ void CubeEffect::paintSphereCap()
 void CubeEffect::postPaintScreen()
 {
     effects->postPaintScreen();
-    if (activated) {
-        if (start) {
-            if (timeLine.currentValue() == 1.0) {
-                start = false;
-                timeLine.setCurrentTime(0);
-                // more rotations?
-                if (!rotations.empty()) {
-                    rotationDirection = rotations.dequeue();
-                    rotating = true;
-                    // change the curve shape if current shape is not easeInOut
-                    if (currentShape != QTimeLine::EaseInOutCurve) {
-                        // more rotations follow -> linear curve
-                        if (!rotations.empty()) {
-                            currentShape = QTimeLine::LinearCurve;
-                        }
-                        // last rotation step -> easeOut curve
-                        else {
-                            currentShape = QTimeLine::EaseOutCurve;
-                        }
-                        timeLine.setCurveShape(currentShape);
-                    } else {
-                        // if there is at least one more rotation, we can change to easeIn
-                        if (!rotations.empty()) {
-                            currentShape = QTimeLine::EaseInCurve;
-                            timeLine.setCurveShape(currentShape);
-                        }
-                    }
-                }
-            }
-            effects->addRepaintFull();
-            return; // schedule_close could have been called, start has to finish first
-        }
-        if (stop) {
-            if (timeLine.currentValue() == 1.0) {
-                effects->setCurrentDesktop(frontDesktop);
-                stop = false;
-                timeLine.setCurrentTime(0);
-                activated = false;
-                // set the new desktop
-                if (keyboard_grab)
-                    effects->ungrabKeyboard();
-                keyboard_grab = false;
-                effects->stopMouseInterception(this);
+    if (!activated)
+        return;
 
-                effects->setActiveFullScreenEffect(0);
-
-                delete m_cubeCapBuffer;
-                m_cubeCapBuffer = NULL;
-                if (desktopNameFrame)
-                    desktopNameFrame->free();
-            }
-            effects->addRepaintFull();
+    bool animation = (animationState != AnimationState::None || verticalAnimationState != VerticalAnimationState::None);
+    if (animationState != AnimationState::None && timeLine.currentValue() == 1.0) {
+        /* An animation have just finished! */
+        if (animationState == AnimationState::Stop) {
+            /* If the stop animation is finished, we're done */
+            if (keyboard_grab)
+                effects->ungrabKeyboard();
+            keyboard_grab = false;
+            effects->stopMouseInterception(this);
+            effects->setCurrentDesktop(frontDesktop);
+            effects->setActiveFullScreenEffect(0);
+            delete m_cubeCapBuffer;
+            m_cubeCapBuffer = NULL;
+            if (desktopNameFrame)
+                desktopNameFrame->free();
+            activated = false;
+            // User can press Esc several times, and several Stop animations can be added to queue. We don't want it
+            animationState = AnimationState::None;
+            animations.clear();
+            verticalAnimationState = VerticalAnimationState::None;
+            verticalAnimations.clear();
+        } else {
+            if (!animations.empty())
+                startAnimation(animations.dequeue());
+            else
+                animationState = AnimationState::None;
         }
-        if (rotating || verticalRotating) {
-            if (rotating && timeLine.currentValue() == 1.0) {
-                timeLine.setCurrentTime(0.0);
-                rotating = false;
-                desktopChangedWhileRotating = false;
-                manualAngle = 0.0;
-                // more rotations?
-                if (!rotations.empty()) {
-                    rotationDirection = rotations.dequeue();
-                    rotating = true;
-                    // change the curve shape if current shape is not easeInOut
-                    if (currentShape != QTimeLine::EaseInOutCurve) {
-                        // more rotations follow -> linear curve
-                        if (!rotations.empty()) {
-                            currentShape = QTimeLine::LinearCurve;
-                        }
-                        // last rotation step -> easeOut curve
-                        else {
-                            currentShape = QTimeLine::EaseOutCurve;
-                        }
-                        timeLine.setCurveShape(currentShape);
-                    } else {
-                        // if there is at least one more rotation, we can change to easeIn
-                        if (!rotations.empty()) {
-                            currentShape = QTimeLine::EaseInCurve;
-                            timeLine.setCurveShape(currentShape);
-                        }
-                    }
-                } else {
-                    // reset curve shape if there are no more rotations
-                    if (currentShape != QTimeLine::EaseInOutCurve) {
-                        currentShape = QTimeLine::EaseInOutCurve;
-                        timeLine.setCurveShape(currentShape);
-                    }
-                }
-            }
-            if (verticalRotating && verticalTimeLine.currentValue() == 1.0) {
-                verticalTimeLine.setCurrentTime(0);
-                verticalRotating = false;
-                manualVerticalAngle = 0.0;
-                // more rotations?
-                if (!verticalRotations.empty()) {
-                    verticalRotationDirection = verticalRotations.dequeue();
-                    verticalRotating = true;
-                    if (verticalRotationDirection == Upwards) {
-                        if (verticalPosition == Normal)
-                            verticalPosition = Up;
-                        if (verticalPosition == Down)
-                            verticalPosition = Normal;
-                    }
-                    if (verticalRotationDirection == Downwards) {
-                        if (verticalPosition == Normal)
-                            verticalPosition = Down;
-                        if (verticalPosition == Up)
-                            verticalPosition = Normal;
-                    }
-                }
-            }
-            effects->addRepaintFull();
-            return; // rotation has to end before cube is closed
+    }
+    /* Vertical animation have finished */
+    if (verticalAnimationState != VerticalAnimationState::None && verticalTimeLine.currentValue() == 1.0) {
+        if (!verticalAnimations.empty()) {
+            startVerticalAnimation(verticalAnimations.dequeue());
+        } else {
+            verticalAnimationState = VerticalAnimationState::None;
         }
-        if (schedule_close) {
-            schedule_close = false;
-            stop = true;
-            effects->addRepaintFull();
-        }
+    }
+    /* Repaint if there is any animation */
+    if (animation) {
+        effects->addRepaintFull();
     }
 }
 
@@ -1171,15 +1083,14 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         region= infiniteRegion(); // we need to explicitly prevent any clipping, bug #325432
         //qCDebug(KWINEFFECTS) << w->caption();
         float opacity = cubeOpacity;
-        if (start) {
+        if (animationState == AnimationState::Start) {
             opacity = 1.0 - (1.0 - opacity) * timeLine.currentValue();
             if (reflectionPainting)
                 opacity = 0.5 + (cubeOpacity - 0.5) * timeLine.currentValue();
             // fade in windows belonging to different desktops
             if (painting_desktop == effects->currentDesktop() && (!w->isOnDesktop(painting_desktop)))
                 opacity = timeLine.currentValue() * cubeOpacity;
-        }
-        if (stop) {
+        } else if (animationState == AnimationState::Stop) {
             opacity = 1.0 - (1.0 - opacity) * (1.0 - timeLine.currentValue());
             if (reflectionPainting)
                 opacity = 0.5 + (cubeOpacity - 0.5) * (1.0 - timeLine.currentValue());
@@ -1190,10 +1101,11 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         // z-Ordering
         if (!w->isDesktop() && !w->isDock() && useZOrdering && !w->isOnAllDesktops()) {
             float zOrdering = (effects->stackingOrder().indexOf(w) + 1) * zOrderingFactor;
-            if (start)
+            if (animationState == AnimationState::Start) {
                 zOrdering *= timeLine.currentValue();
-            if (stop)
+            } else if (animationState == AnimationState::Stop) {
                 zOrdering *= (1.0 - timeLine.currentValue());
+            }
             data.translate(0.0, 0.0, zOrdering);
         }
         // check for windows belonging to the previous desktop
@@ -1227,19 +1139,21 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         }
         QRect rect = effects->clientArea(FullArea, activeScreen, painting_desktop);
 
-        if (start || stop) {
+        if (animationState == AnimationState::Start || animationState == AnimationState::Stop) {
             // we have to change opacity values for fade in/out of windows which are shown on front-desktop
             if (prev_desktop == effects->currentDesktop() && w->x() < rect.x()) {
-                if (start)
+                if (animationState == AnimationState::Start) {
                     opacity = timeLine.currentValue() * cubeOpacity;
-                if (stop)
+                } else if (animationState == AnimationState::Stop) {
                     opacity = cubeOpacity * (1.0 - timeLine.currentValue());
+                }
             }
             if (next_desktop == effects->currentDesktop() && w->x() + w->width() > rect.x() + rect.width()) {
-                if (start)
+                if (animationState == AnimationState::Start) {
                     opacity = timeLine.currentValue() * cubeOpacity;
-                if (stop)
+                } else if (animationState == AnimationState::Stop) {
                     opacity = cubeOpacity * (1.0 - timeLine.currentValue());
+                }
             }
         }
         // HACK set opacity to 0.99 in case of fully opaque to ensure that windows are painted in correct sequence
@@ -1292,10 +1206,11 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             cylinderShader->setUniform("xCoord", (float)w->x());
             cylinderShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
             float factor = 0.0f;
-            if (start)
+            if (animationState == AnimationState::Start) {
                 factor = 1.0f - timeLine.currentValue();
-            if (stop)
+            } else if (animationState == AnimationState::Stop) {
                 factor = timeLine.currentValue();
+            }
             cylinderShader->setUniform("timeLine", factor);
             currentShader = cylinderShader;
         }
@@ -1304,10 +1219,11 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             sphereShader->setUniform("u_offset", QVector2D(w->x(), w->y()));
             sphereShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
             float factor = 0.0f;
-            if (start)
+            if (animationState == AnimationState::Start) {
                 factor = 1.0f - timeLine.currentValue();
-            if (stop)
+            } else if (animationState == AnimationState::Stop) {
                 factor = timeLine.currentValue();
+            }
             sphereShader->setUniform("timeLine", factor);
             currentShader = sphereShader;
         }
@@ -1466,8 +1382,10 @@ void CubeEffect::toggle(CubeMode newMode)
 
 void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
 {
-    if (stop)
+    // If either stop is running or is scheduled - ignore all events
+    if ((!animations.isEmpty() && animations.last() == AnimationState::Stop) || animationState == AnimationState::Stop) {
         return;
+    }
     // taken from desktopgrid.cpp
     if (e->type() == QEvent::KeyPress) {
         // check for global shortcuts
@@ -1500,128 +1418,39 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             }
             return;
         }
-        switch(e->key()) {
-            // wrap only on autorepeat
+
+        int key = e->key();
+        if (invertKeys) {
+            if (key == Qt::Key_Left)
+                key = Qt::Key_Right;
+            else if (key == Qt::Key_Right)
+                key = Qt::Key_Left;
+            else if (key == Qt::Key_Up)
+                key = Qt::Key_Down;
+            else if (key == Qt::Key_Down)
+                key = Qt::Key_Up;
+        }
+
+        switch(key) {
+        // wrap only on autorepeat
         case Qt::Key_Left:
-            // rotate to previous desktop
             qCDebug(KWINEFFECTS) << "left";
-            if (!rotating && !start) {
-                rotating = true;
-                if (invertKeys)
-                    rotationDirection = Right;
-                else
-                    rotationDirection = Left;
-            } else {
-                if (rotations.count() < effects->numberOfDesktops()) {
-                    if (invertKeys)
-                        rotations.enqueue(Right);
-                    else
-                        rotations.enqueue(Left);
-                }
-            }
+            if (animations.count() < effects->numberOfDesktops())
+                animations.enqueue(AnimationState::Left);
             break;
         case Qt::Key_Right:
-            // rotate to next desktop
             qCDebug(KWINEFFECTS) << "right";
-            if (!rotating && !start) {
-                rotating = true;
-                if (invertKeys)
-                    rotationDirection = Left;
-                else
-                    rotationDirection = Right;
-            } else {
-                if (rotations.count() < effects->numberOfDesktops()) {
-                    if (invertKeys)
-                        rotations.enqueue(Left);
-                    else
-                        rotations.enqueue(Right);
-                }
-            }
+            if (animations.count() < effects->numberOfDesktops())
+                animations.enqueue(AnimationState::Right);
             break;
         case Qt::Key_Up:
             qCDebug(KWINEFFECTS) << "up";
-            if (invertKeys) {
-                if (verticalPosition != Down) {
-                    if (!verticalRotating) {
-                        verticalRotating = true;
-                        verticalRotationDirection = Downwards;
-                        if (verticalPosition == Normal)
-                            verticalPosition = Down;
-                        if (verticalPosition == Up)
-                            verticalPosition = Normal;
-                    } else {
-                        verticalRotations.enqueue(Downwards);
-                    }
-                } else if (manualVerticalAngle > 0.0 && !verticalRotating) {
-                    // rotate to down position from the manual position
-                    verticalRotating = true;
-                    verticalRotationDirection = Downwards;
-                    verticalPosition = Down;
-                    manualVerticalAngle -= 90.0;
-                }
-            } else {
-                if (verticalPosition != Up) {
-                    if (!verticalRotating) {
-                        verticalRotating = true;
-                        verticalRotationDirection = Upwards;
-                        if (verticalPosition == Normal)
-                            verticalPosition = Up;
-                        if (verticalPosition == Down)
-                            verticalPosition = Normal;
-                    } else {
-                        verticalRotations.enqueue(Upwards);
-                    }
-                } else if (manualVerticalAngle < 0.0 && !verticalRotating) {
-                    // rotate to up position from the manual position
-                    verticalRotating = true;
-                    verticalRotationDirection = Upwards;
-                    verticalPosition = Up;
-                    manualVerticalAngle += 90.0;
-                }
-            }
+            verticalAnimations.enqueue(VerticalAnimationState::Upwards);
             break;
         case Qt::Key_Down:
             qCDebug(KWINEFFECTS) << "down";
-            if (invertKeys) {
-                if (verticalPosition != Up) {
-                    if (!verticalRotating) {
-                        verticalRotating = true;
-                        verticalRotationDirection = Upwards;
-                        if (verticalPosition == Normal)
-                            verticalPosition = Up;
-                        if (verticalPosition == Down)
-                            verticalPosition = Normal;
-                    } else {
-                        verticalRotations.enqueue(Upwards);
-                    }
-                } else if (manualVerticalAngle < 0.0 && !verticalRotating) {
-                    // rotate to up position from the manual position
-                    verticalRotating = true;
-                    verticalRotationDirection = Upwards;
-                    verticalPosition = Up;
-                    manualVerticalAngle += 90.0;
-                }
-            } else {
-                if (verticalPosition != Down) {
-                    if (!verticalRotating) {
-                        verticalRotating = true;
-                        verticalRotationDirection = Downwards;
-                        if (verticalPosition == Normal)
-                            verticalPosition = Down;
-                        if (verticalPosition == Up)
-                            verticalPosition = Normal;
-                    } else {
-                        verticalRotations.enqueue(Downwards);
-                    }
-                } else if (manualVerticalAngle > 0.0 && !verticalRotating) {
-                    // rotate to down position from the manual position
-                    verticalRotating = true;
-                    verticalRotationDirection = Downwards;
-                    verticalPosition = Down;
-                    manualVerticalAngle -= 90.0;
-                }
-            }
-            break;
+            verticalAnimations.enqueue(VerticalAnimationState::Downwards);
+        break;
         case Qt::Key_Escape:
             rotateToDesktop(effects->currentDesktop());
             setActive(false);
@@ -1632,6 +1461,7 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             setActive(false);
             return;
         case Qt::Key_Plus:
+        case Qt::Key_Equal:
             zoom -= 10.0;
             zoom = qMax(-zPosition, zoom);
             rotateCube();
@@ -1643,53 +1473,54 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
         default:
             break;
         }
-        effects->addRepaintFull();
     }
+    effects->addRepaintFull();
 }
 
 void CubeEffect::rotateToDesktop(int desktop)
 {
-    int tempFrontDesktop = frontDesktop;
-    if (!rotations.empty()) {
-        // all scheduled rotations will be removed as a speed up
-        rotations.clear();
+    // all scheduled animations will be removed as a speed up
+    animations.clear();
+    verticalAnimations.clear();
+    // we want only startAnimation to finish gracefully
+    // all the others can be interrupted
+    if (animationState != AnimationState::Start) {
+        animationState = AnimationState::None;
     }
-    if (rotating && !desktopChangedWhileRotating) {
-        // front desktop will change during the actual rotation - this has to be considered
-        if (rotationDirection == Left) {
-            tempFrontDesktop++;
-        } else if (rotationDirection == Right) {
-            tempFrontDesktop--;
-        }
-        if (tempFrontDesktop > effects->numberOfDesktops())
-            tempFrontDesktop = 1;
-        else if (tempFrontDesktop == 0)
-            tempFrontDesktop = effects->numberOfDesktops();
-    }
-    // find the fastest rotation path from tempFrontDesktop to desktop
-    int rightRotations = tempFrontDesktop - desktop;
-    if (rightRotations < 0)
+    verticalAnimationState = VerticalAnimationState::None;
+    // find the fastest rotation path from frontDesktop to desktop
+    int rightRotations = frontDesktop - desktop;
+    if (rightRotations < 0) {
         rightRotations += effects->numberOfDesktops();
-    int leftRotations = desktop - tempFrontDesktop;
-    if (leftRotations < 0)
+    }
+    int leftRotations = desktop - frontDesktop;
+    if (leftRotations < 0) {
         leftRotations += effects->numberOfDesktops();
+    }
     if (leftRotations <= rightRotations) {
         for (int i = 0; i < leftRotations; i++) {
-            rotations.enqueue(Left);
+            animations.enqueue(AnimationState::Left);
         }
     } else {
         for (int i = 0; i < rightRotations; i++) {
-            rotations.enqueue(Right);
+            animations.enqueue(AnimationState::Right);
         }
     }
-    if (!start && !rotating && !rotations.empty()) {
-        rotating = true;
-        rotationDirection = rotations.dequeue();
+    // we want the face of desktop to appear, it might need also vertical animation
+    if (verticalCurrentAngle > 0.0f) {
+        verticalAnimations.enqueue(VerticalAnimationState::Downwards);
     }
-    // change timeline curve if more rotations are following
-    if (!rotations.empty()) {
-        currentShape = QTimeLine::EaseInCurve;
-        timeLine.setCurveShape(currentShape);
+    if (verticalCurrentAngle < 0.0f) {
+        verticalAnimations.enqueue(VerticalAnimationState::Upwards);
+    }
+    /* Start immediately, so there is no pause:
+     * during that pause, actual frontDesktop might change
+     * if user moves his mouse fast, leading to incorrect desktop */
+    if (animationState == AnimationState::None && !animations.empty()) {
+        startAnimation(animations.dequeue());
+    }
+    if (verticalAnimationState == VerticalAnimationState::None && !verticalAnimations.empty()) {
+        startVerticalAnimation(verticalAnimations.dequeue());
     }
 }
 
@@ -1718,14 +1549,13 @@ void CubeEffect::setActive(bool active)
         frontDesktop = effects->currentDesktop();
         zoom = 0.0;
         zOrderingFactor = zPosition / (effects->stackingOrder().count() - 1);
-        start = true;
+        animations.enqueue(AnimationState::Start);
+        animationState = AnimationState::None;
+        verticalAnimationState = VerticalAnimationState::None;
         effects->setActiveFullScreenEffect(this);
         qCDebug(KWINEFFECTS) << "Cube is activated";
-        verticalPosition = Normal;
-        verticalRotating = false;
-        manualAngle = 0.0;
-        manualVerticalAngle = 0.0;
-        desktopChangedWhileRotating = false;
+        currentAngle = 0.0;
+        verticalCurrentAngle = 0.0;
         if (reflection) {
             QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
             float temporaryCoeff = float(rect.width()) / tan(M_PI / float(effects->numberOfDesktops()));
@@ -1733,12 +1563,10 @@ void CubeEffect::setActive(bool active)
             mAddedHeightCoeff2 = sqrt(float(rect.height()) * float(rect.height()) + float(rect.width()) * float(rect.width()) + temporaryCoeff * temporaryCoeff);
         }
         m_rotationMatrix.setToIdentity();
-        effects->addRepaintFull();
     } else {
-        schedule_close = true;
-        // we have to add a repaint, to start the deactivating
-        effects->addRepaintFull();
+        animations.enqueue(AnimationState::Stop);
     }
+    effects->addRepaintFull();
 }
 
 void CubeEffect::windowInputMouseEvent(QEvent* e)
@@ -1747,7 +1575,7 @@ void CubeEffect::windowInputMouseEvent(QEvent* e)
         return;
     if (tabBoxMode)
         return;
-    if (stop)
+    if ((!animations.isEmpty() && animations.last() == AnimationState::Stop) || animationState == AnimationState::Stop)
         return;
 
     QMouseEvent *mouse = dynamic_cast< QMouseEvent* >(e);
@@ -1762,19 +1590,22 @@ void CubeEffect::windowInputMouseEvent(QEvent* e)
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
         bool repaint = false;
         // vertical movement only if there is not a rotation
-        if (!verticalRotating) {
+        if (verticalAnimationState == VerticalAnimationState::None) {
             // display height corresponds to 180*
             int deltaY = pos.y() - oldpos.y();
             float deltaVerticalDegrees = (float)deltaY / rect.height() * 180.0f;
             if (invertMouse)
-                manualVerticalAngle += deltaVerticalDegrees;
+                verticalCurrentAngle += deltaVerticalDegrees;
             else
-                manualVerticalAngle -= deltaVerticalDegrees;
+                verticalCurrentAngle -= deltaVerticalDegrees;
+            // don't get too excited
+            verticalCurrentAngle = qBound(-90.0f, verticalCurrentAngle, 90.0f);
+
             if (deltaVerticalDegrees != 0.0)
                 repaint = true;
         }
         // horizontal movement only if there is not a rotation
-        if (!rotating) {
+        if (animationState == AnimationState::None) {
             // display width corresponds to sum of angles of the polyhedron
             int deltaX = oldpos.x() - pos.x();
             float deltaDegrees = (float)deltaX / rect.width() * 360.0f;
@@ -1785,9 +1616,9 @@ void CubeEffect::windowInputMouseEvent(QEvent* e)
                     deltaDegrees = -5.0f;
             }
             if (invertMouse)
-                manualAngle += deltaDegrees;
+                currentAngle += deltaDegrees;
             else
-                manualAngle -= deltaDegrees;
+                currentAngle -= deltaDegrees;
             if (deltaDegrees != 0.0)
                 repaint = true;
         }
@@ -1816,35 +1647,19 @@ void CubeEffect::windowInputMouseEvent(QEvent* e)
             }
         }
         else if (mouse->button() == Qt::XButton1) {
-            if (!rotating && !start) {
-                rotating = true;
+            if (animations.count() < effects->numberOfDesktops()) {
                 if (invertMouse)
-                    rotationDirection = Right;
+                    animations.enqueue(AnimationState::Right);
                 else
-                    rotationDirection = Left;
-            } else {
-                if (rotations.count() < effects->numberOfDesktops()) {
-                    if (invertMouse)
-                        rotations.enqueue(Right);
-                    else
-                        rotations.enqueue(Left);
-                }
+                    animations.enqueue(AnimationState::Left);
             }
             effects->addRepaintFull();
         } else if (mouse->button() == Qt::XButton2) {
-            if (!rotating && !start) {
-                rotating = true;
+            if (animations.count() < effects->numberOfDesktops()) {
                 if (invertMouse)
-                    rotationDirection = Left;
+                    animations.enqueue(AnimationState::Left);
                 else
-                    rotationDirection = Right;
-            } else {
-                if (rotations.count() < effects->numberOfDesktops()) {
-                    if (invertMouse)
-                        rotations.enqueue(Left);
-                    else
-                        rotations.enqueue(Right);
-                }
+                    animations.enqueue(AnimationState::Right);
             }
             effects->addRepaintFull();
         } else if (mouse->button() == Qt::RightButton || (mouse->button() == Qt::LeftButton && closeOnMouseRelease)) {

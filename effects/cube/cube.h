@@ -142,16 +142,17 @@ private Q_SLOTS:
     void slotCubeCapLoaded();
     void slotWallPaperLoaded();
 private:
-    enum RotationDirection {
+    enum class AnimationState {
+        None,
+        Start,
+        Stop,
         Left,
-        Right,
+        Right
+    };
+    enum class VerticalAnimationState {
+        None,
         Upwards,
         Downwards
-    };
-    enum VerticalRotationPosition {
-        Up,
-        Normal,
-        Down
     };
     enum CubeMode {
         Cube,
@@ -170,6 +171,9 @@ private:
     void setActive(bool active);
     QImage loadCubeCap(const QString &capPath);
     QImage loadWallPaper(const QString &file);
+    void startAnimation(AnimationState state);
+    void startVerticalAnimation(VerticalAnimationState state);
+
     bool activated;
     bool cube_painting;
     bool keyboard_grab;
@@ -189,23 +193,26 @@ private:
     bool verticalRotating;
     bool desktopChangedWhileRotating;
     bool paintCaps;
-    QTimeLine timeLine;
-    QTimeLine verticalTimeLine;
-    RotationDirection rotationDirection;
-    RotationDirection verticalRotationDirection;
-    VerticalRotationPosition verticalPosition;
-    QQueue<RotationDirection> rotations;
-    QQueue<RotationDirection> verticalRotations;
     QColor backgroundColor;
     QColor capColor;
     GLTexture* wallpaper;
     bool texturedCaps;
     GLTexture* capTexture;
-    float manualAngle;
-    float manualVerticalAngle;
-    QTimeLine::CurveShape currentShape;
-    bool start;
-    bool stop;
+    //  animations
+    // Horizontal/start/stop
+    float startAngle;
+    float currentAngle;
+    int startFrontDesktop;
+    AnimationState animationState;
+    QTimeLine timeLine;
+    QQueue<AnimationState> animations;
+    // vertical
+    float verticalStartAngle;
+    float verticalCurrentAngle;
+    VerticalAnimationState verticalAnimationState;
+    QTimeLine verticalTimeLine;
+    QQueue<VerticalAnimationState> verticalAnimations;
+
     bool reflectionPainting;
     int rotationDuration;
     int activeScreen;
