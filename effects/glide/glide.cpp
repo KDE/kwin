@@ -5,6 +5,7 @@
 Copyright (C) 2007 Philip Falkner <philip.falkner@gmail.com>
 Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
 Copyright (C) 2010 Alexandre Pereira <pereira.alex@gmail.com>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,246 +21,293 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
+// own
 #include "glide.h"
+
 // KConfigSkeleton
 #include "glideconfig.h"
 
+// Qt
+#include <QMatrix4x4>
 #include <QSet>
-#include <QString>
-#include <QTimeLine>
-
-// Effect is based on fade effect by Philip Falkner
 
 namespace KWin
 {
 
-static const int IsGlideWindow = 0x22A982D4;
-
 static const QSet<QString> s_blacklist {
-    "ksmserver ksmserver",
-    "ksplashx ksplashx",
-    "ksplashsimple ksplashsimple",
-    "ksplashqml ksplashqml"
+    QStringLiteral("ksmserver ksmserver"),
+    QStringLiteral("ksplashqml ksplashqml"),
+    QStringLiteral("ksplashsimple ksplashsimple"),
+    QStringLiteral("ksplashx ksplashx")
 };
 
 GlideEffect::GlideEffect()
-    : Effect()
 {
     initConfig<GlideConfig>();
     reconfigure(ReconfigureAll);
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
 
-
-    connect(effects, &EffectsHandler::windowDataChanged, this, &GlideEffect::cancelWindowGrab);
+    connect(effects, &EffectsHandler::windowAdded, this, &GlideEffect::windowAdded);
+    connect(effects, &EffectsHandler::windowClosed, this, &GlideEffect::windowClosed);
+    connect(effects, &EffectsHandler::windowDeleted, this, &GlideEffect::windowDeleted);
+    connect(effects, &EffectsHandler::windowDataChanged, this, &GlideEffect::windowDataChanged);
 }
 
 GlideEffect::~GlideEffect() = default;
 
-bool GlideEffect::supported()
+void GlideEffect::reconfigure(ReconfigureFlags flags)
 {
-    return effects->isOpenGLCompositing() && effects->animationsSupported();
-}
+    Q_UNUSED(flags)
 
-void GlideEffect::reconfigure(ReconfigureFlags)
-{
-    // Fetch config with KConfigXT
     GlideConfig::self()->read();
-    duration = animationTime<GlideConfig>(350);
-    effect = (EffectStyle) GlideConfig::glideEffect();
-    angle = GlideConfig::glideAngle();
+    m_duration = std::chrono::milliseconds(animationTime<GlideConfig>(160));
+
+    m_inParams.edge = static_cast<RotationEdge>(GlideConfig::inRotationEdge());
+    m_inParams.angle.from = GlideConfig::inRotationAngle();
+    m_inParams.angle.to = 0.0;
+    m_inParams.distance.from = GlideConfig::inDistance();
+    m_inParams.distance.to = 0.0;
+    m_inParams.opacity.from = GlideConfig::inOpacity();
+    m_inParams.opacity.to = 1.0;
+
+    m_outParams.edge = static_cast<RotationEdge>(GlideConfig::outRotationEdge());
+    m_outParams.angle.from = 0.0;
+    m_outParams.angle.to = GlideConfig::outRotationAngle();
+    m_outParams.distance.from = 0.0;
+    m_outParams.distance.to = GlideConfig::outDistance();
+    m_outParams.opacity.from = 1.0;
+    m_outParams.opacity.to = GlideConfig::outOpacity();
 }
 
-void GlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void GlideEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
-    if (!windows.isEmpty())
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    const std::chrono::milliseconds delta(time);
+
+    auto animationIt = m_animations.begin();
+    while (animationIt != m_animations.end()) {
+        (*animationIt).update(delta);
+        ++animationIt;
+    }
+
+    data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+
     effects->prePaintScreen(data, time);
 }
 
-void GlideEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
 {
-    InfoHash::iterator info = windows.find(w);
-    if (info != windows.end()) {
+    if (m_animations.contains(w)) {
         data.setTransformed();
-        if (info->added)
-            info->timeLine->setCurrentTime(info->timeLine->currentTime() + time);
-        else if (info->closed) {
-            info->timeLine->setCurrentTime(info->timeLine->currentTime() - time);
-            if (info->deleted)
-                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
-        }
+        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
     }
 
     effects->prePaintWindow(w, data, time);
-
-    // if the window isn't to be painted, then let's make sure
-    // to track its progress
-    if (info != windows.end() && !w->isPaintingEnabled() && !effects->activeFullScreenEffect())
-        w->addRepaintFull();
 }
 
-void GlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    InfoHash::const_iterator info = windows.constFind(w);
-    if (info != windows.constEnd()) {
-        const double progress = info->timeLine->currentValue();
-        data.setRotationAxis(Qt::XAxis);
-        data.setRotationAngle(angle * (1 - progress));
-        data.multiplyOpacity(progress);
-        switch(effect) {
-        default:
-        case GlideInOut:
-            if (info->added)
-                glideIn(w, data, info);
-            else if (info->closed)
-                glideOut(w, data, info);
-            break;
-        case GlideOutIn:
-            if (info->added)
-                glideOut(w, data, info);
-            if (info->closed)
-                glideIn(w, data, info);
-            break;
-        case GlideIn: glideIn(w, data, info); break;
-        case GlideOut: glideOut(w, data, info); break;
-        }
+    auto animationIt = m_animations.constFind(w);
+    if (animationIt == m_animations.constEnd()) {
+        effects->paintWindow(w, mask, region, data);
+        return;
     }
+
+    // Perspective projection distorts objects near edges
+    // of the viewport. This is critical because distortions
+    // near edges of the viewport are not desired with this effect.
+    // To fix this, the center of the window will be moved to the origin,
+    // after applying perspective projection, the center is moved back
+    // to its "original" projected position. Overall, this is how the window
+    // will be transformed:
+    //  [move to the origin] -> [rotate] -> [translate] ->
+    //    -> [perspective projection] -> [reverse "move to the origin"]
+    const QMatrix4x4 oldProjMatrix = data.screenProjectionMatrix();
+    const QRectF windowGeo = w->geometry();
+    const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
+    QMatrix4x4 invOffsetMatrix;
+    invOffsetMatrix.translate(invOffset.x(), invOffset.y());
+    data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
+
+    // Move the center of the window to the origin.
+    const QRectF screenGeo = effects->virtualScreenGeometry();
+    const QPointF offset = screenGeo.center() - windowGeo.center();
+    data.translate(offset.x(), offset.y());
+
+    const GlideParams params = w->isDeleted() ? m_outParams : m_inParams;
+    const qreal t = (*animationIt).value();
+
+    switch (params.edge) {
+    case RotationEdge::Top:
+        data.setRotationAxis(Qt::XAxis);
+        data.setRotationOrigin(QVector3D(0, 0, 0));
+        data.setRotationAngle(-interpolate(params.angle.from, params.angle.to, t));
+        break;
+
+    case RotationEdge::Right:
+        data.setRotationAxis(Qt::YAxis);
+        data.setRotationOrigin(QVector3D(w->width(), 0, 0));
+        data.setRotationAngle(-interpolate(params.angle.from, params.angle.to, t));
+        break;
+
+    case RotationEdge::Bottom:
+        data.setRotationAxis(Qt::XAxis);
+        data.setRotationOrigin(QVector3D(0, w->height(), 0));
+        data.setRotationAngle(interpolate(params.angle.from, params.angle.to, t));
+        break;
+
+    case RotationEdge::Left:
+        data.setRotationAxis(Qt::YAxis);
+        data.setRotationOrigin(QVector3D(0, 0, 0));
+        data.setRotationAngle(interpolate(params.angle.from, params.angle.to, t));
+        break;
+
+    default:
+        // Fallback to Top.
+        data.setRotationAxis(Qt::XAxis);
+        data.setRotationOrigin(QVector3D(0, 0, 0));
+        data.setRotationAngle(-interpolate(params.angle.from, params.angle.to, t));
+        break;
+    }
+
+    data.setZTranslation(-interpolate(params.distance.from, params.distance.to, t));
+    data.multiplyOpacity(interpolate(params.opacity.from, params.opacity.to, t));
+
     effects->paintWindow(w, mask, region, data);
 }
 
-void GlideEffect::glideIn(EffectWindow* w, WindowPaintData& data, const InfoHash::const_iterator &info)
+void GlideEffect::postPaintScreen()
 {
-    const double progress = info->timeLine->currentValue();
-    data *= progress;
-    data.translate(int(w->width() / 2 * (1 - progress)), int(w->height() / 2 * (1 - progress)));
-}
-
-void GlideEffect::glideOut(EffectWindow* w, WindowPaintData& data, const InfoHash::const_iterator &info)
-{
-    const double progress = info->timeLine->currentValue();
-    data *= (2 - progress);
-    data.translate(- int(w->width() / 2 * (1 - progress)), - int(w->height() / 2 * (1 - progress)));
-}
-
-void GlideEffect::postPaintWindow(EffectWindow* w)
-{
-    InfoHash::iterator info = windows.find(w);
-    if (info != windows.end()) {
-        if (info->added && info->timeLine->currentValue() == 1.0) {
-            windows.remove(w);
-            effects->addRepaintFull();
-        } else if (info->closed && info->timeLine->currentValue() == 0.0) {
-            info->closed = false;
-            if (info->deleted) {
-                windows.remove(w);
+    auto animationIt = m_animations.begin();
+    while (animationIt != m_animations.end()) {
+        if ((*animationIt).done()) {
+            EffectWindow *w = animationIt.key();
+            if (w->isDeleted()) {
                 w->unrefWindow();
             }
-            effects->addRepaintFull();
+            animationIt = m_animations.erase(animationIt);
+        } else {
+            ++animationIt;
         }
-        if (info->added || info->closed)
-            w->addRepaintFull();
     }
-    effects->postPaintWindow(w);
-}
 
-void GlideEffect::slotWindowAdded(EffectWindow* w)
-{
-    if (!isGlideWindow(w))
-        return;
-    w->setData(IsGlideWindow, true);
-    const void *addGrab = w->data(WindowAddedGrabRole).value<void*>();
-    if (addGrab && addGrab != this)
-        return;
-    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
-
-    InfoHash::iterator it = windows.find(w);
-    WindowInfo *info = (it == windows.end()) ? &windows[w] : &it.value();
-    info->added = true;
-    info->closed = false;
-    info->deleted = false;
-    delete info->timeLine;
-    info->timeLine = new QTimeLine(duration);
-    info->timeLine->setCurveShape(QTimeLine::EaseOutCurve);
-    w->addRepaintFull();
-}
-
-void GlideEffect::slotWindowClosed(EffectWindow* w)
-{
-    if (!isGlideWindow(w))
-        return;
-    const void *closeGrab = w->data(WindowClosedGrabRole).value<void*>();
-    if (closeGrab && closeGrab != this)
-        return;
-    w->refWindow();
-    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
-
-    InfoHash::iterator it = windows.find(w);
-    WindowInfo *info = (it == windows.end()) ? &windows[w] : &it.value();
-    info->added = false;
-    info->closed = true;
-    info->deleted = true;
-    delete info->timeLine;
-    info->timeLine = new QTimeLine(duration);
-    info->timeLine->setCurveShape(QTimeLine::EaseInCurve);
-    info->timeLine->setCurrentTime(info->timeLine->duration());
-    w->addRepaintFull();
-}
-
-void GlideEffect::slotWindowDeleted(EffectWindow* w)
-{
-    windows.remove(w);
-}
-
-bool GlideEffect::isGlideWindow(EffectWindow* w)
-{
-    if (effects->activeFullScreenEffect())
-        return false;
-    if (!w->isVisible())
-        return false;
-    if (s_blacklist.contains(w->windowClass()))
-        return false;
-    if (w->data(IsGlideWindow).toBool())
-        return true;
-    if (w->hasDecoration())
-        return true;
-    if (!w->isManaged() || w->isMenu() ||  w->isNotification() || w->isDesktop() ||
-            w->isDock() ||  w->isSplash() || w->isToolbar())
-        return false;
-    return true;
+    effects->addRepaintFull();
+    effects->postPaintScreen();
 }
 
 bool GlideEffect::isActive() const
 {
-    return !windows.isEmpty();
+    return !m_animations.isEmpty();
 }
 
-void GlideEffect::cancelWindowGrab(EffectWindow *w, int grabRole)
+bool GlideEffect::supported()
 {
-    if (grabRole != WindowAddedGrabRole && grabRole != WindowClosedGrabRole) {
+    return effects->isOpenGLCompositing()
+        && effects->animationsSupported();
+}
+
+void GlideEffect::windowAdded(EffectWindow *w)
+{
+    if (effects->activeFullScreenEffect()) {
         return;
     }
-    if (!w->data(IsGlideWindow).toBool()) {
+
+    if (!isGlideWindow(w)) {
         return;
     }
-    if (w->data(grabRole).value<void*>() != this) {
-        windows.remove(w);
-        w->setData(IsGlideWindow, false);
+
+    if (!w->isVisible()) {
+        return;
     }
+
+    const void *addGrab = w->data(WindowAddedGrabRole).value<void*>();
+    if (addGrab && addGrab != this) {
+        return;
+    }
+
+    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+
+    TimeLine &timeLine = m_animations[w];
+    timeLine.reset();
+    timeLine.setDirection(TimeLine::Forward);
+    timeLine.setDuration(m_duration);
+    timeLine.setEasingCurve(QEasingCurve::InCurve);
+
+    effects->addRepaintFull();
 }
 
-GlideEffect::WindowInfo::WindowInfo()
-    : deleted(false)
-    , added(false)
-    , closed(false)
-    , timeLine(0)
+void GlideEffect::windowClosed(EffectWindow *w)
 {
+    if (effects->activeFullScreenEffect()) {
+        return;
+    }
+
+    if (!isGlideWindow(w)) {
+        return;
+    }
+
+    if (!w->isVisible()) {
+        return;
+    }
+
+    const void *closeGrab = w->data(WindowClosedGrabRole).value<void*>();
+    if (closeGrab && closeGrab != this) {
+        return;
+    }
+
+    w->refWindow();
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+
+    TimeLine &timeLine = m_animations[w];
+    timeLine.reset();
+    timeLine.setDirection(TimeLine::Forward);
+    timeLine.setDuration(m_duration);
+    timeLine.setEasingCurve(QEasingCurve::OutCurve);
+
+    effects->addRepaintFull();
 }
 
-GlideEffect::WindowInfo::~WindowInfo()
+void GlideEffect::windowDeleted(EffectWindow *w)
 {
-    delete timeLine;
+    m_animations.remove(w);
 }
 
-} // namespace
+void GlideEffect::windowDataChanged(EffectWindow *w, int role)
+{
+    if (role != WindowAddedGrabRole && role != WindowClosedGrabRole) {
+        return;
+    }
+
+    if (w->data(role).value<void*>() == this) {
+        return;
+    }
+
+    auto animationIt = m_animations.find(w);
+    if (animationIt == m_animations.end()) {
+        return;
+    }
+
+    if (w->isDeleted() && role == WindowClosedGrabRole) {
+        w->unrefWindow();
+    }
+
+    m_animations.erase(animationIt);
+}
+
+bool GlideEffect::isGlideWindow(EffectWindow *w) const
+{
+    if (s_blacklist.contains(w->windowClass())) {
+        return false;
+    }
+
+    if (w->hasDecoration()) {
+        return true;
+    }
+
+    if (!w->isManaged()) {
+        return false;
+    }
+
+    return w->isNormalWindow()
+        || w->isDialog();
+}
+
+} // namespace KWin

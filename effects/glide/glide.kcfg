@@ -8,11 +8,33 @@
         <entry name="Duration" type="UInt">
             <default>0</default>
         </entry>
-        <entry name="GlideEffect" type="Int">
+        <entry name="InRotationEdge" type="Int">
             <default>0</default>
         </entry>
-        <entry name="GlideAngle" type="Int">
-            <default>-90</default>
+        <entry name="InRotationAngle" type="Double">
+            <default>3.0</default>
+        </entry>
+        <entry name="InDistance" type="Double">
+            <default>30.0</default>
+        </entry>
+        <entry name="InOpacity" type="Double">
+            <default>0.4</default>
+            <min>0.0</min>
+            <max>1.0</max>
+        </entry>
+        <entry name="OutRotationEdge" type="Int">
+            <default>2</default>
+        </entry>
+        <entry name="OutRotationAngle" type="Double">
+            <default>3.0</default>
+        </entry>
+        <entry name="OutDistance" type="Double">
+            <default>30.0</default>
+        </entry>
+        <entry name="OutOpacity" type="Double">
+            <default>0.0</default>
+            <min>0.0</min>
+            <max>1.0</max>
         </entry>
     </group>
 </kcfg>

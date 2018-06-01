@@ -32,10 +32,10 @@ class GlideEffectConfig : public KCModule
     Q_OBJECT
 
 public:
-    explicit GlideEffectConfig(QWidget *parent = 0, const QVariantList& args = QVariantList());
-    ~GlideEffectConfig();
+    explicit GlideEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
+    ~GlideEffectConfig() override;
 
-    void save();
+    void save() override;
 
 private:
     ::Ui::GlideEffectConfig ui;

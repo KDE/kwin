@@ -55,5 +55,7 @@ void GlideEffectConfig::save()
                                          QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("glide"));
 }
+
 } // namespace KWin
+
 #include "glide_config.moc"
