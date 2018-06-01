@@ -63,9 +63,10 @@ void WaylandCursorTheme::loadTheme()
             // use sensible default
             size = 24;
         }
-        size *= output->scale();
-        connect(output, &KWayland::Server::OutputInterface::scaleChanged, this, &WaylandCursorTheme::loadTheme, Qt::UniqueConnection);
+        connect(output, &KWayland::Server::OutputInterface::pixelSizeChanged, this, &WaylandCursorTheme::loadTheme, Qt::UniqueConnection);
+        connect(output, &KWayland::Server::OutputInterface::physicalSizeChanged, this, &WaylandCursorTheme::loadTheme, Qt::UniqueConnection);
     }
+
     auto theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
                                    size, m_shm->shm());
     if (theme) {
