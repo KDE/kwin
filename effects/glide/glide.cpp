@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "glideconfig.h"
 
+#include <QSet>
+#include <QString>
 #include <QTimeLine>
 
 // Effect is based on fade effect by Philip Falkner
@@ -32,6 +34,13 @@ namespace KWin
 {
 
 static const int IsGlideWindow = 0x22A982D4;
+
+static const QSet<QString> s_blacklist {
+    "ksmserver ksmserver",
+    "ksplashx ksplashx",
+    "ksplashsimple ksplashsimple",
+    "ksplashqml ksplashqml"
+};
 
 GlideEffect::GlideEffect()
     : Effect()
@@ -208,6 +217,8 @@ bool GlideEffect::isGlideWindow(EffectWindow* w)
     if (effects->activeFullScreenEffect())
         return false;
     if (!w->isVisible())
+        return false;
+    if (s_blacklist.contains(w->windowClass()))
         return false;
     if (w->data(IsGlideWindow).toBool())
         return true;
