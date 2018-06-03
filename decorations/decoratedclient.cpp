@@ -123,11 +123,17 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
                 this->m_toolTipFallAsleep.setRemainingTime(fallAsleepDelay);
 
                 QToolTip::showText(Cursor::pos(), this->m_toolTipText);
+                m_toolTipShowing = true;
             }
     );
 }
 
-DecoratedClientImpl::~DecoratedClientImpl() = default;
+DecoratedClientImpl::~DecoratedClientImpl()
+{
+    if (m_toolTipShowing) {
+        requestHideToolTip();
+    }
+}
 
 void DecoratedClientImpl::signalShadeChange() {
     emit decoratedClient()->shadedChanged(m_client->isShade());
@@ -224,6 +230,7 @@ void DecoratedClientImpl::requestHideToolTip()
 {
     m_toolTipWakeUp.stop();
     QToolTip::hideText();
+    m_toolTipShowing = false;
 }
 
 void DecoratedClientImpl::requestShowWindowMenu()

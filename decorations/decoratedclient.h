@@ -115,6 +115,7 @@ private:
     QString m_toolTipText;
     QTimer m_toolTipWakeUp;
     QDeadlineTimer m_toolTipFallAsleep;
+    bool m_toolTipShowing = false;
 };
 
 }
