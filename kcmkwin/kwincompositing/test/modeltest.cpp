@@ -40,11 +40,11 @@
 ****************************************************************************/
 
 
-#include <QtGui/QtGui>
+#include <QtGui>
 
 #include "modeltest.h"
 
-#include <QtTest/QtTest>
+#include <QtTest>
 
 /*!
     Connect to all of the models signals.  Whenever anything happens recheck everything.

@@ -31,9 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPair>
 #include <QSet>
 #include <QRect>
-#include <QtGui/QRegion>
-#include <QtGui/QVector2D>
-#include <QtGui/QVector3D>
+#include <QRegion>
+#include <QVector2D>
+#include <QVector3D>
 
 #include <QVector>
 #include <QLoggingCategory>

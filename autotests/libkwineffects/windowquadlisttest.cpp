@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include <kwineffects.h>
-#include <QtTest/QTest>
+#include <QTest>
 
 Q_DECLARE_METATYPE(KWin::WindowQuadList)
 

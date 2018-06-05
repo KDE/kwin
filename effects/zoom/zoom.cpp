@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <QApplication>
 #include <QStyle>
-#include <QtGui/QVector2D>
-#include <QtDBus/QDBusConnection>
+#include <QVector2D>
+#include <QDBusConnection>
 #include <kstandardaction.h>
 #include <KConfigGroup>
 #include <KGlobalAccel>

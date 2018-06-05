@@ -23,7 +23,7 @@
 #include <QVBoxLayout>
 #include <KLocalizedString>
 #include <kaboutdata.h>
-#include <QtDBus/QtDBus>
+#include <QtDBus>
 #include <QX11Info>
 
 #include "ruleslist.h"

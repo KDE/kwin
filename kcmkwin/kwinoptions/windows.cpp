@@ -29,7 +29,7 @@
 #include <QHBoxLayout>
 #include <QFormLayout>
 #include <QDesktopWidget>
-#include <QtDBus/QtDBus>
+#include <QtDBus>
 #include <QGroupBox>
 
 #include <KConfig>

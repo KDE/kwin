@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../xcbutils.h"
 #include "mock_workspace.h"
 // Qt
-#include <QtTest/QtTest>
+#include <QtTest>
 // system
 #include <unistd.h>
 

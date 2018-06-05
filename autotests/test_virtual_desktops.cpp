@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 
 #include <QAction>
-#include <QtTest/QtTest>
+#include <QtTest>
 
 namespace KWin {
 

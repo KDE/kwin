@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SHADOW_H
 
 #include <QObject>
-#include <QtGui/QPixmap>
+#include <QPixmap>
 #include <kwineffects.h>
 #include <qvarlengtharray.h>
 

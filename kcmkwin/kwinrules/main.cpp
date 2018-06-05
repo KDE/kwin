@@ -21,7 +21,7 @@
 #include <kconfig.h>
 #include <KLocalizedString>
 #include <kwindowsystem.h>
-#include <QtDBus/QtDBus>
+#include <QtDBus>
 #include <QX11Info>
 #include <X11/Xlib.h>
 #include <fixx11h.h>

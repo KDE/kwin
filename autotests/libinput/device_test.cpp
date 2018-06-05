@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KSharedConfig>
 
-#include <QtTest/QtTest>
+#include <QtTest>
 
 #include <linux/input.h>
 

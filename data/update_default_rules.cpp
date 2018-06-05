@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <QtDBus/QtDBus>
-#include <QtCore/QStandardPaths>
+#include <QtDBus>
+#include <QStandardPaths>
 #include <QDebug>
 
 int main( int argc, char* argv[] )

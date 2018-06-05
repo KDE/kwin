@@ -42,7 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xfixes.h>
 
 #include <QDebug>
-#include <QtGui/QPainter>
+#include <QPainter>
 #include <qmath.h>
 
 namespace KWin

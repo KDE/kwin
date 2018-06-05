@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfig>
 #include <KConfigGroup>
 // Qt
-#include <QtTest/QtTest>
+#include <QtTest>
 #include <QStringList>
 Q_DECLARE_METATYPE(KWin::CompositingType)
 Q_DECLARE_METATYPE(KWin::LoadEffectFlag)

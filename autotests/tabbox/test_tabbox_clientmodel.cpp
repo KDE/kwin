@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "clientmodel.h"
 #include "../testutils.h"
 
-#include <QtTest/QtTest>
+#include <QtTest>
 #include <QX11Info>
 using namespace KWin;
 

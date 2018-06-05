@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QSize>
 #include <QStyle>
-#include <QtCore/QStandardPaths>
-#include <QtGui/QPainter>
+#include <QStandardPaths>
+#include <QPainter>
 // KDE
 #include <KConfigGroup>
 #include <KSharedConfig>

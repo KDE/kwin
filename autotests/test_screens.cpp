@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // frameworks
 #include <KConfigGroup>
 // Qt
-#include <QtTest/QtTest>
+#include <QtTest>
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 

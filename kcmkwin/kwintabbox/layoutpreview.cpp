@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopWidget>
 #include <QQmlEngine>
 #include <QQmlContext>
-#include <QtCore/QStandardPaths>
+#include <QStandardPaths>
 #include <KConfigGroup>
 #include <KDesktopFile>
 #include <KLocalizedString>

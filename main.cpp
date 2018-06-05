@@ -48,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <qcommandlineparser.h>
 #include <QQuickWindow>
 #include <QStandardPaths>
-#include <QtDBus/QtDBus>
+#include <QtDBus>
 
 // system
 #ifdef HAVE_UNISTD_H

@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 #include <KPluginInfo>
-#include <QtDBus/QtDBus>
+#include <QtDBus>
 
 K_PLUGIN_FACTORY(KWinScreenEdgesConfigFactory, registerPlugin<KWin::KWinScreenEdgesConfig>();)
 

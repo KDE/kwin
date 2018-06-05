@@ -36,9 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KPackage/PackageLoader>
 // Qt
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusMessage>
-#include <QtDBus/QDBusPendingCallWatcher>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCallWatcher>
 #include <QDebug>
 #include <QFutureWatcher>
 #include <QSettings>
@@ -49,7 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlExpression>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValue>
-#include <QtCore/QStandardPaths>
+#include <QStandardPaths>
 #include <QQuickWindow>
 
 QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)

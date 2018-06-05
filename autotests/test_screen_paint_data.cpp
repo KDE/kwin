@@ -21,10 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 
 #include <QMatrix4x4>
-#include <QtGui/QVector2D>
+#include <QVector2D>
 #include <QVector3D>
 
-#include <QtTest/QtTest>
+#include <QtTest>
 
 using namespace KWin;
 

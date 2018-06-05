@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Frameworks
 #include <KConfigGroup>
 // Qt
-#include <QtTest/QtTest>
+#include <QtTest>
 #include <QX11Info>
 // xcb
 #include <xcb/xcb.h>

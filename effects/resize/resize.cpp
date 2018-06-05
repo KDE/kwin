@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KColorScheme>
 
-#include <QtGui/QVector2D>
+#include <QVector2D>
 #include <QPainter>
 
 namespace KWin

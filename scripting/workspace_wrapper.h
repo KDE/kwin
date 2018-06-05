@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QStringList>
 #include <QRect>
-#include <QtQml/QQmlListProperty>
+#include <QQmlListProperty>
 #include <kwinglobals.h>
 
 namespace KWin

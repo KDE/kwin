@@ -23,9 +23,9 @@
 #include <QFileDialog>
 #include <QStringList>
 #include <QStandardPaths>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusMessage>
-#include <QtDBus/QDBusPendingCall>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCall>
 
 #include <KAboutData>
 #include <KLocalizedString>

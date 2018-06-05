@@ -37,7 +37,7 @@
 #include <QDebug>
 #include <kcolorscheme.h>
 #include <kseparator.h>
-#include <QtDBus/QtDBus>
+#include <QtDBus>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>

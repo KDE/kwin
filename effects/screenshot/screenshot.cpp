@@ -24,11 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinxrenderutils.h>
 #include <QtConcurrentRun>
 #include <QDataStream>
-#include <QtCore/QTemporaryFile>
-#include <QtCore/QDir>
-#include <QtDBus/QDBusConnection>
+#include <QTemporaryFile>
+#include <QDir>
+#include <QDBusConnection>
 #include <QVarLengthArray>
-#include <QtGui/QPainter>
+#include <QPainter>
 #include <QMatrix4x4>
 #include <xcb/xcb_image.h>
 

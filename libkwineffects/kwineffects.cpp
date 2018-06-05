@@ -30,10 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVariant>
 #include <QList>
 #include <QTimeLine>
-#include <QtGui/QFontMetrics>
-#include <QtGui/QPainter>
-#include <QtGui/QPixmap>
-#include <QtGui/QVector2D>
+#include <QFontMetrics>
+#include <QPainter>
+#include <QPixmap>
+#include <QVector2D>
 #include <QGraphicsRotation>
 #include <QGraphicsScale>
 

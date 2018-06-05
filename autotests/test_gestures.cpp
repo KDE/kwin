@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "../gestures.h"
 
-#include <QtTest/QTest>
+#include <QTest>
 #include <QSignalSpy>
 
 using namespace KWin;

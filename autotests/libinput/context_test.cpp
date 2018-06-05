@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mock_udev.h"
 #include "../../libinput/context.h"
 #include "../../udev.h"
-#include <QtTest/QtTest>
+#include <QtTest>
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtCriticalMsg)
 
 using namespace KWin;

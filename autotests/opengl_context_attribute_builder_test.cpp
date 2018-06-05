@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "../abstract_opengl_context_attribute_builder.h"
 #include "../egl_context_attribute_builder.h"
-#include <QtTest/QtTest>
+#include <QtTest>
 #include <epoxy/egl.h>
 
 #include <kwinconfig.h>

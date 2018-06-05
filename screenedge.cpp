@@ -53,8 +53,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTimer>
 #include <QVector>
 #include <QTextStream>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusPendingCall>
+#include <QDBusInterface>
+#include <QDBusPendingCall>
 #include <QWidget>
 
 namespace KWin {

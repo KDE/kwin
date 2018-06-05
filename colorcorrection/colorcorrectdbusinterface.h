@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_NIGHTCOLOR_DBUS_INTERFACE_H
 
 #include <QObject>
-#include <QtDBus/QtDBus>
+#include <QtDBus>
 
 namespace KWin
 {

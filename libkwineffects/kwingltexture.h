@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRegion>
 #include <QSharedPointer>
 #include <QExplicitlySharedDataPointer>
-#include <QtGui/QMatrix4x4>
+#include <QMatrix4x4>
 
 #include <epoxy/gl.h>
 

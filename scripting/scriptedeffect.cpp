@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValueIterator>
-#include <QtCore/QStandardPaths>
+#include <QStandardPaths>
 
 typedef KWin::EffectWindow* KEffectWindowRef;
 

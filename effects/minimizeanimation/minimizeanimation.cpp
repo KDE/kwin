@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "minimizeanimation.h"
 #include <QTimeLine>
-#include <QtGui/QVector2D>
+#include <QVector2D>
 
 namespace KWin
 {

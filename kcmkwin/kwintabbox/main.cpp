@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwin_effects_interface.h>
 
 // Qt
-#include <QtDBus/QtDBus>
+#include <QtDBus>
 #include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>

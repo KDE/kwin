@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../libinput/device.h"
 #include "../input_event.h"
 
-#include <QtTest/QtTest>
+#include <QtTest>
 
 Q_DECLARE_METATYPE(KWin::SwitchEvent::State);
 
