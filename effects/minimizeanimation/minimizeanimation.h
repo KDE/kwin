@@ -51,10 +51,10 @@ public:
 
     static bool supported();
 
-public Q_SLOTS:
-    void slotWindowDeleted(KWin::EffectWindow *w);
-    void slotWindowMinimized(KWin::EffectWindow *w);
-    void slotWindowUnminimized(KWin::EffectWindow *w);
+private Q_SLOTS:
+    void windowDeleted(EffectWindow *w);
+    void windowMinimized(EffectWindow *w);
+    void windowUnminimized(EffectWindow *w);
 
 private:
     QHash< EffectWindow*, QTimeLine* > mTimeLineWindows;

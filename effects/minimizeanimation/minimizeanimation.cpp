@@ -28,9 +28,9 @@ namespace KWin
 MinimizeAnimationEffect::MinimizeAnimationEffect()
 {
     mActiveAnimations = 0;
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowMinimized(KWin::EffectWindow*)), this, SLOT(slotWindowMinimized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), this, SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
+    connect(effects, &EffectsHandler::windowDeleted, this, &MinimizeAnimationEffect::windowDeleted);
+    connect(effects, &EffectsHandler::windowMinimized, this, &MinimizeAnimationEffect::windowMinimized);
+    connect(effects, &EffectsHandler::windowUnminimized, this, &MinimizeAnimationEffect::windowUnminimized);
 }
 
 bool MinimizeAnimationEffect::supported()
@@ -116,12 +116,12 @@ void MinimizeAnimationEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void MinimizeAnimationEffect::slotWindowDeleted(EffectWindow* w)
+void MinimizeAnimationEffect::windowDeleted(EffectWindow *w)
 {
     delete mTimeLineWindows.take(w);
 }
 
-void MinimizeAnimationEffect::slotWindowMinimized(EffectWindow* w)
+void MinimizeAnimationEffect::windowMinimized(EffectWindow *w)
 {
     if (effects->activeFullScreenEffect())
         return;
@@ -134,7 +134,7 @@ void MinimizeAnimationEffect::slotWindowMinimized(EffectWindow* w)
     }
 }
 
-void MinimizeAnimationEffect::slotWindowUnminimized(EffectWindow* w)
+void MinimizeAnimationEffect::windowUnminimized(EffectWindow *w)
 {
     if (effects->activeFullScreenEffect())
         return;
