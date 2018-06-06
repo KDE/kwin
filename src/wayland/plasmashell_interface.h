@@ -141,7 +141,7 @@ public:
     /**
      * @returns true if this window doesn't want to be listed
      * in a window switcher
-     * @since 5.45
+     * @since 5.47
      **/
     bool skipSwitcher() const;
 
