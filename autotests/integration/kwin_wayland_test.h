@@ -38,6 +38,7 @@ class PlasmaWindowManagement;
 class PointerConstraints;
 class Seat;
 class ServerSideDecorationManager;
+class ShadowManager;
 class Shell;
 class ShellSurface;
 class ShmPool;
@@ -85,7 +86,8 @@ enum class AdditionalWaylandInterface {
     WindowManagement = 1 << 3,
     PointerConstraints = 1 << 4,
     IdleInhibition = 1 << 5,
-    AppMenu = 1 << 6
+    AppMenu = 1 << 6,
+    ShadowManager = 1 << 7
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -106,6 +108,7 @@ void destroyWaylandConnection();
 
 KWayland::Client::ConnectionThread *waylandConnection();
 KWayland::Client::Compositor *waylandCompositor();
+KWayland::Client::ShadowManager *waylandShadowManager();
 KWayland::Client::Shell *waylandShell();
 KWayland::Client::ShmPool *waylandShmPool();
 KWayland::Client::Seat *waylandSeat();

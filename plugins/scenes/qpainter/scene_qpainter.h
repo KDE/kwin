@@ -123,23 +123,17 @@ class SceneQPainterShadow : public Shadow
 public:
     SceneQPainterShadow(Toplevel* toplevel);
     virtual ~SceneQPainterShadow();
-    using Shadow::ShadowElements;
-    using Shadow::ShadowElementTop;
-    using Shadow::ShadowElementTopRight;
-    using Shadow::ShadowElementRight;
-    using Shadow::ShadowElementBottomRight;
-    using Shadow::ShadowElementBottom;
-    using Shadow::ShadowElementBottomLeft;
-    using Shadow::ShadowElementLeft;
-    using Shadow::ShadowElementTopLeft;
-    using Shadow::ShadowElementsCount;
-    using Shadow::shadowPixmap;
-    using Shadow::topOffset;
-    using Shadow::leftOffset;
-    using Shadow::rightOffset;
-    using Shadow::bottomOffset;
+
+    QImage &shadowTexture() {
+        return m_texture;
+    }
+
 protected:
+    virtual void buildQuads() override;
     virtual bool prepareBackend() override;
+
+private:
+    QImage m_texture;
 };
 
 class SceneQPainterDecorationRenderer : public Decoration::Renderer

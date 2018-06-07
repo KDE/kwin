@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
+#include <KWayland/Client/shadow.h>
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/output.h>
@@ -62,6 +63,7 @@ static struct {
     EventQueue *queue = nullptr;
     Compositor *compositor = nullptr;
     ServerSideDecorationManager *decoration = nullptr;
+    ShadowManager *shadowManager = nullptr;
     Shell *shell = nullptr;
     XdgShell *xdgShellV5 = nullptr;
     XdgShell *xdgShellV6 = nullptr;
@@ -163,6 +165,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::ShadowManager)) {
+        s_waylandConnection.shadowManager = registry->createShadowManager(registry->interface(Registry::Interface::Shadow).name,
+                                                                          registry->interface(Registry::Interface::Shadow).version);
+        if (!s_waylandConnection.shadowManager->isValid()) {
+            return false;
+        }
+    }
     if (flags.testFlag(AdditionalWaylandInterface::Decoration)) {
         s_waylandConnection.decoration = registry->createServerSideDecorationManager(registry->interface(Registry::Interface::ServerSideDecorationManager).name,
                                                                                     registry->interface(Registry::Interface::ServerSideDecorationManager).version);
@@ -230,6 +239,8 @@ void destroyWaylandConnection()
     s_waylandConnection.xdgShellV6 = nullptr;
     delete s_waylandConnection.shell;
     s_waylandConnection.shell = nullptr;
+    delete s_waylandConnection.shadowManager;
+    s_waylandConnection.shadowManager = nullptr;
     delete s_waylandConnection.idleInhibit;
     s_waylandConnection.idleInhibit = nullptr;
     delete s_waylandConnection.shm;
@@ -262,6 +273,11 @@ ConnectionThread *waylandConnection()
 Compositor *waylandCompositor()
 {
     return s_waylandConnection.compositor;
+}
+
+ShadowManager *waylandShadowManager()
+{
+    return s_waylandConnection.shadowManager;
 }
 
 Shell *waylandShell()
