@@ -1291,23 +1291,31 @@ void AbstractClient::updateCursor()
     Position m = moveResizePointerMode();
     if (!isResizable() || isShade())
         m = PositionCenter;
-    Qt::CursorShape c = Qt::ArrowCursor;
+    CursorShape c = Qt::ArrowCursor;
     switch(m) {
     case PositionTopLeft:
+        c = KWin::ExtendedCursor::SizeNorthWest;
+        break;
     case PositionBottomRight:
-        c = Qt::SizeFDiagCursor;
+        c = KWin::ExtendedCursor::SizeSouthEast;
         break;
     case PositionBottomLeft:
+        c = KWin::ExtendedCursor::SizeSouthWest;
+        break;
     case PositionTopRight:
-        c = Qt::SizeBDiagCursor;
+        c = KWin::ExtendedCursor::SizeNorthEast;
         break;
     case PositionTop:
+        c = KWin::ExtendedCursor::SizeNorth;
+        break;
     case PositionBottom:
-        c = Qt::SizeVerCursor;
+        c = KWin::ExtendedCursor::SizeSouth;
         break;
     case PositionLeft:
+        c = KWin::ExtendedCursor::SizeWest;
+        break;
     case PositionRight:
-        c = Qt::SizeHorCursor;
+        c = KWin::ExtendedCursor::SizeEast;
         break;
     default:
         if (isMoveResize())

@@ -365,28 +365,28 @@ void DecorationInputTest::testHover()
 
     quint32 timestamp = 1;
     MOTION(QPoint(c->geometry().center().x(), c->clientPos().y() / 2));
-    QCOMPARE(c->cursor(), Qt::ArrowCursor);
+    QCOMPARE(c->cursor(), CursorShape(Qt::ArrowCursor));
 
-    MOTION(QPoint(20, 0));
-    QCOMPARE(c->cursor(), Qt::SizeFDiagCursor);
+    MOTION(QPoint(c->geometry().x(), 0));
+    QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeNorthWest));
     MOTION(QPoint(c->geometry().x() + c->geometry().width() / 2, 0));
-    QCOMPARE(c->cursor(), Qt::SizeVerCursor);
+    QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeNorth));
     MOTION(QPoint(c->geometry().x() + c->geometry().width() - 1, 0));
-    QCOMPARE(c->cursor(), Qt::SizeBDiagCursor);
+    QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeNorthEast));
     MOTION(QPoint(c->geometry().x() + c->geometry().width() - 1, c->height() / 2));
-    QCOMPARE(c->cursor(), Qt::SizeHorCursor);
+    QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeEast));
     MOTION(QPoint(c->geometry().x() + c->geometry().width() - 1, c->height() - 1));
-    QCOMPARE(c->cursor(), Qt::SizeFDiagCursor);
+    QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeSouthEast));
     MOTION(QPoint(c->geometry().x() + c->geometry().width() / 2, c->height() - 1));
-    QCOMPARE(c->cursor(), Qt::SizeVerCursor);
+    QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeSouth));
     MOTION(QPoint(c->geometry().x(), c->height() - 1));
-    QCOMPARE(c->cursor(), Qt::SizeBDiagCursor);
+    QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeSouthWest));
     MOTION(QPoint(c->geometry().x(), c->height() / 2));
-    QCOMPARE(c->cursor(), Qt::SizeHorCursor);
+    QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeWest));
 
     MOTION(c->geometry().center());
     QEXPECT_FAIL("", "Cursor not set back on leave", Continue);
-    QCOMPARE(c->cursor(), Qt::ArrowCursor);
+    QCOMPARE(c->cursor(), CursorShape(Qt::ArrowCursor));
 }
 
 void DecorationInputTest::testPressToMove_data()
@@ -425,7 +425,7 @@ void DecorationInputTest::testPressToMove()
 
     quint32 timestamp = 1;
     MOTION(QPoint(c->geometry().center().x(), c->y() + c->clientPos().y() / 2));
-    QCOMPARE(c->cursor(), Qt::ArrowCursor);
+    QCOMPARE(c->cursor(), CursorShape(Qt::ArrowCursor));
 
     PRESS;
     QVERIFY(!c->isMove());

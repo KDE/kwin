@@ -125,7 +125,7 @@ void Cursor::setPos(int x, int y)
     Cursor::setPos(QPoint(x, y));
 }
 
-xcb_cursor_t Cursor::getX11Cursor(Qt::CursorShape shape)
+xcb_cursor_t Cursor::getX11Cursor(CursorShape shape)
 {
     Q_UNUSED(shape)
     return XCB_CURSOR_NONE;
@@ -137,7 +137,7 @@ xcb_cursor_t Cursor::getX11Cursor(const QByteArray &name)
     return XCB_CURSOR_NONE;
 }
 
-xcb_cursor_t Cursor::x11Cursor(Qt::CursorShape shape)
+xcb_cursor_t Cursor::x11Cursor(CursorShape shape)
 {
     return s_self->getX11Cursor(shape);
 }
@@ -299,7 +299,46 @@ QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
                                                 QByteArrayLiteral("1081e37283d90000800003c07f3ef6bf"),
                                                 QByteArrayLiteral("6407b0e94181790501fd1e167b474872"),
                                                 QByteArrayLiteral("b66166c04f8c3109214a4fbd64a50fc8")}},
-        {QByteArrayLiteral("dnd-move"),       {QByteArrayLiteral("move")}}
+        {QByteArrayLiteral("dnd-move"),       {QByteArrayLiteral("move")}},
+        {QByteArrayLiteral("sw-resize"),        {QByteArrayLiteral("size_bdiag"),
+                                                QByteArrayLiteral("fcf1c3c7cd4491d801f1e1c78f100000"),
+                                                QByteArrayLiteral("fd_double_arrow"),
+                                                QByteArrayLiteral("bottom_left_corner")}},
+        {QByteArrayLiteral("se-resize"),         {QByteArrayLiteral("size_fdiag"),
+                                                QByteArrayLiteral("c7088f0f3e6c8088236ef8e1e3e70000"),
+                                                QByteArrayLiteral("bd_double_arrow"),
+                                                QByteArrayLiteral("bottom_right_corner")}},
+        {QByteArrayLiteral("ne-resize"),         {QByteArrayLiteral("size_bdiag"),
+                                                QByteArrayLiteral("fcf1c3c7cd4491d801f1e1c78f100000"),
+                                                QByteArrayLiteral("fd_double_arrow"),
+                                                QByteArrayLiteral("top_right_corner")}},
+        {QByteArrayLiteral("nw-resize"),         {QByteArrayLiteral("size_fdiag"),
+                                                QByteArrayLiteral("c7088f0f3e6c8088236ef8e1e3e70000"),
+                                                QByteArrayLiteral("bd_double_arrow"),
+                                                QByteArrayLiteral("top_left_corner")}},
+        {QByteArrayLiteral("n-resize"),       {QByteArrayLiteral("size_ver"),
+                                                QByteArrayLiteral("00008160000006810000408080010102"),
+                                                QByteArrayLiteral("sb_v_double_arrow"),
+                                                QByteArrayLiteral("v_double_arrow"),
+                                                QByteArrayLiteral("col-resize"),
+                                               QByteArrayLiteral("top_side")}},
+        {QByteArrayLiteral("e-resize"),       {QByteArrayLiteral("size_hor"),
+                                                QByteArrayLiteral("028006030e0e7ebffc7f7070c0600140"),
+                                                QByteArrayLiteral("sb_h_double_arrow"),
+                                                QByteArrayLiteral("h_double_arrow"),
+                                                QByteArrayLiteral("row-resize"),
+                                                QByteArrayLiteral("left_side")}},
+        {QByteArrayLiteral("s-resize"),       {QByteArrayLiteral("size_ver"),
+                                                QByteArrayLiteral("00008160000006810000408080010102"),
+                                                QByteArrayLiteral("sb_v_double_arrow"),
+                                                QByteArrayLiteral("v_double_arrow"),
+                                                QByteArrayLiteral("col-resize"),
+                                                QByteArrayLiteral("bottom_side")}},
+         {QByteArrayLiteral("w-resize"),       {QByteArrayLiteral("size_hor"),
+                                                QByteArrayLiteral("028006030e0e7ebffc7f7070c0600140"),
+                                                QByteArrayLiteral("sb_h_double_arrow"),
+                                                QByteArrayLiteral("h_double_arrow"),
+                                                QByteArrayLiteral("right_side")}}
     };
     auto it = alternatives.find(name);
     if (it != alternatives.end()) {
@@ -308,51 +347,67 @@ QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
     return QVector<QByteArray>();
 }
 
-QByteArray Cursor::cursorName(Qt::CursorShape shape) const
+QByteArray CursorShape::name() const
 {
-    switch (shape) {
+    switch (m_shape) {
     case Qt::ArrowCursor:
-        return QByteArray("left_ptr");
+        return QByteArrayLiteral("left_ptr");
     case Qt::UpArrowCursor:
-        return QByteArray("up_arrow");
+        return QByteArrayLiteral("up_arrow");
     case Qt::CrossCursor:
-        return QByteArray("cross");
+        return QByteArrayLiteral("cross");
     case Qt::WaitCursor:
-        return QByteArray("wait");
+        return QByteArrayLiteral("wait");
     case Qt::IBeamCursor:
-        return QByteArray("ibeam");
+        return QByteArrayLiteral("ibeam");
     case Qt::SizeVerCursor:
-        return QByteArray("size_ver");
+        return QByteArrayLiteral("size_ver");
     case Qt::SizeHorCursor:
-        return QByteArray("size_hor");
+        return QByteArrayLiteral("size_hor");
     case Qt::SizeBDiagCursor:
-        return QByteArray("size_bdiag");
+        return QByteArrayLiteral("size_bdiag");
     case Qt::SizeFDiagCursor:
-        return QByteArray("size_fdiag");
+        return QByteArrayLiteral("size_fdiag");
     case Qt::SizeAllCursor:
-        return QByteArray("size_all");
+        return QByteArrayLiteral("size_all");
     case Qt::SplitVCursor:
-        return QByteArray("split_v");
+        return QByteArrayLiteral("split_v");
     case Qt::SplitHCursor:
-        return QByteArray("split_h");
+        return QByteArrayLiteral("split_h");
     case Qt::PointingHandCursor:
-        return QByteArray("pointing_hand");
+        return QByteArrayLiteral("pointing_hand");
     case Qt::ForbiddenCursor:
-        return QByteArray("forbidden");
+        return QByteArrayLiteral("forbidden");
     case Qt::OpenHandCursor:
-        return QByteArray("openhand");
+        return QByteArrayLiteral("openhand");
     case Qt::ClosedHandCursor:
-        return QByteArray("closedhand");
+        return QByteArrayLiteral("closedhand");
     case Qt::WhatsThisCursor:
-        return QByteArray("whats_this");
+        return QByteArrayLiteral("whats_this");
     case Qt::BusyCursor:
-        return QByteArray("left_ptr_watch");
+        return QByteArrayLiteral("left_ptr_watch");
     case Qt::DragMoveCursor:
-        return QByteArray("dnd-move");
+        return QByteArrayLiteral("dnd-move");
     case Qt::DragCopyCursor:
-        return QByteArray("dnd-copy");
+        return QByteArrayLiteral("dnd-copy");
     case Qt::DragLinkCursor:
-        return QByteArray("dnd-link");
+        return QByteArrayLiteral("dnd-link");
+    case KWin::ExtendedCursor::SizeNorthEast:
+       return QByteArrayLiteral("ne-resize");
+    case KWin::ExtendedCursor::SizeNorth:
+        return QByteArrayLiteral("n-resize");
+    case KWin::ExtendedCursor::SizeNorthWest:
+        return QByteArrayLiteral("nw-resize");
+    case KWin::ExtendedCursor::SizeEast:
+        return QByteArrayLiteral("e-resize");
+    case KWin::ExtendedCursor::SizeWest:
+        return QByteArrayLiteral("w-resize");
+    case KWin::ExtendedCursor::SizeSouthEast:
+        return QByteArrayLiteral("se-resize");
+    case KWin::ExtendedCursor::SizeSouth:
+        return QByteArrayLiteral("s-resize");
+    case KWin::ExtendedCursor::SizeSouthWest:
+        return QByteArrayLiteral("sw-resize");
     default:
         return QByteArray();
     }

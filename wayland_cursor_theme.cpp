@@ -90,9 +90,9 @@ void WaylandCursorTheme::destroyTheme()
     m_theme = nullptr;
 }
 
-wl_cursor_image *WaylandCursorTheme::get(Qt::CursorShape shape)
+wl_cursor_image *WaylandCursorTheme::get(CursorShape shape)
 {
-    return get(Cursor::self()->cursorName(shape));
+    return get(shape.name());
 }
 
 wl_cursor_image *WaylandCursorTheme::get(const QByteArray &name)

@@ -46,7 +46,7 @@ public:
     void notifyCursorChanged();
 
 protected:
-    virtual xcb_cursor_t getX11Cursor(Qt::CursorShape shape);
+    virtual xcb_cursor_t getX11Cursor(CursorShape shape);
     xcb_cursor_t getX11Cursor(const QByteArray &name) override;
     virtual void doSetPos();
     virtual void doGetPos();

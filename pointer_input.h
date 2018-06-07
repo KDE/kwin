@@ -39,11 +39,11 @@ class SurfaceInterface;
 
 namespace KWin
 {
-
 class CursorImage;
 class InputRedirection;
 class Toplevel;
 class WaylandCursorTheme;
+class CursorShape;
 
 namespace Decoration
 {
@@ -203,7 +203,7 @@ private:
         QImage image;
         QPoint hotSpot;
     };
-    void loadThemeCursor(Qt::CursorShape shape, Image *image);
+    void loadThemeCursor(CursorShape shape, Image *image);
     void loadThemeCursor(const QByteArray &shape, Image *image);
     template <typename T>
     void loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Image *image);
@@ -235,7 +235,7 @@ private:
     Image m_fallbackCursor;
     Image m_moveResizeCursor;
     Image m_windowSelectionCursor;
-    QHash<Qt::CursorShape, Image> m_cursors;
+    QHash<CursorShape, Image> m_cursors;
     QHash<QByteArray, Image> m_cursorsByName;
     QElapsedTimer m_surfaceRenderedTimer;
     struct {

@@ -154,7 +154,7 @@ Client::Client()
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &Client::updateCaption);
     connect(options, &Options::condensedTitleChanged, this, &Client::updateCaption);
 
-    connect(this, &Client::moveResizeCursorChanged, this, [this] (Qt::CursorShape cursor) {
+    connect(this, &Client::moveResizeCursorChanged, this, [this] (CursorShape cursor) {
         xcb_cursor_t nativeCursor = Cursor::x11Cursor(cursor);
         m_frame.defineCursor(nativeCursor);
         if (m_decoInputExtent.isValid())

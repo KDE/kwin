@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "rules.h"
 #include "tabgroup.h"
+#include "cursor.h"
 
 #include <memory>
 
@@ -602,7 +603,7 @@ public:
     /**
      * Cursor shape for move/resize mode.
      **/
-    Qt::CursorShape cursor() const {
+    CursorShape cursor() const {
         return m_moveResize.cursor;
     }
 
@@ -747,7 +748,7 @@ Q_SIGNALS:
     void modalChanged();
     void quickTileModeChanged();
     void moveResizedChanged();
-    void moveResizeCursorChanged(Qt::CursorShape);
+    void moveResizeCursorChanged(CursorShape);
     void clientStartUserMovedResized(KWin::AbstractClient*);
     void clientStepUserMovedResized(KWin::AbstractClient *, const QRect&);
     void clientFinishUserMovedResized(KWin::AbstractClient*);
@@ -1122,7 +1123,7 @@ private:
         QRect geometry;
         Position pointer = PositionCenter;
         bool buttonDown = false;
-        Qt::CursorShape cursor = Qt::ArrowCursor;
+        CursorShape cursor = Qt::ArrowCursor;
         int startScreen = 0;
         QTimer *delayedTimer = nullptr;
     } m_moveResize;

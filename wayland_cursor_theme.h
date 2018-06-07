@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwin_export.h>
 
 #include <QObject>
+#include "cursor.h"
 
 struct wl_cursor_image;
 struct wl_cursor_theme;
@@ -45,7 +46,7 @@ public:
     explicit WaylandCursorTheme(KWayland::Client::ShmPool *shm, QObject *parent = nullptr);
     virtual ~WaylandCursorTheme();
 
-    wl_cursor_image *get(Qt::CursorShape shape);
+    wl_cursor_image *get(CursorShape shape);
     wl_cursor_image *get(const QByteArray &name);
 
 Q_SIGNALS:

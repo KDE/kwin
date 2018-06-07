@@ -144,9 +144,9 @@ void X11Cursor::mousePolled()
     }
 }
 
-xcb_cursor_t X11Cursor::getX11Cursor(Qt::CursorShape shape)
+xcb_cursor_t X11Cursor::getX11Cursor(CursorShape shape)
 {
-    return getX11Cursor(cursorName(shape));
+    return getX11Cursor(shape.name());
 }
 
 xcb_cursor_t X11Cursor::getX11Cursor(const QByteArray &name)

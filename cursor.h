@@ -33,6 +33,48 @@ class QTimer;
 namespace KWin
 {
 
+namespace ExtendedCursor {
+enum Shape {
+    SizeNorthWest = 0x100 + 0,
+    SizeNorth = 0x100 + 1,
+    SizeNorthEast = 0x100 + 2,
+    SizeEast = 0x100 + 3,
+    SizeWest = 0x100 + 4,
+    SizeSouthEast = 0x100 + 5,
+    SizeSouth = 0x100 + 6,
+    SizeSouthWest = 0x100 + 7
+};
+}
+/**
+ * Extension of Qt::CursorShape with values not currently present there
+ */
+
+
+/**
+ * @brief Wrapper round Qt::CursorShape with extensions enums into a single entity
+ */
+class KWIN_EXPORT CursorShape {
+public:
+    CursorShape(Qt::CursorShape qtShape) {
+        m_shape = qtShape;
+    }
+    CursorShape(KWin::ExtendedCursor::Shape kwinShape) {
+        m_shape = kwinShape;
+    }
+    bool operator==(const CursorShape &o) const {
+        return m_shape == o.m_shape;
+    }
+    operator int() const {
+        return m_shape;
+    }
+    /**
+     * @brief The name of a cursor shape in the theme.
+     */
+    QByteArray name() const;
+private:
+    int m_shape = Qt::ArrowCursor;
+};
+
 /**
  * @short Replacement for QCursor.
  *
@@ -94,13 +136,6 @@ public:
      */
     int themeSize() const;
     /**
-     * @brief The name of a cursor shape in the theme.
-     *
-     * @param shape The cursor for which the name needs to be known.
-     * @return QByteArray
-     */
-    QByteArray cursorName(Qt::CursorShape shape) const;
-    /**
      * @return list of alternative names for the cursor with @p name
      **/
     QVector<QByteArray> cursorAlternativeNames(const QByteArray &name) const;
@@ -118,9 +153,9 @@ public:
      **/
     static void setPos(const QPoint &pos);
     static void setPos(int x, int y);
-    static xcb_cursor_t x11Cursor(Qt::CursorShape shape);
+    static xcb_cursor_t x11Cursor(CursorShape shape);
     /**
-     * Notice: if available always use the Qt::CursorShape variant to avoid cache duplicates for
+     * Notice: if available always use the CursorShape variant to avoid cache duplicates for
      * ambiguous cursor names in the non existing cursor name spcification
      **/
     static xcb_cursor_t x11Cursor(const QByteArray &name);
@@ -147,7 +182,7 @@ protected:
      * a null cursor, an implementing subclass should implement this method if it can provide X11
      * mouse cursors.
      **/
-    virtual xcb_cursor_t getX11Cursor(Qt::CursorShape shape);
+    virtual xcb_cursor_t getX11Cursor(CursorShape shape);
     /**
      * Called from @link x11Cursor to actually retrieve the X11 cursor. Base implementation returns
      * a null cursor, an implementing subclass should implement this method if it can provide X11
