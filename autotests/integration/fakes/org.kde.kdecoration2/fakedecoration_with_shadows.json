@@ -1,0 +1,15 @@
+{
+    "KPlugin": {
+        "Description": "Window decoration to test shadow tile overlaps",
+        "EnabledByDefault": false,
+        "Id": "org.kde.test.fakedecowithshadows",
+        "Name": "Fake Decoration With Shadows",
+        "ServiceTypes": [
+            "org.kde.kdecoration2"
+        ]
+    },
+    "org.kde.kdecoration2": {
+        "blur": false,
+        "kcmodule": false
+    }
+}
