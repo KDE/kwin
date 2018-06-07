@@ -30,6 +30,8 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 
+#include <cmath>
+
 #include <QDebug>
 
 namespace KDecoration2
@@ -171,41 +173,143 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
     if (!shadow) {
         return;
     }
+
     paddingLeft   = shadow->paddingLeft();
     paddingTop    = shadow->paddingTop();
     paddingRight  = shadow->paddingRight();
     paddingBottom = shadow->paddingBottom();
-    const QImage img = shadow->shadow();
-    if (img.isNull()) {
+
+    const QImage shadowPixmap = shadow->shadow();
+    if (shadowPixmap.isNull()) {
         return;
     }
-    const QRect &topLeft     = shadow->topLeftGeometry();
-    const QRect &top         = shadow->topGeometry();
-    const QRect &topRight    = shadow->topRightGeometry();
-    const QRect &right       = shadow->rightGeometry();
-    const QRect &left        = shadow->leftGeometry();
-    const QRect &bottomLeft  = shadow->bottomLeftGeometry();
-    const QRect &bottom      = shadow->bottomGeometry();
-    const QRect &bottomRight = shadow->bottomRightGeometry();
+
+    const QRect outerRect(-paddingLeft, -paddingTop, width(), height());
+    const QRect shadowRect(shadowPixmap.rect());
+
+    const QSize topLeftSize(shadow->topLeftGeometry().size());
+    QRect topLeftTarget(
+        QPoint(outerRect.x(), outerRect.y()),
+        topLeftSize);
+
+    const QSize topRightSize(shadow->topRightGeometry().size());
+    QRect topRightTarget(
+        QPoint(outerRect.x() + outerRect.width() - topRightSize.width(),
+               outerRect.y()),
+        topRightSize);
+
+    const QSize bottomRightSize(shadow->bottomRightGeometry().size());
+    QRect bottomRightTarget(
+        QPoint(outerRect.x() + outerRect.width() - bottomRightSize.width(),
+               outerRect.y() + outerRect.height() - bottomRightSize.height()),
+        bottomRightSize);
+
+    const QSize bottomLeftSize(shadow->bottomLeftGeometry().size());
+    QRect bottomLeftTarget(
+        QPoint(outerRect.x(),
+               outerRect.y() + outerRect.height() - bottomLeftSize.height()),
+        bottomLeftSize);
+
+    // Re-distribute the corner tiles so no one of them is overlapping with others.
+    // By doing this, we assume that shadow's corner tiles are symmetric
+    // and it is OK to not draw top/right/bottom/left tile between corners.
+    // For example, let's say top-left and top-right tiles are overlapping.
+    // In that case, the right side of the top-left tile will be shifted to left,
+    // the left side of the top-right tile will shifted to right, and the top
+    // tile won't be rendered.
+    bool drawTop = true;
+    if (topLeftTarget.x() + topLeftTarget.width() >= topRightTarget.x()) {
+        const float halfOverlap = qAbs(topLeftTarget.x() + topLeftTarget.width() - topRightTarget.x()) / 2.0f;
+        topLeftTarget.setRight(topLeftTarget.right() - std::floor(halfOverlap));
+        topRightTarget.setLeft(topRightTarget.left() + std::ceil(halfOverlap));
+        drawTop = false;
+    }
+
+    bool drawRight = true;
+    if (topRightTarget.y() + topRightTarget.height() >= bottomRightTarget.y()) {
+        const float halfOverlap = qAbs(topRightTarget.y() + topRightTarget.height() - bottomRightTarget.y()) / 2.0f;
+        topRightTarget.setBottom(topRightTarget.bottom() - std::floor(halfOverlap));
+        bottomRightTarget.setTop(bottomRightTarget.top() + std::ceil(halfOverlap));
+        drawRight = false;
+    }
+
+    bool drawBottom = true;
+    if (bottomLeftTarget.x() + bottomLeftTarget.width() >= bottomRightTarget.x()) {
+        const float halfOverlap = qAbs(bottomLeftTarget.x() + bottomLeftTarget.width() - bottomRightTarget.x()) / 2.0f;
+        bottomLeftTarget.setRight(bottomLeftTarget.right() - std::floor(halfOverlap));
+        bottomRightTarget.setLeft(bottomRightTarget.left() + std::ceil(halfOverlap));
+        drawBottom = false;
+    }
+
+    bool drawLeft = true;
+    if (topLeftTarget.y() + topLeftTarget.height() >= bottomLeftTarget.y()) {
+        const float halfOverlap = qAbs(topLeftTarget.y() + topLeftTarget.height() - bottomLeftTarget.y()) / 2.0f;
+        topLeftTarget.setBottom(topLeftTarget.bottom() - std::floor(halfOverlap));
+        bottomLeftTarget.setTop(bottomLeftTarget.top() + std::ceil(halfOverlap));
+        drawLeft = false;
+    }
 
     painter->translate(paddingLeft, paddingTop);
 
-    // top left
-    painter->drawImage(QPoint(-paddingLeft, -paddingTop), img, topLeft);
-    // top
-    painter->drawImage(QRect(-paddingLeft + topLeft.width(), -paddingTop, width() - topLeft.width() - topRight.width(), top.height()), img, top);
-    // top right
-    painter->drawImage(QPoint(width() - topRight.width() - paddingLeft, -paddingTop), img, topRight);
-    // right
-    painter->drawImage(QRect(width() - right.width() - paddingLeft, -paddingTop + topRight.height(), right.width(), height() - topRight.height() - bottomRight.height()), img, right);
-    // bottom right
-    painter->drawImage(QPoint(width() - paddingLeft - bottomRight.width(), height() - paddingTop - bottomRight.height()), img, bottomRight);
-    // bottom
-    painter->drawImage(QRect(-paddingLeft + bottomLeft.width(), height() - bottom.height() - paddingTop, width() - bottomLeft.width() - bottomRight.width(), bottom.height()), img, bottom);
-    // bottom left
-    painter->drawImage(QPoint(-paddingLeft, height() - bottomLeft.height() - paddingTop), img, bottomLeft);
-    // left
-    painter->drawImage(QRect(-paddingLeft, -paddingTop + topLeft.height(), left.width(), height() - topLeft.height() - bottomLeft.height()), img, left);
+    painter->drawImage(topLeftTarget, shadowPixmap,
+                       QRect(QPoint(0, 0), topLeftTarget.size()));
+
+    painter->drawImage(topRightTarget, shadowPixmap,
+                      QRect(QPoint(shadowRect.width() - topRightTarget.width(), 0),
+                            topRightTarget.size()));
+
+    painter->drawImage(bottomRightTarget, shadowPixmap,
+                       QRect(QPoint(shadowRect.width() - bottomRightTarget.width(),
+                                    shadowRect.height() - bottomRightTarget.height()),
+                             bottomRightTarget.size()));
+
+    painter->drawImage(bottomLeftTarget, shadowPixmap,
+                       QRect(QPoint(0, shadowRect.height() - bottomLeftTarget.height()),
+                             bottomLeftTarget.size()));
+
+    if (drawTop) {
+        QRect topTarget(topLeftTarget.x() + topLeftTarget.width(),
+                        topLeftTarget.y(),
+                        topRightTarget.x() - topLeftTarget.x() - topLeftTarget.width(),
+                        topRightTarget.height());
+        QRect topSource(shadow->topGeometry());
+        topSource.setHeight(topTarget.height());
+        topSource.moveTop(shadowRect.top());
+        painter->drawImage(topTarget, shadowPixmap, topSource);
+    }
+
+    if (drawRight) {
+        QRect rightTarget(topRightTarget.x(),
+                          topRightTarget.y() + topRightTarget.height(),
+                          topRightTarget.width(),
+                          bottomRightTarget.y() - topRightTarget.y() - topRightTarget.height());
+        QRect rightSource(shadow->rightGeometry());
+        rightSource.setWidth(rightTarget.width());
+        rightSource.moveRight(shadowRect.right());
+        painter->drawImage(rightTarget, shadowPixmap, rightSource);
+    }
+
+    if (drawBottom) {
+        QRect bottomTarget(bottomLeftTarget.x() + bottomLeftTarget.width(),
+                           bottomLeftTarget.y(),
+                           bottomRightTarget.x() - bottomLeftTarget.x() - bottomLeftTarget.width(),
+                           bottomRightTarget.height());
+        QRect bottomSource(shadow->bottomGeometry());
+        bottomSource.setHeight(bottomTarget.height());
+        bottomSource.moveBottom(shadowRect.bottom());
+        painter->drawImage(bottomTarget, shadowPixmap, bottomSource);
+    }
+
+    if (drawLeft) {
+       QRect leftTarget(topLeftTarget.x(),
+                        topLeftTarget.y() + topLeftTarget.height(),
+                        topLeftTarget.width(),
+                        bottomLeftTarget.y() - topLeftTarget.y() - topLeftTarget.height());
+        QRect leftSource(shadow->leftGeometry());
+        leftSource.setWidth(leftTarget.width());
+        leftSource.moveLeft(shadowRect.left());
+        painter->drawImage(leftTarget, shadowPixmap, leftSource);
+    }
 }
 
 void PreviewItem::mouseDoubleClickEvent(QMouseEvent *event)
