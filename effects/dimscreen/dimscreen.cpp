@@ -21,8 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglutils.h>
 
+#include <QSet>
+
 namespace KWin
 {
+
+static const QSet<QString> s_authWindows {
+    QStringLiteral("kdesu kdesu"),
+    QStringLiteral("kdesudo kdesudo"),
+    QStringLiteral("pinentry pinentry"),
+    QStringLiteral("polkit-kde-authentication-agent-1 polkit-kde-authentication-agent-1"),
+    QStringLiteral("polkit-kde-manager polkit-kde-manager"),
+};
 
 DimScreenEffect::DimScreenEffect()
     : mActivated(false)
@@ -86,13 +96,7 @@ void DimScreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
 void DimScreenEffect::slotWindowActivated(EffectWindow *w)
 {
     if (!w) return;
-    QStringList check;
-    check << QStringLiteral("kdesu kdesu");
-    check << QStringLiteral("kdesudo kdesudo");
-    check << QStringLiteral("polkit-kde-manager polkit-kde-manager");
-    check << QStringLiteral("polkit-kde-authentication-agent-1 polkit-kde-authentication-agent-1");
-    check << QStringLiteral("pinentry pinentry");
-    if (check.contains(w->windowClass())) {
+    if (s_authWindows.contains(w->windowClass())) {
         mActivated = true;
         activateAnimation = true;
         deactivateAnimation = false;
