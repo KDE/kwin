@@ -171,7 +171,7 @@ ColumnLayout {
             anchors.verticalCenter: activArea.verticalCenter
 
             text: "Unconfine pointer"
-            onClicked: root.unconfineRequest()
+            onClicked: root.unconfine()
         }
     }
 
