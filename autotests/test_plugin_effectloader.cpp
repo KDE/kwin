@@ -95,6 +95,7 @@ void TestPluginEffectLoader::testHasEffect_data()
     QTest::newRow("MouseMark")         << QStringLiteral("mousemark")                 << false;
     QTest::newRow("PresentWindows")    << QStringLiteral("presentwindows")            << false;
     QTest::newRow("Resize")            << QStringLiteral("resize")                    << false;
+    QTest::newRow("Scale")             << QStringLiteral("scale")                     << false;
     QTest::newRow("ScreenEdge")        << QStringLiteral("screenedge")                << false;
     QTest::newRow("ScreenShot")        << QStringLiteral("screenshot")                << false;
     QTest::newRow("Sheet")             << QStringLiteral("sheet")                     << false;

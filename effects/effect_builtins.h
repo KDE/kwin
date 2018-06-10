@@ -57,6 +57,7 @@ enum class BuiltInEffect
     MouseMark,
     PresentWindows,
     Resize,
+    Scale,
     ScreenEdge,
     ScreenShot,
     Sheet,

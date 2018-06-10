@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kwin_scale_config
+X-KDE-ParentComponents=scale
+
+Name=Scale

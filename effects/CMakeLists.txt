@@ -90,6 +90,7 @@ set( kwin4_effect_builtins_sources
     presentwindows/presentwindows.cpp
     presentwindows/presentwindows_proxy.cpp
     resize/resize.cpp
+    scale/scale.cpp
     showfps/showfps.cpp
     slide/slide.cpp
     thumbnailaside/thumbnailaside.cpp
@@ -119,6 +120,7 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     mousemark/mousemarkconfig.kcfgc
     presentwindows/presentwindowsconfig.kcfgc
     resize/resizeconfig.kcfgc
+    scale/scaleconfig.kcfgc
     showfps/showfpsconfig.kcfgc
     slide/slideconfig.kcfgc
     slidingpopups/slidingpopupsconfig.kcfgc
@@ -179,6 +181,7 @@ add_subdirectory( lookingglass )
 add_subdirectory( magnifier )
 add_subdirectory( mouseclick )
 add_subdirectory( mousemark )
+add_subdirectory( scale )
 include( screenshot/CMakeLists.txt )
 include( sheet/CMakeLists.txt )
 include( snaphelper/CMakeLists.txt )
