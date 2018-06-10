@@ -456,12 +456,12 @@ void SlideEffect::start(int old, int current, EffectWindow* movingWindow)
 void SlideEffect::stop()
 {
     for (EffectWindow* w : m_forcedRoles.blur) {
-        w->setData(WindowForceBlurRole, QVariant(false));
+        w->setData(WindowForceBlurRole, QVariant());
     }
     m_forcedRoles.blur.clear();
 
     for (EffectWindow* w : m_forcedRoles.backgroundContrast) {
-        w->setData(WindowForceBackgroundContrastRole, QVariant(false));
+        w->setData(WindowForceBackgroundContrastRole, QVariant());
     }
     m_forcedRoles.backgroundContrast.clear();
 
