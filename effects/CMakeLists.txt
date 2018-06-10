@@ -141,7 +141,6 @@ add_subdirectory( login )
 add_subdirectory( logout )
 add_subdirectory( maximize )
 add_subdirectory( morphingpopups )
-add_subdirectory( scalein )
 add_subdirectory( translucency )
 add_subdirectory( windowaperture )
 

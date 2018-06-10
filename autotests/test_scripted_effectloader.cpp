@@ -151,7 +151,6 @@ void TestScriptedEffectLoader::testHasEffect_data()
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")        << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")       << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")     << true;
-    QTest::newRow("ScaleIn")                     << QStringLiteral("kwin4_effect_scalein")      << true;
     QTest::newRow("Translucency")                << QStringLiteral("kwin4_effect_translucency") << true;
 }
 
@@ -183,7 +182,6 @@ void TestScriptedEffectLoader::testKnownEffects()
                     << QStringLiteral("kwin4_effect_login")
                     << QStringLiteral("kwin4_effect_logout")
                     << QStringLiteral("kwin4_effect_maximize")
-                    << QStringLiteral("kwin4_effect_scalein")
                     << QStringLiteral("kwin4_effect_translucency");
 
     KWin::ScriptedEffectLoader loader;
@@ -210,7 +208,6 @@ void TestScriptedEffectLoader::testLoadEffect_data()
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")        << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")        << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")     << true;
-    QTest::newRow("ScaleIn")                     << QStringLiteral("kwin4_effect_scalein")      << true;
     QTest::newRow("Translucency")                << QStringLiteral("kwin4_effect_translucency") << true;
 }
 
@@ -275,15 +272,15 @@ void TestScriptedEffectLoader::testLoadScriptedEffect_data()
     const KWin::LoadEffectFlags dontLoadFlags = KWin::LoadEffectFlags();
 
     // enabled by default
-    QTest::newRow("Fade")             << QStringLiteral("kwin4_effect_fade")    << true  << checkDefault;
+    QTest::newRow("Fade")                 << QStringLiteral("kwin4_effect_fade")        << true  << checkDefault;
     // not enabled by default
-    QTest::newRow("Scalein")          << QStringLiteral("kwin4_effect_scalein") << true  << checkDefault;
+    QTest::newRow("EyeOnScreen")          << QStringLiteral("kwin4_effect_eyeonscreen") << true  << checkDefault;
     // Force an Effect which will load
-    QTest::newRow("Scalein-Force")    << QStringLiteral("kwin4_effect_scalein") << true  << forceFlags;
+    QTest::newRow("EyeOnScreen-Force")    << QStringLiteral("kwin4_effect_eyeonscreen") << true  << forceFlags;
     // Enforce no load of effect which is enabled by default
-    QTest::newRow("Fade-DontLoad")    << QStringLiteral("kwin4_effect_fade")    << false << dontLoadFlags;
+    QTest::newRow("Fade-DontLoad")        << QStringLiteral("kwin4_effect_fade")        << false << dontLoadFlags;
     // Enforce no load of effect which is not enabled by default, but enforced
-    QTest::newRow("Scalein-DontLoad") << QStringLiteral("kwin4_effect_scalein") << false << dontLoadFlags;
+    QTest::newRow("EyeOnScreen-DontLoad") << QStringLiteral("kwin4_effect_eyeonscreen") << false << dontLoadFlags;
 }
 
 void TestScriptedEffectLoader::testLoadScriptedEffect()
@@ -363,7 +360,6 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     plugins.writeEntry(kwin4 + QStringLiteral("logoutEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("maximizeEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("minimizeanimationEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("scaleinEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("translucencyEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("eyeonscreenEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("windowapertureEnabled"), false);
@@ -388,7 +384,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     QVERIFY(!spy.wait(100));
 
     // now let's prepare a config which has one effect explicitly enabled
-    plugins.writeEntry(kwin4 + QStringLiteral("scaleinEnabled"), true);
+    plugins.writeEntry(kwin4 + QStringLiteral("eyeonscreenEnabled"), true);
     plugins.sync();
 
     loader.queryAndLoadAll();
@@ -401,7 +397,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     // if we caught a signal it should have the effect name we passed in
     QList<QVariant> arguments = spy.takeFirst();
     QCOMPARE(arguments.count(), 2);
-    QCOMPARE(arguments.at(1).toString(), kwin4 + QStringLiteral("scalein"));
+    QCOMPARE(arguments.at(1).toString(), kwin4 + QStringLiteral("eyeonscreen"));
     spy.clear();
 
     // let's delete one of the default entries
@@ -419,8 +415,8 @@ void TestScriptedEffectLoader::testLoadAllEffects()
         loadedEffects << list.at(1).toString();
     }
     qSort(loadedEffects);
-    QCOMPARE(loadedEffects.at(0), kwin4 + QStringLiteral("fade"));
-    QCOMPARE(loadedEffects.at(1), kwin4 + QStringLiteral("scalein"));
+    QCOMPARE(loadedEffects.at(0), kwin4 + QStringLiteral("eyeonscreen"));
+    QCOMPARE(loadedEffects.at(1), kwin4 + QStringLiteral("fade"));
 }
 
 void TestScriptedEffectLoader::testCancelLoadAllEffects()
@@ -433,7 +429,7 @@ void TestScriptedEffectLoader::testCancelLoadAllEffects()
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     const QString kwin4 = QStringLiteral("kwin4_effect_");
     KConfigGroup plugins = config->group("Plugins");
-    plugins.writeEntry(kwin4 + QStringLiteral("scaleinEnabled"), true);
+    plugins.writeEntry(kwin4 + QStringLiteral("eyeonscreenEnabled"), true);
     plugins.sync();
 
     loader.setConfig(config);

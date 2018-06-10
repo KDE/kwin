@@ -1,0 +1,7 @@
+Version=5
+
+# Replace old Scale in effect with Scale effect.
+Id=replace-scalein-with-scale
+File=kwinrc
+Group=Plugins
+Key=kwin4_effect_scaleinEnabled,scaleEnabled
