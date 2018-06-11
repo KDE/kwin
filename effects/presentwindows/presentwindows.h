@@ -309,9 +309,6 @@ private:
     // Grid layout info
     QList<GridSize> m_gridSizes;
 
-    // State of WindowForceBlurRole before this effect
-    QMap <EffectWindow*, bool> m_windowForceBlurRoleState;
-
     // Filter box
     EffectFrame* m_filterFrame;
     QString m_windowFilter;

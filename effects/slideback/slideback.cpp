@@ -151,7 +151,6 @@ void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data, int time)
     }
 
     for (auto const &w : effects->stackingOrder()) {
-        m_windowForceBlurRoleState[w] = w->data(WindowForceBlurRole).toBool();
         w->setData(WindowForceBlurRole, QVariant(true));
     }
 
@@ -165,7 +164,7 @@ void SlideBackEffect::postPaintScreen()
     }
 
     for (auto &w : effects->stackingOrder()) {
-        w->setData(WindowForceBlurRole, m_windowForceBlurRoleState.value(w, false));
+        w->setData(WindowForceBlurRole, QVariant());
     }
 
     effects->postPaintScreen();

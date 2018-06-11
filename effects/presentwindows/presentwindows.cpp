@@ -244,8 +244,8 @@ void PresentWindowsEffect::postPaintScreen()
         m_windowData.clear();
 
         foreach (EffectWindow * w, effects->stackingOrder()) {
-            w->setData(WindowForceBlurRole, QVariant(m_windowForceBlurRoleState.value(w, false)));
-            w->setData(WindowForceBackgroundContrastRole, QVariant(false));
+            w->setData(WindowForceBlurRole, QVariant());
+            w->setData(WindowForceBackgroundContrastRole, QVariant());
         }
         effects->setActiveFullScreenEffect(NULL);
         effects->addRepaintFull();
@@ -1584,7 +1584,6 @@ void PresentWindowsEffect::setActive(bool active)
         setHighlightedWindow(effects->activeWindow());
 
         foreach (EffectWindow * w, effects->stackingOrder()) {
-            m_windowForceBlurRoleState[w] = w->data(WindowForceBlurRole).toBool();
             w->setData(WindowForceBlurRole, QVariant(true));
             w->setData(WindowForceBackgroundContrastRole, QVariant(true));
         }

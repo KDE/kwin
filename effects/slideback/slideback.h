@@ -66,8 +66,6 @@ private:
     int m_tabboxActive;
     QList <QRegion> clippedRegions;
 
-    QMap <EffectWindow*, bool> m_windowForceBlurRoleState;
-
     QRect getSlideDestination(const QRect &windowUnderGeometry, const QRect &windowOverGeometry);
     bool isWindowUsable(EffectWindow *w);
     bool intersects(EffectWindow *windowUnder, const QRect &windowOverGeometry);
