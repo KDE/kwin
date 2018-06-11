@@ -302,7 +302,7 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 void SlidingPopupsEffect::startForShow(EffectWindow *w)
 {
     if (w->isOnCurrentDesktop() && mWindowsData.contains(w)) {
-        if (!w->data(WindowForceBackgroundContrastRole).isValid() && w->hasAlpha()) {
+        if (!w->data(WindowForceBackgroundContrastRole).toBool() && w->hasAlpha()) {
             w->setData(WindowForceBackgroundContrastRole, QVariant(true));
             m_backgroundContrastForced.append(w);
         }
@@ -348,7 +348,7 @@ void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
         // Tell other windowClosed() effects to ignore this window
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
         w->setData(WindowForceBlurRole, true);
-        if (!w->data(WindowForceBackgroundContrastRole).isValid() && w->hasAlpha()) {
+        if (!w->data(WindowForceBackgroundContrastRole).toBool() && w->hasAlpha()) {
             w->setData(WindowForceBackgroundContrastRole, QVariant(true));
         }
 
