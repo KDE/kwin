@@ -542,10 +542,10 @@ void PointerInputRedirection::update()
             }
         );
         m_constraintsConnection = connect(m_window->surface(), &KWayland::Server::SurfaceInterface::pointerConstraintsChanged,
-                                          this, &PointerInputRedirection::enablePointerConstraints);
+                                          this, &PointerInputRedirection::updatePointerConstraints);
         // check whether a pointer confinement/lock fires
         m_blockConstraint = false;
-        enablePointerConstraints();
+        updatePointerConstraints();
     } else {
         m_window.clear();
         warpXcbOnSurfaceLeft(nullptr);
@@ -598,7 +598,7 @@ static QRegion getConstraintRegion(Toplevel *t, T *constraint)
     return intersected.translated(t->pos() + t->clientPos());
 }
 
-void PointerInputRedirection::enablePointerConstraints()
+void PointerInputRedirection::updatePointerConstraints()
 {
     if (m_window.isNull()) {
         return;
@@ -653,6 +653,7 @@ void PointerInputRedirection::enablePointerConstraints()
             return;
         }
     } else {
+        m_confined = false;
         disconnectConfinedPointerRegionConnection();
     }
     const auto lock = s->lockedPointer();
@@ -669,6 +670,8 @@ void PointerInputRedirection::enablePointerConstraints()
                       QStringLiteral("preferences-desktop-mouse"), 5000);
             // TODO: connect to region change - is it needed at all? If the pointer is locked it's always in the region
         }
+    } else {
+        m_locked = false;
     }
 }
 

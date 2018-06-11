@@ -1340,7 +1340,7 @@ public:
             if (event->buttons() == Qt::NoButton) {
                 // update pointer window only if no button is pressed
                 input()->pointer()->update();
-                input()->pointer()->enablePointerConstraints();
+                input()->pointer()->updatePointerConstraints();
             }
             seat->setPointerPos(event->globalPos());
             MouseEvent *e = static_cast<MouseEvent*>(event);

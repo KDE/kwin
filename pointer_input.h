@@ -84,8 +84,10 @@ public:
     void setWindowSelectionCursor(const QByteArray &shape);
     void removeWindowSelectionCursor();
 
-    void enablePointerConstraints();
+    void updatePointerConstraints();
     void breakPointerConstraints();
+
+    /* This is only used for ESC pressing */
     void blockPointerConstraints() {
         m_blockConstraint = true;
     }

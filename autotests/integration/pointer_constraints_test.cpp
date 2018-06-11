@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Server/seat_interface.h>
+#include <KWayland/Server/surface_interface.h>
 
 #include <linux/input.h>
 
@@ -246,6 +247,24 @@ void TestPointerConstraints::testConfinedPointer()
     QVERIFY(confinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
+    // delete pointer confine
+    confinedPointer.reset(nullptr);
+    Test::flushWaylandConnection();
+
+    QSignalSpy constraintsChangedSpy(input()->pointer()->window()->surface(), &KWayland::Server::SurfaceInterface::pointerConstraintsChanged);
+    QVERIFY(constraintsChangedSpy.isValid());
+    QVERIFY(constraintsChangedSpy.wait());
+
+    // should be unconfined
+    QCOMPARE(input()->pointer()->isConstrained(), false);
+
+    // confine again
+    confinedPointer.reset(Test::waylandPointerConstraints()->confinePointer(surface.data(), pointer.data(), nullptr, PointerConstraints::LifeTime::Persistent));
+    QSignalSpy confinedSpy3(confinedPointer.data(), &ConfinedPointer::confined);
+    QVERIFY(confinedSpy3.isValid());
+    QVERIFY(confinedSpy3.wait());
+    QCOMPARE(input()->pointer()->isConstrained(), true);
+
     // and now unmap
     shellSurface.reset();
     surface.reset();
@@ -302,6 +321,29 @@ void TestPointerConstraints::testLockedPointer()
     // moving cursor should be allowed again
     KWin::Cursor::setPos(c->geometry().center() + QPoint(1, 1));
     QCOMPARE(KWin::Cursor::pos(), c->geometry().center() + QPoint(1, 1));
+
+    lockedPointer.reset(Test::waylandPointerConstraints()->lockPointer(surface.data(), pointer.data(), nullptr, PointerConstraints::LifeTime::Persistent));
+    QSignalSpy lockedSpy2(lockedPointer.data(), &LockedPointer::locked);
+    QVERIFY(lockedSpy2.isValid());
+    QVERIFY(lockedSpy2.wait());
+
+    // try to move the pointer
+    QCOMPARE(input()->pointer()->isConstrained(), true);
+    KWin::Cursor::setPos(c->geometry().center());
+    QCOMPARE(KWin::Cursor::pos(), c->geometry().center() + QPoint(1, 1));
+
+    // delete pointer lock
+    lockedPointer.reset(nullptr);
+    Test::flushWaylandConnection();
+
+    QSignalSpy constraintsChangedSpy(input()->pointer()->window()->surface(), &KWayland::Server::SurfaceInterface::pointerConstraintsChanged);
+    QVERIFY(constraintsChangedSpy.isValid());
+    QVERIFY(constraintsChangedSpy.wait());
+
+    // moving cursor should be allowed again
+    QCOMPARE(input()->pointer()->isConstrained(), false);
+    KWin::Cursor::setPos(c->geometry().center());
+    QCOMPARE(KWin::Cursor::pos(), c->geometry().center());
 }
 
 void TestPointerConstraints::testBreakConstrainedPointer_data()
