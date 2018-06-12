@@ -95,6 +95,7 @@ XdgExportedUnstableV2Interface *XdgExporterUnstableV2Interface::exportedSurface(
 void XdgExporterUnstableV2Interface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
+    Q_UNUSED(resource)
 }
 
 void XdgExporterUnstableV2Interface::Private::exportCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource * surface)
@@ -237,6 +238,7 @@ XdgImporterUnstableV2Interface::Private *XdgImporterUnstableV2Interface::d_func(
 void XdgImporterUnstableV2Interface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
+    Q_UNUSED(resource)
 }
 
 void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, wl_resource *resource, uint32_t id, const char *h)
@@ -438,6 +440,8 @@ SurfaceInterface *XdgImportedUnstableV2Interface::child() const
 
 void XdgImportedUnstableV2Interface::Private::setParentOfCallback(wl_client *client, wl_resource *resource, wl_resource * surface)
 {
+    Q_UNUSED(client)
+
     auto s = cast<Private>(resource);
     SurfaceInterface *surf = SurfaceInterface::get(surface);
 

@@ -86,7 +86,7 @@ public:
 
 
 XdgOutputManagerInterface::XdgOutputManagerInterface(Display *display, QObject *parent)
-    : Global(new XdgOutputManagerInterface::Private(this, display))
+    : Global(new XdgOutputManagerInterface::Private(this, display), parent)
 {
 }
 
