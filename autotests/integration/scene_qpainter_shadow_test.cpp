@@ -764,10 +764,10 @@ void SceneQPainterShadowTest::testShadowTextureReconstruction()
     // Check whether we've got right shadow.
     auto shadowIface = client->surface()->shadow();
     QVERIFY(!shadowIface.isNull());
-    QCOMPARE(shadowIface->offset().left(),   128);
-    QCOMPARE(shadowIface->offset().top(),    128);
-    QCOMPARE(shadowIface->offset().right(),  128);
-    QCOMPARE(shadowIface->offset().bottom(), 128);
+    QCOMPARE(shadowIface->offset().left(),   128.0);
+    QCOMPARE(shadowIface->offset().top(),    128.0);
+    QCOMPARE(shadowIface->offset().right(),  128.0);
+    QCOMPARE(shadowIface->offset().bottom(), 128.0);
 
     // Get SceneQPainterShadow's texture.
     QVERIFY(client->effectWindow());
