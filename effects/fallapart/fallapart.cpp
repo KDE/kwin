@@ -38,6 +38,7 @@ FallApartEffect::FallApartEffect()
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(windowDataChanged(KWin::EffectWindow*,int)), this, SLOT(slotWindowDataChanged(KWin::EffectWindow*,int)));
 }
 
 void FallApartEffect::reconfigure(ReconfigureFlags)
@@ -157,6 +158,7 @@ void FallApartEffect::slotWindowClosed(EffectWindow* c)
     const void* e = c->data(WindowClosedGrabRole).value<void*>();
     if (e && e != this)
         return;
+    c->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
     windows[ c ] = 0;
     c->refWindow();
 }
@@ -164,6 +166,25 @@ void FallApartEffect::slotWindowClosed(EffectWindow* c)
 void FallApartEffect::slotWindowDeleted(EffectWindow* c)
 {
     windows.remove(c);
+}
+
+void FallApartEffect::slotWindowDataChanged(EffectWindow* w, int role)
+{
+    if (role != WindowClosedGrabRole) {
+        return;
+    }
+
+    if (w->data(role).value<void*>() == this) {
+        return;
+    }
+
+    auto it = windows.find(w);
+    if (it == windows.end()) {
+        return;
+    }
+
+    it.key()->unrefWindow();
+    windows.erase(it);
 }
 
 bool FallApartEffect::isActive() const

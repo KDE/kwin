@@ -54,9 +54,10 @@ public:
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);
     void slotWindowDeleted(KWin::EffectWindow *w);
+    void slotWindowDataChanged(KWin::EffectWindow *w, int role);
 
 private:
-    QHash< const EffectWindow*, double > windows;
+    QHash< EffectWindow*, double > windows;
     bool isRealWindow(EffectWindow* w);
     int blockSize;
 };
