@@ -521,9 +521,16 @@ void KWinDesktopConfig::slotEffectSelectionChanged(int index)
     if (index != 0)
         enabled = true;
     m_ui->effectInfoButton->setEnabled(enabled);
-    // only cube has config dialog
-    if (index != 2)
+
+    switch (index) {
+    case 1: // Slide
+    case 2: // Cube Slide
+        enabled = true;
+        break;
+    default:
         enabled = false;
+        break;
+    }
     m_ui->effectConfigButton->setEnabled(enabled);
 }
 
@@ -610,6 +617,9 @@ void KWinDesktopConfig::slotConfigureEffectClicked()
 {
     QString effect;
     switch(m_ui->effectComboBox->currentIndex()) {
+    case 1:
+        effect = BuiltInEffects::nameForEffect(BuiltInEffect::Slide);
+        break;
     case 2:
         effect = BuiltInEffects::nameForEffect(BuiltInEffect::CubeSlide);
         break;
