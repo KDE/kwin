@@ -130,6 +130,9 @@ void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
         wl_resource_post_error(dataSource->resource(), WL_DATA_SOURCE_ERROR_INVALID_SOURCE, "Data source is for drag and drop");
         return;
     }
+    if (selection == dataSource) {
+        return;
+    }
     Q_Q(DataDeviceInterface);
     QObject::disconnect(selectionUnboundConnection);
     QObject::disconnect(selectionDestroyedConnection);

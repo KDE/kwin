@@ -512,6 +512,12 @@ void TestDataDevice::testReplaceSource()
     QCOMPARE(selectionOfferedSpy.count(), 2);
     QVERIFY(sourceCancelled2Spy.isEmpty());
 
+    // replace the data source with itself, ensure that it did not get cancelled
+    dataDevice->setSelection(1, dataSource2.data());
+    QVERIFY(!sourceCancelled2Spy.wait(500));
+    QCOMPARE(selectionOfferedSpy.count(), 2);
+    QVERIFY(sourceCancelled2Spy.isEmpty());
+
     // create a new DataDevice and replace previous one
     QScopedPointer<DataDevice> dataDevice2(m_dataDeviceManager->getDataDevice(m_seat));
     QVERIFY(dataDevice2->isValid());
