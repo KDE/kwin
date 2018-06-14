@@ -74,6 +74,7 @@ void FallApartEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, 
 void FallApartEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (windows.contains(w) && isRealWindow(w)) {
+        const qreal t = windows[w];
         WindowQuadList new_quads;
         int cnt = 0;
         foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
@@ -90,7 +91,7 @@ void FallApartEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 ydiff = -(w->height() / 2 - p1.y()) / w->height() * 100;
             if (p1.y() > w->height() / 2)
                 ydiff = (p1.y() - w->height() / 2) / w->height() * 100;
-            double modif = windows[ w ] * windows[ w ] * 64;
+            double modif = t * t * 64;
             srandom(cnt);   // change direction randomly but consistently
             xdiff += (rand() % 21 - 10);
             ydiff += (rand() % 21 - 10);
@@ -119,6 +120,7 @@ void FallApartEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
             ++cnt;
         }
         data.quads = new_quads;
+        data.multiplyOpacity(interpolate(1.0, 0.0, t));
     }
     effects->paintWindow(w, mask, region, data);
 }
