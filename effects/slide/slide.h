@@ -86,6 +86,7 @@ private:
     int m_hGap;
     int m_vGap;
     bool m_slideDocks;
+    bool m_slideBackground;
 
     bool m_active = false;
     QTimeLine m_timeline;
@@ -95,6 +96,7 @@ private:
 
     struct {
         int desktop;
+        bool firstPass;
         bool lastPass;
         QPoint translation;
 

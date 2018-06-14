@@ -18,5 +18,8 @@
         <entry name="SlideDocks" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="SlideBackground" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

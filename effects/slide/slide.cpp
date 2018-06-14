@@ -71,6 +71,7 @@ void SlideEffect::reconfigure(ReconfigureFlags)
     m_hGap = SlideConfig::horizontalGap();
     m_vGap = SlideConfig::verticalGap();
     m_slideDocks = SlideConfig::slideDocks();
+    m_slideBackground = SlideConfig::slideBackground();
 }
 
 void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -189,6 +190,7 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
     // passes, depending how an user moves between virtual desktops.
     // Windows, such as docks or keep-above windows, are painted in
     // the last pass so they are above other windows.
+    m_paintCtx.firstPass = true;
     const int lastDesktop = visibleDesktops.last();
     for (int desktop : qAsConst(visibleDesktops)) {
         m_paintCtx.desktop = desktop;
@@ -198,6 +200,7 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             wrapDiff(m_paintCtx.translation, w, h);
         }
         effects->paintScreen(mask, region, data);
+        m_paintCtx.firstPass = false;
     }
 }
 
@@ -211,7 +214,10 @@ bool SlideEffect::isTranslated(const EffectWindow* w) const
         if (w->isDock()) {
             return m_slideDocks;
         }
-        return w->isDesktop();
+        if (w->isDesktop()) {
+            return m_slideBackground;
+        }
+        return false;
     } else if (w == m_movingWindow) {
         return false;
     } else if (w->isOnDesktop(m_paintCtx.desktop)) {
@@ -238,6 +244,13 @@ bool SlideEffect::isPainted(const EffectWindow* w) const
                 }
             }
             return true;
+        }
+        if (w->isDesktop()) {
+            // If desktop background is not being slided, draw it only
+            // in the first pass. Otherwise, desktop backgrounds from
+            // follow-up virtual desktops will be drawn above windows
+            // from previous virtual desktops.
+            return m_slideBackground || m_paintCtx.firstPass;
         }
         // In order to make sure that 'keep above' windows are above
         // other windows during transition to another virtual desktop,
