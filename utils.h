@@ -142,14 +142,14 @@ MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
 }
 
 enum class QuickTileFlag {
-    None = 0,
-    Left = 1,
-    Right = 1<<1,
-    Top = 1<<2,
-    Bottom = 1<<3,
-    Horizontal = Left|Right,
-    Vertical = Top|Bottom,
-    Maximize = Left|Right|Top|Bottom
+    None        = 0,
+    Left        = 1 << 0,
+    Right       = 1 << 1,
+    Top         = 1 << 2,
+    Bottom      = 1 << 3,
+    Horizontal  = Left | Right,
+    Vertical    = Top | Bottom,
+    Maximize    = Left | Right | Top | Bottom,
 };
 Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
 
