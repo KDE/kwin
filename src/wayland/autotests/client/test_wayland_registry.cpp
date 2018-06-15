@@ -598,7 +598,7 @@ void TestWaylandRegistry::testOutOfSyncRemoval()
 
     //server removes the global
     //(simultaneously) the client legimitely uses the bound resource to the global
-    //client then gets the server events...it should no-op, not be a protcol error
+    //client then gets the server events...it should no-op, not be a protocol error
 
     using namespace KWayland::Client;
     KWayland::Client::ConnectionThread connection;
