@@ -34,9 +34,9 @@ const struct org_kde_kwin_dpms_manager_interface DpmsManagerInterface::Private::
 };
 #endif
 
-DpmsManagerInterface::Private::Private(DpmsManagerInterface *q, Display *d)
+DpmsManagerInterface::Private::Private(DpmsManagerInterface *qptr, Display *d)
     : Global::Private(d, &org_kde_kwin_dpms_manager_interface, s_version)
-    , q(q)
+    , q(qptr)
 {
 }
 
@@ -82,9 +82,9 @@ const struct org_kde_kwin_dpms_interface DpmsInterface::Private::s_interface = {
 };
 #endif
 
-DpmsInterface::Private::Private(DpmsInterface *q, DpmsManagerInterface *g, wl_resource *parentResource, OutputInterface *output)
+DpmsInterface::Private::Private(DpmsInterface *q, DpmsManagerInterface *g, wl_resource *parentResource, OutputInterface *outputInterface)
     : Resource::Private(q, g, parentResource, &org_kde_kwin_dpms_interface, &s_interface)
-    , output(output)
+    , output(outputInterface)
 {
 }
 

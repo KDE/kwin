@@ -150,9 +150,9 @@ void XdgOutputManagerInterface::Private::getXdgOutputCallback(wl_client *client,
     });
 }
 
-XdgOutputManagerInterface::Private::Private(XdgOutputManagerInterface *q, Display *d)
+XdgOutputManagerInterface::Private::Private(XdgOutputManagerInterface *qptr, Display *d)
     : Global::Private(d, &zxdg_output_manager_v1_interface, s_version)
-    , q(q)
+    , q(qptr)
 {
 }
 

@@ -207,10 +207,10 @@ void TestWaylandServerDisplay::testConnectNoSocket()
 
 void TestWaylandServerDisplay::testOutputManagement()
 {
-    auto display = new KWayland::Server::Display(this);
-    display->setSocketName("kwayland-test-0");
-    display->start();
-    auto kwin = display->createOutputManagement(this);
+    Display display;
+    display.setSocketName("kwayland-test-0");
+    display.start();
+    auto kwin = display.createOutputManagement(this);
     kwin->create();
     QVERIFY(kwin->isValid());
 }
