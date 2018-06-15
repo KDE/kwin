@@ -16,7 +16,7 @@
             <default>20</default>
         </entry>
         <entry name="SlideDocks" type="Bool">
-            <default>true</default>
+            <default>false</default>
         </entry>
         <entry name="SlideBackground" type="Bool">
             <default>true</default>
