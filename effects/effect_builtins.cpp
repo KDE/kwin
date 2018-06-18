@@ -692,11 +692,11 @@ static inline int index(BuiltInEffect effect)
 
 Effect *create(BuiltInEffect effect)
 {
-    const EffectData &effectData = s_effectData.at(index(effect));
-    if (effectData.createFunction == nullptr) {
+    const EffectData &data = effectData(effect);
+    if (data.createFunction == nullptr) {
         return nullptr;
     }
-    return effectData.createFunction();
+    return data.createFunction();
 }
 
 bool available(const QString &name)
@@ -714,11 +714,11 @@ bool supported(BuiltInEffect effect)
     if (effect == BuiltInEffect::Invalid) {
         return false;
     }
-    const EffectData &effectData = s_effectData.at(index(effect));
-    if (effectData.supportedFunction == nullptr) {
+    const EffectData &data = effectData(effect);
+    if (data.supportedFunction == nullptr) {
         return true;
     }
-    return effectData.supportedFunction();
+    return data.supportedFunction();
 }
 
 bool checkEnabledByDefault(BuiltInEffect effect)
@@ -726,17 +726,16 @@ bool checkEnabledByDefault(BuiltInEffect effect)
     if (effect == BuiltInEffect::Invalid) {
         return false;
     }
-    const EffectData &effectData = s_effectData.at(index(effect));
-    if (effectData.enabledFunction == nullptr) {
+    const EffectData &data = effectData(effect);
+    if (data.enabledFunction == nullptr) {
         return true;
     }
-    return effectData.enabledFunction();
+    return data.enabledFunction();
 }
 
 bool enabledByDefault(BuiltInEffect effect)
 {
-    const EffectData &effectData = s_effectData.at(index(effect));
-    return effectData.enabled;
+    return effectData(effect).enabled;
 }
 
 QStringList availableEffectNames()
@@ -775,7 +774,7 @@ BuiltInEffect builtInForName(const QString &name)
 
 QString nameForEffect(BuiltInEffect effect)
 {
-    return s_effectData.at(index(effect)).name;
+    return effectData(effect).name;
 }
 
 const EffectData &effectData(BuiltInEffect effect)
