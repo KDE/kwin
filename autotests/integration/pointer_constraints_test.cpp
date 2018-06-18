@@ -224,6 +224,16 @@ void TestPointerConstraints::testConfinedPointer()
     QCOMPARE(input()->pointer()->isConstrained(), true);
     QVERIFY(confinedSpy2.wait());
 
+    // deactivate the client, this should unconfine
+    workspace()->activateClient(nullptr);
+    QVERIFY(unconfinedSpy2.wait());
+    QCOMPARE(input()->pointer()->isConstrained(), false);
+
+    // activate it again, this confines again
+    workspace()->activateClient(static_cast<AbstractClient*>(input()->pointer()->window().data()));
+    QVERIFY(confinedSpy2.wait());
+    QCOMPARE(input()->pointer()->isConstrained(), true);
+
     // create a second window and move it above our constrained window
     QScopedPointer<Surface> surface2(Test::createSurface());
     QScopedPointer<QObject> shellSurface2(Test::createShellSurface(type, surface2.data()));

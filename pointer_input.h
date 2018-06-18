@@ -165,6 +165,7 @@ private:
     QMetaObject::Connection m_windowGeometryConnection;
     QMetaObject::Connection m_internalWindowConnection;
     QMetaObject::Connection m_constraintsConnection;
+    QMetaObject::Connection m_constraintsActivatedConnection;
     QMetaObject::Connection m_confinedPointerRegionConnection;
     QMetaObject::Connection m_decorationGeometryConnection;
     bool m_confined = false;

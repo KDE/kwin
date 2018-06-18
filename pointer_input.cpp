@@ -544,6 +544,8 @@ void PointerInputRedirection::update()
         );
         m_constraintsConnection = connect(m_window->surface(), &KWayland::Server::SurfaceInterface::pointerConstraintsChanged,
                                           this, &PointerInputRedirection::updatePointerConstraints);
+        m_constraintsActivatedConnection = connect(workspace(), &Workspace::clientActivated,
+                                                   this, &PointerInputRedirection::updatePointerConstraints);
         // check whether a pointer confinement/lock fires
         m_blockConstraint = false;
         updatePointerConstraints();
@@ -588,6 +590,9 @@ void PointerInputRedirection::disconnectPointerConstraintsConnection()
 {
     disconnect(m_constraintsConnection);
     m_constraintsConnection = QMetaObject::Connection();
+
+    disconnect(m_constraintsActivatedConnection);
+    m_constraintsActivatedConnection = QMetaObject::Connection();
 }
 
 template <typename T>
@@ -617,13 +622,19 @@ void PointerInputRedirection::updatePointerConstraints()
     if (m_blockConstraint) {
         return;
     }
+    const bool windowIsActive = m_window == workspace()->activeClient();
     const auto cf = s->confinedPointer();
     if (cf) {
         if (cf->isConfined()) {
+            if (!windowIsActive) {
+                cf->setConfined(false);
+                m_confined = false;
+                disconnectConfinedPointerRegionConnection();
+            }
             return;
         }
         const QRegion r = getConstraintRegion(m_window.data(), cf.data());
-        if (r.contains(m_pos.toPoint())) {
+        if (windowIsActive && r.contains(m_pos.toPoint())) {
             cf->setConfined(true);
             m_confined = true;
             m_confinedPointerRegionConnection = connect(cf.data(), &KWayland::Server::ConfinedPointerInterface::regionChanged, this,
@@ -660,10 +671,14 @@ void PointerInputRedirection::updatePointerConstraints()
     const auto lock = s->lockedPointer();
     if (lock) {
         if (lock->isLocked()) {
+            if (!windowIsActive) {
+                lock->setLocked(false);
+                m_locked = false;
+            }
             return;
         }
         const QRegion r = getConstraintRegion(m_window.data(), lock.data());
-        if (r.contains(m_pos.toPoint())) {
+        if (windowIsActive && r.contains(m_pos.toPoint())) {
             lock->setLocked(true);
             m_locked = true;
             OSD::show(i18nc("notification about mouse pointer locked",
