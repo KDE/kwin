@@ -270,8 +270,6 @@ Decoration::~Decoration()
     if (m_context) {
         m_context->makeCurrent(m_offscreenSurface.data());
 
-        delete m_renderControl;
-        delete m_view.data();
         m_fbo.reset();
         delete m_item;
 
@@ -324,8 +322,8 @@ void Decoration::init()
         m_item->setParentItem(visualParent.value<QQuickItem*>());
         visualParent.value<QQuickItem*>()->setProperty("drawBackground", false);
     } else {
-        m_renderControl = new QQuickRenderControl(this);
-        m_view = new QQuickWindow(m_renderControl);
+        m_renderControl.reset(new QQuickRenderControl);
+        m_view = new QQuickWindow(m_renderControl.data());
         bool usingGL = m_view->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL;
         m_view->setColor(Qt::transparent);
         m_view->setFlags(Qt::FramelessWindowHint);
@@ -392,8 +390,8 @@ void Decoration::init()
             }
             m_updateTimer->start();
         };
-        connect(m_renderControl, &QQuickRenderControl::renderRequested, this, requestUpdate);
-        connect(m_renderControl, &QQuickRenderControl::sceneChanged, this, requestUpdate);
+        connect(m_renderControl.data(), &QQuickRenderControl::renderRequested, this, requestUpdate);
+        connect(m_renderControl.data(), &QQuickRenderControl::sceneChanged, this, requestUpdate);
 
         m_item->setParentItem(m_view->contentItem());
 
