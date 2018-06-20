@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,19 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "diminactive_config.h"
+
 // KConfigSkeleton
 #include "diminactiveconfig.h"
 #include <config-kwin.h>
 
 #include <kwineffects_interface.h>
 
-#include <KLocalizedString>
-#include <kconfiggroup.h>
 #include <KAboutData>
 #include <KPluginFactory>
-
-#include <QWidget>
-#include <QVBoxLayout>
 
 K_PLUGIN_FACTORY_WITH_JSON(DimInactiveEffectConfigFactory,
                            "diminactive_config.json",
@@ -40,35 +37,29 @@ K_PLUGIN_FACTORY_WITH_JSON(DimInactiveEffectConfigFactory,
 namespace KWin
 {
 
-DimInactiveEffectConfigForm::DimInactiveEffectConfigForm(QWidget* parent) : QWidget(parent)
+DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(KAboutData::pluginData(QStringLiteral("diminactive")), parent, args)
 {
-    setupUi(this);
+    m_ui.setupUi(this);
+    DimInactiveConfig::instance(KWIN_CONFIG);
+    addConfig(DimInactiveConfig::self(), this);
+    load();
 }
 
-DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("diminactive")), parent, args)
+DimInactiveEffectConfig::~DimInactiveEffectConfig()
 {
-    m_ui = new DimInactiveEffectConfigForm(this);
-
-    QVBoxLayout* layout = new QVBoxLayout(this);
-
-    layout->addWidget(m_ui);
-
-    DimInactiveConfig::instance(KWIN_CONFIG);
-    addConfig(DimInactiveConfig::self(), m_ui);
-
-    load();
 }
 
 void DimInactiveEffectConfig::save()
 {
     KCModule::save();
+
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("diminactive"));
 }
 
-} // namespace
+} // namespace KWin
 
 #include "diminactive_config.moc"

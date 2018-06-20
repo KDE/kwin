@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,32 +22,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DIMINACTIVE_CONFIG_H
 #define KWIN_DIMINACTIVE_CONFIG_H
 
-#include <kcmodule.h>
+#include <KCModule>
 
 #include "ui_diminactive_config.h"
 
 namespace KWin
 {
 
-class DimInactiveEffectConfigForm : public QWidget, public Ui::DimInactiveEffectConfigForm
-{
-    Q_OBJECT
-public:
-    explicit DimInactiveEffectConfigForm(QWidget* parent);
-};
-
 class DimInactiveEffectConfig : public KCModule
 {
     Q_OBJECT
-public:
-    explicit DimInactiveEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
-    virtual void save();
+public:
+    explicit DimInactiveEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
+    ~DimInactiveEffectConfig() override;
+
+    void save() override;
 
 private:
-    DimInactiveEffectConfigForm* m_ui;
+    ::Ui::DimInactiveEffectConfig m_ui;
 };
 
-} // namespace
+} // namespace KWin
 
 #endif

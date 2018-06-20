@@ -1,144 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KWin::DimInactiveEffectConfigForm</class>
- <widget class="QWidget" name="KWin::DimInactiveEffectConfigForm">
+ <class>DimInactiveEffectConfig</class>
+ <widget class="QWidget" name="DimInactiveEffectConfig">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>298</width>
-    <height>161</height>
+    <width>400</width>
+    <height>160</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" colspan="3">
-    <widget class="QCheckBox" name="kcfg_DimPanels">
-     <property name="text">
-      <string>Apply effect to &amp;panels</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="3">
-    <widget class="QCheckBox" name="kcfg_DimDesktop">
-     <property name="text">
-      <string>Apply effect to the desk&amp;top</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="3">
-    <widget class="QCheckBox" name="kcfg_DimKeepAbove">
-     <property name="text">
-      <string>Apply effect to &amp;keep-above windows</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="3">
-    <widget class="QCheckBox" name="kcfg_DimByGroup">
-     <property name="text">
-      <string>Apply effect to &amp;groups</string>
-     </property>
-    </widget>
-   </item>
+  <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="label_Strength">
      <property name="text">
-      <string>&amp;Strength:</string>
-     </property>
-     <property name="buddy">
-      <cstring>kcfg_Strength</cstring>
+      <string>Strength:</string>
      </property>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QSlider" name="kcfg_sliderStrength">
-     <property name="minimumSize">
-      <size>
-       <width>120</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>100</number>
-     </property>
-     <property name="value">
-      <number>25</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
     <widget class="QSpinBox" name="kcfg_Strength">
-     <property name="minimum">
-      <number>1</number>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="maximum">
       <number>100</number>
      </property>
-     <property name="value">
-      <number>25</number>
+     <property name="singleStep">
+      <number>5</number>
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="3">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_Dim">
+     <property name="text">
+      <string>Dim:</string>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>0</height>
-      </size>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QCheckBox" name="kcfg_DimPanels">
+     <property name="text">
+      <string>Docks and panels</string>
      </property>
-    </spacer>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="kcfg_DimDesktop">
+     <property name="text">
+      <string>Desktop</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="kcfg_DimKeepAbove">
+     <property name="text">
+      <string>Keep above windows</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QCheckBox" name="kcfg_DimByGroup">
+     <property name="text">
+      <string>By window group</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>kcfg_sliderStrength</tabstop>
-  <tabstop>kcfg_Strength</tabstop>
-  <tabstop>kcfg_DimPanels</tabstop>
-  <tabstop>kcfg_DimDesktop</tabstop>
-  <tabstop>kcfg_DimByGroup</tabstop>
- </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>kcfg_Strength</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>kcfg_sliderStrength</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>288</x>
-     <y>29</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>195</x>
-     <y>26</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_sliderStrength</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>kcfg_Strength</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>136</x>
-     <y>26</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>288</x>
-     <y>29</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

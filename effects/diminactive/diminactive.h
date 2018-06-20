@@ -4,6 +4,7 @@
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,66 +23,108 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DIMINACTIVE_H
 #define KWIN_DIMINACTIVE_H
 
-// Include with base class for effects.
+// kwineffects
 #include <kwineffects.h>
-#include <QTimeLine>
-
 
 namespace KWin
 {
 
-class DimInactiveEffect
-    : public Effect
+class DimInactiveEffect : public Effect
 {
     Q_OBJECT
-    Q_PROPERTY(bool dimPanels READ isDimPanels)
-    Q_PROPERTY(bool dimDesktop READ isDimDesktop)
-    Q_PROPERTY(bool dimKeepAbove READ isDimKeepAbove)
-    Q_PROPERTY(bool dimByGroup READ isDimByGroup)
-    Q_PROPERTY(int dimStrength READ configuredDimStrength)
+    Q_PROPERTY(int dimStrength READ dimStrength)
+    Q_PROPERTY(bool dimPanels READ dimPanels)
+    Q_PROPERTY(bool dimDesktop READ dimDesktop)
+    Q_PROPERTY(bool dimKeepAbove READ dimKeepAbove)
+    Q_PROPERTY(bool dimByGroup READ dimByGroup)
+
 public:
     DimInactiveEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    ~DimInactiveEffect() override;
 
-    int requestedEffectChainPosition() const override {
-        return 50;
-    }
+    void reconfigure(ReconfigureFlags flags) override;
 
-    // for properties
-    bool isDimPanels() const {
-        return dim_panels;
-    }
-    bool isDimDesktop() const {
-        return dim_desktop;
-    }
-    bool isDimKeepAbove() const {
-        return dim_keepabove;
-    }
-    bool isDimByGroup() const {
-        return dim_by_group;
-    }
-    int configuredDimStrength() const {
-        return dim_strength;
-    }
-public Q_SLOTS:
-    void slotWindowActivated(KWin::EffectWindow* c);
-    void slotWindowDeleted(KWin::EffectWindow *w);
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void postPaintScreen() override;
+
+    int requestedEffectChainPosition() const override;
+    bool isActive() const override;
+
+    int dimStrength() const;
+    bool dimPanels() const;
+    bool dimDesktop() const;
+    bool dimKeepAbove() const;
+    bool dimByGroup() const;
+
+private Q_SLOTS:
+    void windowActivated(EffectWindow *w);
+    void windowClosed(EffectWindow *w);
+    void windowDeleted(EffectWindow *w);
+    void activeFullScreenEffectChanged();
 
 private:
-    bool dimWindow(const EffectWindow* w) const;
-    QTimeLine timeline;
-    EffectWindow* active;
-    EffectWindow* previousActive;
-    QTimeLine previousActiveTimeline;
-    int dim_strength; // reduce saturation and brightness by this percentage
-    bool dim_panels; // do/don't dim also all panels
-    bool dim_desktop; // do/don't dim the desktop
-    bool dim_keepabove; // do/don't dim keep-above windows
-    bool dim_by_group; // keep visible all windows from the active window's group or only the active window
+    void dimWindow(WindowPaintData &data, qreal strength);
+    bool canDimWindow(const EffectWindow *w) const;
+    void scheduleInTransition(EffectWindow *w);
+    void scheduleGroupInTransition(EffectWindow *w);
+    void scheduleOutTransition(EffectWindow *w);
+    void scheduleGroupOutTransition(EffectWindow *w);
+    void scheduleRepaint(EffectWindow *w);
+
+private:
+    qreal m_dimStrength;
+    bool m_dimPanels;
+    bool m_dimDesktop;
+    bool m_dimKeepAbove;
+    bool m_dimByGroup;
+
+    EffectWindow *m_activeWindow;
+    const EffectWindowGroup *m_activeWindowGroup;
+    QHash<EffectWindow*, TimeLine> m_transitions;
+    QHash<EffectWindow*, qreal> m_forceDim;
+
+    struct {
+        bool active = false;
+        TimeLine timeLine;
+    } m_fullScreenTransition;
 };
 
-} // namespace
+inline int DimInactiveEffect::requestedEffectChainPosition() const
+{
+    return 50;
+}
+
+inline bool DimInactiveEffect::isActive() const
+{
+    return true;
+}
+
+inline int DimInactiveEffect::dimStrength() const
+{
+    return qRound(m_dimStrength * 100.0);
+}
+
+inline bool DimInactiveEffect::dimPanels() const
+{
+    return m_dimPanels;
+}
+
+inline bool DimInactiveEffect::dimDesktop() const
+{
+    return m_dimDesktop;
+}
+
+inline bool DimInactiveEffect::dimKeepAbove() const
+{
+    return m_dimKeepAbove;
+}
+
+inline bool DimInactiveEffect::dimByGroup() const
+{
+    return m_dimByGroup;
+}
+
+} // namespace KWin
 
 #endif
