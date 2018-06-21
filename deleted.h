@@ -41,6 +41,9 @@ class KWIN_EXPORT Deleted
     Q_PROPERTY(bool modal READ isModal)
     Q_PROPERTY(bool fullScreen READ isFullScreen CONSTANT)
     Q_PROPERTY(bool isCurrentTab READ isCurrentTab)
+    Q_PROPERTY(bool keepAbove READ keepAbove CONSTANT)
+    Q_PROPERTY(bool keepBelow READ keepBelow CONSTANT)
+    Q_PROPERTY(QString caption READ caption CONSTANT)
 public:
     static Deleted* create(Toplevel* c);
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
@@ -92,6 +95,15 @@ public:
     bool isCurrentTab() const {
         return m_wasCurrentTab;
     }
+    bool keepAbove() const {
+        return m_keepAbove;
+    }
+    bool keepBelow() const {
+        return m_keepBelow;
+    }
+    QString caption() const {
+        return m_caption;
+    }
 protected:
     virtual void debug(QDebug& stream) const;
 private Q_SLOTS:
@@ -125,6 +137,9 @@ private:
     NET::WindowType m_type = NET::Unknown;
     QByteArray m_windowRole;
     bool m_fullscreen;
+    bool m_keepAbove;
+    bool m_keepBelow;
+    QString m_caption;
 };
 
 inline void Deleted::refWindow()
