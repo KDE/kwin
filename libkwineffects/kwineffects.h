@@ -1837,6 +1837,10 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      **/
     Q_PROPERTY(bool keepAbove READ keepAbove)
     /**
+     * Whether the window is set to be kept below other windows.
+     **/
+    Q_PROPERTY(bool keepBelow READ keepBelow)
+    /**
      * Whether the window is minimized.
      **/
     Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized)
@@ -2140,6 +2144,10 @@ public:
      * Returns whether or not the window is kept above all other windows.
      */
     bool keepAbove() const;
+    /**
+     * Returns whether the window is kept below all other windows.
+     */
+    bool keepBelow() const;
 
     bool isModal() const;
     Q_SCRIPTABLE virtual KWin::EffectWindow* findModal() = 0;
