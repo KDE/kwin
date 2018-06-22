@@ -68,7 +68,7 @@ void XdgShellTestV6::testMaxSize()
 
 void XdgShellTestV6::testPopup_data()
 {
-    QTest::addColumn<XdgPositioner>("positioners");
+    QTest::addColumn<XdgPositioner>("positioner");
     XdgPositioner positioner(QSize(10,10), QRect(100,100,50,50));
     QTest::newRow("default") << positioner;
 
@@ -105,7 +105,7 @@ void XdgShellTestV6::testPopup()
     QVERIFY(xdgTopLevelCreatedSpy.wait());
     auto serverXdgTopLevel = xdgTopLevelCreatedSpy.first().first().value<XdgShellSurfaceInterface*>();
 
-    XdgPositioner positioner(QSize(10,10), QRect(100,100,50,50));
+    QFETCH(XdgPositioner, positioner);
 
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QScopedPointer<XdgShellPopup> xdgSurface(m_xdgShell->createPopup(surface.data(), xdgParentSurface.data(), positioner));
