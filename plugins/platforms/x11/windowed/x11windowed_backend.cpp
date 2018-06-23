@@ -404,11 +404,16 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
     }
 }
 
-void X11WindowedBackend::createCursor(const QImage &img, const QPoint &hotspot)
+void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hotspot)
 {
     const xcb_pixmap_t pix = xcb_generate_id(m_connection);
     const xcb_gcontext_t gc = xcb_generate_id(m_connection);
     const xcb_cursor_t cid = xcb_generate_id(m_connection);
+
+    //right now on X we only have one scale between all screens, and we know we will have at least one screen
+    const qreal outputScale = screenScales().first();
+    const QSize targetSize = srcImage.size() * outputScale / srcImage.devicePixelRatio();
+    const QImage img = srcImage.scaled(targetSize, Qt::KeepAspectRatio);
 
     xcb_create_pixmap(m_connection, 32, pix, m_screen->root, img.width(), img.height());
     xcb_create_gc(m_connection, gc, pix, 0, nullptr);
@@ -416,7 +421,7 @@ void X11WindowedBackend::createCursor(const QImage &img, const QPoint &hotspot)
     xcb_put_image(m_connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.byteCount(), img.constBits());
 
     XRenderPicture pic(pix, 32);
-    xcb_render_create_cursor(m_connection, cid, pic, hotspot.x(), hotspot.y());
+    xcb_render_create_cursor(m_connection, cid, pic, qRound(hotspot.x() * outputScale), qRound(hotspot.y() * outputScale));
     for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
         xcb_change_window_attributes(m_connection, (*it).window, XCB_CW_CURSOR, &cid);
     }
