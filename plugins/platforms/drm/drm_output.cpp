@@ -132,6 +132,8 @@ void DrmOutput::updateCursor()
     m_hasNewCursor = true;
     QImage *c = m_cursor[m_cursorIndex]->image();
     c->fill(Qt::transparent);
+    c->setDevicePixelRatio(m_scale);
+
     QPainter p;
     p.begin(c);
     if (m_orientation == Qt::InvertedLandscapeOrientation) {
@@ -158,6 +160,7 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
         hotspotMatrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
         hotspotMatrix.translate(-cursorSize.width()/2.0, -cursorSize.height()/2.0);
     }
+    hotspotMatrix.scale(m_scale);
     matrix.scale(m_scale);
     matrix.translate(-m_globalPos.x(), -m_globalPos.y());
     const QPoint p = matrix.map(globalPos) - hotspotMatrix.map(m_backend->softwareCursorHotspot());
