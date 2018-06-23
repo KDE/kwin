@@ -88,6 +88,14 @@ public:
      **/
     virtual QSize size(int screen) const = 0;
 
+    /**
+     * The highest scale() of all connected screens
+     * for use when deciding what scale to load global assets at
+     * Similar to QGuiApplication::scale
+     * @see scale
+     */
+    qreal maxScale() const;
+
     /*
      * The output scale for this display, for use by high DPI displays
      */
@@ -171,6 +179,11 @@ Q_SIGNALS:
      * @see size()
      **/
     void sizeChanged();
+    /**
+     * Emitted when the maximum scale of all attached screens changes
+     * @see maxScale
+     */
+    void maxScaleChanged();
 
 protected Q_SLOTS:
     void setCount(int count);
@@ -196,6 +209,7 @@ private:
     KSharedConfig::Ptr m_config;
     QSize m_boundingSize;
     OrientationSensor *m_orientationSensor;
+    qreal m_maxScale;
 
     KWIN_SINGLETON(Screens)
 };

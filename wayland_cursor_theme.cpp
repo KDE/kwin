@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_cursor_theme.h"
 #include "cursor.h"
 #include "wayland_server.h"
+#include "screens.h"
 // Qt
 #include <QVector>
 // KWayland
@@ -37,6 +38,7 @@ WaylandCursorTheme::WaylandCursorTheme(KWayland::Client::ShmPool *shm, QObject *
     , m_theme(nullptr)
     , m_shm(shm)
 {
+    connect(screens(), &Screens::maxScaleChanged, this, &WaylandCursorTheme::loadTheme);
 }
 
 WaylandCursorTheme::~WaylandCursorTheme()
@@ -55,6 +57,8 @@ void WaylandCursorTheme::loadTheme()
         //set a default size
         size = 24;
     }
+
+    size *= screens()->maxScale();
 
     auto theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
                                    size, m_shm->shm());

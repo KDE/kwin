@@ -56,6 +56,7 @@ Screens::Screens(QObject *parent)
     , m_currentFollowsMouse(false)
     , m_changedTimer(new QTimer(this))
     , m_orientationSensor(new OrientationSensor(this))
+    , m_maxScale(1.0)
 {
     connect(this, &Screens::changed, this,
         [this] {
@@ -105,6 +106,11 @@ float Screens::refreshRate(int screen) const
     return 60.0f;
 }
 
+qreal Screens::maxScale() const
+{
+    return m_maxScale;
+}
+
 qreal Screens::scale(int screen) const
 {
     Q_UNUSED(screen)
@@ -124,12 +130,18 @@ void Screens::reconfigure()
 void Screens::updateSize()
 {
     QRect bounding;
+    qreal maxScale = 1.0;
     for (int i = 0; i < count(); ++i) {
         bounding = bounding.united(geometry(i));
+        maxScale = qMax(maxScale, scale(i));
     }
     if (m_boundingSize != bounding.size()) {
         m_boundingSize = bounding.size();
         emit sizeChanged();
+    }
+    if (!qFuzzyCompare(m_maxScale, maxScale)) {
+        m_maxScale = maxScale;
+        emit maxScaleChanged();
     }
 }
 

@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "decorations/decoratedclient.h"
+#include "screens.h"
 // KDecoration
 #include <KDecoration2/Decoration>
 // KWayland
@@ -1217,7 +1218,12 @@ void CursorImage::loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Imag
         if (!buffer) {
             return;
         }
-        it = decltype(it)(cursors.insert(shape, {buffer->data().copy(), QPoint(cursor->hotspot_x, cursor->hotspot_y)}));
+        auto scale = screens()->maxScale();
+        int hotSpotX = qRound(cursor->hotspot_x / scale);
+        int hotSpotY = qRound(cursor->hotspot_y / scale);
+        QImage img = buffer->data().copy();
+        img.setDevicePixelRatio(scale);
+        it = decltype(it)(cursors.insert(shape, {img, QPoint(hotSpotX, hotSpotY)}));
     }
     image->hotSpot = it.value().hotSpot;
     image->image = it.value().image;
