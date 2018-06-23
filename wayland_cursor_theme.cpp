@@ -52,19 +52,8 @@ void WaylandCursorTheme::loadTheme()
     Cursor *c = Cursor::self();
     int size = c->themeSize();
     if (size == 0) {
-        // resolution depended
-        // as we don't support per screen cursor sizes yet, we use the first screen
-        KWayland::Server::Display *display = waylandServer()->display();
-        auto output = display->outputs().first();
-        // calculate dots per inch, multiplied with magic constants
-        if (output->physicalSize().height()) {
-            size = qreal(output->pixelSize().height()) / (qreal(output->physicalSize().height()) * 0.0393701) * 16.0 / 72.0;
-        } else {
-            // use sensible default
-            size = 24;
-        }
-        connect(output, &KWayland::Server::OutputInterface::pixelSizeChanged, this, &WaylandCursorTheme::loadTheme, Qt::UniqueConnection);
-        connect(output, &KWayland::Server::OutputInterface::physicalSizeChanged, this, &WaylandCursorTheme::loadTheme, Qt::UniqueConnection);
+        //set a default size
+        size = 24;
     }
 
     auto theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
