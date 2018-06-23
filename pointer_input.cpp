@@ -1063,6 +1063,7 @@ void CursorImage::updateServerCursor()
     }
     m_serverCursor.hotSpot = c->hotspot();
     m_serverCursor.image = buffer->data().copy();
+    m_serverCursor.image.setDevicePixelRatio(cursorSurface->scale());
     if (needsEmit) {
         emit changed();
     }

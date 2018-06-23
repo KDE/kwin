@@ -882,6 +882,19 @@ void PointerInputTest::testCursorImage()
     QTRY_COMPARE(p->cursorImage(), blue);
     QCOMPARE(p->cursorHotSpot(), QPoint(6, 6));
 
+    // scaled cursor
+    QImage blueScaled = QImage(QSize(20, 20), QImage::Format_ARGB32_Premultiplied);
+    blueScaled.fill(Qt::blue);
+    auto bs = Test::waylandShmPool()->createBuffer(blueScaled);
+    cursorSurface->attachBuffer(bs);
+    cursorSurface->setScale(2);
+    cursorSurface->damage(QRect(0, 0, 20, 20));
+    cursorSurface->commit();
+    QVERIFY(cursorRenderedSpy.wait());
+    QTRY_COMPARE(p->cursorImage(), blueScaled);
+    QCOMPARE(p->cursorImage().devicePixelRatio(), 2.0);
+    QCOMPARE(p->cursorHotSpot(), QPoint(6, 6)); //surface-local (so not changed)
+
     // hide the cursor
     pointer->setCursor(nullptr);
     Test::flushWaylandConnection();
