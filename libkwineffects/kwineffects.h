@@ -1695,6 +1695,15 @@ Q_SIGNALS:
      **/
     void xcbConnectionChanged();
 
+    /**
+     * This signal is emitted when active fullscreen effect changed.
+     *
+     * @see activeFullScreenEffect
+     * @see setActiveFullScreenEffect
+     * @since 5.14
+     **/
+    void activeFullScreenEffectChanged();
+
 protected:
     QVector< EffectPair > loaded_effects;
     //QHash< QString, EffectFactory* > effect_factories;

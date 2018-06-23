@@ -620,7 +620,11 @@ void EffectsHandlerImpl::slotPaddingChanged(Toplevel* t, const QRect& old)
 
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)
 {
+    if (fullscreen_effect == e) {
+        return;
+    }
     fullscreen_effect = e;
+    emit activeFullScreenEffectChanged();
 }
 
 Effect* EffectsHandlerImpl::activeFullScreenEffect() const
