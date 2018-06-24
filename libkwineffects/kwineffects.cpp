@@ -767,9 +767,32 @@ EffectsHandler* effects = nullptr;
 // EffectWindow
 //****************************************
 
+class Q_DECL_HIDDEN EffectWindow::Private
+{
+public:
+    Private(EffectWindow *q);
+
+    EffectWindow *q;
+    bool managed = false;
+};
+
+EffectWindow::Private::Private(EffectWindow *q)
+    : q(q)
+{
+}
+
 EffectWindow::EffectWindow(QObject *parent)
     : QObject(parent)
+    , d(new Private(this))
 {
+    // Deleted windows are not managed. So, when windowClosed signal is
+    // emitted, effects can't distinguish managed windows from unmanaged
+    // windows(e.g. combo box popups, popup menus, etc). Save value of the
+    // managed property during construction of EffectWindow. At that time,
+    // parent can be Client, ShellClient, or Unmanaged. So, later on, when
+    // an instance of Deleted becomes parent of the EffectWindow, effects
+    // can still figure out whether it is/was a managed window.
+    d->managed = parent->property("managed").value<bool>();
 }
 
 EffectWindow::~EffectWindow()
@@ -810,7 +833,6 @@ WINDOW_HELPER(bool, isNotification, "notification")
 WINDOW_HELPER(bool, isOnScreenDisplay, "onScreenDisplay")
 WINDOW_HELPER(bool, isComboBox, "comboBox")
 WINDOW_HELPER(bool, isDNDIcon, "dndIcon")
-WINDOW_HELPER(bool, isManaged, "managed")
 WINDOW_HELPER(bool, isDeleted, "deleted")
 WINDOW_HELPER(bool, hasOwnShape, "shaped")
 WINDOW_HELPER(QString, windowRole, "windowRole")
@@ -961,6 +983,11 @@ bool EffectWindow::isVisible() const
     return !isMinimized()
            && isOnCurrentDesktop()
            && isOnCurrentActivity();
+}
+
+bool EffectWindow::isManaged() const
+{
+    return d->managed;
 }
 
 
