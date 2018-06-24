@@ -87,11 +87,7 @@ private:
     KWin::Borders *m_extendedBorders;
     KWin::Borders *m_padding;
     QString m_themeName;
-
-    //workaround QtBug-68997
-    //deleting of a RenderControl/controlled window triggers deletion of other queued deleted items
-    //deleting this queued means we know we're not processing anything else at the same time and should minimise the damage
-    QScopedPointer<QQuickRenderControl, QScopedPointerDeleteLater> m_renderControl;
+    QQuickRenderControl *m_renderControl = nullptr;
     QScopedPointer<QTimer> m_updateTimer;
     QScopedPointer<QOpenGLContext> m_context;
     QScopedPointer<QOffscreenSurface> m_offscreenSurface;
