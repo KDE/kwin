@@ -108,6 +108,11 @@ void Workspace::storeSession(KConfig* config, SMSavePhase phase)
 
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
         Client* c = (*it);
+        if (c->windowType() > NET::Splash) {
+            //window types outside this are not tooltips/menus/OSDs
+            //typically these will be unmanaged and not in this list anyway, but that is not enforced
+            continue;
+        }
         QByteArray sessionId = c->sessionId();
         QByteArray wmCommand = c->wmCommand();
         if (sessionId.isEmpty())
@@ -184,6 +189,9 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
     int active_client = -1;
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
         Client* c = (*it);
+        if (c->windowType() > NET::Splash) {
+            continue;
+        }
         QByteArray sessionId = c->sessionId();
         QByteArray wmCommand = c->wmCommand();
         if (sessionId.isEmpty())
