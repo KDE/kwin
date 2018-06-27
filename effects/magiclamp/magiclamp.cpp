@@ -24,18 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "magiclampconfig.h"
 
-#include <kwinconfig.h>
-#include <kconfiggroup.h>
-#include <QTimeLine>
-#include <QtDebug>
-
 namespace KWin
 {
 
 MagicLampEffect::MagicLampEffect()
 {
     initConfig<MagicLampConfig>();
-    mActiveAnimations = 0;
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowMinimized(KWin::EffectWindow*)), this, SLOT(slotWindowMinimized(KWin::EffectWindow*)));
@@ -50,36 +44,28 @@ bool MagicLampEffect::supported()
 void MagicLampEffect::reconfigure(ReconfigureFlags)
 {
     MagicLampConfig::self()->read();
-    // TODO: rename animationDuration to duration
-    mAnimationDuration = animationTime(MagicLampConfig::animationDuration() != 0 ? MagicLampConfig::animationDuration() : 250);
+
+    // TODO: Rename animationDuration to duration so we can use
+    // animationTime<MagicLampConfig>(250).
+    const int d = MagicLampConfig::animationDuration() != 0
+        ? MagicLampConfig::animationDuration()
+        : 250;
+    m_duration = std::chrono::milliseconds(static_cast<int>(animationTime(d)));
 }
 
 void MagicLampEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
+    const std::chrono::milliseconds delta(time);
 
-    QHash< EffectWindow*, QTimeLine* >::iterator entry = mTimeLineWindows.begin();
-    bool erase = false;
-    while (entry != mTimeLineWindows.end()) {
-        QTimeLine *timeline = entry.value();
-        if (entry.key()->isMinimized()) {
-            timeline->setCurrentTime(timeline->currentTime() + time);
-            erase = (timeline->currentValue() >= 1.0f);
-        } else {
-            timeline->setCurrentTime(timeline->currentTime() - time);
-            erase = (timeline->currentValue() <= 0.0f);
-        }
-        if (erase) {
-            delete timeline;
-            entry = mTimeLineWindows.erase(entry);
-        } else
-            ++entry;
+    auto animationIt = m_animations.begin();
+    while (animationIt != m_animations.end()) {
+        (*animationIt).update(delta);
+        ++animationIt;
     }
 
-    mActiveAnimations = mTimeLineWindows.count();
-    if (mActiveAnimations > 0)
-        // We need to mark the screen windows as transformed. Otherwise the
-        //  whole screen won't be repainted, resulting in artefacts
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    // We need to mark the screen windows as transformed. Otherwise the
+    // whole screen won't be repainted, resulting in artefacts.
+    data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(data, time);
 }
@@ -88,7 +74,7 @@ void MagicLampEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, 
 {
     // Schedule window for transformation if the animation is still in
     //  progress
-    if (mTimeLineWindows.contains(w)) {
+    if (m_animations.contains(w)) {
         // We'll transform this window
         data.setTransformed();
         data.quads = data.quads.makeGrid(40);
@@ -100,9 +86,10 @@ void MagicLampEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, 
 
 void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (mTimeLineWindows.contains(w)) {
+    auto animationIt = m_animations.constFind(w);
+    if (animationIt != m_animations.constEnd()) {
         // 0 = not minimized, 1 = fully minimized
-        float progress = mTimeLineWindows[w]->currentValue();
+        const qreal progress = (*animationIt).value();
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
@@ -322,10 +309,16 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
 
 void MagicLampEffect::postPaintScreen()
 {
-    if (mActiveAnimations > 0)
-        // Repaint the workspace so that everything would be repainted next time
-        effects->addRepaintFull();
-    mActiveAnimations = mTimeLineWindows.count();
+    auto animationIt = m_animations.begin();
+    while (animationIt != m_animations.end()) {
+        if ((*animationIt).done()) {
+            animationIt = m_animations.erase(animationIt);
+        } else {
+            ++animationIt;
+        }
+    }
+
+    effects->addRepaintFull();
 
     // Call the next effect.
     effects->postPaintScreen();
@@ -333,34 +326,48 @@ void MagicLampEffect::postPaintScreen()
 
 void MagicLampEffect::slotWindowDeleted(EffectWindow* w)
 {
-    delete mTimeLineWindows.take(w);
+    m_animations.remove(w);
 }
 
 void MagicLampEffect::slotWindowMinimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;
-    if (!mTimeLineWindows.contains(w)) {
-        mTimeLineWindows.insert(w, new QTimeLine(mAnimationDuration, this));
-        mTimeLineWindows[w]->setCurrentTime(0);
-        mTimeLineWindows[w]->setCurveShape(QTimeLine::LinearCurve);
+
+    TimeLine &timeLine = m_animations[w];
+
+    if (timeLine.running()) {
+        timeLine.toggleDirection();
+    } else {
+        timeLine.setDirection(TimeLine::Forward);
+        timeLine.setDuration(m_duration);
+        timeLine.setEasingCurve(QEasingCurve::Linear);
     }
+
+    effects->addRepaintFull();
 }
 
 void MagicLampEffect::slotWindowUnminimized(EffectWindow* w)
 {
     if (effects->activeFullScreenEffect())
         return;
-    if (!mTimeLineWindows.contains(w)) {
-        mTimeLineWindows.insert(w, new QTimeLine(mAnimationDuration, this));
-        mTimeLineWindows[w]->setCurrentTime(mAnimationDuration);
-        mTimeLineWindows[w]->setCurveShape(QTimeLine::LinearCurve);
+
+    TimeLine &timeLine = m_animations[w];
+
+    if (timeLine.running()) {
+        timeLine.toggleDirection();
+    } else {
+        timeLine.setDirection(TimeLine::Backward);
+        timeLine.setDuration(m_duration);
+        timeLine.setEasingCurve(QEasingCurve::Linear);
     }
+
+    effects->addRepaintFull();
 }
 
 bool MagicLampEffect::isActive() const
 {
-    return !mTimeLineWindows.isEmpty();
+    return !m_animations.isEmpty();
 }
 
 } // namespace

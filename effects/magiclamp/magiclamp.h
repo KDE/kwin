@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
-class QTimeLine;
-
 namespace KWin
 {
 
@@ -32,7 +30,7 @@ class MagicLampEffect
     : public Effect
 {
     Q_OBJECT
-    Q_PROPERTY(int animationDuration READ animationDuration)
+
 public:
     MagicLampEffect();
 
@@ -49,19 +47,14 @@ public:
 
     static bool supported();
 
-    // for properties
-    int animationDuration() const {
-        return mAnimationDuration;
-    }
 public Q_SLOTS:
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowMinimized(KWin::EffectWindow *w);
     void slotWindowUnminimized(KWin::EffectWindow *w);
 
 private:
-    QHash< EffectWindow*, QTimeLine* > mTimeLineWindows;
-    int mActiveAnimations;
-    int mAnimationDuration;
+    std::chrono::milliseconds m_duration;
+    QHash<const EffectWindow*, TimeLine> m_animations;
 
     enum IconPosition {
         Top,
