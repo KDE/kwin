@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Include with base class for effects.
 #include <kwineffects.h>
 
-class QTimeLine;
-
 namespace KWin
 {
 
@@ -38,6 +36,8 @@ class MinimizeAnimationEffect
     Q_OBJECT
 public:
     MinimizeAnimationEffect();
+
+    void reconfigure(ReconfigureFlags flags) override;
 
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
@@ -57,8 +57,8 @@ private Q_SLOTS:
     void windowUnminimized(EffectWindow *w);
 
 private:
-    QHash< EffectWindow*, QTimeLine* > mTimeLineWindows;
-    int mActiveAnimations;
+    std::chrono::milliseconds m_duration;
+    QHash<const EffectWindow*, TimeLine> m_animations;
 };
 
 } // namespace
