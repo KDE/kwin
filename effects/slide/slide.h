@@ -26,10 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <kwineffects.h>
 
-// Qt
-#include <QObject>
-#include <QTimeLine>
-
 namespace KWin
 {
 
@@ -89,7 +85,7 @@ private:
     bool m_slideBackground;
 
     bool m_active = false;
-    QTimeLine m_timeline;
+    TimeLine m_timeLine;
     QPoint m_startPos;
     QPoint m_diff;
     EffectWindow* m_movingWindow = nullptr;

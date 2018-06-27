@@ -20,9 +20,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-// Qt
-#include <QEasingCurve>
-
 // KWayland
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/blur_interface.h>
@@ -40,8 +37,7 @@ SlideEffect::SlideEffect()
     initConfig<SlideConfig>();
     reconfigure(ReconfigureAll);
 
-    QEasingCurve curve(QEasingCurve::OutCubic);
-    m_timeline.setEasingCurve(curve);
+    m_timeLine.setEasingCurve(QEasingCurve::OutCubic);
 
     connect(effects, static_cast<void (EffectsHandler::*)(int,int,EffectWindow*)>(&EffectsHandler::desktopChanged),
             this, &SlideEffect::desktopChanged);
@@ -64,9 +60,8 @@ void SlideEffect::reconfigure(ReconfigureFlags)
 {
     SlideConfig::self()->read();
 
-    const int d = animationTime(
-        SlideConfig::duration() > 0 ? SlideConfig::duration() : 500);
-    m_timeline.setDuration(d);
+    m_timeLine.setDuration(
+        std::chrono::milliseconds(animationTime<SlideConfig>(500)));
 
     m_hGap = SlideConfig::horizontalGap();
     m_vGap = SlideConfig::verticalGap();
@@ -76,11 +71,10 @@ void SlideEffect::reconfigure(ReconfigureFlags)
 
 void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (m_active) {
-        m_timeline.setCurrentTime(m_timeline.currentTime() + time);
-        data.mask |= PAINT_SCREEN_TRANSFORMED
-                  |  PAINT_SCREEN_BACKGROUND_FIRST;
-    }
+    m_timeLine.update(std::chrono::milliseconds(time));
+
+    data.mask |= PAINT_SCREEN_TRANSFORMED
+              |  PAINT_SCREEN_BACKGROUND_FIRST;
 
     effects->prePaintScreen(data, time);
 }
@@ -141,7 +135,7 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
     const int w = workspaceWidth();
     const int h = workspaceHeight();
 
-    QPoint currentPos = m_startPos + m_diff * m_timeline.currentValue();
+    QPoint currentPos = m_startPos + m_diff * m_timeLine.value();
 
     // When "Desktop navigation wraps around" checkbox is checked, currentPos
     // can be outside the rectangle Rect{x:-w, y:-h, width:2*w, height: 2*h},
@@ -293,12 +287,11 @@ void SlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
 
 void SlideEffect::postPaintScreen()
 {
-    if (m_active) {
-        if (m_timeline.currentValue() == 1) {
-            stop();
-        }
-        effects->addRepaintFull();
+    if (m_timeLine.done()) {
+        stop();
     }
+
+    effects->addRepaintFull();
     effects->postPaintScreen();
 }
 
@@ -427,7 +420,7 @@ void SlideEffect::start(int old, int current, EffectWindow* movingWindow)
     const int h = workspaceHeight();
 
     if (m_active) {
-        QPoint passed = m_diff * m_timeline.currentValue();
+        QPoint passed = m_diff * m_timeLine.value();
         QPoint currentPos = m_startPos + passed;
         QPoint delta = desktopCoords(current) - desktopCoords(old);
         if (wrap) {
@@ -435,7 +428,8 @@ void SlideEffect::start(int old, int current, EffectWindow* movingWindow)
         }
         m_diff += delta - passed;
         m_startPos = currentPos;
-        m_timeline.setCurrentTime(0);
+        // TODO: Figure out how to smooth movement.
+        m_timeLine.reset();
         return;
     }
 
@@ -460,7 +454,7 @@ void SlideEffect::start(int old, int current, EffectWindow* movingWindow)
         wrapDiff(m_diff, w, h);
     }
     m_startPos = desktopCoords(old);
-    m_timeline.setCurrentTime(0);
+    m_timeLine.reset();
     m_active = true;
     effects->setActiveFullScreenEffect(this);
     effects->addRepaintFull();
@@ -484,7 +478,6 @@ void SlideEffect::stop()
     m_elevatedWindows.clear();
 
     m_paintCtx.fullscreenWindows.clear();
-    m_timeline.setCurrentTime(0);
     m_movingWindow = nullptr;
     m_active = false;
     effects->setActiveFullScreenEffect(nullptr);
