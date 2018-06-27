@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QQueue>
 #include <QMatrix4x4>
-#include <QTimeLine>
 #include <QFont>
 #include "cube_inside.h"
 #include "cube_proxy.h"
@@ -42,7 +41,7 @@ class CubeEffect
     Q_PROPERTY(bool opacityDesktopOnly READ isOpacityDesktopOnly)
     Q_PROPERTY(bool displayDesktopName READ isDisplayDesktopName)
     Q_PROPERTY(bool reflection READ isReflection)
-    Q_PROPERTY(int rotationDuration READ configuredRotationDuration)
+    Q_PROPERTY(std::chrono::milliseconds rotationDuration READ configuredRotationDuration)
     Q_PROPERTY(QColor backgroundColor READ configuredBackgroundColor)
     Q_PROPERTY(QColor capColor READ configuredCapColor)
     Q_PROPERTY(bool paintCaps READ isPaintCaps)
@@ -93,7 +92,7 @@ public:
     bool isReflection() const {
         return reflection;
     }
-    int configuredRotationDuration() const {
+    std::chrono::milliseconds configuredRotationDuration() const {
         return rotationDuration;
     }
     QColor configuredBackgroundColor() const {
@@ -204,17 +203,17 @@ private:
     float currentAngle;
     int startFrontDesktop;
     AnimationState animationState;
-    QTimeLine timeLine;
+    TimeLine timeLine;
     QQueue<AnimationState> animations;
     // vertical
     float verticalStartAngle;
     float verticalCurrentAngle;
     VerticalAnimationState verticalAnimationState;
-    QTimeLine verticalTimeLine;
+    TimeLine verticalTimeLine;
     QQueue<VerticalAnimationState> verticalAnimations;
 
     bool reflectionPainting;
-    int rotationDuration;
+    std::chrono::milliseconds rotationDuration;
     int activeScreen;
     bool bottomCap;
     bool closeOnMouseRelease;
