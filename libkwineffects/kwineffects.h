@@ -5,6 +5,7 @@
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
 Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects_export.h>
 #include <kwinglobals.h>
 
+#include <QEasingCurve>
 #include <QIcon>
 #include <QPair>
 #include <QSet>
@@ -186,7 +188,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 225
+#define KWIN_EFFECT_API_VERSION_MINOR 226
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
         KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -3284,6 +3286,200 @@ private:
 };
 
 /**
+ * The TimeLine class is a helper for controlling animations.
+ **/
+class KWINEFFECTS_EXPORT TimeLine
+{
+public:
+    /**
+     * Direction of the timeline.
+     *
+     * When the direction of the timeline is Forward, the progress
+     * value will go from 0.0 to 1.0.
+     *
+     * When the direction of the timeline is Backward, the progress
+     * value will go from 1.0 to 0.0.
+     **/
+    enum Direction {
+        Forward,
+        Backward
+    };
+
+    /**
+     * Constructs a new instance of TimeLine.
+     *
+     * @param duration Duration of the timeline, in milliseconds
+     * @param direction Direction of the timeline
+     * @since 5.14
+     **/
+    explicit TimeLine(std::chrono::milliseconds duration = std::chrono::milliseconds(1000),
+                      Direction direction = Forward);
+    TimeLine(const TimeLine &other);
+    ~TimeLine();
+
+    /**
+     * Returns the current value of the timeline.
+     *
+     * @since 5.14
+     **/
+    qreal value() const;
+
+    /**
+     * Updates the progress of the timeline.
+     *
+     * @note The delta value should be a non-negative number, i.e. it
+     * should be greater or equal to 0.
+     *
+     * @param delta The number milliseconds passed since last frame
+     * @since 5.14
+     **/
+    void update(std::chrono::milliseconds delta);
+
+    /**
+     * Returns the number of elapsed milliseconds.
+     *
+     * @see setElapsed
+     * @since 5.14
+     **/
+    std::chrono::milliseconds elapsed() const;
+
+    /**
+     * Sets the number of elapsed milliseconds.
+     *
+     * This method overwrites previous value of elapsed milliseconds.
+     * If the new value of elapsed milliseconds is greater or equal
+     * to duration of the timeline, the timeline will be finished, i.e.
+     * proceeding TimeLine::done method calls will return @c true.
+     * Please don't use it. Instead, use TimeLine::update.
+     *
+     * @note The new number of elapsed milliseconds should be a non-negative
+     * number, i.e. it should be greater or equal to 0.
+     *
+     * @param elapsed The new number of elapsed milliseconds
+     * @see elapsed
+     * @since 5.14
+     **/
+    void setElapsed(std::chrono::milliseconds elapsed);
+
+    /**
+     * Returns the duration of the timeline.
+     *
+     * @returns Duration of the timeline, in milliseconds
+     * @see setDuration
+     * @since 5.14
+     **/
+    std::chrono::milliseconds duration() const;
+
+    /**
+     * Sets the duration of the timeline.
+     *
+     * In addition to setting new value of duration, the timeline will
+     * try to retarget the number of elapsed milliseconds to match
+     * as close as possible old progress value. If the new duration
+     * is much smaller than old duration, there is a big chance that
+     * the timeline will be finished after setting new duration.
+     *
+     * @note The new duration should be a positive number, i.e. it
+     * should be greater or equal to 1.
+     *
+     * @param duration The new duration of the timeline, in milliseconds
+     * @see duration
+     * @since 5.14
+     **/
+    void setDuration(std::chrono::milliseconds duration);
+
+    /**
+     * Returns the direction of the timeline.
+     *
+     * @returns Direction of the timeline(TimeLine::Forward or TimeLine::Backward)
+     * @see setDirection
+     * @see toggleDirection
+     * @since 5.14
+     **/
+    Direction direction() const;
+
+    /**
+     * Sets the direction of the timeline.
+     *
+     * @param direction The new direction of the timeline
+     * @see direction
+     * @see toggleDirection
+     * @since 5.14
+     **/
+    void setDirection(Direction direction);
+
+    /**
+     * Toggles the direction of the timeline.
+     *
+     * If the direction of the timeline was TimeLine::Forward, it becomes
+     * TimeLine::Backward, and vice verca.
+     *
+     * @see direction
+     * @see setDirection
+     * @since 5.14
+     **/
+    void toggleDirection();
+
+    /**
+     * Returns the easing curve of the timeline.
+     *
+     * @see setEasingCurve
+     * @since 5.14
+     **/
+    QEasingCurve easingCurve() const;
+
+    /**
+     * Sets new easing curve.
+     *
+     * @param easingCurve An easing curve to be set
+     * @see easingCurve
+     * @since 5.14
+     **/
+    void setEasingCurve(const QEasingCurve &easingCurve);
+
+    /**
+     * Sets new easing curve by providing its type.
+     *
+     * @param type Type of the easing curve(e.g. QEasingCurve::InQuad, etc)
+     * @see easingCurve
+     * @since 5.14
+     **/
+    void setEasingCurve(QEasingCurve::Type type);
+
+    /**
+     * Returns whether the timeline is currently in progress.
+     *
+     * @see done
+     * @since 5.14
+     **/
+    bool running() const;
+
+    /**
+     * Returns whether the timeline is finished.
+     *
+     * @see reset
+     * @since 5.14
+     **/
+    bool done() const;
+
+    /**
+     * Resets the timeline to initial state.
+     *
+     * @since 5.14
+     **/
+    void reset();
+
+    TimeLine &operator=(const TimeLine &other);
+
+private:
+    qreal progress() const;
+
+private:
+    class Data;
+    QSharedDataPointer<Data> d;
+};
+
+/**
  * Pointer to the global EffectsHandler object.
  **/
 extern KWINEFFECTS_EXPORT EffectsHandler* effects;
@@ -3512,6 +3708,7 @@ void Effect::initConfig()
 } // namespace
 Q_DECLARE_METATYPE(KWin::EffectWindow*)
 Q_DECLARE_METATYPE(QList<KWin::EffectWindow*>)
+Q_DECLARE_METATYPE(KWin::TimeLine)
 
 /** @} */
 

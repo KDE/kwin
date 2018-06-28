@@ -11,6 +11,7 @@ endmacro()
 
 kwineffects_unit_tests(
     windowquadlisttest
+    timelinetest
 )
 
 add_executable(kwinglplatformtest kwinglplatformtest.cpp mock_gl.cpp ../../libkwineffects/kwinglplatform.cpp)
