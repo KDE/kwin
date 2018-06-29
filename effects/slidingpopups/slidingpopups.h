@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Include with base class for effects.
 #include <kwineffects.h>
 
-class QTimeLine;
-
 namespace KWin
 {
 
@@ -55,10 +53,10 @@ public:
 
     // for properties
     int fadeInTime() const {
-        return mFadeInTime;
+        return mFadeInTime.count();
     }
     int fadeOutTime() const {
-        return mFadeOutTime;
+        return mFadeOutTime.count();
     }
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *c);
@@ -80,8 +78,8 @@ private:
         int start; //point in screen coordinates where the window starts
         //to animate, from decides if this point is an x or an y
         Position from;
-        int fadeInDuration;
-        int fadeOutDuration;
+        std::chrono::milliseconds fadeInDuration;
+        std::chrono::milliseconds fadeOutDuration;
         int slideLength;
     };
     long mAtom;
@@ -90,12 +88,12 @@ private:
     // WindowBackgroundContrastForcedRole flag, so we can remove it later.
     // It doesn't matter for disappearing windows, they'll be deleted anyway.
     QList< const EffectWindow* > m_backgroundContrastForced;
-    QHash< const EffectWindow*, QTimeLine* > mAppearingWindows;
-    QHash< const EffectWindow*, QTimeLine* > mDisappearingWindows;
+    QHash< const EffectWindow*, TimeLine > mAppearingWindows;
+    QHash< const EffectWindow*, TimeLine > mDisappearingWindows;
     QHash< const EffectWindow*, Data > mWindowsData;
     int mSlideLength;
-    int mFadeInTime;
-    int mFadeOutTime;
+    std::chrono::milliseconds mFadeInTime;
+    std::chrono::milliseconds mFadeOutTime;
 };
 
 } // namespace

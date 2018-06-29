@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "slidingpopups.h"
 #include "slidingpopupsconfig.h"
 
-#include <QTimeLine>
 #include <QApplication>
 #include <QFontMetrics>
 
@@ -70,16 +69,18 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
     SlidingPopupsConfig::self()->read();
-    mFadeInTime = animationTime(SlidingPopupsConfig::slideInTime() != 0 ? SlidingPopupsConfig::slideInTime() : 150);
-    mFadeOutTime = animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? SlidingPopupsConfig::slideOutTime() : 250);
-    QHash< const EffectWindow*, QTimeLine* >::iterator it = mAppearingWindows.begin();
+    mFadeInTime = std::chrono::milliseconds(
+        static_cast<int>(animationTime(SlidingPopupsConfig::slideInTime() != 0 ? SlidingPopupsConfig::slideInTime() : 150)));
+    mFadeOutTime = std::chrono::milliseconds(
+        static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? SlidingPopupsConfig::slideOutTime() : 250)));
+    QHash< const EffectWindow*, TimeLine >::iterator it = mAppearingWindows.begin();
     while (it != mAppearingWindows.end()) {
-        it.value()->setDuration(animationTime(mFadeInTime));
+        (*it).setDuration(mFadeInTime);
         ++it;
     }
     it = mDisappearingWindows.begin();
     while (it != mDisappearingWindows.end()) {
-        it.value()->setDuration(animationTime(mFadeOutTime));
+        (*it).setDuration(mFadeOutTime);
         ++it;
     }
     QHash< const EffectWindow*, Data >::iterator wIt = mWindowsData.begin();
@@ -97,16 +98,18 @@ void SlidingPopupsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
 void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
+    const std::chrono::milliseconds delta(time);
+
     qreal progress = 1.0;
     bool appearing = false;
     if (mAppearingWindows.contains(w)) {
-        mAppearingWindows[ w ]->setCurrentTime(mAppearingWindows[ w ]->currentTime() + time);
-        if (mAppearingWindows[ w ]->currentValue() < 1) {
+        mAppearingWindows[ w ].update(delta);
+        if (!mAppearingWindows[ w ].done()) {
             data.setTransformed();
-            progress = mAppearingWindows[ w ]->currentValue();
+            progress = mAppearingWindows[ w ].value();
             appearing = true;
         } else {
-            delete mAppearingWindows.take(w);
+            mAppearingWindows.remove(w);
             w->setData(WindowForceBlurRole, false);
             if (m_backgroundContrastForced.contains(w) && w->hasAlpha() &&
                     w->data(WindowForceBackgroundContrastRole).toBool()) {
@@ -116,14 +119,14 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
         }
     } else if (mDisappearingWindows.contains(w)) {
 
-        mDisappearingWindows[ w ]->setCurrentTime(mDisappearingWindows[ w ]->currentTime() + time);
-        progress = mDisappearingWindows[ w ]->currentValue();
+        mDisappearingWindows[ w ].update(delta);
+        progress = mDisappearingWindows[ w ].value();
 
-        if (progress != 1.0) {
+        if (!mDisappearingWindows[ w ].done()) {
             data.setTransformed();
             w->enablePainting(EffectWindow::PAINT_DISABLED | EffectWindow::PAINT_DISABLED_BY_DELETE);
         } else {
-            delete mDisappearingWindows.take(w);
+            mDisappearingWindows.remove(w);
             w->addRepaintFull();
             if (w->isDeleted()) {
                 w->unrefWindow();
@@ -215,10 +218,10 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
     if (animating) {
         qreal progress;
         if (appearing)
-            progress = 1.0 - mAppearingWindows[ w ]->currentValue();
+            progress = 1.0 - mAppearingWindows[ w ].value();
         else {
             if (mDisappearingWindows.contains(w))
-                progress = mDisappearingWindows[ w ]->currentValue();
+                progress = mDisappearingWindows[ w ].value();
             else
                 progress = 1.0;
         }
@@ -306,18 +309,14 @@ void SlidingPopupsEffect::startForShow(EffectWindow *w)
             w->setData(WindowForceBackgroundContrastRole, QVariant(true));
             m_backgroundContrastForced.append(w);
         }
-        auto it = mDisappearingWindows.find(w);
-        if (it != mDisappearingWindows.end()) {
-            delete it.value();
-            mDisappearingWindows.erase(it);
-        }
-        it = mAppearingWindows.find(w);
-        if (it != mAppearingWindows.end()) {
-            delete it.value();
-            mAppearingWindows.erase(it);
-        }
-        mAppearingWindows.insert(w, new QTimeLine(mWindowsData[ w ].fadeInDuration, this));
-        mAppearingWindows[ w ]->setCurveShape(QTimeLine::EaseInOutCurve);
+
+        mDisappearingWindows.remove(w);
+
+        TimeLine &timeLine = mAppearingWindows[ w ];
+        timeLine.reset();
+        timeLine.setDirection(TimeLine::Forward);
+        timeLine.setDuration(mWindowsData[ w ].fadeInDuration);
+        timeLine.setEasingCurve(QEasingCurve::InOutSine);
 
         w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
@@ -333,17 +332,16 @@ void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
         if (w->isDeleted()) {
             w->refWindow();
         }
-        auto it = mAppearingWindows.find(w);
-        if (it != mAppearingWindows.end()) {
-            delete it.value();
-            mAppearingWindows.erase(it);
-        }
-        // could be already running, better check
-        if (mDisappearingWindows.contains(w)) {
+
+        mAppearingWindows.remove(w);
+
+        TimeLine &timeLine = mDisappearingWindows[ w ];
+        if (timeLine.running()) {
             return;
         }
-        mDisappearingWindows.insert(w, new QTimeLine(mWindowsData[ w ].fadeOutDuration, this));
-        mDisappearingWindows[ w ]->setCurveShape(QTimeLine::EaseInOutCurve);
+        timeLine.setDirection(TimeLine::Forward);
+        timeLine.setDuration(mWindowsData[ w ].fadeOutDuration);
+        timeLine.setEasingCurve(QEasingCurve::InOutSine);
 
         // Tell other windowClosed() effects to ignore this window
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
@@ -359,8 +357,8 @@ void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
 
 void SlidingPopupsEffect::slotWindowDeleted(EffectWindow* w)
 {
-    delete mAppearingWindows.take(w);
-    delete mDisappearingWindows.take(w);
+    mAppearingWindows.remove(w);
+    mDisappearingWindows.remove(w);
     mWindowsData.remove(w);
     effects->addRepaint(w->expandedGeometry());
 }
@@ -377,8 +375,8 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
         if (w->data(WindowClosedGrabRole).value<void *>() == this) {
             w->setData(WindowClosedGrabRole, QVariant());
         }
-        delete mAppearingWindows.take(w);
-        delete mDisappearingWindows.take(w);
+        mAppearingWindows.remove(w);
+        mDisappearingWindows.remove(w);
         mWindowsData.remove(w);
         return;
     }
@@ -390,20 +388,20 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
     //custom duration
     animData.slideLength = 0;
     if (data.length() >= (int)(sizeof(uint32_t) * 3)) {
-        animData.fadeInDuration = d[2];
+        animData.fadeInDuration = std::chrono::milliseconds(d[2]);
         if (data.length() >= (int)(sizeof(uint32_t) * 4))
             //custom fadein
-            animData.fadeOutDuration = d[3];
+            animData.fadeOutDuration = std::chrono::milliseconds(d[3]);
         else
             //custom fadeout
-            animData.fadeOutDuration = d[2];
+            animData.fadeOutDuration = std::chrono::milliseconds(d[2]);
 
         //do we want an actual slide?
         if (data.length() >= (int)(sizeof(uint32_t) * 5))
             animData.slideLength = d[5];
     } else {
-        animData.fadeInDuration = animationTime(mFadeInTime);
-        animData.fadeOutDuration = animationTime(mFadeOutTime);
+        animData.fadeInDuration = mFadeInTime;
+        animData.fadeOutDuration = mFadeOutTime;
     }
     mWindowsData[ w ] = animData;
     setupAnimData(w);
@@ -482,8 +480,8 @@ void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow* w)
             break;
         }
         animData.slideLength = 0;
-        animData.fadeInDuration = animationTime(mFadeInTime);
-        animData.fadeOutDuration = animationTime(mFadeOutTime);
+        animData.fadeInDuration = mFadeInTime;
+        animData.fadeOutDuration = mFadeOutTime;
         mWindowsData[ w ] = animData;
 
         setupAnimData(w);
