@@ -1099,23 +1099,9 @@ void GLRenderTarget::pushRenderTargets(QStack <GLRenderTarget*> targets)
 {
     if (s_renderTargets.isEmpty()) {
         glGetIntegerv(GL_VIEWPORT, s_virtualScreenViewport);
-        s_renderTargets = targets;
-    } else {
-        s_renderTargets.reserve(s_renderTargets.size() + targets.size());
-
-        /*
-         * Merging the two stacks.
-         * We cheat a little bit by using the inherited QVector functions.
-         * This is to not have the targets stack in reverse order without
-         * having to use a helper QStack first to reverse the order.
-         */
-        while (!targets.isEmpty()) {
-            s_renderTargets.push(targets.first());
-            targets.removeFirst();
-        }
     }
-
-    s_renderTargets.top()->enable();
+    targets.top()->enable();
+    s_renderTargets.append(targets);
 }
 
 GLRenderTarget* GLRenderTarget::popRenderTarget()
