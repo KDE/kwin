@@ -91,7 +91,8 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     KDeclarative::KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(m_quickView->engine());
     kdeclarative.setTranslationDomain(QStringLiteral(TRANSLATION_DOMAIN));
-    kdeclarative.setupBindings();
+    kdeclarative.setupContext();
+    kdeclarative.setupEngine(m_quickView->engine());
 
     qmlRegisterType<QAbstractItemModel>();
     QWidget *widget = QWidget::createWindowContainer(m_quickView, this);

@@ -597,7 +597,8 @@ void EffectView::init(ViewType type)
     KDeclarative::KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(engine());
     kdeclarative.setTranslationDomain(QStringLiteral(TRANSLATION_DOMAIN));
-    kdeclarative.setupBindings();
+    kdeclarative.setupContext();
+    kdeclarative.setupEngine(engine());
     QString path;
     switch (type) {
     case CompositingSettingsView:
