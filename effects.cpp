@@ -1736,9 +1736,7 @@ void EffectWindowImpl::setData(int role, const QVariant &data)
 
 QVariant EffectWindowImpl::data(int role) const
 {
-    if (!dataMap.contains(role))
-        return QVariant();
-    return dataMap[ role ];
+    return dataMap.value(role);
 }
 
 EffectWindow* effectWindow(Toplevel* w)
