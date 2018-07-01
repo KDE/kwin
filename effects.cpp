@@ -1078,10 +1078,12 @@ void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
 EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 {
 #ifdef KWIN_BUILD_TABBOX
-    EffectWindowList ret;
     const auto clients = TabBox::TabBox::self()->currentClientList();
-    for (auto c : clients)
-    ret.append(c->effectWindow());
+    EffectWindowList ret;
+    ret.reserve(clients.size());
+    std::transform(std::cbegin(clients), std::cend(clients),
+        std::back_inserter(ret),
+        [](auto client) { return client->effectWindow(); });
     return ret;
 #else
     return EffectWindowList();
@@ -1700,10 +1702,12 @@ template <typename T>
 EffectWindowList getMainWindows(Toplevel *toplevel)
 {
     T *c = static_cast<T*>(toplevel);
-    EffectWindowList ret;
     const auto mainclients = c->mainClients();
-    for (auto tmp : mainclients)
-        ret.append(tmp->effectWindow());
+    EffectWindowList ret;
+    ret.reserve(mainclients.size());
+    std::transform(std::cbegin(mainclients), std::cend(mainclients),
+        std::back_inserter(ret),
+        [](auto client) { return client->effectWindow(); });
     return ret;
 }
 
@@ -1818,9 +1822,12 @@ void EffectWindowImpl::unreferencePreviousWindowPixmap()
 
 EffectWindowList EffectWindowGroupImpl::members() const
 {
+    const auto memberList = group->members();
     EffectWindowList ret;
-    for (Toplevel * c : group->members())
-    ret.append(c->effectWindow());
+    ret.reserve(memberList.size());
+    std::transform(std::cbegin(memberList), std::cend(memberList),
+        std::back_inserter(ret),
+        [](auto toplevel) { return toplevel->effectWindow(); });
     return ret;
 }
 
