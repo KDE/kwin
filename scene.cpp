@@ -100,9 +100,7 @@ Scene::Scene(QObject *parent)
 
 Scene::~Scene()
 {
-    foreach (Window *w, m_windows) {
-        delete w;
-    }
+    qDeleteAll(m_windows);
 }
 
 // returns mask and possibly modified region
