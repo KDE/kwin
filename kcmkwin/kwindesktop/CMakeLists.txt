@@ -18,6 +18,7 @@ target_link_libraries(kcm_kwindesktop
     KF5::Completion
     KF5::GlobalAccel
     KF5::I18n
+    KF5::Package
     KF5::WindowSystem
     KF5::XmlGui
     ${X11_LIBRARIES}

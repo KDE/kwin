@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KCModuleProxy>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KPackage/Package>
+#include <KPackage/PackageLoader>
 #include <KPluginInfo>
 #include <KPluginFactory>
 #include <KPluginTrader>
@@ -570,12 +572,17 @@ void KWinDesktopConfig::slotAboutEffectClicked()
         delete aboutPlugin;
     };
     if (fromKService) {
-        KServiceTypeTrader* trader = KServiceTypeTrader::self();
-        KService::List services;
-        services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
-        if (services.isEmpty())
+        const QString pluginId = QStringLiteral("kwin4_effect_%1").arg(effect);
+        const auto effectsMetaData = KPackage::PackageLoader::self()->findPackages(
+            QStringLiteral("KWin/Effect"),
+            QStringLiteral("kwin/effects/"),
+            [&pluginId](const KPluginMetaData &meta) {
+                return meta.pluginId() == pluginId;
+            });
+        if (effectsMetaData.isEmpty()) {
             return;
-        KPluginInfo pluginInfo(services.first());
+        }
+        KPluginInfo pluginInfo(effectsMetaData.first());
 
         const QString name    = pluginInfo.name();
         const QString comment = pluginInfo.comment();
