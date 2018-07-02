@@ -41,7 +41,7 @@ class CubeEffect
     Q_PROPERTY(bool opacityDesktopOnly READ isOpacityDesktopOnly)
     Q_PROPERTY(bool displayDesktopName READ isDisplayDesktopName)
     Q_PROPERTY(bool reflection READ isReflection)
-    Q_PROPERTY(std::chrono::milliseconds rotationDuration READ configuredRotationDuration)
+    Q_PROPERTY(int rotationDuration READ configuredRotationDuration)
     Q_PROPERTY(QColor backgroundColor READ configuredBackgroundColor)
     Q_PROPERTY(QColor capColor READ configuredCapColor)
     Q_PROPERTY(bool paintCaps READ isPaintCaps)
@@ -92,8 +92,8 @@ public:
     bool isReflection() const {
         return reflection;
     }
-    std::chrono::milliseconds configuredRotationDuration() const {
-        return rotationDuration;
+    int configuredRotationDuration() const {
+        return rotationDuration.count();
     }
     QColor configuredBackgroundColor() const {
         return backgroundColor;
