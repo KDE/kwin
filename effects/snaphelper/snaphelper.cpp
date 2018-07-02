@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,217 +22,314 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "snaphelper.h"
 
 #include <kwinglutils.h>
+
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <kwinxrenderutils.h>
 #include <xcb/render.h>
 #endif
+
 #include <QPainter>
 
 namespace KWin
 {
 
-SnapHelperEffect::SnapHelperEffect()
-    : m_active(false)
-    , m_window(NULL)
+static const int s_lineWidth = 4;
+static const QColor s_lineColor = QColor(128, 128, 128, 128);
+
+static QRegion computeDirtyRegion(const QRect &windowRect)
 {
-    m_timeline.setCurveShape(QTimeLine::LinearCurve);
+    const QMargins outlineMargins(
+        s_lineWidth / 2,
+        s_lineWidth / 2,
+        s_lineWidth / 2,
+        s_lineWidth / 2
+    );
+
+    QRegion dirtyRegion;
+    for (int i = 0; i < effects->numScreens(); ++i) {
+        const QRect screenRect = effects->clientArea(ScreenArea, i, 0);
+
+        QRect screenWindowRect = windowRect;
+        screenWindowRect.moveCenter(screenRect.center());
+
+        QRect verticalBarRect(0, 0, s_lineWidth, screenRect.height());
+        verticalBarRect.moveCenter(screenRect.center());
+        verticalBarRect.adjust(-1, -1, 1, 1);
+        dirtyRegion += verticalBarRect;
+
+        QRect horizontalBarRect(0, 0, screenRect.width(), s_lineWidth);
+        horizontalBarRect.moveCenter(screenRect.center());
+        horizontalBarRect.adjust(-1, -1, 1, 1);
+        dirtyRegion += horizontalBarRect;
+
+        const QRect outlineOuterRect = screenWindowRect
+            .marginsAdded(outlineMargins)
+            .adjusted(-1, -1, 1, 1);
+        const QRect outlineInnerRect = screenWindowRect
+            .marginsRemoved(outlineMargins)
+            .adjusted(1, 1, -1, -1);
+        dirtyRegion += QRegion(outlineOuterRect) - QRegion(outlineInnerRect);
+    }
+
+    return dirtyRegion;
+}
+
+SnapHelperEffect::SnapHelperEffect()
+{
     reconfigure(ReconfigureAll);
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowResized(KWin::EffectWindow*,QRect)));
+
+    connect(effects, &EffectsHandler::windowClosed, this, &SnapHelperEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::windowStartUserMovedResized, this, &SnapHelperEffect::slotWindowStartUserMovedResized);
+    connect(effects, &EffectsHandler::windowFinishUserMovedResized, this, &SnapHelperEffect::slotWindowFinishUserMovedResized);
+    connect(effects, &EffectsHandler::windowGeometryShapeChanged, this, &SnapHelperEffect::slotWindowGeometryShapeChanged);
 }
 
 SnapHelperEffect::~SnapHelperEffect()
 {
 }
 
-void SnapHelperEffect::reconfigure(ReconfigureFlags)
+void SnapHelperEffect::reconfigure(ReconfigureFlags flags)
 {
-    m_timeline.setDuration(animationTime(250));
+    Q_UNUSED(flags)
+
+    m_animation.timeLine.setDuration(
+        std::chrono::milliseconds(static_cast<int>(animationTime(250))));
 }
 
 void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
-    double oldValue = m_timeline.currentValue();
-    if (m_active)
-        m_timeline.setCurrentTime(m_timeline.currentTime() + time);
-    else
-        m_timeline.setCurrentTime(m_timeline.currentTime() - time);
-    if (oldValue != m_timeline.currentValue())
-        effects->addRepaintFull();
+    if (m_animation.active) {
+        m_animation.timeLine.update(std::chrono::milliseconds(time));
+    }
+
     effects->prePaintScreen(data, time);
 }
 
 void SnapHelperEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 {
     effects->paintScreen(mask, region, data);
-    if (m_timeline.currentValue() != 0.0) {
-        // Display the guide
-        if (effects->isOpenGLCompositing()) {
-            GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-            vbo->reset();
-            vbo->setUseColor(true);
-            ShaderBinder binder(ShaderTrait::UniformColor);
-            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            QColor color;
-            color.setRedF(0.5);
-            color.setGreenF(0.5);
-            color.setBlueF(0.5);
-            color.setAlphaF(m_timeline.currentValue() * 0.5);
-            vbo->setColor(color);
-            glLineWidth(4.0);
-            QVector<float> verts;
-            verts.reserve(effects->numScreens() * 24);
-            for (int i = 0; i < effects->numScreens(); ++i) {
-                const QRect& rect = effects->clientArea(ScreenArea, i, 0);
-                int midX = rect.x() + rect.width() / 2;
-                int midY = rect.y() + rect.height() / 2 ;
-                int halfWidth = m_window->width() / 2;
-                int halfHeight = m_window->height() / 2;
+    const qreal opacityFactor = m_animation.active
+        ? m_animation.timeLine.value()
+        : 1.0;
 
-                // Center lines
-                verts << rect.x() + rect.width() / 2 << rect.y();
-                verts << rect.x() + rect.width() / 2 << rect.y() + rect.height();
-                verts << rect.x() << rect.y() + rect.height() / 2;
-                verts << rect.x() + rect.width() << rect.y() + rect.height() / 2;
+    // Display the guide
+    if (effects->isOpenGLCompositing()) {
+        GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+        vbo->reset();
+        vbo->setUseColor(true);
+        ShaderBinder binder(ShaderTrait::UniformColor);
+        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-                // Window outline
-                // The +/- 2 is to prevent line overlap
-                verts << midX - halfWidth + 2 << midY - halfHeight;
-                verts << midX + halfWidth + 2 << midY - halfHeight;
-                verts << midX + halfWidth << midY - halfHeight + 2;
-                verts << midX + halfWidth << midY + halfHeight + 2;
-                verts << midX + halfWidth - 2 << midY + halfHeight;
-                verts << midX - halfWidth - 2 << midY + halfHeight;
-                verts << midX - halfWidth << midY + halfHeight - 2;
-                verts << midX - halfWidth << midY - halfHeight - 2;
-            }
-            vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
-            vbo->render(GL_LINES);
+        QColor color = s_lineColor;
+        color.setAlphaF(color.alphaF() * opacityFactor);
+        vbo->setColor(color);
 
-            glDisable(GL_BLEND);
-            glLineWidth(1.0);
+        glLineWidth(s_lineWidth);
+        QVector<float> verts;
+        verts.reserve(effects->numScreens() * 24);
+        for (int i = 0; i < effects->numScreens(); ++i) {
+            const QRect rect = effects->clientArea(ScreenArea, i, 0);
+            const int midX = rect.x() + rect.width() / 2;
+            const int midY = rect.y() + rect.height() / 2 ;
+            const int halfWidth = m_geometry.width() / 2;
+            const int halfHeight = m_geometry.height() / 2;
+
+            // Center vertical line.
+            verts << rect.x() + rect.width() / 2 << rect.y();
+            verts << rect.x() + rect.width() / 2 << rect.y() + rect.height();
+
+            // Center horizontal line.
+            verts << rect.x() << rect.y() + rect.height() / 2;
+            verts << rect.x() + rect.width() << rect.y() + rect.height() / 2;
+
+            // Top edge of the window outline.
+            verts << midX - halfWidth - s_lineWidth / 2 << midY - halfHeight;
+            verts << midX + halfWidth + s_lineWidth / 2 << midY - halfHeight;
+
+            // Right edge of the window outline.
+            verts << midX + halfWidth << midY - halfHeight + s_lineWidth / 2;
+            verts << midX + halfWidth << midY + halfHeight - s_lineWidth / 2;
+
+            // Bottom edge of the window outline.
+            verts << midX + halfWidth + s_lineWidth / 2 << midY + halfHeight;
+            verts << midX - halfWidth - s_lineWidth / 2 << midY + halfHeight;
+
+            // Left edge of the window outline.
+            verts << midX - halfWidth << midY + halfHeight - s_lineWidth / 2;
+            verts << midX - halfWidth << midY - halfHeight + s_lineWidth / 2;
         }
-        if ( effects->compositingType() == XRenderCompositing ) {
+        vbo->setData(verts.count() / 2, 2, verts.data(), nullptr);
+        vbo->render(GL_LINES);
+
+        glDisable(GL_BLEND);
+        glLineWidth(1.0);
+    }
+    if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            for (int i = 0; i < effects->numScreens(); ++i) {
-                const QRect& rect = effects->clientArea( ScreenArea, i, 0 );
-                int midX = rect.x() + rect.width() / 2;
-                int midY = rect.y() + rect.height() / 2 ;
-                int halfWidth = m_window->width() / 2;
-                int halfHeight = m_window->height() / 2;
+        for (int i = 0; i < effects->numScreens(); ++i) {
+            const QRect rect = effects->clientArea(ScreenArea, i, 0);
+            const int midX = rect.x() + rect.width() / 2;
+            const int midY = rect.y() + rect.height() / 2 ;
+            const int halfWidth = m_geometry.width() / 2;
+            const int halfHeight = m_geometry.height() / 2;
 
-                xcb_rectangle_t rects[6];
-                // Center lines
-                rects[0].x = rect.x() + rect.width() / 2 - 2;
-                rects[0].y = rect.y();
-                rects[0].width = 4;
-                rects[0].height = rect.height();
-                rects[1].x = rect.x();
-                rects[1].y = rect.y() + rect.height() / 2 - 2;
-                rects[1].width = rect.width();
-                rects[1].height = 4;
+            xcb_rectangle_t rects[6];
 
-                // Window outline
-                // The +/- 4 is to prevent line overlap
-                rects[2].x = midX - halfWidth + 4;
-                rects[2].y = midY - halfHeight;
-                rects[2].width = 2*halfWidth - 4;
-                rects[2].height = 4;
-                rects[3].x = midX + halfWidth - 4;
-                rects[3].y = midY - halfHeight + 4;
-                rects[3].width = 4;
-                rects[3].height = 2*halfHeight - 4;
-                rects[4].x = midX - halfWidth;
-                rects[4].y = midY + halfHeight - 4;
-                rects[4].width = 2*halfWidth - 4;
-                rects[4].height = 4;
-                rects[5].x = midX - halfWidth;
-                rects[5].y = midY - halfHeight;
-                rects[5].width = 4;
-                rects[5].height = 2*halfHeight - 4;
+            // Center vertical line.
+            rects[0].x = rect.x() + rect.width() / 2 - s_lineWidth / 2;
+            rects[0].y = rect.y();
+            rects[0].width = s_lineWidth;
+            rects[0].height = rect.height();
 
-                xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(),
-                                           preMultiply(QColor(128, 128, 128, m_timeline.currentValue()*128)), 6, rects);
-            }
+            // Center horizontal line.
+            rects[1].x = rect.x();
+            rects[1].y = rect.y() + rect.height() / 2 - s_lineWidth / 2;
+            rects[1].width = rect.width();
+            rects[1].height = s_lineWidth;
+
+            // Top edge of the window outline.
+            rects[2].x = midX - halfWidth - s_lineWidth / 2;
+            rects[2].y = midY - halfHeight - s_lineWidth / 2;
+            rects[2].width = 2 * halfWidth + s_lineWidth;
+            rects[2].height = s_lineWidth;
+
+            // Right edge of the window outline.
+            rects[3].x = midX + halfWidth - s_lineWidth / 2;
+            rects[3].y = midY - halfHeight + s_lineWidth / 2;
+            rects[3].width = s_lineWidth;
+            rects[3].height = 2 * halfHeight - s_lineWidth;
+
+            // Bottom edge of the window outline.
+            rects[4].x = midX - halfWidth - s_lineWidth / 2;
+            rects[4].y = midY + halfHeight - s_lineWidth / 2;
+            rects[4].width = 2 * halfWidth + s_lineWidth;
+            rects[4].height = s_lineWidth;
+
+            // Left edge of the window outline.
+            rects[5].x = midX - halfWidth - s_lineWidth / 2;
+            rects[5].y = midY - halfHeight + s_lineWidth / 2;
+            rects[5].width = s_lineWidth;
+            rects[5].height = 2 * halfHeight - s_lineWidth;
+
+            QColor color = s_lineColor;
+            color.setAlphaF(color.alphaF() * opacityFactor);
+
+            xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(),
+                                       preMultiply(color), 6, rects);
+        }
 #endif
-        }
-        if (effects->compositingType() == QPainterCompositing) {
-            QPainter *painter = effects->scenePainter();
-            painter->save();
-            QColor color;
-            color.setRedF(0.5);
-            color.setGreenF(0.5);
-            color.setBlueF(0.5);
-            color.setAlphaF(m_timeline.currentValue() * 0.5);
-            QPen pen(color);
-            pen.setWidth(4);
-            painter->setPen(pen);
-            painter->setBrush(Qt::NoBrush);
+    }
+    if (effects->compositingType() == QPainterCompositing) {
+        QPainter *painter = effects->scenePainter();
+        painter->save();
+        QColor color = s_lineColor;
+        color.setAlphaF(color.alphaF() * opacityFactor);
+        QPen pen(color);
+        pen.setWidth(s_lineWidth);
+        painter->setPen(pen);
+        painter->setBrush(Qt::NoBrush);
 
-            for (int i = 0; i < effects->numScreens(); ++i) {
-                const QRect &rect = effects->clientArea(ScreenArea, i, 0);
-                // Center lines
-                painter->drawLine(rect.center().x(), rect.y(), rect.center().x(), rect.y() + rect.height());
-                painter->drawLine(rect.x(), rect.center().y(), rect.x() + rect.width(), rect.center().y());
+        for (int i = 0; i < effects->numScreens(); ++i) {
+            const QRect rect = effects->clientArea(ScreenArea, i, 0);
+            // Center lines.
+            painter->drawLine(rect.center().x(), rect.y(), rect.center().x(), rect.y() + rect.height());
+            painter->drawLine(rect.x(), rect.center().y(), rect.x() + rect.width(), rect.center().y());
 
-                // window outline
-                QRect windowRect(rect.center(), m_window->geometry().size());
-                painter->drawRect(windowRect.translated(-windowRect.width()/2, -windowRect.height()/2));
-            }
-            painter->restore();
+            // Window outline.
+            QRect outlineRect(0, 0, m_geometry.width(), m_geometry.height());
+            outlineRect.moveCenter(rect.center());
+            painter->drawRect(outlineRect);
         }
-    } else if (m_window && !m_active) {
-        if (m_window->isDeleted())
-            m_window->unrefWindow();
-        m_window = NULL;
+        painter->restore();
     }
 }
 
-void SnapHelperEffect::slotWindowClosed(EffectWindow* w)
+void SnapHelperEffect::postPaintScreen()
 {
-    if (m_window == w) {
-        m_window->refWindow();
-        m_active = false;
+    if (m_animation.active) {
+        effects->addRepaint(computeDirtyRegion(m_geometry));
     }
+
+    if (m_animation.timeLine.done()) {
+        m_animation.active = false;
+    }
+
+    effects->postPaintScreen();
+}
+
+void SnapHelperEffect::slotWindowClosed(EffectWindow *w)
+{
+    if (w != m_window) {
+        return;
+    }
+
+    m_window = nullptr;
+
+    m_animation.active = true;
+    m_animation.timeLine.setDirection(TimeLine::Backward);
+
+    if (m_animation.timeLine.done()) {
+        m_animation.timeLine.reset();
+    }
+
+    effects->addRepaint(computeDirtyRegion(m_geometry));
 }
 
 void SnapHelperEffect::slotWindowStartUserMovedResized(EffectWindow *w)
 {
-    if (w->isMovable()) {
-        m_active = true;
-        m_window = w;
-        effects->addRepaintFull();
+    if (!w->isMovable()) {
+        return;
     }
+
+    m_window = w;
+    m_geometry = w->geometry();
+
+    m_animation.active = true;
+    m_animation.timeLine.setDirection(TimeLine::Forward);
+
+    if (m_animation.timeLine.done()) {
+        m_animation.timeLine.reset();
+    }
+
+    effects->addRepaint(computeDirtyRegion(m_geometry));
 }
 
 void SnapHelperEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
 {
-    Q_UNUSED(w)
-    if (m_active) {
-        m_active = false;
-        effects->addRepaintFull();
+    if (w != m_window) {
+        return;
     }
+
+    m_window = nullptr;
+    m_geometry = w->geometry();
+
+    m_animation.active = true;
+    m_animation.timeLine.setDirection(TimeLine::Backward);
+
+    if (m_animation.timeLine.done()) {
+        m_animation.timeLine.reset();
+    }
+
+    effects->addRepaint(computeDirtyRegion(m_geometry));
 }
 
-void SnapHelperEffect::slotWindowResized(KWin::EffectWindow *w, const QRect &oldRect)
+void SnapHelperEffect::slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old)
 {
-    if (w == m_window) {
-        QRect r(oldRect);
-        for (int i = 0; i < effects->numScreens(); ++i) {
-            r.moveCenter(effects->clientArea( ScreenArea, i, 0 ).center());
-            effects->addRepaint(r);
-        }
+    if (w != m_window) {
+        return;
     }
+
+    m_geometry = w->geometry();
+
+    effects->addRepaint(computeDirtyRegion(old));
 }
 
 bool SnapHelperEffect::isActive() const
 {
-    return m_active || m_timeline.currentValue() != 0.0;
+    return m_window != nullptr || m_animation.active;
 }
 
-} // namespace
+} // namespace KWin
