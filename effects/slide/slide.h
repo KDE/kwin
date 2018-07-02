@@ -32,6 +32,12 @@ namespace KWin
 class SlideEffect : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int duration READ duration)
+    Q_PROPERTY(int horizontalGap READ horizontalGap)
+    Q_PROPERTY(int verticalGap READ verticalGap)
+    Q_PROPERTY(bool slideDocks READ slideDocks)
+    Q_PROPERTY(bool slideBackground READ slideBackground)
+
 public:
     SlideEffect();
 
@@ -53,6 +59,12 @@ public:
     }
 
     static bool supported();
+
+    int duration() const;
+    int horizontalGap() const;
+    int verticalGap() const;
+    bool slideDocks() const;
+    bool slideBackground() const;
 
 private Q_SLOTS:
     void desktopChanged(int old, int current, EffectWindow* with);
@@ -106,6 +118,31 @@ private:
 
     QList<EffectWindow*> m_elevatedWindows;
 };
+
+inline int SlideEffect::duration() const
+{
+    return m_timeLine.duration().count();
+}
+
+inline int SlideEffect::horizontalGap() const
+{
+    return m_hGap;
+}
+
+inline int SlideEffect::verticalGap() const
+{
+    return m_vGap;
+}
+
+inline bool SlideEffect::slideDocks() const
+{
+    return m_slideDocks;
+}
+
+inline bool SlideEffect::slideBackground() const
+{
+    return m_slideBackground;
+}
 
 } // namespace
 
