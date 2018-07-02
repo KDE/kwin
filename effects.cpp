@@ -1473,24 +1473,23 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
 
 QString EffectsHandlerImpl::supportInformation(const QString &name) const
 {
-    if (!isEffectLoaded(name)) {
+    auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(),
+        [name](const EffectPair &pair) { return pair.first == name; });
+    if (it == loaded_effects.constEnd()) {
         return QString();
     }
-    for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
-        if ((*it).first == name) {
-            QString support((*it).first + QLatin1String(":\n"));
-            const QMetaObject *metaOptions = (*it).second->metaObject();
-            for (int i=0; i<metaOptions->propertyCount(); ++i) {
-                const QMetaProperty property = metaOptions->property(i);
-                if (qstrcmp(property.name(), "objectName") == 0) {
-                    continue;
-                }
-                support += QString::fromUtf8(property.name()) + QLatin1String(": ") + (*it).second->property(property.name()).toString() + QLatin1Char('\n');
-            }
-            return support;
+
+    QString support((*it).first + QLatin1String(":\n"));
+    const QMetaObject *metaOptions = (*it).second->metaObject();
+    for (int i=0; i<metaOptions->propertyCount(); ++i) {
+        const QMetaProperty property = metaOptions->property(i);
+        if (qstrcmp(property.name(), "objectName") == 0) {
+            continue;
         }
+        support += QString::fromUtf8(property.name()) + QLatin1String(": ") + (*it).second->property(property.name()).toString() + QLatin1Char('\n');
     }
-    return QString();
+
+    return support;
 }
 
 
