@@ -1369,20 +1369,15 @@ void EffectsHandlerImpl::reconfigureEffect(const QString& name)
 
 bool EffectsHandlerImpl::isEffectLoaded(const QString& name) const
 {
-    for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
-        if ((*it).first == name)
-            return true;
-
-    return false;
+    auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(),
+        [&name](const EffectPair &pair) { return pair.first == name; });
+    return it != loaded_effects.constEnd();
 }
 
 bool EffectsHandlerImpl::isEffectSupported(const QString &name)
 {
-    // if the effect is loaded, it is obviously supported
-    auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(), [name](const EffectPair &pair) {
-        return pair.first == name;
-    });
-    if (it != loaded_effects.constEnd()) {
+    // If the effect is loaded, it is obviously supported.
+    if (isEffectLoaded(name)) {
         return true;
     }
 
