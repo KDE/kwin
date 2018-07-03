@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_KSCREEN_H
 
 #include <kwineffects.h>
-// Qt
-#include <QTimeLine>
 
 namespace KWin
 {
@@ -58,7 +56,7 @@ private:
         StateFadedOut,
         StateFadingIn
     };
-    QTimeLine m_timeLine;
+    TimeLine m_timeLine;
     FadeOutState m_state;
     xcb_atom_t m_atom;
 };

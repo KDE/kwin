@@ -74,14 +74,15 @@ void KscreenEffect::reconfigure(ReconfigureFlags flags)
     Q_UNUSED(flags)
 
     KscreenConfig::self()->read();
-    m_timeLine.setDuration(animationTime<KscreenConfig>(250));
+    m_timeLine.setDuration(
+        std::chrono::milliseconds(animationTime<KscreenConfig>(250)));
 }
 
 void KscreenEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
     if (m_state == StateFadingIn || m_state == StateFadingOut) {
-        m_timeLine.setCurrentTime(m_timeLine.currentTime() + time);
-        if (m_timeLine.currentValue() >= 1.0) {
+        m_timeLine.update(std::chrono::milliseconds(time));
+        if (m_timeLine.done()) {
             switchState();
         }
     }
@@ -108,16 +109,16 @@ void KscreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Windo
     //fade to black and fully opaque
     switch (m_state) {
         case StateFadingOut:
-            data.setOpacity(data.opacity() + (1.0 - data.opacity()) * m_timeLine.currentValue());
-            data.multiplyBrightness(1.0 - m_timeLine.currentValue());
+            data.setOpacity(data.opacity() + (1.0 - data.opacity()) * m_timeLine.value());
+            data.multiplyBrightness(1.0 - m_timeLine.value());
             break;
         case StateFadedOut:
             data.multiplyOpacity(0.0);
             data.multiplyBrightness(0.0);
             break;
         case StateFadingIn:
-            data.setOpacity(data.opacity() + (1.0 - data.opacity()) * (1.0 - m_timeLine.currentValue()));
-            data.multiplyBrightness(m_timeLine.currentValue());
+            data.setOpacity(data.opacity() + (1.0 - data.opacity()) * (1.0 - m_timeLine.value()));
+            data.multiplyBrightness(m_timeLine.value());
             break;
         default:
             // no adjustment
@@ -152,14 +153,14 @@ void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
     if (data[0] == 1) {
         // kscreen wants KWin to fade out all windows
         m_state = StateFadingOut;
-        m_timeLine.setCurrentTime(0);
+        m_timeLine.reset();
         effects->addRepaintFull();
         return;
     }
     if (data[0] == 3) {
         // kscreen wants KWin to fade in again
         m_state = StateFadingIn;
-        m_timeLine.setCurrentTime(0);
+        m_timeLine.reset();
         effects->addRepaintFull();
         return;
     }
