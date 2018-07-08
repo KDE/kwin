@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SLIDE_H
 #define KWIN_SLIDE_H
 
-// KDE
+// kwineffects
 #include <kwineffects.h>
 
 namespace KWin
@@ -112,11 +112,11 @@ private:
     } m_paintCtx;
 
     struct {
-        QList<EffectWindow*> blur;
-        QList<EffectWindow*> backgroundContrast;
+        EffectWindowList blur;
+        EffectWindowList backgroundContrast;
     } m_forcedRoles;
 
-    QList<EffectWindow*> m_elevatedWindows;
+    EffectWindowList m_elevatedWindows;
 };
 
 inline int SlideEffect::duration() const
@@ -144,6 +144,6 @@ inline bool SlideEffect::slideBackground() const
     return m_slideBackground;
 }
 
-} // namespace
+} // namespace KWin
 
 #endif

@@ -20,14 +20,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-// KWayland
-#include <KWayland/Server/surface_interface.h>
-#include <KWayland/Server/blur_interface.h>
-#include <KWayland/Server/contrast_interface.h>
-
+// own
 #include "slide.h"
+
 // KConfigSkeleton
 #include "slideconfig.h"
+
+// KWayland
+#include <KWayland/Server/blur_interface.h>
+#include <KWayland/Server/contrast_interface.h>
+#include <KWayland/Server/surface_interface.h>
 
 namespace KWin
 {
@@ -540,4 +542,4 @@ void SlideEffect::numberScreensChanged()
     stop();
 }
 
-} // namespace
+} // namespace KWin
