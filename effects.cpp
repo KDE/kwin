@@ -1310,9 +1310,10 @@ void EffectsHandlerImpl::toggleEffect(const QString& name)
 QStringList EffectsHandlerImpl::loadedEffects() const
 {
     QStringList listModules;
-    for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
-        listModules << (*it).first;
-    }
+    listModules.reserve(loaded_effects.count());
+    std::transform(loaded_effects.constBegin(), loaded_effects.constEnd(),
+        std::back_inserter(listModules),
+        [](const EffectPair &pair) { return pair.first; });
     return listModules;
 }
 
@@ -1389,12 +1390,15 @@ bool EffectsHandlerImpl::isEffectSupported(const QString &name)
 
 }
 
-QList< bool > EffectsHandlerImpl::areEffectsSupported(const QStringList &names)
+QList<bool> EffectsHandlerImpl::areEffectsSupported(const QStringList &names)
 {
-    QList< bool > retList;
-    for (const QString &name : names) {
-        retList << isEffectSupported(name);
-    }
+    QList<bool> retList;
+    retList.reserve(names.count());
+    std::transform(names.constBegin(), names.constEnd(),
+        std::back_inserter(retList),
+        [this](const QString &name) {
+            return isEffectSupported(name);
+        });
     return retList;
 }
 
