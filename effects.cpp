@@ -1417,11 +1417,11 @@ void EffectsHandlerImpl::effectsChanged()
 {
     loaded_effects.clear();
     m_activeEffects.clear(); // it's possible to have a reconfigure and a quad rebuild between two paint cycles - bug #308201
-//    qDebug() << "Recreating effects' list:";
-    for (const EffectPair & effect : effect_order) {
-//        qDebug() << effect.first;
-        loaded_effects.append(effect);
-    }
+
+    loaded_effects.reserve(effect_order.count());
+    std::copy(effect_order.constBegin(), effect_order.constEnd(),
+        std::back_inserter(loaded_effects));
+
     m_activeEffects.reserve(loaded_effects.count());
 }
 
