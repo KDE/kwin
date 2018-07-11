@@ -861,7 +861,7 @@ EffectWindow* DesktopGridEffect::windowAt(QPoint pos) const
         }
     } else {
         foreach (EffectWindow * w, windows) {
-            if (w->isOnDesktop(desktop) && !w->isMinimized() && w->geometry().contains(pos))
+            if (w->isOnDesktop(desktop) && w->isOnCurrentActivity() && !w->isMinimized() && w->geometry().contains(pos))
                 return w;
         }
     }
