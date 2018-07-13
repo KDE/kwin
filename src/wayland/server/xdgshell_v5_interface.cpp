@@ -27,7 +27,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "seat_interface.h"
 #include "surface_interface.h"
 
-#include <wayland-xdg-shell-v5-server-protocol.h>
+#include "../compat/wayland-xdg-shell-v5-server-protocol.h"
 
 namespace KWayland
 {
@@ -61,7 +61,7 @@ private:
     static void pongCallback(wl_client *client, wl_resource *resource, uint32_t serial);
 
     XdgShellV5Interface *q;
-    static const struct xdg_shell_interface s_interface;
+    static const struct zxdg_shell_v5_interface s_interface;
     static const quint32 s_version;
 };
 
@@ -79,13 +79,13 @@ public:
 
 private:
 
-    static const struct xdg_popup_interface s_interface;
+    static const struct zxdg_popup_v5_interface s_interface;
 };
 
 const quint32 XdgShellV5Interface::Private::s_version = 1;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-const struct xdg_shell_interface XdgShellV5Interface::Private::s_interface = {
+const struct zxdg_shell_v5_interface XdgShellV5Interface::Private::s_interface = {
     destroyCallback,
     useUnstableVersionCallback,
     getXdgSurfaceCallback,
@@ -123,7 +123,7 @@ void XdgShellV5Interface::Private::createSurface(wl_client *client, uint32_t ver
         }
     );
     if (it != surfaces.constEnd()) {
-        wl_resource_post_error(surface->resource(), XDG_SHELL_ERROR_ROLE, "ShellSurface already created");
+        wl_resource_post_error(surface->resource(), ZXDG_SHELL_V5_ERROR_ROLE, "ShellSurface already created");
         return;
     }
     XdgSurfaceV5Interface *shellSurface = new XdgSurfaceV5Interface(q, surface, parentResource);
@@ -175,7 +175,7 @@ void XdgShellV5Interface::Private::pongCallback(wl_client *client, wl_resource *
 }
 
 XdgShellV5Interface::Private::Private(XdgShellV5Interface *q, Display *d)
-    : XdgShellInterface::Private(XdgShellInterfaceVersion::UnstableV5, q, d, &xdg_shell_interface, s_version)
+    : XdgShellInterface::Private(XdgShellInterfaceVersion::UnstableV5, q, d, &zxdg_shell_v5_interface, s_version)
     , q(q)
 {
 }
@@ -183,7 +183,7 @@ XdgShellV5Interface::Private::Private(XdgShellV5Interface *q, Display *d)
 void XdgShellV5Interface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {
     auto c = display->getConnection(client);
-    auto resource = c->createResource(&xdg_shell_interface, qMin(version, s_version), id);
+    auto resource = c->createResource(&zxdg_shell_v5_interface, qMin(version, s_version), id);
     if (!resource) {
         wl_client_post_no_memory(client);
         return;
@@ -226,7 +226,7 @@ quint32 XdgShellV5Interface::Private::ping(XdgShellSurfaceInterface * surface)
         return 0;
     }
     const quint32 pingSerial = display->nextSerial();
-    xdg_shell_send_ping(clientXdgShellResource, pingSerial);
+    zxdg_shell_v5_send_ping(clientXdgShellResource, pingSerial);
 
     setupTimer(pingSerial);
     return pingSerial;
@@ -261,40 +261,40 @@ private:
     static void unsetFullscreenCallback(wl_client *client, wl_resource *resource);
     static void setMinimizedCallback(wl_client *client, wl_resource *resource);
 
-    static const struct xdg_surface_interface s_interface;
+    static const struct zxdg_surface_v5_interface s_interface;
 };
 
 namespace {
 template <>
-Qt::Edges edgesToQtEdges(xdg_surface_resize_edge edges)
+Qt::Edges edgesToQtEdges(zxdg_surface_v5_resize_edge edges)
 {
     Qt::Edges qtEdges;
     switch (edges) {
-    case XDG_SURFACE_RESIZE_EDGE_TOP:
+    case ZXDG_SURFACE_V5_RESIZE_EDGE_TOP:
         qtEdges = Qt::TopEdge;
         break;
-    case XDG_SURFACE_RESIZE_EDGE_BOTTOM:
+    case ZXDG_SURFACE_V5_RESIZE_EDGE_BOTTOM:
         qtEdges = Qt::BottomEdge;
         break;
-    case XDG_SURFACE_RESIZE_EDGE_LEFT:
+    case ZXDG_SURFACE_V5_RESIZE_EDGE_LEFT:
         qtEdges = Qt::LeftEdge;
         break;
-    case XDG_SURFACE_RESIZE_EDGE_TOP_LEFT:
+    case ZXDG_SURFACE_V5_RESIZE_EDGE_TOP_LEFT:
         qtEdges = Qt::TopEdge | Qt::LeftEdge;
         break;
-    case XDG_SURFACE_RESIZE_EDGE_BOTTOM_LEFT:
+    case ZXDG_SURFACE_V5_RESIZE_EDGE_BOTTOM_LEFT:
         qtEdges = Qt::BottomEdge | Qt::LeftEdge;
         break;
-    case XDG_SURFACE_RESIZE_EDGE_RIGHT:
+    case ZXDG_SURFACE_V5_RESIZE_EDGE_RIGHT:
         qtEdges = Qt::RightEdge;
         break;
-    case XDG_SURFACE_RESIZE_EDGE_TOP_RIGHT:
+    case ZXDG_SURFACE_V5_RESIZE_EDGE_TOP_RIGHT:
         qtEdges = Qt::TopEdge | Qt::RightEdge;
         break;
-    case XDG_SURFACE_RESIZE_EDGE_BOTTOM_RIGHT:
+    case ZXDG_SURFACE_V5_RESIZE_EDGE_BOTTOM_RIGHT:
         qtEdges = Qt::BottomEdge | Qt::RightEdge;
         break;
-    case XDG_SURFACE_RESIZE_EDGE_NONE:
+    case ZXDG_SURFACE_V5_RESIZE_EDGE_NONE:
         break;
     default:
         Q_UNREACHABLE();
@@ -305,14 +305,14 @@ Qt::Edges edgesToQtEdges(xdg_surface_resize_edge edges)
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-const struct xdg_surface_interface XdgSurfaceV5Interface::Private::s_interface = {
+const struct zxdg_surface_v5_interface XdgSurfaceV5Interface::Private::s_interface = {
     resourceDestroyedCallback,
     setParentCallback,
     setTitleCallback,
     setAppIdCallback,
     showWindowMenuCallback,
     moveCallback,
-    resizeCallback<xdg_surface_resize_edge>,
+    resizeCallback<zxdg_surface_v5_resize_edge>,
     ackConfigureCallback,
     setWindowGeometryCallback,
     setMaximizedCallback,
@@ -409,7 +409,7 @@ void XdgSurfaceV5Interface::Private::setMinimizedCallback(wl_client *client, wl_
 }
 
 XdgSurfaceV5Interface::Private::Private(XdgSurfaceV5Interface *q, XdgShellV5Interface *c, SurfaceInterface *surface, wl_resource *parentResource)
-    : XdgShellSurfaceInterface::Private(XdgShellInterfaceVersion::UnstableV5, q, c, surface, parentResource, &xdg_surface_interface, &s_interface)
+    : XdgShellSurfaceInterface::Private(XdgShellInterfaceVersion::UnstableV5, q, c, surface, parentResource, &zxdg_surface_v5_interface, &s_interface)
 {
 }
 
@@ -417,7 +417,7 @@ XdgSurfaceV5Interface::Private::~Private() = default;
 
 void XdgSurfaceV5Interface::Private::close()
 {
-    xdg_surface_send_close(resource);
+    zxdg_surface_v5_send_close(resource);
     client->flush();
 }
 
@@ -431,22 +431,22 @@ quint32 XdgSurfaceV5Interface::Private::configure(States states, const QSize &si
     wl_array_init(&state);
     if (states.testFlag(State::Maximized)) {
         uint32_t *s = reinterpret_cast<uint32_t*>(wl_array_add(&state, sizeof(uint32_t)));
-        *s = XDG_SURFACE_STATE_MAXIMIZED;
+        *s = ZXDG_SURFACE_V5_STATE_MAXIMIZED;
     }
     if (states.testFlag(State::Fullscreen)) {
         uint32_t *s = reinterpret_cast<uint32_t*>(wl_array_add(&state, sizeof(uint32_t)));
-        *s = XDG_SURFACE_STATE_FULLSCREEN;
+        *s = ZXDG_SURFACE_V5_STATE_FULLSCREEN;
     }
     if (states.testFlag(State::Resizing)) {
         uint32_t *s = reinterpret_cast<uint32_t*>(wl_array_add(&state, sizeof(uint32_t)));
-        *s = XDG_SURFACE_STATE_RESIZING;
+        *s = ZXDG_SURFACE_V5_STATE_RESIZING;
     }
     if (states.testFlag(State::Activated)) {
         uint32_t *s = reinterpret_cast<uint32_t*>(wl_array_add(&state, sizeof(uint32_t)));
-        *s = XDG_SURFACE_STATE_ACTIVATED;
+        *s = ZXDG_SURFACE_V5_STATE_ACTIVATED;
     }
     configureSerials << serial;
-    xdg_surface_send_configure(resource, size.width(), size.height(), &state, serial);
+    zxdg_surface_v5_send_configure(resource, size.width(), size.height(), &state, serial);
     client->flush();
     wl_array_release(&state);
 
@@ -454,13 +454,13 @@ quint32 XdgSurfaceV5Interface::Private::configure(States states, const QSize &si
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-const struct xdg_popup_interface XdgPopupV5Interface::Private::s_interface = {
+const struct zxdg_popup_v5_interface XdgPopupV5Interface::Private::s_interface = {
     resourceDestroyedCallback
 };
 #endif
 
 XdgPopupV5Interface::Private::Private(XdgPopupV5Interface *q, XdgShellV5Interface *c, SurfaceInterface *surface, wl_resource *parentResource)
-    : XdgShellPopupInterface::Private(XdgShellInterfaceVersion::UnstableV5, q, c, surface, parentResource, &xdg_popup_interface, &s_interface)
+    : XdgShellPopupInterface::Private(XdgShellInterfaceVersion::UnstableV5, q, c, surface, parentResource, &zxdg_popup_v5_interface, &s_interface)
 {
 }
 
@@ -473,7 +473,7 @@ void XdgPopupV5Interface::Private::popupDone()
         return;
     }
     // TODO: dismiss all child popups
-    xdg_popup_send_popup_done(resource);
+    zxdg_popup_v5_send_popup_done(resource);
     client->flush();
 }
 
