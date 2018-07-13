@@ -146,6 +146,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 const double splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - start) + qMin(geo.width(), slideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtX(splitPoint);
                 WindowQuadList filtered;
+                filtered.reserve(data.quads.count());
                 foreach (const WindowQuad &quad, data.quads) {
                     if (quad.left() >= splitPoint) {
                         filtered << quad;
@@ -158,6 +159,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 const double splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - start) + qMin(geo.height(), slideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtY(splitPoint);
                 WindowQuadList filtered;
+                filtered.reserve(data.quads.count());
                 foreach (const WindowQuad &quad, data.quads) {
                     if (quad.top() >= splitPoint) {
                         filtered << quad;
@@ -170,6 +172,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 const double splitPoint = screenRect.x() + screenRect.width() - geo.x() - start - qMin(geo.width(), slideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtX(splitPoint);
                 WindowQuadList filtered;
+                filtered.reserve(data.quads.count());
                 foreach (const WindowQuad &quad, data.quads) {
                     if (quad.right() <= splitPoint) {
                         filtered << quad;
@@ -183,6 +186,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 const double splitPoint = screenRect.y() + screenRect.height() - geo.y() - start - qMin(geo.height(), slideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtY(splitPoint);
                 WindowQuadList filtered;
+                filtered.reserve(data.quads.count());
                 foreach (const WindowQuad &quad, data.quads) {
                     if (quad.bottom() <= splitPoint) {
                         filtered << quad;
