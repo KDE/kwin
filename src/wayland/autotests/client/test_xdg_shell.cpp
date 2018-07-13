@@ -76,8 +76,9 @@ void XdgShellTest::init()
     QSignalSpy outputAnnouncedSpy(&registry, &Registry::outputAnnounced);
     QVERIFY(outputAnnouncedSpy.isValid());
 
-    auto shellAnnouncedSignal =  m_version == XdgShellInterfaceVersion::UnstableV5 ?
-    &Registry::xdgShellUnstableV5Announced : &Registry::xdgShellUnstableV6Announced;
+    auto shellAnnouncedSignal =  m_version == XdgShellInterfaceVersion::UnstableV5 ? &Registry::xdgShellUnstableV5Announced :
+                                 m_version == XdgShellInterfaceVersion::UnstableV6 ? &Registry::xdgShellUnstableV6Announced :
+                                 &Registry::xdgShellStableAnnounced;
 
     QSignalSpy xdgShellAnnouncedSpy(&registry, shellAnnouncedSignal);
     QVERIFY(xdgShellAnnouncedSpy.isValid());
@@ -105,7 +106,18 @@ void XdgShellTest::init()
 
     QCOMPARE(xdgShellAnnouncedSpy.count(), 1);
 
-    Registry::Interface iface = m_version == XdgShellInterfaceVersion::UnstableV5 ? Registry::Interface::XdgShellUnstableV5 : Registry::Interface::XdgShellUnstableV6;
+    Registry::Interface iface;
+    switch (m_version) {
+    case XdgShellInterfaceVersion::UnstableV5:
+        iface = Registry::Interface::XdgShellUnstableV5;
+        break;
+    case XdgShellInterfaceVersion::UnstableV6:
+        iface = Registry::Interface::XdgShellUnstableV6;
+        break;
+    case XdgShellInterfaceVersion::Stable:
+        iface = Registry::Interface::XdgShellStable;
+        break;
+    }
 
     m_xdgShell = registry.createXdgShell(registry.interface(iface).name,
                                          registry.interface(iface).version,
