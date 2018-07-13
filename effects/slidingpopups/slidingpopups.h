@@ -36,7 +36,7 @@ class SlidingPopupsEffect
 public:
     SlidingPopupsEffect();
     ~SlidingPopupsEffect();
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void postPaintWindow(EffectWindow* w);

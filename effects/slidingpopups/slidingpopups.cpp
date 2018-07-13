@@ -91,11 +91,6 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
     }
 }
 
-void SlidingPopupsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
-{
-    effects->prePaintScreen(data, time);
-}
-
 void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
     const std::chrono::milliseconds delta(time);
