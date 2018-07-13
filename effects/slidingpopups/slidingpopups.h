@@ -60,13 +60,15 @@ public:
     }
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *c);
-    void slotWindowClosed(KWin::EffectWindow *c);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotPropertyNotify(KWin::EffectWindow *w, long a);
     void slotWaylandSlideOnShowChanged(EffectWindow* w);
+
+    void slideIn(EffectWindow *w);
+    void slideOut(EffectWindow *w);
+
 private:
     void setupAnimData(EffectWindow *w);
-    void startForShow(EffectWindow *w);
 
     enum Position {
         West = 0,
@@ -84,12 +86,21 @@ private:
     };
     long mAtom;
 
-    QHash< const EffectWindow*, TimeLine > mAppearingWindows;
-    QHash< const EffectWindow*, TimeLine > mDisappearingWindows;
     QHash< const EffectWindow*, Data > mWindowsData;
     int mSlideLength;
     std::chrono::milliseconds mFadeInTime;
     std::chrono::milliseconds mFadeOutTime;
+
+    enum class AnimationKind {
+        In,
+        Out
+    };
+
+    struct Animation {
+        AnimationKind kind;
+        TimeLine timeLine;
+    };
+    QHash<const EffectWindow*, Animation> m_animations;
 };
 
 } // namespace
