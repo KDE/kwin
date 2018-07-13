@@ -147,7 +147,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 data.quads = data.quads.splitAtX(splitPoint);
                 WindowQuadList filtered;
                 filtered.reserve(data.quads.count());
-                foreach (const WindowQuad &quad, data.quads) {
+                for (const WindowQuad &quad : qAsConst(data.quads)) {
                     if (quad.left() >= splitPoint) {
                         filtered << quad;
                     }
@@ -160,7 +160,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 data.quads = data.quads.splitAtY(splitPoint);
                 WindowQuadList filtered;
                 filtered.reserve(data.quads.count());
-                foreach (const WindowQuad &quad, data.quads) {
+                for (const WindowQuad &quad : qAsConst(data.quads)) {
                     if (quad.top() >= splitPoint) {
                         filtered << quad;
                     }
@@ -173,7 +173,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 data.quads = data.quads.splitAtX(splitPoint);
                 WindowQuadList filtered;
                 filtered.reserve(data.quads.count());
-                foreach (const WindowQuad &quad, data.quads) {
+                for (const WindowQuad &quad : qAsConst(data.quads)) {
                     if (quad.right() <= splitPoint) {
                         filtered << quad;
                     }
@@ -187,7 +187,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 data.quads = data.quads.splitAtY(splitPoint);
                 WindowQuadList filtered;
                 filtered.reserve(data.quads.count());
-                foreach (const WindowQuad &quad, data.quads) {
+                for (const WindowQuad &quad : qAsConst(data.quads)) {
                     if (quad.bottom() <= splitPoint) {
                         filtered << quad;
                     }
