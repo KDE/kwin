@@ -4,6 +4,7 @@
         "Description": "KWin Compositor plugin rendering through OpenGL",
         "Description[ca@valencia]": "Connector del Compositor del KWin que renderitza a través de l'OpenGL",
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través de l'OpenGL",
+        "Description[da]": "KWin-compositorplugin som renderer via OpenGL",
         "Description[de]": "KWin-Compositor-Modul zum Rendern mit OpenGL",
         "Description[es]": "Complemento compositor de KWin renderizando mediante OpenGL",
         "Description[eu]": "Kwin konposatzailearen plugina OpenGL bidez errendatzen",
