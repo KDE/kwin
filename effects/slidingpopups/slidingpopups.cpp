@@ -405,20 +405,21 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
 void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
 {
     const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
+    const QRect windowGeo = w->geometry();
     if (mWindowsData[w].start == -1) {
         switch (mWindowsData[w].from) {
         case West:
-            mWindowsData[w].start = qMax(w->x() - screenRect.x(), 0);
+            mWindowsData[w].start = qMax(windowGeo.left() - screenRect.left(), 0);
             break;
         case North:
-            mWindowsData[w].start = qMax(w->y() - screenRect.y(), 0);
+            mWindowsData[w].start = qMax(windowGeo.top() - screenRect.top(), 0);
             break;
         case East:
-            mWindowsData[w].start = qMax(screenRect.x() + screenRect.width() - (w->x() + w->width()), 0);
+            mWindowsData[w].start = qMax(screenRect.right() - windowGeo.right(), 0);
             break;
         case South:
         default:
-            mWindowsData[w].start = qMax(screenRect.y() + screenRect.height() - (w->y() + w->height()), 0);
+            mWindowsData[w].start = qMax(screenRect.bottom() - windowGeo.bottom(), 0);
             break;
         }
     }
@@ -426,20 +427,20 @@ void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
     int difference = 0;
     switch (mWindowsData[w].from) {
     case West:
-        difference = w->x() - screenRect.x();
+        mWindowsData[w].start = qMax(windowGeo.left() - screenRect.left(), mWindowsData[w].start);
         break;
     case North:
-        difference = w->y() - screenRect.y();
+        mWindowsData[w].start = qMax(windowGeo.top() - screenRect.top(), mWindowsData[w].start);
         break;
     case East:
-        difference = w->x() + w->width() - (screenRect.x() + screenRect.width());
+        mWindowsData[w].start = qMax(screenRect.right() - windowGeo.right(), mWindowsData[w].start);
         break;
     case South:
     default:
-        difference = w->y() + w->height() - (screenRect.y() + screenRect.height());
+        mWindowsData[w].start = qMax(screenRect.bottom() - windowGeo.bottom(), mWindowsData[w].start);
         break;
     }
-    mWindowsData[w].start = qMax<int>(mWindowsData[w].start, difference);
+
     // Grab the window, so other windowClosed effects will ignore it
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
 }
