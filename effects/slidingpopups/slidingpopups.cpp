@@ -105,12 +105,8 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
             appearing = true;
         } else {
             mAppearingWindows.remove(w);
+            w->setData(WindowForceBackgroundContrastRole, false);
             w->setData(WindowForceBlurRole, false);
-            if (m_backgroundContrastForced.contains(w) && w->hasAlpha() &&
-                    w->data(WindowForceBackgroundContrastRole).toBool()) {
-                w->setData(WindowForceBackgroundContrastRole, QVariant());
-                m_backgroundContrastForced.removeAll(w);
-            }
         }
     } else if (mDisappearingWindows.contains(w)) {
 
@@ -304,11 +300,6 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 void SlidingPopupsEffect::startForShow(EffectWindow *w)
 {
     if (w->isOnCurrentDesktop() && mWindowsData.contains(w)) {
-        if (!w->data(WindowForceBackgroundContrastRole).toBool() && w->hasAlpha()) {
-            w->setData(WindowForceBackgroundContrastRole, QVariant(true));
-            m_backgroundContrastForced.append(w);
-        }
-
         mDisappearingWindows.remove(w);
 
         TimeLine &timeLine = mAppearingWindows[ w ];
@@ -319,6 +310,7 @@ void SlidingPopupsEffect::startForShow(EffectWindow *w)
 
         w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+        w->setData(WindowForceBackgroundContrastRole, true);
         w->setData(WindowForceBlurRole, true);
 
         w->addRepaintFull();
@@ -344,14 +336,11 @@ void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
 
         // Tell other windowClosed() effects to ignore this window
         w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+        w->setData(WindowForceBackgroundContrastRole, true);
         w->setData(WindowForceBlurRole, true);
-        if (!w->data(WindowForceBackgroundContrastRole).toBool() && w->hasAlpha()) {
-            w->setData(WindowForceBackgroundContrastRole, QVariant(true));
-        }
 
         w->addRepaintFull();
     }
-    m_backgroundContrastForced.removeAll(w);
 }
 
 void SlidingPopupsEffect::slotWindowDeleted(EffectWindow* w)

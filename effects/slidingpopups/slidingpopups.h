@@ -84,10 +84,6 @@ private:
     };
     long mAtom;
 
-    // This list is only for appearing windows: we remember that we've enabled the
-    // WindowBackgroundContrastForcedRole flag, so we can remove it later.
-    // It doesn't matter for disappearing windows, they'll be deleted anyway.
-    QList< const EffectWindow* > m_backgroundContrastForced;
     QHash< const EffectWindow*, TimeLine > mAppearingWindows;
     QHash< const EffectWindow*, TimeLine > mDisappearingWindows;
     QHash< const EffectWindow*, Data > mWindowsData;
