@@ -198,6 +198,7 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                                                                             quad[3]._SET_B_(quad[3]._B_() + offset[_O3_])
 
         WindowQuadList newQuads;
+        newQuads.reserve(data.quads.count());
         float quadFactor;   // defines how fast a quad is vertically moved: y coordinates near to window top are slowed down
                             // it is used as quadFactor^3/windowHeight^3
                             // quadFactor is the y position of the quad but is changed towards becomming the window height
