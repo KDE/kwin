@@ -76,6 +76,8 @@ private Q_SLOTS:
     void testPopup();
     void testDecoCancelsPopup();
     void testWindowUnderCursorWhileButtonPressed();
+    void testConfineToScreenGeometry_data();
+    void testConfineToScreenGeometry();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -1203,6 +1205,97 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(enteredSpy.count(), 2);
+}
+
+void PointerInputTest::testConfineToScreenGeometry_data()
+{
+    QTest::addColumn<QPoint>("startPos");
+    QTest::addColumn<QPoint>("targetPos");
+    QTest::addColumn<QPoint>("expectedPos");
+
+    // screen layout:
+    //
+    // +----------+----------+---------+
+    // |   left   |    top   |  right  |
+    // +----------+----------+---------+
+    //            |  bottom  |
+    //            +----------+
+    //
+
+    QTest::newRow("move top-left - left screen")       << QPoint(640, 512)   << QPoint(-100, -100) << QPoint(0, 0);
+    QTest::newRow("move top - left screen")            << QPoint(640, 512)   << QPoint(640, -100)  << QPoint(640, 0);
+    QTest::newRow("move top-right - left screen")      << QPoint(640, 512)   << QPoint(1380, -100) << QPoint(1380, 0);
+    QTest::newRow("move right - left screen")          << QPoint(640, 512)   << QPoint(1380, 512)  << QPoint(1380, 512);
+    QTest::newRow("move bottom-right - left screen")   << QPoint(640, 512)   << QPoint(1380, 1124) << QPoint(1380, 1124);
+    QTest::newRow("move bottom - left screen")         << QPoint(640, 512)   << QPoint(640, 1124)  << QPoint(640, 1023);
+    QTest::newRow("move bottom-left - left screen")    << QPoint(640, 512)   << QPoint(-100, 1124) << QPoint(0, 1023);
+    QTest::newRow("move left - left screen")           << QPoint(640, 512)   << QPoint(-100, 512)  << QPoint(0, 512);
+
+    QTest::newRow("move top-left - top screen")        << QPoint(1920, 512)  << QPoint(1180, -100) << QPoint(1180, 0);
+    QTest::newRow("move top - top screen")             << QPoint(1920, 512)  << QPoint(1920, -100) << QPoint(1920, 0);
+    QTest::newRow("move top-right - top screen")       << QPoint(1920, 512)  << QPoint(2660, -100) << QPoint(2660, 0);
+    QTest::newRow("move right - top screen")           << QPoint(1920, 512)  << QPoint(2660, 512)  << QPoint(2660, 512);
+    QTest::newRow("move bottom-right - top screen")    << QPoint(1920, 512)  << QPoint(2660, 1124) << QPoint(2559, 1023);
+    QTest::newRow("move bottom - top screen")          << QPoint(1920, 512)  << QPoint(1920, 1124) << QPoint(1920, 1124);
+    QTest::newRow("move bottom-left - top screen")     << QPoint(1920, 512)  << QPoint(1180, 1124) << QPoint(1280, 1023);
+    QTest::newRow("move left - top screen")            << QPoint(1920, 512)  << QPoint(1180, 512)  << QPoint(1180, 512);
+
+    QTest::newRow("move top-left - right screen")      << QPoint(3200, 512)  << QPoint(2460, -100) << QPoint(2460, 0);
+    QTest::newRow("move top - right screen")           << QPoint(3200, 512)  << QPoint(3200, -100) << QPoint(3200, 0);
+    QTest::newRow("move top-right - right screen")     << QPoint(3200, 512)  << QPoint(3940, -100) << QPoint(3839, 0);
+    QTest::newRow("move right - right screen")         << QPoint(3200, 512)  << QPoint(3940, 512)  << QPoint(3839, 512);
+    QTest::newRow("move bottom-right - right screen")  << QPoint(3200, 512)  << QPoint(3940, 1124) << QPoint(3839, 1023);
+    QTest::newRow("move bottom - right screen")        << QPoint(3200, 512)  << QPoint(3200, 1124) << QPoint(3200, 1023);
+    QTest::newRow("move bottom-left - right screen")   << QPoint(3200, 512)  << QPoint(2460, 1124) << QPoint(2460, 1124);
+    QTest::newRow("move left - right screen")          << QPoint(3200, 512)  << QPoint(2460, 512)  << QPoint(2460, 512);
+
+    QTest::newRow("move top-left - bottom screen")     << QPoint(1920, 1536) << QPoint(1180, 924)  << QPoint(1180, 924);
+    QTest::newRow("move top - bottom screen")          << QPoint(1920, 1536) << QPoint(1920, 924)  << QPoint(1920, 924);
+    QTest::newRow("move top-right - bottom screen")    << QPoint(1920, 1536) << QPoint(2660, 924)  << QPoint(2660, 924);
+    QTest::newRow("move right - bottom screen")        << QPoint(1920, 1536) << QPoint(2660, 1536) << QPoint(2559, 1536);
+    QTest::newRow("move bottom-right - bottom screen") << QPoint(1920, 1536) << QPoint(2660, 2148) << QPoint(2559, 2047);
+    QTest::newRow("move bottom - bottom screen")       << QPoint(1920, 1536) << QPoint(1920, 2148) << QPoint(1920, 2047);
+    QTest::newRow("move bottom-left - bottom screen")  << QPoint(1920, 1536) << QPoint(1180, 2148) << QPoint(1280, 2047);
+    QTest::newRow("move left - bottom screen")         << QPoint(1920, 1536) << QPoint(1180, 1536) << QPoint(1280, 1536);
+}
+
+void PointerInputTest::testConfineToScreenGeometry()
+{
+    // this test verifies that pointer belongs to at least one screen
+    // after moving it to off-screen area
+
+    // unload the Present Windows effect because it pushes back
+    // pointer if it's at (0, 0)
+    static_cast<EffectsHandlerImpl*>(effects)->unloadEffect(QStringLiteral("presentwindows"));
+
+    // setup screen layout
+    const QVector<QRect> geometries {
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+        QRect(2560, 0, 1280, 1024),
+        QRect(1280, 1024, 1280, 1024)
+    };
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
+                              Qt::DirectConnection,
+                              Q_ARG(int, geometries.count()),
+                              Q_ARG(QVector<QRect>, geometries));
+    QCOMPARE(screens()->count(), geometries.count());
+    QCOMPARE(screens()->geometry(0), geometries.at(0));
+    QCOMPARE(screens()->geometry(1), geometries.at(1));
+    QCOMPARE(screens()->geometry(2), geometries.at(2));
+    QCOMPARE(screens()->geometry(3), geometries.at(3));
+
+    // move pointer to initial position
+    QFETCH(QPoint, startPos);
+    Cursor::setPos(startPos);
+    QCOMPARE(Cursor::pos(), startPos);
+
+    // perform movement
+    QFETCH(QPoint, targetPos);
+    kwinApp()->platform()->pointerMotion(targetPos, 1);
+
+    QFETCH(QPoint, expectedPos);
+    QCOMPARE(Cursor::pos(), expectedPos);
 }
 
 }

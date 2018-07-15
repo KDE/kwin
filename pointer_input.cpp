@@ -114,6 +114,14 @@ static bool screenContainsPos(const QPointF &pos)
     return false;
 }
 
+static QPointF confineToBoundingBox(const QPointF &pos, const QRectF &boundingBox)
+{
+    return QPointF(
+        qBound(boundingBox.left(), pos.x(), boundingBox.right() - 1.0),
+        qBound(boundingBox.top(), pos.y(), boundingBox.bottom() - 1.0)
+    );
+}
+
 PointerInputRedirection::PointerInputRedirection(InputRedirection* parent)
     : InputDeviceHandler(parent)
     , m_cursor(nullptr)
@@ -764,13 +772,11 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
     // verify that at least one screen contains the pointer position
     QPointF p = pos;
     if (!screenContainsPos(p)) {
-        // allow either x or y to pass
-        p = QPointF(m_pos.x(), pos.y());
+        const QRectF unitedScreensGeometry = screens()->geometry();
+        p = confineToBoundingBox(p, unitedScreensGeometry);
         if (!screenContainsPos(p)) {
-            p = QPointF(pos.x(), m_pos.y());
-            if (!screenContainsPos(p)) {
-                return;
-            }
+            const QRectF currentScreenGeometry = screens()->geometry(screens()->number(m_pos.toPoint()));
+            p = confineToBoundingBox(p, currentScreenGeometry);
         }
     }
     p = applyPointerConfinement(p);
