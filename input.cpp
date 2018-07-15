@@ -1197,6 +1197,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setFocusedKeyboardSurface(nullptr);
+        input()->pointer()->setEnableConstraints(false);
         // pass the key event to the seat, so that it has a proper model of the currently hold keys
         // this is important for combinations like alt+shift to ensure that shift is not considered pressed
         passToWaylandServer(event);

@@ -92,6 +92,8 @@ public:
         m_blockConstraint = true;
     }
 
+    void setEnableConstraints(bool set);
+
     bool isConstrained() const {
         return m_confined || m_locked;
     }
@@ -171,6 +173,7 @@ private:
     bool m_confined = false;
     bool m_locked = false;
     bool m_blockConstraint = false;
+    bool m_enableConstraints = true;
 };
 
 class CursorImage : public QObject

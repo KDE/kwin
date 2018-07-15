@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "input.h"
 #include "keyboard_input.h"
+#include "pointer_input.h"
 #include "focuschain.h"
 #include "screenedge.h"
 #include "screens.h"
@@ -1483,6 +1484,7 @@ void TabBox::close(bool abort)
         removeTabBoxGrab();
     }
     hide(abort);
+    input()->pointer()->setEnableConstraints(true);
     m_tabGrab = false;
     m_desktopGrab = false;
     m_noModifierGrab = false;

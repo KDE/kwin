@@ -612,6 +612,15 @@ static QRegion getConstraintRegion(Toplevel *t, T *constraint)
     return intersected.translated(t->pos() + t->clientPos());
 }
 
+void PointerInputRedirection::setEnableConstraints(bool set)
+{
+    if (m_enableConstraints == set) {
+        return;
+    }
+    m_enableConstraints = set;
+    updatePointerConstraints();
+}
+
 void PointerInputRedirection::updatePointerConstraints()
 {
     if (m_window.isNull()) {
@@ -630,11 +639,11 @@ void PointerInputRedirection::updatePointerConstraints()
     if (m_blockConstraint) {
         return;
     }
-    const bool windowIsActive = m_window == workspace()->activeClient();
+    const bool canConstrain = m_enableConstraints && m_window == workspace()->activeClient();
     const auto cf = s->confinedPointer();
     if (cf) {
         if (cf->isConfined()) {
-            if (!windowIsActive) {
+            if (!canConstrain) {
                 cf->setConfined(false);
                 m_confined = false;
                 disconnectConfinedPointerRegionConnection();
@@ -642,7 +651,7 @@ void PointerInputRedirection::updatePointerConstraints()
             return;
         }
         const QRegion r = getConstraintRegion(m_window.data(), cf.data());
-        if (windowIsActive && r.contains(m_pos.toPoint())) {
+        if (canConstrain && r.contains(m_pos.toPoint())) {
             cf->setConfined(true);
             m_confined = true;
             m_confinedPointerRegionConnection = connect(cf.data(), &KWayland::Server::ConfinedPointerInterface::regionChanged, this,
@@ -679,14 +688,14 @@ void PointerInputRedirection::updatePointerConstraints()
     const auto lock = s->lockedPointer();
     if (lock) {
         if (lock->isLocked()) {
-            if (!windowIsActive) {
+            if (!canConstrain) {
                 lock->setLocked(false);
                 m_locked = false;
             }
             return;
         }
         const QRegion r = getConstraintRegion(m_window.data(), lock.data());
-        if (windowIsActive && r.contains(m_pos.toPoint())) {
+        if (canConstrain && r.contains(m_pos.toPoint())) {
             lock->setLocked(true);
             m_locked = true;
             OSD::show(i18nc("notification about mouse pointer locked",
