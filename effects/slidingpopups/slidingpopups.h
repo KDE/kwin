@@ -31,8 +31,8 @@ class SlidingPopupsEffect
     : public Effect
 {
     Q_OBJECT
-    Q_PROPERTY(int fadeInTime READ fadeInTime)
-    Q_PROPERTY(int fadeOutTime READ fadeOutTime)
+    Q_PROPERTY(int slideInDuration READ slideInDuration)
+    Q_PROPERTY(int slideOutDuration READ slideOutDuration)
 public:
     SlidingPopupsEffect();
     ~SlidingPopupsEffect();
@@ -51,13 +51,9 @@ public:
 
     // TODO react also on virtual desktop changes
 
-    // for properties
-    int fadeInTime() const {
-        return mFadeInTime.count();
-    }
-    int fadeOutTime() const {
-        return mFadeOutTime.count();
-    }
+    int slideInDuration() const;
+    int slideOutDuration() const;
+
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *c);
     void slotWindowDeleted(KWin::EffectWindow *w);
@@ -70,26 +66,11 @@ public Q_SLOTS:
 private:
     void setupAnimData(EffectWindow *w);
 
-    enum Position {
-        West = 0,
-        North = 1,
-        East = 2,
-        South = 3
-    };
-    struct Data {
-        int start; //point in screen coordinates where the window starts
-        //to animate, from decides if this point is an x or an y
-        Position from;
-        std::chrono::milliseconds fadeInDuration;
-        std::chrono::milliseconds fadeOutDuration;
-        int slideLength;
-    };
     long mAtom;
 
-    QHash< const EffectWindow*, Data > mWindowsData;
     int mSlideLength;
-    std::chrono::milliseconds mFadeInTime;
-    std::chrono::milliseconds mFadeOutTime;
+    std::chrono::milliseconds m_slideInDuration;
+    std::chrono::milliseconds m_slideOutDuration;
 
     enum class AnimationKind {
         In,
@@ -101,7 +82,33 @@ private:
         TimeLine timeLine;
     };
     QHash<const EffectWindow*, Animation> m_animations;
+
+    enum class Location {
+        Left,
+        Top,
+        Right,
+        Bottom
+    };
+
+    struct AnimationData {
+        int offset;
+        Location location;
+        std::chrono::milliseconds slideInDuration;
+        std::chrono::milliseconds slideOutDuration;
+        int slideLength;
+    };
+    QHash<const EffectWindow*, AnimationData> m_animationsData;
 };
+
+inline int SlidingPopupsEffect::slideInDuration() const
+{
+    return m_slideInDuration.count();
+}
+
+inline int SlidingPopupsEffect::slideOutDuration() const
+{
+    return m_slideOutDuration.count();
+}
 
 } // namespace
 

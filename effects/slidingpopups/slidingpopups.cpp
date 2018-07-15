@@ -69,25 +69,25 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
     SlidingPopupsConfig::self()->read();
-    mFadeInTime = std::chrono::milliseconds(
+    m_slideInDuration = std::chrono::milliseconds(
         static_cast<int>(animationTime(SlidingPopupsConfig::slideInTime() != 0 ? SlidingPopupsConfig::slideInTime() : 150)));
-    mFadeOutTime = std::chrono::milliseconds(
+    m_slideOutDuration = std::chrono::milliseconds(
         static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? SlidingPopupsConfig::slideOutTime() : 250)));
 
     auto animationIt = m_animations.begin();
     while (animationIt != m_animations.end()) {
         const auto duration = ((*animationIt).kind == AnimationKind::In)
-            ? mFadeInTime
-            : mFadeOutTime;
+            ? m_slideInDuration
+            : m_slideOutDuration;
         (*animationIt).timeLine.setDuration(duration);
         ++animationIt;
     }
 
-    QHash< const EffectWindow*, Data >::iterator wIt = mWindowsData.begin();
-    while (wIt != mWindowsData.end()) {
-        wIt.value().fadeInDuration = mFadeInTime;
-        wIt.value().fadeOutDuration = mFadeOutTime;
-        ++wIt;
+    auto dataIt = m_animationsData.begin();
+    while (dataIt != m_animationsData.end()) {
+        (*dataIt).slideInDuration = m_slideInDuration;
+        (*dataIt).slideOutDuration = m_slideOutDuration;
+        ++dataIt;
     }
 }
 
@@ -114,52 +114,46 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         return;
     }
 
-    const int start = mWindowsData[ w ].start;
-
-    int slideLength;
-    if (mWindowsData[ w ].slideLength > 0) {
-        slideLength = mWindowsData[ w ].slideLength;
-    } else {
-        slideLength = mSlideLength;
-    }
+    const AnimationData &animData = m_animationsData[w];
+    const int slideLength = (animData.slideLength > 0) ? animData.slideLength : mSlideLength;
 
     const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), w->desktop());
     int splitPoint = 0;
     const QRect geo = w->expandedGeometry();
     const qreal t = (*animationIt).timeLine.value();
 
-    switch(mWindowsData[ w ].from) {
-    case West:
+    switch(animData.location) {
+    case Location::Left:
         if (slideLength < geo.width()) {
             data.multiplyOpacity(t);
         }
         data.translate(-interpolate(qMin(geo.width(), slideLength), 0.0, t));
-        splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - start);
+        splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - animData.offset);
         region = QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
         break;
-    case North:
+    case Location::Top:
         if (slideLength < geo.height()) {
             data.multiplyOpacity(t);
         }
         data.translate(0.0, -interpolate(qMin(geo.height(), slideLength), 0.0, t));
-        splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - start);
+        splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - animData.offset);
         region = QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
         break;
-    case East:
+    case Location::Right:
         if (slideLength < geo.width()) {
             data.multiplyOpacity(t);
         }
         data.translate(interpolate(qMin(geo.width(), slideLength), 0.0, t));
-        splitPoint = screenRect.x() + screenRect.width() - geo.x() - start;
+        splitPoint = screenRect.x() + screenRect.width() - geo.x() - animData.offset;
         region = QRegion(geo.x(), geo.y(), splitPoint, geo.height());
         break;
-    case South:
+    case Location::Bottom:
     default:
         if (slideLength < geo.height()) {
             data.multiplyOpacity(t);
         }
         data.translate(0.0, interpolate(qMin(geo.height(), slideLength), 0.0, t));
-        splitPoint = screenRect.y() + screenRect.height() - geo.y() - start;
+        splitPoint = screenRect.y() + screenRect.height() - geo.y() - animData.offset;
         region = QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
     }
 
@@ -206,7 +200,7 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 void SlidingPopupsEffect::slotWindowDeleted(EffectWindow* w)
 {
     m_animations.remove(w);
-    mWindowsData.remove(w);
+    m_animationsData.remove(w);
     effects->addRepaint(w->expandedGeometry());
 }
 
@@ -223,33 +217,49 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
             w->setData(WindowClosedGrabRole, QVariant());
         }
         m_animations.remove(w);
-        mWindowsData.remove(w);
+        m_animationsData.remove(w);
         return;
     }
 
     auto* d = reinterpret_cast< uint32_t* >(data.data());
-    Data animData;
-    animData.start = d[ 0 ];
-    animData.from = (Position)d[ 1 ];
+    AnimationData &animData = m_animationsData[w];
+    animData.offset = d[ 0 ];
+
+    switch (d[1]) {
+    case 0: // West
+        animData.location = Location::Left;
+        break;
+    case 1: // North
+        animData.location = Location::Top;
+        break;
+    case 2: // East
+        animData.location = Location::Right;
+        break;
+    case 3: // South
+    default:
+        animData.location = Location::Bottom;
+        break;
+    }
+
     //custom duration
     animData.slideLength = 0;
     if (data.length() >= (int)(sizeof(uint32_t) * 3)) {
-        animData.fadeInDuration = std::chrono::milliseconds(d[2]);
+        animData.slideInDuration = std::chrono::milliseconds(d[2]);
         if (data.length() >= (int)(sizeof(uint32_t) * 4))
             //custom fadein
-            animData.fadeOutDuration = std::chrono::milliseconds(d[3]);
+            animData.slideOutDuration = std::chrono::milliseconds(d[3]);
         else
             //custom fadeout
-            animData.fadeOutDuration = std::chrono::milliseconds(d[2]);
+            animData.slideOutDuration = std::chrono::milliseconds(d[2]);
 
         //do we want an actual slide?
         if (data.length() >= (int)(sizeof(uint32_t) * 5))
             animData.slideLength = d[4];
     } else {
-        animData.fadeInDuration = mFadeInTime;
-        animData.fadeOutDuration = mFadeOutTime;
+        animData.slideInDuration = m_slideInDuration;
+        animData.slideOutDuration = m_slideOutDuration;
     }
-    mWindowsData[ w ] = animData;
+
     setupAnimData(w);
 }
 
@@ -257,37 +267,39 @@ void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
 {
     const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
     const QRect windowGeo = w->geometry();
-    if (mWindowsData[w].start == -1) {
-        switch (mWindowsData[w].from) {
-        case West:
-            mWindowsData[w].start = qMax(windowGeo.left() - screenRect.left(), 0);
+    AnimationData &animData = m_animationsData[w];
+
+    if (animData.offset == -1) {
+        switch (animData.location) {
+        case Location::Left:
+            animData.offset = qMax(windowGeo.left() - screenRect.left(), 0);
             break;
-        case North:
-            mWindowsData[w].start = qMax(windowGeo.top() - screenRect.top(), 0);
+        case Location::Top:
+            animData.offset = qMax(windowGeo.top() - screenRect.top(), 0);
             break;
-        case East:
-            mWindowsData[w].start = qMax(screenRect.right() - windowGeo.right(), 0);
+        case Location::Right:
+            animData.offset = qMax(screenRect.right() - windowGeo.right(), 0);
             break;
-        case South:
+        case Location::Bottom:
         default:
-            mWindowsData[w].start = qMax(screenRect.bottom() - windowGeo.bottom(), 0);
+            animData.offset = qMax(screenRect.bottom() - windowGeo.bottom(), 0);
             break;
         }
     }
     // sanitize
-    switch (mWindowsData[w].from) {
-    case West:
-        mWindowsData[w].start = qMax(windowGeo.left() - screenRect.left(), mWindowsData[w].start);
+    switch (animData.location) {
+    case Location::Left:
+        animData.offset = qMax(windowGeo.left() - screenRect.left(), animData.offset);
         break;
-    case North:
-        mWindowsData[w].start = qMax(windowGeo.top() - screenRect.top(), mWindowsData[w].start);
+    case Location::Top:
+        animData.offset = qMax(windowGeo.top() - screenRect.top(), animData.offset);
         break;
-    case East:
-        mWindowsData[w].start = qMax(screenRect.right() - windowGeo.right(), mWindowsData[w].start);
+    case Location::Right:
+        animData.offset = qMax(screenRect.right() - windowGeo.right(), animData.offset);
         break;
-    case South:
+    case Location::Bottom:
     default:
-        mWindowsData[w].start = qMax(screenRect.bottom() - windowGeo.bottom(), mWindowsData[w].start);
+        animData.offset = qMax(screenRect.bottom() - windowGeo.bottom(), animData.offset);
         break;
     }
 
@@ -307,28 +319,28 @@ void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow* w)
     }
 
     if (surf->slideOnShowHide()) {
-        Data animData;
-        animData.start = surf->slideOnShowHide()->offset();
+        AnimationData &animData = m_animationsData[w];
+
+        animData.offset = surf->slideOnShowHide()->offset();
 
         switch (surf->slideOnShowHide()->location()) {
         case KWayland::Server::SlideInterface::Location::Top:
-            animData.from = North;
+            animData.location = Location::Top;
             break;
         case KWayland::Server::SlideInterface::Location::Left:
-            animData.from = West;
+            animData.location = Location::Left;
             break;
         case KWayland::Server::SlideInterface::Location::Right:
-            animData.from = East;
+            animData.location = Location::Right;
             break;
         case KWayland::Server::SlideInterface::Location::Bottom:
         default:
-            animData.from = South;
+            animData.location = Location::Bottom;
             break;
         }
         animData.slideLength = 0;
-        animData.fadeInDuration = mFadeInTime;
-        animData.fadeOutDuration = mFadeOutTime;
-        mWindowsData[ w ] = animData;
+        animData.slideInDuration = m_slideInDuration;
+        animData.slideOutDuration = m_slideOutDuration;
 
         setupAnimData(w);
     }
@@ -344,8 +356,8 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
         return;
     }
 
-    auto dataIt = mWindowsData.constFind(w);
-    if (dataIt == mWindowsData.constEnd()) {
+    auto dataIt = m_animationsData.constFind(w);
+    if (dataIt == m_animationsData.constEnd()) {
         return;
     }
 
@@ -353,7 +365,7 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
     animation.kind = AnimationKind::In;
     animation.timeLine.reset();
     animation.timeLine.setDirection(TimeLine::Forward);
-    animation.timeLine.setDuration((*dataIt).fadeInDuration);
+    animation.timeLine.setDuration((*dataIt).slideInDuration);
     animation.timeLine.setEasingCurve(QEasingCurve::InOutSine);
 
     w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
@@ -373,8 +385,8 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
         return;
     }
 
-    auto dataIt = mWindowsData.constFind(w);
-    if (dataIt == mWindowsData.constEnd()) {
+    auto dataIt = m_animationsData.constFind(w);
+    if (dataIt == m_animationsData.constEnd()) {
         return;
     }
 
@@ -386,7 +398,7 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     animation.kind = AnimationKind::Out;
     animation.timeLine.reset();
     animation.timeLine.setDirection(TimeLine::Backward);
-    animation.timeLine.setDuration((*dataIt).fadeOutDuration);
+    animation.timeLine.setDuration((*dataIt).slideOutDuration);
     animation.timeLine.setEasingCurve(QEasingCurve::InOutSine);
 
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
