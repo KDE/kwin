@@ -58,7 +58,7 @@ enum class XdgShellInterfaceVersion
     UnstableV6,
     /**
       xdg_wm_base (stable)
-      @since 5.XDGSHELL_VERSION
+      @since 5.48
       */
     Stable
 };
