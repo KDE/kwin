@@ -65,10 +65,10 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <wayland-server-decoration-client-protocol.h>
 #include <wayland-text-input-v0-client-protocol.h>
 #include <wayland-text-input-v2-client-protocol.h>
-#include <wayland-xdg-shell-v5-client-protocol.h>
 #include <wayland-relativepointer-unstable-v1-client-protocol.h>
 #include <wayland-pointer-gestures-unstable-v1-client-protocol.h>
 #include <wayland-pointer-constraints-unstable-v1-client-protocol.h>
+#include "../../src/compat/wayland-xdg-shell-v5-client-protocol.h"
 
 class TestWaylandRegistry : public QObject
 {
@@ -347,7 +347,7 @@ void TestWaylandRegistry::testBindTextInputManagerUnstableV2()
 
 void TestWaylandRegistry::testBindXdgShellUnstableV5()
 {
-    TEST_BIND(KWayland::Client::Registry::Interface::XdgShellUnstableV5, SIGNAL(xdgShellUnstableV5Announced(quint32,quint32)), bindXdgShellUnstableV5, xdg_shell_destroy)
+    TEST_BIND(KWayland::Client::Registry::Interface::XdgShellUnstableV5, SIGNAL(xdgShellUnstableV5Announced(quint32,quint32)), bindXdgShellUnstableV5, zxdg_shell_v5_destroy)
 }
 
 void TestWaylandRegistry::testBindRelativePointerManagerUnstableV1()
