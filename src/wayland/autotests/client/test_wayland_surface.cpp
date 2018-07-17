@@ -1143,12 +1143,12 @@ void TestWaylandSurface::testInhibit()
 
     // creating a second idle inhibition should not trigger the signal
     QScopedPointer<IdleInhibitor> inhibitor2(m_idleInhibitManager->createInhibitor(s.data()));
-    QVERIFY(!inhibitsChangedSpy.wait());
+    QVERIFY(!inhibitsChangedSpy.wait(500));
     QCOMPARE(serverSurface->inhibitsIdle(), true);
 
     // and also deleting the first inhibitor should not yet change the inhibition
     inhibitor1.reset();
-    QVERIFY(!inhibitsChangedSpy.wait());
+    QVERIFY(!inhibitsChangedSpy.wait(500));
     QCOMPARE(serverSurface->inhibitsIdle(), true);
 
     // but deleting also the second inhibitor should trigger

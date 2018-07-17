@@ -204,7 +204,7 @@ KWayland::Server::SurfaceInterface *TestDragAndDrop::getServerSurface()
     if (!surfaceCreatedSpy.isValid()) {
         return nullptr;
     }
-    if (!surfaceCreatedSpy.wait()) {
+    if (!surfaceCreatedSpy.wait(500)) {
         return nullptr;
     }
     return surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
@@ -389,7 +389,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QVERIFY(droppedSpy.isValid());
     m_seatInterface->setTimestamp(4);
     m_seatInterface->pointerButtonReleased(1);
-    QVERIFY(!droppedSpy.wait());
+    QVERIFY(!droppedSpy.wait(500));
 
     // verify that we did not get any further input events
     QVERIFY(pointerMotionSpy.isEmpty());

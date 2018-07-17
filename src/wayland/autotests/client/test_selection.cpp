@@ -108,7 +108,7 @@ bool SelectionTest::setupConnection(Connection* c)
     c->thread->start();
 
     c->connection->initConnection();
-    if (!connectedSpy.wait()) {
+    if (!connectedSpy.wait(500)) {
         return false;
     }
 
@@ -126,7 +126,7 @@ bool SelectionTest::setupConnection(Connection* c)
         return false;
     }
     registry.setup();
-    if (!interfacesAnnouncedSpy.wait()) {
+    if (!interfacesAnnouncedSpy.wait(500)) {
         return false;
     }
 
@@ -152,7 +152,7 @@ bool SelectionTest::setupConnection(Connection* c)
     if (!keyboardSpy.isValid()) {
         return false;
     }
-    if (!keyboardSpy.wait()) {
+    if (!keyboardSpy.wait(500)) {
         return false;
     }
     if (!c->seat->hasKeyboard()) {

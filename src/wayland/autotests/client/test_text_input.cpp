@@ -199,7 +199,7 @@ SurfaceInterface *TextInputTest::waitForSurface()
     if (!surfaceCreatedSpy.isValid()) {
         return nullptr;
     }
-    if (!surfaceCreatedSpy.wait()) {
+    if (!surfaceCreatedSpy.wait(500)) {
         return nullptr;
     }
     if (surfaceCreatedSpy.count() != 1) {

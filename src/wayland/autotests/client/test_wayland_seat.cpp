@@ -542,7 +542,7 @@ void TestWaylandSeat::testPointer()
 
     // now a relative motion should not be sent to the relative pointer
     m_seatInterface->relativePointerMotion(QSizeF(1, 2), QSizeF(3, 4), quint64(-1));
-    QVERIFY(!relativeMotionSpy.wait());
+    QVERIFY(!relativeMotionSpy.wait(500));
 
     // enter it again
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(0, 0));
@@ -975,7 +975,7 @@ void TestWaylandSeat::testPointerSwipeGesture()
 
     // another start should not be possible
     m_seatInterface->startPointerSwipeGesture(2);
-    QVERIFY(!startSpy.wait());
+    QVERIFY(!startSpy.wait(500));
 
     // send in some updates
     m_seatInterface->setTimestamp(timestamp++);
@@ -1091,7 +1091,7 @@ void TestWaylandSeat::testPointerPinchGesture()
 
     // another start should not be possible
     m_seatInterface->startPointerPinchGesture(3);
-    QVERIFY(!startSpy.wait());
+    QVERIFY(!startSpy.wait(500));
 
     // send in some updates
     m_seatInterface->setTimestamp(timestamp++);

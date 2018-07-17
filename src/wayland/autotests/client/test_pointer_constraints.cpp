@@ -213,7 +213,7 @@ void TestPointerConstraints::testLockPointer()
     QCOMPARE(serverLockedPointer->lifeTime(), serverLifeTime);
     // setting to unlocked now should not trigger an unlocked spy
     serverLockedPointer->setLocked(false);
-    QVERIFY(!unlockedSpy.wait());
+    QVERIFY(!unlockedSpy.wait(500));
 
     // try setting a region
     QSignalSpy destroyedSpy(serverLockedPointer.data(), &QObject::destroyed);
@@ -222,7 +222,7 @@ void TestPointerConstraints::testLockPointer()
     QVERIFY(regionChangedSpy.isValid());
     lockedPointer->setRegion(m_compositor->createRegion(QRegion(0, 5, 10, 20), m_compositor));
     // it's double buffered
-    QVERIFY(!regionChangedSpy.wait());
+    QVERIFY(!regionChangedSpy.wait(500));
     surface->commit(Surface::CommitFlag::None);
     QVERIFY(regionChangedSpy.wait());
     QCOMPARE(serverLockedPointer->region(), QRegion(0, 5, 10, 20));
@@ -318,7 +318,7 @@ void TestPointerConstraints::testConfinePointer()
     QCOMPARE(serverConfinedPointer->lifeTime(), serverLifeTime);
     // setting to unconfined now should not trigger an unconfined spy
     serverConfinedPointer->setConfined(false);
-    QVERIFY(!unconfinedSpy.wait());
+    QVERIFY(!unconfinedSpy.wait(500));
 
     // try setting a region
     QSignalSpy destroyedSpy(serverConfinedPointer.data(), &QObject::destroyed);
@@ -327,7 +327,7 @@ void TestPointerConstraints::testConfinePointer()
     QVERIFY(regionChangedSpy.isValid());
     confinedPointer->setRegion(m_compositor->createRegion(QRegion(0, 5, 10, 20), m_compositor));
     // it's double buffered
-    QVERIFY(!regionChangedSpy.wait());
+    QVERIFY(!regionChangedSpy.wait(500));
     surface->commit(Surface::CommitFlag::None);
     QVERIFY(regionChangedSpy.wait());
     QCOMPARE(serverConfinedPointer->region(), QRegion(0, 5, 10, 20));
