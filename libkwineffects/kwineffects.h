@@ -359,7 +359,14 @@ public:
     };
 
     enum Feature {
-        Nothing = 0, Resize, GeometryTip, Outline, ScreenInversion, Blur, Contrast, HighlightWindows
+        Nothing = 0,
+        Resize,
+        GeometryTip,
+        Outline, /**< @deprecated */
+        ScreenInversion,
+        Blur,
+        Contrast,
+        HighlightWindows
     };
 
     /**
