@@ -249,18 +249,16 @@ void SelectionTest::testClearOnEnter()
     auto serverSurface2 = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
     QVERIFY(serverSurface2);
 
-    // entering that surface should give a selection
+    // entering that surface should give a selection offer
     m_seatInterface->setFocusedKeyboardSurface(serverSurface2);
     QVERIFY(selectionOfferedClient2Spy.wait());
     QVERIFY(selectionClearedClient2Spy.isEmpty());
-    // now unset the selection
-    m_client2.dataDevice->clearSelection(keyboardEnteredClient2Spy.first().first().value<quint32>());
-    QVERIFY(selectionClearedClient2Spy.wait());
+
     // set a data source but without offers
     QScopedPointer<DataSource> dataSource2(m_client2.ddm->createDataSource());
     m_client2.dataDevice->setSelection(keyboardEnteredClient2Spy.first().first().value<quint32>(), dataSource2.data());
     QVERIFY(selectionOfferedClient2Spy.wait());
-    // and clear again
+    // and clear
     m_client2.dataDevice->clearSelection(keyboardEnteredClient2Spy.first().first().value<quint32>());
     QVERIFY(selectionClearedClient2Spy.wait());
 
