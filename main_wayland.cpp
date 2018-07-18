@@ -219,15 +219,8 @@ void ApplicationWayland::continueStartupWithX()
     QSocketNotifier *notifier = new QSocketNotifier(xcb_get_file_descriptor(c), QSocketNotifier::Read, this);
     auto processXcbEvents = [this, c] {
         while (auto event = xcb_poll_for_event(c)) {
-            updateX11Time(event);
             long result = 0;
-            if (QThread::currentThread()->eventDispatcher()->filterNativeEvent(QByteArrayLiteral("xcb_generic_event_t"), event, &result)) {
-                free(event);
-                continue;
-            }
-            if (Workspace::self()) {
-                Workspace::self()->workspaceEvent(event);
-            }
+            QThread::currentThread()->eventDispatcher()->filterNativeEvent(QByteArrayLiteral("xcb_generic_event_t"), event, &result);
             free(event);
         }
         xcb_flush(c);
