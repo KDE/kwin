@@ -142,8 +142,14 @@ void WaylandBackend::lockRequest(bool persistent, QRect region)
     }
     m_lockedPointer = lockedPointer;
     m_lockedPointerPersistent = persistent;
+
     connect(lockedPointer, &LockedPointer::locked, this, [this]() {
         qDebug() << "------ LOCKED! ------";
+        if(lockHint()) {
+            m_lockedPointer->setCursorPositionHint(QPointF(10., 10.));
+            forceSurfaceCommit();
+        }
+
         Q_EMIT lockChanged(true);
     });
     connect(lockedPointer, &LockedPointer::unlocked, this, [this]() {

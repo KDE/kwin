@@ -594,6 +594,12 @@ void PointerInputRedirection::disconnectConfinedPointerRegionConnection()
     m_confinedPointerRegionConnection = QMetaObject::Connection();
 }
 
+void PointerInputRedirection::disconnectLockedPointerAboutToBeUnboundConnection()
+{
+    disconnect(m_lockedPointerAboutToBeUnboundConnection);
+    m_lockedPointerAboutToBeUnboundConnection = QMetaObject::Connection();
+}
+
 void PointerInputRedirection::disconnectPointerConstraintsConnection()
 {
     disconnect(m_constraintsConnection);
@@ -689,8 +695,13 @@ void PointerInputRedirection::updatePointerConstraints()
     if (lock) {
         if (lock->isLocked()) {
             if (!canConstrain) {
+                const auto hint = lock->cursorPositionHint();
                 lock->setLocked(false);
                 m_locked = false;
+                disconnectLockedPointerAboutToBeUnboundConnection();
+                if (! (hint.x() < 0 || hint.y() < 0) && m_window) {
+                    processMotion(m_window->pos() - m_window->clientContentPos() + hint, waylandServer()->seat()->timestamp());
+                }
             }
             return;
         }
@@ -698,6 +709,24 @@ void PointerInputRedirection::updatePointerConstraints()
         if (canConstrain && r.contains(m_pos.toPoint())) {
             lock->setLocked(true);
             m_locked = true;
+
+            // The client might cancel pointer locking from its side by unbinding the LockedPointerInterface.
+            // In this case the cached cursor position hint must be fetched before the resource goes away
+            m_lockedPointerAboutToBeUnboundConnection = connect(lock.data(), &KWayland::Server::LockedPointerInterface::aboutToBeUnbound, this,
+                [this, lock]() {
+                    const auto hint = lock->cursorPositionHint();
+                    if (hint.x() < 0 || hint.y() < 0 || !m_window) {
+                        return;
+                    }
+                    auto globalHint = m_window->pos() - m_window->clientContentPos() + hint;
+
+                    // When the resource finally goes away, reposition the cursor according to the hint
+                    connect(lock.data(), &KWayland::Server::LockedPointerInterface::unbound, this,
+                        [this, globalHint]() {
+                            processMotion(globalHint, waylandServer()->seat()->timestamp());
+                    });
+                }
+            );
             OSD::show(i18nc("notification about mouse pointer locked",
                             "Pointer locked to current position.\nTo end pointer lock hold Escape for 3 seconds."),
                       QStringLiteral("preferences-desktop-mouse"), 5000);
@@ -705,6 +734,7 @@ void PointerInputRedirection::updatePointerConstraints()
         }
     } else {
         m_locked = false;
+        disconnectLockedPointerAboutToBeUnboundConnection();
     }
 }
 

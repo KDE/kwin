@@ -155,6 +155,7 @@ private:
     void warpXcbOnSurfaceLeft(KWayland::Server::SurfaceInterface *surface);
     QPointF applyPointerConfinement(const QPointF &pos) const;
     void disconnectConfinedPointerRegionConnection();
+    void disconnectLockedPointerAboutToBeUnboundConnection();
     void disconnectPointerConstraintsConnection();
     void breakPointerConstraints(KWayland::Server::SurfaceInterface *surface);
     bool areButtonsPressed() const;
@@ -169,6 +170,7 @@ private:
     QMetaObject::Connection m_constraintsConnection;
     QMetaObject::Connection m_constraintsActivatedConnection;
     QMetaObject::Connection m_confinedPointerRegionConnection;
+    QMetaObject::Connection m_lockedPointerAboutToBeUnboundConnection;
     QMetaObject::Connection m_decorationGeometryConnection;
     bool m_confined = false;
     bool m_locked = false;

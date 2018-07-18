@@ -79,6 +79,28 @@ ColumnLayout {
         return activArea.rect();
     }
 
+    Connections {
+        target: org_kde_kwin_tests_pointerconstraints_backend
+        onForceSurfaceCommit: {
+            forceCommitRect.visible = true
+        }
+    }
+
+    Rectangle {
+        id: forceCommitRect
+        width: 10
+        height: 10
+        color: "red"
+        visible: false
+
+        Timer {
+            interval: 500
+            running: forceCommitRect.visible
+            repeat: false
+            onTriggered: forceCommitRect.visible = false;
+        }
+    }
+
     GridLayout {
         columns: 2
         rowSpacing: 10
@@ -120,6 +142,13 @@ ColumnLayout {
         }
     }
 
+    CheckBox {
+        id: lockHintChck
+        text: "Send position hint on lock"
+        checked: root.waylandNative
+        enabled: root.waylandNative
+        onCheckedChanged: org_kde_kwin_tests_pointerconstraints_backend.lockHint = checked;
+    }
     CheckBox {
         id: restrAreaChck
         text: "Restrict input area (not yet implemented)"

@@ -49,6 +49,7 @@ public:
     Backend(QObject *parent = nullptr) : QObject(parent) {}
 
     Q_PROPERTY(int mode READ mode CONSTANT)
+    Q_PROPERTY(bool lockHint MEMBER m_lockHint NOTIFY lockHintChanged)
     Q_PROPERTY(bool errorsAllowed READ errorsAllowed WRITE setErrorsAllowed NOTIFY errorsAllowedChanged)
 
     virtual void init(QQuickView *view) {
@@ -56,6 +57,10 @@ public:
     }
     int mode() const {
         return (int)m_mode;
+    }
+
+    bool lockHint() const {
+        return m_lockHint;
     }
     bool errorsAllowed() const {
         return m_errorsAllowed;
@@ -87,7 +92,9 @@ public:
 Q_SIGNALS:
     void confineChanged(bool confined);
     void lockChanged(bool locked);
+    void lockHintChanged();
     void errorsAllowedChanged();
+    void forceSurfaceCommit();
 
 protected:
     enum class Mode {
@@ -105,6 +112,8 @@ protected:
 private:
     QQuickView *m_view;
     Mode m_mode;
+
+    bool m_lockHint = true;
     bool m_errorsAllowed = false;
 };
 
