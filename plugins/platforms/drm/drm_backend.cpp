@@ -400,7 +400,7 @@ void DrmBackend::updateOutputs()
         it = m_outputs.erase(it);
         m_enabledOutputs.removeOne(removed);
         emit outputRemoved(removed);
-        delete removed;
+        removed->teardown();
     }
 
     // now check new connections
