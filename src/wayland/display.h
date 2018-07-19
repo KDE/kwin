@@ -86,6 +86,7 @@ class PointerConstraintsInterface;
 class XdgForeignInterface;
 class AppMenuManagerInterface;
 class ServerSideDecorationPaletteManagerInterface;
+class PlasmaVirtualDesktopManagementInterface;
 class XdgOutputManagerInterface;
 
 /**
@@ -267,6 +268,14 @@ public:
      */
     XdgOutputManagerInterface *createXdgOutputManager(QObject *parent = nullptr);
 
+
+    /**
+     * Creates the PlasmaVirtualDesktopManagementInterface in interface @p version.
+     *
+     * @returns The created manager object
+     * @since 5.46
+     **/
+    PlasmaVirtualDesktopManagementInterface *createPlasmaVirtualDesktopManagement(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

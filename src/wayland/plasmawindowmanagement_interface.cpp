@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "resource_p.h"
 #include "display.h"
 #include "surface_interface.h"
+#include "plasmavirtualdesktop_interface.h"
 
 #include <QtConcurrentRun>
 #include <QFile>
@@ -48,6 +49,7 @@ public:
     ShowingDesktopState state = ShowingDesktopState::Disabled;
     QVector<wl_resource*> resources;
     QList<PlasmaWindowInterface*> windows;
+    QPointer<PlasmaVirtualDesktopManagementInterface> plasmaVirtualDesktopManagementInterface = nullptr;
     quint32 windowIdCounter = 0;
 
 private:
@@ -90,6 +92,7 @@ public:
     bool unmapped = false;
     PlasmaWindowInterface *parentWindow = nullptr;
     QMetaObject::Connection parentWindowDestroyConnection;
+    QStringList plasmaVirtualDesktops;
     QRect geometry;
 
 private:
@@ -103,6 +106,9 @@ private:
     static void unsetMinimizedGeometryCallback(wl_client *client, wl_resource *resource, wl_resource *panel);
     static void destroyCallback(wl_client *client, wl_resource *resource);
     static void getIconCallback(wl_client *client, wl_resource *resource, int32_t fd);
+    static void requestEnterVirtualDesktopCallback(wl_client *client, wl_resource *resource, const char *id);
+    static void requestEnterNewVirtualDesktopCallback(wl_client *client, wl_resource *resource);
+    static void requestLeaveVirtualDesktopCallback(wl_client *client, wl_resource *resource, const char *id);
     static Private *cast(wl_resource *resource) {
         return reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
     }
@@ -255,6 +261,12 @@ PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *pa
     return window;
 }
 
+QList<PlasmaWindowInterface*> PlasmaWindowManagementInterface::windows() const
+{
+    Q_D();
+    return d->windows;
+}
+
 void PlasmaWindowManagementInterface::unmapWindow(PlasmaWindowInterface *window)
 {
     if (!window) {
@@ -264,6 +276,21 @@ void PlasmaWindowManagementInterface::unmapWindow(PlasmaWindowInterface *window)
     d->windows.removeOne(window);
     Q_ASSERT(!d->windows.contains(window));
     window->d->unmap();
+}
+
+void PlasmaWindowManagementInterface::setPlasmaVirtualDesktopManagementInterface(PlasmaVirtualDesktopManagementInterface *manager)
+{
+    Q_D();
+    if (d->plasmaVirtualDesktopManagementInterface == manager) {
+        return;
+    }
+    d->plasmaVirtualDesktopManagementInterface = manager;
+}
+
+PlasmaVirtualDesktopManagementInterface *PlasmaWindowManagementInterface::plasmaVirtualDesktopManagementInterface() const
+{
+    Q_D();
+    return d->plasmaVirtualDesktopManagementInterface;
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -276,7 +303,10 @@ const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_i
     requestMoveCallback,
     requestResizeCallback,
     destroyCallback,
-    getIconCallback
+    getIconCallback,
+    requestEnterVirtualDesktopCallback,
+    requestEnterNewVirtualDesktopCallback,
+    requestLeaveVirtualDesktopCallback
 };
 #endif
 
@@ -328,6 +358,9 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_
     resources << resource;
 
     org_kde_plasma_window_send_virtual_desktop_changed(resource, m_virtualDesktop);
+    for (const auto &desk : plasmaVirtualDesktops) {
+        org_kde_plasma_window_send_virtual_desktop_entered(resource, desk.toUtf8().constData());
+    }
     if (!m_appId.isEmpty()) {
         org_kde_plasma_window_send_app_id_changed(resource, m_appId.toUtf8().constData());
     }
@@ -423,6 +456,27 @@ void PlasmaWindowInterface::Private::getIconCallback(wl_client *client, wl_resou
             file.close();
         }, p->m_icon
     );
+}
+
+void PlasmaWindowInterface::Private::requestEnterVirtualDesktopCallback(wl_client *client, wl_resource *resource, const char *id)
+{
+    Q_UNUSED(client)
+    Private *p = cast(resource);
+    emit p->q->enterPlasmaVirtualDesktopRequested(QString::fromUtf8(id));
+}
+
+void PlasmaWindowInterface::Private::requestEnterNewVirtualDesktopCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    Private *p = cast(resource);
+    emit p->q->enterNewPlasmaVirtualDesktopRequested();
+}
+
+void PlasmaWindowInterface::Private::requestLeaveVirtualDesktopCallback(wl_client *client, wl_resource *resource, const char *id)
+{
+    Q_UNUSED(client)
+    Private *p = cast(resource);
+    emit p->q->leavePlasmaVirtualDesktopRequested(QString::fromUtf8(id));
 }
 
 void PlasmaWindowInterface::Private::setTitle(const QString &title)
@@ -684,10 +738,12 @@ void PlasmaWindowInterface::setTitle(const QString &title)
     d->setTitle(title);
 }
 
+#ifndef KWAYLANDSERVER_NO_DEPRECATED
 void PlasmaWindowInterface::setVirtualDesktop(quint32 desktop)
 {
     d->setVirtualDesktop(desktop);
 }
+#endif
 
 void PlasmaWindowInterface::unmap()
 {
@@ -731,7 +787,39 @@ void PlasmaWindowInterface::setMinimized(bool set)
 
 void PlasmaWindowInterface::setOnAllDesktops(bool set)
 {
+    //the deprecated vd management
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_ON_ALL_DESKTOPS, set);
+
+    if (!d->wm->plasmaVirtualDesktopManagementInterface()) {
+        return;
+    }
+
+    //the current vd management
+    if (set) {
+        if (d->plasmaVirtualDesktops.isEmpty()) {
+            return;
+        }
+        //leaving everything means on all desktops
+        for (auto desk : plasmaVirtualDesktops()) {
+            for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
+                org_kde_plasma_window_send_virtual_desktop_left(*it, desk.toUtf8().constData());
+            }
+        }
+        d->plasmaVirtualDesktops.clear();
+    } else {
+        if (!d->plasmaVirtualDesktops.isEmpty()) {
+            return;
+        }
+        //enters the desktops which are active (usually only one  but not a given)
+        for (auto desk : d->wm->plasmaVirtualDesktopManagementInterface()->desktops()) {
+            if (desk->isActive() && !d->plasmaVirtualDesktops.contains(desk->id())) {
+                d->plasmaVirtualDesktops << desk->id();
+                for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
+                    org_kde_plasma_window_send_virtual_desktop_entered(*it, desk->id().toUtf8().constData());
+                }
+            }
+        }
+    }
 }
 
 void PlasmaWindowInterface::setDemandsAttention(bool set)
@@ -779,6 +867,58 @@ void PlasmaWindowInterface::setThemedIconName(const QString &iconName)
 void PlasmaWindowInterface::setIcon(const QIcon &icon)
 {
     d->setIcon(icon);
+}
+
+void PlasmaWindowInterface::addPlasmaVirtualDesktop(const QString &id)
+{
+    //don't add a desktop we're not sure it exists
+    if (!d->wm->plasmaVirtualDesktopManagementInterface() || d->plasmaVirtualDesktops.contains(id)) {
+        return;
+    }
+
+    PlasmaVirtualDesktopInterface *desktop = d->wm->plasmaVirtualDesktopManagementInterface()->desktop(id);
+
+    if (!desktop) {
+        return;
+    }
+
+    //full? lets set it on all desktops, the plasmaVirtualDesktops list will get empty, which means it's on all desktops
+    if (d->wm->plasmaVirtualDesktopManagementInterface()->desktops().count() == d->plasmaVirtualDesktops.count() + 1) {
+        setOnAllDesktops(true);
+        return;
+    }
+
+    d->plasmaVirtualDesktops << id;
+
+    //if the desktop dies, remove it from or list
+    connect(desktop, &QObject::destroyed,
+            this, [this, id](){removePlasmaVirtualDesktop(id);});
+
+    for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
+        org_kde_plasma_window_send_virtual_desktop_entered(*it, id.toUtf8().constData());
+    }
+}
+
+void PlasmaWindowInterface::removePlasmaVirtualDesktop(const QString &id)
+{
+    if (!d->plasmaVirtualDesktops.contains(id)) {
+        return;
+    }
+
+    d->plasmaVirtualDesktops.removeAll(id);
+    for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
+        org_kde_plasma_window_send_virtual_desktop_left(*it, id.toUtf8().constData());
+    }
+
+    //we went on all desktops
+    if (d->plasmaVirtualDesktops.isEmpty()) {
+        setOnAllDesktops(true);
+    }
+}
+
+QStringList PlasmaWindowInterface::plasmaVirtualDesktops() const
+{
+    return d->plasmaVirtualDesktops;
 }
 
 void PlasmaWindowInterface::setShadeable(bool set)
