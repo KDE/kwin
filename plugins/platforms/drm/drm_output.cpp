@@ -64,6 +64,15 @@ DrmOutput::DrmOutput(DrmBackend *backend)
 
 DrmOutput::~DrmOutput()
 {
+    Q_ASSERT(!m_pageFlipPending);
+    if (!m_deleted) {
+        teardown();
+    }
+}
+
+void DrmOutput::teardown()
+{
+    m_deleted = true;
     hideCursor();
     m_crtc->blank();
 
@@ -84,6 +93,10 @@ DrmOutput::~DrmOutput()
     delete m_waylandOutputDevice.data();
     delete m_cursor[0];
     delete m_cursor[1];
+    if (!m_pageFlipPending) {
+        deleteLater();
+    } //else will be deleted in the page flip handler
+    //this is needed so that the pageflipcallback handle isn't deleted
 }
 
 void DrmOutput::releaseGbm()
@@ -930,6 +943,10 @@ void DrmOutput::updateMode(int modeIndex)
 void DrmOutput::pageFlipped()
 {
     m_pageFlipPending = false;
+    if (m_deleted) {
+        deleteLater();
+        return;
+    }
 
     if (!m_crtc) {
         return;

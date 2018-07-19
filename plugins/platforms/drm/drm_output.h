@@ -64,7 +64,10 @@ public:
         QByteArray serialNumber;
         QSize physicalSize;
     };
-    virtual ~DrmOutput();
+    ///deletes the output, calling this whilst a page flip is pending will result in an error
+    ~DrmOutput() override;
+    ///queues deleting the output after a page flip has completed.
+    void teardown();
     void releaseGbm();
     bool showCursor(DrmDumbBuffer *buffer);
     bool showCursor();
@@ -144,6 +147,7 @@ private:
     friend class DrmCrtc;   // TODO: For use of setModeLegacy. Remove later when we allow multiple connectors per crtc
                             //       and save the connector ids in the DrmCrtc instance.
     DrmOutput(DrmBackend *backend);
+
     bool presentAtomically(DrmBuffer *buffer);
 
     enum class AtomicCommitMode {
@@ -212,6 +216,7 @@ private:
     int m_cursorIndex = 0;
     bool m_hasNewCursor = false;
     bool m_internal = false;
+    bool m_deleted = false;
 };
 
 }
