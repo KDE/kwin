@@ -31,8 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-static const int IsSheetWindow = 0x22A982D5;
-
 SheetEffect::SheetEffect()
 {
     initConfig<SheetConfig>();
@@ -123,7 +121,6 @@ void SheetEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!isSheetWindow(w))
         return;
-    w->setData(IsSheetWindow, true);
 
     InfoMap::iterator it = windows.find(w);
     WindowInfo *info = (it == windows.end()) ? &windows[w] : &it.value();
@@ -181,7 +178,7 @@ void SheetEffect::slotWindowDeleted(EffectWindow* w)
 
 bool SheetEffect::isSheetWindow(EffectWindow* w)
 {
-    return (w->isModal() || w->data(IsSheetWindow).toBool());
+    return w->isModal();
 }
 
 bool SheetEffect::isActive() const
