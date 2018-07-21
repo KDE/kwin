@@ -43,12 +43,12 @@ public:
 
     void reconfigure(ReconfigureFlags) override;
 
-    void prePaintScreen(ScreenPrePaintData& data, int time) override;
-    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
     void postPaintScreen() override;
 
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     bool isActive() const override {
         return m_active;
@@ -67,9 +67,9 @@ public:
     bool slideBackground() const;
 
 private Q_SLOTS:
-    void desktopChanged(int old, int current, EffectWindow* with);
-    void windowAdded(EffectWindow* w);
-    void windowDeleted(EffectWindow* w);
+    void desktopChanged(int old, int current, EffectWindow *with);
+    void windowAdded(EffectWindow *w);
+    void windowDeleted(EffectWindow *w);
 
     void numberDesktopsChanged(uint old);
     void numberScreensChanged();
@@ -80,14 +80,14 @@ private:
     int workspaceWidth() const;
     int workspaceHeight() const;
 
-    bool isTranslated(const EffectWindow* w) const;
-    bool isPainted(const EffectWindow* w) const;
+    bool isTranslated(const EffectWindow *w) const;
+    bool isPainted(const EffectWindow *w) const;
 
-    bool shouldForceBlur(const EffectWindow* w) const;
-    bool shouldForceBackgroundContrast(const EffectWindow* w) const;
-    bool shouldElevate(const EffectWindow* w) const;
+    bool shouldForceBlur(const EffectWindow *w) const;
+    bool shouldForceBackgroundContrast(const EffectWindow *w) const;
+    bool shouldElevate(const EffectWindow *w) const;
 
-    void start(int old, int current, EffectWindow* movingWindow = nullptr);
+    void start(int old, int current, EffectWindow *movingWindow = nullptr);
     void stop();
 
 private:
@@ -100,7 +100,7 @@ private:
     TimeLine m_timeLine;
     QPoint m_startPos;
     QPoint m_diff;
-    EffectWindow* m_movingWindow = nullptr;
+    EffectWindow *m_movingWindow = nullptr;
 
     struct {
         int desktop;

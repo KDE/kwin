@@ -71,7 +71,7 @@ void SlideEffect::reconfigure(ReconfigureFlags)
     m_slideBackground = SlideConfig::slideBackground();
 }
 
-void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void SlideEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
     m_timeLine.update(std::chrono::milliseconds(time));
 
@@ -92,7 +92,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
  * @param w Width of the desktop grid
  * @param h Height of the desktop grid
  */
-inline void wrapDiff(QPoint& diff, int w, int h)
+inline void wrapDiff(QPoint &diff, int w, int h)
 {
     if (diff.x() > w/2) {
         diff.setX(diff.x() - w);
@@ -107,7 +107,7 @@ inline void wrapDiff(QPoint& diff, int w, int h)
     }
 }
 
-inline QRegion buildClipRegion(const QPoint& pos, int w, int h)
+inline QRegion buildClipRegion(const QPoint &pos, int w, int h)
 {
     const QSize screenSize = effects->virtualScreenSize();
     QRegion r = QRect(pos, screenSize);
@@ -126,9 +126,9 @@ inline QRegion buildClipRegion(const QPoint& pos, int w, int h)
     return r;
 }
 
-void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 {
-    if (! m_active) {
+    if (!m_active) {
         effects->paintScreen(mask, region, data);
         return;
     }
@@ -152,7 +152,7 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
     const QRegion clipRegion = buildClipRegion(currentPos, w, h);
     for (int i = 1; i <= effects->numberOfDesktops(); i++) {
         const QRect desktopGeo = desktopGeometry(i);
-        if (! clipRegion.contains(desktopGeo)) {
+        if (!clipRegion.contains(desktopGeo)) {
             continue;
         }
         visibleDesktops << i;
@@ -167,8 +167,8 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
     if (m_slideDocks) {
         const auto windows = effects->stackingOrder();
         m_paintCtx.fullscreenWindows.clear();
-        for (EffectWindow* w : windows) {
-            if (! w->isFullScreen()) {
+        for (EffectWindow *w : windows) {
+            if (!w->isFullScreen()) {
                 continue;
             }
             m_paintCtx.fullscreenWindows << w;
@@ -204,7 +204,7 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
  * Decide whether given window @p w should be transformed/translated.
  * @returns @c true if given window @p w should be transformed, otherwise @c false
  */
-bool SlideEffect::isTranslated(const EffectWindow* w) const
+bool SlideEffect::isTranslated(const EffectWindow *w) const
 {
     if (w->isOnAllDesktops()) {
         if (w->isDock()) {
@@ -226,14 +226,14 @@ bool SlideEffect::isTranslated(const EffectWindow* w) const
  * Decide whether given window @p w should be painted.
  * @returns @c true if given window @p w should be painted, otherwise @c false
  */
-bool SlideEffect::isPainted(const EffectWindow* w) const
+bool SlideEffect::isPainted(const EffectWindow *w) const
 {
     if (w->isOnAllDesktops()) {
         if (w->isDock()) {
-            if (! m_slideDocks) {
+            if (!m_slideDocks) {
                 return m_paintCtx.lastPass;
             }
-            for (const EffectWindow* fw : qAsConst(m_paintCtx.fullscreenWindows)) {
+            for (const EffectWindow *fw : qAsConst(m_paintCtx.fullscreenWindows)) {
                 if (fw->isOnDesktop(m_paintCtx.desktop)
                     && fw->screen() == w->screen()) {
                     return false;
@@ -263,7 +263,7 @@ bool SlideEffect::isPainted(const EffectWindow* w) const
     return false;
 }
 
-void SlideEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
 {
     if (m_active) {
         const bool painted = isPainted(w);
@@ -279,7 +279,7 @@ void SlideEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int 
     effects->prePaintWindow(w, data, time);
 }
 
-void SlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     if (m_active && isTranslated(w)) {
         data += m_paintCtx.translation;
@@ -341,7 +341,7 @@ int SlideEffect::workspaceHeight() const
     return h;
 }
 
-bool SlideEffect::shouldForceBlur(const EffectWindow* w) const
+bool SlideEffect::shouldForceBlur(const EffectWindow *w) const
 {
     // While there is an active fullscreen effect, the blur effect
     // tends to do nothing, i.e. it doesn't blur behind windows.
@@ -364,7 +364,7 @@ bool SlideEffect::shouldForceBlur(const EffectWindow* w) const
     //        if (surf) {
     //            return !surf->blur().isNull();
     //        }
-    const KWayland::Server::SurfaceInterface* surf = w->surface();
+    const KWayland::Server::SurfaceInterface *surf = w->surface();
     if (surf && surf->blur()) {
         return true;
     }
@@ -374,7 +374,7 @@ bool SlideEffect::shouldForceBlur(const EffectWindow* w) const
     return w->hasAlpha();
 }
 
-bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow* w) const
+bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow *w) const
 {
     // While there is an active fullscreen effect, the background
     // contrast effect tends to do nothing, i.e. it doesn't change
@@ -393,7 +393,7 @@ bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow* w) const
     //        if (surf) {
     //            return !surf->contrast().isNull();
     //        }
-    const KWayland::Server::SurfaceInterface* surf = w->surface();
+    const KWayland::Server::SurfaceInterface *surf = w->surface();
     if (surf && surf->contrast()) {
         return true;
     }
@@ -405,7 +405,7 @@ bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow* w) const
         && (w->isDock() || w->keepAbove());
 }
 
-bool SlideEffect::shouldElevate(const EffectWindow* w) const
+bool SlideEffect::shouldElevate(const EffectWindow *w) const
 {
     // Static docks(i.e. this effect doesn't slide docks) should be elevated
     // so they can properly animate themselves when an user enters or leaves
@@ -413,7 +413,7 @@ bool SlideEffect::shouldElevate(const EffectWindow* w) const
     return w->isDock() && !m_slideDocks;
 }
 
-void SlideEffect::start(int old, int current, EffectWindow* movingWindow)
+void SlideEffect::start(int old, int current, EffectWindow *movingWindow)
 {
     m_movingWindow = movingWindow;
 
@@ -436,7 +436,7 @@ void SlideEffect::start(int old, int current, EffectWindow* movingWindow)
     }
 
     const auto windows = effects->stackingOrder();
-    for (EffectWindow* w : windows) {
+    for (EffectWindow *w : windows) {
         if (shouldForceBlur(w)) {
             w->setData(WindowForceBlurRole, QVariant(true));
             m_forcedRoles.blur << w;
@@ -464,17 +464,17 @@ void SlideEffect::start(int old, int current, EffectWindow* movingWindow)
 
 void SlideEffect::stop()
 {
-    for (EffectWindow* w : m_forcedRoles.blur) {
+    for (EffectWindow *w : m_forcedRoles.blur) {
         w->setData(WindowForceBlurRole, QVariant());
     }
     m_forcedRoles.blur.clear();
 
-    for (EffectWindow* w : m_forcedRoles.backgroundContrast) {
+    for (EffectWindow *w : m_forcedRoles.backgroundContrast) {
         w->setData(WindowForceBackgroundContrastRole, QVariant());
     }
     m_forcedRoles.backgroundContrast.clear();
 
-    for (EffectWindow* w : m_elevatedWindows) {
+    for (EffectWindow *w : m_elevatedWindows) {
         effects->setElevatedWindow(w, false);
     }
     m_elevatedWindows.clear();
@@ -485,7 +485,7 @@ void SlideEffect::stop()
     effects->setActiveFullScreenEffect(nullptr);
 }
 
-void SlideEffect::desktopChanged(int old, int current, EffectWindow* with)
+void SlideEffect::desktopChanged(int old, int current, EffectWindow *with)
 {
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this) {
         return;
@@ -495,7 +495,7 @@ void SlideEffect::desktopChanged(int old, int current, EffectWindow* with)
 
 void SlideEffect::windowAdded(EffectWindow *w)
 {
-    if (! m_active) {
+    if (!m_active) {
         return;
     }
     if (shouldForceBlur(w)) {
@@ -514,7 +514,7 @@ void SlideEffect::windowAdded(EffectWindow *w)
 
 void SlideEffect::windowDeleted(EffectWindow *w)
 {
-    if (! m_active) {
+    if (!m_active) {
         return;
     }
     if (w == m_movingWindow) {
@@ -528,7 +528,7 @@ void SlideEffect::windowDeleted(EffectWindow *w)
 
 void SlideEffect::numberDesktopsChanged(uint)
 {
-    if (! m_active) {
+    if (!m_active) {
         return;
     }
     stop();
@@ -536,7 +536,7 @@ void SlideEffect::numberDesktopsChanged(uint)
 
 void SlideEffect::numberScreensChanged()
 {
-    if (! m_active) {
+    if (!m_active) {
         return;
     }
     stop();

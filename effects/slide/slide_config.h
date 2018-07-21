@@ -33,7 +33,7 @@ class SlideEffectConfig : public KCModule
     Q_OBJECT
 
 public:
-    explicit SlideEffectConfig(QWidget *parent = nullptr, const QVariantList& args = QVariantList());
+    explicit SlideEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     ~SlideEffectConfig();
 
     void save();
