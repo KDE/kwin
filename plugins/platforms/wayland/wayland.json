@@ -13,6 +13,7 @@
         "Description[fr]": "Rendre sur une fenêtre imbriquée sur un compositeur Wayland en cours de fonctionnement.",
         "Description[gl]": "Renderizar unha xanela aniñada no compositor de Wayland en execución.",
         "Description[hu]": "Renderelés egy Wayland kompozitoron futó beágyazott ablakba.",
+        "Description[id]": "Render untuk sebuah jendela tersarang pada Wayland compositor yang berjalan.",
         "Description[it]": "Resa in una finestra nidificata su compositore Wayland in esecuzione.",
         "Description[ko]": "Wayland 컴포지터에서 실행 중인 창에 렌더링합니다.",
         "Description[nl]": "Render naar een genest venster in een werkende Wayland-compositor.",
