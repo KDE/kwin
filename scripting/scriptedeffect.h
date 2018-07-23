@@ -109,14 +109,15 @@ Q_SIGNALS:
     void animationEnded(KWin::EffectWindow *w, quint64 animationId);
 
 protected:
+    ScriptedEffect();
+    QScriptEngine *engine() const;
+    bool init(const QString &effectName, const QString &pathToScript);
     void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta);
 
 private Q_SLOTS:
     void signalHandlerException(const QScriptValue &value);
     void globalShortcutTriggered();
 private:
-    ScriptedEffect();
-    bool init(const QString &effectName, const QString &pathToScript);
     QScriptEngine *m_engine;
     QString m_effectName;
     QString m_scriptFile;

@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
-class AniData {
+class KWINEFFECTS_EXPORT AniData {
 public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,

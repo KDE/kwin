@@ -948,5 +948,11 @@ QString AnimationEffect::debug(const QString &/*parameter*/) const
     return dbg;
 }
 
+AnimationEffect::AniMap AnimationEffect::state() const
+{
+    Q_D(const AnimationEffect);
+    return d->m_animations;
+}
+
 
 #include "moc_kwinanimationeffect.cpp"

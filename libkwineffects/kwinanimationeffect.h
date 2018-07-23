@@ -97,6 +97,8 @@ class KWINEFFECTS_EXPORT AnimationEffect : public Effect
     Q_ENUMS(Attribute)
     Q_ENUMS(MetaType)
 public:
+    typedef QMap< EffectWindow*, QPair<QList<AniData>, QRect> > AniMap;
+
     enum Anchor { Left = 1<<0, Top = 1<<1, Right = 1<<2, Bottom = 1<<3,
                   Horizontal = Left|Right, Vertical = Top|Bottom, Mouse = 1<<4  };
     enum Attribute {
@@ -205,6 +207,9 @@ protected:
     virtual void genericAnimation( EffectWindow *w, WindowPaintData &data, float progress, uint meta )
     {Q_UNUSED(w); Q_UNUSED(data); Q_UNUSED(progress); Q_UNUSED(meta);}
 
+    //Internal for unit tests
+    AniMap state() const;
+
 private:
     quint64 p_animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget );
     QRect clipRect(const QRect &windowRect, const AniData&) const;
@@ -222,7 +227,6 @@ private Q_SLOTS:
     void _expandedGeometryChanged(KWin::EffectWindow *w, const QRect &old);
 private:
     static QElapsedTimer s_clock;
-    typedef QMap< EffectWindow*, QPair<QList<AniData>, QRect> > AniMap;
     AnimationEffectPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(AnimationEffect)
 };

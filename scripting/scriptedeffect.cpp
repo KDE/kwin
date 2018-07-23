@@ -678,4 +678,9 @@ bool ScriptedEffect::unregisterTouchScreenCallback(int edge)
     return true;
 }
 
+QScriptEngine *ScriptedEffect::engine() const
+{
+    return m_engine;
+}
+
 } // namespace
