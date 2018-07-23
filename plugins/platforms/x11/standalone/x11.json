@@ -13,6 +13,7 @@
         "Description[fr]": "Module de plate-forme pour x11 autonomes, au sein de kwin_x11",
         "Description[gl]": "Complemento de plataforma para x11 independente en kwin_x11.",
         "Description[hu]": "Platformbővítmény önálló x11-hez a kwin_x11-ben.",
+        "Description[id]": "Plugin platform untuk standalone x11 dalam kwin_x11.",
         "Description[it]": "Estensione di piattaforma per x11 autonomo in kwin_x11.",
         "Description[ko]": "kwin_x11의 단독 X11 플러그인입니다.",
         "Description[nl]": "Platform plug-in voor alleenstaande x11 in kwin_x11.",
