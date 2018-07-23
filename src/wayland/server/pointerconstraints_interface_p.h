@@ -64,12 +64,16 @@ public:
     LifeTime lifeTime;
     QRegion region;
     bool locked = false;
+    QPointF hint = QPointF(-1., -1.);
 
 protected:
     Private(PointerConstraintsInterfaceVersion interfaceVersion, LockedPointerInterface *q, Global *c, wl_resource *parentResource, const wl_interface *interface, const void *implementation);
 
     QRegion pendingRegion;
     bool regionIsSet = false;
+
+    QPointF pendingHint;
+    bool hintIsSet = false;
 
 private:
     LockedPointerInterface *q_func() {

@@ -125,6 +125,24 @@ public:
     QRegion region() const;
 
     /**
+     * Indicates where the mouse cursor should be positioned after it has been unlocked again.
+     * The compositor can warp the cursor at this moment to the position. For that it
+     * will not emit any relative motion events. The hint is relative to the top-left
+     * corner of the surface the lock was applied to. Only non-negative x and y values
+     * are allowed. Otherwise the hint is invalid and should be ignored by the compositor.
+     *
+     * In case the client never set the hint, an invalid one will be returned.
+     *
+     * This function should be called when the compositor decides to break the lock or the
+     * client unbinds the resource. To set the position in this case the compositor should
+     * call this function when the aboutToBeUnbound signal has been emitted.
+     *
+     * @see cursorPositionHintChanged
+     * @since 5.49
+     **/
+    QPointF cursorPositionHint() const;
+
+    /**
      * Whether the Compositor set this pointer lock to be active.
      * @see setLocked
      * @see lockedChanged
@@ -137,6 +155,8 @@ public:
      * A pointer lock can only be activated if the SurfaceInterface
      * this LockedPointerInterface was created for has pointer focus
      * and the pointer is inside the {@link region}.
+     *
+     * Unlocking resets the cursor position hint.
      *
      * @param locked Whether the lock should be active
      * @see isLocked
@@ -151,6 +171,14 @@ Q_SIGNALS:
      * @see region
      **/
     void regionChanged();
+
+    /**
+     * Emitted whenever the cursor position hint changes.
+     * This happens when the parent SurfaceInterface gets committed
+     * @see cursorPositionHint
+     * @since 5.49
+     **/
+    void cursorPositionHintChanged();
 
     /**
      * Emitted whenever the {@link isLocked} state changes.

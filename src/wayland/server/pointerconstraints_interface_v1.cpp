@@ -171,11 +171,9 @@ const struct zwp_locked_pointer_v1_interface LockedPointerUnstableV1Interface::P
 void LockedPointerUnstableV1Interface::Private::setCursorPositionHintCallback(wl_client *client, wl_resource *resource, wl_fixed_t surface_x, wl_fixed_t surface_y)
 {
     Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(surface_x)
-    Q_UNUSED(surface_y)
-    // double buffered
-    // TODO: implement
+    auto p = cast<Private>(resource);
+    p->pendingHint = QPointF(wl_fixed_to_double(surface_x), wl_fixed_to_double(surface_y));
+    p->hintIsSet = true;
 }
 
 void LockedPointerUnstableV1Interface::Private::setRegionCallback(wl_client *client, wl_resource *resource, wl_resource * region)

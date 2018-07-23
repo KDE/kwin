@@ -250,9 +250,18 @@ void TestPointerConstraints::testLockPointer()
     QVERIFY(lockedSpy.wait());
     QVERIFY(unlockedSpy.isEmpty());
 
+    const QPointF hint = QPointF(1.5, 0.5);
+    QSignalSpy hintChangedSpy(serverLockedPointer.data(), &LockedPointerInterface::cursorPositionHintChanged);
+    lockedPointer->setCursorPositionHint(hint);
+    QCOMPARE(serverLockedPointer->cursorPositionHint(), QPointF(-1., -1.));
+    surface->commit(Surface::CommitFlag::None);
+    QVERIFY(hintChangedSpy.wait());
+    QCOMPARE(serverLockedPointer->cursorPositionHint(), hint);
+
     // and unlock again
     serverLockedPointer->setLocked(false);
     QCOMPARE(serverLockedPointer->isLocked(), false);
+    QCOMPARE(serverLockedPointer->cursorPositionHint(), QPointF(-1., -1.));
     QCOMPARE(lockedChangedSpy.count(), 2);
     QTEST(!serverSurface->lockedPointer().isNull(), "hasConstraintAfterUnlock");
     QTEST(pointerConstraintsChangedSpy.count(), "pointerChangedCount");

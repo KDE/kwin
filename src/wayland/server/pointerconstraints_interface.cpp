@@ -67,13 +67,17 @@ LockedPointerInterface::Private::~Private()
 
 void LockedPointerInterface::Private::commit()
 {
-    if (!regionIsSet) {
-        return;
+    if (regionIsSet) {
+        region = pendingRegion;
+        pendingRegion = QRegion();
+        regionIsSet = false;
+        emit q_func()->regionChanged();
     }
-    region = pendingRegion;
-    pendingRegion = QRegion();
-    regionIsSet = false;
-    emit q_func()->regionChanged();
+    if (hintIsSet) {
+        hint = pendingHint;
+        hintIsSet = false;
+        emit q_func()->cursorPositionHintChanged();
+    }
 }
 
 LockedPointerInterface::LockedPointerInterface(Private *p, QObject *parent)
@@ -102,6 +106,12 @@ QRegion LockedPointerInterface::region() const
     return d->region;
 }
 
+QPointF LockedPointerInterface::cursorPositionHint() const
+{
+    Q_D();
+    return d->hint;
+}
+
 bool LockedPointerInterface::isLocked() const
 {
     Q_D();
@@ -113,6 +123,9 @@ void LockedPointerInterface::setLocked(bool locked)
     Q_D();
     if (locked == d->locked) {
         return;
+    }
+    if (!locked) {
+        d->hint = QPointF(-1., -1.);
     }
     d->locked = locked;
     d->updateLocked();
