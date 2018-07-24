@@ -241,13 +241,12 @@ void RemoteAccessManagerInterface::Private::getBufferCallback(wl_client *client,
         return;
     }
 
-    QObject::connect(rbuf, &QObject::destroyed, [p, rbuf, resource, &bh] {
+    QObject::connect(rbuf, &Resource::aboutToBeUnbound, p->q, [p, rbuf, resource, &bh] {
         if (!p->clientResources.contains(resource)) {
             // remote buffer destroy confirmed after client is already gone
             // all relevant buffers are already unreferenced
             return;
         }
-
         qCDebug(KWAYLAND_SERVER) << "Remote buffer returned, client" << wl_resource_get_id(resource)
                                                      << ", id" << rbuf->id()
                                                      << ", fd" << bh.buf->fd();
