@@ -115,7 +115,7 @@ set_package_properties(KF5DocTools PROPERTIES
          )
 add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation")
 
-find_package(KDecoration2 CONFIG REQUIRED)
+find_package(KDecoration2 5.13.0 CONFIG REQUIRED)
 
 find_package(KScreenLocker CONFIG REQUIRED)
 set_package_properties(KScreenLocker PROPERTIES
