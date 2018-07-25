@@ -34,6 +34,7 @@ OutputChangeSet::Private::Private(OutputDeviceInterface *outputdevice, OutputCha
     , transform(o->transform())
     , position(o->globalPosition())
     , scale(o->scale())
+    , colorCurves(o->colorCurves())
 {
 }
 
@@ -115,6 +116,18 @@ qreal OutputChangeSet::scaleF() const
 {
     Q_D();
     return d->scale;
+}
+
+bool OutputChangeSet::colorCurvesChanged() const
+{
+    Q_D();
+    return d->colorCurves != d->o->colorCurves();
+}
+
+OutputDeviceInterface::ColorCurves OutputChangeSet::colorCurves() const
+{
+    Q_D();
+    return d->colorCurves;
 }
 
 }

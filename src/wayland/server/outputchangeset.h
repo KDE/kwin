@@ -69,6 +69,10 @@ public:
      * @returns @c true if the scale() property of the outputdevice has changed.
      */
     bool scaleChanged() const;
+    /** Whether the colorCurves() property of the outputdevice changed.
+     * @returns @c true if the colorCurves() property of the outputdevice has changed.
+     */
+    bool colorCurvesChanged() const;
 
     /** The new value for enabled. */
     OutputDeviceInterface::Enablement enabled() const;
@@ -86,6 +90,10 @@ public:
      * @since 5.XX
      */
     qreal scaleF() const;
+    /** The new value for colorCurves.
+     * @since 5.XX
+     */
+    OutputDeviceInterface::ColorCurves colorCurves() const;
 
 private:
     friend class OutputConfigurationInterface;

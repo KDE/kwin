@@ -71,6 +71,9 @@ private:
     static void applyCallback(wl_client *client, wl_resource *resource);
     static void scaleFCallback(wl_client *client, wl_resource *resource,
                               wl_resource * outputdevice, wl_fixed_t scale);
+    static void colorcurvesCallback(wl_client *client, wl_resource *resource,
+                                    wl_resource * outputdevice,
+                                    wl_array *red, wl_array *green, wl_array *blue);
 
     OutputConfigurationInterface *q_func() {
         return reinterpret_cast<OutputConfigurationInterface *>(q);
@@ -87,6 +90,7 @@ const struct org_kde_kwin_outputconfiguration_interface OutputConfigurationInter
     scaleCallback,
     applyCallback,
     scaleFCallback,
+    colorcurvesCallback,
     resourceDestroyedCallback
 };
 
@@ -211,6 +215,42 @@ void OutputConfigurationInterface::Private::applyCallback(wl_client *client, wl_
     auto s = cast<Private>(resource);
     Q_ASSERT(s);
     s->emitConfigurationChangeRequested();
+}
+
+void OutputConfigurationInterface::Private::colorcurvesCallback(wl_client *client, wl_resource *resource,
+                                                                wl_resource * outputdevice,
+                                                                wl_array *red, wl_array *green, wl_array *blue)
+{
+    Q_UNUSED(client);
+    OutputDeviceInterface *o = OutputDeviceInterface::get(outputdevice);
+    OutputDeviceInterface::ColorCurves oldCc = o->colorCurves();
+
+    auto checkArg = [](const wl_array *newColor, const QVector<quint16> &oldColor) {
+        return (newColor->size % sizeof(uint16_t) == 0) &&
+                (newColor->size / sizeof(uint16_t) == static_cast<size_t>(oldColor.size()));
+    };
+    if (!checkArg(red, oldCc.red) || !checkArg(green, oldCc.green) || !checkArg(blue, oldCc.blue)) {
+        qCWarning(KWAYLAND_SERVER) << "Requested to change color curves, but have wrong size.";
+        return;
+    }
+
+    auto s = cast<Private>(resource);
+    Q_ASSERT(s);
+    OutputDeviceInterface::ColorCurves cc;
+
+    auto fillVector = [](const wl_array *array, QVector<quint16> *v) {
+        const uint16_t *pos = (uint16_t*)array->data;
+
+        while((char*)pos < (char*)array->data + array->size) {
+            v->append(*pos);
+            pos++;
+        }
+    };
+    fillVector(red, &cc.red);
+    fillVector(green, &cc.green);
+    fillVector(blue, &cc.blue);
+
+    s->pendingChanges(o)->d_func()->colorCurves = cc;
 }
 
 void OutputConfigurationInterface::Private::emitConfigurationChangeRequested() const

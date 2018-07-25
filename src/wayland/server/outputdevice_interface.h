@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QPoint>
 #include <QSize>
+#include <QVector>
 
 #include <KWayland/Server/kwaylandserver_export.h>
 #include "global.h"
@@ -91,6 +92,11 @@ public:
         ModeFlags flags;
         int id = -1;
     };
+    struct ColorCurves {
+        QVector<quint16> red, green, blue;
+        bool operator==(const ColorCurves &cc) const;
+        bool operator!=(const ColorCurves &cc) const;
+    };
     virtual ~OutputDeviceInterface();
 
     QSize physicalSize() const;
@@ -103,6 +109,7 @@ public:
     qreal scaleF() const;
     SubPixel subPixel() const;
     Transform transform() const;
+    ColorCurves colorCurves() const;
     QList<Mode> modes() const;
     int currentModeId() const;
 
@@ -118,6 +125,7 @@ public:
     void setScaleF(qreal scale);
     void setSubPixel(SubPixel subPixel);
     void setTransform(Transform transform);
+    void setColorCurves(const ColorCurves &colorCurves);
     void addMode(Mode &mode);
     void setCurrentMode(const int modeId);
 
@@ -140,6 +148,7 @@ Q_SIGNALS:
     void scaleFChanged(qreal);
     void subPixelChanged(SubPixel);
     void transformChanged(Transform);
+    void colorCurvesChanged(ColorCurves);
     void modesChanged();
     void currentModeChanged();
 
@@ -161,5 +170,6 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KWayland::Server::OutputDeviceInterface::ModeFlags
 Q_DECLARE_METATYPE(KWayland::Server::OutputDeviceInterface::Enablement)
 Q_DECLARE_METATYPE(KWayland::Server::OutputDeviceInterface::SubPixel)
 Q_DECLARE_METATYPE(KWayland::Server::OutputDeviceInterface::Transform)
+Q_DECLARE_METATYPE(KWayland::Server::OutputDeviceInterface::ColorCurves)
 
 #endif

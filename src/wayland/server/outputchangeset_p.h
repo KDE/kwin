@@ -41,6 +41,7 @@ namespace KWayland
             OutputDeviceInterface::Transform transform;
             QPoint position;
             qreal scale;
+            OutputDeviceInterface::ColorCurves colorCurves;
         };
     }
 }

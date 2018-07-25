@@ -250,6 +250,9 @@ void TestWaylandOutputManagement::applyPendingChanges(KWayland::Server::OutputCo
         if (c->scaleChanged()) {
             outputdevice->setScaleF(c->scaleF());
         }
+        if (c->colorCurvesChanged()) {
+            outputdevice->setColorCurves(c->colorCurves());
+        }
     }
 }
 
@@ -268,6 +271,9 @@ void TestWaylandOutputManagement::createOutputDevices()
     QCOMPARE(output->pixelSize(), QSize());
     QCOMPARE(output->refreshRate(), 0);
     QCOMPARE(output->scale(), 1);
+    QCOMPARE(output->colorCurves().red, QVector<quint16>());
+    QCOMPARE(output->colorCurves().green, QVector<quint16>());
+    QCOMPARE(output->colorCurves().blue, QVector<quint16>());
     QCOMPARE(output->subPixel(), KWayland::Client::OutputDevice::SubPixel::Unknown);
     QCOMPARE(output->transform(), KWayland::Client::OutputDevice::Transform::Normal);
     QCOMPARE(output->enabled(), OutputDevice::Enablement::Enabled);
@@ -405,6 +411,8 @@ void TestWaylandOutputManagement::testMultipleSettings()
     config->setTransform(output, OutputDevice::Transform::Rotated90);
     config->setPosition(output, QPoint(13, 37));
     config->setScale(output, 2);
+    const auto zeroVector = QVector<quint16>(256, 0);
+    config->setColorCurves(output, zeroVector, zeroVector, zeroVector);
     config->setEnabled(output, OutputDevice::Enablement::Disabled);
     config->apply();
 
@@ -423,6 +431,8 @@ void TestWaylandOutputManagement::testMultipleSettings()
     config->setTransform(output, OutputDevice::Transform::Normal);
     config->setPosition(output, QPoint(0, 1920));
     config->setScale(output, 1);
+    const auto oneVector = QVector<quint16>(256, 1);
+    config->setColorCurves(output, oneVector, oneVector, oneVector);
     config->setEnabled(output, OutputDevice::Enablement::Enabled);
     config->apply();
 

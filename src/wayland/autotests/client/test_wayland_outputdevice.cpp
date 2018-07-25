@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testModeChanges();
     void testScaleChange_legacy();
     void testScaleChange();
+    void testColorCurvesChange();
 
     void testSubPixel_data();
     void testSubPixel();
@@ -62,6 +63,7 @@ private:
     KWayland::Server::Display *m_display;
     KWayland::Server::OutputDeviceInterface *m_serverOutputDevice;
     QByteArray m_edid;
+    KWayland::Server::OutputDeviceInterface::ColorCurves m_initColorCurves;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -114,6 +116,21 @@ void TestWaylandOutputDevice::init()
 
     m_edid = QByteArray::fromBase64("AP///////wAQrBbwTExLQQ4WAQOANCB46h7Frk80sSYOUFSlSwCBgKlA0QBxTwEBAQEBAQEBKDyAoHCwI0AwIDYABkQhAAAaAAAA/wBGNTI1TTI0NUFLTEwKAAAA/ABERUxMIFUyNDEwCiAgAAAA/QA4TB5REQAKICAgICAgAToCAynxUJAFBAMCBxYBHxITFCAVEQYjCQcHZwMMABAAOC2DAQAA4wUDAQI6gBhxOC1AWCxFAAZEIQAAHgEdgBhxHBYgWCwlAAZEIQAAngEdAHJR0B4gbihVAAZEIQAAHowK0Iog4C0QED6WAAZEIQAAGAAAAAAAAAAAAAAAAAAAPg==");
     m_serverOutputDevice->setEdid(m_edid);
+
+    m_initColorCurves.red.clear();
+    m_initColorCurves.green.clear();
+    m_initColorCurves.blue.clear();
+    // 8 bit color ramps
+    for (int i = 0; i < 256; i++) {
+        quint16 val = (double)i / 255 * UINT16_MAX;
+        m_initColorCurves.red << val ;
+        m_initColorCurves.green << val ;
+    }
+    // 10 bit color ramp
+    for (int i = 0; i < 320; i++) {
+        m_initColorCurves.blue << (double)i / 319 * UINT16_MAX;
+    }
+    m_serverOutputDevice->setColorCurves(m_initColorCurves);
 
     m_serverOutputDevice->create();
 
@@ -183,6 +200,9 @@ void TestWaylandOutputDevice::testRegistry()
     QCOMPARE(output.pixelSize(), QSize());
     QCOMPARE(output.refreshRate(), 0);
     QCOMPARE(output.scale(), 1);
+    QCOMPARE(output.colorCurves().red, QVector<quint16>());
+    QCOMPARE(output.colorCurves().green, QVector<quint16>());
+    QCOMPARE(output.colorCurves().blue, QVector<quint16>());
     QCOMPARE(output.subPixel(), KWayland::Client::OutputDevice::SubPixel::Unknown);
     QCOMPARE(output.transform(), KWayland::Client::OutputDevice::Transform::Normal);
     QCOMPARE(output.enabled(), OutputDevice::Enablement::Enabled);
@@ -203,6 +223,9 @@ void TestWaylandOutputDevice::testRegistry()
     QCOMPARE(output.pixelSize(), QSize(1024, 768));
     QCOMPARE(output.refreshRate(), 60000);
     QCOMPARE(output.scale(), 1);
+    QCOMPARE(output.colorCurves().red, m_initColorCurves.red);
+    QCOMPARE(output.colorCurves().green, m_initColorCurves.green);
+    QCOMPARE(output.colorCurves().blue, m_initColorCurves.blue);
     // for xwayland output it's unknown
     QCOMPARE(output.subPixel(), KWayland::Client::OutputDevice::SubPixel::Unknown);
     // for xwayland transform is normal
@@ -382,6 +405,53 @@ void TestWaylandOutputDevice::testScaleChange()
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 5);
     QCOMPARE(wl_fixed_from_double(output.scaleF()), wl_fixed_from_double(4.9));
+}
+
+void TestWaylandOutputDevice::testColorCurvesChange()
+{
+    KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    QVERIFY(interfacesAnnouncedSpy.isValid());
+    QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
+    registry.setEventQueue(m_queue);
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    wl_display_flush(m_connection->display());
+    QVERIFY(interfacesAnnouncedSpy.wait());
+
+    KWayland::Client::OutputDevice output;
+    QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::done);
+    QVERIFY(outputChanged.isValid());
+    output.setup(registry.bindOutputDevice(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
+    wl_display_flush(m_connection->display());
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.colorCurves().red, m_initColorCurves.red);
+    QCOMPARE(output.colorCurves().green, m_initColorCurves.green);
+    QCOMPARE(output.colorCurves().blue, m_initColorCurves.blue);
+
+    // change the color curves
+    outputChanged.clear();
+    KWayland::Server::OutputDeviceInterface::ColorCurves cc;
+    cc.red = QVector<quint16>(256, 0);
+    cc.green = QVector<quint16>(256, UINT16_MAX);
+    cc.blue = QVector<quint16>(320, 1);
+    m_serverOutputDevice->setColorCurves(cc);
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.colorCurves().red, cc.red);
+    QCOMPARE(output.colorCurves().green, cc.green);
+    QCOMPARE(output.colorCurves().blue, cc.blue);
+
+    // change once more
+    outputChanged.clear();
+    cc.red = QVector<quint16>(256, 0);
+    cc.green = QVector<quint16>(256, UINT16_MAX);
+    cc.blue = QVector<quint16>(320, UINT16_MAX);
+    m_serverOutputDevice->setColorCurves(cc);
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.colorCurves().red, cc.red);
+    QCOMPARE(output.colorCurves().green, cc.green);
+    QCOMPARE(output.colorCurves().blue, cc.blue);
 }
 
 void TestWaylandOutputDevice::testSubPixel_data()

@@ -45,6 +45,7 @@ public:
     void sendDone(const ResourceData &data);
     void updateGeometry();
     void updateScale();
+    void updateColorCurves();
 
     void sendUuid();
     void sendEdid();
@@ -57,6 +58,7 @@ public:
     qreal scale = 1.0;
     SubPixel subPixel = SubPixel::Unknown;
     Transform transform = Transform::Normal;
+    ColorCurves colorCurves;
     QList<Mode> modes;
     QList<ResourceData> resources;
 
@@ -74,6 +76,7 @@ private:
     int32_t toSubPixel() const;
     void sendGeometry(wl_resource *resource);
     void sendScale(const ResourceData &data);
+    void sendColorCurves(const ResourceData &data);
 
     static const quint32 s_version;
     OutputDeviceInterface *q;
@@ -139,6 +142,8 @@ OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
     connect(this, &OutputDeviceInterface::modelChanged,          this, [this, d] { d->updateGeometry(); });
     connect(this, &OutputDeviceInterface::manufacturerChanged,   this, [this, d] { d->updateGeometry(); });
     connect(this, &OutputDeviceInterface::scaleFChanged,          this, [this, d] { d->updateScale(); });
+    connect(this, &OutputDeviceInterface::scaleChanged,          this, [this, d] { d->updateScale(); });
+    connect(this, &OutputDeviceInterface::colorCurvesChanged,    this, [this, d] { d->updateColorCurves(); });
 }
 
 OutputDeviceInterface::~OutputDeviceInterface() = default;
@@ -333,6 +338,7 @@ void OutputDeviceInterface::Private::bind(wl_client *client, uint32_t version, u
 
     sendGeometry(resource);
     sendScale(r);
+    sendColorCurves(r);
 
     auto currentModeIt = modes.constEnd();
     for (auto it = modes.constBegin(); it != modes.constEnd(); ++it) {
@@ -409,6 +415,31 @@ void OutputDeviceInterface::Private::sendScale(const ResourceData &data)
     }
 }
 
+void OutputDeviceInterface::Private::sendColorCurves(const ResourceData &data)
+{
+    if (data.version < ORG_KDE_KWIN_OUTPUTDEVICE_COLORCURVES_SINCE_VERSION) {
+        return;
+    }
+
+    wl_array wlRed, wlGreen, wlBlue;
+
+    auto fillArray = [](const QVector<quint16> &origin, wl_array *dest) {
+        wl_array_init(dest);
+        const size_t memLength = sizeof(uint16_t) * origin.size();
+        void *s = wl_array_add(dest, memLength);
+        memcpy(s, origin.data(), memLength);
+    };
+    fillArray(colorCurves.red, &wlRed);
+    fillArray(colorCurves.green, &wlGreen);
+    fillArray(colorCurves.blue, &wlBlue);
+
+    org_kde_kwin_outputdevice_send_colorcurves(data.resource, &wlRed, &wlGreen, &wlBlue);
+
+    wl_array_release(&wlRed);
+    wl_array_release(&wlGreen);
+    wl_array_release(&wlBlue);
+}
+
 void OutputDeviceInterface::Private::sendDone(const ResourceData &data)
 {
     org_kde_kwin_outputdevice_send_done(data.resource);
@@ -428,6 +459,22 @@ void OutputDeviceInterface::Private::updateScale()
         sendScale(*it);
         sendDone(*it);
     }
+}
+
+void OutputDeviceInterface::Private::updateColorCurves()
+{
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+        sendColorCurves(*it);
+        sendDone(*it);
+    }
+}
+
+bool OutputDeviceInterface::ColorCurves::operator==(const ColorCurves &cc) const
+{
+    return red == cc.red && green == cc.green && blue == cc.blue;
+}
+bool OutputDeviceInterface::ColorCurves::operator!=(const ColorCurves &cc) const {
+    return !operator==(cc);
 }
 
 #define SETTER(setterName, type, argumentName) \
@@ -521,6 +568,12 @@ OutputDeviceInterface::Transform OutputDeviceInterface::transform() const
     return d->transform;
 }
 
+OutputDeviceInterface::ColorCurves OutputDeviceInterface::colorCurves() const
+{
+    Q_D();
+    return d->colorCurves;
+}
+
 QList< OutputDeviceInterface::Mode > OutputDeviceInterface::modes() const
 {
     Q_D();
@@ -541,6 +594,17 @@ int OutputDeviceInterface::currentModeId() const
 OutputDeviceInterface::Private *OutputDeviceInterface::d_func() const
 {
     return reinterpret_cast<Private*>(d.data());
+}
+
+void OutputDeviceInterface::setColorCurves(const ColorCurves &colorCurves)
+{
+    Q_D();
+
+    if (d->colorCurves == colorCurves) {
+        return;
+    }
+    d->colorCurves = colorCurves;
+    emit colorCurvesChanged(d->colorCurves);
 }
 
 void OutputDeviceInterface::setEdid(const QByteArray &edid)
