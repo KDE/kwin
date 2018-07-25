@@ -51,6 +51,7 @@ private Q_SLOTS:
     void cleanup();
     void createConfig();
 
+    void testBasicMemoryManagement();
     void testMultipleSettings();
     void testConfigFailed();
     void testApplied();
@@ -287,6 +288,26 @@ void TestWaylandOutputManagement::createOutputDevices()
     m_outputDevice = output;
 
     QVERIFY(m_outputManagement->isValid());
+}
+
+void TestWaylandOutputManagement::testBasicMemoryManagement()
+{
+    createConfig();
+
+    QSignalSpy serverApplySpy(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested);
+    KWayland::Server::OutputConfigurationInterface *configurationInterface = nullptr;
+    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=, &configurationInterface](KWayland::Server::OutputConfigurationInterface *c) {
+        configurationInterface = c;
+    });
+    m_outputConfiguration->apply();
+
+    QVERIFY(serverApplySpy.wait());
+    QVERIFY(configurationInterface);
+    QSignalSpy interfaceDeletedSpy(configurationInterface, &QObject::destroyed);
+
+    delete m_outputConfiguration;
+    m_outputConfiguration = nullptr;
+    QVERIFY(interfaceDeletedSpy.wait());
 }
 
 void TestWaylandOutputManagement::testRemoval()

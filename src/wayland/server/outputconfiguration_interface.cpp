@@ -86,7 +86,8 @@ const struct org_kde_kwin_outputconfiguration_interface OutputConfigurationInter
     positionCallback,
     scaleCallback,
     applyCallback,
-    scaleFCallback
+    scaleFCallback,
+    resourceDestroyedCallback
 };
 
 OutputConfigurationInterface::OutputConfigurationInterface(OutputManagementInterface* parent, wl_resource* parentResource): Resource(new Private(this, parent, parentResource))
