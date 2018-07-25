@@ -54,7 +54,7 @@ public:
     QPoint globalPosition;
     QString manufacturer = QStringLiteral("org.kde.kwin");
     QString model = QStringLiteral("none");
-    int scale = 1;
+    qreal scale = 1.0;
     SubPixel subPixel = SubPixel::Unknown;
     Transform transform = Transform::Normal;
     QList<Mode> modes;
@@ -80,7 +80,7 @@ private:
     static QVector<Private*> s_privates;
 };
 
-const quint32 OutputDeviceInterface::Private::s_version = 1;
+const quint32 OutputDeviceInterface::Private::s_version = 2;
 
 QVector<OutputDeviceInterface::Private*> OutputDeviceInterface::Private::s_privates;
 
@@ -138,7 +138,7 @@ OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
     connect(this, &OutputDeviceInterface::globalPositionChanged, this, [this, d] { d->updateGeometry(); });
     connect(this, &OutputDeviceInterface::modelChanged,          this, [this, d] { d->updateGeometry(); });
     connect(this, &OutputDeviceInterface::manufacturerChanged,   this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::scaleChanged,          this, [this, d] { d->updateScale(); });
+    connect(this, &OutputDeviceInterface::scaleFChanged,          this, [this, d] { d->updateScale(); });
 }
 
 OutputDeviceInterface::~OutputDeviceInterface() = default;
@@ -402,7 +402,11 @@ void OutputDeviceInterface::Private::sendGeometry(wl_resource *resource)
 
 void OutputDeviceInterface::Private::sendScale(const ResourceData &data)
 {
-    org_kde_kwin_outputdevice_send_scale(data.resource, scale);
+    if (wl_resource_get_version(data.resource) < ORG_KDE_KWIN_OUTPUTDEVICE_SCALEF_SINCE_VERSION) {
+        org_kde_kwin_outputdevice_send_scale(data.resource, qRound(scale));
+    } else {
+        org_kde_kwin_outputdevice_send_scalef(data.resource, wl_fixed_from_double(scale));
+    }
 }
 
 void OutputDeviceInterface::Private::sendDone(const ResourceData &data)
@@ -441,11 +445,32 @@ SETTER(setPhysicalSize, const QSize&, physicalSize)
 SETTER(setGlobalPosition, const QPoint&, globalPosition)
 SETTER(setManufacturer, const QString&, manufacturer)
 SETTER(setModel, const QString&, model)
-SETTER(setScale, int, scale)
 SETTER(setSubPixel, SubPixel, subPixel)
 SETTER(setTransform, Transform, transform)
 
 #undef SETTER
+
+void OutputDeviceInterface::setScale(int scale)
+{
+    Q_D();
+    if (d->scale == scale) {
+        return;
+    }
+    d->scale = scale;
+    emit scaleChanged(d->scale);
+    emit scaleFChanged(d->scale);
+}
+
+void OutputDeviceInterface::setScaleF(qreal scale)
+{
+    Q_D();
+    if (qFuzzyCompare(d->scale, scale)) {
+        return;
+    }
+    d->scale = scale;
+    emit scaleChanged(qRound(d->scale));
+    emit scaleFChanged(d->scale);
+}
 
 QSize OutputDeviceInterface::physicalSize() const
 {
@@ -474,8 +499,15 @@ QString OutputDeviceInterface::model() const
 int OutputDeviceInterface::scale() const
 {
     Q_D();
+    return qRound(d->scale);
+}
+
+qreal OutputDeviceInterface::scaleF() const
+{
+    Q_D();
     return d->scale;
 }
+
 
 OutputDeviceInterface::SubPixel OutputDeviceInterface::subPixel() const
 {

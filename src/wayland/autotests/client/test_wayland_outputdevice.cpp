@@ -44,6 +44,7 @@ private Q_SLOTS:
 
     void testRegistry();
     void testModeChanges();
+    void testScaleChange_legacy();
     void testScaleChange();
 
     void testSubPixel_data();
@@ -310,7 +311,7 @@ void TestWaylandOutputDevice::testModeChanges()
     QCOMPARE(output.pixelSize(), QSize(1280, 1024));
 }
 
-void TestWaylandOutputDevice::testScaleChange()
+void TestWaylandOutputDevice::testScaleChange_legacy()
 {
     KWayland::Client::Registry registry;
     QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -336,12 +337,51 @@ void TestWaylandOutputDevice::testScaleChange()
     m_serverOutputDevice->setScale(2);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 2);
+    QCOMPARE(output.scaleF(), 2.0); //check we're forward compatiable
+
 
     // change once more
     outputChanged.clear();
     m_serverOutputDevice->setScale(4);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 4);
+    QCOMPARE(output.scaleF(), 4.0);
+}
+
+void TestWaylandOutputDevice::testScaleChange()
+{
+    KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    QVERIFY(interfacesAnnouncedSpy.isValid());
+    QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
+    registry.setEventQueue(m_queue);
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    wl_display_flush(m_connection->display());
+    QVERIFY(interfacesAnnouncedSpy.wait());
+
+    KWayland::Client::OutputDevice output;
+    QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::done);
+    QVERIFY(outputChanged.isValid());
+    output.setup(registry.bindOutputDevice(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
+    wl_display_flush(m_connection->display());
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.scaleF(), 1.0);
+
+    // change the scale
+    outputChanged.clear();
+    m_serverOutputDevice->setScaleF(2.2);
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.scale(), 2); //check backwards compatibility works
+    QCOMPARE(wl_fixed_from_double(output.scaleF()), wl_fixed_from_double(2.2));
+
+    // change once more
+    outputChanged.clear();
+    m_serverOutputDevice->setScaleF(4.9);
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.scale(), 5);
+    QCOMPARE(wl_fixed_from_double(output.scaleF()), wl_fixed_from_double(4.9));
 }
 
 void TestWaylandOutputDevice::testSubPixel_data()

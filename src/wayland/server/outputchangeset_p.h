@@ -40,7 +40,7 @@ namespace KWayland
             int modeId;
             OutputDeviceInterface::Transform transform;
             QPoint position;
-            int scale;
+            qreal scale;
         };
     }
 }

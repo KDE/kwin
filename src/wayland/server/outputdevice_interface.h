@@ -53,7 +53,7 @@ class KWAYLANDSERVER_EXPORT OutputDeviceInterface : public Global
     Q_PROPERTY(QString model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(QSize pixelSize READ pixelSize NOTIFY pixelSizeChanged)
     Q_PROPERTY(int refreshRate READ refreshRate NOTIFY refreshRateChanged)
-    Q_PROPERTY(int scale READ scale WRITE setScale NOTIFY scaleChanged)
+    Q_PROPERTY(qreal scale READ scaleF WRITE setScaleF NOTIFY scaleFChanged)
     Q_PROPERTY(QByteArray edid READ edid WRITE setEdid NOTIFY edidChanged)
     Q_PROPERTY(OutputDeviceInterface::Enablement enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(QByteArray uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
@@ -100,6 +100,7 @@ public:
     QSize pixelSize() const;
     int refreshRate() const;
     int scale() const;
+    qreal scaleF() const;
     SubPixel subPixel() const;
     Transform transform() const;
     QList<Mode> modes() const;
@@ -114,6 +115,7 @@ public:
     void setManufacturer(const QString &manufacturer);
     void setModel(const QString &model);
     void setScale(int scale);
+    void setScaleF(qreal scale);
     void setSubPixel(SubPixel subPixel);
     void setTransform(Transform transform);
     void addMode(Mode &mode);
@@ -133,7 +135,9 @@ Q_SIGNALS:
     void modelChanged(const QString&);
     void pixelSizeChanged(const QSize&);
     void refreshRateChanged(int);
+    //@deprecated see scaleChanged(real)
     void scaleChanged(int);
+    void scaleFChanged(qreal);
     void subPixelChanged(SubPixel);
     void transformChanged(Transform);
     void modesChanged();

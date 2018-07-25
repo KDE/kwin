@@ -57,7 +57,7 @@ private:
     QHash<wl_resource*, OutputConfigurationInterface*> configurationInterfaces;
 };
 
-const quint32 OutputManagementInterface::Private::s_version = 1;
+const quint32 OutputManagementInterface::Private::s_version = 2;
 
 const struct org_kde_kwin_outputmanagement_interface OutputManagementInterface::Private::s_interface = {
     createConfigurationCallback

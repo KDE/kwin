@@ -55,7 +55,7 @@ public:
     OutputManagementInterface *outputManagement;
     QHash<OutputDeviceInterface*, OutputChangeSet*> changes;
 
-    static const quint32 s_version = 1;
+    static const quint32 s_version = 2;
 
 private:
     static void enableCallback(wl_client *client, wl_resource *resource,
@@ -69,6 +69,8 @@ private:
     static void scaleCallback(wl_client *client, wl_resource *resource,
                               wl_resource * outputdevice, int32_t scale);
     static void applyCallback(wl_client *client, wl_resource *resource);
+    static void scaleFCallback(wl_client *client, wl_resource *resource,
+                              wl_resource * outputdevice, wl_fixed_t scale);
 
     OutputConfigurationInterface *q_func() {
         return reinterpret_cast<OutputConfigurationInterface *>(q);
@@ -83,7 +85,8 @@ const struct org_kde_kwin_outputconfiguration_interface OutputConfigurationInter
     transformCallback,
     positionCallback,
     scaleCallback,
-    applyCallback
+    applyCallback,
+    scaleFCallback
 };
 
 OutputConfigurationInterface::OutputConfigurationInterface(OutputManagementInterface* parent, wl_resource* parentResource): Resource(new Private(this, parent, parentResource))
@@ -182,6 +185,22 @@ void OutputConfigurationInterface::Private::scaleCallback(wl_client *client, wl_
     OutputDeviceInterface *o = OutputDeviceInterface::get(outputdevice);
     auto s = cast<Private>(resource);
     Q_ASSERT(s);
+    s->pendingChanges(o)->d_func()->scale = scale;
+}
+
+void OutputConfigurationInterface::Private::scaleFCallback(wl_client *client, wl_resource *resource, wl_resource * outputdevice, wl_fixed_t scale_fixed)
+{
+    Q_UNUSED(client);
+    const qreal scale = wl_fixed_to_double(scale_fixed);
+
+    if (scale <= 0) {
+        qCWarning(KWAYLAND_SERVER) << "Requested to scale output device to" << scale << ", but I can't do that.";
+        return;
+    }
+    OutputDeviceInterface *o = OutputDeviceInterface::get(outputdevice);
+    auto s = cast<Private>(resource);
+    Q_ASSERT(s);
+
     s->pendingChanges(o)->d_func()->scale = scale;
 }
 

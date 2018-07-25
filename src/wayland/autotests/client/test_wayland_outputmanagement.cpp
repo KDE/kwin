@@ -60,6 +60,7 @@ private Q_SLOTS:
     void testFailed();
 
     void testExampleConfig();
+    void testScale();
 
     void testRemoval();
 
@@ -229,7 +230,7 @@ void TestWaylandOutputManagement::applyPendingChanges()
             outputdevice->setGlobalPosition(c->position());
         }
         if (c->scaleChanged()) {
-            outputdevice->setScale(c->scale());
+            outputdevice->setScaleF(c->scaleF());
         }
     }
 }
@@ -470,6 +471,35 @@ void TestWaylandOutputManagement::testExampleConfig()
     m_outputConfigurationInterface->setApplied();
     QVERIFY(configAppliedSpy.isValid());
     QVERIFY(configAppliedSpy.wait(200));
+}
+
+void TestWaylandOutputManagement::testScale()
+{
+    createConfig();
+
+    auto config = m_outputConfiguration;
+    KWayland::Client::OutputDevice *output = m_clientOutputs.first();
+
+    config->setScaleF(output, 2.3);
+    config->apply();
+
+    QSignalSpy configAppliedSpy(config, &OutputConfiguration::applied);
+    m_outputConfigurationInterface->setApplied();
+    QVERIFY(configAppliedSpy.isValid());
+    QVERIFY(configAppliedSpy.wait(200));
+
+    QCOMPARE(output->scale(), 2); //test backwards compatibility
+    QCOMPARE(wl_fixed_from_double(output->scaleF()), wl_fixed_from_double(2.3));
+
+    config->setScale(output, 3);
+    config->apply();
+
+    m_outputConfigurationInterface->setApplied();
+    QVERIFY(configAppliedSpy.isValid());
+    QVERIFY(configAppliedSpy.wait(200));
+
+    QCOMPARE(output->scale(), 3);
+    QCOMPARE(output->scaleF(), 3.0); //test fowards compatibility
 }
 
 QTEST_GUILESS_MAIN(TestWaylandOutputManagement)

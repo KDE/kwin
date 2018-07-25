@@ -78,8 +78,14 @@ public:
     OutputDeviceInterface::Transform transform() const;
     /** The new value for globalPosition. */
     QPoint position() const;
-    /** The new value for scale. */
+    /** The new value for scale.
+     @deprecated see scaleF
+     */
     int scale() const;
+    /** The new value for scale.
+     * @since 5.XX
+     */
+    qreal scaleF() const;
 
 private:
     friend class OutputConfigurationInterface;
