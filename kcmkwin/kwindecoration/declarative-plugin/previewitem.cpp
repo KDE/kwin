@@ -25,6 +25,7 @@
 #include <KDecoration2/DecorationSettings>
 #include <KDecoration2/DecorationShadow>
 #include <KDecoration2/DecoratedClient>
+#include <QCoreApplication>
 #include <QCursor>
 #include <QPainter>
 #include <QQmlContext>
