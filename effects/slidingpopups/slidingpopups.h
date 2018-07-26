@@ -35,13 +35,13 @@ class SlidingPopupsEffect
     Q_PROPERTY(int slideOutDuration READ slideOutDuration)
 public:
     SlidingPopupsEffect();
-    ~SlidingPopupsEffect();
+    ~SlidingPopupsEffect() override;
 
-    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void postPaintWindow(EffectWindow* w);
-    virtual void reconfigure(ReconfigureFlags flags);
-    virtual bool isActive() const;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void postPaintWindow(EffectWindow* w) override;
+    void reconfigure(ReconfigureFlags flags) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 40;
