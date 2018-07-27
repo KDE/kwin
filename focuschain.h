@@ -189,6 +189,7 @@ public Q_SLOTS:
     bool isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev) const;
 
 private:
+    using Chain = QList<AbstractClient*>;
     /**
      * @brief Makes @p client the first Client in the given focus @p chain.
      *
@@ -199,7 +200,7 @@ private:
      * @param chain The focus chain to operate on
      * @return void
      **/
-    void makeFirstInChain(AbstractClient *client, QList<AbstractClient*> &chain);
+    void makeFirstInChain(AbstractClient *client, Chain &chain);
     /**
      * @brief Makes @p client the last Client in the given focus @p chain.
      *
@@ -210,13 +211,12 @@ private:
      * @param chain The focus chain to operate on
      * @return void
      **/
-    void makeLastInChain(AbstractClient *client, QList<AbstractClient*> &chain);
-    void moveAfterClientInChain(AbstractClient *client, AbstractClient *reference, QList<AbstractClient*> &chain);
-    void updateClientInChain(AbstractClient *client, Change change, QList<AbstractClient*> &chain);
-    void insertClientIntoChain(AbstractClient *client, QList<AbstractClient*> &chain);
-    typedef QHash<uint, QList<AbstractClient*> > DesktopChains;
-    QList<AbstractClient*> m_mostRecentlyUsed;
-    DesktopChains m_desktopFocusChains;
+    void makeLastInChain(AbstractClient *client, Chain &chain);
+    void moveAfterClientInChain(AbstractClient *client, AbstractClient *reference, Chain &chain);
+    void updateClientInChain(AbstractClient *client, Change change, Chain &chain);
+    void insertClientIntoChain(AbstractClient *client, Chain &chain);
+    Chain m_mostRecentlyUsed;
+    QHash<uint, Chain> m_desktopFocusChains;
     bool m_separateScreenFocus;
     AbstractClient *m_activeClient;
     uint m_currentDesktop;

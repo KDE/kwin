@@ -41,7 +41,7 @@ FocusChain::~FocusChain()
 
 void FocusChain::remove(AbstractClient *client)
 {
-    for (DesktopChains::iterator it = m_desktopFocusChains.begin();
+    for (auto it = m_desktopFocusChains.begin();
             it != m_desktopFocusChains.end();
             ++it) {
         it.value().removeAll(client);
@@ -52,7 +52,7 @@ void FocusChain::remove(AbstractClient *client)
 void FocusChain::resize(uint previousSize, uint newSize)
 {
     for (uint i = previousSize + 1; i <= newSize; ++i) {
-        m_desktopFocusChains.insert(i, QList<AbstractClient*>());
+        m_desktopFocusChains.insert(i, Chain());
     }
     for (uint i = previousSize; i > newSize; --i) {
         m_desktopFocusChains.remove(i);
@@ -66,7 +66,7 @@ AbstractClient *FocusChain::getForActivation(uint desktop) const
 
 AbstractClient *FocusChain::getForActivation(uint desktop, int screen) const
 {
-    DesktopChains::const_iterator it = m_desktopFocusChains.find(desktop);
+    auto it = m_desktopFocusChains.constFind(desktop);
     if (it == m_desktopFocusChains.constEnd()) {
         return NULL;
     }
@@ -92,7 +92,7 @@ void FocusChain::update(AbstractClient *client, FocusChain::Change change)
 
     if (client->isOnAllDesktops()) {
         // Now on all desktops, add it to focus chains it is not already in
-        for (DesktopChains::iterator it = m_desktopFocusChains.begin();
+        for (auto it = m_desktopFocusChains.begin();
                 it != m_desktopFocusChains.end();
                 ++it) {
             auto &chain = it.value();
@@ -110,7 +110,7 @@ void FocusChain::update(AbstractClient *client, FocusChain::Change change)
         }
     } else {
         // Now only on desktop, remove it anywhere else
-        for (DesktopChains::iterator it = m_desktopFocusChains.begin();
+        for (auto it = m_desktopFocusChains.begin();
                 it != m_desktopFocusChains.end();
                 ++it) {
             auto &chain = it.value();
@@ -126,7 +126,7 @@ void FocusChain::update(AbstractClient *client, FocusChain::Change change)
     updateClientInChain(client, change, m_mostRecentlyUsed);
 }
 
-void FocusChain::updateClientInChain(AbstractClient *client, FocusChain::Change change, QList< AbstractClient * >& chain)
+void FocusChain::updateClientInChain(AbstractClient *client, FocusChain::Change change, Chain &chain)
 {
     if (change == MakeFirst) {
         makeFirstInChain(client, chain);
@@ -137,7 +137,7 @@ void FocusChain::updateClientInChain(AbstractClient *client, FocusChain::Change 
     }
 }
 
-void FocusChain::insertClientIntoChain(AbstractClient *client, QList< AbstractClient * >& chain)
+void FocusChain::insertClientIntoChain(AbstractClient *client, Chain &chain)
 {
     if (chain.contains(client)) {
         return;
@@ -158,7 +158,7 @@ void FocusChain::moveAfterClient(AbstractClient *client, AbstractClient *referen
         return;
     }
 
-    for (DesktopChains::iterator it = m_desktopFocusChains.begin();
+    for (auto it = m_desktopFocusChains.begin();
             it != m_desktopFocusChains.end();
             ++it) {
         if (!client->isOnDesktop(it.key())) {
@@ -169,7 +169,7 @@ void FocusChain::moveAfterClient(AbstractClient *client, AbstractClient *referen
     moveAfterClientInChain(client, reference, m_mostRecentlyUsed);
 }
 
-void FocusChain::moveAfterClientInChain(AbstractClient *client, AbstractClient *reference, QList<AbstractClient *> &chain)
+void FocusChain::moveAfterClientInChain(AbstractClient *client, AbstractClient *reference, Chain &chain)
 {
     if (!chain.contains(reference)) {
         return;
@@ -221,8 +221,8 @@ bool FocusChain::isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev)
 
 AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, uint desktop) const
 {
-    DesktopChains::const_iterator it = m_desktopFocusChains.find(desktop);
-    if (it == m_desktopFocusChains.end()) {
+    auto it = m_desktopFocusChains.constFind(desktop);
+    if (it == m_desktopFocusChains.constEnd()) {
         return NULL;
     }
     const auto &chain = it.value();
@@ -235,7 +235,7 @@ AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, uint deskt
     return NULL;
 }
 
-void FocusChain::makeFirstInChain(AbstractClient *client, QList< AbstractClient * >& chain)
+void FocusChain::makeFirstInChain(AbstractClient *client, Chain &chain)
 {
     chain.removeAll(client);
     if (client->isMinimized()) { // add it before the first minimized ...
@@ -251,7 +251,7 @@ void FocusChain::makeFirstInChain(AbstractClient *client, QList< AbstractClient 
     }
 }
 
-void FocusChain::makeLastInChain(AbstractClient *client, QList< AbstractClient * >& chain)
+void FocusChain::makeLastInChain(AbstractClient *client, Chain &chain)
 {
     chain.removeAll(client);
     chain.prepend(client);
@@ -259,8 +259,8 @@ void FocusChain::makeLastInChain(AbstractClient *client, QList< AbstractClient *
 
 bool FocusChain::contains(AbstractClient *client, uint desktop) const
 {
-    DesktopChains::const_iterator it = m_desktopFocusChains.find(desktop);
-    if (it == m_desktopFocusChains.end()) {
+    auto it = m_desktopFocusChains.constFind(desktop);
+    if (it == m_desktopFocusChains.constEnd()) {
         return false;
     }
     return it.value().contains(client);
