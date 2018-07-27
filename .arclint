@@ -1,0 +1,43 @@
+{
+    "linters": {
+        "chmod": {
+            "type": "chmod"
+        },
+        "cppcheck": {
+            "type": "cppcheck",
+            "include": [
+                "(\\.cc$)",
+                "(\\.cpp$)",
+                "(\\.cxx$)",
+                "(\\.hh$)",
+                "(\\.hpp$)",
+                "(\\.hxx$)",
+                "(\\.h$)"
+            ],
+            "flags": [
+                "--language=c++",
+                "--std=c++14"
+            ]
+        },
+        "json": {
+            "type": "json",
+            "include": [
+                "(^\\.arcconfig$)",
+                "(^\\.arclint$)",
+                "(\\.json$)"
+            ]
+        },
+        "merge-conflict": {
+            "type": "merge-conflict"
+        },
+        "spelling": {
+            "type": "spelling"
+        },
+        "xml": {
+            "type": "xml",
+            "include": [
+                "(\\.xml$)"
+            ]
+        }
+    }
+}
