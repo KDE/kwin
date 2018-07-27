@@ -32,7 +32,6 @@ public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,
             QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource, bool keepAtTarget = false);
-    AniData(const AniData &other);
     explicit AniData(const QString &str);
     inline void addTime(int t) { time += t; }
     inline bool isOneDimensional() const {

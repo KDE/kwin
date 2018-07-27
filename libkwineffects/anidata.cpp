@@ -60,22 +60,6 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to
 {
 }
 
-AniData::AniData(const AniData &other)
- : attribute(other.attribute)
- , curve(other.curve)
- , customCurve(other.customCurve)
- , from(other.from)
- , to(other.to)
- , time(other.time)
- , duration(other.duration)
- , meta(other.meta)
- , startTime(other.startTime)
- , windowType(other.windowType)
- , waitAtSource(other.waitAtSource)
- , keepAtTarget(other.keepAtTarget)
-{
-}
-
 static FPx2 fpx2(const QString &s, AnimationEffect::Attribute a)
 {
     bool ok; float f1, f2;
