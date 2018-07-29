@@ -265,7 +265,7 @@ EFFECT_FALLBACK
     }, {
         QStringLiteral("glide"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Glide"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Windows Glide Effect as they are open and closed"),
+        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Glide windows as they appear or disappear"),
         QStringLiteral("Appearance"),
         QString(),
         QUrl(),
