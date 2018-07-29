@@ -656,7 +656,7 @@ EFFECT_FALLBACK
         QStringLiteral("wobblywindows"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Wobbly Windows"),
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Deform windows while they are moving"),
-        QStringLiteral("Appearance"),
+        QStringLiteral("Candy"),
         QString(),
         QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/wobbly_windows.ogv")),
         false,
