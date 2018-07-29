@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=logout
+Name=Logout
 Name[ca]=sortida
 Name[ca@valencia]=eixida
 Name[cs]=odhlášení
@@ -37,7 +37,7 @@ Name[x-test]=xxlogoutxx
 Name[zh_CN]=注销
 Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
-Comment=Smoothly fade to the desktop when logging in
+Comment=Smoothly fade to the logout screen
 Comment[ar]=اظهار سطح المكتب بنعومة عند الولوج
 Comment[bg]=Плавен преход към работния плот при влизане
 Comment[bs]=Glatko pretapa na površ pri prijavljivanju
