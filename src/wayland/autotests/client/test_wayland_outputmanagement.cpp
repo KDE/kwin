@@ -425,7 +425,7 @@ void TestWaylandOutputManagement::testMultipleSettings()
     QVERIFY(configAppliedSpy.isValid());
     QVERIFY(configAppliedSpy.wait(200));
     QCOMPARE(configAppliedSpy.count(), 1);
-    QCOMPARE(outputChangedSpy.count(), 5);
+    QCOMPARE(outputChangedSpy.count(), 6);
 
     config->setMode(output, m_modes.at(1).id);
     config->setTransform(output, OutputDevice::Transform::Normal);
@@ -443,7 +443,7 @@ void TestWaylandOutputManagement::testMultipleSettings()
 
     QVERIFY(configAppliedSpy.wait(200));
     QCOMPARE(configAppliedSpy.count(), 2);
-    QCOMPARE(outputChangedSpy.count(), 10);
+    QCOMPARE(outputChangedSpy.count(), 12);
 
 }
 
