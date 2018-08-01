@@ -1,7 +1,17 @@
 [Desktop Entry]
 Name=Logout
+Name[nl]=Afmelden
+Name[pt]=Encerrar
+Name[uk]=Вихід
+Name[x-test]=xxLogoutxx
+Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Smoothly fade to the logout screen
+Comment[nl]=Langzaam naar het afmeldscherm vervagen
+Comment[pt]=Desvanecer suavemente para o ecrã de encerramento
+Comment[uk]=Плавний перехід до вікна виходу з системи
+Comment[x-test]=xxSmoothly fade to the logout screenxx
+Comment[zh_TW]=平順地淡入登出畫面
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect,KCModule
