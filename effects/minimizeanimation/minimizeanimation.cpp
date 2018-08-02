@@ -91,8 +91,8 @@ void MinimizeAnimationEffect::paintWindow(EffectWindow* w, int mask, QRegion reg
 
         data *= QVector2D(interpolate(1.0, icon.width() / (double)geo.width(), progress),
                           interpolate(1.0, icon.height() / (double)geo.height(), progress));
-        data.setXTranslation((int)interpolate(data.xTranslation(), icon.x() - geo.x(), progress));
-        data.setYTranslation((int)interpolate(data.yTranslation(), icon.y() - geo.y(), progress));
+        data.setXTranslation(interpolate(data.xTranslation(), icon.x() - geo.x(), progress));
+        data.setYTranslation(interpolate(data.yTranslation(), icon.y() - geo.y(), progress));
         data.multiplyOpacity(0.1 + (1 - progress) * 0.9);
     }
 
