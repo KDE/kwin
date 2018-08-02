@@ -137,6 +137,9 @@ void SheetEffect::slotWindowAdded(EffectWindow* w)
             break;
         }
     }
+
+    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+
     w->addRepaintFull();
 }
 
@@ -168,6 +171,9 @@ void SheetEffect::slotWindowClosed(EffectWindow* w)
     }
     if (!found)
         info->parentY = 0;
+
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+
     w->addRepaintFull();
 }
 
