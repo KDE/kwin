@@ -1,13 +1,18 @@
 [Desktop Entry]
 Name=Logout
+Name[ca]=Sortida
+Name[fr]=Déconnexion
 Name[nl]=Afmelden
+Name[nn]=Logg ut
 Name[pt]=Encerrar
 Name[uk]=Вихід
 Name[x-test]=xxLogoutxx
 Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Smoothly fade to the logout screen
+Comment[ca]=Transició suau a la pantalla de sortida
 Comment[nl]=Langzaam naar het afmeldscherm vervagen
+Comment[nn]=Ton ut til utloggingsbiletet
 Comment[pt]=Desvanecer suavemente para o ecrã de encerramento
 Comment[uk]=Плавний перехід до вікна виходу з системи
 Comment[x-test]=xxSmoothly fade to the logout screenxx
