@@ -53,7 +53,7 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     if (!effects) {
         return NULL;
     }
-    Shadow *shadow = crateShadowFromDecoration(toplevel);
+    Shadow *shadow = createShadowFromDecoration(toplevel);
     if (!shadow && waylandServer()) {
         shadow = createShadowFromWayland(toplevel);
     }
@@ -89,7 +89,7 @@ Shadow *Shadow::createShadowFromX11(Toplevel *toplevel)
     }
 }
 
-Shadow *Shadow::crateShadowFromDecoration(Toplevel *toplevel)
+Shadow *Shadow::createShadowFromDecoration(Toplevel *toplevel)
 {
     AbstractClient *c = qobject_cast<AbstractClient*>(toplevel);
     if (!c) {

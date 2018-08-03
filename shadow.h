@@ -167,7 +167,7 @@ protected:
 
 private:
     static Shadow *createShadowFromX11(Toplevel *toplevel);
-    static Shadow *crateShadowFromDecoration(Toplevel *toplevel);
+    static Shadow *createShadowFromDecoration(Toplevel *toplevel);
     static Shadow *createShadowFromWayland(Toplevel *toplevel);
     static QVector<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init(const QVector<uint32_t> &data);
