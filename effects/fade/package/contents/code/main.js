@@ -18,17 +18,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
+
+var blacklist = [
+    // The logout screen has to be animated only by the logout effect.
+    "ksmserver ksmserver",
+
+    // The splash screen has to be animated only by the login effect.
+    "ksplashqml ksplashqml",
+    "ksplashsimple ksplashsimple",
+    "ksplashx ksplashx"
+];
+
 function isFadeWindow(w) {
+    if (blacklist.indexOf(w.windowClass) != -1) {
+        return false;
+    }
     if (w.deleted && effect.isGrabbed(w, Effect.WindowClosedGrabRole)) {
         return false;
     } else if (!w.deleted && effect.isGrabbed(w, Effect.WindowAddedGrabRole)) {
         return false;
     }
-    return w.onCurrentDesktop && !isLoginWindow(w) && !w.desktopWindow && !w.utility && !w.minimized;
-}
-
-function isLoginWindow(w) {
-    return w.windowClass == "ksplashx ksplashx" || w.windowClass == "ksplashsimple ksplashsimple" || w.windowClass == "ksplashqml ksplashqml";
+    return w.onCurrentDesktop && !w.desktopWindow && !w.utility && !w.minimized;
 }
 
 var fadeInTime, fadeOutTime, fadeWindows;
