@@ -46,7 +46,7 @@ bool MinimizeAnimationEffect::supported()
     return effects->animationsSupported();
 }
 
-void MinimizeAnimationEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void MinimizeAnimationEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
     const std::chrono::milliseconds delta(time);
 
@@ -63,7 +63,7 @@ void MinimizeAnimationEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void MinimizeAnimationEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+void MinimizeAnimationEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
 {
     // Schedule window for transformation if the animation is still in
     //  progress
@@ -76,7 +76,7 @@ void MinimizeAnimationEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData
     effects->prePaintWindow(w, data, time);
 }
 
-void MinimizeAnimationEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+void MinimizeAnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     const auto animationIt = m_animations.constFind(w);
     if (animationIt != m_animations.constEnd()) {
@@ -86,8 +86,9 @@ void MinimizeAnimationEffect::paintWindow(EffectWindow* w, int mask, QRegion reg
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
         // If there's no icon geometry, minimize to the center of the screen
-        if (!icon.isValid())
+        if (!icon.isValid()) {
             icon = QRect(effects->virtualScreenGeometry().center(), QSize(0, 0));
+        }
 
         data *= QVector2D(interpolate(1.0, icon.width() / (double)geo.width(), progress),
                           interpolate(1.0, icon.height() / (double)geo.height(), progress));
@@ -124,8 +125,9 @@ void MinimizeAnimationEffect::windowDeleted(EffectWindow *w)
 
 void MinimizeAnimationEffect::windowMinimized(EffectWindow *w)
 {
-    if (effects->activeFullScreenEffect())
+    if (effects->activeFullScreenEffect()) {
         return;
+    }
 
     TimeLine &timeLine = m_animations[w];
 
@@ -142,8 +144,9 @@ void MinimizeAnimationEffect::windowMinimized(EffectWindow *w)
 
 void MinimizeAnimationEffect::windowUnminimized(EffectWindow *w)
 {
-    if (effects->activeFullScreenEffect())
+    if (effects->activeFullScreenEffect()) {
         return;
+    }
 
     TimeLine &timeLine = m_animations[w];
 

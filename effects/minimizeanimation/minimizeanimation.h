@@ -30,18 +30,18 @@ namespace KWin
 /**
  * Animates minimize/unminimize
  **/
-class MinimizeAnimationEffect
-    : public Effect
+class MinimizeAnimationEffect : public Effect
 {
     Q_OBJECT
+
 public:
     MinimizeAnimationEffect();
 
     void reconfigure(ReconfigureFlags flags) override;
 
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
+    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
+    virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
