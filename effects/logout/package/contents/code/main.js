@@ -21,10 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 /*global effect, effects, animate, animationTime, Effect*/
 var logoutEffect = {
-    duration: animationTime(800),
+    inDuration: animationTime(800),
+    outDuration: animationTime(400),
     loadConfig: function () {
         "use strict";
-        logoutEffect.duration = animationTime(800);
+        logoutEffect.inDuration = animationTime(800);
+        logoutEffect.outDuration = animationTime(400);
     },
     isLogoutWindow: function (window) {
         "use strict";
@@ -39,12 +41,35 @@ var logoutEffect = {
         if (!logoutEffect.isLogoutWindow(window)) {
             return;
         }
-        animate({
+        // If the Out animation is still active, kill it.
+        if (window.outAnimation !== undefined) {
+            cancel(window.outAnimation);
+            delete window.outAnimation;
+        }
+        window.inAnimation = animate({
             window: window,
-            duration: logoutEffect.duration,
+            duration: logoutEffect.inDuration,
             type: Effect.Opacity,
             from: 0.0,
             to: 1.0
+        });
+    },
+    closed: function (window) {
+        "use strict";
+        if (!logoutEffect.isLogoutWindow(window)) {
+            return;
+        }
+        // If the In animation is still active, kill it.
+        if (window.inAnimation !== undefined) {
+            cancel(window.inAnimation);
+            delete window.inAnimation;
+        }
+        window.outAnimation = animate({
+            window: window,
+            duration: logoutEffect.outDuration,
+            type: Effect.Opacity,
+            from: 1.0,
+            to: 0.0
         });
     },
     init: function () {
@@ -52,6 +77,8 @@ var logoutEffect = {
         logoutEffect.loadConfig();
         effects.windowAdded.connect(logoutEffect.opened);
         effects.windowShown.connect(logoutEffect.opened);
+        effects.windowClosed.connect(logoutEffect.closed);
+        effects.windowHidden.connect(logoutEffect.closed);
     }
 };
 logoutEffect.init();
