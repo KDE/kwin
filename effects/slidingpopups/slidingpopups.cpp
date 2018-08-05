@@ -345,7 +345,6 @@ void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
         }
     }
     // sanitize
-    int difference = 0;
     switch (mWindowsData[w].from) {
     case West:
         mWindowsData[w].start = qMax(windowGeo.left() - screenRect.left(), mWindowsData[w].start);
