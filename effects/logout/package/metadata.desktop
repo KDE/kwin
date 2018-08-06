@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Logout
 Name[ca]=Sortida
+Name[ca@valencia]=Eixida
 Name[cs]=Odhlášení
 Name[eu]=Saio-ixtea
 Name[fr]=Déconnexion
@@ -16,6 +17,7 @@ Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Smoothly fade to the logout screen
 Comment[ca]=Transició suau a la pantalla de sortida
+Comment[ca@valencia]=Transició suau a la pantalla d'eixida
 Comment[eu]=Emeki desagertu saio-ixteko pantailarantz
 Comment[fr]=Effectue un dégradé progressif vers l'écran de déconnexion
 Comment[id]=Memudar dengan halus ke layar logout
