@@ -53,6 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
 
+#include <cmath>
 
 namespace KWin
 {
@@ -817,10 +818,16 @@ void DrmOutput::setScale(qreal scale)
 {
     m_scale = scale;
     if (m_waylandOutput) {
-        m_waylandOutput->setScale(scale);
+        // this is the scale that clients will ideally use for their buffers
+        // this has to be an int which is fine
+
+        // I don't know whether we want to round or ceil
+        // or maybe even set this to 3 when we're scaling to 1.5
+        // don't treat this like it's chosen deliberately
+        m_waylandOutput->setScale(std::ceil(scale));
     }
     if (m_waylandOutputDevice) {
-        m_waylandOutputDevice->setScale(scale);
+        m_waylandOutputDevice->setScaleF(scale);
     }
     if (m_xdgOutput) {
         m_xdgOutput->setLogicalSize(pixelSize() / m_scale);
@@ -861,7 +868,7 @@ bool DrmOutput::commitChanges()
     }
     if (m_changeset->scaleChanged()) {
         qCDebug(KWIN_DRM) << "Setting scale:" << m_changeset->scale();
-        setScale(m_changeset->scale());
+        setScale(m_changeset->scaleF());
     }
     return true;
 }
