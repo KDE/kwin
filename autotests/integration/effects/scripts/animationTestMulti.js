@@ -4,11 +4,11 @@ effects.windowAdded.connect(function(w) {
         duration: 100,
         animations: [{
             type: Effect.Scale,
-            curve: Effect.GaussianCurve,
-            to: 1.4
+            to: 1.4,
+            curve: QEasingCurve.OutQuad
         }, {
             type: Effect.Opacity,
-            curve: Effect.GaussianCurve,
+            curve: QEasingCurve.OutQuad,
             to: 0.0
         }]
     });

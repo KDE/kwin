@@ -581,22 +581,22 @@ void ScriptedEffect::signalHandlerException(const QScriptValue &value)
     }
 }
 
-quint64 ScriptedEffect::animate(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, QEasingCurve::Type curve, int delay)
+quint64 ScriptedEffect::animate(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, int curve, int delay)
 {
     QEasingCurve qec;
     if (curve < QEasingCurve::Custom)
-        qec.setType(curve);
-    else if (static_cast<int>(curve) == static_cast<int>(GaussianCurve))
+        qec.setType(static_cast<QEasingCurve::Type>(curve));
+    else if (curve == GaussianCurve)
         qec.setCustomType(qecGaussian);
     return AnimationEffect::animate(w, a, metaData, ms, to, qec, delay, from);
 }
 
-quint64 ScriptedEffect::set(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, QEasingCurve::Type curve, int delay)
+quint64 ScriptedEffect::set(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, int curve, int delay)
 {
     QEasingCurve qec;
     if (curve < QEasingCurve::Custom)
-        qec.setType(curve);
-    else if (static_cast<int>(curve) == static_cast<int>(GaussianCurve))
+        qec.setType(static_cast<QEasingCurve::Type>(curve));
+    else if (curve == GaussianCurve)
         qec.setCustomType(qecGaussian);
     return AnimationEffect::set(w, a, metaData, ms, to, qec, delay, from);
 }

@@ -1,5 +1,5 @@
 effects.windowAdded.connect(function(w) {
-    w.anim1 = effect.animate(w, Effect.Scale, 100, 1.4, 0.2);
+    w.anim1 = effect.animate(w, Effect.Scale, 100, 1.4, 0.2, 0, QEasingCurve.OutQuad);
     sendTestResponse(typeof(w.anim1) == "number");
 });
 

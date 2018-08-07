@@ -291,6 +291,7 @@ void ScriptedEffectsTest::testAnimations()
         QCOMPARE(animationsForWindow[0].duration, 100);
         QCOMPARE(animationsForWindow[0].to, FPx2(1.4));
         QCOMPARE(animationsForWindow[0].attribute, AnimationEffect::Scale);
+        QCOMPARE(animationsForWindow[0].curve.type(), QEasingCurve::OutQuad);
         QCOMPARE(animationsForWindow[0].keepAtTarget, false);
         timePassed = animationsForWindow[0].time;
         if (animationCount == 2) {
