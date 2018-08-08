@@ -85,14 +85,37 @@ void SheetEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int 
 void SheetEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     InfoMap::const_iterator info = windows.constFind(w);
-    if (info != windows.constEnd()) {
-        const double progress = info->timeLine->currentValue();
-        QGraphicsRotation rot;
-        data.setRotationAxis(Qt::XAxis);
-        data.setRotationAngle(60.0 * (1.0 - progress));
-        data *= QVector3D(1.0, progress, progress);
-        data.translate(0.0, - (w->y() - info->parentY) * (1.0 - progress));
+    if (info == windows.constEnd()) {
+        effects->paintWindow(w, mask, region, data);
+        return;
     }
+
+    // Perspective projection distorts objects near edges of the viewport
+    // in undesired way. To fix this, the center of the window will be
+    // moved to the origin, after applying perspective projection, the
+    // center is moved back to its "original" projected position. Overall,
+    // this is how the window will be transformed:
+    //  [move to the origin] -> [scale] -> [rotate] -> [translate] ->
+    //    -> [perspective projection] -> [reverse "move to the origin"]
+    const QMatrix4x4 oldProjMatrix = data.screenProjectionMatrix();
+    const QRectF windowGeo = w->geometry();
+    const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
+    QMatrix4x4 invOffsetMatrix;
+    invOffsetMatrix.translate(invOffset.x(), invOffset.y());
+    data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
+
+    // Move the center of the window to the origin.
+    const QRectF screenGeo = effects->virtualScreenGeometry();
+    const QPointF offset = screenGeo.center() - windowGeo.center();
+    data.translate(offset.x(), offset.y());
+
+    const double progress = info->timeLine->currentValue();
+    QGraphicsRotation rot;
+    data.setRotationAxis(Qt::XAxis);
+    data.setRotationAngle(60.0 * (1.0 - progress));
+    data *= QVector3D(1.0, progress, progress);
+    data.translate(0.0, - (w->y() - info->parentY) * (1.0 - progress));
+
     effects->paintWindow(w, mask, region, data);
 }
 
