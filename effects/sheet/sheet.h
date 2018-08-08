@@ -4,6 +4,7 @@
 
 Copyright (C) 2007 Philip Falkner <philip.falkner@gmail.com>
 Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,62 +23,63 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SHEET_H
 #define KWIN_SHEET_H
 
+// kwineffects
 #include <kwineffects.h>
-
-class QTimeLine;
 
 namespace KWin
 {
 
-class SheetEffect
-    : public Effect
+class SheetEffect : public Effect
 {
     Q_OBJECT
-    Q_PROPERTY(int duration READ configuredDuration)
+    Q_PROPERTY(int duration READ duration)
+
 public:
     SheetEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void postPaintWindow(EffectWindow* w);
-    virtual bool isActive() const;
 
-    int requestedEffectChainPosition() const override {
-        return 60;
-    }
+    void reconfigure(ReconfigureFlags flags) override;
+
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void postPaintWindow(EffectWindow *w) override;
+
+    bool isActive() const override;
+    int requestedEffectChainPosition() const override;
 
     static bool supported();
 
-    // for properties
-    int configuredDuration() const {
-        return duration;
-    }
-public Q_SLOTS:
-    void slotWindowAdded(KWin::EffectWindow* c);
-    void slotWindowClosed(KWin::EffectWindow *c);
-    void slotWindowDeleted(KWin::EffectWindow *w);
+    int duration() const;
+
+private Q_SLOTS:
+    void slotWindowAdded(EffectWindow *w);
+    void slotWindowClosed(EffectWindow *w);
+    void slotWindowDeleted(EffectWindow *w);
+
 private:
-    class WindowInfo;
-    typedef QMap< const EffectWindow*, WindowInfo > InfoMap;
-    bool isSheetWindow(EffectWindow* w);
-    InfoMap windows;
-    float duration;
-    int screenTime;
+    bool isSheetWindow(EffectWindow *w) const;
+
+private:
+    std::chrono::milliseconds m_duration;
+
+    struct Animation {
+        TimeLine timeLine;
+        int parentY;
+    };
+
+    QHash<EffectWindow*, Animation> m_animations;
 };
 
-class SheetEffect::WindowInfo
+inline int SheetEffect::requestedEffectChainPosition() const
 {
-public:
-    WindowInfo();
-    ~WindowInfo();
-    bool deleted;
-    bool added;
-    bool closed;
-    QTimeLine *timeLine;
-    int parentY;
-};
+    return 60;
+}
 
-} // namespace
+inline int SheetEffect::duration() const
+{
+    return m_duration.count();
+}
+
+} // namespace KWin
 
 #endif
