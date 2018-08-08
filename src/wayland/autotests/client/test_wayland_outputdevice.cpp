@@ -63,6 +63,9 @@ private:
     KWayland::Server::Display *m_display;
     KWayland::Server::OutputDeviceInterface *m_serverOutputDevice;
     QByteArray m_edid;
+    QString m_serialNumber;
+    QString m_eidaId;
+
     KWayland::Server::OutputDeviceInterface::ColorCurves m_initColorCurves;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
@@ -116,6 +119,11 @@ void TestWaylandOutputDevice::init()
 
     m_edid = QByteArray::fromBase64("AP///////wAQrBbwTExLQQ4WAQOANCB46h7Frk80sSYOUFSlSwCBgKlA0QBxTwEBAQEBAQEBKDyAoHCwI0AwIDYABkQhAAAaAAAA/wBGNTI1TTI0NUFLTEwKAAAA/ABERUxMIFUyNDEwCiAgAAAA/QA4TB5REQAKICAgICAgAToCAynxUJAFBAMCBxYBHxITFCAVEQYjCQcHZwMMABAAOC2DAQAA4wUDAQI6gBhxOC1AWCxFAAZEIQAAHgEdgBhxHBYgWCwlAAZEIQAAngEdAHJR0B4gbihVAAZEIQAAHowK0Iog4C0QED6WAAZEIQAAGAAAAAAAAAAAAAAAAAAAPg==");
     m_serverOutputDevice->setEdid(m_edid);
+
+    m_serialNumber = "23498723948723";
+    m_serverOutputDevice->setSerialNumber(m_serialNumber);
+    m_eidaId = "asdffoo";
+    m_serverOutputDevice->setEisaId(m_eidaId);
 
     m_initColorCurves.red.clear();
     m_initColorCurves.green.clear();
@@ -207,6 +215,9 @@ void TestWaylandOutputDevice::testRegistry()
     QCOMPARE(output.transform(), KWayland::Client::OutputDevice::Transform::Normal);
     QCOMPARE(output.enabled(), OutputDevice::Enablement::Enabled);
     QCOMPARE(output.edid(), QByteArray());
+    QCOMPARE(output.eisaId(), QString());
+    QCOMPARE(output.serialNumber(), QString());
+
     QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::done);
     QVERIFY(outputChanged.isValid());
 
@@ -234,7 +245,8 @@ void TestWaylandOutputDevice::testRegistry()
     QCOMPARE(output.edid(), m_edid);
     QCOMPARE(output.enabled(), OutputDevice::Enablement::Enabled);
     QCOMPARE(output.uuid(), QByteArray("1337"));
-
+    QCOMPARE(output.serialNumber(), m_serialNumber);
+    QCOMPARE(output.eisaId(), m_eidaId);
 }
 
 void TestWaylandOutputDevice::testModeChanges()

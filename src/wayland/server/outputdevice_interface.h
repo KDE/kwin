@@ -52,6 +52,8 @@ class KWAYLANDSERVER_EXPORT OutputDeviceInterface : public Global
     Q_PROPERTY(QPoint globalPosition READ globalPosition WRITE setGlobalPosition NOTIFY globalPositionChanged)
     Q_PROPERTY(QString manufacturer READ manufacturer WRITE setManufacturer NOTIFY manufacturerChanged)
     Q_PROPERTY(QString model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(QString serialNumber READ serialNumber WRITE setSerialNumber NOTIFY serialNumberChanged)
+    Q_PROPERTY(QString eisaId READ eisaId WRITE setEisaId NOTIFY eisaIdChanged)
     Q_PROPERTY(QSize pixelSize READ pixelSize NOTIFY pixelSizeChanged)
     Q_PROPERTY(int refreshRate READ refreshRate NOTIFY refreshRateChanged)
     Q_PROPERTY(qreal scale READ scaleF WRITE setScaleF NOTIFY scaleFChanged)
@@ -103,6 +105,8 @@ public:
     QPoint globalPosition() const;
     QString manufacturer() const;
     QString model() const;
+    QString serialNumber() const;
+    QString eisaId() const;
     QSize pixelSize() const;
     int refreshRate() const;
     int scale() const;
@@ -121,6 +125,8 @@ public:
     void setGlobalPosition(const QPoint &pos);
     void setManufacturer(const QString &manufacturer);
     void setModel(const QString &model);
+    void setSerialNumber(const QString &serialNumber);
+    void setEisaId(const QString &eisaId);
     void setScale(int scale);
     void setScaleF(qreal scale);
     void setSubPixel(SubPixel subPixel);
@@ -141,6 +147,8 @@ Q_SIGNALS:
     void globalPositionChanged(const QPoint&);
     void manufacturerChanged(const QString&);
     void modelChanged(const QString&);
+    void serialNumberChanged(const QString&);
+    void eisaIdChanged(const QString &);
     void pixelSizeChanged(const QSize&);
     void refreshRateChanged(int);
     //@deprecated see scaleChanged(real)

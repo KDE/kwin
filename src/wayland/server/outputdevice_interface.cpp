@@ -46,6 +46,8 @@ public:
     void updateGeometry();
     void updateScale();
     void updateColorCurves();
+    void updateSerialNumber();
+    void updateEisaId();
 
     void sendUuid();
     void sendEdid();
@@ -56,6 +58,8 @@ public:
     QString manufacturer = QStringLiteral("org.kde.kwin");
     QString model = QStringLiteral("none");
     qreal scale = 1.0;
+    QString serialNumber;
+    QString eisaId;
     SubPixel subPixel = SubPixel::Unknown;
     Transform transform = Transform::Normal;
     ColorCurves colorCurves;
@@ -77,6 +81,8 @@ private:
     void sendGeometry(wl_resource *resource);
     void sendScale(const ResourceData &data);
     void sendColorCurves(const ResourceData &data);
+    void sendEisaId(const ResourceData &data);
+    void sendSerialNumber(const ResourceData &data);
 
     static const quint32 s_version;
     OutputDeviceInterface *q;
@@ -339,6 +345,8 @@ void OutputDeviceInterface::Private::bind(wl_client *client, uint32_t version, u
     sendGeometry(resource);
     sendScale(r);
     sendColorCurves(r);
+    sendEisaId(r);
+    sendSerialNumber(r);
 
     auto currentModeIt = modes.constEnd();
     for (auto it = modes.constBegin(); it != modes.constEnd(); ++it) {
@@ -440,6 +448,23 @@ void OutputDeviceInterface::Private::sendColorCurves(const ResourceData &data)
     wl_array_release(&wlBlue);
 }
 
+void KWayland::Server::OutputDeviceInterface::Private::sendSerialNumber(const ResourceData &data)
+{
+    if (wl_resource_get_version(data.resource) >= ORG_KDE_KWIN_OUTPUTDEVICE_SERIAL_NUMBER_SINCE_VERSION) {
+        org_kde_kwin_outputdevice_send_serial_number(data.resource,
+                                            qPrintable(serialNumber));
+    }
+}
+
+void KWayland::Server::OutputDeviceInterface::Private::sendEisaId(const ResourceData &data)
+{
+    if (wl_resource_get_version(data.resource) >= ORG_KDE_KWIN_OUTPUTDEVICE_EISA_ID_SINCE_VERSION) {
+        org_kde_kwin_outputdevice_send_eisa_id(data.resource,
+                                            qPrintable(eisaId));
+    }
+}
+
+
 void OutputDeviceInterface::Private::sendDone(const ResourceData &data)
 {
     org_kde_kwin_outputdevice_send_done(data.resource);
@@ -492,6 +517,8 @@ SETTER(setPhysicalSize, const QSize&, physicalSize)
 SETTER(setGlobalPosition, const QPoint&, globalPosition)
 SETTER(setManufacturer, const QString&, manufacturer)
 SETTER(setModel, const QString&, model)
+SETTER(setSerialNumber, const QString&, serialNumber)
+SETTER(setEisaId, const QString&, eisaId)
 SETTER(setSubPixel, SubPixel, subPixel)
 SETTER(setTransform, Transform, transform)
 
@@ -541,6 +568,18 @@ QString OutputDeviceInterface::model() const
 {
     Q_D();
     return d->model;
+}
+
+QString OutputDeviceInterface::serialNumber() const
+{
+    Q_D();
+    return d->serialNumber;
+}
+
+QString OutputDeviceInterface::eisaId() const
+{
+    Q_D();
+    return d->eisaId;
 }
 
 int OutputDeviceInterface::scale() const
