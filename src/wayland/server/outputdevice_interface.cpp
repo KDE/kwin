@@ -41,17 +41,26 @@ public:
     Private(OutputDeviceInterface *q, Display *d);
     ~Private();
 
-    void sendMode(wl_resource *resource, const Mode &mode);
-    void sendDone(const ResourceData &data);
+
     void updateGeometry();
+    void updateUuid();
+    void updateEdid();
+    void updateEnabled();
     void updateScale();
     void updateColorCurves();
-    void updateSerialNumber();
     void updateEisaId();
+    void updateSerialNumber();
 
-    void sendUuid();
-    void sendEdid();
-    void sendEnabled();
+    void sendGeometry(wl_resource *resource);
+    void sendMode(wl_resource *resource, const Mode &mode);
+    void sendDone(const ResourceData &data);
+    void sendUuid(const ResourceData &data);
+    void sendEdid(const ResourceData &data);
+    void sendEnabled(const ResourceData &data);
+    void sendScale(const ResourceData &data);
+    void sendColorCurves(const ResourceData &data);
+    void sendEisaId(const ResourceData &data);
+    void sendSerialNumber(const ResourceData &data);
 
     QSize physicalSize;
     QPoint globalPosition;
@@ -78,11 +87,6 @@ private:
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     int32_t toTransform() const;
     int32_t toSubPixel() const;
-    void sendGeometry(wl_resource *resource);
-    void sendScale(const ResourceData &data);
-    void sendColorCurves(const ResourceData &data);
-    void sendEisaId(const ResourceData &data);
-    void sendSerialNumber(const ResourceData &data);
 
     static const quint32 s_version;
     OutputDeviceInterface *q;
@@ -363,9 +367,9 @@ void OutputDeviceInterface::Private::bind(wl_client *client, uint32_t version, u
         sendMode(resource, *currentModeIt);
     }
 
-    sendUuid();
-    sendEdid();
-    sendEnabled();
+    sendUuid(r);
+    sendEdid(r);
+    sendEnabled(r);
 
     sendDone(r);
     c->flush();
@@ -650,7 +654,7 @@ void OutputDeviceInterface::setEdid(const QByteArray &edid)
 {
     Q_D();
     d->edid = edid;
-    d->sendEdid();
+    d->updateEdid();
     emit edidChanged();
 }
 
@@ -665,7 +669,7 @@ void OutputDeviceInterface::setEnabled(OutputDeviceInterface::Enablement enabled
     Q_D();
     if (d->enabled != enabled) {
         d->enabled = enabled;
-        d->sendEnabled();
+        d->updateEnabled();
         emit enabledChanged();
     }
 }
@@ -681,7 +685,7 @@ void OutputDeviceInterface::setUuid(const QByteArray &uuid)
     Q_D();
     if (d->uuid != uuid) {
         d->uuid = uuid;
-        d->sendUuid();
+        d->updateUuid();
         emit uuidChanged();
     }
 }
@@ -692,32 +696,54 @@ QByteArray OutputDeviceInterface::uuid() const
     return d->uuid;
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::sendEdid()
+void KWayland::Server::OutputDeviceInterface::Private::sendEdid(const ResourceData &data)
 {
-    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        org_kde_kwin_outputdevice_send_edid((*it).resource,
-                                            edid.toBase64().constData());
-    }
-
+    org_kde_kwin_outputdevice_send_edid(data.resource,
+                                        edid.toBase64().constData());
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::sendEnabled()
+void KWayland::Server::OutputDeviceInterface::Private::sendEnabled(const ResourceData &data)
 {
     int _enabled = 0;
     if (enabled == OutputDeviceInterface::Enablement::Enabled) {
         _enabled = 1;
     }
+    org_kde_kwin_outputdevice_send_enabled(data.resource, _enabled);
+}
+
+void OutputDeviceInterface::Private::sendUuid(const ResourceData &data)
+{
+    org_kde_kwin_outputdevice_send_uuid(data.resource, uuid.constData());
+}
+
+void KWayland::Server::OutputDeviceInterface::Private::updateEnabled()
+{
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        org_kde_kwin_outputdevice_send_enabled((*it).resource, _enabled);
+        sendEnabled(*it);
     }
 }
 
-void OutputDeviceInterface::Private::sendUuid()
+void KWayland::Server::OutputDeviceInterface::Private::updateEdid()
 {
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        org_kde_kwin_outputdevice_send_uuid((*it).resource, uuid.constData());
+        sendEdid(*it);
     }
 }
+
+void KWayland::Server::OutputDeviceInterface::Private::updateUuid()
+{
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+        sendUuid(*it);
+    }
+}
+
+void KWayland::Server::OutputDeviceInterface::Private::updateEisaId()
+{
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+        sendEisaId(*it);
+    }
+}
+
 
 }
 }
