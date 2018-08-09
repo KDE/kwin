@@ -119,7 +119,11 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
         return;
     if ( effects->isOpenGLCompositing()) {
         if (!GLPlatform::instance()->isGLES()) {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
             glEnable(GL_LINE_SMOOTH);
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
         }
         glLineWidth(width);
         GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -150,6 +154,7 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
         glLineWidth(1.0);
         if (!GLPlatform::instance()->isGLES()) {
             glDisable(GL_LINE_SMOOTH);
+            glDisable(GL_BLEND);
         }
     }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
