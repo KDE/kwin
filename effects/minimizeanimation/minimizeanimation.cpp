@@ -65,10 +65,7 @@ void MinimizeAnimationEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 
 void MinimizeAnimationEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
 {
-    // Schedule window for transformation if the animation is still in
-    //  progress
     if (m_animations.contains(w)) {
-        // We'll transform this window
         data.setTransformed();
         w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
     }
@@ -97,7 +94,6 @@ void MinimizeAnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion reg
         data.multiplyOpacity(interpolate(1.0, 0.1, progress));
     }
 
-    // Call the next effect.
     effects->paintWindow(w, mask, region, data);
 }
 
@@ -114,7 +110,6 @@ void MinimizeAnimationEffect::postPaintScreen()
 
     effects->addRepaintFull();
 
-    // Call the next effect.
     effects->postPaintScreen();
 }
 
