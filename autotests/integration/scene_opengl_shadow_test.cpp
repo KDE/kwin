@@ -757,10 +757,10 @@ void SceneOpenGLShadowTest::testNoCornerShadowTiles()
     // Texture size: QSize(257, 257)
     // Window size: QSize(512, 512)
     WindowQuadList expectedQuads;
-    expectedQuads << makeShadowQuad(QRectF(0, -128, 512, 128), 0.0, 0.0, 1.0 / 257.0, 128.0 / 257.0);      // top
-    expectedQuads << makeShadowQuad(QRectF(512, 0, 128, 512), 1.0 - 128.0 / 257.0, 0.0, 1.0, 1.0 / 257.0); // right
-    expectedQuads << makeShadowQuad(QRectF(0, 512, 512, 128), 0.0, 1.0 - 128.0 / 257, 1.0 / 257, 1.0);     // bottom
-    expectedQuads << makeShadowQuad(QRectF(-128, 0, 128, 512), 0.0, 0.0, 128.0 / 257.0, 1.0 / 257.0);      // left
+    expectedQuads << makeShadowQuad(QRectF(   0, -128, 512, 128), 128.0 / 257.0,           0.0, 129.0 / 257.0, 128.0 / 257.0); // top
+    expectedQuads << makeShadowQuad(QRectF( 512,    0, 128, 512), 129.0 / 257.0, 128.0 / 257.0,           1.0, 129.0 / 257.0); // right
+    expectedQuads << makeShadowQuad(QRectF(   0,  512, 512, 128), 128.0 / 257.0, 129.0 / 257.0, 129.0 / 257.0, 1.0);           // bottom
+    expectedQuads << makeShadowQuad(QRectF(-128,    0, 128, 512),           0.0, 128.0 / 257.0, 128.0 / 257.0, 129.0 / 257.0); // left
 
     for (const WindowQuad &expectedQuad : expectedQuads) {
         auto it = std::find_if(quads.constBegin(), quads.constEnd(),

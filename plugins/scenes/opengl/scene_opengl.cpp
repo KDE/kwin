@@ -2332,7 +2332,7 @@ void SceneOpenGLShadow::buildQuads()
     distributeVertically(topRect, bottomRect);
 
     if (topRect.isValid()) {
-        tx1 = topLeft.width() / width;
+        tx1 = shadowMargins.left() / width;
         ty1 = 0.0;
         tx2 = tx1 + top.width() / width;
         ty2 = topRect.height() / height;
@@ -2346,7 +2346,7 @@ void SceneOpenGLShadow::buildQuads()
 
     if (rightRect.isValid()) {
         tx1 = 1.0 - rightRect.width() / width;
-        ty1 = topRight.height() / height;
+        ty1 = shadowMargins.top() / height;
         tx2 = 1.0;
         ty2 = ty1 + right.height() / height;
         WindowQuad rightQuad(WindowQuadShadow);
@@ -2358,7 +2358,7 @@ void SceneOpenGLShadow::buildQuads()
     }
 
     if (bottomRect.isValid()) {
-        tx1 = bottomLeft.width() / width;
+        tx1 = shadowMargins.left() / width;
         ty1 = 1.0 - bottomRect.height() / height;
         tx2 = tx1 + bottom.width() / width;
         ty2 = 1.0;
@@ -2372,7 +2372,7 @@ void SceneOpenGLShadow::buildQuads()
 
     if (leftRect.isValid()) {
         tx1 = 0.0;
-        ty1 = topLeft.height() / height;
+        ty1 = shadowMargins.top() / height;
         tx2 = leftRect.width() / width;
         ty2 = ty1 + left.height() / height;
         WindowQuad leftQuad(WindowQuadShadow);
@@ -2413,21 +2413,26 @@ bool SceneOpenGLShadow::prepareBackend()
         return false;
     }
 
-    // FIXME: If the corner tiles are missing, the left/top/right/bottom tiles
-    // will overlap, e.g. the top tile and the left tile.
-
     QImage image(width, height, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
+
+    const int innerRectTop = std::max({topLeft.height(), top.height(), topRight.height()});
+    const int innerRectLeft = std::max({topLeft.width(), left.width(), bottomLeft.width()});
+
     QPainter p;
     p.begin(&image);
+
     p.drawPixmap(0, 0, shadowPixmap(ShadowElementTopLeft));
-    p.drawPixmap(topLeft.width(), 0, shadowPixmap(ShadowElementTop));
-    p.drawPixmap(topLeft.width() + top.width(), 0, shadowPixmap(ShadowElementTopRight));
-    p.drawPixmap(0, topLeft.height(), shadowPixmap(ShadowElementLeft));
-    p.drawPixmap(width - right.width(), topRight.height(), shadowPixmap(ShadowElementRight));
-    p.drawPixmap(0, topLeft.height() + left.height(), shadowPixmap(ShadowElementBottomLeft));
-    p.drawPixmap(bottomLeft.width(), height - bottom.height(), shadowPixmap(ShadowElementBottom));
-    p.drawPixmap(bottomLeft.width() + bottom.width(), topRight.height() + right.height(), shadowPixmap(ShadowElementBottomRight));
+    p.drawPixmap(innerRectLeft, 0, shadowPixmap(ShadowElementTop));
+    p.drawPixmap(width - topRight.width(), 0, shadowPixmap(ShadowElementTopRight));
+
+    p.drawPixmap(0, innerRectTop, shadowPixmap(ShadowElementLeft));
+    p.drawPixmap(width - right.width(), innerRectTop, shadowPixmap(ShadowElementRight));
+
+    p.drawPixmap(0, height - bottomLeft.height(), shadowPixmap(ShadowElementBottomLeft));
+    p.drawPixmap(innerRectLeft, height - bottom.height(), shadowPixmap(ShadowElementBottom));
+    p.drawPixmap(width - bottomRight.width(), height - bottomRight.height(), shadowPixmap(ShadowElementBottomRight));
+
     p.end();
 
     // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format
