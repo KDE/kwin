@@ -30,8 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/DecorationShadow>
 
 #include <KWayland/Client/server_decoration.h>
+#include <KWayland/Client/shadow.h>
 #include <KWayland/Client/shell.h>
+#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Server/shadow_interface.h>
+#include <KWayland/Server/surface_interface.h>
 
 #include "kwin_wayland_test.h"
 
@@ -61,11 +65,12 @@ public:
 
 private Q_SLOTS:
     void initTestCase();
-    void init();
     void cleanup();
 
     void testShadowTileOverlaps_data();
     void testShadowTileOverlaps();
+    void testNoCornerShadowTiles();
+    void testDistributeHugeCornerTiles();
 
 };
 
@@ -148,11 +153,7 @@ void SceneOpenGLShadowTest::initTestCase()
     group.writeEntry("library", "org.kde.test.fakedecowithshadows");
     group.sync();
     Workspace::self()->slotReconfigure();
-}
 
-void SceneOpenGLShadowTest::init()
-{
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
 }
 
 void SceneOpenGLShadowTest::cleanup()
@@ -622,6 +623,8 @@ void SceneOpenGLShadowTest::testShadowTileOverlaps()
     QFETCH(QSize, windowSize);
     QFETCH(WindowQuadList, expectedQuads);
 
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
+
     // Create a decorated client.
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
@@ -675,6 +678,184 @@ void SceneOpenGLShadowTest::testShadowTileOverlaps()
     for (const auto &v : qAsConst(mask)) {
         if (!v) {
             QFAIL("missed a shadow quad");
+        }
+    }
+}
+
+void SceneOpenGLShadowTest::testNoCornerShadowTiles()
+{
+    // this test verifies that top/right/bottom/left shadow tiles are
+    // still drawn even when corner tiles are missing
+
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ShadowManager));
+
+    // Create a surface.
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto *client = Test::renderAndWaitForShown(surface.data(), QSize(512, 512), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(!client->isDecorated());
+
+    // Render reference shadow texture with the following params:
+    //  - shadow size: 128
+    //  - inner rect size: 1
+    //  - padding: 128
+    QImage referenceShadowTexture(256 + 1, 256 + 1, QImage::Format_ARGB32_Premultiplied);
+    referenceShadowTexture.fill(Qt::transparent);
+
+    // We don't care about content of the shadow.
+
+    // Submit the shadow to KWin.
+    QScopedPointer<KWayland::Client::Shadow> clientShadow(Test::waylandShadowManager()->createShadow(surface.data()));
+    QVERIFY(clientShadow->isValid());
+
+    auto *shmPool = Test::waylandShmPool();
+
+    Buffer::Ptr bufferTop = shmPool->createBuffer(
+        referenceShadowTexture.copy(QRect(128, 0, 1, 128)));
+    clientShadow->attachTop(bufferTop);
+
+    Buffer::Ptr bufferRight = shmPool->createBuffer(
+        referenceShadowTexture.copy(QRect(128 + 1, 128, 128, 1)));
+    clientShadow->attachRight(bufferRight);
+
+    Buffer::Ptr bufferBottom = shmPool->createBuffer(
+        referenceShadowTexture.copy(QRect(128, 128 + 1, 1, 128)));
+    clientShadow->attachBottom(bufferBottom);
+
+    Buffer::Ptr bufferLeft = shmPool->createBuffer(
+        referenceShadowTexture.copy(QRect(0, 128, 128, 1)));
+    clientShadow->attachLeft(bufferLeft);
+
+    clientShadow->setOffsets(QMarginsF(128, 128, 128, 128));
+
+    QSignalSpy shadowChangedSpy(client->surface(), &KWayland::Server::SurfaceInterface::shadowChanged);
+    QVERIFY(shadowChangedSpy.isValid());
+    clientShadow->commit();
+    surface->commit(Surface::CommitFlag::None);
+    QVERIFY(shadowChangedSpy.wait());
+
+    // Check that we got right shadow from the client.
+    QPointer<KWayland::Server::ShadowInterface> shadowIface = client->surface()->shadow();
+    QVERIFY(!shadowIface.isNull());
+    QCOMPARE(shadowIface->offset().left(),   128.0);
+    QCOMPARE(shadowIface->offset().top(),    128.0);
+    QCOMPARE(shadowIface->offset().right(),  128.0);
+    QCOMPARE(shadowIface->offset().bottom(), 128.0);
+
+    QVERIFY(client->effectWindow());
+    QVERIFY(client->effectWindow()->sceneWindow());
+    KWin::Shadow *shadow = client->effectWindow()->sceneWindow()->shadow();
+    QVERIFY(shadow != nullptr);
+
+    const WindowQuadList &quads = shadow->shadowQuads();
+    QCOMPARE(quads.count(), 4);
+
+    // Shadow size: 128
+    // Padding: QMargins(128, 128, 128, 128)
+    // Inner rect: QRect(128, 128, 1, 1)
+    // Texture size: QSize(257, 257)
+    // Window size: QSize(512, 512)
+    WindowQuadList expectedQuads;
+    expectedQuads << makeShadowQuad(QRectF(0, -128, 512, 128), 0.0, 0.0, 1.0 / 257.0, 128.0 / 257.0);      // top
+    expectedQuads << makeShadowQuad(QRectF(512, 0, 128, 512), 1.0 - 128.0 / 257.0, 0.0, 1.0, 1.0 / 257.0); // right
+    expectedQuads << makeShadowQuad(QRectF(0, 512, 512, 128), 0.0, 1.0 - 128.0 / 257, 1.0 / 257, 1.0);     // bottom
+    expectedQuads << makeShadowQuad(QRectF(-128, 0, 128, 512), 0.0, 0.0, 128.0 / 257.0, 1.0 / 257.0);      // left
+
+    for (const WindowQuad &expectedQuad : expectedQuads) {
+        auto it = std::find_if(quads.constBegin(), quads.constEnd(),
+            [&expectedQuad](const WindowQuad &quad) {
+                return compareQuads(quad, expectedQuad);
+            });
+        if (it == quads.constEnd()) {
+            const QString message = QStringLiteral("Missing shadow quad (left: %1, top: %2, right: %3, bottom: %4)")
+                .arg(expectedQuad.left())
+                .arg(expectedQuad.top())
+                .arg(expectedQuad.right())
+                .arg(expectedQuad.bottom());
+            const QByteArray rawMessage = message.toLocal8Bit().data();
+            QFAIL(rawMessage.data());
+        }
+    }
+}
+
+void SceneOpenGLShadowTest::testDistributeHugeCornerTiles()
+{
+    // this test verifies that huge corner tiles are distributed correctly
+
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ShadowManager));
+
+    // Create a surface.
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    auto *client = Test::renderAndWaitForShown(surface.data(), QSize(64, 64), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(!client->isDecorated());
+
+    // Submit the shadow to KWin.
+    QScopedPointer<KWayland::Client::Shadow> clientShadow(Test::waylandShadowManager()->createShadow(surface.data()));
+    QVERIFY(clientShadow->isValid());
+
+    QImage referenceTileTexture(512, 512, QImage::Format_ARGB32_Premultiplied);
+    referenceTileTexture.fill(Qt::transparent);
+
+    auto *shmPool = Test::waylandShmPool();
+
+    Buffer::Ptr bufferTopLeft = shmPool->createBuffer(referenceTileTexture);
+    clientShadow->attachTopLeft(bufferTopLeft);
+
+    Buffer::Ptr bufferTopRight = shmPool->createBuffer(referenceTileTexture);
+    clientShadow->attachTopRight(bufferTopRight);
+
+    clientShadow->setOffsets(QMarginsF(256, 256, 256, 0));
+
+    QSignalSpy shadowChangedSpy(client->surface(), &KWayland::Server::SurfaceInterface::shadowChanged);
+    QVERIFY(shadowChangedSpy.isValid());
+    clientShadow->commit();
+    surface->commit(Surface::CommitFlag::None);
+    QVERIFY(shadowChangedSpy.wait());
+
+    // Check that we got right shadow from the client.
+    QPointer<KWayland::Server::ShadowInterface> shadowIface = client->surface()->shadow();
+    QVERIFY(!shadowIface.isNull());
+    QCOMPARE(shadowIface->offset().left(),   256.0);
+    QCOMPARE(shadowIface->offset().top(),    256.0);
+    QCOMPARE(shadowIface->offset().right(),  256.0);
+    QCOMPARE(shadowIface->offset().bottom(), 0.0);
+
+    QVERIFY(client->effectWindow());
+    QVERIFY(client->effectWindow()->sceneWindow());
+    KWin::Shadow *shadow = client->effectWindow()->sceneWindow()->shadow();
+    QVERIFY(shadow != nullptr);
+
+    WindowQuadList expectedQuads;
+
+    // Top-left quad
+    expectedQuads << makeShadowQuad(
+        QRectF(-256, -256, 256 + 32, 256 + 64),
+        0.0, 0.0, (256.0 + 32.0) / 1024.0, (256.0 + 64.0) / 512.0);
+
+    // Top-right quad
+    expectedQuads << makeShadowQuad(
+        QRectF(32, -256, 256 + 32, 256 + 64),
+        1.0 - (256.0 + 32.0) / 1024.0, 0.0, 1.0, (256.0 + 64.0) / 512.0);
+
+    const WindowQuadList &quads = shadow->shadowQuads();
+    QCOMPARE(quads.count(), expectedQuads.count());
+
+    for (const WindowQuad &expectedQuad : expectedQuads) {
+        auto it = std::find_if(quads.constBegin(), quads.constEnd(),
+            [&expectedQuad](const WindowQuad &quad) {
+                return compareQuads(quad, expectedQuad);
+            });
+        if (it == quads.constEnd()) {
+            const QString message = QStringLiteral("Missing shadow quad (left: %1, top: %2, right: %3, bottom: %4)")
+                .arg(expectedQuad.left())
+                .arg(expectedQuad.top())
+                .arg(expectedQuad.right())
+                .arg(expectedQuad.bottom());
+            const QByteArray rawMessage = message.toLocal8Bit().data();
+            QFAIL(rawMessage.data());
         }
     }
 }
