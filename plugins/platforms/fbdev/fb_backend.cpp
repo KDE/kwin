@@ -98,8 +98,8 @@ void FramebufferBackend::openFrameBuffer()
         return;
     }
     m_fd = fd;
-    if (!queryScreenInfo()) {
-        qCWarning(KWIN_FB) << "failed to query framebuffer information";
+    if (!handleScreenInfo()) {
+        qCWarning(KWIN_FB) << "failed to handle framebuffer information";
         emit initFailed();
         return;
     }
@@ -112,7 +112,7 @@ void FramebufferBackend::openFrameBuffer()
     emit screensQueried();
 }
 
-bool FramebufferBackend::queryScreenInfo()
+bool FramebufferBackend::handleScreenInfo()
 {
     if (m_fd < 0) {
         return false;
@@ -125,6 +125,28 @@ bool FramebufferBackend::queryScreenInfo()
     if (ioctl(m_fd, FBIOGET_FSCREENINFO, &fixinfo) < 0 || ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo) < 0) {
         return false;
     }
+
+    // correct the color info, and try to turn on screens, assuming this is a non-primary framebuffer device
+    varinfo.grayscale = 0;
+    varinfo.transp.offset = 24;
+    varinfo.transp.length = 8;
+    varinfo.transp.msb_right = 0;
+    varinfo.red.offset = 16;
+    varinfo.red.length = 8;
+    varinfo.red.msb_right = 0;
+    varinfo.green.offset = 8;
+    varinfo.green.length = 8;
+    varinfo.green.msb_right = 0;
+    varinfo.blue.offset = 0;
+    varinfo.blue.length = 8;
+    varinfo.blue.msb_right = 0;
+    ioctl(m_fd, FBIOPUT_VSCREENINFO, &varinfo);
+
+    // Probe the device for new screen information.
+    if (ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo) < 0) {
+        return false;
+    }
+
     m_resolution = QSize(varinfo.xres, varinfo.yres);
     m_physicalSize = QSize(varinfo.width, varinfo.height);
     m_id = QByteArray(fixinfo.id);

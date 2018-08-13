@@ -84,7 +84,7 @@ public:
 
 private:
     void openFrameBuffer();
-    bool queryScreenInfo();
+    bool handleScreenInfo();
     void initImageFormat();
     QSize m_resolution;
     QSize m_physicalSize;
