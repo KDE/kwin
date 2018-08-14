@@ -54,10 +54,10 @@ public:
     int slideInDuration() const;
     int slideOutDuration() const;
 
-public Q_SLOTS:
-    void slotWindowAdded(KWin::EffectWindow *c);
-    void slotWindowDeleted(KWin::EffectWindow *w);
-    void slotPropertyNotify(KWin::EffectWindow *w, long a);
+private Q_SLOTS:
+    void slotWindowAdded(EffectWindow *w);
+    void slotWindowDeleted(EffectWindow *w);
+    void slotPropertyNotify(EffectWindow *w, long a);
     void slotWaylandSlideOnShowChanged(EffectWindow* w);
 
     void slideIn(EffectWindow *w);

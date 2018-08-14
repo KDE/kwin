@@ -42,10 +42,10 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     mSlideLength = QFontMetrics(qApp->font()).height() * 8;
 
     mAtom = effects->announceSupportProperty("_KDE_SLIDE", this);
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
+    connect(effects, &EffectsHandler::windowAdded, this, &SlidingPopupsEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &SlidingPopupsEffect::slideOut);
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
+    connect(effects, &EffectsHandler::windowDeleted, this, &SlidingPopupsEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::propertyNotify, this, &SlidingPopupsEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::windowShown, this, &SlidingPopupsEffect::slideIn);
     connect(effects, &EffectsHandler::windowHidden, this, &SlidingPopupsEffect::slideOut);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this,
