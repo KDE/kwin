@@ -33,6 +33,7 @@ namespace KWin
 static const QSet<QString> s_blacklist {
     // The logout screen has to be animated only by the logout effect.
     QStringLiteral("ksmserver ksmserver"),
+    QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"),
 
     // KDE Plasma splash screen has to be animated only by the login effect.
     QStringLiteral("ksplashqml ksplashqml"),

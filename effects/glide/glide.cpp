@@ -36,6 +36,7 @@ namespace KWin
 
 static const QSet<QString> s_blacklist {
     QStringLiteral("ksmserver ksmserver"),
+    QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"),
     QStringLiteral("ksplashqml ksplashqml"),
     QStringLiteral("ksplashsimple ksplashsimple"),
     QStringLiteral("ksplashx ksplashx")

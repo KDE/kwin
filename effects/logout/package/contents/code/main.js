@@ -30,8 +30,10 @@ var logoutEffect = {
     },
     isLogoutWindow: function (window) {
         "use strict";
-        var windowClass = window.windowClass;
-        if (windowClass === "ksmserver ksmserver") {
+        if (window.windowClass === "ksmserver ksmserver") {
+            return true;
+        }
+        if (window.windowClass === "ksmserver-logout-greeter ksmserver-logout-greeter") {
             return true;
         }
         return false;
