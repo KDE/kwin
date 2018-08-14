@@ -6,3 +6,9 @@ X-KDE-Library=kwin_scale_config
 X-KDE-ParentComponents=scale
 
 Name=Scale
+Name[ca]=Escala
+Name[eu]=Eskalatu
+Name[nl]=Schalen
+Name[pt]=Escala
+Name[uk]=Масштабування
+Name[x-test]=xxScalexx
