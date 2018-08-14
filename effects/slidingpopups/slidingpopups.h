@@ -27,19 +27,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class SlidingPopupsEffect
-    : public Effect
+class SlidingPopupsEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(int slideInDuration READ slideInDuration)
     Q_PROPERTY(int slideOutDuration READ slideOutDuration)
+
 public:
     SlidingPopupsEffect();
     ~SlidingPopupsEffect() override;
 
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
-    void postPaintWindow(EffectWindow* w) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void postPaintWindow(EffectWindow *w) override;
     void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
 
@@ -58,7 +58,7 @@ private Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowDeleted(EffectWindow *w);
     void slotPropertyNotify(EffectWindow *w, long a);
-    void slotWaylandSlideOnShowChanged(EffectWindow* w);
+    void slotWaylandSlideOnShowChanged(EffectWindow *w);
 
     void slideIn(EffectWindow *w);
     void slideOut(EffectWindow *w);
@@ -66,9 +66,9 @@ private Q_SLOTS:
 private:
     void setupAnimData(EffectWindow *w);
 
-    long mAtom;
+    long m_atom;
 
-    int mSlideLength;
+    int m_slideLength;
     std::chrono::milliseconds m_slideInDuration;
     std::chrono::milliseconds m_slideOutDuration;
 

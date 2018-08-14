@@ -39,9 +39,9 @@ SlidingPopupsEffect::SlidingPopupsEffect()
         display->createSlideManager(this)->create();
     }
 
-    mSlideLength = QFontMetrics(qApp->font()).height() * 8;
+    m_slideLength = QFontMetrics(qApp->font()).height() * 8;
 
-    mAtom = effects->announceSupportProperty("_KDE_SLIDE", this);
+    m_atom = effects->announceSupportProperty("_KDE_SLIDE", this);
     connect(effects, &EffectsHandler::windowAdded, this, &SlidingPopupsEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &SlidingPopupsEffect::slideOut);
     connect(effects, &EffectsHandler::windowDeleted, this, &SlidingPopupsEffect::slotWindowDeleted);
@@ -50,7 +50,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, &EffectsHandler::windowHidden, this, &SlidingPopupsEffect::slideOut);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this,
         [this] {
-            mAtom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
+            m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
         }
     );
     reconfigure(ReconfigureAll);
@@ -91,7 +91,7 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
     }
 }
 
-void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt == m_animations.end()) {
@@ -106,7 +106,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
     effects->prePaintWindow(w, data, time);
 }
 
-void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     auto animationIt = m_animations.constFind(w);
     if (animationIt == m_animations.constEnd()) {
@@ -115,14 +115,14 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
     }
 
     const AnimationData &animData = m_animationsData[w];
-    const int slideLength = (animData.slideLength > 0) ? animData.slideLength : mSlideLength;
+    const int slideLength = (animData.slideLength > 0) ? animData.slideLength : m_slideLength;
 
     const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), w->desktop());
     int splitPoint = 0;
     const QRect geo = w->expandedGeometry();
     const qreal t = (*animationIt).timeLine.value();
 
-    switch(animData.location) {
+    switch (animData.location) {
     case Location::Left:
         if (slideLength < geo.width()) {
             data.multiplyOpacity(t);
@@ -160,7 +160,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
     effects->paintWindow(w, mask, region, data);
 }
 
-void SlidingPopupsEffect::postPaintWindow(EffectWindow* w)
+void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
@@ -182,8 +182,8 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow* w)
 void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 {
     //X11
-    if (mAtom != XCB_ATOM_NONE) {
-        slotPropertyNotify(w, mAtom);
+    if (m_atom != XCB_ATOM_NONE) {
+        slotPropertyNotify(w, m_atom);
     }
 
     //Wayland
@@ -197,19 +197,20 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
     slideIn(w);
 }
 
-void SlidingPopupsEffect::slotWindowDeleted(EffectWindow* w)
+void SlidingPopupsEffect::slotWindowDeleted(EffectWindow *w)
 {
     m_animations.remove(w);
     m_animationsData.remove(w);
     effects->addRepaint(w->expandedGeometry());
 }
 
-void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
+void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long a)
 {
-    if (!w || a != mAtom || mAtom == XCB_ATOM_NONE)
+    if (!w || a != m_atom || m_atom == XCB_ATOM_NONE) {
         return;
+    }
 
-    QByteArray data = w->readProperty(mAtom, mAtom, 32);
+    QByteArray data = w->readProperty(m_atom, m_atom, 32);
 
     if (data.length() < 1) {
         // Property was removed, thus also remove the effect for window
@@ -221,9 +222,9 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
         return;
     }
 
-    auto* d = reinterpret_cast< uint32_t* >(data.data());
+    const auto *d = reinterpret_cast<const uint32_t *>(data.data());
     AnimationData &animData = m_animationsData[w];
-    animData.offset = d[ 0 ];
+    animData.offset = d[0];
 
     switch (d[1]) {
     case 0: // West
@@ -245,16 +246,18 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
     animData.slideLength = 0;
     if (data.length() >= (int)(sizeof(uint32_t) * 3)) {
         animData.slideInDuration = std::chrono::milliseconds(d[2]);
-        if (data.length() >= (int)(sizeof(uint32_t) * 4))
+        if (data.length() >= (int)(sizeof(uint32_t) * 4)) {
             //custom fadein
             animData.slideOutDuration = std::chrono::milliseconds(d[3]);
-        else
+        } else {
             //custom fadeout
             animData.slideOutDuration = std::chrono::milliseconds(d[2]);
+        }
 
         //do we want an actual slide?
-        if (data.length() >= (int)(sizeof(uint32_t) * 5))
+        if (data.length() >= (int)(sizeof(uint32_t) * 5)) {
             animData.slideLength = d[4];
+        }
     } else {
         animData.slideInDuration = m_slideInDuration;
         animData.slideOutDuration = m_slideOutDuration;
