@@ -21,6 +21,7 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.1
+import QtQuick.Controls 2.0 as QQC2
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
@@ -101,22 +102,22 @@ Rectangle {
             id: effectItem
             property int maximumWidth: parent.maximumWidth - checkBoxLayout.width - (videoButton.width + configureButton.width + aboutButton.width) - parent.spacing * 5
             Layout.maximumWidth: maximumWidth
-            Label {
+            QQC2.Label {
                 text: model.NameRole
-                font.bold: true
+                font.weight: Font.Bold
                 wrapMode: Text.Wrap
                 Layout.maximumWidth: parent.maximumWidth
             }
-            Label {
+            QQC2.Label {
                 id: desc
                 text: model.DescriptionRole
                 wrapMode: Text.Wrap
                 Layout.maximumWidth: parent.maximumWidth
             }
-            Label {
+            QQC2.Label {
                 id:aboutItem
                 text: i18n("Author: %1\nLicense: %2", model.AuthorNameRole, model.LicenseRole)
-                font.bold: true
+                font.weight: Font.Bold
                 visible: false
                 wrapMode: Text.Wrap
                 Layout.maximumWidth: parent.maximumWidth
