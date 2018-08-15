@@ -20,6 +20,7 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import QtQuick.Controls 2.0 as QQC2
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
@@ -35,12 +36,12 @@ Rectangle {
             implicitHeight: sectionText.implicitHeight + 2 * col.spacing
             color: searchModel.backgroundNormalColor
 
-            Label {
+            QQC2.Label {
                 id: sectionText
                 x: col.spacing
                 y: col.spacing
                 text: section
-                font.bold: true
+                font.weight: Font.Bold
                 color: searchModel.sectionColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -58,7 +59,7 @@ Rectangle {
         id: col
         anchors.fill: parent
 
-        Label {
+        QQC2.Label {
             id: hint
             text: i18n("Hint: To find out or configure how to activate an effect, look at the effect's settings.")
             anchors {
@@ -68,7 +69,7 @@ Rectangle {
         }
 
         RowLayout {
-            TextField {
+            QQC2.TextField {
                 // TODO: needs clear button, missing in Qt
                 id: searchField
                 placeholderText: i18n("Search")

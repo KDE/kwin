@@ -19,6 +19,7 @@
  */
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtQuick.Controls 2.0 as QQC2
 import QtQuick.Layouts 1.1
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons;
@@ -70,7 +71,7 @@ Item {
                         Layout.fillWidth: true
                         anchors.centerIn: parent
                         height: titlebar.implicitHeight
-                        Label {
+                        QQC2.Label {
                             id: titlebar
                             anchors.centerIn: parent
                             font: titleFont
@@ -165,7 +166,7 @@ Item {
                         Drag.keys: [ "decoButtonAdd" ]
                         Drag.active: dragArea.drag.active
                     }
-                    Label {
+                    QQC2.Label {
                         id: iconLabel
                         text: model["display"]
                         horizontalAlignment: Text.AlignHCenter
@@ -212,9 +213,9 @@ Item {
                 ColumnLayout {
                     anchors.centerIn: parent
                     visible: leftButtonsView.dragging || rightButtonsView.dragging
-                    Label {
+                    QQC2.Label {
                         text: i18n("Drop here to remove button")
-                        font.bold: true
+                        font.weight: Font.Bold
                     }
                     KQuickControlsAddons.QIconItem {
                         id: icon
