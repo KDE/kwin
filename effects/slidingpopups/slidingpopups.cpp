@@ -204,15 +204,28 @@ void SlidingPopupsEffect::slotWindowDeleted(EffectWindow *w)
     effects->addRepaint(w->expandedGeometry());
 }
 
-void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long a)
+void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)
 {
-    if (!w || a != m_atom || m_atom == XCB_ATOM_NONE) {
+    if (!w || atom != m_atom || m_atom == XCB_ATOM_NONE) {
         return;
     }
 
-    QByteArray data = w->readProperty(m_atom, m_atom, 32);
+    // _KDE_SLIDE atom format(each field is an uint32_t):
+    // <offset> <location> [<slide in duration>] [<slide out duration>] [<slide length>]
+    //
+    // If offset is equal to -1, this effect will decide what offset to use
+    // given edge of the screen, from which the window has to slide.
+    //
+    // If slide in duration is equal to 0 milliseconds, the default slide in
+    // duration will be used. Same with the slide out duration.
+    //
+    // NOTE: If only slide in duration has been provided, then it will be
+    // also used as slide out duration. I.e. if you provided only slide in
+    // duration, then slide in duration == slide out duration.
 
-    if (data.length() < 1) {
+    const QByteArray rawAtomData = w->readProperty(m_atom, m_atom, 32);
+
+    if (rawAtomData.isEmpty()) {
         // Property was removed, thus also remove the effect for window
         if (w->data(WindowClosedGrabRole).value<void *>() == this) {
             w->setData(WindowClosedGrabRole, QVariant());
@@ -222,11 +235,16 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long a)
         return;
     }
 
-    const auto *d = reinterpret_cast<const uint32_t *>(data.data());
-    AnimationData &animData = m_animationsData[w];
-    animData.offset = d[0];
+    // Offset and location are required.
+    if (static_cast<size_t>(rawAtomData.size()) < sizeof(uint32_t) * 2) {
+        return;
+    }
 
-    switch (d[1]) {
+    const auto *atomData = reinterpret_cast<const uint32_t *>(rawAtomData.data());
+    AnimationData &animData = m_animationsData[w];
+    animData.offset = atomData[0];
+
+    switch (atomData[1]) {
     case 0: // West
         animData.location = Location::Left;
         break;
@@ -242,25 +260,22 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long a)
         break;
     }
 
-    //custom duration
-    animData.slideLength = 0;
-    if (data.length() >= (int)(sizeof(uint32_t) * 3)) {
-        animData.slideInDuration = std::chrono::milliseconds(d[2]);
-        if (data.length() >= (int)(sizeof(uint32_t) * 4)) {
-            //custom fadein
-            animData.slideOutDuration = std::chrono::milliseconds(d[3]);
+    if (static_cast<size_t>(rawAtomData.size()) >= sizeof(uint32_t) * 3) {
+        animData.slideInDuration = std::chrono::milliseconds(atomData[2]);
+        if (static_cast<size_t>(rawAtomData.size()) >= sizeof(uint32_t) * 4) {
+            animData.slideOutDuration = std::chrono::milliseconds(atomData[3]);
         } else {
-            //custom fadeout
-            animData.slideOutDuration = std::chrono::milliseconds(d[2]);
-        }
-
-        //do we want an actual slide?
-        if (data.length() >= (int)(sizeof(uint32_t) * 5)) {
-            animData.slideLength = d[4];
+            animData.slideOutDuration = animData.slideInDuration;
         }
     } else {
         animData.slideInDuration = m_slideInDuration;
         animData.slideOutDuration = m_slideOutDuration;
+    }
+
+    if (static_cast<size_t>(rawAtomData.size()) >= sizeof(uint32_t) * 5) {
+        animData.slideLength = atomData[4];
+    } else {
+        animData.slideLength = 0;
     }
 
     setupAnimData(w);
@@ -305,6 +320,14 @@ void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
         animData.offset = qMax(screenRect.bottom() - windowGeo.bottom(), animData.offset);
         break;
     }
+
+    animData.slideInDuration = (animData.slideInDuration.count() != 0)
+        ? animData.slideInDuration
+        : m_slideInDuration;
+
+    animData.slideOutDuration = (animData.slideOutDuration.count() != 0)
+        ? animData.slideOutDuration
+        : m_slideOutDuration;
 
     // Grab the window, so other windowClosed effects will ignore it
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
