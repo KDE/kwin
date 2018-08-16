@@ -7,7 +7,10 @@ X-KDE-ParentComponents=scale
 
 Name=Scale
 Name[ca]=Escala
+Name[ca@valencia]=Escala
+Name[en_GB]=Scale
 Name[eu]=Eskalatu
+Name[fr]=Échelle
 Name[ko]=크기 조정
 Name[nl]=Schalen
 Name[nn]=Skalering
