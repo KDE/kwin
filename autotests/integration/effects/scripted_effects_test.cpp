@@ -180,9 +180,9 @@ void ScriptedEffectsTest::testEffectsHandler()
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     auto waitFor = [&effectOutputSpy, this](const QString &expected) {
-        QVERIFY(effectOutputSpy.count() == 1 || effectOutputSpy.wait());
-        QCOMPARE(effectOutputSpy.last().first(), expected);
-        effectOutputSpy.clear();
+        QVERIFY(effectOutputSpy.count() > 0 || effectOutputSpy.wait());
+        QCOMPARE(effectOutputSpy.first().first(), expected);
+        effectOutputSpy.removeFirst();
     };
     QVERIFY(effect->load("effectsHandler"));
 
@@ -194,22 +194,23 @@ void ScriptedEffectsTest::testEffectsHandler()
     QVERIFY(surface);
     auto *shellSurface = Test::createXdgShellV6Surface(surface, surface);
     QVERIFY(shellSurface);
-    shellSurface->setTitle("Window 1");
+    shellSurface->setTitle("WindowA");
     auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
-    waitFor("windowAdded - Window 1");
+    waitFor("windowAdded - WindowA");
+    waitFor("stackingOrder - 1 WindowA");
 
     // windowMinimsed
     c->minimize();
-    waitFor("windowMinimized - Window 1");
+    waitFor("windowMinimized - WindowA");
 
     c->unminimize();
-    waitFor("windowUnminimized - Window 1");
+    waitFor("windowUnminimized - WindowA");
 
     surface->deleteLater();
-    waitFor("windowClosed - Window 1");
+    waitFor("windowClosed - WindowA");
 
     // desktop management
     KWin::VirtualDesktopManager::self()->setCurrent(2);
