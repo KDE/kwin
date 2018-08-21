@@ -92,7 +92,6 @@ WaylandServer::WaylandServer(QObject *parent)
     qRegisterMetaType<KWayland::Server::OutputInterface::DpmsMode>();
 
     connect(kwinApp(), &Application::screensCreated, this, &WaylandServer::initOutputs);
-//    connect(kwinApp(), &Application::x11ConnectionChanged, this, &WaylandServer::setupX11ClipboardSync);
 }
 
 WaylandServer::~WaylandServer()
@@ -260,24 +259,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_display->createPointerConstraints(PointerConstraintsInterfaceVersion::UnstableV1, m_display)->create();
     m_dataDeviceManager = m_display->createDataDeviceManager(m_display);
     m_dataDeviceManager->create();
-    connect(m_dataDeviceManager, &DataDeviceManagerInterface::dataDeviceCreated, this,
-        [this] (DataDeviceInterface *ddi) {
-            if (ddi->client() == m_xclipbaordSync.client && m_xclipbaordSync.client != nullptr) {
-                m_xclipbaordSync.ddi = QPointer<DataDeviceInterface>(ddi);
-                emit xclipboardSyncDataDeviceCreated();
-                connect(m_xclipbaordSync.ddi.data(), &DataDeviceInterface::selectionChanged, this,
-                    [this] {
-                        // testing whether the active client inherits Client
-                        // it would be better to test for the keyboard focus, but we might get a clipboard update
-                        // when the Client is already active, but no Surface is created yet.
-                        if (workspace()->activeClient() && workspace()->activeClient()->inherits("KWin::Client")) {
-                            m_seat->setSelection(m_xclipbaordSync.ddi.data());
-                        }
-                    }
-                );
-            }
-        }
-    );
     m_idle = m_display->createIdle(m_display);
     m_idle->create();
     auto idleInhibition = new IdleInhibition(m_idle);
@@ -531,10 +512,6 @@ void WaylandServer::destroyXWaylandConnection()
     if (!m_xwayland.client) {
         return;
     }
-    // first terminate the clipboard sync
-    if (m_xclipbaordSync.process) {
-        m_xclipbaordSync.process->terminate();
-    }
     disconnect(m_xwayland.destroyConnection);
     m_xwayland.client->destroy();
     m_xwayland.client = nullptr;
@@ -557,62 +534,6 @@ void WaylandServer::destroyInputMethodConnection()
     }
     m_inputMethodServerConnection->destroy();
     m_inputMethodServerConnection = nullptr;
-}
-
-int WaylandServer::createXclipboardSyncConnection()
-{
-    const auto socket = createConnection();
-    if (!socket.connection) {
-        return -1;
-    }
-    m_xclipbaordSync.client = socket.connection;
-    return socket.fd;
-}
-
-void WaylandServer::setupX11ClipboardSync()
-{
-    if (m_xclipbaordSync.process) {
-        qCWarning(KWIN_CORE) << "Tried to start x clipboard syncer although process already started";
-        return;
-    }
-
-    int socket = dup(createXclipboardSyncConnection());
-    if (socket == -1) {
-        delete m_xclipbaordSync.client;
-        m_xclipbaordSync.client = nullptr;
-        qCWarning(KWIN_CORE) << "Could not create wayland socket for x clipboard syncer";
-        return;
-    }
-    if (socket >= 0) {
-        QProcessEnvironment environment = kwinApp()->processStartupEnvironment();
-        environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
-        environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
-        environment.remove("WAYLAND_DISPLAY");
-        m_xclipbaordSync.process = new Process(this);
-        m_xclipbaordSync.process->setProcessChannelMode(QProcess::ForwardedChannels);
-        auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
-        connect(m_xclipbaordSync.process, finishedSignal, this,
-            [this] {
-                qCDebug(KWIN_CORE) << "X clipboard syncer process finished";
-                m_xclipbaordSync.process->deleteLater();
-                m_xclipbaordSync.process = nullptr;
-                m_xclipbaordSync.ddi.clear();
-                m_xclipbaordSync.client->destroy();
-                m_xclipbaordSync.client = nullptr;
-                // TODO: restart
-            }
-        );
-        m_xclipbaordSync.process->setProcessEnvironment(environment);
-        // start from build directory if executable is available there (e.g. autotests), otherwise start libexec executable
-        const QFileInfo clipboardSync{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("org_kde_kwin_xclipboard_syncer")};
-        if (clipboardSync.exists()) {
-            qCDebug(KWIN_CORE) << "Starting" << clipboardSync.absoluteFilePath();
-            m_xclipbaordSync.process->start(clipboardSync.absoluteFilePath());
-        } else {
-            qCDebug(KWIN_CORE) << "Starting" << KWIN_XCLIPBOARD_SYNC_BIN;
-            m_xclipbaordSync.process->start(QStringLiteral(KWIN_XCLIPBOARD_SYNC_BIN));
-        }
-    }
 }
 
 void WaylandServer::createInternalConnection()

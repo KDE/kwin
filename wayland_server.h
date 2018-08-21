@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 
 #include <QObject>
-#include <QPointer>
 
 class QThread;
 class QProcess;
@@ -150,8 +149,6 @@ public:
     int createInputMethodConnection();
     void destroyInputMethodConnection();
 
-    int createXclipboardSyncConnection();
-
     /**
      * @returns true if screen is locked.
      **/
@@ -180,9 +177,6 @@ public:
     }
     KWayland::Server::ClientConnection *screenLockerClientConnection() const {
         return m_screenLockerClientConnection;
-    }
-    QPointer<KWayland::Server::DataDeviceInterface> xclipboardSyncDataDevice() const {
-        return m_xclipbaordSync.ddi;
     }
     KWayland::Client::Seat *internalSeat() {
         return m_internalConnection.seat;
@@ -229,10 +223,8 @@ Q_SIGNALS:
     void terminatingInternalClientConnection();
     void initialized();
     void foreignTransientChanged(KWayland::Server::SurfaceInterface *child);
-    void xclipboardSyncDataDeviceCreated();
 
 private:
-    void setupX11ClipboardSync();
     void shellClientShown(Toplevel *t);
     void initOutputs();
     void syncOutputsToWayland();
@@ -277,11 +269,6 @@ private:
         bool interfacesAnnounced = false;
 
     } m_internalConnection;
-    struct {
-        QProcess *process = nullptr;
-        KWayland::Server::ClientConnection *client = nullptr;
-        QPointer<KWayland::Server::DataDeviceInterface> ddi;
-    } m_xclipbaordSync;
     KWayland::Server::XdgForeignInterface *m_XdgForeign = nullptr;
     QList<ShellClient*> m_clients;
     QList<ShellClient*> m_internalClients;

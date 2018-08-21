@@ -37,7 +37,7 @@ integrationTest(WAYLAND_ONLY NAME testPlasmaSurface SRCS plasma_surface_test.cpp
 integrationTest(WAYLAND_ONLY NAME testMaximized SRCS maximize_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testShellClient SRCS shell_client_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testDontCrashNoBorder SRCS dont_crash_no_border.cpp)
-integrationTest(NAME testXClipboardSync SRCS xclipboardsync_test.cpp)
+integrationTest(NAME testXwaylandSelections SRCS xwayland_selections_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testSceneOpenGL SRCS scene_opengl_test.cpp generic_scene_opengl_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testSceneOpenGLShadow SRCS scene_opengl_shadow_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testSceneOpenGLES SRCS scene_opengl_es_test.cpp generic_scene_opengl_test.cpp)

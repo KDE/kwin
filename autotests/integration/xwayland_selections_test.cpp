@@ -2,7 +2,8 @@
 KWin - the KDE window manager
 This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2016 Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2019 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,9 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace KWin;
 
-static const QString s_socketName = QStringLiteral("wayland_test_kwin_xclipboard_sync-0");
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_xwayland_selections-0");
 
-class XClipboardSyncTest : public QObject
+class XwaylandSelectionsTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
@@ -48,7 +49,7 @@ private:
     QProcess *m_pasteProcess = nullptr;
 };
 
-void XClipboardSyncTest::initTestCase()
+void XwaylandSelectionsTest::initTestCase()
 {
     QSKIP("Skipped as it fails for unknown reasons on build.kde.org");
     qRegisterMetaType<KWin::ShellClient*>();
@@ -58,8 +59,8 @@ void XClipboardSyncTest::initTestCase()
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
-    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
-    QVERIFY(clipboardSyncDevicedCreated.isValid());
+//    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
+//    QVERIFY(clipboardSyncDevicedCreated.isValid());
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
     kwinApp()->start();
@@ -79,7 +80,7 @@ void XClipboardSyncTest::initTestCase()
     QVERIFY(Xwl::DataBridge::self()->dataDeviceIface() != nullptr);
 }
 
-void XClipboardSyncTest::cleanup()
+void XwaylandSelectionsTest::cleanup()
 {
     if (m_copyProcess) {
         m_copyProcess->terminate();
@@ -93,7 +94,7 @@ void XClipboardSyncTest::cleanup()
     }
 }
 
-void XClipboardSyncTest::testSync_data()
+void XwaylandSelectionsTest::testSync_data()
 {
     QTest::addColumn<QString>("copyPlatform");
     QTest::addColumn<QString>("pastePlatform");
@@ -102,7 +103,7 @@ void XClipboardSyncTest::testSync_data()
     QTest::newRow("wayland->x11") << QStringLiteral("wayland") << QStringLiteral("xcb");
 }
 
-void XClipboardSyncTest::testSync()
+void XwaylandSelectionsTest::testSync()
 {
     // this test verifies the syncing of X11 to Wayland clipboard
     const QString copy = QFINDTESTDATA(QStringLiteral("copy"));
@@ -192,5 +193,5 @@ void XClipboardSyncTest::testSync()
     m_copyProcess = nullptr;
 }
 
-WAYLANDTEST_MAIN(XClipboardSyncTest)
-#include "xclipboardsync_test.moc"
+WAYLANDTEST_MAIN(XwaylandSelectionsTest)
+#include "xwayland_selections_test.moc"
