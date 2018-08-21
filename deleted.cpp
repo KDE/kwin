@@ -34,7 +34,6 @@ namespace KWin
 
 Deleted::Deleted()
     : Toplevel()
-    , delete_refcount(1)
     , m_frame(XCB_WINDOW_NONE)
     , no_border(true)
     , m_layer(UnknownLayer)
@@ -51,9 +50,6 @@ Deleted::Deleted()
 
 Deleted::~Deleted()
 {
-    if (delete_refcount != 0)
-        qCCritical(KWIN_CORE) << "Deleted client has non-zero reference count (" << delete_refcount << ")";
-    assert(delete_refcount == 0);
     if (workspace()) {
         workspace()->removeDeleted(this);
     }
@@ -71,7 +67,6 @@ Deleted* Deleted::create(Toplevel* c)
 // to be used only from Workspace::finishCompositing()
 void Deleted::discard()
 {
-    delete_refcount = 0;
     delete this;
 }
 
@@ -120,10 +115,8 @@ void Deleted::copyToDeleted(Toplevel* c)
     }
 }
 
-void Deleted::unrefWindow()
+void Deleted::windowReleased()
 {
-    if (--delete_refcount > 0)
-        return;
     // needs to be delayed
     // a) when calling from effects, otherwise it'd be rather complicated to handle the case of the
     // window going away during a painting pass

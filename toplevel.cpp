@@ -129,6 +129,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     m_screen = c->m_screen;
     m_skipCloseAnimation = c->m_skipCloseAnimation;
     m_internalFBO = c->m_internalFBO;
+    m_refCount = c->m_refCount;
 }
 
 // before being deleted, remove references to everything that's now
@@ -552,6 +553,22 @@ QRect Toplevel::inputGeometry() const
 {
     return geometry();
 }
+
+void Toplevel::refWindow()
+{
+    m_refCount++;
+}
+
+void Toplevel::unrefWindow()
+{
+    m_refCount--;
+    Q_ASSERT(m_refCount >= 0);
+    if (m_refCount == 0) {
+        windowReleased();
+    }
+}
+
+
 
 } // namespace
 

@@ -47,8 +47,7 @@ class KWIN_EXPORT Deleted
 public:
     static Deleted* create(Toplevel* c);
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
-    void refWindow();
-    void unrefWindow();
+    void windowReleased() override;
     void discard();
     virtual int desktop() const;
     virtual QStringList activities() const;
@@ -112,7 +111,6 @@ private:
     Deleted();   // use create()
     void copyToDeleted(Toplevel* c);
     virtual ~Deleted(); // deleted only using unrefWindow()
-    int delete_refcount;
     double window_opacity;
     int desk;
     QStringList activityList;
@@ -141,11 +139,6 @@ private:
     bool m_keepBelow;
     QString m_caption;
 };
-
-inline void Deleted::refWindow()
-{
-    ++delete_refcount;
-}
 
 } // namespace
 

@@ -563,12 +563,13 @@ void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
     emit windowAdded(u->effectWindow());
 }
 
-void EffectsHandlerImpl::slotWindowClosed(KWin::Toplevel *c, KWin::Deleted *d)
+void EffectsHandlerImpl::slotWindowClosed(KWin::Toplevel *c)
 {
     c->disconnect(this);
-    if (d) {
-        emit windowClosed(c->effectWindow());
+    if (qobject_cast<ShellClient*>(c)) {
+        connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotShellClientShown);
     }
+    emit windowClosed(c->effectWindow());
 }
 
 void EffectsHandlerImpl::slotClientModalityChanged()
@@ -1638,16 +1639,14 @@ const EffectWindowGroup* EffectWindowImpl::group() const
 
 void EffectWindowImpl::refWindow()
 {
-    if (Deleted* d = dynamic_cast< Deleted* >(toplevel))
-        return d->refWindow();
-    abort(); // TODO
+    Q_ASSERT(toplevel->isDeleted());
+    toplevel->refWindow();
 }
 
 void EffectWindowImpl::unrefWindow()
 {
-    if (Deleted* d = dynamic_cast< Deleted* >(toplevel))
-        return d->unrefWindow();   // delays deletion in case
-    abort(); // TODO
+    Q_ASSERT(toplevel->isDeleted());
+    toplevel->unrefWindow();
 }
 
 void EffectWindowImpl::setWindow(Toplevel* w)

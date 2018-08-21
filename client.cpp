@@ -222,7 +222,8 @@ void Client::releaseWindow(bool on_shutdown)
     }
     if (isMoveResize())
         emit clientFinishUserMovedResized(this);
-    emit windowClosed(this, del);
+    emit windowClosed(this);
+    emit windowHandleClosed(this, del);
     finishCompositing();
     RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
@@ -289,7 +290,8 @@ void Client::destroyClient()
     Deleted* del = Deleted::create(this);
     if (isMoveResize())
         emit clientFinishUserMovedResized(this);
-    emit windowClosed(this, del);
+    emit windowClosed(this);
+    emit windowHandleClosed(this, del);
     finishCompositing(ReleaseReason::Destroyed);
     RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());

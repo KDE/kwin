@@ -130,10 +130,6 @@ void FadeTest::testWindowCloseAfterWindowHidden()
 
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    QSignalSpy windowHiddenSpy(effects, &EffectsHandler::windowHidden);
-    QVERIFY(windowHiddenSpy.isValid());
-    QSignalSpy windowShownSpy(effects, &EffectsHandler::windowShown);
-    QVERIFY(windowShownSpy.isValid());
     QSignalSpy windowClosedSpy(effects, &EffectsHandler::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
 
@@ -151,14 +147,14 @@ void FadeTest::testWindowCloseAfterWindowHidden()
     // now unmap the surface
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
-    QVERIFY(windowHiddenSpy.wait());
+    QVERIFY(windowClosedSpy.wait());
     QCOMPARE(m_fadeEffect->isActive(), true);
     QTest::qWait(500);
     QTRY_COMPARE(m_fadeEffect->isActive(), false);
 
     // and map again
     Test::render(surface.data(), QSize(100, 50), Qt::red);
-    QVERIFY(windowShownSpy.wait());
+    QVERIFY(windowAddedSpy.wait());
     QTRY_COMPARE(m_fadeEffect->isActive(), true);
     QTest::qWait(500);
     QTRY_COMPARE(m_fadeEffect->isActive(), false);
@@ -166,7 +162,7 @@ void FadeTest::testWindowCloseAfterWindowHidden()
     // and unmap once more
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
-    QVERIFY(windowHiddenSpy.wait());
+    QVERIFY(windowClosedSpy.wait());
     QCOMPARE(m_fadeEffect->isActive(), true);
     QTest::qWait(500);
     QTRY_COMPARE(m_fadeEffect->isActive(), false);
@@ -174,7 +170,8 @@ void FadeTest::testWindowCloseAfterWindowHidden()
     // and now destroy
     shellSurface.reset();
     surface.reset();
-    QVERIFY(windowClosedSpy.wait());
+    //we shouldn't get a window closed for an already unmapped window
+    QVERIFY(!windowClosedSpy.wait(10));
     QCOMPARE(m_fadeEffect->isActive(), false);
 }
 

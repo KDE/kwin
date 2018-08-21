@@ -374,7 +374,10 @@ void ShellClient::destroyClient()
     if (workspace()) {
         del = Deleted::create(this);
     }
-    emit windowClosed(this, del);
+    if (!m_unmapped) {
+        emit windowClosed(this);
+    }
+    emit windowHandleClosed(this, del);
     destroyWindowManagementInterface();
     destroyDecoration();
 
@@ -1228,7 +1231,7 @@ void ShellClient::unmap()
         addWorkspaceRepaint(visibleRect());
         workspace()->clientHidden(this);
     }
-    emit windowHidden(this);
+    emit windowClosed(this);
 }
 
 void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface)
@@ -1463,6 +1466,11 @@ bool ShellClient::hasStrut() const
         return false;
     }
     return m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible;
+}
+
+bool ShellClient::isDeleted() const
+{
+    return m_unmapped;
 }
 
 void ShellClient::updateIcon()

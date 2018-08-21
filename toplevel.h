@@ -443,14 +443,32 @@ public:
     template <class T, class U>
     static T *findInList(const QList<T*> &list, std::function<bool (const U*)> func);
 
+    void refWindow();
+    void unrefWindow();
+
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
     void geometryChanged();
     void geometryShapeChanged(KWin::Toplevel* toplevel, const QRect& old);
     void paddingChanged(KWin::Toplevel* toplevel, const QRect& old);
-    void windowClosed(KWin::Toplevel* toplevel, KWin::Deleted* deleted);
+    /**
+     * A window has been unmapped/closed
+     */
+    void windowClosed(KWin::Toplevel* toplevel);
+
+    /* @arg toplevel the toplevel deleted
+     * @arg deleted if the underlying resources are to be deleted, the new owner of window data (optional)
+     */
+    void windowHandleClosed(KWin::Toplevel* toplevel, KWin::Deleted* deleted);
+    /**
+     * A previously hidden window was shown
+     */
     void windowShown(KWin::Toplevel* toplevel);
+    /**
+     * Window is still mapped, but it is not to displayed as determined by the WM,
+     * i.e minimised or on another desktop
+     */
     void windowHidden(KWin::Toplevel* toplevel);
     /**
      * Signal emitted when the window's shape state changed. That is if it did not have a shape
@@ -515,6 +533,7 @@ protected Q_SLOTS:
 
 protected:
     virtual ~Toplevel();
+    virtual void windowReleased() {};
     void setWindowHandles(xcb_window_t client);
     void detectShape(Window id);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
@@ -584,6 +603,7 @@ private:
     QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
     // when adding new data members, check also copyToDeleted()
     qreal m_screenScale = 1.0;
+    int m_refCount = 1;
 };
 
 inline xcb_window_t Toplevel::window() const

@@ -112,6 +112,7 @@ public:
     using AbstractClient::setGeometry;
     void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     bool hasStrut() const override;
+    bool isDeleted() const override;
 
     void setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo) override;
 
