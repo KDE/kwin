@@ -46,8 +46,6 @@ static inline bool belongToSameGroup(const EffectWindow *w1, const EffectWindow 
 
 DimInactiveEffect::DimInactiveEffect()
 {
-    m_activeWindow = nullptr;
-
     initConfig<DimInactiveConfig>();
     reconfigure(ReconfigureAll);
 
@@ -77,6 +75,10 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
     m_dimDesktop = DimInactiveConfig::dimDesktop();
     m_dimKeepAbove = DimInactiveConfig::dimKeepAbove();
     m_dimByGroup = DimInactiveConfig::dimByGroup();
+
+    // Need to reset m_activeWindow becase canDimWindow returns false
+    // if m_activeWindow is equal to effects->activeWindow().
+    m_activeWindow = nullptr;
 
     EffectWindow *activeWindow = effects->activeWindow();
     m_activeWindow = (activeWindow && canDimWindow(activeWindow))
