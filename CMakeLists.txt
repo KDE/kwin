@@ -651,13 +651,32 @@ install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELIN
 install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
+set(kwin_XWAYLAND_SRCS
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/xwayland.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/databridge.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/selection.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/selection_source.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/transfer.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/clipboard.cpp
+   )
+include(ECMQtDeclareLoggingCategory)
+ecm_qt_declare_logging_category(kwin_XWAYLAND_SRCS
+    HEADER
+        xwayland_logging.h
+    IDENTIFIER
+        KWIN_XWL
+    CATEGORY_NAME
+        kwin_xwl
+    DEFAULT_SEVERITY
+        Critical
+)
+
 set(kwin_WAYLAND_SRCS
    tabletmodemanager.cpp
    main_wayland.cpp
-   xwl/xwayland.cpp
    )
 
-add_executable(kwin_wayland ${kwin_WAYLAND_SRCS})
+add_executable(kwin_wayland ${kwin_WAYLAND_SRCS} ${kwin_XWAYLAND_SRCS})
 target_link_libraries(kwin_wayland kwin KF5::Crash)
 if (HAVE_LIBCAP)
     target_link_libraries(kwin_wayland ${Libcap_LIBRARIES})

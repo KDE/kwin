@@ -67,9 +67,17 @@ public:
     Xcb::Atom gtk_frame_extents;
     Xcb::Atom kwin_dbus_service;
     Xcb::Atom utf8_string;
+    Xcb::Atom text;
+    Xcb::Atom uri_list;
     Xcb::Atom wl_surface_id;
     Xcb::Atom kde_net_wm_appmenu_service_name;
     Xcb::Atom kde_net_wm_appmenu_object_path;
+    Xcb::Atom clipboard;
+    Xcb::Atom timestamp;
+    Xcb::Atom targets;
+    Xcb::Atom delete_atom;
+    Xcb::Atom incr;
+    Xcb::Atom wl_selection;
 
     /**
      * @internal

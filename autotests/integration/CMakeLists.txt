@@ -1,6 +1,6 @@
 add_subdirectory(helper)
 
-add_library(KWinIntegrationTestFramework STATIC ../../xwl/xwayland.cpp kwin_wayland_test.cpp test_helpers.cpp)
+add_library(KWinIntegrationTestFramework STATIC kwin_wayland_test.cpp test_helpers.cpp ${kwin_XWAYLAND_SRCS})
 target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test)
 
 function(integrationTest)

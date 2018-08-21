@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "../../xwl/databridge.h"
 
 #include <KWayland/Server/datadevice_interface.h>
 
@@ -67,11 +68,15 @@ void XClipboardSyncTest::initTestCase()
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
     waylandServer()->initWorkspace();
-    // wait till the xclipboard sync data device is created
-    if (clipboardSyncDevicedCreated.empty()) {
-        QVERIFY(clipboardSyncDevicedCreated.wait());
+//    // wait till the xclipboard sync data device is created
+//    if (clipboardSyncDevicedCreated.empty()) {
+//        QVERIFY(clipboardSyncDevicedCreated.wait());
+//    }
+    // wait till the DataBridge sync data device is created
+    while (Xwl::DataBridge::self()->dataDeviceIface() == nullptr) {
+        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
     }
-    QVERIFY(!waylandServer()->xclipboardSyncDataDevice().isNull());
+    QVERIFY(Xwl::DataBridge::self()->dataDeviceIface() != nullptr);
 }
 
 void XClipboardSyncTest::cleanup()
@@ -93,8 +98,8 @@ void XClipboardSyncTest::testSync_data()
     QTest::addColumn<QString>("copyPlatform");
     QTest::addColumn<QString>("pastePlatform");
 
-    QTest::newRow("x11-wayland") << QStringLiteral("xcb") << QStringLiteral("wayland");
-    QTest::newRow("wayland-x11") << QStringLiteral("wayland") << QStringLiteral("xcb");
+    QTest::newRow("x11->wayland") << QStringLiteral("xcb") << QStringLiteral("wayland");
+    QTest::newRow("wayland->x11") << QStringLiteral("wayland") << QStringLiteral("xcb");
 }
 
 void XClipboardSyncTest::testSync()
@@ -109,10 +114,12 @@ void XClipboardSyncTest::testSync()
     QVERIFY(clientAddedSpy.isValid());
     QSignalSpy shellClientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(shellClientAddedSpy.isValid());
-    QSignalSpy clipboardChangedSpy(waylandServer()->xclipboardSyncDataDevice().data(), &KWayland::Server::DataDeviceInterface::selectionChanged);
+    QSignalSpy clipboardChangedSpy(Xwl::DataBridge::self()->dataDeviceIface(), &KWayland::Server::DataDeviceInterface::selectionChanged);
     QVERIFY(clipboardChangedSpy.isValid());
 
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+
+    // start the copy process
     QFETCH(QString, copyPlatform);
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), copyPlatform);
     environment.insert(QStringLiteral("WAYLAND_DISPLAY"), s_socketName);
@@ -169,6 +176,7 @@ void XClipboardSyncTest::testSync()
     QCOMPARE(clientAddedSpy.count(), 1);
     QCOMPARE(shellClientAddedSpy.count(), 1);
     QVERIFY(pasteClient);
+
     if (workspace()->activeClient() != pasteClient) {
         QSignalSpy clientActivatedSpy(workspace(), &Workspace::clientActivated);
         QVERIFY(clientActivatedSpy.isValid());
@@ -180,6 +188,8 @@ void XClipboardSyncTest::testSync()
     QCOMPARE(finishedSpy.first().first().toInt(), 0);
     delete m_pasteProcess;
     m_pasteProcess = nullptr;
+    delete m_copyProcess;
+    m_copyProcess = nullptr;
 }
 
 WAYLANDTEST_MAIN(XClipboardSyncTest)

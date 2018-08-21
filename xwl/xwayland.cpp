@@ -19,6 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "xwayland.h"
+#include "databridge.h"
+
 #include "wayland_server.h"
 #include "main_wayland.h"
 #include "utils.h"
@@ -69,10 +71,17 @@ namespace KWin {
 namespace Xwl
 {
 
+Xwayland *s_self = nullptr;
+Xwayland* Xwayland::self()
+{
+    return s_self;
+}
+
 Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
     : QObject(parent),
       m_app(app)
 {
+    s_self = this;
 }
 
 Xwayland::~Xwayland()
@@ -93,6 +102,7 @@ Xwayland::~Xwayland()
         }
         waylandServer()->destroyXWaylandConnection();
     }
+    s_self = nullptr;
 }
 
 void Xwayland::init()
@@ -166,6 +176,12 @@ void Xwayland::init()
     close(pipeFds[1]);
 }
 
+void Xwayland::prepareDestroy()
+{
+    delete m_dataBridge;
+    m_dataBridge = nullptr;
+}
+
 void Xwayland::createX11Connection()
 {
     int screenNumber = 0;
@@ -180,6 +196,10 @@ void Xwayland::createX11Connection()
         Q_EMIT criticalError(1);
         return;
     }
+
+    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(c));
+    m_xcbScreen = iter.data;
+    Q_ASSERT(m_xcbScreen);
 
     m_app->setX11Connection(c);
     // we don't support X11 multi-head in Wayland
@@ -199,6 +219,10 @@ void Xwayland::continueStartupWithX()
     QSocketNotifier *notifier = new QSocketNotifier(xcb_get_file_descriptor(xcbConn), QSocketNotifier::Read, this);
     auto processXcbEvents = [this, xcbConn] {
         while (auto event = xcb_poll_for_event(xcbConn)) {
+            if (m_dataBridge->filterEvent(event)) {
+                free(event);
+                continue;
+            }
             long result = 0;
             QThread::currentThread()->eventDispatcher()->filterNativeEvent(QByteArrayLiteral("xcb_generic_event_t"), event, &result);
             free(event);
@@ -209,12 +233,17 @@ void Xwayland::continueStartupWithX()
     connect(QThread::currentThread()->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, processXcbEvents);
     connect(QThread::currentThread()->eventDispatcher(), &QAbstractEventDispatcher::awake, this, processXcbEvents);
 
+    xcb_prefetch_extension_data(xcbConn, &xcb_xfixes_id);
+    m_xfixes = xcb_get_extension_data(xcbConn, &xcb_xfixes_id);
+
     // create selection owner for WM_S0 - magic X display number expected by XWayland
     KSelectionOwner owner("WM_S0", xcbConn, m_app->x11RootWindow());
     owner.claim(true);
 
     m_app->createAtoms();
     m_app->setupEventFilters();
+
+    m_dataBridge = new DataBridge;
 
     // Check  whether another windowmanager is running
     const uint32_t maskValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT};

@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
+#include <xcb/xproto.h>
+
 class QProcess;
 
 class xcb_screen_t;
@@ -32,15 +34,26 @@ class ApplicationWaylandAbstract;
 
 namespace Xwl
 {
+class DataBridge;
 
 class Xwayland : public QObject
 {
     Q_OBJECT
 public:
+    static Xwayland* self();
+
     Xwayland(ApplicationWaylandAbstract *app, QObject *parent = nullptr);
     virtual ~Xwayland();
 
     void init();
+    void prepareDestroy();
+
+    xcb_screen_t *xcbScreen() const {
+        return m_xcbScreen;
+    }
+    const xcb_query_extension_reply_t *xfixes() const {
+        return m_xfixes;
+    }
 
 Q_SIGNALS:
     void criticalError(int code);
@@ -52,6 +65,10 @@ private:
     int m_xcbConnectionFd = -1;
     QProcess *m_xwaylandProcess = nullptr;
     QMetaObject::Connection m_xwaylandFailConnection;
+
+    xcb_screen_t *m_xcbScreen = nullptr;
+    const xcb_query_extension_reply_t *m_xfixes = nullptr;
+    DataBridge *m_dataBridge = nullptr;
 
     ApplicationWaylandAbstract *m_app;
 };

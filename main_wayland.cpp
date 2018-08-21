@@ -128,6 +128,10 @@ ApplicationWayland::~ApplicationWayland()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
+    if (m_xwayland) {
+        // needs to be done before workspace gets destroyed
+        m_xwayland->prepareDestroy();
+    }
     destroyWorkspace();
     waylandServer()->dispatch();
 

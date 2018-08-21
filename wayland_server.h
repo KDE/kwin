@@ -35,6 +35,8 @@ namespace Client
 {
 class ConnectionThread;
 class Registry;
+class Seat;
+class DataDeviceManager;
 class ShmPool;
 class Surface;
 }
@@ -48,6 +50,7 @@ class DataDeviceInterface;
 class IdleInterface;
 class ShellInterface;
 class SeatInterface;
+class DataDeviceManagerInterface;
 class ServerSideDecorationManagerInterface;
 class ServerSideDecorationPaletteManagerInterface;
 class SurfaceInterface;
@@ -98,6 +101,9 @@ public:
     }
     KWayland::Server::SeatInterface *seat() {
         return m_seat;
+    }
+    KWayland::Server::DataDeviceManagerInterface *dataDeviceManager() {
+        return m_dataDeviceManager;
     }
     KWayland::Server::ShellInterface *shell() {
         return m_shell;
@@ -178,6 +184,12 @@ public:
     QPointer<KWayland::Server::DataDeviceInterface> xclipboardSyncDataDevice() const {
         return m_xclipbaordSync.ddi;
     }
+    KWayland::Client::Seat *internalSeat() {
+        return m_internalConnection.seat;
+    }
+    KWayland::Client::DataDeviceManager *internalDataDeviceManager() {
+        return m_internalConnection.ddm;
+    }
     KWayland::Client::ShmPool *internalShmPool() {
         return m_internalConnection.shm;
     }
@@ -233,6 +245,7 @@ private:
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
+    KWayland::Server::DataDeviceManagerInterface *m_dataDeviceManager = nullptr;
     KWayland::Server::ShellInterface *m_shell = nullptr;
     KWayland::Server::XdgShellInterface *m_xdgShell5 = nullptr;
     KWayland::Server::XdgShellInterface *m_xdgShell6 = nullptr;
@@ -258,6 +271,8 @@ private:
         KWayland::Client::ConnectionThread *client = nullptr;
         QThread *clientThread = nullptr;
         KWayland::Client::Registry *registry = nullptr;
+        KWayland::Client::Seat *seat = nullptr;
+        KWayland::Client::DataDeviceManager *ddm = nullptr;
         KWayland::Client::ShmPool *shm = nullptr;
         bool interfacesAnnounced = false;
 
