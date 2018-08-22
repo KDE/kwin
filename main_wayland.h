@@ -29,7 +29,7 @@ namespace Xwl
 class Xwayland;
 }
 
-class ApplicationWayland : public Application
+class ApplicationWayland : public ApplicationWaylandAbstract
 {
     Q_OBJECT
 public:
@@ -45,7 +45,7 @@ public:
     void setInputMethodServerToStart(const QString &inputMethodServer) {
         m_inputMethodServerToStart = inputMethodServer;
     }
-    void setProcessStartupEnvironment(const QProcessEnvironment &environment) {
+    void setProcessStartupEnvironment(const QProcessEnvironment &environment) override {
         m_environment = environment;
     }
     void setSessionArgument(const QString &session) {
@@ -60,13 +60,11 @@ protected:
     void performStartup() override;
 
 private:
-    friend class Xwl::Xwayland;
-
     void createBackend();
     void continueStartupWithScreens();
     void continueStartupWithSceen();
     void continueStartupWithXwayland();
-    void startSession();
+    void startSession() override;
 
     bool m_startXWayland = false;
     QStringList m_applicationsToStart;

@@ -456,5 +456,14 @@ void Application::initPlatform(const KPluginMetaData &plugin)
     }
 }
 
+ApplicationWaylandAbstract::ApplicationWaylandAbstract(OperationMode mode, int &argc, char **argv)
+    : Application(mode, argc, argv)
+{
+}
+
+ApplicationWaylandAbstract::~ApplicationWaylandAbstract()
+{
+}
+
 } // namespace
 

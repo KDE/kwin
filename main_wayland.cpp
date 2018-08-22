@@ -110,7 +110,7 @@ void gainRealTime(RealTimeFlags flags = RealTimeFlags::DontReset)
 //************************************
 
 ApplicationWayland::ApplicationWayland(int &argc, char **argv)
-    : Application(OperationModeWaylandOnly, argc, argv)
+    : ApplicationWaylandAbstract(OperationModeWaylandOnly, argc, argv)
 {
 }
 
@@ -213,7 +213,7 @@ void ApplicationWayland::startSession()
     if (!m_inputMethodServerToStart.isEmpty()) {
         int socket = dup(waylandServer()->createInputMethodConnection());
         if (socket >= 0) {
-            QProcessEnvironment environment = m_environment;
+            QProcessEnvironment environment = processStartupEnvironment();
             environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
             environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
             environment.remove("DISPLAY");
@@ -239,7 +239,7 @@ void ApplicationWayland::startSession()
     if (!m_sessionArgument.isEmpty()) {
         QProcess *p = new Process(this);
         p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
-        p->setProcessEnvironment(m_environment);
+        p->setProcessEnvironment(processStartupEnvironment());
         auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
         connect(p, finishedSignal, this, &ApplicationWayland::quit);
         p->start(m_sessionArgument);
@@ -251,7 +251,7 @@ void ApplicationWayland::startSession()
             // this is going to happen anyway as we are the wayland and X server the app connects to
             QProcess *p = new Process(this);
             p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
-            p->setProcessEnvironment(m_environment);
+            p->setProcessEnvironment(processStartupEnvironment());
             p->start(application);
         }
     }

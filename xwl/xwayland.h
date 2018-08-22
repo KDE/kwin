@@ -28,7 +28,7 @@ class xcb_screen_t;
 
 namespace KWin
 {
-class ApplicationWayland;
+class ApplicationWaylandAbstract;
 
 namespace Xwl
 {
@@ -37,7 +37,7 @@ class Xwayland : public QObject
 {
     Q_OBJECT
 public:
-    Xwayland(ApplicationWayland *app, QObject *parent = nullptr);
+    Xwayland(ApplicationWaylandAbstract *app, QObject *parent = nullptr);
     virtual ~Xwayland();
 
     void init();
@@ -53,7 +53,7 @@ private:
     QProcess *m_xwaylandProcess = nullptr;
     QMetaObject::Connection m_xwaylandFailConnection;
 
-    ApplicationWayland *m_app;
+    ApplicationWaylandAbstract *m_app;
 };
 
 }

@@ -52,11 +52,15 @@ class XdgDecorationManager;
 
 namespace KWin
 {
+namespace Xwl
+{
+class Xwayland;
+}
 
 class AbstractClient;
 class ShellClient;
 
-class WaylandTestApplication : public Application
+class WaylandTestApplication : public ApplicationWaylandAbstract
 {
     Q_OBJECT
 public:
@@ -68,15 +72,11 @@ protected:
 
 private:
     void createBackend();
-    void createX11Connection();
     void continueStartupWithScreens();
     void continueStartupWithSceen();
-    void continueStartupWithX();
-    void startXwaylandServer();
+    void continueStartupWithXwayland();
 
-    int m_xcbConnectionFd = -1;
-    QProcess *m_xwaylandProcess = nullptr;
-    QMetaObject::Connection m_xwaylandFailConnection;
+    Xwl::Xwayland *m_xwayland = nullptr;
 };
 
 namespace Test

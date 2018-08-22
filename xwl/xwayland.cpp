@@ -69,7 +69,7 @@ namespace KWin {
 namespace Xwl
 {
 
-Xwayland::Xwayland(ApplicationWayland *app, QObject *parent)
+Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
     : QObject(parent),
       m_app(app)
 {
