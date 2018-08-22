@@ -69,10 +69,17 @@ protected:
     Selection *selection() const {
         return m_sel;
     }
+    void setWindow(xcb_window_t window) {
+        m_window = window;
+    }
+    xcb_window_t window() const {
+        return m_window;
+    }
 
 private:
     xcb_timestamp_t m_timestamp = XCB_CURRENT_TIME;
     Selection *m_sel;
+    xcb_window_t m_window;
 };
 
 /**
@@ -134,6 +141,10 @@ public:
     void setOffers(const Mimes &offers);
 
     bool handleSelNotify(xcb_selection_notify_event_t *event);
+
+    void setRequestor(xcb_window_t window) {
+        setWindow(window);
+    }
 
 Q_SIGNALS:
     void offersChanged(QVector<QString> added, QVector<QString> removed);

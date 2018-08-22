@@ -34,6 +34,7 @@ namespace Client
 {
 class ConnectionThread;
 class Registry;
+class Compositor;
 class Seat;
 class DataDeviceManager;
 class ShmPool;
@@ -178,6 +179,9 @@ public:
     KWayland::Server::ClientConnection *screenLockerClientConnection() const {
         return m_screenLockerClientConnection;
     }
+    KWayland::Client::Compositor *internalCompositor() {
+        return m_internalConnection.compositor;
+    }
     KWayland::Client::Seat *internalSeat() {
         return m_internalConnection.seat;
     }
@@ -263,6 +267,7 @@ private:
         KWayland::Client::ConnectionThread *client = nullptr;
         QThread *clientThread = nullptr;
         KWayland::Client::Registry *registry = nullptr;
+        KWayland::Client::Compositor *compositor = nullptr;
         KWayland::Client::Seat *seat = nullptr;
         KWayland::Client::DataDeviceManager *ddm = nullptr;
         KWayland::Client::ShmPool *shm = nullptr;

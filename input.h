@@ -165,6 +165,7 @@ public:
     void uninstallInputEventSpy(InputEventSpy *spy);
 
     Toplevel *findToplevel(const QPoint &pos);
+    Toplevel *findManagedToplevel(const QPoint &pos);
     GlobalShortcutsManager *shortcuts() const {
         return m_shortcuts;
     }

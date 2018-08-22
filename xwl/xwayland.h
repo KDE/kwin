@@ -62,6 +62,8 @@ private:
     void createX11Connection();
     void continueStartupWithX();
 
+    DragEventReply dragMoveFilter(Toplevel *target, QPoint pos) override;
+
     int m_xcbConnectionFd = -1;
     QProcess *m_xwaylandProcess = nullptr;
     QMetaObject::Connection m_xwaylandFailConnection;

@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "wayland_server.h"
 #include "workspace.h"
-#include "abstract_client.h"
+#include "client.h"
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/datadevice.h>
@@ -135,6 +135,14 @@ void Clipboard::checkWlSource()
 
 void Clipboard::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 {
+    createX11Source(NULL);
+
+    const auto *ac = workspace()->activeClient();
+    if (!qobject_cast<const KWin::Client *>(ac)) {
+        // clipboard is only allowed to be acquired when Xwayland has focus
+        // TODO: can we make this stronger (window id comparision)?
+        return;
+    }
     createX11Source(event);
     auto *xSrc = x11Source();
     if (xSrc) {

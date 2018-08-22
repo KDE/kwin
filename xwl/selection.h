@@ -60,11 +60,11 @@ public:
     static xcb_atom_t mimeTypeToAtom(const QString &mimeType);
     static xcb_atom_t mimeTypeToAtomLiteral(const QString &mimeType);
     static QStringList atomToMimeTypes(xcb_atom_t atom);
+    static void sendSelNotify(xcb_selection_request_event_t *event, bool success);
 
     // on selection owner changes by X clients (Xwl -> Wl)
     bool handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event);
     bool filterEvent(xcb_generic_event_t *event);
-    void sendSelNotify(xcb_selection_request_event_t *event, bool success);
 
     xcb_atom_t atom() const {
         return m_atom;
@@ -72,6 +72,7 @@ public:
     xcb_window_t window() const {
         return m_window;
     }
+    void overwriteRequestorWindow(xcb_window_t window);
 
 Q_SIGNALS:
     void transferFinished(xcb_timestamp_t eventTime);
@@ -117,6 +118,7 @@ private:
 
     xcb_atom_t m_atom = XCB_ATOM_NONE;
     xcb_window_t m_window = XCB_WINDOW_NONE;
+    xcb_window_t m_requestorWindow = XCB_WINDOW_NONE;
     xcb_timestamp_t m_timestamp;
 
     // Active source, if any. Only one of them at max can exist

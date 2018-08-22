@@ -83,6 +83,7 @@ Selection::Selection(xcb_atom_t atom, QObject *parent)
 {
     auto *xcbConn = kwinApp()->x11Connection();
     m_window = xcb_generate_id(kwinApp()->x11Connection());
+    m_requestorWindow = m_window;
     xcb_flush(xcbConn);
 }
 
@@ -109,14 +110,6 @@ bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     }
 
     // Being here means some other X window has claimed the selection.
-    delete m_xSrc;
-    m_xSrc = nullptr;
-    const auto *ac = workspace()->activeClient();
-    if (!ac || !ac->inherits("KWin::Client")) {
-        // selections are only allowed to be acquired when Xwayland has focus
-        // TODO: can we make this stronger (window id comparision)?
-        return true;
-    }
     doHandleXfixesNotify(event);
     return true;
 }
@@ -200,7 +193,7 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
     delete m_xSrc;
     m_wlSrc = nullptr;
     m_xSrc = nullptr;
-    if (event->owner == XCB_WINDOW_NONE) {
+    if (!event || event->owner == XCB_WINDOW_NONE) {
         return;
     }
     m_xSrc = new X11Source(this, event);
@@ -225,6 +218,17 @@ void Selection::ownSelection(bool own)
                                 m_timestamp);
     }
     xcb_flush(xcbConn);
+}
+
+void Selection::overwriteRequestorWindow(xcb_window_t window)
+{
+    Q_ASSERT(m_xSrc);
+    if (window == XCB_WINDOW_NONE) {
+        // reset
+        window = m_window;
+    }
+    m_requestorWindow = window;
+    m_xSrc->setRequestor(window);
 }
 
 bool Selection::handleSelRequest(xcb_selection_request_event_t *event)
@@ -283,7 +287,7 @@ bool Selection::handlePropNotify(xcb_property_notify_event_t *event)
 void Selection::startTransferToWayland(xcb_atom_t target, qint32 fd)
 {
     // create new x to wl data transfer object
-    auto *transfer = new TransferXtoWl(m_atom, target, fd, m_xSrc->timestamp(), m_window, this);
+    auto *transfer = new TransferXtoWl(m_atom, target, fd, m_xSrc->timestamp(), m_requestorWindow, this);
     m_xToWlTransfers << transfer;
 
     connect(transfer, &TransferXtoWl::finished, this, [this, transfer]() {

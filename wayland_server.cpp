@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/registry.h>
+#include <KWayland/Client/compositor.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/shm_pool.h>
@@ -113,6 +114,7 @@ void WaylandServer::destroyInternalConnection()
         }
 
         delete m_internalConnection.registry;
+        delete m_internalConnection.compositor;
         delete m_internalConnection.seat;
         delete m_internalConnection.ddm;
         delete m_internalConnection.shm;
@@ -567,6 +569,10 @@ void WaylandServer::createInternalConnection()
                 [this, registry] {
                     m_internalConnection.interfacesAnnounced = true;
 
+                    const auto compInterface = registry->interface(Registry::Interface::Compositor);
+                    if (compInterface.name != 0) {
+                        m_internalConnection.compositor = registry->createCompositor(compInterface.name, compInterface.version, this);
+                    }
                     const auto seatInterface = registry->interface(Registry::Interface::Seat);
                     if (seatInterface.name != 0) {
                         m_internalConnection.seat = registry->createSeat(seatInterface.name, seatInterface.version, this);

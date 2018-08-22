@@ -42,7 +42,8 @@ namespace Xwl {
 
 SelectionSource::SelectionSource(Selection *sel)
     : QObject(sel),
-      m_sel(sel)
+      m_sel(sel),
+      m_window(sel->window())
 {
 }
 
@@ -74,7 +75,7 @@ void WlSource::receiveOffer(const QString &mime)
 
 void WlSource::sendSelNotify(xcb_selection_request_event_t *event, bool success)
 {
-    selection()->sendSelNotify(event, success);
+    Selection::sendSelNotify(event, success);
 }
 
 bool WlSource::handleSelRequest(xcb_selection_request_event_t *event)
@@ -183,7 +184,7 @@ void X11Source::getTargets()
     auto *xcbConn = kwinApp()->x11Connection();
     /* will lead to a selection request event for the new owner */
     xcb_convert_selection(xcbConn,
-                          selection()->window(),
+                          window(),
                           selection()->atom(),
                           atoms->targets,
                           atoms->wl_selection,
@@ -199,7 +200,7 @@ void X11Source::handleTargets()
     auto *xcbConn = kwinApp()->x11Connection();
     xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn,
                                                         1,
-                                                        selection()->window(),
+                                                        window(),
                                                         atoms->wl_selection,
                                                         XCB_GET_PROPERTY_TYPE_ANY,
                                                         0,
@@ -278,7 +279,7 @@ void X11Source::setOffers(const Mimes &offers)
 
 bool X11Source::handleSelNotify(xcb_selection_notify_event_t *event)
 {
-    if (event->requestor != selection()->window()) {
+    if (event->requestor != window()) {
         return false;
     }
     if (event->selection != selection()->atom()) {

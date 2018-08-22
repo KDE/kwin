@@ -17,13 +17,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_XWL_XWAYLAND_INTERFACE
-#define KWIN_XWL_XWAYLAND_INTERFACE
+#ifndef KWIN_XWL_DRAG
+#define KWIN_XWL_DRAG
 
-#include <kwinglobals.h>
+#include <KWayland/Client/datadevicemanager.h>
 
-#include <QObject>
 #include <QPoint>
+
+#include <xcb/xcb.h>
 
 namespace KWin
 {
@@ -31,33 +32,32 @@ class Toplevel;
 
 namespace Xwl
 {
-enum class DragEventReply {
-    // event should be ignored by the filter
-    Ignore,
-    // event is filtered out
-    Take,
-    // event should be handled as a Wayland native one
-    Wayland,
-};
-}
+enum class DragEventReply;
 
-class KWIN_EXPORT XwaylandInterface : public QObject
+using DnDAction = KWayland::Client::DataDeviceManager::DnDAction;
+
+/**
+ * An ongoing drag operation.
+ */
+class Drag : public QObject
 {
     Q_OBJECT
 public:
-    static XwaylandInterface *self();
+    static void sendClientMessage(xcb_window_t target, xcb_atom_t type, xcb_client_message_data_t *data);
+    static DnDAction atomToClientAction(xcb_atom_t atom);
+    static xcb_atom_t clientActionToAtom(DnDAction action);
 
-    virtual Xwl::DragEventReply dragMoveFilter(Toplevel *target, QPoint pos) = 0;
+    virtual ~Drag() = default;
+    virtual bool handleClientMessage(xcb_client_message_event_t *event) = 0;
+    virtual DragEventReply moveFilter(Toplevel *target, QPoint pos) = 0;
 
-protected:
-    explicit XwaylandInterface(QObject *parent = nullptr);
-    virtual ~XwaylandInterface();
+    virtual bool end() = 0;
+
+Q_SIGNALS:
+    void finish(Drag *self);
 };
 
-inline XwaylandInterface *xwayland() {
-    return XwaylandInterface::self();
 }
-
 }
 
 #endif

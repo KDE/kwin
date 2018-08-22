@@ -270,5 +270,13 @@ void Xwayland::continueStartupWithX()
     m_app->notifyKSplash();
 }
 
+DragEventReply Xwayland::dragMoveFilter(Toplevel *target, QPoint pos)
+{
+    if (!m_dataBridge) {
+        return DragEventReply::Wayland;
+    }
+    return m_dataBridge->dragMoveFilter(target, pos);
+}
+
 }
 }
