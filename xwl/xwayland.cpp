@@ -78,7 +78,7 @@ Xwayland* Xwayland::self()
 }
 
 Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
-    : QObject(parent),
+    : XwaylandInterface(parent),
       m_app(app)
 {
     s_self = this;

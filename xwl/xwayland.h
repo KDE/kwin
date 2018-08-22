@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_XWL_XWAYLAND
 #define KWIN_XWL_XWAYLAND
 
-#include <QObject>
+#include "xwayland_interface.h"
 
 #include <xcb/xproto.h>
 
@@ -36,7 +36,7 @@ namespace Xwl
 {
 class DataBridge;
 
-class Xwayland : public QObject
+class Xwayland : public XwaylandInterface
 {
     Q_OBJECT
 public:
