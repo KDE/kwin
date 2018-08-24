@@ -316,12 +316,9 @@ WlVisit::WlVisit(AbstractClient *target, XToWlDrag *drag)
                         32, 1, &version);
 
     xcb_map_window(xcbConn, m_window);
+    workspace()->addManualOverlay(m_window);
+    workspace()->updateStackingOrder(true);
 
-    const uint32_t stackValues[] = { XCB_STACK_MODE_ABOVE };
-    xcb_configure_window (xcbConn,
-                          m_window,
-                          XCB_CONFIG_WINDOW_STACK_MODE,
-                          stackValues);
     xcb_flush(xcbConn);
     m_mapped = true;
 }
@@ -541,6 +538,8 @@ void WlVisit::unmapProxyWindow()
     }
     auto *xcbConn = kwinApp()->x11Connection();
     xcb_unmap_window(xcbConn, m_window);
+    workspace()->removeManualOverlay(m_window);
+    workspace()->updateStackingOrder(true);
     xcb_flush(xcbConn);
     m_mapped = false;
 }

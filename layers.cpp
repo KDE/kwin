@@ -170,6 +170,8 @@ void Workspace::propagateClients(bool propagate_new_clients)
 
     newWindowStack << ScreenEdges::self()->windows();
 
+    newWindowStack << manual_overlays;
+
     newWindowStack.reserve(newWindowStack.size() + 2*stacking_order.size()); // *2 for inputWindow
 
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
@@ -202,7 +204,10 @@ void Workspace::propagateClients(bool propagate_new_clients)
     int pos = 0;
     xcb_window_t *cl(nullptr);
     if (propagate_new_clients) {
-        cl = new xcb_window_t[ desktops.count() + clients.count()];
+        cl = new xcb_window_t[ manual_overlays.count() + desktops.count() + clients.count()];
+        for (const auto win : manual_overlays) {
+            cl[pos++] = win;
+        }
         // TODO this is still not completely in the map order
         for (ClientList::ConstIterator it = desktops.constBegin(); it != desktops.constEnd(); ++it)
             cl[pos++] = (*it)->window();
@@ -212,11 +217,14 @@ void Workspace::propagateClients(bool propagate_new_clients)
         delete [] cl;
     }
 
-    cl = new xcb_window_t[ stacking_order.count()];
+    cl = new xcb_window_t[ manual_overlays.count() + stacking_order.count()];
     pos = 0;
     for (ToplevelList::ConstIterator it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
         if ((*it)->isClient())
             cl[pos++] = (*it)->window();
+    }
+    for (const auto win : manual_overlays) {
+        cl[pos++] = win;
     }
     rootInfo()->setClientListStacking(cl, pos);
     delete [] cl;
