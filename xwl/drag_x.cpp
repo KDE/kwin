@@ -42,6 +42,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin {
 namespace Xwl {
 
+static QStringList atomToMimeTypes(xcb_atom_t atom)
+{
+    QStringList mimeTypes;
+
+    if (atom == atoms->utf8_string) {
+        mimeTypes << QString::fromLatin1("text/plain;charset=utf-8");
+    } else if (atom == atoms->text) {
+        mimeTypes << QString::fromLatin1("text/plain");
+    } else if (atom == atoms->uri_list || atom == atoms->netscape_url || atom == atoms->moz_url) {
+    // We identify netscape and moz format as less detailed formats text/uri-list,
+    // text/x-uri and accept the information loss.
+        mimeTypes << QString::fromLatin1("text/uri-list") << QString::fromLatin1("text/x-uri");
+    } else {
+        mimeTypes << Selection::atomName(atom);
+    }
+    return mimeTypes;
+}
+
 XToWlDrag::XToWlDrag(X11Source *source)
     : m_src(source)
 {
@@ -365,7 +383,7 @@ bool WlVisit::handleEnter(xcb_client_message_event_t *ev)
         // message has only max 3 types (which are directly in data)
         for (size_t i = 0; i < 3; i++) {
             xcb_atom_t mimeAtom = data->data32[2 + i];
-            const auto mimeStrings = Selection::atomToMimeTypes(mimeAtom);
+            const auto mimeStrings = atomToMimeTypes(mimeAtom);
             for (const auto mime : mimeStrings ) {
                 if (!hasMimeName(offers, mime)) {
                     offers << Mime(mime, mimeAtom);
@@ -403,7 +421,7 @@ void WlVisit::getMimesFromWinProperty(Mimes &offers)
 
     xcb_atom_t *mimeAtoms = static_cast<xcb_atom_t*>(xcb_get_property_value(reply));
     for (size_t i = 0; i < reply->value_len; ++i) {
-        const auto mimeStrings = Selection::atomToMimeTypes(mimeAtoms[i]);
+        const auto mimeStrings = atomToMimeTypes(mimeAtoms[i]);
         for (const auto mime : mimeStrings ) {
             if (!hasMimeName(offers, mime)) {
                 offers << Mime(mime, mimeAtoms[i]);

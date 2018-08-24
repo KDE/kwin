@@ -79,6 +79,8 @@ public:
     Xcb::Atom utf8_string;
     Xcb::Atom text;
     Xcb::Atom uri_list;
+    Xcb::Atom netscape_url;
+    Xcb::Atom moz_url;
     Xcb::Atom wl_surface_id;
     Xcb::Atom kde_net_wm_appmenu_service_name;
     Xcb::Atom kde_net_wm_appmenu_object_path;

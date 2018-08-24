@@ -60,6 +60,7 @@ public:
     static xcb_atom_t mimeTypeToAtom(const QString &mimeType);
     static xcb_atom_t mimeTypeToAtomLiteral(const QString &mimeType);
     static QStringList atomToMimeTypes(xcb_atom_t atom);
+    static QString atomName(xcb_atom_t atom);
     static void sendSelNotify(xcb_selection_request_event_t *event, bool success);
 
     // on selection owner changes by X clients (Xwl -> Wl)

@@ -351,7 +351,13 @@ bool TransferXtoWl::handleSelNotify(xcb_selection_notify_event_t *event)
         return True;
     }
 
-    m_receiver = new DataReceiver;
+    if (event->target == atoms->netscape_url) {
+        m_receiver = new NetscapeUrlReceiver;
+    } else if (event->target == atoms->moz_url) {
+        m_receiver = new MozUrlReceiver;
+    } else {
+        m_receiver = new DataReceiver;
+    }
     startTransfer();
     return true;
 }
@@ -461,6 +467,87 @@ void DataReceiver::partRead(int length)
         free(m_propertyReply);
         m_propertyReply = nullptr;
     }
+}
+
+void NetscapeUrlReceiver::setData(char *value, int length)
+{
+    auto origData = QByteArray::fromRawData(value, length);
+
+    if (origData.indexOf('\n') == -1) {
+        // there are no line breaks, not in Netscape url format or empty,
+        // but try anyway
+        setDataInternal(origData);
+        return;
+    }
+    // remove every second line
+    QByteArray data;
+    int start = 0;
+    bool remLine = false;
+    while (start < length) {
+        auto part = QByteArray::fromRawData(value + start, length - start);
+        const int linebreak = part.indexOf('\n');
+        if (linebreak == -1) {
+            // no more linebreaks, end of work
+            if (!remLine) {
+                // append the rest
+                data.append(part);
+            }
+            break;
+        }
+        if (remLine) {
+            // no data to add, but add a linebreak for the next line
+            data.append('\n');
+        } else {
+            // add data till before linebreak
+            data.append(part.data(), linebreak);
+        }
+        remLine = !remLine;
+        start = linebreak + 1;
+    }
+    setDataInternal(data);
+}
+
+void MozUrlReceiver::setData(char *value, int length)
+{
+    // represent as QByteArray (guaranteed '\0'-terminated)
+    const auto origData = QByteArray::fromRawData(value, length);
+
+    // text/x-moz-url data is sent in utf-16 - copies the content
+    // and converts it into 8 byte representation
+    const auto byteData = QString::fromUtf16(reinterpret_cast<const char16_t*>(origData.data())).toLatin1();
+
+    if (byteData.indexOf('\n') == -1) {
+        // there are no line breaks, not in text/x-moz-url format or empty,
+        // but try anyway
+        setDataInternal(byteData);
+        return;
+    }
+    // remove every second line
+    QByteArray data;
+    int start = 0;
+    bool remLine = false;
+    while (start < length) {
+        auto part = QByteArray::fromRawData(byteData.data() + start, byteData.size() - start);
+        const int linebreak = part.indexOf('\n');
+        if (linebreak == -1) {
+            // no more linebreaks, end of work
+            if (!remLine) {
+                // append the rest
+                data.append(part);
+            }
+            break;
+        }
+        if (remLine) {
+            // no data to add, but add a linebreak for the next line
+            data.append('\n');
+        } else {
+            // add data till before linebreak
+            data.append(part.data(), linebreak);
+        }
+        remLine = !remLine;
+        start = linebreak + 1;
+    }
+    setDataInternal(data);
 }
 
 void TransferXtoWl::dataSourceWrite()

@@ -41,7 +41,7 @@ namespace KWin
 namespace Xwl
 {
 
-/*
+/**
  * Represents for an arbitrary selection a data transfer between
  * sender and receiver.
  *
@@ -103,7 +103,7 @@ private:
     bool m_timeout = false;
 };
 
-/*
+/**
  * Represents a transfer from a Wayland native source to an X window.
  */
 class TransferWltoX : public Transfer
@@ -139,7 +139,7 @@ private:
     bool flushPropOnDelete = false;
 };
 
-/*
+/**
  * Helper class for X to Wl transfers
  */
 class DataReceiver
@@ -166,7 +166,27 @@ private:
     QByteArray m_data;
 };
 
-/*
+/**
+ * Compatibility receiver for clients only
+ * supporting the NETSCAPE_URL scheme (Firefox)
+ */
+class NetscapeUrlReceiver : public DataReceiver
+{
+public:
+    void setData(char *value, int length) override;
+};
+
+/**
+ * Compatibility receiver for clients only
+ * supporting the text/x-moz-url scheme (Chromium on own drags)
+ */
+class MozUrlReceiver : public DataReceiver
+{
+public:
+    void setData(char *value, int length) override;
+};
+
+/**
  * Represents a transfer from an X window to a Wayland native client.
  */
 class TransferXtoWl : public Transfer

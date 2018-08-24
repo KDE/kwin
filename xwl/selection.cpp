@@ -51,6 +51,21 @@ xcb_atom_t Selection::mimeTypeToAtomLiteral(const QString &mimeType)
     return Xcb::Atom(mimeType.toLatin1(), false, kwinApp()->x11Connection());
 }
 
+QString Selection::atomName(xcb_atom_t atom)
+{
+    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_get_atom_name_cookie_t nameCookie = xcb_get_atom_name(xcbConn, atom);
+    xcb_get_atom_name_reply_t *nameReply = xcb_get_atom_name_reply(xcbConn, nameCookie, NULL);
+    if (nameReply == NULL) {
+        return QString();
+    }
+
+    size_t len = xcb_get_atom_name_name_length(nameReply);
+    QString name = QString::fromLatin1(xcb_get_atom_name_name(nameReply), len);
+    free(nameReply);
+    return name;
+}
+
 QStringList Selection::atomToMimeTypes(xcb_atom_t atom)
 {
     QStringList mimeTypes;
@@ -62,17 +77,7 @@ QStringList Selection::atomToMimeTypes(xcb_atom_t atom)
     } else if (atom == atoms->uri_list) {
         mimeTypes << "text/uri-list" << "text/x-uri";
     } else {
-        auto *xcbConn = kwinApp()->x11Connection();
-        xcb_get_atom_name_cookie_t nameCookie = xcb_get_atom_name(xcbConn, atom);
-        xcb_get_atom_name_reply_t *nameReply = xcb_get_atom_name_reply(xcbConn, nameCookie, NULL);
-        if (nameReply == NULL) {
-            return QStringList();
-        }
-
-        size_t len = xcb_get_atom_name_name_length(nameReply);
-        char *name = xcb_get_atom_name_name(nameReply);
-        mimeTypes << QString::fromLatin1(name, len);
-        free(nameReply);
+        mimeTypes << atomName(atom);
     }
     return mimeTypes;
 }
