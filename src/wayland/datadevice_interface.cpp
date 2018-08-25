@@ -159,6 +159,10 @@ DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInte
     if (!resource) {
         return nullptr;
     }
+    if (!source) {
+        // a data offer can only exist together with a source
+        return nullptr;
+    }
     Q_Q(DataDeviceInterface);
     DataOfferInterface *offer = new DataOfferInterface(source, q, resource);
     auto c = q->global()->display()->getConnection(wl_resource_get_client(resource));
