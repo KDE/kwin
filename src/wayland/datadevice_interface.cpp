@@ -100,8 +100,8 @@ void DataDeviceInterface::Private::startDragCallback(wl_client *client, wl_resou
 void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *i, quint32 serial)
 {
     // TODO: allow touch
-    if (seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() != origin) {
-        wl_resource_post_error(resource, 0, "Surface doesn't have pointer grab");
+    if (!seat->hasImplicitPointerGrab(serial) || seat->focusedPointerSurface() != origin) {
+        // Surface doesn't have pointer grab.
         return;
     }
     // TODO: source is allowed to be null, handled client internally!

@@ -49,7 +49,9 @@ private Q_SLOTS:
     void cleanup();
 
     void testCreate();
+    void testDrag_data();
     void testDrag();
+    void testDragInternally_data();
     void testDragInternally();
     void testSetSelection();
     void testSendSelectionOnSeat();
@@ -208,6 +210,18 @@ void TestDataDevice::testCreate()
     QVERIFY(!m_seatInterface->selection());
 }
 
+void TestDataDevice::testDrag_data()
+{
+    QTest::addColumn<bool>("hasGrab");
+    QTest::addColumn<bool>("hasPointerFocus");
+    QTest::addColumn<bool>("success");
+
+    QTest::newRow("grab and focus") << true << true << true;
+    QTest::newRow("no grab") << false << true << false;
+    QTest::newRow("no focus") << true << false << false;
+    QTest::newRow("no grab, no focus") << false << false << false;
+}
+
 void TestDataDevice::testDrag()
 {
     using namespace KWayland::Client;
@@ -251,17 +265,44 @@ void TestDataDevice::testDrag()
     QVERIFY(dragStartedSpy.isValid());
 
     // first we need to fake the pointer enter
-    m_seatInterface->setFocusedPointerSurface(surfaceInterface);
-    m_seatInterface->pointerButtonPressed(1);
+    QFETCH(bool, hasGrab);
+    QFETCH(bool, hasPointerFocus);
+    QFETCH(bool, success);
+    if (!hasGrab) {
+        // in case we don't have grab, still generate a pointer serial to make it more interesting
+        m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+    }
+    if (hasPointerFocus) {
+        m_seatInterface->setFocusedPointerSurface(surfaceInterface);
+    }
+    if (hasGrab) {
+        m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+    }
+
+    // TODO: This test would be better, if it could also test that a client trying to guess
+    //       the last serial of a different client can't start a drag.
+    const quint32 pointerButtonSerial = success ? m_seatInterface->pointerButtonSerial(Qt::LeftButton) : 0;
 
     QCoreApplication::processEvents();
-
-    dataDevice->startDrag(1, dataSource.data(), surface.data());
-    QVERIFY(dragStartedSpy.wait());
-    QCOMPARE(dragStartedSpy.count(), 1);
-    QCOMPARE(deviceInterface->dragSource(), sourceInterface);
-    QCOMPARE(deviceInterface->origin(), surfaceInterface);
+    // finally start the drag
+    dataDevice->startDrag(pointerButtonSerial, dataSource.data(), surface.data());
+    QCOMPARE(dragStartedSpy.wait(500), success);
+    QCOMPARE(dragStartedSpy.count(), success);
+    QCOMPARE(deviceInterface->dragSource(), success ? sourceInterface : nullptr);
+    QCOMPARE(deviceInterface->origin(), success ? surfaceInterface : nullptr);
     QVERIFY(!deviceInterface->icon());
+}
+
+void TestDataDevice::testDragInternally_data()
+{
+    QTest::addColumn<bool>("hasGrab");
+    QTest::addColumn<bool>("hasPointerFocus");
+    QTest::addColumn<bool>("success");
+
+    QTest::newRow("grab and focus") << true << true << true;
+    QTest::newRow("no grab") << false << true << false;
+    QTest::newRow("no focus") << true << false << false;
+    QTest::newRow("no grab, no focus") << false << false << false;
 }
 
 void TestDataDevice::testDragInternally()
@@ -303,17 +344,32 @@ void TestDataDevice::testDragInternally()
     QVERIFY(dragStartedSpy.isValid());
 
     // first we need to fake the pointer enter
-    m_seatInterface->setFocusedPointerSurface(surfaceInterface);
-    m_seatInterface->pointerButtonPressed(1);
+    QFETCH(bool, hasGrab);
+    QFETCH(bool, hasPointerFocus);
+    QFETCH(bool, success);
+    if (!hasGrab) {
+        // in case we don't have grab, still generate a pointer serial to make it more interesting
+        m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+    }
+    if (hasPointerFocus) {
+        m_seatInterface->setFocusedPointerSurface(surfaceInterface);
+    }
+    if (hasGrab) {
+        m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+    }
+
+    // TODO: This test would be better, if it could also test that a client trying to guess
+    //       the last serial of a different client can't start a drag.
+    const quint32 pointerButtonSerial = success ? m_seatInterface->pointerButtonSerial(Qt::LeftButton) : 0;
 
     QCoreApplication::processEvents();
-
-    dataDevice->startDragInternally(1, surface.data(), iconSurface.data());
-    QVERIFY(dragStartedSpy.wait());
-    QCOMPARE(dragStartedSpy.count(), 1);
+    // finally start the internal drag
+    dataDevice->startDragInternally(pointerButtonSerial, surface.data(), iconSurface.data());
+    QCOMPARE(dragStartedSpy.wait(500), success);
+    QCOMPARE(dragStartedSpy.count(), success);
     QVERIFY(!deviceInterface->dragSource());
-    QCOMPARE(deviceInterface->origin(), surfaceInterface);
-    QCOMPARE(deviceInterface->icon(), iconSurfaceInterface);
+    QCOMPARE(deviceInterface->origin(), success ? surfaceInterface : nullptr);
+    QCOMPARE(deviceInterface->icon(), success ? iconSurfaceInterface : nullptr);
 }
 
 void TestDataDevice::testSetSelection()
