@@ -20,8 +20,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef KWIN_KILLWINDOW_H
-#define KWIN_KILLWINDOW_H
+#ifndef KWIN_WINDOWSELECTOR_H
+#define KWIN_WINDOWSELECTOR_H
 
 #include "x11eventfilter.h"
 

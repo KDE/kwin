@@ -17,8 +17,8 @@
 *   Boston, MA 02110-1301, USA.                                               *
 *******************************************************************************/
 
-#ifndef SWITCHERPACKAGE_H
-#define SWITCHERPACKAGE_H
+#ifndef WINDOWSWITCHER_H
+#define WINDOWSWITCHER_H
 
 #include <KPackage/PackageStructure>
 

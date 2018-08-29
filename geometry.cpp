@@ -177,7 +177,7 @@ void Workspace::updateClientArea(bool force)
                         iS ++) {
                     const auto geo = new_sareas[ i ][ iS ].intersected(
                                                 (*it)->adjustedClientArea(desktopArea, screens[ iS ]));
-                    // ignore the geometry if it results in the screen getting removed completly
+                    // ignore the geometry if it results in the screen getting removed completely
                     if (!geo.isEmpty()) {
                         new_sareas[ i ][ iS ] = geo;
                     }
@@ -193,7 +193,7 @@ void Workspace::updateClientArea(bool force)
 //                            qDebug() << "adjusting new_sarea: " << screens[ iS ];
                 const auto geo = new_sareas[(*it)->desktop()][ iS ].intersected(
                       (*it)->adjustedClientArea(desktopArea, screens[ iS ]));
-                // ignore the geometry if it results in the screen getting removed completly
+                // ignore the geometry if it results in the screen getting removed completely
                 if (!geo.isEmpty()) {
                     new_sareas[(*it)->desktop()][ iS ] = geo;
                 }

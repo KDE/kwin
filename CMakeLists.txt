@@ -193,7 +193,7 @@ if(Libdrm_FOUND)
 endif()
 
 find_package(gbm)
-set_package_properties(gbm PROPERTIES TYPE OPTIONAL PURPOSE "Required for egl ouput of drm backend.")
+set_package_properties(gbm PROPERTIES TYPE OPTIONAL PURPOSE "Required for egl output of drm backend.")
 set(HAVE_GBM FALSE)
 if(HAVE_DRM AND gbm_FOUND)
     set(HAVE_GBM TRUE)

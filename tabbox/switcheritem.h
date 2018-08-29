@@ -17,8 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_TABBOX_ITEM
-#define KWIN_TABBOX_ITEM
+#ifndef KWIN_TABBOX_SWITCHERITEM_H
+#define KWIN_TABBOX_SWITCHERITEM_H
 
 #include <QObject>
 #include <QRect>
@@ -115,4 +115,4 @@ inline QObject *SwitcherItem::item() const
 } // TabBox
 } // KWin
 
-#endif // KWIN_TABBOX_ITEM
+#endif // KWIN_TABBOX_SWITCHERITEM_H

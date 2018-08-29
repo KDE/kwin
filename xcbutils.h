@@ -1397,7 +1397,7 @@ public:
     void map();
     void unmap();
     void reparent(xcb_window_t parent, int x = 0, int y = 0);
-    void changeProperty(xcb_atom_t property, xcb_atom_t type, uint8_t format, uint32_t lenght,
+    void changeProperty(xcb_atom_t property, xcb_atom_t type, uint8_t format, uint32_t length,
                         const void *data, uint8_t mode = XCB_PROP_MODE_REPLACE);
     void deleteProperty(xcb_atom_t property);
     void setBorderWidth(uint32_t width);
@@ -1601,12 +1601,12 @@ void Window::reparent(xcb_window_t parent, int x, int y)
 }
 
 inline
-void Window::changeProperty(xcb_atom_t property, xcb_atom_t type, uint8_t format, uint32_t lenght, const void *data, uint8_t mode)
+void Window::changeProperty(xcb_atom_t property, xcb_atom_t type, uint8_t format, uint32_t length, const void *data, uint8_t mode)
 {
     if (!isValid()) {
         return;
     }
-    xcb_change_property(connection(), mode, m_window, property, type, format, lenght, data);
+    xcb_change_property(connection(), mode, m_window, property, type, format, length, data);
 }
 
 inline

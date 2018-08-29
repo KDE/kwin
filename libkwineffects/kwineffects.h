@@ -546,7 +546,7 @@ public:
 
     /**
      * Reimplement this method to provide online debugging.
-     * This could be as trivial as printing specific detail informations about the effect state
+     * This could be as trivial as printing specific detail information about the effect state
      * but could also be used to move the effect in and out of a special debug modes, clear bogus
      * data, etc.
      * Notice that the functions is const by intent! Whenever you alter the state of the object

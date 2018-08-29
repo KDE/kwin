@@ -1229,7 +1229,7 @@ public:
     }
     bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(time)
-        // TODO: better check whether a touch sequence is in progess
+        // TODO: better check whether a touch sequence is in progress
         if (m_touchInProgress || waylandServer()->seat()->isTouchSequence()) {
             // cancel existing touch
             ScreenEdges::self()->gestureRecognizer()->cancelSwipeGesture();

@@ -85,7 +85,7 @@ protected:
     const uint32_t m_id;
     DrmOutput *m_output = nullptr;
 
-    // for comparision with received name of DRM object
+    // for comparison with received name of DRM object
     QVector<Property *> m_props;
 
     class Property

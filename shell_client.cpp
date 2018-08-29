@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "virtualdesktops.h"
-#include "workspace.h"
 #include "screens.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/decoratedclient.h"

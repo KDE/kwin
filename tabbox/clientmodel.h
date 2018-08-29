@@ -76,7 +76,7 @@ public:
     /**
     * Generates a new list of TabBoxClients based on the current config.
     * Calling this method will reset the model. If partialReset is true
-    * the top of the list is kept as a starting point. If not the the
+    * the top of the list is kept as a starting point. If not the
     * current active client is used as the starting point to generate the
     * list.
     * @param desktop The desktop for which the list should be created

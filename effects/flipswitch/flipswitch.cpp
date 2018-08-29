@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QKeyEvent>
 #include <QMatrix4x4>
 
-#include <QAction>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 

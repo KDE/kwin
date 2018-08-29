@@ -19,8 +19,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_APPLICATIONMENU_H
-#define KWIN_APPLICATIONMENU_H
+#ifndef KWIN_APPMENU_H
+#define KWIN_APPMENU_H
 // KWin
 #include <kwinglobals.h>
 // Qt
@@ -72,4 +72,4 @@ private:
 
 }
 
-#endif // KWIN_APPLICATIONMENU_H
+#endif // KWIN_APPMENU_H

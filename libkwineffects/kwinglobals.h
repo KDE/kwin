@@ -25,8 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QPoint>
 #include <QVariant>
-#include <QCoreApplication>
-#include <QVariant>
 
 #include <kwin_export.h>
 

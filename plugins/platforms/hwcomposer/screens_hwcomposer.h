@@ -17,8 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_SCREENS_FRAMEBUFFER_H
-#define KWIN_SCREENS_FRAMEBUFFER_H
+#ifndef KWIN_SCREENS_HWCOMPOSER_H
+#define KWIN_SCREENS_HWCOMPOSER_H
 #include "screens.h"
 
 namespace KWin

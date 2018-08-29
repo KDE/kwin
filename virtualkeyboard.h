@@ -17,8 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_INPUT_METHODS_H
-#define KWIN_INPUT_METHODS_H
+#ifndef KWIN_VIRTUAL_KEYBOARD_H
+#define KWIN_VIRTUAL_KEYBOARD_H
 
 #include <QObject>
 

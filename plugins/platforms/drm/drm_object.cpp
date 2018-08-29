@@ -25,7 +25,7 @@ namespace KWin
 {
 
 /*
- * Defintions for class DrmObject
+ * Definitions for class DrmObject
  */
 
 DrmObject::DrmObject(uint32_t object_id, int fd)
@@ -91,7 +91,7 @@ bool DrmObject::atomicPopulate(drmModeAtomicReq *req)
 }
 
 /*
- * Defintions for struct Prop
+ * Definitions for struct Prop
  */
 
 DrmObject::Property::Property(drmModePropertyRes *prop, uint64_t val, QVector<QByteArray> enumNames)

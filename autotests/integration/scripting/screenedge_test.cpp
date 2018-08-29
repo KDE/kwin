@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "scripting/scripting.h"
 #include "effect_builtins.h"
-#include "workspace.h"
 
 #define private public
 #include "screenedge.h"

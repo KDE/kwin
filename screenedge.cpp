@@ -274,9 +274,9 @@ void Edge::markAsTriggered(const QPoint &cursorPos, const QDateTime &triggerTime
 
 bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
 {
-    // we check whether either the timer has explicitly been invalidated (successfull trigger) or is
+    // we check whether either the timer has explicitly been invalidated (successful trigger) or is
     // bigger than the reactivation threshold (activation "aborted", usually due to moving away the cursor
-    // from the corner after successfull activation)
+    // from the corner after successful activation)
     // either condition means that "this is the first event in a new attempt"
     if (!m_lastReset.isValid() || m_lastReset.msecsTo(triggerTime) > edges()->reActivationThreshold()) {
         m_lastReset = triggerTime;

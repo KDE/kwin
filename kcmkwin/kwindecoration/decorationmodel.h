@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KDECORATION_DECORATIONS_MODEL_H
-#define KDECORATION_DECORATIONS_MODEL_H
+#ifndef KDECORATION_DECORATION_MODEL_H
+#define KDECORATION_DECORATION_MODEL_H
 
 #include <QAbstractListModel>
 
