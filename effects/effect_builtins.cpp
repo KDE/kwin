@@ -85,7 +85,9 @@ inline Effect *createHelper()
     return new T();
 }
 
-static const QVector<EffectData> s_effectData = {
+static const QVector<EffectData> &effectData()
+{
+    static const QVector<EffectData> s_effectData = {
     {
         QString(),
         QString(),
@@ -699,7 +701,9 @@ EFFECT_FALLBACK
 #endif
 EFFECT_FALLBACK
     }
-};
+    };
+    return s_effectData;
+}
 
 static inline int index(BuiltInEffect effect)
 {
@@ -717,12 +721,12 @@ Effect *create(BuiltInEffect effect)
 
 bool available(const QString &name)
 {
-    auto it = std::find_if(s_effectData.begin(), s_effectData.end(),
+    auto it = std::find_if(effectData().begin(), effectData().end(),
         [name](const EffectData &data) {
             return data.name == name;
         }
     );
-    return it != s_effectData.end();
+    return it != effectData().end();
 }
 
 bool supported(BuiltInEffect effect)
@@ -757,7 +761,7 @@ bool enabledByDefault(BuiltInEffect effect)
 QStringList availableEffectNames()
 {
     QStringList result;
-    for (const EffectData &data : s_effectData) {
+    for (const EffectData &data : effectData()) {
         if (data.name.isEmpty()) {
             continue;
         }
@@ -777,15 +781,15 @@ QList< BuiltInEffect > availableEffects()
 
 BuiltInEffect builtInForName(const QString &name)
 {
-    auto it = std::find_if(s_effectData.begin(), s_effectData.end(),
+    auto it = std::find_if(effectData().begin(), effectData().end(),
         [name](const EffectData &data) {
             return data.name == name;
         }
     );
-    if (it == s_effectData.end()) {
+    if (it == effectData().end()) {
         return BuiltInEffect::Invalid;
     }
-    return BuiltInEffect(std::distance(s_effectData.begin(), it));
+    return BuiltInEffect(std::distance(effectData().begin(), it));
 }
 
 QString nameForEffect(BuiltInEffect effect)
@@ -795,7 +799,7 @@ QString nameForEffect(BuiltInEffect effect)
 
 const EffectData &effectData(BuiltInEffect effect)
 {
-    return s_effectData.at(index(effect));
+    return effectData().at(index(effect));
 }
 
 } // BuiltInEffects
