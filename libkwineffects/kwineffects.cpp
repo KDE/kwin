@@ -749,6 +749,7 @@ EffectsHandler::~EffectsHandler()
 {
     // All effects should already be unloaded by Impl dtor
     assert(loaded_effects.count() == 0);
+    KWin::effects = nullptr;
 }
 
 CompositingType EffectsHandler::compositingType() const
