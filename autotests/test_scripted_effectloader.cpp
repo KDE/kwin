@@ -159,7 +159,7 @@ void TestScriptedEffectLoader::testHasEffect()
     QFETCH(QString, name);
     QFETCH(bool, expected);
 
-    MockEffectsHandler mockHandler(KWin::XRenderCompositing);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::XRenderCompositing));
     KWin::ScriptedEffectLoader loader;
     QCOMPARE(loader.hasEffect(name), expected);
 
@@ -167,7 +167,7 @@ void TestScriptedEffectLoader::testHasEffect()
     QCOMPARE(loader.isEffectSupported(name), expected);
 
     if (expected) {
-        mockHandler.setAnimationsSupported(false);
+        mockHandler->setAnimationsSupported(false);
         QVERIFY(!loader.isEffectSupported(name));
     }
 }
@@ -216,7 +216,7 @@ void TestScriptedEffectLoader::testLoadEffect()
     QFETCH(QString, name);
     QFETCH(bool, expected);
 
-    MockEffectsHandler mockHandler(KWin::XRenderCompositing);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::XRenderCompositing));
     KWin::ScriptedEffectLoader loader;
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
@@ -289,7 +289,7 @@ void TestScriptedEffectLoader::testLoadScriptedEffect()
     QFETCH(bool, expected);
     QFETCH(KWin::LoadEffectFlags, loadFlags);
 
-    MockEffectsHandler mockHandler(KWin::XRenderCompositing);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::XRenderCompositing));
     KWin::ScriptedEffectLoader loader;
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
@@ -343,7 +343,7 @@ void TestScriptedEffectLoader::testLoadScriptedEffect()
 
 void TestScriptedEffectLoader::testLoadAllEffects()
 {
-    MockEffectsHandler mockHandler(KWin::XRenderCompositing);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::XRenderCompositing));
     KWin::ScriptedEffectLoader loader;
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);

@@ -201,7 +201,7 @@ void TestPluginEffectLoader::testLoadEffect()
     QFETCH(bool, expected);
     QFETCH(KWin::CompositingType, type);
 
-    MockEffectsHandler mockHandler(type);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(type));
     KWin::PluginEffectLoader loader;
     loader.setPluginSubDirectory(QString());
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -285,8 +285,8 @@ void TestPluginEffectLoader::testLoadPluginEffect()
     QFETCH(KWin::LoadEffectFlags, loadFlags);
     QFETCH(bool, enabledByDefault);
 
-    MockEffectsHandler mockHandler(type);
-    mockHandler.setProperty("testEnabledByDefault", enabledByDefault);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(type));
+    mockHandler->setProperty("testEnabledByDefault", enabledByDefault);
     KWin::PluginEffectLoader loader;
     loader.setPluginSubDirectory(QString());
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -341,8 +341,8 @@ void TestPluginEffectLoader::testLoadPluginEffect()
 
 void TestPluginEffectLoader::testLoadAllEffects()
 {
-    MockEffectsHandler mockHandler(KWin::OpenGL2Compositing);
-    mockHandler.setProperty("testEnabledByDefault", true);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(KWin::OpenGL2Compositing));
+    mockHandler->setProperty("testEnabledByDefault", true);
     KWin::PluginEffectLoader loader;
     loader.setPluginSubDirectory(QString());
 

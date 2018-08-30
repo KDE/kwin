@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtTest>
 #include <QStringList>
+#include <QScopedPointer>
 Q_DECLARE_METATYPE(KWin::CompositingType)
 Q_DECLARE_METATYPE(KWin::LoadEffectFlag)
 Q_DECLARE_METATYPE(KWin::LoadEffectFlags)
@@ -362,7 +363,7 @@ void TestBuiltInEffectLoader::testLoadEffect()
     QFETCH(bool, expected);
     QFETCH(KWin::CompositingType, type);
 
-    MockEffectsHandler mockHandler(type);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(type));
     KWin::BuiltInEffectLoader loader;
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
@@ -451,7 +452,7 @@ void TestBuiltInEffectLoader::testLoadBuiltInEffect()
     QFETCH(KWin::CompositingType, type);
     QFETCH(KWin::LoadEffectFlags, loadFlags);
 
-    MockEffectsHandler mockHandler(type);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater> mockHandler(new MockEffectsHandler(type));
     KWin::BuiltInEffectLoader loader;
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
@@ -498,7 +499,7 @@ void TestBuiltInEffectLoader::testLoadBuiltInEffect()
 
 void TestBuiltInEffectLoader::testLoadAllEffects()
 {
-    MockEffectsHandler mockHandler(KWin::XRenderCompositing);
+    QScopedPointer<MockEffectsHandler, QScopedPointerDeleteLater>mockHandler(new MockEffectsHandler(KWin::XRenderCompositing));
     KWin::BuiltInEffectLoader loader;
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
