@@ -42,6 +42,7 @@ QSize VirtualOutput::pixelSize() const
 void VirtualOutput::setGeometry(const QRect &geo)
 {
     m_pixelSize = geo.size();
+    setRawPhysicalSize(m_pixelSize);
     setGlobalPos(geo.topLeft());
 }
 
