@@ -24,11 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwineffects.h"
 
-#include "client.h"
 #include "scene.h"
 
 #include <QHash>
 #include <Plasma/FrameSvg>
+
+#include <memory>
 
 namespace Plasma {
 class Theme;
@@ -53,10 +54,12 @@ class AbstractThumbnailItem;
 class DesktopThumbnailItem;
 class WindowThumbnailItem;
 
+class AbstractClient;
 class Client;
 class Compositor;
 class Deleted;
 class EffectLoader;
+class Toplevel;
 class Unmanaged;
 class WindowPropertyNotifyX11Filter;
 

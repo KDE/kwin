@@ -20,11 +20,11 @@
  */
 
 #include "blur.h"
-#include "effects.h"
 #include "blurshader.h"
 // KConfigSkeleton
 #include "blurconfig.h"
 
+#include <QGuiApplication>
 #include <QMatrix4x4>
 #include <QLinkedList>
 #include <QScreen> // for QGuiApplication

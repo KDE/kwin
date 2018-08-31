@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "platform.h"
 #include "abstract_client.h"
+#include "client.h"
 #include "cursor.h"
 #include "effects.h"
 #include "screens.h"

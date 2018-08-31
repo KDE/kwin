@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "window_property_notify_x11_filter.h"
+#include "client.h"
 #include "effects.h"
 #include "unmanaged.h"
 #include "workspace.h"

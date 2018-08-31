@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "pointer_input.h"
 #include "platform.h"
+#include "client.h"
 #include "effects.h"
 #include "input_event.h"
 #include "input_event_spy.h"

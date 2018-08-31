@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "atoms.h"
+#include "client.h"
 #include "composite.h"
 #include "effects.h"
 #include "effectloader.h"
