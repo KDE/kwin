@@ -85,12 +85,6 @@ public:
     void removeWindowSelectionCursor();
 
     void updatePointerConstraints();
-    void breakPointerConstraints();
-
-    /* This is only used for ESC pressing */
-    void blockPointerConstraints() {
-        m_blockConstraint = true;
-    }
 
     void setEnableConstraints(bool set);
 
@@ -174,7 +168,6 @@ private:
     QMetaObject::Connection m_decorationGeometryConnection;
     bool m_confined = false;
     bool m_locked = false;
-    bool m_blockConstraint = false;
     bool m_enableConstraints = true;
 };
 

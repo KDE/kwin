@@ -43,7 +43,6 @@ class Toplevel;
 class InputEventFilter;
 class InputEventSpy;
 class KeyboardInputRedirection;
-class PointerConstraintsFilter;
 class PointerInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
@@ -224,8 +223,6 @@ public:
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
     bool isSelectingWindow() const;
 
-    bool isBreakingPointerConstraints() const;
-
 Q_SIGNALS:
     /**
      * @brief Emitted when the global pointer position changed
@@ -285,7 +282,6 @@ private:
     LibInput::Connection *m_libInput = nullptr;
 
     WindowSelectorFilter *m_windowSelector = nullptr;
-    PointerConstraintsFilter *m_pointerConstraintsFilter = nullptr;
 
     QVector<InputEventFilter*> m_filters;
     QVector<InputEventSpy*> m_spies;

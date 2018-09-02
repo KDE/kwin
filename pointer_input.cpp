@@ -556,7 +556,6 @@ void PointerInputRedirection::update()
         m_constraintsActivatedConnection = connect(workspace(), &Workspace::clientActivated,
                                                    this, &PointerInputRedirection::updatePointerConstraints);
         // check whether a pointer confinement/lock fires
-        m_blockConstraint = false;
         updatePointerConstraints();
     } else {
         m_window.clear();
@@ -582,11 +581,6 @@ void PointerInputRedirection::breakPointerConstraints(KWayland::Server::SurfaceI
     disconnectConfinedPointerRegionConnection();
     m_confined = false;
     m_locked = false;
-}
-
-void PointerInputRedirection::breakPointerConstraints()
-{
-    breakPointerConstraints(m_window ? m_window->surface() : nullptr);
 }
 
 void PointerInputRedirection::disconnectConfinedPointerRegionConnection()
@@ -643,9 +637,6 @@ void PointerInputRedirection::updatePointerConstraints()
     if (!supportsWarping()) {
         return;
     }
-    if (m_blockConstraint) {
-        return;
-    }
     const bool canConstrain = m_enableConstraints && m_window == workspace()->activeClient();
     const auto cf = s->confinedPointer();
     if (cf) {
@@ -683,9 +674,6 @@ void PointerInputRedirection::updatePointerConstraints()
                     }
                 }
             );
-            OSD::show(i18nc("notification about mouse pointer confined",
-                            "Pointer motion confined to the current window.\nTo release pointer hold Escape for 3 seconds."),
-                      QStringLiteral("preferences-desktop-mouse"), 5000);
             return;
         }
     } else {
@@ -728,9 +716,6 @@ void PointerInputRedirection::updatePointerConstraints()
                     });
                 }
             );
-            OSD::show(i18nc("notification about mouse pointer locked",
-                            "Pointer locked to current position.\nTo end pointer lock hold Escape for 3 seconds."),
-                      QStringLiteral("preferences-desktop-mouse"), 5000);
             // TODO: connect to region change - is it needed at all? If the pointer is locked it's always in the region
         }
     } else {
