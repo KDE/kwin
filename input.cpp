@@ -1512,7 +1512,7 @@ public:
                 // TODO: consider decorations
                 if (t->surface() != seat->dragSurface()) {
                     if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
-                        workspace()->raiseClient(c);
+                        workspace()->activateClient(c);
                     }
                     seat->setPointerPos(event->globalPos());
                     seat->setDragTarget(t->surface(), event->globalPos(), t->inputTransformation());
