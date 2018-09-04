@@ -166,34 +166,35 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
             vbo->setColor(QColor(0, 0, 0));
+            const QRectF areaF = area;
             // top frame
-            verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
-            verts << area.left() - FRAME_WIDTH << area.top() - FRAME_WIDTH;
-            verts << area.left() - FRAME_WIDTH << area.top() - 1;
-            verts << area.left() - FRAME_WIDTH << area.top() - 1;
-            verts << area.right() + FRAME_WIDTH << area.top() - 1;
-            verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+            verts << areaF.right() + FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
+            verts << areaF.left() - FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
+            verts << areaF.left() - FRAME_WIDTH << areaF.top();
+            verts << areaF.left() - FRAME_WIDTH << areaF.top();
+            verts << areaF.right() + FRAME_WIDTH << areaF.top();
+            verts << areaF.right() + FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
             // left frame
-            verts << area.left() - 1 << area.top() - FRAME_WIDTH;
-            verts << area.left() - FRAME_WIDTH << area.top() - FRAME_WIDTH;
-            verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-            verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-            verts << area.left() - 1 << area.bottom() + FRAME_WIDTH;
-            verts << area.left() - 1 << area.top() - FRAME_WIDTH;
+            verts << areaF.left() << areaF.top() - FRAME_WIDTH;
+            verts << areaF.left() - FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
+            verts << areaF.left() - FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
+            verts << areaF.left() - FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
+            verts << areaF.left() << areaF.bottom() + FRAME_WIDTH;
+            verts << areaF.left() << areaF.top() - FRAME_WIDTH;
             // right frame
-            verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
-            verts << area.right() + 1 << area.top() - FRAME_WIDTH;
-            verts << area.right() + 1 << area.bottom() + FRAME_WIDTH;
-            verts << area.right() + 1 << area.bottom() + FRAME_WIDTH;
-            verts << area.right() + FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-            verts << area.right() + FRAME_WIDTH << area.top() - FRAME_WIDTH;
+            verts << areaF.right() + FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
+            verts << areaF.right() << areaF.top() - FRAME_WIDTH;
+            verts << areaF.right() << areaF.bottom() + FRAME_WIDTH;
+            verts << areaF.right() << areaF.bottom() + FRAME_WIDTH;
+            verts << areaF.right() + FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
+            verts << areaF.right() + FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
             // bottom frame
-            verts << area.right() + FRAME_WIDTH << area.bottom() + 1;
-            verts << area.left() - FRAME_WIDTH << area.bottom() + 1;
-            verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-            verts << area.left() - FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-            verts << area.right() + FRAME_WIDTH << area.bottom() + FRAME_WIDTH;
-            verts << area.right() + FRAME_WIDTH << area.bottom() + 1;
+            verts << areaF.right() + FRAME_WIDTH << areaF.bottom();
+            verts << areaF.left() - FRAME_WIDTH << areaF.bottom();
+            verts << areaF.left() - FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
+            verts << areaF.left() - FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
+            verts << areaF.right() + FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
+            verts << areaF.right() + FRAME_WIDTH << areaF.bottom();
             vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
 
             ShaderBinder binder(ShaderTrait::UniformColor);
