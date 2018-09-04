@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>327</width>
-    <height>104</height>
+    <width>345</width>
+    <height>112</height>
    </rect>
   </property>
   <layout class="QFormLayout" name="formLayout">
@@ -15,26 +15,48 @@
     <enum>QFormLayout::FieldsStayAtSizeHint</enum>
    </property>
    <item row="0" column="0" colspan="2">
-    <widget class="KTitleWidget" name="ktitlewidget">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
-      <string>Trigger on</string>
+      <string>Trigger effect with:</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QRadioButton" name="modifierRadio">
+    <widget class="QLabel" name="label_KeyboardShortcut">
      <property name="text">
-      <string>Modifiers</string>
+      <string>Keyboard shortcut:</string>
      </property>
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QWidget" name="widget" native="true">
-     <property name="enabled">
-      <bool>false</bool>
+    <widget class="KKeySequenceWidget" name="shortcut" native="true"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_ModifierKeys">
+     <property name="text">
+      <string>Modifier keys:</string>
      </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
@@ -68,20 +90,6 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QRadioButton" name="shortcutRadio">
-     <property name="text">
-      <string>Shortcut</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="KKeySequenceWidget" name="shortcut">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -90,45 +98,7 @@
    <extends>QWidget</extends>
    <header>kkeysequencewidget.h</header>
   </customwidget>
-  <customwidget>
-   <class>KTitleWidget</class>
-   <extends>QWidget</extends>
-   <header>ktitlewidget.h</header>
-  </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>shortcutRadio</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>shortcut</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>107</x>
-     <y>75</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>183</x>
-     <y>75</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modifierRadio</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>widget</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>99</x>
-     <y>44</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>309</x>
-     <y>52</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

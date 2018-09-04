@@ -4,6 +4,7 @@
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2010 Jorge Mata <matamax123@gmail.com>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -61,7 +62,7 @@ private:
     bool init();
     void loadTexture();
     QRect m_lastRect[2];
-    bool m_active, m_mousePolling;
+    bool m_mousePolling;
     float m_angle;
     float m_angleBase;
     GLTexture* m_texture[2];
@@ -72,6 +73,13 @@ private:
     QAction* m_action;
     QImage m_image[2];
     Qt::KeyboardModifiers m_modifiers;
+
+    enum class State {
+        ActivatedByModifiers,
+        ActivatedByShortcut,
+        Inactive
+    };
+    State m_state = State::Inactive;
 };
 
 } // namespace

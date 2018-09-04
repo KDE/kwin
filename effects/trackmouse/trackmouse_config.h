@@ -52,7 +52,6 @@ public Q_SLOTS:
 private Q_SLOTS:
     void shortcutChanged(const QKeySequence &seq);
 private:
-    void checkModifiers();
     TrackMouseEffectConfigForm* m_ui;
     KActionCollection* m_actionCollection;
 };

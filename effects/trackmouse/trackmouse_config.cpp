@@ -44,6 +44,8 @@ K_PLUGIN_FACTORY_WITH_JSON(TrackMouseEffectConfigFactory,
 namespace KWin
 {
 
+static const QString s_toggleTrackMouseActionName = QStringLiteral("TrackMouse");
+
 TrackMouseEffectConfigForm::TrackMouseEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
     setupUi(this);
@@ -64,7 +66,7 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantLi
     m_actionCollection->setConfigGroup(QStringLiteral("TrackMouse"));
     m_actionCollection->setConfigGlobal(true);
 
-    QAction *a = m_actionCollection->addAction(QStringLiteral("TrackMouse"));
+    QAction *a = m_actionCollection->addAction(s_toggleTrackMouseActionName);
     a->setText(i18n("Track mouse"));
     a->setProperty("isConfigurationAction", true);
 
@@ -81,20 +83,16 @@ TrackMouseEffectConfig::~TrackMouseEffectConfig()
 {
 }
 
-void TrackMouseEffectConfig::checkModifiers()
-{
-    const bool modifiers = m_ui->kcfg_Shift->isChecked() || m_ui->kcfg_Alt->isChecked() ||
-                           m_ui->kcfg_Control->isChecked() || m_ui->kcfg_Meta->isChecked();
-    m_ui->modifierRadio->setChecked(modifiers);
-    m_ui->shortcutRadio->setChecked(!modifiers);
-}
-
 void TrackMouseEffectConfig::load()
 {
     KCModule::load();
 
-    checkModifiers();
-    emit changed(false);
+    if (QAction *a = m_actionCollection->action(s_toggleTrackMouseActionName)) {
+        auto shortcuts = KGlobalAccel::self()->shortcut(a);
+        if (!shortcuts.isEmpty()) {
+            m_ui->shortcut->setKeySequence(shortcuts.first());
+        }
+    }
 }
 
 void TrackMouseEffectConfig::save()
@@ -111,7 +109,6 @@ void TrackMouseEffectConfig::defaults()
 {
     KCModule::defaults();
     m_ui->shortcut->clearKeySequence();
-    checkModifiers();
 }
 
 void TrackMouseEffectConfig::shortcutChanged(const QKeySequence &seq)
@@ -119,7 +116,6 @@ void TrackMouseEffectConfig::shortcutChanged(const QKeySequence &seq)
     if (QAction *a = m_actionCollection->action(QStringLiteral("TrackMouse"))) {
         KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << seq, KGlobalAccel::NoAutoloading);
     }
-//     m_actionCollection->writeSettings();
     emit changed(true);
 }
 

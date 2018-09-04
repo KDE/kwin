@@ -4,6 +4,7 @@
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2010 Jorge Mata <matamax123@gmail.com>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,8 +43,7 @@ namespace KWin
 {
 
 TrackMouseEffect::TrackMouseEffect()
-    : m_active(false)
-    , m_angle(0)
+    : m_angle(0)
 {
     initConfig<TrackMouseConfig>();
     m_texture[0] = m_texture[1] = 0;
@@ -107,21 +107,18 @@ void TrackMouseEffect::reconfigure(ReconfigureFlags)
 
 void TrackMouseEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (m_active) {
-        QTime t = QTime::currentTime();
-        m_angle = ((t.second() % 4) * m_angleBase) + (t.msec() / 1000.0 * m_angleBase);
-        m_lastRect[0].moveCenter(cursorPos());
-        m_lastRect[1].moveCenter(cursorPos());
-        data.paint |= m_lastRect[0].adjusted(-1,-1,1,1);
-    }
+    QTime t = QTime::currentTime();
+    m_angle = ((t.second() % 4) * m_angleBase) + (t.msec() / 1000.0 * m_angleBase);
+    m_lastRect[0].moveCenter(cursorPos());
+    m_lastRect[1].moveCenter(cursorPos());
+    data.paint |= m_lastRect[0].adjusted(-1,-1,1,1);
+
     effects->prePaintScreen(data, time);
 }
 
 void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);   // paint normal screen
-    if (!m_active)
-        return;
 
     if ( effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
         ShaderBinder binder(ShaderTrait::MapTexture);
@@ -191,9 +188,7 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
 
 void TrackMouseEffect::postPaintScreen()
 {
-    if (m_active) {
-        effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
-    }
+    effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
     effects->postPaintScreen();
 }
 
@@ -215,39 +210,71 @@ bool TrackMouseEffect::init()
 #endif
     m_lastRect[0].moveCenter(cursorPos());
     m_lastRect[1].moveCenter(cursorPos());
-    m_active = true;
     m_angle = 0;
     return true;
 }
 
 void TrackMouseEffect::toggle()
 {
-    if (m_mousePolling)
-        return;
+    switch (m_state) {
+    case State::ActivatedByModifiers:
+        m_state = State::ActivatedByShortcut;
+        break;
 
-    if (m_active) {
-        m_active = false;
-    } else if (!init()) {
-        return;
+    case State::ActivatedByShortcut:
+        m_state = State::Inactive;
+        break;
+
+    case State::Inactive:
+        if (!init()) {
+            return;
+        }
+        m_state = State::ActivatedByShortcut;
+        break;
+
+    default:
+        Q_UNREACHABLE();
+        break;
     }
-    effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
+
+    effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
 }
 
 void TrackMouseEffect::slotMouseChanged(const QPoint&, const QPoint&,
                                         Qt::MouseButtons, Qt::MouseButtons,
                                         Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
-    if (!m_mousePolling) // we didn't ask for it but maybe someone else did...
+    if (!m_mousePolling) { // we didn't ask for it but maybe someone else did...
         return;
-    if (m_modifiers && modifiers == m_modifiers) {
-        if (!m_active && !init()) {
+    }
+
+    switch (m_state) {
+    case State::ActivatedByModifiers:
+        if (modifiers == m_modifiers) {
             return;
         }
-        effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
-    } else if (m_active) {
-        m_active = false;
-        effects->addRepaint(m_lastRect[0].adjusted(-1,-1,1,1));
+        m_state = State::Inactive;
+        break;
+
+    case State::ActivatedByShortcut:
+        return;
+
+    case State::Inactive:
+        if (modifiers != m_modifiers) {
+            return;
+        }
+        if (!init()) {
+            return;
+        }
+        m_state = State::ActivatedByModifiers;
+        break;
+
+    default:
+        Q_UNREACHABLE();
+        break;
     }
+
+    effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
 }
 
 void TrackMouseEffect::loadTexture()
@@ -280,7 +307,7 @@ void TrackMouseEffect::loadTexture()
 
 bool TrackMouseEffect::isActive() const
 {
-    return m_active;
+    return m_state != State::Inactive;
 }
 
 } // namespace
