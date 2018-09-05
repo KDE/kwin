@@ -41,7 +41,7 @@ SlideEffect::SlideEffect()
 
     m_timeLine.setEasingCurve(QEasingCurve::OutCubic);
 
-    connect(effects, static_cast<void (EffectsHandler::*)(int,int,EffectWindow*)>(&EffectsHandler::desktopChanged),
+    connect(effects, QOverload<int, int, EffectWindow *>::of(&EffectsHandler::desktopChanged),
             this, &SlideEffect::desktopChanged);
     connect(effects, &EffectsHandler::windowAdded,
             this, &SlideEffect::windowAdded);
