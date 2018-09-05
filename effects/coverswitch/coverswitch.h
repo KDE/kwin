@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QRegion>
 #include <QSize>
-#include <QTimeLine>
 #include <QFont>
 #include <QQueue>
 
@@ -65,7 +64,7 @@ public:
 
     // for properties
     int configuredAnimationDuration() const {
-        return animationDuration;
+        return animationDuration.count();
     }
     bool isAnimateSwitch() const {
         return animateSwitch;
@@ -131,10 +130,10 @@ private:
     bool reflection;
     float mirrorColor[2][4];
     bool windowTitle;
-    int animationDuration;
+    std::chrono::milliseconds animationDuration;
     bool stopRequested;
     bool startRequested;
-    QTimeLine timeLine;
+    TimeLine timeLine;
     QRect area;
     float zPosition;
     float scaleFactor;
