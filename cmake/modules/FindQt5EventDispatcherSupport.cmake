@@ -65,32 +65,20 @@ if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
     message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindQt5EventDispatcherSupport.cmake")
 endif()
 
-#Trying to find in the default paths
+# Use pkg-config to get the directories and then use these values
+# in the FIND_PATH() and FIND_LIBRARY() calls
+find_package(PkgConfig)
+pkg_check_modules(PKG_Qt5EventDispatcherSupport QUIET Qt5Gui)
+
+set(Qt5EventDispatcherSupport_DEFINITIONS ${PKG_Qt5EventDispatcherSupport_CFLAGS_OTHER})
+set(Qt5EventDispatcherSupport_VERSION ${PKG_Qt5EventDispatcherSupport_VERSION})
+
 find_path(Qt5EventDispatcherSupport_INCLUDE_DIR
     NAMES
         QtEventDispatcherSupport/private/qunixeventdispatcher_qpa_p.h
-    PATH_SUFFIXES
-        QtEventDispatcherSupport/${Qt5Core_VERSION}/
+    HINTS
+        ${PKG_Qt5EventDispatcherSupport_INCLUDEDIR}/QtEventDispatcherSupport/${PKG_Qt5EventDispatcherSupport_VERSION}/
 )
-
-if (Qt5EventDispatcherSupport_INCLUDE_DIR)
-	set(Qt5EventDispatcherSupport_VERSION ${Qt5Core_VERSION})
-else()
-	# Use pkg-config to get the directories and then use these values
-	# in the FIND_PATH() and FIND_LIBRARY() calls
-	find_package(PkgConfig)
-	pkg_check_modules(PKG_Qt5EventDispatcherSupport QUIET Qt5Gui)
-
-	set(Qt5EventDispatcherSupport_DEFINITIONS ${PKG_Qt5EventDispatcherSupport_CFLAGS_OTHER})
-	set(Qt5EventDispatcherSupport_VERSION ${PKG_Qt5EventDispatcherSupport_VERSION})
-	find_path(Qt5EventDispatcherSupport_INCLUDE_DIR
-	    NAMES
-		QtEventDispatcherSupport/private/qunixeventdispatcher_qpa_p.h
-	    HINTS
-	        ${PKG_Qt5EventDispatcherSupport_INCLUDEDIR}/QtEventDispatcherSupport/${PKG_Qt5EventDispatcherSupport_VERSION}/
-	)
-endif()
-
 find_library(Qt5EventDispatcherSupport_LIBRARY
     NAMES
         Qt5EventDispatcherSupport
