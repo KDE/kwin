@@ -537,7 +537,7 @@ void TestWaylandOutputManagement::testScale()
     //will be setApplied using the connect above
 
     QCOMPARE(output->scale(), 3);
-    QCOMPARE(output->scaleF(), 3.0); //test fowards compatibility
+    QCOMPARE(output->scaleF(), 3.0); //test forward compatibility
 }
 
 

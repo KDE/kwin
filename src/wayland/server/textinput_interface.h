@@ -329,8 +329,8 @@ public:
      *
      * The Client processes this event together with the commit string
      *
-     * @param beforeLength length of text before current cursor positon.
-     * @param afterLength length of text after current cursor positon.
+     * @param beforeLength length of text before current cursor position.
+     * @param afterLength length of text after current cursor position.
      * @see commit
      **/
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);

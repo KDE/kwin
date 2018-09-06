@@ -2183,7 +2183,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(unboundSpy.count(), 1);
     QCOMPARE(destroyedSpy.count(), 0);
     QVERIFY(!serverTouch->resource());
-    // try to call into all the the methods of the touch interface, should not crash
+    // try to call into all the methods of the touch interface, should not crash
     QCOMPARE(m_seatInterface->focusedTouch(), serverTouch);
     m_seatInterface->setTimestamp(8);
     QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 0);
