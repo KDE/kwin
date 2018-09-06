@@ -65,20 +65,32 @@ if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
     message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindQt5FontDatabaseSupport.cmake")
 endif()
 
-# Use pkg-config to get the directories and then use these values
-# in the FIND_PATH() and FIND_LIBRARY() calls
-find_package(PkgConfig)
-pkg_check_modules(PKG_Qt5FontDatabaseSupport QUIET Qt5Gui)
-
-set(Qt5FontDatabaseSupport_DEFINITIONS ${PKG_Qt5FontDatabaseSupport_CFLAGS_OTHER})
-set(Qt5FontDatabaseSupport_VERSION ${PKG_Qt5FontDatabaseSupport_VERSION})
-
+#Trying to find in the default paths
 find_path(Qt5FontDatabaseSupport_INCLUDE_DIR
     NAMES
         QtFontDatabaseSupport/private/qfontconfigdatabase_p.h
-    HINTS
-        ${PKG_Qt5FontDatabaseSupport_INCLUDEDIR}/QtFontDatabaseSupport/${PKG_Qt5FontDatabaseSupport_VERSION}/
+    PATH_SUFFIXES
+        QtFontDatabaseSupport/${Qt5Core_VERSION}/
 )
+
+if (Qt5FontDatabaseSupport_INCLUDE_DIR)
+	set(Qt5FontDatabaseSupport_VERSION ${Qt5Core_VERSION})
+else()
+	# Use pkg-config to get the directories and then use these values
+	# in the FIND_PATH() and FIND_LIBRARY() calls
+	find_package(PkgConfig)
+	pkg_check_modules(PKG_Qt5FontDatabaseSupport QUIET Qt5Gui)
+
+	set(Qt5FontDatabaseSupport_DEFINITIONS ${PKG_Qt5FontDatabaseSupport_CFLAGS_OTHER})
+	set(Qt5FontDatabaseSupport_VERSION ${PKG_Qt5FontDatabaseSupport_VERSION})
+	find_path(Qt5FontDatabaseSupport_INCLUDE_DIR
+	    NAMES
+		QtFontDatabaseSupport/private/qfontconfigdatabase_p.h
+	    HINTS
+	        ${PKG_Qt5FontDatabaseSupport_INCLUDEDIR}/QtFontDatabaseSupport/${PKG_Qt5FontDatabaseSupport_VERSION}/
+	)
+endif()
+
 find_library(Qt5FontDatabaseSupport_LIBRARY
     NAMES
         Qt5FontDatabaseSupport

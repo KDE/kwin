@@ -64,20 +64,32 @@ if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
     message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindQt5PlatformSupport.cmake")
 endif()
 
-# Use pkg-config to get the directories and then use these values
-# in the FIND_PATH() and FIND_LIBRARY() calls
-find_package(PkgConfig)
-pkg_check_modules(PKG_Qt5PlatformSupport QUIET Qt5Gui)
-
-set(Qt5PlatformSupport_DEFINITIONS ${PKG_Qt5PlatformSupport_CFLAGS_OTHER})
-set(Qt5PlatformSupport_VERSION ${PKG_Qt5PlatformSupport_VERSION})
-
+#Trying to find in the default paths
 find_path(Qt5PlatformSupport_INCLUDE_DIR
     NAMES
         QtPlatformSupport/private/qfontconfigdatabase_p.h
-    HINTS
-        ${PKG_Qt5PlatformSupport_INCLUDEDIR}/QtPlatformSupport/${PKG_Qt5PlatformSupport_VERSION}/
+    PATH_SUFFIXES
+        QtPlatformSupport/${Qt5Core_VERSION}/
 )
+
+if (Qt5PlatformSupport_INCLUDE_DIR)
+	set(Qt5PlatformSupport_VERSION ${Qt5Core_VERSION})
+else()
+	# Use pkg-config to get the directories and then use these values
+	# in the FIND_PATH() and FIND_LIBRARY() calls
+	find_package(PkgConfig)
+	pkg_check_modules(PKG_Qt5PlatformSupport QUIET Qt5Gui)
+
+	set(Qt5PlatformSupport_DEFINITIONS ${PKG_Qt5PlatformSupport_CFLAGS_OTHER})
+	set(Qt5PlatformSupport_VERSION ${PKG_Qt5PlatformSupport_VERSION})
+	find_path(Qt5PlatformSupport_INCLUDE_DIR
+	    NAMES
+		QtPlatformSupport/private/qfontconfigdatabase_p.h
+	    HINTS
+	        ${PKG_Qt5PlatformSupport_INCLUDEDIR}/QtPlatformSupport/${PKG_Qt5PlatformSupport_VERSION}/
+	)
+endif()
+
 find_library(Qt5PlatformSupport_LIBRARY
     NAMES
         Qt5PlatformSupport
