@@ -287,7 +287,7 @@ void TestDataDevice::testDrag()
     // finally start the drag
     dataDevice->startDrag(pointerButtonSerial, dataSource.data(), surface.data());
     QCOMPARE(dragStartedSpy.wait(500), success);
-    QCOMPARE(dragStartedSpy.count(), success);
+    QCOMPARE(!dragStartedSpy.isEmpty(), success);
     QCOMPARE(deviceInterface->dragSource(), success ? sourceInterface : nullptr);
     QCOMPARE(deviceInterface->origin(), success ? surfaceInterface : nullptr);
     QVERIFY(!deviceInterface->icon());
@@ -366,7 +366,7 @@ void TestDataDevice::testDragInternally()
     // finally start the internal drag
     dataDevice->startDragInternally(pointerButtonSerial, surface.data(), iconSurface.data());
     QCOMPARE(dragStartedSpy.wait(500), success);
-    QCOMPARE(dragStartedSpy.count(), success);
+    QCOMPARE(!dragStartedSpy.isEmpty(), success);
     QVERIFY(!deviceInterface->dragSource());
     QCOMPARE(deviceInterface->origin(), success ? surfaceInterface : nullptr);
     QCOMPARE(deviceInterface->icon(), success ? iconSurfaceInterface : nullptr);
