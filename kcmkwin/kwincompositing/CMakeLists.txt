@@ -38,7 +38,7 @@ target_link_libraries(kwincompositing
     KF5::ConfigCore
     KF5::Declarative
     KF5::I18n
-    KF5::Service
+    KF5::Package
     KF5::KCMUtils
     KF5::NewStuff
     kwin4_effect_builtins
@@ -72,7 +72,7 @@ if (BUILD_TESTING)
         KF5::ConfigCore
         KF5::Declarative
         KF5::I18n
-        KF5::Service
+        KF5::Package
         KF5::KCMUtils
         KF5::NewStuff
         kwineffects

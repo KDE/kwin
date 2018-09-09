@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=KWin Effect
+Type=Service
+X-KDE-ServiceTypes=KPackage/PackageStructure
+X-KDE-Library=kwin_packagestructure_effect
+
+X-KDE-PluginInfo-Author=Vlad Zagorodniy
+X-KDE-PluginInfo-Email=vladzzag@gmail.com
+X-KDE-PluginInfo-Name=KWin/Effect
+X-KDE-PluginInfo-Version=1

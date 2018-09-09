@@ -26,10 +26,9 @@
 #include <effect_builtins.h>
 
 #include <KLocalizedString>
-#include <KService>
-#include <KServiceTypeTrader>
 #include <KSharedConfig>
 #include <KCModuleProxy>
+#include <KPackage/PackageLoader>
 #include <KPluginTrader>
 #include <kdeclarative/kdeclarative.h>
 #include <KPluginLoader>
@@ -263,10 +262,9 @@ void EffectModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPlug
 
 void EffectModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 {
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect", QStringLiteral("[X-Plasma-API] == 'javascript'"));
-    for(KService::Ptr service : offers) {
-        const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kservices5/"+ service->entryPath(), QStandardPaths::LocateFile);
-        KPluginInfo plugin(effectPluginPath);
+    const auto plugins = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Effect"), QStringLiteral("kwin/effects"));
+    for (const KPluginMetaData &metaData : plugins) {
+        KPluginInfo plugin(metaData);
         EffectData effect;
 
         effect.name = plugin.name();
@@ -280,15 +278,16 @@ void EffectModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         effect.effectStatus = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault()));
         effect.enabledByDefault = plugin.isPluginEnabledByDefault();
         effect.enabledByDefaultFunction = false;
-        effect.video = service->property(QStringLiteral("X-KWin-Video-Url"), QVariant::Url).toUrl();
+        effect.video = plugin.property(QStringLiteral("X-KWin-Video-Url")).toUrl();
         effect.supported = true;
-        effect.exclusiveGroup = service->property(QStringLiteral("X-KWin-Exclusive-Category"), QVariant::String).toString();
-        effect.internal = service->property(QStringLiteral("X-KWin-Internal"), QVariant::Bool).toBool();
+        effect.exclusiveGroup = plugin.property(QStringLiteral("X-KWin-Exclusive-Category")).toString();
+        effect.internal = plugin.property(QStringLiteral("X-KWin-Internal")).toBool();
         effect.scripted = true;
 
-        if (!service->pluginKeyword().isEmpty()) {
-            // scripted effects have their pluginName() as the keyword
-            effect.configurable = service->property(QStringLiteral("X-KDE-ParentComponents")).toString() == service->pluginKeyword();
+        const QString pluginKeyword = plugin.property(QStringLiteral("X-KDE-PluginKeyword")).toString();
+        if (!pluginKeyword.isEmpty()) {
+             // scripted effects have their pluginName() as the keyword
+             effect.configurable = plugin.property(QStringLiteral("X-KDE-ParentComponents")).toString() == pluginKeyword;
         } else {
             effect.configurable = false;
         }
