@@ -23,7 +23,6 @@ var dialogParentEffect = {
     duration: animationTime(300),
     windowAdded: function (window) {
         "use strict";
-        var mainWindows, i, w;
         if (window === null || window.modal === false) {
             return;
         }
@@ -31,9 +30,9 @@ var dialogParentEffect = {
     },
     dialogGotModality: function (window) {
         "use strict";
-        mainWindows = window.mainWindows();
-        for (i = 0; i < mainWindows.length; i += 1) {
-            w = mainWindows[i];
+        var mainWindows = window.mainWindows();
+        for (var i = 0; i < mainWindows.length; i += 1) {
+            var w = mainWindows[i];
             if (w.dialogParentAnimation !== undefined) {
                 continue;
             }
@@ -59,7 +58,6 @@ var dialogParentEffect = {
     },
     windowClosed: function (window) {
         "use strict";
-        var mainWindows, i, w;
         dialogParentEffect.cancelAnimation(window);
         if (window.modal === false) {
             return;
@@ -68,9 +66,9 @@ var dialogParentEffect = {
     },
     dialogLostModality: function (window) {
         "use strict";
-        mainWindows = window.mainWindows();
-        for (i = 0; i < mainWindows.length; i += 1) {
-            w = mainWindows[i];
+        var mainWindows = window.mainWindows();
+        for (var i = 0; i < mainWindows.length; i += 1) {
+            var w = mainWindows[i];
             if (w.dialogParentAnimation === undefined) {
                 continue;
             }
