@@ -98,7 +98,7 @@ Type=bool
 Type=bool
 
 [PropertyDef::X-KWin-Video-Url]
-Type=Url
+Type=QString
 
 [PropertyDef::X-KWin-Exclusive-Category]
 Type=QString
