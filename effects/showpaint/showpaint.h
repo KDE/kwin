@@ -26,22 +26,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class ShowPaintEffect
-    : public Effect
+class ShowPaintEffect : public Effect
 {
+    Q_OBJECT
+
 public:
-    ShowPaintEffect();
-    ~ShowPaintEffect();
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+
 private:
     void paintGL(const QMatrix4x4 &projection);
     void paintXrender();
     void paintQPainter();
-    QRegion painted; // what's painted in one pass
-    int color_index;
+
+    QRegion m_painted; // what's painted in one pass
+    int m_colorIndex = 0;
 };
 
-} // namespace
+} // namespace KWin
 
 #endif
