@@ -204,12 +204,17 @@ void RemoteAccessManagerInterface::Private::sendBufferReady(const OutputInterfac
 
         // clients don't necessarily bind outputs
         if (boundScreens.isEmpty()) {
-            return;
+            continue;
         }
 
         // no reason for client to bind wl_output multiple times, send only to first one
         org_kde_kwin_remote_access_manager_send_buffer_ready(res, buf->fd(), boundScreens[0]);
         holder.counter++;
+    }
+    if (holder.counter == 0) {
+        // buffer was not requested by any client
+        emit q->bufferReleased(buf);
+        return;
     }
     // store buffer locally, clients will ask it later
     sentBuffers[buf->fd()] = holder;
