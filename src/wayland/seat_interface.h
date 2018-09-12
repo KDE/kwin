@@ -589,6 +589,12 @@ public:
     void touchFrame();
     void cancelTouchSequence();
     bool isTouchSequence() const;
+    /**
+     * @returns true if there is a touch sequence going on associated with a touch
+     * down of the given @p serial.
+     * @since 5.XX
+     **/
+    bool hasImplicitTouchGrab(quint32 serial) const;
     ///@}
 
     /**
@@ -663,6 +669,7 @@ Q_SIGNALS:
     void hasKeyboardChanged(bool);
     void hasTouchChanged(bool);
     void pointerPosChanged(const QPointF &pos);
+    void touchMoved(qint32 id, quint32 serial, const QPointF &globalPosition);
     void timestampChanged(quint32);
 
     void pointerCreated(KWayland::Server::PointerInterface*);

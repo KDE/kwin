@@ -92,6 +92,10 @@ void TouchInterface::move(qint32 id, const QPointF &localPos)
     if (!d->resource) {
         return;
     }
+    if (d->seat->isDragTouch()) {
+        // handled by DataDevice
+        return;
+    }
     wl_touch_send_motion(d->resource, d->seat->timestamp(), id, wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
     d->client->flush();
 }

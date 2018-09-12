@@ -54,7 +54,7 @@ public:
     struct Drag {
         SurfaceInterface *surface = nullptr;
         QMetaObject::Connection destroyConnection;
-        QMetaObject::Connection pointerPosConnection;
+        QMetaObject::Connection posConnection;
         QMetaObject::Connection sourceActionConnection;
         QMetaObject::Connection targetActionConnection;
         quint32 serial = 0;
@@ -99,10 +99,14 @@ void DataDeviceInterface::Private::startDragCallback(wl_client *client, wl_resou
 
 void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *i, quint32 serial)
 {
-    // TODO: allow touch
-    if (!seat->hasImplicitPointerGrab(serial) || seat->focusedPointerSurface() != origin) {
-        // Surface doesn't have pointer grab.
-        return;
+    const bool pointerGrab = seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() == origin;
+    if (!pointerGrab) {
+        // Client doesn't have pointer grab.
+        const bool touchGrab = seat->hasImplicitTouchGrab(serial) && seat->focusedTouchSurface() == origin;
+        if (!touchGrab) {
+            // Client neither has pointer nor touch grab. No drag start allowed.
+            return;
+        }
     }
     // TODO: source is allowed to be null, handled client internally!
     Q_Q(DataDeviceInterface);
@@ -248,9 +252,9 @@ void DataDeviceInterface::drop()
         return;
     }
     wl_data_device_send_drop(d->resource);
-    if (d->drag.pointerPosConnection) {
-        disconnect(d->drag.pointerPosConnection);
-        d->drag.pointerPosConnection = QMetaObject::Connection();
+    if (d->drag.posConnection) {
+        disconnect(d->drag.posConnection);
+        d->drag.posConnection = QMetaObject::Connection();
     }
     disconnect(d->drag.destroyConnection);
     d->drag.destroyConnection = QMetaObject::Connection();
@@ -265,9 +269,9 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         if (d->resource && d->drag.surface->resource()) {
             wl_data_device_send_leave(d->resource);
         }
-        if (d->drag.pointerPosConnection) {
-            disconnect(d->drag.pointerPosConnection);
-            d->drag.pointerPosConnection = QMetaObject::Connection();
+        if (d->drag.posConnection) {
+            disconnect(d->drag.posConnection);
+            d->drag.posConnection = QMetaObject::Connection();
         }
         disconnect(d->drag.destroyConnection);
         d->drag.destroyConnection = QMetaObject::Connection();
@@ -292,7 +296,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     DataOfferInterface *offer = d->createDataOffer(source);
     d->drag.surface = surface;
     if (d->seat->isDragPointer()) {
-        d->drag.pointerPosConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this,
+        d->drag.posConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this,
             [this] {
                 Q_D();
                 const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
@@ -301,16 +305,30 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
                 client()->flush();
             }
         );
+    } else if (d->seat->isDragTouch()) {
+        d->drag.posConnection = connect(d->seat, &SeatInterface::touchMoved, this,
+            [this](qint32 id, quint32 serial, const QPointF &globalPosition) {
+                Q_D();
+                Q_UNUSED(id);
+                if (serial != d->drag.serial) {
+                    // different touch down has been moved
+                    return;
+                }
+                const QPointF pos = d->seat->dragSurfaceTransformation().map(globalPosition);
+                wl_data_device_send_motion(d->resource, d->seat->timestamp(),
+                                        wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+                client()->flush();
+            }
+        );
     }
-    // TODO: same for touch
     d->drag.destroyConnection = connect(d->drag.surface, &QObject::destroyed, this,
         [this] {
             Q_D();
             if (d->resource) {
                 wl_data_device_send_leave(d->resource);
             }
-            if (d->drag.pointerPosConnection) {
-                disconnect(d->drag.pointerPosConnection);
+            if (d->drag.posConnection) {
+                disconnect(d->drag.posConnection);
             }
             d->drag = Private::Drag();
         }

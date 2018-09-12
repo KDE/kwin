@@ -24,6 +24,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "global_p.h"
 // Qt
 #include <QHash>
+#include <QMap>
 #include <QPointer>
 #include <QVector>
 // Wayland
@@ -147,9 +148,10 @@ public:
             QVector<TouchInterface*> touchs;
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
+            QPointF firstTouchPos;
         };
         Focus focus;
-        QVector<qint32> ids;
+        QMap<qint32, quint32> ids;
     };
     Touch globalTouch;
 
@@ -164,6 +166,7 @@ public:
         DataDeviceInterface *target = nullptr;
         SurfaceInterface *surface = nullptr;
         PointerInterface *sourcePointer = nullptr;
+        TouchInterface *sourceTouch = nullptr;
         QMatrix4x4 transformation;
         QMetaObject::Connection destroyConnection;
         QMetaObject::Connection dragSourceDestroyConnection;
