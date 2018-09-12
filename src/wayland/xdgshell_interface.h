@@ -334,7 +334,7 @@ Q_SIGNALS:
     void transientForChanged();
 
     /**
-     * Emitted whenever the maximun size hint changes
+     * Emitted whenever the maximum size hint changes
      * @since 5.39
      */
     void maxSizeChanged(const QSize &size);
@@ -421,7 +421,7 @@ public:
 
     /**
      * Specifies in what direction the popup should be positioned around the anchor
-     * i.e if the gravity is "bottom", then then the top of top of the poup will be at the anchor edge
+     * i.e if the gravity is "bottom", then then the top of top of the popup will be at the anchor edge
      * if the gravity is top, then the bottom of the popup will be at the anchor edge
      *
      * @since 5.39

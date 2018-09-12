@@ -75,7 +75,7 @@ public:
     void inhibit();
 
     /**
-     * Unhibits the IdleInterface. The idle timeouts are only restarted if uninhibit has been
+     * Inhibits the IdleInterface. The idle timeouts are only restarted if uninhibit has been
      * called the same amount as inhibit.
      *
      * @see inhibit

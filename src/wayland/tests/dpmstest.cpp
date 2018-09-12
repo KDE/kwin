@@ -129,7 +129,7 @@ int main(int argc, char **argv)
             if (hasDpms) {
                 hasDpmsLabel->setText(QStringLiteral("Compositor provides a DpmsManager"));
             } else {
-                hasDpmsLabel->setText(QStringLiteral("Compositor does not provid a DpmsManager"));
+                hasDpmsLabel->setText(QStringLiteral("Compositor does not provide a DpmsManager"));
             }
 
             QVBoxLayout *layout = new QVBoxLayout;

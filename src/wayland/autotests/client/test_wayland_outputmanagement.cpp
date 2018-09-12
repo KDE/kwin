@@ -479,7 +479,7 @@ void TestWaylandOutputManagement::testConfigFailed()
 
     QVERIFY(serverApplySpy.wait(200));
 
-    // Artificialy make the server fail to apply the settings
+    // Artificially make the server fail to apply the settings
     // Make sure the applied signal never comes, and that failed has been received
     QVERIFY(!configAppliedSpy.wait(200));
     QCOMPARE(configFailedSpy.count(), 1);

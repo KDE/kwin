@@ -372,7 +372,7 @@ void TestWaylandOutputDevice::testScaleChange_legacy()
     m_serverOutputDevice->setScale(2);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 2);
-    QCOMPARE(output.scaleF(), 2.0); //check we're forward compatiable
+    QCOMPARE(output.scaleF(), 2.0); //check we're forward compatible
 
 
     // change once more

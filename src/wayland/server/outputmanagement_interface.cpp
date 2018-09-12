@@ -22,7 +22,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "outputconfiguration_interface.h"
 #include "display.h"
 #include "global_p.h"
-#include "display.h"
 
 #include <wayland-server.h>
 #include "wayland-output-management-server-protocol.h"

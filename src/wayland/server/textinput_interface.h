@@ -384,7 +384,7 @@ Q_SIGNALS:
      **/
     void requestReset();
     /**
-     * Emitted whenever the preffered @p language changes.
+     * Emitted whenever the preferred @p language changes.
      * @see preferredLanguage
      **/
     void preferredLanguageChanged(const QByteArray &language);

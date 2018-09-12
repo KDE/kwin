@@ -17,9 +17,9 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
-#include "output_interface.h"
 #include "remote_access_interface.h"
 #include "remote_access_interface_p.h"
+#include "output_interface.h"
 #include "display.h"
 #include "global_p.h"
 #include "resource_p.h"

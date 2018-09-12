@@ -17,6 +17,9 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
+#ifndef TEST_XDG_SHELL_H
+#define TEST_XDG_SHELL_H
+
 // Qt
 #include <QtTest/QtTest>
 // client
@@ -99,3 +102,5 @@ private:
     QVERIFY(xdgSurfaceCreatedSpy.wait()); \
     auto serverXdgSurface = xdgSurfaceCreatedSpy.first().first().value<XdgShellSurfaceInterface*>(); \
     QVERIFY(serverXdgSurface);
+
+#endif

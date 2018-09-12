@@ -1820,7 +1820,7 @@ void TestWaylandSeat::testSelection()
     // setting the same again should not change
     m_seatInterface->setSelection(ddi);
     QVERIFY(!selectionSpy.wait(100));
-    // now clear it manully
+    // now clear it manually
     m_seatInterface->setSelection(nullptr);
     QVERIFY(selectionClearedSpy.wait());
     QCOMPARE(selectionSpy.count(), 2);

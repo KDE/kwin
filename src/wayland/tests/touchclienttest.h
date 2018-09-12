@@ -17,8 +17,8 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef WAYLANDCLIENTTEST_H
-#define WAYLANDCLIENTTEST_H
+#ifndef TOUCHCLIENTTEST_H
+#define TOUCHCLIENTTEST_H
 
 #include <QObject>
 #include <QSize>

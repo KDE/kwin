@@ -18,8 +18,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
-#ifndef WAYLAND_SERVER_CHANGESET_H
-#define WAYLAND_SERVER_CHANGESET_H
+#ifndef WAYLAND_SERVER_OUTPUT_CHANGESET_H
+#define WAYLAND_SERVER_OUTPUT_CHANGESET_H
 
 #include <QObject>
 

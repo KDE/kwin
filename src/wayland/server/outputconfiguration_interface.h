@@ -17,8 +17,8 @@
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
-#ifndef KWAYLAND_SERVER_OUTPUTCONFIGURATION_H
-#define KWAYLAND_SERVER_OUTPUTCONFIGURATION_H
+#ifndef KWAYLAND_SERVER_OUTPUTCONFIGURATION_INTERFACE_H
+#define KWAYLAND_SERVER_OUTPUTCONFIGURATION_INTERFACE_H
 
 #include "resource.h"
 #include "outputmanagement_interface.h"

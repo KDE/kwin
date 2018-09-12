@@ -27,7 +27,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/registry.h"
 #include "../../src/client/surface.h"
 #include "../../src/client/plasmawindowmanagement.h"
-#include "../../src/client/surface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/region_interface.h"

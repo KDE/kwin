@@ -90,7 +90,7 @@ class KWAYLANDSERVER_EXPORT ShellSurfaceInterface : public Resource
      **/
     Q_PROPERTY(QByteArray windowClass READ windowClass NOTIFY windowClassChanged)
     /**
-     * Whether the window is fullscren.
+     * Whether the window is fullscreen.
      **/
     Q_PROPERTY(bool fullscreen READ isFullscreen NOTIFY fullscreenChanged)
     /**
