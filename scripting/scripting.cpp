@@ -628,11 +628,11 @@ QVariant KWin::JSEngineGlobalMethodsWrapper::readConfig(const QString &key, QVar
 
 void KWin::JSEngineGlobalMethodsWrapper::registerWindow(QQuickWindow *window)
 {
-    connect(window, &QWindow::visibilityChanged, [window](QWindow::Visibility visibility) {
+    connect(window, &QWindow::visibilityChanged, this, [window](QWindow::Visibility visibility) {
         if (visibility == QWindow::Hidden) {
             window->destroy();
         }
-    });
+    }, Qt::QueuedConnection);
 }
 
 bool KWin::JSEngineGlobalMethodsWrapper::registerShortcut(const QString &name, const QString &text, const QKeySequence& keys, QJSValue function)
