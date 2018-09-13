@@ -1332,7 +1332,7 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
     } else if (id == 0 && focusedTouchSurface()) {
 #if HAVE_LINUX_INPUT_H
         const QPointF pos = globalPosition - d->touchInterface.focus.offset;
-        const bool result = forEachInterface<PointerInterface>(focusedTouchSurface(), d->pointers,
+        forEachInterface<PointerInterface>(focusedTouchSurface(), d->pointers,
             [this, pos, serial] (PointerInterface *p) {
                 wl_pointer_send_enter(p->resource(), serial,
                                 focusedTouchSurface()->resource(),
@@ -1344,9 +1344,6 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
                 p->d_func()->sendFrame();
             }
         );
-        if (!result) {
-            return id;
-        }
 #endif
     }
 
