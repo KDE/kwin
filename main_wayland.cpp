@@ -560,7 +560,6 @@ int main(int argc, char * argv[])
             }
         );
     };
-    const bool hasWindowedOption = hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_waylandPlugin);
     const bool hasSizeOption = hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_virtualPlugin);
     const bool hasOutputCountOption = hasPlugin(KWin::s_x11Plugin);
     const bool hasX11Option = hasPlugin(KWin::s_x11Plugin);
@@ -579,8 +578,6 @@ int main(int argc, char * argv[])
     QCommandLineOption waylandSocketOption(QStringList{QStringLiteral("s"), QStringLiteral("socket")},
                                            i18n("Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."),
                                            QStringLiteral("socket"));
-    QCommandLineOption windowedOption(QStringLiteral("windowed"),
-                                      i18n("Use a nested compositor in windowed mode."));
     QCommandLineOption framebufferOption(QStringLiteral("framebuffer"),
                                          i18n("Render to framebuffer."));
     QCommandLineOption framebufferDeviceOption(QStringLiteral("fb-device"),
@@ -616,9 +613,6 @@ int main(int argc, char * argv[])
     a.setupCommandLine(&parser);
     parser.addOption(xwaylandOption);
     parser.addOption(waylandSocketOption);
-    if (hasWindowedOption) {
-        parser.addOption(windowedOption);
-    }
     if (hasX11Option) {
         parser.addOption(x11DisplayOption);
     }
@@ -740,25 +734,14 @@ int main(int argc, char * argv[])
         }
     }
 
-    if (hasWindowedOption && parser.isSet(windowedOption)) {
-        if (hasX11Option && parser.isSet(x11DisplayOption)) {
-            deviceIdentifier = parser.value(x11DisplayOption).toUtf8();
-        } else if (!(hasWaylandOption && parser.isSet(waylandDisplayOption))) {
-            deviceIdentifier = qgetenv("DISPLAY");
-        }
-        if (!deviceIdentifier.isEmpty()) {
-            pluginName = KWin::s_x11Plugin;
-        } else if (hasWaylandOption) {
-            if (parser.isSet(waylandDisplayOption)) {
-                deviceIdentifier = parser.value(waylandDisplayOption).toUtf8();
-            } else {
-                deviceIdentifier = qgetenv("WAYLAND_DISPLAY");
-            }
-            if (!deviceIdentifier.isEmpty()) {
-                pluginName = KWin::s_waylandPlugin;
-            }
-        }
+    if (hasX11Option && parser.isSet(x11DisplayOption)) {
+        deviceIdentifier = parser.value(x11DisplayOption).toUtf8();
+        pluginName = KWin::s_x11Plugin;
+    } else if (hasWaylandOption && parser.isSet(waylandDisplayOption)) {
+        deviceIdentifier = parser.value(waylandDisplayOption).toUtf8();
+        pluginName = KWin::s_waylandPlugin;
     }
+
     if (hasFramebufferOption && parser.isSet(framebufferOption)) {
         pluginName = KWin::s_fbdevPlugin;
         deviceIdentifier = parser.value(framebufferDeviceOption).toUtf8();
