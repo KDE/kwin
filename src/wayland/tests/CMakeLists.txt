@@ -1,7 +1,7 @@
 include(ECMMarkAsTest)
 
 # find_package(Qt5Core ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENT Private _check_private)
-include_directories(${Qt5Core_PRIVATE_INCLUDE_DIRS})
+include_directories(SYSTEM ${Qt5Core_PRIVATE_INCLUDE_DIRS})
 set(testServer_SRCS
     waylandservertest.cpp
     )
