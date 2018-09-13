@@ -641,7 +641,7 @@ void TestWaylandRegistry::testOutOfSyncRemoval()
     QVERIFY(blurRemovedSpy.count() == 0);
 
     //use the in the client
-    blurManager->createBlur(surface.data(), 0);
+    blurManager->createBlur(surface.data(), nullptr);
 
     //now process events,
     QVERIFY(blurRemovedSpy.wait());
@@ -656,7 +656,7 @@ void TestWaylandRegistry::testOutOfSyncRemoval()
     QVERIFY(contrastRemovedSpy.count() == 0);
 
     //use the in the client
-    contrastManager->createContrast(surface.data(), 0);
+    contrastManager->createContrast(surface.data(), nullptr);
 
     //now process events,
     QVERIFY(contrastRemovedSpy.wait());
