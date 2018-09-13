@@ -571,5 +571,3 @@ void XdgShellTest::testConfigureMultipleAcks()
     QCOMPARE(sizeChangedSpy.count(), 3);
     QCOMPARE(xdgSurface->size(), QSize(30, 40));
 }
-
-#include "test_xdg_shell.moc"
