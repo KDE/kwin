@@ -60,15 +60,14 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     if (!shadow && kwinApp()->x11Connection()) {
         shadow = createShadowFromX11(toplevel);
     }
-    if (shadow) {
-        if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
-            toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
-        }
-        if (shadow->hasDecorationShadow()) {
-            if (toplevel->effectWindow()) {
-                toplevel->effectWindow()->buildQuads(true);
-            }
-        }
+    if (!shadow) {
+        return nullptr;
+    }
+    if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
+        toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
+    }
+    if (toplevel->effectWindow()) {
+        toplevel->effectWindow()->buildQuads(true);
     }
     return shadow;
 }
