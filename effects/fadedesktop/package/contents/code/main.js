@@ -54,7 +54,7 @@ effects['desktopChanged(int,int)'].connect(function(oldDesktop, newDesktop) {
                 duration: duration,
                 animations: [{
                     type: Effect.Opacity,
-                    to: w.opacity,
+                    to: 1.0,
                     from: 0.0
                 }]
             });
