@@ -518,12 +518,14 @@ void CubeSlideEffect::startAnimation() {
 }
 
 void CubeSlideEffect::slotWindowAdded(EffectWindow* w) {
-    if (!isActive() || shouldAnimate(w)) {
+    if (!isActive()) {
         return;
     }
-    staticWindows.insert(w);
-    w->setData(WindowForceBlurRole, QVariant(true));
-    w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+    if (!shouldAnimate(w)) {
+        staticWindows.insert(w);
+        w->setData(WindowForceBlurRole, QVariant(true));
+        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+    }
 }
 
 void CubeSlideEffect::slotWindowDeleted(EffectWindow* w) {
