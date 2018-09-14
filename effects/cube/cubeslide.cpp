@@ -33,14 +33,22 @@ namespace KWin
 {
 
 CubeSlideEffect::CubeSlideEffect()
-    : windowMoving(false)
+    : stickyPainting(false)
+    , windowMoving(false)
     , desktopChangedWhileMoving(false)
     , progressRestriction(0.0f)
 {
     initConfig<CubeSlideConfig>();
-    connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int,int)));
-    connect(effects, SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
+    connect(effects, &EffectsHandler::windowAdded,
+            this, &CubeSlideEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowDeleted,
+            this, &CubeSlideEffect::slotWindowDeleted);
+    connect(effects, QOverload<int,int,EffectWindow *>::of(&EffectsHandler::desktopChanged),
+            this, &CubeSlideEffect::slotDesktopChanged);
+    connect(effects, &EffectsHandler::windowStepUserMovedResized,
+            this, &CubeSlideEffect::slotWindowStepUserMovedResized);
+    connect(effects, &EffectsHandler::windowFinishUserMovedResized,
+            this, &CubeSlideEffect::slotWindowFinishUserMovedResized);
     reconfigure(ReconfigureAll);
 }
 
@@ -68,37 +76,29 @@ void CubeSlideEffect::reconfigure(ReconfigureFlags)
 
 void CubeSlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (!slideRotations.empty()) {
-        data.mask |= PAINT_SCREEN_TRANSFORMED | Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
+    if (isActive()) {
+        data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
         timeLine.setCurrentTime(timeLine.currentTime() + time);
         if (windowMoving && timeLine.currentTime() > progressRestriction * (qreal)timeLine.duration())
             timeLine.setCurrentTime(progressRestriction * (qreal)timeLine.duration());
-        if (dontSlidePanels)
-            panels.clear();
-        stickyWindows.clear();
     }
     effects->prePaintScreen(data, time);
 }
 
 void CubeSlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
-    if (!slideRotations.empty()) {
+    if (isActive()) {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
         paintSlideCube(mask, region, data);
         glCullFace(GL_BACK);
         paintSlideCube(mask, region, data);
         glDisable(GL_CULL_FACE);
-
-        if (dontSlidePanels) {
-            foreach (EffectWindow * w, panels) {
-                WindowPaintData wData(w);
-                effects->paintWindow(w, 0, infiniteRegion(), wData);
-            }
-        }
-        foreach (EffectWindow * w, stickyWindows) {
-            WindowPaintData wData(w);
-            effects->paintWindow(w, 0, infiniteRegion(), wData);
+        // Paint an extra screen with 'sticky' windows.
+        if (!staticWindows.isEmpty()) {
+            stickyPainting = true;
+            effects->paintScreen(mask, region, data);
+            stickyPainting = false;
         }
     } else
         effects->paintScreen(mask, region, data);
@@ -181,20 +181,19 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
 
 void CubeSlideEffect::prePaintWindow(EffectWindow* w,  WindowPrePaintData& data, int time)
 {
-    if (!slideRotations.empty() && cube_painting) {
+    if (stickyPainting) {
+        if (staticWindows.contains(w)) {
+            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+        } else {
+            w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+        }
+    } else if (isActive() && cube_painting) {
+        if (staticWindows.contains(w)) {
+            w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+            effects->prePaintWindow(w, data, time);
+            return;
+        }
         QRect rect = effects->clientArea(FullArea, effects->activeScreen(), painting_desktop);
-        if (dontSlidePanels && w->isDock()) {
-            w->setData(WindowForceBlurRole, QVariant(true));
-            panels.insert(w);
-        }
-        if (!w->isManaged()) {
-            w->setData(WindowForceBlurRole, QVariant(true));
-            stickyWindows.insert(w);
-        } else if (dontSlideStickyWindows && !w->isDock() &&
-                  !w->isDesktop() && w->isOnAllDesktops()) {
-            w->setData(WindowForceBlurRole, QVariant(true));
-            stickyWindows.insert(w);
-        }
         if (w->isOnDesktop(painting_desktop)) {
             if (w->x() < rect.x()) {
                 data.quads = data.quads.splitAtX(-w->x());
@@ -246,12 +245,7 @@ void CubeSlideEffect::prePaintWindow(EffectWindow* w,  WindowPrePaintData& data,
 
 void CubeSlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (!slideRotations.empty() && cube_painting) {
-        if (dontSlidePanels && w->isDock())
-            return;
-        if (stickyWindows.contains(w))
-            return;
-
+    if (isActive() && cube_painting && !staticWindows.contains(w)) {
         // filter out quads overlapping the edges
         QRect rect = effects->clientArea(FullArea, effects->activeScreen(), painting_desktop);
         if (w->isOnDesktop(painting_desktop)) {
@@ -351,7 +345,7 @@ void CubeSlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
 void CubeSlideEffect::postPaintScreen()
 {
     effects->postPaintScreen();
-    if (!slideRotations.empty()) {
+    if (isActive()) {
         if (timeLine.currentValue() == 1.0) {
             RotationDirection direction = slideRotations.dequeue();
             switch(direction) {
@@ -386,12 +380,11 @@ void CubeSlideEffect::postPaintScreen()
             else
                 timeLine.setCurveShape(QTimeLine::LinearCurve);
             if (slideRotations.empty()) {
-                foreach (EffectWindow * w, panels)
-                w->setData(WindowForceBlurRole, QVariant(false));
-                foreach (EffectWindow * w, stickyWindows)
-                w->setData(WindowForceBlurRole, QVariant(false));
-                stickyWindows.clear();
-                panels.clear();
+                for (EffectWindow* w : staticWindows) {
+                    w->setData(WindowForceBlurRole, QVariant());
+                    w->setData(WindowForceBackgroundContrastRole, QVariant());
+                }
+                staticWindows.clear();
                 effects->setActiveFullScreenEffect(0);
             }
         }
@@ -399,8 +392,9 @@ void CubeSlideEffect::postPaintScreen()
     }
 }
 
-void CubeSlideEffect::slotDesktopChanged(int old, int current)
+void CubeSlideEffect::slotDesktopChanged(int old, int current, EffectWindow* w)
 {
+    Q_UNUSED(w)
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
     if (old > effects->numberOfDesktops()) {
@@ -499,15 +493,55 @@ void CubeSlideEffect::slotDesktopChanged(int old, int current)
     }
     timeLine.setDuration((float)rotationDuration / (float)slideRotations.count());
     if (activate) {
-        if (slideRotations.count() == 1)
-            timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
-        else
-            timeLine.setCurveShape(QTimeLine::EaseInCurve);
-        effects->setActiveFullScreenEffect(this);
-        timeLine.setCurrentTime(0);
+        startAnimation();
         front_desktop = old;
         effects->addRepaintFull();
     }
+}
+
+void CubeSlideEffect::startAnimation() {
+    const EffectWindowList windows = effects->stackingOrder();
+    for (EffectWindow* w : windows) {
+        if (!shouldAnimate(w)) {
+            w->setData(WindowForceBlurRole, QVariant(true));
+            w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+            staticWindows.insert(w);
+        }
+    }
+    if (slideRotations.count() == 1) {
+        timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
+    } else {
+        timeLine.setCurveShape(QTimeLine::EaseInCurve);
+    }
+    effects->setActiveFullScreenEffect(this);
+    timeLine.setCurrentTime(0);
+}
+
+void CubeSlideEffect::slotWindowAdded(EffectWindow* w) {
+    if (!isActive() || shouldAnimate(w)) {
+        return;
+    }
+    staticWindows.insert(w);
+    w->setData(WindowForceBlurRole, QVariant(true));
+    w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+}
+
+void CubeSlideEffect::slotWindowDeleted(EffectWindow* w) {
+    staticWindows.remove(w);
+}
+
+bool CubeSlideEffect::shouldAnimate(const EffectWindow* w) const
+{
+    if (w->isDock()) {
+        return !dontSlidePanels;
+    }
+    if (w->isOnAllDesktops()) {
+        if (!w->isManaged()) {
+            return false;
+        }
+        return !dontSlideStickyWindows;
+    }
+    return true;
 }
 
 void CubeSlideEffect::slotWindowStepUserMovedResized(EffectWindow* w)
@@ -594,9 +628,8 @@ void CubeSlideEffect::windowMovingChanged(float progress, RotationDirection dire
     front_desktop = effects->currentDesktop();
     if (slideRotations.isEmpty()) {
         slideRotations.enqueue(direction);
-        timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
         windowMoving = true;
-        effects->setActiveFullScreenEffect(this);
+        startAnimation();
     }
     effects->addRepaintFull();
 }

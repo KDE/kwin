@@ -72,7 +72,10 @@ public:
         return useWindowMoving;
     }
 private Q_SLOTS:
-    void slotDesktopChanged(int old, int current);
+    void slotWindowAdded(EffectWindow* w);
+    void slotWindowDeleted(EffectWindow* w);
+
+    void slotDesktopChanged(int old, int current, EffectWindow* w);
     void slotWindowStepUserMovedResized(KWin::EffectWindow *w);
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
 
@@ -85,15 +88,19 @@ private:
     };
     void paintSlideCube(int mask, QRegion region, ScreenPaintData& data);
     void windowMovingChanged(float progress, RotationDirection direction);
+
+    bool shouldAnimate(const EffectWindow* w) const;
+    void startAnimation();
+
     bool cube_painting;
     int front_desktop;
     int painting_desktop;
     int other_desktop;
     bool firstDesktop;
+    bool stickyPainting;
+    QSet<EffectWindow*> staticWindows;
     QTimeLine timeLine;
     QQueue<RotationDirection> slideRotations;
-    QSet<EffectWindow*> panels;
-    QSet<EffectWindow*> stickyWindows;
     bool dontSlidePanels;
     bool dontSlideStickyWindows;
     bool usePagerLayout;
