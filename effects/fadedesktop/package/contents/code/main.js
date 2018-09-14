@@ -40,9 +40,24 @@ effects['desktopChanged(int,int)'].connect(function(oldDesktop, newDesktop) {
             continue;
         }
         if (w.desktop == oldDesktop) {
-            effect.animate(w, Effect.Opacity, duration, 0.0);
+            animate({
+                window: w,
+                duration: duration,
+                animations: [{
+                    type: Effect.Opacity,
+                    to: 0.0
+                }]
+            });
         } else {
-            effect.animate(w, Effect.Opacity, duration, w.opacity, 0.0);
+            animate({
+                window: w,
+                duration: duration,
+                animations: [{
+                    type: Effect.Opacity,
+                    to: w.opacity,
+                    from: 0.0
+                }]
+            });
         }
     }
 });
