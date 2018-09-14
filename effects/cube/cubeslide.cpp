@@ -536,6 +536,9 @@ bool CubeSlideEffect::shouldAnimate(const EffectWindow* w) const
         return !dontSlidePanels;
     }
     if (w->isOnAllDesktops()) {
+        if (w->isDesktop()) {
+            return true;
+        }
         if (!w->isManaged()) {
             return false;
         }
