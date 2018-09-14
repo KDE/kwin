@@ -134,6 +134,7 @@ void TestShellClient::testMapUnmapMap_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestShellClient::testMapUnmapMap()
@@ -297,6 +298,7 @@ void TestShellClient::testWindowOutputs_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestShellClient::testWindowOutputs()
@@ -344,6 +346,7 @@ void TestShellClient::testMinimizeActiveWindow_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestShellClient::testMinimizeActiveWindow()
@@ -386,11 +389,13 @@ void TestShellClient::testFullscreen_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell << ServerSideDecoration::Mode::Client;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << ServerSideDecoration::Mode::Client;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6 << ServerSideDecoration::Mode::Client;
-
+    QTest::newRow("xdgShellWmBase") << Test::ShellSurfaceType::XdgShellStable << ServerSideDecoration::Mode::Client;
 
     QTest::newRow("wlShell - deco") << Test::ShellSurfaceType::WlShell << ServerSideDecoration::Mode::Server;
     QTest::newRow("xdgShellV5 - deco") << Test::ShellSurfaceType::XdgShellV5 << ServerSideDecoration::Mode::Server;
     QTest::newRow("xdgShellV6 - deco") << Test::ShellSurfaceType::XdgShellV6 << ServerSideDecoration::Mode::Server;
+    QTest::newRow("xdgShellWmBase - deco") << Test::ShellSurfaceType::XdgShellStable << ServerSideDecoration::Mode::Server;
+
 }
 
 void TestShellClient::testFullscreen()
@@ -487,6 +492,8 @@ void TestShellClient::testUserCanSetFullscreen_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell << false;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << true;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6 << true;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable << true;
+
 }
 
 void TestShellClient::testUserCanSetFullscreen()
@@ -523,6 +530,7 @@ void TestShellClient::testUserSetFullscreenXdgShell_data()
 
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestShellClient::testUserSetFullscreenXdgShell()
@@ -579,10 +587,12 @@ void TestShellClient::testMaximizedToFullscreen_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell << ServerSideDecoration::Mode::Client;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5 << ServerSideDecoration::Mode::Client;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6 << ServerSideDecoration::Mode::Client;
+    QTest::newRow("xdgShellWmBase") << Test::ShellSurfaceType::XdgShellStable << ServerSideDecoration::Mode::Client;
 
     QTest::newRow("wlShell - deco") << Test::ShellSurfaceType::WlShell << ServerSideDecoration::Mode::Server;
     QTest::newRow("xdgShellV5 - deco") << Test::ShellSurfaceType::XdgShellV5 << ServerSideDecoration::Mode::Server;
     QTest::newRow("xdgShellV6 - deco") << Test::ShellSurfaceType::XdgShellV6 << ServerSideDecoration::Mode::Server;
+    QTest::newRow("xdgShellWmBase - deco") << Test::ShellSurfaceType::XdgShellStable << ServerSideDecoration::Mode::Server;
 }
 
 void TestShellClient::testMaximizedToFullscreen()
@@ -699,6 +709,7 @@ void TestShellClient::testWindowOpensLargerThanScreen_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestShellClient::testWindowOpensLargerThanScreen()
@@ -736,6 +747,7 @@ void TestShellClient::testHidden_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestShellClient::testHidden()
@@ -878,6 +890,8 @@ void TestShellClient::testUnresponsiveWindow_data()
     QTest::newRow("xdgv5 socket") << "xdg-shell-v5" << true;
     QTest::newRow("xdgv6 display") << "xdg-shell-v6" << false;
     QTest::newRow("xdgv6 socket") << "xdg-shell-v6" << true;
+
+    //TODO add XDG WM Base when Kwin relies on Qt 5.12
 }
 
 void TestShellClient::testUnresponsiveWindow()
@@ -955,6 +969,7 @@ void TestShellClient::testX11WindowId_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestShellClient::testX11WindowId()
@@ -994,6 +1009,7 @@ void TestShellClient::testNoDecorationModeRequested_data()
 
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestShellClient::testNoDecorationModeRequested()

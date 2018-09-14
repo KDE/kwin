@@ -215,17 +215,22 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_shell = m_display->createShell(m_display);
     m_shell->create();
     connect(m_shell, &ShellInterface::surfaceCreated, this, &WaylandServer::createSurface<ShellSurfaceInterface>);
-    m_xdgShell = m_display->createXdgShell(XdgShellInterfaceVersion::UnstableV5, m_display);
-    m_xdgShell->create();
-    connect(m_xdgShell, &XdgShellInterface::surfaceCreated, this, &WaylandServer::createSurface<XdgShellSurfaceInterface>);
+
+    m_xdgShell5 = m_display->createXdgShell(XdgShellInterfaceVersion::UnstableV5, m_display);
+    m_xdgShell5->create();
+    connect(m_xdgShell5, &XdgShellInterface::surfaceCreated, this, &WaylandServer::createSurface<XdgShellSurfaceInterface>);
     // TODO: verify seat and serial
-    connect(m_xdgShell, &XdgShellInterface::popupCreated, this, &WaylandServer::createSurface<XdgShellPopupInterface>);
+    connect(m_xdgShell5, &XdgShellInterface::popupCreated, this, &WaylandServer::createSurface<XdgShellPopupInterface>);
 
     m_xdgShell6 = m_display->createXdgShell(XdgShellInterfaceVersion::UnstableV6, m_display);
     m_xdgShell6->create();
     connect(m_xdgShell6, &XdgShellInterface::surfaceCreated, this, &WaylandServer::createSurface<XdgShellSurfaceInterface>);
     connect(m_xdgShell6, &XdgShellInterface::xdgPopupCreated, this, &WaylandServer::createSurface<XdgShellPopupInterface>);
 
+    m_xdgShell = m_display->createXdgShell(XdgShellInterfaceVersion::Stable, m_display);
+    m_xdgShell->create();
+    connect(m_xdgShell, &XdgShellInterface::surfaceCreated, this, &WaylandServer::createSurface<XdgShellSurfaceInterface>);
+    connect(m_xdgShell, &XdgShellInterface::xdgPopupCreated, this, &WaylandServer::createSurface<XdgShellPopupInterface>);
 
     m_display->createShm();
     m_seat = m_display->createSeat(m_display);
