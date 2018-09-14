@@ -1445,20 +1445,20 @@ public:
         seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::MouseMove: {
-            if (Toplevel *t = input()->findToplevel(event->globalPos())) {
+            const auto pos = input()->globalPointer();
+            seat->setPointerPos(pos);
+            if (Toplevel *t = input()->findToplevel(pos.toPoint())) {
                 // TODO: consider decorations
                 if (t->surface() != seat->dragSurface()) {
                     if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
                         workspace()->activateClient(c);
                     }
-                    seat->setPointerPos(event->globalPos());
-                    seat->setDragTarget(t->surface(), event->globalPos(), t->inputTransformation());
+                    seat->setDragTarget(t->surface(), t->inputTransformation());
                 }
             } else {
                 // no window at that place, if we have a surface we need to reset
                 seat->setDragTarget(nullptr);
             }
-            seat->setPointerPos(event->globalPos());
             break;
         }
         case QEvent::MouseButtonPress:
