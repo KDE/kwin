@@ -389,7 +389,17 @@ protected:
     explicit InputDeviceHandler(InputRedirection *parent);
     void updateDecoration(Toplevel *t, const QPointF &pos);
     void updateInternalWindow(const QPointF &pos);
-    InputRedirection *m_input;
+    void setWindow(QPointer<Toplevel> window = QPointer<Toplevel>()) {
+        m_window = window;
+    }
+    void clearDecoration() {
+        m_decoration.clear();
+    }
+    void clearInternalWindow() {
+        m_internalWindow.clear();
+    }
+
+private:
     /**
      * @brief The Toplevel which currently receives events
      */

@@ -2078,7 +2078,6 @@ bool InputRedirection::isSelectingWindow() const
 
 InputDeviceHandler::InputDeviceHandler(InputRedirection *input)
     : QObject(input)
-    , m_input(input)
 {
 }
 
@@ -2108,7 +2107,7 @@ void InputDeviceHandler::updateDecoration(Toplevel *t, const QPointF &pos)
     }
 
     bool leftSend = false;
-    auto oldWindow = qobject_cast<AbstractClient*>(m_window.data());
+    auto oldWindow = qobject_cast<AbstractClient*>(window().data());
     if (oldWindow && (m_decoration && m_decoration->client() != oldWindow)) {
         leftSend = true;
         oldWindow->leaveEvent();
