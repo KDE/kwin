@@ -439,7 +439,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         emit q->transformChanged(target->transform);
     }
     if (bufferChanged && emitChanged) {
-        if (!target->damage.isEmpty()) {
+        if (target->buffer && !target->damage.isEmpty()) {
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
             if (!windowRegion.isEmpty()) {
                 target->damage = windowRegion.intersected(target->damage);
@@ -524,10 +524,6 @@ void SurfaceInterface::Private::commitSubSurface()
 
 void SurfaceInterface::Private::damage(const QRect &rect)
 {
-    if (!pending.bufferIsSet || (pending.bufferIsSet && !pending.buffer)) {
-        // TODO: should we send an error?
-        return;
-    }
     pending.damage = pending.damage.united(rect);
 }
 
