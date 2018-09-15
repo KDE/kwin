@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2013, 2016 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2018 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -64,7 +65,6 @@ public:
 
     void init();
 
-    void update();
     void updateAfterScreenChange();
     bool supportsWarping() const;
     void warp(const QPointF &pos);
@@ -75,6 +75,7 @@ public:
     Qt::MouseButtons buttons() const {
         return m_qtButtons;
     }
+    bool areButtonsPressed() const;
 
     QImage cursorImage() const;
     QPoint cursorHotSpot() const;
@@ -91,6 +92,8 @@ public:
     bool isConstrained() const {
         return m_confined || m_locked;
     }
+
+    bool focusUpdatesBlocked() override;
 
     /**
      * @internal
@@ -142,6 +145,13 @@ public:
     void processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device = nullptr);
 
 private:
+    void cleanupInternalWindow(QWindow *old, QWindow *now) override;
+    void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
+
+    void focusUpdate(Toplevel *focusOld, Toplevel *focusNow) override;
+
+    QPointF position() const override;
+
     void updateOnStartMoveResize();
     void updateToReset();
     void updatePosition(const QPointF &pos);
@@ -152,14 +162,12 @@ private:
     void disconnectLockedPointerAboutToBeUnboundConnection();
     void disconnectPointerConstraintsConnection();
     void breakPointerConstraints(KWayland::Server::SurfaceInterface *surface);
-    bool areButtonsPressed() const;
     CursorImage *m_cursor;
-    bool m_inited = false;
     bool m_supportsWarping;
     QPointF m_pos;
     QHash<uint32_t, InputRedirection::PointerButtonState> m_buttons;
     Qt::MouseButtons m_qtButtons;
-    QMetaObject::Connection m_windowGeometryConnection;
+    QMetaObject::Connection m_focusGeometryConnection;
     QMetaObject::Connection m_internalWindowConnection;
     QMetaObject::Connection m_constraintsConnection;
     QMetaObject::Connection m_constraintsActivatedConnection;

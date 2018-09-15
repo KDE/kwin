@@ -115,7 +115,7 @@ void TestWindowSelection::testSelectOnWindowPointer()
     QVERIFY(client);
     QVERIFY(keyboardEnteredSpy.wait());
     KWin::Cursor::setPos(client->geometry().center());
-    QCOMPARE(input()->pointer()->window().data(), client);
+    QCOMPARE(input()->pointer()->focus().data(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
     Toplevel *selectedWindow = nullptr;
@@ -142,11 +142,11 @@ void TestWindowSelection::testSelectOnWindowPointer()
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
-    QVERIFY(input()->pointer()->window().isNull());
+    QVERIFY(input()->pointer()->focus().isNull());
 
     // updating the pointer should not change anything
     input()->pointer()->update();
-    QVERIFY(input()->pointer()->window().isNull());
+    QVERIFY(input()->pointer()->focus().isNull());
     // updating keyboard should also not change
     input()->keyboard()->update();
 
@@ -160,7 +160,7 @@ void TestWindowSelection::testSelectOnWindowPointer()
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(selectedWindow, client);
-    QCOMPARE(input()->pointer()->window().data(), client);
+    QCOMPARE(input()->pointer()->focus().data(), client);
     // should give back keyboard and pointer
     QVERIFY(pointerEnteredSpy.wait());
     if (keyboardEnteredSpy.count() != 2) {
@@ -240,7 +240,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     kwinApp()->platform()->keyboardKeyPressed(key, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(selectedWindow, client);
-    QCOMPARE(input()->pointer()->window().data(), client);
+    QCOMPARE(input()->pointer()->focus().data(), client);
     // should give back keyboard and pointer
     QVERIFY(pointerEnteredSpy.wait());
     if (keyboardEnteredSpy.count() != 2) {
@@ -336,7 +336,7 @@ void TestWindowSelection::testCancelOnWindowPointer()
     QVERIFY(client);
     QVERIFY(keyboardEnteredSpy.wait());
     KWin::Cursor::setPos(client->geometry().center());
-    QCOMPARE(input()->pointer()->window().data(), client);
+    QCOMPARE(input()->pointer()->focus().data(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
     Toplevel *selectedWindow = nullptr;
@@ -363,7 +363,7 @@ void TestWindowSelection::testCancelOnWindowPointer()
     kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QVERIFY(!selectedWindow);
-    QCOMPARE(input()->pointer()->window().data(), client);
+    QCOMPARE(input()->pointer()->focus().data(), client);
     // should give back keyboard and pointer
     QVERIFY(pointerEnteredSpy.wait());
     if (keyboardEnteredSpy.count() != 2) {
@@ -395,7 +395,7 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     QVERIFY(client);
     QVERIFY(keyboardEnteredSpy.wait());
     KWin::Cursor::setPos(client->geometry().center());
-    QCOMPARE(input()->pointer()->window().data(), client);
+    QCOMPARE(input()->pointer()->focus().data(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
     Toplevel *selectedWindow = nullptr;
@@ -421,7 +421,7 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     kwinApp()->platform()->keyboardKeyPressed(KEY_ESC, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QVERIFY(!selectedWindow);
-    QCOMPARE(input()->pointer()->window().data(), client);
+    QCOMPARE(input()->pointer()->focus().data(), client);
     // should give back keyboard and pointer
     QVERIFY(pointerEnteredSpy.wait());
     if (keyboardEnteredSpy.count() != 2) {
@@ -454,7 +454,7 @@ void TestWindowSelection::testSelectPointPointer()
     QVERIFY(client);
     QVERIFY(keyboardEnteredSpy.wait());
     KWin::Cursor::setPos(client->geometry().center());
-    QCOMPARE(input()->pointer()->window().data(), client);
+    QCOMPARE(input()->pointer()->focus().data(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
     QPoint point;
@@ -488,11 +488,11 @@ void TestWindowSelection::testSelectPointPointer()
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
-    QVERIFY(input()->pointer()->window().isNull());
+    QVERIFY(input()->pointer()->focus().isNull());
 
     // updating the pointer should not change anything
     input()->pointer()->update();
-    QVERIFY(input()->pointer()->window().isNull());
+    QVERIFY(input()->pointer()->focus().isNull());
     // updating keyboard should also not change
     input()->keyboard()->update();
 
@@ -506,7 +506,7 @@ void TestWindowSelection::testSelectPointPointer()
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(point, input()->globalPointer().toPoint());
-    QCOMPARE(input()->pointer()->window().data(), client);
+    QCOMPARE(input()->pointer()->focus().data(), client);
     // should give back keyboard and pointer
     QVERIFY(pointerEnteredSpy.wait());
     if (keyboardEnteredSpy.count() != 2) {

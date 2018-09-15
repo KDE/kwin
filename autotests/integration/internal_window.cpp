@@ -230,11 +230,11 @@ void InternalWindowTest::testEnterLeave()
 
     quint32 timestamp = 1;
     kwinApp()->platform()->pointerMotion(QPoint(50, 50), timestamp++);
-    QTRY_COMPARE(enterSpy.count(), 1);
+    QTRY_COMPARE(moveSpy.count(), 1);
 
     kwinApp()->platform()->pointerMotion(QPoint(60, 50), timestamp++);
-    QTRY_COMPARE(moveSpy.count(), 1);
-    QCOMPARE(moveSpy.first().first().toPoint(), QPoint(60, 50));
+    QTRY_COMPARE(moveSpy.count(), 2);
+    QCOMPARE(moveSpy[1].first().toPoint(), QPoint(60, 50));
 
     kwinApp()->platform()->pointerMotion(QPoint(101, 50), timestamp++);
     QTRY_COMPARE(leaveSpy.count(), 1);

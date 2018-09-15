@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2018 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -365,50 +366,91 @@ protected:
     void passToWaylandServer(QKeyEvent *event);
 };
 
-class InputDeviceHandler : public QObject
+class KWIN_EXPORT InputDeviceHandler : public QObject
 {
     Q_OBJECT
 public:
     virtual ~InputDeviceHandler();
+    virtual void init();
 
-    QPointer<Toplevel> window() const {
-        return m_window;
+    void update();
+
+    /**
+     * @brief First Toplevel currently at the position of the input device
+     * according to the stacking order.
+     * @return Toplevel* at device position.
+     */
+    QPointer<Toplevel> at() const {
+        return m_at;
     }
+    /**
+     * @brief Toplevel currently having pointer input focus (this might
+     * be different from the Toplevel at the position of the pointer).
+     * @return Toplevel* with pointer focus.
+     */
+    QPointer<Toplevel> focus() const {
+        return m_focus.focus;
+    }
+    /**
+     * @brief The Decoration currently receiving events.
+     * @return decoration with pointer focus.
+     **/
     QPointer<Decoration::DecoratedClientImpl> decoration() const {
-        return m_decoration;
+        return m_focus.decoration;
     }
+    /**
+     * @brief The internal window currently receiving events.
+     * @return QWindow with pointer focus.
+     **/
     QPointer<QWindow> internalWindow() const {
-        return m_internalWindow;
+        return m_focus.internalWindow;
     }
+
+    virtual QPointF position() const = 0;
+
+    void setFocus(Toplevel *toplevel);
+    void setDecoration(QPointer<Decoration::DecoratedClientImpl> decoration);
+    void setInternalWindow(QWindow *window);
 
 Q_SIGNALS:
+    void atChanged(Toplevel *old, Toplevel *now);
     void decorationChanged();
-    void internalWindowChanged();
 
 protected:
     explicit InputDeviceHandler(InputRedirection *parent);
-    void updateDecoration(Toplevel *t, const QPointF &pos);
-    void updateInternalWindow(const QPointF &pos);
-    void setWindow(QPointer<Toplevel> window = QPointer<Toplevel>()) {
-        m_window = window;
+
+    virtual void cleanupInternalWindow(QWindow *old, QWindow *now) = 0;
+    virtual void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) = 0;
+
+    virtual void focusUpdate(Toplevel *old, Toplevel *now) = 0;
+
+    virtual bool focusUpdatesBlocked() {
+        return false;
     }
-    void clearDecoration() {
-        m_decoration.clear();
+
+    inline bool inited() const {
+        return m_inited;
     }
-    void clearInternalWindow() {
-        m_internalWindow.clear();
+    inline void setInited(bool set) {
+        m_inited = set;
     }
 
 private:
-    /**
-     * @brief The Toplevel which currently receives events
-     */
-    QPointer<Toplevel> m_window;
-    /**
-     * @brief The Decoration which currently receives events.
-     **/
-    QPointer<Decoration::DecoratedClientImpl> m_decoration;
-    QPointer<QWindow> m_internalWindow;
+    bool setAt(Toplevel *toplevel);
+    void updateFocus();
+    bool updateDecoration();
+    void updateInternalWindow(QWindow *window);
+
+    QWindow* findInternalWindow(const QPoint &pos) const;
+
+    QPointer<Toplevel> m_at;
+    struct {
+        QPointer<Toplevel> focus;
+        QPointer<Decoration::DecoratedClientImpl> decoration;
+        QPointer<QWindow> internalWindow;
+    } m_focus;
+
+    bool m_inited = false;
 };
 
 inline

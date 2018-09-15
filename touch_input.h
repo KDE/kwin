@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2013, 2016 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2018 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +50,7 @@ public:
     explicit TouchInputRedirection(InputRedirection *parent);
     virtual ~TouchInputRedirection();
 
-    void update(const QPointF &pos = QPointF());
+    bool focusUpdatesBlocked() override;
     void init();
 
     void processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
@@ -75,7 +76,16 @@ public:
         return m_internalId;
     }
 
+    QPointF position() const override {
+        return m_lastPosition;
+    }
+
 private:
+    void cleanupInternalWindow(QWindow *old, QWindow *now) override;
+    void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
+
+    void focusUpdate(Toplevel *focusOld, Toplevel *focusNow) override;
+
     bool m_inited = false;
     qint32 m_decorationId = -1;
     qint32 m_internalId = -1;
@@ -83,8 +93,11 @@ private:
      * external/kwayland
      **/
     QHash<qint32, qint32> m_idMapper;
-    QMetaObject::Connection m_windowGeometryConnection;
+    QMetaObject::Connection m_focusGeometryConnection;
     bool m_windowUpdatedInCycle = false;
+    QPointF m_lastPosition;
+
+    int m_touches = 0;
 };
 
 }

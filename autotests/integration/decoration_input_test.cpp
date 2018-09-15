@@ -836,8 +836,8 @@ void DecorationInputTest::testTouchEvents()
     QCOMPARE(hoverMoveSpy.count(), 3);
     QCOMPARE(hoverLeaveSpy.count(), 1);
     kwinApp()->platform()->touchUp(0, timestamp++);
-    QCOMPARE(hoverMoveSpy.count(), 4);
-    QCOMPARE(hoverLeaveSpy.count(), 1);
+    QCOMPARE(hoverMoveSpy.count(), 3);
+    QCOMPARE(hoverLeaveSpy.count(), 2);
 }
 
 void DecorationInputTest::testTooltipDoesntEatKeyEvents_data()
