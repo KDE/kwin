@@ -234,7 +234,8 @@ void DebugConsoleFilter::wheelEvent(WheelEvent *event)
     text.append(tableRow(i18nc("The orientation of a pointer axis event", "Orientation"),
                          orientation == Qt::Horizontal ? i18nc("An orientation of a pointer axis event", "Horizontal")
                                                        : i18nc("An orientation of a pointer axis event", "Vertical")));
-    text.append(tableRow(QStringLiteral("Delta"), orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y()));
+    text.append(tableRow(i18nc("The angle delta of a pointer axis event", "Delta"),
+                         orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y()));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
