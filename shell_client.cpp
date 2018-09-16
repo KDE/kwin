@@ -425,8 +425,9 @@ QSize ShellClient::clientSize() const
 
 void ShellClient::debug(QDebug &stream) const
 {
-    // TODO: implement
-    Q_UNUSED(stream)
+    stream.nospace();
+    stream << "\'ShellClient:" << surface() << ";WMCLASS:" << resourceClass() << ":"
+           << resourceName() << ";Caption:" << caption() << "\'";
 }
 
 Layer ShellClient::layerForDock() const

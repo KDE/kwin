@@ -1772,6 +1772,7 @@ void Client::updateAllowedActions(bool force)
 
 void Client::debug(QDebug& stream) const
 {
+    stream.nospace();
     print<QDebug>(stream);
 }
 

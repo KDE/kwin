@@ -689,7 +689,7 @@ inline bool Client::hiddenPreview() const
 template <typename T>
 inline void Client::print(T &stream) const
 {
-    stream << "\'ID:" << window() << ";WMCLASS:" << resourceClass() << ":"
+    stream << "\'Client:" << window() << ";WMCLASS:" << resourceClass() << ":"
            << resourceName() << ";Caption:" << caption() << "\'";
 }
 
