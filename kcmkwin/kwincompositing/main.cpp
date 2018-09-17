@@ -128,7 +128,14 @@ void KWinCompositingSettings::init()
     // xrender scale filter
     m_form.xrScaleFilter->setCurrentIndex(m_compositing->xrScaleFilter());
     connect(m_compositing, &Compositing::xrScaleFilterChanged, m_form.xrScaleFilter, &QComboBox::setCurrentIndex);
-    connect(m_form.xrScaleFilter, currentIndexChangedSignal, m_compositing, &Compositing::setXrScaleFilter);
+    connect(m_form.xrScaleFilter, currentIndexChangedSignal,
+            [this](int index) {
+        if (index == 0) {
+            m_compositing->setXrScaleFilter(false);
+        } else {
+            m_compositing->setXrScaleFilter(true);
+        }
+    });
 
     // tearing prevention
     m_form.tearingPrevention->setCurrentIndex(m_compositing->glSwapStrategy());
