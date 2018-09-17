@@ -541,7 +541,7 @@ bool CubeSlideEffect::shouldAnimate(const EffectWindow* w) const
         if (w->isDesktop()) {
             return true;
         }
-        if (!w->isManaged()) {
+        if (w->isSpecialWindow()) {
             return false;
         }
         return !dontSlideStickyWindows;
