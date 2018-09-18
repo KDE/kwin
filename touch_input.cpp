@@ -75,6 +75,9 @@ bool TouchInputRedirection::focusUpdatesBlocked()
         return true;
     }
     m_windowUpdatedInCycle = true;
+    if (waylandServer()->seat()->isDragTouch()) {
+        return true;
+    }
     if (m_touches > 0) {
         // first touch defines focus
         return true;

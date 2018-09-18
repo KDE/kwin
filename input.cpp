@@ -1464,6 +1464,9 @@ public:
         if (!seat->isDragPointer()) {
             return false;
         }
+        if (seat->isDragTouch()) {
+            return true;
+        }
         seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::MouseMove: {
@@ -1495,6 +1498,79 @@ public:
         // TODO: should we pass through effects?
         return true;
     }
+
+    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+        auto seat = waylandServer()->seat();
+        if (seat->isDragPointer()) {
+            return true;
+        }
+        if (!seat->isDragTouch()) {
+            return false;
+        }
+        if (m_touchId != id) {
+            return true;
+        }
+        seat->setTimestamp(time);
+        input()->touch()->insertId(id, seat->touchDown(pos));
+        return true;
+    }
+    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+        auto seat = waylandServer()->seat();
+        if (seat->isDragPointer()) {
+            return true;
+        }
+        if (!seat->isDragTouch()) {
+            return false;
+        }
+        if (m_touchId < 0) {
+            // We take for now the first id appearing as a move after a drag
+            // started. We can optimize by specifying the id the drag is
+            // associated with by implementing a key-value getter in KWayland.
+            m_touchId = id;
+        }
+        if (m_touchId != id) {
+            return true;
+        }
+        seat->setTimestamp(time);
+        const qint32 kwaylandId = input()->touch()->mappedId(id);
+        if (kwaylandId == -1) {
+            return true;
+        }
+
+        seat->touchMove(kwaylandId, pos);
+
+        if (Toplevel *t = input()->findToplevel(pos.toPoint())) {
+            // TODO: consider decorations
+            if (t->surface() != seat->dragSurface()) {
+                if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
+                    workspace()->activateClient(c);
+                }
+                seat->setDragTarget(t->surface(), pos, t->inputTransformation());
+            }
+        } else {
+            // no window at that place, if we have a surface we need to reset
+            seat->setDragTarget(nullptr);
+        }
+        return true;
+    }
+    bool touchUp(quint32 id, quint32 time) override {
+        auto seat = waylandServer()->seat();
+        if (!seat->isDragTouch()) {
+            return false;
+        }
+        seat->setTimestamp(time);
+        const qint32 kwaylandId = input()->touch()->mappedId(id);
+        if (kwaylandId != -1) {
+            seat->touchUp(kwaylandId);
+            input()->touch()->removeId(id);
+        }
+        if (m_touchId == id) {
+            m_touchId = -1;
+        }
+        return true;
+    }
+private:
+    qint32 m_touchId = -1;
 };
 
 KWIN_SINGLETON_FACTORY(InputRedirection)
