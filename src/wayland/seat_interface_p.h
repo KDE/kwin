@@ -46,7 +46,7 @@ public:
     void sendName(wl_resource *r);
     QVector<PointerInterface *> pointersForSurface(SurfaceInterface *surface) const;
     QVector<KeyboardInterface *> keyboardsForSurface(SurfaceInterface *surface) const;
-    TouchInterface *touchForSurface(SurfaceInterface *surface) const;
+    QVector<TouchInterface *> touchsForSurface(SurfaceInterface *surface) const;
     DataDeviceInterface *dataDeviceForSurface(SurfaceInterface *surface) const;
     TextInputInterface *textInputForSurface(SurfaceInterface *surface) const;
     void registerDataDevice(DataDeviceInterface *dataDevice);
@@ -140,17 +140,18 @@ public:
     };
     TextInput textInput;
 
+    // Touch related members
     struct Touch {
         struct Focus {
             SurfaceInterface *surface = nullptr;
-            TouchInterface *touch = nullptr;
+            QVector<TouchInterface*> touchs;
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
         };
         Focus focus;
         QVector<qint32> ids;
     };
-    Touch touchInterface;
+    Touch globalTouch;
 
     struct Drag {
         enum class Mode {

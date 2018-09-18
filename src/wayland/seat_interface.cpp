@@ -246,9 +246,9 @@ QVector<KeyboardInterface *> SeatInterface::Private::keyboardsForSurface(Surface
     return interfacesForSurface(surface, keyboards);
 }
 
-TouchInterface *SeatInterface::Private::touchForSurface(SurfaceInterface *surface) const
+QVector<TouchInterface *> SeatInterface::Private::touchsForSurface(SurfaceInterface *surface) const
 {
-    return interfaceForSurface(surface, touchs);
+    return interfacesForSurface(surface, touchs);
 }
 
 DataDeviceInterface *SeatInterface::Private::dataDeviceForSurface(SurfaceInterface *surface) const
@@ -551,21 +551,17 @@ void SeatInterface::Private::getTouch(wl_client *client, wl_resource *resource, 
         return;
     }
     touchs << touch;
-    if (touchInterface.focus.surface && touchInterface.focus.surface->client() == clientConnection) {
+    if (globalTouch.focus.surface && globalTouch.focus.surface->client() == clientConnection) {
         // this is a touch for the currently focused touch surface
-        if (!touchInterface.focus.touch) {
-            touchInterface.focus.touch = touch;
-            if (!touchInterface.ids.isEmpty()) {
-                // TODO: send out all the points
-            }
+        globalTouch.focus.touchs << touch;
+        if (!globalTouch.ids.isEmpty()) {
+            // TODO: send out all the points
         }
     }
     QObject::connect(touch, &QObject::destroyed, q,
         [touch,this] {
             touchs.removeAt(touchs.indexOf(touch));
-            if (touchInterface.focus.touch == touch) {
-                touchInterface.focus.touch = nullptr;
-            }
+            globalTouch.focus.touchs.removeOne(touch);
         }
     );
     emit q->touchCreated(touch);
@@ -1254,34 +1250,37 @@ KeyboardInterface *SeatInterface::focusedKeyboard() const
 void SeatInterface::cancelTouchSequence()
 {
     Q_D();
-    if (d->touchInterface.focus.touch) {
-        d->touchInterface.focus.touch->cancel();
+    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
+        (*it)->cancel();
     }
-    d->touchInterface.ids.clear();
+    d->globalTouch.ids.clear();
 }
 
 TouchInterface *SeatInterface::focusedTouch() const
 {
     Q_D();
-    return d->touchInterface.focus.touch;
+    if (d->globalTouch.focus.touchs.isEmpty()) {
+        return nullptr;
+    }
+    return d->globalTouch.focus.touchs.first();
 }
 
 SurfaceInterface *SeatInterface::focusedTouchSurface() const
 {
     Q_D();
-    return d->touchInterface.focus.surface;
+    return d->globalTouch.focus.surface;
 }
 
 QPointF SeatInterface::focusedTouchSurfacePosition() const
 {
     Q_D();
-    return d->touchInterface.focus.offset;
+    return d->globalTouch.focus.offset;
 }
 
 bool SeatInterface::isTouchSequence() const
 {
     Q_D();
-    return !d->touchInterface.ids.isEmpty();
+    return !d->globalTouch.ids.isEmpty();
 }
 
 void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPointF &surfacePosition)
@@ -1291,26 +1290,24 @@ void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPoi
         return;
     }
     Q_D();
-    if (d->touchInterface.focus.surface) {
-        disconnect(d->touchInterface.focus.destroyConnection);
+    if (d->globalTouch.focus.surface) {
+        disconnect(d->globalTouch.focus.destroyConnection);
     }
-    d->touchInterface.focus = Private::Touch::Focus();
-    d->touchInterface.focus.surface = surface;
-    d->touchInterface.focus.offset = surfacePosition;
-    TouchInterface *t = d->touchForSurface(surface);
-    if (t && !t->resource()) {
-        t = nullptr;
-    }
-    d->touchInterface.focus.touch = t;
-    if (d->touchInterface.focus.surface) {
-        d->touchInterface.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
+    d->globalTouch.focus = Private::Touch::Focus();
+    d->globalTouch.focus.surface = surface;
+    d->globalTouch.focus.offset = surfacePosition;
+    d->globalTouch.focus.touchs = d->touchsForSurface(surface);
+    if (d->globalTouch.focus.surface) {
+        d->globalTouch.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
             [this] {
                 Q_D();
-                if (isTouchSequence() && d->touchInterface.focus.touch) {
+                if (isTouchSequence()) {
                     // Surface destroyed during touch sequence - send a cancel
-                    d->touchInterface.focus.touch->cancel();
+                    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
+                        (*it)->cancel();
+                    }
                 }
-                d->touchInterface.focus = Private::Touch::Focus();
+                d->globalTouch.focus = Private::Touch::Focus();
             }
         );
     }
@@ -1319,19 +1316,23 @@ void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPoi
 void SeatInterface::setFocusedTouchSurfacePosition(const QPointF &surfacePosition)
 {
     Q_D();
-    d->touchInterface.focus.offset = surfacePosition;
+    d->globalTouch.focus.offset = surfacePosition;
 }
 
 qint32 SeatInterface::touchDown(const QPointF &globalPosition)
 {
     Q_D();
-    const qint32 id = d->touchInterface.ids.isEmpty() ? 0 : d->touchInterface.ids.last() + 1;
-    const quint32 serial = display()->nextSerial();
-    if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
-        d->touchInterface.focus.touch->down(id, serial, globalPosition - d->touchInterface.focus.offset);
-    } else if (id == 0 && focusedTouchSurface()) {
+    const qint32 id = d->globalTouch.ids.isEmpty() ? 0 : d->globalTouch.ids.last() + 1;
+    const qint32 serial = display()->nextSerial();
+    const auto pos = globalPosition - d->globalTouch.focus.offset;
+    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
+        (*it)->down(id, serial, pos);
+    }
+
 #if HAVE_LINUX_INPUT_H
-        const QPointF pos = globalPosition - d->touchInterface.focus.offset;
+    if (id == 0 && d->globalTouch.focus.touchs.isEmpty()) {
+        // If the client did not bind the touch interface fall back
+        // to at least emulating touch through pointer events.
         forEachInterface<PointerInterface>(focusedTouchSurface(), d->pointers,
             [this, pos, serial] (PointerInterface *p) {
                 wl_pointer_send_enter(p->resource(), serial,
@@ -1344,53 +1345,62 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
                 p->d_func()->sendFrame();
             }
         );
-#endif
     }
+#endif
 
-    d->touchInterface.ids << id;
+    d->globalTouch.ids << id;
     return id;
 }
 
 void SeatInterface::touchMove(qint32 id, const QPointF &globalPosition)
 {
     Q_D();
-    if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
-        d->touchInterface.focus.touch->move(id, globalPosition - d->touchInterface.focus.offset);
-    } else if (id == 0 && focusedTouchSurface()) {
-        const QPointF pos = globalPosition - d->touchInterface.focus.offset;
+    Q_ASSERT(d->globalTouch.ids.contains(id));
+    const auto pos = globalPosition - d->globalTouch.focus.offset;
+    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
+        (*it)->move(id, pos);
+    }
+
+    if (id == 0 && d->globalTouch.focus.touchs.isEmpty()) {
+        // Client did not bind touch, fall back to emulating with pointer events.
         forEachInterface<PointerInterface>(focusedTouchSurface(), d->pointers,
             [this, pos] (PointerInterface *p) {
                 wl_pointer_send_motion(p->resource(), timestamp(),
                                        wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
             }
         );
-    } 
+    }
 }
 
 void SeatInterface::touchUp(qint32 id)
 {
     Q_D();
-    Q_ASSERT(d->touchInterface.ids.contains(id));
-    if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
-        d->touchInterface.focus.touch->up(id, display()->nextSerial());
-    } else if (id == 0 && focusedTouchSurface()) {
+    Q_ASSERT(d->globalTouch.ids.contains(id));
+    const qint32 serial = display()->nextSerial();
+    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
+        (*it)->up(id, serial);
+    }
+
 #if HAVE_LINUX_INPUT_H
+    if (id == 0 && d->globalTouch.focus.touchs.isEmpty()) {
+        // Client did not bind touch, fall back to emulating with pointer events.
         const quint32 serial = display()->nextSerial();
         forEachInterface<PointerInterface>(focusedTouchSurface(), d->pointers,
             [this, serial] (PointerInterface *p) {
                 wl_pointer_send_button(p->resource(), serial, timestamp(), BTN_LEFT, WL_POINTER_BUTTON_STATE_RELEASED);
             }
         );
-#endif
     }
-    d->touchInterface.ids.removeAll(id);
+#endif
+
+    d->globalTouch.ids.remove(id);
 }
 
 void SeatInterface::touchFrame()
 {
     Q_D();
-    if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
-        d->touchInterface.focus.touch->frame();
+    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
+        (*it)->frame();
     }
 }
 
