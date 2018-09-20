@@ -388,10 +388,16 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
 
     Animation &animation = m_animations[w];
     animation.kind = AnimationKind::In;
-    animation.timeLine.reset();
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration((*dataIt).slideInDuration);
     animation.timeLine.setEasingCurve(QEasingCurve::InOutSine);
+
+    // If the opposite animation (Out) was active and it had shorter duration,
+    // at this point, the timeline can end up in the "done" state. Thus, we have
+    // to reset it.
+    if (animation.timeLine.done()) {
+        animation.timeLine.reset();
+    }
 
     w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
@@ -421,10 +427,16 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
 
     Animation &animation = m_animations[w];
     animation.kind = AnimationKind::Out;
-    animation.timeLine.reset();
     animation.timeLine.setDirection(TimeLine::Backward);
     animation.timeLine.setDuration((*dataIt).slideOutDuration);
     animation.timeLine.setEasingCurve(QEasingCurve::InOutSine);
+
+    // If the opposite animation (In) was active and it had shorter duration,
+    // at this point, the timeline can end up in the "done" state. Thus, we have
+    // to reset it.
+    if (animation.timeLine.done()) {
+        animation.timeLine.reset();
+    }
 
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
