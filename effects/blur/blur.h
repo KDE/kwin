@@ -50,18 +50,18 @@ class BlurEffect : public KWin::Effect
 
 public:
     BlurEffect();
-    ~BlurEffect();
+    ~BlurEffect() override;
 
     static bool supported();
     static bool enabledByDefault();
 
-    void reconfigure(ReconfigureFlags flags);
-    void prePaintScreen(ScreenPrePaintData &data, int time);
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
-    void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
-    void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
+    void reconfigure(ReconfigureFlags flags) override;
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity) override;
 
-    virtual bool provides(Feature feature);
+    bool provides(Feature feature) override;
 
     int requestedEffectChainPosition() const override {
         return 75;
