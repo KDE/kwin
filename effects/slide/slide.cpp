@@ -26,11 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "slideconfig.h"
 
-// KWayland
-#include <KWayland/Server/blur_interface.h>
-#include <KWayland/Server/contrast_interface.h>
-#include <KWayland/Server/surface_interface.h>
-
 namespace KWin
 {
 
@@ -51,6 +46,13 @@ SlideEffect::SlideEffect()
             this, &SlideEffect::numberDesktopsChanged);
     connect(effects, &EffectsHandler::numberScreensChanged,
             this, &SlideEffect::numberScreensChanged);
+}
+
+SlideEffect::~SlideEffect()
+{
+    if (m_active) {
+        stop();
+    }
 }
 
 bool SlideEffect::supported()
@@ -334,70 +336,6 @@ int SlideEffect::workspaceHeight() const
     return h;
 }
 
-bool SlideEffect::shouldForceBlur(const EffectWindow *w) const
-{
-    // While there is an active fullscreen effect, the blur effect
-    // tends to do nothing, i.e. it doesn't blur behind windows.
-    // So, we should force the blur effect to blur by setting
-    // WindowForceBlurRole.
-
-    if (w->data(WindowForceBlurRole).toBool()) {
-        return false;
-    }
-
-    if (w->data(WindowBlurBehindRole).isValid()) {
-        return true;
-    }
-
-    if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
-        return true;
-    }
-
-    // FIXME: it should be something like this:
-    //        if (surf) {
-    //            return !surf->blur().isNull();
-    //        }
-    const KWayland::Server::SurfaceInterface *surf = w->surface();
-    if (surf && surf->blur()) {
-        return true;
-    }
-
-    // TODO: make it X11-specific(check _KDE_NET_WM_BLUR_BEHIND_REGION)
-    //       or delete it in the future
-    return w->hasAlpha();
-}
-
-bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow *w) const
-{
-    // While there is an active fullscreen effect, the background
-    // contrast effect tends to do nothing, i.e. it doesn't change
-    // contrast. So, we should force the background contrast effect
-    // to change contrast by setting WindowForceBackgroundContrastRole.
-
-    if (w->data(WindowForceBackgroundContrastRole).toBool()) {
-        return false;
-    }
-
-    if (w->data(WindowBackgroundContrastRole).isValid()) {
-        return true;
-    }
-
-    // FIXME: it should be something like this:
-    //        if (surf) {
-    //            return !surf->contrast().isNull();
-    //        }
-    const KWayland::Server::SurfaceInterface *surf = w->surface();
-    if (surf && surf->contrast()) {
-        return true;
-    }
-
-    // TODO: make it X11-specific(check _KDE_NET_WM_BACKGROUND_CONTRAST_REGION)
-    //       or delete it in the future
-    return w->hasAlpha()
-        && w->isOnAllDesktops()
-        && (w->isDock() || w->keepAbove());
-}
-
 bool SlideEffect::shouldElevate(const EffectWindow *w) const
 {
     // Static docks(i.e. this effect doesn't slide docks) should be elevated
@@ -430,18 +368,12 @@ void SlideEffect::start(int old, int current, EffectWindow *movingWindow)
 
     const auto windows = effects->stackingOrder();
     for (EffectWindow *w : windows) {
-        if (shouldForceBlur(w)) {
-            w->setData(WindowForceBlurRole, QVariant(true));
-            m_forcedRoles.blur << w;
-        }
-        if (shouldForceBackgroundContrast(w)) {
-            w->setData(WindowForceBackgroundContrastRole, QVariant(true));
-            m_forcedRoles.backgroundContrast << w;
-        }
         if (shouldElevate(w)) {
             effects->setElevatedWindow(w, true);
             m_elevatedWindows << w;
         }
+        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+        w->setData(WindowForceBlurRole, QVariant(true));
     }
 
     m_diff = desktopCoords(current) - desktopCoords(old);
@@ -457,15 +389,11 @@ void SlideEffect::start(int old, int current, EffectWindow *movingWindow)
 
 void SlideEffect::stop()
 {
-    for (EffectWindow *w : m_forcedRoles.blur) {
+    const EffectWindowList windows = effects->stackingOrder();
+    for (EffectWindow *w : windows) {
+        w->setData(WindowForceBackgroundContrastRole, QVariant());
         w->setData(WindowForceBlurRole, QVariant());
     }
-    m_forcedRoles.blur.clear();
-
-    for (EffectWindow *w : m_forcedRoles.backgroundContrast) {
-        w->setData(WindowForceBackgroundContrastRole, QVariant());
-    }
-    m_forcedRoles.backgroundContrast.clear();
 
     for (EffectWindow *w : m_elevatedWindows) {
         effects->setElevatedWindow(w, false);
@@ -491,18 +419,12 @@ void SlideEffect::windowAdded(EffectWindow *w)
     if (!m_active) {
         return;
     }
-    if (shouldForceBlur(w)) {
-        w->setData(WindowForceBlurRole, QVariant(true));
-        m_forcedRoles.blur << w;
-    }
-    if (shouldForceBackgroundContrast(w)) {
-        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
-        m_forcedRoles.backgroundContrast << w;
-    }
     if (shouldElevate(w)) {
         effects->setElevatedWindow(w, true);
         m_elevatedWindows << w;
     }
+    w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+    w->setData(WindowForceBlurRole, QVariant(true));
 }
 
 void SlideEffect::windowDeleted(EffectWindow *w)
@@ -513,8 +435,6 @@ void SlideEffect::windowDeleted(EffectWindow *w)
     if (w == m_movingWindow) {
         m_movingWindow = nullptr;
     }
-    m_forcedRoles.blur.removeAll(w);
-    m_forcedRoles.backgroundContrast.removeAll(w);
     m_elevatedWindows.removeAll(w);
     m_paintCtx.fullscreenWindows.removeAll(w);
 }

@@ -40,6 +40,7 @@ class SlideEffect : public Effect
 
 public:
     SlideEffect();
+    ~SlideEffect() override;
 
     void reconfigure(ReconfigureFlags) override;
 
@@ -82,9 +83,6 @@ private:
 
     bool isTranslated(const EffectWindow *w) const;
     bool isPainted(const EffectWindow *w) const;
-
-    bool shouldForceBlur(const EffectWindow *w) const;
-    bool shouldForceBackgroundContrast(const EffectWindow *w) const;
     bool shouldElevate(const EffectWindow *w) const;
 
     void start(int old, int current, EffectWindow *movingWindow = nullptr);
@@ -110,11 +108,6 @@ private:
 
         EffectWindowList fullscreenWindows;
     } m_paintCtx;
-
-    struct {
-        EffectWindowList blur;
-        EffectWindowList backgroundContrast;
-    } m_forcedRoles;
 
     EffectWindowList m_elevatedWindows;
 };
