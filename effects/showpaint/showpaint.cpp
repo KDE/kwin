@@ -26,6 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/render.h>
 #endif
 
+#include <KGlobalAccel>
+#include <KLocalizedString>
+
+#include <QAction>
 #include <QPainter>
 
 namespace KWin
@@ -41,6 +45,18 @@ static const QVector<QColor> s_colors {
     Qt::yellow,
     Qt::gray
 };
+
+ShowPaintEffect::ShowPaintEffect()
+{
+    auto *toggleAction = new QAction(this);
+    toggleAction->setObjectName(QStringLiteral("Toggle"));
+    toggleAction->setText(i18n("Toggle Show Paint"));
+    KGlobalAccel::self()->setDefaultShortcut(toggleAction, {});
+    KGlobalAccel::self()->setShortcut(toggleAction, {});
+    effects->registerGlobalShortcut({}, toggleAction);
+
+    connect(toggleAction, &QAction::triggered, this, &ShowPaintEffect::toggle);
+}
 
 void ShowPaintEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 {
@@ -121,6 +137,17 @@ void ShowPaintEffect::paintQPainter()
     for (const QRect &r : m_painted) {
         effects->scenePainter()->fillRect(r, color);
     }
+}
+
+bool ShowPaintEffect::isActive() const
+{
+    return m_active;
+}
+
+void ShowPaintEffect::toggle()
+{
+    m_active = !m_active;
+    effects->addRepaintFull();
 }
 
 } // namespace KWin

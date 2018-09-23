@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,39 +18,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef KWIN_SHOWPAINT_H
-#define KWIN_SHOWPAINT_H
+#pragma once
 
-#include <kwineffects.h>
+#include <KCModule>
+
+#include "ui_showpaint_config.h"
 
 namespace KWin
 {
 
-class ShowPaintEffect : public Effect
+class ShowPaintEffectConfig : public KCModule
 {
     Q_OBJECT
 
 public:
-    ShowPaintEffect();
+    explicit ShowPaintEffectConfig(QWidget *parent = nullptr, const QVariantList &args = {});
+    ~ShowPaintEffectConfig() override;
 
-    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
-
-    bool isActive() const override;
-
-private Q_SLOTS:
-    void toggle();
+public Q_SLOTS:
+    void save() override;
+    void defaults() override;
 
 private:
-    void paintGL(const QMatrix4x4 &projection);
-    void paintXrender();
-    void paintQPainter();
-
-    bool m_active = false;
-    QRegion m_painted; // what's painted in one pass
-    int m_colorIndex = 0;
+    Ui::ShowPaintEffectConfig *m_ui;
 };
 
 } // namespace KWin
-
-#endif

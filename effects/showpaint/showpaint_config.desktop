@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kwin_showpaint_config
+X-KDE-ParentComponents=showpaint
+
+Name=Show Paint

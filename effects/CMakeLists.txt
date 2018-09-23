@@ -92,6 +92,7 @@ set( kwin4_effect_builtins_sources
     resize/resize.cpp
     scale/scale.cpp
     showfps/showfps.cpp
+    showpaint/showpaint.cpp
     slide/slide.cpp
     thumbnailaside/thumbnailaside.cpp
     touchpoints/touchpoints.cpp
@@ -160,7 +161,7 @@ add_subdirectory( presentwindows )
 add_subdirectory( resize )
 include( screenedge/CMakeLists.txt )
 add_subdirectory( showfps )
-include( showpaint/CMakeLists.txt )
+add_subdirectory( showpaint )
 add_subdirectory( slide )
 include( slideback/CMakeLists.txt )
 include( slidingpopups/CMakeLists.txt )
