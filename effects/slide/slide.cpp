@@ -128,11 +128,6 @@ inline QRegion buildClipRegion(const QPoint &pos, int w, int h)
 
 void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 {
-    if (!m_active) {
-        effects->paintScreen(mask, region, data);
-        return;
-    }
-
     const bool wrap = effects->optionRollOverDesktops();
     const int w = workspaceWidth();
     const int h = workspaceHeight();
@@ -265,23 +260,21 @@ bool SlideEffect::isPainted(const EffectWindow *w) const
 
 void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
 {
-    if (m_active) {
-        const bool painted = isPainted(w);
-        if (painted) {
-            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-        } else {
-            w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-        }
-        if (painted && isTranslated(w)) {
-            data.setTransformed();
-        }
+    const bool painted = isPainted(w);
+    if (painted) {
+        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+    } else {
+        w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+    }
+    if (painted && isTranslated(w)) {
+        data.setTransformed();
     }
     effects->prePaintWindow(w, data, time);
 }
 
 void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    if (m_active && isTranslated(w)) {
+    if (isTranslated(w)) {
         data += m_paintCtx.translation;
     }
     effects->paintWindow(w, mask, region, data);
