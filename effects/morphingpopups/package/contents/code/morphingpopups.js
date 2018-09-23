@@ -58,10 +58,8 @@ var morphingEffect = {
             return;
         }
 
-        //WindowForceBackgroundContrastRole
-        window.setData(7, true);
-        //WindowForceBlurRole
-        window.setData(5, true);
+        window.setData(Effect.WindowForceBackgroundContrastRole, true);
+        window.setData(Effect.WindowForceBlurRole, true);
 
         var couldRetarget = false;
 
