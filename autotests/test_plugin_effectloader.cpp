@@ -90,7 +90,6 @@ void TestPluginEffectLoader::testHasEffect_data()
     QTest::newRow("LookingGlass")      << QStringLiteral("lookingglass")              << false;
     QTest::newRow("MagicLamp")         << QStringLiteral("magiclamp")                 << false;
     QTest::newRow("Magnifier")         << QStringLiteral("magnifier")                 << false;
-    QTest::newRow("MinimizeAnimation") << QStringLiteral("minimizeanimation")         << false;
     QTest::newRow("MouseClick")        << QStringLiteral("mouseclick")                << false;
     QTest::newRow("MouseMark")         << QStringLiteral("mousemark")                 << false;
     QTest::newRow("PresentWindows")    << QStringLiteral("presentwindows")            << false;
@@ -119,6 +118,7 @@ void TestPluginEffectLoader::testHasEffect_data()
     QTest::newRow("Login")             << QStringLiteral("kwin4_effect_login")        << false;
     QTest::newRow("Logout")            << QStringLiteral("kwin4_effect_logout")       << false;
     QTest::newRow("Maximize")          << QStringLiteral("kwin4_effect_maximize")     << false;
+    QTest::newRow("Squash")            << QStringLiteral("kwin4_effect_squash")       << false;
     QTest::newRow("Translucency")      << QStringLiteral("kwin4_effect_translucency") << false;
     // and the fake effects we use here
     QTest::newRow("fakeeffectplugin")    << QStringLiteral("fakeeffectplugin")          << true;

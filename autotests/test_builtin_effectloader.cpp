@@ -99,7 +99,6 @@ void TestBuiltInEffectLoader::testHasEffect_data()
     QTest::newRow("LookingGlass")                   << QStringLiteral("lookingglass")      << true;
     QTest::newRow("MagicLamp")                      << QStringLiteral("magiclamp")         << true;
     QTest::newRow("Magnifier")                      << QStringLiteral("magnifier")         << true;
-    QTest::newRow("MinimizeAnimation")              << QStringLiteral("minimizeanimation") << true;
     QTest::newRow("MouseClick")                     << QStringLiteral("mouseclick")        << true;
     QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true;
     QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true;
@@ -156,7 +155,6 @@ void TestBuiltInEffectLoader::testKnownEffects()
                     << QStringLiteral("lookingglass")
                     << QStringLiteral("magiclamp")
                     << QStringLiteral("magnifier")
-                    << QStringLiteral("minimizeanimation")
                     << QStringLiteral("mouseclick")
                     << QStringLiteral("mousemark")
                     << QStringLiteral("presentwindows")
@@ -235,7 +233,6 @@ void TestBuiltInEffectLoader::testSupported_data()
     QTest::newRow("MagicLamp-GL")                   << QStringLiteral("magiclamp")         << true  << oc << true;
     QTest::newRow("MagicLamp-GL-no-anim")           << QStringLiteral("magiclamp")         << false << oc << false;
     QTest::newRow("Magnifier")                      << QStringLiteral("magnifier")         << true  << xc << true;
-    QTest::newRow("MinimizeAnimation")              << QStringLiteral("minimizeanimation") << true  << xc << true;
     QTest::newRow("MouseClick")                     << QStringLiteral("mouseclick")        << true  << xc << true;
     QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true  << xc << true;
     QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true  << xc << true;
@@ -324,7 +321,6 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
     QTest::newRow("MagicLamp")                      << QStringLiteral("magiclamp")         << false << xc;
     QTest::newRow("MagicLamp-GL")                   << QStringLiteral("magiclamp")         << true  << oc;
     QTest::newRow("Magnifier")                      << QStringLiteral("magnifier")         << true  << xc;
-    QTest::newRow("MinimizeAnimation")              << QStringLiteral("minimizeanimation") << true  << xc;
     QTest::newRow("MouseClick")                     << QStringLiteral("mouseclick")        << true  << xc;
     QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true  << xc;
     QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true  << xc;
@@ -509,7 +505,6 @@ void TestBuiltInEffectLoader::testLoadAllEffects()
     plugins.writeEntry(QStringLiteral("desktopgridEnabled"), false);
     plugins.writeEntry(QStringLiteral("highlightwindowEnabled"), false);
     plugins.writeEntry(QStringLiteral("kscreenEnabled"), false);
-    plugins.writeEntry(QStringLiteral("minimizeanimationEnabled"), false);
     plugins.writeEntry(QStringLiteral("presentwindowsEnabled"), false);
     plugins.writeEntry(QStringLiteral("screenedgeEnabled"), false);
     plugins.writeEntry(QStringLiteral("screenshotEnabled"), false);

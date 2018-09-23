@@ -52,7 +52,6 @@ enum class BuiltInEffect
     LookingGlass,
     MagicLamp,
     Magnifier,
-    MinimizeAnimation,
     MouseClick,
     MouseMark,
     PresentWindows,

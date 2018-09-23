@@ -5,3 +5,9 @@ Id=replace-scalein-with-scale
 File=kwinrc
 Group=Plugins
 Key=kwin4_effect_scaleinEnabled,scaleEnabled
+
+# Port the Minimize Animation effect to JavaScript.
+Id=port-minimizeanimation-effect-to-js
+File=kwinrc
+Group=Plugins
+Key=minimizeanimationEnabled,kwin4_effect_squashEnabled

@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "fallapart/fallapart.h"
 #include "highlightwindow/highlightwindow.h"
 #include "magiclamp/magiclamp.h"
-#include "minimizeanimation/minimizeanimation.h"
 #include "resize/resize.h"
 #include "scale/scale.h"
 #include "showfps/showfps.h"
@@ -367,21 +366,6 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<MagnifierEffect>,
         &MagnifierEffect::supported,
-        nullptr
-#endif
-EFFECT_FALLBACK
-    }, {
-        QStringLiteral("minimizeanimation"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Minimize Animation"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Animate the minimizing of windows"),
-        QStringLiteral("Appearance"),
-        QStringLiteral("minimize"),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/minimize.ogv")),
-        true,
-        false,
-#ifdef EFFECT_BUILTINS
-        &createHelper<MinimizeAnimationEffect>,
-        &MinimizeAnimationEffect::supported,
         nullptr
 #endif
 EFFECT_FALLBACK
