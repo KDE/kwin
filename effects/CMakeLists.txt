@@ -75,7 +75,7 @@ set( kwin4_effect_builtins_sources
     colorpicker/colorpicker.cpp
     cube/cube.cpp
     cube/cube_proxy.cpp
-    cube/cubeslide.cpp
+    cubeslide/cubeslide.cpp
     coverswitch/coverswitch.cpp
     desktopgrid/desktopgrid.cpp
     diminactive/diminactive.cpp
@@ -105,8 +105,8 @@ qt5_add_resources( kwin4_effect_builtins_sources shaders.qrc )
 
 kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     blur/blurconfig.kcfgc
-    cube/cubeslideconfig.kcfgc
     cube/cubeconfig.kcfgc
+    cubeslide/cubeslideconfig.kcfgc
     coverswitch/coverswitchconfig.kcfgc
     desktopgrid/desktopgridconfig.kcfgc
     diminactive/diminactiveconfig.kcfgc
@@ -173,6 +173,7 @@ add_subdirectory( blur )
 include( backgroundcontrast/CMakeLists.txt )
 add_subdirectory( coverswitch )
 add_subdirectory( cube )
+add_subdirectory( cubeslide )
 add_subdirectory( flipswitch )
 add_subdirectory( glide )
 add_subdirectory( invert )

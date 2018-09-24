@@ -49,7 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // OpenGL-specific effects for desktop
 #include "coverswitch/coverswitch.h"
 #include "cube/cube.h"
-#include "cube/cubeslide.h"
+#include "cubeslide/cubeslide.h"
 #include "flipswitch/flipswitch.h"
 #include "glide/glide.h"
 #include "invert/invert.h"
