@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "client.h"
 #include "composite.h"
+#include "deleted.h"
 #include "effects.h"
 #include "effectloader.h"
 #include "cursor.h"
@@ -61,6 +62,7 @@ void SlidingPopupsTest::initTestCase()
 {
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::Deleted*>();
     qRegisterMetaType<KWin::Effect*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
