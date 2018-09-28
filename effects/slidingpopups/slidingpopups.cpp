@@ -201,7 +201,6 @@ void SlidingPopupsEffect::slotWindowDeleted(EffectWindow *w)
 {
     m_animations.remove(w);
     m_animationsData.remove(w);
-    effects->addRepaint(w->expandedGeometry());
 }
 
 void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)
