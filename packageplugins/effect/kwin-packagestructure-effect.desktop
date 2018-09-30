@@ -1,5 +1,12 @@
 [Desktop Entry]
 Name=KWin Effect
+Name[ca]=Efecte del KWin
+Name[ca@valencia]=Efecte del KWin
+Name[es]=Efecto de KWin
+Name[nl]=KWin-effect
+Name[sv]=Kwin-effekt
+Name[uk]=Ефект KWin
+Name[x-test]=xxKWin Effectxx
 Type=Service
 X-KDE-ServiceTypes=KPackage/PackageStructure
 X-KDE-Library=kwin_packagestructure_effect
