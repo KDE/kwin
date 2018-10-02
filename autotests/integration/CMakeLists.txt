@@ -73,6 +73,7 @@ if (XCB_ICCCM_FOUND)
     integrationTest(NAME testGlobalShortcuts SRCS globalshortcuts_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testSceneQPainter SRCS scene_qpainter_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testSceneQPainterShadow SRCS scene_qpainter_shadow_test.cpp LIBS XCB::ICCCM)
+    integrationTest(NAME testStackingOrder SRCS stacking_order_test.cpp LIBS XCB::ICCCM)
 
     if (KWIN_BUILD_ACTIVITIES)
         integrationTest(NAME testActivities SRCS activities_test.cpp LIBS XCB::ICCCM)

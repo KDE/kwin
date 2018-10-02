@@ -534,41 +534,19 @@ ToplevelList Workspace::constrainedStackingOrder()
             continue;
         }
         int i2 = -1;
-        Client *ccurrent = qobject_cast<Client*>(current);
-        if (ccurrent && ccurrent->groupTransient()) {
-            if (ccurrent->group()->members().count() > 0) {
-                // find topmost client this one is transient for
-                for (i2 = stacking.size() - 1;
-                        i2 >= 0;
-                        --i2) {
-                    if (stacking[ i2 ] == stacking[ i ]) {
-                        i2 = -1; // don't reorder, already the topmost in the group
-                        break;
-                    }
-                    AbstractClient *c2 = qobject_cast<AbstractClient*>(stacking[ i2 ]);
-                    if (!c2) {
-                        continue;
-                    }
-                    if (c2->hasTransient(current, true)
-                            && keepTransientAbove(c2, current))
-                        break;
-                }
-            } // else i2 remains pointing at -1
-        } else {
-            for (i2 = stacking.size() - 1;
-                    i2 >= 0;
-                    --i2) {
-                AbstractClient *c2 = qobject_cast<AbstractClient*>(stacking[ i2 ]);
-                if (!c2) {
-                    continue;
-                }
-                if (c2 == current) {
-                    i2 = -1; // don't reorder, already on top of its mainwindow
-                    break;
-                }
-                if (c2 == current->transientFor()
-                        && keepTransientAbove(c2, current))
-                    break;
+        // find topmost client this one is transient for
+        for (i2 = stacking.size() - 1; i2 >= 0; --i2) {
+            AbstractClient *c2 = qobject_cast<AbstractClient *>(stacking[i2]);
+            if (!c2) {
+                continue;
+            }
+            if (c2 == current) {
+                i2 = -1; // Don't reorder, already on top of its main window.
+                break;
+            }
+            if (c2->hasTransient(current, true)
+                    && keepTransientAbove(c2, current)) {
+                break;
             }
         }
         if (i2 == -1) {
