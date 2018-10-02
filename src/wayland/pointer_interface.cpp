@@ -241,7 +241,7 @@ PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentRes
                 return;
             }
             const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
-            auto targetSurface = d->focusedSurface->surfaceAt(pos);
+            auto targetSurface = d->focusedSurface->inputSurfaceAt(pos);
             if (!targetSurface) {
                 targetSurface = d->focusedSurface;
             }
@@ -286,7 +286,7 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 seri
     );
 
     const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
-    d->focusedChildSurface = QPointer<SurfaceInterface>(d->focusedSurface->surfaceAt(pos));
+    d->focusedChildSurface = QPointer<SurfaceInterface>(d->focusedSurface->inputSurfaceAt(pos));
     if (!d->focusedChildSurface) {
         d->focusedChildSurface = QPointer<SurfaceInterface>(d->focusedSurface);
     }

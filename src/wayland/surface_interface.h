@@ -212,6 +212,21 @@ public:
     SurfaceInterface *surfaceAt(const QPointF &position);
 
     /**
+     * Finds the input receiving SurfaceInterface at the given @p position in surface-local coordinates.
+     * This can be either a descendant SurfaceInterface honoring the stacking order or
+     * the SurfaceInterface itself if its geometry contains the given @p position.
+     *
+     * If no such SurfaceInterface is found, e.g. because the SurfaceInterface is unmapped or there is no
+     * input region containing the position,
+     * @c nullptr is returned.
+     *
+     * @param position The position in surface-local coordinates
+     * @returns Input receiving child surface at the given @p position or surface itself at the position, might be @c nullptr
+     * @since 5.52
+     **/
+    SurfaceInterface *inputSurfaceAt(const QPointF &position);
+
+    /**
      * Sets the @p outputs this SurfaceInterface overlaps with, may be empty.
      *
      * The compositor should update whenever the SurfaceInterface becomes visible on

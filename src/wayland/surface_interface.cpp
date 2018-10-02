@@ -856,6 +856,35 @@ SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
     return nullptr;
 }
 
+SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
+{
+    // TODO: Most of this is very similar to SurfaceInterface::surfaceAt
+    //       Is there a way to reduce the code duplication?
+    if (!isMapped()) {
+        return nullptr;
+    }
+    Q_D();
+    // go from top to bottom. Top most child is last in list
+    QListIterator<QPointer<SubSurfaceInterface>> it(d->current.children);
+    it.toBack();
+    while (it.hasPrevious()) {
+        const auto &current = it.previous();
+        auto surface = current->surface();
+        if (surface.isNull()) {
+            continue;
+        }
+        if (auto s = surface->inputSurfaceAt(position - current->position())) {
+            return s;
+        }
+    }
+    // check whether the geometry and input region contain the pos
+    if (!size().isEmpty() && QRectF(QPoint(0, 0), size()).contains(position) &&
+            (inputIsInfinite() || input().contains(position.toPoint()))) {
+        return this;
+    }
+    return nullptr;
+}
+
 QPointer<LockedPointerInterface> SurfaceInterface::lockedPointer() const
 {
     Q_D();
