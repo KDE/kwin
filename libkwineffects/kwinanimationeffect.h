@@ -88,6 +88,20 @@ private:
     bool valid;
 };
 
+/**
+ * Wraps effects->setActiveFullScreenEffect for the duration of it's lifespan
+ */
+class FullScreenEffectLock
+{
+public:
+    FullScreenEffectLock(Effect *effect);
+    ~FullScreenEffectLock();
+private:
+    Q_DISABLE_COPY(FullScreenEffectLock)
+    void *d; //unused currently
+};
+typedef QSharedPointer<FullScreenEffectLock> FullScreenEffectLockPtr;
+
 class AniData;
 class AnimationEffectPrivate;
 class KWINEFFECTS_EXPORT AnimationEffect : public Effect
@@ -160,19 +174,20 @@ protected:
      * @param to - The target value. FPx2 is an agnostic two component float type (like QPointF or QSizeF, but without requiring to be either and supporting an invalid state)
      * @param shape - How the animation progresses, eg. Linear progresses constantly while Exponential start slow and becomes very fast in the end
      * @param delay - When the animation will start compared to "now" (the window will remain at the "from" position until then)
-     * @param from - the starting value, the default is invalid, ie. the attribute for the window is not transformed in the beginning
+     * @param from - The starting value, the default is invalid, ie. the attribute for the window is not transformed in the beginning
+     * @param fullScreen - Sets this effect as the active full screen effect for the duration of the animation
      * @return an ID that you can use to cancel a running animation
      */
-    quint64 animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2() )
-    { return p_animate(w, a, meta, ms, to, curve, delay, from, false); }
+    quint64 animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2(), bool fullScreen = false)
+    { return p_animate(w, a, meta, ms, to, curve, delay, from, false, fullScreen); }
 
     /**
      * Equal to ::animate() with one important difference:
      * The target value for the attribute is kept until you ::cancel() this animation
      * @return an ID that you need to use to cancel this manipulation
      */
-    quint64 set( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2() )
-    { return p_animate(w, a, meta, ms, to, curve, delay, from, true); }
+    quint64 set( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2(), bool fullScreen = false)
+    { return p_animate(w, a, meta, ms, to, curve, delay, from, true, fullScreen); }
 
     /**
      * this allows to alter the target (but not type or curve) of a running animation
@@ -211,7 +226,7 @@ protected:
     AniMap state() const;
 
 private:
-    quint64 p_animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget );
+    quint64 p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect);
     QRect clipRect(const QRect &windowRect, const AniData&) const;
     void clipWindow(const EffectWindow *, const AniData &, WindowQuadList &) const;
     float interpolated( const AniData&, int i = 0 ) const;

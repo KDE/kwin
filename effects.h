@@ -149,6 +149,7 @@ public:
 
     void setActiveFullScreenEffect(Effect* e) override;
     Effect* activeFullScreenEffect() const override;
+    bool hasActiveFullScreenEffect() const override;
 
     void addRepaintFull() override;
     void addRepaint(const QRect& r) override;

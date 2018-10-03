@@ -66,6 +66,8 @@ private Q_SLOTS:
     void testAnimations();
     void testScreenEdge();
     void testScreenEdgeTouch();
+    void testFullScreenEffect_data();
+    void testFullScreenEffect();
 private:
     ScriptedEffect *loadEffect(const QString &name);
 };
@@ -172,6 +174,7 @@ void ScriptedEffectsTest::cleanup()
         e->unloadEffect(effect);
         QVERIFY(!e->isEffectLoaded(effect));
     }
+    KWin::VirtualDesktopManager::self()->setCurrent(1);
 }
 
 void ScriptedEffectsTest::testEffectsHandler()
@@ -350,6 +353,73 @@ void ScriptedEffectsTest::testScreenEdgeTouch()
     actions[0]->trigger();
     QCOMPARE(effectOutputSpy.count(), 1);
 }
+
+void ScriptedEffectsTest::testFullScreenEffect_data()
+{
+    QTest::addColumn<QString>("file");
+
+    QTest::newRow("single") << "fullScreenEffectTest";
+    QTest::newRow("multi")  << "fullScreenEffectTestMulti";
+}
+
+void ScriptedEffectsTest::testFullScreenEffect()
+{
+    QFETCH(QString, file);
+
+    auto *effectMain = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
+    QSignalSpy effectOutputSpy(effectMain, &ScriptedEffectWithDebugSpy::testOutput);
+    QSignalSpy fullScreenEffectActiveSpy(effects, &EffectsHandler::hasActiveFullScreenEffectChanged);
+    QSignalSpy isActiveFullScreenEffectSpy(effectMain, &ScriptedEffect::isActiveFullScreenEffectChanged);
+
+    QVERIFY(effectMain->load(file));
+
+    //load any random effect from another test to confirm fullscreen effect state is correctly
+    //shown as being someone else
+    auto effectOther = new ScriptedEffectWithDebugSpy();
+    QVERIFY(effectOther->load("screenEdgeTouchTest"));
+    QSignalSpy isActiveFullScreenEffectSpyOther(effectOther, &ScriptedEffect::isActiveFullScreenEffectChanged);
+
+    using namespace KWayland::Client;
+    auto *surface = Test::createSurface(Test::waylandCompositor());
+    QVERIFY(surface);
+    auto *shellSurface = Test::createXdgShellV6Surface(surface, surface);
+    QVERIFY(shellSurface);
+    shellSurface->setTitle("Window 1");
+    auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+
+    QCOMPARE(effects->hasActiveFullScreenEffect(), false);
+    QCOMPARE(effectMain->isActiveFullScreenEffect(), false);
+
+    //trigger animation
+    KWin::VirtualDesktopManager::self()->setCurrent(2);
+
+    QCOMPARE(effects->activeFullScreenEffect(), effectMain);
+    QCOMPARE(effects->hasActiveFullScreenEffect(), true);
+    QCOMPARE(fullScreenEffectActiveSpy.count(), 1);
+
+    QCOMPARE(effectMain->isActiveFullScreenEffect(), true);
+    QCOMPARE(isActiveFullScreenEffectSpy.count(), 1);
+
+    QCOMPARE(effectOther->isActiveFullScreenEffect(), false);
+    QCOMPARE(isActiveFullScreenEffectSpyOther.count(), 0);
+
+    //after 500ms trigger another full screen animation
+    QTest::qWait(500);
+    KWin::VirtualDesktopManager::self()->setCurrent(1);
+    QCOMPARE(effects->activeFullScreenEffect(), effectMain);
+
+    //after 1000ms (+a safety margin for time based tests) we should still be the active full screen effect
+    //despite first animation expiring
+    QTest::qWait(500+100);
+    QCOMPARE(effects->activeFullScreenEffect(), effectMain);
+
+    //after 1500ms (+a safetey margin) we should have no full screen effect
+    QTest::qWait(500+100);
+    QCOMPARE(effects->activeFullScreenEffect(), nullptr);
+}
+
 
 WAYLANDTEST_MAIN(ScriptedEffectsTest)
 #include "scripted_effects_test.moc"

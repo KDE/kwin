@@ -825,6 +825,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(QPoint cursorPos READ cursorPos)
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
+    Q_PROPERTY(bool hasActiveFullscreenEffect READ hasActiveFullScreenEffect NOTIFY hasActiveFullScreenEffectChanged)
     friend class Effect;
 public:
     explicit EffectsHandler(CompositingType type);
@@ -1322,6 +1323,11 @@ public:
      **/
     virtual KSharedConfigPtr inputConfig() const = 0;
 
+    /**
+     * Returns if activeFullScreenEffect is set
+     */
+    virtual bool hasActiveFullScreenEffect() const = 0;
+
 Q_SIGNALS:
     /**
      * Signal emitted when the current desktop changed.
@@ -1712,6 +1718,16 @@ Q_SIGNALS:
      * @since 5.14
      **/
     void activeFullScreenEffectChanged();
+
+    /**
+     * This signal is emitted when active fullscreen effect changed to being
+     * set or unset
+     *
+     * @see activeFullScreenEffect
+     * @see setActiveFullScreenEffect
+     * @since 5.15
+     **/
+    void hasActiveFullScreenEffectChanged();
 
 protected:
     QVector< EffectPair > loaded_effects;

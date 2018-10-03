@@ -45,9 +45,10 @@ public:
     }
     AnimationEffect::AniMap m_animations;
     EffectWindowList m_zombies;
-    bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched, m_isInitialized;
-    quint64 m_justEndedAnimation; // protect against cancel
     static quint64 m_animCounter;
+    quint64 m_justEndedAnimation; // protect against cancel
+    QWeakPointer<FullScreenEffectLock> m_fullScreenEffectLock;
+    bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched, m_isInitialized;
 };
 }
 
@@ -216,7 +217,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
     }
 }
 
-quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget )
+quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect)
 {
     const bool waitAtSource = from.isValid();
     validate(a, meta, &from, &to, w);
@@ -237,7 +238,17 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     AniMap::iterator it = d->m_animations.find(w);
     if (it == d->m_animations.end())
         it = d->m_animations.insert(w, QPair<QList<AniData>, QRect>(QList<AniData>(), QRect()));
-    it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource, keepAtTarget));
+
+    FullScreenEffectLockPtr fullscreen;
+    if (fullScreenEffect) {
+        if (d->m_fullScreenEffectLock.isNull()) {
+            fullscreen = FullScreenEffectLockPtr::create(this);
+            d->m_fullScreenEffectLock = fullscreen.toWeakRef();
+        } else {
+            fullscreen = d->m_fullScreenEffectLock.toStrongRef();
+        }
+    }
+    it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource, keepAtTarget, fullscreen));
     quint64 ret_id = ++d->m_animCounter;
     it->first.last().id = ret_id;
     it->second = QRect();
@@ -954,5 +965,14 @@ AnimationEffect::AniMap AnimationEffect::state() const
     return d->m_animations;
 }
 
+FullScreenEffectLock::FullScreenEffectLock(Effect *effect)
+{
+    effects->setActiveFullScreenEffect(effect);
+}
+
+FullScreenEffectLock::~FullScreenEffectLock()
+{
+    effects->setActiveFullScreenEffect(nullptr);
+}
 
 #include "moc_kwinanimationeffect.cpp"

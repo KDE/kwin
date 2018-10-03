@@ -31,7 +31,7 @@ class KWINEFFECTS_EXPORT AniData {
 public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,
-            QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource, bool keepAtTarget = false);
+            QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource, bool keepAtTarget = false, FullScreenEffectLockPtr=FullScreenEffectLockPtr());
     explicit AniData(const QString &str);
     inline void addTime(int t) { time += t; }
     inline bool isOneDimensional() const {
@@ -50,6 +50,7 @@ public:
     uint meta;
     qint64 startTime;
     NET::WindowTypeMask windowType;
+    QSharedPointer<FullScreenEffectLock> fullScreenEffectLock;
     bool waitAtSource, keepAtTarget;
 };
 

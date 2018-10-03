@@ -45,7 +45,8 @@ AniData::AniData()
 }
 
 AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to_,
-                 QEasingCurve curve_, int delay, const FPx2 &from_, bool waitAtSource_, bool keepAtTarget_ )
+                 QEasingCurve curve_, int delay, const FPx2 &from_, bool waitAtSource_, bool keepAtTarget_,
+                 FullScreenEffectLockPtr fullScreenEffectLock_)
  : attribute(a)
  , curve(curve_)
  , from(from_)
@@ -55,6 +56,7 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to
  , meta(meta_)
  , startTime(AnimationEffect::clock() + delay)
  , windowType((NET::WindowTypeMask)0)
+ , fullScreenEffectLock(fullScreenEffectLock_)
  , waitAtSource(waitAtSource_)
  , keepAtTarget(keepAtTarget_)
 {

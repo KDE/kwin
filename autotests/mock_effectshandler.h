@@ -32,6 +32,9 @@ public:
     KWin::Effect *activeFullScreenEffect() const {
         return nullptr;
     }
+    bool hasActiveFullScreenEffect() const override {
+        return false;
+    }
     int activeScreen() const override {
         return 0;
     }

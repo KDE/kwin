@@ -38,6 +38,10 @@ class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
     Q_ENUMS(Anchor)
     Q_ENUMS(MetaType)
     Q_ENUMS(EasingCurve)
+    /**
+     * True if we are the active fullscreen effect
+     */
+    Q_PROPERTY(bool isActiveFullScreenEffect READ isActiveFullScreenEffect NOTIFY isActiveFullScreenEffectChanged)
 public:
     // copied from kwineffects.h
     enum DataRole {
@@ -91,13 +95,15 @@ public:
         return m_screenEdgeCallbacks;
     }
 
+    bool isActiveFullScreenEffect() const;
+
     bool registerTouchScreenCallback(int edge, QScriptValue callback);
     bool unregisterTouchScreenCallback(int edge);
 
 public Q_SLOTS:
     //curve should be of type QEasingCurve::type or ScriptedEffect::EasingCurve
-    quint64 animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0);
-    quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0);
+    quint64 animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0, bool fullScreen = false);
+    quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0, bool fullScreen = false);
     bool retarget(quint64 animationId, KWin::FPx2 newTarget, int newRemainingTime = -1);
     bool cancel(quint64 animationId) { return AnimationEffect::cancel(animationId); }
     virtual bool borderActivated(ElectricBorder border);
@@ -108,6 +114,7 @@ Q_SIGNALS:
      **/
     void configChanged();
     void animationEnded(KWin::EffectWindow *w, quint64 animationId);
+    void isActiveFullScreenEffectChanged();
 
 protected:
     ScriptedEffect();
@@ -127,6 +134,7 @@ private:
     KConfigLoader *m_config;
     int m_chainPosition;
     QHash<int, QAction*> m_touchScreenEdgeCallbacks;
+    Effect *m_activeFullScreenEffect = nullptr;
 };
 
 }

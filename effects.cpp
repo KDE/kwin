@@ -623,11 +623,20 @@ void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)
     if (fullscreen_effect == e) {
         return;
     }
+    const bool activeChanged = (e == nullptr || fullscreen_effect == nullptr);
     fullscreen_effect = e;
     emit activeFullScreenEffectChanged();
+    if (activeChanged) {
+        emit hasActiveFullScreenEffectChanged();
+    }
 }
 
 Effect* EffectsHandlerImpl::activeFullScreenEffect() const
+{
+    return fullscreen_effect;
+}
+
+bool EffectsHandlerImpl::hasActiveFullScreenEffect() const
 {
     return fullscreen_effect;
 }
