@@ -825,7 +825,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(QPoint cursorPos READ cursorPos)
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
-    Q_PROPERTY(bool hasActiveFullscreenEffect READ hasActiveFullScreenEffect NOTIFY hasActiveFullScreenEffectChanged)
+    Q_PROPERTY(bool hasActiveFullScreenEffect READ hasActiveFullScreenEffect NOTIFY hasActiveFullScreenEffectChanged)
     friend class Effect;
 public:
     explicit EffectsHandler(CompositingType type);
