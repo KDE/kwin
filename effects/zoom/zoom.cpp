@@ -192,8 +192,10 @@ void ZoomEffect::recreateTexture()
         imageWidth = cursor.image().width();
         imageHeight = cursor.image().height();
         cursorHotSpot = cursor.hotSpot();
-        if (effects->isOpenGLCompositing())
+        if (effects->isOpenGLCompositing()) {
             texture.reset(new GLTexture(cursor.image()));
+            texture->setWrapMode(GL_CLAMP_TO_EDGE);
+        }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (effects->compositingType() == XRenderCompositing)
             xrenderPicture.reset(new XRenderPicture(cursor.image()));
