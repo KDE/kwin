@@ -53,6 +53,9 @@ effect.configChanged.connect(function() {
     loadConfig();
 });
 function fadeInHandler(w) {
+    if (effects.hasActiveFullScreenEffect) {
+        return;
+    }
     if (fadeWindows && isFadeWindow(w)) {
         if (w.fadeOutWindowTypeAnimation !== undefined) {
             cancel(w.fadeOutWindowTypeAnimation);
@@ -62,6 +65,9 @@ function fadeInHandler(w) {
     }
 }
 function fadeOutHandler(w) {
+    if (effects.hasActiveFullScreenEffect) {
+        return;
+    }
     if (fadeWindows && isFadeWindow(w)) {
         if (w.fadeOutWindowTypeAnimation !== undefined) {
             // don't animate again as it was already animated through window hidden
