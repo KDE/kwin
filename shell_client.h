@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2018 David Edmundson <davidedmundson@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -202,6 +203,7 @@ private:
     void updateClientOutputs();
     KWayland::Server::XdgShellSurfaceInterface::States xdgSurfaceStates() const;
     void updateShowOnScreenEdge();
+    void updateMaximizeMode(MaximizeMode maximizeMode);
     // called on surface commit and processes all m_pendingConfigureRequests up to m_lastAckedConfigureReqest
     void updatePendingGeometry();
     static void deleteClient(ShellClient *c);
@@ -217,9 +219,15 @@ private:
         quint32 serialId = 0;
         // position to apply after a resize operation has been completed
         QPoint positionAfterResize;
+        MaximizeMode maximizeMode;
     };
     QVector<PendingConfigureRequest> m_pendingConfigureRequests;
     quint32 m_lastAckedConfigureRequest = 0;
+
+    //mode in use by the current buffer
+    MaximizeMode m_maximizeMode = MaximizeRestore;
+    //mode we currently want to be, could be pending on client updating, could be not sent yet
+    MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
 
     QRect m_geomFsRestore; //size and position of the window before it was set to fullscreen
     bool m_closing = false;
@@ -227,7 +235,6 @@ private:
     QWindow *m_internalWindow = nullptr;
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_unmapped = true;
-    MaximizeMode m_maximizeMode = MaximizeRestore;
     QRect m_geomMaximizeRestore; // size and position of the window before it was set to maximize
     NET::WindowType m_windowType = NET::Normal;
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;

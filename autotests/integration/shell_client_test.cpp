@@ -671,6 +671,15 @@ void TestShellClient::testMaximizedToFullscreen()
     }
     QVERIFY(sizeChangeRequestedSpy.wait());
     QCOMPARE(sizeChangeRequestedSpy.count(), 1);
+
+    if (xdgShellSurface) {
+        for (const auto &it: configureRequestedSpy) {
+            xdgShellSurface->ackConfigure(it[2].toInt());
+        }
+    }
+    Test::render(surface.data(), sizeChangeRequestedSpy.last().first().toSize(), Qt::red);
+    QVERIFY(geometryChangedSpy.wait());
+
     QCOMPARE(c->maximizeMode(), MaximizeFull);
     QCOMPARE(geometryChangedSpy.isEmpty(), false);
     geometryChangedSpy.clear();
@@ -690,7 +699,6 @@ void TestShellClient::testMaximizedToFullscreen()
     QCOMPARE(sizeChangeRequestedSpy.last().first().toSize(), QSize(screens()->size(0)));
     // TODO: should switch to fullscreen once it's updated
     QVERIFY(c->isFullScreen());
-    QCOMPARE(c->clientSize(), QSize(100, 50));
     QVERIFY(geometryChangedSpy.isEmpty());
 
     if (xdgShellSurface) {
@@ -698,7 +706,6 @@ void TestShellClient::testMaximizedToFullscreen()
             xdgShellSurface->ackConfigure(it[2].toInt());
         }
     }
-
     // render at the new size
     Test::render(surface.data(), sizeChangeRequestedSpy.last().first().toSize(), Qt::red);
     QVERIFY(geometryChangedSpy.wait());

@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2018 David Edmundson <davidedmundson@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -606,6 +607,7 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     if (QSize(w, h) == geom.size() && !isWaitingForMoveResizeSync()) {
         // size didn't change, update directly
         doSetGeometry(QRect(x, y, w, h));
+        updateMaximizeMode(m_requestedMaximizeMode);
     } else {
         // size did change, Client needs to provide a new buffer
         requestGeometry(QRect(x, y, w, h));
@@ -826,30 +828,30 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         workspace()->clientArea(MaximizeArea, Cursor::pos(), desktop()) :
         workspace()->clientArea(MaximizeArea, this);
 
-    MaximizeMode oldMode = m_maximizeMode;
+    MaximizeMode oldMode = m_requestedMaximizeMode;
     StackingUpdatesBlocker blocker(workspace());
     RequestGeometryBlocker geometryBlocker(this);
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
     if (!adjust) {
         if (vertical)
-            m_maximizeMode = MaximizeMode(m_maximizeMode ^ MaximizeVertical);
+            m_requestedMaximizeMode = MaximizeMode(m_requestedMaximizeMode ^ MaximizeVertical);
         if (horizontal)
-            m_maximizeMode = MaximizeMode(m_maximizeMode ^ MaximizeHorizontal);
+            m_requestedMaximizeMode = MaximizeMode(m_requestedMaximizeMode ^ MaximizeHorizontal);
     }
     // TODO: add more checks as in Client
 
     // call into decoration update borders
-    if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_maximizeMode == KWin::MaximizeFull)) {
+    if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
         const auto c = decoration()->client().data();
-        if ((m_maximizeMode & MaximizeVertical) != (oldMode & MaximizeVertical)) {
-            emit c->maximizedVerticallyChanged(m_maximizeMode & MaximizeVertical);
+        if ((m_requestedMaximizeMode & MaximizeVertical) != (oldMode & MaximizeVertical)) {
+            emit c->maximizedVerticallyChanged(m_requestedMaximizeMode & MaximizeVertical);
         }
-        if ((m_maximizeMode & MaximizeHorizontal) != (oldMode & MaximizeHorizontal)) {
-            emit c->maximizedHorizontallyChanged(m_maximizeMode & MaximizeHorizontal);
+        if ((m_requestedMaximizeMode & MaximizeHorizontal) != (oldMode & MaximizeHorizontal)) {
+            emit c->maximizedHorizontallyChanged(m_requestedMaximizeMode & MaximizeHorizontal);
         }
-        if ((m_maximizeMode == MaximizeFull) != (oldMode == MaximizeFull)) {
-            emit c->maximizedChanged(m_maximizeMode & MaximizeFull);
+        if ((m_requestedMaximizeMode == MaximizeFull) != (oldMode == MaximizeFull)) {
+            emit c->maximizedChanged(m_requestedMaximizeMode & MaximizeFull);
         }
         changeMaximizeRecursion = false;
     }
@@ -858,7 +860,7 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         // triggers a maximize change.
         // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore geometry
         changeMaximizeRecursion = true;
-        setNoBorder(rules()->checkNoBorder(m_maximizeMode == MaximizeFull));
+        setNoBorder(rules()->checkNoBorder(m_requestedMaximizeMode == MaximizeFull));
         changeMaximizeRecursion = false;
     }
 
@@ -870,15 +872,15 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
             // Not restoring on the same screen
             // TODO: The following doesn't work for some reason
             //quick_tile_mode = QuickTileNone; // And exit quick tile mode manually
-        } else if ((oldMode == MaximizeVertical && m_maximizeMode == MaximizeRestore) ||
-                  (oldMode == MaximizeFull && m_maximizeMode == MaximizeHorizontal)) {
+        } else if ((oldMode == MaximizeVertical && m_requestedMaximizeMode == MaximizeRestore) ||
+                  (oldMode == MaximizeFull && m_requestedMaximizeMode == MaximizeHorizontal)) {
             // Modifying geometry of a tiled window
             updateQuickTileMode(QuickTileFlag::None); // Exit quick tile mode without restoring geometry
         }
     }
 
     // TODO: check rules
-    if (m_maximizeMode == MaximizeFull) {
+    if (m_requestedMaximizeMode == MaximizeFull) {
         m_geomMaximizeRestore = geometry();
         // TODO: Client has more checks
         if (options->electricBorderMaximize()) {
@@ -892,7 +894,7 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         setGeometry(workspace()->clientArea(MaximizeArea, this));
         workspace()->raiseClient(this);
     } else {
-        if (m_maximizeMode == MaximizeRestore) {
+        if (m_requestedMaximizeMode == MaximizeRestore) {
             updateQuickTileMode(QuickTileFlag::None);
         }
         if (quickTileMode() != oldQuickTileMode) {
@@ -1174,6 +1176,7 @@ void ShellClient::requestGeometry(const QRect &rect)
     }
     PendingConfigureRequest configureRequest;
     configureRequest.positionAfterResize = rect.topLeft();
+    configureRequest.maximizeMode = m_requestedMaximizeMode;
 
     const QSize size = rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
     if (m_shellSurface) {
@@ -1202,6 +1205,7 @@ void ShellClient::requestGeometry(const QRect &rect)
 void ShellClient::updatePendingGeometry()
 {
     QPoint position = geom.topLeft();
+    MaximizeMode maximizeMode = m_maximizeMode;
     for (auto it = m_pendingConfigureRequests.begin(); it != m_pendingConfigureRequests.end(); it++) {
         if (it->serialId > m_lastAckedConfigureRequest) {
             //this serial is not acked yet, therefore we know all future serials are not
@@ -1212,6 +1216,7 @@ void ShellClient::updatePendingGeometry()
                 addLayerRepaint(geometry());
             }
             position = it->positionAfterResize;
+            maximizeMode = it->maximizeMode;
 
             m_pendingConfigureRequests.erase(m_pendingConfigureRequests.begin(), ++it);
             break;
@@ -1219,6 +1224,7 @@ void ShellClient::updatePendingGeometry()
         //else serialId < m_lastAckedConfigureRequest and the state is now irrelevant and can be ignored
     }
     doSetGeometry(QRect(position, m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
+    updateMaximizeMode(maximizeMode);
 }
 
 void ShellClient::clientFullScreenChanged(bool fullScreen)
@@ -1484,6 +1490,20 @@ void ShellClient::updateColorScheme()
     }
 }
 
+void ShellClient::updateMaximizeMode(MaximizeMode maximizeMode)
+{
+    if (maximizeMode == m_maximizeMode) {
+        return;
+    }
+
+    bool horizontalChanged = (maximizeMode & MaximizeHorizontal) != (m_maximizeMode & MaximizeHorizontal);
+    bool verticalChanged = (maximizeMode & MaximizeVertical) != (m_maximizeMode & MaximizeVertical);
+    m_maximizeMode = maximizeMode;
+
+    emit clientMaximizedStateChanged(this, m_maximizeMode);
+    emit clientMaximizedStateChanged(this, horizontalChanged, verticalChanged);
+}
+
 bool ShellClient::hasStrut() const
 {
     if (!isShown(true)) {
@@ -1636,7 +1656,7 @@ KWayland::Server::XdgShellSurfaceInterface::States ShellClient::xdgSurfaceStates
     if (isFullScreen()) {
         states |= XdgShellSurfaceInterface::State::Fullscreen;
     }
-    if (maximizeMode() == MaximizeMode::MaximizeFull) {
+    if (m_requestedMaximizeMode == MaximizeMode::MaximizeFull) {
         states |= XdgShellSurfaceInterface::State::Maximized;
     }
     if (isResize()) {
