@@ -54,7 +54,10 @@ public:
     virtual bool isActive() const;
 
     int requestedEffectChainPosition() const override {
-        return 45;
+        // Please notice that the Wobbly Windows effect has to be placed
+        // after the Maximize effect in the effect chain, otherwise there
+        // can be visual artifacts when dragging maximized windows.:wq
+        return 70;
     }
 
     // Wobbly model parameters

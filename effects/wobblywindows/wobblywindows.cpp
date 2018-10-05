@@ -326,8 +326,14 @@ void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
             right  = qMax(right,  data.quads[i].right());
             bottom = qMax(bottom, data.quads[i].bottom());
         }
-        m_updateRegion = m_updateRegion.united(QRect(w->x() + left, w->y() + top,
-                                               right - left + 2, bottom - top + 2));
+        QRectF dirtyRect(
+            left * data.xScale() + w->x() + data.xTranslation(),
+            top * data.yScale() + w->y() + data.yTranslation(),
+            (right - left + 1.0) * data.xScale(),
+            (bottom - top + 1.0) * data.yScale());
+        // Expand the dirty region by 1px to fix potential round/floor issues.
+        dirtyRect.adjust(-1.0, -1.0, 1.0, 1.0);
+        m_updateRegion = m_updateRegion.united(dirtyRect.toRect());
     }
 
     // Call the next effect.
