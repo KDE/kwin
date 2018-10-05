@@ -261,6 +261,10 @@ void ShellClient::init()
                 }
             });
 
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::configureAcknowledged, this, [this](int serial) {
+           m_lastAckedConfigureRequest = serial;
+        });
+
         connect(global, &XdgShellInterface::pingTimeout,
             this, [this](qint32 serial) {
                 auto it = m_pingSerials.find(serial);
@@ -320,6 +324,10 @@ void ShellClient::init()
             Q_UNUSED(serial)
             //TODO - should check the parent had focus
             m_hasPopupGrab = true;
+        });
+
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::configureAcknowledged, this, [this](int serial) {
+           m_lastAckedConfigureRequest = serial;
         });
 
         QRect position = QRect(m_xdgShellPopup->transientOffset(), m_xdgShellPopup->initialSize());
@@ -485,13 +493,7 @@ void ShellClient::addDamage(const QRegion &damage)
     auto s = surface();
     if (s->size().isValid()) {
         m_clientSize = s->size();
-        QPoint position = geom.topLeft();
-        if (m_positionAfterResize.isValid()) {
-            addLayerRepaint(geometry());
-            position = m_positionAfterResize.point();
-            m_positionAfterResize.clear();
-        }
-        doSetGeometry(QRect(position, m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
+        updatePendingGeometry();
     }
     markAsMapped();
     setDepth((s->buffer()->hasAlphaChannel() && !isDesktop()) ? 32 : 24);
@@ -601,7 +603,7 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         geom = geometryBeforeUpdateBlocking();
     }
     // TODO: better merge with Client's implementation
-    if (QSize(w, h) == geom.size() && !m_positionAfterResize.isValid()) {
+    if (QSize(w, h) == geom.size() && !isWaitingForMoveResizeSync()) {
         // size didn't change, update directly
         doSetGeometry(QRect(x, y, w, h));
     } else {
@@ -1170,27 +1172,53 @@ void ShellClient::requestGeometry(const QRect &rect)
         m_blockedRequestGeometry = rect;
         return;
     }
-    m_positionAfterResize.setPoint(rect.topLeft());
+    PendingConfigureRequest configureRequest;
+    configureRequest.positionAfterResize = rect.topLeft();
+
     const QSize size = rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
     if (m_shellSurface) {
         m_shellSurface->requestSize(size);
     }
     if (m_xdgShellSurface) {
-        m_xdgShellSurface->configure(xdgSurfaceStates(), size);
+        configureRequest.serialId = m_xdgShellSurface->configure(xdgSurfaceStates(), size);
     }
     if (m_xdgShellPopup) {
         auto parent = transientFor();
         if (parent) {
             const QPoint globalClientContentPos = parent->geometry().topLeft() + parent->clientPos();
             const QPoint relativeOffset = rect.topLeft() -globalClientContentPos;
-            m_xdgShellPopup->configure(QRect(relativeOffset, rect.size()));
+            configureRequest.serialId = m_xdgShellPopup->configure(QRect(relativeOffset, rect.size()));
         }
     }
+
+    m_pendingConfigureRequests.append(configureRequest);
 
     m_blockedRequestGeometry = QRect();
     if (m_internal) {
         m_internalWindow->setGeometry(QRect(rect.topLeft() + QPoint(borderLeft(), borderTop()), rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
     }
+}
+
+void ShellClient::updatePendingGeometry()
+{
+    QPoint position = geom.topLeft();
+    for (auto it = m_pendingConfigureRequests.begin(); it != m_pendingConfigureRequests.end(); it++) {
+        if (it->serialId > m_lastAckedConfigureRequest) {
+            //this serial is not acked yet, therefore we know all future serials are not
+            break;
+        }
+        if (it->serialId == m_lastAckedConfigureRequest) {
+            if (position != it->positionAfterResize) {
+                addLayerRepaint(geometry());
+            }
+            position = it->positionAfterResize;
+
+            m_pendingConfigureRequests.erase(m_pendingConfigureRequests.begin(), ++it);
+            break;
+        }
+        //else serialId < m_lastAckedConfigureRequest and the state is now irrelevant and can be ignored
+    }
+    doSetGeometry(QRect(position, m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
 }
 
 void ShellClient::clientFullScreenChanged(bool fullScreen)
@@ -1534,7 +1562,7 @@ QPoint ShellClient::transientPlacementHint() const
 
 bool ShellClient::isWaitingForMoveResizeSync() const
 {
-    return m_positionAfterResize.isValid();
+    return !m_pendingConfigureRequests.isEmpty();
 }
 
 void ShellClient::doResizeSync()

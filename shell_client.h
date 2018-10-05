@@ -202,6 +202,8 @@ private:
     void updateClientOutputs();
     KWayland::Server::XdgShellSurfaceInterface::States xdgSurfaceStates() const;
     void updateShowOnScreenEdge();
+    // called on surface commit and processes all m_pendingConfigureRequests up to m_lastAckedConfigureReqest
+    void updatePendingGeometry();
     static void deleteClient(ShellClient *c);
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;
@@ -209,7 +211,16 @@ private:
     KWayland::Server::XdgShellPopupInterface *m_xdgShellPopup;
     QSize m_clientSize;
 
-    ClearablePoint m_positionAfterResize; // co-ordinates saved from a requestGeometry call, real geometry will be updated after the next damage event when the client has resized
+    struct PendingConfigureRequest {
+        //note for wl_shell we have no serial, so serialId and m_lastAckedConfigureRequest will always be 0
+        //meaning we treat a surface commit as having processed all requests
+        quint32 serialId = 0;
+        // position to apply after a resize operation has been completed
+        QPoint positionAfterResize;
+    };
+    QVector<PendingConfigureRequest> m_pendingConfigureRequests;
+    quint32 m_lastAckedConfigureRequest = 0;
+
     QRect m_geomFsRestore; //size and position of the window before it was set to fullscreen
     bool m_closing = false;
     quint32 m_windowId = 0;
