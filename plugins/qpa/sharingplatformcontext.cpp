@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <logging.h>
 
 #include <QOpenGLFramebufferObject>
+#include <private/qopenglcontext_p.h>
 
 namespace KWin
 {
@@ -48,6 +49,10 @@ SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, const EG
 bool SharingPlatformContext::makeCurrent(QPlatformSurface *surface)
 {
     Window *window = static_cast<Window*>(surface);
+
+    // QOpenGLContext::makeCurrent in Qt5.12 calls platfrom->setContext before setCurrentContext
+    // but binding the content FBO looks up the format from the current context, so we need // to make sure sure Qt knows what the correct one is already
+    QOpenGLContextPrivate::setCurrentContext(context());
     if (eglMakeCurrent(eglDisplay(), m_surface, m_surface, eglContext())) {
         window->bindContentFBO();
         return true;
