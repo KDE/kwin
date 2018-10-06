@@ -707,20 +707,22 @@ std::pair<bool, bool> performClientMouseAction(QMouseEvent *event, AbstractClien
     Options::MouseCommand command = Options::MouseNothing;
     bool wasAction = false;
     if (static_cast<MouseEvent*>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
-        wasAction = true;
-        switch (event->button()) {
-        case Qt::LeftButton:
-            command = options->commandAll1();
-            break;
-        case Qt::MiddleButton:
-            command = options->commandAll2();
-            break;
-        case Qt::RightButton:
-            command = options->commandAll3();
-            break;
-        default:
-            // nothing
-            break;
+        if (!input()->pointer()->isConstrained()) {
+            wasAction = true;
+            switch (event->button()) {
+            case Qt::LeftButton:
+                command = options->commandAll1();
+                break;
+            case Qt::MiddleButton:
+                command = options->commandAll2();
+                break;
+            case Qt::RightButton:
+                command = options->commandAll3();
+                break;
+            default:
+                // nothing
+                break;
+            }
         }
     } else {
         if (action == MouseAction::ModifierAndWindow) {

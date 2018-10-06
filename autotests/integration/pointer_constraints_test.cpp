@@ -186,6 +186,27 @@ void TestPointerConstraints::testConfinedPointer()
     QCOMPARE(pointerPositionChangedSpy.count(), 1);
     QCOMPARE(KWin::Cursor::pos(), position);
 
+    // modifier + click should be ignored
+    // first ensure the settings are ok
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", QStringLiteral("Alt"));
+    group.writeEntry("CommandAll1", "Move");
+    group.writeEntry("CommandAll2", "Move");
+    group.writeEntry("CommandAll3", "Move");
+    group.sync();
+    workspace()->slotReconfigure();
+    QCOMPARE(options->commandAllModifier(), Qt::AltModifier);
+    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+
+    quint32 timestamp = 1;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QVERIFY(!c->isMove());
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+
     // deactivate the client, this should unconfine
     workspace()->activateClient(nullptr);
     QVERIFY(unconfinedSpy.wait());
