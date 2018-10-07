@@ -914,6 +914,11 @@ MaximizeMode ShellClient::maximizeMode() const
     return m_maximizeMode;
 }
 
+MaximizeMode ShellClient::requestedMaximizeMode() const
+{
+    return m_requestedMaximizeMode;
+}
+
 bool ShellClient::noBorder() const
 {
     if (isInternal()) {

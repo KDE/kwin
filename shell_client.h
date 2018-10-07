@@ -95,6 +95,8 @@ public:
     }
     void hideClient(bool hide) override;
     MaximizeMode maximizeMode() const override;
+    MaximizeMode requestedMaximizeMode() const override;
+
     QRect geometryRestore() const override {
         return m_geomMaximizeRestore;
     }

@@ -204,6 +204,11 @@ bool AbstractClient::isCurrentTab() const
     return !tab_group || tab_group->current() == this;
 }
 
+MaximizeMode AbstractClient::requestedMaximizeMode() const
+{
+    return maximizeMode();
+}
+
 xcb_timestamp_t AbstractClient::userTime() const
 {
     return XCB_TIME_CURRENT_TIME;

@@ -456,7 +456,16 @@ public:
     */
     bool isCurrentTab() const;
     virtual QRect geometryRestore() const = 0;
+    /**
+     * The currently applied maximize mode
+     */
     virtual MaximizeMode maximizeMode() const = 0;
+    /**
+     * The maximise mode requested by the server.
+     * For X this always matches maximizeMode, for wayland clients it
+     * is asyncronous
+     */
+    virtual MaximizeMode requestedMaximizeMode() const;
     void maximize(MaximizeMode);
     void setMaximize(bool vertically, bool horizontally);
     virtual bool noBorder() const = 0;
