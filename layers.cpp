@@ -809,14 +809,4 @@ bool Client::belongsToDesktop() const
     return false;
 }
 
-bool rec_checkTransientOnTop(const QList<AbstractClient*> &transients, const Client *topmost)
-{
-    foreach (const AbstractClient *transient, transients) {
-        if (transient == topmost || rec_checkTransientOnTop(transient->transients(), topmost)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 } // namespace
