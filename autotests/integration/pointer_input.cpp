@@ -63,8 +63,10 @@ private Q_SLOTS:
     void testUpdateFocusAfterScreenChange();
     void testModifierClickUnrestrictedMove_data();
     void testModifierClickUnrestrictedMove();
+    void testModifierClickUnrestrictedMoveGlobalShortcutsDisabled();
     void testModifierScrollOpacity_data();
     void testModifierScrollOpacity();
+    void testModifierScrollOpacityGlobalShortcutsDisabled();
     void testScrollAction();
     void testFocusFollowsMouse();
     void testMouseActionInactiveWindow_data();
@@ -424,6 +426,64 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     QVERIFY(!buttonSpy.wait(100));
 }
 
+void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled()
+{
+    // this test ensures that Alt+mouse button press triggers unrestricted move
+    using namespace KWayland::Client;
+    // create pointer and signal spy for button events
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy buttonSpy(pointer, &Pointer::buttonStateChanged);
+    QVERIFY(buttonSpy.isValid());
+
+    // first modify the config for this run
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAll1", "Move");
+    group.writeEntry("CommandAll2", "Move");
+    group.writeEntry("CommandAll3", "Move");
+    group.sync();
+    workspace()->slotReconfigure();
+    QCOMPARE(options->commandAllModifier(), Qt::AltModifier);
+    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+
+    // create a window
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = Test::createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+
+    // disable global shortcuts
+    QVERIFY(!workspace()->globalShortcutsDisabled());
+    workspace()->disableGlobalShortcutsForClient(true);
+    QVERIFY(workspace()->globalShortcutsDisabled());
+
+    // move cursor on window
+    Cursor::setPos(window->geometry().center());
+
+    // simulate modifier+click
+    quint32 timestamp = 1;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    QVERIFY(!window->isMove());
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QVERIFY(!window->isMove());
+    // release modifier should not change it
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    QVERIFY(!window->isMove());
+    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+
+    workspace()->disableGlobalShortcutsForClient(false);
+}
+
 void PointerInputTest::testModifierScrollOpacity_data()
 {
     QTest::addColumn<int>("modifierKey");
@@ -501,6 +561,60 @@ void PointerInputTest::testModifierScrollOpacity()
     // axis should have been filtered out
     QCOMPARE(axisSpy.count(), 0);
     QVERIFY(!axisSpy.wait(100));
+}
+
+void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
+{
+    // this test verifies that mod+wheel performs a window operation and does not
+    // pass the wheel to the window
+    using namespace KWayland::Client;
+    // create pointer and signal spy for button events
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy axisSpy(pointer, &Pointer::axisChanged);
+    QVERIFY(axisSpy.isValid());
+
+    // first modify the config for this run
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAllWheel", "change opacity");
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // create a window
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Surface *surface = Test::createSurface(m_compositor);
+    QVERIFY(surface);
+    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
+    QVERIFY(shellSurface);
+    render(surface);
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *window = workspace()->activeClient();
+    QVERIFY(window);
+    // set the opacity to 0.5
+    window->setOpacity(0.5);
+    QCOMPARE(window->opacity(), 0.5);
+
+    // move cursor on window
+    Cursor::setPos(window->geometry().center());
+
+    // disable global shortcuts
+    QVERIFY(!workspace()->globalShortcutsDisabled());
+    workspace()->disableGlobalShortcutsForClient(true);
+    QVERIFY(workspace()->globalShortcutsDisabled());
+
+    // simulate modifier+wheel
+    quint32 timestamp = 1;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
+    QCOMPARE(window->opacity(), 0.5);
+    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    QCOMPARE(window->opacity(), 0.5);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+
+    workspace()->disableGlobalShortcutsForClient(false);
 }
 
 void  PointerInputTest::testScrollAction()

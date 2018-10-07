@@ -707,7 +707,7 @@ std::pair<bool, bool> performClientMouseAction(QMouseEvent *event, AbstractClien
     Options::MouseCommand command = Options::MouseNothing;
     bool wasAction = false;
     if (static_cast<MouseEvent*>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
-        if (!input()->pointer()->isConstrained()) {
+        if (!input()->pointer()->isConstrained() && !workspace()->globalShortcutsDisabled()) {
             wasAction = true;
             switch (event->button()) {
             case Qt::LeftButton:
@@ -740,8 +740,10 @@ std::pair<bool, bool> performClientWheelAction(QWheelEvent *event, AbstractClien
     bool wasAction = false;
     Options::MouseCommand command = Options::MouseNothing;
     if (static_cast<WheelEvent*>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
-        wasAction = true;
-        command = options->operationWindowMouseWheel(-1 * event->angleDelta().y());
+        if (!input()->pointer()->isConstrained() && !workspace()->globalShortcutsDisabled()) {
+            wasAction = true;
+            command = options->operationWindowMouseWheel(-1 * event->angleDelta().y());
+        }
     } else {
         if (action == MouseAction::ModifierAndWindow) {
             command = c->getWheelCommand(Qt::Vertical, &wasAction);

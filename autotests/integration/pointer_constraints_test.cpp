@@ -193,6 +193,7 @@ void TestPointerConstraints::testConfinedPointer()
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");
     group.writeEntry("CommandAll3", "Move");
+    group.writeEntry("CommandAllWheel", "change opacity");
     group.sync();
     workspace()->slotReconfigure();
     QCOMPARE(options->commandAllModifier(), Qt::AltModifier);
@@ -205,6 +206,17 @@ void TestPointerConstraints::testConfinedPointer()
     kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(!c->isMove());
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+
+    // set the opacity to 0.5
+    c->setOpacity(0.5);
+    QCOMPARE(c->opacity(), 0.5);
+
+    // pointer is confined so shortcut should not work
+    kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
+    QCOMPARE(c->opacity(), 0.5);
+    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    QCOMPARE(c->opacity(), 0.5);
+
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
 
     // deactivate the client, this should unconfine
