@@ -42,6 +42,9 @@ struct GammaRamp {
     uint16_t *red = nullptr;
     uint16_t *green = nullptr;
     uint16_t *blue = nullptr;
+
+private:
+    Q_DISABLE_COPY(GammaRamp)
 };
 
 }
