@@ -1768,4 +1768,15 @@ void ShellClient::updateClientOutputs()
     surface()->setOutputs(clientOutputs);
 }
 
+bool ShellClient::isPopupWindow() const
+{
+    if (m_shellSurface != nullptr) {
+        return m_shellSurface->isPopup();
+    }
+    if (m_xdgShellPopup != nullptr) {
+        return true;
+    }
+    return false;
+}
+
 }

@@ -166,6 +166,8 @@ public:
 
     void updateColorScheme() override;
 
+    bool isPopupWindow() const override;
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;

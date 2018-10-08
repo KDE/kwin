@@ -776,6 +776,9 @@ public:
 
     EffectWindow *q;
     bool managed = false;
+    bool waylandClient;
+    bool x11Client;
+    bool popupWindow;
 };
 
 EffectWindow::Private::Private(EffectWindow *q)
@@ -795,6 +798,10 @@ EffectWindow::EffectWindow(QObject *parent)
     // an instance of Deleted becomes parent of the EffectWindow, effects
     // can still figure out whether it is/was a managed window.
     d->managed = parent->property("managed").value<bool>();
+
+    d->waylandClient = parent->inherits("KWin::ShellClient");
+    d->x11Client = !d->waylandClient;
+    d->popupWindow = parent->property("popupWindow").value<bool>();
 }
 
 EffectWindow::~EffectWindow()
@@ -992,6 +999,20 @@ bool EffectWindow::isManaged() const
     return d->managed;
 }
 
+bool EffectWindow::isWaylandClient() const
+{
+    return d->waylandClient;
+}
+
+bool EffectWindow::isX11Client() const
+{
+    return d->x11Client;
+}
+
+bool EffectWindow::isPopupWindow() const
+{
+    return d->popupWindow;
+}
 
 //****************************************
 // EffectWindowGroup

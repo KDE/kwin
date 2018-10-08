@@ -274,7 +274,14 @@ bool ScaleEffect::isScaleWindow(EffectWindow *w) const
         return true;
     }
 
-    if (!w->isManaged()) {
+    // Don't animate combobox popups, tooltips, popup menus, etc.
+    if (w->isPopupWindow()) {
+        return false;
+    }
+
+    // Override-redirect windows are usually used for user interface
+    // concepts that are not expected to be animated by this effect.
+    if (w->isX11Client() && !w->isManaged()) {
         return false;
     }
 

@@ -210,6 +210,11 @@ class KWIN_EXPORT Toplevel
      */
     Q_PROPERTY(KWayland::Server::SurfaceInterface *surface READ surface)
 
+    /**
+     * Whether the window is a popup.
+     **/
+    Q_PROPERTY(bool popupWindow READ isPopupWindow)
+
 public:
     explicit Toplevel();
     virtual xcb_window_t frameId() const;
@@ -442,6 +447,15 @@ public:
      */
     template <class T, class U>
     static T *findInList(const QList<T*> &list, std::function<bool (const U*)> func);
+
+    /**
+     * Whether the window is a popup.
+     *
+     * Popups can be used to implement popup menus, tooltips, combo boxes, etc.
+     *
+     * @since 5.15
+     **/
+    virtual bool isPopupWindow() const;
 
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
@@ -844,6 +858,20 @@ inline T *Toplevel::findInList(const QList<T*> &list, std::function<bool (const 
         return nullptr;
     }
     return *it;
+}
+
+inline bool Toplevel::isPopupWindow() const
+{
+    switch (windowType()) {
+    case NET::ComboBox:
+    case NET::DropdownMenu:
+    case NET::PopupMenu:
+    case NET::Tooltip:
+        return true;
+
+    default:
+        return false;
+    }
 }
 
 QDebug& operator<<(QDebug& stream, const Toplevel*);

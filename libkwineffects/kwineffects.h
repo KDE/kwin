@@ -1979,6 +1979,29 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * @since 5.10
      */
     Q_PROPERTY(bool unresponsive READ isUnresponsive)
+
+    /**
+     * Whether this is a Wayland client.
+     * @since 5.15
+     **/
+    Q_PROPERTY(bool waylandClient READ isWaylandClient CONSTANT)
+
+    /**
+     * Whether this is an X11 client.
+     * @since 5.15
+     **/
+    Q_PROPERTY(bool x11Client READ isX11Client CONSTANT)
+
+    /**
+     * Whether the window is a popup.
+     *
+     * A popup is a window that can be used to implement tooltips, combo box popups,
+     * popup menus and other similar user interface concepts.
+     *
+     * @since 5.15
+     **/
+    Q_PROPERTY(bool popupWindow READ isPopupWindow CONSTANT)
+
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -2229,6 +2252,21 @@ public:
      * @since 5.10
      */
     bool isUnresponsive() const;
+
+    /**
+     * @since 5.15
+     **/
+    bool isWaylandClient() const;
+
+    /**
+     * @since 5.15
+     **/
+    bool isX11Client() const;
+
+    /**
+     * @since 5.15
+     **/
+    bool isPopupWindow() const;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.
