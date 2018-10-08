@@ -696,6 +696,7 @@ void AbstractClient::updateColorScheme(QString path)
         connect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &AbstractClient::handlePaletteChange);
 
         emit paletteChanged(palette());
+        emit colorSchemeChanged();
     }
 }
 

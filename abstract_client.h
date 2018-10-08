@@ -278,6 +278,14 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      **/
     Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
 
+    /**
+     * The color scheme set on this client
+     * Absolute file path, or name of palette in the user's config directory following KColorSchemes format.
+     * An empty string indicates the default palette from kdeglobals is used.
+     * @Note this indicates the colour scheme requested, which might differ from the theme applied if the colorScheme cannot be found
+     */
+    Q_PROPERTY(QString colorScheme READ colorScheme NOTIFY colorSchemeChanged)
+
 public:
     virtual ~AbstractClient();
 
@@ -714,6 +722,9 @@ public:
     QString applicationMenuObjectPath() const {
         return m_applicationMenuObjectPath;
     }
+    QString colorScheme() const {
+        return m_colorScheme;
+    }
 
     /**
      * Request showing the application menu bar
@@ -750,6 +761,7 @@ Q_SIGNALS:
     void clientMinimized(KWin::AbstractClient* client, bool animate);
     void clientUnminimized(KWin::AbstractClient* client, bool animate);
     void paletteChanged(const QPalette &p);
+    void colorSchemeChanged();
     void captionChanged();
     void clientMaximizedStateChanged(KWin::AbstractClient*, MaximizeMode);
     void clientMaximizedStateChanged(KWin::AbstractClient* c, bool h, bool v);
