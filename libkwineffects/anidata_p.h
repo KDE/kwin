@@ -37,7 +37,6 @@ public:
     ~FullScreenEffectLock();
 private:
     Q_DISABLE_COPY(FullScreenEffectLock)
-    void *d; //unused currently
 };
 typedef QSharedPointer<FullScreenEffectLock> FullScreenEffectLockPtr;
 
