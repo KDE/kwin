@@ -27,6 +27,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
+/**
+ * Wraps effects->setActiveFullScreenEffect for the duration of it's lifespan
+ */
+class FullScreenEffectLock
+{
+public:
+    FullScreenEffectLock(Effect *effect);
+    ~FullScreenEffectLock();
+private:
+    Q_DISABLE_COPY(FullScreenEffectLock)
+    void *d; //unused currently
+};
+typedef QSharedPointer<FullScreenEffectLock> FullScreenEffectLockPtr;
+
 class KWINEFFECTS_EXPORT AniData {
 public:
     AniData();

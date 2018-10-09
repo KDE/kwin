@@ -31,6 +31,16 @@ QDebug operator<<(QDebug dbg, const KWin::AniData &a)
 using namespace KWin;
 static const int Gaussian = 46;
 
+FullScreenEffectLock::FullScreenEffectLock(Effect *effect)
+{
+    effects->setActiveFullScreenEffect(effect);
+}
+
+FullScreenEffectLock::~FullScreenEffectLock()
+{
+    effects->setActiveFullScreenEffect(nullptr);
+}
+
 AniData::AniData()
  : attribute(AnimationEffect::Opacity)
  , customCurve(0) // Linear

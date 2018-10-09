@@ -88,20 +88,6 @@ private:
     bool valid;
 };
 
-/**
- * Wraps effects->setActiveFullScreenEffect for the duration of it's lifespan
- */
-class FullScreenEffectLock
-{
-public:
-    FullScreenEffectLock(Effect *effect);
-    ~FullScreenEffectLock();
-private:
-    Q_DISABLE_COPY(FullScreenEffectLock)
-    void *d; //unused currently
-};
-typedef QSharedPointer<FullScreenEffectLock> FullScreenEffectLockPtr;
-
 class AniData;
 class AnimationEffectPrivate;
 class KWINEFFECTS_EXPORT AnimationEffect : public Effect

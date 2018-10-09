@@ -965,14 +965,4 @@ AnimationEffect::AniMap AnimationEffect::state() const
     return d->m_animations;
 }
 
-FullScreenEffectLock::FullScreenEffectLock(Effect *effect)
-{
-    effects->setActiveFullScreenEffect(effect);
-}
-
-FullScreenEffectLock::~FullScreenEffectLock()
-{
-    effects->setActiveFullScreenEffect(nullptr);
-}
-
 #include "moc_kwinanimationeffect.cpp"
