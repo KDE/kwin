@@ -40,16 +40,23 @@ effects['desktopChanged(int,int,KWin::EffectWindow*)'].connect(function(oldDeskt
             continue;
         }
 
-        if (w.desktop != oldDesktop && w.desktop != newDesktop) {
+        // If the window is not on the old and the new desktop or it's
+        // on both of them, then don't animate it.
+        var onOldDesktop = w.isOnDesktop(oldDesktop);
+        var onNewDesktop = w.isOnDesktop(newDesktop);
+        if (onOldDesktop == onNewDesktop) {
             continue;
         }
+
         if (w.minimized) {
             continue;
         }
+
         if (!w.isOnActivity(effects.currentActivity)){
             continue;
         }
-        if (w.desktop == oldDesktop) {
+
+        if (onOldDesktop) {
             animate({
                 window: w,
                 duration: duration,

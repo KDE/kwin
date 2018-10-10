@@ -2044,7 +2044,7 @@ public:
     bool isOnAllActivities() const;
     QStringList activities() const;
 
-    bool isOnDesktop(int d) const;
+    Q_SCRIPTABLE bool isOnDesktop(int d) const;
     bool isOnCurrentDesktop() const;
     bool isOnAllDesktops() const;
     int desktop() const; // prefer isOnXXX()
