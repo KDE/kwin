@@ -215,7 +215,12 @@ private:
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;
     KWayland::Server::XdgShellSurfaceInterface *m_xdgShellSurface;
     KWayland::Server::XdgShellPopupInterface *m_xdgShellPopup;
+
+    // size of the last buffer
     QSize m_clientSize;
+    // last size we requested or empty if we haven't sent an explicit request to the client
+    // if empty the client should choose their own default size
+    QSize m_requestedClientSize;
 
     struct PendingConfigureRequest {
         //note for wl_shell we have no serial, so serialId and m_lastAckedConfigureRequest will always be 0

@@ -313,7 +313,7 @@ void ShellClient::init()
             if (m_requestGeometryBlockCounter != 0 || areGeometryUpdatesBlocked()) {
                 return;
             }
-            m_xdgShellSurface->configure(xdgSurfaceStates());
+            m_xdgShellSurface->configure(xdgSurfaceStates(), m_requestedClientSize);
         };
         configure();
         connect(this, &AbstractClient::activeChanged, this, configure);
@@ -1184,6 +1184,8 @@ void ShellClient::requestGeometry(const QRect &rect)
     configureRequest.maximizeMode = m_requestedMaximizeMode;
 
     const QSize size = rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
+    m_requestedClientSize = size;
+
     if (m_shellSurface) {
         m_shellSurface->requestSize(size);
     }
@@ -1262,6 +1264,7 @@ void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
 void ShellClient::unmap()
 {
     m_unmapped = true;
+    m_requestedClientSize = QSize();
     destroyWindowManagementInterface();
     if (Workspace::self()) {
         addWorkspaceRepaint(visibleRect());
