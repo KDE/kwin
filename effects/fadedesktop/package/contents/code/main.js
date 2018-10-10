@@ -26,13 +26,20 @@ loadConfig();
 effect.configChanged.connect(function() {
     loadConfig();
 });
-effects['desktopChanged(int,int)'].connect(function(oldDesktop, newDesktop) {
+effects['desktopChanged(int,int,KWin::EffectWindow*)'].connect(function(oldDesktop, newDesktop, movingWindow) {
     if (effects.hasActiveFullScreenEffect && !effect.isActiveFullScreenEffect) {
         return;
     }
     var stackingOrder = effects.stackingOrder;
     for (var i = 0; i < stackingOrder.length; i++) {
         var w = stackingOrder[i];
+
+        // Don't animate windows that have been moved to the current
+        // desktop, i.e. newDesktop.
+        if (w == movingWindow) {
+            continue;
+        }
+
         if (w.desktop != oldDesktop && w.desktop != newDesktop) {
             continue;
         }
