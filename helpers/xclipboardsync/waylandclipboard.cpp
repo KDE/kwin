@@ -45,7 +45,7 @@ WaylandClipboard::WaylandClipboard(QObject *parent)
     , m_thread(new QThread)
     , m_connectionThread(new ConnectionThread)
 {
-    m_connectionThread->setSocketFd(qgetenv("WAYLAND_SOCKET").toInt());
+    m_connectionThread->setSocketFd(qEnvironmentVariableIntValue("WAYLAND_SOCKET"));
     m_connectionThread->moveToThread(m_thread);
     m_thread->start();
 
