@@ -27,8 +27,11 @@ effect.configChanged.connect(function() {
     loadConfig();
 });
 effects['desktopChanged(int,int)'].connect(function(oldDesktop, newDesktop) {
+    if (effects.hasActiveFullScreenEffect && !effect.isActiveFullScreenEffect) {
+        return;
+    }
     var stackingOrder = effects.stackingOrder;
-    for (var i=0; i<stackingOrder.length; i++) {
+    for (var i = 0; i < stackingOrder.length; i++) {
         var w = stackingOrder[i];
         if (w.desktop != oldDesktop && w.desktop != newDesktop) {
             continue;
@@ -45,7 +48,8 @@ effects['desktopChanged(int,int)'].connect(function(oldDesktop, newDesktop) {
                 duration: duration,
                 animations: [{
                     type: Effect.Opacity,
-                    to: 0.0
+                    to: 0.0,
+                    fullScreen: true
                 }]
             });
         } else {
@@ -55,9 +59,20 @@ effects['desktopChanged(int,int)'].connect(function(oldDesktop, newDesktop) {
                 animations: [{
                     type: Effect.Opacity,
                     to: 1.0,
-                    from: 0.0
+                    from: 0.0,
+                    fullScreen: true
                 }]
             });
         }
+    }
+});
+
+effect.isActiveFullScreenEffectChanged.connect(function() {
+    var isActiveFullScreen = effect.isActiveFullScreenEffect;
+    var stackingOrder = effects.stackingOrder;
+    for (var i = 0; i < stackingOrder.length; i++) {
+        var w = stackingOrder[i];
+        w.setData(Effect.WindowForceBlurRole, isActiveFullScreen);
+        w.setData(Effect.WindowForceBackgroundContrastRole, isActiveFullScreen);
     }
 });
