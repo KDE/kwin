@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2011 Thomas Lübking <thomas.luebking@web.de>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,11 +41,28 @@ private:
 };
 typedef QSharedPointer<FullScreenEffectLock> FullScreenEffectLockPtr;
 
+/**
+ * Keeps windows alive during animation after they got closed
+ **/
+class KeepAliveLock
+{
+public:
+    KeepAliveLock(EffectWindow *w);
+    ~KeepAliveLock();
+
+private:
+    EffectWindow *m_window;
+    Q_DISABLE_COPY(KeepAliveLock)
+};
+typedef QSharedPointer<KeepAliveLock> KeepAliveLockPtr;
+
 class KWINEFFECTS_EXPORT AniData {
 public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,
-            QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource, bool keepAtTarget = false, FullScreenEffectLockPtr=FullScreenEffectLockPtr());
+            QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource,
+            bool keepAtTarget = false, FullScreenEffectLockPtr=FullScreenEffectLockPtr(),
+            bool keepAlive = true);
     inline void addTime(int t) { time += t; }
     inline bool isOneDimensional() const {
         return from[0] == from[1] && to[0] == to[1];
@@ -62,6 +80,8 @@ public:
     NET::WindowTypeMask windowType;
     QSharedPointer<FullScreenEffectLock> fullScreenEffectLock;
     bool waitAtSource, keepAtTarget;
+    bool keepAlive;
+    KeepAliveLockPtr keepAliveLock;
 };
 
 } // namespace

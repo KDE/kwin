@@ -77,6 +77,7 @@ var dialogParentEffect = {
             animate({
                 window: w,
                 duration: dialogParentEffect.duration,
+                keepAlive: false,
                 animations: [{
                     type: Effect.Saturation,
                     from: 0.4,

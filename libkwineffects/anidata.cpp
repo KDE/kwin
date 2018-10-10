@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2011 Thomas Lübking <thomas.luebking@web.de>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,6 +42,17 @@ FullScreenEffectLock::~FullScreenEffectLock()
     effects->setActiveFullScreenEffect(nullptr);
 }
 
+KeepAliveLock::KeepAliveLock(EffectWindow *w)
+    : m_window(w)
+{
+    m_window->refWindow();
+}
+
+KeepAliveLock::~KeepAliveLock()
+{
+    m_window->unrefWindow();
+}
+
 AniData::AniData()
  : attribute(AnimationEffect::Opacity)
  , customCurve(0) // Linear
@@ -51,12 +63,13 @@ AniData::AniData()
  , windowType((NET::WindowTypeMask)0)
  , waitAtSource(false)
  , keepAtTarget(false)
+ , keepAlive(true)
 {
 }
 
 AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to_,
                  QEasingCurve curve_, int delay, const FPx2 &from_, bool waitAtSource_, bool keepAtTarget_,
-                 FullScreenEffectLockPtr fullScreenEffectLock_)
+                 FullScreenEffectLockPtr fullScreenEffectLock_, bool keepAlive)
  : attribute(a)
  , curve(curve_)
  , from(from_)
@@ -69,6 +82,7 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to
  , fullScreenEffectLock(fullScreenEffectLock_)
  , waitAtSource(waitAtSource_)
  , keepAtTarget(keepAtTarget_)
+ , keepAlive(keepAlive)
 {
 }
 

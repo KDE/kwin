@@ -103,7 +103,14 @@ QScriptValue kwinUnregisterTouchScreenEdge(QScriptContext *context, QScriptEngin
 }
 
 struct AnimationSettings {
-    enum { Type = 1<<0, Curve = 1<<1, Delay = 1<<2, Duration = 1<<3, FullScreen = 1<<4 };
+    enum {
+        Type       = 1<<0,
+        Curve      = 1<<1,
+        Delay      = 1<<2,
+        Duration   = 1<<3,
+        FullScreen = 1<<4,
+        KeepAlive  = 1<<5
+    };
     AnimationEffect::Attribute type;
     QEasingCurve::Type curve;
     FPx2 from;
@@ -113,6 +120,7 @@ struct AnimationSettings {
     uint set;
     uint metaData;
     bool fullScreenEffect;
+    bool keepAlive;
 };
 
 AnimationSettings animationSettingsFromObject(QScriptValue &object)
@@ -162,6 +170,14 @@ AnimationSettings animationSettingsFromObject(QScriptValue &object)
         settings.set |= AnimationSettings::FullScreen;
     } else {
         settings.fullScreenEffect = false;
+    }
+
+    QScriptValue keepAlive = object.property(QStringLiteral("keepAlive"));
+    if (keepAlive.isValid() && keepAlive.isBool()) {
+        settings.keepAlive = keepAlive.toBool();
+        settings.set |= AnimationSettings::KeepAlive;
+    } else {
+        settings.keepAlive = true;
     }
 
     return settings;
@@ -229,6 +245,9 @@ QList<AnimationSettings> animationSettings(QScriptContext *context, ScriptedEffe
                 }
                 if (!(s.set & AnimationSettings::FullScreen)) {
                     s.fullScreenEffect = settings.at(0).fullScreenEffect;
+                }
+                if (!(s.set & AnimationSettings::KeepAlive)) {
+                    s.keepAlive = settings.at(0).keepAlive;
                 }
 
                 s.metaData = 0;
@@ -298,7 +317,8 @@ QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
                                     setting.metaData,
                                     setting.curve,
                                     setting.delay,
-                                    setting.fullScreenEffect));
+                                    setting.fullScreenEffect,
+                                    setting.keepAlive));
         ++i;
     }
     return array;
@@ -328,7 +348,9 @@ QScriptValue kwinEffectSet(QScriptContext *context, QScriptEngine *engine)
                                setting.from,
                                setting.metaData,
                                setting.curve,
-                               setting.delay));
+                               setting.delay,
+                               setting.fullScreenEffect,
+                               setting.keepAlive));
     }
 
     return engine->newVariant(animIds);
@@ -610,24 +632,24 @@ void ScriptedEffect::signalHandlerException(const QScriptValue &value)
     }
 }
 
-quint64 ScriptedEffect::animate(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, int curve, int delay, bool fullScreen)
+quint64 ScriptedEffect::animate(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, int curve, int delay, bool fullScreen, bool keepAlive)
 {
     QEasingCurve qec;
     if (curve < QEasingCurve::Custom)
         qec.setType(static_cast<QEasingCurve::Type>(curve));
     else if (curve == GaussianCurve)
         qec.setCustomType(qecGaussian);
-    return AnimationEffect::animate(w, a, metaData, ms, to, qec, delay, from, fullScreen);
+    return AnimationEffect::animate(w, a, metaData, ms, to, qec, delay, from, fullScreen, keepAlive);
 }
 
-quint64 ScriptedEffect::set(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, int curve, int delay, bool fullScreen)
+quint64 ScriptedEffect::set(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, int curve, int delay, bool fullScreen, bool keepAlive)
 {
     QEasingCurve qec;
     if (curve < QEasingCurve::Custom)
         qec.setType(static_cast<QEasingCurve::Type>(curve));
     else if (curve == GaussianCurve)
         qec.setCustomType(qecGaussian);
-    return AnimationEffect::set(w, a, metaData, ms, to, qec, delay, from, fullScreen);
+    return AnimationEffect::set(w, a, metaData, ms, to, qec, delay, from, fullScreen, keepAlive);
 }
 
 bool ScriptedEffect::retarget(quint64 animationId, KWin::FPx2 newTarget, int newRemainingTime)

@@ -44,7 +44,6 @@ public:
         m_justEndedAnimation = 0;
     }
     AnimationEffect::AniMap m_animations;
-    EffectWindowList m_zombies;
     static quint64 m_animCounter;
     quint64 m_justEndedAnimation; // protect against cancel
     QWeakPointer<FullScreenEffectLock> m_fullScreenEffectLock;
@@ -217,7 +216,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
     }
 }
 
-quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect)
+quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive)
 {
     const bool waitAtSource = from.isValid();
     validate(a, meta, &from, &to, w);
@@ -248,7 +247,7 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
             fullscreen = d->m_fullScreenEffectLock.toStrongRef();
         }
     }
-    it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource, keepAtTarget, fullscreen));
+    it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource, keepAtTarget, fullscreen, keepAlive));
     quint64 ret_id = ++d->m_animCounter;
     it->first.last().id = ret_id;
     it->second = QRect();
@@ -298,11 +297,6 @@ bool AnimationEffect::cancel(quint64 animationId)
             if (anim->id == animationId) {
                 entry->first.erase(anim); // remove the animation
                 if (entry->first.isEmpty()) { // no other animations on the window, release it.
-                    const int i = d->m_zombies.indexOf(entry.key());
-                    if ( i > -1 ) {
-                        d->m_zombies.removeAt( i );
-                        entry.key()->unrefWindow();
-                    }
                     d->m_animations.erase(entry);
                 }
                 if (d->m_animations.isEmpty())
@@ -378,11 +372,6 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             }
         }
         if (entry->first.isEmpty()) {
-            const int i = d->m_zombies.indexOf(entry.key());
-            if ( i > -1 ) {
-                d->m_zombies.removeAt( i );
-                entry.key()->unrefWindow();
-            }
             data.paint |= entry->second;
 //             d->m_damageDirty = true; // TODO likely no longer required
             entry = d->m_animations.erase(entry);
@@ -397,11 +386,6 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     // janitorial...
     if (d->m_animations.isEmpty()) {
         disconnectGeometryChanges();
-        if (!d->m_zombies.isEmpty()) { // this is actually not supposed to happen
-            foreach (EffectWindow *w, d->m_zombies)
-                w->unrefWindow();
-            d->m_zombies.clear();
-        }
     }
 
     effects->prePaintScreen(data, time);
@@ -924,16 +908,33 @@ void AnimationEffect::_expandedGeometryChanged(KWin::EffectWindow *w, const QRec
 void AnimationEffect::_windowClosed( EffectWindow* w )
 {
     Q_D(AnimationEffect);
-    if (d->m_animations.contains(w) && !d->m_zombies.contains(w)) {
-        w->refWindow();
-        d->m_zombies << w;
+
+    auto it = d->m_animations.find(w);
+    if (it == d->m_animations.end()) {
+        return;
+    }
+
+    KeepAliveLockPtr keepAliveLock;
+
+    QList<AniData> &animations = (*it).first;
+    for (auto animationIt = animations.begin();
+            animationIt != animations.end();
+            ++animationIt) {
+        if (!(*animationIt).keepAlive) {
+            continue;
+        }
+
+        if (keepAliveLock.isNull()) {
+            keepAliveLock = KeepAliveLockPtr::create(w);
+        }
+
+        (*animationIt).keepAliveLock = keepAliveLock;
     }
 }
 
 void AnimationEffect::_windowDeleted( EffectWindow* w )
 {
     Q_D(AnimationEffect);
-    d->m_zombies.removeAll( w ); // TODO this line is a workaround for a bug in KWin 4.8.0 & 4.8.1
     d->m_animations.remove( w );
 }
 

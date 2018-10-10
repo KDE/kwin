@@ -23,7 +23,7 @@ along with this program.  If not, see <http:// www.gnu.org/licenses/>.
 
 #include "composite.h"
 #include "cursor.h"
-#include "cursor.h"
+#include "deleted.h"
 #include "effect_builtins.h"
 #include "effectloader.h"
 #include "effects.h"
@@ -68,6 +68,9 @@ private Q_SLOTS:
     void testScreenEdgeTouch();
     void testFullScreenEffect_data();
     void testFullScreenEffect();
+    void testKeepAlive_data();
+    void testKeepAlive();
+
 private:
     ScriptedEffect *loadEffect(const QString &name);
 };
@@ -132,6 +135,7 @@ void ScriptedEffectsTest::initTestCase()
 {
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::Deleted*>();
     qRegisterMetaType<KWin::Effect*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -421,6 +425,62 @@ void ScriptedEffectsTest::testFullScreenEffect()
     QCOMPARE(effects->activeFullScreenEffect(), nullptr);
 }
 
+void ScriptedEffectsTest::testKeepAlive_data()
+{
+    QTest::addColumn<QString>("file");
+    QTest::addColumn<bool>("keepAlive");
+
+    QTest::newRow("keep")        << "keepAliveTest"         << true;
+    QTest::newRow("don't keep")  << "keepAliveTestDontKeep" << false;
+}
+
+void ScriptedEffectsTest::testKeepAlive()
+{
+    // this test checks whether closed windows are kept alive
+    // when keepAlive property is set to true(false)
+
+    QFETCH(QString, file);
+    QFETCH(bool, keepAlive);
+
+    auto *effect = new ScriptedEffectWithDebugSpy;
+    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    QVERIFY(effectOutputSpy.isValid());
+    QVERIFY(effect->load(file));
+
+    // create a window
+    using namespace KWayland::Client;
+    auto *surface = Test::createSurface(Test::waylandCompositor());
+    QVERIFY(surface);
+    auto *shellSurface = Test::createXdgShellV6Surface(surface, surface);
+    QVERIFY(shellSurface);
+    auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+
+    // no active animations at the beginning
+    QCOMPARE(effect->state().count(), 0);
+
+    // trigger windowClosed signal
+    surface->deleteLater();
+    QVERIFY(effectOutputSpy.count() == 1 || effectOutputSpy.wait());
+
+    if (keepAlive) {
+        QCOMPARE(effect->state().count(), 1);
+
+        QTest::qWait(500);
+        QCOMPARE(effect->state().count(), 1);
+
+        QTest::qWait(500 + 100); // 100ms is extra safety margin
+        QCOMPARE(effect->state().count(), 0);
+    } else {
+        // the test effect doesn't keep the window alive, so it should be
+        // removed immediately
+        QSignalSpy deletedRemovedSpy(workspace(), &Workspace::deletedRemoved);
+        QVERIFY(deletedRemovedSpy.isValid());
+        QVERIFY(deletedRemovedSpy.count() == 1 || deletedRemovedSpy.wait(100)); // 100ms is less than duration of the animation
+        QCOMPARE(effect->state().count(), 0);
+    }
+}
 
 WAYLANDTEST_MAIN(ScriptedEffectsTest)
 #include "scripted_effects_test.moc"

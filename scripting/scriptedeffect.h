@@ -102,8 +102,8 @@ public:
 
 public Q_SLOTS:
     //curve should be of type QEasingCurve::type or ScriptedEffect::EasingCurve
-    quint64 animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0, bool fullScreen = false);
-    quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0, bool fullScreen = false);
+    quint64 animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0, bool fullScreen = false, bool keepAlive = true);
+    quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0, bool fullScreen = false, bool keepAlive = true);
     bool retarget(quint64 animationId, KWin::FPx2 newTarget, int newRemainingTime = -1);
     bool cancel(quint64 animationId) { return AnimationEffect::cancel(animationId); }
     virtual bool borderActivated(ElectricBorder border);
