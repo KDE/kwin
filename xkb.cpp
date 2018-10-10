@@ -67,7 +67,7 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
 
 Xkb::Xkb(QObject *parent)
     : QObject(parent)
-    , m_context(xkb_context_new(static_cast<xkb_context_flags>(0)))
+    , m_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS))
     , m_keymap(NULL)
     , m_state(NULL)
     , m_shiftModifier(0)
