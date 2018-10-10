@@ -227,6 +227,9 @@ QList<AnimationSettings> animationSettings(QScriptContext *context, ScriptedEffe
                 if (!(s.set & AnimationSettings::Delay)) {
                     s.delay = settings.at(0).delay;
                 }
+                if (!(s.set & AnimationSettings::FullScreen)) {
+                    s.fullScreenEffect = settings.at(0).fullScreenEffect;
+                }
 
                 s.metaData = 0;
                 typedef QMap<AnimationEffect::MetaType, QString> MetaTypeMap;

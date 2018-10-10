@@ -360,6 +360,7 @@ void ScriptedEffectsTest::testFullScreenEffect_data()
 
     QTest::newRow("single") << "fullScreenEffectTest";
     QTest::newRow("multi")  << "fullScreenEffectTestMulti";
+    QTest::newRow("global") << "fullScreenEffectTestGlobal";
 }
 
 void ScriptedEffectsTest::testFullScreenEffect()
