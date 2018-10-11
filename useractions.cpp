@@ -178,7 +178,7 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<AbstractClient> 
             }
         }
         if (!m_client.isNull())
-            m_client.data()->blockActivityUpdates(true);
+            m_client.data()->blockActivityUpdates(false);
     }
 }
 

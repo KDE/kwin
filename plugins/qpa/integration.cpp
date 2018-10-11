@@ -205,10 +205,16 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
 void Integration::initScreens()
 {
     QVector<Screen*> newScreens;
+    newScreens.reserve(qMax(screens()->count(), 1));
     for (int i = 0; i < screens()->count(); i++) {
         auto screen = new Screen(i);
         screenAdded(screen);
         newScreens << screen;
+    }
+    if (newScreens.isEmpty()) {
+        auto dummyScreen = new Screen(-1);
+        screenAdded(dummyScreen);
+        newScreens << dummyScreen;
     }
     while (!m_screens.isEmpty()) {
         destroyScreen(m_screens.takeLast());
