@@ -220,7 +220,7 @@ private:
     QSize m_clientSize;
     // last size we requested or empty if we haven't sent an explicit request to the client
     // if empty the client should choose their own default size
-    QSize m_requestedClientSize;
+    QSize m_requestedClientSize = QSize(0, 0);
 
     struct PendingConfigureRequest {
         //note for wl_shell we have no serial, so serialId and m_lastAckedConfigureRequest will always be 0

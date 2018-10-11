@@ -1184,7 +1184,7 @@ void ShellClient::requestGeometry(const QRect &rect)
     configureRequest.maximizeMode = m_requestedMaximizeMode;
 
     const QSize size = rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
-    m_requestedClientSize = size;
+    m_requestedClientSize = QSize(0, 0);
 
     if (m_shellSurface) {
         m_shellSurface->requestSize(size);
