@@ -683,6 +683,7 @@ void RulesWidget::detectClicked()
     detect_dlg = new DetectDialog;
     connect(detect_dlg, SIGNAL(detectionDone(bool)), this, SLOT(detected(bool)));
     detect_dlg->detect(0, Ui::RulesWidgetBase::detection_delay->value());
+    Ui::RulesWidgetBase::detect->setEnabled(false);
 }
 
 void RulesWidget::detected(bool ok)
@@ -722,6 +723,7 @@ void RulesWidget::detected(bool ok)
     delete detect_dlg;
     detect_dlg = nullptr;
     detect_dlg_ok = ok;
+    Ui::RulesWidgetBase::detect->setEnabled(true);
 }
 
 #define GENERIC_PREFILL( var, func, info, uimethod ) \
