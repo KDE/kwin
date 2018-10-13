@@ -56,7 +56,7 @@ public:
     int requestedEffectChainPosition() const override {
         // Please notice that the Wobbly Windows effect has to be placed
         // after the Maximize effect in the effect chain, otherwise there
-        // can be visual artifacts when dragging maximized windows.:wq
+        // can be visual artifacts when dragging maximized windows.
         return 70;
     }
 
