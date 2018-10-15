@@ -75,6 +75,7 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
     m_dimDesktop = DimInactiveConfig::dimDesktop();
     m_dimKeepAbove = DimInactiveConfig::dimKeepAbove();
     m_dimByGroup = DimInactiveConfig::dimByGroup();
+    m_dimFullScreen = DimInactiveConfig::dimFullScreen();
 
     // Need to reset m_activeWindow becase canDimWindow returns false
     // if m_activeWindow is equal to effects->activeWindow().
@@ -194,6 +195,10 @@ bool DimInactiveEffect::canDimWindow(const EffectWindow *w) const
     }
 
     if (w->keepAbove() && !m_dimKeepAbove) {
+        return false;
+    }
+
+    if (w->isFullScreen() && !m_dimFullScreen) {
         return false;
     }
 

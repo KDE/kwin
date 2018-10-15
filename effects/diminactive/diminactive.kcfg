@@ -20,5 +20,8 @@
         <entry name="DimByGroup" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="DimFullScreen" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

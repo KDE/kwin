@@ -37,6 +37,7 @@ class DimInactiveEffect : public Effect
     Q_PROPERTY(bool dimDesktop READ dimDesktop)
     Q_PROPERTY(bool dimKeepAbove READ dimKeepAbove)
     Q_PROPERTY(bool dimByGroup READ dimByGroup)
+    Q_PROPERTY(bool dimFullScreen READ dimFullScreen)
 
 public:
     DimInactiveEffect();
@@ -56,6 +57,7 @@ public:
     bool dimDesktop() const;
     bool dimKeepAbove() const;
     bool dimByGroup() const;
+    bool dimFullScreen() const;
 
 private Q_SLOTS:
     void windowActivated(EffectWindow *w);
@@ -78,6 +80,7 @@ private:
     bool m_dimDesktop;
     bool m_dimKeepAbove;
     bool m_dimByGroup;
+    bool m_dimFullScreen;
 
     EffectWindow *m_activeWindow;
     const EffectWindowGroup *m_activeWindowGroup;
@@ -123,6 +126,11 @@ inline bool DimInactiveEffect::dimKeepAbove() const
 inline bool DimInactiveEffect::dimByGroup() const
 {
     return m_dimByGroup;
+}
+
+inline bool DimInactiveEffect::dimFullScreen() const
+{
+    return m_dimFullScreen;
 }
 
 } // namespace KWin
