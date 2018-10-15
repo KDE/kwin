@@ -67,6 +67,7 @@ static struct {
     Shell *shell = nullptr;
     XdgShell *xdgShellV5 = nullptr;
     XdgShell *xdgShellV6 = nullptr;
+    XdgShell *xdgShellStable = nullptr;
     ShmPool *shm = nullptr;
     Seat *seat = nullptr;
     PlasmaShell *plasmaShell = nullptr;
@@ -159,6 +160,10 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
     if (!s_waylandConnection.xdgShellV6->isValid()) {
         return false;
     }
+    s_waylandConnection.xdgShellStable = registry->createXdgShell(registry->interface(Registry::Interface::XdgShellStable).name, registry->interface(Registry::Interface::XdgShellStable).version);
+    if (!s_waylandConnection.xdgShellStable->isValid()) {
+        return false;
+    }
     if (flags.testFlag(AdditionalWaylandInterface::Seat)) {
         s_waylandConnection.seat = registry->createSeat(registry->interface(Registry::Interface::Seat).name, registry->interface(Registry::Interface::Seat).version);
         if (!s_waylandConnection.seat->isValid()) {
@@ -237,6 +242,8 @@ void destroyWaylandConnection()
     s_waylandConnection.xdgShellV5 = nullptr;
     delete s_waylandConnection.xdgShellV6;
     s_waylandConnection.xdgShellV6 = nullptr;
+    delete s_waylandConnection.xdgShellStable;
+    s_waylandConnection.xdgShellStable = nullptr;
     delete s_waylandConnection.shell;
     s_waylandConnection.shell = nullptr;
     delete s_waylandConnection.shadowManager;
@@ -460,6 +467,19 @@ XdgShellSurface *createXdgShellV6Surface(Surface *surface, QObject *parent)
     return s;
 }
 
+XdgShellSurface *createXdgShellStableSurface(Surface *surface, QObject *parent)
+{
+    if (!s_waylandConnection.xdgShellStable) {
+        return nullptr;
+    }
+    auto s = s_waylandConnection.xdgShellStable->createSurface(surface, parent);
+    if (!s->isValid()) {
+        delete s;
+        return nullptr;
+    }
+    return s;
+}
+
 QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent)
 {
     switch (type) {
@@ -469,6 +489,8 @@ QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *su
         return createXdgShellV5Surface(surface, parent);
     case ShellSurfaceType::XdgShellV6:
         return createXdgShellV6Surface(surface, parent);
+    case ShellSurfaceType::XdgShellStable:
+        return createXdgShellStableSurface(surface, parent);
     default:
         Q_UNREACHABLE();
         return nullptr;

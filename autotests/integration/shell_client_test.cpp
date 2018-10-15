@@ -414,6 +414,7 @@ void TestShellClient::testFullscreen()
         break;
     case Test::ShellSurfaceType::XdgShellV5:
     case Test::ShellSurfaceType::XdgShellV6:
+    case Test::ShellSurfaceType::XdgShellStable:
         xdgShellSurface = qobject_cast<XdgShellSurface*>(shellSurface.data());
         break;
     default:
@@ -626,6 +627,7 @@ void TestShellClient::testMaximizedToFullscreen()
         break;
     case Test::ShellSurfaceType::XdgShellV5:
     case Test::ShellSurfaceType::XdgShellV6:
+    case Test::ShellSurfaceType::XdgShellStable:
         xdgShellSurface = qobject_cast<XdgShellSurface*>(shellSurface.data());
         break;
     default:
@@ -722,6 +724,7 @@ void TestShellClient::testMaximizedToFullscreen()
         break;
     case Test::ShellSurfaceType::XdgShellV5:
     case Test::ShellSurfaceType::XdgShellV6:
+    case Test::ShellSurfaceType::XdgShellStable:
         qobject_cast<XdgShellSurface*>(shellSurface.data())->setFullscreen(false);
         break;
     default:
