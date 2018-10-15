@@ -525,39 +525,86 @@ ToplevelList Workspace::constrainedStackingOrder()
         stacking += layer[ lay ];
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
-    for (int i = stacking.size() - 1;
-            i >= 0;
-       ) {
-        AbstractClient *current = qobject_cast<AbstractClient*>(stacking[i]);
-        if (!current || !current->isTransient()) {
-            --i;
-            continue;
-        }
+    for (int i = stacking.size() - 1; i >= 0;) {
+        // Index of the main window for the current transient window.
         int i2 = -1;
-        // find topmost client this one is transient for
-        for (i2 = stacking.size() - 1; i2 >= 0; --i2) {
-            AbstractClient *c2 = qobject_cast<AbstractClient *>(stacking[i2]);
-            if (!c2) {
+
+        // If the current transient has "child" transients, we'd like to restart
+        // construction of the constrained stacking order from the position where
+        // the current transient will be moved.
+        bool hasTransients = false;
+
+        // Find topmost client this one is transient for.
+        if (auto *client = qobject_cast<AbstractClient *>(stacking[i])) {
+            if (!client->isTransient()) {
+                --i;
                 continue;
             }
-            if (c2 == current) {
-                i2 = -1; // Don't reorder, already on top of its main window.
-                break;
+            for (i2 = stacking.size() - 1; i2 >= 0; --i2) {
+                auto *c2 = qobject_cast<AbstractClient *>(stacking[i2]);
+                if (!c2) {
+                    continue;
+                }
+                if (c2 == client) {
+                    i2 = -1; // Don't reorder, already on top of its main window.
+                    break;
+                }
+                if (c2->hasTransient(client, true)
+                        && keepTransientAbove(c2, client)) {
+                    break;
+                }
             }
-            if (c2->hasTransient(current, true)
-                    && keepTransientAbove(c2, current)) {
-                break;
+
+            hasTransients = !client->transients().isEmpty();
+
+            // If the current transient doesn't have any "alive" transients, check
+            // whether it has deleted transients that have to be raised.
+            const bool searchForDeletedTransients = !hasTransients
+                && !deletedList().isEmpty();
+            if (searchForDeletedTransients) {
+                for (int j = i + 1; j < stacking.count(); ++j) {
+                    auto *deleted = qobject_cast<Deleted *>(stacking[j]);
+                    if (!deleted) {
+                        continue;
+                    }
+                    if (deleted->wasTransientFor(client)) {
+                        hasTransients = true;
+                        break;
+                    }
+                }
             }
+        } else if (auto *deleted = qobject_cast<Deleted *>(stacking[i])) {
+            if (!deleted->wasTransient()) {
+                --i;
+                continue;
+            }
+            for (i2 = stacking.size() - 1; i2 >= 0; --i2) {
+                Toplevel *c2 = stacking[i2];
+                if (c2 == deleted) {
+                    i2 = -1; // Don't reorder, already on top of its main window.
+                    break;
+                }
+                if (deleted->wasTransientFor(c2)
+                        && keepDeletedTransientAbove(c2, deleted)) {
+                    break;
+                }
+            }
+            hasTransients = !deleted->transients().isEmpty();
         }
+
         if (i2 == -1) {
             --i;
             continue;
         }
+
+        Toplevel *current = stacking[i];
+
         stacking.removeAt(i);
         --i; // move onto the next item (for next for () iteration)
         --i2; // adjust index of the mainwindow after the remove above
-        if (!current->transients().isEmpty())   // this one now can be possibly above its transients,
+        if (hasTransients) {  // this one now can be possibly above its transients,
             i = i2; // so go again higher in the stack order and possibly move those transients again
+        }
         ++i2; // insert after (on top of) the mainwindow, it's ok if it2 is now stacking.end()
         stacking.insert(i2, current);
     }
@@ -634,6 +681,40 @@ bool Workspace::keepTransientAbove(const AbstractClient* mainwindow, const Abstr
     // ignore this if the transient has a placement hint which indicates it should go above it's parent
     if (mainwindow->isDock() && !transient->hasTransientPlacementHint())
         return false;
+    return true;
+}
+
+bool Workspace::keepDeletedTransientAbove(const Toplevel *mainWindow, const Deleted *transient) const
+{
+    // #93832 - Don't keep splashscreens above dialogs.
+    if (transient->isSplash() && mainWindow->isDialog()) {
+        return false;
+    }
+
+    if (transient->wasX11Client()) {
+        // If a group transient was active, we should keep it above no matter
+        // what, because at the time when the transient was closed, it was above
+        // the main window.
+        if (transient->wasGroupTransient() && transient->wasActive()) {
+            return true;
+        }
+
+        // This is rather a hack for #76026. Don't keep non-modal dialogs above
+        // the mainwindow, but only if they're group transient (since only such
+        // dialogs have taskbar entry in Kicker). A proper way of doing this
+        // (both kwin and kicker) needs to be found.
+        if (transient->wasGroupTransient() && transient->isDialog()
+                && !transient->isModal()) {
+            return false;
+        }
+
+        // #63223 - Don't keep transients above docks, because the dock is kept
+        // high, and e.g. dialogs for them would be too high too.
+        if (mainWindow->isDock()) {
+            return false;
+        }
+    }
+
     return true;
 }
 
