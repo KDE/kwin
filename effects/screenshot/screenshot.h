@@ -42,10 +42,11 @@ public:
         INCLUDE_CURSOR = 1 << 1
     };
     ScreenShotEffect();
-    virtual ~ScreenShotEffect();
+    ~ScreenShotEffect() override;
+
     void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
-    virtual void postPaintScreen();
-    virtual bool isActive() const;
+    void postPaintScreen() override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 50;
