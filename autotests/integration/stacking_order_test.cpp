@@ -59,6 +59,9 @@ private Q_SLOTS:
     void testDeletedGroupTransient();
     void testDontKeepAboveNonModalDialogGroupTransients();
 
+    void testKeepAbove();
+    void testKeepBelow();
+
 };
 
 void StackingOrderTest::initTestCase()
@@ -811,6 +814,97 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
     workspace()->activateClient(transient);
     QTRY_VERIFY(transient->isActive());
     QCOMPARE(workspace()->stackingOrder(), (ToplevelList{leader, member1, member2, transient}));
+}
+
+void StackingOrderTest::testKeepAbove()
+{
+    // This test verifies that "keep-above" windows are kept above other windows.
+
+    // Create the first client.
+    KWayland::Client::Surface *clientASurface =
+        Test::createSurface(Test::waylandCompositor());
+    QVERIFY(clientASurface);
+    KWayland::Client::ShellSurface *clientAShellSurface =
+        Test::createShellSurface(clientASurface, clientASurface);
+    QVERIFY(clientAShellSurface);
+    ShellClient *clientA = Test::renderAndWaitForShown(clientASurface, QSize(128, 128), Qt::green);
+    QVERIFY(clientA);
+    QVERIFY(clientA->isActive());
+    QVERIFY(!clientA->keepAbove());
+
+    QCOMPARE(workspace()->stackingOrder(), (ToplevelList{clientA}));
+
+    // Create the second client.
+    KWayland::Client::Surface *clientBSurface =
+        Test::createSurface(Test::waylandCompositor());
+    QVERIFY(clientBSurface);
+    KWayland::Client::ShellSurface *clientBShellSurface =
+        Test::createShellSurface(clientBSurface, clientBSurface);
+    QVERIFY(clientBShellSurface);
+    ShellClient *clientB = Test::renderAndWaitForShown(clientBSurface, QSize(128, 128), Qt::green);
+    QVERIFY(clientB);
+    QVERIFY(clientB->isActive());
+    QVERIFY(!clientB->keepAbove());
+
+    QCOMPARE(workspace()->stackingOrder(), (ToplevelList{clientA, clientB}));
+
+    // Go to the initial test position.
+    workspace()->activateClient(clientA);
+    QTRY_VERIFY(clientA->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (ToplevelList{clientB, clientA}));
+
+    // Set the "keep-above" flag on the client B, it should go above other clients.
+    {
+        StackingUpdatesBlocker blocker(workspace());
+        clientB->setKeepAbove(true);
+    }
+
+    QVERIFY(clientB->keepAbove());
+    QVERIFY(!clientB->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (ToplevelList{clientA, clientB}));
+}
+
+void StackingOrderTest::testKeepBelow()
+{
+    // This test verifies that "keep-below" windows are kept below other windows.
+
+    // Create the first client.
+    KWayland::Client::Surface *clientASurface =
+        Test::createSurface(Test::waylandCompositor());
+    QVERIFY(clientASurface);
+    KWayland::Client::ShellSurface *clientAShellSurface =
+        Test::createShellSurface(clientASurface, clientASurface);
+    QVERIFY(clientAShellSurface);
+    ShellClient *clientA = Test::renderAndWaitForShown(clientASurface, QSize(128, 128), Qt::green);
+    QVERIFY(clientA);
+    QVERIFY(clientA->isActive());
+    QVERIFY(!clientA->keepBelow());
+
+    QCOMPARE(workspace()->stackingOrder(), (ToplevelList{clientA}));
+
+    // Create the second client.
+    KWayland::Client::Surface *clientBSurface =
+        Test::createSurface(Test::waylandCompositor());
+    QVERIFY(clientBSurface);
+    KWayland::Client::ShellSurface *clientBShellSurface =
+        Test::createShellSurface(clientBSurface, clientBSurface);
+    QVERIFY(clientBShellSurface);
+    ShellClient *clientB = Test::renderAndWaitForShown(clientBSurface, QSize(128, 128), Qt::green);
+    QVERIFY(clientB);
+    QVERIFY(clientB->isActive());
+    QVERIFY(!clientB->keepBelow());
+
+    QCOMPARE(workspace()->stackingOrder(), (ToplevelList{clientA, clientB}));
+
+    // Set the "keep-below" flag on the client B, it should go below other clients.
+    {
+        StackingUpdatesBlocker blocker(workspace());
+        clientB->setKeepBelow(true);
+    }
+
+    QVERIFY(clientB->isActive());
+    QVERIFY(clientB->keepBelow());
+    QCOMPARE(workspace()->stackingOrder(), (ToplevelList{clientB, clientA}));
 }
 
 WAYLANDTEST_MAIN(StackingOrderTest)
