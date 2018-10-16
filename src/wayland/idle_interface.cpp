@@ -103,8 +103,9 @@ void IdleInterface::Private::getIdleTimeoutCallback(wl_client *client, wl_resour
         return;
     }
     p->idleTimeouts << idleTimeout;
-    QObject::connect(idleTimeout, &IdleTimeoutInterface::aboutToBeUnbound, p->q,
-                     std::bind(&QVector<IdleTimeoutInterface*>::removeOne, p->idleTimeouts, idleTimeout));
+    QObject::connect(idleTimeout, &IdleTimeoutInterface::aboutToBeUnbound, p->q, [p, idleTimeout]() {
+        p->idleTimeouts.removeOne(idleTimeout);
+    });
     idleTimeout->d_func()->setup(timeout);
 }
 

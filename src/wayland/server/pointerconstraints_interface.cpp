@@ -83,7 +83,7 @@ void LockedPointerInterface::Private::commit()
 LockedPointerInterface::LockedPointerInterface(Private *p, QObject *parent)
     : Resource(p, parent)
 {
-    connect(this, &LockedPointerInterface::unbound, this, std::bind(&LockedPointerInterface::setLocked, this, false));
+    connect(this, &LockedPointerInterface::unbound, this, [this]() { setLocked(false); });
 }
 
 LockedPointerInterface::~LockedPointerInterface() = default;
@@ -165,7 +165,7 @@ void ConfinedPointerInterface::Private::commit()
 ConfinedPointerInterface::ConfinedPointerInterface(Private *p, QObject *parent)
     : Resource(p, parent)
 {
-    connect(this, &ConfinedPointerInterface::unbound, this, std::bind(&ConfinedPointerInterface::setConfined, this, false));
+    connect(this, &ConfinedPointerInterface::unbound, this, [this]() { setConfined(false); });
 }
 
 ConfinedPointerInterface::~ConfinedPointerInterface() = default;
