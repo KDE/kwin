@@ -14,13 +14,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <math.h>
 
-#define USE_ASSERT
-#ifdef USE_ASSERT
-#define ASSERT1 assert
-#else
-#define ASSERT1
-#endif
-
 //#define COMPUTE_STATS
 
 // if you enable it and run kwin in a terminal from the session it manages,
@@ -626,18 +619,8 @@ WobblyWindowsEffect::Pair WobblyWindowsEffect::computeBezierPoint(const WindowWo
     Pair topleft = wwi.origin[0];
     Pair bottomright = wwi.origin[wwi.count-1];
 
-//    ASSERT1(point.x >= topleft.x);
-//    ASSERT1(point.y >= topleft.y);
-//    ASSERT1(point.x <= bottomright.x);
-//    ASSERT1(point.y <= bottomright.y);
-
     qreal tx = (point.x - topleft.x) / (bottomright.x - topleft.x);
     qreal ty = (point.y - topleft.y) / (bottomright.y - topleft.y);
-
-//    ASSERT1(tx >= 0);
-//    ASSERT1(tx <= 1);
-//    ASSERT1(ty >= 0);
-//    ASSERT1(ty <= 1);
 
     // compute polynomial coeff
 
