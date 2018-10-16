@@ -50,15 +50,15 @@ class CoverSwitchEffect
     // TODO: mirror colors
 public:
     CoverSwitchEffect();
-    ~CoverSwitchEffect();
+    ~CoverSwitchEffect() override;
 
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowInputMouseEvent(QEvent* e);
-    virtual bool isActive() const;
+    void reconfigure(ReconfigureFlags) override;
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
+    void postPaintScreen();
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void windowInputMouseEvent(QEvent *e) override;
+    bool isActive() const override;
 
     static bool supported();
 
