@@ -65,6 +65,8 @@ private Q_SLOTS:
     void windowDeleted(EffectWindow *w);
     void activeFullScreenEffectChanged();
 
+    void updateActiveWindow(EffectWindow *w);
+
 private:
     void dimWindow(WindowPaintData &data, qreal strength);
     bool canDimWindow(const EffectWindow *w) const;
@@ -82,7 +84,7 @@ private:
     bool m_dimByGroup;
     bool m_dimFullScreen;
 
-    EffectWindow *m_activeWindow;
+    EffectWindow *m_activeWindow = nullptr;
     const EffectWindowGroup *m_activeWindowGroup;
     QHash<EffectWindow*, TimeLine> m_transitions;
     QHash<EffectWindow*, qreal> m_forceDim;

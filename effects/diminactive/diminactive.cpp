@@ -57,6 +57,10 @@ DimInactiveEffect::DimInactiveEffect()
             this, &DimInactiveEffect::windowDeleted);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
             this, &DimInactiveEffect::activeFullScreenEffectChanged);
+    connect(effects, &EffectsHandler::windowKeepAboveChanged,
+            this, &DimInactiveEffect::updateActiveWindow);
+    connect(effects, &EffectsHandler::windowFullScreenChanged,
+            this, &DimInactiveEffect::updateActiveWindow);
 }
 
 DimInactiveEffect::~DimInactiveEffect()
@@ -77,14 +81,7 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
     m_dimByGroup = DimInactiveConfig::dimByGroup();
     m_dimFullScreen = DimInactiveConfig::dimFullScreen();
 
-    // Need to reset m_activeWindow becase canDimWindow returns false
-    // if m_activeWindow is equal to effects->activeWindow().
-    m_activeWindow = nullptr;
-
-    EffectWindow *activeWindow = effects->activeWindow();
-    m_activeWindow = (activeWindow && canDimWindow(activeWindow))
-        ? activeWindow
-        : nullptr;
+    updateActiveWindow(effects->activeWindow());
 
     m_activeWindowGroup = (m_dimByGroup && m_activeWindow)
         ? m_activeWindow->group()
@@ -398,6 +395,22 @@ void DimInactiveEffect::activeFullScreenEffectChanged()
     m_fullScreenTransition.active = true;
 
     effects->addRepaintFull();
+}
+
+void DimInactiveEffect::updateActiveWindow(EffectWindow *w)
+{
+    if (effects->activeWindow() == nullptr) {
+        return;
+    }
+
+    if (effects->activeWindow() != w) {
+        return;
+    }
+
+    // Need to reset m_activeWindow because canDimWindow depends on it.
+    m_activeWindow = nullptr;
+
+    m_activeWindow = canDimWindow(w) ? w : nullptr;
 }
 
 } // namespace KWin

@@ -338,6 +338,23 @@ void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)
             emit windowHidden(c->effectWindow());
         }
     );
+    connect(c, &AbstractClient::keepAboveChanged, this,
+        [this, c](bool above) {
+            Q_UNUSED(above)
+            emit windowKeepAboveChanged(c->effectWindow());
+        }
+    );
+    connect(c, &AbstractClient::keepBelowChanged, this,
+        [this, c](bool below) {
+            Q_UNUSED(below)
+            emit windowKeepBelowChanged(c->effectWindow());
+        }
+    );
+    connect(c, &AbstractClient::fullScreenChanged, this,
+        [this, c]() {
+            emit windowFullScreenChanged(c->effectWindow());
+        }
+    );
 }
 
 void EffectsHandlerImpl::setupClientConnections(Client* c)
