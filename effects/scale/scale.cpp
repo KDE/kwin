@@ -262,7 +262,8 @@ bool ScaleEffect::isScaleWindow(EffectWindow *w) const
     // So, the only way to decide whether a window should be animated is
     // to use a heuristic: if a window has decoration, then it's most
     // likely a dialog or a settings window so we have to animate it.
-    if (w->windowClass() == QLatin1String("plasmashell plasmashell")) {
+    if (w->windowClass() == QLatin1String("plasmashell plasmashell")
+            || w->windowClass() == QLatin1String("plasmashell org.kde.plasmashell")) {
         return w->hasDecoration();
     }
 
