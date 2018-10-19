@@ -32,6 +32,11 @@ static const QSet<QString> s_authWindows {
     QStringLiteral("pinentry pinentry"),
     QStringLiteral("polkit-kde-authentication-agent-1 polkit-kde-authentication-agent-1"),
     QStringLiteral("polkit-kde-manager polkit-kde-manager"),
+
+    // On Wayland, the resource name is filename of executable. It's empty for
+    // authentication agents because KWayland can't get their executable paths.
+    QStringLiteral(" org.kde.kdesu"),
+    QStringLiteral(" org.kde.polkit-kde-authentication-agent-1")
 };
 
 DimScreenEffect::DimScreenEffect()
@@ -84,9 +89,22 @@ void DimScreenEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
+static inline bool isDimWindow(const EffectWindow *w)
+{
+    if (w->isPopupWindow()) {
+        return false;
+    }
+
+    if (w->isX11Client() && !w->isManaged()) {
+        return false;
+    }
+
+    return true;
+}
+
 void DimScreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    if (mActivated && (w != window) && w->isManaged()) {
+    if (mActivated && (w != window) && isDimWindow(w)) {
         data.multiplyBrightness((1.0 - 0.33 * timeline.currentValue()));
         data.multiplySaturation((1.0 - 0.33 * timeline.currentValue()));
     }
