@@ -185,7 +185,8 @@ var translucencyEffect = {
                 return;
             }
             if (window === effects.activeWindow ||
-                    window.managed === false ||
+                    window.popup === true ||
+                    (window.x11Client === true && window.managed === false) ||
                     window.desktopWindow === true ||
                     window.dock === true ||
                     window.visible === false ||
