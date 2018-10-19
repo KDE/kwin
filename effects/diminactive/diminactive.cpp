@@ -199,7 +199,11 @@ bool DimInactiveEffect::canDimWindow(const EffectWindow *w) const
         return false;
     }
 
-    if (!w->isManaged()) {
+    if (w->isPopupWindow()) {
+        return false;
+    }
+
+    if (w->isX11Client() && !w->isManaged()) {
         return false;
     }
 
