@@ -147,7 +147,7 @@ public:
 
     bool isTransient() const override;
     bool hasTransientPlacementHint() const override;
-    QPoint transientPlacementHint() const override;
+    QRect transientPlacement(const QRect &bounds) const override;
 
     QMatrix4x4 inputTransformation() const override;
 
@@ -210,6 +210,7 @@ private:
     void updateMaximizeMode(MaximizeMode maximizeMode);
     // called on surface commit and processes all m_pendingConfigureRequests up to m_lastAckedConfigureReqest
     void updatePendingGeometry();
+    QPoint popupOffset(const QRect &anchorRect, const Qt::Edges anchorEdge, const Qt::Edges gravity) const;
     static void deleteClient(ShellClient *c);
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;

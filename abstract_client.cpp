@@ -1169,9 +1169,11 @@ bool AbstractClient::hasTransientPlacementHint() const
     return false;
 }
 
-QPoint AbstractClient::transientPlacementHint() const
+QRect AbstractClient::transientPlacement(const QRect &bounds) const
 {
-    return QPoint();
+    Q_UNUSED(bounds);
+    Q_UNREACHABLE();
+    return QRect();
 }
 
 bool AbstractClient::hasTransient(const AbstractClient *c, bool indirect) const

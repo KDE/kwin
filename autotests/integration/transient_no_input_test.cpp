@@ -103,7 +103,6 @@ void TransientNoInputTest::testTransientNoFocus()
     QVERIFY(transientClient != c);
     QCOMPARE(transientClient->geometry(), QRect(c->x() + 10, c->y() + 20, 200, 20));
     QVERIFY(transientClient->isTransient());
-    QCOMPARE(transientClient->transientPlacementHint(), QPoint(10, 20));
     QVERIFY(!transientClient->wantsInput());
 
     // workspace's active window should not have changed

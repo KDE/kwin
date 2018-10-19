@@ -496,39 +496,19 @@ void Placement::placeOnScreenDisplay(AbstractClient* c, QRect& area)
 
 void Placement::placeTransient(AbstractClient *c)
 {
-    const QPoint target = c->transientFor()->pos() + c->transientFor()->clientPos() + c->transientPlacementHint();
-    c->move(target);
     const QRect screen = screens()->geometry(c->transientFor()->screen());
-    // TODO: work around Qt's transient placement of sub-menus, see https://bugreports.qt.io/browse/QTBUG-51640
-#define CHECK \
-    if (screen.contains(c->geometry())) { \
-        return; \
+    const QPoint popupPos = c->transientPlacement(screen).topLeft();
+    c->move(popupPos);
+
+    // Potentially a client could set no constraint adjustments
+    // and we'll be offscreen.
+
+    // The spec implies we should place window the offscreen. However,
+    // practically Qt doesn't set any constraint adjustments yet so we can't.
+    // Also kwin generally doesn't let clients do what they want
+    if (!screen.contains(c->geometry())) {
+        c->keepInArea(screen);
     }
-    CHECK
-    if (screen.x() + screen.width() < c->x() + c->width()) {
-        // overlaps on right
-        c->move(screen.x() + screen.width() - c->width(), c->y());
-        CHECK
-    }
-    if (screen.y() + screen.height() < c->y() + c->height()) {
-        // overlaps on bottom
-        c->move(c->x(), screen.y() + screen.height() - c->height());
-        CHECK
-    }
-    if (screen.y() > c->y()) {
-        // top is not on screen
-        c->move(c->x(), screen.y());
-        CHECK
-    }
-    if (screen.x() > c->x()) {
-        // left is not on screen
-        c->move(screen.x(), c->y());
-        CHECK
-    }
-#undef CHECK
-    // so far the sanitizing didn't help, let's move back to orig target position and use keepInArea
-    c->move(target);
-    c->keepInArea(screen);
 }
 
 void Placement::placeDialog(AbstractClient* c, QRect& area, Policy nextPlacement)

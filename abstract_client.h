@@ -392,9 +392,10 @@ public:
      **/
     virtual bool hasTransientPlacementHint() const;
     /**
-     * @returns The recommended position of the transient in parent coordinates
+     * Only valid id hasTransientPlacementHint is true
+     * @returns The position the transient wishes to position itself
      **/
-    virtual QPoint transientPlacementHint() const;
+    virtual QRect transientPlacement(const QRect &bounds) const;
     const AbstractClient* transientFor() const;
     AbstractClient* transientFor();
     /**

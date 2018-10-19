@@ -25,6 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtTest>
 
+// KWayland
+#include <KWayland/Client/xdgshell.h>
+
 namespace KWayland
 {
 namespace Client
@@ -43,7 +46,6 @@ class Shell;
 class ShellSurface;
 class ShmPool;
 class Surface;
-class XdgShellSurface;
 }
 }
 
@@ -138,7 +140,7 @@ KWayland::Client::ShellSurface *createShellSurface(KWayland::Client::Surface *su
 KWayland::Client::XdgShellSurface *createXdgShellV5Surface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
 KWayland::Client::XdgShellSurface *createXdgShellV6Surface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
 KWayland::Client::XdgShellSurface *createXdgShellStableSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
-
+KWayland::Client::XdgShellPopup *createXdgShellStablePopup(KWayland::Client::Surface *surface, KWayland::Client::XdgShellSurface *parentSurface, const KWayland::Client::XdgPositioner &positioner, QObject *parent = nullptr);
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.

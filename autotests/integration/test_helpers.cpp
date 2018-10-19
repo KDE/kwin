@@ -480,6 +480,19 @@ XdgShellSurface *createXdgShellStableSurface(Surface *surface, QObject *parent)
     return s;
 }
 
+XdgShellPopup *createXdgShellStablePopup(Surface *surface, XdgShellSurface *parentSurface, const XdgPositioner &positioner, QObject *parent)
+{
+    if (!s_waylandConnection.xdgShellStable) {
+        return nullptr;
+    }
+    auto s = s_waylandConnection.xdgShellStable->createPopup(surface, parentSurface, positioner, parent);
+    if (!s->isValid()) {
+        delete s;
+        return nullptr;
+    }
+    return s;
+}
+
 QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent)
 {
     switch (type) {
