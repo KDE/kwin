@@ -1408,6 +1408,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                 int xDiff = widthDiff / 2;  // Also move a bit in the direction of the enlarge, allows the
                 int yDiff = heightDiff / 2; // center windows to be enlarged if there is gaps on the side.
 
+                // heightDiff (and yDiff) will be re-computed after each successfull enlargement attempt
+                // so that the error introduced in the window's aspect ratio is minimized
+
                 // Attempt enlarging to the top-right
                 oldRect = *target;
                 target->setRect(target->x() + xDiff,
@@ -1417,8 +1420,11 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                                 );
                 if (isOverlappingAny(w, targets, borderRegion))
                     *target = oldRect;
-                else
+                else {
                     moved = true;
+                    heightDiff = heightForWidth(w, target->width() + widthDiff) - target->height();
+                    yDiff = heightDiff / 2;
+                }
 
                 // Attempt enlarging to the bottom-right
                 oldRect = *target;
@@ -1430,8 +1436,11 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                              );
                 if (isOverlappingAny(w, targets, borderRegion))
                     *target = oldRect;
-                else
+                else {
                     moved = true;
+                    heightDiff = heightForWidth(w, target->width() + widthDiff) - target->height();
+                    yDiff = heightDiff / 2;
+                }
 
                 // Attempt enlarging to the bottom-left
                 oldRect = *target;
@@ -1443,8 +1452,11 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                              );
                 if (isOverlappingAny(w, targets, borderRegion))
                     *target = oldRect;
-                else
+                else {
                     moved = true;
+                    heightDiff = heightForWidth(w, target->width() + widthDiff) - target->height();
+                    yDiff = heightDiff / 2;
+                }
 
                 // Attempt enlarging to the top-left
                 oldRect = *target;
