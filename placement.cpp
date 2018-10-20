@@ -507,12 +507,12 @@ void Placement::placeTransient(AbstractClient *c)
     CHECK
     if (screen.x() + screen.width() < c->x() + c->width()) {
         // overlaps on right
-        c->move(c->x() - c->width(), c->y());
+        c->move(screen.x() + screen.width() - c->width(), c->y());
         CHECK
     }
     if (screen.y() + screen.height() < c->y() + c->height()) {
         // overlaps on bottom
-        c->move(c->x(), c->y() - c->height());
+        c->move(c->x(), screen.y() + screen.height() - c->height());
         CHECK
     }
     if (screen.y() > c->y()) {

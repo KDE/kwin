@@ -156,13 +156,13 @@ void TransientPlacementTest::testSimplePosition_data()
     QTest::newRow("0/0") << QSize(640, 512) << QPoint(0, 0) << QSize(10, 100) << QPoint(0, 0) << QRect(0, 0, 10, 100);
     QTest::newRow("bottomRight") << QSize(640, 512) << QPoint(0, 0) << QSize(10, 100) << QPoint(639, 511) << QRect(639, 511, 10, 100);
     QTest::newRow("offset") << QSize(640, 512) << QPoint(200, 300) << QSize(100, 10) << QPoint(320, 256) << QRect(520, 556, 100, 10);
-    QTest::newRow("right border") << QSize(1280, 1024) << QPoint(0, 0) << QSize(10, 100) << QPoint(1279, 50) << QRect(1269, 50, 10, 100);
-    QTest::newRow("bottom border") << QSize(1280, 1024) << QPoint(0, 0) << QSize(10, 100) << QPoint(512, 1020) << QRect(512, 920, 10, 100);
-    QTest::newRow("bottom right") << QSize(1280, 1024) << QPoint(0, 0) << QSize(10, 100) << QPoint(1279, 1020) << QRect(1269, 920, 10, 100);
+    QTest::newRow("right border") << QSize(1280, 1024) << QPoint(0, 0) << QSize(10, 100) << QPoint(1279, 50) << QRect(1270, 50, 10, 100);
+    QTest::newRow("bottom border") << QSize(1280, 1024) << QPoint(0, 0) << QSize(10, 100) << QPoint(512, 1020) << QRect(512, 924, 10, 100);
+    QTest::newRow("bottom right") << QSize(1280, 1024) << QPoint(0, 0) << QSize(10, 100) << QPoint(1279, 1020) << QRect(1270, 924, 10, 100);
     QTest::newRow("top border") << QSize(1280, 1024) << QPoint(0, -100) << QSize(10, 100) << QPoint(512, 50) << QRect(512, 0, 10, 100);
     QTest::newRow("left border") << QSize(1280, 1024) << QPoint(-100, 0) << QSize(100, 10) << QPoint(50, 512) << QRect(0, 512, 100, 10);
     QTest::newRow("top left") << QSize(1280, 1024) << QPoint(-100, -100) << QSize(100, 100) << QPoint(50, 50) << QRect(0, 0, 100, 100);
-    QTest::newRow("bottom left") << QSize(1280, 1024) << QPoint(-100, 0) << QSize(100, 100) << QPoint(50, 1000) << QRect(0, 900, 100, 100);
+    QTest::newRow("bottom left") << QSize(1280, 1024) << QPoint(-100, 0) << QSize(100, 100) << QPoint(50, 1000) << QRect(0, 924, 100, 100);
 }
 
 void TransientPlacementTest::testSimplePosition()
