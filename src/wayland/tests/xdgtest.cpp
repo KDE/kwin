@@ -26,10 +26,13 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../src/client/shm_pool.h"
 #include "../src/client/surface.h"
 #include "../src/client/xdgshell.h"
+#include "../src/client/pointer.h"
+#include "../src/client/seat.h"
 // Qt
 #include <QGuiApplication>
 #include <QImage>
 #include <QThread>
+#include <QPainter>
 
 using namespace KWayland::Client;
 
@@ -44,6 +47,7 @@ public:
 
 private:
     void setupRegistry(Registry *registry);
+    void createPopup();
     void render();
     void renderPopup();
     QThread *m_connectionThread;
@@ -119,28 +123,69 @@ void XdgTest::setupRegistry(Registry *registry)
             Q_ASSERT(m_xdgShellSurface);
             connect(m_xdgShellSurface, &XdgShellSurface::sizeChanged, this, &XdgTest::render);
             render();
-
-            //create popup
-            m_popupSurface = m_compositor->createSurface(this);
-
-            XdgPositioner positioner(QSize(50,50), QRect(100,100, 20, 20));
-            m_xdgShellPopup = m_xdgShell->createPopup(m_popupSurface, m_xdgShellSurface, positioner, this);
-            renderPopup();
         }
     );
+    connect(registry, &Registry::seatAnnounced, this,
+        [this, registry](quint32 name) {
+            Seat *s = registry->createSeat(name, 2, this);
+            connect(s, &Seat::hasPointerChanged, this,
+                [this, s](bool has) {
+                    if (!has) {
+                        return;
+                    }
+                    Pointer *p = s->createPointer(this);
+                    connect(p, &Pointer::buttonStateChanged, this,
+                        [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
+                            Q_UNUSED(button)
+                            Q_UNUSED(serial)
+                            Q_UNUSED(time)
+                            if (state == Pointer::ButtonState::Released) {
+                                if (m_popupSurface) {
+                                    m_popupSurface->deleteLater();
+                                    m_popupSurface = nullptr;
+                                } else {
+                                    createPopup();
+                                }
+                            }
+                        }
+                    );
+                }
+            );
+    });
+
     registry->setEventQueue(m_eventQueue);
     registry->create(m_connectionThreadObject);
     registry->setup();
 }
 
+void XdgTest::createPopup()
+{
+    if (m_popupSurface) {
+        m_popupSurface->deleteLater();
+    }
+
+    m_popupSurface = m_compositor->createSurface(this);
+
+    XdgPositioner positioner(QSize(200,200), QRect(50, 50, 400, 400));
+    positioner.setAnchorEdge(Qt::BottomEdge | Qt::RightEdge);
+    positioner.setGravity(Qt::BottomEdge);
+    positioner.setConstraints(XdgPositioner::Constraint::FlipX | XdgPositioner::Constraint::SlideY);
+    m_xdgShellPopup = m_xdgShell->createPopup(m_popupSurface, m_xdgShellSurface, positioner, m_popupSurface);
+    renderPopup();
+}
 
 void XdgTest::render()
 {
-    const QSize &size = m_xdgShellSurface->size().isValid() ? m_xdgShellSurface->size() : QSize(300, 200);
+    const QSize &size = m_xdgShellSurface->size().isValid() ? m_xdgShellSurface->size() : QSize(500, 500);
     auto buffer = m_shm->getBuffer(size, size.width() * 4).toStrongRef();
     buffer->setUsed(true);
     QImage image(buffer->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
-    image.fill(QColor(255, 255, 255, 128));
+    image.fill(QColor(255, 255, 255, 255));
+    //draw a red rectangle indicating the anchor of the top level
+    QPainter painter(&image);
+    painter.setBrush(Qt::red);
+    painter.setPen(Qt::black);
+    painter.drawRect(50, 50, 400, 400);
 
     m_surface->attachBuffer(*buffer);
     m_surface->damage(QRect(QPoint(0, 0), size));
@@ -154,15 +199,13 @@ void XdgTest::renderPopup()
     auto buffer = m_shm->getBuffer(size, size.width() * 4).toStrongRef();
     buffer->setUsed(true);
     QImage image(buffer->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
-    image.fill(QColor(255, 0, 0, 255));
+    image.fill(QColor(0, 0, 255, 255));
 
     m_popupSurface->attachBuffer(*buffer);
     m_popupSurface->damage(QRect(QPoint(0, 0), size));
     m_popupSurface->commit(Surface::CommitFlag::None);
     buffer->setUsed(false);
 }
-
-
 
 int main(int argc, char **argv)
 {
