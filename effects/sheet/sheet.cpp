@@ -51,7 +51,7 @@ void SheetEffect::reconfigure(ReconfigureFlags flags)
     // TODO: Rename AnimationTime config key to Duration.
     const int d = animationTime(SheetConfig::animationTime() != 0
         ? SheetConfig::animationTime()
-        : 500);
+        : 300);
     m_duration = std::chrono::milliseconds(static_cast<int>(d));
 }
 
@@ -112,6 +112,8 @@ void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     data.setRotationAngle(interpolate(60.0, 0.0, t));
     data *= QVector3D(1.0, t, t);
     data.translate(0.0, -interpolate(w->y() - (*animationIt).parentY, 0.0, t));
+
+    data.multiplyOpacity(t);
 
     effects->paintWindow(w, mask, region, data);
 }
