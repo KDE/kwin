@@ -30,7 +30,6 @@ QDebug operator<<(QDebug dbg, const KWin::AniData &a)
 }
 
 using namespace KWin;
-static const int Gaussian = 46;
 
 FullScreenEffectLock::FullScreenEffectLock(Effect *effect)
 {
