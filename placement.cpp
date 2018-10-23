@@ -74,6 +74,8 @@ void Placement::place(AbstractClient* c, QRect& area)
         placeOnScreenDisplay(c, area);
     else if (c->isTransient() && c->hasTransientPlacementHint())
         placeTransient(c);
+    else if (c->isTransient() && c->surface())
+        placeDialog(c, area, options->placement());
     else
         place(c, area, options->placement());
 }
