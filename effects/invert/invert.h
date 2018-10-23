@@ -41,11 +41,11 @@ public:
     ~InvertEffect();
 
     virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
-    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
     virtual void paintEffectFrame(KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
     virtual bool isActive() const;
     virtual bool provides(Feature);
+
+    int requestedEffectChainPosition() const override;
 
     static bool supported();
 
@@ -64,6 +64,11 @@ private:
     bool m_allWindows;
     QList<EffectWindow*> m_windows;
 };
+
+inline int InvertEffect::requestedEffectChainPosition() const
+{
+    return 99;
+}
 
 } // namespace
 

@@ -82,19 +82,6 @@ bool InvertEffect::loadData()
     return true;
 }
 
-void InvertEffect::prePaintScreen(ScreenPrePaintData &data, int time)
-{
-    effects->prePaintScreen(data, time);
-}
-
-void InvertEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
-{
-    if (m_valid && (m_allWindows != m_windows.contains(w))) {
-        data.mask |= PAINT_WINDOW_TRANSFORMED;
-    }
-    effects->prePaintWindow(w, data, time);
-}
-
 void InvertEffect::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
     // Load if we haven't already
