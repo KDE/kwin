@@ -52,6 +52,21 @@ KeepAliveLock::~KeepAliveLock()
     m_window->unrefWindow();
 }
 
+PreviousWindowPixmapLock::PreviousWindowPixmapLock(EffectWindow *w)
+    : m_window(w)
+{
+    m_window->referencePreviousWindowPixmap();
+}
+
+PreviousWindowPixmapLock::~PreviousWindowPixmapLock()
+{
+    m_window->unreferencePreviousWindowPixmap();
+
+    // Add synthetic repaint to prevent glitches after cross-fading
+    // translucent windows.
+    effects->addRepaint(m_window->expandedGeometry());
+}
+
 AniData::AniData()
  : attribute(AnimationEffect::Opacity)
  , customCurve(0) // Linear
@@ -67,7 +82,8 @@ AniData::AniData()
 
 AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to_,
                  QEasingCurve curve_, int delay, const FPx2 &from_, bool waitAtSource_, bool keepAtTarget_,
-                 FullScreenEffectLockPtr fullScreenEffectLock_, bool keepAlive)
+                 FullScreenEffectLockPtr fullScreenEffectLock_, bool keepAlive,
+                 PreviousWindowPixmapLockPtr previousWindowPixmapLock_)
  : attribute(a)
  , curve(curve_)
  , from(from_)
@@ -80,6 +96,7 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to
  , waitAtSource(waitAtSource_)
  , keepAtTarget(keepAtTarget_)
  , keepAlive(keepAlive)
+ , previousWindowPixmapLock(previousWindowPixmapLock_)
 {
 }
 

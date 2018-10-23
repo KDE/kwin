@@ -220,8 +220,6 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
 {
     const bool waitAtSource = from.isValid();
     validate(a, meta, &from, &to, w);
-    if (a == CrossFadePrevious)
-        w->referencePreviousWindowPixmap();
 
     Q_D(AnimationEffect);
     if (!d->m_isInitialized)
@@ -247,7 +245,27 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
             fullscreen = d->m_fullScreenEffectLock.toStrongRef();
         }
     }
-    it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource, keepAtTarget, fullscreen, keepAlive));
+
+    PreviousWindowPixmapLockPtr previousPixmap;
+    if (a == CrossFadePrevious) {
+        previousPixmap = PreviousWindowPixmapLockPtr::create(w);
+    }
+
+    it->first.append(AniData(
+        a,              // Attribute
+        meta,           // Metadata
+        ms,             // Duration
+        to,             // Target
+        curve,          // Easing curve
+        delay,          // Delay
+        from,           // Source
+        waitAtSource,   // Whether the animation should be kept at source
+        keepAtTarget,   // Whether the animation is persistent
+        fullscreen,     // Full screen effect lock
+        keepAlive,      // Keep alive flag
+        previousPixmap  // Previous window pixmap lock
+    ));
+
     quint64 ret_id = ++d->m_animCounter;
     it->first.last().id = ret_id;
     it->second = QRect();
@@ -344,11 +362,6 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 ++animCounter;
             } else {
                 EffectWindow *oldW = entry.key();
-                AniData *aData = &(*anim);
-                if (aData->attribute == KWin::AnimationEffect::CrossFadePrevious) {
-                    oldW->unreferencePreviousWindowPixmap();
-                    effects->addRepaint(oldW->expandedGeometry());
-                }
                 d->m_justEndedAnimation = anim->id;
                 animationEnded(oldW, anim->attribute, anim->meta);
                 d->m_justEndedAnimation = 0;

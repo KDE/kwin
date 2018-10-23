@@ -56,13 +56,28 @@ private:
 };
 typedef QSharedPointer<KeepAliveLock> KeepAliveLockPtr;
 
+/**
+ * References the previous window pixmap to prevent discarding.
+ **/
+class PreviousWindowPixmapLock
+{
+public:
+    PreviousWindowPixmapLock(EffectWindow *w);
+    ~PreviousWindowPixmapLock();
+
+private:
+    EffectWindow *m_window;
+    Q_DISABLE_COPY(PreviousWindowPixmapLock)
+};
+typedef QSharedPointer<PreviousWindowPixmapLock> PreviousWindowPixmapLockPtr;
+
 class KWINEFFECTS_EXPORT AniData {
 public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,
             QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource,
             bool keepAtTarget = false, FullScreenEffectLockPtr=FullScreenEffectLockPtr(),
-            bool keepAlive = true);
+            bool keepAlive = true, PreviousWindowPixmapLockPtr previousWindowPixmapLock = {});
     inline void addTime(int t) { time += t; }
     inline bool isOneDimensional() const {
         return from[0] == from[1] && to[0] == to[1];
@@ -81,6 +96,7 @@ public:
     bool waitAtSource, keepAtTarget;
     bool keepAlive;
     KeepAliveLockPtr keepAliveLock;
+    PreviousWindowPixmapLockPtr previousWindowPixmapLock;
 };
 
 } // namespace
