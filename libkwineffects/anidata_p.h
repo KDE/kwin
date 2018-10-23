@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ANIDATA_H
 
 #include "kwinanimationeffect.h"
+
 #include <QEasingCurve>
-#include <netwm.h>
 
 namespace KWin {
 
@@ -77,7 +77,6 @@ public:
     int time, duration;
     uint meta;
     qint64 startTime;
-    NET::WindowTypeMask windowType;
     QSharedPointer<FullScreenEffectLock> fullScreenEffectLock;
     bool waitAtSource, keepAtTarget;
     bool keepAlive;

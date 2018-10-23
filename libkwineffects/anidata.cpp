@@ -59,7 +59,6 @@ AniData::AniData()
  , duration(0)
  , meta(0)
  , startTime(0)
- , windowType((NET::WindowTypeMask)0)
  , waitAtSource(false)
  , keepAtTarget(false)
  , keepAlive(true)
@@ -77,7 +76,6 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to
  , duration(ms)
  , meta(meta_)
  , startTime(AnimationEffect::clock() + delay)
- , windowType((NET::WindowTypeMask)0)
  , fullScreenEffectLock(fullScreenEffectLock_)
  , waitAtSource(waitAtSource_)
  , keepAtTarget(keepAtTarget_)
@@ -108,6 +106,5 @@ QString AniData::debugInfo() const
            QLatin1String("\n       To: ") + to.toString() +
            QLatin1String("\n  Started: ") + QString::number(AnimationEffect::clock() - startTime) + QLatin1String("ms ago\n") +
            QLatin1String(  " Duration: ") + QString::number(duration) + QLatin1String("ms\n") +
-           QLatin1String(  "   Passed: ") + QString::number(time) + QLatin1String("ms\n") +
-           QLatin1String(  " Applying: ") + QString::number(windowType) + QLatin1Char('\n');
+           QLatin1String(  "   Passed: ") + QString::number(time) + QLatin1String("ms\n");
 }
