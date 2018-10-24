@@ -76,8 +76,10 @@ public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, const FPx2 &to,
             int delay, const FPx2 &from, bool waitAtSource,
-            bool keepAtTarget = false, FullScreenEffectLockPtr=FullScreenEffectLockPtr(),
+            FullScreenEffectLockPtr=FullScreenEffectLockPtr(),
             bool keepAlive = true, PreviousWindowPixmapLockPtr previousWindowPixmapLock = {});
+
+    bool isActive() const;
 
     inline bool isOneDimensional() const {
         return from[0] == from[1] && to[0] == to[1];
@@ -92,10 +94,11 @@ public:
     uint meta;
     qint64 startTime;
     QSharedPointer<FullScreenEffectLock> fullScreenEffectLock;
-    bool waitAtSource, keepAtTarget;
+    bool waitAtSource;
     bool keepAlive;
     KeepAliveLockPtr keepAliveLock;
     PreviousWindowPixmapLockPtr previousWindowPixmapLock;
+    AnimationEffect::TerminationFlags terminationFlags;
 };
 
 } // namespace

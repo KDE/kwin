@@ -76,6 +76,8 @@ private Q_SLOTS:
     void testGrabAlreadyGrabbedWindow();
     void testGrabAlreadyGrabbedWindowForced();
     void testUngrab();
+    void testRedirect_data();
+    void testRedirect();
 
 private:
     ScriptedEffect *loadEffect(const QString &name);
@@ -301,13 +303,15 @@ void ScriptedEffectsTest::testAnimations()
         QCOMPARE(animationsForWindow[0].to, FPx2(1.4));
         QCOMPARE(animationsForWindow[0].attribute, AnimationEffect::Scale);
         QCOMPARE(animationsForWindow[0].timeLine.easingCurve().type(), QEasingCurve::OutQuad);
-        QCOMPARE(animationsForWindow[0].keepAtTarget, false);
+        QCOMPARE(animationsForWindow[0].terminationFlags,
+                 AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
 
         if (animationCount == 2) {
             QCOMPARE(animationsForWindow[1].timeLine.duration(), 100ms);
             QCOMPARE(animationsForWindow[1].to, FPx2(0.0));
             QCOMPARE(animationsForWindow[1].attribute, AnimationEffect::Opacity);
-            QCOMPARE(animationsForWindow[1].keepAtTarget, false);
+            QCOMPARE(animationsForWindow[1].terminationFlags,
+                     AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
         }
     }
     QCOMPARE(effectOutputSpy[0].first(), "true");
@@ -323,12 +327,14 @@ void ScriptedEffectsTest::testAnimations()
         QCOMPARE(animationsForWindow[0].timeLine.duration(), 200ms);
         QCOMPARE(animationsForWindow[0].to, FPx2(1.5));
         QCOMPARE(animationsForWindow[0].attribute, AnimationEffect::Scale);
-        QCOMPARE(animationsForWindow[0].keepAtTarget, false);
+        QCOMPARE(animationsForWindow[0].terminationFlags,
+                 AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
         if (animationCount == 2) {
             QCOMPARE(animationsForWindow[1].timeLine.duration(), 200ms);
             QCOMPARE(animationsForWindow[1].to, FPx2(1.5));
             QCOMPARE(animationsForWindow[1].attribute, AnimationEffect::Opacity);
-            QCOMPARE(animationsForWindow[1].keepAtTarget, false);
+            QCOMPARE(animationsForWindow[1].terminationFlags,
+                     AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
         }
     }
     c->setMinimized(false);
@@ -617,6 +623,95 @@ void ScriptedEffectsTest::testUngrab()
     QCOMPARE(effectOutputSpy.count(), 1);
     QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
     QCOMPARE(c->effectWindow()->data(WindowAddedGrabRole).value<void *>(), nullptr);
+}
+
+void ScriptedEffectsTest::testRedirect_data()
+{
+    QTest::addColumn<QString>("file");
+    QTest::addColumn<bool>("shouldTerminate");
+    QTest::newRow("animate/DontTerminateAtSource") << "redirectAnimateDontTerminateTest" << false;
+    QTest::newRow("animate/TerminateAtSource")     << "redirectAnimateTerminateTest"     << true;
+    QTest::newRow("set/DontTerminate")             << "redirectSetDontTerminateTest"     << false;
+    QTest::newRow("set/Terminate")                 << "redirectSetTerminateTest"         << true;
+}
+
+void ScriptedEffectsTest::testRedirect()
+{
+    // this test verifies that redirect() works
+
+    // load the test effect
+    auto effect = new ScriptedEffectWithDebugSpy;
+    QFETCH(QString, file);
+    QVERIFY(effect->load(file));
+
+    // create test client
+    using namespace KWayland::Client;
+    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    QVERIFY(surface);
+    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
+    QVERIFY(shellSurface);
+    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+
+    auto around = [] (std::chrono::milliseconds elapsed,
+                      std::chrono::milliseconds pivot,
+                      std::chrono::milliseconds margin) {
+        return qAbs(elapsed.count() - pivot.count()) < margin.count();
+    };
+
+    // initially, the test animation is at the source position
+
+    {
+        const AnimationEffect::AniMap state = effect->state();
+        QCOMPARE(state.count(), 1);
+        QCOMPARE(state.firstKey(), c->effectWindow());
+        const QList<AniData> animations = state.first().first;
+        QCOMPARE(animations.count(), 1);
+        QCOMPARE(animations[0].timeLine.direction(), TimeLine::Forward);
+        QVERIFY(around(animations[0].timeLine.elapsed(), 0ms, 50ms));
+    }
+
+    // minimize the test client after 250ms, when the test effect sees that
+    // a window was minimized, it will try to reverse animation for it
+    QTest::qWait(250);
+
+    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    QVERIFY(effectOutputSpy.isValid());
+
+    c->setMinimized(true);
+
+    QCOMPARE(effectOutputSpy.count(), 1);
+    QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
+
+    {
+        const AnimationEffect::AniMap state = effect->state();
+        QCOMPARE(state.count(), 1);
+        QCOMPARE(state.firstKey(), c->effectWindow());
+        const QList<AniData> animations = state.first().first;
+        QCOMPARE(animations.count(), 1);
+        QCOMPARE(animations[0].timeLine.direction(), TimeLine::Backward);
+        QVERIFY(around(animations[0].timeLine.elapsed(), 1000ms - 250ms, 50ms));
+    }
+
+    // wait for the animation to reach the start position, 100ms is an extra
+    // safety margin
+    QTest::qWait(250 + 100);
+
+    QFETCH(bool, shouldTerminate);
+    if (shouldTerminate) {
+        const AnimationEffect::AniMap state = effect->state();
+        QCOMPARE(state.count(), 0);
+    } else {
+        const AnimationEffect::AniMap state = effect->state();
+        QCOMPARE(state.count(), 1);
+        QCOMPARE(state.firstKey(), c->effectWindow());
+        const QList<AniData> animations = state.first().first;
+        QCOMPARE(animations.count(), 1);
+        QCOMPARE(animations[0].timeLine.direction(), TimeLine::Backward);
+        QCOMPARE(animations[0].timeLine.elapsed(), 1000ms);
+        QCOMPARE(animations[0].timeLine.value(), 0.0);
+    }
 }
 
 WAYLANDTEST_MAIN(ScriptedEffectsTest)

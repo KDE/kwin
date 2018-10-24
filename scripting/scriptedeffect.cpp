@@ -438,6 +438,60 @@ QScriptValue kwinEffectRetarget(QScriptContext *context, QScriptEngine *engine)
     return QScriptValue(ok);
 }
 
+QScriptValue kwinEffectRedirect(QScriptContext *context, QScriptEngine *engine)
+{
+    if (context->argumentCount() != 2 && context->argumentCount() != 3) {
+        const QString errorMessage = QStringLiteral("redirect() takes either 2 or 3 arguments (%1 given)")
+            .arg(context->argumentCount());
+        context->throwError(QScriptContext::SyntaxError, errorMessage);
+        return engine->undefinedValue();
+    }
+
+    bool ok = false;
+    QList<quint64> animationIds = animations(context->argument(0).toVariant(), &ok);
+    if (!ok) {
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Argument needs to be one or several quint64"));
+        return engine->undefinedValue();
+    }
+
+    const QScriptValue wrappedDirection = context->argument(1);
+    if (!wrappedDirection.isNumber()) {
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Direction has invalid type"));
+        return engine->undefinedValue();
+    }
+
+    const auto direction = static_cast<AnimationEffect::Direction>(wrappedDirection.toInt32());
+    switch (direction) {
+    case AnimationEffect::Forward:
+    case AnimationEffect::Backward:
+        break;
+
+    default:
+        context->throwError(QScriptContext::SyntaxError, QStringLiteral("Unknown direction"));
+        return engine->undefinedValue();
+    }
+
+    AnimationEffect::TerminationFlags terminationFlags = AnimationEffect::TerminateAtSource;
+    if (context->argumentCount() >= 3) {
+        const QScriptValue wrappedTerminationFlags = context->argument(2);
+        if (!wrappedTerminationFlags.isNumber()) {
+            context->throwError(QScriptContext::TypeError, QStringLiteral("Termination flags argument has invalid type"));
+            return engine->undefinedValue();
+        }
+
+        terminationFlags = static_cast<AnimationEffect::TerminationFlags>(wrappedTerminationFlags.toInt32());
+    }
+
+    ScriptedEffect *effect = qobject_cast<ScriptedEffect *>(context->callee().data().toQObject());
+    for (const quint64 &animationId : qAsConst(animationIds)) {
+        if (!effect->redirect(animationId, direction, terminationFlags)) {
+            return QScriptValue(false);
+        }
+    }
+
+    return QScriptValue(true);
+}
+
 QScriptValue kwinEffectCancel(QScriptContext *context, QScriptEngine *engine)
 {
     ScriptedEffect *effect = qobject_cast<ScriptedEffect*>(context->callee().data().toQObject());
@@ -592,6 +646,11 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     retargetFunc.setData(m_engine->newQObject(this));
     m_engine->globalObject().setProperty(QStringLiteral("retarget"), retargetFunc);
 
+    // redirect
+    QScriptValue redirectFunc = m_engine->newFunction(kwinEffectRedirect);
+    redirectFunc.setData(m_engine->newQObject(this));
+    m_engine->globalObject().setProperty(QStringLiteral("redirect"), redirectFunc);
+
     // cancel...
     QScriptValue cancelFunc = m_engine->newFunction(kwinEffectCancel);
     cancelFunc.setData(m_engine->newQObject(this));
@@ -655,6 +714,11 @@ quint64 ScriptedEffect::set(KWin::EffectWindow* w, KWin::AnimationEffect::Attrib
 bool ScriptedEffect::retarget(quint64 animationId, KWin::FPx2 newTarget, int newRemainingTime)
 {
     return AnimationEffect::retarget(animationId, newTarget, newRemainingTime);
+}
+
+bool ScriptedEffect::redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags)
+{
+    return AnimationEffect::redirect(animationId, direction, terminationFlags);
 }
 
 bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRole)

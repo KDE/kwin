@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2011 Thomas Lübking <thomas.luebking@web.de>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -258,7 +259,6 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
         delay,          // Delay
         from,           // Source
         waitAtSource,   // Whether the animation should be kept at source
-        keepAtTarget,   // Whether the animation is persistent
         fullscreen,     // Full screen effect lock
         keepAlive,      // Keep alive flag
         previousPixmap  // Previous window pixmap lock
@@ -273,6 +273,11 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     animation.timeLine.setEasingCurve(curve);
     animation.timeLine.setSourceRedirectMode(TimeLine::RedirectMode::Strict);
     animation.timeLine.setTargetRedirectMode(TimeLine::RedirectMode::Relaxed);
+
+    animation.terminationFlags = TerminateAtSource;
+    if (!keepAtTarget) {
+        animation.terminationFlags |= TerminateAtTarget;
+    }
 
     it->second = QRect();
 
@@ -313,6 +318,42 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
         }
     }
     return false; // no animation found
+}
+
+bool AnimationEffect::redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags)
+{
+    Q_D(AnimationEffect);
+
+    if (animationId == d->m_justEndedAnimation) {
+        return false;
+    }
+
+    for (auto entryIt = d->m_animations.begin(); entryIt != d->m_animations.end(); ++entryIt) {
+        auto animIt = std::find_if(entryIt->first.begin(), entryIt->first.end(),
+            [animationId] (AniData &anim) {
+                return anim.id == animationId;
+            }
+        );
+        if (animIt == entryIt->first.end()) {
+            continue;
+        }
+
+        switch (direction) {
+        case Backward:
+            animIt->timeLine.setDirection(TimeLine::Backward);
+            break;
+
+        case Forward:
+            animIt->timeLine.setDirection(TimeLine::Forward);
+            break;
+        }
+
+        animIt->terminationFlags = terminationFlags & ~TerminateAtTarget;
+
+        return true;
+    }
+
+    return false;
 }
 
 bool AnimationEffect::cancel(quint64 animationId)
@@ -364,7 +405,7 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 anim->timeLine.update(std::chrono::milliseconds(time));
             }
 
-            if (!anim->timeLine.done() || anim->keepAtTarget) {
+            if (anim->isActive()) {
 //                 if (anim->attribute != Brightness && anim->attribute != Saturation && anim->attribute != Opacity)
 //                     transformed = true;
                 d->m_animated = true;

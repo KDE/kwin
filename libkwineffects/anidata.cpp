@@ -73,13 +73,12 @@ AniData::AniData()
  , meta(0)
  , startTime(0)
  , waitAtSource(false)
- , keepAtTarget(false)
  , keepAlive(true)
 {
 }
 
 AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
-                 int delay, const FPx2 &from_, bool waitAtSource_, bool keepAtTarget_,
+                 int delay, const FPx2 &from_, bool waitAtSource_,
                  FullScreenEffectLockPtr fullScreenEffectLock_, bool keepAlive,
                  PreviousWindowPixmapLockPtr previousWindowPixmapLock_)
  : attribute(a)
@@ -89,10 +88,22 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
  , startTime(AnimationEffect::clock() + delay)
  , fullScreenEffectLock(fullScreenEffectLock_)
  , waitAtSource(waitAtSource_)
- , keepAtTarget(keepAtTarget_)
  , keepAlive(keepAlive)
  , previousWindowPixmapLock(previousWindowPixmapLock_)
 {
+}
+
+bool AniData::isActive() const
+{
+    if (!timeLine.done()) {
+        return true;
+    }
+
+    if (timeLine.direction() == TimeLine::Backward) {
+        return !(terminationFlags & AnimationEffect::TerminateAtSource);
+    }
+
+    return !(terminationFlags & AnimationEffect::TerminateAtTarget);
 }
 
 static QString attributeString(KWin::AnimationEffect::Attribute attribute)

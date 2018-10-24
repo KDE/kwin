@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2011 Thomas Lübking <thomas.luebking@web.de>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -108,6 +109,37 @@ public:
     };
     enum MetaType { SourceAnchor, TargetAnchor,
                     RelativeSourceX, RelativeSourceY, RelativeTargetX, RelativeTargetY, Axis };
+
+    /**
+     * This enum type is used to specify the direction of the animation.
+     **/
+    enum Direction {
+        Forward, ///< The animation goes from source to target.
+        Backward ///< The animation goes from target to source.
+    };
+    Q_ENUM(Direction)
+
+    /**
+     * This enum type is used to specify when the animation should be terminated.
+     *
+     * @value DontTerminate Don't terminate the animation when it reaches the source
+     *   or the target position.
+     *
+     * @value TerminateAtSource Terminate the animation when it reaches the source
+     *   position. An animation can reach the source position if its direction was
+     *   changed to go backward (from target to source).
+     *
+     * @value TerminateAtTarget Terminate the animation when it reaches the target
+     *   position. If this flag is not set, then the animation will be persistent.
+     **/
+    enum TerminationFlag {
+        DontTerminate     = 0x00,
+        TerminateAtSource = 0x01,
+        TerminateAtTarget = 0x02
+    };
+    Q_FLAGS(TerminationFlag)
+    Q_DECLARE_FLAGS(TerminationFlags, TerminationFlag)
+
     /**
      * Whenever you intend to connect to the EffectsHandler::windowClosed() signal, do so when reimplementing the constructor.
      * Do *not* add private slots named _windowClosed( EffectWindow* w ) or _windowDeleted( EffectWindow* w ) !!
@@ -190,6 +222,21 @@ protected:
     bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1);
 
     /**
+     * Changes the direction of the animation.
+     *
+     * @param animationId The id of the animation.
+     * @param direction The new direction of the animation.
+     * @param terminationPolicy Whether the animation should be terminated when it
+     *   reaches the source position after its direction was changed to go backward.
+     *   Currently, TerminationFlag::TerminateAtTarget has no effect.
+     * @returns @c true if the direction of the animation was changed successfully,
+     *   otherwise @c false.
+     **/
+    bool redirect(quint64 animationId,
+                  Direction direction,
+                  TerminationFlags terminationFlags = TerminateAtSource);
+
+    /**
      * Called whenever an animation end, passes the transformed @class EffectWindow @enum Attribute and originally supplied @param meta
      * You can reimplement it to keep a constant transformation for the window (ie. keep it a this opacity or position) or to start another animation
      */
@@ -236,6 +283,8 @@ private:
 
 } // namespace
 QDebug operator<<(QDebug dbg, const KWin::FPx2 &fpx2);
+
 Q_DECLARE_METATYPE(KWin::FPx2)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::AnimationEffect::TerminationFlags)
 
 #endif // ANIMATION_EFFECT_H
