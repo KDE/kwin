@@ -37,9 +37,18 @@ var squashEffect = {
         }
 
         if (window.unminimizeAnimation) {
-            // TODO: Try to reverse it instead.
+            if (redirect(window.unminimizeAnimation, Effect.Backward)) {
+                return;
+            }
             cancel(window.unminimizeAnimation);
             delete window.unminimizeAnimation;
+        }
+
+        if (window.minimizeAnimation) {
+            if (redirect(window.minimizeAnimation, Effect.Forward)) {
+                return;
+            }
+            cancel(window.minimizeAnimation);
         }
 
         var windowRect = window.geometry;
@@ -94,9 +103,18 @@ var squashEffect = {
         }
 
         if (window.minimizeAnimation) {
-            // TODO: Try to reverse it instead.
+            if (redirect(window.minimizeAnimation, Effect.Backward)) {
+                return;
+            }
             cancel(window.minimizeAnimation);
             delete window.minimizeAnimation;
+        }
+
+        if (window.unminimizeAnimation) {
+            if (redirect(window.unminimizeAnimation, Effect.Forward)) {
+                return;
+            }
+            cancel(window.unminimizeAnimation);
         }
 
         var windowRect = window.geometry;
