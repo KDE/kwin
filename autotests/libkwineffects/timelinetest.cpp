@@ -43,6 +43,14 @@ private Q_SLOTS:
     void testSetDurationRetargeting();
     void testSetDurationRetargetingSmallDuration();
     void testRunning();
+    void testStrictRedirectSourceMode_data();
+    void testStrictRedirectSourceMode();
+    void testRelaxedRedirectSourceMode_data();
+    void testRelaxedRedirectSourceMode();
+    void testStrictRedirectTargetMode_data();
+    void testStrictRedirectTargetMode();
+    void testRelaxedRedirectTargetMode_data();
+    void testRelaxedRedirectTargetMode();
 };
 
 void TimeLineTest::testUpdateForward()
@@ -247,6 +255,156 @@ void TimeLineTest::testRunning()
     QVERIFY(!timeLine.done());
 
     timeLine.update(900ms);
+    QVERIFY(!timeLine.running());
+    QVERIFY(timeLine.done());
+}
+
+void TimeLineTest::testStrictRedirectSourceMode_data()
+{
+    QTest::addColumn<KWin::TimeLine::Direction>("initialDirection");
+    QTest::addColumn<qreal>("initialValue");
+    QTest::addColumn<KWin::TimeLine::Direction>("finalDirection");
+    QTest::addColumn<qreal>("finalValue");
+
+    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward  << 0.0 << KWin::TimeLine::Backward << 0.0;
+    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward  << 1.0;
+}
+
+void TimeLineTest::testStrictRedirectSourceMode()
+{
+    QFETCH(KWin::TimeLine::Direction, initialDirection);
+    KWin::TimeLine timeLine(1000ms, initialDirection);
+    timeLine.setEasingCurve(QEasingCurve::Linear);
+    timeLine.setSourceRedirectMode(KWin::TimeLine::RedirectMode::Strict);
+
+    QTEST(timeLine.direction(), "initialDirection");
+    QTEST(timeLine.value(), "initialValue");
+    QCOMPARE(timeLine.sourceRedirectMode(), KWin::TimeLine::RedirectMode::Strict);
+    QVERIFY(!timeLine.running());
+    QVERIFY(!timeLine.done());
+
+    QFETCH(KWin::TimeLine::Direction, finalDirection);
+    timeLine.setDirection(finalDirection);
+
+    QTEST(timeLine.direction(), "finalDirection");
+    QTEST(timeLine.value(), "finalValue");
+    QCOMPARE(timeLine.sourceRedirectMode(), KWin::TimeLine::RedirectMode::Strict);
+    QVERIFY(!timeLine.running());
+    QVERIFY(timeLine.done());
+}
+
+void TimeLineTest::testRelaxedRedirectSourceMode_data()
+{
+    QTest::addColumn<KWin::TimeLine::Direction>("initialDirection");
+    QTest::addColumn<qreal>("initialValue");
+    QTest::addColumn<KWin::TimeLine::Direction>("finalDirection");
+    QTest::addColumn<qreal>("finalValue");
+
+    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward  << 0.0 << KWin::TimeLine::Backward << 1.0;
+    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward  << 0.0;
+}
+
+void TimeLineTest::testRelaxedRedirectSourceMode()
+{
+    QFETCH(KWin::TimeLine::Direction, initialDirection);
+    KWin::TimeLine timeLine(1000ms, initialDirection);
+    timeLine.setEasingCurve(QEasingCurve::Linear);
+    timeLine.setSourceRedirectMode(KWin::TimeLine::RedirectMode::Relaxed);
+
+    QTEST(timeLine.direction(), "initialDirection");
+    QTEST(timeLine.value(), "initialValue");
+    QCOMPARE(timeLine.sourceRedirectMode(), KWin::TimeLine::RedirectMode::Relaxed);
+    QVERIFY(!timeLine.running());
+    QVERIFY(!timeLine.done());
+
+    QFETCH(KWin::TimeLine::Direction, finalDirection);
+    timeLine.setDirection(finalDirection);
+
+    QTEST(timeLine.direction(), "finalDirection");
+    QTEST(timeLine.value(), "finalValue");
+    QCOMPARE(timeLine.sourceRedirectMode(), KWin::TimeLine::RedirectMode::Relaxed);
+    QVERIFY(!timeLine.running());
+    QVERIFY(!timeLine.done());
+}
+
+void TimeLineTest::testStrictRedirectTargetMode_data()
+{
+    QTest::addColumn<KWin::TimeLine::Direction>("initialDirection");
+    QTest::addColumn<qreal>("initialValue");
+    QTest::addColumn<KWin::TimeLine::Direction>("finalDirection");
+    QTest::addColumn<qreal>("finalValue");
+
+    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward  << 0.0 << KWin::TimeLine::Backward << 1.0;
+    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward  << 0.0;
+}
+
+void TimeLineTest::testStrictRedirectTargetMode()
+{
+    QFETCH(KWin::TimeLine::Direction, initialDirection);
+    KWin::TimeLine timeLine(1000ms, initialDirection);
+    timeLine.setEasingCurve(QEasingCurve::Linear);
+    timeLine.setTargetRedirectMode(KWin::TimeLine::RedirectMode::Strict);
+
+    QTEST(timeLine.direction(), "initialDirection");
+    QTEST(timeLine.value(), "initialValue");
+    QCOMPARE(timeLine.targetRedirectMode(), KWin::TimeLine::RedirectMode::Strict);
+    QVERIFY(!timeLine.running());
+    QVERIFY(!timeLine.done());
+
+    timeLine.update(1000ms);
+    QTEST(timeLine.value(), "finalValue");
+    QVERIFY(!timeLine.running());
+    QVERIFY(timeLine.done());
+
+    QFETCH(KWin::TimeLine::Direction, finalDirection);
+    timeLine.setDirection(finalDirection);
+
+    QTEST(timeLine.direction(), "finalDirection");
+    QTEST(timeLine.value(), "finalValue");
+    QVERIFY(!timeLine.running());
+    QVERIFY(timeLine.done());
+}
+
+void TimeLineTest::testRelaxedRedirectTargetMode_data()
+{
+    QTest::addColumn<KWin::TimeLine::Direction>("initialDirection");
+    QTest::addColumn<qreal>("initialValue");
+    QTest::addColumn<KWin::TimeLine::Direction>("finalDirection");
+    QTest::addColumn<qreal>("finalValue");
+
+    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward  << 0.0 << KWin::TimeLine::Backward << 1.0;
+    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward  << 0.0;
+}
+
+void TimeLineTest::testRelaxedRedirectTargetMode()
+{
+    QFETCH(KWin::TimeLine::Direction, initialDirection);
+    KWin::TimeLine timeLine(1000ms, initialDirection);
+    timeLine.setEasingCurve(QEasingCurve::Linear);
+    timeLine.setTargetRedirectMode(KWin::TimeLine::RedirectMode::Relaxed);
+
+    QTEST(timeLine.direction(), "initialDirection");
+    QTEST(timeLine.value(), "initialValue");
+    QCOMPARE(timeLine.targetRedirectMode(), KWin::TimeLine::RedirectMode::Relaxed);
+    QVERIFY(!timeLine.running());
+    QVERIFY(!timeLine.done());
+
+    timeLine.update(1000ms);
+    QTEST(timeLine.value(), "finalValue");
+    QVERIFY(!timeLine.running());
+    QVERIFY(timeLine.done());
+
+    QFETCH(KWin::TimeLine::Direction, finalDirection);
+    timeLine.setDirection(finalDirection);
+
+    QTEST(timeLine.direction(), "finalDirection");
+    QTEST(timeLine.value(), "finalValue");
+    QVERIFY(!timeLine.running());
+    QVERIFY(!timeLine.done());
+
+    timeLine.update(1000ms);
+    QTEST(timeLine.direction(), "finalDirection");
+    QTEST(timeLine.value(), "initialValue");
     QVERIFY(!timeLine.running());
     QVERIFY(timeLine.done());
 }

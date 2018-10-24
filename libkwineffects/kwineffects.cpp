@@ -1953,6 +1953,8 @@ public:
 
     std::chrono::milliseconds elapsed = std::chrono::milliseconds::zero();
     bool done = false;
+    RedirectMode sourceRedirectMode = RedirectMode::Relaxed;
+    RedirectMode targetRedirectMode = RedirectMode::Strict;
 };
 
 TimeLine::TimeLine(std::chrono::milliseconds duration, Direction direction)
@@ -2038,10 +2040,21 @@ void TimeLine::setDirection(TimeLine::Direction direction)
     if (d->direction == direction) {
         return;
     }
-    if (d->elapsed > std::chrono::milliseconds::zero()) {
+
+    d->direction = direction;
+
+    if (d->elapsed > std::chrono::milliseconds::zero()
+            || d->sourceRedirectMode == RedirectMode::Strict) {
         d->elapsed = d->duration - d->elapsed;
     }
-    d->direction = direction;
+
+    if (d->done && d->targetRedirectMode == RedirectMode::Relaxed) {
+        d->done = false;
+    }
+
+    if (d->elapsed >= d->duration) {
+        d->done = true;
+    }
 }
 
 void TimeLine::toggleDirection()
@@ -2079,6 +2092,26 @@ void TimeLine::reset()
 {
     d->elapsed = std::chrono::milliseconds::zero();
     d->done = false;
+}
+
+TimeLine::RedirectMode TimeLine::sourceRedirectMode() const
+{
+    return d->sourceRedirectMode;
+}
+
+void TimeLine::setSourceRedirectMode(RedirectMode mode)
+{
+    d->sourceRedirectMode = mode;
+}
+
+TimeLine::RedirectMode TimeLine::targetRedirectMode() const
+{
+    return d->targetRedirectMode;
+}
+
+void TimeLine::setTargetRedirectMode(RedirectMode mode)
+{
+    d->targetRedirectMode = mode;
 }
 
 TimeLine &TimeLine::operator=(const TimeLine &other)

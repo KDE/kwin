@@ -3584,6 +3584,65 @@ public:
      **/
     void reset();
 
+    enum class RedirectMode {
+        Strict,
+        Relaxed
+    };
+
+    /**
+     * Returns the redirect mode for the source position.
+     *
+     * The redirect mode controls behavior of the timeline when its direction is
+     * changed at the source position, e.g. what should we do when the timeline
+     * initially goes forward and we change its direction to go backward.
+     *
+     * In the strict mode, the timeline will stop.
+     *
+     * In the relaxed mode, the timeline will go in the new direction. For example,
+     * if the timeline goes forward(from 0 to 1), then with the new direction it
+     * will go backward(from 1 to 0).
+     *
+     * The default is RedirectMode::Relaxed.
+     *
+     * @see targetRedirectMode
+     * @since 5.15
+     **/
+    RedirectMode sourceRedirectMode() const;
+
+    /**
+     * Sets the redirect mode for the source position.
+     *
+     * @param mode The new mode.
+     * @since 5.15
+     **/
+    void setSourceRedirectMode(RedirectMode mode);
+
+    /**
+     * Returns the redirect mode for the target position.
+     *
+     * The redirect mode controls behavior of the timeline when its direction is
+     * changed at the target position.
+     *
+     * In the strict mode, subsequent update calls won't have any effect on the
+     * current value of the timeline.
+     *
+     * In the relaxed mode, the timeline will go in the new direction.
+     *
+     * The default is RedirectMode::Strict.
+     *
+     * @see sourceRedirectMode
+     * @since 5.15
+     **/
+    RedirectMode targetRedirectMode() const;
+
+    /**
+     * Sets the redirect mode for the target position.
+     *
+     * @param mode The new mode.
+     * @since 5.15
+     **/
+    void setTargetRedirectMode(RedirectMode mode);
+
     TimeLine &operator=(const TimeLine &other);
 
 private:
@@ -3824,6 +3883,7 @@ void Effect::initConfig()
 Q_DECLARE_METATYPE(KWin::EffectWindow*)
 Q_DECLARE_METATYPE(QList<KWin::EffectWindow*>)
 Q_DECLARE_METATYPE(KWin::TimeLine)
+Q_DECLARE_METATYPE(KWin::TimeLine::Direction)
 
 /** @} */
 
