@@ -254,9 +254,7 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     it->first.append(AniData(
         a,              // Attribute
         meta,           // Metadata
-        ms,             // Duration
         to,             // Target
-        curve,          // Easing curve
         delay,          // Delay
         from,           // Source
         waitAtSource,   // Whether the animation should be kept at source
@@ -266,8 +264,16 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
         previousPixmap  // Previous window pixmap lock
     ));
 
-    quint64 ret_id = ++d->m_animCounter;
-    it->first.last().id = ret_id;
+    const quint64 ret_id = ++d->m_animCounter;
+    AniData &animation = it->first.last();
+    animation.id = ret_id;
+
+    animation.timeLine.setDirection(TimeLine::Forward);
+    animation.timeLine.setDuration(std::chrono::milliseconds(ms));
+    animation.timeLine.setEasingCurve(curve);
+    animation.timeLine.setSourceRedirectMode(TimeLine::RedirectMode::Strict);
+    animation.timeLine.setTargetRedirectMode(TimeLine::RedirectMode::Relaxed);
+
     it->second = QRect();
 
     d->m_animationsTouched = true;
@@ -297,7 +303,11 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
                 anim->from.set(interpolated(*anim, 0), interpolated(*anim, 1));
                 validate(anim->attribute, anim->meta, nullptr, &newTarget, entry.key());
                 anim->to.set(newTarget[0], newTarget[1]);
-                anim->duration = anim->time + newRemainingTime;
+
+                anim->timeLine.setDirection(TimeLine::Forward);
+                anim->timeLine.setDuration(std::chrono::milliseconds(newRemainingTime));
+                anim->timeLine.reset();
+
                 return true;
             }
         }
@@ -351,10 +361,10 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                     continue;
                 }
             } else {
-                anim->addTime(time);
+                anim->timeLine.update(std::chrono::milliseconds(time));
             }
 
-            if (anim->time < anim->duration || anim->keepAtTarget) {
+            if (!anim->timeLine.done() || anim->keepAtTarget) {
 //                 if (anim->attribute != Brightness && anim->attribute != Saturation && anim->attribute != Opacity)
 //                     transformed = true;
                 d->m_animated = true;
@@ -671,7 +681,7 @@ void AnimationEffect::postPaintScreen()
                 for (; anim != it->first.constEnd(); ++anim) {
                     if (anim->startTime > clock())
                         continue;
-                    if (anim->time < anim->duration) {
+                    if (!anim->timeLine.done()) {
                         addRepaint = true;
                         break;
                     }
@@ -689,18 +699,14 @@ float AnimationEffect::interpolated( const AniData &a, int i ) const
 {
     if (a.startTime > clock())
         return a.from[i];
-    if (a.time < a.duration)
-        return a.from[i] + a.curve.valueForProgress( ((float)a.time)/a.duration )*(a.to[i] - a.from[i]);
+    if (!a.timeLine.done())
+        return a.from[i] + a.timeLine.value() * (a.to[i] - a.from[i]);
     return a.to[i]; // we're done and "waiting" at the target value
 }
 
 float AnimationEffect::progress( const AniData &a ) const
 {
-    if (a.startTime > clock())
-        return 0.0;
-    if (a.time < a.duration)
-        return a.curve.valueForProgress( ((float)a.time)/a.duration );
-    return 1.0; // we're done and "waiting" at the target value
+    return a.startTime < clock() ? a.timeLine.value() : 0.0;
 }
 
 
@@ -782,7 +788,7 @@ void AnimationEffect::triggerRepaint()
 
 static float fixOvershoot(float f, const AniData &d, short int dir, float s = 1.1)
 {
-    switch(d.curve.type()) {
+    switch(d.timeLine.easingCurve().type()) {
         case QEasingCurve::InOutElastic:
         case QEasingCurve::InOutBack:
             return f * s;

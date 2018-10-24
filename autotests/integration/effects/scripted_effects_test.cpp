@@ -49,6 +49,8 @@ along with this program.  If not, see <http:// www.gnu.org/licenses/>.
 #include <KWayland/Client/xdgshell.h>
 
 using namespace KWin;
+using namespace std::chrono_literals;
+
 static const QString s_socketName = QStringLiteral("wayland_test_effects_scripts-0");
 
 class ScriptedEffectsTest : public QObject
@@ -289,25 +291,20 @@ void ScriptedEffectsTest::testAnimations()
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
-    // we are running the event loop during renderAndWaitForShown
-    // some time will pass with the event loop running between the window being added and getting to here
-    // anim.duration is an aboslute value, but retarget will update the duration based on time passed
-    int timePassed = 0;
-
     {
         const AnimationEffect::AniMap state = effect->state();
         QCOMPARE(state.count(), 1);
         QCOMPARE(state.firstKey(), c->effectWindow());
         const auto &animationsForWindow = state.first().first;
         QCOMPARE(animationsForWindow.count(), animationCount);
-        QCOMPARE(animationsForWindow[0].duration, 100);
+        QCOMPARE(animationsForWindow[0].timeLine.duration(), 100ms);
         QCOMPARE(animationsForWindow[0].to, FPx2(1.4));
         QCOMPARE(animationsForWindow[0].attribute, AnimationEffect::Scale);
-        QCOMPARE(animationsForWindow[0].curve.type(), QEasingCurve::OutQuad);
+        QCOMPARE(animationsForWindow[0].timeLine.easingCurve().type(), QEasingCurve::OutQuad);
         QCOMPARE(animationsForWindow[0].keepAtTarget, false);
-        timePassed = animationsForWindow[0].time;
+
         if (animationCount == 2) {
-            QCOMPARE(animationsForWindow[1].duration, 100);
+            QCOMPARE(animationsForWindow[1].timeLine.duration(), 100ms);
             QCOMPARE(animationsForWindow[1].to, FPx2(0.0));
             QCOMPARE(animationsForWindow[1].attribute, AnimationEffect::Opacity);
             QCOMPARE(animationsForWindow[1].keepAtTarget, false);
@@ -323,12 +320,12 @@ void ScriptedEffectsTest::testAnimations()
         QCOMPARE(state.count(), 1);
         const auto &animationsForWindow = state.first().first;
         QCOMPARE(animationsForWindow.count(), animationCount);
-        QCOMPARE(animationsForWindow[0].duration, 200 + timePassed);
+        QCOMPARE(animationsForWindow[0].timeLine.duration(), 200ms);
         QCOMPARE(animationsForWindow[0].to, FPx2(1.5));
         QCOMPARE(animationsForWindow[0].attribute, AnimationEffect::Scale);
         QCOMPARE(animationsForWindow[0].keepAtTarget, false);
         if (animationCount == 2) {
-            QCOMPARE(animationsForWindow[1].duration, 200 + timePassed);
+            QCOMPARE(animationsForWindow[1].timeLine.duration(), 200ms);
             QCOMPARE(animationsForWindow[1].to, FPx2(1.5));
             QCOMPARE(animationsForWindow[1].attribute, AnimationEffect::Opacity);
             QCOMPARE(animationsForWindow[1].keepAtTarget, false);

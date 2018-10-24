@@ -70,8 +70,6 @@ PreviousWindowPixmapLock::~PreviousWindowPixmapLock()
 AniData::AniData()
  : attribute(AnimationEffect::Opacity)
  , customCurve(0) // Linear
- , time(0)
- , duration(0)
  , meta(0)
  , startTime(0)
  , waitAtSource(false)
@@ -80,16 +78,13 @@ AniData::AniData()
 {
 }
 
-AniData::AniData(AnimationEffect::Attribute a, int meta_, int ms, const FPx2 &to_,
-                 QEasingCurve curve_, int delay, const FPx2 &from_, bool waitAtSource_, bool keepAtTarget_,
+AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
+                 int delay, const FPx2 &from_, bool waitAtSource_, bool keepAtTarget_,
                  FullScreenEffectLockPtr fullScreenEffectLock_, bool keepAlive,
                  PreviousWindowPixmapLockPtr previousWindowPixmapLock_)
  : attribute(a)
- , curve(curve_)
  , from(from_)
  , to(to_)
- , time(0)
- , duration(ms)
  , meta(meta_)
  , startTime(AnimationEffect::clock() + delay)
  , fullScreenEffectLock(fullScreenEffectLock_)
@@ -122,6 +117,6 @@ QString AniData::debugInfo() const
            QLatin1String("\n     From: ") + from.toString() +
            QLatin1String("\n       To: ") + to.toString() +
            QLatin1String("\n  Started: ") + QString::number(AnimationEffect::clock() - startTime) + QLatin1String("ms ago\n") +
-           QLatin1String(  " Duration: ") + QString::number(duration) + QLatin1String("ms\n") +
-           QLatin1String(  "   Passed: ") + QString::number(time) + QLatin1String("ms\n");
+           QLatin1String(  " Duration: ") + QString::number(timeLine.duration().count()) + QLatin1String("ms\n") +
+           QLatin1String(  "   Passed: ") + QString::number(timeLine.elapsed().count()) + QLatin1String("ms\n");
 }

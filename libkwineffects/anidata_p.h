@@ -74,11 +74,11 @@ typedef QSharedPointer<PreviousWindowPixmapLock> PreviousWindowPixmapLockPtr;
 class KWINEFFECTS_EXPORT AniData {
 public:
     AniData();
-    AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,
-            QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource,
+    AniData(AnimationEffect::Attribute a, int meta, const FPx2 &to,
+            int delay, const FPx2 &from, bool waitAtSource,
             bool keepAtTarget = false, FullScreenEffectLockPtr=FullScreenEffectLockPtr(),
             bool keepAlive = true, PreviousWindowPixmapLockPtr previousWindowPixmapLock = {});
-    inline void addTime(int t) { time += t; }
+
     inline bool isOneDimensional() const {
         return from[0] == from[1] && to[0] == to[1];
     }
@@ -86,10 +86,9 @@ public:
     quint64 id{0};
     QString debugInfo() const;
     AnimationEffect::Attribute attribute;
-    QEasingCurve curve;
     int customCurve;
     FPx2 from, to;
-    int time, duration;
+    TimeLine timeLine;
     uint meta;
     qint64 startTime;
     QSharedPointer<FullScreenEffectLock> fullScreenEffectLock;
