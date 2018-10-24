@@ -254,6 +254,14 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
                     connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotShellClientShown);
             }
         );
+        const auto clients = waylandServer()->clients();
+        for (ShellClient *c : clients) {
+            if (c->readyForPainting()) {
+                setupAbstractClientConnections(c);
+            } else {
+                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotShellClientShown);
+            }
+        }
     }
     reconfigure();
 }
