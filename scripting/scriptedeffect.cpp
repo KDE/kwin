@@ -492,6 +492,32 @@ QScriptValue kwinEffectRedirect(QScriptContext *context, QScriptEngine *engine)
     return QScriptValue(true);
 }
 
+QScriptValue kwinEffectComplete(QScriptContext *context, QScriptEngine *engine)
+{
+    if (context->argumentCount() != 1) {
+        const QString errorMessage = QStringLiteral("complete() takes exactly 1 arguments (%1 given)")
+            .arg(context->argumentCount());
+        context->throwError(QScriptContext::SyntaxError, errorMessage);
+        return engine->undefinedValue();
+    }
+
+    bool ok = false;
+    QList<quint64> animationIds = animations(context->argument(0).toVariant(), &ok);
+    if (!ok) {
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Argument needs to be one or several quint64"));
+        return engine->undefinedValue();
+    }
+
+    ScriptedEffect *effect = qobject_cast<ScriptedEffect *>(context->callee().data().toQObject());
+    for (const quint64 &animationId : qAsConst(animationIds)) {
+        if (!effect->complete(animationId)) {
+            return QScriptValue(false);
+        }
+    }
+
+    return QScriptValue(true);
+}
+
 QScriptValue kwinEffectCancel(QScriptContext *context, QScriptEngine *engine)
 {
     ScriptedEffect *effect = qobject_cast<ScriptedEffect*>(context->callee().data().toQObject());
@@ -651,6 +677,11 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     redirectFunc.setData(m_engine->newQObject(this));
     m_engine->globalObject().setProperty(QStringLiteral("redirect"), redirectFunc);
 
+    // complete
+    QScriptValue completeFunc = m_engine->newFunction(kwinEffectComplete);
+    completeFunc.setData(m_engine->newQObject(this));
+    m_engine->globalObject().setProperty(QStringLiteral("complete"), completeFunc);
+
     // cancel...
     QScriptValue cancelFunc = m_engine->newFunction(kwinEffectCancel);
     cancelFunc.setData(m_engine->newQObject(this));
@@ -719,6 +750,11 @@ bool ScriptedEffect::retarget(quint64 animationId, KWin::FPx2 newTarget, int new
 bool ScriptedEffect::redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags)
 {
     return AnimationEffect::redirect(animationId, direction, terminationFlags);
+}
+
+bool ScriptedEffect::complete(quint64 animationId)
+{
+    return AnimationEffect::complete(animationId);
 }
 
 bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRole)

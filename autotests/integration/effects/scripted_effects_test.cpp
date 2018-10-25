@@ -78,6 +78,7 @@ private Q_SLOTS:
     void testUngrab();
     void testRedirect_data();
     void testRedirect();
+    void testComplete();
 
 private:
     ScriptedEffect *loadEffect(const QString &name);
@@ -711,6 +712,75 @@ void ScriptedEffectsTest::testRedirect()
         QCOMPARE(animations[0].timeLine.direction(), TimeLine::Backward);
         QCOMPARE(animations[0].timeLine.elapsed(), 1000ms);
         QCOMPARE(animations[0].timeLine.value(), 0.0);
+    }
+}
+
+void ScriptedEffectsTest::testComplete()
+{
+    // this test verifies that complete works
+
+    // load the test effect
+    auto effect = new ScriptedEffectWithDebugSpy;
+    QVERIFY(effect->load(QStringLiteral("completeTest")));
+
+    // create test client
+    using namespace KWayland::Client;
+    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    QVERIFY(surface);
+    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
+    QVERIFY(shellSurface);
+    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+
+    auto around = [] (std::chrono::milliseconds elapsed,
+                      std::chrono::milliseconds pivot,
+                      std::chrono::milliseconds margin) {
+        return qAbs(elapsed.count() - pivot.count()) < margin.count();
+    };
+
+    // initially, the test animation should be at the start position
+    {
+        const AnimationEffect::AniMap state = effect->state();
+        QCOMPARE(state.count(), 1);
+        QCOMPARE(state.firstKey(), c->effectWindow());
+        const QList<AniData> animations = state.first().first;
+        QCOMPARE(animations.count(), 1);
+        QVERIFY(around(animations[0].timeLine.elapsed(), 0ms, 50ms));
+        QVERIFY(!animations[0].timeLine.done());
+    }
+
+    // wait for 250ms
+    QTest::qWait(250);
+
+    {
+        const AnimationEffect::AniMap state = effect->state();
+        QCOMPARE(state.count(), 1);
+        QCOMPARE(state.firstKey(), c->effectWindow());
+        const QList<AniData> animations = state.first().first;
+        QCOMPARE(animations.count(), 1);
+        QVERIFY(around(animations[0].timeLine.elapsed(), 250ms, 50ms));
+        QVERIFY(!animations[0].timeLine.done());
+    }
+
+    // minimize the test client, when the test effect sees that a window was
+    // minimized, it will try to complete animation for it
+    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    QVERIFY(effectOutputSpy.isValid());
+
+    c->setMinimized(true);
+
+    QCOMPARE(effectOutputSpy.count(), 1);
+    QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
+
+    {
+        const AnimationEffect::AniMap state = effect->state();
+        QCOMPARE(state.count(), 1);
+        QCOMPARE(state.firstKey(), c->effectWindow());
+        const QList<AniData> animations = state.first().first;
+        QCOMPARE(animations.count(), 1);
+        QCOMPARE(animations[0].timeLine.elapsed(), 1000ms);
+        QVERIFY(animations[0].timeLine.done());
     }
 }
 

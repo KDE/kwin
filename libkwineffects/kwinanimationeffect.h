@@ -237,6 +237,15 @@ protected:
                   TerminationFlags terminationFlags = TerminateAtSource);
 
     /**
+     * Fast-forwards the animation to the target position.
+     *
+     * @param animationId The id of the animation.
+     * @returns @c true if the animation was fast-forwarded successfully, otherwise
+     *   @c false.
+     **/
+    bool complete(quint64 animationId);
+
+    /**
      * Called whenever an animation end, passes the transformed @class EffectWindow @enum Attribute and originally supplied @param meta
      * You can reimplement it to keep a constant transformation for the window (ie. keep it a this opacity or position) or to start another animation
      */

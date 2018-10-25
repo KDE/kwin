@@ -129,6 +129,7 @@ public Q_SLOTS:
     quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0, bool fullScreen = false, bool keepAlive = true);
     bool retarget(quint64 animationId, KWin::FPx2 newTarget, int newRemainingTime = -1);
     bool redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags = TerminateAtSource);
+    bool complete(quint64 animationId);
     bool cancel(quint64 animationId) { return AnimationEffect::cancel(animationId); }
     virtual bool borderActivated(ElectricBorder border);
 

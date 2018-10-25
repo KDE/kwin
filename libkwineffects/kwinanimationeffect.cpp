@@ -356,6 +356,32 @@ bool AnimationEffect::redirect(quint64 animationId, Direction direction, Termina
     return false;
 }
 
+bool AnimationEffect::complete(quint64 animationId)
+{
+    Q_D(AnimationEffect);
+
+    if (animationId == d->m_justEndedAnimation) {
+        return false;
+    }
+
+    for (auto entryIt = d->m_animations.begin(); entryIt != d->m_animations.end(); ++entryIt) {
+        auto animIt = std::find_if(entryIt->first.begin(), entryIt->first.end(),
+            [animationId] (AniData &anim) {
+                return anim.id == animationId;
+            }
+        );
+        if (animIt == entryIt->first.end()) {
+            continue;
+        }
+
+        animIt->timeLine.setElapsed(animIt->timeLine.duration());
+
+        return true;
+    }
+
+    return false;
+}
+
 bool AnimationEffect::cancel(quint64 animationId)
 {
     Q_D(AnimationEffect);
