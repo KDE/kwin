@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
  Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+ Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,30 +24,32 @@ var dialogParentEffect = {
     duration: animationTime(300),
     windowAdded: function (window) {
         "use strict";
-        if (window === null || window.modal === false) {
-            return;
+        if (window.modal) {
+            dialogParentEffect.dialogGotModality(window);
         }
-        dialogParentEffect.dialogGotModality(window)
     },
     dialogGotModality: function (window) {
         "use strict";
         var mainWindows = window.mainWindows();
-        for (var i = 0; i < mainWindows.length; i += 1) {
-            var w = mainWindows[i];
-            if (w.dialogParentAnimation !== undefined) {
-                continue;
-            }
-            dialogParentEffect.startAnimation(w, dialogParentEffect.duration);
+        for (var i = 0; i < mainWindows.length; ++i) {
+            dialogParentEffect.startAnimation(mainWindows[i]);
         }
     },
-    startAnimation: function (window, duration) {
+    startAnimation: function (window) {
         "use strict";
         if (window.visible === false) {
             return;
         }
+        if (window.dialogParentAnimation) {
+            if (redirect(window.dialogParentAnimation, Effect.Forward)) {
+                return;
+            }
+            cancel(window.dialogParentAnimation);
+        }
         window.dialogParentAnimation = set({
             window: window,
-            duration: duration,
+            duration: dialogParentEffect.duration,
+            keepAlive: false,
             animations: [{
                 type: Effect.Saturation,
                 to: 0.4
@@ -58,52 +61,50 @@ var dialogParentEffect = {
     },
     windowClosed: function (window) {
         "use strict";
-        dialogParentEffect.cancelAnimation(window);
-        if (window.modal === false) {
-            return;
+        if (window.modal) {
+            dialogParentEffect.dialogLostModality(window);
         }
-        dialogParentEffect.dialogLostModality(window);
     },
     dialogLostModality: function (window) {
         "use strict";
         var mainWindows = window.mainWindows();
-        for (var i = 0; i < mainWindows.length; i += 1) {
-            var w = mainWindows[i];
-            if (w.dialogParentAnimation === undefined) {
-                continue;
-            }
-            cancel(w.dialogParentAnimation);
-            w.dialogParentAnimation = undefined;
-            animate({
-                window: w,
-                duration: dialogParentEffect.duration,
-                keepAlive: false,
-                animations: [{
-                    type: Effect.Saturation,
-                    from: 0.4,
-                    to: 1.0
-                }, {
-                    type: Effect.Brightness,
-                    from: 0.6,
-                    to: 1.0
-                }]
-            });
+        for (var i = 0; i < mainWindows.length; ++i) {
+            dialogParentEffect.cancelAnimationSmooth(mainWindows[i]);
         }
     },
-    cancelAnimation: function (window) {
+    cancelAnimationInstant: function (window) {
         "use strict";
-        if (window.dialogParentAnimation !== undefined) {
+        if (window.dialogParentAnimation) {
             cancel(window.dialogParentAnimation);
-            window.dialogParentAnimation = undefined;
+            delete window.dialogParentAnimation;
         }
+    },
+    cancelAnimationSmooth: function (window) {
+        "use strict";
+        if (!window.dialogParentAnimation) {
+            return;
+        }
+        if (redirect(window.dialogParentAnimation, Effect.Backward)) {
+            return;
+        }
+        cancel(window.dialogParentAnimation);
+        delete window.dialogParentEffect;
     },
     desktopChanged: function () {
         "use strict";
-        var i, windows, window;
-        windows = effects.stackingOrder;
-        for (i = 0; i < windows.length; i += 1) {
-            window = windows[i];
-            dialogParentEffect.cancelAnimation(window);
+        // If there is an active full screen effect, then try smoothly dim/brighten
+        // the main windows. Keep in mind that in order for this to work properly, this
+        // effect has to come after the full screen effect in the effect chain,
+        // otherwise this slot will be invoked before the full screen effect can mark
+        // itself as a full screen effect.
+        if (effects.hasActiveFullScreenEffect) {
+            return;
+        }
+
+        var windows = effects.stackingOrder;
+        for (var i = 0; i < windows.length; ++i) {
+            var window = windows[i];
+            dialogParentEffect.cancelAnimationInstant(window);
             dialogParentEffect.restartAnimation(window);
         }
     },
@@ -119,19 +120,39 @@ var dialogParentEffect = {
         if (window === null || window.findModal() === null) {
             return;
         }
-        dialogParentEffect.startAnimation(window, 1);
+        dialogParentEffect.startAnimation(window);
+        if (window.dialogParentAnimation) {
+            complete(window.dialogParentAnimation);
+        }
+    },
+    activeFullScreenEffectChanged: function () {
+        "use strict";
+        var windows = effects.stackingOrder;
+        for (var i = 0; i < windows.length; ++i) {
+            var dialog = windows[i];
+            if (!dialog.modal) {
+                continue;
+            }
+            if (effects.hasActiveFullScreenEffect) {
+                dialogParentEffect.dialogLostModality(dialog);
+            } else {
+                dialogParentEffect.dialogGotModality(dialog);
+            }
+        }
     },
     init: function () {
         "use strict";
         var i, windows;
         effects.windowAdded.connect(dialogParentEffect.windowAdded);
         effects.windowClosed.connect(dialogParentEffect.windowClosed);
-        effects.windowMinimized.connect(dialogParentEffect.cancelAnimation);
+        effects.windowMinimized.connect(dialogParentEffect.cancelAnimationInstant);
         effects.windowUnminimized.connect(dialogParentEffect.restartAnimation);
         effects.windowModalityChanged.connect(dialogParentEffect.modalDialogChanged)
         effects['desktopChanged(int,int)'].connect(dialogParentEffect.desktopChanged);
-        effects.desktopPresenceChanged.connect(dialogParentEffect.cancelAnimation);
+        effects.desktopPresenceChanged.connect(dialogParentEffect.cancelAnimationInstant);
         effects.desktopPresenceChanged.connect(dialogParentEffect.restartAnimation);
+        effects.activeFullScreenEffectChanged.connect(
+            dialogParentEffect.activeFullScreenEffectChanged);
 
         // start animation
         windows = effects.stackingOrder;
