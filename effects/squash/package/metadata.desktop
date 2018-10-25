@@ -1,7 +1,21 @@
 [Desktop Entry]
 Comment=Squash windows when they are minimized
+Comment[ca]=Amuntega les finestres quan estan minimitzades
+Comment[gl]=Xuntar as xanelas cando estean minimizadas
+Comment[nl]=Krimp vensters wanneer ze geminimaliseerd zijn
+Comment[pt]=Esmagar as janelas quando são minimizadas
+Comment[sv]=Kläm fönster när de minimeras
+Comment[uk]=Складує вікна, якщо їх мінімізовано
+Comment[x-test]=xxSquash windows when they are minimizedxx
 Icon=preferences-system-windows-effect-squash
 Name=Squash
+Name[ca]=Amuntega
+Name[gl]=Xuntar
+Name[nl]=Krimpen
+Name[pt]=Esmagar
+Name[sv]=Kläm
+Name[uk]=Складування
+Name[x-test]=xxSquashxx
 
 Type=Service
 X-KDE-ParentApp=
