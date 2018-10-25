@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Common effects only relevant to desktop
 #include "desktopgrid/desktopgrid.h"
 #include "diminactive/diminactive.h"
-#include "dimscreen/dimscreen.h"
 #include "fallapart/fallapart.h"
 #include "highlightwindow/highlightwindow.h"
 #include "magiclamp/magiclamp.h"
@@ -214,21 +213,6 @@ EFFECT_FALLBACK
         false,
 #ifdef EFFECT_BUILTINS
         &createHelper<DimInactiveEffect>,
-        nullptr,
-        nullptr
-#endif
-EFFECT_FALLBACK
-    }, {
-        QStringLiteral("dimscreen"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Dim Screen for Administrator Mode"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Darkens the entire screen when requesting root privileges"),
-        QStringLiteral("Focus"),
-        QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/dim_administration.mp4")),
-        false,
-        false,
-#ifdef EFFECT_BUILTINS
-        &createHelper<DimScreenEffect>,
         nullptr,
         nullptr
 #endif

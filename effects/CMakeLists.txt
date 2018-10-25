@@ -132,6 +132,7 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
 
 # scripted effects
 add_subdirectory( dialogparent )
+add_subdirectory( dimscreen )
 add_subdirectory( eyeonscreen )
 add_subdirectory( fade )
 add_subdirectory( fadedesktop )
@@ -152,7 +153,6 @@ add_subdirectory( windowaperture )
 # Common effects
 add_subdirectory( desktopgrid )
 add_subdirectory( diminactive )
-include( dimscreen/CMakeLists.txt )
 include( fallapart/CMakeLists.txt )
 include( highlightwindow/CMakeLists.txt )
 include( kscreen/CMakeLists.txt )

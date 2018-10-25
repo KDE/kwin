@@ -42,7 +42,6 @@ enum class BuiltInEffect
     CubeSlide,
     DesktopGrid,
     DimInactive,
-    DimScreen,
     FallApart,
     FlipSwitch,
     Glide,

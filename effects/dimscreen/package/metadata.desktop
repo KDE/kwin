@@ -1,0 +1,20 @@
+[Desktop Entry]
+Comment=Darkens the entire screen when requesting root privileges
+Icon=preferences-system-windows-effect-dimscreen
+Name=Dim Screen for Administrator Mode
+
+Type=Service
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=Martin Flöser, Vlad Zagorodniy
+X-KDE-PluginInfo-Category=Focus
+X-KDE-PluginInfo-Email=mgraesslin@kde.org, vladzzag@gmail.com
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-Name=kwin4_effect_dimscreen
+X-KDE-PluginInfo-Version=1
+X-KDE-PluginInfo-Website=
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Ordering=60
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
+X-KWin-Video-Url=http://files.kde.org/plasma/kwin/effect-videos/dim_administration.mp4

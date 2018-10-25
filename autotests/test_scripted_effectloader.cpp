@@ -110,7 +110,6 @@ void TestScriptedEffectLoader::testHasEffect_data()
     QTest::newRow("CubeSlide")                   << QStringLiteral("cubeslide")                 << false;
     QTest::newRow("DesktopGrid")                 << QStringLiteral("desktopgrid")               << false;
     QTest::newRow("DimInactive")                 << QStringLiteral("diminactive")               << false;
-    QTest::newRow("DimScreen")                   << QStringLiteral("dimscreen")                 << false;
     QTest::newRow("FallApart")                   << QStringLiteral("fallapart")                 << false;
     QTest::newRow("FlipSwitch")                  << QStringLiteral("flipswitch")                << false;
     QTest::newRow("Glide")                       << QStringLiteral("glide")                     << false;
@@ -148,6 +147,7 @@ void TestScriptedEffectLoader::testHasEffect_data()
     QTest::newRow("FadingPopups")                << QStringLiteral("kwin4_effect_fadingpopups") << true;
     QTest::newRow("FrozenApp")                   << QStringLiteral("kwin4_effect_frozenapp")    << true;
     QTest::newRow("DialogParent")                << QStringLiteral("kwin4_effect_dialogparent") << true;
+    QTest::newRow("DimScreen")                   << QStringLiteral("kwin4_effect_dimscreen")    << true;
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")        << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")       << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")     << true;
@@ -178,6 +178,7 @@ void TestScriptedEffectLoader::testKnownEffects()
 {
     QStringList expectedEffects;
     expectedEffects << QStringLiteral("kwin4_effect_dialogparent")
+                    << QStringLiteral("kwin4_effect_dimscreen")
                     << QStringLiteral("kwin4_effect_fade")
                     << QStringLiteral("kwin4_effect_fadedesktop")
                     << QStringLiteral("kwin4_effect_fadingpopups")
@@ -211,6 +212,7 @@ void TestScriptedEffectLoader::testLoadEffect_data()
     QTest::newRow("FadingPopups")                << QStringLiteral("kwin4_effect_fadingpopups") << true;
     QTest::newRow("FrozenApp")                   << QStringLiteral("kwin4_effect_frozenapp")    << true;
     QTest::newRow("DialogParent")                << QStringLiteral("kwin4_effect_dialogparent") << true;
+    QTest::newRow("DimScreen")                   << QStringLiteral("kwin4_effect_dimscreen")    << true;
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")        << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")        << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")     << true;
@@ -361,6 +363,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     // prepare the configuration to hard enable/disable the effects we want to load
     KConfigGroup plugins = config->group("Plugins");
     plugins.writeEntry(kwin4 + QStringLiteral("dialogparentEnabled"), false);
+    plugins.writeEntry(kwin4 + QStringLiteral("dimscreenEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("fadeEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("fadedesktopEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("fadingpopupsEnabled"), false);
