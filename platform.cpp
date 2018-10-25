@@ -119,13 +119,9 @@ void Platform::createPlatformCursor(QObject *parent)
 
 void Platform::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
 {
-    Q_UNUSED(config)
     qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
 
-    // KCoreAddons needs kwayland's 2b3f9509ac1 to not crash
-    if (KCoreAddons::version() >= QT_VERSION_CHECK(5, 39, 0)) {
-        config->setFailed();
-    }
+    config->setFailed();
 }
 
 void Platform::setSoftWareCursor(bool set)

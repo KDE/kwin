@@ -580,10 +580,7 @@ void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurat
     } else {
         emit screens()->changed();
     }
-    // KCoreAddons needs kwayland's 2b3f9509ac1 to not crash
-    if (KCoreAddons::version() >= QT_VERSION_CHECK(5, 39, 0)) {
-        config->setApplied();
-    }
+    config->setApplied();
 }
 
 DrmOutput *DrmBackend::findOutput(quint32 connector)

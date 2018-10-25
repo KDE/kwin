@@ -344,12 +344,6 @@ void Decoration::init()
 
         }
 
-        //workaround for https://codereview.qt-project.org/#/c/207198/
-#if (QT_VERSION < QT_VERSION_CHECK(5, 10, 0))
-        if (!usingGL) {
-            m_renderControl->sync();
-        }
-#endif
         // delay rendering a little bit for better performance
         m_updateTimer.reset(new QTimer);
         m_updateTimer->setSingleShot(true);
