@@ -60,6 +60,7 @@ private Q_SLOTS:
     void testVirtualDesktopPolicy();
     void testWindowPolicy();
     void testApplicationPolicy();
+    void testNumLock();
 
 private:
     void reconfigureLayouts();
@@ -83,6 +84,7 @@ void KeyboardLayoutTest::initTestCase()
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
     kwinApp()->setKxkbConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
+    kwinApp()->setInputConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
@@ -456,6 +458,47 @@ void KeyboardLayoutTest::testApplicationPolicy()
     QVERIFY(!layoutChangedSpy.wait());
     QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
 }
+
+void KeyboardLayoutTest::testNumLock()
+{
+    qputenv("KWIN_FORCE_NUM_LOCK_EVALUATION", "1");
+    auto xkb = input()->keyboard()->xkb();
+    // by default not set
+    QVERIFY(!xkb->modifiers().testFlag(Qt::KeypadModifier));
+    quint32 timestamp = 0;
+    kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+    // now it should be on
+    QVERIFY(xkb->modifiers().testFlag(Qt::KeypadModifier));
+    // and back to off
+    kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+    QVERIFY(!xkb->modifiers().testFlag(Qt::KeypadModifier));
+
+    // let's reconfigure to enable through config
+    auto group = kwinApp()->inputConfig()->group("Keyboard");
+    group.writeEntry("NumLock", 0);
+    group.sync();
+    xkb->reconfigure();
+    // now it should be on
+    QVERIFY(xkb->modifiers().testFlag(Qt::KeypadModifier));
+    // pressing should result in it being off
+    kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+    QVERIFY(!xkb->modifiers().testFlag(Qt::KeypadModifier));
+
+    // pressing again should enable it
+    kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+    QVERIFY(xkb->modifiers().testFlag(Qt::KeypadModifier));
+
+    // now reconfigure to disable on load
+    group.writeEntry("NumLock", 1);
+    group.sync();
+    xkb->reconfigure();
+    QVERIFY(!xkb->modifiers().testFlag(Qt::KeypadModifier));
+}
+
 
 WAYLANDTEST_MAIN(KeyboardLayoutTest)
 #include "keyboard_layout_test.moc"

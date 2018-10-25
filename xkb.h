@@ -58,6 +58,9 @@ public:
     void setConfig(KSharedConfigPtr config) {
         m_config = config;
     }
+    void setNumLockConfig(KSharedConfigPtr config) {
+        m_numLockConfig = config;
+    }
     void reconfigure();
 
     void installKeymap(int fd, uint32_t size);
@@ -130,6 +133,7 @@ private:
     xkb_mod_index_t m_controlModifier;
     xkb_mod_index_t m_altModifier;
     xkb_mod_index_t m_metaModifier;
+    xkb_mod_index_t m_numModifier;
     xkb_led_index_t m_numLock;
     xkb_led_index_t m_capsLock;
     xkb_led_index_t m_scrollLock;
@@ -144,12 +148,19 @@ private:
     } m_compose;
     LEDs m_leds;
     KSharedConfigPtr m_config;
+    KSharedConfigPtr m_numLockConfig;
 
     struct {
         xkb_mod_index_t depressed = 0;
         xkb_mod_index_t latched = 0;
         xkb_mod_index_t locked = 0;
     } m_modifierState;
+
+    enum class Ownership {
+        Server,
+        Client
+    };
+    Ownership m_ownership = Ownership::Server;
 
     QPointer<KWayland::Server::SeatInterface> m_seat;
 };
