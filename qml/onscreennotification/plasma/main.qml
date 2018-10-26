@@ -35,8 +35,8 @@ PlasmaCore.Dialog {
 
     mainItem: RowLayout {
         PlasmaCore.IconItem {
-            Layout.minimumWidth: 64
-            Layout.minimumHeight: 64
+            implicitWidth: PlasmaCore.Units.iconSizes["medium"]
+            implicitHeight: implicitWidth
             source: osd.iconName
             visible: osd.iconName != ""
         }
