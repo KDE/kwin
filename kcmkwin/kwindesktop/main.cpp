@@ -90,10 +90,12 @@ void KWinDesktopConfig::init()
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    m_actionCollection->setComponentDisplayName(i18n("KWin"));
     m_actionCollection->setConfigGroup("Desktop Switching");
     m_actionCollection->setConfigGlobal(true);
 
     m_switchDesktopCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    m_switchDesktopCollection->setComponentDisplayName(i18n("KWin"));
     m_switchDesktopCollection->setConfigGroup("Desktop Switching");
     m_switchDesktopCollection->setConfigGlobal(true);
 
