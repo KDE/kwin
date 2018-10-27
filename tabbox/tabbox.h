@@ -160,7 +160,7 @@ public:
     */
     bool isDisplayed() const {
         return m_displayRefcount > 0;
-    };
+    }
 
     /**
      * @returns @c true if TabBox is shown, @c false if replaced by Effect
