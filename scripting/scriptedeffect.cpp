@@ -667,6 +667,40 @@ bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRol
     }
 }
 
+bool ScriptedEffect::grab(EffectWindow *w, DataRole grabRole, bool force)
+{
+    void *grabber = w->data(grabRole).value<void *>();
+
+    if (grabber == this) {
+        return true;
+    }
+
+    if (grabber != nullptr && grabber != this && !force) {
+        return false;
+    }
+
+    w->setData(grabRole, QVariant::fromValue(static_cast<void *>(this)));
+
+    return true;
+}
+
+bool ScriptedEffect::ungrab(EffectWindow *w, DataRole grabRole)
+{
+    void *grabber = w->data(grabRole).value<void *>();
+
+    if (grabber == nullptr) {
+        return true;
+    }
+
+    if (grabber != this) {
+        return false;
+    }
+
+    w->setData(grabRole, QVariant());
+
+    return true;
+}
+
 void ScriptedEffect::reconfigure(ReconfigureFlags flags)
 {
     AnimationEffect::reconfigure(flags);

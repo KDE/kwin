@@ -80,6 +80,29 @@ public:
      * @returns @c true if another window has grabbed the effect, @c false otherwise
      **/
     Q_SCRIPTABLE bool isGrabbed(KWin::EffectWindow *w, DataRole grabRole);
+
+    /**
+     * Grabs the window with the specified role.
+     *
+     * @param w The window.
+     * @param grabRole The grab role.
+     * @param force By default, if the window is already grabbed by another effect,
+     *   then that window won't be grabbed by effect that called this method. If you
+     *   would like to grab a window even if it's grabbed by another effect, then
+     *   pass @c true.
+     * @returns @c true if the window was grabbed successfully, otherwise @c false.
+     **/
+    Q_SCRIPTABLE bool grab(KWin::EffectWindow *w, DataRole grabRole, bool force = false);
+
+    /**
+     * Ungrabs the window with the specified role.
+     *
+     * @param w The window.
+     * @param grabRole The grab role.
+     * @returns @c true if the window was ungrabbed successfully, otherwise @c false.
+     **/
+    Q_SCRIPTABLE bool ungrab(KWin::EffectWindow *w, DataRole grabRole);
+
     /**
      * Reads the value from the configuration data for the given key.
      * @param key The key to search for

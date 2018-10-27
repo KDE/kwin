@@ -70,6 +70,10 @@ private Q_SLOTS:
     void testFullScreenEffect();
     void testKeepAlive_data();
     void testKeepAlive();
+    void testGrab();
+    void testGrabAlreadyGrabbedWindow();
+    void testGrabAlreadyGrabbedWindowForced();
+    void testUngrab();
 
 private:
     ScriptedEffect *loadEffect(const QString &name);
@@ -480,6 +484,142 @@ void ScriptedEffectsTest::testKeepAlive()
         QVERIFY(deletedRemovedSpy.count() == 1 || deletedRemovedSpy.wait(100)); // 100ms is less than duration of the animation
         QCOMPARE(effect->state().count(), 0);
     }
+}
+
+void ScriptedEffectsTest::testGrab()
+{
+    // this test verifies that scripted effects can grab windows that are
+    // not already grabbed
+
+    // load the test effect
+    auto effect = new ScriptedEffectWithDebugSpy;
+    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    QVERIFY(effectOutputSpy.isValid());
+    QVERIFY(effect->load(QStringLiteral("grabTest")));
+
+    // create test client
+    using namespace KWayland::Client;
+    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    QVERIFY(surface);
+    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
+    QVERIFY(shellSurface);
+    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+
+    // the test effect should grab the test client successfully
+    QCOMPARE(effectOutputSpy.count(), 1);
+    QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
+    QCOMPARE(c->effectWindow()->data(WindowAddedGrabRole).value<void *>(), effect);
+}
+
+void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
+{
+    // this test verifies that scripted effects cannot grab already grabbed
+    // windows (unless force is set to true of course)
+
+    // load effect that will hold the window grab
+    auto owner = new ScriptedEffectWithDebugSpy;
+    QSignalSpy ownerOutputSpy(owner, &ScriptedEffectWithDebugSpy::testOutput);
+    QVERIFY(ownerOutputSpy.isValid());
+    QVERIFY(owner->load(QStringLiteral("grabAlreadyGrabbedWindowTest_owner")));
+
+    // load effect that will try to grab already grabbed window
+    auto grabber = new ScriptedEffectWithDebugSpy;
+    QSignalSpy grabberOutputSpy(grabber, &ScriptedEffectWithDebugSpy::testOutput);
+    QVERIFY(grabberOutputSpy.isValid());
+    QVERIFY(grabber->load(QStringLiteral("grabAlreadyGrabbedWindowTest_grabber")));
+
+    // create test client
+    using namespace KWayland::Client;
+    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    QVERIFY(surface);
+    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
+    QVERIFY(shellSurface);
+    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+
+    // effect that initially held the grab should still hold the grab
+    QCOMPARE(ownerOutputSpy.count(), 1);
+    QCOMPARE(ownerOutputSpy.first().first(), QStringLiteral("ok"));
+    QCOMPARE(c->effectWindow()->data(WindowAddedGrabRole).value<void *>(), owner);
+
+    // effect that tried to grab already grabbed window should fail miserably
+    QCOMPARE(grabberOutputSpy.count(), 1);
+    QCOMPARE(grabberOutputSpy.first().first(), QStringLiteral("fail"));
+}
+
+void ScriptedEffectsTest::testGrabAlreadyGrabbedWindowForced()
+{
+    // this test verifies that scripted effects can steal window grabs when
+    // they forcefully try to grab windows
+
+    // load effect that initially will be holding the window grab
+    auto owner = new ScriptedEffectWithDebugSpy;
+    QSignalSpy ownerOutputSpy(owner, &ScriptedEffectWithDebugSpy::testOutput);
+    QVERIFY(ownerOutputSpy.isValid());
+    QVERIFY(owner->load(QStringLiteral("grabAlreadyGrabbedWindowForcedTest_owner")));
+
+    // load effect that will try to steal the window grab
+    auto thief = new ScriptedEffectWithDebugSpy;
+    QSignalSpy thiefOutputSpy(thief, &ScriptedEffectWithDebugSpy::testOutput);
+    QVERIFY(thiefOutputSpy.isValid());
+    QVERIFY(thief->load(QStringLiteral("grabAlreadyGrabbedWindowForcedTest_thief")));
+
+    // create test client
+    using namespace KWayland::Client;
+    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    QVERIFY(surface);
+    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
+    QVERIFY(shellSurface);
+    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+
+    // verify that the owner in fact held the grab
+    QCOMPARE(ownerOutputSpy.count(), 1);
+    QCOMPARE(ownerOutputSpy.first().first(), QStringLiteral("ok"));
+
+    // effect that grabbed the test client forcefully should now hold the grab
+    QCOMPARE(thiefOutputSpy.count(), 1);
+    QCOMPARE(thiefOutputSpy.first().first(), QStringLiteral("ok"));
+    QCOMPARE(c->effectWindow()->data(WindowAddedGrabRole).value<void *>(), thief);
+}
+
+void ScriptedEffectsTest::testUngrab()
+{
+    // this test verifies that scripted effects can ungrab windows that they
+    // are previously grabbed
+
+    // load the test effect
+    auto effect = new ScriptedEffectWithDebugSpy;
+    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    QVERIFY(effectOutputSpy.isValid());
+    QVERIFY(effect->load(QStringLiteral("ungrabTest")));
+
+    // create test client
+    using namespace KWayland::Client;
+    Surface *surface = Test::createSurface(Test::waylandCompositor());
+    QVERIFY(surface);
+    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
+    QVERIFY(shellSurface);
+    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QCOMPARE(workspace()->activeClient(), c);
+
+    // the test effect should grab the test client successfully
+    QCOMPARE(effectOutputSpy.count(), 1);
+    QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
+    QCOMPARE(c->effectWindow()->data(WindowAddedGrabRole).value<void *>(), effect);
+
+    // when the test effect sees that a window was minimized, it will try to ungrab it
+    effectOutputSpy.clear();
+    c->setMinimized(true);
+
+    QCOMPARE(effectOutputSpy.count(), 1);
+    QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
+    QCOMPARE(c->effectWindow()->data(WindowAddedGrabRole).value<void *>(), nullptr);
 }
 
 WAYLANDTEST_MAIN(ScriptedEffectsTest)
