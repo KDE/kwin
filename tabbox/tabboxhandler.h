@@ -46,7 +46,7 @@ namespace KWin
 {
 /**
 * The TabBox is a model based view for displaying a list while switching windows or desktops.
-* This functionality is mostly referred as Alt+Tab. TabBox itself does not provide support for
+* This functionality is mostly referred to as Alt+Tab. TabBox itself does not provide support for
 * switching windows or desktops. This has to be done outside of TabBox inside an independent controller.
 *
 * The main entrance point to TabBox is the class TabBoxHandler, which has to be subclassed and implemented.
