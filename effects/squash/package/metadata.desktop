@@ -1,7 +1,9 @@
 [Desktop Entry]
 Comment=Squash windows when they are minimized
 Comment[ca]=Amuntega les finestres quan estan minimitzades
+Comment[ca@valencia]=Amuntega les finestres quan estan minimitzades
 Comment[gl]=Xuntar as xanelas cando estean minimizadas
+Comment[id]=Sesakkan jendela ketika mereka diminimalkan
 Comment[nl]=Krimp vensters wanneer ze geminimaliseerd zijn
 Comment[pt]=Esmagar as janelas quando são minimizadas
 Comment[sv]=Kläm fönster när de minimeras
@@ -10,7 +12,9 @@ Comment[x-test]=xxSquash windows when they are minimizedxx
 Icon=preferences-system-windows-effect-squash
 Name=Squash
 Name[ca]=Amuntega
+Name[ca@valencia]=Amuntega
 Name[gl]=Xuntar
+Name[id]=Squash
 Name[nl]=Krimpen
 Name[pt]=Esmagar
 Name[sv]=Kläm
