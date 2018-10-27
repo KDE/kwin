@@ -125,8 +125,8 @@ void SlidingPopupsTest::testWithOtherEffect_data()
 
     QTest::newRow("fade, slide") << QStringList{QStringLiteral("kwin4_effect_fade"), QStringLiteral("slidingpopups")};
     QTest::newRow("slide, fade") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_fade")};
-    QTest::newRow("scale, slide") << QStringList{QStringLiteral("scale"), QStringLiteral("slidingpopups")};
-    QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("scale")};
+    QTest::newRow("scale, slide") << QStringList{QStringLiteral("kwin4_effect_scale"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_scale")};
 
     if (effects->compositingType() & KWin::OpenGLCompositing) {
         QTest::newRow("glide, slide") << QStringList{QStringLiteral("glide"), QStringLiteral("slidingpopups")};
@@ -262,8 +262,8 @@ void SlidingPopupsTest::testWithOtherEffectWayland_data()
 
     QTest::newRow("fade, slide") << QStringList{QStringLiteral("kwin4_effect_fade"), QStringLiteral("slidingpopups")};
     QTest::newRow("slide, fade") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_fade")};
-    QTest::newRow("scale, slide") << QStringList{QStringLiteral("scale"), QStringLiteral("slidingpopups")};
-    QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("scale")};
+    QTest::newRow("scale, slide") << QStringList{QStringLiteral("kwin4_effect_scale"), QStringLiteral("slidingpopups")};
+    QTest::newRow("slide, scale") << QStringList{QStringLiteral("slidingpopups"), QStringLiteral("kwin4_effect_scale")};
 
     if (effects->compositingType() & KWin::OpenGLCompositing) {
         QTest::newRow("glide, slide") << QStringList{QStringLiteral("glide"), QStringLiteral("slidingpopups")};

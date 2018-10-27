@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "highlightwindow/highlightwindow.h"
 #include "magiclamp/magiclamp.h"
 #include "resize/resize.h"
-#include "scale/scale.h"
 #include "showfps/showfps.h"
 #include "showpaint/showpaint.h"
 #include "slide/slide.h"
@@ -426,21 +425,6 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ResizeEffect>,
         nullptr,
-        nullptr
-#endif
-EFFECT_FALLBACK
-    }, {
-        QStringLiteral("scale"),
-        i18ndc("kwin_effects", "Name of a KWin Effect", "Scale"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Make windows smoothly scale in and out when they are shown or hidden"),
-        QStringLiteral("Appearance"),
-        QString(),
-        QUrl(),
-        false,
-        false,
-#ifdef EFFECT_BUILTINS
-        &createHelper<ScaleEffect>,
-        &ScaleEffect::supported,
         nullptr
 #endif
 EFFECT_FALLBACK

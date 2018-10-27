@@ -124,7 +124,6 @@ void TestScriptedEffectLoader::testHasEffect_data()
     QTest::newRow("MouseMark")                   << QStringLiteral("mousemark")                 << false;
     QTest::newRow("PresentWindows")              << QStringLiteral("presentwindows")            << false;
     QTest::newRow("Resize")                      << QStringLiteral("resize")                    << false;
-    QTest::newRow("Scale")                       << QStringLiteral("scale")                     << false;
     QTest::newRow("ScreenEdge")                  << QStringLiteral("screenedge")                << false;
     QTest::newRow("ScreenShot")                  << QStringLiteral("screenshot")                << false;
     QTest::newRow("Sheet")                       << QStringLiteral("sheet")                     << false;
@@ -150,6 +149,7 @@ void TestScriptedEffectLoader::testHasEffect_data()
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")        << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")       << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")     << true;
+    QTest::newRow("Scale")                       << QStringLiteral("kwin4_effect_scale")        << true;
     QTest::newRow("Squash")                      << QStringLiteral("kwin4_effect_squash")       << true;
     QTest::newRow("Translucency")                << QStringLiteral("kwin4_effect_translucency") << true;
 }
@@ -182,6 +182,7 @@ void TestScriptedEffectLoader::testKnownEffects()
                     << QStringLiteral("kwin4_effect_login")
                     << QStringLiteral("kwin4_effect_logout")
                     << QStringLiteral("kwin4_effect_maximize")
+                    << QStringLiteral("kwin4_effect_scale")
                     << QStringLiteral("kwin4_effect_squash")
                     << QStringLiteral("kwin4_effect_translucency");
 
@@ -209,6 +210,7 @@ void TestScriptedEffectLoader::testLoadEffect_data()
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")        << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")        << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")     << true;
+    QTest::newRow("Scale")                       << QStringLiteral("kwin4_effect_scale")        << true;
     QTest::newRow("Squash")                      << QStringLiteral("kwin4_effect_squash")       << true;
     QTest::newRow("Translucency")                << QStringLiteral("kwin4_effect_translucency") << true;
 }
@@ -361,6 +363,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     plugins.writeEntry(kwin4 + QStringLiteral("loginEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("logoutEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("maximizeEnabled"), false);
+    plugins.writeEntry(kwin4 + QStringLiteral("scaleEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("squashEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("translucencyEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("eyeonscreenEnabled"), false);

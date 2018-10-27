@@ -11,3 +11,11 @@ Id=port-minimizeanimation-effect-to-js
 File=kwinrc
 Group=Plugins
 Key=minimizeanimationEnabled,kwin4_effect_squashEnabled
+
+# Port the Scale effect to JavaScript.
+Id=port-scale-effect-to-js
+File=kwinrc
+Group=Effect-Scale,Effect-kwin4_effect_scale
+AllKeys
+Group=Plugins
+Key=scaleEnabled,kwin4_effect_scaleEnabled

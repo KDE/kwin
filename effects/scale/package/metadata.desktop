@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=Scale
+Icon=preferences-system-windows-effect-scale
+Comment=Make windows smoothly scale in and out when they are shown or hidden
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect,KCModule
+X-KDE-PluginInfo-Author=Vlad Zagorodniy
+X-KDE-PluginInfo-Email=vladzzag@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_scale
+X-KDE-PluginInfo-Version=1
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Ordering=60
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
+X-KDE-PluginKeyword=kwin4_effect_scale
+X-KDE-Library=kcm_kwin4_genericscripted
+X-KDE-ParentComponents=kwin4_effect_scale
+X-KWin-Config-TranslationDomain=kwin_effects

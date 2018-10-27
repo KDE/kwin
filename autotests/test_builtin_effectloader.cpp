@@ -103,7 +103,6 @@ void TestBuiltInEffectLoader::testHasEffect_data()
     QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true;
     QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true;
     QTest::newRow("Resize")                         << QStringLiteral("resize")            << true;
-    QTest::newRow("Scale")                          << QStringLiteral("scale")             << true;
     QTest::newRow("ScreenEdge")                     << QStringLiteral("screenedge")        << true;
     QTest::newRow("ScreenShot")                     << QStringLiteral("screenshot")        << true;
     QTest::newRow("Sheet")                          << QStringLiteral("sheet")             << true;
@@ -159,7 +158,6 @@ void TestBuiltInEffectLoader::testKnownEffects()
                     << QStringLiteral("mousemark")
                     << QStringLiteral("presentwindows")
                     << QStringLiteral("resize")
-                    << QStringLiteral("scale")
                     << QStringLiteral("screenedge")
                     << QStringLiteral("screenshot")
                     << QStringLiteral("sheet")
@@ -237,7 +235,6 @@ void TestBuiltInEffectLoader::testSupported_data()
     QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true  << xc << true;
     QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true  << xc << true;
     QTest::newRow("Resize")                         << QStringLiteral("resize")            << true  << xc << true;
-    QTest::newRow("Scale")                          << QStringLiteral("scale")             << true  << xc << true;
     QTest::newRow("ScreenEdge")                     << QStringLiteral("screenedge")        << true  << xc << true;
     QTest::newRow("ScreenShot")                     << QStringLiteral("screenshot")        << true  << xc << true;
     QTest::newRow("Sheet")                          << QStringLiteral("sheet")             << false << xc << true;
@@ -325,7 +322,6 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
     QTest::newRow("MouseMark")                      << QStringLiteral("mousemark")         << true  << xc;
     QTest::newRow("PresentWindows")                 << QStringLiteral("presentwindows")    << true  << xc;
     QTest::newRow("Resize")                         << QStringLiteral("resize")            << true  << xc;
-    QTest::newRow("Scale")                          << QStringLiteral("scale")             << true  << xc;
     QTest::newRow("ScreenEdge")                     << QStringLiteral("screenedge")        << true  << xc;
     QTest::newRow("ScreenShot")                     << QStringLiteral("screenshot")        << true  << xc;
     QTest::newRow("Sheet")                          << QStringLiteral("sheet")             << false << xc;

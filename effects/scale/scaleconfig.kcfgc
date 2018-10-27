@@ -1,5 +1,0 @@
-File=scale.kcfg
-ClassName=ScaleConfig
-NameSpace=KWin
-Singleton=true
-Mutators=true

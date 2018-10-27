@@ -94,7 +94,6 @@ void TestPluginEffectLoader::testHasEffect_data()
     QTest::newRow("MouseMark")         << QStringLiteral("mousemark")                 << false;
     QTest::newRow("PresentWindows")    << QStringLiteral("presentwindows")            << false;
     QTest::newRow("Resize")            << QStringLiteral("resize")                    << false;
-    QTest::newRow("Scale")             << QStringLiteral("scale")                     << false;
     QTest::newRow("ScreenEdge")        << QStringLiteral("screenedge")                << false;
     QTest::newRow("ScreenShot")        << QStringLiteral("screenshot")                << false;
     QTest::newRow("Sheet")             << QStringLiteral("sheet")                     << false;
@@ -118,6 +117,7 @@ void TestPluginEffectLoader::testHasEffect_data()
     QTest::newRow("Login")             << QStringLiteral("kwin4_effect_login")        << false;
     QTest::newRow("Logout")            << QStringLiteral("kwin4_effect_logout")       << false;
     QTest::newRow("Maximize")          << QStringLiteral("kwin4_effect_maximize")     << false;
+    QTest::newRow("Scale")             << QStringLiteral("kwin4_effect_scale")        << false;
     QTest::newRow("Squash")            << QStringLiteral("kwin4_effect_squash")       << false;
     QTest::newRow("Translucency")      << QStringLiteral("kwin4_effect_translucency") << false;
     // and the fake effects we use here
