@@ -89,6 +89,7 @@ ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
 void ThumbnailAsideEffectConfig::save()
 {
     KCModule::save();
+    m_ui->editor->save();
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
