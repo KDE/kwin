@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0;
 import QtQuick.Window 2.0;
 import org.kde.plasma.core 2.0 as PlasmaCore;
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.components 2.0 as Plasma;
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons;
 import org.kde.kwin 2.0;
@@ -75,15 +76,20 @@ PlasmaCore.Dialog {
         property int animationDuration: 1000
         property bool showGrid: true
 
-        width: dialogItem.showGrid ? view.itemWidth * view.columns : textElement.width
+        width: dialogItem.showGrid ? view.itemWidth * view.columns : Math.ceil(textElement.implicitWidth)
         height: dialogItem.showGrid ? view.itemHeight * view.rows + textElement.height : textElement.height
 
-        Plasma.Label {
+        PlasmaExtras.Heading {
             id: textElement
             anchors.top: dialogItem.showGrid ? parent.top : undefined
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.NoWrap
+            elide: Text.ElideRight
             text: workspace.desktopName(workspace.currentDesktop)
         }
+
         Grid {
             id: view
             columns: 1
