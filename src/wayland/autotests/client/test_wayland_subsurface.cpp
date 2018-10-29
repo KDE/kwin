@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/event_queue.h"
+#include "../../src/client/region.h"
 #include "../../src/client/registry.h"
 #include "../../src/client/shm_pool.h"
 #include "../../src/client/subcompositor.h"
@@ -984,7 +985,13 @@ void TestSubSurface::testSurfaceAt()
     childFor1->damage(QRect(0, 0, 50, 50));
     childFor1->commit(Surface::CommitFlag::None);
     partImage.fill(Qt::blue);
+
     childFor2->attachBuffer(m_shm->createBuffer(partImage));
+    // child for 2's input region is subdivided into quadrants, with input mask on the top left and bottom right
+    QRegion region;
+    region += QRect(0,0,25,25);
+    region += QRect(25,25,25,25);
+    childFor2->setInputRegion(m_compositor->createRegion(region).get());
     childFor2->damage(QRect(0, 0, 50, 50));
     childFor2->commit(Surface::CommitFlag::None);
 
@@ -1002,8 +1009,20 @@ void TestSubSurface::testSurfaceAt()
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(49, 49)), childFor1ServerSurface);
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(50, 50)), childFor2ServerSurface);
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(100, 100)), childFor2ServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(100, 50)), childFor2ServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(50, 100)), childFor2ServerSurface);
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(25, 75)), parentServerSurface);
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(75, 25)), parentServerSurface);
+
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(0, 0)), childFor1ServerSurface);
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(49, 49)), childFor1ServerSurface);
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(50, 50)), childFor2ServerSurface);
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(99, 99)), childFor2ServerSurface);
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(99, 50)), parentServerSurface);
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(50, 99)), parentServerSurface);
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(25, 75)), parentServerSurface);
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(75, 25)), parentServerSurface);
+
     // outside the geometries should be no surface
     QVERIFY(!parentServerSurface->surfaceAt(QPointF(-1, -1)));
     QVERIFY(!parentServerSurface->surfaceAt(QPointF(101, 101)));
