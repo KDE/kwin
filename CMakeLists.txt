@@ -381,6 +381,7 @@ add_subdirectory(helpers)
 set(kwin_KDEINIT_SRCS
    workspace.cpp
    dbusinterface.cpp
+   virtualdesktopsdbustypes.cpp
    abstract_client.cpp
    client.cpp
    client_machine.cpp
@@ -533,6 +534,7 @@ qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Compositing.xml dbusinterfa
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.ColorCorrect.xml colorcorrection/colorcorrectdbusinterface.h KWin::ColorCorrect::ColorCorrectDBusInterface )
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl )
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.OrientationSensor.xml orientation_sensor.h KWin::OrientationSensor)
+qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface )
 
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.ScreenSaver.xml screenlocker_interface)
 
@@ -671,6 +673,7 @@ install(
         org.kde.kwin.Compositing.xml
         org.kde.kwin.ColorCorrect.xml
         org.kde.kwin.Effects.xml
+        org.kde.KWin.VirtualDesktopManager.xml
     DESTINATION
         ${KDE_INSTALL_DBUSINTERFACEDIR}
 )

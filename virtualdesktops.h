@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPoint>
 #include <QPointer>
 #include <QSize>
+
 // KDE includes
 #include <KConfig>
 #include <KSharedConfig>
@@ -35,13 +36,21 @@ class KLocalizedString;
 class NETRootInfo;
 class QAction;
 
+namespace KWayland
+{
+namespace Server
+{
+class PlasmaVirtualDesktopManagementInterface;
+}
+}
+
 namespace KWin {
 
 class KWIN_EXPORT VirtualDesktop : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QByteArray id READ id CONSTANT)
-    Q_PROPERTY(uint x11DesktopNumber READ x11DesktopNumber CONSTANT)
+    Q_PROPERTY(uint x11DesktopNumber READ x11DesktopNumber NOTIFY x11DesktopNumberChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 public:
     explicit VirtualDesktop(QObject *parent = nullptr);
@@ -64,6 +73,7 @@ public:
 
 Q_SIGNALS:
     void nameChanged();
+    void x11DesktopNumberChanged();
     /**
      * Emitted just before the desktop gets destroyed.
      **/
@@ -148,9 +158,13 @@ class KWIN_EXPORT VirtualDesktopManager : public QObject
 public:
     virtual ~VirtualDesktopManager();
     /**
-     * @internal
+     * @internal, for X11 case
      **/
     void setRootInfo(NETRootInfo *info);
+    /**
+     * @internal, for Wayland case
+     **/
+    void setVirtualDesktopManagement(KWayland::Server::PlasmaVirtualDesktopManagementInterface *management);
     /**
      * @internal
      **/
@@ -161,6 +175,12 @@ public:
      * @see countChanged
      */
     uint count() const;
+    /**
+     * @returns the number of rows the layout has.
+     * @see setRows
+     * @see rowsChanged
+     */
+    uint rows() const;
     /**
      * @returns The ID of the current desktop.
      * @see setCurrent
@@ -264,6 +284,30 @@ public:
     VirtualDesktop *desktopForX11Id(uint id) const;
 
     /**
+     * @returns The VirtualDesktop for the internal desktop string @p id, if no such VirtualDesktop @c null is returned
+     **/
+    VirtualDesktop *desktopForId(const QByteArray &id) const;
+
+    /**
+     * Create a new virtual desktop at the requested position.
+     * The difference with setCount is that setCount always adds new desktops at the end of the chain. The Id is automatically generated.
+     * @param x11DesktopNumber number for the desktop. The desktop created will have an
+     *           x11DesktopNumber guaranteed to be between 1 and numberOfDesktops().
+     * Existing desktops will eventually have their x11DesktopNumber increased.
+     * @param name The name for the new desktop, if empty the default name will be used.
+     * @returns the new VirtualDesktop, nullptr if we reached the maximum number of desktops
+     */
+     VirtualDesktop *createVirtualDesktop(uint x11DesktopNumber, const QString &name = QString());
+
+    /**
+     * Remove the virtual desktop identified by id, if it exists
+     * difference with setCount is that is possible to remove an arbitrary desktop,
+     * not only the last one.
+     * @param id the string id of the desktop to remove
+     */
+    void removeVirtualDesktop(const QByteArray &id);
+
+    /**
      * Updates the net root info for new number of desktops
      **/
     void updateRootInfo();
@@ -283,13 +327,14 @@ public Q_SLOTS:
      * @link countChanged signal.
      *
      * In case the @link current desktop is on a desktop higher than the new count, the current desktop
-     * is changed to be the new desktop with highest id. In that situation the signal @link desktopsRemoved
+     * is changed to be the new desktop with highest id. In that situation the signal @link desktopRemoved
      * is emitted.
      * @param count The new number of desktops to use
      * @see count
      * @see maximum
      * @see countChanged
-     * @see desktopsRemoved
+     * @see desktopCreated
+     * @see desktopRemoved
      */
     void setCount(uint count);
     /**
@@ -308,6 +353,10 @@ public Q_SLOTS:
      * @see moveTo
      **/
     bool setCurrent(VirtualDesktop *current);
+    /**
+     * Updates the layout to a new number of rows. The number of columns will be calculated accordingly
+     */
+    void setRows(uint rows);
     /**
      * Called from within setCount() to ensure the desktop layout is still valid.
      */
@@ -334,18 +383,27 @@ Q_SIGNALS:
      * @param newCount The new current number of desktops
      **/
     void countChanged(uint previousCount, uint newCount);
+
     /**
-     * Signal emitted whenever the number of virtual desktops changes in a way
-     * that existing desktops are removed.
-     *
-     * The signal is emitted after the @c count property has been updated but prior
-     * to the @link countChanged signal being emitted.
-     * @param previousCount The number of desktops prior to the change.
-     * @see countChanged
-     * @see setCount
-     * @see count
-     **/
-    void desktopsRemoved(uint previousCount);
+     * Signal when the number of rows in the layout changes
+     * @param new number of rows
+     */
+    void rowsChanged(uint rows);
+
+    /**
+     * A new desktop has been created
+     * @param desktop the new just crated desktop
+     */
+    void desktopCreated(KWin::VirtualDesktop *desktop);
+
+    /**
+     * A desktop has been removed and is about to be deleted
+     * @param desktop the desktop that has been removed.
+     *          It's guaranteed to stil la valid pointer when the signal arrives,
+     *          but it's about to be deleted.
+     */
+    void desktopRemoved(KWin::VirtualDesktop *desktop);
+
     /**
      * Signal emitted whenever the current desktop changes.
      * @param previousDesktop The virtual desktop changed from
@@ -397,21 +455,6 @@ private Q_SLOTS:
 
 private:
     /**
-     * This method is called when the number of desktops is updated in a way that desktops
-     * are removed. At the time when this method is invoked the count property is already
-     * updated but the corresponding signal has not been emitted yet.
-     *
-     * Ensures that in case the current desktop is on one of the removed
-     * desktops the last desktop after the change becomes the new desktop.
-     * Emits the signal @link desktopsRemoved.
-     *
-     * @param previousCount The number of desktops prior to the change.
-     * @param previousCurrent The number of the previously current desktop.
-     * @see setCount
-     * @see desktopsRemoved
-     **/
-    void handleDesktopsRemoved(uint previousCount, uint previousCurrent);
-    /**
      * Generate a desktop layout from EWMH _NET_DESKTOP_LAYOUT property parameters.
      */
     void setNETDesktopLayout(Qt::Orientation orientation, uint width, uint height, int startingCorner);
@@ -450,7 +493,9 @@ private:
     VirtualDesktopGrid m_grid;
     // TODO: QPointer
     NETRootInfo *m_rootInfo;
+    KWayland::Server::PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KSharedConfig::Ptr m_config;
+    bool m_isLoading = false;
 
     KWIN_SINGLETON_VARIABLE(VirtualDesktopManager, s_manager)
 };

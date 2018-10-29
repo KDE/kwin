@@ -911,8 +911,9 @@ void EffectsHandlerImpl::moveWindow(EffectWindow* w, const QPoint& pos, bool sna
 void EffectsHandlerImpl::windowToDesktop(EffectWindow* w, int desktop)
 {
     AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());
-    if (cl && !cl->isDesktop() && !cl->isDock())
+    if (cl && !cl->isDesktop() && !cl->isDock()) {
         Workspace::self()->sendClientToDesktop(cl, desktop, true);
+    }
 }
 
 void EffectsHandlerImpl::windowToScreen(EffectWindow* w, int screen)

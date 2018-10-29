@@ -43,6 +43,10 @@ private Q_SLOTS:
     void testNetCurrentDesktop();
     void testLastDesktopRemoved_data();
     void testLastDesktopRemoved();
+    void testWindowOnMultipleDesktops_data();
+    void testWindowOnMultipleDesktops();
+    void testRemoveDesktopWithWindow_data();
+    void testRemoveDesktopWithWindow();
 };
 
 void VirtualDesktopTest::initTestCase()
@@ -157,12 +161,154 @@ void VirtualDesktopTest::testLastDesktopRemoved()
     QSignalSpy desktopPresenceChangedSpy(client, &ShellClient::desktopPresenceChanged);
     QVERIFY(desktopPresenceChangedSpy.isValid());
 
+    QCOMPARE(client->desktops().count(), 1u);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), client->desktops().first());
+
     // and remove last desktop
     VirtualDesktopManager::self()->setCount(1);
     QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
     // now the client should be moved as well
     QTRY_COMPARE(desktopPresenceChangedSpy.count(), 1);
     QCOMPARE(client->desktop(), 1);
+
+    QCOMPARE(client->desktops().count(), 1u);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), client->desktops().first());
+}
+
+void VirtualDesktopTest::testWindowOnMultipleDesktops_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+}
+
+void VirtualDesktopTest::testWindowOnMultipleDesktops()
+{
+    // first create two new desktops
+    QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
+    VirtualDesktopManager::self()->setCount(3);
+    QCOMPARE(VirtualDesktopManager::self()->count(), 3u);
+
+    // switch to last desktop
+    VirtualDesktopManager::self()->setCurrent(VirtualDesktopManager::self()->desktops().last());
+    QCOMPARE(VirtualDesktopManager::self()->current(), 3u);
+
+    // now create a window on this desktop
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(client);
+    QCOMPARE(client->desktop(), 3u);
+    QSignalSpy desktopPresenceChangedSpy(client, &ShellClient::desktopPresenceChanged);
+    QVERIFY(desktopPresenceChangedSpy.isValid());
+
+    QCOMPARE(client->desktops().count(), 1u);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), client->desktops().first());
+
+    //Set the window on desktop 2 as well
+    client->setDesktop(2u);
+    QCOMPARE(client->desktops().count(), 2u);
+    QCOMPARE(VirtualDesktopManager::self()->desktops()[2], client->desktops()[0]);
+    QCOMPARE(VirtualDesktopManager::self()->desktops()[1], client->desktops()[1]);
+    QVERIFY(client->isOnDesktop(2));
+    QVERIFY(client->isOnDesktop(3));
+
+    //leave desktop 3
+    client->unSetDesktop(3);
+    QCOMPARE(client->desktops().count(), 1u);
+    //leave desktop 2
+    client->unSetDesktop(2);
+    QCOMPARE(client->desktops().count(), 0u);
+    //we should be on all desktops now
+    QVERIFY(client->isOnAllDesktops());
+    //put on desktop 1
+    client->setDesktop(1);
+    QVERIFY(client->isOnDesktop(1));
+    QVERIFY(!client->isOnDesktop(2));
+    QVERIFY(!client->isOnDesktop(3));
+    QCOMPARE(client->desktops().count(), 1u);
+    //put on desktop 2
+    client->setDesktop(2);
+    QVERIFY(client->isOnDesktop(1));
+    QVERIFY(client->isOnDesktop(2));
+    QVERIFY(!client->isOnDesktop(3));
+    QCOMPARE(client->desktops().count(), 2u);
+    //put on desktop 3
+    client->setDesktop(3);
+    QVERIFY(client->isOnDesktop(1));
+    QVERIFY(client->isOnDesktop(2));
+    QVERIFY(client->isOnDesktop(3));
+    QVERIFY(client->isOnAllDesktops());
+    //when it gets on all desktops, it loses all desktops()
+    QCOMPARE(client->desktops().count(), 0u);
+}
+
+void VirtualDesktopTest::testRemoveDesktopWithWindow_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+}
+
+void VirtualDesktopTest::testRemoveDesktopWithWindow()
+{
+    // first create two new desktops
+    QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
+    VirtualDesktopManager::self()->setCount(3);
+    QCOMPARE(VirtualDesktopManager::self()->count(), 3u);
+
+    // switch to last desktop
+    VirtualDesktopManager::self()->setCurrent(VirtualDesktopManager::self()->desktops().last());
+    QCOMPARE(VirtualDesktopManager::self()->current(), 3u);
+
+    // now create a window on this desktop
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(client);
+    QCOMPARE(client->desktop(), 3u);
+    QSignalSpy desktopPresenceChangedSpy(client, &ShellClient::desktopPresenceChanged);
+    QVERIFY(desktopPresenceChangedSpy.isValid());
+
+    QCOMPARE(client->desktops().count(), 1u);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), client->desktops().first());
+
+    //Set the window on desktop 2 as well
+    client->setDesktop(2u);
+    QCOMPARE(client->desktops().count(), 2u);
+    QCOMPARE(VirtualDesktopManager::self()->desktops()[2], client->desktops()[0]);
+    QCOMPARE(VirtualDesktopManager::self()->desktops()[1], client->desktops()[1]);
+    QVERIFY(client->isOnDesktop(2));
+    QVERIFY(client->isOnDesktop(3));
+
+    //remove desktop 3
+    VirtualDesktopManager::self()->setCount(2);
+    QCOMPARE(client->desktops().count(), 1u);
+    //window is only on desktop 2
+    QCOMPARE(VirtualDesktopManager::self()->desktops()[1], client->desktops()[0]);
+
+    //Again 3 desktops
+    VirtualDesktopManager::self()->setCount(3);
+    //move window to be only on desktop 3
+    client->setDesktop(3);
+    client->unSetDesktop(2);
+    QCOMPARE(client->desktops().count(), 1u);
+    //window is only on desktop 3
+    QCOMPARE(VirtualDesktopManager::self()->desktops()[2], client->desktops()[0]);
+
+    //remove desktop 3
+    VirtualDesktopManager::self()->setCount(2);
+    QCOMPARE(client->desktops().count(), 1u);
+    //window is only on desktop 2
+    QCOMPARE(VirtualDesktopManager::self()->desktops()[1], client->desktops()[0]);
 }
 
 WAYLANDTEST_MAIN(VirtualDesktopTest)

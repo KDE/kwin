@@ -1,0 +1,50 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.KWin.VirtualDesktopManager">
+    <property name="count" type="u" access="read"/>
+    <property name="current" type="s" access="readwrite"/>
+    <property name="rows" type="u" access="readwrite"/>
+    <property name="navigationWrappingAround" type="b" access="readwrite"/>
+    <property name="desktops" type="a(iss)" access="read">
+        <annotation name="org.qtproject.QtDBus.QtTypeName" value="KWin::DBusDesktopDataVector"/>
+    </property>
+
+    <signal name="countChanged">
+      <arg name="count" type="u" direction="out"/>
+    </signal>
+    <signal name="rowsChanged">
+      <arg name="rows" type="u" direction="out"/>
+    </signal>
+    <signal name="currentChanged">
+      <arg name="id" type="s" direction="out"/>
+    </signal>
+    <signal name="navigationWrappingAroundChanged">
+      <arg name="navigationWrappingAround" type="b" direction="out"/>
+    </signal>
+    <signal name="desktopDataChanged">
+      <arg name="id" type="s" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="KWin::DBusDesktopDataStruct"/>
+      <arg name="desktopData" type="(iss)" direction="out"/>
+    </signal>
+    <signal name="desktopCreated">
+      <arg name="id" type="s" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="KWin::DBusDesktopDataStruct"/>
+      <arg name="desktopData" type="(iss)" direction="out"/>
+    </signal>
+    <signal name="desktopRemoved">
+      <arg name="id" type="s" direction="out"/>
+    </signal>
+
+    <method name="createDesktop">
+      <arg name="position" type="u" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
+    </method>
+    <method name="setDesktopName">
+      <arg name="id" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
+    </method>
+    <method name="removeDesktop">
+      <arg name="id" type="s" direction="in"/>
+    </method>
+  </interface>
+</node>

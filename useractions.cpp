@@ -402,6 +402,7 @@ void UserActionsMenu::discard()
     delete m_menu;
     m_menu = NULL;
     m_desktopMenu = NULL;
+    m_multipleDesktopsMenu = nullptr;
     m_screenMenu = NULL;
     m_activityMenu = NULL;
     m_switchToTabMenu = NULL;
@@ -417,6 +418,8 @@ void UserActionsMenu::menuAboutToShow()
     if (VirtualDesktopManager::self()->count() == 1) {
         delete m_desktopMenu;
         m_desktopMenu = 0;
+        delete m_multipleDesktopsMenu;
+        m_multipleDesktopsMenu = nullptr;
     } else {
         initDesktopPopup();
     }
@@ -604,17 +607,34 @@ void UserActionsMenu::initTabbingPopups()
 
 void UserActionsMenu::initDesktopPopup()
 {
-    if (m_desktopMenu)
-        return;
+    if (kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
+        kwinApp()->operationMode() == Application::OperationModeXwayland) { 
+        if (m_multipleDesktopsMenu) {
+            return;
+        }
 
-    m_desktopMenu = new QMenu(m_menu);
-    connect(m_desktopMenu, &QMenu::triggered,   this, &UserActionsMenu::slotSendToDesktop);
-    connect(m_desktopMenu, &QMenu::aboutToShow, this, &UserActionsMenu::desktopPopupAboutToShow);
+        m_multipleDesktopsMenu = new QMenu(m_menu);
+        connect(m_multipleDesktopsMenu, &QMenu::triggered, this,   &UserActionsMenu::slotToggleOnVirtualDesktop);
+        connect(m_multipleDesktopsMenu, &QMenu::aboutToShow, this, &UserActionsMenu::multipleDesktopsPopupAboutToShow);
 
-    QAction *action = m_desktopMenu->menuAction();
-    // set it as the first item
-    m_menu->insertAction(m_minimizeOperation, action);
-    action->setText(i18n("Move To &Desktop"));
+        QAction *action = m_multipleDesktopsMenu->menuAction();
+        // set it as the first item
+        m_menu->insertAction(m_minimizeOperation, action);
+        action->setText(i18n("&Desktops"));
+
+    } else {
+        if (m_desktopMenu)
+            return;
+
+        m_desktopMenu = new QMenu(m_menu);
+        connect(m_desktopMenu, &QMenu::triggered,   this, &UserActionsMenu::slotSendToDesktop);
+        connect(m_desktopMenu, &QMenu::aboutToShow, this, &UserActionsMenu::desktopPopupAboutToShow);
+
+        QAction *action = m_desktopMenu->menuAction();
+        // set it as the first item
+        m_menu->insertAction(m_minimizeOperation, action);
+        action->setText(i18n("Move To &Desktop"));
+    }
 }
 
 void UserActionsMenu::initScreenPopup()
@@ -667,6 +687,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
     m_desktopMenu->addSeparator();
 
     const uint BASE = 10;
+
     for (uint i = 1; i <= vds->count(); ++i) {
         QString basic_name(QStringLiteral("%1  %2"));
         if (i < BASE) {
@@ -684,6 +705,58 @@ void UserActionsMenu::desktopPopupAboutToShow()
 
     m_desktopMenu->addSeparator();
     action = m_desktopMenu->addAction(i18nc("Create a new desktop and move there the window", "&New Desktop"));
+    action->setData(vds->count() + 1);
+
+    if (vds->count() >= vds->maximum())
+        action->setEnabled(false);
+}
+
+void UserActionsMenu::multipleDesktopsPopupAboutToShow()
+{
+    if (!m_multipleDesktopsMenu)
+        return;
+    const VirtualDesktopManager *vds = VirtualDesktopManager::self();
+
+    m_multipleDesktopsMenu->clear();
+    m_multipleDesktopsMenu->setPalette(m_client.data()->palette());
+    QAction *action = m_multipleDesktopsMenu->addAction(i18n("&All Desktops"));
+    action->setData(0);
+    action->setCheckable(true);
+    QActionGroup *allDesktopsGroup = new QActionGroup(m_multipleDesktopsMenu);
+    allDesktopsGroup->addAction(action);
+
+    if (!m_client.isNull() && m_client.data()->isOnAllDesktops()) {
+        action->setChecked(true);
+    }
+    m_multipleDesktopsMenu->addSeparator();
+
+
+    const uint BASE = 10;
+
+    for (uint i = 1; i <= vds->count(); ++i) {
+        QString basic_name(QStringLiteral("%1  %2"));
+        if (i < BASE) {
+            basic_name.prepend(QLatin1Char('&'));
+        }
+        QWidgetAction *action = new QWidgetAction(m_multipleDesktopsMenu);
+        QCheckBox *box = new QCheckBox(basic_name.arg(i).arg(vds->name(i).replace(QLatin1Char('&'), QStringLiteral("&&"))), m_multipleDesktopsMenu);
+        action->setDefaultWidget(box);
+
+        box->setBackgroundRole(m_multipleDesktopsMenu->backgroundRole());
+        box->setForegroundRole(m_multipleDesktopsMenu->foregroundRole());
+        box->setPalette(m_multipleDesktopsMenu->palette());
+        connect(box, &QCheckBox::clicked, action, &QAction::triggered);
+        m_multipleDesktopsMenu->addAction(action);
+        action->setData(i);
+
+        if (!m_client.isNull() &&
+                !m_client.data()->isOnAllDesktops() && m_client.data()->isOnDesktop(i)) {
+            box->setChecked(true);
+        }
+    }
+
+    m_multipleDesktopsMenu->addSeparator();
+    action = m_multipleDesktopsMenu->addAction(i18nc("Create a new desktop and move there the window", "&New Desktop"));
     action->setData(vds->count() + 1);
 
     if (vds->count() >= vds->maximum())
@@ -814,6 +887,35 @@ void UserActionsMenu::slotSendToDesktop(QAction *action)
     }
 
     ws->sendClientToDesktop(m_client.data(), desk, false);
+}
+
+void UserActionsMenu::slotToggleOnVirtualDesktop(QAction *action)
+{
+    bool ok = false;
+    uint desk = action->data().toUInt(&ok);
+    if (!ok) {
+        return;
+    }
+    if (m_client.isNull()) {
+        return;
+    }
+
+    Workspace *ws = Workspace::self();
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    if (desk == 0) {
+        // the 'on_all_desktops' menu entry
+        m_client.data()->setOnAllDesktops(!m_client.data()->isOnAllDesktops());
+        return;
+    } else if (desk > vds->count()) {
+        vds->setCount(desk);
+    }
+
+    VirtualDesktop *virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desk);
+    if (m_client.data()->desktops().contains(virtualDesktop)) {
+        m_client.data()->unSetDesktop(desk);
+    } else {
+        ws->sendClientToDesktop(m_client.data(), desk, false);
+    }
 }
 
 void UserActionsMenu::slotSendToScreen(QAction *action)

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "dbusinterface.h"
 #include "compositingadaptor.h"
+#include "virtualdesktopmanageradaptor.h"
 
 // kwin
 #include "abstract_client.h"
@@ -313,6 +314,182 @@ QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const
     }
     interfaces << QStringLiteral("egl");
     return interfaces;
+}
+
+
+
+
+VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDesktopManager *parent)
+    : QObject(parent)
+    , m_manager(parent)
+{
+    qDBusRegisterMetaType<KWin::DBusDesktopDataStruct>();
+    qDBusRegisterMetaType<KWin::DBusDesktopDataVector>();
+
+    new VirtualDesktopManagerAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/VirtualDesktopManager"),
+        QStringLiteral("org.kde.KWin.VirtualDesktopManager"),
+        this
+    );
+
+    connect(m_manager, &VirtualDesktopManager::currentChanged, this,
+        [this](uint previousDesktop, uint newDesktop) {
+            Q_UNUSED(previousDesktop);
+            Q_UNUSED(newDesktop);
+            emit currentChanged(m_manager->currentDesktop()->id());
+        }
+    );
+
+    connect(m_manager, &VirtualDesktopManager::countChanged, this,
+        [this](uint previousCount, uint newCount) {
+            Q_UNUSED(previousCount);
+            emit countChanged(newCount);
+            emit desktopsChanged(desktops());
+        }
+    );
+
+    connect(m_manager, &VirtualDesktopManager::navigationWrappingAroundChanged, this,
+        [this]() {
+            emit navigationWrappingAroundChanged(isNavigationWrappingAround());
+        }
+    );
+
+    connect(m_manager, &VirtualDesktopManager::rowsChanged, this, &VirtualDesktopManagerDBusInterface::rowsChanged);
+
+    for (auto *vd : m_manager->desktops()) {
+        connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this,
+            [this, vd]() {
+                DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+                emit desktopDataChanged(vd->id(), data);
+                emit desktopsChanged(desktops());
+            }
+        );
+        connect(vd, &VirtualDesktop::nameChanged, this,
+            [this, vd]() {
+                DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+                emit desktopDataChanged(vd->id(), data);
+                emit desktopsChanged(desktops());
+            }
+        );
+    }
+    connect(m_manager, &VirtualDesktopManager::desktopCreated, this,
+        [this](VirtualDesktop *vd) {
+            connect(vd, &VirtualDesktop::x11DesktopNumberChanged, this,
+                [this, vd]() {
+                    DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+                    emit desktopDataChanged(vd->id(), data);
+                    emit desktopsChanged(desktops());
+                }
+            );
+            connect(vd, &VirtualDesktop::nameChanged, this,
+                [this, vd]() {
+                    DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+                    emit desktopDataChanged(vd->id(), data);
+                    emit desktopsChanged(desktops());
+                }
+            );
+            DBusDesktopDataStruct data{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+            emit desktopCreated(vd->id(), data);
+            emit desktopsChanged(desktops());
+        }
+    );
+    connect(m_manager, &VirtualDesktopManager::desktopRemoved, this,
+        [this](VirtualDesktop *vd) {
+            emit desktopRemoved(vd->id());
+            emit desktopsChanged(desktops());
+        }
+    );
+}
+
+uint VirtualDesktopManagerDBusInterface::count() const
+{
+    return m_manager->count();
+}
+
+void VirtualDesktopManagerDBusInterface::setRows(uint rows)
+{
+    if (static_cast<uint>(m_manager->grid().height()) == rows) {
+        return;
+    }
+
+    m_manager->setRows(rows);
+    m_manager->save();
+}
+
+uint VirtualDesktopManagerDBusInterface::rows() const
+{
+    return m_manager->rows();
+}
+
+void VirtualDesktopManagerDBusInterface::setCurrent(const QString &id)
+{
+    if (m_manager->currentDesktop()->id() == id) {
+        return;
+    }
+
+    auto *vd = m_manager->desktopForId(id.toUtf8());
+    if (vd) {
+        m_manager->setCurrent(vd);
+    }
+}
+
+QString VirtualDesktopManagerDBusInterface::current() const
+{
+    return m_manager->currentDesktop()->id();
+}
+
+void VirtualDesktopManagerDBusInterface::setNavigationWrappingAround(bool wraps)
+{
+    if (m_manager->isNavigationWrappingAround() == wraps) {
+        return;
+    }
+
+    m_manager->setNavigationWrappingAround(wraps);
+}
+
+bool VirtualDesktopManagerDBusInterface::isNavigationWrappingAround() const
+{
+    return m_manager->isNavigationWrappingAround();
+}
+
+DBusDesktopDataVector VirtualDesktopManagerDBusInterface::desktops() const
+{
+    const auto desks = m_manager->desktops();
+    DBusDesktopDataVector desktopVect;
+    desktopVect.reserve(m_manager->count());
+
+    std::transform(desks.constBegin(), desks.constEnd(),
+        std::back_inserter(desktopVect),
+        [] (const VirtualDesktop *vd) {
+            return DBusDesktopDataStruct{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+        }
+    );
+
+    return desktopVect;
+}
+
+void VirtualDesktopManagerDBusInterface::createDesktop(uint position, const QString &name)
+{
+    m_manager->createVirtualDesktop(position + 1, name);
+}
+
+void VirtualDesktopManagerDBusInterface::setDesktopName(const QString &id, const QString &name)
+{
+    VirtualDesktop *vd = m_manager->desktopForId(id.toUtf8());
+    if (!vd) {
+        return;
+    }
+    if (vd->name() == name) {
+        return;
+    }
+
+    vd->setName(name);
+    m_manager->save();
+}
+
+void VirtualDesktopManagerDBusInterface::removeDesktop(const QString &id)
+{
+    m_manager->removeVirtualDesktop(id.toUtf8());
 }
 
 } // namespace

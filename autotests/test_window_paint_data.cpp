@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include <kwineffects.h>
+#include "../virtualdesktops.h"
 
 #include <QVector2D>
 #include <QGraphicsRotation>
@@ -72,6 +73,7 @@ public:
     virtual void setData(int role, const QVariant &data);
     virtual void referencePreviousWindowPixmap() {}
     virtual void unreferencePreviousWindowPixmap() {}
+    QList<int> desktops() const { return {};}
 };
 
 MockEffectWindow::MockEffectWindow(QObject *parent)

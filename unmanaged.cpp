@@ -123,6 +123,11 @@ QStringList Unmanaged::activities() const
     return QStringList();
 }
 
+QList<VirtualDesktop *> Unmanaged::desktops() const
+{
+    return QList<VirtualDesktop *>();
+}
+
 QPoint Unmanaged::clientPos() const
 {
     return QPoint(0, 0);   // unmanaged windows don't have decorations

@@ -762,6 +762,13 @@ bool EffectsHandler::isOpenGLCompositing() const
     return compositing_type & OpenGLCompositing;
 }
 
+void EffectsHandler::removeWindowFromDesktop(KWin::EffectWindow* w, int desktop)
+{
+    if (w->parent() && !w->isDesktop() && !w->isDock()) {
+        QMetaObject::invokeMethod(w->parent(), "unSetDesktop", Q_ARG(int, desktop));
+    }
+}
+
 EffectsHandler* effects = nullptr;
 
 
@@ -826,7 +833,9 @@ WINDOW_HELPER(int, screen, "screen")
 WINDOW_HELPER(QRect, geometry, "geometry")
 WINDOW_HELPER(QRect, expandedGeometry, "visibleRect")
 WINDOW_HELPER(QRect, rect, "rect")
+#ifndef KWIN_NO_DEPRECATED
 WINDOW_HELPER(int, desktop, "desktop")
+#endif
 WINDOW_HELPER(bool, isDesktop, "desktopWindow")
 WINDOW_HELPER(bool, isDock, "dock")
 WINDOW_HELPER(bool, isToolbar, "toolbar")
@@ -848,6 +857,11 @@ WINDOW_HELPER(QString, windowRole, "windowRole")
 WINDOW_HELPER(QStringList, activities, "activities")
 WINDOW_HELPER(bool, skipsCloseAnimation, "skipsCloseAnimation")
 WINDOW_HELPER(KWayland::Server::SurfaceInterface *, surface, "surface")
+
+QList<int> EffectWindow::desktops() const
+{
+    return parent()->property("x11DesktopIds").value<QList<int> >();
+}
 
 QString EffectWindow::windowClass() const
 {
@@ -974,12 +988,13 @@ bool EffectWindow::isOnCurrentDesktop() const
 
 bool EffectWindow::isOnDesktop(int d) const
 {
-    return desktop() == d || isOnAllDesktops();
+    const QList<int> ds = desktops();
+    return ds.isEmpty() || ds.contains(d);
 }
 
 bool EffectWindow::isOnAllDesktops() const
 {
-    return desktop() == NET::OnAllDesktops;
+    return desktops().isEmpty();
 }
 
 bool EffectWindow::hasDecoration() const

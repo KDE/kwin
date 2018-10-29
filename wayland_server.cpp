@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/idleinhibit_interface.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
+#include <KWayland/Server/plasmavirtualdesktop_interface.h>
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
 #include <KWayland/Server/pointerconstraints_interface.h>
 #include <KWayland/Server/pointergestures_interface.h>
@@ -333,6 +334,12 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             workspace()->setShowingDesktop(set);
         }
     );
+
+
+    m_virtualDesktopManagement = m_display->createPlasmaVirtualDesktopManagement(m_display);
+    m_virtualDesktopManagement->create();
+    m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);
+
     auto shadowManager = m_display->createShadowManager(m_display);
     shadowManager->create();
 
@@ -390,6 +397,8 @@ void WaylandServer::shellClientShown(Toplevel *t)
 
 void WaylandServer::initWorkspace()
 {
+    VirtualDesktopManager::self()->setVirtualDesktopManagement(m_virtualDesktopManagement);
+
     if (m_windowManagement) {
         connect(workspace(), &Workspace::showingDesktopChanged, this,
             [this] (bool set) {

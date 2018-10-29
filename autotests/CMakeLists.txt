@@ -43,6 +43,7 @@ target_link_libraries( testVirtualDesktops
                        KF5::GlobalAccel
                        KF5::ConfigCore
                        KF5::WindowSystem
+                       KF5::WaylandServer
 )
 add_test(NAME kwin-testVirtualDesktops COMMAND testVirtualDesktops)
 ecm_mark_as_test(testVirtualDesktops)
@@ -336,6 +337,7 @@ target_link_libraries(testScreenEdges
     KF5::GlobalAccel
     KF5::Notifications
     KF5::WindowSystem
+    KF5::WaylandServer
     XCB::XCB
     XCB::RANDR
     XCB::XFIXES

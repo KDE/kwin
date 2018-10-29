@@ -52,6 +52,7 @@ public:
     void discard();
     virtual int desktop() const;
     virtual QStringList activities() const;
+    virtual QList<VirtualDesktop *> desktops() const;
     virtual QPoint clientPos() const;
     virtual QSize clientSize() const;
     QPoint clientContentPos() const override {
@@ -195,6 +196,7 @@ private:
     QPoint m_contentPos;
     QRect transparent_rect;
     xcb_window_t m_frame;
+    QList <VirtualDesktop *> m_desktops;
 
     bool no_border;
     QRect decoration_left;

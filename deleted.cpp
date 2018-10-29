@@ -94,6 +94,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     assert(dynamic_cast< Deleted* >(c) == NULL);
     Toplevel::copyToDeleted(c);
     desk = c->desktop();
+    m_desktops = c->desktops();
     activityList = c->activities();
     contentsRect = QRect(c->clientPos(), c->clientSize());
     m_contentPos = c->clientContentPos();
@@ -175,6 +176,11 @@ int Deleted::desktop() const
 QStringList Deleted::activities() const
 {
     return activityList;
+}
+
+QList<VirtualDesktop *> Deleted::desktops() const
+{
+    return m_desktops;
 }
 
 QPoint Deleted::clientPos() const

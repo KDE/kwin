@@ -54,6 +54,7 @@ class SurfaceInterface;
 class OutputInterface;
 class PlasmaShellInterface;
 class PlasmaShellSurfaceInterface;
+class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
 class OutputManagementInterface;
@@ -98,6 +99,9 @@ public:
     }
     KWayland::Server::ShellInterface *shell() {
         return m_shell;
+    }
+    KWayland::Server::PlasmaVirtualDesktopManagementInterface *virtualDesktopManagement() {
+        return m_virtualDesktopManagement;
     }
     KWayland::Server::PlasmaWindowManagementInterface *windowManagement() {
         return m_windowManagement;
@@ -227,6 +231,7 @@ private:
     KWayland::Server::XdgShellInterface *m_xdgShell = nullptr;
     KWayland::Server::PlasmaShellInterface *m_plasmaShell = nullptr;
     KWayland::Server::PlasmaWindowManagementInterface *m_windowManagement = nullptr;
+    KWayland::Server::PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
     KWayland::Server::ServerSideDecorationManagerInterface *m_decorationManager = nullptr;
     KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;

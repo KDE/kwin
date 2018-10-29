@@ -290,6 +290,7 @@ public:
      * isOnDesktop() instead.
      */
     virtual int desktop() const = 0;
+    virtual QList<VirtualDesktop *> desktops() const = 0;
     virtual QStringList activities() const = 0;
     bool isOnDesktop(int d) const;
     bool isOnActivity(const QString &activity) const;
@@ -790,7 +791,12 @@ const EffectWindowImpl* Toplevel::effectWindow() const
 
 inline bool Toplevel::isOnAllDesktops() const
 {
-    return desktop() == NET::OnAllDesktops;
+    return kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
+           kwinApp()->operationMode() == Application::OperationModeXwayland
+        //Wayland
+        ? desktops().isEmpty()
+        //X11
+        : desktop() == NET::OnAllDesktops;
 }
 
 inline bool Toplevel::isOnAllActivities() const
@@ -800,7 +806,11 @@ inline bool Toplevel::isOnAllActivities() const
 
 inline bool Toplevel::isOnDesktop(int d) const
 {
-    return desktop() == d || /*desk == 0 ||*/ isOnAllDesktops();
+    return (kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
+            kwinApp()->operationMode() == Application::OperationModeXwayland
+            ? desktops().contains(VirtualDesktopManager::self()->desktopForX11Id(d))
+            : desktop() == d
+           ) || isOnAllDesktops();
 }
 
 inline bool Toplevel::isOnActivity(const QString &activity) const
