@@ -1392,8 +1392,31 @@ bool DesktopGridEffect::isActive() const
 
 bool DesktopGridEffect::isRelevantWithPresentWindows(EffectWindow *w) const
 {
-    return !(w->isDesktop() || w->isDock() || w->isSkipSwitcher() || w->isOnScreenDisplay()) &&
-            w->isCurrentTab() && w->isOnCurrentActivity();
+    if (w->isSpecialWindow() || w->isUtility()) {
+        return false;
+    }
+
+    if (w->isSkipSwitcher()) {
+        return false;
+    }
+
+    if (w->isDeleted()) {
+        return false;
+    }
+
+    if (!w->acceptsFocus()) {
+        return false;
+    }
+
+    if (!w->isCurrentTab()) {
+        return false;
+    }
+
+    if (!w->isOnCurrentActivity()) {
+        return false;
+    }
+
+    return true;
 }
 
 /************************************************
