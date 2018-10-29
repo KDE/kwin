@@ -24,6 +24,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringList>
 // Wayland
 #include <wayland-server.h>
+// system
+#include <unistd.h>
 
 namespace KWayland
 {
@@ -69,6 +71,10 @@ void DataOfferInterface::Private::receiveCallback(wl_client *client, wl_resource
 
 void DataOfferInterface::Private::receive(const QString &mimeType, qint32 fd)
 {
+    if (!source) {
+        close(fd);
+        return;
+    }
     source->requestData(mimeType, fd);
 }
 
