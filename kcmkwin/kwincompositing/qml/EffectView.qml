@@ -99,13 +99,6 @@ Rectangle {
                     }
                 }
             }
-
-            Button {
-                id: ghnsButton
-                text: i18n("Get New Effects...")
-                iconName: "get-hot-new-stuff"
-                onClicked: effectConfig.openGHNS()
-            }
         }
 
         EffectFilterModel {
@@ -169,6 +162,19 @@ Rectangle {
             }
         }
 
+        RowLayout {
+            Layout.fillWidth: true
+
+            Item {
+                Layout.fillWidth: true
+            }
+            Button {
+                id: ghnsButton
+                text: i18n("Get New Desktop Effects...")
+                iconName: "get-hot-new-stuff"
+                onClicked: effectConfig.openGHNS()
+            }
+        }
     }//End ColumnLayout
     Connections {
         target: searchModel

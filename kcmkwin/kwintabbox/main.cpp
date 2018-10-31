@@ -24,8 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtDBus>
 #include <QDesktopWidget>
-#include <QVBoxLayout>
 #include <QDialogButtonBox>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QSpacerItem>
 #include <QStandardPaths>
 #include <QPointer>
 
@@ -72,6 +75,15 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     m_alternativeTabBoxUi = new KWinTabBoxConfigForm(tabWidget);
     tabWidget->addTab(m_primaryTabBoxUi, i18n("Main"));
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
+
+    QPushButton* ghnsButton = new QPushButton(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")), i18n("Get New Task Switchers..."));
+    connect(ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNS()));
+
+    QHBoxLayout* buttonBar = new QHBoxLayout();
+    QSpacerItem* buttonBarSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    buttonBar->addItem(buttonBarSpacer);
+    buttonBar->addWidget(ghnsButton);
+
     QVBoxLayout* layout = new QVBoxLayout(this);
     KTitleWidget* infoLabel = new KTitleWidget(tabWidget);
     infoLabel->setText(i18n("Focus policy settings limit the functionality of navigating through windows."),
@@ -79,6 +91,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     infoLabel->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
     layout->addWidget(infoLabel,0);
     layout->addWidget(tabWidget,1);
+    layout->addLayout(buttonBar);
     setLayout(layout);
 
 #define ADD_SHORTCUT(_NAME_, _CUT_, _BTN_) \
@@ -113,7 +126,6 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     KWinTabBoxConfigForm *ui[2] = { m_primaryTabBoxUi, m_alternativeTabBoxUi };
     for (int i = 0; i < 2; ++i) {
         ui[i]->effectConfigButton->setIcon(QIcon::fromTheme(QStringLiteral("view-preview")));
-        ui[i]->ghns->setIcon(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")));
 
         connect(ui[i]->highlightWindowCheck, SIGNAL(clicked(bool)), SLOT(changed()));
         connect(ui[i]->showTabBox, SIGNAL(clicked(bool)), SLOT(tabBoxToggled(bool)));
@@ -145,7 +157,6 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
         connect(ui[i]->filterMinimization, SIGNAL(clicked(bool)), SLOT(changed()));
         connect(ui[i]->visibleWindows, SIGNAL(clicked(bool)), SLOT(changed()));
         connect(ui[i]->hiddenWindows, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->ghns, SIGNAL(clicked(bool)), SLOT(slotGHNS()));
     }
 
     // check focus policy - we don't offer configs for unreasonable focus policies

@@ -33,16 +33,6 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="knsButton">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Get New Decorations...</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
        <item>
@@ -76,19 +66,6 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <spacer name="borderSizesSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
          <item>
           <widget class="QLabel" name="borderSizesLabel">
            <property name="text">
@@ -149,6 +126,29 @@
              <string comment="@item:inlistbox Border size:">Oversized</string>
             </property>
            </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="borderSizesSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="knsButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Get New Window Decorations...</string>
+           </property>
           </widget>
          </item>
         </layout>
