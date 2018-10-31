@@ -435,8 +435,6 @@ QModelIndex TabBoxHandler::nextPrev(bool forward) const
     case TabBoxConfig::DesktopTabBox:
         model = d->desktopModel();
         break;
-    default:
-        return d->index;
     }
     if (forward) {
         int column = d->index.column() + 1;
@@ -612,8 +610,6 @@ QModelIndex TabBoxHandler::first() const
     case TabBoxConfig::DesktopTabBox:
         model = d->desktopModel();
         break;
-    default:
-        return QModelIndex();
     }
     return model->index(0, 0);
 }
