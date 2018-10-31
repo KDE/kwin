@@ -491,6 +491,7 @@ void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
         AniMap::const_iterator entry = d->m_animations.constFind( w );
         if ( entry != d->m_animations.constEnd() ) {
             bool isUsed = false;
+            bool paintDeleted = false;
             for (QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim) {
                 if (anim->startTime > clock() && !anim->waitAtSource)
                     continue;
@@ -504,11 +505,13 @@ void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
                     if (anim->attribute == Clip)
                         clipWindow(w, *anim, data.quads);
                 }
+
+                paintDeleted |= anim->keepAlive;
             }
             if ( isUsed ) {
                 if ( w->isMinimized() )
                     w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
-                else if ( w->isDeleted() )
+                else if ( w->isDeleted() && paintDeleted )
                     w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
                 else if ( !w->isOnCurrentDesktop() )
                     w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
