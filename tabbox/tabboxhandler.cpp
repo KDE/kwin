@@ -246,7 +246,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
             if (offers.isEmpty()) {
                 // load default
                 offers = KPackage::PackageLoader::self()->findPackages(type,  folderName,
-                    [this] (const KPluginMetaData &data) {
+                    [] (const KPluginMetaData &data) {
                         return data.pluginId().compare(QStringLiteral("informative"), Qt::CaseInsensitive) == 0;
                     }
                 );
@@ -265,7 +265,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
             qCDebug(KWIN_TABBOX) << "Window Switcher Layout is no declarativeappletscript";
             return nullptr;
         }
-        auto findScriptFile = [desktopMode, service, folderName] {
+        auto findScriptFile = [service, folderName] {
             const QString pluginName = service.pluginId();
             const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
             return QStandardPaths::locate(QStandardPaths::GenericDataLocation, folderName + pluginName + QLatin1String("/contents/") + scriptName);
