@@ -125,6 +125,7 @@ void Deleted::copyToDeleted(Toplevel* c)
         m_modal = client->isModal();
         m_mainClients = client->mainClients();
         foreach (AbstractClient *c, m_mainClients) {
+            addTransientFor(c);
             connect(c, &AbstractClient::windowClosed, this, &Deleted::mainClientClosed);
         }
         m_fullscreen = client->isFullScreen();
@@ -137,20 +138,6 @@ void Deleted::copyToDeleted(Toplevel* c)
 
         const auto *x11Client = qobject_cast<Client *>(client);
         m_wasGroupTransient = x11Client && x11Client->groupTransient();
-
-        if (m_wasGroupTransient) {
-            const auto members = x11Client->group()->members();
-            for (Client *member : members) {
-                if (member != client) {
-                    addTransientFor(member);
-                }
-            }
-        } else {
-            AbstractClient *transientFor = client->transientFor();
-            if (transientFor != nullptr) {
-                addTransientFor(transientFor);
-            }
-        }
     }
 
     m_wasWaylandClient = qobject_cast<ShellClient *>(c) != nullptr;
