@@ -1100,6 +1100,7 @@ void RuleBook::save()
         (*it)->write(cg);
         ++i;
     }
+    m_config->sync();
 }
 
 void RuleBook::temporaryRulesMessage(const QString& message)
