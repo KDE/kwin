@@ -5,14 +5,34 @@
 // ### FIXME
 
 #include "tabbox/tabbox.h"
-// #include "main.h"
 
 #ifndef KWIN_TABBOX_ACCESSIBILITY_H
 #define KWIN_TABBOX_ACCESSIBILITY_H
 
-// namespace and stuff (why?)
 namespace KWin {
 
+class AbstractClient;
+
+class ClientAccessible : public QAccessibleObject
+{
+public:
+    ClientAccessible(AbstractClient *client);
+
+    QAccessibleInterface* parent() const override;
+
+    QAccessibleInterface *child(int) const override
+    { return nullptr; }
+    int childCount() const override { return 0; }
+    int indexOfChild(const QAccessibleInterface *) const override
+    { return -1; }
+
+    QString text(QAccessible::Text t) const override;
+    QAccessible::Role role() const override;
+    QAccessible::State state() const override;
+
+private:
+    AbstractClient *client() const;
+};
 
 class TabBoxAccessible : public QAccessibleObject
 {
@@ -21,26 +41,18 @@ public:
 
     QAccessibleInterface* parent() const override;
 
-//    bool isValid() const override;
-//    QObject *object() const override;
-//    QWindow *window() const;
-
-    // relations
-//    QVector<QPair<QAccessibleInterface*, QAccessible::Relation> > relations(QAccessible::Relation match = QAccessible::AllRelations) const;
 //    QAccessibleInterface *focusChild() const;
 
-//    QAccessibleInterface *childAt(int x, int y) const override;
-
-    // navigation, hierarchy
     QAccessibleInterface *child(int index) const override;
     int childCount() const override;
     int indexOfChild(const QAccessibleInterface *) const override;
 
-    // properties and state
     QString text(QAccessible::Text) const override;
-//    QRect rect() const override;
     QAccessible::Role role() const override;
     QAccessible::State state() const override;
+
+private:
+    KWin::TabBox::TabBox *tabbox() const;
 };
 
 class Application;

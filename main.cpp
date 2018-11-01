@@ -104,6 +104,7 @@ int Application::x11ScreenNumber()
 }
 
 QAccessibleInterface* accessibilityFactory(const QString &key, QObject* object) {
+    Q_UNUSED(key);
 //    qDebug() << Q_FUNC_INFO << key << object;
     if (object == kwinApp()) {
         qDebug() << "RETURN A11Y for APP";
