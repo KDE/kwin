@@ -508,6 +508,7 @@ if(KWIN_BUILD_TABBOX)
         tabbox/tabboxhandler.cpp
         tabbox/tabbox_logging.cpp
         tabbox/x11_filter.cpp
+        tabbox/accessibility.cpp
   )
 endif()
 

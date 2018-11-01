@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+#include "tabbox/accessibility.h"
+
 // KDE
 #include <KAboutData>
 #include <KLocalizedString>
@@ -49,6 +51,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQuickWindow>
 #include <QStandardPaths>
 #include <QtDBus>
+#include <QAccessible>
+#include <QAccessibleApplication>
 
 // system
 #ifdef HAVE_UNISTD_H
@@ -99,6 +103,14 @@ int Application::x11ScreenNumber()
     return screen_number;
 }
 
+QAccessibleInterface* accessibilityFactory(const QString &key, QObject* object) {
+//    qDebug() << Q_FUNC_INFO << key << object;
+    if (object == kwinApp()) {
+        qDebug() << "RETURN A11Y for APP";
+    }
+    return new KWinAccessibleApplication(kwinApp());
+}
+
 Application::Application(Application::OperationMode mode, int &argc, char **argv)
     : QApplication(argc, argv)
     , m_eventFilter(new XcbEventFilter())
@@ -112,6 +124,10 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     qRegisterMetaType<KWin::EffectWindow*>();
     qRegisterMetaType<KWayland::Server::SurfaceInterface *>("KWayland::Server::SurfaceInterface *");
     qRegisterMetaType<KSharedConfigPtr>();
+
+    // By default we would get a QAccessibleApplication created for our
+    // main app. That doesn't do the trick for the purpose of faking the tab handler.
+    QAccessible::installFactory(KWin::accessibilityFactory);
 }
 
 void Application::setConfigLock(bool lock)

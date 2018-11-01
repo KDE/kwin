@@ -30,6 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox/desktopchain.h"
 #include "tabbox/tabbox_logging.h"
 #include "tabbox/x11_filter.h"
+
+#include "tabbox/accessibility.h"
+
 // kwin
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -83,6 +86,7 @@ TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox* tabBox)
         connect(Activities::self(), SIGNAL(currentChanged(QString)), m_desktopFocusChain, SLOT(useChain(QString)));
     }
 #endif
+    qDebug() << Q_FUNC_INFO << "CREATED";
 }
 
 TabBoxHandlerImpl::~TabBoxHandlerImpl()
@@ -506,10 +510,15 @@ TabBox::TabBox(QObject *parent)
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
     connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
+
+    TabBoxAccessible *accessible = new TabBoxAccessible(this);
+    qDebug() << "Created TabBox and accessible" << accessible;
+    qDebug() << " parent accessible" << accessible->parent();
 }
 
 TabBox::~TabBox()
 {
+    qDebug() << Q_FUNC_INFO;
     s_self = nullptr;
 }
 
@@ -600,6 +609,7 @@ void TabBox::globalShortcutChanged(QAction *action, const QKeySequence &seq)
  */
 void TabBox::setMode(TabBoxMode mode)
 {
+    qDebug() << Q_FUNC_INFO << mode;
     m_tabBoxMode = mode;
     switch(mode) {
     case TabBoxWindowsMode:
@@ -629,6 +639,7 @@ void TabBox::setMode(TabBoxMode mode)
  */
 void TabBox::reset(bool partial_reset)
 {
+    qDebug() << Q_FUNC_INFO;
     switch(m_tabBox->config().tabBoxMode()) {
     case TabBoxConfig::ClientTabBox:
         m_tabBox->createModel(partial_reset);
@@ -660,6 +671,7 @@ void TabBox::reset(bool partial_reset)
  */
 void TabBox::nextPrev(bool next)
 {
+    qDebug() << Q_FUNC_INFO << next;
     setCurrentIndex(m_tabBox->nextPrev(next), false);
     emit tabBoxUpdated();
 }
@@ -724,6 +736,7 @@ QList< int > TabBox::currentDesktopList()
  */
 void TabBox::setCurrentClient(AbstractClient *newClient)
 {
+    qDebug() << Q_FUNC_INFO;
     setCurrentIndex(m_tabBox->index(newClient->tabBoxClient()));
 }
 
@@ -742,6 +755,9 @@ void TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
     if (!index.isValid())
         return;
     m_tabBox->setCurrentIndex(index);
+    qDebug() << Q_FUNC_INFO << "Set current index:" << index
+         << m_tabBox->client(index)->caption();
+
     if (notifyEffects) {
         emit tabBoxUpdated();
     }
@@ -753,6 +769,7 @@ void TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
 */
 void TabBox::show()
 {
+    qDebug() << Q_FUNC_INFO;
     emit tabBoxAdded(m_tabBoxMode);
     if (isDisplayed()) {
         m_isShown = false;
@@ -769,6 +786,7 @@ void TabBox::show()
 */
 void TabBox::hide(bool abort)
 {
+    qDebug() << Q_FUNC_INFO;
     m_delayedShowTimer.stop();
     if (m_isShown) {
         m_isShown = false;
@@ -1244,6 +1262,7 @@ bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
     m_noModifierGrab = false;
     setMode(mode);
     reset();
+    qDebug() << Q_FUNC_INFO;
     return true;
 }
 
@@ -1270,6 +1289,7 @@ bool TabBox::startWalkThroughDesktopList()
 
 void TabBox::KDEWalkThroughWindows(bool forward)
 {
+    qDebug() << Q_FUNC_INFO << forward;
     nextPrev(forward);
     delayedShow();
 }
