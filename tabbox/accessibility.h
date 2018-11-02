@@ -19,7 +19,7 @@ namespace TabBox {
 class ClientAccessible : public QAccessibleObject
 {
 public:
-    ClientAccessible(AbstractClient *client);
+    ClientAccessible(AbstractClient *client, const QAccessibleInterface *parentInterface);
 
     QAccessibleInterface* parent() const override;
 
@@ -35,6 +35,7 @@ public:
 
 private:
     KWin::AbstractClient *client() const;
+    QAccessibleInterface *m_parent;
 };
 
 class TabBoxAccessible : public QAccessibleObject

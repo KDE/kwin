@@ -35,8 +35,13 @@ QAccessibleInterface *TabBoxAccessible::focusChild() const
     if (!tabbox() || !tabbox()->currentClient()) {
         return nullptr;
     }
-    // FIXME must come from cache!!!
-    return new ClientAccessible(tabbox()->currentClient());
+    auto *client = tabbox()->currentClient();
+    auto *iface = QAccessible::queryAccessibleInterface(client);
+    if (!iface) {
+        auto *iface = new ClientAccessible(client, this);
+        QAccessible::registerAccessibleInterface(iface);
+    }
+    return iface;
 }
 
 QAccessibleInterface *TabBoxAccessible::child(int index) const
@@ -46,8 +51,14 @@ QAccessibleInterface *TabBoxAccessible::child(int index) const
     }
 
     if (index >= 0 && index < tabbox()->currentClientList().size()) {
-        // FIXME: go through factory to get the cache used
-        return new ClientAccessible(tabbox()->currentClientList().at(index));
+        auto *client = tabbox()->currentClientList().at(index);
+        auto *iface = QAccessible::queryAccessibleInterface(client);
+
+        if (!iface) {
+            auto *iface = new ClientAccessible(client, this);
+            QAccessible::registerAccessibleInterface(iface);
+        }
+        return iface;
     }
 
     return nullptr;
@@ -63,8 +74,16 @@ int TabBoxAccessible::childCount() const
     return 0;
 }
 
-int TabBoxAccessible::indexOfChild(const QAccessibleInterface *) const
+int TabBoxAccessible::indexOfChild(const QAccessibleInterface *child) const
 {
+    if (!tabbox()) {
+        return -1;
+    }
+    for (int i = 0; i < tabbox()->currentClientList().size(); ++i) {
+        if (tabbox()->currentClientList().at(i) == child->object()) {
+            return i;
+        }
+    }
     return -1;
 }
 
@@ -152,16 +171,15 @@ int KWinAccessibleApplication::indexOfChild(const QAccessibleInterface *child) c
     return QAccessibleApplication::indexOfChild(child);
 }
 
-ClientAccessible::ClientAccessible(AbstractClient *client)
+ClientAccessible::ClientAccessible(AbstractClient *client, const QAccessibleInterface *parentInterface)
     : QAccessibleObject(client)
 {
+    m_parent = const_cast<QAccessibleInterface*>(parentInterface);
 }
 
 QAccessibleInterface *ClientAccessible::parent() const
 {
-    qWarning() << "parent of client accessible";
-    // FIXME
-    return nullptr;
+    return m_parent;
 }
 
 QString ClientAccessible::text(QAccessible::Text t) const
