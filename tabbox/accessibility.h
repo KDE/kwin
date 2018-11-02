@@ -44,7 +44,7 @@ public:
 
     QAccessibleInterface* parent() const override;
 
-//    QAccessibleInterface *focusChild() const;
+    QAccessibleInterface *focusChild() const;
 
     QAccessibleInterface *child(int index) const override;
     int childCount() const override;

@@ -30,6 +30,15 @@ QAccessibleInterface *TabBoxAccessible::parent() const {
     return QAccessible::queryAccessibleInterface(KWin::kwinApp());
 }
 
+QAccessibleInterface *TabBoxAccessible::focusChild() const
+{
+    if (!tabbox() || !tabbox()->currentClient()) {
+        return nullptr;
+    }
+    // FIXME must come from cache!!!
+    return new ClientAccessible(tabbox()->currentClient());
+}
+
 QAccessibleInterface *TabBoxAccessible::child(int index) const
 {
     if (!tabbox()) {
@@ -61,16 +70,8 @@ int TabBoxAccessible::indexOfChild(const QAccessibleInterface *) const
 
 QString TabBoxAccessible::text(QAccessible::Text t) const
 {
-    QString window;
-    if (tabbox() && tabbox()->currentClient()) {
-        window = tabbox()->currentClient()->caption();
-    }
-
     if (t == QAccessible::Name) {
-        return QStringLiteral("Window Switcher: ") + window;
-    } else if (t == QAccessible::Description) {
-
-        return QStringLiteral("KWIN THING description"); // FIXME
+        return QStringLiteral("Window Switcher");
     }
     return QString();
 }
@@ -95,13 +96,17 @@ QAccessible::State TabBoxAccessible::state() const
 
 void TabBoxAccessible::show() const
 {
-    QAccessibleStateChangeEvent event(object(), state());
+    QAccessible::State state;
+    state.active = true;
+    QAccessibleStateChangeEvent event(object(), state);
     QAccessible::updateAccessibility(&event);
 }
 
 void TabBoxAccessible::hide() const
 {
-    QAccessibleStateChangeEvent event(object(), state());
+    QAccessible::State state;
+    state.active = false;
+    QAccessibleStateChangeEvent event(object(), state);
     QAccessible::updateAccessibility(&event);
 }
 
@@ -124,7 +129,9 @@ int KWinAccessibleApplication::childCount() const {
 }
 
 QAccessibleInterface *KWinAccessibleApplication::child(int index) const {
-//    qDebug() << Q_FUNC_INFO << index << "CC" << QAccessibleApplication::childCount();
+
+    qDebug() << Q_FUNC_INFO << index << "ChildCount" << QAccessibleApplication::childCount();
+
     if (index < QAccessibleApplication::childCount()) {
         return QAccessibleApplication::child(index);
     } else if (index == QAccessibleApplication::childCount()) {
@@ -136,6 +143,9 @@ QAccessibleInterface *KWinAccessibleApplication::child(int index) const {
 }
 
 int KWinAccessibleApplication::indexOfChild(const QAccessibleInterface *child) const {
+
+    qDebug() << Q_FUNC_INFO;
+
     if (child == m_child) {
         return childCount() - 1;
     }
@@ -149,6 +159,7 @@ ClientAccessible::ClientAccessible(AbstractClient *client)
 
 QAccessibleInterface *ClientAccessible::parent() const
 {
+    qWarning() << "parent of client accessible";
     // FIXME
     return nullptr;
 }
@@ -162,6 +173,7 @@ QString ClientAccessible::text(QAccessible::Text t) const
         }
     }
     return QString();
+//    return "Client Accessible of KWIN";
 }
 
 QAccessible::Role ClientAccessible::role() const
@@ -172,6 +184,8 @@ QAccessible::Role ClientAccessible::role() const
 QAccessible::State ClientAccessible::state() const
 {
     QAccessible::State s; // FIXME
+    s.focusable = true;
+    s.focused = true;
     return s;
 }
 
