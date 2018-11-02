@@ -8,6 +8,9 @@
 
 using namespace KWin;
 
+namespace KWin {
+namespace TabBox {
+
 // When doing anything, the window needs to be activated:
 //QAccessible::State state;
 //state.active = true;
@@ -16,7 +19,7 @@ using namespace KWin;
 
 // AND deactivated when hiding the tabbox
 
-TabBoxAccessible::TabBoxAccessible(TabBox::TabBox *parent) : QAccessibleObject(parent) {
+TabBoxAccessible::TabBoxAccessible(TabBox *parent) : QAccessibleObject(parent) {
     auto *appInterface = QAccessible::queryAccessibleInterface(KWin::kwinApp());
     KWinAccessibleApplication *appAccessible = static_cast<KWinAccessibleApplication*>(appInterface);
     appAccessible->addChildAccessible(this);
@@ -80,13 +83,31 @@ QAccessible::Role TabBoxAccessible::role() const
 QAccessible::State TabBoxAccessible::state() const
 {
     QAccessible::State s;
-    s.focused = true;
+    s.focusable = true;
+    if (tabbox() && tabbox()->isShown()) {
+        s.active = true;
+        s.focused = true;
+    } else {
+        s.invisible = true;
+    }
     return s;
 }
 
-TabBox::TabBox *TabBoxAccessible::tabbox() const
+void TabBoxAccessible::show() const
 {
-    return static_cast<TabBox::TabBox *>(object());
+    QAccessibleStateChangeEvent event(object(), state());
+    QAccessible::updateAccessibility(&event);
+}
+
+void TabBoxAccessible::hide() const
+{
+    QAccessibleStateChangeEvent event(object(), state());
+    QAccessible::updateAccessibility(&event);
+}
+
+TabBox *TabBoxAccessible::tabbox() const
+{
+    return static_cast<TabBox *>(object());
 }
 
 KWinAccessibleApplication::KWinAccessibleApplication(Application *app)
@@ -154,7 +175,10 @@ QAccessible::State ClientAccessible::state() const
     return s;
 }
 
-AbstractClient *ClientAccessible::client() const
+KWin::AbstractClient *ClientAccessible::client() const
 {
-    return static_cast<AbstractClient *>(object());
+    return static_cast<KWin::AbstractClient *>(object());
+}
+
+}
 }

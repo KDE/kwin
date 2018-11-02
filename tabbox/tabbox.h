@@ -47,6 +47,7 @@ namespace TabBox
 class DesktopChainManager;
 class TabBoxConfig;
 class TabBox;
+class TabBoxAccessible;
 class TabBoxHandlerImpl : public TabBoxHandler
 {
 public:
@@ -257,6 +258,7 @@ private Q_SLOTS:
 private:
     TabBoxMode m_tabBoxMode;
     TabBoxHandlerImpl* m_tabBox;
+    TabBoxAccessible* m_accessible;
     bool m_delayShow;
     int m_delayShowTime;
 

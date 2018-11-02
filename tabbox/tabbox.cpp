@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox/desktopchain.h"
 #include "tabbox/tabbox_logging.h"
 #include "tabbox/x11_filter.h"
-
 #include "tabbox/accessibility.h"
 
 // kwin
@@ -511,9 +510,8 @@ TabBox::TabBox(QObject *parent)
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
     connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
 
-    TabBoxAccessible *accessible = new TabBoxAccessible(this);
-    qDebug() << "Created TabBox and accessible" << accessible;
-    qDebug() << " parent accessible" << accessible->parent();
+    m_accessible = new TabBoxAccessible(this);
+    qDebug() << "Created TabBox and accessible" << m_accessible;
 }
 
 TabBox::~TabBox()
@@ -779,6 +777,7 @@ void TabBox::show()
     reference();
     m_isShown = true;
     m_tabBox->show();
+    m_accessible->show();
 }
 
 /*!

@@ -109,7 +109,7 @@ QAccessibleInterface* accessibilityFactory(const QString &key, QObject* object) 
     if (object == kwinApp()) {
         qDebug() << "RETURN A11Y for APP";
     }
-    return new KWinAccessibleApplication(kwinApp());
+    return new TabBox::KWinAccessibleApplication(kwinApp());
 }
 
 Application::Application(Application::OperationMode mode, int &argc, char **argv)

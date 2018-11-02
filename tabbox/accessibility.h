@@ -12,6 +12,9 @@
 namespace KWin {
 
 class AbstractClient;
+class Application;
+
+namespace TabBox {
 
 class ClientAccessible : public QAccessibleObject
 {
@@ -31,7 +34,7 @@ public:
     QAccessible::State state() const override;
 
 private:
-    AbstractClient *client() const;
+    KWin::AbstractClient *client() const;
 };
 
 class TabBoxAccessible : public QAccessibleObject
@@ -51,11 +54,13 @@ public:
     QAccessible::Role role() const override;
     QAccessible::State state() const override;
 
+    // The TabBox is shown/hidden - update accessibility
+    void show() const;
+    void hide() const;
+
 private:
     KWin::TabBox::TabBox *tabbox() const;
 };
-
-class Application;
 
 class KWinAccessibleApplication : public QAccessibleApplication
 {
@@ -78,7 +83,7 @@ private:
     QAccessibleInterface *m_child = nullptr;
 };
 
-}
-
+} // namespace TabBox
+} // namespace KWin
 
 #endif
