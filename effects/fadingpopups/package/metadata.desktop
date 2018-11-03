@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Fading Popups
+Icon=preferences-system-windows-effect-fadingpopups
+Comment=Make popups smoothly fade in and out when they are shown or hidden
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Vlad Zagorodniy
+X-KDE-PluginInfo-Email=vladzzag@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_fadingpopups
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Ordering=60
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js

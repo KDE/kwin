@@ -145,6 +145,7 @@ void TestScriptedEffectLoader::testHasEffect_data()
     QTest::newRow("Fade + kwin4_effect")         << QStringLiteral("kwin4_effect_fade")         << true;
     QTest::newRow("Fade + kwin4_effect + CS")    << QStringLiteral("kwin4_eFfect_fAde")         << true;
     QTest::newRow("FadeDesktop")                 << QStringLiteral("kwin4_effect_fadedesktop")  << true;
+    QTest::newRow("FadingPopups")                << QStringLiteral("kwin4_effect_fadingpopups") << true;
     QTest::newRow("FrozenApp")                   << QStringLiteral("kwin4_effect_frozenapp")    << true;
     QTest::newRow("DialogParent")                << QStringLiteral("kwin4_effect_dialogparent") << true;
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")        << true;
@@ -179,6 +180,7 @@ void TestScriptedEffectLoader::testKnownEffects()
     expectedEffects << QStringLiteral("kwin4_effect_dialogparent")
                     << QStringLiteral("kwin4_effect_fade")
                     << QStringLiteral("kwin4_effect_fadedesktop")
+                    << QStringLiteral("kwin4_effect_fadingpopups")
                     << QStringLiteral("kwin4_effect_frozenapp")
                     << QStringLiteral("kwin4_effect_login")
                     << QStringLiteral("kwin4_effect_logout")
@@ -206,6 +208,7 @@ void TestScriptedEffectLoader::testLoadEffect_data()
     QTest::newRow("Fade + kwin4_effect")         << QStringLiteral("kwin4_effect_fade")         << true;
     QTest::newRow("Fade + kwin4_effect + CS")    << QStringLiteral("kwin4_eFfect_fAde")         << true;
     QTest::newRow("FadeDesktop")                 << QStringLiteral("kwin4_effect_fadedesktop")  << true;
+    QTest::newRow("FadingPopups")                << QStringLiteral("kwin4_effect_fadingpopups") << true;
     QTest::newRow("FrozenApp")                   << QStringLiteral("kwin4_effect_frozenapp")    << true;
     QTest::newRow("DialogParent")                << QStringLiteral("kwin4_effect_dialogparent") << true;
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")        << true;
@@ -360,6 +363,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     plugins.writeEntry(kwin4 + QStringLiteral("dialogparentEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("fadeEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("fadedesktopEnabled"), false);
+    plugins.writeEntry(kwin4 + QStringLiteral("fadingpopupsEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("frozenappEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("loginEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("logoutEnabled"), false);

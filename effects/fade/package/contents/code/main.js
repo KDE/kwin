@@ -34,12 +34,21 @@ function isFadeWindow(w) {
     if (blacklist.indexOf(w.windowClass) != -1) {
         return false;
     }
+    if (w.popup) {
+        return false;
+    }
+    if (w.x11Client && !w.managed) {
+        return false;
+    }
+    if (!w.visible) {
+        return false;
+    }
     if (w.deleted && effect.isGrabbed(w, Effect.WindowClosedGrabRole)) {
         return false;
     } else if (!w.deleted && effect.isGrabbed(w, Effect.WindowAddedGrabRole)) {
         return false;
     }
-    return w.onCurrentDesktop && !w.desktopWindow && !w.utility && !w.minimized;
+    return w.normalWindow || w.dialog;
 }
 
 var fadeInTime, fadeOutTime, fadeWindows;

@@ -113,6 +113,7 @@ void TestPluginEffectLoader::testHasEffect_data()
     // all the scripted effects should fail
     QTest::newRow("Fade")              << QStringLiteral("kwin4_effect_fade")         << false;
     QTest::newRow("FadeDesktop")       << QStringLiteral("kwin4_effect_fadedesktop")  << false;
+    QTest::newRow("FadingPopups")      << QStringLiteral("kwin4_effect_fadingpopups") << false;
     QTest::newRow("DialogParent")      << QStringLiteral("kwin4_effect_dialogparent") << false;
     QTest::newRow("Login")             << QStringLiteral("kwin4_effect_login")        << false;
     QTest::newRow("Logout")            << QStringLiteral("kwin4_effect_logout")       << false;
