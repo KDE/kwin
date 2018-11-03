@@ -505,7 +505,7 @@ void TestVirtualDesktop::testCreateRequested()
     m_plasmaVirtualDesktopManagement->requestCreateVirtualDesktop(QStringLiteral("Desktop"), 1);
     desktopCreateRequestedSpy.wait();
     QCOMPARE(desktopCreateRequestedSpy.first().first().toString(), QStringLiteral("Desktop"));
-    QCOMPARE(desktopCreateRequestedSpy.first().at(1).toUInt(), 1);
+    QCOMPARE(desktopCreateRequestedSpy.first().at(1).toUInt(), (quint32)1);
 
     //actually create
     m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-4"), 1);
