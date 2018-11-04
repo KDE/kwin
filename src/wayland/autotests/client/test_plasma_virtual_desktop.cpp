@@ -151,7 +151,7 @@ void TestVirtualDesktop::init()
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement = registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
-    QSignalSpy windowSpy(m_windowManagement, SIGNAL(windowCreated(KWayland::Client::PlasmaWindow *)));
+    QSignalSpy windowSpy(m_windowManagement, SIGNAL(windowCreated(KWayland::Client::PlasmaWindow*)));
     QVERIFY(windowSpy.isValid());
     m_windowInterface = m_windowManagementInterface->createWindow(this);
     m_windowInterface->setPid(1337);
