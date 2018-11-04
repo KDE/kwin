@@ -77,13 +77,6 @@ void TextInputInterface::Private::hideInputPanelCallback(wl_client *client, wl_r
     emit p->q_func()->requestHideInputPanel();
 }
 
-void TextInputInterface::Private::resetCallback(wl_client *client, wl_resource *resource)
-{
-    auto p = cast<Private>(resource);
-    Q_ASSERT(*p->client == client);
-    emit p->q_func()->requestReset();
-}
-
 void TextInputInterface::Private::setSurroundingTextCallback(wl_client *client, wl_resource *resource, const char * text, uint32_t cursor, uint32_t anchor)
 {
     setSurroundingText2Callback(client, resource, text, cursor, anchor);
@@ -208,22 +201,6 @@ void TextInputInterface::Private::setPreferredLanguageCallback(wl_client *client
         p->preferredLanguage = preferredLanguage;
         emit p->q_func()->preferredLanguageChanged(p->preferredLanguage);
     }
-}
-
-void TextInputInterface::Private::commitStateCallback(wl_client *client, wl_resource *resource, uint32_t serial)
-{
-    auto p = cast<Private>(resource);
-    Q_ASSERT(*p->client == client);
-    p->latestState = serial;
-}
-
-void TextInputInterface::Private::invokeActionCallback(wl_client *client, wl_resource *resource, uint32_t button, uint32_t index)
-{
-    Q_UNUSED(button)
-    Q_UNUSED(index)
-    // TODO: implement
-    auto p = cast<Private>(resource);
-    Q_ASSERT(*p->client == client);
 }
 
 TextInputInterface::Private::Private(TextInputInterface *q, Global *c, wl_resource *parentResource, const wl_interface *interface, const void *implementation)

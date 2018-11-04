@@ -56,10 +56,15 @@ public:
 
 private:
     static const struct wl_text_input_interface s_interface;
-
     TextInputUnstableV0Interface *q_func() {
         return reinterpret_cast<TextInputUnstableV0Interface *>(q);
     }
+
+    static void resetCallback(wl_client *client, wl_resource *resource);
+    static void commitStateCallback(wl_client *client, wl_resource *resource, uint32_t serial);
+    static void invokeActionCallback(wl_client *client, wl_resource *resource, uint32_t button, uint32_t index);
+
+    quint32 latestState = 0;
 };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -216,6 +221,29 @@ TextInputUnstableV0Interface::Private::Private(TextInputInterface *q, TextInputM
 }
 
 TextInputUnstableV0Interface::Private::~Private() = default;
+
+void TextInputUnstableV0Interface::Private::resetCallback(wl_client *client, wl_resource *resource)
+{
+    auto p = cast<Private>(resource);
+    Q_ASSERT(*p->client == client);
+    emit p->q_func()->requestReset();
+}
+
+void TextInputUnstableV0Interface::Private::commitStateCallback(wl_client *client, wl_resource *resource, uint32_t serial)
+{
+    auto p = cast<Private>(resource);
+    Q_ASSERT(*p->client == client);
+    p->latestState = serial;
+}
+
+void TextInputUnstableV0Interface::Private::invokeActionCallback(wl_client *client, wl_resource *resource, uint32_t button, uint32_t index)
+{
+    Q_UNUSED(button)
+    Q_UNUSED(index)
+    // TODO: implement
+    auto p = cast<Private>(resource);
+    Q_ASSERT(*p->client == client);
+}
 
 TextInputUnstableV0Interface::TextInputUnstableV0Interface(TextInputManagerUnstableV0Interface *parent, wl_resource *parentResource)
     : TextInputInterface(new Private(this, parent, parentResource))
