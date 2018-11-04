@@ -77,12 +77,7 @@ void TextInputInterface::Private::hideInputPanelCallback(wl_client *client, wl_r
     emit p->q_func()->requestHideInputPanel();
 }
 
-void TextInputInterface::Private::setSurroundingTextCallback(wl_client *client, wl_resource *resource, const char * text, uint32_t cursor, uint32_t anchor)
-{
-    setSurroundingText2Callback(client, resource, text, cursor, anchor);
-}
-
-void TextInputInterface::Private::setSurroundingText2Callback(wl_client *client, wl_resource *resource, const char * text, int32_t cursor, int32_t anchor)
+void TextInputInterface::Private::setSurroundingTextCallback(wl_client *client, wl_resource *resource, const char * text, int32_t cursor, int32_t anchor)
 {
     auto p = cast<Private>(resource);
     Q_ASSERT(*p->client == client);

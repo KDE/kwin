@@ -70,7 +70,7 @@ const struct zwp_text_input_v2_interface TextInputUnstableV2Interface::Private::
     disableCallback,
     showInputPanelCallback,
     hideInputPanelCallback,
-    setSurroundingText2Callback,
+    setSurroundingTextCallback,
     setContentTypeCallback,
     setCursorRectangleCallback,
     setPreferredLanguageCallback,

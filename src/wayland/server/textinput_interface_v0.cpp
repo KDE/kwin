@@ -61,6 +61,7 @@ private:
     }
 
     static void resetCallback(wl_client *client, wl_resource *resource);
+    static void setSurroundingTextUintCallback(wl_client *client, wl_resource *resource, const char * text, uint32_t cursor, uint32_t anchor);
     static void commitStateCallback(wl_client *client, wl_resource *resource, uint32_t serial);
     static void invokeActionCallback(wl_client *client, wl_resource *resource, uint32_t button, uint32_t index);
 
@@ -74,7 +75,7 @@ const struct wl_text_input_interface TextInputUnstableV0Interface::Private::s_in
     showInputPanelCallback,
     hideInputPanelCallback,
     resetCallback,
-    setSurroundingTextCallback,
+    setSurroundingTextUintCallback,
     setContentTypeCallback,
     setCursorRectangleCallback,
     setPreferredLanguageCallback,
@@ -227,6 +228,11 @@ void TextInputUnstableV0Interface::Private::resetCallback(wl_client *client, wl_
     auto p = cast<Private>(resource);
     Q_ASSERT(*p->client == client);
     emit p->q_func()->requestReset();
+}
+
+void TextInputUnstableV0Interface::Private::setSurroundingTextUintCallback(wl_client *client, wl_resource *resource, const char * text, uint32_t cursor, uint32_t anchor)
+{
+    setSurroundingTextCallback(client, resource, text, cursor, anchor);
 }
 
 void TextInputUnstableV0Interface::Private::commitStateCallback(wl_client *client, wl_resource *resource, uint32_t serial)

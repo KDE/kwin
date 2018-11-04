@@ -91,8 +91,7 @@ protected:
     static void disableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);
     static void showInputPanelCallback(wl_client *client, wl_resource *resource);
     static void hideInputPanelCallback(wl_client *client, wl_resource *resource);
-    static void setSurroundingTextCallback(wl_client *client, wl_resource *resource, const char * text, uint32_t cursor, uint32_t anchor);
-    static void setSurroundingText2Callback(wl_client *client, wl_resource *resource, const char * text, int32_t cursor, int32_t anchor);
+    static void setSurroundingTextCallback(wl_client *client, wl_resource *resource, const char * text, int32_t cursor, int32_t anchor);
     static void setContentTypeCallback(wl_client *client, wl_resource *resource, uint32_t hint, uint32_t purpose);
     static void setCursorRectangleCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
     static void setPreferredLanguageCallback(wl_client *client, wl_resource *resource, const char * language);
