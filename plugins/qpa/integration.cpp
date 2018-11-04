@@ -45,7 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <qpa/qplatforminputcontext.h>
 #include <qpa/qplatforminputcontextfactory_p.h>
 #include <qpa/qwindowsysteminterface.h>
-#include <private/qeventdispatcher_unix_p.h>
 
 #include <QtFontDatabaseSupport/private/qgenericunixfontdatabase_p.h>
 #include <QtThemeSupport/private/qgenericunixthemes_p.h>
