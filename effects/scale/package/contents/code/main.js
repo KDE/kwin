@@ -62,7 +62,7 @@ var scaleEffect = {
         }
 
         // Don't animate combobox popups, tooltips, popup menus, etc.
-        if (window.popup) {
+        if (window.popupWindow) {
             return false;
         }
 
