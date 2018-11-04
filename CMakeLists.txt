@@ -498,6 +498,7 @@ ecm_qt_declare_logging_category(kwin_KDEINIT_SRCS
 )
 
 if(KWIN_BUILD_TABBOX)
+    include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
     set(
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
         tabbox/tabbox.cpp

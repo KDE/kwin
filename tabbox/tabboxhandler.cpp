@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <X11/Xlib.h>
+#include <qpa/qwindowsysteminterface.h>
 // KDE
 #include <KLocalizedString>
 #include <KProcess>
@@ -344,6 +345,8 @@ void TabBoxHandlerPrivate::show()
     if (QWindow *w = window()) {
         wheelAngleDelta = 0;
         w->installEventFilter(q);
+        // pretend to activate the window to enable accessibility notifications
+        QWindowSystemInterface::handleWindowActivated(w, Qt::TabFocusReason);
     }
 #endif
 }
