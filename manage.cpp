@@ -132,6 +132,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     setupWindowRules(false);
     setCaption(cap_normal, true);
 
+    connect(this, &Client::windowClassChanged, this, &Client::evaluateWindowRules);
+
     if (Xcb::Extensions::self()->isShapeAvailable())
         xcb_shape_select_input(connection(), window(), true);
     detectShape(window());
