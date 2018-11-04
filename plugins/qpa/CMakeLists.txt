@@ -19,16 +19,11 @@ ecm_qt_declare_logging_category(QPA_SOURCES HEADER logging.h IDENTIFIER KWIN_QPA
 
 add_library(KWinQpaPlugin MODULE ${QPA_SOURCES})
 
-if(Qt5Core_VERSION VERSION_LESS "5.8.0")
-    add_definitions(-DQ_FONTCONFIGDATABASE)
-    set(QT5PLATFORMSUPPORT_LIBS Qt5PlatformSupport::Qt5PlatformSupport)
-else()
-    set(QT5PLATFORMSUPPORT_LIBS
-        Qt5FontDatabaseSupport::Qt5FontDatabaseSupport
-        Qt5ThemeSupport::Qt5ThemeSupport
-        Qt5EventDispatcherSupport::Qt5EventDispatcherSupport
+set(QT5PLATFORMSUPPORT_LIBS
+     Qt5FontDatabaseSupport::Qt5FontDatabaseSupport
+     Qt5ThemeSupport::Qt5ThemeSupport
+     Qt5EventDispatcherSupport::Qt5EventDispatcherSupport
 )
-endif()
 
 target_link_libraries(KWinQpaPlugin
     kwin
