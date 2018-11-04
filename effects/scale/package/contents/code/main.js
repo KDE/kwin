@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
+"use strict";
+
 var blacklist = [
     // The logout screen has to be animated only by the logout effect.
     "ksmserver ksmserver",
@@ -31,7 +33,6 @@ var blacklist = [
 
 var scaleEffect = {
     loadConfig: function (window) {
-        "use strict";
         var defaultDuration = 160;
         var duration = effect.readConfig("Duration", defaultDuration) || defaultDuration;
         scaleEffect.duration = animationTime(duration);
@@ -41,7 +42,6 @@ var scaleEffect = {
         scaleEffect.outOpacity = effect.readConfig("OutOpacity", 0.0);
     },
     isScaleWindow: function (window) {
-        "use strict";
         // We don't want to animate most of plasmashell's windows, yet, some
         // of them we want to, for example, Task Manager Settings window.
         // The problem is that all those window share single window class.
@@ -75,17 +75,14 @@ var scaleEffect = {
         return window.normalWindow || window.dialog;
     },
     setupForcedRoles: function (window) {
-        "use strict";
         window.setData(Effect.WindowForceBackgroundContrastRole, true);
         window.setData(Effect.WindowForceBlurRole, true);
     },
     cleanupForcedRoles: function (window) {
-        "use strict";
         window.setData(Effect.WindowForceBackgroundContrastRole, null);
         window.setData(Effect.WindowForceBlurRole, null);
     },
     slotWindowAdded: function (window) {
-        "use strict";
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
@@ -116,7 +113,6 @@ var scaleEffect = {
         });
     },
     slotWindowClosed: function (window) {
-        "use strict";
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
@@ -151,7 +147,6 @@ var scaleEffect = {
         });
     },
     slotWindowDataChanged: function (window, role) {
-        "use strict";
         if (role == Effect.WindowAddedGrabRole) {
             if (window.scaleInAnimation && effect.isGrabbed(window, role)) {
                 cancel(window.scaleInAnimation);
@@ -167,7 +162,6 @@ var scaleEffect = {
         }
     },
     init: function () {
-        "use strict";
         scaleEffect.loadConfig();
 
         effect.configChanged.connect(scaleEffect.loadConfig);
