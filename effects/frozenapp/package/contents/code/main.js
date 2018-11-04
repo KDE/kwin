@@ -17,31 +17,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-/*global effect, effects, animate, animationTime, Effect*/
+
+"use strict";
+
 var frozenAppEffect = {
     inDuration: animationTime(1500),
     outDuration: animationTime(250),
     loadConfig: function () {
-        "use strict";
         frozenAppEffect.inDuration = animationTime(1500);
         frozenAppEffect.outDuration = animationTime(250);
     },
     windowAdded: function (window) {
-        "use strict";
         if (!window || !window.unresponsive) {
             return;
         }
         frozenAppEffect.windowBecameUnresponsive(window);
     },
     windowBecameUnresponsive: function (window) {
-        "use strict";
         if (window.unresponsiveAnimation) {
             return;
         }
         frozenAppEffect.startAnimation(window, frozenAppEffect.inDuration);
     },
     startAnimation: function (window, duration) {
-        "use strict";
         if (!window.visible) {
             return;
         }
@@ -58,7 +56,6 @@ var frozenAppEffect = {
         });
     },
     windowClosed: function (window) {
-        "use strict";
         frozenAppEffect.cancelAnimation(window);
         if (!window.unresponsive) {
             return;
@@ -66,7 +63,6 @@ var frozenAppEffect = {
         frozenAppEffect.windowBecameResponsive(window);
     },
     windowBecameResponsive: function (window) {
-        "use strict";
         if (!window.unresponsiveAnimation) {
             return;
         }
@@ -88,15 +84,12 @@ var frozenAppEffect = {
         });
     },
     cancelAnimation: function (window) {
-        "use strict";
         if (window.unresponsiveAnimation) {
             cancel(window.unresponsiveAnimation);
             window.unresponsiveAnimation = undefined;
         }
     },
     desktopChanged: function () {
-        "use strict";
-
         var windows = effects.stackingOrder;
         for (var i = 0, length = windows.length; i < length; ++i) {
             var window = windows[i];
@@ -105,7 +98,6 @@ var frozenAppEffect = {
         }
     },
     unresponsiveChanged: function (window) {
-        "use strict";
         if (window.unresponsive) {
             frozenAppEffect.windowBecameUnresponsive(window);
         } else {
@@ -113,15 +105,12 @@ var frozenAppEffect = {
         }
     },
     restartAnimation: function (window) {
-        "use strict";
         if (!window || !window.unresponsive) {
             return;
         }
         frozenAppEffect.startAnimation(window, 1);
     },
     init: function () {
-        "use strict";
-
         effects.windowAdded.connect(frozenAppEffect.windowAdded);
         effects.windowClosed.connect(frozenAppEffect.windowClosed);
         effects.windowMinimized.connect(frozenAppEffect.cancelAnimation);
