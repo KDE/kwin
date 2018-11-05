@@ -219,7 +219,7 @@ PlasmaVirtualDesktopInterface *PlasmaVirtualDesktopManagementInterface::createDe
     }
 
     d->desktops.insert(actualPosition, desktop);
-    //NOTE: this in case the desktop has been deleted but not trough removedesktop
+    //NOTE: this in case the desktop has been deleted but not through removeDesktop
     connect(desktop, &QObject::destroyed, this,
         [this, id] {
             Q_D();
