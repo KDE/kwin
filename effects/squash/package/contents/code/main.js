@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
+"use strict";
+
 var squashEffect = {
     duration: animationTime(250),
     loadConfig: function () {
-        "use strict";
         squashEffect.duration = animationTime(250);
     },
     slotWindowMinimized: function (window) {
-        "use strict";
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
@@ -82,7 +82,6 @@ var squashEffect = {
         });
     },
     slotWindowUnminimized: function (window) {
-        "use strict";
         if (effects.hasActiveFullScreenEffect) {
             return;
         }
@@ -140,7 +139,6 @@ var squashEffect = {
         });
     },
     init: function () {
-        "use strict";
         effect.configChanged.connect(squashEffect.loadConfig);
         effects.windowMinimized.connect(squashEffect.slotWindowMinimized);
         effects.windowUnminimized.connect(squashEffect.slotWindowUnminimized);
