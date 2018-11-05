@@ -18,16 +18,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-/*global effect, effects, animate, animationTime, Effect*/
+
+"use strict";
+
 var loginEffect = {
     duration: animationTime(2000),
     isFadeToBlack: false,
     loadConfig: function () {
-        "use strict";
         loginEffect.isFadeToBlack = effect.readConfig("FadeToBlack", false);
     },
     isLoginSplash: function (window) {
-        "use strict";
         var windowClass = window.windowClass;
         if (windowClass === "ksplashx ksplashx") {
             return true;
@@ -41,7 +41,6 @@ var loginEffect = {
         return false;
     },
     fadeOut: function (window) {
-        "use strict";
         animate({
             window: window,
             duration: loginEffect.duration,
@@ -51,7 +50,6 @@ var loginEffect = {
         });
     },
     fadeToBlack: function (window) {
-        "use strict";
         animate({
             window: window,
             duration: loginEffect.duration / 2,
@@ -74,7 +72,6 @@ var loginEffect = {
         });
     },
     closed: function (window) {
-        "use strict";
         if (!loginEffect.isLoginSplash(window)) {
             return;
         }
@@ -85,7 +82,6 @@ var loginEffect = {
         }
     },
     init: function () {
-        "use strict";
         effect.configChanged.connect(loginEffect.loadConfig);
         effects.windowClosed.connect(loginEffect.closed);
         loginEffect.loadConfig();
