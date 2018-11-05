@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2009 Marco Martin notmart@gmail.com
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,6 +54,11 @@ SlidingPopupsEffect::SlidingPopupsEffect()
             m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
         }
     );
+    connect(effects, qOverload<int, int, EffectWindow *>(&EffectsHandler::desktopChanged),
+            this, &SlidingPopupsEffect::stopAnimations);
+    connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
+            this, &SlidingPopupsEffect::stopAnimations);
+
     reconfigure(ReconfigureAll);
 }
 
@@ -432,6 +438,22 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     w->setData(WindowForceBlurRole, QVariant(true));
 
     w->addRepaintFull();
+}
+
+void SlidingPopupsEffect::stopAnimations()
+{
+    for (auto it = m_animations.constBegin(); it != m_animations.constEnd(); ++it) {
+        EffectWindow *w = it.key();
+
+        if (w->isDeleted()) {
+            w->unrefWindow();
+        } else {
+            w->setData(WindowForceBackgroundContrastRole, QVariant());
+            w->setData(WindowForceBlurRole, QVariant());
+        }
+    }
+
+    m_animations.clear();
 }
 
 bool SlidingPopupsEffect::isActive() const
