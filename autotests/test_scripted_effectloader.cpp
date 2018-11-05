@@ -91,6 +91,7 @@ private Q_SLOTS:
 
 void TestScriptedEffectLoader::initTestCase()
 {
+    qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     QCoreApplication::instance()->setProperty("config", QVariant::fromValue(config));
 }
