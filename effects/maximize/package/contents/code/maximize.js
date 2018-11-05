@@ -16,15 +16,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-/*global effect, effects, animate, animationTime, Effect*/
+
+"use strict";
+
 var maximizeEffect = {
     duration: animationTime(250),
     loadConfig: function () {
-        "use strict";
         maximizeEffect.duration = animationTime(250);
     },
     maximizeChanged: function (window) {
-        "use strict";
         if (!window.oldGeometry) {
             return;
         }
@@ -77,7 +77,6 @@ var maximizeEffect = {
         window.setData(Effect.WindowForceBlurRole, null);
     },
     geometryChange: function (window, oldGeometry) {
-        "use strict";
         if (window.maximizeAnimation1) {
             if (window.geometry.width != window.oldGeometry.width ||
                 window.geometry.height != window.oldGeometry.height) {
@@ -93,7 +92,6 @@ var maximizeEffect = {
         window.olderGeometry = oldGeometry;
     },
     init: function () {
-        "use strict";
         effect.configChanged.connect(maximizeEffect.loadConfig);
         effects.windowGeometryShapeChanged.connect(maximizeEffect.geometryChange);
         effects.windowMaximizedStateChanged.connect(maximizeEffect.maximizeChanged);
