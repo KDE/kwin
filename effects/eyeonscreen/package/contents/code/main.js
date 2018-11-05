@@ -19,14 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 /*global effect, effects, animate, animationTime, Effect, QEasingCurve */
 
+"use strict";
+
 var eyeOnScreenEffect = {
     duration: animationTime(250),
     loadConfig: function () {
-        "use strict";
         eyeOnScreenEffect.duration = animationTime(250);
     },
     delevateWindow: function(window) {
-        "use strict";
         if (window.desktopWindow) {
             if (window.eyeOnScreenShowsDesktop) {
                 window.eyeOnScreenShowsDesktop = false;
@@ -45,7 +45,6 @@ var eyeOnScreenEffect = {
         }
     },
     slurp: function (showing) {
-        "use strict";
         var stackingOrder = effects.stackingOrder;
         var screenGeo = effects.virtualScreenGeometry;
         var center = { value1: screenGeo.x + screenGeo.width/2,
@@ -155,7 +154,6 @@ var eyeOnScreenEffect = {
         }
     },
     init: function () {
-        "use strict";
         eyeOnScreenEffect.loadConfig();
         effects.showingDesktopChanged.connect(eyeOnScreenEffect.slurp);
         effect.animationEnded.connect(eyeOnScreenEffect.delevateWindow);
