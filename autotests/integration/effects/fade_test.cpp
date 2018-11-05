@@ -55,6 +55,7 @@ private:
 
 void FadeTest::initTestCase()
 {
+    qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWin::Effect*>();
