@@ -17,17 +17,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-/*global effect, effects, animate, animationTime, Effect*/
+
+"use strict";
+
 var morphingEffect = {
     duration: animationTime(150),
     loadConfig: function () {
-        "use strict";
         morphingEffect.duration = animationTime(150);
     },
 
     geometryChange: function (window, oldGeometry) {
-        "use strict";
-
         //only tooltips and notifications
         if (!window.tooltip && !window.notification) {
             return;
@@ -130,7 +129,6 @@ var morphingEffect = {
     },
 
     init: function () {
-        "use strict";
         effect.configChanged.connect(morphingEffect.loadConfig);
         effects.windowGeometryShapeChanged.connect(morphingEffect.geometryChange);
     }
