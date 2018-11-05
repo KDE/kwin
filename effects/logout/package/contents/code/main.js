@@ -19,17 +19,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-/*global effect, effects, animate, animationTime, Effect*/
+
+"use strict";
+
 var logoutEffect = {
     inDuration: animationTime(800),
     outDuration: animationTime(400),
     loadConfig: function () {
-        "use strict";
         logoutEffect.inDuration = animationTime(800);
         logoutEffect.outDuration = animationTime(400);
     },
     isLogoutWindow: function (window) {
-        "use strict";
         if (window.windowClass === "ksmserver ksmserver") {
             return true;
         }
@@ -39,7 +39,6 @@ var logoutEffect = {
         return false;
     },
     opened: function (window) {
-        "use strict";
         if (!logoutEffect.isLogoutWindow(window)) {
             return;
         }
@@ -57,7 +56,6 @@ var logoutEffect = {
         });
     },
     closed: function (window) {
-        "use strict";
         if (!logoutEffect.isLogoutWindow(window)) {
             return;
         }
@@ -75,7 +73,6 @@ var logoutEffect = {
         });
     },
     init: function () {
-        "use strict";
         logoutEffect.loadConfig();
         effects.windowAdded.connect(logoutEffect.opened);
         effects.windowShown.connect(logoutEffect.opened);
