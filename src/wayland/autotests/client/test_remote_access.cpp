@@ -19,7 +19,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // Qt
-#include <QtTest/QtTest>
+#include <QtTest>
 // client
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/event_queue.h"

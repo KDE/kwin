@@ -18,7 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // Qt
-#include <QtTest/QtTest>
+#include <QtTest>
 #include <QImage>
 // KWin
 #include "../../src/client/compositor.h"

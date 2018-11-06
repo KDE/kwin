@@ -25,7 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QGuiApplication>
 #include <QFile>
-#include <QtCore/private/qeventdispatcher_glib_p.h>
+#include <private/qeventdispatcher_glib_p.h>
 
 #include <unistd.h>
 #include <iostream>

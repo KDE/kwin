@@ -21,7 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #define TEST_XDG_SHELL_H
 
 // Qt
-#include <QtTest/QtTest>
+#include <QtTest>
 // client
 #include "../../src/client/xdgshell.h"
 #include "../../src/client/connection_thread.h"
