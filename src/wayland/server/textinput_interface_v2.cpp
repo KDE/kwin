@@ -38,8 +38,6 @@ public:
 
     void sendEnter(SurfaceInterface *surface, quint32 serial) override;
     void sendLeave(quint32 serial, SurfaceInterface *surface) override;
-    void requestActivate(SeatInterface *seat, SurfaceInterface *surface) override;
-    void requestDeactivate(SeatInterface *seat) override;
     void preEdit(const QByteArray &text, const QByteArray &commit) override;
     void commit(const QByteArray &text) override;
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength) override;
@@ -55,12 +53,17 @@ public:
     void sendLanguage() override;
 
 private:
+    static void enableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);
+    static void disableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);
     static void updateStateCallback(wl_client *client, wl_resource *resource, uint32_t serial, uint32_t reason);
     static const struct zwp_text_input_v2_interface s_interface;
 
     TextInputUnstableV2Interface *q_func() {
         return reinterpret_cast<TextInputUnstableV2Interface *>(q);
     }
+
+    void enable(SurfaceInterface *s);
+    void disable();
 };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -78,17 +81,15 @@ const struct zwp_text_input_v2_interface TextInputUnstableV2Interface::Private::
 };
 #endif
 
-void TextInputUnstableV2Interface::Private::requestActivate(SeatInterface *seat, SurfaceInterface *s)
+void TextInputUnstableV2Interface::Private::enable(SurfaceInterface *s)
 {
-    Q_UNUSED(seat)
     surface = QPointer<SurfaceInterface>(s);
     enabled = true;
     emit q_func()->enabledChanged();
 }
 
-void TextInputUnstableV2Interface::Private::requestDeactivate(SeatInterface *seat)
+void TextInputUnstableV2Interface::Private::disable()
 {
-    Q_UNUSED(seat)
     surface.clear();
     enabled = false;
     emit q_func()->enabledChanged();
@@ -215,6 +216,21 @@ TextInputUnstableV2Interface::Private::Private(TextInputInterface *q, TextInputM
 }
 
 TextInputUnstableV2Interface::Private::~Private() = default;
+
+void TextInputUnstableV2Interface::Private::enableCallback(wl_client *client, wl_resource *resource, wl_resource *surface)
+{
+    auto p = cast<Private>(resource);
+    Q_ASSERT(*p->client == client);
+    p->enable(SurfaceInterface::get(surface));
+}
+
+void TextInputUnstableV2Interface::Private::disableCallback(wl_client *client, wl_resource *resource, wl_resource *surface)
+{
+    Q_UNUSED(surface)
+    auto p = cast<Private>(resource);
+    Q_ASSERT(*p->client == client);
+    p->disable();
+}
 
 void TextInputUnstableV2Interface::Private::updateStateCallback(wl_client *client, wl_resource *resource, uint32_t serial, uint32_t reason)
 {

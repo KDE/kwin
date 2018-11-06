@@ -54,8 +54,6 @@ public:
     virtual void sendEnter(SurfaceInterface *surface, quint32 serial) = 0;
     virtual void sendLeave(quint32 serial, SurfaceInterface *surface) = 0;
 
-    virtual void requestActivate(SeatInterface *seat, SurfaceInterface *surface) = 0;
-    virtual void requestDeactivate(SeatInterface *seat) = 0;
     virtual void preEdit(const QByteArray &text, const QByteArray &commit) = 0;
     virtual void commit(const QByteArray &text) = 0;
     virtual void deleteSurroundingText(quint32 beforeLength, quint32 afterLength) = 0;
@@ -85,10 +83,6 @@ public:
 protected:
     Private(TextInputInterface *q, Global *c, wl_resource *parentResource, const wl_interface *interface, const void *implementation);
 
-    static void activateCallback(wl_client *client, wl_resource *resource, wl_resource * seat, wl_resource * surface);
-    static void deactivateCallback(wl_client *client, wl_resource *resource, wl_resource * seat);
-    static void enableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);
-    static void disableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);
     static void showInputPanelCallback(wl_client *client, wl_resource *resource);
     static void hideInputPanelCallback(wl_client *client, wl_resource *resource);
     static void setSurroundingTextCallback(wl_client *client, wl_resource *resource, const char * text, int32_t cursor, int32_t anchor);

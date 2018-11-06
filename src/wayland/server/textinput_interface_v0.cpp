@@ -36,10 +36,11 @@ public:
     Private(TextInputInterface *q, TextInputManagerUnstableV0Interface *c, wl_resource *parentResource);
     ~Private();
 
+    void activate(SeatInterface *seat, SurfaceInterface *surface);
+    void deactivate();
+
     void sendEnter(SurfaceInterface *surface, quint32 serial) override;
     void sendLeave(quint32 serial, SurfaceInterface *surface) override;
-    void requestActivate(SeatInterface *seat, SurfaceInterface *surface) override;
-    void requestDeactivate(SeatInterface *seat) override;
     void preEdit(const QByteArray &text, const QByteArray &commit) override;
     void commit(const QByteArray &text) override;
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength) override;
@@ -60,6 +61,8 @@ private:
         return reinterpret_cast<TextInputUnstableV0Interface *>(q);
     }
 
+    static void activateCallback(wl_client *client, wl_resource *resource, wl_resource * seat, wl_resource * surface);
+    static void deactivateCallback(wl_client *client, wl_resource *resource, wl_resource * seat);
     static void resetCallback(wl_client *client, wl_resource *resource);
     static void setSurroundingTextUintCallback(wl_client *client, wl_resource *resource, const char * text, uint32_t cursor, uint32_t anchor);
     static void commitStateCallback(wl_client *client, wl_resource *resource, uint32_t serial);
@@ -84,7 +87,7 @@ const struct wl_text_input_interface TextInputUnstableV0Interface::Private::s_in
 };
 #endif
 
-void TextInputUnstableV0Interface::Private::requestActivate(SeatInterface *seat, SurfaceInterface *s)
+void TextInputUnstableV0Interface::Private::activate(SeatInterface *seat, SurfaceInterface *s)
 {
     surface = QPointer<SurfaceInterface>(s);
     enabled = true;
@@ -92,9 +95,8 @@ void TextInputUnstableV0Interface::Private::requestActivate(SeatInterface *seat,
     emit q_func()->requestActivate(seat, surface);
 }
 
-void TextInputUnstableV0Interface::Private::requestDeactivate(SeatInterface *seat)
+void TextInputUnstableV0Interface::Private::deactivate()
 {
-    Q_UNUSED(seat)
     surface.clear();
     enabled = false;
     emit q_func()->enabledChanged();
@@ -222,6 +224,21 @@ TextInputUnstableV0Interface::Private::Private(TextInputInterface *q, TextInputM
 }
 
 TextInputUnstableV0Interface::Private::~Private() = default;
+
+void TextInputUnstableV0Interface::Private::activateCallback(wl_client *client, wl_resource *resource, wl_resource *seat, wl_resource *surface)
+{
+    auto p = cast<Private>(resource);
+    Q_ASSERT(*p->client == client);
+    p->activate(SeatInterface::get(seat), SurfaceInterface::get(surface));
+}
+
+void TextInputUnstableV0Interface::Private::deactivateCallback(wl_client *client, wl_resource *resource, wl_resource *seat)
+{
+    Q_UNUSED(seat)
+    auto p = cast<Private>(resource);
+    Q_ASSERT(*p->client == client);
+    p->deactivate();
+}
 
 void TextInputUnstableV0Interface::Private::resetCallback(wl_client *client, wl_resource *resource)
 {

@@ -34,35 +34,6 @@ namespace KWayland
 namespace Server
 {
 
-void TextInputInterface::Private::activateCallback(wl_client *client, wl_resource *resource, wl_resource *seat, wl_resource *surface)
-{
-    auto p = cast<Private>(resource);
-    Q_ASSERT(*p->client == client);
-    p->requestActivate(SeatInterface::get(seat), SurfaceInterface::get(surface));
-}
-
-void TextInputInterface::Private::deactivateCallback(wl_client *client, wl_resource *resource, wl_resource *seat)
-{
-    auto p = cast<Private>(resource);
-    Q_ASSERT(*p->client == client);
-    p->requestDeactivate(SeatInterface::get(seat));
-}
-
-void TextInputInterface::Private::enableCallback(wl_client *client, wl_resource *resource, wl_resource *surface)
-{
-    auto p = cast<Private>(resource);
-    Q_ASSERT(*p->client == client);
-    p->requestActivate(nullptr, SurfaceInterface::get(surface));
-}
-
-void TextInputInterface::Private::disableCallback(wl_client *client, wl_resource *resource, wl_resource *surface)
-{
-    Q_UNUSED(surface)
-    auto p = cast<Private>(resource);
-    Q_ASSERT(*p->client == client);
-    p->requestDeactivate(nullptr);
-}
-
 void TextInputInterface::Private::showInputPanelCallback(wl_client *client, wl_resource *resource)
 {
     auto p = cast<Private>(resource);
