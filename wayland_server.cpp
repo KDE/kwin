@@ -63,6 +63,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // Qt
+#include <QDir>
+#include <QFileInfo>
 #include <QThread>
 #include <QWindow>
 
@@ -590,7 +592,13 @@ void WaylandServer::setupX11ClipboardSync()
             }
         );
         m_xclipbaordSync.process->setProcessEnvironment(environment);
-        m_xclipbaordSync.process->start(QStringLiteral(KWIN_XCLIPBOARD_SYNC_BIN));
+        // start from build directory if executable is available there (e.g. autotests), otherwise start libexec executable
+        const QFileInfo clipboardSync{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("org_kde_kwin_xclipboard_syncer")};
+        if (clipboardSync.exists()) {
+            m_xclipbaordSync.process->start(clipboardSync.absoluteFilePath());
+        } else {
+            m_xclipbaordSync.process->start(QStringLiteral(KWIN_XCLIPBOARD_SYNC_BIN));
+        }
     }
 }
 
