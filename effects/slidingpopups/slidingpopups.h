@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2009 Marco Martin notmart@gmail.com
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,8 +50,6 @@ public:
 
     static bool supported();
 
-    // TODO react also on virtual desktop changes
-
     int slideInDuration() const;
     int slideOutDuration() const;
 
@@ -62,6 +61,7 @@ private Q_SLOTS:
 
     void slideIn(EffectWindow *w);
     void slideOut(EffectWindow *w);
+    void stopAnimations();
 
 private:
     void setupAnimData(EffectWindow *w);
@@ -81,7 +81,7 @@ private:
         AnimationKind kind;
         TimeLine timeLine;
     };
-    QHash<const EffectWindow*, Animation> m_animations;
+    QHash<EffectWindow *, Animation> m_animations;
 
     enum class Location {
         Left,
