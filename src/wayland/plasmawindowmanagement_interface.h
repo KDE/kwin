@@ -282,7 +282,7 @@ Q_SIGNALS:
     /**
      * Emitted when the client wishes this window to enter in a new virtual desktop.
      * The server will decide whether to consent this request
-     * @since 5.48
+     * @since 5.52
      */
     void enterPlasmaVirtualDesktopRequested(const QString &desktop);
 
@@ -290,14 +290,14 @@ Q_SIGNALS:
      * Emitted when the client wishes this window to enter in
      * a new virtual desktop to be created for it.
      * The server will decide whether to consent this request
-     * @since 5.48
+     * @since 5.52
      */
     void enterNewPlasmaVirtualDesktopRequested();
 
     /**
      * Emitted when the client wishes to remove this window from a virtual desktop.
      * The server will decide whether to consent this request
-     * @since 5.48
+     * @since 5.52
      */
     void leavePlasmaVirtualDesktopRequested(const QString &desktop);
 

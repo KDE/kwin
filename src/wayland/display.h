@@ -273,7 +273,7 @@ public:
      * Creates the PlasmaVirtualDesktopManagementInterface in interface @p version.
      *
      * @returns The created manager object
-     * @since 5.46
+     * @since 5.52
      **/
     PlasmaVirtualDesktopManagementInterface *createPlasmaVirtualDesktopManagement(QObject *parent = nullptr);
 

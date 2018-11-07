@@ -37,7 +37,7 @@ class PlasmaVirtualDesktopInterface;
  * @short Wrapper for the org_kde_plasma_virtual_desktop_management interface.
  *
  * This class provides a convenient wrapper for the org_kde_plasma_virtual_desktop_management interface.
- * @since 5.46
+ * @since 5.52
  */
 class KWAYLANDSERVER_EXPORT PlasmaVirtualDesktopManagementInterface : public Global
 {
