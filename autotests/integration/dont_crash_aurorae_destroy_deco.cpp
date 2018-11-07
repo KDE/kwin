@@ -54,6 +54,7 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
     if (!QFile::exists(QStringLiteral("/dev/dri/card0"))) {
         QSKIP("Needs a dri device");
     }
+    qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
