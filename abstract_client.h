@@ -94,7 +94,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     /**
      * The x11 ids for all desktops this client is in. On X11 this list will always have a length of 1
      **/
-    Q_PROPERTY(QList<int> x11DesktopIds READ x11DesktopIds NOTIFY x11DesktopIdsChanged)
+    Q_PROPERTY(QVector<int> x11DesktopIds READ x11DesktopIds NOTIFY x11DesktopIdsChanged)
     /**
      * Indicates that the window should not be included on a taskbar.
      **/
@@ -432,13 +432,13 @@ public:
     int desktop() const override {
         return m_desktops.isEmpty() ? (int)NET::OnAllDesktops : m_desktops.last()->x11DesktopNumber();
     }
-    virtual QList<VirtualDesktop *> desktops() const {
+    virtual QVector<VirtualDesktop *> desktops() const {
         return m_desktops;
     }
     void removeDesktop(VirtualDesktop *desktop) {
         m_desktops.removeAll(desktop);
     }
-    QList<int> x11DesktopIds() const;
+    QVector<int> x11DesktopIds() const;
 
     void setMinimized(bool set);
     /**
@@ -1122,7 +1122,7 @@ private:
     bool m_demandsAttention = false;
     bool m_minimized = false;
     QTimer *m_autoRaiseTimer = nullptr;
-    QList <VirtualDesktop *> m_desktops;
+    QVector <VirtualDesktop *> m_desktops;
 
     QString m_colorScheme;
     std::shared_ptr<Decoration::DecorationPalette> m_palette;

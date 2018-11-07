@@ -602,10 +602,10 @@ void AbstractClient::setOnAllDesktops(bool b)
         setDesktop(VirtualDesktopManager::self()->current());
 }
 
-QList<int> AbstractClient::x11DesktopIds() const
+QVector<int> AbstractClient::x11DesktopIds() const
 {
     const auto desks = desktops();
-    QList<int> x11Ids;
+    QVector<int> x11Ids;
     x11Ids.reserve(desks.count());
     std::transform(desks.constBegin(), desks.constEnd(),
         std::back_inserter(x11Ids),
