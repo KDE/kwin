@@ -56,6 +56,8 @@ void XClipboardSyncTest::initTestCase()
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
+    QVERIFY(clipboardSyncDevicedCreated.isValid());
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
     kwinApp()->start();
@@ -65,8 +67,8 @@ void XClipboardSyncTest::initTestCase()
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
     waylandServer()->initWorkspace();
     // wait till the xclipboard sync data device is created
-    while (waylandServer()->xclipboardSyncDataDevice().isNull()) {
-        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
+    if (clipboardSyncDevicedCreated.empty()) {
+        QVERIFY(clipboardSyncDevicedCreated.wait());
     }
     QVERIFY(!waylandServer()->xclipboardSyncDataDevice().isNull());
 }

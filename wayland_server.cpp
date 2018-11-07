@@ -246,6 +246,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
         [this] (DataDeviceInterface *ddi) {
             if (ddi->client() == m_xclipbaordSync.client && m_xclipbaordSync.client != nullptr) {
                 m_xclipbaordSync.ddi = QPointer<DataDeviceInterface>(ddi);
+                emit xclipboardSyncDataDeviceCreated();
                 connect(m_xclipbaordSync.ddi.data(), &DataDeviceInterface::selectionChanged, this,
                     [this] {
                         // testing whether the active client inherits Client

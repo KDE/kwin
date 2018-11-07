@@ -210,6 +210,7 @@ Q_SIGNALS:
     void terminatingInternalClientConnection();
     void initialized();
     void foreignTransientChanged(KWayland::Server::SurfaceInterface *child);
+    void xclipboardSyncDataDeviceCreated();
 
 private:
     void setupX11ClipboardSync();
