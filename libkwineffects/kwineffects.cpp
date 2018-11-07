@@ -857,11 +857,7 @@ WINDOW_HELPER(QString, windowRole, "windowRole")
 WINDOW_HELPER(QStringList, activities, "activities")
 WINDOW_HELPER(bool, skipsCloseAnimation, "skipsCloseAnimation")
 WINDOW_HELPER(KWayland::Server::SurfaceInterface *, surface, "surface")
-
-QList<int> EffectWindow::desktops() const
-{
-    return parent()->property("x11DesktopIds").value<QList<int> >();
-}
+WINDOW_HELPER(QVector<int>, desktops, "x11DesktopIds")
 
 QString EffectWindow::windowClass() const
 {
@@ -988,7 +984,7 @@ bool EffectWindow::isOnCurrentDesktop() const
 
 bool EffectWindow::isOnDesktop(int d) const
 {
-    const QList<int> ds = desktops();
+    const QVector<int> ds = desktops();
     return ds.isEmpty() || ds.contains(d);
 }
 

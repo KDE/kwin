@@ -2091,7 +2091,7 @@ public:
      * a length of 1, on Wayland can be any subset.
      * If the list is empty it means the window is on all desktops
      */
-    QList<int> desktops() const;
+    QVector<int> desktops() const;
 
     int x() const;
     int y() const;
