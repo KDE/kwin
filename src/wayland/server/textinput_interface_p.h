@@ -66,6 +66,9 @@ public:
     virtual void sendInputPanelState() = 0;
     virtual void sendLanguage() = 0;
 
+    virtual TextInputInterface::ContentHints convertContentHint(uint32_t hint) const = 0;
+    virtual TextInputInterface::ContentPurpose convertContentPurpose(uint32_t purpose) const = 0;
+
     QByteArray preferredLanguage;
     QRect cursorRectangle;
     TextInputInterface::ContentHints contentHints = TextInputInterface::ContentHint::None;

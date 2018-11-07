@@ -59,90 +59,15 @@ void TextInputInterface::Private::setSurroundingTextCallback(wl_client *client, 
     emit p->q_func()->surroundingTextChanged();
 }
 
-namespace {
-static TextInputInterface::ContentHints waylandHintsToKWayland(wl_text_input_content_hint wlHints)
-{
-    TextInputInterface::ContentHints hints = TextInputInterface::ContentHint::None;
-
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_AUTO_COMPLETION) {
-        hints |= TextInputInterface::ContentHint::AutoCompletion;
-    }
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_AUTO_CORRECTION) {
-        hints |= TextInputInterface::ContentHint::AutoCorrection;
-    }
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_AUTO_CAPITALIZATION) {
-        hints |= TextInputInterface::ContentHint::AutoCapitalization;
-    }
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_LOWERCASE) {
-        hints |= TextInputInterface::ContentHint::LowerCase;
-    }
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_UPPERCASE) {
-        hints |= TextInputInterface::ContentHint::UpperCase;
-    }
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_TITLECASE) {
-        hints |= TextInputInterface::ContentHint::TitleCase;
-    }
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_HIDDEN_TEXT) {
-        hints |= TextInputInterface::ContentHint::HiddenText;
-    }
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_SENSITIVE_DATA) {
-        hints |= TextInputInterface::ContentHint::SensitiveData;
-    }
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_LATIN) {
-        hints |= TextInputInterface::ContentHint::Latin;
-    }
-    if (wlHints & WL_TEXT_INPUT_CONTENT_HINT_MULTILINE) {
-        hints |= TextInputInterface::ContentHint::MultiLine;
-    }
-
-    return hints;
-}
-
-static TextInputInterface::ContentPurpose waylandPurposeToKWayland(wl_text_input_content_purpose purpose)
-{
-    switch (purpose) {
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_ALPHA:
-        return TextInputInterface::ContentPurpose::Alpha;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_DIGITS:
-        return TextInputInterface::ContentPurpose::Digits;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_NUMBER:
-        return TextInputInterface::ContentPurpose::Number;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_PHONE:
-        return TextInputInterface::ContentPurpose::Phone;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_URL:
-        return TextInputInterface::ContentPurpose::Url;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_EMAIL:
-        return TextInputInterface::ContentPurpose::Email;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_NAME:
-        return TextInputInterface::ContentPurpose::Name;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_PASSWORD:
-        return TextInputInterface::ContentPurpose::Password;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_DATE:
-        return TextInputInterface::ContentPurpose::Date;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_TIME:
-        return TextInputInterface::ContentPurpose::Time;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_DATETIME:
-        return TextInputInterface::ContentPurpose::DateTime;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_TERMINAL:
-        return TextInputInterface::ContentPurpose::Terminal;
-    case WL_TEXT_INPUT_CONTENT_PURPOSE_NORMAL:
-    default:
-        return TextInputInterface::ContentPurpose::Normal;
-    }
-}
-
-}
-
-void TextInputInterface::Private::setContentTypeCallback(wl_client *client, wl_resource *resource, uint32_t hint, uint32_t wlPurpose)
+void TextInputInterface::Private::setContentTypeCallback(wl_client *client, wl_resource *resource, uint32_t hint, uint32_t purpose)
 {
     auto p = cast<Private>(resource);
     Q_ASSERT(*p->client == client);
-    // TODO: pass through Private impl
-    const auto hints = waylandHintsToKWayland(wl_text_input_content_hint(hint));
-    const auto purpose = waylandPurposeToKWayland(wl_text_input_content_purpose(wlPurpose));
-    if (hints != p->contentHints || purpose != p->contentPurpose) {
-        p->contentHints = hints;
-        p->contentPurpose = purpose;
+    const auto contentHints = p->convertContentHint(hint);
+    const auto contentPurpose = p->convertContentPurpose(purpose);
+    if (contentHints != p->contentHints || contentPurpose != p->contentPurpose) {
+        p->contentHints = contentHints;
+        p->contentPurpose = contentPurpose;
         emit p->q_func()->contentTypeChanged();
     }
 }

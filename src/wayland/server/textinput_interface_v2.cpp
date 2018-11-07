@@ -53,14 +53,18 @@ public:
     void sendLanguage() override;
 
 private:
-    static void enableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);
-    static void disableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);
-    static void updateStateCallback(wl_client *client, wl_resource *resource, uint32_t serial, uint32_t reason);
     static const struct zwp_text_input_v2_interface s_interface;
-
     TextInputUnstableV2Interface *q_func() {
         return reinterpret_cast<TextInputUnstableV2Interface *>(q);
     }
+
+    static void enableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);
+    static void disableCallback(wl_client *client, wl_resource *resource, wl_resource * surface);
+    static void updateStateCallback(wl_client *client, wl_resource *resource, uint32_t serial, uint32_t reason);
+
+    // helpers
+    TextInputInterface::ContentHints convertContentHint(uint32_t hint) const override;
+    TextInputInterface::ContentPurpose convertContentPurpose(uint32_t purpose) const override;
 
     void enable(SurfaceInterface *s);
     void disable();
@@ -240,6 +244,79 @@ void TextInputUnstableV2Interface::Private::updateStateCallback(wl_client *clien
     // TODO: use other reason values reason
     if (reason == ZWP_TEXT_INPUT_V2_UPDATE_STATE_RESET) {
         emit p->q_func()->requestReset();
+    }
+}
+
+TextInputInterface::ContentHints TextInputUnstableV2Interface::Private::convertContentHint(uint32_t hint) const
+{
+    const auto hints = zwp_text_input_v2_content_hint(hint);
+    TextInputInterface::ContentHints ret = TextInputInterface::ContentHint::None;
+
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_AUTO_COMPLETION) {
+        ret |= TextInputInterface::ContentHint::AutoCompletion;
+    }
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_AUTO_CORRECTION) {
+        ret |= TextInputInterface::ContentHint::AutoCorrection;
+    }
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_AUTO_CAPITALIZATION) {
+        ret |= TextInputInterface::ContentHint::AutoCapitalization;
+    }
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_LOWERCASE) {
+        ret |= TextInputInterface::ContentHint::LowerCase;
+    }
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_UPPERCASE) {
+        ret |= TextInputInterface::ContentHint::UpperCase;
+    }
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_TITLECASE) {
+        ret |= TextInputInterface::ContentHint::TitleCase;
+    }
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_HIDDEN_TEXT) {
+        ret |= TextInputInterface::ContentHint::HiddenText;
+    }
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_SENSITIVE_DATA) {
+        ret |= TextInputInterface::ContentHint::SensitiveData;
+    }
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_LATIN) {
+        ret |= TextInputInterface::ContentHint::Latin;
+    }
+    if (hints & ZWP_TEXT_INPUT_V2_CONTENT_HINT_MULTILINE) {
+        ret |= TextInputInterface::ContentHint::MultiLine;
+    }
+    return ret;
+}
+
+TextInputInterface::ContentPurpose TextInputUnstableV2Interface::Private::convertContentPurpose(uint32_t purpose) const
+{
+    const auto wlPurpose = zwp_text_input_v2_content_purpose(purpose);
+
+    switch (wlPurpose) {
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_ALPHA:
+        return TextInputInterface::ContentPurpose::Alpha;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_DIGITS:
+        return TextInputInterface::ContentPurpose::Digits;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_NUMBER:
+        return TextInputInterface::ContentPurpose::Number;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_PHONE:
+        return TextInputInterface::ContentPurpose::Phone;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_URL:
+        return TextInputInterface::ContentPurpose::Url;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_EMAIL:
+        return TextInputInterface::ContentPurpose::Email;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_NAME:
+        return TextInputInterface::ContentPurpose::Name;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_PASSWORD:
+        return TextInputInterface::ContentPurpose::Password;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_DATE:
+        return TextInputInterface::ContentPurpose::Date;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_TIME:
+        return TextInputInterface::ContentPurpose::Time;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_DATETIME:
+        return TextInputInterface::ContentPurpose::DateTime;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_TERMINAL:
+        return TextInputInterface::ContentPurpose::Terminal;
+    case ZWP_TEXT_INPUT_V2_CONTENT_PURPOSE_NORMAL:
+    default:
+        return TextInputInterface::ContentPurpose::Normal;
     }
 }
 

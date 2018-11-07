@@ -68,6 +68,10 @@ private:
     static void commitStateCallback(wl_client *client, wl_resource *resource, uint32_t serial);
     static void invokeActionCallback(wl_client *client, wl_resource *resource, uint32_t button, uint32_t index);
 
+    // helpers
+    TextInputInterface::ContentHints convertContentHint(uint32_t hint) const override;
+    TextInputInterface::ContentPurpose convertContentPurpose(uint32_t purpose) const override;
+
     quint32 latestState = 0;
 };
 
@@ -266,6 +270,79 @@ void TextInputUnstableV0Interface::Private::invokeActionCallback(wl_client *clie
     // TODO: implement
     auto p = cast<Private>(resource);
     Q_ASSERT(*p->client == client);
+}
+
+TextInputInterface::ContentHints TextInputUnstableV0Interface::Private::convertContentHint(uint32_t hint) const
+{
+    const auto hints = wl_text_input_content_hint(hint);
+    TextInputInterface::ContentHints ret = TextInputInterface::ContentHint::None;
+
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_AUTO_COMPLETION) {
+        ret |= TextInputInterface::ContentHint::AutoCompletion;
+    }
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_AUTO_CORRECTION) {
+        ret |= TextInputInterface::ContentHint::AutoCorrection;
+    }
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_AUTO_CAPITALIZATION) {
+        ret |= TextInputInterface::ContentHint::AutoCapitalization;
+    }
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_LOWERCASE) {
+        ret |= TextInputInterface::ContentHint::LowerCase;
+    }
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_UPPERCASE) {
+        ret |= TextInputInterface::ContentHint::UpperCase;
+    }
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_TITLECASE) {
+        ret |= TextInputInterface::ContentHint::TitleCase;
+    }
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_HIDDEN_TEXT) {
+        ret |= TextInputInterface::ContentHint::HiddenText;
+    }
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_SENSITIVE_DATA) {
+        ret |= TextInputInterface::ContentHint::SensitiveData;
+    }
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_LATIN) {
+        ret |= TextInputInterface::ContentHint::Latin;
+    }
+    if (hints & WL_TEXT_INPUT_CONTENT_HINT_MULTILINE) {
+        ret |= TextInputInterface::ContentHint::MultiLine;
+    }
+    return ret;
+}
+
+TextInputInterface::ContentPurpose TextInputUnstableV0Interface::Private::convertContentPurpose(uint32_t purpose) const
+{
+    const auto wlPurpose = wl_text_input_content_purpose(purpose);
+
+    switch (wlPurpose) {
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_ALPHA:
+        return TextInputInterface::ContentPurpose::Alpha;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_DIGITS:
+        return TextInputInterface::ContentPurpose::Digits;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_NUMBER:
+        return TextInputInterface::ContentPurpose::Number;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_PHONE:
+        return TextInputInterface::ContentPurpose::Phone;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_URL:
+        return TextInputInterface::ContentPurpose::Url;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_EMAIL:
+        return TextInputInterface::ContentPurpose::Email;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_NAME:
+        return TextInputInterface::ContentPurpose::Name;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_PASSWORD:
+        return TextInputInterface::ContentPurpose::Password;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_DATE:
+        return TextInputInterface::ContentPurpose::Date;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_TIME:
+        return TextInputInterface::ContentPurpose::Time;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_DATETIME:
+        return TextInputInterface::ContentPurpose::DateTime;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_TERMINAL:
+        return TextInputInterface::ContentPurpose::Terminal;
+    case WL_TEXT_INPUT_CONTENT_PURPOSE_NORMAL:
+    default:
+        return TextInputInterface::ContentPurpose::Normal;
+    }
 }
 
 TextInputUnstableV0Interface::TextInputUnstableV0Interface(TextInputManagerUnstableV0Interface *parent, wl_resource *parentResource)
