@@ -1504,12 +1504,10 @@ void ShellClient::updateMaximizeMode(MaximizeMode maximizeMode)
         return;
     }
 
-    bool horizontalChanged = (maximizeMode & MaximizeHorizontal) != (m_maximizeMode & MaximizeHorizontal);
-    bool verticalChanged = (maximizeMode & MaximizeVertical) != (m_maximizeMode & MaximizeVertical);
     m_maximizeMode = maximizeMode;
 
     emit clientMaximizedStateChanged(this, m_maximizeMode);
-    emit clientMaximizedStateChanged(this, horizontalChanged, verticalChanged);
+    emit clientMaximizedStateChanged(this, m_maximizeMode & MaximizeHorizontal, m_maximizeMode & MaximizeVertical);
 }
 
 bool ShellClient::hasStrut() const
