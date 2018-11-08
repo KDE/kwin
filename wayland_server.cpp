@@ -565,6 +565,7 @@ int WaylandServer::createXclipboardSyncConnection()
 void WaylandServer::setupX11ClipboardSync()
 {
     if (m_xclipbaordSync.process) {
+        qCWarning(KWIN_CORE) << "Tried to start x clipboard syncer although process already started";
         return;
     }
 
@@ -572,6 +573,7 @@ void WaylandServer::setupX11ClipboardSync()
     if (socket == -1) {
         delete m_xclipbaordSync.client;
         m_xclipbaordSync.client = nullptr;
+        qCWarning(KWIN_CORE) << "Could not create wayland socket for x clipboard syncer";
         return;
     }
     if (socket >= 0) {
@@ -580,10 +582,11 @@ void WaylandServer::setupX11ClipboardSync()
         environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
         environment.remove("WAYLAND_DISPLAY");
         m_xclipbaordSync.process = new Process(this);
-        m_xclipbaordSync.process->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+        m_xclipbaordSync.process->setProcessChannelMode(QProcess::ForwardedChannels);
         auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
         connect(m_xclipbaordSync.process, finishedSignal, this,
             [this] {
+                qCDebug(KWIN_CORE) << "X clipboard syncer process finished";
                 m_xclipbaordSync.process->deleteLater();
                 m_xclipbaordSync.process = nullptr;
                 m_xclipbaordSync.ddi.clear();
@@ -596,8 +599,10 @@ void WaylandServer::setupX11ClipboardSync()
         // start from build directory if executable is available there (e.g. autotests), otherwise start libexec executable
         const QFileInfo clipboardSync{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("org_kde_kwin_xclipboard_syncer")};
         if (clipboardSync.exists()) {
+            qCDebug(KWIN_CORE) << "Starting" << clipboardSync.absoluteFilePath();
             m_xclipbaordSync.process->start(clipboardSync.absoluteFilePath());
         } else {
+            qCDebug(KWIN_CORE) << "Starting" << KWIN_XCLIPBOARD_SYNC_BIN;
             m_xclipbaordSync.process->start(QStringLiteral(KWIN_XCLIPBOARD_SYNC_BIN));
         }
     }
