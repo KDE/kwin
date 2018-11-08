@@ -315,6 +315,12 @@ void Decoration::init()
     }
     m_item = qobject_cast< QQuickItem* >(component->create(context));
     if (!m_item) {
+        if (component->isError()) {
+            const auto errors = component->errors();
+            for (const auto &error: errors) {
+                qCWarning(AURORAE) << error;
+            }
+        }
         return;
     }
     m_item->setParent(this);
