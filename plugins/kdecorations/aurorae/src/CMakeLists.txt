@@ -34,6 +34,7 @@ set(decoration_plugin_SRCS
     )
 
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})
+set_target_properties(decorationplugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org/kde/kwin/decoration/")
 target_link_libraries(decorationplugin
     Qt5::Quick
     KDecoration2::KDecoration
@@ -54,12 +55,14 @@ install( FILES
     qml/MenuButton.qml
     qml/AppMenuButton.qml
     DESTINATION ${DATA_INSTALL_DIR}/kwin/aurorae )
-install( FILES
+set(QMLFILES
     qml/Decoration.qml
     qml/DecorationButton.qml
     qml/MenuButton.qml
     qml/AppMenuButton.qml
     qml/ButtonGroup.qml
     qml/qmldir
-    DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration )
+)
+install( FILES ${QMLFILES} DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration )
+file(COPY ${QMLFILES} DESTINATION ${CMAKE_BINARY_DIR}/bin/org/kde/kwin/decoration/)
 install( FILES kwindecoration.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
