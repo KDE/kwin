@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QFileInfo>
 #include <QDebug>
+#include <QDir>
 
 #ifndef KCMRULES
 #include "client.h"
@@ -1047,7 +1048,8 @@ void RuleBook::edit(AbstractClient* c, bool whole_app)
     QProcess *p = new Process(this);
     p->setArguments(args);
     p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
-    p->setProgram(QStringLiteral(KWIN_RULES_DIALOG_BIN));
+    const QFileInfo buildDirBinary{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("kwin_rules_dialog")};
+    p->setProgram(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : QStringLiteral(KWIN_RULES_DIALOG_BIN));
     connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
     connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
         [p] (QProcess::ProcessError e) {
