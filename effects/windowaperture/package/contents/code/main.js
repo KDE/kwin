@@ -19,14 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 /*global effect, effects, animate, animationTime, Effect, QEasingCurve */
 
+"use strict";
+
 var badBadWindowsEffect = {
     duration: animationTime(250),
     loadConfig: function () {
-        "use strict";
         badBadWindowsEffect.duration = animationTime(250);
     },
     offToCorners: function (showing) {
-        "use strict";
         var stackingOrder = effects.stackingOrder;
         var screenGeo = effects.virtualScreenGeometry;
         var xOffset = screenGeo.width / 16;
@@ -195,7 +195,6 @@ var badBadWindowsEffect = {
         }
     },
     init: function () {
-        "use strict";
         badBadWindowsEffect.loadConfig();
         effects.showingDesktopChanged.connect(badBadWindowsEffect.offToCorners);
     }
