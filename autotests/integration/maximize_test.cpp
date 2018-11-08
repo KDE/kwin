@@ -118,7 +118,14 @@ void TestMaximized::testMaximizedPassedToDeco()
     QVERIFY(bordersChangedSpy.isValid());
     QSignalSpy maximizedChangedSpy(decoration->client().data(), &KDecoration2::DecoratedClient::maximizedChanged);
     QVERIFY(maximizedChangedSpy.isValid());
+    QSignalSpy geometryShapeChangedSpy(client, &AbstractClient::geometryShapeChanged);
+    QVERIFY(geometryShapeChangedSpy.isValid());
+
     workspace()->slotWindowMaximize();
+
+    Test::render(surface.data(), QSize(100, 50), Qt::red);
+    QVERIFY(geometryShapeChangedSpy.wait());
+    QCOMPARE(geometryShapeChangedSpy.count(), 2);
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(maximizedChangedSpy.count(), 1);
     QCOMPARE(maximizedChangedSpy.last().first().toBool(), true);
@@ -128,13 +135,15 @@ void TestMaximized::testMaximizedPassedToDeco()
     QCOMPARE(decoration->borderRight(), 0);
     QVERIFY(decoration->borderTop() != 0);
 
-    QVERIFY(sizeChangedSpy.isEmpty());
-    QVERIFY(sizeChangedSpy.wait());
     QCOMPARE(sizeChangedSpy.count(), 1);
     QCOMPARE(sizeChangedSpy.first().first().toSize(), QSize(1280, 1024 - decoration->borderTop()));
 
     // now unmaximize again
     workspace()->slotWindowMaximize();
+
+    Test::render(surface.data(), QSize(100, 50), Qt::red);
+    QVERIFY(geometryShapeChangedSpy.wait());
+    QCOMPARE(geometryShapeChangedSpy.count(), 4);
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(maximizedChangedSpy.count(), 2);
     QCOMPARE(maximizedChangedSpy.last().first().toBool(), false);
@@ -144,7 +153,6 @@ void TestMaximized::testMaximizedPassedToDeco()
     QVERIFY(decoration->borderRight() != 0);
     QVERIFY(decoration->borderBottom() != 0);
 
-    QVERIFY(sizeChangedSpy.wait());
     QCOMPARE(sizeChangedSpy.count(), 2);
     QCOMPARE(sizeChangedSpy.last().first().toSize(), QSize(100, 50));
 }
@@ -203,6 +211,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(client->geometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(client->geometryRestore(), origGeo);
     QCOMPARE(client->isDecorated(), false);
 
     // go back to normal
@@ -213,6 +222,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(client->geometry(), origGeo);
+    QCOMPARE(client->geometryRestore(), origGeo);
     QCOMPARE(client->isDecorated(), true);
 }
 

@@ -828,7 +828,9 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         workspace()->clientArea(MaximizeArea, Cursor::pos(), desktop()) :
         workspace()->clientArea(MaximizeArea, this);
 
-    MaximizeMode oldMode = m_requestedMaximizeMode;
+    const MaximizeMode oldMode = m_requestedMaximizeMode;
+    const QRect oldGeometry = geometry();
+
     StackingUpdatesBlocker blocker(workspace());
     RequestGeometryBlocker geometryBlocker(this);
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
@@ -881,7 +883,7 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
 
     // TODO: check rules
     if (m_requestedMaximizeMode == MaximizeFull) {
-        m_geomMaximizeRestore = geometry();
+        m_geomMaximizeRestore = oldGeometry;
         // TODO: Client has more checks
         if (options->electricBorderMaximize()) {
             updateQuickTileMode(QuickTileFlag::Maximize);
