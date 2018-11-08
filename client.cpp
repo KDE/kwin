@@ -45,7 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QApplication>
 #include <QDebug>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QMouseEvent>
 #include <QProcess>
 // XLib
@@ -1186,7 +1188,9 @@ void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
             ::kill(pid, SIGTERM);
     } else {
         QString hostname = clientMachine()->isLocal() ? QStringLiteral("localhost") : QString::fromUtf8(clientMachine()->hostName());
-        QProcess::startDetached(QStringLiteral(KWIN_KILLER_BIN),
+        // execute helper from build dir or the system installed one
+        const QFileInfo buildDirBinary{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("kwin_killer_helper")};
+        QProcess::startDetached(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : QStringLiteral(KWIN_KILLER_BIN),
                                 QStringList() << QStringLiteral("--pid") << QString::number(unsigned(pid)) << QStringLiteral("--hostname") << hostname
                                 << QStringLiteral("--windowname") << captionNormal()
                                 << QStringLiteral("--applicationname") << QString::fromUtf8(resourceClass())
