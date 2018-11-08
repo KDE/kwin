@@ -17,6 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 /*global effect, effects, animate, cancel, set, animationTime, Effect, QEasingCurve */
+
+"use strict";
+
 var translucencyEffect = {
     activeWindow: effects.activeWindow,
     settings: {
@@ -31,7 +34,6 @@ var translucencyEffect = {
         tornoffmenus: 100
     },
     loadConfig: function () {
-        "use strict";
         var i, individualMenu, windows;
         // TODO: add animation duration
         translucencyEffect.settings.moveresize     = effect.readConfig("MoveResize", 80);
@@ -66,7 +68,6 @@ var translucencyEffect = {
      *
      */
     startAnimation: function (window) {
-        "use strict";
         var checkWindow = function (window, value) {
             if (value !== 100) {
                 var ids = set({
@@ -104,7 +105,6 @@ var translucencyEffect = {
      *
      */
     cancelAnimations: function (window) {
-        "use strict";
         if (window.translucencyWindowTypeAnimation !== undefined) {
             cancel(window.translucencyWindowTypeAnimation);
             window.translucencyWindowTypeAnimation = undefined;
@@ -116,7 +116,6 @@ var translucencyEffect = {
     },
     moveResize: {
         start: function (window) {
-            "use strict";
             var ids;
             if (translucencyEffect.settings.moveresize === 100) {
                 return;
@@ -132,7 +131,6 @@ var translucencyEffect = {
             window.translucencyMoveResizeAnimations = ids;
         },
         finish: function (window) {
-            "use strict";
             if (window.translucencyMoveResizeAnimations !== undefined) {
                 // start revert animation
                 animate({
@@ -151,7 +149,6 @@ var translucencyEffect = {
     },
     inactive: {
         activated: function (window) {
-            "use strict";
             if (translucencyEffect.settings.inactive === 100) {
                 return;
             }
@@ -176,7 +173,6 @@ var translucencyEffect = {
             }
         },
         animate: function (window) {
-            "use strict";
             var ids;
             if (translucencyEffect.settings.inactive === 100) {
                 return;
@@ -205,7 +201,6 @@ var translucencyEffect = {
         }
     },
     desktopChanged: function () {
-        "use strict";
         var i, windows;
         windows = effects.stackingOrder;
         for (i = 0; i < windows.length; i += 1) {
@@ -217,7 +212,6 @@ var translucencyEffect = {
         }
     },
     init: function () {
-        "use strict";
         effect.configChanged.connect(translucencyEffect.loadConfig);
         effects.desktopPresenceChanged.connect(translucencyEffect.cancelAnimations);
         effects.desktopPresenceChanged.connect(translucencyEffect.startAnimation);
