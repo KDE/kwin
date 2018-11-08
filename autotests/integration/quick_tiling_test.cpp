@@ -258,18 +258,11 @@ void QuickTilingTest::testQuickMaximizing()
 
     c->setQuickTileMode(QuickTileFlag::Maximize, true);
     QCOMPARE(quickTileChangedSpy.count(), 1);
-    QCOMPARE(maximizeChangedSpy1.count(), 1);
-    QCOMPARE(maximizeChangedSpy1.first().first().value<KWin::AbstractClient*>(), c);
-    QCOMPARE(maximizeChangedSpy1.first().last().value<KWin::MaximizeMode>(), MaximizeFull);
-    QCOMPARE(maximizeChangedSpy2.count(), 1);
-    QCOMPARE(maximizeChangedSpy2.first().first().value<KWin::AbstractClient*>(), c);
-    QCOMPARE(maximizeChangedSpy2.first().at(1).toBool(), true);
-    QCOMPARE(maximizeChangedSpy2.first().at(2).toBool(), true);
+
     // at this point the geometry did not yet change
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     // but quick tile mode already changed
     QCOMPARE(c->quickTileMode(), QuickTileFlag::Maximize);
-    QCOMPARE(c->maximizeMode(), MaximizeFull);
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 
     // but we got requested a new geometry
@@ -286,19 +279,21 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(c->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 
+    // client is now set to maximised
+    QCOMPARE(maximizeChangedSpy1.count(), 1);
+    QCOMPARE(maximizeChangedSpy1.first().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy1.first().last().value<KWin::MaximizeMode>(), MaximizeFull);
+    QCOMPARE(maximizeChangedSpy2.count(), 1);
+    QCOMPARE(maximizeChangedSpy2.first().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy2.first().at(1).toBool(), true);
+    QCOMPARE(maximizeChangedSpy2.first().at(2).toBool(), true);
+    QCOMPARE(c->maximizeMode(), MaximizeFull);
+
     // go back to quick tile none
     QFETCH(QuickTileMode, mode);
     c->setQuickTileMode(mode, true);
-    QCOMPARE(quickTileChangedSpy.count(), 2);
-    QCOMPARE(maximizeChangedSpy1.count(), 2);
-    QCOMPARE(maximizeChangedSpy1.last().first().value<KWin::AbstractClient*>(), c);
-    QCOMPARE(maximizeChangedSpy1.last().last().value<KWin::MaximizeMode>(), MaximizeRestore);
-    QCOMPARE(maximizeChangedSpy2.count(), 2);
-    QCOMPARE(maximizeChangedSpy2.last().first().value<KWin::AbstractClient*>(), c);
-    QCOMPARE(maximizeChangedSpy2.last().at(1).toBool(), false);
-    QCOMPARE(maximizeChangedSpy2.last().at(2).toBool(), false);
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
-    QCOMPARE(c->maximizeMode(), MaximizeRestore);
+    QCOMPARE(quickTileChangedSpy.count(), 2);
     // geometry not yet changed
     QCOMPARE(c->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
@@ -315,6 +310,13 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(geometryChangedSpy.count(), 4);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
+    QCOMPARE(maximizeChangedSpy1.count(), 2);
+    QCOMPARE(maximizeChangedSpy1.last().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy1.last().last().value<KWin::MaximizeMode>(), MaximizeRestore);
+    QCOMPARE(maximizeChangedSpy2.count(), 2);
+    QCOMPARE(maximizeChangedSpy2.last().first().value<KWin::AbstractClient*>(), c);
+    QCOMPARE(maximizeChangedSpy2.last().at(1).toBool(), false);
+    QCOMPARE(maximizeChangedSpy2.last().at(2).toBool(), false);
 }
 
 void QuickTilingTest::testQuickTilingKeyboardMove_data()
