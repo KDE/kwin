@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/outputchangeset.h>
-#include <KWayland/Server/outputdevice_interface.h>
 #include <KWayland/Server/xdgoutput_interface.h>
 // KF5
 #include <KLocalizedString>
@@ -105,9 +104,32 @@ void AbstractOutput::setScale(qreal scale)
 
 void AbstractOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
 {
-    m_changeset = changes;
-    qCDebug(KWIN_CORE) << "set changes in AbstractOutput";
-    commitChanges();
+    qCDebug(KWIN_CORE) << "Set changes in AbstractOutput.";
+    Q_ASSERT(!m_waylandOutputDevice.isNull());
+
+    if (!changes) {
+        qCDebug(KWIN_CORE) << "No changes.";
+        // No changes to an output is an entirely valid thing
+    }
+    //enabledChanged is handled by plugin code
+    if (changes->modeChanged()) {
+        qCDebug(KWIN_CORE) << "Setting new mode:" << changes->mode();
+        m_waylandOutputDevice->setCurrentMode(changes->mode());
+        updateMode(changes->mode());
+    }
+    if (changes->transformChanged()) {
+        qCDebug(KWIN_CORE) << "Server setting transform: " << (int)(changes->transform());
+        transform(changes->transform());
+    }
+    if (changes->positionChanged()) {
+        qCDebug(KWIN_CORE) << "Server setting position: " << changes->position();
+        setGlobalPos(changes->position());
+        // may just work already!
+    }
+    if (changes->scaleChanged()) {
+        qCDebug(KWIN_CORE) << "Setting scale:" << changes->scale();
+        setScale(changes->scaleF());
+    }
 }
 
 void AbstractOutput::createXdgOutput()

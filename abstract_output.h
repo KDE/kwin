@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QVector>
 
+#include <KWayland/Server/outputdevice_interface.h>
+
 namespace KWayland
 {
 namespace Server
@@ -88,7 +90,6 @@ public:
      * This sets the changes and tests them against the specific output
      */
     void setChanges(KWayland::Server::OutputChangeSet *changeset);
-    virtual bool commitChanges() { return false; }
 
     QPointer<KWayland::Server::OutputInterface> waylandOutput() const {
         return m_waylandOutput;
@@ -103,9 +104,7 @@ public:
     }
 
 protected:
-    QPointer<KWayland::Server::OutputChangeSet> changes() const {
-        return m_changeset;
-    }
+    void initWaylandOutput();
 
     QPointer<KWayland::Server::XdgOutputInterface> xdgOutput() const {
         return m_xdgOutput;
@@ -137,10 +136,14 @@ protected:
     void setInternal(bool set) {
         m_internal = set;
     }
-    void initWaylandOutput();
+    virtual void updateMode(int modeIndex) {
+        Q_UNUSED(modeIndex);
+    }
+    virtual void transform(KWayland::Server::OutputDeviceInterface::Transform transform) {
+        Q_UNUSED(transform);
+    }
 
 private:
-    QPointer<KWayland::Server::OutputChangeSet> m_changeset;
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;
     QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;

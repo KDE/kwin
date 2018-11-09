@@ -31,8 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector>
 #include <xf86drmMode.h>
 
-#include <KWayland/Server/outputdevice_interface.h>
-
 namespace KWin
 {
 
@@ -74,8 +72,6 @@ public:
      * The default is on
      */
     void setEnabled(bool enabled);
-
-    bool commitChanges() override;
 
     QSize pixelSize() const override;
 
@@ -135,9 +131,9 @@ private:
     void dpmsOffHandler();
     bool dpmsAtomicOff();
     bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
-    void updateMode(int modeIndex);
+    void updateMode(int modeIndex) override;
 
-    void transform(KWayland::Server::OutputDeviceInterface::Transform transform);
+    void transform(KWayland::Server::OutputDeviceInterface::Transform transform) override;
     void automaticRotation();
 
     int getGammaRampSize() const override;

@@ -752,40 +752,6 @@ int DrmOutput::currentRefreshRate() const
     return wlOutput->refreshRate();
 }
 
-bool DrmOutput::commitChanges()
-{
-    auto wlOutputDevice = waylandOutputDevice();
-    Q_ASSERT(!wlOutputDevice.isNull());
-
-    auto changeset = changes();
-
-    if (changeset.isNull()) {
-        qCDebug(KWIN_DRM) << "no changes";
-        // No changes to an output is an entirely valid thing
-        return true;
-    }
-    //enabledChanged is handled by drmbackend
-    if (changeset->modeChanged()) {
-        qCDebug(KWIN_DRM) << "Setting new mode:" << changeset->mode();
-        wlOutputDevice->setCurrentMode(changeset->mode());
-        updateMode(changeset->mode());
-    }
-    if (changeset->transformChanged()) {
-        qCDebug(KWIN_DRM) << "Server setting transform: " << (int)(changeset->transform());
-        transform(changeset->transform());
-    }
-    if (changeset->positionChanged()) {
-        qCDebug(KWIN_DRM) << "Server setting position: " << changeset->position();
-        setGlobalPos(changeset->position());
-        // may just work already!
-    }
-    if (changeset->scaleChanged()) {
-        qCDebug(KWIN_DRM) << "Setting scale:" << changeset->scale();
-        setScale(changeset->scaleF());
-    }
-    return true;
-}
-
 void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform transform)
 {
     waylandOutputDevice()->setTransform(transform);
