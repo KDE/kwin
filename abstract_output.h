@@ -171,6 +171,8 @@ protected:
 
     void setWaylandMode(const QSize &size, int refreshRate);
 
+    QSize orientateSize(const QSize &size) const;
+
 private:
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;

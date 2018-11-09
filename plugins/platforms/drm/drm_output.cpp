@@ -783,11 +783,7 @@ void DrmOutput::updateMode(int modeIndex)
 
 QSize DrmOutput::pixelSize() const
 {
-    auto orient = orientation();
-    if (orient == Qt::PortraitOrientation || orient == Qt::InvertedPortraitOrientation) {
-        return QSize(m_mode.vdisplay, m_mode.hdisplay);
-    }
-    return QSize(m_mode.hdisplay, m_mode.vdisplay);
+    return orientateSize(QSize(m_mode.hdisplay, m_mode.vdisplay));
 }
 
 void DrmOutput::setWaylandMode()

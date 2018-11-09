@@ -59,10 +59,7 @@ QRect AbstractOutput::geometry() const
 
 QSize AbstractOutput::physicalSize() const
 {
-    if (m_orientation == Qt::PortraitOrientation || m_orientation == Qt::InvertedPortraitOrientation) {
-        return m_physicalSize.transposed();
-    }
-    return m_physicalSize;
+    return orientateSize(m_physicalSize);
 }
 
 int AbstractOutput::refreshRate() const
@@ -249,6 +246,14 @@ void AbstractOutput::initWaylandOutputDevice(const QString &model,
         m_waylandOutputDevice->addMode(mode);
     }
     m_waylandOutputDevice->create();
+}
+
+QSize AbstractOutput::orientateSize(const QSize &size) const
+{
+    if (m_orientation == Qt::PortraitOrientation || m_orientation == Qt::InvertedPortraitOrientation) {
+        return size.transposed();
+    }
+    return size;
 }
 
 }
