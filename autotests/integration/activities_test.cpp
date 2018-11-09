@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #include <kwineffects.h>
 
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCall>
+
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
 
@@ -75,7 +79,12 @@ void ActivitiesTest::initTestCase()
 
 void ActivitiesTest::cleanupTestCase()
 {
-    QProcess::execute(QStringLiteral("kactivitymanagerd"), QStringList{QStringLiteral("stop")});
+    // terminate any still running kactivitymanagerd
+    QDBusConnection::sessionBus().asyncCall(QDBusMessage::createMethodCall(
+        QStringLiteral("org.kde.ActivityManager"),
+        QStringLiteral("/ActivityManager"),
+        QStringLiteral("org.qtproject.Qt.QCoreApplication"),
+        QStringLiteral("quit")));
 }
 
 void ActivitiesTest::init()
