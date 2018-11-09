@@ -33,12 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens_drm.h"
 #include "wayland_server.h"
 // KWayland
-#include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
-#include <KWayland/Server/outputchangeset.h>
-#include <KWayland/Server/outputmanagement_interface.h>
-#include <KWayland/Server/outputconfiguration_interface.h>
-#include <KWayland/Server/xdgoutput_interface.h>
 // KF5
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -175,49 +170,6 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
     matrix.translate(-outputGlobalPos.x(), -outputGlobalPos.y());
     const QPoint p = matrix.map(globalPos) - hotspotMatrix.map(m_backend->softwareCursorHotspot());
     drmModeMoveCursor(m_backend->fd(), m_crtc->id(), p.x(), p.y());
-}
-
-QSize DrmOutput::pixelSize() const
-{
-    auto orient = orientation();
-    if (orient == Qt::PortraitOrientation || orient == Qt::InvertedPortraitOrientation) {
-        return QSize(m_mode.vdisplay, m_mode.hdisplay);
-    }
-    return QSize(m_mode.hdisplay, m_mode.vdisplay);
-}
-
-static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
-{
-    using namespace KWayland::Server;
-    switch (mode) {
-    case DrmOutput::DpmsMode::On:
-        return OutputInterface::DpmsMode::On;
-    case DrmOutput::DpmsMode::Standby:
-        return OutputInterface::DpmsMode::Standby;
-    case DrmOutput::DpmsMode::Suspend:
-        return OutputInterface::DpmsMode::Suspend;
-    case DrmOutput::DpmsMode::Off:
-        return OutputInterface::DpmsMode::Off;
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
-static DrmOutput::DpmsMode fromWaylandDpmsMode(KWayland::Server::OutputInterface::DpmsMode wlMode)
-{
-    using namespace KWayland::Server;
-    switch (wlMode) {
-    case OutputInterface::DpmsMode::On:
-        return DrmOutput::DpmsMode::On;
-    case OutputInterface::DpmsMode::Standby:
-        return DrmOutput::DpmsMode::Standby;
-    case OutputInterface::DpmsMode::Suspend:
-        return DrmOutput::DpmsMode::Suspend;
-    case OutputInterface::DpmsMode::Off:
-        return DrmOutput::DpmsMode::Off;
-    default:
-        Q_UNREACHABLE();
-    }
 }
 
 static QHash<int, QByteArray> s_connectorNames = {
@@ -596,6 +548,21 @@ bool DrmOutput::initCursorPlane()       // TODO: Add call in init (but needs lay
     return false;
 }
 
+bool DrmOutput::initCursor(const QSize &cursorSize)
+{
+    auto createCursor = [this, cursorSize] (int index) {
+        m_cursor[index] = m_backend->createBuffer(cursorSize);
+        if (!m_cursor[index]->map(QImage::Format_ARGB32_Premultiplied)) {
+            return false;
+        }
+        return true;
+    };
+    if (!createCursor(0) || !createCursor(1)) {
+        return false;
+    }
+    return true;
+}
+
 void DrmOutput::initDpms(drmModeConnector *connector)
 {
     for (int i = 0; i < connector->count_props; ++i) {
@@ -607,6 +574,40 @@ void DrmOutput::initDpms(drmModeConnector *connector)
             m_dpms.swap(property);
             break;
         }
+    }
+}
+
+static DrmOutput::DpmsMode fromWaylandDpmsMode(KWayland::Server::OutputInterface::DpmsMode wlMode)
+{
+    using namespace KWayland::Server;
+    switch (wlMode) {
+    case OutputInterface::DpmsMode::On:
+        return DrmOutput::DpmsMode::On;
+    case OutputInterface::DpmsMode::Standby:
+        return DrmOutput::DpmsMode::Standby;
+    case OutputInterface::DpmsMode::Suspend:
+        return DrmOutput::DpmsMode::Suspend;
+    case OutputInterface::DpmsMode::Off:
+        return DrmOutput::DpmsMode::Off;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
+{
+    using namespace KWayland::Server;
+    switch (mode) {
+    case DrmOutput::DpmsMode::On:
+        return OutputInterface::DpmsMode::On;
+    case DrmOutput::DpmsMode::Standby:
+        return OutputInterface::DpmsMode::Standby;
+    case DrmOutput::DpmsMode::Suspend:
+        return OutputInterface::DpmsMode::Suspend;
+    case DrmOutput::DpmsMode::Off:
+        return OutputInterface::DpmsMode::Off;
+    default:
+        Q_UNREACHABLE();
     }
 }
 
@@ -683,15 +684,6 @@ void DrmOutput::dpmsOffHandler()
     emit dpmsChanged();
 
     m_backend->outputWentOff();
-}
-
-int DrmOutput::currentRefreshRate() const
-{
-    auto wlOutput = waylandOutput();
-    if (!wlOutput) {
-        return 60000;
-    }
-    return wlOutput->refreshRate();
 }
 
 void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform transform)
@@ -787,6 +779,24 @@ void DrmOutput::updateMode(int modeIndex)
     m_mode = connector->modes[modeIndex];
     m_modesetRequested = true;
     setWaylandMode();
+}
+
+int DrmOutput::currentRefreshRate() const
+{
+    auto wlOutput = waylandOutput();
+    if (!wlOutput) {
+        return 60000;
+    }
+    return wlOutput->refreshRate();
+}
+
+QSize DrmOutput::pixelSize() const
+{
+    auto orient = orientation();
+    if (orient == Qt::PortraitOrientation || orient == Qt::InvertedPortraitOrientation) {
+        return QSize(m_mode.vdisplay, m_mode.hdisplay);
+    }
+    return QSize(m_mode.hdisplay, m_mode.vdisplay);
 }
 
 void DrmOutput::setWaylandMode()
@@ -1104,21 +1114,6 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
     ret &= m_crtc->atomicPopulate(req);
 
     return ret;
-}
-
-bool DrmOutput::initCursor(const QSize &cursorSize)
-{
-    auto createCursor = [this, cursorSize] (int index) {
-        m_cursor[index] = m_backend->createBuffer(cursorSize);
-        if (!m_cursor[index]->map(QImage::Format_ARGB32_Premultiplied)) {
-            return false;
-        }
-        return true;
-    };
-    if (!createCursor(0) || !createCursor(1)) {
-        return false;
-    }
-    return true;
 }
 
 bool DrmOutput::supportsTransformations() const
