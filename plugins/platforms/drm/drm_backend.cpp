@@ -144,7 +144,7 @@ void DrmBackend::turnOutputsOn()
 {
     m_dpmsFilter.reset();
     for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        (*it)->setDpms(DrmOutput::DpmsMode::On);
+        (*it)->updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
     }
 }
 

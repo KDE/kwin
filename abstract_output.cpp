@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KWayland
 #include <KWayland/Server/display.h>
-#include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/outputchangeset.h>
 #include <KWayland/Server/xdgoutput_interface.h>
 // KF5
@@ -169,10 +168,16 @@ void AbstractOutput::initWaylandOutput()
     m_waylandOutput = waylandServer()->display()->createOutput();
     createXdgOutput();
 
+    /*
+     *  add base wayland output data
+     */
     m_waylandOutput->setManufacturer(m_waylandOutputDevice->manufacturer());
     m_waylandOutput->setModel(m_waylandOutputDevice->model());
     m_waylandOutput->setPhysicalSize(rawPhysicalSize());
 
+    /*
+     *  add modes
+     */
     for(const auto &mode: m_waylandOutputDevice->modes()) {
         KWayland::Server::OutputInterface::ModeFlags flags;
         if (mode.flags & KWayland::Server::OutputDeviceInterface::ModeFlag::Current) {
@@ -184,6 +189,18 @@ void AbstractOutput::initWaylandOutput()
         m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
     }
     m_waylandOutput->create();
+
+    /*
+     *  set dpms
+     */
+    m_waylandOutput->setDpmsSupported(m_supportsDpms);
+    // set to last known mode
+    m_waylandOutput->setDpmsMode(m_dpms);
+    connect(m_waylandOutput.data(), &KWayland::Server::OutputInterface::dpmsModeRequested, this,
+        [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
+            updateDpms(mode);
+        }, Qt::QueuedConnection
+    );
 }
 
 }

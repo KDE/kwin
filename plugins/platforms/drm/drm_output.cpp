@@ -192,11 +192,10 @@ void DrmOutput::setEnabled(bool enabled)
         return;
     }
     if (enabled) {
-        setDpms(DpmsMode::On);
+        updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
         initWaylandOutput();
-        initDrmWaylandOutput();
     } else {
-        setDpms(DpmsMode::Off);
+        updateDpms(KWayland::Server::OutputInterface::DpmsMode::Off);
         delete waylandOutput().data();
     }
     waylandOutputDevice()->setEnabled(enabled ?
@@ -290,6 +289,7 @@ bool DrmOutput::init(drmModeConnector *connector)
     }
 
     setInternal(connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP);
+    setDpmsSupported(true);
 
     if (internal()) {
         connect(kwinApp(), &Application::screensCreated, this,
@@ -327,21 +327,6 @@ void DrmOutput::initUuid()
     hash.addData(m_edid.monitorName);
     hash.addData(m_edid.serialNumber);
     m_uuid = hash.result().toHex().left(10);
-}
-
-void DrmOutput::initDrmWaylandOutput()
-{
-    auto wlOutput = waylandOutput();
-    // set dpms
-    if (!m_dpms.isNull()) {
-        wlOutput->setDpmsSupported(true);
-        wlOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsMode));
-        connect(wlOutput.data(), &KWayland::Server::OutputInterface::dpmsModeRequested, this,
-            [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
-                setDpms(fromWaylandDpmsMode(mode));
-            }, Qt::QueuedConnection
-        );
-    }
 }
 
 void DrmOutput::initOutputDevice(drmModeConnector *connector)
@@ -654,21 +639,23 @@ void DrmOutput::initDpms(drmModeConnector *connector)
     }
 }
 
-void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
+void DrmOutput::updateDpms(KWayland::Server::OutputInterface::DpmsMode mode)
 {
     if (m_dpms.isNull()) {
         return;
     }
-    if (mode == m_dpmsModePending) {
+
+    const auto drmMode = fromWaylandDpmsMode(mode);
+    if (drmMode == m_dpmsModePending) {
         qCDebug(KWIN_DRM) << "New DPMS mode equals old mode. DPMS unchanged.";
         return;
     }
 
-    m_dpmsModePending = mode;
+    m_dpmsModePending = drmMode;
 
     if (m_backend->atomicModeSetting()) {
         m_modesetRequested = true;
-        if (mode == DpmsMode::On) {
+        if (drmMode == DpmsMode::On) {
             if (m_pageFlipPending) {
                 m_pageFlipPending = false;
                 Compositor::self()->bufferSwapComplete();
@@ -681,12 +668,12 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
             }
         }
     } else {
-        if (drmModeConnectorSetProperty(m_backend->fd(), m_conn->id(), m_dpms->prop_id, uint64_t(mode)) < 0) {
+        if (drmModeConnectorSetProperty(m_backend->fd(), m_conn->id(), m_dpms->prop_id, uint64_t(drmMode)) < 0) {
             m_dpmsModePending = m_dpmsMode;
             qCWarning(KWIN_DRM) << "Setting DPMS failed";
             return;
         }
-        if (mode == DpmsMode::On) {
+        if (drmMode == DpmsMode::On) {
             dpmsOnHandler();
         } else {
             dpmsOffHandler();

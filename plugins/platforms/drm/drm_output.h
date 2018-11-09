@@ -67,7 +67,7 @@ public:
 
     /**
      * Enable or disable the output.
-     * This differs from setDpms as it also
+     * This differs from updateDpms as it also
      * removes the wl_output
      * The default is on
      */
@@ -83,7 +83,6 @@ public:
         Suspend = DRM_MODE_DPMS_SUSPEND,
         Off = DRM_MODE_DPMS_OFF
     };
-    void setDpms(DpmsMode mode);
     bool isDpmsEnabled() const {
         // We care for current as well as pending mode in order to allow first present in AMS.
         return m_dpmsModePending == DpmsMode::On;
@@ -119,7 +118,6 @@ private:
     void initEdid(drmModeConnector *connector);
     void initDpms(drmModeConnector *connector);
     void initOutputDevice(drmModeConnector *connector);
-    void initDrmWaylandOutput();
 
     bool isCurrentMode(const drmModeModeInfo *mode) const;
     void initUuid();
@@ -130,6 +128,7 @@ private:
     void dpmsOffHandler();
     bool dpmsAtomicOff();
     bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
+    void updateDpms(KWayland::Server::OutputInterface::DpmsMode mode) override;
     void updateMode(int modeIndex) override;
     void setWaylandMode();
 

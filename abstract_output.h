@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QVector>
 
+#include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/outputdevice_interface.h>
 
 namespace KWayland
@@ -139,6 +140,12 @@ protected:
     void setInternal(bool set) {
         m_internal = set;
     }
+    void setDpmsSupported(bool set) {
+        m_supportsDpms = set;
+    }
+    virtual void updateDpms(KWayland::Server::OutputInterface::DpmsMode mode) {
+        Q_UNUSED(mode);
+    }
     virtual void updateMode(int modeIndex) {
         Q_UNUSED(modeIndex);
     }
@@ -152,11 +159,14 @@ private:
     QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;
     QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
 
+    KWayland::Server::OutputInterface::DpmsMode m_dpms = KWayland::Server::OutputInterface::DpmsMode::On;
+
     QPoint m_globalPos;
     qreal m_scale = 1;
     QSize m_physicalSize;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     bool m_internal = false;
+    bool m_supportsDpms = false;
 };
 
 }
