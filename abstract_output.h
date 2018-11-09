@@ -96,6 +96,14 @@ public:
         return m_waylandOutput;
     }
 
+    /**
+     * Enable or disable the output.
+     * This differs from updateDpms as it also
+     * removes the wl_output.
+     * The default is on.
+     */
+    void setEnabled(bool enable);
+
     virtual int getGammaRampSize() const {
         return 0;
     }
@@ -155,6 +163,7 @@ protected:
     virtual void transform(KWayland::Server::OutputDeviceInterface::Transform transform) {
         Q_UNUSED(transform);
     }
+
     void setWaylandMode(const QSize &size, int refreshRate);
 
 private:

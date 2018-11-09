@@ -132,6 +132,22 @@ void AbstractOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
     }
 }
 
+void AbstractOutput::setEnabled(bool enable)
+{
+    if (enable == isEnabled()) {
+        return;
+    }
+    if (enable) {
+        updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
+        initWaylandOutput();
+    } else {
+        updateDpms(KWayland::Server::OutputInterface::DpmsMode::Off);
+        delete waylandOutput().data();
+    }
+    waylandOutputDevice()->setEnabled(enable ? KWayland::Server::OutputDeviceInterface::Enablement::Enabled :
+                                               KWayland::Server::OutputDeviceInterface::Enablement::Disabled);
+}
+
 void AbstractOutput::setWaylandMode(const QSize &size, int refreshRate)
 {
     if (m_waylandOutput.isNull()) {

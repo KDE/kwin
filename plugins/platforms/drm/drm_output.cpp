@@ -186,22 +186,6 @@ QSize DrmOutput::pixelSize() const
     return QSize(m_mode.hdisplay, m_mode.vdisplay);
 }
 
-void DrmOutput::setEnabled(bool enabled)
-{
-    if (enabled == isEnabled()) {
-        return;
-    }
-    if (enabled) {
-        updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
-        initWaylandOutput();
-    } else {
-        updateDpms(KWayland::Server::OutputInterface::DpmsMode::Off);
-        delete waylandOutput().data();
-    }
-    waylandOutputDevice()->setEnabled(enabled ?
-    KWayland::Server::OutputDeviceInterface::Enablement::Enabled : KWayland::Server::OutputDeviceInterface::Enablement::Disabled);
-}
-
 static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
 {
     using namespace KWayland::Server;

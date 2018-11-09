@@ -65,14 +65,6 @@ public:
     bool present(DrmBuffer *buffer);
     void pageFlipped();
 
-    /**
-     * Enable or disable the output.
-     * This differs from updateDpms as it also
-     * removes the wl_output
-     * The default is on
-     */
-    void setEnabled(bool enabled);
-
     QSize pixelSize() const override;
 
     int currentRefreshRate() const;
