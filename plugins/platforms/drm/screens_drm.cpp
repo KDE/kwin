@@ -34,15 +34,6 @@ DrmScreens::DrmScreens(DrmBackend *backend, QObject *parent)
 
 DrmScreens::~DrmScreens() = default;
 
-float DrmScreens::refreshRate(int screen) const
-{
-    const auto enOuts = m_backend->drmEnabledOutputs();
-    if (screen >= enOuts.size()) {
-        return Screens::refreshRate(screen);
-    }
-    return enOuts.at(screen)->currentRefreshRate() / 1000.0f;
-}
-
 bool DrmScreens::supportsTransformations(int screen) const
 {
     const auto enOuts = m_backend->drmEnabledOutputs();

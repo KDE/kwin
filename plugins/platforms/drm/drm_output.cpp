@@ -781,15 +781,6 @@ void DrmOutput::updateMode(int modeIndex)
     setWaylandMode();
 }
 
-int DrmOutput::currentRefreshRate() const
-{
-    auto wlOutput = waylandOutput();
-    if (!wlOutput) {
-        return 60000;
-    }
-    return wlOutput->refreshRate();
-}
-
 QSize DrmOutput::pixelSize() const
 {
     auto orient = orientation();

@@ -93,6 +93,15 @@ QSizeF OutputScreens::physicalSize(int screen) const
     return enOuts.at(screen)->physicalSize();
 }
 
+float OutputScreens::refreshRate(int screen) const
+{
+    const auto enOuts = m_platform->enabledOutputs();
+    if (screen >= enOuts.size()) {
+        return Screens::refreshRate(screen);
+    }
+    return enOuts.at(screen)->refreshRate() / 1000.0f;
+}
+
 Qt::ScreenOrientation OutputScreens::orientation(int screen) const
 {
     const auto enOuts = m_platform->enabledOutputs();

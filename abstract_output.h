@@ -80,6 +80,11 @@ public:
         return m_orientation;
     }
 
+    /*
+     * Current refresh rate in 1/ms
+     */
+    int refreshRate() const;
+
     bool isInternal() const {
         return m_internal;
     }

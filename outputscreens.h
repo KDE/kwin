@@ -42,7 +42,8 @@ public:
     QRect geometry(int screen) const override;
     QSize size(int screen) const override;
     qreal scale(int screen) const override;
-    Qt::ScreenOrientation orientation(int screen) const;
+    float refreshRate(int screen) const override;
+    Qt::ScreenOrientation orientation(int screen) const override;
     void updateCount() override;
     int number(const QPoint &pos) const override;
 

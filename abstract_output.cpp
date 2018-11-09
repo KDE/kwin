@@ -65,6 +65,14 @@ QSize AbstractOutput::physicalSize() const
     return m_physicalSize;
 }
 
+int AbstractOutput::refreshRate() const
+{
+    if (!m_waylandOutput) {
+        return 60000;
+    }
+    return m_waylandOutput->refreshRate();
+}
+
 void AbstractOutput::setGlobalPos(const QPoint &pos)
 {
     m_globalPos = pos;

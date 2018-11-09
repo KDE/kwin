@@ -32,7 +32,6 @@ public:
     DrmScreens(DrmBackend *backend, QObject *parent = nullptr);
     virtual ~DrmScreens();
 
-    float refreshRate(int screen) const override;
     bool supportsTransformations(int screen) const override;
 
     DrmBackend *m_backend;

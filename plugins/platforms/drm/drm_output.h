@@ -67,7 +67,6 @@ public:
 
     QSize pixelSize() const override;
 
-    int currentRefreshRate() const;
     // These values are defined by the kernel
     enum class DpmsMode {
         On = DRM_MODE_DPMS_ON,
