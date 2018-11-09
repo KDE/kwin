@@ -99,7 +99,6 @@ public:
 
 Q_SIGNALS:
     void dpmsChanged();
-    void modeChanged();
 
 private:
     friend class DrmBackend;
@@ -132,6 +131,7 @@ private:
     bool dpmsAtomicOff();
     bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
     void updateMode(int modeIndex) override;
+    void setWaylandMode();
 
     void transform(KWayland::Server::OutputDeviceInterface::Transform transform) override;
     void automaticRotation();

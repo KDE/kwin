@@ -103,6 +103,9 @@ public:
         return false;
     }
 
+Q_SIGNALS:
+    void modeChanged();
+
 protected:
     void initWaylandOutput();
 
@@ -142,6 +145,7 @@ protected:
     virtual void transform(KWayland::Server::OutputDeviceInterface::Transform transform) {
         Q_UNUSED(transform);
     }
+    void setWaylandMode(const QSize &size, int refreshRate);
 
 private:
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;

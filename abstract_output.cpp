@@ -100,6 +100,7 @@ void AbstractOutput::setScale(qreal scale)
         m_xdgOutput->setLogicalSize(pixelSize() / m_scale);
         m_xdgOutput->done();
     }
+    emit modeChanged();
 }
 
 void AbstractOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
@@ -129,6 +130,18 @@ void AbstractOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
     if (changes->scaleChanged()) {
         qCDebug(KWIN_CORE) << "Setting scale:" << changes->scale();
         setScale(changes->scaleF());
+    }
+}
+
+void AbstractOutput::setWaylandMode(const QSize &size, int refreshRate)
+{
+    if (m_waylandOutput.isNull()) {
+        return;
+    }
+    m_waylandOutput->setCurrentMode(size, refreshRate);
+    if (m_xdgOutput) {
+        m_xdgOutput->setLogicalSize(pixelSize() / scale());
+        m_xdgOutput->done();
     }
 }
 

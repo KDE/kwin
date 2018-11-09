@@ -332,22 +332,6 @@ void DrmOutput::initUuid()
 void DrmOutput::initDrmWaylandOutput()
 {
     auto wlOutput = waylandOutput();
-    connect(this, &DrmOutput::modeChanged, this,
-        [this] {
-            auto wlOutput = waylandOutput();
-            if (wlOutput.isNull()) {
-                return;
-            }
-            wlOutput->setCurrentMode(QSize(m_mode.hdisplay, m_mode.vdisplay),
-                                          refreshRateForMode(&m_mode));
-            auto xdg = xdgOutput();
-            if (xdg) {
-                xdg->setLogicalSize(pixelSize() / scale());
-                xdg->done();
-            }
-        }
-    );
-
     // set dpms
     if (!m_dpms.isNull()) {
         wlOutput->setDpmsSupported(true);
@@ -825,7 +809,9 @@ void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform tra
     // the cursor might need to get rotated
     updateCursor();
     showCursor();
-    emit modeChanged();
+
+    // TODO: are these calls not enough in updateMode already?
+    setWaylandMode();
 }
 
 void DrmOutput::updateMode(int modeIndex)
@@ -842,7 +828,13 @@ void DrmOutput::updateMode(int modeIndex)
     }
     m_mode = connector->modes[modeIndex];
     m_modesetRequested = true;
-    emit modeChanged();
+    setWaylandMode();
+}
+
+void DrmOutput::setWaylandMode()
+{
+    AbstractOutput::setWaylandMode(QSize(m_mode.hdisplay, m_mode.vdisplay),
+                                   refreshRateForMode(&m_mode));
 }
 
 void DrmOutput::pageFlipped()
@@ -961,7 +953,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
             updateCursor();
             showCursor();
             // TODO: forward to OutputInterface and OutputDeviceInterface
-            emit modeChanged();
+            setWaylandMode();
             emit screens()->changed();
         }
         return false;
