@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 
 // KWayland
+#include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/outputchangeset.h>
 #include <KWayland/Server/outputdevice_interface.h>
@@ -109,11 +110,6 @@ void AbstractOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
     commitChanges();
 }
 
-void AbstractOutput::setWaylandOutput(KWayland::Server::OutputInterface *set)
-{
-    m_waylandOutput = set;
-}
-
 void AbstractOutput::createXdgOutput()
 {
     if (!m_waylandOutput || m_xdgOutput) {
@@ -125,6 +121,34 @@ void AbstractOutput::createXdgOutput()
 void AbstractOutput::setWaylandOutputDevice(KWayland::Server::OutputDeviceInterface *set)
 {
     m_waylandOutputDevice = set;
+}
+
+void AbstractOutput::initWaylandOutput()
+{
+    Q_ASSERT(m_waylandOutputDevice);
+
+    if (!m_waylandOutput.isNull()) {
+        delete m_waylandOutput.data();
+        m_waylandOutput.clear();
+    }
+    m_waylandOutput = waylandServer()->display()->createOutput();
+    createXdgOutput();
+
+    m_waylandOutput->setManufacturer(m_waylandOutputDevice->manufacturer());
+    m_waylandOutput->setModel(m_waylandOutputDevice->model());
+    m_waylandOutput->setPhysicalSize(rawPhysicalSize());
+
+    for(const auto &mode: m_waylandOutputDevice->modes()) {
+        KWayland::Server::OutputInterface::ModeFlags flags;
+        if (mode.flags & KWayland::Server::OutputDeviceInterface::ModeFlag::Current) {
+            flags |= KWayland::Server::OutputInterface::ModeFlag::Current;
+        }
+        if (mode.flags & KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred) {
+            flags |= KWayland::Server::OutputInterface::ModeFlag::Preferred;
+        }
+        m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
+    }
+    m_waylandOutput->create();
 }
 
 }

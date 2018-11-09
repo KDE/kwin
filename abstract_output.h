@@ -107,8 +107,6 @@ protected:
         return m_changeset;
     }
 
-    void setWaylandOutput(KWayland::Server::OutputInterface *set);
-
     QPointer<KWayland::Server::XdgOutputInterface> xdgOutput() const {
         return m_xdgOutput;
     }
@@ -139,6 +137,7 @@ protected:
     void setInternal(bool set) {
         m_internal = set;
     }
+    void initWaylandOutput();
 
 private:
     QPointer<KWayland::Server::OutputChangeSet> m_changeset;

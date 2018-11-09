@@ -193,7 +193,8 @@ void DrmOutput::setEnabled(bool enabled)
     }
     if (enabled) {
         setDpms(DpmsMode::On);
-        initOutput();
+        initWaylandOutput();
+        initDrmWaylandOutput();
     } else {
         setDpms(DpmsMode::Off);
         delete waylandOutput().data();
@@ -328,19 +329,9 @@ void DrmOutput::initUuid()
     m_uuid = hash.result().toHex().left(10);
 }
 
-void DrmOutput::initOutput()
+void DrmOutput::initDrmWaylandOutput()
 {
-    auto wlOutputDevice = waylandOutputDevice();
-    Q_ASSERT(wlOutputDevice);
-
     auto wlOutput = waylandOutput();
-    if (!wlOutput.isNull()) {
-        delete wlOutput.data();
-        wlOutput.clear();
-    }
-    wlOutput = waylandServer()->display()->createOutput();
-    setWaylandOutput(wlOutput.data());
-    createXdgOutput();
     connect(this, &DrmOutput::modeChanged, this,
         [this] {
             auto wlOutput = waylandOutput();
@@ -356,9 +347,6 @@ void DrmOutput::initOutput()
             }
         }
     );
-    wlOutput->setManufacturer(wlOutputDevice->manufacturer());
-    wlOutput->setModel(wlOutputDevice->model());
-    wlOutput->setPhysicalSize(rawPhysicalSize());
 
     // set dpms
     if (!m_dpms.isNull()) {
@@ -370,19 +358,6 @@ void DrmOutput::initOutput()
             }, Qt::QueuedConnection
         );
     }
-
-    for(const auto &mode: wlOutputDevice->modes()) {
-        KWayland::Server::OutputInterface::ModeFlags flags;
-        if (mode.flags & KWayland::Server::OutputDeviceInterface::ModeFlag::Current) {
-            flags |= KWayland::Server::OutputInterface::ModeFlag::Current;
-        }
-        if (mode.flags & KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred) {
-            flags |= KWayland::Server::OutputInterface::ModeFlag::Preferred;
-        }
-        wlOutput->addMode(mode.size, flags, mode.refreshRate);
-    }
-
-    wlOutput->create();
 }
 
 void DrmOutput::initOutputDevice(drmModeConnector *connector)

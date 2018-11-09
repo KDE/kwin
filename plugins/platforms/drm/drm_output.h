@@ -124,10 +124,10 @@ private:
     void initEdid(drmModeConnector *connector);
     void initDpms(drmModeConnector *connector);
     void initOutputDevice(drmModeConnector *connector);
+    void initDrmWaylandOutput();
 
     bool isCurrentMode(const drmModeModeInfo *mode) const;
     void initUuid();
-    void initOutput();
     bool initPrimaryPlane();
     bool initCursorPlane();
 
