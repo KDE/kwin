@@ -331,41 +331,31 @@ void DrmOutput::initUuid()
 
 void DrmOutput::initOutputDevice(drmModeConnector *connector)
 {
-    auto wlOutputDevice = waylandOutputDevice();
-    if (!wlOutputDevice.isNull()) {
-        delete wlOutputDevice.data();
-        wlOutputDevice.clear();
-    }
-    wlOutputDevice = waylandServer()->display()->createOutputDevice();
-    wlOutputDevice->setUuid(m_uuid);
-
+    QString manufacturer;
     if (!m_edid.eisaId.isEmpty()) {
-        wlOutputDevice->setManufacturer(QString::fromLatin1(m_edid.eisaId));
-    } else {
-        wlOutputDevice->setManufacturer(i18n("unknown"));
+        manufacturer = QString::fromLatin1(m_edid.eisaId);
     }
 
     QString connectorName = s_connectorNames.value(connector->connector_type, QByteArrayLiteral("Unknown"));
     QString modelName;
 
     if (!m_edid.monitorName.isEmpty()) {
-        QString model = QString::fromLatin1(m_edid.monitorName);
+        QString m = QString::fromLatin1(m_edid.monitorName);
         if (!m_edid.serialNumber.isEmpty()) {
-            model.append('/');
-            model.append(QString::fromLatin1(m_edid.serialNumber));
+            m.append('/');
+            m.append(QString::fromLatin1(m_edid.serialNumber));
         }
-        modelName = model;
+        modelName = m;
     } else if (!m_edid.serialNumber.isEmpty()) {
         modelName = QString::fromLatin1(m_edid.serialNumber);
     } else {
         modelName = i18n("unknown");
     }
 
-    wlOutputDevice->setModel(connectorName + QStringLiteral("-") + QString::number(connector->connector_type_id) + QStringLiteral("-") + modelName);
-
-    wlOutputDevice->setPhysicalSize(rawPhysicalSize());
+    const QString model = connectorName + QStringLiteral("-") + QString::number(connector->connector_type_id) + QStringLiteral("-") + modelName;
 
     // read in mode information
+    QVector<KWayland::Server::OutputDeviceInterface::Mode> modes;
     for (int i = 0; i < connector->count_modes; ++i) {
         // TODO: in AMS here we could read and store for later every mode's blob_id
         // would simplify isCurrentMode(..) and presentAtomically(..) in case of mode set
@@ -378,18 +368,15 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
             deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred;
         }
 
-        const auto refreshRate = refreshRateForMode(m);
-
         KWayland::Server::OutputDeviceInterface::Mode mode;
         mode.id = i;
         mode.size = QSize(m->hdisplay, m->vdisplay);
         mode.flags = deviceflags;
-        mode.refreshRate = refreshRate;
-        qCDebug(KWIN_DRM) << "Adding mode: " << i << mode.size;
-        wlOutputDevice->addMode(mode);
+        mode.refreshRate = refreshRateForMode(m);
+        modes << mode;
     }
-    wlOutputDevice->create();
-    setWaylandOutputDevice(wlOutputDevice.data());
+
+    AbstractOutput::initWaylandOutputDevice(model, manufacturer, m_uuid, modes);
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const

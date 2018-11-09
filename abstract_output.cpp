@@ -152,11 +152,6 @@ void AbstractOutput::createXdgOutput()
     m_xdgOutput = waylandServer()->xdgOutputManager()->createXdgOutput(m_waylandOutput, m_waylandOutput);
 }
 
-void AbstractOutput::setWaylandOutputDevice(KWayland::Server::OutputDeviceInterface *set)
-{
-    m_waylandOutputDevice = set;
-}
-
 void AbstractOutput::initWaylandOutput()
 {
     Q_ASSERT(m_waylandOutputDevice);
@@ -201,6 +196,35 @@ void AbstractOutput::initWaylandOutput()
             updateDpms(mode);
         }, Qt::QueuedConnection
     );
+}
+
+void AbstractOutput::initWaylandOutputDevice(const QString &model,
+                                             const QString &manufacturer,
+                                             const QByteArray &uuid,
+                                             const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes)
+{
+    if (!m_waylandOutputDevice.isNull()) {
+        delete m_waylandOutputDevice.data();
+        m_waylandOutputDevice.clear();
+    }
+    m_waylandOutputDevice = waylandServer()->display()->createOutputDevice();
+    m_waylandOutputDevice->setUuid(uuid);
+
+    if (!manufacturer.isEmpty()) {
+        m_waylandOutputDevice->setManufacturer(manufacturer);
+    } else {
+        m_waylandOutputDevice->setManufacturer(i18n("unknown"));
+    }
+
+    m_waylandOutputDevice->setModel(model);
+    m_waylandOutputDevice->setPhysicalSize(m_physicalSize);
+
+    int i = 0;
+    for (auto mode : modes) {
+        qCDebug(KWIN_CORE).nospace() << "Adding mode " << ++i << ": " << mode.size << " [" << mode.refreshRate << "]";
+        m_waylandOutputDevice->addMode(mode);
+    }
+    m_waylandOutputDevice->create();
 }
 
 }

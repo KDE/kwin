@@ -109,6 +109,10 @@ Q_SIGNALS:
 
 protected:
     void initWaylandOutput();
+    void initWaylandOutputDevice(const QString &model,
+                                 const QString &manufacturer,
+                                 const QByteArray &uuid,
+                                 const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes);
 
     QPointer<KWayland::Server::XdgOutputInterface> xdgOutput() const {
         return m_xdgOutput;
@@ -118,7 +122,6 @@ protected:
     QPointer<KWayland::Server::OutputDeviceInterface> waylandOutputDevice() const {
         return m_waylandOutputDevice;
     }
-    void setWaylandOutputDevice(KWayland::Server::OutputDeviceInterface *set);
 
     QPoint globalPos() const {
         return m_globalPos;
