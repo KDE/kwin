@@ -548,22 +548,18 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry)
     QImage img;
     if (effects->isOpenGLCompositing())
     {
-        if (!GLRenderTarget::blitSupported()) {
-            qCDebug(KWINEFFECTS) << "Framebuffer Blit not supported";
-            return img;
-        }
-        GLTexture tex(GL_RGBA8, geometry.width(), geometry.height());
-        GLRenderTarget target(tex);
-        target.blitFromFramebuffer(geometry);
-        // copy content from framebuffer into image
-        tex.bind();
         img = QImage(geometry.size(), QImage::Format_ARGB32);
-        if (GLPlatform::instance()->isGLES()) {
-            glReadPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
-        } else {
+        if (GLRenderTarget::blitSupported() && !GLPlatform::instance()->isGLES()) {
+            GLTexture tex(GL_RGBA8, geometry.width(), geometry.height());
+            GLRenderTarget target(tex);
+            target.blitFromFramebuffer(geometry);
+            // copy content from framebuffer into image
+            tex.bind();
             glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+            tex.unbind();
+        } else {
+            glReadPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
         }
-        tex.unbind();
         ScreenShotEffect::convertFromGLImage(img, geometry.width(), geometry.height());
     }
 
