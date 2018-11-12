@@ -52,6 +52,7 @@ Deleted::Deleted()
     , m_wasX11Client(false)
     , m_wasWaylandClient(false)
     , m_wasGroupTransient(false)
+    , m_wasPopupWindow(false)
 {
 }
 
@@ -142,6 +143,7 @@ void Deleted::copyToDeleted(Toplevel* c)
 
     m_wasWaylandClient = qobject_cast<ShellClient *>(c) != nullptr;
     m_wasX11Client = !m_wasWaylandClient;
+    m_wasPopupWindow = c->isPopupWindow();
 }
 
 void Deleted::unrefWindow()

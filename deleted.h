@@ -172,6 +172,15 @@ public:
         return m_transients;
     }
 
+    /**
+     * Returns whether the client was a popup.
+     *
+     * @returns @c true if the client was a popup, @c false otherwise.
+     **/
+    bool isPopupWindow() const override {
+        return m_wasPopupWindow;
+    }
+
 protected:
     virtual void debug(QDebug& stream) const;
 private Q_SLOTS:
@@ -223,6 +232,7 @@ private:
     bool m_wasGroupTransient;
     ToplevelList m_transientFor;
     DeletedList m_transients;
+    bool m_wasPopupWindow;
 };
 
 inline void Deleted::refWindow()

@@ -785,7 +785,6 @@ public:
     bool managed = false;
     bool waylandClient;
     bool x11Client;
-    bool popupWindow;
 };
 
 EffectWindow::Private::Private(EffectWindow *q)
@@ -808,7 +807,6 @@ EffectWindow::EffectWindow(QObject *parent)
 
     d->waylandClient = parent->inherits("KWin::ShellClient");
     d->x11Client = !d->waylandClient;
-    d->popupWindow = parent->property("popupWindow").value<bool>();
 }
 
 EffectWindow::~EffectWindow()
@@ -858,6 +856,7 @@ WINDOW_HELPER(QStringList, activities, "activities")
 WINDOW_HELPER(bool, skipsCloseAnimation, "skipsCloseAnimation")
 WINDOW_HELPER(KWayland::Server::SurfaceInterface *, surface, "surface")
 WINDOW_HELPER(QVector<int>, desktops, "x11DesktopIds")
+WINDOW_HELPER(bool, isPopupWindow, "popupWindow")
 
 QString EffectWindow::windowClass() const
 {
@@ -1018,11 +1017,6 @@ bool EffectWindow::isWaylandClient() const
 bool EffectWindow::isX11Client() const
 {
     return d->x11Client;
-}
-
-bool EffectWindow::isPopupWindow() const
-{
-    return d->popupWindow;
 }
 
 //****************************************

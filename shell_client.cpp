@@ -1935,6 +1935,9 @@ void ShellClient::updateClientOutputs()
 
 bool ShellClient::isPopupWindow() const
 {
+    if (Toplevel::isPopupWindow()) {
+        return true;
+    }
     if (m_shellSurface != nullptr) {
         return m_shellSurface->isPopup();
     }
