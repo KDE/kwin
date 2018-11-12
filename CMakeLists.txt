@@ -644,7 +644,7 @@ install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 add_executable(kwin_wayland tabletmodemanager.cpp main_wayland.cpp)
-target_link_libraries(kwin_wayland kwin)
+target_link_libraries(kwin_wayland kwin KF5::Crash)
 if (HAVE_LIBCAP)
     target_link_libraries(kwin_wayland ${Libcap_LIBRARIES})
 endif()

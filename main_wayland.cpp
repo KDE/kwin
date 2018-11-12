@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <KPluginLoader>
 #include <KPluginMetaData>
+#include <KCrash>
 #include <KQuickAddons/QtQuickSettings>
 
 // Qt
@@ -82,6 +83,14 @@ static void sighandler(int)
 {
     QApplication::exit();
 }
+
+void disableDrKonqi()
+{
+    KCrash::setDrKonqiEnabled(false);
+}
+// run immediately, before Q_CORE_STARTUP functions
+// that would enable drkonqi
+Q_CONSTRUCTOR_FUNCTION(disableDrKonqi)
 
 static void readDisplay(int pipe);
 
