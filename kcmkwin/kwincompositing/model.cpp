@@ -62,7 +62,8 @@ static QString translatedCategory(const QString &category)
         QStringLiteral("Show Desktop Animation"),
         QStringLiteral("Tools"),
         QStringLiteral("Virtual Desktop Switching Animation"),
-        QStringLiteral("Window Management")
+        QStringLiteral("Window Management"),
+        QStringLiteral("Window Open/Close Animation")
     };
 
     static const QVector<QString> translatedCategories = {
@@ -73,7 +74,8 @@ static QString translatedCategory(const QString &category)
         i18nc("Category of Desktop Effects, used as section header", "Show Desktop Animation"),
         i18nc("Category of Desktop Effects, used as section header", "Tools"),
         i18nc("Category of Desktop Effects, used as section header", "Virtual Desktop Switching Animation"),
-        i18nc("Category of Desktop Effects, used as section header", "Window Management")
+        i18nc("Category of Desktop Effects, used as section header", "Window Management"),
+        i18nc("Category of Desktop Effects, used as section header", "Window Open/Close Animation")
     };
     const int index = knownCategories.indexOf(category);
     if (index == -1) {
