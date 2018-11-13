@@ -1104,6 +1104,8 @@ protected:
 
     bool tabTo(AbstractClient *other, bool behind, bool activate);
 
+    void setDesktops(QVector<VirtualDesktop *> desktops);
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;

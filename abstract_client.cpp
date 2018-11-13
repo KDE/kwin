@@ -490,44 +490,52 @@ void AbstractClient::setDesktop(int desktop)
         desktop = qMax(1, qMin(numberOfDesktops, desktop));
     desktop = qMin(numberOfDesktops, rules()->checkDesktop(desktop));
 
-    VirtualDesktop *virtualDesktop = desktop == NET::OnAllDesktops ? nullptr : VirtualDesktopManager::self()->desktopForX11Id(desktop);
+    QVector<VirtualDesktop *> desktops;
+    if (desktop != NET::OnAllDesktops) {
+       desktops << VirtualDesktopManager::self()->desktopForX11Id(desktop);
+    }
+    setDesktops(desktops);
+}
 
-    // Don't do anything if we're already there, if the desktop is already in desktops or if the desktop is NET::OnAllDesktops and m_desktops is already empty.
-    if (m_desktops.contains(virtualDesktop) ||
-        (desktop == NET::OnAllDesktops && m_desktops.isEmpty())) {
+void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
+{
+    //on x11 we can have only one desktop at a time
+    if (kwinApp()->operationMode() == Application::OperationModeX11 && desktops.size() > 1) {
+        desktops = QVector<VirtualDesktop*>({desktops.first()});
+    }
+
+    if (desktops == m_desktops) {
         return;
     }
 
     int was_desk = AbstractClient::desktop();
     const bool wasOnCurrentDesktop = isOnCurrentDesktop() && was_desk >= 0;
 
-    //on x11 we can have only one desktop at a time
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        m_desktops.clear();
-    }
-    if (desktop == NET::OnAllDesktops) {
-        m_desktops.clear();
-    } else {
-        //if would become on all desktops, clear the list, as empty == on all desktops
-        if (m_desktops.count() > 1 && static_cast<uint>(m_desktops.count()) == VirtualDesktopManager::self()->count() - 1) {
-            m_desktops.clear();
-        } else {
-            m_desktops << virtualDesktop;
-        }
-    }
+    m_desktops = desktops;
+
     if (windowManagementInterface()) {
         if (m_desktops.isEmpty()) {
             windowManagementInterface()->setOnAllDesktops(true);
         } else {
-            windowManagementInterface()->addPlasmaVirtualDesktop(virtualDesktop->id());
+            windowManagementInterface()->setOnAllDesktops(false);
+            auto currentDesktops = windowManagementInterface()->plasmaVirtualDesktops();
+            for (auto desktop: m_desktops) {
+                if (!currentDesktops.contains(desktop->id())) {
+                    windowManagementInterface()->addPlasmaVirtualDesktop(desktop->id());
+                } else {
+                    currentDesktops.removeOne(desktop->id());
+                }
+            }
+            for (auto desktopId: currentDesktops) {
+                windowManagementInterface()->removePlasmaVirtualDesktop(desktopId);
+            }
         }
     }
-
     if (info) {
-        info->setDesktop(desktop);
+        info->setDesktop(desktop());
     }
 
-    if ((was_desk == NET::OnAllDesktops) != (desktop == NET::OnAllDesktops)) {
+    if ((was_desk == NET::OnAllDesktops) != (desktop() == NET::OnAllDesktops)) {
         // onAllDesktops changed
         workspace()->updateOnAllDesktopsOfTransients(this);
     }
@@ -536,17 +544,17 @@ void AbstractClient::setDesktop(int desktop)
     for (auto it = transients_stacking_order.constBegin();
             it != transients_stacking_order.constEnd();
             ++it)
-        (*it)->setDesktop(desktop);
+        (*it)->setDesktops(desktops);
 
     if (isModal())  // if a modal dialog is moved, move the mainwindow with it as otherwise
         // the (just moved) modal dialog will confusingly return to the mainwindow with
         // the next desktop change
     {
         foreach (AbstractClient * c2, mainClients())
-        c2->setDesktop(desktop);
+        c2->setDesktops(desktops);
     }
 
-    doSetDesktop(desktop, was_desk);
+    doSetDesktop(desktop(), was_desk);
 
     FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateWindowRules(Rules::Desktop);
@@ -570,7 +578,6 @@ void AbstractClient::unSetDesktop(int desktop)
         if (m_desktops.isEmpty()) {
             setOnAllDesktops(false);
         }
-
         return;
     }
 
@@ -580,15 +587,10 @@ void AbstractClient::unSetDesktop(int desktop)
     }
 
     VirtualDesktop *virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desktop);
-
-    m_desktops.removeAll(virtualDesktop);
-
-    if (!windowManagementInterface()) {
-        return;
-    }
-
-    windowManagementInterface()->removePlasmaVirtualDesktop(virtualDesktop->id());
-    emit x11DesktopIdsChanged();
+    Q_ASSERT(virtualDesktop);
+    auto desktops = m_desktops;
+    desktops.removeOne(virtualDesktop);
+    setDesktops(desktops);
 }
 
 void AbstractClient::setOnAllDesktops(bool b)
