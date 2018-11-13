@@ -1569,13 +1569,13 @@ void AbstractClient::keyPressEvent(uint key_code)
     case Qt::Key_Space:
     case Qt::Key_Return:
     case Qt::Key_Enter:
-        finishMoveResize(false);
         setMoveResizePointerButtonDown(false);
+        finishMoveResize(false);
         updateCursor();
         break;
     case Qt::Key_Escape:
-        finishMoveResize(true);
         setMoveResizePointerButtonDown(false);
+        finishMoveResize(true);
         updateCursor();
         break;
     default:
