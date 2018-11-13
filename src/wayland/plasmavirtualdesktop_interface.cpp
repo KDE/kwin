@@ -180,7 +180,10 @@ PlasmaVirtualDesktopManagementInterface::PlasmaVirtualDesktopManagementInterface
 }
 
 PlasmaVirtualDesktopManagementInterface::~PlasmaVirtualDesktopManagementInterface()
-{}
+{
+    Q_D();
+    qDeleteAll(d->desktops);
+}
 
 PlasmaVirtualDesktopManagementInterface::Private *PlasmaVirtualDesktopManagementInterface::d_func() const
 {
@@ -219,20 +222,6 @@ PlasmaVirtualDesktopInterface *PlasmaVirtualDesktopManagementInterface::createDe
     }
 
     d->desktops.insert(actualPosition, desktop);
-    //NOTE: this in case the desktop has been deleted but not through removeDesktop
-    connect(desktop, &QObject::destroyed, this,
-        [this, id] {
-            Q_D();
-            auto i = d->findDesktop(id);
-            if (i != d->desktops.end()) {
-                for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
-                    org_kde_plasma_virtual_desktop_management_send_desktop_removed(*it, id.toUtf8().constData());
-                }
-
-                d->desktops.erase(i);
-            }
-        }
-    );
 
     for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
         org_kde_plasma_virtual_desktop_management_send_desktop_created(*it, id.toUtf8().constData(), actualPosition);
@@ -343,7 +332,9 @@ PlasmaVirtualDesktopInterface::PlasmaVirtualDesktopInterface(PlasmaVirtualDeskto
 }
 
 PlasmaVirtualDesktopInterface::~PlasmaVirtualDesktopInterface()
-{}
+{
+    d->vdm->removeDesktop(id());
+}
 
 QString PlasmaVirtualDesktopInterface::id() const
 {
