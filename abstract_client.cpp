@@ -571,24 +571,29 @@ void AbstractClient::doSetDesktop(int desktop, int was_desk)
     Q_UNUSED(was_desk)
 }
 
-void AbstractClient::unSetDesktop(int desktop)
+void AbstractClient::enterDesktop(VirtualDesktop *virtualDesktop)
 {
-    // Case in which we are on all desktops and gets asked to unset
-    if (desktop == NET::OnAllDesktops) {
-        if (m_desktops.isEmpty()) {
-            setOnAllDesktops(false);
-        }
+    if (m_desktops.contains(virtualDesktop)) {
         return;
     }
-
-    // Out of range
-    if (desktop < 1 || desktop > VirtualDesktopManager::self()->count()) {
-        return;
-    }
-
-    VirtualDesktop *virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desktop);
-    Q_ASSERT(virtualDesktop);
     auto desktops = m_desktops;
+    desktops.append(virtualDesktop);
+    setDesktops(desktops);
+}
+
+void AbstractClient::leaveDesktop(VirtualDesktop *virtualDesktop)
+{
+    QVector<VirtualDesktop*> currentDesktops;
+    if (m_desktops.isEmpty()) {
+        currentDesktops = VirtualDesktopManager::self()->desktops();
+    } else {
+        currentDesktops = m_desktops;
+    }
+
+    if (!currentDesktops.contains(virtualDesktop)) {
+        return;
+    }
+    auto desktops = currentDesktops;
     desktops.removeOne(virtualDesktop);
     setDesktops(desktops);
 }
@@ -604,10 +609,10 @@ void AbstractClient::setOnAllDesktops(bool b)
         setDesktop(VirtualDesktopManager::self()->current());
 }
 
-QVector<int> AbstractClient::x11DesktopIds() const
+QVector<uint> AbstractClient::x11DesktopIds() const
 {
     const auto desks = desktops();
-    QVector<int> x11Ids;
+    QVector<uint> x11Ids;
     x11Ids.reserve(desks.count());
     std::transform(desks.constBegin(), desks.constEnd(),
         std::back_inserter(x11Ids),
@@ -999,21 +1004,21 @@ void AbstractClient::setupWindowManagementInterface()
         [this] (const QString &desktopId) {
             VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId.toUtf8());
             if (vd) {
-                workspace()->sendClientToDesktop(this, vd->x11DesktopNumber(), false);
+                enterDesktop(vd);
             }
         }
     );
     connect(w, &PlasmaWindowInterface::enterNewPlasmaVirtualDesktopRequested, this,
         [this] () {
             VirtualDesktopManager::self()->setCount(VirtualDesktopManager::self()->count() + 1);
-            workspace()->sendClientToDesktop(this, VirtualDesktopManager::self()->count(), false);
+            enterDesktop(VirtualDesktopManager::self()->desktops().last());
         }
     );
     connect(w, &PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested, this,
         [this] (const QString &desktopId) {
             VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId.toUtf8());
             if (vd) {
-                unSetDesktop(vd->x11DesktopNumber());
+                leaveDesktop(vd);
             }
         }
     );

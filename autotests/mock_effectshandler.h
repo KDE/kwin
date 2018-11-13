@@ -263,6 +263,11 @@ public:
     }
     void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) override { Q_UNUSED(flags)}
 
+    void windowToDesktops(KWin::EffectWindow *w, const QVector<uint> &desktops) {
+        Q_UNUSED(w)
+        Q_UNUSED(desktops)
+    }
+
     KSharedConfigPtr config() const override;
     KSharedConfigPtr inputConfig() const override;
 

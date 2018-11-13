@@ -525,10 +525,14 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                     effects->defineCursor(Qt::ClosedHandCursor);
                 }
                 if (d != highlightedDesktop) {
-                    effects->windowToDesktop(windowMove, d);   // Not true all desktop move
-                    if (highlightedDesktop != sourceDesktop || !wasWindowCopy) {
-                        effects->removeWindowFromDesktop(windowMove, highlightedDesktop);
+                    auto desktops = windowMove->desktops();
+                    if (!desktops.contains(d)) {
+                        desktops.append(d);
                     }
+                    if (highlightedDesktop != sourceDesktop || !wasWindowCopy) {
+                        desktops.removeOne(highlightedDesktop);
+                    }
+                    effects->windowToDesktops(windowMove, desktops);
                     const int screen = effects->screenNumber(me->pos());
                     if (screen != windowMove->screen())
                         effects->windowToScreen(windowMove, screen);
@@ -561,8 +565,10 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                     if (desks[i] == desks[i+1])
                         continue;
                     foreach (EffectWindow *w, stack[i]) {
-                        effects->windowToDesktop(w, desks[i+1]);
-                        effects->removeWindowFromDesktop(w, desks[i]);
+                        auto desktops = w->desktops();
+                        desktops.removeOne(desks[i]);
+                        desktops.append(desks[i+1]);
+                        effects->windowToDesktops(w, desktops);
 
                         if (isUsingPresentWindows()) {
                             m_managers[(desks[i]-1)*(effects->numScreens()) + w->screen()].unmanage(w);

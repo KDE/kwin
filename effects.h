@@ -260,6 +260,8 @@ public:
         return registered_atoms.contains(atom);
     }
 
+    void windowToDesktops(EffectWindow *w, const QVector<uint> &desktops);
+
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
     void slotTabAdded(EffectWindow* from, EffectWindow* to);

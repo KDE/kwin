@@ -916,6 +916,28 @@ void EffectsHandlerImpl::windowToDesktop(EffectWindow* w, int desktop)
     }
 }
 
+void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &desktopIds)
+{
+    AbstractClient* cl = qobject_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());
+    if (!cl || cl->isDesktop() || cl->isDock()) {
+        return;
+    }
+    QVector<VirtualDesktop*> desktops;
+    desktops.reserve(desktopIds.count());
+    for (uint x11Id: desktopIds) {
+        if (x11Id > VirtualDesktopManager::self()->count()) {
+            continue;
+        }
+        VirtualDesktop *d = VirtualDesktopManager::self()->desktopForX11Id(x11Id);
+        Q_ASSERT(d);
+        if (desktops.contains(d)) {
+            continue;
+        }
+        desktops << d;
+    }
+    cl->setDesktops(desktops);
+}
+
 void EffectsHandlerImpl::windowToScreen(EffectWindow* w, int screen)
 {
     AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());

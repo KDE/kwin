@@ -210,7 +210,7 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), client->desktops().first());
 
     //Set the window on desktop 2 as well
-    client->setDesktop(2u);
+    client->enterDesktop(VirtualDesktopManager::self()->desktopForX11Id(2));
     QCOMPARE(client->desktops().count(), 2u);
     QCOMPARE(VirtualDesktopManager::self()->desktops()[2], client->desktops()[0]);
     QCOMPARE(VirtualDesktopManager::self()->desktops()[1], client->desktops()[1]);
@@ -218,33 +218,50 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
     QVERIFY(client->isOnDesktop(3));
 
     //leave desktop 3
-    client->unSetDesktop(3);
+    client->leaveDesktop(VirtualDesktopManager::self()->desktopForX11Id(3));
     QCOMPARE(client->desktops().count(), 1u);
     //leave desktop 2
-    client->unSetDesktop(2);
+    client->leaveDesktop(VirtualDesktopManager::self()->desktopForX11Id(2));
     QCOMPARE(client->desktops().count(), 0u);
     //we should be on all desktops now
     QVERIFY(client->isOnAllDesktops());
     //put on desktop 1
-    client->setDesktop(1);
+    client->enterDesktop(VirtualDesktopManager::self()->desktopForX11Id(1));
     QVERIFY(client->isOnDesktop(1));
     QVERIFY(!client->isOnDesktop(2));
     QVERIFY(!client->isOnDesktop(3));
     QCOMPARE(client->desktops().count(), 1u);
     //put on desktop 2
-    client->setDesktop(2);
+    client->enterDesktop(VirtualDesktopManager::self()->desktopForX11Id(2));
     QVERIFY(client->isOnDesktop(1));
     QVERIFY(client->isOnDesktop(2));
     QVERIFY(!client->isOnDesktop(3));
     QCOMPARE(client->desktops().count(), 2u);
     //put on desktop 3
-    client->setDesktop(3);
+    client->enterDesktop(VirtualDesktopManager::self()->desktopForX11Id(3));
     QVERIFY(client->isOnDesktop(1));
     QVERIFY(client->isOnDesktop(2));
     QVERIFY(client->isOnDesktop(3));
-    QVERIFY(client->isOnAllDesktops());
-    //when it gets on all desktops, it loses all desktops()
+    QCOMPARE(client->desktops().count(), 3u);
+
+    //entering twice dooes nothing
+    client->enterDesktop(VirtualDesktopManager::self()->desktopForX11Id(3));
+    QCOMPARE(client->desktops().count(), 3u);
+
+    //adding to "all desktops" results in just that one desktop
+    client->setOnAllDesktops(true);
     QCOMPARE(client->desktops().count(), 0u);
+    client->enterDesktop(VirtualDesktopManager::self()->desktopForX11Id(3));
+    QVERIFY(client->isOnDesktop(3));
+    QCOMPARE(client->desktops().count(), 1u);
+
+    //leaving a desktop on "all desktops" puts on everything else
+    client->setOnAllDesktops(true);
+    QCOMPARE(client->desktops().count(), 0u);
+    client->leaveDesktop(VirtualDesktopManager::self()->desktopForX11Id(3));
+    QVERIFY(client->isOnDesktop(1));
+    QVERIFY(client->isOnDesktop(2));
+    QCOMPARE(client->desktops().count(), 2u);
 }
 
 void VirtualDesktopTest::testRemoveDesktopWithWindow_data()
@@ -282,7 +299,7 @@ void VirtualDesktopTest::testRemoveDesktopWithWindow()
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), client->desktops().first());
 
     //Set the window on desktop 2 as well
-    client->setDesktop(2u);
+    client->enterDesktop(VirtualDesktopManager::self()->desktops()[1]);
     QCOMPARE(client->desktops().count(), 2u);
     QCOMPARE(VirtualDesktopManager::self()->desktops()[2], client->desktops()[0]);
     QCOMPARE(VirtualDesktopManager::self()->desktops()[1], client->desktops()[1]);
@@ -298,8 +315,8 @@ void VirtualDesktopTest::testRemoveDesktopWithWindow()
     //Again 3 desktops
     VirtualDesktopManager::self()->setCount(3);
     //move window to be only on desktop 3
-    client->setDesktop(3);
-    client->unSetDesktop(2);
+    client->enterDesktop(VirtualDesktopManager::self()->desktops()[2]);
+    client->leaveDesktop(VirtualDesktopManager::self()->desktops()[1]);
     QCOMPARE(client->desktops().count(), 1u);
     //window is only on desktop 3
     QCOMPARE(VirtualDesktopManager::self()->desktops()[2], client->desktops()[0]);

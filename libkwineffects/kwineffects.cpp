@@ -762,13 +762,6 @@ bool EffectsHandler::isOpenGLCompositing() const
     return compositing_type & OpenGLCompositing;
 }
 
-void EffectsHandler::removeWindowFromDesktop(KWin::EffectWindow* w, int desktop)
-{
-    if (w->parent() && !w->isDesktop() && !w->isDock()) {
-        QMetaObject::invokeMethod(w->parent(), "unSetDesktop", Q_ARG(int, desktop));
-    }
-}
-
 EffectsHandler* effects = nullptr;
 
 
@@ -855,7 +848,7 @@ WINDOW_HELPER(QString, windowRole, "windowRole")
 WINDOW_HELPER(QStringList, activities, "activities")
 WINDOW_HELPER(bool, skipsCloseAnimation, "skipsCloseAnimation")
 WINDOW_HELPER(KWayland::Server::SurfaceInterface *, surface, "surface")
-WINDOW_HELPER(QVector<int>, desktops, "x11DesktopIds")
+WINDOW_HELPER(QVector<uint>, desktops, "x11DesktopIds")
 WINDOW_HELPER(bool, isPopupWindow, "popupWindow")
 
 QString EffectWindow::windowClass() const
@@ -983,7 +976,7 @@ bool EffectWindow::isOnCurrentDesktop() const
 
 bool EffectWindow::isOnDesktop(int d) const
 {
-    const QVector<int> ds = desktops();
+    const QVector<uint> ds = desktops();
     return ds.isEmpty() || ds.contains(d);
 }
 

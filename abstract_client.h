@@ -94,7 +94,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     /**
      * The x11 ids for all desktops this client is in. On X11 this list will always have a length of 1
      **/
-    Q_PROPERTY(QVector<int> x11DesktopIds READ x11DesktopIds NOTIFY x11DesktopIdsChanged)
+    Q_PROPERTY(QVector<uint> x11DesktopIds READ x11DesktopIds NOTIFY x11DesktopIdsChanged)
     /**
      * Indicates that the window should not be included on a taskbar.
      **/
@@ -428,7 +428,10 @@ public:
     virtual bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos);
     void setOnAllDesktops(bool set);
     void setDesktop(int);
-    Q_INVOKABLE virtual void unSetDesktop(int desktop);
+    void enterDesktop(VirtualDesktop *desktop);
+    void leaveDesktop(VirtualDesktop *desktop);
+    void setDesktops(QVector<VirtualDesktop *> desktops);
+
     int desktop() const override {
         return m_desktops.isEmpty() ? (int)NET::OnAllDesktops : m_desktops.last()->x11DesktopNumber();
     }
@@ -438,7 +441,7 @@ public:
     void removeDesktop(VirtualDesktop *desktop) {
         m_desktops.removeAll(desktop);
     }
-    QVector<int> x11DesktopIds() const;
+    QVector<uint> x11DesktopIds() const;
 
     void setMinimized(bool set);
     /**
@@ -1103,8 +1106,6 @@ protected:
     void discardTemporaryRules();
 
     bool tabTo(AbstractClient *other, bool behind, bool activate);
-
-    void setDesktops(QVector<VirtualDesktop *> desktops);
 
 private:
     void handlePaletteChange();

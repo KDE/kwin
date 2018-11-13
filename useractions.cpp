@@ -900,7 +900,6 @@ void UserActionsMenu::slotToggleOnVirtualDesktop(QAction *action)
         return;
     }
 
-    Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     if (desk == 0) {
         // the 'on_all_desktops' menu entry
@@ -912,9 +911,9 @@ void UserActionsMenu::slotToggleOnVirtualDesktop(QAction *action)
 
     VirtualDesktop *virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desk);
     if (m_client.data()->desktops().contains(virtualDesktop)) {
-        m_client.data()->unSetDesktop(desk);
+        m_client.data()->leaveDesktop(virtualDesktop);
     } else {
-        ws->sendClientToDesktop(m_client.data(), desk, false);
+        m_client.data()->enterDesktop(virtualDesktop);
     }
 }
 

@@ -943,14 +943,24 @@ public:
     virtual void activateWindow(KWin::EffectWindow* c) = 0;
     virtual KWin::EffectWindow* activeWindow() const = 0 ;
     Q_SCRIPTABLE virtual void moveWindow(KWin::EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0) = 0;
-    Q_SCRIPTABLE virtual void windowToDesktop(KWin::EffectWindow* w, int desktop) = 0;
+
     /**
-     * Removes a window from a desktop on wayland, no-op on X11
+     * Moves the window to the specific desktop
+     * Setting desktop to NET::OnAllDesktops will set the window on all desktops
      */
-    Q_SCRIPTABLE void removeWindowFromDesktop(KWin::EffectWindow* w, int desktop);
+    Q_SCRIPTABLE virtual void windowToDesktop(KWin::EffectWindow* w, int desktop) = 0;
+
+    /**
+     * Moves a window to the given desktops
+     * On X11, the window will end up on the last window in the list
+     * Setting this to an empty list will set the window on all desktops
+     *
+     * @arg desktopIds a list of desktops the window should be placed on. NET::OnAllDesktops is not a valid desktop X11Id
+     */
+    Q_SCRIPTABLE virtual void windowToDesktops(KWin::EffectWindow* w, const QVector<uint> &desktopIds) = 0;
+
     Q_SCRIPTABLE virtual void windowToScreen(KWin::EffectWindow* w, int screen) = 0;
     virtual void setShowingDesktop(bool showing) = 0;
-
 
     // Activities
     /**
@@ -2091,7 +2101,7 @@ public:
      * a length of 1, on Wayland can be any subset.
      * If the list is empty it means the window is on all desktops
      */
-    QVector<int> desktops() const;
+    QVector<uint> desktops() const;
 
     int x() const;
     int y() const;
