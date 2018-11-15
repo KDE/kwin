@@ -326,7 +326,7 @@ void PlasmaWindowModelTest::testDefaultData_data()
     QTest::newRow("IsKeepAbove")          << int(PlasmaWindowModel::IsKeepAbove) << QVariant(false);
     QTest::newRow("IsKeepBelow")          << int(PlasmaWindowModel::IsKeepBelow) << QVariant(false);
     QTest::newRow("VirtualDesktop")       << int(PlasmaWindowModel::VirtualDesktop) << QVariant(0);
-    QTest::newRow("IsOnAllDesktops")      << int(PlasmaWindowModel::IsOnAllDesktops) << QVariant(false);
+    QTest::newRow("IsOnAllDesktops")      << int(PlasmaWindowModel::IsOnAllDesktops) << QVariant(true);
     QTest::newRow("IsDemandingAttention") << int(PlasmaWindowModel::IsDemandingAttention) << QVariant(false);
     QTest::newRow("IsShadeable")           << int(PlasmaWindowModel::IsShadeable) << QVariant(false);
     QTest::newRow("IsShaded")             << int(PlasmaWindowModel::IsShaded) << QVariant(false);
