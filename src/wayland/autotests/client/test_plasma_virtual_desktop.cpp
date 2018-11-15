@@ -169,6 +169,7 @@ void TestVirtualDesktop::cleanup()
     }
     CLEANUP(m_compositor)
     CLEANUP(m_plasmaVirtualDesktopManagement)
+    CLEANUP(m_windowInterface)
     CLEANUP(m_windowManagement)
     CLEANUP(m_queue)
     if (m_connection) {
