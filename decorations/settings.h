@@ -49,6 +49,9 @@ public:
     QVector< KDecoration2::DecorationButtonType > decorationButtonsRight() const override {
         return m_rightButtons;
     }
+    QFont font() const override {
+        return m_font;
+    }
 
 private:
     void readSettings();
@@ -59,6 +62,7 @@ private:
     QVector< KDecoration2::DecorationButtonType > m_rightButtons;
     KDecoration2::BorderSize m_borderSize;
     bool m_closeDoubleClickMenu = false;
+    QFont m_font;
 };
 } // Decoration
 } // KWin

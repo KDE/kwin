@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KConfigGroup>
 
+#include <QFontDatabase>
+
 namespace KWin
 {
 namespace Decoration
@@ -182,6 +184,11 @@ void SettingsImpl::readSettings()
     if (size != m_borderSize) {
         m_borderSize = size;
         emit decorationSettings()->borderSizeChanged(m_borderSize);
+    }
+    const QFont font = QFontDatabase::systemFont(QFontDatabase::TitleFont);
+    if (font != m_font) {
+        m_font = font;
+        emit decorationSettings()->fontChanged(m_font);
     }
 
     emit decorationSettings()->reconfigured();
