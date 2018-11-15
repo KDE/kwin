@@ -462,7 +462,15 @@ void KeyboardLayoutTest::testApplicationPolicy()
 void KeyboardLayoutTest::testNumLock()
 {
     qputenv("KWIN_FORCE_NUM_LOCK_EVALUATION", "1");
+    KConfigGroup layoutGroup = kwinApp()->kxkbConfig()->group("Layout");
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us"));
+    layoutGroup.sync();
+    reconfigureLayouts();
+
     auto xkb = input()->keyboard()->xkb();
+    QTRY_COMPARE(xkb->numberOfLayouts(), 1u);
+    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
     // by default not set
     QVERIFY(!xkb->modifiers().testFlag(Qt::KeypadModifier));
     quint32 timestamp = 0;
