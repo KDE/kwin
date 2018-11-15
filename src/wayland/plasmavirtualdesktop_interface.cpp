@@ -246,8 +246,8 @@ void PlasmaVirtualDesktopManagementInterface::removeDesktop(const QString &id)
         org_kde_plasma_virtual_desktop_management_send_desktop_removed(*it, id.toUtf8().constData());
     }
 
-    d->desktops.erase(deskIt);
     (*deskIt)->deleteLater();
+    d->desktops.erase(deskIt);
 }
 
 QList <PlasmaVirtualDesktopInterface *> PlasmaVirtualDesktopManagementInterface::desktops() const
