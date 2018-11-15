@@ -466,6 +466,8 @@ void TestVirtualDesktop::testAllDesktops()
 
     virtualDesktopLeftSpy.wait();
     QCOMPARE(virtualDesktopLeftSpy.count(), 2);
+    QCOMPARE(m_window->plasmaVirtualDesktops().length(), 0);
+    QVERIFY(m_window->isOnAllDesktops());
 
     QCOMPARE(m_window->plasmaVirtualDesktops().length(), 0);
     QVERIFY(m_window->isOnAllDesktops());
@@ -476,22 +478,6 @@ void TestVirtualDesktop::testAllDesktops()
     QCOMPARE(m_window->plasmaVirtualDesktops().length(), 1);
     QCOMPARE(m_windowInterface->plasmaVirtualDesktops().first(), QStringLiteral("0-1"));
     QVERIFY(!m_window->isOnAllDesktops());
-
-    //try setting on virtual desktops again but by setting every desktop by hand
-    m_windowInterface->addPlasmaVirtualDesktop(QStringLiteral("0-3"));
-    virtualDesktopEnteredSpy.wait();
-
-    virtualDesktopEnteredSpy.clear();
-    virtualDesktopLeftSpy.clear();
-
-    m_windowInterface->addPlasmaVirtualDesktop(QStringLiteral("0-2"));
-    virtualDesktopLeftSpy.wait();
-    QCOMPARE(virtualDesktopLeftSpy.count(), 2);
-    //note that virtualDesktopEntered should *not* have been emitted for 0-2
-    QCOMPARE(virtualDesktopEnteredSpy.count(), 0);
-
-    QCOMPARE(m_window->plasmaVirtualDesktops().length(), 0);
-    QVERIFY(m_window->isOnAllDesktops());
 }
 
 void TestVirtualDesktop::testCreateRequested()

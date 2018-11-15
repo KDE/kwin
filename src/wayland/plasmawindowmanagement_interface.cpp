@@ -882,12 +882,6 @@ void PlasmaWindowInterface::addPlasmaVirtualDesktop(const QString &id)
         return;
     }
 
-    //full? lets set it on all desktops, the plasmaVirtualDesktops list will get empty, which means it's on all desktops
-    if (d->wm->plasmaVirtualDesktopManagementInterface()->desktops().count() == d->plasmaVirtualDesktops.count() + 1) {
-        setOnAllDesktops(true);
-        return;
-    }
-
     d->plasmaVirtualDesktops << id;
 
     //if the desktop dies, remove it from or list

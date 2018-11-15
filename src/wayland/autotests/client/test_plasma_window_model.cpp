@@ -28,6 +28,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // server
 #include "../../src/server/display.h"
 #include "../../src/server/plasmawindowmanagement_interface.h"
+#include "../../src/server/plasmavirtualdesktop_interface.h"
 
 #include <linux/input.h>
 
@@ -67,7 +68,6 @@ private Q_SLOTS:
     void testIsMinimized();
     void testIsKeepAbove();
     void testIsKeepBelow();
-    void testIsOnAllDesktops();
     void testIsDemandingAttention();
     void testSkipTaskbar();
     void testSkipSwitcher();
@@ -81,7 +81,7 @@ private Q_SLOTS:
     void testTitle();
     void testAppId();
     void testPid();
-    void testVirtualDesktop();
+    void testVirtualDesktops();
     // TODO icon: can we ensure a theme is installed on CI?
     void testRequests();
     // TODO: minimized geometry
@@ -96,6 +96,7 @@ private:
     Display *m_display = nullptr;
     PlasmaWindowManagementInterface *m_pwInterface = nullptr;
     PlasmaWindowManagement *m_pw = nullptr;
+    KWayland::Server::PlasmaVirtualDesktopManagementInterface *m_plasmaVirtualDesktopManagementInterface = nullptr;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
     EventQueue *m_queue = nullptr;
@@ -113,6 +114,12 @@ void PlasmaWindowModelTest::init()
     m_display->createShm();
     m_pwInterface = m_display->createPlasmaWindowManagement();
     m_pwInterface->create();
+    m_plasmaVirtualDesktopManagementInterface = m_display->createPlasmaVirtualDesktopManagement(m_display);
+    m_plasmaVirtualDesktopManagementInterface->create();
+    QVERIFY(m_plasmaVirtualDesktopManagementInterface->isValid());
+    m_plasmaVirtualDesktopManagementInterface->createDesktop("desktop1");
+    m_plasmaVirtualDesktopManagementInterface->createDesktop("desktop2");
+    m_pwInterface->setPlasmaVirtualDesktopManagementInterface(m_plasmaVirtualDesktopManagementInterface);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -153,6 +160,7 @@ void PlasmaWindowModelTest::cleanup()
         variable = nullptr; \
     }
     CLEANUP(m_pw)
+    CLEANUP(m_plasmaVirtualDesktopManagementInterface)
     CLEANUP(m_queue)
     if (m_connection) {
         m_connection->deleteLater();
@@ -401,11 +409,6 @@ void PlasmaWindowModelTest::testIsKeepBelow()
     QVERIFY(testBooleanData(PlasmaWindowModel::IsKeepBelow, &PlasmaWindowInterface::setKeepBelow));
 }
 
-void PlasmaWindowModelTest::testIsOnAllDesktops()
-{
-    QVERIFY(testBooleanData(PlasmaWindowModel::IsOnAllDesktops, &PlasmaWindowInterface::setOnAllDesktops));
-}
-
 void PlasmaWindowModelTest::testIsDemandingAttention()
 {
     QVERIFY(testBooleanData(PlasmaWindowModel::IsDemandingAttention, &PlasmaWindowInterface::setDemandsAttention));
@@ -549,7 +552,7 @@ void PlasmaWindowModelTest::testPid()
     QCOMPARE(model->data(index, PlasmaWindowModel::Pid).toInt(), 1337);
 }
 
-void PlasmaWindowModelTest::testVirtualDesktop()
+void PlasmaWindowModelTest::testVirtualDesktops()
 {
     auto model = m_pw->createWindowModel();
     QVERIFY(model);
@@ -564,17 +567,36 @@ void PlasmaWindowModelTest::testVirtualDesktop()
     QVERIFY(dataChangedSpy.isValid());
 
     const QModelIndex index = model->index(0);
-    QCOMPARE(model->data(index, PlasmaWindowModel::VirtualDesktop).toInt(), 0);
+    QCOMPARE(model->data(index, PlasmaWindowModel::VirtualDesktops).toStringList(), QStringList());
 
-    w->setVirtualDesktop(1);
+    w->addPlasmaVirtualDesktop("desktop1");
+    QVERIFY(dataChangedSpy.wait());
+    QCOMPARE(dataChangedSpy.count(), 2);
+    QCOMPARE(dataChangedSpy.first().first().toModelIndex(), index);
+    QCOMPARE(dataChangedSpy.last().first().toModelIndex(), index);
+
+    QCOMPARE(dataChangedSpy.first().last().value<QVector<int>>(), QVector<int>{int(PlasmaWindowModel::VirtualDesktops)});
+    QCOMPARE(dataChangedSpy.last().last().value<QVector<int>>(), QVector<int>{int(PlasmaWindowModel::IsOnAllDesktops)});
+
+    QCOMPARE(model->data(index, PlasmaWindowModel::VirtualDesktops).toStringList(), QStringList({"desktop1"}));
+    QCOMPARE(model->data(index, PlasmaWindowModel::IsOnAllDesktops).toBool(), false);
+
+    dataChangedSpy.clear();
+    w->addPlasmaVirtualDesktop("desktop2");
     QVERIFY(dataChangedSpy.wait());
     QCOMPARE(dataChangedSpy.count(), 1);
     QCOMPARE(dataChangedSpy.last().first().toModelIndex(), index);
-    QCOMPARE(dataChangedSpy.last().last().value<QVector<int>>(), QVector<int>{int(PlasmaWindowModel::VirtualDesktop)});
-    QCOMPARE(model->data(index, PlasmaWindowModel::VirtualDesktop).toInt(), 1);
+    QCOMPARE(dataChangedSpy.last().last().value<QVector<int>>(), QVector<int>{int(PlasmaWindowModel::VirtualDesktops)});
+    QCOMPARE(model->data(index, PlasmaWindowModel::VirtualDesktops).toStringList(), QStringList({"desktop1", "desktop2"}));
+    QCOMPARE(model->data(index, PlasmaWindowModel::IsOnAllDesktops).toBool(), false);
 
-    // setting to same should not trigger
-    w->setVirtualDesktop(1);
+    w->removePlasmaVirtualDesktop("desktop2");
+    w->removePlasmaVirtualDesktop("desktop1");
+    QVERIFY(dataChangedSpy.wait());
+    QCOMPARE(dataChangedSpy.last().last().value<QVector<int>>(), QVector<int>{int(PlasmaWindowModel::IsOnAllDesktops)});
+    QCOMPARE(model->data(index, PlasmaWindowModel::VirtualDesktops).toStringList(), QStringList({}));
+    QCOMPARE(model->data(index, PlasmaWindowModel::IsOnAllDesktops).toBool(), true);
+
     QVERIFY(!dataChangedSpy.wait(100));
 }
 
