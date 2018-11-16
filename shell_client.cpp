@@ -944,10 +944,17 @@ void ShellClient::setFullScreen(bool set, bool user)
     set = rules()->checkFullScreen(set && !isSpecialWindow());
     setShade(ShadeNone);
     bool was_fs = isFullScreen();
-    if (was_fs)
+    if (was_fs) {
         workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event
-    else
-        m_geomFsRestore = geometry();
+    } else {
+        // in shell surface, maximise mode and fullscreen are exclusive
+        // fullscreen->toplevel should restore the state we had before maximising
+        if (m_shellSurface && m_maximizeMode == MaximizeMode::MaximizeFull) {
+            m_geomFsRestore = m_geomMaximizeRestore;
+        } else {
+            m_geomFsRestore = geometry();
+        }
+    }
     m_fullScreen = set;
     if (was_fs == isFullScreen())
         return;
