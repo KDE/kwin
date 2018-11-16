@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "waylandclipboard.h"
 
+#include <KCrash>
 #include <QGuiApplication>
 
 #include <config-kwin.h>
@@ -40,6 +41,7 @@ int main(int argc, char *argv[])
                 argv[0], qPrintable(app.platformName()));
         return 1;
     }
+    KCrash::initialize();
     new WaylandClipboard(&app);
     return app.exec();
 }
