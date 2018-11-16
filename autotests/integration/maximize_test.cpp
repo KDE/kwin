@@ -122,8 +122,9 @@ void TestMaximized::testMaximizedPassedToDeco()
     QVERIFY(geometryShapeChangedSpy.isValid());
 
     workspace()->slotWindowMaximize();
-
-    Test::render(surface.data(), QSize(100, 50), Qt::red);
+    QVERIFY(sizeChangedSpy.wait());
+    QCOMPARE(sizeChangedSpy.first().first().toSize(), QSize(1280, 1024 - decoration->borderTop()));
+    Test::render(surface.data(), sizeChangedSpy.first().first().toSize(), Qt::red);
     QVERIFY(geometryShapeChangedSpy.wait());
     QCOMPARE(geometryShapeChangedSpy.count(), 2);
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
@@ -134,9 +135,6 @@ void TestMaximized::testMaximizedPassedToDeco()
     QCOMPARE(decoration->borderBottom(), 0);
     QCOMPARE(decoration->borderRight(), 0);
     QVERIFY(decoration->borderTop() != 0);
-
-    QCOMPARE(sizeChangedSpy.count(), 1);
-    QCOMPARE(sizeChangedSpy.first().first().toSize(), QSize(1280, 1024 - decoration->borderTop()));
 
     // now unmaximize again
     workspace()->slotWindowMaximize();
