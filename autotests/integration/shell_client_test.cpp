@@ -701,7 +701,6 @@ void TestShellClient::testMaximizedToFullscreen()
     QCOMPARE(sizeChangeRequestedSpy.last().first().toSize(), QSize(screens()->size(0)));
     // TODO: should switch to fullscreen once it's updated
     QVERIFY(c->isFullScreen());
-    QVERIFY(geometryChangedSpy.isEmpty());
 
     if (xdgShellSurface) {
         for (const auto &it: configureRequestedSpy) {
@@ -710,8 +709,7 @@ void TestShellClient::testMaximizedToFullscreen()
     }
     // render at the new size
     Test::render(surface.data(), sizeChangeRequestedSpy.last().first().toSize(), Qt::red);
-    QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(geometryChangedSpy.count(), 1);
+
     QVERIFY(c->isFullScreen());
     QVERIFY(!c->isDecorated());
     QCOMPARE(c->geometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.last().first().toSize()));
@@ -726,18 +724,20 @@ void TestShellClient::testMaximizedToFullscreen()
     case Test::ShellSurfaceType::XdgShellV6:
     case Test::ShellSurfaceType::XdgShellStable:
         qobject_cast<XdgShellSurface*>(shellSurface.data())->setFullscreen(false);
-        break;
-    default:
-        Q_UNREACHABLE();
+        qobject_cast<XdgShellSurface*>(shellSurface.data())->setMaximized(false);
         break;
     }
     QVERIFY(fullscreenChangedSpy.wait());
-    QVERIFY(sizeChangeRequestedSpy.wait());
-    QCOMPARE(sizeChangeRequestedSpy.count(), 1);
-    QEXPECT_FAIL("wlShell - deco", "With decoration incorrect geometry requested", Continue);
-    QEXPECT_FAIL("xdgShellV5 - deco", "With decoration incorrect geometry requested", Continue);
-    QEXPECT_FAIL("xdgShellV6 - deco", "With decoration incorrect geometry requested", Continue);
-    QCOMPARE(sizeChangeRequestedSpy.last().first().toSize(), QSize(100, 50));
+    if (decoMode == ServerSideDecoration::Mode::Server) {
+         QVERIFY(sizeChangeRequestedSpy.wait());
+         // don't check count, XDG might legitimately get two updates
+
+         // fails as we don't correctly call setMaximize(false)
+         // but realistically the only toolkits that support the deco also use XDGShell
+         QEXPECT_FAIL("wlShell - deco", "With decoration incorrect geometry requested", Continue);
+
+         QCOMPARE(sizeChangeRequestedSpy.last().first().toSize(), QSize(100, 50));
+    }
     // TODO: should switch to fullscreen once it's updated
     QVERIFY(!c->isFullScreen());
     QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
