@@ -604,7 +604,8 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         geom = geometryBeforeUpdateBlocking();
     }
     // TODO: better merge with Client's implementation
-    if (QSize(w, h) == geom.size() && !isWaitingForMoveResizeSync()) {
+    const QSize requestedClientSize = QSize(w, h) - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
+    if (requestedClientSize == m_clientSize && !isWaitingForMoveResizeSync()) {
         // size didn't change, update directly
         doSetGeometry(QRect(x, y, w, h));
         updateMaximizeMode(m_requestedMaximizeMode);
