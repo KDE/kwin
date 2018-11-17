@@ -182,6 +182,9 @@ AbstractClient *LockScreenTest::showWindow()
 
 void LockScreenTest::initTestCase()
 {
+    if (!QFile::exists(QStringLiteral("/dev/dri/card0"))) {
+        QSKIP("Needs a dri device");
+    }
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
@@ -190,13 +193,13 @@ void LockScreenTest::initTestCase()
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
+    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QCOMPARE(screens()->count(), 2);
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
     setenv("QT_QPA_PLATFORM", "wayland", true);
-    setenv("QMLSCENE_DEVICE", "softwarecontext", true);
     waylandServer()->initWorkspace();
 }
 
