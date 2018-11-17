@@ -19,3 +19,9 @@ Group=Effect-Scale,Effect-kwin4_effect_scale
 AllKeys
 Group=Plugins
 Key=scaleEnabled,kwin4_effect_scaleEnabled
+
+# Port the Dim Screen effect to JavaScript.
+Id=port-dimscreen-effect-to-js
+File=kwinrc
+Group=Plugins
+Key=dimscreenEnabled,kwin4_effect_dimscreenEnabled
