@@ -1,7 +1,17 @@
 [Desktop Entry]
 Name=Fading Popups
+Name[ca]=Missatges emergents esvaïts
+Name[nl]=Vervagende pop-ups
+Name[pt]=Mensagens Desvanecentes
+Name[uk]=Інтерактивні контекстні панелі
+Name[x-test]=xxFading Popupsxx
 Icon=preferences-system-windows-effect-fadingpopups
 Comment=Make popups smoothly fade in and out when they are shown or hidden
+Comment[ca]=Fa que els missatges emergents s'encenguin o s'apaguin de manera gradual quan es mostren o s'oculten
+Comment[nl]=Laat pop-ups vloeiend opkomen/vervagen als ze worden weergegeven of verborgen
+Comment[pt]=Fazer com que as janelas apareçam/desapareçam suavemente quando aparecem ou ficam escondidas
+Comment[uk]=Поступова поява або зникнення контекстних вікон вікон при відкритті чи закритті
+Comment[x-test]=xxMake popups smoothly fade in and out when they are shown or hiddenxx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
