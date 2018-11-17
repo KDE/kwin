@@ -193,6 +193,10 @@ int main(int argc, char *argv[]) \
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true); \
     setenv("QT_QPA_PLATFORM_PLUGIN_PATH", QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath().toLocal8Bit().constData(), true); \
     setenv("KWIN_FORCE_OWN_QPA", "1", true); \
+    qunsetenv("KDE_FULL_SESSION"); \
+    qunsetenv("KDE_SESSION_VERSION"); \
+    qunsetenv("XDG_SESSION_DESKTOP"); \
+    qunsetenv("XDG_CURRENT_DESKTOP"); \
     DPI; \
     KWin::WaylandTestApplication app(OperationMode, argc, argv); \
     app.setAttribute(Qt::AA_Use96Dpi, true); \
