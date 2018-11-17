@@ -730,7 +730,10 @@ void TestShellClient::testMaximizedToFullscreen()
     QVERIFY(fullscreenChangedSpy.wait());
     if (decoMode == ServerSideDecoration::Mode::Server) {
          QVERIFY(sizeChangeRequestedSpy.wait());
-         // don't check count, XDG might legitimately get two updates
+         // XDG will legitimately get two updates. They might be batched
+         if (xdgShellSurface && sizeChangeRequestedSpy.count() == 1) {
+             QVERIFY(sizeChangeRequestedSpy.wait());
+         }
 
          // fails as we don't correctly call setMaximize(false)
          // but realistically the only toolkits that support the deco also use XDGShell
