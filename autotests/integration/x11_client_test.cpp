@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "effectloader.h"
 #include "cursor.h"
+#include "deleted.h"
 #include "platform.h"
 #include "screens.h"
 #include "shell_client.h"
@@ -60,6 +61,7 @@ private Q_SLOTS:
 
 void X11ClientTest::initTestCase()
 {
+    qRegisterMetaType<KWin::Deleted*>();
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
@@ -352,6 +354,13 @@ void X11ClientTest::testX11WindowId()
     QCOMPARE(client->windowId(), w);
     QVERIFY(client->isActive());
     QCOMPARE(client->window(), w);
+    QCOMPARE(client->internalId().isNull(), false);
+    const auto uuid = client->internalId();
+    QUuid deletedUuid;
+    QCOMPARE(deletedUuid.isNull(), true);
+
+    connect(client, &Client::windowClosed, this, [&deletedUuid] (Toplevel *, Deleted *d) { deletedUuid = d->internalId(); });
+
 
     NETRootInfo rootInfo(c.data(), NET::WMAllProperties);
     QCOMPARE(rootInfo.activeWindow(), client->window());
@@ -379,6 +388,12 @@ void X11ClientTest::testX11WindowId()
     // and destroy the window again
     xcb_unmap_window(c.data(), w);
     xcb_flush(c.data());
+    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QVERIFY(windowClosedSpy.isValid());
+    QVERIFY(windowClosedSpy.wait());
+
+    QCOMPARE(deletedUuid.isNull(), false);
+    QCOMPARE(deletedUuid, uuid);
 }
 
 void X11ClientTest::testCaptionChanges()

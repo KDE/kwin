@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "cursor.h"
 #include "effects.h"
+#include "deleted.h"
 #include "platform.h"
 #include "shell_client.h"
 #include "screens.h"
@@ -95,6 +96,7 @@ private Q_SLOTS:
 
 void TestShellClient::initTestCase()
 {
+    qRegisterMetaType<KWin::Deleted*>();
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWayland::Client::Output*>();
@@ -174,6 +176,12 @@ void TestShellClient::testMapUnmapMap()
     QVERIFY(client->property("moveable").toBool());
     QVERIFY(client->property("moveableAcrossScreens").toBool());
     QVERIFY(client->property("resizeable").toBool());
+    QCOMPARE(client->internalId().isNull(), false);
+    const auto uuid = client->internalId();
+    QUuid deletedUuid;
+    QCOMPARE(deletedUuid.isNull(), true);
+
+    connect(client, &ShellClient::windowClosed, this, [&deletedUuid] (Toplevel *, Deleted *d) { deletedUuid = d->internalId(); });
 
     // now unmap
     QSignalSpy hiddenSpy(client, &ShellClient::windowHidden);
@@ -212,6 +220,7 @@ void TestShellClient::testMapUnmapMap()
     QCOMPARE(hiddenSpy.count(), 2);
     QCOMPARE(client->readyForPainting(), true);
     QCOMPARE(client->isHiddenInternal(), true);
+    QCOMPARE(client->internalId(), uuid);
     QVERIFY(windowClosedSpy.isEmpty());
     QCOMPARE(effectsWindowHiddenSpy.count(), 2);
     QCOMPARE(effectsWindowHiddenSpy.last().first().value<EffectWindow*>(), client->effectWindow());
@@ -221,6 +230,8 @@ void TestShellClient::testMapUnmapMap()
     QVERIFY(windowClosedSpy.wait());
     QCOMPARE(windowClosedSpy.count(), 1);
     QCOMPARE(effectsWindowHiddenSpy.count(), 2);
+    QCOMPARE(deletedUuid.isNull(), false);
+    QCOMPARE(deletedUuid, uuid);
 }
 
 void TestShellClient::testDesktopPresenceChanged()

@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QObject>
 #include <QMatrix4x4>
+#include <QUuid>
 // xcb
 #include <xcb/damage.h>
 #include <xcb/xfixes.h>
@@ -458,6 +459,14 @@ public:
      **/
     virtual bool isPopupWindow() const;
 
+    /**
+     * A UUID to uniquely identify this Toplevel independent of windowing system.
+     **/
+    QUuid internalId() const
+    {
+        return m_internalId;
+    }
+
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
@@ -577,6 +586,7 @@ protected:
 
 private:
     // when adding new data members, check also copyToDeleted()
+    QUuid m_internalId;
     Xcb::Window m_client;
     xcb_damage_damage_t damage_handle;
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
