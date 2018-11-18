@@ -1,15 +1,21 @@
 [Desktop Entry]
 Name=Fading Popups
 Name[ca]=Missatges emergents esvaïts
+Name[gl]=Xanelas emerxentes que esvaen
 Name[nl]=Vervagende pop-ups
+Name[nn]=Inn- og uttoning av sprettoppvindauge
 Name[pt]=Mensagens Desvanecentes
+Name[sv]=Borttonande meddelanderutor
 Name[uk]=Інтерактивні контекстні панелі
 Name[x-test]=xxFading Popupsxx
 Icon=preferences-system-windows-effect-fadingpopups
 Comment=Make popups smoothly fade in and out when they are shown or hidden
 Comment[ca]=Fa que els missatges emergents s'encenguin o s'apaguin de manera gradual quan es mostren o s'oculten
+Comment[gl]=Esvae e fai opacas as xanelas emerxentes con suavidade ao mostralas ou agochadas
 Comment[nl]=Laat pop-ups vloeiend opkomen/vervagen als ze worden weergegeven of verborgen
+Comment[nn]=Ton sprettoppvindauge gradvis inn og ut når dei vert viste eller gøymde
 Comment[pt]=Fazer com que as janelas apareçam/desapareçam suavemente quando aparecem ou ficam escondidas
+Comment[sv]=Gör att meddelanderutor mjukt tonas in eller ut när de visas eller döljs
 Comment[uk]=Поступова поява або зникнення контекстних вікон вікон при відкритті чи закритті
 Comment[x-test]=xxMake popups smoothly fade in and out when they are shown or hiddenxx
 
