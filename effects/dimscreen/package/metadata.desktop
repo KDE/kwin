@@ -2,6 +2,8 @@
 Comment=Darkens the entire screen when requesting root privileges
 Comment[ar]=يعتم كامل الشاشة عند طلب صلاحيات الجذر
 Comment[bg]=Екранът затъмнява при необходимост от администраторски права 
+Comment[ca]=Enfosqueix tota la pantalla en demanar privilegis d'administrador
+Comment[ca@valencia]=Enfosqueix tota la pantalla en demanar privilegis d'administrador
 Comment[da]=Gør hele skærmen mørkere når der bedes om root-privilegier
 Comment[de]=Dunkelt den gesamten Bildschirm ab, wenn nach dem Systemverwalter-Passwort gefragt wird.
 Comment[el]=Σκίαση ολόκληρης της οθόνης όταν απαιτούνται διακαιώματα ριζικού χρήστη root
@@ -55,6 +57,8 @@ Name=Dim Screen for Administrator Mode
 Name[af]=Verdof vir Administrateurmodus
 Name[ar]=يعتم الشاشة لنمط المدير
 Name[bg]=Затъмняване на екрана в администраторски режим
+Name[ca]=Enfosqueix la pantalla pel mode administrador
+Name[ca@valencia]=Enfosqueix la pantalla pel mode administrador
 Name[da]=Dæmp skærmen til administratortilstand
 Name[de]=Bildschirm für Systemverwaltungsmodus abdunkeln
 Name[el]=Σκίαση οθόνης σε λειτουργία διαχειριστή
