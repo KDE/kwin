@@ -661,8 +661,6 @@ void Workspace::addUnmanaged(Unmanaged* c)
  */
 void Workspace::removeClient(Client* c)
 {
-    emit clientRemoved(c);
-
     if (c == active_popup_client)
         closeActivePopup();
     if (m_userActionsMenu->isMenuClient(c)) {
@@ -703,6 +701,8 @@ void Workspace::removeClient(Client* c)
         last_active_client = 0;
     if (c == delayfocus_client)
         cancelDelayFocus();
+
+    emit clientRemoved(c);
 
     updateStackingOrder(true);
 
