@@ -120,7 +120,7 @@ class RemoteAccessManagerInterface::Private : public Global::Private
 {
 public:
     Private(RemoteAccessManagerInterface *q, Display *d);
-    virtual ~Private() override;
+    ~Private() override;
 
     /**
      * @brief Send buffer ready notification to all connected clients
