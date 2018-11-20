@@ -20,7 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "server_decoration_interface.h"
 #include "display.h"
 #include "global_p.h"
-#include "logging_p.h"
+#include "logging.h"
 #include "resource_p.h"
 #include "surface_interface.h"
 

@@ -20,7 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "outputdevice_interface.h"
 #include "global_p.h"
 #include "display.h"
-#include "logging_p.h"
+#include "logging.h"
 
 #include <wayland-server.h>
 #include "wayland-org_kde_kwin_outputdevice-server-protocol.h"

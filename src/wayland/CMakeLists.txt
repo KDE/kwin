@@ -21,7 +21,6 @@ set(SERVER_LIB_SRCS
     outputchangeset.cpp
     outputmanagement_interface.cpp
     outputdevice_interface.cpp
-    logging.cpp
     output_interface.cpp
     pointer_interface.cpp
     plasmashell_interface.cpp
@@ -60,6 +59,8 @@ set(SERVER_LIB_SRCS
     xdgoutput_interface.cpp
     ../compat/wayland-xdg-shell-v5-protocol.c
 )
+
+ecm_qt_declare_logging_category(SERVER_LIB_SRCS HEADER logging.h IDENTIFIER KWAYLAND_SERVER CATEGORY_NAME kwayland-server DEFAULT_SEVERITY Critical)
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/output-management.xml

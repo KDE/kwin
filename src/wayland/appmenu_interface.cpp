@@ -22,7 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "surface_interface.h"
 #include "global_p.h"
 #include "resource_p.h"
-#include "logging_p.h"
+#include "logging.h"
 
 #include <QtGlobal>
 

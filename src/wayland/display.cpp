@@ -28,7 +28,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "idleinhibit_interface_p.h"
 #include "remote_access_interface.h"
 #include "fakeinput_interface.h"
-#include "logging_p.h"
+#include "logging.h"
 #include "output_interface.h"
 #include "plasmashell_interface.h"
 #include "plasmawindowmanagement_interface.h"
