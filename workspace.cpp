@@ -230,7 +230,6 @@ void Workspace::init()
                     const bool needsMove = (*it)->desktops().count() == 1;
                     (*it)->removeDesktop(desktop);
                     if (needsMove) {
-                        const VirtualDesktop *otherDesktop = VirtualDesktopManager::self()->desktops().first();
                         sendClientToDesktop(*it, qMin(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count()), true);
                     }
                 }
