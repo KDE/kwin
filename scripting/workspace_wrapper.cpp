@@ -90,14 +90,10 @@ void WorkspaceWrapper::setNumberOfDesktops(int count)
     VirtualDesktopManager::self()->setCount(count);
 }
 
-#define GETTER( klass, rettype, getterName ) \
-rettype klass::getterName( ) const { \
-    return Workspace::self()->getterName(); \
+AbstractClient *WorkspaceWrapper::activeClient() const
+{
+    return workspace()->activeClient();
 }
-GETTER(WorkspaceWrapper, KWin::AbstractClient*, activeClient)
-GETTER(QtScriptWorkspaceWrapper, QList< KWin::Client* >, clientList)
-
-#undef GETTER
 
 QString WorkspaceWrapper::currentActivity() const
 {
@@ -244,7 +240,7 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), p, desktop);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Client *c) const
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::AbstractClient *c) const
 {
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
@@ -342,22 +338,26 @@ QSize WorkspaceWrapper::virtualScreenSize() const
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject* parent)
     : WorkspaceWrapper(parent) {}
 
-
-QQmlListProperty<KWin::Client> DeclarativeScriptWorkspaceWrapper::clients()
+QList<KWin::AbstractClient *> QtScriptWorkspaceWrapper::clientList() const
 {
-    return QQmlListProperty<KWin::Client>(this, 0, &DeclarativeScriptWorkspaceWrapper::countClientList, &DeclarativeScriptWorkspaceWrapper::atClientList);
+    return workspace()->allClientList();
 }
 
-int DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Client> *clients)
+QQmlListProperty<KWin::AbstractClient> DeclarativeScriptWorkspaceWrapper::clients()
 {
-    Q_UNUSED(clients)
-    return Workspace::self()->clientList().size();
+    return QQmlListProperty<KWin::AbstractClient>(this, 0, &DeclarativeScriptWorkspaceWrapper::countClientList, &DeclarativeScriptWorkspaceWrapper::atClientList);
 }
 
-KWin::Client *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Client> *clients, int index)
+int DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::AbstractClient> *clients)
 {
     Q_UNUSED(clients)
-    return Workspace::self()->clientList().at(index);
+    return workspace()->allClientList().size();
+}
+
+KWin::AbstractClient *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::AbstractClient> *clients, int index)
+{
+    Q_UNUSED(clients)
+    return workspace()->allClientList().at(index);
 }
 
 DeclarativeScriptWorkspaceWrapper::DeclarativeScriptWorkspaceWrapper(QObject* parent)

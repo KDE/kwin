@@ -250,7 +250,7 @@ void setter( rettype val );
      * @param client The Client for which the area should be retrieved
      * @returns The specified screen geometry
      **/
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const KWin::Client* client) const;
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const KWin::AbstractClient *client) const;
     /**
      * Returns the name for the given @p desktop.
      **/
@@ -356,7 +356,7 @@ public:
     /**
      * List of Clients currently managed by KWin.
      **/
-    Q_INVOKABLE QList< KWin::Client* > clientList() const;
+    Q_INVOKABLE QList<KWin::AbstractClient *> clientList() const;
 
     explicit QtScriptWorkspaceWrapper(QObject* parent = nullptr);
 };
@@ -365,11 +365,11 @@ class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
 {
     Q_OBJECT
 
-    Q_PROPERTY(QQmlListProperty<KWin::Client> clients READ clients)
+    Q_PROPERTY(QQmlListProperty<KWin::AbstractClient> clients READ clients)
 public:
-    QQmlListProperty<KWin::Client> clients();
-    static int countClientList(QQmlListProperty<KWin::Client> *clients);
-    static KWin::Client *atClientList(QQmlListProperty<KWin::Client> *clients, int index);
+    QQmlListProperty<KWin::AbstractClient> clients();
+    static int countClientList(QQmlListProperty<KWin::AbstractClient> *clients);
+    static KWin::AbstractClient *atClientList(QQmlListProperty<KWin::AbstractClient> *clients, int index);
 
     explicit DeclarativeScriptWorkspaceWrapper(QObject* parent = nullptr);
 };

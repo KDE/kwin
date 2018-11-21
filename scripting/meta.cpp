@@ -134,6 +134,7 @@ void KWin::MetaScripting::registration(QScriptEngine* eng)
     qScriptRegisterMetaType<KToplevelRef>(eng, Toplevel::toScriptValue, Toplevel::fromScriptValue);
 
     qScriptRegisterSequenceMetaType<QStringList>(eng);
+    qScriptRegisterSequenceMetaType< QList<KWin::AbstractClient*> >(eng);
     qScriptRegisterSequenceMetaType< QList<KWin::Client*> >(eng);
 }
 
