@@ -91,7 +91,7 @@ private:
 Q_SIGNALS:
     void desktopPresenceChanged(KWin::AbstractClient *client, int desktop);
     void currentDesktopChanged(int desktop, KWin::AbstractClient *client);
-    void clientAdded(KWin::Client *client);
+    void clientAdded(KWin::AbstractClient *client);
     void clientRemoved(KWin::AbstractClient *client);
     void clientManaging(KWin::Client *client);
     void clientMinimized(KWin::AbstractClient *client);
@@ -346,7 +346,8 @@ public Q_SLOTS:
     void hideOutline();
 
 private Q_SLOTS:
-    void setupClientConnections(KWin::Client* client);
+    void setupAbstractClientConnections(AbstractClient *client);
+    void setupClientConnections(Client *client);
 };
 
 class QtScriptWorkspaceWrapper : public WorkspaceWrapper

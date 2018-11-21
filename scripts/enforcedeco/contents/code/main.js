@@ -24,6 +24,9 @@ function enforceDeco(client) {
 }
 
 function setupConnection(client) {
+    if (!client.clientSideDecoratedChanged) {
+        return;
+    }
     enforceDeco(client);
     client.clientSideDecoratedChanged.connect(client, function () {
         enforceDeco(this);

@@ -23,7 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../client.h"
 #include "../outline.h"
 #include "../screens.h"
+#include "../shell_client.h"
 #include "../virtualdesktops.h"
+#include "../wayland_server.h"
 #include "../workspace.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "../activities.h"
@@ -40,8 +42,8 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
     connect(ws, &Workspace::desktopPresenceChanged, this, &WorkspaceWrapper::desktopPresenceChanged);
     connect(ws, &Workspace::currentDesktopChanged, this, &WorkspaceWrapper::currentDesktopChanged);
-    connect(ws, SIGNAL(clientAdded(KWin::Client*)), SIGNAL(clientAdded(KWin::Client*)));
-    connect(ws, SIGNAL(clientAdded(KWin::Client*)), SLOT(setupClientConnections(KWin::Client*)));
+    connect(ws, &Workspace::clientAdded, this, &WorkspaceWrapper::clientAdded);
+    connect(ws, &Workspace::clientAdded, this, &WorkspaceWrapper::setupClientConnections);
     connect(ws, &Workspace::clientRemoved, this, &WorkspaceWrapper::clientRemoved);
     connect(ws, &Workspace::clientActivated, this, &WorkspaceWrapper::clientActivated);
     connect(vds, SIGNAL(countChanged(uint,uint)), SIGNAL(numberDesktopsChanged(uint)));
@@ -65,6 +67,10 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
         }
     );
     connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));
+    if (waylandServer()) {
+        connect(waylandServer(), &WaylandServer::shellClientAdded, this, &WorkspaceWrapper::clientAdded);
+        connect(waylandServer(), &WaylandServer::shellClientAdded, this, &WorkspaceWrapper::setupAbstractClientConnections);
+    }
     foreach (KWin::Client *client, ws->clientList()) {
         setupClientConnections(client);
     }
@@ -260,14 +266,20 @@ QString WorkspaceWrapper::supportInformation() const
     return Workspace::self()->supportInformation();
 }
 
-void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
+void WorkspaceWrapper::setupAbstractClientConnections(AbstractClient *client)
 {
-    connect(client, &Client::clientMinimized, this, &WorkspaceWrapper::clientMinimized);
-    connect(client, &Client::clientUnminimized, this, &WorkspaceWrapper::clientUnminimized);
-    connect(client, SIGNAL(clientManaging(KWin::Client*)), SIGNAL(clientManaging(KWin::Client*)));
-    connect(client, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)));
-    connect(client, static_cast<void (Client::*)(KWin::AbstractClient*, bool, bool)>(&Client::clientMaximizedStateChanged),
+    connect(client, &AbstractClient::clientMinimized, this, &WorkspaceWrapper::clientMinimized);
+    connect(client, &AbstractClient::clientUnminimized, this, &WorkspaceWrapper::clientUnminimized);
+    connect(client, qOverload<AbstractClient *, bool, bool>(&AbstractClient::clientMaximizedStateChanged),
             this, &WorkspaceWrapper::clientMaximizeSet);
+}
+
+void WorkspaceWrapper::setupClientConnections(Client *client)
+{
+    setupAbstractClientConnections(client);
+
+    connect(client, &Client::clientManaging, this, &WorkspaceWrapper::clientManaging);
+    connect(client, &Client::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);
 }
 
 void WorkspaceWrapper::showOutline(const QRect &geometry)
