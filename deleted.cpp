@@ -103,7 +103,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     m_layer = c->layer();
     m_frame = c->frameId();
     m_opacity = c->opacity();
-    m_type = c->windowType(true);
+    m_type = c->windowType();
     m_windowRole = c->windowRole();
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
