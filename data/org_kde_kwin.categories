@@ -1,21 +1,21 @@
-kwin_core KWin Core
-kwineffects KWin Effects
-libkwineffects KWin Effects Library
-libkwinglutils KWin OpenGL utility Library
-libkwinxrenderutils KWin XRender utility Library
-kwin_wayland_drm KWin Wayland (DRM backend)
-kwin_wayland_framebuffer KWin Wayland (Framebuffer backend)
-kwin_wayland_hwcomposer KWin Wayland (hwcomposer backend)
-kwin_wayland_backend KWin Wayland (Wayland backend)
-kwin_wayland_x11windowed KWin Wayland (X11 backend)
-kwin_platform_x11_standalone KWin X11 Standalone Platform
-kwin_libinput KWin Libinput Integration
-kwin_tabbox KWin Window Switcher
-kwin_decorations KWin Decorations
-kwin_scripting KWin Scripting
-aurorae KWin Aurorae Window Decoration Engine
-kwin_xkbcommon KWin xkbcommon integration
-kwin_qpa_plugin KWin QtPlatformAbstraction plugin
-kwin_scene_xrender KWin XRender based compositor scene plugin
-kwin_scene_qpainter KWin QPainter based compositor scene plugin
-kwin_scene_opengl KWin OpenGL based compositor scene plugins
+kwin_core KWin Core DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_CORE]
+kwineffects KWin Effects DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWINEFFECTS]
+libkwineffects KWin Effects Library DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [LIBKWINEFFECTS]
+libkwinglutils KWin OpenGL utility Library DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [LIBKWINGLUTILS]
+libkwinxrenderutils KWin XRender utility Library DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [LIBKWINXRENDERUTILS]
+kwin_wayland_drm KWin Wayland (DRM backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_DRM]
+kwin_wayland_framebuffer KWin Wayland (Framebuffer backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_FB]
+kwin_wayland_hwcomposer KWin Wayland (hwcomposer backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_HWCOMPOSER]
+kwin_wayland_backend KWin Wayland (Wayland backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_WAYLAND_BACKEND]
+kwin_wayland_x11windowed KWin Wayland (X11 backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_X11WINDOWED]
+kwin_platform_x11_standalone KWin X11 Standalone Platform DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_X11STANDALONE]
+kwin_libinput KWin Libinput Integration DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_LIBINPUT]
+kwin_tabbox KWin Window Switcher DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_TABBOX]
+kwin_decorations KWin Decorations DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_DECORATIONS]
+kwin_scripting KWin Scripting DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_SCRIPTING]
+aurorae KWin Aurorae Window Decoration Engine DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [AURORAE]
+kwin_xkbcommon KWin xkbcommon integration DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_XKB]
+kwin_qpa_plugin KWin QtPlatformAbstraction plugin DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_QPA]
+kwin_scene_xrender KWin XRender based compositor scene plugin DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_XRENDER]
+kwin_scene_qpainter KWin QPainter based compositor scene plugin DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_QPAINTER]
+kwin_scene_opengl KWin OpenGL based compositor scene plugins DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_OPENGL]
