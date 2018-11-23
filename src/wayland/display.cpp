@@ -84,6 +84,7 @@ public:
     wl_event_loop *loop = nullptr;
     QString socketName = QStringLiteral("wayland-0");
     bool running = false;
+    bool automaticSocketNaming = false;
     QList<OutputInterface*> outputs;
     QList<OutputDeviceInterface*> outputdevices;
     QVector<SeatInterface*> seats;
@@ -161,13 +162,39 @@ QString Display::socketName() const
     return d->socketName;
 }
 
+void Display::setAutomaticSocketNaming(bool automaticSocketNaming)
+{
+    if (d->automaticSocketNaming == automaticSocketNaming) {
+        return;
+    }
+    d->automaticSocketNaming = automaticSocketNaming;
+    emit automaticSocketNamingChanged(automaticSocketNaming);
+}
+
+bool Display::automaticSocketNaming() const
+{
+    return d->automaticSocketNaming;
+}
+
 void Display::start(StartMode mode)
 {
     Q_ASSERT(!d->running);
     Q_ASSERT(!d->display);
     d->display = wl_display_create();
     if (mode == StartMode::ConnectToSocket) {
-        if (wl_display_add_socket(d->display, qPrintable(d->socketName)) != 0) {
+        if (d->automaticSocketNaming) {
+            const char *socket = wl_display_add_socket_auto(d->display);
+            if (socket == nullptr) {
+                qCWarning(KWAYLAND_SERVER) << "Failed to create Wayland socket";
+                return;
+            }
+
+            const QString newEffectiveSocketName = QString::fromUtf8(socket);
+            if (d->socketName != newEffectiveSocketName) {
+                d->socketName = newEffectiveSocketName;
+                emit socketNameChanged(d->socketName);
+            }
+        } else if (wl_display_add_socket(d->display, qPrintable(d->socketName)) != 0) {
             qCWarning(KWAYLAND_SERVER) << "Failed to create Wayland socket";
             return;
         }

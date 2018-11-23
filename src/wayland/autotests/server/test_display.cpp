@@ -43,6 +43,7 @@ private Q_SLOTS:
     void testClientConnection();
     void testConnectNoSocket();
     void testOutputManagement();
+    void testAutoSocketName();
 };
 
 void TestWaylandServerDisplay::testSocketName()
@@ -213,6 +214,29 @@ void TestWaylandServerDisplay::testOutputManagement()
     auto kwin = display.createOutputManagement(this);
     kwin->create();
     QVERIFY(kwin->isValid());
+}
+
+void TestWaylandServerDisplay::testAutoSocketName()
+{
+    QTemporaryDir runtimeDir;
+    QVERIFY(runtimeDir.isValid());
+    QVERIFY(qputenv("XDG_RUNTIME_DIR", runtimeDir.path().toUtf8()));
+
+    Display display0;
+    display0.setAutomaticSocketNaming(true);
+    QSignalSpy socketNameChangedSpy0(&display0, SIGNAL(socketNameChanged(QString)));
+    display0.start();
+    QVERIFY(display0.isRunning());
+    QCOMPARE(socketNameChangedSpy0.count(), 0);
+    QCOMPARE(display0.socketName(), QStringLiteral("wayland-0"));
+
+    Display display1;
+    display1.setAutomaticSocketNaming(true);
+    QSignalSpy socketNameChangedSpy1(&display1, SIGNAL(socketNameChanged(QString)));
+    display1.start();
+    QVERIFY(display1.isRunning());
+    QCOMPARE(socketNameChangedSpy1.count(), 1);
+    QCOMPARE(display1.socketName(), QStringLiteral("wayland-1"));
 }
 
 

@@ -100,13 +100,27 @@ class KWAYLANDSERVER_EXPORT Display : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString socketName READ socketName WRITE setSocketName NOTIFY socketNameChanged)
+    Q_PROPERTY(bool automaticSocketNaming READ automaticSocketNaming WRITE setAutomaticSocketNaming NOTIFY automaticSocketNamingChanged)
     Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)
 public:
     explicit Display(QObject *parent = nullptr);
     virtual ~Display();
 
+    /**
+     * Sets the basename of the socket to @p name. If @p name is empty, it will use
+     * wl_display_add_socket_auto to get a free socket with a filename "wayland-%d".
+     **/
     void setSocketName(const QString &name);
     QString socketName() const;
+
+    /**
+     * If automaticSocketNaming is true, the manually set socketName is ignored
+     * and it will use wl_display_add_socket_auto on start to get a free socket with
+     * a filename "wayland-%d" instead. The effective socket is written into socketName.
+     * @since 5.55
+     **/
+    void setAutomaticSocketNaming(bool automaticSocketNaming);
+    bool automaticSocketNaming() const;
 
     quint32 serial();
     quint32 nextSerial();
@@ -316,6 +330,7 @@ public:
 
 Q_SIGNALS:
     void socketNameChanged(const QString&);
+    void automaticSocketNamingChanged(bool);
     void runningChanged(bool);
     void aboutToTerminate();
     void clientConnected(KWayland::Server::ClientConnection*);
