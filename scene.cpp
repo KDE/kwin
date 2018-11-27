@@ -405,6 +405,11 @@ void Scene::windowAdded(Toplevel *c)
     c->effectWindow()->setSceneWindow(w);
     c->getShadow();
     w->updateShadow(c->shadow());
+    connect(c, &Toplevel::shadowChanged, this,
+        [w] {
+            w->invalidateQuadsCache();
+        }
+    );
 }
 
 void Scene::windowClosed(Toplevel *c, Deleted *deleted)
@@ -732,7 +737,7 @@ void Scene::Window::discardShape()
     // it is created on-demand and cached, simply
     // reset the flag
     shape_valid = false;
-    cached_quad_list.reset();
+    invalidateQuadsCache();
 }
 
 // Find out the shape of the window using the XShape extension
@@ -934,6 +939,11 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
     }
 
     return list;
+}
+
+void Scene::Window::invalidateQuadsCache()
+{
+    cached_quad_list.reset();
 }
 
 WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg, const QPoint &textureOffset, qreal scale) const

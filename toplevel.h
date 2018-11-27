@@ -527,6 +527,12 @@ Q_SIGNALS:
      */
     void screenScaleChanged();
 
+    /**
+     * Emitted whenever the client's shadow changes.
+     * @since 5.15
+     **/
+    void shadowChanged();
+
 protected Q_SLOTS:
     /**
      * Checks whether the screen number for this Toplevel changed and updates if needed.

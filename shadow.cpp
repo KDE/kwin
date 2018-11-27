@@ -65,9 +65,7 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     }
     if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
         toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
-    }
-    if (toplevel->effectWindow()) {
-        toplevel->effectWindow()->buildQuads(true);
+        emit toplevel->shadowChanged();
     }
     return shadow;
 }
@@ -333,21 +331,24 @@ void Shadow::buildQuads()
 
 bool Shadow::updateShadow()
 {
-    auto clear = [this]() {
-        if (m_topLevel && m_topLevel->effectWindow() && m_topLevel->effectWindow()->sceneWindow() &&
-                                            m_topLevel->effectWindow()->sceneWindow()->shadow()) {
+    auto clear = [this] {
+        if (m_topLevel && m_topLevel->shadow()) {
             auto w = m_topLevel->effectWindow();
             // this also deletes the shadow
             w->sceneWindow()->updateShadow(nullptr);
-            w->buildQuads(true);
+            emit m_topLevel->shadowChanged();
         }
     };
+
+    if (!m_topLevel) {
+        return false;
+    }
+
     if (m_decorationShadow) {
         if (AbstractClient *c = qobject_cast<AbstractClient*>(m_topLevel)) {
             if (c->decoration()) {
                 if (init(c->decoration())) {
-                    if (m_topLevel && m_topLevel->effectWindow())
-                        m_topLevel->effectWindow()->buildQuads(true);
+                    emit m_topLevel->shadowChanged();
                     return true;
                 }
             }
@@ -355,30 +356,27 @@ bool Shadow::updateShadow()
         clear();
         return false;
     }
+
     if (waylandServer()) {
         if (m_topLevel && m_topLevel->surface()) {
             if (const auto &s = m_topLevel->surface()->shadow()) {
                 if (init(s)) {
-                    if (m_topLevel->effectWindow()) {
-                        m_topLevel->effectWindow()->buildQuads(true);
-                    }
+                    emit m_topLevel->shadowChanged();
                     return true;
                 }
             }
         }
     }
-    if (!m_topLevel) {
-        clear();
-        return false;
-    }
+
     auto data = Shadow::readX11ShadowProperty(m_topLevel->window());
     if (data.isEmpty()) {
         clear();
         return false;
     }
+
     init(data);
-    if (m_topLevel && m_topLevel->effectWindow())
-        m_topLevel->effectWindow()->buildQuads(true);
+    emit m_topLevel->shadowChanged();
+
     return true;
 }
 
