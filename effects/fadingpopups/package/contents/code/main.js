@@ -20,7 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
+var blacklist = [
+    // The logout screen has to be animated only by the logout effect.
+    "ksmserver ksmserver",
+    "ksmserver-logout-greeter ksmserver-logout-greeter",
+
+    // KDE Plasma splash screen has to be animated only by the login effect.
+    "ksplashqml ksplashqml",
+    "ksplashsimple ksplashsimple",
+    "ksplashx ksplashx"
+];
+
 function isPopupWindow(window) {
+    // If the window is blacklisted, don't animate it.
+    if (blacklist.indexOf(window.windowClass) != -1) {
+        return false;
+    }
+
     // Animate combo box popups, tooltips, popup menus, etc.
     if (window.popupWindow) {
         return true;
