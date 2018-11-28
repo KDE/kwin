@@ -41,17 +41,15 @@ IdleInhibition::~IdleInhibition() = default;
 
 void IdleInhibition::registerShellClient(ShellClient *client)
 {
-    auto surface = client->surface();
-    m_connections.insert(client, connect(surface, &SurfaceInterface::inhibitsIdleChanged, this,
-        [this, client] {
-            // TODO: only inhibit if the ShellClient is visible
-            if (client->surface()->inhibitsIdle()) {
-                inhibit(client);
-            } else {
-                uninhibit(client);
-            }
+    auto inhibitsIdleChanged = [this, client] {
+        // TODO: only inhibit if the ShellClient is visible
+        if (client->surface()->inhibitsIdle()) {
+            inhibit(client);
+        } else {
+            uninhibit(client);
         }
-    ));
+    };
+    m_connections[client] = connect(client->surface(), &SurfaceInterface::inhibitsIdleChanged, this, inhibitsIdleChanged);
     connect(client, &ShellClient::windowClosed, this,
         [this, client] {
             uninhibit(client);
@@ -62,6 +60,8 @@ void IdleInhibition::registerShellClient(ShellClient *client)
             }
         }
     );
+
+    inhibitsIdleChanged();
 }
 
 void IdleInhibition::inhibit(ShellClient *client)

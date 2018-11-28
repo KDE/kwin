@@ -79,6 +79,7 @@ void TestIdleInhibition::testInhibit_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase")  << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestIdleInhibition::testInhibit()
@@ -93,17 +94,16 @@ void TestIdleInhibition::testInhibit()
     QScopedPointer<Surface> surface(Test::createSurface());
     QFETCH(Test::ShellSurfaceType, type);
     QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
-
-    // not yet inhibited
-    QVERIFY(!idle->isInhibited());
 
     // now create inhibition on window
     QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
     QVERIFY(inhibitor->isValid());
+
+    // render the client
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+
     // this should inhibit our server object
-    QVERIFY(inhibitedSpy.wait());
     QVERIFY(idle->isInhibited());
 
     // deleting the object should uninhibit again
