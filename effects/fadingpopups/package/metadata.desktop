@@ -2,6 +2,7 @@
 Name=Fading Popups
 Name[ca]=Missatges emergents esvaïts
 Name[ca@valencia]=Missatges emergents esvaïts
+Name[fi]=Hiipuvat ponnahdusikkunat
 Name[gl]=Xanelas emerxentes que esvaen
 Name[id]=Fading Popups
 Name[nl]=Vervagende pop-ups
@@ -15,6 +16,7 @@ Icon=preferences-system-windows-effect-fadingpopups
 Comment=Make popups smoothly fade in and out when they are shown or hidden
 Comment[ca]=Fa que els missatges emergents s'encenguin o s'apaguin de manera gradual quan es mostren o s'oculten
 Comment[ca@valencia]=Fa que els missatges emergents s'encenguin o s'apaguin de manera gradual quan es mostren o s'oculten
+Comment[fi]=Ponnahdusikkunat tulevat näkyviin tai poistuvat näkyvistä pehmeästi häivyttäen
 Comment[gl]=Esvae e fai opacas as xanelas emerxentes con suavidade ao mostralas ou agochadas
 Comment[id]=Buat sembulan secara halus lesap-masuk dan lesap-keluar ketika ia ditampilkan atau disembunyikan
 Comment[nl]=Laat pop-ups vloeiend opkomen/vervagen als ze worden weergegeven of verborgen
