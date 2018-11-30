@@ -1658,8 +1658,19 @@ KSharedConfigPtr EffectsHandlerImpl::inputConfig() const
 EffectWindowImpl::EffectWindowImpl(Toplevel *toplevel)
     : EffectWindow(toplevel)
     , toplevel(toplevel)
-    , sw(NULL)
+    , sw(nullptr)
 {
+    // Deleted windows are not managed. So, when windowClosed signal is
+    // emitted, effects can't distinguish managed windows from unmanaged
+    // windows(e.g. combo box popups, popup menus, etc). Save value of the
+    // managed property during construction of EffectWindow. At that time,
+    // parent can be Client, ShellClient, or Unmanaged. So, later on, when
+    // an instance of Deleted becomes parent of the EffectWindow, effects
+    // can still figure out whether it is/was a managed window.
+    managed = toplevel->isClient();
+
+    waylandClient = qobject_cast<KWin::ShellClient *>(toplevel) != nullptr;
+    x11Client = !waylandClient;
 }
 
 EffectWindowImpl::~EffectWindowImpl()
@@ -1690,7 +1701,7 @@ const EffectWindowGroup* EffectWindowImpl::group() const
 {
     if (Client* c = dynamic_cast< Client* >(toplevel))
         return c->group()->effectGroup();
-    return NULL; // TODO
+    return nullptr; // TODO
 }
 
 void EffectWindowImpl::refWindow()
@@ -1705,6 +1716,122 @@ void EffectWindowImpl::unrefWindow()
     if (Deleted* d = dynamic_cast< Deleted* >(toplevel))
         return d->unrefWindow();   // delays deletion in case
     abort(); // TODO
+}
+
+#define TOPLEVEL_HELPER( rettype, prototype, toplevelPrototype) \
+    rettype EffectWindowImpl::prototype ( ) const \
+    { \
+        return toplevel->toplevelPrototype(); \
+    }
+
+TOPLEVEL_HELPER(double, opacity, opacity)
+TOPLEVEL_HELPER(bool, hasAlpha, hasAlpha)
+TOPLEVEL_HELPER(int, x, x)
+TOPLEVEL_HELPER(int, y, y)
+TOPLEVEL_HELPER(int, width, width)
+TOPLEVEL_HELPER(int, height, height)
+TOPLEVEL_HELPER(QPoint, pos, pos)
+TOPLEVEL_HELPER(QSize, size, size)
+TOPLEVEL_HELPER(int, screen, screen)
+TOPLEVEL_HELPER(QRect, geometry, geometry)
+TOPLEVEL_HELPER(QRect, expandedGeometry, visibleRect)
+TOPLEVEL_HELPER(QRect, rect, rect)
+TOPLEVEL_HELPER(int, desktop, desktop)
+TOPLEVEL_HELPER(bool, isDesktop, isDesktop)
+TOPLEVEL_HELPER(bool, isDock, isDock)
+TOPLEVEL_HELPER(bool, isToolbar, isToolbar)
+TOPLEVEL_HELPER(bool, isMenu, isMenu)
+TOPLEVEL_HELPER(bool, isNormalWindow, isNormalWindow)
+TOPLEVEL_HELPER(bool, isDialog, isDialog)
+TOPLEVEL_HELPER(bool, isSplash, isSplash)
+TOPLEVEL_HELPER(bool, isUtility, isUtility)
+TOPLEVEL_HELPER(bool, isDropdownMenu, isDropdownMenu)
+TOPLEVEL_HELPER(bool, isPopupMenu, isPopupMenu)
+TOPLEVEL_HELPER(bool, isTooltip, isTooltip)
+TOPLEVEL_HELPER(bool, isNotification, isNotification)
+TOPLEVEL_HELPER(bool, isOnScreenDisplay, isOnScreenDisplay)
+TOPLEVEL_HELPER(bool, isComboBox, isComboBox)
+TOPLEVEL_HELPER(bool, isDNDIcon, isDNDIcon)
+TOPLEVEL_HELPER(bool, isDeleted, isDeleted)
+TOPLEVEL_HELPER(bool, hasOwnShape, shape)
+TOPLEVEL_HELPER(QString, windowRole, windowRole)
+TOPLEVEL_HELPER(QStringList, activities, activities)
+TOPLEVEL_HELPER(bool, skipsCloseAnimation, skipsCloseAnimation)
+TOPLEVEL_HELPER(KWayland::Server::SurfaceInterface *, surface, surface)
+TOPLEVEL_HELPER(bool, isPopupWindow, isPopupWindow)
+
+#undef TOPLEVEL_HELPER
+
+#define CLIENT_HELPER_WITH_DELETED( rettype, prototype, propertyname, defaultValue ) \
+    rettype EffectWindowImpl::prototype ( ) const \
+    { \
+        auto client = qobject_cast<AbstractClient *>(toplevel); \
+        if (client) { \
+            return client->propertyname(); \
+        } \
+        auto deleted = qobject_cast<Deleted *>(toplevel); \
+        if (deleted) { \
+            return deleted->propertyname(); \
+        } \
+        return defaultValue; \
+    }
+
+CLIENT_HELPER_WITH_DELETED(bool, isMinimized, isMinimized, false)
+CLIENT_HELPER_WITH_DELETED(bool, isModal, isModal, false)
+CLIENT_HELPER_WITH_DELETED(bool, isFullScreen, isFullScreen, false)
+CLIENT_HELPER_WITH_DELETED(bool, isCurrentTab, isCurrentTab, false)
+CLIENT_HELPER_WITH_DELETED(bool, keepAbove, keepAbove, false)
+CLIENT_HELPER_WITH_DELETED(bool, keepBelow, keepBelow, false)
+CLIENT_HELPER_WITH_DELETED(QString, caption, caption, QString());
+CLIENT_HELPER_WITH_DELETED(QVector<uint>, desktops, x11DesktopIds, QVector<uint>());
+
+#undef CLIENT_HELPER_WITH_DELETED
+
+QString EffectWindowImpl::windowClass() const
+{
+    return toplevel->resourceName() + QLatin1Char(' ') + toplevel->resourceClass();
+}
+
+QRect EffectWindowImpl::contentsRect() const
+{
+    return QRect(toplevel->clientPos(), toplevel->clientSize());
+}
+
+NET::WindowType EffectWindowImpl::windowType() const
+{
+    return toplevel->windowType();
+}
+
+#define CLIENT_HELPER( rettype, prototype, propertyname, defaultValue ) \
+    rettype EffectWindowImpl::prototype ( ) const \
+    { \
+        auto client = qobject_cast<AbstractClient *>(toplevel); \
+        if (client) { \
+            return client->propertyname(); \
+        } \
+        return defaultValue; \
+    }
+
+CLIENT_HELPER(bool, isMovable, isMovable, false)
+CLIENT_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens, false)
+CLIENT_HELPER(bool, isUserMove, isMove, false)
+CLIENT_HELPER(bool, isUserResize, isResize, false)
+CLIENT_HELPER(QRect, iconGeometry, iconGeometry, QRect())
+CLIENT_HELPER(bool, isSpecialWindow, isSpecialWindow, true)
+CLIENT_HELPER(bool, acceptsFocus, wantsInput, true) // We don't actually know...
+CLIENT_HELPER(QIcon, icon, icon, QIcon())
+CLIENT_HELPER(bool, isSkipSwitcher, skipSwitcher, false)
+CLIENT_HELPER(bool, decorationHasAlpha, decorationHasAlpha, false)
+CLIENT_HELPER(bool, isUnresponsive, unresponsive, false)
+
+#undef CLIENT_HELPER
+
+QSize EffectWindowImpl::basicUnit() const
+{
+    if (auto client = qobject_cast<Client*>(toplevel)){
+        return client->basicUnit();
+    }
+    return QSize(1,1);
 }
 
 void EffectWindowImpl::setWindow(Toplevel* w)
@@ -1867,6 +1994,22 @@ void EffectWindowImpl::unreferencePreviousWindowPixmap()
         sw->unreferencePreviousPixmap();
     }
 }
+
+bool EffectWindowImpl::isManaged() const
+{
+    return managed;
+}
+
+bool EffectWindowImpl::isWaylandClient() const
+{
+    return waylandClient;
+}
+
+bool EffectWindowImpl::isX11Client() const
+{
+    return x11Client;
+}
+
 
 //****************************************
 // EffectWindowGroupImpl

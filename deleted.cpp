@@ -254,6 +254,20 @@ QByteArray Deleted::windowRole() const
     return m_windowRole;
 }
 
+QVector<uint> Deleted::x11DesktopIds() const
+{
+    const auto desks = desktops();
+    QVector<uint> x11Ids;
+    x11Ids.reserve(desks.count());
+    std::transform(desks.constBegin(), desks.constEnd(),
+        std::back_inserter(x11Ids),
+        [] (const VirtualDesktop *vd) {
+            return vd->x11DesktopNumber();
+        }
+    );
+    return x11Ids;
+}
+
 void Deleted::addTransient(Deleted *transient)
 {
     m_transients.append(transient);

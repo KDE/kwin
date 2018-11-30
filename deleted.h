@@ -181,6 +181,8 @@ public:
         return m_wasPopupWindow;
     }
 
+    QVector<uint> x11DesktopIds() const;
+
 protected:
     virtual void debug(QDebug& stream) const;
 private Q_SLOTS:

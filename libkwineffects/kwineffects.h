@@ -2071,16 +2071,17 @@ public:
 
     virtual void refWindow() = 0;
     virtual void unrefWindow() = 0;
-    bool isDeleted() const;
 
-    bool isMinimized() const;
-    double opacity() const;
-    bool hasAlpha() const;
+    virtual bool isDeleted() const = 0;
+
+    virtual bool isMinimized() const = 0;
+    virtual double opacity() const = 0;
+    virtual bool hasAlpha() const = 0;
 
     bool isOnCurrentActivity() const;
     Q_SCRIPTABLE bool isOnActivity(QString id) const;
     bool isOnAllActivities() const;
-    QStringList activities() const;
+    virtual QStringList activities() const = 0;
 
     Q_SCRIPTABLE bool isOnDesktop(int d) const;
     bool isOnCurrentDesktop() const;
@@ -2094,48 +2095,48 @@ public:
      * @deprecated
      */
 #ifndef KWIN_NO_DEPRECATED
-    int KWIN_DEPRECATED desktop() const; // prefer isOnXXX()
+    virtual int KWIN_DEPRECATED desktop() const = 0; // prefer isOnXXX()
 #endif
     /**
      * All the desktops by number that the window is in. On X11 this list will always have
      * a length of 1, on Wayland can be any subset.
      * If the list is empty it means the window is on all desktops
      */
-    QVector<uint> desktops() const;
+    virtual QVector<uint> desktops() const = 0;
 
-    int x() const;
-    int y() const;
-    int width() const;
-    int height() const;
+    virtual int x() const = 0;
+    virtual int y() const = 0;
+    virtual int width() const = 0;
+    virtual int height() const = 0;
     /**
      * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
      */
-    QSize basicUnit() const;
-    QRect geometry() const;
+    virtual QSize basicUnit() const = 0;
+    virtual QRect geometry() const = 0;
     /**
      * Geometry of the window including decoration and potentially shadows.
      * May be different from geometry() if the window has a shadow.
      * @since 4.9
      */
-    QRect expandedGeometry() const;
+    virtual QRect expandedGeometry() const = 0;
     virtual QRegion shape() const = 0;
-    int screen() const;
+    virtual int screen() const = 0;
     /** @internal Do not use */
-    bool hasOwnShape() const; // only for shadow effect, for now
-    QPoint pos() const;
-    QSize size() const;
-    QRect rect() const;
-    bool isMovable() const;
-    bool isMovableAcrossScreens() const;
-    bool isUserMove() const;
-    bool isUserResize() const;
-    QRect iconGeometry() const;
+    virtual bool hasOwnShape() const = 0; // only for shadow effect, for now
+    virtual QPoint pos() const = 0;
+    virtual QSize size() const = 0;
+    virtual QRect rect() const = 0;
+    virtual bool isMovable() const = 0;
+    virtual bool isMovableAcrossScreens() const = 0;
+    virtual bool isUserMove() const = 0;
+    virtual bool isUserResize() const = 0;
+    virtual QRect iconGeometry() const = 0;
 
     /**
      * Geometry of the actual window contents inside the whole (including decorations) window.
      */
-    QRect contentsRect() const;
+    virtual QRect contentsRect() const = 0;
     /**
      * Geometry of the transparent rect in the decoration.
      * May be different from contentsRect() if the decoration is extended into the client area.
@@ -2143,124 +2144,124 @@ public:
      */
     virtual QRect decorationInnerRect() const = 0;
     bool hasDecoration() const;
-    bool decorationHasAlpha() const;
+    virtual bool decorationHasAlpha() const = 0;
     virtual QByteArray readProperty(long atom, long type, int format) const = 0;
     virtual void deleteProperty(long atom) const = 0;
 
-    QString caption() const;
-    QIcon icon() const;
-    QString windowClass() const;
-    QString windowRole() const;
+    virtual QString caption() const = 0;
+    virtual QIcon icon() const = 0;
+    virtual QString windowClass() const = 0;
+    virtual QString windowRole() const = 0;
     virtual const EffectWindowGroup* group() const = 0;
 
     /**
      * Returns whether the window is a desktop background window (the one with wallpaper).
      * See _NET_WM_WINDOW_TYPE_DESKTOP at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isDesktop() const;
+    virtual bool isDesktop() const = 0;
     /**
      * Returns whether the window is a dock (i.e. a panel).
      * See _NET_WM_WINDOW_TYPE_DOCK at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isDock() const;
+    virtual bool isDock() const = 0;
     /**
      * Returns whether the window is a standalone (detached) toolbar window.
      * See _NET_WM_WINDOW_TYPE_TOOLBAR at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isToolbar() const;
+    virtual bool isToolbar() const = 0;
     /**
      * Returns whether the window is a torn-off menu.
      * See _NET_WM_WINDOW_TYPE_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isMenu() const;
+    virtual bool isMenu() const = 0;
     /**
      * Returns whether the window is a "normal" window, i.e. an application or any other window
      * for which none of the specialized window types fit.
      * See _NET_WM_WINDOW_TYPE_NORMAL at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
+    virtual bool isNormalWindow() const = 0; // normal as in 'NET::Normal or NET::Unknown non-transient'
     /**
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
      * i.e. window types that usually don't have a window frame and the user does not use window
      * management (moving, raising,...) on them.
      */
-    bool isSpecialWindow() const;
+    virtual bool isSpecialWindow() const = 0;
     /**
      * Returns whether the window is a dialog window.
      * See _NET_WM_WINDOW_TYPE_DIALOG at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isDialog() const;
+    virtual bool isDialog() const = 0;
     /**
      * Returns whether the window is a splashscreen. Note that many (especially older) applications
      * do not support marking their splash windows with this type.
      * See _NET_WM_WINDOW_TYPE_SPLASH at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isSplash() const;
+    virtual bool isSplash() const = 0;
     /**
      * Returns whether the window is a utility window, such as a tool window.
      * See _NET_WM_WINDOW_TYPE_UTILITY at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isUtility() const;
+    virtual bool isUtility() const = 0;
     /**
      * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
      * from the applications menubar).
      * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isDropdownMenu() const;
+    virtual bool isDropdownMenu() const = 0;
     /**
      * Returns whether the window is a popup menu (that is not a torn-off or dropdown menu).
      * See _NET_WM_WINDOW_TYPE_POPUP_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isPopupMenu() const; // a context popup, not dropdown, not torn-off
+    virtual bool isPopupMenu() const = 0; // a context popup, not dropdown, not torn-off
     /**
      * Returns whether the window is a tooltip.
      * See _NET_WM_WINDOW_TYPE_TOOLTIP at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isTooltip() const;
+    virtual bool isTooltip() const = 0;
     /**
      * Returns whether the window is a window with a notification.
      * See _NET_WM_WINDOW_TYPE_NOTIFICATION at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isNotification() const;
+    virtual bool isNotification() const = 0;
     /**
      * Returns whether the window is an on screen display window
      * using the non-standard _KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY
      */
-    bool isOnScreenDisplay() const;
+    virtual bool isOnScreenDisplay() const = 0;
     /**
      * Returns whether the window is a combobox popup.
      * See _NET_WM_WINDOW_TYPE_COMBO at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isComboBox() const;
+    virtual bool isComboBox() const = 0;
     /**
      * Returns whether the window is a Drag&Drop icon.
      * See _NET_WM_WINDOW_TYPE_DND at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    bool isDNDIcon() const;
+    virtual bool isDNDIcon() const = 0;
     /**
      * Returns the NETWM window type
      * See http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    NET::WindowType windowType() const;
+    virtual NET::WindowType windowType() const = 0;
     /**
      * Returns whether the window is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
      */
-    bool isManaged() const; // whether it's managed or override-redirect
+    virtual bool isManaged() const = 0; // whether it's managed or override-redirect
     /**
      * Returns whether or not the window can accept keyboard focus.
      */
-    bool acceptsFocus() const;
+    virtual bool acceptsFocus() const = 0;
     /**
      * Returns whether or not the window is kept above all other windows.
      */
-    bool keepAbove() const;
+    virtual bool keepAbove() const = 0;
     /**
      * Returns whether the window is kept below all other windows.
      */
-    bool keepBelow() const;
+    virtual bool keepBelow() const = 0;
 
-    bool isModal() const;
+    virtual bool isModal() const = 0;
     Q_SCRIPTABLE virtual KWin::EffectWindow* findModal() = 0;
     Q_SCRIPTABLE virtual QList<KWin::EffectWindow*> mainWindows() const = 0;
 
@@ -2268,7 +2269,7 @@ public:
     * Returns whether the window should be excluded from window switching effects.
     * @since 4.5
     */
-    bool isSkipSwitcher() const;
+    virtual bool isSkipSwitcher() const = 0;
 
     /**
      * Returns the unmodified window quad list. Can also be used to force rebuilding.
@@ -2280,7 +2281,7 @@ public:
     void unminimize();
     Q_SCRIPTABLE void closeWindow() const;
 
-    bool isCurrentTab() const;
+    virtual bool isCurrentTab() const = 0;
 
     /**
      * @since 4.11
@@ -2290,37 +2291,37 @@ public:
     /**
      * @since 5.0
      **/
-    bool skipsCloseAnimation() const;
+    virtual bool skipsCloseAnimation() const = 0;
 
     /**
      * @since 5.5
      */
-    KWayland::Server::SurfaceInterface *surface() const;
+    virtual KWayland::Server::SurfaceInterface *surface() const = 0;
 
     /**
      * @since 5.6
      **/
-    bool isFullScreen() const;
+    virtual bool isFullScreen() const = 0;
 
     /**
      * @since 5.10
      */
-    bool isUnresponsive() const;
+    virtual bool isUnresponsive() const = 0;
 
     /**
      * @since 5.15
      **/
-    bool isWaylandClient() const;
+    virtual bool isWaylandClient() const = 0;
 
     /**
      * @since 5.15
      **/
-    bool isX11Client() const;
+    virtual bool isX11Client() const = 0;
 
     /**
      * @since 5.15
      **/
-    bool isPopupWindow() const;
+    virtual bool isPopupWindow() const = 0;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.
