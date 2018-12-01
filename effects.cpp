@@ -1654,6 +1654,19 @@ KSharedConfigPtr EffectsHandlerImpl::inputConfig() const
     return kwinApp()->inputConfig();
 }
 
+Effect *EffectsHandlerImpl::findEffect(const QString &name) const
+{
+    auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(),
+        [name] (const EffectPair &pair) {
+            return pair.first == name;
+        }
+    );
+    if (it == loaded_effects.constEnd()) {
+        return nullptr;
+    }
+    return (*it).second;
+}
+
 //****************************************
 // EffectWindowImpl
 //****************************************

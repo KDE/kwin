@@ -368,6 +368,13 @@ void Compositor::finish()
         return;
     m_finishing = true;
     m_releaseSelectionTimer.start();
+
+    // Some effects might need access to effect windows when they are about to
+    // be destroyed, for example to unreference deleted windows, so we have to
+    // make sure that effect windows outlive effects.
+    delete effects;
+    effects = nullptr;
+
     if (Workspace::self()) {
         foreach (Client * c, Workspace::self()->clientList())
             m_scene->windowClosed(c, NULL);
@@ -403,8 +410,6 @@ void Compositor::finish()
             c->finishCompositing();
         }
     }
-    delete effects;
-    effects = NULL;
     delete m_scene;
     m_scene = NULL;
     compositeTimer.stop();

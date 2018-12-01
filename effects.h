@@ -262,6 +262,15 @@ public:
 
     void windowToDesktops(EffectWindow *w, const QVector<uint> &desktops);
 
+    /**
+     * Finds an effect with the given name.
+     *
+     * @param name The name of the effect.
+     * @returns The effect with the given name @p name, or nullptr if there
+     *     is no such effect loaded.
+     **/
+    Effect *findEffect(const QString &name) const;
+
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
     void slotTabAdded(EffectWindow* from, EffectWindow* to);
