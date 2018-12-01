@@ -287,8 +287,11 @@ void EffectsHandlerImpl::unloadAllEffects()
         }
         delete effect;
     }
-    loaded_effects.clear();
+
+    effect_order.clear();
     m_effectLoader->clear();
+
+    effectsChanged();
 }
 
 void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)
