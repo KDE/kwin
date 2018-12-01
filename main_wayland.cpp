@@ -672,6 +672,10 @@ int main(int argc, char * argv[])
                                           i18n("Starts the session in locked mode."));
     parser.addOption(screenLockerOption);
 
+    QCommandLineOption noScreenLockerOption(QStringLiteral("no-lockscreen"),
+                                            i18n("Starts the session without lock screen support."));
+    parser.addOption(noScreenLockerOption);
+
     QCommandLineOption exitWithSessionOption(QStringLiteral("exit-with-session"),
                                              i18n("Exit after the session application, which is started by KWin, closed."),
                                              QStringLiteral("/path/to/session"));
@@ -785,6 +789,8 @@ int main(int argc, char * argv[])
     KWin::WaylandServer::InitalizationFlags flags;
     if (parser.isSet(screenLockerOption)) {
         flags = KWin::WaylandServer::InitalizationFlag::LockScreen;
+    } else if (parser.isSet(noScreenLockerOption)) {
+        flags = KWin::WaylandServer::InitalizationFlag::NoLockScreenIntegration;
     }
     if (!server->init(parser.value(waylandSocketOption).toUtf8(), flags)) {
         std::cerr << "FATAL ERROR: could not create Wayland server" << std::endl;
