@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "touch_input.h"
+#include "touch_hide_cursor_spy.h"
 #include "client.h"
 #include "effects.h"
 #include "gestures.h"
@@ -1754,6 +1755,7 @@ void InputRedirection::setupInputFilters()
         installInputEventFilter(new VirtualTerminalFilter);
     }
     if (waylandServer()) {
+        installInputEventSpy(new TouchHideCursorSpy);
         installInputEventFilter(new TerminateServerFilter);
         installInputEventFilter(new DragAndDropInputFilter);
         installInputEventFilter(new LockScreenFilter);
