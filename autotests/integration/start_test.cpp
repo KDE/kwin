@@ -52,6 +52,7 @@ void StartTest::initTestCase()
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+    QVERIFY(waylandServer()->hasGlobalShortcutSupport());
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
 }

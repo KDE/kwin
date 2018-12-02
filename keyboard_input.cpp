@@ -122,7 +122,9 @@ void KeyboardInputRedirection::init()
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 
-    m_input->installInputEventSpy(new ModifierOnlyShortcuts);
+    if (waylandServer()->hasGlobalShortcutSupport()) {
+        m_input->installInputEventSpy(new ModifierOnlyShortcuts);
+    }
 
     KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.data());
     connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,

@@ -1751,25 +1751,32 @@ void InputRedirection::setupWorkspace()
 
 void InputRedirection::setupInputFilters()
 {
-    if (LogindIntegration::self()->hasSessionControl()) {
+    const bool hasGlobalShortcutSupport = !waylandServer() || waylandServer()->hasGlobalShortcutSupport();
+    if (LogindIntegration::self()->hasSessionControl() && hasGlobalShortcutSupport) {
         installInputEventFilter(new VirtualTerminalFilter);
     }
     if (waylandServer()) {
         installInputEventSpy(new TouchHideCursorSpy);
-        installInputEventFilter(new TerminateServerFilter);
+        if (hasGlobalShortcutSupport) {
+            installInputEventFilter(new TerminateServerFilter);
+        }
         installInputEventFilter(new DragAndDropInputFilter);
         installInputEventFilter(new LockScreenFilter);
         installInputEventFilter(new PopupInputFilter);
         m_windowSelector = new WindowSelectorFilter;
         installInputEventFilter(m_windowSelector);
     }
-    installInputEventFilter(new ScreenEdgeInputFilter);
+    if (hasGlobalShortcutSupport) {
+        installInputEventFilter(new ScreenEdgeInputFilter);
+    }
     installInputEventFilter(new EffectsFilter);
     installInputEventFilter(new MoveResizeFilter);
 #ifdef KWIN_BUILD_TABBOX
     installInputEventFilter(new TabBoxInputFilter);
 #endif
-    installInputEventFilter(new GlobalShortcutFilter);
+    if (hasGlobalShortcutSupport) {
+        installInputEventFilter(new GlobalShortcutFilter);
+    }
     installInputEventFilter(new DecorationEventFilter);
     installInputEventFilter(new InternalWindowEventFilter);
     if (waylandServer()) {

@@ -79,7 +79,8 @@ public:
     enum class InitalizationFlag {
         NoOptions = 0x0,
         LockScreen = 0x1,
-        NoLockScreenIntegration = 0x2
+        NoLockScreenIntegration = 0x2,
+        NoGlobalShortcuts = 0x4
     };
 
     Q_DECLARE_FLAGS(InitalizationFlags, InitalizationFlag)
@@ -152,6 +153,11 @@ public:
      * @returns whether integration with KScreenLocker is available.
      **/
     bool hasScreenLockerIntegration() const;
+
+    /**
+     * @returns whether any kind of global shortcuts are supported.
+     **/
+    bool hasGlobalShortcutSupport() const;
 
     void createInternalConnection();
     void initWorkspace();

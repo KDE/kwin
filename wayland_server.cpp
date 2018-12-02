@@ -795,6 +795,11 @@ bool WaylandServer::hasScreenLockerIntegration() const
     return !m_initFlags.testFlag(InitalizationFlag::NoLockScreenIntegration);
 }
 
+bool WaylandServer::hasGlobalShortcutSupport() const
+{
+    return !m_initFlags.testFlag(InitalizationFlag::NoGlobalShortcuts);
+}
+
 void WaylandServer::simulateUserActivity()
 {
     if (m_idle) {

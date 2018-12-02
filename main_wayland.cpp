@@ -676,6 +676,10 @@ int main(int argc, char * argv[])
                                             i18n("Starts the session without lock screen support."));
     parser.addOption(noScreenLockerOption);
 
+    QCommandLineOption noGlobalShortcutsOption(QStringLiteral("no-global-shortcuts"),
+                                               i18n("Starts the session without global shortcuts support."));
+    parser.addOption(noScreenLockerOption);
+
     QCommandLineOption exitWithSessionOption(QStringLiteral("exit-with-session"),
                                              i18n("Exit after the session application, which is started by KWin, closed."),
                                              QStringLiteral("/path/to/session"));
@@ -791,6 +795,9 @@ int main(int argc, char * argv[])
         flags = KWin::WaylandServer::InitalizationFlag::LockScreen;
     } else if (parser.isSet(noScreenLockerOption)) {
         flags = KWin::WaylandServer::InitalizationFlag::NoLockScreenIntegration;
+    }
+    if (parser.isSet(noGlobalShortcutsOption)) {
+        flags |= KWin::WaylandServer::InitalizationFlag::NoGlobalShortcuts;
     }
     if (!server->init(parser.value(waylandSocketOption).toUtf8(), flags)) {
         std::cerr << "FATAL ERROR: could not create Wayland server" << std::endl;
