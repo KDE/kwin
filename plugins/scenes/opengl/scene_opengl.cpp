@@ -2074,8 +2074,9 @@ SceneOpenGLShadow::SceneOpenGLShadow(Toplevel *toplevel)
 
 SceneOpenGLShadow::~SceneOpenGLShadow()
 {
-    if (effects) {
-        effects->makeOpenGLContextCurrent();
+    Scene *scene = Compositor::self()->scene();
+    if (scene) {
+        scene->makeOpenGLContextCurrent();
         DecorationShadowTextureCache::instance().unregister(this);
         m_texture.reset();
     }
@@ -2334,7 +2335,8 @@ bool SceneOpenGLShadow::prepareBackend()
 {
     if (hasDecorationShadow()) {
         // simplifies a lot by going directly to
-        effects->makeOpenGLContextCurrent();
+        Scene *scene = Compositor::self()->scene();
+        scene->makeOpenGLContextCurrent();
         m_texture = DecorationShadowTextureCache::instance().getTexture(this);
 
         return true;
@@ -2403,7 +2405,8 @@ bool SceneOpenGLShadow::prepareBackend()
         }
     }
 
-    effects->makeOpenGLContextCurrent();
+    Scene *scene = Compositor::self()->scene();
+    scene->makeOpenGLContextCurrent();
     m_texture = QSharedPointer<GLTexture>::create(image);
 
     if (m_texture->internalFormat() == GL_R8) {
