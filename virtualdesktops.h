@@ -362,7 +362,7 @@ public Q_SLOTS:
      */
     void updateLayout();
     /**
-     * @param enable wrapping around borders for navigation in desktop layout
+     * @param enabled wrapping around borders for navigation in desktop layout
      * @see isNavigationWrappingAround
      * @see navigationWrappingAroundChanged
      **/

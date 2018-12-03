@@ -162,40 +162,40 @@ private:
  *
  * The screen edge functionality is split into three parts:
  * @li This manager class ScreenEdges
- * @li abstract class @link Edge
- * @li specific implementation of @link Edge, e.g. @link WindowBasedEdge
+ * @li abstract class @ref Edge
+ * @li specific implementation of @ref Edge, e.g. @ref WindowBasedEdge
  *
- * The ScreenEdges creates an @link Edge for each screen edge which is also an edge in the
+ * The ScreenEdges creates an @ref Edge for each screen edge which is also an edge in the
  * combination of all screens. E.g. if there are two screens, no Edge is created between the screens,
  * but at all other edges even if the screens have a different dimension.
  *
- * In addition at each corner of the overall display geometry an one-pixel large @link Edge is
+ * In addition at each corner of the overall display geometry an one-pixel large @ref Edge is
  * created. No matter how many screens there are, there will only be exactly four of these corner
  * edges. This is motivated by Fitts's Law which show that it's easy to trigger such a corner, but
  * it would be very difficult to trigger a corner between two screens (one pixel target not visually
  * outlined).
  *
  * The ScreenEdges are used for one of the following functionality:
- * @li switch virtual desktop (see property @link desktopSwitching)
- * @li switch virtual desktop when moving a window (see property @link desktopSwitchingMovingClients)
- * @li trigger a pre-defined action (see properties @link actionTop and similar)
- * @li trigger an externally configured action (e.g. Effect, Script, see @link reserve, @link unreserve)
+ * @li switch virtual desktop (see property @ref desktopSwitching)
+ * @li switch virtual desktop when moving a window (see property @ref desktopSwitchingMovingClients)
+ * @li trigger a pre-defined action (see properties @ref actionTop and similar)
+ * @li trigger an externally configured action (e.g. Effect, Script, see @ref reserve, @ref unreserve)
  *
- * An @link Edge is only active if there is at least one of the possible actions "reserved" for this
+ * An @ref Edge is only active if there is at least one of the possible actions "reserved" for this
  * edge. The idea is to not block the screen edge if nothing could be triggered there, so that the
  * user e.g. can configure nothing on the top edge, which tends to interfere with full screen apps
- * having a hidden panel there. On X11 (currently only supported backend) the @link Edge is
- * represented by a @link WindowBasedEdge which creates an input only window for the geometry and
+ * having a hidden panel there. On X11 (currently only supported backend) the @ref Edge is
+ * represented by a @ref WindowBasedEdge which creates an input only window for the geometry and
  * reacts on enter notify events. If the edge gets reserved for the first time a window is created
  * and mapped, once the edge gets unreserved again, the window gets destroyed.
  *
  * When the mouse enters one of the screen edges the following values are used to determine whether
  * the action should be triggered or the cursor be pushed back
  * @li Time difference between two entering events is not larger than a certain threshold
- * @li Time difference between two entering events is larger than @link timeThreshold
- * @li Time difference between two activations is larger than @link reActivateThreshold
+ * @li Time difference between two entering events is larger than @ref timeThreshold
+ * @li Time difference between two activations is larger than @ref reActivateThreshold
  * @li Distance between two enter events is not larger than a defined pixel distance
- * These checks are performed in @link Edge
+ * These checks are performed in @ref Edge
  *
  * @todo change way how Effects/Scripts can reserve an edge and are notified.
  */
@@ -241,7 +241,7 @@ public:
     /**
      * Mark the specified screen edge as reserved. This method is provided for external activation
      * like effects and scripts. When the effect/script does no longer need the edge it is supposed
-     * to call @link unreserve.
+     * to call @ref unreserve.
      * @param border the screen edge to mark as reserved
      * @param object The object on which the @p callback needs to be invoked
      * @param callback The method name to be invoked - uses QMetaObject::invokeMethod
@@ -251,7 +251,7 @@ public:
     void reserve(ElectricBorder border, QObject *object, const char *callback);
     /**
      * Mark the specified screen edge as unreserved. This method is provided for external activation
-     * like effects and scripts. This method is only allowed to be called if @link reserve had been
+     * like effects and scripts. This method is only allowed to be called if @ref reserve had been
      * called before for the same @p border. An unbalanced calling of reserve/unreserve leads to the
      * edge never being active or never being able to deactivate again.
      * @param border the screen edge to mark as unreserved
@@ -288,7 +288,7 @@ public:
      * Mark the specified screen edge as reserved for touch gestures. This method is provided for
      * external activation like effects and scripts.
      * When the effect/script does no longer need the edge it is supposed
-     * to call @link unreserveTouch.
+     * to call @ref unreserveTouch.
      * @param border the screen edge to mark as reserved
      * @param action The action which gets triggered
      * @see unreserveTouch
@@ -304,7 +304,7 @@ public:
 
     /**
      * Reserve desktop switching for screen edges, if @p isToReserve is @c true. Unreserve otherwise.
-     * @param reserve indicated weather desktop switching should be reserved or unreseved
+     * @param isToReserve indicated whether desktop switching should be reserved or unreseved
      */
     void reserveDesktopSwitching(bool isToReserve, Qt::Orientations o);
     /**

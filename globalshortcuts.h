@@ -65,7 +65,7 @@ public:
      *
      * @param action The action to trigger if the shortcut is triggered
      * @param modifiers The modifiers which need to be hold to trigger the action
-     * @param pointerButtons The pointer axis
+     * @param axis The pointer axis
      */
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 

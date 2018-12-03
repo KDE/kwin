@@ -188,7 +188,7 @@ protected:
      * @p defaultValue determines whether the Effect should be loaded. A value of @c true means
      * that Load | CheckDefaultFunction is returned, in case of @c false no Load flags are returned.
      *
-     * @param effecName The name of the Effect to look for in the configuration
+     * @param effectName The name of the Effect to look for in the configuration
      * @param defaultValue Whether the Effect is enabled by default or not.
      * @returns Flags indicating whether the Effect should be loaded and how it should be loaded
      */
