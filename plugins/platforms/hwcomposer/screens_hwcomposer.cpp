@@ -24,26 +24,11 @@ namespace KWin
 {
 
 HwcomposerScreens::HwcomposerScreens(HwcomposerBackend *backend, QObject *parent)
-    : BasicScreens(backend, parent)
+    : OutputScreens(backend, parent)
     , m_backend(backend)
 {
-}
-
-HwcomposerScreens::~HwcomposerScreens() = default;
-
-float HwcomposerScreens::refreshRate(int screen) const
-{
-    Q_UNUSED(screen)
-    return m_backend->refreshRate() / 1000.0f;
-}
-
-QSizeF HwcomposerScreens::physicalSize(int screen) const
-{
-    const QSizeF size = m_backend->physicalSize();
-    if (size.isValid()) {
-        return size;
-    }
-    return Screens::physicalSize(screen);
+    connect(m_backend, &HwcomposerBackend::screensQueried, this, &OutputScreens::updateCount);
+    connect(m_backend, &HwcomposerBackend::screensQueried, this, &OutputScreens::changed);
 }
 
 }

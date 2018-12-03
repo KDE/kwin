@@ -25,9 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "main.h"
 #include "wayland_server.h"
-// KWayland
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/seat_interface.h>
 // Qt
 #include <QKeyEvent>
 #include <QDBusConnection>
@@ -36,8 +33,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <hardware/lights.h>
 // linux
 #include <linux/input.h>
+// KWayland
+#include <KWayland/Server/output_interface.h>
 
 // based on test_hwcomposer.c from libhybris project (Apache 2 licensed)
+
+using namespace KWayland::Server;
 
 namespace KWin
 {
@@ -157,50 +158,6 @@ HwcomposerBackend::~HwcomposerBackend()
     if (!m_outputBlank) {
         toggleBlankOutput();
     }
-    if (m_device) {
-        hwc_close_1(m_device);
-    }
-}
-
-KWayland::Server::OutputInterface* HwcomposerBackend::createOutput(hwc_composer_device_1_t *device)
-{
-    uint32_t configs[5];
-    size_t numConfigs = 5;
-    if (device->getDisplayConfigs(device, 0, configs, &numConfigs) != 0) {
-        qCWarning(KWIN_HWCOMPOSER) << "Failed to get hwcomposer display configurations";
-        return nullptr;
-    }
-
-    int32_t attr_values[5];
-    uint32_t attributes[] = {
-        HWC_DISPLAY_WIDTH,
-        HWC_DISPLAY_HEIGHT,
-        HWC_DISPLAY_DPI_X,
-        HWC_DISPLAY_DPI_Y,
-        HWC_DISPLAY_VSYNC_PERIOD ,
-        HWC_DISPLAY_NO_ATTRIBUTE
-    };
-    device->getDisplayAttributes(device, 0, configs[0], attributes, attr_values);
-    QSize pixel(attr_values[0], attr_values[1]);
-    if (pixel.isEmpty()) {
-        return nullptr;
-    }
-
-    using namespace KWayland::Server;
-    OutputInterface *o = waylandServer()->display()->createOutput(waylandServer()->display());
-    o->addMode(pixel, OutputInterface::ModeFlag::Current | OutputInterface::ModeFlag::Preferred, (attr_values[4] == 0) ? 60000 : 10E11/attr_values[4]);
-
-    if (attr_values[2] != 0 && attr_values[3] != 0) {
-         static const qreal factor = 25.4;
-         m_physicalSize = QSizeF(qreal(pixel.width() * 1000) / qreal(attr_values[2]) * factor,
-                                 qreal(pixel.height() * 1000) / qreal(attr_values[3]) * factor);
-         o->setPhysicalSize(m_physicalSize.toSize());
-    } else {
-         // couldn't read physical size, assume 96 dpi
-         o->setPhysicalSize(pixel / 3.8);
-    }
-    o->create();
-    return o;
 }
 
 void HwcomposerBackend::init()
@@ -249,49 +206,56 @@ void HwcomposerBackend::init()
     };
     m_device->registerProcs(m_device, procs);
 
+    //move to HwcomposerOutput + signal
+
     initLights();
     toggleBlankOutput();
     m_filter.reset(new BacklightInputEventFilter(this));
     input()->prependInputEventFilter(m_filter.data());
 
     // get display configuration
-    auto output = createOutput(hwcDevice);
-    if (!output) {
+    m_output.reset(new HwcomposerOutput(hwcDevice));
+    if (!m_output->isValid()) {
         emit initFailed();
         return;
     }
-    m_displaySize = output->pixelSize();
-    m_refreshRate = output->refreshRate();
-    if (m_refreshRate != 0) {
-        m_vsyncInterval = 1000000/m_refreshRate;
+
+    if (m_output->refreshRate() != 0) {
+        m_vsyncInterval = 1000000/m_output->refreshRate();
     }
-    if (m_lights) {
-        using namespace KWayland::Server;
-        output->setDpmsSupported(true);
-        auto updateDpms = [this, output] {
-            output->setDpmsMode(m_outputBlank ? OutputInterface::DpmsMode::Off : OutputInterface::DpmsMode::On);
-        };
-        updateDpms();
-        connect(this, &HwcomposerBackend::outputBlankChanged, this, updateDpms);
-        connect(output, &OutputInterface::dpmsModeRequested, this,
-            [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
-                if (mode == OutputInterface::DpmsMode::On) {
-                    if (m_outputBlank) {
-                        toggleBlankOutput();
-                    }
-                } else {
-                    if (!m_outputBlank) {
-                        toggleBlankOutput();
-                    }
-                }
-            }
-        );
-    }
-    qCDebug(KWIN_HWCOMPOSER) << "Display size:" << m_displaySize;
-    qCDebug(KWIN_HWCOMPOSER) << "Refresh rate:" << m_refreshRate;
+//     if (m_lights) {
+//         using namespace KWayland::Server;
+//         output->setDpmsSupported(true);
+//         auto updateDpms = [this, output] {
+//             output->setDpmsMode(m_outputBlank ? OutputInterface::DpmsMode::Off : OutputInterface::DpmsMode::On);
+//         };
+//         updateDpms();
+//         connect(this, &HwcomposerBackend::outputBlankChanged, this, updateDpms);
+//         connect(output, &OutputInterface::dpmsModeRequested, this,
+//             [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
+//                 if (mode == OutputInterface::DpmsMode::On) {
+//                     if (m_outputBlank) {
+//                         toggleBlankOutput();
+//                     }
+//                 } else {
+//                     if (!m_outputBlank) {
+//                         toggleBlankOutput();
+//                     }
+//                 }
+//             }
+//         );
+//     }
 
     emit screensQueried();
     setReady(true);
+}
+
+QSize HwcomposerBackend::screenSize() const
+{
+    if (m_output) {
+        return m_output->pixelSize();
+    }
+    return QSize();
 }
 
 void HwcomposerBackend::initLights()
@@ -335,6 +299,8 @@ void HwcomposerBackend::toggleBlankOutput()
             compositor->addRepaintFull();
         }
     }
+
+    qDebug() << "setting blank to " << m_outputBlank;
     emit outputBlankChanged();
 }
 
@@ -371,6 +337,20 @@ Screens *HwcomposerBackend::createScreens(QObject *parent)
 {
     return new HwcomposerScreens(this, parent);
 }
+
+Outputs HwcomposerBackend::outputs() const
+{
+    if (!m_output.isNull()) {
+        return QVector<HwcomposerOutput*>({m_output.data()});
+    }
+    return {};
+}
+
+Outputs HwcomposerBackend::enabledOutputs() const
+{
+    return outputs();
+}
+
 
 OpenGLBackend *HwcomposerBackend::createOpenGLBackend()
 {
@@ -480,6 +460,70 @@ void HwcomposerWindow::present(HWComposerNativeWindowBuffer *buffer)
         m_list[0]->retireFenceFd = -1;
     }
     m_list[0]->flags = 0;
+}
+
+HwcomposerOutput::HwcomposerOutput(hwc_composer_device_1_t *device):
+    AbstractOutput(),
+    m_device(device)
+{
+    uint32_t configs[5];
+    size_t numConfigs = 5;
+    if (device->getDisplayConfigs(device, 0, configs, &numConfigs) != 0) {
+        qCWarning(KWIN_HWCOMPOSER) << "Failed to get hwcomposer display configurations";
+        return;
+    }
+
+    int32_t attr_values[5];
+    uint32_t attributes[] = {
+        HWC_DISPLAY_WIDTH,
+        HWC_DISPLAY_HEIGHT,
+        HWC_DISPLAY_DPI_X,
+        HWC_DISPLAY_DPI_Y,
+        HWC_DISPLAY_VSYNC_PERIOD ,
+        HWC_DISPLAY_NO_ATTRIBUTE
+    };
+    device->getDisplayAttributes(device, 0, configs[0], attributes, attr_values);
+    QSize pixel(attr_values[0], attr_values[1]);
+    if (pixel.isEmpty()) {
+        return;
+    }
+    m_pixelSize = pixel;
+
+    if (attr_values[2] != 0 && attr_values[3] != 0) {
+         static const qreal factor = 25.4;
+         auto physicalSize = QSizeF(qreal(pixel.width() * 1000) / qreal(attr_values[2]) * factor,
+                                 qreal(pixel.height() * 1000) / qreal(attr_values[3]) * factor);
+         setRawPhysicalSize(physicalSize.toSize());
+    } else {
+         // couldn't read physical size, assume 96 dpi
+         setRawPhysicalSize(pixel / 3.8);
+    }
+
+    OutputDeviceInterface::Mode mode;
+    mode.id = 0;
+    mode.size = pixel;
+    mode.flags = OutputDeviceInterface::ModeFlag::Current | OutputDeviceInterface::ModeFlag::Preferred;
+    mode.refreshRate = (attr_values[4] == 0) ? 60000 : 10E11/attr_values[4];
+
+    initWaylandOutputDevice(QString(), QString(), QByteArray(), {mode});
+    setInternal(true);
+    setEnabled(true);
+    setWaylandMode(m_pixelSize, mode.refreshRate);
+}
+
+HwcomposerOutput::~HwcomposerOutput()
+{
+    hwc_close_1(m_device);
+}
+
+QSize HwcomposerOutput::pixelSize() const
+{
+    return m_pixelSize;
+}
+
+bool HwcomposerOutput::isValid() const
+{
+    return m_pixelSize.isValid();
 }
 
 }

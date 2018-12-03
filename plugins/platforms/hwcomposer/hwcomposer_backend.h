@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_HWCOMPOSER_BACKEND_H
 #define KWIN_HWCOMPOSER_BACKEND_H
 #include "platform.h"
+#include "abstract_output.h"
 #include "input.h"
 
 #include <QElapsedTimer>
@@ -32,8 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <hwcomposer_window.h>
 // needed as hwcomposer_window.h includes EGL which on non-arm includes Xlib
 #include <fixx11h.h>
-
-#include <KWayland/Server/output_interface.h>
 
 typedef struct hwc_display_contents_1 hwc_display_contents_1_t;
 typedef struct hwc_layer_1 hwc_layer_1_t;
@@ -48,6 +47,18 @@ namespace KWin
 class HwcomposerWindow;
 class BacklightInputEventFilter;
 
+class HwcomposerOutput: public AbstractOutput {
+public:
+    HwcomposerOutput(hwc_composer_device_1_t *device);
+    ~HwcomposerOutput() override;
+    QSize pixelSize() const;
+    bool isValid() const;
+    //TODO blank and vsync here
+private:
+    QSize m_pixelSize;
+    hwc_composer_device_1_t *m_device;
+};
+
 class HwcomposerBackend : public Platform
 {
     Q_OBJECT
@@ -61,21 +72,18 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
 
-    QSize screenSize() const override {
-        return m_displaySize;
+    Outputs outputs() const override;
+    Outputs enabledOutputs() const override;
+
+    QSize size() const {
+        return screenSize();
     }
+    QSize screenSize() const override;
 
     HwcomposerWindow *createSurface();
 
-    QSize size() const {
-        return m_displaySize;
-    }
-
     hwc_composer_device_1_t *device() const {
         return m_device;
-    }
-    int refreshRate() const {
-        return m_refreshRate;
     }
     void enableVSync(bool enable);
     void waitVSync();
@@ -87,9 +95,6 @@ public:
 
     QVector<CompositingType> supportedCompositors() const override {
         return QVector<CompositingType>{OpenGLCompositing};
-    }
-    QSizeF physicalSize() const {
-        return m_physicalSize;
     }
 
 Q_SIGNALS:
@@ -104,12 +109,9 @@ private Q_SLOTS:
 private:
     void initLights();
     void toggleScreenBrightness();
-    KWayland::Server::OutputInterface* createOutput(hwc_composer_device_1_t *device);
-    QSize m_displaySize;
-    hwc_composer_device_1_t *m_device = nullptr;
+    hwc_composer_device_1_t *m_device = nullptr; //DAVE
     light_device_t *m_lights = nullptr;
     bool m_outputBlank = true;
-    int m_refreshRate = 60000;
     int m_vsyncInterval = 16;
     uint32_t m_hwcVersion;
     int m_oldScreenBrightness = 0x7f;
@@ -117,7 +119,7 @@ private:
     QMutex m_vsyncMutex;
     QWaitCondition m_vsyncWaitCondition;
     QScopedPointer<BacklightInputEventFilter> m_filter;
-    QSizeF m_physicalSize;
+    QScopedPointer<HwcomposerOutput> m_output;
 };
 
 class HwcomposerWindow : public HWComposerNativeWindow
