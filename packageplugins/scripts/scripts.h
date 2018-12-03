@@ -26,8 +26,8 @@ class ScriptsPackage : public KPackage::PackageStructure
 {
 public:
     ScriptsPackage(QObject*, const QVariantList &) {}
-    void initPackage(KPackage::Package *package) Q_DECL_OVERRIDE;
-    void pathChanged(KPackage::Package *package) Q_DECL_OVERRIDE;
+    void initPackage(KPackage::Package *package) override;
+    void pathChanged(KPackage::Package *package) override;
 };
 
 #endif
