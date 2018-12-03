@@ -55,6 +55,7 @@ Comment[uk]=Притлумлює кольори усього екрана, ко�
 Comment[vi]=Làm tối toàn màn hình khi yêu cầu quyền quản trị
 Comment[wa]=Fwait pus noer li waitroûle etire cwand on dmande les droets da root
 Comment[x-test]=xxDarkens the entire screen when requesting root privilegesxx
+Comment[zh_TW]=當要求 root 權限時將整個螢幕變暗
 Icon=preferences-system-windows-effect-dimscreen
 Name=Dim Screen for Administrator Mode
 Name[af]=Verdof vir Administrateurmodus
@@ -114,6 +115,7 @@ Name[uk]=Притлумлення кольорів у режимі адміні�
 Name[vi]=Làm tối màn hình cho chế độ quản trị
 Name[wa]=Fé pus noere li waitroûle pol môde Manaedjeu
 Name[x-test]=xxDim Screen for Administrator Modexx
+Name[zh_TW]=為管理員模式暗化螢幕
 
 Type=Service
 X-KDE-ParentApp=
