@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2017 Martin Flöser <mgraesslin@kde.org>
+Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "idle_inhibition.h"
 #include "deleted.h"
 #include "shell_client.h"
+#include "workspace.h"
 
 #include <KWayland/Server/idle_interface.h>
 #include <KWayland/Server/surface_interface.h>
@@ -35,21 +37,24 @@ IdleInhibition::IdleInhibition(IdleInterface *idle)
     : QObject(idle)
     , m_idle(idle)
 {
+    // Workspace is created after the wayland server is initialized.
+    connect(kwinApp(), &Application::workspaceCreated, this, &IdleInhibition::slotWorkspaceCreated);
 }
 
 IdleInhibition::~IdleInhibition() = default;
 
 void IdleInhibition::registerShellClient(ShellClient *client)
 {
-    auto inhibitsIdleChanged = [this, client] {
-        // TODO: only inhibit if the ShellClient is visible
-        if (client->surface()->inhibitsIdle()) {
-            inhibit(client);
-        } else {
-            uninhibit(client);
-        }
+    auto updateInhibit = [this, client] {
+        update(client);
     };
-    m_connections[client] = connect(client->surface(), &SurfaceInterface::inhibitsIdleChanged, this, inhibitsIdleChanged);
+
+    m_connections[client] = connect(client->surface(), &SurfaceInterface::inhibitsIdleChanged, this, updateInhibit);
+    connect(client, &ShellClient::desktopChanged, this, updateInhibit);
+    connect(client, &ShellClient::clientMinimized, this, updateInhibit);
+    connect(client, &ShellClient::clientUnminimized, this, updateInhibit);
+    connect(client, &ShellClient::windowHidden, this, updateInhibit);
+    connect(client, &ShellClient::windowShown, this, updateInhibit);
     connect(client, &ShellClient::windowClosed, this,
         [this, client] {
             uninhibit(client);
@@ -61,10 +66,10 @@ void IdleInhibition::registerShellClient(ShellClient *client)
         }
     );
 
-    inhibitsIdleChanged();
+    updateInhibit();
 }
 
-void IdleInhibition::inhibit(ShellClient *client)
+void IdleInhibition::inhibit(AbstractClient *client)
 {
     if (isInhibited(client)) {
         // already inhibited
@@ -75,7 +80,7 @@ void IdleInhibition::inhibit(ShellClient *client)
     // TODO: notify powerdevil?
 }
 
-void IdleInhibition::uninhibit(ShellClient *client)
+void IdleInhibition::uninhibit(AbstractClient *client)
 {
     auto it = std::find_if(m_idleInhibitors.begin(), m_idleInhibitors.end(), [client] (auto c) { return c == client; });
     if (it == m_idleInhibitors.end()) {
@@ -84,6 +89,28 @@ void IdleInhibition::uninhibit(ShellClient *client)
     }
     m_idleInhibitors.erase(it);
     m_idle->uninhibit();
+}
+
+void IdleInhibition::update(AbstractClient *client)
+{
+    // TODO: Don't honor the idle inhibitor object if the shell client is not
+    // on the current activity (currently, activities are not supported).
+    const bool visible = client->isShown(true) && client->isOnCurrentDesktop();
+    if (visible && client->surface()->inhibitsIdle()) {
+        inhibit(client);
+    } else {
+        uninhibit(client);
+    }
+}
+
+void IdleInhibition::slotWorkspaceCreated()
+{
+    connect(workspace(), &Workspace::currentDesktopChanged, this, &IdleInhibition::slotDesktopChanged);
+}
+
+void IdleInhibition::slotDesktopChanged()
+{
+    workspace()->forEachAbstractClient([this] (AbstractClient *c) { update(c); });
 }
 
 }
