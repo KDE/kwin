@@ -39,6 +39,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/surface_interface.h>
 // xcb
 #include <xcb/xcb_keysyms.h>
+// X11
+#if HAVE_X11_XINPUT
+#include "ge_event_mem_mover.h"
+#include <X11/extensions/XInput2.h>
+#include <X11/extensions/XI2proto.h>
+#endif
 // system
 #include <linux/input.h>
 #include <X11/Xlib-xcb.h>
@@ -92,6 +98,7 @@ void X11WindowedBackend::init()
                 m_screen = it.data;
             }
         }
+        initXInput();
         XRenderUtils::init(m_connection, m_screen->root);
         createWindow();
         connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
@@ -103,10 +110,41 @@ void X11WindowedBackend::init()
         setReady(true);
         waylandServer()->seat()->setHasPointer(true);
         waylandServer()->seat()->setHasKeyboard(true);
+        if (m_hasXInput) {
+            waylandServer()->seat()->setHasTouch(true);
+        }
         emit screensQueried();
     } else {
         emit initFailed();
     }
+}
+
+void X11WindowedBackend::initXInput()
+{
+#if HAVE_X11_XINPUT
+    int xi_opcode, event, error;
+    // init XInput extension
+    if (!XQueryExtension(m_display, "XInputExtension", &xi_opcode, &event, &error)) {
+        qCDebug(KWIN_X11WINDOWED) << "XInputExtension not present";
+        return;
+    }
+
+    // verify that the XInput extension is at at least version 2.0
+    int major = 2, minor = 2;
+    int result = XIQueryVersion(m_display, &major, &minor);
+    if (result != Success) {
+        qCDebug(KWIN_X11WINDOWED) << "Failed to init XInput 2.2, trying 2.0";
+        minor = 0;
+        if (XIQueryVersion(m_display, &major, &minor) != Success) {
+            qCDebug(KWIN_X11WINDOWED) << "Failed to init XInput";
+            return;
+        }
+    }
+    m_xiOpcode = xi_opcode;
+    m_majorVersion = major;
+    m_minorVersion = minor;
+    m_hasXInput = m_majorVersion >=2 && m_minorVersion >= 2;
+#endif
 }
 
 void X11WindowedBackend::createWindow()
@@ -138,6 +176,9 @@ void X11WindowedBackend::createWindow()
         xcb_create_window(m_connection, XCB_COPY_FROM_PARENT, o.window, m_screen->root,
                         0, 0, o.size.width(), o.size.height(),
                         0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, mask, values);
+
+        // select xinput 2 events
+        initXInputForWindow(o.window);
 
         o.winInfo = new NETWinInfo(m_connection, o.window, m_screen->root, NET::WMWindowType, NET::Properties2());
         o.winInfo->setWindowType(NET::Normal);
@@ -171,6 +212,29 @@ void X11WindowedBackend::createWindow()
     xcb_flush(m_connection);
 }
 
+void X11WindowedBackend::initXInputForWindow(xcb_window_t window)
+{
+    if (!m_hasXInput) {
+        return;
+    }
+#if HAVE_X11_XINPUT
+    XIEventMask evmasks[1];
+    unsigned char mask1[XIMaskLen(XI_LASTEVENT)];
+
+    memset(mask1, 0, sizeof(mask1));
+    XISetMask(mask1, XI_TouchBegin);
+    XISetMask(mask1, XI_TouchUpdate);
+    XISetMask(mask1, XI_TouchOwnership);
+    XISetMask(mask1, XI_TouchEnd);
+    evmasks[0].deviceid = XIAllMasterDevices;
+    evmasks[0].mask_len = sizeof(mask1);
+    evmasks[0].mask = mask1;
+    XISelectEvents(m_display, window, evmasks, 1);
+#else
+    Q_UNUSED(window)
+#endif
+}
+
 void X11WindowedBackend::startEventReading()
 {
     QSocketNotifier *notifier = new QSocketNotifier(xcb_get_file_descriptor(m_connection), QSocketNotifier::Read, this);
@@ -185,6 +249,14 @@ void X11WindowedBackend::startEventReading()
     connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, processXcbEvents);
     connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::awake, this, processXcbEvents);
 }
+
+#if HAVE_X11_XINPUT
+
+static inline qreal fixed1616ToReal(FP1616 val)
+{
+    return (val) * 1.0 / (1 << 16);
+}
+#endif
 
 void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
 {
@@ -249,6 +321,46 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             xcb_refresh_keyboard_mapping(m_keySymbols, reinterpret_cast<xcb_mapping_notify_event_t*>(e));
         }
         break;
+#if HAVE_X11_XINPUT
+    case XCB_GE_GENERIC: {
+        GeEventMemMover ge(e);
+        auto te = reinterpret_cast<xXIDeviceEvent*>(e);
+        auto it = std::find_if(m_windows.constBegin(), m_windows.constEnd(), [te] (const Output &o) { return o.window == te->event; });
+        if (it == m_windows.constEnd()) {
+            break;
+        }
+        QPointF position{
+            fixed1616ToReal(te->root_x) - (*it).xPosition.x() + (*it).internalPosition.x(),
+            fixed1616ToReal(te->root_y) - (*it).xPosition.y() + (*it).internalPosition.y()
+        };
+        position /= it->scale;
+
+        switch (ge->event_type) {
+
+        case XI_TouchBegin: {
+            touchDown(te->detail, position, te->time);
+            touchFrame();
+            break;
+        }
+        case XI_TouchUpdate: {
+            touchMotion(te->detail, position, te->time);
+            touchFrame();
+            break;
+        }
+        case XI_TouchEnd: {
+            touchUp(te->detail, te->time);
+            touchFrame();
+            break;
+        }
+        case XI_TouchOwnership: {
+            auto te = reinterpret_cast<xXITouchOwnershipEvent*>(e);
+            XIAllowTouchEvents(m_display, te->deviceid, te->sourceid, te->touchid, XIAcceptTouch);
+            break;
+        }
+        }
+        break;
+    }
+#endif
     default:
         break;
     }

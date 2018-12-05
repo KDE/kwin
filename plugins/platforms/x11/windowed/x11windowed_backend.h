@@ -87,6 +87,8 @@ private:
     void handleExpose(xcb_expose_event_t *event);
     void updateSize(xcb_configure_notify_event_t *event);
     void createCursor(const QImage &img, const QPoint &hotspot);
+    void initXInputForWindow(xcb_window_t window);
+    void initXInput();
 
     xcb_connection_t *m_connection = nullptr;
     xcb_screen_t *m_screen = nullptr;
@@ -106,6 +108,11 @@ private:
     xcb_cursor_t m_cursor = XCB_CURSOR_NONE;
     Display *m_display = nullptr;
     bool m_keyboardGrabbed = false;
+
+    bool m_hasXInput = false;
+    int m_xiOpcode = 0;
+    int m_majorVersion = 0;
+    int m_minorVersion = 0;
 };
 
 }
