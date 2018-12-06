@@ -331,15 +331,6 @@ void Shadow::buildQuads()
 
 bool Shadow::updateShadow()
 {
-    auto clear = [this] {
-        if (m_topLevel && m_topLevel->shadow()) {
-            auto w = m_topLevel->effectWindow();
-            // this also deletes the shadow
-            w->sceneWindow()->updateShadow(nullptr);
-            emit m_topLevel->shadowChanged();
-        }
-    };
-
     if (!m_topLevel) {
         return false;
     }
@@ -348,12 +339,10 @@ bool Shadow::updateShadow()
         if (AbstractClient *c = qobject_cast<AbstractClient*>(m_topLevel)) {
             if (c->decoration()) {
                 if (init(c->decoration())) {
-                    emit m_topLevel->shadowChanged();
                     return true;
                 }
             }
         }
-        clear();
         return false;
     }
 
@@ -361,7 +350,6 @@ bool Shadow::updateShadow()
         if (m_topLevel && m_topLevel->surface()) {
             if (const auto &s = m_topLevel->surface()->shadow()) {
                 if (init(s)) {
-                    emit m_topLevel->shadowChanged();
                     return true;
                 }
             }
@@ -370,12 +358,10 @@ bool Shadow::updateShadow()
 
     auto data = Shadow::readX11ShadowProperty(m_topLevel->window());
     if (data.isEmpty()) {
-        clear();
         return false;
     }
 
     init(data);
-    emit m_topLevel->shadowChanged();
 
     return true;
 }

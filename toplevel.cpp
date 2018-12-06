@@ -336,7 +336,10 @@ void Toplevel::getShadow()
     const QRect oldVisibleRect = visibleRect();
     if (hasShadow()) {
         dirtyRect = shadow()->shadowRegion().boundingRect();
-        effectWindow()->sceneWindow()->shadow()->updateShadow();
+        if (!effectWindow()->sceneWindow()->shadow()->updateShadow()) {
+            effectWindow()->sceneWindow()->updateShadow(nullptr);
+        }
+        emit shadowChanged();
     } else {
         Shadow::createShadow(this);
     }
