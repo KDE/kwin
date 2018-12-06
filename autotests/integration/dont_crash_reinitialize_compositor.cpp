@@ -23,12 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "composite.h"
 #include "deleted.h"
+#include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
 #include "screens.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
+
+#include "effect_builtins.h"
 
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
@@ -64,6 +67,16 @@ void DontCrashReinitializeCompositorTest::initTestCase()
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup plugins(config, QStringLiteral("Plugins"));
+    ScriptedEffectLoader loader;
+    const auto builtinNames = BuiltInEffects::availableEffectNames() << loader.listOfKnownEffects();
+    for (const QString &name : builtinNames) {
+        plugins.writeEntry(name + QStringLiteral("Enabled"), false);
+    }
+    config->sync();
+    kwinApp()->setConfig(config);
+
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", QByteArrayLiteral("1"));
 
@@ -82,6 +95,12 @@ void DontCrashReinitializeCompositorTest::init()
 
 void DontCrashReinitializeCompositorTest::cleanup()
 {
+    // Unload all effects.
+    auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
+    QVERIFY(effectsImpl);
+    effectsImpl->unloadAllEffects();
+    QVERIFY(effectsImpl->loadedEffects().isEmpty());
+
     Test::destroyWaylandConnection();
 }
 
@@ -103,10 +122,6 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
     // Make sure that we have the right effects ptr.
     auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
     QVERIFY(effectsImpl);
-
-    // Unload all effects.
-    effectsImpl->unloadAllEffects();
-    QVERIFY(effectsImpl->loadedEffects().isEmpty());
 
     // Create the test client.
     using namespace KWayland::Client;
