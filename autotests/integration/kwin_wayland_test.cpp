@@ -60,7 +60,17 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     qunsetenv("XKB_DEFAULT_LAYOUT");
     qunsetenv("XKB_DEFAULT_VARIANT");
     qunsetenv("XKB_DEFAULT_OPTIONS");
-    initPlatform(KPluginMetaData(QStringLiteral("KWinWaylandVirtualBackend.so")));
+
+    const auto ownPath = libraryPaths().last();
+    removeLibraryPath(ownPath);
+    addLibraryPath(ownPath);
+
+    const auto plugins = KPluginLoader::findPluginsById(QStringLiteral("org.kde.kwin.waylandbackends"), "KWinWaylandVirtualBackend");
+    if (plugins.empty()) {
+        quit();
+        return;
+    }
+    initPlatform(plugins.first());
     WaylandServer::create(this);
 }
 
