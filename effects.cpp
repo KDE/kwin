@@ -568,7 +568,7 @@ void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
 
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 {
-    Q_ASSERT(dynamic_cast<Client*>(t));
+    Q_ASSERT(qobject_cast<Client *>(t));
     Client *c = static_cast<Client*>(t);
     disconnect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
     setupClientConnections(c);
@@ -585,7 +585,7 @@ void EffectsHandlerImpl::slotShellClientShown(Toplevel *t)
 
 void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
 {   // regardless, unmanaged windows are -yet?- not synced anyway
-    Q_ASSERT(dynamic_cast<Unmanaged*>(t));
+    Q_ASSERT(qobject_cast<Unmanaged *>(t));
     Unmanaged *u = static_cast<Unmanaged*>(t);
     setupUnmanagedConnections(u);
     emit windowAdded(u->effectWindow());
@@ -890,8 +890,9 @@ QByteArray EffectsHandlerImpl::readRootProperty(long atom, long type, int format
 
 void EffectsHandlerImpl::activateWindow(EffectWindow* c)
 {
-    if (AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(c)->window()))
+    if (auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(c)->window())) {
         Workspace::self()->activateClient(cl, true);
+    }
 }
 
 EffectWindow* EffectsHandlerImpl::activeWindow() const
@@ -901,7 +902,7 @@ EffectWindow* EffectsHandlerImpl::activeWindow() const
 
 void EffectsHandlerImpl::moveWindow(EffectWindow* w, const QPoint& pos, bool snap, double snapAdjust)
 {
-    AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());
+    auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
     if (!cl || !cl->isMovable())
         return;
 
@@ -913,7 +914,7 @@ void EffectsHandlerImpl::moveWindow(EffectWindow* w, const QPoint& pos, bool sna
 
 void EffectsHandlerImpl::windowToDesktop(EffectWindow* w, int desktop)
 {
-    AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());
+    auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
     if (cl && !cl->isDesktop() && !cl->isDock()) {
         Workspace::self()->sendClientToDesktop(cl, desktop, true);
     }
@@ -943,7 +944,7 @@ void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &
 
 void EffectsHandlerImpl::windowToScreen(EffectWindow* w, int screen)
 {
-    AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(w)->window());
+    auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
     if (cl && !cl->isDesktop() && !cl->isDock())
         Workspace::self()->sendClientToScreen(cl, screen);
 }
@@ -1118,7 +1119,7 @@ void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow* w, bool set)
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (AbstractClient* c = dynamic_cast< AbstractClient* >(static_cast< EffectWindowImpl* >(w)->window())) {
+    if (auto c = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window())) {
         TabBox::TabBox::self()->setCurrentClient(c);
     }
 #else
@@ -1239,10 +1240,11 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, int screen, int deskt
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow* c) const
 {
     const Toplevel* t = static_cast< const EffectWindowImpl* >(c)->window();
-    if (const AbstractClient* cl = dynamic_cast< const AbstractClient* >(t))
+    if (const auto *cl = qobject_cast<const AbstractClient *>(t)) {
         return Workspace::self()->clientArea(opt, cl);
-    else
+    } else {
         return Workspace::self()->clientArea(opt, t->geometry().center(), VirtualDesktopManager::self()->current());
+    }
 }
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
@@ -1715,22 +1717,25 @@ void EffectWindowImpl::disablePainting(int reason)
 
 const EffectWindowGroup* EffectWindowImpl::group() const
 {
-    if (Client* c = dynamic_cast< Client* >(toplevel))
+    if (auto c = qobject_cast<Client *>(toplevel)) {
         return c->group()->effectGroup();
+    }
     return nullptr; // TODO
 }
 
 void EffectWindowImpl::refWindow()
 {
-    if (Deleted* d = dynamic_cast< Deleted* >(toplevel))
+    if (auto d = qobject_cast<Deleted *>(toplevel)) {
         return d->refWindow();
+    }
     abort(); // TODO
 }
 
 void EffectWindowImpl::unrefWindow()
 {
-    if (Deleted* d = dynamic_cast< Deleted* >(toplevel))
+    if (auto d = qobject_cast<Deleted *>(toplevel)) {
         return d->unrefWindow();   // delays deletion in case
+    }
     abort(); // TODO
 }
 
@@ -1868,7 +1873,7 @@ QRegion EffectWindowImpl::shape() const
 
 QRect EffectWindowImpl::decorationInnerRect() const
 {
-    Client *client = dynamic_cast<Client*>(toplevel);
+    auto client = qobject_cast<Client *>(toplevel);
     return client ? client->transparentRect() : contentsRect();
 }
 
@@ -1889,11 +1894,17 @@ void EffectWindowImpl::deleteProperty(long int atom) const
 
 EffectWindow* EffectWindowImpl::findModal()
 {
-    if (AbstractClient* c = dynamic_cast< AbstractClient* >(toplevel)) {
-        if (AbstractClient* c2 = c->findModal())
-            return c2->effectWindow();
+    auto client = qobject_cast<AbstractClient *>(toplevel);
+    if (!client) {
+        return nullptr;
     }
-    return NULL;
+
+    AbstractClient *modal = client->findModal();
+    if (modal) {
+        return modal->effectWindow();
+    }
+
+    return nullptr;
 }
 
 template <typename T>
