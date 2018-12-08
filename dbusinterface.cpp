@@ -189,6 +189,37 @@ void DBusInterface::showDebugConsole()
     console->show();
 }
 
+namespace {
+QVariantMap clientToVariantMap(const AbstractClient *c)
+{
+    return {
+        {QStringLiteral("resourceClass"), c->resourceClass()},
+        {QStringLiteral("resourceName"), c->resourceName()},
+        {QStringLiteral("desktopFile"), c->desktopFileName()},
+        {QStringLiteral("role"), c->windowRole()},
+        {QStringLiteral("caption"), c->captionNormal()},
+        {QStringLiteral("clientMachine"), c->wmClientMachine(true)},
+        {QStringLiteral("type"), c->windowType()},
+        {QStringLiteral("x"), c->x()},
+        {QStringLiteral("y"), c->y()},
+        {QStringLiteral("width"), c->width()},
+        {QStringLiteral("height"), c->height()},
+        {QStringLiteral("x11DesktopNumber"), c->desktop()},
+        {QStringLiteral("minimized"), c->isMinimized()},
+        {QStringLiteral("shaded"), c->isShade()},
+        {QStringLiteral("fullscreen"), c->isFullScreen()},
+        {QStringLiteral("keepAbove"), c->keepAbove()},
+        {QStringLiteral("keepBelow"), c->keepBelow()},
+        {QStringLiteral("noBorder"), c->noBorder()},
+        {QStringLiteral("skipTaskbar"), c->skipTaskbar()},
+        {QStringLiteral("skipPager"), c->skipPager()},
+        {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
+        {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
+        {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical}
+    };
+}
+}
+
 QVariantMap DBusInterface::queryWindowInfo()
 {
     m_replyQueryWindowInfo = message();
@@ -196,38 +227,24 @@ QVariantMap DBusInterface::queryWindowInfo()
     kwinApp()->platform()->startInteractiveWindowSelection(
         [this] (Toplevel *t) {
             if (auto c = qobject_cast<AbstractClient*>(t)) {
-                const QVariantMap ret{
-                    {QStringLiteral("resourceClass"), c->resourceClass()},
-                    {QStringLiteral("resourceName"), c->resourceName()},
-                    {QStringLiteral("desktopFile"), c->desktopFileName()},
-                    {QStringLiteral("role"), c->windowRole()},
-                    {QStringLiteral("caption"), c->captionNormal()},
-                    {QStringLiteral("clientMachine"), c->wmClientMachine(true)},
-                    {QStringLiteral("type"), c->windowType()},
-                    {QStringLiteral("x"), c->x()},
-                    {QStringLiteral("y"), c->y()},
-                    {QStringLiteral("width"), c->width()},
-                    {QStringLiteral("height"), c->height()},
-                    {QStringLiteral("x11DesktopNumber"), c->desktop()},
-                    {QStringLiteral("minimized"), c->isMinimized()},
-                    {QStringLiteral("shaded"), c->isShade()},
-                    {QStringLiteral("fullscreen"), c->isFullScreen()},
-                    {QStringLiteral("keepAbove"), c->keepAbove()},
-                    {QStringLiteral("keepBelow"), c->keepBelow()},
-                    {QStringLiteral("noBorder"), c->noBorder()},
-                    {QStringLiteral("skipTaskbar"), c->skipTaskbar()},
-                    {QStringLiteral("skipPager"), c->skipPager()},
-                    {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
-                    {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
-                    {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical}
-                };
-                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(ret));
+                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(clientToVariantMap(c)));
             } else {
                 QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(QString(), QString()));
             }
         }
     );
     return QVariantMap{};
+}
+
+QVariantMap DBusInterface::getWindowInfo(const QString &uuid)
+{
+    const auto id = QUuid::fromString(uuid);
+    const auto client = workspace()->findAbstractClient([&id] (const AbstractClient *c) { return c->internalId() == id; });
+    if (client) {
+        return clientToVariantMap(client);
+    } else {
+        return {};
+    }
 }
 
 CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)

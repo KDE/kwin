@@ -70,6 +70,7 @@ public Q_SLOTS: // METHODS
     Q_NOREPLY void showDebugConsole();
 
     QVariantMap queryWindowInfo();
+    QVariantMap getWindowInfo(const QString &uuid);
 
 private Q_SLOTS:
     void becomeKWinService(const QString &service);
