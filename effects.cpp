@@ -1897,9 +1897,8 @@ EffectWindow* EffectWindowImpl::findModal()
 }
 
 template <typename T>
-EffectWindowList getMainWindows(Toplevel *toplevel)
+EffectWindowList getMainWindows(T *c)
 {
-    T *c = static_cast<T*>(toplevel);
     const auto mainclients = c->mainClients();
     EffectWindowList ret;
     ret.reserve(mainclients.size());
@@ -1911,12 +1910,13 @@ EffectWindowList getMainWindows(Toplevel *toplevel)
 
 EffectWindowList EffectWindowImpl::mainWindows() const
 {
-    if (dynamic_cast<AbstractClient*>(toplevel)) {
-        return getMainWindows<AbstractClient>(toplevel);
-    } else if (toplevel->isDeleted()) {
-        return getMainWindows<Deleted>(toplevel);
+    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+        return getMainWindows(client);
     }
-    return EffectWindowList();
+    if (auto deleted = qobject_cast<Deleted *>(toplevel)) {
+        return getMainWindows(deleted);
+    }
+    return {};
 }
 
 WindowQuadList EffectWindowImpl::buildQuads(bool force) const
