@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KSharedConfig>
 
+#include <QDBusInterface>
+#include <QDBusConnection>
 #include <QtTest>
 
 #include <linux/input.h>
@@ -33,6 +35,7 @@ class TestLibinputDevice : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase();
     void testStaticGetter();
     void testDeviceType_data();
     void testDeviceType();
@@ -163,6 +166,22 @@ private Q_SLOTS:
     void testSwitch();
 };
 
+namespace {
+template <typename T>
+T dbusProperty(const QString &name, const char *property)
+{
+    QDBusInterface interface{QStringLiteral("org.kde.kwin.tests.libinputdevice"),
+                             QStringLiteral("/org/kde/KWin/InputDevice/") + name,
+                             QStringLiteral("org.kde.KWin.InputDevice")};
+    return interface.property(property).value<T>();
+}
+}
+
+void TestLibinputDevice::initTestCase()
+{
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.tests.libinputdevice"));
+}
+
 void TestLibinputDevice::testStaticGetter()
 {
     // this test verifies that the static getter for Device works as expected
@@ -243,16 +262,22 @@ void TestLibinputDevice::testDeviceType()
     Device d(&device);
     QCOMPARE(d.isKeyboard(), keyboard);
     QCOMPARE(d.property("keyboard").toBool(), keyboard);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "keyboard"), keyboard);
     QCOMPARE(d.isPointer(), pointer);
     QCOMPARE(d.property("pointer").toBool(), pointer);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "pointer"), pointer);
     QCOMPARE(d.isTouch(), touch);
     QCOMPARE(d.property("touch").toBool(), touch);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "touch"), touch);
     QCOMPARE(d.isTabletPad(), false);
     QCOMPARE(d.property("tabletPad").toBool(), false);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tabletPad"), false);
     QCOMPARE(d.isTabletTool(), tabletTool);
     QCOMPARE(d.property("tabletTool").toBool(), tabletTool);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tabletTool"), tabletTool);
     QCOMPARE(d.isSwitch(), switchDevice);
     QCOMPARE(d.property("switchDevice").toBool(), switchDevice);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "switchDevice"), switchDevice);
 
     QCOMPARE(d.device(), &device);
 }
@@ -275,6 +300,7 @@ void TestLibinputDevice::testGestureSupport()
     Device d(&device);
     QCOMPARE(d.supportsGesture(), supported);
     QCOMPARE(d.property("gestureSupport").toBool(), supported);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "gestureSupport"), supported);
 }
 
 void TestLibinputDevice::testNames_data()
@@ -301,10 +327,13 @@ void TestLibinputDevice::testNames()
     Device d(&device);
     QCOMPARE(d.name().toUtf8(), name);
     QCOMPARE(d.property("name").toString().toUtf8(), name);
+    QCOMPARE(dbusProperty<QString>(d.sysName(), "name"), name);
     QCOMPARE(d.sysName().toUtf8(), sysName);
     QCOMPARE(d.property("sysName").toString().toUtf8(), sysName);
+    QCOMPARE(dbusProperty<QString>(d.sysName(), "sysName"), sysName);
     QCOMPARE(d.outputName().toUtf8(), outputName);
     QCOMPARE(d.property("outputName").toString().toUtf8(), outputName);
+    QCOMPARE(dbusProperty<QString>(d.sysName(), "outputName"), outputName);
 }
 
 void TestLibinputDevice::testProduct()
@@ -315,6 +344,7 @@ void TestLibinputDevice::testProduct()
     Device d(&device);
     QCOMPARE(d.product(), 100u);
     QCOMPARE(d.property("product").toUInt(), 100u);
+    QCOMPARE(dbusProperty<quint32>(d.sysName(), "product"), 100u);
 }
 
 void TestLibinputDevice::testVendor()
@@ -325,6 +355,7 @@ void TestLibinputDevice::testVendor()
     Device d(&device);
     QCOMPARE(d.vendor(), 200u);
     QCOMPARE(d.property("vendor").toUInt(), 200u);
+    QCOMPARE(dbusProperty<quint32>(d.sysName(), "vendor"), 200u);
 }
 
 void TestLibinputDevice::testTapFingerCount()
@@ -335,6 +366,7 @@ void TestLibinputDevice::testTapFingerCount()
     Device d(&device);
     QCOMPARE(d.tapFingerCount(), 3);
     QCOMPARE(d.property("tapFingerCount").toInt(), 3);
+    QCOMPARE(dbusProperty<int>(d.sysName(), "tapFingerCount"), 3);
 }
 
 void TestLibinputDevice::testSize_data()
@@ -359,6 +391,7 @@ void TestLibinputDevice::testSize()
     Device d(&device);
     QTEST(d.size(), "expectedSize");
     QTEST(d.property("size").toSizeF(), "expectedSize");
+    QTEST(dbusProperty<QSizeF>(d.sysName(), "size"), "expectedSize");
 }
 
 void TestLibinputDevice::testLeftHandedEnabledByDefault_data()
@@ -378,6 +411,7 @@ void TestLibinputDevice::testLeftHandedEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.leftHandedEnabledByDefault(), enabled);
     QCOMPARE(d.property("leftHandedEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "leftHandedEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testTapEnabledByDefault_data()
@@ -397,6 +431,7 @@ void TestLibinputDevice::testTapEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.tapToClickEnabledByDefault(), enabled);
     QCOMPARE(d.property("tapToClickEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapToClickEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testMiddleEmulationEnabledByDefault_data()
@@ -416,6 +451,7 @@ void TestLibinputDevice::testMiddleEmulationEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.middleEmulationEnabledByDefault(), enabled);
     QCOMPARE(d.property("middleEmulationEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "middleEmulationEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testNaturalScrollEnabledByDefault_data()
@@ -435,6 +471,7 @@ void TestLibinputDevice::testNaturalScrollEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.naturalScrollEnabledByDefault(), enabled);
     QCOMPARE(d.property("naturalScrollEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "naturalScrollEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testScrollTwoFingerEnabledByDefault_data()
@@ -454,6 +491,7 @@ void TestLibinputDevice::testScrollTwoFingerEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.scrollTwoFingerEnabledByDefault(), enabled);
     QCOMPARE(d.property("scrollTwoFingerEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollTwoFingerEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testScrollEdgeEnabledByDefault_data()
@@ -473,6 +511,7 @@ void TestLibinputDevice::testScrollEdgeEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.scrollEdgeEnabledByDefault(), enabled);
     QCOMPARE(d.property("scrollEdgeEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollEdgeEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testDefaultPointerAccelerationProfileFlat_data()
@@ -492,6 +531,7 @@ void TestLibinputDevice::testDefaultPointerAccelerationProfileFlat()
     Device d(&device);
     QCOMPARE(d.defaultPointerAccelerationProfileFlat(), enabled);
     QCOMPARE(d.property("defaultPointerAccelerationProfileFlat").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "defaultPointerAccelerationProfileFlat"), enabled);
 }
 
 void TestLibinputDevice::testDefaultPointerAccelerationProfileAdaptive_data()
@@ -511,6 +551,7 @@ void TestLibinputDevice::testDefaultPointerAccelerationProfileAdaptive()
     Device d(&device);
     QCOMPARE(d.defaultPointerAccelerationProfileAdaptive(), enabled);
     QCOMPARE(d.property("defaultPointerAccelerationProfileAdaptive").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "defaultPointerAccelerationProfileAdaptive"), enabled);
 }
 
 void TestLibinputDevice::testScrollOnButtonDownEnabledByDefault_data()
@@ -530,6 +571,7 @@ void TestLibinputDevice::testScrollOnButtonDownEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.scrollOnButtonDownEnabledByDefault(), enabled);
     QCOMPARE(d.property("scrollOnButtonDownEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollOnButtonDownEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testDefaultScrollButton_data()
@@ -556,6 +598,7 @@ void TestLibinputDevice::testDefaultScrollButton()
     Device d(&device);
     QCOMPARE(d.defaultScrollButton(), button);
     QCOMPARE(d.property("defaultScrollButton").value<quint32>(), button);
+    QCOMPARE(dbusProperty<quint32>(d.sysName(), "defaultScrollButton"), button);
 }
 
 void TestLibinputDevice::testSupportsDisableWhileTyping_data()
@@ -575,6 +618,7 @@ void TestLibinputDevice::testSupportsDisableWhileTyping()
     Device d(&device);
     QCOMPARE(d.supportsDisableWhileTyping(), enabled);
     QCOMPARE(d.property("supportsDisableWhileTyping").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsDisableWhileTyping"), enabled);
 }
 
 void TestLibinputDevice::testSupportsPointerAcceleration_data()
@@ -594,6 +638,7 @@ void TestLibinputDevice::testSupportsPointerAcceleration()
     Device d(&device);
     QCOMPARE(d.supportsPointerAcceleration(), enabled);
     QCOMPARE(d.property("supportsPointerAcceleration").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsPointerAcceleration"), enabled);
 }
 
 void TestLibinputDevice::testSupportsLeftHanded_data()
@@ -613,6 +658,7 @@ void TestLibinputDevice::testSupportsLeftHanded()
     Device d(&device);
     QCOMPARE(d.supportsLeftHanded(), enabled);
     QCOMPARE(d.property("supportsLeftHanded").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsLeftHanded"), enabled);
 }
 
 void TestLibinputDevice::testSupportsCalibrationMatrix_data()
@@ -632,6 +678,7 @@ void TestLibinputDevice::testSupportsCalibrationMatrix()
     Device d(&device);
     QCOMPARE(d.supportsCalibrationMatrix(), enabled);
     QCOMPARE(d.property("supportsCalibrationMatrix").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsCalibrationMatrix"), enabled);
 }
 
 void TestLibinputDevice::testSupportsDisableEvents_data()
@@ -651,6 +698,7 @@ void TestLibinputDevice::testSupportsDisableEvents()
     Device d(&device);
     QCOMPARE(d.supportsDisableEvents(), enabled);
     QCOMPARE(d.property("supportsDisableEvents").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsDisableEvents"), enabled);
 }
 
 void TestLibinputDevice::testSupportsDisableEventsOnExternalMouse_data()
@@ -670,6 +718,7 @@ void TestLibinputDevice::testSupportsDisableEventsOnExternalMouse()
     Device d(&device);
     QCOMPARE(d.supportsDisableEventsOnExternalMouse(), enabled);
     QCOMPARE(d.property("supportsDisableEventsOnExternalMouse").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsDisableEventsOnExternalMouse"), enabled);
 }
 
 void TestLibinputDevice::testSupportsMiddleEmulation_data()
@@ -689,6 +738,7 @@ void TestLibinputDevice::testSupportsMiddleEmulation()
     Device d(&device);
     QCOMPARE(d.supportsMiddleEmulation(), enabled);
     QCOMPARE(d.property("supportsMiddleEmulation").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsMiddleEmulation"), enabled);
 }
 
 void TestLibinputDevice::testSupportsNaturalScroll_data()
@@ -708,6 +758,7 @@ void TestLibinputDevice::testSupportsNaturalScroll()
     Device d(&device);
     QCOMPARE(d.supportsNaturalScroll(), enabled);
     QCOMPARE(d.property("supportsNaturalScroll").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsNaturalScroll"), enabled);
 }
 
 void TestLibinputDevice::testSupportsScrollTwoFinger_data()
@@ -727,6 +778,7 @@ void TestLibinputDevice::testSupportsScrollTwoFinger()
     Device d(&device);
     QCOMPARE(d.supportsScrollTwoFinger(), enabled);
     QCOMPARE(d.property("supportsScrollTwoFinger").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsScrollTwoFinger"), enabled);
 }
 
 void TestLibinputDevice::testSupportsScrollEdge_data()
@@ -746,6 +798,7 @@ void TestLibinputDevice::testSupportsScrollEdge()
     Device d(&device);
     QCOMPARE(d.supportsScrollEdge(), enabled);
     QCOMPARE(d.property("supportsScrollEdge").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsScrollEdge"), enabled);
 }
 
 void TestLibinputDevice::testSupportsScrollOnButtonDown_data()
@@ -765,6 +818,7 @@ void TestLibinputDevice::testSupportsScrollOnButtonDown()
     Device d(&device);
     QCOMPARE(d.supportsScrollOnButtonDown(), enabled);
     QCOMPARE(d.property("supportsScrollOnButtonDown").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "supportsScrollOnButtonDown"), enabled);
 }
 
 void TestLibinputDevice::testDefaultPointerAcceleration_data()
@@ -787,6 +841,7 @@ void TestLibinputDevice::testDefaultPointerAcceleration()
     Device d(&device);
     QCOMPARE(d.defaultPointerAcceleration(), accel);
     QCOMPARE(d.property("defaultPointerAcceleration").toReal(), accel);
+    QCOMPARE(dbusProperty<qreal>(d.sysName(), "defaultPointerAcceleration"), accel);
 }
 
 void TestLibinputDevice::testPointerAcceleration_data()
@@ -818,6 +873,7 @@ void TestLibinputDevice::testPointerAcceleration()
     Device d(&device);
     QCOMPARE(d.pointerAcceleration(), accel);
     QCOMPARE(d.property("pointerAcceleration").toReal(), accel);
+    QCOMPARE(dbusProperty<qreal>(d.sysName(), "pointerAcceleration"), accel);
 
     QSignalSpy pointerAccelChangedSpy(&d, &Device::pointerAccelerationChanged);
     QVERIFY(pointerAccelChangedSpy.isValid());
@@ -825,6 +881,7 @@ void TestLibinputDevice::testPointerAcceleration()
     d.setPointerAcceleration(setAccel);
     QTEST(d.pointerAcceleration(), "expectedAccel");
     QTEST(!pointerAccelChangedSpy.isEmpty(), "expectedChanged");
+    QTEST(dbusProperty<qreal>(d.sysName(), "pointerAcceleration"), "expectedAccel");
 }
 
 void TestLibinputDevice::testLeftHanded_data()
@@ -857,6 +914,7 @@ void TestLibinputDevice::testLeftHanded()
     Device d(&device);
     QCOMPARE(d.isLeftHanded(), supported && initValue);
     QCOMPARE(d.property("leftHanded").toBool(), supported && initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "leftHanded"), supported && initValue);
 
     QSignalSpy leftHandedChangedSpy(&d, &Device::leftHandedChanged);
     QVERIFY(leftHandedChangedSpy.isValid());
@@ -865,6 +923,7 @@ void TestLibinputDevice::testLeftHanded()
     QFETCH(bool, expectedValue);
     QCOMPARE(d.isLeftHanded(), expectedValue);
     QCOMPARE(leftHandedChangedSpy.isEmpty(), (supported && initValue) == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "leftHanded"), expectedValue);
 }
 
 void TestLibinputDevice::testSupportedButtons_data()
@@ -907,6 +966,7 @@ void TestLibinputDevice::testSupportedButtons()
     Device d(&device);
     QCOMPARE(d.isPointer(), isPointer);
     QTEST(d.supportedButtons(), "expectedButtons");
+    QTEST(Qt::MouseButtons(dbusProperty<int>(d.sysName(), "supportedButtons")), "expectedButtons");
 }
 
 void TestLibinputDevice::testAlphaNumericKeyboard_data()
@@ -959,6 +1019,7 @@ void TestLibinputDevice::testAlphaNumericKeyboard()
     Device d(&device);
     QCOMPARE(d.isKeyboard(), true);
     QTEST(d.isAlphaNumericKeyboard(), "isAlpha");
+    QTEST(dbusProperty<bool>(d.sysName(), "alphaNumericKeyboard"), "isAlpha");
 }
 
 
@@ -992,6 +1053,7 @@ void TestLibinputDevice::testEnabled()
     Device d(&device);
     QCOMPARE(d.isEnabled(), !supported || initValue);
     QCOMPARE(d.property("enabled").toBool(), !supported || initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "enabled"), !supported || initValue);
 
     QSignalSpy enabledChangedSpy(&d, &Device::enabledChanged);
     QVERIFY(enabledChangedSpy.isValid());
@@ -999,6 +1061,8 @@ void TestLibinputDevice::testEnabled()
     d.setEnabled(setValue);
     QFETCH(bool, expectedValue);
     QCOMPARE(d.isEnabled(), expectedValue);
+
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "enabled"), expectedValue);
 }
 
 void TestLibinputDevice::testTapToClick_data()
@@ -1031,6 +1095,7 @@ void TestLibinputDevice::testTapToClick()
     QCOMPARE(d.tapFingerCount(), fingerCount);
     QCOMPARE(d.isTapToClick(), initValue);
     QCOMPARE(d.property("tapToClick").toBool(), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapToClick"), initValue);
 
     QSignalSpy tapToClickChangedSpy(&d, &Device::tapToClickChanged);
     QVERIFY(tapToClickChangedSpy.isValid());
@@ -1039,6 +1104,7 @@ void TestLibinputDevice::testTapToClick()
     QFETCH(bool, expectedValue);
     QCOMPARE(d.isTapToClick(), expectedValue);
     QCOMPARE(tapToClickChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapToClick"), expectedValue);
 }
 
 void TestLibinputDevice::testTapAndDragEnabledByDefault_data()
@@ -1058,6 +1124,7 @@ void TestLibinputDevice::testTapAndDragEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.tapAndDragEnabledByDefault(), enabled);
     QCOMPARE(d.property("tapAndDragEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapAndDragEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testTapAndDrag_data()
@@ -1085,6 +1152,7 @@ void TestLibinputDevice::testTapAndDrag()
     Device d(&device);
     QCOMPARE(d.isTapAndDrag(), initValue);
     QCOMPARE(d.property("tapAndDrag").toBool(), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapAndDrag"), initValue);
 
     QSignalSpy tapAndDragChangedSpy(&d, &Device::tapAndDragChanged);
     QVERIFY(tapAndDragChangedSpy.isValid());
@@ -1093,6 +1161,7 @@ void TestLibinputDevice::testTapAndDrag()
     QFETCH(bool, expectedValue);
     QCOMPARE(d.isTapAndDrag(), expectedValue);
     QCOMPARE(tapAndDragChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapAndDrag"), expectedValue);
 }
 
 void TestLibinputDevice::testTapDragLockEnabledByDefault_data()
@@ -1112,6 +1181,7 @@ void TestLibinputDevice::testTapDragLockEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.tapDragLockEnabledByDefault(), enabled);
     QCOMPARE(d.property("tapDragLockEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapDragLockEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testTapDragLock_data()
@@ -1139,6 +1209,7 @@ void TestLibinputDevice::testTapDragLock()
     Device d(&device);
     QCOMPARE(d.isTapDragLock(), initValue);
     QCOMPARE(d.property("tapDragLock").toBool(), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapDragLock"), initValue);
 
     QSignalSpy tapDragLockChangedSpy(&d, &Device::tapDragLockChanged);
     QVERIFY(tapDragLockChangedSpy.isValid());
@@ -1147,6 +1218,7 @@ void TestLibinputDevice::testTapDragLock()
     QFETCH(bool, expectedValue);
     QCOMPARE(d.isTapDragLock(), expectedValue);
     QCOMPARE(tapDragLockChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tapDragLock"), expectedValue);
 }
 
 void TestLibinputDevice::testMiddleEmulation_data()
@@ -1179,6 +1251,7 @@ void TestLibinputDevice::testMiddleEmulation()
     Device d(&device);
     QCOMPARE(d.isMiddleEmulation(), initValue);
     QCOMPARE(d.property("middleEmulation").toBool(), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "middleEmulation"), initValue);
 
     QSignalSpy middleEmulationChangedSpy(&d, &Device::middleEmulationChanged);
     QVERIFY(middleEmulationChangedSpy.isValid());
@@ -1188,6 +1261,7 @@ void TestLibinputDevice::testMiddleEmulation()
     QCOMPARE(d.isMiddleEmulation(), expectedValue);
     QCOMPARE(d.property("middleEmulation").toBool(), expectedValue);
     QCOMPARE(middleEmulationChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "middleEmulation"), expectedValue);
 }
 
 void TestLibinputDevice::testNaturalScroll_data()
@@ -1220,6 +1294,7 @@ void TestLibinputDevice::testNaturalScroll()
     Device d(&device);
     QCOMPARE(d.isNaturalScroll(), initValue);
     QCOMPARE(d.property("naturalScroll").toBool(), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "naturalScroll"), initValue);
 
     QSignalSpy naturalScrollChangedSpy(&d, &Device::naturalScrollChanged);
     QVERIFY(naturalScrollChangedSpy.isValid());
@@ -1229,6 +1304,7 @@ void TestLibinputDevice::testNaturalScroll()
     QCOMPARE(d.isNaturalScroll(), expectedValue);
     QCOMPARE(d.property("naturalScroll").toBool(), expectedValue);
     QCOMPARE(naturalScrollChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "naturalScroll"), expectedValue);
 }
 
 void TestLibinputDevice::testScrollTwoFinger_data()
@@ -1265,6 +1341,8 @@ void TestLibinputDevice::testScrollTwoFinger()
     QCOMPARE(d.isScrollTwoFinger(), initValue);
     QCOMPARE(d.property("scrollTwoFinger").toBool(), initValue);
     QCOMPARE(d.property("scrollEdge").toBool(), otherValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollTwoFinger"), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollEdge"), otherValue);
 
     QSignalSpy scrollMethodChangedSpy(&d, &Device::scrollMethodChanged);
     QVERIFY(scrollMethodChangedSpy.isValid());
@@ -1274,6 +1352,7 @@ void TestLibinputDevice::testScrollTwoFinger()
     QCOMPARE(d.isScrollTwoFinger(), expectedValue);
     QCOMPARE(d.property("scrollTwoFinger").toBool(), expectedValue);
     QCOMPARE(scrollMethodChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollTwoFinger"), expectedValue);
 }
 
 void TestLibinputDevice::testScrollEdge_data()
@@ -1310,6 +1389,8 @@ void TestLibinputDevice::testScrollEdge()
     QCOMPARE(d.isScrollEdge(), initValue);
     QCOMPARE(d.property("scrollEdge").toBool(), initValue);
     QCOMPARE(d.property("scrollTwoFinger").toBool(), otherValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollEdge"), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollTwoFinger"), otherValue);
 
     QSignalSpy scrollMethodChangedSpy(&d, &Device::scrollMethodChanged);
     QVERIFY(scrollMethodChangedSpy.isValid());
@@ -1319,6 +1400,7 @@ void TestLibinputDevice::testScrollEdge()
     QCOMPARE(d.isScrollEdge(), expectedValue);
     QCOMPARE(d.property("scrollEdge").toBool(), expectedValue);
     QCOMPARE(scrollMethodChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollEdge"), expectedValue);
 }
 
 void TestLibinputDevice::testScrollButtonDown_data()
@@ -1355,6 +1437,8 @@ void TestLibinputDevice::testScrollButtonDown()
     QCOMPARE(d.isScrollOnButtonDown(), initValue);
     QCOMPARE(d.property("scrollOnButtonDown").toBool(), initValue);
     QCOMPARE(d.property("scrollTwoFinger").toBool(), otherValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollOnButtonDown"), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollTwoFinger"), otherValue);
 
     QSignalSpy scrollMethodChangedSpy(&d, &Device::scrollMethodChanged);
     QVERIFY(scrollMethodChangedSpy.isValid());
@@ -1364,6 +1448,7 @@ void TestLibinputDevice::testScrollButtonDown()
     QCOMPARE(d.isScrollOnButtonDown(), expectedValue);
     QCOMPARE(d.property("scrollOnButtonDown").toBool(), expectedValue);
     QCOMPARE(scrollMethodChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollOnButtonDown"), expectedValue);
 }
 
 void TestLibinputDevice::testScrollButton_data()
@@ -1393,6 +1478,7 @@ void TestLibinputDevice::testScrollButton()
     Device d(&device);
     QCOMPARE(d.scrollButton(), initValue);
     QCOMPARE(d.property("scrollButton").value<quint32>(), initValue);
+    QCOMPARE(dbusProperty<quint32>(d.sysName(), "scrollButton"), initValue);
 
     QSignalSpy scrollButtonChangedSpy(&d, &Device::scrollButtonChanged);
     QVERIFY(scrollButtonChangedSpy.isValid());
@@ -1402,6 +1488,7 @@ void TestLibinputDevice::testScrollButton()
     QCOMPARE(d.scrollButton(), expectedValue);
     QCOMPARE(d.property("scrollButton").value<quint32>(), expectedValue);
     QCOMPARE(scrollButtonChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<quint32>(d.sysName(), "scrollButton"), expectedValue);
 }
 
 void TestLibinputDevice::testDisableWhileTypingEnabledByDefault_data()
@@ -1421,6 +1508,7 @@ void TestLibinputDevice::testDisableWhileTypingEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.disableWhileTypingEnabledByDefault(), enabled);
     QCOMPARE(d.property("disableWhileTypingEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "disableWhileTypingEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testLmrTapButtonMapEnabledByDefault_data()
@@ -1440,6 +1528,7 @@ void TestLibinputDevice::testLmrTapButtonMapEnabledByDefault()
     Device d(&device);
     QCOMPARE(d.lmrTapButtonMapEnabledByDefault(), enabled);
     QCOMPARE(d.property("lmrTapButtonMapEnabledByDefault").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "lmrTapButtonMapEnabledByDefault"), enabled);
 }
 
 void TestLibinputDevice::testLmrTapButtonMap_data()
@@ -1522,6 +1611,7 @@ void TestLibinputDevice::testDisableWhileTyping()
     Device d(&device);
     QCOMPARE(d.isDisableWhileTyping(), initValue);
     QCOMPARE(d.property("disableWhileTyping").toBool(), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "disableWhileTyping"), initValue);
 
     QSignalSpy disableWhileTypingChangedSpy(&d, &Device::disableWhileTypingChanged);
     QVERIFY(disableWhileTypingChangedSpy.isValid());
@@ -1531,6 +1621,7 @@ void TestLibinputDevice::testDisableWhileTyping()
     QCOMPARE(d.isDisableWhileTyping(), expectedValue);
     QCOMPARE(d.property("disableWhileTyping").toBool(), expectedValue);
     QCOMPARE(disableWhileTypingChangedSpy.isEmpty(), initValue == expectedValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "disableWhileTyping"), expectedValue);
 }
 
 void TestLibinputDevice::testLoadEnabled_data()
@@ -1669,6 +1760,8 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile()
     d.loadConfiguration();
     QCOMPARE(d.property(initValuePropName).toBool(), initValue == configValue);
     QCOMPARE(d.property(configValuePropName).toBool(), true);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), initValuePropName), initValue == configValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), configValuePropName), true);
 
     // and try to store
     if (configValue != initValue) {
@@ -2094,11 +2187,13 @@ void TestLibinputDevice::testLoadLmrTapButtonMap()
     // no config group set, should not change
     d.loadConfiguration();
     QCOMPARE(d.lmrTapButtonMap(), initValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "lmrTapButtonMap"), initValue);
 
     // set the group
     d.setConfig(inputConfig);
     d.loadConfiguration();
     QCOMPARE(d.lmrTapButtonMap(), configValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "lmrTapButtonMap"), configValue);
 
     // and try to store
     if (configValue != initValue) {
@@ -2190,8 +2285,10 @@ void TestLibinputDevice::testSwitch()
     QCOMPARE(d.isSwitch(), true);
     QCOMPARE(d.isLidSwitch(), lid);
     QCOMPARE(d.property("lidSwitch").toBool(), lid);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "lidSwitch"), lid);
     QCOMPARE(d.isTabletModeSwitch(), tablet);
     QCOMPARE(d.property("tabletModeSwitch").toBool(), tablet);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "tabletModeSwitch"), tablet);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputDevice)

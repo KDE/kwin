@@ -61,7 +61,7 @@ class Device : public QObject
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     //
     // advanced
-    Q_PROPERTY(Qt::MouseButtons supportedButtons READ supportedButtons CONSTANT)
+    Q_PROPERTY(int supportedButtons READ supportedButtons CONSTANT)
     Q_PROPERTY(bool supportsCalibrationMatrix READ supportsCalibrationMatrix CONSTANT)
 
     Q_PROPERTY(bool supportsLeftHanded READ supportsLeftHanded CONSTANT)
