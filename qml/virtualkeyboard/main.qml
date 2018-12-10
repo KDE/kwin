@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 import QtQuick.Controls 2.3
 import QtQuick.VirtualKeyboard 2.1
+import org.kde.kirigami 2.5 as Kirigami
 
 Item {
     id: window
@@ -32,8 +33,10 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
     }
-    ToolButton {
+    //NOTE: ToolButton for some reasons breaks the virtual keyboard loading on Plasma Mobile
+    Button {
         id: resizeButton
+        visible: !Kirigami.Settings.isMobile //don't show on handheld devices
         flat: true
         display: AbstractButton.IconOnly
         icon.name: "transform-scale"
