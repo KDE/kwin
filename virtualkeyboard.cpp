@@ -68,12 +68,14 @@ VirtualKeyboard::~VirtualKeyboard() = default;
 void VirtualKeyboard::init()
 {
     // TODO: need a shared Qml engine
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "Initializing window";
     m_inputWindow.reset(new QQuickView(nullptr));
     m_inputWindow->setFlags(Qt::FramelessWindowHint);
     m_inputWindow->setGeometry(screens()->geometry(screens()->current()));
     m_inputWindow->setResizeMode(QQuickView::SizeRootObjectToView);
     m_inputWindow->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/virtualkeyboard/main.qml"))));
     if (m_inputWindow->status() != QQuickView::Status::Ready) {
+        qCWarning(KWIN_VIRTUALKEYBOARD) << "window not ready yet";
         m_inputWindow.reset();
         return;
     }
@@ -81,13 +83,16 @@ void VirtualKeyboard::init()
 
     if (waylandServer()) {
         m_enabled = !input()->hasAlphaNumericKeyboard();
+        qCDebug(KWIN_VIRTUALKEYBOARD) << "enabled by default: " << m_enabled;
         connect(input(), &InputRedirection::hasAlphaNumericKeyboardChanged, this,
             [this] (bool set) {
+                qCDebug(KWIN_VIRTUALKEYBOARD) << "AlphaNumeric Keyboard changed:" << set << "toggling VirtualKeyboard.";
                 setEnabled(!set);
             }
         );
     }
 
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the SNI";
     m_sni = new KStatusNotifierItem(QStringLiteral("kwin-virtual-keyboard"), this);
     m_sni->setStandardActionsEnabled(false);
     m_sni->setCategory(KStatusNotifierItem::Hardware);
@@ -102,6 +107,7 @@ void VirtualKeyboard::init()
     connect(this, &VirtualKeyboard::enabledChanged, this, &VirtualKeyboard::updateSni);
 
     auto dbus = new VirtualKeyboardDBus(this);
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";
     dbus->setEnabled(m_enabled);
     connect(dbus, &VirtualKeyboardDBus::activateRequested, this, &VirtualKeyboard::setEnabled);
     connect(this, &VirtualKeyboard::enabledChanged, dbus, &VirtualKeyboardDBus::setEnabled);
