@@ -1332,7 +1332,7 @@ QString Workspace::supportInformation() const
 
     support.append(ki18nc("Introductory text shown in the support information.",
         "KWin Support Information:\n"
-        "The following information should be used when requesting support on e.g. http://forum.kde.org.\n"
+        "The following information should be used when requesting support on e.g. https://forum.kde.org.\n"
         "It provides information about the currently running instance, which options are used,\n"
         "what OpenGL driver and which effects are running.\n"
         "Please post the information provided underneath this introductory text to a paste bin service\n"
