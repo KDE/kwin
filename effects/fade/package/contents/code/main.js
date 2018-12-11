@@ -34,7 +34,7 @@ function isFadeWindow(w) {
     if (blacklist.indexOf(w.windowClass) != -1) {
         return false;
     }
-    if (w.popup) {
+    if (w.popupWindow) {
         return false;
     }
     if (w.x11Client && !w.managed) {
