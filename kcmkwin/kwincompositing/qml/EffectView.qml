@@ -136,7 +136,6 @@ Rectangle {
                 }
                 id: effectView
                 property var exclusiveGroups: []
-                property color backgroundActiveColor: searchModel.backgroundActiveColor
                 property color backgroundNormalColor: searchModel.backgroundNormalColor
                 property color backgroundAlternateColor: searchModel.backgroundAlternateColor
                 anchors.fill: parent

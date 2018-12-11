@@ -29,16 +29,9 @@ Rectangle {
     id: item
     width: parent.width
     height: rowEffect.implicitHeight
-    color: item.ListView.isCurrentItem ? effectView.backgroundActiveColor : index % 2 ? effectView.backgroundNormalColor : effectView.backgroundAlternateColor
+    color: index % 2 ? effectView.backgroundNormalColor : effectView.backgroundAlternateColor
     signal changed()
     property int checkedState: model.EffectStatusRole
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            effectView.currentIndex = index;
-        }
-    }
 
     RowLayout {
         id: rowEffect
@@ -125,12 +118,15 @@ Rectangle {
             Loader {
                 id: videoItem
                 active: false
+                visible: false
                 source: "Video.qml"
                 function showHide() {
                     if (!videoItem.active) {
                         videoItem.active = true;
+                        videoItem.visible = true;
                     } else {
-                        videoItem.item.showHide();
+                        videoItem.active = false;
+                        videoItem.visible = false;
                     }
                 }
                 onLoaded: {

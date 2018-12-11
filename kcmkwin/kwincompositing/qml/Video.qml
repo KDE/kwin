@@ -20,47 +20,30 @@
 **************************************************************************/
 import QtQuick 2.1
 import QtQuick.Controls 1.1
+import QtQuick.Controls 2.0 as QQC2
 import QtQuick.Layouts 1.0
 import QtMultimedia 5.0 as Multimedia
-import org.kde.kquickcontrolsaddons 2.0 as QtExtra
 
 Multimedia.Video {
     id: videoItem
-    function showHide() {
-        replayButton.visible = false;
-        if (videoItem.visible === true) {
-            videoItem.stop();
-            videoItem.visible = false;
-        } else {
-            videoItem.visible = true;
-            videoItem.play();
-        }
-    }
     autoLoad: false
     visible: false
     source: model.VideoRole
     width: 400
     height: 400
-    BusyIndicator {
+    QQC2.BusyIndicator {
         anchors.centerIn: parent
         visible: videoItem.status == Multimedia.MediaPlayer.Loading
         running: true
     }
-    MouseArea {
-        // it's a mouse area with icon inside to not have an ugly button background
+    Button {
         id: replayButton
         visible: false
-        anchors.fill: parent
+        anchors.centerIn: parent
+        iconName: "media-playback-start"
         onClicked: {
             replayButton.visible = false;
             videoItem.play();
-        }
-        QtExtra.QIconItem {
-            id: replayIcon
-            anchors.centerIn: parent
-            width: 16
-            height: 16
-            icon: "media-playback-start"
         }
         Connections {
             target: videoItem
