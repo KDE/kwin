@@ -254,8 +254,7 @@ set_package_properties(Freetype PROPERTIES DESCRIPTION "A font rendering engine"
                        PURPOSE "Needed for KWin's QPA plugin."
                       )
 find_package(Fontconfig REQUIRED)
-set_package_properties(Fontconfig PROPERTIES DESCRIPTION "Font access configuration library"
-                       URL "http://www.freedesktop.org/wiki/Software/fontconfig"
+set_package_properties(Fontconfig PROPERTIES
                        TYPE REQUIRED
                        PURPOSE "Needed for KWin's QPA plugin."
                       )

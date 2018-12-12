@@ -29,7 +29,7 @@ target_link_libraries(KWinQpaPlugin
     kwin
     KF5::WaylandClient
     ${QT5PLATFORMSUPPORT_LIBS}
-    ${FONTCONFIG_LIBRARIES}
+    Fontconfig::Fontconfig
     ${FREETYPE_LIBRARIES}
 )
 
