@@ -92,6 +92,8 @@ private Q_SLOTS:
     void testAppMenu();
     void testNoDecorationModeRequested_data();
     void testNoDecorationModeRequested();
+    void testSendClientWithTransientToDesktop_data();
+    void testSendClientWithTransientToDesktop();
 };
 
 void TestShellClient::initTestCase()
@@ -1085,6 +1087,62 @@ void TestShellClient::testNoDecorationModeRequested()
     QVERIFY(c);
     QCOMPARE(c->noBorder(), false);
     QCOMPARE(c->isDecorated(), true);
+}
+
+void TestShellClient::testSendClientWithTransientToDesktop_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
+}
+
+void TestShellClient::testSendClientWithTransientToDesktop()
+{
+    // this test verifies that when sending a client to a desktop all transients are also send to that desktop
+
+    VirtualDesktopManager::self()->setCount(2);
+    QScopedPointer<Surface> surface{Test::createSurface()};
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> shellSurface{qobject_cast<XdgShellSurface*>(Test::createShellSurface(type, surface.data()))};
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+
+    // let's create a transient window
+    QScopedPointer<Surface> transientSurface{Test::createSurface()};
+    QScopedPointer<XdgShellSurface> transientShellSurface{qobject_cast<XdgShellSurface*>(Test::createShellSurface(type, transientSurface.data()))};
+    transientShellSurface->setTransientFor(shellSurface.data());
+
+    auto transient = Test::renderAndWaitForShown(transientSurface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(transient);
+    QCOMPARE(workspace()->activeClient(), transient);
+    QCOMPARE(transient->transientFor(), c);
+    QVERIFY(c->transients().contains(transient));
+
+    QCOMPARE(c->desktop(), 1);
+    QVERIFY(!c->isOnAllDesktops());
+    QCOMPARE(transient->desktop(), 1);
+    QVERIFY(!transient->isOnAllDesktops());
+    workspace()->slotWindowToDesktop(2);
+
+    QCOMPARE(c->desktop(), 1);
+    QCOMPARE(transient->desktop(), 2);
+
+    // activate c
+    workspace()->activateClient(c);
+    QCOMPARE(workspace()->activeClient(), c);
+    QVERIFY(c->isActive());
+
+    // and send it to the desktop it's already on
+    QCOMPARE(c->desktop(), 1);
+    QCOMPARE(transient->desktop(), 2);
+    workspace()->slotWindowToDesktop(1);
+
+    // which should move the transient back to the desktop
+    QCOMPARE(c->desktop(), 1);
+    QCOMPARE(transient->desktop(), 1);
 }
 
 WAYLANDTEST_MAIN(TestShellClient)

@@ -1169,14 +1169,11 @@ void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activ
 
     c->checkWorkspacePosition( QRect(), old_desktop );
 
-    if (Client *client = dynamic_cast<Client*>(c)) {
-        // TODO: adjust transients for non-X11
-        auto transients_stacking_order = ensureStackingOrder(client->transients());
-        for (auto it = transients_stacking_order.constBegin();
-                it != transients_stacking_order.constEnd();
-                ++it)
-            sendClientToDesktop(*it, desk, dont_activate);
-    }
+    auto transients_stacking_order = ensureStackingOrder(c->transients());
+    for (auto it = transients_stacking_order.constBegin();
+            it != transients_stacking_order.constEnd();
+            ++it)
+        sendClientToDesktop(*it, desk, dont_activate);
     updateClientArea();
 }
 
