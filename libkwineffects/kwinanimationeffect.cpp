@@ -591,7 +591,6 @@ void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
                     data.setTranslucent();
                 else if (!(anim->attribute == Brightness || anim->attribute == Saturation)) {
                     data.setTransformed();
-                    data.mask |= PAINT_WINDOW_TRANSFORMED;
                     if (anim->attribute == Clip)
                         clipWindow(w, *anim, data.quads);
                 }
