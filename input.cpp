@@ -2265,16 +2265,19 @@ void InputDeviceHandler::update()
     if (!m_inited) {
         return;
     }
-    const auto pos = position().toPoint();
-    auto internalWindow = findInternalWindow(pos);
 
-    Toplevel *toplevel;
-    if (internalWindow) {
-        toplevel = waylandServer()->findClient(internalWindow);
-    } else {
-        toplevel = input()->findToplevel(pos);
+    Toplevel *toplevel = nullptr;
+    QWindow *internalWindow = nullptr;
+
+    if (!positionValid()) {
+        const auto pos = position().toPoint();
+        internalWindow = findInternalWindow(pos);
+        if (internalWindow) {
+            toplevel = waylandServer()->findClient(internalWindow);
+        } else {
+            toplevel = input()->findToplevel(pos);
+        }
     }
-
     // Always set the toplevel at the position of the input device.
     setAt(toplevel);
 

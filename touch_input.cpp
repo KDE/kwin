@@ -78,11 +78,18 @@ bool TouchInputRedirection::focusUpdatesBlocked()
     if (waylandServer()->seat()->isDragTouch()) {
         return true;
     }
-    if (m_touches > 0) {
+    if (m_touches > 1) {
         // first touch defines focus
         return true;
     }
     return false;
+}
+
+bool TouchInputRedirection::positionValid() const
+{
+    Q_ASSERT(m_touches >= 0);
+    // we can only determine a position with atleast one touch point
+    return m_touches == 0;
 }
 
 void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
@@ -171,10 +178,10 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
     }
     m_lastPosition = pos;
     m_windowUpdatedInCycle = false;
-    if (m_touches == 0) {
+    m_touches++;
+    if (m_touches == 1) {
         update();
     }
-    m_touches++;
     input()->processSpies(std::bind(&InputEventSpy::touchDown, std::placeholders::_1, id, pos, time));
     input()->processFilters(std::bind(&InputEventFilter::touchDown, std::placeholders::_1, id, pos, time));
     m_windowUpdatedInCycle = false;

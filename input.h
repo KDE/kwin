@@ -424,6 +424,13 @@ protected:
 
     virtual void focusUpdate(Toplevel *old, Toplevel *now) = 0;
 
+    /* Certain input devices can be in a state of having no valid
+     * position. An example are touch screens when no finger/pen
+     * is resting on the surface (no touch point).
+     */
+    virtual bool positionValid() const {
+        return false;
+    }
     virtual bool focusUpdatesBlocked() {
         return false;
     }

@@ -50,6 +50,7 @@ public:
     explicit TouchInputRedirection(InputRedirection *parent);
     virtual ~TouchInputRedirection();
 
+    bool positionValid() const override;
     bool focusUpdatesBlocked() override;
     void init();
 
