@@ -142,13 +142,10 @@ void TouchInputRedirection::cleanupInternalWindow(QWindow *old, QWindow *now)
 
 void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now)
 {
+    Q_UNUSED(old);
     Q_UNUSED(now);
 
-    if (old) {
-        // send leave event to old decoration
-        QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
-        QCoreApplication::instance()->sendEvent(old->decoration(), &event);
-    }
+    // nothing to do
 }
 
 void TouchInputRedirection::insertId(quint32 internalId, qint32 kwaylandId)
