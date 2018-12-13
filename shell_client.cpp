@@ -1850,6 +1850,7 @@ void ShellClient::doMinimize()
     } else {
         emit windowShown(this);
     }
+    workspace()->updateMinimizedOfTransients(this);
 }
 
 bool ShellClient::setupCompositing()

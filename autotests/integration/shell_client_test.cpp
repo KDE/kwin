@@ -94,6 +94,8 @@ private Q_SLOTS:
     void testNoDecorationModeRequested();
     void testSendClientWithTransientToDesktop_data();
     void testSendClientWithTransientToDesktop();
+    void testMinimizeWindowWithTransients_data();
+    void testMinimizeWindowWithTransients();
 };
 
 void TestShellClient::initTestCase()
@@ -1143,6 +1145,51 @@ void TestShellClient::testSendClientWithTransientToDesktop()
     // which should move the transient back to the desktop
     QCOMPARE(c->desktop(), 1);
     QCOMPARE(transient->desktop(), 1);
+}
+
+void TestShellClient::testMinimizeWindowWithTransients_data()
+{
+    QTest::addColumn<Test::ShellSurfaceType>("type");
+
+    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase")  << Test::ShellSurfaceType::XdgShellStable;
+}
+
+void TestShellClient::testMinimizeWindowWithTransients()
+{
+    // this test verifies that when minimizing/unminimizing a window all its
+    // transients will be minimized/unminimized as well
+
+    // create the main window
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> shellSurface(qobject_cast<XdgShellSurface *>(
+        Test::createShellSurface(type, surface.data())));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(c);
+    QVERIFY(!c->isMinimized());
+
+    // create a transient window
+    QScopedPointer<Surface> transientSurface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> transientShellSurface(qobject_cast<XdgShellSurface *>(
+        Test::createShellSurface(type, transientSurface.data())));
+    transientShellSurface->setTransientFor(shellSurface.data());
+    auto transient = Test::renderAndWaitForShown(transientSurface.data(), QSize(100, 50), Qt::red);
+    QVERIFY(transient);
+    QVERIFY(!transient->isMinimized());
+    QCOMPARE(transient->transientFor(), c);
+    QVERIFY(c->hasTransient(transient, false));
+
+    // minimize the main window, the transient should be minimized as well
+    c->minimize();
+    QVERIFY(c->isMinimized());
+    QVERIFY(transient->isMinimized());
+
+    // unminimize the main window, the transient should be unminimized as well
+    c->unminimize();
+    QVERIFY(!c->isMinimized());
+    QVERIFY(!transient->isMinimized());
 }
 
 WAYLANDTEST_MAIN(TestShellClient)
