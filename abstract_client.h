@@ -438,9 +438,6 @@ public:
     virtual QVector<VirtualDesktop *> desktops() const {
         return m_desktops;
     }
-    void removeDesktop(VirtualDesktop *desktop) {
-        m_desktops.removeAll(desktop);
-    }
     QVector<uint> x11DesktopIds() const;
 
     void setMinimized(bool set);

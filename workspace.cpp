@@ -227,9 +227,12 @@ void Workspace::init()
             if (kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
                 kwinApp()->operationMode() == Application::OperationModeXwayland) {
                 for (auto it = m_allClients.constBegin(); it != m_allClients.constEnd(); ++it) {
-                    const bool needsMove = (*it)->desktops().count() == 1;
-                    (*it)->removeDesktop(desktop);
-                    if (needsMove) {
+                    if (!(*it)->desktops().contains(desktop)) {
+                        continue;
+                    }
+                    if ((*it)->desktops().count() > 1) {
+                        (*it)->leaveDesktop(desktop);
+                    } else {
                         sendClientToDesktop(*it, qMin(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count()), true);
                     }
                 }
