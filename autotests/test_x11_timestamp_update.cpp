@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTest>
 #include <QX11Info>
 
+#include <KPluginLoader>
 #include <KPluginMetaData>
 
 #include "main.h"
@@ -46,7 +47,20 @@ X11TestApplication::X11TestApplication(int &argc, char **argv)
 {
     setX11Connection(QX11Info::connection());
     setX11RootWindow(QX11Info::appRootWindow());
-    initPlatform(KPluginMetaData(QStringLiteral("KWinX11Platform.so")));
+
+    // move directory containing executable to front, so that KPluginLoader prefers the plugins in
+    // the build dir over system installed ones
+    const auto ownPath = libraryPaths().last();
+    removeLibraryPath(ownPath);
+    addLibraryPath(ownPath);
+
+    const auto plugins = KPluginLoader::findPluginsById(QStringLiteral("org.kde.kwin.platforms"),
+                                                        QStringLiteral("KWinX11Platform"));
+    if (plugins.empty()) {
+        quit();
+        return;
+    }
+    initPlatform(plugins.first());
 }
 
 X11TestApplication::~X11TestApplication()
