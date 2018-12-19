@@ -273,19 +273,8 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
 
 void EffectsHandlerImpl::unloadAllEffects()
 {
-    makeOpenGLContextCurrent();
-    if (keyboard_grab_effect != NULL)
-        ungrabKeyboard();
-    setActiveFullScreenEffect(nullptr);
-    for (auto it = loaded_effects.begin(); it != loaded_effects.end(); ++it) {
-        Effect *effect = (*it).second;
-        stopMouseInterception(effect);
-        // remove support properties for the effect
-        const QList<QByteArray> properties = m_propertiesForEffects.keys();
-        for (const QByteArray &property : properties) {
-            removeSupportProperty(property, effect);
-        }
-        delete effect;
+    for (const EffectPair &pair : loaded_effects) {
+        destroyEffect(pair.second);
     }
 
     effect_order.clear();
@@ -1394,29 +1383,44 @@ bool EffectsHandlerImpl::loadEffect(const QString& name)
 
 void EffectsHandlerImpl::unloadEffect(const QString& name)
 {
-    makeOpenGLContextCurrent();
-    m_compositor->addRepaintFull();
-
-    for (QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); ++it) {
-        if (it.value().first == name) {
-            qCDebug(KWIN_CORE) << "EffectsHandler::unloadEffect : Unloading Effect : " << name;
-            if (activeFullScreenEffect() == it.value().second) {
-                setActiveFullScreenEffect(0);
-            }
-            stopMouseInterception(it.value().second);
-            // remove support properties for the effect
-            const QList<QByteArray> properties = m_propertiesForEffects.keys();
-            for (const QByteArray &property : properties) {
-                removeSupportProperty(property, it.value().second);
-            }
-            delete it.value().second;
-            effect_order.erase(it);
-            effectsChanged();
-            return;
+    auto it = std::find_if(effect_order.begin(), effect_order.end(),
+        [name](EffectPair &pair) {
+            return pair.first == name;
         }
+    );
+    if (it == effect_order.end()) {
+        qCDebug(KWIN_CORE) << "EffectsHandler::unloadEffect : Effect not loaded :" << name;
+        return;
     }
 
-    qCDebug(KWIN_CORE) << "EffectsHandler::unloadEffect : Effect not loaded : " << name;
+    qCDebug(KWIN_CORE) << "EffectsHandler::unloadEffect : Unloading Effect :" << name;
+    destroyEffect((*it).second);
+    effect_order.erase(it);
+    effectsChanged();
+
+    m_compositor->addRepaintFull();
+}
+
+void EffectsHandlerImpl::destroyEffect(Effect *effect)
+{
+    makeOpenGLContextCurrent();
+
+    if (fullscreen_effect == effect) {
+        setActiveFullScreenEffect(nullptr);
+    }
+
+    if (keyboard_grab_effect == effect) {
+        ungrabKeyboard();
+    }
+
+    stopMouseInterception(effect);
+
+    const QList<QByteArray> properties = m_propertiesForEffects.keys();
+    for (const QByteArray &property : properties) {
+        removeSupportProperty(property, effect);
+    }
+
+    delete effect;
 }
 
 void EffectsHandlerImpl::reconfigureEffect(const QString& name)
