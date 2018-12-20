@@ -187,6 +187,44 @@ static ChipClass detectRadeonClass(const QByteArray &chipset)
         chipset.contains("CAYMAN"))
         return NorthernIslands;
 
+    if (chipset.contains("TAHITI")   ||
+        chipset.contains("PITCAIRN") ||
+        chipset.contains("VERDE")    ||
+        chipset.contains("OLAND")    ||
+        chipset.contains("HAINAN")) {
+        return SouthernIslands;
+    }
+
+    if (chipset.contains("BONAIRE") ||
+        chipset.contains("KAVERI")  ||
+        chipset.contains("KABINI")  ||
+        chipset.contains("HAWAII")  ||
+        chipset.contains("MULLINS")) {
+        return SeaIslands;
+    }
+
+    if (chipset.contains("TONGA")   ||
+        chipset.contains("TOPAZ")   ||
+        chipset.contains("FIJI")    ||
+        chipset.contains("CARRIZO") ||
+        chipset.contains("STONEY")) {
+        return VolcanicIslands;
+    }
+
+    if (chipset.contains("POLARIS10") ||
+        chipset.contains("POLARIS11") ||
+        chipset.contains("POLARIS12") ||
+        chipset.contains("VEGAM")) {
+        return ArcticIslands;
+    }
+
+    if (chipset.contains("VEGA10") ||
+        chipset.contains("VEGA12") ||
+        chipset.contains("VEGA20") ||
+        chipset.contains("RAVEN")) {
+        return Vega;
+    }
+
     const QString chipset16 = QString::fromLatin1(chipset);
     QString name = extract(chipset16, QStringLiteral("HD [0-9]{4}")); // HD followed by a space and 4 digits
     if (!name.isEmpty()) {
@@ -464,6 +502,8 @@ QByteArray GLPlatform::driverToString8(Driver driver)
         return QByteArrayLiteral("R600C");
     case Driver_R600G:
         return QByteArrayLiteral("R600G");
+    case Driver_RadeonSI:
+        return QByteArrayLiteral("RadeonSI");
     case Driver_Nouveau:
         return QByteArrayLiteral("Nouveau");
     case Driver_Intel:
@@ -514,7 +554,17 @@ QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
     case Evergreen:
         return QByteArrayLiteral("EVERGREEN");
     case NorthernIslands:
-        return QByteArrayLiteral("NI");
+        return QByteArrayLiteral("Northern Islands");
+    case SouthernIslands:
+        return QByteArrayLiteral("Southern Islands");
+    case SeaIslands:
+        return QByteArrayLiteral("Sea Islands");
+    case VolcanicIslands:
+        return QByteArrayLiteral("Volcanic Islands");
+    case ArcticIslands:
+        return QByteArrayLiteral("Arctic Islands");
+    case Vega:
+        return QByteArrayLiteral("Vega");
 
     case NV10:
         return QByteArrayLiteral("NV10");
@@ -798,6 +848,35 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
                  m_renderer.contains("CAYMAN"))) {
             m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R600G;
+        }
+
+        // RadeonSI
+        else if (m_vendor == "X.Org" &&
+                (m_renderer.contains("TAHITI")    ||
+                 m_renderer.contains("PITCAIRN")  ||
+                 m_renderer.contains("VERDE")     ||
+                 m_renderer.contains("OLAND")     ||
+                 m_renderer.contains("HAINAN")    ||
+                 m_renderer.contains("BONAIRE")   ||
+                 m_renderer.contains("KAVERI")    ||
+                 m_renderer.contains("KABINI")    ||
+                 m_renderer.contains("HAWAII")    ||
+                 m_renderer.contains("MULLINS")   ||
+                 m_renderer.contains("TOPAZ")     ||
+                 m_renderer.contains("TONGA")     ||
+                 m_renderer.contains("FIJI")      ||
+                 m_renderer.contains("CARRIZO")   ||
+                 m_renderer.contains("STONEY")    ||
+                 m_renderer.contains("POLARIS10") ||
+                 m_renderer.contains("POLARIS11") ||
+                 m_renderer.contains("POLARIS12") ||
+                 m_renderer.contains("VEGAM")     ||
+                 m_renderer.contains("VEGA10")    ||
+                 m_renderer.contains("VEGA12")    ||
+                 m_renderer.contains("VEGA20")    ||
+                 m_renderer.contains("RAVEN"))) {
+            m_chipClass = detectRadeonClass(m_renderer);
+            m_driver = Driver_RadeonSI;
         }
 
         // Nouveau

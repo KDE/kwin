@@ -67,6 +67,7 @@ void GLPlatformTest::testDriverToString_data()
     QTest::newRow("R300G") << Driver_R300G << QStringLiteral("R300G");
     QTest::newRow("R600C") << Driver_R600C << QStringLiteral("R600C");
     QTest::newRow("R600G") << Driver_R600G << QStringLiteral("R600G");
+    QTest::newRow("RadeonSI") << Driver_RadeonSI << QStringLiteral("RadeonSI");
     QTest::newRow("Nouveau") << Driver_Nouveau << QStringLiteral("Nouveau");
     QTest::newRow("Intel") << Driver_Intel << QStringLiteral("Intel");
     QTest::newRow("NVidia") << Driver_NVidia << QStringLiteral("NVIDIA");
@@ -99,7 +100,12 @@ void GLPlatformTest::testChipClassToString_data()
     QTest::newRow("R600") << R600 << QStringLiteral("R600");
     QTest::newRow("R700") << R700 << QStringLiteral("R700");
     QTest::newRow("Evergreen") << Evergreen << QStringLiteral("EVERGREEN");
-    QTest::newRow("NorthernIslands") << NorthernIslands << QStringLiteral("NI");
+    QTest::newRow("NorthernIslands") << NorthernIslands << QStringLiteral("Northern Islands");
+    QTest::newRow("SouthernIslands") << SouthernIslands << QStringLiteral("Southern Islands");
+    QTest::newRow("SeaIslands") << SeaIslands << QStringLiteral("Sea Islands");
+    QTest::newRow("VolcanicIslands") << VolcanicIslands << QStringLiteral("Volcanic Islands");
+    QTest::newRow("Arctic Islands") << ArcticIslands << QStringLiteral("Arctic Islands");
+    QTest::newRow("Vega") << Vega << QStringLiteral("Vega");
     QTest::newRow("UnknownRadeon") << UnknownRadeon << QStringLiteral("Unknown");
     QTest::newRow("NV10") << NV10 << QStringLiteral("NV10");
     QTest::newRow("NV20") << NV20 << QStringLiteral("NV20");
@@ -245,20 +251,11 @@ void GLPlatformTest::testDetect()
     QEXPECT_FAIL("amd-catalyst-radeonhd-7700M-3.1.13399", "Detects GL version instead of driver version", Continue);
     QCOMPARE(gl->driverVersion(), readVersion(settingsGroup, "DriverVersion"));
 
-    QEXPECT_FAIL("amd-gallium-bonaire-3.0", "Not detected as a radeon driver", Continue);
-    QEXPECT_FAIL("amd-gallium-hawaii-3.0", "Not detected as a radeon driver", Continue);
-    QEXPECT_FAIL("amd-gallium-tonga-4.1", "Not detected as a radeon driver", Continue);
     QCOMPARE(gl->driver(), Driver(settingsGroup.readEntry("Driver", int(Driver_Unknown))));
-    QEXPECT_FAIL("amd-gallium-bonaire-3.0", "Not detected as a radeon driver", Continue);
-    QEXPECT_FAIL("amd-gallium-hawaii-3.0", "Not detected as a radeon driver", Continue);
-    QEXPECT_FAIL("amd-gallium-tonga-4.1", "Not detected as a radeon driver", Continue);
     QCOMPARE(gl->chipClass(), ChipClass(settingsGroup.readEntry("ChipClass", int(UnknownChipClass))));
 
     QCOMPARE(gl->isMesaDriver(), settingsGroup.readEntry("Mesa", false));
     QCOMPARE(gl->isGalliumDriver(), settingsGroup.readEntry("Gallium", false));
-    QEXPECT_FAIL("amd-gallium-bonaire-3.0", "Not detected as a radeon driver", Continue);
-    QEXPECT_FAIL("amd-gallium-hawaii-3.0", "Not detected as a radeon driver", Continue);
-    QEXPECT_FAIL("amd-gallium-tonga-4.1", "Not detected as a radeon driver", Continue);
     QCOMPARE(gl->isRadeon(), settingsGroup.readEntry("Radeon", false));
     QCOMPARE(gl->isNvidia(), settingsGroup.readEntry("Nvidia", false));
     QCOMPARE(gl->isIntel(), settingsGroup.readEntry("Intel", false));

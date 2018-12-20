@@ -102,6 +102,7 @@ enum Driver {
     Driver_VirtualBox,
     Driver_VMware,
     Driver_Qualcomm,
+    Driver_RadeonSI,
     Driver_Unknown
 };
 
@@ -116,6 +117,11 @@ enum ChipClass {
     R700,                   // GL3.3         DX10.1    SM 4.1      2008
     Evergreen,              // GL4.0  CL1.0  DX11      SM 5.0      2009
     NorthernIslands,        // GL4.0  CL1.1  DX11      SM 5.0      2010
+    SouthernIslands,        // GL4.5  CL1.2  DX11.1    SM 5.1      2012
+    SeaIslands,             // GL4.5  CL2.0  DX12      SM 6.0      2013
+    VolcanicIslands,        // GL4.5  CL2.0  DX12      SM 6.0      2015
+    ArcticIslands,          // GL4.5  CL2.0  DX12      SM 6.0      2016
+    Vega,                   // GL4.6  CL2.0  DX12      SM 6.0      2017
     UnknownRadeon = 999,
 
     // NVIDIA
