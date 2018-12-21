@@ -94,21 +94,24 @@ class AnimationEffectPrivate;
 class KWINEFFECTS_EXPORT AnimationEffect : public Effect
 {
     Q_OBJECT
-    Q_ENUMS(Anchor)
-    Q_ENUMS(Attribute)
-    Q_ENUMS(MetaType)
+
 public:
     typedef QMap< EffectWindow*, QPair<QList<AniData>, QRect> > AniMap;
 
     enum Anchor { Left = 1<<0, Top = 1<<1, Right = 1<<2, Bottom = 1<<3,
                   Horizontal = Left|Right, Vertical = Top|Bottom, Mouse = 1<<4  };
+    Q_ENUM(Anchor)
+
     enum Attribute {
         Opacity = 0, Brightness, Saturation, Scale, Rotation,
         Position, Size, Translation, Clip, Generic, CrossFadePrevious,
         NonFloatBase = Position
     };
+    Q_ENUM(Attribute)
+
     enum MetaType { SourceAnchor, TargetAnchor,
                     RelativeSourceX, RelativeSourceY, RelativeTargetX, RelativeTargetY, Axis };
+    Q_ENUM(MetaType)
 
     /**
      * This enum type is used to specify the direction of the animation.
