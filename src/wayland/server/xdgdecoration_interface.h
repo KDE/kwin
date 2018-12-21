@@ -37,7 +37,7 @@ class XdgShellSurfaceInterface;
 
 /**
  * @brief The XdgDecorationManagerInterface class
- * @since 5.DECO_VERSION
+ * @since 5.54
  */
 class KWAYLANDSERVER_EXPORT XdgDecorationManagerInterface : public Global
 {
@@ -54,7 +54,7 @@ private:
 
 /**
  * @brief The XdgDecorationInterface class
- * @since 5.DECO_VERSION
+ * @since 5.54
  */
 class KWAYLANDSERVER_EXPORT XdgDecorationInterface : public Resource
 {

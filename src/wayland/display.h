@@ -284,7 +284,7 @@ public:
      * @arg shellInterface A created XdgShellInterface based on XDG_WM_BASE
      *
      * @return the created manager
-     * @since 5.XDG_DECO_VERSION
+     * @since 5.54
      */
     XdgDecorationManagerInterface *createXdgDecorationManager(XdgShellInterface *shellInterface, QObject *parent = nullptr);
 
