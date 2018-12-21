@@ -495,7 +495,6 @@ private:
     NETRootInfo *m_rootInfo;
     KWayland::Server::PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KSharedConfig::Ptr m_config;
-    bool m_isLoading = false;
 
     KWIN_SINGLETON_VARIABLE(VirtualDesktopManager, s_manager)
 };

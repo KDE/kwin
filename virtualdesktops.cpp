@@ -536,6 +536,8 @@ bool VirtualDesktopManager::setCurrent(VirtualDesktop *newDesktop)
     return true;
 }
 
+static bool s_loadingDesktopSettings = false;
+
 void VirtualDesktopManager::setCount(uint count)
 {
     count = qBound<uint>(1, count, VirtualDesktopManager::maximum());
@@ -565,7 +567,7 @@ void VirtualDesktopManager::setCount(uint count)
         while (uint(m_desktops.count()) < count) {
             auto vd = new VirtualDesktop(this);
             vd->setX11DesktopNumber(m_desktops.count() + 1);
-            if (!m_isLoading) {
+            if (!s_loadingDesktopSettings) {
                 vd->setId(QUuid::createUuid().toString().toUtf8());
             }
             m_desktops << vd;
@@ -654,16 +656,12 @@ void VirtualDesktopManager::updateLayout()
     );
 }
 
-static bool s_loadingDesktopSettings = false;
-
 void VirtualDesktopManager::load()
 {
     s_loadingDesktopSettings = true;
     if (!m_config) {
         return;
     }
-    //FIXME: how to avoid this?
-    m_isLoading = true;
     QString groupname;
     if (screen_number == 0) {
         groupname = QStringLiteral("Desktops");
@@ -710,7 +708,6 @@ void VirtualDesktopManager::load()
     }
 
     s_loadingDesktopSettings = false;
-    m_isLoading = false;
 }
 
 void VirtualDesktopManager::save()
