@@ -1,5 +1,6 @@
 /********************************************************************
 Copyright 2014  Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2018  David Edmundson <davidedmundson@kde.org>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -53,6 +54,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "server_decoration_palette_interface.h"
 #include "plasmavirtualdesktop_interface.h"
 #include "xdgoutput_interface.h"
+#include "xdgdecoration_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -476,6 +478,13 @@ XdgOutputManagerInterface *Display::createXdgOutputManager(QObject *parent)
     auto b = new XdgOutputManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, b, [this, b] { delete b; });
     return b;
+}
+
+XdgDecorationManagerInterface *Display::createXdgDecorationManager(XdgShellInterface *shellInterface, QObject *parent)
+{
+    auto d = new XdgDecorationManagerInterface(this, shellInterface, parent);
+    connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
+    return d;
 }
 
 void Display::createShm()

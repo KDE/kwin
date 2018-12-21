@@ -49,6 +49,7 @@ zwp_text_input_manager_v2;TextInputManagerUnstableV2
 xdg_shell;XdgShellV5
 xdg_surface;XdgSurfaceV5
 xdg_popup;XdgPopupV5
+xdg_toplevel;XdgShell
 zxdg_shell_v6;XdgShellV6
 zxdg_surface_v6;XdgSurfaceV6
 zxdg_popup_v6;XdgPopupV6
@@ -66,3 +67,5 @@ org_kde_kwin_remote_access_manager;RemoteAccessManager
 org_kde_kwin_remote_buffer;RemoteBuffer
 zxdg_output_v1;XdgOutput
 zxdg_output_manager_v1;XdgOutputManager
+zxdg_decoration_manager_v1;XdgDecorationManager
+zxdg_toplevel_decoration_v1;XdgDecoration

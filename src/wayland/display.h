@@ -1,5 +1,6 @@
 /********************************************************************
 Copyright 2014  Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2018  David Edmundson <davidedmundson@kde.org>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -88,6 +89,7 @@ class AppMenuManagerInterface;
 class ServerSideDecorationPaletteManagerInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class XdgOutputManagerInterface;
+class XdgDecorationManagerInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -276,6 +278,15 @@ public:
      * @since 5.52
      **/
     PlasmaVirtualDesktopManagementInterface *createPlasmaVirtualDesktopManagement(QObject *parent = nullptr);
+
+    /**
+     * Creates the XdgDecorationManagerInterface
+     * @arg shellInterface A created XdgShellInterface based on XDG_WM_BASE
+     *
+     * @return the created manager
+     * @since 5.XDG_DECO_VERSION
+     */
+    XdgDecorationManagerInterface *createXdgDecorationManager(XdgShellInterface *shellInterface, QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

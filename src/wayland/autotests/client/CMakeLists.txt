@@ -463,3 +463,14 @@ target_link_libraries( testXdgOutput Qt5::Test Qt5::Gui KF5::WaylandClient KF5::
 add_test(NAME kwayland-testXdgOutput COMMAND testXdgOutput)
 ecm_mark_as_test(testXdgOutput)
 
+########################################################
+# Test XDG Decoration
+########################################################
+set( testXdgdecoration_SRCS
+        test_xdg_decoration.cpp
+    )
+add_executable(testXdgDecoration ${testXdgdecoration_SRCS})
+target_link_libraries( testXdgDecoration Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client Wayland::Server)
+add_test(NAME kwayland-testXdgDecoration COMMAND testXdgDecoration)
+ecm_mark_as_test(testXdgDecoration)
+

@@ -114,6 +114,7 @@ public:
     /**
      * @returns The XdgShellSurfaceInterface for the @p native resource.
      **/
+    //TODO KF6 make virtual
     XdgShellSurfaceInterface *getSurface(wl_resource *native);
 
     /**

@@ -49,6 +49,7 @@ set(SERVER_LIB_SRCS
     textinput_interface.cpp
     textinput_interface_v0.cpp
     textinput_interface_v2.cpp
+    xdgdecoration_interface.cpp
     xdgshell_interface.cpp
     xdgshell_v5_interface.cpp
     xdgforeign_v2_interface.cpp
@@ -196,6 +197,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME xdg-shell
 )
 
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/xdg-decoration-unstable-v1.xml
+    BASENAME xdg-decoration
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-server-protocol.h
@@ -248,6 +254,9 @@ set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-idle-inhibit-unstable-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-unstable-v1-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-unstable-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-unstable-v1-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-decoration-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-decoration-client-protocol.h
 )
 
 set_source_files_properties(${SERVER_GENERATED_SRCS} PROPERTIES SKIP_AUTOMOC ON)
@@ -326,6 +335,7 @@ set(SERVER_LIB_HEADERS
   surface_interface.h
   textinput_interface.h
   touch_interface.h
+  xdgdecoration_interface.h
   xdgshell_interface.h
   xdgforeign_interface.h
   xdgoutput_interface.h
