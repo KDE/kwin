@@ -21,6 +21,9 @@
 #include "modeltest.h"
 #include "../model.h"
 #include "effectmodeltest.h"
+
+#include "effectmodel.h"
+
 #include <QtTest>
 
 EffectModelTest::EffectModelTest(QObject *parent)
@@ -29,7 +32,7 @@ EffectModelTest::EffectModelTest(QObject *parent)
 }
 
 void EffectModelTest::testEffectModel() {
-    KWin::Compositing::EffectModel *effectModel = new KWin::Compositing::EffectModel();
+    auto effectModel = new KWin::EffectModel();
 
     new ModelTest(effectModel, this);
 }

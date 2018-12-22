@@ -38,10 +38,9 @@ target_link_libraries(kwincompositing
     KF5::ConfigCore
     KF5::Declarative
     KF5::I18n
-    KF5::Package
     KF5::KCMUtils
     KF5::NewStuff
-    kwin4_effect_builtins
+    kcmkwincommon
 )
 
 if (BUILD_TESTING)
@@ -72,11 +71,10 @@ if (BUILD_TESTING)
         KF5::ConfigCore
         KF5::Declarative
         KF5::I18n
-        KF5::Package
         KF5::KCMUtils
         KF5::NewStuff
         kwineffects
-        kwin4_effect_builtins
+        kcmkwincommon
     )
 endif()
 

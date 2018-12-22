@@ -24,95 +24,15 @@
 
 #include <KColorScheme>
 #include <KSharedConfig>
-#include <QAbstractItemModel>
-#include <QHash>
-#include <QList>
 #include <QQuickWidget>
 #include <QSortFilterProxyModel>
 #include <QString>
-#include <KPluginInfo>
 
 namespace KWin {
+
+class EffectModel;
+
 namespace Compositing {
-
-enum class EffectStatus {
-    Disabled = Qt::Unchecked,
-    EnabledUndeterminded = Qt::PartiallyChecked,
-    Enabled = Qt::Checked
-};
-
-struct EffectData {
-    QString name;
-    QString description;
-    QString authorName;
-    QString authorEmail;
-    QString license;
-    QString version;
-    QString category;
-    QString serviceName;
-    EffectStatus effectStatus;
-    bool enabledByDefault;
-    bool enabledByDefaultFunction;
-    QUrl video;
-    bool supported;
-    QString exclusiveGroup;
-    bool internal;
-    bool configurable;
-    bool scripted;
-    bool changed = false;
-};
-
-class EffectModel : public QAbstractItemModel
-{
-
-    Q_OBJECT
-
-public:
-    enum EffectRoles {
-        NameRole = Qt::UserRole + 1,
-        DescriptionRole,
-        AuthorNameRole,
-        AuthorEmailRole,
-        LicenseRole,
-        VersionRole,
-        CategoryRole,
-        ServiceNameRole,
-        EffectStatusRole,
-        VideoRole,
-        SupportedRole,
-        ExclusiveRole,
-        InternalRole,
-        ConfigurableRole,
-        ScriptedRole
-    };
-
-    explicit EffectModel(QObject *parent = 0);
-
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex &child) const override;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
-    QString serviceName(const QString &effectName);
-
-    virtual QHash< int, QByteArray > roleNames() const override;
-
-    void updateEffectStatus(const QModelIndex &rowIndex, EffectStatus effectState);
-    void syncEffectsToKWin();
-    void syncConfig();
-    void loadEffects();
-    void defaults();
-
-private:
-    void loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
-    void loadJavascriptEffects(const KConfigGroup &kwinConfig);
-    void loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
-    int findRowByServiceName(const QString &serviceName);
-    QList<EffectData> m_effectsList;
-    QList<EffectData> m_effectsChanged;
-
-};
 
 class EffectView : public QQuickWidget
 {
