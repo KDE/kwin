@@ -204,6 +204,49 @@ ScrollViewKCM {
                 Layout.fillWidth: true
 
                 QtControls.CheckBox {
+                    id: animationEnabled
+
+                    text: i18n("Show animation when switching:")
+
+                    checked: kcm.animationsModel.enabled
+
+                    onCheckedChanged: kcm.animationsModel.enabled = checked
+                }
+
+                QtControls.ComboBox {
+                    enabled: animationEnabled.checked
+
+                    model: kcm.animationsModel
+                    textRole: "NameRole"
+                    currentIndex: kcm.animationsModel.currentIndex
+                    onActivated: kcm.animationsModel.currentIndex = currentIndex
+                }
+
+                QtControls.Button {
+                    enabled: animationEnabled.checked && kcm.animationsModel.currentConfigurable
+
+                    icon.name: "configure"
+
+                    onClicked: kcm.configureAnimation()
+                }
+
+                QtControls.Button {
+                    enabled: animationEnabled.checked
+
+                    icon.name: "dialog-information"
+
+                    onClicked: kcm.showAboutAnimation()
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                QtControls.CheckBox {
                     id: osdEnabled
 
                     text: i18n("Show on-screen display when switching:")

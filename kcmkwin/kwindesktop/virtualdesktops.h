@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2018 Eike Hein <hein@kde.org>
+ * Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +25,7 @@
 namespace KWin
 {
 
+class AnimationsModel;
 class DesktopsModel;
 
 class VirtualDesktops : public KQuickAddons::ConfigModule
@@ -35,6 +37,7 @@ class VirtualDesktops : public KQuickAddons::ConfigModule
     Q_PROPERTY(bool osdEnabled READ osdEnabled WRITE setOsdEnabled NOTIFY osdEnabledChanged)
     Q_PROPERTY(int osdDuration READ osdDuration WRITE setOsdDuration NOTIFY osdDurationChanged)
     Q_PROPERTY(bool osdTextOnly READ osdTextOnly WRITE setOsdTextOnly NOTIFY osdTextOnlyChanged)
+    Q_PROPERTY(QAbstractItemModel *animationsModel READ animationsModel CONSTANT)
 
 public:
     explicit VirtualDesktops(QObject *parent = nullptr, const QVariantList &list = QVariantList());
@@ -54,6 +57,8 @@ public:
     int osdTextOnly() const;
     void setOsdTextOnly(bool textOnly);
 
+    QAbstractItemModel *animationsModel() const;
+
 Q_SIGNALS:
     void navWrapsChanged() const;
     void osdEnabledChanged() const;
@@ -65,6 +70,9 @@ public Q_SLOTS:
     void save() override;
     void defaults() override;
 
+    void configureAnimation();
+    void showAboutAnimation();
+
 private Q_SLOTS:
     void updateNeedsSave();
 
@@ -75,6 +83,7 @@ private:
     bool m_osdEnabled;
     int m_osdDuration;
     bool m_osdTextOnly;
+    AnimationsModel *m_animationsModel;
 };
 
 }

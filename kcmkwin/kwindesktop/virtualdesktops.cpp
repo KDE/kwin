@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2018 Eike Hein <hein@kde.org>
+ * Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +17,21 @@
  */
 
 #include "virtualdesktops.h"
+#include "animationsmodel.h"
 #include "desktopsmodel.h"
 
+#include <KAboutApplicationDialog>
 #include <KAboutData>
+#include <KCModule>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPluginFactory>
+#include <KPluginTrader>
+
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 K_PLUGIN_FACTORY_WITH_JSON(VirtualDesktopsFactory, "kcm_kwin_virtualdesktops.json", registerPlugin<KWin::VirtualDesktops>();)
 
@@ -36,6 +46,7 @@ VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
     , m_osdEnabled(false)
     , m_osdDuration(1000)
     , m_osdTextOnly(false)
+    , m_animationsModel(new AnimationsModel(this))
 {
     KAboutData *about = new KAboutData(QStringLiteral("kcm_kwin_virtualdesktops"),
         i18n("Configure Virtual Desktops"),
@@ -45,6 +56,10 @@ VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
     setButtons(Apply | Default);
 
     QObject::connect(m_desktopsModel, &KWin::DesktopsModel::userModifiedChanged,
+        this, &VirtualDesktops::updateNeedsSave);
+    connect(m_animationsModel, &AnimationsModel::enabledChanged,
+        this, &VirtualDesktops::updateNeedsSave);
+    connect(m_animationsModel, &AnimationsModel::currentIndexChanged,
         this, &VirtualDesktops::updateNeedsSave);
 }
 
@@ -121,6 +136,11 @@ void VirtualDesktops::setOsdTextOnly(bool textOnly)
     }
 }
 
+QAbstractItemModel *VirtualDesktops::animationsModel() const
+{
+    return m_animationsModel;
+}
+
 void VirtualDesktops::load()
 {
     KConfigGroup navConfig(m_kwinConfig, "Windows");
@@ -132,11 +152,14 @@ void VirtualDesktops::load()
     KConfigGroup osdSettings(m_kwinConfig, "Script-desktopchangeosd");
     setOsdDuration(osdSettings.readEntry("PopupHideDelay", 1000));
     setOsdTextOnly(osdSettings.readEntry("TextOnly", false));
+
+    m_animationsModel->load();
 }
 
 void VirtualDesktops::save()
 {
     m_desktopsModel->syncWithServer();
+    m_animationsModel->save();
 
     KConfigGroup navConfig(m_kwinConfig, "Windows");
     navConfig.writeEntry("RollOverDesktops", m_navWraps);
@@ -160,6 +183,7 @@ void VirtualDesktops::save()
 void VirtualDesktops::defaults()
 {
     m_desktopsModel->setRows(1);
+    m_animationsModel->defaults();
 
     setNavWraps(true);
     setOsdEnabled(false);
@@ -167,11 +191,117 @@ void VirtualDesktops::defaults()
     setOsdTextOnly(false);
 }
 
+void VirtualDesktops::configureAnimation()
+{
+    const QModelIndex index = m_animationsModel->index(m_animationsModel->currentIndex(), 0);
+    if (!index.isValid()) {
+        return;
+    }
+
+    const QString name = index.data(AnimationsModel::NameRole).toString();
+    const QString serviceName = index.data(AnimationsModel::ServiceNameRole).toString();
+
+    QPointer<QDialog> configDialog = new QDialog();
+
+    KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(
+        QStringLiteral("kwin/effects/configs/"),
+        QString(),
+        QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(serviceName),
+        configDialog
+    );
+
+    if (!kcm) {
+        delete configDialog;
+        return;
+    }
+
+    configDialog->setWindowTitle(name);
+    configDialog->setLayout(new QVBoxLayout);
+
+    auto buttons = new QDialogButtonBox(
+        QDialogButtonBox::Ok |
+        QDialogButtonBox::Cancel |
+        QDialogButtonBox::RestoreDefaults,
+        configDialog
+    );
+    QObject::connect(buttons, &QDialogButtonBox::accepted, configDialog, &QDialog::accept);
+    QObject::connect(buttons, &QDialogButtonBox::rejected, configDialog, &QDialog::reject);
+    QObject::connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, kcm, &KCModule::defaults);
+
+    auto showWidget = new QWidget(configDialog);
+    auto layout = new QVBoxLayout;
+    showWidget->setLayout(layout);
+    layout->addWidget(kcm);
+    configDialog->layout()->addWidget(showWidget);
+    configDialog->layout()->addWidget(buttons);
+
+    if (configDialog->exec() == QDialog::Accepted) {
+        kcm->save();
+    } else if (!configDialog.isNull()) {
+        kcm->load();
+    }
+
+    delete configDialog;
+}
+
+void VirtualDesktops::showAboutAnimation()
+{
+    const QModelIndex index = m_animationsModel->index(m_animationsModel->currentIndex(), 0);
+    if (!index.isValid()) {
+        return;
+    }
+
+    const QString name    = index.data(AnimationsModel::NameRole).toString();
+    const QString comment = index.data(AnimationsModel::DescriptionRole).toString();
+    const QString author  = index.data(AnimationsModel::AuthorNameRole).toString();
+    const QString email   = index.data(AnimationsModel::AuthorEmailRole).toString();
+    const QString website = index.data(AnimationsModel::WebsiteRole).toString();
+    const QString version = index.data(AnimationsModel::VersionRole).toString();
+    const QString license = index.data(AnimationsModel::LicenseRole).toString();
+    const QString icon    = index.data(AnimationsModel::IconNameRole).toString();
+
+    const KAboutLicense::LicenseKey licenseType = KAboutLicense::byKeyword(license).key();
+
+    KAboutData aboutData(
+        name,              // Plugin name
+        name,              // Display name
+        version,           // Version
+        comment,           // Short description
+        licenseType,       // License
+        QString(),         // Copyright statement
+        QString(),         // Other text
+        website.toLatin1() // Home page
+    );
+    aboutData.setProgramLogo(icon);
+
+    const QStringList authors = author.split(',');
+    const QStringList emails = email.split(',');
+
+    if (authors.count() == emails.count()) {
+        int i = 0;
+        for (const QString &author : authors) {
+            if (!author.isEmpty()) {
+                aboutData.addAuthor(i18n(author.toUtf8()), QString(), emails[i]);
+            }
+            i++;
+        }
+    }
+
+    QPointer<KAboutApplicationDialog> aboutPlugin = new KAboutApplicationDialog(aboutData);
+    aboutPlugin->exec();
+
+    delete aboutPlugin;
+}
+
 void VirtualDesktops::updateNeedsSave()
 {
     bool needsSave = false;
 
     if (m_desktopsModel->userModified()) {
+        needsSave = true;
+    }
+
+    if (m_animationsModel->needsSave()) {
         needsSave = true;
     }
 
