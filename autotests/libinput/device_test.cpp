@@ -54,6 +54,10 @@ private Q_SLOTS:
     void testDefaultPointerAccelerationProfileFlat();
     void testDefaultPointerAccelerationProfileAdaptive_data();
     void testDefaultPointerAccelerationProfileAdaptive();
+    void testDefaultClickMethodAreas_data();
+    void testDefaultClickMethodAreas();
+    void testDefaultClickMethodClickfinger_data();
+    void testDefaultClickMethodClickfinger();
     void testLeftHandedEnabledByDefault_data();
     void testLeftHandedEnabledByDefault();
     void testTapEnabledByDefault_data();
@@ -138,6 +142,8 @@ private Q_SLOTS:
     void testLoadPointerAcceleration();
     void testLoadPointerAccelerationProfile_data();
     void testLoadPointerAccelerationProfile();
+    void testLoadClickMethod_data();
+    void testLoadClickMethod();
     void testLoadTapToClick_data();
     void testLoadTapToClick();
     void testLoadTapAndDrag_data();
@@ -552,6 +558,46 @@ void TestLibinputDevice::testDefaultPointerAccelerationProfileAdaptive()
     QCOMPARE(d.defaultPointerAccelerationProfileAdaptive(), enabled);
     QCOMPARE(d.property("defaultPointerAccelerationProfileAdaptive").toBool(), enabled);
     QCOMPARE(dbusProperty<bool>(d.sysName(), "defaultPointerAccelerationProfileAdaptive"), enabled);
+}
+
+void TestLibinputDevice::testDefaultClickMethodAreas_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::addRow("enabled") << true;
+    QTest::addRow("disabled") << false;
+}
+
+void TestLibinputDevice::testDefaultClickMethodAreas()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.defaultClickMethod = enabled ? LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS : LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER;
+
+    Device d(&device);
+    QCOMPARE(d.defaultClickMethodAreas(), enabled);
+    QCOMPARE(d.property("defaultClickMethodAreas").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "defaultClickMethodAreas"), enabled);
+}
+
+void TestLibinputDevice::testDefaultClickMethodClickfinger_data()
+{
+    QTest::addColumn<bool>("enabled");
+
+    QTest::addRow("enabled") << true;
+    QTest::addRow("disabled") << false;
+}
+
+void TestLibinputDevice::testDefaultClickMethodClickfinger()
+{
+    QFETCH(bool, enabled);
+    libinput_device device;
+    device.defaultClickMethod = enabled ? LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER : LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS;
+
+    Device d(&device);
+    QCOMPARE(d.defaultClickMethodClickfinger(), enabled);
+    QCOMPARE(d.property("defaultClickMethodClickfinger").toBool(), enabled);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), "defaultClickMethodClickfinger"), enabled);
 }
 
 void TestLibinputDevice::testScrollOnButtonDownEnabledByDefault_data()
@@ -1767,6 +1813,69 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile()
     if (configValue != initValue) {
         d.setProperty(initValuePropName, true);
         QCOMPARE(inputConfig.readEntry("PointerAccelerationProfile", configValue), initValue);
+    }
+}
+
+void TestLibinputDevice::testLoadClickMethod_data()
+{
+    QTest::addColumn<quint32>("initValue");
+    QTest::addColumn<QString>("initValuePropNameString");
+    QTest::addColumn<quint32>("configValue");
+    QTest::addColumn<QString>("configValuePropNameString");
+
+    QTest::newRow("clickMethodAreas -> clickMethodClickfinger")
+            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas"
+            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger";
+    QTest::newRow("clickMethodClickfinger -> clickMethodAreas")
+            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger"
+            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas";
+    QTest::newRow("clickMethodAreas -> clickMethodAreas")
+            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas"
+            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) << "clickMethodAreas";
+    QTest::newRow("clickMethodClickfinger -> clickMethodClickfinger")
+            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger"
+            << static_cast<quint32>(LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER) << "clickMethodClickfinger";
+}
+
+void TestLibinputDevice::testLoadClickMethod()
+{
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+    QFETCH(quint32, initValue);
+    QFETCH(quint32, configValue);
+    QFETCH(QString, initValuePropNameString);
+    QFETCH(QString, configValuePropNameString);
+
+    QByteArray initValuePropName = initValuePropNameString.toLatin1();
+    QByteArray configValuePropName = configValuePropNameString.toLatin1();
+
+    inputConfig.writeEntry("ClickMethod", configValue);
+
+    libinput_device device;
+    device.supportedClickMethods = LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS | LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER;
+    device.clickMethod = (libinput_config_click_method) initValue;
+    device.setClickMethodReturnValue = false;
+
+    Device d(&device);
+    QCOMPARE(d.property(initValuePropName).toBool(), true);
+    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+    // no config group set, should not change
+    d.loadConfiguration();
+    QCOMPARE(d.property(initValuePropName).toBool(), true);
+    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+
+    // set the group
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
+    QCOMPARE(d.property(initValuePropName).toBool(), initValue == configValue);
+    QCOMPARE(d.property(configValuePropName).toBool(), true);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), initValuePropName), initValue == configValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), configValuePropName), true);
+
+    // and try to store
+    if (configValue != initValue) {
+        d.setProperty(initValuePropName, true);
+        QCOMPARE(inputConfig.readEntry("ClickMethod", configValue), initValue);
     }
 }
 

@@ -101,6 +101,10 @@ struct libinput_device {
 
     bool lidSwitch = false;
     bool tabletModeSwitch = false;
+    quint32 supportedClickMethods = 0;
+    enum libinput_config_click_method defaultClickMethod = LIBINPUT_CONFIG_CLICK_METHOD_NONE;
+    enum libinput_config_click_method clickMethod = LIBINPUT_CONFIG_CLICK_METHOD_NONE;
+    bool setClickMethodReturnValue = 0;
 };
 
 struct libinput_event {

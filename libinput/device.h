@@ -129,6 +129,14 @@ class Device : public QObject
     Q_PROPERTY(bool lidSwitch READ isLidSwitch CONSTANT)
     Q_PROPERTY(bool tabletModeSwitch READ isTabletModeSwitch CONSTANT)
 
+    // Click Methods 
+    Q_PROPERTY(bool supportsClickMethodAreas READ supportsClickMethodAreas CONSTANT)
+    Q_PROPERTY(bool defaultClickMethodAreas READ defaultClickMethodAreas CONSTANT)
+    Q_PROPERTY(bool clickMethodAreas READ isClickMethodAreas WRITE setClickMethodAreas NOTIFY clickMethodChanged)
+
+    Q_PROPERTY(bool supportsClickMethodClickfinger READ supportsClickMethodClickfinger CONSTANT)
+    Q_PROPERTY(bool defaultClickMethodClickfinger READ defaultClickMethodClickfinger CONSTANT)
+    Q_PROPERTY(bool clickMethodClickfinger READ isClickMethodClickfinger WRITE setClickMethodClickfinger NOTIFY clickMethodChanged)
 
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
@@ -381,6 +389,38 @@ public:
     quint32 defaultPointerAccelerationProfileToInt() const {
         return (quint32) m_defaultPointerAccelerationProfile;
     }
+    bool supportsClickMethodAreas() const {
+        return (m_supportedClickMethods & LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS);
+    }
+    bool defaultClickMethodAreas() const {
+        return (m_defaultClickMethod == LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS);
+    }
+    bool isClickMethodAreas() const {
+        return (m_clickMethod == LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS);
+    }
+    bool supportsClickMethodClickfinger() const {
+        return (m_supportedClickMethods & LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER);
+    }
+    bool defaultClickMethodClickfinger() const {
+        return (m_defaultClickMethod == LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER);
+    }
+    bool isClickMethodClickfinger() const {
+        return (m_clickMethod == LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER);
+    }
+    void setClickMethod(bool set, enum libinput_config_click_method method);
+    void setClickMethodAreas(bool set) {
+        setClickMethod(set, LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS);
+    }
+    void setClickMethodClickfinger(bool set) {
+        setClickMethod(set, LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER);
+    }
+    void setClickMethodFromInt(quint32 method) {
+        setClickMethod(true, (libinput_config_click_method) method);
+    }
+    quint32 defaultClickMethodToInt() const {
+        return (quint32) m_defaultClickMethod;
+    }
+
     bool isEnabled() const {
         return m_enabled;
     }
@@ -456,6 +496,7 @@ Q_SIGNALS:
     void naturalScrollChanged();
     void scrollMethodChanged();
     void scrollButtonChanged();
+    void clickMethodChanged();
 
 private:
     template <typename T>
@@ -525,6 +566,9 @@ private:
     int m_screenId = 0;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     QMatrix4x4 m_defaultCalibrationMatrix;
+    quint32 m_supportedClickMethods;
+    enum libinput_config_click_method m_defaultClickMethod;
+    enum libinput_config_click_method m_clickMethod;
 
     static QVector<Device*> s_devices;
 };

@@ -83,7 +83,8 @@ enum class ConfigKey {
     MiddleButtonEmulation,
     NaturalScroll,
     ScrollMethod,
-    ScrollButton
+    ScrollButton,
+    ClickMethod
 };
 
 struct ConfigData {
@@ -129,7 +130,8 @@ static const QMap<ConfigKey, ConfigData> s_configData {
     {ConfigKey::LmrTapButtonMap, ConfigData(QByteArrayLiteral("LmrTapButtonMap"), &Device::setLmrTapButtonMap, &Device::lmrTapButtonMapEnabledByDefault)},
     {ConfigKey::NaturalScroll, ConfigData(QByteArrayLiteral("NaturalScroll"), &Device::setNaturalScroll, &Device::naturalScrollEnabledByDefault)},
     {ConfigKey::ScrollMethod, ConfigData(QByteArrayLiteral("ScrollMethod"), &Device::activateScrollMethodFromInt, &Device::defaultScrollMethodToInt)},
-    {ConfigKey::ScrollButton, ConfigData(QByteArrayLiteral("ScrollButton"), &Device::setScrollButton, &Device::defaultScrollButton)}
+    {ConfigKey::ScrollButton, ConfigData(QByteArrayLiteral("ScrollButton"), &Device::setScrollButton, &Device::defaultScrollButton)},
+    {ConfigKey::ClickMethod, ConfigData(QByteArrayLiteral("ClickMethod"), &Device::setClickMethodFromInt, &Device::defaultClickMethodToInt)}
 };
 
 namespace {
@@ -209,6 +211,9 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_enabled(m_supportsDisableEvents ? libinput_device_config_send_events_get_mode(m_device) == LIBINPUT_CONFIG_SEND_EVENTS_ENABLED : true)
     , m_config()
     , m_defaultCalibrationMatrix(m_supportsCalibrationMatrix ? defaultCalibrationMatrix(m_device) : QMatrix4x4{})
+    , m_supportedClickMethods(libinput_device_config_click_get_methods(m_device))
+    , m_defaultClickMethod(libinput_device_config_click_get_default_method(m_device))
+    , m_clickMethod(libinput_device_config_click_get_method(m_device))
 {
     libinput_device_ref(m_device);
 
@@ -352,6 +357,27 @@ void Device::setPointerAccelerationProfile(bool set, enum  libinput_config_accel
             m_pointerAccelerationProfile = profile;
             emit pointerAccelerationProfileChanged();
             writeEntry(ConfigKey::PointerAccelerationProfile, (quint32) profile);
+        }
+    }
+}
+
+void Device::setClickMethod(bool set, enum libinput_config_click_method method)
+{
+    if (!(m_supportedClickMethods & method)) {
+        return;
+    }
+    if (!set) {
+        method = (method == LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS) ? LIBINPUT_CONFIG_CLICK_METHOD_CLICKFINGER : LIBINPUT_CONFIG_CLICK_METHOD_BUTTON_AREAS;
+        if (!(m_supportedClickMethods & method)) {
+            return;
+        }
+    }
+
+    if (libinput_device_config_click_set_method(m_device, method) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
+        if (m_clickMethod != method) {
+            m_clickMethod = method;
+            emit clickMethodChanged();
+            writeEntry(ConfigKey::ClickMethod, (quint32) method);
         }
     }
 }
