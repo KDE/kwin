@@ -168,6 +168,11 @@ public:
 
     bool isPopupWindow() const override;
 
+    bool isLocalhost() const override
+    {
+        return true;
+    }
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;

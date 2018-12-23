@@ -307,6 +307,7 @@ public:
     QByteArray wmCommand();
     QByteArray wmClientMachine(bool use_localhost) const;
     const ClientMachine *clientMachine() const;
+    virtual bool isLocalhost() const;
     Window wmClientLeader() const;
     virtual pid_t pid() const;
     static bool resourceMatch(const Toplevel* c1, const Toplevel* c2);

@@ -82,7 +82,7 @@ void KCMRulesList::activeChanged()
 void KCMRulesList::newClicked()
 {
     RulesDialog dlg(this);
-    Rules* rule = dlg.edit(nullptr, 0, false);
+    Rules* rule = dlg.edit(nullptr, {}, false);
     if (rule == nullptr)
         return;
     int pos = rules_listbox->currentRow() + 1;
@@ -98,7 +98,7 @@ void KCMRulesList::modifyClicked()
     if (pos == -1)
         return;
     RulesDialog dlg(this);
-    Rules* rule = dlg.edit(rules[ pos ], 0, false);
+    Rules* rule = dlg.edit(rules[ pos ], {}, false);
     if (rule == rules[ pos ])
         return;
     delete rules[ pos ];

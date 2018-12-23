@@ -24,7 +24,6 @@
 #include <QCheckBox>
 #include <QFileInfo>
 #include <QLabel>
-#include <kwindowsystem.h>
 #include <KLocalizedString>
 #include <QRegExp>
 
@@ -740,45 +739,6 @@ void RulesWidget::detected(bool ok)
 #define COMBOBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setCurrentIndex )
 #define SPINBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setValue )
 
-void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
-{
-    LINEEDIT_PREFILL(position, positionToStr, info.frameGeometry().topLeft());
-    LINEEDIT_PREFILL(size, sizeToStr, info.frameGeometry().size());
-    COMBOBOX_PREFILL(desktop, desktopToCombo, info.desktop());
-    // COMBOBOX_PREFILL(activity, activityToCombo, info.activity()); // TODO: ivan
-    CHECKBOX_PREFILL(maximizehoriz, , info.state() & NET::MaxHoriz);
-    CHECKBOX_PREFILL(maximizevert, , info.state() & NET::MaxVert);
-    CHECKBOX_PREFILL(minimize, , info.isMinimized());
-    CHECKBOX_PREFILL(shade, , info.state() & NET::Shaded);
-    CHECKBOX_PREFILL(fullscreen, , info.state() & NET::FullScreen);
-    //COMBOBOX_PREFILL( placement, placementToCombo );
-    CHECKBOX_PREFILL(above, , info.state() & NET::KeepAbove);
-    CHECKBOX_PREFILL(below, , info.state() & NET::KeepBelow);
-    // noborder is only internal KWin information, so let's guess
-    CHECKBOX_PREFILL(noborder, , info.frameGeometry() == info.geometry());
-    CHECKBOX_PREFILL(skiptaskbar, , info.state() & NET::SkipTaskbar);
-    CHECKBOX_PREFILL(skippager, , info.state() & NET::SkipPager);
-    CHECKBOX_PREFILL(skipswitcher, , info.state() & NET::SkipSwitcher);
-    //CHECKBOX_PREFILL( acceptfocus, );
-    //CHECKBOX_PREFILL( closeable, );
-    //CHECKBOX_PREFILL( autogroup, );
-    //CHECKBOX_PREFILL( autogroupfg, );
-    //LINEEDIT_PREFILL( autogroupid, );
-    SPINBOX_PREFILL(opacityactive, , 100 /*get the actual opacity somehow*/);
-    SPINBOX_PREFILL(opacityinactive, , 100 /*get the actual opacity somehow*/);
-    //LINEEDIT_PREFILL( shortcut, );
-    //COMBOBOX_PREFILL( fsplevel, );
-    //COMBOBOX_PREFILL( fpplevel, );
-    COMBOBOX_PREFILL(type, typeToCombo, info.windowType(SUPPORTED_MANAGED_WINDOW_TYPES_MASK));
-    //CHECKBOX_PREFILL( ignoregeometry, );
-    LINEEDIT_PREFILL(minsize, sizeToStr, info.frameGeometry().size());
-    LINEEDIT_PREFILL(maxsize, sizeToStr, info.frameGeometry().size());
-    //CHECKBOX_PREFILL( strictgeometry, );
-    //CHECKBOX_PREFILL( disableglobalshortcuts, );
-    //CHECKBOX_PREFILL( blockcompositing, );
-    LINEEDIT_PREFILL(desktopfile, , info.desktopFileName());
-}
-
 void RulesWidget::prefillUnusedValues(const QVariantMap& info)
 {
     const QSize windowSize{info.value("width").toInt(), info.value("height").toInt()};
@@ -849,11 +809,9 @@ bool RulesWidget::finalCheck()
     return true;
 }
 
-void RulesWidget::prepareWindowSpecific(WId window)
+void RulesWidget::prepareWindowSpecific(const QVariantMap &info)
 {
-    // TODO: adjust for Wayland
     tabs->setCurrentIndex(1);   // geometry tab, skip tab for window identification
-    KWindowInfo info(window, NET::WMAllProperties, NET::WM2AllProperties);   // read everything
     prefillUnusedValues(info);
 }
 
@@ -886,12 +844,14 @@ RulesDialog::RulesDialog(QWidget* parent, const char* name)
 
 // window is set only for Alt+F3/Window-specific settings, because the dialog
 // is then related to one specific window
-Rules* RulesDialog::edit(Rules* r, WId window, bool show_hints)
+Rules* RulesDialog::edit(Rules* r, const QVariantMap& info, bool show_hints)
 {
     rules = r;
     widget->setRules(rules);
-    if (window != 0)
-        widget->prepareWindowSpecific(window);
+    if (!info.isEmpty())
+    {
+        widget->prepareWindowSpecific(info);
+    }
     if (show_hints)
         QTimer::singleShot(0, this, SLOT(displayHints()));
     exec();

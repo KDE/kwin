@@ -4,7 +4,7 @@ add_definitions(-DKCMRULES)
 ########### next target ###############
 
 include_directories(../../)
-set (kwinrules_MOC_HDRS yesnobox.h ../../client_machine.h ../../cursor.h ../../plugins/platforms/x11/standalone/x11cursor.h)
+set (kwinrules_MOC_HDRS yesnobox.h ../../cursor.h ../../plugins/platforms/x11/standalone/x11cursor.h)
 qt5_wrap_cpp(kwinrules_MOC_SRCS ${kwinrules_MOC_HDRS})
 set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp ${kwinrules_MOC_SRCS})
 

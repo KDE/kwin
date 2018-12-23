@@ -471,14 +471,8 @@ void UserActionsMenu::menuAboutToShow()
         action->setText(i18n("&Extensions"));
     }
 
-    // disable rules for Wayland windows - dialog is X11 only
-    if (qobject_cast<ShellClient*>(m_client.data())) {
-        m_rulesOperation->setEnabled(false);
-        m_applicationRulesOperation->setEnabled(false);
-    } else {
-        m_rulesOperation->setEnabled(true);
-        m_applicationRulesOperation->setEnabled(true);
-    }
+    m_rulesOperation->setEnabled(true);
+    m_applicationRulesOperation->setEnabled(true);
 
     showHideActivityMenu();
 }

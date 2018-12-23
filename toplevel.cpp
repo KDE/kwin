@@ -558,5 +558,13 @@ QRect Toplevel::inputGeometry() const
     return geometry();
 }
 
+bool Toplevel::isLocalhost() const
+{
+    if (!m_clientMachine) {
+        return true;
+    }
+    return m_clientMachine->isLocal();
+}
+
 } // namespace
 

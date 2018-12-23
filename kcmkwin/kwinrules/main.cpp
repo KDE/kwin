@@ -21,15 +21,18 @@
 #include <kconfig.h>
 #include <KLocalizedString>
 #include <kwindowsystem.h>
-#include <QtDBus>
-#include <QX11Info>
-#include <X11/Xlib.h>
-#include <fixx11h.h>
 
 #include "ruleswidget.h"
 #include "../../rules.h"
-#include "../../client_machine.h"
 #include <QByteArray>
+
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
+#include <QUuid>
+
+Q_DECLARE_METATYPE(NET::WindowType)
 
 namespace KWin
 {
@@ -67,29 +70,14 @@ static void saveRules(const QList< Rules* >& rules)
     }
 }
 
-static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
+static Rules* findRule(const QList< Rules* >& rules, const QVariantMap &data, bool whole_app)
 {
-    // ClientMachine::resolve calls NETWinInfo::update() which requires properties
-    // bug #348472 ./. bug #346748
-    if (QX11Info::isPlatformX11()) {
-        qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
-        qApp->setProperty("x11RootWindow", QVariant::fromValue(QX11Info::appRootWindow()));
-    }
-    KWindowInfo info = KWindowInfo(wid,
-                       NET::WMName | NET::WMWindowType,
-                       NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine);
-    if (!info.valid())  // shouldn't really happen
-        return nullptr;
-    ClientMachine clientMachine;
-    clientMachine.resolve(info.win(), info.groupLeader());
-    QByteArray wmclass_class = info.windowClassClass().toLower();
-    QByteArray wmclass_name = info.windowClassName().toLower();
-    QByteArray role = info.windowRole().toLower();
-    NET::WindowType type = info.windowType(NET::NormalMask | NET::DesktopMask | NET::DockMask
-                                           | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
-                                           | NET::UtilityMask | NET::SplashMask);
-    QString title = info.name();
-    QByteArray machine = clientMachine.hostName();
+    QByteArray wmclass_class = data.value("resourceClass").toByteArray().toLower();
+    QByteArray wmclass_name = data.value("resourceName").toByteArray().toLower();
+    QByteArray role = data.value("role").toByteArray().toLower();
+    NET::WindowType type = data.value("type").value<NET::WindowType>();
+    QString title = data.value("caption").toString();
+    QByteArray machine = data.value("clientMachine").toByteArray();
     Rules* best_match = nullptr;
     int match_quality = 0;
     for (QList< Rules* >::ConstIterator it = rules.constBegin();
@@ -136,7 +124,7 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
         if (!rule->matchType(type)
                 || !rule->matchRole(role)
                 || !rule->matchTitle(title)
-                || !rule->matchClientMachine(machine, clientMachine.isLocal()))
+                || !rule->matchClientMachine(machine, data.value("localhost").toBool()))
             continue;
         if (quality > match_quality) {
             best_match = rule;
@@ -212,16 +200,16 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
     return ret;
 }
 
-static int edit(Window wid, bool whole_app)
+static void edit(const QVariantMap &data, bool whole_app)
 {
     QList< Rules* > rules;
     loadRules(rules);
-    Rules* orig_rule = findRule(rules, wid, whole_app);
+    Rules* orig_rule = findRule(rules, data, whole_app);
     RulesDialog dlg;
     if (whole_app)
         dlg.setWindowTitle(i18nc("Window caption for the application wide rules dialog", "Edit Application-Specific Settings"));
     // dlg.edit() creates new Rules instance if edited
-    Rules* edited_rule = dlg.edit(orig_rule, wid, true);
+    Rules* edited_rule = dlg.edit(orig_rule, data, true);
     if (edited_rule == nullptr || edited_rule->isEmpty()) {
         rules.removeAll(orig_rule);
         delete orig_rule;
@@ -240,7 +228,7 @@ static int edit(Window wid, bool whole_app)
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
-    return 0;
+    qApp->quit();
 }
 
 } // namespace
@@ -248,28 +236,49 @@ static int edit(Window wid, bool whole_app)
 extern "C"
 KWIN_EXPORT int kdemain(int argc, char* argv[])
 {
-    qputenv("QT_QPA_PLATFORM", "xcb");
     QApplication app(argc, argv);
     app.setApplicationDisplayName(i18n("KWin"));
     app.setApplicationName("kwin_rules_dialog");
     app.setApplicationVersion("1.0");
     bool whole_app = false;
-    bool id_ok = false;
-    Window id = None;
+    QUuid uuid;
     {
         QCommandLineParser parser;
         parser.setApplicationDescription(i18n("KWin helper utility"));
-        parser.addOption(QCommandLineOption("wid", i18n("WId of the window for special window settings."), "wid"));
+        parser.addOption(QCommandLineOption("uuid", i18n("KWin id of the window for special window settings."), "uuid"));
         parser.addOption(QCommandLineOption("whole-app", i18n("Whether the settings should affect all windows of the application.")));
         parser.process(app);
 
-        id = parser.value("wid").toULongLong(&id_ok);
+        uuid = QUuid::fromString(parser.value("uuid"));
         whole_app = parser.isSet("whole-app");
     }
 
-    if (!id_ok || id == None) {
+
+    if (uuid.isNull()) {
         printf("%s\n", qPrintable(i18n("This helper utility is not supposed to be called directly.")));
         return 1;
     }
-    return KWin::edit(id, whole_app);
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"),
+                                                          QStringLiteral("/KWin"),
+                                                          QStringLiteral("org.kde.KWin"),
+                                                          QStringLiteral("getWindowInfo"));
+    message.setArguments({uuid.toString()});
+    QDBusPendingReply<QVariantMap> async = QDBusConnection::sessionBus().asyncCall(message);
+
+    QDBusPendingCallWatcher *callWatcher = new QDBusPendingCallWatcher(async, &app);
+    QObject::connect(callWatcher, &QDBusPendingCallWatcher::finished, &app,
+        [&whole_app] (QDBusPendingCallWatcher *self) {
+            QDBusPendingReply<QVariantMap> reply = *self;
+            self->deleteLater();
+            if (!reply.isValid() || reply.value().isEmpty()) {
+                qApp->quit();
+                return;
+            }
+            KWin::edit(reply.value(), whole_app);
+        }
+    );
+
+
+
+    return app.exec();
 }

@@ -23,7 +23,6 @@
 #include <config-kwin.h>
 
 #include <QDialog>
-#include <kwindowsystem.h>
 #include <kkeysequencewidget.h>
 
 #include "ui_ruleswidgetbase.h"
@@ -50,7 +49,7 @@ public:
     void setRules(Rules* r);
     Rules* rules() const;
     bool finalCheck();
-    void prepareWindowSpecific(WId window);
+    void prepareWindowSpecific(const QVariantMap &info);
 Q_SIGNALS:
     void changed(bool state);
 protected Q_SLOTS:
@@ -117,7 +116,6 @@ private:
     int comboToTiling(int val) const;
     int inc(int i) const { return i+1; }
     int dec(int i) const { return i-1; }
-    void prefillUnusedValues(const KWindowInfo& info);
     void prefillUnusedValues(const QVariantMap& info);
     DetectDialog* detect_dlg;
     bool detect_dlg_ok;
@@ -129,7 +127,7 @@ class RulesDialog
     Q_OBJECT
 public:
     explicit RulesDialog(QWidget* parent = nullptr, const char* name = nullptr);
-    Rules* edit(Rules* r, WId window, bool show_hints);
+    Rules* edit(Rules* r, const QVariantMap& info, bool show_hints);
 protected:
     virtual void accept();
 private Q_SLOTS:
