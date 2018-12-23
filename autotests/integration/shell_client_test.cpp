@@ -982,11 +982,15 @@ void TestShellClient::testUnresponsiveWindow()
     process->setProcessEnvironment(env);
     process->setProcessChannelMode(QProcess::ForwardedChannels);
     process->setProgram(kill);
+    QSignalSpy processStartedSpy{process.data(), &QProcess::started};
+    QVERIFY(processStartedSpy.isValid());
     process->start();
-    QVERIFY(process->waitForStarted());
+    QVERIFY(processStartedSpy.wait());
 
     AbstractClient *killClient = nullptr;
-    QVERIFY(shellClientAddedSpy.wait());
+    if (shellClientAddedSpy.isEmpty()) {
+        QVERIFY(shellClientAddedSpy.wait());
+    }
     killClient = shellClientAddedSpy.first().first().value<AbstractClient*>();
     QSignalSpy unresponsiveSpy(killClient, &AbstractClient::unresponsiveChanged);
     QSignalSpy killedSpy(process.data(), static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished));
