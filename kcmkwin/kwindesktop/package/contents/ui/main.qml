@@ -216,6 +216,8 @@ ScrollViewKCM {
                 QtControls.SpinBox {
                     id: osdDuration
 
+                    enabled: osdEnabled.checked
+
                     from: 0
                     to: 10000
                     stepSize: 100
