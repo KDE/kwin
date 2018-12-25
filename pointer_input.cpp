@@ -994,6 +994,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     // connect the move resize of all window
     auto setupMoveResizeConnection = [this] (AbstractClient *c) {
         connect(c, &AbstractClient::moveResizedChanged, this, &CursorImage::updateMoveResize);
+        connect(c, &AbstractClient::moveResizeCursorChanged, this, &CursorImage::updateMoveResize);
     };
     const auto clients = workspace()->allClientList();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
@@ -1108,7 +1109,7 @@ void CursorImage::updateMoveResize()
     m_moveResizeCursor.image = QImage();
     m_moveResizeCursor.hotSpot = QPoint();
     if (AbstractClient *c = workspace()->getMovingClient()) {
-        loadThemeCursor(c->isMove() ? Qt::SizeAllCursor : Qt::SizeBDiagCursor, &m_moveResizeCursor);
+        loadThemeCursor(c->cursor(), &m_moveResizeCursor);
         if (m_currentSource == CursorSource::MoveResize) {
             emit changed();
         }

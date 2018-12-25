@@ -55,6 +55,7 @@ enum Shape {
  */
 class KWIN_EXPORT CursorShape {
 public:
+    CursorShape() = default;
     CursorShape(Qt::CursorShape qtShape) {
         m_shape = qtShape;
     }
@@ -299,5 +300,7 @@ inline bool Cursor::isCursorTracking() const
 }
 
 }
+
+Q_DECLARE_METATYPE(KWin::CursorShape)
 
 #endif // KWIN_CURSOR_H
