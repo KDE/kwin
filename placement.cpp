@@ -498,7 +498,8 @@ void Placement::placeOnScreenDisplay(AbstractClient* c, QRect& area)
 
 void Placement::placeTransient(AbstractClient *c)
 {
-    const QRect screen = screens()->geometry(c->transientFor()->screen());
+    const auto parent = c->transientFor();
+    const QRect screen =  Workspace::self()->clientArea(parent->isFullScreen() ? FullScreenArea : PlacementArea, parent);
     const QPoint popupPos = c->transientPlacement(screen).topLeft();
     c->move(popupPos);
 
