@@ -399,6 +399,7 @@ private:
     static QElapsedTimer s_clock;
     AnimationEffectPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(AnimationEffect)
+    Q_DISABLE_COPY(AnimationEffect)
 };
 
 
