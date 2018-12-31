@@ -137,8 +137,7 @@ void Deleted::copyToDeleted(Toplevel* c)
 
         m_wasActive = client->isActive();
 
-        const auto *x11Client = qobject_cast<Client *>(client);
-        m_wasGroupTransient = x11Client && x11Client->groupTransient();
+        m_wasGroupTransient = client->groupTransient();
     }
 
     for (auto vd : m_desktops) {

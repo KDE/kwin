@@ -313,8 +313,8 @@ void Workspace::lowerClient(AbstractClient* c, bool nogroup)
     if (!nogroup && c->isTransient()) {
         // lower also all windows in the group, in their reversed stacking order
         ClientList wins;
-        if (Client *client = dynamic_cast<Client*>(c)) {
-            wins = ensureStackingOrder(client->group()->members());
+        if (auto group = c->group()) {
+            wins = ensureStackingOrder(group->members());
         }
         for (int i = wins.size() - 1;
                 i >= 0;
@@ -672,10 +672,8 @@ bool Workspace::keepTransientAbove(const AbstractClient* mainwindow, const Abstr
     // the mainwindow, but only if they're group transient (since only such dialogs
     // have taskbar entry in Kicker). A proper way of doing this (both kwin and kicker)
     // needs to be found.
-    if (const Client *ct = dynamic_cast<const Client*>(transient)) {
-        if (ct->isDialog() && !ct->isModal() && ct->groupTransient())
-            return false;
-    }
+    if (transient->isDialog() && !transient->isModal() && transient->groupTransient())
+        return false;
     // #63223 - don't keep transients above docks, because the dock is kept high,
     // and e.g. dialogs for them would be too high too
     // ignore this if the transient has a placement hint which indicates it should go above it's parent

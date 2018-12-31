@@ -2015,4 +2015,19 @@ void AbstractClient::checkNoBorder()
     setNoBorder(false);
 }
 
+bool AbstractClient::groupTransient() const
+{
+    return false;
+}
+
+const Group *AbstractClient::group() const
+{
+    return nullptr;
+}
+
+Group *AbstractClient::group()
+{
+    return nullptr;
+}
+
 }

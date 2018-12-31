@@ -767,35 +767,35 @@ void Workspace::updateToolWindows(bool also_hide)
                 (*it)->hideClient(false);
         return;
     }
-    const Group* group = NULL;
-    const Client* client = dynamic_cast<Client*>(active_client);
+    const Group* group = nullptr;
+    auto client = active_client;
     // Go up in transiency hiearchy, if the top is found, only tool transients for the top mainwindow
     // will be shown; if a group transient is group, all tools in the group will be shown
-    while (client != NULL) {
+    while (client != nullptr) {
         if (!client->isTransient())
             break;
         if (client->groupTransient()) {
             group = client->group();
             break;
         }
-        client = dynamic_cast<const Client*>(client->transientFor());
+        client = client->transientFor();
     }
     // Use stacking order only to reduce flicker, it doesn't matter if block_stacking_updates == 0,
     // I.e. if it's not up to date
 
     // SELI TODO: But maybe it should - what if a new client has been added that's not in stacking order yet?
-    ClientList to_show, to_hide;
+    QVector<AbstractClient*> to_show, to_hide;
     for (ToplevelList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it) {
-        Client *c = qobject_cast<Client*>(*it);
+        auto c = qobject_cast<AbstractClient*>(*it);
         if (!c) {
             continue;
         }
         if (c->isUtility() || c->isMenu() || c->isToolbar()) {
             bool show = true;
             if (!c->isTransient()) {
-                if (c->group()->members().count() == 1)   // Has its own group, keep always visible
+                if (!c->group() || c->group()->members().count() == 1)   // Has its own group, keep always visible
                     show = true;
                 else if (client != NULL && c->group() == client->group())
                     show = true;
@@ -834,7 +834,7 @@ void Workspace::updateToolWindows(bool also_hide)
         // TODO: Since this is in stacking order, the order of taskbar entries changes :(
         to_show.at(i)->hideClient(false);
     if (also_hide) {
-        for (ClientList::ConstIterator it = to_hide.constBegin();
+        for (auto it = to_hide.constBegin();
                 it != to_hide.constEnd();
                 ++it)  // From bottommost
             (*it)->hideClient(true);
@@ -1283,8 +1283,8 @@ void Workspace::setShowingDesktop(bool showing)
                 lowerClient(c);
                 if (!topDesk)
                     topDesk = c;
-                if (Client *client = qobject_cast<Client*>(c)) {
-                    foreach (Client *cm, client->group()->members()) {
+                if (auto group = c->group()) {
+                    foreach (Client *cm, group->members()) {
                         cm->updateLayer();
                     }
                 }

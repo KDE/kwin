@@ -839,11 +839,7 @@ void Client::checkGroup(Group* set_group, bool force)
         for (auto it = transients().constBegin();
                 it != transients().constEnd();
            ) {
-            Client *c = dynamic_cast<Client *>(*it);
-            if (!c) {
-                ++it;
-                continue;
-            }
+            auto *c = *it;
             // group transients in the old group are no longer transient for it
             if (c->groupTransient() && c->group() != group()) {
                 removeTransientFromList(c);

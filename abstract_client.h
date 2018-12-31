@@ -753,6 +753,31 @@ public:
         return false;
     }
 
+    /**
+     * Default implementation returns @c null.
+     * Mostly intended for X11 clients, from EWMH:
+     * <quote>
+     * If the WM_TRANSIENT_FOR property is set to None or Root window, the window should be
+     * treated as a transient for all other windows in the same group. It has been noted that this
+     * is a slight ICCCM violation, but as this behavior is pretty standard for many toolkits and
+     * window managers, and is extremely unlikely to break anything, it seems reasonable to document
+     * it as standard.
+     * </quote>
+     **/
+    virtual bool groupTransient() const;
+    /**
+     * Default implementation returns @c null.
+     *
+     * Mostly for X11 clients, holds the client group
+     **/
+    virtual const Group *group() const;
+    /**
+     * Default implementation returns @c null.
+     *
+     * Mostly for X11 clients, holds the client group
+     **/
+    virtual Group *group();
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 

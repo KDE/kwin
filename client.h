@@ -93,14 +93,14 @@ public:
     virtual xcb_window_t frameId() const override;
 
     bool isTransient() const override;
-    bool groupTransient() const;
+    bool groupTransient() const override;
     bool wasOriginallyGroupTransient() const;
     QList<AbstractClient*> mainClients() const override; // Call once before loop , is not indirect
     bool hasTransient(const AbstractClient* c, bool indirect) const override;
     void checkTransient(xcb_window_t w);
     AbstractClient* findModal(bool allow_itself = false) override;
-    const Group* group() const;
-    Group* group();
+    const Group* group() const override;
+    Group* group() override;
     void checkGroup(Group* gr = NULL, bool force = false);
     void changeClientLeaderGroup(Group* gr);
     void updateWindowRules(Rules::Types selection) override;
