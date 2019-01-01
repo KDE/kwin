@@ -141,13 +141,12 @@ WobblyWindowsEffect::WobblyWindowsEffect()
 {
     initConfig<WobblyWindowsConfig>();
     reconfigure(ReconfigureAll);
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(KWin::EffectWindow*,QRect)));
-    connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowMaximizedStateChanged(KWin::EffectWindow*,bool,bool)), this, SLOT(slotWindowMaximizeStateChanged(KWin::EffectWindow*,bool,bool)));
-
+    connect(effects, &EffectsHandler::windowAdded, this, &WobblyWindowsEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowClosed, this, &WobblyWindowsEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::windowStartUserMovedResized, this, &WobblyWindowsEffect::slotWindowStartUserMovedResized);
+    connect(effects, &EffectsHandler::windowStepUserMovedResized, this, &WobblyWindowsEffect::slotWindowStepUserMovedResized);
+    connect(effects, &EffectsHandler::windowFinishUserMovedResized, this, &WobblyWindowsEffect::slotWindowFinishUserMovedResized);
+    connect(effects, &EffectsHandler::windowMaximizedStateChanged, this, &WobblyWindowsEffect::slotWindowMaximizeStateChanged);
     connect(effects, &EffectsHandler::windowDataChanged, this, &WobblyWindowsEffect::cancelWindowGrab);
 }
 

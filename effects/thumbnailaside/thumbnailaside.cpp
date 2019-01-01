@@ -39,12 +39,12 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);
     effects->registerGlobalShortcut(Qt::META + Qt::CTRL + Qt::Key_T, a);
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleCurrentThumbnail()));
+    connect(a, &QAction::triggered, this, &ThumbnailAsideEffect::toggleCurrentThumbnail);
 
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(KWin::EffectWindow*,QRect)));
-    connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(KWin::EffectWindow*,QRect)));
-    connect(effects, SIGNAL(screenLockingChanged(bool)), SLOT(repaintAll()));
+    connect(effects, &EffectsHandler::windowClosed, this, &ThumbnailAsideEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::windowGeometryShapeChanged, this, &ThumbnailAsideEffect::slotWindowGeometryShapeChanged);
+    connect(effects, &EffectsHandler::windowDamaged, this, &ThumbnailAsideEffect::slotWindowDamaged);
+    connect(effects, &EffectsHandler::screenLockingChanged, this, &ThumbnailAsideEffect::repaintAll);
     reconfigure(ReconfigureAll);
 }
 

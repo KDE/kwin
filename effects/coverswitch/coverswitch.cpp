@@ -67,11 +67,11 @@ CoverSwitchEffect::CoverSwitchEffect()
     } else {
         m_reflectionShader = NULL;
     }
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
-    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
-    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
-    connect(effects, SIGNAL(tabBoxKeyEvent(QKeyEvent*)), this, SLOT(slotTabBoxKeyEvent(QKeyEvent*)));
+    connect(effects, &EffectsHandler::windowClosed, this, &CoverSwitchEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::tabBoxAdded, this, &CoverSwitchEffect::slotTabBoxAdded);
+    connect(effects, &EffectsHandler::tabBoxClosed, this, &CoverSwitchEffect::slotTabBoxClosed);
+    connect(effects, &EffectsHandler::tabBoxUpdated, this, &CoverSwitchEffect::slotTabBoxUpdated);
+    connect(effects, &EffectsHandler::tabBoxKeyEvent, this, &CoverSwitchEffect::slotTabBoxKeyEvent);
 }
 
 CoverSwitchEffect::~CoverSwitchEffect()

@@ -46,7 +46,7 @@ InvertEffect::InvertEffect()
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_I);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_I);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::META + Qt::Key_I, a);
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleScreenInversion()));
+    connect(a, &QAction::triggered, this, &InvertEffect::toggleScreenInversion);
 
     QAction* b = new QAction(this);
     b->setObjectName(QStringLiteral("InvertWindow"));
@@ -54,9 +54,9 @@ InvertEffect::InvertEffect()
     KGlobalAccel::self()->setDefaultShortcut(b, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_U);
     KGlobalAccel::self()->setShortcut(b, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_U);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::META + Qt::Key_U, b);
-    connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleWindow()));
+    connect(b, &QAction::triggered, this, &InvertEffect::toggleWindow);
 
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
+    connect(effects, &EffectsHandler::windowClosed, this, &InvertEffect::slotWindowClosed);
 }
 
 InvertEffect::~InvertEffect()

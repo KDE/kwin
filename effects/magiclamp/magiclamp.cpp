@@ -31,9 +31,9 @@ MagicLampEffect::MagicLampEffect()
 {
     initConfig<MagicLampConfig>();
     reconfigure(ReconfigureAll);
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowMinimized(KWin::EffectWindow*)), this, SLOT(slotWindowMinimized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), this, SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
+    connect(effects, &EffectsHandler::windowDeleted, this, &MagicLampEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::windowMinimized, this, &MagicLampEffect::slotWindowMinimized);
+    connect(effects, &EffectsHandler::windowUnminimized, this, &MagicLampEffect::slotWindowUnminimized);
 }
 
 bool MagicLampEffect::supported()

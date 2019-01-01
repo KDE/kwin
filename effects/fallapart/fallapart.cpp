@@ -36,9 +36,9 @@ FallApartEffect::FallApartEffect()
 {
     initConfig<FallApartConfig>();
     reconfigure(ReconfigureAll);
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDataChanged(KWin::EffectWindow*,int)), this, SLOT(slotWindowDataChanged(KWin::EffectWindow*,int)));
+    connect(effects, &EffectsHandler::windowClosed, this, &FallApartEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::windowDeleted, this, &FallApartEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::windowDataChanged, this, &FallApartEffect::slotWindowDataChanged);
 }
 
 void FallApartEffect::reconfigure(ReconfigureFlags)

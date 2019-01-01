@@ -52,7 +52,7 @@ MouseClickEffect::MouseClickEffect()
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
     effects->registerGlobalShortcut(Qt::META + Qt::Key_Asterisk, a);
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleEnabled()));
+    connect(a, &QAction::triggered, this, &MouseClickEffect::toggleEnabled);
 
     reconfigure(ReconfigureAll);
 
@@ -227,12 +227,10 @@ void MouseClickEffect::toggleEnabled()
     m_enabled = !m_enabled;
 
     if (m_enabled) {
-        connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
-                         SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+        connect(effects, &EffectsHandler::mouseChanged, this, &MouseClickEffect::slotMouseChanged);
         effects->startMousePolling();
     } else {
-        disconnect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
-                   this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+        disconnect(effects, &EffectsHandler::mouseChanged, this, &MouseClickEffect::slotMouseChanged);
         effects->stopMousePolling();
     }
 

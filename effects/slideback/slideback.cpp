@@ -27,12 +27,12 @@ SlideBackEffect::SlideBackEffect()
 {
     m_tabboxActive = 0;
     m_justMapped = m_upmostWindow = NULL;
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(tabBoxAdded(int)), SLOT(slotTabBoxAdded()));
-    connect(effects, SIGNAL(stackingOrderChanged()), SLOT(slotStackingOrderChanged()));
-    connect(effects, SIGNAL(tabBoxClosed()), SLOT(slotTabBoxClosed()));
+    connect(effects, &EffectsHandler::windowAdded, this, &SlideBackEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowDeleted, this, &SlideBackEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::windowUnminimized, this, &SlideBackEffect::slotWindowUnminimized);
+    connect(effects, &EffectsHandler::tabBoxAdded, this, &SlideBackEffect::slotTabBoxAdded);
+    connect(effects, &EffectsHandler::stackingOrderChanged, this, &SlideBackEffect::slotStackingOrderChanged);
+    connect(effects, &EffectsHandler::tabBoxClosed, this, &SlideBackEffect::slotTabBoxClosed);
 }
 
 void SlideBackEffect::slotStackingOrderChanged()

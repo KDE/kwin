@@ -60,21 +60,21 @@ FlipSwitchEffect::FlipSwitchEffect()
     KGlobalAccel::self()->setShortcut(flipSwitchCurrentAction, QList<QKeySequence>());
     m_shortcutCurrent = KGlobalAccel::self()->shortcut(flipSwitchCurrentAction);
     effects->registerGlobalShortcut(QKeySequence(), flipSwitchCurrentAction);
-    connect(flipSwitchCurrentAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveCurrent()));
+    connect(flipSwitchCurrentAction, &QAction::triggered, this, &FlipSwitchEffect::toggleActiveCurrent);
     QAction* flipSwitchAllAction = new QAction(this);
     flipSwitchAllAction->setObjectName(QStringLiteral("FlipSwitchAll"));
     flipSwitchAllAction->setText(i18n("Toggle Flip Switch (All desktops)"));
     KGlobalAccel::self()->setShortcut(flipSwitchAllAction, QList<QKeySequence>());
     effects->registerGlobalShortcut(QKeySequence(), flipSwitchAllAction);
     m_shortcutAll = KGlobalAccel::self()->shortcut(flipSwitchAllAction);
-    connect(flipSwitchAllAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
+    connect(flipSwitchAllAction, &QAction::triggered, this, &FlipSwitchEffect::toggleActiveAllDesktops);
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &FlipSwitchEffect::globalShortcutChanged);
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
-    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
-    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
-    connect(effects, SIGNAL(tabBoxKeyEvent(QKeyEvent*)), this, SLOT(slotTabBoxKeyEvent(QKeyEvent*)));
+    connect(effects, &EffectsHandler::windowAdded, this, &FlipSwitchEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowClosed, this, &FlipSwitchEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::tabBoxAdded, this, &FlipSwitchEffect::slotTabBoxAdded);
+    connect(effects, &EffectsHandler::tabBoxClosed, this, &FlipSwitchEffect::slotTabBoxClosed);
+    connect(effects, &EffectsHandler::tabBoxUpdated, this, &FlipSwitchEffect::slotTabBoxUpdated);
+    connect(effects, &EffectsHandler::tabBoxKeyEvent, this, &FlipSwitchEffect::slotTabBoxKeyEvent);
 }
 
 FlipSwitchEffect::~FlipSwitchEffect()

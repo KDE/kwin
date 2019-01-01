@@ -62,7 +62,7 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
                                            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
-    connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
+    connect(mShortcutEditor, &KShortcutsEditor::keyChange, this, qOverload<>(&InvertEffectConfig::changed));
     layout->addWidget(mShortcutEditor);
 
     load();

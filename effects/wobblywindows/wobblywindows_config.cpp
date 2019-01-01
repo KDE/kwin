@@ -87,7 +87,7 @@ WobblyWindowsEffectConfig::WobblyWindowsEffectConfig(QWidget* parent, const QVar
     m_ui.setupUi(this);
 
     addConfig(WobblyWindowsConfig::self(), this);
-    connect(m_ui.kcfg_WobblynessLevel, SIGNAL(valueChanged(int)), this, SLOT(wobblinessChanged()));
+    connect(m_ui.kcfg_WobblynessLevel, &QSlider::valueChanged, this, &WobblyWindowsEffectConfig::wobblinessChanged);
 
     load();
 }

@@ -56,11 +56,11 @@ WindowGeometry::WindowGeometry()
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_F11);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11, a);
 
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
+    connect(a, &QAction::triggered, this, &WindowGeometry::toggle);
 
-    connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(KWin::EffectWindow*,QRect)));
+    connect(effects, &EffectsHandler::windowStartUserMovedResized, this, &WindowGeometry::slotWindowStartUserMovedResized);
+    connect(effects, &EffectsHandler::windowFinishUserMovedResized, this, &WindowGeometry::slotWindowFinishUserMovedResized);
+    connect(effects, &EffectsHandler::windowStepUserMovedResized, this, &WindowGeometry::slotWindowStepUserMovedResized);
 }
 
 WindowGeometry::~WindowGeometry()

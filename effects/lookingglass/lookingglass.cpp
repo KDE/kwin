@@ -69,8 +69,8 @@ LookingGlassEffect::LookingGlassEffect()
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
     effects->registerGlobalShortcut(Qt::META + Qt::Key_0, a);
 
-    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
-            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+    connect(effects, &EffectsHandler::mouseChanged, this, &LookingGlassEffect::slotMouseChanged);
+
     reconfigure(ReconfigureAll);
 }
 

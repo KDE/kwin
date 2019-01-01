@@ -64,10 +64,10 @@ BlurEffect::BlurEffect()
         net_wm_blur_region = 0;
     }
 
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
-    connect(effects, SIGNAL(screenGeometryChanged(QSize)), this, SLOT(slotScreenGeometryChanged()));
+    connect(effects, &EffectsHandler::windowAdded, this, &BlurEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowDeleted, this, &BlurEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::propertyNotify, this, &BlurEffect::slotPropertyNotify);
+    connect(effects, &EffectsHandler::screenGeometryChanged, this, &BlurEffect::slotScreenGeometryChanged);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this,
         [this] {
             if (m_shader && m_shader->isValid() && m_renderTargetsValid) {

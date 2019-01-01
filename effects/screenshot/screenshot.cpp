@@ -60,7 +60,7 @@ bool ScreenShotEffect::supported()
 ScreenShotEffect::ScreenShotEffect()
     : m_scheduledScreenshot(0)
 {
-    connect ( effects, SIGNAL(windowClosed(KWin::EffectWindow*)), SLOT(windowClosed(KWin::EffectWindow*)) );
+    connect(effects, &EffectsHandler::windowClosed, this, &ScreenShotEffect::windowClosed);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Screenshot"), this, QDBusConnection::ExportScriptableContents);
 }
 

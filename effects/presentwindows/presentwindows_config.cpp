@@ -83,7 +83,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
 
     m_ui->shortcutEditor->addCollection(m_actionCollection);
 
-    connect(m_ui->shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
+    connect(m_ui->shortcutEditor, &KShortcutsEditor::keyChange, this, qOverload<>(&PresentWindowsEffectConfig::changed));
 
     PresentWindowsConfig::instance(KWIN_CONFIG);
     addConfig(PresentWindowsConfig::self(), m_ui);

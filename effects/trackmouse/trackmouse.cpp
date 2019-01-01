@@ -63,10 +63,9 @@ TrackMouseEffect::TrackMouseEffect()
     KGlobalAccel::self()->setShortcut(m_action, QList<QKeySequence>());
     effects->registerGlobalShortcut(QKeySequence(), m_action);
 
-    connect(m_action, SIGNAL(triggered(bool)), this, SLOT(toggle()));
+    connect(m_action, &QAction::triggered, this, &TrackMouseEffect::toggle);
 
-    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
-                     SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+    connect(effects, &EffectsHandler::mouseChanged, this, &TrackMouseEffect::slotMouseChanged);
     reconfigure(ReconfigureAll);
 }
 

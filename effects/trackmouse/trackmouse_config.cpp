@@ -73,8 +73,8 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantLi
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
 
-    connect(m_ui->shortcut, SIGNAL(keySequenceChanged(QKeySequence)),
-                            SLOT(shortcutChanged(QKeySequence)));
+    connect(m_ui->shortcut, &KKeySequenceWidget::keySequenceChanged,
+            this, &TrackMouseEffectConfig::shortcutChanged);
 
     load();
 }

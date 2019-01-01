@@ -98,9 +98,9 @@ CubeEffect::CubeEffect()
     }
     m_textureMirrorMatrix.scale(1.0, -1.0, 1.0);
     m_textureMirrorMatrix.translate(0.0, -1.0, 0.0);
-    connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
-    connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
-    connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
+    connect(effects, &EffectsHandler::tabBoxAdded, this, &CubeEffect::slotTabBoxAdded);
+    connect(effects, &EffectsHandler::tabBoxClosed, this, &CubeEffect::slotTabBoxClosed);
+    connect(effects, &EffectsHandler::tabBoxUpdated, this, &CubeEffect::slotTabBoxUpdated);
 
     reconfigure(ReconfigureAll);
 }
@@ -202,9 +202,9 @@ void CubeEffect::reconfigure(ReconfigureFlags)
         KGlobalAccel::self()->setShortcut(sphereAction, QList<QKeySequence>());
         sphereShortcut = KGlobalAccel::self()->shortcut(sphereAction);
         effects->registerGlobalShortcut(QKeySequence(), sphereAction);
-        connect(cubeAction, SIGNAL(triggered(bool)), this, SLOT(toggleCube()));
-        connect(cylinderAction, SIGNAL(triggered(bool)), this, SLOT(toggleCylinder()));
-        connect(sphereAction, SIGNAL(triggered(bool)), this, SLOT(toggleSphere()));
+        connect(cubeAction, &QAction::triggered, this, &CubeEffect::toggleCube);
+        connect(cylinderAction, &QAction::triggered, this, &CubeEffect::toggleCylinder);
+        connect(sphereAction, &QAction::triggered, this, &CubeEffect::toggleSphere);
         connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &CubeEffect::globalShortcutChanged);
         shortcutsRegistered = true;
     }
@@ -1537,13 +1537,13 @@ void CubeEffect::setActive(bool active)
         QString capPath = CubeConfig::capPath();
         if (texturedCaps && !capTexture && !capPath.isEmpty()) {
             QFutureWatcher<QImage> *watcher = new QFutureWatcher<QImage>(this);
-            connect(watcher, SIGNAL(finished()), SLOT(slotCubeCapLoaded()));
+            connect(watcher, &QFutureWatcher<QImage>::finished, this, &CubeEffect::slotCubeCapLoaded);
             watcher->setFuture(QtConcurrent::run(this, &CubeEffect::loadCubeCap, capPath));
         }
         QString wallpaperPath = CubeConfig::wallpaper().toLocalFile();
         if (!wallpaper && !wallpaperPath.isEmpty()) {
             QFutureWatcher<QImage> *watcher = new QFutureWatcher<QImage>(this);
-            connect(watcher, SIGNAL(finished()), SLOT(slotWallPaperLoaded()));
+            connect(watcher, &QFutureWatcher<QImage>::finished, this, &CubeEffect::slotWallPaperLoaded);
             watcher->setFuture(QtConcurrent::run(this, &CubeEffect::loadWallPaper, wallpaperPath));
         }
         activated = true;

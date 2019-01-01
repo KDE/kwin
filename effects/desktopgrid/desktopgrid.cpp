@@ -79,13 +79,13 @@ DesktopGridEffect::DesktopGridEffect()
     shortcut = KGlobalAccel::self()->shortcut(a);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F8, a);
     effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, a);
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
+    connect(a, &QAction::triggered, this, &DesktopGridEffect::toggle);
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &DesktopGridEffect::globalShortcutChanged);
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(numberDesktopsChanged(uint)), this, SLOT(slotNumberDesktopsChanged(uint)));
-    connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(KWin::EffectWindow*,QRect)));
+    connect(effects, &EffectsHandler::windowAdded, this, &DesktopGridEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowClosed, this, &DesktopGridEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::windowDeleted, this, &DesktopGridEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::numberDesktopsChanged, this, &DesktopGridEffect::slotNumberDesktopsChanged);
+    connect(effects, &EffectsHandler::windowGeometryShapeChanged, this, &DesktopGridEffect::slotWindowGeometryShapeChanged);
     connect(effects, &EffectsHandler::numberScreensChanged, this, &DesktopGridEffect::setup);
 
     // Load all other configuration details
@@ -1128,8 +1128,8 @@ void DesktopGridEffect::setup()
             view = new DesktopButtonsView();
             m_desktopButtonsViews.append(view);
             it = m_desktopButtonsViews.end(); // changed through insert!
-            connect(view, SIGNAL(addDesktop()), SLOT(slotAddDesktop()));
-            connect(view, SIGNAL(removeDesktop()), SLOT(slotRemoveDesktop()));
+            connect(view, &DesktopButtonsView::addDesktop, this, &DesktopGridEffect::slotAddDesktop);
+            connect(view, &DesktopButtonsView::removeDesktop, this, &DesktopGridEffect::slotRemoveDesktop);
         } else {
             view = *it;
             ++it;

@@ -29,10 +29,14 @@ HighlightWindowEffect::HighlightWindowEffect()
     , m_monitorWindow(NULL)
 {
     m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
+    connect(effects, &EffectsHandler::windowAdded, this, &HighlightWindowEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowClosed, this, &HighlightWindowEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::windowDeleted, this, &HighlightWindowEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::propertyNotify, this,
+        [this](EffectWindow *w, long atom) {
+            slotPropertyNotify(w, atom, nullptr);
+        }
+    );
     connect(effects, &EffectsHandler::xcbConnectionChanged, this,
         [this] {
             m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);

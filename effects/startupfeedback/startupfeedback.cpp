@@ -90,11 +90,10 @@ StartupFeedbackEffect::StartupFeedbackEffect()
         m_selection = new KSelectionOwner("_KDE_STARTUP_FEEDBACK", xcbConnection(), x11RootWindow(), this);
         m_selection->claim(true);
     }
-    connect(m_startupInfo, SIGNAL(gotNewStartup(KStartupInfoId,KStartupInfoData)), SLOT(gotNewStartup(KStartupInfoId,KStartupInfoData)));
-    connect(m_startupInfo, SIGNAL(gotRemoveStartup(KStartupInfoId,KStartupInfoData)), SLOT(gotRemoveStartup(KStartupInfoId,KStartupInfoData)));
-    connect(m_startupInfo, SIGNAL(gotStartupChange(KStartupInfoId,KStartupInfoData)), SLOT(gotStartupChange(KStartupInfoId,KStartupInfoData)));
-    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
-            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+    connect(m_startupInfo, &KStartupInfo::gotNewStartup, this, &StartupFeedbackEffect::gotNewStartup);
+    connect(m_startupInfo, &KStartupInfo::gotRemoveStartup, this, &StartupFeedbackEffect::gotRemoveStartup);
+    connect(m_startupInfo, &KStartupInfo::gotStartupChange, this, &StartupFeedbackEffect::gotStartupChange);
+    connect(effects, &EffectsHandler::mouseChanged, this, &StartupFeedbackEffect::slotMouseChanged);
     reconfigure(ReconfigureAll);
 }
 

@@ -39,10 +39,10 @@ ScreenEdgeEffect::ScreenEdgeEffect()
     : Effect()
     , m_cleanupTimer(new QTimer(this))
 {
-    connect(effects, SIGNAL(screenEdgeApproaching(ElectricBorder,qreal,QRect)), SLOT(edgeApproaching(ElectricBorder,qreal,QRect)));
+    connect(effects, &EffectsHandler::screenEdgeApproaching, this, &ScreenEdgeEffect::edgeApproaching);
     m_cleanupTimer->setInterval(5000);
     m_cleanupTimer->setSingleShot(true);
-    connect(m_cleanupTimer, SIGNAL(timeout()), SLOT(cleanup()));
+    connect(m_cleanupTimer, &QTimer::timeout, this, &ScreenEdgeEffect::cleanup);
     connect(effects, &EffectsHandler::screenLockingChanged, this,
         [this] (bool locked) {
             if (locked) {

@@ -54,10 +54,10 @@ ContrastEffect::ContrastEffect()
         net_wm_contrast_region = 0;
     }
 
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
-    connect(effects, SIGNAL(screenGeometryChanged(QSize)), this, SLOT(slotScreenGeometryChanged()));
+    connect(effects, &EffectsHandler::windowAdded, this, &ContrastEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowDeleted, this, &ContrastEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::propertyNotify, this, &ContrastEffect::slotPropertyNotify);
+    connect(effects, &EffectsHandler::screenGeometryChanged, this, &ContrastEffect::slotScreenGeometryChanged);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this,
         [this] {
             if (shader && shader->isValid()) {

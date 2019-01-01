@@ -80,7 +80,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     KGlobalAccel::self()->setShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
     shortcut = KGlobalAccel::self()->shortcut(exposeAction);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F9, exposeAction);
-    connect(exposeAction, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
+    connect(exposeAction, &QAction::triggered, this, &PresentWindowsEffect::toggleActive);
     QAction* exposeAllAction = m_exposeAllAction;
     exposeAllAction->setObjectName(QStringLiteral("ExposeAll"));
     exposeAllAction->setText(i18n("Toggle Present Windows (All desktops)"));
@@ -89,22 +89,22 @@ PresentWindowsEffect::PresentWindowsEffect()
     shortcutAll = KGlobalAccel::self()->shortcut(exposeAllAction);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F10, exposeAllAction);
     effects->registerTouchpadSwipeShortcut(SwipeDirection::Down, exposeAllAction);
-    connect(exposeAllAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
+    connect(exposeAllAction, &QAction::triggered, this, &PresentWindowsEffect::toggleActiveAllDesktops);
     QAction* exposeClassAction = m_exposeClassAction;
     exposeClassAction->setObjectName(QStringLiteral("ExposeClass"));
     exposeClassAction->setText(i18n("Toggle Present Windows (Window class)"));
     KGlobalAccel::self()->setDefaultShortcut(exposeClassAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F7);
     KGlobalAccel::self()->setShortcut(exposeClassAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F7);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F7, exposeClassAction);
-    connect(exposeClassAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveClass()));
+    connect(exposeClassAction, &QAction::triggered, this, &PresentWindowsEffect::toggleActiveClass);
     shortcutClass = KGlobalAccel::self()->shortcut(exposeClassAction);
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &PresentWindowsEffect::globalShortcutChanged);
     reconfigure(ReconfigureAll);
-    connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(KWin::EffectWindow*,QRect)));
-    connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
+    connect(effects, &EffectsHandler::windowAdded, this, &PresentWindowsEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowClosed, this, &PresentWindowsEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::windowDeleted, this, &PresentWindowsEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::windowGeometryShapeChanged, this, &PresentWindowsEffect::slotWindowGeometryShapeChanged);
+    connect(effects, &EffectsHandler::propertyNotify, this, &PresentWindowsEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::numberScreensChanged, this,
         [this] {
             if (isActive())
