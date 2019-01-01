@@ -59,6 +59,7 @@ class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
 class OutputManagementInterface;
 class OutputConfigurationInterface;
+class XdgDecorationManagerInterface;
 class XdgShellInterface;
 class XdgForeignInterface;
 class XdgOutputManagerInterface;
@@ -246,6 +247,7 @@ private:
     KWayland::Server::ServerSideDecorationPaletteManagerInterface *m_paletteManager = nullptr;
     KWayland::Server::IdleInterface *m_idle = nullptr;
     KWayland::Server::XdgOutputManagerInterface *m_xdgOutputManager = nullptr;
+    KWayland::Server::XdgDecorationManagerInterface *m_xdgDecorationManager = nullptr;
     struct {
         KWayland::Server::ClientConnection *client = nullptr;
         QMetaObject::Connection destroyConnection;

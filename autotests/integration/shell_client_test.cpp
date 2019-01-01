@@ -36,12 +36,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
+#include <KWayland/Client/xdgdecoration.h>
 #include <KWayland/Client/appmenu.h>
 
 #include <KWayland/Server/clientconnection.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/shell_interface.h>
-
+#include <KWayland/Server/xdgdecoration_interface.h>
 
 // system
 #include <sys/types.h>
@@ -96,6 +97,8 @@ private Q_SLOTS:
     void testSendClientWithTransientToDesktop();
     void testMinimizeWindowWithTransients_data();
     void testMinimizeWindowWithTransients();
+    void testXdgDecoration_data();
+    void testXdgDecoration();
 };
 
 void TestShellClient::initTestCase()
@@ -122,6 +125,7 @@ void TestShellClient::initTestCase()
 void TestShellClient::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration |
+                                         Test::AdditionalWaylandInterface::XdgDecoration |
                                          Test::AdditionalWaylandInterface::AppMenu));
 
     screens()->setCurrent(0);
@@ -1194,6 +1198,45 @@ void TestShellClient::testMinimizeWindowWithTransients()
     c->unminimize();
     QVERIFY(!c->isMinimized());
     QVERIFY(!transient->isMinimized());
+}
+
+void TestShellClient::testXdgDecoration_data()
+{
+    QTest::addColumn<KWayland::Client::XdgDecoration::Mode>("requestedMode");
+    QTest::addColumn<KWayland::Client::XdgDecoration::Mode>("expectedMode");
+
+    QTest::newRow("client side requested") << XdgDecoration::Mode::ClientSide << XdgDecoration::Mode::ClientSide;
+    QTest::newRow("server side requested") << XdgDecoration::Mode::ServerSide << XdgDecoration::Mode::ServerSide;
+}
+
+void TestShellClient::testXdgDecoration()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<XdgDecoration> deco(Test::xdgDecorationManager()->getToplevelDecoration(shellSurface.data()));
+
+    QSignalSpy decorationConfiguredSpy(deco.data(), &XdgDecoration::modeChanged);
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+
+    QFETCH(KWayland::Client::XdgDecoration::Mode, requestedMode);
+    QFETCH(KWayland::Client::XdgDecoration::Mode, expectedMode);
+
+    //request a mode
+    deco->setMode(requestedMode);
+
+    //kwin will send a configure
+    decorationConfiguredSpy.wait();
+    configureRequestedSpy.wait();
+
+    QCOMPARE(decorationConfiguredSpy.count(), 1);
+    QCOMPARE(decorationConfiguredSpy.first()[0].value<KWayland::Client::XdgDecoration::Mode>(), expectedMode);
+    QVERIFY(configureRequestedSpy.count() > 0);
+
+    shellSurface->ackConfigure(configureRequestedSpy.last()[2].toInt());
+
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QCOMPARE(c->userCanSetNoBorder(), expectedMode == XdgDecoration::Mode::ServerSide);
+    QCOMPARE(c->isDecorated(), expectedMode == XdgDecoration::Mode::ServerSide);
 }
 
 WAYLANDTEST_MAIN(TestShellClient)

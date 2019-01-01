@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/xdgshell.h>
+#include <KWayland/Client/xdgdecoration.h>
 #include <KWayland/Server/display.h>
 
 //screenlocker
@@ -78,6 +79,7 @@ static struct {
     QVector<Output*> outputs;
     IdleInhibitManager *idleInhibit = nullptr;
     AppMenuManager *appMenu = nullptr;
+    XdgDecorationManager *xdgDecoration = nullptr;
 } s_waylandConnection;
 
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
@@ -218,6 +220,12 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::XdgDecoration)) {
+        s_waylandConnection.xdgDecoration = registry->createXdgDecorationManager(registry->interface(Registry::Interface::XdgDecorationUnstableV1).name, registry->interface(Registry::Interface::XdgDecorationUnstableV1).version);
+        if (!s_waylandConnection.xdgDecoration->isValid()) {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -258,6 +266,8 @@ void destroyWaylandConnection()
     s_waylandConnection.registry = nullptr;
     delete s_waylandConnection.appMenu;
     s_waylandConnection.appMenu = nullptr;
+    delete s_waylandConnection.xdgDecoration;
+    s_waylandConnection.xdgDecoration = nullptr;
     if (s_waylandConnection.thread) {
         QSignalSpy spy(s_waylandConnection.connection, &QObject::destroyed);
         s_waylandConnection.connection->deleteLater();
@@ -331,6 +341,12 @@ AppMenuManager* waylandAppMenuManager()
 {
     return s_waylandConnection.appMenu;
 }
+
+XdgDecorationManager *xdgDecorationManager()
+{
+    return s_waylandConnection.xdgDecoration;
+}
+
 
 bool waitForWaylandPointer()
 {

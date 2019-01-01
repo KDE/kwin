@@ -48,6 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
 #include <KWayland/Server/appmenu_interface.h>
 #include <KWayland/Server/server_decoration_palette_interface.h>
+#include <KWayland/Server/xdgdecoration_interface.h>
 
 #include <KDesktopFile>
 
@@ -579,6 +580,11 @@ void ShellClient::updateDecoration(bool check_workspace_pos, bool force)
     if (m_serverDecoration && isDecorated()) {
         m_serverDecoration->setMode(KWayland::Server::ServerSideDecorationManagerInterface::Mode::Server);
     }
+    if (m_xdgDecoration) {
+        auto mode = isDecorated() ? XdgDecorationInterface::Mode::ServerSide: XdgDecorationInterface::Mode::ClientSide;
+        m_xdgDecoration->configure(mode);
+        m_xdgShellSurface->configure(xdgSurfaceStates(), m_requestedClientSize);
+    }
     getShadow();
     if (check_workspace_pos)
         checkWorkspacePosition(oldgeom, -2, oldClientGeom);
@@ -932,6 +938,9 @@ bool ShellClient::noBorder() const
             return m_userNoBorder || isFullScreen();
         }
     }
+    if (m_xdgDecoration && m_xdgDecoration->requestedMode() != XdgDecorationInterface::Mode::ClientSide) {
+        return m_userNoBorder || isFullScreen();
+    }
     return true;
 }
 
@@ -1054,6 +1063,9 @@ bool ShellClient::userCanSetFullScreen() const
 bool ShellClient::userCanSetNoBorder() const
 {
     if (m_serverDecoration && m_serverDecoration->mode() == ServerSideDecorationManagerInterface::Mode::Server) {
+        return !isFullScreen() && !isShade() && !tabGroup();
+    }
+    if (m_xdgDecoration && m_xdgDecoration->requestedMode() != XdgDecorationInterface::Mode::ClientSide) {
         return !isFullScreen() && !isShade() && !tabGroup();
     }
     if (m_internal) {
@@ -1194,7 +1206,7 @@ void ShellClient::requestGeometry(const QRect &rect)
     configureRequest.maximizeMode = m_requestedMaximizeMode;
 
     const QSize size = rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
-    m_requestedClientSize = QSize(0, 0);
+    m_requestedClientSize = size;
 
     if (m_shellSurface) {
         m_shellSurface->requestSize(size);
@@ -1274,7 +1286,7 @@ void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
 void ShellClient::unmap()
 {
     m_unmapped = true;
-    m_requestedClientSize = QSize();
+    m_requestedClientSize = QSize(0, 0);
     destroyWindowManagementInterface();
     if (Workspace::self()) {
         addWorkspaceRepaint(visibleRect());
@@ -1804,6 +1816,29 @@ void ShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecora
             }
         }
     );
+}
+
+void ShellClient::installXdgDecoration(XdgDecorationInterface *deco)
+{
+    Q_ASSERT(m_xdgShellSurface);
+
+    m_xdgDecoration = deco;
+
+    connect(m_xdgDecoration, &QObject::destroyed, this,
+        [this] {
+            m_xdgDecoration = nullptr;
+            if (m_closing || !Workspace::self()) {
+                return;
+            }
+            updateDecoration(true);
+        }
+    );
+
+    connect(m_xdgDecoration, &XdgDecorationInterface::modeRequested, this,
+        [this] () {
+        //force is true as we must send a new configure response
+        updateDecoration(false, true);
+    });
 }
 
 bool ShellClient::shouldExposeToWindowManagement()

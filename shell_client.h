@@ -34,6 +34,7 @@ class ServerSideDecorationPaletteInterface;
 class AppMenuInterface;
 class PlasmaShellSurfaceInterface;
 class QtExtendedSurfaceInterface;
+class XdgDecorationInterface;
 }
 }
 
@@ -142,6 +143,7 @@ public:
     void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
     void installAppMenu(KWayland::Server::AppMenuInterface *appmenu);
     void installPalette(KWayland::Server::ServerSideDecorationPaletteInterface *palette);
+    void installXdgDecoration(KWayland::Server::XdgDecorationInterface *decoration);
 
     bool isInitialPositionSet() const override;
 
@@ -257,6 +259,7 @@ private:
     QPointer<KWayland::Server::AppMenuInterface> m_appMenuInterface;
     QPointer<KWayland::Server::ServerSideDecorationPaletteInterface> m_paletteInterface;
     KWayland::Server::ServerSideDecorationInterface *m_serverDecoration = nullptr;
+    KWayland::Server::XdgDecorationInterface *m_xdgDecoration = nullptr;
     bool m_userNoBorder = false;
     bool m_fullScreen = false;
     bool m_transient = false;

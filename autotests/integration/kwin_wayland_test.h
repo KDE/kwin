@@ -46,6 +46,7 @@ class Shell;
 class ShellSurface;
 class ShmPool;
 class Surface;
+class XdgDecorationManager;
 }
 }
 
@@ -89,7 +90,8 @@ enum class AdditionalWaylandInterface {
     PointerConstraints = 1 << 4,
     IdleInhibition = 1 << 5,
     AppMenu = 1 << 6,
-    ShadowManager = 1 << 7
+    ShadowManager = 1 << 7,
+    XdgDecoration = 1 << 8,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -120,7 +122,7 @@ KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
 KWayland::Client::PointerConstraints *waylandPointerConstraints();
 KWayland::Client::IdleInhibitManager *waylandIdleInhibitManager();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
-
+KWayland::Client::XdgDecorationManager *xdgDecorationManager();
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();

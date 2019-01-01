@@ -57,6 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/outputmanagement_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
+#include <KWayland/Server/xdgdecoration_interface.h>
 #include <KWayland/Server/xdgshell_interface.h>
 #include <KWayland/Server/xdgforeign_interface.h>
 #include <KWayland/Server/xdgoutput_interface.h>
@@ -234,6 +235,14 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_xdgShell->create();
     connect(m_xdgShell, &XdgShellInterface::surfaceCreated, this, &WaylandServer::createSurface<XdgShellSurfaceInterface>);
     connect(m_xdgShell, &XdgShellInterface::xdgPopupCreated, this, &WaylandServer::createSurface<XdgShellPopupInterface>);
+
+    m_xdgDecorationManager = m_display->createXdgDecorationManager(m_xdgShell, m_display);
+    m_xdgDecorationManager->create();
+    connect(m_xdgDecorationManager, &XdgDecorationManagerInterface::xdgDecorationInterfaceCreated, this,  [this] (XdgDecorationInterface *deco) {
+        if (ShellClient *client = findClient(deco->surface()->surface())) {
+            client->installXdgDecoration(deco);
+        }
+    });
 
     m_display->createShm();
     m_seat = m_display->createSeat(m_display);
