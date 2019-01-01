@@ -262,7 +262,7 @@ void Toplevel::setReadyForPainting()
         if (compositing()) {
             addRepaintFull();
             emit windowShown(this);
-            if (Client *cl = dynamic_cast<Client*>(this)) {
+            if (auto *cl = dynamic_cast<AbstractClient*>(this)) {
                 if (cl->tabGroup() && cl->tabGroup()->current() == cl)
                     cl->tabGroup()->setCurrent(cl, true);
             }
