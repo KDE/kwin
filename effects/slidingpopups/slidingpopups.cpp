@@ -123,7 +123,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
     const AnimationData &animData = m_animationsData[w];
     const int slideLength = (animData.slideLength > 0) ? animData.slideLength : m_slideLength;
 
-    const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), w->desktop());
+    const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
     int splitPoint = 0;
     const QRect geo = w->expandedGeometry();
     const qreal t = (*animationIt).timeLine.value();
