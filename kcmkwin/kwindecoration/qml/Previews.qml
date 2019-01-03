@@ -28,16 +28,17 @@ ScrollView {
     GridView {
         id: gridView
         objectName: "listView"
+        signal userChangedSelection()
         model: decorationsModel
         cellWidth: 20 * units.gridUnit
         cellHeight: cellWidth / 1.6
+        highlightFollowsCurrentItem: true
         onContentHeightChanged: {
-            if (gridView.currentIndex == -1) {
-                gridView.currentIndex = savedIndex;
+            if (gridView.currentIndex == -1 && initialThemeIndex != -1) {
+                gridView.currentIndex = initialThemeIndex
             }
-            gridView.positionViewAtIndex(gridView.currentIndex, GridView.Visible);
+            gridView.positionViewAtIndex(gridView.currentIndex, GridView.Visible)
         }
-
         Rectangle {
             z: -1
             anchors.fill: parent
@@ -63,11 +64,17 @@ ScrollView {
                 bridge: bridgeItem.bridge
                 borderSizesIndex: gridView.borderSizesIndex
             }
+            Component.onCompleted: {
+                if (gridView.currentIndex == -1 && initialThemeIndex != -1) {
+                    gridView.currentIndex = initialThemeIndex
+                }
+            }
             MouseArea {
                 hoverEnabled: false
                 anchors.fill: parent
                 onClicked: {
-                    gridView.currentIndex = index;
+                    gridView.currentIndex = index
+                    gridView.userChangedSelection()
                 }
             }
             ColumnLayout {
@@ -107,7 +114,8 @@ ScrollView {
                         hoverEnabled: false
                         anchors.fill: parent
                         onClicked: {
-                            gridView.currentIndex = index;
+                            gridView.currentIndex = index
+                            gridView.userChangedSelection()
                         }
                     }
                     Layout.fillWidth: true
@@ -138,6 +146,7 @@ ScrollView {
                             text: i18n("Configure %1...", decorationPreviews.themeName)
                             onClicked: {
                                 gridView.currentIndex = index
+                                gridView.userChangedSelection()
                                 bridgeItem.bridge.configure()
                             }
                         }

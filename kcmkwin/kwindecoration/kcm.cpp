@@ -106,6 +106,7 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     m_quickView->rootContext()->setContextProperty("leftButtons", m_leftButtons);
     m_quickView->rootContext()->setContextProperty("rightButtons", m_rightButtons);
     m_quickView->rootContext()->setContextProperty("availableButtons", m_availableButtons);
+    m_quickView->rootContext()->setContextProperty("initialThemeIndex", -1);
 
     m_quickView->rootContext()->setContextProperty("titleFont", QFontDatabase::systemFont(QFontDatabase::TitleFont));
     m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
@@ -113,7 +114,7 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     if (m_quickView->status() == QQuickView::Ready) {
         auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView");
         if (listView) {
-            connect(listView, SIGNAL(currentIndexChanged()), this, SLOT(changed()));
+            connect(listView, SIGNAL(userChangedSelection()), this, SLOT(changed()));
         }
     }
 
@@ -313,7 +314,7 @@ void ConfigurationModule::load()
     m_ui->borderSizesCombo->setCurrentIndex(m_ui->borderSizesCombo->findData(border));
 
     int themeIndex = m_proxyModel->mapFromSource(m_model->findDecoration(plugin, theme)).row();
-    m_quickView->rootContext()->setContextProperty("savedIndex", themeIndex);
+    m_quickView->rootContext()->setContextProperty("initialThemeIndex", themeIndex);
 
     // buttons
     const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType >{
