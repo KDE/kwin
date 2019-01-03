@@ -72,7 +72,7 @@ Rectangle {
             QQC2.TextField {
                 // TODO: needs clear button, missing in Qt
                 id: searchField
-                placeholderText: i18n("Search")
+                placeholderText: i18n("Search...")
                 Layout.fillWidth: true
                 focus: true
             }
