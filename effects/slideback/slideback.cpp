@@ -35,12 +35,6 @@ SlideBackEffect::SlideBackEffect()
     connect(effects, SIGNAL(tabBoxClosed()), SLOT(slotTabBoxClosed()));
 }
 
-static inline bool windowsShareDesktop(EffectWindow *w1, EffectWindow *w2)
-{
-    return w1->isOnAllDesktops() || w2->isOnAllDesktops() || w1->desktop() == w2->desktop();
-}
-
-
 void SlideBackEffect::slotStackingOrderChanged()
 {
     if (effects->activeFullScreenEffect() || m_tabboxActive) {
@@ -79,7 +73,7 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
                 currentFound = true;
             }
         } else {
-            if (isWindowUsable(tmp) && windowsShareDesktop(tmp, w)) {
+            if (isWindowUsable(tmp) && tmp->isOnCurrentDesktop() && w->isOnCurrentDesktop()) {
                 // Do we have to move it?
                 if (intersects(w, tmp->geometry())) {
                     QRect slideRect;
