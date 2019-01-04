@@ -146,6 +146,7 @@ void X11StandalonePlatform::createPlatformCursor(QObject *parent)
         m_xinputIntegration->setCursor(c);
         // we know we have xkb already
         auto xkb = input()->keyboard()->xkb();
+        xkb->setConfig(kwinApp()->kxkbConfig());
         xkb->reconfigure();
     }
 #endif
