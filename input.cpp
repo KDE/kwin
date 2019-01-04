@@ -1508,7 +1508,7 @@ public:
         if (!seat->isDragTouch()) {
             return false;
         }
-        if (static_cast<quint32>(m_touchId) == id) {
+        if (m_touchId != id) {
             return true;
         }
         seat->setTimestamp(time);
@@ -1529,7 +1529,7 @@ public:
             // associated with by implementing a key-value getter in KWayland.
             m_touchId = id;
         }
-        if (static_cast<quint32>(m_touchId) == id) {
+        if (m_touchId != id) {
             return true;
         }
         seat->setTimestamp(time);
@@ -1565,7 +1565,7 @@ public:
             seat->touchUp(kwaylandId);
             input()->touch()->removeId(id);
         }
-        if (static_cast<quint32>(m_touchId) == id) {
+        if (m_touchId == id) {
             m_touchId = -1;
         }
         return true;
