@@ -63,6 +63,7 @@ private Q_SLOTS:
     void testSkipCloseAnimation();
     void testModifierClickUnrestrictedMove();
     void testModifierScroll();
+    void testPopup();
 };
 
 class HelperWindow : public QRasterWindow
@@ -669,6 +670,21 @@ void InternalWindowTest::testModifierScroll()
     kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
     QCOMPARE(internalClient->opacity(), 0.5);
     kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+}
+
+void InternalWindowTest::testPopup()
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    win.setFlags(win.flags() | Qt::Popup);
+    win.show();
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QCOMPARE(internalClient->isPopupWindow(), true);
 }
 
 }
