@@ -11,7 +11,8 @@ The following additional software needs to be installed for running the test sui
 * breeze window decoration
 
 # Preparing a run of the test suite
-Please load the kernel module "vgem". This is required to provide a virtual OpenGL device.
+In case your system does not support the EGL extension EGL_MESA_platform_surfaceless,
+please load the kernel module "vgem". This is required to provide a virtual OpenGL device.
 
     sudo modprobe vgem
 

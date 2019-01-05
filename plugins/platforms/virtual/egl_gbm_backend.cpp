@@ -99,6 +99,13 @@ bool EglGbmBackend::initializeEgl()
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
     if (display == EGL_NO_DISPLAY) {
+        // first try surfaceless
+        if (hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_surfaceless"))) {
+            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, nullptr);
+        }
+    }
+    if (display == EGL_NO_DISPLAY) {
+        qCDebug(KWIN_VIRTUAL) << "Failed to create surfaceless platform, trying with vgem device";
         const bool hasMesaGBM = hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"));
         const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
         const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
