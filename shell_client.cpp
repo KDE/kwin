@@ -1982,8 +1982,8 @@ bool ShellClient::isPopupWindow() const
     if (Toplevel::isPopupWindow()) {
         return true;
     }
-    if (isInternal() && m_internalWindow) {
-        return m_internalWindow->flags().testFlag(Qt::Popup);
+    if (isInternal()) {
+        return m_internalWindowFlags.testFlag(Qt::Popup);
     }
     if (m_shellSurface != nullptr) {
         return m_shellSurface->isPopup();
