@@ -135,10 +135,8 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
     QVERIFY(client);
     QVERIFY(effect->isActive());
 
-    // None of effects lasts longer than 1000ms, so after that duration the effect
-    // should not be active anymore, i.e. the animation is complete.
-    QTest::qWait(1000);
-    QVERIFY(!effect->isActive());
+    // Eventually, the animation will be complete.
+    QTRY_VERIFY(!effect->isActive());
 
     // Close the test client, the effect should start animating the disappearing
     // of the client.
@@ -149,10 +147,8 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
     QVERIFY(windowClosedSpy.wait());
     QVERIFY(effect->isActive());
 
-    // None of effects lasts longer than 1000ms, so after that duration the effect
-    // should not be active anymore, i.e. the animation is complete.
-    QTest::qWait(1000);
-    QVERIFY(!effect->isActive());
+    // Eventually, the animation will be complete.
+    QTRY_VERIFY(!effect->isActive());
 }
 
 void ToplevelOpenCloseAnimationTest::testDontAnimatePopups_data()
