@@ -156,6 +156,10 @@ Compositor::~Compositor()
 
 void Compositor::setup()
 {
+    if (kwinApp()->isTerminating()) {
+        // don't setup while KWin is terminating. An event to restart might be lingering in the event queue due to graphics reset
+        return;
+    }
     if (hasScene())
         return;
     if (m_suspended) {

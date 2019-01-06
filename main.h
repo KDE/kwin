@@ -188,6 +188,10 @@ public:
         return m_platform;
     }
 
+    bool isTerminating() const {
+        return m_terminating;
+    }
+
     static void setupMalloc();
     static void setupLocalizedString();
 
@@ -231,6 +235,10 @@ protected:
     }
     void destroyAtoms();
 
+    void setTerminating() {
+        m_terminating = true;
+    }
+
 protected:
     QString m_originalSessionKey;
     static int crashes;
@@ -252,6 +260,7 @@ private:
     bool m_useKActivities = true;
 #endif
     Platform *m_platform = nullptr;
+    bool m_terminating = false;
 };
 
 inline static Application *kwinApp()

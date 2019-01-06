@@ -76,6 +76,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
 
 WaylandTestApplication::~WaylandTestApplication()
 {
+    setTerminating();
     kwinApp()->platform()->setOutputsEnabled(false);
     // need to unload all effects prior to destroying X connection as they might do X calls
     // also before destroy Workspace, as effects might call into Workspace

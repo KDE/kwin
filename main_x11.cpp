@@ -187,6 +187,7 @@ ApplicationX11::ApplicationX11(int &argc, char **argv)
 
 ApplicationX11::~ApplicationX11()
 {
+    setTerminating();
     destroyCompositor();
     destroyWorkspace();
     if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE)   // If there was no --replace (no new WM)
