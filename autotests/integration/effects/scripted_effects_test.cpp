@@ -170,6 +170,10 @@ void ScriptedEffectsTest::initTestCase()
     QVERIFY(workspaceCreatedSpy.wait());
     QVERIFY(Compositor::self());
 
+    auto scene = KWin::Compositor::self()->scene();
+    QVERIFY(scene);
+    QCOMPARE(scene->compositingType(), KWin::OpenGL2Compositing);
+
     KWin::VirtualDesktopManager::self()->setCount(2);
 }
 

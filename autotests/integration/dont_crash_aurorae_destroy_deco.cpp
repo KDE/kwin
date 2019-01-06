@@ -20,11 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "platform.h"
 #include "client.h"
+#include "composite.h"
 #include "cursor.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "scene.h"
 #include "shell_client.h"
 #include <kwineffects.h>
 
@@ -51,9 +53,6 @@ private Q_SLOTS:
 
 void DontCrashAuroraeDestroyDecoTest::initTestCase()
 {
-    if (!QFile::exists(QStringLiteral("/dev/dri/card0"))) {
-        QSKIP("Needs a dri device");
-    }
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
@@ -77,6 +76,10 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
     setenv("QT_QPA_PLATFORM", "wayland", true);
     waylandServer()->initWorkspace();
+
+    auto scene = KWin::Compositor::self()->scene();
+    QVERIFY(scene);
+    QCOMPARE(scene->compositingType(), KWin::OpenGL2Compositing);
 }
 
 void DontCrashAuroraeDestroyDecoTest::init()

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effectloader.h"
 #include "cursor.h"
 #include "platform.h"
+#include "scene.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -86,13 +87,15 @@ void SlidingPopupsTest::initTestCase()
     config->sync();
     kwinApp()->setConfig(config);
 
-    if (QFile::exists(QStringLiteral("/dev/dri/card0"))) {
-        qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
-    }
+    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QVERIFY(Compositor::self());
+
+    auto scene = KWin::Compositor::self()->scene();
+    QVERIFY(scene);
+    QCOMPARE(scene->compositingType(), KWin::OpenGL2Compositing);
 }
 
 void SlidingPopupsTest::init()

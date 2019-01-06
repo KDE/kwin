@@ -21,10 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
+#include "composite.h"
 #include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
+#include "scene.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -81,6 +83,10 @@ void ToplevelOpenCloseAnimationTest::initTestCase()
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     waylandServer()->initWorkspace();
+
+    auto scene = KWin::Compositor::self()->scene();
+    QVERIFY(scene);
+    QCOMPARE(scene->compositingType(), KWin::OpenGL2Compositing);
 }
 
 void ToplevelOpenCloseAnimationTest::init()

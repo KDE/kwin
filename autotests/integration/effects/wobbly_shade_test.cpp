@@ -82,6 +82,10 @@ void WobblyWindowsShadeTest::initTestCase()
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
     QVERIFY(Compositor::self());
+
+    auto scene = KWin::Compositor::self()->scene();
+    QVERIFY(scene);
+    QCOMPARE(scene->compositingType(), KWin::OpenGL2Compositing);
 }
 
 void WobblyWindowsShadeTest::init()

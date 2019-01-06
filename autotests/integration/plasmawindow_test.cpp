@@ -302,9 +302,6 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
 
 void PlasmaWindowTest::testLockScreenNoPlasmaWindow()
 {
-    if (!QFile::exists(QStringLiteral("/dev/dri/card0"))) {
-        QSKIP("Needs a dri device");
-    }
     // this test verifies that lock screen windows are not exposed to PlasmaWindow
     QSignalSpy plasmaWindowCreatedSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
     QVERIFY(plasmaWindowCreatedSpy.isValid());

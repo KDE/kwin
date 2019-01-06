@@ -113,9 +113,6 @@ void SceneOpenGLShadowTest::initTestCase()
 {
     // Copied from generic_scene_opengl_test.cpp
 
-    if (!QFile::exists(QStringLiteral("/dev/dri/card0"))) {
-        QSKIP("Needs a dri device");
-    }
     qRegisterMetaType<KWin::ShellClient*>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
@@ -153,6 +150,10 @@ void SceneOpenGLShadowTest::initTestCase()
     group.writeEntry("library", "org.kde.test.fakedecowithshadows");
     group.sync();
     Workspace::self()->slotReconfigure();
+
+    auto scene = KWin::Compositor::self()->scene();
+    QVERIFY(scene);
+    QCOMPARE(scene->compositingType(), KWin::OpenGL2Compositing);
 
 }
 
