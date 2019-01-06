@@ -19,34 +19,14 @@
 **************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Controls 1.0
-import QtQuick.Controls 2.0 as QQC2
+import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
 Rectangle {
     signal changed
-    implicitWidth: col.implicitWidth
-    implicitHeight: col.implicitHeight
-
-    Component {
-        id: sectionHeading
-        Rectangle {
-            width: parent.width
-            implicitHeight: sectionText.implicitHeight + 2 * col.spacing
-            color: searchModel.backgroundNormalColor
-
-            QQC2.Label {
-                id: sectionText
-                x: col.spacing
-                y: col.spacing
-                text: section
-                font.weight: Font.Bold
-                color: searchModel.sectionColor
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-        }
-    }
+    implicitHeight: 500
+    implicitWidth: 400
 
     EffectConfig {
         id: effectConfig
@@ -59,17 +39,17 @@ Rectangle {
         id: col
         anchors.fill: parent
 
-        QQC2.Label {
+        Label {
             id: hint
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignLeft
+
             text: i18n("Hint: To find out or configure how to activate an effect, look at the effect's settings.")
-            anchors {
-                top: parent.top
-                left: parent.left
-            }
+            elide: Text.ElideRight
         }
 
         RowLayout {
-            QQC2.TextField {
+            TextField {
                 // TODO: needs clear button, missing in Qt
                 id: searchField
                 placeholderText: i18n("Search...")
@@ -78,45 +58,43 @@ Rectangle {
             }
 
             Button {
-                iconName: "configure"
-                tooltip: i18n("Configure filter")
-                menu: Menu {
-                    MenuItem {
-                        text: i18n("Exclude Desktop Effects not supported by the Compositor")
-                        checkable: true
-                        checked: searchModel.filterOutUnsupported
-                        onTriggered: {
-                            searchModel.filterOutUnsupported = !searchModel.filterOutUnsupported;
-                        }
+                id: configureButton
+                icon.name: "configure"
+                ToolTip.visible: hovered
+                ToolTip.text: i18n("Configure filter")
+                onClicked: menu.opened ?  menu.close() : menu.open()
+            }
+            Menu {
+                id: menu
+                y: configureButton.height
+                x: parent.width - width
+                MenuItem {
+                    text: i18n("Exclude Desktop Effects not supported by the Compositor")
+                    checkable: true
+                    checked: searchModel.filterOutUnsupported
+                    onToggled: {
+                        searchModel.filterOutUnsupported = !searchModel.filterOutUnsupported;
                     }
-                    MenuItem {
-                        text: i18n("Exclude internal Desktop Effects")
-                        checkable: true
-                        checked: searchModel.filterOutInternal
-                        onTriggered: {
-                            searchModel.filterOutInternal = !searchModel.filterOutInternal
-                        }
+                }
+                MenuItem {
+                    text: i18n("Exclude internal Desktop Effects")
+                    checkable: true
+                    checked: searchModel.filterOutInternal
+                    onToggled: {
+                        searchModel.filterOutInternal = !searchModel.filterOutInternal
                     }
                 }
             }
         }
 
-        EffectFilterModel {
-            id: searchModel
-            objectName: "filterModel"
-            filter: searchField.text
-        }
-
         ScrollView {
-            id: scroll
-            frameVisible: true
-            highlightOnFocus: true
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Rectangle {
-                color: effectView.backgroundNormalColor
-                anchors.fill: parent
-            }
+            clip: true
+
+            // Draw a frame around the scrollview
+            Component.onCompleted: background.visible = true;
+
             ListView {
                 function exclusiveGroupForCategory(category) {
                     for (var i = 0; i < effectView.exclusiveGroups.length; ++i) {
@@ -139,7 +117,11 @@ Rectangle {
                 property color backgroundNormalColor: searchModel.backgroundNormalColor
                 property color backgroundAlternateColor: searchModel.backgroundAlternateColor
                 anchors.fill: parent
-                model: searchModel
+                model: EffectFilterModel {
+                    id: searchModel
+                    objectName: "filterModel"
+                    filter: searchField.text
+                }
                 delegate: Effect{
                     id: effectDelegate
                     Connections {
@@ -155,7 +137,22 @@ Rectangle {
                 }
 
                 section.property: "CategoryRole"
-                section.delegate: sectionHeading
+                section.delegate: Rectangle {
+                    width: parent.width
+                    implicitHeight: sectionText.implicitHeight + 2 * col.spacing
+                    color: searchModel.backgroundNormalColor
+
+                    Label {
+                        id: sectionText
+                        anchors.fill: parent
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+
+                        text: section
+                        font.weight: Font.Bold
+                        color: searchModel.sectionColor
+                    }
+                }
                 spacing: col.spacing
                 focus: true
             }
@@ -170,7 +167,7 @@ Rectangle {
             Button {
                 id: ghnsButton
                 text: i18n("Get New Desktop Effects...")
-                iconName: "get-hot-new-stuff"
+                icon.name: "get-hot-new-stuff"
                 onClicked: effectConfig.openGHNS()
             }
         }
@@ -179,4 +176,4 @@ Rectangle {
         target: searchModel
         onDataChanged: changed()
     }
-}//End item
+}//End Rectangle
