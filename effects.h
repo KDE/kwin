@@ -374,6 +374,12 @@ public:
     void disablePainting(int reason) override;
     bool isPaintingEnabled() override;
 
+    void addRepaint(const QRect &r) override;
+    void addRepaint(int x, int y, int w, int h) override;
+    void addRepaintFull() override;
+    void addLayerRepaint(const QRect &r) override;
+    void addLayerRepaint(int x, int y, int w, int h) override;
+
     void refWindow() override;
     void unrefWindow() override;
 
@@ -460,6 +466,10 @@ public:
     EffectWindowList mainWindows() const override;
 
     WindowQuadList buildQuads(bool force = false) const override;
+
+    void minimize() override;
+    void unminimize() override;
+    void closeWindow() override;
 
     void referencePreviousWindowPixmap() override;
     void unreferencePreviousWindowPixmap() override;

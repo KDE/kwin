@@ -1719,6 +1719,31 @@ void EffectWindowImpl::disablePainting(int reason)
     sceneWindow()->disablePainting(reason);
 }
 
+void EffectWindowImpl::addRepaint(const QRect &r)
+{
+    toplevel->addRepaint(r);
+}
+
+void EffectWindowImpl::addRepaint(int x, int y, int w, int h)
+{
+    toplevel->addRepaint(x, y, w, h);
+}
+
+void EffectWindowImpl::addRepaintFull()
+{
+    toplevel->addRepaintFull();
+}
+
+void EffectWindowImpl::addLayerRepaint(const QRect &r)
+{
+    toplevel->addLayerRepaint(r);
+}
+
+void EffectWindowImpl::addLayerRepaint(int x, int y, int w, int h)
+{
+    toplevel->addLayerRepaint(x, y, w, h);
+}
+
 const EffectWindowGroup* EffectWindowImpl::group() const
 {
     if (auto c = qobject_cast<Client *>(toplevel)) {
@@ -2010,6 +2035,27 @@ void EffectWindowImpl::desktopThumbnailDestroyed(QObject *object)
 {
     // we know it is a DesktopThumbnailItem
     m_desktopThumbnails.removeAll(static_cast<DesktopThumbnailItem*>(object));
+}
+
+void EffectWindowImpl::minimize()
+{
+    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+        client->minimize();
+    }
+}
+
+void EffectWindowImpl::unminimize()
+{
+    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+        client->unminimize();
+    }
+}
+
+void EffectWindowImpl::closeWindow()
+{
+    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+        client->closeWindow();
+    }
 }
 
 void EffectWindowImpl::referencePreviousWindowPixmap()

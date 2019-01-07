@@ -40,6 +40,11 @@ public:
     void deleteProperty(long int atom) const override;
     void disablePainting(int reason) override;
     void enablePainting(int reason) override;
+    void addRepaint(const QRect &r) override;
+    void addRepaint(int x, int y, int w, int h) override;
+    void addRepaintFull() override;
+    void addLayerRepaint(const QRect &r) override;
+    void addLayerRepaint(int x, int y, int w, int h) override;
     EffectWindow *findModal() override;
     const EffectWindowGroup *group() const override;
     bool isPaintingEnabled() override;
@@ -49,6 +54,9 @@ public:
     void unrefWindow() override;
     QRegion shape() const override;
     void setData(int role, const QVariant &data) override;
+    void minimize() override;
+    void unminimize() override;
+    void closeWindow() override;
     void referencePreviousWindowPixmap() override {}
     void unreferencePreviousWindowPixmap() override {}
     bool isDeleted() const override {
@@ -279,6 +287,36 @@ void MockEffectWindow::enablePainting(int reason)
     Q_UNUSED(reason)
 }
 
+void MockEffectWindow::addRepaint(const QRect &r)
+{
+    Q_UNUSED(r)
+}
+
+void MockEffectWindow::addRepaint(int x, int y, int w, int h)
+{
+    Q_UNUSED(x)
+    Q_UNUSED(y)
+    Q_UNUSED(w)
+    Q_UNUSED(h)
+}
+
+void MockEffectWindow::addRepaintFull()
+{
+}
+
+void MockEffectWindow::addLayerRepaint(const QRect &r)
+{
+    Q_UNUSED(r)
+}
+
+void MockEffectWindow::addLayerRepaint(int x, int y, int w, int h)
+{
+    Q_UNUSED(x)
+    Q_UNUSED(y)
+    Q_UNUSED(w)
+    Q_UNUSED(h)
+}
+
 EffectWindow *MockEffectWindow::findModal()
 {
     return nullptr;
@@ -315,6 +353,18 @@ void MockEffectWindow::setData(int role, const QVariant &data)
 {
     Q_UNUSED(role)
     Q_UNUSED(data)
+}
+
+void MockEffectWindow::minimize()
+{
+}
+
+void MockEffectWindow::unminimize()
+{
+}
+
+void MockEffectWindow::closeWindow()
+{
 }
 
 QRegion MockEffectWindow::shape() const

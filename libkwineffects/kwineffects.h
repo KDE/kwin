@@ -2063,11 +2063,11 @@ public:
     virtual void enablePainting(int reason) = 0;
     virtual void disablePainting(int reason) = 0;
     virtual bool isPaintingEnabled() = 0;
-    Q_SCRIPTABLE void addRepaint(const QRect& r);
-    Q_SCRIPTABLE void addRepaint(int x, int y, int w, int h);
-    Q_SCRIPTABLE void addRepaintFull();
-    Q_SCRIPTABLE void addLayerRepaint(const QRect& r);
-    Q_SCRIPTABLE void addLayerRepaint(int x, int y, int w, int h);
+    Q_SCRIPTABLE virtual void addRepaint(const QRect &r) = 0;
+    Q_SCRIPTABLE virtual void addRepaint(int x, int y, int w, int h) = 0;
+    Q_SCRIPTABLE virtual void addRepaintFull() = 0;
+    Q_SCRIPTABLE virtual void addLayerRepaint(const QRect &r) = 0;
+    Q_SCRIPTABLE virtual void addLayerRepaint(int x, int y, int w, int h) = 0;
 
     virtual void refWindow() = 0;
     virtual void unrefWindow() = 0;
@@ -2277,9 +2277,9 @@ public:
     virtual WindowQuadList buildQuads(bool force = false) const = 0;
 
     void setMinimized(bool minimize);
-    void minimize();
-    void unminimize();
-    Q_SCRIPTABLE void closeWindow() const;
+    virtual void minimize() = 0;
+    virtual void unminimize() = 0;
+    Q_SCRIPTABLE virtual void closeWindow() = 0;
 
     virtual bool isCurrentTab() const = 0;
 

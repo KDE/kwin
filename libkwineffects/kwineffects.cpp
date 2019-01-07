@@ -803,20 +803,6 @@ bool EffectWindow::isOnAllActivities() const
     return activities().isEmpty();
 }
 
-#define WINDOW_HELPER_SETTER( prototype, propertyname, args, value ) \
-    void EffectWindow::prototype ( args ) \
-    {\
-        const QVariant variant = parent()->property( propertyname ); \
-        if (variant.isValid()) { \
-            parent()->setProperty( propertyname, value ); \
-        } \
-    }
-
-WINDOW_HELPER_SETTER(minimize, "minimized",,true)
-WINDOW_HELPER_SETTER(unminimize, "minimized",,false)
-
-#undef WINDOW_HELPER_SETTER
-
 void EffectWindow::setMinimized(bool min)
 {
     if (min) {
@@ -824,36 +810,6 @@ void EffectWindow::setMinimized(bool min)
     } else {
         unminimize();
     }
-}
-
-void EffectWindow::closeWindow() const
-{
-    QMetaObject::invokeMethod(parent(), "closeWindow");
-}
-
-void EffectWindow::addRepaint(int x, int y, int w, int h)
-{
-    QMetaObject::invokeMethod(parent(), "addRepaint", Q_ARG(int, x), Q_ARG(int, y), Q_ARG(int, w), Q_ARG(int, h));
-}
-
-void EffectWindow::addRepaint(const QRect &r)
-{
-    QMetaObject::invokeMethod(parent(), "addRepaint", Q_ARG(const QRect&, r));
-}
-
-void EffectWindow::addRepaintFull()
-{
-    QMetaObject::invokeMethod(parent(), "addRepaintFull");
-}
-
-void EffectWindow::addLayerRepaint(int x, int y, int w, int h)
-{
-    QMetaObject::invokeMethod(parent(), "addLayerRepaint", Q_ARG(int, x), Q_ARG(int, y), Q_ARG(int, w), Q_ARG(int, h));
-}
-
-void EffectWindow::addLayerRepaint(const QRect &r)
-{
-    QMetaObject::invokeMethod(parent(), "addLayerRepaint", Q_ARG(const QRect&, r));
 }
 
 bool EffectWindow::isOnCurrentActivity() const
