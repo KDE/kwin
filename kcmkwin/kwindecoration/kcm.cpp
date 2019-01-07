@@ -426,7 +426,7 @@ bool ConfigurationModule::eventFilter(QObject *watched, QEvent *e)
 void ConfigurationModule::updateColors()
 {
     m_quickView->rootContext()->setContextProperty("backgroundColor", m_ui->palette().color(QPalette::Active, QPalette::Window));
-    m_quickView->rootContext()->setContextProperty("highlightColor", m_ui->palette().color(QPalette::Active, QPalette::Highlight));
+    m_quickView->rootContext()->setContextProperty("highlightColor", m_ui->palette().color(QPalette::Active, QPalette::Shadow));
     m_quickView->rootContext()->setContextProperty("baseColor", m_ui->palette().color(QPalette::Active, QPalette::Base));
 }
 

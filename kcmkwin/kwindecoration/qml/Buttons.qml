@@ -37,10 +37,9 @@ Item {
     }
     Rectangle {
         anchors.fill: parent
-        anchors.topMargin: units.gridUnit / 2
         border.width: Math.ceil(units.gridUnit / 16.0)
-        color: backgroundColor;
-        border.color: highlightColor;
+        border.color: highlightColor
+        color: baseColor
         ColumnLayout {
             id: layout
             width: parent.width
@@ -48,10 +47,11 @@ Item {
             Rectangle {
                 id: titlebarRect
                 height: buttonPreviewRow.height + units.smallSpacing
-                Layout.fillWidth: true
                 border.width: Math.ceil(units.gridUnit / 16.0)
                 border.color: highlightColor
-                color: backgroundColor;
+                color: backgroundColor
+                Layout.fillWidth: true
+                Layout.topMargin: -border.width // prevent a double top border
                 RowLayout {
                     id: buttonPreviewRow
                     anchors.top: parent.top;
@@ -81,7 +81,13 @@ Item {
                     }
                 }
                 DropArea {
-                    anchors.fill: buttonPreviewRow
+                    anchors {
+                        fill: titlebarRect
+                        leftMargin:   -units.iconSizes.small
+                        topMargin:    -units.iconSizes.small
+                        rightMargin:  +units.iconSizes.small
+                        bottomMargin: +units.iconSizes.small
+                    }
                     keys: [ "decoButtonAdd", "decoButtonRight", "decoButtonLeft" ]
                     onEntered: {
                         drag.accept();
@@ -123,7 +129,7 @@ Item {
                                     drag.source.buttonsModel.move(drag.source.itemIndex, index);
                                 }
                             } else {
-                                // move to right view
+                                // move to left view
                                 view.model.add(index, drag.source.type);
                                 drag.source.buttonsModel.remove(drag.source.itemIndex);
                             }
@@ -131,21 +137,15 @@ Item {
                     }
                 }
             }
-            Text {
-                id: iCannotBelieveIDoThis
-                text: "gnarf"
-                visible: false
-            }
             GridView {
                 id: availableGrid
                 Layout.fillWidth: true
                 model: availableButtons
                 interactive: false
-                cellWidth: iconLabel.implicitWidth
-                cellHeight: units.iconSizes.small + iCannotBelieveIDoThis.implicitHeight + 4*units.smallSpacing
-                height: Math.ceil(cellHeight * 2.5)
+                height: Math.ceil(cellHeight * 3)
                 delegate: Item {
                     id: availableDelegate
+                    Layout.margins: units.gridUnit
                     width: availableGrid.cellWidth
                     height: availableGrid.cellHeight
                     opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 0.25 : 1.0
@@ -164,17 +164,19 @@ Item {
                         id: iconLabel
                         text: model["display"]
                         horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignTop
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
                         anchors.right: parent.right
                         elide: Text.ElideRight
-                        wrapMode: Text.NoWrap
+                        wrapMode: Text.Wrap
+                        height: 2 * dragHint.implicitHeight + lineHeight
                     }
                     MouseArea {
                         id: dragArea
-                        anchors.fill: parent
+                        anchors.fill: availableButton
                         drag.target: availableButton
-                        cursorShape: Qt.PointingHandCursor
+                        cursorShape: Qt.SizeAllCursor
                         onReleased: {
                             if (availableButton.Drag.target) {
                                 availableButton.Drag.drop();
@@ -195,16 +197,17 @@ Item {
                     }
                     ColumnLayout {
                         anchors.centerIn: parent
-                        visible: leftButtonsView.dragging || rightButtonsView.dragging
+                        opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 1.0 : 0.0
                         QQC2.Label {
                             text: i18n("Drop here to remove button")
                             font.weight: Font.Bold
+                            Layout.bottomMargin: units.smallSpacing
                         }
                         KQuickControlsAddons.QIconItem {
                             id: icon
-                            width: 64
-                            height: 64
-                            icon: "list-remove"
+                            width: units.iconSizes.smallMedium
+                            height: units.iconSizes.smallMedium
+                            icon: "emblem-remove"
                             Layout.alignment: Qt.AlignHCenter
                         }
                         Item {
@@ -215,12 +218,12 @@ Item {
             }
             Text {
                 id: dragHint
-                visible: !(leftButtonsView.dragging || rightButtonsView.dragging || availableGrid.dragging)
+                opacity: (leftButtonsView.dragging || rightButtonsView.dragging || availableGrid.dragging) ? 0.0 : 0.50
                 Layout.fillWidth: true
-                color: backgroundColor;
-                opacity: 0.66
+                Layout.bottomMargin: units.smallSpacing
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignTop
+                wrapMode: Text.NoWrap
                 text: i18n("Drag buttons between here and the titlebar")
             }
         }

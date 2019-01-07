@@ -49,7 +49,7 @@ ListView {
         }
         MouseArea {
             id: dragArea
-            cursorShape: Qt.PointingHandCursor
+            cursorShape: Qt.SizeAllCursor
             anchors.fill: parent
             drag.target: button
             onReleased: {
