@@ -208,6 +208,10 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     popupSurface.reset();
     QVERIFY(popupClosedSpy.wait());
     QVERIFY(!effect->isActive());
+
+    // Destroy the main window.
+    mainWindowSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(mainWindow));
 }
 
 WAYLANDTEST_MAIN(ToplevelOpenCloseAnimationTest)
