@@ -91,6 +91,21 @@ private:
 
 class AniData;
 class AnimationEffectPrivate;
+
+/**
+ * Base class for animation effects.
+ *
+ * AnimationEffect serves as a base class for animation effects. It makes easier
+ * implementing animated transitions, without having to worry about low-level
+ * specific stuff, e.g. referencing and unreferencing deleted windows, scheduling
+ * repaints for the next frame, etc.
+ *
+ * Each animation animates one specific attribute, e.g. size, position, scale, etc.
+ * You can provide your own implementation of the Generic attribute if none of the
+ * standard attributes(e.g. size, position, etc) satisfy your requirements.
+ *
+ * @since 4.8
+ **/
 class KWINEFFECTS_EXPORT AnimationEffect : public Effect
 {
     Q_OBJECT
@@ -115,6 +130,8 @@ public:
 
     /**
      * This enum type is used to specify the direction of the animation.
+     *
+     * @since 5.15
      **/
     enum Direction {
         Forward, ///< The animation goes from source to target.
@@ -125,46 +142,74 @@ public:
     /**
      * This enum type is used to specify when the animation should be terminated.
      *
-     * @value DontTerminate Don't terminate the animation when it reaches the source
-     *   or the target position.
-     *
-     * @value TerminateAtSource Terminate the animation when it reaches the source
-     *   position. An animation can reach the source position if its direction was
-     *   changed to go backward (from target to source).
-     *
-     * @value TerminateAtTarget Terminate the animation when it reaches the target
-     *   position. If this flag is not set, then the animation will be persistent.
+     * @since 5.15
      **/
     enum TerminationFlag {
+        /**
+         * Don't terminate the animation when it reaches source or target position.
+         **/
         DontTerminate     = 0x00,
+        /**
+         * Terminate the animation when it reaches the source position. An animation
+         * can reach the source position if its direction was changed to go backward
+         * (from target to source).
+         **/
         TerminateAtSource = 0x01,
+        /**
+         * Terminate the animation when it reaches the target position. If this flag
+         * is not set, then the animation will be persistent.
+         **/
         TerminateAtTarget = 0x02
     };
     Q_FLAGS(TerminationFlag)
     Q_DECLARE_FLAGS(TerminationFlags, TerminationFlag)
 
     /**
-     * Whenever you intend to connect to the EffectsHandler::windowClosed() signal, do so when reimplementing the constructor.
-     * Do *not* add private slots named _windowClosed( EffectWindow* w ) or _windowDeleted( EffectWindow* w ) !!
-     * The AnimationEffect connects them right *after* the construction.
-     * If you shadow the _windowDeleted slot (it doesn't matter that it's a private slot!), this will lead to segfaults.
-     * If you shadow _windowClosed() or connect your slot to EffectsHandler::windowClosed() after _windowClosed() was connected, animations for closing windows will fail.
-     */
+     * Constructs AnimationEffect.
+     *
+     * Whenever you intend to connect to the EffectsHandler::windowClosed() signal,
+     * do so when reimplementing the constructor. Do not add private slots named
+     * _windowClosed or _windowDeleted! The AnimationEffect connects them right after
+     * the construction.
+     *
+     * If you shadow the _windowDeleted slot (it doesn't matter that it's a private
+     * slot), this will lead to segfaults.
+     *
+     * If you shadow _windowClosed or connect your slot to EffectsHandler::windowClosed()
+     * after _windowClosed was connected, animations for closing windows will fail.
+     **/
     AnimationEffect();
     ~AnimationEffect();
 
     bool isActive() const;
-    /**
-     * Set and get predefined metatypes.
-     * The first 24 bits are reserved for the AnimationEffect class - you can use the last 8 bits for custom hints.
-     * In case you transform a Generic attribute, all 32 bits are yours and you can use them as you want and read them in your genericAnimation() implementation.
-     */
-    static int metaData(MetaType type, uint meta );
-    static void setMetaData(MetaType type, uint value, uint &meta );
 
     /**
-     * Reimplemented from KWIn::Effect
-     */
+     * Gets stored metadata.
+     *
+     * Metadata can be used to store some extra information, for example rotation axis,
+     * etc. The first 24 bits are reserved for the AnimationEffect class, you can use
+     * the last 8 bits for custom hints. In case when you transform a Generic attribute,
+     * all 32 bits are yours and you can use them as you want and read them in your
+     * genericAnimation() implementation.
+     *
+     * @param type The type of the metadata.
+     * @param meta Where the metadata is stored.
+     * @returns Stored metadata.
+     * @since 4.8
+     **/
+    static int metaData(MetaType type, uint meta );
+
+    /**
+     * Sets metadata.
+     *
+     * @param type The type of the metadata.
+     * @param value The data to be stored.
+     * @param meta Where the metadata will be stored.
+     * @since 4.8
+     **/
+    static void setMetaData(MetaType type, uint value, uint &meta );
+
+    // Reimplemented from KWin::Effect.
     QString debug(const QString &parameter) const;
     virtual void prePaintScreen( ScreenPrePaintData& data, int time );
     virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
@@ -172,8 +217,10 @@ public:
     virtual void postPaintScreen();
 
     /**
-     * Gaussian (bumper) animation curve for QEasingCurve
-     */
+     * Gaussian (bumper) animation curve for QEasingCurve.
+     *
+     * @since 4.8
+     **/
     static qreal qecGaussian(qreal progress)
     {
         progress = 2*progress - 1;
@@ -181,47 +228,84 @@ public:
         return qExp(progress);
     }
 
+    /**
+     * @since 4.8
+     **/
     static inline qint64 clock() {
         return s_clock.elapsed();
     }
 
 protected:
     /**
-     * The central function of this class - call it to create an animated transition of any supported attribute
-     * @param w - The EffectWindow to manipulate
-     * @param a - The @enum Attribute to manipulate
-     * @param meta - Basically a wildcard to carry various extra information, eg. the anchor, relativity or rotation axis. You will probably use require it when performing Generic animations.
-     * @param ms - How long the transition will last
-     * @param to - The target value. FPx2 is an agnostic two component float type (like QPointF or QSizeF, but without requiring to be either and supporting an invalid state)
-     * @param shape - How the animation progresses, eg. Linear progresses constantly while Exponential start slow and becomes very fast in the end
-     * @param delay - When the animation will start compared to "now" (the window will remain at the "from" position until then)
-     * @param from - The starting value, the default is invalid, ie. the attribute for the window is not transformed in the beginning
-     * @param fullScreen - Sets this effect as the active full screen effect for the duration of the animation
-     * @param keepAlive - Whether closed windows should be kept alive during animation
-     * @return an ID that you can use to cancel a running animation
-     */
+     * Starts an animated transition of any supported attribute.
+     *
+     * @param w The animated window.
+     * @param a The animated attribute.
+     * @param meta Basically a wildcard to carry various extra information, e.g.
+     *   the anchor, relativity or rotation axis. You will probably use it when
+     *   performing Generic animations.
+     * @param ms How long the transition will last.
+     * @param to The target value. FPx2 is an agnostic two component float type
+     *   (like QPointF or QSizeF, but without requiring to be either and supporting
+     *   an invalid state).
+     * @param shape How the animation progresses, e.g. Linear progresses constantly
+     *   while Exponential start slow and becomes very fast in the end.
+     * @param delay When the animation will start compared to "now" (the window will
+     *   remain at the "from" position until then).
+     * @param from The starting value, the default is invalid, ie. the attribute for
+     *   the window is not transformed in the beginning.
+     * @param fullScreen Sets this effect as the active full screen effect for the
+     *   duration of the animation.
+     * @param keepAlive Whether closed windows should be kept alive during animation.
+     * @returns An ID that you can use to cancel a running animation.
+     * @since 4.8
+     **/
     quint64 animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2(), bool fullScreen = false, bool keepAlive = true)
     { return p_animate(w, a, meta, ms, to, curve, delay, from, false, fullScreen, keepAlive); }
 
     /**
-     * Equal to ::animate() with one important difference:
-     * The target value for the attribute is kept until you ::cancel() this animation
-     * @return an ID that you need to use to cancel this manipulation
-     */
+     * Starts a persistent animated transition of any supported attribute.
+     *
+     * This method is equal to animate() with one important difference:
+     * the target value for the attribute is kept until you call cancel().
+     *
+     * @param w The animated window.
+     * @param a The animated attribute.
+     * @param meta Basically a wildcard to carry various extra information, e.g.
+     *   the anchor, relativity or rotation axis. You will probably use it when
+     *   performing Generic animations.
+     * @param ms How long the transition will last.
+     * @param to The target value. FPx2 is an agnostic two component float type
+     *   (like QPointF or QSizeF, but without requiring to be either and supporting
+     *   an invalid state).
+     * @param shape How the animation progresses, e.g. Linear progresses constantly
+     *   while Exponential start slow and becomes very fast in the end.
+     * @param delay When the animation will start compared to "now" (the window will
+     *   remain at the "from" position until then).
+     * @param from The starting value, the default is invalid, ie. the attribute for
+     *   the window is not transformed in the beginning.
+     * @param fullScreen Sets this effect as the active full screen effect for the
+     *   duration of the animation.
+     * @param keepAlive Whether closed windows should be kept alive during animation.
+     * @returns An ID that you need to use to cancel this manipulation.
+     * @since 4.11
+     **/
     quint64 set( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2(), bool fullScreen = false, bool keepAlive = true)
     { return p_animate(w, a, meta, ms, to, curve, delay, from, true, fullScreen, keepAlive); }
 
     /**
-     * this allows to alter the target (but not type or curve) of a running animation
-     * with the ID @param animationId
-     * @param newTarget alters the "to" parameter of the animation
-     * If @param newRemainingTime allows to lengthen (or shorten) the remaining time
-     * of the animation. By default (-1) the remaining time remains unchanged
+     * Changes the target (but not type or curve) of a running animation.
      *
-     * Please use @function cancel to cancel an animation rather than altering it.
-     * NOTICE that you can NOT retarget an animation that just has just @function animationEnded !
-     * @return whether there was such animation and it could be altered
-     */
+     * Please use cancel() to cancel an animation rather than altering it.
+     *
+     * @param animationId The id of the animation to be retargetted.
+     * @param newTarget The new target.
+     * @param newRemainingTime The new duration of the transition. By default (-1),
+     *   the remaining time remains unchanged.
+     * @returns @c true if the animation was retargetted successfully, @c false otherwise.
+     * @note You can NOT retarget an animation that just has just ended!
+     * @since 5.6
+     **/
     bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1);
 
     /**
@@ -234,6 +318,7 @@ protected:
      *   Currently, TerminationFlag::TerminateAtTarget has no effect.
      * @returns @c true if the direction of the animation was changed successfully,
      *   otherwise @c false.
+     * @since 5.15
      **/
     bool redirect(quint64 animationId,
                   Direction direction,
@@ -245,26 +330,50 @@ protected:
      * @param animationId The id of the animation.
      * @returns @c true if the animation was fast-forwarded successfully, otherwise
      *   @c false.
+     * @since 5.15
      **/
     bool complete(quint64 animationId);
 
     /**
-     * Called whenever an animation end, passes the transformed @class EffectWindow @enum Attribute and originally supplied @param meta
-     * You can reimplement it to keep a constant transformation for the window (ie. keep it a this opacity or position) or to start another animation
-     */
-    virtual void animationEnded( EffectWindow *, Attribute, uint meta ) {Q_UNUSED(meta);}
+     * Called whenever an animation ends.
+     *
+     * You can reimplement this method to keep a constant transformation for the window
+     * (i.e. keep it at some opacity or position) or to start another animation.
+     *
+     * @param w The animated window.
+     * @param a The animated attribute.
+     * @param meta Originally supplied metadata to animate() or set().
+     * @since 4.8
+     **/
+    virtual void animationEnded(EffectWindow *w, Attribute a, uint meta)
+    {Q_UNUSED(w); Q_UNUSED(a); Q_UNUSED(meta);}
 
     /**
-     * Cancel a running animation. @return true if an animation for @p animationId was found (and canceled)
-     * NOTICE that there is NO animated reset of the original value. You'll have to provide that with a second animation
-     * NOTICE as well that this will eventually release a Deleted window.
-     * If you intend to run another animation on the (Deleted) window, you have to do that before cancelling the old animation (to keep the window around)
-     */
+     * Cancels a running animation.
+     *
+     * @param animationId The id of the animation.
+     * @returns @c true if the animation was found (and canceled), @c false otherwise.
+     * @note There is NO animated reset of the original value. You'll have to provide
+     *   that with a second animation.
+     * @note This will eventually release a Deleted window as well.
+     * @note If you intend to run another animation on the (Deleted) window, you have
+     *   to do that before cancelling the old animation (to keep the window around).
+     * @since 4.11
+     **/
     bool cancel(quint64 animationId);
+
     /**
-     * Called if the transformed @enum Attribute is Generic. You should reimplement it if you transform this "Attribute".
-     * You could use the meta information to eg. support more than one additional animations
-     */
+     * Called whenever animation that transforms Generic attribute needs to be painted.
+     *
+     * You should reimplement this method if you transform Generic attribute. @p meta
+     * can be used to support more than one additional animations.
+     *
+     * @param w The animated window.
+     * @param data The paint data.
+     * @param progress Current progress value.
+     * @param meta The metadata.
+     * @since 4.8
+     **/
     virtual void genericAnimation( EffectWindow *w, WindowPaintData &data, float progress, uint meta )
     {Q_UNUSED(w); Q_UNUSED(data); Q_UNUSED(progress); Q_UNUSED(meta);}
 
