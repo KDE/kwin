@@ -124,9 +124,10 @@ Outputs VirtualBackend::enabledOutputs() const
     return m_enabledOutputs;
 }
 
-void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries)
+void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVector<int> scales)
 {
     Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
+    Q_ASSERT(scales.size() == 0 || scales.size() == count);
 
     bool countChanged = m_outputs.size() != count;
     qDeleteAll(m_outputs.begin(), m_outputs.end());
@@ -136,6 +137,9 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries)
     int sumWidth = 0;
     for (int i = 0; i < count; i++) {
         VirtualOutput *vo = new VirtualOutput(this);
+        if (scales.size()) {
+            vo->setScale(scales.at(i));
+        }
         if (geometries.size()) {
             vo->setGeometry(geometries.at(i));
         } else if (!vo->geometry().isValid()) {
