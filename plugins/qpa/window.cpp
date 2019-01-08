@@ -148,6 +148,7 @@ QSharedPointer<QOpenGLFramebufferObject> Window::swapFBO()
 {
     auto fbo = m_contentFBO;
     m_contentFBO.clear();
+    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     return fbo;
 }
 
