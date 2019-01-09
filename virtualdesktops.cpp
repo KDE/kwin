@@ -557,8 +557,6 @@ bool VirtualDesktopManager::setCurrent(VirtualDesktop *newDesktop)
     return true;
 }
 
-static bool s_loadingDesktopSettings = false;
-
 void VirtualDesktopManager::setCount(uint count)
 {
     count = qBound<uint>(1, count, VirtualDesktopManager::maximum());
