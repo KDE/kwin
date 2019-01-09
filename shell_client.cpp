@@ -945,14 +945,20 @@ bool ShellClient::isFullScreenable() const
 
 void ShellClient::setFullScreen(bool set, bool user)
 {
-    if (!isFullScreen() && !set)
+    set = rules()->checkFullScreen(set);
+
+    const bool wasFullscreen = isFullScreen();
+    if (wasFullscreen == set) {
         return;
-    if (user && !userCanSetFullScreen())
+    }
+    if (isSpecialWindow()) {
         return;
-    set = rules()->checkFullScreen(set && !isSpecialWindow());
-    setShade(ShadeNone);
-    bool was_fs = isFullScreen();
-    if (was_fs) {
+    }
+    if (user && !userCanSetFullScreen()) {
+        return;
+    }
+
+    if (wasFullscreen) {
         workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event
     } else {
         // in shell surface, maximise mode and fullscreen are exclusive
@@ -964,8 +970,7 @@ void ShellClient::setFullScreen(bool set, bool user)
         }
     }
     m_fullScreen = set;
-    if (was_fs == isFullScreen())
-        return;
+
     if (set) {
         untab();
         workspace()->raiseClient(this);
@@ -973,9 +978,11 @@ void ShellClient::setFullScreen(bool set, bool user)
     RequestGeometryBlocker requestBlocker(this);
     StackingUpdatesBlocker blocker1(workspace());
     GeometryUpdatesBlocker blocker2(this);
+
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
     updateDecoration(false, false);
-    if (isFullScreen()) {
+
+    if (set) {
         setGeometry(workspace()->clientArea(FullScreenArea, this));
     } else {
         if (m_geomFsRestore.isValid()) {
@@ -989,11 +996,9 @@ void ShellClient::setFullScreen(bool set, bool user)
             setGeometry(QRect(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
         }
     }
-    updateWindowRules(Rules::Fullscreen|Rules::Position|Rules::Size);
 
-    if (was_fs != isFullScreen()) {
-        emit fullScreenChanged();
-    }
+    updateWindowRules(Rules::Fullscreen|Rules::Position|Rules::Size);
+    emit fullScreenChanged();
 }
 
 void ShellClient::setNoBorder(bool set)
