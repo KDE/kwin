@@ -1673,6 +1673,13 @@ void InputRedirection::setupWorkspace()
                         waylandServer()->simulateUserActivity();
                     }
                 );
+               connect(device, &FakeInputDevice::pointerMotionAbsoluteRequested, this,
+                    [this] (const QPointF &pos) {
+                        // TODO: Fix time
+                        m_pointer->processMotion(pos, 0);
+                        waylandServer()->simulateUserActivity();
+                    }
+                );
                 connect(device, &FakeInputDevice::pointerButtonPressRequested, this,
                     [this] (quint32 button) {
                         // TODO: Fix time
