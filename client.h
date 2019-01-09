@@ -143,6 +143,7 @@ public:
     bool isMinimizable() const override;
     QRect iconGeometry() const override;
 
+    bool isFullScreenable() const override;
     void setFullScreen(bool set, bool user = true) override;
     bool isFullScreen() const override;
     bool userCanSetFullScreen() const override;
@@ -346,6 +347,8 @@ private:
     bool motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root);
 
     Client* findAutogroupCandidate() const;
+
+    bool isFullScreenable(bool fullscreenHack) const;
 
 protected:
     virtual void debug(QDebug& stream) const;

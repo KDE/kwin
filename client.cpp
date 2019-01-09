@@ -595,6 +595,30 @@ bool Client::userNoBorder() const
     return noborder;
 }
 
+bool Client::isFullScreenable() const
+{
+    return isFullScreenable(false);
+}
+
+bool Client::isFullScreenable(bool fullscreenHack) const
+{
+    if (!rules()->checkFullScreen(true)) {
+        return false;
+    }
+    if (fullscreenHack) {
+        return isNormalWindow();
+    }
+    if (rules()->checkStrictGeometry(true)) {
+        // check geometry constraints (rule to obey is set)
+        const QRect fsarea = workspace()->clientArea(FullScreenArea, this);
+        if (sizeForClientSize(fsarea.size(), SizemodeAny, true) != fsarea.size()) {
+            return false; // the app wouldn't fit exactly fullscreen geometry due to its strict geometry requirements
+        }
+    }
+    // don't check size constrains - some apps request fullscreen despite requesting fixed size
+    return !isSpecialWindow(); // also better disallow only weird types to go fullscreen
+}
+
 bool Client::noBorder() const
 {
     return userNoBorder() || isFullScreen();

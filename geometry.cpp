@@ -2449,26 +2449,6 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     emit quickTileModeChanged();
 }
 
-bool AbstractClient::isFullScreenable() const
-{
-    return isFullScreenable(false);
-}
-
-bool AbstractClient::isFullScreenable(bool fullscreen_hack) const
-{
-    if (!rules()->checkFullScreen(true))
-        return false;
-    if (fullscreen_hack)
-        return isNormalWindow();
-    if (rules()->checkStrictGeometry(true)) { // allow rule to ignore geometry constraints
-        QRect fsarea = workspace()->clientArea(FullScreenArea, this);
-        if (sizeForClientSize(fsarea.size(), SizemodeAny, true) != fsarea.size())
-            return false; // the app wouldn't fit exactly fullscreen geometry due to its strict geometry requirements
-    }
-    // don't check size constrains - some apps request fullscreen despite requesting fixed size
-    return !isSpecialWindow(); // also better disallow only weird types to go fullscreen
-}
-
 bool Client::userCanSetFullScreen() const
 {
     if (fullscreen_mode == FullScreenHack)

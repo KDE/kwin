@@ -931,6 +931,14 @@ bool ShellClient::noBorder() const
     return true;
 }
 
+bool ShellClient::isFullScreenable() const
+{
+    if (!rules()->checkFullScreen(true)) {
+        return false;
+    }
+    return !isSpecialWindow();
+}
+
 void ShellClient::setFullScreen(bool set, bool user)
 {
     if (!isFullScreen() && !set)
