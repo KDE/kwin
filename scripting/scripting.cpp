@@ -231,9 +231,9 @@ KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginN
     : QObject(parent)
     , m_scriptId(id)
     , m_pluginName(pluginName)
+    , m_fileName(scriptName)
     , m_running(false)
 {
-    m_scriptFile.setFileName(scriptName);
     if (m_pluginName.isNull()) {
         m_pluginName = scriptName;
     }
@@ -255,7 +255,7 @@ void KWin::AbstractScript::stop()
 
 void KWin::AbstractScript::printMessage(const QString &message)
 {
-    qCDebug(KWIN_SCRIPTING) << scriptFile().fileName() << ":" << message;
+    qCDebug(KWIN_SCRIPTING) << fileName() << ":" << message;
     emit print(message);
 }
 
@@ -468,16 +468,16 @@ void KWin::Script::run()
     m_starting = true;
     QFutureWatcher<QByteArray> *watcher = new QFutureWatcher<QByteArray>(this);
     connect(watcher, SIGNAL(finished()), SLOT(slotScriptLoadedFromFile()));
-    watcher->setFuture(QtConcurrent::run(this, &KWin::Script::loadScriptFromFile));
+    watcher->setFuture(QtConcurrent::run(this, &KWin::Script::loadScriptFromFile, fileName()));
 }
 
-QByteArray KWin::Script::loadScriptFromFile()
+QByteArray KWin::Script::loadScriptFromFile(const QString &fileName)
 {
-    if (!scriptFile().open(QIODevice::ReadOnly)) {
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
         return QByteArray();
     }
-    QByteArray result(scriptFile().readAll());
-    scriptFile().close();
+    QByteArray result(file.readAll());
     return result;
 }
 
@@ -591,7 +591,7 @@ void KWin::DeclarativeScript::run()
         return;
     }
 
-    m_component->loadUrl(QUrl::fromLocalFile(scriptFile().fileName()));
+    m_component->loadUrl(QUrl::fromLocalFile(fileName()));
     if (m_component->isLoading()) {
         connect(m_component, &QQmlComponent::statusChanged, this, &DeclarativeScript::createComponent);
     } else {

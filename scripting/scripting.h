@@ -60,7 +60,7 @@ public:
     AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     ~AbstractScript();
     QString fileName() const {
-        return m_scriptFile.fileName();
+        return m_fileName;
     }
     const QString &pluginName() {
         return m_pluginName;
@@ -153,9 +153,6 @@ Q_SIGNALS:
     void runningChanged(bool);
 
 protected:
-    QFile &scriptFile() {
-        return m_scriptFile;
-    }
     bool running() const {
         return m_running;
     }
@@ -204,7 +201,7 @@ private:
      **/
     QAction *createMenu(const QString &title, QScriptValue &items, QMenu *parent);
     int m_scriptId;
-    QFile m_scriptFile;
+    QString m_fileName;
     QString m_pluginName;
     bool m_running;
     QHash<QAction*, QScriptValue> m_shortcutCallbacks;
@@ -255,7 +252,7 @@ private:
      * Read the script from file into a byte array.
      * If file cannot be read an empty byte array is returned.
      **/
-    QByteArray loadScriptFromFile();
+    QByteArray loadScriptFromFile(const QString &fileName);
     QScriptEngine *m_engine;
     bool m_starting;
     QScopedPointer<ScriptUnloaderAgent> m_agent;
