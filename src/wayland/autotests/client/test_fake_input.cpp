@@ -44,6 +44,7 @@ private Q_SLOTS:
 
     void testAuthenticate();
     void testMotion();
+    void testMotionAbsolute();
     void testPointerButtonQt_data();
     void testPointerButtonQt();
     void testPointerButtonLinux_data();
@@ -177,6 +178,31 @@ void FakeInputTest::testMotion()
     QVERIFY(motionSpy.wait());
     QCOMPARE(motionSpy.count(), 2);
     QCOMPARE(motionSpy.last().first().toSizeF(), QSizeF(0, 0));
+}
+
+void FakeInputTest::testMotionAbsolute()
+{
+    // this test verifies that motion is properly passed to the server
+    QVERIFY(!m_device->isAuthenticated());
+    QSignalSpy motionSpy(m_device, &FakeInputDevice::pointerMotionAbsoluteRequested);
+    QVERIFY(motionSpy.isValid());
+
+    // without an authentication we shouldn't get the signals
+    m_fakeInput->requestPointerMoveAbsolute(QPointF(1, 2));
+    QVERIFY(!motionSpy.wait(100));
+
+    // now let's authenticate the interface
+    m_device->setAuthentication(true);
+    m_fakeInput->requestPointerMoveAbsolute(QPointF(1, 2));
+    QVERIFY(motionSpy.wait());
+    QCOMPARE(motionSpy.count(), 1);
+    QCOMPARE(motionSpy.last().first().toPointF(), QPointF(1, 2));
+
+    // just for the fun: once more
+    m_fakeInput->requestPointerMoveAbsolute(QPointF(0, 0));
+    QVERIFY(motionSpy.wait());
+    QCOMPARE(motionSpy.count(), 2);
+    QCOMPARE(motionSpy.last().first().toPointF(), QPointF(0, 0));
 }
 
 void FakeInputTest::testPointerButtonQt_data()

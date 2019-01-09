@@ -42,6 +42,7 @@ private:
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     static void authenticateCallback(wl_client *client, wl_resource *resource, const char *application, const char *reason);
     static void pointerMotionCallback(wl_client *client, wl_resource *resource, wl_fixed_t delta_x, wl_fixed_t delta_y);
+    static void pointerMotionAbsoluteCallback(wl_client *client, wl_resource *resource, wl_fixed_t x, wl_fixed_t y);
     static void buttonCallback(wl_client *client, wl_resource *resource, uint32_t button, uint32_t state);
     static void axisCallback(wl_client *client, wl_resource *resource, uint32_t axis, wl_fixed_t value);
     static void touchDownCallback(wl_client *client, wl_resource *resource, quint32 id, wl_fixed_t x, wl_fixed_t y);
@@ -74,7 +75,7 @@ private:
     FakeInputDevice *q;
 };
 
-const quint32 FakeInputInterface::Private::s_version = 2;
+const quint32 FakeInputInterface::Private::s_version = 3;
 QList<quint32> FakeInputInterface::Private::touchIds = QList<quint32>();
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -87,7 +88,8 @@ const struct org_kde_kwin_fake_input_interface FakeInputInterface::Private::s_in
     touchMotionCallback,
     touchUpCallback,
     touchCancelCallback,
-    touchFrameCallback
+    touchFrameCallback,
+    pointerMotionAbsoluteCallback
 };
 #endif
 
@@ -147,6 +149,16 @@ void FakeInputInterface::Private::pointerMotionCallback(wl_client *client, wl_re
         return;
     }
     emit d->pointerMotionRequested(QSizeF(wl_fixed_to_double(delta_x), wl_fixed_to_double(delta_y)));
+}
+
+void FakeInputInterface::Private::pointerMotionAbsoluteCallback(wl_client *client, wl_resource *resource, wl_fixed_t x, wl_fixed_t y)
+{
+    Q_UNUSED(client)
+    FakeInputDevice *d = device(resource);
+    if (!d || !d->isAuthenticated()) {
+        return;
+    }
+    emit d->pointerMotionAbsoluteRequested(QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
 }
 
 void FakeInputInterface::Private::axisCallback(wl_client *client, wl_resource *resource, uint32_t axis, wl_fixed_t value)

@@ -114,6 +114,12 @@ Q_SIGNALS:
      **/
     void pointerMotionRequested(const QSizeF &delta);
     /**
+     * Request an absolute pointer motion to @p pos.
+     *
+     * @since 5.54
+     **/
+    void pointerMotionAbsoluteRequested(const QPointF &pos);
+    /**
      * Requests a pointer button pressed for @p button.
      **/
     void pointerButtonPressRequested(quint32 button);
