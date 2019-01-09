@@ -36,8 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusConnection>
 #include <QScreen>
 #include <QTimer>
-// xcb
-#include <xcb/xfixes.h>
 
 namespace KWin
 {
