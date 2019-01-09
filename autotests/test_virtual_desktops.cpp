@@ -87,6 +87,7 @@ private Q_SLOTS:
     void name_data();
     void name();
     void switchToShortcuts();
+    void changeRows();
     void load();
     void save();
 
@@ -588,6 +589,21 @@ void TestVirtualDesktops::switchToShortcuts()
     QMetaObject::invokeMethod(vds, "slotSwitchTo");
     // should still be on max
     QCOMPARE(vds->current(), vds->maximum());
+}
+
+void TestVirtualDesktops::changeRows()
+{
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+
+    vds->setCount(4);
+    vds->setRows(4);
+    QCOMPARE(vds->rows(), 4);
+
+    vds->setRows(5);
+    QCOMPARE(vds->rows(), 4);
+
+    vds->setCount(2);
+    QCOMPARE(vds->rows(), 2);
 }
 
 void TestVirtualDesktops::load()

@@ -489,6 +489,7 @@ private:
 
     QVector<VirtualDesktop*> m_desktops;
     QPointer<VirtualDesktop> m_current;
+    quint32 m_rows = 2;
     bool m_navigationWrapsAround;
     VirtualDesktopGrid m_grid;
     // TODO: QPointer
@@ -706,12 +707,6 @@ inline
 bool VirtualDesktopManager::isNavigationWrappingAround() const
 {
     return m_navigationWrapsAround;
-}
-
-inline
-void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
-{
-    m_rootInfo = info;
 }
 
 inline

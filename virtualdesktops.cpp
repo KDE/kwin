@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin {
 
 extern int screen_number;
+static bool s_loadingDesktopSettings = false;
 
 VirtualDesktop::VirtualDesktop(QObject *parent)
     : QObject(parent)
@@ -236,8 +237,24 @@ VirtualDesktopManager::~VirtualDesktopManager()
     s_manager = NULL;
 }
 
+void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
+{
+    m_rootInfo = info;
+
+    // Nothing will be connected to rootInfo
+    if (m_rootInfo) {
+        for (auto *vd : m_desktops) {
+            m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
+        }
+    }
+}
+
 QString VirtualDesktopManager::name(uint desktop) const
 {
+    if (m_desktops.length() > desktop - 1) {
+        return m_desktops[desktop - 1]->name();
+    }
+
     if (!m_rootInfo) {
         return defaultName(desktop);
     }
@@ -441,14 +458,16 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint number, const Q
     //TODO: depend on Qt 5.11, use toString(QUuid::WithoutBraces)
     vd->setId(QUuid::createUuid().toString().toUtf8());
     vd->setName(name);
-    if (m_rootInfo) {
-        connect(vd, &VirtualDesktop::nameChanged, this,
-            [this, vd]() {
-                if (m_rootInfo) {
-                    m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
-                }
+
+    connect(vd, &VirtualDesktop::nameChanged, this,
+        [this, vd]() {
+            if (m_rootInfo) {
+                m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
             }
-        );
+        }
+    );
+
+    if (m_rootInfo) {
         m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
     }
 
@@ -496,6 +515,8 @@ void VirtualDesktopManager::removeVirtualDesktop(const QByteArray &id)
     if (oldCurrent != newCurrent) {
         emit currentChanged(oldCurrent, newCurrent);
     }
+
+    save();
 
     updateRootInfo();
     emit desktopRemoved(desktop);
@@ -566,7 +587,9 @@ void VirtualDesktopManager::setCount(uint count)
     } else {
         while (uint(m_desktops.count()) < count) {
             auto vd = new VirtualDesktop(this);
-            vd->setX11DesktopNumber(m_desktops.count() + 1);
+            const int x11Number = m_desktops.count() + 1;
+            vd->setX11DesktopNumber(x11Number);
+            vd->setName(defaultName(x11Number));
             if (!s_loadingDesktopSettings) {
                 vd->setId(QUuid::createUuid().toString().toUtf8());
             }
@@ -587,7 +610,9 @@ void VirtualDesktopManager::setCount(uint count)
 
     updateRootInfo();
 
-    save();
+    if (!s_loadingDesktopSettings) {
+        save();
+    }
     for (auto vd : newDesktops) {
         emit desktopCreated(vd);
     }
@@ -597,21 +622,23 @@ void VirtualDesktopManager::setCount(uint count)
 
 uint VirtualDesktopManager::rows() const
 {
-    return grid().height();
+    return m_rows;
 }
 
 void VirtualDesktopManager::setRows(uint rows)
 {
-    if (static_cast<uint>(grid().height()) == rows || rows == 0 || rows > count()) {
+    if (rows == 0 || rows > count() || rows == m_rows) {
         return;
     }
 
-    int columns = count() / rows;
-    if (count() % rows > 0) {
+    m_rows = rows;
+
+    int columns = count() / m_rows;
+    if (count() % m_rows > 0) {
         columns++;
     }
     if (m_rootInfo) {
-        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, rows, NET::DesktopLayoutCornerTopLeft);
+        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
         m_rootInfo->activate();
     }
 
@@ -638,21 +665,23 @@ void VirtualDesktopManager::updateRootInfo()
 
 void VirtualDesktopManager::updateLayout()
 {
-    int width = 0;
-    int height = 0;
+    m_rows = qMin(m_rows, count());
+    int columns = count() / m_rows;
     Qt::Orientation orientation = Qt::Horizontal;
     if (m_rootInfo) {
         // TODO: Is there a sane way to avoid overriding the existing grid?
-        width = m_rootInfo->desktopLayoutColumnsRows().width();
-        height = m_rootInfo->desktopLayoutColumnsRows().height();
+        columns = m_rootInfo->desktopLayoutColumnsRows().width();
+        m_rows = qMax(1, m_rootInfo->desktopLayoutColumnsRows().height());
         orientation = m_rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical;
     }
-    if (width == 0 && height == 0) {
+
+    if (columns == 0) {
         // Not given, set default layout
-        height = count() == 1u ? 1 : 2;
+        m_rows = count() == 1u ? 1 : 2;
+        columns = count() / m_rows;
     }
     setNETDesktopLayout(orientation,
-        width, height, 0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
+        columns, m_rows, 0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
     );
 }
 
@@ -695,15 +724,16 @@ void VirtualDesktopManager::load()
 //         m_desktopFocusChain.value()[i-1] = i;
     }
 
+    int rows = group.readEntry<int>("Rows", 2);
+    m_rows = qBound(1, rows, n);
+
     if (m_rootInfo) {
-        int rows = group.readEntry<int>("Rows", 2);
-        rows = qBound(1, rows, n);
         // avoid weird cases like having 3 rows for 4 desktops, where the last row is unused
-        int columns = n / rows;
-        if (n % rows > 0) {
+        int columns = n / m_rows;
+        if (n % m_rows > 0) {
             columns++;
         }
-        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, rows, NET::DesktopLayoutCornerTopLeft);
+        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
         m_rootInfo->activate();
     }
 
@@ -726,6 +756,11 @@ void VirtualDesktopManager::save()
     }
     KConfigGroup group(m_config, groupname);
 
+    for (int i = count() + 1;  group.hasKey(QStringLiteral("Id_%1").arg(i)); i++) {
+        group.deleteEntry(QStringLiteral("Id_%1").arg(i));
+        group.deleteEntry(QStringLiteral("Name_").arg(i));
+    }
+
     group.writeEntry("Number", count());
     for (uint i = 1; i <= count(); ++i) {
         QString s = name(i);
@@ -747,6 +782,8 @@ void VirtualDesktopManager::save()
         }
         group.writeEntry(QStringLiteral("Id_%1").arg(i), m_desktops[i-1]->id());
     }
+
+    group.writeEntry("Rows", m_rows);
 
     // Save to disk
     group.sync();
@@ -776,6 +813,8 @@ void VirtualDesktopManager::setNETDesktopLayout(Qt::Orientation orientation, uin
             ++height;
         }
     }
+
+    m_rows = qMax(1u, height);
 
     m_grid.update(QSize(width, height), orientation, m_desktops);
     // TODO: why is there no call to m_rootInfo->setDesktopLayout?
