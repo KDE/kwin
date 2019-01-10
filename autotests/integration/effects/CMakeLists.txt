@@ -10,3 +10,4 @@ integrationTest(WAYLAND_ONLY NAME testToplevelOpenCloseAnimation SRCS toplevel_o
 integrationTest(WAYLAND_ONLY NAME testPopupOpenCloseAnimation SRCS popup_open_close_animation_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testDesktopSwitchingAnimation SRCS desktop_switching_animation_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testMinimizeAnimation SRCS minimize_animation_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testMaximizeAnimation SRCS maximize_animation_test.cpp)
