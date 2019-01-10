@@ -141,6 +141,12 @@ void Deleted::copyToDeleted(Toplevel* c)
         m_wasGroupTransient = x11Client && x11Client->groupTransient();
     }
 
+    for (auto vd : m_desktops) {
+        connect(vd, &QObject::destroyed, this, [=] {
+            m_desktops.removeOne(vd);
+        });
+    }
+
     m_wasWaylandClient = qobject_cast<ShellClient *>(c) != nullptr;
     m_wasX11Client = !m_wasWaylandClient;
     m_wasPopupWindow = c->isPopupWindow();
