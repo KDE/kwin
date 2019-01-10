@@ -83,8 +83,6 @@ public:
     }
     UdevDevice::Ptr primaryGpu();
     UdevDevice::Ptr primaryFramebuffer();
-    UdevDevice::Ptr virtualGpu();
-    UdevDevice::Ptr renderNode();
     UdevDevice::Ptr deviceFromSyspath(const char *syspath);
     UdevMonitor *monitor();
     operator udev*() const {

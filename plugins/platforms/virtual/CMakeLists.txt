@@ -14,10 +14,6 @@ add_library(KWinWaylandVirtualBackend MODULE ${VIRTUAL_SOURCES})
 set_target_properties(KWinWaylandVirtualBackend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
 target_link_libraries(KWinWaylandVirtualBackend kwin SceneQPainterBackend SceneOpenGLBackend)
 
-if(HAVE_GBM)
-    target_link_libraries(KWinWaylandVirtualBackend gbm::gbm)
-endif()
-
 install(
     TARGETS
         KWinWaylandVirtualBackend

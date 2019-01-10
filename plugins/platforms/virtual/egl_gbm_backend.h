@@ -49,7 +49,6 @@ private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
-    void initGbmDevice();
     VirtualBackend *m_backend;
     GLTexture *m_backBuffer = nullptr;
     GLRenderTarget *m_fbo = nullptr;

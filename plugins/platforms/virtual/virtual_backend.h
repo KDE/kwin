@@ -28,8 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QTemporaryDir;
 
-struct gbm_device;
-
 namespace KWin
 {
 class VirtualOutput;
@@ -59,20 +57,6 @@ public:
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
 
-    int drmFd() const {
-        return m_drmFd;
-    }
-    void setDrmFd(int fd) {
-        m_drmFd = fd;
-    }
-
-    gbm_device *gbmDevice() const {
-        return m_gbmDevice;
-    }
-    void setGbmDevice(gbm_device *device) {
-        m_gbmDevice = device;
-    }
-
     QVector<CompositingType> supportedCompositors() const override {
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
     }
@@ -85,8 +69,6 @@ private:
     QVector<VirtualOutput*> m_enabledOutputs;
 
     QScopedPointer<QTemporaryDir> m_screenshotDir;
-    int m_drmFd = -1;
-    gbm_device *m_gbmDevice = nullptr;
 };
 
 }

@@ -10,13 +10,13 @@ The following additional software needs to be installed for running the test sui
 * DMZ-white cursor theme
 * breeze window decoration
 
-# Preparing a run of the test suite
-In case your system does not support the EGL extension EGL_MESA_platform_surfaceless,
-please load the kernel module "vgem". This is required to provide a virtual OpenGL device.
+# Preparing OpenGL
+Some of the tests require OpenGL. The test suite is implemented against Mesa and uses the Mesa specific EGL extension
+EGL_MESA_platform_surfaceless. This extension supports rendering without any real GPU using llvmpipe as software
+emulation. This gives the tests a stable base removing variance introduced by different hardware and drivers.
 
-    sudo modprobe vgem
-
-Furthermore the user executing the test suite must be able to read and write to the dri device created by vgem.
+Users of non-Mesa drivers (e.g. proprietary NVIDIA driver) need to ensure that Mesa is also installed. If your system
+uses libglvnd this should work out of the box, if not you might need to tune LD_LIBRARY_PATH.
 
 # Running the test suite
 The test suite can be run from the build directory. Best is to do:
