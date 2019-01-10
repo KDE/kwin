@@ -108,9 +108,6 @@
         <entry name="RollOverDesktops" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="LegacyFullscreenSupport" type="Bool">
-            <default>false</default>
-        </entry>
         <entry name="FocusStealingPreventionLevel" type="Int">
             <default>1</default>
             <min>0</min>

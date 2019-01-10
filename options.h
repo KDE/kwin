@@ -111,10 +111,6 @@ class KWIN_EXPORT Options : public QObject
      * 0 - 4 , see Workspace::allowClientActivation()
      **/
     Q_PROPERTY(int focusStealingPreventionLevel READ focusStealingPreventionLevel WRITE setFocusStealingPreventionLevel NOTIFY focusStealingPreventionLevelChanged)
-    /**
-     * Support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry.
-     **/
-    Q_PROPERTY(bool legacyFullscreenSupport READ isLegacyFullscreenSupport WRITE setLegacyFullscreenSupport NOTIFY legacyFullscreenSupportChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationTitlebarDblClick READ operationTitlebarDblClick WRITE setOperationTitlebarDblClick NOTIFY operationTitlebarDblClickChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationMaxButtonLeftClick READ operationMaxButtonLeftClick WRITE setOperationMaxButtonLeftClick NOTIFY operationMaxButtonLeftClickChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationMaxButtonMiddleClick READ operationMaxButtonMiddleClick WRITE setOperationMaxButtonMiddleClick NOTIFY operationMaxButtonMiddleClickChanged)
@@ -340,13 +336,6 @@ public:
      **/
     int focusStealingPreventionLevel() const {
         return m_focusStealingPreventionLevel;
-    }
-
-    /**
-     * Support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry.
-     **/
-    bool isLegacyFullscreenSupport() const {
-        return m_legacyFullscreenSupport;
     }
 
     enum WindowOperation {
@@ -626,7 +615,6 @@ public:
     void setSnapOnlyWhenOverlapping(bool snapOnlyWhenOverlapping);
     void setRollOverDesktops(bool rollOverDesktops);
     void setFocusStealingPreventionLevel(int focusStealingPreventionLevel);
-    void setLegacyFullscreenSupport(bool legacyFullscreenSupport);
     void setOperationTitlebarDblClick(WindowOperation operationTitlebarDblClick);
     void setOperationMaxButtonLeftClick(WindowOperation op);
     void setOperationMaxButtonRightClick(WindowOperation op);
@@ -813,7 +801,6 @@ Q_SIGNALS:
     void snapOnlyWhenOverlappingChanged();
     void rollOverDesktopsChanged(bool enabled);
     void focusStealingPreventionLevelChanged();
-    void legacyFullscreenSupportChanged();
     void operationTitlebarDblClickChanged();
     void operationMaxButtonLeftClickChanged();
     void operationMaxButtonRightClickChanged();
@@ -880,7 +867,6 @@ private:
     bool m_snapOnlyWhenOverlapping;
     bool m_rollOverDesktops;
     int m_focusStealingPreventionLevel;
-    bool m_legacyFullscreenSupport;
     int m_killPingTimeout;
     bool m_hideUtilityWindowsForInactive;
     bool m_inactiveTabsSkipTaskbar;

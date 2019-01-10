@@ -348,8 +348,6 @@ private:
 
     Client* findAutogroupCandidate() const;
 
-    bool isFullScreenable(bool fullscreenHack) const;
-
 protected:
     virtual void debug(QDebug& stream) const;
     void addDamage(const QRegion &damage) override;
@@ -410,8 +408,6 @@ private:
     void updateAllowedActions(bool force = false);
     QRect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
     void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
-    int checkFullScreenHack(const QRect& geom) const;   // 0 - None, 1 - One xinerama screen, 2 - Full area
-    void updateFullScreenHack(const QRect& geom);
     void getWmNormalHints();
     void getMotifHints();
     void getIcons();
@@ -514,13 +510,12 @@ private:
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     bool blocks_compositing;
-    // DON'T reorder - Saved to config files !!!
+
     enum FullScreenMode {
         FullScreenNone,
-        FullScreenNormal,
-        FullScreenHack ///< Non-NETWM fullscreen (noborder and size of desktop)
-    };
-    FullScreenMode m_fullscreenMode;
+        FullScreenNormal
+    } m_fullscreenMode;
+
     MaximizeMode max_mode;
     QRect geom_restore;
     QRect geom_fs_restore;

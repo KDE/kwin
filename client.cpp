@@ -597,16 +597,8 @@ bool Client::userNoBorder() const
 
 bool Client::isFullScreenable() const
 {
-    return isFullScreenable(false);
-}
-
-bool Client::isFullScreenable(bool fullscreenHack) const
-{
     if (!rules()->checkFullScreen(true)) {
         return false;
-    }
-    if (fullscreenHack) {
-        return isNormalWindow();
     }
     if (rules()->checkStrictGeometry(true)) {
         // check geometry constraints (rule to obey is set)

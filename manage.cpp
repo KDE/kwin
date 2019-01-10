@@ -280,17 +280,6 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         area = workspace()->clientArea(PlacementArea, screens()->geometry(screen).center(), desktop());
     }
 
-    if (int type = checkFullScreenHack(geom)) {
-        m_fullscreenMode = FullScreenHack;
-        if (rules()->checkStrictGeometry(false)) {
-            geom = type == 2 // 1 = It's xinerama-aware fullscreen hack, 2 = It's full area
-                   ? workspace()->clientArea(FullArea, geom.center(), desktop())
-                   : workspace()->clientArea(ScreenArea, geom.center(), desktop());
-        } else
-            geom = workspace()->clientArea(FullScreenArea, geom.center(), desktop());
-        placementDone = true;
-    }
-
     if (isDesktop())
         // KWin doesn't manage desktop windows
         placementDone = true;
@@ -532,9 +521,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         if (session->maximized != MaximizeRestore) {
             maximize(MaximizeMode(session->maximized));
         }
-        if (session->fullscreen == FullScreenHack)
-            ; // Nothing, this should be already set again above
-        else if (session->fullscreen != FullScreenNone) {
+        if (session->fullscreen != FullScreenNone) {
             setFullScreen(true, false);
             geom_fs_restore = session->fsrestore;
         }
@@ -566,9 +553,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             demandAttention();
         if (info->state() & NET::Modal)
             setModal(true);
-        if (m_fullscreenMode != FullScreenHack) {
-            setFullScreen(rules()->checkFullScreen(info->state() & NET::FullScreen, !isMapped), false);
-        }
+
+        setFullScreen(rules()->checkFullScreen(info->state() & NET::FullScreen, !isMapped), false);
     }
 
     updateAllowedActions(true);
