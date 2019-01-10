@@ -8,3 +8,4 @@ integrationTest(WAYLAND_ONLY NAME testEffectWindowGeometry SRCS windowgeometry_t
 integrationTest(NAME testScriptedEffects SRCS scripted_effects_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testToplevelOpenCloseAnimation SRCS toplevel_open_close_animation_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testPopupOpenCloseAnimation SRCS popup_open_close_animation_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testDesktopSwitchingAnimation SRCS desktop_switching_animation_test.cpp)
