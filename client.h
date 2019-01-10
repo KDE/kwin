@@ -148,10 +148,10 @@ public:
     bool isFullScreen() const override;
     bool userCanSetFullScreen() const override;
     QRect geometryFSRestore() const {
-        return geom_fs_restore;    // Only for session saving
+        return geom_fs_restore;     // only for session saving
     }
     int fullScreenMode() const {
-        return fullscreen_mode;    // only for session saving
+        return m_fullscreenMode;    // only for session saving
     }
 
     bool userNoBorder() const;
@@ -520,7 +520,7 @@ private:
         FullScreenNormal,
         FullScreenHack ///< Non-NETWM fullscreen (noborder and size of desktop)
     };
-    FullScreenMode fullscreen_mode;
+    FullScreenMode m_fullscreenMode;
     MaximizeMode max_mode;
     QRect geom_restore;
     QRect geom_fs_restore;
@@ -632,7 +632,7 @@ inline MaximizeMode Client::maximizeMode() const
 
 inline bool Client::isFullScreen() const
 {
-    return fullscreen_mode != FullScreenNone;
+    return m_fullscreenMode != FullScreenNone;
 }
 
 inline bool Client::hasNETSupport() const

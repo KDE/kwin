@@ -675,7 +675,7 @@ void Client::configureRequestEvent(xcb_configure_request_event_t *e)
     if (isResize() || isMove())
         return; // we have better things to do right now
 
-    if (fullscreen_mode == FullScreenNormal) { // refuse resizing of fullscreen windows
+    if (m_fullscreenMode == FullScreenNormal) { // refuse resizing of fullscreen windows
         // but allow resizing fullscreen hacks in order to let them cancel fullscreen mode
         sendSyntheticConfigureNotify();
         return;

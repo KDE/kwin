@@ -140,7 +140,7 @@ Client::Client()
 
     shade_mode = ShadeNone;
     deleting = false;
-    fullscreen_mode = FullScreenNone;
+    m_fullscreenMode = FullScreenNone;
     hidden = false;
     noborder = false;
     app_noborder = false;

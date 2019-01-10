@@ -281,7 +281,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     }
 
     if (int type = checkFullScreenHack(geom)) {
-        fullscreen_mode = FullScreenHack;
+        m_fullscreenMode = FullScreenHack;
         if (rules()->checkStrictGeometry(false)) {
             geom = type == 2 // 1 = It's xinerama-aware fullscreen hack, 2 = It's full area
                    ? workspace()->clientArea(FullArea, geom.center(), desktop())
@@ -566,8 +566,9 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             demandAttention();
         if (info->state() & NET::Modal)
             setModal(true);
-        if (fullscreen_mode != FullScreenHack)
+        if (m_fullscreenMode != FullScreenHack) {
             setFullScreen(rules()->checkFullScreen(info->state() & NET::FullScreen, !isMapped), false);
+        }
     }
 
     updateAllowedActions(true);

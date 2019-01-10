@@ -2448,61 +2448,76 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
 
 bool Client::userCanSetFullScreen() const
 {
-    if (fullscreen_mode == FullScreenHack)
+    if (m_fullscreenMode == FullScreenHack) {
         return false;
-    if (!isFullScreenable(false))
+    }
+    if (!isFullScreenable(false)) {
         return false;
+    }
     return isNormalWindow() || isDialog();
 }
 
 void Client::setFullScreen(bool set, bool user)
 {
-    if (!isFullScreen() && !set)
+    const bool wasFullscreen = isFullScreen();
+    if (!wasFullscreen && !set) {
         return;
-    if (fullscreen_mode == FullScreenHack)
+    }
+    if (m_fullscreenMode == FullScreenHack) {
         return;
-    if (user && !userCanSetFullScreen())
+    }
+    if (user && !userCanSetFullScreen()) {
         return;
+    }
+
     set = rules()->checkFullScreen(set && !isSpecialWindow());
     setShade(ShadeNone);
-    bool was_fs = isFullScreen();
-    if (was_fs)
+
+    if (wasFullscreen) {
         workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event
-    else
+    } else {
         geom_fs_restore = geometry();
-    fullscreen_mode = set ? FullScreenNormal : FullScreenNone;
-    if (was_fs == isFullScreen())
+    }
+
+    m_fullscreenMode = set ? FullScreenNormal : FullScreenNone;
+    if (wasFullscreen == isFullScreen()) {
         return;
+    }
     if (set) {
         untab();
         workspace()->raiseClient(this);
     }
+
     StackingUpdatesBlocker blocker1(workspace());
     GeometryUpdatesBlocker blocker2(this);
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
+
     info->setState(isFullScreen() ? NET::FullScreen : NET::States(0), NET::FullScreen);
     updateDecoration(false, false);
+
     if (isFullScreen()) {
-        if (info->fullscreenMonitors().isSet())
+        if (info->fullscreenMonitors().isSet()) {
             setGeometry(fullscreenMonitorsArea(info->fullscreenMonitors()));
-        else
+        } else {
             setGeometry(workspace()->clientArea(FullScreenArea, this));
-    }
-    else {
+        }
+    } else {
         if (!geom_fs_restore.isNull()) {
-            int currentScreen = screen();
+            const int currentScreen = screen();
             setGeometry(QRect(geom_fs_restore.topLeft(), adjustedSize(geom_fs_restore.size())));
-            if( currentScreen != screen())
+            if(currentScreen != screen()) {
                 workspace()->sendClientToScreen( this, currentScreen );
-        // TODO isShaded() ?
+            }
+            // TODO isShaded() ?
         } else {
             // does this ever happen?
             setGeometry(workspace()->clientArea(MaximizeArea, this));
         }
     }
-    updateWindowRules(Rules::Fullscreen|Rules::Position|Rules::Size);
 
-    if (was_fs != isFullScreen()) {
+    updateWindowRules(Rules::Fullscreen | Rules::Position | Rules::Size);
+
+    if (wasFullscreen != isFullScreen()) {
         emit clientFullScreenSet(this, set, user);
         emit fullScreenChanged();
     }
@@ -2568,8 +2583,8 @@ int Client::checkFullScreenHack(const QRect& geom) const
 void Client::updateFullScreenHack(const QRect& geom)
 {
     int type = checkFullScreenHack(geom);
-    if (fullscreen_mode == FullScreenNone && type != 0) {
-        fullscreen_mode = FullScreenHack;
+    if (m_fullscreenMode == FullScreenNone && type != 0) {
+        m_fullscreenMode = FullScreenHack;
         updateDecoration(false, false);
         QRect geom;
         if (rules()->checkStrictGeometry(false)) {
@@ -2580,8 +2595,8 @@ void Client::updateFullScreenHack(const QRect& geom)
             geom = workspace()->clientArea(FullScreenArea, geom.center(), desktop());
         setGeometry(geom);
         emit fullScreenChanged();
-    } else if (fullscreen_mode == FullScreenHack && type == 0) {
-        fullscreen_mode = FullScreenNone;
+    } else if (m_fullscreenMode == FullScreenHack && type == 0) {
+        m_fullscreenMode = FullScreenNone;
         updateDecoration(false, false);
         // whoever called this must setup correct geometry
         emit fullScreenChanged();
