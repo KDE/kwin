@@ -356,11 +356,7 @@ void ConfigurationModule::save()
             if (index.isValid()) {
                 config.writeEntry("library", index.data(Qt::UserRole + 4).toString());
                 const QString theme = index.data(Qt::UserRole +5).toString();
-                if (theme.isEmpty()) {
-                    config.deleteEntry("theme");
-                } else {
-                    config.writeEntry("theme", theme);
-                }
+                config.writeEntry("theme", theme);
             }
         }
     }
