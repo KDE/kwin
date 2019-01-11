@@ -2454,15 +2454,16 @@ bool Client::userCanSetFullScreen() const
 
 void Client::setFullScreen(bool set, bool user)
 {
+    set = rules()->checkFullScreen(set);
+
     const bool wasFullscreen = isFullScreen();
-    if (!wasFullscreen && !set) {
+    if (wasFullscreen == set) {
         return;
     }
     if (user && !userCanSetFullScreen()) {
         return;
     }
 
-    set = rules()->checkFullScreen(set && !isSpecialWindow());
     setShade(ShadeNone);
 
     if (wasFullscreen) {
@@ -2471,48 +2472,41 @@ void Client::setFullScreen(bool set, bool user)
         geom_fs_restore = geometry();
     }
 
-    m_fullscreenMode = set ? FullScreenNormal : FullScreenNone;
-    if (wasFullscreen == isFullScreen()) {
-        return;
-    }
     if (set) {
+        m_fullscreenMode = FullScreenNormal;
         untab();
         workspace()->raiseClient(this);
+    } else {
+        m_fullscreenMode = FullScreenNone;
     }
 
     StackingUpdatesBlocker blocker1(workspace());
     GeometryUpdatesBlocker blocker2(this);
-    workspace()->updateClientLayer(this);   // active fullscreens get different layer
+
+    // active fullscreens get different layer
+    workspace()->updateClientLayer(this);
 
     info->setState(isFullScreen() ? NET::FullScreen : NET::States(0), NET::FullScreen);
     updateDecoration(false, false);
 
-    if (isFullScreen()) {
+    if (set) {
         if (info->fullscreenMonitors().isSet()) {
             setGeometry(fullscreenMonitorsArea(info->fullscreenMonitors()));
         } else {
             setGeometry(workspace()->clientArea(FullScreenArea, this));
         }
     } else {
-        if (!geom_fs_restore.isNull()) {
-            const int currentScreen = screen();
-            setGeometry(QRect(geom_fs_restore.topLeft(), adjustedSize(geom_fs_restore.size())));
-            if(currentScreen != screen()) {
-                workspace()->sendClientToScreen( this, currentScreen );
-            }
-            // TODO isShaded() ?
-        } else {
-            // does this ever happen?
-            setGeometry(workspace()->clientArea(MaximizeArea, this));
+        Q_ASSERT(!geom_fs_restore.isNull());
+        const int currentScreen = screen();
+        setGeometry(QRect(geom_fs_restore.topLeft(), adjustedSize(geom_fs_restore.size())));
+        if(currentScreen != screen()) {
+            workspace()->sendClientToScreen(this, currentScreen);
         }
     }
 
     updateWindowRules(Rules::Fullscreen | Rules::Position | Rules::Size);
-
-    if (wasFullscreen != isFullScreen()) {
-        emit clientFullScreenSet(this, set, user);
-        emit fullScreenChanged();
-    }
+    emit clientFullScreenSet(this, set, user);
+    emit fullScreenChanged();
 }
 
 
