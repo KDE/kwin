@@ -249,7 +249,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 {
     assert((orig_mask & (PAINT_SCREEN_TRANSFORMED
                          | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) == 0);
-    QList< QPair< Window*, Phase2Data > > phase2data;
+    QVector<Phase2Data> phase2data;
 
     QRegion dirtyArea = region;
     bool opaqueFullscreen(false);
@@ -308,8 +308,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         }
         dirtyArea |= data.paint;
         // Schedule the window for painting
-        phase2data.append(QPair< Window*, Phase2Data >(w,Phase2Data(w, data.paint, data.clip,
-                                                                    data.mask, data.quads)));
+        phase2data.append({w, data.paint, data.clip, data.mask, data.quads});
     }
 
     // Save the part of the repaint region that's exclusively rendered to
@@ -331,8 +330,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 
     // This is the occlusion culling pass
     for (int i = phase2data.count() - 1; i >= 0; --i) {
-        QPair< Window*, Phase2Data > *entry = &phase2data[i];
-        Phase2Data *data = &entry->second;
+        Phase2Data *data = &phase2data[i];
 
         if (fullRepaint)
             data->region = displayRegion;
@@ -365,7 +363,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 
     // Now walk the list bottom to top and draw the windows.
     for (int i = 0; i < phase2data.count(); ++i) {
-        Phase2Data *data = &phase2data[i].second;
+        Phase2Data *data = &phase2data[i];
 
         // add all regions which have been drawn so far
         paintedArea |= data->region;
