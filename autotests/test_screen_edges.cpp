@@ -298,6 +298,7 @@ void TestScreenEdges::testCreatingInitialEdges()
     auto vd = VirtualDesktopManager::self();
     vd->setConfig(config);
     vd->load();
+    vd->updateLayout();
     QCOMPARE(vd->count(), 4u);
     QCOMPARE(vd->grid().width(), 2);
     QCOMPARE(vd->grid().height(), 2);
