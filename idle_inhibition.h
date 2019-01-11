@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector>
 #include <QMap>
 
-#include <algorithm>
-
 namespace KWayland
 {
 namespace Server
@@ -54,7 +52,7 @@ public:
         return !m_idleInhibitors.isEmpty();
     }
     bool isInhibited(AbstractClient *client) const {
-        return std::any_of(m_idleInhibitors.begin(), m_idleInhibitors.end(), [client] (auto c) { return c == client; });
+        return m_idleInhibitors.contains(client);
     }
 
 private Q_SLOTS:

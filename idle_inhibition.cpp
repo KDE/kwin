@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/idle_interface.h>
 #include <KWayland/Server/surface_interface.h>
 
+#include <algorithm>
 #include <functional>
 
 using KWayland::Server::SurfaceInterface;
@@ -82,7 +83,7 @@ void IdleInhibition::inhibit(AbstractClient *client)
 
 void IdleInhibition::uninhibit(AbstractClient *client)
 {
-    auto it = std::find_if(m_idleInhibitors.begin(), m_idleInhibitors.end(), [client] (auto c) { return c == client; });
+    auto it = std::find(m_idleInhibitors.begin(), m_idleInhibitors.end(), client);
     if (it == m_idleInhibitors.end()) {
         // not inhibited
         return;
