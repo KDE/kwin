@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shell.h>
 
+#include <KWayland/Server/surface_interface.h>
+
 #include <linux/input.h>
 
 using namespace KWayland::Client;
@@ -64,6 +66,7 @@ private Q_SLOTS:
     void testModifierClickUnrestrictedMove();
     void testModifierScroll();
     void testPopup();
+    void testScale();
 };
 
 class HelperWindow : public QRasterWindow
@@ -686,6 +689,29 @@ void InternalWindowTest::testPopup()
     QVERIFY(internalClient);
     QCOMPARE(internalClient->isPopupWindow(), true);
 }
+
+void InternalWindowTest::testScale()
+{
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection,
+        Q_ARG(int, 2),
+        Q_ARG(QVector<QRect>, QVector<QRect>({QRect(0,0,1280, 1024), QRect(1280/2, 0, 1280, 1024)})),
+        Q_ARG(QVector<int>, QVector<int>({2,2})));
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    win.setFlags(win.flags() | Qt::Popup);
+    win.show();
+    QCOMPARE(win.devicePixelRatio(), 2.0);
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QCOMPARE(internalClient->surface()->scale(), 2);
+
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+}
+
 
 }
 

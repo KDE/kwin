@@ -48,6 +48,7 @@ public:
     void beginPaint(const QRegion &) override;
 
 private:
+    int scale() const;
     KWayland::Client::ShmPool *m_shm;
     QWeakPointer<KWayland::Client::Buffer> m_buffer;
     QImage m_backBuffer;

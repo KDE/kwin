@@ -510,9 +510,7 @@ void ShellClient::setInternalFramebufferObject(const QSharedPointer<QOpenGLFrame
         return;
     }
 
-    //Kwin currently scales internal windows to 1, so this is currently always correct
-    //when that changes, this needs adjusting
-    m_clientSize = fbo->size();
+    m_clientSize = fbo->size() / surface()->scale();
     markAsMapped();
     doSetGeometry(QRect(geom.topLeft(), m_clientSize));
     Toplevel::setInternalFramebufferObject(fbo);

@@ -74,6 +74,9 @@ public:
     }
     void createEglSurface(EGLDisplay dpy, EGLConfig config);
 
+    int scale() const;
+    qreal devicePixelRatio() const override;
+
     void bindContentFBO();
     const QSharedPointer<QOpenGLFramebufferObject> &contentFBO() const {
         return m_contentFBO;
@@ -96,6 +99,7 @@ private:
 #endif
     quint32 m_windowId;
     const Integration *m_integration;
+    int m_scale = 1;
 };
 
 }

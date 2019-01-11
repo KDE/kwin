@@ -47,6 +47,7 @@ BackingStore::BackingStore(QWindow *w, KWayland::Client::ShmPool *shm)
             }
             const QSize size = m_backBuffer.size();
             m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
+            m_backBuffer.setDevicePixelRatio(scale());
         }
     );
 }
@@ -61,7 +62,7 @@ QPaintDevice *BackingStore::paintDevice()
 void BackingStore::resize(const QSize &size, const QRegion &staticContents)
 {
     Q_UNUSED(staticContents)
-    m_size = size;
+    m_size = size * scale();
     if (!m_buffer) {
         return;
     }
@@ -73,13 +74,15 @@ void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &o
 {
     Q_UNUSED(region)
     Q_UNUSED(offset)
-    auto s = static_cast<Window *>(window->handle())->surface();
+
+    auto w = static_cast<Window *>(window->handle());
+    auto s = w->surface();
     if (!s) {
         return;
     }
     s->attachBuffer(m_buffer);
     // TODO: proper damage region
-    s->damage(QRect(QPoint(0, 0), m_backBuffer.size()));
+    s->damage(QRect(QPoint(0, 0), m_backBuffer.size() / scale()));
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     waylandServer()->internalClientConection()->flush();
     waylandServer()->dispatch();
@@ -108,11 +111,17 @@ void BackingStore::beginPaint(const QRegion&)
     auto b = m_buffer.toStrongRef();
     b->setUsed(true);
     m_backBuffer = QImage(b->address(), m_size.width(), m_size.height(), QImage::Format_ARGB32_Premultiplied);
+    m_backBuffer.setDevicePixelRatio(scale());
     if (oldBuffer) {
         b->copy(oldBuffer->address());
     } else {
         m_backBuffer.fill(Qt::transparent);
     }
+}
+
+int BackingStore::scale() const
+{
+    return static_cast<Window *>(window()->handle())->scale();
 }
 
 }
