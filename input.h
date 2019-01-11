@@ -259,7 +259,7 @@ Q_SIGNALS:
      * @brief Emitted when the state of a key changed.
      *
      * @param keyCode The keycode of the key which changed
-     * @param oldMods The new key state
+     * @param state The new key state
      */
     void keyStateChanged(quint32 keyCode, InputRedirection::KeyboardKeyState state);
 

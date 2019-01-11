@@ -235,7 +235,7 @@ public:
 
     /**
      * Binds the @p shader.
-     * To unbind the shader use @link popShader. A previous bound shader will be rebound.
+     * To unbind the shader use popShader. A previous bound shader will be rebound.
      * To bind a built-in shader use the more specific method.
      * @param shader The shader to be bound
      * @see popShader
@@ -271,7 +271,7 @@ public:
      * If neither are provided a new shader following the @p traits is generated.
      *
      * @param traits The shader traits for generating the shader
-     * @param vertesSource optional vertex shader source code to be used instead of shader traits
+     * @param vertexSource optional vertex shader source code to be used instead of shader traits
      * @param fragmentSource optional fragment shader source code to be used instead of shader traits
      * @return new generated shader
      * @since 5.6

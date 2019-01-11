@@ -163,7 +163,7 @@ private:
  * The screen edge functionality is split into three parts:
  * @li This manager class ScreenEdges
  * @li abstract class @ref Edge
- * @li specific implementation of @ref Edge, e.g. @ref WindowBasedEdge
+ * @li specific implementation of @ref Edge, e.g. WindowBasedEdge
  *
  * The ScreenEdges creates an @ref Edge for each screen edge which is also an edge in the
  * combination of all screens. E.g. if there are two screens, no Edge is created between the screens,

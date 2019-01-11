@@ -1338,7 +1338,7 @@ public:
      * Creates an xcb_window_t and manages it. It's a convenient method to create a window with
      * depth and visual being copied from parent and border being @c 0.
      * @param geometry The geometry for the window to be created
-     * @param class The window class
+     * @param windowClass The window class
      * @param mask The mask for the values
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
@@ -1364,7 +1364,7 @@ public:
      *
      * Depth and visual are being copied from parent and border is @c 0.
      * @param geometry The geometry for the window to be created
-     * @param class The window class
+     * @param windowClass The window class
      * @param mask The mask for the values
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
@@ -1381,11 +1381,11 @@ public:
      * @returns @c true if a window is managed, @c false otherwise.
      **/
     bool isValid() const;
+    inline const QRect &geometry() const { return m_logicGeometry; }
     /**
      * Configures the window with a new geometry.
      * @param geometry The new window geometry to be used
      **/
-    inline const QRect &geometry() const { return m_logicGeometry; }
     void setGeometry(const QRect &geometry);
     void setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
     void move(const QPoint &pos);

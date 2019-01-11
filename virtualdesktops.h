@@ -324,10 +324,10 @@ public Q_SLOTS:
      * There needs to be at least one virtual desktop and the new value is capped at the maximum
      * number of desktops. A caller of this function cannot expect that the change has been applied.
      * It is the callers responsibility to either check the @link numberOfDesktops or connect to the
-     * @link countChanged signal.
+     * countChanged signal.
      *
      * In case the @link current desktop is on a desktop higher than the new count, the current desktop
-     * is changed to be the new desktop with highest id. In that situation the signal @link desktopRemoved
+     * is changed to be the new desktop with highest id. In that situation the signal desktopRemoved
      * is emitted.
      * @param count The new number of desktops to use
      * @see count
@@ -386,7 +386,7 @@ Q_SIGNALS:
 
     /**
      * Signal when the number of rows in the layout changes
-     * @param new number of rows
+     * @param rows number of rows
      */
     void rowsChanged(uint rows);
 

@@ -244,7 +244,7 @@ public:
     int screen() const; // the screen where the center is
     /**
      * The scale of the screen this window is currently on
-     * @Note: The buffer scale can be different.
+     * @note The buffer scale can be different.
      * @since 5.12
      */
     qreal screenScale() const; //

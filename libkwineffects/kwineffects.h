@@ -1259,7 +1259,7 @@ public:
     virtual void hideCursor() = 0;
 
     /**
-     * The cursor image should be shown again after having been hidden..
+     * The cursor image should be shown again after having been hidden.
      * @see hideCursor
      * @since 5.9
      **/
@@ -1394,7 +1394,7 @@ Q_SIGNALS:
      * Signal emitted when a window is being removed from the Workspace.
      * An effect which wants to animate the window closing should connect
      * to this signal and reference the window by using
-     * @link EffectWindow::refWindow
+     * @ref EffectWindow::refWindow
      * @param w The window which is being closed
      * @since 4.7
      **/
@@ -1420,7 +1420,7 @@ Q_SIGNALS:
     /**
      * Signal emitted when a user begins a window move or resize operation.
      * To figure out whether the user resizes or moves the window use
-     * @link EffectWindow::isUserMove or @link EffectWindow::isUserResize.
+     * @ref EffectWindow::isUserMove or @link EffectWindow::isUserResize.
      * Whenever the geometry is updated the signal @link windowStepUserMovedResized
      * is emitted with the current geometry.
      * The move/resize operation ends with the signal @link windowFinishUserMovedResized.
@@ -1464,7 +1464,7 @@ Q_SIGNALS:
      * @li restored: both @p horizontal and @p vertical are @c false
      * @li horizontally maximized: @p horizontal is @c true and @p vertical is @c false
      * @li vertically maximized: @p horizontal is @c false and @p vertical is @c true
-     * @li completely maximized: both @p horizontal and @p vertical are @C true
+     * @li completely maximized: both @p horizontal and @p vertical are @c true
      * @param w The window whose maximized state changed
      * @param horizontal If @c true maximized horizontally
      * @param vertical If @c true maximized vertically
@@ -1533,7 +1533,7 @@ Q_SIGNALS:
     void windowDamaged(KWin::EffectWindow *w, const QRect &r);
     /**
      * Signal emitted when a tabbox is added.
-     * An effect who wants to replace the tabbox with itself should use @link refTabBox.
+     * An effect who wants to replace the tabbox with itself should use refTabBox.
      * @param mode The TabBoxMode.
      * @see refTabBox
      * @see tabBoxClosed
@@ -1552,7 +1552,7 @@ Q_SIGNALS:
     void tabBoxClosed();
     /**
      * Signal emitted when the selected TabBox window changed or the TabBox List changed.
-     * An effect should only response to this signal if it referenced the TabBox with @link refTabBox.
+     * An effect should only response to this signal if it referenced the TabBox with refTabBox.
      * @see refTabBox
      * @see currentTabBoxWindowList
      * @see currentTabBoxDesktopList
@@ -1575,8 +1575,8 @@ Q_SIGNALS:
     void tabRemoved(KWin::EffectWindow* c, KWin::EffectWindow* group);   // c removed from group
     /**
      * Signal emitted when mouse changed.
-     * If an effect needs to get updated mouse positions, it needs to first call @link startMousePolling.
-     * For a fullscreen effect it is better to use an input window and react on @link windowInputMouseEvent.
+     * If an effect needs to get updated mouse positions, it needs to first call startMousePolling.
+     * For a fullscreen effect it is better to use an input window and react on windowInputMouseEvent.
      * @param pos The new mouse position
      * @param oldpos The previously mouse position
      * @param buttons The pressed mouse buttons
@@ -1596,7 +1596,7 @@ Q_SIGNALS:
      */
     void cursorShapeChanged();
     /**
-     * Receives events registered for using @link registerPropertyType.
+     * Receives events registered for using registerPropertyType.
      * Use readProperty() to get the property data.
      * Note that the property may be already set on the window, so doing the same
      * processing from windowAdded() (e.g. simply calling propertyNotify() from it)
@@ -2340,7 +2340,7 @@ public:
      * window pixmap an effect can for example cross fade the current window pixmap with the previous
      * one. This allows for smoother transitions for window geometry changes.
      *
-     * If an effect calls this method on a window it also needs to call @link unreferencePreviousWindowPixmap
+     * If an effect calls this method on a window it also needs to call unreferencePreviousWindowPixmap
      * once it does no longer need the previous window pixmap.
      *
      * Note: the window pixmap is not kept forever even when referenced. If the geometry changes again, so that
@@ -2353,7 +2353,7 @@ public:
      */
     virtual void referencePreviousWindowPixmap() = 0;
     /**
-     * @brief Unreferences the previous window pixmap. Only relevant after @link referencePreviousWindowPixmap had
+     * @brief Unreferences the previous window pixmap. Only relevant after referencePreviousWindowPixmap had
      * been called.
      *
      * @see referencePreviousWindowPixmap

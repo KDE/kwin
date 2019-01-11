@@ -118,7 +118,7 @@ public:
     /**
      * @brief Disables tracking changes of cursor images.
      *
-     * Only call after using @link startCursorTracking.
+     * Only call after using startCursorTracking.
      *
      * @see startCursorTracking
      */
@@ -169,7 +169,7 @@ Q_SIGNALS:
     /**
      * @brief Signal emitted when the cursor image changes.
      *
-     * To enable these signals use @link startCursorTracking.
+     * To enable these signals use startCursorTracking.
      *
      * @see startCursorTracking
      * @see stopCursorTracking
@@ -222,7 +222,7 @@ protected:
     bool isCursorTracking() const;
     /**
      * Provides the actual internal cursor position to inheriting classes. If an inheriting class needs
-     * access to the cursor position this method should be used instead of the static @link pos, as
+     * access to the cursor position this method should be used instead of the static @ref pos, as
      * the static method syncs with the underlying system's cursor.
      **/
     const QPoint &currentPos() const;

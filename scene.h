@@ -343,11 +343,11 @@ protected:
     /**
      * @brief Returns the WindowPixmap for this Window.
      *
-     * If the WindowPixmap does not yet exist, this method will invoke @link createWindowPixmap.
+     * If the WindowPixmap does not yet exist, this method will invoke createWindowPixmap.
      * If the WindowPixmap is not valid it tries to create it, in case this succeeds the WindowPixmap is
      * returned. In case it fails, the previous (and still valid) WindowPixmap is returned.
      *
-     * Note: this method can return @c NULL as there might neither be a valid previous nor current WindowPixmap
+     * @note This method can return @c NULL as there might neither be a valid previous nor current WindowPixmap
      * around.
      *
      * The WindowPixmap gets casted to the type passed in as a template parameter. That way this class does not
@@ -361,7 +361,7 @@ protected:
      * @brief Factory method to create a WindowPixmap.
      *
      * The inheriting classes need to implement this method to create a new instance of their WindowPixmap subclass.
-     * Note: do not use @link WindowPixmap::create on the created instance. The Scene will take care of that.
+     * @note Do not use WindowPixmap::create on the created instance. The Scene will take care of that.
      */
     virtual WindowPixmap *createWindowPixmap() = 0;
     Toplevel* toplevel;

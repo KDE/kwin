@@ -287,7 +287,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * The color scheme set on this client
      * Absolute file path, or name of palette in the user's config directory following KColorSchemes format.
      * An empty string indicates the default palette from kdeglobals is used.
-     * @Note this indicates the colour scheme requested, which might differ from the theme applied if the colorScheme cannot be found
+     * @note this indicates the colour scheme requested, which might differ from the theme applied if the colorScheme cannot be found
      */
     Q_PROPERTY(QString colorScheme READ colorScheme NOTIFY colorSchemeChanged)
 
@@ -454,8 +454,8 @@ public:
     Q_INVOKABLE inline bool tabBefore(AbstractClient *other, bool activate) { return tabTo(other, false, activate); }
     Q_INVOKABLE inline bool tabBehind(AbstractClient *other, bool activate) { return tabTo(other, true, activate); }
     /**
-     * Syncs the *dynamic* @param property @param fromThisClient or the @link currentTab() to
-     * all members of the @link tabGroup() (if there is one)
+     * Syncs the *dynamic* @param property @param fromThisClient or the currentTab() to
+     * all members of the tabGroup() (if there is one)
      *
      * eg. if you call:
      * client->setProperty("kwin_tiling_floats", true);
@@ -818,28 +818,28 @@ protected:
      **/
     virtual bool acceptsFocus() const = 0;
     /**
-     * Called from ::setActive once the active value got updated, but before the changed signal
+     * Called from setActive once the active value got updated, but before the changed signal
      * is emitted.
      *
      * Default implementation does nothing.
      **/
     virtual void doSetActive();
     /**
-     * Called from ::setKeepAbove once the keepBelow value got updated, but before the changed signal
+     * Called from setKeepAbove once the keepBelow value got updated, but before the changed signal
      * is emitted.
      *
      * Default implementation does nothing.
      **/
     virtual void doSetKeepAbove();
     /**
-     * Called from ::setKeepBelow once the keepBelow value got updated, but before the changed signal
+     * Called from setKeepBelow once the keepBelow value got updated, but before the changed signal
      * is emitted.
      *
      * Default implementation does nothing.
      **/
     virtual void doSetKeepBelow();
     /**
-     * Called from ::setDeskop once the desktop value got updated, but before the changed signal
+     * Called from setDeskop once the desktop value got updated, but before the changed signal
      * is emitted.
      *
      * Default implementation does nothing.
@@ -848,7 +848,7 @@ protected:
      **/
     virtual void doSetDesktop(int desktop, int was_desk);
     /**
-     * Called from ::minimize and ::unminimize once the minimized value got updated, but before the
+     * Called from @ref minimize and @ref unminimize once the minimized value got updated, but before the
      * changed signal is emitted.
      *
      * Default implementation does nothig.
@@ -1012,7 +1012,7 @@ protected:
     void stopDelayedMoveResize();
     bool startMoveResize();
     /**
-     * Called from @link startMoveResize.
+     * Called from startMoveResize.
      *
      * Implementing classes should return @c false if starting move resize should
      * get aborted. In that case @link startMoveResize will also return @c false.

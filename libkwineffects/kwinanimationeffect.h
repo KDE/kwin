@@ -248,7 +248,7 @@ protected:
      * @param to The target value. FPx2 is an agnostic two component float type
      *   (like QPointF or QSizeF, but without requiring to be either and supporting
      *   an invalid state).
-     * @param shape How the animation progresses, e.g. Linear progresses constantly
+     * @param curve How the animation progresses, e.g. Linear progresses constantly
      *   while Exponential start slow and becomes very fast in the end.
      * @param delay When the animation will start compared to "now" (the window will
      *   remain at the "from" position until then).
@@ -278,7 +278,7 @@ protected:
      * @param to The target value. FPx2 is an agnostic two component float type
      *   (like QPointF or QSizeF, but without requiring to be either and supporting
      *   an invalid state).
-     * @param shape How the animation progresses, e.g. Linear progresses constantly
+     * @param curve How the animation progresses, e.g. Linear progresses constantly
      *   while Exponential start slow and becomes very fast in the end.
      * @param delay When the animation will start compared to "now" (the window will
      *   remain at the "from" position until then).
@@ -313,7 +313,7 @@ protected:
      *
      * @param animationId The id of the animation.
      * @param direction The new direction of the animation.
-     * @param terminationPolicy Whether the animation should be terminated when it
+     * @param terminationFlags Whether the animation should be terminated when it
      *   reaches the source position after its direction was changed to go backward.
      *   Currently, TerminationFlag::TerminateAtTarget has no effect.
      * @returns @c true if the direction of the animation was changed successfully,

@@ -54,7 +54,7 @@ public:
 
     /**
      * Set the outline geometry.
-     * To show the outline use @link showOutline.
+     * To show the outline use showOutline.
      * @param outlineGeometry The geometry of the outline to be shown
      * @see showOutline
      */
@@ -70,7 +70,7 @@ public:
 
     /**
      * Shows the outline of a window using either an effect or the X implementation.
-     * To stop the outline process use @link hideOutline.
+     * To stop the outline process use hideOutline.
      * @see hideOutline
      */
     void show();
@@ -78,7 +78,7 @@ public:
     /**
      * Shows the outline for the given @p outlineGeometry.
      * This is the same as setOutlineGeometry followed by showOutline directly.
-     * To stop the outline process use @link hideOutline.
+     * To stop the outline process use hideOutline.
      * @param outlineGeometry The geometry of the outline to be shown
      * @see hideOutline
      */
@@ -88,7 +88,7 @@ public:
      * Shows the outline for the given @p outlineGeometry animated from @p visualParentGeometry.
      * This is the same as setOutlineGeometry followed by setVisualParentGeometry
      * and then showOutline.
-     * To stop the outline process use @link hideOutline.
+     * To stop the outline process use hideOutline.
      * @param outlineGeometry The geometry of the outline to be shown
      * @param visualParentGeometry The geometry from where the outline should emerge
      * @see hideOutline
