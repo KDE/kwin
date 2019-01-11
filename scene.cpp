@@ -206,7 +206,7 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
     if (!(orig_mask & PAINT_SCREEN_BACKGROUND_FIRST)) {
         paintBackground(infiniteRegion());
     }
-    QList< Phase2Data > phase2;
+    QVector<Phase2Data> phase2;
     foreach (Window * w, stacking_order) { // bottom to top
         Toplevel* topw = w->window();
 
