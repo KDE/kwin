@@ -323,7 +323,7 @@ void Compositor::startupWithWorkspace()
     m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now" - we don't have even a slight idea when the first vsync will occur
     scheduleRepaint();
     kwinApp()->platform()->createEffectsHandler(this, m_scene);   // sets also the 'effects' pointer
-    connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::windowDeleted);
+    connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
     connect(effects, SIGNAL(screenGeometryChanged(QSize)), SLOT(addRepaintFull()));
     addRepaintFull();
     foreach (Client * c, Workspace::self()->clientList()) {
@@ -381,13 +381,13 @@ void Compositor::finish()
 
     if (Workspace::self()) {
         foreach (Client * c, Workspace::self()->clientList())
-            m_scene->windowClosed(c, NULL);
+            m_scene->removeToplevel(c);
         foreach (Client * c, Workspace::self()->desktopList())
-            m_scene->windowClosed(c, NULL);
+            m_scene->removeToplevel(c);
         foreach (Unmanaged * c, Workspace::self()->unmanagedList())
-            m_scene->windowClosed(c, NULL);
+            m_scene->removeToplevel(c);
         foreach (Deleted * c, Workspace::self()->deletedList())
-            m_scene->windowDeleted(c);
+            m_scene->removeToplevel(c);
         foreach (Client * c, Workspace::self()->clientList())
         c->finishCompositing();
         foreach (Client * c, Workspace::self()->desktopList())
@@ -402,10 +402,10 @@ void Compositor::finish()
     }
     if (waylandServer()) {
         foreach (ShellClient *c, waylandServer()->clients()) {
-            m_scene->windowClosed(c, nullptr);
+            m_scene->removeToplevel(c);
         }
         foreach (ShellClient *c, waylandServer()->internalClients()) {
-            m_scene->windowClosed(c, nullptr);
+            m_scene->removeToplevel(c);
         }
         foreach (ShellClient *c, waylandServer()->clients()) {
             c->finishCompositing();
@@ -955,7 +955,7 @@ bool Toplevel::setupCompositing()
     damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl(this);
 
-    Compositor::self()->scene()->windowAdded(this);
+    Compositor::self()->scene()->addToplevel(this);
 
     // With unmanaged windows there is a race condition between the client painting the window
     // and us setting up damage tracking.  If the client wins we won't get a damage event even

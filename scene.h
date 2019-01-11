@@ -78,11 +78,25 @@ public:
     // ie. "what of this frame is lost to painting"
     virtual qint64 paint(QRegion damage, ToplevelList windows) = 0;
 
-    // Notification function - KWin core informs about changes.
-    // Used to mainly discard cached data.
+    /**
+     * Adds the Toplevel to the Scene.
+     *
+     * If the toplevel gets deleted, then the scene will try automatically
+     * to re-bind an underlying scene window to the corresponding Deleted.
+     *
+     * @param toplevel The window to be added.
+     * @note You can add a toplevel to scene only once.
+     **/
+    void addToplevel(Toplevel *toplevel);
 
-    // a new window has been created
-    void windowAdded(Toplevel*);
+    /**
+     * Removes the Toplevel from the Scene.
+     *
+     * @param toplevel The window to be removed.
+     * @note You can remove a toplevel from the scene only once.
+     **/
+    void removeToplevel(Toplevel *toplevel);
+
     /**
      * @brief Creates the Scene backend of an EffectFrame.
      *
@@ -189,8 +203,6 @@ Q_SIGNALS:
     void resetCompositing();
 
 public Q_SLOTS:
-    // a window has been destroyed
-    void windowDeleted(KWin::Deleted*);
     // shape/size of a window changed
     void windowGeometryShapeChanged(KWin::Toplevel* c);
     // a window has been closed
