@@ -228,16 +228,10 @@ protected:
     void updateTimeDiff();
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data {
-        Phase2Data(Window* w, QRegion r, QRegion c, int m, const WindowQuadList& q)
-            : window(w), region(r), clip(c), mask(m), quads(q) {}
-        Phase2Data()  {
-            window = 0;
-            mask = 0;
-        }
-        Window* window;
+        Window *window = nullptr;
         QRegion region;
         QRegion clip;
-        int mask;
+        int mask = 0;
         WindowQuadList quads;
     };
     // The region which actually has been painted by paintScreen() and should be

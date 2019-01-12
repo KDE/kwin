@@ -232,7 +232,7 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
         if (!w->isPaintingEnabled()) {
             continue;
         }
-        phase2.append(Phase2Data(w, infiniteRegion(), data.clip, data.mask, data.quads));
+        phase2.append({w, infiniteRegion(), data.clip, data.mask, data.quads});
     }
 
     foreach (const Phase2Data & d, phase2) {
