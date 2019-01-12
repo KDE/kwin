@@ -104,10 +104,10 @@ public:
     /**
      * @brief Enables tracking changes of cursor images.
      *
-     * After enabling cursor change tracking the signal @link cursorChanged will be emitted
+     * After enabling cursor change tracking the signal cursorChanged will be emitted
      * whenever a change to the cursor image is recognized.
      *
-     * Use @link stopCursorTracking to no longer emit this signal. Note: the signal will be
+     * Use stopCursorTracking to no longer emit this signal. Note: the signal will be
      * emitted until each call of this method has been matched with a call to stopCursorTracking.
      *
      * This tracking is not about pointer position tracking.
@@ -145,7 +145,7 @@ public:
      * Returns the current cursor position. This method does an update of the mouse position if
      * needed. It's save to call it multiple times.
      *
-     * Implementing subclasses should prefer to use @link currentPos which is not performing a check
+     * Implementing subclasses should prefer to use currentPos which is not performing a check
      * for update.
      **/
     static QPoint pos();
@@ -157,7 +157,7 @@ public:
     static xcb_cursor_t x11Cursor(CursorShape shape);
     /**
      * Notice: if available always use the CursorShape variant to avoid cache duplicates for
-     * ambiguous cursor names in the non existing cursor name spcification
+     * ambiguous cursor names in the non existing cursor name specification
      **/
     static xcb_cursor_t x11Cursor(const QByteArray &name);
 
@@ -179,13 +179,13 @@ Q_SIGNALS:
 
 protected:
     /**
-     * Called from @link x11Cursor to actually retrieve the X11 cursor. Base implementation returns
+     * Called from x11Cursor to actually retrieve the X11 cursor. Base implementation returns
      * a null cursor, an implementing subclass should implement this method if it can provide X11
      * mouse cursors.
      **/
     virtual xcb_cursor_t getX11Cursor(CursorShape shape);
     /**
-     * Called from @link x11Cursor to actually retrieve the X11 cursor. Base implementation returns
+     * Called from x11Cursor to actually retrieve the X11 cursor. Base implementation returns
      * a null cursor, an implementing subclass should implement this method if it can provide X11
      * mouse cursors.
      **/
@@ -195,27 +195,27 @@ protected:
      **/
     virtual void doSetPos();
     /**
-     * Called from @link pos() to allow syncing the internal position with the underlying
+     * Called from @ref pos() to allow syncing the internal position with the underlying
      * system's cursor position.
      **/
     virtual void doGetPos();
     /**
-     * Called from @link startMousePolling when the mouse polling gets activated. Base implementation
+     * Called from startMousePolling when the mouse polling gets activated. Base implementation
      * does nothing, inheriting classes can overwrite to e.g. start a timer.
      **/
     virtual void doStartMousePolling();
     /**
-     * Called from @link stopMousePolling when the mouse polling gets deactivated. Base implementation
+     * Called from stopMousePolling when the mouse polling gets deactivated. Base implementation
      * does nothing, inheriting classes can overwrite to e.g. stop a timer.
      **/
     virtual void doStopMousePolling();
     /**
-     * Called from @link startCursorTracking when cursor image tracking gets activated. Inheriting class needs
+     * Called from startCursorTracking when cursor image tracking gets activated. Inheriting class needs
      * to overwrite to enable platform specific code for the tracking.
      */
     virtual void doStartCursorTracking();
     /**
-     * Called from @link stopCursorTracking when cursor image tracking gets deactivated. Inheriting class needs
+     * Called from stopCursorTracking when cursor image tracking gets deactivated. Inheriting class needs
      * to overwrite to disable platform specific code for the tracking.
      */
     virtual void doStopCursorTracking();
@@ -228,7 +228,7 @@ protected:
     const QPoint &currentPos() const;
     /**
      * Updates the internal position to @p pos without warping the pointer as
-     * @link setPos does.
+     * setPos does.
      **/
     void updatePos(const QPoint &pos);
     void updatePos(int x, int y);

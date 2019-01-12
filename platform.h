@@ -185,7 +185,7 @@ public:
     virtual bool requiresCompositing() const;
     /**
      * Whether Compositing is possible in the Platform.
-     * Returning @c false in this method makes only sense if @link{requiresCompositing} returns @c false.
+     * Returning @c false in this method makes only sense if requiresCompositing returns @c false.
      *
      * The default implementation returns @c true.
      * @see requiresCompositing
@@ -193,7 +193,7 @@ public:
     virtual bool compositingPossible() const;
     /**
      * Returns a user facing text explaining why compositing is not possible in case
-     * @link{compositingPossible} returns @c false.
+     * compositingPossible returns @c false.
      *
      * The default implementation returns an empty string.
      * @see compositingPossible
@@ -218,7 +218,7 @@ public:
     /**
      * This method is invoked before and after creating the OpenGL rendering Scene.
      * An implementing Platform can use it to detect crashes triggered by the OpenGL implementation.
-     * This can be used for @link{openGLCompositingIsBroken}.
+     * This can be used for openGLCompositingIsBroken.
      *
      * The default implementation does nothing.
      * @see openGLCompositingIsBroken.

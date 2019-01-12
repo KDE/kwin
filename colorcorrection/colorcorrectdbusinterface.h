@@ -106,7 +106,7 @@ Q_SIGNALS:
     /**
      * @brief Emits that the Night Color configuration has been changed.
      *
-     * The provided variant hash provides the same fields as @link nightColorInfo
+     * The provided variant hash provides the same fields as nightColorInfo
      *
      * @return void
      * @see nightColorInfo

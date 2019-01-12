@@ -31,10 +31,10 @@ namespace KWin
  * session bus.
  *
  * Allows to setup the connection arguments just like in QDBusMessage and supports
- * adding arguments to the call. To invoke the message use the slot @link call.
+ * adding arguments to the call. To invoke the message use the slot @ref call.
  *
- * If the call succeeds the signal @link finished is emitted, if the call fails
- * the signal @link failed is emitted.
+ * If the call succeeds the signal @ref finished is emitted, if the call fails
+ * the signal @ref failed is emitted.
  *
  * Note: the DBusCall always uses the session bus and performs an async call.
  *

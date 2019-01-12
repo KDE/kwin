@@ -32,7 +32,7 @@ namespace KWin
  * @brief Qml export for reserving a Screen Edge.
  *
  * The edge is controlled by the @c enabled property and the @c edge
- * property. If the edge is enabled and gets triggered the @link activated()
+ * property. If the edge is enabled and gets triggered the @ref activated()
  * signal gets emitted.
  *
  * Example usage:

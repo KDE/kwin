@@ -221,7 +221,7 @@ public:
     virtual xcb_window_t frameId() const;
     xcb_window_t window() const;
     /**
-     * @return a unique identifier for the Toplevel. On X11 same as @link {window}
+     * @return a unique identifier for the Toplevel. On X11 same as @ref window
      **/
     virtual quint32 windowId() const;
     QRect geometry() const;
@@ -353,7 +353,7 @@ public:
      * Returns the pointer to the Toplevel's Shadow. A Shadow
      * is only available if Compositing is enabled and the corresponding X window
      * has the Shadow property set.
-     * If a shadow is available @link hasShadow returns @c true.
+     * If a shadow is available hasShadow returns @c true.
      * @returns The Shadow belonging to this Toplevel, may be @c NULL.
      * @see hasShadow
      **/
@@ -372,7 +372,7 @@ public:
 
     /**
      * This method returns the area that the Toplevel window reports to be opaque.
-     * It is supposed to only provide valuable information if @link hasAlpha is @c true .
+     * It is supposed to only provide valuable information if hasAlpha is @c true .
      * @see hasAlpha
      **/
     const QRegion& opaqueRegion() const;

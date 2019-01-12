@@ -126,7 +126,7 @@ public:
      * as a starting point to construct the recently used list.
      *
      * In case the @p client is not in the focus chain it is recommended to use the
-     * Client returned by @link firstClientFocusChain.
+     * Client returned by firstClientFocusChain.
      *
      * The method accepts a @c null Client and in that case @c false is returned.
      * @param client The Client to check whether it is in the Focus Chain

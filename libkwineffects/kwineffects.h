@@ -921,11 +921,11 @@ public:
      * Registers the given @p action for the given @p border to be activated through
      * a touch swipe gesture.
      *
-     * If the @p border gets triggered through a touch swipe gesture the @link{QAction::triggered}
+     * If the @p border gets triggered through a touch swipe gesture the QAction::triggered
      * signal gets invoked.
      *
      * To unregister the touch screen action either delete the @p action or
-     * invoke @link{unregisterTouchBorder}.
+     * invoke unregisterTouchBorder.
      *
      * @see unregisterTouchBorder
      * @since 5.10
@@ -1131,9 +1131,9 @@ public:
      *
      * The Effect will be notified for events through the signal propertyNotify().
      *
-     * To remove the support again use @link removeSupportProperty. When an Effect is
+     * To remove the support again use removeSupportProperty. When an Effect is
      * destroyed it is automatically taken care of removing the support. It is not
-     * required to call @link removeSupportProperty in the Effect's cleanup handling.
+     * required to call removeSupportProperty in the Effect's cleanup handling.
      *
      * @param propertyName The name of the property to announce support for
      * @param effect The effect which announces support
@@ -1295,7 +1295,7 @@ public:
     virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) = 0;
 
     /**
-     * Shows an on-screen-message. To hide it again use @link{hideOnScreenMessage}.
+     * Shows an on-screen-message. To hide it again use hideOnScreenMessage.
      *
      * @param message The message to show
      * @param iconName The optional themed icon name
@@ -1420,10 +1420,10 @@ Q_SIGNALS:
     /**
      * Signal emitted when a user begins a window move or resize operation.
      * To figure out whether the user resizes or moves the window use
-     * @ref EffectWindow::isUserMove or @link EffectWindow::isUserResize.
-     * Whenever the geometry is updated the signal @link windowStepUserMovedResized
+     * @ref EffectWindow::isUserMove or @ref EffectWindow::isUserResize.
+     * Whenever the geometry is updated the signal @ref windowStepUserMovedResized
      * is emitted with the current geometry.
-     * The move/resize operation ends with the signal @link windowFinishUserMovedResized.
+     * The move/resize operation ends with the signal @ref windowFinishUserMovedResized.
      * Only one window can be moved/resized by the user at the same time!
      * @param w The window which is being moved/resized
      * @see windowStepUserMovedResized
@@ -1544,7 +1544,7 @@ Q_SIGNALS:
     void tabBoxAdded(int mode);
     /**
      * Signal emitted when the TabBox was closed by KWin core.
-     * An effect which referenced the TabBox should use @link unrefTabBox to unref again.
+     * An effect which referenced the TabBox should use unrefTabBox to unref again.
      * @see unrefTabBox
      * @see tabBoxAdded
      * @since 4.7
@@ -1564,7 +1564,7 @@ Q_SIGNALS:
     /**
      * Signal emitted when a key event, which is not handled by TabBox directly is, happens while
      * TabBox is active. An effect might use the key event to e.g. change the selected window.
-     * An effect should only response to this signal if it referenced the TabBox with @link refTabBox.
+     * An effect should only response to this signal if it referenced the TabBox with refTabBox.
      * @param event The key event not handled by TabBox directly
      * @see refTabBox
      * @since 4.7
@@ -1676,7 +1676,7 @@ Q_SIGNALS:
 
     /**
      * The window @p w gets shown again. The window was previously
-     * initially shown with @link{windowAdded} and hidden with @link{windowHidden}.
+     * initially shown with windowAdded and hidden with windowHidden.
      *
      * @see windowHidden
      * @see windowAdded
@@ -1687,7 +1687,7 @@ Q_SIGNALS:
     /**
      * The window @p w got hidden but not yet closed.
      * This can happen when a window is still being used and is supposed to be shown again
-     * with @link{windowShown}. On X11 an example is autohiding panels. On Wayland every
+     * with windowShown. On X11 an example is autohiding panels. On Wayland every
      * window first goes through the window hidden state and might get shown again, or might
      * get closed the normal way.
      *
@@ -1717,7 +1717,7 @@ Q_SIGNALS:
      * got destroyed.
      * Effects can use this to refetch the properties they want to set.
      *
-     * When the xcbConnection changes also the @link{x11RootWindow} becomes invalid.
+     * When the xcbConnection changes also the x11RootWindow becomes invalid.
      * @see xcbConnection
      * @see x11RootWindow
      * @since 5.11

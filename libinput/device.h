@@ -439,7 +439,7 @@ public:
     }
 
     /**
-     * The id of the screen in KWin identifiers. Set from KWin through @link setScreenId.
+     * The id of the screen in KWin identifiers. Set from KWin through setScreenId.
      **/
     int screenId() const {
         return m_screenId;

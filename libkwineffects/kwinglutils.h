@@ -282,7 +282,7 @@ public:
      * Creates a custom shader with the given @p traits and custom @p vertexFile and or @p fragmentFile.
      * The file names specified in @p vertexFile and @p fragmentFile are relative paths to the shaders
      * resource file shipped together with KWin. This means this method can only be used for built-in
-     * effects, for 3rd party effects @link {generateCustomShader} should be used.
+     * effects, for 3rd party effects generateCustomShader should be used.
      *
      * If the @p vertexFile is empty a vertex shader with the given @p traits is generated.
      * If it is not empty the @p vertexFile is used as the source for the vertex shader.
@@ -490,7 +490,7 @@ public:
     /**
      * Blits the content of the current draw framebuffer into the texture attached to this FBO.
      *
-     * Be aware that framebuffer blitting may not be supported on all hardware. Use @link blitSupported to check whether
+     * Be aware that framebuffer blitting may not be supported on all hardware. Use blitSupported to check whether
      * it is supported.
      * @param source Geometry in screen coordinates which should be blitted, if not specified complete framebuffer is used
      * @param destination Geometry in attached texture, if not specified complete texture is used as destination

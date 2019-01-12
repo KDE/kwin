@@ -42,8 +42,8 @@ protected:
 Q_SIGNALS:
     /**
      * Matching of a gesture started and this Gesture might match.
-     * On further evaluation either the signal @link{triggered} or
-     * @link{cancelled} will get emitted.
+     * On further evaluation either the signal @ref triggered or
+     * @ref cancelled will get emitted.
      **/
     void started();
     /**
@@ -158,7 +158,7 @@ public:
 
 Q_SIGNALS:
     /**
-     * The progress of the gesture if a @link{minimumDelta} is set.
+     * The progress of the gesture if a minimumDelta is set.
      * The progress is reported in [0.0,1.0]
      **/
     void progress(qreal);

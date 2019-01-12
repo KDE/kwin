@@ -323,10 +323,10 @@ public Q_SLOTS:
      * grid layout.
      * There needs to be at least one virtual desktop and the new value is capped at the maximum
      * number of desktops. A caller of this function cannot expect that the change has been applied.
-     * It is the callers responsibility to either check the @link numberOfDesktops or connect to the
+     * It is the callers responsibility to either check the numberOfDesktops or connect to the
      * countChanged signal.
      *
-     * In case the @link current desktop is on a desktop higher than the new count, the current desktop
+     * In case the @ref current desktop is on a desktop higher than the new count, the current desktop
      * is changed to be the new desktop with highest id. In that situation the signal desktopRemoved
      * is emitted.
      * @param count The new number of desktops to use

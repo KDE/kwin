@@ -107,8 +107,8 @@ private:
  * @brief The data structure of the Model.
  *
  * The model is implemented as a Tree consisting of AbstractLevels as the levels of the tree.
- * A non leaf level is represented by the inheriting class @link ForkLevel, the last level above a
- * leaf is represented by the inheriting class @link ClientLevel, which contains the Clients - each
+ * A non leaf level is represented by the inheriting class ForkLevel, the last level above a
+ * leaf is represented by the inheriting class ClientLevel, which contains the Clients - each
  * Client is one leaf.
  *
  * In case the tree would only consist of Clients - leafs - it has always one ClientLevel as the root
@@ -117,8 +117,8 @@ private:
  * The number of levels in the tree is controlled by the LevelRestrictions. For each existing
  * LevelRestriction a new Level is created, if there are no more restrictions a ClientLevel is created.
  *
- * To build up the tree the static factory method @link create has to be used. It will recursively
- * build up the tree. After the tree has been build up use @link init to initialize the tree which
+ * To build up the tree the static factory method @ref create has to be used. It will recursively
+ * build up the tree. After the tree has been build up use @ref init to initialize the tree which
  * will add the Clients to the ClientLevel.
  *
  * Each element of the tree has a unique id which can be used by the QAbstractItemModel as the

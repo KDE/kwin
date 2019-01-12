@@ -182,8 +182,8 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool glStrictBinding READ isGlStrictBinding WRITE setGlStrictBinding NOTIFY glStrictBindingChanged)
     /**
      * Whether strict binding follows the driver or has been overwritten by a user defined config value.
-     * If @c true @link glStrictBinding is set by the OpenGL Scene during initialization.
-     * If @c false @link glStrictBinding is set from a config value and not updated during scene initialization.
+     * If @c true glStrictBinding is set by the OpenGL Scene during initialization.
+     * If @c false glStrictBinding is set from a config value and not updated during scene initialization.
      **/
     Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
     Q_PROPERTY(bool glCoreProfile READ glCoreProfile WRITE setGLCoreProfile NOTIFY glCoreProfileChanged)

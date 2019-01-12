@@ -50,7 +50,7 @@ class Toplevel;
  * window during the Compositing stage. The Shadow consists of several pixmaps and offsets.
  * For a complete description please refer to http://community.kde.org/KWin/Shadow
  *
- * To create a Shadow instance use the static factory method @link createShadow which will
+ * To create a Shadow instance use the static factory method createShadow which will
  * create an instance for the currently used Compositing Backend. It will read the X11 Property
  * and create the Shadow and all required data (such as WindowQuads). If there is no Shadow
  * defined for the Toplevel the factory method returns @c NULL.

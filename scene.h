@@ -379,17 +379,17 @@ private:
 };
 
 /**
- * @brief Wrapper for a pixmap of the @link Scene::Window.
+ * @brief Wrapper for a pixmap of the Scene::Window.
  *
  * This class encapsulates the functionality to get the pixmap for a window. When initialized the pixmap is not yet
- * mapped to the window and @link isValid will return @c false. The pixmap mapping to the window can be established
- * through @link create. If it succeeds @link isValid will return @c true, otherwise it will keep in the non valid
+ * mapped to the window and isValid will return @c false. The pixmap mapping to the window can be established
+ * through @ref create. If it succeeds isValid will return @c true, otherwise it will keep in the non valid
  * state and it can be tried to create the pixmap mapping again (e.g. in the next frame).
  *
  * This class is not intended to be updated when the pixmap is no longer valid due to e.g. resizing the window.
  * Instead a new instance of this class should be instantiated. The idea behind this is that a valid pixmap does not
  * get destroyed, but can continue to be used. To indicate that a newer pixmap should in generally be around, one can
- * use @link markAsDiscarded.
+ * use markAsDiscarded.
  *
  * This class is intended to be inherited for the needs of the compositor backends which need further mapping from
  * the native pixmap to the respective rendering format.
@@ -401,7 +401,7 @@ public:
     /**
      * @brief Tries to create the mapping between the Window and the pixmap.
      *
-     * In case this method succeeds in creating the pixmap for the window, @link isValid will return @c true otherwise
+     * In case this method succeeds in creating the pixmap for the window, isValid will return @c true otherwise
      * @c false.
      *
      * Inheriting classes should re-implement this method in case they need to add further functionality for mapping the
@@ -430,7 +430,7 @@ public:
      */
     bool isDiscarded() const;
     /**
-     * @brief Marks this WindowPixmap as discarded. From now on @link isDiscarded will return @c true. This method should
+     * @brief Marks this WindowPixmap as discarded. From now on isDiscarded will return @c true. This method should
      * only be used by the Window when it changes in a way that a new pixmap is required.
      *
      * @see isDiscarded

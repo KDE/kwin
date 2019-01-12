@@ -116,7 +116,7 @@ public:
 
     /**
      * The virtual bounding size of all screens combined.
-     * The default implementation returns the same as @link{size} and that is the
+     * The default implementation returns the same as @ref size and that is the
      * method which should be preferred.
      *
      * This method is only for cases where the platform specific implementation needs

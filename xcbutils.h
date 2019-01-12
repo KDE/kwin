@@ -1307,14 +1307,14 @@ private:
  * Furthermore the class provides wrappers around some xcb methods operating on an xcb_window_t.
  *
  * For the cases that one is more interested in wrapping the xcb methods the constructor which takes
- * an existing window and the @link reset method allow to disable the RAII functionality.
+ * an existing window and the @ref reset method allow to disable the RAII functionality.
  **/
 class Window
 {
 public:
     /**
      * Takes over responsibility of @p window. If @p window is not provided an invalid Window is
-     * created. Use @link create to set an xcb_window_t later on.
+     * created. Use @ref create to set an xcb_window_t later on.
      *
      * If @p destroy is @c true the window will be destroyed together with this object, if @c false
      * the window will be kept around. This is useful if you are not interested in the RAII capabilities

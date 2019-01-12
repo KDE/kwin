@@ -362,7 +362,7 @@ public:
 
     virtual void updateMouseGrab();
     /**
-     * @returns The caption consisting of @link{captionNormal} and @link{captionSuffix}
+     * @returns The caption consisting of captionNormal and captionSuffix
      * @see captionNormal
      * @see captionSuffix
      **/
@@ -454,13 +454,15 @@ public:
     Q_INVOKABLE inline bool tabBefore(AbstractClient *other, bool activate) { return tabTo(other, false, activate); }
     Q_INVOKABLE inline bool tabBehind(AbstractClient *other, bool activate) { return tabTo(other, true, activate); }
     /**
-     * Syncs the *dynamic* @param property @param fromThisClient or the currentTab() to
+     * Syncs the *dynamic* @p property @p fromThisClient or the currentTab() to
      * all members of the tabGroup() (if there is one)
      *
      * eg. if you call:
+     * @code
      * client->setProperty("kwin_tiling_floats", true);
      * client->syncTabGroupFor("kwin_tiling_floats", true)
-     * all clients in this tabGroup will have ::property("kwin_tiling_floats").toBool() == true
+     * @endcode
+     * all clients in this tabGroup will have property("kwin_tiling_floats").toBool() == true
      *
      * WARNING: non dynamic properties are ignored - you're not supposed to alter/update such explicitly
      */
@@ -1040,7 +1042,7 @@ protected:
      * Called from startMoveResize.
      *
      * Implementing classes should return @c false if starting move resize should
-     * get aborted. In that case @link startMoveResize will also return @c false.
+     * get aborted. In that case startMoveResize will also return @c false.
      *
      * Base implementation returns @c true.
      **/

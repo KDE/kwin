@@ -163,8 +163,8 @@ bool KWIN_EXPORT grabXKeyboard(xcb_window_t w = XCB_WINDOW_NONE);
 void KWIN_EXPORT ungrabXKeyboard();
 
 /**
- * Small helper class which performs @link grabXServer in the ctor and
- * @link ungrabXServer in the dtor. Use this class to ensure that grab and
+ * Small helper class which performs grabXServer in the ctor and
+ * ungrabXServer in the dtor. Use this class to ensure that grab and
  * ungrab are matched.
  *
  * To simplify usage consider using the macro GRAB_SERVER_DURING_CONTEXT
