@@ -207,6 +207,7 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
         paintBackground(infiniteRegion());
     }
     QVector<Phase2Data> phase2;
+    phase2.reserve(stacking_order.size());
     foreach (Window * w, stacking_order) { // bottom to top
         Toplevel* topw = w->window();
 
@@ -250,6 +251,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
     assert((orig_mask & (PAINT_SCREEN_TRANSFORMED
                          | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) == 0);
     QVector<Phase2Data> phase2data;
+    phase2data.reserve(stacking_order.size());
 
     QRegion dirtyArea = region;
     bool opaqueFullscreen(false);
