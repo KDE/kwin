@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "platform.h"
 #include "cursor.h"
+#include "effects.h"
 #include "shell_client.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -32,12 +33,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shell.h>
+#include <KWindowSystem>
 
 #include <KWayland/Server/surface_interface.h>
 
 #include <linux/input.h>
 
 using namespace KWayland::Client;
+
+Q_DECLARE_METATYPE(NET::WindowType);
 
 namespace KWin
 {
@@ -67,6 +71,11 @@ private Q_SLOTS:
     void testModifierScroll();
     void testPopup();
     void testScale();
+    void testWindowType_data();
+    void testWindowType();
+    void testChangeWindowType_data();
+    void testChangeWindowType();
+    void testEffectWindow();
 };
 
 class HelperWindow : public QRasterWindow
@@ -712,6 +721,98 @@ void InternalWindowTest::testScale()
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 }
 
+void InternalWindowTest::testWindowType_data()
+{
+    QTest::addColumn<NET::WindowType>("windowType");
+
+    QTest::newRow("normal") << NET::Normal;
+    QTest::newRow("desktop") << NET::Desktop;
+    QTest::newRow("Dock") << NET::Dock;
+    QTest::newRow("Toolbar") << NET::Toolbar;
+    QTest::newRow("Menu") << NET::Menu;
+    QTest::newRow("Dialog") << NET::Dialog;
+    QTest::newRow("Utility") << NET::Utility;
+    QTest::newRow("Splash") << NET::Splash;
+    QTest::newRow("DropdownMenu") << NET::DropdownMenu;
+    QTest::newRow("PopupMenu") << NET::PopupMenu;
+    QTest::newRow("Tooltip") << NET::Tooltip;
+    QTest::newRow("Notification") << NET::Notification;
+    QTest::newRow("ComboBox") << NET::ComboBox;
+    QTest::newRow("OnScreenDisplay") << NET::OnScreenDisplay;
+}
+
+void InternalWindowTest::testWindowType()
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    QFETCH(NET::WindowType, windowType);
+    KWindowSystem::setType(win.winId(), windowType);
+    win.show();
+    QVERIFY(clientAddedSpy.wait());
+    QTRY_COMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QCOMPARE(internalClient->windowType(), windowType);
+}
+
+void InternalWindowTest::testChangeWindowType_data()
+{
+    QTest::addColumn<NET::WindowType>("windowType");
+
+    QTest::newRow("desktop") << NET::Desktop;
+    QTest::newRow("Dock") << NET::Dock;
+    QTest::newRow("Toolbar") << NET::Toolbar;
+    QTest::newRow("Menu") << NET::Menu;
+    QTest::newRow("Dialog") << NET::Dialog;
+    QTest::newRow("Utility") << NET::Utility;
+    QTest::newRow("Splash") << NET::Splash;
+    QTest::newRow("DropdownMenu") << NET::DropdownMenu;
+    QTest::newRow("PopupMenu") << NET::PopupMenu;
+    QTest::newRow("Tooltip") << NET::Tooltip;
+    QTest::newRow("Notification") << NET::Notification;
+    QTest::newRow("ComboBox") << NET::ComboBox;
+    QTest::newRow("OnScreenDisplay") << NET::OnScreenDisplay;
+}
+
+void InternalWindowTest::testChangeWindowType()
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    win.show();
+    QVERIFY(clientAddedSpy.wait());
+    QTRY_COMPARE(clientAddedSpy.count(), 1);
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QCOMPARE(internalClient->windowType(), NET::Normal);
+
+    QFETCH(NET::WindowType, windowType);
+    KWindowSystem::setType(win.winId(), windowType);
+    QTRY_COMPARE(internalClient->windowType(), windowType);
+
+    KWindowSystem::setType(win.winId(), NET::Normal);
+    QTRY_COMPARE(internalClient->windowType(), NET::Normal);
+}
+
+void InternalWindowTest::testEffectWindow()
+{
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    win.show();
+    QVERIFY(clientAddedSpy.wait());
+    auto internalClient = clientAddedSpy.first().first().value<ShellClient*>();
+    QVERIFY(internalClient);
+    QVERIFY(internalClient->effectWindow());
+    QCOMPARE(internalClient->effectWindow()->internalWindow(), &win);
+
+    QCOMPARE(effects->findWindow(&win), internalClient->effectWindow());
+    QCOMPARE(effects->findWindow(&win)->internalWindow(), &win);
+}
 
 }
 

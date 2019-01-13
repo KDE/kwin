@@ -53,6 +53,8 @@ public:
     int slideInDuration() const;
     int slideOutDuration() const;
 
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 private Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowDeleted(EffectWindow *w);
@@ -65,6 +67,7 @@ private Q_SLOTS:
 
 private:
     void setupAnimData(EffectWindow *w);
+    void setupInternalWindowSlide(EffectWindow *w);
 
     long m_atom;
 

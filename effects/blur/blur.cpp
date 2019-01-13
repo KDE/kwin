@@ -29,6 +29,7 @@
 #include <QLinkedList>
 #include <QScreen> // for QGuiApplication
 #include <QTime>
+#include <QWindow>
 #include <cmath> // for ceil()
 
 #include <KWayland/Server/surface_interface.h>
@@ -272,6 +273,13 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
         region = surf->blur()->region();
     }
 
+    if (auto internal = w->internalWindow()) {
+        const auto property = internal->property("kwin_blur");
+        if (property.isValid()) {
+            region = property.value<QRegion>();
+        }
+    }
+
     //!value.isNull() full window in X11 case, surf->blur()
     //valid, full window in wayland case
     if (region.isEmpty() && (!value.isNull() || (surf && surf->blur()))) {
@@ -294,6 +302,9 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
             }
         });
     }
+    if (auto internal = w->internalWindow()) {
+        internal->installEventFilter(this);
+    }
 
     updateBlurRegion(w);
 }
@@ -313,6 +324,20 @@ void BlurEffect::slotPropertyNotify(EffectWindow *w, long atom)
     if (w && atom == net_wm_blur_region && net_wm_blur_region != XCB_ATOM_NONE) {
         updateBlurRegion(w);
     }
+}
+
+bool BlurEffect::eventFilter(QObject *watched, QEvent *event)
+{
+    auto internal = qobject_cast<QWindow*>(watched);
+    if (internal && event->type() == QEvent::DynamicPropertyChange) {
+        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
+        if (pe->propertyName() == "kwin_blur") {
+            if (auto w = effects->findWindow(internal)) {
+                updateBlurRegion(w);
+            }
+        }
+    }
+    return false;
 }
 
 bool BlurEffect::enabledByDefault()

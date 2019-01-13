@@ -59,6 +59,9 @@ public:
     void closeWindow() override;
     void referencePreviousWindowPixmap() override {}
     void unreferencePreviousWindowPixmap() override {}
+    QWindow *internalWindow() const override {
+        return nullptr;
+    }
     bool isDeleted() const override {
         return false;
     }

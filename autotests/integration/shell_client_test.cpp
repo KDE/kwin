@@ -184,6 +184,9 @@ void TestShellClient::testMapUnmapMap()
     QVERIFY(client->property("moveable").toBool());
     QVERIFY(client->property("moveableAcrossScreens").toBool());
     QVERIFY(client->property("resizeable").toBool());
+    QCOMPARE(client->isInternal(), false);
+    QVERIFY(client->effectWindow());
+    QVERIFY(!client->effectWindow()->internalWindow());
     QCOMPARE(client->internalId().isNull(), false);
     const auto uuid = client->internalId();
     QUuid deletedUuid;

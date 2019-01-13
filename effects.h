@@ -134,6 +134,7 @@ public:
     void stopMousePolling() override;
     EffectWindow* findWindow(WId id) const override;
     EffectWindow* findWindow(KWayland::Server::SurfaceInterface *surf) const override;
+    EffectWindow *findWindow(QWindow *w) const override;
     EffectWindowList stackingOrder() const override;
     void setElevatedWindow(KWin::EffectWindow* w, bool set) override;
 
@@ -473,6 +474,8 @@ public:
 
     void referencePreviousWindowPixmap() override;
     void unreferencePreviousWindowPixmap() override;
+
+    QWindow *internalWindow() const override;
 
     const Toplevel* window() const;
     Toplevel* window();

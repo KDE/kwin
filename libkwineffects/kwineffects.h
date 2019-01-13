@@ -1078,6 +1078,16 @@ public:
 
     Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(WId id) const = 0;
     Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(KWayland::Server::SurfaceInterface *surf) const = 0;
+    /**
+     * Finds the EffectWindow for the internal window @p w.
+     * If there is no such window @c null is returned.
+     *
+     * On Wayland this returns the internal window. On X11 it returns an Unamanged with the
+     * window id matching that of the provided window @p w.
+     *
+     * @since 5.16
+     **/
+    Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(QWindow *w) const = 0;
     virtual EffectWindowList stackingOrder() const = 0;
     // window will be temporarily painted as if being at the top of the stack
     Q_SCRIPTABLE virtual void setElevatedWindow(KWin::EffectWindow* w, bool set) = 0;
@@ -2041,6 +2051,14 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      **/
     Q_PROPERTY(bool popupWindow READ isPopupWindow CONSTANT)
 
+    /**
+     * KWin internal window. Specific to Wayland platform.
+     *
+     * If the EffectWindow does not reference an internal window, this property is @c null.
+     * @since 5.16
+     **/
+    Q_PROPERTY(QWindow *internalWindow READ internalWindow CONSTANT)
+
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -2323,6 +2341,11 @@ public:
      * @since 5.15
      **/
     virtual bool isPopupWindow() const = 0;
+
+    /**
+     * @since 5.16
+     **/
+    virtual QWindow *internalWindow() const = 0;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

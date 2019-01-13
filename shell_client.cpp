@@ -60,6 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <signal.h>
 
+Q_DECLARE_METATYPE(NET::WindowType)
+
 using namespace KWayland::Server;
 
 static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_CLOSE_ANIMATION");
@@ -1143,11 +1145,9 @@ void ShellClient::findInternalWindow()
         connect(m_internalWindow, &QWindow::destroyed, this, [this] { m_internalWindow = nullptr; });
         connect(m_internalWindow, &QWindow::opacityChanged, this, &ShellClient::setOpacity);
 
-        // Try reading the window type from the QWindow. PlasmaCore.Dialog provides a dynamic type property
-        // let's check whether it exists, if it does it's our window type
-        const QVariant windowType = m_internalWindow->property("type");
+        const QVariant windowType = m_internalWindow->property("kwin_windowType");
         if (!windowType.isNull()) {
-            m_windowType = static_cast<NET::WindowType>(windowType.toInt());
+            m_windowType = windowType.value<NET::WindowType>();
         }
         setOpacity(m_internalWindow->opacity());
 
@@ -1504,6 +1504,10 @@ bool ShellClient::eventFilter(QObject *watched, QEvent *event)
         QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (pe->propertyName() == s_skipClosePropertyName) {
             setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
+        }
+        if (pe->propertyName() == "kwin_windowType") {
+            m_windowType = m_internalWindow->property("kwin_windowType").value<NET::WindowType>();
+            workspace()->updateClientArea();
         }
     }
     return false;

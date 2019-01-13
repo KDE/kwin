@@ -25,6 +25,7 @@
 
 #include <QMatrix4x4>
 #include <QLinkedList>
+#include <QWindow>
 
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/contrast_interface.h>
@@ -140,6 +141,27 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
         m_colorMatrices[w] = colorMatrix(surf->contrast()->contrast(), surf->contrast()->intensity(), surf->contrast()->saturation());
     }
 
+    if (auto internal = w->internalWindow()) {
+        const auto property = internal->property("kwin_background_region");
+        if (property.isValid()) {
+            region = property.value<QRegion>();
+            bool ok = false;
+            qreal contrast = internal->property("kwin_background_contrast").toReal(&ok);
+            if (!ok) {
+                contrast = 1.0;
+            }
+            qreal intensity = internal->property("kwin_background_intensity").toReal(&ok);
+            if (!ok) {
+                intensity = 1.0;
+            }
+            qreal saturation = internal->property("kwin_background_saturation").toReal(&ok);
+            if (!ok) {
+                saturation = 1.0;
+            }
+            m_colorMatrices[w] = colorMatrix(contrast, intensity, saturation);
+        }
+    }
+
     //!value.isNull() full window in X11 case, surf->contrast()
     //valid, full window in wayland case
     if (region.isEmpty() && (!value.isNull() || (surf && surf->contrast()))) {
@@ -163,7 +185,29 @@ void ContrastEffect::slotWindowAdded(EffectWindow *w)
             }
         });
     }
+
+    if (auto internal = w->internalWindow()) {
+        internal->installEventFilter(this);
+    }
+
     updateContrastRegion(w);
+}
+
+bool ContrastEffect::eventFilter(QObject *watched, QEvent *event)
+{
+    auto internal = qobject_cast<QWindow*>(watched);
+    if (internal && event->type() == QEvent::DynamicPropertyChange) {
+        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
+        if (pe->propertyName() == "kwin_background_region" ||
+            pe->propertyName() == "kwin_background_contrast" ||
+            pe->propertyName() == "kwin_background_intensity" ||
+            pe->propertyName() == "kwin_background_saturation") {
+            if (auto w = effects->findWindow(internal)) {
+                updateContrastRegion(w);
+            }
+        }
+    }
+    return false;
 }
 
 void ContrastEffect::slotWindowDeleted(EffectWindow *w)

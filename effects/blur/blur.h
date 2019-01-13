@@ -67,6 +67,8 @@ public:
         return 75;
     }
 
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);

@@ -1086,6 +1086,19 @@ EffectWindow* EffectsHandlerImpl::findWindow(KWayland::Server::SurfaceInterface 
     return nullptr;
 }
 
+EffectWindow *EffectsHandlerImpl::findWindow(QWindow *w) const
+{
+    if (waylandServer()) {
+        if (auto c = waylandServer()->findClient(w)) {
+            return c->effectWindow();
+        }
+    }
+    if (auto u = Workspace::self()->findUnmanaged(w->winId())) {
+        return u->effectWindow();
+    }
+    return nullptr;
+}
+
 
 EffectWindowList EffectsHandlerImpl::stackingOrder() const
 {
@@ -1934,6 +1947,15 @@ EffectWindow* EffectWindowImpl::findModal()
     }
 
     return nullptr;
+}
+
+QWindow *EffectWindowImpl::internalWindow() const
+{
+    auto client = qobject_cast<ShellClient*>(toplevel);
+    if (!client) {
+        return nullptr;
+    }
+    return client->internalWindow();
 }
 
 template <typename T>

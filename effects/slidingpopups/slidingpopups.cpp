@@ -24,10 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QFontMetrics>
+#include <QWindow>
 
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/slide_interface.h>
 #include <KWayland/Server/display.h>
+
+#include <KWindowEffects>
+
+Q_DECLARE_METATYPE(KWindowEffects::SlideFromLocation)
 
 namespace KWin
 {
@@ -198,6 +203,11 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
         connect(surf, &KWayland::Server::SurfaceInterface::slideOnShowHideChanged, this, [this, surf] {
             slotWaylandSlideOnShowChanged(effects->findWindow(surf));
         });
+    }
+
+    if (auto internal = w->internalWindow()) {
+        internal->installEventFilter(this);
+        setupInternalWindowSlide(w);
     }
 
     slideIn(w);
@@ -375,6 +385,62 @@ void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow* w)
 
         setupAnimData(w);
     }
+}
+
+void SlidingPopupsEffect::setupInternalWindowSlide(EffectWindow *w)
+{
+    if (!w) {
+        return;
+    }
+    auto internal = w->internalWindow();
+    if (!internal) {
+        return;
+    }
+    const QVariant slideProperty = internal->property("kwin_slide");
+    if (!slideProperty.isValid()) {
+        return;
+    }
+    AnimationData &animData = m_animationsData[w];
+    switch (slideProperty.value<KWindowEffects::SlideFromLocation>()) {
+    case KWindowEffects::BottomEdge:
+        animData.location = Location::Bottom;
+        break;
+    case KWindowEffects::TopEdge:
+        animData.location = Location::Top;
+        break;
+    case KWindowEffects::RightEdge:
+        animData.location = Location::Right;
+        break;
+    case KWindowEffects::LeftEdge:
+        animData.location = Location::Left;
+        break;
+    default:
+        return;
+    }
+    bool intOk = false;
+    animData.offset = internal->property("kwin_slide_offset").toInt(&intOk);
+    if (!intOk) {
+        animData.offset = -1;
+    }
+    animData.slideLength = 0;
+    animData.slideInDuration = m_slideInDuration;
+    animData.slideOutDuration = m_slideOutDuration;
+
+    setupAnimData(w);
+}
+
+bool SlidingPopupsEffect::eventFilter(QObject *watched, QEvent *event)
+{
+    auto internal = qobject_cast<QWindow*>(watched);
+    if (internal && event->type() == QEvent::DynamicPropertyChange) {
+        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
+        if (pe->propertyName() == "kwin_slide" || pe->propertyName() == "kwin_slide_offset") {
+            if (auto w = effects->findWindow(internal)) {
+                setupInternalWindowSlide(w);
+            }
+        }
+    }
+    return false;
 }
 
 void SlidingPopupsEffect::slideIn(EffectWindow *w)
