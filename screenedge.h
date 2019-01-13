@@ -185,7 +185,7 @@ private:
  * edge. The idea is to not block the screen edge if nothing could be triggered there, so that the
  * user e.g. can configure nothing on the top edge, which tends to interfere with full screen apps
  * having a hidden panel there. On X11 (currently only supported backend) the @ref Edge is
- * represented by a @ref WindowBasedEdge which creates an input only window for the geometry and
+ * represented by a WindowBasedEdge which creates an input only window for the geometry and
  * reacts on enter notify events. If the edge gets reserved for the first time a window is created
  * and mapped, once the edge gets unreserved again, the window gets destroyed.
  *
@@ -305,6 +305,7 @@ public:
     /**
      * Reserve desktop switching for screen edges, if @p isToReserve is @c true. Unreserve otherwise.
      * @param isToReserve indicated whether desktop switching should be reserved or unreseved
+     * @param o Qt orientations
      */
     void reserveDesktopSwitching(bool isToReserve, Qt::Orientations o);
     /**

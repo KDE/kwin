@@ -855,9 +855,10 @@ public:
      * No window will get the mouse events. Only fullscreen effects providing a custom user interface should
      * be using this method. The input events are delivered to Effect::windowInputMouseEvent.
      *
-     * NOTE: this method does not perform an X11 mouse grab. On X11 a fullscreen input window is raised above
+     * @note This method does not perform an X11 mouse grab. On X11 a fullscreen input window is raised above
      * all other windows, but no grab is performed.
      *
+     * @param effect The effect
      * @param shape Sets the cursor to be used while the mouse is intercepted
      * @see stopMouseInterception
      * @see Effect::windowInputMouseEvent
@@ -1394,7 +1395,7 @@ Q_SIGNALS:
      * Signal emitted when a window is being removed from the Workspace.
      * An effect which wants to animate the window closing should connect
      * to this signal and reference the window by using
-     * @ref EffectWindow::refWindow
+     * refWindow
      * @param w The window which is being closed
      * @since 4.7
      **/
@@ -1420,7 +1421,7 @@ Q_SIGNALS:
     /**
      * Signal emitted when a user begins a window move or resize operation.
      * To figure out whether the user resizes or moves the window use
-     * @ref EffectWindow::isUserMove or @ref EffectWindow::isUserResize.
+     * isUserMove or isUserResize.
      * Whenever the geometry is updated the signal @ref windowStepUserMovedResized
      * is emitted with the current geometry.
      * The move/resize operation ends with the signal @ref windowFinishUserMovedResized.

@@ -591,6 +591,7 @@ public:
     /** Set the quick tile mode ("snap") of this window.
      * This will also handle preserving and restoring of window geometry as necessary.
      * @param mode The tile mode (left/right) to give this window.
+     * @param keyboard Defines whether to take keyboard cursor into account.
      */
     void setQuickTileMode(QuickTileMode mode, bool keyboard = false);
     QuickTileMode quickTileMode() const {
@@ -758,13 +759,13 @@ public:
     /**
      * Default implementation returns @c null.
      * Mostly intended for X11 clients, from EWMH:
-     * <quote>
+     * @verbatim
      * If the WM_TRANSIENT_FOR property is set to None or Root window, the window should be
      * treated as a transient for all other windows in the same group. It has been noted that this
      * is a slight ICCCM violation, but as this behavior is pretty standard for many toolkits and
      * window managers, and is extremely unlikely to break anything, it seems reasonable to document
      * it as standard.
-     * </quote>
+     * @endverbatim
      **/
     virtual bool groupTransient() const;
     /**
@@ -1121,7 +1122,7 @@ protected:
     virtual void updateCaption() = 0;
 
     /**
-     * Looks for another AbstractClient with same @link{captionNormal} and @link{captionSuffix}.
+     * Looks for another AbstractClient with same captionNormal and captionSuffix.
      * If no such AbstractClient exists @c nullptr is returned.
      **/
     AbstractClient *findClientWithSameCaption() const;
