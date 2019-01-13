@@ -345,7 +345,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 
         // Here we rely on WindowPrePaintData::setTranslucent() to remove
         // the clip if needed.
-        if (!data->clip.isEmpty() && !(data->mask & PAINT_WINDOW_TRANSFORMED)) {
+        if (!data->clip.isEmpty() && !(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
             // clip away the opaque regions for all windows below this one
             allclips |= data->clip;
             // extend the translucent damage for windows below this by remaining (translucent) regions
