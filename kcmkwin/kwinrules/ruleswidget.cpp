@@ -629,7 +629,7 @@ Rules* RulesWidget::rules() const
     CHECKBOX_SET_RULE(below,);
     CHECKBOX_SET_RULE(noborder,);
     auto comboToDecocolor = [this](int index) -> QString {
-        return QFileInfo(decocolor->itemData(index).toString()).baseName();
+        return decocolor->itemData(index).toString();
     };
     COMBOBOX_FORCE_RULE(decocolor, comboToDecocolor);
     CHECKBOX_SET_RULE(skiptaskbar,);
