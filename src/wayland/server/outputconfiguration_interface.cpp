@@ -287,6 +287,9 @@ void OutputConfigurationInterface::setApplied()
 
 void OutputConfigurationInterface::Private::sendApplied()
 {
+    if (!resource) {
+        return;
+    }
     org_kde_kwin_outputconfiguration_send_applied(resource);
 }
 
@@ -299,6 +302,9 @@ void OutputConfigurationInterface::setFailed()
 
 void OutputConfigurationInterface::Private::sendFailed()
 {
+    if (!resource) {
+        return;
+    }
     org_kde_kwin_outputconfiguration_send_failed(resource);
 }
 
