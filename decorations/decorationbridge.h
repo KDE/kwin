@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDecoration2/Private/DecorationBridge>
 
+#include <KSharedConfig>
+
 #include <QObject>
 #include <QSharedPointer>
 
@@ -68,11 +70,13 @@ public:
     QString supportInformation() const;
 
 private:
+    QString readPlugin();
     void loadMetaData(const QJsonObject &object);
     void findTheme(const QVariantMap &map);
     void initPlugin();
     QString readTheme() const;
     KPluginFactory *m_factory;
+    KSharedConfig::Ptr m_lnfConfig;
     bool m_blur;
     QString m_plugin;
     QString m_defaultTheme;
