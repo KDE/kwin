@@ -253,7 +253,7 @@ ScrollViewKCM {
 
                     checked: kcm.osdEnabled
 
-                    onCheckedChanged: kcm.osdEnabled = checked
+                    onToggled: kcm.osdEnabled = checked
                 }
 
                 QtControls.SpinBox {
@@ -287,9 +287,9 @@ ScrollViewKCM {
 
                     text: i18n("Show desktop layout indicators")
 
-                    checked: kcm.osdTextOnly
+                    checked: !kcm.osdTextOnly
 
-                    onCheckedChanged: kcm.osdTextOnly = !checked
+                    onToggled: kcm.osdTextOnly = !checked
                 }
             }
         }
