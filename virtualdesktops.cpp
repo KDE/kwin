@@ -98,7 +98,7 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
         VirtualDesktop *internalDesktop = desktopForX11Id(i);
         PlasmaVirtualDesktopInterface *desktop = m_virtualDesktopManagement->createDesktop(internalDesktop->id());
 
-        desktop->setName(desktop->name());
+        desktop->setName(internalDesktop->name());
         desktop->sendDone();
 
         connect(desktop, &PlasmaVirtualDesktopInterface::activateRequested, this,
