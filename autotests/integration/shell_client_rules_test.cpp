@@ -106,15 +106,19 @@ void TestShellClientRules::name##_data() \
     QTest::newRow("wlShell|Force") << Test::ShellSurfaceType::WlShell << 2; \
     QTest::newRow("xdgShellV5|Force") << Test::ShellSurfaceType::XdgShellV5 << 2; \
     QTest::newRow("xdgShellV6|Force") << Test::ShellSurfaceType::XdgShellV6 << 2; \
+    QTest::newRow("xdgWmBase|Force") << Test::ShellSurfaceType::XdgShellStable << 2; \
     QTest::newRow("wlShell|Apply") << Test::ShellSurfaceType::WlShell << 3; \
     QTest::newRow("xdgShellV5|Apply") << Test::ShellSurfaceType::XdgShellV5 << 3; \
     QTest::newRow("xdgShellV6|Apply") << Test::ShellSurfaceType::XdgShellV6 << 3; \
+    QTest::newRow("xdgWmBase|Apply") << Test::ShellSurfaceType::XdgShellStable << 3; \
     QTest::newRow("wlShell|ApplyNow") << Test::ShellSurfaceType::WlShell << 5; \
     QTest::newRow("xdgShellV5|ApplyNow") << Test::ShellSurfaceType::XdgShellV5 << 5; \
     QTest::newRow("xdgShellV6|ApplyNow") << Test::ShellSurfaceType::XdgShellV6 << 5; \
+    QTest::newRow("xdgWmBase|ApplyNow") << Test::ShellSurfaceType::XdgShellStable << 5; \
     QTest::newRow("wlShell|ForceTemporarily") << Test::ShellSurfaceType::WlShell << 6; \
     QTest::newRow("xdgShellV5|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV5 << 6; \
     QTest::newRow("xdgShellV6|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV6 << 6; \
+    QTest::newRow("xdgWmBase|ForceTemporarily") << Test::ShellSurfaceType::XdgShellStable << 6; \
 }
 
 #define TEST_FORCE_DATA( name ) \
@@ -125,9 +129,11 @@ void TestShellClientRules::name##_data() \
     QTest::newRow("wlShell|Force") << Test::ShellSurfaceType::WlShell << 2; \
     QTest::newRow("xdgShellV5|Force") << Test::ShellSurfaceType::XdgShellV5 << 2; \
     QTest::newRow("xdgShellV6|Force") << Test::ShellSurfaceType::XdgShellV6 << 2; \
+    QTest::newRow("xdgWmBase|Force") << Test::ShellSurfaceType::XdgShellStable << 2; \
     QTest::newRow("wlShell|ForceTemporarily") << Test::ShellSurfaceType::WlShell << 6; \
     QTest::newRow("xdgShellV5|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV5 << 6; \
     QTest::newRow("xdgShellV6|ForceTemporarily") << Test::ShellSurfaceType::XdgShellV6 << 6; \
+    QTest::newRow("xdgWmBase|ForceTemporarily") << Test::ShellSurfaceType::XdgShellStable << 6; \
 }
 
 

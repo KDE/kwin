@@ -185,6 +185,9 @@ void DecorationInputTest::testAxis_data()
     QTest::newRow("topLeft|xdgv6") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("top|xdgv6") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("topRight|xdgv6") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("topLeft|xdgWmBase") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("top|xdgWmBase") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("topRight|xdgWmBase") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void DecorationInputTest::testAxis()
@@ -242,6 +245,9 @@ void DecorationInputTest::testDoubleClick_data()
     QTest::newRow("topLeft|xdgv6") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("top|xdgv6") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("topRight|xdgv6") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("topLeft|xdgWmBase") << QPoint(0, 0) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("top|xdgWmBase") << QPoint(250, 0) << Qt::TopSection << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("topRight|xdgWmBase") << QPoint(499, 0) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void KWin::DecorationInputTest::testDoubleClick()
@@ -300,7 +306,9 @@ void DecorationInputTest::testDoubleTap_data()
     QTest::newRow("topLeft|xdgv6") << QPoint(10, 10) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("top|xdgv6") << QPoint(260, 10) << Qt::TopSection << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("topRight|xdgv6") << QPoint(509, 10) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellV6;
-
+    QTest::newRow("topLeft|xdgWmBase") << QPoint(10, 10) << Qt::TopLeftSection << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("top|xdgWmBase") << QPoint(260, 10) << Qt::TopSection << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("topRight|xdgWmBase") << QPoint(509, 10) << Qt::TopRightSection << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void KWin::DecorationInputTest::testDoubleTap()
@@ -353,6 +361,7 @@ void DecorationInputTest::testHover_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void DecorationInputTest::testHover()
@@ -411,6 +420,10 @@ void DecorationInputTest::testPressToMove_data()
     QTest::newRow("To left|xdgv6")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("To bottom|xdgv6") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("To top|xdgv6")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("To right|xdgWmBase")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("To left|xdgWmBase")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("To bottom|xdgWmBase") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("To top|xdgWmBase")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void DecorationInputTest::testPressToMove()
@@ -480,6 +493,10 @@ void DecorationInputTest::testTapToMove_data()
     QTest::newRow("To left|xdgv6")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("To bottom|xdgv6") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::ShellSurfaceType::XdgShellV6;
     QTest::newRow("To top|xdgv6")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("To right|xdgWmBase")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("To left|xdgWmBase")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("To bottom|xdgWmBase") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("To top|xdgWmBase")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void DecorationInputTest::testTapToMove()
@@ -540,12 +557,15 @@ void DecorationInputTest::testResizeOutsideWindow_data()
     QTest::newRow("wlShell - left") << Test::ShellSurfaceType::WlShell << Qt::LeftEdge << Qt::SizeHorCursor;
     QTest::newRow("xdgShellV5 - left") << Test::ShellSurfaceType::XdgShellV5 << Qt::LeftEdge << Qt::SizeHorCursor;
     QTest::newRow("xdgShellV6 - left") << Test::ShellSurfaceType::XdgShellV6 << Qt::LeftEdge << Qt::SizeHorCursor;
+    QTest::newRow("xdgWmBase - left") << Test::ShellSurfaceType::XdgShellStable << Qt::LeftEdge << Qt::SizeHorCursor;
     QTest::newRow("wlShell - right") << Test::ShellSurfaceType::WlShell << Qt::RightEdge << Qt::SizeHorCursor;
     QTest::newRow("xdgShellV5 - right") << Test::ShellSurfaceType::XdgShellV5 << Qt::RightEdge << Qt::SizeHorCursor;
     QTest::newRow("xdgShellV6 - right") << Test::ShellSurfaceType::XdgShellV6 << Qt::RightEdge << Qt::SizeHorCursor;
+    QTest::newRow("xdgWmBase - right") << Test::ShellSurfaceType::XdgShellStable << Qt::RightEdge << Qt::SizeHorCursor;
     QTest::newRow("wlShell - bottom") << Test::ShellSurfaceType::WlShell << Qt::BottomEdge << Qt::SizeVerCursor;
     QTest::newRow("xdgShellV5 - bottom") << Test::ShellSurfaceType::XdgShellV5 << Qt::BottomEdge << Qt::SizeVerCursor;
     QTest::newRow("xdgShellV6 - bottom") << Test::ShellSurfaceType::XdgShellV6 << Qt::BottomEdge << Qt::SizeVerCursor;
+    QTest::newRow("xdgWmBase - bottom") << Test::ShellSurfaceType::XdgShellStable << Qt::BottomEdge << Qt::SizeVerCursor;
 }
 
 void DecorationInputTest::testResizeOutsideWindow()
@@ -611,6 +631,8 @@ void DecorationInputTest::testModifierClickUnrestrictedMove_data()
     const QVector<std::pair<Test::ShellSurfaceType, QByteArray>> surfaceTypes{
         {Test::ShellSurfaceType::WlShell, QByteArrayLiteral("WlShell")},
         {Test::ShellSurfaceType::XdgShellV5, QByteArrayLiteral("XdgShellV5")},
+        {Test::ShellSurfaceType::XdgShellV6, QByteArrayLiteral("XdgShellV6")},
+        {Test::ShellSurfaceType::XdgShellStable, QByteArrayLiteral("XdgWmBase")},
     };
 
     for (const auto &type: surfaceTypes) {
@@ -709,6 +731,8 @@ void DecorationInputTest::testModifierScrollOpacity_data()
     const QVector<std::pair<Test::ShellSurfaceType, QByteArray>> surfaceTypes{
         {Test::ShellSurfaceType::WlShell, QByteArrayLiteral("WlShell")},
         {Test::ShellSurfaceType::XdgShellV5, QByteArrayLiteral("XdgShellV5")},
+        {Test::ShellSurfaceType::XdgShellV6, QByteArrayLiteral("XdgShellV6")},
+        {Test::ShellSurfaceType::XdgShellStable, QByteArrayLiteral("XdgWmBase")},
     };
 
     for (const auto &type: surfaceTypes) {
@@ -772,6 +796,7 @@ void DecorationInputTest::testTouchEvents_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 class EventHelper : public QObject
@@ -846,6 +871,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents_data()
 
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void DecorationInputTest::testTooltipDoesntEatKeyEvents()

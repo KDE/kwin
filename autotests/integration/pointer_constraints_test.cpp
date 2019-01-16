@@ -132,6 +132,10 @@ void TestPointerConstraints::testConfinedPointer_data()
     QTest::newRow("XdgShellV6 - bottomRight") << Test::ShellSurfaceType::XdgShellV6 << bottomRight << 1  << 1;
     QTest::newRow("XdgShellV6 - topLeft")     << Test::ShellSurfaceType::XdgShellV6 << topLeft  << -1 << -1;
     QTest::newRow("XdgShellV6 - topRight")    << Test::ShellSurfaceType::XdgShellV6 << topRight << 1  << -1;
+    QTest::newRow("XdgWmBase - bottomLeft")   << Test::ShellSurfaceType::XdgShellStable << bottomLeft  << -1 << 1;
+    QTest::newRow("XdgWmBase - bottomRight")  << Test::ShellSurfaceType::XdgShellStable << bottomRight << 1  << 1;
+    QTest::newRow("XdgWmBase - topLeft")      << Test::ShellSurfaceType::XdgShellStable << topLeft  << -1 << -1;
+    QTest::newRow("XdgWmBase - topRight")     << Test::ShellSurfaceType::XdgShellStable << topRight << 1  << -1;
 }
 
 void TestPointerConstraints::testConfinedPointer()
@@ -300,6 +304,7 @@ void TestPointerConstraints::testLockedPointer_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestPointerConstraints::testLockedPointer()
@@ -378,6 +383,7 @@ void TestPointerConstraints::testCloseWindowWithLockedPointer_data()
     QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
     QTest::newRow("XdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
     QTest::newRow("XdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("XdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
 }
 
 void TestPointerConstraints::testCloseWindowWithLockedPointer()
