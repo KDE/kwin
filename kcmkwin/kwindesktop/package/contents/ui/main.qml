@@ -174,123 +174,119 @@ ScrollViewKCM {
         }
     }
 
-    footer: ColumnLayout {
-        Kirigami.FormLayout {
-            anchors.horizontalCenter: parent.horizontalCenter
+    footer: Kirigami.FormLayout {
+        Connections {
+            target: kcm
 
-            Connections {
-                target: kcm
+            onNavWrapsChanged: navWraps.checked = kcm.navWraps
 
-                onNavWrapsChanged: navWraps.checked = kcm.navWraps
+            onOsdEnabledChanged: osdEnabled.checked = kcm.osdEnabled
+            onOsdDurationChanged: osdDuration.value = kcm.osdDuration
+            onOsdTextOnlyChanged: osdTextOnly.checked = !kcm.osdTextOnly
+        }
 
-                onOsdEnabledChanged: osdEnabled.checked = kcm.osdEnabled
-                onOsdDurationChanged: osdDuration.value = kcm.osdDuration
-                onOsdTextOnlyChanged: osdTextOnly.checked = !kcm.osdTextOnly
+        QtControls.CheckBox {
+            id: navWraps
+
+            Kirigami.FormData.label: i18n("Options:")
+
+            text: i18n("Navigation wraps around")
+
+            checked: kcm.navWraps
+
+            onCheckedChanged: kcm.navWraps = checked
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            QtControls.CheckBox {
+                id: animationEnabled
+
+                text: i18n("Show animation when switching:")
+
+                checked: kcm.animationsModel.enabled
+
+                onCheckedChanged: kcm.animationsModel.enabled = checked
+            }
+
+            QtControls.ComboBox {
+                enabled: animationEnabled.checked
+
+                model: kcm.animationsModel
+                textRole: "NameRole"
+                currentIndex: kcm.animationsModel.currentIndex
+                onActivated: kcm.animationsModel.currentIndex = currentIndex
+            }
+
+            QtControls.Button {
+                enabled: animationEnabled.checked && kcm.animationsModel.currentConfigurable
+
+                icon.name: "configure"
+
+                onClicked: kcm.configureAnimation()
+            }
+
+            QtControls.Button {
+                enabled: animationEnabled.checked
+
+                icon.name: "dialog-information"
+
+                onClicked: kcm.showAboutAnimation()
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            QtControls.CheckBox {
+                id: osdEnabled
+
+                text: i18n("Show on-screen display when switching:")
+
+                checked: kcm.osdEnabled
+
+                onToggled: kcm.osdEnabled = checked
+            }
+
+            QtControls.SpinBox {
+                id: osdDuration
+
+                enabled: osdEnabled.checked
+
+                from: 0
+                to: 10000
+                stepSize: 100
+
+                textFromValue: function(value, locale) { return i18n("%1 ms", value)}
+
+                value: kcm.osdDuration
+
+                onValueChanged: kcm.osdDuration = value
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            Item {
+                width: units.largeSpacing
             }
 
             QtControls.CheckBox {
-                id: navWraps
+                id: osdTextOnly
 
-                Kirigami.FormData.label: i18n("Options:")
+                enabled: osdEnabled.checked
 
-                text: i18n("Navigation wraps around")
+                text: i18n("Show desktop layout indicators")
 
-                checked: kcm.navWraps
+                checked: !kcm.osdTextOnly
 
-                onCheckedChanged: kcm.navWraps = checked
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                QtControls.CheckBox {
-                    id: animationEnabled
-
-                    text: i18n("Show animation when switching:")
-
-                    checked: kcm.animationsModel.enabled
-
-                    onCheckedChanged: kcm.animationsModel.enabled = checked
-                }
-
-                QtControls.ComboBox {
-                    enabled: animationEnabled.checked
-
-                    model: kcm.animationsModel
-                    textRole: "NameRole"
-                    currentIndex: kcm.animationsModel.currentIndex
-                    onActivated: kcm.animationsModel.currentIndex = currentIndex
-                }
-
-                QtControls.Button {
-                    enabled: animationEnabled.checked && kcm.animationsModel.currentConfigurable
-
-                    icon.name: "configure"
-
-                    onClicked: kcm.configureAnimation()
-                }
-
-                QtControls.Button {
-                    enabled: animationEnabled.checked
-
-                    icon.name: "dialog-information"
-
-                    onClicked: kcm.showAboutAnimation()
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                QtControls.CheckBox {
-                    id: osdEnabled
-
-                    text: i18n("Show on-screen display when switching:")
-
-                    checked: kcm.osdEnabled
-
-                    onToggled: kcm.osdEnabled = checked
-                }
-
-                QtControls.SpinBox {
-                    id: osdDuration
-
-                    enabled: osdEnabled.checked
-
-                    from: 0
-                    to: 10000
-                    stepSize: 100
-
-                    textFromValue: function(value, locale) { return i18n("%1 ms", value)}
-
-                    value: kcm.osdDuration
-
-                    onValueChanged: kcm.osdDuration = value
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                Item {
-                    width: units.largeSpacing
-                }
-
-                QtControls.CheckBox {
-                    id: osdTextOnly
-
-                    enabled: osdEnabled.checked
-
-                    text: i18n("Show desktop layout indicators")
-
-                    checked: !kcm.osdTextOnly
-
-                    onToggled: kcm.osdTextOnly = !checked
-                }
+                onToggled: kcm.osdTextOnly = !checked
             }
         }
     }
