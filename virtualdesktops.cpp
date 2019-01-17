@@ -54,19 +54,24 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
     Q_ASSERT(!m_virtualDesktopManagement);
     m_virtualDesktopManagement = management;
 
-    connect(this, &VirtualDesktopManager::desktopCreated, this,
-        [this](VirtualDesktop *desktop) {
-            using namespace KWayland::Server;
-            PlasmaVirtualDesktopInterface *pvd = m_virtualDesktopManagement->createDesktop(desktop->id(), desktop->x11DesktopNumber() - 1);
-            pvd->setName(desktop->name());
-            pvd->sendDone();
-            connect(desktop, &VirtualDesktop::nameChanged, this,
-                [this, desktop, pvd]() {
-                    pvd->setName(desktop->name());
-                }
-            );
-        }
-    );
+    auto createPlasmaVirtualDesktop = [this](VirtualDesktop *desktop) {
+        PlasmaVirtualDesktopInterface *pvd = m_virtualDesktopManagement->createDesktop(desktop->id(), desktop->x11DesktopNumber() - 1);
+        pvd->setName(desktop->name());
+        pvd->sendDone();
+
+        connect(desktop, &VirtualDesktop::nameChanged, pvd,
+            [desktop, pvd] {
+                pvd->setName(desktop->name());
+            }
+        );
+        connect(pvd, &PlasmaVirtualDesktopInterface::activateRequested, this,
+            [this, desktop] {
+                setCurrent(desktop);
+            }
+        );
+    };
+
+    connect(this, &VirtualDesktopManager::desktopCreated, this, createPlasmaVirtualDesktop);
 
     //handle removed: from VirtualDesktopManager to the wayland interface
     connect(this, &VirtualDesktopManager::desktopRemoved, this,
@@ -94,19 +99,8 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
         }
     );
 
-    for (quint32 i = 1; i <= count(); ++i) {
-        VirtualDesktop *internalDesktop = desktopForX11Id(i);
-        PlasmaVirtualDesktopInterface *desktop = m_virtualDesktopManagement->createDesktop(internalDesktop->id());
+    std::for_each(m_desktops.constBegin(), m_desktops.constEnd(), createPlasmaVirtualDesktop);
 
-        desktop->setName(internalDesktop->name());
-        desktop->sendDone();
-
-        connect(desktop, &PlasmaVirtualDesktopInterface::activateRequested, this,
-            [this, desktop] () {
-                setCurrent(desktopForId(desktop->id().toUtf8()));
-            }
-        );
-    }
     //Now we are sure all ids are there
     save();
 
