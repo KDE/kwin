@@ -501,7 +501,7 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
 {
     //on x11 we can have only one desktop at a time
     if (kwinApp()->operationMode() == Application::OperationModeX11 && desktops.size() > 1) {
-        desktops = QVector<VirtualDesktop*>({desktops.first()});
+        desktops = QVector<VirtualDesktop*>({desktops.last()});
     }
 
     if (desktops == m_desktops) {
