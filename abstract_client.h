@@ -430,6 +430,11 @@ public:
     void setDesktop(int);
     void enterDesktop(VirtualDesktop *desktop);
     void leaveDesktop(VirtualDesktop *desktop);
+
+    /**
+     * Set the window as being on the attached list of desktops
+     * On X11 it will be set to the last entry
+     */
     void setDesktops(QVector<VirtualDesktop *> desktops);
 
     int desktop() const override {
