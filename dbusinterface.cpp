@@ -488,7 +488,7 @@ DBusDesktopDataVector VirtualDesktopManagerDBusInterface::desktops() const
 
 void VirtualDesktopManagerDBusInterface::createDesktop(uint position, const QString &name)
 {
-    m_manager->createVirtualDesktop(position + 1, name);
+    m_manager->createVirtualDesktop(position, name);
 }
 
 void VirtualDesktopManagerDBusInterface::setDesktopName(const QString &id, const QString &name)

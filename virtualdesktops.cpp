@@ -445,16 +445,17 @@ VirtualDesktop *VirtualDesktopManager::desktopForId(const QByteArray &id) const
     return nullptr;
 }
 
-VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint number, const QString &name)
+VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const QString &name)
 {
     //too many, can't insert new ones
     if ((uint)m_desktops.count() == VirtualDesktopManager::maximum()) {
         return nullptr;
     }
 
-    const uint actualNumber = qBound<uint>(0, number, VirtualDesktopManager::maximum());
+    position = qBound(0u, position, static_cast<uint>(m_desktops.count()));
+
     auto *vd = new VirtualDesktop(this);
-    vd->setX11DesktopNumber(actualNumber);
+    vd->setX11DesktopNumber(position + 1);
     //TODO: depend on Qt 5.11, use toString(QUuid::WithoutBraces)
     vd->setId(QUuid::createUuid().toString().toUtf8());
     vd->setName(name);
@@ -471,15 +472,16 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint number, const Q
         m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
     }
 
+    m_desktops.insert(position, vd);
+
     //update the id of displaced desktops
-    for (uint i = actualNumber; i < (uint)m_desktops.count(); ++i) {
+    for (uint i = position + 1; i < (uint)m_desktops.count(); ++i) {
         m_desktops[i]->setX11DesktopNumber(i + 1);
         if (m_rootInfo) {
             m_rootInfo->setDesktopName(i + 1, m_desktops[i]->name().toUtf8().data());
         }
     }
 
-    m_desktops.insert(actualNumber - 1, vd);
     save();
 
     updateRootInfo();
