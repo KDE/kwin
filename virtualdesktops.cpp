@@ -76,10 +76,10 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
         );
     };
 
-    connect(this, &VirtualDesktopManager::desktopCreated, this, createPlasmaVirtualDesktop);
+    connect(this, &VirtualDesktopManager::desktopCreated, m_virtualDesktopManagement, createPlasmaVirtualDesktop);
 
     //handle removed: from VirtualDesktopManager to the wayland interface
-    connect(this, &VirtualDesktopManager::desktopRemoved, this,
+    connect(this, &VirtualDesktopManager::desktopRemoved, m_virtualDesktopManagement,
         [this](VirtualDesktop *desktop) {
             m_virtualDesktopManagement->removeDesktop(desktop->id());
         }
@@ -106,7 +106,7 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
     //Now we are sure all ids are there
     save();
 
-    connect(this, &VirtualDesktopManager::currentChanged, this,
+    connect(this, &VirtualDesktopManager::currentChanged, m_virtualDesktopManagement,
         [this]() {
             for (auto *deskInt : m_virtualDesktopManagement->desktops()) {
                 if (deskInt->id() == currentDesktop()->id()) {
