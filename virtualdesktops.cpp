@@ -88,10 +88,7 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
     //create a new desktop when the client asks to
     connect (m_virtualDesktopManagement, &PlasmaVirtualDesktopManagementInterface::desktopCreateRequested, this,
         [this](const QString &name, quint32 position) {
-            VirtualDesktop *vd = createVirtualDesktop(position);
-            if (vd) {
-                vd->setName(name);
-            }
+            createVirtualDesktop(position, name);
         }
     );
 
