@@ -115,6 +115,13 @@ set_package_properties(KF5DocTools PROPERTIES
          )
 add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation")
 
+find_package(KF5Kirigami2 ${KF5_MIN_VERSION} CONFIG)
+set_package_properties(KF5Kirigami2 PROPERTIES
+    DESCRIPTION "A QtQuick based components set"
+    PURPOSE "Required at runtime for Virtual desktop KCM and the virtual keyboard"
+    TYPE RUNTIME
+)
+
 find_package(KDecoration2 5.13.0 CONFIG REQUIRED)
 
 find_package(KScreenLocker CONFIG REQUIRED)
