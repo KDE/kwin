@@ -38,6 +38,11 @@ namespace KWin {
 extern int screen_number;
 static bool s_loadingDesktopSettings = false;
 
+static QByteArray generateDesktopId()
+{
+    return QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+}
+
 VirtualDesktop::VirtualDesktop(QObject *parent)
     : QObject(parent)
 {
@@ -450,8 +455,7 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
 
     auto *vd = new VirtualDesktop(this);
     vd->setX11DesktopNumber(position + 1);
-    //TODO: depend on Qt 5.11, use toString(QUuid::WithoutBraces)
-    vd->setId(QUuid::createUuid().toString().toUtf8());
+    vd->setId(generateDesktopId());
     vd->setName(name);
 
     connect(vd, &VirtualDesktop::nameChanged, this,
@@ -585,7 +589,7 @@ void VirtualDesktopManager::setCount(uint count)
             vd->setX11DesktopNumber(x11Number);
             vd->setName(defaultName(x11Number));
             if (!s_loadingDesktopSettings) {
-                vd->setId(QUuid::createUuid().toString().toUtf8());
+                vd->setId(generateDesktopId());
             }
             m_desktops << vd;
             newDesktops << vd;
@@ -702,14 +706,11 @@ void VirtualDesktopManager::load()
         }
         m_desktops[i-1]->setName(s.toUtf8().data());
 
-        QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
+        const QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
 
         //load gets called 2 times, see workspace.cpp line 416 and BUG 385260
         if (m_desktops[i-1]->id().isEmpty()) {
-            if (sId.isEmpty()) {
-                sId = QUuid::createUuid().toString();
-            }
-            m_desktops[i-1]->setId(sId.toUtf8().data());
+            m_desktops[i-1]->setId(sId.isEmpty() ? generateDesktopId() : sId.toUtf8());
         } else {
             Q_ASSERT(sId.isEmpty() || m_desktops[i-1]->id() == sId.toUtf8().data());
         }
