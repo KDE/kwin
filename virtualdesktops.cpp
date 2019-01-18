@@ -756,7 +756,7 @@ void VirtualDesktopManager::save()
 
     for (int i = count() + 1;  group.hasKey(QStringLiteral("Id_%1").arg(i)); i++) {
         group.deleteEntry(QStringLiteral("Id_%1").arg(i));
-        group.deleteEntry(QStringLiteral("Name_").arg(i));
+        group.deleteEntry(QStringLiteral("Name_%1").arg(i));
     }
 
     group.writeEntry("Number", count());
