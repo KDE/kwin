@@ -953,6 +953,11 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
 
 SceneOpenGL2::~SceneOpenGL2()
 {
+    if (m_lanczosFilter) {
+        makeOpenGLContextCurrent();
+        delete m_lanczosFilter;
+        m_lanczosFilter = nullptr;
+    }
 }
 
 QMatrix4x4 SceneOpenGL2::createProjectionMatrix() const
