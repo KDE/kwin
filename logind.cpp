@@ -420,7 +420,6 @@ void LogindIntegration::getSeat()
                                                           s_dbusPropertiesInterface,
                                                           QStringLiteral("Get"));
     message.setArguments(QVariantList({m_sessionControllerSessionInterface, QStringLiteral("Seat")}));
-    message.setArguments(QVariantList({m_sessionControllerSessionInterface, QStringLiteral("Seat")}));
     QDBusPendingReply<QVariant> reply = m_bus.asyncCall(message);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this,
@@ -433,7 +432,6 @@ void LogindIntegration::getSeat()
             }
             DBusLogindSeat seat = qdbus_cast<DBusLogindSeat>(reply.value().value<QDBusArgument>());
             const QString seatPath = seat.path.path();
-            qCDebug(KWIN_CORE) << m_sessionControllerName << " seat:" << seat.name << "/" << seatPath;
             qCDebug(KWIN_CORE) << m_sessionControllerName << " seat:" << seat.name << "/" << seatPath;
             if (m_seatPath != seatPath) {
                 m_seatPath = seatPath;
