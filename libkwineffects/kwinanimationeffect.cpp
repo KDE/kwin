@@ -82,8 +82,8 @@ void AnimationEffect::init()
      * connect it we can provide auto-referencing of animated and closed windows, since at the time
      * our slot will be called, the slot of the subclass has been (SIGNAL/SLOT connections are FIFO)
      * and has pot. started an animation so we have the window in our hash :) */
-    connect ( effects,  SIGNAL(windowClosed(KWin::EffectWindow*)), SLOT(_windowClosed(KWin::EffectWindow*)) );
-    connect ( effects,  SIGNAL(windowDeleted(KWin::EffectWindow*)), SLOT(_windowDeleted(KWin::EffectWindow*)) );
+    connect(effects, &EffectsHandler::windowClosed, this, &AnimationEffect::_windowClosed);
+    connect(effects, &EffectsHandler::windowDeleted, this, &AnimationEffect::_windowDeleted);
 }
 
 bool AnimationEffect::isActive() const
@@ -226,12 +226,12 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     if (!d->m_isInitialized)
         init(); // needs to ensure the window gets removed if deleted in the same event cycle
     if (d->m_animations.isEmpty()) {
-        connect (effects,   SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)),
-                            SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
-        connect (effects,   SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)),
-                            SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
-        connect (effects,   SIGNAL(windowPaddingChanged(KWin::EffectWindow*,QRect)),
-                            SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
+        connect(effects, &EffectsHandler::windowGeometryShapeChanged,
+            this, &AnimationEffect::_expandedGeometryChanged);
+        connect(effects, &EffectsHandler::windowStepUserMovedResized,
+            this, &AnimationEffect::_expandedGeometryChanged);
+        connect(effects, &EffectsHandler::windowPaddingChanged,
+            this, &AnimationEffect::_expandedGeometryChanged);
     }
     AniMap::iterator it = d->m_animations.find(w);
     if (it == d->m_animations.end())
@@ -284,7 +284,7 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     d->m_animationsTouched = true;
 
     if (delay > 0) {
-        QTimer::singleShot(delay, this, SLOT(triggerRepaint()));
+        QTimer::singleShot(delay, this, &AnimationEffect::triggerRepaint);
         const QSize &s = effects->virtualScreenSize();
         if (waitAtSource)
             w->addLayerRepaint(0, 0, s.width(), s.height());
@@ -565,12 +565,12 @@ void AnimationEffect::clipWindow(const EffectWindow *w, const AniData &anim, Win
 
 void AnimationEffect::disconnectGeometryChanges()
 {
-    disconnect (effects,SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)),
-                this,   SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
-    disconnect (effects,SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)),
-                this,   SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
-    disconnect (effects,SIGNAL(windowPaddingChanged(KWin::EffectWindow*,QRect)),
-                this,   SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
+    disconnect(effects, &EffectsHandler::windowGeometryShapeChanged,
+        this, &AnimationEffect::_expandedGeometryChanged);
+    disconnect(effects, &EffectsHandler::windowStepUserMovedResized,
+        this, &AnimationEffect::_expandedGeometryChanged);
+    disconnect(effects, &EffectsHandler::windowPaddingChanged,
+        this, &AnimationEffect::_expandedGeometryChanged);
 }
 
 
