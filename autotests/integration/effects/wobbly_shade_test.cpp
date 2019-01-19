@@ -96,12 +96,10 @@ void WobblyWindowsShadeTest::init()
 void WobblyWindowsShadeTest::cleanup()
 {
     Test::destroyWaylandConnection();
-    EffectsHandlerImpl *e = static_cast<EffectsHandlerImpl*>(effects);
-    while (!e->loadedEffects().isEmpty()) {
-        const QString effect = e->loadedEffects().first();
-        e->unloadEffect(effect);
-        QVERIFY(!e->isEffectLoaded(effect));
-    }
+
+    auto effectsImpl = static_cast<EffectsHandlerImpl *>(effects);
+    effectsImpl->unloadAllEffects();
+    QVERIFY(effectsImpl->loadedEffects().isEmpty());
 }
 
 struct XcbConnectionDeleter
