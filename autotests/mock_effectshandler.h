@@ -137,6 +137,9 @@ public:
     KWin::EffectWindow *findWindow(QWindow *w) const override {
         return nullptr;
     }
+    KWin::EffectWindow *findWindow(const QUuid &id) const override {
+        return nullptr;
+    }
     void *getProxy(QString) override {
         return nullptr;
     }

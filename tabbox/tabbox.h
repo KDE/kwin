@@ -103,6 +103,7 @@ public:
     virtual bool isCloseable() const;
     virtual void close();
     virtual bool isFirstInTabBox() const;
+    QUuid internalId() const override;
 
     AbstractClient* client() const {
         return m_client;

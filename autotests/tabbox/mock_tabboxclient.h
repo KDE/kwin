@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../tabbox/tabboxhandler.h"
 
 #include <QIcon>
+#include <QUuid>
 
 namespace KWin
 {
@@ -63,6 +64,10 @@ public:
     }
     virtual QIcon icon() const {
         return QIcon();
+    }
+
+    QUuid internalId() const override {
+        return QUuid{};
     }
 
 private:

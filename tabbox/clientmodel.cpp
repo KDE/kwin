@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabboxhandler.h"
 // Qt
 #include <QIcon>
+#include <QUuid>
 // TODO: remove with Qt 5, only for HTML escaping the caption
 #include <QTextDocument>
 #include <QTextStream>
@@ -84,7 +85,7 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
         return tabBox->desktopName(client.data());
     }
     case WIdRole:
-        return qulonglong(client->window());
+        return client->internalId();
     case MinimizedRole:
         return client->isMinimized();
     case CloseableRole:

@@ -1099,6 +1099,16 @@ EffectWindow *EffectsHandlerImpl::findWindow(QWindow *w) const
     return nullptr;
 }
 
+EffectWindow *EffectsHandlerImpl::findWindow(const QUuid &id) const
+{
+    if (const auto client = workspace()->findAbstractClient([&id] (const AbstractClient *c) { return c->internalId() == id; })) {
+        return client->effectWindow();
+    }
+    if (const auto unmanaged = workspace()->findUnmanaged([&id] (const Unmanaged *c) { return c->internalId() == id; })) {
+        return unmanaged->effectWindow();
+    }
+    return nullptr;
+}
 
 EffectWindowList EffectsHandlerImpl::stackingOrder() const
 {
@@ -2023,7 +2033,7 @@ void EffectWindowImpl::registerThumbnail(AbstractThumbnailItem *item)
     if (WindowThumbnailItem *thumb = qobject_cast<WindowThumbnailItem*>(item)) {
         insertThumbnail(thumb);
         connect(thumb, SIGNAL(destroyed(QObject*)), SLOT(thumbnailDestroyed(QObject*)));
-        connect(thumb, SIGNAL(wIdChanged(qulonglong)), SLOT(thumbnailTargetChanged()));
+        connect(thumb, &WindowThumbnailItem::wIdChanged, this, &EffectWindowImpl::thumbnailTargetChanged);
     } else if (DesktopThumbnailItem *desktopThumb = qobject_cast<DesktopThumbnailItem*>(item)) {
         m_desktopThumbnails.append(desktopThumb);
         connect(desktopThumb, SIGNAL(destroyed(QObject*)), SLOT(desktopThumbnailDestroyed(QObject*)));

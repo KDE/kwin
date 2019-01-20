@@ -441,6 +441,11 @@ bool TabBoxClientImpl::isFirstInTabBox() const
     return m_client->isFirstInTabBox();
 }
 
+QUuid TabBoxClientImpl::internalId() const
+{
+    return m_client->internalId();
+}
+
 /*********************************************************
 * TabBox
 *********************************************************/

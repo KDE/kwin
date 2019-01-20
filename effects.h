@@ -135,6 +135,7 @@ public:
     EffectWindow* findWindow(WId id) const override;
     EffectWindow* findWindow(KWayland::Server::SurfaceInterface *surf) const override;
     EffectWindow *findWindow(QWindow *w) const override;
+    EffectWindow *findWindow(const QUuid &id) const override;
     EffectWindowList stackingOrder() const override;
     void setElevatedWindow(KWin::EffectWindow* w, bool set) override;
 

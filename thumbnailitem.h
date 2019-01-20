@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_THUMBNAILITEM_H
 
 #include <QPointer>
+#include <QUuid>
 #include <QWeakPointer>
 #include <QQuickPaintedItem>
 
@@ -76,26 +77,26 @@ private:
 class WindowThumbnailItem : public AbstractThumbnailItem
 {
     Q_OBJECT
-    Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
+    Q_PROPERTY(QUuid wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
     Q_PROPERTY(KWin::AbstractClient *client READ client WRITE setClient NOTIFY clientChanged)
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = 0);
     virtual ~WindowThumbnailItem();
 
-    qulonglong wId() const {
+    QUuid wId() const {
         return m_wId;
     }
-    void setWId(qulonglong wId);
+    void setWId(const QUuid &wId);
     AbstractClient *client() const;
     void setClient(AbstractClient *client);
     virtual void paint(QPainter *painter);
 Q_SIGNALS:
-    void wIdChanged(qulonglong wid);
+    void wIdChanged(const QUuid &wid);
     void clientChanged();
 protected Q_SLOTS:
     virtual void repaint(KWin::EffectWindow* w);
 private:
-    qulonglong m_wId;
+    QUuid m_wId;
     AbstractClient *m_client;
 };
 

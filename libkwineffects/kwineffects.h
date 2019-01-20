@@ -1088,6 +1088,13 @@ public:
      * @since 5.16
      **/
     Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(QWindow *w) const = 0;
+    /**
+     * Finds the EffectWindow for the Toplevel with KWin internal @p id.
+     * If there is no such window @c null is returned.
+     *
+     * @since 5.16
+     **/
+    Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(const QUuid &id) const = 0;
     virtual EffectWindowList stackingOrder() const = 0;
     // window will be temporarily painted as if being at the top of the stack
     Q_SCRIPTABLE virtual void setElevatedWindow(KWin::EffectWindow* w, bool set) = 0;
