@@ -438,6 +438,8 @@ QModelIndex TabBoxHandler::nextPrev(bool forward) const
     case TabBoxConfig::DesktopTabBox:
         model = d->desktopModel();
         break;
+    default:
+        Q_UNREACHABLE();
     }
     if (forward) {
         int column = d->index.column() + 1;
@@ -607,6 +609,8 @@ QModelIndex TabBoxHandler::first() const
     case TabBoxConfig::DesktopTabBox:
         model = d->desktopModel();
         break;
+    default:
+        Q_UNREACHABLE();
     }
     return model->index(0, 0);
 }
