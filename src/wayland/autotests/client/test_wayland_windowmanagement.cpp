@@ -597,17 +597,21 @@ void TestWindowManagement::testGeometry()
 void TestWindowManagement::testIcon()
 {
     using namespace KWayland::Client;
-    QVERIFY(m_window);
+
+    // initially, the server should send us an icon
     QSignalSpy iconChangedSpy(m_window, &PlasmaWindow::iconChanged);
     QVERIFY(iconChangedSpy.isValid());
-    m_windowInterface->setIcon(QIcon());
-    // first goes from themed name to empty
     QVERIFY(iconChangedSpy.wait());
+    QCOMPARE(iconChangedSpy.count(), 1);
     if (!QIcon::hasThemeIcon(QStringLiteral("wayland"))) {
         QEXPECT_FAIL("", "no icon", Continue);
     }
     QCOMPARE(m_window->icon().name(), QStringLiteral("wayland"));
+
+    // first goes from themed name to empty
+    m_windowInterface->setIcon(QIcon());
     QVERIFY(iconChangedSpy.wait());
+    QCOMPARE(iconChangedSpy.count(), 2);
     if (!QIcon::hasThemeIcon(QStringLiteral("wayland"))) {
         QEXPECT_FAIL("", "no icon", Continue);
     }
@@ -618,11 +622,13 @@ void TestWindowManagement::testIcon()
     p.fill(Qt::red);
     m_windowInterface->setIcon(p);
     QVERIFY(iconChangedSpy.wait());
+    QCOMPARE(iconChangedSpy.count(), 3);
     QCOMPARE(m_window->icon().pixmap(32, 32), p);
 
     // let's set a themed icon
     m_windowInterface->setIcon(QIcon::fromTheme(QStringLiteral("xorg")));
     QVERIFY(iconChangedSpy.wait());
+    QCOMPARE(iconChangedSpy.count(), 4);
     if (!QIcon::hasThemeIcon(QStringLiteral("xorg"))) {
         QEXPECT_FAIL("", "no icon", Continue);
     }
