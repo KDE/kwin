@@ -38,6 +38,11 @@ namespace KWin {
 extern int screen_number;
 static bool s_loadingDesktopSettings = false;
 
+static QByteArray generateDesktopId()
+{
+    return QUuid::createUuid().toString(QUuid::WithoutBraces).toUtf8();
+}
+
 VirtualDesktop::VirtualDesktop(QObject *parent)
     : QObject(parent)
 {
@@ -54,22 +59,27 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
     Q_ASSERT(!m_virtualDesktopManagement);
     m_virtualDesktopManagement = management;
 
-    connect(this, &VirtualDesktopManager::desktopCreated, this,
-        [this](VirtualDesktop *desktop) {
-            using namespace KWayland::Server;
-            PlasmaVirtualDesktopInterface *pvd = m_virtualDesktopManagement->createDesktop(desktop->id(), desktop->x11DesktopNumber() - 1);
-            pvd->setName(desktop->name());
-            pvd->sendDone();
-            connect(desktop, &VirtualDesktop::nameChanged, this,
-                [this, desktop, pvd]() {
-                    pvd->setName(desktop->name());
-                }
-            );
-        }
-    );
+    auto createPlasmaVirtualDesktop = [this](VirtualDesktop *desktop) {
+        PlasmaVirtualDesktopInterface *pvd = m_virtualDesktopManagement->createDesktop(desktop->id(), desktop->x11DesktopNumber() - 1);
+        pvd->setName(desktop->name());
+        pvd->sendDone();
+
+        connect(desktop, &VirtualDesktop::nameChanged, pvd,
+            [desktop, pvd] {
+                pvd->setName(desktop->name());
+            }
+        );
+        connect(pvd, &PlasmaVirtualDesktopInterface::activateRequested, this,
+            [this, desktop] {
+                setCurrent(desktop);
+            }
+        );
+    };
+
+    connect(this, &VirtualDesktopManager::desktopCreated, m_virtualDesktopManagement, createPlasmaVirtualDesktop);
 
     //handle removed: from VirtualDesktopManager to the wayland interface
-    connect(this, &VirtualDesktopManager::desktopRemoved, this,
+    connect(this, &VirtualDesktopManager::desktopRemoved, m_virtualDesktopManagement,
         [this](VirtualDesktop *desktop) {
             m_virtualDesktopManagement->removeDesktop(desktop->id());
         }
@@ -78,10 +88,7 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
     //create a new desktop when the client asks to
     connect (m_virtualDesktopManagement, &PlasmaVirtualDesktopManagementInterface::desktopCreateRequested, this,
         [this](const QString &name, quint32 position) {
-            VirtualDesktop *vd = createVirtualDesktop(position);
-            if (vd) {
-                vd->setName(name);
-            }
+            createVirtualDesktop(position, name);
         }
     );
 
@@ -94,23 +101,12 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
         }
     );
 
-    for (quint32 i = 1; i <= count(); ++i) {
-        VirtualDesktop *internalDesktop = desktopForX11Id(i);
-        PlasmaVirtualDesktopInterface *desktop = m_virtualDesktopManagement->createDesktop(internalDesktop->id());
+    std::for_each(m_desktops.constBegin(), m_desktops.constEnd(), createPlasmaVirtualDesktop);
 
-        desktop->setName(internalDesktop->name());
-        desktop->sendDone();
-
-        connect(desktop, &PlasmaVirtualDesktopInterface::activateRequested, this,
-            [this, desktop] () {
-                setCurrent(desktopForId(desktop->id().toUtf8()));
-            }
-        );
-    }
     //Now we are sure all ids are there
     save();
 
-    connect(this, &VirtualDesktopManager::currentChanged, this,
+    connect(this, &VirtualDesktopManager::currentChanged, m_virtualDesktopManagement,
         [this]() {
             for (auto *deskInt : m_virtualDesktopManagement->desktops()) {
                 if (deskInt->id() == currentDesktop()->id()) {
@@ -445,18 +441,18 @@ VirtualDesktop *VirtualDesktopManager::desktopForId(const QByteArray &id) const
     return nullptr;
 }
 
-VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint number, const QString &name)
+VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const QString &name)
 {
     //too many, can't insert new ones
     if ((uint)m_desktops.count() == VirtualDesktopManager::maximum()) {
         return nullptr;
     }
 
-    const uint actualNumber = qBound<uint>(0, number, VirtualDesktopManager::maximum());
+    position = qBound(0u, position, static_cast<uint>(m_desktops.count()));
+
     auto *vd = new VirtualDesktop(this);
-    vd->setX11DesktopNumber(actualNumber);
-    //TODO: depend on Qt 5.11, use toString(QUuid::WithoutBraces)
-    vd->setId(QUuid::createUuid().toString().toUtf8());
+    vd->setX11DesktopNumber(position + 1);
+    vd->setId(generateDesktopId());
     vd->setName(name);
 
     connect(vd, &VirtualDesktop::nameChanged, this,
@@ -471,15 +467,16 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint number, const Q
         m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
     }
 
+    m_desktops.insert(position, vd);
+
     //update the id of displaced desktops
-    for (uint i = actualNumber; i < (uint)m_desktops.count(); ++i) {
+    for (uint i = position + 1; i < (uint)m_desktops.count(); ++i) {
         m_desktops[i]->setX11DesktopNumber(i + 1);
         if (m_rootInfo) {
             m_rootInfo->setDesktopName(i + 1, m_desktops[i]->name().toUtf8().data());
         }
     }
 
-    m_desktops.insert(actualNumber - 1, vd);
     save();
 
     updateRootInfo();
@@ -589,7 +586,7 @@ void VirtualDesktopManager::setCount(uint count)
             vd->setX11DesktopNumber(x11Number);
             vd->setName(defaultName(x11Number));
             if (!s_loadingDesktopSettings) {
-                vd->setId(QUuid::createUuid().toString().toUtf8());
+                vd->setId(generateDesktopId());
             }
             m_desktops << vd;
             newDesktops << vd;
@@ -706,14 +703,11 @@ void VirtualDesktopManager::load()
         }
         m_desktops[i-1]->setName(s.toUtf8().data());
 
-        QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
+        const QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
 
         //load gets called 2 times, see workspace.cpp line 416 and BUG 385260
         if (m_desktops[i-1]->id().isEmpty()) {
-            if (sId.isEmpty()) {
-                sId = QUuid::createUuid().toString();
-            }
-            m_desktops[i-1]->setId(sId.toUtf8().data());
+            m_desktops[i-1]->setId(sId.isEmpty() ? generateDesktopId() : sId.toUtf8());
         } else {
             Q_ASSERT(sId.isEmpty() || m_desktops[i-1]->id() == sId.toUtf8().data());
         }
