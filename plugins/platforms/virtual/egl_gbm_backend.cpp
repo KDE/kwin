@@ -156,6 +156,12 @@ bool EglGbmBackend::initBufferConfigs()
 
 void EglGbmBackend::present()
 {
+    Compositor::self()->aboutToSwapBuffers();
+
+    eglSwapBuffers(eglDisplay(), surface());
+    setLastDamage(QRegion());
+
+    Compositor::self()->bufferSwapComplete();
 }
 
 void EglGbmBackend::screenGeometryChanged(const QSize &size)
@@ -171,6 +177,9 @@ SceneOpenGLTexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGLTextur
 
 QRegion EglGbmBackend::prepareRenderingFrame()
 {
+    if (!lastDamage().isEmpty()) {
+        present();
+    }
     startRenderTimer();
     if (!GLRenderTarget::isRenderTargetBound()) {
         GLRenderTarget::pushRenderTarget(m_fbo);
@@ -211,7 +220,6 @@ static void convertFromGLImage(QImage &img, int w, int h)
 
 void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
     glFlush();
     if (m_backend->saveFrames()) {
@@ -221,6 +229,7 @@ void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
         img.save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
     }
     GLRenderTarget::popRenderTarget();
+    setLastDamage(renderedRegion);
 }
 
 bool EglGbmBackend::usesOverlayWindow() const
