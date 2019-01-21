@@ -606,7 +606,7 @@ void TestWaylandShell::testTitle()
     QString testTitle = QStringLiteral("fooBar");
     QVERIFY(serverSurface->title().isNull());
 
-    wl_shell_surface_set_title(*(const KWayland::Client::ShellSurface *)surface, testTitle.toUtf8().constData());
+    surface->setTitle(testTitle);
     QVERIFY(titleSpy.wait());
     QCOMPARE(serverSurface->title(), testTitle);
     QCOMPARE(titleSpy.first().first().toString(), testTitle);
@@ -631,13 +631,13 @@ void TestWaylandShell::testWindowClass()
     QByteArray testClass = QByteArrayLiteral("fooBar");
     QVERIFY(serverSurface->windowClass().isNull());
 
-    wl_shell_surface_set_class(*surface, testClass.constData());
+    surface->setWindowClass(testClass);
     QVERIFY(windowClassSpy.wait());
     QCOMPARE(serverSurface->windowClass(), testClass);
     QCOMPARE(windowClassSpy.first().first().toByteArray(), testClass);
 
     // try setting it to same should not trigger the signal
-    wl_shell_surface_set_class(*surface, testClass.constData());
+    surface->setWindowClass(testClass);
     QVERIFY(!windowClassSpy.wait(100));
 }
 
