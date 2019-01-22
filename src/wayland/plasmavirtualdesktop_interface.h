@@ -46,9 +46,10 @@ public:
     virtual ~PlasmaVirtualDesktopManagementInterface();
 
     /**
-     * Sets a new layout for this desktop grid.
+     * Sets how many rows the virtual desktops should be laid into
+     * @since 5.55
      */
-    void setLayout(quint32 rows, quint32 columns);
+    void setRows(quint32 rows);
 
     /**
      * @returns A desktop identified uniquely by this id.

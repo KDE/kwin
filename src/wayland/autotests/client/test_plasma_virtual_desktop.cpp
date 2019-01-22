@@ -46,6 +46,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testCreate();
+    void testSetRows();
     void testConnectNewClient();
     void testDestroy();
     void testActivate();
@@ -266,6 +267,18 @@ void TestVirtualDesktop::testCreate()
     for (int i = 0; i < m_plasmaVirtualDesktopManagement->desktops().length(); ++i) {
         QCOMPARE(m_plasmaVirtualDesktopManagementInterface->desktops().at(i)->id(), m_plasmaVirtualDesktopManagement->desktops().at(i)->id());
     }
+}
+
+void TestVirtualDesktop::testSetRows()
+{
+    //rebuild some desktops
+    testCreate();
+
+    QSignalSpy rowsChangedSpy(m_plasmaVirtualDesktopManagement, &PlasmaVirtualDesktopManagement::rowsChanged);
+
+    m_plasmaVirtualDesktopManagementInterface->setRows(3);
+    QVERIFY(rowsChangedSpy.wait());
+    QCOMPARE(m_plasmaVirtualDesktopManagement->rows(), 3);
 }
 
 void TestVirtualDesktop::testConnectNewClient()

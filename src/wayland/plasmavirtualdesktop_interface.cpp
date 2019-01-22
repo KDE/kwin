@@ -91,7 +91,7 @@ private:
     static const quint32 s_version;
 };
 
-const quint32 PlasmaVirtualDesktopManagementInterface::Private::s_version = 1;
+const quint32 PlasmaVirtualDesktopManagementInterface::Private::s_version = 2;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_plasma_virtual_desktop_management_interface PlasmaVirtualDesktopManagementInterface::Private::s_interface = {
@@ -188,6 +188,21 @@ PlasmaVirtualDesktopManagementInterface::~PlasmaVirtualDesktopManagementInterfac
 PlasmaVirtualDesktopManagementInterface::Private *PlasmaVirtualDesktopManagementInterface::d_func() const
 {
     return reinterpret_cast<Private*>(d.data());
+}
+
+void PlasmaVirtualDesktopManagementInterface::setRows(quint32 rows)
+{
+    if (rows == 0) {
+        return;
+    }
+
+    Q_D();
+    for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
+        if (wl_resource_get_version(*it) < ORG_KDE_PLASMA_VIRTUAL_DESKTOP_MANAGEMENT_ROWS_SINCE_VERSION) {
+            continue;
+        }
+        org_kde_plasma_virtual_desktop_management_send_rows(*it, rows);
+    }
 }
 
 PlasmaVirtualDesktopInterface *PlasmaVirtualDesktopManagementInterface::desktop(const QString &id)
