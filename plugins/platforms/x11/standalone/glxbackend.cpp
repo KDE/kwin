@@ -115,6 +115,10 @@ GlxBackend::GlxBackend(Display *display)
     , haveSwapInterval(false)
     , m_x11Display(display)
 {
+     // Force initialization of GLX integration in the Qt's xcb backend
+     // to make it call XESetWireToEvent callbacks, which is required
+     // by Mesa when using DRI2.
+     QOpenGLContext::supportsThreadedOpenGL();
 }
 
 static bool gs_tripleBufferUndetected = true;
