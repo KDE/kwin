@@ -1,6 +1,6 @@
 [Desktop Entry]
 Exec=kcmshell5 kwineffects
-Icon=preferences-desktop
+Icon=preferences-desktop-effects
 Type=Service
 X-KDE-ServiceTypes=KCModule
 X-DocPath=kcontrol/kwineffects/index.html
