@@ -590,14 +590,14 @@ void VirtualDesktopManager::setCount(uint count)
             }
             m_desktops << vd;
             newDesktops << vd;
-            if (m_rootInfo) {
-                connect(vd, &VirtualDesktop::nameChanged, this,
-                    [this, vd]() {
-                        if (m_rootInfo) {
-                            m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
-                        }
+            connect(vd, &VirtualDesktop::nameChanged, this,
+                [this, vd] {
+                    if (m_rootInfo) {
+                        m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
                     }
-                );
+                }
+            );
+            if (m_rootInfo) {
                 m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
             }
         }
