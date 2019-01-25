@@ -165,6 +165,11 @@ void PlasmaVirtualDesktopManagementInterface::Private::bind(wl_client *client, u
     for (auto it = desktops.constBegin(); it != desktops.constEnd(); ++it) {
         org_kde_plasma_virtual_desktop_management_send_desktop_created(resource, (*it)->id().toUtf8().constData(), i++);
     }
+
+    if (wl_resource_get_version(resource) >= ORG_KDE_PLASMA_VIRTUAL_DESKTOP_MANAGEMENT_ROWS_SINCE_VERSION) {
+        org_kde_plasma_virtual_desktop_management_send_rows(resource, rows);
+    }
+
     org_kde_plasma_virtual_desktop_management_send_done(resource);
 }
 
@@ -192,11 +197,14 @@ PlasmaVirtualDesktopManagementInterface::Private *PlasmaVirtualDesktopManagement
 
 void PlasmaVirtualDesktopManagementInterface::setRows(quint32 rows)
 {
-    if (rows == 0) {
+    Q_D();
+
+    if (rows == 0 || d->rows == rows) {
         return;
     }
 
-    Q_D();
+    d->rows = rows;
+
     for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
         if (wl_resource_get_version(*it) < ORG_KDE_PLASMA_VIRTUAL_DESKTOP_MANAGEMENT_ROWS_SINCE_VERSION) {
             continue;
