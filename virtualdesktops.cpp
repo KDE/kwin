@@ -80,7 +80,12 @@ void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::Plasma
     connect(this, &VirtualDesktopManager::desktopCreated, m_virtualDesktopManagement, createPlasmaVirtualDesktop);
 
     connect(this, &VirtualDesktopManager::rowsChanged, m_virtualDesktopManagement,
-         &PlasmaVirtualDesktopManagementInterface::setRows);
+        [this](uint rows) {
+            m_virtualDesktopManagement->setRows(rows);
+            m_virtualDesktopManagement->sendDone();
+        }
+    );
+
     //handle removed: from VirtualDesktopManager to the wayland interface
     connect(this, &VirtualDesktopManager::desktopRemoved, m_virtualDesktopManagement,
         [this](VirtualDesktop *desktop) {
