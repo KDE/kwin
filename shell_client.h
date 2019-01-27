@@ -57,8 +57,6 @@ public:
     ShellClient(KWayland::Server::XdgShellPopupInterface *surface);
     virtual ~ShellClient();
 
-    bool eventFilter(QObject *watched, QEvent *event) override;
-
     QStringList activities() const override;
     QPoint clientContentPos() const override;
     QSize clientSize() const override;
@@ -112,8 +110,6 @@ public:
     void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     bool hasStrut() const override;
 
-    void setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo) override;
-
     quint32 windowId() const override {
         return m_windowId;
     }
@@ -126,12 +122,10 @@ public:
      **/
     pid_t pid() const override;
 
-    bool isInternal() const;
+    virtual bool isInternal() const;
     bool isLockScreen() const override;
     bool isInputMethod() const override;
-    QWindow *internalWindow() const {
-        return m_internalWindow;
-    }
+    virtual QWindow *internalWindow() const;
 
     void installPlasmaShellSurface(KWayland::Server::PlasmaShellSurfaceInterface *surface);
     void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
@@ -182,8 +176,20 @@ protected:
     bool isWaitingForMoveResizeSync() const override;
     bool acceptsFocus() const override;
     void doMinimize() override;
-    void doMove(int x, int y) override;
     void updateCaption() override;
+
+    virtual bool requestGeometry(const QRect &rect);
+    virtual void doSetGeometry(const QRect &rect);
+    void unmap();
+    void markAsMapped();
+
+    void setClientSize(const QSize &size) {
+        m_clientSize = size;
+    }
+
+    bool isUnmapped() const {
+        return m_unmapped;
+    }
 
 private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);
@@ -192,17 +198,10 @@ private:
     void init();
     template <class T>
     void initSurface(T *shellSurface);
-    void requestGeometry(const QRect &rect);
-    void doSetGeometry(const QRect &rect);
     void createDecoration(const QRect &oldgeom);
     void destroyClient();
-    void unmap();
     void createWindowId();
-    void findInternalWindow();
-    void updateInternalWindowGeometry();
-    void syncGeometryToInternalWindow();
     void updateIcon();
-    void markAsMapped();
     void setTransient();
     bool shouldExposeToWindowManagement();
     void updateClientOutputs();
@@ -243,8 +242,6 @@ private:
     QRect m_geomFsRestore; //size and position of the window before it was set to fullscreen
     bool m_closing = false;
     quint32 m_windowId = 0;
-    QWindow *m_internalWindow = nullptr;
-    Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_unmapped = true;
     QRect m_geomMaximizeRestore; // size and position of the window before it was set to maximize
     NET::WindowType m_windowType = NET::Normal;

@@ -493,6 +493,7 @@ set(kwin_KDEINIT_SRCS
     libinput/libinput_logging.cpp
     udev.cpp
     touch_hide_cursor_spy.cpp
+    internal_client.cpp
     xwl/xwayland_interface.cpp
    )
 

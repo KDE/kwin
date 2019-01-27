@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "composite.h"
 #include "idle_inhibition.h"
+#include "internal_client.h"
 #include "screens.h"
 #include "shell_client.h"
 #include "workspace.h"
@@ -155,7 +156,13 @@ void WaylandServer::createSurface(T *surface)
     if (surface->client() == m_screenLockerClientConnection) {
         ScreenLocker::KSldApp::self()->lockScreenShown();
     }
-    auto client = new ShellClient(surface);
+    ShellClient *client;
+    if (surface->client() == waylandServer()->internalConnection()) {
+        client = new InternalClient(surface);
+    } else {
+        client = new ShellClient(surface);
+    }
+    client = new ShellClient(surface);
     if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(surface->surface())) {
         client->installServerSideDecoration(deco);
     }
