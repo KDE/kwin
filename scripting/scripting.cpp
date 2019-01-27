@@ -230,8 +230,8 @@ QScriptValue kwinCallDBus(QScriptContext *context, QScriptEngine *engine)
 KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent)
     : QObject(parent)
     , m_scriptId(id)
-    , m_pluginName(pluginName)
     , m_fileName(scriptName)
+    , m_pluginName(pluginName)
     , m_running(false)
 {
     if (m_pluginName.isNull()) {
