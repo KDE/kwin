@@ -48,7 +48,7 @@ enum class PingReason {
     CloseWindow = 0,
     FocusWindow
 };
-    
+
 class KWIN_EXPORT ShellClient : public AbstractClient
 {
     Q_OBJECT
