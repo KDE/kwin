@@ -764,7 +764,7 @@ void Compositor::performCompositing()
     m_timeSinceStart += m_timeSinceLastVBlank;
 
     if (waylandServer()) {
-        for (Toplevel *win : qAsConst(damaged)) {
+        for (Toplevel *win : qAsConst(windows)) {
             if (auto surface = win->surface()) {
                 surface->frameRendered(m_timeSinceStart);
             }
