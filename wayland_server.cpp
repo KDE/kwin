@@ -151,6 +151,9 @@ void WaylandServer::createSurface(T *surface)
         ScreenLocker::KSldApp::self()->lockScreenShown();
     }
     auto client = new ShellClient(surface);
+    if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(surface->surface())) {
+        client->installServerSideDecoration(deco);
+    }
     auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
         [client] (PlasmaShellSurfaceInterface *surface) {
             return client->surface() == surface->surface();

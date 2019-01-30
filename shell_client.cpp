@@ -363,10 +363,6 @@ void ShellClient::init()
         }
     });
     setTransient();
-    // check whether we have a ServerSideDecoration
-    if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(s)) {
-        installServerSideDecoration(deco);
-    }
 
     AbstractClient::updateColorScheme(QString());
 
