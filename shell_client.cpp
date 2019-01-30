@@ -714,8 +714,6 @@ void ShellClient::closeWindow()
         m_xdgShellSurface->close();
         const qint32 pingSerial = static_cast<XdgShellInterface *>(m_xdgShellSurface->global())->ping(m_xdgShellSurface);
         m_pingSerials.insert(pingSerial, PingReason::CloseWindow);
-    } else if (m_qtExtendedSurface && isCloseable()) {
-        m_qtExtendedSurface->close();
     } else if (m_internalWindow) {
         m_internalWindow->hide();
     }
@@ -738,7 +736,7 @@ bool ShellClient::isCloseable() const
     if (m_internal) {
         return true;
     }
-    return m_qtExtendedSurface ? true : false;
+    return false;
 }
 
 bool ShellClient::isFullScreen() const
@@ -1448,19 +1446,6 @@ bool ShellClient::isInitialPositionSet() const
         return m_plasmaShellSurface->isPositionSet();
     }
     return false;
-}
-
-void ShellClient::installQtExtendedSurface(QtExtendedSurfaceInterface *surface)
-{
-    m_qtExtendedSurface = surface;
-
-    connect(m_qtExtendedSurface.data(), &QtExtendedSurfaceInterface::raiseRequested, this, [this]() {
-        workspace()->raiseClientRequest(this);
-    });
-    connect(m_qtExtendedSurface.data(), &QtExtendedSurfaceInterface::lowerRequested, this, [this]() {
-        workspace()->lowerClientRequest(this);
-    });
-    m_qtExtendedSurface->installEventFilter(this);
 }
 
 void ShellClient::installAppMenu(AppMenuInterface *menu)

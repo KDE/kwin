@@ -295,17 +295,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             }
         }
     );
-
-
-    m_qtExtendedSurface = m_display->createQtSurfaceExtension(m_display);
-    m_qtExtendedSurface->create();
-    connect(m_qtExtendedSurface, &QtSurfaceExtensionInterface::surfaceCreated,
-        [this] (QtExtendedSurfaceInterface *surface) {
-            if (ShellClient *client = findClient(surface->surface())) {
-                client->installQtExtendedSurface(surface);
-            }
-        }
-    );
     m_appMenuManager = m_display->createAppMenuManagerInterface(m_display);
     m_appMenuManager->create();
     connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated,
