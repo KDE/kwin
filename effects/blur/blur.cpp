@@ -126,8 +126,10 @@ void BlurEffect::updateTexture()
     m_renderTargets.reserve(m_downSampleIterations + 2);
     m_renderTextures.reserve(m_downSampleIterations + 2);
 
+    const GLenum textureFormat = GLPlatform::instance()->isGLES() ? GL_RGBA8 : GL_SRGB8_ALPHA8;
+
     for (int i = 0; i <= m_downSampleIterations; i++) {
-        m_renderTextures.append(GLTexture(GL_RGBA8, effects->virtualScreenSize() / (1 << i)));
+        m_renderTextures.append(GLTexture(textureFormat, effects->virtualScreenSize() / (1 << i)));
         m_renderTextures.last().setFilter(GL_LINEAR);
         m_renderTextures.last().setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -135,7 +137,7 @@ void BlurEffect::updateTexture()
     }
 
     // This last set is used as a temporary helper texture
-    m_renderTextures.append(GLTexture(GL_RGBA8, effects->virtualScreenSize()));
+    m_renderTextures.append(GLTexture(textureFormat, effects->virtualScreenSize()));
     m_renderTextures.last().setFilter(GL_LINEAR);
     m_renderTextures.last().setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -641,6 +643,8 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     const QRegion expandedBlurRegion = expand(shape) & expand(screen);
 
+    const bool isGLES = GLPlatform::instance()->isGLES();
+
     // Upload geometry for the down and upsample iterations
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
 
@@ -662,9 +666,18 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
      */
     if (isDock) {
         m_renderTargets.last()->blitFromFramebuffer(sourceRect, destRect);
+
+        if (!isGLES) {
+            glEnable(GL_FRAMEBUFFER_SRGB);
+        }
+
         copyScreenSampleTexture(vbo, blurRectCount, shape.translated(xTranslate, yTranslate), screenProjection);
     } else {
         m_renderTargets.first()->blitFromFramebuffer(sourceRect, destRect);
+
+        if (!isGLES) {
+            glEnable(GL_FRAMEBUFFER_SRGB);
+        }
 
         // Remove the m_renderTargets[0] from the top of the stack that we will not use
         GLRenderTarget::popRenderTarget();
@@ -688,6 +701,10 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     }
 
     upscaleRenderToScreen(vbo, blurRectCount * (m_downSampleIterations + 1), shape.rectCount() * 6, screenProjection, windowRect.topLeft());
+
+    if (!isGLES) {
+        glDisable(GL_FRAMEBUFFER_SRGB);
+    }
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);
