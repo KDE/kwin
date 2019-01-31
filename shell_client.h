@@ -69,10 +69,6 @@ public:
     void setOpacity(double opacity) override;
     QByteArray windowRole() const override;
 
-    KWayland::Server::ShellSurfaceInterface *shellSurface() const {
-        return m_shellSurface;
-    }
-
     void blockActivityUpdates(bool b = true) override;
     QString captionNormal() const override {
         return m_caption;

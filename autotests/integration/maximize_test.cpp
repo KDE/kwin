@@ -174,7 +174,6 @@ void TestMaximized::testInitiallyMaximized()
     QCOMPARE(client->geometry(), QRect(0, 0, 100, 50));
     QEXPECT_FAIL("", "Should go out of maximzied", Continue);
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QVERIFY(client->shellSurface()->isMaximized());
 }
 
 void TestMaximized::testBorderlessMaximizedWindow()
