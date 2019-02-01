@@ -101,7 +101,7 @@ Compositor::Compositor(QObject* workspace)
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
     connect(options, &Options::configChanged, this, &Compositor::slotConfigChanged);
     compositeResetTimer.setSingleShot(true);
-    nextPaintReference.invalidate(); // Initialize the timer
+    m_monotonicClock.start();
 
     // 2 sec which should be enough to restart the compositor
     static const int compositorLostMessageDelay = 2000;
@@ -727,7 +727,6 @@ void Compositor::performCompositing()
     if (repaints_region.isEmpty() && !windowRepaintsPending()) {
         m_scene->idle();
         m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now"
-        m_timeSinceStart += m_timeSinceLastVBlank;
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
         // it for some reason, e.g. transformations or translucency, the next pass that does not
         // need this anymore and paints normally will also reset the suspended unredirect.
@@ -769,12 +768,12 @@ void Compositor::performCompositing()
             kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostLastGuardedFrame);
         }
     }
-    m_timeSinceStart += m_timeSinceLastVBlank;
 
     if (waylandServer()) {
+        const auto currentTime = static_cast<quint32>(m_monotonicClock.elapsed());
         for (Toplevel *win : qAsConst(windows)) {
             if (auto surface = win->surface()) {
-                surface->frameRendered(m_timeSinceStart);
+                surface->frameRendered(currentTime);
             }
         }
     }

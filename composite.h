@@ -222,18 +222,17 @@ private:
     QTimer m_unusedSupportPropertyTimer;
     qint64 vBlankInterval, fpsInterval;
     int m_xrrRefreshRate;
-    QElapsedTimer nextPaintReference;
     QRegion repaints_region;
 
     QTimer compositeResetTimer; // for compressing composite resets
     bool m_finishing; // finish() sets this variable while shutting down
     bool m_starting; // start() sets this variable while starting
     qint64 m_timeSinceLastVBlank;
-    qint64 m_timeSinceStart = 0;
     Scene *m_scene;
     bool m_bufferSwapPending;
     bool m_composeAtSwapCompletion;
     int m_framesToTestForSafety = 3;
+    QElapsedTimer m_monotonicClock;
 
     KWIN_SINGLETON_VARIABLE(Compositor, s_compositor)
 };
