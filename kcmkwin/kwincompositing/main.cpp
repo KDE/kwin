@@ -21,7 +21,6 @@
 
 
 #include "compositing.h"
-#include "model.h"
 #include "ui_compositing.h"
 #include <QAction>
 #include <QApplication>
@@ -29,33 +28,6 @@
 
 #include <kcmodule.h>
 #include <kservice.h>
-
-class KWinCompositingKCM : public KCModule
-{
-    Q_OBJECT
-public:
-    virtual ~KWinCompositingKCM();
-
-public Q_SLOTS:
-    void save() override;
-    void load() override;
-    void defaults() override;
-
-protected:
-    explicit KWinCompositingKCM(QWidget* parent, const QVariantList& args,
-                                KWin::Compositing::EffectView::ViewType viewType);
-
-private:
-    QScopedPointer<KWin::Compositing::EffectView> m_view;
-};
-
-class KWinDesktopEffects : public KWinCompositingKCM
-{
-    Q_OBJECT
-public:
-    explicit KWinDesktopEffects(QWidget* parent = 0, const QVariantList& args = QVariantList())
-        : KWinCompositingKCM(parent, args, KWin::Compositing::EffectView::DesktopEffectsView) {}
-};
 
 class KWinCompositingSettings : public KCModule
 {
@@ -230,44 +202,7 @@ void KWinCompositingSettings::save()
     m_compositing->save();
 }
 
-KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args, KWin::Compositing::EffectView::ViewType viewType)
-    : KCModule(parent, args)
-    , m_view(new KWin::Compositing::EffectView(viewType))
-{
-    QVBoxLayout *vl = new QVBoxLayout(this);
-
-    vl->addWidget(m_view.data());
-    setLayout(vl);
-    connect(m_view.data(), &KWin::Compositing::EffectView::changed, [this]{
-        emit changed(true);
-    });
-    m_view->setFocusPolicy(Qt::StrongFocus);
-}
-
-KWinCompositingKCM::~KWinCompositingKCM()
-{
-}
-
-void KWinCompositingKCM::save()
-{
-    m_view->save();
-    KCModule::save();
-}
-
-void KWinCompositingKCM::load()
-{
-    m_view->load();
-    KCModule::load();
-}
-
-void KWinCompositingKCM::defaults()
-{
-    m_view->defaults();
-    KCModule::defaults();
-}
-
 K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
-                 registerPlugin<KWinDesktopEffects>("effects");
                  registerPlugin<KWinCompositingSettings>("compositing");
                 )
 

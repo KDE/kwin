@@ -199,7 +199,7 @@ bool EffectModel::setData(const QModelIndex &index, const QVariant &value, int r
         // config file could get polluted
         EffectData &data = m_effectsList[index.row()];
         data.effectStatus = Status(value.toInt());
-        data.changed = true;
+        data.changed = data.effectStatus != data.originalStatus;
         emit dataChanged(index, index);
 
         if (data.effectStatus == Status::Enabled && !data.exclusiveGroup.isEmpty()) {
@@ -211,7 +211,7 @@ bool EffectModel::setData(const QModelIndex &index, const QVariant &value, int r
                 EffectData &otherData = m_effectsList[i];
                 if (otherData.exclusiveGroup == data.exclusiveGroup) {
                     otherData.effectStatus = Status::Disabled;
-                    otherData.changed = true;
+                    otherData.changed = otherData.effectStatus != otherData.originalStatus;
                     emit dataChanged(this->index(i, 0), this->index(i, 0));
                 }
             }
@@ -249,6 +249,7 @@ void EffectModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPlug
         } else {
             effect.effectStatus = effectStatus(effect.enabledByDefault);
         }
+        effect.originalStatus = effect.effectStatus;
         effect.video = data.video;
         effect.website = QUrl();
         effect.supported = true;
@@ -289,6 +290,7 @@ void EffectModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         effect.serviceName = plugin.pluginName();
         effect.iconName = plugin.icon();
         effect.effectStatus = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault()));
+        effect.originalStatus = effect.effectStatus;
         effect.enabledByDefault = plugin.isPluginEnabledByDefault();
         effect.enabledByDefaultFunction = false;
         effect.video = plugin.property(QStringLiteral("X-KWin-Video-Url")).toUrl();
@@ -366,6 +368,8 @@ void EffectModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPlugi
             effect.effectStatus = effectStatus(effect.enabledByDefault);
         }
 
+        effect.originalStatus = effect.effectStatus;
+
         effect.configurable = std::any_of(configs.constBegin(), configs.constEnd(),
             [pluginEffect](const KPluginInfo &info) {
                 return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == pluginEffect.pluginId();
@@ -430,7 +434,7 @@ void EffectModel::load()
                     if (it != m_effectsList.end()) {
                         if ((*it).supported != supportedValue) {
                             (*it).supported = supportedValue;
-                            QModelIndex i = index(findRowByServiceName(effectName), 0);
+                            QModelIndex i = findByPluginId(effectName);
                             if (i.isValid()) {
                                 emit dataChanged(i, i, QVector<int>() << SupportedRole);
                             }
@@ -444,16 +448,6 @@ void EffectModel::load()
 
     m_effectsChanged = m_effectsList;
     endResetModel();
-}
-
-int EffectModel::findRowByServiceName(const QString &serviceName)
-{
-    for (int it = 0; it < m_effectsList.size(); it++) {
-        if (m_effectsList.at(it).serviceName == serviceName) {
-            return it;
-        }
-    }
-    return -1;
 }
 
 void EffectModel::syncEffectsToKWin()
@@ -490,6 +484,7 @@ void EffectModel::save()
             continue;
         }
         effect.changed = false;
+        effect.originalStatus = effect.effectStatus;
 
         const QString key = effect.serviceName + QStringLiteral("Enabled");
         const bool shouldEnable = (effect.effectStatus != Status::Disabled);
@@ -517,6 +512,28 @@ void EffectModel::defaults()
             updateEffectStatus(index(i, 0), effect.enabledByDefault ? Status::Enabled : Status::Disabled);
         }
     }
+}
+
+bool EffectModel::needsSave() const
+{
+    return std::any_of(m_effectsList.constBegin(), m_effectsList.constEnd(),
+        [](const EffectData &data) {
+            return data.changed;
+        }
+    );
+}
+
+QModelIndex EffectModel::findByPluginId(const QString &pluginId) const
+{
+    auto it = std::find_if(m_effectsList.constBegin(), m_effectsList.constEnd(),
+        [pluginId](const EffectData &data) {
+            return data.serviceName == pluginId;
+        }
+    );
+    if (it == m_effectsList.constEnd()) {
+        return {};
+    }
+    return index(std::distance(m_effectsList.constBegin(), it), 0);
 }
 
 bool EffectModel::shouldStore(const EffectData &data) const

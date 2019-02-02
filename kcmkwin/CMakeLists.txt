@@ -8,6 +8,7 @@ add_subdirectory( kwinrules )
 add_subdirectory( kwinscreenedges )
 add_subdirectory( kwinscripts )
 add_subdirectory( kwindesktop )
+add_subdirectory( kwineffects )
 
 if( KWIN_BUILD_TABBOX )
 add_subdirectory( kwintabbox )

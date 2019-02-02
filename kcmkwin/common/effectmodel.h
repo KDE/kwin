@@ -177,6 +177,16 @@ public:
      **/
     void defaults();
 
+    /**
+     * Whether the model has unsaved changes.
+     **/
+    bool needsSave() const;
+
+    /**
+     * Finds an effect with the given plugin id.
+     **/
+    QModelIndex findByPluginId(const QString &pluginId) const;
+
 protected:
     enum class Kind {
         BuiltIn,
@@ -196,6 +206,7 @@ protected:
         QString serviceName;
         QString iconName;
         Status effectStatus;
+        Status originalStatus;
         bool enabledByDefault;
         bool enabledByDefaultFunction;
         QUrl video;
@@ -220,7 +231,6 @@ private:
     void loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
     void loadJavascriptEffects(const KConfigGroup &kwinConfig);
     void loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
-    int findRowByServiceName(const QString &serviceName);
     void syncEffectsToKWin();
 
     QVector<EffectData> m_effectsList;
