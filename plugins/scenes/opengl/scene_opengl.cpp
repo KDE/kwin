@@ -90,7 +90,7 @@ extern int currentRefreshRate();
 /**
  * SyncObject represents a fence used to synchronize operations in
  * the kwin command stream with operations in the X command stream.
- */
+ **/
 class SyncObject
 {
 public:
@@ -237,7 +237,7 @@ void SyncObject::finishResetting()
 /**
  * SyncManager manages a set of fences used for explicit synchronization
  * with the X command stream.
- */
+ **/
 class SyncManager
 {
 public:
@@ -593,7 +593,7 @@ void SceneOpenGL::insertWait()
 /**
  * Render cursor texture in case hardware cursor is disabled.
  * Useful for screen recording apps or backends that can't do planes.
- */
+ **/
 void SceneOpenGL2::paintCursor()
 {
     // don't paint if we use hardware cursor

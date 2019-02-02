@@ -51,7 +51,7 @@ namespace KWin
  * @brief Defines Predicates on how to search for a Client.
  *
  * Used by Workspace::findClient.
- */
+ **/
 enum class Predicate {
     WindowMatch,
     WrapperIdMatch,
@@ -68,7 +68,7 @@ class KWIN_EXPORT Client
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
-     */
+     **/
     Q_PROPERTY(QSize basicUnit READ basicUnit)
     /**
      * A client can block compositing. That is while the Client is alive and the state is set,
@@ -247,18 +247,18 @@ public:
     StrutRects strutRects() const;
     bool hasStrut() const override;
 
-    /*
-    *   If shown is true the client is mapped and raised, if false
-    *   the client is unmapped and hidden, this function is called
-    *   when the tabbing group of the client switches its visible
-    *   client.
-    */
+    /**
+     * If shown is true the client is mapped and raised, if false
+     * the client is unmapped and hidden, this function is called
+     * when the tabbing group of the client switches its visible
+     * client.
+     **/
     void setClientShown(bool shown) override;
 
     /**
      * Whether or not the window has a strut that expands through the invisible area of
      * an xinerama setup where the monitors are not the same resolution.
-     */
+     **/
     bool hasOffscreenXineramaStrut() const;
 
     // Decorations <-> Effects
@@ -380,11 +380,11 @@ Q_SIGNALS:
 
     /**
      * Emitted whenever the Client want to show it menu
-     */
+     **/
     void showRequest();
     /**
      * Emitted whenever the Client's menu is closed
-     */
+     **/
     void menuHidden();
     /**
      * Emitted whenever the Client's menu is available
@@ -392,7 +392,7 @@ Q_SIGNALS:
     void appMenuAvailable();
     /**
      * Emitted whenever the Client's menu is unavailable
-     */
+     **/
     void appMenuUnavailable();
 
     /**

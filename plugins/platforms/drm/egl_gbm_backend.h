@@ -68,8 +68,8 @@ private:
         EGLSurface eglSurface = EGL_NO_SURFACE;
         int bufferAge = 0;
         /**
-        * @brief The damage history for the past 10 frames.
-        */
+         * @brief The damage history for the past 10 frames.
+         **/
         QList<QRegion> damageHistory;
     };
     bool resetOutput(Output &output, DrmOutput *drmOutput);

@@ -115,11 +115,11 @@ private:
 };
 
 /**
-* @brief Class encapsulating all Wayland data structures needed by the Egl backend.
-*
-* It creates the connection to the Wayland Compositor, sets up the registry and creates
-* the Wayland surface and its shell mapping.
-*/
+ * @brief Class encapsulating all Wayland data structures needed by the Egl backend.
+ *
+ * It creates the connection to the Wayland Compositor, sets up the registry and creates
+ * the Wayland surface and its shell mapping.
+ **/
 class KWIN_EXPORT WaylandBackend : public Platform
 {
     Q_OBJECT

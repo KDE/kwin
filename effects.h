@@ -574,7 +574,7 @@ public:
     }
     /**
      * The foreground text color as specified by the default Plasma theme.
-     */
+     **/
     QColor styledTextColor();
 
 private Q_SLOTS:

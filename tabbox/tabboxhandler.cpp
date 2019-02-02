@@ -62,12 +62,12 @@ public:
     ~TabBoxHandlerPrivate();
 
     /**
-    * Updates the current highlight window state
-    */
+     * Updates the current highlight window state
+     **/
     void updateHighlightWindows();
     /**
-    * Ends window highlighting
-    */
+     * Ends window highlighting
+     **/
     void endHighlightWindows(bool abort = false);
 
     void show();
@@ -89,8 +89,8 @@ public:
     DesktopModel* m_desktopModel;
     QModelIndex index;
     /**
-    * Indicates if the tabbox is shown.
-    */
+     * Indicates if the tabbox is shown.
+     **/
     bool isShown;
     TabBoxClient *lastRaisedClient, *lastRaisedClientSucc;
     int wheelAngleDelta = 0;

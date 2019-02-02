@@ -105,7 +105,7 @@ public:
      * This can either be a function pointer or a function object.
      * @return KWin::Client* The found Client or @c null
      * @see findClient(Predicate, xcb_window_t)
-     */
+     **/
     Client *findClient(std::function<bool (const Client*)> func) const;
     AbstractClient *findAbstractClient(std::function<bool (const AbstractClient*)> func) const;
     /**
@@ -115,7 +115,7 @@ public:
      * @param w The window id to test against
      * @return KWin::Client* The found Client or @c null
      * @see findClient(std::function<bool (const Client*)>)
-     */
+     **/
     Client *findClient(Predicate predicate, xcb_window_t w) const;
     void forEachClient(std::function<void (Client*)> func);
     void forEachAbstractClient(std::function<void (AbstractClient*)> func);
@@ -125,7 +125,7 @@ public:
      *
      * @param w The window id to search for
      * @return KWin::Unmanaged* Found Unmanaged or @c null if there is no Unmanaged with given Id.
-     */
+     **/
     Unmanaged *findUnmanaged(xcb_window_t w) const;
     void forEachUnmanaged(std::function<void (Unmanaged*)> func);
     Toplevel *findToplevel(std::function<bool (const Toplevel*)> func) const;
@@ -155,13 +155,13 @@ public:
     /**
      * Returns the active client, i.e. the client that has the focus (or None
      * if no client has the focus)
-     */
+     **/
     AbstractClient* activeClient() const;
     /**
      * Client that was activated, but it's not yet really activeClient(), because
      * we didn't process yet the matching FocusIn event. Used mostly in focus
      * stealing prevention code.
-     */
+     **/
     AbstractClient* mostRecentlyActivatedClient() const;
 
     AbstractClient* clientUnderMouse(int screen) const;
@@ -187,7 +187,7 @@ public:
 
     /**
      * Indicates that the client c is being moved around by the user.
-     */
+     **/
     void setClientIsMoving(AbstractClient* c);
 
     QPoint adjustClientPosition(AbstractClient* c, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
@@ -264,7 +264,7 @@ public:
     /**
      * Returns the list of clients sorted in stacking order, with topmost client
      * at the last position
-     */
+     **/
     const ToplevelList& stackingOrder() const;
     ToplevelList xStackingOrder() const;
     ClientList ensureStackingOrder(const ClientList& clients) const;
@@ -281,7 +281,7 @@ public:
     /**
      * Shows the menu operations menu for the client and makes it active if
      * it's not already.
-     */
+     **/
     void showWindowMenu(const QRect& pos, AbstractClient* cl);
     const UserActionsMenu *userActionsMenu() const {
         return m_userActionsMenu;
@@ -345,12 +345,12 @@ public:
     void requestDelayFocus(AbstractClient*);
 
     /**
-    * updates the mouse position to track whether a focus follow mouse focus change was caused by
-    * an actual mouse move
-    * is esp. called on enter/motion events of inactive windows
-    * since an active window doesn't receive mouse events, it must also be invoked if a (potentially)
-    * active window might be moved/resize away from the cursor (causing a leave event)
-    */
+     * updates the mouse position to track whether a focus follow mouse focus change was caused by
+     * an actual mouse move
+     * is esp. called on enter/motion events of inactive windows
+     * since an active window doesn't receive mouse events, it must also be invoked if a (potentially)
+     * active window might be moved/resize away from the cursor (causing a leave event)
+     **/
     void updateFocusMousePosition(const QPoint& pos);
     QPoint focusMousePosition() const;
 
@@ -489,7 +489,7 @@ Q_SIGNALS:
     /**
      * This signels is emitted when ever the stacking order is change, ie. a window is risen
      * or lowered
-     */
+     **/
     void stackingOrderChanged();
 
 private:
@@ -634,7 +634,7 @@ private:
 
 /**
  * Helper for Workspace::blockStackingUpdates() being called in pairs (True/false)
- */
+ **/
 class StackingUpdatesBlocker
 {
 public:

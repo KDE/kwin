@@ -174,7 +174,7 @@ public:
      *
      * Base implementation warns that the current backend does not implement this
      * functionality.
-     */
+     **/
     virtual void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
 
     /**
@@ -421,13 +421,13 @@ public:
         return Outputs();
     }
 
-    /*
+    /**
      * A string of information to include in kwin debug output
      * It should not be translated.
      *
      * The base implementation prints the name.
      * @since 5.12
-     */
+     **/
     virtual QString supportInformation() const;
 
 public Q_SLOTS:

@@ -133,13 +133,13 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     }
 }
 
-/*!
+/**
  * Some fullscreen effects have to raise the screenedge on top of an input window, thus all windows
  * this function puts them back where they belong for regular use and is some cheap variant of
  * the regular propagateClients function in that it completely ignores managed clients and everything
  * else and also does not update the NETWM property.
  * Called from Effects::destroyInputWindow so far.
- */
+ **/
 void Workspace::stackScreenEdgesUnderOverrideRedirect()
 {
     if (!rootInfo()) {
@@ -148,10 +148,10 @@ void Workspace::stackScreenEdgesUnderOverrideRedirect()
     Xcb::restackWindows(QVector<xcb_window_t>() << rootInfo()->supportWindow() << ScreenEdges::self()->windows());
 }
 
-/*!
-  Propagates the managed clients to the world.
-  Called ONLY from updateStackingOrder().
- */
+/**
+ * Propagates the managed clients to the world.
+ * Called ONLY from updateStackingOrder().
+ **/
 void Workspace::propagateClients(bool propagate_new_clients)
 {
     if (!rootInfo()) {
@@ -226,11 +226,11 @@ void Workspace::propagateClients(bool propagate_new_clients)
     markXStackingOrderAsDirty();
 }
 
-/*!
-  Returns topmost visible client. Windows on the dock, the desktop
-  or of any other special kind are excluded. Also if the window
-  doesn't accept focus it's excluded.
- */
+/**
+ * Returns topmost visible client. Windows on the dock, the desktop
+ * or of any other special kind are excluded. Also if the window
+ * doesn't accept focus it's excluded.
+ **/
 // TODO misleading name for this method, too many slightly different ways to use it
 AbstractClient* Workspace::topClientOnDesktop(int desktop, int screen, bool unconstrained, bool only_normal) const
 {
@@ -490,9 +490,9 @@ void Workspace::restoreSessionStackingOrder(Client* c)
     unconstrained_stacking_order.append(c);
 }
 
-/*!
-  Returns a stacking order based upon \a list that fulfills certain contained.
- */
+/**
+ * Returns a stacking order based upon \a list that fulfills certain contained.
+ **/
 ToplevelList Workspace::constrainedStackingOrder()
 {
     ToplevelList layer[ NumLayers ];

@@ -126,8 +126,9 @@ enum ShadeMode {
 
 /**
  * Maximize mode. These values specify how a window is maximized.
- */
-// these values are written to session files, don't change the order
+ *
+ * @note these values are written to session files, don't change the order
+ **/
 enum MaximizeMode {
     MaximizeRestore    = 0, ///< The window is not maximized in any direction.
     MaximizeVertical   = 1, ///< The window is maximized vertically.
@@ -195,7 +196,7 @@ Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
 
 /**
  * Separate the concept of an unet QPoint and 0,0
- */
+ **/
 class ClearablePoint
 {
 public:

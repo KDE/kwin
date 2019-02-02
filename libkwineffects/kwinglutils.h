@@ -207,7 +207,7 @@ class KWINGLUTILS_EXPORT ShaderManager
 public:
     /**
      * Returns a shader with the given traits, creating it if necessary.
-     */
+     **/
     GLShader *shader(ShaderTraits traits);
 
     /**
@@ -230,7 +230,7 @@ public:
     /**
      * Pushes the current shader onto the stack and binds a shader
      * with the given traits.
-     */
+     **/
     GLShader *pushShader(ShaderTraits traits);
 
     /**
@@ -304,7 +304,7 @@ public:
     /**
      * Compiles and tests the dynamically generated shaders.
      * Returns true if successful and false otherwise.
-     */
+     **/
     bool selfTest();
 
     /**
@@ -535,7 +535,7 @@ public:
      * @returns the ratio between the virtual geometry space the rendering
      * system uses and the target
      * @since 5.10
-     */
+     **/
     static void setVirtualScreenScale(qreal scale) {
         s_virtualScreenScale = scale;
     }
@@ -578,7 +578,7 @@ enum VertexAttributeType {
  * The attribute format consists of the attribute index, the number of
  * vector components, the data type, and the offset of the first element
  * relative to the start of the vertex data.
- */
+ **/
 struct GLVertexAttrib
 {
     int index;            /** The attribute index */
@@ -599,13 +599,13 @@ struct GLVertexAttrib
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.6
- */
+ **/
 class KWINGLUTILS_EXPORT GLVertexBuffer
 {
 public:
     /**
      * Enum to define how often the vertex data in the buffer object changes.
-     */
+     **/
     enum UsageHint {
         Dynamic, ///< frequent changes, but used several times for rendering
         Static, ///< No changes to data
@@ -639,17 +639,17 @@ public:
      *     Vertex vertices[6];
      *     vbo->setAttribLayout(attribs, 2, sizeof(Vertex));
      *     vbo->setData(vertices, sizeof(vertices));
-     */
+     **/
     void setAttribLayout(const GLVertexAttrib *attribs, int count, int stride);
 
     /**
      * Uploads data into the buffer object's data store.
-     */
+     **/
     void setData(const void *data, size_t sizeInBytes);
 
     /**
      * Sets the number of vertices that will be drawn by the render() method.
-     */
+     **/
     void setVertexCount(int count);
 
     /**
@@ -659,7 +659,7 @@ public:
      * @param vertices The vertices, size must equal @a numberVertices * @a dim
      * @param texcoords The texture coordinates for each vertex.
      * Size must equal 2 * @a numberVertices.
-     */
+     **/
     void setData(int numberVertices, int dim, const float* vertices, const float* texcoords);
 
     /**
@@ -679,32 +679,32 @@ public:
      *
      * It is assumed that the GL_ARRAY_BUFFER_BINDING will not be changed while
      * the buffer object is mapped.
-     */
+     **/
     GLvoid *map(size_t size);
 
     /**
      * Flushes the mapped buffer range and unmaps the buffer.
-     */
+     **/
     void unmap();
 
     /**
      * Binds the vertex arrays to the context.
-     */
+     **/
     void bindArrays();
 
     /**
      * Disables the vertex arrays.
-     */
+     **/
     void unbindArrays();
 
     /**
      * Draws count vertices beginning with first.
-     */
+     **/
     void draw(GLenum primitiveMode, int first, int count);
 
     /**
      * Draws count vertices beginning with first.
-     */
+     **/
     void draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping = false);
 
     /**
@@ -712,12 +712,12 @@ public:
      * Please refer to OpenGL documentation of glDrawArrays or glDrawElements for allowed
      * values for @a primitiveMode. Best is to use GL_TRIANGLES or similar to be future
      * compatible.
-     */
+     **/
     void render(GLenum primitiveMode);
     /**
      * Same as above restricting painting to @a region if @a hardwareClipping is true.
      * It's within the caller's responsibility to enable GL_SCISSOR_TEST.
-     */
+     **/
     void render(const QRegion& region, GLenum primitiveMode, bool hardwareClipping = false);
     /**
      * Sets the color the geometry will be rendered with.
@@ -758,29 +758,29 @@ public:
      * Notifies the vertex buffer that we are done painting the frame.
      *
      * @internal
-     */
+     **/
     void endOfFrame();
 
     /**
      * Notifies the vertex buffer that we have posted the frame.
      *
      * @internal
-     */
+     **/
     void framePosted();
 
     /**
      * @internal
-     */
+     **/
     static void initStatic();
 
     /**
      * @internal
-     */
+     **/
     static void cleanup();
 
     /**
      * Returns true if indexed quad mode is supported, and false otherwise.
-     */
+     **/
     static bool supportsIndexedQuads();
 
     /**
@@ -805,7 +805,7 @@ public:
      * @returns the ratio between the virtual geometry space the rendering
      * system uses and the target
      * @since 5.11.3
-     */
+     **/
     static void setVirtualScreenScale(qreal s) {
         s_virtualScreenScale = s;
     }

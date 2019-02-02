@@ -168,12 +168,12 @@ public:
 
     /**
      * Returns the damage that has accumulated since a buffer of the given age was presented.
-     */
+     **/
     QRegion accumulatedDamageHistory(int bufferAge) const;
 
     /**
      * Saves the given region to damage history.
-     */
+     **/
     void addToDamageHistory(const QRegion &region);
 
     /**
@@ -194,7 +194,7 @@ public:
 
     /**
      * Copy a region of pixels from the current read to the current draw buffer
-     */
+     **/
     void copyPixels(const QRegion &region);
 
 protected:
@@ -297,7 +297,7 @@ private:
     bool m_directRendering;
     /**
      * @brief Whether the backend supports GLX_EXT_buffer_age / EGL_EXT_buffer_age.
-     */
+     **/
     bool m_haveBufferAge;
     /**
      * @brief Whether the initialization failed, of course default to @c false.
@@ -309,7 +309,7 @@ private:
     QRegion m_lastDamage;
     /**
      * @brief The damage history for the past 10 frames.
-     */
+     **/
     QList<QRegion> m_damageHistory;
     /**
      * @brief Timer to measure how long a frame renders.

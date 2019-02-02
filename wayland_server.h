@@ -128,8 +128,8 @@ public:
     ShellClient *findClient(QWindow *w) const;
 
     /**
-     * return a transient parent of a surface imported with the foreign protocol, if any
-     */
+     * @returns a transient parent of a surface imported with the foreign protocol, if any
+     **/
     KWayland::Server::SurfaceInterface *findForeignTransientForSurface(KWayland::Server::SurfaceInterface *surface);
 
     /**

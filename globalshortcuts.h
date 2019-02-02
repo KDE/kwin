@@ -58,7 +58,7 @@ public:
      * @param action The action to trigger if the shortcut is pressed
      * @param modifiers The modifiers which need to be hold to trigger the action
      * @param pointerButtons The pointer button which needs to be pressed
-     */
+     **/
     void registerPointerShortcut(QAction *action, Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons);
     /**
      * @brief Registers an internal global axis shortcut
@@ -66,7 +66,7 @@ public:
      * @param action The action to trigger if the shortcut is triggered
      * @param modifiers The modifiers which need to be hold to trigger the action
      * @param axis The pointer axis
-     */
+     **/
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
     void registerTouchpadSwipe(QAction *action, SwipeDirection direction);
@@ -81,7 +81,7 @@ public:
      * @param modifiers The current hold modifiers
      * @param keyQt The Qt::Key which got pressed
      * @return @c true if a shortcut triggered, @c false otherwise
-     */
+     **/
     bool processKey(Qt::KeyboardModifiers modifiers, int keyQt);
     bool processPointerPressed(Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons);
     /**
@@ -94,7 +94,7 @@ public:
      * @param modifiers The current hold modifiers
      * @param axis The axis direction which has triggered this event
      * @return @c true if a shortcut triggered, @c false otherwise
-     */
+     **/
     bool processAxis(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
     void processSwipeStart(uint fingerCount);

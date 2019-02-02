@@ -40,7 +40,7 @@ class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
     Q_ENUMS(EasingCurve)
     /**
      * True if we are the active fullscreen effect
-     */
+     **/
     Q_PROPERTY(bool isActiveFullScreenEffect READ isActiveFullScreenEffect NOTIFY isActiveFullScreenEffectChanged)
 public:
     // copied from kwineffects.h

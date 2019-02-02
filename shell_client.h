@@ -42,7 +42,7 @@ namespace KWin
 
 /**
  * @brief The reason for which the server pinged a client surface
- */
+ **/
 enum class PingReason {
     CloseWindow = 0,
     FocusWindow

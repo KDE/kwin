@@ -198,7 +198,7 @@ private:
  * These checks are performed in @ref Edge
  *
  * @todo change way how Effects/Scripts can reserve an edge and are notified.
- */
+ **/
 class KWIN_EXPORT ScreenEdges : public QObject
 {
     Q_OBJECT
@@ -224,7 +224,7 @@ public:
     /**
      * Initialize the screen edges.
      * @internal
-     */
+     **/
     void init();
     /**
      * Check, if a screen edge is entered and trigger the appropriate action
@@ -232,11 +232,11 @@ public:
      * @param pos the position of the mouse pointer
      * @param now the time when the function is called
      * @param forceNoPushBack needs to be called to workaround some DnD clients, don't use unless you want to chek on a DnD event
-     */
+     **/
     void check(const QPoint& pos, const QDateTime &now, bool forceNoPushBack = false);
     /**
      * The (dpi dependent) length, reserved for the active corners of each edge - 1/3"
-     */
+     **/
     int cornerOffset() const;
     /**
      * Mark the specified screen edge as reserved. This method is provided for external activation
@@ -247,7 +247,7 @@ public:
      * @param callback The method name to be invoked - uses QMetaObject::invokeMethod
      * @see unreserve
      * @todo: add pointer to script/effect
-     */
+     **/
     void reserve(ElectricBorder border, QObject *object, const char *callback);
     /**
      * Mark the specified screen edge as unreserved. This method is provided for external activation
@@ -258,7 +258,7 @@ public:
      * @param object the object on which the callback had been invoked
      * @see reserve
      * @todo: add pointer to script/effect
-     */
+     **/
     void unreserve(ElectricBorder border, QObject *object);
     /**
      * Reserves an edge for the @p client. The idea behind this is to show the @p client if the
@@ -306,19 +306,19 @@ public:
      * Reserve desktop switching for screen edges, if @p isToReserve is @c true. Unreserve otherwise.
      * @param isToReserve indicated whether desktop switching should be reserved or unreseved
      * @param o Qt orientations
-     */
+     **/
     void reserveDesktopSwitching(bool isToReserve, Qt::Orientations o);
     /**
      * Raise electric border windows to the real top of the screen. We only need
      * to do this if an effect input window is active.
-     */
+     **/
     void ensureOnTop();
     bool isEntered(QMouseEvent *event);
 
     /**
      * Returns a QVector of all existing screen edge windows
      * @return all existing screen edge windows in a QVector
-     */
+     **/
     QVector< xcb_window_t > windows() const;
 
     bool isDesktopSwitching() const;

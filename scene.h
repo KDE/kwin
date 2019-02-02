@@ -87,7 +87,7 @@ public:
      * @brief Creates the Scene backend of an EffectFrame.
      *
      * @param frame The EffectFrame this Scene::EffectFrame belongs to.
-     */
+     **/
     virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) = 0;
     /**
      * @brief Creates the Scene specific Shadow subclass.
@@ -96,7 +96,7 @@ public:
      * return @c null.
      *
      * @param toplevel The Toplevel for which the Shadow needs to be created.
-     */
+     **/
     virtual Shadow *createShadow(Toplevel *toplevel) = 0;
     /**
      * Method invoked when the screen geometry is changed.
@@ -142,7 +142,7 @@ public:
 
     /**
      * Whether the Scene uses an X11 overlay window to perform compositing.
-     */
+     **/
     virtual bool usesOverlayWindow() const = 0;
 
     virtual void triggerFence();
@@ -348,7 +348,7 @@ protected:
      * need to know the actual WindowPixmap subclass used by the concrete Scene implementations.
      *
      * @return The WindowPixmap casted to T* or @c NULL if there is no valid window pixmap.
-     */
+     **/
     template<typename T> T *windowPixmap();
     template<typename T> T *previousWindowPixmap();
     /**
@@ -356,7 +356,7 @@ protected:
      *
      * The inheriting classes need to implement this method to create a new instance of their WindowPixmap subclass.
      * @note Do not use WindowPixmap::create on the created instance. The Scene will take care of that.
-     */
+     **/
     virtual WindowPixmap *createWindowPixmap() = 0;
     Toplevel* toplevel;
     ImageFilterType filter;
@@ -387,7 +387,7 @@ private:
  *
  * This class is intended to be inherited for the needs of the compositor backends which need further mapping from
  * the native pixmap to the respective rendering format.
- */
+ **/
 class KWIN_EXPORT WindowPixmap
 {
 public:
@@ -400,15 +400,15 @@ public:
      *
      * Inheriting classes should re-implement this method in case they need to add further functionality for mapping the
      * native pixmap to the rendering format.
-     */
+     **/
     virtual void create();
     /**
      * @return @c true if the pixmap has been created and is valid, @c false otherwise
-     */
+     **/
     virtual bool isValid() const;
     /**
      * @return The native X11 pixmap handle
-     */
+     **/
     xcb_pixmap_t pixmap() const;
     /**
      * @return The Wayland BufferInterface for this WindowPixmap.
@@ -421,29 +421,29 @@ public:
      *
      * @return @c true if this WindowPixmap is considered as discarded, @c false otherwise.
      * @see markAsDiscarded
-     */
+     **/
     bool isDiscarded() const;
     /**
      * @brief Marks this WindowPixmap as discarded. From now on isDiscarded will return @c true. This method should
      * only be used by the Window when it changes in a way that a new pixmap is required.
      *
      * @see isDiscarded
-     */
+     **/
     void markAsDiscarded();
     /**
      * The size of the pixmap.
-     */
+     **/
     const QSize &size() const;
     /**
      * The geometry of the Client's content inside the pixmap. In case of a decorated Client the
      * pixmap also contains the decoration which is not rendered into this pixmap, though. This
      * contentsRect tells where inside the complete pixmap the real content is.
-     */
+     **/
     const QRect &contentsRect() const;
     /**
      * @brief Returns the Toplevel this WindowPixmap belongs to.
      * Note: the Toplevel can change over the lifetime of the WindowPixmap in case the Toplevel is copied to Deleted.
-     */
+     **/
     Toplevel *toplevel() const;
 
     /**
@@ -478,7 +478,7 @@ protected:
     virtual WindowPixmap *createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface);
     /**
      * @return The Window this WindowPixmap belongs to
-     */
+     **/
     Scene::Window *window();
 
     /**

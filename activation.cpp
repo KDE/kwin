@@ -219,14 +219,14 @@ namespace KWin
 //****************************************
 
 
-/*!
-  Informs the workspace about the active client, i.e. the client that
-  has the focus (or None if no client has the focus). This functions
-  is called by the client itself that gets focus. It has no other
-  effect than fixing the focus chain and the return value of
-  activeClient(). And of course, to propagate the active client to the
-  world.
- */
+/**
+ * Informs the workspace about the active client, i.e. the client that
+ * has the focus (or None if no client has the focus). This functions
+ * is called by the client itself that gets focus. It has no other
+ * effect than fixing the focus chain and the return value of
+ * activeClient(). And of course, to propagate the active client to the
+ * world.
+ **/
 void Workspace::setActiveClient(AbstractClient* c)
 {
     if (active_client == c)
@@ -278,17 +278,18 @@ void Workspace::setActiveClient(AbstractClient* c)
     --set_active_client_recursion;
 }
 
-/*!
-  Tries to activate the client \a c. This function performs what you
-  expect when clicking the respective entry in a taskbar: showing and
-  raising the client (this may imply switching to the another virtual
-  desktop) and putting the focus onto it. Once X really gave focus to
-  the client window as requested, the client itself will call
-  setActiveClient() and the operation is complete. This may not happen
-  with certain focus policies, though.
-
-  \sa stActiveClient(), requestFocus()
- */
+/**
+ * Tries to activate the client \a c. This function performs what you
+ * expect when clicking the respective entry in a taskbar: showing and
+ * raising the client (this may imply switching to the another virtual
+ * desktop) and putting the focus onto it. Once X really gave focus to
+ * the client window as requested, the client itself will call
+ * setActiveClient() and the operation is complete. This may not happen
+ * with certain focus policies, though.
+ *
+ * @see setActiveClient
+ * @see requestFocus
+ **/
 void Workspace::activateClient(AbstractClient* c, bool force)
 {
     if (c == NULL) {
@@ -333,13 +334,13 @@ void Workspace::activateClient(AbstractClient* c, bool force)
     }
 }
 
-/*!
-  Tries to activate the client by asking X for the input focus. This
-  function does not perform any show, raise or desktop switching. See
-  Workspace::activateClient() instead.
-
-  \sa Workspace::activateClient()
- */
+/**
+ * Tries to activate the client by asking X for the input focus. This
+ * function does not perform any show, raise or desktop switching. See
+ * Workspace::activateClient() instead.
+ *
+ * @see activateClient
+ **/
 void Workspace::requestFocus(AbstractClient* c, bool force)
 {
     takeActivity(c, force ? ActivityFocusForce : ActivityFocus);
@@ -404,13 +405,13 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
         screens()->setCurrent(c->screen());
 }
 
-/*!
-  Informs the workspace that the client \a c has been hidden. If it
-  was the active client (or to-become the active client),
-  the workspace activates another one.
-
-  \a c may already be destroyed
- */
+/**
+ * Informs the workspace that the client \a c has been hidden. If it
+ * was the active client (or to-become the active client),
+ * the workspace activates another one.
+ *
+ * @note @p c may already be destroyed.
+ **/
 void Workspace::clientHidden(AbstractClient* c)
 {
     assert(!c->isShown(true) || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
@@ -700,12 +701,12 @@ void Workspace::clientAttentionChanged(AbstractClient* c, bool set)
 // Client
 //********************************************
 
-/*!
-  Updates the user time (time of last action in the active window).
-  This is called inside  kwin for every action with the window
-  that qualifies for user interaction (clicking on it, activate it
-  externally, etc.).
- */
+/**
+ * Updates the user time (time of last action in the active window).
+ * This is called inside  kwin for every action with the window
+ * that qualifies for user interaction (clicking on it, activate it
+ * externally, etc.).
+ **/
 void Client::updateUserTime(xcb_timestamp_t time)
 {
     // copied in Group::updateUserTime

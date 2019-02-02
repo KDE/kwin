@@ -264,11 +264,11 @@ class KWIN_EXPORT AbstractClient : public Toplevel
 
     /**
      * Whether an application menu is available for this Client
-     */
+     **/
     Q_PROPERTY(bool hasApplicationMenu READ hasApplicationMenu NOTIFY hasApplicationMenuChanged)
     /**
      * Whether the application menu for this Client is currently opened
-     */
+     **/
     Q_PROPERTY(bool applicationMenuActive READ applicationMenuActive NOTIFY applicationMenuActiveChanged)
 
     /**
@@ -276,7 +276,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      *
      * When an application failed to react on a ping request in time, it is
      * considered unresponsive. This usually indicates that the application froze or crashed.
-     */
+     **/
     Q_PROPERTY(bool unresponsive READ unresponsive NOTIFY unresponsiveChanged)
     /**
      * The "Window Tabs" Group this Client belongs to.
@@ -288,7 +288,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Absolute file path, or name of palette in the user's config directory following KColorSchemes format.
      * An empty string indicates the default palette from kdeglobals is used.
      * @note this indicates the colour scheme requested, which might differ from the theme applied if the colorScheme cannot be found
-     */
+     **/
     Q_PROPERTY(QString colorScheme READ colorScheme NOTIFY colorSchemeChanged)
 
 public:
@@ -418,7 +418,7 @@ public:
      * (normal=window which has a border, can be moved by the user, can be closed, etc.)
      * true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
-     */
+     **/
     bool isSpecialWindow() const;
     void sendToScreen(int screen);
     const QKeySequence &shortcut() const {
@@ -434,7 +434,7 @@ public:
     /**
      * Set the window as being on the attached list of desktops
      * On X11 it will be set to the last entry
-     */
+     **/
     void setDesktops(QVector<VirtualDesktop *> desktops);
 
     int desktop() const override {
@@ -447,8 +447,8 @@ public:
 
     void setMinimized(bool set);
     /**
-    * Minimizes this client plus its transients
-    */
+     * Minimizes this client plus its transients
+     **/
     void minimize(bool avoid_animation = false);
     void unminimize(bool avoid_animation = false);
     bool isMinimized() const {
@@ -470,41 +470,53 @@ public:
      * all clients in this tabGroup will have property("kwin_tiling_floats").toBool() == true
      *
      * WARNING: non dynamic properties are ignored - you're not supposed to alter/update such explicitly
-     */
+     **/
     Q_INVOKABLE void syncTabGroupFor(QString property, bool fromThisClient = false);
     TabGroup *tabGroup() const;
     /**
      * Set tab group - this is to be invoked by TabGroup::add/remove(client) and NO ONE ELSE
-     */
+     **/
     void setTabGroup(TabGroup* group);
     virtual void setClientShown(bool shown);
     Q_INVOKABLE bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
-    /*
-    *   When a click is done in the decoration and it calls the group
-    *   to change the visible client it starts to move-resize the new
-    *   client, this function stops it.
-    */
+    /**
+     * When a click is done in the decoration and it calls the group
+     * to change the visible client it starts to move-resize the new
+     * client, this function stops it.
+     **/
     bool isCurrentTab() const;
     virtual QRect geometryRestore() const = 0;
     /**
      * The currently applied maximize mode
-     */
+     **/
     virtual MaximizeMode maximizeMode() const = 0;
     /**
      * The maximise mode requested by the server.
      * For X this always matches maximizeMode, for wayland clients it
      * is asyncronous
-     */
+     **/
     virtual MaximizeMode requestedMaximizeMode() const;
     void maximize(MaximizeMode);
+    /**
+     * Sets the maximization according to @p vertically and @p horizontally.
+     **/
     void setMaximize(bool vertically, bool horizontally);
     virtual bool noBorder() const = 0;
     virtual void setNoBorder(bool set) = 0;
     virtual void blockActivityUpdates(bool b = true) = 0;
     QPalette palette() const;
     const Decoration::DecorationPalette *decorationPalette() const;
+    /**
+     * Returns whether the window is resizable or has a fixed size.
+     **/
     virtual bool isResizable() const = 0;
+    /**
+     * Returns whether the window is moveable or has a fixed position.
+     **/
     virtual bool isMovable() const = 0;
+    /**
+     * Returns whether the window can be moved to another screen.
+     **/
     virtual bool isMovableAcrossScreens() const = 0;
     /**
      * @c true only for @c ShadeNormal
@@ -525,6 +537,9 @@ public:
      * Whether the Client can be shaded. Default implementation returns @c false.
      **/
     virtual bool isShadeable() const;
+    /**
+     * Returns whether the window is maximizable or not.
+     **/
     virtual bool isMaximizable() const = 0;
     virtual bool isMinimizable() const = 0;
     virtual QRect iconGeometry() const;
@@ -574,7 +589,7 @@ public:
 
     /**
      * These values represent positions inside an area
-     */
+     **/
     enum Position {
         // without prefix, they'd conflict with Qt::TopLeftCorner etc. :(
         PositionCenter         = 0x00,
@@ -593,11 +608,12 @@ public:
     // a helper for the workspace window packing. tests for screen validity and updates since in maximization case as with normal moving
     void packTo(int left, int top);
 
-    /** Set the quick tile mode ("snap") of this window.
+    /**
+     * Sets the quick tile mode ("snap") of this window.
      * This will also handle preserving and restoring of window geometry as necessary.
      * @param mode The tile mode (left/right) to give this window.
      * @param keyboard Defines whether to take keyboard cursor into account.
-     */
+     **/
     void setQuickTileMode(QuickTileMode mode, bool keyboard = false);
     QuickTileMode quickTileMode() const {
         return QuickTileMode(m_quickTileMode);
@@ -623,14 +639,17 @@ public:
         SizemodeMax ///< Try not to make it larger in either direction
     };
     /**
-     *Calculate the appropriate frame size for the given client size @p wsize.
+     * Calculates the appropriate frame size for the given client size @p wsize.
      *
      * @p wsize is adapted according to the window's size hints (minimum, maximum and incremental size changes).
      *
      * Default implementation returns the passed in @p wsize.
-     */
+     **/
     virtual QSize sizeForClientSize(const QSize &wsize, Sizemode mode = SizemodeAny, bool noframe = false) const;
 
+    /**
+     * Adjust the frame size @p frame according to the window's size hints.
+     **/
     QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
     QSize adjustedSize() const;
 
@@ -687,23 +706,23 @@ public:
     virtual void updateDecoration(bool check_workspace_pos, bool force = false) = 0;
 
     /**
-    * Returns whether the window provides context help or not. If it does,
-    * you should show a help menu item or a help button like '?' and call
-    * contextHelp() if this is invoked.
-    *
-    * Default implementation returns @c false.
-    * @see showContextHelp;
-    */
+     * Returns whether the window provides context help or not. If it does,
+     * you should show a help menu item or a help button like '?' and call
+     * contextHelp() if this is invoked.
+     *
+     * Default implementation returns @c false.
+     * @see showContextHelp;
+     **/
     virtual bool providesContextHelp() const;
 
     /**
-    * Invokes context help on the window. Only works if the window
-    * actually provides context help.
-    *
-    * Default implementation does nothing.
-    *
-    * @see providesContextHelp()
-    */
+     * Invokes context help on the window. Only works if the window
+     * actually provides context help.
+     *
+     * Default implementation does nothing.
+     *
+     * @see providesContextHelp()
+     **/
     virtual void showContextHelp();
 
     QRect inputGeometry() const override;
@@ -752,7 +771,7 @@ public:
     /**
      * Request showing the application menu bar
      * @param actionId The DBus menu ID of the action that should be highlighted, 0 for the root menu
-     */
+     **/
     void showApplicationMenu(int actionId);
 
     bool unresponsive() const;
@@ -1038,8 +1057,8 @@ protected:
     }
     void checkUnrestrictedMoveResize();
     /**
-    * Sets an appropriate cursor shape for the logical mouse position.
-    */
+     * Sets an appropriate cursor shape for the logical mouse position.
+     **/
     void updateCursor();
     void startDelayedMoveResize();
     void stopDelayedMoveResize();
@@ -1073,7 +1092,7 @@ protected:
     /*
      * Checks if the mouse cursor is near the edge of the screen and if so
      * activates quick tiling or maximization
-     */
+     **/
     void checkQuickTilingMaximizationZones(int xroot, int yroot);
     /**
      * Whether a sync request is still pending.
@@ -1172,8 +1191,7 @@ private:
     // electric border/quick tiling
     QuickTileMode m_electricMode = QuickTileFlag::None;
     bool m_electricMaximizing = false;
-    /** The quick tile mode of this window.
-     */
+    // The quick tile mode of this window.
     int m_quickTileMode = int(QuickTileFlag::None);
     QTimer *m_electricMaximizingDelay = nullptr;
 
@@ -1221,7 +1239,7 @@ private:
 
 /**
  * Helper for AbstractClient::blockGeometryUpdates() being called in pairs (true/false)
- */
+ **/
 class GeometryUpdatesBlocker
 {
 public:

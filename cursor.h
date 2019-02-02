@@ -51,7 +51,7 @@ enum Shape {
 
 /**
  * @brief Wrapper round Qt::CursorShape with extensions enums into a single entity
- */
+ **/
 class KWIN_EXPORT CursorShape {
 public:
     CursorShape() = default;
@@ -69,7 +69,7 @@ public:
     }
     /**
      * @brief The name of a cursor shape in the theme.
-     */
+     **/
     QByteArray name() const;
 private:
     int m_shape = Qt::ArrowCursor;
@@ -112,7 +112,7 @@ public:
      * This tracking is not about pointer position tracking.
      * @see stopCursorTracking
      * @see cursorChanged
-     */
+     **/
     void startCursorTracking();
     /**
      * @brief Disables tracking changes of cursor images.
@@ -120,20 +120,20 @@ public:
      * Only call after using startCursorTracking.
      *
      * @see startCursorTracking
-     */
+     **/
     void stopCursorTracking();
 
     /**
      * @brief The name of the currently used Cursor theme.
      *
      * @return const QString&
-     */
+     **/
     const QString &themeName() const;
     /**
      * @brief The size of the currently used Cursor theme.
      *
      * @return int
-     */
+     **/
     int themeSize() const;
     /**
      * @return list of alternative names for the cursor with @p name
@@ -172,7 +172,7 @@ Q_SIGNALS:
      *
      * @see startCursorTracking
      * @see stopCursorTracking
-     */
+     **/
     void cursorChanged();
     void themeChanged();
 
@@ -211,12 +211,12 @@ protected:
     /**
      * Called from startCursorTracking when cursor image tracking gets activated. Inheriting class needs
      * to overwrite to enable platform specific code for the tracking.
-     */
+     **/
     virtual void doStartCursorTracking();
     /**
      * Called from stopCursorTracking when cursor image tracking gets deactivated. Inheriting class needs
      * to overwrite to disable platform specific code for the tracking.
-     */
+     **/
     virtual void doStopCursorTracking();
     bool isCursorTracking() const;
     /**
@@ -252,8 +252,7 @@ private:
  * @brief Implementation using the InputRedirection framework to get pointer positions.
  *
  * Does not support warping of cursor.
- *
- */
+ **/
 class InputRedirectionCursor : public Cursor
 {
     Q_OBJECT

@@ -165,12 +165,12 @@ public Q_SLOTS:
      * Notifies the compositor that SwapBuffers() is about to be called.
      * Rendering of the next frame will be deferred until bufferSwapComplete()
      * is called.
-     */
+     **/
     void aboutToSwapBuffers();
 
     /**
      * Notifies the compositor that a pending buffer swap has completed.
-     */
+     **/
     void bufferSwapComplete();
 
 Q_SIGNALS:

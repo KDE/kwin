@@ -42,7 +42,7 @@ enum GLFeature {
      * Set when a texture bound to a pixmap uses the same storage as the pixmap,
      * and thus doesn't need to be rebound when the contents of the pixmap
      * has changed.
-     */
+     **/
     LooseBinding,
 
     /**
@@ -51,7 +51,7 @@ enum GLFeature {
      * - GL_ARB_fragment_shader
      * - GL_ARB_vertex_shader
      * - GL_ARB_shading_language_100
-     */
+     **/
     GLSL,
 
     /**
@@ -64,12 +64,12 @@ enum GLFeature {
      * - No texture fetches in vertex shaders
      * - Max 32 texture fetches in fragment shaders
      * - Max 4 texture indirections
-     */
+     **/
     LimitedGLSL,
 
     /**
      * Set when the driver supports GL_ARB_texture_non_power_of_two.
-     */
+     **/
     TextureNPOT,
 
     /**
@@ -81,7 +81,7 @@ enum GLFeature {
      * - GL_CLAMP
      * - GL_CLAMP_TO_EDGE
      * - GL_CLAMP_TO_BORDER
-     */
+     **/
     LimitedNPOT
 };
 
@@ -162,42 +162,42 @@ public:
 
     /**
      * Runs the detection code using the current OpenGL context.
-     */
+     **/
     void detect(OpenGLPlatformInterface platformInterface);
 
     /**
      * Prints the results of the detection code.
-     */
+     **/
     void printResults() const;
 
     /**
      * Returns a pointer to the GLPlatform instance.
-     */
+     **/
     static GLPlatform *instance();
 
     /**
      * Returns true if the driver support the given feature, and false otherwise.
-     */
+     **/
     bool supports(GLFeature feature) const;
 
     /**
      * Returns the OpenGL version.
-     */
+     **/
     qint64 glVersion() const;
 
     /**
      * Returns the GLSL version if the driver supports GLSL, and 0 otherwise.
-     */
+     **/
     qint64 glslVersion() const;
 
     /**
      * Returns the Mesa version if the driver is a Mesa driver, and 0 otherwise.
-     */
+     **/
     qint64 mesaVersion() const;
 
     /**
      * Returns the Gallium version if the driver is a Gallium driver, and 0 otherwise.
-     */
+     **/
     qint64 galliumVersion() const;
 
     /**
@@ -207,56 +207,56 @@ public:
      * following the doupling of the X server from the katamari.
      *
      * For non X.org servers, this method returns 0.
-     */
+     **/
     qint64 serverVersion() const;
 
     /**
      * Returns the Linux kernel version.
      *
      * If the kernel is not a Linux kernel, this method returns 0.
-     */
+     **/
     qint64 kernelVersion() const;
 
     /**
      * Returns the driver version.
      *
      * For Mesa drivers, this is the same as the Mesa version number.
-     */
+     **/
     qint64 driverVersion() const;
 
     /**
      * Returns the driver.
-     */
+     **/
     Driver driver() const;
 
     /**
      * Returns the chip class.
-     */
+     **/
     ChipClass chipClass() const;
 
     /**
      * Returns true if the driver is a Mesa driver, and false otherwise.
-     */
+     **/
     bool isMesaDriver() const;
 
     /**
      * Returns true if the driver is a Gallium driver, and false otherwise.
-     */
+     **/
     bool isGalliumDriver() const;
 
     /**
      * Returns true if the GPU is a Radeon GPU, and false otherwise.
-     */
+     **/
     bool isRadeon() const;
 
     /**
      * Returns true if the GPU is an NVIDIA GPU, and false otherwise.
-     */
+     **/
     bool isNvidia() const;
 
     /**
      * Returns true if the GPU is an Intel GPU, and false otherwise.
-     */
+     **/
     bool isIntel() const;
 
     /**
@@ -317,7 +317,7 @@ public:
     bool isLooseBinding() const;
     /**
      * @returns Whether OpenGL ES is used
-     */
+     **/
     bool isGLES() const;
 
     /**
@@ -331,7 +331,7 @@ public:
      * when updating an unused range of a buffer object, and false otherwise.
      *
      * @since 4.11
-     */
+     **/
     bool preferBufferSubData() const;
 
     /**

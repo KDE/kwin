@@ -71,18 +71,18 @@ public:
     qreal scale() const {
         return m_scale;
     }
-    /*
+    /**
      * The geometry of this output in global compositor co-ordinates (i.e scaled)
-     */
+     **/
     QRect geometry() const;
     QSize physicalSize() const;
     Qt::ScreenOrientation orientation() const {
         return m_orientation;
     }
 
-    /*
-     * Current refresh rate in 1/ms
-     */
+    /**
+     * Current refresh rate in 1/ms.
+     **/
     int refreshRate() const;
 
     bool isInternal() const {
@@ -93,8 +93,8 @@ public:
     void setScale(qreal scale);
 
     /**
-     * This sets the changes and tests them against the specific output
-     */
+     * This sets the changes and tests them against the specific output.
+     **/
     void setChanges(KWayland::Server::OutputChangeSet *changeset);
 
     QPointer<KWayland::Server::OutputInterface> waylandOutput() const {
@@ -103,10 +103,10 @@ public:
 
     /**
      * Enable or disable the output.
-     * This differs from updateDpms as it also
-     * removes the wl_output.
+     *
+     * This differs from updateDpms as it also removes the wl_output.
      * The default is on.
-     */
+     **/
     void setEnabled(bool enable);
 
     virtual int getGammaRampSize() const {

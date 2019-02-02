@@ -59,19 +59,19 @@ class KWIN_EXPORT Application : public  QApplication
     Q_PROPERTY(KSharedConfigPtr inputConfig READ inputConfig WRITE setInputConfig)
 public:
     /**
-    * @brief This enum provides the various operation modes of KWin depending on the available
-    * Windowing Systems at startup. For example whether KWin only talks to X11 or also to a Wayland
-    * Compositor.
-    *
-    */
+     * @brief This enum provides the various operation modes of KWin depending on the available
+     * Windowing Systems at startup. For example whether KWin only talks to X11 or also to a Wayland
+     * Compositor.
+     *
+     **/
     enum OperationMode {
         /**
-        * @brief KWin uses only X11 for managing windows and compositing
-        */
+         * @brief KWin uses only X11 for managing windows and compositing
+         **/
         OperationModeX11,
         /**
          * @brief KWin uses only Wayland
-        */
+         **/
         OperationModeWaylandOnly,
         /**
          * @brief KWin uses Wayland and controls a nested Xwayland server.
@@ -105,10 +105,10 @@ public:
 
     void start();
     /**
-    * @brief The operation mode used by KWin.
-    *
-    * @return OperationMode
-    */
+     * @brief The operation mode used by KWin.
+     *
+     * @return OperationMode
+     **/
     OperationMode operationMode() const;
     void setOperationMode(OperationMode mode);
     bool shouldUseWaylandForCompositing() const;
@@ -155,7 +155,7 @@ public:
     static bool isX11MultiHead();
     /**
      * Sets whether this is a multi head setup on X11.
-     */
+     **/
     static void setX11MultiHead(bool multiHead);
 
     /**

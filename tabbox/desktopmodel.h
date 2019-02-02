@@ -23,12 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QModelIndex>
 /**
-* @file
-* This file defines the class DesktopModel, the model for desktops.
-*
-* @author Martin Gräßlin <mgraesslin@kde.org>
-* @since 4.4
-*/
+ * @file
+ * This file defines the class DesktopModel, the model for desktops.
+ *
+ * @author Martin Gräßlin <mgraesslin@kde.org>
+ * @since 4.4
+ **/
 
 namespace KWin
 {
@@ -37,11 +37,11 @@ namespace TabBox
 class ClientModel;
 
 /**
-* The model for desktops used in TabBox.
-*
-* @author Martin Gräßlin <mgraesslin@kde.org>
-* @since 4.4
-*/
+ * The model for desktops used in TabBox.
+ *
+ * @author Martin Gräßlin <mgraesslin@kde.org>
+ * @since 4.4
+ **/
 class DesktopModel
     : public QAbstractItemModel
 {
@@ -62,21 +62,21 @@ public:
     Q_INVOKABLE QString longestCaption() const;
 
     /**
-    * Generates a new list of desktops based on the current config.
-    * Calling this method will reset the model.
-    */
+     * Generates a new list of desktops based on the current config.
+     * Calling this method will reset the model.
+     **/
     void createDesktopList();
     /**
-    * @return The current list of desktops.
-    */
+     * @return The current list of desktops.
+     **/
     QList< int > desktopList() const {
         return m_desktopList;
     }
     /**
-    * @param desktop The desktop whose ModelIndex should be retrieved
-    * @return The ModelIndex of given desktop or an invalid ModelIndex if
-    * the desktop is not in the model.
-    */
+     * @param desktop The desktop whose ModelIndex should be retrieved
+     * @return The ModelIndex of given desktop or an invalid ModelIndex if
+     * the desktop is not in the model.
+     **/
     QModelIndex desktopIndex(int desktop) const;
 
 private:

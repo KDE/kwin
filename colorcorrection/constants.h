@@ -31,12 +31,13 @@ static const int NEUTRAL_TEMPERATURE = 6500;
 static const int DEFAULT_NIGHT_TEMPERATURE = 4500;
 static const int FALLBACK_SLOW_UPDATE_TIME = 1800000;   /* 30 minutes */
 
-/* Whitepoint values for temperatures at 100K intervals.
+/**
+ * Whitepoint values for temperatures at 100K intervals.
  * These will be interpolated for the actual temperature.
  * This table was provided by Ingo Thies, 2013.
  * See the following file for more information:
  * https://github.com/jonls/redshift/blob/master/README-colorramp
- */
+ **/
 static const float blackbodyColor[] = {
     1.00000000, 0.18172716, 0.00000000,     /* 1000K */
     1.00000000, 0.25503671, 0.00000000,     /* 1100K */

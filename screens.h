@@ -54,14 +54,14 @@ public:
     int current() const;
     void setCurrent(int current);
     /**
-    * Called e.g. when a user clicks on a window, set current screen to be the screen
-    * where the click occurred
-    */
+     * Called e.g. when a user clicks on a window, set current screen to be the screen
+     * where the click occurred
+     **/
     void setCurrent(const QPoint &pos);
     /**
-    * Check whether a client moved completely out of what's considered the current screen,
-    * if yes, set a new active screen.
-    */
+     * Check whether a client moved completely out of what's considered the current screen,
+     * if yes, set a new active screen.
+     **/
     void setCurrent(const AbstractClient *c);
     bool isCurrentFollowsMouse() const;
     void setCurrentFollowsMouse(bool follows);
@@ -74,7 +74,7 @@ public:
     QRect geometry() const;
     /**
      * The output name of the screen (usually eg. LVDS-1, VGA-0 or DVI-I-1 etc.)
-     */
+     **/
     virtual QString name(int screen) const;
     /**
      * @returns current refreshrate of the @p screen.
@@ -93,12 +93,12 @@ public:
      * for use when deciding what scale to load global assets at
      * Similar to QGuiApplication::scale
      * @see scale
-     */
+     **/
     qreal maxScale() const;
 
-    /*
+    /**
      * The output scale for this display, for use by high DPI displays
-     */
+     **/
     virtual qreal scale(int screen) const;
     /**
      * The bounding size of all screens combined. Overlapping areas
@@ -182,7 +182,7 @@ Q_SIGNALS:
     /**
      * Emitted when the maximum scale of all attached screens changes
      * @see maxScale
-     */
+     **/
     void maxScaleChanged();
 
 protected Q_SLOTS:

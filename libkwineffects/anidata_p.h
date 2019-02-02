@@ -30,7 +30,7 @@ namespace KWin {
 
 /**
  * Wraps effects->setActiveFullScreenEffect for the duration of it's lifespan
- */
+ **/
 class FullScreenEffectLock
 {
 public:

@@ -71,7 +71,7 @@ namespace KWin
  *      onFinished: console.log(returnValue[0])
  *  }
  * @endcode
- */
+ **/
 class DBusCall : public QObject
 {
     Q_OBJECT

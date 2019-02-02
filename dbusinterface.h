@@ -200,7 +200,7 @@ class VirtualDesktopManagerDBusInterface : public QObject
 
     /**
      * list of key/value pairs which every one of them is representing a desktop
-     */
+     **/
     Q_PROPERTY(KWin::DBusDesktopDataVector desktops READ desktops NOTIFY desktopsChanged);
 
 public:
@@ -234,7 +234,7 @@ public Q_SLOTS:
     /**
      * Create a desktop with a new name at a given position
      * note: the position starts from 1
-     */
+     **/
     void createDesktop(uint position, const QString &name);
     void setDesktopName(const QString &id, const QString &name);
     void removeDesktop(const QString &id);

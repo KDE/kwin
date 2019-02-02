@@ -124,8 +124,7 @@ private:
  * Each element of the tree has a unique id which can be used by the QAbstractItemModel as the
  * internal id for its QModelIndex. Note: the ids have no ordering, if trying to get a specific element
  * the tree performs a depth-first search.
- *
- */
+ **/
 class AbstractLevel : public QObject
 {
     Q_OBJECT
@@ -210,7 +209,7 @@ private:
  *
  * The Clients in this group are not sorted in any particular way. It's a simple list which only
  * gets added to. If some sorting should be applied, use a QSortFilterProxyModel.
- */
+ **/
 class ClientLevel : public AbstractLevel
 {
     Q_OBJECT
@@ -270,8 +269,7 @@ public:
 
 /**
  * @brief Custom QSortFilterProxyModel to filter on Client caption, role and class.
- *
- */
+ **/
 class ClientFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT

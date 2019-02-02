@@ -43,7 +43,7 @@ enum class BuiltInEffect;
  * an Effect should be loaded.
  *
  * @see AbstractEffectLoader::readConfig()
- */
+ **/
 enum class LoadEffectFlag {
     Load = 1 << 0, ///< Effect should be loaded
     CheckDefaultFunction = 1 << 2 ///< The Check Default Function needs to be invoked if the Effect provides it
@@ -65,7 +65,7 @@ Q_DECLARE_FLAGS(LoadEffectFlags, LoadEffectFlag)
  * Serving all of them with one Effect Loader is rather complex given that different stores need
  * to be queried at the same time. Thus the idea is to have one implementation per type and one
  * implementation which makes use of all of them and combines the loading.
- */
+ **/
 class KWIN_EXPORT AbstractEffectLoader : public QObject
 {
     Q_OBJECT
@@ -79,7 +79,7 @@ public:
      *
      * @param config
      * @internal
-     */
+     **/
     virtual void setConfig(KSharedConfig::Ptr config);
 
     /**
@@ -90,7 +90,7 @@ public:
      *
      * @param name The name of the Effect to look for.
      * @return bool @c true if the Effect Loader knows this effect, false otherwise
-     */
+     **/
     virtual bool hasEffect(const QString &name) const = 0;
 
     /**
@@ -100,7 +100,7 @@ public:
      * It's possible that the store of effects changed (e.g. a new one got installed)
      *
      * @return QStringList The internal names of the known Effects
-     */
+     **/
     virtual QStringList listOfKnownEffects() const = 0;
 
     /**
@@ -124,7 +124,7 @@ public:
      * @return bool @c true if the effect could be loaded, @c false in error case
      * @see queryAndLoadAll()
      * @see effectLoaded(KWin::Effect*,const QString&)
-     */
+     **/
     virtual bool loadEffect(const QString &name) = 0;
 
     /**
@@ -152,7 +152,7 @@ public:
      *
      * @see loadEffect(const QString &)
      * @see effectLoaded(KWin::Effect*,const QString&)
-     */
+     **/
     virtual void queryAndLoadAll() = 0;
 
     /**
@@ -160,7 +160,7 @@ public:
      *
      * @param name The name of the Effect to check.
      * @return bool @c true if it is supported, @c false otherwise
-     */
+     **/
     virtual bool isEffectSupported(const QString &name) const = 0;
 
     /**
@@ -175,7 +175,7 @@ Q_SIGNALS:
      * @param effect The created Effect
      * @param name The internal name of the loaded Effect
      * @return void
-     */
+     **/
     void effectLoaded(KWin::Effect *effect, const QString &name);
 
 protected:
@@ -191,7 +191,7 @@ protected:
      * @param effectName The name of the Effect to look for in the configuration
      * @param defaultValue Whether the Effect is enabled by default or not.
      * @returns Flags indicating whether the Effect should be loaded and how it should be loaded
-     */
+     **/
     LoadEffectFlags readConfig(const QString &effectName, bool defaultValue) const;
 
 private:
@@ -214,7 +214,7 @@ private:
  *
  * The queue operates like a normal queue providing enqueue and a scheduleDequeue instead of dequeue.
  *
- */
+ **/
 class AbstractEffectLoadQueue : public QObject
 {
     Q_OBJECT
@@ -274,8 +274,7 @@ private:
 
 /**
  * @brief Can load the Built-In-Effects
- *
- */
+ **/
 class BuiltInEffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT
@@ -301,8 +300,7 @@ private:
 
 /**
  * @brief Can load scripted Effects
- *
- */
+ **/
 class KWIN_EXPORT ScriptedEffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT

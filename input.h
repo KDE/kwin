@@ -66,8 +66,7 @@ namespace LibInput
  * In addition input is intercepted before passed to the surfaces to have KWin internal areas
  * getting input first (e.g. screen edges) and filter the input event out if we currently have
  * a full input grab.
- *
- */
+ **/
 class KWIN_EXPORT InputRedirection : public QObject
 {
     Q_OBJECT
@@ -90,7 +89,7 @@ public:
 
     /**
      * @return const QPointF& The current global pointer position
-     */
+     **/
     QPointF globalPointer() const;
     Qt::MouseButtons qtButtonStates() const;
     Qt::KeyboardModifiers keyboardModifiers() const;
@@ -114,23 +113,23 @@ public:
 
     /**
      * @internal
-     */
+     **/
     void processPointerMotion(const QPointF &pos, uint32_t time);
     /**
      * @internal
-     */
+     **/
     void processPointerButton(uint32_t button, PointerButtonState state, uint32_t time);
     /**
      * @internal
-     */
+     **/
     void processPointerAxis(PointerAxis axis, qreal delta, uint32_t time);
     /**
      * @internal
-     */
+     **/
     void processKeyboardKey(uint32_t key, KeyboardKeyState state, uint32_t time);
     /**
      * @internal
-     */
+     **/
     void processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
     /**
      * @internal
@@ -229,21 +228,21 @@ Q_SIGNALS:
      * @brief Emitted when the global pointer position changed
      *
      * @param pos The new global pointer position.
-     */
+     **/
     void globalPointerChanged(const QPointF &pos);
     /**
      * @brief Emitted when the state of a pointer button changed.
      *
      * @param button The button which changed
      * @param state The new button state
-     */
+     **/
     void pointerButtonStateChanged(uint32_t button, InputRedirection::PointerButtonState state);
     /**
      * @brief Emitted when a pointer axis changed
      *
      * @param axis The axis on which the even occurred
      * @param delta The delta of the event.
-     */
+     **/
     void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta);
     /**
      * @brief Emitted when the modifiers changes.
@@ -253,14 +252,14 @@ Q_SIGNALS:
      *
      * @param newMods The new modifiers state
      * @param oldMods The previous modifiers state
-     */
+     **/
     void keyboardModifiersChanged(Qt::KeyboardModifiers newMods, Qt::KeyboardModifiers oldMods);
     /**
      * @brief Emitted when the state of a key changed.
      *
      * @param keyCode The keycode of the key which changed
      * @param state The new key state
-     */
+     **/
     void keyStateChanged(quint32 keyCode, InputRedirection::KeyboardKeyState state);
 
     void hasAlphaNumericKeyboardChanged(bool set);
@@ -379,7 +378,7 @@ public:
      * @brief First Toplevel currently at the position of the input device
      * according to the stacking order.
      * @return Toplevel* at device position.
-     */
+     **/
     QPointer<Toplevel> at() const {
         return m_at;
     }
@@ -387,7 +386,7 @@ public:
      * @brief Toplevel currently having pointer input focus (this might
      * be different from the Toplevel at the position of the pointer).
      * @return Toplevel* with pointer focus.
-     */
+     **/
     QPointer<Toplevel> focus() const {
         return m_focus.focus;
     }
@@ -424,10 +423,11 @@ protected:
 
     virtual void focusUpdate(Toplevel *old, Toplevel *now) = 0;
 
-    /* Certain input devices can be in a state of having no valid
+    /**
+     * Certain input devices can be in a state of having no valid
      * position. An example are touch screens when no finger/pen
      * is resting on the surface (no touch point).
-     */
+     **/
     virtual bool positionValid() const {
         return false;
     }

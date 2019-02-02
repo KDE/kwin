@@ -190,12 +190,12 @@ public:
      * Enum values to identify the decorations buttons which should be used
      * by the decoration.
      *
-     */
+     **/
     enum DecorationButton {
         /**
          * Invalid button value. A decoration should not create a button for
          * this type.
-         */
+         **/
         DecorationButtonNone,
         DecorationButtonMenu,
         DecorationButtonApplicationMenu,
@@ -211,7 +211,7 @@ public:
         /**
          * The decoration should create an empty spacer instead of a button for
          * this type.
-         */
+         **/
         DecorationButtonExplicitSpacer
     };
     explicit DecorationOptions(QObject *parent = nullptr);

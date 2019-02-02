@@ -602,7 +602,7 @@ void UserActionsMenu::initTabbingPopups()
 void UserActionsMenu::initDesktopPopup()
 {
     if (kwinApp()->operationMode() == Application::OperationModeWaylandOnly ||
-        kwinApp()->operationMode() == Application::OperationModeXwayland) { 
+        kwinApp()->operationMode() == Application::OperationModeXwayland) {
         if (m_multipleDesktopsMenu) {
             return;
         }
@@ -1105,9 +1105,9 @@ void Workspace::initShortcut(const QString &actionName, const QString &descripti
     input()->registerShortcut(shortcut, a, receiver, slot);
 }
 
-/*!
-  Create the global accel object \c keys.
- */
+/**
+ * Creates the global accel object \c keys.
+ **/
 void Workspace::initShortcuts()
 {
 #define IN_KWIN
@@ -1289,7 +1289,7 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
 /**
  * Called by the decoration in the new API to determine what buttons the user has configured for
  * window tab dragging and the operations menu.
- */
+ **/
 Options::WindowOperation Client::mouseButtonToWindowOperation(Qt::MouseButtons button)
 {
     Options::MouseCommand com = Options::MouseNothing;
@@ -1312,9 +1312,9 @@ Options::WindowOperation Client::mouseButtonToWindowOperation(Qt::MouseButtons b
     return Options::NoOp;
 }
 
-/*!
-  Performs a mouse command on this client (see options.h)
- */
+/**
+ * Performs a mouse command on this client (see options.h)
+ **/
 bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &globalPos)
 {
     bool replay = false;
@@ -1425,27 +1425,27 @@ void Workspace::slotWindowToPrevScreen()
         sendClientToScreen(active_client, (active_client->screen() + screens()->count() - 1) % screens()->count());
 }
 
-/*!
-  Maximizes the popup client
- */
+/**
+ * Maximizes the active client.
+ **/
 void Workspace::slotWindowMaximize()
 {
     if (USABLE_ACTIVE_CLIENT)
         performWindowOperation(active_client, Options::MaximizeOp);
 }
 
-/*!
-  Maximizes the popup client vertically
- */
+/**
+ * Maximizes the active client vertically.
+ **/
 void Workspace::slotWindowMaximizeVertical()
 {
     if (USABLE_ACTIVE_CLIENT)
         performWindowOperation(active_client, Options::VMaximizeOp);
 }
 
-/*!
-  Maximizes the popup client horiozontally
- */
+/**
+ * Maximizes the active client horiozontally.
+ **/
 void Workspace::slotWindowMaximizeHorizontal()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1453,36 +1453,36 @@ void Workspace::slotWindowMaximizeHorizontal()
 }
 
 
-/*!
-  Minimizes the popup client
- */
+/**
+ * Minimizes the active client.
+ **/
 void Workspace::slotWindowMinimize()
 {
     if (USABLE_ACTIVE_CLIENT)
         performWindowOperation(active_client, Options::MinimizeOp);
 }
 
-/*!
-  Shades/unshades the popup client respectively
- */
+/**
+ * Shades/unshades the active client respectively.
+ **/
 void Workspace::slotWindowShade()
 {
     if (USABLE_ACTIVE_CLIENT)
         performWindowOperation(active_client, Options::ShadeOp);
 }
 
-/*!
-  Raises the popup client
- */
+/**
+ * Raises the active client.
+ **/
 void Workspace::slotWindowRaise()
 {
     if (USABLE_ACTIVE_CLIENT)
         raiseClient(active_client);
 }
 
-/*!
-  Lowers the popup client
- */
+/**
+ * Lowers the active client.
+ **/
 void Workspace::slotWindowLower()
 {
     if (USABLE_ACTIVE_CLIENT) {
@@ -1502,9 +1502,9 @@ void Workspace::slotWindowLower()
     }
 }
 
-/*!
-  Does a toggle-raise-and-lower on the popup client;
-  */
+/**
+ * Does a toggle-raise-and-lower on the active client.
+ **/
 void Workspace::slotWindowRaiseOrLower()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1546,9 +1546,9 @@ void Workspace::slotSetupWindowShortcut()
         performWindowOperation(active_client, Options::SetupWindowShortcutOp);
 }
 
-/*!
-  Toggles show desktop
- */
+/**
+ * Toggles show desktop.
+ **/
 void Workspace::slotToggleShowDesktop()
 {
     setShowingDesktop(!showingDesktop());
@@ -1570,9 +1570,9 @@ void windowToDesktop(AbstractClient *c)
     }
 }
 
-/*!
-  Move window to next desktop
- */
+/**
+ * Moves the active client to the next desktop.
+ **/
 void Workspace::slotWindowToNextDesktop()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1584,9 +1584,9 @@ void Workspace::windowToNextDesktop(AbstractClient* c)
     windowToDesktop<DesktopNext>(c);
 }
 
-/*!
-  Move window to previous desktop
- */
+/**
+ * Moves the active client to the previous desktop.
+ **/
 void Workspace::slotWindowToPreviousDesktop()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1660,9 +1660,9 @@ void Workspace::slotUntab()
         active_client->untab(active_client->geometry().translated(cascadeOffset(active_client)));
 }
 
-/*!
-  Kill Window feature, similar to xkill
- */
+/**
+ * Kill Window feature, similar to xkill.
+ **/
 void Workspace::slotKillWindow()
 {
     if (m_windowKiller.isNull()) {
@@ -1671,9 +1671,9 @@ void Workspace::slotKillWindow()
     m_windowKiller->start();
 }
 
-/*!
-  Switches to the nearest window in given direction
- */
+/**
+ * Switches to the nearest window in given direction.
+ **/
 void Workspace::switchWindow(Direction direction)
 {
     if (!active_client)
@@ -1765,9 +1765,9 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
     return switchTo;
 }
 
-/*!
-  Shows the window operations popup menu for the activeClient()
- */
+/**
+ * Shows the window operations popup menu for the active client.
+ **/
 void Workspace::slotWindowOperations()
 {
     if (!active_client)
@@ -1786,9 +1786,9 @@ void Workspace::showApplicationMenu(const QRect &pos, AbstractClient *c, int act
     ApplicationMenu::self()->showApplicationMenu(c->geometry().topLeft() + pos.bottomLeft(), c, actionId);
 }
 
-/*!
-  Closes the popup client
- */
+/**
+ * Closes the active client.
+ **/
 void Workspace::slotWindowClose()
 {
     // TODO: why?
@@ -1798,18 +1798,18 @@ void Workspace::slotWindowClose()
         performWindowOperation(active_client, Options::CloseOp);
 }
 
-/*!
-  Starts keyboard move mode for the popup client
- */
+/**
+ * Starts keyboard move mode for the active client.
+ **/
 void Workspace::slotWindowMove()
 {
     if (USABLE_ACTIVE_CLIENT)
         performWindowOperation(active_client, Options::UnrestrictedMoveOp);
 }
 
-/*!
-  Starts keyboard resize mode for the popup client
- */
+/**
+ * Starts keyboard resize mode for the active client.
+ **/
 void Workspace::slotWindowResize()
 {
     if (USABLE_ACTIVE_CLIENT)

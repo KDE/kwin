@@ -118,8 +118,7 @@ enum KWinOption {
 
 /**
  * @brief The direction in which a pointer axis is moved.
- *
- */
+ **/
 enum PointerAxisDirection {
     PointerAxisUp,
     PointerAxisDown,

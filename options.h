@@ -57,63 +57,63 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy WRITE setFocusPolicy NOTIFY focusPolicyChanged)
     Q_PROPERTY(bool nextFocusPrefersMouse READ isNextFocusPrefersMouse WRITE setNextFocusPrefersMouse NOTIFY nextFocusPrefersMouseChanged)
     /**
-       Whether clicking on a window raises it in FocusFollowsMouse
-       mode or not.
-     */
+     * Whether clicking on a window raises it in FocusFollowsMouse
+     * mode or not.
+     **/
     Q_PROPERTY(bool clickRaise READ isClickRaise WRITE setClickRaise NOTIFY clickRaiseChanged)
     /**
-       whether autoraise is enabled FocusFollowsMouse mode or not.
-     */
+     * Whether autoraise is enabled FocusFollowsMouse mode or not.
+     **/
     Q_PROPERTY(bool autoRaise READ isAutoRaise WRITE setAutoRaise NOTIFY autoRaiseChanged)
     /**
-       autoraise interval
-     */
+     * Autoraise interval.
+     **/
     Q_PROPERTY(int autoRaiseInterval READ autoRaiseInterval WRITE setAutoRaiseInterval NOTIFY autoRaiseIntervalChanged)
     /**
-       delayed focus interval
-     */
+     * Delayed focus interval.
+     **/
     Q_PROPERTY(int delayFocusInterval READ delayFocusInterval WRITE setDelayFocusInterval NOTIFY delayFocusIntervalChanged)
     /**
-       Whether shade hover is enabled or not
-     */
+     * Whether shade hover is enabled or not.
+     **/
     Q_PROPERTY(bool shadeHover READ isShadeHover WRITE setShadeHover NOTIFY shadeHoverChanged)
     /**
-       shade hover interval
-     */
+     * Shade hover interval.
+     **/
     Q_PROPERTY(int shadeHoverInterval READ shadeHoverInterval WRITE setShadeHoverInterval NOTIFY shadeHoverIntervalChanged)
     /**
-     * whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
+     * Whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
      **/
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
     Q_PROPERTY(int placement READ placement WRITE setPlacement NOTIFY placementChanged)
     Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY focusPolicyIsResonableChanged)
     /**
-     * the size of the zone that triggers snapping on desktop borders
-     */
+     * The size of the zone that triggers snapping on desktop borders.
+     **/
     Q_PROPERTY(int borderSnapZone READ borderSnapZone WRITE setBorderSnapZone NOTIFY borderSnapZoneChanged)
     /**
-     * the size of the zone that triggers snapping with other windows
-     */
+     * The size of the zone that triggers snapping with other windows.
+     **/
     Q_PROPERTY(int windowSnapZone READ windowSnapZone WRITE setWindowSnapZone NOTIFY windowSnapZoneChanged)
     /**
-     * the size of the zone that triggers snapping on the screen center
-     */
+     * The size of the zone that triggers snapping on the screen center.
+     **/
     Q_PROPERTY(int centerSnapZone READ centerSnapZone WRITE setCenterSnapZone NOTIFY centerSnapZoneChanged)
     /**
-     * snap only when windows will overlap
-     */
+     * Snap only when windows will overlap.
+     **/
     Q_PROPERTY(bool snapOnlyWhenOverlapping READ isSnapOnlyWhenOverlapping WRITE setSnapOnlyWhenOverlapping NOTIFY snapOnlyWhenOverlappingChanged)
     /**
-     * whether or not we roll over to the other edge when switching desktops past the edge
-     */
+     * Whether or not we roll over to the other edge when switching desktops past the edge.
+     **/
     Q_PROPERTY(bool rollOverDesktops READ isRollOverDesktops WRITE setRollOverDesktops NOTIFY rollOverDesktopsChanged)
     /**
      * 0 - 4 , see Workspace::allowClientActivation()
      **/
     Q_PROPERTY(int focusStealingPreventionLevel READ focusStealingPreventionLevel WRITE setFocusStealingPreventionLevel NOTIFY focusStealingPreventionLevelChanged)
     /**
-    * support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry
-    */
+     * Support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry.
+     **/
     Q_PROPERTY(bool legacyFullscreenSupport READ isLegacyFullscreenSupport WRITE setLegacyFullscreenSupport NOTIFY legacyFullscreenSupportChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationTitlebarDblClick READ operationTitlebarDblClick WRITE setOperationTitlebarDblClick NOTIFY operationTitlebarDblClickChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationMaxButtonLeftClick READ operationMaxButtonLeftClick WRITE setOperationMaxButtonLeftClick NOTIFY operationMaxButtonLeftClickChanged)
@@ -134,28 +134,28 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(MouseCommand commandAll3 READ commandAll3 WRITE setCommandAll3 NOTIFY commandAll3Changed)
     Q_PROPERTY(uint keyCmdAllModKey READ keyCmdAllModKey WRITE setKeyCmdAllModKey NOTIFY keyCmdAllModKeyChanged)
     /**
-    * whether the Geometry Tip should be shown during a window move/resize.
-    */
+     * Whether the Geometry Tip should be shown during a window move/resize.
+     **/
     Q_PROPERTY(bool showGeometryTip READ showGeometryTip WRITE setShowGeometryTip NOTIFY showGeometryTipChanged)
     /**
-    * whether the visible name should be condensed
-    */
+     * Whether the visible name should be condensed.
+     **/
     Q_PROPERTY(bool condensedTitle READ condensedTitle WRITE setCondensedTitle NOTIFY condensedTitleChanged)
     /**
-    * Whether a window gets maximized when it reaches top screen edge while being moved.
-    */
+     * Whether a window gets maximized when it reaches top screen edge while being moved.
+     **/
     Q_PROPERTY(bool electricBorderMaximize READ electricBorderMaximize WRITE setElectricBorderMaximize NOTIFY electricBorderMaximizeChanged)
     /**
-    * Whether a window is tiled to half screen when reaching left or right screen edge while been moved
-    */
+     * Whether a window is tiled to half screen when reaching left or right screen edge while been moved.
+     **/
     Q_PROPERTY(bool electricBorderTiling READ electricBorderTiling WRITE setElectricBorderTiling NOTIFY electricBorderTilingChanged)
     /**
-    * Whether a window is tiled to half screen when reaching left or right screen edge while been moved
-    */
+     * Whether a window is tiled to half screen when reaching left or right screen edge while been moved.
+     **/
     Q_PROPERTY(float electricBorderCornerRatio READ electricBorderCornerRatio WRITE setElectricBorderCornerRatio NOTIFY electricBorderCornerRatioChanged)
     Q_PROPERTY(bool borderlessMaximizedWindows READ borderlessMaximizedWindows WRITE setBorderlessMaximizedWindows NOTIFY borderlessMaximizedWindowsChanged)
     /**
-     * timeout before non-responding application will be killed after attempt to close
+     * timeout before non-responding application will be killed after attempt to close.
      **/
     Q_PROPERTY(int killPingTimeout READ killPingTimeout WRITE setKillPingTimeout NOTIFY killPingTimeoutChanged)
     /**
@@ -197,38 +197,42 @@ public:
 
     void updateSettings();
 
-    /*!
-      Different focus policies:
-      <ul>
+    /**
+     * This enum type is used to specify the focus policy.
+     *
+     * Note that FocusUnderMouse and FocusStrictlyUnderMouse are not
+     * particulary useful. They are only provided for old-fashined
+     * die-hard UNIX people ;-)
+     **/
+    enum FocusPolicy {
+        /**
+         * Clicking into a window activates it. This is also the default.
+         **/
+        ClickToFocus,
+        /**
+         * Moving the mouse pointer actively onto a normal window activates it.
+         * For convenience, the desktop and windows on the dock are excluded.
+         * They require clicking.
+         **/
+        FocusFollowsMouse,
+        /**
+         * The window that happens to be under the mouse pointer becomes active.
+         * The invariant is: no window can have focus that is not under the mouse.
+         * This also means that Alt-Tab won't work properly and popup dialogs are
+         * usually unsable with the keyboard. Note that the desktop and windows on
+         * the dock are excluded for convenience. They get focus only when clicking
+         * on it.
+         **/
+        FocusUnderMouse,
+        /**
+         * This is even worse than FocusUnderMouse. Only the window under the mouse
+         * pointer is active. If the mouse points nowhere, nothing has the focus. If
+         * the mouse points onto the desktop, the desktop has focus. The same holds
+         * for windows on the dock.
+         **/
+        FocusStrictlyUnderMouse
+    };
 
-      <li>ClickToFocus - Clicking into a window activates it. This is
-      also the default.
-
-      <li>FocusFollowsMouse - Moving the mouse pointer actively onto a
-      normal window activates it. For convenience, the desktop and
-      windows on the dock are excluded. They require clicking.
-
-      <li>FocusUnderMouse - The window that happens to be under the
-      mouse pointer becomes active. The invariant is: no window can
-      have focus that is not under the mouse. This also means that
-      Alt-Tab won't work properly and popup dialogs are usually
-      unsable with the keyboard. Note that the desktop and windows on
-      the dock are excluded for convenience. They get focus only when
-      clicking on it.
-
-      <li>FocusStrictlyUnderMouse - this is even worse than
-      FocusUnderMouse. Only the window under the mouse pointer is
-      active. If the mouse points nowhere, nothing has the focus. If
-      the mouse points onto the desktop, the desktop has focus. The
-      same holds for windows on the dock.
-
-      Note that FocusUnderMouse and FocusStrictlyUnderMouse are not
-      particulary useful. They are only provided for old-fashined
-      die-hard UNIX people ;-)
-
-      </ul>
-     */
-    enum FocusPolicy { ClickToFocus, FocusFollowsMouse, FocusUnderMouse, FocusStrictlyUnderMouse };
     FocusPolicy focusPolicy() const {
         return m_focusPolicy;
     }
@@ -237,49 +241,51 @@ public:
     }
 
     /**
-       Whether clicking on a window raises it in FocusFollowsMouse
-       mode or not.
-     */
+     * Whether clicking on a window raises it in FocusFollowsMouse
+     * mode or not.
+     **/
     bool isClickRaise() const {
         return m_clickRaise;
     }
 
     /**
-       whether autoraise is enabled FocusFollowsMouse mode or not.
-     */
+     * Whether autoraise is enabled FocusFollowsMouse mode or not.
+     **/
     bool isAutoRaise() const {
         return m_autoRaise;
     }
 
     /**
-       autoraise interval
-     */
+     * Autoraise interval
+     **/
     int autoRaiseInterval() const {
         return m_autoRaiseInterval;
     }
 
     /**
-       delayed focus interval
-     */
+     * Delayed focus interval.
+     **/
     int delayFocusInterval() const {
         return m_delayFocusInterval;
     }
 
     /**
-       Whether shade hover is enabled or not
-     */
+     * Whether shade hover is enabled or not.
+     **/
     bool isShadeHover() const {
         return m_shadeHover;
     }
 
     /**
-       shade hover interval
-     */
+     * Shade hover interval.
+     **/
     int shadeHoverInterval() {
         return m_shadeHoverInterval;
     }
 
-    // whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
+    /**
+     * Whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
+     **/
     bool isSeparateScreenFocus() const {
         return m_separateScreenFocus;
     }
@@ -293,49 +299,53 @@ public:
     }
 
     /**
-     * the size of the zone that triggers snapping on desktop borders
-     */
+     * The size of the zone that triggers snapping on desktop borders.
+     **/
     int borderSnapZone() const {
         return m_borderSnapZone;
     }
 
     /**
-     * the size of the zone that triggers snapping with other windows
-     */
+     * The size of the zone that triggers snapping with other windows.
+     **/
     int windowSnapZone() const {
         return m_windowSnapZone;
     }
 
     /**
-     * the size of the zone that triggers snapping on the screen center
-     */
+     * The size of the zone that triggers snapping on the screen center.
+     **/
     int centerSnapZone() const {
         return m_centerSnapZone;
     }
 
 
     /**
-     * snap only when windows will overlap
-     */
+     * Snap only when windows will overlap.
+     **/
     bool isSnapOnlyWhenOverlapping() const {
         return m_snapOnlyWhenOverlapping;
     }
 
     /**
-     * whether or not we roll over to the other edge when switching desktops past the edge
-     */
+     * Whether or not we roll over to the other edge when switching desktops past the edge.
+     **/
     bool isRollOverDesktops() const {
         return m_rollOverDesktops;
     }
 
-    // 0 - 4 , see Workspace::allowClientActivation()
+    /**
+     * Returns the focus stealing prevention level.
+     *
+     * @see allowClientActivation
+     **/
     int focusStealingPreventionLevel() const {
         return m_focusStealingPreventionLevel;
     }
 
     /**
-    * support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry
-    */
+     * Support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry.
+     **/
     bool isLegacyFullscreenSupport() const {
         return m_legacyFullscreenSupport;
     }
@@ -474,32 +484,32 @@ public:
     static MouseWheelCommand mouseWheelCommand(const QString &name);
 
     /**
-    * @returns true if the Geometry Tip should be shown during a window move/resize.
-    */
+     * @returns true if the Geometry Tip should be shown during a window move/resize.
+     **/
     bool showGeometryTip() const;
 
     /**
-     * returns whether the user prefers his caption clean
-     */
+     * Returns whether the user prefers his caption clean.
+     **/
     bool condensedTitle() const;
 
     /**
-    * @returns true if a window gets maximized when it reaches top screen edge
-    * while being moved.
-    */
+     * @returns true if a window gets maximized when it reaches top screen edge
+     * while being moved.
+     **/
     bool electricBorderMaximize() const {
         return electric_border_maximize;
     }
     /**
-    * @returns true if window is tiled to half screen when reaching left or
-    * right screen edge while been moved
-    */
+     * @returns true if window is tiled to half screen when reaching left or
+     * right screen edge while been moved.
+     **/
     bool electricBorderTiling() const {
         return electric_border_tiling;
     }
     /**
-    * @returns the factor that determines the corner part of the edge (ie. 0.1 means tiny corner)
-    */
+     * @returns the factor that determines the corner part of the edge (ie. 0.1 means tiny corner)
+     **/
     float electricBorderCornerRatio() const {
         return electric_border_corner_ratio;
     }
@@ -508,12 +518,16 @@ public:
         return borderless_maximized_windows;
     }
 
-    // timeout before non-responding application will be killed after attempt to close
+    /**
+     * Timeout before non-responding application will be killed after attempt to close.
+     **/
     int killPingTimeout() const {
         return m_killPingTimeout;
     }
 
-    // Whether to hide utility windows for inactive applications.
+    /**
+     * Whether to hide utility windows for inactive applications.
+     **/
     bool isHideUtilityWindowsForInactive() const {
         return m_hideUtilityWindowsForInactive;
     }
@@ -528,7 +542,9 @@ public:
         return m_autogroupInForeground;
     }
 
-    // Desktop effects
+    /**
+     * Returns the animation time factor for desktop effects.
+     **/
     double animationTimeFactor() const;
 
     //----------------------

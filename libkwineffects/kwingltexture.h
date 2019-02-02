@@ -84,7 +84,7 @@ public:
      *
      * @see swizzleSupported()
      * @since 5.2
-     */
+     **/
     void setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha);
 
     /**
@@ -92,7 +92,7 @@ public:
      * taking the texture target and the y-inversion flag into account.
      *
      * @since 4.11
-     */
+     **/
     QMatrix4x4 matrix(TextureCoordinateType type) const;
 
     void update(const QImage& image, const QPoint &offset = QPoint(0, 0), const QRect &src = QRect());
@@ -109,7 +109,7 @@ public:
     /** @short
      * Make the texture fully transparent
      * Warning: this clobbers the current framebuffer binding except on fglrx
-     */
+     **/
     void clear();
     bool isDirty() const;
     void setFilter(GLenum filter);
@@ -126,7 +126,7 @@ public:
      * Texture swizzle requires OpenGL 3.3, GL_ARB_texture_swizzle, or OpenGL ES 3.0.
      *
      * @since 5.2
-     */
+     **/
     static bool supportsSwizzle();
 
     /**

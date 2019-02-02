@@ -56,7 +56,7 @@ private:
         /**
          * Invalid button value. A decoration should not create a button for
          * this type.
-         */
+         **/
         DecorationButtonNone,
         DecorationButtonMenu,
         DecorationButtonApplicationMenu,
@@ -72,7 +72,7 @@ private:
         /**
          * The decoration should create an empty spacer instead of a button for
          * this type.
-         */
+         **/
         DecorationButtonExplicitSpacer
     };
     QPixmap icon(ButtonIcon icon, int size, bool active, bool shadow);

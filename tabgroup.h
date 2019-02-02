@@ -45,13 +45,13 @@ class AbstractClient;
  *
  * If a group contains multiple clients then only one will ever be mapped at
  * any given time.
- */
+ **/
 class TabGroup
 {
 public:
     /**
      * Creates a new group containing \p c.
-     */
+     **/
     explicit TabGroup(AbstractClient* c);
     ~TabGroup();
 
@@ -64,85 +64,85 @@ public:
 
     /**
      * Activate next tab (flips)
-     */
+     **/
     void activateNext();
 
     /**
      * Activate previous tab (flips)
-     */
+     **/
     void activatePrev();
 
     /**
      * Allows to alter several attributes in random order and trigger a general update at the end
      * (must still be explicitly called)
      * this is to prevent side effects, mostly for geometry adjustments during maximization and QuickTiling
-     */
+     **/
     void blockStateUpdates(bool);
 
     /**
      * Close all clients in this group.
-     */
+     **/
     void closeAll();
 
     /**
      * Whether client \p c is member of this group
-     */
+     **/
     bool contains(AbstractClient* c) const;
 
     /**
      * The amount of clients in this group
-     */
+     **/
     int count() const;
 
     /**
      * Returns whether or not this group contains the active client.
-     */
+     **/
     bool isActive() const;
 
     /**
      * Returns whether this group is empty (used by workspace to remove it)
-     */
+     **/
     bool isEmpty() const;
 
     /**
      * Returns the list of all the clients contained in this group in their current order.
-     */
+     **/
     const QVector<AbstractClient*> &clients() const;
 
     /**
      * Returns the currently visible client.
-     */
+     **/
     AbstractClient* current() const;
     /**
      * Makes \p c the visible client in the group - force is only used when the window becomes ready for painting.
      * Any other usage just causes pointless action
-     */
+     **/
     void setCurrent(AbstractClient* c, bool force = false);
 
     /**
      * Alignes the dynamic Qt @param property of all clients to the one of @param c
-     */
+     **/
     void sync(const char *property, AbstractClient *c);
 
     /**
      * Returns combined minimum size of all clients in the group.
-     */
+     **/
     QSize minSize() const;
     /**
      * Returns combined maximum size of all clients in the group.
-     */
+     **/
     QSize maxSize() const;
 
     /**
      * Ensures that all the clients in the group have identical geometries and states using
      * \p main as the primary client to copy the settings off. If \p only is set then only
      * that client is updated to match \p main.
-     */
+     **/
     void updateStates(AbstractClient* main, States states, AbstractClient* only = NULL);
 
     /**
      * updates geometry restrictions of this group, basically called from Client::getWmNormalHints(), otherwise rather private
-     */
+     **/
     void updateMinMaxSize();
 
 Q_SIGNALS:

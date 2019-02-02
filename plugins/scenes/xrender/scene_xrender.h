@@ -41,8 +41,7 @@ namespace Xcb
  *
  * This class is intended as a small abstraction to support multiple compositing backends in the
  * SceneXRender.
- *
- */
+ **/
 class XRenderBackend
 {
 public:
@@ -64,7 +63,7 @@ public:
      * @brief Shows the Overlay Window
      *
      * Default implementation does nothing.
-     */
+     **/
     virtual void showOverlay();
     /**
      * @brief React on screen geometry changes.
@@ -72,7 +71,7 @@ public:
      * Default implementation does nothing. Override if specific functionality is required.
      *
      * @param size The new screen size
-     */
+     **/
     virtual void screenGeometryChanged(const QSize &size);
     /**
      * @brief The compositing buffer hold by this backend.
@@ -80,7 +79,7 @@ public:
      * The Scene composites the new frame into this buffer.
      *
      * @return xcb_render_picture_t
-     */
+     **/
     xcb_render_picture_t buffer() const {
         return m_buffer;
     }
@@ -103,7 +102,7 @@ protected:
      *
      * @param buffer The buffer to use for compositing
      * @return void
-     */
+     **/
     void setBuffer(xcb_render_picture_t buffer);
     /**
      * @brief Sets the backend initialization to failed.
@@ -124,8 +123,7 @@ private:
 
 /**
  * @brief XRenderBackend using an X11 Overlay Window as compositing target.
- *
- */
+ **/
 class X11XRenderBackend : public XRenderBackend
 {
 public:
@@ -282,7 +280,6 @@ xcb_render_picture_t XRenderWindowPixmap::picture() const
  * This class extends Shadow by the elements required for XRender rendering.
  * @author Jacopo De Simoi <wilderkde@gmail.org>
  **/
-
 class SceneXRenderShadow
     : public Shadow
 {

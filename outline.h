@@ -42,7 +42,7 @@ class OutlineVisual;
  *
  * @author Arthur Arlt
  * @since 4.7
- */
+ **/
 class Outline : public QObject {
     Q_OBJECT
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
@@ -57,7 +57,7 @@ public:
      * To show the outline use showOutline.
      * @param outlineGeometry The geometry of the outline to be shown
      * @see showOutline
-     */
+     **/
     void setGeometry(const QRect &outlineGeometry);
 
     /**
@@ -65,14 +65,14 @@ public:
      * This is the geometry from which the will emerge.
      * @param visualParentGeometry The visual geometry of the visual parent
      * @see showOutline
-     */
+     **/
     void setVisualParentGeometry(const QRect &visualParentGeometry);
 
     /**
      * Shows the outline of a window using either an effect or the X implementation.
      * To stop the outline process use hideOutline.
      * @see hideOutline
-     */
+     **/
     void show();
 
     /**
@@ -81,7 +81,7 @@ public:
      * To stop the outline process use hideOutline.
      * @param outlineGeometry The geometry of the outline to be shown
      * @see hideOutline
-     */
+     **/
     void show(const QRect &outlineGeometry);
 
     /**
@@ -93,13 +93,13 @@ public:
      * @param visualParentGeometry The geometry from where the outline should emerge
      * @see hideOutline
      * @since 5.10
-     */
+     **/
     void show(const QRect &outlineGeometry, const QRect &visualParentGeometry);
 
     /**
      * Hides shown outline.
      * @see showOutline
-     */
+     **/
     void hide();
 
     const QRect &geometry() const;

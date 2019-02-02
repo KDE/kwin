@@ -37,7 +37,7 @@ class RootInfoFilter;
 
 /**
  * NET WM Protocol handler class
- */
+ **/
 class RootInfo : public NETRootInfo
 {
 private:
@@ -77,7 +77,7 @@ inline RootInfo *rootInfo()
 
 /**
  * NET WM Protocol handler class
- */
+ **/
 class WinInfo : public NETWinInfo
 {
 private:

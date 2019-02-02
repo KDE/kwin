@@ -598,11 +598,6 @@ void TabBox::globalShortcutChanged(QAction *action, const QKeySequence &seq)
     }
 }
 
-/*!
-  Sets the current mode to \a mode, either TabBoxDesktopListMode or TabBoxWindowsMode
-
-  \sa mode()
- */
 void TabBox::setMode(TabBoxMode mode)
 {
     m_tabBoxMode = mode;
@@ -628,10 +623,6 @@ void TabBox::setMode(TabBoxMode mode)
     }
 }
 
-/*!
-  Resets the tab box to display the active client in TabBoxWindowsMode, or the
-  current desktop in TabBoxDesktopListMode
- */
 void TabBox::reset(bool partial_reset)
 {
     switch(m_tabBox->config().tabBoxMode()) {
@@ -660,19 +651,12 @@ void TabBox::reset(bool partial_reset)
     emit tabBoxUpdated();
 }
 
-/*!
-  Shows the next or previous item, depending on \a next
- */
 void TabBox::nextPrev(bool next)
 {
     setCurrentIndex(m_tabBox->nextPrev(next), false);
     emit tabBoxUpdated();
 }
 
-/*!
-  Returns the currently displayed client ( only works in TabBoxWindowsMode ).
-  Returns 0 if no client is displayed.
- */
 AbstractClient* TabBox::currentClient()
 {
     if (TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >(m_tabBox->client(m_tabBox->currentIndex()))) {
@@ -683,11 +667,6 @@ AbstractClient* TabBox::currentClient()
         return nullptr;
 }
 
-/*!
-  Returns the list of clients potentially displayed ( only works in
-  TabBoxWindowsMode ).
-  Returns an empty list if no clients are available.
- */
 QList<AbstractClient*> TabBox::currentClientList()
 {
     TabBoxClientList list = m_tabBox->clientList();
@@ -702,41 +681,21 @@ QList<AbstractClient*> TabBox::currentClientList()
     return ret;
 }
 
-/*!
-  Returns the currently displayed virtual desktop ( only works in
-  TabBoxDesktopListMode )
-  Returns -1 if no desktop is displayed.
- */
 int TabBox::currentDesktop()
 {
     return m_tabBox->desktop(m_tabBox->currentIndex());
 }
 
-/*!
-  Returns the list of desktops potentially displayed ( only works in
-  TabBoxDesktopListMode )
-  Returns an empty list if no are available.
- */
 QList< int > TabBox::currentDesktopList()
 {
     return m_tabBox->desktopList();
 }
 
-/*!
-  Change the currently selected client, and notify the effects.
-
-  \sa setCurrentDesktop()
- */
 void TabBox::setCurrentClient(AbstractClient *newClient)
 {
     setCurrentIndex(m_tabBox->index(newClient->tabBoxClient()));
 }
 
-/*!
-  Change the currently selected desktop, and notify the effects.
-
-  \sa setCurrentClient()
- */
 void TabBox::setCurrentDesktop(int newDesktop)
 {
     setCurrentIndex(m_tabBox->desktopIndex(newDesktop));
@@ -752,10 +711,6 @@ void TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
     }
 }
 
-/*!
-  Notify effects that the tab box is being shown, and only display the
-  default tab box QFrame if no effect has referenced the tab box.
-*/
 void TabBox::show()
 {
     emit tabBoxAdded(m_tabBoxMode);
@@ -769,9 +724,6 @@ void TabBox::show()
     m_tabBox->show();
 }
 
-/*!
-  Notify effects that the tab box is being hidden.
-*/
 void TabBox::hide(bool abort)
 {
     m_delayedShowTimer.stop();
@@ -879,24 +831,6 @@ void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
     tabBoxConfig.setLayoutName(config.readEntry<QString>("LayoutName", TabBoxConfig::defaultLayoutName()));
 }
 
-/*!
-  Rikkus: please document!   (Matthias)
-
-  Ok, here's the docs :)
-
-  You call delayedShow() instead of show() directly.
-
-  If the 'ShowDelay' setting is false, show() is simply called.
-
-  Otherwise, we start a timer for the delay given in the settings and only
-  do a show() when it times out.
-
-  This means that you can alt-tab between windows and you don't see the
-  tab box immediately. Not only does this make alt-tabbing faster, it gives
-  less 'flicker' to the eyes. You don't need to see the tab box if you're
-  just quickly switching between 2 or 3 windows. It seems to work quite
-  nicely.
- */
 void TabBox::delayedShow()
 {
     if (isDisplayed() || m_delayedShowTimer.isActive())
@@ -984,9 +918,9 @@ struct KeySymbolsDeleter
     }
 };
 
-/*!
-  Handles alt-tab / control-tab
- */
+/**
+ * Handles alt-tab / control-tab
+ **/
 static bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms) {
 
     qCDebug(KWIN_TABBOX) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms;
@@ -1369,9 +1303,6 @@ void TabBox::oneStepThroughDesktopList(bool forward)
     oneStepThroughDesktops(forward, TabBoxDesktopListMode);
 }
 
-/*!
-  Handles holding alt-tab / control-tab
- */
 void TabBox::keyPress(int keyQt)
 {
     enum Direction { Backward = -1, Steady = 0, Forward = 1 };
@@ -1542,10 +1473,10 @@ int TabBox::previousDesktopStatic(int iDesktop) const
     return functor(iDesktop, true);
 }
 
-/*!
-  auxiliary functions to travers all clients according to the static
-  order. Useful for the CDE-style Alt-tab feature.
-*/
+/**
+ * Auxiliary functions to travers all clients according to the static
+ * order. Useful for the CDE-style Alt-tab feature.
+ **/
 AbstractClient* TabBox::nextClientStatic(AbstractClient* c) const
 {
     const auto &list = Workspace::self()->allClientList();
@@ -1560,10 +1491,10 @@ AbstractClient* TabBox::nextClientStatic(AbstractClient* c) const
     return list.at(pos);
 }
 
-/*!
-  auxiliary functions to travers all clients according to the static
-  order. Useful for the CDE-style Alt-tab feature.
-*/
+/**
+ * Auxiliary functions to travers all clients according to the static
+ * order. Useful for the CDE-style Alt-tab feature.
+ **/
 AbstractClient* TabBox::previousClientStatic(AbstractClient* c) const
 {
     const auto &list = Workspace::self()->allClientList();

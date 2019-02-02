@@ -237,9 +237,9 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     /**
-      * A nice clean way to handle exceptions in scripting.
-      * TODO: Log to file, show from notifier..
-      */
+     * A nice clean way to handle exceptions in scripting.
+     * TODO: Log to file, show from notifier..
+     **/
     void sigException(const QScriptValue &exception);
     /**
      * Callback for when loadScriptFromFile has finished.
@@ -327,8 +327,8 @@ private:
 };
 
 /**
-  * The heart of KWin::Scripting. Infinite power lies beyond
-  */
+ * The heart of KWin::Scripting. Infinite power lies beyond
+ **/
 class KWIN_EXPORT Scripting : public QObject
 {
     Q_OBJECT
