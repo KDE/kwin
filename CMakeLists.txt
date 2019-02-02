@@ -723,7 +723,6 @@ install( FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${INCLUDE_I
 install( FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 
 add_subdirectory(qml)
-add_subdirectory(packageplugins)
 
 if (BUILD_TESTING)
     add_subdirectory(autotests)

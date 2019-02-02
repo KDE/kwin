@@ -4,6 +4,7 @@ add_subdirectory(idletime)
 add_subdirectory(platforms)
 add_subdirectory(scenes)
 add_subdirectory(windowsystem)
+add_subdirectory(kpackage)
 
 if(KWIN_BUILD_DECORATIONS)
     add_subdirectory(kdecorations)
