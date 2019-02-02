@@ -34,6 +34,9 @@ namespace KWin
 {
 
 namespace ExtendedCursor {
+/**
+ * Extension of Qt::CursorShape with values not currently present there
+ **/
 enum Shape {
     SizeNorthWest = 0x100 + 0,
     SizeNorth = 0x100 + 1,
@@ -45,10 +48,6 @@ enum Shape {
     SizeSouthWest = 0x100 + 7
 };
 }
-/**
- * Extension of Qt::CursorShape with values not currently present there
- */
-
 
 /**
  * @brief Wrapper round Qt::CursorShape with extensions enums into a single entity
