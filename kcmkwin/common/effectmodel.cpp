@@ -394,7 +394,6 @@ void EffectModel::load(LoadOptions options)
     const QVector<EffectData> oldEffects = m_effectsList;
 
     beginResetModel();
-    m_effectsChanged.clear();
     m_effectsList.clear();
     const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kwin/effects/configs/"));
     loadBuiltInEffects(kwinConfig, configs);
@@ -471,27 +470,7 @@ void EffectModel::load(LoadOptions options)
         });
     }
 
-    m_effectsChanged = m_effectsList;
     endResetModel();
-}
-
-void EffectModel::syncEffectsToKWin()
-{
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
-    for (int it = 0; it < m_effectsList.size(); it++) {
-        if (!m_effectsList.at(it).changed) {
-            continue;
-        }
-        if (m_effectsList.at(it).effectStatus != Status::Disabled) {
-            interface.loadEffect(m_effectsList.at(it).serviceName);
-        } else {
-            interface.unloadEffect(m_effectsList.at(it).serviceName);
-        }
-    }
-
-    m_effectsChanged = m_effectsList;
 }
 
 void EffectModel::updateEffectStatus(const QModelIndex &rowIndex, Status effectState)
@@ -503,11 +482,13 @@ void EffectModel::save()
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
-    for (auto it = m_effectsList.begin(); it != m_effectsList.end(); it++) {
-        EffectData &effect = *(it);
+    QVector<EffectData> dirtyEffects;
+
+    for (EffectData &effect : m_effectsList) {
         if (!effect.changed) {
             continue;
         }
+
         effect.changed = false;
         effect.originalStatus = effect.effectStatus;
 
@@ -521,10 +502,31 @@ void EffectModel::save()
         } else {
             kwinConfig.writeEntry(key, shouldEnable);
         }
+
+        dirtyEffects.append(effect);
+    }
+
+    if (dirtyEffects.isEmpty()) {
+        return;
     }
 
     kwinConfig.sync();
-    syncEffectsToKWin();
+
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+
+    if (!interface.isValid()) {
+        return;
+    }
+
+    for (const EffectData &effect : dirtyEffects) {
+        if (effect.effectStatus != Status::Disabled) {
+            interface.loadEffect(effect.serviceName);
+        } else {
+            interface.unloadEffect(effect.serviceName);
+        }
+    }
 }
 
 void EffectModel::defaults()
