@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAbstractItemModel>
 #include <QString>
 #include <QUrl>
+#include <QWindow>
 
 namespace KWin
 {
@@ -186,6 +187,14 @@ public:
      * Finds an effect with the given plugin id.
      **/
     QModelIndex findByPluginId(const QString &pluginId) const;
+
+    /**
+     * Shows a configuration dialog for a given effect.
+     *
+     * @param index An effect represented by the given index.
+     * @param transientParent The transient parent of the configuration dialog.
+     **/
+    void requestConfigure(const QModelIndex &index, QWindow *transientParent);
 
 protected:
     enum class Kind {

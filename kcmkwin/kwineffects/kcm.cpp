@@ -20,16 +20,10 @@
 #include "effectsfilterproxymodel.h"
 
 #include <KAboutData>
-#include <KCModule>
 #include <KLocalizedString>
 #include <KNS3/DownloadDialog>
-#include <KPluginFactory>
-#include <KPluginTrader>
 
-#include <QDialogButtonBox>
-#include <QPushButton>
 #include <QQuickWindow>
-#include <QVBoxLayout>
 #include <QWindow>
 
 K_PLUGIN_FACTORY_WITH_JSON(DesktopEffectsKCMFactory,
@@ -106,80 +100,16 @@ void DesktopEffectsKCM::openGHNS(QQuickItem *context)
     delete dialog;
 }
 
-static KCModule *findBinaryConfig(const QString &pluginId, QObject *parent)
-{
-    return KPluginTrader::createInstanceFromQuery<KCModule>(
-        QStringLiteral("kwin/effects/configs/"),
-        QString(),
-        QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(pluginId),
-        parent
-    );
-}
-
-static KCModule *findScriptedConfig(const QString &pluginId, QObject *parent)
-{
-    const auto offers = KPluginTrader::self()->query(
-        QStringLiteral("kwin/effects/configs/"),
-        QString(),
-        QStringLiteral("[X-KDE-Library] == 'kcm_kwin4_genericscripted'")
-    );
-
-    if (offers.isEmpty()) {
-        return nullptr;
-    }
-
-    const KPluginInfo &generic = offers.first();
-    KPluginLoader loader(generic.libraryPath());
-    KPluginFactory *factory = loader.factory();
-    if (!factory) {
-        return nullptr;
-    }
-
-    return factory->create<KCModule>(pluginId, parent);
-}
-
 void DesktopEffectsKCM::configure(const QString &pluginId, QQuickItem *context)
 {
-    const QModelIndex idx = m_model->findByPluginId(pluginId);
-    if (!idx.isValid()) {
-        return;
-    }
+    const QModelIndex index = m_model->findByPluginId(pluginId);
 
-    QPointer<QDialog> dialog = new QDialog();
-
-    KCModule *module = idx.data(EffectModel::ScriptedRole).toBool()
-        ? findScriptedConfig(pluginId, dialog)
-        : findBinaryConfig(pluginId, dialog);
-    if (!module) {
-        delete dialog;
-        return;
-    }
-
-    dialog->setWindowTitle(idx.data(EffectModel::NameRole).toString());
-    dialog->winId();
-
-    auto buttons = new QDialogButtonBox(
-        QDialogButtonBox::Ok |
-        QDialogButtonBox::Cancel |
-        QDialogButtonBox::RestoreDefaults,
-        dialog
-    );
-    connect(buttons, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
-    connect(buttons, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
-    connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked,
-        module, &KCModule::defaults);
-
-    auto layout = new QVBoxLayout(dialog);
-    layout->addWidget(module);
-    layout->addWidget(buttons);
-
+    QWindow *transientParent = nullptr;
     if (context && context->window()) {
-        dialog->windowHandle()->setTransientParent(context->window());
+        transientParent = context->window();
     }
 
-    dialog->exec();
-
-    delete dialog;
+    m_model->requestConfigure(index, transientParent);
 }
 
 void DesktopEffectsKCM::updateNeedsSave()

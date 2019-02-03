@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwin_effects_interface.h>
 
 #include <KAboutData>
+#include <KCModule>
 #include <KLocalizedString>
 #include <KPackage/PackageLoader>
 #include <KPluginLoader>
@@ -36,6 +37,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusInterface>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 namespace KWin
 {
@@ -534,6 +539,78 @@ QModelIndex EffectModel::findByPluginId(const QString &pluginId) const
         return {};
     }
     return index(std::distance(m_effectsList.constBegin(), it), 0);
+}
+
+static KCModule *findBinaryConfig(const QString &pluginId, QObject *parent)
+{
+    return KPluginTrader::createInstanceFromQuery<KCModule>(
+        QStringLiteral("kwin/effects/configs/"),
+        QString(),
+        QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(pluginId),
+        parent
+    );
+}
+
+static KCModule *findScriptedConfig(const QString &pluginId, QObject *parent)
+{
+    const auto offers = KPluginTrader::self()->query(
+        QStringLiteral("kwin/effects/configs/"),
+        QString(),
+        QStringLiteral("[X-KDE-Library] == 'kcm_kwin4_genericscripted'")
+    );
+
+    if (offers.isEmpty()) {
+        return nullptr;
+    }
+
+    const KPluginInfo &generic = offers.first();
+    KPluginLoader loader(generic.libraryPath());
+    KPluginFactory *factory = loader.factory();
+    if (!factory) {
+        return nullptr;
+    }
+
+    return factory->create<KCModule>(pluginId, parent);
+}
+
+void EffectModel::requestConfigure(const QModelIndex &index, QWindow *transientParent)
+{
+    if (!index.isValid()) {
+        return;
+    }
+
+    QPointer<QDialog> dialog = new QDialog();
+
+    KCModule *module = index.data(ScriptedRole).toBool()
+        ? findScriptedConfig(index.data(ServiceNameRole).toString(), dialog)
+        : findBinaryConfig(index.data(ServiceNameRole).toString(), dialog);
+    if (!module) {
+        delete dialog;
+        return;
+    }
+
+    dialog->setWindowTitle(index.data(NameRole).toString());
+    dialog->winId();
+    dialog->windowHandle()->setTransientParent(transientParent);
+
+    auto buttons = new QDialogButtonBox(
+        QDialogButtonBox::Ok |
+        QDialogButtonBox::Cancel |
+        QDialogButtonBox::RestoreDefaults,
+        dialog
+    );
+    connect(buttons, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
+    connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked,
+        module, &KCModule::defaults);
+
+    auto layout = new QVBoxLayout(dialog);
+    layout->addWidget(module);
+    layout->addWidget(buttons);
+
+    dialog->exec();
+
+    delete dialog;
 }
 
 bool EffectModel::shouldStore(const EffectData &data) const

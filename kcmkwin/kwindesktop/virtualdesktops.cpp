@@ -22,16 +22,8 @@
 
 #include <KAboutApplicationDialog>
 #include <KAboutData>
-#include <KCModule>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KPluginFactory>
-#include <KPluginTrader>
-
-#include <QDialog>
-#include <QDialogButtonBox>
-#include <QPushButton>
-#include <QVBoxLayout>
 
 K_PLUGIN_FACTORY_WITH_JSON(VirtualDesktopsFactory, "kcm_kwin_virtualdesktops.json", registerPlugin<KWin::VirtualDesktops>();)
 
@@ -198,50 +190,7 @@ void VirtualDesktops::configureAnimation()
         return;
     }
 
-    const QString name = index.data(AnimationsModel::NameRole).toString();
-    const QString serviceName = index.data(AnimationsModel::ServiceNameRole).toString();
-
-    QPointer<QDialog> configDialog = new QDialog();
-
-    KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(
-        QStringLiteral("kwin/effects/configs/"),
-        QString(),
-        QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(serviceName),
-        configDialog
-    );
-
-    if (!kcm) {
-        delete configDialog;
-        return;
-    }
-
-    configDialog->setWindowTitle(name);
-    configDialog->setLayout(new QVBoxLayout);
-
-    auto buttons = new QDialogButtonBox(
-        QDialogButtonBox::Ok |
-        QDialogButtonBox::Cancel |
-        QDialogButtonBox::RestoreDefaults,
-        configDialog
-    );
-    QObject::connect(buttons, &QDialogButtonBox::accepted, configDialog, &QDialog::accept);
-    QObject::connect(buttons, &QDialogButtonBox::rejected, configDialog, &QDialog::reject);
-    QObject::connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, kcm, &KCModule::defaults);
-
-    auto showWidget = new QWidget(configDialog);
-    auto layout = new QVBoxLayout;
-    showWidget->setLayout(layout);
-    layout->addWidget(kcm);
-    configDialog->layout()->addWidget(showWidget);
-    configDialog->layout()->addWidget(buttons);
-
-    if (configDialog->exec() == QDialog::Accepted) {
-        kcm->save();
-    } else if (!configDialog.isNull()) {
-        kcm->load();
-    }
-
-    delete configDialog;
+    m_animationsModel->requestConfigure(index, nullptr);
 }
 
 void VirtualDesktops::showAboutAnimation()
