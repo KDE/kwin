@@ -115,7 +115,7 @@ QHash<int, QByteArray> EffectsModel::roleNames() const
 
 QModelIndex EffectsModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (parent.isValid() || column > 0 || column < 0 || row < 0 || row >= m_effectsList.count()) {
+    if (parent.isValid() || column > 0 || column < 0 || row < 0 || row >= m_effects.count()) {
         return {};
     }
 
@@ -139,7 +139,7 @@ int EffectsModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid()) {
         return 0;
     }
-    return m_effectsList.count();
+    return m_effects.count();
 }
 
 QVariant EffectsModel::data(const QModelIndex &index, int role) const
@@ -148,7 +148,7 @@ QVariant EffectsModel::data(const QModelIndex &index, int role) const
         return {};
     }
 
-    const EffectData effect = m_effectsList.at(index.row());
+    const EffectData effect = m_effects.at(index.row());
     switch (role) {
     case Qt::DisplayRole:
     case NameRole:
@@ -202,18 +202,18 @@ bool EffectsModel::setData(const QModelIndex &index, const QVariant &value, int 
         // note: whenever the StatusRole is modified (even to the same value) the entry
         // gets marked as changed and will get saved to the config file. This means the
         // config file could get polluted
-        EffectData &data = m_effectsList[index.row()];
+        EffectData &data = m_effects[index.row()];
         data.status = Status(value.toInt());
         data.changed = data.status != data.originalStatus;
         emit dataChanged(index, index);
 
         if (data.status == Status::Enabled && !data.exclusiveGroup.isEmpty()) {
             // need to disable all other exclusive effects in the same category
-            for (int i = 0; i < m_effectsList.size(); ++i) {
+            for (int i = 0; i < m_effects.size(); ++i) {
                 if (i == index.row()) {
                     continue;
                 }
-                EffectData &otherData = m_effectsList[i];
+                EffectData &otherData = m_effects[i];
                 if (otherData.exclusiveGroup == data.exclusiveGroup) {
                     otherData.status = Status::Disabled;
                     otherData.changed = otherData.status != otherData.originalStatus;
@@ -269,7 +269,7 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPlu
         );
 
         if (shouldStore(effect)) {
-            m_effectsList << effect;
+            m_effects << effect;
         }
     }
 }
@@ -314,7 +314,7 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         }
 
         if (shouldStore(effect)) {
-            m_effectsList << effect;
+            m_effects << effect;
         }
     }
 }
@@ -382,7 +382,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPlug
         );
 
         if (shouldStore(effect)) {
-            m_effectsList << effect;
+            m_effects << effect;
         }
     }
 }
@@ -391,10 +391,10 @@ void EffectsModel::load(LoadOptions options)
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
-    const QVector<EffectData> oldEffects = m_effectsList;
+    const QVector<EffectData> oldEffects = m_effects;
 
     beginResetModel();
-    m_effectsList.clear();
+    m_effects.clear();
     const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kwin/effects/configs/"));
     loadBuiltInEffects(kwinConfig, configs);
     loadJavascriptEffects(kwinConfig);
@@ -405,12 +405,12 @@ void EffectsModel::load(LoadOptions options)
             if (!oldEffect.changed) {
                 continue;
             }
-            auto effectIt = std::find_if(m_effectsList.begin(), m_effectsList.end(),
+            auto effectIt = std::find_if(m_effects.begin(), m_effects.end(),
                 [serviceName = oldEffect.serviceName](const EffectData &data) {
                     return data.serviceName == serviceName;
                 }
             );
-            if (effectIt == m_effectsList.end()) {
+            if (effectIt == m_effects.end()) {
                 continue;
             }
             effectIt->status = oldEffect.status;
@@ -418,7 +418,7 @@ void EffectsModel::load(LoadOptions options)
         }
     }
 
-    qSort(m_effectsList.begin(), m_effectsList.end(), [](const EffectData &a, const EffectData &b) {
+    qSort(m_effects.begin(), m_effects.end(), [](const EffectData &a, const EffectData &b) {
         if (a.category == b.category) {
             if (a.exclusiveGroup == b.exclusiveGroup) {
                 return a.name < b.name;
@@ -434,8 +434,8 @@ void EffectsModel::load(LoadOptions options)
 
     if (interface.isValid()) {
         QStringList effectNames;
-        effectNames.reserve(m_effectsList.count());
-        for (const EffectData &data : m_effectsList) {
+        effectNames.reserve(m_effects.count());
+        for (const EffectData &data : m_effects) {
             effectNames.append(data.serviceName);
         }
 
@@ -452,10 +452,10 @@ void EffectsModel::load(LoadOptions options)
                 for (int i = 0; i < effectNames.size(); ++i) {
                     const bool supportedValue = supportValues.at(i);
                     const QString &effectName = effectNames.at(i);
-                    auto it = std::find_if(m_effectsList.begin(), m_effectsList.end(), [effectName](const EffectData &data) {
+                    auto it = std::find_if(m_effects.begin(), m_effects.end(), [effectName](const EffectData &data) {
                         return data.serviceName == effectName;
                     });
-                    if (it != m_effectsList.end()) {
+                    if (it != m_effects.end()) {
                         if ((*it).supported != supportedValue) {
                             (*it).supported = supportedValue;
                             QModelIndex i = findByPluginId(effectName);
@@ -484,7 +484,7 @@ void EffectsModel::save()
 
     QVector<EffectData> dirtyEffects;
 
-    for (EffectData &effect : m_effectsList) {
+    for (EffectData &effect : m_effects) {
         if (!effect.changed) {
             continue;
         }
@@ -531,8 +531,8 @@ void EffectsModel::save()
 
 void EffectsModel::defaults()
 {
-    for (int i = 0; i < m_effectsList.count(); ++i) {
-        const auto &effect = m_effectsList.at(i);
+    for (int i = 0; i < m_effects.count(); ++i) {
+        const auto &effect = m_effects.at(i);
         if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
             updateEffectStatus(index(i, 0), Status::EnabledUndeterminded);
         } else if ((bool)effect.status != effect.enabledByDefault) {
@@ -543,7 +543,7 @@ void EffectsModel::defaults()
 
 bool EffectsModel::needsSave() const
 {
-    return std::any_of(m_effectsList.constBegin(), m_effectsList.constEnd(),
+    return std::any_of(m_effects.constBegin(), m_effects.constEnd(),
         [](const EffectData &data) {
             return data.changed;
         }
@@ -552,15 +552,15 @@ bool EffectsModel::needsSave() const
 
 QModelIndex EffectsModel::findByPluginId(const QString &pluginId) const
 {
-    auto it = std::find_if(m_effectsList.constBegin(), m_effectsList.constEnd(),
+    auto it = std::find_if(m_effects.constBegin(), m_effects.constEnd(),
         [pluginId](const EffectData &data) {
             return data.serviceName == pluginId;
         }
     );
-    if (it == m_effectsList.constEnd()) {
+    if (it == m_effects.constEnd()) {
         return {};
     }
-    return index(std::distance(m_effectsList.constBegin(), it), 0);
+    return index(std::distance(m_effects.constBegin(), it), 0);
 }
 
 static KCModule *findBinaryConfig(const QString &pluginId, QObject *parent)

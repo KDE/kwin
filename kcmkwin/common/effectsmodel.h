@@ -252,7 +252,7 @@ private:
     void loadJavascriptEffects(const KConfigGroup &kwinConfig);
     void loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
 
-    QVector<EffectData> m_effectsList;
+    QVector<EffectData> m_effects;
 
     Q_DISABLE_COPY(EffectsModel)
 };
