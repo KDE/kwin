@@ -24,7 +24,7 @@ namespace KWin
 {
 
 AnimationsModel::AnimationsModel(QObject *parent)
-    : EffectModel(parent)
+    : EffectsModel(parent)
 {
     connect(this, &AnimationsModel::currentIndexChanged, this,
         [this] {
@@ -78,7 +78,7 @@ bool AnimationsModel::shouldStore(const EffectData &data) const
         QStringLiteral("Virtual Desktop Switching Animation"), Qt::CaseInsensitive);
 }
 
-EffectModel::Status AnimationsModel::status(int row) const
+EffectsModel::Status AnimationsModel::status(int row) const
 {
     return Status(data(index(row, 0), static_cast<int>(StatusRole)).toInt());
 }
@@ -107,7 +107,7 @@ int AnimationsModel::modelCurrentIndex() const
 
 void AnimationsModel::load()
 {
-    EffectModel::load();
+    EffectsModel::load();
     setEnabled(modelCurrentEnabled());
     setCurrentIndex(modelCurrentIndex());
 }
@@ -116,17 +116,17 @@ void AnimationsModel::save()
 {
     for (int i = 0; i < rowCount(); ++i) {
         const auto status = (m_enabled && i == m_currentIndex)
-            ? EffectModel::Status::Enabled
-            : EffectModel::Status::Disabled;
+            ? EffectsModel::Status::Enabled
+            : EffectsModel::Status::Disabled;
         updateEffectStatus(index(i, 0), status);
     }
 
-    EffectModel::save();
+    EffectsModel::save();
 }
 
 void AnimationsModel::defaults()
 {
-    EffectModel::defaults();
+    EffectsModel::defaults();
     setEnabled(modelCurrentEnabled());
     setCurrentIndex(modelCurrentIndex());
 }

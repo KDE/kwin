@@ -17,7 +17,7 @@
 
 #include "effectsfilterproxymodel.h"
 
-#include "effectmodel.h"
+#include "effectsmodel.h"
 
 namespace KWin
 {
@@ -78,22 +78,22 @@ bool EffectsFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
     const QModelIndex idx = sourceModel()->index(sourceRow, 0, sourceParent);
 
     if (!m_query.isEmpty()) {
-        const bool matches = idx.data(EffectModel::NameRole).toString().contains(m_query, Qt::CaseInsensitive) ||
-            idx.data(EffectModel::DescriptionRole).toString().contains(m_query, Qt::CaseInsensitive) ||
-            idx.data(EffectModel::CategoryRole).toString().contains(m_query, Qt::CaseInsensitive);
+        const bool matches = idx.data(EffectsModel::NameRole).toString().contains(m_query, Qt::CaseInsensitive) ||
+            idx.data(EffectsModel::DescriptionRole).toString().contains(m_query, Qt::CaseInsensitive) ||
+            idx.data(EffectsModel::CategoryRole).toString().contains(m_query, Qt::CaseInsensitive);
         if (!matches) {
             return false;
         }
     }
 
     if (m_excludeInternal) {
-        if (idx.data(EffectModel::InternalRole).toBool()) {
+        if (idx.data(EffectsModel::InternalRole).toBool()) {
             return false;
         }
     }
 
     if (m_excludeUnsupported) {
-        if (!idx.data(EffectModel::SupportedRole).toBool()) {
+        if (!idx.data(EffectsModel::SupportedRole).toBool()) {
             return false;
         }
     }

@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "effectmodel.h"
+#include "effectsmodel.h"
 
 namespace KWin
 {
 
-class AnimationsModel : public EffectModel
+class AnimationsModel : public EffectsModel
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)

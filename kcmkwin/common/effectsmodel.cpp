@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include "effectmodel.h"
+#include "effectsmodel.h"
 
 #include <config-kwin.h>
 #include <effect_builtins.h>
@@ -80,17 +80,17 @@ static QString translatedCategory(const QString &category)
     return translatedCategories[index];
 }
 
-static EffectModel::Status effectStatus(bool enabled)
+static EffectsModel::Status effectStatus(bool enabled)
 {
-    return enabled ? EffectModel::Status::Enabled : EffectModel::Status::Disabled;
+    return enabled ? EffectsModel::Status::Enabled : EffectsModel::Status::Disabled;
 }
 
-EffectModel::EffectModel(QObject *parent)
+EffectsModel::EffectsModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
 }
 
-QHash<int, QByteArray> EffectModel::roleNames() const
+QHash<int, QByteArray> EffectsModel::roleNames() const
 {
     QHash<int, QByteArray> roleNames;
     roleNames[NameRole] = "NameRole";
@@ -113,7 +113,7 @@ QHash<int, QByteArray> EffectModel::roleNames() const
     return roleNames;
 }
 
-QModelIndex EffectModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex EffectsModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (parent.isValid() || column > 0 || column < 0 || row < 0 || row >= m_effectsList.count()) {
         return {};
@@ -122,19 +122,19 @@ QModelIndex EffectModel::index(int row, int column, const QModelIndex &parent) c
     return createIndex(row, column);
 }
 
-QModelIndex EffectModel::parent(const QModelIndex &child) const
+QModelIndex EffectsModel::parent(const QModelIndex &child) const
 {
     Q_UNUSED(child)
     return {};
 }
 
-int EffectModel::columnCount(const QModelIndex &parent) const
+int EffectsModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return 1;
 }
 
-int EffectModel::rowCount(const QModelIndex &parent) const
+int EffectsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return 0;
@@ -142,7 +142,7 @@ int EffectModel::rowCount(const QModelIndex &parent) const
     return m_effectsList.count();
 }
 
-QVariant EffectModel::data(const QModelIndex &index, int role) const
+QVariant EffectsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return {};
@@ -192,7 +192,7 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const
     }
 }
 
-bool EffectModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool EffectsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (!index.isValid()) {
         return QAbstractItemModel::setData(index, value, role);
@@ -228,7 +228,7 @@ bool EffectModel::setData(const QModelIndex &index, const QVariant &value, int r
     return QAbstractItemModel::setData(index, value, role);
 }
 
-void EffectModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs)
+void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs)
 {
     const auto builtins = BuiltInEffects::availableEffects();
     for (auto builtin : builtins) {
@@ -274,7 +274,7 @@ void EffectModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPlug
     }
 }
 
-void EffectModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
+void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 {
     const auto plugins = KPackage::PackageLoader::self()->listPackages(
         QStringLiteral("KWin/Effect"),
@@ -319,7 +319,7 @@ void EffectModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
     }
 }
 
-void EffectModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs)
+void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs)
 {
     const auto pluginEffects = KPluginLoader::findPlugins(
         QStringLiteral("kwin/effects/plugins/"),
@@ -387,7 +387,7 @@ void EffectModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPlugi
     }
 }
 
-void EffectModel::load(LoadOptions options)
+void EffectsModel::load(LoadOptions options)
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
@@ -473,12 +473,12 @@ void EffectModel::load(LoadOptions options)
     endResetModel();
 }
 
-void EffectModel::updateEffectStatus(const QModelIndex &rowIndex, Status effectState)
+void EffectsModel::updateEffectStatus(const QModelIndex &rowIndex, Status effectState)
 {
     setData(rowIndex, static_cast<int>(effectState), StatusRole);
 }
 
-void EffectModel::save()
+void EffectsModel::save()
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
@@ -529,7 +529,7 @@ void EffectModel::save()
     }
 }
 
-void EffectModel::defaults()
+void EffectsModel::defaults()
 {
     for (int i = 0; i < m_effectsList.count(); ++i) {
         const auto &effect = m_effectsList.at(i);
@@ -541,7 +541,7 @@ void EffectModel::defaults()
     }
 }
 
-bool EffectModel::needsSave() const
+bool EffectsModel::needsSave() const
 {
     return std::any_of(m_effectsList.constBegin(), m_effectsList.constEnd(),
         [](const EffectData &data) {
@@ -550,7 +550,7 @@ bool EffectModel::needsSave() const
     );
 }
 
-QModelIndex EffectModel::findByPluginId(const QString &pluginId) const
+QModelIndex EffectsModel::findByPluginId(const QString &pluginId) const
 {
     auto it = std::find_if(m_effectsList.constBegin(), m_effectsList.constEnd(),
         [pluginId](const EffectData &data) {
@@ -595,7 +595,7 @@ static KCModule *findScriptedConfig(const QString &pluginId, QObject *parent)
     return factory->create<KCModule>(pluginId, parent);
 }
 
-void EffectModel::requestConfigure(const QModelIndex &index, QWindow *transientParent)
+void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transientParent)
 {
     if (!index.isValid()) {
         return;
@@ -635,7 +635,7 @@ void EffectModel::requestConfigure(const QModelIndex &index, QWindow *transientP
     delete dialog;
 }
 
-bool EffectModel::shouldStore(const EffectData &data) const
+bool EffectsModel::shouldStore(const EffectData &data) const
 {
     Q_UNUSED(data)
     return true;

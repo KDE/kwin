@@ -4,7 +4,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwincommon\")
 include_directories(${KWIN_SOURCE_DIR}/effects)
 
 set(kcmkwincommon_SRC
-    effectmodel.cpp
+    effectsmodel.cpp
 )
 
 qt5_add_dbus_interface(kcmkwincommon_SRC

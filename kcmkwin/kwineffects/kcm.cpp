@@ -16,8 +16,8 @@
  */
 
 #include "kcm.h"
-#include "effectmodel.h"
 #include "effectsfilterproxymodel.h"
+#include "effectsmodel.h"
 
 #include <KAboutData>
 #include <KLocalizedString>
@@ -35,7 +35,7 @@ namespace KWin
 
 DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const QVariantList &args)
     : KQuickAddons::ConfigModule(parent, args)
-    , m_model(new EffectModel(this))
+    , m_model(new EffectsModel(this))
 {
     qmlRegisterType<EffectsFilterProxyModel>("org.kde.private.kcms.kwin.effects", 1, 0, "EffectsFilterProxyModel");
 
@@ -51,7 +51,7 @@ DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const QVariantList &args)
 
     setButtons(Apply | Default);
 
-    connect(m_model, &EffectModel::dataChanged, this, &DesktopEffectsKCM::updateNeedsSave);
+    connect(m_model, &EffectsModel::dataChanged, this, &DesktopEffectsKCM::updateNeedsSave);
 }
 
 DesktopEffectsKCM::~DesktopEffectsKCM()
@@ -93,7 +93,7 @@ void DesktopEffectsKCM::openGHNS(QQuickItem *context)
 
     if (dialog->exec() == QDialog::Accepted) {
         if (!dialog->changedEntries().isEmpty()) {
-            m_model->load(EffectModel::LoadOptions::KeepDirty);
+            m_model->load(EffectsModel::LoadOptions::KeepDirty);
         }
     }
 

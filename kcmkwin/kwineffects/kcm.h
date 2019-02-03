@@ -25,7 +25,7 @@
 namespace KWin
 {
 
-class EffectModel;
+class EffectsModel;
 
 class DesktopEffectsKCM : public KQuickAddons::ConfigModule
 {
@@ -50,7 +50,7 @@ private Q_SLOTS:
     void updateNeedsSave();
 
 private:
-    EffectModel *m_model;
+    EffectsModel *m_model;
 
     Q_DISABLE_COPY(DesktopEffectsKCM)
 };

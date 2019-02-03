@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class KWIN_EXPORT EffectModel : public QAbstractItemModel
+class KWIN_EXPORT EffectsModel : public QAbstractItemModel
 {
     Q_OBJECT
 
@@ -139,7 +139,7 @@ public:
         Enabled = Qt::Checked
     };
 
-    explicit EffectModel(QObject *parent = nullptr);
+    explicit EffectsModel(QObject *parent = nullptr);
 
     // Reimplemented from QAbstractItemModel.
     QHash<int, QByteArray> roleNames() const override;
@@ -254,7 +254,7 @@ private:
 
     QVector<EffectData> m_effectsList;
 
-    Q_DISABLE_COPY(EffectModel)
+    Q_DISABLE_COPY(EffectsModel)
 };
 
 }
