@@ -80,7 +80,7 @@ bool AnimationsModel::shouldStore(const EffectData &data) const
 
 EffectModel::Status AnimationsModel::status(int row) const
 {
-    return Status(data(index(row, 0), static_cast<int>(EffectStatusRole)).toInt());
+    return Status(data(index(row, 0), static_cast<int>(StatusRole)).toInt());
 }
 
 bool AnimationsModel::modelCurrentEnabled() const

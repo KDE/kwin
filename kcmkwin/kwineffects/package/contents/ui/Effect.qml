@@ -39,28 +39,28 @@ Rectangle {
             property bool _exclusive: model.ExclusiveRole != ""
             property bool _toggled: false
 
-            checked: model.EffectStatusRole
+            checked: model.StatusRole
             visible: _exclusive
             QtControls.ButtonGroup.group: _exclusive ? effectsList.findButtonGroup(model.ExclusiveRole) : null
 
             onToggled: {
-                model.EffectStatusRole = checked ? Qt.Checked : Qt.Unchecked;
+                model.StatusRole = checked ? Qt.Checked : Qt.Unchecked;
                 _toggled = true;
             }
             onClicked: {
                 // Uncheck the radio button if it's clicked.
                 if (checked && !_toggled) {
-                    model.EffectStatusRole = Qt.Unchecked;
+                    model.StatusRole = Qt.Unchecked;
                 }
                 _toggled = false;
             }
         }
 
         QtControls.CheckBox {
-            checkState: model.EffectStatusRole
+            checkState: model.StatusRole
             visible: model.ExclusiveRole == ""
 
-            onToggled: model.EffectStatusRole = checkState
+            onToggled: model.StatusRole = checkState
         }
 
         ColumnLayout {
@@ -117,7 +117,7 @@ Rectangle {
         }
 
         QtControls.Button {
-            enabled: model.EffectStatusRole != Qt.Unchecked
+            enabled: model.StatusRole != Qt.Unchecked
             icon.name: "configure"
             visible: model.ConfigurableRole
 

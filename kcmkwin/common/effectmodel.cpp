@@ -102,7 +102,7 @@ QHash<int, QByteArray> EffectModel::roleNames() const
     roleNames[CategoryRole] = "CategoryRole";
     roleNames[ServiceNameRole] = "ServiceNameRole";
     roleNames[IconNameRole] = "IconNameRole";
-    roleNames[EffectStatusRole] = "EffectStatusRole";
+    roleNames[StatusRole] = "StatusRole";
     roleNames[VideoRole] = "VideoRole";
     roleNames[WebsiteRole] = "WebsiteRole";
     roleNames[SupportedRole] = "SupportedRole";
@@ -169,8 +169,8 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const
         return effect.serviceName;
     case IconNameRole:
         return effect.iconName;
-    case EffectStatusRole:
-        return static_cast<int>(effect.effectStatus);
+    case StatusRole:
+        return static_cast<int>(effect.status);
     case VideoRole:
         return effect.video;
     case WebsiteRole:
@@ -198,16 +198,16 @@ bool EffectModel::setData(const QModelIndex &index, const QVariant &value, int r
         return QAbstractItemModel::setData(index, value, role);
     }
 
-    if (role == EffectModel::EffectStatusRole) {
+    if (role == StatusRole) {
         // note: whenever the StatusRole is modified (even to the same value) the entry
         // gets marked as changed and will get saved to the config file. This means the
         // config file could get polluted
         EffectData &data = m_effectsList[index.row()];
-        data.effectStatus = Status(value.toInt());
-        data.changed = data.effectStatus != data.originalStatus;
+        data.status = Status(value.toInt());
+        data.changed = data.status != data.originalStatus;
         emit dataChanged(index, index);
 
-        if (data.effectStatus == Status::Enabled && !data.exclusiveGroup.isEmpty()) {
+        if (data.status == Status::Enabled && !data.exclusiveGroup.isEmpty()) {
             // need to disable all other exclusive effects in the same category
             for (int i = 0; i < m_effectsList.size(); ++i) {
                 if (i == index.row()) {
@@ -215,8 +215,8 @@ bool EffectModel::setData(const QModelIndex &index, const QVariant &value, int r
                 }
                 EffectData &otherData = m_effectsList[i];
                 if (otherData.exclusiveGroup == data.exclusiveGroup) {
-                    otherData.effectStatus = Status::Disabled;
-                    otherData.changed = otherData.effectStatus != otherData.originalStatus;
+                    otherData.status = Status::Disabled;
+                    otherData.changed = otherData.status != otherData.originalStatus;
                     emit dataChanged(this->index(i, 0), this->index(i, 0));
                 }
             }
@@ -248,13 +248,13 @@ void EffectModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPlug
         effect.enabledByDefaultFunction = (data.enabledFunction != nullptr);
         const QString enabledKey = QStringLiteral("%1Enabled").arg(effect.serviceName);
         if (kwinConfig.hasKey(enabledKey)) {
-            effect.effectStatus = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", effect.enabledByDefault));
+            effect.status = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", effect.enabledByDefault));
         } else if (data.enabledFunction != nullptr) {
-            effect.effectStatus = Status::EnabledUndeterminded;
+            effect.status = Status::EnabledUndeterminded;
         } else {
-            effect.effectStatus = effectStatus(effect.enabledByDefault);
+            effect.status = effectStatus(effect.enabledByDefault);
         }
-        effect.originalStatus = effect.effectStatus;
+        effect.originalStatus = effect.status;
         effect.video = data.video;
         effect.website = QUrl();
         effect.supported = true;
@@ -294,8 +294,8 @@ void EffectModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         effect.category = translatedCategory(plugin.category());
         effect.serviceName = plugin.pluginName();
         effect.iconName = plugin.icon();
-        effect.effectStatus = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault()));
-        effect.originalStatus = effect.effectStatus;
+        effect.status = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault()));
+        effect.originalStatus = effect.status;
         effect.enabledByDefault = plugin.isPluginEnabledByDefault();
         effect.enabledByDefaultFunction = false;
         effect.video = plugin.property(QStringLiteral("X-KWin-Video-Url")).toUrl();
@@ -366,14 +366,14 @@ void EffectModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPlugi
 
         const QString enabledKey = QStringLiteral("%1Enabled").arg(effect.serviceName);
         if (kwinConfig.hasKey(enabledKey)) {
-            effect.effectStatus = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", effect.enabledByDefault));
+            effect.status = effectStatus(kwinConfig.readEntry(effect.serviceName + "Enabled", effect.enabledByDefault));
         } else if (effect.enabledByDefaultFunction) {
-            effect.effectStatus = Status::EnabledUndeterminded;
+            effect.status = Status::EnabledUndeterminded;
         } else {
-            effect.effectStatus = effectStatus(effect.enabledByDefault);
+            effect.status = effectStatus(effect.enabledByDefault);
         }
 
-        effect.originalStatus = effect.effectStatus;
+        effect.originalStatus = effect.status;
 
         effect.configurable = std::any_of(configs.constBegin(), configs.constEnd(),
             [pluginEffect](const KPluginInfo &info) {
@@ -413,8 +413,8 @@ void EffectModel::load(LoadOptions options)
             if (effectIt == m_effectsList.end()) {
                 continue;
             }
-            effectIt->effectStatus = oldEffect.effectStatus;
-            effectIt->changed = effectIt->effectStatus != effectIt->originalStatus;
+            effectIt->status = oldEffect.status;
+            effectIt->changed = effectIt->status != effectIt->originalStatus;
         }
     }
 
@@ -475,7 +475,7 @@ void EffectModel::load(LoadOptions options)
 
 void EffectModel::updateEffectStatus(const QModelIndex &rowIndex, Status effectState)
 {
-    setData(rowIndex, static_cast<int>(effectState), EffectModel::EffectStatusRole);
+    setData(rowIndex, static_cast<int>(effectState), StatusRole);
 }
 
 void EffectModel::save()
@@ -490,12 +490,12 @@ void EffectModel::save()
         }
 
         effect.changed = false;
-        effect.originalStatus = effect.effectStatus;
+        effect.originalStatus = effect.status;
 
         const QString key = effect.serviceName + QStringLiteral("Enabled");
-        const bool shouldEnable = (effect.effectStatus != Status::Disabled);
+        const bool shouldEnable = (effect.status != Status::Disabled);
         const bool restoreToDefault = effect.enabledByDefaultFunction
-            ? effect.effectStatus == Status::EnabledUndeterminded
+            ? effect.status == Status::EnabledUndeterminded
             : shouldEnable == effect.enabledByDefault;
         if (restoreToDefault) {
             kwinConfig.deleteEntry(key);
@@ -521,7 +521,7 @@ void EffectModel::save()
     }
 
     for (const EffectData &effect : dirtyEffects) {
-        if (effect.effectStatus != Status::Disabled) {
+        if (effect.status != Status::Disabled) {
             interface.loadEffect(effect.serviceName);
         } else {
             interface.unloadEffect(effect.serviceName);
@@ -533,9 +533,9 @@ void EffectModel::defaults()
 {
     for (int i = 0; i < m_effectsList.count(); ++i) {
         const auto &effect = m_effectsList.at(i);
-        if (effect.enabledByDefaultFunction && effect.effectStatus != Status::EnabledUndeterminded) {
+        if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
             updateEffectStatus(index(i, 0), Status::EnabledUndeterminded);
-        } else if ((bool)effect.effectStatus != effect.enabledByDefault) {
+        } else if ((bool)effect.status != effect.enabledByDefault) {
             updateEffectStatus(index(i, 0), effect.enabledByDefault ? Status::Enabled : Status::Disabled);
         }
     }

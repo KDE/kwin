@@ -84,7 +84,7 @@ public:
         /**
          * Whether the effect is enabled or disabled.
          **/
-        EffectStatusRole,
+        StatusRole,
         /**
          * Link to a video demonstration of the effect.
          **/
@@ -225,7 +225,7 @@ protected:
         QString category;
         QString serviceName;
         QString iconName;
-        Status effectStatus;
+        Status status;
         Status originalStatus;
         bool enabledByDefault;
         bool enabledByDefaultFunction;
