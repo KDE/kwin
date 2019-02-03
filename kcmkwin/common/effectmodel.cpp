@@ -387,9 +387,11 @@ void EffectModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPlugi
     }
 }
 
-void EffectModel::load()
+void EffectModel::load(LoadOptions options)
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
+
+    const QVector<EffectData> oldEffects = m_effectsList;
 
     beginResetModel();
     m_effectsChanged.clear();
@@ -398,6 +400,24 @@ void EffectModel::load()
     loadBuiltInEffects(kwinConfig, configs);
     loadJavascriptEffects(kwinConfig);
     loadPluginEffects(kwinConfig, configs);
+
+    if (options == LoadOptions::KeepDirty) {
+        for (const EffectData &oldEffect : oldEffects) {
+            if (!oldEffect.changed) {
+                continue;
+            }
+            auto effectIt = std::find_if(m_effectsList.begin(), m_effectsList.end(),
+                [serviceName = oldEffect.serviceName](const EffectData &data) {
+                    return data.serviceName == serviceName;
+                }
+            );
+            if (effectIt == m_effectsList.end()) {
+                continue;
+            }
+            effectIt->effectStatus = oldEffect.effectStatus;
+            effectIt->changed = effectIt->effectStatus != effectIt->originalStatus;
+        }
+    }
 
     qSort(m_effectsList.begin(), m_effectsList.end(), [](const EffectData &a, const EffectData &b) {
         if (a.category == b.category) {
@@ -461,7 +481,7 @@ void EffectModel::syncEffectsToKWin()
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
     for (int it = 0; it < m_effectsList.size(); it++) {
-        if (m_effectsList.at(it).effectStatus == m_effectsChanged.at(it).effectStatus) {
+        if (!m_effectsList.at(it).changed) {
             continue;
         }
         if (m_effectsList.at(it).effectStatus != Status::Disabled) {

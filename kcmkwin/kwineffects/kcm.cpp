@@ -93,7 +93,7 @@ void DesktopEffectsKCM::openGHNS(QQuickItem *context)
 
     if (dialog->exec() == QDialog::Accepted) {
         if (!dialog->changedEntries().isEmpty()) {
-            m_model->load();
+            m_model->load(EffectModel::LoadOptions::KeepDirty);
         }
     }
 

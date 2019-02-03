@@ -160,11 +160,22 @@ public:
     void updateEffectStatus(const QModelIndex &rowIndex, Status effectState);
 
     /**
+     * This enum type is used to specify load options.
+     **/
+    enum class LoadOptions {
+        None,
+        /**
+         * Do not discard unsaved changes when reloading the model.
+         **/
+        KeepDirty
+    };
+
+    /**
      * Loads effects.
      *
      * You have to call this method in order to populate the model.
      **/
-    void load();
+    void load(LoadOptions options = LoadOptions::None);
 
     /**
      * Saves status of each modified effect.
