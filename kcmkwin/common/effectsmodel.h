@@ -207,6 +207,14 @@ public:
      **/
     void requestConfigure(const QModelIndex &index, QWindow *transientParent);
 
+Q_SIGNALS:
+    /**
+     * This signal is emitted when the model is loaded or reloaded.
+     *
+     * @see load
+     **/
+    void loaded();
+
 protected:
     enum class Kind {
         BuiltIn,
@@ -253,6 +261,8 @@ private:
     void loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
 
     QVector<EffectData> m_effects;
+    QVector<EffectData> m_pendingEffects;
+    int m_lastSerial = -1;
 
     Q_DISABLE_COPY(EffectsModel)
 };

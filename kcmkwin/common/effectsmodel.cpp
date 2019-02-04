@@ -269,7 +269,7 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPlu
         );
 
         if (shouldStore(effect)) {
-            m_effects << effect;
+            m_pendingEffects << effect;
         }
     }
 }
@@ -314,7 +314,7 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         }
 
         if (shouldStore(effect)) {
-            m_effects << effect;
+            m_pendingEffects << effect;
         }
     }
 }
@@ -382,7 +382,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPlug
         );
 
         if (shouldStore(effect)) {
-            m_effects << effect;
+            m_pendingEffects << effect;
         }
     }
 }
@@ -391,42 +391,50 @@ void EffectsModel::load(LoadOptions options)
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
-    const QVector<EffectData> oldEffects = m_effects;
-
-    beginResetModel();
-    m_effects.clear();
+    m_pendingEffects.clear();
     const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kwin/effects/configs/"));
     loadBuiltInEffects(kwinConfig, configs);
     loadJavascriptEffects(kwinConfig);
     loadPluginEffects(kwinConfig, configs);
 
-    if (options == LoadOptions::KeepDirty) {
-        for (const EffectData &oldEffect : oldEffects) {
-            if (!oldEffect.changed) {
-                continue;
-            }
-            auto effectIt = std::find_if(m_effects.begin(), m_effects.end(),
-                [serviceName = oldEffect.serviceName](const EffectData &data) {
-                    return data.serviceName == serviceName;
+    qSort(m_pendingEffects.begin(), m_pendingEffects.end(),
+        [](const EffectData &a, const EffectData &b) {
+            if (a.category == b.category) {
+                if (a.exclusiveGroup == b.exclusiveGroup) {
+                    return a.name < b.name;
                 }
-            );
-            if (effectIt == m_effects.end()) {
-                continue;
+                return a.exclusiveGroup < b.exclusiveGroup;
             }
-            effectIt->status = oldEffect.status;
-            effectIt->changed = effectIt->status != effectIt->originalStatus;
+            return a.category < b.category;
         }
-    }
+    );
 
-    qSort(m_effects.begin(), m_effects.end(), [](const EffectData &a, const EffectData &b) {
-        if (a.category == b.category) {
-            if (a.exclusiveGroup == b.exclusiveGroup) {
-                return a.name < b.name;
+    auto commit = [this, options] {
+        if (options == LoadOptions::KeepDirty) {
+            for (const EffectData &oldEffect : m_effects) {
+                if (!oldEffect.changed) {
+                    continue;
+                }
+                auto effectIt = std::find_if(m_pendingEffects.begin(), m_pendingEffects.end(),
+                    [oldEffect](const EffectData &data) {
+                        return data.serviceName == oldEffect.serviceName;
+                    }
+                );
+                if (effectIt == m_pendingEffects.end()) {
+                    continue;
+                }
+                effectIt->status = oldEffect.status;
+                effectIt->changed = effectIt->status != effectIt->originalStatus;
             }
-            return a.exclusiveGroup < b.exclusiveGroup;
         }
-        return a.category < b.category;
-    });
+
+        beginResetModel();
+        m_effects = m_pendingEffects;
+        m_pendingEffects.clear();
+        endResetModel();
+
+        emit loaded();
+    };
 
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
@@ -434,43 +442,57 @@ void EffectsModel::load(LoadOptions options)
 
     if (interface.isValid()) {
         QStringList effectNames;
-        effectNames.reserve(m_effects.count());
-        for (const EffectData &data : m_effects) {
+        effectNames.reserve(m_pendingEffects.count());
+        for (const EffectData &data : m_pendingEffects) {
             effectNames.append(data.serviceName);
         }
 
+        const int serial = ++m_lastSerial;
+
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(interface.areEffectsSupported(effectNames), this);
-        watcher->setProperty("effectNames", effectNames);
-        connect(watcher, &QDBusPendingCallWatcher::finished, [this](QDBusPendingCallWatcher *self) {
-            const QStringList effectNames = self->property("effectNames").toStringList();
-            const QDBusPendingReply<QList<bool > > reply = *self;
-            QList<bool> supportValues;
-            if (reply.isValid()) {
-                supportValues.append(reply.value());
-            }
-            if (effectNames.size() == supportValues.size()) {
+        connect(watcher, &QDBusPendingCallWatcher::finished, this,
+            [=](QDBusPendingCallWatcher *self) {
+                self->deleteLater();
+
+                if (m_lastSerial != serial) {
+                    return;
+                }
+
+                const QDBusPendingReply<QList<bool > > reply = *self;
+                if (reply.isError()) {
+                    commit();
+                    return;
+                }
+
+                const QList<bool> supportedValues = reply.value();
+                if (supportedValues.count() != effectNames.count()) {
+                    return;
+                }
+
                 for (int i = 0; i < effectNames.size(); ++i) {
-                    const bool supportedValue = supportValues.at(i);
-                    const QString &effectName = effectNames.at(i);
-                    auto it = std::find_if(m_effects.begin(), m_effects.end(), [effectName](const EffectData &data) {
-                        return data.serviceName == effectName;
-                    });
-                    if (it != m_effects.end()) {
-                        if ((*it).supported != supportedValue) {
-                            (*it).supported = supportedValue;
-                            QModelIndex i = findByPluginId(effectName);
-                            if (i.isValid()) {
-                                emit dataChanged(i, i, QVector<int>() << SupportedRole);
-                            }
+                    const bool supported = supportedValues.at(i);
+                    const QString effectName = effectNames.at(i);
+
+                    auto it = std::find_if(m_pendingEffects.begin(), m_pendingEffects.end(),
+                        [effectName](const EffectData &data) {
+                            return data.serviceName == effectName;
                         }
+                    );
+                    if (it == m_pendingEffects.end()) {
+                        continue;
+                    }
+
+                    if ((*it).supported != supported) {
+                        (*it).supported = supported;
                     }
                 }
-            }
-            self->deleteLater();
-        });
-    }
 
-    endResetModel();
+                commit();
+            }
+        );
+    } else {
+        commit();
+    }
 }
 
 void EffectsModel::updateEffectStatus(const QModelIndex &rowIndex, Status effectState)

@@ -26,6 +26,12 @@ namespace KWin
 AnimationsModel::AnimationsModel(QObject *parent)
     : EffectsModel(parent)
 {
+    connect(this, &EffectsModel::loaded, this,
+        [this] {
+            setEnabled(modelCurrentEnabled());
+            setCurrentIndex(modelCurrentIndex());
+        }
+    );
     connect(this, &AnimationsModel::currentIndexChanged, this,
         [this] {
             const QModelIndex index_ = index(m_currentIndex, 0);
@@ -108,8 +114,6 @@ int AnimationsModel::modelCurrentIndex() const
 void AnimationsModel::load()
 {
     EffectsModel::load();
-    setEnabled(modelCurrentEnabled());
-    setCurrentIndex(modelCurrentIndex());
 }
 
 void AnimationsModel::save()
