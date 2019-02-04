@@ -26,8 +26,7 @@ import QtMultimedia 5.0 as Multimedia
 
 Multimedia.Video {
     id: videoItem
-    autoLoad: false
-    visible: false
+    autoPlay: true
     source: model.VideoRole
     width: 400
     height: 400

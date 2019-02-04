@@ -129,9 +129,6 @@ Rectangle {
                         videoItem.visible = false;
                     }
                 }
-                onLoaded: {
-                    videoItem.item.showHide();
-                }
             }
         }
         Item {
