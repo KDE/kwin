@@ -437,7 +437,6 @@ set(kwin_KDEINIT_SRCS
    scene.cpp
    screenlockerwatcher.cpp
    thumbnailitem.cpp
-   lanczosfilter.cpp
    deleted.cpp
    effects.cpp
    effectloader.cpp
@@ -551,8 +550,6 @@ qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.VirtualDesktopManager.xml d
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.ScreenSaver.xml screenlocker_interface)
 
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS org.kde.kappmenu.xml appmenu_interface )
-
-qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
 ki18n_wrap_ui(kwin_KDEINIT_SRCS
     debug_console.ui

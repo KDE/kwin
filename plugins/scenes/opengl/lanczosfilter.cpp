@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "workspace.h"
 
+#include <logging.h>
+
 #include <kwinglutils.h>
 #include <kwinglplatform.h>
 
@@ -65,7 +67,7 @@ void LanczosFilter::init()
     m_inited = true;
     const bool force = (qstrcmp(qgetenv("KWIN_FORCE_LANCZOS"), "1") == 0);
     if (force) {
-        qCWarning(KWIN_CORE) << "Lanczos Filter forced on by environment variable";
+        qCWarning(KWIN_OPENGL) << "Lanczos Filter forced on by environment variable";
     }
 
     if (!force && options->glSmoothScale() != 2)
@@ -87,10 +89,10 @@ void LanczosFilter::init()
         }
     }
     QFile ff(gl->glslVersion() >= kVersionNumber(1, 40) ?
-             QStringLiteral(":/resources/shaders/1.40/lanczos-fragment.glsl") :
-             QStringLiteral(":/resources/shaders/1.10/lanczos-fragment.glsl"));
+             QStringLiteral(":/scenes/opengl/shaders/1.40/lanczos-fragment.glsl") :
+             QStringLiteral(":/scenes/opengl/shaders/1.10/lanczos-fragment.glsl"));
     if (!ff.open(QIODevice::ReadOnly)) {
-        qCDebug(KWIN_CORE) << "Failed to open lanczos shader";
+        qCDebug(KWIN_OPENGL) << "Failed to open lanczos shader";
         return;
     }
     m_shader.reset(ShaderManager::instance()->generateCustomShader(ShaderTrait::MapTexture, QByteArray(), ff.readAll()));
@@ -99,7 +101,7 @@ void LanczosFilter::init()
         m_uKernel     = m_shader->uniformLocation("kernel");
         m_uOffsets    = m_shader->uniformLocation("offsets");
     } else {
-        qCDebug(KWIN_CORE) << "Shader is not valid";
+        qCDebug(KWIN_OPENGL) << "Shader is not valid";
         m_shader.reset();
     }
 }
