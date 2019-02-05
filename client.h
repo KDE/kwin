@@ -157,6 +157,7 @@ public:
         return fullscreen_mode;    // only for session saving
     }
 
+    bool userNoBorder() const;
     bool noBorder() const override;
     void setNoBorder(bool set) override;
     bool userCanSetNoBorder() const override;
