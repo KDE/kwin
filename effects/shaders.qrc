@@ -8,7 +8,7 @@
   <file alias="invert.frag">invert/data/1.10/invert.frag</file>
   <file alias="logout-blur.frag">logout/data/1.10/logout-blur.frag</file>
   <file alias="lookingglass.frag">lookingglass/data/1.10/lookingglass.frag</file>
-  <file alias="blinking-startup-fragment.glsl">startupfeedback/data/blinking-startup-fragment.glsl</file>
+  <file alias="blinking-startup-fragment.glsl">startupfeedback/data/1.10/blinking-startup-fragment.glsl</file>
 </qresource>
 <qresource prefix="/effect-shaders-1.40">
   <file alias="coverswitch-reflection.glsl">coverswitch/shaders/1.40/coverswitch-reflection.glsl</file>
@@ -19,6 +19,7 @@
   <file alias="invert.frag">invert/data/1.40/invert.frag</file>
   <file alias="logout-blur.frag">logout/data/1.40/logout-blur.frag</file>
   <file alias="lookingglass.frag">lookingglass/data/1.40/lookingglass.frag</file>
+  <file alias="blinking-startup-fragment.glsl">startupfeedback/data/1.40/blinking-startup-fragment.glsl</file>
 </qresource>
 </RCC>
 
