@@ -679,7 +679,7 @@ int main(int argc, char * argv[])
 
     QCommandLineOption noGlobalShortcutsOption(QStringLiteral("no-global-shortcuts"),
                                                i18n("Starts the session without global shortcuts support."));
-    parser.addOption(noScreenLockerOption);
+    parser.addOption(noGlobalShortcutsOption);
 
     QCommandLineOption exitWithSessionOption(QStringLiteral("exit-with-session"),
                                              i18n("Exit after the session application, which is started by KWin, closed."),
