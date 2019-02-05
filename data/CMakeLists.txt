@@ -1,3 +1,5 @@
+add_subdirectory(icons)
+
 ########### next target ###############
 add_executable( kwin5_update_default_rules update_default_rules.cpp)
 

@@ -1,0 +1,11 @@
+ecm_install_icons(
+    ICONS
+        16-apps-kwin.png
+        32-apps-kwin.png
+        48-apps-kwin.png
+        sc-apps-kwin.svgz
+    DESTINATION
+        ${ICON_INSTALL_DIR}
+    THEME
+        hicolor
+)
