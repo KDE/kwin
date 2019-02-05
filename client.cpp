@@ -574,9 +574,14 @@ void Client::resizeDecoration()
     updateInputWindow();
 }
 
+bool Client::userNoBorder() const
+{
+    return noborder;
+}
+
 bool Client::noBorder() const
 {
-    return noborder || isFullScreen();
+    return userNoBorder() || isFullScreen();
 }
 
 bool Client::userCanSetNoBorder() const
