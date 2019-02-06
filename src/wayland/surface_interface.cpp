@@ -903,6 +903,18 @@ bool SurfaceInterface::inhibitsIdle() const
     return !d->idleInhibitors.isEmpty();
 }
 
+void SurfaceInterface::setDataProxy(SurfaceInterface *surface)
+{
+    Q_D();
+    d->dataProxy = surface;
+}
+
+SurfaceInterface* SurfaceInterface::dataProxy() const
+{
+    Q_D();
+    return d->dataProxy;
+}
+
 SurfaceInterface::Private *SurfaceInterface::d_func() const
 {
     return reinterpret_cast<Private*>(d.data());

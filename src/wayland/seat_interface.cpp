@@ -307,9 +307,17 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
                 // no implicit grab, abort drag
                 return;
             }
+            auto *originSurface = dataDevice->origin();
+            const bool proxied = originSurface->dataProxy();
+            if (!proxied) {
+                // origin surface
+                drag.target = dataDevice;
+                drag.surface = originSurface;
+                // TODO: transformation needs to be either pointer or touch
+                drag.transformation = globalPointer.focus.transformation;
+            }
             drag.source = dataDevice;
-            drag.target = dataDevice;
-            drag.surface = dragSurface;
+            drag.sourcePointer = interfaceForSurface(originSurface, pointers);
             drag.destroyConnection = QObject::connect(dataDevice, &QObject::destroyed, q,
                 [this] {
                     endDrag(display->nextSerial());
@@ -329,7 +337,7 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
             } else {
                 drag.dragSourceDestroyConnection = QMetaObject::Connection();
             }
-            dataDevice->updateDragTarget(dataDevice->origin(), dataDevice->dragImplicitGrabSerial());
+            dataDevice->updateDragTarget(proxied ? nullptr : originSurface, dataDevice->dragImplicitGrabSerial());
             emit q->dragStarted();
             emit q->dragSurfaceChanged();
         }
@@ -871,11 +879,11 @@ void SeatInterface::pointerButtonPressed(quint32 button)
         // ignore
         return;
     }
-    if (d->globalPointer.focus.surface) {
+    if (auto *focusSurface = d->globalPointer.focus.surface) {
         for (auto it = d->globalPointer.focus.pointers.constBegin(), end = d->globalPointer.focus.pointers.constEnd(); it != end; ++it) {
             (*it)->buttonPressed(button, serial);
         }
-        if (d->globalPointer.focus.surface == d->keys.focus.surface) {
+        if (focusSurface == d->keys.focus.surface) {
             // update the focused child surface
             auto p = focusedPointer();
             if (p) {

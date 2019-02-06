@@ -82,6 +82,11 @@ public:
      * @since 5.6
      **/
     void updateDragTarget(SurfaceInterface *surface, quint32 serial);
+    /**
+     * Mark this DataDeviceInterface as being a proxy device for @p remote.
+     * @since 5.56
+     **/
+    void updateProxy(SurfaceInterface *remote);
 
 Q_SIGNALS:
     void dragStarted();

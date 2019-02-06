@@ -61,6 +61,8 @@ public:
     };
     Drag drag;
 
+    SurfaceInterface *proxyRemoteSurface = nullptr;
+
 private:
     DataDeviceInterface *q_func() {
         return reinterpret_cast<DataDeviceInterface*>(q);
@@ -99,10 +101,15 @@ void DataDeviceInterface::Private::startDragCallback(wl_client *client, wl_resou
 
 void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *i, quint32 serial)
 {
-    const bool pointerGrab = seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() == origin;
+    SurfaceInterface *focusSurface = origin;
+    if (proxyRemoteSurface) {
+        // origin is a proxy surface
+        focusSurface = proxyRemoteSurface;
+    }
+    const bool pointerGrab = seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() == focusSurface;
     if (!pointerGrab) {
         // Client doesn't have pointer grab.
-        const bool touchGrab = seat->hasImplicitTouchGrab(serial) && seat->focusedTouchSurface() == origin;
+        const bool touchGrab = seat->hasImplicitTouchGrab(serial) && seat->focusedTouchSurface() == focusSurface;
         if (!touchGrab) {
             // Client neither has pointer nor touch grab. No drag start allowed.
             return;
@@ -209,7 +216,7 @@ SurfaceInterface *DataDeviceInterface::icon() const
 SurfaceInterface *DataDeviceInterface::origin() const
 {
     Q_D();
-    return d->surface;
+    return d->proxyRemoteSurface ? d->proxyRemoteSurface : d->surface;
 }
 
 DataSourceInterface *DataDeviceInterface::selection() const
@@ -292,6 +299,11 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         }
         return;
     }
+    if (d->proxyRemoteSurface && d->proxyRemoteSurface == surface) {
+        // A proxy can not have the remote surface as target.
+        // TODO: do this for all client's surfaces?
+        return;
+    }
     auto *source = d->seat->dragSource()->dragSource();
     DataOfferInterface *offer = d->createDataOffer(source);
     d->drag.surface = surface;
@@ -369,6 +381,13 @@ quint32 DataDeviceInterface::dragImplicitGrabSerial() const
 {
     Q_D();
     return d->drag.serial;
+}
+
+void DataDeviceInterface::updateProxy(SurfaceInterface *remote)
+{
+    Q_D();
+    // TODO: connect destroy signal?
+    d->proxyRemoteSurface = remote;
 }
 
 DataDeviceInterface::Private *DataDeviceInterface::d_func() const

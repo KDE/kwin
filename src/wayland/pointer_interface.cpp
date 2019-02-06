@@ -27,6 +27,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "display.h"
 #include "subcompositor_interface.h"
 #include "surface_interface.h"
+#include "datadevice_interface.h"
 // Wayland
 #include <wayland-server.h>
 
@@ -232,32 +233,37 @@ PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentRes
     // TODO: handle touch
     connect(parent, &SeatInterface::pointerPosChanged, this, [this] {
         Q_D();
-        if (d->seat->isDragPointer()) {
-            // handled by DataDevice
+        if (!d->focusedSurface || !d->resource) {
             return;
         }
-        if (d->focusedSurface && d->resource) {
-            if (!d->focusedSurface->lockedPointer().isNull() && d->focusedSurface->lockedPointer()->isLocked()) {
+        if (d->seat->isDragPointer()) {
+            const auto *originSurface = d->seat->dragSource()->origin();
+            const bool proxyRemoteFocused = originSurface->dataProxy() && originSurface == d->focusedSurface;
+            if (!proxyRemoteFocused) {
+                // handled by DataDevice
                 return;
             }
-            const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
-            auto targetSurface = d->focusedSurface->inputSurfaceAt(pos);
-            if (!targetSurface) {
-                targetSurface = d->focusedSurface;
-            }
-            if (targetSurface != d->focusedChildSurface.data()) {
-                const quint32 serial = d->seat->display()->nextSerial();
-                d->sendLeave(d->focusedChildSurface.data(), serial);
-                d->focusedChildSurface = QPointer<SurfaceInterface>(targetSurface);
-                d->sendEnter(targetSurface, pos, serial);
-                d->sendFrame();
-                d->client->flush();
-            } else {
-                const QPointF adjustedPos = pos - surfacePosition(d->focusedChildSurface);
-                wl_pointer_send_motion(d->resource, d->seat->timestamp(),
-                                       wl_fixed_from_double(adjustedPos.x()), wl_fixed_from_double(adjustedPos.y()));
-                d->sendFrame();
-            }
+        }
+        if (!d->focusedSurface->lockedPointer().isNull() && d->focusedSurface->lockedPointer()->isLocked()) {
+            return;
+        }
+        const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
+        auto targetSurface = d->focusedSurface->inputSurfaceAt(pos);
+        if (!targetSurface) {
+            targetSurface = d->focusedSurface;
+        }
+        if (targetSurface != d->focusedChildSurface.data()) {
+            const quint32 serial = d->seat->display()->nextSerial();
+            d->sendLeave(d->focusedChildSurface.data(), serial);
+            d->focusedChildSurface = QPointer<SurfaceInterface>(targetSurface);
+            d->sendEnter(targetSurface, pos, serial);
+            d->sendFrame();
+            d->client->flush();
+        } else {
+            const QPointF adjustedPos = pos - surfacePosition(d->focusedChildSurface);
+            wl_pointer_send_motion(d->resource, d->seat->timestamp(),
+                                   wl_fixed_from_double(adjustedPos.x()), wl_fixed_from_double(adjustedPos.y()));
+            d->sendFrame();
         }
     });
 }
