@@ -44,6 +44,7 @@ class KWIN_EXPORT Deleted
     Q_PROPERTY(bool keepAbove READ keepAbove CONSTANT)
     Q_PROPERTY(bool keepBelow READ keepBelow CONSTANT)
     Q_PROPERTY(QString caption READ caption CONSTANT)
+
 public:
     static Deleted* create(Toplevel* c);
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
@@ -185,6 +186,7 @@ public:
 
 protected:
     virtual void debug(QDebug& stream) const;
+
 private Q_SLOTS:
     void mainClientClosed(KWin::Toplevel *client);
     void transientForClosed(Toplevel *toplevel, Deleted *deleted);
