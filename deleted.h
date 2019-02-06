@@ -200,7 +200,6 @@ private:
     void removeTransientFor(Deleted *parent);
 
     int delete_refcount;
-    double window_opacity;
     int desk;
     QStringList activityList;
     QRect contentsRect; // for clientPos()/clientSize()
