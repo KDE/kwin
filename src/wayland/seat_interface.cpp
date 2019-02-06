@@ -273,6 +273,7 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
         if (currentSelection == dataDevice) {
             // current selection is cleared
             currentSelection = nullptr;
+            emit q->selectionChanged(nullptr);
             if (keys.focus.selection) {
                 keys.focus.selection->sendClearSelection();
             }
@@ -405,6 +406,7 @@ void SeatInterface::Private::cancelPreviousSelection(DataDeviceInterface *dataDe
 
 void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice, bool set)
 {
+    bool selChanged = currentSelection != dataDevice;
     if (keys.focus.surface && (keys.focus.surface->client() == dataDevice->client())) {
         // cancel the previous selection
         cancelPreviousSelection(dataDevice);
@@ -419,8 +421,12 @@ void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice, bo
             } else {
                 keys.focus.selection->sendClearSelection();
                 currentSelection = nullptr;
+                selChanged = true;
             }
         }
+    }
+    if (selChanged) {
+        emit q->selectionChanged(currentSelection);
     }
 }
 
@@ -1580,6 +1586,7 @@ void SeatInterface::setSelection(DataDeviceInterface *dataDevice)
             d->keys.focus.selection->sendClearSelection();
         }
     }
+    emit selectionChanged(dataDevice);
 }
 
 }

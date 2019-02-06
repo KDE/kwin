@@ -644,6 +644,7 @@ public:
     /**
      * @returns The DataDeviceInterface holding the current clipboard selection.
      * @since 5.24
+     * @see selectionChanged
      * @see setSelection
      **/
     DataDeviceInterface *selection() const;
@@ -657,6 +658,7 @@ public:
      *
      * @param dataDevice Sets the current clipboard selection.
      * @see selection
+     * @see selectionChanged
      * @since 5.24
      **/
     void setSelection(DataDeviceInterface *dataDevice);
@@ -681,6 +683,14 @@ Q_SIGNALS:
      * @since 5.6
      **/
     void focusedPointerChanged(KWayland::Server::PointerInterface*);
+
+    /**
+     * Emitted whenever the selection changes
+     * @since 5.56
+     * @see selection
+     * @see setSelection
+     **/
+    void selectionChanged(DataDeviceInterface*);
 
     /**
      * Emitted when a drag'n'drop operation is started
