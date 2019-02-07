@@ -24,7 +24,7 @@
 
 #include <KDecoration2/Decoration>
 
-#include <QDebug>
+#include <QPainter>
 
 namespace KDecoration2
 {
@@ -132,7 +132,17 @@ void PreviewButtonItem::paint(QPainter *painter)
     if (!m_button) {
         return;
     }
-    m_button->paint(painter, QRect(0, 0, width(), height()));
+    QRect size { 0, 0, (int)width(), (int)height() };
+    m_button->paint(painter, size);
+    painter->setCompositionMode(QPainter::CompositionMode_SourceAtop);
+    painter->fillRect(size, m_color);
+}
+
+void PreviewButtonItem::setColor(const QColor color)
+{
+    m_color = color;
+    m_color.setAlpha(127);
+    update();
 }
 
 }

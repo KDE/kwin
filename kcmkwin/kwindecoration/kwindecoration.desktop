@@ -1,15 +1,15 @@
 [Desktop Entry]
-Exec=kcmshell5 kwindecoration
 Icon=preferences-system-windows-action
+Exec=kcmshell5 kwindecoration
+
+Categories=Qt;KDE;X-KDE-settings-looknfeel;
 Type=Service
 X-KDE-ServiceTypes=KCModule
-X-DocPath=kcontrol/kwindecoration/index.html
-
 X-KDE-Library=kcm_kwindecoration
 X-KDE-ParentApp=kcontrol
-
 X-KDE-System-Settings-Parent-Category=applicationstyle
 X-KDE-Weight=40
+X-DocPath=kcontrol/kwindecoration/index.html
 
 Name=Window Decorations
 Name[ar]=زخارف النوافذ
@@ -72,50 +72,7 @@ Name[x-test]=xxWindow Decorationsxx
 Name[zh_CN]=窗口装饰
 Name[zh_TW]=視窗裝飾
 
-Comment=Look and Feel of Window Titles
-Comment[bs]=Izgled i osjećaj naslova prozora
-Comment[ca]=Aspecte i comportament dels títols de les finestres
-Comment[ca@valencia]=Aspecte i comportament dels títols de les finestres
-Comment[cs]=Vzhled a dekorace titulků oken
-Comment[da]=Udseendet af vinduestitler
-Comment[de]=Erscheinungsbild von Fenstertiteln
-Comment[el]=Διαμόρφωση της εμφάνισης και αίσθησης του τίτλου των παραθύρων
-Comment[en_GB]=Look and Feel of Window Titles
-Comment[es]=Aspecto visual de los títulos de las ventanas
-Comment[et]=Akna tiitliribade välimus ja tunnetus
-Comment[eu]=Leiho-tituluen itxura eta izaera
-Comment[fi]=Ikkunoiden kehysten ulkoasu
-Comment[fr]=Apparence des titres de fenêtre
-Comment[gl]=Aparencia e o comportamento dos títulos das xanelas
-Comment[he]=הגדרת המראה והתחושה של מסגרות החלונות
-Comment[hu]=Az ablakok címsorának megjelenése
-Comment[ia]=Semblantia de titulos de fenestra
-Comment[id]=Look and Feel pada Judul Window
-Comment[it]=Aspetto dei titoli delle finestre
-Comment[ja]=ウィンドウタイトルの外観を設定
-Comment[ko]=창 제목 표시줄의 모습과 느낌 설정
-Comment[lt]=Langų antraščių išvaizda ir elgsena
-Comment[nb]=Utseende og virkemåte for vindustitlene
-Comment[nds]=Dat Utsehn vun de Finstertiteln instellen
-Comment[nl]=Uiterlijk en gedrag van venstertitels
-Comment[nn]=Utsjånad og åtferd for vindaugstitlar
-Comment[pa]=ਵਿੰਡੋ ਟਾਇਟਲਾਂ ਦੇ ਰੰਗ-ਰੂਪ ਦੀ ਸੰਰਚਨਾ
-Comment[pl]=Tytuły okien - wrażenia wzrokowe i dotykowe 
-Comment[pt]=Aparência e Comportamento dos Títulos das Janelas
-Comment[pt_BR]=Aparência do título das janelas
-Comment[ru]=Настройка внешнего вида заголовков окон
-Comment[sk]=Nastavenie vzhľadu titulkov okien
-Comment[sl]=Videz in občutek naslovnih vrstic okna
-Comment[sr]=Изглед и осећај за наслове прозора
-Comment[sr@ijekavian]=Изглед и осјећај за наслове прозора
-Comment[sr@ijekavianlatin]=Izgled i osjećaj za naslove prozora
-Comment[sr@latin]=Izgled i osećaj za naslove prozora
-Comment[sv]=Namnlisternas utseende och känsla
-Comment[tr]=Pencere Başlıklarının Görünüm ve Davranışlarını Yapılandır
-Comment[uk]=Вигляд і поведінка смужок заголовків вікон
-Comment[x-test]=xxLook and Feel of Window Titlesxx
-Comment[zh_CN]=窗口标题的观感
-Comment[zh_TW]=視窗標題列的外觀與感覺
+Comment=Configure window titlebars and borders
 
 X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
 X-KDE-Keywords[bs]=kwin,prozor,upravitelj,granica,stil,tema,izgled,osjećati,izgled,dugme,držati,ivica,kwm,dekoracija
@@ -160,6 +117,3 @@ X-KDE-Keywords[uk]=kwin,window,manager,border,style,theme,look,feel,layout,butto
 X-KDE-Keywords[x-test]=xxkwinxx,xxwindowxx,xxmanagerxx,xxborderxx,xxstylexx,xxthemexx,xxlookxx,xxfeelxx,xxlayoutxx,xxbuttonxx,xxhandlexx,xxedgexx,xxkwmxx,xxdecorationxx
 X-KDE-Keywords[zh_CN]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,窗口,管理,边框,样式,主题,外怪,布局,按钮,边界,装饰
 X-KDE-Keywords[zh_TW]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
-
-Categories=Qt;KDE;X-KDE-settings-looknfeel;
-

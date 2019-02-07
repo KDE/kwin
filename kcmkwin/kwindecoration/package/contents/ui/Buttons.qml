@@ -1,5 +1,6 @@
 /*
  * Copyright 2014  Martin Gräßlin <mgraesslin@kde.org>
+ * Copyright (c) 2019 Valerio Pilo <vpilo@coldshock.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,16 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import QtQuick 2.3
-import QtQuick.Controls 1.2
-import QtQuick.Controls 2.0 as QQC2
-import QtQuick.Layouts 1.1
+import QtQuick 2.7
+import QtQuick.Layouts 1.3
+import QtQuick.Controls 2.4 as Controls
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons;
 
-Item {
-    objectName: "buttonLayout"
-    Layout.preferredHeight: layout.height
+ColumnLayout {
+    Layout.fillWidth: true
+    Layout.fillHeight: true
+    property int buttonIconSize: units.iconSizes.medium
+    property int titleBarSpacing: units.iconSizes.smallMedium
+
     KDecoration.Bridge {
         id: bridgeItem
         plugin: "org.kde.breeze"
@@ -35,58 +38,62 @@ Item {
         id: settingsItem
         bridge: bridgeItem.bridge
     }
+
     Rectangle {
-        anchors.fill: parent
-        border.width: Math.ceil(units.gridUnit / 16.0)
-        border.color: highlightColor
-        color: baseColor
+        Layout.fillWidth: true
+        color: palette.base
+        radius: units.smallSpacing
+        height: fakeWindow.height
+        Layout.margins: units.smallSpacing
+
         ColumnLayout {
-            id: layout
+            id: fakeWindow
             width: parent.width
-            height: titlebarRect.height + availableGrid.height + dragHint.height + 5*layout.spacing
+
             Rectangle {
-                id: titlebarRect
-                height: buttonPreviewRow.height + units.smallSpacing
-                border.width: Math.ceil(units.gridUnit / 16.0)
-                border.color: highlightColor
-                color: backgroundColor
+                id: titleBar
                 Layout.fillWidth: true
-                Layout.topMargin: -border.width // prevent a double top border
+                height: buttonPreviewRow.height + 2 * titleBarSpacing
+                radius: units.smallSpacing
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: palette.midlight }
+                    GradientStop { position: 1.0; color: palette.window }
+                }
+
                 RowLayout {
                     id: buttonPreviewRow
-                    anchors.top: parent.top;
-                    anchors.left: parent.left;
-                    anchors.right: parent.right;
-                    anchors.margins: units.smallSpacing / 2
-                    height: Math.max(units.iconSizes.small, titlebar.implicitHeight) + units.smallSpacing/2
-                    ButtonGroup {
-                        id: leftButtonsView
-                        height: buttonPreviewRow.height
-                        model: leftButtons
-                        key: "decoButtonLeft"
-                    }
-                    QQC2.Label {
-                        id: titlebar
-                        Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignHCenter
-                        font: titleFont
-                        text: i18n("Titlebar")
+                    anchors {
+                        margins: titleBarSpacing
+                        left: parent.left
+                        right: parent.right
+                        top: parent.top
                     }
 
                     ButtonGroup {
+                        id: leftButtonsView
+                        iconSize: buttonIconSize
+                        model: kcm.leftButtonsModel
+                        key: "decoButtonLeft"
+                    }
+                    Controls.Label {
+                        id: titleBarLabel
+                        Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignHCenter
+                        font.bold: true
+                        text: i18n("Titlebar")
+                    }
+                    ButtonGroup {
                         id: rightButtonsView
-                        height: buttonPreviewRow.height
-                        model: rightButtons
+                        iconSize: buttonIconSize
+                        model: kcm.rightButtonsModel
                         key: "decoButtonRight"
                     }
                 }
                 DropArea {
+                    id: titleBarDropArea
                     anchors {
-                        fill: titlebarRect
-                        leftMargin:   -units.iconSizes.small
-                        topMargin:    -units.iconSizes.small
-                        rightMargin:  +units.iconSizes.small
-                        bottomMargin: +units.iconSizes.small
+                        fill: parent
+                        margins: -titleBarSpacing
                     }
                     keys: [ "decoButtonAdd", "decoButtonRight", "decoButtonLeft" ]
                     onEntered: {
@@ -105,9 +112,13 @@ Item {
                             return;
                         }
                         var point = mapToItem(view, drag.x, drag.y);
-                        var index = view.indexAt(point.x, point.y);
-                        if (index == -1 && (view.x + view.width <= drag.x)) {
-                            index = view.count - 1;
+                        var index = 0
+                        for(var childIndex = 0 ; childIndex < (view.count - 1) ; childIndex++) {
+                            var child = view.contentItem.children[childIndex]
+                            if (child.x > point.x) {
+                                break
+                            }
+                            index = childIndex + 1
                         }
                         if (drop.keys.indexOf("decoButtonAdd") != -1) {
                             view.model.add(index, drag.source.type);
@@ -138,52 +149,64 @@ Item {
                 }
             }
             GridView {
-                id: availableGrid
+                id: availableButtonsGrid
                 Layout.fillWidth: true
-                model: availableButtons
+                Layout.minimumHeight: availableButtonsGrid.cellHeight * 2
+                Layout.margins: units.largeSpacing
+                model: kcm.availableButtonsModel
                 interactive: false
-                height: Math.ceil(cellHeight * 3)
                 delegate: Item {
                     id: availableDelegate
-                    Layout.margins: units.gridUnit
-                    width: availableGrid.cellWidth
-                    height: availableGrid.cellHeight
+                    Layout.margins: units.largeSpacing
+                    width: availableButtonsGrid.cellWidth
+                    height: availableButtonsGrid.cellHeight
                     opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 0.25 : 1.0
-                    KDecoration.Button {
-                        id: availableButton
-                        anchors.centerIn: Drag.active ? undefined : parent
-                        bridge: bridgeItem.bridge
-                        settings: settingsItem
-                        type: model["button"]
-                        width: units.iconSizes.small
-                        height: units.iconSizes.small
-                        Drag.keys: [ "decoButtonAdd" ]
-                        Drag.active: dragArea.drag.active
+                    Rectangle {
+                        id: availableButtonFrame
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: palette.window
+                        radius: units.smallSpacing
+                        width: buttonIconSize + units.largeSpacing
+                        height: buttonIconSize + units.largeSpacing
+
+                        KDecoration.Button {
+                            id: availableButton
+                            anchors.centerIn: Drag.active ? undefined : availableButtonFrame
+                            bridge: bridgeItem.bridge
+                            settings: settingsItem
+                            type: model["button"]
+                            width: buttonIconSize
+                            height: buttonIconSize
+                            Drag.keys: [ "decoButtonAdd" ]
+                            Drag.active: dragArea.drag.active
+                            color: palette.windowText
+                        }
+                        MouseArea {
+                            id: dragArea
+                            anchors.fill: availableButton
+                            drag.target: availableButton
+                            cursorShape: Qt.SizeAllCursor
+                            onReleased: {
+                                if (availableButton.Drag.target) {
+                                    availableButton.Drag.drop();
+                                } else {
+                                    availableButton.Drag.cancel();
+                                }
+                            }
+                        }
                     }
-                    QQC2.Label {
+                    Controls.Label {
                         id: iconLabel
                         text: model["display"]
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignTop
-                        anchors.bottom: parent.bottom
+                        anchors.top: availableButtonFrame.bottom
+                        anchors.topMargin: units.smallSpacing
                         anchors.left: parent.left
                         anchors.right: parent.right
                         elide: Text.ElideRight
                         wrapMode: Text.Wrap
-                        height: 2 * dragHint.implicitHeight + lineHeight
-                    }
-                    MouseArea {
-                        id: dragArea
-                        anchors.fill: availableButton
-                        drag.target: availableButton
-                        cursorShape: Qt.SizeAllCursor
-                        onReleased: {
-                            if (availableButton.Drag.target) {
-                                availableButton.Drag.drop();
-                            } else {
-                                availableButton.Drag.cancel();
-                            }
-                        }
+                        height: 2 * implicitHeight + lineHeight
                     }
                 }
                 DropArea {
@@ -198,17 +221,17 @@ Item {
                     ColumnLayout {
                         anchors.centerIn: parent
                         opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 1.0 : 0.0
-                        QQC2.Label {
+                        Controls.Label {
                             text: i18n("Drop here to remove button")
                             font.weight: Font.Bold
                             Layout.bottomMargin: units.smallSpacing
                         }
-                        KQuickControlsAddons.QIconItem {
+                        PlasmaCore.IconItem {
                             id: icon
                             width: units.iconSizes.smallMedium
                             height: units.iconSizes.smallMedium
-                            icon: "emblem-remove"
                             Layout.alignment: Qt.AlignHCenter
+                            source: "emblem-remove"
                         }
                         Item {
                             Layout.fillHeight: true
@@ -218,11 +241,12 @@ Item {
             }
             Text {
                 id: dragHint
-                opacity: (leftButtonsView.dragging || rightButtonsView.dragging || availableGrid.dragging) ? 0.0 : 0.50
+                color: palette.windowText
+                opacity: (leftButtonsView.dragging || rightButtonsView.dragging || availableButtonsGrid.dragging) ? 0.0 : 1.0
                 Layout.fillWidth: true
-                Layout.bottomMargin: units.smallSpacing
+                Layout.topMargin: titleBarSpacing
+                Layout.bottomMargin: titleBarSpacing
                 horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignTop
                 wrapMode: Text.NoWrap
                 text: i18n("Drag buttons between here and the titlebar")
             }

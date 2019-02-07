@@ -21,6 +21,7 @@
 #define KDECOARTIONS_PREVIEW_BUTTON_ITEM_H
 
 #include <QQuickPaintedItem>
+#include <QColor>
 #include <QPointer>
 #include <KDecoration2/DecorationButton>
 
@@ -39,6 +40,7 @@ class PreviewButtonItem : public QQuickPaintedItem
     Q_PROPERTY(KDecoration2::Preview::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(KDecoration2::Preview::Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
     Q_PROPERTY(int type READ typeAsInt WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(QColor color READ color WRITE setColor)
 
 public:
     explicit PreviewButtonItem(QQuickItem *parent = nullptr);
@@ -56,6 +58,9 @@ public:
     void setType(KDecoration2::DecorationButtonType type);
     void setType(int type);
 
+    const QColor &color() const { return m_color; }
+    void setColor(const QColor color);
+
 Q_SIGNALS:
     void bridgeChanged();
     void typeChanged();
@@ -67,6 +72,7 @@ protected:
 private:
     void createButton();
     void syncGeometry();
+    QColor m_color;
     QPointer<KDecoration2::Preview::PreviewBridge> m_bridge;
     QPointer<KDecoration2::Preview::Settings> m_settings;
     KDecoration2::Decoration *m_decoration = nullptr;

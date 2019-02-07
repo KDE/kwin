@@ -1,432 +1,314 @@
 /*
- * Copyright 2014  Martin Gräßlin <mgraesslin@kde.org>
+ * Copyright (c) 2019 Valerio Pilo <vpilo@coldshock.net>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License version 2 as published by the Free Software Foundation.
  *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
+
 #include "kcm.h"
 #include "decorationmodel.h"
 #include "declarative-plugin/buttonsmodel.h"
 #include <config-kwin.h>
 
-// KDE
+#include <KAboutData>
 #include <KConfigGroup>
+#include <KLocalizedString>
 #include <KPluginFactory>
-#include <KSharedConfig>
-#include <KDecoration2/DecorationButton>
-#include <KNewStuff3/KNS3/DownloadDialog>
-#include <kdeclarative/kdeclarative.h>
-// Qt
+#include <KNSCore/Engine>
+
 #include <QDBusConnection>
 #include <QDBusMessage>
-#include <QFontDatabase>
-#include <QMenu>
-#include <QQmlContext>
-#include <QQmlEngine>
+#include <QDebug>
 #include <QQuickItem>
-#include <QQuickView>
+#include <QQuickWindow>
 #include <QSortFilterProxyModel>
-#include <QStandardPaths>
-#include <QVBoxLayout>
 
-K_PLUGIN_FACTORY(KDecorationFactory,
-                 registerPlugin<KDecoration2::Configuration::ConfigurationModule>();
-                )
+#include <KNewStuff3/KNS3/DownloadDialog>
+
+
+K_PLUGIN_FACTORY_WITH_JSON(KCMKWinDecorationFactory, "kwindecoration.json", registerPlugin<KCMKWinDecoration>();)
 
 Q_DECLARE_METATYPE(KDecoration2::BorderSize)
 
-namespace KDecoration2
-{
 
-namespace Configuration
+namespace
 {
-static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
+const QString s_configFile { QStringLiteral("kwinrc") };
+const QString s_configGroup { QStringLiteral("org.kde.kdecoration2") };
+const QString s_configPlugin { QStringLiteral("library") };
+const QString s_configTheme { QStringLiteral("theme") };
+const QString s_configBorderSize { QStringLiteral("BorderSize") };
+const QString s_configCloseOnDoubleClickOnMenu { QStringLiteral("CloseOnDoubleClickOnMenu") };
+const QString s_configDecoButtonsOnLeft { QStringLiteral("ButtonsOnLeft") };
+const QString s_configDecoButtonsOnRight { QStringLiteral("ButtonsOnRight") };
+
+const KDecoration2::BorderSize s_defaultBorderSize = KDecoration2::BorderSize::Normal;
+const bool s_defaultCloseOnDoubleClickOnMenu = false;
+
+const DecorationButtonsList s_defaultDecoButtonsOnLeft {
+    KDecoration2::DecorationButtonType::Menu,
+    KDecoration2::DecorationButtonType::OnAllDesktops
+};
+const DecorationButtonsList s_defaultDecoButtonsOnRight {
+    KDecoration2::DecorationButtonType::ContextHelp,
+    KDecoration2::DecorationButtonType::Minimize,
+    KDecoration2::DecorationButtonType::Maximize,
+    KDecoration2::DecorationButtonType::Close
+};
+
 #if HAVE_BREEZE_DECO
-static const QString s_defaultPlugin = QStringLiteral(BREEZE_KDECORATION_PLUGIN_ID);
-static const QString s_defaultTheme;
+const QString s_defaultPlugin { QStringLiteral(BREEZE_KDECORATION_PLUGIN_ID) };
+const QString s_defaultTheme  { QStringLiteral("Breeze") };
 #else
-static const QString s_defaultPlugin = QStringLiteral("org.kde.kwin.aurorae");
-static const QString s_defaultTheme = QStringLiteral("kwin4_decoration_qml_plastik");
+const QString s_defaultPlugin { QStringLiteral("org.kde.kwin.aurorae") };
+const QString s_defaultTheme  { QStringLiteral("kwin4_decoration_qml_plastik") };
 #endif
-static const QString s_borderSizeNormal = QStringLiteral("Normal");
-static const QString s_ghnsIcon = QStringLiteral("get-hot-new-stuff");
-
-ConfigurationForm::ConfigurationForm(QWidget *parent)
-    : QWidget(parent)
-{
-    setupUi(this);
 }
 
-static bool s_loading = false;
-
-ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &args)
-    : KCModule(parent, args)
-    , m_model(new DecorationsModel(this))
-    , m_proxyModel(new QSortFilterProxyModel(this))
-    , m_ui(new ConfigurationForm(this))
-    , m_leftButtons(new Preview::ButtonsModel(QVector<DecorationButtonType>(), this))
-    , m_rightButtons(new Preview::ButtonsModel(QVector<DecorationButtonType>(), this))
-    , m_availableButtons(new Preview::ButtonsModel(this))
+KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &arguments)
+    : KQuickAddons::ConfigModule(parent, arguments)
+    , m_themesModel(new KDecoration2::Configuration::DecorationsModel(this))
+    , m_proxyThemesModel(new QSortFilterProxyModel(this))
+    , m_leftButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
+    , m_rightButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
+    , m_availableButtonsModel(new KDecoration2::Preview::ButtonsModel(this))
+    , m_savedSettings{ s_defaultBorderSize, -2 /* for setTheme() */, false, s_defaultDecoButtonsOnLeft, s_defaultDecoButtonsOnRight }
+    , m_currentSettings(m_savedSettings)
 {
-    m_proxyModel->setSourceModel(m_model);
-    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-    m_proxyModel->sort(0);
-    connect(m_ui->filter, &QLineEdit::textChanged, m_proxyModel, &QSortFilterProxyModel::setFilterFixedString);
+    auto about = new KAboutData(QStringLiteral("kcm_kwindecoration"),
+                                i18n("Configure window titlebars and borders"),
+                                QStringLiteral("1.0"),
+                                QString(),
+                                KAboutLicense::GPL);
+    about->addAuthor(i18n("Valerio Pilo"),
+                     i18n("Author"),
+                     QStringLiteral("vpilo@coldshock.net"));
+    setAboutData(about);
 
-    m_quickView = new QQuickView(0);
-    KDeclarative::KDeclarative kdeclarative;
-    kdeclarative.setDeclarativeEngine(m_quickView->engine());
-    kdeclarative.setTranslationDomain(QStringLiteral(TRANSLATION_DOMAIN));
-    kdeclarative.setupContext();
-    kdeclarative.setupEngine(m_quickView->engine());
+    qmlRegisterType<QAbstractListModel>();
+    qmlRegisterType<QSortFilterProxyModel>();
 
-    qmlRegisterType<QAbstractItemModel>();
-    QWidget *widget = QWidget::createWindowContainer(m_quickView, this);
-    QVBoxLayout* layout = new QVBoxLayout(m_ui->view);
-    layout->setContentsMargins(0,0,0,0);
-    layout->addWidget(widget);
+    m_proxyThemesModel->setSourceModel(m_themesModel);
+    m_proxyThemesModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyThemesModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyThemesModel->sort(0);
 
-    m_quickView->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_proxyModel);
-    updateColors();
-    m_quickView->rootContext()->setContextProperty("_borderSizesIndex", 3); // 3 is normal
-    m_quickView->rootContext()->setContextProperty("leftButtons", m_leftButtons);
-    m_quickView->rootContext()->setContextProperty("rightButtons", m_rightButtons);
-    m_quickView->rootContext()->setContextProperty("availableButtons", m_availableButtons);
-    m_quickView->rootContext()->setContextProperty("initialThemeIndex", -1);
+    connect(m_leftButtonsModel, &QAbstractItemModel::rowsInserted, this, &KCMKWinDecoration::updateNeedsSave);
+    connect(m_leftButtonsModel, &QAbstractItemModel::rowsMoved, this, &KCMKWinDecoration::updateNeedsSave);
+    connect(m_leftButtonsModel, &QAbstractItemModel::rowsRemoved, this, &KCMKWinDecoration::updateNeedsSave);
+    connect(m_leftButtonsModel, &QAbstractItemModel::modelReset, this, &KCMKWinDecoration::updateNeedsSave);
+    connect(m_rightButtonsModel, &QAbstractItemModel::rowsInserted, this, &KCMKWinDecoration::updateNeedsSave);
+    connect(m_rightButtonsModel, &QAbstractItemModel::rowsMoved, this, &KCMKWinDecoration::updateNeedsSave);
+    connect(m_rightButtonsModel, &QAbstractItemModel::rowsRemoved, this, &KCMKWinDecoration::updateNeedsSave);
+    connect(m_rightButtonsModel, &QAbstractItemModel::modelReset, this, &KCMKWinDecoration::updateNeedsSave);
 
-    m_quickView->rootContext()->setContextProperty("titleFont", QFontDatabase::systemFont(QFontDatabase::TitleFont));
-    m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
-    m_quickView->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/kcm_kwindecoration/main.qml"))));
-    if (m_quickView->status() == QQuickView::Ready) {
-        auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView");
-        if (listView) {
-            connect(listView, SIGNAL(userChangedSelection()), this, SLOT(changed()));
+    // Update the themes when the color scheme or a theme's settings change
+    QDBusConnection::sessionBus()
+        .connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
+            this,
+            SLOT(reloadKWinSettings()));
+
+    QMetaObject::invokeMethod(m_themesModel, "init", Qt::QueuedConnection);
+}
+
+void KCMKWinDecoration::reloadKWinSettings()
+{
+    QMetaObject::invokeMethod(m_themesModel, "init", Qt::QueuedConnection);
+}
+
+void KCMKWinDecoration::getNewStuff(QQuickItem *context)
+{
+    if (!m_newStuffDialog) {
+        m_newStuffDialog = new KNS3::DownloadDialog(QStringLiteral("window-decorations.knsrc"));
+        m_newStuffDialog->setWindowTitle(i18n("Download New Window Decorations"));
+        m_newStuffDialog->setWindowModality(Qt::WindowModal);
+        connect(m_newStuffDialog, &KNS3::DownloadDialog::accepted, this, &KCMKWinDecoration::load);
+    }
+
+    if (context && context->window()) {
+        m_newStuffDialog->winId(); // so it creates the windowHandle()
+        m_newStuffDialog->windowHandle()->setTransientParent(context->window());
+    }
+
+    m_newStuffDialog->show();
+}
+
+void KCMKWinDecoration::load()
+{
+    const KConfigGroup config = KSharedConfig::openConfig(s_configFile)->group(s_configGroup);
+
+    const QString plugin = config.readEntry(s_configPlugin, s_defaultPlugin);
+    const QString theme = config.readEntry(s_configTheme, s_defaultTheme);
+    int themeIndex = m_proxyThemesModel->mapFromSource(m_themesModel->findDecoration(plugin, theme)).row();
+    if (themeIndex < 0) {
+        qWarning() << "Plugin" << plugin << "and theme" << theme << "not found";
+    } else {
+        qDebug() << "Current theme: plugin" << plugin << "and theme" << theme;
+    }
+    setTheme(themeIndex);
+
+    setCloseOnDoubleClickOnMenu(config.readEntry(s_configCloseOnDoubleClickOnMenu, s_defaultCloseOnDoubleClickOnMenu));
+
+    const QString defaultSizeName = Utils::borderSizeToString(s_defaultBorderSize);
+    setBorderSize(Utils::stringToBorderSize(config.readEntry(s_configBorderSize, defaultSizeName)));
+
+    m_leftButtonsModel->replace(Utils::readDecorationButtons(config, s_configDecoButtonsOnLeft, s_defaultDecoButtonsOnLeft));
+    m_rightButtonsModel->replace(Utils::readDecorationButtons(config, s_configDecoButtonsOnRight, s_defaultDecoButtonsOnRight));
+    m_currentSettings.buttonsOnLeft = m_leftButtonsModel->buttons();
+    m_currentSettings.buttonsOnRight = m_rightButtonsModel->buttons();
+
+    m_savedSettings = m_currentSettings;
+
+    updateNeedsSave();
+}
+
+void KCMKWinDecoration::save()
+{
+    KConfigGroup config = KSharedConfig::openConfig(s_configFile)->group(s_configGroup);
+
+    if (m_currentSettings.themeIndex >= 0) {
+        const QModelIndex index = m_proxyThemesModel->index(m_currentSettings.themeIndex, 0);
+        if (index.isValid()) {
+            const QString plugin = index.data(KDecoration2::Configuration::DecorationsModel::PluginNameRole).toString();
+            const QString theme = index.data(KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString();
+            config.writeEntry(s_configPlugin, plugin);
+            config.writeEntry(s_configTheme, theme);
+            qDebug() << "Saved theme: plugin" << plugin << "and theme" << theme;
+        } else {
+            qWarning() << "Cannot match theme index" << m_currentSettings.themeIndex << "in model";
         }
     }
 
-    m_ui->tabWidget->tabBar()->disconnect();
-    auto setCurrentTab = [this](int index) {
-        if (index == 0)
-            m_ui->doubleClickMessage->hide();
-        m_ui->filter->setVisible(index == 0);
-        m_ui->knsButton->setVisible(index == 0);
-        if (auto themeList = m_quickView->rootObject()->findChild<QQuickItem*>("themeList")) {
-            themeList->setVisible(index == 0);
-        }
-        m_ui->borderSizesLabel->setVisible(index == 0);
-        m_ui->borderSizesCombo->setVisible(index == 0);
-
-        m_ui->closeWindowsDoubleClick->setVisible(index == 1);
-        if (auto buttonLayout = m_quickView->rootObject()->findChild<QQuickItem*>("buttonLayout")) {
-            buttonLayout->setVisible(index == 1);
-        }
-    };
-    connect(m_ui->tabWidget->tabBar(), &QTabBar::currentChanged, this, setCurrentTab);
-    setCurrentTab(0);
-
-    m_ui->doubleClickMessage->setVisible(false);
-    m_ui->doubleClickMessage->setText(i18n("Close by double clicking:\n To open the menu, keep the button pressed until it appears."));
-    m_ui->doubleClickMessage->setCloseButtonVisible(true);
-    m_ui->borderSizesCombo->setItemData(0, QVariant::fromValue(BorderSize::None));
-    m_ui->borderSizesCombo->setItemData(1, QVariant::fromValue(BorderSize::NoSides));
-    m_ui->borderSizesCombo->setItemData(2, QVariant::fromValue(BorderSize::Tiny));
-    m_ui->borderSizesCombo->setItemData(3, QVariant::fromValue(BorderSize::Normal));
-    m_ui->borderSizesCombo->setItemData(4, QVariant::fromValue(BorderSize::Large));
-    m_ui->borderSizesCombo->setItemData(5, QVariant::fromValue(BorderSize::VeryLarge));
-    m_ui->borderSizesCombo->setItemData(6, QVariant::fromValue(BorderSize::Huge));
-    m_ui->borderSizesCombo->setItemData(7, QVariant::fromValue(BorderSize::VeryHuge));
-    m_ui->borderSizesCombo->setItemData(8, QVariant::fromValue(BorderSize::Oversized));
-    m_ui->knsButton->setIcon(QIcon::fromTheme(s_ghnsIcon));
-
-    auto changedSlot = static_cast<void (ConfigurationModule::*)()>(&ConfigurationModule::changed);
-    connect(m_ui->closeWindowsDoubleClick, &QCheckBox::stateChanged, this, changedSlot);
-    connect(m_ui->closeWindowsDoubleClick, &QCheckBox::toggled, this,
-        [this] (bool toggled) {
-            if (s_loading) {
-                return;
-            }
-            if (toggled)
-                m_ui->doubleClickMessage->animatedShow();
-            else
-                m_ui->doubleClickMessage->animatedHide();
-        }
-    );
-    connect(m_ui->borderSizesCombo, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this, [this] (int index) {
-            auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView");
-            if (listView) {
-                listView->setProperty("borderSizesIndex", index);
-            }
-            changed();
-        }
-    );
-    connect(m_model, &QAbstractItemModel::modelReset, this,
-        [this] {
-            const auto &kns = m_model->knsProviders();
-            m_ui->knsButton->setEnabled(!kns.isEmpty());
-            if (kns.isEmpty()) {
-                return;
-            }
-            if (kns.count() > 1) {
-                QMenu *menu = new QMenu(m_ui->knsButton);
-                for (auto it = kns.begin(); it != kns.end(); ++it) {
-                    QAction *action = menu->addAction(QIcon::fromTheme(s_ghnsIcon), it.value());
-                    action->setData(it.key());
-                    connect(action, &QAction::triggered, this, [this, action] { showKNS(action->data().toString());});
-                }
-                m_ui->knsButton->setMenu(menu);
-            }
-        }
-    );
-    connect(m_ui->knsButton, &QPushButton::clicked, this,
-        [this] {
-            const auto &kns = m_model->knsProviders();
-            if (kns.isEmpty()) {
-                return;
-            }
-            showKNS(kns.firstKey());
-        }
-    );
-    connect(m_leftButtons, &QAbstractItemModel::rowsInserted, this, changedSlot);
-    connect(m_leftButtons, &QAbstractItemModel::rowsMoved, this, changedSlot);
-    connect(m_leftButtons, &QAbstractItemModel::rowsRemoved, this, changedSlot);
-    connect(m_rightButtons, &QAbstractItemModel::rowsInserted, this, changedSlot);
-    connect(m_rightButtons, &QAbstractItemModel::rowsMoved, this, changedSlot);
-    connect(m_rightButtons, &QAbstractItemModel::rowsRemoved, this, changedSlot);
-
-    QVBoxLayout *l = new QVBoxLayout(this);
-    l->addWidget(m_ui);
-    QMetaObject::invokeMethod(m_model, "init", Qt::QueuedConnection);
-
-    m_ui->installEventFilter(this);
-}
-
-ConfigurationModule::~ConfigurationModule() = default;
-
-void ConfigurationModule::showEvent(QShowEvent *ev)
-{
-    KCModule::showEvent(ev);
-}
-
-static const QMap<QString, KDecoration2::BorderSize> s_sizes = QMap<QString, KDecoration2::BorderSize>({
-    {QStringLiteral("None"), BorderSize::None},
-    {QStringLiteral("NoSides"), BorderSize::NoSides},
-    {QStringLiteral("Tiny"), BorderSize::Tiny},
-    {s_borderSizeNormal, BorderSize::Normal},
-    {QStringLiteral("Large"), BorderSize::Large},
-    {QStringLiteral("VeryLarge"), BorderSize::VeryLarge},
-    {QStringLiteral("Huge"), BorderSize::Huge},
-    {QStringLiteral("VeryHuge"), BorderSize::VeryHuge},
-    {QStringLiteral("Oversized"), BorderSize::Oversized}
-});
-
-static BorderSize stringToSize(const QString &name)
-{
-    auto it = s_sizes.constFind(name);
-    if (it == s_sizes.constEnd()) {
-        // non sense values are interpreted just like normal
-        return BorderSize::Normal;
-    }
-    return it.value();
-}
-
-static QString sizeToString(BorderSize size)
-{
-    return s_sizes.key(size, s_borderSizeNormal);
-}
-
-static QHash<KDecoration2::DecorationButtonType, QChar> s_buttonNames;
-static void initButtons()
-{
-    if (!s_buttonNames.isEmpty()) {
-        return;
-    }
-    s_buttonNames[KDecoration2::DecorationButtonType::Menu]            = QChar('M');
-    s_buttonNames[KDecoration2::DecorationButtonType::ApplicationMenu] = QChar('N');
-    s_buttonNames[KDecoration2::DecorationButtonType::OnAllDesktops]   = QChar('S');
-    s_buttonNames[KDecoration2::DecorationButtonType::ContextHelp]     = QChar('H');
-    s_buttonNames[KDecoration2::DecorationButtonType::Minimize]        = QChar('I');
-    s_buttonNames[KDecoration2::DecorationButtonType::Maximize]        = QChar('A');
-    s_buttonNames[KDecoration2::DecorationButtonType::Close]           = QChar('X');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepAbove]       = QChar('F');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepBelow]       = QChar('B');
-    s_buttonNames[KDecoration2::DecorationButtonType::Shade]           = QChar('L');
-}
-
-static QString buttonsToString(const QVector<KDecoration2::DecorationButtonType> &buttons)
-{
-    auto buttonToString = [](KDecoration2::DecorationButtonType button) -> QChar {
-        const auto it = s_buttonNames.constFind(button);
-        if (it != s_buttonNames.constEnd()) {
-            return it.value();
-        }
-        return QChar();
-    };
-    QString ret;
-    for (auto button : buttons) {
-        ret.append(buttonToString(button));
-    }
-    return ret;
-}
-
-static
-QVector< KDecoration2::DecorationButtonType > readDecorationButtons(const KConfigGroup &config,
-                                                                    const char *key,
-                                                                    const QVector< KDecoration2::DecorationButtonType > &defaultValue)
-{
-    initButtons();
-    auto buttonsFromString = [](const QString &buttons) -> QVector<KDecoration2::DecorationButtonType> {
-        QVector<KDecoration2::DecorationButtonType> ret;
-        for (auto it = buttons.begin(); it != buttons.end(); ++it) {
-            for (auto it2 = s_buttonNames.constBegin(); it2 != s_buttonNames.constEnd(); ++it2) {
-                if (it2.value() == (*it)) {
-                    ret << it2.key();
-                }
-            }
-        }
-        return ret;
-    };
-    return buttonsFromString(config.readEntry(key, buttonsToString(defaultValue)));
-}
-
-void ConfigurationModule::load()
-{
-    s_loading = true;
-    const KConfigGroup config = KSharedConfig::openConfig("kwinrc")->group(s_pluginName);
-    const QString plugin = config.readEntry("library", s_defaultPlugin);
-    const QString theme = config.readEntry("theme", s_defaultTheme);
-    m_ui->closeWindowsDoubleClick->setChecked(config.readEntry("CloseOnDoubleClickOnMenu", false));
-    const QVariant border = QVariant::fromValue(stringToSize(config.readEntry("BorderSize", s_borderSizeNormal)));
-    m_ui->borderSizesCombo->setCurrentIndex(m_ui->borderSizesCombo->findData(border));
-
-    int themeIndex = m_proxyModel->mapFromSource(m_model->findDecoration(plugin, theme)).row();
-    m_quickView->rootContext()->setContextProperty("initialThemeIndex", themeIndex);
-
-    // buttons
-    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType >{
-        KDecoration2::DecorationButtonType::Menu,
-        KDecoration2::DecorationButtonType::OnAllDesktops
-    });
-    while (m_leftButtons->rowCount() > 0) {
-        m_leftButtons->remove(0);
-    }
-    for (auto it = left.begin(); it != left.end(); ++it) {
-        m_leftButtons->add(*it);
-    }
-    const auto &right = readDecorationButtons(config, "ButtonsOnRight", QVector<KDecoration2::DecorationButtonType >{
-        KDecoration2::DecorationButtonType::ContextHelp,
-        KDecoration2::DecorationButtonType::Minimize,
-        KDecoration2::DecorationButtonType::Maximize,
-        KDecoration2::DecorationButtonType::Close
-    });
-    while (m_rightButtons->rowCount() > 0) {
-        m_rightButtons->remove(0);
-    }
-    for (auto it = right.begin(); it != right.end(); ++it) {
-        m_rightButtons->add(*it);
-    }
-
-    KCModule::load();
-    s_loading = false;
-}
-
-void ConfigurationModule::save()
-{
-    KConfigGroup config = KSharedConfig::openConfig("kwinrc")->group(s_pluginName);
-    config.writeEntry("CloseOnDoubleClickOnMenu", m_ui->closeWindowsDoubleClick->isChecked());
-    config.writeEntry("BorderSize", sizeToString(m_ui->borderSizesCombo->currentData().value<BorderSize>()));
-    if (auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView")) {
-        const int currentIndex = listView->property("currentIndex").toInt();
-        if (currentIndex != -1) {
-            const QModelIndex index = m_proxyModel->index(currentIndex, 0);
-            if (index.isValid()) {
-                config.writeEntry("library", index.data(Qt::UserRole + 4).toString());
-                const QString theme = index.data(Qt::UserRole +5).toString();
-                config.writeEntry("theme", theme);
-            }
-        }
-    }
-    config.writeEntry("ButtonsOnLeft", buttonsToString(m_leftButtons->buttons()));
-    config.writeEntry("ButtonsOnRight", buttonsToString(m_rightButtons->buttons()));
+    config.writeEntry(s_configCloseOnDoubleClickOnMenu, m_currentSettings.closeOnDoubleClickOnMenu);
+    config.writeEntry(s_configBorderSize, Utils::borderSizeToString(m_currentSettings.borderSize));
+    config.writeEntry(s_configDecoButtonsOnLeft, Utils::buttonsToString(m_currentSettings.buttonsOnLeft));
+    config.writeEntry(s_configDecoButtonsOnRight, Utils::buttonsToString(m_currentSettings.buttonsOnRight));
     config.sync();
-    KCModule::save();
-    // Send signal to all kwin instances
+
+    m_savedSettings = m_currentSettings;
+
+    // Send a signal to all kwin instances
     QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
                                                       QStringLiteral("org.kde.KWin"),
                                                       QStringLiteral("reloadConfig"));
     QDBusConnection::sessionBus().send(message);
+
+    updateNeedsSave();
 }
 
-void ConfigurationModule::defaults()
+void KCMKWinDecoration::defaults()
 {
-    if (auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView")) {
-        const QModelIndex index = m_proxyModel->mapFromSource(m_model->findDecoration(s_defaultPlugin));
-        listView->setProperty("currentIndex", index.isValid() ? index.row() : -1);
+    int themeIndex = m_proxyThemesModel->mapFromSource(m_themesModel->findDecoration(s_defaultPlugin, s_defaultTheme)).row();
+    if (themeIndex < 0) {
+        qWarning() << "Default plugin" << s_defaultPlugin << "and theme" << s_defaultTheme << "not found";
     }
-    m_ui->borderSizesCombo->setCurrentIndex(m_ui->borderSizesCombo->findData(QVariant::fromValue(stringToSize(s_borderSizeNormal))));
-    m_ui->closeWindowsDoubleClick->setChecked(false);
-    KCModule::defaults();
+    setTheme(themeIndex);
+    setBorderSize(s_defaultBorderSize);
+    setCloseOnDoubleClickOnMenu(s_defaultCloseOnDoubleClickOnMenu);
+
+    m_leftButtonsModel->replace(s_defaultDecoButtonsOnLeft);
+    m_rightButtonsModel->replace(s_defaultDecoButtonsOnRight);
+
+    updateNeedsSave();
 }
 
-void ConfigurationModule::showKNS(const QString &config)
+void KCMKWinDecoration::updateNeedsSave()
 {
-    QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog(config, this);
-    if (downloadDialog->exec() == QDialog::Accepted && !downloadDialog->changedEntries().isEmpty()) {
-        auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView");
-        QString selectedPluginName;
-        QString selectedThemeName;
-        if (listView) {
-            const QModelIndex index = m_proxyModel->index(listView->property("currentIndex").toInt(), 0);
-            if (index.isValid()) {
-                selectedPluginName = index.data(Qt::UserRole + 4).toString();
-                selectedThemeName = index.data(Qt::UserRole + 5).toString();
-            }
-        }
-        m_model->init();
-        if (!selectedPluginName.isEmpty()) {
-            const QModelIndex index = m_model->findDecoration(selectedPluginName, selectedThemeName);
-            const QModelIndex proxyIndex = m_proxyModel->mapFromSource(index);
-            if (listView) {
-                listView->setProperty("currentIndex", proxyIndex.isValid() ? proxyIndex.row() : -1);
-            }
-        }
-    }
-    delete downloadDialog;
+    m_currentSettings.buttonsOnLeft = m_leftButtonsModel->buttons();
+    m_currentSettings.buttonsOnRight = m_rightButtonsModel->buttons();
+
+    setNeedsSave(m_savedSettings.closeOnDoubleClickOnMenu != m_currentSettings.closeOnDoubleClickOnMenu
+                || m_savedSettings.borderSize != m_currentSettings.borderSize
+                || m_savedSettings.themeIndex != m_currentSettings.themeIndex
+                || m_savedSettings.buttonsOnLeft != m_currentSettings.buttonsOnLeft
+                || m_savedSettings.buttonsOnRight != m_currentSettings.buttonsOnRight);
 }
 
-bool ConfigurationModule::eventFilter(QObject *watched, QEvent *e)
+QSortFilterProxyModel *KCMKWinDecoration::themesModel() const
 {
-    if (watched != m_ui) {
-        return false;
-    }
-    if (e->type() == QEvent::PaletteChange) {
-        updateColors();
-    }
-    return false;
+    return m_proxyThemesModel;
 }
 
-void ConfigurationModule::updateColors()
+QAbstractListModel *KCMKWinDecoration::leftButtonsModel()
 {
-    m_quickView->rootContext()->setContextProperty("backgroundColor", m_ui->palette().color(QPalette::Active, QPalette::Window));
-    m_quickView->rootContext()->setContextProperty("highlightColor", m_ui->palette().color(QPalette::Active, QPalette::Shadow));
-    m_quickView->rootContext()->setContextProperty("baseColor", m_ui->palette().color(QPalette::Active, QPalette::Base));
+    return m_leftButtonsModel;
 }
 
+QAbstractListModel *KCMKWinDecoration::rightButtonsModel()
+{
+    return m_rightButtonsModel;
 }
+
+QAbstractListModel *KCMKWinDecoration::availableButtonsModel() const
+{
+    return m_availableButtonsModel;
+}
+
+QStringList KCMKWinDecoration::borderSizesModel() const
+{
+    return Utils::getBorderSizeNames().values();
+}
+
+int KCMKWinDecoration::borderSize() const
+{
+    return Utils::getBorderSizeNames().keys().indexOf(m_currentSettings.borderSize);
+}
+
+int KCMKWinDecoration::theme() const
+{
+    return m_currentSettings.themeIndex;
+}
+
+bool KCMKWinDecoration::closeOnDoubleClickOnMenu() const
+{
+    return m_currentSettings.closeOnDoubleClickOnMenu;
+}
+
+void KCMKWinDecoration::setBorderSize(int index)
+{
+    setBorderSize(Utils::getBorderSizeNames().keys().at(index));
+}
+
+void KCMKWinDecoration::setBorderSize(KDecoration2::BorderSize size)
+{
+    if (m_currentSettings.borderSize == size) {
+        return;
+    }
+    m_currentSettings.borderSize = size;
+    emit borderSizeChanged();
+    updateNeedsSave();
+}
+
+void KCMKWinDecoration::setTheme(int index)
+{
+    // The initial themeIndex is set to -2 to always initially apply a theme, any theme
+    if (m_currentSettings.themeIndex == index) {
+        return;
+    }
+    m_currentSettings.themeIndex = index;
+    emit themeChanged();
+    updateNeedsSave();
+}
+
+void KCMKWinDecoration::setCloseOnDoubleClickOnMenu(bool enable)
+{
+    if (m_currentSettings.closeOnDoubleClickOnMenu == enable) {
+        return;
+    }
+    m_currentSettings.closeOnDoubleClickOnMenu = enable;
+    emit closeOnDoubleClickOnMenuChanged();
+    updateNeedsSave();
 }
 
 #include "kcm.moc"

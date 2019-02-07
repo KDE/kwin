@@ -97,7 +97,6 @@ void PreviewBridge::setPlugin(const QString &plugin)
         return;
     }
     m_plugin = plugin;
-    qDebug() << "Plugin changed to: " << m_plugin;
     emit pluginChanged();
 }
 
@@ -123,22 +122,20 @@ QString PreviewBridge::plugin() const
 void PreviewBridge::createFactory()
 {
     m_factory.clear();
+
     if (m_plugin.isNull()) {
         setValid(false);
-        qDebug() <<"Plugin not set";
+        qWarning() << "Plugin not set";
         return;
     }
-    const auto offers = KPluginTrader::self()->query(s_pluginName,
-                                                     s_pluginName,
-                                                     QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(m_plugin));
-    if (offers.isEmpty()) {
-        setValid(false);
-        qDebug() << "no offers";
-        return;
+
+    const auto offers = KPluginTrader::self()->query(s_pluginName, s_pluginName);
+    auto item = std::find_if(offers.constBegin(), offers.constEnd(), [this](const auto &plugin) { return plugin.pluginName() == m_plugin; });
+    if (item != offers.constEnd()) {
+        KPluginLoader loader(item->libraryPath());
+        m_factory = loader.factory();
     }
-    KPluginLoader loader(offers.first().libraryPath());
-    m_factory = loader.factory();
-    qDebug() << "Factory: " << !m_factory.isNull();
+
     setValid(!m_factory.isNull());
 }
 
@@ -212,22 +209,17 @@ void PreviewBridge::configure()
 
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok |
                                                      QDialogButtonBox::Cancel |
-                                                     QDialogButtonBox::Apply |
                                                      QDialogButtonBox::RestoreDefaults |
                                                      QDialogButtonBox::Reset,
                                                      &dialog);
 
-    QPushButton *apply = buttons->button(QDialogButtonBox::Apply);
     QPushButton *reset = buttons->button(QDialogButtonBox::Reset);
-    apply->setEnabled(false);
     reset->setEnabled(false);
     // Here we connect our buttons with the dialog
     connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
     connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
-    connect(apply, &QPushButton::clicked, this, save);
     connect(reset, &QPushButton::clicked, kcm, &KCModule::load);
     auto changedSignal = static_cast<void(KCModule::*)(bool)>(&KCModule::changed);
-    connect(kcm, changedSignal, apply, &QPushButton::setEnabled);
     connect(kcm, changedSignal, reset, &QPushButton::setEnabled);
     connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, kcm, &KCModule::defaults);
 

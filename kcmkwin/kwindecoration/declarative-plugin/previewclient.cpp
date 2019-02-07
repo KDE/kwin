@@ -69,7 +69,6 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     connect(this, &PreviewClient::maximizedVerticallyChanged,   c, &DecoratedClient::maximizedVerticallyChanged);
     connect(this, &PreviewClient::maximizedHorizontallyChanged, c, &DecoratedClient::maximizedHorizontallyChanged);
     connect(this, &PreviewClient::minimizableChanged,           c, &DecoratedClient::minimizeableChanged);
-//         connect(this, &PreviewClient::modalChanged, c, &DecoratedClient::modalChanged);
     connect(this, &PreviewClient::movableChanged,               c, &DecoratedClient::moveableChanged);
     connect(this, &PreviewClient::onAllDesktopsChanged,         c, &DecoratedClient::onAllDesktopsChanged);
     connect(this, &PreviewClient::resizableChanged,             c, &DecoratedClient::resizeableChanged);
@@ -81,7 +80,6 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     connect(this, &PreviewClient::heightChanged,                c, &DecoratedClient::heightChanged);
     connect(this, &PreviewClient::iconChanged,                  c, &DecoratedClient::iconChanged);
     connect(this, &PreviewClient::paletteChanged,               c, &DecoratedClient::paletteChanged);
-//         connect(this, &PreviewClient::, c, &DecoratedClient::);
     connect(this, &PreviewClient::maximizedVerticallyChanged, this,
         [this]() {
             emit maximizedChanged(isMaximized());
@@ -353,12 +351,11 @@ void PreviewClient::setBordersTopEdge(bool enabled)
 
 void PreviewClient::requestShowToolTip(const QString &text)
 {
-    qDebug() << "tooltip show requested with text:" << text;
+    Q_UNUSED(text);
 }
 
 void PreviewClient::requestHideToolTip()
 {
-    qDebug() << "tooltip hide requested";
 }
 
 void PreviewClient::requestClose()
@@ -368,7 +365,6 @@ void PreviewClient::requestClose()
 
 void PreviewClient::requestContextHelp()
 {
-    qDebug() << "context help requested";
 }
 
 void PreviewClient::requestToggleMaximization(Qt::MouseButtons buttons)
@@ -431,7 +427,6 @@ void PreviewClient::name(type variable) \
     if (m_##variable == variable) { \
         return; \
     } \
-    qDebug() << "Setting " << #variable << ":" << variable;\
     m_##variable = variable; \
     emit variable##Changed(m_##variable); \
 }

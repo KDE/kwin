@@ -1,80 +1,116 @@
 /*
- * Copyright 2014  Martin Gräßlin <mgraesslin@kde.org>
+ * Copyright (c) 2019 Valerio Pilo <vpilo@coldshock.net>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License version 2 as published by the Free Software Foundation.
  *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
  */
-#ifndef KDECORATIONS_KCM_H
-#define KDECORATIONS_KCM_H
 
-#include <kcmodule.h>
-#include <ui_kcm.h>
-#include <QAbstractItemModel>
+#pragma once
 
+#include "utils.h"
+
+#include <KQuickAddons/ConfigModule>
+
+
+class QAbstractItemModel;
 class QSortFilterProxyModel;
-class QQuickView;
+class QQuickItem;
+
+namespace KNS3
+{
+class DownloadDialog;
+}
 
 namespace KDecoration2
 {
+enum class BorderSize;
+
 namespace Preview
 {
-class PreviewBridge;
 class ButtonsModel;
 }
 namespace Configuration
 {
 class DecorationsModel;
+}
+}
 
-class ConfigurationForm : public QWidget, public Ui::KCMForm
-{
-public:
-    explicit ConfigurationForm(QWidget* parent);
-};
-
-class ConfigurationModule : public KCModule
+class KCMKWinDecoration : public KQuickAddons::ConfigModule
 {
     Q_OBJECT
-public:
-    explicit ConfigurationModule(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
-    virtual ~ConfigurationModule();
+    Q_PROPERTY(QSortFilterProxyModel *themesModel READ themesModel CONSTANT)
+    Q_PROPERTY(QStringList borderSizesModel READ borderSizesModel CONSTANT)
+    Q_PROPERTY(int borderSize READ borderSize WRITE setBorderSize NOTIFY borderSizeChanged)
+    Q_PROPERTY(int theme READ theme WRITE setTheme NOTIFY themeChanged)
+    Q_PROPERTY(QAbstractListModel *leftButtonsModel READ leftButtonsModel NOTIFY buttonsChanged)
+    Q_PROPERTY(QAbstractListModel *rightButtonsModel READ rightButtonsModel NOTIFY buttonsChanged)
+    Q_PROPERTY(QAbstractListModel *availableButtonsModel READ availableButtonsModel CONSTANT)
+    Q_PROPERTY(bool closeOnDoubleClickOnMenu READ closeOnDoubleClickOnMenu WRITE setCloseOnDoubleClickOnMenu NOTIFY closeOnDoubleClickOnMenuChanged)
 
-    bool eventFilter(QObject *watched, QEvent *e) override;
+public:
+    KCMKWinDecoration(QObject *parent, const QVariantList &arguments);
+
+    QSortFilterProxyModel *themesModel() const;
+    QAbstractListModel *leftButtonsModel();
+    QAbstractListModel *rightButtonsModel();
+    QAbstractListModel *availableButtonsModel() const;
+    QStringList borderSizesModel() const;
+    int borderSize() const;
+    int theme() const;
+    bool closeOnDoubleClickOnMenu() const;
+
+    void setBorderSize(int index);
+    void setBorderSize(KDecoration2::BorderSize size);
+    void setTheme(int index);
+    void setCloseOnDoubleClickOnMenu(bool enable);
+
+    Q_INVOKABLE void getNewStuff(QQuickItem *context);
+
+Q_SIGNALS:
+    void themeChanged();
+    void buttonsChanged();
+    void borderSizeChanged();
+    void closeOnDoubleClickOnMenuChanged();
 
 public Q_SLOTS:
-    void defaults() override;
     void load() override;
     void save() override;
+    void defaults() override;
 
-protected:
-    void showEvent(QShowEvent *ev) override;
+private Q_SLOTS:
+    void updateNeedsSave();
+    void reloadKWinSettings();
 
 private:
-    void showKNS(const QString &config);
-    void updateColors();
-    DecorationsModel *m_model;
-    QSortFilterProxyModel *m_proxyModel;
-    ConfigurationForm *m_ui;
-    QQuickView *m_quickView;
-    Preview::ButtonsModel *m_leftButtons;
-    Preview::ButtonsModel *m_rightButtons;
-    Preview::ButtonsModel *m_availableButtons;
+    KDecoration2::Configuration::DecorationsModel *m_themesModel;
+    QSortFilterProxyModel *m_proxyThemesModel;
+
+    KDecoration2::Preview::ButtonsModel *m_leftButtonsModel;
+    KDecoration2::Preview::ButtonsModel *m_rightButtonsModel;
+    KDecoration2::Preview::ButtonsModel *m_availableButtonsModel;
+
+    QPointer<KNS3::DownloadDialog> m_newStuffDialog;
+
+    struct Settings
+    {
+        KDecoration2::BorderSize borderSize;
+        int themeIndex;
+        bool closeOnDoubleClickOnMenu;
+        DecorationButtonsList buttonsOnLeft;
+        DecorationButtonsList buttonsOnRight;
+    };
+
+    Settings m_savedSettings;
+    Settings m_currentSettings;
 };
-
-}
-
-}
-
-#endif

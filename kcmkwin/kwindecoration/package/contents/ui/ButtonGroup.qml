@@ -17,24 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import QtQuick 2.1
-import QtQuick.Controls 1.2
-import QtQuick.Layouts 1.1
+import QtQuick 2.7
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
-import org.kde.plasma.core 2.0 as PlasmaCore;
 
 ListView {
     id: view
     property string key
     property bool dragging: false
+    property int iconSize: units.iconSizes.small
     orientation: ListView.Horizontal
     interactive: false
     spacing: units.smallSpacing
-    implicitHeight: units.iconSizes.small
-    implicitWidth: count * (units.iconSizes.small + units.smallSpacing) - Math.min(1, count) * units.smallSpacing
+    implicitHeight: iconSize
+    implicitWidth: count * (iconSize + units.smallSpacing) - Math.min(1, count) * units.smallSpacing
     delegate: Item {
-        width: units.iconSizes.small
-        height: units.iconSizes.small
+        width: iconSize
+        height: iconSize
         KDecoration.Button {
             id: button
             property int itemIndex: index
@@ -42,10 +40,13 @@ ListView {
             bridge: bridgeItem.bridge
             settings: settingsItem
             type: model["button"]
+            width: iconSize
+            height: iconSize
             anchors.fill: Drag.active ? undefined : parent
             Drag.keys: [ "decoButtonRemove", view.key ]
             Drag.active: dragArea.drag.active
             Drag.onActiveChanged: view.dragging = Drag.active
+            color: palette.windowText
         }
         MouseArea {
             id: dragArea

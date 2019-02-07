@@ -45,11 +45,13 @@ public:
         return m_buttons;
     }
 
+    Q_INVOKABLE void clear();
     Q_INVOKABLE void remove(int index);
     Q_INVOKABLE void up(int index);
     Q_INVOKABLE void down(int index);
     Q_INVOKABLE void move(int sourceIndex, int targetIndex);
 
+    void replace(const QVector< DecorationButtonType > &buttons);
     void add(DecorationButtonType type);
     Q_INVOKABLE void add(int index, int type);
 

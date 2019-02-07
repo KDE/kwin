@@ -60,14 +60,13 @@ QVariant DecorationsModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case Qt::DisplayRole:
         return d.visibleName;
-    case Qt::UserRole +4:
+    case PluginNameRole:
         return d.pluginName;
-    case Qt::UserRole +5:
+    case ThemeNameRole:
         return d.themeName;
-    case Qt::UserRole +6:
+    case ConfigurationRole:
         return d.configuration;
     }
-
     return QVariant();
 }
 
@@ -75,9 +74,9 @@ QHash< int, QByteArray > DecorationsModel::roleNames() const
 {
     QHash<int, QByteArray> roles({
         {Qt::DisplayRole, QByteArrayLiteral("display")},
-        {Qt::UserRole + 4, QByteArrayLiteral("plugin")},
-        {Qt::UserRole + 5, QByteArrayLiteral("theme")},
-        {Qt::UserRole +6, QByteArrayLiteral("configureable")}
+        {PluginNameRole, QByteArrayLiteral("plugin")},
+        {ThemeNameRole, QByteArrayLiteral("theme")},
+        {ConfigurationRole, QByteArrayLiteral("configureable")}
     });
     return roles;
 }
@@ -134,8 +133,8 @@ void DecorationsModel::init()
         if (!metadata.isUndefined()) {
             const auto decoSettingsMap = metadata.toObject().toVariantMap();
             const QString &kns = findKNewStuff(decoSettingsMap);
-            if (!kns.isEmpty()) {
-                m_knsProvides.insert(kns, info.name().isEmpty() ? info.pluginName() : info.name());
+            if (!kns.isEmpty() && !m_knsProviders.contains(kns)) {
+                m_knsProviders.append(kns);
             }
             if (isThemeEngine(decoSettingsMap)) {
                 const QString keyword = themeListKeyword(decoSettingsMap);
@@ -171,6 +170,7 @@ void DecorationsModel::init()
         Data data;
         data.pluginName = info.pluginName();
         data.visibleName = info.name().isEmpty() ? info.pluginName() : info.name();
+        data.themeName = data.visibleName;
         data.configuration = config;
 
         m_plugins.emplace_back(std::move(data));

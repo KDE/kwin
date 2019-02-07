@@ -78,15 +78,9 @@ void PreviewItem::createDecoration()
     if (m_bridge.isNull() || m_settings.isNull() || m_decoration) {
         return;
     }
-    m_decoration = m_bridge->createDecoration(0);
-    if (!m_decoration) {
-        return;
-    }
-    m_decoration->setProperty("visualParent", QVariant::fromValue(this));
+    Decoration *decoration = m_bridge->createDecoration(0);
     m_client = m_bridge->lastCreatedClient();
-    connect(m_decoration, &Decoration::bordersChanged, this, &PreviewItem::syncSize);
-    connect(m_decoration, &Decoration::shadowChanged, this, &PreviewItem::syncSize);
-    emit decorationChanged(m_decoration);
+    setDecoration(decoration);
 }
 
 Decoration *PreviewItem::decoration() const
@@ -96,41 +90,15 @@ Decoration *PreviewItem::decoration() const
 
 void PreviewItem::setDecoration(Decoration *deco)
 {
-    if (m_decoration == deco) {
+    if (!deco || m_decoration == deco) {
         return;
     }
-    auto updateSlot = static_cast<void (QQuickItem::*)()>(&QQuickItem::update);
-    if (m_decoration) {
-        disconnect(m_decoration, &Decoration::bordersChanged, this, updateSlot);
-    }
+
     m_decoration = deco;
     m_decoration->setProperty("visualParent", QVariant::fromValue(this));
-    connect(m_decoration, &Decoration::bordersChanged, this, updateSlot);
-    connect(m_decoration, &Decoration::sectionUnderMouseChanged, this,
-        [this](Qt::WindowFrameSection section) {
-            switch (section) {
-                case Qt::TopRightSection:
-            case Qt::BottomLeftSection:
-                setCursor(Qt::SizeBDiagCursor);
-                return;
-            case Qt::TopLeftSection:
-            case Qt::BottomRightSection:
-                setCursor(Qt::SizeFDiagCursor);
-                return;
-            case Qt::TopSection:
-            case Qt::BottomSection:
-                setCursor(Qt::SizeVerCursor);
-                return;
-            case Qt::LeftSection:
-            case Qt::RightSection:
-                setCursor(Qt::SizeHorCursor);
-                return;
-            default:
-                setCursor(Qt::ArrowCursor);
-            }
-        }
-    );
-    connect(m_decoration, &KDecoration2::Decoration::shadowChanged, this, &PreviewItem::shadowChanged);
+    connect(m_decoration, &Decoration::bordersChanged, this, &PreviewItem::syncSize);
+    connect(m_decoration, &Decoration::shadowChanged, this, &PreviewItem::syncSize);
+    connect(m_decoration, &Decoration::shadowChanged, this, &PreviewItem::shadowChanged);
     emit decorationChanged(m_decoration);
 }
 
