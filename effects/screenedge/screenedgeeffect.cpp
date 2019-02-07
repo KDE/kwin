@@ -102,7 +102,7 @@ void ScreenEdgeEffect::paintScreen(int mask, QRegion region, ScreenPaintData &da
         if (effects->isOpenGLCompositing()) {
             GLTexture *texture = (*it)->texture.data();
             glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             texture->bind();
             ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate);
             const QVector4D constant(opacity, opacity, opacity, opacity);
