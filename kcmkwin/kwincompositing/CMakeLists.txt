@@ -10,10 +10,6 @@ include_directories(${KWIN_SOURCE_DIR}/effects)
 
 ################# configure checks and create the configured files #################
 
-# now create config headers
-configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h )
-configure_file(config-compiler.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-compiler.h )
-
 set(kwincomposing_SRC
     model.cpp
     main.cpp
