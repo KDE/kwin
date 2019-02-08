@@ -54,7 +54,8 @@ bool DrmConnector::initProps()
         QByteArrayLiteral("CRTC_ID"),
     });
 
-    drmModeObjectProperties *properties = drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_CONNECTOR);
+    ScopedDrmPointer<drmModeObjectProperties, drmModeFreeObjectProperties> properties(
+        drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_CONNECTOR));
     if (!properties) {
         qCWarning(KWIN_DRM) << "Failed to get properties for connector " << m_id ;
         return false;
@@ -62,9 +63,9 @@ bool DrmConnector::initProps()
 
     int propCount = int(PropertyIndex::Count);
     for (int j = 0; j < propCount; ++j) {
-        initProp(j, properties);
+        initProp(j, properties.data());
     }
-    drmModeFreeObjectProperties(properties);
+
     return true;
 }
 

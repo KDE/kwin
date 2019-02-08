@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_object.h"
+#include "drm_pointer.h"
 
 #include "logging.h"
 
@@ -49,16 +50,16 @@ void DrmObject::setPropertyNames(QVector<QByteArray> &&vector)
 void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QByteArray> enumNames)
 {
     for (unsigned int i = 0; i < properties->count_props; ++i) {
-        drmModePropertyRes *prop = drmModeGetProperty(fd(), properties->props[i]);
+        ScopedDrmPointer<drmModePropertyRes, drmModeFreeProperty> prop(
+            drmModeGetProperty(fd(), properties->props[i]));
         if (!prop) {
             continue;
         }
         if (prop->name == m_propsNames[n]) {
             qCDebug(KWIN_DRM).nospace() << m_id << ": " << prop->name << "' (id " << prop->prop_id
                               << "): " << properties->prop_values[i];
-            m_props[n] = new Property(prop, properties->prop_values[i], enumNames);
+            m_props[n] = new Property(prop.data(), properties->prop_values[i], enumNames);
         }
-        drmModeFreeProperty(prop);
     }
 }
 

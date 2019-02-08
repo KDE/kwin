@@ -92,7 +92,8 @@ bool DrmPlane::initProps()
         QByteArrayLiteral("reflect-y")
     };
 
-    drmModeObjectProperties *properties = drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_PLANE);
+    ScopedDrmPointer<drmModeObjectProperties, drmModeFreeObjectProperties> properties(
+        drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_PLANE));
     if (!properties){
         qCWarning(KWIN_DRM) << "Failed to get properties for plane " << m_id ;
         return false;
@@ -101,9 +102,9 @@ bool DrmPlane::initProps()
     int propCount = int(PropertyIndex::Count);
     for (int j = 0; j < propCount; ++j) {
         if (j == int(PropertyIndex::Type)) {
-            initProp(j, properties, typeNames);
+            initProp(j, properties.data(), typeNames);
         } else if (j == int(PropertyIndex::Rotation)) {
-            initProp(j, properties, rotationNames);
+            initProp(j, properties.data(), rotationNames);
             m_supportedTransformations = Transformations();
             auto testTransform = [j, this] (uint64_t value, Transformation t) {
                 if (propHasEnum(j, value)) {
@@ -118,11 +119,10 @@ bool DrmPlane::initProps()
             testTransform(5, Transformation::ReflectY);
             qCDebug(KWIN_DRM) << "Supported Transformations: " << m_supportedTransformations << " on plane " << m_id;
         } else {
-            initProp(j, properties);
+            initProp(j, properties.data());
         }
     }
 
-    drmModeFreeObjectProperties(properties);
     return true;
 }
 

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_backend.h"
 #include "drm_output.h"
 #include "drm_buffer.h"
+#include "drm_pointer.h"
 #include "logging.h"
 #include <colorcorrection/gammaramp.h>
 
@@ -59,7 +60,8 @@ bool DrmCrtc::initProps()
         QByteArrayLiteral("ACTIVE"),
     });
 
-    drmModeObjectProperties *properties = drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_CRTC);
+    ScopedDrmPointer<drmModeObjectProperties, drmModeFreeObjectProperties> properties(
+        drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_CRTC));
     if (!properties) {
         qCWarning(KWIN_DRM) << "Failed to get properties for crtc " << m_id ;
         return false;
@@ -67,9 +69,9 @@ bool DrmCrtc::initProps()
 
     int propCount = int(PropertyIndex::Count);
     for (int j = 0; j < propCount; ++j) {
-        initProp(j, properties);
+        initProp(j, properties.data());
     }
-    drmModeFreeObjectProperties(properties);
+
     return true;
 }
 
