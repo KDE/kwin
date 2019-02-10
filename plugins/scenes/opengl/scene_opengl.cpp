@@ -2430,7 +2430,12 @@ SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::Decorat
     connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (AbstractClient::*)(const QRect&)>(&AbstractClient::addRepaint));
 }
 
-SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer() = default;
+SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer()
+{
+    if (Scene *scene = Compositor::self()->scene()) {
+        scene->makeOpenGLContextCurrent();
+    }
+}
 
 // Rotates the given source rect 90° counter-clockwise,
 // and flips it vertically

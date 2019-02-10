@@ -392,18 +392,17 @@ void Compositor::finish()
             m_scene->removeToplevel(c);
         foreach (Unmanaged * c, Workspace::self()->unmanagedList())
             m_scene->removeToplevel(c);
-        foreach (Deleted * c, Workspace::self()->deletedList())
-            m_scene->removeToplevel(c);
         foreach (Client * c, Workspace::self()->clientList())
         c->finishCompositing();
         foreach (Client * c, Workspace::self()->desktopList())
         c->finishCompositing();
         foreach (Unmanaged * c, Workspace::self()->unmanagedList())
         c->finishCompositing();
-        foreach (Deleted * c, Workspace::self()->deletedList())
-        c->finishCompositing();
         if (auto c = kwinApp()->x11Connection()) {
             xcb_composite_unredirect_subwindows(c, kwinApp()->x11RootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+        }
+        while (!workspace()->deletedList().isEmpty()) {
+            workspace()->deletedList().first()->discard();
         }
     }
     if (waylandServer()) {
@@ -434,9 +433,6 @@ void Compositor::finish()
                 i.setOpacity(static_cast< unsigned long >((*it)->opacity() * 0xffffffff));
             }
         }
-        // discard all Deleted windows (#152914)
-        while (!Workspace::self()->deletedList().isEmpty())
-            Workspace::self()->deletedList().first()->discard();
     }
     m_finishing = false;
     emit compositingToggled(false);
