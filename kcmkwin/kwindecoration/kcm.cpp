@@ -116,8 +116,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     // Update the themes when the color scheme or a theme's settings change
     QDBusConnection::sessionBus()
         .connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
-            this,
-            SLOT(reloadKWinSettings()));
+            this, SLOT(reloadKWinSettings()));
 
     QMetaObject::invokeMethod(m_themesModel, "init", Qt::QueuedConnection);
 }
@@ -140,6 +139,8 @@ void KCMKWinDecoration::getNewStuff(QQuickItem *context)
         m_newStuffDialog->winId(); // so it creates the windowHandle()
         m_newStuffDialog->windowHandle()->setTransientParent(context->window());
     }
+
+    connect(m_newStuffDialog, &QDialog::finished, this, &KCMKWinDecoration::reloadKWinSettings);
 
     m_newStuffDialog->show();
 }

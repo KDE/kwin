@@ -61,7 +61,6 @@ Name[zh_CN]=窗口装饰
 Name[zh_TW]=視窗裝飾
 
 ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
-Categories=Various Plasma Styles,Aurorae Themes
-TargetDir=themes
-StandardResource=tmp
+Categories=Window Decoration Aurorae
+TargetDir=aurorae/themes
 Uncompress=archive
