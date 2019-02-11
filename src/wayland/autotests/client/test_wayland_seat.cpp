@@ -78,6 +78,7 @@ private Q_SLOTS:
     void testPointerSwipeGesture();
     void testPointerPinchGesture_data();
     void testPointerPinchGesture();
+    void testPointerAxis();
     void testKeyboardSubSurfaceTreeFromPointer();
     void testCursor();
     void testCursorDamage();
@@ -1149,6 +1150,103 @@ void TestWaylandSeat::testPointerPinchGesture()
         m_seatInterface->endPointerPinchGesture();
     }
     QVERIFY(spy->wait());
+}
+
+void TestWaylandSeat::testPointerAxis()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    // first create the pointer
+    QSignalSpy hasPointerChangedSpy(m_seat, &Seat::hasPointerChanged);
+    QVERIFY(hasPointerChangedSpy.isValid());
+    m_seatInterface->setHasPointer(true);
+    QVERIFY(hasPointerChangedSpy.wait());
+    QScopedPointer<Pointer> pointer(m_seat->createPointer());
+    QVERIFY(pointer);
+
+    // now create a surface
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    m_seatInterface->setFocusedPointerSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
+    QVERIFY(m_seatInterface->focusedPointer());
+    QSignalSpy frameSpy(pointer.data(), &Pointer::frame);
+    QVERIFY(frameSpy.isValid());
+    QVERIFY(frameSpy.wait());
+    QCOMPARE(frameSpy.count(), 1);
+
+    // let's scroll vertically
+    QSignalSpy axisSourceSpy(pointer.data(), &Pointer::axisSourceChanged);
+    QVERIFY(axisSourceSpy.isValid());
+    QSignalSpy axisSpy(pointer.data(), &Pointer::axisChanged);
+    QVERIFY(axisSpy.isValid());
+    QSignalSpy axisDiscreteSpy(pointer.data(), &Pointer::axisDiscreteChanged);
+    QVERIFY(axisDiscreteSpy.isValid());
+    QSignalSpy axisStoppedSpy(pointer.data(), &Pointer::axisStopped);
+    QVERIFY(axisStoppedSpy.isValid());
+
+    quint32 timestamp = 1;
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->pointerAxisV5(Qt::Vertical, 10, 1, PointerAxisSource::Wheel);
+    QVERIFY(frameSpy.wait());
+    QCOMPARE(frameSpy.count(), 2);
+    QCOMPARE(axisSourceSpy.count(), 1);
+    QCOMPARE(axisSourceSpy.last().at(0).value<Pointer::AxisSource>(), Pointer::AxisSource::Wheel);
+    QCOMPARE(axisDiscreteSpy.count(), 1);
+    QCOMPARE(axisDiscreteSpy.last().at(0).value<Pointer::Axis>(), Pointer::Axis::Vertical);
+    QCOMPARE(axisDiscreteSpy.last().at(1).value<qint32>(), 1);
+    QCOMPARE(axisSpy.count(), 1);
+    QCOMPARE(axisSpy.last().at(0).value<quint32>(), quint32(1));
+    QCOMPARE(axisSpy.last().at(1).value<Pointer::Axis>(), Pointer::Axis::Vertical);
+    QCOMPARE(axisSpy.last().at(2).value<qreal>(), 10.0);
+    QCOMPARE(axisStoppedSpy.count(), 0);
+
+    // let's scroll using fingers
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->pointerAxisV5(Qt::Horizontal, 42, 0, PointerAxisSource::Finger);
+    QVERIFY(frameSpy.wait());
+    QCOMPARE(frameSpy.count(), 3);
+    QCOMPARE(axisSourceSpy.count(), 2);
+    QCOMPARE(axisSourceSpy.last().at(0).value<Pointer::AxisSource>(), Pointer::AxisSource::Finger);
+    QCOMPARE(axisDiscreteSpy.count(), 1);
+    QCOMPARE(axisSpy.count(), 2);
+    QCOMPARE(axisSpy.last().at(0).value<quint32>(), quint32(2));
+    QCOMPARE(axisSpy.last().at(1).value<Pointer::Axis>(), Pointer::Axis::Horizontal);
+    QCOMPARE(axisSpy.last().at(2).value<qreal>(), 42.0);
+    QCOMPARE(axisStoppedSpy.count(), 0);
+
+    // lift the fingers off the device
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->pointerAxisV5(Qt::Horizontal, 0, 0, PointerAxisSource::Finger);
+    QVERIFY(frameSpy.wait());
+    QCOMPARE(frameSpy.count(), 4);
+    QCOMPARE(axisSourceSpy.count(), 3);
+    QCOMPARE(axisSourceSpy.last().at(0).value<Pointer::AxisSource>(), Pointer::AxisSource::Finger);
+    QCOMPARE(axisDiscreteSpy.count(), 1);
+    QCOMPARE(axisSpy.count(), 2);
+    QCOMPARE(axisStoppedSpy.count(), 1);
+    QCOMPARE(axisStoppedSpy.last().at(0).value<quint32>(), 3);
+    QCOMPARE(axisStoppedSpy.last().at(1).value<Pointer::Axis>(), Pointer::Axis::Horizontal);
+
+    // if the device is unknown, no axis_source event should be sent
+    m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->pointerAxisV5(Qt::Horizontal, 42, 1, PointerAxisSource::Unknown);
+    QVERIFY(frameSpy.wait());
+    QCOMPARE(frameSpy.count(), 5);
+    QCOMPARE(axisSourceSpy.count(), 3);
+    QCOMPARE(axisDiscreteSpy.count(), 2);
+    QCOMPARE(axisDiscreteSpy.last().at(0).value<Pointer::Axis>(), Pointer::Axis::Horizontal);
+    QCOMPARE(axisDiscreteSpy.last().at(1).value<qint32>(), 1);
+    QCOMPARE(axisSpy.count(), 3);
+    QCOMPARE(axisSpy.last().at(0).value<quint32>(), quint32(4));
+    QCOMPARE(axisSpy.last().at(1).value<Pointer::Axis>(), Pointer::Axis::Horizontal);
+    QCOMPARE(axisSpy.last().at(2).value<qreal>(), 42.0);
+    QCOMPARE(axisStoppedSpy.count(), 1);
 }
 
 void TestWaylandSeat::testKeyboardSubSurfaceTreeFromPointer()

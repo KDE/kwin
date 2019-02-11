@@ -44,6 +44,34 @@ class SurfaceInterface;
 class TextInputInterface;
 
 /**
+ * Describes the source types for axis events. This indicates to the
+ * client how an axis event was physically generated; a client may
+ * adjust the user interface accordingly. For example, scroll events
+ * from a "finger" source may be in a smooth coordinate space with
+ * kinetic scrolling whereas a "wheel" source may be in discrete steps
+ * of a number of lines.
+ *
+ * The "continuous" axis source is a device generating events in a
+ * continuous coordinate space, but using something other than a
+ * finger. One example for this source is button-based scrolling where
+ * the vertical motion of a device is converted to scroll events while
+ * a button is held down.
+ *
+ * The "wheel tilt" axis source indicates that the actual device is a
+ * wheel but the scroll event is not caused by a rotation but a
+ * (usually sideways) tilt of the wheel.
+ *
+ * @since 5.59
+ **/
+enum class PointerAxisSource {
+    Unknown,
+    Wheel,
+    Finger,
+    Continuous,
+    WheelTilt
+};
+
+/**
  * @brief Represents a Seat on the Wayland Display.
  *
  * A Seat is a set of input devices (e.g. Keyboard, Pointer and Touch) the client can connect
@@ -361,6 +389,20 @@ public:
      * @returns the last serial for @p button.
      **/
     quint32 pointerButtonSerial(Qt::MouseButton button) const;
+    /**
+     * Sends axis events to the currently focused pointer surface.
+     *
+     * @param orientation The scroll axis.
+     * @param delta The length of a vector along the specified axis @p orientation.
+     * @param discreteDelta The number of discrete steps, e.g. mouse wheel clicks.
+     * @param source Describes how the axis event was physically generated.
+     * @since 5.59
+     * @todo Drop V5 suffix with KF6.
+     **/
+    void pointerAxisV5(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
+    /**
+     * @see pointerAxisV5
+     **/
     void pointerAxis(Qt::Orientation orientation, quint32 delta);
     /**
      * @returns true if there is a pressed button with the given @p serial

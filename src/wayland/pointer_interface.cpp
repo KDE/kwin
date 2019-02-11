@@ -322,6 +322,54 @@ void PointerInterface::buttonReleased(quint32 button, quint32 serial)
     d->sendFrame();
 }
 
+void PointerInterface::axis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source)
+{
+    Q_D();
+    Q_ASSERT(d->focusedSurface);
+    if (!d->resource) {
+        return;
+    }
+
+    const quint32 version = wl_resource_get_version(d->resource);
+
+    const auto wlOrientation = (orientation == Qt::Vertical)
+        ? WL_POINTER_AXIS_VERTICAL_SCROLL
+        : WL_POINTER_AXIS_HORIZONTAL_SCROLL;
+
+    if (source != PointerAxisSource::Unknown && version >= WL_POINTER_AXIS_SOURCE_SINCE_VERSION) {
+        wl_pointer_axis_source wlSource;
+        switch (source) {
+        case PointerAxisSource::Wheel:
+            wlSource = WL_POINTER_AXIS_SOURCE_WHEEL;
+            break;
+        case PointerAxisSource::Finger:
+            wlSource = WL_POINTER_AXIS_SOURCE_FINGER;
+            break;
+        case PointerAxisSource::Continuous:
+            wlSource = WL_POINTER_AXIS_SOURCE_CONTINUOUS;
+            break;
+        case PointerAxisSource::WheelTilt:
+            wlSource = WL_POINTER_AXIS_SOURCE_WHEEL_TILT;
+            break;
+        default:
+            Q_UNREACHABLE();
+            break;
+        }
+        wl_pointer_send_axis_source(d->resource, wlSource);
+    }
+
+    if (delta != 0.0) {
+        if (discreteDelta && version >= WL_POINTER_AXIS_DISCRETE_SINCE_VERSION) {
+            wl_pointer_send_axis_discrete(d->resource, wlOrientation, discreteDelta);
+        }
+        wl_pointer_send_axis(d->resource, d->seat->timestamp(), wlOrientation, wl_fixed_from_double(delta));
+    } else if (version >= WL_POINTER_AXIS_STOP_SINCE_VERSION) {
+        wl_pointer_send_axis_stop(d->resource, d->seat->timestamp(), wlOrientation);
+    }
+
+    d->sendFrame();
+}
+
 void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
 {
     Q_D();

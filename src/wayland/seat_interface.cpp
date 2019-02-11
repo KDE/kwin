@@ -846,6 +846,20 @@ bool SeatInterface::isPointerButtonPressed(quint32 button) const
     return it.value() == Private::Pointer::State::Pressed ? true : false;
 }
 
+void SeatInterface::pointerAxisV5(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source)
+{
+    Q_D();
+    if (d->drag.mode == Private::Drag::Mode::Pointer) {
+        // ignore
+        return;
+    }
+    if (d->globalPointer.focus.surface) {
+        for (auto it = d->globalPointer.focus.pointers.constBegin(), end = d->globalPointer.focus.pointers.constEnd(); it != end; ++it) {
+            (*it)->axis(orientation, delta, discreteDelta, source);
+        }
+    }
+}
+
 void SeatInterface::pointerAxis(Qt::Orientation orientation, quint32 delta)
 {
     Q_D();

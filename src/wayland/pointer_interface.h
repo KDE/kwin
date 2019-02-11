@@ -35,6 +35,8 @@ class RelativePointerManagerUnstableV1Interface;
 class SeatInterface;
 class SurfaceInterface;
 
+enum class PointerAxisSource;
+
 /**
  * @brief Resource for the wl_pointer interface.
  *
@@ -73,6 +75,7 @@ private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
     void buttonPressed(quint32 button, quint32 serial);
     void buttonReleased(quint32 button, quint32 serial);
+    void axis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
     void axis(Qt::Orientation orientation, quint32 delta);
     void relativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
     friend class SeatInterface;
