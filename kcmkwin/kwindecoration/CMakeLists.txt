@@ -1,5 +1,5 @@
 # KI18N Translation Domain for this library
-add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwindecoration\")
+add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwindecoration\")
 
 add_subdirectory(declarative-plugin)
 
