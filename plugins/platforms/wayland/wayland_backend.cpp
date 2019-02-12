@@ -285,6 +285,7 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
                         }
                     }
                 );
+                // TODO: Send discreteDelta and source as well.
                 connect(m_pointer, &Pointer::axisChanged, this,
                     [this](quint32 time, Pointer::Axis axis, qreal delta) {
                         switch (axis) {

@@ -35,10 +35,15 @@ MouseEvent::MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton bu
     setTimestamp(timestamp);
 }
 
-WheelEvent::WheelEvent(const QPointF &pos, qreal delta, Qt::Orientation orientation, Qt::MouseButtons buttons,
-                        Qt::KeyboardModifiers modifiers, quint32 timestamp, LibInput::Device *device)
+WheelEvent::WheelEvent(const QPointF &pos, qreal delta, qint32 discreteDelta, Qt::Orientation orientation,
+                       Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputRedirection::PointerAxisSource source,
+                       quint32 timestamp, LibInput::Device *device)
             : QWheelEvent(pos, pos, QPoint(), (orientation == Qt::Horizontal) ? QPoint(delta, 0) : QPoint(0, delta), delta, orientation, buttons, modifiers)
             , m_device(device)
+            , m_orientation(orientation)
+            , m_delta(delta)
+            , m_discreteDelta(discreteDelta)
+            , m_source(source)
 {
     setTimestamp(timestamp);
 }

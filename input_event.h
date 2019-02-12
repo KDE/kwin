@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_INPUT_EVENT_H
 #define KWIN_INPUT_EVENT_H
+
+#include "input.h"
+
 #include <QInputEvent>
 
 namespace KWin
@@ -78,11 +81,29 @@ private:
     quint32 m_nativeButton = 0;
 };
 
+// TODO: Don't derive from QWheelEvent, this event is quite domain specific.
 class WheelEvent : public QWheelEvent
 {
 public:
-    explicit WheelEvent(const QPointF &pos, qreal delta, Qt::Orientation orientation, Qt::MouseButtons buttons,
-                        Qt::KeyboardModifiers modifiers, quint32 timestamp, LibInput::Device *device);
+    explicit WheelEvent(const QPointF &pos, qreal delta, qint32 discreteDelta, Qt::Orientation orientation,
+                        Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputRedirection::PointerAxisSource source,
+                        quint32 timestamp, LibInput::Device *device);
+
+    Qt::Orientation orientation() const {
+        return m_orientation;
+    }
+
+    qreal delta() const {
+        return m_delta;
+    }
+
+    qint32 discreteDelta() const {
+        return m_discreteDelta;
+    }
+
+    InputRedirection::PointerAxisSource axisSource() const {
+        return m_source;
+    }
 
     LibInput::Device *device() const {
         return m_device;
@@ -98,6 +119,10 @@ public:
 
 private:
     LibInput::Device *m_device;
+    Qt::Orientation m_orientation;
+    qreal m_delta;
+    qint32 m_discreteDelta;
+    InputRedirection::PointerAxisSource m_source;
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
 };
 

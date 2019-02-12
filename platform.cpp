@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "cursor.h"
 #include "effects.h"
-#include "input.h"
 #include <KCoreAddons>
 #include "overlaywindow.h"
 #include "outline.h"
@@ -193,20 +192,20 @@ void Platform::keymapChange(int fd, uint32_t size)
     input()->processKeymapChange(fd, size);
 }
 
-void Platform::pointerAxisHorizontal(qreal delta, quint32 time)
+void Platform::pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
 {
     if (!input()) {
         return;
     }
-    input()->processPointerAxis(InputRedirection::PointerAxisHorizontal, delta, time);
+    input()->processPointerAxis(InputRedirection::PointerAxisHorizontal, delta, discreteDelta, source, time);
 }
 
-void Platform::pointerAxisVertical(qreal delta, quint32 time)
+void Platform::pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
 {
     if (!input()) {
         return;
     }
-    input()->processPointerAxis(InputRedirection::PointerAxisVertical, delta, time);
+    input()->processPointerAxis(InputRedirection::PointerAxisVertical, delta, discreteDelta, source, time);
 }
 
 void Platform::pointerButtonPressed(quint32 button, quint32 time)

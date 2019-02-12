@@ -205,6 +205,32 @@ qreal PointerEvent::axisValue(InputRedirection::PointerAxis axis) const
     return libinput_event_pointer_get_axis_value(m_pointerEvent, a);
 }
 
+qint32 PointerEvent::discreteAxisValue(InputRedirection::PointerAxis axis) const
+{
+    Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
+    const libinput_pointer_axis a = (axis == InputRedirection::PointerAxisHorizontal)
+        ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL
+        : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
+    return libinput_event_pointer_get_axis_value_discrete(m_pointerEvent, a);
+}
+
+InputRedirection::PointerAxisSource PointerEvent::axisSource() const
+{
+    Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
+    switch (libinput_event_pointer_get_axis_source(m_pointerEvent)) {
+    case LIBINPUT_POINTER_AXIS_SOURCE_WHEEL:
+        return InputRedirection::PointerAxisSourceWheel;
+    case LIBINPUT_POINTER_AXIS_SOURCE_FINGER:
+        return InputRedirection::PointerAxisSourceFinger;
+    case LIBINPUT_POINTER_AXIS_SOURCE_CONTINUOUS:
+        return InputRedirection::PointerAxisSourceContinuous;
+    case LIBINPUT_POINTER_AXIS_SOURCE_WHEEL_TILT:
+        return InputRedirection::PointerAxisSourceWheelTilt;
+    default:
+        return InputRedirection::PointerAxisSourceUnknown;
+    }
+}
+
 TouchEvent::TouchEvent(libinput_event *event, libinput_event_type type)
     : Event(event, type)
     , m_touchEvent(libinput_event_get_touch_event(event))

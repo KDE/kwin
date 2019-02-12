@@ -4,6 +4,7 @@
 
 Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
 Copyright (C) 2018 Roman Gilg <subdiff@gmail.com>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1331,8 +1332,27 @@ public:
     bool wheelEvent(QWheelEvent *event) override {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
-        const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
-        seat->pointerAxis(orientation, orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y());
+        auto _event = static_cast<WheelEvent *>(event);
+        KWayland::Server::PointerAxisSource source;
+        switch (_event->axisSource()) {
+        case KWin::InputRedirection::PointerAxisSourceWheel:
+            source = KWayland::Server::PointerAxisSource::Wheel;
+            break;
+        case KWin::InputRedirection::PointerAxisSourceFinger:
+            source = KWayland::Server::PointerAxisSource::Finger;
+            break;
+        case KWin::InputRedirection::PointerAxisSourceContinuous:
+            source = KWayland::Server::PointerAxisSource::Continuous;
+            break;
+        case KWin::InputRedirection::PointerAxisSourceWheelTilt:
+            source = KWayland::Server::PointerAxisSource::WheelTilt;
+            break;
+        case KWin::InputRedirection::PointerAxisSourceUnknown:
+        default:
+            source = KWayland::Server::PointerAxisSource::Unknown;
+            break;
+        }
+        seat->pointerAxisV5(_event->orientation(), _event->delta(), _event->discreteDelta(), source);
         return true;
     }
     bool keyEvent(QKeyEvent *event) override {
@@ -1724,7 +1744,7 @@ void InputRedirection::setupWorkspace()
                             break;
                         }
                         // TODO: Fix time
-                        m_pointer->processAxis(axis, delta, 0);
+                        m_pointer->processAxis(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, 0);
                         waylandServer()->simulateUserActivity();
                     }
                 );
@@ -2018,9 +2038,9 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
     m_pointer->processButton(button, state, time);
 }
 
-void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time)
+void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta, PointerAxisSource source, uint32_t time)
 {
-    m_pointer->processAxis(axis, delta, time);
+    m_pointer->processAxis(axis, delta, discreteDelta, source, time);
 }
 
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)

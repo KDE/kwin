@@ -108,6 +108,6 @@ ecm_mark_as_test(testLibinputContext)
 ########################################################
 set( testInputEvents_SRCS input_event_test.cpp mock_libinput.cpp ../../libinput/device.cpp ../../input_event.cpp )
 add_executable(testInputEvents ${testInputEvents_SRCS})
-target_link_libraries( testInputEvents Qt5::Test Qt5::DBus Qt5::Gui KF5::ConfigCore)
+target_link_libraries( testInputEvents Qt5::Test Qt5::DBus Qt5::Gui Qt5::Widgets KF5::ConfigCore)
 add_test(NAME kwin-testInputEvents COMMAND testInputEvents)
 ecm_mark_as_test(testInputEvents)

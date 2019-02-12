@@ -22,9 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwin_export.h>
 #include <kwinglobals.h>
 #include <epoxy/egl.h>
-#include "fixqopengl.h"
-
 #include <fixx11h.h>
+#include "fixqopengl.h"
+#include "input.h"
+
 #include <QImage>
 #include <QObject>
 
@@ -453,8 +454,10 @@ public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
     void pointerButtonReleased(quint32 button, quint32 time);
-    void pointerAxisHorizontal(qreal delta, quint32 time);
-    void pointerAxisVertical(qreal delta, quint32 time);
+    void pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta = 0,
+        InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+    void pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta = 0,
+        InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
     void keyboardKeyPressed(quint32 key, quint32 time);
     void keyboardKeyReleased(quint32 key, quint32 time);
     void keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);

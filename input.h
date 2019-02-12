@@ -4,6 +4,7 @@
 
 Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
 Copyright (C) 2018 Roman Gilg <subdiff@gmail.com>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -79,6 +80,13 @@ public:
         PointerAxisVertical,
         PointerAxisHorizontal
     };
+    enum PointerAxisSource {
+        PointerAxisSourceUnknown,
+        PointerAxisSourceWheel,
+        PointerAxisSourceFinger,
+        PointerAxisSourceContinuous,
+        PointerAxisSourceWheelTilt
+    };
     enum KeyboardKeyState {
         KeyboardKeyReleased,
         KeyboardKeyPressed,
@@ -122,7 +130,7 @@ public:
     /**
      * @internal
      **/
-    void processPointerAxis(PointerAxis axis, qreal delta, uint32_t time);
+    void processPointerAxis(PointerAxis axis, qreal delta, qint32 discreteDelta, PointerAxisSource source, uint32_t time);
     /**
      * @internal
      **/
@@ -479,5 +487,6 @@ void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *a
 Q_DECLARE_METATYPE(KWin::InputRedirection::KeyboardKeyState)
 Q_DECLARE_METATYPE(KWin::InputRedirection::PointerButtonState)
 Q_DECLARE_METATYPE(KWin::InputRedirection::PointerAxis)
+Q_DECLARE_METATYPE(KWin::InputRedirection::PointerAxisSource)
 
 #endif // KWIN_INPUT_H

@@ -602,6 +602,20 @@ double libinput_event_pointer_get_axis_value(struct libinput_event_pointer *even
     }
 }
 
+double libinput_event_pointer_get_axis_value_discrete(struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
+{
+    if (axis == LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL) {
+        return event->verticalDiscreteAxisValue;
+    } else {
+        return event->horizontalDiscreteAxisValue;
+    }
+}
+
+enum libinput_pointer_axis_source libinput_event_pointer_get_axis_source(struct libinput_event_pointer *event)
+{
+    return event->axisSource;
+}
+
 uint32_t libinput_event_touch_get_time(struct libinput_event_touch *event)
 {
     return event->time;

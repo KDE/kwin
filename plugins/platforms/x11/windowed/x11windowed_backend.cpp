@@ -459,9 +459,9 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
         const int delta = (event->detail == XCB_BUTTON_INDEX_4 || event->detail == 6) ? -1 : 1;
         static const qreal s_defaultAxisStepDistance = 10.0;
         if (event->detail > 5) {
-            pointerAxisHorizontal(delta * s_defaultAxisStepDistance, event->time);
+            pointerAxisHorizontal(delta * s_defaultAxisStepDistance, event->time, delta);
         } else {
-            pointerAxisVertical(delta * s_defaultAxisStepDistance, event->time);
+            pointerAxisVertical(delta * s_defaultAxisStepDistance, event->time, delta);
         }
         return;
     }
