@@ -30,7 +30,7 @@ integrationTest(WAYLAND_ONLY NAME testInputStackingOrder SRCS input_stacking_ord
 integrationTest(NAME testPointerInput SRCS pointer_input.cpp)
 integrationTest(NAME testPlatformCursor SRCS platformcursor.cpp)
 integrationTest(WAYLAND_ONLY NAME testDontCrashCancelAnimation SRCS dont_crash_cancel_animation.cpp)
-integrationTest(WAYLAND_ONLY NAME testTransientPlacmenet SRCS transient_placement.cpp)
+integrationTest(WAYLAND_ONLY NAME testTransientPlacement SRCS transient_placement.cpp)
 integrationTest(NAME testDebugConsole SRCS debug_console_test.cpp)
 integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp)
 integrationTest(WAYLAND_ONLY NAME testPlasmaSurface SRCS plasma_surface_test.cpp)
