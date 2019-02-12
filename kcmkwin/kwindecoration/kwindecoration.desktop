@@ -73,6 +73,13 @@ Name[zh_CN]=窗口装饰
 Name[zh_TW]=視窗裝飾
 
 Comment=Configure window titlebars and borders
+Comment[ca]=Configura la barra de títol i les vores de les finestres
+Comment[gl]=Configurar as barras de título e os bordos das xanelas
+Comment[nl]=Titelbalken en randen van venster configureren
+Comment[pt]=Configurar as barras de título e contornos das janelas
+Comment[sv]=Anpassa namnlister och kanter för fönster
+Comment[uk]=Налаштовування смужок заголовків та рамок вікон
+Comment[x-test]=xxConfigure window titlebars and bordersxx
 
 X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
 X-KDE-Keywords[bs]=kwin,prozor,upravitelj,granica,stil,tema,izgled,osjećati,izgled,dugme,držati,ivica,kwm,dekoracija
