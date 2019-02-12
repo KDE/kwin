@@ -292,7 +292,7 @@ void EffectModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         effect.enabledByDefault = plugin.isPluginEnabledByDefault();
         effect.enabledByDefaultFunction = false;
         effect.video = plugin.property(QStringLiteral("X-KWin-Video-Url")).toUrl();
-        effect.website = plugin.website();
+        effect.website = QUrl(plugin.website());
         effect.supported = true;
         effect.exclusiveGroup = plugin.property(QStringLiteral("X-KWin-Exclusive-Category")).toString();
         effect.internal = plugin.property(QStringLiteral("X-KWin-Internal")).toBool();
@@ -355,7 +355,7 @@ void EffectModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPlugi
             effect.enabledByDefaultFunction = d.value("enabledByDefaultMethod").toBool();
         }
 
-        effect.website = pluginEffect.website();
+        effect.website = QUrl(pluginEffect.website());
 
         const QString enabledKey = QStringLiteral("%1Enabled").arg(effect.serviceName);
         if (kwinConfig.hasKey(enabledKey)) {
