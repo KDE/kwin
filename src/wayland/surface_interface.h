@@ -354,6 +354,15 @@ Q_SIGNALS:
      **/
     void inhibitsIdleChanged();
 
+    /**
+     * Emitted when the Surface has been committed.
+     *
+     * This signal is emitted after all the relevant damage and xyzChanged signals
+     * for this commit are emitted.
+     * @since 5.54
+     **/
+    void committed();
+
 private:
     friend class CompositorInterface;
     friend class SubSurfaceInterface;

@@ -271,6 +271,7 @@ void TestWaylandSurface::testDamage()
     QVERIFY(serverSurface->parentResource());
     QVERIFY(!serverSurface->isMapped());
 
+    QSignalSpy committedSpy(serverSurface, SIGNAL(committed()));
     QSignalSpy damageSpy(serverSurface, SIGNAL(damaged(QRegion)));
     QVERIFY(damageSpy.isValid());
 
@@ -282,6 +283,7 @@ void TestWaylandSurface::testDamage()
     QCoreApplication::processEvents();
     QVERIFY(damageSpy.isEmpty());
     QVERIFY(!serverSurface->isMapped());
+    QCOMPARE(committedSpy.count(), 1);
 
     QImage img(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
     img.fill(Qt::black);
@@ -293,6 +295,7 @@ void TestWaylandSurface::testDamage()
     QCOMPARE(serverSurface->damage(), QRegion(0, 0, 10, 10));
     QCOMPARE(damageSpy.first().first().value<QRegion>(), QRegion(0, 0, 10, 10));
     QVERIFY(serverSurface->isMapped());
+    QCOMPARE(committedSpy.count(), 2);
 
     // damage multiple times
     QRegion testRegion(5, 8, 3, 6);
@@ -308,6 +311,7 @@ void TestWaylandSurface::testDamage()
     QCOMPARE(serverSurface->damage(), testRegion);
     QCOMPARE(damageSpy.first().first().value<QRegion>(), testRegion);
     QVERIFY(serverSurface->isMapped());
+    QCOMPARE(committedSpy.count(), 3);
 }
 
 void TestWaylandSurface::testFrameCallback()
