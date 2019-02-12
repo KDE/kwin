@@ -1,16 +1,25 @@
+#.rst:
+# FindXKB
+# -------
+#
 # Try to find xkbcommon on a Unix system
+# If found, this will define the following variables:
 #
-# This will define:
-#
-#   XKB_FOUND        - True if XKB is available
-#   XKB_LIBRARIES    - Link these to use XKB
-#   XKB_INCLUDE_DIRS - Include directory for XKB
-#   XKB_DEFINITIONS  - Compiler flags for using XKB
+#   ``XKB_FOUND``
+#     True if XKB is available
+#   ``XKB_LIBRARIES``
+#     Link these to use XKB
+#   ``XKB_INCLUDE_DIRS``
+#     Include directory for XKB
+#   ``XKB_DEFINITIONS``
+#     Compiler flags for using XKB
 #
 # Additionally, the following imported targets will be defined:
 #
-#   XKB::XKB
-#
+#   ``XKB::XKB``
+#     The XKB library
+
+#=============================================================================
 # Copyright (c) 2014 Martin Gräßlin <mgraesslin@kde.org>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -36,6 +45,7 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
+#=============================================================================
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)
     message(FATAL_ERROR "CMake 2.8.12 is required by FindXKB.cmake")
