@@ -59,7 +59,7 @@ Comment[zh_CN]=平滑地淡出到注销屏幕
 Comment[zh_TW]=平順地淡入登出畫面
 
 Type=Service
-X-KDE-ServiceTypes=KWin/Effect,KCModule
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin
 X-KDE-PluginInfo-Email=l.lunak@kde.org, kde@privat.broulik.de, mgraesslin@kde.org, mart@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_logout
@@ -71,7 +71,3 @@ X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Ordering=40
 X-Plasma-API=javascript
 X-Plasma-MainScript=code/main.js
-X-KDE-PluginKeyword=kwin4_effect_logout
-X-KDE-Library=kcm_kwin4_genericscripted
-X-KDE-ParentComponents=kwin4_effect_logout
-X-KWin-Config-TranslationDomain=kwin_effects
