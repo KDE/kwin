@@ -7,6 +7,7 @@ X-DocPath=kcontrol/kwin_virtualdesktops/index.html
 
 X-KDE-Library=kcm_kwin_virtualdesktops
 X-KDE-ParentApp=kcontrol
+X-KDE-FormFactors=desktop
 
 X-KDE-System-Settings-Parent-Category=desktopbehavior
 X-KDE-Weight=60
