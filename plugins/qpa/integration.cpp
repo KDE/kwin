@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "backingstore.h"
 #include "nativeinterface.h"
-#include "platformcontextwayland.h"
 #include "screen.h"
 #include "sharingplatformcontext.h"
 #include "window.h"
@@ -192,13 +191,7 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
             return new SharingPlatformContext(context, s, kwinApp()->platform()->sceneEglConfig());
         }
     }
-    if (m_eglDisplay == EGL_NO_DISPLAY) {
-        const_cast<Integration*>(this)->initEgl();
-    }
-    if (m_eglDisplay == EGL_NO_DISPLAY) {
-        return nullptr;
-    }
-    return new PlatformContextWayland(context, const_cast<Integration*>(this));
+    return nullptr;
 }
 
 void Integration::initScreens()
@@ -250,38 +243,6 @@ KWayland::Client::Shell *Integration::shell() const
 EGLDisplay Integration::eglDisplay() const
 {
     return m_eglDisplay;
-}
-
-void Integration::initEgl()
-{
-    Q_ASSERT(m_eglDisplay == EGL_NO_DISPLAY);
-    // This variant uses Wayland as the EGL platform
-    qputenv("EGL_PLATFORM", "wayland");
-    m_eglDisplay = eglGetDisplay(waylandServer()->internalClientConection()->display());
-    if (m_eglDisplay == EGL_NO_DISPLAY) {
-        return;
-    }
-    // call eglInitialize in a thread to not block
-    QFuture<bool> future = QtConcurrent::run([this] () -> bool {
-        EGLint major, minor;
-        if (eglInitialize(m_eglDisplay, &major, &minor) == EGL_FALSE) {
-            return false;
-        }
-        EGLint error = eglGetError();
-        if (error != EGL_SUCCESS) {
-            return false;
-        }
-        return true;
-    });
-    // TODO: make this better
-    while (!future.isFinished()) {
-        waylandServer()->internalClientConection()->flush();
-        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
-    }
-    if (!future.result()) {
-        eglTerminate(m_eglDisplay);
-        m_eglDisplay = EGL_NO_DISPLAY;
-    }
 }
 
 QPlatformInputContext *Integration::inputContext() const

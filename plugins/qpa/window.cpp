@@ -17,7 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#define WL_EGL_PLATFORM 1
 #include "integration.h"
 #include "window.h"
 #include "screens.h"
@@ -57,14 +56,6 @@ Window::Window(QWindow *window, KWayland::Client::Surface *surface, KWayland::Cl
 Window::~Window()
 {
     unmap();
-    if (m_eglSurface != EGL_NO_SURFACE) {
-        eglDestroySurface(m_integration->eglDisplay(), m_eglSurface);
-    }
-#if HAVE_WAYLAND_EGL
-    if (m_eglWaylandWindow) {
-        wl_egl_window_destroy(m_eglWaylandWindow);
-    }
-#endif
     delete m_shellSurface;
     delete m_surface;
 }
@@ -106,11 +97,6 @@ void Window::setGeometry(const QRect &rect)
             m_resized = true;
         }
     }
-#if HAVE_WAYLAND_EGL
-    if (m_eglWaylandWindow) {
-        wl_egl_window_resize(m_eglWaylandWindow, nativeSize.width(), nativeSize.height(), 0, 0);
-    }
-#endif
     QWindowSystemInterface::handleGeometryChange(window(), geometry());
 }
 
@@ -126,21 +112,6 @@ void Window::unmap()
     if (waylandServer()->internalClientConection()) {
         waylandServer()->internalClientConection()->flush();
     }
-}
-
-void Window::createEglSurface(EGLDisplay dpy, EGLConfig config)
-{
-#if HAVE_WAYLAND_EGL
-    const QSize size = window()->size() * m_scale;
-    m_eglWaylandWindow = wl_egl_window_create(*m_surface, size.width(), size.height());
-    if (!m_eglWaylandWindow) {
-        return;
-    }
-    m_eglSurface = eglCreateWindowSurface(dpy, config, m_eglWaylandWindow, nullptr);
-#else
-    Q_UNUSED(dpy)
-    Q_UNUSED(config)
-#endif
 }
 
 void Window::bindContentFBO()

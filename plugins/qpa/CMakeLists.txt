@@ -7,7 +7,6 @@ set(QPA_SOURCES
     integration.cpp
     main.cpp
     nativeinterface.cpp
-    platformcontextwayland.cpp
     platformcursor.cpp
     screen.cpp
     sharingplatformcontext.cpp
@@ -33,10 +32,6 @@ target_link_libraries(KWinQpaPlugin
     Fontconfig::Fontconfig
     ${FREETYPE_LIBRARIES}
 )
-
-if(HAVE_WAYLAND_EGL)
-    target_link_libraries(KWinQpaPlugin Wayland::Egl)
-endif()
 
 install(
     TARGETS

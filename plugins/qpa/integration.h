@@ -69,7 +69,6 @@ public:
 
 private:
     void initScreens();
-    void initEgl();
     KWayland::Client::Shell *shell() const;
 
     QPlatformFontDatabase *m_fontDb;
