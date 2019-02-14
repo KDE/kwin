@@ -87,7 +87,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     , m_currentSettings(m_savedSettings)
 {
     auto about = new KAboutData(QStringLiteral("kcm_kwindecoration"),
-                                i18n("Configure window titlebars and borders"),
+                                i18n("Window Decorations"),
                                 QStringLiteral("1.0"),
                                 QString(),
                                 KAboutLicense::GPL);
