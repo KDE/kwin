@@ -647,6 +647,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     // Upload geometry for the down and upsample iterations
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
 
     uploadGeometry(vbo, expandedBlurRegion.translated(xTranslate, yTranslate), shape);
     vbo->bindArrays();

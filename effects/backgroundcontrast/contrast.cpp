@@ -483,6 +483,7 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion& shape, const QRe
 
     // Upload geometry for the horizontal and vertical passes
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
     uploadGeometry(vbo, actualShape);
     vbo->bindArrays();
 
