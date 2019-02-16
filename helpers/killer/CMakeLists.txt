@@ -8,7 +8,7 @@ add_executable(kwin_killer_helper ${kwin_killer_helper_SRCS})
 target_link_libraries(kwin_killer_helper
     Qt5::Widgets
     Qt5::X11Extras
-    KF5::Auth
+    KF5::AuthCore
     KF5::I18n
     KF5::WidgetsAddons
 )
