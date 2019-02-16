@@ -70,6 +70,9 @@ public:
     void warpPointer(const QPointF &globalPos) override;
 
     QVector<CompositingType> supportedCompositors() const override {
+        if (selectedCompositor() != NoCompositing) {
+            return {selectedCompositor()};
+        }
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
     }
 

@@ -769,6 +769,9 @@ void DrmBackend::outputDpmsChanged()
 
 QVector<CompositingType> DrmBackend::supportedCompositors() const
 {
+    if (selectedCompositor() != NoCompositing) {
+        return {selectedCompositor()};
+    }
 #if HAVE_GBM
     return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
 #else

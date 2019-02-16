@@ -260,6 +260,8 @@ void Compositor::slotCompositingOptionsInitialized()
         return;
     }
 
+    kwinApp()->platform()->setSelectedCompositor(m_scene->compositingType() & OpenGLCompositing ? OpenGLCompositing : m_scene->compositingType());
+
     if (!Workspace::self() && m_scene && m_scene->compositingType() == QPainterCompositing) {
         // Force Software QtQuick on first startup with QPainter
         QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);

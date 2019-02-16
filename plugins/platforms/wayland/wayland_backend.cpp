@@ -655,6 +655,9 @@ void WaylandBackend::updateWindowTitle()
 
 QVector<CompositingType> WaylandBackend::supportedCompositors() const
 {
+    if (selectedCompositor() != NoCompositing) {
+        return {selectedCompositor()};
+    }
 #if HAVE_WAYLAND_EGL
     return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
 #else
