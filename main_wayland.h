@@ -22,10 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include <QProcessEnvironment>
 
-class QProcess;
-
 namespace KWin
 {
+namespace Xwl
+{
+class Xwayland;
+}
 
 class ApplicationWayland : public Application
 {
@@ -58,22 +60,21 @@ protected:
     void performStartup() override;
 
 private:
+    friend class Xwl::Xwayland;
+
     void createBackend();
-    void createX11Connection();
     void continueStartupWithScreens();
     void continueStartupWithSceen();
-    void continueStartupWithX();
-    void startXwaylandServer();
+    void continueStartupWithXwayland();
     void startSession();
 
     bool m_startXWayland = false;
-    int m_xcbConnectionFd = -1;
     QStringList m_applicationsToStart;
     QString m_inputMethodServerToStart;
-    QProcess *m_xwaylandProcess = nullptr;
-    QMetaObject::Connection m_xwaylandFailConnection;
     QProcessEnvironment m_environment;
     QString m_sessionArgument;
+
+    Xwl::Xwayland *m_xwayland = nullptr;
 };
 
 }
