@@ -120,6 +120,13 @@ Kirigami.Page {
                         showCloseButton: true
                         visible: false
                     }
+
+                    Controls.CheckBox {
+                        id: showToolTipsCheckBox
+                        text: i18nc("checkbox label", "Show titlebar button tooltips")
+                        checked: kcm.showToolTips
+                        onToggled: kcm.showToolTips = checked
+                    }
                 }
             }
         }

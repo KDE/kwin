@@ -57,6 +57,7 @@ class KCMKWinDecoration : public KQuickAddons::ConfigModule
     Q_PROPERTY(QAbstractListModel *rightButtonsModel READ rightButtonsModel NOTIFY buttonsChanged)
     Q_PROPERTY(QAbstractListModel *availableButtonsModel READ availableButtonsModel CONSTANT)
     Q_PROPERTY(bool closeOnDoubleClickOnMenu READ closeOnDoubleClickOnMenu WRITE setCloseOnDoubleClickOnMenu NOTIFY closeOnDoubleClickOnMenuChanged)
+    Q_PROPERTY(bool showToolTips READ showToolTips WRITE setShowToolTips NOTIFY showToolTipsChanged)
 
 public:
     KCMKWinDecoration(QObject *parent, const QVariantList &arguments);
@@ -69,11 +70,13 @@ public:
     int borderSize() const;
     int theme() const;
     bool closeOnDoubleClickOnMenu() const;
+    bool showToolTips() const;
 
     void setBorderSize(int index);
     void setBorderSize(KDecoration2::BorderSize size);
     void setTheme(int index);
     void setCloseOnDoubleClickOnMenu(bool enable);
+    void setShowToolTips(bool show);
 
     Q_INVOKABLE void getNewStuff(QQuickItem *context);
 
@@ -82,6 +85,7 @@ Q_SIGNALS:
     void buttonsChanged();
     void borderSizeChanged();
     void closeOnDoubleClickOnMenuChanged();
+    void showToolTipsChanged();
 
 public Q_SLOTS:
     void load() override;
@@ -107,6 +111,7 @@ private:
         KDecoration2::BorderSize borderSize;
         int themeIndex;
         bool closeOnDoubleClickOnMenu;
+        bool showToolTips;
         DecorationButtonsList buttonsOnLeft;
         DecorationButtonsList buttonsOnRight;
     };

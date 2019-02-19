@@ -50,11 +50,13 @@ const QString s_configPlugin { QStringLiteral("library") };
 const QString s_configTheme { QStringLiteral("theme") };
 const QString s_configBorderSize { QStringLiteral("BorderSize") };
 const QString s_configCloseOnDoubleClickOnMenu { QStringLiteral("CloseOnDoubleClickOnMenu") };
+const QString s_configShowToolTips { QStringLiteral("ShowToolTips") };
 const QString s_configDecoButtonsOnLeft { QStringLiteral("ButtonsOnLeft") };
 const QString s_configDecoButtonsOnRight { QStringLiteral("ButtonsOnRight") };
 
 const KDecoration2::BorderSize s_defaultBorderSize = KDecoration2::BorderSize::Normal;
 const bool s_defaultCloseOnDoubleClickOnMenu = false;
+const bool s_defaultShowToolTips = true;
 
 const DecorationButtonsList s_defaultDecoButtonsOnLeft {
     KDecoration2::DecorationButtonType::Menu,
@@ -83,7 +85,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     , m_leftButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
     , m_rightButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
     , m_availableButtonsModel(new KDecoration2::Preview::ButtonsModel(this))
-    , m_savedSettings{ s_defaultBorderSize, -2 /* for setTheme() */, false, s_defaultDecoButtonsOnLeft, s_defaultDecoButtonsOnRight }
+    , m_savedSettings{ s_defaultBorderSize, -2 /* for setTheme() */, false, s_defaultShowToolTips, s_defaultDecoButtonsOnLeft, s_defaultDecoButtonsOnRight }
     , m_currentSettings(m_savedSettings)
 {
     auto about = new KAboutData(QStringLiteral("kcm_kwindecoration"),
@@ -160,6 +162,7 @@ void KCMKWinDecoration::load()
     setTheme(themeIndex);
 
     setCloseOnDoubleClickOnMenu(config.readEntry(s_configCloseOnDoubleClickOnMenu, s_defaultCloseOnDoubleClickOnMenu));
+    setShowToolTips(config.readEntry(s_configShowToolTips, s_defaultShowToolTips));
 
     const QString defaultSizeName = Utils::borderSizeToString(s_defaultBorderSize);
     setBorderSize(Utils::stringToBorderSize(config.readEntry(s_configBorderSize, defaultSizeName)));
@@ -192,6 +195,7 @@ void KCMKWinDecoration::save()
     }
 
     config.writeEntry(s_configCloseOnDoubleClickOnMenu, m_currentSettings.closeOnDoubleClickOnMenu);
+    config.writeEntry(s_configShowToolTips, m_currentSettings.showToolTips);
     config.writeEntry(s_configBorderSize, Utils::borderSizeToString(m_currentSettings.borderSize));
     config.writeEntry(s_configDecoButtonsOnLeft, Utils::buttonsToString(m_currentSettings.buttonsOnLeft));
     config.writeEntry(s_configDecoButtonsOnRight, Utils::buttonsToString(m_currentSettings.buttonsOnRight));
@@ -217,6 +221,7 @@ void KCMKWinDecoration::defaults()
     setTheme(themeIndex);
     setBorderSize(s_defaultBorderSize);
     setCloseOnDoubleClickOnMenu(s_defaultCloseOnDoubleClickOnMenu);
+    setShowToolTips(s_defaultShowToolTips);
 
     m_leftButtonsModel->replace(s_defaultDecoButtonsOnLeft);
     m_rightButtonsModel->replace(s_defaultDecoButtonsOnRight);
@@ -230,6 +235,7 @@ void KCMKWinDecoration::updateNeedsSave()
     m_currentSettings.buttonsOnRight = m_rightButtonsModel->buttons();
 
     setNeedsSave(m_savedSettings.closeOnDoubleClickOnMenu != m_currentSettings.closeOnDoubleClickOnMenu
+                || m_savedSettings.showToolTips != m_currentSettings.showToolTips
                 || m_savedSettings.borderSize != m_currentSettings.borderSize
                 || m_savedSettings.themeIndex != m_currentSettings.themeIndex
                 || m_savedSettings.buttonsOnLeft != m_currentSettings.buttonsOnLeft
@@ -276,6 +282,11 @@ bool KCMKWinDecoration::closeOnDoubleClickOnMenu() const
     return m_currentSettings.closeOnDoubleClickOnMenu;
 }
 
+bool KCMKWinDecoration::showToolTips() const
+{
+    return m_currentSettings.showToolTips;
+}
+
 void KCMKWinDecoration::setBorderSize(int index)
 {
     setBorderSize(Utils::getBorderSizeNames().keys().at(index));
@@ -309,6 +320,16 @@ void KCMKWinDecoration::setCloseOnDoubleClickOnMenu(bool enable)
     }
     m_currentSettings.closeOnDoubleClickOnMenu = enable;
     emit closeOnDoubleClickOnMenuChanged();
+    updateNeedsSave();
+}
+
+void KCMKWinDecoration::setShowToolTips(bool show)
+{
+    if (m_currentSettings.showToolTips == show) {
+        return;
+    }
+    m_currentSettings.showToolTips = show;
+    emit showToolTipsChanged();
     updateNeedsSave();
 }
 

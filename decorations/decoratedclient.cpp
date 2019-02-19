@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "decoratedclient.h"
+#include "decorationbridge.h"
 #include "decorationpalette.h"
 #include "decorationrenderer.h"
 #include "abstract_client.h"
@@ -219,6 +220,10 @@ QColor DecoratedClientImpl::color(KDecoration2::ColorGroup group, KDecoration2::
 
 void DecoratedClientImpl::requestShowToolTip(const QString &text)
 {
+    if (!DecorationBridge::self()->showToolTips()) {
+        return;
+    }
+
     m_toolTipText = text;
 
     int wakeUpDelay = QApplication::style()->styleHint(QStyle::SH_ToolTip_WakeUpDelay);

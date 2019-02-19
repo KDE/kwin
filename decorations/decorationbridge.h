@@ -61,6 +61,10 @@ public:
         return m_blur;
     }
 
+    bool showToolTips() const {
+        return m_showToolTips;
+    }
+
     void reconfigure();
 
     const QSharedPointer<KDecoration2::DecorationSettings> &settings() const {
@@ -75,9 +79,11 @@ private:
     void findTheme(const QVariantMap &map);
     void initPlugin();
     QString readTheme() const;
+    void readDecorationOptions();
     KPluginFactory *m_factory;
     KSharedConfig::Ptr m_lnfConfig;
     bool m_blur;
+    bool m_showToolTips;
     QString m_plugin;
     QString m_defaultTheme;
     QString m_theme;

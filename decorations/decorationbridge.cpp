@@ -65,6 +65,7 @@ DecorationBridge::DecorationBridge(QObject *parent)
     : KDecoration2::DecorationBridge(parent)
     , m_factory(nullptr)
     , m_blur(false)
+    , m_showToolTips(false)
     , m_settings()
     , m_noPlugin(false)
 {
@@ -73,6 +74,8 @@ DecorationBridge::DecorationBridge(QObject *parent)
     // try to extract the proper defaults file from a lookandfeel package
     const QString looknfeel = cg.readEntry(QStringLiteral("LookAndFeelPackage"), "org.kde.breeze.desktop");
     m_lnfConfig = KSharedConfig::openConfig(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("plasma/look-and-feel/") + looknfeel + QStringLiteral("/contents/defaults")));
+
+    readDecorationOptions();
 }
 
 DecorationBridge::~DecorationBridge()
@@ -99,6 +102,11 @@ QString DecorationBridge::readTheme() const
     KConfigGroup cg(m_lnfConfig, "kwinrc");
     cg = KConfigGroup(&cg, "org.kde.kdecoration2");
     return kwinApp()->config()->group(s_pluginName).readEntry("theme", cg.readEntry("theme", m_defaultTheme));
+}
+
+void DecorationBridge::readDecorationOptions()
+{
+    m_showToolTips = kwinApp()->config()->group(s_pluginName).readEntry("ShowToolTips", true);
 }
 
 void DecorationBridge::init()
@@ -156,6 +164,8 @@ static void recreateDecorations()
 
 void DecorationBridge::reconfigure()
 {
+    readDecorationOptions();
+
     if (m_noPlugin != readNoPlugin()) {
         m_noPlugin = !m_noPlugin;
         // no plugin setting changed
