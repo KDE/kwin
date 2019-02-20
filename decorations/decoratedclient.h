@@ -95,7 +95,6 @@ public:
     Renderer *renderer() {
         return m_renderer;
     }
-    void destroyRenderer();
     KDecoration2::DecoratedClient *decoratedClient() {
         return KDecoration2::DecoratedClientPrivate::client();
     }
@@ -107,6 +106,7 @@ private Q_SLOTS:
 
 private:
     void createRenderer();
+    void destroyRenderer();
     AbstractClient *m_client;
     QSize m_clientSize;
     Renderer *m_renderer;
