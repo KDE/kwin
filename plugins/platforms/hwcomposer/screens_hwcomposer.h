@@ -19,20 +19,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_SCREENS_HWCOMPOSER_H
 #define KWIN_SCREENS_HWCOMPOSER_H
-#include "screens.h"
+#include "outputscreens.h"
 
 namespace KWin
 {
 class HwcomposerBackend;
 
-class HwcomposerScreens : public BasicScreens
+class HwcomposerScreens : public OutputScreens
 {
     Q_OBJECT
 public:
     HwcomposerScreens(HwcomposerBackend *backend, QObject *parent = nullptr);
-    virtual ~HwcomposerScreens();
-    float refreshRate(int screen) const override;
-    QSizeF physicalSize(int screen) const override;
+    virtual ~HwcomposerScreens() = default;
 
 private:
     HwcomposerBackend *m_backend;
