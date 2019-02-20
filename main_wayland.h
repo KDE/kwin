@@ -62,7 +62,7 @@ protected:
 private:
     void createBackend();
     void continueStartupWithScreens();
-    void continueStartupWithSceen();
+    void continueStartupWithScene();
     void continueStartupWithXwayland();
     void startSession() override;
 

@@ -129,16 +129,16 @@ void WaylandTestApplication::continueStartupWithScreens()
 
     if (operationMode() == OperationModeWaylandOnly) {
         createCompositor();
-        connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithSceen);
+        connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
         return;
     }
     createCompositor();
     connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithXwayland);
 }
 
-void WaylandTestApplication::continueStartupWithSceen()
+void WaylandTestApplication::continueStartupWithScene()
 {
-    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithSceen);
+    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
     createWorkspace();
 }
 

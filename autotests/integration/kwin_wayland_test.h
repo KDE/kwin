@@ -73,7 +73,7 @@ protected:
 private:
     void createBackend();
     void continueStartupWithScreens();
-    void continueStartupWithSceen();
+    void continueStartupWithScene();
     void continueStartupWithXwayland();
 
     Xwl::Xwayland *m_xwayland = nullptr;
