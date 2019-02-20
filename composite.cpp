@@ -201,6 +201,8 @@ void Compositor::slotCompositingOptionsInitialized()
         }
     }
 
+    emit aboutToToggleCompositing();
+
     auto supportedCompositors = kwinApp()->platform()->supportedCompositors();
     const auto userConfigIt = std::find(supportedCompositors.begin(), supportedCompositors.end(), options->compositingMode());
     if (userConfigIt != supportedCompositors.end()) {
@@ -372,6 +374,8 @@ void Compositor::finish()
         return;
     m_finishing = true;
     m_releaseSelectionTimer.start();
+
+    emit aboutToToggleCompositing();
 
     // Some effects might need access to effect windows when they are about to
     // be destroyed, for example to unreference deleted windows, so we have to
@@ -1192,9 +1196,6 @@ bool Client::setupCompositing()
     if (!Toplevel::setupCompositing()){
         return false;
     }
-    if (isDecorated()) {
-        decoratedClient()->destroyRenderer();
-    }
     updateVisibility(); // for internalKeep()
     return true;
 }
@@ -1203,11 +1204,6 @@ void Client::finishCompositing(ReleaseReason releaseReason)
 {
     Toplevel::finishCompositing(releaseReason);
     updateVisibility();
-    if (!deleting) {
-        if (isDecorated()) {
-            decoratedClient()->destroyRenderer();
-        }
-    }
     // for safety in case KWin is just resizing the window
     resetHaveResizeEffect();
 }

@@ -87,10 +87,9 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
             &Decoration::DecoratedClientImpl::signalShadeChange);
     connect(client, &AbstractClient::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedClient::keepAboveChanged);
     connect(client, &AbstractClient::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
+    connect(Compositor::self(), &Compositor::aboutToToggleCompositing, this, &DecoratedClientImpl::destroyRenderer);
     m_compositorToggledConnection = connect(Compositor::self(), &Compositor::compositingToggled, this,
         [this, decoration]() {
-            delete m_renderer;
-            m_renderer = nullptr;
             createRenderer();
             decoration->update();
         }
