@@ -59,7 +59,6 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
 
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    Test::flushWaylandConnection();
 
     // set buffer size
     ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
@@ -73,7 +72,6 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
 
     // now change buffer size
     Test::render(surface.data(), QSize(30, 10), Qt::red);
-    Test::flushWaylandConnection();
 
     QSignalSpy damagedSpy(client, &ShellClient::damaged);
     QVERIFY(damagedSpy.isValid());
