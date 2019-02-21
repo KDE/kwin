@@ -45,6 +45,8 @@ class ShadowManager;
 class Shell;
 class ShellSurface;
 class ShmPool;
+class SubCompositor;
+class SubSurface;
 class Surface;
 class XdgDecorationManager;
 }
@@ -112,6 +114,7 @@ void destroyWaylandConnection();
 
 KWayland::Client::ConnectionThread *waylandConnection();
 KWayland::Client::Compositor *waylandCompositor();
+KWayland::Client::SubCompositor *waylandSubCompositor();
 KWayland::Client::ShadowManager *waylandShadowManager();
 KWayland::Client::Shell *waylandShell();
 KWayland::Client::ShmPool *waylandShmPool();
@@ -131,6 +134,8 @@ bool waitForWaylandKeyboard();
 void flushWaylandConnection();
 
 KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
+KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
+                                               KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
 enum class ShellSurfaceType {
     WlShell,
     XdgShellV5,

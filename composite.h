@@ -178,6 +178,7 @@ Q_SIGNALS:
     void aboutToDestroy();
     void aboutToToggleCompositing();
     void sceneCreated();
+    void bufferSwapCompleted();
 
 protected:
     void timerEvent(QTimerEvent *te);

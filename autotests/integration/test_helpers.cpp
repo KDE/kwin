@@ -36,6 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/output.h>
+#include <KWayland/Client/subcompositor.h>
+#include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/xdgshell.h>
@@ -63,6 +65,7 @@ static struct {
     ConnectionThread *connection = nullptr;
     EventQueue *queue = nullptr;
     Compositor *compositor = nullptr;
+    SubCompositor *subCompositor = nullptr;
     ServerSideDecorationManager *decoration = nullptr;
     ShadowManager *shadowManager = nullptr;
     Shell *shell = nullptr;
@@ -144,6 +147,10 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
 
     s_waylandConnection.compositor = registry->createCompositor(registry->interface(Registry::Interface::Compositor).name, registry->interface(Registry::Interface::Compositor).version);
     if (!s_waylandConnection.compositor->isValid()) {
+        return false;
+    }
+    s_waylandConnection.subCompositor = registry->createSubCompositor(registry->interface(Registry::Interface::SubCompositor).name, registry->interface(Registry::Interface::SubCompositor).version);
+    if (!s_waylandConnection.subCompositor->isValid()) {
         return false;
     }
     s_waylandConnection.shm = registry->createShmPool(registry->interface(Registry::Interface::Shm).name, registry->interface(Registry::Interface::Shm).version);
@@ -234,6 +241,8 @@ void destroyWaylandConnection()
 {
     delete s_waylandConnection.compositor;
     s_waylandConnection.compositor = nullptr;
+    delete s_waylandConnection.subCompositor;
+    s_waylandConnection.subCompositor = nullptr;
     delete s_waylandConnection.windowManagement;
     s_waylandConnection.windowManagement = nullptr;
     delete s_waylandConnection.plasmaShell;
@@ -290,6 +299,11 @@ ConnectionThread *waylandConnection()
 Compositor *waylandCompositor()
 {
     return s_waylandConnection.compositor;
+}
+
+SubCompositor *waylandSubCompositor()
+{
+    return s_waylandConnection.subCompositor;
 }
 
 ShadowManager *waylandShadowManager()
@@ -437,6 +451,19 @@ Surface *createSurface(QObject *parent)
         return nullptr;
     }
     auto s = s_waylandConnection.compositor->createSurface(parent);
+    if (!s->isValid()) {
+        delete s;
+        return nullptr;
+    }
+    return s;
+}
+
+SubSurface *createSubSurface(Surface *surface, Surface *parentSurface, QObject *parent)
+{
+    if (!s_waylandConnection.subCompositor) {
+        return nullptr;
+    }
+    auto s = s_waylandConnection.subCompositor->createSubSurface(surface, parentSurface, parent);
     if (!s->isValid()) {
         delete s;
         return nullptr;

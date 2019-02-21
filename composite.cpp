@@ -655,6 +655,8 @@ void Compositor::bufferSwapComplete()
     assert(m_bufferSwapPending);
     m_bufferSwapPending = false;
 
+    emit bufferSwapCompleted();
+
     if (m_composeAtSwapCompletion) {
         m_composeAtSwapCompletion = false;
         performCompositing();
