@@ -36,15 +36,25 @@ public:
     virtual ~FramebufferQPainterBackend();
 
     QImage *buffer() override;
+    QImage *bufferForScreen(int screenId) override;
     bool needsFullRepaint() const override;
     bool usesOverlayWindow() const override;
     void prepareRenderingFrame() override;
     void present(int mask, const QRegion &damage) override;
+    bool perScreenRendering() const override;
 
 private:
+    /**
+     * @brief mapped memory buffer on fb device
+     */
     QImage m_renderBuffer;
+    /**
+     * @brief buffer to draw into
+     */
     QImage m_backBuffer;
+
     FramebufferBackend *m_backend;
+    bool m_needsFullRepaint;
 };
 
 }
