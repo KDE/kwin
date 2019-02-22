@@ -2,6 +2,7 @@ set(WAYLAND_BACKEND_SOURCES
     logging.cpp
     scene_qpainter_wayland_backend.cpp
     wayland_backend.cpp
+    wayland_output.cpp
 )
 
 if(HAVE_WAYLAND_EGL)

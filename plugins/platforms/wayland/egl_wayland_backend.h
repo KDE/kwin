@@ -2,7 +2,8 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2013 Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2019 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,9 +31,34 @@ struct wl_shm;
 namespace KWin
 {
 
-namespace Wayland {
-    class WaylandBackend;
-}
+namespace Wayland
+{
+class WaylandBackend;
+class WaylandOutput;
+class EglWaylandBackend;
+
+class EglWaylandOutput : public QObject
+{
+    Q_OBJECT
+public:
+    EglWaylandOutput(WaylandOutput *output, QObject *parent = nullptr);
+    ~EglWaylandOutput() = default;
+
+    bool init(EglWaylandBackend *backend);
+    void updateSize(const QSize &size);
+
+private:
+    WaylandOutput *m_waylandOutput;
+    wl_egl_window *m_overlay = nullptr;
+    EGLSurface m_eglSurface = EGL_NO_SURFACE;
+    int m_bufferAge = 0;
+    /**
+    * @brief The damage history for the past 10 frames.
+    */
+    QVector<QRegion> m_damageHistory;
+
+    friend class EglWaylandBackend;
+};
 
 /**
  * @brief OpenGL Backend using Egl on a Wayland surface.
@@ -50,29 +76,38 @@ class EglWaylandBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:
-    EglWaylandBackend(Wayland::WaylandBackend *b);
+    EglWaylandBackend(WaylandBackend *b);
     virtual ~EglWaylandBackend();
-    virtual void screenGeometryChanged(const QSize &size);
-    virtual SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
-    virtual QRegion prepareRenderingFrame();
-    virtual void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
+    void screenGeometryChanged(const QSize &size) override;
+    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
+    QRegion prepareRenderingFrame() override;
+    QRegion prepareRenderingForScreen(int screenId) override;
+    void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     virtual bool usesOverlayWindow() const override;
+    bool perScreenRendering() const override;
     void init() override;
 
-protected:
-    virtual void present();
-
-private Q_SLOTS:
-    void overlaySizeChanged(const QSize &size);
+    bool havePlatformBase() const {
+        return m_havePlatformBase;
+    }
 
 private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
-    bool makeContextCurrent();
-    int m_bufferAge;
-    Wayland::WaylandBackend *m_wayland;
-    wl_egl_window *m_overlay;
+
+    bool createEglWaylandOutput(WaylandOutput *output);
+
+    void cleanupSurfaces() override;
+    void cleanupOutput(EglWaylandOutput *output);
+
+    bool makeContextCurrent(EglWaylandOutput *output);
+    void present() override;
+    void presentOnSurface(EglWaylandOutput *output);
+
+    WaylandBackend *m_backend;
+    QVector<EglWaylandOutput*> m_outputs;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };
@@ -90,6 +125,7 @@ private:
     EglWaylandTexture(SceneOpenGLTexture *texture, EglWaylandBackend *backend);
 };
 
-} // namespace
+}
+}
 
-#endif //  KWIN_EGL_ON_X_BACKEND_H
+#endif

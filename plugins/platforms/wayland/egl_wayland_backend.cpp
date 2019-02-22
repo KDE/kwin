@@ -1,9 +1,9 @@
-
 /********************************************************************
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2019 Roman Gilg <subdiff@gmail.com>
+Copyright 2013 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,57 +19,140 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #define WL_EGL_PLATFORM 1
+
 #include "egl_wayland_backend.h"
-// kwin
+
+#include "wayland_backend.h"
+#include "wayland_output.h"
+
 #include "composite.h"
 #include "logging.h"
 #include "options.h"
-#include "wayland_backend.h"
+
 #include "wayland_server.h"
-#include <KWayland/Client/surface.h>
+#include "screens.h"
+
 // kwin libs
 #include <kwinglplatform.h>
+
 // KDE
+#include <KWayland/Client/surface.h>
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/display.h>
+
 // Qt
 #include <QOpenGLContext>
 
 namespace KWin
 {
-
-EglWaylandBackend::EglWaylandBackend(Wayland::WaylandBackend *b)
-    : AbstractEglBackend()
-    , m_bufferAge(0)
-    , m_wayland(b)
-    , m_overlay(NULL)
+namespace Wayland
 {
-    if (!m_wayland) {
+
+EglWaylandOutput::EglWaylandOutput(WaylandOutput *output, QObject *parent)
+    : QObject(parent)
+    , m_waylandOutput(output)
+{
+}
+
+bool EglWaylandOutput::init(EglWaylandBackend *backend)
+{
+    auto surface = m_waylandOutput->surface();
+    const QSize &size = m_waylandOutput->geometry().size();
+    auto overlay = wl_egl_window_create(*surface, size.width(), size.height());
+    if (!overlay) {
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Egl window failed";
+        return false;
+    }
+    m_overlay = overlay;
+
+    EGLSurface eglSurface = EGL_NO_SURFACE;
+    if (backend->havePlatformBase()) {
+        eglSurface = eglCreatePlatformWindowSurfaceEXT(backend->eglDisplay(), backend->config(), (void *) overlay, nullptr);
+    } else {
+        eglSurface = eglCreateWindowSurface(backend->eglDisplay(), backend->config(), overlay, nullptr);
+    }
+    if (eglSurface == EGL_NO_SURFACE) {
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Create Window Surface failed";
+        return false;
+    }
+    m_eglSurface = eglSurface;
+
+    connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &EglWaylandOutput::updateSize);
+
+    return true;
+}
+
+void EglWaylandOutput::updateSize(const QSize &size)
+{
+    wl_egl_window_resize(m_overlay, size.width(), size.height(), 0, 0);
+}
+
+EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
+    : AbstractEglBackend()
+    , m_backend(b)
+{
+    if (!m_backend) {
         setFailed("Wayland Backend has not been created");
         return;
     }
-    qCDebug(KWIN_WAYLAND_BACKEND) << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
-    if (!m_wayland->display()) {
+    qCDebug(KWIN_WAYLAND_BACKEND) << "Connected to Wayland display?" << (m_backend->display() ? "yes" : "no" );
+    if (!m_backend->display()) {
         setFailed("Could not connect to Wayland compositor");
         return;
     }
-    connect(m_wayland, SIGNAL(shellSurfaceSizeChanged(QSize)), SLOT(overlaySizeChanged(QSize)));
+
     // Egl is always direct rendering
     setIsDirectRendering(true);
+
+    connect(m_backend, &WaylandBackend::outputAdded, this, &EglWaylandBackend::createEglWaylandOutput);
+    connect(m_backend, &WaylandBackend::outputRemoved, this,
+        [this] (WaylandOutput *output) {
+            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+                [output] (const EglWaylandOutput *o) {
+                    return o->m_waylandOutput == output;
+                }
+            );
+            if (it == m_outputs.end()) {
+                return;
+            }
+            cleanupOutput(*it);
+            m_outputs.erase(it);
+        }
+    );
 }
 
 EglWaylandBackend::~EglWaylandBackend()
 {
     cleanup();
-    if (m_overlay) {
-        wl_egl_window_destroy(m_overlay);
+}
+
+void EglWaylandBackend::cleanupSurfaces()
+{
+    for (auto o : m_outputs) {
+        cleanupOutput(o);
     }
+    m_outputs.clear();
+}
+
+bool EglWaylandBackend::createEglWaylandOutput(WaylandOutput *waylandOutput)
+{
+    auto *output = new EglWaylandOutput(waylandOutput, this);
+    if (output->init(this)) {
+        return false;
+    }
+    m_outputs << output;
+    return true;
+}
+
+void EglWaylandBackend::cleanupOutput(EglWaylandOutput *output)
+{
+    wl_egl_window_destroy(output->m_overlay);
 }
 
 bool EglWaylandBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = m_wayland->sceneEglDisplay();
+    EGLDisplay display = m_backend->sceneEglDisplay();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
@@ -80,9 +163,9 @@ bool EglWaylandBackend::initializeEgl()
             if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_wayland")))
                 return false;
 
-            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_wayland->display(), nullptr);
+            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_backend->display(), nullptr);
         } else {
-            display = eglGetDisplay(m_wayland->display());
+            display = eglGetDisplay(m_backend->display());
         }
     }
 
@@ -116,37 +199,37 @@ bool EglWaylandBackend::initRenderingContext()
         return false;
     }
 
-    if (!m_wayland->surface()) {
+    auto waylandOutputs = m_backend->waylandOutputs();
+
+    // we only allow to start with at least one output
+    if (waylandOutputs.isEmpty()) {
         return false;
     }
 
-    const QSize &size = m_wayland->shellSurfaceSize();
-    auto s = m_wayland->surface();
-    connect(s, &KWayland::Client::Surface::frameRendered, Compositor::self(), &Compositor::bufferSwapComplete);
-    m_overlay = wl_egl_window_create(*s, size.width(), size.height());
-    if (!m_overlay) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Egl window failed";
+    for (auto *out : waylandOutputs) {
+        if (!createEglWaylandOutput(out)) {
+            return false;
+        }
+    }
+
+    if (m_outputs.isEmpty()) {
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Create Window Surfaces failed";
         return false;
     }
 
-    EGLSurface surface = EGL_NO_SURFACE;
-    if (m_havePlatformBase)
-        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *) m_overlay, nullptr);
-    else
-        surface = eglCreateWindowSurface(eglDisplay(), config(), m_overlay, nullptr);
-
-    if (surface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Create Window Surface failed";
-        return false;
-    }
-    setSurface(surface);
-
-    return makeContextCurrent();
+    auto *firstOutput = m_outputs.first();
+    // set our first surface as the one for the abstract backend, just to make it happy
+    setSurface(firstOutput->m_eglSurface);
+    return makeContextCurrent(firstOutput);
 }
 
-bool EglWaylandBackend::makeContextCurrent()
+bool EglWaylandBackend::makeContextCurrent(EglWaylandOutput *output)
 {
-    if (eglMakeCurrent(eglDisplay(), surface(), surface(), context()) == EGL_FALSE) {
+    const EGLSurface eglSurface = output->m_eglSurface;
+    if (eglSurface == EGL_NO_SURFACE) {
+        return false;
+    }
+    if (eglMakeCurrent(eglDisplay(), eglSurface, eglSurface, context()) == EGL_FALSE) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
         return false;
     }
@@ -156,6 +239,14 @@ bool EglWaylandBackend::makeContextCurrent()
         qCWarning(KWIN_WAYLAND_BACKEND) << "Error occurred while creating context " << error;
         return false;
     }
+
+    const QRect &v = output->m_waylandOutput->geometry();
+
+    qreal scale = output->m_waylandOutput->scale();
+
+    const QSize overall = screens()->size();
+    glViewport(-v.x() * scale, (v.height() - overall.height() + v.y()) * scale,
+               overall.width() * scale, overall.height() * scale);
     return true;
 }
 
@@ -189,18 +280,24 @@ bool EglWaylandBackend::initBufferConfigs()
 
 void EglWaylandBackend::present()
 {
-    m_wayland->surface()->setupFrameCallback();
+    for (auto *output: qAsConst(m_outputs)) {
+        makeContextCurrent(output);
+        presentOnSurface(output);
+    }
+}
+
+void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output)
+{
+    output->m_waylandOutput->surface()->setupFrameCallback();
     Compositor::self()->aboutToSwapBuffers();
 
     if (supportsBufferAge()) {
-        eglSwapBuffers(eglDisplay(), surface());
-        eglQuerySurface(eglDisplay(), surface(), EGL_BUFFER_AGE_EXT, &m_bufferAge);
-        setLastDamage(QRegion());
-        return;
+        eglSwapBuffers(eglDisplay(), output->m_eglSurface);
+        eglQuerySurface(eglDisplay(), output->m_eglSurface, EGL_BUFFER_AGE_EXT, &output->m_bufferAge);
     } else {
-        eglSwapBuffers(eglDisplay(), surface());
-        setLastDamage(QRegion());
+        eglSwapBuffers(eglDisplay(), output->m_eglSurface);
     }
+
 }
 
 void EglWaylandBackend::screenGeometryChanged(const QSize &size)
@@ -210,7 +307,9 @@ void EglWaylandBackend::screenGeometryChanged(const QSize &size)
     // TODO: base implementation in OpenGLBackend
 
     // The back buffer contents are now undefined
-    m_bufferAge = 0;
+    for (auto *output : qAsConst(m_outputs)) {
+        output->m_bufferAge = 0;
+    }
 }
 
 SceneOpenGLTexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGLTexture *texture)
@@ -220,20 +319,41 @@ SceneOpenGLTexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGLTe
 
 QRegion EglWaylandBackend::prepareRenderingFrame()
 {
-    if (!lastDamage().isEmpty())
-        present();
-    QRegion repaint;
-    if (supportsBufferAge())
-        repaint = accumulatedDamageHistory(m_bufferAge);
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     startRenderTimer();
-    return repaint;
+    return QRegion();
+}
+
+QRegion EglWaylandBackend::prepareRenderingForScreen(int screenId)
+{
+    auto *output = m_outputs.at(screenId);
+    makeContextCurrent(output);
+    if (supportsBufferAge()) {
+        QRegion region;
+
+        // Note: An age of zero means the buffer contents are undefined
+        if (output->m_bufferAge > 0 && output->m_bufferAge <= output->m_damageHistory.count()) {
+            for (int i = 0; i < output->m_bufferAge - 1; i++)
+                region |= output->m_damageHistory[i];
+        } else {
+            region = output->m_waylandOutput->geometry();
+        }
+
+        return region;
+    }
+    return QRegion();
 }
 
 void EglWaylandBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    if (damagedRegion.isEmpty()) {
-        setLastDamage(QRegion());
+    Q_UNUSED(renderedRegion)
+    Q_UNUSED(damagedRegion)
+}
+
+void EglWaylandBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    EglWaylandOutput *output = m_outputs[screenId];
+    if (damagedRegion.intersected(output->m_waylandOutput->geometry()).isEmpty() && screenId == 0) {
 
         // If the damaged region of a window is fully occluded, the only
         // rendering done, if any, will have been to repair a reused back
@@ -242,33 +362,27 @@ void EglWaylandBackend::endRenderingFrame(const QRegion &renderedRegion, const Q
         // In this case we won't post the back buffer. Instead we'll just
         // set the buffer age to 1, so the repaired regions won't be
         // rendered again in the next frame.
-        if (!renderedRegion.isEmpty())
+        if (!renderedRegion.intersected(output->m_waylandOutput->geometry()).isEmpty()) {
             glFlush();
+        }
 
-        m_bufferAge = 1;
+        for (auto *o : qAsConst(m_outputs)) {
+            o->m_bufferAge = 1;
+        }
         return;
     }
-
-    setLastDamage(renderedRegion);
-
-    if (!blocksForRetrace()) {
-        // This also sets lastDamage to empty which prevents the frame from
-        // being posted again when prepareRenderingFrame() is called.
-        present();
-    } else {
-        // Make sure that the GPU begins processing the command stream
-        // now and not the next time prepareRenderingFrame() is called.
-        glFlush();
-    }
+    presentOnSurface(output);
 
     // Save the damaged region to history
-    if (supportsBufferAge())
-        addToDamageHistory(damagedRegion);
-}
+    // Note: damage history is only collected for the first screen. See EglGbmBackend
+    // for mor information regarding this limitation.
+    if (supportsBufferAge() && screenId == 0) {
+        if (output->m_damageHistory.count() > 10) {
+            output->m_damageHistory.removeLast();
+        }
 
-void EglWaylandBackend::overlaySizeChanged(const QSize &size)
-{
-    wl_egl_window_resize(m_overlay, size.width(), size.height(), 0, 0);
+        output->m_damageHistory.prepend(damagedRegion.intersected(output->m_waylandOutput->geometry()));
+    }
 }
 
 bool EglWaylandBackend::usesOverlayWindow() const
@@ -276,15 +390,21 @@ bool EglWaylandBackend::usesOverlayWindow() const
     return false;
 }
 
+bool EglWaylandBackend::perScreenRendering() const
+{
+    return true;
+}
+
 /************************************************
  * EglTexture
  ************************************************/
 
-EglWaylandTexture::EglWaylandTexture(KWin::SceneOpenGLTexture *texture, KWin::EglWaylandBackend *backend)
+EglWaylandTexture::EglWaylandTexture(KWin::SceneOpenGLTexture *texture, KWin::Wayland::EglWaylandBackend *backend)
     : AbstractEglTexture(texture, backend)
 {
 }
 
 EglWaylandTexture::~EglWaylandTexture() = default;
 
-} // namespace
+}
+}

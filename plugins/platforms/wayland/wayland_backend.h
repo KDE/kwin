@@ -2,7 +2,8 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2019 Roman Gilg <subdiff@gmail.com>
+Copyright 2013 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -43,7 +44,6 @@ namespace Client
 class Buffer;
 class ShmPool;
 class Compositor;
-class ConfinedPointer;
 class ConnectionThread;
 class EventQueue;
 class Keyboard;
@@ -53,13 +53,15 @@ class PointerGestures;
 class PointerSwipeGesture;
 class PointerPinchGesture;
 class Registry;
+class RelativePointer;
+class RelativePointerManager;
 class Seat;
 class Shell;
-class ShellSurface;
+class SubCompositor;
+class SubSurface;
 class Surface;
 class Touch;
 class XdgShell;
-class XdgShellSurface;
 }
 }
 
@@ -72,6 +74,60 @@ namespace Wayland
 
 class WaylandBackend;
 class WaylandSeat;
+class WaylandOutput;
+
+class WaylandCursor : public QObject
+{
+    Q_OBJECT
+public:
+    explicit WaylandCursor(WaylandBackend *backend);
+    virtual ~WaylandCursor();
+
+    virtual void init();
+    virtual void move(const QPointF &globalPosition) {
+        Q_UNUSED(globalPosition)
+    }
+
+    void installImage();
+
+protected:
+    void resetSurface();
+    virtual void doInstallImage(wl_buffer *image, const QSize &size);
+    void drawSurface(wl_buffer *image, const QSize &size);
+
+    KWayland::Client::Surface *surface() const {
+        return m_surface;
+    }
+    WaylandBackend *backend() const {
+        return m_backend;
+    }
+
+private:
+    WaylandBackend *m_backend;
+    KWayland::Client::Pointer *m_pointer;
+    KWayland::Client::Surface *m_surface = nullptr;
+};
+
+class WaylandSubSurfaceCursor : public WaylandCursor
+{
+    Q_OBJECT
+public:
+    explicit WaylandSubSurfaceCursor(WaylandBackend *backend);
+    virtual ~WaylandSubSurfaceCursor();
+
+    void init() override;
+
+    void move(const QPointF &globalPosition) override;
+
+private:
+    void changeOutput(WaylandOutput *output);
+    void doInstallImage(wl_buffer *image, const QSize &size) override;
+    void createSubSurface();
+
+    QPointF absoluteToRelativePosition(const QPointF &position);
+    WaylandOutput *m_output = nullptr;
+    KWayland::Client::SubSurface *m_subSurface = nullptr;
+};
 
 class WaylandSeat : public QObject
 {
@@ -79,13 +135,6 @@ class WaylandSeat : public QObject
 public:
     WaylandSeat(wl_seat *seat, WaylandBackend *backend);
     virtual ~WaylandSeat();
-
-    void installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
-    void installCursorImage(const QImage &image, const QPoint &hotspot);
-    void setInstallCursor(bool install);
-    bool isInstallCursor() const {
-        return m_installCursor;
-    }
 
     KWayland::Client::Pointer *pointer() const {
         return m_pointer;
@@ -101,25 +150,26 @@ private:
     void destroyKeyboard();
     void destroyTouch();
     void setupPointerGestures();
+
     KWayland::Client::Seat *m_seat;
     KWayland::Client::Pointer *m_pointer;
     KWayland::Client::Keyboard *m_keyboard;
     KWayland::Client::Touch *m_touch;
-    KWayland::Client::Surface *m_cursor;
     KWayland::Client::PointerGestures *m_gesturesInterface = nullptr;
     KWayland::Client::PointerPinchGesture *m_pinchGesture = nullptr;
     KWayland::Client::PointerSwipeGesture *m_swipeGesture = nullptr;
+
     uint32_t m_enteredSerial;
+
     WaylandBackend *m_backend;
-    bool m_installCursor;
 };
 
 /**
- * @brief Class encapsulating all Wayland data structures needed by the Egl backend.
- *
- * It creates the connection to the Wayland Compositor, sets up the registry and creates
- * the Wayland surface and its shell mapping.
- **/
+* @brief Class encapsulating all Wayland data structures needed by the Egl backend.
+*
+* It creates the connection to the Wayland Compositor, sets up the registry and creates
+* the Wayland output surfaces and its shell mappings.
+*/
 class KWIN_EXPORT WaylandBackend : public Platform
 {
     Q_OBJECT
@@ -131,51 +181,77 @@ public:
     void init() override;
     wl_display *display();
     KWayland::Client::Compositor *compositor();
+    KWayland::Client::SubCompositor *subCompositor();
     KWayland::Client::ShmPool *shmPool();
-
-    KWayland::Client::Surface *surface() const;
-    QSize shellSurfaceSize() const;
 
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend *createQPainterBackend() override;
 
-    QSize screenSize() const override {
-        return shellSurfaceSize();
-    }
-
     void flush();
 
-    void togglePointerConfinement();
+    WaylandSeat *seat() const {
+        return m_seat;
+    }
+    KWayland::Client::PointerConstraints *pointerConstraints() const {
+        return m_pointerConstraints;
+    }
+
+    void pointerMotionRelativeToOutput(const QPointF &position, quint32 time);
+
+    bool supportsPointerLock();
+    void togglePointerLock();
+    bool pointerIsLocked();
 
     QVector<CompositingType> supportedCompositors() const override;
 
+    void checkBufferSwap();
+
+    WaylandOutput* getOutputAt(const QPointF globalPosition);
+    Outputs outputs() const override;
+    Outputs enabledOutputs() const override;
+    QVector<WaylandOutput*> waylandOutputs() const {
+        return m_outputs;
+    }
+
 Q_SIGNALS:
-    void shellSurfaceSizeChanged(const QSize &size);
+    void outputAdded(WaylandOutput *output);
+    void outputRemoved(WaylandOutput *output);
+
     void systemCompositorDied();
     void connectionFailed();
+
+    void pointerLockSupportedChanged();
+    void pointerLockChanged(bool locked);
+
 private:
     void initConnection();
-    void createSurface();
-    template <class T>
-    void setupSurface(T *surface);
-    void updateWindowTitle();
+    void createOutputs();
+
+    void updateScreenSize(WaylandOutput *output);
+    void relativeMotionHandler(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp);
+
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;
     KWayland::Client::Compositor *m_compositor;
+    KWayland::Client::SubCompositor *m_subCompositor;
     KWayland::Client::Shell *m_shell;
-    KWayland::Client::Surface *m_surface;
-    KWayland::Client::ShellSurface *m_shellSurface;
     KWayland::Client::XdgShell *m_xdgShell = nullptr;
-    KWayland::Client::XdgShellSurface *m_xdgShellSurface = nullptr;
-    QScopedPointer<WaylandSeat> m_seat;
     KWayland::Client::ShmPool *m_shm;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
+
+    WaylandSeat *m_seat = nullptr;
+    KWayland::Client::RelativePointer *m_relativePointer = nullptr;
+    KWayland::Client::RelativePointerManager *m_relativePointerManager = nullptr;
     KWayland::Client::PointerConstraints *m_pointerConstraints = nullptr;
-    KWayland::Client::ConfinedPointer *m_pointerConfinement = nullptr;
+
     QThread *m_connectionThread;
-    bool m_isPointerConfined = false;
+    QVector<WaylandOutput*> m_outputs;
+
+    WaylandCursor *m_waylandCursor = nullptr;
+
+    bool m_pointerLockRequested = false;
 };
 
 inline
@@ -191,15 +267,15 @@ KWayland::Client::Compositor *WaylandBackend::compositor()
 }
 
 inline
-KWayland::Client::ShmPool* WaylandBackend::shmPool()
+KWayland::Client::SubCompositor *WaylandBackend::subCompositor()
 {
-    return m_shm;
+    return m_subCompositor;
 }
 
 inline
-KWayland::Client::Surface *WaylandBackend::surface() const
+KWayland::Client::ShmPool* WaylandBackend::shmPool()
 {
-    return m_surface;
+    return m_shm;
 }
 
 } // namespace Wayland
