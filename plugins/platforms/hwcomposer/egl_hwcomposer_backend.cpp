@@ -130,6 +130,10 @@ bool EglHwcomposerBackend::makeContextCurrent()
         qCWarning(KWIN_HWCOMPOSER) << "Error occurred while creating context " << error;
         return false;
     }
+
+    const QSize overall = m_backend->size();
+    glViewport(0, 0, overall.width(), overall.height());
+
     return true;
 }
 

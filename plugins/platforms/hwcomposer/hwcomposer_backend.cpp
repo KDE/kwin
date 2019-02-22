@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 // KWayland
 #include <KWayland/Server/output_interface.h>
+// KDE
+#include <KConfigGroup>
 // Qt
 #include <QKeyEvent>
 #include <QDBusConnection>
@@ -253,12 +255,28 @@ void HwcomposerBackend::init()
     setReady(true);
 }
 
-QSize HwcomposerBackend::screenSize() const
+QSize HwcomposerBackend::size() const
 {
     if (m_output) {
         return m_output->pixelSize();
     }
     return QSize();
+}
+
+QSize HwcomposerBackend::screenSize() const
+{
+    if (m_output) {
+        return m_output->pixelSize() / m_output->scale();
+    }
+    return QSize();
+}
+
+int HwcomposerBackend::scale() const
+ {
+    if (m_output) {
+        return m_output->scale();
+    }
+    return 1;
 }
 
 void HwcomposerBackend::initLights()
@@ -510,6 +528,9 @@ HwcomposerOutput::HwcomposerOutput(hwc_composer_device_1_t *device)
     setInternal(true);
     setEnabled(true);
     setDpmsSupported(true);
+
+    const auto outputGroup = kwinApp()->config()->group("HWComposerOutputs").group("0");
+    setScale(outputGroup.readEntry("Scale", 1));
     setWaylandMode(m_pixelSize, mode.refreshRate);
 }
 

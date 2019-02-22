@@ -80,10 +80,10 @@ public:
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
 
-    QSize size() const {
-        return screenSize();
-    }
+    QSize size() const;
     QSize screenSize() const override;
+
+    int scale() const;
 
     HwcomposerWindow *createSurface();
 
