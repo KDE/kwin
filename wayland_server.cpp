@@ -162,7 +162,6 @@ void WaylandServer::createSurface(T *surface)
     } else {
         client = new ShellClient(surface);
     }
-    client = new ShellClient(surface);
     if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(surface->surface())) {
         client->installServerSideDecoration(deco);
     }
