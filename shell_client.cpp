@@ -920,14 +920,15 @@ void ShellClient::setFullScreen(bool set, bool user)
     if (isFullScreen()) {
         setGeometry(workspace()->clientArea(FullScreenArea, this));
     } else {
-        if (!m_geomFsRestore.isNull()) {
+        if (m_geomFsRestore.isValid()) {
             int currentScreen = screen();
             setGeometry(QRect(m_geomFsRestore.topLeft(), adjustedSize(m_geomFsRestore.size())));
             if( currentScreen != screen())
                 workspace()->sendClientToScreen( this, currentScreen );
         } else {
-            // does this ever happen?
-            setGeometry(workspace()->clientArea(MaximizeArea, this));
+            // this can happen when the window was first shown already fullscreen,
+            // so let the client set the size by itself
+            setGeometry(QRect(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
         }
     }
     updateWindowRules(Rules::Fullscreen|Rules::Position|Rules::Size);
