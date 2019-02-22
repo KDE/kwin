@@ -30,6 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtScript/QScriptEngineAgent>
 #include <QJSValue>
 
+#include <QDBusContext>
+#include <QDBusMessage>
+
 class QQmlComponent;
 class QQmlContext;
 class QQmlEngine;
@@ -214,7 +217,7 @@ private:
     QList<QScriptValue> m_userActionsMenuCallbacks;
 };
 
-class Script : public AbstractScript
+class Script : public AbstractScript, QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
@@ -254,6 +257,7 @@ private:
      **/
     QByteArray loadScriptFromFile(const QString &fileName);
     QScriptEngine *m_engine;
+    QDBusMessage m_invocationContext;
     bool m_starting;
     QScopedPointer<ScriptUnloaderAgent> m_agent;
     QHash<int, QAction*> m_touchScreenEdgeCallbacks;

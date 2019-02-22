@@ -465,6 +465,12 @@ void KWin::Script::run()
     if (running() || m_starting) {
         return;
     }
+
+    if (calledFromDBus()) {
+        m_invocationContext = message();
+        setDelayedReply(true);
+    }
+
     m_starting = true;
     QFutureWatcher<QByteArray> *watcher = new QFutureWatcher<QByteArray>(this);
     connect(watcher, SIGNAL(finished()), SLOT(slotScriptLoadedFromFile()));
@@ -492,8 +498,16 @@ void KWin::Script::slotScriptLoadedFromFile()
         // do not load empty script
         deleteLater();
         watcher->deleteLater();
+
+        if (m_invocationContext.type() == QDBusMessage::MethodCallMessage) {
+            auto reply = m_invocationContext.createErrorReply("org.kde.kwin.Scripting.FileError", QString("Could not open %1").arg(fileName()));
+            QDBusConnection::sessionBus().send(reply);
+            m_invocationContext = QDBusMessage();
+        }
+
         return;
     }
+
     QScriptValue optionsValue = m_engine->newQObject(options, QScriptEngine::QtOwnership,
                             QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
     m_engine->globalObject().setProperty(QStringLiteral("options"), optionsValue, QScriptValue::Undeletable);
@@ -507,6 +521,12 @@ void KWin::Script::slotScriptLoadedFromFile()
     if (ret.isError()) {
         sigException(ret);
         deleteLater();
+    }
+
+    if (m_invocationContext.type() == QDBusMessage::MethodCallMessage) {
+        auto reply = m_invocationContext.createReply();
+        QDBusConnection::sessionBus().send(reply);
+        m_invocationContext = QDBusMessage();
     }
 
     watcher->deleteLater();

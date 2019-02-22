@@ -22,6 +22,7 @@ target_link_libraries( testTabBoxClientModel
     Qt5::Script
     Qt5::Quick
     Qt5::Test
+    Qt5::DBus
     Qt5::X11Extras
     KF5::ConfigCore
     KF5::I18n
@@ -54,6 +55,7 @@ target_link_libraries( testTabBoxHandler
     Qt5::Script
     Qt5::Quick
     Qt5::Test
+    Qt5::DBus
     Qt5::X11Extras
     KF5::ConfigCore
     KF5::I18n

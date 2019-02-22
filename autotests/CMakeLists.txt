@@ -365,6 +365,7 @@ target_link_libraries(testOnScreenNotification
     Qt5::Test
     Qt5::Widgets # QAction include
     Qt5::Quick
+    Qt5::DBus
     KF5::ConfigCore
 )
 
