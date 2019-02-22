@@ -500,8 +500,9 @@ void Placement::placeTransient(AbstractClient *c)
 {
     const auto parent = c->transientFor();
     const QRect screen =  Workspace::self()->clientArea(parent->isFullScreen() ? FullScreenArea : PlacementArea, parent);
-    const QPoint popupPos = c->transientPlacement(screen).topLeft();
-    c->move(popupPos);
+    const QRect popupGeometry = c->transientPlacement(screen);
+    c->setGeometry(popupGeometry);
+
 
     // Potentially a client could set no constraint adjustments
     // and we'll be offscreen.

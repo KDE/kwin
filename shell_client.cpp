@@ -1453,6 +1453,7 @@ QRect ShellClient::transientPlacement(const QRect &bounds) const
     Qt::Edges gravity;
     QPoint offset;
     PositionerConstraints constraintAdjustments;
+    QSize size = geometry().size();
 
     const QPoint parentClientPos = transientFor()->pos() + transientFor()->clientPos();
     QRect popupPosition;
@@ -1486,12 +1487,16 @@ QRect ShellClient::transientPlacement(const QRect &bounds) const
         gravity = m_xdgShellPopup->gravity();
         offset = m_xdgShellPopup->anchorOffset();
         constraintAdjustments = m_xdgShellPopup->constraintAdjustments();
+        if (!size.isValid()) {
+            size = m_xdgShellPopup->initialSize();
+        }
     } else {
         Q_UNREACHABLE();
     }
 
+
     //initial position
-    popupPosition = QRect(popupOffset(anchorRect, anchorEdge, gravity) + offset + parentClientPos, geometry().size());
+    popupPosition = QRect(popupOffset(anchorRect, anchorEdge, gravity, size) + offset + parentClientPos, size);
 
     //if that fits, we don't need to do anything
     if (inBounds(popupPosition)) {
@@ -1510,20 +1515,21 @@ QRect ShellClient::transientPlacement(const QRect &bounds) const
             if (flippedGravity & (Qt::LeftEdge | Qt::RightEdge)) {
                 flippedGravity ^= (Qt::LeftEdge | Qt::RightEdge);
             }
-            auto flippedPopupPosition = QRect(popupOffset(anchorRect, flippedAnchorEdge, flippedGravity) + offset + parentClientPos, geometry().size());
+            auto flippedPopupPosition = QRect(popupOffset(anchorRect, flippedAnchorEdge, flippedGravity, size) + offset + parentClientPos, size);
 
             //if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupPosition, Qt::LeftEdge | Qt::RightEdge)) {
-                popupPosition.setX(flippedPopupPosition.x());
+                popupPosition.moveLeft(flippedPopupPosition.x());
             }
         }
     }
     if (constraintAdjustments & PositionerConstraint::SlideX) {
         if (!inBounds(popupPosition, Qt::LeftEdge)) {
-            popupPosition.setX(bounds.x());
+            popupPosition.moveLeft(bounds.x());
         }
         if (!inBounds(popupPosition, Qt::RightEdge)) {
-            popupPosition.setX(bounds.x() + bounds.width() - geometry().width());
+            // moveRight suffers from the classic QRect off by one issue
+            popupPosition.moveLeft(bounds.x() + bounds.width() - size.width());
         }
     }
     if (constraintAdjustments & PositionerConstraint::ResizeX) {
@@ -1542,20 +1548,20 @@ QRect ShellClient::transientPlacement(const QRect &bounds) const
             if (flippedGravity & (Qt::TopEdge | Qt::BottomEdge)) {
                 flippedGravity ^= (Qt::TopEdge | Qt::BottomEdge);
             }
-            auto flippedPopupPosition = QRect(popupOffset(anchorRect, flippedAnchorEdge, flippedGravity) + offset + parentClientPos, geometry().size());
+            auto flippedPopupPosition = QRect(popupOffset(anchorRect, flippedAnchorEdge, flippedGravity, size) + offset + parentClientPos, size);
 
             //if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupPosition, Qt::TopEdge | Qt::BottomEdge)) {
-                popupPosition.setY(flippedPopupPosition.y());
+                popupPosition.moveTop(flippedPopupPosition.y());
             }
         }
     }
     if (constraintAdjustments & PositionerConstraint::SlideY) {
         if (!inBounds(popupPosition, Qt::TopEdge)) {
-            popupPosition.setY(bounds.y());
+            popupPosition.moveTop(bounds.y());
         }
         if (!inBounds(popupPosition, Qt::BottomEdge)) {
-            popupPosition.setY(bounds.y() + bounds.height() - geometry().height());
+            popupPosition.moveTop(bounds.y() + bounds.height() - size.height());
         }
     }
     if (constraintAdjustments & PositionerConstraint::ResizeY) {
@@ -1565,9 +1571,8 @@ QRect ShellClient::transientPlacement(const QRect &bounds) const
     return popupPosition;
 }
 
-QPoint ShellClient::popupOffset(const QRect &anchorRect, const Qt::Edges anchorEdge, const Qt::Edges gravity) const
+QPoint ShellClient::popupOffset(const QRect &anchorRect, const Qt::Edges anchorEdge, const Qt::Edges gravity, const QSize popupSize) const
 {
-    const QSize popupSize = geometry().size();
     QPoint anchorPoint;
     switch (anchorEdge & (Qt::LeftEdge | Qt::RightEdge)) {
     case Qt::LeftEdge:
