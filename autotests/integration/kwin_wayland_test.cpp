@@ -126,25 +126,26 @@ void WaylandTestApplication::continueStartupWithScreens()
 {
     disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &WaylandTestApplication::continueStartupWithScreens);
     createScreens();
-
-    if (operationMode() == OperationModeWaylandOnly) {
-        createCompositor();
-        connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
-        return;
-    }
     createCompositor();
-    connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithXwayland);
+    connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
+}
+
+void WaylandTestApplication::finalizeStartup()
+{
+    if (m_xwayland) {
+        disconnect(m_xwayland, &Xwl::Xwayland::initialized, this, &WaylandTestApplication::finalizeStartup);
+    }
+    createWorkspace();
 }
 
 void WaylandTestApplication::continueStartupWithScene()
 {
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
-    createWorkspace();
-}
 
-void WaylandTestApplication::continueStartupWithXwayland()
-{
-    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithXwayland);
+    if (operationMode() == OperationModeWaylandOnly) {
+        finalizeStartup();
+        return;
+    }
 
     m_xwayland = new Xwl::Xwayland(this);
     connect(m_xwayland, &Xwl::Xwayland::criticalError, this, [](int code) {
@@ -153,6 +154,7 @@ void WaylandTestApplication::continueStartupWithXwayland()
         std::cerr << "Xwayland had a critical error. Going to exit now." << std::endl;
         exit(code);
     });
+    connect(m_xwayland, &Xwl::Xwayland::initialized, this, &WaylandTestApplication::finalizeStartup);
     m_xwayland->init();
 }
 

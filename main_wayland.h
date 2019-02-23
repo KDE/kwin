@@ -63,7 +63,7 @@ private:
     void createBackend();
     void continueStartupWithScreens();
     void continueStartupWithScene();
-    void continueStartupWithXwayland();
+    void finalizeStartup();
     void startSession() override;
 
     bool m_startXWayland = false;

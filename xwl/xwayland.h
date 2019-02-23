@@ -56,6 +56,7 @@ public:
     }
 
 Q_SIGNALS:
+    void initialized();
     void criticalError(int code);
 
 private:

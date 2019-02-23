@@ -180,27 +180,28 @@ void ApplicationWayland::continueStartupWithScreens()
 {
     disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
     createScreens();
-
-    if (operationMode() == OperationModeWaylandOnly) {
-        createCompositor();
-        connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
-        return;
-    }
     createCompositor();
-    connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithXwayland);
+    connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
 }
 
-void ApplicationWayland::continueStartupWithScene()
+void ApplicationWayland::finalizeStartup()
 {
-    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
+    if (m_xwayland) {
+        disconnect(m_xwayland, &Xwl::Xwayland::initialized, this, &ApplicationWayland::finalizeStartup);
+    }
     startSession();
     createWorkspace();
     notifyKSplash();
 }
 
-void ApplicationWayland::continueStartupWithXwayland()
+void ApplicationWayland::continueStartupWithScene()
 {
-    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithXwayland);
+    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
+
+    if (operationMode() == OperationModeWaylandOnly) {
+        finalizeStartup();
+        return;
+    }
 
     m_xwayland = new Xwl::Xwayland(this);
     connect(m_xwayland, &Xwl::Xwayland::criticalError, this, [](int code) {
@@ -209,6 +210,7 @@ void ApplicationWayland::continueStartupWithXwayland()
         std::cerr << "Xwayland had a critical error. Going to exit now." << std::endl;
         exit(code);
     });
+    connect(m_xwayland, &Xwl::Xwayland::initialized, this, &ApplicationWayland::finalizeStartup);
     m_xwayland->init();
 }
 

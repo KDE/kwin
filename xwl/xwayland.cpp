@@ -262,12 +262,9 @@ void Xwayland::continueStartupWithX()
     env.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
     m_app->setProcessStartupEnvironment(env);
 
-    m_app->startSession();
-    m_app->createWorkspace();
+    emit initialized();
 
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
-
-    m_app->notifyKSplash();
 }
 
 DragEventReply Xwayland::dragMoveFilter(Toplevel *target, QPoint pos)

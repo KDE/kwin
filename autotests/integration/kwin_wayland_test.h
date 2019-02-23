@@ -76,7 +76,7 @@ private:
     void createBackend();
     void continueStartupWithScreens();
     void continueStartupWithScene();
-    void continueStartupWithXwayland();
+    void finalizeStartup();
 
     Xwl::Xwayland *m_xwayland = nullptr;
 };
