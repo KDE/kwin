@@ -80,6 +80,7 @@ public:
     void resourceDisconnected(XdgOutputV1Interface *resource);
     QPoint pos;
     QSize size;
+    bool dirty = false;
     bool doneOnce = false;
     QList<XdgOutputV1Interface*> resources;
 };
@@ -187,6 +188,7 @@ void XdgOutputInterface::setLogicalSize(const QSize &size)
         return;
     }
     d->size = size;
+    d->dirty = true;
     for(auto resource: d->resources) {
         resource->setLogicalSize(size);
     }
@@ -203,6 +205,7 @@ void XdgOutputInterface::setLogicalPosition(const QPoint &pos)
         return;
     }
     d->pos = pos;
+    d->dirty = true;
     for(auto resource: d->resources) {
         resource->setLogicalPosition(pos);
     }
@@ -216,6 +219,10 @@ QPoint XdgOutputInterface::logicalPosition() const
 void XdgOutputInterface::done()
 {
     d->doneOnce = true;
+    if (!d->dirty) {
+        return;
+    }
+    d->dirty = false;
     for(auto resource: d->resources) {
         resource->done();
     }
