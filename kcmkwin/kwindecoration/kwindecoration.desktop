@@ -74,6 +74,7 @@ Name[zh_TW]=視窗裝飾
 
 Comment=Configure window titlebars and borders
 Comment[ca]=Configura la barra de títol i les vores de les finestres
+Comment[ca@valencia]=Configura la barra de títol i les vores de les finestres
 Comment[es]=Configurar barra de título y bordes de las ventanas
 Comment[gl]=Configurar as barras de título e os bordos das xanelas
 Comment[id]=Konfigurasikan tepi dan bilah-judul window
