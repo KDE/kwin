@@ -269,11 +269,7 @@ private:
         {
             m_client->m_requestGeometryBlockCounter--;
             if (m_client->m_requestGeometryBlockCounter == 0) {
-                if (m_client->m_blockedRequestGeometry.isValid()) {
-                    m_client->requestGeometry(m_client->m_blockedRequestGeometry);
-                } else if (m_client->m_xdgShellSurface) {
-                    m_client->m_xdgShellSurface->configure(m_client->xdgSurfaceStates());
-                }
+                m_client->requestGeometry(m_client->m_blockedRequestGeometry);
             }
         }
     private:

@@ -1084,29 +1084,39 @@ bool ShellClient::requestGeometry(const QRect &rect)
         m_blockedRequestGeometry = rect;
         return false;
     }
-    PendingConfigureRequest configureRequest;
-    configureRequest.positionAfterResize = rect.topLeft();
-    configureRequest.maximizeMode = m_requestedMaximizeMode;
 
-    const QSize size = rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
+    QSize size;
+    if (rect.isValid()) {
+        size = rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
+    } else {
+        size = QSize(0, 0);
+    }
     m_requestedClientSize = size;
 
-    if (m_shellSurface) {
+    quint64 serialId = 0;
+
+    if (m_shellSurface && !size.isEmpty()) {
         m_shellSurface->requestSize(size);
     }
     if (m_xdgShellSurface) {
-        configureRequest.serialId = m_xdgShellSurface->configure(xdgSurfaceStates(), size);
+        serialId = m_xdgShellSurface->configure(xdgSurfaceStates(), size);
     }
     if (m_xdgShellPopup) {
         auto parent = transientFor();
         if (parent) {
             const QPoint globalClientContentPos = parent->geometry().topLeft() + parent->clientPos();
-            const QPoint relativeOffset = rect.topLeft() -globalClientContentPos;
-            configureRequest.serialId = m_xdgShellPopup->configure(QRect(relativeOffset, rect.size()));
+            const QPoint relativeOffset = rect.topLeft() - globalClientContentPos;
+            serialId = m_xdgShellPopup->configure(QRect(relativeOffset, rect.size()));
         }
     }
 
-    m_pendingConfigureRequests.append(configureRequest);
+    if (rect.isValid()) { //if there's no requested size, then there's implicity no positional information worth using
+        PendingConfigureRequest configureRequest;
+        configureRequest.serialId = serialId;
+        configureRequest.positionAfterResize = rect.topLeft();
+        configureRequest.maximizeMode = m_requestedMaximizeMode;
+        m_pendingConfigureRequests.append(configureRequest);
+    }
 
     m_blockedRequestGeometry = QRect();
     return true;
