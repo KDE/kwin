@@ -90,6 +90,7 @@ class ScriptedEffectWithDebugSpy : public KWin::ScriptedEffect
 public:
     ScriptedEffectWithDebugSpy();
     bool load(const QString &name);
+    using AnimationEffect::AniMap;
     using AnimationEffect::state;
 signals:
     void testOutput(const QString &data);
@@ -298,7 +299,7 @@ void ScriptedEffectsTest::testAnimations()
     QCOMPARE(workspace()->activeClient(), c);
 
     {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 1);
         QCOMPARE(state.firstKey(), c->effectWindow());
         const auto &animationsForWindow = state.first().first;
@@ -324,7 +325,7 @@ void ScriptedEffectsTest::testAnimations()
 
     c->setMinimized(true);
     {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 1);
         const auto &animationsForWindow = state.first().first;
         QCOMPARE(animationsForWindow.count(), animationCount);
@@ -343,7 +344,7 @@ void ScriptedEffectsTest::testAnimations()
     }
     c->setMinimized(false);
     {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 0);
     }
 }
@@ -667,7 +668,7 @@ void ScriptedEffectsTest::testRedirect()
     // initially, the test animation is at the source position
 
     {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 1);
         QCOMPARE(state.firstKey(), c->effectWindow());
         const QList<AniData> animations = state.first().first;
@@ -689,7 +690,7 @@ void ScriptedEffectsTest::testRedirect()
     QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
 
     {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 1);
         QCOMPARE(state.firstKey(), c->effectWindow());
         const QList<AniData> animations = state.first().first;
@@ -704,10 +705,10 @@ void ScriptedEffectsTest::testRedirect()
 
     QFETCH(bool, shouldTerminate);
     if (shouldTerminate) {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 0);
     } else {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 1);
         QCOMPARE(state.firstKey(), c->effectWindow());
         const QList<AniData> animations = state.first().first;
@@ -744,7 +745,7 @@ void ScriptedEffectsTest::testComplete()
 
     // initially, the test animation should be at the start position
     {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 1);
         QCOMPARE(state.firstKey(), c->effectWindow());
         const QList<AniData> animations = state.first().first;
@@ -757,7 +758,7 @@ void ScriptedEffectsTest::testComplete()
     QTest::qWait(250);
 
     {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 1);
         QCOMPARE(state.firstKey(), c->effectWindow());
         const QList<AniData> animations = state.first().first;
@@ -777,7 +778,7 @@ void ScriptedEffectsTest::testComplete()
     QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
 
     {
-        const AnimationEffect::AniMap state = effect->state();
+        const auto state = effect->state();
         QCOMPARE(state.count(), 1);
         QCOMPARE(state.firstKey(), c->effectWindow());
         const QList<AniData> animations = state.first().first;

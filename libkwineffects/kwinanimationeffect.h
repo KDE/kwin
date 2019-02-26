@@ -110,8 +110,6 @@ class KWINEFFECTS_EXPORT AnimationEffect : public Effect
     Q_OBJECT
 
 public:
-    typedef QMap< EffectWindow*, QPair<QList<AniData>, QRect> > AniMap;
-
     enum Anchor { Left = 1<<0, Top = 1<<1, Right = 1<<2, Bottom = 1<<3,
                   Horizontal = Left|Right, Vertical = Top|Bottom, Mouse = 1<<4  };
     Q_ENUM(Anchor)
@@ -376,7 +374,14 @@ protected:
     virtual void genericAnimation( EffectWindow *w, WindowPaintData &data, float progress, uint meta )
     {Q_UNUSED(w); Q_UNUSED(data); Q_UNUSED(progress); Q_UNUSED(meta);}
 
-    //Internal for unit tests
+    /**
+     * @internal
+     **/
+    typedef QMap<EffectWindow *, QPair<QList<AniData>, QRect> > AniMap;
+
+    /**
+     * @internal
+     **/
     AniMap state() const;
 
 private:
