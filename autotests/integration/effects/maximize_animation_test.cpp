@@ -116,12 +116,14 @@ void MaximizeAnimationTest::testMaximizeRestore()
     QVERIFY(!surface.isNull());
 
     QFETCH(Test::ShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(qobject_cast<XdgShellSurface *>(
-        Test::createShellSurface(type, surface.data())));
+    QScopedPointer<XdgShellSurface> shellSurface(createXdgShellSurface(type, surface.data(), nullptr, Test::CreationSetup::CreateOnly));
 
     // Wait for the initial configure event.
     XdgShellSurface::States states;
     QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+
+    surface->commit(Surface::CommitFlag::None);
+
     QVERIFY(configureRequestedSpy.isValid());
     QVERIFY(configureRequestedSpy.wait());
     QCOMPARE(configureRequestedSpy.count(), 1);

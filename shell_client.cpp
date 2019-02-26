@@ -88,7 +88,9 @@ ShellClient::ShellClient(XdgShellSurfaceInterface *surface)
     , m_internal(surface->client() == waylandServer()->internalConnection())
 {
     setSurface(surface->surface());
+    m_requestGeometryBlockCounter++;
     init();
+    connect(surface->surface(), &SurfaceInterface::committed, this, &ShellClient::finishInit);
 }
 
 ShellClient::ShellClient(XdgShellPopupInterface *surface)
@@ -99,7 +101,9 @@ ShellClient::ShellClient(XdgShellPopupInterface *surface)
     , m_internal(surface->client() == waylandServer()->internalConnection())
 {
     setSurface(surface->surface());
+    m_requestGeometryBlockCounter++;
     init();
+    connect(surface->surface(), &SurfaceInterface::committed, this, &ShellClient::finishInit);
 }
 
 ShellClient::~ShellClient() = default;
@@ -314,7 +318,6 @@ void ShellClient::init()
             }
             m_xdgShellSurface->configure(xdgSurfaceStates(), m_requestedClientSize);
         };
-        configure();
         connect(this, &AbstractClient::activeChanged, this, configure);
         connect(this, &AbstractClient::clientStartUserMovedResized, this, configure);
         connect(this, &AbstractClient::clientFinishUserMovedResized, this, configure);
@@ -329,9 +332,6 @@ void ShellClient::init()
         connect(m_xdgShellPopup, &XdgShellPopupInterface::configureAcknowledged, this, [this](int serial) {
            m_lastAckedConfigureRequest = serial;
         });
-
-        QRect position = QRect(m_xdgShellPopup->transientOffset(), m_xdgShellPopup->initialSize());
-        m_xdgShellPopup->configure(position);
 
         connect(m_xdgShellPopup, &XdgShellPopupInterface::destroyed, this, &ShellClient::destroyClient);
     }
@@ -367,6 +367,21 @@ void ShellClient::init()
         applyWindowRules(); // Just in case
         RuleBook::self()->discardUsed(this, false);   // Remove ApplyNow rules
         updateWindowRules(Rules::All); // Was blocked while !isManaged()
+    }
+}
+
+void ShellClient::finishInit() {
+    SurfaceInterface *s = surface();
+    disconnect(s, &SurfaceInterface::committed, this, &ShellClient::finishInit);
+
+    if (m_xdgShellPopup) {
+        QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
+        placeIn(area);
+    }
+
+    m_requestGeometryBlockCounter--;
+    if (m_requestGeometryBlockCounter == 0) {
+        requestGeometry(m_blockedRequestGeometry);
     }
 }
 

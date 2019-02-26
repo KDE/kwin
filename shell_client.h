@@ -195,7 +195,15 @@ private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);
 
 private:
+    /**
+     *  Called when the shell is created.
+     **/
     void init();
+    /**
+     * Called for the XDG case when the shell surface is committed to the surface.
+     * At this point all initial properties should have been set by the client.
+     **/
+    void finishInit();
     template <class T>
     void initSurface(T *shellSurface);
     void createDecoration(const QRect &oldgeom);
@@ -258,7 +266,7 @@ private:
     bool m_hasPopupGrab = false;
     qreal m_opacity = 1.0;
 
-    class RequestGeometryBlocker {
+    class RequestGeometryBlocker { //TODO rename ConfigureBlocker when this class is Xdg only
     public:
         RequestGeometryBlocker(ShellClient *client)
             : m_client(client)

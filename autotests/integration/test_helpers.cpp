@@ -484,7 +484,7 @@ ShellSurface *createShellSurface(Surface *surface, QObject *parent)
     return s;
 }
 
-XdgShellSurface *createXdgShellV5Surface(Surface *surface, QObject *parent)
+XdgShellSurface *createXdgShellV5Surface(Surface *surface, QObject *parent, CreationSetup creationSetup)
 {
     if (!s_waylandConnection.xdgShellV5) {
         return nullptr;
@@ -494,10 +494,13 @@ XdgShellSurface *createXdgShellV5Surface(Surface *surface, QObject *parent)
         delete s;
         return nullptr;
     }
+    if (creationSetup == CreationSetup::CreateAndConfigure) {
+        initXdgShellSurface(surface, s);
+    }
     return s;
 }
 
-XdgShellSurface *createXdgShellV6Surface(Surface *surface, QObject *parent)
+XdgShellSurface *createXdgShellV6Surface(Surface *surface, QObject *parent, CreationSetup creationSetup)
 {
     if (!s_waylandConnection.xdgShellV6) {
         return nullptr;
@@ -507,10 +510,13 @@ XdgShellSurface *createXdgShellV6Surface(Surface *surface, QObject *parent)
         delete s;
         return nullptr;
     }
+    if (creationSetup == CreationSetup::CreateAndConfigure) {
+        initXdgShellSurface(surface, s);
+    }
     return s;
 }
 
-XdgShellSurface *createXdgShellStableSurface(Surface *surface, QObject *parent)
+XdgShellSurface *createXdgShellStableSurface(Surface *surface, QObject *parent, CreationSetup creationSetup)
 {
     if (!s_waylandConnection.xdgShellStable) {
         return nullptr;
@@ -520,10 +526,13 @@ XdgShellSurface *createXdgShellStableSurface(Surface *surface, QObject *parent)
         delete s;
         return nullptr;
     }
+    if (creationSetup == CreationSetup::CreateAndConfigure) {
+        initXdgShellSurface(surface, s);
+    }
     return s;
 }
 
-XdgShellPopup *createXdgShellStablePopup(Surface *surface, XdgShellSurface *parentSurface, const XdgPositioner &positioner, QObject *parent)
+XdgShellPopup *createXdgShellStablePopup(Surface *surface, XdgShellSurface *parentSurface, const XdgPositioner &positioner, QObject *parent, CreationSetup creationSetup)
 {
     if (!s_waylandConnection.xdgShellStable) {
         return nullptr;
@@ -533,8 +542,32 @@ XdgShellPopup *createXdgShellStablePopup(Surface *surface, XdgShellSurface *pare
         delete s;
         return nullptr;
     }
+    if (creationSetup == CreationSetup::CreateAndConfigure) {
+        initXdgShellPopup(surface, s);
+    }
     return s;
 }
+
+void initXdgShellSurface(KWayland::Client::Surface *surface, KWayland::Client::XdgShellSurface *shellSurface)
+{
+    //wait for configure
+    QSignalSpy configureRequestedSpy(shellSurface, &KWayland::Client::XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    surface->commit(Surface::CommitFlag::None);
+    QVERIFY(configureRequestedSpy.wait());
+    shellSurface->ackConfigure(configureRequestedSpy.last()[2].toInt());
+}
+
+void initXdgShellPopup(KWayland::Client::Surface *surface, KWayland::Client::XdgShellPopup *shellPopup)
+{
+    //wait for configure
+    QSignalSpy configureRequestedSpy(shellPopup, &KWayland::Client::XdgShellPopup::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    surface->commit(Surface::CommitFlag::None);
+    QVERIFY(configureRequestedSpy.wait());
+    shellPopup->ackConfigure(configureRequestedSpy.last()[1].toInt());
+}
+
 
 QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent)
 {
@@ -542,13 +575,27 @@ QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *su
     case ShellSurfaceType::WlShell:
         return createShellSurface(surface, parent);
     case ShellSurfaceType::XdgShellV5:
-        return createXdgShellV5Surface(surface, parent);
+        return createXdgShellV5Surface(surface, parent, CreationSetup::CreateAndConfigure);
     case ShellSurfaceType::XdgShellV6:
-        return createXdgShellV6Surface(surface, parent);
+        return createXdgShellV6Surface(surface, parent, CreationSetup::CreateAndConfigure);
     case ShellSurfaceType::XdgShellStable:
-        return createXdgShellStableSurface(surface, parent);
+        return createXdgShellStableSurface(surface, parent, CreationSetup::CreateAndConfigure);
     default:
         Q_UNREACHABLE();
+        return nullptr;
+    }
+}
+
+KWayland::Client::XdgShellSurface *createXdgShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent, CreationSetup creationSetup)
+{
+    switch (type) {
+    case ShellSurfaceType::XdgShellV5:
+        return createXdgShellV5Surface(surface, parent, creationSetup);
+    case ShellSurfaceType::XdgShellV6:
+        return createXdgShellV6Surface(surface, parent, creationSetup);
+    case ShellSurfaceType::XdgShellStable:
+        return createXdgShellStableSurface(surface, parent, creationSetup);
+    default:
         return nullptr;
     }
 }
