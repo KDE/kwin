@@ -352,8 +352,10 @@ void TransientPlacementTest::testXdgPopup()
     // there are no further constraints like window too large to fit screen, cascading transients, etc
     // some test cases also verify that the transient fits on the screen
     QFETCH(QSize, parentSize);
+    QFETCH(QPoint, parentPosition);
+    QFETCH(QRect, expectedGeometry);
+    const QRect expectedRelativeGeometry = expectedGeometry.translated(-parentPosition);
 
-    //create parent
     Surface *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
     auto parentShellSurface = Test::createXdgShellStableSurface(surface, Test::waylandCompositor());
@@ -362,8 +364,8 @@ void TransientPlacementTest::testXdgPopup()
     QVERIFY(parent);
 
     QVERIFY(!parent->isDecorated());
-    QFETCH(QPoint, parentPosition);
     parent->move(parentPosition);
+    QCOMPARE(parent->geometry(), QRect(parentPosition, parentSize));
 
     //create popup
     QFETCH(XdgPositioner, positioner);
@@ -371,13 +373,23 @@ void TransientPlacementTest::testXdgPopup()
     Surface *transientSurface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(transientSurface);
 
-    Test::createXdgShellStablePopup(transientSurface, parentShellSurface, positioner, Test::waylandCompositor());
+    auto popup = Test::createXdgShellStablePopup(transientSurface, parentShellSurface, positioner, Test::waylandCompositor(), Test::CreationSetup::CreateOnly);
+    QSignalSpy configureRequestedSpy(popup, &XdgShellPopup::configureRequested);
+    transientSurface->commit(Surface::CommitFlag::None);
+
+    configureRequestedSpy.wait();
+    QCOMPARE(configureRequestedSpy.count(), 1);
+    QCOMPARE(configureRequestedSpy.first()[0].value<QRect>(), expectedRelativeGeometry);
+    popup->ackConfigure(configureRequestedSpy.first()[1].toUInt());
+
     auto transient = Test::renderAndWaitForShown(transientSurface, positioner.initialSize(), Qt::red);
     QVERIFY(transient);
 
     QVERIFY(!transient->isDecorated());
     QVERIFY(transient->hasTransientPlacementHint());
-    QTEST(transient->geometry(), "expectedGeometry");
+    QCOMPARE(transient->geometry(), expectedGeometry);
+
+    QCOMPARE(configureRequestedSpy.count(), 1); // check that we did not get reconfigured
 }
 
 void TransientPlacementTest::testXdgPopupWithPanel()
