@@ -449,6 +449,20 @@ void ShellClient::debug(QDebug &stream) const
            << resourceName() << ";Caption:" << caption() << "\'";
 }
 
+bool ShellClient::belongsToDesktop() const
+{
+    const auto clients = waylandServer()->clients();
+
+    return std::any_of(clients.constBegin(), clients.constEnd(),
+        [this](const ShellClient *client) {
+            if (belongsToSameApplication(client, SameApplicationChecks())) {
+                return client->isDesktop();
+            }
+            return false;
+        }
+    );
+}
+
 Layer ShellClient::layerForDock() const
 {
     if (m_plasmaShellSurface) {
@@ -982,22 +996,9 @@ void ShellClient::takeFocus()
         setActive(true);
     }
 
-    bool breakShowingDesktop = !keepAbove() && !isOnScreenDisplay();
-    if (breakShowingDesktop) {
-        // check that it doesn't belong to the desktop
-        const auto &clients = waylandServer()->clients();
-        for (auto c: clients) {
-            if (!belongsToSameApplication(c, SameApplicationChecks())) {
-                continue;
-            }
-            if (c->isDesktop()) {
-                breakShowingDesktop = false;
-                break;
-            }
-        }
-    }
-    if (breakShowingDesktop)
+    if (!keepAbove() && !isOnScreenDisplay() && !belongsToDesktop()) {
         workspace()->setShowingDesktop(false);
+    }
 }
 
 void ShellClient::doSetActive()
