@@ -938,7 +938,7 @@ void TestShellClient::testWindowOpensLargerThanScreen()
     QCOMPARE(c->clientSize(), screens()->size(0));
     QVERIFY(c->isDecorated());
     QEXPECT_FAIL("", "BUG 366632", Continue);
-    QVERIFY(sizeChangeRequestedSpy.wait());
+    QVERIFY(sizeChangeRequestedSpy.wait(10));
 }
 
 void TestShellClient::testHidden_data()
