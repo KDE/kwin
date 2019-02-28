@@ -3,6 +3,7 @@ KWin - the KDE window manager
 This file is part of the KDE project.
 
 Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2019 David Edmundson <davidedmundson@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWidget>
 #include <unistd.h>
 
+#include <signal.h>
+
 int main(int argc, char *argv[])
 {
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
@@ -31,14 +34,13 @@ int main(int argc, char *argv[])
     w.setGeometry(QRect(0, 0, 100, 200));
     w.show();
 
-    //after showing the window block the main thread
-    //1 as we want it to come after the singleshots in qApp construction
-    QTimer::singleShot(1, []() {
-        //block
+    auto freezeHandler = [](int) {
         while(true) {
-            sleep(100000);
+            sleep(10000);
         }
-    });
+    };
+
+    signal(SIGUSR1, freezeHandler);
 
     return app.exec();
 }

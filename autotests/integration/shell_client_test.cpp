@@ -3,6 +3,7 @@ KWin - the KDE window manager
 This file is part of the KDE project.
 
 Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2019 David Edmundson <davidedmundson@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,6 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <signal.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -1133,7 +1135,10 @@ void TestShellClient::testUnresponsiveWindow()
     if (shellClientAddedSpy.isEmpty()) {
         QVERIFY(shellClientAddedSpy.wait());
     }
+    ::kill(process->processId(), SIGUSR1); // send a signal to freeze the process
+
     killClient = shellClientAddedSpy.first().first().value<AbstractClient*>();
+    QVERIFY(killClient);
     QSignalSpy unresponsiveSpy(killClient, &AbstractClient::unresponsiveChanged);
     QSignalSpy killedSpy(process.data(), static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished));
     QSignalSpy deletedSpy(killClient, &QObject::destroyed);
