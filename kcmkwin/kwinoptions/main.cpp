@@ -69,7 +69,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     mConfig = new KConfig("kwinrc");
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     tab = new QTabWidget(this);
     layout->addWidget(tab);
 
@@ -182,7 +182,7 @@ KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
     mConfig = new KConfig("kwinrc");
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     tab = new QTabWidget(this);
     layout->addWidget(tab);
 

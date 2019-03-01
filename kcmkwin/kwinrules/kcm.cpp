@@ -42,7 +42,7 @@ KCMRules::KCMRules(QWidget *parent, const QVariantList &)
     , config("kwinrulesrc", KConfig::NoGlobals)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     widget = new KCMRulesList(this);
     layout->addWidget(widget);

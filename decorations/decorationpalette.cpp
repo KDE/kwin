@@ -122,7 +122,7 @@ void DecorationPalette::update()
 
     m_palette = KColorScheme::createApplicationPalette(config);
 
-    m_activeFrameColor        = wmConfig.readEntry("frame", m_palette.color(QPalette::Active, QPalette::Background));
+    m_activeFrameColor        = wmConfig.readEntry("frame", m_palette.color(QPalette::Active, QPalette::Window));
     m_inactiveFrameColor      = wmConfig.readEntry("inactiveFrame", m_activeFrameColor);
     m_activeTitleBarColor     = wmConfig.readEntry("activeBackground", m_palette.color(QPalette::Active, QPalette::Highlight));
     m_inactiveTitleBarColor   = wmConfig.readEntry("inactiveBackground", m_inactiveFrameColor);
