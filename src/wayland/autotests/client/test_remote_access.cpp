@@ -273,16 +273,15 @@ void RemoteAccessTest::testSendReleaseMultiple()
 
     // wait for event loop
     QVERIFY(bufferReadySpy1.wait());
-    if (bufferReadySpy2.size() == 0) {
-        QVERIFY(bufferReadySpy2.wait());
-    }
-
     // receive buffer at client 1
     QCOMPARE(bufferReadySpy1.size(), 1);
     auto rbuf1 = bufferReadySpy1.takeFirst()[1].value<const RemoteBuffer *>();
     QSignalSpy paramsObtainedSpy1(rbuf1, &RemoteBuffer::parametersObtained);
     QVERIFY(paramsObtainedSpy1.isValid());
 
+    if (bufferReadySpy2.size() == 0) {
+        QVERIFY(bufferReadySpy2.wait());
+    }
     // receive buffer at client 2
     QCOMPARE(bufferReadySpy2.size(), 1);
     auto rbuf2 = bufferReadySpy2.takeFirst()[1].value<const RemoteBuffer *>();
@@ -290,7 +289,7 @@ void RemoteAccessTest::testSendReleaseMultiple()
     QVERIFY(paramsObtainedSpy2.isValid());
 
     // wait for event loop
-    QVERIFY(paramsObtainedSpy1.wait());
+    QVERIFY(paramsObtainedSpy1.size() == 1 || paramsObtainedSpy1.wait());
     QCOMPARE(paramsObtainedSpy1.size(), 1);
     if (paramsObtainedSpy2.size() == 0) {
         QVERIFY(paramsObtainedSpy2.wait());
