@@ -428,10 +428,10 @@ void Workspace::initWithX11()
     // TODO: only in X11 mode
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info(connection(), NET::ActiveWindow | NET::CurrentDesktop);
-    if (!qApp->isSessionRestored())
+    if (!qApp->isSessionRestored()) {
         m_initialDesktop = client_info.currentDesktop();
-    if (!VirtualDesktopManager::self()->setCurrent(m_initialDesktop))
-        VirtualDesktopManager::self()->setCurrent(1);
+        vds->setCurrent(m_initialDesktop);
+    }
 
     // TODO: better value
     rootInfo->setActiveWindow(None);
