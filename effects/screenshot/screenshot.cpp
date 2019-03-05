@@ -316,6 +316,7 @@ void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
         m_scheduledScreenshot = 0;
     }
     if (m_scheduledScreenshot) {
+        m_windowMode = WindowMode::Xpixmap;
         m_scheduledScreenshot->addRepaintFull();
     }
 }
