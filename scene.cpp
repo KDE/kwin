@@ -100,7 +100,7 @@ Scene::Scene(QObject *parent)
 
 Scene::~Scene()
 {
-    qDeleteAll(m_windows);
+    Q_ASSERT(m_windows.isEmpty());
 }
 
 // returns mask and possibly modified region
