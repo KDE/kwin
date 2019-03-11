@@ -43,7 +43,17 @@ EffectsHandlerImplX11::EffectsHandlerImplX11(Compositor *compositor, Scene *scen
     );
 }
 
-EffectsHandlerImplX11::~EffectsHandlerImplX11() = default;
+EffectsHandlerImplX11::~EffectsHandlerImplX11()
+{
+    // EffectsHandlerImpl tries to unload all effects when it's destroyed.
+    // The routine that unloads effects makes some calls (indirectly) to
+    // doUngrabKeyboard and doStopMouseInterception, which are virtual.
+    // Given that any call to a virtual function in the destructor of a base
+    // class will never go to a derived class, we have to unload effects
+    // here. Yeah, this is quite a bit ugly but it's fine; someday, X11
+    // will be dead (or not?).
+    unloadAllEffects();
+}
 
 bool EffectsHandlerImplX11::doGrabKeyboard()
 {
