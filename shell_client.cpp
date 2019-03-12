@@ -386,6 +386,9 @@ void ShellClient::finishInit() {
 void ShellClient::destroyClient()
 {
     m_closing = true;
+    if (isMoveResize()) {
+        leaveMoveResize();
+    }
     Deleted *del = nullptr;
     if (workspace()) {
         del = Deleted::create(this);
@@ -1188,6 +1191,9 @@ void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
 void ShellClient::unmap()
 {
     m_unmapped = true;
+    if (isMoveResize()) {
+        leaveMoveResize();
+    }
     m_requestedClientSize = QSize(0, 0);
     destroyWindowManagementInterface();
     if (Workspace::self()) {
