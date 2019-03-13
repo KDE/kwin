@@ -296,6 +296,8 @@ public:
 
     QRect transparentRect() const;
 
+    QMargins gtkFrameExtents() const;
+
     bool isClientSideDecorated() const;
     bool wantsShadowToBeRendered() const override;
 
@@ -399,6 +401,10 @@ protected:
     QSize resizeIncrements() const override;
     bool acceptsFocus() const override;
 
+    QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const override;
+    QRect clientArea(clientAreaOption) const override;
+    QRect clientArea(clientAreaOption, int screen, int desktop) const override;
+
     //Signals for the scripting interface
     //Signals make an excellent way for communication
     //in between objects as compared to simple function
@@ -476,6 +482,7 @@ private:
     void embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth);
     void detectNoBorder();
     Xcb::Property fetchGtkFrameExtents() const;
+    static QMargins getGtkFrameExtents(Xcb::Property &property);
     void readGtkFrameExtents(Xcb::Property &prop);
     void detectGtkFrameExtents();
     void destroyDecoration() override;
@@ -592,6 +599,7 @@ private:
 
     QList<QMetaObject::Connection> m_connections;
     bool m_clientSideDecorated;
+    QMargins m_gtkFrameExtents;
 
     QMetaObject::Connection m_edgeRemoveConnection;
     QMetaObject::Connection m_edgeGeometryTrackingConnection;

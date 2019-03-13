@@ -952,7 +952,7 @@ QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) co
                         str . bottom_end - str . bottom_start + 1,
                         str . bottom_width);
 
-    QRect screenarea = workspace()->clientArea(ScreenArea, this);
+    QRect screenarea = clientArea(ScreenArea);
     // HACK: workarea handling is not xinerama aware, so if this strut
     // reserves place at a xinerama edge that's inside the virtual screen,
     // ignore the strut for workspace setting.
@@ -1114,7 +1114,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     if (isDesktop())
         return;
     if (isFullScreen()) {
-        QRect area = workspace()->clientArea(FullScreenArea, this);
+        QRect area = clientArea(FullScreenArea);
         if (geometry() != area)
             setGeometry(area);
         return;
@@ -1125,7 +1125,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     if (maximizeMode() != MaximizeRestore) {
         // TODO update geom_restore?
         changeMaximize(false, false, true);   // adjust size
-        const QRect screenArea = workspace()->clientArea(ScreenArea, this);
+        const QRect screenArea = clientArea(ScreenArea);
         QRect geom = geometry();
         checkOffscreenPosition(&geom, screenArea);
         setGeometry(geom);
@@ -1166,7 +1166,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
             }
         }
     } else {
-        oldScreenArea = workspace()->clientArea(ScreenArea, oldGeometry.center(), oldDesktop);
+        oldScreenArea = clientArea(ScreenArea, oldGeometry.center(), oldDesktop);
         oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), displaySize.height());   // Full screen height
         oldGeomWide = QRect(0, oldGeometry.y(), displaySize.width(), oldGeometry.height());   // Full screen width
     }
@@ -1174,7 +1174,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
     int oldBottomMax = oldScreenArea.y() + oldScreenArea.height();
     int oldLeftMax = oldScreenArea.x();
-    const QRect screenArea = workspace()->clientArea(ScreenArea, geometryRestore().center(), desktop());
+    const QRect screenArea = clientArea(ScreenArea, geometryRestore().center(), desktop());
     int topMax = screenArea.y();
     int rightMax = screenArea.x() + screenArea.width();
     int bottomMax = screenArea.y() + screenArea.height();
@@ -1561,10 +1561,10 @@ void Client::getWmNormalHints()
             if ((!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
-                QRect area = workspace()->clientArea(MovementArea, this);
+                QRect area = clientArea(MovementArea);
                 if (area.contains(origClientGeometry))
                     keepInArea(area);
-                area = workspace()->clientArea(WorkArea, this);
+                area = clientArea(WorkArea);
                 if (area.contains(origClientGeometry))
                     keepInArea(area);
             }
@@ -1755,7 +1755,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
         plainResize(ns);
         setGeometry(QRect(calculateGravitation(false, gravity), size()));
         updateFullScreenHack(QRect(new_pos, QSize(nw, nh)));
-        QRect area = workspace()->clientArea(WorkArea, this);
+        QRect area = clientArea(WorkArea);
         if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()
                 && area.contains(origClientGeometry))
             keepInArea(area);
@@ -1786,10 +1786,10 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
             if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
-                QRect area = workspace()->clientArea(MovementArea, this);
+                QRect area = clientArea(MovementArea);
                 if (area.contains(origClientGeometry))
                     keepInArea(area);
-                area = workspace()->clientArea(WorkArea, this);
+                area = clientArea(WorkArea);
                 if (area.contains(origClientGeometry))
                     keepInArea(area);
             }
@@ -1811,7 +1811,7 @@ void Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry
     }
     int newx = x();
     int newy = y();
-    QRect area = workspace()->clientArea(WorkArea, this);
+    QRect area = clientArea(WorkArea);
     // don't allow growing larger than workarea
     if (w > area.width())
         w = area.width();
@@ -2237,9 +2237,9 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
 
     QRect clientArea;
     if (isElectricBorderMaximizing())
-        clientArea = workspace()->clientArea(MaximizeArea, Cursor::pos(), desktop());
+        clientArea = this->clientArea(MaximizeArea, Cursor::pos(), desktop());
     else
-        clientArea = workspace()->clientArea(MaximizeArea, this);
+        clientArea = this->clientArea(MaximizeArea);
 
     MaximizeMode old_mode = max_mode;
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
@@ -2438,7 +2438,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
                 const bool overWidth  = r.width()  > clientArea.width();
                 if (closeWidth || closeHeight) {
                     Position titlePos = titlebarPosition();
-                    const QRect screenArea = workspace()->clientArea(ScreenArea, clientArea.center(), desktop());
+                    const QRect screenArea = this->clientArea(ScreenArea, clientArea.center(), desktop());
                     if (closeHeight) {
                         bool tryBottom = titlePos == PositionBottom;
                         if ((overHeight && titlePos == PositionTop) ||
@@ -2495,7 +2495,7 @@ bool AbstractClient::isFullScreenable(bool fullscreen_hack) const
     if (fullscreen_hack)
         return isNormalWindow();
     if (rules()->checkStrictGeometry(true)) { // allow rule to ignore geometry constraints
-        QRect fsarea = workspace()->clientArea(FullScreenArea, this);
+        QRect fsarea = clientArea(FullScreenArea);
         if (sizeForClientSize(fsarea.size(), SizemodeAny, true) != fsarea.size())
             return false; // the app wouldn't fit exactly fullscreen geometry due to its strict geometry requirements
     }
@@ -2543,7 +2543,7 @@ void Client::setFullScreen(bool set, bool user)
         if (info->fullscreenMonitors().isSet())
             setGeometry(fullscreenMonitorsArea(info->fullscreenMonitors()));
         else
-            setGeometry(workspace()->clientArea(FullScreenArea, this));
+            setGeometry(clientArea(FullScreenArea));
     }
     else {
         if (!geom_fs_restore.isNull()) {
@@ -2554,7 +2554,7 @@ void Client::setFullScreen(bool set, bool user)
         // TODO isShaded() ?
         } else {
             // does this ever happen?
-            setGeometry(workspace()->clientArea(MaximizeArea, this));
+            setGeometry(clientArea(MaximizeArea));
         }
     }
     updateWindowRules(Rules::Fullscreen|Rules::Position|Rules::Size);
@@ -2615,9 +2615,9 @@ int Client::checkFullScreenHack(const QRect& geom) const
         return 0;
     // if it's noborder window, and has size of one screen or the whole desktop geometry, it's fullscreen hack
     if (noBorder() && app_noborder && isFullScreenable(true)) {
-        if (geom.size() == workspace()->clientArea(FullArea, geom.center(), desktop()).size())
+        if (geom.size() == clientArea(FullArea, geom.center(), desktop()).size())
             return 2; // full area fullscreen hack
-        if (geom.size() == workspace()->clientArea(ScreenArea, geom.center(), desktop()).size())
+        if (geom.size() == clientArea(ScreenArea, geom.center(), desktop()).size())
             return 1; // xinerama-aware fullscreen hack
     }
     return 0;
@@ -2632,10 +2632,10 @@ void Client::updateFullScreenHack(const QRect& geom)
         QRect geom;
         if (rules()->checkStrictGeometry(false)) {
             geom = type == 2 // 1 - it's xinerama-aware fullscreen hack, 2 - it's full area
-                   ? workspace()->clientArea(FullArea, geom.center(), desktop())
-                   : workspace()->clientArea(ScreenArea, geom.center(), desktop());
+                   ? clientArea(FullArea, geom.center(), desktop())
+                   : clientArea(ScreenArea, geom.center(), desktop());
         } else
-            geom = workspace()->clientArea(FullScreenArea, geom.center(), desktop());
+            geom = clientArea(FullScreenArea, geom.center(), desktop());
         setGeometry(geom);
         emit fullScreenChanged();
     } else if (fullscreen_mode == FullScreenHack && type == 0) {
@@ -2721,7 +2721,7 @@ bool Client::doStartMoveResize()
     // This reportedly improves smoothness of the moveresize operation,
     // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
     // (http://lists.kde.org/?t=107302193400001&r=1&w=2)
-    QRect r = workspace()->clientArea(FullArea, this);
+    QRect r = clientArea(FullArea);
     m_moveResizeGrabWindow.create(r, XCB_WINDOW_CLASS_INPUT_ONLY, 0, NULL, rootWindow());
     m_moveResizeGrabWindow.map();
     m_moveResizeGrabWindow.raise();
@@ -2826,7 +2826,7 @@ void AbstractClient::checkUnrestrictedMoveResize()
     if (isUnrestrictedMoveResize())
         return;
     const QRect &moveResizeGeom = moveResizeGeometry();
-    QRect desktopArea = workspace()->clientArea(WorkArea, moveResizeGeom.center(), desktop());
+    QRect desktopArea = clientArea(WorkArea, moveResizeGeom.center(), desktop());
     int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
     // restricted move/resize - keep at least part of the titlebar always visible
     // how much must remain visible when moved away in that direction
@@ -3027,7 +3027,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
             // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
             // the other directions. If not visible enough, move the window to the closest valid
             // point. We bruteforce this by slowly moving the window back to its previous position
-            QRegion availableArea(workspace()->clientArea(FullArea, -1, 0));   // On the screen
+            QRegion availableArea(clientArea(FullArea, -1, 0));   // On the screen
             availableArea -= workspace()->restrictedMoveArea(desktop());   // Strut areas
             bool transposed = false;
             int requiredPixels;
@@ -3134,9 +3134,9 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
             // Special moving of maximized windows on Xinerama screens
             int screen = screens()->number(globalPos);
             if (isFullScreen())
-                setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, screen, 0));
+                setMoveResizeGeometry(clientArea(FullScreenArea, screen, 0));
             else {
-                QRect moveResizeGeom = workspace()->clientArea(MaximizeArea, screen, 0);
+                QRect moveResizeGeom = clientArea(MaximizeArea, screen, 0);
                 QSize adjSize = adjustedSize(moveResizeGeom.size(), SizemodeMax);
                 if (adjSize != moveResizeGeom.size()) {
                     QRect r(moveResizeGeom);
@@ -3155,7 +3155,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
 
             if (!isUnrestrictedMoveResize()) {
                 const QRegion strut = workspace()->restrictedMoveArea(desktop());   // Strut areas
-                QRegion availableArea(workspace()->clientArea(FullArea, -1, 0));   // On the screen
+                QRegion availableArea(clientArea(FullArea, -1, 0));   // On the screen
                 availableArea -= strut;   // Strut areas
                 bool transposed = false;
                 int requiredPixels;
@@ -3300,10 +3300,10 @@ QRect AbstractClient::electricBorderMaximizeGeometry(QPoint pos, int desktop)
         if (maximizeMode() == MaximizeFull)
             return geometryRestore();
         else
-            return workspace()->clientArea(MaximizeArea, pos, desktop);
+            return clientArea(MaximizeArea, pos, desktop);
     }
 
-    QRect ret = workspace()->clientArea(MaximizeArea, pos, desktop);
+    QRect ret = clientArea(MaximizeArea, pos, desktop);
     if (electricBorderMode() & QuickTileFlag::Left)
         ret.setRight(ret.left()+ret.width()/2 - 1);
     else if (electricBorderMode() & QuickTileFlag::Right)
@@ -3335,7 +3335,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
             QRect prev_geom_restore = geometryRestore(); // setMaximize() would set moveResizeGeom as geom_restore
             m_quickTileMode = int(QuickTileFlag::Maximize);
             setMaximize(true, true);
-            QRect clientArea = workspace()->clientArea(MaximizeArea, this);
+            QRect clientArea = this->clientArea(MaximizeArea);
             if (geometry().top() != clientArea.top()) {
                 QRect r(geometry());
                 r.moveTop(clientArea.top());
@@ -3487,8 +3487,8 @@ void AbstractClient::sendToScreen(int newScreen)
     if (qtMode != QuickTileMode(QuickTileFlag::None))
         setQuickTileMode(QuickTileFlag::None, true);
 
-    QRect oldScreenArea = workspace()->clientArea(MaximizeArea, this);
-    QRect screenArea = workspace()->clientArea(MaximizeArea, newScreen, desktop());
+    QRect oldScreenArea = clientArea(MaximizeArea);
+    QRect screenArea = clientArea(MaximizeArea, newScreen, desktop());
 
     // the window can have its center so that the position correction moves the new center onto
     // the old screen, what will tile it where it is. Ie. the screen is not changed

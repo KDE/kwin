@@ -485,6 +485,11 @@ QRect Client::transparentRect() const
     return QRect();
 }
 
+QMargins Client::gtkFrameExtents() const
+{
+    return m_gtkFrameExtents;
+}
+
 void Client::detectNoBorder()
 {
     if (shape()) {
@@ -537,9 +542,53 @@ Xcb::Property Client::fetchGtkFrameExtents() const
     return Xcb::Property(false, m_client, atoms->gtk_frame_extents, XCB_ATOM_CARDINAL, 0, 4);
 }
 
+QMargins Client::getGtkFrameExtents(Xcb::Property &property)
+{
+    if (property.isNull() || property->type != XCB_ATOM_CARDINAL) {
+        return QMargins();
+    }
+
+    bool ok = false;
+    const QByteArray &data = property.toByteArray(32, XCB_ATOM_CARDINAL, &ok);
+
+    if (ok && data.size() == 4 * 4) {
+        const int32_t *datas = reinterpret_cast<const int32_t*>(data.constData()); // left right top bottom
+        const QMargins frame_margins(datas[0], datas[2], datas[1], datas[3]);
+
+        return frame_margins;
+    }
+
+    return QMargins();
+}
+
 void Client::readGtkFrameExtents(Xcb::Property &prop)
 {
-    m_clientSideDecorated = !prop.isNull() && prop->type != 0;
+    const QMargins &margins = getGtkFrameExtents(prop);
+
+    if (margins != m_gtkFrameExtents) {
+        // 更新窗口大小（如果有必要）
+        bool needResize = false;
+        QRect new_geometry = geometry();
+
+        if (maximizeMode() != MaximizeRestore || isFullScreen()) {
+            needResize = true;
+            new_geometry = new_geometry += (margins - m_gtkFrameExtents);
+        } else if (electricBorderMode() != QuickTileMode(QuickTileFlag::None)) {
+            needResize = true;
+            new_geometry = electricBorderMaximizeGeometry(new_geometry.center(), desktop());
+        }
+
+        m_gtkFrameExtents = margins;
+
+        if (needResize) {
+            blockGeometryUpdates(true);
+            plainResize(new_geometry.size(), NormalGeometrySet);
+            move(new_geometry.topLeft());
+            blockGeometryUpdates(false);
+        }
+    }
+
+    m_clientSideDecorated = !m_gtkFrameExtents.isNull();
     emit clientSideDecoratedChanged();
 }
 
@@ -1791,6 +1840,37 @@ bool Client::wantsInput() const
 bool Client::acceptsFocus() const
 {
     return info->input();
+}
+
+static QRect hackClientArea(const Client *c, clientAreaOption opt, const QRect &rect)
+{
+    switch (opt) {
+    case PlacementArea: Q_FALLTHROUGH();
+    case MovementArea: Q_FALLTHROUGH();
+    case MaximizeArea: Q_FALLTHROUGH();
+    case MaximizeFullArea: Q_FALLTHROUGH();
+    case FullScreenArea:
+        return rect + c->gtkFrameExtents();
+    default:
+        break;
+    }
+
+    return rect;
+}
+
+QRect Client::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
+{
+    return hackClientArea(this, opt, AbstractClient::clientArea(opt, p, desktop));
+}
+
+QRect Client::clientArea(clientAreaOption opt) const
+{
+    return hackClientArea(this, opt, AbstractClient::clientArea(opt));
+}
+
+QRect Client::clientArea(clientAreaOption opt, int screen, int desktop) const
+{
+    return hackClientArea(this, opt, AbstractClient::clientArea(opt, screen, desktop));
 }
 
 void Client::setBlockingCompositing(bool block)
