@@ -126,20 +126,8 @@ bool FramebufferBackend::handleScreenInfo()
         return false;
     }
 
-    // correct the color info, and try to turn on screens, assuming this is a non-primary framebuffer device
-    varinfo.grayscale = 0;
-    varinfo.transp.offset = 24;
-    varinfo.transp.length = 8;
-    varinfo.transp.msb_right = 0;
-    varinfo.red.offset = 16;
-    varinfo.red.length = 8;
-    varinfo.red.msb_right = 0;
-    varinfo.green.offset = 8;
-    varinfo.green.length = 8;
-    varinfo.green.msb_right = 0;
-    varinfo.blue.offset = 0;
-    varinfo.blue.length = 8;
-    varinfo.blue.msb_right = 0;
+    // Activate the framebuffer device, assuming this is a non-primary framebuffer device
+    varinfo.activate = FB_ACTIVATE_NOW | FB_ACTIVATE_FORCE;
     ioctl(m_fd, FBIOPUT_VSCREENINFO, &varinfo);
 
     // Probe the device for new screen information.
