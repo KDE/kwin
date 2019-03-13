@@ -37,13 +37,6 @@ class KWIN_EXPORT Deleted
     : public Toplevel
 {
     Q_OBJECT
-    Q_PROPERTY(bool minimized READ isMinimized)
-    Q_PROPERTY(bool modal READ isModal)
-    Q_PROPERTY(bool fullScreen READ isFullScreen CONSTANT)
-    Q_PROPERTY(bool isCurrentTab READ isCurrentTab)
-    Q_PROPERTY(bool keepAbove READ keepAbove CONSTANT)
-    Q_PROPERTY(bool keepBelow READ keepBelow CONSTANT)
-    Q_PROPERTY(QString caption READ caption CONSTANT)
 
 public:
     static Deleted* create(Toplevel* c);
