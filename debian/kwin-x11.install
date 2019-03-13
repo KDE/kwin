@@ -1,0 +1,3 @@
+usr/bin/kwin_x11
+usr/lib/*/libkdeinit5_kwin_x11.so
+usr/lib/*/qt5/plugins/org.kde.kwin.platforms/KWinX11Platform.so

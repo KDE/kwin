@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = configure ]; then
+    # Set the capabilities
+    if command -v setcap > /dev/null && \
+       setcap "CAP_SYS_RESOURCE=+ep" \
+            /usr/bin/kwin_wayland; then
+        echo "Sucessfully set capabilities for kwin_wayland"
+    else
+        echo "Failed to set capabilities for kwin_wayland" >&2
+    fi
+fi
+
+#DEBHELPER#
+
+exit 0
+

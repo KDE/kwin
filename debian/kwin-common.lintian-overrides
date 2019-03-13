@@ -1,0 +1,4 @@
+kwin-common: package-name-doesnt-match-sonames libkdeinit5-kwin-rules-dialog libkwin5
+kwin-common: dev-pkg-without-shlib-symlink usr/lib/*/libkdeinit5_kwin_rules_dialog.so usr/lib/*/libkdeinit5_kwin_rules_dialog.so
+kwin-common: dev-pkg-without-shlib-symlink usr/lib/*/libkwin.so
+kwin-common: shlib-without-versioned-soname usr/lib/*/libkdeinit5_kwin_rules_dialog.so libkdeinit5_kwin_rules_dialog.so

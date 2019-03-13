@@ -1,0 +1,5 @@
+kwin-x11: package-name-doesnt-match-sonames libkdeinit5-kwin-x11
+kwin-x11: binary-without-manpage usr/bin/kwin_x11
+kwin-x11: shlib-without-versioned-soname usr/lib/*/libkdeinit5_kwin_x11.so libkdeinit5_kwin_x11.so
+kwin-x11: postinst-must-call-ldconfig usr/lib/*/libkdeinit5_kwin_x11.so
+kwin-x11: package-must-activate-ldconfig-trigger usr/lib/*/libkdeinit5_kwin_x11.so

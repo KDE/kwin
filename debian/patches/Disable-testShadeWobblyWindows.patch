@@ -1,0 +1,25 @@
+From: Maximiliano Curia <maxy@gnuservers.com.ar>
+Date: Mon, 7 May 2018 16:58:50 +0200
+Subject: Disable testShadeWobblyWindows
+
+This test requires a /dev/dri device, which are not available in the
+Debian autopkgtest infrastructure
+---
+ autotests/integration/effects/CMakeLists.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/autotests/integration/effects/CMakeLists.txt b/autotests/integration/effects/CMakeLists.txt
+index 10446bb..e9b5b36 100644
+--- a/autotests/integration/effects/CMakeLists.txt
++++ b/autotests/integration/effects/CMakeLists.txt
+@@ -1,7 +1,9 @@
+ if (XCB_ICCCM_FOUND)
+     integrationTest(NAME testTranslucency SRCS translucency_test.cpp LIBS XCB::ICCCM)
+     integrationTest(NAME testSlidingPopups SRCS slidingpopups_test.cpp LIBS XCB::ICCCM)
+-    integrationTest(NAME testShadeWobblyWindows SRCS wobbly_shade_test.cpp LIBS XCB::ICCCM)
++    # This test requires a /dev/dri device, which are not available in the
++    # Debian autopkgtest infrastructure
++    # integrationTest(NAME testShadeWobblyWindows SRCS wobbly_shade_test.cpp LIBS XCB::ICCCM)
+ endif()
+ integrationTest(NAME testFade SRCS fade_test.cpp)
+ integrationTest(WAYLAND_ONLY NAME testEffectWindowGeometry SRCS windowgeometry_test.cpp)

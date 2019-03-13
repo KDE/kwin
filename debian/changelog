@@ -1,0 +1,637 @@
+kwin (4:5.12.5-1) unstable; urgency=medium
+
+  * Bump Standards-Version to 4.1.4.
+  * New upstream release (5.12.5).
+  * testsuite: fix most of the test running environment
+  * Add patch: Disable-testShadeWobblyWindows.patch
+  * Add missing -dev dependency
+  * Run the tests sequentialy
+  * Use https for the debian/copyright
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 09 May 2018 13:24:01 +0200
+
+kwin (4:5.12.4-1) unstable; urgency=medium
+
+  * New upstream release (5.12.4).
+  * Add a misc depends to kde-window-manager
+  * Drop kde-window-manager transitional package
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 28 Mar 2018 18:12:47 +0200
+
+kwin (4:5.12.3-1) sid; urgency=medium
+
+  * New upstream release (5.12.2).
+  * New upstream release (5.12.3).
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 07 Mar 2018 19:14:08 +0100
+
+kwin (4:5.12.1-1) sid; urgency=medium
+
+  * Add qml virtualkeyboard as a recommends
+  * Use the salsa canonical urls
+  * New upstream release (5.12.1).
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 20 Feb 2018 22:08:54 +0100
+
+kwin (4:5.12.0-2) sid; urgency=medium
+
+  * New revision
+  * Add libcap as a build depends
+  * Set kwin_wayland capabilities in postinst
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 12 Feb 2018 16:03:42 +0100
+
+kwin (4:5.12.0-1) experimental; urgency=medium
+
+  * Bump debhelper build-dep and compat to 11.
+  * Build without build_stamp
+  * Add link options as-needed
+  * Add Bhushan Shah upstream signing key
+  * New upstream release (5.12.0).
+  * Update build-deps and deps with the info from cmake
+  * Bump Standards-Version to 4.1.3.
+  * Bump group breaks (5.12)
+  * Update build-deps and deps with the info from cmake
+  * Update install files
+  * Use https uri for uscan
+  * Drop unused lintian overrides
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 08 Feb 2018 15:20:50 +0100
+
+kwin (4:5.11.4-1) experimental; urgency=medium
+
+  * New upstream release (5.11.4).
+  * Bump Standards-Version to 4.1.2.
+  * Update build-deps and deps with the info from cmake
+  * Update symbols files.
+  * Update install files
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 03 Jan 2018 16:49:03 -0300
+
+kwin (4:5.10.5-2) sid; urgency=medium
+
+  * New revision
+  * Bump Standards-Version to 4.1.0.
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 03 Sep 2017 09:55:31 +0200
+
+kwin (4:5.10.5-1) experimental; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.10.3.1).
+  * Update build-deps and deps with the info from cmake
+  * Bump Standards-Version to 4.0.0.
+  * Update upstream metadata
+  * Bump group breaks (5.10)
+  * Sync watch file and signing-key.asc with neon
+  * Bump kdecorations build dep to 5.10
+  * Update symbols files after soversion bump
+  * New upstream release (5.10.4).
+  * New upstream release (5.10.5).
+  * Drop upstream patches
+  * Release to experimental
+
+  [ Jonathan Riddell ]
+  * update for new soversion
+  * update .install
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 28 Aug 2017 15:29:21 +0200
+
+kwin (4:5.8.7-2) unstable; urgency=medium
+
+  * Team upload.
+  * Backport upstream patch to fix build with modularized Qt PlatformSupport.
+    (Closes: #873078)
+  * Backport upstream patch to fix ‘undefined reference to qCompare’ error.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Fri, 25 Aug 2017 14:06:50 +0300
+
+kwin (4:5.8.7-1) unstable; urgency=medium
+
+  * New upstream release (5.8.7)
+      + move the view at the correct index at startup
+        using the same trick as elsewhere, set the currentIndex
+        and move the view to currentIndex right at startup
+        the only way to be sure is onContentHeightChanged
+        as there are no signals for when "the view has been
+        populated and settled up"
+      + [kcm_kwindecoration] Respect theme colors in buttons
+      + Fix crash on dragging titlebar buttons in System Settings
+        Currently, if user tries to move one of buttons to the left, ending up
+        dragging one button onto another, crash occurs.
+        In addition, this patch replaces verbose replacement(remove/insert) with
+        more elegant QVector<T>::move(int, int)
+        Fixes KDE#374153
+      + [platforms/drm] Explicitly request event context version 2
+        Libdrm 2.4.78 introduces a version 2 and if KWin gets built against it
+        our code would break. Given that this change is for Plasma/5.8 branch.
+        (https://phabricator.kde.org/T5839)
+      + Fix KWin decoration KCM showing correct index at startup
+        The KCM has a context property of the currently set theme index. This is
+        set before the decorations model is populated, so it is currently always
+        -1.
+        This model is populated after the constructor but before
+        KCModule::load().
+        KCModule::load is called from KCModule::showEvent so before
+        QQuickGridView will start doing anything with delegates.
+        This fixes the problem simply and also avoid parsing the config file
+        multiple times.
+        This bug was introduced in 5.9.4:
+        Someone made a (tested) change to make sure the view scrolled to the
+        right place on startup.
+        I then made a (tested) commit fixing the crash on exit
+        The author then updated his patch to my changes, but now in a way that
+        didn't work.
+      + Sort the themes in decoration KCM
+        Even though we're using a QSortFilterProxy model, by default it doesn't
+        actually sort anything until instructed to.
+        This patch turns sorting on.
+      + Improve the x11 timestamp handling
+        So far KWin only updated the x11 timestamp if the new timestamp is larger
+        than the existing one. While this is a useful thing it creates problems
+        when the 32 bit msec based time stamp wraps around which happens after
+        running an X server for 49 days. After the timestamp wrapped around KWin
+        would not update the timestamp any more and thus some calls might fail.
+        Most prominent victims are keyboard and pointer grab which fails as the
+        timestamp is either larger than the server timestamp or smaller than the
+        last grab timestamp.
+        Another problem related to timestamp handling is KWin getting broken by
+        wrong timestamps sent by applications. A prominent example is clusterssh
+        which used to send a timestamp as unix time which is larger than the
+        x timestamp and thus our timestamp gets too large.
+        This change addresses these problems by allowing to reset the timestamp.
+        This is only used from updateXTime (which is normally invoked before we
+        do things like grabKeyboard). Thus we make QX11Info::getTimestamp the
+        ultimate trusted source for timestamps.
+        Fixes KDE#377901 KDE#348569
+      + Fix regression for timestamp handling for Xwayland windows
+        Change 0bec9ad7337536e319c17c5684d97e1156399fdb introduced a regrssion
+        on Wayland. On Wayland getTimestamp always returns 0, thus the X11
+        timestamp gets reset again and again. This results in broken interaction
+        for Xwayland windows as the broken unit tests show.
+        This change addresses the regression by ignoring a value of 0.
+        It means the addressed bug is still present on Wayland for X11 windows
+        as the timestamp doesn't get updated properly. This requires further
+        changes.
+      + fix occassional crash caused by needlessly delayed signals (bko#363224)
+        As pointed out by the Valgrind trace in #363224, delaying the signal causes
+        the EffectWindow* argument to become invalid before the connected slot is
+        called (this is because Qt discards only delayed signal->slot calls where
+        the receiver gets deleted meanwhile, not the sender and definitely not
+        a random argument.
+        If the supposed glitches really happen, they should get fixed correctly,
+        and for all cases (I doubt only desktop number would be involved but
+        not e.g. shaded or minimized states).
+        Related to KDE#363224
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 16 Jun 2017 13:43:10 +0200
+
+kwin (4:5.8.6-1) unstable; urgency=medium
+
+  * New upstream release (5.8.6) (Closes: 846508)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 24 Mar 2017 14:38:54 +0100
+
+kwin (4:5.8.5-2) unstable; urgency=medium
+
+  * Be more strict about runtime dependencies.
+    Thanks to Ben Longbons for reporting (Closes: 848523)
+  * Drop forced qtwayland runtime dependency.
+    Thanks to Martin Graesslin for reporting (Closes: 855410)
+  * Update kwin-wayland description about being a preview release.
+    Thanks to Ben Longbons for reporting (Closes: 848524)
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 18 Feb 2017 10:42:33 +0100
+
+kwin (4:5.8.5-1) experimental; urgency=medium
+
+  * New upstream release (5.8.5).
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 30 Dec 2016 18:46:18 +0100
+
+kwin (4:5.8.4-1) unstable; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.8.4)
+  * Add breeze-dev build dependency.
+    Thanks to Martin Graesslin for the report (Closes: 842912)
+  * Bump qt buid deps and deps to 5.7
+  * kwin-x11: Add provides x-window-manager
+
+  [ Automatic packaging ]
+  * Update build-deps and deps with the info from cmake
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 23 Nov 2016 18:36:53 +0100
+
+kwin (4:5.8.2-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Update build-deps and deps with the info from cmake
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.8.2)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 19 Oct 2016 15:26:03 +0200
+
+kwin (4:5.8.1-1) unstable; urgency=medium
+
+  * Update copyright information
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 16 Oct 2016 23:00:42 +0200
+
+kwin (4:5.8.0-1) unstable; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.8.0)
+  * Update symbols files.
+  * Follow upstream soversion bump
+  * Update install files
+  * Replace dbus-launch with dbus-run-session in tests
+  * Bump group breaks (5.8)
+
+  [ Automatic packaging ]
+  * Update build-deps and deps with the info from cmake
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 07 Oct 2016 14:08:55 +0200
+
+kwin (4:5.7.4-1) unstable; urgency=medium
+
+  [ Pino Toscano ]
+  * autopkgtest: switch from oxygen5-icon-theme back to the canonical
+    oxygen-icon-theme.
+
+  [ Maximiliano Curia ]
+  * Add plasma-desktop recommends.
+    Thanks to HJ (Closes: 834954)
+  * New upstream release (5.7.4)
+  * Bump group breaks (5.7)
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 27 Aug 2016 00:12:30 +0200
+
+kwin (4:5.7.0-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Update build-deps and deps with the info from cmake
+  * Update symbols files.
+
+  [ Jonathan Riddell ]
+  * add KWinX11Platform.so to kwin-x11
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 11 Jul 2016 10:22:59 +0200
+
+kwin (4:5.6.5-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 27 Jun 2016 18:14:24 +0200
+
+kwin (4:5.6.4-3) unstable; urgency=medium
+
+  * Add kwayland windowsystem platform plugin dependency
+  * Add XInput build dependency
+  * Add xwayland runtime dependency in kwin-wayland
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 05 Jun 2016 14:27:18 +0200
+
+kwin (4:5.6.4-2) unstable; urgency=medium
+
+  * Update copyright information
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 01 Jun 2016 10:42:19 +0200
+
+kwin (4:5.6.4-1) experimental; urgency=medium
+
+  [ Automatic packaging ]
+  * Update build-deps and deps with the info from cmake
+  * Refresh patches
+  * Bump Standards-Version to 3.9.8
+  * Update symbols files.
+  * Drop missing symbol
+
+  [ Maximiliano Curia ]
+  * Revert "Add missing closes"
+  * Keep unreleased with preview versions
+  * uscan no longer supports this kind of watch files.
+  * New upstream release (5.5.5).
+  * Automatic update with ddeb_migration3.py
+  * Add upstream metadata (DEP-12)
+  * Follow upstream soversion bumps
+  * Update symbols files
+  * debian/control: Update Vcs-Browser and Vcs-Git fields
+  * Add new lintian-override about ldconfig-trigger for libkdeinit5_kwin_x11.so
+  * Update testsuite
+
+  [ Debian/Kubuntu Qt/KDE Maintainers ]
+  * Drop kwinglesutils, removed upstream
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 28 May 2016 21:45:59 +0200
+
+kwin (4:5.5.4-2) experimental; urgency=medium
+
+  * Rebuild due to typo in symbols file.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 02 Feb 2016 10:29:43 +0100
+
+kwin (4:5.5.4-1) experimental; urgency=medium
+
+  * New upstream release (5.5.0).
+  * Update symbols files from buildds logs (4:5.4.3-1.1).
+  * New upstream release (5.5.1).
+  * Follow upstream soversion bump
+  * Add virtual backend.
+  * New upstream release (5.5.2).
+  * New upstream release (5.5.3).
+  * New upstream release (5.5.4).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 27 Jan 2016 16:48:45 +0100
+
+kwin (4:5.4.3-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Add mips64 and mips64el into the arch list of libkwinglutils6.
+    (Closes: #801800)
+
+ -- YunQiang Su <syq@debian.org>  Thu, 03 Dec 2015 12:37:32 +0800
+
+kwin (4:5.4.3-1) unstable; urgency=medium
+
+  * New upstream release (5.4.3).
+  * Update symbols files from buildds logs (4:5.4.2-1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 01 Dec 2015 11:45:37 +0100
+
+kwin (4:5.4.2-1) unstable; urgency=medium
+
+  [ Luigi Toscano ]
+  * Changes to Recommends for kwin-common:
+    - add libqt5multimedia5-plugins (it enables the playback of the
+      preview of KWin effects);
+    - remove libqt5multimedia5 (it is dependency of the required
+      qml-module-qtmultimedia package).
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.4.2).
+  * Update symbols files from buildds logs (4:5.4.1-1).
+  * Drop upstream patch:
+    upstream_fake_a_leave_event_for_the_decoration_when_client_is_left.d
+    iff
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 06 Oct 2015 07:51:48 +0200
+
+kwin (4:5.4.1-1) unstable; urgency=medium
+
+  * New upstream release (5.4.1).
+  * New upstream patch:
+    upstream_fake_a_leave_event_for_the_decoration_when_client_is_left.d
+    iff
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 11 Sep 2015 18:44:56 +0200
+
+kwin (4:5.4.0-2) unstable; urgency=medium
+
+  [ Felix Geyer ]
+  * Tighten the dependency of kde-window-manager on kwin-x11 to the version
+    that provides the /usr/bin/kwin symlink.
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 06 Sep 2015 12:20:03 +0200
+
+kwin (4:5.4.0-1) unstable; urgency=medium
+
+  * New upstream release (5.4.0).
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 04 Sep 2015 11:06:10 +0200
+
+kwin (4:5.3.2-4) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Scott Kitterman ]
+  * Add debian/kwin-x11.links to add symlink for usr/bin/kiwn so that kwin
+    will be properly started with KDE 4 (Plasma 1) (Closes: #793026)
+  * Drop #793026 from the debian/changelog entry for the last upload, since it
+    did not fix the bug
+
+  [ Felix Geyer ]
+  * Update symbols files for gcc 5.
+  * Make kwin-x11 break/replace kde-window-manager (<< 4:5) because of the
+    /usr/bin/kwin file conflict.
+
+ -- Felix Geyer <fgeyer@debian.org>  Wed, 26 Aug 2015 01:18:42 +0200
+
+kwin (4:5.3.2-3) unstable; urgency=high
+
+  [ Maximiliano Curia ]
+  * kwin-wayland: Add qtwayland5 dependency, for the wayland qt5 plugin.
+
+  [ Scott Kitterman ]
+  * Urgency high for RC but fix in testing
+  * Remove obsolete kwin alternative and add new alternative for kwin_x11 so
+    kwin will work as x-window-manager (Closes: #792849, #793997)
+
+ -- Debian/Kubuntu Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Wed, 29 Jul 2015 16:43:28 -0400
+
+kwin (4:5.3.2-2) unstable; urgency=medium
+
+  * Adds missing arches to libkwingl*utils6. (Closes: #792481) Thanks to
+    Dejan Latinovic, and Scott Kitterman
+  * Add a kde-window-manager transitional package.
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 18 Jul 2015 18:47:45 +0200
+
+kwin (4:5.3.2-1) unstable; urgency=medium
+
+  * New upstream release (5.3.0).
+  * Update symbols files.
+  * New upstream release (5.3.1).
+  * New upstream release (5.3.2).
+  * Add the missing Breaks/Replaces.
+  * Update copyright information.
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 01 Jul 2015 12:20:41 +0200
+
+kwin (4:5.3.1-0ubuntu3) wily; urgency=medium
+
+  * No-change rebuild against Qt 5.4.2.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Tue, 16 Jun 2015 00:27:17 -0600
+
+kwin (4:5.3.1-0ubuntu1) wily; urgency=medium
+
+  [ Scarlett Clark ]
+  * Manual merge kubuntu_stable.
+
+  [ Jonathan Riddell ]
+  * Plasma 5.3 beta
+  * new upstream release
+
+  [ Scarlett Clark ]
+  * Vivid backport
+
+  [ Jonathan Riddell ]
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 05 Jun 2015 02:34:16 +0200
+
+kwin (4:5.2.2a-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+  * New upstream tar.
+  * Append a to version so launchpad accepts new tar.
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Tue, 24 Mar 2015 07:33:08 -0700
+
+kwin (4:5.2.2-1) experimental; urgency=medium
+
+  * New upstream release (5.2.1).
+  * Split kwin package in common, x11 and wayland.
+  * Update symbols files.
+  * New upstream release (5.2.2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 25 Mar 2015 23:17:20 +0100
+
+kwin (4:5.2.1-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+  * Batchpatch symbols file.
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Mon, 23 Feb 2015 09:42:26 -0800
+
+kwin (4:5.2.0.1-1) experimental; urgency=medium
+
+  * Prepare initial Debian release.
+  * Add myself as Uploader.
+  * Update build dependencies to build against experimental and to
+    follow cmake.
+  * Bump Standards-Version to 3.9.6, no changes needed.
+  * Update copyright information.
+  * Update install files.
+  * Update watch file.
+  * Add basic autopkgtests support.
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 09 Feb 2015 09:21:57 +0100
+
+kwin (4:5.2.0.1-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+  * Soversion bump properly
+  * Rename packages for 5->6 transition in library version
+  * Update install accordingly
+    + Apply more restrictive wildcards to prevent sobumps slip past us
+  * New lib packages break/replace the old ones <<5.2.0 because the
+    pre-release packages were uploaded with libfoo.so.6 in the .so.5 packages
+
+ -- Harald Sitter <sitter@kde.org>  Tue, 27 Jan 2015 14:54:41 +0100
+
+kwin (4:5.1.95-0ubuntu2) vivid; urgency=medium
+
+  * version kwayland build-dep
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 16 Jan 2015 12:30:57 +0100
+
+kwin (4:5.1.95-0ubuntu1) vivid; urgency=medium
+
+  * New upstream beta release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 15 Jan 2015 01:31:59 +0100
+
+kwin (4:5.1.2-0ubuntu1) vivid; urgency=medium
+
+  * remove obsolete patch kubuntu_kf5-version.diff
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 15 Dec 2014 13:22:19 +0100
+
+kwin (4:5.1.1-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release.
+  * New package libkwinglesutils5 on armhf
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Mon, 10 Nov 2014 19:47:53 +0100
+
+kwin (4:5.1.0.1-0ubuntu2) vivid; urgency=medium
+
+  * Add install.armhf files for armhf
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 07 Nov 2014 17:12:18 +0100
+
+kwin (4:5.1.0.1-0ubuntu1) vivid; urgency=medium
+
+  [ Jonathan Riddell ]
+  * New upstream beta release
+  * Add kubuntu_kf5-version.diff to build with KF5 5.2
+  * Build-dep on libkf5windowsystem-dev (>= 5.3.0~)
+  * Add build-dep on kwayland-dev
+
+  [ Harald Sitter ]
+  * Add/update lintian overrides
+    + All manpage warnings: we don't care
+    + All warnings to do with kdeinit: it's not a shared lib by design
+    + All warnings to do with internal/private libs having no versioned soname
+
+  [ Jonathan Riddell ]
+  * New upstream release
+  * New upstream release with fixed tar
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Tue, 14 Oct 2014 13:49:05 +0200
+
+kwin (4:5.0.2-0ubuntu1) utopic; urgency=medium
+
+  [ Harald Sitter ]
+  * switch to new pkg-kde-tools
+
+  [ Scarlett Clark ]
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Wed, 17 Sep 2014 18:17:10 -0700
+
+kwin (4:5.0.1-0ubuntu1~ubuntu14.10~ppa2) utopic; urgency=medium
+
+  [ Jonathan Riddell ]
+  * New upstream release
+
+  [ Scarlett Clark ]
+  * Update watch to http://download.kde.org
+
+  [ Jonathan Riddell ]
+  * New upstream bugfix release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Sun, 10 Aug 2014 15:43:00 +0200
+
+kwin (4:4.98.0-0ubuntu1) utopic; urgency=medium
+
+  * New upstream RC release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 07 Jul 2014 13:20:34 +0200
+
+kwin (4:4.97.0-0ubuntu1) utopic; urgency=medium
+
+  [ Scarlett Clark ]
+  * Initial release.
+
+  [ Jonathan Riddell ]
+  * New upstream beta release
+
+  [ Scarlett Clark ]
+  * Fix install file
+
+  [ José Manuel Santamaría Lema ]
+  * Build depend on libegl1-mesa-dev.
+  * Make kwin depend on kwin-data (= ${source:Version}) instead of
+    ${binary:Version}
+  * Remove harcoded depends on libraries from kwin, rely on ${shlibs:Depends}
+    instead.
+
+  [ Scarlett Clark ]
+  * change kwin-data to arch all
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 09 Jun 2014 10:25:41 +0100

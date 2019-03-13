@@ -1,0 +1,17 @@
+etc/xdg/aurorae.knsrc
+etc/xdg/kwin*.knsrc
+etc/xdg/org_kde_kwin.categories
+usr/lib/*/kconf_update_bin/kwin5_update_default_rules
+usr/lib/*/libexec/kwin*
+usr/lib/*/libexec/org_kde_kwin_xclipboard_syncer
+usr/lib/*/libkdeinit5_kwin_rules_dialog.so
+usr/lib/*/libkwin.so.5
+usr/lib/*/libkwin.so.5.*
+usr/lib/*/qt5/plugins/kcm_kwin*.so
+usr/lib/*/qt5/plugins/kpackage/packagestructure/
+usr/lib/*/qt5/plugins/kwin*.so
+usr/lib/*/qt5/plugins/kwin/
+usr/lib/*/qt5/plugins/org.kde.kdecoration2/kwin5_aurorae.so
+usr/lib/*/qt5/plugins/org.kde.kglobalaccel5.platforms/KF5GlobalAccelPrivateKWin.so
+usr/lib/*/qt5/plugins/org.kde.kwin.scenes/
+usr/lib/*/qt5/qml/org/kde/kwin/

@@ -1,0 +1,6 @@
+# In kwin.deb
+org.kde.kwin 2.0
+org.kde.kwin.decoration 0.1
+org.kde.kwin.decorations.*
+org.kde.kwin.kwincompositing 1.0
+org.kde.kwin.private.*

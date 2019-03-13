@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<descriptor>
+
+<version>
+    5.2.0.1
+</version>
+
+<headers>
+    /usr/include/kwin_export.h
+    /usr/include/kwinanimationeffect.h
+    /usr/include/kwinconfig.h
+    /usr/include/kwineffects.h
+    /usr/include/kwineffects_export.h
+    /usr/include/kwinglobals.h
+    /usr/include/kwinglplatform.h
+    /usr/include/kwingltexture.h
+    /usr/include/kwinglutils.h
+    /usr/include/kwinglutils_export.h
+    /usr/include/kwinglutils_funcs.h
+    /usr/include/kwinxrenderutils.h
+    /usr/include/kwinxrenderutils_export.h
+</headers>
+
+<libs>
+    /usr/lib/@@DEB_HOST_MULTIARCH@@/libkwin4_effect_builtins.so
+    /usr/lib/@@DEB_HOST_MULTIARCH@@/libkwineffects.so
+    /usr/lib/@@DEB_HOST_MULTIARCH@@/libkwinglutils.so
+    /usr/lib/@@DEB_HOST_MULTIARCH@@/libkwinxrenderutils.so
+</libs>
+
+<gcc_options>
+    -fPIC
+    -std=c++11
+</gcc_options>
+
+</descriptor>
