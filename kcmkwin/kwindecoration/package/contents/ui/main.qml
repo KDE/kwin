@@ -39,6 +39,9 @@ Kirigami.Page {
     rightPadding: leftPadding
     bottomPadding: leftPadding
 
+    implicitWidth: tabLayout.implicitWidth
+    implicitHeight: tabLayout.implicitHeight
+
     ColumnLayout {
         id: tabLayout
         anchors.fill: parent
