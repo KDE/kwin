@@ -24,10 +24,6 @@ import org.kde.kirigami 2.2 as Kirigami
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
 
 KCM.GridView {
-    property int cellSpacing: 2 * units.largeSpacing
-    property int previewWidth: 18 * units.gridUnit
-    property int previewHeight: previewWidth / 1.7
-
     function updateDecoration(item, marginTopLeft, marginBottomRight) {
         var mainMargin = units.largeSpacing
         var shd = item.shadow
@@ -42,8 +38,7 @@ KCM.GridView {
     view.onCurrentIndexChanged: kcm.theme = view.currentIndex
     view.onContentHeightChanged: view.positionViewAtIndex(view.currentIndex, GridView.Visible)
 
-    view.cellWidth: previewWidth + cellSpacing
-    view.cellHeight: previewHeight + cellSpacing
+    view.implicitCellWidth: Kirigami.Units.gridUnit * 18
 
     view.delegate: KCM.GridDelegate {
         text: model.display
@@ -51,16 +46,8 @@ KCM.GridView {
         thumbnailAvailable: true
         thumbnail: Rectangle {
             anchors.fill: parent
-            width: previewWidth
-            height: previewHeight
             color: palette.base
             clip: true
-
-            // Workaround: the thumbnail size can't be otherwise changed
-            Component.onCompleted: {
-                parent.parent.width = previewWidth
-                parent.parent.height = previewHeight
-             }
 
             KDecoration.Bridge {
                 id: bridgeItem
