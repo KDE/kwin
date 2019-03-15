@@ -207,7 +207,10 @@ static QHash<int, QByteArray> s_connectorNames = {
     {DRM_MODE_CONNECTOR_TV, QByteArrayLiteral("TV")},
     {DRM_MODE_CONNECTOR_eDP, QByteArrayLiteral("eDP")},
     {DRM_MODE_CONNECTOR_VIRTUAL, QByteArrayLiteral("Virtual")},
-    {DRM_MODE_CONNECTOR_DSI, QByteArrayLiteral("DSI")}
+    {DRM_MODE_CONNECTOR_DSI, QByteArrayLiteral("DSI")},
+#ifdef DRM_MODE_CONNECTOR_DPI
+    {DRM_MODE_CONNECTOR_DPI, QByteArrayLiteral("DPI")},
+#endif
 };
 
 namespace {
