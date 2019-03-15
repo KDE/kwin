@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=preferences-system-windows-action
+Icon=preferences-desktop-theme-windowdecorations
 Exec=kcmshell5 kwindecoration
 
 Categories=Qt;KDE;X-KDE-settings-looknfeel;
