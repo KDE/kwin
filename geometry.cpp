@@ -468,7 +468,7 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
     QRect maxRect;
     int guideMaximized = MaximizeRestore;
     if (c->maximizeMode() != MaximizeRestore) {
-        maxRect = clientArea(MaximizeArea, pos + c->rect().center(), c->desktop());
+        maxRect = c->clientArea(MaximizeArea, pos + c->rect().center(), c->desktop());
         QRect geo = c->geometry();
         if (c->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
             guideMaximized |= MaximizeHorizontal;
@@ -485,7 +485,7 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
         const int screen = screens()->number(pos + c->rect().center());
         if (maxRect.isNull())
-            maxRect = clientArea(MovementArea, screen, c->desktop());
+            maxRect = c->clientArea(MovementArea, screen, c->desktop());
         const int xmin = maxRect.left();
         const int xmax = maxRect.right() + 1;             //desk size
         const int ymin = maxRect.top();
@@ -654,7 +654,7 @@ QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int m
     if (options->windowSnapZone() || options->borderSnapZone()) {  // || options->centerSnapZone )
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
 
-        const QRect maxRect = clientArea(MovementArea, c->rect().center(), c->desktop());
+        const QRect maxRect = c->clientArea(MovementArea, c->rect().center(), c->desktop());
         const int xmin = maxRect.left();
         const int xmax = maxRect.right();               //desk size
         const int ymin = maxRect.top();

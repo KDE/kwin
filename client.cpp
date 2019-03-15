@@ -1849,28 +1849,14 @@ static QRect hackClientArea(const Client *c, clientAreaOption opt, const QRect &
     case MovementArea: Q_FALLTHROUGH();
     case MaximizeArea: Q_FALLTHROUGH();
     case MaximizeFullArea: Q_FALLTHROUGH();
-    case FullScreenArea:
+    case FullScreenArea: Q_FALLTHROUGH();
+    case WorkArea:
         return rect + c->gtkFrameExtents();
     default:
         break;
     }
 
     return rect;
-}
-
-QRect Client::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
-{
-    return hackClientArea(this, opt, AbstractClient::clientArea(opt, p, desktop));
-}
-
-QRect Client::clientArea(clientAreaOption opt) const
-{
-    return hackClientArea(this, opt, AbstractClient::clientArea(opt));
-}
-
-QRect Client::clientArea(clientAreaOption opt, int screen, int desktop) const
-{
-    return hackClientArea(this, opt, AbstractClient::clientArea(opt, screen, desktop));
 }
 
 void Client::setBlockingCompositing(bool block)
@@ -2044,6 +2030,21 @@ void Client::updateColorScheme()
 {
     Xcb::StringProperty property = fetchColorScheme();
     readColorScheme(property);
+}
+
+QRect Client::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
+{
+    return hackClientArea(this, opt, AbstractClient::clientArea(opt, p, desktop));
+}
+
+QRect Client::clientArea(clientAreaOption opt) const
+{
+    return hackClientArea(this, opt, AbstractClient::clientArea(opt));
+}
+
+QRect Client::clientArea(clientAreaOption opt, int screen, int desktop) const
+{
+    return hackClientArea(this, opt, AbstractClient::clientArea(opt, screen, desktop));
 }
 
 bool Client::isClient() const

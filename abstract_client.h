@@ -688,6 +688,10 @@ public:
         return false;
     }
 
+    virtual QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
+    virtual QRect clientArea(clientAreaOption) const;
+    virtual QRect clientArea(clientAreaOption, int screen, int desktop) const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -786,10 +790,6 @@ protected:
 
     virtual void doSetSkipTaskbar();
     virtual void doSetSkipPager();
-
-    virtual QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
-    virtual QRect clientArea(clientAreaOption) const;
-    virtual QRect clientArea(clientAreaOption, int screen, int desktop) const;
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();

@@ -161,21 +161,6 @@ void AbstractClient::doSetSkipPager()
 {
 }
 
-QRect AbstractClient::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
-{
-    return workspace()->clientArea(opt, p, desktop);
-}
-
-QRect AbstractClient::clientArea(clientAreaOption opt) const
-{
-    return workspace()->clientArea(opt, this);
-}
-
-QRect AbstractClient::clientArea(clientAreaOption opt, int screen, int desktop) const
-{
-    return workspace()->clientArea(opt, screen, desktop);
-}
-
 void AbstractClient::setSkipTaskbar(bool b)
 {
     int was_wants_tab_focus = wantsTabFocus();
@@ -1749,6 +1734,21 @@ void AbstractClient::showApplicationMenu(int actionId)
         // we don't know where the application menu button will be, show it in the top left corner instead
         Workspace::self()->showApplicationMenu(QRect(), this, actionId);
     }
+}
+
+QRect AbstractClient::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
+{
+    return workspace()->clientArea(opt, p, desktop);
+}
+
+QRect AbstractClient::clientArea(clientAreaOption opt) const
+{
+    return workspace()->clientArea(opt, this);
+}
+
+QRect AbstractClient::clientArea(clientAreaOption opt, int screen, int desktop) const
+{
+    return workspace()->clientArea(opt, screen, desktop);
 }
 
 bool AbstractClient::unresponsive() const

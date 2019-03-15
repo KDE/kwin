@@ -310,6 +310,10 @@ public:
     void readColorScheme(Xcb::StringProperty &property);
     void updateColorScheme() override;
 
+    QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const override;
+    QRect clientArea(clientAreaOption) const override;
+    QRect clientArea(clientAreaOption, int screen, int desktop) const override;
+
     //sets whether the client should be faked as being on all activities (and be shown during session save)
     void setSessionActivityOverride(bool needed);
     virtual bool isClient() const;
@@ -400,10 +404,6 @@ protected:
     void doResizeSync() override;
     QSize resizeIncrements() const override;
     bool acceptsFocus() const override;
-
-    QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const override;
-    QRect clientArea(clientAreaOption) const override;
-    QRect clientArea(clientAreaOption, int screen, int desktop) const override;
 
     //Signals for the scripting interface
     //Signals make an excellent way for communication
