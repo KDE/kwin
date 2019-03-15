@@ -64,8 +64,6 @@ Q_DECLARE_METATYPE(NET::WindowType)
 
 using namespace KWayland::Server;
 
-static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_CLOSE_ANIMATION");
-
 namespace KWin
 {
 
