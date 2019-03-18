@@ -134,10 +134,10 @@ void ThemeConfig::load(const KConfig &conf)
 
     KConfigGroup border(&conf, QStringLiteral("Layout"));
     // default values taken from KCommonDecoration::layoutMetric() in kcommondecoration.cpp
-    m_borderLeft = qRound(scaleFactor * border.readEntry("BorderLeft", defaultBorderLeft()));
-    m_borderRight = qRound(scaleFactor * border.readEntry("BorderRight", defaultBorderRight()));
-    m_borderBottom = qRound(scaleFactor * border.readEntry("BorderBottom", defaultBorderBottom()));
-    m_borderTop = qRound(scaleFactor * border.readEntry("BorderTop", defaultBorderTop()));
+    m_borderLeft = border.readEntry("BorderLeft", defaultBorderLeft());
+    m_borderRight = border.readEntry("BorderRight", defaultBorderRight());
+    m_borderBottom = border.readEntry("BorderBottom", defaultBorderBottom());
+    m_borderTop = border.readEntry("BorderTop", defaultBorderTop());
 
     m_titleEdgeTop = qRound(scaleFactor * border.readEntry("TitleEdgeTop", defaultTitleEdgeTop()));
     m_titleEdgeBottom = qRound(scaleFactor * border.readEntry("TitleEdgeBottom", defaultTitleEdgeBottom()));
@@ -168,10 +168,10 @@ void ThemeConfig::load(const KConfig &conf)
     m_buttonMarginTop = qRound(scaleFactor * border.readEntry("ButtonMarginTop", defaultButtonMarginTop()));
     m_explicitButtonSpacer = qRound(scaleFactor * border.readEntry("ExplicitButtonSpacer", defaultExplicitButtonSpacer()));
 
-    m_paddingLeft = qRound(scaleFactor * border.readEntry("PaddingLeft", defaultPaddingLeft()));
-    m_paddingRight = qRound(scaleFactor * border.readEntry("PaddingRight", defaultPaddingRight()));
-    m_paddingTop = qRound(scaleFactor * border.readEntry("PaddingTop", defaultPaddingTop()));
-    m_paddingBottom = qRound(scaleFactor * border.readEntry("PaddingBottom", defaultPaddingBottom()));
+    m_paddingLeft = border.readEntry("PaddingLeft", defaultPaddingLeft());
+    m_paddingRight = border.readEntry("PaddingRight", defaultPaddingRight());
+    m_paddingTop = border.readEntry("PaddingTop", defaultPaddingTop());
+    m_paddingBottom = border.readEntry("PaddingBottom", defaultPaddingBottom());
 }
 
 QColor ThemeConfig::activeTextColor(bool useTabs, bool focused) const
