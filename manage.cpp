@@ -477,6 +477,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         }
     }
 
+    dontKeepInArea = !rules()->checkStrictGeometry(true);
+
     if ((!isSpecialWindow() || isToolbar()) && isMovable() && !dontKeepInArea)
         keepInArea(area, partial_keep_in_area);
 
