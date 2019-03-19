@@ -219,11 +219,12 @@ void VirtualKeyboard::updateSni()
     }
     if (m_enabled) {
         m_sni->setIconByName(QStringLiteral("input-keyboard-virtual-on"));
-        m_sni->setToolTipTitle(i18n("Virtual Keyboard is enabled."));
+        m_sni->setTitle(i18n("Virtual Keyboard: enabled"));
     } else {
         m_sni->setIconByName(QStringLiteral("input-keyboard-virtual-off"));
-        m_sni->setToolTipTitle(i18n("Virtual Keyboard is disabled."));
+        m_sni->setTitle(i18n("Virtual Keyboard: disabled"));
     }
+    m_sni->setToolTipTitle(i18n("Whether to show the virtual keyboard on demand."));
 }
 
 void VirtualKeyboard::show()
