@@ -702,7 +702,7 @@ void DrmBackend::doShowCursor()
 
 void DrmBackend::doHideCursor()
 {
-    if (!m_cursorEnabled) {
+    if (!m_cursorEnabled || usesSoftwareCursor()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
@@ -712,7 +712,7 @@ void DrmBackend::doHideCursor()
 
 void DrmBackend::moveCursor()
 {
-    if (!m_cursorEnabled || isCursorHidden()) {
+    if (!m_cursorEnabled || isCursorHidden() || usesSoftwareCursor()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {

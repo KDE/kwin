@@ -596,8 +596,10 @@ void SceneOpenGL::insertWait()
  **/
 void SceneOpenGL2::paintCursor()
 {
-    // don't paint if we use hardware cursor
-    if (!kwinApp()->platform()->usesSoftwareCursor()) {
+    // don't paint if we use hardware cursor or the cursor is hidden
+    if (!kwinApp()->platform()->usesSoftwareCursor() ||
+        kwinApp()->platform()->isCursorHidden() ||
+        kwinApp()->platform()->softwareCursor().isNull()) {
         return;
     }
 
@@ -616,7 +618,7 @@ void SceneOpenGL2::paintCursor()
         updateCursorTexture();
 
         // handle shape update on case cursor image changed
-        connect(Cursor::self(), &Cursor::cursorChanged, this, updateCursorTexture);
+        connect(kwinApp()->platform(), &Platform::cursorChanged, this, updateCursorTexture);
     }
 
     // get cursor position in projection coordinates
