@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "composite.h"
 #include "cursor.h"
 #include "rules.h"
 #include "group.h"
@@ -651,6 +652,20 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     setBlockingCompositing(info->isBlockingCompositing());
     readShowOnScreenEdge(showOnScreenEdgeCookie);
+
+    // Forward all opacity values to the frame in case there'll be other CM running.
+    connect(Compositor::self(), &Compositor::compositingToggled, this,
+        [this](bool active) {
+            if (active) {
+                return;
+            }
+            if (opacity() == 1.0) {
+                return;
+            }
+            NETWinInfo info(connection(), frameId(), rootWindow(), 0, 0);
+            info.setOpacity(static_cast<unsigned long>(opacity() * 0xffffffff));
+        }
+    );
 
     // TODO: there's a small problem here - isManaged() depends on the mapping state,
     // but this client is not yet in Workspace's client list at this point, will

@@ -423,17 +423,6 @@ void Compositor::finish()
     m_scene = NULL;
     compositeTimer.stop();
     repaints_region = QRegion();
-    if (Workspace::self()) {
-        for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin();
-                it != Workspace::self()->clientList().constEnd();
-                ++it) {
-            // forward all opacity values to the frame in case there'll be other CM running
-            if ((*it)->opacity() != 1.0) {
-                NETWinInfo i(connection(), (*it)->frameId(), rootWindow(), 0, 0);
-                i.setOpacity(static_cast< unsigned long >((*it)->opacity() * 0xffffffff));
-            }
-        }
-    }
     m_finishing = false;
     emit compositingToggled(false);
 }
