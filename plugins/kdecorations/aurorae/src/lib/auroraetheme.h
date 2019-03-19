@@ -69,6 +69,10 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(int borderRightMaximized READ rightBorderMaximized NOTIFY borderSizesChanged)
     Q_PROPERTY(int borderTopMaximized READ topBorderMaximized NOTIFY borderSizesChanged)
     Q_PROPERTY(int borderBottomMaximized READ bottomBorderMaximized NOTIFY borderSizesChanged)
+    Q_PROPERTY(int extendedBorderLeft READ extendedBorderLeft NOTIFY themeChanged)
+    Q_PROPERTY(int extendedBorderRight READ extendedBorderRight NOTIFY themeChanged)
+    Q_PROPERTY(int extendedBorderTop READ extendedBorderTop NOTIFY themeChanged)
+    Q_PROPERTY(int extendedBorderBottom READ extendedBorderBottom NOTIFY themeChanged)
     Q_PROPERTY(int paddingLeft READ paddingLeft NOTIFY themeChanged)
     Q_PROPERTY(int paddingRight READ paddingRight NOTIFY themeChanged)
     Q_PROPERTY(int paddingTop READ paddingTop NOTIFY themeChanged)
@@ -129,6 +133,10 @@ public:
     int rightBorderMaximized() const;
     int topBorderMaximized() const;
     int bottomBorderMaximized() const;
+    int extendedBorderLeft() const;
+    int extendedBorderRight() const;
+    int extendedBorderTop() const;
+    int extendedBorderBottom() const;
     int paddingLeft() const;
     int paddingRight() const;
     int paddingTop() const;

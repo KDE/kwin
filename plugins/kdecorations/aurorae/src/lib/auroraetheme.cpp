@@ -351,6 +351,10 @@ int AuroraeTheme::prototype ( ) const \
     return d->themeConfig.prototype( ); \
 }
 
+THEME_CONFIG(extendedBorderLeft)
+THEME_CONFIG(extendedBorderRight)
+THEME_CONFIG(extendedBorderTop)
+THEME_CONFIG(extendedBorderBottom)
 THEME_CONFIG(paddingBottom)
 THEME_CONFIG(paddingLeft)
 THEME_CONFIG(paddingRight)

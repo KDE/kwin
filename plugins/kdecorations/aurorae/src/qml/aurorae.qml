@@ -30,10 +30,15 @@ Decoration {
         maximizedBorders.right  = Qt.binding(function() { return Math.max(0, auroraeTheme.borderRightMaximized);});
         maximizedBorders.bottom = Qt.binding(function() { return Math.max(0, auroraeTheme.borderBottomMaximized);});
         maximizedBorders.top    = Qt.binding(function() { return Math.max(0, auroraeTheme.borderTopMaximized);});
-        padding.left   = auroraeTheme.paddingLeft;
-        padding.right  = auroraeTheme.paddingRight;
-        padding.bottom = auroraeTheme.paddingBottom;
-        padding.top    = auroraeTheme.paddingTop;
+        padding.left   = Qt.binding(function() { return Math.max(0, auroraeTheme.paddingLeft);});
+        padding.right  = Qt.binding(function() { return Math.max(0, auroraeTheme.paddingRight);});
+        padding.bottom = Qt.binding(function() { return Math.max(0, auroraeTheme.paddingBottom);});
+        padding.top    = Qt.binding(function() { return Math.max(0, auroraeTheme.paddingTop);});
+
+        extendedBorders.left = Qt.binding(function() { return Math.max(5, auroraeTheme.extendedBorderLeft);});
+        extendedBorders.right = Qt.binding(function() { return Math.max(5, auroraeTheme.extendedBorderRight);});
+        extendedBorders.bottom = Qt.binding(function() { return Math.max(5, auroraeTheme.extendedBorderBottom);});
+        extendedBorders.top = Qt.binding(function() { return Math.max(5, auroraeTheme.extendedBorderTop);});
         root.animate = true;
     }
     DecorationOptions {

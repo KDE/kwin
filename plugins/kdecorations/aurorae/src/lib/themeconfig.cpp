@@ -139,6 +139,11 @@ void ThemeConfig::load(const KConfig &conf)
     m_borderBottom = border.readEntry("BorderBottom", defaultBorderBottom());
     m_borderTop = border.readEntry("BorderTop", defaultBorderTop());
 
+    m_extendedBorderLeft = border.readEntry("ExtendedBorderLeft", defaultExtendedBorderLeft());
+    m_extendedBorderRight = border.readEntry("ExtendedBorderRight", defaultExtendedBorderRight());
+    m_extendedBorderBottom = border.readEntry("ExtendedBorderBottom", defaultExtendedBorderBottom());
+    m_extendedBorderTop = border.readEntry("ExtendedBorderTop", defaultExtendedBorderTop());
+
     m_titleEdgeTop = qRound(scaleFactor * border.readEntry("TitleEdgeTop", defaultTitleEdgeTop()));
     m_titleEdgeBottom = qRound(scaleFactor * border.readEntry("TitleEdgeBottom", defaultTitleEdgeBottom()));
     m_titleEdgeLeft = qRound(scaleFactor * border.readEntry("TitleEdgeLeft", defaultTitleEdgeLeft()));

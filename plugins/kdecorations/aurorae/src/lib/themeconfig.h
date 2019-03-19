@@ -81,6 +81,19 @@ public:
         return m_borderTop;
     }
 
+    int extendedBorderLeft() const {
+        return m_extendedBorderLeft;
+    }
+    int extendedBorderRight() const {
+        return m_extendedBorderRight;
+    }
+    int extendedBorderTop() const {
+        return m_extendedBorderTop;
+    }
+    int extendedBorderBottom() const {
+        return m_extendedBorderBottom;
+    }
+
     int titleEdgeTop() const {
         return m_titleEdgeTop;
     }
@@ -240,6 +253,21 @@ public:
     static int defaultBorderTop() {
         return 0;
     }
+
+    // extended borders
+    static int defaultExtendedBorderLeft() {
+        return 5;
+    }
+    static int defaultExtendedBorderRight() {
+        return 5;
+    }
+    static int defaultExtendedBorderBottom() {
+        return 5;
+    }
+    static int defaultExtendedBorderTop() {
+        return 5;
+    }
+
     // title
     static int defaultTitleEdgeTop() {
         return 5;
@@ -364,6 +392,12 @@ private:
     int m_borderRight;
     int m_borderBottom;
     int m_borderTop;
+
+    // extended borders
+    int m_extendedBorderLeft;
+    int m_extendedBorderRight;
+    int m_extendedBorderBottom;
+    int m_extendedBorderTop;
 
     // title
     int m_titleEdgeTop;
