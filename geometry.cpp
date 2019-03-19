@@ -1145,6 +1145,12 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     if (!workspace() || workspace()->initializing())
         return;
 
+    // If the window force d'not strict geometry, And the update from Workspace::updateClientArea()
+    // then should be ignore.
+    if (workspace()->inUpdateClientArea() && !rules()->checkStrictGeometry(true)) {
+        return;
+    }
+
     // If the window was touching an edge before but not now move it so it is again.
     // Old and new maximums have different starting values so windows on the screen
     // edge will move when a new strut is placed on the edge.
