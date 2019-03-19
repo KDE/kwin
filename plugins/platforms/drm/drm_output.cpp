@@ -127,6 +127,23 @@ bool DrmOutput::showCursor()
     return ret;
 }
 
+qreal orientationToRotation(Qt::ScreenOrientation orientation)
+{
+    switch (orientation) {
+        case Qt::PrimaryOrientation:
+        case Qt::LandscapeOrientation:
+            return 0.;
+        case Qt::InvertedPortraitOrientation:
+            return 90.;
+        case Qt::InvertedLandscapeOrientation:
+            return 180.;
+        case Qt::PortraitOrientation:
+            return 270.;
+    }
+    Q_UNREACHABLE();
+    return 0;
+}
+
 void DrmOutput::updateCursor()
 {
     QImage cursorImage = m_backend->softwareCursor();
@@ -140,10 +157,10 @@ void DrmOutput::updateCursor()
 
     QPainter p;
     p.begin(c);
-    if (orientation() == Qt::InvertedLandscapeOrientation) {
+    if (orientation() != Qt::LandscapeOrientation) {
         QMatrix4x4 matrix;
         matrix.translate(cursorImage.width() / 2.0, cursorImage.height() / 2.0);
-        matrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+        matrix.rotate(orientationToRotation(orientation()), 0.0f, 0.0f, 1.0f);
         matrix.translate(-cursorImage.width() / 2.0, -cursorImage.height() / 2.0);
         p.setWorldTransform(matrix.toTransform());
     }
@@ -155,13 +172,14 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
 {
     QMatrix4x4 matrix;
     QMatrix4x4 hotspotMatrix;
-    if (orientation() == Qt::InvertedLandscapeOrientation) {
+    if (orientation() != Qt::LandscapeOrientation) {
+        auto rotation = orientationToRotation(orientation());
         matrix.translate(pixelSize().width() /2.0, pixelSize().height() / 2.0);
-        matrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+        matrix.rotate(rotation, 0.0f, 0.0f, 1.0f);
         matrix.translate(-pixelSize().width() /2.0, -pixelSize().height() / 2.0);
         const auto cursorSize = m_backend->softwareCursor().size();
         hotspotMatrix.translate(cursorSize.width()/2.0, cursorSize.height()/2.0);
-        hotspotMatrix.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+        hotspotMatrix.rotate(rotation, 0.0f, 0.0f, 1.0f);
         hotspotMatrix.translate(-cursorSize.width()/2.0, -cursorSize.height()/2.0);
     }
     hotspotMatrix.scale(scale());
