@@ -216,6 +216,13 @@ class KWIN_EXPORT Toplevel
      **/
     Q_PROPERTY(bool popupWindow READ isPopupWindow)
 
+    /**
+     * Whether this Toplevel represents the outline.
+     *
+     * @note It's always @c false if compositing is turned off.
+     **/
+    Q_PROPERTY(bool outline READ isOutline)
+
 public:
     explicit Toplevel();
     virtual xcb_window_t frameId() const;
@@ -283,6 +290,7 @@ public:
 
     virtual bool isLockScreen() const;
     virtual bool isInputMethod() const;
+    virtual bool isOutline() const;
 
     /**
      * Returns the virtual desktop within the workspace() the client window
@@ -760,6 +768,11 @@ inline bool Toplevel::isLockScreen() const
 }
 
 inline bool Toplevel::isInputMethod() const
+{
+    return false;
+}
+
+inline bool Toplevel::isOutline() const
 {
     return false;
 }

@@ -2066,6 +2066,15 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      **/
     Q_PROPERTY(QWindow *internalWindow READ internalWindow CONSTANT)
 
+    /**
+     * Whether this EffectWindow represents the outline.
+     *
+     * When compositing is turned on, the outline is an actual window.
+     *
+     * @since 5.16
+     **/
+    Q_PROPERTY(bool outline READ isOutline CONSTANT)
+
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -2353,6 +2362,11 @@ public:
      * @since 5.16
      **/
     virtual QWindow *internalWindow() const = 0;
+
+    /**
+     * @since 5.16
+     **/
+    virtual bool isOutline() const = 0;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

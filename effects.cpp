@@ -1832,6 +1832,7 @@ TOPLEVEL_HELPER(QStringList, activities, activities)
 TOPLEVEL_HELPER(bool, skipsCloseAnimation, skipsCloseAnimation)
 TOPLEVEL_HELPER(KWayland::Server::SurfaceInterface *, surface, surface)
 TOPLEVEL_HELPER(bool, isPopupWindow, isPopupWindow)
+TOPLEVEL_HELPER(bool, isOutline, isOutline)
 
 #undef TOPLEVEL_HELPER
 

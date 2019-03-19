@@ -319,6 +319,11 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
         return false;
     }
 
+    // Dont't animate the outline because it looks very sick.
+    if (w->isOutline()) {
+        return false;
+    }
+
     // Override-redirect windows are usually used for user interface
     // concepts that are not expected to be animated by this effect.
     if (w->isX11Client() && !w->isManaged()) {

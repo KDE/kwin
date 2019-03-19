@@ -180,6 +180,9 @@ void CompositedOutlineVisual::show()
         } else {
             m_mainItem.reset(m_qmlComponent->create(m_qmlContext.data()));
         }
+        if (auto w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
+            w->setProperty("__kwin_outline", true);
+        }
     }
 }
 

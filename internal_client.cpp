@@ -211,6 +211,14 @@ bool InternalClient::isInputMethod() const
     return false;
 }
 
+bool InternalClient::isOutline() const
+{
+    if (m_internalWindow) {
+        return m_internalWindow->property("__kwin_outline").toBool();
+    }
+    return false;
+}
+
 quint32 InternalClient::windowId() const
 {
     return m_windowId;

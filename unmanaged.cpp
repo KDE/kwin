@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QTimer>
 #include <QDebug>
+#include <QWindow>
 
 #include <xcb/shape.h>
 
@@ -81,6 +82,9 @@ bool Unmanaged::track(Window w)
     getWmOpaqueRegion();
     getSkipCloseAnimation();
     setupCompositing();
+    if (QWindow *internalWindow = findInternalWindow()) {
+        m_outline = internalWindow->property("__kwin_outline").toBool();
+    }
     if (effects)
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking();
     return true;
@@ -159,10 +163,26 @@ NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
     return info->windowType(NET::WindowTypes(supportedTypes));
 }
 
+bool Unmanaged::isOutline() const
+{
+    return m_outline;
+}
+
 void Unmanaged::addDamage(const QRegion &damage)
 {
     repaints_region += damage;
     Toplevel::addDamage(damage);
+}
+
+QWindow *Unmanaged::findInternalWindow() const
+{
+    const QWindowList windows = kwinApp()->topLevelWindows();
+    for (QWindow *w : windows) {
+        if (w->winId() == window()) {
+            return w;
+        }
+    }
+    return nullptr;
 }
 
 } // namespace

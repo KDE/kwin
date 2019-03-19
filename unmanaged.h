@@ -47,6 +47,7 @@ public:
         return UnmanagedLayer;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
+    bool isOutline() const override;
 
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);
@@ -57,6 +58,8 @@ private:
     virtual ~Unmanaged(); // use release()
     // handlers for X11 events
     void configureNotifyEvent(xcb_configure_notify_event_t *e);
+    QWindow *findInternalWindow() const;
+    bool m_outline = false;
 };
 
 } // namespace

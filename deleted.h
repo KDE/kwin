@@ -177,6 +177,13 @@ public:
 
     QVector<uint> x11DesktopIds() const;
 
+    /**
+     * Whether this Deleted represents the outline.
+     **/
+    bool isOutline() const override {
+        return m_wasOutline;
+    }
+
 protected:
     virtual void debug(QDebug& stream) const;
 
@@ -229,6 +236,7 @@ private:
     ToplevelList m_transientFor;
     DeletedList m_transients;
     bool m_wasPopupWindow;
+    bool m_wasOutline;
 };
 
 inline void Deleted::refWindow()

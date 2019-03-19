@@ -66,6 +66,11 @@ var scaleEffect = {
             return false;
         }
 
+        // Dont't animate the outline because it looks very sick.
+        if (window.outline) {
+            return false;
+        }
+
         // Override-redirect windows are usually used for user interface
         // concepts that are not expected to be animated by this effect.
         if (window.x11Client && !window.managed) {

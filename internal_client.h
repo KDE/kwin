@@ -55,6 +55,7 @@ public:
     bool isInternal() const override;
     bool isLockScreen() const override;
     bool isInputMethod() const override;
+    bool isOutline() const override;
     quint32 windowId() const override;
     using AbstractClient::resizeWithChecks;
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;

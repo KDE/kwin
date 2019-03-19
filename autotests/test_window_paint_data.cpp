@@ -248,6 +248,9 @@ public:
     bool isX11Client() const override {
         return false;
     }
+    bool isOutline() const override {
+        return false;
+    }
 
 private:
     qreal m_opacity = 1.0;

@@ -43,6 +43,9 @@ function isFadeWindow(w) {
     if (!w.visible) {
         return false;
     }
+    if (w.outline) {
+        return false;
+    }
     if (w.deleted && effect.isGrabbed(w, Effect.WindowClosedGrabRole)) {
         return false;
     } else if (!w.deleted && effect.isGrabbed(w, Effect.WindowAddedGrabRole)) {

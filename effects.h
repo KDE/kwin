@@ -442,6 +442,7 @@ public:
     bool keepBelow() const override;
     bool isModal() const override;
     bool isPopupWindow() const override;
+    bool isOutline() const override;
 
     KWayland::Server::SurfaceInterface *surface() const override;
     bool isFullScreen() const override;
