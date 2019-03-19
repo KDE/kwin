@@ -63,18 +63,37 @@ OrientationSensor::OrientationSensor(QObject *parent)
             }
         }
     );
-    connect(m_sensor, &QOrientationSensor::activeChanged, this,
-        [this] {
-            if (!m_sni) {
-                return;
-            }
-            if (m_sensor->isActive()) {
-                m_sni->setToolTipTitle(i18n("Automatic screen rotation is enabled"));
-            } else {
-                m_sni->setToolTipTitle(i18n("Automatic screen rotation is disabled"));
-            }
+    connect(m_sensor, &QOrientationSensor::activeChanged, this, &OrientationSensor::refresh);
+}
+
+void OrientationSensor::refresh()
+{
+    if (!m_sni) {
+        return;
+    }
+    if (m_sensor->isActive()) {
+        m_sni->setTitle(i18n("Allow Rotation"));
+        m_sni->setToolTipTitle(i18n("Automatic screen rotation is enabled"));
+    } else {
+        QString text;
+        switch(m_orientation) {
+            case FaceUp:
+            case FaceDown:
+            case Undefined:
+                text = i18n("Undefined");
+                break;
+            case TopUp:
+            case TopDown:
+                text = i18n("Vertical");
+                break;
+            case LeftUp:
+            case RightUp:
+                text = i18n("Horizontal");
+                break;
         }
-    );
+        m_sni->setTitle(text);
+        m_sni->setToolTipTitle(i18n("Automatic screen rotation is disabled"));
+    }
 }
 
 OrientationSensor::~OrientationSensor() = default;
@@ -115,11 +134,11 @@ void OrientationSensor::setupStatusNotifier()
     m_sni->setStandardActionsEnabled(false);
     m_sni->setCategory(KStatusNotifierItem::Hardware);
     m_sni->setStatus(KStatusNotifierItem::Passive);
-    m_sni->setTitle(i18n("Automatic Screen Rotation"));
     // TODO: proper icon with state
     m_sni->setIconByName(QStringLiteral("preferences-desktop-display"));
     // we start disabled, it gets updated when the sensor becomes active
-    m_sni->setToolTipTitle(i18n("Automatic screen rotation is disabled"));
+
+    refresh();
     connect(m_sni, &KStatusNotifierItem::activateRequested, this,
         [this] {
             m_userEnabled = !m_userEnabled;

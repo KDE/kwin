@@ -56,6 +56,7 @@ public:
         FaceUp,
         FaceDown
     };
+    Q_ENUM(Orientation)
 
     Orientation orientation() const {
         return m_orientation;
@@ -78,6 +79,8 @@ private:
     void setupStatusNotifier();
     void startStopSensor();
     void loadConfig();
+    void refresh();
+
     QOrientationSensor *m_sensor;
     bool m_enabled = false;
     bool m_userEnabled = true;
