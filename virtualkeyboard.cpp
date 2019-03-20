@@ -243,7 +243,7 @@ void VirtualKeyboard::updateInputPanelState()
 
     auto t = waylandServer()->seat()->focusedTextInput();
 
-    if (!t) {
+    if (!t || !m_inputWindow) {
         return;
     }
 
