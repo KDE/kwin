@@ -450,7 +450,7 @@ int main(int argc, char * argv[])
 
     QCommandLineOption outputCountOption(QStringLiteral("output-count"),
                                     i18n("The number of windows to open as outputs in windowed mode. Default value is 1"),
-                                    QStringLiteral("height"));
+                                    QStringLiteral("count"));
     outputCountOption.setDefaultValue(QString::number(1));
 
     QCommandLineParser parser;
