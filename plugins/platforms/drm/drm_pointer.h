@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,18 +23,124 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QScopedPointer>
 
+#include <xf86drmMode.h>
+
 namespace KWin
 {
 
-template <typename Pointer, void (*cleanupFunc)(Pointer*)>
-struct DrmCleanup
+template <typename T>
+struct DrmDeleter;
+
+template <>
+struct DrmDeleter<drmModeAtomicReq>
 {
-    static inline void cleanup(Pointer *ptr)
+    static void cleanup(drmModeAtomicReq *req)
     {
-        cleanupFunc(ptr);
+        drmModeAtomicFree(req);
     }
 };
-template <typename T, void (*cleanupFunc)(T*)> using ScopedDrmPointer = QScopedPointer<T, DrmCleanup<T, cleanupFunc>>;
+
+template <>
+struct DrmDeleter<drmModeConnector>
+{
+    static void cleanup(drmModeConnector *connector)
+    {
+        drmModeFreeConnector(connector);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModeCrtc>
+{
+    static void cleanup(drmModeCrtc *crtc)
+    {
+        drmModeFreeCrtc(crtc);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModeFB>
+{
+    static void cleanup(drmModeFB *fb)
+    {
+        drmModeFreeFB(fb);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModeEncoder>
+{
+    static void cleanup(drmModeEncoder *encoder)
+    {
+        drmModeFreeEncoder(encoder);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModeModeInfo>
+{
+    static void cleanup(drmModeModeInfo *info)
+    {
+        drmModeFreeModeInfo(info);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModeObjectProperties>
+{
+    static void cleanup(drmModeObjectProperties *properties)
+    {
+        drmModeFreeObjectProperties(properties);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModePlane>
+{
+    static void cleanup(drmModePlane *plane)
+    {
+        drmModeFreePlane(plane);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModePlaneRes>
+{
+    static void cleanup(drmModePlaneRes *resources)
+    {
+        drmModeFreePlaneResources(resources);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModePropertyRes>
+{
+    static void cleanup(drmModePropertyRes *property)
+    {
+        drmModeFreeProperty(property);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModePropertyBlobRes>
+{
+    static void cleanup(drmModePropertyBlobRes *blob)
+    {
+        drmModeFreePropertyBlob(blob);
+    }
+};
+
+template <>
+struct DrmDeleter<drmModeRes>
+{
+    static void cleanup(drmModeRes *resources)
+    {
+        drmModeFreeResources(resources);
+    }
+};
+
+template <typename T>
+using DrmScopedPointer = QScopedPointer<T, DrmDeleter<T>>;
 
 }
 

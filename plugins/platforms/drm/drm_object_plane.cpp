@@ -39,7 +39,7 @@ DrmPlane::~DrmPlane()
 bool DrmPlane::atomicInit()
 {
     qCDebug(KWIN_DRM) << "Atomic init for plane:" << m_id;
-    ScopedDrmPointer<_drmModePlane, &drmModeFreePlane> p(drmModeGetPlane(fd(), m_id));
+    DrmScopedPointer<drmModePlane> p(drmModeGetPlane(fd(), m_id));
 
     if (!p) {
         qCWarning(KWIN_DRM) << "Failed to get kernel plane" << m_id;
@@ -92,7 +92,7 @@ bool DrmPlane::initProps()
         QByteArrayLiteral("reflect-y")
     };
 
-    ScopedDrmPointer<drmModeObjectProperties, drmModeFreeObjectProperties> properties(
+    DrmScopedPointer<drmModeObjectProperties> properties(
         drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_PLANE));
     if (!properties){
         qCWarning(KWIN_DRM) << "Failed to get properties for plane " << m_id ;

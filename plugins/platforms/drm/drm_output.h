@@ -135,7 +135,7 @@ private:
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
     Edid m_edid;
-    KWin::ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
+    DrmScopedPointer<drmModePropertyRes> m_dpms;
     DpmsMode m_dpmsMode = DpmsMode::On;
     DpmsMode m_dpmsModePending = DpmsMode::On;
     QByteArray m_uuid;

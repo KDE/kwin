@@ -33,7 +33,7 @@ DrmCrtc::DrmCrtc(uint32_t crtc_id, DrmBackend *backend, int resIndex)
       m_resIndex(resIndex),
       m_backend(backend)
 {
-    ScopedDrmPointer<_drmModeCrtc, &drmModeFreeCrtc> modeCrtc(drmModeGetCrtc(backend->fd(), crtc_id));
+    DrmScopedPointer<drmModeCrtc> modeCrtc(drmModeGetCrtc(backend->fd(), crtc_id));
     if (modeCrtc) {
         m_gammaRampSize = modeCrtc->gamma_size;
     }
@@ -60,7 +60,7 @@ bool DrmCrtc::initProps()
         QByteArrayLiteral("ACTIVE"),
     });
 
-    ScopedDrmPointer<drmModeObjectProperties, drmModeFreeObjectProperties> properties(
+    DrmScopedPointer<drmModeObjectProperties> properties(
         drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_CRTC));
     if (!properties) {
         qCWarning(KWIN_DRM) << "Failed to get properties for crtc " << m_id ;

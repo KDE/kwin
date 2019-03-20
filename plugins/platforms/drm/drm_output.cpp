@@ -484,9 +484,9 @@ static QSize extractPhysicalSize(drmModePropertyBlobPtr edid)
 
 void DrmOutput::initEdid(drmModeConnector *connector)
 {
-    ScopedDrmPointer<_drmModePropertyBlob, &drmModeFreePropertyBlob> edid;
+    DrmScopedPointer<drmModePropertyBlobRes> edid;
     for (int i = 0; i < connector->count_props; ++i) {
-        ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> property(drmModeGetProperty(m_backend->fd(), connector->props[i]));
+        DrmScopedPointer<drmModePropertyRes> property(drmModeGetProperty(m_backend->fd(), connector->props[i]));
         if (!property) {
             continue;
         }
@@ -587,7 +587,7 @@ bool DrmOutput::initCursor(const QSize &cursorSize)
 void DrmOutput::initDpms(drmModeConnector *connector)
 {
     for (int i = 0; i < connector->count_props; ++i) {
-        ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> property(drmModeGetProperty(m_backend->fd(), connector->props[i]));
+        DrmScopedPointer<drmModePropertyRes> property(drmModeGetProperty(m_backend->fd(), connector->props[i]));
         if (!property) {
             continue;
         }
@@ -788,7 +788,7 @@ void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform tra
 void DrmOutput::updateMode(int modeIndex)
 {
     // get all modes on the connector
-    ScopedDrmPointer<_drmModeConnector, &drmModeFreeConnector> connector(drmModeGetConnector(m_backend->fd(), m_conn->id()));
+    DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_backend->fd(), m_conn->id()));
     if (connector->count_modes <= modeIndex) {
         // TODO: error?
         return;

@@ -50,7 +50,7 @@ void DrmObject::setPropertyNames(QVector<QByteArray> &&vector)
 void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QByteArray> enumNames)
 {
     for (unsigned int i = 0; i < properties->count_props; ++i) {
-        ScopedDrmPointer<drmModePropertyRes, drmModeFreeProperty> prop(
+        DrmScopedPointer<drmModePropertyRes> prop(
             drmModeGetProperty(fd(), properties->props[i]));
         if (!prop) {
             continue;

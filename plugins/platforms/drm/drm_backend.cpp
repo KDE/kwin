@@ -278,7 +278,7 @@ void DrmBackend::openDrm()
             qCDebug(KWIN_DRM) << "Using Atomic Mode Setting.";
             m_atomicModeSetting = true;
 
-            ScopedDrmPointer<drmModePlaneRes, &drmModeFreePlaneResources> planeResources(drmModeGetPlaneResources(m_fd));
+            DrmScopedPointer<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
             if (!planeResources) {
                 qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode";
                 m_atomicModeSetting = false;
@@ -311,7 +311,7 @@ void DrmBackend::openDrm()
         }
     }
 
-    ScopedDrmPointer<_drmModeRes, &drmModeFreeResources> resources(drmModeGetResources(m_fd));
+    DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
     drmModeRes *res = resources.data();
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
@@ -381,7 +381,7 @@ void DrmBackend::updateOutputs()
         return;
     }
 
-    ScopedDrmPointer<_drmModeRes, &drmModeFreeResources> resources(drmModeGetResources(m_fd));
+    DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
         return;
@@ -419,7 +419,7 @@ void DrmBackend::updateOutputs()
 
     // now check new connections
     for (DrmConnector *con : qAsConst(pendingConnectors)) {
-        ScopedDrmPointer<_drmModeConnector, &drmModeFreeConnector> connector(drmModeGetConnector(m_fd, con->id()));
+        DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_fd, con->id()));
         if (!connector) {
             continue;
         }
@@ -430,7 +430,7 @@ void DrmBackend::updateOutputs()
 
         QVector<uint32_t> encoders = con->encoders();
         for (auto encId : qAsConst(encoders)) {
-            ScopedDrmPointer<_drmModeEncoder, &drmModeFreeEncoder> encoder(drmModeGetEncoder(m_fd, encId));
+            DrmScopedPointer<drmModeEncoder> encoder(drmModeGetEncoder(m_fd, encId));
             if (!encoder) {
                 continue;
             }
@@ -451,7 +451,7 @@ void DrmBackend::updateOutputs()
 
                 // we found a suitable encoder+crtc
                 // TODO: we could avoid these lib drm calls if we store all struct data in DrmCrtc and DrmConnector in the beginning
-                ScopedDrmPointer<_drmModeCrtc, &drmModeFreeCrtc> modeCrtc(drmModeGetCrtc(m_fd, crtc->id()));
+                DrmScopedPointer<drmModeCrtc> modeCrtc(drmModeGetCrtc(m_fd, crtc->id()));
                 if (!modeCrtc) {
                     continue;
                 }
