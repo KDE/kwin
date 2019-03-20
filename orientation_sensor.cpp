@@ -77,17 +77,17 @@ void OrientationSensor::refresh()
     } else {
         QString text;
         switch(m_orientation) {
-            case FaceUp:
-            case FaceDown:
-            case Undefined:
+            case Orientation::FaceUp:
+            case Orientation::FaceDown:
+            case Orientation::Undefined:
                 text = i18n("Undefined");
                 break;
-            case TopUp:
-            case TopDown:
+            case Orientation::TopUp:
+            case Orientation::TopDown:
                 text = i18n("Vertical");
                 break;
-            case LeftUp:
-            case RightUp:
+            case Orientation::LeftUp:
+            case Orientation::RightUp:
                 text = i18n("Horizontal");
                 break;
         }
