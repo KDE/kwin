@@ -72,6 +72,17 @@ AbstractClient::AbstractClient()
 
     connect(Decoration::DecorationBridge::self(), &QObject::destroyed, this, &AbstractClient::destroyDecoration);
 
+    // If the user manually moved the window, don't restore it after the keyboard closes
+    connect(this, &AbstractClient::clientFinishUserMovedResized, this, [this] () {
+        m_keyboardGeometryRestore = QRect();
+    });
+    connect(this, qOverload<AbstractClient *, bool, bool>(&AbstractClient::clientMaximizedStateChanged), this, [this] () {
+        m_keyboardGeometryRestore = QRect();
+    });
+    connect(this, &AbstractClient::fullScreenChanged, this, [this] () {
+        m_keyboardGeometryRestore = QRect();
+    });
+
     // replace on-screen-display on size changes
     connect(this, &AbstractClient::geometryShapeChanged, this,
         [this] (Toplevel *c, const QRect &old) {
@@ -1869,6 +1880,38 @@ QRect AbstractClient::inputGeometry() const
         return Toplevel::inputGeometry() + decoration()->resizeOnlyBorders();
     }
     return Toplevel::inputGeometry();
+}
+
+QRect AbstractClient::virtualKeyboardGeometry() const
+{
+    return m_virtualKeyboardGeometry;
+}
+
+void AbstractClient::setVirtualKeyboardGeometry(const QRect &geo)
+{
+    // No keyboard anymore
+    if (geo.isEmpty() && !m_keyboardGeometryRestore.isEmpty()) {
+        setGeometry(m_keyboardGeometryRestore);
+        m_keyboardGeometryRestore = QRect();
+    } else if (geo.isEmpty()) {
+        return;
+    // The keyboard has just been opened (rather than resized) save client geometry for a restore
+    } else if (m_keyboardGeometryRestore.isEmpty()) {
+        m_keyboardGeometryRestore = geometry();
+    }
+
+    m_virtualKeyboardGeometry = geo;
+
+    if (!geo.intersects(m_keyboardGeometryRestore)) {
+        return;
+    }
+
+    const QRect availableArea = workspace()->clientArea(MaximizeArea, this);
+    QRect newWindowGeometry = m_keyboardGeometryRestore;
+    newWindowGeometry.moveBottom(geo.top());
+    newWindowGeometry.setTop(qMax(newWindowGeometry.top(), availableArea.top()));
+
+    setGeometry(newWindowGeometry);
 }
 
 bool AbstractClient::dockWantsInput() const

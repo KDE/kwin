@@ -728,6 +728,18 @@ public:
     QRect inputGeometry() const override;
 
     /**
+     * @returns the geometry of the virtual keyboard
+     * This geometry is in global coordinates
+     */
+    QRect virtualKeyboardGeometry() const;
+
+    /**
+     * Sets the geometry of the virtual keyboard, The window may resize itself in order to make space for the keybaord
+     * This geometry is in global coordinates
+     */
+    void setVirtualKeyboardGeometry(const QRect &geo);
+
+    /**
      * Restores the AbstractClient after it had been hidden due to show on screen edge functionality.
      * The AbstractClient also gets raised (e.g. Panel mode windows can cover) and the AbstractClient
      * gets informed in a window specific way that it is shown and raised again.
@@ -957,6 +969,7 @@ protected:
     int borderBottom() const;
     virtual void changeMaximize(bool horizontal, bool vertical, bool adjust) = 0;
     virtual void setGeometryRestore(const QRect &geo) = 0;
+
     /**
      * Called from move after updating the geometry. Can be reimplemented to perform specific tasks.
      * The base implementation does nothing.
@@ -1201,6 +1214,8 @@ private:
     friend class GeometryUpdatesBlocker;
     QRect m_visibleRectBeforeGeometryUpdate;
     QRect m_geometryBeforeUpdateBlocking;
+    QRect m_virtualKeyboardGeometry;
+    QRect m_keyboardGeometryRestore;
 
     struct {
         bool enabled = false;

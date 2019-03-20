@@ -25,7 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 #include <kwin_export.h>
 
+#include <abstract_client.h>
+
 class QQuickView;
+class QTimer;
 class QWindow;
 class KStatusNotifierItem;
 
@@ -53,10 +56,15 @@ private:
     void hide();
     void setEnabled(bool enable);
     void updateSni();
+    void updateInputPanelState();
 
     bool m_enabled = false;
     KStatusNotifierItem *m_sni = nullptr;
     QScopedPointer<QQuickView> m_inputWindow;
+    QPointer<AbstractClient> m_trackedClient;
+    // If a surface loses focus immediately after being resized by the keyboard, don't react to it to avoid resize loops
+    QTimer *m_floodTimer;
+
     QMetaObject::Connection m_waylandShowConnection;
     QMetaObject::Connection m_waylandHideConnection;
     QMetaObject::Connection m_waylandHintsConnection;
