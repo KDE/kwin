@@ -84,11 +84,11 @@ void OrientationSensor::refresh()
                 break;
             case Orientation::TopUp:
             case Orientation::TopDown:
-                text = i18n("Vertical");
+                text = i18nc("Portrait oriented display", "Vertical");
                 break;
             case Orientation::LeftUp:
             case Orientation::RightUp:
-                text = i18n("Horizontal");
+                text = i18nc("Landscape oriented display", "Horizontal");
                 break;
         }
         m_sni->setTitle(text);
