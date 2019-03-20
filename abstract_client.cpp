@@ -1902,6 +1902,11 @@ void AbstractClient::setVirtualKeyboardGeometry(const QRect &geo)
 
     m_virtualKeyboardGeometry = geo;
 
+    // Don't resize Desktop and fullscreen windows
+    if (isFullScreen() || isDesktop()) {
+        return;
+    }
+
     if (!geo.intersects(m_keyboardGeometryRestore)) {
         return;
     }
