@@ -137,7 +137,7 @@ void EglWaylandBackend::cleanupSurfaces()
 bool EglWaylandBackend::createEglWaylandOutput(WaylandOutput *waylandOutput)
 {
     auto *output = new EglWaylandOutput(waylandOutput, this);
-    if (output->init(this)) {
+    if (!output->init(this)) {
         return false;
     }
     m_outputs << output;
