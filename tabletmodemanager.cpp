@@ -25,53 +25,92 @@
 #include "input_event_spy.h"
 
 #include "libinput/device.h"
+#include "libinput/connection.h"
 
+#include <QTimer>
 #include <QDBusConnection>
 
 using namespace KWin;
 
 KWIN_SINGLETON_FACTORY_VARIABLE(TabletModeManager, s_manager)
 
-class KWin::TabletModeInputEventSpy : public InputEventSpy
+class TabletModeSwitchEventSpy : public QObject, public InputEventSpy
 {
 public:
-    explicit TabletModeInputEventSpy(TabletModeManager *parent);
+    explicit TabletModeSwitchEventSpy(TabletModeManager *parent)
+        : QObject(parent)
+        , m_parent(parent)
+    {
+    }
 
-    void switchEvent(SwitchEvent *event) override;
+    void switchEvent(SwitchEvent *event) override
+    {
+        if (!event->device()->isTabletModeSwitch()) {
+            return;
+        }
+
+        switch (event->state()) {
+        case SwitchEvent::State::Off:
+            m_parent->setIsTablet(false);
+            break;
+        case SwitchEvent::State::On:
+            m_parent->setIsTablet(true);
+            break;
+        default:
+            Q_UNREACHABLE();
+        }
+    }
+
 private:
-    TabletModeManager *m_parent;
+    TabletModeManager * const m_parent;
 };
 
-TabletModeInputEventSpy::TabletModeInputEventSpy(TabletModeManager *parent)
-    : m_parent(parent)
-{
-}
 
-void TabletModeInputEventSpy::switchEvent(SwitchEvent *event)
+class TabletModeTouchpadRemovedSpy : public QObject
 {
-    if (!event->device()->isTabletModeSwitch()) {
-        return;
+public:
+    explicit TabletModeTouchpadRemovedSpy(TabletModeManager *parent)
+        : QObject(parent)
+        , m_parent(parent)
+    {
+        auto c = LibInput::Connection::self();
+        connect(c, &LibInput::Connection::deviceAdded, this, &TabletModeTouchpadRemovedSpy::refresh);
+        connect(c, &LibInput::Connection::deviceRemoved, this, &TabletModeTouchpadRemovedSpy::refresh);
+
+        check();
     }
 
-    switch (event->state()) {
-    case SwitchEvent::State::Off:
-        m_parent->setIsTablet(false);
-        break;
-    case SwitchEvent::State::On:
-        m_parent->setIsTablet(true);
-        break;
-    default:
-        Q_UNREACHABLE();
+    void refresh(LibInput::Device* d) {
+        if (!d->isTouch() && !d->isPointer())
+            return;
+        check();
     }
-}
 
+    void check() {
+        if (!LibInput::Connection::self()) {
+            qDebug() << "no libinput :(";
+            return;
+        }
+        const auto devices = LibInput::Connection::self()->devices();
+        const bool hasTouch = std::any_of(devices.constBegin(), devices.constEnd(), [](LibInput::Device* device){ return device->isTouch(); });
+        m_parent->setTabletModeAvailable(hasTouch);
 
+        const bool hasPointer = std::any_of(devices.constBegin(), devices.constEnd(), [](LibInput::Device* device){ return device->isPointer(); });
+        m_parent->setIsTablet(hasTouch && !hasPointer);
+    }
+
+private:
+    TabletModeManager * const m_parent;
+};
 
 TabletModeManager::TabletModeManager(QObject *parent)
-    : QObject(parent),
-      m_spy(new TabletModeInputEventSpy(this))
+    : QObject(parent)
 {
-    input()->installInputEventSpy(m_spy);
+    if (input()->hasTabletModeSwitch()) {
+        input()->installInputEventSpy(new TabletModeSwitchEventSpy(this));
+    } else {
+        hasTabletModeInputChanged(false);
+    }
 
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin"),
                                                  QStringLiteral("org.kde.KWin.TabletModeManager"),
@@ -82,9 +121,29 @@ TabletModeManager::TabletModeManager(QObject *parent)
     connect(input(), &InputRedirection::hasTabletModeSwitchChanged, this, &TabletModeManager::tabletModeAvailableChanged);
 }
 
+void KWin::TabletModeManager::hasTabletModeInputChanged(bool set)
+{
+    if (set) {
+        input()->installInputEventSpy(new TabletModeSwitchEventSpy(this));
+        setTabletModeAvailable(true);
+    } else {
+        auto setupDetector = [this] {
+            auto spy = new TabletModeTouchpadRemovedSpy(this);
+            connect(input(), &InputRedirection::hasTabletModeSwitchChanged, spy, [spy](bool set){
+                if (set)
+                    spy->deleteLater();
+            });
+        };
+        if (LibInput::Connection::self())
+            setupDetector();
+        else
+            QTimer::singleShot(2000, this, setupDetector);
+    }
+}
+
 bool TabletModeManager::isTabletModeAvailable() const
 {
-    return input()->hasTabletModeSwitch();
+    return m_detecting;
 }
 
 bool TabletModeManager::isTablet() const
@@ -100,4 +159,12 @@ void TabletModeManager::setIsTablet(bool tablet)
 
     m_isTabletMode = tablet;
     emit tabletModeChanged(tablet);
+}
+
+void KWin::TabletModeManager::setTabletModeAvailable(bool detecting)
+{
+    if (m_detecting != detecting) {
+        m_detecting = detecting;
+        tabletModeAvailableChanged(detecting);
+    }
 }

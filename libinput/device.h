@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMatrix4x4>
 #include <QSizeF>
 #include <QVector>
+#include "kwin_export.h"
 
 struct libinput_device;
 
@@ -37,7 +38,7 @@ namespace LibInput
 {
 enum class ConfigKey;
 
-class Device : public QObject
+class KWIN_EXPORT Device : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.InputDevice")
