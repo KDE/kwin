@@ -76,10 +76,10 @@ Q_SIGNALS:
     void userEnabledChanged(bool);
 
 private:
-    void setupStatusNotifier();
     void startStopSensor();
     void loadConfig();
     void refresh();
+    void activate();
 
     QOrientationSensor *m_sensor;
     bool m_enabled = false;
