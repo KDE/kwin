@@ -65,12 +65,12 @@ void glResolveFunctions(std::function<resolveFuncPtr(const char*)> resolveFuncti
         }
     }
     if (robustContext && haveArbRobustness) {
-        // See http://www.opengl.org/registry/specs/ARB/robustness.txt
+        // See https://www.opengl.org/registry/specs/ARB/robustness.txt
         GL_RESOLVE_WITH_EXT(glGetGraphicsResetStatus, glGetGraphicsResetStatusARB);
         GL_RESOLVE_WITH_EXT(glReadnPixels,            glReadnPixelsARB);
         GL_RESOLVE_WITH_EXT(glGetnUniformfv,          glGetnUniformfvARB);
     } else if (robustContext && haveExtRobustness) {
-        // See http://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
+        // See https://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
         glGetGraphicsResetStatus = (glGetGraphicsResetStatus_func) resolveFunction("glGetGraphicsResetStatusEXT");
         glReadnPixels            = (glReadnPixels_func)            resolveFunction("glReadnPixelsEXT");
         glGetnUniformfv          = (glGetnUniformfv_func)          resolveFunction("glGetnUniformfvEXT");

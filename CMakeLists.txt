@@ -156,7 +156,7 @@ set_package_properties(EGL PROPERTIES
 
 find_package(epoxy)
 set_package_properties(epoxy PROPERTIES DESCRIPTION "libepoxy"
-                       URL "http://github.com/anholt/libepoxy"
+                       URL "https://github.com/anholt/libepoxy"
                        TYPE REQUIRED
                        PURPOSE "OpenGL dispatch library"
                       )
@@ -216,7 +216,7 @@ set(HAVE_LIBHYBRIS ${libhybris_FOUND})
 
 find_package(X11)
 set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
-                        URL "http://www.x.org"
+                        URL "https://www.x.org"
                         TYPE REQUIRED
                     )
 add_feature_info("XInput" X11_Xinput_FOUND "Required for poll-free mouse cursor updates")
@@ -260,7 +260,7 @@ find_package(Qt5EventDispatcherSupport REQUIRED)
 
 find_package(Freetype REQUIRED)
 set_package_properties(Freetype PROPERTIES DESCRIPTION "A font rendering engine"
-                       URL "http://www.freetype.org"
+                       URL "https://www.freetype.org"
                        TYPE REQUIRED
                        PURPOSE "Needed for KWin's QPA plugin."
                       )
@@ -272,7 +272,7 @@ set_package_properties(Fontconfig PROPERTIES
 
 find_package(Xwayland)
 set_package_properties(Xwayland PROPERTIES
-    URL "http://x.org"
+    URL "https://x.org"
     DESCRIPTION "Xwayland X server"
     TYPE RUNTIME
     PURPOSE "Needed for running kwin_wayland"

@@ -1336,7 +1336,7 @@ QString Workspace::supportInformation() const
         "It provides information about the currently running instance, which options are used,\n"
         "what OpenGL driver and which effects are running.\n"
         "Please post the information provided underneath this introductory text to a paste bin service\n"
-        "like http://paste.kde.org instead of pasting into support threads.\n").toString());
+        "like https://paste.kde.org instead of pasting into support threads.\n").toString());
     support.append(QStringLiteral("\n==========================\n\n"));
     // all following strings are intended for support. They need to be pasted to e.g forums.kde.org
     // it is expected that the support will happen in English language or that the people providing

@@ -2694,7 +2694,7 @@ bool Client::doStartMoveResize()
     bool has_grab = false;
     // This reportedly improves smoothness of the moveresize operation,
     // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
-    // (http://lists.kde.org/?t=107302193400001&r=1&w=2)
+    // (https://lists.kde.org/?t=107302193400001&r=1&w=2)
     QRect r = workspace()->clientArea(FullArea, this);
     m_moveResizeGrabWindow.create(r, XCB_WINDOW_CLASS_INPUT_ONLY, 0, NULL, rootWindow());
     m_moveResizeGrabWindow.map();

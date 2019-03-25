@@ -116,7 +116,7 @@ set(Qt5EventDispatcherSupport_VERSION_STRING ${Qt5EventDispatcherSupport_VERSION
 
 include(FeatureSummary)
 set_package_properties(Qt5EventDispatcherSupport PROPERTIES
-    URL "http://www.qt.io"
+    URL "https://www.qt.io"
     DESCRIPTION "Qt EventDispatcherSupport module."
 )
 

@@ -59,4 +59,4 @@ X-KDE-Ordering=60
 X-Plasma-API=javascript
 X-Plasma-MainScript=code/main.js
 X-KWin-Exclusive-Category=minimize
-X-KWin-Video-Url=http://files.kde.org/plasma/kwin/effect-videos/minimize.ogv
+X-KWin-Video-Url=https://files.kde.org/plasma/kwin/effect-videos/minimize.ogv

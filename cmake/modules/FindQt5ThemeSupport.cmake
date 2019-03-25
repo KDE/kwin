@@ -116,7 +116,7 @@ set(Qt5ThemeSupport_VERSION_STRING ${Qt5ThemeSupport_VERSION})
 
 include(FeatureSummary)
 set_package_properties(Qt5ThemeSupport PROPERTIES
-    URL "http://www.qt.io"
+    URL "https://www.qt.io"
     DESCRIPTION "Qt ThemeSupport module."
 )
 

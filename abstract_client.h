@@ -141,7 +141,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized NOTIFY minimizedChanged)
     /**
      * The optional geometry representing the minimized Client in e.g a taskbar.
-     * See _NET_WM_ICON_GEOMETRY at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+     * See _NET_WM_ICON_GEOMETRY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
      **/

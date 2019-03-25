@@ -235,7 +235,7 @@ void Client::releaseWindow(bool on_shutdown)
     if (isOnCurrentDesktop() && isShown(true))
         addWorkspaceRepaint(visibleRect());
     // Grab X during the release to make removing of properties, setting to withdrawn state
-    // and repareting to root an atomic operation (http://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
+    // and repareting to root an atomic operation (https://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
     grabXServer();
     exportMappingState(WithdrawnState);
     setModal(false);   // Otherwise its mainwindow wouldn't get focus
@@ -1458,7 +1458,7 @@ QString Client::readName() const
     }
 }
 
-// The list is taken from http://www.unicode.org/reports/tr9/ (#154840)
+// The list is taken from https://www.unicode.org/reports/tr9/ (#154840)
 static const QChar LRM(0x200E);
 
 void Client::setCaption(const QString& _s, bool force)

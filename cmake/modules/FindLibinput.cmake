@@ -120,6 +120,6 @@ endif()
 
 include(FeatureSummary)
 set_package_properties(Libinput PROPERTIES
-    URL "http://www.freedesktop.org/wiki/Software/libinput/"
+    URL "https://www.freedesktop.org/wiki/Software/libinput/"
     DESCRIPTION "Library to handle input devices in Wayland compositors and to provide a generic X.Org input driver."
 )

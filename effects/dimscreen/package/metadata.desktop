@@ -136,4 +136,4 @@ X-KDE-PluginInfo-EnabledByDefault=false
 X-KDE-Ordering=60
 X-Plasma-API=javascript
 X-Plasma-MainScript=code/main.js
-X-KWin-Video-Url=http://files.kde.org/plasma/kwin/effect-videos/dim_administration.mp4
+X-KWin-Video-Url=https://files.kde.org/plasma/kwin/effect-videos/dim_administration.mp4

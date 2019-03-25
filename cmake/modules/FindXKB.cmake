@@ -106,6 +106,6 @@ endif()
 
 include(FeatureSummary)
 set_package_properties(XKB PROPERTIES
-    URL "http://xkbcommon.org"
+    URL "https://xkbcommon.org"
     DESCRIPTION "XKB API common to servers and clients."
 )

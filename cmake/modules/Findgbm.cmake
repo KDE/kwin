@@ -120,6 +120,6 @@ endif()
 
 include(FeatureSummary)
 set_package_properties(gbm PROPERTIES
-    URL "http://www.mesa3d.org"
+    URL "https://www.mesa3d.org"
     DESCRIPTION "Mesa gbm library."
 )

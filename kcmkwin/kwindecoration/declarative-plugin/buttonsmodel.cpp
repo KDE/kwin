@@ -166,7 +166,7 @@ void ButtonsModel::move(int sourceIndex, int targetIndex)
 
     /* When moving an item down, the destination index needs to be incremented
        by one, as explained in the documentation:
-       http://doc.qt.nokia.com/qabstractitemmodel.html#beginMoveRows */
+       https://doc.qt.io/qt-5/qabstractitemmodel.html#beginMoveRows */
     if (targetIndex > sourceIndex) {
         // Row will be moved down
         beginMoveRows(QModelIndex(), sourceIndex, sourceIndex, QModelIndex(), targetIndex + 1);

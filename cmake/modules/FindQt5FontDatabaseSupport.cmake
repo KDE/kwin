@@ -116,7 +116,7 @@ set(Qt5FontDatabaseSupport_VERSION_STRING ${Qt5FontDatabaseSupport_VERSION})
 
 include(FeatureSummary)
 set_package_properties(Qt5FontDatabaseSupport PROPERTIES
-    URL "http://www.qt.io"
+    URL "https://www.qt.io"
     DESCRIPTION "Qt FontDatabaseSupport module."
 )
 

@@ -33,7 +33,7 @@ namespace ColorCorrect {
 
 QPair<QTime, QTime> calculateSunTimings(QDate prompt, double latitude, double longitude, bool morning)
 {
-    // calculations based on http://aa.quae.nl/en/reken/zonpositie.html
+    // calculations based on https://aa.quae.nl/en/reken/zonpositie.html
     // accuracy: +/- 5min
 
     // positioning

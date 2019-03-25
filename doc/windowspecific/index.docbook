@@ -10,7 +10,7 @@
 <author>&Lauri.Watts; &Lauri.Watts.mail;</author>
 <author>
 <personname>
-      <firstname>Parts of this documentation was converted from the KDE UserBase <ulink url=" http://userbase.kde.org/KWin Rules">KWin Rules</ulink> page and updated by the &kde; Documentation team to Plasma 5.8.</firstname>
+      <firstname>Parts of this documentation was converted from the KDE UserBase <ulink url="https://userbase.kde.org/KWin Rules">KWin Rules</ulink> page and updated by the &kde; Documentation team to Plasma 5.8.</firstname>
 <surname></surname>
 </personname>
       </author>
@@ -199,7 +199,7 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
 <para><note><para>Both <guilabel>Exact Match</guilabel> and <guilabel>Substring Match</guilabel> implement case insensitive matching.  For example, <emphasis>AB</emphasis> matches the string <emphasis>AB</emphasis>, <emphasis>ab</emphasis>, <emphasis>Ab</emphasis> and <emphasis>aB</emphasis>.</para></note>
 </para>
 <itemizedlist>
-<listitem><para><guilabel>Regular Expression</guilabel> - Qt's regular expressions are implemented - see <ulink url="http://doc.qt.io/qt-5/qregexp.html">pattern matching using regular expressions</ulink>.</para></listitem>
+<listitem><para><guilabel>Regular Expression</guilabel> - Qt's regular expressions are implemented - see <ulink url="https://doc.qt.io/qt-5/qregexp.html">pattern matching using regular expressions</ulink>.</para></listitem>
 </itemizedlist>
 <sect1 id="detect-window-properties"><title>Detect Window Properties</title>
 <para>
@@ -1012,7 +1012,7 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
 <title>Credits and License</title>
       <para>
 Documentation Copyright see the UserBase
-      <ulink url="http://userbase.kde.org/index.php?title=KWin Rules&amp;action=history">KWin Rules page history</ulink></para>
+      <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history">KWin Rules page history</ulink></para>
       <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;
 </chapter>

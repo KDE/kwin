@@ -148,7 +148,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display a Cover Flow effect for the alt+tab window switcher"),
         QStringLiteral("Window Management"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/cover_switch.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/cover_switch.mp4")),
         false,
         true,
 #ifdef EFFECT_BUILTINS
@@ -163,7 +163,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display each virtual desktop on a side of a cube"),
         QStringLiteral("Window Management"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/desktop_cube.ogv")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/desktop_cube.ogv")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -178,7 +178,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Animate desktop switching with a cube"),
         QStringLiteral("Virtual Desktop Switching Animation"),
         QStringLiteral("desktop-animations"),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/desktop_cube_animation.ogv")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/desktop_cube_animation.ogv")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -193,7 +193,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Zoom out so all desktops are displayed side-by-side in a grid"),
         QStringLiteral("Window Management"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/desktop_grid.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/desktop_grid.mp4")),
         true,
         false,
 #ifdef EFFECT_BUILTINS
@@ -208,7 +208,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Darken inactive windows"),
         QStringLiteral("Focus"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/dim_inactive.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/dim_inactive.mp4")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -238,7 +238,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Flip through windows that are in a stack for the alt+tab window switcher"),
         QStringLiteral("Window Management"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/flip_switch.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/flip_switch.mp4")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -283,7 +283,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Inverts the color of the desktop and windows"),
         QStringLiteral("Accessibility"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/invert.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/invert.mp4")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -313,7 +313,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "A screen magnifier that looks like a fisheye lens"),
         QStringLiteral("Accessibility"),
         QStringLiteral("magnifiers"),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/looking_glass.ogv")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/looking_glass.ogv")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -328,7 +328,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Simulate a magic lamp when minimizing windows"),
         QStringLiteral("Appearance"),
         QStringLiteral("minimize"),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/magic_lamp.ogv")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/magic_lamp.ogv")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -343,7 +343,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Magnify the section of the screen that is near the mouse cursor"),
         QStringLiteral("Accessibility"),
         QStringLiteral("magnifiers"),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/magnifier.ogv")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/magnifier.ogv")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -358,7 +358,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations"),
         QStringLiteral("Accessibility"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/mouse_click.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/mouse_click.mp4")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -388,7 +388,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Zoom out until all opened windows can be displayed side-by-side"),
         QStringLiteral("Window Management"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4")),
         true,
         false,
 #ifdef EFFECT_BUILTINS
@@ -493,7 +493,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Slide desktops when switching virtual desktops"),
         QStringLiteral("Virtual Desktop Switching Animation"),
         QStringLiteral("desktop-animations"),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/slide.ogv")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/slide.ogv")),
         true,
         false,
 #ifdef EFFECT_BUILTINS
@@ -523,7 +523,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Sliding animation for Plasma popups"),
         QStringLiteral("Appearance"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4")),
         true,
         false,
 #ifdef EFFECT_BUILTINS
@@ -538,7 +538,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Help you locate the center of the screen when moving a window"),
         QStringLiteral("Accessibility"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/snap_helper.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/snap_helper.mp4")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -598,7 +598,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Display a mouse cursor locating effect when activated"),
         QStringLiteral("Accessibility"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/track_mouse.mp4")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/track_mouse.mp4")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -628,7 +628,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Deform windows while they are moving"),
         QStringLiteral("Candy"),
         QString(),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/wobbly_windows.ogv")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/wobbly_windows.ogv")),
         false,
         false,
 #ifdef EFFECT_BUILTINS
@@ -643,7 +643,7 @@ EFFECT_FALLBACK
         i18ndc("kwin_effects", "Comment describing the KWin Effect", "Magnify the entire desktop"),
         QStringLiteral("Accessibility"),
         QStringLiteral("magnifiers"),
-        QUrl(QStringLiteral("http://files.kde.org/plasma/kwin/effect-videos/zoom.ogv")),
+        QUrl(QStringLiteral("https://files.kde.org/plasma/kwin/effect-videos/zoom.ogv")),
         true,
         false,
 #ifdef EFFECT_BUILTINS

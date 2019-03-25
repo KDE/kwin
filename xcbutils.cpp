@@ -54,7 +54,7 @@ static const int XFIXES_MAX_MINOR = 0;
 
 QVector<QByteArray> shapeOpCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/xextproto/shape.html
+    // see https://www.x.org/releases/X11R7.7/doc/xextproto/shape.html
     // extracted from <xcb/shape.h>
     return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
                                 QByteArrayLiteral("Rectangles"),
@@ -69,7 +69,7 @@ QVector<QByteArray> shapeOpCodes()
 
 QVector<QByteArray> randrOpCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/randrproto/randrproto.txt
+    // see https://www.x.org/releases/X11R7.7/doc/randrproto/randrproto.txt
     // extracted from <xcb/randr.h>
     return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
                                 QByteArray(""), // doesn't exist
@@ -117,7 +117,7 @@ QVector<QByteArray> randrOpCodes()
 
 QVector<QByteArray> randrErrorCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/randrproto/randrproto.txt
+    // see https://www.x.org/releases/X11R7.7/doc/randrproto/randrproto.txt
     // extracted from <xcb/randr.h>
     return QVector<QByteArray>({QByteArrayLiteral("BadOutput"),
                                 QByteArrayLiteral("BadCrtc"),
@@ -127,7 +127,7 @@ QVector<QByteArray> randrErrorCodes()
 
 QVector<QByteArray> damageOpCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/damageproto/damageproto.txt
+    // see https://www.x.org/releases/X11R7.7/doc/damageproto/damageproto.txt
     // extracted from <xcb/damage.h>
     return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
                                 QByteArrayLiteral("Create"),
@@ -138,14 +138,14 @@ QVector<QByteArray> damageOpCodes()
 
 QVector<QByteArray> damageErrorCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/damageproto/damageproto.txt
+    // see https://www.x.org/releases/X11R7.7/doc/damageproto/damageproto.txt
     // extracted from <xcb/damage.h>
     return QVector<QByteArray>({QByteArrayLiteral("BadDamage")});
 }
 
 QVector<QByteArray> compositeOpCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/compositeproto/compositeproto.txt
+    // see https://www.x.org/releases/X11R7.7/doc/compositeproto/compositeproto.txt
     // extracted from <xcb/composite.h>
     return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
                                 QByteArrayLiteral("RedirectWindow"),
@@ -160,7 +160,7 @@ QVector<QByteArray> compositeOpCodes()
 
 QVector<QByteArray> fixesOpCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/fixesproto/fixesproto.txt
+    // see https://www.x.org/releases/X11R7.7/doc/fixesproto/fixesproto.txt
     // extracted from <xcb/xfixes.h>
     return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
                                 QByteArrayLiteral("ChangeSaveSet"),
@@ -199,14 +199,14 @@ QVector<QByteArray> fixesOpCodes()
 
 QVector<QByteArray> fixesErrorCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/fixesproto/fixesproto.txt
+    // see https://www.x.org/releases/X11R7.7/doc/fixesproto/fixesproto.txt
     // extracted from <xcb/xfixes.h>
     return QVector<QByteArray>({QByteArrayLiteral("BadRegion")});
 }
 
 QVector<QByteArray> renderOpCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/renderproto/renderproto.txt
+    // see https://www.x.org/releases/X11R7.7/doc/renderproto/renderproto.txt
     // extracted from <xcb/render.h>
     return QVector<QByteArray>({QByteArrayLiteral("QueryVersion"),
                                 QByteArrayLiteral("QueryPictFormats"),
@@ -243,7 +243,7 @@ QVector<QByteArray> renderOpCodes()
 
 QVector<QByteArray> syncOpCodes()
 {
-    // see http://www.x.org/releases/X11R7.7/doc/xextproto/sync.html
+    // see https://www.x.org/releases/X11R7.7/doc/xextproto/sync.html
     // extracted from <xcb/sync.h>
     return QVector<QByteArray>({QByteArrayLiteral("Initialize"),
                                 QByteArrayLiteral("ListSystemCounters"),
