@@ -115,6 +115,11 @@ GlxBackend::GlxBackend(Display *display)
     , haveSwapInterval(false)
     , m_x11Display(display)
 {
+     // Ensures calls to glXSwapBuffers will always block until the next
+     // retrace when using the proprietary NVIDIA driver. This must be
+     // set before libGL.so is loaded.
+     setenv("__GL_MaxFramesAllowed", "1", true);
+
      // Force initialization of GLX integration in the Qt's xcb backend
      // to make it call XESetWireToEvent callbacks, which is required
      // by Mesa when using DRI2.
@@ -696,25 +701,8 @@ void GlxBackend::present()
                 glXWaitGL();
                 if (char result = m_swapProfiler.end()) {
                     gs_tripleBufferUndetected = gs_tripleBufferNeedsDetection = false;
-                    if (result == 'd' && GLPlatform::instance()->driver() == Driver_NVidia) {
-                        // TODO this is a workaround, we should get __GL_YIELD set before libGL checks it
-                        if (qstrcmp(qgetenv("__GL_YIELD"), "USLEEP")) {
-                            options->setGlPreferBufferSwap(0);
-                            setSwapInterval(0);
-                            result = 0; // hint proper behavior
-                            qCWarning(KWIN_X11STANDALONE) << "\nIt seems you are using the nvidia driver without triple buffering\n"
-                                              "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
-                                              "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"
-                                              "For this reason, the tearing prevention has been disabled.\n"
-                                              "See https://bugs.kde.org/show_bug.cgi?id=322060\n";
-                        }
-                    }
                     setBlocksForRetrace(result == 'd');
                 }
-            } else if (blocksForRetrace()) {
-                // at least the nvidia blob manages to swap async, ie. return immediately on double
-                // buffering - what messes our timing calculation and leads to laggy behavior #346275
-                glXWaitGL();
             }
         } else {
             waitSync();
