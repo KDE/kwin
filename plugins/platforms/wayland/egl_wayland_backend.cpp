@@ -289,7 +289,10 @@ void EglWaylandBackend::present()
 void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output)
 {
     output->m_waylandOutput->surface()->setupFrameCallback();
-    Compositor::self()->aboutToSwapBuffers();
+    if (!m_swapping) {
+        m_swapping = true;
+        Compositor::self()->aboutToSwapBuffers();
+    }
 
     if (supportsBufferAge()) {
         eglSwapBuffers(eglDisplay(), output->m_eglSurface);
@@ -321,6 +324,7 @@ QRegion EglWaylandBackend::prepareRenderingFrame()
 {
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     startRenderTimer();
+    m_swapping = false;
     return QRegion();
 }
 

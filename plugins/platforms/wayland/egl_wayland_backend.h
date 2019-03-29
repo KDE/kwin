@@ -109,6 +109,7 @@ private:
     WaylandBackend *m_backend;
     QVector<EglWaylandOutput*> m_outputs;
     bool m_havePlatformBase;
+    bool m_swapping = false;
     friend class EglWaylandTexture;
 };
 
