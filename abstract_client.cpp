@@ -374,7 +374,7 @@ Layer AbstractClient::belongsToLayer() const
     if (isActiveFullScreen())
         return ActiveLayer;
     if (keepAbove())
-        return AboveLayer;
+        return workspace()->showingDesktop() ? NormalLayer : AboveLayer;
 
     return NormalLayer;
 }
