@@ -88,7 +88,6 @@ Depends: kwin-data (= ${source:Version}),
          qml-module-qtmultimedia,
          ${misc:Depends},
          ${shlibs:Depends},
-Recommends: libqt5multimedia5-plugins, plasma-desktop
 Suggests: kwin-addons
 Breaks: kwin (<= 4:5.3.1-0ubuntu3),
         plasma-workspace (<< 4:5.12),
@@ -108,8 +107,7 @@ Description: KDE window manager, common files
 Package: kwin-data
 Architecture: all
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Recommends: plasma-framework,
-            qml-module-qtmultimedia,
+Recommends: qml-module-qtmultimedia,
             qml-module-qtquick-controls,
             qml-module-qtquick-layouts,
             qml-module-qtquick-virtualkeyboard,
