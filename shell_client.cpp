@@ -586,7 +586,7 @@ void ShellClient::updateDecoration(bool check_workspace_pos, bool force)
         m_serverDecoration->setMode(KWayland::Server::ServerSideDecorationManagerInterface::Mode::Server);
     }
     if (m_xdgDecoration) {
-        auto mode = isDecorated() ? XdgDecorationInterface::Mode::ServerSide: XdgDecorationInterface::Mode::ClientSide;
+        auto mode = isDecorated() || m_userNoBorder ? XdgDecorationInterface::Mode::ServerSide: XdgDecorationInterface::Mode::ClientSide;
         m_xdgDecoration->configure(mode);
         m_xdgShellSurface->configure(xdgSurfaceStates(), m_requestedClientSize);
     }
