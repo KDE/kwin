@@ -30,8 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/server_decoration.h>
+#include <KWayland/Client/xdgdecoration.h>
 
 #include <KWayland/Server/shell_interface.h>
+#include <KWayland/Server/xdgdecoration_interface.h>
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
@@ -52,6 +54,7 @@ private Q_SLOTS:
     void testMaximizedPassedToDeco();
     void testInitiallyMaximized();
     void testBorderlessMaximizedWindow();
+    void testBorderlessMaximizedWindowNoClientSideDecoration();
 };
 
 void TestMaximized::initTestCase()
@@ -76,7 +79,8 @@ void TestMaximized::initTestCase()
 
 void TestMaximized::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration |
+                                         Test::AdditionalWaylandInterface::XdgDecoration));
 
     screens()->setCurrent(0);
     KWin::Cursor::setPos(QPoint(1280, 512));
@@ -222,6 +226,73 @@ void TestMaximized::testBorderlessMaximizedWindow()
     QCOMPARE(client->geometry(), origGeo);
     QCOMPARE(client->geometryRestore(), origGeo);
     QCOMPARE(client->isDecorated(), true);
+}
+
+void TestMaximized::testBorderlessMaximizedWindowNoClientSideDecoration()
+{
+    // test case verifies that borderless maximized windows doesn't cause
+    // clients to render client-side decorations instead (BUG 405385)
+
+    // adjust config
+    auto group = kwinApp()->config()->group("Windows");
+    group.writeEntry("BorderlessMaximizedWindows", true);
+    group.sync();
+    Workspace::self()->slotReconfigure();
+    QCOMPARE(options->borderlessMaximizedWindows(), true);
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> xdgShellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<XdgDecoration> deco(Test::xdgDecorationManager()->getToplevelDecoration(xdgShellSurface.data()));
+
+    QSignalSpy decorationConfiguredSpy(deco.data(), &XdgDecoration::modeChanged);
+    QVERIFY(decorationConfiguredSpy.isValid());
+
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+
+    QSignalSpy geometryChangedSpy(client, &ShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy sizeChangeRequestedSpy(xdgShellSurface.data(), &XdgShellSurface::sizeChanged);
+    QVERIFY(sizeChangeRequestedSpy.isValid());
+    QSignalSpy configureRequestedSpy(xdgShellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+
+    QVERIFY(client->isDecorated());
+    QVERIFY(!client->noBorder());
+    configureRequestedSpy.wait();
+    QCOMPARE(decorationConfiguredSpy.count(), 1);
+    QCOMPARE(deco->mode(), XdgDecoration::Mode::ServerSide);
+
+    // go to maximized
+    xdgShellSurface->setMaximized(true);
+    QVERIFY(sizeChangeRequestedSpy.wait());
+    QCOMPARE(sizeChangeRequestedSpy.count(), 1);
+
+    for (const auto &it: configureRequestedSpy) {
+        xdgShellSurface->ackConfigure(it[2].toInt());
+    }
+    Test::render(surface.data(), sizeChangeRequestedSpy.last().first().toSize(), Qt::red);
+    QVERIFY(geometryChangedSpy.wait());
+
+    // no deco
+    QVERIFY(!client->isDecorated());
+    QVERIFY(client->noBorder());
+    // but still server-side
+    QCOMPARE(deco->mode(), XdgDecoration::Mode::ServerSide);
+
+    // go back to normal
+    xdgShellSurface->setMaximized(false);
+    QVERIFY(sizeChangeRequestedSpy.wait());
+    QCOMPARE(sizeChangeRequestedSpy.count(), 2);
+
+    for (const auto &it: configureRequestedSpy) {
+        xdgShellSurface->ackConfigure(it[2].toInt());
+    }
+    Test::render(surface.data(), sizeChangeRequestedSpy.last().first().toSize(), Qt::red);
+    QVERIFY(geometryChangedSpy.wait());
+
+    QVERIFY(client->isDecorated());
+    QVERIFY(!client->noBorder());
+    QCOMPARE(deco->mode(), XdgDecoration::Mode::ServerSide);
 }
 
 WAYLANDTEST_MAIN(TestMaximized)
