@@ -115,7 +115,7 @@ void KeyboardLayout::initNotifierItem()
 
     m_notifierItem = new KStatusNotifierItem(this);
     m_notifierItem->setCategory(KStatusNotifierItem::Hardware);
-    m_notifierItem->setStatus(KStatusNotifierItem::Active);
+    m_notifierItem->setStatus(KStatusNotifierItem::Passive);
     m_notifierItem->setToolTipTitle(i18nc("tooltip title", "Keyboard Layout"));
     m_notifierItem->setTitle(i18nc("tooltip title", "Keyboard Layout"));
     m_notifierItem->setToolTipIconByName(QStringLiteral("preferences-desktop-keyboard"));
@@ -137,8 +137,6 @@ void KeyboardLayout::initNotifierItem()
             }
         }
     );
-
-    m_notifierItem->setStatus(KStatusNotifierItem::Active);
 }
 
 void KeyboardLayout::switchToNextLayout()
