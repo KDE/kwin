@@ -619,8 +619,10 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     }
     // TODO: better merge with Client's implementation
     const QSize requestedClientSize = QSize(w, h) - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
-    if (requestedClientSize == m_clientSize && !isWaitingForMoveResizeSync()) {
-        // size didn't change, update directly
+
+    if (requestedClientSize == m_clientSize && !isWaitingForMoveResizeSync() &&
+        (m_requestedClientSize.isEmpty() || requestedClientSize == m_requestedClientSize)) {
+        // size didn't change, and we don't need to explicitly request a new size
         doSetGeometry(QRect(x, y, w, h));
         updateMaximizeMode(m_requestedMaximizeMode);
     } else {
@@ -1656,7 +1658,10 @@ QPoint ShellClient::popupOffset(const QRect &anchorRect, const Qt::Edges anchorE
 
 bool ShellClient::isWaitingForMoveResizeSync() const
 {
-    return !m_pendingConfigureRequests.isEmpty();
+    if (m_shellSurface) {
+        return !m_pendingConfigureRequests.isEmpty();
+    }
+    return false;
 }
 
 void ShellClient::doResizeSync()
