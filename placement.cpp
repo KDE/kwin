@@ -376,6 +376,10 @@ QPoint Workspace::cascadeOffset(const AbstractClient *c) const
  **/
 void Placement::placeCascaded(AbstractClient* c, QRect& area, Policy nextPlacement)
 {
+    if (!c->size().isValid()) {
+        return;
+    }
+
     /* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
      */
     // work coords

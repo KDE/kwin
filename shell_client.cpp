@@ -372,7 +372,7 @@ void ShellClient::finishInit() {
     SurfaceInterface *s = surface();
     disconnect(s, &SurfaceInterface::committed, this, &ShellClient::finishInit);
 
-    if (m_xdgShellPopup) {
+    if (!isInitialPositionSet()) {
         QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
         placeIn(area);
     }
