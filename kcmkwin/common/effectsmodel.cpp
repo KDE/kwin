@@ -652,7 +652,9 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
     layout->addWidget(module);
     layout->addWidget(buttons);
 
-    dialog->exec();
+    if (dialog->exec() == QDialog::Accepted) {
+        module->save();
+    }
 
     delete dialog;
 }
