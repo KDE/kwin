@@ -43,7 +43,7 @@ static EGLConfig configFromGLFormat(EGLDisplay dpy, const QSurfaceFormat &format
 #define SIZE( __buffer__ ) format.__buffer__##BufferSize() > 0 ? format.__buffer__##BufferSize() : 0
     // not setting samples as QtQuick doesn't need it
     const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
+        EGL_SURFACE_TYPE,         0,
         EGL_RED_SIZE,             SIZE(red),
         EGL_GREEN_SIZE,           SIZE(green),
         EGL_BLUE_SIZE,            SIZE(blue),
