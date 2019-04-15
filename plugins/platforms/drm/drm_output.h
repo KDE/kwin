@@ -165,7 +165,6 @@ private:
     DrmDumbBuffer *m_cursor[2] = {nullptr, nullptr};
     int m_cursorIndex = 0;
     bool m_hasNewCursor = false;
-    bool m_internal = false;
     bool m_deleted = false;
 };
 

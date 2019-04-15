@@ -248,7 +248,7 @@ bool DrmOutput::init(drmModeConnector *connector)
     setInternal(connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP);
     setDpmsSupported(true);
 
-    if (internal()) {
+    if (isInternal()) {
         connect(kwinApp(), &Application::screensCreated, this,
             [this] {
                 connect(screens()->orientationSensor(), &OrientationSensor::orientationChanged, this, &DrmOutput::automaticRotation);

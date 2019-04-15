@@ -150,9 +150,6 @@ protected:
     void setOrientation(Qt::ScreenOrientation set) {
         m_orientation = set;
     }
-    bool internal() const {
-        return m_internal;
-    }
     void setInternal(bool set) {
         m_internal = set;
     }
