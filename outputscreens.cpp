@@ -41,74 +41,66 @@ void OutputScreens::init()
 
 QString OutputScreens::name(int screen) const
 {
-    const auto enOuts = m_platform->enabledOutputs();
-    if (screen >= enOuts.size()) {
-        return Screens::name(screen);
+    if (AbstractOutput *output = findOutput(screen)) {
+        return output->name();
     }
-    return enOuts.at(screen)->name();
+    return QString();
 }
 
 bool OutputScreens::isInternal(int screen) const
 {
-    const auto enOuts = m_platform->enabledOutputs();
-    if (screen >= enOuts.size()) {
-        return false;
+    if (AbstractOutput *output = findOutput(screen)) {
+        return output->isInternal();
     }
-    return enOuts.at(screen)->isInternal();
+    return false;
 }
 
 QRect OutputScreens::geometry(int screen) const
 {
-    const auto enOuts = m_platform->enabledOutputs();
-    if (screen >= enOuts.size()) {
-        return QRect();
+    if (AbstractOutput *output = findOutput(screen)) {
+        return output->geometry();
     }
-    return enOuts.at(screen)->geometry();
+    return QRect();
 }
 
 QSize OutputScreens::size(int screen) const
 {
-    const auto enOuts = m_platform->enabledOutputs();
-    if (screen >= enOuts.size()) {
-        return QSize();
+    if (AbstractOutput *output = findOutput(screen)) {
+        return output->geometry().size();
     }
-    return enOuts.at(screen)->geometry().size();
+    return QSize();
 }
 
 qreal OutputScreens::scale(int screen) const
 {
-    const auto enOuts = m_platform->enabledOutputs();
-    if (screen >= enOuts.size()) {
-        return 1;
+    if (AbstractOutput *output = findOutput(screen)) {
+        return output->scale();
     }
-    return enOuts.at(screen)->scale();
+    return 1.0;
 }
 
 QSizeF OutputScreens::physicalSize(int screen) const
 {
-    const auto enOuts = m_platform->enabledOutputs();
-    if (screen >= enOuts.size()) {
-        return Screens::physicalSize(screen);
+    if (AbstractOutput *output = findOutput(screen)) {
+        return output->physicalSize();
     }
-    return enOuts.at(screen)->physicalSize();
+    return QSizeF();
 }
 
 float OutputScreens::refreshRate(int screen) const
 {
-    const auto enOuts = m_platform->enabledOutputs();
-    if (screen >= enOuts.size()) {
-        return Screens::refreshRate(screen);
+    if (AbstractOutput *output = findOutput(screen)) {
+        return output->refreshRate() / 1000.0;
     }
-    return enOuts.at(screen)->refreshRate() / 1000.0f;
+    return 60.0;
 }
 
 Qt::ScreenOrientation OutputScreens::orientation(int screen) const
 {
-    const auto enOuts = m_platform->enabledOutputs();
-    if (screen >= enOuts.size()) {
-        return Qt::PrimaryOrientation;
+    if (AbstractOutput *output = findOutput(screen)) {
+        return output->orientation();
     }
-    return enOuts.at(screen)->orientation();
+    return Qt::PrimaryOrientation;
 }
 
 void OutputScreens::updateCount()
@@ -120,9 +112,9 @@ int OutputScreens::number(const QPoint &pos) const
 {
     int bestScreen = 0;
     int minDistance = INT_MAX;
-    const auto enOuts = m_platform->enabledOutputs();
-    for (int i = 0; i < enOuts.size(); ++i) {
-        const QRect &geo = enOuts.at(i)->geometry();
+    const auto outputs = m_platform->enabledOutputs();
+    for (int i = 0; i < outputs.size(); ++i) {
+        const QRect &geo = outputs[i]->geometry();
         if (geo.contains(pos)) {
             return i;
         }
@@ -136,6 +128,11 @@ int OutputScreens::number(const QPoint &pos) const
         }
     }
     return bestScreen;
+}
+
+AbstractOutput *OutputScreens::findOutput(int screen) const
+{
+    return m_platform->enabledOutputs().value(screen);
 }
 
 } // namespace

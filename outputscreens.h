@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class AbstractOutput;
+
 /**
  * @brief Implementation for backends with Outputs
  **/
@@ -49,6 +51,9 @@ public:
 
 protected:
     Platform *m_platform;
+
+private:
+    AbstractOutput *findOutput(int screen) const;
 };
 
 }
