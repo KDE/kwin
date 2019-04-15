@@ -55,6 +55,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "plasmavirtualdesktop_interface.h"
 #include "xdgoutput_interface.h"
 #include "xdgdecoration_interface.h"
+#include "eglstream_controller_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -512,6 +513,13 @@ XdgDecorationManagerInterface *Display::createXdgDecorationManager(XdgShellInter
     auto d = new XdgDecorationManagerInterface(this, shellInterface, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
+}
+
+EglStreamControllerInterface *Display::createEglStreamControllerInterface(QObject *parent)
+{
+    EglStreamControllerInterface *e = new EglStreamControllerInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, e, [e] { delete e; });
+    return e;
 }
 
 void Display::createShm()

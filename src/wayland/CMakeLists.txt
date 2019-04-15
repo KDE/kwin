@@ -58,6 +58,7 @@ set(SERVER_LIB_SRCS
     xdgshell_v6_interface.cpp
     xdgshell_stable_interface.cpp
     xdgoutput_interface.cpp
+    eglstream_controller_interface.cpp
     ../compat/wayland-xdg-shell-v5-protocol.c
 )
 
@@ -202,6 +203,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME xdg-decoration
 )
 
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/wayland-eglstream-controller.xml
+    BASENAME eglstream-controller
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-server-protocol.h
@@ -257,6 +263,7 @@ set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-unstable-v1-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-decoration-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-decoration-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-eglstream-controller-server-protocol.h
 )
 
 set_source_files_properties(${SERVER_GENERATED_SRCS} PROPERTIES SKIP_AUTOMOC ON)
@@ -303,6 +310,7 @@ set(SERVER_LIB_HEADERS
   datasource_interface.h
   display.h
   dpms_interface.h
+  eglstream_controller_interface.h
   filtered_display.h
   fakeinput_interface.h
   global.h
