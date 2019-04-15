@@ -210,6 +210,11 @@ if(HAVE_DRM AND gbm_FOUND)
     set(HAVE_GBM TRUE)
 endif()
 
+option(KWIN_BUILD_EGL_STREAM_BACKEND "Enable building of EGLStream based DRM backend" ON)
+if(HAVE_DRM AND KWIN_BUILD_EGL_STREAM_BACKEND)
+    set(HAVE_EGL_STREAMS TRUE)
+endif()
+
 find_package(libhybris)
 set_package_properties(libhybris PROPERTIES TYPE OPTIONAL PURPOSE "Required for libhybris backend")
 set(HAVE_LIBHYBRIS ${libhybris_FOUND})

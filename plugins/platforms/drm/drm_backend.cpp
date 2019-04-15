@@ -35,6 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "egl_gbm_backend.h"
 #include <gbm.h>
 #endif
+#if HAVE_EGL_STREAMS
+#include "egl_stream_backend.h"
+#endif
 // KWayland
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
@@ -74,6 +77,11 @@ DrmBackend::DrmBackend(QObject *parent)
     , m_udevMonitor(m_udev->monitor())
     , m_dpmsFilter()
 {
+#if HAVE_EGL_STREAMS
+    if (qEnvironmentVariableIsSet("KWIN_DRM_USE_EGL_STREAMS")) {
+        m_useEglStreams = true;
+    }
+#endif
     setSupportsGammaControl(true);
     handleOutputs();
 }
@@ -250,9 +258,10 @@ void DrmBackend::openDrm()
         qCWarning(KWIN_DRM) << "Did not find a GPU";
         return;
     }
-    int fd = LogindIntegration::self()->takeDevice(device->devNode());
+    m_devNode = device->devNode();
+    int fd = LogindIntegration::self()->takeDevice(m_devNode.constData());
     if (fd < 0) {
-        qCWarning(KWIN_DRM) << "failed to open drm device at" << device->devNode();
+        qCWarning(KWIN_DRM) << "failed to open drm device at" << m_devNode;
         return;
     }
     m_fd = fd;
@@ -605,13 +614,13 @@ DrmOutput *DrmBackend::findOutput(const QByteArray &uuid)
     return nullptr;
 }
 
-void DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
+bool DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
 {
     if (!buffer || buffer->bufferId() == 0) {
         if (m_deleteBufferAfterPageFlip) {
             delete buffer;
         }
-        return;
+        return false;
     }
 
     if (output->present(buffer)) {
@@ -619,13 +628,24 @@ void DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
         if (m_pageFlipsPending == 1 && Compositor::self()) {
             Compositor::self()->aboutToSwapBuffers();
         }
+        return true;
     } else if (m_deleteBufferAfterPageFlip) {
         delete buffer;
     }
+    return false;
 }
 
 void DrmBackend::initCursor()
 {
+
+#if HAVE_EGL_STREAMS
+    // Hardware cursors aren't currently supported with EGLStream backend,
+    // possibly an NVIDIA driver bug
+    if (m_useEglStreams) {
+        setSoftWareCursor(true);
+    }
+#endif
+
     m_cursorEnabled = waylandServer()->seat()->hasPointer();
     connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::hasPointerChanged, this,
         [this] {
@@ -733,6 +753,13 @@ QPainterBackend *DrmBackend::createQPainterBackend()
 
 OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
+#if HAVE_EGL_STREAMS
+    if (m_useEglStreams) {
+        m_deleteBufferAfterPageFlip = false;
+        return new EglStreamBackend(this);
+    }
+#endif
+
 #if HAVE_GBM
     m_deleteBufferAfterPageFlip = true;
     return new EglGbmBackend(this);
@@ -774,6 +801,10 @@ QVector<CompositingType> DrmBackend::supportedCompositors() const
     }
 #if HAVE_GBM
     return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
+#elif HAVE_EGL_STREAMS
+    return m_useEglStreams ?
+        QVector<CompositingType>{OpenGLCompositing, QPainterCompositing} :
+        QVector<CompositingType>{QPainterCompositing};
 #else
     return QVector<CompositingType>{QPainterCompositing};
 #endif
@@ -787,6 +818,9 @@ QString DrmBackend::supportInformation() const
     s << "Name: " << "DRM" << endl;
     s << "Active: " << m_active << endl;
     s << "Atomic Mode Setting: " << m_atomicModeSetting << endl;
+#if HAVE_EGL_STREAMS
+    s << "Using EGL Streams: " << m_useEglStreams << endl;
+#endif
     return supportInfo;
 }
 

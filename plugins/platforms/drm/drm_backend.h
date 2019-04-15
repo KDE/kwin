@@ -85,7 +85,7 @@ public:
 #if HAVE_GBM
     DrmSurfaceBuffer *createBuffer(const std::shared_ptr<GbmSurface> &surface);
 #endif
-    void present(DrmBuffer *buffer, DrmOutput *output);
+    bool present(DrmBuffer *buffer, DrmOutput *output);
 
     int fd() const {
         return m_fd;
@@ -124,6 +124,16 @@ public:
     gbm_device *gbmDevice() const {
         return m_gbmDevice;
     }
+
+    QByteArray devNode() const {
+        return m_devNode;
+    }
+
+#if HAVE_EGL_STREAMS
+    bool useEglStreams() const {
+        return m_useEglStreams;
+    }
+#endif
 
     QVector<CompositingType> supportedCompositors() const override;
 
@@ -182,6 +192,10 @@ private:
     QSize m_cursorSize;
     int m_pageFlipsPending = 0;
     bool m_active = false;
+    QByteArray m_devNode;
+#if HAVE_EGL_STREAMS
+    bool m_useEglStreams = false;
+#endif
     // all available planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;
     QVector<DrmPlane*> m_overlayPlanes;

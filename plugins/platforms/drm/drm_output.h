@@ -83,6 +83,13 @@ public:
         return m_uuid;
     }
 
+    const DrmCrtc *crtc() const {
+        return m_crtc;
+    }
+    const DrmPlane *primaryPlane() const {
+        return m_primaryPlane;
+    }
+
     bool initCursor(const QSize &cursorSize);
 
     bool supportsTransformations() const;

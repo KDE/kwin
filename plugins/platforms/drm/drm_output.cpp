@@ -909,6 +909,15 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
         return false;
     }
 
+#if HAVE_EGL_STREAMS
+    if (m_backend->useEglStreams() && !m_modesetRequested) {
+        // EglStreamBackend queues normal page flips through EGL,
+        // modesets are still performed through DRM-KMS
+        m_pageFlipPending = true;
+        return true;
+    }
+#endif
+
     m_primaryPlane->setNext(buffer);
     m_nextPlanesFlipList << m_primaryPlane;
 
@@ -1052,7 +1061,13 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
                 // TODO: Evaluating this condition should only be necessary, as long as we expect older kernels than 4.10.
                 flags |= DRM_MODE_ATOMIC_NONBLOCK;
             }
-            flags |= DRM_MODE_PAGE_FLIP_EVENT;
+
+#if HAVE_EGL_STREAMS
+            if (!m_backend->useEglStreams())
+                // EglStreamBackend uses the NV_output_drm_flip_event EGL extension
+                // to register the flip event through eglStreamConsumerAcquireAttribNV
+#endif
+                flags |= DRM_MODE_PAGE_FLIP_EVENT;
         }
     } else {
         flags |= DRM_MODE_ATOMIC_TEST_ONLY;

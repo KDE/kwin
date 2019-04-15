@@ -21,6 +21,12 @@ if(HAVE_GBM)
     )
 endif()
 
+if(HAVE_EGL_STREAMS)
+    set(DRM_SOURCES ${DRM_SOURCES}
+        egl_stream_backend.cpp
+    )
+endif()
+
 include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})
