@@ -146,6 +146,12 @@ bool FallApartEffect::isRealWindow(EffectWindow* w)
     qCDebug(KWINEFFECTS) << "Splash:" << w->isSplash();
     qCDebug(KWINEFFECTS) << "Normal:" << w->isNormalWindow();
     */
+    if (w->isPopupWindow()) {
+        return false;
+    }
+    if (w->isX11Client() && !w->isManaged()) {
+        return false;
+    }
     if (!w->isNormalWindow())
         return false;
     return true;
