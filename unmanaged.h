@@ -49,6 +49,8 @@ public:
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
     bool isOutline() const override;
 
+    bool setupCompositing() override;
+
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);
 protected:
