@@ -1276,9 +1276,7 @@ void Workspace::setShowingDesktop(bool showing)
     for (int i = stacking_order.count() - 1; i > -1; --i) {
         AbstractClient *c = qobject_cast<AbstractClient*>(stacking_order.at(i));
         if (c && c->isOnCurrentDesktop()) {
-            // When showing desktop we'd like to raise docks above desktop
-            // windows and move keep-above clients to the normal layer.
-            if (c->isDock() || c->keepAbove()) {
+            if (c->isDock()) {
                 c->updateLayer();
             } else if (c->isDesktop() && c->isShown(true)) {
                 c->updateLayer();
