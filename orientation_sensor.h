@@ -80,6 +80,7 @@ private:
     void loadConfig();
     void refresh();
     void activate();
+    void updateState();
 
     QOrientationSensor *m_sensor;
     bool m_enabled = false;

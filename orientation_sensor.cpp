@@ -34,36 +34,37 @@ OrientationSensor::OrientationSensor(QObject *parent)
     : QObject(parent)
     , m_sensor(new QOrientationSensor(this))
 {
-    connect(m_sensor, &QOrientationSensor::readingChanged, this,
-        [this] {
-            auto toOrientation = [] (auto reading) {
-                switch (reading->orientation()) {
-                case QOrientationReading::Undefined:
-                    return OrientationSensor::Orientation::Undefined;
-                case QOrientationReading::TopUp:
-                    return OrientationSensor::Orientation::TopUp;
-                case QOrientationReading::TopDown:
-                    return OrientationSensor::Orientation::TopDown;
-                case QOrientationReading::LeftUp:
-                    return OrientationSensor::Orientation::LeftUp;
-                case QOrientationReading::RightUp:
-                    return OrientationSensor::Orientation::RightUp;
-                case QOrientationReading::FaceUp:
-                    return OrientationSensor::Orientation::FaceUp;
-                case QOrientationReading::FaceDown:
-                    return OrientationSensor::Orientation::FaceDown;
-                default:
-                    Q_UNREACHABLE();
-                }
-            };
-            const auto orientation = toOrientation(m_sensor->reading());
-            if (m_orientation != orientation) {
-                m_orientation = orientation;
-                emit orientationChanged();
-            }
-        }
-    );
+    connect(m_sensor, &QOrientationSensor::readingChanged, this, &OrientationSensor::updateState);
     connect(m_sensor, &QOrientationSensor::activeChanged, this, &OrientationSensor::refresh);
+}
+
+void OrientationSensor::updateState()
+{
+    auto toOrientation = [] (auto reading) {
+        switch (reading->orientation()) {
+        case QOrientationReading::Undefined:
+            return OrientationSensor::Orientation::Undefined;
+        case QOrientationReading::TopUp:
+            return OrientationSensor::Orientation::TopUp;
+        case QOrientationReading::TopDown:
+            return OrientationSensor::Orientation::TopDown;
+        case QOrientationReading::LeftUp:
+            return OrientationSensor::Orientation::LeftUp;
+        case QOrientationReading::RightUp:
+            return OrientationSensor::Orientation::RightUp;
+        case QOrientationReading::FaceUp:
+            return OrientationSensor::Orientation::FaceUp;
+        case QOrientationReading::FaceDown:
+            return OrientationSensor::Orientation::FaceDown;
+        default:
+            Q_UNREACHABLE();
+        }
+    };
+    const auto orientation = toOrientation(m_sensor->reading());
+    if (m_orientation != orientation) {
+        m_orientation = orientation;
+        emit orientationChanged();
+    }
 }
 
 void OrientationSensor::activate()
@@ -96,6 +97,7 @@ void OrientationSensor::refresh()
     if (m_sensor->isActive()) {
         m_sni->setTitle(i18n("Allow Rotation"));
         m_sni->setToolTipTitle(i18n("Automatic screen rotation is enabled"));
+        updateState();
     } else {
         QString text;
         switch(m_orientation) {
