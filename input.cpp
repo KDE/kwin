@@ -442,7 +442,7 @@ class MoveResizeFilter : public InputEventFilter {
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
         Q_UNUSED(nativeButton)
-        AbstractClient *c = workspace()->getMovingClient();
+        AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
             return false;
         }
@@ -463,10 +463,10 @@ public:
     bool wheelEvent(QWheelEvent *event) override {
         Q_UNUSED(event)
         // filter out while moving a window
-        return workspace()->getMovingClient() != nullptr;
+        return workspace()->moveResizeClient() != nullptr;
     }
     bool keyEvent(QKeyEvent *event) override {
-        AbstractClient *c = workspace()->getMovingClient();
+        AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
             return false;
         }
@@ -484,7 +484,7 @@ public:
         Q_UNUSED(id)
         Q_UNUSED(pos)
         Q_UNUSED(time)
-        AbstractClient *c = workspace()->getMovingClient();
+        AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
             return false;
         }
@@ -493,7 +493,7 @@ public:
 
     bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(time)
-        AbstractClient *c = workspace()->getMovingClient();
+        AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
             return false;
         }
@@ -509,7 +509,7 @@ public:
 
     bool touchUp(quint32 id, quint32 time) override {
         Q_UNUSED(time)
-        AbstractClient *c = workspace()->getMovingClient();
+        AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
             return false;
         }

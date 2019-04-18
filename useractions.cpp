@@ -1564,9 +1564,9 @@ void windowToDesktop(AbstractClient *c)
     const auto desktop = functor(nullptr, true);
     if (c && !c->isDesktop()
             && !c->isDock()) {
-        ws->setClientIsMoving(c);
+        ws->setMoveResizeClient(c);
         vds->setCurrent(desktop);
-        ws->setClientIsMoving(NULL);
+        ws->setMoveResizeClient(nullptr);
     }
 }
 
@@ -1609,9 +1609,9 @@ void activeClientToDesktop()
     if (d == current) {
         return;
     }
-    ws->setClientIsMoving(ws->activeClient());
+    ws->setMoveResizeClient(ws->activeClient());
     vds->setCurrent(d);
-    ws->setClientIsMoving(NULL);
+    ws->setMoveResizeClient(nullptr);
 }
 
 void Workspace::slotWindowToDesktopRight()

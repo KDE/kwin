@@ -396,7 +396,7 @@ void TestScreenEdges::testCreatingInitialEdges()
 
     // let's start a move of window.
     Client client(workspace());
-    workspace()->setMovingClient(&client);
+    workspace()->setMoveResizeClient(&client);
     for (int i = 0; i < 8; ++i) {
         auto e = edges.at(i);
         QVERIFY(!e->isReserved());
@@ -413,7 +413,7 @@ void TestScreenEdges::testCreatingInitialEdges()
         QCOMPARE(e->activatesForTouchGesture(), false);
         QCOMPARE(e->approachGeometry(), expectedGeometries.at(i*2+1));
     }
-    workspace()->setMovingClient(nullptr);
+    workspace()->setMoveResizeClient(nullptr);
 }
 
 void TestScreenEdges::testCallback()

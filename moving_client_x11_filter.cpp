@@ -33,7 +33,7 @@ MovingClientX11Filter::MovingClientX11Filter()
 
 bool MovingClientX11Filter::event(xcb_generic_event_t *event)
 {
-    auto client = dynamic_cast<Client*>(workspace()->getMovingClient());
+    auto client = dynamic_cast<Client*>(workspace()->moveResizeClient());
     if (!client) {
         return false;
     }

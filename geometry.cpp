@@ -882,9 +882,9 @@ QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int m
 }
 
 /**
- * Marks the client as being moved around by the user.
+ * Marks the client as being moved or resized by the user.
  **/
-void Workspace::setClientIsMoving(AbstractClient *c)
+void Workspace::setMoveResizeClient(AbstractClient *c)
 {
     Q_ASSERT(!c || !movingClient); // Catch attempts to move a second
     // window while still moving the first one.
@@ -2663,7 +2663,7 @@ bool AbstractClient::startMoveResize()
     invalidateDecorationDoubleClickTimer();
 
     setMoveResize(true);
-    workspace()->setClientIsMoving(this);
+    workspace()->setMoveResizeClient(this);
 
     const Position mode = moveResizePointerMode();
     if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below

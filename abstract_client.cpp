@@ -1462,7 +1462,7 @@ void AbstractClient::updateCursor()
 
 void AbstractClient::leaveMoveResize()
 {
-    workspace()->setClientIsMoving(nullptr);
+    workspace()->setMoveResizeClient(nullptr);
     setMoveResize(false);
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
         ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);

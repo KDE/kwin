@@ -183,7 +183,7 @@ bool Edge::activatesForPointer() const
         return true;
     }
     if (m_edges->isDesktopSwitchingMovingClients()) {
-        auto c = Workspace::self()->getMovingClient();
+        auto c = Workspace::self()->moveResizeClient();
         if (c && !c->isResize()) {
             return true;
         }
@@ -297,7 +297,7 @@ bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
 
 void Edge::handle(const QPoint &cursorPos)
 {
-    AbstractClient *movingClient = Workspace::self()->getMovingClient();
+    AbstractClient *movingClient = Workspace::self()->moveResizeClient();
     if ((edges()->isDesktopSwitchingMovingClients() && movingClient && !movingClient->isResize()) ||
         (edges()->isDesktopSwitching() && isScreenEdge())) {
         // always switch desktops in case:
@@ -436,7 +436,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
             pos.setY(OFFSET);
     }
 #ifndef KWIN_UNIT_TEST
-    if (AbstractClient *c = Workspace::self()->getMovingClient()) {
+    if (AbstractClient *c = Workspace::self()->moveResizeClient()) {
         if (c->rules()->checkDesktop(desktop) != int(desktop)) {
             // user attempts to move a client to another desktop where it is ruleforced to not be
             return;

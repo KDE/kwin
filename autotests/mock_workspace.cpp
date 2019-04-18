@@ -28,7 +28,7 @@ Workspace *MockWorkspace::s_self = nullptr;
 MockWorkspace::MockWorkspace(QObject *parent)
     : QObject(parent)
     , m_activeClient(nullptr)
-    , m_movingClient(nullptr)
+    , m_moveResizeClient(nullptr)
     , m_showingDesktop(false)
 {
     s_self = this;
@@ -49,14 +49,14 @@ void MockWorkspace::setActiveClient(AbstractClient *c)
     m_activeClient = c;
 }
 
-AbstractClient *MockWorkspace::getMovingClient() const
+AbstractClient *MockWorkspace::moveResizeClient() const
 {
-    return m_movingClient;
+    return m_moveResizeClient;
 }
 
-void MockWorkspace::setMovingClient(AbstractClient *c)
+void MockWorkspace::setMoveResizeClient(AbstractClient *c)
 {
-    m_movingClient = c;
+    m_moveResizeClient = c;
 }
 
 void MockWorkspace::setShowingDesktop(bool showing)

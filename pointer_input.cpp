@@ -583,7 +583,7 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
                 return;
             }
             // TODO: can we check on the client instead?
-            if (workspace()->getMovingClient()) {
+            if (workspace()->moveResizeClient()) {
                 // don't update while moving
                 return;
             }
@@ -1108,7 +1108,7 @@ void CursorImage::updateMoveResize()
 {
     m_moveResizeCursor.image = QImage();
     m_moveResizeCursor.hotSpot = QPoint();
-    if (AbstractClient *c = workspace()->getMovingClient()) {
+    if (AbstractClient *c = workspace()->moveResizeClient()) {
         loadThemeCursor(c->cursor(), &m_moveResizeCursor);
         if (m_currentSource == CursorSource::MoveResize) {
             emit changed();
@@ -1337,7 +1337,7 @@ void CursorImage::reevaluteSource()
         setSource(CursorSource::EffectsOverride);
         return;
     }
-    if (workspace() && workspace()->getMovingClient()) {
+    if (workspace() && workspace()->moveResizeClient()) {
         setSource(CursorSource::MoveResize);
         return;
     }

@@ -186,9 +186,9 @@ public:
     }
 
     /**
-     * Indicates that the client c is being moved around by the user.
+     * Indicates that the client c is being moved or resized by the user.
      **/
-    void setClientIsMoving(AbstractClient* c);
+    void setMoveResizeClient(AbstractClient* c);
 
     QPoint adjustClientPosition(AbstractClient* c, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
     QRect adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int mode);
@@ -361,7 +361,12 @@ public:
     void updateFocusMousePosition(const QPoint& pos);
     QPoint focusMousePosition() const;
 
-    AbstractClient* getMovingClient() {
+    /**
+     * Returns a client that is currently being moved or resized by the user.
+     *
+     * If none of clients is being moved or resized, @c null will be returned.
+     **/
+    AbstractClient* moveResizeClient() {
         return movingClient;
     }
 
