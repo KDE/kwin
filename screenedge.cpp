@@ -616,20 +616,21 @@ void Edge::updateApproaching(const QPoint &point)
     if (approachGeometry().contains(point)) {
         int factor = 0;
         const int edgeDistance = m_edges->cornerOffset();
-        // manhattan length for our edge
-        const int cornerDistance = 2*edgeDistance;
+        auto cornerDistance = [=](const QPoint &corner) {
+            return qMax(qAbs(corner.x() - point.x()), qAbs(corner.y() - point.y()));
+        };
         switch (border()) {
         case ElectricTopLeft:
-            factor = (point.manhattanLength()<<8) / cornerDistance;
+            factor = (cornerDistance(approachGeometry().topLeft())<<8) / edgeDistance;
             break;
         case ElectricTopRight:
-            factor = ((point - approachGeometry().topRight()).manhattanLength()<<8) / cornerDistance;
+            factor = (cornerDistance(approachGeometry().topRight())<<8) / edgeDistance;
             break;
         case ElectricBottomRight:
-            factor = ((point - approachGeometry().bottomRight()).manhattanLength()<<8) / cornerDistance;
+            factor = (cornerDistance(approachGeometry().bottomRight())<<8) / edgeDistance;
             break;
         case ElectricBottomLeft:
-            factor = ((point - approachGeometry().bottomLeft()).manhattanLength()<<8) / cornerDistance;
+            factor = (cornerDistance(approachGeometry().bottomLeft())<<8) / edgeDistance;
             break;
         case ElectricTop:
             factor = (qAbs(point.y() - approachGeometry().y())<<8) / edgeDistance;
