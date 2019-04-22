@@ -369,13 +369,16 @@ SceneOpenGL::~SceneOpenGL()
 {
     // do cleanup after initBuffer()
     gs_debuggedScene = nullptr;
-    SceneOpenGL::EffectFrame::cleanup();
-    if (init_ok) {
-        delete m_syncManager;
 
-        // backend might be still needed for a different scene
-        delete m_backend;
+    if (init_ok) {
+        makeOpenGLContextCurrent();
     }
+    SceneOpenGL::EffectFrame::cleanup();
+
+    delete m_syncManager;
+
+    // backend might be still needed for a different scene
+    delete m_backend;
 }
 
 static void scheduleVboReInit()
