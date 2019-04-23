@@ -1767,7 +1767,7 @@ Q_SIGNALS:
      * @param w The window whose the keep above state was changed.
      * @since 5.15
      **/
-    void windowKeepAboveChanged(EffectWindow *w);
+    void windowKeepAboveChanged(KWin::EffectWindow *w);
 
     /**
      * This signal is emitted when the keep below state of @p was changed.
@@ -1775,7 +1775,7 @@ Q_SIGNALS:
      * @param w The window whose the keep below state was changed.
      * @since 5.15
      **/
-    void windowKeepBelowChanged(EffectWindow *w);
+    void windowKeepBelowChanged(KWin::EffectWindow *w);
 
     /**
      * This signal is emitted when the full screen state of @p w was changed.
@@ -1783,7 +1783,7 @@ Q_SIGNALS:
      * @param w The window whose the full screen state was changed.
      * @since 5.15
      **/
-    void windowFullScreenChanged(EffectWindow *w);
+    void windowFullScreenChanged(KWin::EffectWindow *w);
 
 protected:
     QVector< EffectPair > loaded_effects;
