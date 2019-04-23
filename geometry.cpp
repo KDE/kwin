@@ -325,10 +325,6 @@ void Workspace::updateClientArea(bool force)
                 it != m_allClients.constEnd();
                 ++it)
             (*it)->checkWorkspacePosition();
-        for (ClientList::ConstIterator it = desktops.constBegin();
-                it != desktops.constEnd();
-                ++it)
-            (*it)->checkWorkspacePosition();
 
         oldrestrictedmovearea.clear(); // reset, no longer valid or needed
     }
