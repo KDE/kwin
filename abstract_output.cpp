@@ -171,6 +171,9 @@ void AbstractOutput::createXdgOutput()
         return;
     }
     m_xdgOutput = waylandServer()->xdgOutputManager()->createXdgOutput(m_waylandOutput, m_waylandOutput);
+    m_xdgOutput->setLogicalSize(pixelSize() / scale());
+    m_xdgOutput->setLogicalPosition(m_globalPos);
+    m_xdgOutput->done();
 }
 
 void AbstractOutput::initWaylandOutput()
