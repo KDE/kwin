@@ -135,6 +135,7 @@ private:
 
     int getGammaRampSize() const override;
     bool setGammaRamp(const ColorCorrect::GammaRamp &gamma) override;
+    QMatrix4x4 &&matrixDisplay(const QSize &s) const;
 
     DrmBackend *m_backend;
     DrmConnector *m_conn = nullptr;

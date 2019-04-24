@@ -127,21 +127,36 @@ bool DrmOutput::showCursor()
     return ret;
 }
 
-qreal orientationToRotation(Qt::ScreenOrientation orientation)
+int orientationToRotation(Qt::ScreenOrientation orientation)
 {
     switch (orientation) {
-        case Qt::PrimaryOrientation:
-        case Qt::LandscapeOrientation:
-            return 0.;
-        case Qt::InvertedPortraitOrientation:
-            return 90.;
-        case Qt::InvertedLandscapeOrientation:
-            return 180.;
-        case Qt::PortraitOrientation:
-            return 270.;
+    case Qt::PrimaryOrientation:
+    case Qt::LandscapeOrientation:
+        return 0;
+    case Qt::InvertedPortraitOrientation:
+        return 90;
+    case Qt::InvertedLandscapeOrientation:
+        return 180;
+    case Qt::PortraitOrientation:
+        return 270;
     }
     Q_UNREACHABLE();
     return 0;
+}
+
+QMatrix4x4 &&DrmOutput::matrixDisplay(const QSize &s) const
+{
+    QMatrix4x4 matrix;
+    const int angle = orientationToRotation(orientation());
+    if (angle) {
+        const QSize center = s / 2;
+
+        matrix.translate(center.width(), center.height());
+        matrix.rotate(angle, 0, 0, 1);
+        matrix.translate(-center.width(), -center.height());
+    }
+    matrix.scale(scale());
+    return std::move(matrix);
 }
 
 void DrmOutput::updateCursor()
@@ -153,40 +168,35 @@ void DrmOutput::updateCursor()
     m_hasNewCursor = true;
     QImage *c = m_cursor[m_cursorIndex]->image();
     c->fill(Qt::transparent);
-    c->setDevicePixelRatio(scale());
 
     QPainter p;
     p.begin(c);
-    if (orientation() != Qt::LandscapeOrientation) {
-        QMatrix4x4 matrix;
-        matrix.translate(cursorImage.width() / 2.0, cursorImage.height() / 2.0);
-        matrix.rotate(orientationToRotation(orientation()), 0.0f, 0.0f, 1.0f);
-        matrix.translate(-cursorImage.width() / 2.0, -cursorImage.height() / 2.0);
-        p.setWorldTransform(matrix.toTransform());
-    }
+    p.setWorldTransform(matrixDisplay(QSize(cursorImage.width(), cursorImage.height())).toTransform());
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
 }
 
 void DrmOutput::moveCursor(const QPoint &globalPos)
 {
-    QMatrix4x4 matrix;
-    QMatrix4x4 hotspotMatrix;
-    if (orientation() != Qt::LandscapeOrientation) {
-        auto rotation = orientationToRotation(orientation());
-        matrix.translate(pixelSize().width() /2.0, pixelSize().height() / 2.0);
-        matrix.rotate(rotation, 0.0f, 0.0f, 1.0f);
-        matrix.translate(-pixelSize().width() /2.0, -pixelSize().height() / 2.0);
-        const auto cursorSize = m_backend->softwareCursor().size();
-        hotspotMatrix.translate(cursorSize.width()/2.0, cursorSize.height()/2.0);
-        hotspotMatrix.rotate(rotation, 0.0f, 0.0f, 1.0f);
-        hotspotMatrix.translate(-cursorSize.width()/2.0, -cursorSize.height()/2.0);
+    const QMatrix4x4 hotspotMatrix = matrixDisplay(m_backend->softwareCursor().size());
+
+    QPoint p = globalPos-AbstractOutput::globalPos();
+    switch (orientation()) {
+    case Qt::PrimaryOrientation:
+    case Qt::LandscapeOrientation:
+        break;
+    case Qt::PortraitOrientation:
+        p = QPoint(p.y(), pixelSize().height() - p.x());
+        break;
+    case Qt::InvertedPortraitOrientation:
+        p = QPoint(pixelSize().width() - p.y(), p.x());
+        break;
+    case Qt::InvertedLandscapeOrientation:
+        p = QPoint(pixelSize().width() - p.x(), pixelSize().height() - p.y());
+        break;
     }
-    hotspotMatrix.scale(scale());
-    matrix.scale(scale());
-    const auto outputGlobalPos = AbstractOutput::globalPos();
-    matrix.translate(-outputGlobalPos.x(), -outputGlobalPos.y());
-    const QPoint p = matrix.map(globalPos) - hotspotMatrix.map(m_backend->softwareCursorHotspot());
+    p *= scale();
+    p -= hotspotMatrix.map(m_backend->softwareCursorHotspot());
     drmModeMoveCursor(m_backend->fd(), m_crtc->id(), p.x(), p.y());
 }
 
