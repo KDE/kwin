@@ -523,7 +523,8 @@ void DrmBackend::readOutputsConfiguration()
         const auto outputConfig = configGroup.group((*it)->uuid());
         (*it)->setGlobalPos(outputConfig.readEntry<QPoint>("Position", pos));
         // TODO: add mode
-        (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
+        if (outputConfig.hasKey("Scale"))
+            (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
         pos.setX(pos.x() + (*it)->geometry().width());
     }
 }
