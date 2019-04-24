@@ -552,9 +552,6 @@ private:
     void addSessionInfo(KConfigGroup &cg);
 
     QList<SessionInfo*> session;
-    static const char* windowTypeToTxt(NET::WindowType type);
-    static NET::WindowType txtToWindowType(const char* txt);
-    static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
 
     void updateXStackingOrder();
 
