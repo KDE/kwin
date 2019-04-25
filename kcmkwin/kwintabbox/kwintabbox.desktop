@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 X-KDE-ServiceTypes=KCModule
-Icon=window-duplicate
+Icon=preferences-system-tabbox
 Exec=kcmshell5 kwintabbox
 X-DocPath=kcontrol/kwintabbox/index.html
 X-KDE-Library=kcm_kwintabbox
