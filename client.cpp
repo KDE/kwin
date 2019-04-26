@@ -1463,13 +1463,27 @@ static const QChar LRM(0x200E);
 
 void Client::setCaption(const QString& _s, bool force)
 {
-    if (!force && _s == cap_normal)
-        return;
     QString s(_s);
-    for (int i = 0; i < s.length(); ++i)
-        if (!s[i].isPrint())
-            s[i] = QChar(u' ');
+    for (int i = 0; i < s.length(); ) {
+        if (!s[i].isPrint()) {
+            if (QChar(s[i]).isHighSurrogate() && i + 1 < s.length() && QChar(s[i + 1]).isLowSurrogate()) {
+                const uint uc = QChar::surrogateToUcs4(s[i], s[i + 1]);
+                if (!QChar::isPrint(uc)) {
+                    s.remove(i, 2);
+                } else {
+                    i += 2;
+                }
+                continue;
+            }
+            s.remove(i, 1);
+            continue;
+        }
+        ++i;
+    }
     const bool changed = (s != cap_normal);
+    if (!force && !changed) {
+        return;
+    }
     cap_normal = s;
     if (!force && !changed) {
         emit captionChanged();
