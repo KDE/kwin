@@ -49,7 +49,8 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
-    void testCaptionSimplified();
+    void testTrimCaption_data();
+    void testTrimCaption();
     void testFullscreenLayerWithActiveWaylandWindow();
     void testFocusInWithWaylandLastActiveWindow();
     void testX11WindowId();
@@ -94,13 +95,23 @@ struct XcbConnectionDeleter
     }
 };
 
+void X11ClientTest::testTrimCaption_data()
+{
+    QTest::addColumn<QByteArray>("originalTitle");
+    QTest::addColumn<QByteArray>("expectedTitle");
 
-void X11ClientTest::testCaptionSimplified()
+    QTest::newRow("simplified")
+        << QByteArrayLiteral("Was tun, wenn Schüler Autismus haben?\342\200\250\342\200\250\342\200\250 – Marlies Hübner - Mozilla Firefox")
+        << QByteArrayLiteral("Was tun, wenn Schüler Autismus haben? – Marlies Hübner - Mozilla Firefox");
+
+    QTest::newRow("with emojis")
+        << QByteArrayLiteral("\bTesting non\302\255printable:\177, emoij:\360\237\230\203, non-characters:\357\277\276")
+        << QByteArrayLiteral("Testing nonprintable:, emoij:\360\237\230\203, non-characters:");
+}
+
+void X11ClientTest::testTrimCaption()
 {
     // this test verifies that caption is properly trimmed
-    // see BUG 323798 comment #12
-    QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
 
     // create an xcb window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -119,8 +130,8 @@ void X11ClientTest::testCaptionSimplified()
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
     NETWinInfo winInfo(c.data(), w, rootWindow(), NET::Properties(), NET::Properties2());
-    const QByteArray origTitle = QByteArrayLiteral("Was tun, wenn Schüler Autismus haben?\342\200\250\342\200\250\342\200\250 – Marlies Hübner - Mozilla Firefox");
-    winInfo.setName(origTitle.constData());
+    QFETCH(QByteArray, originalTitle);
+    winInfo.setName(originalTitle);
     xcb_map_window(c.data(), w);
     xcb_flush(c.data());
 
@@ -131,8 +142,8 @@ void X11ClientTest::testCaptionSimplified()
     Client *client = windowCreatedSpy.first().first().value<Client*>();
     QVERIFY(client);
     QCOMPARE(client->window(), w);
-    QVERIFY(client->caption() != QString::fromUtf8(origTitle));
-    QCOMPARE(client->caption(), QString::fromUtf8(origTitle).simplified());
+    QFETCH(QByteArray, expectedTitle);
+    QCOMPARE(client->caption(), QString::fromUtf8(expectedTitle));
 
     // and destroy the window again
     xcb_unmap_window(c.data(), w);
