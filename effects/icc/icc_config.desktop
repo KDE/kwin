@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kwin_icc_config
+X-KDE-ParentComponents=icc
+
+Name=ICC color correction
+Name[ru]=ICC цветокоррекция

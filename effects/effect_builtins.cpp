@@ -49,6 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cubeslide/cubeslide.h"
 #include "flipswitch/flipswitch.h"
 #include "glide/glide.h"
+#include "icc/icc.h"
 #include "invert/invert.h"
 #include "lookingglass/lookingglass.h"
 #include "magnifier/magnifier.h"
@@ -274,6 +275,21 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<HighlightWindowEffect>,
         nullptr,
+        nullptr
+#endif
+EFFECT_FALLBACK
+    }, {
+        QStringLiteral("icc"),
+        i18ndc("kwin_effects", "Name of a KWin Effect", "ICC Color Correction"),
+        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Applies full ICC color correction to the whole display"),
+        QStringLiteral("Appearance"),
+        QString(),
+        QUrl(),
+        false,
+        false,
+#ifdef EFFECT_BUILTINS
+        &createHelper<ICCEffect>,
+        &ICCEffect::supported,
         nullptr
 #endif
 EFFECT_FALLBACK

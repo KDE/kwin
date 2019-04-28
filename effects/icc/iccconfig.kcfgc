@@ -1,0 +1,5 @@
+File=icc.kcfg
+ClassName=ICCConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

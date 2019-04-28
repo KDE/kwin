@@ -6,6 +6,7 @@
   <file alias="cylinder.vert">cube/data/1.10/cylinder.vert</file>
   <file alias="sphere.vert">cube/data/1.10/sphere.vert</file>
   <file alias="invert.frag">invert/data/1.10/invert.frag</file>
+  <file alias="icc.frag">icc/data/1.10/icc.frag</file>
   <file alias="lookingglass.frag">lookingglass/data/1.10/lookingglass.frag</file>
   <file alias="blinking-startup-fragment.glsl">startupfeedback/data/1.10/blinking-startup-fragment.glsl</file>
 </qresource>
@@ -16,6 +17,7 @@
   <file alias="cylinder.vert">cube/data/1.40/cylinder.vert</file>
   <file alias="sphere.vert">cube/data/1.40/sphere.vert</file>
   <file alias="invert.frag">invert/data/1.40/invert.frag</file>
+  <file alias="icc.frag">icc/data/1.40/icc.frag</file>
   <file alias="lookingglass.frag">lookingglass/data/1.40/lookingglass.frag</file>
   <file alias="blinking-startup-fragment.glsl">startupfeedback/data/1.40/blinking-startup-fragment.glsl</file>
 </qresource>

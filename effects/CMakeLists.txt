@@ -61,6 +61,11 @@ macro( KWIN4_ADD_EFFECT name )
 
 endmacro()
 
+# For ICC (FIXME remove if building separately)
+find_package(PkgConfig)
+pkg_check_modules(LCMS2 REQUIRED lcms2)
+set_package_properties(LCMS2 PROPERTIES TYPE REQUIRED PURPOSE "Required for ICC color correction.")
+
 # Install the KWin/Effect service type
 install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 
@@ -81,6 +86,7 @@ set( kwin4_effect_builtins_sources
     diminactive/diminactive.cpp
     flipswitch/flipswitch.cpp
     glide/glide.cpp
+    icc/icc.cpp
     invert/invert.cpp
     lookingglass/lookingglass.cpp
     magiclamp/magiclamp.cpp
@@ -113,6 +119,7 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     fallapart/fallapartconfig.kcfgc
     flipswitch/flipswitchconfig.kcfgc
     glide/glideconfig.kcfgc
+    icc/iccconfig.kcfgc
     lookingglass/lookingglassconfig.kcfgc
     magiclamp/magiclampconfig.kcfgc
     magnifier/magnifierconfig.kcfgc
@@ -177,6 +184,7 @@ add_subdirectory( cube )
 add_subdirectory( cubeslide )
 add_subdirectory( flipswitch )
 add_subdirectory( glide )
+add_subdirectory( icc )
 add_subdirectory( invert )
 add_subdirectory( lookingglass )
 add_subdirectory( magnifier )
@@ -193,3 +201,8 @@ add_subdirectory( wobblywindows )
 
 # Add the builtins plugin
 kwin4_add_effect( builtins ${kwin4_effect_builtins_sources} )
+
+# FIXME For ICC, remove if building separately
+target_link_libraries(kwin4_effect_builtins PUBLIC ${LCMS2_LIBRARIES})
+target_include_directories(kwin4_effect_builtins PUBLIC ${LCMS2_INCLUDE_DIRS})
+target_compile_options(kwin4_effect_builtins PUBLIC ${LCMS2_CFLAGS_OTHER})
