@@ -32,6 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "focuschain.h"
 #include "group.h"
 #include "shadow.h"
+#ifdef KWIN_BUILD_TABBOX
+#include "tabbox.h"
+#endif
 #include "workspace.h"
 #include "screenedge.h"
 #include "decorations/decorationbridge.h"
@@ -205,6 +208,12 @@ void Client::releaseWindow(bool on_shutdown)
 {
     assert(!deleting);
     deleting = true;
+#ifdef KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
+        tabBox->nextPrev(true);
+    }
+#endif
     destroyWindowManagementInterface();
     Deleted* del = NULL;
     if (!on_shutdown) {
@@ -275,6 +284,12 @@ void Client::destroyClient()
 {
     assert(!deleting);
     deleting = true;
+#ifdef KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
+        tabBox->nextPrev(true);
+    }
+#endif
     destroyWindowManagementInterface();
     Deleted* del = Deleted::create(this);
     if (isMoveResize())
