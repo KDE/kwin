@@ -679,12 +679,6 @@ void Workspace::removeClient(Client* c)
         clientShortcutUpdated(c);   // Needed, since this is otherwise delayed by setShortcut() and wouldn't run
     }
 
-#ifdef KWIN_BUILD_TABBOX
-    TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox->isDisplayed() && tabBox->currentClient() == c)
-        tabBox->nextPrev(true);
-#endif
-
     Q_ASSERT(clients.contains(c) || desktops.contains(c));
     // TODO: if marked client is removed, notify the marked list
     clients.removeAll(c);
@@ -710,6 +704,7 @@ void Workspace::removeClient(Client* c)
     updateStackingOrder(true);
 
 #ifdef KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
     if (tabBox->isDisplayed())
         tabBox->reset(true);
 #endif
