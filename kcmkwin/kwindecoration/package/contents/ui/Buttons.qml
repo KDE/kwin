@@ -21,14 +21,16 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4 as Controls
+
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami 2.5 as Kirigami
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
 
 ColumnLayout {
     Layout.fillWidth: true
     Layout.fillHeight: true
     property int buttonIconSize: units.iconSizes.medium
-    property int titleBarSpacing: units.iconSizes.smallMedium
+    property int titleBarSpacing: units.smallSpacing * 2
 
     KDecoration.Bridge {
         id: bridgeItem
@@ -160,7 +162,7 @@ ColumnLayout {
                     Layout.margins: units.largeSpacing
                     width: availableButtonsGrid.cellWidth
                     height: availableButtonsGrid.cellHeight
-                    opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 0.25 : 1.0
+                    opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 0.15 : 1.0
                     Rectangle {
                         id: availableButtonFrame
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -218,24 +220,12 @@ ColumnLayout {
                     onDropped: {
                         drag.source.buttonsModel.remove(drag.source.itemIndex);
                     }
-                    ColumnLayout {
+                    Kirigami.Heading {
+                        text: i18n("Drop button here to remove it")
+                        font.weight: Font.Bold
+                        level: 2
                         anchors.centerIn: parent
                         opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 1.0 : 0.0
-                        Controls.Label {
-                            text: i18n("Drop here to remove button")
-                            font.weight: Font.Bold
-                            Layout.bottomMargin: units.smallSpacing
-                        }
-                        PlasmaCore.IconItem {
-                            id: icon
-                            width: units.iconSizes.smallMedium
-                            height: units.iconSizes.smallMedium
-                            Layout.alignment: Qt.AlignHCenter
-                            source: "emblem-remove"
-                        }
-                        Item {
-                            Layout.fillHeight: true
-                        }
                     }
                 }
             }
