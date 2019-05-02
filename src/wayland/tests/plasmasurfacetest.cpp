@@ -172,6 +172,8 @@ int main(int argc, char **argv)
     parser.addHelpOption();
     QCommandLineOption notificationOption(QStringLiteral("notification"));
     parser.addOption(notificationOption);
+    QCommandLineOption criticalNotificationOption(QStringLiteral("criticalNotification"));
+    parser.addOption(criticalNotificationOption);
     QCommandLineOption panelOption(QStringLiteral("panel"));
     parser.addOption(panelOption);
     QCommandLineOption desktopOption(QStringLiteral("desktop"));
@@ -191,6 +193,8 @@ int main(int argc, char **argv)
 
     if (parser.isSet(notificationOption)) {
         client.setRole(PlasmaShellSurface::Role::Notification);
+    } else if (parser.isSet(criticalNotificationOption)) {
+        client.setRole(PlasmaShellSurface::Role::CriticalNotification);
     } else if (parser.isSet(panelOption)) {
         client.setRole(PlasmaShellSurface::Role::Panel);
     } else if (parser.isSet(desktopOption)) {

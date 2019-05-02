@@ -50,7 +50,7 @@ private:
     static const quint32 s_version;
 };
 
-const quint32 PlasmaShellInterface::Private::s_version = 5;
+const quint32 PlasmaShellInterface::Private::s_version = 6;
 
 PlasmaShellInterface::Private::Private(PlasmaShellInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_shell_interface, s_version)
@@ -251,6 +251,9 @@ void PlasmaShellSurfaceInterface::Private::setRole(uint32_t role)
         break;
     case ORG_KDE_PLASMA_SURFACE_ROLE_TOOLTIP:
         r = Role::ToolTip;
+        break;
+    case ORG_KDE_PLASMA_SURFACE_ROLE_CRITICALNOTIFICATION:
+        r = Role::CriticalNotification;
         break;
     case ORG_KDE_PLASMA_SURFACE_ROLE_NORMAL:
     default:
