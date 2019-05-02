@@ -70,7 +70,7 @@ void Placement::place(AbstractClient* c, QRect& area)
         placeDialog(c, area, options->placement());
     else if (c->isSplash())
         placeOnMainWindow(c, area);   // on mainwindow, if any, otherwise centered
-    else if (c->isOnScreenDisplay() || c->isNotification())
+    else if (c->isOnScreenDisplay() || c->isNotification() || c->isCriticalNotification())
         placeOnScreenDisplay(c, area);
     else if (c->isTransient() && c->hasTransientPlacementHint())
         placeTransient(c);

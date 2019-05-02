@@ -366,6 +366,8 @@ Layer AbstractClient::belongsToLayer() const
         return OnScreenDisplayLayer;
     if (isNotification())
         return NotificationLayer;
+    if (isCriticalNotification())
+        return CriticalNotificationLayer;
     if (workspace()->showingDesktop() && belongsToDesktop()) {
         return AboveLayer;
     }
@@ -477,7 +479,7 @@ bool AbstractClient::wantsTabFocus() const
 bool AbstractClient::isSpecialWindow() const
 {
     // TODO
-    return isDesktop() || isDock() || isSplash() || isToolbar() || isNotification() || isOnScreenDisplay();
+    return isDesktop() || isDock() || isSplash() || isToolbar() || isNotification() || isOnScreenDisplay() || isCriticalNotification();
 }
 
 void AbstractClient::demandAttention(bool set)

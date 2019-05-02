@@ -46,12 +46,14 @@ namespace KWin
 // window types that are supported as normal windows (i.e. KWin actually manages them)
 const NET::WindowTypes SUPPORTED_MANAGED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
         | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
-        | NET::UtilityMask | NET::SplashMask | NET::NotificationMask | NET::OnScreenDisplayMask;
+        | NET::UtilityMask | NET::SplashMask | NET::NotificationMask | NET::OnScreenDisplayMask
+        | NET::CriticalNotificationMask;
 // window types that are supported as unmanaged (mainly for compositing)
 const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
         | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
         | NET::UtilityMask | NET::SplashMask | NET::DropdownMenuMask | NET::PopupMenuMask
-        | NET::TooltipMask | NET::NotificationMask | NET::ComboBoxMask | NET::DNDIconMask | NET::OnScreenDisplayMask;
+        | NET::TooltipMask | NET::NotificationMask | NET::ComboBoxMask | NET::DNDIconMask | NET::OnScreenDisplayMask
+        | NET::CriticalNotificationMask;
 
 const QPoint invalidPoint(INT_MIN, INT_MIN);
 
@@ -82,6 +84,7 @@ enum Layer {
     AboveLayer,
     NotificationLayer, // layer for windows of type notification
     ActiveLayer, // active fullscreen, or active dialog
+    CriticalNotificationLayer, // layer for notifications that should be shown even on top of fullscreen
     OnScreenDisplayLayer, // layer for On Screen Display windows such as volume feedback
     UnmanagedLayer, // layer for override redirect windows.
     NumLayers // number of layers, must be last

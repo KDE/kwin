@@ -68,7 +68,8 @@ function isPopupWindow(window) {
     // special windows(e.g. notifications) because the monolithic version
     // was doing that.
     if (window.dock || window.splash || window.toolbar
-            || window.notification || window.onScreenDisplay) {
+            || window.notification || window.onScreenDisplay
+            || window.criticalNotification) {
         return true;
     }
 

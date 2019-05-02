@@ -176,6 +176,9 @@ public:
     bool isNotification() const override {
         return false;
     }
+    bool isCriticalNotification() const override {
+        return false;
+    }
     bool isOnScreenDisplay() const override  {
         return false;
     }

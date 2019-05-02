@@ -161,6 +161,10 @@ class KWIN_EXPORT Toplevel
      **/
     Q_PROPERTY(bool notification READ isNotification)
     /**
+     * Returns whether the window is a window with a critical notification.
+     **/
+    Q_PROPERTY(bool criticalNotification READ isCriticalNotification)
+    /**
      * Returns whether the window is an On Screen Display.
      **/
     Q_PROPERTY(bool onScreenDisplay READ isOnScreenDisplay)
@@ -284,6 +288,7 @@ public:
     bool isPopupMenu() const; // a context popup, not dropdown, not torn-off
     bool isTooltip() const;
     bool isNotification() const;
+    bool isCriticalNotification() const;
     bool isOnScreenDisplay() const;
     bool isComboBox() const;
     bool isDNDIcon() const;
@@ -745,6 +750,11 @@ inline bool Toplevel::isTooltip() const
 inline bool Toplevel::isNotification() const
 {
     return windowType() == NET::Notification;
+}
+
+inline bool Toplevel::isCriticalNotification() const
+{
+    return windowType() == NET::CriticalNotification;
 }
 
 inline bool Toplevel::isOnScreenDisplay() const

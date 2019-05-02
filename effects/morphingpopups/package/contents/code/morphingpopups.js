@@ -28,7 +28,7 @@ var morphingEffect = {
 
     geometryChange: function (window, oldGeometry) {
         //only tooltips and notifications
-        if (!window.tooltip && !window.notification) {
+        if (!window.tooltip && !window.notification && !window.criticalNotification) {
             return;
         }
 

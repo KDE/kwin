@@ -1882,6 +1882,11 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      **/
     Q_PROPERTY(bool notification READ isNotification)
     /**
+     * Returns whether the window is a window with a critical notification.
+     * using the non-standard _KDE_NET_WM_WINDOW_TYPE_CRITICAL_NOTIFICATION
+     **/
+    Q_PROPERTY(bool criticalNotification READ isCriticalNotification)
+    /**
      * Returns whether the window is an on screen display window
      * using the non-standard _KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY
      **/
@@ -2258,6 +2263,11 @@ public:
      * See _NET_WM_WINDOW_TYPE_NOTIFICATION at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      **/
     virtual bool isNotification() const = 0;
+    /**
+     * Returns whether the window is a window with a critical notification.
+     * using the non-standard _KDE_NET_WM_WINDOW_TYPE_CRITICAL_NOTIFICATION
+     **/
+    virtual bool isCriticalNotification() const = 0;
     /**
      * Returns whether the window is an on screen display window
      * using the non-standard _KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY

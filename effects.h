@@ -432,6 +432,7 @@ public:
     bool isPopupMenu() const override;
     bool isTooltip() const override;
     bool isNotification() const override;
+    bool isCriticalNotification() const override;
     bool isOnScreenDisplay() const override;
     bool isComboBox() const override;
     bool isDNDIcon() const override;

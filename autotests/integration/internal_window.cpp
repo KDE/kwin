@@ -741,6 +741,7 @@ void InternalWindowTest::testWindowType_data()
     QTest::newRow("Notification") << NET::Notification;
     QTest::newRow("ComboBox") << NET::ComboBox;
     QTest::newRow("OnScreenDisplay") << NET::OnScreenDisplay;
+    QTest::newRow("CriticalNotification") << NET::CriticalNotification;
 }
 
 void InternalWindowTest::testWindowType()
@@ -776,6 +777,7 @@ void InternalWindowTest::testChangeWindowType_data()
     QTest::newRow("Notification") << NET::Notification;
     QTest::newRow("ComboBox") << NET::ComboBox;
     QTest::newRow("OnScreenDisplay") << NET::OnScreenDisplay;
+    QTest::newRow("CriticalNotification") << NET::CriticalNotification;
 }
 
 void InternalWindowTest::testChangeWindowType()

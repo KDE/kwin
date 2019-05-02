@@ -107,6 +107,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops_data()
     QTest::newRow("Normal") << PlasmaShellSurface::Role::Normal << false;
     QTest::newRow("Notification") << PlasmaShellSurface::Role::Notification << true;
     QTest::newRow("ToolTip") << PlasmaShellSurface::Role::ToolTip << true;
+    QTest::newRow("CriticalNotification") << PlasmaShellSurface::Role::CriticalNotification << true;
 }
 
 void PlasmaSurfaceTest::testRoleOnAllDesktops()
@@ -164,6 +165,7 @@ void PlasmaSurfaceTest::testAcceptsFocus_data()
     QTest::newRow("Normal") << PlasmaShellSurface::Role::Normal << true << true;
     QTest::newRow("Notification") << PlasmaShellSurface::Role::Notification << false << false;
     QTest::newRow("ToolTip") << PlasmaShellSurface::Role::ToolTip << false << false;
+    QTest::newRow("CriticalNotification") << PlasmaShellSurface::Role::CriticalNotification << false << false;
 }
 
 void PlasmaSurfaceTest::testAcceptsFocus()

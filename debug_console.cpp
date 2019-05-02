@@ -1054,6 +1054,8 @@ QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &ind
                 return QStringLiteral("NET::DNDIcon");
             case NET::OnScreenDisplay:
                 return QStringLiteral("NET::OnScreenDisplay");
+            case NET::CriticalNotification:
+                return QStringLiteral("NET::CriticalNotification");
             case NET::Unknown:
             default:
                 return QStringLiteral("NET::Unknown");
