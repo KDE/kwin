@@ -25,3 +25,9 @@ Id=port-dimscreen-effect-to-js
 File=kwinrc
 Group=Plugins
 Key=dimscreenEnabled,kwin4_effect_dimscreenEnabled
+
+# Deactivate auto border size if the user has changed border size in the past
+Id=auto-bordersize
+File=kwinrc
+Group=org.kde.kdecoration2
+Script=kwin-5.16-auto-bordersize.sh,sh
