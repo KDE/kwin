@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "settings.h"
 // KWin
+#include "decorationbridge.h"
 #include "composite.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -60,6 +61,7 @@ SettingsImpl::SettingsImpl(KDecoration2::DecorationSettings *parent)
         }
     );
     connect(Workspace::self(), &Workspace::configChanged, this, &SettingsImpl::readSettings);
+    connect(DecorationBridge::self(), &DecorationBridge::metaDataLoaded, this, &SettingsImpl::readSettings);
 }
 
 SettingsImpl::~SettingsImpl() = default;
@@ -180,7 +182,13 @@ void SettingsImpl::readSettings()
         m_closeDoubleClickMenu = close;
         emit decorationSettings()->closeOnDoubleClickOnMenuChanged(m_closeDoubleClickMenu);
     }
-    const auto size = stringToSize(config.readEntry("BorderSize", QStringLiteral("Normal")));
+    m_autoBorderSize = config.readEntry("BorderSizeAuto", true);
+
+    auto size = stringToSize(config.readEntry("BorderSize", QStringLiteral("Normal")));
+    if (m_autoBorderSize) {
+        /* Falls back to Normal border size, if the plugin does not provide a valid recommendation. */
+        size = stringToSize(DecorationBridge::self()->recommendedBorderSize());
+    }
     if (size != m_borderSize) {
         m_borderSize = size;
         emit decorationSettings()->borderSizeChanged(m_borderSize);

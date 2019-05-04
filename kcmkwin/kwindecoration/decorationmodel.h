@@ -20,6 +20,8 @@
 #ifndef KDECORATION_DECORATION_MODEL_H
 #define KDECORATION_DECORATION_MODEL_H
 
+#include "utils.h"
+
 #include <QAbstractListModel>
 
 namespace KDecoration2
@@ -36,6 +38,7 @@ public:
         PluginNameRole = Qt::UserRole + 1,
         ThemeNameRole,
         ConfigurationRole,
+        RecommendedBorderSizeRole,
     };
 
 public:
@@ -61,6 +64,7 @@ private:
         QString themeName;
         QString visibleName;
         bool configuration = false;
+        KDecoration2::BorderSize recommendedBorderSize = KDecoration2::BorderSize::Normal;
     };
     std::vector<Data> m_plugins;
     QStringList m_knsProviders;

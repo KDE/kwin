@@ -212,6 +212,7 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
 {
     // reset all settings
     m_blur = false;
+    m_recommendedBorderSize = QString();
     m_theme = QString();
     m_defaultTheme = QString();
 
@@ -226,7 +227,13 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
     if (blurIt != decoSettingsMap.end()) {
         m_blur = blurIt.value().toBool();
     }
+    auto recBorderSizeIt = decoSettingsMap.find(QStringLiteral("recommendedBorderSize"));
+    if (recBorderSizeIt != decoSettingsMap.end()) {
+        m_recommendedBorderSize = recBorderSizeIt.value().toString();
+    }
     findTheme(decoSettingsMap);
+
+    Q_EMIT metaDataLoaded();
 }
 
 void DecorationBridge::findTheme(const QVariantMap &map)
@@ -306,6 +313,7 @@ QString DecorationBridge::supportInformation() const
     QString b;
     b.append(QStringLiteral("Plugin: %1\n").arg(m_plugin));
     b.append(QStringLiteral("Theme: %1\n").arg(m_theme));
+    b.append(QStringLiteral("Plugin recommends border size: %1\n").arg(m_recommendedBorderSize.isNull() ? "No" : m_recommendedBorderSize));
     b.append(QStringLiteral("Blur: %1\n").arg(m_blur));
     const QMetaObject *metaOptions = m_settings->metaObject();
     for (int i=0; i<metaOptions->propertyCount(); ++i) {

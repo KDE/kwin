@@ -61,6 +61,7 @@ private:
     QVector< KDecoration2::DecorationButtonType > m_leftButtons;
     QVector< KDecoration2::DecorationButtonType > m_rightButtons;
     KDecoration2::BorderSize m_borderSize;
+    bool m_autoBorderSize = true;
     bool m_closeDoubleClickMenu = false;
     QFont m_font;
 };

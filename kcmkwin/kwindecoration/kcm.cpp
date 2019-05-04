@@ -49,12 +49,15 @@ const QString s_configGroup { QStringLiteral("org.kde.kdecoration2") };
 const QString s_configPlugin { QStringLiteral("library") };
 const QString s_configTheme { QStringLiteral("theme") };
 const QString s_configBorderSize { QStringLiteral("BorderSize") };
+const QString s_configBorderSizeAuto { QStringLiteral("BorderSizeAuto") };
 const QString s_configCloseOnDoubleClickOnMenu { QStringLiteral("CloseOnDoubleClickOnMenu") };
 const QString s_configShowToolTips { QStringLiteral("ShowToolTips") };
 const QString s_configDecoButtonsOnLeft { QStringLiteral("ButtonsOnLeft") };
 const QString s_configDecoButtonsOnRight { QStringLiteral("ButtonsOnRight") };
 
 const KDecoration2::BorderSize s_defaultBorderSize = KDecoration2::BorderSize::Normal;
+const KDecoration2::BorderSize s_defaultRecommendedBorderSize = KDecoration2::BorderSize::Normal;
+const bool s_defaultBorderSizeAuto = true;
 const bool s_defaultCloseOnDoubleClickOnMenu = false;
 const bool s_defaultShowToolTips = true;
 
@@ -85,7 +88,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     , m_leftButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
     , m_rightButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
     , m_availableButtonsModel(new KDecoration2::Preview::ButtonsModel(this))
-    , m_savedSettings{ s_defaultBorderSize, -2 /* for setTheme() */, false, s_defaultShowToolTips, s_defaultDecoButtonsOnLeft, s_defaultDecoButtonsOnRight }
+    , m_savedSettings{ s_defaultBorderSize, s_defaultBorderSizeAuto, -2 /* for setTheme() */, false, s_defaultShowToolTips, s_defaultDecoButtonsOnLeft, s_defaultDecoButtonsOnRight }
     , m_currentSettings(m_savedSettings)
 {
     auto about = new KAboutData(QStringLiteral("kcm_kwindecoration"),
@@ -166,6 +169,7 @@ void KCMKWinDecoration::load()
 
     const QString defaultSizeName = Utils::borderSizeToString(s_defaultBorderSize);
     setBorderSize(Utils::stringToBorderSize(config.readEntry(s_configBorderSize, defaultSizeName)));
+    setBorderSizeAuto(config.readEntry(s_configBorderSizeAuto, s_defaultBorderSizeAuto));
 
     m_leftButtonsModel->replace(Utils::readDecorationButtons(config, s_configDecoButtonsOnLeft, s_defaultDecoButtonsOnLeft));
     m_rightButtonsModel->replace(Utils::readDecorationButtons(config, s_configDecoButtonsOnRight, s_defaultDecoButtonsOnRight));
@@ -197,6 +201,7 @@ void KCMKWinDecoration::save()
     config.writeEntry(s_configCloseOnDoubleClickOnMenu, m_currentSettings.closeOnDoubleClickOnMenu);
     config.writeEntry(s_configShowToolTips, m_currentSettings.showToolTips);
     config.writeEntry(s_configBorderSize, Utils::borderSizeToString(m_currentSettings.borderSize));
+    config.writeEntry(s_configBorderSizeAuto, m_currentSettings.borderSizeAuto);
     config.writeEntry(s_configDecoButtonsOnLeft, Utils::buttonsToString(m_currentSettings.buttonsOnLeft));
     config.writeEntry(s_configDecoButtonsOnRight, Utils::buttonsToString(m_currentSettings.buttonsOnRight));
     config.sync();
@@ -220,6 +225,7 @@ void KCMKWinDecoration::defaults()
     }
     setTheme(themeIndex);
     setBorderSize(s_defaultBorderSize);
+    setBorderSizeAuto(s_defaultBorderSizeAuto);
     setCloseOnDoubleClickOnMenu(s_defaultCloseOnDoubleClickOnMenu);
     setShowToolTips(s_defaultShowToolTips);
 
@@ -237,6 +243,7 @@ void KCMKWinDecoration::updateNeedsSave()
     setNeedsSave(m_savedSettings.closeOnDoubleClickOnMenu != m_currentSettings.closeOnDoubleClickOnMenu
                 || m_savedSettings.showToolTips != m_currentSettings.showToolTips
                 || m_savedSettings.borderSize != m_currentSettings.borderSize
+                || m_savedSettings.borderSizeAuto != m_currentSettings.borderSizeAuto
                 || m_savedSettings.themeIndex != m_currentSettings.themeIndex
                 || m_savedSettings.buttonsOnLeft != m_currentSettings.buttonsOnLeft
                 || m_savedSettings.buttonsOnRight != m_currentSettings.buttonsOnRight);
@@ -272,6 +279,25 @@ int KCMKWinDecoration::borderSize() const
     return Utils::getBorderSizeNames().keys().indexOf(m_currentSettings.borderSize);
 }
 
+int KCMKWinDecoration::recommendedBorderSize() const
+{
+    typedef KDecoration2::Configuration::DecorationsModel::DecorationRole DecoRole;
+    const QModelIndex proxyIndex = m_proxyThemesModel->index(m_currentSettings.themeIndex, 0);
+    if (proxyIndex.isValid()) {
+        const QModelIndex index = m_proxyThemesModel->mapToSource(proxyIndex);
+        if (index.isValid()) {
+            QVariant ret = m_themesModel->data(index, DecoRole::RecommendedBorderSizeRole);
+            return Utils::getBorderSizeNames().keys().indexOf(Utils::stringToBorderSize(ret.toString()));
+        }
+    }
+    return Utils::getBorderSizeNames().keys().indexOf(s_defaultRecommendedBorderSize);
+}
+
+bool KCMKWinDecoration::borderSizeAuto() const
+{
+    return m_currentSettings.borderSizeAuto;
+}
+
 int KCMKWinDecoration::theme() const
 {
     return m_currentSettings.themeIndex;
@@ -299,6 +325,16 @@ void KCMKWinDecoration::setBorderSize(KDecoration2::BorderSize size)
     }
     m_currentSettings.borderSize = size;
     emit borderSizeChanged();
+    updateNeedsSave();
+}
+
+void KCMKWinDecoration::setBorderSizeAuto(bool set)
+{
+    if (m_currentSettings.borderSizeAuto == set) {
+        return;
+    }
+    m_currentSettings.borderSizeAuto = set;
+    emit borderSizeAutoChanged();
     updateNeedsSave();
 }
 

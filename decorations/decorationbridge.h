@@ -60,6 +60,9 @@ public:
     bool needsBlur() const {
         return m_blur;
     }
+    QString recommendedBorderSize() const {
+        return m_recommendedBorderSize;
+    }
 
     bool showToolTips() const {
         return m_showToolTips;
@@ -73,6 +76,9 @@ public:
 
     QString supportInformation() const;
 
+Q_SIGNALS:
+    void metaDataLoaded();
+
 private:
     QString readPlugin();
     void loadMetaData(const QJsonObject &object);
@@ -84,6 +90,7 @@ private:
     KSharedConfig::Ptr m_lnfConfig;
     bool m_blur;
     bool m_showToolTips;
+    QString m_recommendedBorderSize;
     QString m_plugin;
     QString m_defaultTheme;
     QString m_theme;

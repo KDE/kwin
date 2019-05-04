@@ -74,17 +74,33 @@ Kirigami.Page {
                     }
 
                     RowLayout {
-                        Controls.Label {
-                            Layout.alignment: Qt.AlignRight
-                            text: i18nc("combobox label", "Window border size:")
+                        Controls.CheckBox {
+                            id: borderSizeAutoCheckbox
+                            text: i18nc("checkbox label", "Use theme's default window border size")
+                            checked: kcm.borderSizeAuto
+                            onCheckedChanged: {
+                                kcm.borderSizeAuto = checked;
+                                borderSizeComboBox.autoBorderUpdate()
+                            }
                         }
-
                         Controls.ComboBox {
                             id: borderSizeComboBox
+                            enabled: !borderSizeAutoCheckbox.checked
                             model: kcm.borderSizesModel
-                            currentIndex: kcm.borderSize
                             onActivated: {
                                 kcm.borderSize = currentIndex
+                            }
+                            function autoBorderUpdate() {
+                                if (borderSizeAutoCheckbox.checked) {
+                                    currentIndex = kcm.recommendedBorderSize
+                                } else {
+                                    currentIndex = kcm.borderSize
+                                }
+                            }
+
+                            Connections {
+                                target: kcm
+                                onThemeChanged: borderSizeComboBox.autoBorderUpdate()
                             }
                         }
                         Item {
