@@ -78,6 +78,7 @@ private Q_SLOTS:
     void slotDesktopChanged(int old, int current, EffectWindow* w);
     void slotWindowStepUserMovedResized(KWin::EffectWindow *w);
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
+    void slotNumberDesktopsChanged();
 
 private:
     enum RotationDirection {

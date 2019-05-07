@@ -49,6 +49,8 @@ CubeSlideEffect::CubeSlideEffect()
             this, &CubeSlideEffect::slotWindowStepUserMovedResized);
     connect(effects, &EffectsHandler::windowFinishUserMovedResized,
             this, &CubeSlideEffect::slotWindowFinishUserMovedResized);
+    connect(effects, &EffectsHandler::numberDesktopsChanged,
+            this, &CubeSlideEffect::slotNumberDesktopsChanged);
     reconfigure(ReconfigureAll);
 }
 
@@ -642,6 +644,28 @@ void CubeSlideEffect::windowMovingChanged(float progress, RotationDirection dire
 bool CubeSlideEffect::isActive() const
 {
     return !slideRotations.isEmpty();
+}
+
+void CubeSlideEffect::slotNumberDesktopsChanged()
+{
+    // This effect animates only aftermaths of desktop switching. There is no any
+    // way to reference removed desktops for animation purposes. So our the best
+    // shot is just to do nothing. It doesn't look nice and we probaby have to
+    // find more proper way to handle this case.
+
+    if (!isActive()) {
+        return;
+    }
+
+    for (EffectWindow *w : staticWindows) {
+        w->setData(WindowForceBlurRole, QVariant());
+        w->setData(WindowForceBackgroundContrastRole, QVariant());
+    }
+
+    slideRotations.clear();
+    staticWindows.clear();
+
+    effects->setActiveFullScreenEffect(nullptr);
 }
 
 } // namespace
