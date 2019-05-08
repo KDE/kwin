@@ -144,7 +144,7 @@ int orientationToRotation(Qt::ScreenOrientation orientation)
     return 0;
 }
 
-QMatrix4x4 &&DrmOutput::matrixDisplay(const QSize &s) const
+QMatrix4x4 DrmOutput::matrixDisplay(const QSize &s) const
 {
     QMatrix4x4 matrix;
     const int angle = orientationToRotation(orientation());
@@ -156,7 +156,7 @@ QMatrix4x4 &&DrmOutput::matrixDisplay(const QSize &s) const
         matrix.translate(-center.width(), -center.height());
     }
     matrix.scale(scale());
-    return std::move(matrix);
+    return matrix;
 }
 
 void DrmOutput::updateCursor()
