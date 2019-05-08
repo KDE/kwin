@@ -149,7 +149,8 @@ public:
         WindowExitAction = 2, // Deactivates the effect without activating new window
         WindowToCurrentDesktopAction = 3, // Brings window to current desktop
         WindowToAllDesktopsAction = 4, // Brings window to all desktops
-        WindowMinimizeAction = 5 // Minimize the window
+        WindowMinimizeAction = 5, // Minimizes the window
+        WindowCloseAction = 6 // Closes the window
     };
     enum DesktopMouseAction {
         DesktopNoAction = 0, // nothing
