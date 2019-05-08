@@ -274,7 +274,8 @@ const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
     inputRegionCallback,
     commitCallback,
     bufferTransformCallback,
-    bufferScaleCallback
+    bufferScaleCallback,
+    damageBufferCallback
 };
 #endif
 
@@ -373,6 +374,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     if (bufferChanged) {
         target->buffer = buffer;
         target->damage = source->damage;
+        target->bufferDamage = source->bufferDamage;
         target->bufferIsSet = source->bufferIsSet;
     }
     if (childrenChanged) {
@@ -439,10 +441,32 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         emit q->transformChanged(target->transform);
     }
     if (bufferChanged && emitChanged) {
-        if (target->buffer && !target->damage.isEmpty()) {
+        if (target->buffer && (!target->damage.isEmpty() || !target->bufferDamage.isEmpty())) {
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
             if (!windowRegion.isEmpty()) {
-                target->damage = windowRegion.intersected(target->damage);
+                QRegion bufferDamage;
+                if (!target->bufferDamage.isEmpty()) {
+                    typedef OutputInterface::Transform Tr;
+                    const Tr tr = target->transform;
+                    const qint32 sc = target->scale;
+                    if (tr == Tr::Rotated90 || tr == Tr::Rotated270 ||
+                            tr == Tr::Flipped90 || tr == Tr::Flipped270) {
+                        // calculate transformed + scaled buffer damage
+                        for (const auto &rect : target->bufferDamage) {
+                            const auto add = QRegion(rect.x() / sc, rect.y() / sc, rect.height() / sc, rect.width() / sc);
+                            bufferDamage = bufferDamage.united(add);
+                        }
+                    } else if (sc != 1) {
+                        // calculate scaled buffer damage
+                        for (const auto &rect : target->bufferDamage) {
+                            const auto add = QRegion(rect.x() / sc, rect.y() / sc, rect.width() / sc, rect.height() / sc);
+                            bufferDamage = bufferDamage.united(add);
+                        }
+                    } else {
+                        bufferDamage = target->bufferDamage;
+                    }
+                }
+                target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
                 if (emitChanged) {
                     subSurfaceIsMapped = true;
                     trackedDamage = trackedDamage.united(target->damage);
@@ -529,6 +553,15 @@ void SurfaceInterface::Private::damage(const QRect &rect)
     pending.damage = pending.damage.united(rect);
 }
 
+void SurfaceInterface::Private::damageBuffer(const QRect &rect)
+{
+    if (!pending.bufferIsSet || (pending.bufferIsSet && !pending.buffer)) {
+        // TODO: should we send an error?
+        return;
+    }
+    pending.bufferDamage = pending.bufferDamage.united(rect);
+}
+
 void SurfaceInterface::Private::setScale(qint32 scale)
 {
     pending.scale = scale;
@@ -562,6 +595,7 @@ void SurfaceInterface::Private::attachBuffer(wl_resource *buffer, const QPoint &
         // got a null buffer, deletes content in next frame
         pending.buffer = nullptr;
         pending.damage = QRegion();
+        pending.bufferDamage = QRegion();
         return;
     }
     Q_Q(SurfaceInterface);
@@ -600,6 +634,12 @@ void SurfaceInterface::Private::damageCallback(wl_client *client, wl_resource *r
 {
     Q_UNUSED(client)
     cast<Private>(resource)->damage(QRect(x, y, width, height));
+}
+
+void SurfaceInterface::Private::damageBufferCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
+{
+    Q_UNUSED(client)
+    cast<Private>(resource)->damageBuffer(QRect(x, y, width, height));
 }
 
 void SurfaceInterface::Private::frameCallback(wl_client *client, wl_resource *resource, uint32_t callback)

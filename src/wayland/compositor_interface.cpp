@@ -51,7 +51,7 @@ private:
     static const quint32 s_version;
 };
 
-const quint32 CompositorInterface::Private::s_version = 3;
+const quint32 CompositorInterface::Private::s_version = 4;
 
 CompositorInterface::Private::Private(CompositorInterface *q, Display *d)
     : Global::Private(d, &wl_compositor_interface, s_version)

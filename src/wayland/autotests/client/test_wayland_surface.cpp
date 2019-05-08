@@ -264,6 +264,7 @@ void TestWaylandSurface::testDamage()
     QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
     QVERIFY(serverSurfaceCreated.isValid());
     KWayland::Client::Surface *s = m_compositor->createSurface();
+    s->setScale(2);
     QVERIFY(serverSurfaceCreated.wait());
     KWayland::Server::SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
     QVERIFY(serverSurface);
@@ -292,14 +293,14 @@ void TestWaylandSurface::testDamage()
     s->damage(QRect(0, 0, 10, 10));
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(damageSpy.wait());
-    QCOMPARE(serverSurface->damage(), QRegion(0, 0, 10, 10));
-    QCOMPARE(damageSpy.first().first().value<QRegion>(), QRegion(0, 0, 10, 10));
+    QCOMPARE(serverSurface->damage(), QRegion(0, 0, 5, 5)); // scale is 2
+    QCOMPARE(damageSpy.first().first().value<QRegion>(), QRegion(0, 0, 5, 5));
     QVERIFY(serverSurface->isMapped());
     QCOMPARE(committedSpy.count(), 2);
 
     // damage multiple times
     QRegion testRegion(5, 8, 3, 6);
-    testRegion = testRegion.united(QRect(10, 20, 30, 15));
+    testRegion = testRegion.united(QRect(10, 11, 6, 1));
     img = QImage(QSize(40, 35), QImage::Format_ARGB32_Premultiplied);
     img.fill(Qt::black);
     b = m_shm->createBuffer(img);
@@ -312,6 +313,39 @@ void TestWaylandSurface::testDamage()
     QCOMPARE(damageSpy.first().first().value<QRegion>(), testRegion);
     QVERIFY(serverSurface->isMapped());
     QCOMPARE(committedSpy.count(), 3);
+
+    // damage buffer
+    const QRegion testRegion2(30, 40, 22, 4);
+    const QRegion cmpRegion2(15, 20, 11, 2); // divided by scale factor
+    img = QImage(QSize(80, 70), QImage::Format_ARGB32_Premultiplied);
+    img.fill(Qt::black);
+    b = m_shm->createBuffer(img);
+    s->attachBuffer(b);
+    s->damageBuffer(testRegion2);
+    damageSpy.clear();
+    s->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(damageSpy.wait());
+    QCOMPARE(serverSurface->damage(), cmpRegion2);
+    QCOMPARE(damageSpy.first().first().value<QRegion>(), cmpRegion2);
+    QVERIFY(serverSurface->isMapped());
+
+    // combined regular damage and damaged buffer
+    const QRegion testRegion3 = testRegion.united(cmpRegion2);
+    img = QImage(QSize(80, 70), QImage::Format_ARGB32_Premultiplied);
+    img.fill(Qt::black);
+    b = m_shm->createBuffer(img);
+    s->attachBuffer(b);
+    s->damage(testRegion);
+    s->damageBuffer(testRegion2);
+    damageSpy.clear();
+    s->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(damageSpy.wait());
+    QVERIFY(serverSurface->damage() != testRegion);
+    QVERIFY(serverSurface->damage() != testRegion2);
+    QVERIFY(serverSurface->damage() != cmpRegion2);
+    QCOMPARE(serverSurface->damage(), testRegion3);
+    QCOMPARE(damageSpy.first().first().value<QRegion>(), testRegion3);
+    QVERIFY(serverSurface->isMapped());
 }
 
 void TestWaylandSurface::testFrameCallback()

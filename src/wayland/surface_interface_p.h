@@ -39,6 +39,7 @@ class SurfaceInterface::Private : public Resource::Private
 public:
     struct State {
         QRegion damage = QRegion();
+        QRegion bufferDamage = QRegion();
         QRegion opaque = QRegion();
         QRegion input = QRegion();
         bool inputIsSet = false;
@@ -114,6 +115,7 @@ private:
     }
     void swapStates(State *source, State *target, bool emitChanged);
     void damage(const QRect &rect);
+    void damageBuffer(const QRect &rect);
     void setScale(qint32 scale);
     void setTransform(OutputInterface::Transform transform);
     void addFrameCallback(uint32_t callback);
@@ -133,6 +135,8 @@ private:
     static void bufferTransformCallback(wl_client *client, wl_resource *resource, int32_t transform);
     // since version 3
     static void bufferScaleCallback(wl_client *client, wl_resource *resource, int32_t scale);
+    // since version 4
+    static void damageBufferCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
 
     static const struct wl_surface_interface s_interface;
 };
