@@ -2,6 +2,7 @@
 Comment=Squash windows when they are minimized
 Comment[ca]=Amuntega les finestres quan estan minimitzades
 Comment[ca@valencia]=Amuntega les finestres quan estan minimitzades
+Comment[da]=Mas vinduer når de minimeres
 Comment[en_GB]=Squash windows when they are minimised
 Comment[es]=Aplastar las ventanas al minimizarlas
 Comment[fi]=Litistä ikkunat, kun ne pienennetään
@@ -26,6 +27,7 @@ Icon=preferences-system-windows-effect-squash
 Name=Squash
 Name[ca]=Amuntega
 Name[ca@valencia]=Amuntega
+Name[da]=Mas
 Name[en_GB]=Squash
 Name[es]=Aplastar
 Name[fi]=Litistä

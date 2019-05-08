@@ -32,6 +32,7 @@ Icon=preferences-system-windows-effect-scale
 Comment=Make windows smoothly scale in and out when they are shown or hidden
 Comment[ca]=Fa que les finestres entrin o surtin volant quan es mostren o s'oculten
 Comment[ca@valencia]=Fa que les finestres entrin o isquen volant quan es mostren o s'oculten
+Comment[da]=Få vinduer til at skalere blidt ud og ind når de vises eller skjules
 Comment[de]=Ändert die Fenstergröße langsam beim Ein- oder Ausblenden
 Comment[en_GB]=Make windows smoothly scale in and out when they are shown or hidden
 Comment[es]=Hace que las ventanas se agranden o se encojan suavemente al mostrarlas u ocultarlas
