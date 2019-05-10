@@ -824,6 +824,7 @@ xcb_timestamp_t Client::userTime() const
 void Client::doSetActive()
 {
     updateUrgency(); // demand attention again if it's still urgent
+    info->setState(isActive() ? NET::Focused : NET::States(), NET::Focused);
 }
 
 void Client::startupIdChanged()

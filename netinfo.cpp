@@ -96,7 +96,8 @@ RootInfo *RootInfo::create()
         NET::FullScreen |
         NET::KeepBelow |
         NET::DemandsAttention |
-        NET::SkipSwitcher;
+        NET::SkipSwitcher |
+        NET::Focused;
     NET::Properties2 properties2 = NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2AllowedActions |
