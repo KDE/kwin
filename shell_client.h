@@ -122,7 +122,6 @@ public:
      **/
     pid_t pid() const override;
 
-    virtual bool isInternal() const;
     bool isLockScreen() const override;
     bool isInputMethod() const override;
     virtual QWindow *internalWindow() const;

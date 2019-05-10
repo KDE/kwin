@@ -1083,11 +1083,6 @@ pid_t ShellClient::pid() const
     return surface()->client()->processId();
 }
 
-bool ShellClient::isInternal() const
-{
-    return false;
-}
-
 bool ShellClient::isLockScreen() const
 {
     return surface()->client() == waylandServer()->screenLockerClientConnection();

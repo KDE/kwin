@@ -353,6 +353,8 @@ Layer AbstractClient::belongsToLayer() const
     // and the docks move into the NotificationLayer (which is between Above- and
     // ActiveLayer, so that active fullscreen windows will still cover everything)
     // Since the desktop is also activated, nothing should be in the ActiveLayer, though
+    if (isInternal())
+        return UnmanagedLayer;
     if (isDesktop())
         return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
     if (isSplash())          // no damn annoying splashscreens
@@ -2078,6 +2080,11 @@ const Group *AbstractClient::group() const
 Group *AbstractClient::group()
 {
     return nullptr;
+}
+
+bool AbstractClient::isInternal() const
+{
+    return false;
 }
 
 }
