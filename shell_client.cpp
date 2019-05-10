@@ -372,6 +372,7 @@ void ShellClient::finishInit() {
     SurfaceInterface *s = surface();
     disconnect(s, &SurfaceInterface::committed, this, &ShellClient::finishInit);
 
+    updateWindowMargins();
     if (!isInitialPositionSet()) {
         QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
         placeIn(area);
@@ -425,6 +426,16 @@ void ShellClient::destroyClient()
 void ShellClient::deleteClient(ShellClient *c)
 {
     delete c;
+}
+
+QSize ShellClient::toWindowGeometry(const QSize &size) const
+{
+    QSize adjustedSize = size - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
+    // a client going fullscreen should have the window the contents size of the screen
+    if (!isFullScreen() && requestedMaximizeMode() != MaximizeFull) {
+        adjustedSize -= QSize(m_windowMargins.left() + m_windowMargins.right(), m_windowMargins.top() + m_windowMargins.bottom());
+    }
+    return adjustedSize;
 }
 
 QStringList ShellClient::activities() const
@@ -519,6 +530,7 @@ void ShellClient::addDamage(const QRegion &damage)
     auto s = surface();
     if (s->size().isValid()) {
         m_clientSize = s->size();
+        updateWindowMargins();
         updatePendingGeometry();
     }
     markAsMapped();
@@ -617,11 +629,11 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         // reset geometry to the one before blocking, so that we can compare properly
         geom = geometryBeforeUpdateBlocking();
     }
-    // TODO: better merge with Client's implementation
     const QSize requestedClientSize = QSize(w, h) - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
+    const QSize requestedWindowGeometrySize = toWindowGeometry(QSize(w, h));
 
     if (requestedClientSize == m_clientSize && !isWaitingForMoveResizeSync() &&
-        (m_requestedClientSize.isEmpty() || requestedClientSize == m_requestedClientSize)) {
+        (m_requestedClientSize.isEmpty() || requestedWindowGeometrySize == m_requestedClientSize)) {
         // size didn't change, and we don't need to explicitly request a new size
         doSetGeometry(QRect(x, y, w, h));
         updateMaximizeMode(m_requestedMaximizeMode);
@@ -1107,7 +1119,7 @@ bool ShellClient::requestGeometry(const QRect &rect)
 
     QSize size;
     if (rect.isValid()) {
-        size = rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
+        size = toWindowGeometry(rect.size());
     } else {
         size = QSize(0, 0);
     }
@@ -1126,7 +1138,7 @@ bool ShellClient::requestGeometry(const QRect &rect)
         if (parent) {
             const QPoint globalClientContentPos = parent->geometry().topLeft() + parent->clientPos();
             const QPoint relativeOffset = rect.topLeft() - globalClientContentPos;
-            serialId = m_xdgShellPopup->configure(QRect(relativeOffset, rect.size()));
+            serialId = m_xdgShellPopup->configure(QRect(relativeOffset, size));
         }
     }
 
@@ -1865,6 +1877,34 @@ void ShellClient::updateClientOutputs()
         }
     }
     surface()->setOutputs(clientOutputs);
+}
+
+void ShellClient::updateWindowMargins()
+{
+    QRect windowGeometry;
+    QSize clientSize = m_clientSize;
+
+    if (m_xdgShellSurface) {
+        windowGeometry = m_xdgShellSurface->windowGeometry();
+    } else if (m_xdgShellPopup) {
+        windowGeometry = m_xdgShellPopup->windowGeometry();
+        if (!clientSize.isValid()) {
+            clientSize = m_xdgShellPopup->initialSize();
+        }
+    } else {
+        return;
+    }
+
+    if (windowGeometry.isEmpty() ||
+        windowGeometry.width() > clientSize.width() ||
+        windowGeometry.height() > clientSize.height()) {
+        m_windowMargins = QMargins();
+    } else {
+        m_windowMargins = QMargins(windowGeometry.left(),
+                                    windowGeometry.top(),
+                                    clientSize.width() - (windowGeometry.right() + 1),
+                                    clientSize.height() - (windowGeometry.bottom() + 1));
+    }
 }
 
 bool ShellClient::isPopupWindow() const

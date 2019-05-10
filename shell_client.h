@@ -214,6 +214,7 @@ private:
     void setTransient();
     bool shouldExposeToWindowManagement();
     void updateClientOutputs();
+    void updateWindowMargins();
     KWayland::Server::XdgShellSurfaceInterface::States xdgSurfaceStates() const;
     void updateShowOnScreenEdge();
     void updateMaximizeMode(MaximizeMode maximizeMode);
@@ -221,6 +222,8 @@ private:
     void updatePendingGeometry();
     QPoint popupOffset(const QRect &anchorRect, const Qt::Edges anchorEdge, const Qt::Edges gravity, const QSize popupSize) const;
     static void deleteClient(ShellClient *c);
+
+    QSize toWindowGeometry(const QSize &geometry) const;
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;
     KWayland::Server::XdgShellSurfaceInterface *m_xdgShellSurface;
@@ -290,6 +293,8 @@ private:
     QString m_caption;
     QString m_captionSuffix;
     QHash<qint32, PingReason> m_pingSerials;
+
+    QMargins m_windowMargins;
 
     bool m_compositingSetup = false;
 };
