@@ -629,7 +629,6 @@ void Compositor::aboutToSwapBuffers()
 
 void Compositor::bufferSwapComplete()
 {
-    assert(m_bufferSwapPending);
     m_bufferSwapPending = false;
 
     emit bufferSwapCompleted();
