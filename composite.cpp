@@ -426,6 +426,7 @@ void Compositor::stop()
     m_scene = NULL;
     compositeTimer.stop();
     repaints_region = QRegion();
+    m_bufferSwapPending = false;
 
     m_state = State::Off;
     emit compositingToggled(false);
