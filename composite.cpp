@@ -635,7 +635,9 @@ void Compositor::bufferSwapComplete()
 
     if (m_composeAtSwapCompletion) {
         m_composeAtSwapCompletion = false;
-        performCompositing();
+        // We start the composite timer here to avoid calling
+        // performCompositing() from the event handler.
+        compositeTimer.start(1, this);
     }
 }
 
