@@ -374,15 +374,13 @@ WindowRules::WindowRules()
 inline
 bool WindowRules::contains(const Rules* rule) const
 {
-    return qFind(rules.begin(), rules.end(), rule) != rules.end();
+    return rules.contains(const_cast<Rules *>(rule));
 }
 
 inline
 void WindowRules::remove(Rules* rule)
 {
-    QVector< Rules* >::Iterator pos = qFind(rules.begin(), rules.end(), rule);
-    if (pos != rules.end())
-        rules.erase(pos);
+    rules.removeOne(rule);
 }
 
 #endif
