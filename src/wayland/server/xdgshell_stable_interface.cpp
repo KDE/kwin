@@ -515,13 +515,18 @@ void XdgSurfaceStableInterface::Private::ackConfigureCallback(wl_client *client,
 
 void XdgSurfaceStableInterface::Private::setWindowGeometryCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    // TODO: implement - not done for v5 either
-    Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(x)
-    Q_UNUSED(y)
-    Q_UNUSED(width)
-    Q_UNUSED(height)
+    auto s = cast<Private>(resource);
+    Q_ASSERT(client == *s->client);
+
+    const QRect windowRect(x, y, width, height);
+
+    if (s->m_topLevel) {
+        s->m_topLevel->d_func()->windowGeometry = windowRect;
+        emit s->m_topLevel->windowGeometryChanged(windowRect);
+    } else if (s->m_popup) {
+        s->m_popup->d_func()->windowGeometry = windowRect;
+        emit s->m_popup->windowGeometryChanged(windowRect);
+    }
 }
 
 XdgSurfaceStableInterface::Private::Private(XdgSurfaceStableInterface *q, XdgShellStableInterface *c, SurfaceInterface *surface, wl_resource *parentResource)

@@ -60,6 +60,7 @@ public:
 
     QVector<quint32> configureSerials;
     QPointer<XdgShellSurfaceInterface> parent;
+    QRect windowGeometry;
     XdgShellInterfaceVersion interfaceVersion;
 
 protected:
@@ -93,6 +94,7 @@ public:
     Qt::Edges gravity;
     PositionerConstraints constraintAdjustments;
     QPoint anchorOffset;
+    QRect windowGeometry;
 
     XdgShellInterfaceVersion interfaceVersion;
 

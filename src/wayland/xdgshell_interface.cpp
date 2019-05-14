@@ -154,6 +154,12 @@ void XdgShellSurfaceInterface::close()
     d->close();
 }
 
+QRect XdgShellSurfaceInterface::windowGeometry() const
+{
+    Q_D();
+    return d->windowGeometry;
+}
+
 XdgShellSurfaceInterface::Private *XdgShellSurfaceInterface::d_func() const
 {
     return reinterpret_cast<Private*>(d.data());
@@ -250,6 +256,12 @@ PositionerConstraints XdgShellPopupInterface::constraintAdjustments() const
 {
     Q_D();
     return d->constraintAdjustments;
+}
+
+QRect XdgShellPopupInterface::windowGeometry() const
+{
+    Q_D();
+    return d->windowGeometry;
 }
 
 void XdgShellPopupInterface::popupDone()

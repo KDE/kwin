@@ -37,6 +37,8 @@ private Q_SLOTS:
 
     void testMultipleRoles1();
     void testMultipleRoles2();
+
+    void testWindowGeometry();
 };
 
 void XdgShellTestStable::testMaxSize()
@@ -215,6 +217,31 @@ void XdgShellTestStable::testMultipleRoles2()
     xdg_toplevel_destroy(xdgTopLevelParent);
     xdg_popup_destroy(xdgPopup2);
     xdg_surface_destroy(xdgSurface);
+}
+
+void XdgShellTestStable::testWindowGeometry()
+{
+    SURFACE
+    QSignalSpy windowGeometryChangedSpy(serverXdgSurface, &XdgShellSurfaceInterface::windowGeometryChanged);
+    xdgSurface->setWindowGeometry(QRect(50, 50, 400, 400));
+
+    windowGeometryChangedSpy.wait();
+    QCOMPARE(serverXdgSurface->windowGeometry(), QRect(50, 50, 400, 400));
+
+
+    //add a popup to this surface
+    XdgPositioner positioner(QSize(10,10), QRect(100,100,50,50));
+    QSignalSpy xdgPopupCreatedSpy(m_xdgShellInterface, &XdgShellInterface::xdgPopupCreated);
+    QScopedPointer<Surface> popupSurface(m_compositor->createSurface());
+    QScopedPointer<XdgShellPopup> xdgPopupSurface(m_xdgShell->createPopup(popupSurface.data(), xdgSurface.data(), positioner));
+    QVERIFY(xdgPopupCreatedSpy.wait());
+    auto serverXdgPopup = xdgPopupCreatedSpy.first().first().value<XdgShellPopupInterface*>();
+    QVERIFY(serverXdgPopup);
+
+    QSignalSpy popupWindowGeometryChangedSpy(serverXdgPopup, &XdgShellPopupInterface::windowGeometryChanged);
+    xdgPopupSurface->setWindowGeometry(QRect(60, 60, 300, 300));
+    popupWindowGeometryChangedSpy.wait();
+    QCOMPARE(serverXdgPopup->windowGeometry(), QRect(60, 60, 300, 300));
 }
 
 

@@ -278,6 +278,15 @@ public:
      **/
     void close();
 
+    /**
+     * @brief windowGeometry
+     * The geometry of the window within the buffer
+     *
+     * If invalid, the geometry of the bufer should be used instead
+     * @since 5.59
+     */
+    QRect windowGeometry() const;
+
 Q_SIGNALS:
     /**
      * Emitted whenever the title changes.
@@ -345,6 +354,13 @@ Q_SIGNALS:
      * @since 5.39
      */
     void minSizeChanged(const QSize &size);
+
+    /**
+     * @brief windowGeometryChanged
+     * @param windowGeometry the newly changed windowGeometry
+     * @since 5.59
+     */
+    void windowGeometryChanged(const QRect &windowGeometry);
 
 protected:
     class Private;
@@ -444,6 +460,13 @@ public:
      **/
     void popupDone();
 
+    /**
+     * @brief windowGeometryChanged
+     * @param windowGeometry the newly changed geometry of the window contents within the buffer
+     * @since 5.59
+     */
+    QRect windowGeometry()const;
+
 Q_SIGNALS:
     /**
      * A configure event with @p serial got acknowledged.
@@ -461,6 +484,13 @@ Q_SIGNALS:
      * @since 5.39
      */
     void grabRequested(KWayland::Server::SeatInterface *seat, quint32 serial);
+
+    /**
+     * @brief windowGeometryChanged
+     * @param windowGeometry the newly changed windowGeometry
+     * @since 5.59
+     */
+    void windowGeometryChanged(const QRect &windowGeometry);
 
 protected:
     class Private;
