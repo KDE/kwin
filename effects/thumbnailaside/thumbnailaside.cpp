@@ -23,9 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
 
-#include <QAction>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+
+#include <QAction>
+#include <QMatrix4x4>
 
 namespace KWin
 {
@@ -62,9 +64,11 @@ void ThumbnailAsideEffect::paintScreen(int mask, QRegion region, ScreenPaintData
 {
     painted = QRegion();
     effects->paintScreen(mask, region, data);
+
+    const QMatrix4x4 projectionMatrix = data.projectionMatrix();
     foreach (const Data & d, windows) {
         if (painted.intersects(d.rect)) {
-            WindowPaintData data(d.window);
+            WindowPaintData data(d.window, projectionMatrix);
             data.multiplyOpacity(opacity);
             QRect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);
