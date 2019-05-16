@@ -77,8 +77,10 @@ public:
 
     /**
      * Notifies the compositor that a pending buffer swap has completed.
+     *
+     * When not zero, timestamp is the time when the swap occurred.
      **/
-    void bufferSwapComplete();
+    void bufferSwapComplete(uint64_t timestamp = 0);
 
     /**
      * @brief Suspends the Compositor if it is currently active.

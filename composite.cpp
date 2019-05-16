@@ -627,8 +627,10 @@ void Compositor::aboutToSwapBuffers()
     m_bufferSwapPending = true;
 }
 
-void Compositor::bufferSwapComplete()
+void Compositor::bufferSwapComplete(uint64_t timestamp)
 {
+    Q_UNUSED(timestamp)
+
     m_bufferSwapPending = false;
 
     emit bufferSwapCompleted();
