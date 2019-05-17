@@ -24,7 +24,7 @@ kcoreaddons_desktop_to_json(kcm_kwindecoration "kwindecoration.desktop" SERVICE_
 
 # This desktop file is installed only for retrocompatibility with sycoca
 install(FILES kwindecoration.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
-install(FILES window-decorations.knsrc DESTINATION ${KDE_INSTALL_CONFDIR})
+install(FILES window-decorations.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
 install(TARGETS kcm_kwindecoration DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
 
 kpackage_install_package(package kcm_kwindecoration kcms)
