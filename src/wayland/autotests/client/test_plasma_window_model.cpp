@@ -861,29 +861,29 @@ void PlasmaWindowModelTest::testChangeWindowAfterModelDestroy_data()
     QTest::addColumn<QVariant>("setter");
     QTest::addColumn<QVariant>("value");
 
-    QTest::newRow("active")           << &PlasmaWindow::activeChanged                   << qVariantFromValue(&PlasmaWindowInterface::setActive)                   << QVariant(true);
-    QTest::newRow("minimized")        << &PlasmaWindow::minimizedChanged                << qVariantFromValue(&PlasmaWindowInterface::setMinimized)                << QVariant(true);
-    QTest::newRow("fullscreen")       << &PlasmaWindow::fullscreenChanged               << qVariantFromValue(&PlasmaWindowInterface::setFullscreen)               << QVariant(true);
-    QTest::newRow("keepAbove")        << &PlasmaWindow::keepAboveChanged                << qVariantFromValue(&PlasmaWindowInterface::setKeepAbove)                << QVariant(true);
-    QTest::newRow("keepBelow")        << &PlasmaWindow::keepBelowChanged                << qVariantFromValue(&PlasmaWindowInterface::setKeepBelow)                << QVariant(true);
-    QTest::newRow("maximized")        << &PlasmaWindow::maximizedChanged                << qVariantFromValue(&PlasmaWindowInterface::setMaximized)                << QVariant(true);
-    QTest::newRow("demandsAttention") << &PlasmaWindow::demandsAttentionChanged         << qVariantFromValue(&PlasmaWindowInterface::setDemandsAttention)         << QVariant(true);
-    QTest::newRow("closeable")        << &PlasmaWindow::closeableChanged                << qVariantFromValue(&PlasmaWindowInterface::setCloseable)                << QVariant(true);
-    QTest::newRow("minimizeable")     << &PlasmaWindow::minimizeableChanged             << qVariantFromValue(&PlasmaWindowInterface::setMinimizeable)             << QVariant(true);
-    QTest::newRow("maximizeable")     << &PlasmaWindow::maximizeableChanged             << qVariantFromValue(&PlasmaWindowInterface::setMaximizeable)             << QVariant(true);
-    QTest::newRow("fullscreenable")   << &PlasmaWindow::fullscreenableChanged           << qVariantFromValue(&PlasmaWindowInterface::setFullscreenable)           << QVariant(true);
-    QTest::newRow("skipTaskbar")      << &PlasmaWindow::skipTaskbarChanged              << qVariantFromValue(&PlasmaWindowInterface::setSkipTaskbar)              << QVariant(true);
-    QTest::newRow("shadeable")        << &PlasmaWindow::shadeableChanged                << qVariantFromValue(&PlasmaWindowInterface::setShadeable)                << QVariant(true);
-    QTest::newRow("shaded")           << &PlasmaWindow::shadedChanged                   << qVariantFromValue(&PlasmaWindowInterface::setShaded)                   << QVariant(true);
-    QTest::newRow("movable")          << &PlasmaWindow::movableChanged                  << qVariantFromValue(&PlasmaWindowInterface::setMovable)                  << QVariant(true);
-    QTest::newRow("resizable")        << &PlasmaWindow::resizableChanged                << qVariantFromValue(&PlasmaWindowInterface::setResizable)                << QVariant(true);
-    QTest::newRow("vdChangeable")     << &PlasmaWindow::virtualDesktopChangeableChanged << qVariantFromValue(&PlasmaWindowInterface::setVirtualDesktopChangeable) << QVariant(true);
-    QTest::newRow("onallDesktop")     << &PlasmaWindow::onAllDesktopsChanged            << qVariantFromValue(&PlasmaWindowInterface::setOnAllDesktops)            << QVariant(true);
-    QTest::newRow("title")            << &PlasmaWindow::titleChanged                    << qVariantFromValue(&PlasmaWindowInterface::setTitle)                    << QVariant(QStringLiteral("foo"));
-    QTest::newRow("appId")            << &PlasmaWindow::appIdChanged                    << qVariantFromValue(&PlasmaWindowInterface::setAppId)                    << QVariant(QStringLiteral("foo"));
-    QTest::newRow("icon" )            << &PlasmaWindow::iconChanged                     << qVariantFromValue(&PlasmaWindowInterface::setThemedIconName)           << QVariant(QStringLiteral("foo"));
-    QTest::newRow("vd")               << &PlasmaWindow::virtualDesktopChanged           << qVariantFromValue(&PlasmaWindowInterface::setVirtualDesktop)           << QVariant(2u);
-    QTest::newRow("unmapped")         << &PlasmaWindow::unmapped                        << qVariantFromValue(&PlasmaWindowInterface::unmap)                       << QVariant();
+    QTest::newRow("active")           << &PlasmaWindow::activeChanged                   << QVariant::fromValue(&PlasmaWindowInterface::setActive)                   << QVariant(true);
+    QTest::newRow("minimized")        << &PlasmaWindow::minimizedChanged                << QVariant::fromValue(&PlasmaWindowInterface::setMinimized)                << QVariant(true);
+    QTest::newRow("fullscreen")       << &PlasmaWindow::fullscreenChanged               << QVariant::fromValue(&PlasmaWindowInterface::setFullscreen)               << QVariant(true);
+    QTest::newRow("keepAbove")        << &PlasmaWindow::keepAboveChanged                << QVariant::fromValue(&PlasmaWindowInterface::setKeepAbove)                << QVariant(true);
+    QTest::newRow("keepBelow")        << &PlasmaWindow::keepBelowChanged                << QVariant::fromValue(&PlasmaWindowInterface::setKeepBelow)                << QVariant(true);
+    QTest::newRow("maximized")        << &PlasmaWindow::maximizedChanged                << QVariant::fromValue(&PlasmaWindowInterface::setMaximized)                << QVariant(true);
+    QTest::newRow("demandsAttention") << &PlasmaWindow::demandsAttentionChanged         << QVariant::fromValue(&PlasmaWindowInterface::setDemandsAttention)         << QVariant(true);
+    QTest::newRow("closeable")        << &PlasmaWindow::closeableChanged                << QVariant::fromValue(&PlasmaWindowInterface::setCloseable)                << QVariant(true);
+    QTest::newRow("minimizeable")     << &PlasmaWindow::minimizeableChanged             << QVariant::fromValue(&PlasmaWindowInterface::setMinimizeable)             << QVariant(true);
+    QTest::newRow("maximizeable")     << &PlasmaWindow::maximizeableChanged             << QVariant::fromValue(&PlasmaWindowInterface::setMaximizeable)             << QVariant(true);
+    QTest::newRow("fullscreenable")   << &PlasmaWindow::fullscreenableChanged           << QVariant::fromValue(&PlasmaWindowInterface::setFullscreenable)           << QVariant(true);
+    QTest::newRow("skipTaskbar")      << &PlasmaWindow::skipTaskbarChanged              << QVariant::fromValue(&PlasmaWindowInterface::setSkipTaskbar)              << QVariant(true);
+    QTest::newRow("shadeable")        << &PlasmaWindow::shadeableChanged                << QVariant::fromValue(&PlasmaWindowInterface::setShadeable)                << QVariant(true);
+    QTest::newRow("shaded")           << &PlasmaWindow::shadedChanged                   << QVariant::fromValue(&PlasmaWindowInterface::setShaded)                   << QVariant(true);
+    QTest::newRow("movable")          << &PlasmaWindow::movableChanged                  << QVariant::fromValue(&PlasmaWindowInterface::setMovable)                  << QVariant(true);
+    QTest::newRow("resizable")        << &PlasmaWindow::resizableChanged                << QVariant::fromValue(&PlasmaWindowInterface::setResizable)                << QVariant(true);
+    QTest::newRow("vdChangeable")     << &PlasmaWindow::virtualDesktopChangeableChanged << QVariant::fromValue(&PlasmaWindowInterface::setVirtualDesktopChangeable) << QVariant(true);
+    QTest::newRow("onallDesktop")     << &PlasmaWindow::onAllDesktopsChanged            << QVariant::fromValue(&PlasmaWindowInterface::setOnAllDesktops)            << QVariant(true);
+    QTest::newRow("title")            << &PlasmaWindow::titleChanged                    << QVariant::fromValue(&PlasmaWindowInterface::setTitle)                    << QVariant(QStringLiteral("foo"));
+    QTest::newRow("appId")            << &PlasmaWindow::appIdChanged                    << QVariant::fromValue(&PlasmaWindowInterface::setAppId)                    << QVariant(QStringLiteral("foo"));
+    QTest::newRow("icon" )            << &PlasmaWindow::iconChanged                     << QVariant::fromValue(&PlasmaWindowInterface::setThemedIconName)           << QVariant(QStringLiteral("foo"));
+    QTest::newRow("vd")               << &PlasmaWindow::virtualDesktopChanged           << QVariant::fromValue(&PlasmaWindowInterface::setVirtualDesktop)           << QVariant(2u);
+    QTest::newRow("unmapped")         << &PlasmaWindow::unmapped                        << QVariant::fromValue(&PlasmaWindowInterface::unmap)                       << QVariant();
 }
 
 void PlasmaWindowModelTest::testChangeWindowAfterModelDestroy()
