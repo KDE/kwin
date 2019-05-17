@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "xcbutils.h"
 #include "texture.h"
+#include "abstract_output.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
@@ -92,6 +93,14 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     // by a WireToEvent handler, and the GLX drawable when the event was
     // received over the wire
     if (ev->drawable == m_drawable || ev->drawable == m_glxDrawable) {
+        const std::chrono::microseconds timestamp { (uint64_t(ev->ust_hi) << 32) | ev->ust_lo };
+
+        // We use a single surface that spans all outputs, so we only get one swap event and one timestamp
+        const QVector<AbstractOutput *> outputs = kwinApp()->platform()->outputs();
+        for (AbstractOutput *output : outputs) {
+            output->setPresentationTimestamp(timestamp);
+        }
+
         Compositor::self()->bufferSwapComplete();
         return true;
     }
