@@ -92,7 +92,8 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     // by a WireToEvent handler, and the GLX drawable when the event was
     // received over the wire
     if (ev->drawable == m_drawable || ev->drawable == m_glxDrawable) {
-        Compositor::self()->bufferSwapComplete();
+        const uint64_t timestamp = (uint64_t(ev->ust_hi) << 32) | ev->ust_lo;
+        Compositor::self()->bufferSwapComplete(timestamp);
         return true;
     }
 
