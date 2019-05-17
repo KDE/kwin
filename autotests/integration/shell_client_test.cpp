@@ -109,6 +109,7 @@ private Q_SLOTS:
     void testXdgInitialState();
     void testXdgInitiallyMaximised();
     void testXdgInitiallyMinimized();
+    void testXdgWindowGeometry();
 };
 
 void TestShellClient::initTestCase()
@@ -1463,6 +1464,41 @@ void TestShellClient::testXdgInitiallyMinimized()
     QVERIFY(c->isMinimized());
 }
 
+void TestShellClient::testXdgWindowGeometry()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data(), nullptr, Test::CreationSetup::CreateOnly));
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    surface->commit(Surface::CommitFlag::None);
+
+    configureRequestedSpy.wait();
+    shellSurface->ackConfigure(configureRequestedSpy.first()[2].toUInt());
+
+    // Create a 160x140 window in with a margin of 10(left), 20(top), 30(right), 40(bottom). Giving a total buffer size 200, 100
+    shellSurface->setWindowGeometry(QRect(10, 20, 160, 40));
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(200,100), Qt::blue);
+    configureRequestedSpy.wait(); //window activated after being shown
+
+    QSignalSpy geometryChangedSpy(c, &ShellClient::geometryChanged);
+    // resize to 300,200 in kwin terms
+    c->setGeometry(QRect(100, 100, 300, 200));
+    QVERIFY(configureRequestedSpy.wait());
+    // requested geometry should not include the margins we had above
+    const QSize requestedSize = configureRequestedSpy.last()[0].value<QSize>();
+    QCOMPARE(requestedSize, QSize(300, 200) - QSize(10 + 30, 20 + 40));
+    shellSurface->ackConfigure(configureRequestedSpy.last()[2].toUInt());
+    Test::render(surface.data(), requestedSize + QSize(10 + 30, 20 + 40), Qt::blue);
+    geometryChangedSpy.wait();
+
+    // kwin's concept of geometry should remain the same
+    QCOMPARE(c->geometry(), QRect(100, 100, 300, 200));
+
+    c->setFullScreen(true);
+    configureRequestedSpy.wait();
+    // when full screen, the window geometry (i.e without margins) should fill the screen
+    const QSize requestedFullScreenSize = configureRequestedSpy.last()[0].value<QSize>();
+    QCOMPARE(requestedFullScreenSize, QSize(1280, 1024));
+}
 
 WAYLANDTEST_MAIN(TestShellClient)
 #include "shell_client_test.moc"
