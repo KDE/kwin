@@ -230,8 +230,6 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
 {
     Q_UNUSED(fd)
     Q_UNUSED(frame)
-    Q_UNUSED(sec)
-    Q_UNUSED(usec)
     auto output = reinterpret_cast<DrmOutput*>(data);
     output->pageFlipped();
     output->m_backend->m_pageFlipsPending--;
@@ -244,8 +242,13 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
             output->dpmsAtomicOff();
         }
 
+        uint64_t timestamp = 0;
+        if (output->backend()->supportsTimestampMonotonic()) {
+            timestamp = uint64_t(sec) * 1'000'000 + usec;
+        }
+
         if (Compositor::self()) {
-            Compositor::self()->bufferSwapComplete();
+            Compositor::self()->bufferSwapComplete(timestamp);
         }
     }
 }
@@ -345,6 +348,11 @@ void DrmBackend::openDrm()
         };
         m_connectors.erase(std::remove_if(m_connectors.begin(), m_connectors.end(), tryAtomicInit), m_connectors.end());
         m_crtcs.erase(std::remove_if(m_crtcs.begin(), m_crtcs.end(), tryAtomicInit), m_crtcs.end());
+    }
+
+    uint64_t capability = 0;
+    if (drmGetCap(m_fd, DRM_CAP_TIMESTAMP_MONOTONIC, &capability) == 0) {
+        m_timestampMonotonic = capability;
     }
 
     initCursor();

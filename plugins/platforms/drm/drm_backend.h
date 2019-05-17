@@ -135,6 +135,10 @@ public:
     }
 #endif
 
+    bool supportsTimestampMonotonic() const {
+        return m_timestampMonotonic;
+    }
+
     QVector<CompositingType> supportedCompositors() const override;
 
     QString supportInformation() const override;
@@ -189,6 +193,7 @@ private:
     bool m_deleteBufferAfterPageFlip;
     bool m_atomicModeSetting = false;
     bool m_cursorEnabled = false;
+    bool m_timestampMonotonic = false;
     QSize m_cursorSize;
     int m_pageFlipsPending = 0;
     bool m_active = false;

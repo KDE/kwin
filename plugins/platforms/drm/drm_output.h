@@ -85,6 +85,10 @@ public:
         return m_primaryPlane;
     }
 
+    DrmBackend *backend() const {
+        return m_backend;
+    }
+
     bool initCursor(const QSize &cursorSize);
 
     bool supportsTransformations() const;
