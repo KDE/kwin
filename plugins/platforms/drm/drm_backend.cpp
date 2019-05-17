@@ -227,15 +227,24 @@ void DrmBackend::deactivate()
     m_active = false;
 }
 
+static std::chrono::microseconds makeTimestamp(unsigned int sec, unsigned int usec)
+{
+    return std::chrono::seconds(sec) +
+           std::chrono::microseconds(usec);
+}
+
 void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data)
 {
     Q_UNUSED(fd)
     Q_UNUSED(frame)
-    Q_UNUSED(sec)
-    Q_UNUSED(usec)
     auto output = reinterpret_cast<DrmOutput*>(data);
     output->pageFlipped();
     output->m_backend->m_pageFlipsPending--;
+
+    if (output->m_backend->supportsTimestampMonotonic()) {
+        output->setPresentationTimestamp(makeTimestamp(sec, usec));
+    }
+
     if (output->m_backend->m_pageFlipsPending == 0) {
         // TODO: improve, this currently means we wait for all page flips or all outputs.
         // It would be better to driver the repaint per output
@@ -346,6 +355,11 @@ void DrmBackend::openDrm()
         };
         m_connectors.erase(std::remove_if(m_connectors.begin(), m_connectors.end(), tryAtomicInit), m_connectors.end());
         m_crtcs.erase(std::remove_if(m_crtcs.begin(), m_crtcs.end(), tryAtomicInit), m_crtcs.end());
+    }
+
+    uint64_t capability = 0;
+    if (drmGetCap(m_fd, DRM_CAP_TIMESTAMP_MONOTONIC, &capability) == 0) {
+        m_timestampMonotonic = capability;
     }
 
     initCursor();
