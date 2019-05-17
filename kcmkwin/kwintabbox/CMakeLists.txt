@@ -37,4 +37,4 @@ install(TARGETS kcm_kwintabbox  DESTINATION ${PLUGIN_INSTALL_DIR} )
 ########### install files ###############
 install( FILES kwintabbox.desktop DESTINATION  ${SERVICES_INSTALL_DIR} )
 install( FILES thumbnails/konqueror.png thumbnails/kmail.png thumbnails/systemsettings.png thumbnails/dolphin.png DESTINATION ${DATA_INSTALL_DIR}/kwin/kcm_kwintabbox)
-install( FILES kwinswitcher.knsrc  DESTINATION  ${CONFIG_INSTALL_DIR} )
+install( FILES kwinswitcher.knsrc  DESTINATION  ${KDE_INSTALL_KNSRCDIR} )
