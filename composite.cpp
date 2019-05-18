@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "composite.h"
 
+#include "abstract_output.h"
 #include "dbusinterface.h"
 #include "client.h"
 #include "decorations/decoratedclient.h"
@@ -108,7 +109,7 @@ Compositor::Compositor(QObject* workspace)
     , m_timeSinceLastVBlank(0)
     , m_scene(NULL)
     , m_bufferSwapPending(false)
-    , m_composeAtSwapCompletion(false)
+    , m_scheduleAtSwapCompletion(false)
 {
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
     connect(options, &Options::configChanged, this, &Compositor::slotConfigChanged);
@@ -620,6 +621,21 @@ void Compositor::timerEvent(QTimerEvent *te)
         QObject::timerEvent(te);
 }
 
+AbstractOutput *Compositor::mostRecentlyUpdatedOutput() const
+{
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->outputs();
+    AbstractOutput *best = nullptr;
+
+    for (auto *output : outputs) {
+        if (best && best->presentationTimestamp() <= output->presentationTimestamp())
+            continue;
+
+        best = output;
+    }
+
+    return best;
+}
+
 void Compositor::aboutToSwapBuffers()
 {
     assert(!m_bufferSwapPending);
@@ -633,11 +649,11 @@ void Compositor::bufferSwapComplete()
 
     emit bufferSwapCompleted();
 
-    if (m_composeAtSwapCompletion) {
-        m_composeAtSwapCompletion = false;
-        // We start the composite timer here to avoid calling
-        // performCompositing() from the event handler.
-        compositeTimer.start(1, this);
+    if (m_scheduleAtSwapCompletion) {
+        m_scheduleAtSwapCompletion = false;
+
+        const AbstractOutput *output = mostRecentlyUpdatedOutput();
+        scheduleUsingSwapTimestamp(output);
     }
 }
 
@@ -649,7 +665,7 @@ void Compositor::performCompositing()
     // If a buffer swap is still pending, we return to the event loop and
     // continue processing events until the swap has completed.
     if (m_bufferSwapPending) {
-        m_composeAtSwapCompletion = true;
+        m_scheduleAtSwapCompletion = true;
         compositeTimer.stop();
         return;
     }
@@ -761,7 +777,7 @@ void Compositor::performCompositing()
     // scheduleRepaint() would restart it again somewhen later, called from functions that
     // would again add something pending.
     if (m_bufferSwapPending && m_scene->syncsToVBlank()) {
-        m_composeAtSwapCompletion = true;
+        m_scheduleAtSwapCompletion = true;
     } else {
         scheduleRepaint();
     }
@@ -806,18 +822,73 @@ bool Compositor::windowRepaintsPending() const
     return false;
 }
 
+template <typename T>
+T align(T offset, T alignment)
+{
+    return offset + ((alignment - (offset % alignment)) % alignment);
+}
+
+void Compositor::scheduleUsingSwapTimestamp(const AbstractOutput *output)
+{
+    using namespace std::literals::chrono_literals;
+
+    const std::chrono::nanoseconds lastSwap = output->presentationTimestamp();
+    const std::chrono::nanoseconds vBlankInterval{uint64_t(1'000'000'000'000ull / output->refreshRate())};
+
+    // This call is potentially expensive, so it must be done
+    // before the call to std::chrono::steady_clock::now() below.
+    std::chrono::nanoseconds prevRenderTime = m_scene->prevFrameTime();
+
+    // Note that m_timeSinceLastVBlank is actually the time it took to record
+    // the rendering commands for the previous frame.
+    if (prevRenderTime == std::chrono::nanoseconds::zero())
+        prevRenderTime = std::chrono::nanoseconds{m_timeSinceLastVBlank};
+
+    // Guard against anomalous values
+    prevRenderTime = qBound(0ns, prevRenderTime, vBlankInterval * 4);
+
+    // Add a three millisecond margin to account for limitations in QBasicTimer precision
+    // and additional overhead.
+    const std::chrono::nanoseconds expectedRenderTime = prevRenderTime + 3ms;
+    const std::chrono::nanoseconds now = std::chrono::steady_clock::now().time_since_epoch();
+    std::chrono::nanoseconds target = lastSwap + vBlankInterval;
+
+    // If we already missed the next vblank
+    if (now > target) {
+        target = lastSwap + align(now - lastSwap, vBlankInterval);
+    }
+
+    // Skip one or more frames if we can't render the scene before the deadline
+    if ((target - now) < expectedRenderTime) {
+        target += align(now + expectedRenderTime - target, vBlankInterval);
+    }
+
+    const std::chrono::milliseconds timeout = std::chrono::duration_cast<std::chrono::milliseconds>(target - expectedRenderTime - now);
+    compositeTimer.start(std::max<int>(1, timeout.count()), this);
+}
+
 void Compositor::setCompositeTimer()
 {
+    using namespace std::literals::chrono_literals;
+
     if (m_state != State::On) {
         return;
     }
 
     // Don't start the timer if we're waiting for a swap event
-    if (m_bufferSwapPending && m_composeAtSwapCompletion)
+    if (m_bufferSwapPending && m_scheduleAtSwapCompletion)
         return;
 
     // Don't start the timer if all outputs are disabled
     if (!kwinApp()->platform()->areOutputsEnabled()) {
+        return;
+    }
+
+    // FIXME: Figure out which output we want to sync to
+    const AbstractOutput *output = mostRecentlyUpdatedOutput();
+
+    if (output && output->presentationTimestamp() > 0ns) {
+        scheduleUsingSwapTimestamp(output);
         return;
     }
 

@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+class AbstractOutput;
 class Client;
 class CompositorSelectionOwner;
 class Scene;
@@ -188,12 +189,15 @@ private:
     void startupWithWorkspace();
     void setupX11Support();
 
+    void scheduleUsingSwapTimestamp(const AbstractOutput *output);
     void setCompositeTimer();
     void performCompositing();
     bool windowRepaintsPending() const;
 
     void releaseCompositorSelection();
     void deleteUnusedSupportProperties();
+
+    AbstractOutput *mostRecentlyUpdatedOutput() const;
 
     void slotConfigChanged();
 
@@ -217,7 +221,7 @@ private:
     Scene *m_scene;
 
     bool m_bufferSwapPending;
-    bool m_composeAtSwapCompletion;
+    bool m_scheduleAtSwapCompletion;
 
     int m_framesToTestForSafety = 3;
     QElapsedTimer m_monotonicClock;
