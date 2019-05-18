@@ -36,11 +36,13 @@ class LanczosFilter;
 class OpenGLBackend;
 class SyncManager;
 class SyncObject;
+class TimerQuery;
 
 class KWIN_EXPORT SceneOpenGL
     : public Scene
 {
     Q_OBJECT
+
 public:
     class EffectFrame;
     class Window;
@@ -61,6 +63,7 @@ public:
     virtual void triggerFence() override;
     virtual QMatrix4x4 projectionMatrix() const = 0;
     bool animationsSupported() const override;
+    std::chrono::nanoseconds prevFrameTime() override;
 
     void insertWait();
 
@@ -105,6 +108,7 @@ private:
     OpenGLBackend *m_backend;
     SyncManager *m_syncManager;
     SyncObject *m_currentFence;
+    TimerQuery *m_timerQuery = nullptr;
 };
 
 class SceneOpenGL2 : public SceneOpenGL

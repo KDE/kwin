@@ -28,6 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QElapsedTimer>
 #include <QMatrix4x4>
 
+#include <chrono>
+
+
 class QOpenGLFramebufferObject;
 
 namespace KWayland
@@ -170,6 +173,14 @@ public:
      * if rendering is hardware accelerated it should return @c true.
      **/
     virtual bool animationsSupported() const = 0;
+
+    /**
+     * Returns the time it took to render the previous frame, including
+     * both the CPU and the GPU time.
+     *
+     * The default implementation returns 0ns.
+     */
+    virtual std::chrono::nanoseconds prevFrameTime();
 
     /**
      * The render buffer used by an XRender based compositor scene.

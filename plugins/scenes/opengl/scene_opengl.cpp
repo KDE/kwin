@@ -305,6 +305,127 @@ bool SyncManager::updateFences()
 
 // -----------------------------------------------------------------------
 
+
+/**
+ * TimerQuery manages query objects used to measure CPU and GPU rendering time.
+ */
+class TimerQuery
+{
+    enum QueryType { BeginQuery = 0, EndQuery, QueryTypeCount };
+
+public:
+    TimerQuery(SceneOpenGL *scene);
+    ~TimerQuery();
+
+    void begin();
+    void end();
+
+    uint64_t worstFrameTime();
+
+private:
+    void getResults();
+
+private:
+    SceneOpenGL * const m_scene;
+    std::array<GLuint, QueryTypeCount> m_queries;
+    std::array<uint64_t, 6> m_frameElapsedTimes;
+    uint64_t m_cpuBeginTimestamp = 0;
+    uint64_t m_cpuEndTimestamp = 0;
+    int m_frameElapsedIndex = 0;
+    bool m_pending = false;
+    bool m_firstFrame = true;
+};
+
+TimerQuery::TimerQuery(SceneOpenGL *scene)
+    : m_scene(scene)
+{
+    m_queries.fill(0);
+
+    if (!GLPlatform::instance()->isGLES())
+        glGenQueries(m_queries.size(), m_queries.data());
+    else
+        glGenQueriesEXT(m_queries.size(), m_queries.data());
+
+    m_frameElapsedTimes.fill(0);
+}
+
+TimerQuery::~TimerQuery()
+{
+    if (!GLPlatform::instance()->isGLES())
+        glDeleteQueries(m_queries.size(), m_queries.data());
+    else
+        glDeleteQueriesEXT(m_queries.size(), m_queries.data());
+
+    m_queries.fill(0);
+}
+
+void TimerQuery::begin()
+{
+    glGetInteger64v(GL_TIMESTAMP, (GLint64 *) &m_cpuBeginTimestamp);
+    glQueryCounter(m_queries[BeginQuery], GL_TIMESTAMP);
+}
+
+void TimerQuery::end()
+{
+    glQueryCounter(m_queries[EndQuery], GL_TIMESTAMP);
+    glGetInteger64v(GL_TIMESTAMP, (GLint64 *) &m_cpuEndTimestamp);
+    m_pending = true;
+}
+
+void TimerQuery::getResults()
+{
+    if (!m_pending)
+        return;
+
+    // Query the GPU timestamps for the previous frame
+    GLuint64 gpuBeginTimestamp = 0;
+    GLuint64 gpuEndTimestamp = 0;
+
+    glGetQueryObjectui64v(m_queries[BeginQuery], GL_QUERY_RESULT, &gpuBeginTimestamp);
+    glGetQueryObjectui64v(m_queries[EndQuery],   GL_QUERY_RESULT, &gpuEndTimestamp);
+
+    const int64_t begin = m_cpuBeginTimestamp;
+    const int64_t end = std::max(m_cpuEndTimestamp, gpuEndTimestamp);
+
+    int64_t elapsed;
+
+    if (!m_firstFrame) {
+        elapsed = std::max(0l, end - begin);
+    } else {
+        // Ignore the CPU time from the first frame.
+        // We resolve all the GL entry points during the first render pass, and that
+        // makes the first frame considerably more expensive than subsequent frames.
+        elapsed = std::max<GLuint64>(1'000'000, gpuEndTimestamp - gpuBeginTimestamp);
+        m_firstFrame = false;
+    }
+
+    m_frameElapsedTimes[m_frameElapsedIndex] = elapsed;
+    m_frameElapsedIndex = (m_frameElapsedIndex + 1) % m_frameElapsedTimes.size();
+
+    m_pending = false;
+}
+
+uint64_t TimerQuery::worstFrameTime()
+{
+    if (m_pending) {
+        m_scene->backend()->makeCurrent();
+        getResults();
+    }
+
+    uint64_t worstTime = 0;
+    for (uint64_t elapsed : m_frameElapsedTimes) {
+        worstTime = std::max(worstTime, elapsed);
+    }
+
+    return worstTime;
+}
+
+
+
+// -----------------------------------------------------------------------
+
+
+
 /************************************************
  * SceneOpenGL
  ***********************************************/
@@ -362,6 +483,11 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
             qCDebug(KWIN_OPENGL) << "Explicit synchronization with the X command stream disabled by environment variable";
         }
     }
+
+    if ((!glPlatform->isGLES() && (hasGLVersion(3, 3) || hasGLExtension("GL_ARB_timer_query"))) ||
+        (glPlatform->isGLES()  && (hasGLVersion(3, 0) && hasGLExtension("GL_EXT_disjoint_timer_query")))) {
+        m_timerQuery = new TimerQuery(this);
+    }
 }
 
 static SceneOpenGL *gs_debuggedScene = nullptr;
@@ -375,6 +501,7 @@ SceneOpenGL::~SceneOpenGL()
     }
     SceneOpenGL::EffectFrame::cleanup();
 
+    delete m_timerQuery;
     delete m_syncManager;
 
     // backend might be still needed for a different scene
@@ -646,6 +773,16 @@ void SceneOpenGL2::paintCursor()
     glDisable(GL_BLEND);
 }
 
+
+std::chrono::nanoseconds SceneOpenGL::prevFrameTime()
+{
+    if (m_timerQuery)
+        return std::chrono::nanoseconds{m_timerQuery->worstFrameTime()};
+
+    return std::chrono::nanoseconds::zero();
+}
+
+
 qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame
@@ -660,6 +797,10 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     if (m_backend->perScreenRendering()) {
         // trigger start render timer
         m_backend->prepareRenderingFrame();
+
+        if (m_timerQuery)
+            m_timerQuery->begin();
+
         for (int i = 0; i < screens()->count(); ++i) {
             const QRect &geo = screens()->geometry(i);
             QRegion update;
@@ -688,6 +829,10 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 
             GLVertexBuffer::streamingBuffer()->framePosted();
         }
+
+        if (m_timerQuery)
+            m_timerQuery->end();
+
     } else {
         m_backend->makeCurrent();
         QRegion repaint = m_backend->prepareRenderingFrame();
@@ -697,6 +842,10 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             handleGraphicsReset(status);
             return 0;
         }
+
+        if (m_timerQuery)
+            m_timerQuery->begin();
+
         GLVertexBuffer::setVirtualScreenGeometry(screens()->geometry());
         GLRenderTarget::setVirtualScreenGeometry(screens()->geometry());
         GLVertexBuffer::setVirtualScreenScale(1);
@@ -721,6 +870,9 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
             }
         }
 
+        if (m_timerQuery)
+            m_timerQuery->end();
+
         GLVertexBuffer::streamingBuffer()->endOfFrame();
 
         m_backend->endRenderingFrame(validRegion, updateRegion);
@@ -740,6 +892,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 
     // do cleanup
     clearStackingOrder();
+
     return m_backend->renderTime();
 }
 

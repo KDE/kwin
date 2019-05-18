@@ -654,6 +654,11 @@ void Scene::triggerFence()
 {
 }
 
+std::chrono::nanoseconds Scene::prevFrameTime()
+{
+    return std::chrono::nanoseconds::zero();
+}
+
 QMatrix4x4 Scene::screenProjectionMatrix() const
 {
     return QMatrix4x4();
