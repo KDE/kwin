@@ -260,6 +260,10 @@ void GlxBackend::init()
             if (!tripleBuffer.isEmpty()) {
                 setBlocksForRetrace(qstrcmp(tripleBuffer, "0") == 0);
                 gs_tripleBufferUndetected = false;
+            } else if (glPlatform->isMesaDriver()) {
+                // glXSwapBuffers() never blocks in Mesa
+                setBlocksForRetrace(false);
+                gs_tripleBufferUndetected = false;
             }
             gs_tripleBufferNeedsDetection = gs_tripleBufferUndetected;
         } else if (hasExtension(QByteArrayLiteral("GLX_SGI_video_sync"))) {
