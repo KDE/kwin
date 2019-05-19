@@ -863,6 +863,8 @@ void Compositor::scheduleUsingSwapTimestamp(const AbstractOutput *output)
         target += align(now + expectedRenderTime - target, vBlankInterval);
     }
 
+    m_scene->setNextExpectedPresentTime(target);
+
     const std::chrono::milliseconds timeout = std::chrono::duration_cast<std::chrono::milliseconds>(target - expectedRenderTime - now);
     compositeTimer.start(std::max<int>(1, timeout.count()), this);
 }

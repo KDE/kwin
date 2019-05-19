@@ -85,6 +85,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/surface_interface.h>
 
+#include <cmath>
+
 namespace KWin
 {
 
@@ -175,9 +177,14 @@ void Scene::updateTimeDiff()
         // cause problems).
         time_diff = 1;
         last_time.start();
-    } else
+    } else {
+        time_diff = last_time.restart();
 
-    time_diff = last_time.restart();
+        if (m_prevPresentTime.count() && m_nextPresentTime.count()) {
+            const std::chrono::nanoseconds delta = m_nextPresentTime - m_prevPresentTime;
+            time_diff = std::round(delta.count() / 1'000'000.); // Convert to milliseconds
+        }
+    }
 
     if (time_diff < 0)   // check time rollback
         time_diff = 1;
@@ -388,6 +395,16 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         // full repaints.
         damaged_region = paintedArea - repaintClip;
     }
+}
+
+void Scene::setNextExpectedPresentTime(std::chrono::nanoseconds time)
+{
+    if (time == m_nextPresentTime) {
+        return;
+    }
+
+    m_prevPresentTime = m_nextPresentTime;
+    m_nextPresentTime = time;
 }
 
 void Scene::addToplevel(Toplevel *c)

@@ -82,6 +82,13 @@ public:
     virtual qint64 paint(QRegion damage, ToplevelList windows) = 0;
 
     /**
+     * Sets the monotonic time when the next frame is expected to be presented.
+     *
+     * This function should only be called by Compositor.
+     **/
+    void setNextExpectedPresentTime(std::chrono::nanoseconds time);
+
+    /**
      * Adds the Toplevel to the Scene.
      *
      * If the toplevel gets deleted, then the scene will try automatically
@@ -276,6 +283,8 @@ private:
     QHash< Toplevel*, Window* > m_windows;
     // windows in their stacking order
     QVector< Window* > stacking_order;
+    std::chrono::nanoseconds m_prevPresentTime = std::chrono::nanoseconds::zero();
+    std::chrono::nanoseconds m_nextPresentTime = std::chrono::nanoseconds::zero();
 };
 
 /**
