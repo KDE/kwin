@@ -921,10 +921,8 @@ struct KeySymbolsDeleter
 /**
  * Handles alt-tab / control-tab
  **/
-static bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms) {
-
-    qCDebug(KWIN_TABBOX) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms;
-
+static bool areKeySymXsDepressed(const uint keySyms[], int nKeySyms)
+{
     Xcb::QueryKeymap keys;
 
     QScopedPointer<xcb_key_symbols_t, KeySymbolsDeleter> symbols(xcb_key_symbols_alloc(connection()));
@@ -933,42 +931,38 @@ static bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms) 
     }
     const auto keymap = keys->keys;
 
+    bool depressed = false;
     for (int iKeySym = 0; iKeySym < nKeySyms; iKeySym++) {
         uint keySymX = keySyms[ iKeySym ];
         xcb_keycode_t *keyCodes = xcb_key_symbols_get_keycode(symbols.data(), keySymX);
         if (!keyCodes) {
             continue;
         }
-        xcb_keycode_t keyCodeX = keyCodes[0];
+
+        int j = 0;
+        while (keyCodes[j] != XCB_NO_SYMBOL) {
+            const xcb_keycode_t keyCodeX = keyCodes[j++];
+            int i = keyCodeX / 8;
+            char mask = 1 << (keyCodeX - (i * 8));
+
+            if (i < 0 || i >= 32) {
+                continue;
+            }
+
+            qCDebug(KWIN_TABBOX)    << iKeySym << ": keySymX=0x" << QString::number(keySymX, 16)
+                        << " i=" << i << " mask=0x" << QString::number(mask, 16)
+                        << " keymap[i]=0x" << QString::number(keymap[i], 16);
+
+            if (keymap[i] & mask) {
+                depressed = true;
+                break;
+            }
+        }
+
         free(keyCodes);
-        if (keyCodeX == XCB_NO_SYMBOL) {
-            continue;
-        }
-        int i = keyCodeX / 8;
-        char mask = 1 << (keyCodeX - (i * 8));
-
-        // Abort if bad index value,
-        if (i < 0 || i >= 32)
-            return false;
-
-        qCDebug(KWIN_TABBOX)    << iKeySym << ": keySymX=0x" << QString::number(keySymX, 16)
-                    << " i=" << i << " mask=0x" << QString::number(mask, 16)
-                    << " keymap[i]=0x" << QString::number(keymap[i], 16);
-
-        // If ALL keys passed need to be depressed,
-        if (bAll) {
-            if ((keymap[i] & mask) == 0)
-                return false;
-        } else {
-            // If we are looking for ANY key press, and this key is depressed,
-            if (keymap[i] & mask)
-                return true;
-        }
     }
 
-    // If we were looking for ANY key press, then none was found, return false,
-    // If we were looking for ALL key presses, then all were found, return true.
-    return bAll;
+    return depressed;
 }
 
 static bool areModKeysDepressedX11(const QKeySequence &seq)
@@ -999,7 +993,7 @@ static bool areModKeysDepressedX11(const QKeySequence &seq)
         rgKeySyms[nKeySyms++] = XK_Meta_R;
     }
 
-    return areKeySymXsDepressed(false, rgKeySyms, nKeySyms);
+    return areKeySymXsDepressed(rgKeySyms, nKeySyms);
 }
 
 static bool areModKeysDepressedWayland(const QKeySequence &seq)
