@@ -190,7 +190,7 @@ void KWinScreenEdgesConfig::monitorInit()
     monitorAddItem(i18n("No Action"));
     monitorAddItem(i18n("Show Desktop"));
     monitorAddItem(i18n("Lock Screen"));
-    monitorAddItem(i18nc("Open krunner", "Run Command"));
+    monitorAddItem(i18n("Show KRunner"));
     monitorAddItem(i18n("Activity Manager"));
     monitorAddItem(i18n("Application Launcher"));
 
