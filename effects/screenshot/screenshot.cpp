@@ -87,6 +87,75 @@ static QImage xPictureToImage(xcb_render_picture_t srcPic, const QRect &geometry
 }
 #endif
 
+static QSize pickWindowSize(const QImage &image)
+{
+    xcb_connection_t *c = effects->xcbConnection();
+
+    // This will implicitly enable BIG-REQUESTS extension.
+    const uint32_t maximumRequestSize = xcb_get_maximum_request_length(c);
+    const xcb_setup_t *setup = xcb_get_setup(c);
+
+    uint32_t requestSize = sizeof(xcb_put_image_request_t);
+
+    // With BIG-REQUESTS extension an additional 32-bit field is inserted into
+    // the request so we better take it into account.
+    if (setup->maximum_request_length < maximumRequestSize) {
+        requestSize += 4;
+    }
+
+    const uint32_t maximumDataSize = 4 * maximumRequestSize - requestSize;
+    const uint32_t bytesPerPixel = image.depth() >> 3;
+    const uint32_t bytesPerLine = image.bytesPerLine();
+
+    if (image.sizeInBytes() <= maximumDataSize) {
+        return image.size();
+    }
+
+    if (maximumDataSize < bytesPerLine) {
+        return QSize(maximumDataSize / bytesPerPixel, 1);
+    }
+
+    return QSize(image.width(), maximumDataSize / bytesPerLine);
+}
+
+static xcb_pixmap_t xpixmapFromImage(const QImage &image)
+{
+    xcb_connection_t *c = effects->xcbConnection();
+
+    xcb_pixmap_t pixmap = xcb_generate_id(c);
+    xcb_gcontext_t gc = xcb_generate_id(c);
+
+    xcb_create_pixmap(c, image.depth(), pixmap, effects->x11RootWindow(),
+        image.width(), image.height());
+    xcb_create_gc(c, gc, pixmap, 0, nullptr);
+
+    const int bytesPerPixel = image.depth() >> 3;
+
+    // Figure out how much data we can send with one invocation of xcb_put_image.
+    // In contrast to XPutImage, xcb_put_image doesn't implicitly split the data.
+    const QSize window = pickWindowSize(image);
+
+    for (int i = 0; i < image.height(); i += window.height()) {
+        const int targetHeight = qMin(image.height() - i, window.height());
+        const uint8_t *line = image.scanLine(i);
+
+        for (int j = 0; j < image.width(); j += window.width()) {
+            const int targetWidth = qMin(image.width() - j, window.width());
+            const uint8_t *bytes = line + j * bytesPerPixel;
+            const uint32_t byteCount = targetWidth * targetHeight * bytesPerPixel;
+
+            xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, pixmap,
+                gc, targetWidth, targetHeight, j, i, 0, image.depth(),
+                byteCount, bytes);
+        }
+    }
+
+    xcb_flush(c);
+    xcb_free_gc(c, gc);
+
+    return pixmap;
+}
+
 void ScreenShotEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 {
     m_cachedOutputGeometry = data.outputGeometry();
@@ -181,16 +250,7 @@ void ScreenShotEffect::postPaintScreen()
             }
 
             if (m_windowMode == WindowMode::Xpixmap) {
-                const int depth = img.depth();
-                xcb_pixmap_t xpix = xcb_generate_id(xcbConnection());
-                xcb_create_pixmap(xcbConnection(), depth, xpix, x11RootWindow(), img.width(), img.height());
-
-                xcb_gcontext_t cid = xcb_generate_id(xcbConnection());
-                xcb_create_gc(xcbConnection(), cid, xpix, 0, NULL);
-                xcb_put_image(xcbConnection(), XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(),
-                            0, 0, 0, depth, img.byteCount(), img.constBits());
-                xcb_free_gc(xcbConnection(), cid);
-                xcb_flush(xcbConnection());
+                const xcb_pixmap_t xpix = xpixmapFromImage(img);
                 emit screenshotCreated(xpix);
                 m_windowMode = WindowMode::NoCapture;
             } else if (m_windowMode == WindowMode::File) {
