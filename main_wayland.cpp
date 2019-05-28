@@ -247,7 +247,19 @@ void ApplicationWayland::startSession()
         p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
         p->setProcessEnvironment(processStartupEnvironment());
         auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
-        connect(p, finishedSignal, this, &ApplicationWayland::quit);
+        connect(p, finishedSignal, this, [](int code, QProcess::ExitStatus status) {
+            if (status == QProcess::CrashExit) {
+                qWarning() << "Session process has crashed";
+                QCoreApplication::exit(-1);
+                return;
+            }
+
+            if (code) {
+                qWarning() << "Session process exited with code" << code;
+            }
+
+            QCoreApplication::exit(code);
+        });
         p->start(m_sessionArgument);
     }
     // start the applications passed to us as command line arguments
