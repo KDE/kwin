@@ -29,7 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "shell_client.h"
 #include <kwineffects.h>
+
 #include "decorations/decoratedclient.h"
+#include "decorations/decorationbridge.h"
+#include "decorations/settings.h"
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
@@ -42,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/surface.h>
 
 #include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationSettings>
 
 #include <linux/input.h>
 
@@ -379,21 +383,32 @@ void DecorationInputTest::testHover()
     MOTION(QPoint(c->geometry().center().x(), c->clientPos().y() / 2));
     QCOMPARE(c->cursor(), CursorShape(Qt::ArrowCursor));
 
+    // There is a mismatch of the cursor key positions between windows
+    // with and without borders (with borders one can move inside a bit and still
+    // be on an edge, without not). We should make this consistent in KWin's core.
+    //
+    // TODO: Test input position with different border sizes.
+    // TODO: We should test with the fake decoration to have a fixed test environment.
+    const bool hasBorders = Decoration::DecorationBridge::self()->settings()->borderSize() != KDecoration2::BorderSize::None;
+    auto deviation = [hasBorders] {
+        return hasBorders ? -1 : 0;
+    };
+
     MOTION(QPoint(c->geometry().x(), 0));
     QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeNorthWest));
     MOTION(QPoint(c->geometry().x() + c->geometry().width() / 2, 0));
     QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeNorth));
     MOTION(QPoint(c->geometry().x() + c->geometry().width() - 1, 0));
     QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeNorthEast));
-    MOTION(QPoint(c->geometry().x() + c->geometry().width() - 1, c->height() / 2));
+    MOTION(QPoint(c->geometry().x() + c->geometry().width() + deviation(), c->height() / 2));
     QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeEast));
-    MOTION(QPoint(c->geometry().x() + c->geometry().width() - 1, c->height() - 1));
+    MOTION(QPoint(c->geometry().x() + c->geometry().width() + deviation(), c->height() - 1));
     QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeSouthEast));
-    MOTION(QPoint(c->geometry().x() + c->geometry().width() / 2, c->height() - 1));
+    MOTION(QPoint(c->geometry().x() + c->geometry().width() / 2, c->height() + deviation()));
     QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeSouth));
-    MOTION(QPoint(c->geometry().x(), c->height() - 1));
+    MOTION(QPoint(c->geometry().x(), c->height() + deviation()));
     QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeSouthWest));
-    MOTION(QPoint(c->geometry().x(), c->height() / 2));
+    MOTION(QPoint(c->geometry().x() - 1, c->height() / 2));
     QCOMPARE(c->cursor(), CursorShape(KWin::ExtendedCursor::SizeWest));
 
     MOTION(c->geometry().center());
