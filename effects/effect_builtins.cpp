@@ -430,7 +430,7 @@ EFFECT_FALLBACK
     }, {
         QStringLiteral("screenshot"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Screenshot"),
-        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Helper effect for KSnapshot"),
+        i18ndc("kwin_effects", "Comment describing the KWin Effect", "Helper effect for screenshot tools"),
         QStringLiteral("Appearance"),
         QString(),
         QUrl(),
