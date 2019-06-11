@@ -22,13 +22,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "client.h"
 #include "cursor.h"
+#include "decorations/decorationbridge.h"
+#include "decorations/settings.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "shell_client.h"
 #include "scripting/scripting.h"
 
+#include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationSettings>
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
@@ -579,10 +583,15 @@ void QuickTilingTest::testQuickTilingTouchMoveXdgShell()
     kwinApp()->platform()->touchUp(0, timestamp++);
     QVERIFY(!workspace()->moveResizeClient());
 
+
+    // When there are no borders, there is no change to them when quick-tiling.
+    // TODO: we should test both cases with fixed fake decoration for autotests.
+    const bool hasBorders = Decoration::DecorationBridge::self()->settings()->borderSize() != KDecoration2::BorderSize::None;
+
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(c->quickTileMode(), "expectedMode");
     QVERIFY(configureRequestedSpy.wait());
-    QTRY_COMPARE(configureRequestedSpy.count(), 5);
+    QTRY_COMPARE(configureRequestedSpy.count(), hasBorders ? 5 : 4);
     QCOMPARE(false, configureRequestedSpy.last().first().toSize().isEmpty());
 }
 

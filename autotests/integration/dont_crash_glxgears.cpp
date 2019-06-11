@@ -75,7 +75,8 @@ void DontCrashGlxgearsTest::testGlxgears()
     QVERIFY(decoration);
 
     // send a mouse event to the position of the close button
-    QPointF pos = decoration->rect().topRight() + QPointF(-decoration->borderRight() * 2, decoration->borderRight() * 2);
+    // TODO: position is dependent on the decoration in use. We should use a static target instead, a fake deco for autotests.
+    QPointF pos = decoration->rect().topRight() + QPointF(-decoration->borderTop() / 2, decoration->borderTop() / 2);
     QHoverEvent event(QEvent::HoverMove, pos, pos);
     QCoreApplication::instance()->sendEvent(decoration, &event);
     // mouse press

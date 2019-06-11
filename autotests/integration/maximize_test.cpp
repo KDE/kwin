@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "cursor.h"
+#include "decorations/decorationbridge.h"
+#include "decorations/settings.h"
 #include "platform.h"
 #include "shell_client.h"
 #include "screens.h"
@@ -37,8 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/xdgdecoration_interface.h>
 
-#include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
+#include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationSettings>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -120,6 +123,10 @@ void TestMaximized::testMaximizedPassedToDeco()
     QVERIFY(decoration);
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
 
+    // When there are no borders, there is no change to them when maximizing.
+    // TODO: we should test both cases with fixed fake decoration for autotests.
+    const bool hasBorders = Decoration::DecorationBridge::self()->settings()->borderSize() != KDecoration2::BorderSize::None;
+
     // now maximize
     QVERIFY(sizeChangedSpy.isEmpty());
     QSignalSpy bordersChangedSpy(decoration, &KDecoration2::Decoration::bordersChanged);
@@ -134,11 +141,14 @@ void TestMaximized::testMaximizedPassedToDeco()
     QCOMPARE(sizeChangedSpy.first().first().toSize(), QSize(1280, 1024 - decoration->borderTop()));
     Test::render(surface.data(), sizeChangedSpy.first().first().toSize(), Qt::red);
     QVERIFY(geometryShapeChangedSpy.wait());
-    QCOMPARE(geometryShapeChangedSpy.count(), 2);
+
+    // If no borders, there is only the initial geometry shape change, but none through border resizing.
+    QCOMPARE(geometryShapeChangedSpy.count(), hasBorders ? 2 : 1);
+
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(maximizedChangedSpy.count(), 1);
     QCOMPARE(maximizedChangedSpy.last().first().toBool(), true);
-    QCOMPARE(bordersChangedSpy.count(), 1);
+    QCOMPARE(bordersChangedSpy.count(), hasBorders ? 1 : 0);
     QCOMPARE(decoration->borderLeft(), 0);
     QCOMPARE(decoration->borderBottom(), 0);
     QCOMPARE(decoration->borderRight(), 0);
@@ -149,15 +159,15 @@ void TestMaximized::testMaximizedPassedToDeco()
 
     Test::render(surface.data(), QSize(100, 50), Qt::red);
     QVERIFY(geometryShapeChangedSpy.wait());
-    QCOMPARE(geometryShapeChangedSpy.count(), 4);
+    QCOMPARE(geometryShapeChangedSpy.count(), hasBorders ? 4 : 2);
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(maximizedChangedSpy.count(), 2);
     QCOMPARE(maximizedChangedSpy.last().first().toBool(), false);
-    QCOMPARE(bordersChangedSpy.count(), 2);
+    QCOMPARE(bordersChangedSpy.count(), hasBorders ? 2 : 0);
     QVERIFY(decoration->borderTop() != 0);
-    QVERIFY(decoration->borderLeft() != 0);
-    QVERIFY(decoration->borderRight() != 0);
-    QVERIFY(decoration->borderBottom() != 0);
+    QVERIFY(decoration->borderLeft() != !hasBorders);
+    QVERIFY(decoration->borderRight() != !hasBorders);
+    QVERIFY(decoration->borderBottom() != !hasBorders);
 
     QCOMPARE(sizeChangedSpy.count(), 2);
     QCOMPARE(sizeChangedSpy.last().first().toSize(), QSize(100, 50));

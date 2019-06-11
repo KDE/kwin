@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "cursor.h"
+#include "decorations/decorationbridge.h"
+#include "decorations/settings.h"
 #include "effects.h"
 #include "deleted.h"
 #include "platform.h"
@@ -28,7 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <QDBusConnection>
+#include <KDecoration2/DecoratedClient>
+#include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationSettings>
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
@@ -44,6 +48,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/xdgdecoration_interface.h>
+
+#include <QDBusConnection>
 
 // system
 #include <sys/types.h>
@@ -74,6 +80,7 @@ private Q_SLOTS:
     void testMinimizeActiveWindow();
     void testFullscreen_data();
     void testFullscreen();
+
     void testFullscreenRestore_data();
     void testFullscreenRestore();
     void testUserCanSetFullscreen_data();
@@ -81,6 +88,7 @@ private Q_SLOTS:
     void testUserSetFullscreenWlShell();
     void testUserSetFullscreenXdgShell_data();
     void testUserSetFullscreenXdgShell();
+
     void testMaximizedToFullscreenWlShell_data();
     void testMaximizedToFullscreenWlShell();
     void testMaximizedToFullscreenXdgShell_data();
@@ -776,9 +784,15 @@ void TestShellClient::testMaximizedToFullscreenWlShell()
     QVERIFY(fullscreenChangedSpy.wait());
     if (decoMode == ServerSideDecoration::Mode::Server) {
          QVERIFY(sizeChangeRequestedSpy.wait());
-         // fails as we don't correctly call setMaximize(false)
+
+         // TODO: we should test both cases with fixed fake decoration for autotests.
+         const bool hasBorders = Decoration::DecorationBridge::self()->settings()->borderSize() != KDecoration2::BorderSize::None;
+
+         // fails if we have borders as we don't correctly call setMaximize(false)
          // but realistically the only toolkits that support the deco also use XDGShell
-         QEXPECT_FAIL("wlShell - deco", "With decoration incorrect geometry requested", Continue);
+         if (hasBorders) {
+            QEXPECT_FAIL("wlShell - deco", "With decoration incorrect geometry requested", Continue);
+         }
          QCOMPARE(sizeChangeRequestedSpy.last().first().toSize(), QSize(100, 50));
     }
     // TODO: should switch to fullscreen once it's updated

@@ -147,7 +147,7 @@ void XWaylandInputTest::testPointerEnterLeave()
     Xcb::Atom atom(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"), false, c.data());
 
     xcb_window_t w = xcb_generate_id(c.data());
-    const QRect windowGeometry = QRect(0, 0, 10, 20);
+    const QRect windowGeometry = QRect(0, 0, 100, 200);
     const uint32_t values[] = {
         XCB_EVENT_MASK_ENTER_WINDOW |
         XCB_EVENT_MASK_LEAVE_WINDOW
