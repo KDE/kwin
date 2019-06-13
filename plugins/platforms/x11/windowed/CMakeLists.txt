@@ -3,6 +3,7 @@ set(X11BACKEND_SOURCES
     egl_x11_backend.cpp
     scene_qpainter_x11_backend.cpp
     x11windowed_backend.cpp
+    x11windowed_output.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)

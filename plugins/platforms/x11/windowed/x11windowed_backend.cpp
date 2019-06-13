@@ -18,25 +18,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11windowed_backend.h"
+#include "x11windowed_output.h"
 #include "scene_qpainter_x11_backend.h"
 #include "logging.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
 #include "egl_x11_backend.h"
-#include "screens.h"
+#include "outputscreens.h"
 #include <kwinxrenderutils.h>
 // KDE
 #include <KLocalizedString>
-#include <NETWM>
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
-#include <QIcon>
 #include <QSocketNotifier>
 // kwayland
-#include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/surface_interface.h>
 // xcb
 #include <xcb/xcb_keysyms.h>
 // X11
@@ -64,11 +61,6 @@ X11WindowedBackend::~X11WindowedBackend()
     if (m_connection) {
         if (m_keySymbols) {
             xcb_key_symbols_free(m_keySymbols);
-        }
-        for (auto it = m_windows.begin(); it != m_windows.end(); ++it) {
-            xcb_unmap_window(m_connection, (*it).window);
-            xcb_destroy_window(m_connection, (*it).window);
-            delete (*it).winInfo;
         }
         if (m_cursor) {
             xcb_free_cursor(m_connection, m_cursor);
@@ -100,7 +92,7 @@ void X11WindowedBackend::init()
         }
         initXInput();
         XRenderUtils::init(m_connection, m_screen->root);
-        createWindow();
+        createOutputs();
         connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
         connect(this, &X11WindowedBackend::cursorChanged, this,
             [this] {
@@ -147,92 +139,42 @@ void X11WindowedBackend::initXInput()
 #endif
 }
 
-void X11WindowedBackend::createWindow()
+void X11WindowedBackend::createOutputs()
 {
     Xcb::Atom protocolsAtom(QByteArrayLiteral("WM_PROTOCOLS"), false, m_connection);
     Xcb::Atom deleteWindowAtom(QByteArrayLiteral("WM_DELETE_WINDOW"), false, m_connection);
+
+    // we need to multiply the initial window size with the scale in order to
+    // create an output window of this size in the end
+    const int pixelWidth = initialWindowSize().width() * initialOutputScale() + 0.5;
+    const int pixelHeight = initialWindowSize().height() * initialOutputScale() + 0.5;
+    const int logicalWidth = initialWindowSize().width();
+
+    int logicalWidthSum = 0;
     for (int i = 0; i < initialOutputCount(); ++i) {
-        Output o;
-        o.window = xcb_generate_id(m_connection);
-        uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
-        const uint32_t values[] = {
-            m_screen->black_pixel,
-            XCB_EVENT_MASK_KEY_PRESS |
-            XCB_EVENT_MASK_KEY_RELEASE |
-            XCB_EVENT_MASK_BUTTON_PRESS |
-            XCB_EVENT_MASK_BUTTON_RELEASE |
-            XCB_EVENT_MASK_POINTER_MOTION |
-            XCB_EVENT_MASK_ENTER_WINDOW |
-            XCB_EVENT_MASK_LEAVE_WINDOW |
-            XCB_EVENT_MASK_STRUCTURE_NOTIFY |
-            XCB_EVENT_MASK_EXPOSURE
-        };
-        o.scale = initialOutputScale();
-        o.size = initialWindowSize() * o.scale;
-        if (!m_windows.isEmpty()) {
-            const auto &p = m_windows.last();
-            o.internalPosition = QPoint(p.internalPosition.x() + p.size.width() / p.scale, 0);
-        }
-        xcb_create_window(m_connection, XCB_COPY_FROM_PARENT, o.window, m_screen->root,
-                        0, 0, o.size.width(), o.size.height(),
-                        0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, mask, values);
-
-        // select xinput 2 events
-        initXInputForWindow(o.window);
-
-        o.winInfo = new NETWinInfo(m_connection, o.window, m_screen->root, NET::WMWindowType, NET::Properties2());
-        o.winInfo->setWindowType(NET::Normal);
-        o.winInfo->setPid(QCoreApplication::applicationPid());
-        QIcon windowIcon = QIcon::fromTheme(QStringLiteral("kwin"));
-        auto addIcon = [&o, &windowIcon] (const QSize &size) {
-            if (windowIcon.actualSize(size) != size) {
-                return;
-            }
-            NETIcon icon;
-            icon.data = windowIcon.pixmap(size).toImage().bits();
-            icon.size.width = size.width();
-            icon.size.height = size.height();
-            o.winInfo->setIcon(icon, false);
-        };
-        addIcon(QSize(16, 16));
-        addIcon(QSize(32, 32));
-        addIcon(QSize(48, 48));
-
-        xcb_map_window(m_connection, o.window);
+        auto *output = new X11WindowedOutput(this);
+        output->setScale(initialOutputScale());
+        output->setGeometry(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
+        output->init();
 
         m_protocols = protocolsAtom;
         m_deleteWindowProtocol = deleteWindowAtom;
-        xcb_change_property(m_connection, XCB_PROP_MODE_REPLACE, o.window, m_protocols, XCB_ATOM_ATOM, 32, 1, &m_deleteWindowProtocol);
 
-        m_windows << o;
+        xcb_change_property(m_connection,
+                            XCB_PROP_MODE_REPLACE,
+                            output->window(),
+                            m_protocols,
+                            XCB_ATOM_ATOM,
+                            32, 1,
+                            &m_deleteWindowProtocol);
+
+        logicalWidthSum += logicalWidth;
+        m_outputs << output;
     }
 
     updateWindowTitle();
 
     xcb_flush(m_connection);
-}
-
-void X11WindowedBackend::initXInputForWindow(xcb_window_t window)
-{
-    if (!m_hasXInput) {
-        return;
-    }
-#if HAVE_X11_XINPUT
-    XIEventMask evmasks[1];
-    unsigned char mask1[XIMaskLen(XI_LASTEVENT)];
-
-    memset(mask1, 0, sizeof(mask1));
-    XISetMask(mask1, XI_TouchBegin);
-    XISetMask(mask1, XI_TouchUpdate);
-    XISetMask(mask1, XI_TouchOwnership);
-    XISetMask(mask1, XI_TouchEnd);
-    evmasks[0].deviceid = XIAllMasterDevices;
-    evmasks[0].mask_len = sizeof(mask1);
-    evmasks[0].mask = mask1;
-    XISelectEvents(m_display, window, evmasks, 1);
-#else
-    Q_UNUSED(window)
-#endif
 }
 
 void X11WindowedBackend::startEventReading()
@@ -268,15 +210,17 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
         break;
     case XCB_MOTION_NOTIFY: {
             auto event = reinterpret_cast<xcb_motion_notify_event_t*>(e);
-            auto it = std::find_if(m_windows.constBegin(), m_windows.constEnd(), [event] (const Output &o) { return o.window == event->event; });
-            if (it == m_windows.constEnd()) {
+            auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
+                                   [event] (X11WindowedOutput *output) { return output->window() == event->event; }
+                      );
+            if (it == m_outputs.constEnd()) {
                 break;
             }
             //generally we don't need to normalise input to the output scale; however because we're getting input
             //from a host window that doesn't understand scaling, we need to apply it ourselves so the cursor matches
-            pointerMotion(QPointF(event->root_x - (*it).xPosition.x() + (*it).internalPosition.x(),
-                                    event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()) / it->scale,
-                                    event->time);
+            pointerMotion(QPointF(event->root_x - (*it)->hostPosition().x() + (*it)->internalPosition().x(),
+                                  event->root_y - (*it)->hostPosition().y() + (*it)->internalPosition().y()) / (*it)->scale(),
+                          event->time);
         }
         break;
     case XCB_KEY_PRESS:
@@ -301,13 +245,15 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
         break;
     case XCB_ENTER_NOTIFY: {
             auto event = reinterpret_cast<xcb_enter_notify_event_t*>(e);
-            auto it = std::find_if(m_windows.constBegin(), m_windows.constEnd(), [event] (const Output &o) { return o.window == event->event; });
-            if (it == m_windows.constEnd()) {
+            auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
+                                   [event] (X11WindowedOutput *output) { return output->window() == event->event; }
+                      );
+            if (it == m_outputs.constEnd()) {
                 break;
             }
-            pointerMotion(QPointF(event->root_x - (*it).xPosition.x() + (*it).internalPosition.x(),
-                                    event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()) / it->scale,
-                                    event->time);
+            pointerMotion(QPointF(event->root_x - (*it)->hostPosition().x() + (*it)->internalPosition().x(),
+                                  event->root_y - (*it)->hostPosition().y() + (*it)->internalPosition().y()) / (*it)->scale(),
+                          event->time);
         }
         break;
     case XCB_CLIENT_MESSAGE:
@@ -325,15 +271,17 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
     case XCB_GE_GENERIC: {
         GeEventMemMover ge(e);
         auto te = reinterpret_cast<xXIDeviceEvent*>(e);
-        auto it = std::find_if(m_windows.constBegin(), m_windows.constEnd(), [te] (const Output &o) { return o.window == te->event; });
-        if (it == m_windows.constEnd()) {
+        auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
+                               [te] (X11WindowedOutput *output) { return output->window() == te->event; }
+                  );
+        if (it == m_outputs.constEnd()) {
             break;
         }
         QPointF position{
-            fixed1616ToReal(te->root_x) - (*it).xPosition.x() + (*it).internalPosition.x(),
-            fixed1616ToReal(te->root_y) - (*it).xPosition.y() + (*it).internalPosition.y()
+            fixed1616ToReal(te->root_x) - (*it)->hostPosition().x() + (*it)->internalPosition().x(),
+            fixed1616ToReal(te->root_y) - (*it)->hostPosition().y() + (*it)->internalPosition().y()
         };
-        position /= it->scale;
+        position /= (*it)->scale();
 
         switch (ge->event_type) {
 
@@ -407,37 +355,39 @@ void X11WindowedBackend::updateWindowTitle()
     const QString title = QStringLiteral("%1 (%2) - %3").arg(i18n("KDE Wayland Compositor"))
                                                         .arg(waylandServer()->display()->socketName())
                                                         .arg(grab);
-    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-        (*it).winInfo->setName(title.toUtf8().constData());
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        (*it)->setWindowTitle(title);
     }
 }
 
 void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
 {
-    auto it = std::find_if(m_windows.begin(), m_windows.end(), [event] (const Output &o) { return o.window == event->window; });
-    if (it == m_windows.end()) {
+    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+                           [event] (X11WindowedOutput *output) { return output->window() == event->window; }
+              );
+    if (it == m_outputs.end()) {
         return;
     }
     if (event->type == m_protocols && m_protocols != XCB_ATOM_NONE) {
         if (event->data.data32[0] == m_deleteWindowProtocol && m_deleteWindowProtocol != XCB_ATOM_NONE) {
-            if (m_windows.count() == 1) {
+            if (m_outputs.count() == 1) {
                 qCDebug(KWIN_X11WINDOWED) << "Backend window is going to be closed, shutting down.";
                 QCoreApplication::quit();
             } else {
                 // remove the window
                 qCDebug(KWIN_X11WINDOWED) << "Removing one output window.";
-                auto o = *it;
-                it = m_windows.erase(it);
-                xcb_unmap_window(m_connection, o.window);
-                xcb_destroy_window(m_connection, o.window);
-                delete o.winInfo;
+
+                auto removedOutput = *it;
+                it = m_outputs.erase(it);
 
                 // update the sizes
-                int x = o.internalPosition.x();
-                for (; it != m_windows.end(); ++it) {
-                    (*it).internalPosition.setX(x);
-                    x += (*it).size.width();
+                int x = removedOutput->internalPosition().x();
+                for (; it != m_outputs.end(); ++it) {
+                    (*it)->setGeometry(QPoint(x, 0), (*it)->pixelSize());
+                    x += (*it)->geometry().width();
                 }
+
+                delete removedOutput;
                 QMetaObject::invokeMethod(screens(), "updateCount");
             }
         }
@@ -446,8 +396,10 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
 
 void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
 {
-    auto it = std::find_if(m_windows.constBegin(), m_windows.constEnd(), [event] (const Output &o) { return o.window == event->event; });
-    if (it == m_windows.constEnd()) {
+    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
+                           [event] (X11WindowedOutput *output) { return output->window() == event->event; }
+              );
+    if (it == m_outputs.constEnd()) {
         return;
     }
     bool const pressed = (event->response_type & ~0x80) == XCB_BUTTON_PRESS;
@@ -481,9 +433,9 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
         return;
     }
 
-    pointerMotion(QPointF(event->root_x - (*it).xPosition.x() + (*it).internalPosition.x(),
-                            event->root_y - (*it).xPosition.y() + (*it).internalPosition.y()) / it->scale,
-                            event->time);
+    pointerMotion(QPointF(event->root_x - (*it)->hostPosition().x() + (*it)->internalPosition().x(),
+                          event->root_y - (*it)->hostPosition().y() + (*it)->internalPosition().y()) / (*it)->scale(),
+                  event->time);
     if (pressed) {
         pointerButtonPressed(button, event->time);
     } else {
@@ -498,22 +450,20 @@ void X11WindowedBackend::handleExpose(xcb_expose_event_t *event)
 
 void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
 {
-    auto it = std::find_if(m_windows.begin(), m_windows.end(), [event] (const Output &o) { return o.window == event->window; });
-    if (it == m_windows.end()) {
+    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+                           [event] (X11WindowedOutput *output) { return output->window() == event->window; }
+              );
+    if (it == m_outputs.end()) {
         return;
     }
-    (*it).xPosition = QPoint(event->x, event->y);
-    QSize s = QSize(event->width, event->height);
-    if (s != (*it).size) {
-        (*it).size = s;
-        int x = (*it).internalPosition.x() + (*it).size.width() / (*it).scale;
-        it++;
-        for (; it != m_windows.end(); ++it) {
-            (*it).internalPosition.setX(x);
-            x += (*it).size.width() / (*it).scale;
-        }
-        emit sizeChanged();
+
+    (*it)->setHostPosition(QPoint(event->x, event->y));
+
+    const QSize s = QSize(event->width, event->height);
+    if (s != (*it)->pixelSize()) {
+        (*it)->setGeometry((*it)->internalPosition(), s);
     }
+    emit sizeChanged();
 }
 
 void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hotspot)
@@ -534,8 +484,8 @@ void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hots
 
     XRenderPicture pic(pix, 32);
     xcb_render_create_cursor(m_connection, cid, pic, qRound(hotspot.x() * outputScale), qRound(hotspot.y() * outputScale));
-    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-        xcb_change_window_attributes(m_connection, (*it).window, XCB_CW_CURSOR, &cid);
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        xcb_change_window_attributes(m_connection, (*it)->window(), XCB_CW_CURSOR, &cid);
     }
 
     xcb_free_pixmap(m_connection, pix);
@@ -558,7 +508,7 @@ xcb_window_t X11WindowedBackend::rootWindow() const
 
 Screens *X11WindowedBackend::createScreens(QObject *parent)
 {
-    return new BasicScreens(this, parent);
+    return new OutputScreens(this, parent);
 }
 
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
@@ -573,35 +523,27 @@ QPainterBackend *X11WindowedBackend::createQPainterBackend()
 
 void X11WindowedBackend::warpPointer(const QPointF &globalPos)
 {
-    const xcb_window_t w = m_windows.at(0).window;
+    const xcb_window_t w = m_outputs.at(0)->window();
     xcb_warp_pointer(m_connection, w, w, 0, 0, 0, 0, globalPos.x(), globalPos.y());
     xcb_flush(m_connection);
 }
 
 xcb_window_t X11WindowedBackend::windowForScreen(int screen) const
 {
-    if (screen > m_windows.count()) {
+    if (screen > m_outputs.count()) {
         return XCB_WINDOW_NONE;
     }
-    return m_windows.at(screen).window;
+    return m_outputs.at(screen)->window();
 }
 
-QVector<QRect> X11WindowedBackend::screenGeometries() const
+Outputs X11WindowedBackend::outputs() const
 {
-    QVector<QRect> ret;
-    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-        ret << QRect((*it).internalPosition, (*it).size / (*it).scale);
-    }
-    return ret;
+    return m_outputs;
 }
 
-QVector<qreal> X11WindowedBackend::screenScales() const
+Outputs X11WindowedBackend::enabledOutputs() const
 {
-    QVector<qreal> ret;
-    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-        ret << (*it).scale;
-    }
-    return ret;
+    return m_outputs;
 }
 
 }
