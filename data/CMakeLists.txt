@@ -9,5 +9,9 @@ install(TARGETS kwin5_update_default_rules DESTINATION ${LIB_INSTALL_DIR}/kconf_
 
 ########### install files ###############
 
-install( FILES org_kde_kwin.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
+if (${ECM_VERSION} STRGREATER "5.58.0")
+    install(FILES org_kde_kwin.categories DESTINATION  ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
+else()
+    install(FILES org_kde_kwin.categories DESTINATION ${KDE_INSTALL_CONFDIR})
+endif()
 
