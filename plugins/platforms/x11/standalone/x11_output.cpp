@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright 2018 Roman Gilg <subdiff@gmail.com>
+Copyright 2019 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,23 +17,48 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#include "abstract_output.h"
-
-// KF5
-#include <KLocalizedString>
-
-#include <cmath>
+#include "x11_output.h"
+#include "screens.h"
 
 namespace KWin
 {
 
-AbstractOutput::AbstractOutput(QObject *parent)
-    : QObject(parent)
+X11Output::X11Output(QObject *parent)
+    : AbstractOutput(parent)
 {
 }
 
-AbstractOutput::~AbstractOutput()
+QString X11Output::name() const
 {
+    return m_name;
+}
+
+void X11Output::setName(QString set)
+{
+    m_name = set;
+}
+
+QRect X11Output::geometry() const
+{
+    if (m_geometry.isValid()) {
+        return m_geometry;
+    }
+    return QRect(QPoint(0, 0), Screens::self()->displaySize()); // xinerama, lacks RandR
+}
+
+void X11Output::setGeometry(QRect set)
+{
+    m_geometry = set;
+}
+
+int X11Output::refreshRate() const
+{
+    return m_refreshRate;
+}
+
+void X11Output::setRefreshRate(int set)
+{
+    m_refreshRate = set;
 }
 
 }

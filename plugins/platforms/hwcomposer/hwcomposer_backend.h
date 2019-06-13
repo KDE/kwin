@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_HWCOMPOSER_BACKEND_H
 #define KWIN_HWCOMPOSER_BACKEND_H
 #include "platform.h"
-#include "abstract_output.h"
+#include "abstract_wayland_output.h"
 #include "input.h"
 
 #include <QElapsedTimer>
@@ -47,7 +47,7 @@ namespace KWin
 class HwcomposerWindow;
 class BacklightInputEventFilter;
 
-class HwcomposerOutput : public AbstractOutput
+class HwcomposerOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 public:

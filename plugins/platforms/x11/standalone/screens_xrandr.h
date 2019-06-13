@@ -20,40 +20,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCREENS_XRANDR_H
 #define KWIN_SCREENS_XRANDR_H
 // kwin
-#include "screens.h"
+#include "outputscreens.h"
 #include "x11eventfilter.h"
-// Qt
-#include <QVector>
 
 namespace KWin
 {
+class X11StandalonePlatform;
 
-class XRandRScreens : public Screens, public X11EventFilter
+class XRandRScreens : public OutputScreens, public X11EventFilter
 {
     Q_OBJECT
 public:
-    XRandRScreens(QObject *parent);
+    XRandRScreens(X11StandalonePlatform *backend, QObject *parent = nullptr);
     virtual ~XRandRScreens();
     void init() override;
-    QRect geometry(int screen) const override;
-    QString name(int screen) const override;
-    int number(const QPoint& pos) const override;
-    float refreshRate(int screen) const override;
-    QSize size(int screen) const override;
+
     QSize displaySize() const override;
 
     using QObject::event;
     bool event(xcb_generic_event_t *event) override;
 
-protected Q_SLOTS:
+private:
     void updateCount() override;
 
-private:
-    template <typename T>
-    void update();
-    QVector<QRect> m_geometries;
-    QVector<float> m_refreshRates;
-    QVector<QString> m_names;
+    X11StandalonePlatform *m_backend;
 };
 
 } // namespace

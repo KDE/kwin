@@ -51,7 +51,7 @@ namespace KWin
 {
 
 DrmOutput::DrmOutput(DrmBackend *backend)
-    : AbstractOutput(backend)
+    : AbstractWaylandOutput(backend)
     , m_backend(backend)
 {
 }
@@ -180,7 +180,7 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
 {
     const QMatrix4x4 hotspotMatrix = matrixDisplay(m_backend->softwareCursor().size());
 
-    QPoint p = globalPos-AbstractOutput::globalPos();
+    QPoint p = globalPos - AbstractWaylandOutput::globalPos();
     switch (orientation()) {
     case Qt::PrimaryOrientation:
     case Qt::LandscapeOrientation:
@@ -343,7 +343,7 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         modes << mode;
     }
 
-    AbstractOutput::initWaylandOutputDevice(model, manufacturer, m_uuid, modes);
+    AbstractWaylandOutput::initWaylandOutputDevice(model, manufacturer, m_uuid, modes);
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
@@ -819,8 +819,8 @@ QSize DrmOutput::pixelSize() const
 
 void DrmOutput::setWaylandMode()
 {
-    AbstractOutput::setWaylandMode(QSize(m_mode.hdisplay, m_mode.vdisplay),
-                                   refreshRateForMode(&m_mode));
+    AbstractWaylandOutput::setWaylandMode(QSize(m_mode.hdisplay, m_mode.vdisplay),
+                                          refreshRateForMode(&m_mode));
 }
 
 void DrmOutput::pageFlipped()

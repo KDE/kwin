@@ -260,48 +260,6 @@ add_test(NAME kwin_testScreens COMMAND testScreens)
 ecm_mark_as_test(testScreens)
 
 ########################################################
-# Test XrandRScreens
-########################################################
-set( testXRandRScreens_SRCS
-     test_xrandr_screens.cpp
-     mock_abstract_client.cpp
-     mock_client.cpp
-     mock_screens.cpp
-     mock_workspace.cpp
-     ../screens.cpp
-     ../plugins/platforms/x11/standalone/screens_xrandr.cpp
-     ../xcbutils.cpp # init of extensions
-     ../x11eventfilter.cpp
-     ../orientation_sensor.cpp
-)
-kconfig_add_kcfg_files(testXRandRScreens_SRCS ../settings.kcfgc)
-qt5_add_dbus_adaptor( testXRandRScreens_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.kde.kwin.OrientationSensor.xml ${CMAKE_CURRENT_SOURCE_DIR}/../orientation_sensor.h KWin::OrientationSensor)
-add_executable( testXRandRScreens ${testXRandRScreens_SRCS} )
-target_link_libraries( testXRandRScreens
-                       Qt5::Test
-                       Qt5::DBus
-                       Qt5::Gui
-                       Qt5::Sensors
-		       Qt5::Widgets
-                       KF5::ConfigCore
-                       KF5::ConfigGui
-                       KF5::I18n
-                       KF5::Notifications
-                       KF5::WindowSystem
-                       XCB::XCB
-                       XCB::RANDR
-                       XCB::XFIXES
-                       XCB::SYNC
-                       XCB::COMPOSITE
-                       XCB::DAMAGE
-                       XCB::GLX
-                       XCB::SHM
-)
-
-add_test(NAME kwin-testXRandRScreens COMMAND testXRandRScreens)
-ecm_mark_as_test(testXRandRScreens)
-
-########################################################
 # Test ScreenEdges
 ########################################################
 set( testScreenEdges_SRCS

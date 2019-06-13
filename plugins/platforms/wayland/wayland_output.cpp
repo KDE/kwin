@@ -39,7 +39,7 @@ namespace Wayland
 using namespace KWayland::Client;
 
 WaylandOutput::WaylandOutput(Surface *surface, QObject *parent)
-    : AbstractOutput(parent),
+    : AbstractWaylandOutput(parent),
       m_surface(surface)
 {
     connect(surface, &Surface::frameRendered, [this] {

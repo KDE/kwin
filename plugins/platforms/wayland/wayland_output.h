@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_WAYLAND_OUTPUT_H
 #define KWIN_WAYLAND_OUTPUT_H
 
-#include "abstract_output.h"
+#include "abstract_wayland_output.h"
 
 #include <KWayland/Client/xdgshell.h>
 
@@ -46,7 +46,7 @@ namespace Wayland
 {
 class WaylandBackend;
 
-class WaylandOutput : public AbstractOutput
+class WaylandOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 public:

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DRM_OUTPUT_H
 #define KWIN_DRM_OUTPUT_H
 
-#include "abstract_output.h"
+#include "abstract_wayland_output.h"
 #include "drm_pointer.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"
@@ -41,7 +41,7 @@ class DrmPlane;
 class DrmConnector;
 class DrmCrtc;
 
-class KWIN_EXPORT DrmOutput : public AbstractOutput
+class KWIN_EXPORT DrmOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 public:

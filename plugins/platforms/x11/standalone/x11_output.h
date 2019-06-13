@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright 2018 Roman Gilg <subdiff@gmail.com>
+Copyright 2019 Roman Gilg <subdiff@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,23 +17,48 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
+#ifndef KWIN_X11_OUTPUT_H
+#define KWIN_X11_OUTPUT_H
+
 #include "abstract_output.h"
+#include <kwin_export.h>
 
-// KF5
-#include <KLocalizedString>
-
-#include <cmath>
+#include <QObject>
+#include <QRect>
 
 namespace KWin
 {
 
-AbstractOutput::AbstractOutput(QObject *parent)
-    : QObject(parent)
+/**
+ * X11 output representation
+ **/
+class KWIN_EXPORT X11Output : public AbstractOutput
 {
+    Q_OBJECT
+public:
+    explicit X11Output(QObject *parent = nullptr);
+    virtual ~X11Output() = default;
+
+    QString name() const override;
+    void setName(QString set);
+    /**
+     * The geometry of this output in global compositor co-ordinates (i.e scaled)
+     **/
+    QRect geometry() const override;
+    void setGeometry(QRect set);
+
+    /**
+     * Current refresh rate in 1/ms.
+     **/
+    int refreshRate() const override;
+    void setRefreshRate(int set);
+
+private:
+    QString m_name;
+    QRect m_geometry;
+    int m_refreshRate;
+};
+
 }
 
-AbstractOutput::~AbstractOutput()
-{
-}
-
-}
+#endif

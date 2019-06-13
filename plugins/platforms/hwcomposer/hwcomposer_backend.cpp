@@ -482,7 +482,7 @@ void HwcomposerWindow::present(HWComposerNativeWindowBuffer *buffer)
 }
 
 HwcomposerOutput::HwcomposerOutput(hwc_composer_device_1_t *device)
-    : AbstractOutput()
+    : AbstractWaylandOutput()
     , m_device(device)
 {
     uint32_t configs[5];

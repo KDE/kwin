@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_X11WINDOWED_OUTPUT_H
 #define KWIN_X11WINDOWED_OUTPUT_H
 
-#include "abstract_output.h"
+#include "abstract_wayland_output.h"
 #include <kwin_export.h>
 
 #include <QObject>
@@ -38,7 +38,7 @@ class X11WindowedBackend;
 /**
  * Wayland outputs in a nested X11 setup
  **/
-class KWIN_EXPORT X11WindowedOutput : public AbstractOutput
+class KWIN_EXPORT X11WindowedOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 public:

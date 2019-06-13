@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_VIRTUAL_OUTPUT_H
 #define KWIN_VIRTUAL_OUTPUT_H
 
-#include "abstract_output.h"
+#include "abstract_wayland_output.h"
 
 #include <QObject>
 #include <QRect>
@@ -29,7 +29,7 @@ namespace KWin
 {
 class VirtualBackend;
 
-class VirtualOutput : public AbstractOutput
+class VirtualOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 

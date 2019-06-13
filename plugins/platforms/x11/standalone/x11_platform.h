@@ -33,6 +33,7 @@ class SyncFilter;
 class XInputIntegration;
 class WindowSelector;
 class X11EventFilter;
+class X11Output;
 
 class KWIN_EXPORT X11StandalonePlatform : public Platform
 {
@@ -71,6 +72,12 @@ public:
     void createEffectsHandler(Compositor *compositor, Scene *scene) override;
     QVector<CompositingType> supportedCompositors() const override;
 
+    void initOutputs();
+    void updateOutputs();
+
+    Outputs outputs() const override;
+    Outputs enabledOutputs() const override;
+
 protected:
     void doHideCursor() override;
     void doShowCursor() override;
@@ -87,6 +94,9 @@ private:
      **/
     static bool hasGlx();
 
+    template <typename T>
+    void doUpdateOutputs();
+
     XInputIntegration *m_xinputIntegration = nullptr;
     QThread *m_openGLFreezeProtectionThread = nullptr;
     QTimer *m_openGLFreezeProtection = nullptr;
@@ -95,6 +105,7 @@ private:
     QScopedPointer<X11EventFilter> m_screenEdgesFilter;
     std::unique_ptr<SyncFilter> m_syncFilter;
 
+    QVector<X11Output*> m_outputs;
 };
 
 }

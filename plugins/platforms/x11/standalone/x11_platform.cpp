@@ -42,6 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "non_composited_outline.h"
 #include "workspace.h"
 #include "x11_decoration_renderer.h"
+#include "x11_output.h"
+#include "xcbutils.h"
 
 #include <kwinxrenderutils.h>
 
@@ -106,7 +108,7 @@ void X11StandalonePlatform::init()
 
 Screens *X11StandalonePlatform::createScreens(QObject *parent)
 {
-    return new XRandRScreens(parent);
+    return new XRandRScreens(this, parent);
 }
 
 OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
@@ -437,6 +439,111 @@ QVector<CompositingType> X11StandalonePlatform::supportedCompositors() const
 #endif
     compositors << NoCompositing;
     return compositors;
+}
+
+void X11StandalonePlatform::initOutputs()
+{
+    doUpdateOutputs<Xcb::RandR::ScreenResources>();
+}
+
+void X11StandalonePlatform::updateOutputs()
+{
+    doUpdateOutputs<Xcb::RandR::CurrentResources>();
+}
+
+template <typename T>
+void X11StandalonePlatform::doUpdateOutputs()
+{
+    auto fallback = [this]() {
+        auto *o = new X11Output(this);
+        o->setRefreshRate(-1.0f);
+        o->setName(QStringLiteral("Xinerama"));
+        m_outputs << o;
+    };
+
+    // TODO: instead of resetting all outputs, check if new output is added/removed
+    //       or still available and leave still available outputs in m_outputs
+    //       untouched (like in DRM backend)
+    qDeleteAll(m_outputs);
+    m_outputs.clear();
+
+    if (!Xcb::Extensions::self()->isRandrAvailable()) {
+        fallback();
+        return;
+    }
+    T resources(rootWindow());
+    if (resources.isNull()) {
+        fallback();
+        return;
+    }
+    xcb_randr_crtc_t *crtcs = resources.crtcs();
+    xcb_randr_mode_info_t *modes = resources.modes();
+
+    QVector<Xcb::RandR::CrtcInfo> infos(resources->num_crtcs);
+    for (int i = 0; i < resources->num_crtcs; ++i) {
+        infos[i] = Xcb::RandR::CrtcInfo(crtcs[i], resources->config_timestamp);
+    }
+
+    for (int i = 0; i < resources->num_crtcs; ++i) {
+        Xcb::RandR::CrtcInfo info(infos.at(i));
+
+        xcb_randr_output_t *outputs = info.outputs();
+        QVector<Xcb::RandR::OutputInfo> outputInfos(outputs ? resources->num_outputs : 0);
+        if (outputs) {
+            for (int i = 0; i < resources->num_outputs; ++i) {
+                outputInfos[i] = Xcb::RandR::OutputInfo(outputs[i], resources->config_timestamp);
+            }
+        }
+
+        float refreshRate = -1.0f;
+        for (int j = 0; j < resources->num_modes; ++j) {
+            if (info->mode == modes[j].id) {
+                if (modes[j].htotal != 0 && modes[j].vtotal != 0) { // BUG 313996
+                    // refresh rate calculation - WTF was wikipedia 1998 when I needed it?
+                    int dotclock = modes[j].dot_clock,
+                          vtotal = modes[j].vtotal;
+                    if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_INTERLACE)
+                        dotclock *= 2;
+                    if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_DOUBLE_SCAN)
+                        vtotal *= 2;
+                    refreshRate = dotclock/float(modes[j].htotal*vtotal);
+                }
+                break; // found mode
+            }
+        }
+
+        const QRect geo = info.rect();
+        if (geo.isValid()) {
+            auto *o = new X11Output(this);
+            o->setGeometry(geo);
+            o->setRefreshRate(refreshRate);
+
+            QString name;
+            for (int j = 0; j < info->num_outputs; ++j) {
+                Xcb::RandR::OutputInfo outputInfo(outputInfos.at(j));
+                if (crtcs[i] == outputInfo->crtc) {
+                    name = outputInfo.name();
+                    break;
+                }
+            }
+            o->setName(name);
+            m_outputs << o;
+        }
+    }
+
+    if (m_outputs.isEmpty()) {
+        fallback();
+    }
+}
+
+Outputs X11StandalonePlatform::outputs() const
+{
+    return m_outputs;
+}
+
+Outputs X11StandalonePlatform::enabledOutputs() const
+{
+    return m_outputs;
 }
 
 }

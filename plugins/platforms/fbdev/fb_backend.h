@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_FB_BACKEND_H
 #define KWIN_FB_BACKEND_H
-#include "abstract_output.h"
+#include "abstract_wayland_output.h"
 #include "platform.h"
 
 #include <QImage>
@@ -29,12 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class FramebufferOutput : public AbstractOutput
+class FramebufferOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 
 public:
-    FramebufferOutput(QObject *parent = nullptr) : AbstractOutput(parent) {}
+    FramebufferOutput(QObject *parent = nullptr) : AbstractWaylandOutput(parent) {}
     virtual ~FramebufferOutput() = default;
 
     QSize pixelSize() const override {
@@ -45,7 +45,7 @@ public:
     }
 
     void setRawPhysicalSize(const QSize &set) {
-        AbstractOutput::setRawPhysicalSize(set);
+        AbstractWaylandOutput::setRawPhysicalSize(set);
     }
 
 private:

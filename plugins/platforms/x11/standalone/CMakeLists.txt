@@ -3,6 +3,7 @@ set(X11PLATFORM_SOURCES
     logging.cpp
     x11cursor.cpp
     x11_platform.cpp
+    x11_output.cpp
     screens_xrandr.cpp
     windowselector.cpp
     overlaywindow_x11.cpp

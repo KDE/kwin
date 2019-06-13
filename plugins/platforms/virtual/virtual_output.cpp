@@ -23,7 +23,7 @@ namespace KWin
 {
 
 VirtualOutput::VirtualOutput(QObject *parent)
-    : AbstractOutput()
+    : AbstractWaylandOutput()
 {
     Q_UNUSED(parent);
 

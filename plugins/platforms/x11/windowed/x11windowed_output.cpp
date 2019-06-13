@@ -33,7 +33,7 @@ namespace KWin
 {
 
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
-    : AbstractOutput(backend)
+    : AbstractWaylandOutput(backend)
     , m_backend(backend)
 {
     m_window = xcb_generate_id(m_backend->connection());

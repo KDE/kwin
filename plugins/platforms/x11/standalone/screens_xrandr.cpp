@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screens_xrandr.h"
+#include "x11_platform.h"
+
 #ifndef KWIN_UNIT_TEST
 #include "composite.h"
 #include "options.h"
@@ -29,160 +31,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-XRandRScreens::XRandRScreens(QObject *parent)
-    : Screens(parent)
+XRandRScreens::XRandRScreens(X11StandalonePlatform *backend, QObject *parent)
+    : OutputScreens(backend, parent)
     , X11EventFilter(Xcb::Extensions::self()->randrNotifyEvent())
+    , m_backend(backend)
 {
 }
 
 XRandRScreens::~XRandRScreens() = default;
 
-template <typename T>
-void XRandRScreens::update()
-{
-    auto fallback = [this]() {
-        m_geometries << QRect();
-        m_refreshRates << -1.0f;
-        m_names << "Xinerama";
-        setCount(1);
-    };
-    m_geometries.clear();
-    m_names.clear();
-    if (!Xcb::Extensions::self()->isRandrAvailable()) {
-        fallback();
-        return;
-    }
-    T resources(rootWindow());
-    if (resources.isNull()) {
-        fallback();
-        return;
-    }
-    xcb_randr_crtc_t *crtcs = resources.crtcs();
-    xcb_randr_mode_info_t *modes = resources.modes();
-
-    QVector<Xcb::RandR::CrtcInfo> infos(resources->num_crtcs);
-    for (int i = 0; i < resources->num_crtcs; ++i) {
-        infos[i] = Xcb::RandR::CrtcInfo(crtcs[i], resources->config_timestamp);
-    }
-
-    for (int i = 0; i < resources->num_crtcs; ++i) {
-        Xcb::RandR::CrtcInfo info(infos.at(i));
-
-        xcb_randr_output_t *outputs = info.outputs();
-        QVector<Xcb::RandR::OutputInfo> outputInfos(outputs ? resources->num_outputs : 0);
-        if (outputs) {
-            for (int i = 0; i < resources->num_outputs; ++i) {
-                outputInfos[i] = Xcb::RandR::OutputInfo(outputs[i], resources->config_timestamp);
-            }
-        }
-
-        float refreshRate = -1.0f;
-        for (int j = 0; j < resources->num_modes; ++j) {
-            if (info->mode == modes[j].id) {
-                if (modes[j].htotal != 0 && modes[j].vtotal != 0) { // BUG 313996
-                    // refresh rate calculation - WTF was wikipedia 1998 when I needed it?
-                    int dotclock = modes[j].dot_clock,
-                          vtotal = modes[j].vtotal;
-                    if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_INTERLACE)
-                        dotclock *= 2;
-                    if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_DOUBLE_SCAN)
-                        vtotal *= 2;
-                    refreshRate = dotclock/float(modes[j].htotal*vtotal);
-                }
-                break; // found mode
-            }
-        }
-
-        const QRect geo = info.rect();
-        if (geo.isValid()) {
-            m_geometries << geo;
-            m_refreshRates << refreshRate;
-            QString name;
-            for (int j = 0; j < info->num_outputs; ++j) {
-                Xcb::RandR::OutputInfo outputInfo(outputInfos.at(j));
-                if (crtcs[i] == outputInfo->crtc) {
-                    name = outputInfo.name();
-                    break;
-                }
-            }
-            m_names << name;
-        }
-    }
-    if (m_geometries.isEmpty()) {
-        fallback();
-        return;
-    }
-
-    setCount(m_geometries.count());
-}
-
-
 void XRandRScreens::init()
 {
     KWin::Screens::init();
     // we need to call ScreenResources at least once to be able to use current
-    update<Xcb::RandR::ScreenResources>();
+    m_backend->initOutputs();
+    setCount(m_backend->outputs().count());
     emit changed();
-}
-
-QRect XRandRScreens::geometry(int screen) const
-{
-    if (screen >= m_geometries.size() || screen < 0) {
-        return QRect();
-    }
-    return m_geometries.at(screen).isValid() ? m_geometries.at(screen) :
-           QRect(QPoint(0, 0), displaySize()); // xinerama, lacks RandR
-}
-
-QString XRandRScreens::name(int screen) const
-{
-    if (screen >= m_names.size() || screen < 0) {
-        return QString();
-    }
-    return m_names.at(screen);
-}
-
-int XRandRScreens::number(const QPoint &pos) const
-{
-    int bestScreen = 0;
-    int minDistance = INT_MAX;
-    for (int i = 0; i < m_geometries.size(); ++i) {
-        const QRect &geo = m_geometries.at(i);
-        if (geo.contains(pos)) {
-            return i;
-        }
-        int distance = QPoint(geo.topLeft() - pos).manhattanLength();
-        distance = qMin(distance, QPoint(geo.topRight() - pos).manhattanLength());
-        distance = qMin(distance, QPoint(geo.bottomRight() - pos).manhattanLength());
-        distance = qMin(distance, QPoint(geo.bottomLeft() - pos).manhattanLength());
-        if (distance < minDistance) {
-            minDistance = distance;
-            bestScreen = i;
-        }
-    }
-    return bestScreen;
-}
-
-float XRandRScreens::refreshRate(int screen) const
-{
-    if (screen >= m_refreshRates.size() || screen < 0) {
-        return -1.0f;
-    }
-    return m_refreshRates.at(screen);
-}
-
-QSize XRandRScreens::size(int screen) const
-{
-    const QRect geo = geometry(screen);
-    if (!geo.isValid()) {
-        return QSize();
-    }
-    return geo.size();
 }
 
 void XRandRScreens::updateCount()
 {
-    update<Xcb::RandR::CurrentResources>();
+    m_backend->updateOutputs();
+    setCount(m_backend->outputs().count());
 }
 
 bool XRandRScreens::event(xcb_generic_event_t *event)
