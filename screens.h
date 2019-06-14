@@ -214,29 +214,6 @@ private:
     KWIN_SINGLETON(Screens)
 };
 
-/**
- * @brief A base implementation for backends with just a (nested) window
- **/
-class KWIN_EXPORT BasicScreens : public Screens
-{
-    Q_OBJECT
-public:
-    BasicScreens(Platform *backend, QObject *parent = nullptr);
-    virtual ~BasicScreens();
-
-    void init() override;
-    QRect geometry(int screen) const override;
-    int number(const QPoint &pos) const override;
-    QSize size(int screen) const override;
-    qreal scale(int screen) const override;
-    void updateCount() override;
-
-private:
-    Platform *m_backend;
-    QVector<QRect> m_geometries;
-    QVector<qreal> m_scales;
-};
-
 inline
 int Screens::count() const
 {
