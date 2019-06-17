@@ -85,45 +85,78 @@ private:
 };
 
 /**
- * Generic output representation in a Wayland session
+ * Generic output representation.
  **/
 class KWIN_EXPORT AbstractOutput : public QObject
 {
     Q_OBJECT
+
 public:
     explicit AbstractOutput(QObject *parent = nullptr);
-    virtual ~AbstractOutput();
+    ~AbstractOutput() override;
 
+    /**
+     * Returns the human readable name of this output.
+     **/
     virtual QString name() const = 0;
+
+    /**
+     * Returns geometry of this output in device independent pixels.
+     **/
     virtual QRect geometry() const = 0;
 
     /**
-     * Current refresh rate in 1/ms.
+     * Returns the approximate vertical refresh rate of this output, in mHz.
      **/
     virtual int refreshRate() const = 0;
 
-    virtual bool isInternal() const {
-        return false;
-    }
-    virtual qreal scale() const {
-        return 1.;
-    }
-    virtual QSize physicalSize() const {
-        return QSize();
-    }
-    virtual Qt::ScreenOrientation orientation() const {
-        return Qt::PrimaryOrientation;
-    }
+    /**
+     * Returns whether this output is connected through an internal connector,
+     * e.g. LVDS, or eDP.
+     *
+     * Default implementation returns @c false.
+     **/
+    virtual bool isInternal() const;
 
-    virtual int gammaRampSize() const {
-        return 0;
-    }
-    virtual bool setGammaRamp(const GammaRamp &gamma) {
-        Q_UNUSED(gamma);
-        return false;
-    }
+    /**
+     * Returns the ratio between physical pixels and logical pixels.
+     *
+     * Default implementation returns 1.
+     **/
+    virtual qreal scale() const;
+
+    /**
+     * Returns the physical size of this output, in millimeters.
+     *
+     * Default implementation returns an invalid QSize.
+     **/
+    virtual QSize physicalSize() const;
+
+    /**
+     * Returns the orientation of this output.
+     *
+     * Default implementation returns Qt::PrimaryOrientation.
+     **/
+    virtual Qt::ScreenOrientation orientation() const;
+
+    /**
+     * Returns the size of the gamma lookup table.
+     *
+     * Default implementation returns 0.
+     **/
+    virtual int gammaRampSize() const;
+
+    /**
+     * Sets the gamma ramp of this output.
+     *
+     * Returns @c true if the gamma ramp was successfully set.
+     **/
+    virtual bool setGammaRamp(const GammaRamp &gamma);
+
+private:
+    Q_DISABLE_COPY(AbstractOutput)
 };
 
-}
+} // namespace KWin
 
 #endif

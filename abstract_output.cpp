@@ -73,4 +73,35 @@ AbstractOutput::~AbstractOutput()
 {
 }
 
+bool AbstractOutput::isInternal() const
+{
+    return false;
 }
+
+qreal AbstractOutput::scale() const
+{
+    return 1;
+}
+
+QSize AbstractOutput::physicalSize() const
+{
+    return QSize();
+}
+
+Qt::ScreenOrientation AbstractOutput::orientation() const
+{
+    return Qt::PrimaryOrientation;
+}
+
+int AbstractOutput::gammaRampSize() const
+{
+    return 0;
+}
+
+bool AbstractOutput::setGammaRamp(const GammaRamp &gamma)
+{
+    Q_UNUSED(gamma);
+    return false;
+}
+
+} // namespace KWin
