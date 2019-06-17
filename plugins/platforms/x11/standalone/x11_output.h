@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QRect>
 
+#include <xcb/randr.h>
+
 namespace KWin
 {
 
@@ -35,6 +37,7 @@ namespace KWin
 class KWIN_EXPORT X11Output : public AbstractOutput
 {
     Q_OBJECT
+
 public:
     explicit X11Output(QObject *parent = nullptr);
     virtual ~X11Output() = default;
@@ -53,10 +56,23 @@ public:
     int refreshRate() const override;
     void setRefreshRate(int set);
 
+    /**
+     * The size of gamma lookup table.
+     **/
+    int gammaRampSize() const override;
+    bool setGammaRamp(const GammaRamp &gamma) override;
+
 private:
+    void setCrtc(xcb_randr_crtc_t crtc);
+    void setGammaRampSize(int size);
+
+    xcb_randr_crtc_t m_crtc = XCB_NONE;
     QString m_name;
     QRect m_geometry;
+    int m_gammaRampSize;
     int m_refreshRate;
+
+    friend class X11StandalonePlatform;
 };
 
 }

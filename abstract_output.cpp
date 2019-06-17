@@ -17,15 +17,52 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
+
 #include "abstract_output.h"
-
-// KF5
-#include <KLocalizedString>
-
-#include <cmath>
 
 namespace KWin
 {
+
+GammaRamp::GammaRamp(uint32_t size)
+    : m_table(3 * size)
+    , m_size(size)
+{
+}
+
+uint32_t GammaRamp::size() const
+{
+    return m_size;
+}
+
+uint16_t *GammaRamp::red()
+{
+    return m_table.data();
+}
+
+const uint16_t *GammaRamp::red() const
+{
+    return m_table.data();
+}
+
+uint16_t *GammaRamp::green()
+{
+    return m_table.data() + m_size;
+}
+
+const uint16_t *GammaRamp::green() const
+{
+    return m_table.data() + m_size;
+}
+
+uint16_t *GammaRamp::blue()
+{
+    return m_table.data() + 2 * m_size;
+}
+
+const uint16_t *GammaRamp::blue() const
+{
+    return m_table.data() + 2 * m_size;
+}
 
 AbstractOutput::AbstractOutput(QObject *parent)
     : QObject(parent)

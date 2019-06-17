@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "manager.h"
 #include "colorcorrectdbusinterface.h"
 #include "suncalc.h"
-#include "gammaramp.h"
 #include <colorcorrect_logging.h>
 
 #include <main.h>
@@ -513,20 +512,23 @@ void Manager::commitGammaRamps(int temperature)
     const auto outs = kwinApp()->platform()->outputs();
 
     for (auto *o : outs) {
-        int rampsize = o->getGammaRampSize();
+        int rampsize = o->gammaRampSize();
         GammaRamp ramp(rampsize);
 
         /*
          * The gamma calculation below is based on the Redshift app:
          * https://github.com/jonls/redshift
          */
+        uint16_t *red = ramp.red();
+        uint16_t *green = ramp.green();
+        uint16_t *blue = ramp.blue();
 
         // linear default state
         for (int i = 0; i < rampsize; i++) {
                 uint16_t value = (double)i / rampsize * (UINT16_MAX + 1);
-                ramp.red[i] = value;
-                ramp.green[i] = value;
-                ramp.blue[i] = value;
+                red[i] = value;
+                green[i] = value;
+                blue[i] = value;
         }
 
         // approximate white point
@@ -538,9 +540,9 @@ void Manager::commitGammaRamps(int temperature)
         whitePoint[2] = (1. - alpha) * blackbodyColor[bbCIndex + 2] + alpha * blackbodyColor[bbCIndex + 5];
 
         for (int i = 0; i < rampsize; i++) {
-            ramp.red[i] = (double)ramp.red[i] / (UINT16_MAX+1) * whitePoint[0] * (UINT16_MAX+1);
-            ramp.green[i] = (double)ramp.green[i] / (UINT16_MAX+1) * whitePoint[1] * (UINT16_MAX+1);
-            ramp.blue[i] = (double)ramp.blue[i] / (UINT16_MAX+1) * whitePoint[2] * (UINT16_MAX+1);
+            red[i] = qreal(red[i]) / (UINT16_MAX+1) * whitePoint[0] * (UINT16_MAX+1);
+            green[i] = qreal(green[i]) / (UINT16_MAX+1) * whitePoint[1] * (UINT16_MAX+1);
+            blue[i] = qreal(blue[i]) / (UINT16_MAX+1) * whitePoint[2] * (UINT16_MAX+1);
         }
 
         if (o->setGammaRamp(ramp)) {

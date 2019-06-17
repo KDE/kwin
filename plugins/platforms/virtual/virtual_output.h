@@ -41,10 +41,10 @@ public:
 
     void setGeometry(const QRect &geo);
 
-    int getGammaRampSize() const override {
+    int gammaRampSize() const override {
         return m_gammaSize;
     }
-    bool setGammaRamp(const ColorCorrect::GammaRamp &gamma) override {
+    bool setGammaRamp(const GammaRamp &gamma) override {
         Q_UNUSED(gamma);
         return m_gammaResult;
     }

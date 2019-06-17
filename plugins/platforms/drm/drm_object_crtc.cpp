@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_buffer.h"
 #include "drm_pointer.h"
 #include "logging.h"
-#include <colorcorrection/gammaramp.h>
 
 namespace KWin
 {
@@ -114,9 +113,15 @@ bool DrmCrtc::blank()
     return false;
 }
 
-bool DrmCrtc::setGammaRamp(const ColorCorrect::GammaRamp &gamma) {
-    bool isError = drmModeCrtcSetGamma(m_backend->fd(), m_id, gamma.size,
-                                gamma.red, gamma.green, gamma.blue);
+bool DrmCrtc::setGammaRamp(const GammaRamp &gamma)
+{
+    uint16_t *red = const_cast<uint16_t *>(gamma.red());
+    uint16_t *green = const_cast<uint16_t *>(gamma.green());
+    uint16_t *blue = const_cast<uint16_t *>(gamma.blue());
+
+    const bool isError = drmModeCrtcSetGamma(m_backend->fd(), m_id,
+        gamma.size(), red, green, blue);
+
     return !isError;
 }
 

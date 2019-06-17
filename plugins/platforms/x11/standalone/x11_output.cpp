@@ -61,4 +61,31 @@ void X11Output::setRefreshRate(int set)
     m_refreshRate = set;
 }
 
+int X11Output::gammaRampSize() const
+{
+    return m_gammaRampSize;
+}
+
+bool X11Output::setGammaRamp(const GammaRamp &gamma)
+{
+    if (m_crtc == XCB_NONE) {
+        return false;
+    }
+
+    xcb_randr_set_crtc_gamma(connection(), m_crtc, gamma.size(), gamma.red(),
+        gamma.green(), gamma.blue());
+
+    return true;
+}
+
+void X11Output::setCrtc(xcb_randr_crtc_t crtc)
+{
+    m_crtc = crtc;
+}
+
+void X11Output::setGammaRampSize(int size)
+{
+    m_gammaRampSize = size;
+}
+
 }

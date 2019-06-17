@@ -133,8 +133,8 @@ private:
     void transform(KWayland::Server::OutputDeviceInterface::Transform transform) override;
     void automaticRotation();
 
-    int getGammaRampSize() const override;
-    bool setGammaRamp(const ColorCorrect::GammaRamp &gamma) override;
+    int gammaRampSize() const override;
+    bool setGammaRamp(const GammaRamp &gamma) override;
     QMatrix4x4 matrixDisplay(const QSize &s) const;
 
     DrmBackend *m_backend;

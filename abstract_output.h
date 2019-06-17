@@ -25,13 +25,64 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QRect>
 #include <QSize>
+#include <QVector>
 
 namespace KWin
 {
 
-namespace ColorCorrect {
-struct GammaRamp;
-}
+class KWIN_EXPORT GammaRamp
+{
+public:
+    GammaRamp(uint32_t size);
+
+    /**
+     * Returns the size of the gamma ramp.
+     **/
+    uint32_t size() const;
+
+    /**
+     * Returns pointer to the first red component in the gamma ramp.
+     *
+     * The returned pointer can be used for altering the red component
+     * in the gamma ramp.
+     **/
+    uint16_t *red();
+
+    /**
+     * Returns pointer to the first red component in the gamma ramp.
+     **/
+    const uint16_t *red() const;
+
+    /**
+     * Returns pointer to the first green component in the gamma ramp.
+     *
+     * The returned pointer can be used for altering the green component
+     * in the gamma ramp.
+     **/
+    uint16_t *green();
+
+    /**
+     * Returns pointer to the first green component in the gamma ramp.
+     **/
+    const uint16_t *green() const;
+
+    /**
+     * Returns pointer to the first blue component in the gamma ramp.
+     *
+     * The returned pointer can be used for altering the blue component
+     * in the gamma ramp.
+     **/
+    uint16_t *blue();
+
+    /**
+     * Returns pointer to the first blue component in the gamma ramp.
+     **/
+    const uint16_t *blue() const;
+
+private:
+    QVector<uint16_t> m_table;
+    uint32_t m_size;
+};
 
 /**
  * Generic output representation in a Wayland session
@@ -64,10 +115,10 @@ public:
         return Qt::PrimaryOrientation;
     }
 
-    virtual int getGammaRampSize() const {
+    virtual int gammaRampSize() const {
         return 0;
     }
-    virtual bool setGammaRamp(const ColorCorrect::GammaRamp &gamma) {
+    virtual bool setGammaRamp(const GammaRamp &gamma) {
         Q_UNUSED(gamma);
         return false;
     }

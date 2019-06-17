@@ -81,6 +81,8 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
             }
         }
     );
+
+    setSupportsGammaControl(true);
 }
 
 X11StandalonePlatform::~X11StandalonePlatform()
@@ -456,6 +458,7 @@ void X11StandalonePlatform::doUpdateOutputs()
 {
     auto fallback = [this]() {
         auto *o = new X11Output(this);
+        o->setGammaRampSize(0);
         o->setRefreshRate(-1.0f);
         o->setName(QStringLiteral("Xinerama"));
         m_outputs << o;
@@ -514,14 +517,23 @@ void X11StandalonePlatform::doUpdateOutputs()
 
         const QRect geo = info.rect();
         if (geo.isValid()) {
+            xcb_randr_crtc_t crtc = crtcs[i];
+
+            // TODO: Perhaps the output has to save the inherited gamma ramp and
+            // restore it during tear down. Currently neither standalone x11 nor
+            // drm platform do this.
+            Xcb::RandR::CrtcGamma gamma(crtc);
+
             auto *o = new X11Output(this);
+            o->setCrtc(crtc);
+            o->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
             o->setGeometry(geo);
             o->setRefreshRate(refreshRate);
 
             QString name;
             for (int j = 0; j < info->num_outputs; ++j) {
                 Xcb::RandR::OutputInfo outputInfo(outputInfos.at(j));
-                if (crtcs[i] == outputInfo->crtc) {
+                if (crtc == outputInfo->crtc) {
                     name = outputInfo.name();
                     break;
                 }
