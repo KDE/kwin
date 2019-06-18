@@ -416,9 +416,29 @@ bool GlxBackend::initFbConfig()
         0
     };
 
-    // Try to find a double buffered configuration
+    const int attribs_srgb[] = {
+        GLX_RENDER_TYPE,                  GLX_RGBA_BIT,
+        GLX_DRAWABLE_TYPE,                GLX_WINDOW_BIT,
+        GLX_RED_SIZE,                     1,
+        GLX_GREEN_SIZE,                   1,
+        GLX_BLUE_SIZE,                    1,
+        GLX_ALPHA_SIZE,                   0,
+        GLX_DEPTH_SIZE,                   0,
+        GLX_STENCIL_SIZE,                 0,
+        GLX_CONFIG_CAVEAT,                GLX_NONE,
+        GLX_DOUBLEBUFFER,                 true,
+        GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB, true,
+        0
+    };
+
+    // Try to find a double buffered sRGB capable configuration
     int count = 0;
-    GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
+    GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs_srgb, &count);
+
+    if (count == 0) {
+        // Try to find a double buffered non-sRGB capable configuration
+        configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
+    }
 
     struct FBConfig {
         GLXFBConfig config;
@@ -452,7 +472,7 @@ bool GlxBackend::initFbConfig()
     if (candidates.size() > 0) {
         fbconfig = candidates.front().config;
 
-        int fbconfig_id, visual_id, red, green, blue, alpha, depth, stencil;
+        int fbconfig_id, visual_id, red, green, blue, alpha, depth, stencil, srgb;
         glXGetFBConfigAttrib(display(), fbconfig, GLX_FBCONFIG_ID,  &fbconfig_id);
         glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID,    &visual_id);
         glXGetFBConfigAttrib(display(), fbconfig, GLX_RED_SIZE,     &red);
@@ -461,9 +481,10 @@ bool GlxBackend::initFbConfig()
         glXGetFBConfigAttrib(display(), fbconfig, GLX_ALPHA_SIZE,   &alpha);
         glXGetFBConfigAttrib(display(), fbconfig, GLX_DEPTH_SIZE,   &depth);
         glXGetFBConfigAttrib(display(), fbconfig, GLX_STENCIL_SIZE, &stencil);
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB, &srgb);
 
-        qCDebug(KWIN_X11STANDALONE, "Choosing GLXFBConfig %#x X visual %#x depth %d RGBA %d:%d:%d:%d ZS %d:%d",
-                fbconfig_id, visual_id, visualDepth(visual_id), red, green, blue, alpha, depth, stencil);
+        qCDebug(KWIN_X11STANDALONE, "Choosing GLXFBConfig %#x X visual %#x depth %d RGBA %d:%d:%d:%d ZS %d:%d sRGB: %d",
+                fbconfig_id, visual_id, visualDepth(visual_id), red, green, blue, alpha, depth, stencil, srgb);
     }
 
     if (fbconfig == nullptr) {
