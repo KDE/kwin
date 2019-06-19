@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QLabel>
 #include <QPushButton>
+#include <QSurfaceFormat>
 #include <QVBoxLayout>
 #include <QX11Info>
 
@@ -416,6 +417,11 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     KWin::Application::createAboutData();
     KQuickAddons::QtQuickSettings::init();
+
+    // disables vsync for any QtQuick windows we create (BUG 406180)
+    QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+    format.setSwapInterval(0);
+    QSurfaceFormat::setDefaultFormat(format);
 
     QCommandLineOption replaceOption(QStringLiteral("replace"), i18n("Replace already-running ICCCM2.0-compliant window manager"));
 
