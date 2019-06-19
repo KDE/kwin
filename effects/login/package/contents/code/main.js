@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "use strict";
 
 var loginEffect = {
-    duration: animationTime(2000),
+    duration: animationTime(1000),
     isFadeToBlack: false,
     loadConfig: function () {
         loginEffect.isFadeToBlack = effect.readConfig("FadeToBlack", false);
