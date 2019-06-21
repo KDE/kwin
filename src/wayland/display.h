@@ -91,6 +91,7 @@ class PlasmaVirtualDesktopManagementInterface;
 class XdgOutputManagerInterface;
 class XdgDecorationManagerInterface;
 class EglStreamControllerInterface;
+class KeyStateInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -203,6 +204,10 @@ public:
     ContrastManagerInterface *createContrastManager(QObject *parent = nullptr);
     SlideManagerInterface *createSlideManager(QObject *parent = nullptr);
     DpmsManagerInterface *createDpmsManager(QObject *parent = nullptr);
+
+    /** @since 5.57 */
+    KeyStateInterface *createKeyStateInterface(QObject *parent = nullptr);
+
     /**
      * @since 5.6
      **/

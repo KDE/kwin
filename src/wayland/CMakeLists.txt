@@ -16,6 +16,7 @@ set(SERVER_LIB_SRCS
     idleinhibit_interface_v1.cpp
     fakeinput_interface.cpp
     keyboard_interface.cpp
+    keystate_interface.cpp
     remote_access_interface.cpp
     outputconfiguration_interface.cpp
     outputchangeset.cpp
@@ -208,6 +209,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME eglstream-controller
 )
 
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/keystate.xml
+    BASENAME keystate
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-server-protocol.h
@@ -317,6 +323,7 @@ set(SERVER_LIB_HEADERS
   idle_interface.h
   idleinhibit_interface.h
   keyboard_interface.h
+  keystate_interface.h
   remote_access_interface.h
   outputdevice_interface.h
   outputchangeset.h
