@@ -1868,6 +1868,8 @@ void InputRedirection::setupLibInput()
 
         conn->setInputConfig(kwinApp()->inputConfig());
         conn->updateLEDs(m_keyboard->xkb()->leds());
+        waylandServer()->updateKeyState(m_keyboard->xkb()->leds());
+        connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, waylandServer(), &WaylandServer::updateKeyState);
         connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, conn, &LibInput::Connection::updateLEDs);
         connect(conn, &LibInput::Connection::eventsRead, this,
             [this] {

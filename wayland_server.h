@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_WAYLAND_SERVER_H
 
 #include <kwinglobals.h>
+#include "keyboard_input.h"
 
 #include <QObject>
 
@@ -66,6 +67,7 @@ class XdgDecorationManagerInterface;
 class XdgShellInterface;
 class XdgForeignInterface;
 class XdgOutputManagerInterface;
+class KeyStateInterface;
 }
 }
 
@@ -220,6 +222,7 @@ public:
     SocketPairConnection createConnection();
 
     void simulateUserActivity();
+    void updateKeyState(KWin::Xkb::LEDs leds);
 
 Q_SIGNALS:
     void shellClientAdded(KWin::ShellClient*);
@@ -275,6 +278,7 @@ private:
 
     } m_internalConnection;
     KWayland::Server::XdgForeignInterface *m_XdgForeign = nullptr;
+    KWayland::Server::KeyStateInterface *m_keyState = nullptr;
     QList<ShellClient*> m_clients;
     QList<ShellClient*> m_internalClients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;

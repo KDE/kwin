@@ -65,7 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/xdgshell_interface.h>
 #include <KWayland/Server/xdgforeign_interface.h>
 #include <KWayland/Server/xdgoutput_interface.h>
-
+#include <KWayland/Server/keystate_interface.h>
 
 // Qt
 #include <QDir>
@@ -374,6 +374,9 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 
     m_XdgForeign = m_display->createXdgForeignInterface(m_display);
     m_XdgForeign->create();
+
+    m_keyState = m_display->createKeyStateInterface(m_display);
+    m_keyState->create();
 
     return true;
 }
@@ -754,6 +757,16 @@ void WaylandServer::simulateUserActivity()
     if (m_idle) {
         m_idle->simulateUserActivity();
     }
+}
+
+void WaylandServer::updateKeyState(KWin::Xkb::LEDs leds)
+{
+    if (!m_keyState)
+        return;
+
+    m_keyState->setState(KeyStateInterface::Key::CapsLock, leds & KWin::Xkb::LED::CapsLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
+    m_keyState->setState(KeyStateInterface::Key::NumLock, leds & KWin::Xkb::LED::NumLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
+    m_keyState->setState(KeyStateInterface::Key::ScrollLock, leds & KWin::Xkb::LED::ScrollLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
 }
 
 }
