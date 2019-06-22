@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_COMPOSITE_H
 // KWin
 #include <kwinglobals.h>
-// KDE
-#include <KSelectionOwner>
 // Qt
 #include <QObject>
 #include <QElapsedTimer>
@@ -35,19 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin {
 
 class Client;
+class CompositorSelectionOwner;
 class Scene;
-
-class CompositorSelectionOwner : public KSelectionOwner
-{
-    Q_OBJECT
-public:
-    CompositorSelectionOwner(const char *selection);
-private:
-    friend class Compositor;
-    bool owning;
-private Q_SLOTS:
-    void looseOwnership();
-};
 
 class KWIN_EXPORT Compositor : public QObject {
     Q_OBJECT
@@ -216,7 +203,7 @@ private:
     SuspendReasons m_suspended;
 
     QBasicTimer compositeTimer;
-    CompositorSelectionOwner* cm_selection;
+    CompositorSelectionOwner *m_selectionOwner;
     QTimer m_releaseSelectionTimer;
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;

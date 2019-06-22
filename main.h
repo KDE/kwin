@@ -25,8 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 #include <config-kwin.h>
 
-#include <KSelectionWatcher>
-#include <KSelectionOwner>
 #include <KSharedConfig>
 // Qt
 #include <QApplication>

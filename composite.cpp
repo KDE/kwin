@@ -46,7 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPluginLoader>
 #include <KPluginMetaData>
 #include <KNotification>
-#include <KSelectionWatcher>
+#include <KSelectionOwner>
 
 #include <QDateTime>
 #include <QFutureWatcher>
@@ -69,15 +69,26 @@ namespace KWin
 
 extern int currentRefreshRate();
 
-CompositorSelectionOwner::CompositorSelectionOwner(const char *selection) : KSelectionOwner(selection, connection(), rootWindow()), owning(false)
+class CompositorSelectionOwner : public KSelectionOwner
 {
-    connect (this, SIGNAL(lostOwnership()), SLOT(looseOwnership()));
-}
-
-void CompositorSelectionOwner::looseOwnership()
-{
-    owning = false;
-}
+    Q_OBJECT
+public:
+    CompositorSelectionOwner(const char *selection)
+        : KSelectionOwner(selection, connection(), rootWindow())
+        , m_owning(false)
+    {
+        connect (this, &CompositorSelectionOwner::lostOwnership,
+                 this, [this]() { m_owning = false; });
+    }
+    bool owning() const {
+        return m_owning;
+    }
+    void setOwning(bool own) {
+        m_owning = own;
+    }
+private:
+    bool m_owning;
+};
 
 KWIN_SINGLETON_FACTORY_VARIABLE(Compositor, s_compositor)
 
@@ -87,7 +98,7 @@ static inline qint64 nanoToMilli(int nano) { return nano / (1000*1000); }
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
     , m_suspended(options->isUseCompositing() ? NoReasonSuspend : UserSuspend)
-    , cm_selection(NULL)
+    , m_selectionOwner(NULL)
     , vBlankInterval(0)
     , fpsInterval(0)
     , m_xrrRefreshRate(0)
@@ -133,8 +144,8 @@ Compositor::Compositor(QObject* workspace)
     );
     connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this,
         [this] {
-            delete cm_selection;
-            cm_selection = nullptr;
+            delete m_selectionOwner;
+            m_selectionOwner = nullptr;
         }
     );
 
@@ -150,7 +161,7 @@ Compositor::~Compositor()
     emit aboutToDestroy();
     finish();
     deleteUnusedSupportProperties();
-    delete cm_selection;
+    delete m_selectionOwner;
     s_compositor = NULL;
 }
 
@@ -249,9 +260,9 @@ void Compositor::slotCompositingOptionsInitialized()
         delete m_scene;
         m_scene = NULL;
         m_starting = false;
-        if (cm_selection) {
-            cm_selection->owning = false;
-            cm_selection->release();
+        if (m_selectionOwner) {
+            m_selectionOwner->setOwning(false);
+            m_selectionOwner->release();
         }
         if (!supportedCompositors.contains(NoCompositing)) {
             qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
@@ -280,19 +291,19 @@ void Compositor::slotCompositingOptionsInitialized()
 
 void Compositor::claimCompositorSelection()
 {
-    if (!cm_selection) {
+    if (!m_selectionOwner) {
         char selection_name[ 100 ];
         sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
-        cm_selection = new CompositorSelectionOwner(selection_name);
-        connect(cm_selection, SIGNAL(lostOwnership()), SLOT(finish()));
+        m_selectionOwner = new CompositorSelectionOwner(selection_name);
+        connect(m_selectionOwner, &CompositorSelectionOwner::lostOwnership, this, &Compositor::finish);
     }
 
-    if (!cm_selection) // no X11 yet
+    if (!m_selectionOwner) // no X11 yet
         return;
 
-    if (!cm_selection->owning) {
-        cm_selection->claim(true);   // force claiming
-        cm_selection->owning = true;
+    if (!m_selectionOwner->owning()) {
+        m_selectionOwner->claim(true);   // force claiming
+        m_selectionOwner->setOwning(true);
     }
 }
 
@@ -300,8 +311,8 @@ void Compositor::setupX11Support()
 {
     auto c = kwinApp()->x11Connection();
     if (!c) {
-        delete cm_selection;
-        cm_selection = nullptr;
+        delete m_selectionOwner;
+        m_selectionOwner = nullptr;
         return;
     }
     claimCompositorSelection();
@@ -446,9 +457,9 @@ void Compositor::releaseCompositorSelection()
         return;
     }
     qCDebug(KWIN_CORE) << "Releasing compositor selection";
-    if (cm_selection) {
-        cm_selection->owning = false;
-        cm_selection->release();
+    if (m_selectionOwner) {
+        m_selectionOwner->setOwning(false);
+        m_selectionOwner->release();
     }
 }
 
@@ -920,3 +931,6 @@ bool Compositor::isOverlayWindowVisible() const
 }
 
 } // namespace
+
+// included for CompositorSelectionOwner
+#include "composite.moc"

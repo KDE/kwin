@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 
 #include <KLocalizedString>
+#include <KSelectionOwner>
 
 #include "xcbutils.h"
 
