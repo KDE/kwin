@@ -591,7 +591,9 @@ void ShellClient::updateDecoration(bool check_workspace_pos, bool force)
     if (m_xdgDecoration) {
         auto mode = isDecorated() || m_userNoBorder ? XdgDecorationInterface::Mode::ServerSide: XdgDecorationInterface::Mode::ClientSide;
         m_xdgDecoration->configure(mode);
-        m_xdgShellSurface->configure(xdgSurfaceStates(), m_requestedClientSize);
+        if (m_requestGeometryBlockCounter == 0) {
+            m_xdgShellSurface->configure(xdgSurfaceStates(), m_requestedClientSize);
+        }
     }
     getShadow();
     if (check_workspace_pos)
