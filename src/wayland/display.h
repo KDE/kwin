@@ -205,7 +205,7 @@ public:
     SlideManagerInterface *createSlideManager(QObject *parent = nullptr);
     DpmsManagerInterface *createDpmsManager(QObject *parent = nullptr);
 
-    /** @since 5.57 */
+    /** @since 5.60 */
     KeyStateInterface *createKeyStateInterface(QObject *parent = nullptr);
 
     /**
