@@ -1748,6 +1748,11 @@ Toplevel *Workspace::findInternal(QWindow *w) const
     }
 }
 
+bool Workspace::compositing() const
+{
+    return m_compositor && m_compositor->hasScene();
+}
+
 void Workspace::markXStackingOrderAsDirty()
 {
     m_xStackingDirty = true;

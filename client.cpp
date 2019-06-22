@@ -704,6 +704,23 @@ void Client::hideClient(bool hide)
     updateVisibility();
 }
 
+bool Client::setupCompositing()
+{
+    if (!Toplevel::setupCompositing()){
+        return false;
+    }
+    updateVisibility(); // for internalKeep()
+    return true;
+}
+
+void Client::finishCompositing(ReleaseReason releaseReason)
+{
+    Toplevel::finishCompositing(releaseReason);
+    updateVisibility();
+    // for safety in case KWin is just resizing the window
+    resetHaveResizeEffect();
+}
+
 /**
  * Returns whether the window is minimizable or not
  **/

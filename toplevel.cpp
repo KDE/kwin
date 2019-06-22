@@ -17,7 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-
 #include "toplevel.h"
 
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -26,9 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "client.h"
 #include "client_machine.h"
+#include "composite.h"
 #include "effects.h"
 #include "screens.h"
 #include "shadow.h"
+#include "workspace.h"
 #include "xcbutils.h"
 
 #include <KWayland/Server/surface_interface.h>
@@ -254,6 +255,243 @@ void Toplevel::setOpacity(double new_opacity)
         addRepaintFull();
         emit opacityChanged(this, old_opacity);
     }
+}
+
+bool Toplevel::setupCompositing()
+{
+    if (!compositing())
+        return false;
+
+    if (damage_handle != XCB_NONE)
+        return false;
+
+    if (kwinApp()->operationMode() == Application::OperationModeX11 && !surface()) {
+        damage_handle = xcb_generate_id(connection());
+        xcb_damage_create(connection(), damage_handle, frameId(), XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
+    }
+
+    damage_region = QRegion(0, 0, width(), height());
+    effect_window = new EffectWindowImpl(this);
+
+    Compositor::self()->scene()->addToplevel(this);
+
+    return true;
+}
+
+void Toplevel::finishCompositing(ReleaseReason releaseReason)
+{
+    if (kwinApp()->operationMode() == Application::OperationModeX11 && damage_handle == XCB_NONE)
+        return;
+    if (effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
+        discardWindowPixmap();
+        delete effect_window;
+    }
+
+    if (damage_handle != XCB_NONE &&
+            releaseReason != ReleaseReason::Destroyed) {
+        xcb_damage_destroy(connection(), damage_handle);
+    }
+
+    damage_handle = XCB_NONE;
+    damage_region = QRegion();
+    repaints_region = QRegion();
+    effect_window = NULL;
+}
+
+void Toplevel::discardWindowPixmap()
+{
+    addDamageFull();
+    if (effectWindow() != NULL && effectWindow()->sceneWindow() != NULL)
+        effectWindow()->sceneWindow()->pixmapDiscarded();
+}
+
+void Toplevel::damageNotifyEvent()
+{
+    m_isDamaged = true;
+
+    // Note: The rect is supposed to specify the damage extents,
+    //       but we don't know it at this point. No one who connects
+    //       to this signal uses the rect however.
+    emit damaged(this, QRect());
+}
+
+bool Toplevel::compositing() const
+{
+    if (!Workspace::self()) {
+        return false;
+    }
+    return Workspace::self()->compositing();
+}
+
+void Client::damageNotifyEvent()
+{
+    if (syncRequest.isPending && isResize()) {
+        emit damaged(this, QRect());
+        m_isDamaged = true;
+        return;
+    }
+
+    if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
+        if (syncRequest.counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
+            setReadyForPainting();
+            setupWindowManagementInterface();
+        }
+    }
+
+    Toplevel::damageNotifyEvent();
+}
+
+bool Toplevel::resetAndFetchDamage()
+{
+    if (!m_isDamaged)
+        return false;
+
+    if (damage_handle == XCB_NONE) {
+        m_isDamaged = false;
+        return true;
+    }
+
+    xcb_connection_t *conn = connection();
+
+    // Create a new region and copy the damage region to it,
+    // resetting the damaged state.
+    xcb_xfixes_region_t region = xcb_generate_id(conn);
+    xcb_xfixes_create_region(conn, region, 0, 0);
+    xcb_damage_subtract(conn, damage_handle, 0, region);
+
+    // Send a fetch-region request and destroy the region
+    m_regionCookie = xcb_xfixes_fetch_region_unchecked(conn, region);
+    xcb_xfixes_destroy_region(conn, region);
+
+    m_isDamaged = false;
+    m_damageReplyPending = true;
+
+    return m_damageReplyPending;
+}
+
+void Toplevel::getDamageRegionReply()
+{
+    if (!m_damageReplyPending)
+        return;
+
+    m_damageReplyPending = false;
+
+    // Get the fetch-region reply
+    xcb_xfixes_fetch_region_reply_t *reply =
+            xcb_xfixes_fetch_region_reply(connection(), m_regionCookie, 0);
+
+    if (!reply)
+        return;
+
+    // Convert the reply to a QRegion
+    int count = xcb_xfixes_fetch_region_rectangles_length(reply);
+    QRegion region;
+
+    if (count > 1 && count < 16) {
+        xcb_rectangle_t *rects = xcb_xfixes_fetch_region_rectangles(reply);
+
+        QVector<QRect> qrects;
+        qrects.reserve(count);
+
+        for (int i = 0; i < count; i++)
+            qrects << QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height);
+
+        region.setRects(qrects.constData(), count);
+    } else
+        region += QRect(reply->extents.x, reply->extents.y,
+                        reply->extents.width, reply->extents.height);
+
+    damage_region += region;
+    repaints_region += region;
+
+    free(reply);
+}
+
+void Toplevel::addDamageFull()
+{
+    if (!compositing())
+        return;
+
+    damage_region = rect();
+    repaints_region |= rect();
+
+    emit damaged(this, rect());
+}
+
+void Toplevel::resetDamage()
+{
+    damage_region = QRegion();
+}
+
+void Toplevel::addRepaint(const QRect& r)
+{
+    if (!compositing()) {
+        return;
+    }
+    repaints_region += r;
+    emit needsRepaint();
+}
+
+void Toplevel::addRepaint(int x, int y, int w, int h)
+{
+    QRect r(x, y, w, h);
+    addRepaint(r);
+}
+
+void Toplevel::addRepaint(const QRegion& r)
+{
+    if (!compositing()) {
+        return;
+    }
+    repaints_region += r;
+    emit needsRepaint();
+}
+
+void Toplevel::addLayerRepaint(const QRect& r)
+{
+    if (!compositing()) {
+        return;
+    }
+    layer_repaints_region += r;
+    emit needsRepaint();
+}
+
+void Toplevel::addLayerRepaint(int x, int y, int w, int h)
+{
+    QRect r(x, y, w, h);
+    addLayerRepaint(r);
+}
+
+void Toplevel::addLayerRepaint(const QRegion& r)
+{
+    if (!compositing())
+        return;
+    layer_repaints_region += r;
+    emit needsRepaint();
+}
+
+void Toplevel::addRepaintFull()
+{
+    repaints_region = visibleRect().translated(-pos());
+    emit needsRepaint();
+}
+
+void Toplevel::resetRepaints()
+{
+    repaints_region = QRegion();
+    layer_repaints_region = QRegion();
+}
+
+void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)
+{
+    addWorkspaceRepaint(QRect(x, y, w, h));
+}
+
+void Toplevel::addWorkspaceRepaint(const QRect& r2)
+{
+    if (!compositing())
+        return;
+    Compositor::self()->addRepaint(r2);
 }
 
 void Toplevel::setReadyForPainting()
