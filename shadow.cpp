@@ -124,7 +124,7 @@ Shadow *Shadow::createShadowFromWayland(Toplevel *toplevel)
 QVector< uint32_t > Shadow::readX11ShadowProperty(xcb_window_t id)
 {
     QVector<uint32_t> ret;
-    if (id != XCB_WINDOW) {
+    if (id != XCB_WINDOW_NONE) {
         Xcb::Property property(false, id, atoms->kde_net_wm_shadow, XCB_ATOM_CARDINAL, 0, 12);
         uint32_t *shadow = property.value<uint32_t*>();
         if (shadow) {
