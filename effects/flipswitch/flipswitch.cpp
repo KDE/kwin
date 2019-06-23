@@ -75,6 +75,10 @@ FlipSwitchEffect::FlipSwitchEffect()
     connect(effects, &EffectsHandler::tabBoxClosed, this, &FlipSwitchEffect::slotTabBoxClosed);
     connect(effects, &EffectsHandler::tabBoxUpdated, this, &FlipSwitchEffect::slotTabBoxUpdated);
     connect(effects, &EffectsHandler::tabBoxKeyEvent, this, &FlipSwitchEffect::slotTabBoxKeyEvent);
+    connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
+        setActive(false, AllDesktopsMode);
+        setActive(false, CurrentDesktopMode);
+    });
 }
 
 FlipSwitchEffect::~FlipSwitchEffect()

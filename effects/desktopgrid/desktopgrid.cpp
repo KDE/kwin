@@ -88,6 +88,14 @@ DesktopGridEffect::DesktopGridEffect()
     connect(effects, &EffectsHandler::windowGeometryShapeChanged, this, &DesktopGridEffect::slotWindowGeometryShapeChanged);
     connect(effects, &EffectsHandler::numberScreensChanged, this, &DesktopGridEffect::setup);
 
+    connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
+        setActive(false);
+        if (keyboardGrab) {
+            effects->ungrabKeyboard();
+            keyboardGrab = false;
+        }
+    });
+
     // Load all other configuration details
     reconfigure(ReconfigureAll);
 }

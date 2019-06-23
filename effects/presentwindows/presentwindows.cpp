@@ -111,6 +111,9 @@ PresentWindowsEffect::PresentWindowsEffect()
                 reCreateGrids();
         }
     );
+    connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
+        setActive(false);
+    });
 }
 
 PresentWindowsEffect::~PresentWindowsEffect()

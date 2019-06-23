@@ -101,6 +101,16 @@ CubeEffect::CubeEffect()
     connect(effects, &EffectsHandler::tabBoxAdded, this, &CubeEffect::slotTabBoxAdded);
     connect(effects, &EffectsHandler::tabBoxClosed, this, &CubeEffect::slotTabBoxClosed);
     connect(effects, &EffectsHandler::tabBoxUpdated, this, &CubeEffect::slotTabBoxUpdated);
+    connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
+        // Set active(false) does not release key grabs until the animation completes
+        // As we know the lockscreen is trying to grab them, release them early
+        // all other grabs are released in the normal way
+        setActive(false);
+        if (keyboard_grab) {
+            effects->ungrabKeyboard();
+            keyboard_grab = false;
+        }
+    });
 
     reconfigure(ReconfigureAll);
 }

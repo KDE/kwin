@@ -1662,6 +1662,13 @@ Q_SIGNALS:
     void screenLockingChanged(bool locked);
 
     /**
+     * This signal is emitted just before the screen locker tries to grab keys and lock the screen
+     * Effects should release any grabs immediately
+     * @since 5.17
+     **/
+    void screenAboutToLock();
+
+    /**
      * This signels is emitted when ever the stacking order is change, ie. a window is risen
      * or lowered
      * @since 4.10

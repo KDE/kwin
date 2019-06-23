@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtConcurrentRun>
 // dbus generated
 #include "screenlocker_interface.h"
+#include "kscreenlocker_interface.h"
 
 namespace KWin
 {
@@ -34,7 +35,6 @@ static const QString SCREEN_LOCKER_SERVICE_NAME = QStringLiteral("org.freedeskto
 
 ScreenLockerWatcher::ScreenLockerWatcher(QObject *parent)
     : QObject(parent)
-    , m_interface(NULL)
     , m_serviceWatcher(new QDBusServiceWatcher(this))
     , m_locked(false)
 {
@@ -70,13 +70,18 @@ void ScreenLockerWatcher::serviceOwnerChanged(const QString &serviceName, const 
         return;
     }
     delete m_interface;
-    m_interface = NULL;
+    m_interface = nullptr;
+    delete m_kdeInterface;
+    m_kdeInterface = nullptr;
+
     m_locked = false;
     if (!newOwner.isEmpty()) {
         m_interface = new OrgFreedesktopScreenSaverInterface(newOwner, QStringLiteral("/ScreenSaver"), QDBusConnection::sessionBus(), this);
+        m_kdeInterface = new OrgKdeScreensaverInterface(newOwner, QStringLiteral("/ScreenSaver"), QDBusConnection::sessionBus(), this);
         connect(m_interface, SIGNAL(ActiveChanged(bool)), SLOT(setLocked(bool)));
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(m_interface->GetActive(), this);
         connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(activeQueried(QDBusPendingCallWatcher*)));
+        connect(m_kdeInterface, &OrgKdeScreensaverInterface::AboutToLock, this, &ScreenLockerWatcher::aboutToLock);
     }
 }
 

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 
 class OrgFreedesktopScreenSaverInterface;
+class OrgKdeScreensaverInterface;
 class QDBusServiceWatcher;
 class QDBusPendingCallWatcher;
 
@@ -41,6 +42,7 @@ public:
     }
 Q_SIGNALS:
     void locked(bool locked);
+    void aboutToLock();
 private Q_SLOTS:
     void setLocked(bool activated);
     void activeQueried(QDBusPendingCallWatcher *watcher);
@@ -49,7 +51,8 @@ private Q_SLOTS:
     void serviceOwnerQueried();
 private:
     void initialize();
-    OrgFreedesktopScreenSaverInterface *m_interface;
+    OrgFreedesktopScreenSaverInterface *m_interface = nullptr;
+    OrgKdeScreensaverInterface *m_kdeInterface = nullptr;
     QDBusServiceWatcher *m_serviceWatcher;
     bool m_locked;
 
