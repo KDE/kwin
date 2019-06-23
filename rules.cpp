@@ -938,7 +938,7 @@ void AbstractClient::applyWindowRules()
         workspace()->activateNextClient(this);
     // Closeable
     QSize s = adjustedSize();
-    if (s != size())
+    if (s != size() && s.isValid())
         resizeWithChecks(s);
     // Autogrouping : Only checked on window manage
     // AutogroupInForeground : Only checked on window manage
