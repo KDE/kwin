@@ -18,8 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_SCENE_OPENGL_TEXTURE_H
-#define KWIN_SCENE_OPENGL_TEXTURE_H
+#pragma once
 
 #include <kwingltexture.h>
 #include <kwingltexture_p.h>
@@ -28,37 +27,34 @@ namespace KWin
 {
 
 class OpenGLBackend;
-class WindowPixmap;
 class SceneOpenGLTexturePrivate;
+class WindowPixmap;
 
-class SceneOpenGLTexture
-    : public GLTexture
+class SceneOpenGLTexture : public GLTexture
 {
 public:
-    SceneOpenGLTexture(OpenGLBackend *backend);
-    virtual ~SceneOpenGLTexture();
+    explicit SceneOpenGLTexture(OpenGLBackend *backend);
+    ~SceneOpenGLTexture() override;
 
     SceneOpenGLTexture & operator = (const SceneOpenGLTexture& tex);
 
     void discard() override final;
 
-protected:
+private:
+    SceneOpenGLTexture(SceneOpenGLTexturePrivate& dd);
+
     bool load(WindowPixmap *pixmap);
     void updateFromPixmap(WindowPixmap *pixmap);
 
-    SceneOpenGLTexture(SceneOpenGLTexturePrivate& dd);
-
-private:
     Q_DECLARE_PRIVATE(SceneOpenGLTexture)
 
     friend class OpenGLWindowPixmap;
 };
 
-class SceneOpenGLTexturePrivate
-    : public GLTexturePrivate
+class SceneOpenGLTexturePrivate : public GLTexturePrivate
 {
 public:
-    virtual ~SceneOpenGLTexturePrivate();
+    ~SceneOpenGLTexturePrivate() override;
 
     virtual bool loadTexture(WindowPixmap *pixmap) = 0;
     virtual void updateTexture(WindowPixmap *pixmap);
@@ -72,5 +68,3 @@ private:
 };
 
 }
-
-#endif
