@@ -205,6 +205,10 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
      * with ideas from xfce.
      */
 
+    if (!c->size().isValid()) {
+        return;
+    }
+
     const int none = 0, h_wrong = -1, w_wrong = -2; // overlap types
     long int overlap, min_overlap = 0;
     int x_optimal, y_optimal;
