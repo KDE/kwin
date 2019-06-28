@@ -37,7 +37,19 @@ InternalClient::InternalClient(KWayland::Server::ShellSurfaceInterface *surface)
 {
     findInternalWindow();
     updateInternalWindowGeometry();
-    updateDecoration(true);
+
+    // Qt asks our QPA to create a platform window for each QOffscreenSurface.
+    // Given that those windows aren't toplevels, findInternalWindow may not be
+    // able to find corresponding QWindow object for this client, which means
+    // no-border and pretty much every other property that depends on QWindow
+    // flags will have undefined value. Unfortunately the Aurorae decoration
+    // engine creates three internal clients per each decoration. One of those
+    // clients represents QOffscreenSurface. Thus we have to ensure that the
+    // QOffscreenSurface client is not decorated, otherwise kwin will fall
+    // into an infinite "recursion."
+    if (m_internalWindow) {
+        updateDecoration(true);
+    }
 }
 
 InternalClient::InternalClient(KWayland::Server::XdgShellSurfaceInterface *surface)
