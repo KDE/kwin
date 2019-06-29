@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screen.h"
 #include "platformcursor.h"
 #include "screens.h"
-#include "wayland_server.h"
 
 namespace KWin
 {

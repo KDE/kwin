@@ -31,7 +31,6 @@ namespace KWayland
 {
 namespace Client
 {
-class Registry;
 class Compositor;
 class Shell;
 }

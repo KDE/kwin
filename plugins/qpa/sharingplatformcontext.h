@@ -26,13 +26,12 @@ namespace KWin
 {
 namespace QPA
 {
-class Integration;
 
 class SharingPlatformContext : public AbstractPlatformContext
 {
 public:
     explicit SharingPlatformContext(QOpenGLContext *context);
-    explicit SharingPlatformContext(QOpenGLContext *context, const EGLSurface &surface, EGLConfig config = nullptr);
+    SharingPlatformContext(QOpenGLContext *context, const EGLSurface &surface, EGLConfig config = nullptr);
 
     void swapBuffers(QPlatformSurface *surface) override;
 

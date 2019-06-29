@@ -17,18 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#define WL_EGL_PLATFORM 1
 #include "integration.h"
-#include "platform.h"
 #include "backingstore.h"
 #include "nativeinterface.h"
 #include "offscreensurface.h"
 #include "screen.h"
 #include "sharingplatformcontext.h"
 #include "window.h"
-#include "../../virtualkeyboard.h"
 #include "../../main.h"
+#include "../../platform.h"
 #include "../../screens.h"
+#include "../../virtualkeyboard.h"
 #include "../../wayland_server.h"
 
 #include <KWayland/Client/compositor.h>
@@ -41,14 +40,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCoreApplication>
 #include <QtConcurrentRun>
 
-#include <qpa/qplatformwindow.h>
 #include <qpa/qplatforminputcontext.h>
 #include <qpa/qplatforminputcontextfactory_p.h>
+#include <qpa/qplatformwindow.h>
 #include <qpa/qwindowsysteminterface.h>
 
+#include <QtEventDispatcherSupport/private/qunixeventdispatcher_qpa_p.h>
 #include <QtFontDatabaseSupport/private/qgenericunixfontdatabase_p.h>
 #include <QtThemeSupport/private/qgenericunixthemes_p.h>
-#include <QtEventDispatcherSupport/private/qunixeventdispatcher_qpa_p.h>
 
 namespace KWin
 {
@@ -122,7 +121,7 @@ void Integration::initialize()
             }
         );
         connect(qApp->inputMethod(), &QInputMethod::visibleChanged, this,
-            [this] {
+            [] {
                 if (qApp->inputMethod()->isVisible()) {
                     if (QWindow *w = VirtualKeyboard::self()->inputPanel()) {
                         QWindowSystemInterface::handleWindowActivated(w, Qt::ActiveWindowFocusReason);

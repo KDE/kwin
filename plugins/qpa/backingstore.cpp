@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "backingstore.h"
 #include "../../wayland_server.h"
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/buffer.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
