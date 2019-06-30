@@ -110,6 +110,7 @@ protected:
 private:
     bool loadShmTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
     bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
+    bool loadDmabufTexture(const QPointer< KWayland::Server::BufferInterface > &buffer);
     EGLImageKHR attach(const QPointer<KWayland::Server::BufferInterface> &buffer);
     bool updateFromFBO(const QSharedPointer<QOpenGLFramebufferObject> &fbo);
     SceneOpenGLTexture *q;
