@@ -4,6 +4,7 @@ include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 set(QPA_SOURCES
     abstractplatformcontext.cpp
     backingstore.cpp
+    eglhelpers.cpp
     integration.cpp
     main.cpp
     nativeinterface.cpp

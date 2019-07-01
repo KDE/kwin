@@ -18,9 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstractplatformcontext.h"
-#include "integration.h"
 #include "egl_context_attribute_builder.h"
+#include "eglhelpers.h"
+
 #include <logging.h>
+
+#include <QOpenGLContext>
 
 #include <memory>
 
@@ -30,76 +33,10 @@ namespace KWin
 namespace QPA
 {
 
-static bool isOpenGLES()
-{
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
-        return true;
-    }
-    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
-}
-
-static EGLConfig configFromGLFormat(EGLDisplay dpy, const QSurfaceFormat &format)
-{
-#define SIZE( __buffer__ ) format.__buffer__##BufferSize() > 0 ? format.__buffer__##BufferSize() : 0
-    // not setting samples as QtQuick doesn't need it
-    const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,         0,
-        EGL_RED_SIZE,             SIZE(red),
-        EGL_GREEN_SIZE,           SIZE(green),
-        EGL_BLUE_SIZE,            SIZE(blue),
-        EGL_ALPHA_SIZE,           SIZE(alpha),
-        EGL_DEPTH_SIZE,           SIZE(depth),
-        EGL_STENCIL_SIZE,         SIZE(stencil),
-        EGL_RENDERABLE_TYPE,      isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_NONE,
-    };
-    qCDebug(KWIN_QPA) << "Trying to find a format with: rgba/depth/stencil" << (SIZE(red)) << (SIZE(green)) <<( SIZE(blue)) << (SIZE(alpha)) << (SIZE(depth)) << (SIZE(stencil));
-#undef SIZE
-
-    EGLint count;
-    EGLConfig configs[1024];
-    if (eglChooseConfig(dpy, config_attribs, configs, 1, &count) == EGL_FALSE) {
-        qCWarning(KWIN_QPA) << "eglChooseConfig failed";
-        return 0;
-    }
-    if (count != 1) {
-        qCWarning(KWIN_QPA) << "eglChooseConfig did not return any configs";
-        return 0;
-    }
-    return configs[0];
-}
-
-static QSurfaceFormat formatFromConfig(EGLDisplay dpy, EGLConfig config)
-{
-    QSurfaceFormat format;
-    EGLint value = 0;
-#define HELPER(__egl__, __qt__) \
-    eglGetConfigAttrib(dpy, config, EGL_##__egl__, &value); \
-    format.set##__qt__(value); \
-    value = 0;
-
-#define BUFFER_HELPER(__eglColor__, __color__) \
-    HELPER(__eglColor__##_SIZE, __color__##BufferSize)
-
-    BUFFER_HELPER(RED, Red)
-    BUFFER_HELPER(GREEN, Green)
-    BUFFER_HELPER(BLUE, Blue)
-    BUFFER_HELPER(ALPHA, Alpha)
-    BUFFER_HELPER(STENCIL, Stencil)
-    BUFFER_HELPER(DEPTH, Depth)
-#undef BUFFER_HELPER
-    HELPER(SAMPLES, Samples)
-#undef HELPER
-    format.setRenderableType(isOpenGLES() ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL);
-    format.setStereo(false);
-
-    return format;
-}
-
 AbstractPlatformContext::AbstractPlatformContext(QOpenGLContext *context, EGLDisplay display, EGLConfig config)
     : QPlatformOpenGLContext()
     , m_eglDisplay(display)
-    , m_config(config ? config :configFromGLFormat(m_eglDisplay, context->format()))
+    , m_config(config ? config : configFromFormat(m_eglDisplay, context->format()))
     , m_format(formatFromConfig(m_eglDisplay, m_config))
 {
 }
