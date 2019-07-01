@@ -53,6 +53,7 @@ public:
 
     bool hasCapability(Capability cap) const override;
     QPlatformWindow *createPlatformWindow(QWindow *window) const override;
+    QPlatformOffscreenSurface *createPlatformOffscreenSurface(QOffscreenSurface *surface) const override;
     QPlatformBackingStore *createPlatformBackingStore(QWindow *window) const override;
     QAbstractEventDispatcher *createEventDispatcher() const override;
     QPlatformFontDatabase *fontDatabase() const override;

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "sharingplatformcontext.h"
 #include "integration.h"
+#include "offscreensurface.h"
 #include "window.h"
 #include "../../platform.h"
 #include "../../wayland_server.h"
@@ -48,22 +49,30 @@ SharingPlatformContext::SharingPlatformContext(QOpenGLContext *context, const EG
 
 bool SharingPlatformContext::makeCurrent(QPlatformSurface *surface)
 {
-    Window *window = static_cast<Window*>(surface);
+    EGLSurface eglSurface;
+    if (surface->surface()->surfaceClass() == QSurface::Window) {
+        eglSurface = m_surface;
+    } else {
+        eglSurface = static_cast<OffscreenSurface *>(surface)->nativeHandle();
+    }
 
-    // QOpenGLContext::makeCurrent in Qt5.12 calls platfrom->setContext before setCurrentContext
-    // but binding the content FBO looks up the format from the current context, so we need // to make sure sure Qt knows what the correct one is already
-    QOpenGLContextPrivate::setCurrentContext(context());
-    if (eglMakeCurrent(eglDisplay(), m_surface, m_surface, eglContext())) {
+    const bool ok = eglMakeCurrent(eglDisplay(), eglSurface, eglSurface, eglContext());
+    if (!ok) {
+        qCWarning(KWIN_QPA, "eglMakeCurrent failed: %x", eglGetError());
+        return false;
+    }
+
+    if (surface->surface()->surfaceClass() == QSurface::Window) {
+        // QOpenGLContextPrivate::setCurrentContext will be called after this
+        // method returns, but that's too late, as we need a current context in
+        // order to bind the content framebuffer object.
+        QOpenGLContextPrivate::setCurrentContext(context());
+
+        Window *window = static_cast<Window *>(surface);
         window->bindContentFBO();
-        return true;
-    }
-    qCWarning(KWIN_QPA) << "Failed to make context current";
-    EGLint error = eglGetError();
-    if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_QPA) << "EGL error code: " << error;
     }
 
-    return false;
+    return true;
 }
 
 bool SharingPlatformContext::isSharing() const
@@ -73,16 +82,18 @@ bool SharingPlatformContext::isSharing() const
 
 void SharingPlatformContext::swapBuffers(QPlatformSurface *surface)
 {
-    Window *window = static_cast<Window*>(surface);
-    auto c = window->shellClient();
-    if (!c) {
-        qCDebug(KWIN_QPA) << "SwapBuffers called but there is no ShellClient";
-        return;
+    if (surface->surface()->surfaceClass() == QSurface::Window) {
+        Window *window = static_cast<Window *>(surface);
+        auto c = window->shellClient();
+        if (!c) {
+            qCDebug(KWIN_QPA) << "SwapBuffers called but there is no ShellClient";
+            return;
+        }
+        context()->makeCurrent(surface->surface());
+        glFlush();
+        c->setInternalFramebufferObject(window->swapFBO());
+        window->bindContentFBO();
     }
-    context()->makeCurrent(surface->surface());
-    glFlush();
-    c->setInternalFramebufferObject(window->swapFBO());
-    window->bindContentFBO();
 }
 
 GLuint SharingPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) const
@@ -92,8 +103,9 @@ GLuint SharingPlatformContext::defaultFramebufferObject(QPlatformSurface *surfac
         if (!fbo.isNull()) {
             return fbo->handle();
         }
+        qCDebug(KWIN_QPA) << "No default framebuffer object for internal window";
     }
-    qCDebug(KWIN_QPA) << "No default framebuffer object for internal window";
+
     return 0;
 }
 

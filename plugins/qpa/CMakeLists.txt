@@ -8,6 +8,7 @@ set(QPA_SOURCES
     integration.cpp
     main.cpp
     nativeinterface.cpp
+    offscreensurface.cpp
     platformcursor.cpp
     screen.cpp
     sharingplatformcontext.cpp

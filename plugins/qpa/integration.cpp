@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "backingstore.h"
 #include "nativeinterface.h"
+#include "offscreensurface.h"
 #include "screen.h"
 #include "sharingplatformcontext.h"
 #include "window.h"
@@ -158,6 +159,11 @@ QPlatformWindow *Integration::createPlatformWindow(QWindow *window) const
         auto surface = c->createSurface(c);
         return new Window(window, surface, s->createSurface(surface, surface), this);
     }
+}
+
+QPlatformOffscreenSurface *Integration::createPlatformOffscreenSurface(QOffscreenSurface *surface) const
+{
+    return new OffscreenSurface(surface);
 }
 
 QPlatformFontDatabase *Integration::fontDatabase() const
