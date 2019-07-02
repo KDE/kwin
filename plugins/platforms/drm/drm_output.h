@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_pointer.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"
+#include "edid.h"
 
 #include <QObject>
 #include <QPoint>
@@ -45,12 +46,6 @@ class KWIN_EXPORT DrmOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 public:
-    struct Edid {
-        QByteArray eisaId;
-        QByteArray monitorName;
-        QByteArray serialNumber;
-        QSize physicalSize;
-    };
     ///deletes the output, calling this whilst a page flip is pending will result in an error
     ~DrmOutput() override;
     ///queues deleting the output after a page flip has completed.
