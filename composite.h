@@ -18,35 +18,105 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
+#pragma once
 
-#ifndef KWIN_COMPOSITE_H
-#define KWIN_COMPOSITE_H
-// KWin
 #include <kwinglobals.h>
-// Qt
+
 #include <QObject>
 #include <QElapsedTimer>
 #include <QTimer>
 #include <QBasicTimer>
 #include <QRegion>
 
-namespace KWin {
-
+namespace KWin
+{
 class Client;
 class CompositorSelectionOwner;
 class Scene;
 
-class KWIN_EXPORT Compositor : public QObject {
+class KWIN_EXPORT Compositor : public QObject
+{
     Q_OBJECT
 public:
-    enum SuspendReason { NoReasonSuspend = 0, UserSuspend = 1<<0, BlockRuleSuspend = 1<<1, ScriptSuspend = 1<<2, AllReasonSuspend = 0xff };
+    enum SuspendReason {
+        NoReasonSuspend     = 0,
+        UserSuspend         = 1 << 0,
+        BlockRuleSuspend    = 1 << 1,
+        ScriptSuspend       = 1 << 2,
+        AllReasonSuspend    = 0xff
+    };
     Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
-    ~Compositor();
+
+    ~Compositor() override;
+
     // when adding repaints caused by a window, you probably want to use
     // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
     void addRepaint(const QRect& r);
     void addRepaint(const QRegion& r);
     void addRepaint(int x, int y, int w, int h);
+    void addRepaintFull();
+
+    /**
+     * Schedules a new repaint if no repaint is currently scheduled.
+     **/
+    void scheduleRepaint();
+
+    /**
+     * Notifies the compositor that SwapBuffers() is about to be called.
+     * Rendering of the next frame will be deferred until bufferSwapComplete()
+     * is called.
+     **/
+    void aboutToSwapBuffers();
+
+    /**
+     * Notifies the compositor that a pending buffer swap has completed.
+     **/
+    void bufferSwapComplete();
+
+    /**
+     * @brief Suspends the Compositor if it is currently active.
+     *
+     * Note: it is possible that the Compositor is not able to suspend. Use isActive to check
+     * whether the Compositor has been suspended.
+     *
+     * @return void
+     * @see resume
+     * @see isActive
+     **/
+    Q_INVOKABLE void suspend(Compositor::SuspendReason reason);
+
+    /**
+     * @brief Resumes the Compositor if it is currently suspended.
+     *
+     * Note: it is possible that the Compositor cannot be resumed, that is there might be Clients
+     * blocking the usage of Compositing or the Scene might be broken. Use isActive to check
+     * whether the Compositor has been resumed. Also check isCompositingPossible and
+     * isOpenGLBroken.
+     *
+     * Note: The starting of the Compositor can require some time and is partially done threaded.
+     * After this method returns the setup may not have been completed.
+     *
+     * @return void
+     * @see suspend
+     * @see isActive
+     * @see isCompositingPossible
+     * @see isOpenGLBroken
+     **/
+    Q_INVOKABLE void resume(Compositor::SuspendReason reason);
+
+    /**
+     * Toggles compositing, that is if the Compositor is suspended it will be resumed
+     * and if the Compositor is active it will be suspended.
+     * Invoked by keybinding (shortcut default: Shift + Alt + F12).
+     **/
+    void toggleCompositing();
+
+    /**
+     * Re-initializes the Compositor completely.
+     * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
+     **/
+    void slotReinitialize();
+
     /**
      * Whether the Compositor is active. That is a Scene is present and the Compositor is
      * not shutting down itself.
@@ -93,72 +163,12 @@ public:
         return s_compositor != NULL && s_compositor->isActive();
     }
 
+    void updateCompositeBlocking();
+    void updateClientCompositeBlocking(KWin::Client* c);
+
     // for delayed supportproperty management of effects
     void keepSupportProperty(xcb_atom_t atom);
     void removeSupportProperty(xcb_atom_t atom);
-
-public Q_SLOTS:
-    void addRepaintFull();
-    /**
-     * @brief Suspends the Compositor if it is currently active.
-     *
-     * Note: it is possible that the Compositor is not able to suspend. Use isActive to check
-     * whether the Compositor has been suspended.
-     *
-     * @return void
-     * @see resume
-     * @see isActive
-     **/
-    void suspend(Compositor::SuspendReason reason);
-    /**
-     * @brief Resumes the Compositor if it is currently suspended.
-     *
-     * Note: it is possible that the Compositor cannot be resumed, that is there might be Clients
-     * blocking the usage of Compositing or the Scene might be broken. Use isActive to check
-     * whether the Compositor has been resumed. Also check isCompositingPossible and
-     * isOpenGLBroken.
-     *
-     * Note: The starting of the Compositor can require some time and is partially done threaded.
-     * After this method returns the setup may not have been completed.
-     *
-     * @return void
-     * @see suspend
-     * @see isActive
-     * @see isCompositingPossible
-     * @see isOpenGLBroken
-     **/
-    void resume(Compositor::SuspendReason reason);
-    /**
-     * Actual slot to perform the toggling compositing.
-     * That is if the Compositor is suspended it will be resumed and if the Compositor is active
-     * it will be suspended.
-     * Invoked primarily by the keybinding.
-     * TODO: make private slot
-     **/
-    void slotToggleCompositing();
-    /**
-     * Re-initializes the Compositor completely.
-     * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
-     **/
-    void slotReinitialize();
-    /**
-     * Schedules a new repaint if no repaint is currently scheduled.
-     **/
-    void scheduleRepaint();
-    void updateCompositeBlocking();
-    void updateCompositeBlocking(KWin::Client* c);
-
-    /**
-     * Notifies the compositor that SwapBuffers() is about to be called.
-     * Rendering of the next frame will be deferred until bufferSwapComplete()
-     * is called.
-     **/
-    void aboutToSwapBuffers();
-
-    /**
-     * Notifies the compositor that a pending buffer swap has completed.
-     **/
-    void bufferSwapComplete();
 
 Q_SIGNALS:
     void compositingToggled(bool active);
@@ -168,12 +178,12 @@ Q_SIGNALS:
     void bufferSwapCompleted();
 
 protected:
-    void timerEvent(QTimerEvent *te);
+    void timerEvent(QTimerEvent *te) override;
 
-private Q_SLOTS:
-    void setup();
+private:
+    Q_INVOKABLE void setup();
     /**
-     * Called from setupCompositing() when the CompositingPrefs are ready.
+     * Called from setup() when the CompositingPrefs are ready.
      **/
     void slotCompositingOptionsInitialized();
     void finish();
@@ -182,20 +192,23 @@ private Q_SLOTS:
      * That is the Compositor will be stopped and started again.
      **/
     void restart();
-    void performCompositing();
-    void slotConfigChanged();
-    void releaseCompositorSelection();
-    void deleteUnusedSupportProperties();
 
-private:
     void claimCompositorSelection();
-    void setCompositeTimer();
-    bool windowRepaintsPending() const;
+
     /**
      * Continues the startup after Scene And Workspace are created
      **/
     void startupWithWorkspace();
     void setupX11Support();
+
+    void setCompositeTimer();
+    void performCompositing();
+    bool windowRepaintsPending() const;
+
+    void releaseCompositorSelection();
+    void deleteUnusedSupportProperties();
+
+    void slotConfigChanged();
 
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
@@ -215,14 +228,16 @@ private:
     bool m_finishing; // finish() sets this variable while shutting down
     bool m_starting; // start() sets this variable while starting
     qint64 m_timeSinceLastVBlank;
+
     Scene *m_scene;
+
     bool m_bufferSwapPending;
     bool m_composeAtSwapCompletion;
+
     int m_framesToTestForSafety = 3;
     QElapsedTimer m_monotonicClock;
 
     KWIN_SINGLETON_VARIABLE(Compositor, s_compositor)
 };
-}
 
-# endif // KWIN_COMPOSITE_H
+}

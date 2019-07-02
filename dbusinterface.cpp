@@ -257,7 +257,7 @@ CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/Compositor"), this);
     dbus.connect(QString(), QStringLiteral("/Compositor"), QStringLiteral("org.kde.kwin.Compositing"),
-                 QStringLiteral("reinit"), m_compositor, SLOT(slotReinitialize()));
+                 QStringLiteral("reinit"), this, SLOT(reinitialize()));
 }
 
 QString CompositorDBusInterface::compositingNotPossibleReason() const
@@ -315,6 +315,11 @@ void CompositorDBusInterface::resume()
 void CompositorDBusInterface::suspend()
 {
     m_compositor->suspend(Compositor::ScriptSuspend);
+}
+
+void CompositorDBusInterface::reinitialize()
+{
+    m_compositor->slotReinitialize();
 }
 
 QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const

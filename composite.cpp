@@ -110,7 +110,7 @@ Compositor::Compositor(QObject* workspace)
     , m_composeAtSwapCompletion(false)
 {
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
-    connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
+    connect(&compositeResetTimer, &QTimer::timeout, this, &Compositor::restart);
     connect(options, &Options::configChanged, this, &Compositor::slotConfigChanged);
     compositeResetTimer.setSingleShot(true);
     m_monotonicClock.start();
@@ -120,11 +120,11 @@ Compositor::Compositor(QObject* workspace)
 
     m_releaseSelectionTimer.setSingleShot(true);
     m_releaseSelectionTimer.setInterval(compositorLostMessageDelay);
-    connect(&m_releaseSelectionTimer, SIGNAL(timeout()), SLOT(releaseCompositorSelection()));
+    connect(&m_releaseSelectionTimer, &QTimer::timeout, this, &Compositor::releaseCompositorSelection);
 
     m_unusedSupportPropertyTimer.setInterval(compositorLostMessageDelay);
     m_unusedSupportPropertyTimer.setSingleShot(true);
-    connect(&m_unusedSupportPropertyTimer, SIGNAL(timeout()), SLOT(deleteUnusedSupportProperties()));
+    connect(&m_unusedSupportPropertyTimer, &QTimer::timeout, this, &Compositor::deleteUnusedSupportProperties);
 
     // delay the call to setup by one event cycle
     // The ctor of this class is invoked from the Workspace ctor, that means before
@@ -340,7 +340,7 @@ void Compositor::startupWithWorkspace()
     scheduleRepaint();
     kwinApp()->platform()->createEffectsHandler(this, m_scene);   // sets also the 'effects' pointer
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
-    connect(effects, SIGNAL(screenGeometryChanged(QSize)), SLOT(addRepaintFull()));
+    connect(effects, &EffectsHandler::screenGeometryChanged, this, &Compositor::addRepaintFull);
     addRepaintFull();
     foreach (Client * c, Workspace::self()->clientList()) {
         c->setupCompositing();
@@ -523,7 +523,7 @@ void Compositor::slotReinitialize()
 }
 
 // for the shortcut
-void Compositor::slotToggleCompositing()
+void Compositor::toggleCompositing()
 {
     if (kwinApp()->platform()->requiresCompositing()) {
         // we are not allowed to turn on/off compositing
@@ -538,10 +538,10 @@ void Compositor::slotToggleCompositing()
 
 void Compositor::updateCompositeBlocking()
 {
-    updateCompositeBlocking(NULL);
+    updateClientCompositeBlocking(NULL);
 }
 
-void Compositor::updateCompositeBlocking(Client *c)
+void Compositor::updateClientCompositeBlocking(Client *c)
 {
     if (kwinApp()->platform()->requiresCompositing()) {
         return;
@@ -597,7 +597,7 @@ void Compositor::restart()
 {
     if (hasScene()) {
         finish();
-        QTimer::singleShot(0, this, SLOT(setup()));
+        QTimer::singleShot(0, this, &Compositor::setup);
     }
 }
 

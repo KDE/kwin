@@ -586,7 +586,7 @@ Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
     StackingUpdatesBlocker blocker(this);
     Client* c = new Client();
     setupClientConnections(c);
-    connect(c, SIGNAL(blockingCompositingChanged(KWin::Client*)), m_compositor, SLOT(updateCompositeBlocking(KWin::Client*)));
+    connect(c, &Client::blockingCompositingChanged, m_compositor, &Compositor::updateClientCompositeBlocking);
     connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
     if (!c->manage(w, is_mapped)) {
         Client::deleteClient(c);
@@ -605,7 +605,7 @@ Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
         Unmanaged::deleteUnmanaged(c);
         return NULL;
     }
-    connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
+    connect(c, &Unmanaged::needsRepaint, m_compositor, &Compositor::scheduleRepaint);
     addUnmanaged(c);
     emit unmanagedAdded(c);
     return c;
@@ -737,7 +737,7 @@ void Workspace::addDeleted(Deleted* c, Toplevel *orig)
         stacking_order.append(c);
     }
     markXStackingOrderAsDirty();
-    connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
+    connect(c, &Deleted::needsRepaint, m_compositor, &Compositor::scheduleRepaint);
 }
 
 void Workspace::removeDeleted(Deleted* c)

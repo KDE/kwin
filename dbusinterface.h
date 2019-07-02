@@ -165,6 +165,12 @@ public Q_SLOTS:
      * @see isOpenGLBroken
      **/
     void resume();
+    /**
+     * @brief Used by Compositing KCM after settings change.
+     *
+     * On signal Compositor reloads settings and restarts.
+     */
+    void reinitialize();
 
 Q_SIGNALS:
     void compositingToggled(bool active);
