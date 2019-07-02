@@ -125,7 +125,6 @@ public:
     int xrrRefreshRate() const {
         return m_xrrRefreshRate;
     }
-    void setCompositeResetTimer(int msecs);
 
     bool hasScene() const {
         return m_scene != NULL;
@@ -219,7 +218,6 @@ private:
     int m_xrrRefreshRate;
     QRegion repaints_region;
 
-    QTimer compositeResetTimer; // for compressing composite resets
     bool m_finishing; // finish() sets this variable while shutting down
     bool m_starting; // start() sets this variable while starting
     qint64 m_timeSinceLastVBlank;

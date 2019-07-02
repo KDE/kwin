@@ -110,9 +110,8 @@ Compositor::Compositor(QObject* workspace)
     , m_composeAtSwapCompletion(false)
 {
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
-    connect(&compositeResetTimer, &QTimer::timeout, this, &Compositor::reinitialize);
     connect(options, &Options::configChanged, this, &Compositor::slotConfigChanged);
-    compositeResetTimer.setSingleShot(true);
+
     m_monotonicClock.start();
 
     // 2 sec which should be enough to restart the compositor
@@ -814,11 +813,6 @@ bool Compositor::windowRepaintsPending() const
         }
     }
     return false;
-}
-
-void Compositor::setCompositeResetTimer(int msecs)
-{
-    compositeResetTimer.start(msecs);
 }
 
 void Compositor::setCompositeTimer()

@@ -47,6 +47,21 @@ void XRandRScreens::init()
     m_backend->initOutputs();
     setCount(m_backend->outputs().count());
     emit changed();
+
+#ifndef KWIN_UNIT_TEST
+    connect(this, &XRandRScreens::changed, this, [] {
+        if (!workspace()->compositing()) {
+            return;
+        }
+        if (Compositor::self()->xrrRefreshRate() == Options::currentRefreshRate()) {
+            return;
+        }
+        // desktopResized() should take care of when the size or
+        // shape of the desktop has changed, but we also want to
+        // catch refresh rate changes
+        Compositor::self()->reinitialize();
+    });
+#endif
 }
 
 void XRandRScreens::updateCount()
@@ -75,15 +90,6 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
         screen->width_in_millimeters = xrrEvent->mwidth;
         screen->height_in_millimeters = xrrEvent->mheight;
     }
-#ifndef KWIN_UNIT_TEST
-    if (workspace()->compositing()) {
-        // desktopResized() should take care of when the size or
-        // shape of the desktop has changed, but we also want to
-        // catch refresh rate changes
-        if (Compositor::self()->xrrRefreshRate() != Options::currentRefreshRate())
-            Compositor::self()->setCompositeResetTimer(0);
-    }
-#endif
 
     return false;
 }
