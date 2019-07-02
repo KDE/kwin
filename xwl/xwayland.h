@@ -39,11 +39,12 @@ class DataBridge;
 class Xwayland : public XwaylandInterface
 {
     Q_OBJECT
+
 public:
-    static Xwayland* self();
+    static Xwayland *self();
 
     Xwayland(ApplicationWaylandAbstract *app, QObject *parent = nullptr);
-    virtual ~Xwayland();
+    ~Xwayland() override;
 
     void init();
     void prepareDestroy();
@@ -63,7 +64,7 @@ private:
     void createX11Connection();
     void continueStartupWithX();
 
-    DragEventReply dragMoveFilter(Toplevel *target, QPoint pos) override;
+    DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;
 
     int m_xcbConnectionFd = -1;
     QProcess *m_xwaylandProcess = nullptr;
@@ -74,9 +75,11 @@ private:
     DataBridge *m_dataBridge = nullptr;
 
     ApplicationWaylandAbstract *m_app;
+
+    Q_DISABLE_COPY(Xwayland)
 };
 
-}
-}
+} // namespace Xwl
+} // namespace KWin
 
 #endif

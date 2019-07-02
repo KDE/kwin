@@ -19,22 +19,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drag_wl.h"
 
-#include "xwayland.h"
 #include "databridge.h"
 #include "dnd.h"
+#include "xwayland.h"
 
 #include "atoms.h"
+#include "client.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "client.h"
 
 #include <KWayland/Client/datadevice.h>
 #include <KWayland/Client/datasource.h>
 
-#include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/datadevice_interface.h>
 #include <KWayland/Server/datasource_interface.h>
+#include <KWayland/Server/seat_interface.h>
+#include <KWayland/Server/surface_interface.h>
 
 #include <QMouseEvent>
 #include <QTimer>
@@ -49,9 +49,9 @@ WlToXDrag::WlToXDrag()
     m_dsi = waylandServer()->seat()->dragSource()->dragSource();
 }
 
-DragEventReply WlToXDrag::moveFilter(Toplevel *target, QPoint pos)
+DragEventReply WlToXDrag::moveFilter(Toplevel *target, const QPoint &pos)
 {
-    AbstractClient *ac = qobject_cast<AbstractClient*>(target);
+    AbstractClient *ac = qobject_cast<AbstractClient *>(target);
     auto *seat = waylandServer()->seat();
     if (m_visit && m_visit->target() == ac) {
         // no target change
@@ -64,7 +64,7 @@ DragEventReply WlToXDrag::moveFilter(Toplevel *target, QPoint pos)
         delete m_visit;
         m_visit = nullptr;
     }
-    if (!qobject_cast<KWin::Client *>(ac)) {
+    if (!qobject_cast<Client *>(ac)) {
         // no target or wayland native target,
         // handled by input code directly
         return DragEventReply::Wayland;
@@ -107,15 +107,15 @@ Xvisit::Xvisit(WlToXDrag *drag, AbstractClient *target)
       m_target(target)
 {
     // first check supported DND version
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn,
                                                         0,
                                                         m_target->window(),
                                                         atoms->xdnd_aware,
                                                         XCB_GET_PROPERTY_TYPE_ANY,
                                                         0, 1);
-    auto *reply = xcb_get_property_reply(xcbConn, cookie, NULL);
-    if (reply == NULL) {
+    auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
+    if (!reply) {
         doFinish();
         return;
     }
@@ -124,7 +124,7 @@ Xvisit::Xvisit(WlToXDrag *drag, AbstractClient *target)
         free(reply);
         return;
     }
-    xcb_atom_t *value = static_cast<xcb_atom_t*>(xcb_get_property_value(reply));
+    xcb_atom_t *value = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
     m_version = qMin(*value, Dnd::version());
     if (m_version < 1) {
         // minimal version we accept is 1
@@ -136,9 +136,9 @@ Xvisit::Xvisit(WlToXDrag *drag, AbstractClient *target)
 
     const auto *dd = DataBridge::self()->dataDevice();
     // proxy drop
-    m_enterCon = connect(dd, &KWayland::Client::DataDevice::dragEntered,
+    m_enterConnection = connect(dd, &KWayland::Client::DataDevice::dragEntered,
                          this, &Xvisit::receiveOffer);
-    m_dropCon = connect(dd, &KWayland::Client::DataDevice::dropped,
+    m_dropConnection = connect(dd, &KWayland::Client::DataDevice::dropped,
                         this, &Xvisit::drop);
 }
 
@@ -152,9 +152,9 @@ bool Xvisit::handleClientMessage(xcb_client_message_event_t *event)
     return false;
 }
 
-bool Xvisit::handleStatus(xcb_client_message_event_t *ev)
+bool Xvisit::handleStatus(xcb_client_message_event_t *event)
 {
-    xcb_client_message_data_t *data = &ev->data;
+    xcb_client_message_data_t *data = &event->data;
     if (data->data32[0] != m_target->window()) {
         // wrong target window
         return false;
@@ -186,9 +186,9 @@ bool Xvisit::handleStatus(xcb_client_message_event_t *ev)
     return true;
 }
 
-bool Xvisit::handleFinished(xcb_client_message_event_t *ev)
+bool Xvisit::handleFinished(xcb_client_message_event_t *event)
 {
-    xcb_client_message_data_t *data = &ev->data;
+    xcb_client_message_data_t *data = &event->data;
 
     if (data->data32[0] != m_target->window()) {
         // different target window
@@ -264,7 +264,7 @@ void Xvisit::receiveOffer()
     Q_ASSERT(!m_dataOffer.isNull());
 
     retrieveSupportedActions();
-    m_actionCon = connect(m_dataOffer, &KWayland::Client::DataOffer::sourceDragAndDropActionsChanged,
+    m_actionConnection = connect(m_dataOffer, &KWayland::Client::DataOffer::sourceDragAndDropActionsChanged,
                           this, &Xvisit::retrieveSupportedActions);
     enter();
 }
@@ -277,7 +277,7 @@ void Xvisit::enter()
     sendPosition(waylandServer()->seat()->pointerPos());
 
     // proxy future pointer position changes
-    m_motionCon = connect(waylandServer()->seat(),
+    m_motionConnection = connect(waylandServer()->seat(),
                           &KWayland::Server::SeatInterface::pointerPosChanged,
                           this, &Xvisit::sendPosition);
 }
@@ -431,16 +431,16 @@ void Xvisit::stopConnections()
 {
     // final outcome has been determined from Wayland side
     // no more updates needed
-    disconnect(m_enterCon);
-    m_enterCon = QMetaObject::Connection();
-    disconnect(m_dropCon);
-    m_dropCon = QMetaObject::Connection();
+    disconnect(m_enterConnection);
+    m_enterConnection = QMetaObject::Connection();
+    disconnect(m_dropConnection);
+    m_dropConnection = QMetaObject::Connection();
 
-    disconnect(m_motionCon);
-    m_motionCon = QMetaObject::Connection();
-    disconnect(m_actionCon);
-    m_actionCon = QMetaObject::Connection();
+    disconnect(m_motionConnection);
+    m_motionConnection = QMetaObject::Connection();
+    disconnect(m_actionConnection);
+    m_actionConnection = QMetaObject::Connection();
 }
 
-}
-}
+} // namespace Xwl
+} // namespace KWin

@@ -21,22 +21,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xwayland.h"
 #include "databridge.h"
 
-#include "wayland_server.h"
 #include "main_wayland.h"
 #include "utils.h"
+#include "wayland_server.h"
+#include "xcbutils.h"
 
 #include <KLocalizedString>
 #include <KSelectionOwner>
 
-#include "xcbutils.h"
-
 #include <QAbstractEventDispatcher>
-#include <QtConcurrentRun>
 #include <QFile>
 #include <QFutureWatcher>
 #include <QProcess>
 #include <QSocketNotifier>
 #include <QThread>
+#include <QtConcurrentRun>
 
 // system
 #ifdef HAVE_UNISTD_H
@@ -68,19 +67,21 @@ static void readDisplay(int pipe)
     close(pipe);
 }
 
-namespace KWin {
+namespace KWin
+{
 namespace Xwl
 {
 
 Xwayland *s_self = nullptr;
-Xwayland* Xwayland::self()
+
+Xwayland *Xwayland::self()
 {
     return s_self;
 }
 
 Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
-    : XwaylandInterface(parent),
-      m_app(app)
+    : XwaylandInterface(parent)
+    , m_app(app)
 {
     s_self = this;
 }
@@ -211,7 +212,7 @@ void Xwayland::createX11Connection()
 void Xwayland::continueStartupWithX()
 {
     createX11Connection();
-    auto *xcbConn = m_app->x11Connection();
+    xcb_connection_t *xcbConn = m_app->x11Connection();
     if (!xcbConn) {
         // about to quit
         Q_EMIT criticalError(1);
@@ -268,7 +269,7 @@ void Xwayland::continueStartupWithX()
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 }
 
-DragEventReply Xwayland::dragMoveFilter(Toplevel *target, QPoint pos)
+DragEventReply Xwayland::dragMoveFilter(Toplevel *target, const QPoint &pos)
 {
     if (!m_dataBridge) {
         return DragEventReply::Wayland;
@@ -276,5 +277,5 @@ DragEventReply Xwayland::dragMoveFilter(Toplevel *target, QPoint pos)
     return m_dataBridge->dragMoveFilter(target, pos);
 }
 
-}
-}
+} // namespace Xwl
+} // namespace KWin

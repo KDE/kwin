@@ -20,21 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "dnd.h"
 
 #include "databridge.h"
-#include "selection_source.h"
 #include "drag_wl.h"
 #include "drag_x.h"
+#include "selection_source.h"
 
+#include "abstract_client.h"
 #include "atoms.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwayland.h"
-#include "abstract_client.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/surface.h>
 
-#include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/compositor_interface.h>
+#include <KWayland/Server/seat_interface.h>
 
 #include <QMouseEvent>
 
@@ -55,7 +55,7 @@ uint32_t Dnd::version()
 Dnd::Dnd(xcb_atom_t atom, QObject *parent)
     : Selection(atom, parent)
 {
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     const uint32_t dndValues[] = { XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
                                    XCB_EVENT_MASK_PROPERTY_CHANGE };
@@ -124,7 +124,7 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
 
 void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 {
-    if (qobject_cast<XToWlDrag*>(m_currentDrag)) {
+    if (qobject_cast<XToWlDrag *>(m_currentDrag)) {
         // X drag is in progress, rogue X client took over the selection.
         return;
     }
@@ -134,7 +134,7 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
         ownSelection(true);
         return;
     }
-    createX11Source(NULL);
+    createX11Source(nullptr);
     const auto *seat = waylandServer()->seat();
     auto *originSurface = seat->focusedPointerSurface();
     if (!originSurface) {
@@ -151,15 +151,15 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
         return;
     }
     createX11Source(event);
-    auto *xSrc = x11Source();
-    if (!xSrc) {
+    X11Source *source = x11Source();
+    if (!source) {
         return;
     }
     DataBridge::self()->dataDeviceIface()->updateProxy(originSurface);
-    m_currentDrag = new XToWlDrag(xSrc);
+    m_currentDrag = new XToWlDrag(source);
 }
 
-void Dnd::x11OffersChanged(const QVector<QString> &added, const QVector<QString> &removed)
+void Dnd::x11OffersChanged(const QStringList &added, const QStringList &removed)
 {
     Q_UNUSED(added);
     Q_UNUSED(removed);
@@ -168,7 +168,7 @@ void Dnd::x11OffersChanged(const QVector<QString> &added, const QVector<QString>
 
 bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
 {
-    for (auto *drag : m_oldDrags) {
+    for (Drag *drag : m_oldDrags) {
         if (drag->handleClientMessage(event)) {
             return true;
         }
@@ -179,9 +179,9 @@ bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
     return false;
 }
 
-DragEventReply Dnd::dragMoveFilter(Toplevel *target, QPoint pos)
+DragEventReply Dnd::dragMoveFilter(Toplevel *target, const QPoint &pos)
 {
-    // this filter only is used when a drag is in process
+    // This filter only is used when a drag is in process.
     Q_ASSERT(m_currentDrag);
     return m_currentDrag->moveFilter(target, pos);
 }
@@ -190,24 +190,26 @@ void Dnd::startDrag()
 {
     auto *ddi = waylandServer()->seat()->dragSource();
     if (ddi == DataBridge::self()->dataDeviceIface()) {
-        // X to Wl drag, started by us, is in progress
+        // X to Wl drag, started by us, is in progress.
         Q_ASSERT(m_currentDrag);
         return;
     }
-    // there can only ever be one Wl native drag at the same time
+
+    // There can only ever be one Wl native drag at the same time.
     Q_ASSERT(!m_currentDrag);
 
-    // new Wl to X drag, init drag and Wl source
+    // New Wl to X drag, init drag and Wl source.
     m_currentDrag = new WlToXDrag();
-    auto *wls = new WlSource(this, ddi);
-    wls->setDataSourceIface(ddi->dragSource());
-    setWlSource(wls);
+    auto source = new WlSource(this, ddi);
+    source->setDataSourceIface(ddi->dragSource());
+    setWlSource(source);
     ownSelection(true);
 }
 
 void Dnd::endDrag()
 {
     Q_ASSERT(m_currentDrag);
+
     if (m_currentDrag->end()) {
         delete m_currentDrag;
     } else {
@@ -223,5 +225,5 @@ void Dnd::clearOldDrag(Drag *drag)
     delete drag;
 }
 
-}
-}
+} // namespace Xwl
+} // namespace KWin

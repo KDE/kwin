@@ -31,8 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPointer>
 #include <QVector>
 
-namespace KWayland {
-namespace Client {
+namespace KWayland
+{
+namespace Client
+{
 class DataSource;
 }
 }
@@ -53,11 +55,12 @@ using Mimes = QVector<QPair<QString, xcb_atom_t> >;
 class XToWlDrag : public Drag
 {
     Q_OBJECT
+
 public:
     explicit XToWlDrag(X11Source *source);
     ~XToWlDrag() override;
 
-    DragEventReply moveFilter(Toplevel *target, QPoint pos) override;
+    DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     void setDragAndDropAction(DnDAction action);
@@ -66,8 +69,8 @@ public:
     bool end() override {
         return false;
     }
-    X11Source* x11Source() const {
-        return m_src;
+    X11Source *x11Source() const {
+        return m_source;
     }
 
 private:
@@ -82,19 +85,22 @@ private:
     Mimes m_offers;
     Mimes m_offersPending;
 
-    X11Source *m_src;
+    X11Source *m_source;
     QVector<QPair<xcb_timestamp_t, bool> > m_dataRequests;
 
     WlVisit *m_visit = nullptr;
-    QVector<WlVisit*> m_oldVisits;
+    QVector<WlVisit *> m_oldVisits;
 
     bool m_performed = false;
     DnDAction m_lastSelectedDragAndDropAction = DnDAction::None;
+
+    Q_DISABLE_COPY(XToWlDrag)
 };
 
 class WlVisit : public QObject
 {
     Q_OBJECT
+
 public:
     WlVisit(AbstractClient *target, XToWlDrag *drag);
     ~WlVisit();
@@ -124,10 +130,10 @@ Q_SIGNALS:
     void finish(WlVisit *self);
 
 private:
-    bool handleEnter(xcb_client_message_event_t *ev);
-    bool handlePosition(xcb_client_message_event_t *ev);
-    bool handleDrop(xcb_client_message_event_t *ev);
-    bool handleLeave(xcb_client_message_event_t *ev);
+    bool handleEnter(xcb_client_message_event_t *event);
+    bool handlePosition(xcb_client_message_event_t *event);
+    bool handleDrop(xcb_client_message_event_t *event);
+    bool handleLeave(xcb_client_message_event_t *event);
 
     void sendStatus();
 
@@ -154,9 +160,10 @@ private:
     bool m_dropHandled = false;
     bool m_finished = false;
 
+    Q_DISABLE_COPY(WlVisit)
 };
 
-}
-}
+} // namespace Xwl
+} // namespace KWin
 
 #endif

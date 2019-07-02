@@ -40,4 +40,4 @@ XwaylandInterface::~XwaylandInterface()
     s_self = nullptr;
 }
 
-}
+} // namespace KWin

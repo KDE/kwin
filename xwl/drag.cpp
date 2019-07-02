@@ -26,6 +26,15 @@ namespace KWin
 namespace Xwl
 {
 
+Drag::Drag(QObject *parent)
+    : QObject(parent)
+{
+}
+
+Drag::~Drag()
+{
+}
+
 void Drag::sendClientMessage(xcb_window_t target, xcb_atom_t type, xcb_client_message_data_t *data)
 {
     xcb_client_message_event_t event {
@@ -37,7 +46,7 @@ void Drag::sendClientMessage(xcb_window_t target, xcb_atom_t type, xcb_client_me
         *data,      // data
     };
 
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_send_event(xcbConn,
                    0,
                    target,
@@ -74,5 +83,5 @@ xcb_atom_t Drag::clientActionToAtom(DnDAction action)
     return XCB_ATOM_NONE;
 }
 
-}
-}
+} // namespace Xwl
+} // namespace KWin

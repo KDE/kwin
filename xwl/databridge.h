@@ -27,11 +27,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class xcb_xfixes_selection_notify_event_t;
 
-namespace KWayland {
-namespace Client {
+namespace KWayland
+{
+namespace Client
+{
 class DataDevice;
 }
-namespace Server {
+namespace Server
+{
 class DataDeviceInterface;
 class SurfaceInterface;
 }
@@ -48,33 +51,34 @@ class Clipboard;
 class Dnd;
 enum class DragEventReply;
 
-/*
+/**
  * Interface class for all data sharing in the context of X selections
  * and Wayland's internal mechanism.
  *
  * Exists only once per Xwayland session.
- */
+ **/
 class DataBridge : public QObject
 {
     Q_OBJECT
+
 public:
-    static DataBridge* self();
+    static DataBridge *self();
 
     explicit DataBridge(QObject *parent = nullptr);
     ~DataBridge();
 
     bool filterEvent(xcb_generic_event_t *event);
-    DragEventReply dragMoveFilter(Toplevel *target, QPoint pos);
+    DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);
 
     KWayland::Client::DataDevice *dataDevice() const
     {
-        return m_dd;
+        return m_dataDevice;
     }
     KWayland::Server::DataDeviceInterface *dataDeviceIface() const
     {
-        return m_ddi;
+        return m_dataDeviceInterface;
     }
-    Dnd* dnd() const
+    Dnd *dnd() const
     {
         return m_dnd;
     }
@@ -88,11 +92,13 @@ private:
     Dnd *m_dnd = nullptr;
 
     /* Internal data device interface */
-    KWayland::Client::DataDevice *m_dd = nullptr;
-    KWayland::Server::DataDeviceInterface *m_ddi = nullptr;
+    KWayland::Client::DataDevice *m_dataDevice = nullptr;
+    KWayland::Server::DataDeviceInterface *m_dataDeviceInterface = nullptr;
+
+    Q_DISABLE_COPY(DataBridge)
 };
 
-}
-}
+} // namespace Xwl
+} // namespace KWin
 
 #endif

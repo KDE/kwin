@@ -39,8 +39,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMouseEvent>
 #include <QTimer>
 
-namespace KWin {
-namespace Xwl {
+namespace KWin
+{
+namespace Xwl
+{
 
 static QStringList atomToMimeTypes(xcb_atom_t atom)
 {
@@ -61,7 +63,7 @@ static QStringList atomToMimeTypes(xcb_atom_t atom)
 }
 
 XToWlDrag::XToWlDrag(X11Source *source)
-    : m_src(source)
+    : m_source(source)
 {
     connect(DataBridge::self()->dnd(), &Dnd::transferFinished, this, [this](xcb_timestamp_t eventTime) {
         // we use this mechanism, because the finished call is not
@@ -80,7 +82,7 @@ XToWlDrag::XToWlDrag(X11Source *source)
     connect(source, &X11Source::transferReady, this, [this](xcb_atom_t target, qint32 fd) {
         Q_UNUSED(target);
         Q_UNUSED(fd);
-        m_dataRequests << QPair<xcb_timestamp_t, bool>(m_src->timestamp(), false);
+        m_dataRequests << QPair<xcb_timestamp_t, bool>(m_source->timestamp(), false);
     });
     auto *ddm = waylandServer()->internalDataDeviceManager();
     m_dataSource = ddm->createDataSource(this);
@@ -142,7 +144,7 @@ XToWlDrag::~XToWlDrag()
     m_dataSource = nullptr;
 }
 
-DragEventReply XToWlDrag::moveFilter(Toplevel *target, QPoint pos)
+DragEventReply XToWlDrag::moveFilter(Toplevel *target, const QPoint &pos)
 {
     Q_UNUSED(pos);
 
@@ -220,7 +222,7 @@ DnDAction XToWlDrag::selectedDragAndDropAction()
 
 void XToWlDrag::setOffers(const Mimes &offers)
 {
-    m_src->setOffers(offers);
+    m_source->setOffers(offers);
     if (offers.isEmpty()) {
         // There are no offers, so just directly set the drag target,
         // no transfer possible anyways.
@@ -288,7 +290,7 @@ WlVisit::WlVisit(AbstractClient *target, XToWlDrag *drag)
       m_target(target),
       m_drag(drag)
 {
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     m_window = xcb_generate_id(xcbConn);
     DataBridge::self()->dnd()->overwriteRequestorWindow(m_window);
@@ -325,7 +327,7 @@ WlVisit::WlVisit(AbstractClient *target, XToWlDrag *drag)
 
 WlVisit::~WlVisit()
 {
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_destroy_window(xcbConn, m_window);
     xcb_flush(xcbConn);
 }
@@ -362,7 +364,7 @@ static bool hasMimeName(const Mimes &mimes, const QString &name)
                        [name](const Mime &m) { return m.first == name; });
 }
 
-bool WlVisit::handleEnter(xcb_client_message_event_t *ev)
+bool WlVisit::handleEnter(xcb_client_message_event_t *event)
 {
     if (m_entered) {
         // a drag already entered
@@ -370,7 +372,7 @@ bool WlVisit::handleEnter(xcb_client_message_event_t *ev)
     }
     m_entered = true;
 
-    xcb_client_message_data_t *data = &ev->data;
+    xcb_client_message_data_t *data = &event->data;
     m_srcWindow = data->data32[0];
     m_version = data->data32[1] >> 24;
 
@@ -398,7 +400,7 @@ bool WlVisit::handleEnter(xcb_client_message_event_t *ev)
 
 void WlVisit::getMimesFromWinProperty(Mimes &offers)
 {
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     auto cookie = xcb_get_property(xcbConn,
                                    0,
                                    m_srcWindow,
@@ -416,10 +418,10 @@ void WlVisit::getMimesFromWinProperty(Mimes &offers)
         return;
     }
 
-    xcb_atom_t *mimeAtoms = static_cast<xcb_atom_t*>(xcb_get_property_value(reply));
+    xcb_atom_t *mimeAtoms = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
     for (size_t i = 0; i < reply->value_len; ++i) {
         const auto mimeStrings = atomToMimeTypes(mimeAtoms[i]);
-        for (const auto mime : mimeStrings ) {
+        for (const auto mime : mimeStrings) {
             if (!hasMimeName(offers, mime)) {
                 offers << Mime(mime, mimeAtoms[i]);
             }
@@ -428,9 +430,9 @@ void WlVisit::getMimesFromWinProperty(Mimes &offers)
     free(reply);
 }
 
-bool WlVisit::handlePosition(xcb_client_message_event_t *ev)
+bool WlVisit::handlePosition(xcb_client_message_event_t *event)
 {
-    xcb_client_message_data_t *data = &ev->data;
+    xcb_client_message_data_t *data = &event->data;
     m_srcWindow = data->data32[0];
 
     if (!m_target) {
@@ -466,11 +468,11 @@ bool WlVisit::handlePosition(xcb_client_message_event_t *ev)
     return true;
 }
 
-bool WlVisit::handleDrop(xcb_client_message_event_t *ev)
+bool WlVisit::handleDrop(xcb_client_message_event_t *event)
 {
     m_dropHandled = true;
 
-    xcb_client_message_data_t *data = &ev->data;
+    xcb_client_message_data_t *data = &event->data;
     m_srcWindow = data->data32[0];
     const xcb_timestamp_t timestamp = data->data32[2];
     m_drag->x11Source()->setTimestamp(timestamp);
@@ -488,10 +490,10 @@ void WlVisit::doFinish()
     Q_EMIT finish(this);
 }
 
-bool WlVisit::handleLeave(xcb_client_message_event_t *ev)
+bool WlVisit::handleLeave(xcb_client_message_event_t *event)
 {
     m_entered = false;
-    xcb_client_message_data_t *data = &ev->data;
+    xcb_client_message_data_t *data = &event->data;
     m_srcWindow = data->data32[0];
     doFinish();
     return true;
@@ -536,7 +538,7 @@ void WlVisit::unmapProxyWindow()
     if (!m_mapped) {
         return;
     }
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_unmap_window(xcbConn, m_window);
     workspace()->removeManualOverlay(m_window);
     workspace()->updateStackingOrder(true);
@@ -544,5 +546,5 @@ void WlVisit::unmapProxyWindow()
     m_mapped = false;
 }
 
-}
-}
+} // namespace Xwl
+} // namespace KWin

@@ -19,35 +19,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "clipboard.h"
 
-#include "xwayland.h"
 #include "databridge.h"
 #include "selection_source.h"
 #include "transfer.h"
+#include "xwayland.h"
 
+#include "client.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "client.h"
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/datadevice.h>
 #include <KWayland/Client/datasource.h>
 
-#include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/datadevice_interface.h>
 #include <KWayland/Server/datasource_interface.h>
+#include <KWayland/Server/seat_interface.h>
 
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
 
 #include <xwayland_logging.h>
 
-namespace KWin {
-namespace Xwl {
+namespace KWin
+{
+namespace Xwl
+{
 
 Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
     : Selection(atom, parent)
 {
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     const uint32_t clipboardValues[] = { XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
                                    XCB_EVENT_MASK_PROPERTY_CHANGE };
@@ -135,53 +137,56 @@ void Clipboard::checkWlSource()
 
 void Clipboard::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 {
-    createX11Source(NULL);
+    createX11Source(nullptr);
 
-    const auto *ac = workspace()->activeClient();
-    if (!qobject_cast<const KWin::Client *>(ac)) {
+    const AbstractClient *client = workspace()->activeClient();
+    if (!qobject_cast<const Client *>(client)) {
         // clipboard is only allowed to be acquired when Xwayland has focus
         // TODO: can we make this stronger (window id comparision)?
         return;
     }
+
     createX11Source(event);
-    auto *xSrc = x11Source();
-    if (xSrc) {
-        xSrc->getTargets();
+
+    if (X11Source *source = x11Source()) {
+        source->getTargets();
     }
 }
 
-void Clipboard::x11OffersChanged(const QVector<QString> &added, const QVector<QString> &removed)
+void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &removed)
 {
-    auto *xSrc = x11Source();
-    if (!xSrc) {
+    X11Source *source = x11Source();
+    if (!source) {
         return;
     }
 
-    const auto offers = xSrc->offers();
-    const bool hasOffers = offers.size() > 0;
+    const Mimes offers = source->offers();
 
-    if (hasOffers) {
-        if (!xSrc->dataSource() || !removed.isEmpty()) {
+    if (!offers.isEmpty()) {
+        if (!source->dataSource() || !removed.isEmpty()) {
             // create new Wl DataSource if there is none or when types
             // were removed (Wl Data Sources can only add types)
-            auto *ddm = waylandServer()->internalDataDeviceManager();
-            auto *ds = ddm->createDataSource(xSrc);
+            KWayland::Client::DataDeviceManager *dataDeviceManager =
+                waylandServer()->internalDataDeviceManager();
+            KWayland::Client::DataSource *dataSource =
+                dataDeviceManager->createDataSource(source);
 
             // also offers directly the currently available types
-            xSrc->setDataSource(ds);
-            DataBridge::self()->dataDevice()->setSelection(0, ds);
+            source->setDataSource(dataSource);
+            DataBridge::self()->dataDevice()->setSelection(0, dataSource);
             waylandServer()->seat()->setSelection(DataBridge::self()->dataDeviceIface());
-        } else if (auto *ds = xSrc->dataSource()) {
-            for (const auto &mime : added) {
-                ds->offer(mime);
+        } else if (auto *dataSource = source->dataSource()) {
+            for (const QString &mime : added) {
+                dataSource->offer(mime);
             }
         }
     } else {
         waylandServer()->seat()->setSelection(nullptr);
     }
+
     waylandServer()->internalClientConection()->flush();
     waylandServer()->dispatch();
 }
 
-}
-}
+} // namespace Xwl
+} // namespace KWin

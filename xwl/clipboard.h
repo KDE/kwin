@@ -38,30 +38,33 @@ namespace Xwl
 /**
  * Represents the X clipboard, which is on Wayland side just called
  * @e selection.
- */
+ **/
 class Clipboard : public Selection
 {
     Q_OBJECT
+
 public:
     Clipboard(xcb_atom_t atom, QObject *parent);
 
 private:
     void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) override;
-    void x11OffersChanged(const QVector<QString> &added, const QVector<QString> &removed) override;
+    void x11OffersChanged(const QStringList &added, const QStringList &removed) override;
     /**
      * React to Wl selection change.
-     */
+     **/
     void wlSelectionChanged(KWayland::Server::DataDeviceInterface *ddi);
     /**
      * Check the current state of the selection and if a source needs
      * to be created or destroyed.
-     */
+     **/
     void checkWlSource();
 
     QMetaObject::Connection m_checkConnection;
+
+    Q_DISABLE_COPY(Clipboard)
 };
 
-}
-}
+} // namespace Xwl
+} // namespace KWin
 
 #endif

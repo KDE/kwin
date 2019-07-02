@@ -23,24 +23,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "transfer.h"
 
 #include "atoms.h"
-#include "workspace.h"
 #include "client.h"
+#include "workspace.h"
 
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
 
 #include <QTimer>
 
-namespace KWin {
-namespace Xwl {
+namespace KWin
+{
+namespace Xwl
+{
 
 xcb_atom_t Selection::mimeTypeToAtom(const QString &mimeType)
 {
     if (mimeType == QLatin1String("text/plain;charset=utf-8")) {
         return atoms->utf8_string;
-    } else if (mimeType == QLatin1String("text/plain")) {
+    }
+    if (mimeType == QLatin1String("text/plain")) {
         return atoms->text;
-    } else if (mimeType == QLatin1String("text/x-uri")) {
+    }
+    if (mimeType == QLatin1String("text/x-uri")) {
         return atoms->uri_list;
     }
     return mimeTypeToAtomLiteral(mimeType);
@@ -53,15 +57,15 @@ xcb_atom_t Selection::mimeTypeToAtomLiteral(const QString &mimeType)
 
 QString Selection::atomName(xcb_atom_t atom)
 {
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_get_atom_name_cookie_t nameCookie = xcb_get_atom_name(xcbConn, atom);
-    xcb_get_atom_name_reply_t *nameReply = xcb_get_atom_name_reply(xcbConn, nameCookie, NULL);
-    if (nameReply == NULL) {
+    xcb_get_atom_name_reply_t *nameReply = xcb_get_atom_name_reply(xcbConn, nameCookie, nullptr);
+    if (!nameReply) {
         return QString();
     }
 
-    size_t len = xcb_get_atom_name_name_length(nameReply);
-    QString name = QString::fromLatin1(xcb_get_atom_name_name(nameReply), len);
+    const size_t length = xcb_get_atom_name_name_length(nameReply);
+    QString name = QString::fromLatin1(xcb_get_atom_name_name(nameReply), length);
     free(nameReply);
     return name;
 }
@@ -83,10 +87,10 @@ QStringList Selection::atomToMimeTypes(xcb_atom_t atom)
 }
 
 Selection::Selection(xcb_atom_t atom, QObject *parent)
-    : QObject(parent),
-      m_atom(atom)
+    : QObject(parent)
+    , m_atom(atom)
 {
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     m_window = xcb_generate_id(kwinApp()->x11Connection());
     m_requestorWindow = m_window;
     xcb_flush(xcbConn);
@@ -105,11 +109,11 @@ bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
         m_disownPending = false;
         return true;
     }
-    if (event->owner == m_window && m_wlSrc) {
+    if (event->owner == m_window && m_waylandSource) {
         // When we claim a selection we must use XCB_TIME_CURRENT,
         // grab the actual timestamp here to answer TIMESTAMP requests
         // correctly
-        m_wlSrc->setTimestamp(event->timestamp);
+        m_waylandSource->setTimestamp(event->timestamp);
         m_timestamp = event->timestamp;
         return true;
     }
@@ -123,22 +127,22 @@ bool Selection::filterEvent(xcb_generic_event_t *event)
 {
     switch (event->response_type & XCB_EVENT_RESPONSE_TYPE_MASK) {
     case XCB_SELECTION_NOTIFY:
-        if (handleSelNotify(reinterpret_cast<xcb_selection_notify_event_t*>(event))) {
+        if (handleSelectionNotify(reinterpret_cast<xcb_selection_notify_event_t *>(event))) {
             return true;
         }
         Q_FALLTHROUGH();
     case XCB_PROPERTY_NOTIFY:
-        if (handlePropNotify(reinterpret_cast<xcb_property_notify_event_t*>(event))) {
+        if (handlePropertyNotify(reinterpret_cast<xcb_property_notify_event_t *>(event))) {
             return true;
         }
         Q_FALLTHROUGH();
     case XCB_SELECTION_REQUEST:
-        if (handleSelRequest(reinterpret_cast<xcb_selection_request_event_t*>(event))) {
+        if (handleSelectionRequest(reinterpret_cast<xcb_selection_request_event_t *>(event))) {
             return true;
         }
         Q_FALLTHROUGH();
     case XCB_CLIENT_MESSAGE:
-        if (handleClientMessage(reinterpret_cast<xcb_client_message_event_t*>(event))) {
+        if (handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(event))) {
             return true;
         }
         Q_FALLTHROUGH();
@@ -147,7 +151,7 @@ bool Selection::filterEvent(xcb_generic_event_t *event)
     }
 }
 
-void Selection::sendSelNotify(xcb_selection_request_event_t *event, bool success)
+void Selection::sendSelectionNotify(xcb_selection_request_event_t *event, bool success)
 {
     xcb_selection_notify_event_t notify;
     notify.response_type = XCB_SELECTION_NOTIFY;
@@ -156,9 +160,9 @@ void Selection::sendSelNotify(xcb_selection_request_event_t *event, bool success
     notify.requestor = event->requestor;
     notify.selection = event->selection;
     notify.target = event->target;
-    notify.property = success ? event->property : (xcb_atom_t)XCB_ATOM_NONE;
+    notify.property = success ? event->property : xcb_atom_t(XCB_ATOM_NONE);
 
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_send_event(xcbConn,
                    0,
                    event->requestor,
@@ -169,7 +173,7 @@ void Selection::sendSelNotify(xcb_selection_request_event_t *event, bool success
 
 void Selection::registerXfixes()
 {
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     const uint32_t mask = XCB_XFIXES_SELECTION_EVENT_MASK_SET_SELECTION_OWNER |
             XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_WINDOW_DESTROY |
             XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_CLIENT_CLOSE;
@@ -180,36 +184,36 @@ void Selection::registerXfixes()
     xcb_flush(xcbConn);
 }
 
-void Selection::setWlSource(WlSource *src)
+void Selection::setWlSource(WlSource *source)
 {
-    delete m_wlSrc;
-    delete m_xSrc;
-    m_wlSrc = nullptr;
-    m_xSrc = nullptr;
-    if (src) {
-        m_wlSrc = src;
-        connect(src, &WlSource::transferReady, this, &Selection::startTransferToX);
+    delete m_waylandSource;
+    delete m_xSource;
+    m_waylandSource = nullptr;
+    m_xSource = nullptr;
+    if (source) {
+        m_waylandSource = source;
+        connect(source, &WlSource::transferReady, this, &Selection::startTransferToX);
     }
 }
 
 void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
 {
-    delete m_wlSrc;
-    delete m_xSrc;
-    m_wlSrc = nullptr;
-    m_xSrc = nullptr;
+    delete m_waylandSource;
+    delete m_xSource;
+    m_waylandSource = nullptr;
+    m_xSource = nullptr;
     if (!event || event->owner == XCB_WINDOW_NONE) {
         return;
     }
-    m_xSrc = new X11Source(this, event);
+    m_xSource = new X11Source(this, event);
 
-    connect(m_xSrc, &X11Source::offersChanged, this, &Selection::x11OffersChanged);
-    connect(m_xSrc, &X11Source::transferReady, this, &Selection::startTransferToWayland);
+    connect(m_xSource, &X11Source::offersChanged, this, &Selection::x11OffersChanged);
+    connect(m_xSource, &X11Source::transferReady, this, &Selection::startTransferToWayland);
 }
 
 void Selection::ownSelection(bool own)
 {
-    auto *xcbConn = kwinApp()->x11Connection();
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     if (own) {
         xcb_set_selection_owner(xcbConn,
                                 m_window,
@@ -227,16 +231,16 @@ void Selection::ownSelection(bool own)
 
 void Selection::overwriteRequestorWindow(xcb_window_t window)
 {
-    Q_ASSERT(m_xSrc);
+    Q_ASSERT(m_xSource);
     if (window == XCB_WINDOW_NONE) {
         // reset
         window = m_window;
     }
     m_requestorWindow = window;
-    m_xSrc->setRequestor(window);
+    m_xSource->setRequestor(window);
 }
 
-bool Selection::handleSelRequest(xcb_selection_request_event_t *event)
+bool Selection::handleSelectionRequest(xcb_selection_request_event_t *event)
 {
     if (event->selection != m_atom) {
         return false;
@@ -245,44 +249,44 @@ bool Selection::handleSelRequest(xcb_selection_request_event_t *event)
     if (qobject_cast<Client *>(workspace()->activeClient()) == nullptr) {
         // Receiving Wayland selection not allowed when no Xwayland surface active
         // filter the event, but don't act upon it
-        sendSelNotify(event, false);
+        sendSelectionNotify(event, false);
         return true;
     }
 
-    if (m_window != event->owner || !m_wlSrc) {
+    if (m_window != event->owner || !m_waylandSource) {
         if (event->time < m_timestamp) {
             // cancel earlier attempts at receiving a selection
             // TODO: is this for sure without problems?
-            sendSelNotify(event, false);
+            sendSelectionNotify(event, false);
             return true;
         }
         return false;
     }
-    return m_wlSrc->handleSelRequest(event);
+    return m_waylandSource->handleSelectionRequest(event);
 }
 
-bool Selection::handleSelNotify(xcb_selection_notify_event_t *event)
+bool Selection::handleSelectionNotify(xcb_selection_notify_event_t *event)
 {
-    if (m_xSrc && m_xSrc->handleSelNotify(event)) {
+    if (m_xSource && m_xSource->handleSelectionNotify(event)) {
         return true;
     }
-    for (auto *transfer : m_xToWlTransfers) {
-        if (transfer->handleSelNotify(event)) {
+    for (TransferXtoWl *transfer : m_xToWlTransfers) {
+        if (transfer->handleSelectionNotify(event)) {
             return true;
         }
     }
     return false;
 }
 
-bool Selection::handlePropNotify(xcb_property_notify_event_t *event)
+bool Selection::handlePropertyNotify(xcb_property_notify_event_t *event)
 {
-    for (auto *transfer : m_xToWlTransfers) {
-        if (transfer->handlePropNotify(event)) {
+    for (TransferXtoWl *transfer : m_xToWlTransfers) {
+        if (transfer->handlePropertyNotify(event)) {
             return true;
         }
     }
-    for (auto *transfer : m_wlToXTransfers) {
-        if (transfer->handlePropNotify(event)) {
+    for (TransferWltoX *transfer : m_wlToXTransfers) {
+        if (transfer->handlePropertyNotify(event)) {
             return true;
         }
     }
@@ -292,7 +296,7 @@ bool Selection::handlePropNotify(xcb_property_notify_event_t *event)
 void Selection::startTransferToWayland(xcb_atom_t target, qint32 fd)
 {
     // create new x to wl data transfer object
-    auto *transfer = new TransferXtoWl(m_atom, target, fd, m_xSrc->timestamp(), m_requestorWindow, this);
+    auto *transfer = new TransferXtoWl(m_atom, target, fd, m_xSource->timestamp(), m_requestorWindow, this);
     m_xToWlTransfers << transfer;
 
     connect(transfer, &TransferXtoWl::finished, this, [this, transfer]() {
@@ -309,7 +313,7 @@ void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd
     // create new wl to x data transfer object
     auto *transfer = new TransferWltoX(m_atom, event, fd, this);
 
-    connect(transfer, &TransferWltoX::selNotify, this, &Selection::sendSelNotify);
+    connect(transfer, &TransferWltoX::selectionNotify, this, &Selection::sendSelectionNotify);
     connect(transfer, &TransferWltoX::finished, this, [this, transfer]() {
         Q_EMIT transferFinished(transfer->timestamp());
 
@@ -355,13 +359,13 @@ void Selection::endTimeoutTransfersTimer()
 
 void Selection::timeoutTransfers()
 {
-    for (auto *transfer : m_xToWlTransfers) {
+    for (TransferXtoWl *transfer : m_xToWlTransfers) {
         transfer->timeout();
     }
-    for (auto *transfer : m_wlToXTransfers) {
+    for (TransferWltoX *transfer : m_wlToXTransfers) {
         transfer->timeout();
     }
 }
 
-}
-}
+} // namespace Xwl
+} // namespace KWin

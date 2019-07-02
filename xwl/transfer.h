@@ -26,12 +26,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 
-namespace KWayland {
-namespace Client {
+namespace KWayland
+{
+namespace Client
+{
 class DataDevice;
 class DataSource;
 }
-namespace Server {
+namespace Server
+{
 class DataDeviceInterface;
 }
 }
@@ -48,17 +51,18 @@ namespace Xwl
  * Lives for the duration of the transfer and must be cleaned up
  * externally afterwards. For that the owner should connect to the
  * @c finished() signal.
- */
+ **/
 class Transfer : public QObject
 {
     Q_OBJECT
+
 public:
     Transfer(xcb_atom_t selection,
              qint32 fd,
              xcb_timestamp_t timestamp,
              QObject *parent = nullptr);
 
-    virtual bool handlePropNotify(xcb_property_notify_event_t *event) = 0;
+    virtual bool handlePropertyNotify(xcb_property_notify_event_t *event) = 0;
     void timeout();
     xcb_timestamp_t timestamp() const {
         return m_timestamp;
@@ -88,8 +92,8 @@ protected:
     }
     void createSocketNotifier(QSocketNotifier::Type type);
     void clearSocketNotifier();
-    QSocketNotifier* socketNotifier() const {
-        return m_sn;
+    QSocketNotifier *socketNotifier() const {
+        return m_notifier;
     }
 private:
     void closeFd();
@@ -98,17 +102,20 @@ private:
     qint32 m_fd;
     xcb_timestamp_t m_timestamp = XCB_CURRENT_TIME;
 
-    QSocketNotifier *m_sn = nullptr;
+    QSocketNotifier *m_notifier = nullptr;
     bool m_incr = false;
     bool m_timeout = false;
+
+    Q_DISABLE_COPY(Transfer)
 };
 
 /**
  * Represents a transfer from a Wayland native source to an X window.
- */
+ **/
 class TransferWltoX : public Transfer
 {
     Q_OBJECT
+
 public:
     TransferWltoX(xcb_atom_t selection,
                   xcb_selection_request_event_t *request,
@@ -117,31 +124,33 @@ public:
     ~TransferWltoX();
 
     void startTransferFromSource();
-    bool handlePropNotify(xcb_property_notify_event_t *event) override;
+    bool handlePropertyNotify(xcb_property_notify_event_t *event) override;
 
 Q_SIGNALS:
-    void selNotify(xcb_selection_request_event_t *event, bool success);
+    void selectionNotify(xcb_selection_request_event_t *event, bool success);
 
 private:
     void startIncr();
     void readWlSource();
     int flushSourceData();
-    void handlePropDelete();
+    void handlePropertyDelete();
 
     xcb_selection_request_event_t *m_request = nullptr;
 
     /* contains all received data portioned in chunks
      * TODO: explain second QPair component
      */
-    QVector<QPair<QByteArray, int> > chunks;
+    QVector<QPair<QByteArray, int> > m_chunks;
 
-    bool propertyIsSet = false;
-    bool flushPropOnDelete = false;
+    bool m_propertyIsSet = false;
+    bool m_flushPropertyOnDelete = false;
+
+    Q_DISABLE_COPY(TransferWltoX)
 };
 
 /**
- * Helper class for X to Wl transfers
- */
+ * Helper class for X to Wl transfers.
+ **/
 class DataReceiver
 {
 public:
@@ -150,7 +159,7 @@ public:
     void transferFromProperty(xcb_get_property_reply_t *reply);
 
 
-    virtual void setData(char *value, int length);
+    virtual void setData(const char *value, int length);
     QByteArray data() const;
 
     void partRead(int length);
@@ -169,29 +178,30 @@ private:
 /**
  * Compatibility receiver for clients only
  * supporting the NETSCAPE_URL scheme (Firefox)
- */
+ **/
 class NetscapeUrlReceiver : public DataReceiver
 {
 public:
-    void setData(char *value, int length) override;
+    void setData(const char *value, int length) override;
 };
 
 /**
  * Compatibility receiver for clients only
  * supporting the text/x-moz-url scheme (Chromium on own drags)
- */
+ **/
 class MozUrlReceiver : public DataReceiver
 {
 public:
-    void setData(char *value, int length) override;
+    void setData(const char *value, int length) override;
 };
 
 /**
  * Represents a transfer from an X window to a Wayland native client.
- */
+ **/
 class TransferXtoWl : public Transfer
 {
     Q_OBJECT
+
 public:
     TransferXtoWl(xcb_atom_t selection,
                   xcb_atom_t target,
@@ -200,8 +210,8 @@ public:
                   QObject *parent = nullptr);
     ~TransferXtoWl();
 
-    bool handleSelNotify(xcb_selection_notify_event_t *event);
-    bool handlePropNotify(xcb_property_notify_event_t *event) override;
+    bool handleSelectionNotify(xcb_selection_notify_event_t *event);
+    bool handlePropertyNotify(xcb_property_notify_event_t *event) override;
 
 private:
     void dataSourceWrite();
@@ -210,9 +220,11 @@ private:
 
     xcb_window_t m_window;
     DataReceiver *m_receiver = nullptr;
+
+    Q_DISABLE_COPY(TransferXtoWl)
 };
 
-}
-}
+} // namespace Xwl
+} // namespace KWin
 
 #endif

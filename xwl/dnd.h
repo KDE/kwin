@@ -48,20 +48,21 @@ enum class DragEventReply;
 /**
  * Represents the drag and drop mechanism, on X side this is the XDND protocol.
  * For more information on XDND see: https://johnlindal.wixsite.com/xdnd
- */
+ **/
 class Dnd : public Selection
 {
     Q_OBJECT
+
 public:
     explicit Dnd(xcb_atom_t atom, QObject *parent);
 
     static uint32_t version();
 
     void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) override;
-    void x11OffersChanged(const QVector<QString> &added, const QVector<QString> &removed) override;
+    void x11OffersChanged(const QStringList &added, const QStringList &removed) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
-    DragEventReply dragMoveFilter(Toplevel *target, QPoint pos);
+    DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);
 
     KWayland::Server::SurfaceInterface *surfaceIface() const {
         return m_surfaceIface;
@@ -78,13 +79,15 @@ private:
 
     // active drag or null when no drag active
     Drag *m_currentDrag = nullptr;
-    QVector<Drag*> m_oldDrags;
+    QVector<Drag *> m_oldDrags;
 
     KWayland::Client::Surface *m_surface;
     KWayland::Server::SurfaceInterface *m_surfaceIface = nullptr;
+
+    Q_DISABLE_COPY(Dnd)
 };
 
-}
-}
+} // namespace Xwl
+} // namespace KWin
 
 #endif

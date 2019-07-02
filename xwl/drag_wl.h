@@ -58,10 +58,11 @@ using DnDActions = KWayland::Client::DataDeviceManager::DnDActions;
 class WlToXDrag : public Drag
 {
     Q_OBJECT
+
 public:
     explicit WlToXDrag();
 
-    DragEventReply moveFilter(Toplevel *target, QPoint pos) override;
+    DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     bool end() override;
@@ -73,20 +74,23 @@ public:
 private:
     KWayland::Server::DataSourceInterface *m_dsi;
     Xvisit *m_visit = nullptr;
+
+    Q_DISABLE_COPY(WlToXDrag)
 };
 
 // visit to an X window
 class Xvisit : public QObject
 {
     Q_OBJECT
+
 public:
     // TODO: handle ask action
 
     Xvisit(WlToXDrag *drag, AbstractClient *target);
 
     bool handleClientMessage(xcb_client_message_event_t *event);
-    bool handleStatus(xcb_client_message_event_t *ev);
-    bool handleFinished(xcb_client_message_event_t *ev);
+    bool handleStatus(xcb_client_message_event_t *event);
+    bool handleFinished(xcb_client_message_event_t *event);
 
     void sendPosition(const QPointF &globalPos);
     void leave();
@@ -123,10 +127,10 @@ private:
     AbstractClient *m_target;
     uint32_t m_version = 0;
 
-    QMetaObject::Connection m_enterCon;
-    QMetaObject::Connection m_motionCon;
-    QMetaObject::Connection m_actionCon;
-    QMetaObject::Connection m_dropCon;
+    QMetaObject::Connection m_enterConnection;
+    QMetaObject::Connection m_motionConnection;
+    QMetaObject::Connection m_actionConnection;
+    QMetaObject::Connection m_dropConnection;
 
     struct {
         bool pending = false;
@@ -152,9 +156,11 @@ private:
     } m_state;
 
     bool m_accepts = false;
+
+    Q_DISABLE_COPY(Xvisit)
 };
 
-}
-}
+} // namespace Xwl
+} // namespace KWin
 
 #endif
