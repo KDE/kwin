@@ -102,7 +102,7 @@ void GenericSceneOpenGLTest::testRestart()
 
     QSignalSpy sceneCreatedSpy(KWin::Compositor::self(), &Compositor::sceneCreated);
     QVERIFY(sceneCreatedSpy.isValid());
-    KWin::Compositor::self()->slotReinitialize();
+    KWin::Compositor::self()->reinitialize();
     if (sceneCreatedSpy.isEmpty()) {
         QVERIFY(sceneCreatedSpy.wait());
     }

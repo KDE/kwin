@@ -158,7 +158,7 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
     QVERIFY(effect->isActive());
 
     // Re-initialize the compositor, effects will be destroyed and created again.
-    Compositor::self()->slotReinitialize();
+    Compositor::self()->reinitialize();
 
     // By this time, KWin should still be alive.
 }

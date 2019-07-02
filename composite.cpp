@@ -110,7 +110,7 @@ Compositor::Compositor(QObject* workspace)
     , m_composeAtSwapCompletion(false)
 {
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
-    connect(&compositeResetTimer, &QTimer::timeout, this, &Compositor::restart);
+    connect(&compositeResetTimer, &QTimer::timeout, this, &Compositor::reinitialize);
     connect(options, &Options::configChanged, this, &Compositor::slotConfigChanged);
     compositeResetTimer.setSingleShot(true);
     m_monotonicClock.start();
@@ -277,7 +277,7 @@ void Compositor::slotCompositingOptionsInitialized()
         QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
     }
 
-    connect(m_scene, &Scene::resetCompositing, this, &Compositor::restart);
+    connect(m_scene, &Scene::resetCompositing, this, &Compositor::reinitialize);
     emit sceneCreated();
 
     if (Workspace::self()) {
@@ -503,7 +503,7 @@ void Compositor::slotConfigChanged()
         finish();
 }
 
-void Compositor::slotReinitialize()
+void Compositor::reinitialize()
 {
     // Reparse config. Config options will be reloaded by setup()
     kwinApp()->config()->reparseConfiguration();
@@ -588,14 +588,6 @@ void Compositor::resume(Compositor::SuspendReason reason)
     Q_ASSERT(reason != NoReasonSuspend);
     m_suspended &= ~reason;
     setup(); // signal "toggled" is eventually emitted from within setup
-}
-
-void Compositor::restart()
-{
-    if (hasScene()) {
-        finish();
-        QTimer::singleShot(0, this, &Compositor::setup);
-    }
 }
 
 void Compositor::addRepaint(int x, int y, int w, int h)

@@ -115,7 +115,7 @@ public:
      * Re-initializes the Compositor completely.
      * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
      **/
-    void slotReinitialize();
+    void reinitialize();
 
     /**
      * Whether the Compositor is active. That is a Scene is present and the Compositor is
@@ -187,11 +187,6 @@ private:
      **/
     void slotCompositingOptionsInitialized();
     void finish();
-    /**
-     * Restarts the Compositor if running.
-     * That is the Compositor will be stopped and started again.
-     **/
-    void restart();
 
     void claimCompositorSelection();
 

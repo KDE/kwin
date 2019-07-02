@@ -283,7 +283,7 @@ void SceneQPainterTest::testCompositorRestart()
     QVERIFY(oldScene);
     QSignalSpy sceneCreatedSpy(KWin::Compositor::self(), &KWin::Compositor::sceneCreated);
     QVERIFY(sceneCreatedSpy.isValid());
-    KWin::Compositor::self()->slotReinitialize();
+    KWin::Compositor::self()->reinitialize();
     if (sceneCreatedSpy.isEmpty()) {
         QVERIFY(sceneCreatedSpy.wait());
     }

@@ -319,7 +319,7 @@ void CompositorDBusInterface::suspend()
 
 void CompositorDBusInterface::reinitialize()
 {
-    m_compositor->slotReinitialize();
+    m_compositor->reinitialize();
 }
 
 QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const
