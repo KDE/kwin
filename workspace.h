@@ -496,7 +496,6 @@ Q_SIGNALS:
     void unmanagedRemoved(KWin::Unmanaged*);
     void deletedRemoved(KWin::Deleted*);
     void configChanged();
-    void reinitializeCompositing();
     void showingDesktopChanged(bool showing);
     /**
      * This signels is emitted when ever the stacking order is change, ie. a window is risen
