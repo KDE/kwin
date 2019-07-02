@@ -193,9 +193,7 @@ void Compositor::setup()
     }
     m_starting = true;
 
-    if (!options->isCompositingInitialized()) {
-        options->reloadCompositingSettings(true);
-    }
+    options->reloadCompositingSettings(true);
     slotCompositingOptionsInitialized();
 }
 
@@ -514,7 +512,6 @@ void Compositor::slotReinitialize()
     finish();
     // resume compositing if suspended
     m_suspended = NoReasonSuspend;
-    options->setCompositingInitialized(false);
     setup();
 
     if (effects) { // setup() may fail

@@ -112,7 +112,6 @@ Options::Options(QObject *parent)
     , m_autogroupInForeground(false)
     , m_compositingMode(Options::defaultCompositingMode())
     , m_useCompositing(Options::defaultUseCompositing())
-    , m_compositingInitialized(Options::defaultCompositingInitialized())
     , m_hiddenPreviews(Options::defaultHiddenPreviews())
     , m_glSmoothScale(Options::defaultGlSmoothScale())
     , m_xrenderSmoothScale(Options::defaultXrenderSmoothScale())
@@ -615,15 +614,6 @@ void Options::setUseCompositing(bool useCompositing)
     emit useCompositingChanged();
 }
 
-void Options::setCompositingInitialized(bool compositingInitialized)
-{
-    if (m_compositingInitialized == compositingInitialized) {
-        return;
-    }
-    m_compositingInitialized = compositingInitialized;
-    emit compositingInitializedChanged();
-}
-
 void Options::setHiddenPreviews(int hiddenPreviews)
 {
     if (m_hiddenPreviews == static_cast<HiddenPreviews>(hiddenPreviews)) {
@@ -787,7 +777,6 @@ void Options::updateSettings()
 // KDE4 this probably needs to be done manually in clients
 
     // Driver-specific config detection
-    setCompositingInitialized(false);
     reloadCompositingSettings();
 
     emit configChanged();
@@ -956,9 +945,6 @@ void Options::reloadCompositingSettings(bool force)
     }
     m_settings->load();
     syncFromKcfgc();
-    // from now on we've an initial setup and don't have to reload settings on compositing activation
-    // see Workspace::setupCompositing(), composite.cpp
-    setCompositingInitialized(true);
 
     // Compositing settings
     KConfigGroup config(m_settings->config(), "Compositing");

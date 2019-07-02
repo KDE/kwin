@@ -167,7 +167,6 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool autogroupInForeground READ isAutogroupInForeground WRITE setAutogroupInForeground NOTIFY autogroupInForegroundChanged)
     Q_PROPERTY(int compositingMode READ compositingMode WRITE setCompositingMode NOTIFY compositingModeChanged)
     Q_PROPERTY(bool useCompositing READ isUseCompositing WRITE setUseCompositing NOTIFY useCompositingChanged)
-    Q_PROPERTY(bool compositingInitialized READ isCompositingInitialized WRITE setCompositingInitialized NOTIFY compositingInitializedChanged)
     Q_PROPERTY(int hiddenPreviews READ hiddenPreviews WRITE setHiddenPreviews NOTIFY hiddenPreviewsChanged)
     /**
      * 0 = no, 1 = yes when transformed,
@@ -558,9 +557,6 @@ public:
     }
     // Separate to mode so the user can toggle
     bool isUseCompositing() const;
-    bool isCompositingInitialized() const {
-        return m_compositingInitialized;
-    }
 
     // General preferences
     HiddenPreviews hiddenPreviews() const {
@@ -662,7 +658,6 @@ public:
     void setAutogroupInForeground(bool autogroupInForeground);
     void setCompositingMode(int compositingMode);
     void setUseCompositing(bool useCompositing);
-    void setCompositingInitialized(bool compositingInitialized);
     void setHiddenPreviews(int hiddenPreviews);
     void setGlSmoothScale(int glSmoothScale);
     void setXrenderSmoothScale(bool xrenderSmoothScale);
@@ -745,9 +740,6 @@ public:
     }
     static bool defaultUseCompositing() {
         return true;
-    }
-    static bool defaultCompositingInitialized() {
-        return false;
     }
     static HiddenPreviews defaultHiddenPreviews() {
         return HiddenPreviewsShown;
@@ -853,7 +845,6 @@ Q_SIGNALS:
     void autogroupInForegroundChanged();
     void compositingModeChanged();
     void useCompositingChanged();
-    void compositingInitializedChanged();
     void hiddenPreviewsChanged();
     void glSmoothScaleChanged();
     void xrenderSmoothScaleChanged();
@@ -898,7 +889,6 @@ private:
 
     CompositingType m_compositingMode;
     bool m_useCompositing;
-    bool m_compositingInitialized;
     HiddenPreviews m_hiddenPreviews;
     int m_glSmoothScale;
     bool m_xrenderSmoothScale;
