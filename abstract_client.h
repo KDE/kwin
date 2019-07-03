@@ -61,84 +61,103 @@ class DecorationPalette;
 class KWIN_EXPORT AbstractClient : public Toplevel
 {
     Q_OBJECT
+
     /**
      * Whether this Client is fullScreen. A Client might either be fullScreen due to the _NET_WM property
      * or through a legacy support hack. The fullScreen state can only be changed if the Client does not
      * use the legacy hack. To be sure whether the state changed, connect to the notify signal.
      **/
     Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
+
     /**
      * Whether the Client can be set to fullScreen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      **/
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
+
     /**
      * Whether this Client is the currently visible Client in its Client Group (Window Tabs).
      * For change connect to the visibleChanged signal on the Client's Group.
      **/
     Q_PROPERTY(bool isCurrentTab READ isCurrentTab)
+
     /**
      * Whether this Client is active or not. Use Workspace::activateClient() to activate a Client.
      * @see Workspace::activateClient
      **/
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
+
     /**
      * The desktop this Client is on. If the Client is on all desktops the property has value -1.
      * This is a legacy property, use x11DesktopIds instead
      **/
     Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
+
     /**
      * Whether the Client is on all desktops. That is desktop is -1.
      **/
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopChanged)
+
     /**
      * The x11 ids for all desktops this client is in. On X11 this list will always have a length of 1
      **/
     Q_PROPERTY(QVector<uint> x11DesktopIds READ x11DesktopIds NOTIFY x11DesktopIdsChanged)
+
     /**
      * Indicates that the window should not be included on a taskbar.
      **/
     Q_PROPERTY(bool skipTaskbar READ skipTaskbar WRITE setSkipTaskbar NOTIFY skipTaskbarChanged)
+
     /**
      * Indicates that the window should not be included on a Pager.
      **/
     Q_PROPERTY(bool skipPager READ skipPager WRITE setSkipPager NOTIFY skipPagerChanged)
+
     /**
      * Whether the Client should be excluded from window switching effects.
      **/
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
+
     /**
      * Whether the window can be closed by the user. The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(bool closeable READ isCloseable)
+
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
+
     /**
      * Whether the Client is set to be kept above other windows.
      **/
     Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
+
     /**
      * Whether the Client is set to be kept below other windows.
      **/
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
+
     /**
      * Whether the Client can be shaded. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      **/
     Q_PROPERTY(bool shadeable READ isShadeable)
+
     /**
      * Whether the Client is shaded.
      **/
     Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
+
     /**
      * Whether the Client can be minimized. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      **/
     Q_PROPERTY(bool minimizable READ isMinimizable)
+
     /**
      * Whether the Client is minimized.
      **/
     Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized NOTIFY minimizedChanged)
+
     /**
      * The optional geometry representing the minimized Client in e.g a taskbar.
      * See _NET_WM_ICON_GEOMETRY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
@@ -146,6 +165,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(QRect iconGeometry READ iconGeometry)
+
     /**
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
      * i.e. window types that usually don't have a window frame and the user does not use window
@@ -154,6 +174,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(bool specialWindow READ isSpecialWindow)
+
     /**
      * Whether window state _NET_WM_STATE_DEMANDS_ATTENTION is set. This state indicates that some
      * action in or with the window happened. For example, it may be set by the Window Manager if
@@ -163,57 +184,69 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * (usually, that it got activated).
      **/
     Q_PROPERTY(bool demandsAttention READ isDemandingAttention WRITE demandAttention NOTIFY demandsAttentionChanged)
+
     /**
      * The Caption of the Client. Read from WM_NAME property together with a suffix for hostname and shortcut.
      * To read only the caption as provided by WM_NAME, use the getter with an additional @c false value.
      **/
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
+
     /**
      * Minimum size as specified in WM_NORMAL_HINTS
      **/
     Q_PROPERTY(QSize minSize READ minSize)
+
     /**
      * Maximum size as specified in WM_NORMAL_HINTS
      **/
     Q_PROPERTY(QSize maxSize READ maxSize)
+
     /**
      * Whether the Client can accept keyboard focus.
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(bool wantsInput READ wantsInput)
+
     /**
      * Whether the Client is a transient Window to another Window.
      * @see transientFor
      **/
     Q_PROPERTY(bool transient READ isTransient NOTIFY transientChanged)
+
     /**
      * The Client to which this Client is a transient if any.
      **/
     Q_PROPERTY(KWin::AbstractClient *transientFor READ transientFor NOTIFY transientChanged)
+
     /**
      * Whether the Client represents a modal window.
      **/
     Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
+
     /**
      * The geometry of this Client. Be aware that depending on resize mode the geometryChanged signal
      * might be emitted at each resize step or only at the end of the resize operation.
      **/
     Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
+
     /**
      * Whether the Client is currently being moved by the user.
      * Notify signal is emitted when the Client starts or ends move/resize mode.
      **/
     Q_PROPERTY(bool move READ isMove NOTIFY moveResizedChanged)
+
     /**
      * Whether the Client is currently being resized by the user.
      * Notify signal is emitted when the Client starts or ends move/resize mode.
      **/
     Q_PROPERTY(bool resize READ isResize NOTIFY moveResizedChanged)
+
     /**
      * Whether the decoration is currently using an alpha channel.
      **/
     Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
+
     /**
      * Whether the window has a decoration or not.
      * This property is not allowed to be set by applications themselves.
@@ -221,17 +254,20 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * If this property gets abused by application developers, it will be removed again.
      **/
     Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder)
+
     /**
      * Whether the Client provides context help. Mostly needed by decorations to decide whether to
      * show the help button or not.
      **/
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp CONSTANT)
+
     /**
      * Whether the Client can be maximized both horizontally and vertically.
      * The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      **/
     Q_PROPERTY(bool maximizable READ isMaximizable)
+
     /**
      * Whether the Client is moveable. Even if it is not moveable, it might be possible to move
      * it to another screen. The property is evaluated each time it is invoked.
@@ -239,12 +275,14 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * @see moveableAcrossScreens
      **/
     Q_PROPERTY(bool moveable READ isMovable)
+
     /**
      * Whether the Client can be moved to another screen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      * @see moveable
      **/
     Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
+
     /**
      * Whether the Client can be resized. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
@@ -266,6 +304,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Whether an application menu is available for this Client
      **/
     Q_PROPERTY(bool hasApplicationMenu READ hasApplicationMenu NOTIFY hasApplicationMenuChanged)
+
     /**
      * Whether the application menu for this Client is currently opened
      **/
@@ -278,6 +317,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * considered unresponsive. This usually indicates that the application froze or crashed.
      **/
     Q_PROPERTY(bool unresponsive READ unresponsive NOTIFY unresponsiveChanged)
+
     /**
      * The "Window Tabs" Group this Client belongs to.
      **/
