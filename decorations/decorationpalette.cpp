@@ -41,7 +41,7 @@ DecorationPalette::DecorationPalette(const QString &colorScheme)
                     ? colorScheme
                     : QStandardPaths::locate(QStandardPaths::GenericConfigLocation, colorScheme))
 {
-    if (m_colorScheme.isEmpty() && colorScheme == QStringLiteral("kdeglobals")) {
+    if (!m_colorScheme.startsWith(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)) && colorScheme == QStringLiteral("kdeglobals")) {
         // kdeglobals doesn't exist so create it. This is needed to monitor it using QFileSystemWatcher.
         auto config = KSharedConfig::openConfig(colorScheme, KConfig::SimpleConfig);
         KConfigGroup wmConfig(config, QStringLiteral("WM"));
