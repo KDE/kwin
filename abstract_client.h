@@ -822,6 +822,8 @@ public:
      *
      * Internal clients are created by KWin and used for special purpose windows,
      * like the task switcher, etc.
+     *
+     * Default implementation returns @c false.
      **/
     virtual bool isInternal() const;
 
