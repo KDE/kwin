@@ -47,6 +47,13 @@ public:
     };
     Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
 
+    enum class State {
+        On = 0,
+        Off,
+        Starting,
+        Stopping
+    };
+
     ~Compositor() override;
 
     // when adding repaints caused by a window, you probably want to use
@@ -170,12 +177,8 @@ protected:
     void timerEvent(QTimerEvent *te) override;
 
 private:
-    Q_INVOKABLE void setup();
-    /**
-     * Called from setup() when the CompositingPrefs are ready.
-     **/
-    void slotCompositingOptionsInitialized();
-    void finish();
+    Q_INVOKABLE void start();
+    void stop();
 
     void claimCompositorSelection();
 
@@ -194,6 +197,7 @@ private:
 
     void slotConfigChanged();
 
+    State m_state;
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
      **/
@@ -208,8 +212,6 @@ private:
     int m_xrrRefreshRate;
     QRegion repaints_region;
 
-    bool m_finishing; // finish() sets this variable while shutting down
-    bool m_starting; // start() sets this variable while starting
     qint64 m_timeSinceLastVBlank;
 
     Scene *m_scene;

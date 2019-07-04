@@ -67,6 +67,8 @@ Q_DECLARE_METATYPE(KWin::Compositor::SuspendReason)
 namespace KWin
 {
 
+extern int screen_number; // main.cpp
+extern bool is_multihead;
 extern int currentRefreshRate();
 
 class CompositorSelectionOwner : public KSelectionOwner
@@ -97,13 +99,12 @@ static inline qint64 nanoToMilli(int nano) { return nano / (1000*1000); }
 
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
+    , m_state(State::Off)
     , m_suspended(options->isUseCompositing() ? NoReasonSuspend : UserSuspend)
     , m_selectionOwner(NULL)
     , vBlankInterval(0)
     , fpsInterval(0)
     , m_xrrRefreshRate(0)
-    , m_finishing(false)
-    , m_starting(false)
     , m_timeSinceLastVBlank(0)
     , m_scene(NULL)
     , m_bufferSwapPending(false)
@@ -125,19 +126,19 @@ Compositor::Compositor(QObject* workspace)
     m_unusedSupportPropertyTimer.setSingleShot(true);
     connect(&m_unusedSupportPropertyTimer, &QTimer::timeout, this, &Compositor::deleteUnusedSupportProperties);
 
-    // delay the call to setup by one event cycle
+    // Delay the call to start by one event cycle.
     // The ctor of this class is invoked from the Workspace ctor, that means before
     // Workspace is completely constructed, so calling Workspace::self() would result
     // in undefined behavior. This is fixed by using a delayed invocation.
     if (kwinApp()->platform()->isReady()) {
-        QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(this, "start", Qt::QueuedConnection);
     }
     connect(kwinApp()->platform(), &Platform::readyChanged, this,
         [this] (bool ready) {
             if (ready) {
-                setup();
+                start();
             } else {
-                finish();
+                stop();
             }
         }, Qt::QueuedConnection
     );
@@ -158,21 +159,21 @@ Compositor::Compositor(QObject* workspace)
 Compositor::~Compositor()
 {
     emit aboutToDestroy();
-    finish();
+    stop();
     deleteUnusedSupportProperties();
     delete m_selectionOwner;
     s_compositor = NULL;
 }
 
-
-void Compositor::setup()
+void Compositor::start()
 {
     if (kwinApp()->isTerminating()) {
-        // don't setup while KWin is terminating. An event to restart might be lingering in the event queue due to graphics reset
+        // Don't start while KWin is terminating. An event to restart might be lingering in the event queue due to graphics reset.
         return;
     }
-    if (hasScene())
+    if (m_state != State::Off) {
         return;
+    }
     if (m_suspended) {
         QStringList reasons;
         if (m_suspended & UserSuspend) {
@@ -190,17 +191,10 @@ void Compositor::setup()
         qCCritical(KWIN_CORE) << "Compositing is not possible";
         return;
     }
-    m_starting = true;
+    m_state = State::Starting;
 
     options->reloadCompositingSettings(true);
-    slotCompositingOptionsInitialized();
-}
 
-extern int screen_number; // main.cpp
-extern bool is_multihead;
-
-void Compositor::slotCompositingOptionsInitialized()
-{
     setupX11Support();
 
     // There might still be a deleted around, needs to be cleared before creating the scene (BUG 333275)
@@ -254,9 +248,11 @@ void Compositor::slotCompositingOptionsInitialized()
 
     if (m_scene == NULL || m_scene->initFailed()) {
         qCCritical(KWIN_CORE) << "Failed to initialize compositing, compositing disabled";
+        m_state = State::Off;
+
         delete m_scene;
         m_scene = NULL;
-        m_starting = false;
+
         if (m_selectionOwner) {
             m_selectionOwner->setOwning(false);
             m_selectionOwner->release();
@@ -292,7 +288,7 @@ void Compositor::claimCompositorSelection()
         char selection_name[ 100 ];
         sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
         m_selectionOwner = new CompositorSelectionOwner(selection_name);
-        connect(m_selectionOwner, &CompositorSelectionOwner::lostOwnership, this, &Compositor::finish);
+        connect(m_selectionOwner, &CompositorSelectionOwner::lostOwnership, this, &Compositor::stop);
     }
 
     if (!m_selectionOwner) // no X11 yet
@@ -318,9 +314,6 @@ void Compositor::setupX11Support()
 
 void Compositor::startupWithWorkspace()
 {
-    if (!m_starting) {
-        return;
-    }
     connect(kwinApp(), &Application::x11ConnectionChanged, this, &Compositor::setupX11Support, Qt::UniqueConnection);
     Workspace::self()->markXStackingOrderAsDirty();
     Q_ASSERT(m_scene);
@@ -362,9 +355,9 @@ void Compositor::startupWithWorkspace()
         }
     }
 
+    m_state = State::On;
     emit compositingToggled(true);
 
-    m_starting = false;
     if (m_releaseSelectionTimer.isActive()) {
         m_releaseSelectionTimer.stop();
     }
@@ -379,14 +372,15 @@ void Compositor::scheduleRepaint()
         setCompositeTimer();
 }
 
-void Compositor::finish()
+void Compositor::stop()
 {
-    if (!hasScene())
+    if (m_state == State::Off || m_state == State::Stopping) {
         return;
-    m_finishing = true;
-    m_releaseSelectionTimer.start();
-
+    }
+    m_state = State::Stopping;
     emit aboutToToggleCompositing();
+
+    m_releaseSelectionTimer.start();
 
     // Some effects might need access to effect windows when they are about to
     // be destroyed, for example to unreference deleted windows, so we have to
@@ -432,31 +426,30 @@ void Compositor::finish()
     m_scene = NULL;
     compositeTimer.stop();
     repaints_region = QRegion();
-    m_finishing = false;
+
+    m_state = State::Off;
     emit compositingToggled(false);
 }
 
 void Compositor::releaseCompositorSelection()
 {
-    if (hasScene() && !m_finishing) {
-        // compositor is up and running again, no need to release the selection
-        return;
-    }
-    if (m_starting) {
-        // currently still starting the compositor, it might fail, so restart the timer to test again
+    switch (m_state) {
+    case State::On:
+        // We are compositing at the moment. Don't release.
+        break;
+    case State::Off:
+        if (m_selectionOwner) {
+            qCDebug(KWIN_CORE) << "Releasing compositor selection";
+            m_selectionOwner->setOwning(false);
+            m_selectionOwner->release();
+        }
+        break;
+    case State::Starting:
+    case State::Stopping:
+        // Still starting or shutting down the compositor. Starting might fail
+        // or after stopping a restart might follow. So test again later on.
         m_releaseSelectionTimer.start();
-        return;
-    }
-
-    if (m_finishing) {
-        // still shutting down, a restart might follow, so restart the timer to test again
-        m_releaseSelectionTimer.start();
-        return;
-    }
-    qCDebug(KWIN_CORE) << "Releasing compositor selection";
-    if (m_selectionOwner) {
-        m_selectionOwner->setOwning(false);
-        m_selectionOwner->release();
+        break;
     }
 }
 
@@ -473,13 +466,8 @@ void Compositor::removeSupportProperty(xcb_atom_t atom)
 
 void Compositor::deleteUnusedSupportProperties()
 {
-    if (m_starting) {
-        // currently still starting the compositor
-        m_unusedSupportPropertyTimer.start();
-        return;
-    }
-    if (m_finishing) {
-        // still shutting down, a restart might follow
+    if (m_state == State::Starting || m_state == State::Stopping) {
+        // Currently still maybe restarting the compositor.
         m_unusedSupportPropertyTimer.start();
         return;
     }
@@ -494,26 +482,27 @@ void Compositor::deleteUnusedSupportProperties()
 void Compositor::slotConfigChanged()
 {
     if (!m_suspended) {
-        setup();
+        start();
         if (effects)   // setupCompositing() may fail
             effects->reconfigure();
         addRepaintFull();
-    } else
-        finish();
+    } else {
+        stop();
+    }
 }
 
 void Compositor::reinitialize()
 {
-    // Reparse config. Config options will be reloaded by setup()
+    // Reparse config. Config options will be reloaded by start()
     kwinApp()->config()->reparseConfiguration();
 
     // Restart compositing
-    finish();
+    stop();
     // resume compositing if suspended
     m_suspended = NoReasonSuspend;
-    setup();
+    start();
 
-    if (effects) { // setup() may fail
+    if (effects) { // start() may fail
         effects->reconfigure();
     }
 }
@@ -579,14 +568,14 @@ void Compositor::suspend(Compositor::SuspendReason reason)
             KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
         }
     }
-    finish();
+    stop();
 }
 
 void Compositor::resume(Compositor::SuspendReason reason)
 {
     Q_ASSERT(reason != NoReasonSuspend);
     m_suspended &= ~reason;
-    setup(); // signal "toggled" is eventually emitted from within setup
+    start();
 }
 
 void Compositor::addRepaint(int x, int y, int w, int h)
@@ -817,9 +806,7 @@ bool Compositor::windowRepaintsPending() const
 
 void Compositor::setCompositeTimer()
 {
-    if (!hasScene())  // should not really happen, but there may be e.g. some damage events still pending
-        return;
-    if (m_starting || !Workspace::self()) {
+    if (m_state != State::On) {
         return;
     }
 
@@ -885,7 +872,7 @@ void Compositor::setCompositeTimer()
 
 bool Compositor::isActive()
 {
-    return !m_finishing && hasScene();
+    return m_state == State::On;
 }
 
 bool Compositor::checkForOverlayWindow(WId w) const
