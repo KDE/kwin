@@ -41,7 +41,6 @@ AbstractThumbnailItem::AbstractThumbnailItem(QQuickItem *parent)
     , m_saturation(1.0)
     , m_clipToItem()
 {
-    Q_ASSERT(Compositor::isCreated());
     connect(Compositor::self(), SIGNAL(compositingToggled(bool)), SLOT(compositingToggled()));
     compositingToggled();
     QTimer::singleShot(0, this, SLOT(init()));

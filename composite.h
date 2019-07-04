@@ -144,16 +144,6 @@ public:
     }
 
     /**
-     * @brief Checks whether the Compositor has already been created by the Workspace.
-     *
-     * This method can be used to check whether self will return the Compositor instance or @c null.
-     *
-     * @return bool @c true if the Compositor has been created, @c false otherwise
-     **/
-    static bool isCreated() {
-        return s_compositor != NULL;
-    }
-    /**
      * @brief Static check to test whether the Compositor is available and active.
      *
      * @return bool @c true if there is a Compositor and it is active, @c false otherwise
