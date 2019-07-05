@@ -170,6 +170,7 @@ private:
     void initCursor();
     void outputDpmsChanged();
     void readOutputsConfiguration();
+    void writeOutputsConfiguration();
     QByteArray generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
     DrmOutput *findOutput(const QByteArray &uuid);

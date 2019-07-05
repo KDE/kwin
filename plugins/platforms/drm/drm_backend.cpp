@@ -88,6 +88,7 @@ DrmBackend::DrmBackend(QObject *parent)
 
 DrmBackend::~DrmBackend()
 {
+    writeOutputsConfiguration();
 #if HAVE_GBM
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
@@ -526,6 +527,21 @@ void DrmBackend::readOutputsConfiguration()
         if (outputConfig.hasKey("Scale"))
             (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
         pos.setX(pos.x() + (*it)->geometry().width());
+    }
+}
+
+void DrmBackend::writeOutputsConfiguration()
+{
+    if (m_outputs.isEmpty()) {
+        return;
+    }
+    const QByteArray uuid = generateOutputConfigurationUuid();
+    auto configGroup = KSharedConfig::openConfig()->group("DrmOutputs").group(uuid);
+    // default position goes from left to right
+    for (auto it = m_outputs.cbegin(); it != m_outputs.cend(); ++it) {
+        qCDebug(KWIN_DRM) << "Writing output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
+        auto outputConfig = configGroup.group((*it)->uuid());
+        outputConfig.writeEntry("Scale", (*it)->scale());
     }
 }
 
