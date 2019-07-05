@@ -21,7 +21,7 @@ import QtQuick.Controls 2.5 as QtControls
 import QtQuick.Layouts 1.1
 import org.kde.kcm 1.2
 import org.kde.kconfig 1.0
-import org.kde.kirigami 2.5 as Kirigami
+import org.kde.kirigami 2.8 as Kirigami
 import org.kde.private.kcms.kwin.effects 1.0 as Private
 
 ScrollViewKCM {
@@ -36,13 +36,10 @@ ScrollViewKCM {
         }
 
         RowLayout {
-            QtControls.TextField {
+            Kirigami.SearchField {
                 id: searchField
 
                 Layout.fillWidth: true
-
-                // TODO: Needs clear button, missing in Qt.
-                placeholderText: i18n("Search...")
             }
 
             QtControls.Button {
