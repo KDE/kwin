@@ -543,16 +543,16 @@ int Extensions::syncAlarmNotifyEvent() const
 
 QVector<ExtensionData> Extensions::extensions() const
 {
-    QVector<ExtensionData> extensions;
-    extensions << m_shape
-               << m_randr
-               << m_damage
-               << m_composite
-               << m_render
-               << m_fixes
-               << m_sync
-               << m_glx;
-    return extensions;
+    return {
+        m_shape,
+        m_randr,
+        m_damage,
+        m_composite,
+        m_render,
+        m_fixes,
+        m_sync,
+        m_glx
+    };
 }
 
 //****************************************
