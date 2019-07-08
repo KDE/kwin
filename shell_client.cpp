@@ -839,6 +839,10 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     }
     // TODO: add more checks as in Client
 
+    if (m_requestedMaximizeMode == oldMode) {
+        return;
+    }
+
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
