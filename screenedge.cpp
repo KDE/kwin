@@ -1008,7 +1008,7 @@ void ScreenEdges::recreateEdges()
     for (int i=0; i<screens()->count(); ++i) {
         const QRegion screen = QRegion(screens()->geometry(i)).subtracted(processedRegion);
         processedRegion += screen;
-        Q_FOREACH (const QRect &screenPart, screen.rects()) {
+        for (const QRect &screenPart : screen) {
             if (isLeftScreen(screenPart, fullArea)) {
                 // left most screen
                 createVerticalEdge(ElectricLeft, screenPart, fullArea);

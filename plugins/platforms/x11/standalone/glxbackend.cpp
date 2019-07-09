@@ -733,7 +733,7 @@ void GlxBackend::present()
             glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *) &m_bufferAge);
         }
     } else if (m_haveMESACopySubBuffer) {
-        foreach (const QRect & r, lastDamage().rects()) {
+        for (const QRect &r : lastDamage()) {
             // convert to OpenGL coordinates
             int y = screenSize.height() - r.y() - r.height();
             glXCopySubBufferMESA(display(), glxWindow, r.x(), y, r.width(), r.height());

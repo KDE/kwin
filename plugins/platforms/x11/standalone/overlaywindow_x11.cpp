@@ -124,19 +124,9 @@ void OverlayWindowX11::setShape(const QRegion& reg)
     // and triggers something).
     if (reg == m_shape)
         return;
-    QVector< QRect > rects = reg.rects();
-    xcb_rectangle_t *xrects = new xcb_rectangle_t[rects.count()];
-    for (int i = 0;
-            i < rects.count();
-            ++i) {
-        xrects[ i ].x = rects[ i ].x();
-        xrects[ i ].y = rects[ i ].y();
-        xrects[ i ].width = rects[ i ].width();
-        xrects[ i ].height = rects[ i ].height();
-    }
+    const QVector<xcb_rectangle_t> xrects = Xcb::regionToRects(reg);
     xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_CLIP_ORDERING_UNSORTED,
-                         m_window, 0, 0, rects.count(), xrects);
-    delete[] xrects;
+                         m_window, 0, 0, xrects.count(), xrects.data());
     setupInputShape(m_window);
     m_shape = reg;
 }

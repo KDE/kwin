@@ -739,7 +739,7 @@ void Toplevel::addDamage(const QRegion &damage)
 {
     m_isDamaged = true;
     damage_region += damage;
-    for (const QRect &r : damage.rects()) {
+    for (const QRect &r : damage) {
         emit damaged(this, r);
     }
 }

@@ -374,7 +374,7 @@ void EglOnXBackend::presentSurface(EGLSurface surface, const QRegion &damage, co
         }
     } else {
         // a part of the screen changed, and we can use eglPostSubBufferNV to copy the updated area
-        foreach (const QRect & r, damage.rects()) {
+        for (const QRect &r : damage) {
             eglPostSubBufferNV(eglDisplay(), surface, r.left(), screenGeometry.height() - r.bottom() - 1, r.width(), r.height());
         }
     }

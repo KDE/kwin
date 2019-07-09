@@ -494,11 +494,16 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         xform.matrix22 = DOUBLE_TO_FIXED(1.0 / yscale);
 
         // transform the shape for clipping in paintTransformedScreen()
-        QVector<QRect> rects = transformed_shape.rects();
-        for (int i = 0; i < rects.count(); ++i) {
-            QRect& r = rects[ i ];
-            r.setRect(qRound(r.x() * xscale), qRound(r.y() * yscale),
-                      qRound(r.width() * xscale), qRound(r.height() * yscale));
+        QVector<QRect> rects;
+        rects.reserve(transformed_shape.rectCount());
+        for (const QRect &rect : transformed_shape) {
+            const QRect transformedRect(
+                qRound(rect.x() * xscale),
+                qRound(rect.y() * yscale),
+                qRound(rect.width() * xscale),
+                qRound(rect.height() * yscale)
+            );
+            rects.append(transformedRect);
         }
         transformed_shape.setRects(rects.constData(), rects.count());
     }

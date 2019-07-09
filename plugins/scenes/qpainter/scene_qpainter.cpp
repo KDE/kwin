@@ -153,7 +153,9 @@ qint64 SceneQPainter::paint(QRegion damage, ToplevelList toplevels)
 void SceneQPainter::paintBackground(QRegion region)
 {
     m_painter->setBrush(Qt::black);
-    m_painter->drawRects(region.rects());
+    for (const QRect &rect : region) {
+        m_painter->drawRect(rect);
+    }
 }
 
 void SceneQPainter::paintCursor()

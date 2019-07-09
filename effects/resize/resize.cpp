@@ -93,8 +93,8 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 color.setAlphaF(alpha);
                 vbo->setColor(color);
                 QVector<float> verts;
-                verts.reserve(paintRegion.rects().count() * 12);
-                foreach (const QRect & r, paintRegion.rects()) {
+                verts.reserve(paintRegion.rectCount() * 12);
+                for (const QRect &r : paintRegion) {
                     verts << r.x() + r.width() << r.y();
                     verts << r.x() << r.y();
                     verts << r.x() << r.y() + r.height();
@@ -110,7 +110,7 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (effects->compositingType() == XRenderCompositing) {
                 QVector<xcb_rectangle_t> rects;
-                foreach (const QRect & r, paintRegion.rects()) {
+                for (const QRect &r : paintRegion) {
                     xcb_rectangle_t rect = {int16_t(r.x()), int16_t(r.y()), uint16_t(r.width()), uint16_t(r.height())};
                     rects << rect;
                 }
@@ -123,7 +123,7 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                 QPainter *painter = effects->scenePainter();
                 painter->save();
                 color.setAlphaF(alpha);
-                foreach (const QRect &r, paintRegion.rects()) {
+                for (const QRect &r : paintRegion) {
                     painter->fillRect(r, color);
                 }
                 painter->restore();

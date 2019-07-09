@@ -167,18 +167,15 @@ XRenderPictureData::~XRenderPictureData()
 XFixesRegion::XFixesRegion(const QRegion &region)
 {
     m_region = xcb_generate_id(XRenderUtils::s_connection);
-    QVector< QRect > rects = region.rects();
-    QVector< xcb_rectangle_t > xrects(rects.count());
-    for (int i = 0;
-            i < rects.count();
-            ++i) {
-        const QRect &rect = rects.at(i);
+    QVector<xcb_rectangle_t> xrects;
+    xrects.reserve(region.rectCount());
+    for (const QRect &rect : region) {
         xcb_rectangle_t xrect;
         xrect.x = rect.x();
         xrect.y = rect.y();
         xrect.width = rect.width();
         xrect.height = rect.height();
-        xrects[i] = xrect;
+        xrects.append(xrect);
     }
     xcb_xfixes_create_region(XRenderUtils::s_connection, m_region, xrects.count(), xrects.constData());
 }

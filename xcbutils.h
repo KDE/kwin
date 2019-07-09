@@ -1787,10 +1787,10 @@ static inline xcb_rectangle_t fromQt(const QRect &rect)
 
 static inline QVector<xcb_rectangle_t> regionToRects(const QRegion &region)
 {
-    const QVector<QRect> regionRects = region.rects();
-    QVector<xcb_rectangle_t> rects(regionRects.count());
-    for (int i=0; i<regionRects.count(); ++i) {
-        rects[i] = Xcb::fromQt(regionRects.at(i));
+    QVector<xcb_rectangle_t> rects;
+    rects.reserve(region.rectCount());
+    for (const QRect &rect : region) {
+        rects.append(Xcb::fromQt(rect));
     }
     return rects;
 }

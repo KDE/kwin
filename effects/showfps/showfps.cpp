@@ -145,8 +145,9 @@ void ShowFpsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Windo
     QRegion r2 = region & QRect(w->x(), w->y(), w->width(), w->height());
     r2 -= fps_rect;
     int winsize = 0;
-    foreach (const QRect & r, r2.rects())
-    winsize += r.width() * r.height();
+    for (const QRect &r : r2) {
+        winsize += r.width() * r.height();
+    }
     paint_size[ paints_pos ] += winsize;
 }
 

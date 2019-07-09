@@ -591,16 +591,15 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
         const bool scaled = data.xScale() != 1 || data.yScale() != 1;
         if (scaled) {
             QPoint pt = shape.boundingRect().topLeft();
-            QVector<QRect> shapeRects = shape.rects();
-            shape = QRegion(); // clear
-            foreach (QRect r, shapeRects) {
+            QRegion scaledShape;
+            for (QRect r : shape) {
                 r.moveTo(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
                             pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
                 r.setWidth(r.width() * data.xScale());
                 r.setHeight(r.height() * data.yScale());
-                shape |= r;
+                scaledShape |= r;
             }
-            shape = shape & region;
+            shape = scaledShape & region;
 
         //Only translated, not scaled
         } else if (translated) {

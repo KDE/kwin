@@ -1178,44 +1178,44 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
                                 &Workspace::previousRestrictedMoveArea : //... the restricted areas changed
                                 &Workspace::restrictedMoveArea; //... when e.g. active desktop or screen changes
 
-    foreach (const QRect & r, (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaTop).rects()) {
+    for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaTop)) {
         QRect rect = r & oldGeomTall;
         if (!rect.isEmpty())
             oldTopMax = qMax(oldTopMax, rect.y() + rect.height());
     }
-    foreach (const QRect & r, (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaRight).rects()) {
+    for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaRight)) {
         QRect rect = r & oldGeomWide;
         if (!rect.isEmpty())
             oldRightMax = qMin(oldRightMax, rect.x());
     }
-    foreach (const QRect & r, (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaBottom).rects()) {
+    for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaBottom)) {
         QRect rect = r & oldGeomTall;
         if (!rect.isEmpty())
             oldBottomMax = qMin(oldBottomMax, rect.y());
     }
-    foreach (const QRect & r, (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaLeft).rects()) {
+    for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaLeft)) {
         QRect rect = r & oldGeomWide;
         if (!rect.isEmpty())
             oldLeftMax = qMax(oldLeftMax, rect.x() + rect.width());
     }
 
     // These 4 compute new bounds
-    foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaTop).rects()) {
+    for (const QRect &r : workspace()->restrictedMoveArea(desktop(), StrutAreaTop)) {
         QRect rect = r & newGeomTall;
         if (!rect.isEmpty())
             topMax = qMax(topMax, rect.y() + rect.height());
     }
-    foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaRight).rects()) {
+    for (const QRect &r : workspace()->restrictedMoveArea(desktop(), StrutAreaRight)) {
         QRect rect = r & newGeomWide;
         if (!rect.isEmpty())
             rightMax = qMin(rightMax, rect.x());
     }
-    foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaBottom).rects()) {
+    for (const QRect &r : workspace()->restrictedMoveArea(desktop(), StrutAreaBottom)) {
         QRect rect = r & newGeomTall;
         if (!rect.isEmpty())
             bottomMax = qMin(bottomMax, rect.y());
     }
-    foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaLeft).rects()) {
+    for (const QRect &r : workspace()->restrictedMoveArea(desktop(), StrutAreaLeft)) {
         QRect rect = r & newGeomWide;
         if (!rect.isEmpty())
             leftMax = qMax(leftMax, rect.x() + rect.width());
@@ -2948,7 +2948,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
                 const QRect titleRect(bTitleRect.translated(moveResizeGeometry().topLeft()));
                 int visiblePixels = 0;
                 int realVisiblePixels = 0;
-                foreach (const QRect &rect, availableArea.rects()) {
+                for (const QRect &rect : availableArea) {
                     const QRect r = rect & titleRect;
                     realVisiblePixels += r.width() * r.height();
                     if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
@@ -3073,7 +3073,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
                     QRect moveResizeGeom = moveResizeGeometry();
                     const QRect titleRect(bTitleRect.translated(moveResizeGeom.topLeft()));
                     int visiblePixels = 0;
-                    foreach (const QRect &rect, availableArea.rects()) {
+                    for (const QRect &rect : availableArea) {
                         const QRect r = rect & titleRect;
                         if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
                             (!transposed && r.height() == titleRect.height())) // ...prevents long slim areas
@@ -3094,7 +3094,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
                     if (screens()->count() > 1) { // optimization
                         // TODO: could be useful on partial screen struts (half-width panels etc.)
                         int newTitleTop = -1;
-                        foreach (const QRect &r, strut.rects()) {
+                        for (const QRect &r : strut) {
                             if (r.top() == 0 && r.width() > r.height() && // "top panel"
                                 r.intersects(moveResizeGeom) && moveResizeGeom.top() < r.bottom()) {
                                 newTitleTop = r.bottom() + 1;
