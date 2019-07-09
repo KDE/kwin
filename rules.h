@@ -113,6 +113,24 @@ public:
         Activity = 1<<16, Screen = 1<<17, DesktopFile = 1 << 18, All = 0xffffffff
     };
     Q_DECLARE_FLAGS(Types, Type)
+    // All these values are saved to the cfg file, and are also used in kstart!
+    enum {
+        Unused = 0,
+        DontAffect, // use the default value
+        Force,      // force the given value
+        Apply,      // apply only after initial mapping
+        Remember,   // like apply, and remember the value when the window is withdrawn
+        ApplyNow,   // apply immediatelly, then forget the setting
+        ForceTemporarily // apply and force until the window is withdrawn
+    };
+    enum StringMatch {
+        FirstStringMatch,
+        UnimportantMatch = FirstStringMatch,
+        ExactMatch,
+        SubstringMatch,
+        RegExpMatch,
+        LastStringMatch = RegExpMatch
+    };
     void write(KConfigGroup&) const;
     bool isEmpty() const;
 #ifndef KCMRULES
@@ -166,16 +184,6 @@ private:
     bool matchRole(const QByteArray& match_role) const;
     bool matchTitle(const QString& match_title) const;
     bool matchClientMachine(const QByteArray& match_machine, bool local) const;
-    // All these values are saved to the cfg file, and are also used in kstart!
-    enum {
-        Unused = 0,
-        DontAffect, // use the default value
-        Force,      // force the given value
-        Apply,      // apply only after initial mapping
-        Remember,   // like apply, and remember the value when the window is withdrawn
-        ApplyNow,   // apply immediatelly, then forget the setting
-        ForceTemporarily // apply and force until the window is withdrawn
-    };
     enum SetRule {
         UnusedSetRule = Unused,
         SetRuleDummy = 256   // so that it's at least short int
@@ -183,14 +191,6 @@ private:
     enum ForceRule {
         UnusedForceRule = Unused,
         ForceRuleDummy = 256   // so that it's at least short int
-    };
-    enum StringMatch {
-        FirstStringMatch,
-        UnimportantMatch = FirstStringMatch,
-        ExactMatch,
-        SubstringMatch,
-        RegExpMatch,
-        LastStringMatch = RegExpMatch
     };
     void readFromCfg(const KConfigGroup& cfg);
     static SetRule readSetRule(const KConfigGroup&, const QString& key);
