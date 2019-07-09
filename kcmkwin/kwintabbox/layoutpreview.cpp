@@ -116,13 +116,6 @@ bool LayoutPreview::eventFilter(QObject *object, QEvent *event)
 ExampleClientModel::ExampleClientModel (QObject* parent)
     : QAbstractListModel (parent)
 {
-    QHash<int, QByteArray> roles;
-    roles[Qt::UserRole] = "caption";
-    roles[Qt::UserRole+1] = "minimized";
-    roles[Qt::UserRole + 3] = "icon";
-    roles[Qt::UserRole+2] = "desktopName";
-    roles[Qt::UserRole+4] = "windowId";
-    setRoleNames(roles);
     init();
 }
 
@@ -197,6 +190,18 @@ int ExampleClientModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return m_services.size();
+}
+
+QHash<int, QByteArray> ExampleClientModel::roleNames() const
+{
+    // FIXME: Use an enum.
+    return {
+        { Qt::UserRole, QByteArrayLiteral("caption") },
+        { Qt::UserRole + 1, QByteArrayLiteral("minimized") },
+        { Qt::UserRole + 2, QByteArrayLiteral("desktopName") },
+        { Qt::UserRole + 3, QByteArrayLiteral("icon") },
+        { Qt::UserRole + 4, QByteArrayLiteral("windowId") },
+    };
 }
 
 SwitcherItem::SwitcherItem(QObject *parent)

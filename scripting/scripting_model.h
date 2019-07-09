@@ -74,6 +74,7 @@ public:
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QHash<int, QByteArray> roleNames() const;
 
     void setExclusions(ClientModel::Exclusions exclusions);
     Exclusions exclusions() const;

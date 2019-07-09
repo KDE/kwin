@@ -655,13 +655,6 @@ ClientModel::ClientModel(QObject *parent)
     , m_root(nullptr)
     , m_exclusions(NoExclusion)
 {
-    QHash<int, QByteArray> roleNames;
-    roleNames.insert(Qt::DisplayRole, "display");
-    roleNames.insert(ClientRole, "client");
-    roleNames.insert(ScreenRole, "screen");
-    roleNames.insert(DesktopRole, "desktop");
-    roleNames.insert(ActivityRole, "activity");
-    setRoleNames(roleNames);
 }
 
 ClientModel::~ClientModel()
@@ -739,6 +732,17 @@ int ClientModel::rowCount(const QModelIndex &parent) const
         return level->count();
     }
     return 0;
+}
+
+QHash<int, QByteArray> ClientModel::roleNames() const
+{
+    return {
+        { Qt::DisplayRole, QByteArrayLiteral("display") },
+        { ClientRole, QByteArrayLiteral("client") },
+        { ScreenRole, QByteArrayLiteral("screen") },
+        { DesktopRole, QByteArrayLiteral("desktop") },
+        { ActivityRole, QByteArrayLiteral("activity") },
+    };
 }
 
 QModelIndex ClientModel::parent(const QModelIndex &child) const

@@ -59,6 +59,7 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex& child) const;
     virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    virtual QHash<int, QByteArray> roleNames() const;
     Q_INVOKABLE QString longestCaption() const;
 
     /**
