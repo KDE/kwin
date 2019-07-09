@@ -224,7 +224,7 @@ void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
     glFlush();
     if (m_backend->saveFrames()) {
         QImage img = QImage(QSize(m_backBuffer->width(), m_backBuffer->height()), QImage::Format_ARGB32);
-        glReadnPixels(0, 0, m_backBuffer->width(), m_backBuffer->height(), GL_RGBA, GL_UNSIGNED_BYTE, img.byteCount(), (GLvoid*)img.bits());
+        glReadnPixels(0, 0, m_backBuffer->width(), m_backBuffer->height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(), (GLvoid*)img.bits());
         convertFromGLImage(img, m_backBuffer->width(), m_backBuffer->height());
         img.save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
     }

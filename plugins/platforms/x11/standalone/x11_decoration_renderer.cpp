@@ -94,7 +94,7 @@ void X11Renderer::render()
         QImage image = renderToImage(geo);
         xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, client()->client()->frameId(), m_gc,
                       image.width(), image.height(), geo.x(), geo.y(), 0, client()->client()->depth(),
-                      image.byteCount(), image.constBits());
+                      image.sizeInBytes(), image.constBits());
     };
     renderPart(left);
     renderPart(top);

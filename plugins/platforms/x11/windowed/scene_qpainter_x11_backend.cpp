@@ -87,7 +87,7 @@ void X11WindowedQPainterBackend::present(int mask, const QRegion &damage)
         const QImage &buffer = (*it)->buffer;
         xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, (*it)->window, m_gc,
                         buffer.width(), buffer.height(), 0, 0, 0, 24,
-                        buffer.byteCount(), buffer.constBits());
+                        buffer.sizeInBytes(), buffer.constBits());
     }
 }
 

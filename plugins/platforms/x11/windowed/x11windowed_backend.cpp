@@ -480,7 +480,7 @@ void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hots
     xcb_create_pixmap(m_connection, 32, pix, m_screen->root, img.width(), img.height());
     xcb_create_gc(m_connection, gc, pix, 0, nullptr);
 
-    xcb_put_image(m_connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.byteCount(), img.constBits());
+    xcb_put_image(m_connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.sizeInBytes(), img.constBits());
 
     XRenderPicture pic(pix, 32);
     xcb_render_create_cursor(m_connection, cid, pic, qRound(hotspot.x() * outputScale), qRound(hotspot.y() * outputScale));

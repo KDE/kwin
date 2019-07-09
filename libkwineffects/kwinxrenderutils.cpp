@@ -144,7 +144,7 @@ void XRenderPicture::fromImage(const QImage &img)
     xcb_gcontext_t cid = xcb_generate_id(c);
     xcb_create_gc(c, cid, xpix, 0, nullptr);
     xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(),
-                  0, 0, 0, depth, img.byteCount(), img.constBits());
+                  0, 0, 0, depth, img.sizeInBytes(), img.constBits());
     xcb_free_gc(c, cid);
 
     d = new XRenderPictureData(createPicture(xpix, depth));
