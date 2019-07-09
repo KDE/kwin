@@ -43,12 +43,12 @@ void ColorSettings::init(const QPalette &pal)
     m_inactiveFrameColor    = wmConfig.readEntry("inactiveFrame", m_activeFrameColor);
     m_activeTitleBarColor   = wmConfig.readEntry("activeBackground", pal.color(QPalette::Active, QPalette::Highlight));
     m_inactiveTitleBarColor = wmConfig.readEntry("inactiveBackground", m_inactiveFrameColor);
-    m_activeTitleBarBlendColor = wmConfig.readEntry("activeBlend", m_activeTitleBarColor.dark(110));
-    m_inactiveTitleBarBlendColor = wmConfig.readEntry("inactiveBlend", m_inactiveTitleBarColor.dark(110));
+    m_activeTitleBarBlendColor = wmConfig.readEntry("activeBlend", m_activeTitleBarColor.darker(110));
+    m_inactiveTitleBarBlendColor = wmConfig.readEntry("inactiveBlend", m_inactiveTitleBarColor.darker(110));
     m_activeFontColor       = wmConfig.readEntry("activeForeground", pal.color(QPalette::Active, QPalette::HighlightedText));
-    m_inactiveFontColor     = wmConfig.readEntry("inactiveForeground", m_activeFontColor.dark());
-    m_activeButtonColor = wmConfig.readEntry("activeTitleBtnBg", m_activeFrameColor.light(130));
-    m_inactiveButtonColor = wmConfig.readEntry("inactiveTitleBtnBg", m_inactiveFrameColor.light(130));
+    m_inactiveFontColor     = wmConfig.readEntry("inactiveForeground", m_activeFontColor.darker());
+    m_activeButtonColor = wmConfig.readEntry("activeTitleBtnBg", m_activeFrameColor.lighter(130));
+    m_inactiveButtonColor = wmConfig.readEntry("inactiveTitleBtnBg", m_inactiveFrameColor.lighter(130));
     m_activeHandle = wmConfig.readEntry("handle", m_activeFrameColor);
     m_inactiveHandle = wmConfig.readEntry("inactiveHandle", m_activeHandle);
 }
