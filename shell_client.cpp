@@ -355,8 +355,16 @@ void ShellClient::finishInit() {
 
     updateWindowMargins();
 
+    bool needsPlacement = !isInitialPositionSet();
+
     if (supportsWindowRules()) {
         setupWindowRules(false);
+
+        const QRect originalGeometry = QRect(pos(), sizeForClientSize(clientSize()));
+        const QRect ruledGeometry = rules()->checkGeometry(originalGeometry, true);
+        if (originalGeometry != ruledGeometry) {
+            setGeometry(ruledGeometry);
+        }
 
         setDesktop(rules()->checkDesktop(desktop(), true));
         setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true).toUtf8());
@@ -371,12 +379,17 @@ void ShellClient::finishInit() {
         setShortcut(rules()->checkShortcut(shortcut().toString(), true));
         updateColorScheme();
 
+        // Don't place the client if its position is set by a rule.
+        if (rules()->checkPosition(invalidPoint, true) != invalidPoint) {
+            needsPlacement = false;
+        }
+
         discardTemporaryRules();
         RuleBook::self()->discardUsed(this, false); // Remove Apply Now rules.
         updateWindowRules(Rules::All);
     }
 
-    if (!isInitialPositionSet()) {
+    if (needsPlacement) {
         QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
         placeIn(area);
     }
@@ -624,10 +637,12 @@ void ShellClient::updateDecoration(bool check_workspace_pos, bool force)
 
 void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 {
+    const QRect newGeometry = rules()->checkGeometry(QRect(x, y, w, h));
+
     if (areGeometryUpdatesBlocked()) {
         // when the GeometryUpdateBlocker exits the current geom is passed to setGeometry
         // thus we need to set it here.
-        geom = QRect(x, y, w, h);
+        geom = newGeometry;
         if (pendingGeometryUpdate() == PendingGeometryForced)
             {} // maximum, nothing needed
         else if (force == ForceGeometrySet)
@@ -640,17 +655,17 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         // reset geometry to the one before blocking, so that we can compare properly
         geom = geometryBeforeUpdateBlocking();
     }
-    const QSize requestedClientSize = QSize(w, h) - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
-    const QSize requestedWindowGeometrySize = toWindowGeometry(QSize(w, h));
+    const QSize requestedClientSize = newGeometry.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
+    const QSize requestedWindowGeometrySize = toWindowGeometry(newGeometry.size());
 
     if (requestedClientSize == m_clientSize && !isWaitingForMoveResizeSync() &&
         (m_requestedClientSize.isEmpty() || requestedWindowGeometrySize == m_requestedClientSize)) {
         // size didn't change, and we don't need to explicitly request a new size
-        doSetGeometry(QRect(x, y, w, h));
+        doSetGeometry(newGeometry);
         updateMaximizeMode(m_requestedMaximizeMode);
     } else {
         // size did change, Client needs to provide a new buffer
-        requestGeometry(QRect(x, y, w, h));
+        requestGeometry(newGeometry);
     }
 }
 
@@ -662,7 +677,9 @@ void ShellClient::doSetGeometry(const QRect &rect)
     if (!m_unmapped) {
         addWorkspaceRepaint(visibleRect());
     }
+
     geom = rect;
+    updateWindowRules(Rules::Position | Rules::Size);
 
     if (m_unmapped && m_geomMaximizeRestore.isEmpty() && !geom.isEmpty()) {
         // use first valid geometry as restore geometry
@@ -757,6 +774,9 @@ bool ShellClient::isFullScreen() const
 
 bool ShellClient::isMaximizable() const
 {
+    if (!isResizable()) {
+        return false;
+    }
     return true;
 }
 
@@ -770,6 +790,9 @@ bool ShellClient::isMinimizable() const
 
 bool ShellClient::isMovable() const
 {
+    if (rules()->checkPosition(invalidPoint) != invalidPoint) {
+        return false;
+    }
     if (m_plasmaShellSurface) {
         return m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal;
     }
@@ -781,6 +804,9 @@ bool ShellClient::isMovable() const
 
 bool ShellClient::isMovableAcrossScreens() const
 {
+    if (rules()->checkPosition(invalidPoint) != invalidPoint) {
+        return false;
+    }
     if (m_plasmaShellSurface) {
         return m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal;
     }
@@ -792,6 +818,9 @@ bool ShellClient::isMovableAcrossScreens() const
 
 bool ShellClient::isResizable() const
 {
+    if (rules()->checkSize(QSize()).isValid()) {
+        return false;
+    }
     if (m_plasmaShellSurface) {
         return m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Normal;
     }
@@ -840,8 +869,6 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     const MaximizeMode oldMode = m_requestedMaximizeMode;
     const QRect oldGeometry = geometry();
 
-    StackingUpdatesBlocker blocker(workspace());
-    RequestGeometryBlocker geometryBlocker(this);
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
     if (!adjust) {
         if (vertical)
@@ -854,6 +881,9 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     if (m_requestedMaximizeMode == oldMode) {
         return;
     }
+
+    StackingUpdatesBlocker blocker(workspace());
+    RequestGeometryBlocker geometryBlocker(this);
 
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {

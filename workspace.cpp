@@ -301,6 +301,9 @@ void Workspace::init()
                     if (c->isFullScreen()) {
                         placementDone = true;
                     }
+                    if (c->rules()->checkPosition(invalidPoint, true) != invalidPoint) {
+                        placementDone = true;
+                    }
                     if (!placementDone) {
                         c->placeIn(area);
                     }

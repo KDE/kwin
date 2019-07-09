@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "kwin_wayland_test.h"
+
+#include "cursor.h"
 #include "platform.h"
 #include "rules.h"
 #include "screens.h"
@@ -46,6 +48,32 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
+
+    void testPositionDontAffect_data();
+    void testPositionDontAffect();
+    void testPositionApply_data();
+    void testPositionApply();
+    void testPositionRemember_data();
+    void testPositionRemember();
+    void testPositionForce_data();
+    void testPositionForce();
+    void testPositionApplyNow_data();
+    void testPositionApplyNow();
+    void testPositionForceTemporarily_data();
+    void testPositionForceTemporarily();
+
+    void testSizeDontAffect_data();
+    void testSizeDontAffect();
+    void testSizeApply_data();
+    void testSizeApply();
+    void testSizeRemember_data();
+    void testSizeRemember();
+    void testSizeForce_data();
+    void testSizeForce();
+    void testSizeApplyNow_data();
+    void testSizeApplyNow();
+    void testSizeForceTemporarily_data();
+    void testSizeForceTemporarily();
 
     void testDesktopDontAffect_data();
     void testDesktopDontAffect();
@@ -249,6 +277,975 @@ std::tuple<ShellClient *, Surface *, XdgShellSurface *> createWindow(Test::Shell
     ShellClient *client = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
 
     return {client, surface, shellSurface};
+}
+
+TEST_DATA(testPositionDontAffect)
+
+void TestShellClientRules::testPositionDontAffect()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("position", QPoint(42, 42));
+    group.writeEntry("positionrule", int(Rules::DontAffect));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    ShellClient *client;
+    Surface *surface;
+    XdgShellSurface *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+
+    // The position of the client should not be affected by the rule. The default
+    // placement policy will put the client in the top-left corner of the screen.
+    QVERIFY(client->isMovable());
+    QVERIFY(client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(0, 0));
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testPositionApply)
+
+void TestShellClientRules::testPositionApply()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("position", QPoint(42, 42));
+    group.writeEntry("positionrule", int(Rules::Apply));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    ShellClient *client;
+    Surface *surface;
+    XdgShellSurface *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+
+    // The client should be moved to the position specified by the rule.
+    QVERIFY(client->isMovable());
+    QVERIFY(client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(42, 42));
+
+    // One should still be able to move the client around.
+    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(clientStartMoveResizedSpy.isValid());
+    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QVERIFY(clientStepUserMovedResizedSpy.isValid());
+    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
+
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    workspace()->slotWindowMove();
+    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QVERIFY(client->isMove());
+    QVERIFY(!client->isResize());
+
+    const QPoint cursorPos = KWin::Cursor::pos();
+    client->keyPressEvent(Qt::Key_Right);
+    client->updateMoveResize(KWin::Cursor::pos());
+    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(client->pos(), QPoint(50, 42));
+
+    client->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    QCOMPARE(client->pos(), QPoint(50, 42));
+
+    // The rule should be applied again if the client appears after it's been closed.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMovable());
+    QVERIFY(client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(42, 42));
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testPositionRemember)
+
+void TestShellClientRules::testPositionRemember()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("position", QPoint(42, 42));
+    group.writeEntry("positionrule", int(Rules::Remember));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    ShellClient *client;
+    Surface *surface;
+    XdgShellSurface *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+
+    // The client should be moved to the position specified by the rule.
+    QVERIFY(client->isMovable());
+    QVERIFY(client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(42, 42));
+
+    // One should still be able to move the client around.
+    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(clientStartMoveResizedSpy.isValid());
+    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QVERIFY(clientStepUserMovedResizedSpy.isValid());
+    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
+
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    workspace()->slotWindowMove();
+    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QVERIFY(client->isMove());
+    QVERIFY(!client->isResize());
+
+    const QPoint cursorPos = KWin::Cursor::pos();
+    client->keyPressEvent(Qt::Key_Right);
+    client->updateMoveResize(KWin::Cursor::pos());
+    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(client->pos(), QPoint(50, 42));
+
+    client->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    QCOMPARE(client->pos(), QPoint(50, 42));
+
+    // The client should be placed at the last know position if we reopen it.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMovable());
+    QVERIFY(client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(50, 42));
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testPositionForce)
+
+void TestShellClientRules::testPositionForce()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("position", QPoint(42, 42));
+    group.writeEntry("positionrule", int(Rules::Force));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    ShellClient *client;
+    Surface *surface;
+    XdgShellSurface *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+
+    // The client should be moved to the position specified by the rule.
+    QVERIFY(!client->isMovable());
+    QVERIFY(!client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(42, 42));
+
+    // User should not be able to move the client.
+    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(clientStartMoveResizedSpy.isValid());
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    workspace()->slotWindowMove();
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+
+    // The position should still be forced if we reopen the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(!client->isMovable());
+    QVERIFY(!client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(42, 42));
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testPositionApplyNow)
+
+void TestShellClientRules::testPositionApplyNow()
+{
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    ShellClient *client;
+    Surface *surface;
+    QObject *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+
+    // The position of the client isn't set by any rule, thus the default placement
+    // policy will try to put the client in the top-left corner of the screen.
+    QVERIFY(client->isMovable());
+    QVERIFY(client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(0, 0));
+
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("position", QPoint(42, 42));
+    group.writeEntry("positionrule", int(Rules::ApplyNow));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+
+    // The client should be moved to the position specified by the rule.
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    workspace()->slotReconfigure();
+    QCOMPARE(geometryChangedSpy.count(), 1);
+    QCOMPARE(client->pos(), QPoint(42, 42));
+
+    // We still have to be able to move the client around.
+    QVERIFY(client->isMovable());
+    QVERIFY(client->isMovableAcrossScreens());
+    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(clientStartMoveResizedSpy.isValid());
+    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QVERIFY(clientStepUserMovedResizedSpy.isValid());
+    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
+
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    workspace()->slotWindowMove();
+    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QVERIFY(client->isMove());
+    QVERIFY(!client->isResize());
+
+    const QPoint cursorPos = KWin::Cursor::pos();
+    client->keyPressEvent(Qt::Key_Right);
+    client->updateMoveResize(KWin::Cursor::pos());
+    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(client->pos(), QPoint(50, 42));
+
+    client->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    QCOMPARE(client->pos(), QPoint(50, 42));
+
+    // The rule should not be applied again.
+    client->evaluateWindowRules();
+    QCOMPARE(client->pos(), QPoint(50, 42));
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testPositionForceTemporarily)
+
+void TestShellClientRules::testPositionForceTemporarily()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("position", QPoint(42, 42));
+    group.writeEntry("positionrule", int(Rules::ForceTemporarily));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    ShellClient *client;
+    Surface *surface;
+    XdgShellSurface *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+
+    // The client should be moved to the position specified by the rule.
+    QVERIFY(!client->isMovable());
+    QVERIFY(!client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(42, 42));
+
+    // User should not be able to move the client.
+    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(clientStartMoveResizedSpy.isValid());
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    workspace()->slotWindowMove();
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+
+    // The rule should be discarded if we close the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMovable());
+    QVERIFY(client->isMovableAcrossScreens());
+    QCOMPARE(client->pos(), QPoint(0, 0));
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testSizeDontAffect)
+
+void TestShellClientRules::testSizeDontAffect()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("size", QSize(480, 640));
+    group.writeEntry("sizerule", int(Rules::DontAffect));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // The window size shouldn't be enforced by the rule.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(0, 0));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isResizable());
+    QCOMPARE(client->size(), QSize(100, 50));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testSizeApply)
+
+void TestShellClientRules::testSizeApply()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("size", QSize(480, 640));
+    group.writeEntry("sizerule", int(Rules::Apply));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // The initial configure event should contain size hint set by the rule.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(480, 640));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Resizing));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isResizable());
+    QCOMPARE(client->size(), QSize(480, 640));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Resizing));
+
+    // One still should be able to resize the client.
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(clientStartMoveResizedSpy.isValid());
+    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QVERIFY(clientStepUserMovedResizedSpy.isValid());
+    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
+    QSignalSpy surfaceSizeChangedSpy(shellSurface.data(), &XdgShellSurface::sizeChanged);
+    QVERIFY(surfaceSizeChangedSpy.isValid());
+
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    workspace()->slotWindowResize();
+    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QVERIFY(!client->isMove());
+    QVERIFY(client->isResize());
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 3);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Resizing));
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+
+    const QPoint cursorPos = KWin::Cursor::pos();
+    client->keyPressEvent(Qt::Key_Right);
+    client->updateMoveResize(KWin::Cursor::pos());
+    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 4);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Resizing));
+    QCOMPARE(surfaceSizeChangedSpy.count(), 1);
+    QCOMPARE(surfaceSizeChangedSpy.last().first().toSize(), QSize(488, 640));
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(488, 640), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(488, 640));
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+
+    client->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+
+    QEXPECT_FAIL("", "Interactive resize is not spec-compliant", Continue);
+    QVERIFY(configureRequestedSpy->wait(10));
+    QEXPECT_FAIL("", "Interactive resize is not spec-compliant", Continue);
+    QCOMPARE(configureRequestedSpy->count(), 5);
+
+    // The rule should be applied again if the client appears after it's been closed.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    surface.reset(Test::createSurface());
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(480, 640));
+
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isResizable());
+    QCOMPARE(client->size(), QSize(480, 640));
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testSizeRemember)
+
+void TestShellClientRules::testSizeRemember()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("size", QSize(480, 640));
+    group.writeEntry("sizerule", int(Rules::Remember));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // The initial configure event should contain size hint set by the rule.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(480, 640));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Resizing));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isResizable());
+    QCOMPARE(client->size(), QSize(480, 640));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Resizing));
+
+    // One should still be able to resize the client.
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(clientStartMoveResizedSpy.isValid());
+    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QVERIFY(clientStepUserMovedResizedSpy.isValid());
+    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
+    QSignalSpy surfaceSizeChangedSpy(shellSurface.data(), &XdgShellSurface::sizeChanged);
+    QVERIFY(surfaceSizeChangedSpy.isValid());
+
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    workspace()->slotWindowResize();
+    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QVERIFY(!client->isMove());
+    QVERIFY(client->isResize());
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 3);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Resizing));
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+
+    const QPoint cursorPos = KWin::Cursor::pos();
+    client->keyPressEvent(Qt::Key_Right);
+    client->updateMoveResize(KWin::Cursor::pos());
+    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 4);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Resizing));
+    QCOMPARE(surfaceSizeChangedSpy.count(), 1);
+    QCOMPARE(surfaceSizeChangedSpy.last().first().toSize(), QSize(488, 640));
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(488, 640), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(488, 640));
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+
+    client->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+
+    QEXPECT_FAIL("", "Interactive resize is not spec-compliant", Continue);
+    QVERIFY(configureRequestedSpy->wait(10));
+    QEXPECT_FAIL("", "Interactive resize is not spec-compliant", Continue);
+    QCOMPARE(configureRequestedSpy->count(), 5);
+
+    // If the client appears again, it should have the last known size.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    surface.reset(Test::createSurface());
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(488, 640));
+
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    client = Test::renderAndWaitForShown(surface.data(), QSize(488, 640), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isResizable());
+    QCOMPARE(client->size(), QSize(488, 640));
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testSizeForce)
+
+void TestShellClientRules::testSizeForce()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("size", QSize(480, 640));
+    group.writeEntry("sizerule", int(Rules::Force));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // The initial configure event should contain size hint set by the rule.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(480, 640));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(!client->isResizable());
+    QCOMPARE(client->size(), QSize(480, 640));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+
+    // Any attempt to resize the client should not succeed.
+    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(clientStartMoveResizedSpy.isValid());
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    workspace()->slotWindowResize();
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    QVERIFY(!configureRequestedSpy->wait(100));
+
+    // If the client appears again, the size should still be forced.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    surface.reset(Test::createSurface());
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(480, 640));
+
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(!client->isResizable());
+    QCOMPARE(client->size(), QSize(480, 640));
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testSizeApplyNow)
+
+void TestShellClientRules::testSizeApplyNow()
+{
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // The expected surface dimensions should be set by the rule.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(0, 0));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isResizable());
+    QCOMPARE(client->size(), QSize(100, 50));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("size", QSize(480, 640));
+    group.writeEntry("sizerule", int(Rules::ApplyNow));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // The compositor should send a configure event with a new size.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 3);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(480, 640));
+
+    // Draw the surface with the new size.
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(480, 640), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(480, 640));
+    QVERIFY(!configureRequestedSpy->wait(100));
+
+    // The rule should not be applied again.
+    client->evaluateWindowRules();
+    QVERIFY(!configureRequestedSpy->wait(100));
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testSizeForceTemporarily)
+
+void TestShellClientRules::testSizeForceTemporarily()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("size", QSize(480, 640));
+    group.writeEntry("sizerule", int(Rules::ForceTemporarily));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // The initial configure event should contain size hint set by the rule.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(480, 640));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(!client->isResizable());
+    QCOMPARE(client->size(), QSize(480, 640));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+
+    // Any attempt to resize the client should not succeed.
+    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(clientStartMoveResizedSpy.isValid());
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    workspace()->slotWindowResize();
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QVERIFY(!client->isMove());
+    QVERIFY(!client->isResize());
+    QVERIFY(!configureRequestedSpy->wait(100));
+
+    // The rule should be discarded when the client is closed.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    surface.reset(Test::createSurface());
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(0, 0));
+
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isResizable());
+    QCOMPARE(client->size(), QSize(100, 50));
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
 TEST_DATA(testDesktopDontAffect)
