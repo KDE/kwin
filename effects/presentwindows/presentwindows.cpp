@@ -1133,7 +1133,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
     QRect availRect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
     if (m_showPanel)   // reserve space for the panel
         availRect = effects->clientArea(MaximizeArea, screen, effects->currentDesktop());
-    qSort(windowlist);   // The location of the windows should not depend on the stacking order
+    std::sort(windowlist.begin(), windowlist.end());   // The location of the windows should not depend on the stacking order
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
 
@@ -1280,7 +1280,7 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
 
     // As we are using pseudo-random movement (See "slot") we need to make sure the list
     // is always sorted the same way no matter which window is currently active.
-    qSort(windowlist);
+    std::sort(windowlist.begin(), windowlist.end());
 
     QRect area = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
     if (m_showPanel)   // reserve space for the panel

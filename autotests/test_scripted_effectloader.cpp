@@ -437,7 +437,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
         QCOMPARE(list.size(), 2);
         loadedEffects << list.at(1).toString();
     }
-    qSort(loadedEffects);
+    std::sort(loadedEffects.begin(), loadedEffects.end());
     QCOMPARE(loadedEffects.at(0), kwin4 + QStringLiteral("eyeonscreen"));
     QCOMPARE(loadedEffects.at(1), kwin4 + QStringLiteral("fade"));
 }

@@ -389,7 +389,7 @@ void CompositingType::generateCompositing()
         it++;
     }
 
-    qSort(m_compositingList.begin(), m_compositingList.end(), [](const CompositingData &a, const CompositingData &b) {
+    std::sort(m_compositingList.begin(), m_compositingList.end(), [](const CompositingData &a, const CompositingData &b) {
             return a.type < b.type;
     });
     endResetModel();

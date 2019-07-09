@@ -176,7 +176,7 @@ void TestBuiltInEffectLoader::testKnownEffects()
     KWin::BuiltInEffectLoader loader;
     QStringList result = loader.listOfKnownEffects();
     QCOMPARE(result.size(), expectedEffects.size());
-    qSort(result);
+    std::sort(result.begin(), result.end());
     for (int i = 0; i < expectedEffects.size(); ++i) {
         QCOMPARE(result.at(i), expectedEffects.at(i));
     }
@@ -557,7 +557,7 @@ void TestBuiltInEffectLoader::testLoadAllEffects()
         QCOMPARE(list.size(), 2);
         loadedEffects << list.at(1).toString();
     }
-    qSort(loadedEffects);
+    std::sort(loadedEffects.begin(), loadedEffects.end());
     QCOMPARE(loadedEffects.at(0), QStringLiteral("kscreen"));
     QCOMPARE(loadedEffects.at(1), QStringLiteral("mouseclick"));
 }

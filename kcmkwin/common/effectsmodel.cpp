@@ -397,7 +397,7 @@ void EffectsModel::load(LoadOptions options)
     loadJavascriptEffects(kwinConfig);
     loadPluginEffects(kwinConfig, configs);
 
-    qSort(m_pendingEffects.begin(), m_pendingEffects.end(),
+    std::sort(m_pendingEffects.begin(), m_pendingEffects.end(),
         [](const EffectData &a, const EffectData &b) {
             if (a.category == b.category) {
                 if (a.exclusiveGroup == b.exclusiveGroup) {
