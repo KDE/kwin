@@ -126,7 +126,30 @@ void BlurEffect::updateTexture()
     m_renderTargets.reserve(m_downSampleIterations + 2);
     m_renderTextures.reserve(m_downSampleIterations + 2);
 
-    const GLenum textureFormat = GLPlatform::instance()->isGLES() ? GL_RGBA8 : GL_SRGB8_ALPHA8;
+    GLenum textureFormat = GL_RGBA8;
+
+    // Check the color encoding of the default framebuffer
+    if (!GLPlatform::instance()->isGLES()) {
+        GLuint prevFbo = 0;
+        glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&prevFbo));
+
+        if (prevFbo != 0) {
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        }
+
+        GLenum colorEncoding = GL_LINEAR;
+        glGetFramebufferAttachmentParameteriv(GL_DRAW_FRAMEBUFFER, GL_BACK_LEFT,
+                                              GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING,
+                                              reinterpret_cast<GLint *>(&colorEncoding));
+
+        if (prevFbo != 0) {
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, prevFbo);
+        }
+
+        if (colorEncoding == GL_SRGB) {
+            textureFormat = GL_SRGB8_ALPHA8;
+        }
+    }
 
     for (int i = 0; i <= m_downSampleIterations; i++) {
         m_renderTextures.append(GLTexture(textureFormat, effects->virtualScreenSize() / (1 << i)));
@@ -643,7 +666,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     const QRegion expandedBlurRegion = expand(shape) & expand(screen);
 
-    const bool isGLES = GLPlatform::instance()->isGLES();
+    const bool useSRGB = m_renderTextures.first().internalFormat() == GL_SRGB8_ALPHA8;
 
     // Upload geometry for the down and upsample iterations
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -668,7 +691,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     if (isDock) {
         m_renderTargets.last()->blitFromFramebuffer(sourceRect, destRect);
 
-        if (!isGLES) {
+        if (useSRGB) {
             glEnable(GL_FRAMEBUFFER_SRGB);
         }
 
@@ -676,7 +699,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     } else {
         m_renderTargets.first()->blitFromFramebuffer(sourceRect, destRect);
 
-        if (!isGLES) {
+        if (useSRGB) {
             glEnable(GL_FRAMEBUFFER_SRGB);
         }
 
@@ -703,7 +726,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     upscaleRenderToScreen(vbo, blurRectCount * (m_downSampleIterations + 1), shape.rectCount() * 6, screenProjection, windowRect.topLeft());
 
-    if (!isGLES) {
+    if (useSRGB) {
         glDisable(GL_FRAMEBUFFER_SRGB);
     }
 
