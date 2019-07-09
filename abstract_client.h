@@ -866,6 +866,13 @@ public:
      **/
     virtual bool isInternal() const;
 
+    /**
+     * Returns whether window rules can be applied to this client.
+     *
+     * Default implementation returns @c true.
+     **/
+    virtual bool supportsWindowRules() const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 

@@ -163,6 +163,8 @@ public:
         return true;
     }
 
+    bool supportsWindowRules() const override;
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
@@ -297,6 +299,7 @@ private:
     QMargins m_windowMargins;
 
     bool m_compositingSetup = false;
+    bool m_isInitialized = false;
 };
 
 }

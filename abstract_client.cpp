@@ -2087,4 +2087,9 @@ bool AbstractClient::isInternal() const
     return false;
 }
 
+bool AbstractClient::supportsWindowRules() const
+{
+    return true;
+}
+
 }

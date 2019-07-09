@@ -328,4 +328,9 @@ QWindow *InternalClient::internalWindow() const
     return m_internalWindow;
 }
 
+bool InternalClient::supportsWindowRules() const
+{
+    return false;
+}
+
 }

@@ -60,6 +60,7 @@ public:
     using AbstractClient::resizeWithChecks;
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     QWindow *internalWindow() const override;
+    bool supportsWindowRules() const override;
 
 protected:
     bool acceptsFocus() const override;

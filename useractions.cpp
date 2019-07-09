@@ -471,8 +471,8 @@ void UserActionsMenu::menuAboutToShow()
         action->setText(i18n("&Extensions"));
     }
 
-    m_rulesOperation->setEnabled(true);
-    m_applicationRulesOperation->setEnabled(true);
+    m_rulesOperation->setEnabled(m_client.data()->supportsWindowRules());
+    m_applicationRulesOperation->setEnabled(m_client.data()->supportsWindowRules());
 
     showHideActivityMenu();
 }
