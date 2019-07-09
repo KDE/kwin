@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QUuid>
 // TODO: remove with Qt 5, only for HTML escaping the caption
 #include <QTextDocument>
-#include <QTextStream>
 // other
 #include <cmath>
 
@@ -75,7 +74,7 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
     case CaptionRole: {
         QString caption = client->caption();
         if (Qt::mightBeRichText(caption)) {
-            caption = Qt::escape(caption);
+            caption = caption.toHtmlEscaped();
         }
         return caption;
     }
