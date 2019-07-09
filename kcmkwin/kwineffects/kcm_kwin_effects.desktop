@@ -12,6 +12,8 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=desktopbehavior
 X-KDE-Weight=50
 
+X-KDE-FormFactors=desktop,tablet
+
 Name=Desktop Effects
 Name[bs]=Efekti površi
 Name[ca]=Efectes d'escriptori

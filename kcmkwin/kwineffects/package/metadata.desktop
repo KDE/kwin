@@ -98,5 +98,6 @@ X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-Name=kcm_kwin_effects
 X-KDE-ServiceTypes=Plasma/Generic
 X-Plasma-API=declarativeappletscript
+X-KDE-FormFactors=desktop,tablet
 
 X-Plasma-MainScript=ui/main.qml

@@ -11,6 +11,8 @@ X-KDE-System-Settings-Parent-Category=applicationstyle
 X-KDE-Weight=40
 X-DocPath=kcontrol/kwindecoration/index.html
 
+X-KDE-FormFactors=desktop,tablet
+
 Name=Window Decorations
 Name[ar]=زخارف النوافذ
 Name[bg]=Декорации на прозорците

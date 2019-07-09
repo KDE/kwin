@@ -13,6 +13,7 @@ X-KDE-PluginInfo-Website=https://www.kde.org/plasma-desktop
 X-KDE-ServiceTypes=Plasma/Generic
 X-Plasma-API=declarativeappletscript
 X-Plasma-MainScript=ui/main.qml
+X-KDE-FormFactors=desktop,tablet
 
 Name=Window Decorations
 Name[ar]=زخارف النوافذ

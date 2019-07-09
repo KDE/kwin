@@ -112,5 +112,6 @@ X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-Name=kcm_kwin_virtualdesktops
 X-KDE-ServiceTypes=Plasma/Generic
 X-Plasma-API=declarativeappletscript
+X-KDE-FormFactors=desktop
 
 X-Plasma-MainScript=ui/main.qml
