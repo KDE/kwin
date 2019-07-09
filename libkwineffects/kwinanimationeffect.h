@@ -53,7 +53,8 @@ public:
         return ret;
     }
 
-
+    inline FPx2 &operator=(const FPx2 &other)
+        { f[0] = other.f[0]; f[1] = other.f[1]; valid = other.valid; return *this; }
     inline FPx2 &operator+=(const FPx2 &other)
         { f[0] += other[0]; f[1] += other[1]; return *this; }
     inline FPx2 &operator-=(const FPx2 &other)
