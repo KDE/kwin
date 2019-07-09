@@ -194,6 +194,12 @@ void ShellClient::initSurface(T *shellSurface)
                 // ignore for wl_shell - there it is mutual exclusive and messes with the geometry
                 return;
             }
+
+            // If the maximized state of the client hasn't been changed due to a window
+            // rule or because the requested state is the same as the current, then the
+            // compositor still has to send a configure event.
+            RequestGeometryBlocker blocker(this);
+
             maximize(maximized ? MaximizeFull : MaximizeRestore);
         }
     );
@@ -366,6 +372,8 @@ void ShellClient::finishInit() {
             setGeometry(ruledGeometry);
         }
 
+        maximize(rules()->checkMaximize(maximizeMode(), true));
+
         setDesktop(rules()->checkDesktop(desktop(), true));
         setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true).toUtf8());
         if (rules()->checkMinimize(isMinimized(), true)) {
@@ -381,6 +389,11 @@ void ShellClient::finishInit() {
 
         // Don't place the client if its position is set by a rule.
         if (rules()->checkPosition(invalidPoint, true) != invalidPoint) {
+            needsPlacement = false;
+        }
+
+        // Don't place the client if the maximize state is set by a rule.
+        if (requestedMaximizeMode() != MaximizeRestore) {
             needsPlacement = false;
         }
 
@@ -777,6 +790,9 @@ bool ShellClient::isMaximizable() const
     if (!isResizable()) {
         return false;
     }
+    if (rules()->checkMaximize(MaximizeRestore) != MaximizeRestore || rules()->checkMaximize(MaximizeFull) != MaximizeFull) {
+        return false;
+    }
     return true;
 }
 
@@ -876,9 +892,9 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (horizontal)
             m_requestedMaximizeMode = MaximizeMode(m_requestedMaximizeMode ^ MaximizeHorizontal);
     }
-    // TODO: add more checks as in Client
 
-    if (m_requestedMaximizeMode == oldMode) {
+    m_requestedMaximizeMode = rules()->checkMaximize(m_requestedMaximizeMode);
+    if (!adjust && m_requestedMaximizeMode == oldMode) {
         return;
     }
 
@@ -924,7 +940,6 @@ void ShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
         }
     }
 
-    // TODO: check rules
     if (m_requestedMaximizeMode == MaximizeFull) {
         m_geomMaximizeRestore = oldGeometry;
         // TODO: Client has more checks
@@ -1485,6 +1500,7 @@ void ShellClient::updateMaximizeMode(MaximizeMode maximizeMode)
     }
 
     m_maximizeMode = maximizeMode;
+    updateWindowRules(Rules::MaximizeHoriz | Rules::MaximizeVert | Rules::Position | Rules::Size);
 
     emit clientMaximizedStateChanged(this, m_maximizeMode);
     emit clientMaximizedStateChanged(this, m_maximizeMode & MaximizeHorizontal, m_maximizeMode & MaximizeVertical);

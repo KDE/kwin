@@ -75,6 +75,19 @@ private Q_SLOTS:
     void testSizeForceTemporarily_data();
     void testSizeForceTemporarily();
 
+    void testMaximizeDontAffect_data();
+    void testMaximizeDontAffect();
+    void testMaximizeApply_data();
+    void testMaximizeApply();
+    void testMaximizeRemember_data();
+    void testMaximizeRemember();
+    void testMaximizeForce_data();
+    void testMaximizeForce();
+    void testMaximizeApplyNow_data();
+    void testMaximizeApplyNow();
+    void testMaximizeForceTemporarily_data();
+    void testMaximizeForceTemporarily();
+
     void testDesktopDontAffect_data();
     void testDesktopDontAffect();
     void testDesktopApply_data();
@@ -1241,6 +1254,603 @@ void TestShellClientRules::testSizeForceTemporarily()
 
     QVERIFY(configureRequestedSpy->wait());
     QCOMPARE(configureRequestedSpy->count(), 2);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testMaximizeDontAffect)
+
+void TestShellClientRules::testMaximizeDontAffect()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("maximizehoriz", true);
+    group.writeEntry("maximizehorizrule", int(Rules::DontAffect));
+    group.writeEntry("maximizevert", true);
+    group.writeEntry("maximizevertrule", int(Rules::DontAffect));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->size(), QSize(100, 50));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testMaximizeApply)
+
+void TestShellClientRules::testMaximizeApply()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("maximizehoriz", true);
+    group.writeEntry("maximizehorizrule", int(Rules::Apply));
+    group.writeEntry("maximizevert", true);
+    group.writeEntry("maximizevertrule", int(Rules::Apply));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->size(), QSize(1280, 1024));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // One should still be able to change the maximized state of the client.
+    workspace()->slotWindowMaximize();
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 3);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(100, 50));
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+
+    // If we create the client again, it should be initially maximized.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    surface.reset(Test::createSurface());
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->size(), QSize(1280, 1024));
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testMaximizeRemember)
+
+void TestShellClientRules::testMaximizeRemember()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("maximizehoriz", true);
+    group.writeEntry("maximizehorizrule", int(Rules::Remember));
+    group.writeEntry("maximizevert", true);
+    group.writeEntry("maximizevertrule", int(Rules::Remember));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->size(), QSize(1280, 1024));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // One should still be able to change the maximized state of the client.
+    workspace()->slotWindowMaximize();
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 3);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(100, 50));
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+
+    // If we create the client again, it should not be maximized (because last time it wasn't).
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    surface.reset(Test::createSurface());
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->size(), QSize(100, 50));
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testMaximizeForce)
+
+void TestShellClientRules::testMaximizeForce()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("maximizehoriz", true);
+    group.writeEntry("maximizehorizrule", int(Rules::Force));
+    group.writeEntry("maximizevert", true);
+    group.writeEntry("maximizevertrule", int(Rules::Force));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(!client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->size(), QSize(1280, 1024));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Any attempt to change the maximized state should not succeed.
+    const QRect oldGeometry = client->geometry();
+    workspace()->slotWindowMaximize();
+    QVERIFY(!configureRequestedSpy->wait(100));
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->geometry(), oldGeometry);
+
+    // If we create the client again, the maximized state should still be forced.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    surface.reset(Test::createSurface());
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(!client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->size(), QSize(1280, 1024));
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testMaximizeApplyNow)
+
+void TestShellClientRules::testMaximizeApplyNow()
+{
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->size(), QSize(100, 50));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("maximizehoriz", true);
+    group.writeEntry("maximizehorizrule", int(Rules::ApplyNow));
+    group.writeEntry("maximizevert", true);
+    group.writeEntry("maximizevertrule", int(Rules::ApplyNow));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // We should receive a configure event with a new surface size.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 3);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Draw contents of the maximized client.
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(1280, 1024));
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+
+    // The client still has to be maximizeable.
+    QVERIFY(client->isMaximizable());
+
+    // Restore the client.
+    workspace()->slotWindowMaximize();
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 4);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(100, 50));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(100, 50));
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+
+    // The rule should be discarded after it's been applied.
+    const QRect oldGeometry = client->geometry();
+    client->evaluateWindowRules();
+    QVERIFY(!configureRequestedSpy->wait(100));
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->geometry(), oldGeometry);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+TEST_DATA(testMaximizeForceTemporarily)
+
+void TestShellClientRules::testMaximizeForceTemporarily()
+{
+    // Initialize RuleBook with the test rule.
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    config->group("General").writeEntry("count", 1);
+    KConfigGroup group = config->group("1");
+    group.writeEntry("maximizehoriz", true);
+    group.writeEntry("maximizehorizrule", int(Rules::ForceTemporarily));
+    group.writeEntry("maximizevert", true);
+    group.writeEntry("maximizevertrule", int(Rules::ForceTemporarily));
+    group.writeEntry("wmclass", "org.kde.foo");
+    group.writeEntry("wmclasscomplete", false);
+    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
+    group.sync();
+    RuleBook::self()->setConfig(config);
+    workspace()->slotReconfigure();
+
+    // Create the test client.
+    QFETCH(Test::ShellSurfaceType, type);
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(!client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->size(), QSize(1280, 1024));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Any attempt to change the maximized state should not succeed.
+    const QRect oldGeometry = client->geometry();
+    workspace()->slotWindowMaximize();
+    QVERIFY(!configureRequestedSpy->wait(100));
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(client->geometry(), oldGeometry);
+
+    // The rule should be discarded if we close the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    surface.reset(Test::createSurface());
+    shellSurface.reset(createXdgShellSurface(type, surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    shellSurface->setAppId("org.kde.foo");
+    surface->commit(Surface::CommitFlag::None);
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->size(), QSize(100, 50));
+
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
 
     // Destroy the client.
     shellSurface.reset();

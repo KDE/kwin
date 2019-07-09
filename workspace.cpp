@@ -301,6 +301,9 @@ void Workspace::init()
                     if (c->isFullScreen()) {
                         placementDone = true;
                     }
+                    if (c->maximizeMode() == MaximizeMode::MaximizeFull) {
+                        placementDone = true;
+                    }
                     if (c->rules()->checkPosition(invalidPoint, true) != invalidPoint) {
                         placementDone = true;
                     }
