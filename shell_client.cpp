@@ -399,6 +399,10 @@ void ShellClient::destroyClient()
         del = Deleted::create(this);
     }
     emit windowClosed(this, del);
+
+    // Remove Force Temporarily rules.
+    RuleBook::self()->discardUsed(this, true);
+
     destroyWindowManagementInterface();
     destroyDecoration();
 
