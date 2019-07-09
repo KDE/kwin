@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
-#include <math.h>
+#include <cmath>
 
 namespace KWin
 {

@@ -45,7 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/surface_interface.h>
 // Qt
 #include <qplatformdefs.h>
-#include <qcommandlineparser.h>
+#include <QCommandLineParser>
 #include <QQuickWindow>
 #include <QStandardPaths>
 #include <QtDBus>

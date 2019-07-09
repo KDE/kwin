@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTextDocument>
 #include <QTextStream>
 // other
-#include <math.h>
+#include <cmath>
 
 namespace KWin
 {

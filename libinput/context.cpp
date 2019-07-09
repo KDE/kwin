@@ -24,8 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../udev.h"
 
 #include <fcntl.h>
-#include <errno.h>
 #include <unistd.h>
+
+#include <cerrno>
 
 namespace KWin
 {

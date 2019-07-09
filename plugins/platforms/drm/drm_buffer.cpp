@@ -23,7 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // system
 #include <sys/mman.h>
-#include <errno.h>
+// c++
+#include <cerrno>
 // drm
 #include <xf86drm.h>
 #include <xf86drmMode.h>

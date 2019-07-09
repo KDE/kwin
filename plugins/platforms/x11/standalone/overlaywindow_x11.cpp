@@ -26,9 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "xcbutils.h"
 
-#include "assert.h"
-
 #include <QVector>
+
+#include <cassert>
 
 #include <xcb/composite.h>
 #include <xcb/shape.h>

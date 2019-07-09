@@ -79,8 +79,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <assert.h>
-
 #include "utils.h"
 #include "client.h"
 #include "focuschain.h"
@@ -99,6 +97,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 
 #include <QDebug>
+
+#include <cassert>
 
 namespace KWin
 {

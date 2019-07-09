@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinxrenderutils.h"
 #endif
 
-#include <qmath.h>
 #include <QVariant>
 #include <QList>
 #include <QTimeLine>
@@ -37,11 +36,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector2D>
 #include <QGraphicsRotation>
 #include <QGraphicsScale>
+#include <QtMath>
 
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
 
-#include <assert.h>
+#include <cassert>
 
 #include <KWayland/Server/surface_interface.h>
 

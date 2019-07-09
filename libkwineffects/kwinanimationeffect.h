@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QEasingCurve>
 #include <QElapsedTimer>
-#include <qmath.h>
+#include <QtMath>
 #include <kwineffects.h>
 #include <kwineffects_export.h>
 

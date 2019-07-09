@@ -31,19 +31,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kkeyserver.h>
 
 #ifndef KCMRULES
-#include <assert.h>
 #include <QApplication>
 #include <QDebug>
 
 #include <X11/Xlib.h>
 
-#include <stdio.h>
-
 #include "atoms.h"
 #include "platform.h"
 #include "workspace.h"
 
-#include <signal.h>
+#include <cassert>
+#include <csignal>
+#include <cstdio>
 
 #endif
 

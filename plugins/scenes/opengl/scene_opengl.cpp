@@ -53,14 +53,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <array>
 #include <cmath>
+#include <cstddef>
 #include <unistd.h>
-#include <stddef.h>
 
-#include <qpainter.h>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
 #include <QGraphicsScale>
+#include <QPainter>
 #include <QStringList>
 #include <QVector2D>
 #include <QVector4D>

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWidget>
 #include <unistd.h>
 
-#include <signal.h>
+#include <csignal>
 
 int main(int argc, char *argv[])
 {

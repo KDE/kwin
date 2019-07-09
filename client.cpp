@@ -59,7 +59,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xcb_icccm.h>
 // system
 #include <unistd.h>
-#include <signal.h>
+// c++
+#include <csignal>
 
 // Put all externs before the namespace statement to allow the linker
 // to resolve them properly

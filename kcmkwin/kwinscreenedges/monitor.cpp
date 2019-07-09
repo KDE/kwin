@@ -21,16 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "monitor.h"
 
-#include <QDebug>
 #include <KLocalizedString>
-#include <qgraphicsitem.h>
-#include <qgraphicsview.h>
-#include <qgraphicsscene.h>
-#include <qgraphicssceneevent.h>
-#include <qmenu.h>
-#include <qdesktopwidget.h>
-#include <qapplication.h>
-#include <plasma/framesvg.h>
+#include <Plasma/FrameSvg>
+
+#include <QApplication>
+#include <QDebug>
+#include <QDesktopWidget>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsSceneEvent>
+#include <QMenu>
 
 namespace KWin
 {

@@ -22,11 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "placement.h"
 
-#include <QRect>
-#include <assert.h>
-
-#include <QTextStream>
-
 #ifndef KCMRULES
 #include "workspace.h"
 #include "client.h"
@@ -35,6 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "screens.h"
 #endif
+
+#include <QRect>
+#include <QTextStream>
+
+#include <cassert>
 
 namespace KWin
 {

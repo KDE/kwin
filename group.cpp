@@ -33,10 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "effects.h"
 
-#include <assert.h>
 #include <kstartupinfo.h>
 #include <KWindowSystem>
 #include <QDebug>
+
+#include <cassert>
 
 
 /*

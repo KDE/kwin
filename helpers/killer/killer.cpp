@@ -26,13 +26,14 @@ DEALINGS IN THE SOFTWARE.
 #include <KLocalizedString>
 #include <KAuth/KAuthAction>
 #include <QApplication>
-#include <qcommandlineparser.h>
+#include <QCommandLineParser>
 #include <QDebug>
 #include <QProcess>
 #include <QtX11Extras/QX11Info>
-#include <signal.h>
-#include <errno.h>
 #include <xcb/xcb.h>
+
+#include <cerrno>
+#include <csignal>
 
 int main(int argc, char* argv[])
 {

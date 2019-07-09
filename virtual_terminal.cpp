@@ -32,11 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // system
 #include <fcntl.h>
 #include <unistd.h>
-#include <signal.h>
 #include <sys/ioctl.h>
 #include <sys/signalfd.h>
 #include <sys/stat.h>
 #include <sys/sysmacros.h>
+// c++
+#include <csignal>
 
 #define RELEASE_SIGNAL SIGUSR1
 #define ACQUISITION_SIGNAL SIGUSR2

@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_DL_LIBRARY
 #include <dlfcn.h>
 #endif
-#include <assert.h>
+#include <cassert>
 
 #ifndef XCB_GLX_BUFFER_SWAP_COMPLETE
 #define XCB_GLX_BUFFER_SWAP_COMPLETE 1

@@ -31,7 +31,6 @@
 #include <kactivities/consumer.h>
 #endif
 
-#include <assert.h>
 #include <kmessagebox.h>
 #include <QTabWidget>
 #include <QTimer>
@@ -39,6 +38,8 @@
 #include "../../rules.h"
 
 #include "detectwidget.h"
+
+#include <cassert>
 
 Q_DECLARE_METATYPE(NET::WindowType)
 

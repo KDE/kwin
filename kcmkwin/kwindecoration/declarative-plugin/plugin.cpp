@@ -28,8 +28,6 @@
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationShadow>
 
-#include <qqml.h>
-
 namespace KDecoration2
 {
 namespace Preview

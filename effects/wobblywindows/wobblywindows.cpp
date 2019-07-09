@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "wobblywindows.h"
 #include "wobblywindowsconfig.h"
 
-#include <math.h>
+#include <cmath>
 
 //#define COMPUTE_STATS
 

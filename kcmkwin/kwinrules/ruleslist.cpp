@@ -18,12 +18,13 @@
 
 #include "ruleslist.h"
 
-#include <assert.h>
 #include <QDebug>
 #include <kconfig.h>
 #include <QFileDialog>
 
 #include "ruleswidget.h"
+
+#include <cassert>
 
 namespace KWin
 {

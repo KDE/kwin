@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../presentwindows/presentwindows_proxy.h"
 #include "../effect_builtins.h"
 
-#include <math.h>
-
 #include <QAction>
 #include <QApplication>
 #include <KGlobalAccel>
@@ -43,6 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQuickItem>
 
 #include <KWayland/Server/surface_interface.h>
+
+#include <cmath>
 
 namespace KWin
 {

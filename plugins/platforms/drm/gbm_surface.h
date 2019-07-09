@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DRM_GBM_SURFACE_H
 #define KWIN_DRM_GBM_SURFACE_H
 
-#include <stdint.h>
+#include <cstdint>
 
 struct gbm_bo;
 struct gbm_device;

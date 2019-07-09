@@ -28,7 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/output_interface.h>
 #include <unistd.h>
 #include <gbm.h>
-#include <errno.h>
+
+#include <cerrno>
 
 namespace KWin
 {

@@ -47,10 +47,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPluginFactory>
 #include <KSharedConfig>
 
-#include <assert.h>
-#include <limits.h>
 #include <netwm.h>
 
+#include <cassert>
+#include <climits>
 #include <functional>
 
 class KConfigGroup;

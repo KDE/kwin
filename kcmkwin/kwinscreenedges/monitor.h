@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "screenpreviewwidget.h"
 
-#include <qactiongroup.h>
-#include <qgraphicsitem.h>
-#include <qvector.h>
+#include <QActionGroup>
+#include <QGraphicsItem>
+#include <QVector>
 
 class QAction;
 class QGraphicsView;

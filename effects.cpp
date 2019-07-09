@@ -51,7 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Plasma/Theme>
 
-#include <assert.h>
 #include "composite.h"
 #include "xcbutils.h"
 #include "platform.h"
@@ -60,6 +59,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "decorations/decorationbridge.h"
 #include <KDecoration2/DecorationSettings>
+
+#include <cassert>
 
 namespace KWin
 {

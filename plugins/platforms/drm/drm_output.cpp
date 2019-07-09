@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_object_crtc.h"
 #include "drm_object_connector.h"
 
-#include <errno.h>
-
 #include "composite.h"
 #include "logind.h"
 #include "logging.h"
@@ -42,6 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMatrix4x4>
 #include <QCryptographicHash>
 #include <QPainter>
+// c++
+#include <cerrno>
 // drm
 #include <xf86drm.h>
 #include <xf86drmMode.h>

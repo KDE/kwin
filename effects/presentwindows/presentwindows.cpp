@@ -31,9 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMouseEvent>
 #include <netwm_def.h>
 
-#include <math.h>
-#include <assert.h>
-#include <limits.h>
 #include <QApplication>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -44,6 +41,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QElapsedTimer>
 #include <QVector2D>
 #include <QVector4D>
+
+#include <cassert>
+#include <climits>
+#include <cmath>
 
 namespace KWin
 {

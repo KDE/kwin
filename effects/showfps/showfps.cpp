@@ -32,10 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <KLocalizedString>
-#include <math.h>
+
 #include <QPainter>
 #include <QVector2D>
 #include <QPalette>
+
+#include <cmath>
 
 namespace KWin
 {

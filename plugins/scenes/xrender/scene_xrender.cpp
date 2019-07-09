@@ -43,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDebug>
 #include <QPainter>
-#include <qmath.h>
+#include <QtMath>
 
 namespace KWin
 {

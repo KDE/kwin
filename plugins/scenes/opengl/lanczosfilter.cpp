@@ -36,8 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 
 #include <QFile>
+#include <QtMath>
 
-#include <qmath.h>
 #include <cmath>
 
 namespace KWin
