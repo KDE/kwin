@@ -32,7 +32,7 @@ class QTimer;
 namespace KWin
 {
 
-class Platform;
+class Workspace;
 
 namespace ColorCorrect
 {
@@ -74,6 +74,24 @@ public:
     bool changeConfiguration(QHash<QString, QVariant> data);
     void autoLocationUpdate(double latitude, double longitude);
 
+    /**
+     * Toggles the active state of the filter.
+     *
+     * A quick transition will be started if the difference between current screen
+     * color temperature and target screen color temperature is too large. Target
+     * temperature is defined in context of the new active state.
+     *
+     * If the filter becomes inactive after calling this method, the target color
+     * temperature is 6500 K.
+     *
+     * If the filter becomes active after calling this method, the target screen
+     * color temperature is defined by the current operation mode.
+     *
+     * Note that this method is a no-op if the underlying platform doesn't support
+     * adjusting gamma ramps.
+     **/
+    void toggle();
+
     // for auto tests
     void reparseConfigAndReset();
 
@@ -85,6 +103,7 @@ Q_SIGNALS:
     void configChange(QHash<QString, QVariant> data);
 
 private:
+    void initShortcuts();
     void readConfig();
     void hardReset();
     void slowUpdate(int targetTemp);
@@ -139,6 +158,9 @@ private:
     int m_nightTargetTemp = DEFAULT_NIGHT_TEMPERATURE;
 
     int m_failedCommitAttempts = 0;
+
+    // The Workspace class needs to call initShortcuts during initialization.
+    friend class KWin::Workspace;
 };
 
 }

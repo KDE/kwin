@@ -31,9 +31,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <colorcorrect_settings.h>
 
-#include <QTimer>
+#include <KGlobalAccel>
+#include <KLocalizedString>
+
+#include <QAction>
 #include <QDBusConnection>
 #include <QSocketNotifier>
+#include <QTimer>
 
 #ifdef Q_OS_LINUX
 #include <sys/timerfd.h>
@@ -150,6 +154,53 @@ void Manager::reparseConfigAndReset()
     cancelAllTimers();
     readConfig();
     hardReset();
+}
+
+// FIXME: The internal OSD service doesn't work on X11 right now. Once the QPA
+// is ported away from Wayland, drop this function in favor of the internal
+// OSD service.
+static void showStatusOsd(bool enabled)
+{
+    // TODO: Maybe use different icons?
+    const QString iconName = enabled
+        ? QStringLiteral("preferences-desktop-display-nightcolor-on")
+        : QStringLiteral("preferences-desktop-display-nightcolor-off");
+
+    const QString text = enabled
+        ? i18nc("Night Color was enabled", "Night Color On")
+        : i18nc("Night Color was disabled", "Night Color Off");
+
+    QDBusMessage message = QDBusMessage::createMethodCall(
+        QStringLiteral("org.kde.plasmashell"),
+        QStringLiteral("/org/kde/osdService"),
+        QStringLiteral("org.kde.osdService"),
+        QStringLiteral("showText"));
+    message.setArguments({ iconName, text });
+
+    QDBusConnection::sessionBus().asyncCall(message);
+}
+
+void Manager::toggle()
+{
+    if (!kwinApp()->platform()->supportsGammaControl()) {
+        return;
+    }
+
+    m_active = !m_active;
+
+    showStatusOsd(m_active);
+
+    resetAllTimers();
+}
+
+void Manager::initShortcuts()
+{
+    QAction *toggleAction = new QAction(this);
+    toggleAction->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    toggleAction->setObjectName(i18n("Toggle Night Color"));
+    toggleAction->setText(i18n("Toggle Night Color"));
+    KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
+    input()->registerShortcut(QKeySequence(), toggleAction, this, &Manager::toggle);
 }
 
 void Manager::readConfig()
