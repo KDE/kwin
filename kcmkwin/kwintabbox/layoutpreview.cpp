@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopWidget>
 #include <QQmlEngine>
 #include <QQmlContext>
+#include <QScreen>
 #include <QStandardPaths>
 #include <KConfigGroup>
 #include <KDesktopFile>
@@ -243,7 +244,8 @@ void SwitcherItem::setCurrentIndex(int index)
 
 QRect SwitcherItem::screenGeometry() const
 {
-    return qApp->desktop()->screenGeometry(qApp->desktop()->primaryScreen());
+    const QScreen *primaryScreen = qApp->primaryScreen();
+    return primaryScreen->geometry();
 }
 
 void SwitcherItem::incrementIndex()

@@ -26,20 +26,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsSceneEvent>
 #include <QMenu>
+#include <QScreen>
+#include <QWindow>
 
 namespace KWin
 {
 
+static QWindow *windowFromWidget(const QWidget *widget)
+{
+    QWindow *windowHandle = widget->windowHandle();
+    if (windowHandle) {
+        return windowHandle;
+    }
+
+    const QWidget *nativeParent = widget->nativeParentWidget();
+    if (nativeParent) {
+        return nativeParent->windowHandle();
+    }
+
+    return nullptr;
+}
+
+static QScreen *screenFromWidget(const QWidget *widget)
+{
+    const QWindow *windowHandle = windowFromWidget(widget);
+    if (windowHandle && windowHandle->screen()) {
+        return windowHandle->screen();
+    }
+
+    return QGuiApplication::primaryScreen();
+}
+
 Monitor::Monitor(QWidget* parent)
     : ScreenPreviewWidget(parent)
 {
-    QDesktopWidget *desktop = QApplication::desktop();
-    QRect avail = desktop->availableGeometry(desktop->screenNumber(this));
+    QRect avail = screenFromWidget(this)->geometry();
     setRatio((qreal)avail.width() / (qreal)avail.height());
     for (int i = 0;
             i < 8;

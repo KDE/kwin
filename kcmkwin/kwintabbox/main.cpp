@@ -145,7 +145,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
         connect(ui[i]->otherActivities, SIGNAL(clicked(bool)), SLOT(changed()));
 
         connect(ui[i]->filterScreens, SIGNAL(clicked(bool)), SLOT(changed()));
-        if (QApplication::desktop()->screenCount() < 2) {
+        if (QApplication::screens().count() < 2) {
             ui[i]->filterScreens->hide();
             ui[i]->screenFilter->hide();
         } else {

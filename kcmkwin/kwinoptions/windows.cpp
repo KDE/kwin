@@ -119,7 +119,7 @@ KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, QWidget * parent)
 
 void KFocusConfig::updateMultiScreen()
 {
-    m_ui->multiscreenBox->setVisible(QApplication::desktop()->screenCount() > 1);
+    m_ui->multiscreenBox->setVisible(QApplication::screens().count() > 1);
 }
 
 
