@@ -27,6 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QVector>
 
+#include <chrono>
+
+
 namespace KWin
 {
 
@@ -91,6 +94,8 @@ class KWIN_EXPORT AbstractOutput : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(std::chrono::microseconds presentationTimestamp READ presentationTimestamp WRITE setPresentationTimestamp)
+
 public:
     explicit AbstractOutput(QObject *parent = nullptr);
     ~AbstractOutput() override;
@@ -153,8 +158,24 @@ public:
      **/
     virtual bool setGammaRamp(const GammaRamp &gamma);
 
+    /**
+     * Sets the monotonic time when the last presentation to the output occurred.
+     *
+     * @see presentationTimestamp()
+     **/
+    void setPresentationTimestamp(std::chrono::microseconds timestamp) { m_timestamp = timestamp; }
+
+    /**
+     * Returns the monotonic time when the last presentation to the output occurred.
+     *
+     * @see setPresentationTimestamp()
+     **/
+    std::chrono::microseconds presentationTimestamp() const { return m_timestamp; }
+
 private:
     Q_DISABLE_COPY(AbstractOutput)
+
+    std::chrono::microseconds m_timestamp = std::chrono::microseconds::zero();
 };
 
 } // namespace KWin
