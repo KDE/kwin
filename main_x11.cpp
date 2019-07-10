@@ -299,7 +299,7 @@ void ApplicationX11::crashChecking()
         }
         qCDebug(KWIN_CORE) << "Starting" << cmd << "and exiting";
         char buf[1024];
-        sprintf(buf, "%s &", cmd.toAscii().data());
+        sprintf(buf, "%s &", cmd.toLatin1().data());
         system(buf);
         ::exit(1);
     }
@@ -384,7 +384,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         // number. If it had it, it was removed at the "pos" check
         envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWin::Application::x11ScreenNumber());
 
-        if (putenv(strdup(envir.toAscii().constData()))) {
+        if (putenv(strdup(envir.toLatin1().constData()))) {
             fprintf(stderr, "%s: WARNING: unable to set DISPLAY environment variable\n", argv[0]);
             perror("putenv()");
         }

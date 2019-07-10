@@ -207,7 +207,7 @@ bool AbstractClient::tabTo(AbstractClient *other, bool behind, bool activate)
 void AbstractClient::syncTabGroupFor(QString property, bool fromThisClient)
 {
     if (tab_group)
-        tab_group->sync(property.toAscii().data(), fromThisClient ? this : tab_group->current());
+        tab_group->sync(property.toLatin1().data(), fromThisClient ? this : tab_group->current());
 }
 
 bool AbstractClient::isCurrentTab() const

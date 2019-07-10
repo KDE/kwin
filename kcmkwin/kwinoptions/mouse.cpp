@@ -117,8 +117,8 @@ void createMaxButtonPixmaps()
         },
     };
 
-    QByteArray baseColor(". c " + KColorScheme(QPalette::Active, KColorScheme::View).background().color().name().toAscii());
-    QByteArray textColor("# c " + KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name().toAscii());
+    QByteArray baseColor(". c " + KColorScheme(QPalette::Active, KColorScheme::View).background().color().name().toLatin1());
+    QByteArray textColor("# c " + KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name().toLatin1());
     for (int t = 0; t < 3; ++t) {
         maxButtonXpms[t][0] = "15 13 2 1";
         maxButtonXpms[t][1] = baseColor.constData();
@@ -390,19 +390,19 @@ void KTitleBarActionsConfig::changeEvent(QEvent *ev)
 void KTitleBarActionsConfig::load()
 {
     KConfigGroup windowsConfig(config, "Windows");
-    setComboText(m_ui->coTiDbl, windowsConfig.readEntry("TitlebarDoubleClickCommand", "Maximize").toAscii());
-    setComboText(m_ui->leftClickMaximizeButton, windowsConfig.readEntry(cnf_Max[0], tbl_Max[0]).toAscii());
-    setComboText(m_ui->middleClickMaximizeButton, windowsConfig.readEntry(cnf_Max[1], tbl_Max[1]).toAscii());
-    setComboText(m_ui->rightClickMaximizeButton, windowsConfig.readEntry(cnf_Max[2], tbl_Max[2]).toAscii());
+    setComboText(m_ui->coTiDbl, windowsConfig.readEntry("TitlebarDoubleClickCommand", "Maximize").toLatin1());
+    setComboText(m_ui->leftClickMaximizeButton, windowsConfig.readEntry(cnf_Max[0], tbl_Max[0]).toLatin1());
+    setComboText(m_ui->middleClickMaximizeButton, windowsConfig.readEntry(cnf_Max[1], tbl_Max[1]).toLatin1());
+    setComboText(m_ui->rightClickMaximizeButton, windowsConfig.readEntry(cnf_Max[2], tbl_Max[2]).toLatin1());
 
     KConfigGroup cg(config, "MouseBindings");
-    setComboText(m_ui->coTiAct1, cg.readEntry("CommandActiveTitlebar1", "Raise").toAscii());
-    setComboText(m_ui->coTiAct2, cg.readEntry("CommandActiveTitlebar2", "Start Window Tab Drag").toAscii());
-    setComboText(m_ui->coTiAct3, cg.readEntry("CommandActiveTitlebar3", "Operations menu").toAscii());
-    setComboText(m_ui->coTiAct4, cg.readEntry("CommandTitlebarWheel", "Switch to Window Tab to the Left/Right").toAscii());
-    setComboText(m_ui->coTiInAct1, cg.readEntry("CommandInactiveTitlebar1", "Activate and raise").toAscii());
-    setComboText(m_ui->coTiInAct2, cg.readEntry("CommandInactiveTitlebar2", "Start Window Tab Drag").toAscii());
-    setComboText(m_ui->coTiInAct3, cg.readEntry("CommandInactiveTitlebar3", "Operations menu").toAscii());
+    setComboText(m_ui->coTiAct1, cg.readEntry("CommandActiveTitlebar1", "Raise").toLatin1());
+    setComboText(m_ui->coTiAct2, cg.readEntry("CommandActiveTitlebar2", "Start Window Tab Drag").toLatin1());
+    setComboText(m_ui->coTiAct3, cg.readEntry("CommandActiveTitlebar3", "Operations menu").toLatin1());
+    setComboText(m_ui->coTiAct4, cg.readEntry("CommandTitlebarWheel", "Switch to Window Tab to the Left/Right").toLatin1());
+    setComboText(m_ui->coTiInAct1, cg.readEntry("CommandInactiveTitlebar1", "Activate and raise").toLatin1());
+    setComboText(m_ui->coTiInAct2, cg.readEntry("CommandInactiveTitlebar2", "Start Window Tab Drag").toLatin1());
+    setComboText(m_ui->coTiInAct3, cg.readEntry("CommandInactiveTitlebar3", "Operations menu").toLatin1());
 }
 
 void KTitleBarActionsConfig::save()
@@ -523,15 +523,15 @@ void KWindowActionsConfig::showEvent(QShowEvent *ev)
 void KWindowActionsConfig::load()
 {
     KConfigGroup cg(config, "MouseBindings");
-    setComboText(m_ui->coWin1, cg.readEntry("CommandWindow1", "Activate, raise and pass click").toAscii());
-    setComboText(m_ui->coWin2, cg.readEntry("CommandWindow2", "Activate and pass click").toAscii());
-    setComboText(m_ui->coWin3, cg.readEntry("CommandWindow3", "Activate and pass click").toAscii());
-    setComboText(m_ui->coWinWheel, cg.readEntry("CommandWindowWheel", "Scroll").toAscii());
-    setComboText(m_ui->coAllKey, cg.readEntry("CommandAllKey", "Alt").toAscii());
-    setComboText(m_ui->coAll1, cg.readEntry("CommandAll1", "Move").toAscii());
-    setComboText(m_ui->coAll2, cg.readEntry("CommandAll2", "Toggle raise and lower").toAscii());
-    setComboText(m_ui->coAll3, cg.readEntry("CommandAll3", "Resize").toAscii());
-    setComboText(m_ui->coAllW, cg.readEntry("CommandAllWheel", "Nothing").toAscii());
+    setComboText(m_ui->coWin1, cg.readEntry("CommandWindow1", "Activate, raise and pass click").toLatin1());
+    setComboText(m_ui->coWin2, cg.readEntry("CommandWindow2", "Activate and pass click").toLatin1());
+    setComboText(m_ui->coWin3, cg.readEntry("CommandWindow3", "Activate and pass click").toLatin1());
+    setComboText(m_ui->coWinWheel, cg.readEntry("CommandWindowWheel", "Scroll").toLatin1());
+    setComboText(m_ui->coAllKey, cg.readEntry("CommandAllKey", "Alt").toLatin1());
+    setComboText(m_ui->coAll1, cg.readEntry("CommandAll1", "Move").toLatin1());
+    setComboText(m_ui->coAll2, cg.readEntry("CommandAll2", "Toggle raise and lower").toLatin1());
+    setComboText(m_ui->coAll3, cg.readEntry("CommandAll3", "Resize").toLatin1());
+    setComboText(m_ui->coAllW, cg.readEntry("CommandAllWheel", "Nothing").toLatin1());
 }
 
 void KWindowActionsConfig::save()

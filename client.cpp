@@ -1345,7 +1345,7 @@ void Client::setOnActivities(QStringList newActivitiesList)
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, nullUuid.length(), nullUuid.constData());
 
     } else {
-        QByteArray joined = joinedActivitiesList.toAscii();
+        QByteArray joined = joinedActivitiesList.toLatin1();
         activityList = newActivitiesList;
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, joined.length(), joined.constData());
     }
