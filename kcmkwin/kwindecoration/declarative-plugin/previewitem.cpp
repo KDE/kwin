@@ -43,7 +43,7 @@ namespace Preview
 PreviewItem::PreviewItem(QQuickItem *parent)
     : QQuickPaintedItem(parent)
     , m_decoration(nullptr)
-    , m_windowColor(QPalette().background().color())
+    , m_windowColor(QPalette().window().color())
 {
     setAcceptHoverEvents(true);
     setFiltersChildMouseEvents(true);
