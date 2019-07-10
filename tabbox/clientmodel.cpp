@@ -173,6 +173,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         }
     }
 
+    beginResetModel();
     m_clientList.clear();
     QList< QWeakPointer< TabBoxClient > > stickyClients;
 
@@ -238,7 +239,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         if (!desktopClient.isNull())
             m_clientList.append(desktopClient);
     }
-    reset();
+    endResetModel();
 }
 
 void ClientModel::close(int i)
