@@ -60,7 +60,6 @@ private Q_SLOTS:
     void testInitiallyMaximized();
     void testBorderlessMaximizedWindow();
     void testBorderlessMaximizedWindowNoClientSideDecoration();
-    void testMaximizePlacementStrategy();
 };
 
 void TestMaximized::initTestCase()
@@ -306,40 +305,6 @@ void TestMaximized::testBorderlessMaximizedWindowNoClientSideDecoration()
     QVERIFY(client->isDecorated());
     QVERIFY(!client->noBorder());
     QCOMPARE(deco->mode(), XdgDecoration::Mode::ServerSide);
-}
-
-void TestMaximized::testMaximizePlacementStrategy()
-{
-    // adjust config
-    auto group = kwinApp()->config()->group("Windows");
-    group.writeEntry("Placement", "Maximizing");
-    group.sync();
-    Workspace::self()->slotReconfigure();
-
-    // add a top panel
-    QScopedPointer<Surface> panelSurface(Test::createSurface());
-    QScopedPointer<QObject> panelShellSurface(Test::createXdgShellStableSurface(panelSurface.data()));
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.data()));
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
-    plasmaSurface->setPosition(QPoint(0, 0));
-    Test::renderAndWaitForShown(panelSurface.data(), QSize(1280, 20), Qt::blue);
-
-    // create a new window - it should be maximised on the first configure and positioned beneath the strut
-    QScopedPointer<Surface> surface(Test::createSurface());
-    auto shellSurface = Test::createXdgShellStableSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly);
-    QSignalSpy configSpy(shellSurface, &XdgShellSurface::configureRequested);
-    surface->commit(Surface::CommitFlag::None);
-    QVERIFY(configSpy.wait());
-
-    const auto size = configSpy[0][0].toSize();
-    const auto states = configSpy[0][1].value<KWayland::Client::XdgShellSurface::States>();
-    QVERIFY(states & XdgShellSurface::State::Maximized);
-    shellSurface->ackConfigure(configSpy[0][2].toUInt());
-    QCOMPARE(size, QSize(1280, 1024 - 20));
-
-    auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::red);
-    QVERIFY(c);
-    QCOMPARE(c->geometry(), QRect(0, 20, 1280, 1024 - 20));
 }
 
 WAYLANDTEST_MAIN(TestMaximized)
