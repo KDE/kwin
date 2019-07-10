@@ -1811,7 +1811,7 @@ void InputRedirection::reconfigure()
     if (Application::usesLibinput()) {
         auto inputConfig = kwinApp()->inputConfig();
         inputConfig->reparseConfiguration();
-        const auto config = inputConfig->group(QStringLiteral("keyboard"));
+        const auto config = inputConfig->group(QStringLiteral("Keyboard"));
         const int delay = config.readEntry("RepeatDelay", 660);
         const int rate = config.readEntry("RepeatRate", 25);
         const bool enabled = config.readEntry("KeyboardRepeating", 0) == 0;
