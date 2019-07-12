@@ -66,8 +66,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/xdgforeign_interface.h>
 #include <KWayland/Server/xdgoutput_interface.h>
 #include <KWayland/Server/keystate_interface.h>
+#include <KWayland/Server/filtered_display.h>
+
+// KF
+#include <KServiceTypeTrader>
 
 // Qt
+#include <QCryptographicHash>
 #include <QDir>
 #include <QFileInfo>
 #include <QThread>
@@ -197,10 +202,97 @@ void WaylandServer::createSurface(T *surface)
     });
 }
 
+class KWinDisplay : public KWayland::Server::FilteredDisplay
+{
+public:
+    KWinDisplay(QObject *parent)
+        : KWayland::Server::FilteredDisplay(parent)
+    {}
+
+    static QByteArray sha256(const QString &fileName)
+    {
+        QFile f(fileName);
+        if (f.open(QFile::ReadOnly)) {
+            QCryptographicHash hash(QCryptographicHash::Sha256);
+            if (hash.addData(&f)) {
+                return hash.result();
+            }
+        }
+        return QByteArray();
+    }
+
+    bool isTrustedOrigin(KWayland::Server::ClientConnection *client) const {
+        const auto fullPathSha = sha256(QStringLiteral("/proc/") + QString::number(client->processId()) + QLatin1String("/root") + client->executablePath());
+        const auto localSha = sha256(QLatin1String("/proc/") + QString::number(client->processId()) + QLatin1String("/exe"));
+        const bool trusted = !localSha.isEmpty() && fullPathSha == localSha;
+
+        if (!trusted) {
+            qCWarning(KWIN_CORE) << "Could not trust" << client->executablePath() << "sha" << localSha << fullPathSha;
+        }
+
+        return trusted;
+    }
+
+    QStringList fetchRequestedInterfaces(KWayland::Server::ClientConnection *client) const {
+        const auto serviceQuery = QStringLiteral("exist Exec and exist [X-KDE-Wayland-Interfaces] and '%1' =~ Exec").arg(client->executablePath());
+        const auto servicesFound = KServiceTypeTrader::self()->query(QStringLiteral("Application"), serviceQuery);
+
+        if (servicesFound.isEmpty()) {
+            return {};
+        }
+
+        return servicesFound.first()->property("X-KDE-Wayland-Interfaces").toStringList();
+    }
+
+    QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate"};
+
+    bool allowInterface(KWayland::Server::ClientConnection *client, const QByteArray &interfaceName) override {
+        if (client->processId() == getpid()) {
+            return true;
+        }
+
+        if (!interfacesBlackList.contains(interfaceName)) {
+            return true;
+        }
+
+        if (client->executablePath().isEmpty()) {
+            qCWarning(KWIN_CORE) << "Could not identify process with pid" << client->processId();
+            return false;
+        }
+
+        {
+            auto requestedInterfaces = client->property("requestedInterfaces");
+            if (requestedInterfaces.isNull()) {
+                requestedInterfaces = fetchRequestedInterfaces(client);
+                client->setProperty("requestedInterfaces", requestedInterfaces);
+            }
+            qCDebug(KWIN_CORE) << "interfaces for" << client->executablePath() << requestedInterfaces << interfaceName << requestedInterfaces.toStringList().contains(QString::fromUtf8(interfaceName));
+            if (!requestedInterfaces.toStringList().contains(QString::fromUtf8(interfaceName))) {
+                qCWarning(KWIN_CORE) << "Did not grant the interface" << interfaceName << "to" << client->executablePath() << ". Please request it under X-Wayland-Interfaces";
+                return false;
+            }
+        }
+
+        {
+            auto trustedOrigin = client->property("isPrivileged");
+            if (trustedOrigin.isNull()) {
+                trustedOrigin = isTrustedOrigin(client);
+                client->setProperty("isPrivileged", trustedOrigin);
+            }
+
+            if (!trustedOrigin.toBool()) {
+                return false;
+            }
+        }
+        qCDebug(KWIN_CORE) << "authorized" << client->executablePath() << interfaceName;
+        return true;
+    }
+};
+
 bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 {
     m_initFlags = flags;
-    m_display = new KWayland::Server::Display(this);
+    m_display = new KWinDisplay(this);
     if (!socketName.isNull() && !socketName.isEmpty()) {
         m_display->setSocketName(QString::fromUtf8(socketName));
     } else {
