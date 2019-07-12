@@ -459,7 +459,7 @@ void X11StandalonePlatform::doUpdateOutputs()
     auto fallback = [this]() {
         auto *o = new X11Output(this);
         o->setGammaRampSize(0);
-        o->setRefreshRate(-1.0f);
+        o->setRefreshRate(60'000); // 60 mHz
         o->setName(QStringLiteral("Xinerama"));
         m_outputs << o;
     };
@@ -498,7 +498,7 @@ void X11StandalonePlatform::doUpdateOutputs()
             }
         }
 
-        float refreshRate = -1.0f;
+        float refreshRate = 60.0f;
         for (int j = 0; j < resources->num_modes; ++j) {
             if (info->mode == modes[j].id) {
                 if (modes[j].htotal != 0 && modes[j].vtotal != 0) { // BUG 313996
@@ -528,7 +528,7 @@ void X11StandalonePlatform::doUpdateOutputs()
             o->setCrtc(crtc);
             o->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
             o->setGeometry(geo);
-            o->setRefreshRate(refreshRate);
+            o->setRefreshRate(int(refreshRate * 1000)); // Convert to mHz
 
             QString name;
             for (int j = 0; j < info->num_outputs; ++j) {
