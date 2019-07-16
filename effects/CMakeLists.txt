@@ -131,21 +131,27 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
     )
 
 # scripted effects
-kpackage_install_package(dialogparent/package kwin4_effect_dialogparent effects kwin)
-kpackage_install_package(dimscreen/package kwin4_effect_dimscreen effects kwin)
-kpackage_install_package(eyeonscreen/package kwin4_effect_eyeonscreen effects kwin)
-kpackage_install_package(fade/package kwin4_effect_fade effects kwin)
-kpackage_install_package(fadedesktop/package kwin4_effect_fadedesktop effects kwin)
-kpackage_install_package(fadingpopups/package kwin4_effect_fadingpopups effects kwin)
-kpackage_install_package(frozenapp/package kwin4_effect_frozenapp effects kwin)
-kpackage_install_package(login/package kwin4_effect_login effects kwin)
-kpackage_install_package(logout/package kwin4_effect_logout effects kwin)
-kpackage_install_package(maximize/package kwin4_effect_maximize effects kwin)
-kpackage_install_package(morphingpopups/package kwin4_effect_morphingpopups effects kwin)
-kpackage_install_package(scale/package kwin4_effect_scale effects kwin)
-kpackage_install_package(squash/package kwin4_effect_squash effects kwin)
-kpackage_install_package(translucency/package kwin4_effect_translucency effects kwin)
-kpackage_install_package(windowaperture/package kwin4_effect_windowaperture effects kwin)
+function(install_scripted_effect name)
+    kpackage_install_package(${name}/package kwin4_effect_${name} effects kwin)
+
+    # necessary so tests are found without installing
+    file(COPY ${name}/package/contents ${name}/package/metadata.desktop DESTINATION ${CMAKE_BINARY_DIR}/bin/kwin/effects/kwin4_effect_${name})
+endfunction()
+install_scripted_effect(dialogparent)
+install_scripted_effect(dimscreen)
+install_scripted_effect(eyeonscreen)
+install_scripted_effect(fade)
+install_scripted_effect(fadedesktop)
+install_scripted_effect(fadingpopups)
+install_scripted_effect(frozenapp)
+install_scripted_effect(login)
+install_scripted_effect(logout)
+install_scripted_effect(maximize)
+install_scripted_effect(morphingpopups)
+install_scripted_effect(scale)
+install_scripted_effect(squash)
+install_scripted_effect(translucency)
+install_scripted_effect(windowaperture)
 
 ###############################################################################
 # Built-in effects go here
