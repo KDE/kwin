@@ -17,6 +17,7 @@ set(SERVER_LIB_SRCS
     fakeinput_interface.cpp
     keyboard_interface.cpp
     keystate_interface.cpp
+    linuxdmabuf_v1_interface.cpp
     remote_access_interface.cpp
     outputconfiguration_interface.cpp
     outputchangeset.cpp
@@ -214,6 +215,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME keystate
 )
 
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/linux-dmabuf/linux-dmabuf-unstable-v1.xml
+    BASENAME linux-dmabuf-unstable-v1
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-output-management-server-protocol.h
@@ -270,6 +276,7 @@ set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-decoration-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-decoration-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-eglstream-controller-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-dmabuf-unstable-v1-server-protocol.h
 )
 
 set_source_files_properties(${SERVER_GENERATED_SRCS} PROPERTIES SKIP_AUTOMOC ON)
@@ -354,6 +361,7 @@ set(SERVER_LIB_HEADERS
   xdgshell_interface.h
   xdgforeign_interface.h
   xdgoutput_interface.h
+  linuxdmabuf_v1_interface.h
 )
 
 install(FILES

@@ -21,11 +21,14 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "display.h"
 #include "logging.h"
 #include "surface_interface.h"
+#include "linuxdmabuf_v1_interface.h"
 // Wayland
 #include <wayland-server.h>
 // EGL
 #include <EGL/egl.h>
 #include <QtGui/qopengl.h>
+
+#include "drm_fourcc.h"
 
 namespace KWayland
 {
@@ -47,6 +50,7 @@ public:
     QImage createImage();
     wl_resource *buffer;
     wl_shm_buffer *shmBuffer;
+    LinuxDmabufBuffer *dmabufBuffer;
     SurfaceInterface *surface;
     int refCount;
     QSize size;
@@ -103,11 +107,15 @@ void BufferInterface::Private::imageBufferCleanupHandler(void *info)
 BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, SurfaceInterface *parent)
     : buffer(resource)
     , shmBuffer(wl_shm_buffer_get(resource))
+    , dmabufBuffer(nullptr)
     , surface(parent)
     , refCount(0)
     , alpha(false)
     , q(q)
 {
+    if (!shmBuffer && wl_resource_instance_of(resource, &wl_buffer_interface, LinuxDmabufUnstableV1Interface::bufferImplementation())) {
+        dmabufBuffer = static_cast<LinuxDmabufBuffer *>(wl_resource_get_user_data(resource));
+    }
     s_buffers << this;
     listener.notify = destroyListenerCallback;
     listener.link.prev = nullptr;
@@ -125,6 +133,43 @@ BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, Sur
             alpha = false;
             break;
         }
+    } else if (dmabufBuffer) {
+        switch (dmabufBuffer->format()) {
+        case DRM_FORMAT_ARGB4444:
+        case DRM_FORMAT_ABGR4444:
+        case DRM_FORMAT_RGBA4444:
+        case DRM_FORMAT_BGRA4444:
+
+        case DRM_FORMAT_ARGB1555:
+        case DRM_FORMAT_ABGR1555:
+        case DRM_FORMAT_RGBA5551:
+        case DRM_FORMAT_BGRA5551:
+
+        case DRM_FORMAT_ARGB8888:
+        case DRM_FORMAT_ABGR8888:
+        case DRM_FORMAT_RGBA8888:
+        case DRM_FORMAT_BGRA8888:
+
+        case DRM_FORMAT_ARGB2101010:
+        case DRM_FORMAT_ABGR2101010:
+        case DRM_FORMAT_RGBA1010102:
+        case DRM_FORMAT_BGRA1010102:
+
+        case DRM_FORMAT_XRGB8888_A8:
+        case DRM_FORMAT_XBGR8888_A8:
+        case DRM_FORMAT_RGBX8888_A8:
+        case DRM_FORMAT_BGRX8888_A8:
+        case DRM_FORMAT_RGB888_A8:
+        case DRM_FORMAT_BGR888_A8:
+        case DRM_FORMAT_RGB565_A8:
+        case DRM_FORMAT_BGR565_A8:
+            alpha = true;
+            break;
+        default:
+            alpha = false;
+            break;
+        }
+        size = dmabufBuffer->size();
     } else if (parent) {
         EGLDisplay eglDisplay = parent->global()->display()->eglDisplay();
         static bool resolved = false;
@@ -273,6 +318,11 @@ SurfaceInterface *BufferInterface::surface() const
 wl_shm_buffer *BufferInterface::shmBuffer()
 {
     return d->shmBuffer;
+}
+
+LinuxDmabufBuffer *BufferInterface::linuxDmabufBuffer()
+{
+    return d->dmabufBuffer;
 }
 
 wl_resource *BufferInterface::resource() const
