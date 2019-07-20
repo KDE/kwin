@@ -88,7 +88,7 @@ void X11Renderer::render()
     bottom = bottom.intersected(geometry);
 
     auto renderPart = [this, c](const QRect &geo) {
-        if (geo.isNull()) {
+        if (!geo.isValid()) {
             return;
         }
         QImage image = renderToImage(geo);

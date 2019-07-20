@@ -2490,7 +2490,7 @@ void SceneOpenGLDecorationRenderer::render()
     const QRect geometry = dirty ? QRect(QPoint(0, 0), client()->client()->geometry().size()) : scheduled.boundingRect();
 
     auto renderPart = [this](const QRect &geo, const QRect &partRect, const QPoint &offset, bool rotated = false) {
-        if (geo.isNull()) {
+        if (!geo.isValid()) {
             return;
         }
         QImage image = renderToImage(geo);
