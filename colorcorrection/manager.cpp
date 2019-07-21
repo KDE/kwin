@@ -70,8 +70,6 @@ void Manager::init()
     readConfig();
 
     if (!kwinApp()->platform()->supportsGammaControl()) {
-        // at least update the sun timings to make the values accessible via dbus
-        updateSunTimings(true);
         return;
     }
 
@@ -141,7 +139,12 @@ void Manager::init()
 void Manager::hardReset()
 {
     cancelAllTimers();
-    updateSunTimings(true);
+
+    // Timings of the Sun are not used in the constant mode.
+    if (m_mode != NightColorMode::Constant) {
+        updateSunTimings(true);
+    }
+
     if (kwinApp()->platform()->supportsGammaControl() && m_active) {
         m_running = true;
         commitGammaRamps(currentTargetTemp());
@@ -211,11 +214,17 @@ void Manager::readConfig()
     m_active = s->active();
 
     NightColorMode mode = s->mode();
-    if (mode == NightColorMode::Location || mode == NightColorMode::Timings) {
+    switch (s->mode()) {
+    case NightColorMode::Automatic:
+    case NightColorMode::Location:
+    case NightColorMode::Timings:
+    case NightColorMode::Constant:
         m_mode = mode;
-    } else {
-        // also fallback for invalid setting values
+        break;
+    default:
+        // Fallback for invalid setting values.
         m_mode = NightColorMode::Automatic;
+        break;
     }
 
     m_nightTargetTemp = qBound(MIN_TEMPERATURE, s->nightTemperature(), NEUTRAL_TEMPERATURE);
@@ -293,7 +302,10 @@ void Manager::cancelAllTimers()
 
 void Manager::resetQuickAdjustTimer()
 {
-    updateSunTimings(false);
+    // We don't use timings of the Sun in the constant mode.
+    if (m_mode != NightColorMode::Constant) {
+        updateSunTimings(false);
+    }
 
     int tempDiff = qAbs(currentTargetTemp() - m_currentTemp);
     // allow tolerance of one TEMPERATURE_STEP to compensate if a slow update is coincidental
@@ -344,6 +356,12 @@ void Manager::resetSlowUpdateStartTimer()
 
     if (!m_running || m_quickAdjustTimer) {
         // only reenable the slow update start timer when quick adjust is not active anymore
+        return;
+    }
+
+    // There is no need for starting the slow update timer. Screen color temperature
+    // will be constant all the time now.
+    if (m_mode == NightColorMode::Constant) {
         return;
     }
 
@@ -536,6 +554,10 @@ int Manager::currentTargetTemp() const
         return NEUTRAL_TEMPERATURE;
     }
 
+    if (m_mode == NightColorMode::Constant) {
+       return m_nightTargetTemp;
+    }
+
     QDateTime todayNow = QDateTime::currentDateTimeUtc();
 
     auto f = [this, todayNow](int target1, int target2) {
@@ -680,7 +702,7 @@ bool Manager::changeConfiguration(QHash<QString, QVariant> data)
             return false;
         }
         int mo = iter1.value().toInt();
-        if (mo < 0 || 2 < mo) {
+        if (mo < 0 || 3 < mo) {
             return false;
         }
         NightColorMode moM;
@@ -693,6 +715,10 @@ bool Manager::changeConfiguration(QHash<QString, QVariant> data)
                 break;
             case 2:
                 moM = NightColorMode::Timings;
+                break;
+            case 3:
+                moM = NightColorMode::Constant;
+                break;
         }
         modeUpdate = m_mode != moM;
         mode = moM;

@@ -42,16 +42,50 @@ typedef QPair<QTime,QTime> Times;
 
 class ColorCorrectDBusInterface;
 
-
+/**
+ * This enum type is used to specify operation mode of the night color manager.
+ **/
 enum NightColorMode {
-    // timings are based on provided location data
-    Automatic = 0,
-    // timings are based on fixed location data
+    /**
+     * Color temperature is computed based on the current position of the Sun.
+     *
+     * Location of the user is provided by Plasma.
+     **/
+    Automatic,
+    /**
+     * Color temperature is computed based on the current position of the Sun.
+     *
+     * Location of the user is provided by themselves.
+     **/
     Location,
-    // fixed timings
-    Timings
+    /**
+     * Color temperature is computed based on the current time.
+     *
+     * Sunrise and sunset times have to be specified by the user.
+     **/
+    Timings,
+    /**
+     * Color temperature is constant thoughout the day.
+     **/
+    Constant,
 };
 
+/**
+ * The night color manager is a blue light filter similar to Redshift.
+ *
+ * There are four modes this manager can operate in: Automatic, Location, Timings,
+ * and Constant. Both Automatic and Location modes derive screen color temperature
+ * from the current position of the Sun, the only difference between two is how
+ * coordinates of the user are specified. If the user is located near the North or
+ * South pole, we can't compute correct position of the Sun, that's why we need
+ * Timings and Constant mode.
+ *
+ * With the Timings mode, screen color temperature is computed based on the clock
+ * time. The user needs to specify timings of the sunset and sunrise as well the
+ * transition time.
+ *
+ * With the Constant mode, screen color temperature is always constant.
+ **/
 class KWIN_EXPORT Manager : public QObject
 {
     Q_OBJECT

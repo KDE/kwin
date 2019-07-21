@@ -19,6 +19,7 @@
                 <choice name="Automatic"/>
                 <choice name="Location"/>
                 <choice name="Times"/>
+                <choice name="Constant"/>
             </choices>
             <default>NightColorMode::Automatic</default>
         </entry>

@@ -83,9 +83,10 @@ void ColorCorrectNightColorTest::testConfigRead_data()
 
     QTest::newRow("activeMode0") << "true" << 0 << 4500 << 45.5 << 35.1 << "0600" << "1800" << 30 << true;
     QTest::newRow("activeMode1") << "true" << 1 << 2500 << -10.5 << -8. << "0020" << "2000" << 60 << true;
+    QTest::newRow("activeMode2") << "true" << 3 << 3500 << 45.5 << 35.1 << "0600" << "1800" << 60 << true;
     QTest::newRow("notActiveMode2") << "false" << 2 << 5000 << 90. << -180. << "0600" << "1800" << 1 << true;
-    QTest::newRow("wrongData1") << "fa" << 3 << 7000 << 91. << -181. << "060" << "800" << 999999 << false;
-    QTest::newRow("wrongData2") << "fa" << 3 << 7000 << 91. << -181. << "060" << "800" << -2 << false;
+    QTest::newRow("wrongData1") << "fa" << 4 << 7000 << 91. << -181. << "060" << "800" << 999999 << false;
+    QTest::newRow("wrongData2") << "fa" << 4 << 7000 << 91. << -181. << "060" << "800" << -2 << false;
 }
 
 void ColorCorrectNightColorTest::testConfigRead()
@@ -183,7 +184,8 @@ void ColorCorrectNightColorTest::testChangeConfiguration_data()
     QTest::newRow("data0") << true << 0 << 4500 << 45.5 << 35.1 << QTime(6,0,0) << QTime(18,0,0) << 30 << true;
     QTest::newRow("data1") << true << 1 << 2500 << -10.5 << -8. << QTime(0,2,0) << QTime(20,0,0) << 60 << true;
     QTest::newRow("data2") << false << 2 << 5000 << 90. << -180. << QTime(6,0,0) << QTime(19,1,1) << 1 << true;
-    QTest::newRow("wrongData0") << true << 3 << 4500 << 0. << 0. << QTime(6,0,0) << QTime(18,0,0) << 30 << false;
+    QTest::newRow("data3") << false << 3 << 2000 << 90. << -180. << QTime(6,0,0) << QTime(18,0,0) << 1 << true;
+    QTest::newRow("wrongData0") << true << 4 << 4500 << 0. << 0. << QTime(6,0,0) << QTime(18,0,0) << 30 << false;
     QTest::newRow("wrongData1") << true << 0 << 500 << 0. << 0. << QTime(6,0,0) << QTime(18,0,0) << 30 << false;
     QTest::newRow("wrongData2") << true << 0 << 7000 << 0. << 0. << QTime(6,0,0) << QTime(18,0,0) << 30 << false;
     QTest::newRow("wrongData3") << true << 0 << 4500 << 91. << -181. << QTime(6,0,0) << QTime(18,0,0) << 30 << false;
