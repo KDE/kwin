@@ -295,7 +295,7 @@ class KWIN_EXPORT RuleBook : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~RuleBook();
+    ~RuleBook() override;
     WindowRules find(const AbstractClient*, bool);
     void discardUsed(AbstractClient* c, bool withdraw);
     void setUpdatesDisabled(bool disable);

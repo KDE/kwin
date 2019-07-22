@@ -107,25 +107,25 @@ private:
 
 public:
     PresentWindowsEffect();
-    virtual ~PresentWindowsEffect();
+    ~PresentWindowsEffect() override;
 
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void* proxy();
+    void reconfigure(ReconfigureFlags) override;
+    void* proxy() override;
 
     // Screen painting
-    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData &data);
-    virtual void postPaintScreen();
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
+    void postPaintScreen() override;
 
     // Window painting
-    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
-    virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     // User interaction
-    virtual bool borderActivated(ElectricBorder border);
-    virtual void windowInputMouseEvent(QEvent *e);
-    virtual void grabbedKeyboardEvent(QKeyEvent *e);
-    virtual bool isActive() const;
+    bool borderActivated(ElectricBorder border) override;
+    void windowInputMouseEvent(QEvent *e) override;
+    void grabbedKeyboardEvent(QKeyEvent *e) override;
+    bool isActive() const override;
 
     bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
     bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;

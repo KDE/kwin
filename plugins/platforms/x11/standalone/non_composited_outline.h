@@ -29,9 +29,9 @@ class NonCompositedOutlineVisual : public OutlineVisual
 {
 public:
     NonCompositedOutlineVisual(Outline *outline);
-    virtual ~NonCompositedOutlineVisual();
-    virtual void show();
-    virtual void hide();
+    ~NonCompositedOutlineVisual() override;
+    void show() override;
+    void hide() override;
 
 private:
     // TODO: variadic template arguments for adding method arguments

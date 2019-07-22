@@ -39,7 +39,7 @@ class ColorCorrectDBusInterface : public QObject
 
 public:
     explicit ColorCorrectDBusInterface(Manager *parent);
-    virtual ~ColorCorrectDBusInterface() = default;
+    ~ColorCorrectDBusInterface() override = default;
 
 public Q_SLOTS:
     /**

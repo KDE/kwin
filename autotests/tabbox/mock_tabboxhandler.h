@@ -28,70 +28,70 @@ class MockTabBoxHandler : public TabBox::TabBoxHandler
     Q_OBJECT
 public:
     MockTabBoxHandler(QObject *parent = nullptr);
-    virtual ~MockTabBoxHandler();
-    virtual void activateAndClose() {
+    ~MockTabBoxHandler() override;
+    void activateAndClose() override {
     }
-    virtual QWeakPointer< TabBox::TabBoxClient > activeClient() const;
+    QWeakPointer< TabBox::TabBoxClient > activeClient() const override;
     void setActiveClient(const QWeakPointer<TabBox::TabBoxClient> &client);
-    virtual int activeScreen() const {
+    int activeScreen() const override {
         return 0;
     }
-    virtual QWeakPointer< TabBox::TabBoxClient > clientToAddToList(TabBox::TabBoxClient *client, int desktop) const;
-    virtual int currentDesktop() const {
+    QWeakPointer< TabBox::TabBoxClient > clientToAddToList(TabBox::TabBoxClient *client, int desktop) const override;
+    int currentDesktop() const override {
         return 1;
     }
-    virtual QWeakPointer< TabBox::TabBoxClient > desktopClient() const {
+    QWeakPointer< TabBox::TabBoxClient > desktopClient() const override {
         return QWeakPointer<TabBox::TabBoxClient>();
     }
-    virtual QString desktopName(int desktop) const {
+    QString desktopName(int desktop) const override {
         Q_UNUSED(desktop)
         return "desktop 1";
     }
-    virtual QString desktopName(TabBox::TabBoxClient *client) const {
+    QString desktopName(TabBox::TabBoxClient *client) const override {
         Q_UNUSED(client)
         return "desktop";
     }
-    virtual void elevateClient(TabBox::TabBoxClient *c, QWindow *tabbox, bool elevate) const {
+    void elevateClient(TabBox::TabBoxClient *c, QWindow *tabbox, bool elevate) const override {
         Q_UNUSED(c)
         Q_UNUSED(tabbox)
         Q_UNUSED(elevate)
     }
-    virtual void shadeClient(TabBox::TabBoxClient *c, bool b) const {
+    void shadeClient(TabBox::TabBoxClient *c, bool b) const override {
         Q_UNUSED(c)
         Q_UNUSED(b)
     }
     virtual void hideOutline() {
     }
-    virtual QWeakPointer< TabBox::TabBoxClient > nextClientFocusChain(TabBox::TabBoxClient *client) const;
-    virtual QWeakPointer<TabBox::TabBoxClient> firstClientFocusChain() const;
-    virtual bool isInFocusChain (TabBox::TabBoxClient* client) const;
-    virtual int nextDesktopFocusChain(int desktop) const {
+    QWeakPointer< TabBox::TabBoxClient > nextClientFocusChain(TabBox::TabBoxClient *client) const override;
+    QWeakPointer<TabBox::TabBoxClient> firstClientFocusChain() const override;
+    bool isInFocusChain (TabBox::TabBoxClient* client) const override;
+    int nextDesktopFocusChain(int desktop) const override {
         Q_UNUSED(desktop)
         return 1;
     }
-    virtual int numberOfDesktops() const {
+    int numberOfDesktops() const override {
         return 1;
     }
     virtual QVector< xcb_window_t > outlineWindowIds() const {
         return QVector<xcb_window_t>();
     }
-    virtual bool isKWinCompositing() const {
+    bool isKWinCompositing() const override {
         return false;
     }
-    virtual void raiseClient(TabBox::TabBoxClient *c) const {
+    void raiseClient(TabBox::TabBoxClient *c) const override {
         Q_UNUSED(c)
     }
-    virtual void restack(TabBox::TabBoxClient *c, TabBox::TabBoxClient *under) {
+    void restack(TabBox::TabBoxClient *c, TabBox::TabBoxClient *under) override {
         Q_UNUSED(c)
         Q_UNUSED(under)
     }
     virtual void showOutline(const QRect &outline) {
         Q_UNUSED(outline)
     }
-    virtual TabBox::TabBoxClientList stackingOrder() const {
+    TabBox::TabBoxClientList stackingOrder() const override {
         return TabBox::TabBoxClientList();
     }
-    virtual void grabbedKeyEvent(QKeyEvent *event) const;
+    void grabbedKeyEvent(QKeyEvent *event) const override;
 
     void highlightWindows(TabBox::TabBoxClient *window = nullptr, QWindow *controller = nullptr) override {
         Q_UNUSED(window)

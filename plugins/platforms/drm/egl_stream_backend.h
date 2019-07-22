@@ -40,7 +40,7 @@ class EglStreamBackend : public AbstractEglBackend
     Q_OBJECT
 public:
     EglStreamBackend(DrmBackend *b);
-    virtual ~EglStreamBackend();
+    ~EglStreamBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion prepareRenderingFrame() override;
@@ -95,7 +95,7 @@ private:
 class EglStreamTexture : public AbstractEglTexture
 {
 public:
-    virtual ~EglStreamTexture();
+    ~EglStreamTexture() override;
     bool loadTexture(WindowPixmap *pixmap) override;
     void updateTexture(WindowPixmap *pixmap) override;
 

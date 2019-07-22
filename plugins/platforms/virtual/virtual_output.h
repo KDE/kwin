@@ -35,7 +35,7 @@ class VirtualOutput : public AbstractWaylandOutput
 
 public:
     VirtualOutput(QObject *parent = nullptr);
-    virtual ~VirtualOutput();
+    ~VirtualOutput() override;
 
     QSize pixelSize() const override;
 

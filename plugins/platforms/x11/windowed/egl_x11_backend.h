@@ -33,16 +33,16 @@ class EglX11Backend : public EglOnXBackend
 {
 public:
     explicit EglX11Backend(X11WindowedBackend *backend);
-    virtual ~EglX11Backend();
-    virtual QRegion prepareRenderingFrame();
-    virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
-    virtual bool usesOverlayWindow() const override;
+    ~EglX11Backend() override;
+    QRegion prepareRenderingFrame() override;
+    void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) override;
+    bool usesOverlayWindow() const override;
     bool perScreenRendering() const override;
     QRegion prepareRenderingForScreen(int screenId) override;
     void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
 
 protected:
-    virtual void present();
+    void present() override;
     void cleanupSurfaces() override;
     bool createSurfaces() override;
 

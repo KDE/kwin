@@ -188,7 +188,7 @@ class KWIN_EXPORT Options : public QObject
 public:
 
     explicit Options(QObject *parent = NULL);
-    ~Options();
+    ~Options() override;
 
     void updateSettings();
 

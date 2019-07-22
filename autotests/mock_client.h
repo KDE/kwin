@@ -33,7 +33,7 @@ class Client : public AbstractClient
     Q_OBJECT
 public:
     explicit Client(QObject *parent);
-    virtual ~Client();
+    ~Client() override;
     void showOnScreenEdge() override;
 
 };

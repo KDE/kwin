@@ -38,7 +38,7 @@ class MockWorkspace : public QObject
     Q_OBJECT
 public:
     explicit MockWorkspace(QObject *parent = nullptr);
-    virtual ~MockWorkspace();
+    ~MockWorkspace() override;
     AbstractClient *activeClient() const;
     AbstractClient *moveResizeClient() const;
     void setShowingDesktop(bool showing);

@@ -50,7 +50,7 @@ class Outline : public QObject {
     Q_PROPERTY(QRect unifiedGeometry READ unifiedGeometry NOTIFY unifiedGeometryChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 public:
-    ~Outline();
+    ~Outline() override;
 
     /**
      * Set the outline geometry.
@@ -144,9 +144,9 @@ class CompositedOutlineVisual : public OutlineVisual
 {
 public:
     CompositedOutlineVisual(Outline *outline);
-    virtual ~CompositedOutlineVisual();
-    virtual void show();
-    virtual void hide();
+    ~CompositedOutlineVisual() override;
+    void show() override;
+    void hide() override;
 private:
     QScopedPointer<QQmlContext> m_qmlContext;
     QScopedPointer<QQmlComponent> m_qmlComponent;

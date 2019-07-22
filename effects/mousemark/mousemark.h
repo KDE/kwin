@@ -38,10 +38,10 @@ class MouseMarkEffect
     Q_PROPERTY(QColor color READ configuredColor)
 public:
     MouseMarkEffect();
-    ~MouseMarkEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual bool isActive() const;
+    ~MouseMarkEffect() override;
+    void reconfigure(ReconfigureFlags) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    bool isActive() const override;
 
     // for properties
     int configuredWidth() const {

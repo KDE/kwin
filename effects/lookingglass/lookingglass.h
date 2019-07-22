@@ -41,13 +41,13 @@ class LookingGlassEffect : public Effect
     Q_PROPERTY(int initialRadius READ initialRadius)
 public:
     LookingGlassEffect();
-    virtual ~LookingGlassEffect();
+    ~LookingGlassEffect() override;
 
-    virtual void reconfigure(ReconfigureFlags);
+    void reconfigure(ReconfigureFlags) override;
 
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
     void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
-    virtual bool isActive() const;
+    bool isActive() const override;
 
     static bool supported();
 

@@ -42,7 +42,7 @@ class DecoratedClientImpl : public QObject, public KDecoration2::ApplicationMenu
     Q_OBJECT
 public:
     explicit DecoratedClientImpl(AbstractClient *client, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration);
-    virtual ~DecoratedClientImpl();
+    ~DecoratedClientImpl() override;
     QString caption() const override;
     WId decorationId() const override;
     int desktop() const override;
@@ -87,7 +87,7 @@ public:
     void requestToggleOnAllDesktops() override;
     void requestToggleShade() override;
 
-    void showApplicationMenu(int actionId);
+    void showApplicationMenu(int actionId) override;
 
     AbstractClient *client() {
         return m_client;

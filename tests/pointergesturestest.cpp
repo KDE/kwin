@@ -38,7 +38,7 @@ class PinchGesture : public QQuickItem
 
 public:
     explicit PinchGesture(QQuickItem *parent = nullptr);
-    virtual ~PinchGesture();
+    ~PinchGesture() override;
 
     qreal scale() const {
         return m_scale;

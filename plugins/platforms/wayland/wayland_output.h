@@ -51,7 +51,7 @@ class WaylandOutput : public AbstractWaylandOutput
     Q_OBJECT
 public:
     explicit WaylandOutput(KWayland::Client::Surface *surface, QObject *parent = nullptr);
-    ~WaylandOutput();
+    ~WaylandOutput() override;
 
     virtual void lockPointer(KWayland::Client::Pointer *pointer, bool lock) {
         Q_UNUSED(pointer)
@@ -97,7 +97,7 @@ public:
     ShellOutput(KWayland::Client::Surface *surface,
                 KWayland::Client::Shell *shell,
                 WaylandBackend *backend);
-    ~ShellOutput();
+    ~ShellOutput() override;
 
 private:
     KWayland::Client::ShellSurface *m_shellSurface = nullptr;
@@ -109,7 +109,7 @@ public:
     XdgShellOutput(KWayland::Client::Surface *surface,
                    KWayland::Client::XdgShell *xdgShell,
                    WaylandBackend *backend, int number);
-    ~XdgShellOutput();
+    ~XdgShellOutput() override;
 
     void lockPointer(KWayland::Client::Pointer *pointer, bool lock) override;
 

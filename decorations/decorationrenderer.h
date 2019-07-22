@@ -39,7 +39,7 @@ class KWIN_EXPORT Renderer : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~Renderer();
+    ~Renderer() override;
 
     void schedule(const QRect &rect);
 

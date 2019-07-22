@@ -52,7 +52,7 @@ public:
 
 protected:
     explicit XwaylandInterface(QObject *parent = nullptr);
-    virtual ~XwaylandInterface();
+    ~XwaylandInterface() override;
 
 private:
     Q_DISABLE_COPY(XwaylandInterface)

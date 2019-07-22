@@ -80,7 +80,7 @@ class KWIN_EXPORT Platform : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~Platform();
+    ~Platform() override;
 
     virtual void init() = 0;
     virtual Screens *createScreens(QObject *parent = nullptr);

@@ -37,7 +37,7 @@ class X11Renderer : public Renderer
     Q_OBJECT
 public:
     explicit X11Renderer(DecoratedClientImpl *client);
-    virtual ~X11Renderer();
+    ~X11Renderer() override;
 
     void reparent(Deleted *deleted) override;
 

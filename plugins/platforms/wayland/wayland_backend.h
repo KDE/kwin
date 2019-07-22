@@ -81,7 +81,7 @@ class WaylandCursor : public QObject
     Q_OBJECT
 public:
     explicit WaylandCursor(WaylandBackend *backend);
-    virtual ~WaylandCursor();
+    ~WaylandCursor() override;
 
     virtual void init();
     virtual void move(const QPointF &globalPosition) {
@@ -113,7 +113,7 @@ class WaylandSubSurfaceCursor : public WaylandCursor
     Q_OBJECT
 public:
     explicit WaylandSubSurfaceCursor(WaylandBackend *backend);
-    virtual ~WaylandSubSurfaceCursor();
+    ~WaylandSubSurfaceCursor() override;
 
     void init() override;
 
@@ -134,7 +134,7 @@ class WaylandSeat : public QObject
     Q_OBJECT
 public:
     WaylandSeat(wl_seat *seat, WaylandBackend *backend);
-    virtual ~WaylandSeat();
+    ~WaylandSeat() override;
 
     KWayland::Client::Pointer *pointer() const {
         return m_pointer;
@@ -177,7 +177,7 @@ class KWIN_EXPORT WaylandBackend : public Platform
     Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "wayland.json")
 public:
     explicit WaylandBackend(QObject *parent = nullptr);
-    virtual ~WaylandBackend();
+    ~WaylandBackend() override;
     void init() override;
     wl_display *display();
     KWayland::Client::Compositor *compositor();

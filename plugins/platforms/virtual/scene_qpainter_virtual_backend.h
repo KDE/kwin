@@ -35,7 +35,7 @@ class VirtualQPainterBackend : public QObject, public QPainterBackend
     Q_OBJECT
 public:
     VirtualQPainterBackend(VirtualBackend *backend);
-    virtual ~VirtualQPainterBackend();
+    ~VirtualQPainterBackend() override;
 
     QImage *buffer() override;
     QImage *bufferForScreen(int screenId) override;

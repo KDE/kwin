@@ -39,7 +39,7 @@ class WindowBasedEdge : public Edge
     Q_OBJECT
 public:
     explicit WindowBasedEdge(ScreenEdges *parent);
-    virtual ~WindowBasedEdge();
+    ~WindowBasedEdge() override;
 
     quint32 window() const override;
     /**
@@ -49,12 +49,12 @@ public:
     quint32 approachWindow() const override;
 
 protected:
-    virtual void doGeometryUpdate();
-    virtual void doActivate() override;
-    virtual void doDeactivate() override;
-    virtual void doStartApproaching();
-    virtual void doStopApproaching();
-    virtual void doUpdateBlocking();
+    void doGeometryUpdate() override;
+    void doActivate() override;
+    void doDeactivate() override;
+    void doStartApproaching() override;
+    void doStopApproaching() override;
+    void doUpdateBlocking() override;
 
 private:
     void createWindow();

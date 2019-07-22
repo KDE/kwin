@@ -32,7 +32,7 @@ class DpmsInputEventFilter : public InputEventFilter
 {
 public:
     DpmsInputEventFilter(DrmBackend *backend);
-    ~DpmsInputEventFilter();
+    ~DpmsInputEventFilter() override;
 
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
     bool wheelEvent(QWheelEvent *event) override;

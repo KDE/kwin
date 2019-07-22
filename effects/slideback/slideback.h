@@ -34,13 +34,13 @@ class SlideBackEffect
 public:
     SlideBackEffect();
 
-    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void postPaintWindow(EffectWindow* w);
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void postPaintWindow(EffectWindow* w) override;
 
-    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
-    virtual void postPaintScreen();
-    virtual bool isActive() const;
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void postPaintScreen() override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 50;

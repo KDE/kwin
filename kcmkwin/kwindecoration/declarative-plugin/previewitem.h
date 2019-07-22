@@ -47,8 +47,8 @@ class PreviewItem : public QQuickPaintedItem
     Q_PROPERTY(bool drawBackground READ isDrawingBackground WRITE setDrawingBackground NOTIFY drawingBackgroundChanged)
 public:
     PreviewItem(QQuickItem *parent = nullptr);
-    virtual ~PreviewItem();
-    void paint(QPainter *painter);
+    ~PreviewItem() override;
+    void paint(QPainter *painter) override;
 
     KDecoration2::Decoration *decoration() const;
     void setDecoration(KDecoration2::Decoration *deco);

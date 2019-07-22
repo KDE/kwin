@@ -35,10 +35,10 @@ class ScreenEdgeEffect : public Effect
     Q_OBJECT
 public:
     ScreenEdgeEffect();
-    virtual ~ScreenEdgeEffect();
-    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData &data);
-    virtual bool isActive() const;
+    ~ScreenEdgeEffect() override;
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 90;

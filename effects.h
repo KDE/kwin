@@ -72,7 +72,7 @@ class KWIN_EXPORT EffectsHandlerImpl : public EffectsHandler
     Q_PROPERTY(QStringList listOfEffects READ listOfEffects)
 public:
     EffectsHandlerImpl(Compositor *compositor, Scene *scene);
-    virtual ~EffectsHandlerImpl();
+    ~EffectsHandlerImpl() override;
     void prePaintScreen(ScreenPrePaintData& data, int time) override;
     void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
     /**
@@ -262,7 +262,7 @@ public:
         return registered_atoms.contains(atom);
     }
 
-    void windowToDesktops(EffectWindow *w, const QVector<uint> &desktops);
+    void windowToDesktops(EffectWindow *w, const QVector<uint> &desktops) override;
 
     /**
      * Finds an effect with the given name.
@@ -490,8 +490,8 @@ public:
 
     void elevate(bool elevate);
 
-    void setData(int role, const QVariant &data);
-    QVariant data(int role) const;
+    void setData(int role, const QVariant &data) override;
+    QVariant data(int role) const override;
 
     void registerThumbnail(AbstractThumbnailItem *item);
     QHash<WindowThumbnailItem*, QWeakPointer<EffectWindowImpl> > const &thumbnails() const {
@@ -534,7 +534,7 @@ class KWIN_EXPORT EffectFrameImpl
 public:
     explicit EffectFrameImpl(EffectFrameStyle style, bool staticSize = true, QPoint position = QPoint(-1, -1),
                              Qt::Alignment alignment = Qt::AlignCenter);
-    virtual ~EffectFrameImpl();
+    ~EffectFrameImpl() override;
 
     void free() override;
     void render(QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) override;

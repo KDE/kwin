@@ -32,7 +32,7 @@ class KWIN_EXPORT X11Cursor : public Cursor
     Q_OBJECT
 public:
     X11Cursor(QObject *parent, bool xInputSupport = false);
-    virtual ~X11Cursor();
+    ~X11Cursor() override;
 
     void schedulePoll() {
         m_needsPoll = true;
@@ -46,14 +46,14 @@ public:
     void notifyCursorChanged();
 
 protected:
-    virtual xcb_cursor_t getX11Cursor(CursorShape shape);
+    xcb_cursor_t getX11Cursor(CursorShape shape) override;
     xcb_cursor_t getX11Cursor(const QByteArray &name) override;
-    virtual void doSetPos();
-    virtual void doGetPos();
-    virtual void doStartMousePolling();
-    virtual void doStopMousePolling();
-    virtual void doStartCursorTracking();
-    virtual void doStopCursorTracking();
+    void doSetPos() override;
+    void doGetPos() override;
+    void doStartMousePolling() override;
+    void doStopMousePolling() override;
+    void doStartCursorTracking() override;
+    void doStopCursorTracking() override;
 
 private Q_SLOTS:
     /**

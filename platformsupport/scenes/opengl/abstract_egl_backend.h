@@ -43,7 +43,7 @@ class KWIN_EXPORT AbstractEglBackend : public QObject, public OpenGLBackend
 {
     Q_OBJECT
 public:
-    virtual ~AbstractEglBackend();
+    ~AbstractEglBackend() override;
     bool makeCurrent() override;
     void doneCurrent() override;
 
@@ -90,7 +90,7 @@ private:
 class KWIN_EXPORT AbstractEglTexture : public SceneOpenGLTexturePrivate
 {
 public:
-    virtual ~AbstractEglTexture();
+    ~AbstractEglTexture() override;
     bool loadTexture(WindowPixmap *pixmap) override;
     void updateTexture(WindowPixmap *pixmap) override;
     OpenGLBackend *backend() override;

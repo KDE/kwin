@@ -43,17 +43,17 @@ class FlipSwitchEffect
     Q_PROPERTY(bool windowTitle READ isWindowTitle)
 public:
     FlipSwitchEffect();
-    ~FlipSwitchEffect();
+    ~FlipSwitchEffect() override;
 
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void grabbedKeyboardEvent(QKeyEvent* e);
-    virtual void windowInputMouseEvent(QEvent* e);
-    virtual bool isActive() const;
+    void reconfigure(ReconfigureFlags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void grabbedKeyboardEvent(QKeyEvent* e) override;
+    void windowInputMouseEvent(QEvent* e) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 50;

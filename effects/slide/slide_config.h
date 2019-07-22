@@ -34,9 +34,9 @@ class SlideEffectConfig : public KCModule
 
 public:
     explicit SlideEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
-    ~SlideEffectConfig();
+    ~SlideEffectConfig() override;
 
-    void save();
+    void save() override;
 
 private:
     ::Ui::SlideEffectConfig m_ui;

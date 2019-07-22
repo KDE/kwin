@@ -44,11 +44,11 @@ class LanczosFilter : public QObject
 
 public:
     explicit LanczosFilter(QObject* parent = 0);
-    ~LanczosFilter();
+    ~LanczosFilter() override;
     void performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
 
 protected:
-    virtual void timerEvent(QTimerEvent*);
+    void timerEvent(QTimerEvent*) override;
 private:
     void init();
     void updateOffscreenSurfaces();

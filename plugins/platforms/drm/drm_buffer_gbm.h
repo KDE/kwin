@@ -36,7 +36,7 @@ class DrmSurfaceBuffer : public DrmBuffer
 {
 public:
     DrmSurfaceBuffer(int fd, const std::shared_ptr<GbmSurface> &surface);
-    ~DrmSurfaceBuffer();
+    ~DrmSurfaceBuffer() override;
 
     bool needsModeChange(DrmBuffer *b) const override {
         if (DrmSurfaceBuffer *sb = dynamic_cast<DrmSurfaceBuffer*>(b)) {

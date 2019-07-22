@@ -43,7 +43,7 @@ public:
     explicit CubeSlideEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
 public Q_SLOTS:
-    virtual void save();
+    void save() override;
 
 private:
     CubeSlideEffectConfigForm* m_ui;

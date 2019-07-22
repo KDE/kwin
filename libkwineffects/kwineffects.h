@@ -382,7 +382,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when the Effect is destroyed.
      **/
-    virtual ~Effect();
+    ~Effect() override;
 
     /**
      * Flags describing which parts of configuration have changed.
@@ -695,7 +695,7 @@ class KWINEFFECTS_EXPORT EffectPluginFactory : public KPluginFactory
     Q_OBJECT
 public:
     EffectPluginFactory();
-    virtual ~EffectPluginFactory();
+    ~EffectPluginFactory() override;
     /**
      * Returns whether the Effect is supported.
      *
@@ -829,7 +829,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     friend class Effect;
 public:
     explicit EffectsHandler(CompositingType type);
-    virtual ~EffectsHandler();
+    ~EffectsHandler() override;
     // for use by effects
     virtual void prePaintScreen(ScreenPrePaintData& data, int time) = 0;
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data) = 0;
@@ -2105,7 +2105,7 @@ public:
     };
 
     explicit EffectWindow(QObject *parent = nullptr);
-    virtual ~EffectWindow();
+    ~EffectWindow() override;
 
     virtual void enablePainting(int reason) = 0;
     virtual void disablePainting(int reason) = 0;
@@ -2727,7 +2727,7 @@ public:
     explicit WindowPaintData(EffectWindow* w);
     explicit WindowPaintData(EffectWindow* w, const QMatrix4x4 &screenProjectionMatrix);
     WindowPaintData(const WindowPaintData &other);
-    virtual ~WindowPaintData();
+    ~WindowPaintData() override;
     /**
      * Scales the window by @p scale factor.
      * Multiplies all three components by the given factor.
@@ -2927,7 +2927,7 @@ public:
     ScreenPaintData();
     ScreenPaintData(const QMatrix4x4 &projectionMatrix, const QRect &outputGeometry = QRect());
     ScreenPaintData(const ScreenPaintData &other);
-    virtual ~ScreenPaintData();
+    ~ScreenPaintData() override;
     /**
      * Scales the screen by @p scale factor.
      * Multiplies all three components by the given factor.

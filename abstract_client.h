@@ -332,7 +332,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     Q_PROPERTY(QString colorScheme READ colorScheme NOTIFY colorSchemeChanged)
 
 public:
-    virtual ~AbstractClient();
+    ~AbstractClient() override;
 
     QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const {
         return m_tabBoxClient.toWeakRef();
@@ -479,7 +479,7 @@ public:
     int desktop() const override {
         return m_desktops.isEmpty() ? (int)NET::OnAllDesktops : m_desktops.last()->x11DesktopNumber();
     }
-    virtual QVector<VirtualDesktop *> desktops() const {
+    QVector<VirtualDesktop *> desktops() const override {
         return m_desktops;
     }
     QVector<uint> x11DesktopIds() const;

@@ -49,7 +49,7 @@ class KWIN_EXPORT DebugConsoleModel : public QAbstractItemModel
     Q_OBJECT
 public:
     explicit DebugConsoleModel(QObject *parent = nullptr);
-    virtual ~DebugConsoleModel();
+    ~DebugConsoleModel() override;
 
 
     int columnCount(const QModelIndex &parent) const override;
@@ -90,7 +90,7 @@ class DebugConsoleDelegate : public QStyledItemDelegate
     Q_OBJECT
 public:
     explicit DebugConsoleDelegate(QObject *parent = nullptr);
-    virtual ~DebugConsoleDelegate();
+    ~DebugConsoleDelegate() override;
 
     QString displayText(const QVariant &value, const QLocale &locale) const override;
 };
@@ -100,7 +100,7 @@ class KWIN_EXPORT DebugConsole : public QWidget
     Q_OBJECT
 public:
     DebugConsole();
-    virtual ~DebugConsole();
+    ~DebugConsole() override;
 
 protected:
     void showEvent(QShowEvent *event) override;
@@ -118,7 +118,7 @@ class SurfaceTreeModel : public QAbstractItemModel
     Q_OBJECT
 public:
     explicit SurfaceTreeModel(QObject *parent = nullptr);
-    virtual ~SurfaceTreeModel();
+    ~SurfaceTreeModel() override;
 
     int columnCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
@@ -131,7 +131,7 @@ class DebugConsoleFilter : public InputEventSpy
 {
 public:
     explicit DebugConsoleFilter(QTextEdit *textEdit);
-    virtual ~DebugConsoleFilter();
+    ~DebugConsoleFilter() override;
 
     void pointerEvent(MouseEvent *event) override;
     void wheelEvent(WheelEvent *event) override;
@@ -166,7 +166,7 @@ class InputDeviceModel : public QAbstractItemModel
     Q_OBJECT
 public:
     explicit InputDeviceModel(QObject *parent = nullptr);
-    virtual ~InputDeviceModel();
+    ~InputDeviceModel() override;
 
     int columnCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;

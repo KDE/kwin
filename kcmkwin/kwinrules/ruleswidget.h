@@ -129,7 +129,7 @@ public:
     explicit RulesDialog(QWidget* parent = nullptr, const char* name = nullptr);
     Rules* edit(Rules* r, const QVariantMap& info, bool show_hints);
 protected:
-    virtual void accept();
+    void accept() override;
 private Q_SLOTS:
     void displayHints();
 private:
@@ -167,7 +167,7 @@ class ShortcutDialog
     Q_OBJECT
 public:
     explicit ShortcutDialog(const QKeySequence& cut, QWidget* parent = nullptr);
-    virtual void accept();
+    void accept() override;
     QKeySequence shortcut() const;
 private:
     KKeySequenceWidget* widget;

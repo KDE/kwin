@@ -62,9 +62,9 @@ class KWIN_EXPORT PointerInputRedirection : public InputDeviceHandler
     Q_OBJECT
 public:
     explicit PointerInputRedirection(InputRedirection *parent);
-    virtual ~PointerInputRedirection();
+    ~PointerInputRedirection() override;
 
-    void init();
+    void init() override;
 
     void updateAfterScreenChange();
     bool supportsWarping() const;
@@ -185,7 +185,7 @@ class CursorImage : public QObject
     Q_OBJECT
 public:
     explicit CursorImage(PointerInputRedirection *parent = nullptr);
-    virtual ~CursorImage();
+    ~CursorImage() override;
 
     void setEffectsOverrideCursor(Qt::CursorShape shape);
     void removeEffectsOverrideCursor();

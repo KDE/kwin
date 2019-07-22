@@ -207,7 +207,7 @@ class HelperWindow : public QRasterWindow
     Q_OBJECT
 public:
     HelperWindow();
-    ~HelperWindow();
+    ~HelperWindow() override;
 
 protected:
     void paintEvent(QPaintEvent *event) override;

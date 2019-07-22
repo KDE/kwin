@@ -36,7 +36,7 @@ class KWIN_EXPORT ScreenLockerWatcher : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~ScreenLockerWatcher();
+    ~ScreenLockerWatcher() override;
     bool isLocked() const {
         return m_locked;
     }

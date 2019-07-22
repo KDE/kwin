@@ -31,15 +31,15 @@ class KscreenEffect : public Effect
 
 public:
     KscreenEffect();
-    virtual ~KscreenEffect();
+    ~KscreenEffect() override;
 
-    virtual void prePaintScreen(ScreenPrePaintData &data, int time);
-    virtual void postPaintScreen();
-    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
-    virtual void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void postPaintScreen() override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
-    void reconfigure(ReconfigureFlags flags);
-    virtual bool isActive() const;
+    void reconfigure(ReconfigureFlags flags) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 99;

@@ -54,7 +54,7 @@ class KWIN_EXPORT Xkb : public QObject
     Q_OBJECT
 public:
     Xkb(QObject *parent = nullptr);
-    ~Xkb();
+    ~Xkb() override;
     void setConfig(KSharedConfigPtr config) {
         m_config = config;
     }

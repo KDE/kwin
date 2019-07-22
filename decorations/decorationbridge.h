@@ -48,7 +48,7 @@ class KWIN_EXPORT DecorationBridge : public KDecoration2::DecorationBridge
 {
     Q_OBJECT
 public:
-    virtual ~DecorationBridge();
+    ~DecorationBridge() override;
 
     void init();
     KDecoration2::Decoration *createDecoration(AbstractClient *client);

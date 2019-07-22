@@ -34,7 +34,7 @@ class DrmPlane : public DrmObject
 public:
     DrmPlane(uint32_t plane_id, int fd);
 
-    ~DrmPlane();
+    ~DrmPlane() override;
 
     enum class PropertyIndex {
         Type = 0,
@@ -69,8 +69,8 @@ public:
     };
     Q_DECLARE_FLAGS(Transformations, Transformation);
 
-    bool atomicInit();
-    bool initProps();
+    bool atomicInit() override;
+    bool initProps() override;
     TypeIndex type();
 
     bool isCrtcSupported(int resIndex) const {
@@ -93,7 +93,7 @@ public:
     void setTransformation(Transformations t);
     Transformations transformation();
 
-    bool atomicPopulate(drmModeAtomicReq *req);
+    bool atomicPopulate(drmModeAtomicReq *req) override;
     void flipBuffer();
     void flipBufferWithDelete();
 

@@ -31,7 +31,7 @@ class AbstractClient : public QObject
     Q_OBJECT
 public:
     explicit AbstractClient(QObject *parent);
-    virtual ~AbstractClient();
+    ~AbstractClient() override;
 
     int screen() const;
     bool isOnScreen(int screen) const;

@@ -36,13 +36,13 @@ class StartupFeedbackEffect
     Q_PROPERTY(int type READ type)
 public:
     StartupFeedbackEffect();
-    virtual ~StartupFeedbackEffect();
+    ~StartupFeedbackEffect() override;
 
-    virtual void reconfigure(ReconfigureFlags flags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual bool isActive() const;
+    void reconfigure(ReconfigureFlags flags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 90;

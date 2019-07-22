@@ -42,7 +42,7 @@ class KWIN_EXPORT X11StandalonePlatform : public Platform
     Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "x11.json")
 public:
     X11StandalonePlatform(QObject *parent = nullptr);
-    virtual ~X11StandalonePlatform();
+    ~X11StandalonePlatform() override;
     void init() override;
 
     Screens *createScreens(QObject *parent = nullptr) override;

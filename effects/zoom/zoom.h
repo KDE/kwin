@@ -46,12 +46,12 @@ class ZoomEffect
     Q_PROPERTY(qreal targetZoom READ targetZoom)
 public:
     ZoomEffect();
-    virtual ~ZoomEffect();
-    virtual void reconfigure(ReconfigureFlags flags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual bool isActive() const;
+    ~ZoomEffect() override;
+    void reconfigure(ReconfigureFlags flags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    bool isActive() const override;
     // for properties
     qreal configuredZoomFactor() const {
         return zoomFactor;

@@ -36,10 +36,10 @@ class KCMRules
     Q_OBJECT
 public:
     KCMRules(QWidget *parent, const QVariantList &args);
-    virtual void load();
-    virtual void save();
-    virtual void defaults();
-    virtual QString quickHelp() const;
+    void load() override;
+    void save() override;
+    void defaults() override;
+    QString quickHelp() const override;
 protected Q_SLOTS:
     void moduleChanged(bool state);
 private:

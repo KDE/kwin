@@ -140,7 +140,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    virtual QHash< int, QByteArray > roleNames() const override;
+    QHash< int, QByteArray > roleNames() const override;
 
     Q_INVOKABLE int compositingTypeForIndex(int row) const;
     Q_INVOKABLE int indexForCompositingType(int type) const;
@@ -161,7 +161,7 @@ class OpenGLPlatformInterfaceModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit OpenGLPlatformInterfaceModel(QObject *parent = nullptr);
-    virtual ~OpenGLPlatformInterfaceModel();
+    ~OpenGLPlatformInterfaceModel() override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 

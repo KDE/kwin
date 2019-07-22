@@ -49,7 +49,7 @@ class WaylandQPainterOutput : public QObject
     Q_OBJECT
 public:
     WaylandQPainterOutput(WaylandOutput *output, QObject *parent = nullptr);
-    ~WaylandQPainterOutput();
+    ~WaylandQPainterOutput() override;
 
     bool init(KWayland::Client::ShmPool *pool);
     void updateSize(const QSize &size);
@@ -73,17 +73,17 @@ class WaylandQPainterBackend : public QObject, public QPainterBackend
     Q_OBJECT
 public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
-    virtual ~WaylandQPainterBackend();
+    ~WaylandQPainterBackend() override;
 
-    virtual bool usesOverlayWindow() const override;
+    bool usesOverlayWindow() const override;
 
-    virtual QImage *buffer() override;
+    QImage *buffer() override;
     QImage *bufferForScreen(int screenId) override;
 
-    virtual void present(int mask, const QRegion& damage) override;
-    virtual void prepareRenderingFrame() override;
+    void present(int mask, const QRegion& damage) override;
+    void prepareRenderingFrame() override;
 
-    virtual bool needsFullRepaint() const override;
+    bool needsFullRepaint() const override;
     bool perScreenRendering() const override;
 
 private:

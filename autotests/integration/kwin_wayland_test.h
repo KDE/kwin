@@ -67,7 +67,7 @@ class WaylandTestApplication : public ApplicationWaylandAbstract
     Q_OBJECT
 public:
     WaylandTestApplication(OperationMode mode, int &argc, char **argv);
-    virtual ~WaylandTestApplication();
+    ~WaylandTestApplication() override;
 
 protected:
     void performStartup() override;

@@ -91,7 +91,7 @@ public:
 
     Q_DECLARE_FLAGS(InitalizationFlags, InitalizationFlag)
 
-    virtual ~WaylandServer();
+    ~WaylandServer() override;
     bool init(const QByteArray &socketName = QByteArray(), InitalizationFlags flags = InitalizationFlag::NoOptions);
     void terminateClientConnections();
 

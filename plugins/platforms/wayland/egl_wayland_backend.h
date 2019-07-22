@@ -42,7 +42,7 @@ class EglWaylandOutput : public QObject
     Q_OBJECT
 public:
     EglWaylandOutput(WaylandOutput *output, QObject *parent = nullptr);
-    ~EglWaylandOutput() = default;
+    ~EglWaylandOutput() override = default;
 
     bool init(EglWaylandBackend *backend);
     void updateSize(const QSize &size);
@@ -77,14 +77,14 @@ class EglWaylandBackend : public AbstractEglBackend
     Q_OBJECT
 public:
     EglWaylandBackend(WaylandBackend *b);
-    virtual ~EglWaylandBackend();
+    ~EglWaylandBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion prepareRenderingFrame() override;
     QRegion prepareRenderingForScreen(int screenId) override;
     void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
-    virtual bool usesOverlayWindow() const override;
+    bool usesOverlayWindow() const override;
     bool perScreenRendering() const override;
     void init() override;
 
@@ -119,7 +119,7 @@ private:
 class EglWaylandTexture : public AbstractEglTexture
 {
 public:
-    virtual ~EglWaylandTexture();
+    ~EglWaylandTexture() override;
 
 private:
     friend class EglWaylandBackend;

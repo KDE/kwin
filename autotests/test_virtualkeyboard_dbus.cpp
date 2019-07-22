@@ -52,7 +52,7 @@ public:
             this,
             SLOT(slotEnabledChanged()));
     }
-    ~DbusPropertyHelper() = default;
+    ~DbusPropertyHelper() override = default;
 
 Q_SIGNALS:
     void enabledChanged();

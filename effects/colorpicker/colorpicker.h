@@ -36,7 +36,7 @@ class ColorPickerEffect : public Effect, protected QDBusContext
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.ColorPicker")
 public:
     ColorPickerEffect();
-    virtual ~ColorPickerEffect();
+    ~ColorPickerEffect() override;
     void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;

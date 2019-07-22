@@ -97,7 +97,7 @@ class KWIN_EXPORT Cursor : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~Cursor();
+    ~Cursor() override;
     void startMousePolling();
     void stopMousePolling();
     /**
@@ -258,11 +258,11 @@ class InputRedirectionCursor : public Cursor
     Q_OBJECT
 public:
     explicit InputRedirectionCursor(QObject *parent);
-    virtual ~InputRedirectionCursor();
+    ~InputRedirectionCursor() override;
 protected:
-    virtual void doSetPos();
-    virtual void doStartCursorTracking();
-    virtual void doStopCursorTracking();
+    void doSetPos() override;
+    void doStartCursorTracking() override;
+    void doStopCursorTracking() override;
 private Q_SLOTS:
     void slotPosChanged(const QPointF &pos);
     void slotPointerButtonChanged();

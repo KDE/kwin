@@ -45,7 +45,7 @@ class PreviewBridge : public DecorationBridge
     Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
 public:
     explicit PreviewBridge(QObject *parent = nullptr);
-    virtual ~PreviewBridge();
+    ~PreviewBridge() override;
     std::unique_ptr<DecoratedClientPrivate> createClient(DecoratedClient *client, Decoration *decoration) override;
     void update(Decoration* decoration, const QRect& geometry) override;
     std::unique_ptr<DecorationSettingsPrivate> settings(DecorationSettings *parent) override;
@@ -99,7 +99,7 @@ class BridgeItem : public QObject
 
 public:
     explicit BridgeItem(QObject *parent = nullptr);
-    virtual ~BridgeItem();
+    ~BridgeItem() override;
 
     void setPlugin(const QString &plugin) {
         m_bridge->setPlugin(plugin);

@@ -28,7 +28,7 @@ class Window : public QRasterWindow
     Q_OBJECT
 public:
     explicit Window();
-    virtual ~Window();
+    ~Window() override;
 
 protected:
     void paintEvent(QPaintEvent *event) override;

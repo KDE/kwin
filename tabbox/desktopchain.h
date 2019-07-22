@@ -89,7 +89,7 @@ class DesktopChainManager : public QObject
 
 public:
     explicit DesktopChainManager(QObject *parent = nullptr);
-    virtual ~DesktopChainManager();
+    ~DesktopChainManager() override;
 
     /**
      * Returns the next virtual desktop starting from @p indexDesktop in the currently used chain.

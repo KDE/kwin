@@ -33,7 +33,7 @@ class KCMRulesList
     Q_OBJECT
 public:
     explicit KCMRulesList(QWidget* parent = nullptr);
-    virtual ~KCMRulesList();
+    ~KCMRulesList() override;
     void load();
     void save();
     void defaults();

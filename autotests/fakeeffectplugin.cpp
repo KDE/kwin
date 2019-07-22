@@ -27,7 +27,7 @@ class FakeEffect : public Effect
     Q_OBJECT
 public:
     FakeEffect() {}
-    virtual ~FakeEffect() {}
+    ~FakeEffect() override {}
 
     static bool supported() {
         return effects->isOpenGLCompositing();

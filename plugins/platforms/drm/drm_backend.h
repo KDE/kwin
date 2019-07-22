@@ -73,7 +73,7 @@ class KWIN_EXPORT DrmBackend : public Platform
     Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "drm.json")
 public:
     explicit DrmBackend(QObject *parent = nullptr);
-    virtual ~DrmBackend();
+    ~DrmBackend() override;
 
     void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config) override;
     Screens *createScreens(QObject *parent = nullptr) override;

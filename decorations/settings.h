@@ -36,7 +36,7 @@ class SettingsImpl : public QObject, public KDecoration2::DecorationSettingsPriv
     Q_OBJECT
 public:
     explicit SettingsImpl(KDecoration2::DecorationSettings *parent);
-    virtual ~SettingsImpl();
+    ~SettingsImpl() override;
     bool isAlphaChannelSupported() const override;
     bool isOnAllDesktopsAvailable() const override;
     bool isCloseOnDoubleClickOnMenu() const override;

@@ -32,7 +32,7 @@ class KWIN_EXPORT VirtualTerminal : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~VirtualTerminal();
+    ~VirtualTerminal() override;
 
     void init();
     void activate(int vt);

@@ -54,7 +54,7 @@ class KWIN_EXPORT Edge : public QObject
     Q_OBJECT
 public:
     explicit Edge(ScreenEdges *parent);
-    virtual ~Edge();
+    ~Edge() override;
     bool isLeft() const;
     bool isTop() const;
     bool isRight() const;
@@ -216,7 +216,7 @@ class KWIN_EXPORT ScreenEdges : public QObject
     Q_PROPERTY(int actionBottomLeft READ actionBottomLeft)
     Q_PROPERTY(int actionLeft READ actionLeft)
 public:
-    virtual ~ScreenEdges();
+    ~ScreenEdges() override;
     /**
      * @internal
      **/

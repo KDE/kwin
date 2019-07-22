@@ -31,7 +31,7 @@ class ScreenPreviewWidget : public QWidget
 
 public:
     ScreenPreviewWidget(QWidget *parent);
-    ~ScreenPreviewWidget();
+    ~ScreenPreviewWidget() override;
 
     void setPreview(const QPixmap &preview);
     const QPixmap preview() const;
@@ -41,9 +41,9 @@ public:
     QRect previewRect() const;
 
 protected:
-    void resizeEvent(QResizeEvent *event);
-    void paintEvent(QPaintEvent *event);
-    virtual void dropEvent(QDropEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 
 Q_SIGNALS:
     void imageDropped(const QString &);

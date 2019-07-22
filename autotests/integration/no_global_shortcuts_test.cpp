@@ -70,7 +70,7 @@ class Target : public QObject
 
 public:
     Target();
-    virtual ~Target();
+    ~Target() override;
 
 public Q_SLOTS:
     Q_SCRIPTABLE void shortcut();

@@ -34,7 +34,7 @@ class EglGbmBackend : public AbstractEglBackend
 {
 public:
     EglGbmBackend(VirtualBackend *b);
-    virtual ~EglGbmBackend();
+    ~EglGbmBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion prepareRenderingFrame() override;
@@ -62,7 +62,7 @@ private:
 class EglGbmTexture : public AbstractEglTexture
 {
 public:
-    virtual ~EglGbmTexture();
+    ~EglGbmTexture() override;
 
 private:
     friend class EglGbmBackend;

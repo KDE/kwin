@@ -44,7 +44,7 @@ class IdleInhibition : public QObject
     Q_OBJECT
 public:
     explicit IdleInhibition(IdleInterface *idle);
-    ~IdleInhibition();
+    ~IdleInhibition() override;
 
     void registerShellClient(ShellClient *client);
 

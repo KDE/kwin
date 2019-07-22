@@ -43,7 +43,7 @@ class RemoteAccessManager : public QObject
     Q_OBJECT
 public:
     explicit RemoteAccessManager(QObject *parent = nullptr);
-    virtual ~RemoteAccessManager();
+    ~RemoteAccessManager() override;
 
     void passBuffer(DrmOutput *output, DrmBuffer *buffer);
 

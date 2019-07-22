@@ -62,7 +62,7 @@ class KWIN_EXPORT Scene : public QObject
     Q_OBJECT
 public:
     explicit Scene(QObject *parent = nullptr);
-    virtual ~Scene() = 0;
+    ~Scene() override = 0;
     class EffectFrame;
     class Window;
 
@@ -274,7 +274,7 @@ class KWIN_EXPORT SceneFactory : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~SceneFactory();
+    ~SceneFactory() override;
 
     /**
      * @returns The created Scene, may be @c nullptr.

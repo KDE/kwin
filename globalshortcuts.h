@@ -49,7 +49,7 @@ class GlobalShortcutsManager : public QObject
     Q_OBJECT
 public:
     explicit GlobalShortcutsManager(QObject *parent = nullptr);
-    virtual ~GlobalShortcutsManager();
+    ~GlobalShortcutsManager() override;
     void init();
 
     /**
@@ -149,7 +149,7 @@ public:
     InternalGlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons, QAction *action);
     InternalGlobalShortcut(Qt::KeyboardModifiers axisModifiers, PointerAxisDirection axis, QAction *action);
     InternalGlobalShortcut(Qt::KeyboardModifiers swipeModifier, SwipeDirection direction, QAction *action);
-    virtual ~InternalGlobalShortcut();
+    ~InternalGlobalShortcut() override;
 
     void invoke() override;
 

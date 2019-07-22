@@ -101,12 +101,12 @@ class MouseClickEffect
     Q_PROPERTY(bool enabled READ isEnabled)
 public:
     MouseClickEffect();
-    ~MouseClickEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual bool isActive() const;
+    ~MouseClickEffect() override;
+    void reconfigure(ReconfigureFlags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    bool isActive() const override;
 
     // for properties
     QColor color1() const {

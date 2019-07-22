@@ -58,7 +58,7 @@ class DrmDumbBuffer : public DrmBuffer
 {
 public:
     DrmDumbBuffer(int fd, const QSize &size);
-    ~DrmDumbBuffer();
+    ~DrmDumbBuffer() override;
 
     bool needsModeChange(DrmBuffer *b) const override;
 

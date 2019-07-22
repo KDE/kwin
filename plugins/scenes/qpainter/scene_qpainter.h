@@ -33,15 +33,15 @@ class KWIN_EXPORT SceneQPainter : public Scene
     Q_OBJECT
 
 public:
-    virtual ~SceneQPainter();
-    virtual bool usesOverlayWindow() const override;
-    virtual OverlayWindow* overlayWindow() override;
-    virtual qint64 paint(QRegion damage, ToplevelList windows) override;
-    virtual void paintGenericScreen(int mask, ScreenPaintData data) override;
-    virtual CompositingType compositingType() const override;
-    virtual bool initFailed() const override;
-    virtual EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
-    virtual Shadow *createShadow(Toplevel *toplevel) override;
+    ~SceneQPainter() override;
+    bool usesOverlayWindow() const override;
+    OverlayWindow* overlayWindow() override;
+    qint64 paint(QRegion damage, ToplevelList windows) override;
+    void paintGenericScreen(int mask, ScreenPaintData data) override;
+    CompositingType compositingType() const override;
+    bool initFailed() const override;
+    EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
+    Shadow *createShadow(Toplevel *toplevel) override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void screenGeometryChanged(const QSize &size) override;
 
@@ -59,8 +59,8 @@ public:
     static SceneQPainter *createScene(QObject *parent);
 
 protected:
-    virtual void paintBackground(QRegion region) override;
-    virtual Scene::Window *createWindow(Toplevel *toplevel) override;
+    void paintBackground(QRegion region) override;
+    Scene::Window *createWindow(Toplevel *toplevel) override;
     void paintCursor() override;
 
 private:
@@ -74,10 +74,10 @@ class SceneQPainter::Window : public Scene::Window
 {
 public:
     Window(SceneQPainter *scene, Toplevel *c);
-    virtual ~Window();
-    virtual void performPaint(int mask, QRegion region, WindowPaintData data) override;
+    ~Window() override;
+    void performPaint(int mask, QRegion region, WindowPaintData data) override;
 protected:
-    virtual WindowPixmap *createWindowPixmap() override;
+    WindowPixmap *createWindowPixmap() override;
 private:
     void renderShadow(QPainter *painter);
     void renderWindowDecorations(QPainter *painter);
@@ -88,8 +88,8 @@ class QPainterWindowPixmap : public WindowPixmap
 {
 public:
     explicit QPainterWindowPixmap(Scene::Window *window);
-    virtual ~QPainterWindowPixmap();
-    virtual void create() override;
+    ~QPainterWindowPixmap() override;
+    void create() override;
     bool isValid() const override;
 
     void updateBuffer() override;
@@ -106,14 +106,14 @@ class QPainterEffectFrame : public Scene::EffectFrame
 {
 public:
     QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene);
-    virtual ~QPainterEffectFrame();
-    virtual void crossFadeIcon() override {}
-    virtual void crossFadeText() override {}
-    virtual void free() override {}
-    virtual void freeIconFrame() override {}
-    virtual void freeTextFrame() override {}
-    virtual void freeSelection() override {}
-    virtual void render(QRegion region, double opacity, double frameOpacity) override;
+    ~QPainterEffectFrame() override;
+    void crossFadeIcon() override {}
+    void crossFadeText() override {}
+    void free() override {}
+    void freeIconFrame() override {}
+    void freeTextFrame() override {}
+    void freeSelection() override {}
+    void render(QRegion region, double opacity, double frameOpacity) override;
 private:
     SceneQPainter *m_scene;
 };
@@ -122,15 +122,15 @@ class SceneQPainterShadow : public Shadow
 {
 public:
     SceneQPainterShadow(Toplevel* toplevel);
-    virtual ~SceneQPainterShadow();
+    ~SceneQPainterShadow() override;
 
     QImage &shadowTexture() {
         return m_texture;
     }
 
 protected:
-    virtual void buildQuads() override;
-    virtual bool prepareBackend() override;
+    void buildQuads() override;
+    bool prepareBackend() override;
 
 private:
     QImage m_texture;
@@ -148,7 +148,7 @@ public:
         Count
     };
     explicit SceneQPainterDecorationRenderer(Decoration::DecoratedClientImpl *client);
-    virtual ~SceneQPainterDecorationRenderer();
+    ~SceneQPainterDecorationRenderer() override;
 
     void render() override;
     void reparent(Deleted *deleted) override;

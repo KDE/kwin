@@ -44,23 +44,23 @@ public:
     void refWindow();
     void unrefWindow();
     void discard();
-    virtual int desktop() const;
-    virtual QStringList activities() const;
-    virtual QVector<VirtualDesktop *> desktops() const;
-    virtual QPoint clientPos() const;
-    virtual QSize clientSize() const;
+    int desktop() const override;
+    QStringList activities() const override;
+    QVector<VirtualDesktop *> desktops() const override;
+    QPoint clientPos() const override;
+    QSize clientSize() const override;
     QPoint clientContentPos() const override {
         return m_contentPos;
     }
-    virtual QRect transparentRect() const;
-    virtual bool isDeleted() const;
-    virtual xcb_window_t frameId() const override;
+    QRect transparentRect() const override;
+    bool isDeleted() const override;
+    xcb_window_t frameId() const override;
     bool noBorder() const {
         return no_border;
     }
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
-    QRect decorationRect() const;
-    virtual Layer layer() const {
+    QRect decorationRect() const override;
+    Layer layer() const override {
         return m_layer;
     }
     bool isMinimized() const {
@@ -72,7 +72,7 @@ public:
     QList<AbstractClient*> mainClients() const {
         return m_mainClients;
     }
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool wasClient() const {
         return m_wasClient;
     }
@@ -185,7 +185,7 @@ public:
     }
 
 protected:
-    virtual void debug(QDebug& stream) const;
+    void debug(QDebug& stream) const override;
 
 private Q_SLOTS:
     void mainClientClosed(KWin::Toplevel *client);
@@ -194,7 +194,7 @@ private Q_SLOTS:
 private:
     Deleted();   // use create()
     void copyToDeleted(Toplevel* c);
-    virtual ~Deleted(); // deleted only using unrefWindow()
+    ~Deleted() override; // deleted only using unrefWindow()
 
     void addTransient(Deleted *transient);
     void removeTransient(Deleted *transient);

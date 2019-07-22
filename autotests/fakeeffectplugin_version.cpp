@@ -27,7 +27,7 @@ class FakeVersionEffect : public Effect
     Q_OBJECT
 public:
     FakeVersionEffect() {}
-    virtual ~FakeVersionEffect() {}
+    ~FakeVersionEffect() override {}
 };
 
 } // namespace
@@ -39,7 +39,7 @@ class FakeEffectPluginFactory : public KWin::EffectPluginFactory
     Q_INTERFACES(KPluginFactory)
 public:
     FakeEffectPluginFactory() {}
-    ~FakeEffectPluginFactory() {}
+    ~FakeEffectPluginFactory() override {}
     KWin::Effect *createEffect() const override {
         return new KWin::FakeVersionEffect();
     }

@@ -42,7 +42,7 @@ class Poller : public AbstractSystemPoller
 
 public:
     Poller(QObject *parent = 0);
-    virtual ~Poller();
+    ~Poller() override;
 
     bool isAvailable() override;
     bool setUpPoller() override;

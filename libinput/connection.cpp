@@ -66,7 +66,7 @@ public:
         );
     }
 
-    ~ConnectionAdaptor() {
+    ~ConnectionAdaptor() override {
         QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/org/kde/KWin/InputDeviceManager"));
     }
 

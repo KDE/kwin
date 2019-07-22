@@ -28,7 +28,7 @@ class MouseCursorWidget : public QWidget
     Q_OBJECT
 public:
     explicit MouseCursorWidget();
-    ~MouseCursorWidget();
+    ~MouseCursorWidget() override;
 
 protected:
     void paintEvent(QPaintEvent * event) override;

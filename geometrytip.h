@@ -32,7 +32,7 @@ class GeometryTip: public QLabel
     Q_OBJECT
 public:
     GeometryTip(const Xcb::GeometryHints* xSizeHints);
-    ~GeometryTip();
+    ~GeometryTip() override;
     void setGeometry(const QRect& geom);
 
 private:

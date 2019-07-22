@@ -38,7 +38,7 @@ class X11WindowedQPainterBackend : public QObject, public QPainterBackend
     Q_OBJECT
 public:
     X11WindowedQPainterBackend(X11WindowedBackend *backend);
-    virtual ~X11WindowedQPainterBackend();
+    ~X11WindowedQPainterBackend() override;
 
     QImage *buffer() override;
     QImage *bufferForScreen(int screenId) override;

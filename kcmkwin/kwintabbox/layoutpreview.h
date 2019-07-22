@@ -38,9 +38,9 @@ class LayoutPreview : public QObject
     Q_OBJECT
 public:
     explicit LayoutPreview(const QString &path, QObject *parent = nullptr);
-    virtual ~LayoutPreview();
+    ~LayoutPreview() override;
 
-    virtual bool eventFilter(QObject *object, QEvent *event) override;
+    bool eventFilter(QObject *object, QEvent *event) override;
 private:
     SwitcherItem *m_item;
 };
@@ -50,11 +50,11 @@ class ExampleClientModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit ExampleClientModel(QObject *parent = nullptr);
-    virtual ~ExampleClientModel();
+    ~ExampleClientModel() override;
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QHash<int, QByteArray> roleNames() const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QHash<int, QByteArray> roleNames() const override;
     Q_INVOKABLE QString longestCaption() const;
 
 private:
@@ -84,7 +84,7 @@ class SwitcherItem : public QObject
     Q_CLASSINFO("DefaultProperty", "item")
 public:
     SwitcherItem(QObject *parent = nullptr);
-    virtual ~SwitcherItem();
+    ~SwitcherItem() override;
 
     QAbstractItemModel *model() const;
     QRect screenGeometry() const;

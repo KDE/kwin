@@ -583,7 +583,7 @@ protected Q_SLOTS:
     void setReadyForPainting();
 
 protected:
-    virtual ~Toplevel();
+    ~Toplevel() override;
     void setWindowHandles(xcb_window_t client);
     void detectShape(Window id);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);

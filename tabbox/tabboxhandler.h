@@ -96,7 +96,7 @@ class TabBoxHandler : public QObject
     Q_OBJECT
 public:
     TabBoxHandler(QObject *parent);
-    virtual ~TabBoxHandler();
+    ~TabBoxHandler() override;
 
     /**
      * @return The id of the active screen

@@ -51,7 +51,7 @@ protected:
     virtual void restore() = 0;
 
 public:
-    virtual ~ScreenEdgeHelper();
+    ~ScreenEdgeHelper() override;
 
     virtual void hide() = 0;
     virtual void raiseOrShow(bool raise) = 0;
@@ -78,7 +78,7 @@ class ScreenEdgeHelperX11 : public ScreenEdgeHelper
     Q_OBJECT
 public:
     ScreenEdgeHelperX11(QWidget *widget, QObject *parent = nullptr);
-    virtual ~ScreenEdgeHelperX11() = default;
+    ~ScreenEdgeHelperX11() override = default;
 
     void hide() override;
     void raiseOrShow(bool raise) override;
@@ -103,7 +103,7 @@ class ScreenEdgeHelperWayland : public ScreenEdgeHelper
     Q_OBJECT
 public:
     ScreenEdgeHelperWayland(QWidget *widget, QObject *parent = nullptr);
-    virtual ~ScreenEdgeHelperWayland() = default;
+    ~ScreenEdgeHelperWayland() override = default;
 
     void hide() override;
     void raiseOrShow(bool raise) override;

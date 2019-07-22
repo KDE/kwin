@@ -65,7 +65,7 @@ public:
     static DataBridge *self();
 
     explicit DataBridge(QObject *parent = nullptr);
-    ~DataBridge();
+    ~DataBridge() override;
 
     bool filterEvent(xcb_generic_event_t *event);
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);

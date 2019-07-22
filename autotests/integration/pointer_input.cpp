@@ -1079,7 +1079,7 @@ class HelperEffect : public Effect
     Q_OBJECT
 public:
     HelperEffect() {}
-    ~HelperEffect() {}
+    ~HelperEffect() override {}
 };
 
 void PointerInputTest::testEffectOverrideCursorImage()

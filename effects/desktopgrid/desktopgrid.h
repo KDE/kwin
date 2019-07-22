@@ -67,17 +67,17 @@ class DesktopGridEffect
     // TODO: electric borders
 public:
     DesktopGridEffect();
-    ~DesktopGridEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowInputMouseEvent(QEvent* e);
-    virtual void grabbedKeyboardEvent(QKeyEvent* e);
-    virtual bool borderActivated(ElectricBorder border);
-    virtual bool isActive() const;
+    ~DesktopGridEffect() override;
+    void reconfigure(ReconfigureFlags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void windowInputMouseEvent(QEvent* e) override;
+    void grabbedKeyboardEvent(QKeyEvent* e) override;
+    bool borderActivated(ElectricBorder border) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 50;

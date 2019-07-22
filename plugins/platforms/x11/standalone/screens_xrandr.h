@@ -32,7 +32,7 @@ class XRandRScreens : public OutputScreens, public X11EventFilter
     Q_OBJECT
 public:
     XRandRScreens(X11StandalonePlatform *backend, QObject *parent = nullptr);
-    virtual ~XRandRScreens();
+    ~XRandRScreens() override;
     void init() override;
 
     QSize displaySize() const override;

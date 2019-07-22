@@ -50,7 +50,7 @@ public:
     XInputEventFilter(int xi_opcode)
         : X11EventFilter(XCB_GE_GENERIC, xi_opcode, QVector<int>{XI_RawMotion, XI_RawButtonPress, XI_RawButtonRelease, XI_RawKeyPress, XI_RawKeyRelease, XI_TouchBegin, XI_TouchUpdate, XI_TouchOwnership, XI_TouchEnd})
         {}
-    virtual ~XInputEventFilter() = default;
+    ~XInputEventFilter() override = default;
 
     bool event(xcb_generic_event_t *event) override {
         GeEventMemMover ge(event);
@@ -187,7 +187,7 @@ public:
     XKeyPressReleaseEventFilter(uint32_t type)
         : X11EventFilter(type)
     {}
-    ~XKeyPressReleaseEventFilter() = default;
+    ~XKeyPressReleaseEventFilter() override = default;
 
     bool event(xcb_generic_event_t *event) override {
         xcb_key_press_event_t *ke = reinterpret_cast<xcb_key_press_event_t *>(event);

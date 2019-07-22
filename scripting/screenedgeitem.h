@@ -81,7 +81,7 @@ public:
         Touch
     };
     explicit ScreenEdgeItem(QObject *parent = 0);
-    virtual ~ScreenEdgeItem();
+    ~ScreenEdgeItem() override;
     bool isEnabled() const;
     Edge edge() const;
     Mode mode() const {

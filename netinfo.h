@@ -50,15 +50,15 @@ public:
     void setActiveClient(AbstractClient *client);
 
 protected:
-    virtual void changeNumberOfDesktops(int n) override;
-    virtual void changeCurrentDesktop(int d) override;
-    virtual void changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_timestamp_t timestamp, xcb_window_t active_window) override;
-    virtual void closeWindow(xcb_window_t w) override;
-    virtual void moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction) override;
-    virtual void moveResizeWindow(xcb_window_t w, int flags, int x, int y, int width, int height) override;
-    virtual void gotPing(xcb_window_t w, xcb_timestamp_t timestamp) override;
-    virtual void restackWindow(xcb_window_t w, RequestSource source, xcb_window_t above, int detail, xcb_timestamp_t timestamp) override;
-    virtual void changeShowingDesktop(bool showing) override;
+    void changeNumberOfDesktops(int n) override;
+    void changeCurrentDesktop(int d) override;
+    void changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_timestamp_t timestamp, xcb_window_t active_window) override;
+    void closeWindow(xcb_window_t w) override;
+    void moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction) override;
+    void moveResizeWindow(xcb_window_t w, int flags, int x, int y, int width, int height) override;
+    void gotPing(xcb_window_t w, xcb_timestamp_t timestamp) override;
+    void restackWindow(xcb_window_t w, RequestSource source, xcb_window_t above, int detail, xcb_timestamp_t timestamp) override;
+    void changeShowingDesktop(bool showing) override;
 
 private:
     RootInfo(xcb_window_t w, const char* name, NET::Properties properties, NET::WindowTypes types,
@@ -86,9 +86,9 @@ private:
 public:
     WinInfo(Client* c, xcb_window_t window,
             xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2);
-    virtual void changeDesktop(int desktop) override;
-    virtual void changeFullscreenMonitors(NETFullscreenMonitors topology) override;
-    virtual void changeState(NET::States state, NET::States mask) override;
+    void changeDesktop(int desktop) override;
+    void changeFullscreenMonitors(NETFullscreenMonitors topology) override;
+    void changeState(NET::States state, NET::States mask) override;
     void disable();
 
 private:

@@ -44,7 +44,7 @@ class KWIN_EXPORT WaylandCursorTheme : public QObject
     Q_OBJECT
 public:
     explicit WaylandCursorTheme(KWayland::Client::ShmPool *shm, QObject *parent = nullptr);
-    virtual ~WaylandCursorTheme();
+    ~WaylandCursorTheme() override;
 
     wl_cursor_image *get(CursorShape shape);
     wl_cursor_image *get(const QByteArray &name);

@@ -28,7 +28,7 @@ namespace KWin {
 class KWIN_EXPORT OverlayWindowX11 : public OverlayWindow, public X11EventFilter {
 public:
     OverlayWindowX11();
-    ~OverlayWindowX11();
+    ~OverlayWindowX11() override;
     /// Creates XComposite overlay window, call initOverlay() afterwards
     bool create() override;
     /// Init overlay and the destination window in it

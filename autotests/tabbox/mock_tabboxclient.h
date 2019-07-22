@@ -31,38 +31,38 @@ class MockTabBoxClient : public TabBox::TabBoxClient
 {
 public:
     explicit MockTabBoxClient(QString caption, WId id);
-    virtual bool isMinimized() const {
+    bool isMinimized() const override {
         return false;
     }
-    virtual QString caption() const {
+    QString caption() const override {
         return m_caption;
     }
-    virtual void close();
-    virtual int height() const {
+    void close() override;
+    int height() const override {
         return 100;
     }
     virtual QPixmap icon(const QSize &size = QSize(32, 32)) const {
         return QPixmap(size);
     }
-    virtual bool isCloseable() const {
+    bool isCloseable() const override {
         return true;
     }
-    virtual bool isFirstInTabBox() const {
+    bool isFirstInTabBox() const override {
         return false;
     }
-    virtual int width() const {
+    int width() const override {
         return 100;
     }
-    virtual WId window() const {
+    WId window() const override {
         return m_wId;
     }
-    virtual int x() const {
+    int x() const override {
         return 0;
     }
-    virtual int y() const {
+    int y() const override {
         return 0;
     }
-    virtual QIcon icon() const {
+    QIcon icon() const override {
         return QIcon();
     }
 

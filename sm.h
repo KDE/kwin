@@ -85,7 +85,7 @@ class KWIN_EXPORT SessionSaveDoneHelper
     Q_OBJECT
 public:
     SessionSaveDoneHelper();
-    virtual ~SessionSaveDoneHelper();
+    ~SessionSaveDoneHelper() override;
     SmcConn connection() const {
         return conn;
     }

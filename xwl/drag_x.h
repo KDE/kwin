@@ -103,7 +103,7 @@ class WlVisit : public QObject
 
 public:
     WlVisit(AbstractClient *target, XToWlDrag *drag);
-    ~WlVisit();
+    ~WlVisit() override;
 
     bool handleClientMessage(xcb_client_message_event_t *event);
     bool leave();

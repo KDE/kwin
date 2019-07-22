@@ -61,7 +61,7 @@ class KWIN_EXPORT Shadow : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~Shadow();
+    ~Shadow() override;
 
     /**
      * @return Region of the shadow.

@@ -38,7 +38,7 @@ class Policy : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~Policy();
+    ~Policy() override;
 
     virtual QString name() const = 0;
 

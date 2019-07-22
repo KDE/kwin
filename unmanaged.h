@@ -37,16 +37,16 @@ public:
     bool windowEvent(xcb_generic_event_t *e);
     bool track(Window w);
     static void deleteUnmanaged(Unmanaged* c);
-    virtual int desktop() const;
-    virtual QStringList activities() const;
-    virtual QVector<VirtualDesktop *> desktops() const override;
-    virtual QPoint clientPos() const;
-    virtual QSize clientSize() const;
-    virtual QRect transparentRect() const;
-    virtual Layer layer() const {
+    int desktop() const override;
+    QStringList activities() const override;
+    QVector<VirtualDesktop *> desktops() const override;
+    QPoint clientPos() const override;
+    QSize clientSize() const override;
+    QRect transparentRect() const override;
+    Layer layer() const override {
         return UnmanagedLayer;
     }
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool isOutline() const override;
 
     bool setupCompositing() override;
@@ -54,10 +54,10 @@ public:
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);
 protected:
-    virtual void debug(QDebug& stream) const;
+    void debug(QDebug& stream) const override;
     void addDamage(const QRegion &damage) override;
 private:
-    virtual ~Unmanaged(); // use release()
+    ~Unmanaged() override; // use release()
     // handlers for X11 events
     void configureNotifyEvent(xcb_configure_notify_event_t *e);
     QWindow *findInternalWindow() const;

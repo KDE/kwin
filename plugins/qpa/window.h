@@ -52,7 +52,7 @@ class Window : public QPlatformWindow
 {
 public:
     explicit Window(QWindow *window, KWayland::Client::Surface *surface, KWayland::Client::ShellSurface *shellSurface, const Integration *integration);
-    virtual ~Window();
+    ~Window() override;
 
     void setVisible(bool visible) override;
     void setGeometry(const QRect &rect) override;

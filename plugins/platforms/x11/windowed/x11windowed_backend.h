@@ -45,7 +45,7 @@ class KWIN_EXPORT X11WindowedBackend : public Platform
     Q_PROPERTY(QSize size READ screenSize NOTIFY sizeChanged)
 public:
     X11WindowedBackend(QObject *parent = nullptr);
-    virtual ~X11WindowedBackend();
+    ~X11WindowedBackend() override;
     void init() override;
 
     xcb_connection_t *connection() const {

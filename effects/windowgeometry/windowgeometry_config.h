@@ -41,11 +41,11 @@ class WindowGeometryConfig : public KCModule
     Q_OBJECT
 public:
     explicit WindowGeometryConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-    ~WindowGeometryConfig();
+    ~WindowGeometryConfig() override;
 
 public Q_SLOTS:
-    void save();
-    void defaults();
+    void save() override;
+    void defaults() override;
 
 private:
     WindowGeometryConfigForm* myUi;

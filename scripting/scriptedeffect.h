@@ -63,7 +63,7 @@ public:
     const QString &scriptFile() const {
         return m_scriptFile;
     }
-    virtual void reconfigure(ReconfigureFlags flags);
+    void reconfigure(ReconfigureFlags flags) override;
     int requestedEffectChainPosition() const override {
         return m_chainPosition;
     }
@@ -72,7 +72,7 @@ public:
     static ScriptedEffect *create(const QString &effectName, const QString &pathToScript, int chainPosition);
     static ScriptedEffect *create(const KPluginMetaData &effect);
     static bool supported();
-    virtual ~ScriptedEffect();
+    ~ScriptedEffect() override;
     /**
      * Whether another effect has grabbed the @p w with the given @p grabRole.
      * @param w The window to check
@@ -131,7 +131,7 @@ public Q_SLOTS:
     bool redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags = TerminateAtSource);
     bool complete(quint64 animationId);
     bool cancel(quint64 animationId) { return AnimationEffect::cancel(animationId); }
-    virtual bool borderActivated(ElectricBorder border);
+    bool borderActivated(ElectricBorder border) override;
 
 Q_SIGNALS:
     /**
@@ -145,7 +145,7 @@ protected:
     ScriptedEffect();
     QScriptEngine *engine() const;
     bool init(const QString &effectName, const QString &pathToScript);
-    void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta);
+    void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta) override;
 
 private Q_SLOTS:
     void signalHandlerException(const QScriptValue &value);

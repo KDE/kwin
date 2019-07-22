@@ -39,7 +39,7 @@ class KWIN_EXPORT VirtualKeyboard : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~VirtualKeyboard();
+    ~VirtualKeyboard() override;
 
     void init();
 

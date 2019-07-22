@@ -33,12 +33,12 @@ class InvertEffectConfig : public KCModule
     Q_OBJECT
 public:
     explicit InvertEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-    ~InvertEffectConfig();
+    ~InvertEffectConfig() override;
 
 public Q_SLOTS:
-    virtual void save();
-    virtual void load();
-    virtual void defaults();
+    void save() override;
+    void load() override;
+    void defaults() override;
 
 private:
     KShortcutsEditor* mShortcutEditor;

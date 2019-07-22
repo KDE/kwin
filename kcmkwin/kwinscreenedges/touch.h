@@ -48,14 +48,14 @@ class KWinScreenEdgesConfig : public KCModule
 
 public:
     explicit KWinScreenEdgesConfig(QWidget* parent, const QVariantList& args);
-    ~KWinScreenEdgesConfig();
+    ~KWinScreenEdgesConfig() override;
 
 public Q_SLOTS:
-    virtual void save();
-    virtual void load();
-    virtual void defaults();
+    void save() override;
+    void load() override;
+    void defaults() override;
 protected:
-    virtual void showEvent(QShowEvent* e);
+    void showEvent(QShowEvent* e) override;
 private:
     KWinScreenEdgesConfigForm* m_ui;
     KSharedConfigPtr m_config;

@@ -121,7 +121,7 @@ public:
                   xcb_selection_request_event_t *request,
                   qint32 fd,
                   QObject *parent = nullptr);
-    ~TransferWltoX();
+    ~TransferWltoX() override;
 
     void startTransferFromSource();
     bool handlePropertyNotify(xcb_property_notify_event_t *event) override;
@@ -208,7 +208,7 @@ public:
                   qint32 fd,
                   xcb_timestamp_t timestamp, xcb_window_t parentWindow,
                   QObject *parent = nullptr);
-    ~TransferXtoWl();
+    ~TransferXtoWl() override;
 
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
     bool handlePropertyNotify(xcb_property_notify_event_t *event) override;

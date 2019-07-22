@@ -48,7 +48,7 @@ class KWIN_EXPORT Connection : public QObject
     Q_OBJECT
 
 public:
-    ~Connection();
+    ~Connection() override;
 
     void setInputConfig(const KSharedConfigPtr &config) {
         m_config = config;

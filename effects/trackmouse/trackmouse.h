@@ -39,12 +39,12 @@ class TrackMouseEffect
     Q_PROPERTY(bool mousePolling READ isMousePolling)
 public:
     TrackMouseEffect();
-    virtual ~TrackMouseEffect();
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual bool isActive() const;
+    ~TrackMouseEffect() override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    void reconfigure(ReconfigureFlags) override;
+    bool isActive() const override;
 
     // for properties
     Qt::KeyboardModifiers modifiers() const {

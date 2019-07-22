@@ -31,7 +31,7 @@ class PlatformCursor : public QPlatformCursor
 {
 public:
     PlatformCursor();
-    virtual ~PlatformCursor();
+    ~PlatformCursor() override;
     QPoint pos() const override;
     void setPos(const QPoint &pos) override;
     void changeCursor(QCursor *windowCursor, QWindow *window) override;

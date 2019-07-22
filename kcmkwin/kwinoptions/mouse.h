@@ -54,15 +54,15 @@ class KTitleBarActionsConfig : public KCModule
 public:
 
     KTitleBarActionsConfig(bool _standAlone, KConfig *_config, QWidget *parent);
-    ~KTitleBarActionsConfig();
+    ~KTitleBarActionsConfig() override;
 
-    void load();
-    void save();
-    void defaults();
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev);
-    void changeEvent(QEvent *ev);
+    void showEvent(QShowEvent *ev) override;
+    void changeEvent(QEvent *ev) override;
 
 public Q_SLOTS:
     void changed() {
@@ -98,14 +98,14 @@ class KWindowActionsConfig : public KCModule
 public:
 
     KWindowActionsConfig(bool _standAlone, KConfig *_config, QWidget *parent);
-    ~KWindowActionsConfig();
+    ~KWindowActionsConfig() override;
 
-    void load();
-    void save();
-    void defaults();
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev);
+    void showEvent(QShowEvent *ev) override;
 
 public Q_SLOTS:
     void changed() {

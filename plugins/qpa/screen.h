@@ -33,7 +33,7 @@ class Screen : public QPlatformScreen
 {
 public:
     explicit Screen(int screen);
-    virtual ~Screen();
+    ~Screen() override;
 
     QRect geometry() const override;
     int depth() const override;

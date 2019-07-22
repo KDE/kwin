@@ -35,7 +35,7 @@ class X11TestApplication : public Application
     Q_OBJECT
 public:
     X11TestApplication(int &argc, char **argv);
-    virtual ~X11TestApplication();
+    ~X11TestApplication() override;
 
 protected:
     void performStartup() override;

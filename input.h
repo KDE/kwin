@@ -92,7 +92,7 @@ public:
         KeyboardKeyPressed,
         KeyboardKeyAutoRepeat
     };
-    virtual ~InputRedirection();
+    ~InputRedirection() override;
     void init();
 
     /**
@@ -378,7 +378,7 @@ class KWIN_EXPORT InputDeviceHandler : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~InputDeviceHandler();
+    ~InputDeviceHandler() override;
     virtual void init();
 
     void update();

@@ -93,7 +93,7 @@ class HelperEffect : public Effect
     Q_OBJECT
 public:
     HelperEffect() {}
-    ~HelperEffect() {}
+    ~HelperEffect() override {}
 
     void windowInputMouseEvent(QEvent*) override {
         emit inputEvent();

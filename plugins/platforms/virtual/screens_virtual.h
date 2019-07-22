@@ -31,7 +31,7 @@ class VirtualScreens : public OutputScreens
     Q_OBJECT
 public:
     VirtualScreens(VirtualBackend *backend, QObject *parent = nullptr);
-    virtual ~VirtualScreens();
+    ~VirtualScreens() override;
     void init() override;
 
 private:

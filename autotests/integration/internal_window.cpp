@@ -84,7 +84,7 @@ class HelperWindow : public QRasterWindow
     Q_OBJECT
 public:
     HelperWindow();
-    ~HelperWindow();
+    ~HelperWindow() override;
 
     QPoint latestGlobalMousePos() const {
         return m_latestGlobalMousePos;

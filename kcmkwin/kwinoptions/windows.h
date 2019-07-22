@@ -71,14 +71,14 @@ class KFocusConfig : public KCModule
     Q_OBJECT
 public:
     KFocusConfig(bool _standAlone, KConfig *_config, QWidget *parent);
-    ~KFocusConfig();
+    ~KFocusConfig() override;
 
-    void load();
-    void save();
-    void defaults();
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev);
+    void showEvent(QShowEvent *ev) override;
 
 private Q_SLOTS:
     void setDelayFocusEnabled();
@@ -119,14 +119,14 @@ class KMovingConfig : public KCModule
     Q_OBJECT
 public:
     KMovingConfig(bool _standAlone, KConfig *config, QWidget *parent);
-    ~KMovingConfig();
+    ~KMovingConfig() override;
 
-    void load();
-    void save();
-    void defaults();
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev);
+    void showEvent(QShowEvent *ev) override;
 
 private Q_SLOTS:
     void changed() {
@@ -156,14 +156,14 @@ class KAdvancedConfig : public KCModule
     Q_OBJECT
 public:
     KAdvancedConfig(bool _standAlone, KConfig *config, QWidget *parent);
-    ~KAdvancedConfig();
+    ~KAdvancedConfig() override;
 
-    void load();
-    void save();
-    void defaults();
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected:
-    void showEvent(QShowEvent *ev);
+    void showEvent(QShowEvent *ev) override;
 
 private Q_SLOTS:
     void shadeHoverChanged(bool);

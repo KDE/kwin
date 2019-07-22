@@ -44,10 +44,10 @@ public:
     /**
      * Destructor.
      **/
-    ~Module();
-    virtual void load();
-    virtual void save();
-    virtual void defaults();
+    ~Module() override;
+    void load() override;
+    void save() override;
+    void defaults() override;
 
 protected Q_SLOTS:
 

@@ -35,10 +35,10 @@ class WobblyWindowsEffectConfig : public KCModule
     Q_OBJECT
 public:
     explicit WobblyWindowsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-    ~WobblyWindowsEffectConfig();
+    ~WobblyWindowsEffectConfig() override;
 
 public Q_SLOTS:
-    virtual void save();
+    void save() override;
 
 private Q_SLOTS:
     void wobblinessChanged();

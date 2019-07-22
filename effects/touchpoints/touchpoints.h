@@ -37,7 +37,7 @@ class TouchPointsEffect
     Q_PROPERTY(int ringCount READ ringCount)
 public:
     TouchPointsEffect();
-    ~TouchPointsEffect();
+    ~TouchPointsEffect() override;
     void prePaintScreen(ScreenPrePaintData& data, int time) override;
     void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
     void postPaintScreen() override;

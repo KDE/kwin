@@ -59,7 +59,7 @@ class KWIN_EXPORT UserActionsMenu : public QObject
     Q_OBJECT
 public:
     explicit UserActionsMenu(QObject *parent = 0);
-    virtual ~UserActionsMenu();
+    ~UserActionsMenu() override;
     /**
      * Discards the constructed menu, so that it gets recreates
      * on next show event.
@@ -285,14 +285,14 @@ class ShortcutDialog
     Q_OBJECT
 public:
     explicit ShortcutDialog(const QKeySequence& cut);
-    virtual void accept();
+    void accept() override;
     QKeySequence shortcut() const;
 public Q_SLOTS:
     void keySequenceChanged();
 Q_SIGNALS:
     void dialogDone(bool ok);
 protected:
-    virtual void done(int r);
+    void done(int r) override;
 private:
     Ui::ShortcutDialog m_ui;
     QKeySequence _shortcut;

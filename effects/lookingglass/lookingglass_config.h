@@ -42,10 +42,10 @@ class LookingGlassEffectConfig : public KCModule
     Q_OBJECT
 public:
     explicit LookingGlassEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-    virtual ~LookingGlassEffectConfig();
+    ~LookingGlassEffectConfig() override;
 
-    virtual void save();
-    virtual void defaults();
+    void save() override;
+    void defaults() override;
 
 private:
     LookingGlassEffectConfigForm* m_ui;

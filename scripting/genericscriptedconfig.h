@@ -46,10 +46,10 @@ class GenericScriptedConfig : public KCModule
 
 public:
     GenericScriptedConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args);
-    virtual ~GenericScriptedConfig();
+    ~GenericScriptedConfig() override;
 
 public Q_SLOTS:
-    virtual void save();
+    void save() override;
 
 protected:
     const QString &packageName() const;
@@ -68,11 +68,11 @@ class ScriptedEffectConfig : public GenericScriptedConfig
     Q_OBJECT
 public:
     ScriptedEffectConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args);
-    virtual ~ScriptedEffectConfig();
+    ~ScriptedEffectConfig() override;
 protected:
-    virtual QString typeName() const;
-    virtual KConfigGroup configGroup();
-    virtual void reload();
+    QString typeName() const override;
+    KConfigGroup configGroup() override;
+    void reload() override;
 };
 
 class ScriptingConfig : public GenericScriptedConfig
@@ -80,12 +80,12 @@ class ScriptingConfig : public GenericScriptedConfig
     Q_OBJECT
 public:
     ScriptingConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args);
-    virtual ~ScriptingConfig();
+    ~ScriptingConfig() override;
 
 protected:
-    virtual QString typeName() const;
-    virtual KConfigGroup configGroup();
-    virtual void reload();
+    QString typeName() const override;
+    KConfigGroup configGroup() override;
+    void reload() override;
 };
 
 inline

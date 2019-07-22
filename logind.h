@@ -34,7 +34,7 @@ class KWIN_EXPORT LogindIntegration : public QObject
 {
     Q_OBJECT
 public:
-    ~LogindIntegration();
+    ~LogindIntegration() override;
 
     bool isConnected() const {
         return m_connected;

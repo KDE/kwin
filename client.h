@@ -90,7 +90,7 @@ public:
     explicit Client();
     xcb_window_t wrapperId() const;
     xcb_window_t inputId() const { return m_decoInputExtent; }
-    virtual xcb_window_t frameId() const override;
+    xcb_window_t frameId() const override;
 
     bool isTransient() const override;
     bool groupTransient() const override;
@@ -111,17 +111,17 @@ public:
     QSize minSize() const override;
     QSize maxSize() const override;
     QSize basicUnit() const;
-    virtual QSize clientSize() const;
+    QSize clientSize() const override;
     QPoint inputPos() const { return input_offset; } // Inside of geometry()
 
     bool windowEvent(xcb_generic_event_t *e);
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
     void destroyClient();
 
-    virtual QStringList activities() const;
+    QStringList activities() const override;
     void setOnActivity(const QString &activity, bool enable);
     void setOnAllActivities(bool set) override;
     void setOnActivities(QStringList newActivitiesList) override;
@@ -203,7 +203,7 @@ public:
     void hideClient(bool hide) override;
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
-    virtual bool setupCompositing();
+    bool setupCompositing() override;
     void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing() { return blocks_compositing; }
@@ -263,9 +263,9 @@ public:
     bool hasOffscreenXineramaStrut() const;
 
     // Decorations <-> Effects
-    QRect decorationRect() const;
+    QRect decorationRect() const override;
 
-    QRect transparentRect() const;
+    QRect transparentRect() const override;
 
     bool isClientSideDecorated() const;
     bool wantsShadowToBeRendered() const override;
@@ -281,7 +281,7 @@ public:
 
     //sets whether the client should be faked as being on all activities (and be shown during session save)
     void setSessionActivityOverride(bool needed);
-    virtual bool isClient() const;
+    bool isClient() const override;
 
     template <typename T>
     void print(T &stream) const;
@@ -327,20 +327,20 @@ private Q_SLOTS:
 
 private:
     // Use Workspace::createClient()
-    virtual ~Client(); ///< Use destroyClient() or releaseWindow()
+    ~Client() override; ///< Use destroyClient() or releaseWindow()
 
     // Handlers for X11 events
     bool mapRequestEvent(xcb_map_request_event_t *e);
     void unmapNotifyEvent(xcb_unmap_notify_event_t *e);
     void destroyNotifyEvent(xcb_destroy_notify_event_t *e);
     void configureRequestEvent(xcb_configure_request_event_t *e);
-    virtual void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
+    void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
     void clientMessageEvent(xcb_client_message_event_t *e) override;
     void enterNotifyEvent(xcb_enter_notify_event_t *e);
     void leaveNotifyEvent(xcb_leave_notify_event_t *e);
     void focusInEvent(xcb_focus_in_event_t *e);
     void focusOutEvent(xcb_focus_out_event_t *e);
-    virtual void damageNotifyEvent();
+    void damageNotifyEvent() override;
 
     bool buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time = XCB_CURRENT_TIME);
     bool buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
@@ -349,7 +349,7 @@ private:
     Client* findAutogroupCandidate() const;
 
 protected:
-    virtual void debug(QDebug& stream) const;
+    void debug(QDebug& stream) const override;
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
     void doSetActive() override;

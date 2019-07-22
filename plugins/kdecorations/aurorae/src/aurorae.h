@@ -48,7 +48,7 @@ class Decoration : public KDecoration2::Decoration
     Q_PROPERTY(KDecoration2::DecoratedClient* client READ clientPointer CONSTANT)
 public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
-    virtual ~Decoration();
+    ~Decoration() override;
 
     void paint(QPainter *painter, const QRect &repaintRegion) override;
 

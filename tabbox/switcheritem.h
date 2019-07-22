@@ -48,7 +48,7 @@ class SwitcherItem : public QObject
     Q_CLASSINFO("DefaultProperty", "item")
 public:
     SwitcherItem(QObject *parent = nullptr);
-    virtual ~SwitcherItem();
+    ~SwitcherItem() override;
 
     QAbstractItemModel *model() const;
     QRect screenGeometry() const;

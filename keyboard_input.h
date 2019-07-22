@@ -58,7 +58,7 @@ class KWIN_EXPORT KeyboardInputRedirection : public QObject
     Q_OBJECT
 public:
     explicit KeyboardInputRedirection(InputRedirection *parent);
-    virtual ~KeyboardInputRedirection();
+    ~KeyboardInputRedirection() override;
 
     void init();
 

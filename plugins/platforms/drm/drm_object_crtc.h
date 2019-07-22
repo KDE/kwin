@@ -35,9 +35,9 @@ class DrmCrtc : public DrmObject
 public:
     DrmCrtc(uint32_t crtc_id, DrmBackend *backend, int resIndex);
 
-    virtual ~DrmCrtc();
+    ~DrmCrtc() override;
 
-    bool atomicInit();
+    bool atomicInit() override;
 
     enum class PropertyIndex {
         ModeId = 0,
@@ -45,7 +45,7 @@ public:
         Count
     };
 
-    bool initProps();
+    bool initProps() override;
 
     int resIndex() const {
         return m_resIndex;

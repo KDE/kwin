@@ -30,9 +30,9 @@ class DrmConnector : public DrmObject
 public:
     DrmConnector(uint32_t connector_id, int fd);
 
-    virtual ~DrmConnector();
+    ~DrmConnector() override;
 
-    bool atomicInit();
+    bool atomicInit() override;
 
     enum class PropertyIndex {
         CrtcId = 0,
@@ -43,7 +43,7 @@ public:
         return m_encoders;
     }
     
-    bool initProps();
+    bool initProps() override;
     bool isConnected();
 
 

@@ -38,12 +38,12 @@ class InvertEffect
     Q_OBJECT
 public:
     InvertEffect();
-    ~InvertEffect();
+    ~InvertEffect() override;
 
-    virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void paintEffectFrame(KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
-    virtual bool isActive() const;
-    virtual bool provides(Feature);
+    void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void paintEffectFrame(KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity) override;
+    bool isActive() const override;
+    bool provides(Feature) override;
 
     int requestedEffectChainPosition() const override;
 

@@ -42,9 +42,9 @@ class MouseClickEffectConfig : public KCModule
     Q_OBJECT
 public:
     explicit MouseClickEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-    virtual ~MouseClickEffectConfig();
+    ~MouseClickEffectConfig() override;
 
-    virtual void save();
+    void save() override;
 
 private:
     MouseClickEffectConfigForm* m_ui;

@@ -35,7 +35,7 @@ class DrmQPainterBackend : public QObject, public QPainterBackend
     Q_OBJECT
 public:
     DrmQPainterBackend(DrmBackend *backend);
-    virtual ~DrmQPainterBackend();
+    ~DrmQPainterBackend() override;
 
     QImage *buffer() override;
     QImage *bufferForScreen(int screenId) override;

@@ -55,7 +55,7 @@ public:
         Update,
         MakeFirstMinimized = MakeFirst
     };
-    virtual ~FocusChain();
+    ~FocusChain() override;
     /**
      * @brief Updates the position of the @p client according to the requested @p change in the
      * focus chain.

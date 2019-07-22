@@ -42,10 +42,10 @@ class ZoomEffectConfig : public KCModule
     Q_OBJECT
 public:
     explicit ZoomEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-    virtual ~ZoomEffectConfig();
+    ~ZoomEffectConfig() override;
 
 public Q_SLOTS:
-    virtual void save();
+    void save() override;
 
 private:
     ZoomEffectConfigForm* m_ui;

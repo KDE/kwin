@@ -40,7 +40,7 @@ class KWIN_EXPORT Activities : public QObject
     Q_OBJECT
 
 public:
-    ~Activities();
+    ~Activities() override;
 
     bool stop(const QString &id);
     bool start(const QString &id);

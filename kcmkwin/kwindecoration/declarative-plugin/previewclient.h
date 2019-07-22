@@ -64,7 +64,7 @@ class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedClie
     Q_PROPERTY(bool bordersBottomEdge READ bordersBottomEdge WRITE setBordersBottomEdge NOTIFY bordersBottomEdgeChanged)
 public:
     explicit PreviewClient(DecoratedClient *client, Decoration *decoration);
-    virtual ~PreviewClient();
+    ~PreviewClient() override;
 
     QString caption() const override;
     WId decorationId() const override;
@@ -110,7 +110,7 @@ public:
     void requestShowApplicationMenu(const QRect &rect, int actionId) override;
     void requestToggleOnAllDesktops() override;
 
-    void showApplicationMenu(int actionId);
+    void showApplicationMenu(int actionId) override;
 
     void setCaption(const QString &caption);
     void setActive(bool active);

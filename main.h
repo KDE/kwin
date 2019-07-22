@@ -42,7 +42,7 @@ class Platform;
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
 public:
-    virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
 };
 
 class KWIN_EXPORT Application : public  QApplication
@@ -76,7 +76,7 @@ public:
          **/
         OperationModeXwayland
     };
-    virtual ~Application();
+    ~Application() override;
 
     void setConfigLock(bool lock);
 
@@ -275,7 +275,7 @@ class KWIN_EXPORT ApplicationWaylandAbstract : public Application
 {
     Q_OBJECT
 public:
-    virtual ~ApplicationWaylandAbstract() = 0;
+    ~ApplicationWaylandAbstract() override = 0;
 protected:
     friend class Xwl::Xwayland;
 

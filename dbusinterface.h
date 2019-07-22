@@ -52,7 +52,7 @@ class DBusInterface: public QObject, protected QDBusContext
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin")
 public:
     explicit DBusInterface(QObject *parent);
-    virtual ~DBusInterface();
+    ~DBusInterface() override;
 
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
@@ -125,7 +125,7 @@ class CompositorDBusInterface : public QObject
     Q_PROPERTY(bool platformRequiresCompositing READ platformRequiresCompositing)
 public:
     explicit CompositorDBusInterface(Compositor *parent);
-    virtual ~CompositorDBusInterface() = default;
+    ~CompositorDBusInterface() override = default;
 
     bool isActive() const;
     bool isCompositingPossible() const;
@@ -211,7 +211,7 @@ class VirtualDesktopManagerDBusInterface : public QObject
 
 public:
     VirtualDesktopManagerDBusInterface(VirtualDesktopManager *parent);
-    ~VirtualDesktopManagerDBusInterface() = default;
+    ~VirtualDesktopManagerDBusInterface() override = default;
 
     uint count() const;
 

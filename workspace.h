@@ -66,7 +66,7 @@ class KWIN_EXPORT Workspace : public QObject
     Q_OBJECT
 public:
     explicit Workspace(const QString &sessionKey = QString());
-    virtual ~Workspace();
+    ~Workspace() override;
 
     static Workspace* self() {
         return _self;
@@ -664,7 +664,7 @@ class ColorMapper : public QObject
     Q_OBJECT
 public:
     ColorMapper(QObject *parent);
-    virtual ~ColorMapper();
+    ~ColorMapper() override;
 public Q_SLOTS:
     void update();
 private:

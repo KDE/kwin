@@ -413,7 +413,7 @@ class HelperWindow : public QRasterWindow
     Q_OBJECT
 public:
     HelperWindow() : QRasterWindow(nullptr) {}
-    ~HelperWindow() = default;
+    ~HelperWindow() override = default;
 
 Q_SIGNALS:
     void entered();

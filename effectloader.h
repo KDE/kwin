@@ -70,7 +70,7 @@ class KWIN_EXPORT AbstractEffectLoader : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~AbstractEffectLoader();
+    ~AbstractEffectLoader() override;
 
     /**
      * @brief The KSharedConfig this EffectLoader should operate on.

@@ -39,7 +39,7 @@ class KWIN_EXPORT OrientationSensor : public QObject
     Q_PROPERTY(bool userEnabled READ isUserEnabled WRITE setUserEnabled NOTIFY userEnabledChanged)
 public:
     explicit OrientationSensor(QObject *parent = nullptr);
-    ~OrientationSensor();
+    ~OrientationSensor() override;
 
     void setEnabled(bool enabled);
 

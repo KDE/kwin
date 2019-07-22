@@ -31,7 +31,7 @@ class ApplicationX11 : public Application
     Q_OBJECT
 public:
     ApplicationX11(int &argc, char **argv);
-    virtual ~ApplicationX11();
+    ~ApplicationX11() override;
 
     void setReplace(bool replace);
 

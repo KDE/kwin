@@ -35,13 +35,13 @@ class KWIN_EXPORT EglOnXBackend : public AbstractEglBackend
 public:
     EglOnXBackend(Display *display);
     explicit EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow);
-    virtual ~EglOnXBackend();
-    virtual void screenGeometryChanged(const QSize &size);
-    virtual SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
-    virtual QRegion prepareRenderingFrame();
-    virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
-    virtual OverlayWindow* overlayWindow() override;
-    virtual bool usesOverlayWindow() const override;
+    ~EglOnXBackend() override;
+    void screenGeometryChanged(const QSize &size) override;
+    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
+    QRegion prepareRenderingFrame() override;
+    void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) override;
+    OverlayWindow* overlayWindow() override;
+    bool usesOverlayWindow() const override;
     void init() override;
 
     bool isX11TextureFromPixmapSupported() const {
@@ -49,7 +49,7 @@ public:
     }
 
 protected:
-    virtual void present();
+    void present() override;
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
     virtual bool createSurfaces();
     EGLSurface createSurface(xcb_window_t window);
@@ -92,8 +92,8 @@ private:
 class EglTexture : public AbstractEglTexture
 {
 public:
-    virtual ~EglTexture();
-    virtual void onDamage();
+    ~EglTexture() override;
+    void onDamage() override;
     bool loadTexture(WindowPixmap *pixmap) override;
 
 private:

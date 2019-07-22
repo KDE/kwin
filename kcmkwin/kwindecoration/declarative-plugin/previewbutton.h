@@ -44,7 +44,7 @@ class PreviewButtonItem : public QQuickPaintedItem
 
 public:
     explicit PreviewButtonItem(QQuickItem *parent = nullptr);
-    virtual ~PreviewButtonItem();
+    ~PreviewButtonItem() override;
     void paint(QPainter *painter) override;
 
     PreviewBridge *bridge() const;

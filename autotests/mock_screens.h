@@ -30,7 +30,7 @@ class MockScreens : public Screens
     Q_OBJECT
 public:
     explicit MockScreens(QObject *parent = nullptr);
-    virtual ~MockScreens();
+    ~MockScreens() override;
     QRect geometry(int screen) const override;
     int number(const QPoint &pos) const override;
     QString name(int screen) const override;

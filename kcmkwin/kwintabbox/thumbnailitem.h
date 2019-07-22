@@ -32,11 +32,11 @@ class BrightnessSaturationShader : public QSGMaterialShader
 {
 public:
     BrightnessSaturationShader();
-    virtual const char* vertexShader() const override;
-    virtual const char* fragmentShader() const override;
-    virtual const char*const* attributeNames() const override;
-    virtual void updateState(const RenderState& state, QSGMaterial* newMaterial, QSGMaterial* oldMaterial) override;
-    virtual void initialize() override;
+    const char* vertexShader() const override;
+    const char* fragmentShader() const override;
+    const char*const* attributeNames() const override;
+    void updateState(const RenderState& state, QSGMaterial* newMaterial, QSGMaterial* oldMaterial) override;
+    void initialize() override;
 private:
     int m_id_matrix;
     int m_id_opacity;
@@ -47,7 +47,7 @@ private:
 class BrightnessSaturationMaterial : public QSGTextureMaterial
 {
 public:
-    virtual QSGMaterialShader* createShader() const override {
+    QSGMaterialShader* createShader() const override {
         return new BrightnessSaturationShader;
     }
     QSGMaterialType *type() const override {
@@ -67,7 +67,7 @@ class WindowThumbnailItem : public QQuickItem
     Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
-    virtual ~WindowThumbnailItem();
+    ~WindowThumbnailItem() override;
 
     qulonglong wId() const {
         return m_wId;
@@ -81,7 +81,7 @@ public:
     void setClipTo(QQuickItem *clip);
     void setBrightness(qreal brightness);
     void setSaturation(qreal saturation);
-    virtual QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData) override;
+    QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData) override;
 
     enum Thumbnail {
         Konqueror = 1,

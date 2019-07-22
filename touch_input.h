@@ -48,11 +48,11 @@ class TouchInputRedirection : public InputDeviceHandler
     Q_OBJECT
 public:
     explicit TouchInputRedirection(InputRedirection *parent);
-    virtual ~TouchInputRedirection();
+    ~TouchInputRedirection() override;
 
     bool positionValid() const override;
     bool focusUpdatesBlocked() override;
-    void init();
+    void init() override;
 
     void processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
     void processUp(qint32 id, quint32 time, LibInput::Device *device = nullptr);

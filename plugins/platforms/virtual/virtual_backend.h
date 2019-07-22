@@ -40,7 +40,7 @@ class KWIN_EXPORT VirtualBackend : public Platform
 
 public:
     VirtualBackend(QObject *parent = nullptr);
-    virtual ~VirtualBackend();
+    ~VirtualBackend() override;
     void init() override;
 
     bool saveFrames() const {

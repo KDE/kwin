@@ -61,7 +61,7 @@ class KWIN_EXPORT AbstractScript : public QObject
     Q_OBJECT
 public:
     AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
-    ~AbstractScript();
+    ~AbstractScript() override;
     QString fileName() const {
         return m_fileName;
     }
@@ -224,7 +224,7 @@ class Script : public AbstractScript, QDBusContext
 public:
 
     Script(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
-    virtual ~Script();
+    ~Script() override;
     QScriptEngine *engine() {
         return m_engine;
     }
@@ -233,7 +233,7 @@ public:
     bool unregisterTouchScreenCallback(int edge);
 
 public Q_SLOTS:
-    Q_SCRIPTABLE void run();
+    Q_SCRIPTABLE void run() override;
 
 Q_SIGNALS:
     Q_SCRIPTABLE void printError(const QString &text);
@@ -267,7 +267,7 @@ class ScriptUnloaderAgent : public QScriptEngineAgent
 {
 public:
     explicit ScriptUnloaderAgent(Script *script);
-    virtual void scriptUnload(qint64 id);
+    void scriptUnload(qint64 id) override;
 
 private:
     Script *m_script;
@@ -279,10 +279,10 @@ class DeclarativeScript : public AbstractScript
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 public:
     explicit DeclarativeScript(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
-    virtual ~DeclarativeScript();
+    ~DeclarativeScript() override;
 
 public Q_SLOTS:
-    Q_SCRIPTABLE void run();
+    Q_SCRIPTABLE void run() override;
 
 private Q_SLOTS:
     void createComponent();
@@ -319,7 +319,7 @@ public:
         ScreenArea
     };
     explicit JSEngineGlobalMethodsWrapper(DeclarativeScript *parent);
-    virtual ~JSEngineGlobalMethodsWrapper();
+    ~JSEngineGlobalMethodsWrapper() override;
 
 public Q_SLOTS:
     QVariant readConfig(const QString &key, QVariant defaultValue = QVariant());
@@ -350,7 +350,7 @@ private:
     void runScripts();
 
 public:
-    ~Scripting();
+    ~Scripting() override;
     Q_SCRIPTABLE Q_INVOKABLE int loadScript(const QString &filePath, const QString &pluginName = QString());
     Q_SCRIPTABLE Q_INVOKABLE int loadDeclarativeScript(const QString &filePath, const QString &pluginName = QString());
     Q_SCRIPTABLE Q_INVOKABLE bool isScriptLoaded(const QString &pluginName) const;

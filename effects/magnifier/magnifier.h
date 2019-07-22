@@ -39,12 +39,12 @@ class MagnifierEffect
     Q_PROPERTY(qreal targetZoom READ targetZoom)
 public:
     MagnifierEffect();
-    virtual ~MagnifierEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual bool isActive() const;
+    ~MagnifierEffect() override;
+    void reconfigure(ReconfigureFlags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    bool isActive() const override;
     static bool supported();
 
     // for properties

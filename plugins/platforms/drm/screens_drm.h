@@ -30,7 +30,7 @@ class DrmScreens : public OutputScreens
     Q_OBJECT
 public:
     DrmScreens(DrmBackend *backend, QObject *parent = nullptr);
-    virtual ~DrmScreens();
+    ~DrmScreens() override;
 
     bool supportsTransformations(int screen) const override;
 

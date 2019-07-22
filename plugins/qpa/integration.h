@@ -48,7 +48,7 @@ class Integration : public QObject, public QPlatformIntegration
     Q_OBJECT
 public:
     explicit Integration();
-    virtual ~Integration();
+    ~Integration() override;
 
     bool hasCapability(Capability cap) const override;
     QPlatformWindow *createPlatformWindow(QWindow *window) const override;

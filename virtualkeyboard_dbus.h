@@ -31,7 +31,7 @@ class VirtualKeyboardDBus : public QObject
     Q_PROPERTY(bool enabled READ isEnabled NOTIFY enabledChanged)
 public:
     explicit VirtualKeyboardDBus(QObject *parent = nullptr);
-    ~VirtualKeyboardDBus();
+    ~VirtualKeyboardDBus() override;
     Q_INVOKABLE bool isEnabled() const {
         return m_enabled;
     }

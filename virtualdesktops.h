@@ -54,7 +54,7 @@ class KWIN_EXPORT VirtualDesktop : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 public:
     explicit VirtualDesktop(QObject *parent = nullptr);
-    virtual ~VirtualDesktop();
+    ~VirtualDesktop() override;
 
     void setId(const QByteArray &id);
     QByteArray id() const {
@@ -156,7 +156,7 @@ class KWIN_EXPORT VirtualDesktopManager : public QObject
      **/
     Q_PROPERTY(bool navigationWrappingAround READ isNavigationWrappingAround WRITE setNavigationWrappingAround NOTIFY navigationWrappingAroundChanged)
 public:
-    virtual ~VirtualDesktopManager();
+    ~VirtualDesktopManager() override;
     /**
      * @internal, for X11 case
      **/

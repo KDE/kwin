@@ -232,7 +232,7 @@ class KWIN_EXPORT Process : public QProcess
     Q_OBJECT
 public:
     explicit Process(QObject *parent = nullptr);
-    virtual ~Process();
+    ~Process() override;
 
 protected:
     void setupChildProcess() override;

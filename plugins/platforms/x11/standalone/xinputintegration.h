@@ -37,7 +37,7 @@ class XInputIntegration : public QObject
     Q_OBJECT
 public:
     explicit XInputIntegration(Display *display, QObject *parent);
-    virtual ~XInputIntegration();
+    ~XInputIntegration() override;
 
     void init();
     void startListening();

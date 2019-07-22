@@ -34,7 +34,7 @@ class ApplicationWayland : public ApplicationWaylandAbstract
     Q_OBJECT
 public:
     ApplicationWayland(int &argc, char **argv);
-    virtual ~ApplicationWayland();
+    ~ApplicationWayland() override;
 
     void setStartXwayland(bool start) {
         m_startXWayland = start;

@@ -177,9 +177,9 @@ public:
      * after _windowClosed was connected, animations for closing windows will fail.
      **/
     AnimationEffect();
-    ~AnimationEffect();
+    ~AnimationEffect() override;
 
-    bool isActive() const;
+    bool isActive() const override;
 
     /**
      * Gets stored metadata.
@@ -208,11 +208,11 @@ public:
     static void setMetaData(MetaType type, uint value, uint &meta );
 
     // Reimplemented from KWin::Effect.
-    QString debug(const QString &parameter) const;
-    virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-    virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-    virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-    virtual void postPaintScreen();
+    QString debug(const QString &parameter) const override;
+    void prePaintScreen( ScreenPrePaintData& data, int time ) override;
+    void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time ) override;
+    void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) override;
+    void postPaintScreen() override;
 
     /**
      * Gaussian (bumper) animation curve for QEasingCurve.

@@ -54,12 +54,12 @@ class KWinTabBoxConfig : public KCModule
 
 public:
     explicit KWinTabBoxConfig(QWidget* parent, const QVariantList& args);
-    ~KWinTabBoxConfig();
+    ~KWinTabBoxConfig() override;
 
 public Q_SLOTS:
-    virtual void save();
-    virtual void load();
-    virtual void defaults();
+    void save() override;
+    void load() override;
+    void defaults() override;
 
 private Q_SLOTS:
     void effectSelectionChanged(int index);

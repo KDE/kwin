@@ -38,7 +38,7 @@ class BorderSizesModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit BorderSizesModel(QObject *parent = 0);
-    virtual ~BorderSizesModel();
+    ~BorderSizesModel() override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QHash< int, QByteArray > roleNames() const override;
@@ -70,7 +70,7 @@ class PreviewSettings : public QObject, public DecorationSettingsPrivate
     Q_PROPERTY(QFont font READ font WRITE setFont NOTIFY fontChanged)
 public:
     explicit PreviewSettings(DecorationSettings *parent);
-    virtual ~PreviewSettings();
+    ~PreviewSettings() override;
     bool isAlphaChannelSupported() const override;
     bool isOnAllDesktopsAvailable() const override;
     bool isCloseOnDoubleClickOnMenu() const override {
@@ -100,7 +100,7 @@ public:
     }
     void setBorderSizesIndex(int index);
 
-    QFont font() const {
+    QFont font() const override {
         return m_font;
     }
     void setFont(const QFont &font);
@@ -132,7 +132,7 @@ class Settings : public QObject
     Q_PROPERTY(int borderSizesIndex READ borderSizesIndex WRITE setBorderSizesIndex NOTIFY borderSizesIndexChanged)
 public:
     explicit Settings(QObject *parent = nullptr);
-    virtual ~Settings();
+    ~Settings() override;
 
     PreviewBridge *bridge() const;
     void setBridge(PreviewBridge *bridge);

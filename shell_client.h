@@ -55,7 +55,7 @@ public:
     ShellClient(KWayland::Server::ShellSurfaceInterface *surface);
     ShellClient(KWayland::Server::XdgShellSurfaceInterface *surface);
     ShellClient(KWayland::Server::XdgShellPopupInterface *surface);
-    virtual ~ShellClient();
+    ~ShellClient() override;
 
     QStringList activities() const override;
     QPoint clientContentPos() const override;

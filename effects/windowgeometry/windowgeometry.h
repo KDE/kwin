@@ -33,14 +33,14 @@ class WindowGeometry : public Effect
     Q_PROPERTY(bool handlesResizes READ isHandlesResizes)
 public:
     WindowGeometry();
-    ~WindowGeometry();
+    ~WindowGeometry() override;
 
-    inline bool provides(Effect::Feature ef) {
+    inline bool provides(Effect::Feature ef) override {
         return ef == Effect::GeometryTip;
     }
-    void reconfigure(ReconfigureFlags);
-    void paintScreen(int mask, QRegion region, ScreenPaintData &data);
-    virtual bool isActive() const;
+    void reconfigure(ReconfigureFlags) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 90;

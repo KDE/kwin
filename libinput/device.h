@@ -141,7 +141,7 @@ class KWIN_EXPORT Device : public QObject
 
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
-    virtual ~Device();
+    ~Device() override;
 
     bool isKeyboard() const {
         return m_keyboard;

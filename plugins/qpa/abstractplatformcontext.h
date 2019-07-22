@@ -34,7 +34,7 @@ class AbstractPlatformContext : public QPlatformOpenGLContext
 {
 public:
     AbstractPlatformContext(QOpenGLContext *context, EGLDisplay display, EGLConfig config = nullptr);
-    virtual ~AbstractPlatformContext();
+    ~AbstractPlatformContext() override;
 
     void doneCurrent() override;
     QSurfaceFormat format() const override;

@@ -29,7 +29,7 @@ class MockEffectsHandler : public KWin::EffectsHandler
 public:
     explicit MockEffectsHandler(KWin::CompositingType type);
     void activateWindow(KWin::EffectWindow *) override {}
-    KWin::Effect *activeFullScreenEffect() const {
+    KWin::Effect *activeFullScreenEffect() const override {
         return nullptr;
     }
     bool hasActiveFullScreenEffect() const override {
@@ -271,7 +271,7 @@ public:
     }
     void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) override { Q_UNUSED(flags)}
 
-    void windowToDesktops(KWin::EffectWindow *w, const QVector<uint> &desktops) {
+    void windowToDesktops(KWin::EffectWindow *w, const QVector<uint> &desktops) override {
         Q_UNUSED(w)
         Q_UNUSED(desktops)
     }

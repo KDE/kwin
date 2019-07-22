@@ -35,7 +35,7 @@ class FramebufferOutput : public AbstractWaylandOutput
 
 public:
     FramebufferOutput(QObject *parent = nullptr) : AbstractWaylandOutput(parent) {}
-    virtual ~FramebufferOutput() = default;
+    ~FramebufferOutput() override = default;
 
     QSize pixelSize() const override {
         return m_pixelSize;
@@ -59,7 +59,7 @@ class KWIN_EXPORT FramebufferBackend : public Platform
     Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "fbdev.json")
 public:
     explicit FramebufferBackend(QObject *parent = nullptr);
-    virtual ~FramebufferBackend();
+    ~FramebufferBackend() override;
 
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;

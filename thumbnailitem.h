@@ -40,7 +40,7 @@ class AbstractThumbnailItem : public QQuickPaintedItem
     Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
     Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
 public:
-    virtual ~AbstractThumbnailItem();
+    ~AbstractThumbnailItem() override;
     qreal brightness() const;
     qreal saturation() const;
     QQuickItem *clipTo() const;
@@ -81,7 +81,7 @@ class WindowThumbnailItem : public AbstractThumbnailItem
     Q_PROPERTY(KWin::AbstractClient *client READ client WRITE setClient NOTIFY clientChanged)
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = 0);
-    virtual ~WindowThumbnailItem();
+    ~WindowThumbnailItem() override;
 
     QUuid wId() const {
         return m_wId;
@@ -89,12 +89,12 @@ public:
     void setWId(const QUuid &wId);
     AbstractClient *client() const;
     void setClient(AbstractClient *client);
-    virtual void paint(QPainter *painter);
+    void paint(QPainter *painter) override;
 Q_SIGNALS:
     void wIdChanged(const QUuid &wid);
     void clientChanged();
 protected Q_SLOTS:
-    virtual void repaint(KWin::EffectWindow* w);
+    void repaint(KWin::EffectWindow* w) override;
 private:
     QUuid m_wId;
     AbstractClient *m_client;
@@ -106,17 +106,17 @@ class DesktopThumbnailItem : public AbstractThumbnailItem
     Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
 public:
     DesktopThumbnailItem(QQuickItem *parent = 0);
-    virtual ~DesktopThumbnailItem();
+    ~DesktopThumbnailItem() override;
 
     int desktop() const {
         return m_desktop;
     }
     void setDesktop(int desktop);
-    virtual void paint(QPainter *painter);
+    void paint(QPainter *painter) override;
 Q_SIGNALS:
     void desktopChanged(int desktop);
 protected Q_SLOTS:
-    virtual void repaint(KWin::EffectWindow* w);
+    void repaint(KWin::EffectWindow* w) override;
 private:
     int m_desktop;
 };

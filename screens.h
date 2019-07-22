@@ -45,7 +45,7 @@ class KWIN_EXPORT Screens : public QObject
     Q_PROPERTY(bool currentFollowsMouse READ isCurrentFollowsMouse WRITE setCurrentFollowsMouse)
 
 public:
-    virtual ~Screens();
+    ~Screens() override;
     /**
      * @internal
      **/

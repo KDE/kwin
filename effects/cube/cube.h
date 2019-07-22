@@ -56,24 +56,24 @@ class CubeEffect
     // TODO: electric borders: not a registered type
 public:
     CubeEffect();
-    ~CubeEffect();
-    virtual void reconfigure(ReconfigureFlags);
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
-    virtual void postPaintScreen();
-    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual bool borderActivated(ElectricBorder border);
-    virtual void grabbedKeyboardEvent(QKeyEvent* e);
-    virtual void windowInputMouseEvent(QEvent* e);
-    virtual bool isActive() const;
+    ~CubeEffect() override;
+    void reconfigure(ReconfigureFlags) override;
+    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void postPaintScreen() override;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    bool borderActivated(ElectricBorder border) override;
+    void grabbedKeyboardEvent(QKeyEvent* e) override;
+    void windowInputMouseEvent(QEvent* e) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 50;
     }
 
     // proxy functions
-    virtual void* proxy();
+    void* proxy() override;
     void registerCubeInsideEffect(CubeInsideEffect* effect);
     void unregisterCubeInsideEffect(CubeInsideEffect* effect);
 

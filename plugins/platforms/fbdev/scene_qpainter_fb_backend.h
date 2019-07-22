@@ -33,7 +33,7 @@ class FramebufferQPainterBackend : public QObject, public QPainterBackend
     Q_OBJECT
 public:
     FramebufferQPainterBackend(FramebufferBackend *backend);
-    virtual ~FramebufferQPainterBackend();
+    ~FramebufferQPainterBackend() override;
 
     QImage *buffer() override;
     QImage *bufferForScreen(int screenId) override;

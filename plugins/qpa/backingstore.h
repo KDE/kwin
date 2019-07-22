@@ -40,7 +40,7 @@ class BackingStore : public QPlatformBackingStore
 {
 public:
     explicit BackingStore(QWindow *w, KWayland::Client::ShmPool *shm);
-    virtual ~BackingStore();
+    ~BackingStore() override;
 
     QPaintDevice *paintDevice() override;
     void flush(QWindow *window, const QRegion &region, const QPoint &offset) override;

@@ -55,7 +55,7 @@ public:
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData &data, int time) override;
     void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
-    void postPaintScreen();
+    void postPaintScreen() override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void windowInputMouseEvent(QEvent *e) override;
     bool isActive() const override;

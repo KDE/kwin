@@ -40,7 +40,7 @@ class WindowSelector : public X11EventFilter
 public:
 
     WindowSelector();
-    ~WindowSelector();
+    ~WindowSelector() override;
 
     void start(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName);
     void start(std::function<void (const QPoint &)> callback);
