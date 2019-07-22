@@ -2148,8 +2148,8 @@ void AbstractClient::setMaximize(bool vertically, bool horizontally)
     // changeMaximize() flips the state, so change from set->flip
     const MaximizeMode oldMode = maximizeMode();
     changeMaximize(
-        oldMode & MaximizeVertical ? !vertically : vertically,
         oldMode & MaximizeHorizontal ? !horizontally : horizontally,
+        oldMode & MaximizeVertical ? !vertically : vertically,
         false);
     const MaximizeMode newMode = maximizeMode();
     if (oldMode != newMode) {
@@ -2188,7 +2188,7 @@ private:
 
 
 static bool changeMaximizeRecursion = false;
-void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
+void Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
 {
     if (changeMaximizeRecursion)
         return;
