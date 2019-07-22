@@ -1231,7 +1231,7 @@ void SceneXRenderDecorationRenderer::render()
         xcb_create_gc(c, m_gc, m_pixmaps[int(DecorationPart::Top)], 0, nullptr);
     }
     auto renderPart = [this, c](const QRect &geo, const QPoint &offset, int index) {
-        if (geo.isNull()) {
+        if (!geo.isValid()) {
             return;
         }
         QImage image = renderToImage(geo);
