@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render through hwcomposer through libhybris.",
-        "Description[ca@valencia]": "Renderitza mitjançant el «hwcomposer» mitjançant «libhybris».",
+        "Description[ca@valencia]": "Renderitza mitjançant «hwcomposer» mitjançant «libhybris».",
         "Description[ca]": "Renderitza mitjançant el «hwcomposer» mitjançant «libhybris».",
         "Description[da]": "Rendér igennem hwcomposer igennem libhybris.",
         "Description[de]": "In hwcomposer mit libhybris rendern.",

@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render to framebuffer.",
-        "Description[ca@valencia]": "Renderitza al «framebuffer».",
+        "Description[ca@valencia]": "Renderitza en el «framebuffer».",
         "Description[ca]": "Renderitza al «framebuffer».",
         "Description[da]": "Render til framebuffer.",
         "Description[de]": "In Framebuffer rendern.",

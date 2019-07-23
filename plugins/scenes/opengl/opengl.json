@@ -2,7 +2,7 @@
     "CompositingType": 1,
     "KPlugin": {
         "Description": "KWin Compositor plugin rendering through OpenGL",
-        "Description[ca@valencia]": "Connector del Compositor del KWin que renderitza a través de l'OpenGL",
+        "Description[ca@valencia]": "Connector del Compositor de KWin que renderitza a través d'OpenGL",
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través de l'OpenGL",
         "Description[da]": "KWin-compositorplugin som renderer via OpenGL",
         "Description[de]": "KWin-Compositor-Modul zum Rendern mit OpenGL",
