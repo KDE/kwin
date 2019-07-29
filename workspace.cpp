@@ -1778,8 +1778,9 @@ void Workspace::setWasUserInteraction()
 void Workspace::updateTabbox()
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (TabBox::TabBox::self()->isDisplayed()) {
-        TabBox::TabBox::self()->reset(true);
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    if (tabBox && tabBox->isDisplayed()) {
+        tabBox->reset(true);
     }
 #endif
 }
